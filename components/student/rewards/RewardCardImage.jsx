@@ -1,5 +1,5 @@
 /**
- * Unified reward card image — CSS clip first; canvas trim only when needed (cached).
+ * Unified reward card image — pre-baked URLs when ready; canvas trim as fallback only.
  */
 import { memo, useEffect, useState } from "react";
 import {
@@ -7,6 +7,7 @@ import {
   REWARD_CARD_CLIP_CLASS_THUMB,
   REWARD_CARD_CLIP_CLASS_TILE,
 } from "../../../lib/rewards/reward-card-display.js";
+import { isPreBakedRewardCardVariantUrl } from "../../../lib/rewards/reward-card-image-urls.js";
 import { resolveRewardCardDisplaySource } from "../../../lib/rewards/reward-card-image-process.client.js";
 
 const PLACEHOLDER = "/rewards/cards/placeholders/regular/default.svg";
@@ -24,6 +25,7 @@ const CLIP_BY_SIZE = {
  *   alt?: string,
  *   size?: "thumb" | "tile" | "modal",
  *   fit?: "cover" | "contain",
+ *   preBaked?: boolean,
  *   className?: string,
  *   wrapperClassName?: string,
  *   imgClassName?: string,
@@ -37,6 +39,7 @@ function RewardCardImage({
   alt = "",
   size = "tile",
   fit = "cover",
+  preBaked = false,
   className = "",
   wrapperClassName = "",
   imgClassName = "",
@@ -44,13 +47,19 @@ function RewardCardImage({
   draggable = false,
   children,
 }) {
-  const [displaySrc, setDisplaySrc] = useState(src || PLACEHOLDER);
+  const normalizedSrc = src || PLACEHOLDER;
+  const usePreBaked = preBaked || isPreBakedRewardCardVariantUrl(normalizedSrc);
+  const [displaySrc, setDisplaySrc] = useState(normalizedSrc);
 
   useEffect(() => {
+    if (usePreBaked) {
+      setDisplaySrc(normalizedSrc);
+      return undefined;
+    }
+
     let alive = true;
-    const normalized = src || PLACEHOLDER;
     const priority = size === "modal" || loading === "eager" ? "eager" : "lazy";
-    const { immediate, upgrade } = resolveRewardCardDisplaySource(normalized, { priority });
+    const { immediate, upgrade } = resolveRewardCardDisplaySource(normalizedSrc, { priority });
 
     setDisplaySrc(immediate || PLACEHOLDER);
 
@@ -67,7 +76,7 @@ function RewardCardImage({
     return () => {
       alive = false;
     };
-  }, [src, size, loading]);
+  }, [normalizedSrc, size, loading, usePreBaked]);
 
   const fitClass =
     fit === "contain"
@@ -77,7 +86,7 @@ function RewardCardImage({
   const wrapperFitClass =
     fit === "contain" ? "inline-block max-w-full max-h-[80vh]" : "w-full h-full";
 
-  const clipClass = CLIP_BY_SIZE[size] || REWARD_CARD_CLIP_CLASS_TILE;
+  const clipClass = usePreBaked ? "" : CLIP_BY_SIZE[size] || REWARD_CARD_CLIP_CLASS_TILE;
 
   return (
     <div
@@ -100,6 +109,7 @@ export default memo(RewardCardImage, (prev, next) =>
   prev.src === next.src &&
   prev.size === next.size &&
   prev.fit === next.fit &&
+  prev.preBaked === next.preBaked &&
   prev.loading === next.loading &&
   prev.alt === next.alt &&
   prev.wrapperClassName === next.wrapperClassName &&

@@ -32,7 +32,8 @@ export default function StudentRewardCard({
           aria-label={`הגדלת תמונת הקלף ${card.nameHe || ""}`.trim()}
         >
           <RewardCardImage
-            src={card.imageUrl || "/rewards/cards/placeholders/regular/default.svg"}
+            src={card.imageThumbUrl || card.imageUrl || "/rewards/cards/placeholders/regular/default.svg"}
+            preBaked={card.imageVariantsReady === true}
             size="tile"
             fit="cover"
             wrapperClassName="w-full h-full"
@@ -106,7 +107,8 @@ export function StudentSeriesProgressCard({ series, T, studentFullName = "" }) {
             aria-label={`קלפים בסדרה ${series.nameHe}`}
           >
             {cards.map((card, index) => {
-              const imageSrc = card.imageUrl || "/rewards/cards/placeholders/regular/default.svg";
+              const imageSrc =
+                card.imageThumbUrl || card.imageUrl || "/rewards/cards/placeholders/regular/default.svg";
               return (
                 <button
                   key={card.cardId}
@@ -123,7 +125,13 @@ export function StudentSeriesProgressCard({ series, T, studentFullName = "" }) {
                       : `${card.nameHe} — נעול`
                   }
                 >
-                  <RewardCardImage src={imageSrc} size="thumb" fit="cover" wrapperClassName="w-full h-full">
+                  <RewardCardImage
+                    src={imageSrc}
+                    preBaked={card.imageVariantsReady === true}
+                    size="thumb"
+                    fit="cover"
+                    wrapperClassName="w-full h-full"
+                  >
                     {!card.owned ? <RewardCardLockedStamp compact /> : null}
                   </RewardCardImage>
                 </button>

@@ -9,7 +9,7 @@ const OPEN_PATH = "/api/student/rewards/surprise-box/open";
 const CARD_THUMB_PLACEHOLDER = "/rewards/cards/placeholders/regular/default.svg";
 
 function SurpriseBoxCardPrizeRow({ card, T }) {
-  const imageSrc = card.imageUrl || CARD_THUMB_PLACEHOLDER;
+  const imageSrc = card.imageThumbUrl || card.imageUrl || CARD_THUMB_PLACEHOLDER;
 
   return (
     <li className={`rounded-xl border p-3 sm:p-4 min-w-0 overflow-hidden ${T.subjectCard}`}>
@@ -26,7 +26,13 @@ function SurpriseBoxCardPrizeRow({ card, T }) {
           )}
         </div>
         <div className="shrink-0 w-11 sm:w-14 aspect-[2/3]" aria-hidden>
-          <RewardCardImage src={imageSrc} size="thumb" fit="cover" wrapperClassName="w-full h-full" />
+          <RewardCardImage
+            src={imageSrc}
+            preBaked={card.imageVariantsReady === true}
+            size="thumb"
+            fit="cover"
+            wrapperClassName="w-full h-full"
+          />
         </div>
       </div>
     </li>

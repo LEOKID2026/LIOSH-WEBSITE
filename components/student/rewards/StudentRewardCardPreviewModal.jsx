@@ -86,7 +86,10 @@ export default function StudentRewardCardPreviewModal({
 
   if (!open || !currentCard) return null;
 
-  const imageSrc = currentCard.imageUrl || "/rewards/cards/placeholders/regular/default.svg";
+  const imageSrc =
+    currentCard.imageDisplayUrl ||
+    currentCard.imageUrl ||
+    "/rewards/cards/placeholders/regular/default.svg";
   const showLocked = currentCard.isLocked === true || currentCard.showLockedStamp === true;
   const canDownload =
     !showLocked &&
@@ -102,6 +105,8 @@ export default function StudentRewardCardPreviewModal({
     try {
       await downloadStudentRewardCardImage({
         imageUrl: imageSrc,
+        downloadUrl: currentCard.imageDownloadUrl,
+        imageVariantsReady: currentCard.imageVariantsReady === true,
         studentFullName: String(studentFullName),
         cardNameHe: currentCard.nameHe,
         cardKey: currentCard.cardKey,
@@ -174,6 +179,7 @@ export default function StudentRewardCardPreviewModal({
               </button>
               <RewardCardImage
                 src={imageSrc}
+                preBaked={currentCard.imageVariantsReady === true}
                 alt={currentCard.nameHe || "תמונת קלף"}
                 size="modal"
                 fit="contain"
