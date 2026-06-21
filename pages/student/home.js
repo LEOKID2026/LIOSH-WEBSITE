@@ -570,7 +570,7 @@ export default function StudentHomePage() {
           setHomePayload(mergeStudentHomePayloads(summaryJson, cached?.analytics));
           setProfilePhase("ok");
           void loadHomeAnalytics(payload.student.id, summaryJson);
-          void loadHomeAchievementGrants(studentId);
+          void loadHomeAchievementGrants(payload.student.id);
           return;
         }
 
@@ -585,7 +585,8 @@ export default function StudentHomePage() {
     return () => {
       mounted = false;
     };
-  }, [router.isReady, loadHomeDashboard, router]);
+    // רק isReady + loadHomeDashboard — לא router (משתנה בהידרציה ומבטל fetch באמצע → stuck על "טוען את דף הבית...").
+  }, [router.isReady, loadHomeDashboard]);
 
   const dashboardView = useMemo(() => {
     if (!student?.id || profilePhase !== "ok" || !homePayload) return null;

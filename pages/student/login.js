@@ -70,7 +70,8 @@ export default function StudentLoginPage() {
     return () => {
       mounted = false;
     };
-  }, [router.isReady, router]);
+    // רק isReady — לא router (re-run מבטל fetch → stuck על "בודקים חיבור...").
+  }, [router.isReady]);
 
   if (sessionCheck === "pending") {
     return (

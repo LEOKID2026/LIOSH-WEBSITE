@@ -1,0 +1,19 @@
+{
+  "startedAt": "2026-06-21T13:29:21.589Z",
+  "gates": [
+    {
+      "gate": "REWARD_CONTRACT_PASS",
+      "verdict": "FAIL",
+      "exitCode": 1,
+      "launchRequired": false,
+      "stdoutTail": "\n          };\n        }\n        \n      operator: 'match'\n      stack: |-\n        TestContext.<anonymous> (file:///C:/Users/ERAN%20YOSEF/Desktop/final%20projects/FINAL-WEB/LIOSH-WEB-TRY/tests/rewards/card-rules-no-hardcoded.test.mjs:44:12)\n        Test.runInAsyncScope (node:async_hooks:214:14)\n        Test.run (node:internal/test_runner/test:1047:25)\n        Suite.processPendingSubtests (node:internal/test_runner/test:744:18)\n        Test.postRun (node:internal/test_runner/test:1173:19)\n        Test.run (node:internal/test_runner/test:1101:12)\n        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)\n      ...\n    1..4\nnot ok 1 - card-rules-no-hardcoded\n  ---\n  duration_ms: 8.2296\n  type: 'suite'\n  location: 'C:\\\\Users\\\\ERAN YOSEF\\\\Desktop\\\\final projects\\\\FINAL-WEB\\\\LIOSH-WEB-TRY\\\\tests\\\\rewards\\\\card-rules-no-hardcoded.test.mjs:15:1'\n  failureType: 'subtestsFailed'\n  error: '2 subtests failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 4\n# suites 1\n# pass 2\n# fail 2\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 151.9819\nREWARD_CONTRACT_PASS: FAIL — failed: tests/rewards/card-rules-no-hardcoded.test.mjs\n{\n  \"gate\": \"REWARD_CONTRACT_PASS\",\n  \"verdict\": \"FAIL\",\n  \"layer\": \"contract\",\n  \"usesMock\": true,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": false,\n  \"usesLiveApi\": false,\n  \"usesLiveUi\": false,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"failed: tests/rewards/card-rules-no-hardcoded.test.mjs\",\n  \"details\": {},\n  \"at\": \"2026-06-21T13:29:25.596Z\"\n}\n",
+      "stderrTail": ""
+    }
+  ],
+  "summary": {
+    "pass": 0,
+    "fail": 1,
+    "skip": 0
+  },
+  "finishedAt": "2026-06-21T13:29:25.617Z"
+}

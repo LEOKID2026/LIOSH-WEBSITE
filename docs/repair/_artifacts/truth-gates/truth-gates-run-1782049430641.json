@@ -1,0 +1,19 @@
+{
+  "startedAt": "2026-06-21T13:43:46.990Z",
+  "gates": [
+    {
+      "gate": "REWARD_CONTRACT_PASS",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "launchRequired": false,
+      "stdoutTail": "on_ms 123.3793\nTAP version 13\n# Subtest: arcade economy entry costs\n    # Subtest: game-registry has no ARCADE_ENTRY_COSTS\n    ok 1 - game-registry has no ARCADE_ENTRY_COSTS\n      ---\n      duration_ms: 1.2758\n      type: 'test'\n      ...\n    # Subtest: arcade-rooms validateEntryCost uses DB catalog\n    ok 2 - arcade-rooms validateEntryCost uses DB catalog\n      ---\n      duration_ms: 0.345\n      type: 'test'\n      ...\n    # Subtest: arcade games API loads entryCostOptions from economy-config\n    ok 3 - arcade games API loads entryCostOptions from economy-config\n      ---\n      duration_ms: 0.2554\n      type: 'test'\n      ...\n    # Subtest: student arcade page has no hardcoded ENTRY_OPTIONS\n    ok 4 - student arcade page has no hardcoded ENTRY_OPTIONS\n      ---\n      duration_ms: 0.4091\n      type: 'test'\n      ...\n    1..4\nok 1 - arcade economy entry costs\n  ---\n  duration_ms: 3.5543\n  type: 'suite'\n  ...\n1..1\n# tests 4\n# suites 1\n# pass 4\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 102.9134\nREWARD_CONTRACT_PASS: PASS — reward/time/dashboard/economy single-source contracts passed\n{\n  \"gate\": \"REWARD_CONTRACT_PASS\",\n  \"verdict\": \"PASS\",\n  \"layer\": \"contract\",\n  \"usesMock\": true,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": false,\n  \"usesLiveApi\": false,\n  \"usesLiveUi\": false,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"reward/time/dashboard/economy single-source contracts passed\",\n  \"details\": {\n    \"liveGate\": \"REWARD_PASS\"\n  },\n  \"at\": \"2026-06-21T13:43:50.625Z\"\n}\n",
+      "stderrTail": ""
+    }
+  ],
+  "summary": {
+    "pass": 1,
+    "fail": 0,
+    "skip": 0
+  },
+  "finishedAt": "2026-06-21T13:43:50.641Z"
+}
