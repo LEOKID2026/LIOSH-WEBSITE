@@ -13,6 +13,10 @@ import {
   rewardCardEdgeDarkRatio,
   REWARD_CARD_BLACK_TRIM_THRESHOLD,
 } from "../../lib/rewards/reward-card-display.js";
+import {
+  REWARD_CARD_PROCESSING_VERSION,
+  resolveRewardCardDisplaySource,
+} from "../../lib/rewards/reward-card-image-process.client.js";
 
 function ok(label) {
   console.log(`  ok  ${label}`);
@@ -94,5 +98,11 @@ assert.ok(radiusSmall >= 8 && radiusSmall <= 20);
 const radiusLarge = rewardCardCornerRadiusPx(2000, 3000);
 assert.equal(radiusLarge, 20);
 ok("rewardCardCornerRadiusPx clamped");
+
+assert.equal(typeof REWARD_CARD_PROCESSING_VERSION, "number");
+const svg = resolveRewardCardDisplaySource("/rewards/cards/placeholders/regular/default.svg");
+assert.equal(svg.immediate.includes(".svg"), true);
+assert.equal(svg.upgrade, null);
+ok("resolveRewardCardDisplaySource skips SVG processing");
 
 console.log("\nreward-card-image-process-selftest: all passed");
