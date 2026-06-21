@@ -1,19 +1,57 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  SOLO_V2_ASSETS,
-  SoloV2EndBanner,
-  SoloV2Goal,
-  SoloV2Hud,
-  SoloV2Intro,
-  SoloV2Playfield,
-} from "./solo-v2-ui.jsx";
+
+const BG_BALLOONS = "/images/game-balloons-bg.png";
+const IMG_BOMB = "/images/obstacle1.png";
+const IMG_DIAMOND = "/images/diamond.png";
 
 const GAME_DURATION_SEC = 60;
-const TARGET_POPS = 15;
 const MAX_LIVES = 3;
-const MAX_ESCAPED = 8;
+const MISSES_PER_LIFE = 4;
+
 const SCORE_GOOD = 10;
 const SCORE_GOLD = 25;
+const SCORE_DIAMOND = 40;
+const COMBO_EVERY = 5;
+const COMBO_BONUS = 5;
+
+const TICK_MS = 32;
+
+/**
+ * @param {number} level
+ */
+function levelConfig(level) {
+  const lv = Math.max(1, level);
+  return {
+    riseSpeed: 1.6 + (lv - 1) * 0.28,
+    spawnMs: Math.max(520, 980 - (lv - 1) * 70),
+    maxOnScreen: Math.min(9, 3 + Math.floor(lv / 2)),
+    bombChance: Math.min(0.17, 0.06 + lv * 0.012),
+    goldChance: Math.min(0.2, 0.1 + lv * 0.008),
+    diamondChance: 0.035,
+    clockChance: 0.038,
+    heartChance: 0.028,
+    targetPops: 10 + (lv - 1) * 2,
+  };
+}
+
+/**
+ * @param {number} level
+ */
+function rollKind(level) {
+  const c = levelConfig(level);
+  const r = Math.random();
+  if (r < c.bombChance) return "bomb";
+  if (r < c.bombChance + c.goldChance) return "gold";
+  if (r < c.bombChance + c.goldChance + c.diamondChance) return "diamond";
+  if (r < c.bombChance + c.goldChance + c.diamondChance + c.clockChance) return "clock";
+  if (
+    r <
+    c.bombChance + c.goldChance + c.diamondChance + c.clockChance + c.heartChance
+  ) {
+    return "heart";
+  }
+  return "good";
+}
 
 /**
  * @param {{ autoStart?: boolean, onSessionEnd?: (metrics: object) => void }} props
@@ -21,28 +59,95 @@ const SCORE_GOLD = 25;
 export default function MleoBalloonsEngine({ autoStart = false, onSessionEnd }) {
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
-  const scoreRef = useRef(0);
-  const popsRef = useRef(0);
+  const boardRef = useRef(null);
+  const loopRef = useRef(null);
+  const spawnRef = useRef(null);
+  const timerRef = useRef(null);
   const idRef = useRef(0);
 
+  const runningRef = useRef(false);
+  const scoreRef = useRef(0);
+  const scoringPopsRef = useRef(0);
+  const missesRef = useRef(0);
+  const comboRef = useRef(0);
+  const levelRef = useRef(1);
+  const livesRef = useRef(MAX_LIVES);
+  const timeLeftRef = useRef(GAME_DURATION_SEC);
+  const targetRef = useRef(10);
+  const balloonsRef = useRef([]);
+
+  const [showIntro, setShowIntro] = useState(!autoStart);
   const [gameRunning, setGameRunning] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [won, setWon] = useState(false);
-  const [showIntro, setShowIntro] = useState(!autoStart);
   const [score, setScore] = useState(0);
   const [pops, setPops] = useState(0);
+  const [misses, setMisses] = useState(0);
   const [lives, setLives] = useState(MAX_LIVES);
-  const [escaped, setEscaped] = useState(0);
   const [timeLeft, setTimeLeft] = useState(GAME_DURATION_SEC);
+  const [level, setLevel] = useState(1);
+  const [target, setTarget] = useState(10);
   const [balloons, setBalloons] = useState([]);
+  const [popFx, setPopFx] = useState([]);
+  const [levelFlash, setLevelFlash] = useState(false);
 
-  const spawnBalloon = () => {
-    const roll = Math.random();
-    let kind = "good";
-    if (roll < 0.12) kind = "bomb";
-    else if (roll < 0.22) kind = "gold";
-    idRef.current += 1;
-    return { id: idRef.current, kind, x: 10 + Math.random() * 80, y: 100 };
+  useEffect(() => {
+    const wrapper = document.getElementById("game-wrapper");
+    if (!wrapper) return undefined;
+    const block = (e) => {
+      if (e.target?.closest?.("button")) return;
+      e.preventDefault();
+    };
+    wrapper.addEventListener("contextmenu", block);
+    return () => wrapper.removeEventListener("contextmenu", block);
+  }, []);
+
+  const addPopFx = (xPct, yPct, text) => {
+    const id = Date.now() + Math.random();
+    setPopFx((prev) => [...prev.slice(-8), { id, xPct, yPct, text }]);
+    setTimeout(() => {
+      setPopFx((prev) => prev.filter((f) => f.id !== id));
+    }, 700);
+  };
+
+  const registerMiss = (remaining) => {
+    comboRef.current = 0;
+    missesRef.current += 1;
+    setMisses(missesRef.current);
+    if (missesRef.current % MISSES_PER_LIFE === 0) {
+      livesRef.current -= 1;
+      setLives(livesRef.current);
+      if (livesRef.current <= 0) endGame(false, remaining);
+    }
+  };
+
+  const levelUp = () => {
+    levelRef.current += 1;
+    const cfg = levelConfig(levelRef.current);
+    targetRef.current = cfg.targetPops;
+    setLevel(levelRef.current);
+    setTarget(cfg.targetPops);
+    setLevelFlash(true);
+    setTimeout(() => setLevelFlash(false), 1600);
+  };
+
+  const addScore = (pts, balloon) => {
+    if (pts > 0) {
+      scoreRef.current += pts;
+      setScore(scoreRef.current);
+      addPopFx(balloon.x, balloon.y, `+${pts}`);
+    }
+    scoringPopsRef.current += 1;
+    comboRef.current += 1;
+    setPops(scoringPopsRef.current);
+    if (comboRef.current > 0 && comboRef.current % COMBO_EVERY === 0) {
+      scoreRef.current += COMBO_BONUS;
+      setScore(scoreRef.current);
+      addPopFx(balloon.x, balloon.y - 4, `+${COMBO_BONUS} combo!`);
+    }
+    if (scoringPopsRef.current > 0 && scoringPopsRef.current % 5 === 0) {
+      levelUp();
+    }
   };
 
   const fireSessionEnd = (didWin, remaining) => {
@@ -52,6 +157,7 @@ export default function MleoBalloonsEngine({ autoStart = false, onSessionEnd }) 
       score: scoreRef.current,
       didWin,
       levelReached: 0,
+      mistakes: missesRef.current,
       timeRemainingSec: remaining,
       durationMs:
         playStartedAtRef.current != null
@@ -61,159 +167,304 @@ export default function MleoBalloonsEngine({ autoStart = false, onSessionEnd }) 
   };
 
   const endGame = (didWin, remaining) => {
+    runningRef.current = false;
     setGameRunning(false);
     setGameOver(true);
     setWon(didWin);
+    balloonsRef.current = [];
     setBalloons([]);
+    if (loopRef.current) clearInterval(loopRef.current);
+    if (spawnRef.current) clearInterval(spawnRef.current);
+    if (timerRef.current) clearInterval(timerRef.current);
     fireSessionEnd(didWin, remaining);
   };
 
   const loseLife = (remaining) => {
-    setLives((prev) => {
-      const next = prev - 1;
-      if (next <= 0) endGame(false, remaining);
-      return next;
+    comboRef.current = 0;
+    livesRef.current -= 1;
+    setLives(livesRef.current);
+    if (livesRef.current <= 0) endGame(false, remaining);
+  };
+
+  const spawnBalloon = () => {
+    const cfg = levelConfig(levelRef.current);
+    if (balloonsRef.current.length >= cfg.maxOnScreen) return;
+    idRef.current += 1;
+    balloonsRef.current.push({
+      id: idRef.current,
+      kind: rollKind(levelRef.current),
+      x: 8 + Math.random() * 84,
+      y: -8,
     });
+  };
+
+  const popBalloon = (balloon) => {
+    if (!runningRef.current || !balloon) return;
+    balloonsRef.current = balloonsRef.current.filter((b) => b.id !== balloon.id);
+    setBalloons([...balloonsRef.current]);
+
+    const remaining = timeLeftRef.current;
+
+    if (balloon.kind === "bomb") {
+      addPopFx(balloon.x, balloon.y, "💣");
+      loseLife(remaining);
+      return;
+    }
+
+    if (balloon.kind === "clock") {
+      timeLeftRef.current = Math.min(GAME_DURATION_SEC + 15, timeLeftRef.current + 5);
+      setTimeLeft(timeLeftRef.current);
+      addPopFx(balloon.x, balloon.y, "+5s");
+      return;
+    }
+
+    if (balloon.kind === "heart") {
+      if (livesRef.current < MAX_LIVES) {
+        livesRef.current += 1;
+        setLives(livesRef.current);
+        addPopFx(balloon.x, balloon.y, "+❤️");
+      } else {
+        addPopFx(balloon.x, balloon.y, "❤️");
+      }
+      return;
+    }
+
+    let pts = SCORE_GOOD;
+    if (balloon.kind === "gold") pts = SCORE_GOLD;
+    if (balloon.kind === "diamond") pts = SCORE_DIAMOND;
+    addScore(pts, balloon);
+
+    if (scoringPopsRef.current >= targetRef.current) {
+      endGame(true, remaining);
+    }
+  };
+
+  const findBalloonAt = (clientX, clientY) => {
+    const board = boardRef.current;
+    if (!board) return null;
+    const rect = board.getBoundingClientRect();
+    const px = clientX - rect.left;
+    const pyFromBottom = rect.bottom - clientY;
+    const hitR = Math.max(44, rect.width * 0.11);
+
+    for (let i = balloonsRef.current.length - 1; i >= 0; i -= 1) {
+      const b = balloonsRef.current[i];
+      const bx = (b.x / 100) * rect.width;
+      const by = (b.y / 100) * rect.height;
+      if (Math.hypot(px - bx, py - by) <= hitR) return b;
+    }
+    return null;
+  };
+
+  const handleBoardPointer = (e) => {
+    if (!runningRef.current) return;
+    e.preventDefault();
+    const b = findBalloonAt(e.clientX, e.clientY);
+    if (b) popBalloon(b);
+  };
+
+  const tick = () => {
+    if (!runningRef.current) return;
+    const cfg = levelConfig(levelRef.current);
+    const next = [];
+
+    for (const b of balloonsRef.current) {
+      const ny = b.y + cfg.riseSpeed;
+      if (ny > 108) {
+        if (b.kind !== "bomb" && b.kind !== "clock" && b.kind !== "heart") {
+          registerMiss(timeLeftRef.current);
+        }
+      } else {
+        next.push({ ...b, y: ny });
+      }
+    }
+
+    balloonsRef.current = next;
+    setBalloons([...next]);
   };
 
   const startGame = () => {
     sessionEndFiredRef.current = false;
     playStartedAtRef.current = Date.now();
     scoreRef.current = 0;
-    popsRef.current = 0;
+    scoringPopsRef.current = 0;
+    missesRef.current = 0;
+    comboRef.current = 0;
+    levelRef.current = 1;
+    livesRef.current = MAX_LIVES;
+    timeLeftRef.current = GAME_DURATION_SEC;
+    targetRef.current = levelConfig(1).targetPops;
+    balloonsRef.current = [];
+
     setShowIntro(false);
     setGameOver(false);
     setWon(false);
     setScore(0);
     setPops(0);
+    setMisses(0);
     setLives(MAX_LIVES);
-    setEscaped(0);
     setTimeLeft(GAME_DURATION_SEC);
+    setLevel(1);
+    setTarget(targetRef.current);
     setBalloons([]);
+    setPopFx([]);
+    setLevelFlash(false);
+
     setGameRunning(true);
+    runningRef.current = true;
+
+    spawnBalloon();
+    spawnBalloon();
+
+    if (loopRef.current) clearInterval(loopRef.current);
+    loopRef.current = setInterval(tick, TICK_MS);
+
+    if (spawnRef.current) clearInterval(spawnRef.current);
+    spawnRef.current = setInterval(() => {
+      if (runningRef.current) spawnBalloon();
+    }, levelConfig(1).spawnMs);
+
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      if (!runningRef.current) return;
+      timeLeftRef.current -= 1;
+      setTimeLeft(timeLeftRef.current);
+      if (timeLeftRef.current <= 0) {
+        endGame(scoringPopsRef.current >= targetRef.current, 0);
+      }
+    }, 1000);
   };
 
   useEffect(() => {
-    if (autoStart && !gameRunning && !gameOver && !showIntro) startGame();
+    if (!gameRunning) return undefined;
+    if (spawnRef.current) clearInterval(spawnRef.current);
+    const cfg = levelConfig(levelRef.current);
+    spawnRef.current = setInterval(() => {
+      if (runningRef.current) spawnBalloon();
+    }, cfg.spawnMs);
+    return () => {
+      if (spawnRef.current) clearInterval(spawnRef.current);
+    };
+  }, [gameRunning, level]);
+
+  useEffect(() => {
+    if (autoStart) startGame();
+    return () => {
+      runningRef.current = false;
+      if (loopRef.current) clearInterval(loopRef.current);
+      if (spawnRef.current) clearInterval(spawnRef.current);
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoStart]);
 
-  useEffect(() => {
-    if (!gameRunning) return undefined;
-    if (timeLeft <= 0) {
-      endGame(popsRef.current >= TARGET_POPS, 0);
-      return undefined;
+  const balloonVisual = (kind) => {
+    if (kind === "bomb") {
+      return <img src={IMG_BOMB} alt="" className="pointer-events-none h-11 w-11 object-contain" draggable={false} />;
     }
-    const t = setTimeout(() => setTimeLeft((s) => s - 1), 1000);
-    return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gameRunning, timeLeft]);
-
-  useEffect(() => {
-    if (!gameRunning) return undefined;
-    const spawn = setInterval(() => {
-      setBalloons((prev) => [...prev.slice(-12), spawnBalloon()]);
-    }, 850);
-    return () => clearInterval(spawn);
-  }, [gameRunning]);
-
-  useEffect(() => {
-    if (!gameRunning) return undefined;
-    const rise = setInterval(() => {
-      setBalloons((prev) => {
-        const next = [];
-        for (const b of prev) {
-          const ny = (b.y ?? 100) - 3.5;
-          if (ny < -12) {
-            if (b.kind !== "bomb") {
-              setEscaped((e) => {
-                const ne = e + 1;
-                if (ne >= MAX_ESCAPED) endGame(false, timeLeft);
-                return ne;
-              });
-            }
-          } else {
-            next.push({ ...b, y: ny });
-          }
-        }
-        return next;
-      });
-    }, 120);
-    return () => clearInterval(rise);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gameRunning, timeLeft]);
-
-  const popBalloon = (balloon) => {
-    if (!gameRunning) return;
-    setBalloons((prev) => prev.filter((b) => b.id !== balloon.id));
-    if (balloon.kind === "bomb") {
-      loseLife(timeLeft);
-      return;
+    if (kind === "gold") {
+      return <span className="pointer-events-none text-3xl drop-shadow-md">⭐</span>;
     }
-    const pts = balloon.kind === "gold" ? SCORE_GOLD : SCORE_GOOD;
-    scoreRef.current += pts;
-    popsRef.current += 1;
-    setScore(scoreRef.current);
-    setPops(popsRef.current);
-    if (popsRef.current >= TARGET_POPS) endGame(true, timeLeft);
+    if (kind === "diamond") {
+      return <img src={IMG_DIAMOND} alt="" className="pointer-events-none h-11 w-11 object-contain" draggable={false} />;
+    }
+    if (kind === "clock") {
+      return <span className="pointer-events-none text-3xl drop-shadow-md">⏱️</span>;
+    }
+    if (kind === "heart") {
+      return <span className="pointer-events-none text-3xl drop-shadow-md">💖</span>;
+    }
+    return <span className="pointer-events-none text-4xl drop-shadow-md">🎈</span>;
   };
 
-  const balloonStyle = (kind) => {
-    if (kind === "gold") return "from-amber-300 to-yellow-500 ring-2 ring-amber-200";
-    if (kind === "bomb") return "from-gray-700 to-gray-900 ring-2 ring-red-500";
-    return "from-sky-400 to-blue-600 ring-2 ring-white/50";
+  const balloonRing = (kind) => {
+    if (kind === "bomb") return "ring-4 ring-red-500/80 from-gray-700 to-gray-900";
+    if (kind === "gold") return "ring-4 ring-amber-200 from-amber-300 to-yellow-500";
+    if (kind === "diamond") return "ring-4 ring-cyan-200 from-sky-300 to-indigo-500";
+    if (kind === "clock") return "ring-4 ring-purple-200 from-violet-400 to-purple-600";
+    if (kind === "heart") return "ring-4 ring-rose-200 from-pink-400 to-rose-500";
+    return "ring-4 ring-white/60 from-sky-400 to-blue-600";
   };
 
   return (
-    <div className="flex h-full min-h-0 flex-1 flex-col items-center gap-2 overflow-hidden px-2 py-2 text-white w-full" dir="rtl">
-      <SoloV2Goal text={`פוצצו ${TARGET_POPS} בלונים טובים! בלון זהב = יותר ניקוד. אל תלחצו על 💣`} />
-      {!showIntro ? (
-        <SoloV2Hud
-          rows={[
-            { label: "ניקוד", value: score, accent: "text-amber-300" },
-            { label: "בלונים", value: `${pops}/${TARGET_POPS}` },
-            { label: "חיים", value: "❤️".repeat(Math.max(0, lives)) || "—" },
-            { label: "פספוסים", value: `${escaped}/${MAX_ESCAPED}` },
-            { label: "זמן", value: `${timeLeft}s` },
-          ]}
-        />
-      ) : null}
-      <SoloV2Playfield bg={SOLO_V2_ASSETS.bgPark} className="min-h-[280px]">
-        {showIntro ? (
-          <SoloV2Intro
-            title="פיצוץ בלונים!"
-            lines={["בלון כחול = +10", "בלון זהב = +25", "💣 = מאבדים חיים", "יותר מדי בלונים שברחו = הפסד"]}
-            onStart={startGame}
-          />
-        ) : (
-          <>
+    <div
+      id="game-wrapper"
+      className="relative isolate flex h-full min-h-0 flex-1 flex-col overflow-hidden bg-gray-900 text-white select-none"
+      dir="rtl"
+    >
+      {!showIntro && (
+        <div className="flex min-h-0 w-full flex-1 flex-col px-1 pb-1 pt-1">
+          <div className="pointer-events-none absolute left-1/2 top-2 z-30 max-w-[98vw] -translate-x-1/2 rounded-lg bg-black/65 px-3 py-2 text-center text-[11px] font-bold leading-snug sm:text-sm">
+            <span className="text-amber-300">ניקוד: {score}</span>
+            {" · "}
+            <span>יעד: {pops}/{target}</span>
+            {" · "}
+            <span>רמה: {level}</span>
+            {" · "}
+            <span>{"❤️".repeat(Math.max(0, lives)) || "—"}</span>
+            {" · "}
+            <span>פספוסים: {misses}</span>
+            {" · "}
+            <span>{timeLeft}s</span>
+          </div>
+
+          <div
+            ref={boardRef}
+            className="relative z-0 mx-auto mt-11 flex h-full min-h-0 w-full max-w-[1180px] flex-1 touch-none overflow-hidden rounded-lg border-4 border-yellow-400 bg-black/30 shadow-lg sm:mt-12"
+            style={{
+              backgroundImage: `linear-gradient(to bottom, rgba(255,255,255,0.08), rgba(0,0,0,0.12)), url(${BG_BALLOONS})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              touchAction: "manipulation",
+            }}
+            onPointerDown={handleBoardPointer}
+          >
             {balloons.map((b) => (
-              <button
+              <div
                 key={b.id}
-                type="button"
-                className={`absolute flex min-h-[60px] min-w-[60px] items-center justify-center rounded-full bg-gradient-to-b shadow-lg transition active:scale-90 ${balloonStyle(b.kind)}`}
-                style={{ left: `${b.x}%`, bottom: `${b.y ?? 100}%`, transform: "translateX(-50%)" }}
-                onClick={() => popBalloon(b)}
+                className={`pointer-events-none absolute flex h-[72px] w-[72px] -translate-x-1/2 items-center justify-center rounded-full bg-gradient-to-b shadow-xl ${balloonRing(b.kind)}`}
+                style={{ left: `${b.x}%`, bottom: `${b.y}%` }}
               >
-                {b.kind === "bomb" ? (
-                  <img src={SOLO_V2_ASSETS.bomb} alt="" className="h-10 w-10 object-contain" />
-                ) : b.kind === "gold" ? (
-                  <span className="text-3xl">⭐</span>
-                ) : (
-                  <span className="text-3xl">🎈</span>
-                )}
-              </button>
+                {balloonVisual(b.kind)}
+              </div>
             ))}
-            {gameOver ? (
-              <SoloV2EndBanner
-                success={won}
-                title={won ? "כל הכבוד! פיצצתם מספיק בלונים!" : "לא הצלחתם הפעם"}
-                subtitle={`ניקוד: ${score} · בלונים: ${pops}/${TARGET_POPS}`}
-              />
+
+            {popFx.map((fx) => (
+              <div
+                key={fx.id}
+                className="pointer-events-none absolute z-20 -translate-x-1/2 animate-bounce text-base font-extrabold text-yellow-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] sm:text-lg"
+                style={{ left: `${fx.xPct}%`, bottom: `${fx.yPct}%` }}
+              >
+                {fx.text}
+              </div>
+            ))}
+
+            {levelFlash ? (
+              <div className="pointer-events-none absolute inset-0 z-30 flex items-start justify-center bg-black/35 pt-[20%]">
+                <span className="rounded-xl bg-yellow-400 px-5 py-2 text-xl font-extrabold text-black shadow-lg sm:text-2xl">
+                  רמה {level}!
+                </span>
+              </div>
             ) : null}
-          </>
-        )}
-      </SoloV2Playfield>
+
+            {gameOver ? (
+              <div className="pointer-events-auto absolute inset-0 z-40 flex flex-col items-center justify-center gap-2 overflow-y-auto bg-black/82 px-4 py-6 text-center">
+                <h2 className={`text-2xl font-extrabold sm:text-4xl ${won ? "text-emerald-300" : "text-rose-400"}`}>
+                  {won ? "כל הכבוד! פיצצתם מספיק בלונים!" : "לא הצלחתם הפעם"}
+                </h2>
+                <p className="max-w-md text-sm font-semibold text-white/90 sm:text-base">
+                  ניקוד: {score} · פגיעות: {pops}/{target} · פספוסים: {misses} · רמה: {level}
+                </p>
+                {!won ? (
+                  <p className="text-xs text-gray-300 sm:text-sm">הפסד = 0 מטבעות · ממתין לסיכום...</p>
+                ) : (
+                  <p className="text-xs text-gray-300 sm:text-sm">ממתין לסיכום מטבעות...</p>
+                )}
+              </div>
+            ) : null}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
