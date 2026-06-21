@@ -16,7 +16,7 @@
 import {
   waitForSessionStart,
   waitForAnswerSave,
-  waitForSessionFinish,
+  clickStopAndConfirmSessionFinish,
   readAnswerIsCorrect,
   buildAnsweredQuestionEntry,
   tallyCorrectness,
@@ -187,12 +187,11 @@ export async function runMathScenario({ page, baseUrl, scenario, log, screenshot
 
   await screenshotter("03-math-master-questions-complete");
 
-  const stopButton = page.getByTestId("learning-stop-game");
-  await stopButton.waitFor({ state: "visible", timeout: 10_000 });
-  log("math-master: clicking learning-stop-game (fires session/finish)");
-  await stopButton.click();
-
-  await waitForSessionFinish({ page, log, subject: "math-master" });
+  await clickStopAndConfirmSessionFinish({
+    page,
+    log,
+    subject: "math-master",
+  });
 
   await screenshotter("04-math-master-after-stop");
 

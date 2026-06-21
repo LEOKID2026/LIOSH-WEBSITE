@@ -10,9 +10,9 @@ import {
 } from "./solo-v2-ui.jsx";
 
 const DIFFICULTY_SETTINGS = {
-  easy: { itemCount: 12, durationSec: 90, maxLives: 3, queueMode: "calm" },
-  medium: { itemCount: 18, durationSec: 72, maxLives: 3, queueMode: "mixed" },
-  hard: { itemCount: 24, durationSec: 58, maxLives: 2, queueMode: "rush" },
+  easy: { itemCount: 12, durationSec: 90, maxLives: 3, queueMode: "calm", binShuffleMs: null },
+  medium: { itemCount: 18, durationSec: 72, maxLives: 3, queueMode: "mixed", binShuffleMs: 11000 },
+  hard: { itemCount: 24, durationSec: 58, maxLives: 2, queueMode: "rush", binShuffleMs: 8000 },
 };
 
 const SCORE_PER_SORT = 50;
@@ -144,6 +144,14 @@ function shuffle(items) {
   return arr;
 }
 
+function shuffleBinOrder(order) {
+  const next = shuffle(order);
+  if (next.every((v, i) => v === order[i]) && next.length > 1) {
+    [next[0], next[1]] = [next[1], next[0]];
+  }
+  return next;
+}
+
 function buildBalancedPool(count) {
   const pool = [];
   while (pool.length < count) {
@@ -210,6 +218,8 @@ export default function MleoSortShapesEngine({
   const [queue, setQueue] = useState([]);
   const [sortedCount, setSortedCount] = useState(0);
   const [selectedBin, setSelectedBin] = useState(0);
+  const [binOrder, setBinOrder] = useState([0, 1, 2]);
+  const [shuffleWarning, setShuffleWarning] = useState(false);
 
   useEffect(() => {
     if (initialDifficulty) setDifficulty(initialDifficulty);
@@ -263,8 +273,20 @@ export default function MleoSortShapesEngine({
     setTimeLeft(settings.durationSec);
     setQueue(buildQueue(settings.itemCount, settings.queueMode));
     setSelectedBin(0);
+    setBinOrder([0, 1, 2]);
+    setShuffleWarning(false);
     setGameRunning(true);
   };
+
+  useEffect(() => {
+    if (!gameRunning || gameOver || !settings.binShuffleMs) return undefined;
+    const id = window.setInterval(() => {
+      setShuffleWarning(true);
+      window.setTimeout(() => setShuffleWarning(false), 1000);
+      setBinOrder((prev) => shuffleBinOrder(prev));
+    }, settings.binShuffleMs);
+    return () => window.clearInterval(id);
+  }, [gameRunning, gameOver, settings.binShuffleMs]);
 
   useEffect(() => {
     if (autoStart && !gameRunning && !gameOver && !showIntro) startGame();
@@ -356,7 +378,7 @@ export default function MleoSortShapesEngine({
             onStart={startGame}
           />
         ) : (
-          <div className="flex h-full min-h-0 flex-col gap-3 p-3">
+          <div className="relative flex h-full min-h-0 flex-col gap-3 p-3">
             <div className="flex shrink-0 flex-col items-center gap-2 rounded-2xl border border-yellow-400/40 bg-black/40 p-4">
               <p className="text-sm font-semibold text-yellow-100">הפריט הבא:</p>
               {currentItem ? (
@@ -369,14 +391,16 @@ export default function MleoSortShapesEngine({
             </div>
 
             <div className="grid min-h-0 flex-1 grid-cols-3 gap-2">
-              {BINS.map((bin, binIdx) => (
+              {binOrder.map((binIdx, slotIdx) => {
+                const bin = BINS[binIdx];
+                return (
                 <button
                   key={bin.id}
                   type="button"
                   disabled={!gameRunning || !currentItem}
                   onClick={() => handleBinTap(bin.id)}
                   className={`flex min-h-[88px] flex-col items-center justify-center gap-1 rounded-2xl border-2 px-1 py-2 text-xs font-bold sm:text-sm ${bin.className} disabled:opacity-40 ${
-                    selectedBin === binIdx && gameRunning && !gameOver ? "ring-4 ring-yellow-300" : ""
+                    selectedBin === slotIdx && gameRunning && !gameOver ? "ring-4 ring-yellow-300" : ""
                   }`}
                 >
                   <span className="text-2xl">{bin.emoji}</span>
@@ -387,8 +411,17 @@ export default function MleoSortShapesEngine({
                   </div>
                   {bin.title}
                 </button>
-              ))}
+              );
+              })}
             </div>
+
+            {shuffleWarning ? (
+              <div className="pointer-events-none absolute inset-x-3 top-3 z-30 flex justify-center">
+                <span className="rounded-xl bg-amber-400 px-4 py-2 text-sm font-extrabold text-black shadow-lg sm:text-base">
+                  מערבבים!
+                </span>
+              </div>
+            ) : null}
 
             {gameOver ? (
               <SoloV2EndBanner

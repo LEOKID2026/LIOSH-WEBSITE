@@ -23,6 +23,13 @@ const SESSION_START_PATH = "/api/learning/session/start";
 const SESSION_ANSWER_PATH = "/api/learning/answer";
 const SESSION_FINISH_PATH = "/api/learning/session/finish";
 
+/** Default wait for session/finish after stop — production runs often need >30s under load. */
+export const SESSION_FINISH_TIMEOUT_MS = 90_000;
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 /**
  * Visible label for Practice mode on every learning master page.
  * Must match MODES.practice.name in pages/learning/*-master.js (product copy).
@@ -296,23 +303,226 @@ export async function readAnswerIsCorrect(answerResponse) {
   }
 }
 
-export async function waitForSessionFinish({ page, log, subject, timeoutMs = 30_000 }) {
+export async function waitForSessionFinish({
+  page,
+  log,
+  subject,
+  timeoutMs = SESSION_FINISH_TIMEOUT_MS,
+  strict = false,
+}) {
   try {
-    await page.waitForResponse(
+    const res = await page.waitForResponse(
       (response) =>
         response.request().method() === "POST" &&
         response.url().includes(SESSION_FINISH_PATH),
       { timeout: timeoutMs }
     );
-    log(`${subject}: observed ${SESSION_FINISH_PATH} response`);
+    log(
+      `${subject}: observed ${SESSION_FINISH_PATH} response (status=${res.status()})`
+    );
     return true;
   } catch (error) {
+    const msg =
+      `${subject}: did not observe ${SESSION_FINISH_PATH} within ${timeoutMs}ms — ` +
+      `${error?.message || error}`;
+    log(msg);
+    if (strict) throw new Error(msg);
+    return false;
+  }
+}
+
+/**
+ * Race-safe session end: register finish listener BEFORE clicking stop.
+ * Throws if finish is not observed — callers must not proceed to stamp/snapshot.
+ */
+export async function clickStopAndConfirmSessionFinish({
+  page,
+  log,
+  subject,
+  timeoutMs = SESSION_FINISH_TIMEOUT_MS,
+}) {
+  const stopButton = page.getByTestId("learning-stop-game");
+  await stopButton.waitFor({ state: "visible", timeout: 10_000 });
+  log(`${subject}: clicking learning-stop-game (fires session/finish)`);
+
+  const finishPromise = page.waitForResponse(
+    (response) =>
+      response.request().method() === "POST" &&
+      response.url().includes(SESSION_FINISH_PATH),
+    { timeout: timeoutMs }
+  );
+
+  await stopButton.click();
+
+  try {
+    const res = await finishPromise;
     log(
+      `${subject}: observed ${SESSION_FINISH_PATH} response (status=${res.status()})`
+    );
+    return res;
+  } catch (error) {
+    throw new Error(
       `${subject}: did not observe ${SESSION_FINISH_PATH} within ${timeoutMs}ms — ` +
         `${error?.message || error}`
     );
-    return false;
   }
+}
+
+/**
+ * Robust topic selection with option-load wait, verify, and one controlled reload.
+ */
+export async function selectTopicRobustly({
+  page,
+  baseUrl,
+  path,
+  topicSelectTestid,
+  playerNameTestid,
+  topic,
+  subjectLabel,
+  log,
+  required = true,
+  maxAttempts = 3,
+}) {
+  if (!topic) return { ok: true, topic: null, skipped: true };
+
+  const selectOnce = async () => {
+    const topicSelect = page.getByTestId(topicSelectTestid);
+    await topicSelect.waitFor({ state: "visible", timeout: 15_000 });
+    await page
+      .waitForFunction(
+        (testid) => {
+          const el = document.querySelector(`[data-testid="${testid}"]`);
+          return el && el.options && el.options.length > 1;
+        },
+        topicSelectTestid,
+        { timeout: 12_000 }
+      )
+      .catch(() => {});
+    await topicSelect.selectOption({ value: topic });
+    const selected = await topicSelect.inputValue().catch(() => "");
+    if (selected !== topic) {
+      throw new Error(`selection mismatch wanted=${topic} got=${selected || "(empty)"}`);
+    }
+  };
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      await selectOnce();
+      log(`${subjectLabel}: selected topic=${topic} (attempt ${attempt})`);
+      return { ok: true, topic };
+    } catch (error) {
+      log(
+        `${subjectLabel}: topic select to '${topic}' failed attempt ${attempt}/${maxAttempts} ` +
+          `(${String(error?.message || error).slice(0, 160)})`
+      );
+      if (attempt < maxAttempts && baseUrl && path) {
+        log(`${subjectLabel}: controlled reload before topic retry`);
+        await page.goto(new URL(path, baseUrl).toString(), {
+          waitUntil: "domcontentloaded",
+        });
+        if (playerNameTestid) {
+          await page
+            .getByTestId(playerNameTestid)
+            .waitFor({ state: "visible", timeout: 30_000 })
+            .catch(() => {});
+        }
+        await sleep(400 * attempt);
+      }
+    }
+  }
+
+  if (required) {
+    throw new Error(
+      `${subjectLabel}: topic '${topic}' could not be selected after ${maxAttempts} attempts`
+    );
+  }
+  log(`${subjectLabel}: keeping default topic after failed select of '${topic}'`);
+  return { ok: false, topic: null };
+}
+
+/**
+ * MCQ option click with visibility/enabled/geometry checks and short retries.
+ */
+export async function clickMcqOptionRobustly({
+  page,
+  mcqTestid,
+  log,
+  subjectLabel,
+  questionIndex,
+  maxClickAttempts = 3,
+}) {
+  const target = page.getByTestId(mcqTestid);
+
+  await page
+    .waitForFunction(
+      (tid) => {
+        const btn = document.querySelector(`[data-testid="${tid}"]`);
+        if (!btn || btn.disabled) return false;
+        const rect = btn.getBoundingClientRect();
+        return rect.width > 0 && rect.height > 0;
+      },
+      mcqTestid,
+      { timeout: 15_000 }
+    )
+    .catch(() => {});
+
+  const visible = await target.isVisible().catch(() => false);
+  if (!visible) {
+    throw new Error(
+      `${subjectLabel}: q${questionIndex} MCQ option ${mcqTestid} not visible/enabled`
+    );
+  }
+
+  await target.scrollIntoViewIfNeeded({ timeout: 5_000 }).catch(() => {});
+
+  let lastError = null;
+  for (let attempt = 1; attempt <= maxClickAttempts; attempt++) {
+    try {
+      await target.click({ timeout: 8_000 });
+      return;
+    } catch (error) {
+      lastError = error;
+      if (attempt < maxClickAttempts) {
+        log(
+          `${subjectLabel}: q${questionIndex} MCQ click attempt ${attempt}/${maxClickAttempts} failed; retrying`
+        );
+        await sleep(250 * attempt);
+      }
+    }
+  }
+
+  log(
+    `${subjectLabel}: q${questionIndex} Playwright click failed; falling back to native DOM .click()`
+  );
+  try {
+    await target.evaluate((el) => el.click(), undefined, { timeout: 10_000 });
+    return;
+  } catch (domError) {
+    throw new Error(
+      `${subjectLabel}: q${questionIndex} MCQ click failed for ${mcqTestid}: ` +
+        `${domError?.message || domError || lastError?.message || lastError}`
+    );
+  }
+}
+
+/**
+ * Limit parallel student workers (stability under production load).
+ */
+export async function runWithConcurrency(items, concurrency, workerFn) {
+  const list = Array.isArray(items) ? items : [];
+  if (list.length === 0) return;
+  const limit = Math.max(1, Math.min(concurrency, list.length));
+  let nextIndex = 0;
+
+  async function drain() {
+    while (nextIndex < list.length) {
+      const index = nextIndex;
+      nextIndex += 1;
+      await workerFn(list[index], index);
+    }
+  }
+
+  await Promise.all(Array.from({ length: limit }, () => drain()));
 }
 
 export function shortText(text, max = 80) {

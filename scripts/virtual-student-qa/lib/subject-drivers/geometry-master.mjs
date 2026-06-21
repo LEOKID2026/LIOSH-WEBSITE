@@ -30,13 +30,14 @@
 import {
   waitForSessionStart,
   waitForAnswerSave,
-  waitForSessionFinish,
+  clickStopAndConfirmSessionFinish,
   readAnswerIsCorrect,
   buildAnsweredQuestionEntry,
   tallyCorrectness,
   shortText,
   selectCountablePracticeMode,
   createPracticeEvidenceTracker,
+  selectTopicRobustly,
 } from "../learning-session-helpers.mjs";
 import { probeCurrentQuestion } from "../mcq-fiber-probe.mjs";
 import { pickAnswerForArithmetic } from "../answer-profiles.mjs";
@@ -67,18 +68,18 @@ export async function runGeometryScenario({ page, baseUrl, scenario, log, screen
 
   const playerName = (await playerNameDiv.innerText().catch(() => "")).trim();
 
-  // Choose topic (default 'area' for numeric text-input UI).
-  const topicSelect = page.getByTestId("geometry-topic-select");
-  if (await topicSelect.count()) {
-    try {
-      await topicSelect.selectOption({ value: scenario.topic || "area" });
-    } catch (e) {
-      log(
-        `geometry-master: topic select to '${scenario.topic || "area"}' failed (${e?.message}). ` +
-          `Falling back to current selection.`
-      );
-    }
-  }
+  const topicValue = scenario.topic || "area";
+  await selectTopicRobustly({
+    page,
+    baseUrl,
+    path: GEOMETRY_PATH,
+    topicSelectTestid: "geometry-topic-select",
+    playerNameTestid: "geometry-player-name",
+    topic: topicValue,
+    subjectLabel: "geometry-master",
+    log,
+    required: true,
+  });
 
   await screenshotter("02-geometry-master-ready");
 
@@ -254,11 +255,11 @@ export async function runGeometryScenario({ page, baseUrl, scenario, log, screen
 
   await screenshotter("03-geometry-master-questions-complete");
 
-  const stopButton = page.getByTestId("learning-stop-game");
-  await stopButton.waitFor({ state: "visible", timeout: 10_000 });
-  log("geometry-master: clicking learning-stop-game (fires session/finish)");
-  await stopButton.click();
-  await waitForSessionFinish({ page, log, subject: "geometry-master" });
+  await clickStopAndConfirmSessionFinish({
+    page,
+    log,
+    subject: "geometry-master",
+  });
 
   await screenshotter("04-geometry-master-after-stop");
 

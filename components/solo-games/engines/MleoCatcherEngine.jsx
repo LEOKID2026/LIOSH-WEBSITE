@@ -359,10 +359,6 @@ export default function MleoCatcherEngine({ autoStart = false, onSessionEnd }) {
       diffTimerRef.current.lastSpawn = now;
     }
 
-    ctx.font = "bold 20px sans-serif";
-    ctx.fillStyle = "rgba(255,255,255,0.9)";
-    ctx.fillText(`רמה: ${diff.level}`, 16, 28);
-
     rafRef.current = requestAnimationFrame(updateGame);
   }
 
@@ -459,11 +455,19 @@ export default function MleoCatcherEngine({ autoStart = false, onSessionEnd }) {
       >
         {!showIntro && (
           <div className="flex min-h-0 w-full flex-1 flex-col px-1 pb-2 pt-1">
-            <div className="pointer-events-none absolute left-1/2 top-2 z-20 hidden max-w-[95vw] -translate-x-1/2 rounded-lg bg-black/60 px-4 py-2 text-lg font-bold sm:block">
-              ניקוד: {score} | שיא: {highScore}
+            <div className="pointer-events-none absolute left-1/2 top-2 z-20 hidden max-w-[98vw] -translate-x-1/2 rounded-lg bg-black/70 px-3 py-2 text-center text-sm font-bold leading-snug sm:text-base">
+              <span className="text-amber-300">ניקוד: {score}</span>
+              {" · "}
+              <span>שיא: {highScore}</span>
+              {" · "}
+              <span>רמה: {Math.floor(score / 10)}</span>
             </div>
-            <div className="pointer-events-none absolute bottom-40 left-1/2 z-20 max-w-[95vw] -translate-x-1/2 rounded-md bg-black/60 px-3 py-1 text-base font-bold sm:hidden">
-              ניקוד: {score} | שיא: {highScore}
+            <div className="pointer-events-none absolute bottom-40 left-1/2 z-20 max-w-[98vw] -translate-x-1/2 rounded-md bg-black/70 px-3 py-2 text-center text-sm font-bold sm:hidden">
+              <span className="text-amber-300">ניקוד: {score}</span>
+              {" · "}
+              <span>שיא: {highScore}</span>
+              {" · "}
+              <span>רמה: {Math.floor(score / 10)}</span>
             </div>
 
             <div

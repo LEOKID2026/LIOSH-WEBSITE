@@ -19,8 +19,8 @@ const DIFFICULTY_SETTINGS = {
     maxMistakes: 20,
     starCount: 3,
     hintAfter: 4,
-    cellMin: 30,
-    cellMinLg: 38,
+    cellMin: 26,
+    cellMinLg: 30,
     diamondChance: 0.75,
     diamondSec: 10,
   },
@@ -31,8 +31,8 @@ const DIFFICULTY_SETTINGS = {
     maxMistakes: 14,
     starCount: 4,
     hintAfter: 99,
-    cellMin: 24,
-    cellMinLg: 32,
+    cellMin: 20,
+    cellMinLg: 26,
     diamondChance: 0.7,
     diamondSec: 10,
   },
@@ -43,8 +43,8 @@ const DIFFICULTY_SETTINGS = {
     maxMistakes: 10,
     starCount: 5,
     hintAfter: 99,
-    cellMin: 20,
-    cellMinLg: 28,
+    cellMin: 16,
+    cellMinLg: 22,
     diamondChance: 0.65,
     diamondSec: 10,
   },
@@ -465,6 +465,7 @@ export default function MleoMazeEngine({
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
   const boardRef = useRef(null);
+  const mazeLayoutRef = useRef(null);
   const swipeRef = useRef({ x: 0, y: 0, active: false });
   const hintTimerRef = useRef(null);
   const msgTimerRef = useRef(null);
@@ -500,6 +501,7 @@ export default function MleoMazeEngine({
   const [bonusDiamond, setBonusDiamond] = useState(null);
   const [diamondBanner, setDiamondBanner] = useState(false);
   const [wallHitCell, setWallHitCell] = useState(null);
+  const [cellPx, setCellPx] = useState(24);
 
   useEffect(() => {
     if (initialDifficulty) setDifficulty(initialDifficulty);
@@ -516,6 +518,36 @@ export default function MleoMazeEngine({
 
   const settings = DIFFICULTY_SETTINGS[difficulty] || DIFFICULTY_SETTINGS.medium;
   const isEasy = difficulty === "easy";
+
+  useEffect(() => {
+    if (showIntro || !gameRunning) return undefined;
+    const area = mazeLayoutRef.current;
+    if (!area) return undefined;
+
+    const compute = () => {
+      const rect = area.getBoundingClientRect();
+      const desktopSide = window.matchMedia("(min-width: 768px)").matches;
+      const dpadW = desktopSide ? 208 : 0;
+      const dpadH = desktopSide ? 0 : 196;
+      const availW = Math.max(100, rect.width - dpadW - 8);
+      const availH = Math.max(100, rect.height - dpadH - 4);
+      const fromW = availW / settings.cols;
+      const fromH = availH / settings.rows;
+      const cap = desktopSide ? settings.cellMinLg : settings.cellMin;
+      setCellPx(Math.max(14, Math.min(cap, Math.floor(Math.min(fromW, fromH)))));
+    };
+
+    compute();
+    const ro = new ResizeObserver(compute);
+    ro.observe(area);
+    window.addEventListener("resize", compute);
+    window.addEventListener("orientationchange", compute);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", compute);
+      window.removeEventListener("orientationchange", compute);
+    };
+  }, [showIntro, gameRunning, settings.cols, settings.rows, settings.cellMin, settings.cellMinLg, mazeId]);
 
   const flashMsg = useCallback((text, ms = 1400) => {
     setStatusMsg(text);
@@ -851,8 +883,8 @@ export default function MleoMazeEngine({
             {mazeId ? ` · מבוך #${mazeId}` : ""}
           </p>
 
-          <div className="relative z-0 mx-auto mt-[5.2rem] flex h-full min-h-0 w-full max-w-[1180px] flex-1 flex-col overflow-hidden rounded-lg border-4 border-yellow-400 bg-gradient-to-b from-emerald-950/80 to-slate-950 shadow-lg sm:mt-[5.6rem]">
-            <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden bg-gradient-to-b from-emerald-950/35 via-slate-950 to-slate-900 p-1.5 sm:p-3">
+          <div className="relative z-0 mx-auto mt-16 flex h-full min-h-0 w-full max-w-[1180px] flex-1 flex-col overflow-hidden rounded-lg border-4 border-yellow-400 bg-gradient-to-b from-emerald-950/80 to-slate-950 shadow-lg sm:mt-[4.25rem] md:mt-14">
+            <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden bg-gradient-to-b from-emerald-950/35 via-slate-950 to-slate-900 p-1 sm:p-2">
               {statusMsg ? (
                 <div className="pointer-events-none absolute left-1/2 top-2 z-30 -translate-x-1/2 rounded-xl bg-orange-600/95 px-4 py-2 text-sm font-bold text-white shadow-lg">
                   {statusMsg}
@@ -865,10 +897,13 @@ export default function MleoMazeEngine({
                 </div>
               ) : null}
 
-              <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-2 max-md:landscape:flex-row max-md:landscape:gap-3 md:flex-row md:gap-4">
+              <div
+                ref={mazeLayoutRef}
+                className="flex min-h-0 flex-1 flex-col items-center justify-center gap-1 max-md:landscape:flex-row max-md:landscape:gap-2 md:flex-row md:gap-3 md:overflow-hidden"
+              >
                 <div
                   ref={boardRef}
-                  className="mx-auto w-full max-w-[min(96vw,760px)] shrink-0 rounded-2xl border-[3px] border-amber-700/50 bg-amber-950/20 p-1 shadow-inner sm:max-w-[min(88vw,820px)] sm:p-2 md:mx-0"
+                  className="mx-auto w-fit max-w-full shrink-0 rounded-2xl border-[3px] border-amber-700/50 bg-amber-950/20 p-1 shadow-inner sm:p-1.5 md:mx-0"
                   style={{ touchAction: "manipulation" }}
                   onTouchStart={(e) => {
                     const t = e.touches[0];
@@ -881,9 +916,10 @@ export default function MleoMazeEngine({
                   }}
                 >
                   <div
-                    className="grid gap-[3px] sm:gap-1"
+                    className="grid gap-[2px] sm:gap-1"
+                    dir="ltr"
                     style={{
-                      gridTemplateColumns: `repeat(${settings.cols}, minmax(0, 1fr))`,
+                      gridTemplateColumns: `repeat(${settings.cols}, ${cellPx}px)`,
                     }}
                   >
                   {maze.map((row, r) =>
@@ -898,7 +934,7 @@ export default function MleoMazeEngine({
                       return (
                         <div
                           key={`${r}-${c}`}
-                          className={`relative flex aspect-square items-center justify-center overflow-hidden rounded-md sm:rounded-lg ${
+                          className={`relative flex items-center justify-center overflow-hidden rounded-md sm:rounded-lg ${
                             isWall
                               ? isWallHitCell
                                 ? "bg-gradient-to-br from-orange-600/95 via-red-700/90 to-red-900/95 shadow-[inset_0_0_10px_rgba(251,146,60,0.5)] ring-2 ring-orange-400 animate-[mazeWallHit_0.4s_ease-in-out]"
@@ -918,8 +954,8 @@ export default function MleoMazeEngine({
                                         : "bg-gradient-to-br from-teal-500/50 via-emerald-400/40 to-cyan-600/35 ring-1 ring-teal-300/30 shadow-[inset_0_1px_4px_rgba(255,255,255,0.1)]"
                           }`}
                           style={{
-                            minHeight: `clamp(${settings.cellMin}px, 4vw, ${settings.cellMinLg}px)`,
-                            minWidth: 0,
+                            width: cellPx,
+                            height: cellPx,
                           }}
                         >
                           {isWall ? (

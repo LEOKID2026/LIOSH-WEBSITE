@@ -32,13 +32,15 @@
 import {
   waitForSessionStart,
   waitForAnswerSave,
-  waitForSessionFinish,
+  clickStopAndConfirmSessionFinish,
   readAnswerIsCorrect,
   buildAnsweredQuestionEntry,
   tallyCorrectness,
   shortText,
   selectCountablePracticeMode,
   createPracticeEvidenceTracker,
+  selectTopicRobustly,
+  clickMcqOptionRobustly,
 } from "../learning-session-helpers.mjs";
 import { probeCurrentQuestion } from "../mcq-fiber-probe.mjs";
 import { pickMcqIndex, pickCorrectnessIntent } from "../answer-profiles.mjs";
@@ -141,57 +143,6 @@ function pickTypedAnswer({ probe, scenario }) {
 }
 
 /**
- * Robust MCQ click for English.
- *
- * The English page animates MCQ buttons on each new question render
- * (entrance scale/fade). During the animation the button node IS in the
- * DOM and `disabled=false`, but its bounding rect is zero-sized or it is
- * clipped by the animation container, causing Playwright's click action to
- * time-out waiting for "getByTestId" to become clickable. This is especially
- * pronounced immediately after a typing→MCQ question transition because
- * React commits the new MCQ question asynchronously after the typing UI
- * is torn down.
- *
- * Fix: use waitForFunction with `getBoundingClientRect()` to ensure the
- * button has non-zero dimensions (animation complete) before attempting
- * the click.
- */
-async function clickMcqRobustly({ page, pickedIndex, log, questionIndex }) {
-  const testid = `${MCQ_PREFIX}${pickedIndex}`;
-  const target = page.getByTestId(testid);
-
-  // Wait until the specific button we're about to click has finished its
-  // entrance animation: present in DOM, not disabled, and has non-zero
-  // rendered dimensions. 10 s is generous; normal animations take <500 ms.
-  await page
-    .waitForFunction(
-      (tid) => {
-        const btn = document.querySelector(`[data-testid="${tid}"]`);
-        if (!btn || btn.disabled) return false;
-        const rect = btn.getBoundingClientRect();
-        return rect.width > 0 && rect.height > 0;
-      },
-      testid,
-      { timeout: 10_000 }
-    )
-    .catch(() => {});
-
-  await target.scrollIntoViewIfNeeded({ timeout: 5_000 }).catch(() => {});
-
-  try {
-    await target.click({ timeout: 5_000 });
-    return;
-  } catch (firstError) {
-    log(
-      `${SUBJECT_LABEL}: q${questionIndex} normal MCQ click failed (${
-        String(firstError?.message || "").slice(0, 100)
-      }); falling back to native DOM .click() via evaluate`
-    );
-  }
-  await target.evaluate((el) => el.click(), undefined, { timeout: 10_000 });
-}
-
-/**
  * Retry fiber probe until the MCQ button labels match the fiber's question
  * state (guards against React render-lag on english-master question transitions).
  */
@@ -255,18 +206,17 @@ export async function runEnglishScenario({
   const playerName = (await playerNameDiv.innerText().catch(() => "")).trim();
 
   if (scenario.topic) {
-    const topicSelect = page.getByTestId(`${SUBJECT}-topic-select`);
-    if (await topicSelect.count()) {
-      try {
-        await topicSelect.selectOption({ value: scenario.topic });
-        log(`${SUBJECT_LABEL}: selected topic=${scenario.topic}`);
-      } catch (e) {
-        log(
-          `${SUBJECT_LABEL}: topic select to '${scenario.topic}' failed (${e?.message}); ` +
-            `keeping default selection.`
-        );
-      }
-    }
+    await selectTopicRobustly({
+      page,
+      baseUrl,
+      path: PATH,
+      topicSelectTestid: `${SUBJECT}-topic-select`,
+      playerNameTestid: `${SUBJECT}-player-name`,
+      topic: scenario.topic,
+      subjectLabel: SUBJECT_LABEL,
+      log,
+      required: true,
+    });
   }
 
   await screenshotter(`02-${SUBJECT}-master-ready`);
@@ -373,7 +323,13 @@ export async function runEnglishScenario({
         subject: SUBJECT_LABEL,
         questionIndex,
         doClick: async () => {
-          await clickMcqRobustly({ page, pickedIndex, log, questionIndex });
+          await clickMcqOptionRobustly({
+            page,
+            mcqTestid: `${MCQ_PREFIX}${pickedIndex}`,
+            log,
+            subjectLabel: SUBJECT_LABEL,
+            questionIndex,
+          });
         },
       });
 
@@ -523,11 +479,11 @@ export async function runEnglishScenario({
 
   await screenshotter(`03-${SUBJECT}-master-questions-complete`);
 
-  const stopButton = page.getByTestId("learning-stop-game");
-  await stopButton.waitFor({ state: "visible", timeout: 10_000 });
-  log(`${SUBJECT_LABEL}: clicking learning-stop-game (fires session/finish)`);
-  await stopButton.click();
-  await waitForSessionFinish({ page, log, subject: SUBJECT_LABEL });
+  await clickStopAndConfirmSessionFinish({
+    page,
+    log,
+    subject: SUBJECT_LABEL,
+  });
 
   await screenshotter(`04-${SUBJECT}-master-after-stop`);
 

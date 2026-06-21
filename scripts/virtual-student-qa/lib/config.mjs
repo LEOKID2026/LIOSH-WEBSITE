@@ -473,10 +473,10 @@ export function assertProductionRealisticPacingGuard({
   }
 }
 
-/** Max concurrent AAA students in parallel daily orchestrator. */
+/** Max concurrent AAA students in parallel daily orchestrator (default 4 for stability). */
 export function resolveParallelStudentConcurrency() {
   tryLoadDotenvFiles();
-  const raw = String(process.env.VIRTUAL_STUDENT_PARALLEL_STUDENTS || "12").trim();
+  const raw = String(process.env.VIRTUAL_STUDENT_PARALLEL_STUDENTS || "4").trim();
   const num = Number(raw);
-  return Number.isFinite(num) && num > 0 ? Math.min(12, Math.floor(num)) : 12;
+  return Number.isFinite(num) && num > 0 ? Math.min(12, Math.floor(num)) : 4;
 }

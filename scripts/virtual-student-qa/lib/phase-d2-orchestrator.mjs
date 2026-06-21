@@ -81,6 +81,8 @@ import { runEnglishScenario } from "./subject-drivers/english-master.mjs";
 import { runScienceScenario } from "./subject-drivers/science-master.mjs";
 import { runMoledetGeographyScenario } from "./subject-drivers/moledet-geography-master.mjs";
 import { buildPhaseD2StudentRecords } from "../scenarios/phase-d2-suite.mjs";
+import { resolveParallelStudentConcurrency } from "./config.mjs";
+import { runWithConcurrency } from "./learning-session-helpers.mjs";
 
 const DRIVER_BY_SUBJECT = {
   math: runMathScenario,
@@ -704,13 +706,13 @@ export async function runPhaseD2Suite({
   const runnableRecords = records.filter((r) => r.status !== "blocked");
   const runnableCount = runnableRecords.length;
   const parallelRunStartedAt = Date.now();
+  const parallelConcurrency = resolveParallelStudentConcurrency();
   log?.(
-    `phase-d2: parallel student execution — ${runnableCount} worker(s) ` +
-      `(each with own parent+student browser contexts, Promise.all)`
+    `phase-d2: parallel student execution — ${runnableCount} worker(s), ` +
+      `concurrency=${parallelConcurrency} (own parent+student browser contexts)`
   );
 
-  await Promise.all(
-    records.map(async (record, i) => {
+  await runWithConcurrency(records, parallelConcurrency, async (record, i) => {
     if (record.status === "blocked") {
       log?.(`phase-d2: skipping ${record.label} (status=blocked).`);
       return;
@@ -1007,6 +1009,15 @@ export async function runPhaseD2Suite({
           sessionResult.error = `driver-error: ${
             driverError?.message || driverError
           }`;
+          const counts = observer.summarizeSince(observerMark);
+          sessionResult.tier1Counts = counts;
+          sessionResult.tier1 = verifyTier1({
+            networkSummary: counts,
+            expectedAnswers: 0,
+          });
+          sessionResult.tier1.sessionId =
+            counts["/api/learning/session/start"]?.sessionId ||
+            sessionResult.tier1.sessionId;
           log?.(
             `phase-d2: ${record.label} session${s + 1} FAILED — ${sessionResult.error}`
           );
@@ -1015,6 +1026,18 @@ export async function runPhaseD2Suite({
             .catch(() => {});
         } finally {
           sessionResult.endedAt = Date.now();
+          const orphanSessionId =
+            sessionResult.tier1?.sessionId ||
+            sessionResult.tier1Counts?.["/api/learning/session/start"]?.sessionId ||
+            null;
+          if (!sessionResult.completed && orphanSessionId) {
+            sessionResult.orphanRisk = true;
+            sessionResult.orphanSessionId = orphanSessionId;
+            log?.(
+              `phase-d2: ${record.label} session${s + 1} ORPHAN-RISK ` +
+                `sessionId=${orphanSessionId} — finish/stamp incomplete; wall-clock row may remain`
+            );
+          }
           record.sessionResults.push(sessionResult);
         }
 
@@ -1132,8 +1155,7 @@ export async function runPhaseD2Suite({
     record.runWindow.workerWallClockMs = workerWallClockMs;
     record.runWindow.workerStartedAt = new Date(workerStartedAt).toISOString();
     record.runWindow.workerEndedAt = new Date(workerEndedAt).toISOString();
-    })
-  );
+  });
 
   const parallelRunEndedAt = Date.now();
   const actualParallelWallClockMs = parallelRunEndedAt - parallelRunStartedAt;

@@ -45,6 +45,7 @@ export default function MleoFlyerEngine({ autoStart = false, onSessionEnd }) {
 
   // press-and-hold (mobile) – בלי בוסט חד
   const isFlyingRef = useRef(false);
+  const keyFlyRef = useRef(false);
 
   // timing (dt)
   const lastTimeRef = useRef(performance.now());
@@ -69,7 +70,7 @@ export default function MleoFlyerEngine({ autoStart = false, onSessionEnd }) {
     if (!wrapper) return;
 
     const isUI = (el) =>
-      el.closest?.("input, textarea, select, button, [role='textbox'], [contenteditable='true']");
+      el.closest?.("a, input, textarea, select, button, [role='textbox'], [contenteditable='true']");
 
     const preventMenu = (e) => { if (!isUI(e.target)) e.preventDefault(); };
     const preventSelection = (e) => { if (!isUI(e.target)) e.preventDefault(); };
@@ -254,9 +255,10 @@ export default function MleoFlyerEngine({ autoStart = false, onSessionEnd }) {
     // גרביטציה עדינה
     dog.vy += gravityRef.current * scale;
 
-    // press-and-hold – דחיפה רציפה ועדינה בלבד
-    if (isFlyingRef.current) {
-      dog.vy += (flapPowerRef.current * 0.42) * scale; // 0.38–0.5 לפי טעם
+    // press-and-hold – דחיפה רציפה (עכבר/מגע + מקלדת)
+    if (isFlyingRef.current || keyFlyRef.current) {
+      const lift = keyFlyRef.current && !isFlyingRef.current ? 0.52 : 0.42;
+      dog.vy += (flapPowerRef.current * lift) * scale;
     }
 
     // חיכוך/החלקה
@@ -323,55 +325,57 @@ export default function MleoFlyerEngine({ autoStart = false, onSessionEnd }) {
   }
 
   // ─────────────────────────────────────────────────────────────────────────────
-  // Controls – press-and-hold (no burst) + keyboard (בוסט עדין לנייח בלבד)
+  // Controls – press-and-hold on canvas + keyboard hold (Space / ArrowUp)
   useEffect(() => {
     const isUI = (el) =>
-      el.closest?.("input, textarea, select, button, [role='textbox'], [contenteditable='true']");
-
-    // מקלדת: בוסט עדין. אם תרצה לבטל – תגיד ואסיר.
-    const flapOnce = () => {
-      if (!runningRef.current) return;
-      dogRef.current.vy += flapPowerRef.current * 0.35;
-      const s = assetsRef.current.sounds.flap;
-      if (s) { try { s.currentTime = 0; s.play(); } catch(_) {} }
-    };
+      el.closest?.("a, input, textarea, select, button, [role='textbox'], [contenteditable='true']");
 
     const onKeyDown = (e) => {
       if (isUI(e.target)) return;
       if (e.code === "Space" || e.code === "ArrowUp") {
         e.preventDefault();
-        flapOnce();
+        if (!keyFlyRef.current && runningRef.current) {
+          dogRef.current.vy += flapPowerRef.current * 0.55;
+        }
+        keyFlyRef.current = true;
       }
+    };
+
+    const onKeyUp = (e) => {
+      if (e.code === "Space" || e.code === "ArrowUp") {
+        keyFlyRef.current = false;
+      }
+    };
+
+    const onPointerDown = (e) => {
+      if (isUI(e.target)) return;
+      if (e.target !== canvasRef.current) return;
+      e.preventDefault();
+      isFlyingRef.current = true;
+      canvasRef.current?.setPointerCapture?.(e.pointerId);
+    };
+    const onPointerUp = () => {
+      isFlyingRef.current = false;
     };
 
     const canvas = canvasRef.current;
 
-    // מובייל: בלי בוסט חד – רק מצב לחוץ
-    const onPointerDown = (e) => {
-      if (isUI(e.target)) return;
-      e.preventDefault();
-      isFlyingRef.current = true;
-      canvas?.setPointerCapture?.(e.pointerId);
-    };
-    const onPointerUp = (e) => {
-      isFlyingRef.current = false;
-      canvas?.releasePointerCapture?.(e.pointerId);
-    };
-
-    document.addEventListener("keydown", onKeyDown);
-    document.addEventListener("pointerdown", onPointerDown, { passive: false });
-    document.addEventListener("pointerup", onPointerUp);
-    document.addEventListener("pointercancel", onPointerUp);
-    document.addEventListener("pointerleave", onPointerUp);
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("keyup", onKeyUp);
+    canvas?.addEventListener("pointerdown", onPointerDown, { passive: false });
+    canvas?.addEventListener("pointerup", onPointerUp);
+    canvas?.addEventListener("pointercancel", onPointerUp);
+    canvas?.addEventListener("pointerleave", onPointerUp);
 
     return () => {
-      document.removeEventListener("keydown", onKeyDown);
-      document.removeEventListener("pointerdown", onPointerDown);
-      document.removeEventListener("pointerup", onPointerUp);
-      document.removeEventListener("pointercancel", onPointerUp);
-      document.removeEventListener("pointerleave", onPointerUp);
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("keyup", onKeyUp);
+      canvas?.removeEventListener("pointerdown", onPointerDown);
+      canvas?.removeEventListener("pointerup", onPointerUp);
+      canvas?.removeEventListener("pointercancel", onPointerUp);
+      canvas?.removeEventListener("pointerleave", onPointerUp);
     };
-  }, []);
+  }, [gameRunning, showIntro]);
 
   // ─────────────────────────────────────────────────────────────────────────────
   // Responsive canvas

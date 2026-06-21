@@ -52,13 +52,15 @@
 import {
   waitForSessionStart,
   waitForAnswerSave,
-  waitForSessionFinish,
+  clickStopAndConfirmSessionFinish,
   readAnswerIsCorrect,
   buildAnsweredQuestionEntry,
   tallyCorrectness,
   shortText,
   selectCountablePracticeMode,
   createPracticeEvidenceTracker,
+  selectTopicRobustly,
+  clickMcqOptionRobustly,
 } from "../learning-session-helpers.mjs";
 import { probeCurrentQuestion } from "../mcq-fiber-probe.mjs";
 import { pickMcqIndex, pickCorrectnessIntent } from "../answer-profiles.mjs";
@@ -281,27 +283,6 @@ async function skipAudioRecordedManual({ page, log, questionIndex }) {
   return { ok: true };
 }
 
-async function clickMcqRobustly({
-  page,
-  pickedIndex,
-  log,
-  questionIndex,
-}) {
-  const target = page.getByTestId(`${MCQ_PREFIX}${pickedIndex}`);
-  await target.waitFor({ state: "visible", timeout: 10_000 }).catch(() => {});
-  await target.scrollIntoViewIfNeeded({ timeout: 5_000 }).catch(() => {});
-  try {
-    await target.click({ timeout: 5_000 });
-    return;
-  } catch (firstError) {
-    log(
-      `${SUBJECT_LABEL}: q${questionIndex} normal click failed (${String(firstError?.message || "").slice(0, 100)}); ` +
-        `falling back to native DOM .click() via evaluate`
-    );
-  }
-  await target.evaluate((el) => el.click(), undefined, { timeout: 10_000 });
-}
-
 async function readStemText({ page }) {
   const primary = page.getByTestId(`${SUBJECT}-question-stem`);
   if (await primary.count()) {
@@ -337,18 +318,17 @@ export async function runHebrewScenario({ page, baseUrl, scenario, log, screensh
   const playerName = (await playerNameDiv.innerText().catch(() => "")).trim();
 
   if (scenario.topic) {
-    const topicSelect = page.getByTestId(`${SUBJECT}-topic-select`);
-    if (await topicSelect.count()) {
-      try {
-        await topicSelect.selectOption({ value: scenario.topic });
-        log(`${SUBJECT_LABEL}: selected topic=${scenario.topic}`);
-      } catch (e) {
-        log(
-          `${SUBJECT_LABEL}: topic select to '${scenario.topic}' failed (${e?.message}); ` +
-            `keeping default selection.`
-        );
-      }
-    }
+    await selectTopicRobustly({
+      page,
+      baseUrl,
+      path: PATH,
+      topicSelectTestid: `${SUBJECT}-topic-select`,
+      playerNameTestid: `${SUBJECT}-player-name`,
+      topic: scenario.topic,
+      subjectLabel: SUBJECT_LABEL,
+      log,
+      required: true,
+    });
   }
 
   await screenshotter(`02-${SUBJECT}-master-ready`);
@@ -490,7 +470,13 @@ export async function runHebrewScenario({ page, baseUrl, scenario, log, screensh
         subject: SUBJECT_LABEL,
         questionIndex,
         doClick: async () => {
-          await clickMcqRobustly({ page, pickedIndex, log, questionIndex });
+          await clickMcqOptionRobustly({
+            page,
+            mcqTestid: `${MCQ_PREFIX}${pickedIndex}`,
+            log,
+            subjectLabel: SUBJECT_LABEL,
+            questionIndex,
+          });
         },
       });
 
@@ -602,11 +588,11 @@ export async function runHebrewScenario({ page, baseUrl, scenario, log, screensh
 
   await screenshotter(`03-${SUBJECT}-master-questions-complete`);
 
-  const stopButton = page.getByTestId("learning-stop-game");
-  await stopButton.waitFor({ state: "visible", timeout: 10_000 });
-  log(`${SUBJECT_LABEL}: clicking learning-stop-game (fires session/finish)`);
-  await stopButton.click();
-  await waitForSessionFinish({ page, log, subject: SUBJECT_LABEL });
+  await clickStopAndConfirmSessionFinish({
+    page,
+    log,
+    subject: SUBJECT_LABEL,
+  });
 
   await screenshotter(`04-${SUBJECT}-master-after-stop`);
 

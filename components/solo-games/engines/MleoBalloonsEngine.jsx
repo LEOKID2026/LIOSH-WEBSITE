@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useSoloBoardTap, useSoloAimKeyboard, SoloAimCrosshair } from "./solo-v2-ui.jsx";
+import { useSoloBoardTap } from "./solo-v2-ui.jsx";
 
 const BG_BALLOONS = "/images/game-balloons-bg.png";
 const IMG_BOMB = "/images/obstacle1.png";
@@ -261,11 +261,6 @@ export default function MleoBalloonsEngine({ autoStart = false, onSessionEnd }) 
 
   useSoloBoardTap(boardRef, captureRef, runningRef, handleBoardTap, gameRunning && !gameOver);
 
-  const aim = useSoloAimKeyboard(gameRunning && !gameOver, {
-    boardRef,
-    onFire: handleBoardTap,
-  });
-
   const tick = () => {
     if (!runningRef.current) return;
     const cfg = levelConfig(levelRef.current);
@@ -363,30 +358,21 @@ export default function MleoBalloonsEngine({ autoStart = false, onSessionEnd }) 
 
   const balloonVisual = (kind) => {
     if (kind === "bomb") {
-      return <img src={IMG_BOMB} alt="" className="pointer-events-none h-11 w-11 object-contain" draggable={false} />;
+      return <img src={IMG_BOMB} alt="" className="pointer-events-none h-14 w-14 object-contain drop-shadow-sm" draggable={false} />;
     }
     if (kind === "gold") {
-      return <span className="pointer-events-none text-3xl drop-shadow-md">⭐</span>;
+      return <span className="pointer-events-none text-4xl drop-shadow-sm">⭐</span>;
     }
     if (kind === "diamond") {
-      return <img src={IMG_DIAMOND} alt="" className="pointer-events-none h-11 w-11 object-contain" draggable={false} />;
+      return <img src={IMG_DIAMOND} alt="" className="pointer-events-none h-14 w-14 object-contain drop-shadow-sm" draggable={false} />;
     }
     if (kind === "clock") {
-      return <span className="pointer-events-none text-3xl drop-shadow-md">⏱️</span>;
+      return <span className="pointer-events-none text-4xl drop-shadow-sm">⏱️</span>;
     }
     if (kind === "heart") {
-      return <span className="pointer-events-none text-3xl drop-shadow-md">💖</span>;
+      return <span className="pointer-events-none text-4xl drop-shadow-sm">💖</span>;
     }
-    return <span className="pointer-events-none text-4xl drop-shadow-md">🎈</span>;
-  };
-
-  const balloonRing = (kind) => {
-    if (kind === "bomb") return "ring-4 ring-red-500/80 from-gray-700 to-gray-900";
-    if (kind === "gold") return "ring-4 ring-amber-200 from-amber-300 to-yellow-500";
-    if (kind === "diamond") return "ring-4 ring-cyan-200 from-sky-300 to-indigo-500";
-    if (kind === "clock") return "ring-4 ring-purple-200 from-violet-400 to-purple-600";
-    if (kind === "heart") return "ring-4 ring-rose-200 from-pink-400 to-rose-500";
-    return "ring-4 ring-white/60 from-sky-400 to-blue-600";
+    return <span className="pointer-events-none text-5xl drop-shadow-sm">🎈</span>;
   };
 
   return (
@@ -424,7 +410,7 @@ export default function MleoBalloonsEngine({ autoStart = false, onSessionEnd }) 
             {balloons.map((b) => (
               <div
                 key={b.id}
-                className={`pointer-events-none absolute flex h-[72px] w-[72px] -translate-x-1/2 items-center justify-center rounded-full bg-gradient-to-b shadow-xl ${balloonRing(b.kind)}`}
+                className="pointer-events-none absolute flex h-[72px] w-[72px] -translate-x-1/2 items-center justify-center"
                 style={{ left: `${b.x}%`, bottom: `${b.y}%` }}
               >
                 {balloonVisual(b.kind)}
@@ -447,10 +433,6 @@ export default function MleoBalloonsEngine({ autoStart = false, onSessionEnd }) 
                   רמה {level}!
                 </span>
               </div>
-            ) : null}
-
-            {gameRunning && !gameOver ? (
-              <SoloAimCrosshair xPct={aim.xPct} yPct={aim.yPct} />
             ) : null}
 
             <div

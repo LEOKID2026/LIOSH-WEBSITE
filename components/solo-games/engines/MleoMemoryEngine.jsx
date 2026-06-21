@@ -3,7 +3,10 @@ import confetti from "canvas-confetti";
 import RewardCardImage from "../../student/rewards/RewardCardImage.jsx";
 import { buildMemoryDeckFromShop } from "../../../lib/solo-games/memory-shop-cards.client.js";
 import { useSoloGameShellUi } from "../../../hooks/solo-games/useSoloGameShellUi.js";
-import { useSoloGameKeyboard } from "./solo-v2-ui.jsx";
+import { useSoloGameKeyboard, loadImage } from "./solo-v2-ui.jsx";
+
+const SHOP_CARD_BACK = "/rewards/cards/common/card_back.webp";
+const MISMATCH_HOLD_MS = 1200;
 
 /**
  * @param {{ autoStart?: boolean, initialDifficulty?: string, onSessionEnd?: (metrics: object) => void, onPreGameUiChange?: (active: boolean) => void }} props
@@ -36,6 +39,7 @@ export default function MleoMemoryEngine({
   const [startedPlaying, setStartedPlaying] = useState(false);
   const [didWin, setDidWin] = useState(false);
   const [focusIndex, setFocusIndex] = useState(0);
+  const [keyboardNavActive, setKeyboardNavActive] = useState(false);
   const scoreRef = useRef(0);
   const { SG, pageBgStyle } = useSoloGameShellUi();
   const isPreGame = deckLoading || deckError;
@@ -95,6 +99,7 @@ export default function MleoMemoryEngine({
     setTimerRunning(false);
     setStartedPlaying(false);
     setFocusIndex(0);
+    setKeyboardNavActive(false);
     setCards([]);
     setGameRunning(false);
 
@@ -110,6 +115,7 @@ export default function MleoMemoryEngine({
     setCards(result.deck);
     setGameRunning(true);
     setDeckLoading(false);
+    void Promise.all([loadImage(SHOP_CARD_BACK), ...result.deck.map((c) => loadImage(c.src))]);
   }
 
   useEffect(() => {
@@ -163,6 +169,7 @@ export default function MleoMemoryEngine({
 
   function handleFlip(card) {
     if (gameOver || !gameRunning || deckLoading) return;
+    setKeyboardNavActive(false);
     if (!startedPlaying) {
       setStartedPlaying(true);
       setTimerRunning(true);
@@ -180,15 +187,20 @@ export default function MleoMemoryEngine({
 
       if (card1?.pairKey && card1.pairKey === card2?.pairKey) {
         setMatched((prev) => [...prev, first, second]);
+        setFlipped([]);
       } else {
         setScore((s) => {
           const next = Math.max(0, s - 10);
           scoreRef.current = next;
           return next;
         });
+        const started = Date.now();
+        const closeAt = started + MISMATCH_HOLD_MS;
+        void Promise.all([loadImage(card1?.src), loadImage(card2?.src)]).then(() => {
+          const delay = Math.max(0, closeAt - Date.now());
+          window.setTimeout(() => setFlipped([]), delay);
+        });
       }
-
-      setTimeout(() => setFlipped([]), 1200);
     }
   }
 
@@ -207,6 +219,7 @@ export default function MleoMemoryEngine({
   );
 
   useSoloGameKeyboard(gameRunning && !gameOver && !showIntro && !deckLoading && !deckError, (e) => {
+    setKeyboardNavActive(true);
     if (e.code === "ArrowRight") {
       setFocusIndex((i) => Math.min(totalCards - 1, i + 1));
       return true;
@@ -294,15 +307,16 @@ export default function MleoMemoryEngine({
               >
                 {cards.map((card, idx) => {
                   const isFlipped = flipped.includes(card.id) || matched.includes(card.id);
-                  const isFocused = idx === focusIndex;
+                  const isMatched = matched.includes(card.id);
+                  const isFocused = keyboardNavActive && idx === focusIndex;
                   return (
                     <button
                       key={card.id}
                       type="button"
                       onClick={() => handleFlip(card)}
                       className={`relative flex cursor-pointer items-center justify-center overflow-hidden rounded-lg border-2 transition hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 ${
-                        isFocused ? "ring-4 ring-sky-400" : "border-yellow-400/30"
-                      } ${isFlipped ? "border-yellow-300/70 bg-slate-900/40" : "border-amber-500/40 bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700"}`}
+                        isFocused ? "ring-4 ring-sky-400" : isMatched ? "border-emerald-400/80" : "border-yellow-400/30"
+                      } ${isFlipped ? "border-yellow-300/70 bg-slate-900/40" : "border-amber-500/40 bg-slate-900"}`}
                       style={{ width: `${cardWidth}px`, height: `${cardWidth * 1.35}px` }}
                       aria-label={isFlipped ? card.nameHe || "קלף פתוח" : "קלף סגור"}
                     >
@@ -311,20 +325,18 @@ export default function MleoMemoryEngine({
                           src={card.src}
                           preBaked={card.preBaked}
                           size="tile"
-                          fit="cover"
+                          fit="contain"
                           loading="eager"
                           alt={card.nameHe || "קלף"}
                           wrapperClassName="h-[92%] w-[88%]"
                         />
                       ) : (
-                        <div className="flex h-[92%] w-[88%] flex-col items-center justify-center rounded-md bg-gradient-to-br from-amber-500/90 via-yellow-400/95 to-amber-600/90 shadow-inner ring-1 ring-amber-100/30">
-                          <img
-                            src="/images/leo-logo.png"
-                            alt=""
-                            className="h-[42%] w-[42%] object-contain opacity-90 drop-shadow"
-                            draggable={false}
-                          />
-                        </div>
+                        <img
+                          src={SHOP_CARD_BACK}
+                          alt=""
+                          className="h-full w-full object-cover"
+                          draggable={false}
+                        />
                       )}
                     </button>
                   );

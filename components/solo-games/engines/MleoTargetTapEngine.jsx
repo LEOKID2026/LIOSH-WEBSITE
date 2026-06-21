@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { useSoloBoardTap, useSoloAimKeyboard, SoloAimCrosshair } from "./solo-v2-ui.jsx";
-const BG_TARGET = "/images/game-park.png";
+import { useSoloBoardTap } from "./solo-v2-ui.jsx";
+const BG_TARGET = "/images/game-day.png";
 const IMG_COIN = "/images/coin.png";
 const IMG_DIAMOND = "/images/diamond.png";
 const IMG_STAR = "/images/candy/star.png";
@@ -275,11 +275,6 @@ export default function MleoTargetTapEngine({
 
   useSoloBoardTap(boardRef, captureRef, runningRef, handleBoardTap, gameRunning && !gameOver);
 
-  const aim = useSoloAimKeyboard(gameRunning && !gameOver, {
-    boardRef,
-    onFire: handleBoardTap,
-  });
-
   const startGame = () => {
     const diff = difficultyRef.current;
     const cfg = levelConfig(1, diff);
@@ -357,13 +352,6 @@ export default function MleoTargetTapEngine({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoStart]);
 
-  const targetRing = (kind) => {
-    if (kind === "bomb") return "ring-4 ring-red-500/90 bg-gray-900/75";
-    if (kind === "diamond") return "ring-4 ring-cyan-200 bg-sky-500/25";
-    if (kind === "star") return "ring-4 ring-amber-200 bg-amber-500/25";
-    return "ring-4 ring-yellow-300 bg-yellow-500/20";
-  };
-
   const targetImg = (kind) => {
     if (kind === "bomb") return IMG_BOMB;
     if (kind === "diamond") return IMG_DIAMOND;
@@ -395,9 +383,9 @@ export default function MleoTargetTapEngine({
 
           <div
             ref={boardRef}
-            className="relative z-0 mx-auto mt-11 flex h-full min-h-0 w-full max-w-[1180px] flex-1 overflow-hidden rounded-lg border-4 border-yellow-400 bg-black/30 shadow-lg sm:mt-12"
+            className="relative z-0 mx-auto mt-11 flex h-full min-h-0 w-full max-w-[1180px] flex-1 overflow-hidden rounded-lg border-4 border-yellow-400 shadow-lg sm:mt-12"
             style={{
-              backgroundImage: `linear-gradient(to bottom, rgba(255,255,255,0.06), rgba(0,0,0,0.18)), url(${BG_TARGET})`,
+              backgroundImage: `url(${BG_TARGET})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               touchAction: "none",
@@ -406,7 +394,7 @@ export default function MleoTargetTapEngine({
             {targets.map((t) => (
               <div
                 key={t.id}
-                className={`pointer-events-none absolute flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full shadow-xl animate-pulse ${targetRing(t.kind)}`}
+                className="pointer-events-none absolute flex -translate-x-1/2 -translate-y-1/2 items-center justify-center"
                 style={{
                   left: `${t.xPct}%`,
                   top: `${t.yPct}%`,
@@ -417,7 +405,7 @@ export default function MleoTargetTapEngine({
                 <img
                   src={targetImg(t.kind)}
                   alt=""
-                  className="h-[78%] w-[78%] object-contain drop-shadow-md"
+                  className="h-full w-full object-contain drop-shadow-sm"
                   draggable={false}
                 />
               </div>
@@ -439,10 +427,6 @@ export default function MleoTargetTapEngine({
                   רמה {level}!
                 </span>
               </div>
-            ) : null}
-
-            {gameRunning && !gameOver ? (
-              <SoloAimCrosshair xPct={aim.xPct} yPct={aim.yPct} />
             ) : null}
 
             <div

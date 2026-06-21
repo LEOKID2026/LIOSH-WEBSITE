@@ -13,6 +13,9 @@ import { applyStudentSessionFromLogin } from "../../e2e-lib/hebrew-e2e-student-a
 
 const STUDENT_HOME = "/student/home";
 const STUDENT_LOGIN = "/student/login";
+const MAX_UI_AUTH_ATTEMPTS = 3;
+const RETRYABLE_AUTH_RE =
+  /שגיאת רשת|network|timeout|locator\.fill|did not reach \/student\/home/i;
 
 /**
  * @param {object} args
@@ -27,11 +30,36 @@ export async function authenticateStudent({ context, page, account, baseUrl, mod
   if (mode === "api") {
     return authenticateViaApi({ context, page, account, baseUrl, log });
   }
-  return authenticateViaUi({ page, account, baseUrl, log });
+
+  const url = new URL(STUDENT_LOGIN, baseUrl).toString();
+  let lastError = null;
+
+  for (let attempt = 1; attempt <= MAX_UI_AUTH_ATTEMPTS; attempt++) {
+    if (attempt > 1) {
+      log(
+        `student-auth(ui): retry ${attempt}/${MAX_UI_AUTH_ATTEMPTS} after ` +
+          `${String(lastError?.message || lastError).slice(0, 160)}`
+      );
+      await page.waitForTimeout(1200 * attempt);
+      await page.goto(url, { waitUntil: "domcontentloaded" }).catch(() => {});
+    }
+
+    try {
+      return await authenticateViaUi({ page, account, baseUrl, log, loginUrl: url });
+    } catch (error) {
+      lastError = error;
+      const retryable = RETRYABLE_AUTH_RE.test(String(error?.message || error));
+      if (!retryable || attempt >= MAX_UI_AUTH_ATTEMPTS) {
+        throw error;
+      }
+    }
+  }
+
+  throw lastError || new Error("student-auth(ui): authentication failed");
 }
 
-async function authenticateViaUi({ page, account, baseUrl, log }) {
-  const url = new URL(STUDENT_LOGIN, baseUrl).toString();
+async function authenticateViaUi({ page, account, baseUrl, log, loginUrl }) {
+  const url = loginUrl || new URL(STUDENT_LOGIN, baseUrl).toString();
   log(`student-auth(ui): navigate ${url}`);
   await page.goto(url, { waitUntil: "domcontentloaded" });
 
@@ -62,13 +90,14 @@ async function authenticateViaUi({ page, account, baseUrl, log }) {
   if (!identifier) {
     throw new Error("student-auth(ui): account is missing both username and code");
   }
-  await usernameField.first().fill(identifier);
-  await pinField.first().fill(account.pin);
+
+  await usernameField.first().fill(identifier, { timeout: 30_000 });
+  await pinField.first().fill(account.pin, { timeout: 30_000 });
 
   log(`student-auth(ui): submitting login form for label=${account.label}`);
   const navigationPromise = page.waitForURL(
-    (url) => new URL(url).pathname === STUDENT_HOME,
-    { timeout: 30_000 }
+    (targetUrl) => new URL(targetUrl).pathname === STUDENT_HOME,
+    { timeout: 45_000 }
   );
   await submitButton.first().click();
 

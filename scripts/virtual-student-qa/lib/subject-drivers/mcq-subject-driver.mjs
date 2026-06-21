@@ -26,13 +26,15 @@
 import {
   waitForSessionStart,
   waitForAnswerSave,
-  waitForSessionFinish,
+  clickStopAndConfirmSessionFinish,
   readAnswerIsCorrect,
   buildAnsweredQuestionEntry,
   tallyCorrectness,
   shortText,
   selectCountablePracticeMode,
   createPracticeEvidenceTracker,
+  selectTopicRobustly,
+  clickMcqOptionRobustly,
 } from "../learning-session-helpers.mjs";
 import { probeCurrentQuestion } from "../mcq-fiber-probe.mjs";
 import { pickMcqIndex } from "../answer-profiles.mjs";
@@ -74,20 +76,20 @@ export function makeMcqSubjectDriver({ subject, subjectLabel, path }) {
 
     const playerName = (await playerNameDiv.innerText().catch(() => "")).trim();
 
-    // Optional topic selection.
+    // Topic must be selected before session/start — partial sessions with wrong
+    // topic are a common source of wall-clock orphans under parallel load.
     if (scenario.topic) {
-      const topicSelect = page.getByTestId(topicSelectTestid);
-      if (await topicSelect.count()) {
-        try {
-          await topicSelect.selectOption({ value: scenario.topic });
-          log(`${subjectLabel}: selected topic=${scenario.topic}`);
-        } catch (e) {
-          log(
-            `${subjectLabel}: topic select to '${scenario.topic}' failed (${e?.message}); ` +
-              `keeping default selection.`
-          );
-        }
-      }
+      await selectTopicRobustly({
+        page,
+        baseUrl,
+        path,
+        topicSelectTestid,
+        playerNameTestid,
+        topic: scenario.topic,
+        subjectLabel,
+        log,
+        required: true,
+      });
     }
 
     await screenshotter(`02-${subject}-master-ready`);
@@ -236,10 +238,9 @@ export function makeMcqSubjectDriver({ subject, subjectLabel, path }) {
         subject: subjectLabel,
         questionIndex,
         doClick: async () => {
-          await clickMcqRobustly({
+          await clickMcqOptionRobustly({
             page,
-            mcqPrefix,
-            pickedIndex,
+            mcqTestid: `${mcqPrefix}${pickedIndex}`,
             log,
             subjectLabel,
             questionIndex,
@@ -292,11 +293,11 @@ export function makeMcqSubjectDriver({ subject, subjectLabel, path }) {
 
     await screenshotter(`03-${subject}-master-questions-complete`);
 
-    const stopButton = page.getByTestId("learning-stop-game");
-    await stopButton.waitFor({ state: "visible", timeout: 10_000 });
-    log(`${subjectLabel}: clicking learning-stop-game (fires session/finish)`);
-    await stopButton.click();
-    await waitForSessionFinish({ page, log, subject: subjectLabel });
+    await clickStopAndConfirmSessionFinish({
+      page,
+      log,
+      subject: subjectLabel,
+    });
 
     await screenshotter(`04-${subject}-master-after-stop`);
 
@@ -322,59 +323,6 @@ export function makeMcqSubjectDriver({ subject, subjectLabel, path }) {
       evidence,
     };
   };
-}
-
-/**
- * Robust click for MCQ buttons across hebrew/english/science pages.
- *
- * The pages occasionally render brief transitional overlays (animation
- * wrappers, "next question" banners). The science-master page is the
- * worst offender: even a forced Playwright click can land on a translucent
- * sibling that the React tree wires onClick handlers on a deeper button,
- * so the click event never reaches the handler we need.
- *
- * Strategy:
- *   1. Wait for the button to be visible/enabled, scroll into view.
- *   2. Try a standard Playwright click (cheapest, exercises real UX path).
- *   3. On any failure, fall back to a native DOM .click() inside evaluate.
- *      This dispatches a real click event on the actual button node,
- *      bypassing pointer-event interception entirely. React's onClick
- *      delegation will still fire because it listens on bubble at the
- *      document root.
- *   4. If both paths fail we re-throw so the scenario records FAIL.
- */
-async function clickMcqRobustly({
-  page,
-  mcqPrefix,
-  pickedIndex,
-  log,
-  subjectLabel,
-  questionIndex,
-}) {
-  const target = page.getByTestId(`${mcqPrefix}${pickedIndex}`);
-  await target.waitFor({ state: "visible", timeout: 10_000 }).catch(() => {});
-  await target.scrollIntoViewIfNeeded({ timeout: 5_000 }).catch(() => {});
-
-  try {
-    await target.click({ timeout: 5_000 });
-    return;
-  } catch (firstError) {
-    log(
-      `${subjectLabel}: q${questionIndex} normal click failed (${String(firstError?.message || "").slice(0, 100)}); ` +
-        `falling back to native DOM .click() via evaluate`
-    );
-  }
-
-  // Native DOM .click() — bypasses pointer-event checks AND fires React's
-  // synthetic onClick via bubble. If this throws too the original
-  // problem is structural and the runner should record FAIL.
-  await target.evaluate(
-    (el) => {
-      el.click();
-    },
-    undefined,
-    { timeout: 10_000 }
-  );
 }
 
 /**
