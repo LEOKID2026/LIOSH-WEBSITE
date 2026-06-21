@@ -1,5 +1,6 @@
 import { requireArcadeStudent } from "../../../../lib/arcade/server/arcade-auth";
 import { createArcadeRoom } from "../../../../lib/arcade/server/arcade-rooms";
+import { assertStudentCanPlayGame } from "../../../../lib/games/server/game-access.server.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -21,6 +22,16 @@ export default async function handler(req, res) {
       ok: false,
       error: "סוג חדר לא תקין (מותר public או private)",
       code: "bad_request",
+    });
+  }
+
+  const access = await assertStudentCanPlayGame(auth.supabase, auth.studentId, gameKey);
+  if (!access.ok) {
+    return res.status(access.status || 403).json({
+      ok: false,
+      error: access.message,
+      code: access.code,
+      category: access.category,
     });
   }
 

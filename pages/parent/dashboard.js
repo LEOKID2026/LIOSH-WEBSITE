@@ -5,6 +5,7 @@ import Layout from "../../components/Layout";
 import ParentPolicyAcceptanceGate from "../../components/parent/ParentPolicyAcceptanceGate";
 import AssignActivityModal from "../../components/parent/AssignActivityModal";
 import ParentDashboardModal from "../../components/parent/ParentDashboardModal";
+import ChildGamePermissionsPanel from "../../components/parent/ChildGamePermissionsPanel";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
 import { shouldDisplayStudentAccessCode } from "../../lib/teacher-portal/student-access-display.js";
 import { trackProductEvent } from "../../lib/analytics/track-event.client.js";
@@ -533,6 +534,12 @@ export default function ParentDashboardPage() {
           פעיל
         </label>
         <div className="text-sm text-white/80">יתרת מטבעות: {balance ? balance.balance : 0}</div>
+        {session?.access_token ? (
+          <ChildGamePermissionsPanel
+            studentId={student.id}
+            accessToken={session.access_token}
+          />
+        ) : null}
         <div className="flex flex-wrap gap-2 items-center">
           <button
             className="rounded bg-amber-500 text-black px-3 py-2 font-semibold disabled:opacity-60"

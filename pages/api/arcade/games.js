@@ -1,6 +1,7 @@
 import { requireArcadeStudent } from "../../../lib/arcade/server/arcade-auth";
 import { ARCADE_GAME_REGISTRY } from "../../../lib/arcade/game-registry";
 import { getEntryCostOptions } from "../../../lib/rewards/server/economy-config.server.js";
+import { buildStudentGameAccessPayload } from "../../../lib/games/server/game-access.server.js";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
@@ -11,7 +12,7 @@ export default async function handler(req, res) {
   if (!auth) return;
 
   try {
-    const [gamesQuery, entryCostOptions] = await Promise.all([
+    const [gamesQuery, entryCostOptions, accessPayload] = await Promise.all([
       auth.supabase
         .from("arcade_games")
         .select(
@@ -19,6 +20,7 @@ export default async function handler(req, res) {
         )
         .order("game_key", { ascending: true }),
       getEntryCostOptions(auth.supabase),
+      buildStudentGameAccessPayload(auth.supabase, auth.studentId),
     ]);
 
     const { data: rows, error } = gamesQuery;
@@ -28,8 +30,15 @@ export default async function handler(req, res) {
     }
 
     const catalogAmounts = new Set(entryCostOptions.map((o) => o.amount));
+    const playableKeys = new Set(
+      (accessPayload.games || [])
+        .filter((g) => g.category === "online" && g.playable)
+        .map((g) => g.gameKey)
+    );
 
-    const list = (rows || []).map((r) => ({
+    const list = (rows || [])
+      .filter((r) => playableKeys.has(r.game_key))
+      .map((r) => ({
       gameKey: r.game_key,
       title: r.title,
       enabled: r.enabled,

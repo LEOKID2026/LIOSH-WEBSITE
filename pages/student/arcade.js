@@ -5,6 +5,7 @@ import Layout from "../../components/Layout";
 import { useGamesHubUi } from "../../hooks/useGamesHubUi.js";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import StudentThemePicker from "../../components/student/StudentThemePicker";
+import GameAccessGuard from "../../components/games/GameAccessGuard.jsx";
 import { mapEntryCostOptionsForUi } from "../../lib/learning-client/economyConfigClient.js";
 
 const POLL_MS = 5000;
@@ -568,6 +569,7 @@ export default function StudentArcadePage() {
   };
 
   return (
+    <GameAccessGuard category="online">
     <Layout studentTheme={theme} studentShell="home">
       <Head>
         <title>משחקים — LEO K</title>
@@ -763,5 +765,6 @@ export default function StudentArcadePage() {
         </div>
       </div>
     </Layout>
+    </GameAccessGuard>
   );
 }

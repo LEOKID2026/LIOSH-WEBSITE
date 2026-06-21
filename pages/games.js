@@ -4,6 +4,9 @@ import { useIOSViewportFix } from "../hooks/useIOSViewportFix";
 import { useGamesHubUi } from "../hooks/useGamesHubUi.js";
 import { useStudentTheme } from "../contexts/StudentThemeContext.jsx";
 import StudentThemePicker from "../components/student/StudentThemePicker";
+import GameHubCard from "../components/games/GameHubCard.jsx";
+import { useStudentGameAccess } from "../hooks/useStudentGameAccess.js";
+import { hubCardKeyToCategory } from "../lib/games/game-catalog.constants.js";
 
 const GAME_HUB_CARDS = [
   {
@@ -33,6 +36,7 @@ export default function GamesHubPage() {
   useIOSViewportFix();
   const { theme } = useStudentTheme();
   const { GH } = useGamesHubUi();
+  const { state, categoryState } = useStudentGameAccess();
 
   return (
     <Layout studentTheme={theme} studentShell="home">
@@ -53,27 +57,29 @@ export default function GamesHubPage() {
             </p>
           </header>
 
-          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5">
-            {GAME_HUB_CARDS.map((card) => (
-              <Link
-                key={card.key}
-                href={card.href}
-                className={`${GH.card} text-right min-h-[9.5rem] md:min-h-[11rem]`}
-              >
-                <div className="space-y-2 flex-1">
-                  <div className={GH.cardEmoji} aria-hidden>
-                    {card.emoji}
-                  </div>
-                  <h2 className={GH.cardTitle}>{card.title}</h2>
-                  <p className={GH.cardBlurb}>{card.blurb}</p>
-                </div>
-                <span className={GH.cardCta}>
-                  <span aria-hidden>←</span>
-                  כניסה
-                </span>
-              </Link>
-            ))}
-          </section>
+          {state === "loading" ? (
+            <p className="text-center text-sm opacity-70">טוען...</p>
+          ) : (
+            <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5">
+              {GAME_HUB_CARDS.map((card) => {
+                const category = hubCardKeyToCategory(card.key);
+                const catState = category ? categoryState(category) : null;
+                return (
+                  <GameHubCard
+                    key={card.key}
+                    title={card.title}
+                    emoji={card.emoji}
+                    blurb={card.blurb}
+                    href={catState?.playable ? card.href : undefined}
+                    cardClass={`${GH.card} text-right min-h-[9.5rem] md:min-h-[11rem]`}
+                    ctaClass={GH.cardCta}
+                    hidden={catState ? !catState.visible : false}
+                    locked={catState?.locked === true}
+                  />
+                );
+              })}
+            </section>
+          )}
         </div>
       </div>
     </Layout>

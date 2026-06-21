@@ -1,5 +1,6 @@
 import { requireArcadeStudent } from "../../../../lib/arcade/server/arcade-auth";
 import { enqueueQuickMatch } from "../../../../lib/arcade/server/arcade-quick-match";
+import { assertStudentCanPlayGame } from "../../../../lib/games/server/game-access.server.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -15,6 +16,16 @@ export default async function handler(req, res) {
 
   if (!gameKey) {
     return res.status(400).json({ ok: false, error: "חסר משחק", code: "bad_request" });
+  }
+
+  const access = await assertStudentCanPlayGame(auth.supabase, auth.studentId, gameKey);
+  if (!access.ok) {
+    return res.status(access.status || 403).json({
+      ok: false,
+      error: access.message,
+      code: access.code,
+      category: access.category,
+    });
   }
 
   const result = await enqueueQuickMatch(auth.supabase, {

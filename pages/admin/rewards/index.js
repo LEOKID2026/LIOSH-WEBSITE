@@ -13,6 +13,7 @@ import AdminDuplicatesTab from "../../../components/admin/rewards/AdminDuplicate
 import AdminEventsTab from "../../../components/admin/rewards/AdminEventsTab";
 import AdminTestsTab from "../../../components/admin/rewards/AdminTestsTab";
 import AdminManualCoinsTab from "../../../components/admin/rewards/AdminManualCoinsTab";
+import AdminDiamondsTab from "../../../components/admin/rewards/AdminDiamondsTab";
 import { useAdminSession } from "../../../lib/admin-portal/use-admin-session";
 import {
   isAdminManualCoinCreditEnabledClient,
@@ -28,6 +29,8 @@ function renderTab(tabId, accessToken, setActiveTab) {
   switch (tabId) {
     case "manual-coins":
       return <AdminManualCoinsTab accessToken={accessToken} />;
+    case "diamonds":
+      return <AdminDiamondsTab accessToken={accessToken} />;
     case "general":
       return <AdminGeneralTab accessToken={accessToken} />;
     case "economy":

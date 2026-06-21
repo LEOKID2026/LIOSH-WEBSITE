@@ -1,5 +1,6 @@
 import { useMemo, useState, useEffect, useRef } from "react";
 import Layout from "../../components/Layout";
+import GameAccessGuard from "../../components/games/GameAccessGuard.jsx";
 import StudentAdSlot from "../../components/student/StudentAdSlot.jsx";
 import { useRouter } from "next/router";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
@@ -169,6 +170,7 @@ export default function MemoryMatch() {
     );
 
   return (
+    <GameAccessGuard gameKey="memory-match">
     <Layout>
       <div
         ref={wrapRef}
@@ -352,5 +354,6 @@ export default function MemoryMatch() {
         <StudentAdSlot variant="dvh" />
       </div>
     </Layout>
+    </GameAccessGuard>
   );
 }

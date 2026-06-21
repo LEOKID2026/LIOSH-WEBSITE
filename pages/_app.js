@@ -19,6 +19,13 @@ if (typeof window !== "undefined") {
 }
 
 const STUDENT_PROTECTED_ROUTES = new Set([
+  "/games",
+  "/game",
+  "/offline",
+  "/offline/tic-tac-toe",
+  "/offline/rock-paper-scissors",
+  "/offline/tap-battle",
+  "/offline/memory-match",
   "/student/arcade",
   "/student/games/fourline",
   "/student/games/ludo",

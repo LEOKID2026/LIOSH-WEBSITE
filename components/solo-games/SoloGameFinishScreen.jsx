@@ -7,8 +7,11 @@ import SoloGameNavButtons from "./SoloGameNavButtons.jsx";
  *   score: number,
  *   displayLevelHe: string,
  *   coinsAwarded: number,
+ *   diamondsAwarded?: number,
  *   breakdownHe?: string,
+ *   diamondBreakdownHe?: string,
  *   balanceAfter?: number|null,
+ *   diamondBalanceAfter?: number|null,
  *   onPlayAgain: () => void,
  *   busy?: boolean,
  * }} props
@@ -18,8 +21,11 @@ export default function SoloGameFinishScreen({
   score,
   displayLevelHe,
   coinsAwarded,
+  diamondsAwarded = 0,
   breakdownHe = "",
+  diamondBreakdownHe = "",
   balanceAfter = null,
+  diamondBalanceAfter = null,
   onPlayAgain,
   busy = false,
 }) {
@@ -49,10 +55,23 @@ export default function SoloGameFinishScreen({
               <img src="/images/coin.png" alt="" className="h-6 w-6 sm:h-8 sm:w-8 landscape:h-5 landscape:w-5" />
               +{coinsAwarded} מטבעות
             </p>
+            {diamondsAwarded > 0 ? (
+              <p className={SG.finishCoins}>
+                <span aria-hidden>💎</span> +{diamondsAwarded} יהלומים
+              </p>
+            ) : null}
             {breakdownHe ? <p className={SG.finishMuted}>{breakdownHe}</p> : null}
+            {diamondBreakdownHe && diamondsAwarded > 0 ? (
+              <p className={SG.finishMuted}>{diamondBreakdownHe}</p>
+            ) : null}
             {balanceAfter != null ? (
               <p className={SG.finishMuted}>
-                יתרה חדשה: <span className={SG.finishBalance}>{balanceAfter}</span>
+                יתרת מטבעות: <span className={SG.finishBalance}>{balanceAfter}</span>
+              </p>
+            ) : null}
+            {diamondBalanceAfter != null && diamondsAwarded > 0 ? (
+              <p className={SG.finishMuted}>
+                יתרת יהלומים: <span className={SG.finishBalance}>{diamondBalanceAfter}</span>
               </p>
             ) : null}
           </div>

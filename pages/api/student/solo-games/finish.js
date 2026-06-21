@@ -13,6 +13,7 @@ import {
   validatePlayDurationMs,
 } from "../../../../lib/solo-games/server/solo-game-session.server.js";
 import { finalizeSoloGameSession } from "../../../../lib/solo-games/server/solo-game-payout.server.js";
+import { assertStudentCanPlayGame } from "../../../../lib/games/server/game-access.server.js";
 
 function normalizeMetrics(raw) {
   if (!raw || typeof raw !== "object") return null;
@@ -59,6 +60,16 @@ export default async function handler(req, res) {
       return res.status(404).json({ ok: false, error: loaded.message, code: loaded.code });
     }
 
+    const access = await assertStudentCanPlayGame(supabase, auth.studentId, loaded.session.game_key);
+    if (!access.ok) {
+      return res.status(access.status || 403).json({
+        ok: false,
+        error: access.message,
+        code: access.code,
+        category: access.category,
+      });
+    }
+
     const finishedAt = new Date().toISOString();
     const serverDurationMs = computeServerDurationMs(loaded.session.started_at, finishedAt);
     const durationCheck = validatePlayDurationMs(serverDurationMs);
@@ -86,10 +97,14 @@ export default async function handler(req, res) {
       coinsAwarded: result.coinsAwarded,
       breakdownHe: result.breakdownHe,
       balanceAfter: result.balanceAfter,
+      diamondsAwarded: result.diamondsAwarded,
+      diamondBreakdownHe: result.diamondBreakdownHe,
+      diamondBalanceAfter: result.diamondBalanceAfter,
       didWin: result.didWin,
       score: result.score,
       displayLevelHe: result.displayLevelHe,
       duplicate: result.duplicate === true,
+      diamondDuplicate: result.diamondDuplicate === true,
     });
   } catch (e) {
     if (e?.name === "EconomyUnavailableError") {

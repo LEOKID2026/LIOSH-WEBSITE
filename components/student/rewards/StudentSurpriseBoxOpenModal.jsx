@@ -117,6 +117,7 @@ export default function StudentSurpriseBoxOpenModal({ open, onClose, onOpened })
     : result?.coinsReward != null
       ? [result.coinsReward]
       : [];
+  const diamondsReward = Math.floor(Number(result?.diamondsReward) || 0);
 
   return (
     <div
@@ -178,12 +179,27 @@ export default function StudentSurpriseBoxOpenModal({ open, onClose, onOpened })
           {phase === "done" && result ? (
             <>
               <p className={`text-sm ${T.panelIntro}`}>
-                {coinAmounts.length > 0 && cards.length > 0
-                  ? `קיבלתם ${coinAmounts.length} פרס${coinAmounts.length > 1 ? "י" : ""} מטבעות ו-${cards.length} קלפים:`
-                  : coinAmounts.length > 0
-                    ? `קיבלתם ${coinAmounts.length} פרס${coinAmounts.length > 1 ? "י" : ""} מטבעות:`
-                    : `קיבלתם ${cards.length} קלפים:`}
+                {coinAmounts.length > 0 && diamondsReward > 0 && cards.length > 0
+                  ? `קיבלתם מטבעות, יהלומים ו-${cards.length} קלפים:`
+                  : coinAmounts.length > 0 && diamondsReward > 0
+                    ? `קיבלתם מטבעות ויהלומים:`
+                    : coinAmounts.length > 0 && cards.length > 0
+                      ? `קיבלתם ${coinAmounts.length} פרס${coinAmounts.length > 1 ? "י" : ""} מטבעות ו-${cards.length} קלפים:`
+                      : coinAmounts.length > 0
+                        ? `קיבלתם ${coinAmounts.length} פרס${coinAmounts.length > 1 ? "י" : ""} מטבעות:`
+                        : diamondsReward > 0 && cards.length > 0
+                          ? `קיבלתם יהלומים ו-${cards.length} קלפים:`
+                          : diamondsReward > 0
+                            ? "קיבלתם יהלומים!"
+                            : `קיבלתם ${cards.length} קלפים:`}
               </p>
+
+              {diamondsReward > 0 ? (
+                <div className={`rounded-xl border p-4 space-y-2 ${T.statCard}`}>
+                  <p className={`text-xs ${T.statLabel}`}>יהלומים</p>
+                  <p className={`text-xl font-bold ${T.statValue}`}>+{diamondsReward} 💎</p>
+                </div>
+              ) : null}
 
               {coinAmounts.length > 0 ? (
                 <div className={`rounded-xl border p-4 space-y-2 ${T.statCard}`}>

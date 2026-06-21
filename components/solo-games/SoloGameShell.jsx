@@ -9,6 +9,7 @@ import SoloGameEntryScreen from "./SoloGameEntryScreen.jsx";
 import SoloGameFinishScreen from "./SoloGameFinishScreen.jsx";
 import SoloGameSettlingOverlay from "./SoloGameSettlingOverlay.jsx";
 import SoloGameAdSlot from "./SoloGameAdSlot.jsx";
+import GameAccessGuard from "../games/GameAccessGuard.jsx";
 import MleoCatcherEngine from "./engines/MleoCatcherEngine.jsx";
 import MleoFlyerEngine from "./engines/MleoFlyerEngine.jsx";
 import MleoPuzzleEngine from "./engines/MleoPuzzleEngine.jsx";
@@ -103,6 +104,7 @@ export default function SoloGameShell({ gameKey }) {
   }
 
   return (
+    <GameAccessGuard gameKey={gameKey}>
     <>
       <Head>
         <title>{game.titleHe} — משחקי ליאו</title>
@@ -161,8 +163,11 @@ export default function SoloGameShell({ gameKey }) {
               score={finishData.score ?? 0}
               displayLevelHe={finishData.displayLevelHe || "—"}
               coinsAwarded={finishData.coinsAwarded ?? 0}
+              diamondsAwarded={finishData.diamondsAwarded ?? 0}
               breakdownHe={finishData.breakdownHe}
+              diamondBreakdownHe={finishData.diamondBreakdownHe}
               balanceAfter={finishData.balanceAfter}
+              diamondBalanceAfter={finishData.diamondBalanceAfter}
               onPlayAgain={handlePlayAgain}
               busy={busy}
             />
@@ -172,5 +177,6 @@ export default function SoloGameShell({ gameKey }) {
         {showReservedAd ? <SoloGameAdSlot /> : null}
       </div>
     </>
+    </GameAccessGuard>
   );
 }

@@ -8,6 +8,7 @@ import { economyUnavailableHttpResponse } from "../../../../lib/rewards/economy-
 import { guardEconomyAvailable } from "../../../../lib/rewards/guards.server.js";
 import { readJsonBody } from "../../../../lib/learning-supabase/learning-activity";
 import { createSoloGameSession } from "../../../../lib/solo-games/server/solo-game-session.server.js";
+import { assertStudentCanPlayGame } from "../../../../lib/games/server/game-access.server.js";
 import { isValidSoloDifficulty, isValidSoloGameKey } from "../../../../lib/solo-games/solo-game-registry.js";
 
 export default async function handler(req, res) {
@@ -38,6 +39,17 @@ export default async function handler(req, res) {
     }
 
     const supabase = getLearningSupabaseServiceRoleClient();
+
+    const access = await assertStudentCanPlayGame(supabase, auth.studentId, gameKey);
+    if (!access.ok) {
+      return res.status(access.status || 403).json({
+        ok: false,
+        error: access.message,
+        code: access.code,
+        category: access.category,
+      });
+    }
+
     const result = await createSoloGameSession(supabase, {
       studentId: auth.studentId,
       gameKey,
