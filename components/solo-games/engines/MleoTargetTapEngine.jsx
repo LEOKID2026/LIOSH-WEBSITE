@@ -1,21 +1,58 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  SOLO_V2_ASSETS,
-  SoloV2EndBanner,
-  SoloV2Goal,
-  SoloV2Hud,
-  SoloV2Intro,
-  SoloV2Playfield,
-} from "./solo-v2-ui.jsx";
+import { useSoloBoardTap } from "./solo-v2-ui.jsx";
+const BG_TARGET = "/images/game-park.png";
+const IMG_COIN = "/images/coin.png";
+const IMG_DIAMOND = "/images/diamond.png";
+const IMG_STAR = "/images/candy/star.png";
+const IMG_BOMB = "/images/obstacle1.png";
 
-const DIFFICULTY_SETTINGS = {
-  easy: { targetHits: 12, durationSec: 45, lifetimeMs: 1300, maxMisses: 6 },
-  medium: { targetHits: 18, durationSec: 50, lifetimeMs: 1000, maxMisses: 5 },
-  hard: { targetHits: 24, durationSec: 55, lifetimeMs: 800, maxMisses: 4 },
+const MAX_LIVES = 3;
+const MISSES_PER_LIFE = 3;
+const COMBO_EVERY = 5;
+const COMBO_BONUS = 5;
+
+const SCORE_COIN = 20;
+const SCORE_DIAMOND = 40;
+const SCORE_STAR = 30;
+
+const DIFFICULTY_BASE = {
+  easy: { targetHits: 12, durationSec: 50, lifetimeMs: 1700, sizePx: 86, bombChance: 0.1 },
+  medium: { targetHits: 16, durationSec: 55, lifetimeMs: 1350, sizePx: 78, bombChance: 0.13 },
+  hard: { targetHits: 20, durationSec: 60, lifetimeMs: 1100, sizePx: 72, bombChance: 0.16 },
 };
 
-const SCORE_GOOD = 20;
-const SCORE_BONUS = 25;
+/**
+ * @param {number} level
+ * @param {string} difficulty
+ */
+function levelConfig(level, difficulty) {
+  const base = DIFFICULTY_BASE[difficulty] || DIFFICULTY_BASE.medium;
+  const lv = Math.max(1, level);
+  return {
+    ...base,
+    lifetimeMs: Math.max(650, base.lifetimeMs - (lv - 1) * 90),
+    sizePx: Math.max(58, base.sizePx - (lv - 1) * 3),
+    spawnMs: Math.max(700, 1300 - (lv - 1) * 85),
+    maxOnScreen: Math.min(3, 1 + Math.floor((lv - 1) / 2)),
+    bombChance: Math.min(0.24, base.bombChance + (lv - 1) * 0.014),
+    diamondChance: 0.09,
+    starChance: 0.07,
+    targetHits: base.targetHits + Math.floor((lv - 1) / 2) * 2,
+  };
+}
+
+/**
+ * @param {number} level
+ * @param {string} difficulty
+ */
+function rollKind(level, difficulty) {
+  const c = levelConfig(level, difficulty);
+  const r = Math.random();
+  if (r < c.bombChance) return "bomb";
+  if (r < c.bombChance + c.diamondChance) return "diamond";
+  if (r < c.bombChance + c.diamondChance + c.starChance) return "star";
+  return "coin";
+}
 
 /**
  * @param {{ autoStart?: boolean, initialDifficulty?: string, onSessionEnd?: (metrics: object) => void }} props
@@ -27,41 +64,112 @@ export default function MleoTargetTapEngine({
 }) {
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
+  const boardRef = useRef(null);
+  const captureRef = useRef(null);
+  const tickRef = useRef(null);
+  const spawnRef = useRef(null);
+  const timerRef = useRef(null);
+  const idRef = useRef(0);
+
+  const runningRef = useRef(false);
+  const difficultyRef = useRef(initialDifficulty);
+  const scoreRef = useRef(0);
   const hitsRef = useRef(0);
   const missesRef = useRef(0);
-  const scoreRef = useRef(0);
+  const comboRef = useRef(0);
+  const levelRef = useRef(1);
+  const livesRef = useRef(MAX_LIVES);
+  const timeLeftRef = useRef(55);
+  const targetHitsRef = useRef(16);
+  const targetsRef = useRef([]);
 
-  const [difficulty, setDifficulty] = useState(initialDifficulty);
+  const [showIntro, setShowIntro] = useState(!autoStart);
   const [gameRunning, setGameRunning] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [won, setWon] = useState(false);
-  const [showIntro, setShowIntro] = useState(!autoStart);
   const [score, setScore] = useState(0);
   const [hits, setHits] = useState(0);
   const [misses, setMisses] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(DIFFICULTY_SETTINGS.medium.durationSec);
-  const [target, setTarget] = useState(null);
+  const [lives, setLives] = useState(MAX_LIVES);
+  const [timeLeft, setTimeLeft] = useState(55);
+  const [level, setLevel] = useState(1);
+  const [targetGoal, setTargetGoal] = useState(16);
+  const [targets, setTargets] = useState([]);
+  const [popFx, setPopFx] = useState([]);
+  const [levelFlash, setLevelFlash] = useState(false);
 
   useEffect(() => {
-    if (initialDifficulty) setDifficulty(initialDifficulty);
+    if (initialDifficulty) difficultyRef.current = initialDifficulty;
   }, [initialDifficulty]);
 
-  const settings = DIFFICULTY_SETTINGS[difficulty] || DIFFICULTY_SETTINGS.medium;
+  useEffect(() => {
+    const wrapper = document.getElementById("game-wrapper");
+    if (!wrapper) return undefined;
+    const block = (e) => {
+      if (e.target?.closest?.("button")) return;
+      e.preventDefault();
+    };
+    wrapper.addEventListener("contextmenu", block);
+    return () => wrapper.removeEventListener("contextmenu", block);
+  }, []);
 
-  const spawnTarget = () => {
-    const roll = Math.random();
-    let kind = "good";
-    if (roll < 0.15) kind = "bad";
-    else if (roll < 0.28) kind = "bonus";
-    const pad = 10;
-    const size = kind === "bonus" ? 64 : 72;
-    setTarget({
-      id: Date.now(),
-      kind,
-      x: pad + Math.random() * (100 - pad * 2 - size / 5),
-      y: pad + Math.random() * (100 - pad * 2 - size / 5),
-      size,
-    });
+  const addPopFx = (xPct, yPct, text) => {
+    const id = Date.now() + Math.random();
+    setPopFx((prev) => [...prev.slice(-10), { id, xPct, yPct, text }]);
+    setTimeout(() => {
+      setPopFx((prev) => prev.filter((f) => f.id !== id));
+    }, 650);
+  };
+
+  const loseLife = (remaining) => {
+    comboRef.current = 0;
+    livesRef.current -= 1;
+    setLives(livesRef.current);
+    if (livesRef.current <= 0) endGame(false, remaining);
+  };
+
+  const registerMiss = (remaining) => {
+    comboRef.current = 0;
+    missesRef.current += 1;
+    setMisses(missesRef.current);
+    if (missesRef.current % MISSES_PER_LIFE === 0) loseLife(remaining);
+  };
+
+  const levelUp = () => {
+    levelRef.current += 1;
+    const cfg = levelConfig(levelRef.current, difficultyRef.current);
+    targetHitsRef.current = cfg.targetHits;
+    setLevel(levelRef.current);
+    setTargetGoal(cfg.targetHits);
+    setLevelFlash(true);
+    setTimeout(() => setLevelFlash(false), 1600);
+  };
+
+  const scoringKind = (kind) => kind === "coin" || kind === "diamond" || kind === "star";
+
+  const registerHit = (target, remaining) => {
+    let pts = SCORE_COIN;
+    if (target.kind === "diamond") pts = SCORE_DIAMOND;
+    if (target.kind === "star") pts = SCORE_STAR;
+
+    scoreRef.current += pts;
+    hitsRef.current += 1;
+    comboRef.current += 1;
+    setScore(scoreRef.current);
+    setHits(hitsRef.current);
+    addPopFx(target.xPct, target.yPct, `+${pts}`);
+
+    if (comboRef.current > 0 && comboRef.current % COMBO_EVERY === 0) {
+      scoreRef.current += COMBO_BONUS;
+      setScore(scoreRef.current);
+      addPopFx(target.xPct, target.yPct - 3, `+${COMBO_BONUS} combo!`);
+    }
+
+    if (hitsRef.current > 0 && hitsRef.current % 4 === 0) levelUp();
+
+    if (hitsRef.current >= targetHitsRef.current) {
+      endGame(true, remaining);
+    }
   };
 
   const fireSessionEnd = (didWin, remaining) => {
@@ -70,7 +178,7 @@ export default function MleoTargetTapEngine({
     onSessionEnd({
       score: scoreRef.current,
       didWin,
-      difficulty,
+      difficulty: difficultyRef.current,
       mistakes: missesRef.current,
       timeRemainingSec: remaining,
       levelReached: Math.floor(scoreRef.current / 5),
@@ -81,168 +189,276 @@ export default function MleoTargetTapEngine({
     });
   };
 
-  const registerMiss = (remaining) => {
-    missesRef.current += 1;
-    setMisses(missesRef.current);
-    if (missesRef.current >= settings.maxMisses) {
-      endGame(false, remaining);
-      return true;
-    }
-    return false;
-  };
-
   const endGame = (didWin, remaining) => {
+    runningRef.current = false;
     setGameRunning(false);
     setGameOver(true);
     setWon(didWin);
-    setTarget(null);
+    targetsRef.current = [];
+    setTargets([]);
+    if (tickRef.current) clearInterval(tickRef.current);
+    if (spawnRef.current) clearInterval(spawnRef.current);
+    if (timerRef.current) clearInterval(timerRef.current);
     fireSessionEnd(didWin, remaining);
   };
 
+  const spawnTarget = () => {
+    const cfg = levelConfig(levelRef.current, difficultyRef.current);
+    if (targetsRef.current.length >= cfg.maxOnScreen) return;
+
+    idRef.current += 1;
+    const pad = 12;
+    const t = {
+      id: idRef.current,
+      kind: rollKind(levelRef.current, difficultyRef.current),
+      xPct: pad + Math.random() * (100 - pad * 2),
+      yPct: pad + Math.random() * (100 - pad * 2),
+      size: cfg.sizePx,
+      expiresAt: Date.now() + cfg.lifetimeMs,
+    };
+    targetsRef.current = [...targetsRef.current, t];
+    setTargets([...targetsRef.current]);
+  };
+
+  const removeTarget = (id) => {
+    targetsRef.current = targetsRef.current.filter((t) => t.id !== id);
+    setTargets([...targetsRef.current]);
+  };
+
+  const expireTargets = () => {
+    if (!runningRef.current) return;
+    const now = Date.now();
+    const remaining = timeLeftRef.current;
+    const next = [];
+
+    for (const t of targetsRef.current) {
+      if (t.expiresAt > now) {
+        next.push(t);
+        continue;
+      }
+      if (t.kind === "bomb") continue;
+      if (scoringKind(t.kind)) registerMiss(remaining);
+    }
+
+    targetsRef.current = next;
+    setTargets([...next]);
+  };
+
+  const findTargetAt = (x, y, rect) => {
+    const padHit = Math.max(22, rect.width * 0.055);
+
+    for (let i = targetsRef.current.length - 1; i >= 0; i -= 1) {
+      const t = targetsRef.current[i];
+      const tx = (t.xPct / 100) * rect.width;
+      const ty = (t.yPct / 100) * rect.height;
+      const r = t.size / 2 + padHit;
+      if (Math.hypot(x - tx, y - ty) <= r) return t;
+    }
+    return null;
+  };
+
+  const handleBoardTap = (x, y, rect) => {
+    const t = findTargetAt(x, y, rect);
+    if (!t) return;
+
+    const remaining = timeLeftRef.current;
+    removeTarget(t.id);
+
+    if (t.kind === "bomb") {
+      addPopFx(t.xPct, t.yPct, "💣");
+      loseLife(remaining);
+      return;
+    }
+
+    registerHit(t, remaining);
+  };
+
+  useSoloBoardTap(boardRef, captureRef, runningRef, handleBoardTap, gameRunning && !gameOver);
+
   const startGame = () => {
+    const diff = difficultyRef.current;
+    const cfg = levelConfig(1, diff);
+
     sessionEndFiredRef.current = false;
     playStartedAtRef.current = Date.now();
+    scoreRef.current = 0;
     hitsRef.current = 0;
     missesRef.current = 0;
-    scoreRef.current = 0;
+    comboRef.current = 0;
+    levelRef.current = 1;
+    livesRef.current = MAX_LIVES;
+    timeLeftRef.current = cfg.durationSec;
+    targetHitsRef.current = cfg.targetHits;
+    targetsRef.current = [];
+
     setShowIntro(false);
     setGameOver(false);
     setWon(false);
     setScore(0);
     setHits(0);
     setMisses(0);
-    setTimeLeft(settings.durationSec);
-    setGameRunning(true);
-    spawnTarget();
-  };
+    setLives(MAX_LIVES);
+    setTimeLeft(cfg.durationSec);
+    setLevel(1);
+    setTargetGoal(cfg.targetHits);
+    setTargets([]);
+    setPopFx([]);
+    setLevelFlash(false);
 
-  useEffect(() => {
-    if (autoStart && !gameRunning && !gameOver && !showIntro) startGame();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [autoStart]);
+    setGameRunning(true);
+    runningRef.current = true;
+
+    spawnTarget();
+
+    if (tickRef.current) clearInterval(tickRef.current);
+    tickRef.current = setInterval(expireTargets, 120);
+
+    if (spawnRef.current) clearInterval(spawnRef.current);
+    spawnRef.current = setInterval(() => {
+      if (runningRef.current) spawnTarget();
+    }, cfg.spawnMs);
+
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      if (!runningRef.current) return;
+      timeLeftRef.current -= 1;
+      setTimeLeft(timeLeftRef.current);
+      if (timeLeftRef.current <= 0) {
+        endGame(hitsRef.current >= targetHitsRef.current, 0);
+      }
+    }, 1000);
+  };
 
   useEffect(() => {
     if (!gameRunning) return undefined;
-    if (timeLeft <= 0) {
-      endGame(hitsRef.current >= settings.targetHits, 0);
-      return undefined;
-    }
-    const t = setTimeout(() => setTimeLeft((s) => s - 1), 1000);
-    return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gameRunning, timeLeft]);
+    const cfg = levelConfig(levelRef.current, difficultyRef.current);
+    if (spawnRef.current) clearInterval(spawnRef.current);
+    spawnRef.current = setInterval(() => {
+      if (runningRef.current) spawnTarget();
+    }, cfg.spawnMs);
+    return () => {
+      if (spawnRef.current) clearInterval(spawnRef.current);
+    };
+  }, [gameRunning, level]);
 
   useEffect(() => {
-    if (!gameRunning || !target) return undefined;
-    const t = setTimeout(() => {
-      if (target.kind === "bad") {
-        spawnTarget();
-        return;
-      }
-      if (!registerMiss(timeLeft)) spawnTarget();
-    }, settings.lifetimeMs);
-    return () => clearTimeout(t);
+    if (autoStart) startGame();
+    return () => {
+      runningRef.current = false;
+      if (tickRef.current) clearInterval(tickRef.current);
+      if (spawnRef.current) clearInterval(spawnRef.current);
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gameRunning, target, settings.lifetimeMs]);
+  }, [autoStart]);
 
-  const handleTap = () => {
-    if (!gameRunning || !target) return;
-
-    if (target.kind === "bad") {
-      if (registerMiss(timeLeft)) return;
-      setTarget(null);
-      spawnTarget();
-      return;
-    }
-
-    const pts = target.kind === "bonus" ? SCORE_BONUS : SCORE_GOOD;
-    scoreRef.current += pts;
-    hitsRef.current += 1;
-    setScore(scoreRef.current);
-    setHits(hitsRef.current);
-
-    if (hitsRef.current >= settings.targetHits) {
-      endGame(true, timeLeft);
-      return;
-    }
-    spawnTarget();
+  const targetRing = (kind) => {
+    if (kind === "bomb") return "ring-4 ring-red-500/90 bg-gray-900/75";
+    if (kind === "diamond") return "ring-4 ring-cyan-200 bg-sky-500/25";
+    if (kind === "star") return "ring-4 ring-amber-200 bg-amber-500/25";
+    return "ring-4 ring-yellow-300 bg-yellow-500/20";
   };
 
-  const targetVisual = () => {
-    if (!target) return null;
-    if (target.kind === "bad") {
-      return <img src={SOLO_V2_ASSETS.bomb} alt="" className="h-full w-full object-contain p-2" />;
-    }
-    if (target.kind === "bonus") {
-      return <img src={SOLO_V2_ASSETS.diamond} alt="" className="h-full w-full object-contain p-1" />;
-    }
-    return <img src={SOLO_V2_ASSETS.coin} alt="" className="h-full w-full object-contain p-1" />;
+  const targetImg = (kind) => {
+    if (kind === "bomb") return IMG_BOMB;
+    if (kind === "diamond") return IMG_DIAMOND;
+    if (kind === "star") return IMG_STAR;
+    return IMG_COIN;
   };
 
   return (
-    <div className="flex h-full min-h-0 flex-1 flex-col items-center gap-2 overflow-hidden px-2 py-2 text-white w-full" dir="rtl">
-      <SoloV2Goal text="לחצו על מטבעות ויהלומים — לא על 💣! הגיעו ליעד הפגיעות." />
-      {!showIntro ? (
-        <SoloV2Hud
-          rows={[
-            { label: "ניקוד", value: score, accent: "text-amber-300" },
-            { label: "פגיעות", value: `${hits}/${settings.targetHits}` },
-            { label: "טעויות", value: `${misses}/${settings.maxMisses}` },
-            { label: "זמן", value: `${timeLeft}s` },
-          ]}
-        />
-      ) : null}
+    <div
+      id="game-wrapper"
+      className="relative isolate flex h-full min-h-0 flex-1 flex-col overflow-hidden bg-gray-900 text-white select-none"
+      dir="rtl"
+    >
+      {!showIntro && (
+        <div className="relative flex min-h-0 w-full flex-1 flex-col px-1 pb-1 pt-1">
+          <div className="pointer-events-none absolute left-1/2 top-2 z-[80] max-w-[98vw] -translate-x-1/2 rounded-lg bg-black/65 px-3 py-2 text-center text-[11px] font-bold leading-snug sm:text-sm">
+            <span className="text-amber-300">ניקוד: {score}</span>
+            {" · "}
+            <span>פגיעות: {hits}/{targetGoal}</span>
+            {" · "}
+            <span>רמה: {level}</span>
+            {" · "}
+            <span>{"❤️".repeat(Math.max(0, lives)) || "—"}</span>
+            {" · "}
+            <span>טעויות: {misses}</span>
+            {" · "}
+            <span>{timeLeft}s</span>
+          </div>
 
-      <SoloV2Playfield bg={SOLO_V2_ASSETS.bgSky} className="min-h-[280px]">
-        {showIntro ? (
-          <SoloV2Intro
-            title="קליעה למטרה"
-            lines={[
-              "מטבע = +20",
-              "יהלום = +25",
-              "💣 = טעות (לא ללחוץ!)",
-              "יותר מדי טעויות = הפסד",
-            ]}
-            onStart={startGame}
-          />
-        ) : (
-          <div className="relative h-full w-full">
-            {target ? (
-              <button
-                type="button"
-                className={`absolute flex items-center justify-center rounded-full border-4 shadow-xl animate-pulse touch-manipulation active:scale-90 ${
-                  target.kind === "bad"
-                    ? "border-red-500 bg-gray-900/80"
-                    : target.kind === "bonus"
-                      ? "border-amber-300 bg-amber-500/30"
-                      : "border-yellow-300 bg-yellow-500/20"
-                }`}
+          <div
+            ref={boardRef}
+            className="relative z-0 mx-auto mt-11 flex h-full min-h-0 w-full max-w-[1180px] flex-1 overflow-hidden rounded-lg border-4 border-yellow-400 bg-black/30 shadow-lg sm:mt-12"
+            style={{
+              backgroundImage: `linear-gradient(to bottom, rgba(255,255,255,0.06), rgba(0,0,0,0.18)), url(${BG_TARGET})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              touchAction: "none",
+            }}
+          >
+            {targets.map((t) => (
+              <div
+                key={t.id}
+                className={`pointer-events-none absolute flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full shadow-xl animate-pulse ${targetRing(t.kind)}`}
                 style={{
-                  left: `${target.x}%`,
-                  top: `${target.y}%`,
-                  width: target.size,
-                  height: target.size,
+                  left: `${t.xPct}%`,
+                  top: `${t.yPct}%`,
+                  width: t.size,
+                  height: t.size,
                 }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleTap();
-                }}
-                aria-label="מטרה"
               >
-                {targetVisual()}
-              </button>
+                <img
+                  src={targetImg(t.kind)}
+                  alt=""
+                  className="h-[78%] w-[78%] object-contain drop-shadow-md"
+                  draggable={false}
+                />
+              </div>
+            ))}
+
+            {popFx.map((fx) => (
+              <div
+                key={fx.id}
+                className="pointer-events-none absolute z-20 -translate-x-1/2 -translate-y-1/2 text-base font-extrabold text-yellow-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] sm:text-lg"
+                style={{ left: `${fx.xPct}%`, top: `${fx.yPct}%` }}
+              >
+                {fx.text}
+              </div>
+            ))}
+
+            {levelFlash ? (
+              <div className="pointer-events-none absolute inset-0 z-30 flex items-start justify-center bg-black/35 pt-[18%]">
+                <span className="rounded-xl bg-yellow-400 px-5 py-2 text-xl font-extrabold text-black shadow-lg sm:text-2xl">
+                  רמה {level}!
+                </span>
+              </div>
             ) : null}
+
+            <div
+              ref={captureRef}
+              className={`absolute inset-0 z-[60] ${gameRunning && !gameOver ? "cursor-pointer" : "pointer-events-none"}`}
+              style={{ touchAction: "none", WebkitTapHighlightColor: "transparent" }}
+              aria-hidden
+            />
 
             {gameOver ? (
-              <SoloV2EndBanner
-                success={won}
-                title={won ? "קלעת מעולה!" : "לא עמדת ביעד"}
-                subtitle={`ניקוד: ${score} · פגיעות: ${hits}/${settings.targetHits}`}
-              />
+              <div className="pointer-events-auto absolute inset-0 z-40 flex flex-col items-center justify-center gap-2 overflow-y-auto bg-black/82 px-4 py-6 text-center">
+                <h2 className={`text-2xl font-extrabold sm:text-4xl ${won ? "text-emerald-300" : "text-rose-400"}`}>
+                  {won ? "קלעת מעולה!" : "לא עמדת ביעד"}
+                </h2>
+                <p className="max-w-md text-sm font-semibold text-white/90 sm:text-base">
+                  ניקוד: {score} · פגיעות: {hits}/{targetGoal} · טעויות: {misses} · רמה: {level}
+                </p>
+                <p className="text-xs text-gray-300 sm:text-sm">
+                  {won ? "ממתין לסיכום מטבעות..." : "הפסד = 0 מטבעות · ממתין לסיכום..."}
+                </p>
+              </div>
             ) : null}
           </div>
-        )}
-      </SoloV2Playfield>
+        </div>
+      )}
     </div>
   );
 }

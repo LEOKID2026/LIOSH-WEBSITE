@@ -1,5 +1,6 @@
 /** Shared Leo Kids UI bits for Solo Games V2 engines. */
 
+import { useEffect, useRef } from "react";
 export const SOLO_V2_ASSETS = {
   leo: "/images/leo.png",
   leoAlt: "/images/leo2.png",
@@ -108,4 +109,60 @@ export function loadImage(src) {
     img.onerror = () => resolve(null);
     img.src = src;
   });
+}
+
+/** @param {PointerEvent | TouchEvent} e @param {DOMRect} rect */
+export function getBoardTapPoint(e, rect) {
+  const touch = e.touches?.[0] || e.changedTouches?.[0];
+  const clientX = touch ? touch.clientX : e.clientX;
+  const clientY = touch ? touch.clientY : e.clientY;
+  return {
+    x: clientX - rect.left,
+    y: clientY - rect.top,
+  };
+}
+
+/**
+ * Reliable mobile tap handling on a full-size capture layer.
+ * @param {React.RefObject<HTMLElement | null>} boardRef
+ * @param {React.RefObject<HTMLElement | null>} captureRef
+ * @param {React.MutableRefObject<boolean>} runningRef
+ * @param {(x: number, y: number, rect: DOMRect) => void} onTap
+ * @param {boolean} active
+ */
+export function useSoloBoardTap(boardRef, captureRef, runningRef, onTap, active) {
+  const onTapRef = useRef(onTap);
+  onTapRef.current = onTap;
+
+  useEffect(() => {
+    if (!active) return undefined;
+    const capture = captureRef.current;
+    const board = boardRef.current;
+    if (!capture || !board) return undefined;
+
+    let ignoreNextPointer = false;
+
+    const handle = (e) => {
+      if (!runningRef.current) return;
+      if (e.type === "touchstart") {
+        ignoreNextPointer = true;
+        window.setTimeout(() => {
+          ignoreNextPointer = false;
+        }, 450);
+      } else if (e.type === "pointerdown" && ignoreNextPointer) {
+        return;
+      }
+      if (e.cancelable) e.preventDefault();
+      const rect = board.getBoundingClientRect();
+      const { x, y } = getBoardTapPoint(e, rect);
+      onTapRef.current(x, y, rect);
+    };
+
+    capture.addEventListener("touchstart", handle, { passive: false });
+    capture.addEventListener("pointerdown", handle, { passive: false });
+    return () => {
+      capture.removeEventListener("touchstart", handle);
+      capture.removeEventListener("pointerdown", handle);
+    };
+  }, [boardRef, captureRef, runningRef, active]);
 }

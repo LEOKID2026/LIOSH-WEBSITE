@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useSoloBoardTap } from "./solo-v2-ui.jsx";
 
 const BG_BALLOONS = "/images/game-balloons-bg.png";
 const IMG_BOMB = "/images/obstacle1.png";
@@ -15,6 +16,7 @@ const COMBO_EVERY = 5;
 const COMBO_BONUS = 5;
 
 const TICK_MS = 32;
+const BALLOON_SIZE_PX = 72;
 
 /**
  * @param {number} level
@@ -60,6 +62,7 @@ export default function MleoBalloonsEngine({ autoStart = false, onSessionEnd }) 
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
   const boardRef = useRef(null);
+  const captureRef = useRef(null);
   const loopRef = useRef(null);
   const spawnRef = useRef(null);
   const timerRef = useRef(null);
@@ -239,29 +242,24 @@ export default function MleoBalloonsEngine({ autoStart = false, onSessionEnd }) 
     }
   };
 
-  const findBalloonAt = (clientX, clientY) => {
-    const board = boardRef.current;
-    if (!board) return null;
-    const rect = board.getBoundingClientRect();
-    const px = clientX - rect.left;
-    const pyFromBottom = rect.bottom - clientY;
-    const hitR = Math.max(44, rect.width * 0.11);
+  const findBalloonAt = (x, y, rect) => {
+    const hitR = Math.max(52, rect.width * 0.12);
 
     for (let i = balloonsRef.current.length - 1; i >= 0; i -= 1) {
       const b = balloonsRef.current[i];
       const bx = (b.x / 100) * rect.width;
-      const by = (b.y / 100) * rect.height;
-      if (Math.hypot(px - bx, py - by) <= hitR) return b;
+      const byFromTop = rect.height - (b.y / 100) * rect.height - BALLOON_SIZE_PX / 2;
+      if (Math.hypot(x - bx, y - byFromTop) <= hitR) return b;
     }
     return null;
   };
 
-  const handleBoardPointer = (e) => {
-    if (!runningRef.current) return;
-    e.preventDefault();
-    const b = findBalloonAt(e.clientX, e.clientY);
+  const handleBoardTap = (x, y, rect) => {
+    const b = findBalloonAt(x, y, rect);
     if (b) popBalloon(b);
   };
+
+  useSoloBoardTap(boardRef, captureRef, runningRef, handleBoardTap, gameRunning && !gameOver);
 
   const tick = () => {
     if (!runningRef.current) return;
@@ -393,8 +391,8 @@ export default function MleoBalloonsEngine({ autoStart = false, onSessionEnd }) 
       dir="rtl"
     >
       {!showIntro && (
-        <div className="flex min-h-0 w-full flex-1 flex-col px-1 pb-1 pt-1">
-          <div className="pointer-events-none absolute left-1/2 top-2 z-30 max-w-[98vw] -translate-x-1/2 rounded-lg bg-black/65 px-3 py-2 text-center text-[11px] font-bold leading-snug sm:text-sm">
+        <div className="relative flex min-h-0 w-full flex-1 flex-col px-1 pb-1 pt-1">
+          <div className="pointer-events-none absolute left-1/2 top-2 z-[80] max-w-[98vw] -translate-x-1/2 rounded-lg bg-black/65 px-3 py-2 text-center text-[11px] font-bold leading-snug sm:text-sm">
             <span className="text-amber-300">ניקוד: {score}</span>
             {" · "}
             <span>יעד: {pops}/{target}</span>
@@ -410,14 +408,13 @@ export default function MleoBalloonsEngine({ autoStart = false, onSessionEnd }) 
 
           <div
             ref={boardRef}
-            className="relative z-0 mx-auto mt-11 flex h-full min-h-0 w-full max-w-[1180px] flex-1 touch-none overflow-hidden rounded-lg border-4 border-yellow-400 bg-black/30 shadow-lg sm:mt-12"
+            className="relative z-0 mx-auto mt-11 flex h-full min-h-0 w-full max-w-[1180px] flex-1 overflow-hidden rounded-lg border-4 border-yellow-400 bg-black/30 shadow-lg sm:mt-12"
             style={{
               backgroundImage: `linear-gradient(to bottom, rgba(255,255,255,0.08), rgba(0,0,0,0.12)), url(${BG_BALLOONS})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
-              touchAction: "manipulation",
+              touchAction: "none",
             }}
-            onPointerDown={handleBoardPointer}
           >
             {balloons.map((b) => (
               <div
@@ -446,6 +443,13 @@ export default function MleoBalloonsEngine({ autoStart = false, onSessionEnd }) 
                 </span>
               </div>
             ) : null}
+
+            <div
+              ref={captureRef}
+              className={`absolute inset-0 z-[60] ${gameRunning && !gameOver ? "cursor-pointer" : "pointer-events-none"}`}
+              style={{ touchAction: "none", WebkitTapHighlightColor: "transparent" }}
+              aria-hidden
+            />
 
             {gameOver ? (
               <div className="pointer-events-auto absolute inset-0 z-40 flex flex-col items-center justify-center gap-2 overflow-y-auto bg-black/82 px-4 py-6 text-center">
