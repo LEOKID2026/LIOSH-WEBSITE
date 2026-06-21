@@ -11,7 +11,13 @@ import { buildStudentHomeView } from "../../lib/learning-client/studentHomeDashb
 import {
   invalidateStudentLearningProfileClientCache,
 } from "../../lib/learning-client/studentLearningProfileClient";
-import { invalidateStudentMeClientCache } from "../../lib/learning-client/studentMeClient";
+import {
+  getCachedStudentHomePayload,
+  mergeStudentHomePayloads,
+  setCachedStudentHomePayload,
+  invalidateStudentHomeProfileClientCache,
+} from "../../lib/learning-client/studentHomeProfileClient";
+import { invalidateStudentMeClientCache, getCachedStudentMe, setCachedStudentMe } from "../../lib/learning-client/studentMeClient";
 import { formatGradeLevelHe } from "../../lib/learning-student-defaults";
 import { STUDENT_TRUTH_LABELS_HE } from "../../lib/learning-shared/student-display-truth.js";
 import StudentAvatarPickerModal from "../../components/student/StudentAvatarPickerModal";
@@ -32,6 +38,7 @@ import { syncMonthlyProgressCacheFromServer } from "../../utils/progress-storage
 
 const HOME_SUMMARY_PATH = "/api/student/home-profile/summary";
 const HOME_ANALYTICS_PATH = "/api/student/home-profile/analytics";
+const HOME_ACHIEVEMENT_GRANTS_PATH = "/api/student/home-profile/achievement-grants";
 
 function mapApiErrorToHebrew(raw) {
   const s = String(raw || "").trim();
@@ -329,7 +336,20 @@ export default function StudentHomePage() {
   const [boxModalOpen, setBoxModalOpen] = useState(false);
   const cardRewardsEnabled = isCardRewardsEnabledClient();
 
-  const loadHomeAnalytics = useCallback(async (summaryPayload) => {
+  const loadHomeAchievementGrants = useCallback(async () => {
+    try {
+      await fetch(HOME_ACHIEVEMENT_GRANTS_PATH, {
+        method: "POST",
+        credentials: "include",
+        cache: "no-store",
+        headers: { Accept: "application/json" },
+      });
+    } catch {
+      /* non-fatal — grants retried on next home visit */
+    }
+  }, []);
+
+  const loadHomeAnalytics = useCallback(async (studentId, summaryPayload) => {
     setAnalyticsPhase("loading");
     try {
       const res = await fetch(HOME_ANALYTICS_PATH, {
@@ -352,123 +372,197 @@ export default function StudentHomePage() {
         return;
       }
 
-      if (json?.derived && summaryPayload?.studentId) {
-        syncMonthlyProgressCacheFromServer(summaryPayload.studentId, json.derived);
+      if (json?.derived && studentId) {
+        syncMonthlyProgressCacheFromServer(studentId, json.derived);
       }
 
-      setHomePayload((prev) => ({
-        ...(prev && typeof prev === "object" ? prev : summaryPayload),
-        ...json,
-        challenges: json.challenges ?? prev?.challenges ?? summaryPayload?.challenges,
-        analyticsPending: false,
-      }));
+      setCachedStudentHomePayload(studentId, { analytics: json });
+      setHomePayload((prev) => mergeStudentHomePayloads(prev || summaryPayload, json));
       setAnalyticsPhase("ok");
     } catch {
       setAnalyticsPhase("error");
     }
   }, []);
 
-  const loadHomeDashboard = useCallback(async () => {
-    setProfilePhase("loading");
-    setAnalyticsPhase("idle");
-    setProfileError("");
-    setHomePayload(null);
-    try {
-      const res = await fetch(HOME_SUMMARY_PATH, {
-        method: "GET",
-        credentials: "include",
-        cache: "no-store",
-        headers: { Accept: "application/json" },
-      });
-      const text = await res.text();
-      let json = {};
+  const loadHomeDashboard = useCallback(
+    async (studentRecord) => {
+      const studentId = studentRecord?.id;
+      if (!studentId) return;
+
+      const cached = getCachedStudentHomePayload(studentId);
+      if (cached?.merged) {
+        setHomePayload(cached.merged);
+        setProfilePhase("ok");
+        setAnalyticsPhase(cached.analytics ? "ok" : "idle");
+      } else {
+        setProfilePhase("loading");
+        setHomePayload(null);
+        setAnalyticsPhase("idle");
+      }
+      setProfileError("");
+
       try {
-        json = text ? JSON.parse(text) : {};
-      } catch {
-        setProfileError(`תגובת השרת לא בפורמט תקין (קוד ${res.status}).`);
-        setProfilePhase("error");
+        const res = await fetch(HOME_SUMMARY_PATH, {
+          method: "GET",
+          credentials: "include",
+          cache: "no-store",
+          headers: { Accept: "application/json" },
+        });
+        const text = await res.text();
+        let json = {};
+        try {
+          json = text ? JSON.parse(text) : {};
+        } catch {
+          if (!cached?.merged) {
+            setProfileError(`תגובת השרת לא בפורמט תקין (קוד ${res.status}).`);
+            setProfilePhase("error");
+          }
+          return;
+        }
+
         if (isStudentIdentityDiagnosticsEnabled()) {
-          console.warn("[student/home] home-profile summary JSON parse failed", {
-            status: res.status,
-            textHead: text.slice(0, 200),
+          console.info("[student/home] home-profile summary response", {
+            httpStatus: res.status,
+            okFlag: json?.ok,
+            hasAccountSnapshot: !!json?.accountSnapshot,
+            hasChallenges: !!json?.challenges,
           });
         }
-        return;
-      }
 
-      if (isStudentIdentityDiagnosticsEnabled()) {
-        console.info("[student/home] home-profile summary response", {
-          httpStatus: res.status,
-          okFlag: json?.ok,
-          phase: json?.phase,
-          hasChallenges: !!json?.challenges,
-        });
-      }
+        if (!res.ok || json?.ok !== true || !json?.studentId || !json?.accountSnapshot) {
+          if (!cached?.merged) {
+            const errRaw = json?.error != null ? String(json.error) : "";
+            const detail = json?.detail != null ? String(json.detail) : "";
+            const combined = [
+              mapApiErrorToHebrew(errRaw),
+              detail && isStudentIdentityDiagnosticsEnabled() ? `(${detail})` : "",
+            ]
+              .filter(Boolean)
+              .join(" ");
+            setProfileError(combined || mapApiErrorToHebrew(""));
+            setProfilePhase("error");
+          }
+          return;
+        }
 
-      if (!res.ok || json?.ok !== true || !json?.studentId) {
-        const errRaw = json?.error != null ? String(json.error) : "";
-        const detail = json?.detail != null ? String(json.detail) : "";
-        const combined = [mapApiErrorToHebrew(errRaw), detail && isStudentIdentityDiagnosticsEnabled() ? `(${detail})` : ""]
-          .filter(Boolean)
-          .join(" ");
-        setProfileError(combined || mapApiErrorToHebrew(""));
-        setProfilePhase("error");
-        return;
-      }
+        setCachedStudentHomePayload(studentId, { summary: json });
+        const merged = mergeStudentHomePayloads(json, cached?.analytics);
+        setHomePayload(merged);
+        setProfilePhase("ok");
 
-      setHomePayload(json);
-      setProfilePhase("ok");
-      void loadHomeAnalytics(json);
-    } catch (e) {
-      setProfileError("שגיאת רשת");
-      setProfilePhase("error");
-      if (isStudentIdentityDiagnosticsEnabled()) {
-        console.warn("[student/home] home-profile summary fetch threw", e);
+        void loadHomeAnalytics(studentId, json);
+        void loadHomeAchievementGrants();
+      } catch (e) {
+        if (!cached?.merged) {
+          setProfileError("שגיאת רשת");
+          setProfilePhase("error");
+        }
+        if (isStudentIdentityDiagnosticsEnabled()) {
+          console.warn("[student/home] home-profile summary fetch threw", e);
+        }
       }
-    }
-  }, [loadHomeAnalytics]);
+    },
+    [loadHomeAnalytics, loadHomeAchievementGrants]
+  );
 
   useEffect(() => {
     if (!router.isReady) return undefined;
     let mounted = true;
-    setAuthPhase("checking");
-    setStudent(null);
-    setHomePayload(null);
-    setProfilePhase("idle");
-    setAnalyticsPhase("idle");
     setProfileError("");
     setPersonalActivities([]);
     setPersonalActivityCount(0);
     setPersonalActivitiesPhase("idle");
 
-    fetch("/api/student/me", { credentials: "include", cache: "no-store", headers: { Accept: "application/json" } })
-      .then(async (res) => {
-        const payload = await res.json().catch(() => ({}));
+    const cachedMe = getCachedStudentMe();
+    if (cachedMe?.student?.id) {
+      setStudent(cachedMe.student);
+      setAuthPhase("authed");
+      const cachedHome = getCachedStudentHomePayload(cachedMe.student.id);
+      if (cachedHome?.merged) {
+        setHomePayload(cachedHome.merged);
+        setProfilePhase("ok");
+        setAnalyticsPhase(cachedHome.analytics ? "ok" : "idle");
+      } else {
+        setProfilePhase("idle");
+        setHomePayload(null);
+      }
+    } else {
+      setAuthPhase("checking");
+      setStudent(null);
+      setHomePayload(null);
+      setProfilePhase("idle");
+      setAnalyticsPhase("idle");
+    }
+
+    (async () => {
+      try {
+        const [meRes, summaryRes] = await Promise.all([
+          fetch("/api/student/me", {
+            credentials: "include",
+            cache: "no-store",
+            headers: { Accept: "application/json" },
+          }),
+          fetch(HOME_SUMMARY_PATH, {
+            credentials: "include",
+            cache: "no-store",
+            headers: { Accept: "application/json" },
+          }),
+        ]);
+
         if (!mounted) return;
+
+        const payload = await meRes.json().catch(() => ({}));
         if (isStudentIdentityDiagnosticsEnabled()) {
-          console.info("[student/home] /api/student/me", { httpStatus: res.status, hasStudent: !!payload?.student?.id });
+          console.info("[student/home] /api/student/me", {
+            httpStatus: meRes.status,
+            hasStudent: !!payload?.student?.id,
+          });
         }
-        if (!res.ok || !payload?.student?.id) {
+        if (!meRes.ok || !payload?.student?.id) {
           setAuthPhase("anon");
           router.replace("/student/login");
           return;
         }
 
+        setCachedStudentMe(payload);
         syncStudentLocalStorageIdentity(payload.student, "student/home after /me");
         setStudent(payload.student);
         setAuthPhase("authed");
-        void loadHomeDashboard();
-      })
-      .catch(() => {
+
+        const summaryText = await summaryRes.text();
+        let summaryJson = {};
+        try {
+          summaryJson = summaryText ? JSON.parse(summaryText) : {};
+        } catch {
+          if (!getCachedStudentHomePayload(payload.student.id)?.merged) {
+            setProfileError(`תגובת השרת לא בפורמט תקין (קוד ${summaryRes.status}).`);
+            setProfilePhase("error");
+          }
+          return;
+        }
+
+        if (summaryRes.ok && summaryJson?.ok === true && summaryJson?.accountSnapshot) {
+          setCachedStudentHomePayload(payload.student.id, { summary: summaryJson });
+          const cached = getCachedStudentHomePayload(payload.student.id);
+          setHomePayload(mergeStudentHomePayloads(summaryJson, cached?.analytics));
+          setProfilePhase("ok");
+          void loadHomeAnalytics(payload.student.id, summaryJson);
+          void loadHomeAchievementGrants();
+          return;
+        }
+
+        void loadHomeDashboard(payload.student);
+      } catch {
         if (!mounted) return;
         setAuthPhase("anon");
         router.replace("/student/login");
-      });
+      }
+    })();
 
     return () => {
       mounted = false;
     };
-  }, [router.isReady, loadHomeDashboard]);
+  }, [router.isReady, loadHomeDashboard, router]);
 
   const dashboardView = useMemo(() => {
     if (!student?.id || profilePhase !== "ok" || !homePayload) return null;
@@ -622,33 +716,22 @@ export default function StudentHomePage() {
     const missionCompleted = missions?.totalCompleted ?? 0;
 
     return {
-      stats:
-        dashboardView.meta?.analyticsPending
-          ? STUDENT_TRUTH_LABELS_HE.loading
-          : `רמה ${dashboardView.accountStats.summaryLevel}`,
-      progress: dashboardView.meta?.analyticsPending
-        ? STUDENT_TRUTH_LABELS_HE.loading
-        : `${
-            dashboardView.monthlyPersistence?.currentMinutesDisplayHe ??
-            dashboardView.monthlyJourney.minutesDisplayHe ??
-            dashboardView.monthlyJourney.minutesThisMonth ??
-            STUDENT_TRUTH_LABELS_HE.noData
-          } דק׳ החודש`,
+      stats: `רמה ${dashboardView.accountStats.summaryLevel}`,
+      progress: `${
+        dashboardView.monthlyPersistence?.currentMinutesDisplayHe ??
+        dashboardView.monthlyJourney.minutesDisplayHe ??
+        dashboardView.monthlyJourney.minutesThisMonth ??
+        STUDENT_TRUTH_LABELS_HE.noData
+      } דק׳ החודש`,
       missions:
         missionTotal > 0
           ? `${missionCompleted}/${missionTotal} הושלמו`
           : STUDENT_TRUTH_LABELS_HE.noData,
       classroom: `${personalActivityCount} פעילויות`,
       worksheets: "0 דפי עבודה",
-      subjects: dashboardView.meta?.analyticsPending
-        ? STUDENT_TRUTH_LABELS_HE.loading
-        : `${dashboardView.subjects.length} נושאים`,
-      badges: dashboardView.meta?.analyticsPending
-        ? STUDENT_TRUTH_LABELS_HE.loading
-        : `${dashboardView.badges.length} תגים`,
-      recommendations: dashboardView.meta?.analyticsPending
-        ? STUDENT_TRUTH_LABELS_HE.loading
-        : `${dashboardView.recommendations.length} המלצות`,
+      subjects: `${dashboardView.subjects.length} נושאים`,
+      badges: `${dashboardView.badges.length} תגים`,
+      recommendations: `${dashboardView.recommendations.length} המלצות`,
     };
   }, [dashboardView, personalActivityCount]);
 
@@ -662,6 +745,7 @@ export default function StudentHomePage() {
       await fetch("/api/student/logout", { method: "POST", credentials: "include" });
       clearAllStudentScopedBrowserStorage(sid);
       invalidateStudentLearningProfileClientCache();
+      invalidateStudentHomeProfileClientCache(sid);
       invalidateStudentMeClientCache();
       setStudent(null);
       setHomePayload(null);
@@ -834,7 +918,7 @@ export default function StudentHomePage() {
             <p className={T.errorBody}>{profileError}</p>
             <button
               type="button"
-              onClick={() => void loadHomeDashboard()}
+              onClick={() => student && void loadHomeDashboard(student)}
               className={T.errorBtn}
             >
               נסו שוב
@@ -848,7 +932,7 @@ export default function StudentHomePage() {
             <p className={T.buildErrorBody}>השרת החזיר תשובה תקינה אבל לא ניתן היה לבנות את לוח הבקרה.</p>
             <button
               type="button"
-              onClick={() => void loadHomeDashboard()}
+              onClick={() => student && void loadHomeDashboard(student)}
               className={T.buildErrorBtn}
             >
               נסו שוב
@@ -875,14 +959,14 @@ export default function StudentHomePage() {
 
         {analyticsPhase === "error" && dashboardView && profilePhase === "ok" ? (
           <div className={`mt-4 ${T.errorBox}`}>
-            <p className={T.errorTitle}>חלק מנתוני ההתקדמות עדיין לא נטענו</p>
+            <p className={T.errorTitle}>עדכון נתונים מתקדמים נכשל</p>
             <p className={T.errorBody}>
-              שם, כיתה, מטבעות וכפתורי הניווט זמינים. סטטיסטיקות מפורטות, דקות חודשיות ומשימות מעודכנות ייטענו
-              בניסיון חוזר.
+              הנתונים הבסיסיים (רמה, משימות, מטבעות וכו׳) כבר מוצגים. רק דיוק מדויק, דקות חודשיות מחושבות ופרסי
+              התמדה לא התעדכנו.
             </p>
             <button
               type="button"
-              onClick={() => homePayload && void loadHomeAnalytics(homePayload)}
+              onClick={() => homePayload && student?.id && void loadHomeAnalytics(student.id, homePayload)}
               className={T.errorBtn}
             >
               נסו שוב לטעון נתונים

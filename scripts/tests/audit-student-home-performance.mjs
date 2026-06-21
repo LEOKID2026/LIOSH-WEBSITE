@@ -200,9 +200,10 @@ async function measureHttp() {
 
   const rows = [];
 
-  async function fetchTimed(path) {
+  async function fetchTimed(path, method = "GET") {
     const t0 = performance.now();
     const res = await fetch(`${BASE_URL}${path}`, {
+      method,
       headers: { cookie, accept: "application/json" },
     });
     const text = await res.text();
@@ -219,39 +220,36 @@ async function measureHttp() {
 
   const shellVisibleMs = me.ms + summary.ms;
 
-  // Deferred — starts after summary returns (parallel with activities in browser)
   const analyticsPromise = fetchTimed("/api/student/home-profile/analytics");
+  const grantsPromise = fetchTimed("/api/student/home-profile/achievement-grants", "POST");
   const activitiesPromise = fetchTimed("/api/student/activities");
   const surprisePromise = fetchTimed("/api/student/rewards/surprise-box/status");
 
-  const [analytics, activities, surprise] = await Promise.all([
+  const [analytics, grants, activities, surprise] = await Promise.all([
     analyticsPromise,
+    grantsPromise,
     activitiesPromise,
     surprisePromise,
   ]);
-  rows.push(analytics, activities, surprise);
-
-  const legacy = await fetchTimed("/api/student/home-profile");
-  rows.push(legacy);
+  rows.push(analytics, grants, activities, surprise);
 
   console.log("\n=== HTTP waterfall — browser order (%s) ===\n", BASE_URL);
   console.table(rows.map(({ path, status, ms, size }) => ({ path, status, ms, size })));
 
-  console.log("\n--- Critical path (hero + tiles visible) ---");
+  console.log("\n--- Critical path (all 8 tiles + coins from summary) ---");
   console.log("  /me:      %dms", me.ms);
   console.log("  /summary: %dms", summary.ms);
-  console.log("  TOTAL until shell: ~%dms (was blocking on monolith ~%dms)", shellVisibleMs, legacy.ms);
+  console.log("  TOTAL until real tile data: ~%dms", shellVisibleMs);
 
-  console.log("\n--- Deferred (after shell, non-blocking) ---");
-  console.log("  /analytics:  %dms", analytics.ms);
-  console.log("  /activities: %dms", activities.ms);
-  console.log("  /surprise-box/status: %dms", surprise.ms);
+  console.log("\n--- Deferred (background, non-blocking for tiles) ---");
+  console.log("  /analytics:         %dms", analytics.ms);
+  console.log("  /achievement-grants:%dms", grants.ms);
+  console.log("  /activities:        %dms", activities.ms);
+  console.log("  /surprise-box/status:%dms", surprise.ms);
 
-  console.log("\n--- Legacy monolith (back-compat only) ---");
-  console.log("  /home-profile: %dms", legacy.ms);
-
-  const near30s = rows.some((r) => r.ms >= 25_000);
-  console.log("\nNear 30s bottleneck: %s", near30s ? "YES — investigate" : "NO");
+  const near30s = [analytics, grants].some((r) => r.ms >= 25_000);
+  console.log("\nNear 30s on critical path: %s", shellVisibleMs >= 25_000 ? "YES" : "NO");
+  console.log("Near 30s on deferred grants: %s", grants.ms >= 25_000 ? "YES (ok — background)" : "NO");
 
   return { rows, shellVisibleMs, meMs: me.ms, summaryMs: summary.ms, analyticsMs: analytics.ms, legacyMs: legacy.ms };
 }

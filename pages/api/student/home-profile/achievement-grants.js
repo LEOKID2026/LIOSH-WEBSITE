@@ -3,10 +3,7 @@ import {
   clearStudentSessionCookie,
   getAuthenticatedStudentSession,
 } from "../../../../lib/learning-supabase/student-auth";
-import {
-  createStudentHomeProfileTimer,
-  loadStudentHomeAnalyticsPayload,
-} from "../../../../lib/learning-supabase/student-home-profile-load.server.js";
+import { runStudentHomeAchievementGrants } from "../../../../lib/learning-supabase/student-home-profile-load.server.js";
 
 export default async function handler(req, res) {
   res.setHeader("Cache-Control", "private, no-store, no-cache, must-revalidate");
@@ -14,7 +11,7 @@ export default async function handler(req, res) {
   res.setHeader("Expires", "0");
   res.setHeader("Vary", "Cookie");
 
-  if (req.method !== "GET") {
+  if (req.method !== "GET" && req.method !== "POST") {
     return res.status(405).json({ ok: false, error: "Method not allowed" });
   }
 
@@ -26,16 +23,13 @@ export default async function handler(req, res) {
     }
 
     const supabase = getLearningSupabaseServiceRoleClient();
-    const timer = createStudentHomeProfileTimer("student-home-profile-analytics");
-    const displayName = String(auth.student?.full_name || "").trim() || "Student";
-    const payload = await loadStudentHomeAnalyticsPayload(
-      supabase,
-      { studentId: auth.studentId, displayName },
-      { timer }
-    );
+    const achievementGrants = await runStudentHomeAchievementGrants(supabase, auth.studentId);
 
-    timer.finish({ studentId: auth.studentId, endpoint: "analytics" });
-    return res.status(200).json(payload);
+    return res.status(200).json({
+      ok: true,
+      studentId: auth.studentId,
+      achievementGrants,
+    });
   } catch (e) {
     const msg = e && typeof e === "object" && "message" in e ? String(e.message) : String(e);
     return res.status(500).json({ ok: false, error: "Server error", detail: msg.slice(0, 500) });
