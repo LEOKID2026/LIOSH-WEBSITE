@@ -4,8 +4,7 @@ import {
   POLICY_STATUS_UNAVAILABLE_HE,
 } from "../../lib/parent-client/policy-acceptance-api";
 import { getParentPortalTheme } from "../../lib/parent-ui/parent-portal-theme.client.js";
-import FullPolicyAcceptancePanel from "./FullPolicyAcceptancePanel";
-import PolicyAcceptanceDeclinedBlock from "./PolicyAcceptanceDeclinedBlock";
+import ParentCompactPolicyAcceptance from "./ParentCompactPolicyAcceptance";
 
 /**
  * Blocks parent dashboard until current Terms + Privacy versions are accepted.
@@ -30,8 +29,6 @@ export default function ParentPolicyAcceptanceGate({
   const [loading, setLoading] = useState(true);
   const [statusChecked, setStatusChecked] = useState(false);
   const [accepted, setAccepted] = useState(false);
-  const [declined, setDeclined] = useState(false);
-  const [panelKey, setPanelKey] = useState(0);
   const [error, setError] = useState("");
   const [required, setRequired] = useState({
     termsVersion: "",
@@ -52,7 +49,6 @@ export default function ParentPolicyAcceptanceGate({
     setStatusChecked(false);
     setAccepted(false);
     setError("");
-    setDeclined(false);
 
     try {
       const { ok, payload, error: apiError } = await fetchPolicyAcceptanceStatus(accessToken);
@@ -106,11 +102,7 @@ export default function ParentPolicyAcceptanceGate({
         <div className={`${T.gateBox}`} role="alert">
           <p className={T.gateText}>{error || POLICY_STATUS_UNAVAILABLE_HE}</p>
           <div className="flex flex-col sm:flex-row gap-2 sm:justify-end">
-            <button
-              type="button"
-              onClick={() => void loadStatus()}
-              className={T.amberBtn}
-            >
+            <button type="button" onClick={() => void loadStatus()} className={T.amberBtn}>
               נסו שוב
             </button>
             {typeof onLogout === "function" ? (
@@ -128,38 +120,19 @@ export default function ParentPolicyAcceptanceGate({
     return children;
   }
 
-  if (declined) {
-    return (
-      <div className="max-w-3xl mx-auto px-4 py-8" dir="rtl" lang="he">
-        <PolicyAcceptanceDeclinedBlock
-          bright={bright}
-          onReviewAgain={() => {
-            setDeclined(false);
-            setPanelKey((k) => k + 1);
-          }}
-          onReturnToLogin={() => void onLogout()}
-        />
-      </div>
-    );
-  }
-
   return (
     <div className="max-w-3xl mx-auto px-4 py-8" dir="rtl" lang="he">
-      <FullPolicyAcceptancePanel
-        key={panelKey}
+      <ParentCompactPolicyAcceptance
         bright={bright}
-        layout="fullPage"
         accessToken={accessToken}
         acceptanceSource="parent_dashboard"
         termsVersion={required.termsVersion}
         privacyVersion={required.privacyVersion}
-        persistToApi
+        onLogout={onLogout}
         onAccepted={() => {
           setAccepted(true);
-          setDeclined(false);
           setError("");
         }}
-        onDeclined={() => setDeclined(true)}
       />
     </div>
   );

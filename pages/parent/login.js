@@ -2,9 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Layout from "../../components/Layout";
-import PortalLoginHeading, { PortalHomeBackLink } from "../../components/auth/PortalLoginHeading";
-import FullPolicyAcceptancePanel from "../../components/parent/FullPolicyAcceptancePanel";
-import PolicyAcceptanceDeclinedBlock from "../../components/parent/PolicyAcceptanceDeclinedBlock";
+import PortalLoginHeading from "../../components/auth/PortalLoginHeading";
+import { ParentPolicyAcceptanceCheckboxField } from "../../components/parent/ParentCompactPolicyAcceptance";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
 import { mapParentAuthError } from "../../lib/parent-client/parent-auth-errors.he";
 import { postPolicyAcceptance } from "../../lib/parent-client/policy-acceptance-api";
@@ -44,9 +43,7 @@ export default function ParentLoginPage() {
   const [mode, setMode] = useState("login");
   const [identifier, setIdentifier] = useState("");
   const [secret, setSecret] = useState("");
-  const [signupPolicyDeclined, setSignupPolicyDeclined] = useState(false);
-  const [preSignupPolicyCompleted, setPreSignupPolicyCompleted] = useState(false);
-  const [signupPanelKey, setSignupPanelKey] = useState(0);
+  const [signupPolicyChecked, setSignupPolicyChecked] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [messageKind, setMessageKind] = useState("account");
@@ -82,8 +79,7 @@ export default function ParentLoginPage() {
 
   useEffect(() => {
     if (mode === "login") {
-      setPreSignupPolicyCompleted(false);
-      setSignupPolicyDeclined(false);
+      setSignupPolicyChecked(false);
     }
   }, [mode]);
 
@@ -116,8 +112,8 @@ export default function ParentLoginPage() {
         setMessage("המערכת עדיין נטענת. נסו שוב בעוד רגע.");
         return;
       }
-      if (mode === "signup" && !preSignupPolicyCompleted) {
-        setMessage("יש לקרוא ולאשר את תנאי השימוש ומדיניות הפרטיות לפני ההרשמה.");
+      if (mode === "signup" && !signupPolicyChecked) {
+        setMessage("יש לסמן את תיבת האישור לפני יצירת החשבון.");
         return;
       }
 
@@ -179,53 +175,7 @@ export default function ParentLoginPage() {
     }
   };
 
-  const signupSubmitDisabled = busy || (mode === "signup" && !preSignupPolicyCompleted);
-
-  if (mode === "signup" && !preSignupPolicyCompleted) {
-    return (
-      <Layout {...layoutProps}>
-        <div className="max-w-4xl mx-auto px-4 py-8" dir="rtl" lang="he">
-          <div className="max-w-md mx-auto">
-            <div className="flex justify-end mb-4">
-              <PortalHomeBackLink bright={isBright} />
-            </div>
-          </div>
-          {signupPolicyDeclined ? (
-            <PolicyAcceptanceDeclinedBlock
-              bright={isBright}
-              returnLabel="חזרה למסך הכניסה"
-              message="לא ניתן להמשיך בהרשמה ללא אישור תנאי השימוש ומדיניות הפרטיות."
-              onReviewAgain={() => {
-                setSignupPolicyDeclined(false);
-                setSignupPanelKey((k) => k + 1);
-              }}
-              onReturnToLogin={() => {
-                setSignupPolicyDeclined(false);
-                setMode("login");
-              }}
-            />
-          ) : (
-            <FullPolicyAcceptancePanel
-              key={signupPanelKey}
-              bright={isBright}
-              layout="fullPage"
-              accessToken={null}
-              acceptanceSource="parent_signup"
-              termsVersion={TERMS_VERSION}
-              privacyVersion={PRIVACY_VERSION}
-              persistToApi={false}
-              onAccepted={() => {
-                setPreSignupPolicyCompleted(true);
-                setSignupPolicyDeclined(false);
-                setMessage("");
-              }}
-              onDeclined={() => setSignupPolicyDeclined(true)}
-            />
-          )}
-        </div>
-      </Layout>
-    );
-  }
+  const signupSubmitDisabled = busy || (mode === "signup" && !signupPolicyChecked);
 
   return (
     <Layout {...layoutProps}>
@@ -266,6 +216,7 @@ export default function ParentLoginPage() {
             onClick={() => {
               setMode("signup");
               setMessage("");
+              setSignupPolicyChecked(false);
             }}
             className={`flex-1 rounded px-3 py-2 text-sm font-semibold ${
               mode === "signup" ? T.tabActive : T.tabIdle
@@ -323,9 +274,19 @@ export default function ParentLoginPage() {
                 autoComplete="new-password"
                 testId="parent-signup-password"
               />
-              {preSignupPolicyCompleted ? (
-                <p className={T.success}>✓ המדיניות נקראה ואושרה — אפשר להמשיך בהרשמה.</p>
-              ) : null}
+              <div
+                data-policy-acceptance-root
+                data-policy-scroll-mode="compact"
+                className={`rounded-lg border p-3 ${isBright ? "border-sky-200 bg-sky-50/80" : "border-white/15 bg-white/[0.04]"}`}
+              >
+                <ParentPolicyAcceptanceCheckboxField
+                  checked={signupPolicyChecked}
+                  onChange={setSignupPolicyChecked}
+                  bright={isBright}
+                  disabled={busy}
+                  id="parent-signup-policy-acceptance"
+                />
+              </div>
             </>
           )}
 
