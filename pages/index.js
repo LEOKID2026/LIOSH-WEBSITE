@@ -4,30 +4,45 @@ import Layout from "../components/Layout";
 import Link from "next/link";
 import InstallAppPrompt from "../components/InstallAppPrompt";
 import InstallAppButton from "../components/InstallAppButton";
+import StudentThemePicker from "../components/student/StudentThemePicker";
+import { useStudentTheme } from "../contexts/StudentThemeContext.jsx";
 
 const PORTAL_CARDS = [
   {
     key: "student",
     title: "עולם הילדים",
     emoji: "🎒",
-    gradient: "from-amber-500/60 to-rose-600/70",
+    classicGradient: "from-amber-500/60 to-rose-600/70",
+    /** Full saturated face — own palette for bright mode (not classic tints). */
+    brightFace:
+      "bg-gradient-to-br from-violet-500 via-fuchsia-500 to-purple-700 text-white shadow-lg shadow-fuchsia-300/45",
+    /** Same 🎒 — shifted to teal/green so it reads on the purple face. */
+    brightEmojiFilter:
+      "[filter:hue-rotate(118deg)_saturate(2.5)_brightness(1.12)_contrast(1.05)]",
     authAware: true,
   },
   {
     key: "parent",
     title: "פורטל הורים",
     emoji: "👨‍👩‍👧‍👦",
-    gradient: "from-emerald-500/60 to-teal-600/70",
+    classicGradient: "from-emerald-500/60 to-teal-600/70",
+    brightFace:
+      "bg-gradient-to-br from-cyan-500 via-sky-500 to-blue-700 text-white shadow-lg shadow-cyan-300/45",
     href: "/parent/login",
   },
   {
     key: "teacher",
     title: "פורטל מורים",
     emoji: "📋",
-    gradient: "from-sky-500/60 to-indigo-600/70",
+    classicGradient: "from-sky-500/60 to-indigo-600/70",
+    brightFace:
+      "bg-gradient-to-br from-orange-500 via-amber-500 to-yellow-500 text-white shadow-lg shadow-amber-300/45",
     href: "/teacher/login",
   },
 ];
+
+const CARD_BODY =
+  "flex h-full min-h-[118px] w-full flex-col items-center justify-center rounded-2xl p-4 text-center md:min-h-[152px] md:p-5";
 
 function cardGridClass(key) {
   if (key === "student") return "col-span-2 lg:col-span-1";
@@ -36,6 +51,7 @@ function cardGridClass(key) {
 
 export default function HomePage() {
   const router = useRouter();
+  const { theme, isBright } = useStudentTheme();
   const [studentPortalBusy, setStudentPortalBusy] = useState(false);
 
   const goStudentPortal = async () => {
@@ -60,38 +76,88 @@ export default function HomePage() {
   };
 
   return (
-    <Layout homepage>
+    <Layout homepage studentTheme={theme} studentShell="home">
       <InstallAppPrompt />
       <div
-        className="max-w-5xl mx-auto px-3 pt-3.5 pb-3 md:px-4 md:py-6 flex flex-col flex-1 min-h-0 w-full justify-between md:min-h-[calc(100vh-9.5rem)] md:justify-center md:flex-initial gap-5 md:gap-7"
+        className="mx-auto flex h-full min-h-0 w-full max-w-5xl flex-1 flex-col items-stretch justify-between gap-5 overflow-hidden px-3 pb-3 pt-3.5 md:min-h-[calc(100vh-9.5rem)] md:justify-center md:gap-7 md:px-4 md:py-6 md:flex-initial"
         dir="rtl"
       >
-        <section className="text-center space-y-2.5 md:space-y-4 mt-1.5 mb-0.5 md:mt-0 md:mb-0">
-          <p className="inline-flex items-center gap-2 px-3 py-1 md:py-1.5 rounded-full bg-white/10 text-xs md:text-xs tracking-[0.2em] md:tracking-[0.25em] uppercase text-amber-300 font-semibold">
+        <section className="mt-1.5 shrink-0 space-y-2.5 text-center md:mt-0 md:space-y-4">
+          <p
+            className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] md:tracking-[0.25em] ${
+              isBright
+                ? "border border-sky-200 bg-sky-100 text-sky-800"
+                : "bg-white/10 text-amber-300"
+            }`}
+          >
             לומדים · מתרגלים · מתקדמים
           </p>
-          <h1 className="text-[1.75rem] md:text-4xl lg:text-5xl font-black leading-tight">
-            ברוכים הבאים אל <span className="text-amber-300">LEO KIDS</span>
+          <h1
+            className={`text-[1.75rem] font-black leading-tight md:text-4xl lg:text-5xl ${
+              isBright ? "text-slate-900" : "text-white"
+            }`}
+          >
+            ברוכים הבאים אל{" "}
+            <span className={isBright ? "text-sky-700" : "text-amber-300"}>LEO KIDS</span>
           </h1>
-          <p className="text-sm md:text-base lg:text-lg text-white/70 max-w-2xl mx-auto leading-relaxed md:leading-normal px-1">
+          <p
+            className={`mx-auto max-w-2xl px-1 text-sm leading-relaxed md:text-base md:leading-normal lg:text-lg ${
+              isBright ? "text-slate-600" : "text-white/70"
+            }`}
+          >
             אתר לימודים לילדים עם תרגול חכם, פעילויות קצרות ומיני משחקים — מתמטיקה,
-            גאומטריה, אנגלית ועוד הכל במקום אחד.
+            גאומטריה, אנגלית ועוד. הכל במקום אחד.
           </p>
         </section>
 
-        <section className="grid grid-cols-2 lg:grid-cols-3 gap-x-2.5 gap-y-3.5 md:gap-5">
+        <section className="grid shrink-0 grid-cols-2 gap-x-2.5 gap-y-3.5 md:gap-5 lg:grid-cols-3">
           {PORTAL_CARDS.map((card) => {
-            const inner = (
-              <div className="h-full rounded-2xl bg-black/60 flex flex-col items-center justify-center text-center p-4 md:p-5 min-h-[118px] md:min-h-[152px]">
-                <div className="text-3xl md:text-4xl mb-2 md:mb-3">{card.emoji}</div>
-                <h2 className="text-lg md:text-xl font-bold leading-snug">{card.title}</h2>
+            const gridClass = cardGridClass(card.key);
+
+            const cardContent = (
+              <>
+                <div className="mb-2 text-3xl md:mb-3 md:text-4xl">
+                  <span
+                    className={
+                      isBright && card.brightEmojiFilter ? card.brightEmojiFilter : undefined
+                    }
+                  >
+                    {card.emoji}
+                  </span>
+                </div>
+                <h2 className="text-lg font-bold leading-snug md:text-xl">{card.title}</h2>
                 {card.authAware && studentPortalBusy ? (
-                  <span className="mt-1 text-xs text-white/60">טוען...</span>
+                  <span className="mt-1 text-xs text-white/80">טוען...</span>
                 ) : null}
-              </div>
+              </>
             );
 
-            const shellClass = `group rounded-2xl bg-gradient-to-br ${card.gradient} p-[1px] w-full ${cardGridClass(card.key)}`;
+            if (isBright) {
+              const brightClass = `${CARD_BODY} ${card.brightFace} ${gridClass}`;
+              if (card.authAware) {
+                return (
+                  <button
+                    key={card.key}
+                    type="button"
+                    disabled={studentPortalBusy}
+                    onClick={() => void goStudentPortal()}
+                    className={`${brightClass} text-right disabled:opacity-60 disabled:pointer-events-none`}
+                  >
+                    {cardContent}
+                  </button>
+                );
+              }
+              return (
+                <Link key={card.key} href={card.href} className={brightClass}>
+                  {cardContent}
+                </Link>
+              );
+            }
+
+            const shellClass = `group rounded-2xl bg-gradient-to-br ${card.classicGradient} p-[1px] w-full ${gridClass}`;
+            const inner = (
+              <div className={`${CARD_BODY} bg-black/60 text-white`}>{cardContent}</div>
+            );
 
             if (card.authAware) {
               return (
@@ -115,7 +181,11 @@ export default function HomePage() {
           })}
         </section>
 
-        <div className="flex justify-center shrink-0 pt-1 md:pt-0">
+        <section className="flex shrink-0 justify-center px-1">
+          <StudentThemePicker className="w-full max-w-[17.5rem] sm:max-w-xs" />
+        </section>
+
+        <div className="flex shrink-0 justify-center pt-1 md:pt-0">
           <InstallAppButton className="" />
         </div>
       </div>
