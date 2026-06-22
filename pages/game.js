@@ -28,10 +28,7 @@ export default function Games() {
               <Link href="/games" className={GH.backBtn}>
                 משחקים
               </Link>
-              <div className="flex items-center gap-3">
-                <p className={`text-xs uppercase tracking-[0.3em] ${GH.muted}`}>משחקי ליאו</p>
-                <StudentThemePicker variant="icon" iconSize="nav" />
-              </div>
+              <StudentThemePicker variant="icon" iconSize="nav" />
             </div>
 
             <header className="text-center space-y-3">
@@ -66,11 +63,6 @@ export default function Games() {
                   })}
                 </div>
               )}
-              <p className={`text-center text-sm ${GH.muted}`}>
-                <Link href="/student/solo-games" className="underline underline-offset-2">
-                  לכל משחקי הילד היחיד
-                </Link>
-              </p>
             </section>
           </div>
         </main>

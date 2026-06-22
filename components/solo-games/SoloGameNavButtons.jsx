@@ -36,7 +36,7 @@ export default function SoloGameNavButtons({
         {primaryBusy ? primaryBusyLabel : primaryLabel}
       </button>
       <Link
-        href="/student/solo-games"
+        href="/game"
         className={`${gamesBtn} ${minH} w-full flex items-center justify-center ${textSize}`}
       >
         חזרה למשחקים
