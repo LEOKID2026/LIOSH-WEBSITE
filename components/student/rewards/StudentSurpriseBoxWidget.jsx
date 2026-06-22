@@ -64,52 +64,55 @@ export default function StudentSurpriseBoxWidget({ onOpen }) {
 
   if (!isCardRewardsEnabledClient()) return null;
 
+  const canOpen = phase === "ok" && ready;
+
+  const compactBtn =
+    "flex-1 md:flex-none !min-h-[2.75rem] !px-3 !py-2 !text-sm text-center whitespace-nowrap disabled:opacity-50 disabled:pointer-events-none";
+
   return (
     <section
-      className={`mt-4 md:mt-5 rounded-2xl border p-4 md:p-5 text-right overflow-x-hidden ${T.statCard}`}
+      className={`mt-4 md:mt-5 w-full md:max-w-md text-right overflow-x-hidden ${T.statCard}`}
       aria-label="קופסת הפתעה"
     >
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between md:gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 justify-end">
-            <h2 className={`text-base md:text-lg font-bold ${T.tileTitle}`}>קופסת הפתעה</h2>
-            <span className="text-2xl shrink-0" aria-hidden>
+            <h2 className={`text-sm md:text-base font-bold ${T.tileTitle}`}>קופסת הפתעה</h2>
+            <span className="text-xl shrink-0" aria-hidden>
               🎁
             </span>
           </div>
           {phase === "loading" ? (
-            <p className={`mt-1 text-sm ${T.tileSub}`}>טוען...</p>
+            <p className={`mt-0.5 text-xs md:text-sm ${T.tileSub}`}>טוען...</p>
           ) : phase === "error" ? (
-            <p className="mt-1 text-sm text-rose-600">{errorHe}</p>
+            <p className="mt-0.5 text-xs md:text-sm text-rose-600">{errorHe}</p>
           ) : ready ? (
-            <p className={`mt-1 text-sm font-semibold text-emerald-700 dark:text-emerald-300`}>
+            <p className="mt-0.5 text-xs md:text-sm font-semibold text-emerald-700 dark:text-emerald-300">
               {pendingBoxCount > 1
                 ? `${pendingBoxCount} קופסאות מוכנות לפתיחה!`
                 : "קופסת הפתעה מוכנה!"}
             </p>
           ) : secondsRemaining != null ? (
-            <p className={`mt-1 text-sm ${T.tileSub}`}>
+            <p className={`mt-0.5 text-xs md:text-sm ${T.tileSub}`}>
               הקופסה הבאה תהיה מוכנה בעוד{" "}
               <span className="tabular-nums font-semibold">{formatCountdownHe(secondsRemaining)}</span>
             </p>
           ) : (
-            <p className={`mt-1 text-sm ${T.tileSub}`}>המשיכו ללמוד — בקרוב תגיע קופסה חדשה!</p>
+            <p className={`mt-0.5 text-xs md:text-sm ${T.tileSub}`}>
+              המשיכו ללמוד — בקרוב תגיע קופסה חדשה!
+            </p>
           )}
         </div>
-        <div className="flex flex-col xs:flex-row gap-2 shrink-0 w-full sm:w-auto">
-          {ready ? (
-            <button
-              type="button"
-              onClick={() => onOpen?.()}
-              className={`${T.ctaPrimary} w-full sm:w-auto text-center`}
-            >
-              פתח קופסה
-            </button>
-          ) : null}
-          <Link
-            href="/student/cards"
-            className={`${T.ctaGames} w-full sm:w-auto text-center`}
+        <div className="flex flex-row gap-2 shrink-0 w-full md:w-auto min-w-0">
+          <button
+            type="button"
+            disabled={!canOpen}
+            onClick={() => onOpen?.()}
+            className={`${T.ctaPrimary} ${compactBtn}`}
           >
+            פתח קופסה
+          </button>
+          <Link href="/student/cards" className={`${T.ctaGames} ${compactBtn}`}>
             לאוסף שלי
           </Link>
         </div>
