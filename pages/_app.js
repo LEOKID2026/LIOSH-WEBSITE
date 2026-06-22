@@ -8,6 +8,7 @@ import DevServiceWorkerCleanup from "../components/dev/DevServiceWorkerCleanup";
 import { useIOSViewportFix } from "../hooks/useIOSViewportFix";
 import { initPwaInstallPromptCapture } from "../lib/pwa/pwa-install-prompt";
 import { initParentPwaInstallPromptCapture } from "../lib/pwa/pwa-parent-install-prompt";
+import { initTeacherPwaInstallPromptCapture } from "../lib/pwa/pwa-teacher-install-prompt";
 import { StudentThemeProvider } from "../contexts/StudentThemeContext.jsx";
 import BrowserThemeColorSync from "../components/BrowserThemeColorSync.jsx";
 import {
@@ -17,6 +18,7 @@ import {
 
 if (typeof window !== "undefined") {
   initParentPwaInstallPromptCapture();
+  initTeacherPwaInstallPromptCapture();
   if (window.location.pathname === "/student/install-app") {
     initPwaInstallPromptCapture();
   }
@@ -75,6 +77,7 @@ export default function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     initParentPwaInstallPromptCapture();
+    initTeacherPwaInstallPromptCapture();
     if (router.pathname === "/student/install-app") {
       initPwaInstallPromptCapture();
     }
@@ -119,6 +122,7 @@ export default function MyApp({ Component, pageProps }) {
 
     const isParentRoute = (router.pathname || "").startsWith("/parent/");
     const isStudentRoute = (router.pathname || "").startsWith("/student/");
+    const isTeacherRoute = (router.pathname || "").startsWith("/teacher/");
 
     const registerSW = () => {
       if (isParentRoute) {
@@ -141,6 +145,18 @@ export default function MyApp({ Component, pageProps }) {
           })
           .catch((registrationError) => {
             console.error("[SW student] Registration failed:", registrationError);
+          });
+        return;
+      }
+
+      if (isTeacherRoute) {
+        navigator.serviceWorker
+          .register("/teacher/sw.js", { scope: "/teacher/" })
+          .then((registration) => {
+            console.log("[SW teacher] Registered:", registration.scope);
+          })
+          .catch((registrationError) => {
+            console.error("[SW teacher] Registration failed:", registrationError);
           });
         return;
       }
@@ -213,6 +229,7 @@ export default function MyApp({ Component, pageProps }) {
   const shouldGate = STUDENT_PROTECTED_ROUTES.has(router.pathname || "");
   const isStudentPwaInstallMode = router.pathname === "/student/install-app";
   const isParentPwaInstallMode = router.pathname === "/parent/install-app";
+  const isTeacherPwaInstallMode = router.pathname === "/teacher/install-app";
 
   return (
     <>
@@ -224,17 +241,29 @@ export default function MyApp({ Component, pageProps }) {
           content="width=device-width, initial-scale=1, viewport-fit=cover"
         />
         <meta name="description" content="LEO K - Fun games and learning activities for kids. Play arcade games, solve puzzles, and practice math, geometry and English." />
-        {!isParentPwaInstallMode ? (
+        {isStudentPwaInstallMode ? (
           <>
             <meta name="theme-color" content={BROWSER_THEME_COLOR_BRIGHT} />
             <meta name="apple-mobile-web-app-title" content="LEO K" />
             <meta name="msapplication-TileColor" content={BROWSER_THEME_COLOR_BRIGHT} />
           </>
-        ) : (
+        ) : isParentPwaInstallMode ? (
           <>
             <meta name="theme-color" content="#0d9488" />
             <meta name="apple-mobile-web-app-title" content="P-LEO K" />
             <meta name="msapplication-TileColor" content="#0d9488" />
+          </>
+        ) : isTeacherPwaInstallMode ? (
+          <>
+            <meta name="theme-color" content="#4338ca" />
+            <meta name="apple-mobile-web-app-title" content="T LEO K" />
+            <meta name="msapplication-TileColor" content="#4338ca" />
+          </>
+        ) : (
+          <>
+            <meta name="theme-color" content={BROWSER_THEME_COLOR_BRIGHT} />
+            <meta name="apple-mobile-web-app-title" content="LEO K" />
+            <meta name="msapplication-TileColor" content={BROWSER_THEME_COLOR_BRIGHT} />
           </>
         )}
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -257,6 +286,13 @@ export default function MyApp({ Component, pageProps }) {
             <link rel="icon" type="image/png" sizes="512x512" href="/images/parent-icons/icon-512.png" />
             <link rel="apple-touch-icon" href="/images/parent-icons/icon-192.png" />
           </>
+        ) : isTeacherPwaInstallMode ? (
+          <>
+            <link rel="icon" href="/images/teacher-icons/icon-192.png" sizes="any" />
+            <link rel="icon" type="image/png" sizes="192x192" href="/images/teacher-icons/icon-192.png" />
+            <link rel="icon" type="image/png" sizes="512x512" href="/images/teacher-icons/icon-512.png" />
+            <link rel="apple-touch-icon" href="/images/teacher-icons/icon-192.png" />
+          </>
         ) : (
           <>
             <link rel="icon" href="/images/leo-icons/icon-192.png" sizes="any" />
@@ -275,6 +311,9 @@ export default function MyApp({ Component, pageProps }) {
         ) : null}
         {isParentPwaInstallMode ? (
           <link rel="manifest" href="/manifest-parent.webmanifest" />
+        ) : null}
+        {isTeacherPwaInstallMode ? (
+          <link rel="manifest" href="/manifest-teacher.webmanifest" />
         ) : null}
         
         <title>LEO K - Kids Games & Learning</title>

@@ -3,6 +3,7 @@ import { isCapacitorNative, isPwaInstalledStandalone } from "../lib/pwa/pwa-inst
 import {
   PARENT_PWA_INSTALL_PATH,
   STUDENT_PWA_INSTALL_PATH,
+  TEACHER_PWA_INSTALL_PATH,
 } from "../lib/pwa/pwa-install-mode";
 
 /**
@@ -32,6 +33,13 @@ export default function InstallAppChoiceButton({ className = "" }) {
     e.stopPropagation();
     setShowChoiceModal(false);
     window.location.href = PARENT_PWA_INSTALL_PATH;
+  };
+
+  const handleTeachersChoice = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setShowChoiceModal(false);
+    window.location.href = TEACHER_PWA_INSTALL_PATH;
   };
 
   if (isCapacitorNative() || isPwaInstalledStandalone()) {
@@ -118,6 +126,15 @@ export default function InstallAppChoiceButton({ className = "" }) {
               >
                 <span className="text-base font-bold text-teal-200">התקנת אפליקציה להורים</span>
                 <span className="text-sm text-white/75">P-LEO K</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleTeachersChoice}
+                className="flex w-full flex-col items-start gap-1 rounded-xl border border-indigo-400/30 bg-gradient-to-l from-indigo-500/20 to-orange-500/10 px-4 py-3 text-right transition hover:border-indigo-400/50 hover:from-indigo-500/30"
+              >
+                <span className="text-base font-bold text-indigo-200">התקנת אפליקציה למורים</span>
+                <span className="text-sm text-white/75">T LEO K</span>
               </button>
             </div>
           </div>

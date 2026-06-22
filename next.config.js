@@ -143,6 +143,19 @@ const nextConfig = {
         ],
       },
       {
+        source: '/teacher/sw.js',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=0, must-revalidate',
+          },
+          {
+            key: 'Service-Worker-Allowed',
+            value: '/teacher/',
+          },
+        ],
+      },
+      {
         source: '/manifest.json',
         headers: [
           {
@@ -157,6 +170,19 @@ const nextConfig = {
       },
       {
         source: '/manifest-parent.webmanifest',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/manifest+json',
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=0, must-revalidate',
+          },
+        ],
+      },
+      {
+        source: '/manifest-teacher.webmanifest',
         headers: [
           {
             key: 'Content-Type',
