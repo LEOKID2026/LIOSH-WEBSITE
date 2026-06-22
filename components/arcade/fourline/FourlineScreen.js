@@ -29,7 +29,7 @@ function FourlineLeaveRow({ onLeave, disabled = false, busy = false }) {
         disabled={disabled || busy}
         className="min-h-[2.5rem] w-full max-w-xs rounded-xl border border-rose-500/35 bg-rose-950/35 px-4 py-2 text-sm font-extrabold text-rose-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] transition hover:bg-rose-950/55 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50 sm:max-w-sm sm:text-base"
       >
-        {busy ? "יוצא…" : "עזוב (LEAVE)"}
+        {busy ? "יוצא…" : "עזוב"}
       </button>
     </div>
   );

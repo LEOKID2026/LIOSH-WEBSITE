@@ -29,7 +29,7 @@ function LeaveRow({ onLeave, disabled = false, busy = false }) {
         disabled={disabled || busy}
         className="min-h-[2.5rem] w-full max-w-xs rounded-xl border border-rose-500/35 bg-rose-950/35 px-4 py-2 text-sm font-extrabold text-rose-100 disabled:opacity-50 sm:max-w-sm"
       >
-        {busy ? "יוצא…" : "עזוב (LEAVE)"}
+        {busy ? "יוצא…" : "עזוב"}
       </button>
     </div>
   );

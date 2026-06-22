@@ -17,7 +17,7 @@ import { normalizeCalledNumbers } from "../../../lib/arcade/bingo/ov2BingoEngine
  * }} props
  */
 export default function Ov2BingoCard({ card, called, marks, onToggleMark = null, disabled = false }) {
-  const headers = ["B", "I", "N", "G", "O"];
+  const headers = ["ב", "י", "נ", "ג", "ה"];
   const calledSet = useMemo(() => new Set(normalizeCalledNumbers(called)), [called]);
   const canInteract = typeof onToggleMark === "function" && !disabled;
 
@@ -68,7 +68,7 @@ export default function Ov2BingoCard({ card, called, marks, onToggleMark = null,
                   .filter(Boolean)
                   .join(" ")}
               >
-                {isFree ? "FREE" : n}
+                {isFree ? "חינם" : n}
               </span>
             </button>
           );

@@ -82,7 +82,7 @@ const GATE_SCENARIOS = {
   },
   science: {
     grade: 3,
-    topic: "observation",
+    topic: "experiments",
     questionCount: 2,
     intendedMinutes: 4,
     profile: "strong",

@@ -15,9 +15,9 @@ import StudentAdSlot from "../../student/StudentAdSlot.jsx";
 function fmtCountdown(ms) {
   if (ms == null) return "—";
   const s = Math.max(0, Math.ceil(ms / 1000));
-  if (s >= 120) return `${Math.ceil(s / 60)}m`;
+  if (s >= 120) return `${Math.ceil(s / 60)} דק'`;
   if (s >= 60) return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
-  return `${s}s`;
+  return `${s} שנ'`;
 }
 
 /**
@@ -144,16 +144,16 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
   const isRoomShell = vm.playMode === OV2_BINGO_PLAY_MODE.LIVE_ROOM_NO_MATCH_YET;
   const isLiveMatch = vm.playMode === OV2_BINGO_PLAY_MODE.LIVE_MATCH_ACTIVE;
   const stripTone = isLiveMatch ? "emerald" : isRoomShell ? "amber" : "neutral";
-  const stripTitle = isLiveMatch ? "Bingo · live" : isRoomShell ? "Bingo · room" : "Bingo";
+  const stripTitle = isLiveMatch ? "בינגו · משחק חי" : isRoomShell ? "בינגו · חדר" : "בינגו";
 
   const prizeLabels = useMemo(
     () => ({
-      row1: "Row 1",
-      row2: "Row 2",
-      row3: "Row 3",
-      row4: "Row 4",
-      row5: "Row 5",
-      full: "Full",
+      row1: "שורה 1",
+      row2: "שורה 2",
+      row3: "שורה 3",
+      row4: "שורה 4",
+      row5: "שורה 5",
+      full: "מלא",
     }),
     []
   );
@@ -170,7 +170,7 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
   const finishModalClaims = useMemo(() => {
     return (vm.claims || []).map(c => ({
       prizeKey: String(c.prizeKey || "").trim(),
-      claimedByName: String(c.claimedByName || "").trim() || "Player",
+      claimedByName: String(c.claimedByName || "").trim() || "שחקן",
       amount: Math.floor(Number(c.amount) || 0),
       seatIndex: c.seatIndex,
     }));
@@ -225,7 +225,7 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
     setExitErr("");
     try {
       const r = await actions.requestRematch();
-      if (!r.ok) setExitErr(r.error || "Rematch request failed");
+      if (!r.ok) setExitErr(r.error || "בקשת משחק חוזר נכשלה");
     } finally {
       setRematchBusy(false);
     }
@@ -237,7 +237,7 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
     setExitErr("");
     try {
       const r = await actions.cancelRematch();
-      if (!r.ok) setExitErr(r.error || "Could not cancel rematch");
+      if (!r.ok) setExitErr(r.error || "לא ניתן לבטל משחק חוזר");
     } finally {
       setRematchBusy(false);
     }
@@ -250,12 +250,12 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
     try {
       const r = await actions.startNextMatch();
       if (!r.ok) {
-        setExitErr(r.error || "Could not start next match");
+        setExitErr(r.error || "לא ניתן להתחיל משחק הבא");
         return;
       }
       await router.push("/student/arcade");
     } catch (e) {
-      setExitErr(e?.message || String(e) || "Could not start next match.");
+      setExitErr(e?.message || String(e) || "לא ניתן להתחיל משחק הבא.");
     } finally {
       setStartNextBusy(false);
     }
@@ -281,7 +281,7 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
 
   const cardFooterHint = useMemo(() => {
     if (!vm.isLive) return null;
-    if (!vm.cardIsAuthoritative) return "Take a seat in the lobby to see your card for this round.";
+    if (!vm.cardIsAuthoritative) return "ישבו במושב בלובי כדי לראות את הכרטיס שלכם לסיבוב הזה.";
     return null;
   }, [vm.isLive, vm.cardIsAuthoritative]);
 
@@ -292,12 +292,12 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
       vm.authoritativeSnapshot && vm.authoritativeSnapshot.sessionId != null
         ? String(vm.authoritativeSnapshot.sessionId).trim()
         : "";
-    if (isLiveMatch && sp === "playing") return "Playing";
-    if (isLiveMatch && sp === "finished") return "Finished";
-    if (life === "lobby") return "Waiting for players";
-    if (life === "pending_start" || life === "pending_stakes") return "Waiting for stake commits";
-    if (life === "active" && !vm.roomActiveSessionId && !snapSid) return "Waiting for host to open Bingo";
-    if (life === "active" && (vm.roomActiveSessionId || snapSid)) return "Match";
+    if (isLiveMatch && sp === "playing") return "משחק פעיל";
+    if (isLiveMatch && sp === "finished") return "הסתיים";
+    if (life === "lobby") return "ממתינים לשחקנים";
+    if (life === "pending_start" || life === "pending_stakes") return "ממתינים להימור מכל השחקנים";
+    if (life === "active" && !vm.roomActiveSessionId && !snapSid) return "ממתינים שהמארח יפתח בינגו";
+    if (life === "active" && (vm.roomActiveSessionId || snapSid)) return "משחק";
     return sp || life || "—";
   }, [isLiveMatch, vm.roomLifecyclePhase, vm.sessionPhase, vm.roomActiveSessionId, vm.authoritativeSnapshot]);
 
@@ -347,14 +347,14 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
             onClick={() => void onLeaveToLobby()}
             className="text-[10px] font-semibold text-red-200/95 underline decoration-red-400/50 disabled:opacity-45 sm:text-[11px]"
           >
-            {leaveToLobbyBusy ? "Leaving…" : "Leave game"}
+            {leaveToLobbyBusy ? "יוצא…" : "עזוב משחק"}
           </button>
         </div>
       ) : null}
 
       <div
         className="shrink-0 overflow-x-auto rounded-lg border border-white/10 bg-black/35 py-0.5 [scrollbar-width:thin] sm:py-1"
-        aria-label="Seats"
+        aria-label="מושבים"
       >
         <div className="flex min-w-max gap-1 px-1">
           {seatSlots.map(({ seatIndex, member }) => {
@@ -363,7 +363,7 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
             const isCaller = vm.callerSeatIndex != null && vm.callerSeatIndex === seatIndex;
             const isWinner =
               Boolean(vm.winner?.participantKey && member?.participantKey && vm.winner.participantKey === member.participantKey);
-            const label = member?.displayName?.trim() || (member ? "Player" : "Empty");
+            const label = member?.displayName?.trim() || (member ? "שחקן" : "ריק");
             return (
               <div
                 key={seatIndex}
@@ -376,16 +376,16 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
                   isCaller ? "ring-1 ring-amber-300/70" : "",
                   isWinner ? "ring-1 ring-emerald-400/60" : "",
                 ].join(" ")}
-                title={member ? `${label}${member.isReady ? " · Ready" : ""}` : `Seat ${seatIndex + 1} · Open`}
+                title={member ? `${label}${member.isReady ? " · מוכן" : ""}` : `מושב ${seatIndex + 1} · פנוי`}
               >
                 <div className={`truncate font-semibold ${member ? seatStyle.text : "text-zinc-400"}`}>{label}</div>
                 <div className="mt-1 text-[8px]">
                   {member ? (
                     <span className={member.isReady ? "text-emerald-300" : "text-zinc-500"}>
-                      {member.isReady ? "Ready" : "Idle"}
+                      {member.isReady ? "מוכן" : "ממתין"}
                     </span>
                   ) : (
-                    <span className="text-zinc-600">Open</span>
+                    <span className="text-zinc-600">פנוי</span>
                   )}
                 </div>
               </div>
@@ -397,10 +397,10 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
       {playingLive ? (
         <div
           className="flex shrink-0 flex-nowrap items-stretch gap-2 overflow-x-auto rounded-lg border border-white/10 bg-black/30 px-2 py-2 [scrollbar-width:thin] sm:gap-3 sm:px-4 sm:py-3"
-          aria-label="Live match stats"
+          aria-label="סטטיסטיקות משחק חי"
         >
           <span className="flex h-[2.25rem] max-h-[2.25rem] min-w-[5.5rem] flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-white/10 bg-black/40 px-3 py-0 text-xs leading-tight text-zinc-400 sm:h-[2.5rem] sm:max-h-[2.5rem] sm:min-w-0 sm:px-4 sm:text-sm">
-            <span className="font-semibold text-zinc-500">Last</span>
+            <span className="font-semibold text-zinc-500">אחרון</span>
             <span className="font-mono font-semibold text-amber-100">{vm.lastCalled ?? "—"}</span>
           </span>
           <span className="flex h-[2.25rem] max-h-[2.25rem] min-w-[5.5rem] flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-white/10 bg-black/40 px-3 py-0 text-xs leading-tight text-zinc-400 sm:h-[2.5rem] sm:max-h-[2.5rem] sm:min-w-0 sm:px-4 sm:text-sm">
@@ -408,7 +408,7 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
             <span className="font-mono font-semibold text-zinc-100">{fmtCountdown(vm.msUntilNextCall)}</span>
           </span>
           <span className="flex h-[2.25rem] max-h-[2.25rem] min-w-[5.5rem] flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-white/10 bg-black/40 px-3 py-0 text-xs leading-tight text-zinc-400 sm:h-[2.5rem] sm:max-h-[2.5rem] sm:min-w-0 sm:px-4 sm:text-sm">
-            <span className="font-semibold text-zinc-500">Deck</span>
+            <span className="font-semibold text-zinc-500">חפיסה</span>
             <span className="font-mono font-semibold text-zinc-200">
               {vm.deckRemaining}/{vm.deckTotal}
             </span>
@@ -419,10 +419,10 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
       {isFinishedLive ? (
         <div
           className="flex shrink-0 flex-nowrap items-stretch gap-2 overflow-x-auto rounded-lg border border-white/10 bg-black/30 px-2 py-1.5 [scrollbar-width:thin] sm:gap-3 sm:px-3 sm:py-2"
-          aria-label="Match result summary"
+          aria-label="סיכום תוצאות משחק"
         >
           <span className="flex h-[2rem] max-h-[2rem] min-w-[5rem] flex-1 items-center justify-center gap-1 whitespace-nowrap rounded-md border border-white/10 bg-black/40 px-2 py-0 text-[10px] leading-tight text-zinc-400 sm:h-[2.25rem] sm:max-h-[2.25rem] sm:min-w-0 sm:text-xs">
-            <span className="font-semibold text-zinc-500">Last</span>
+            <span className="font-semibold text-zinc-500">אחרון</span>
             <span className="font-mono font-semibold text-amber-100">{vm.lastCalled ?? "—"}</span>
           </span>
           <span className="flex h-[2rem] max-h-[2rem] min-w-[5rem] flex-1 items-center justify-center gap-1 whitespace-nowrap rounded-md border border-white/10 bg-black/40 px-2 py-0 text-[10px] leading-tight text-zinc-400 sm:h-[2.25rem] sm:max-h-[2.25rem] sm:min-w-0 sm:text-xs">
@@ -430,7 +430,7 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
             <span className="font-mono font-semibold text-zinc-300">—</span>
           </span>
           <span className="flex h-[2rem] max-h-[2rem] min-w-[5rem] flex-1 items-center justify-center gap-1 whitespace-nowrap rounded-md border border-white/10 bg-black/40 px-2 py-0 text-[10px] leading-tight text-zinc-400 sm:h-[2.25rem] sm:max-h-[2.25rem] sm:min-w-0 sm:text-xs">
-            <span className="font-semibold text-zinc-500">Deck</span>
+            <span className="font-semibold text-zinc-500">חפיסה</span>
             <span className="font-mono font-semibold text-zinc-200">
               {vm.deckRemaining}/{vm.deckTotal}
             </span>
@@ -441,14 +441,14 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
       {vm.isLive && liveExceptionUi ? (
         <div className="shrink-0 rounded-lg border border-white/10 bg-black/35 px-2 py-1.5 sm:flex sm:items-start sm:gap-4 sm:py-2">
           <div className="min-w-0 flex-1">
-            <div className="text-[9px] font-semibold uppercase tracking-wide text-zinc-500 sm:text-[10px]">Status</div>
+            <div className="text-[9px] font-semibold uppercase tracking-wide text-zinc-500 sm:text-[10px]">מצב</div>
             <div className="mt-0.5 text-[11px] font-semibold leading-snug text-zinc-100 sm:text-xs">{phaseHeader}</div>
             {vm.phaseLine ? <p className="mt-0.5 text-[9px] leading-snug text-zinc-400 sm:text-[10px]">{vm.phaseLine}</p> : null}
           </div>
           {!playingLive && isLiveMatch && vm.sessionPhase !== "playing" ? (
             <div className="mt-2 grid grid-cols-2 gap-2 border-t border-white/10 pt-2 sm:mt-0 sm:border-l sm:border-t-0 sm:pl-4 sm:pt-0">
               <div>
-                <div className="text-[9px] font-semibold text-zinc-500">Last called</div>
+                <div className="text-[9px] font-semibold text-zinc-500">נקרא לאחרונה</div>
                 <div className="font-mono text-sm text-amber-100">{vm.lastCalled ?? "—"}</div>
               </div>
               <div>
@@ -463,11 +463,11 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
       {!vm.isLive ? (
         <div className="grid shrink-0 gap-1 rounded-lg border border-white/10 bg-black/30 px-1.5 py-1 sm:grid-cols-3 sm:px-2 sm:py-1.5">
           <div className="text-[9px] text-zinc-300 sm:text-[10px]">
-            <div className="font-semibold text-zinc-500">Phase</div>
+            <div className="font-semibold text-zinc-500">שלב</div>
             <div className="mt-0.5 text-zinc-100">{phaseHeader}</div>
           </div>
           <div className="text-[9px] text-zinc-300 sm:text-[10px]">
-            <div className="font-semibold text-zinc-500">Last</div>
+            <div className="font-semibold text-zinc-500">אחרון</div>
             <div className="mt-0.5 font-mono text-xs text-amber-100 sm:text-sm">{vm.lastCalled ?? "—"}</div>
           </div>
           <div className="text-[9px] text-zinc-300 sm:text-[10px]">
@@ -480,14 +480,14 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
       {!vm.isLive ? (
         <div className="flex shrink-0 flex-wrap items-center justify-end gap-1 rounded-lg border border-white/10 bg-black/30 px-1.5 py-1">
           <div className="mr-auto text-[10px] text-zinc-500">
-            Deck {vm.deckRemaining}/{vm.deckTotal}
+            חפיסה {vm.deckRemaining}/{vm.deckTotal}
           </div>
           <button
             type="button"
             onClick={() => resetPreviewRound()}
             className="rounded-md border border-white/20 bg-white/10 px-2 py-0.5 text-[10px] font-semibold text-white sm:py-1"
           >
-            Reset
+            איפוס
           </button>
           <button
             type="button"
@@ -496,14 +496,14 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
             title={previewDisabledReasonCallNext || undefined}
             className="rounded-md border border-amber-500/40 bg-amber-900/40 px-2 py-0.5 text-[10px] font-semibold text-amber-100 disabled:opacity-40 sm:py-1"
           >
-            Call next
+            קרא הבא
           </button>
         </div>
       ) : null}
 
       <div className="flex min-h-0 flex-1 flex-col gap-0.5 overflow-hidden sm:gap-1 lg:grid lg:h-full lg:min-h-0 lg:grid-cols-5 lg:grid-rows-1 lg:auto-rows-[minmax(0,1fr)] lg:gap-1.5">
         <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-lg border border-white/10 bg-black/25 p-1 lg:col-span-3 lg:min-h-0 lg:h-full">
-          <div className="shrink-0 text-[9px] font-semibold uppercase tracking-wide text-zinc-500 sm:text-[10px]">Your card</div>
+          <div className="shrink-0 text-[9px] font-semibold uppercase tracking-wide text-zinc-500 sm:text-[10px]">הכרטיס שלך</div>
           <div className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto py-0.5 sm:py-1">
             <Ov2BingoCard
               card={vm.card}
@@ -521,7 +521,7 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
         <div className="flex min-h-0 min-w-0 max-h-[min(44svh,14rem)] shrink overflow-y-auto flex-col gap-0.5 sm:max-h-none sm:shrink-0 sm:overflow-y-visible sm:gap-1 lg:col-span-2 lg:flex lg:h-full lg:max-h-none lg:min-h-0 lg:shrink-0 lg:flex-col lg:overflow-hidden">
           <div className="flex h-[min(7.875rem,32svh)] max-h-[min(7.875rem,34svh)] shrink-0 flex-col overflow-hidden rounded-lg border border-white/10 bg-black/25 px-1.5 py-1 sm:h-[11.5rem] sm:max-h-[11.5rem] sm:px-2 sm:py-1.5 lg:max-h-[min(30vh,10.5rem)] lg:shrink-0">
             <div className="shrink-0 text-[9px] font-semibold uppercase tracking-wide text-zinc-500 sm:text-[10px]">
-              Called numbers
+              מספרים שנקראו
             </div>
             <div className="mt-0.5 min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden pr-0.5 [scrollbar-width:thin]">
               {vm.called.length ? (
@@ -541,14 +541,14 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
                 </div>
               ) : (
                 <p className="text-[9px] text-zinc-500 sm:text-[10px]">
-                  {vm.isLive ? "Waiting for the caller to draw." : "Join a Bingo room from Shared rooms to play live."}
+                  {vm.isLive ? "ממתינים שהקורא ימשוך מספר." : "הצטרפו לחדר בינגו מחדרים משותפים כדי לשחק חי."}
                 </p>
               )}
             </div>
           </div>
 
           <div className="shrink-0 rounded-lg border border-white/10 bg-black/25 px-1.5 py-1 sm:px-2 sm:py-1.5 lg:shrink-0">
-            <div className="text-[9px] font-semibold uppercase tracking-wide text-zinc-500 sm:text-[10px]">Claim a prize</div>
+            <div className="text-[9px] font-semibold uppercase tracking-wide text-zinc-500 sm:text-[10px]">תביעת פרס</div>
             <div className="mt-0.5 grid grid-cols-3 gap-0.5 sm:grid-cols-6 sm:gap-1">
               {BINGO_PRIZE_KEYS.map(pk => {
                 const disableReason = vm.prizeDisabledByKey[pk];
@@ -557,7 +557,7 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
                 const hardBlocked =
                   !isLiveMatch ||
                   vm.sessionPhase !== "playing" ||
-                  (disableReason != null && disableReason !== "Already claimed");
+                  (disableReason != null && disableReason !== "כבר נתבע");
                 const disabled = hardBlocked || Boolean(claimed) || claimPendingKey !== null;
                 return (
                   <button
@@ -566,10 +566,10 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
                     disabled={disabled}
                     title={
                       claimed
-                        ? `Won · seat ${claimed.seatIndex + 1}${claimed.claimedByName ? ` · ${claimed.claimedByName}` : ""}`
+                        ? `ניצח · מושב ${claimed.seatIndex + 1}${claimed.claimedByName ? ` · ${claimed.claimedByName}` : ""}`
                         : disableReason != null
                           ? disableReason
-                          : `Claim ${prizeLabels[pk]}`
+                          : `תביע ${prizeLabels[pk]}`
                     }
                     onClick={() => void onClaim(pk)}
                     className={[

@@ -43,7 +43,7 @@ const MINIMAL_SCENARIOS = {
   geometry: { grade: 4, topic: "area", questionCount: 3, profile: "average", seed: 0xa1b202 },
   english: { grade: 2, topic: "vocabulary", questionCount: 3, profile: "average", seed: 0xa1b203 },
   hebrew: { grade: 3, topic: "reading", questionCount: 3, profile: "average", seed: 0xa1b204 },
-  science: { grade: 3, topic: "observation", questionCount: 3, profile: "strong", seed: 0xa1b205 },
+  science: { grade: 3, topic: "experiments", questionCount: 3, profile: "strong", seed: 0xa1b205 },
   "moledet-geography": { grade: 4, topic: "israel_map", questionCount: 3, profile: "average", seed: 0xa1b206 },
 };
 

@@ -27,7 +27,7 @@ export default function StudentFourlinePage() {
           <title>ארבע בשורה — ארקייד</title>
         </Head>
         <div className="min-h-screen bg-zinc-950 px-4 py-8 text-zinc-300 space-y-3">
-          <p>חסר מזהה חדר (roomId).</p>
+          <p>חסר מזהה חדר.</p>
           <Link href="/student/arcade" className="text-sky-400 underline">
             חזרה לארקייד
           </Link>

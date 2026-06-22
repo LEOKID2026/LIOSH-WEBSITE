@@ -18,6 +18,7 @@
  *   - Profile keys must match answer-profiles.mjs:
  *       strong | average | weak | targeted
  */
+import { SCIENCE_GRADES } from "../../../data/science-curriculum.js";
 
 /** Ordered list of subject keys the simulator may schedule. */
 export const SUBJECTS = [
@@ -214,18 +215,24 @@ export const PERSONAS = {
  * answerable; this function just supplies a reasonable label for the
  * planner's per-session intent (and for human-readable artifacts).
  */
-export function defaultTopicForSubject(subject, _grade) {
+export function defaultTopicForSubject(subject, grade) {
   switch (subject) {
     case "math":
       return "addition";
     case "geometry":
-      return "shapes";
+      return "shapes_basic";
     case "hebrew":
       return "reading";
     case "english":
       return "vocabulary";
-    case "science":
-      return "observation";
+    case "science": {
+      const g = Math.min(6, Math.max(1, Number(grade) || 1));
+      const topics = SCIENCE_GRADES[`g${g}`]?.topics || [];
+      if (g === 1) {
+        return topics.includes("body") ? "body" : topics[0] || "body";
+      }
+      return topics.includes("experiments") ? "experiments" : topics[0] || "body";
+    }
     case "moledet-geography":
       return "geography";
     default:
