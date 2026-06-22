@@ -117,7 +117,21 @@ export default function MyApp({ Component, pageProps }) {
       };
     }
 
+    const isParentRoute = (router.pathname || "").startsWith("/parent/");
+
     const registerSW = () => {
+      if (isParentRoute) {
+        navigator.serviceWorker
+          .register("/parent/sw.js", { scope: "/parent/" })
+          .then((registration) => {
+            console.log("[SW parent] Registered:", registration.scope);
+          })
+          .catch((registrationError) => {
+            console.error("[SW parent] Registration failed:", registrationError);
+          });
+        return;
+      }
+
         navigator.serviceWorker
           .register("/sw.js", { scope: "/" })
           .then((registration) => {
@@ -181,7 +195,7 @@ export default function MyApp({ Component, pageProps }) {
 
     window.addEventListener("load", registerSW);
     return () => window.removeEventListener("load", registerSW);
-  }, []);
+  }, [router.pathname]);
 
   const shouldGate = STUDENT_PROTECTED_ROUTES.has(router.pathname || "");
   const isParentPwaInstallMode = router.pathname === "/parent/install-app";
@@ -196,26 +210,45 @@ export default function MyApp({ Component, pageProps }) {
           content="width=device-width, initial-scale=1, viewport-fit=cover"
         />
         <meta name="description" content="LEO K - Fun games and learning activities for kids. Play arcade games, solve puzzles, and practice math, geometry and English." />
-        <meta name="theme-color" content={BROWSER_THEME_COLOR_BRIGHT} />
+        {!isParentPwaInstallMode ? (
+          <>
+            <meta name="theme-color" content={BROWSER_THEME_COLOR_BRIGHT} />
+            <meta name="apple-mobile-web-app-title" content="LEO K" />
+            <meta name="msapplication-TileColor" content={BROWSER_THEME_COLOR_BRIGHT} />
+          </>
+        ) : (
+          <>
+            <meta name="theme-color" content="#0d9488" />
+            <meta name="apple-mobile-web-app-title" content="P-LEO K" />
+            <meta name="msapplication-TileColor" content="#0d9488" />
+          </>
+        )}
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="LEO K" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="msapplication-TileColor" content={BROWSER_THEME_COLOR_BRIGHT} />
         <script dangerouslySetInnerHTML={{ __html: BROWSER_THEME_COLOR_BOOTSTRAP_SCRIPT }} />
         <meta name="msapplication-config" content="/browserconfig.xml" />
+
+        {!isParentPwaInstallMode ? (
+          <>
+            <link rel="icon" href="/images/leo-icons/icon-192.png" sizes="any" />
+            <link rel="icon" type="image/png" sizes="192x192" href="/images/leo-icons/icon-192.png" />
+            <link rel="icon" type="image/png" sizes="512x512" href="/images/leo-icons/icon-512.png" />
+            <link rel="apple-touch-icon" href="/images/leo-icons/icon-192.png" />
+            <link rel="apple-touch-icon" sizes="120x120" href="/images/leo-icons/icon-192.png" />
+            <link rel="apple-touch-icon" sizes="152x152" href="/images/leo-icons/icon-192.png" />
+            <link rel="apple-touch-icon" sizes="167x167" href="/images/leo-icons/icon-192.png" />
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/leo-icons/icon-192.png" />
+          </>
+        ) : (
+          <>
+            <link rel="icon" href="/images/parent-icons/icon-192.png" sizes="any" />
+            <link rel="icon" type="image/png" sizes="192x192" href="/images/parent-icons/icon-192.png" />
+            <link rel="icon" type="image/png" sizes="512x512" href="/images/parent-icons/icon-512.png" />
+            <link rel="apple-touch-icon" href="/images/parent-icons/icon-192.png" />
+          </>
+        )}
         
-        {/* Icons */}
-        <link rel="icon" href="/images/leo-icons/icon-192.png" sizes="any" />
-        <link rel="icon" type="image/png" sizes="192x192" href="/images/leo-icons/icon-192.png" />
-        <link rel="icon" type="image/png" sizes="512x512" href="/images/leo-icons/icon-512.png" />
-        <link rel="apple-touch-icon" href="/images/leo-icons/icon-192.png" />
-        <link rel="apple-touch-icon" sizes="120x120" href="/images/leo-icons/icon-192.png" />
-        <link rel="apple-touch-icon" sizes="152x152" href="/images/leo-icons/icon-192.png" />
-        <link rel="apple-touch-icon" sizes="167x167" href="/images/leo-icons/icon-192.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/images/leo-icons/icon-192.png" />
-        
-        {/* Manifest — kids default; parent install uses manifest-parent on same origin */}
         {isParentPwaInstallMode ? (
           <link rel="manifest" href="/manifest-parent.webmanifest" />
         ) : (

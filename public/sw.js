@@ -235,6 +235,11 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
+  // Never intercept web manifests — each PWA page must fetch its own manifest from network.
+  if (url.pathname.endsWith('.webmanifest') || url.pathname === '/manifest.json') {
+    return;
+  }
+
   // Skip non-GET requests
   if (request.method !== 'GET') {
     return;

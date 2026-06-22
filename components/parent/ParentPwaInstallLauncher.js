@@ -5,12 +5,14 @@ import {
   subscribeParentAppInstalled,
   useParentPwaInstallPromptAvailable,
   usePromptParentPwaInstall,
+  wasParentAppInstalledEventFired,
   wasParentInstallPromptConsumed,
 } from "../../lib/pwa/pwa-parent-install-prompt";
 import { isCapacitorNative } from "../../lib/pwa/pwa-install-prompt";
+import { logPwaInstallDiagnostics, logPwaInstallEvent } from "../../lib/pwa/pwa-install-debug";
 
 /**
- * Parent install page — explicit button only. Install state follows appinstalled / standalone, not userChoice alone.
+ * Parent install page — explicit button only. Success only on appinstalled or standalone parent PWA.
  */
 export default function ParentPwaInstallLauncher() {
   const hasNativePrompt = useParentPwaInstallPromptAvailable();
@@ -24,13 +26,18 @@ export default function ParentPwaInstallLauncher() {
   useEffect(() => {
     initParentPwaInstallPromptCapture();
     setRunningStandalone(isParentPwaInstalledStandalone());
+    void logPwaInstallDiagnostics("parent");
+    logPwaInstallEvent("parent:page-ready", {
+      promptAvailable: Boolean(hasNativePrompt),
+    });
+
     return subscribeParentAppInstalled(() => {
       setInstallConfirmed(true);
       setPromptAccepted(false);
       setInstallUnavailable(false);
       setUnavailableReason("");
     });
-  }, []);
+  }, [hasNativePrompt]);
 
   const handleInstallClick = async (e) => {
     e.preventDefault();
@@ -39,6 +46,11 @@ export default function ParentPwaInstallLauncher() {
     setUnavailableReason("");
     setPromptAccepted(false);
 
+    logPwaInstallEvent("parent:install-click", {
+      promptAvailable: hasNativePrompt,
+      promptConsumed: wasParentInstallPromptConsumed(),
+    });
+
     if (!hasNativePrompt) {
       if (wasParentInstallPromptConsumed()) {
         setUnavailableReason("consumed");
@@ -46,19 +58,31 @@ export default function ParentPwaInstallLauncher() {
         setUnavailableReason("no-prompt");
       }
       setInstallUnavailable(true);
+      void logPwaInstallDiagnostics("parent");
       return;
     }
 
     try {
       const { outcome } = await promptInstall();
+      logPwaInstallEvent("parent:after-prompt", {
+        outcome,
+        appinstalledFired: wasParentAppInstalledEventFired(),
+      });
+
       if (outcome === "accepted") {
-        setPromptAccepted(true);
+        if (wasParentAppInstalledEventFired() || isParentPwaInstalledStandalone()) {
+          setInstallConfirmed(true);
+        } else {
+          setPromptAccepted(true);
+        }
+        void logPwaInstallDiagnostics("parent");
         return;
       }
     } catch (error) {
       console.error("[PWA parent] install prompt failed:", error);
       setUnavailableReason("error");
       setInstallUnavailable(true);
+      void logPwaInstallDiagnostics("parent");
     }
   };
 
@@ -90,8 +114,8 @@ export default function ParentPwaInstallLauncher() {
 
       {promptAccepted ? (
         <p className="rounded-xl border border-sky-400/30 bg-sky-950/40 px-4 py-3 text-sm leading-relaxed text-sky-100">
-          Chrome אישר את ההתקנה. אם האייקון P-LEO K לא הופיע במסך הבית, רענן את הדף ונסה שוב, או הסר
-          התקנות חלקיות של האתר מהגדרות Chrome/האפליקציות.
+          Chrome אישר את ההתקנה. אם האייקון P-LEO K לא הופיע במסך הבית תוך דקה, רענן את הדף ונסה
+          שוב. אם עדיין אין אייקון — הסר התקנות קודמות של האתר מהגדרות האפליקציות.
         </p>
       ) : null}
 
@@ -101,7 +125,7 @@ export default function ParentPwaInstallLauncher() {
             ? "חלון ההתקנה כבר נוצל. רענן את הדף כדי לנסות שוב, אם Chrome עדיין מאפשר."
             : unavailableReason === "error"
               ? "חלון ההתקנה נכשל. רענן את הדף ונסה שוב."
-              : "Chrome לא הציע חלון התקנה ל-P-LEO K כרגע. ודא/י שהאפליקציה לא מותקנת כבר, ונסה/י רענון."}
+              : "Chrome לא הציע חלון התקנה ל-P-LEO K כרגע. ודא/י ש-LEO K מותקנת, ונסה/י רענון — שתי האפליקציות אמורות להיות נפרדות."}
         </p>
       ) : null}
     </div>
