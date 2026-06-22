@@ -1,0 +1,27 @@
+{
+  "id": "/pwa-parent",
+  "name": "P-LEO K",
+  "short_name": "P-LEO K",
+  "description": "Parent portal for LEO KIDS — follow progress, manage children, and stay connected.",
+  "start_url": "/parent/login",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0d9488",
+  "orientation": "any",
+  "scope": "/parent/",
+  "icons": [
+    {
+      "src": "/images/parent-icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/parent-icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["education", "productivity"]
+}

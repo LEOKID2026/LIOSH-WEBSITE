@@ -177,6 +177,7 @@ export default function MyApp({ Component, pageProps }) {
   }, []);
 
   const shouldGate = STUDENT_PROTECTED_ROUTES.has(router.pathname || "");
+  const isParentPwaInstallPage = router.pathname === "/parent/install-app";
 
   return (
     <>
@@ -207,8 +208,8 @@ export default function MyApp({ Component, pageProps }) {
         <link rel="apple-touch-icon" sizes="167x167" href="/images/leo-icons/icon-192.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/images/leo-icons/icon-192.png" />
         
-        {/* Manifest */}
-        <link rel="manifest" href="/manifest.json" />
+        {/* Manifest — kids default; parent install page uses its own manifest link */}
+        {!isParentPwaInstallPage ? <link rel="manifest" href="/manifest.json" /> : null}
         
         <title>LEO K - Kids Games & Learning</title>
       </Head>

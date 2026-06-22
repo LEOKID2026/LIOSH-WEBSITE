@@ -6,7 +6,7 @@ import {
   usePromptPwaInstall,
 } from "../lib/pwa/pwa-install-prompt";
 
-export default function InstallAppButton({ className = "" }) {
+export default function InstallAppButton({ className = "", label = "התקן אפליקציה" }) {
   const hasNativePrompt = usePwaInstallPromptAvailable();
   const promptInstall = usePromptPwaInstall();
   const [isIOS, setIsIOS] = useState(false);
@@ -75,7 +75,7 @@ export default function InstallAppButton({ className = "" }) {
         >
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
         </svg>
-        <span>התקן אפליקציה</span>
+        <span>{label}</span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-4 w-4"
