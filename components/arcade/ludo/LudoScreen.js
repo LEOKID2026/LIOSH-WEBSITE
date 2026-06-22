@@ -3,6 +3,7 @@
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLudoSession } from "../../../hooks/arcade/useLudoSession";
+import { useArcadeRoomExit } from "../../../hooks/arcade/useArcadeRoomExit";
 import LudoBoardView from "../../../lib/arcade/ludo/LudoBoardView";
 import LudoSeatStrip from "./LudoSeatStrip";
 import StudentAdSlot from "../../student/StudentAdSlot.jsx";
@@ -144,8 +145,8 @@ export default function LudoScreen({ roomId }) {
 
   const [balance, setBalance] = useState(/** @type {number|null} */ (null));
   const [helpOpen, setHelpOpen] = useState(false);
-  const [leaveBusy, setLeaveBusy] = useState(false);
-  const leaveBusyRef = useRef(false);
+  const { exitToLobby, leaveBusy } = useArcadeRoomExit({ roomId, stopPolling });
+  const onLeaveRoom = exitToLobby;
 
   useEffect(() => {
     let cancelled = false;
@@ -175,28 +176,6 @@ export default function LudoScreen({ roomId }) {
       void r.replace("/student/arcade");
     }
   }, []);
-
-  const onLeaveRoom = useCallback(async () => {
-    const id = String(roomId || "").trim();
-    if (!id || leaveBusyRef.current) return;
-    leaveBusyRef.current = true;
-    setLeaveBusy(true);
-    stopPolling();
-    try {
-      await fetch("/api/arcade/rooms/leave", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "same-origin",
-        body: JSON.stringify({ roomId: id }),
-      });
-    } catch {
-      /* */
-    } finally {
-      leaveBusyRef.current = false;
-      setLeaveBusy(false);
-      goBack();
-    }
-  }, [roomId, goBack, stopPolling]);
 
   const showLobbyWait = room?.status === "waiting";
   const showSessionInitError =

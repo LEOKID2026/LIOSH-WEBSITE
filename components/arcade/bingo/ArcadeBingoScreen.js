@@ -6,6 +6,7 @@ import { BINGO_PRIZE_KEYS } from "../../../lib/arcade/bingo/ov2BingoEngine";
 import { getOv2BingoSeatStyle } from "../../../lib/arcade/bingo/ov2BingoSeatColors";
 import { OV2_BINGO_PLAY_MODE, OV2_BINGO_PRODUCT_GAME_ID } from "../../../lib/arcade/bingo/ov2BingoSessionAdapter";
 import { useArcadeBingoSession } from "../../../hooks/useArcadeBingoSession";
+import { useArcadeRoomExit } from "../../../hooks/arcade/useArcadeRoomExit";
 import Ov2BingoCard from "./Ov2BingoCard";
 import Ov2BingoFinishModal from "./Ov2BingoFinishModal";
 import Ov2GameStatusStrip from "./Ov2GameStatusStrip";
@@ -29,6 +30,8 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
 
   const [bundle, setBundle] = useState(/** @type {Record<string, unknown>|null} */ (null));
   const [bundleErr, setBundleErr] = useState("");
+
+  const [exitErr, setExitErr] = useState("");
 
   const reloadBundle = useCallback(async () => {
     if (!roomId) return;
@@ -54,32 +57,6 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
     void reloadBundle();
   }, [reloadBundle]);
 
-  const [exitBusy, setExitBusy] = useState(false);
-
-  const leaveArcadeRoom = useCallback(async () => {
-    if (!roomId || exitBusy) return;
-    setExitBusy(true);
-    setExitErr("");
-    try {
-      const res = await fetch("/api/arcade/rooms/leave", {
-        method: "POST",
-        credentials: "same-origin",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomId }),
-      });
-      if (!res.ok) {
-        const j = await res.json().catch(() => ({}));
-        setExitErr(typeof j?.error === "string" ? j.error : "לא ניתן לעזוב");
-        return;
-      }
-      await router.push("/student/arcade");
-    } catch (e) {
-      setExitErr(e instanceof Error ? e.message : "שגיאת רשת");
-    } finally {
-      setExitBusy(false);
-    }
-  }, [roomId, exitBusy, router]);
-
   const contextInput = useMemo(() => {
     if (!bundle?.room) return undefined;
     const r = /** @type {Record<string, unknown>} */ (bundle.room);
@@ -94,6 +71,7 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
     return {
       room: {
         id: String(r.id ?? ""),
+        game_key: r.game_key != null ? String(r.game_key) : "bingo",
         host_participant_key: String(r.host_student_id ?? ""),
         lifecycle_phase: lifecycle,
         match_seq: 1,
@@ -113,27 +91,25 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
         display_name: String(selfPl?.display_name ?? "").trim(),
       },
       reloadRoomContext: reloadBundle,
-      onLeaveToLobby: leaveArcadeRoom,
-      leaveToLobbyBusy: exitBusy,
     };
-  }, [bundle, reloadBundle, leaveArcadeRoom, exitBusy]);
+  }, [bundle, reloadBundle]);
 
   const session = useArcadeBingoSession(contextInput);
-  const { vm, actions, selfKey, callNextPreviewNumber, resetPreviewRound, onToggleMark, previewDisabledReasonCallNext } =
+  const { vm, actions, selfKey, callNextPreviewNumber, resetPreviewRound, onToggleMark, previewDisabledReasonCallNext, stopLivePolling } =
     session;
-  const onLeaveToLobby =
-    contextInput && typeof contextInput === "object" && typeof contextInput.onLeaveToLobby === "function"
-      ? contextInput.onLeaveToLobby
-      : null;
-  const leaveToLobbyBusy = Boolean(
-    contextInput && typeof contextInput === "object" && contextInput.leaveToLobbyBusy
-  );
+
+  const { exitToLobby, leaveBusy: exitBusy } = useArcadeRoomExit({
+    roomId,
+    stopPolling: stopLivePolling,
+  });
+
+  const onLeaveToLobby = exitToLobby;
+  const leaveToLobbyBusy = exitBusy;
   const [claimPendingKey, setClaimPendingKey] = useState(/** @type {string|null} */ (null));
   const claimFlightRef = useRef(false);
   const [finishModalDismissedForSessionId, setFinishModalDismissedForSessionId] = useState("");
   const [rematchBusy, setRematchBusy] = useState(false);
   const [startNextBusy, setStartNextBusy] = useState(false);
-  const [exitErr, setExitErr] = useState("");
   const pk = selfKey != null ? String(selfKey).trim() : "";
   const hostPk =
     contextInput?.room && typeof contextInput.room === "object" && contextInput.room.host_participant_key != null
@@ -261,7 +237,7 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
     }
   }, [roomId, isHost, startNextBusy, actions, router]);
 
-  const onExitToLobby = leaveArcadeRoom;
+  const onExitToLobby = exitToLobby;
 
   const onClaim = useCallback(
     async prizeKey => {

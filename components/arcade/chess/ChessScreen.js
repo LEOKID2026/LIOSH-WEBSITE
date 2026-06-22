@@ -3,6 +3,7 @@
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useChessSession } from "../../../hooks/arcade/useChessSession";
+import { useArcadeRoomExit } from "../../../hooks/arcade/useArcadeRoomExit";
 import { squareFromRowCol } from "../../../lib/arcade/chess/buildChessSnapshot";
 import {
   boardSideLabels,
@@ -125,8 +126,8 @@ export default function ChessScreen({ roomId }) {
 
   const [balance, setBalance] = useState(/** @type {number|null} */ (null));
   const [helpOpen, setHelpOpen] = useState(false);
-  const [leaveBusy, setLeaveBusy] = useState(false);
-  const leaveBusyRef = useRef(false);
+  const { exitToLobby, leaveBusy } = useArcadeRoomExit({ roomId, stopPolling });
+  const onLeaveRoom = exitToLobby;
   /** @type {[string|null, React.Dispatch<React.SetStateAction<string|null>>]} */
   const [pickSquare, setPickSquare] = useState(/** @type {string|null} */ (null));
 
@@ -159,28 +160,6 @@ export default function ChessScreen({ roomId }) {
     if (typeof window !== "undefined" && window.history.length > 1) r.back();
     else void r.replace("/student/arcade");
   }, []);
-
-  const onLeaveRoom = useCallback(async () => {
-    const id = String(roomId || "").trim();
-    if (!id || leaveBusyRef.current) return;
-    leaveBusyRef.current = true;
-    setLeaveBusy(true);
-    stopPolling();
-    try {
-      await fetch("/api/arcade/rooms/leave", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "same-origin",
-        body: JSON.stringify({ roomId: id }),
-      });
-    } catch {
-      /* */
-    } finally {
-      leaveBusyRef.current = false;
-      setLeaveBusy(false);
-      goBack();
-    }
-  }, [roomId, goBack, stopPolling]);
 
   const showLobbyWait = room?.status === "waiting";
   const showSessionInitError = bundleLoaded && room?.status === "active" && !snapshot && !gameSession;

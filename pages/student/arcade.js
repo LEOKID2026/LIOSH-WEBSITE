@@ -8,6 +8,7 @@ import GameAccessGuard from "../../components/games/GameAccessGuard.jsx";
 import GamesHubNavBar from "../../components/games/GamesHubNavBar.jsx";
 import GamesHubHeader from "../../components/games/GamesHubHeader.jsx";
 import { mapEntryCostOptionsForUi } from "../../lib/learning-client/economyConfigClient.js";
+import { clearArcadeActiveRoom } from "../../lib/arcade/client/arcadeRoomLifecycle.client.js";
 
 const POLL_MS = 5000;
 
@@ -394,6 +395,11 @@ export default function StudentArcadePage() {
   }, [games]);
 
   const openRoomsPollActive = anyLobbyGameActive;
+
+  useEffect(() => {
+    clearArcadeActiveRoom();
+    setRoomHighlight(null);
+  }, []);
 
   useEffect(() => {
     if (!openRoomsPollActive) return undefined;

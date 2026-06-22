@@ -4,6 +4,8 @@ import {
   requestSnakesAndLaddersGameAction,
 } from "../../lib/arcade/snakes-ladders/snakesSessionAdapter";
 import { useArcadeSnapshotPollEffect } from "./useArcadeSnapshotPollEffect";
+import { handleArcadePollBundleFailure } from "./arcadeSessionPollHelpers.js";
+import { useArcadeRoomAccessLostRedirect } from "./useArcadeRoomAccessLostRedirect.js";
 import {
   ARCADE_SNAKES_BOARD_EDGES,
   ARCADE_SNAKES_EDGE_HOLD_MS,
@@ -67,6 +69,7 @@ export function useSnakesLaddersSession(ctx) {
   const [gameSessionRow, setGameSessionRow] = useState(null);
   const [bundleLoaded, setBundleLoaded] = useState(false);
   const [bundleError, setBundleError] = useState("");
+  const [roomAccessLost, setRoomAccessLost] = useState(false);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
   const lastPollSigRef = useRef("");
@@ -184,6 +187,7 @@ export function useSnakesLaddersSession(ctx) {
     setGameSessionRow(null);
     setBundleLoaded(false);
     setBundleError("");
+    setRoomAccessLost(false);
     setErr("");
     lastPollSigRef.current = "";
     setDiceRolling(false);
@@ -227,14 +231,7 @@ export function useSnakesLaddersSession(ctx) {
   const fetchBundle = useCallback(() => fetchArcadeRoomSnakesLaddersBundle(roomId || ""), [roomId]);
 
   const onPollBundle = useCallback((b, ctx) => {
-    if (!ctx.ok) {
-      if (!ctx.bundleLoadedOnceRef.current) {
-        const msg =
-          b.code === "forbidden"
-            ? "אין גישה לחדר (לא רשום כשחקן)."
-            : b.error || b.code || "טעינת החדר נכשלה";
-        setBundleError(msg);
-      }
+    if (handleArcadePollBundleFailure(b, ctx, setBundleError, setRoomAccessLost, roomId)) {
       return;
     }
 
@@ -268,13 +265,15 @@ export function useSnakesLaddersSession(ctx) {
     setPlayers(b.players || []);
     setGameSessionRow(b.gameSession ?? null);
     setSnap((prev) => preferNewer(prev, b.snakesAndLadders));
-  }, []);
+  }, [roomId]);
 
   const { stopPolling } = useArcadeSnapshotPollEffect({
     roomId,
     fetchBundle,
     onBundle: onPollBundle,
   });
+
+  useArcadeRoomAccessLostRedirect(roomAccessLost, stopPolling);
 
   useEffect(() => {
     if (typeof window === "undefined") return undefined;

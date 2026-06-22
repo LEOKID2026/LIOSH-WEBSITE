@@ -3,6 +3,7 @@
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useArcadePlaceholderSession } from "../../../hooks/arcade/useArcadePlaceholderSession";
+import { useArcadeRoomExit } from "../../../hooks/arcade/useArcadeRoomExit";
 import StudentAdSlot from "../../student/StudentAdSlot.jsx";
 
 const HUD_CONTROL_H = "h-9";
@@ -70,8 +71,8 @@ export default function ArcadePlaceholderScreen({ roomId, title }) {
   const { placeholder, room, players, bundleLoaded, bundleError, stopPolling } = useArcadePlaceholderSession({ roomId });
 
   const [balance, setBalance] = useState(/** @type {number|null} */ (null));
-  const [leaveBusy, setLeaveBusy] = useState(false);
-  const leaveBusyRef = useRef(false);
+  const { exitToLobby, leaveBusy } = useArcadeRoomExit({ roomId, stopPolling });
+  const onLeaveRoom = exitToLobby;
 
   useEffect(() => {
     let cancelled = false;
@@ -101,28 +102,6 @@ export default function ArcadePlaceholderScreen({ roomId, title }) {
       void r.replace("/student/arcade");
     }
   }, []);
-
-  const onLeaveRoom = useCallback(async () => {
-    const id = String(roomId || "").trim();
-    if (!id || leaveBusyRef.current) return;
-    leaveBusyRef.current = true;
-    setLeaveBusy(true);
-    stopPolling();
-    try {
-      await fetch("/api/arcade/rooms/leave", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "same-origin",
-        body: JSON.stringify({ roomId: id }),
-      });
-    } catch {
-      /* */
-    } finally {
-      leaveBusyRef.current = false;
-      setLeaveBusy(false);
-      goBack();
-    }
-  }, [roomId, goBack, stopPolling]);
 
   const board =
     placeholder?.board && typeof placeholder.board === "object"

@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useRef } from "react";
 import {
+  clearArcadeActiveRoom,
+  registerArcadeRoomPollStop,
+  setArcadeActiveRoom,
+} from "../../lib/arcade/client/arcadeRoomLifecycle.client.js";
+import {
   haltArcadeRoomPolling,
   pollArcadeRoomSnapshot,
   useArcadePollRouteStop,
@@ -29,6 +34,14 @@ export function useArcadeSnapshotPollEffect({ roomId, fetchBundle, onBundle, pol
   const stopPolling = useCallback(() => {
     haltArcadeRoomPolling(pollRefs, pollIntervalRef);
   }, []);
+
+  useEffect(() => registerArcadeRoomPollStop(stopPolling), [stopPolling]);
+
+  useEffect(() => {
+    if (!roomId) return undefined;
+    setArcadeActiveRoom({ roomId });
+    return () => clearArcadeActiveRoom(roomId);
+  }, [roomId]);
 
   useArcadePollRouteStop(stopPolling);
 

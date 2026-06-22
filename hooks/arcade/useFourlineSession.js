@@ -4,6 +4,8 @@ import {
   requestFourlinePlayColumn,
 } from "../../lib/arcade/fourline/fourlineSessionAdapter";
 import { useArcadeSnapshotPollEffect } from "./useArcadeSnapshotPollEffect";
+import { handleArcadePollBundleFailure } from "./arcadeSessionPollHelpers.js";
+import { useArcadeRoomAccessLostRedirect } from "./useArcadeRoomAccessLostRedirect.js";
 
 function preferNewer(prev, next) {
   if (!next) return prev;
@@ -33,6 +35,7 @@ export function useFourlineSession(ctx) {
   const [bundleLoaded, setBundleLoaded] = useState(false);
   /** טעינת snapshot נכשלה (403 / רשת); אחרי ניסיון הצטרפות אוטומטי לחדר */
   const [bundleError, setBundleError] = useState("");
+  const [roomAccessLost, setRoomAccessLost] = useState(false);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
   const lastPollSigRef = useRef("");
@@ -46,6 +49,7 @@ export function useFourlineSession(ctx) {
     setGameSessionRow(null);
     setBundleLoaded(false);
     setBundleError("");
+    setRoomAccessLost(false);
     setErr("");
     lastPollSigRef.current = "";
   }, [roomId]);
@@ -53,14 +57,7 @@ export function useFourlineSession(ctx) {
   const fetchBundle = useCallback(() => fetchArcadeRoomFourlineBundle(roomId || ""), [roomId]);
 
   const onPollBundle = useCallback((b, ctx) => {
-    if (!ctx.ok) {
-      if (!ctx.bundleLoadedOnceRef.current) {
-        const msg =
-          b.code === "forbidden"
-            ? "אין גישה לחדר (לא רשום כשחקן). נסה מהלובי «משחק מהיר» או «הצטרף לחדר»."
-            : b.error || b.code || "טעינת החדר נכשלה";
-        setBundleError(msg);
-      }
+    if (handleArcadePollBundleFailure(b, ctx, setBundleError, setRoomAccessLost, roomId)) {
       return;
     }
 
@@ -110,13 +107,15 @@ export function useFourlineSession(ctx) {
       }
       return merged;
     });
-  }, []);
+  }, [roomId]);
 
   const { stopPolling } = useArcadeSnapshotPollEffect({
     roomId,
     fetchBundle,
     onBundle: onPollBundle,
   });
+
+  useArcadeRoomAccessLostRedirect(roomAccessLost, stopPolling);
 
   const playColumn = useCallback(
     async (col) => {

@@ -9,6 +9,7 @@ import {
   parseFourLineCells,
 } from "../../../lib/arcade/fourline/fourlineClientLegality";
 import { useFourlineSession } from "../../../hooks/arcade/useFourlineSession";
+import { useArcadeRoomExit } from "../../../hooks/arcade/useArcadeRoomExit";
 import StudentAdSlot from "../../student/StudentAdSlot.jsx";
 
 const DROP_MS = 155;
@@ -366,8 +367,9 @@ export default function FourlineScreen({ roomId }) {
 
   const [balance, setBalance] = useState(/** @type {number|null} */ (null));
   const [helpOpen, setHelpOpen] = useState(false);
-  const [leaveBusy, setLeaveBusy] = useState(false);
-  const leaveBusyRef = useRef(false);
+
+  const { exitToLobby, leaveBusy } = useArcadeRoomExit({ roomId, stopPolling });
+  const onLeaveRoom = exitToLobby;
 
   const [hoverCol, setHoverCol] = useState(/** @type {number|null} */ (null));
   const [movePulseCol, setMovePulseCol] = useState(/** @type {number|null} */ (null));
@@ -411,28 +413,6 @@ export default function FourlineScreen({ roomId }) {
       void r.replace("/student/arcade");
     }
   }, []);
-
-  const onLeaveRoom = useCallback(async () => {
-    const id = String(roomId || "").trim();
-    if (!id || leaveBusyRef.current) return;
-    leaveBusyRef.current = true;
-    setLeaveBusy(true);
-    stopPolling();
-    try {
-      await fetch("/api/arcade/rooms/leave", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "same-origin",
-        body: JSON.stringify({ roomId: id }),
-      });
-    } catch {
-      /* ניווט גם אם הרשת נכשלה */
-    } finally {
-      leaveBusyRef.current = false;
-      setLeaveBusy(false);
-      goBack();
-    }
-  }, [roomId, goBack, stopPolling]);
 
   const cells = useMemo(() => parseFourLineCells(vm.cells), [vm.cells]);
 

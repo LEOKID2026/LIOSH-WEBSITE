@@ -34,10 +34,16 @@ import {
   reconcileBingoMarksToCalled,
   saveOv2BingoMarks,
 } from "../lib/arcade/bingo/ov2BingoMarksStorage";
+import {
+  clearArcadeActiveRoom,
+  registerArcadeRoomPollStop,
+  setArcadeActiveRoom,
+} from "../lib/arcade/client/arcadeRoomLifecycle.client.js";
+import { useArcadeRoomAccessLostRedirect } from "./arcade/useArcadeRoomAccessLostRedirect.js";
 
 /** @typedef {import("../lib/arcade/bingo/ov2BingoSessionAdapter").Ov2BingoAuthoritativeSnapshot} Ov2BingoAuthoritativeSnapshot */
 
-const OV2_BINGO_POLL_MS = 2500;
+const OV2_BINGO_GAME_KEY = "bingo";
 
 function initialRoundState() {
   return {
@@ -64,15 +70,21 @@ export function useArcadeBingoSession(baseContext) {
   const room = baseContext?.room && typeof baseContext.room === "object" ? baseContext.room : null;
   const roomId = room?.id != null ? String(room.id) : null;
   const roomProductId = room?.product_game_id != null ? String(room.product_game_id) : null;
+  const roomGameKey = room?.game_key != null ? String(room.game_key).trim().toLowerCase() : OV2_BINGO_GAME_KEY;
+  const isBingoRoom =
+    roomProductId === OV2_BINGO_PRODUCT_GAME_ID &&
+    (!roomGameKey || roomGameKey === OV2_BINGO_GAME_KEY);
   const members = Array.isArray(baseContext?.members) ? baseContext.members : [];
   const selfKey = baseContext?.self?.participant_key?.trim() || null;
   const reloadRoomContext = baseContext?.reloadRoomContext;
 
   /** @type {Ov2BingoAuthoritativeSnapshot|null} */
   const [liveSnapshot, setLiveSnapshot] = useState(null);
+  const [roomAccessLost, setRoomAccessLost] = useState(false);
   const [nowMs, setNowMs] = useState(() => Date.now());
   const callInFlightRef = useRef(false);
   const lastAutoCallKeyRef = useRef(/** @type {string|null} */ (null));
+  const livePollStopRef = useRef(/** @type {(() => void) | null} */ (null));
 
   const playMode = useMemo(() => {
     return resolveOv2BingoPlayMode(
@@ -99,18 +111,31 @@ export function useArcadeBingoSession(baseContext) {
   }, [roomId, selfKey, liveSnapshot?.sessionId]);
 
   useEffect(() => {
-    if (!roomId || roomProductId !== OV2_BINGO_PRODUCT_GAME_ID) {
+    if (!roomId || !isBingoRoom) {
+      livePollStopRef.current?.();
+      livePollStopRef.current = null;
       setLiveSnapshot(null);
+      setRoomAccessLost(false);
       lastAutoCallKeyRef.current = null;
       return undefined;
     }
     let cancelled = false;
+    setRoomAccessLost(false);
+    setArcadeActiveRoom({ roomId, gameKey: OV2_BINGO_GAME_KEY });
+
     void (async () => {
-      const snap = await fetchOv2BingoLiveRoundSnapshot(roomId, { viewerParticipantKey: selfKey ?? "" });
-      if (!cancelled) {
-        if (!snap) setLiveSnapshot(null);
-        else setLiveSnapshot(prev => coalesceOv2BingoLiveSnapshots(prev, snap, selfKey ?? ""));
+      const result = await fetchOv2BingoLiveRoundSnapshot(roomId, { viewerParticipantKey: selfKey ?? "" });
+      if (cancelled) return;
+      if (!result.ok) {
+        if (result.forbidden) {
+          clearArcadeActiveRoom(roomId);
+          setRoomAccessLost(true);
+        } else {
+          setLiveSnapshot(null);
+        }
+        return;
       }
+      setLiveSnapshot(prev => coalesceOv2BingoLiveSnapshots(prev, result.snapshot, selfKey ?? ""));
     })();
 
     const unsub = subscribeOv2BingoAuthoritativeSnapshot(roomId, {
@@ -118,26 +143,30 @@ export function useArcadeBingoSession(baseContext) {
       onSnapshot: s => {
         if (!cancelled) setLiveSnapshot(prev => coalesceOv2BingoLiveSnapshots(prev, s, selfKey ?? ""));
       },
+      onAccessLost: () => {
+        if (cancelled) return;
+        clearArcadeActiveRoom(roomId);
+        setRoomAccessLost(true);
+      },
     });
-
-    const poll =
-      typeof window !== "undefined"
-        ? window.setInterval(() => {
-            void (async () => {
-              const snap = await fetchOv2BingoLiveRoundSnapshot(roomId, { viewerParticipantKey: selfKey ?? "" });
-              if (!cancelled && snap) {
-                setLiveSnapshot(prev => coalesceOv2BingoLiveSnapshots(prev, snap, selfKey ?? ""));
-              }
-            })();
-          }, OV2_BINGO_POLL_MS)
-        : 0;
+    livePollStopRef.current = unsub;
 
     return () => {
       cancelled = true;
       unsub();
-      if (typeof window !== "undefined" && poll) window.clearInterval(poll);
+      livePollStopRef.current = null;
+      clearArcadeActiveRoom(roomId);
     };
-  }, [roomId, roomProductId, selfKey]);
+  }, [roomId, isBingoRoom, selfKey]);
+
+  const stopLivePolling = useCallback(() => {
+    livePollStopRef.current?.();
+    livePollStopRef.current = null;
+  }, []);
+
+  useEffect(() => registerArcadeRoomPollStop(stopLivePolling), [stopLivePolling]);
+
+  useArcadeRoomAccessLostRedirect(roomAccessLost, stopLivePolling);
 
   useEffect(() => {
     if (typeof window === "undefined") return undefined;
@@ -271,12 +300,17 @@ export function useArcadeBingoSession(baseContext) {
   );
 
   const refreshLiveSnapshot = useCallback(async () => {
-    if (!roomId) return;
-    const snap = await fetchOv2BingoLiveRoundSnapshot(roomId, { viewerParticipantKey: selfKey ?? "" });
-    if (snap) {
-      setLiveSnapshot(prev => coalesceOv2BingoLiveSnapshots(prev, snap, selfKey ?? ""));
+    if (!roomId || !isBingoRoom) return;
+    const result = await fetchOv2BingoLiveRoundSnapshot(roomId, { viewerParticipantKey: selfKey ?? "" });
+    if (!result.ok) {
+      if (result.forbidden) {
+        clearArcadeActiveRoom(roomId);
+        setRoomAccessLost(true);
+      }
+      return;
     }
-  }, [roomId, selfKey]);
+    setLiveSnapshot(prev => coalesceOv2BingoLiveSnapshots(prev, result.snapshot, selfKey ?? ""));
+  }, [roomId, isBingoRoom, selfKey]);
 
   const openSession = useCallback(async () => {
     if (!roomId || !selfKey) return { ok: false, error: "לא מוכן" };
@@ -623,6 +657,7 @@ export function useArcadeBingoSession(baseContext) {
       cancelRematch,
       startNextMatch,
     },
+    stopLivePolling,
     rebindSnapshotFromServerPayload,
   };
 }

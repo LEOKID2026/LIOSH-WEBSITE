@@ -3,6 +3,7 @@
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSnakesLaddersSession } from "../../../hooks/arcade/useSnakesLaddersSession";
+import { useArcadeRoomExit } from "../../../hooks/arcade/useArcadeRoomExit";
 import { LADDERS, SNAKES } from "../../../lib/arcade/snakes-ladders/snakesLaddersEngine";
 import { Ov2ArcadeSnakesPlayfield } from "./ov2ArcadeSnakesBoardView";
 import StudentAdSlot from "../../student/StudentAdSlot.jsx";
@@ -145,8 +146,8 @@ export default function SnakesLaddersScreen({ roomId }) {
 
   const [balance, setBalance] = useState(/** @type {number|null} */ (null));
   const [helpOpen, setHelpOpen] = useState(false);
-  const [leaveBusy, setLeaveBusy] = useState(false);
-  const leaveBusyRef = useRef(false);
+  const { exitToLobby, leaveBusy } = useArcadeRoomExit({ roomId, stopPolling });
+  const onLeaveRoom = exitToLobby;
   const [waitTick, setWaitTick] = useState(0);
 
   useEffect(() => {
@@ -198,28 +199,6 @@ export default function SnakesLaddersScreen({ roomId }) {
       void r.replace("/student/arcade");
     }
   }, []);
-
-  const onLeaveRoom = useCallback(async () => {
-    const id = String(roomId || "").trim();
-    if (!id || leaveBusyRef.current) return;
-    leaveBusyRef.current = true;
-    setLeaveBusy(true);
-    stopPolling();
-    try {
-      await fetch("/api/arcade/rooms/leave", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "same-origin",
-        body: JSON.stringify({ roomId: id }),
-      });
-    } catch {
-      /* */
-    } finally {
-      leaveBusyRef.current = false;
-      setLeaveBusy(false);
-      goBack();
-    }
-  }, [roomId, goBack, stopPolling]);
 
   const showSessionInitError =
     bundleLoaded && room?.status === "active" && !snapshot && !gameSession;

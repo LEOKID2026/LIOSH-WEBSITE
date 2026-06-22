@@ -3,6 +3,7 @@
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useCheckersSession } from "../../../hooks/arcade/useCheckersSession";
+import { useArcadeRoomExit } from "../../../hooks/arcade/useArcadeRoomExit";
 import { EMPTY, isKing, pieceSeat } from "../../../lib/arcade/checkers/checkersEngine";
 import {
   boardSideLabels,
@@ -117,8 +118,8 @@ export default function CheckersScreen({ roomId }) {
 
   const [balance, setBalance] = useState(/** @type {number|null} */ (null));
   const [helpOpen, setHelpOpen] = useState(false);
-  const [leaveBusy, setLeaveBusy] = useState(false);
-  const leaveBusyRef = useRef(false);
+  const { exitToLobby, leaveBusy } = useArcadeRoomExit({ roomId, stopPolling });
+  const onLeaveRoom = exitToLobby;
   /** @type {[{ r: number, c: number } | null, React.Dispatch<React.SetStateAction<{ r: number, c: number } | null>>]} */
   const [pick, setPick] = useState(/** @type {{ r: number, c: number } | null} */ (null));
 
@@ -151,28 +152,6 @@ export default function CheckersScreen({ roomId }) {
     if (typeof window !== "undefined" && window.history.length > 1) r.back();
     else void r.replace("/student/arcade");
   }, []);
-
-  const onLeaveRoom = useCallback(async () => {
-    const id = String(roomId || "").trim();
-    if (!id || leaveBusyRef.current) return;
-    leaveBusyRef.current = true;
-    setLeaveBusy(true);
-    stopPolling();
-    try {
-      await fetch("/api/arcade/rooms/leave", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "same-origin",
-        body: JSON.stringify({ roomId: id }),
-      });
-    } catch {
-      /* */
-    } finally {
-      leaveBusyRef.current = false;
-      setLeaveBusy(false);
-      goBack();
-    }
-  }, [roomId, goBack, stopPolling]);
 
   const showLobbyWait = room?.status === "waiting";
   const showSessionInitError = bundleLoaded && room?.status === "active" && !snapshot && !gameSession;

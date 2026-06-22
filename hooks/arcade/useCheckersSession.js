@@ -4,6 +4,8 @@ import {
   requestCheckersMove,
 } from "../../lib/arcade/checkers/checkersSessionAdapter";
 import { useArcadeSnapshotPollEffect } from "./useArcadeSnapshotPollEffect";
+import { handleArcadePollBundleFailure } from "./arcadeSessionPollHelpers.js";
+import { useArcadeRoomAccessLostRedirect } from "./useArcadeRoomAccessLostRedirect.js";
 
 function preferNewer(prev, next) {
   if (!next) return prev;
@@ -31,6 +33,7 @@ export function useCheckersSession(ctx) {
   const [gameSessionRow, setGameSessionRow] = useState(null);
   const [bundleLoaded, setBundleLoaded] = useState(false);
   const [bundleError, setBundleError] = useState("");
+  const [roomAccessLost, setRoomAccessLost] = useState(false);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
   const lastPollSigRef = useRef("");
@@ -44,6 +47,7 @@ export function useCheckersSession(ctx) {
     setGameSessionRow(null);
     setBundleLoaded(false);
     setBundleError("");
+    setRoomAccessLost(false);
     setErr("");
     lastPollSigRef.current = "";
   }, [roomId]);
@@ -51,14 +55,7 @@ export function useCheckersSession(ctx) {
   const fetchBundle = useCallback(() => fetchArcadeRoomCheckersBundle(roomId || ""), [roomId]);
 
   const onPollBundle = useCallback((b, ctx) => {
-    if (!ctx.ok) {
-      if (!ctx.bundleLoadedOnceRef.current) {
-        const msg =
-          b.code === "forbidden"
-            ? "אין גישה לחדר (לא רשום כשחקן)."
-            : b.error || b.code || "טעינת החדר נכשלה";
-        setBundleError(msg);
-      }
+    if (handleArcadePollBundleFailure(b, ctx, setBundleError, setRoomAccessLost, roomId)) {
       return;
     }
 
@@ -93,13 +90,15 @@ export function useCheckersSession(ctx) {
     setPlayers(b.players || []);
     setGameSessionRow(b.gameSession ?? null);
     setSnap((prev) => preferNewer(prev, b.checkers));
-  }, []);
+  }, [roomId]);
 
   const { stopPolling } = useArcadeSnapshotPollEffect({
     roomId,
     fetchBundle,
     onBundle: onPollBundle,
   });
+
+  useArcadeRoomAccessLostRedirect(roomAccessLost, stopPolling);
 
   const submitMove = useCallback(
     async (fromRow, fromCol, toRow, toCol) => {

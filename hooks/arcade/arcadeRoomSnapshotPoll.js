@@ -5,6 +5,11 @@
  */
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import {
+  clearArcadeActiveRoom,
+  registerArcadeRoomPollStop,
+} from "../../lib/arcade/client/arcadeRoomLifecycle.client.js";
+import { isArcadeRoomAccessDenied } from "./arcadeSessionPollHelpers.js";
 
 /**
  * @typedef {object} ArcadeBundleResult
@@ -30,7 +35,7 @@ export async function pollArcadeRoomSnapshot(refs, roomId, fetchBundle) {
 
   let bundle = await fetchBundle();
 
-  if (!bundle.ok && bundle.code === "forbidden" && bundle.httpStatus === 403) {
+  if (!bundle.ok && isArcadeRoomAccessDenied(bundle)) {
     if (!refs.joinRecoveryAttemptedRef.current && !refs.bundleLoadedOnceRef.current) {
       refs.joinRecoveryAttemptedRef.current = true;
       try {
@@ -48,8 +53,9 @@ export async function pollArcadeRoomSnapshot(refs, roomId, fetchBundle) {
       refs.joinRecoveryAttemptedRef.current = true;
     }
 
-    if (!bundle.ok && bundle.code === "forbidden") {
+    if (!bundle.ok && isArcadeRoomAccessDenied(bundle)) {
       refs.pollStoppedRef.current = true;
+      clearArcadeActiveRoom(roomId);
       return { bundle, stopped: true };
     }
   }

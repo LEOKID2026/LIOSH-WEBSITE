@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { fetchArcadeRoomLudoBundle, requestLudoGameAction } from "../../lib/arcade/ludo/ludoSessionAdapter";
 import { useArcadeSnapshotPollEffect } from "./useArcadeSnapshotPollEffect";
+import { handleArcadePollBundleFailure } from "./arcadeSessionPollHelpers.js";
+import { useArcadeRoomAccessLostRedirect } from "./useArcadeRoomAccessLostRedirect.js";
 
 /** כמו OV2 `useOv2LudoSession.js` — משך מינימלי לזריקה + הצגת תוצאה */
 const OV2_LUDO_LIVE_ROLL_MIN_MS = 2000;
@@ -54,6 +56,7 @@ export function useLudoSession(ctx) {
   const [gameSessionRow, setGameSessionRow] = useState(null);
   const [bundleLoaded, setBundleLoaded] = useState(false);
   const [bundleError, setBundleError] = useState("");
+  const [roomAccessLost, setRoomAccessLost] = useState(false);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
   const lastPollSigRef = useRef("");
@@ -78,6 +81,7 @@ export function useLudoSession(ctx) {
     setGameSessionRow(null);
     setBundleLoaded(false);
     setBundleError("");
+    setRoomAccessLost(false);
     setErr("");
     lastPollSigRef.current = "";
     setDiceRolling(false);
@@ -118,14 +122,7 @@ export function useLudoSession(ctx) {
   const fetchBundle = useCallback(() => fetchArcadeRoomLudoBundle(roomId || ""), [roomId]);
 
   const onPollBundle = useCallback((b, ctx) => {
-    if (!ctx.ok) {
-      if (!ctx.bundleLoadedOnceRef.current) {
-        const msg =
-          b.code === "forbidden"
-            ? "אין גישה לחדר (לא רשום כשחקן). נסה מהלובי «משחק מהיר» או «הצטרף לחדר»."
-            : b.error || b.code || "טעינת החדר נכשלה";
-        setBundleError(msg);
-      }
+    if (handleArcadePollBundleFailure(b, ctx, setBundleError, setRoomAccessLost, roomId)) {
       return;
     }
 
@@ -158,13 +155,15 @@ export function useLudoSession(ctx) {
     setPlayers(b.players || []);
     setGameSessionRow(b.gameSession ?? null);
     setSnap((prev) => preferNewer(prev, b.ludo));
-  }, []);
+  }, [roomId]);
 
   const { stopPolling } = useArcadeSnapshotPollEffect({
     roomId,
     fetchBundle,
     onBundle: onPollBundle,
   });
+
+  useArcadeRoomAccessLostRedirect(roomAccessLost, stopPolling);
 
   const runLiveRoll = useCallback(async () => {
     const s = snapRef.current;
