@@ -4,6 +4,11 @@ import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useCheckersSession } from "../../../hooks/arcade/useCheckersSession";
 import { EMPTY, isKing, pieceSeat } from "../../../lib/arcade/checkers/checkersEngine";
+import {
+  boardSideLabels,
+  shouldFlipCheckersBoard,
+  viewToEngineCoord,
+} from "../../../lib/arcade/board-orientation";
 import StudentAdSlot from "../../student/StudentAdSlot.jsx";
 
 const GAME_TITLE = "דמקה";
@@ -225,6 +230,11 @@ export default function CheckersScreen({ roomId }) {
 
   const finished = vm.phase === "finished";
   const didIWin = vm.mySeat != null && vm.winnerSeat != null && vm.winnerSeat === vm.mySeat;
+  const flipBoard = shouldFlipCheckersBoard(vm.mySeat);
+  const sideLabels = boardSideLabels(seatLabels, vm.mySeat, [
+    { seat: 0, color: "שחור" },
+    { seat: 1, color: "לבן" },
+  ]);
 
   return (
     <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden bg-zinc-950 px-2 pt-2">
@@ -250,22 +260,22 @@ export default function CheckersScreen({ roomId }) {
 
         {!showLobbyWait && snapshot ? (
           <>
-            <div className="mt-2 flex justify-between gap-2 text-xs text-zinc-400 sm:text-sm">
-              <span className="truncate font-semibold text-amber-100/90">{seatLabels[0]} · שחור</span>
-              <span className="truncate font-semibold text-zinc-200">{seatLabels[1]} · לבן</span>
-            </div>
+            <p className="mt-2 text-center text-xs text-zinc-500 sm:text-sm">
+              {sideLabels.top.name} · {sideLabels.top.color}
+            </p>
 
-            <div className="mx-auto mt-3 w-full max-w-[min(96vw,420px)] border border-amber-900/40 p-1">
+            <div className="mx-auto mt-2 w-full max-w-[min(96vw,420px)] border border-amber-900/40 p-1">
               <div className="grid grid-cols-8 gap-px bg-zinc-800 p-px">
-                {Array.from({ length: 8 }, (_, r) =>
-                  Array.from({ length: 8 }, (_, c) => {
+                {Array.from({ length: 8 }, (_, viewR) =>
+                  Array.from({ length: 8 }, (_, viewC) => {
+                    const { r, c } = viewToEngineCoord(viewR, viewC, flipBoard);
                     const isDark = (r + c) % 2 === 1;
                     const piece = vm.grid[r]?.[c] ?? 0;
                     const hl = pick?.r === r && pick?.c === c;
                     const canLand = highlightTo.has(`${r},${c}`);
                     return (
                       <button
-                        key={`${r}-${c}`}
+                        key={`${viewR}-${viewC}`}
                         type="button"
                         disabled={vm.phase !== "playing" || busy}
                         onClick={() => void onCellClick(r, c)}
@@ -280,6 +290,10 @@ export default function CheckersScreen({ roomId }) {
                 ).flat()}
               </div>
             </div>
+
+            <p className="mt-2 text-center text-xs font-semibold text-amber-100/90 sm:text-sm">
+              {sideLabels.bottom.name} · {sideLabels.bottom.color} (אתה)
+            </p>
 
             <div className="mt-4 space-y-2 text-center">
               {vm.mustContinueFrom ? (

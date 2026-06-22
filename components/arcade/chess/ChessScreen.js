@@ -4,6 +4,11 @@ import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useChessSession } from "../../../hooks/arcade/useChessSession";
 import { squareFromRowCol } from "../../../lib/arcade/chess/buildChessSnapshot";
+import {
+  boardSideLabels,
+  shouldFlipChessBoard,
+  viewToEngineCoord,
+} from "../../../lib/arcade/board-orientation";
 import StudentAdSlot from "../../student/StudentAdSlot.jsx";
 
 const GAME_TITLE = "שחמט";
@@ -234,6 +239,11 @@ export default function ChessScreen({ roomId }) {
 
   const finished = vm.phase === "finished";
   const didIWin = vm.mySeat != null && vm.winnerSeat != null && vm.winnerSeat === vm.mySeat;
+  const flipBoard = shouldFlipChessBoard(vm.mySeat);
+  const sideLabels = boardSideLabels(seatLabels, vm.mySeat, [
+    { seat: 0, color: "לבן" },
+    { seat: 1, color: "שחור" },
+  ]);
 
   return (
     <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden bg-zinc-950 px-2 pt-2">
@@ -259,19 +269,19 @@ export default function ChessScreen({ roomId }) {
 
         {!showLobbyWait && snapshot ? (
           <>
-            <div className="mt-2 flex justify-between gap-2 text-xs text-zinc-400 sm:text-sm">
-              <span className="truncate font-semibold text-sky-100/90">{seatLabels[0]} · לבן</span>
-              <span className="truncate font-semibold text-zinc-300">{seatLabels[1]} · שחור</span>
-            </div>
+            <p className="mt-2 text-center text-xs text-zinc-500 sm:text-sm">
+              {sideLabels.top.name} · {sideLabels.top.color}
+            </p>
 
             {vm.inCheck && vm.phase === "playing" ? (
               <p className="mt-2 text-center text-sm font-bold text-rose-300">שח!</p>
             ) : null}
 
-            <div className="mx-auto mt-3 w-full max-w-[min(96vw,420px)] border border-sky-900/40 p-1">
+            <div className="mx-auto mt-2 w-full max-w-[min(96vw,420px)] border border-sky-900/40 p-1">
               <div className="grid grid-cols-8 gap-px bg-zinc-800 p-px">
-                {Array.from({ length: 8 }, (_, r) =>
-                  Array.from({ length: 8 }, (_, c) => {
+                {Array.from({ length: 8 }, (_, viewR) =>
+                  Array.from({ length: 8 }, (_, viewC) => {
+                    const { r, c } = viewToEngineCoord(viewR, viewC, flipBoard);
                     const isDark = (r + c) % 2 === 1;
                     const piece = vm.pieces[r]?.[c] ?? null;
                     const sq = squareFromRowCol(r, c) || "";
@@ -279,7 +289,7 @@ export default function ChessScreen({ roomId }) {
                     const canLand = highlightTo.has(sq);
                     return (
                       <button
-                        key={`${r}-${c}`}
+                        key={`${viewR}-${viewC}`}
                         type="button"
                         disabled={vm.phase !== "playing" || busy}
                         onClick={() => void onCellClick(r, c)}
@@ -294,6 +304,10 @@ export default function ChessScreen({ roomId }) {
                 ).flat()}
               </div>
             </div>
+
+            <p className="mt-2 text-center text-xs font-semibold text-sky-100/90 sm:text-sm">
+              {sideLabels.bottom.name} · {sideLabels.bottom.color} (אתה)
+            </p>
 
             <div className="mt-4 space-y-2 text-center">
               {err ? <p className="text-sm text-rose-300">{err}</p> : null}
