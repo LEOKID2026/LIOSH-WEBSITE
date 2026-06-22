@@ -6,9 +6,9 @@ import { useRouter } from "next/router";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
 
 const CHOICES = [
-  { id: "rock", label: "Rock", emoji: "🪨" },
-  { id: "paper", label: "Paper", emoji: "📄" },
-  { id: "scissors", label: "Scissors", emoji: "✂️" },
+  { id: "rock", label: "אבן", emoji: "🪨" },
+  { id: "paper", label: "נייר", emoji: "📄" },
+  { id: "scissors", label: "מספריים", emoji: "✂️" },
 ];
 
 const beats = {
@@ -38,7 +38,7 @@ export default function RockPaperScissors() {
   const [activeHuman, setActiveHuman] = useState("p1");
   const [history, setHistory] = useState([]);
   const [statusMessage, setStatusMessage] = useState(
-    "Player 1: choose your move"
+    "שחקן 1: בחרו מהלך"
   );
   const [lastResult, setLastResult] = useState(null);
   const [showP1Choice, setShowP1Choice] = useState(false);
@@ -49,11 +49,11 @@ export default function RockPaperScissors() {
 
   const matchWinner =
     score.p1 >= firstTo
-      ? "Player 1"
+      ? "שחקן 1"
       : score.p2 >= firstTo
       ? vsBot
-        ? "LeoBot"
-        : "Player 2"
+        ? "רובוט ליאו"
+        : "שחקן 2"
       : null;
 
   useEffect(() => {
@@ -88,7 +88,7 @@ export default function RockPaperScissors() {
             setRound((prevRound) => prevRound + 1);
             setPendingChoice(null);
             setActiveHuman("p1");
-            setStatusMessage("Player 1: choose your move");
+            setStatusMessage("שחקן 1: בחרו מהלך");
             setShowResults(false);
             setFinalResult(null);
             setShowP1Choice(false);
@@ -150,7 +150,7 @@ export default function RockPaperScissors() {
     // Show P1 choice for 1 second
     setP1ChoiceDisplay(choice);
     setShowP1Choice(true);
-    setStatusMessage("Your choice:");
+    setStatusMessage("הבחירה שלך:");
     
     setTimeout(() => {
       setShowP1Choice(false);
@@ -172,14 +172,14 @@ export default function RockPaperScissors() {
       // Show P1 choice for 1 second, then hide and pass to P2
       setP1ChoiceDisplay(choice);
       setShowP1Choice(true);
-      setStatusMessage("Player 1 chose:");
+      setStatusMessage("שחקן 1 בחר:");
       
       setTimeout(() => {
         setShowP1Choice(false);
         setP1ChoiceDisplay(null);
         setPendingChoice(choice);
         setActiveHuman("p2");
-        setStatusMessage("Player 2: your turn (no peeking!)");
+        setStatusMessage("שחקן 2: תורכם (בלי להציץ!)");
       }, 1000);
     } else {
       // P2 chose - show results with 3 second countdown
@@ -193,7 +193,7 @@ export default function RockPaperScissors() {
     setHistory([]);
     setPendingChoice(null);
     setActiveHuman("p1");
-    setStatusMessage("Player 1: choose your move");
+    setStatusMessage("שחקן 1: בחרו מהלך");
     setLastResult(null);
     setShowP1Choice(false);
     setP1ChoiceDisplay(null);
@@ -253,12 +253,12 @@ export default function RockPaperScissors() {
                 onClick={backSafe}
                 className="min-w-[60px] px-3 py-1 rounded-lg text-sm font-bold bg-white/5 border border-white/10 hover:bg-white/10"
               >
-                BACK
+                חזרה
               </button>
             </div>
             <div className="absolute right-2 top-2 pointer-events-auto">
               <span className="text-xs uppercase tracking-[0.3em] text-white/60">
-                Local
+                מקומי
               </span>
             </div>
           </div>
@@ -276,10 +276,10 @@ export default function RockPaperScissors() {
         >
           <div className="text-center mb-1">
             <h1 className="text-2xl font-extrabold text-white mb-0.5">
-              🪨📄✂️ Rock Paper Scissors
+              🪨📄✂️ אבן · נייר · מספריים
             </h1>
             <p className="text-white/70 text-xs">
-              Round {round} • First to {firstTo}
+              סיבוב {round} • ראשון ל-{firstTo}
             </p>
           </div>
 
@@ -288,16 +288,16 @@ export default function RockPaperScissors() {
             className="grid grid-cols-3 gap-1 mb-1 w-full max-w-md"
           >
             <div className="bg-black/30 border border-white/10 rounded-lg p-1 text-center">
-              <div className="text-[10px] text-white/60">Player 1</div>
+              <div className="text-[10px] text-white/60">שחקן 1</div>
               <div className="text-sm font-bold text-emerald-400">{score.p1}</div>
             </div>
             <div className="bg-black/30 border border-white/10 rounded-lg p-1 text-center">
-              <div className="text-[10px] text-white/60">Round</div>
+              <div className="text-[10px] text-white/60">סיבוב</div>
               <div className="text-sm font-bold text-amber-400">{round}</div>
             </div>
             <div className="bg-black/30 border border-white/10 rounded-lg p-1 text-center">
               <div className="text-[10px] text-white/60">
-                {vsBot ? "Bot" : "Player 2"}
+                {vsBot ? "רובוט" : "שחקן 2"}
               </div>
               <div className="text-sm font-bold text-purple-400">{score.p2}</div>
             </div>
@@ -314,7 +314,7 @@ export default function RockPaperScissors() {
             >
               {[3, 5, 7].map((target) => (
                 <option key={target} value={target}>
-                  First to {target}
+                  ראשון ל-{target}
                 </option>
               ))}
             </select>
@@ -328,26 +328,26 @@ export default function RockPaperScissors() {
                 }}
                 className="w-5 h-5"
               />
-              vs Bot
+              נגד רובוט
             </label>
             <button
               onClick={() => resetMatch()}
               className="h-9 px-4 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold text-sm"
             >
-              Reset
+              איפוס
             </button>
           </div>
 
           {matchWinner && (
             <div className="mb-1 px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-200 text-sm font-semibold">
-              {matchWinner} won the series!
+              {matchWinner} ניצח במשחק!
             </div>
           )}
 
           {showResults && finalResult && (
             <div className="mb-1 px-4 py-2 rounded-lg bg-purple-500/20 text-purple-200 text-center">
               <div className="text-2xl mb-1">
-                {CHOICES.find((c) => c.id === finalResult.p1)?.emoji} vs{" "}
+                {CHOICES.find((c) => c.id === finalResult.p1)?.emoji} מול{" "}
                 {CHOICES.find((c) => c.id === finalResult.p2)?.emoji}
               </div>
               {resultsTimer > 0 && (
@@ -356,12 +356,12 @@ export default function RockPaperScissors() {
               {resultsTimer === 0 && (
                 <div className="text-lg font-semibold">
                   {finalResult.winner === "tie"
-                    ? "It's a Tie!"
+                    ? "תיקו!"
                     : finalResult.winner === "p1"
-                    ? "Player 1 Wins!"
+                    ? "שחקן 1 ניצח!"
                     : vsBot
-                    ? "Bot Wins!"
-                    : "Player 2 Wins!"}
+                    ? "הרובוט ניצח!"
+                    : "שחקן 2 ניצח!"}
                 </div>
               )}
             </div>
@@ -369,15 +369,15 @@ export default function RockPaperScissors() {
 
           {lastResult && !matchWinner && !showResults && (
             <div className="mb-1 text-xs text-white/80">
-              {CHOICES.find((c) => c.id === lastResult.p1)?.emoji} vs{" "}
+              {CHOICES.find((c) => c.id === lastResult.p1)?.emoji} מול{" "}
               {CHOICES.find((c) => c.id === lastResult.p2)?.emoji} —{" "}
               {lastResult.winner === "tie"
-                ? "Tie"
+                ? "תיקו"
                 : lastResult.winner === "p1"
-                ? "P1 wins"
+                ? "שחקן 1 ניצח"
                 : vsBot
-                ? "Bot wins"
-                : "P2 wins"}
+                ? "הרובוט ניצח"
+                : "שחקן 2 ניצח"}
             </div>
           )}
 
@@ -395,7 +395,7 @@ export default function RockPaperScissors() {
                   <span className="text-7xl">
                     {CHOICES.find((c) => c.id === p1ChoiceDisplay)?.emoji}
                   </span>
-                  <span className="text-3xl font-bold uppercase text-white/90">
+                  <span className="text-3xl font-bold text-white/90">
                     {CHOICES.find((c) => c.id === p1ChoiceDisplay)?.label}
                   </span>
                 </div>
@@ -403,18 +403,18 @@ export default function RockPaperScissors() {
             ) : showResults ? (
               <div className="w-full max-w-md flex flex-col items-center justify-center">
                 <div className="text-sm text-white/80 mb-3 text-center font-semibold">
-                  Results in {resultsTimer}...
+                  תוצאות בעוד {resultsTimer}...
                 </div>
                 <div className="grid grid-cols-2 gap-4 w-full">
                   <div className="rounded-2xl border-2 border-blue-400/50 bg-blue-500/20 px-6 py-6 flex flex-col items-center justify-center gap-3">
-                    <span className="text-2xl text-white/60">Player 1</span>
+                    <span className="text-2xl text-white/60">שחקן 1</span>
                     <span className="text-6xl">
                       {finalResult && CHOICES.find((c) => c.id === finalResult.p1)?.emoji}
                     </span>
                   </div>
                   <div className="rounded-2xl border-2 border-purple-400/50 bg-purple-500/20 px-6 py-6 flex flex-col items-center justify-center gap-3">
                     <span className="text-2xl text-white/60">
-                      {vsBot ? "Bot" : "Player 2"}
+                      {vsBot ? "רובוט" : "שחקן 2"}
                     </span>
                     <span className="text-6xl">
                       {finalResult && CHOICES.find((c) => c.id === finalResult.p2)?.emoji}
@@ -436,7 +436,7 @@ export default function RockPaperScissors() {
                       className="rounded-2xl border-2 border-white/15 bg-black/30 px-8 py-8 flex flex-row items-center justify-center gap-6 hover:border-white/40 transition disabled:opacity-50 active:scale-95"
                     >
                       <span className="text-7xl">{choice.emoji}</span>
-                      <span className="text-3xl font-bold uppercase text-white/90">
+                      <span className="text-3xl font-bold text-white/90">
                         {choice.label}
                       </span>
                     </button>
@@ -448,23 +448,23 @@ export default function RockPaperScissors() {
 
           {history.length > 0 && (
             <div className="w-full max-w-md text-xs text-white/60 space-y-1">
-              <div className="text-center font-semibold mb-1">Recent</div>
+              <div className="text-center font-semibold mb-1">אחרונים</div>
               {history.slice(0, 3).map((entry, idx) => (
                 <div
                   key={idx}
                   className="flex items-center justify-between bg-black/20 px-2 py-1 rounded text-[10px]"
                 >
-                  <span>R{entry.round}</span>
+                  <span>ס{entry.round}</span>
                   <span>
-                    {CHOICES.find((c) => c.id === entry.p1)?.emoji} vs{" "}
+                    {CHOICES.find((c) => c.id === entry.p1)?.emoji} מול{" "}
                     {CHOICES.find((c) => c.id === entry.p2)?.emoji}
                   </span>
                   <span>
                     {entry.winner === "tie"
-                      ? "Tie"
+                      ? "תיקו"
                       : entry.winner === "p1"
-                      ? "P1"
-                      : "P2"}
+                      ? "ש1"
+                      : "ש2"}
                   </span>
                 </div>
               ))}

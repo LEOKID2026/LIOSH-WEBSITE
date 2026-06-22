@@ -9,6 +9,18 @@ const SIZES = [3, 5, 7];
 
 const initialScore = { X: 0, O: 0, ties: 0 };
 
+function playerLabel(symbol) {
+  if (symbol === "X") return "איקס";
+  if (symbol === "O") return "עיגול";
+  return symbol;
+}
+
+function cellDisplay(symbol) {
+  if (symbol === "X") return "✕";
+  if (symbol === "O") return "○";
+  return symbol;
+}
+
 function makeBoard(size) {
   return Array(size * size).fill(null);
 }
@@ -140,13 +152,13 @@ export default function TicTacToeXL() {
     setBoard(nextBoard);
 
     if (potentialWinner) {
-      setWinnerMessage(`${potentialWinner} wins!`);
+      setWinnerMessage(`${playerLabel(potentialWinner)} ניצח!`);
       setScore((prev) => ({
         ...prev,
         [potentialWinner]: prev[potentialWinner] + 1,
       }));
     } else if (full) {
-      setWinnerMessage("Draw!");
+      setWinnerMessage("תיקו!");
       setScore((prev) => ({ ...prev, ties: prev.ties + 1 }));
     } else {
       setCurrentPlayer(nextPlayer);
@@ -211,12 +223,12 @@ export default function TicTacToeXL() {
                 onClick={backSafe}
                 className="min-w-[60px] px-3 py-1 rounded-lg text-sm font-bold bg-white/5 border border-white/10 hover:bg-white/10"
               >
-                BACK
+                חזרה
               </button>
             </div>
             <div className="absolute right-2 top-2 pointer-events-auto">
               <span className="text-xs uppercase tracking-[0.3em] text-white/60">
-                Local
+                מקומי
               </span>
             </div>
           </div>
@@ -234,10 +246,10 @@ export default function TicTacToeXL() {
         >
           <div className="text-center mb-1">
             <h1 className="text-2xl font-extrabold text-white mb-0.5">
-              ❌⭕️ Tic Tac Toe XL
+              ❌⭕️ איקס עיגול
             </h1>
             <p className="text-white/70 text-xs">
-              {size}×{size} Board • {vsBot ? "vs Bot" : "2 Players"}
+              לוח {size}×{size} • {vsBot ? "נגד רובוט" : "2 שחקנים"}
             </p>
           </div>
 
@@ -246,15 +258,15 @@ export default function TicTacToeXL() {
             className="grid grid-cols-3 gap-1 mb-1 w-full max-w-md"
           >
             <div className="bg-black/30 border border-white/10 rounded-lg p-1 text-center">
-              <div className="text-[10px] text-white/60">Player X</div>
+              <div className="text-[10px] text-white/60">שחקן איקס</div>
               <div className="text-sm font-bold text-emerald-400">{score.X}</div>
             </div>
             <div className="bg-black/30 border border-white/10 rounded-lg p-1 text-center">
-              <div className="text-[10px] text-white/60">Draws</div>
+              <div className="text-[10px] text-white/60">תיקו</div>
               <div className="text-sm font-bold text-amber-400">{score.ties}</div>
             </div>
             <div className="bg-black/30 border border-white/10 rounded-lg p-1 text-center">
-              <div className="text-[10px] text-white/60">Player O</div>
+              <div className="text-[10px] text-white/60">שחקן עיגול</div>
               <div className="text-sm font-bold text-purple-400">{score.O}</div>
             </div>
           </div>
@@ -281,19 +293,19 @@ export default function TicTacToeXL() {
                 }}
                 className="w-5 h-5"
               />
-              vs Bot
+              נגד רובוט
             </label>
             <button
               onClick={resetBoard}
               className="h-9 px-4 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold text-sm"
             >
-              Reset
+              איפוס לוח
             </button>
             <button
               onClick={resetScore}
               className="h-9 px-4 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold text-sm"
             >
-              Clear Score
+              איפוס ציון
             </button>
           </div>
 
@@ -331,14 +343,14 @@ export default function TicTacToeXL() {
                   disabled={!!cell || !!winner}
                   className="rounded-xl bg-black/30 border-2 border-white/15 text-6xl md:text-8xl font-bold flex items-center justify-center transition-all hover:bg-white/10 hover:border-white/30 disabled:opacity-50 active:scale-95"
                 >
-                  {cell}
+                  {cellDisplay(cell)}
                 </button>
               ))}
             </div>
           </div>
 
           <div className="text-center text-sm text-white/80 font-semibold">
-            Turn: <span className="font-bold text-white text-lg">{currentPlayer}</span>
+            תור: <span className="font-bold text-white text-lg">{playerLabel(currentPlayer)}</span>
           </div>
         </div>
         <StudentAdSlot variant="dvh" />

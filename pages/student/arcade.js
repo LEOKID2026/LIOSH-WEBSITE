@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Head from "next/head";
-import Link from "next/link";
 import Layout from "../../components/Layout";
 import { useGamesHubUi } from "../../hooks/useGamesHubUi.js";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
-import StudentThemePicker from "../../components/student/StudentThemePicker";
 import GameAccessGuard from "../../components/games/GameAccessGuard.jsx";
+import GamesHubNavBar from "../../components/games/GamesHubNavBar.jsx";
+import GamesHubHeader from "../../components/games/GamesHubHeader.jsx";
 import { mapEntryCostOptionsForUi } from "../../lib/learning-client/economyConfigClient.js";
 
 const POLL_MS = 5000;
@@ -288,7 +288,6 @@ function ArcadeGameCard({
 export default function StudentArcadePage() {
   const { theme } = useStudentTheme();
   const { GH } = useGamesHubUi();
-  const [studentName, setStudentName] = useState("");
   const [balance, setBalance] = useState(null);
   const [games, setGames] = useState([]);
   const [entryOptions, setEntryOptions] = useState([]);
@@ -302,17 +301,12 @@ export default function StudentArcadePage() {
   const [roomHighlight, setRoomHighlight] = useState(null);
 
   const refresh = useCallback(async () => {
-    const [meRes, balRes, gamesRes] = await Promise.all([
-      fetch("/api/student/me", { credentials: "same-origin", cache: "no-store" }),
+    const [balRes, gamesRes] = await Promise.all([
       fetch("/api/arcade/balance"),
       fetch("/api/arcade/games"),
     ]);
-    const meJson = await meRes.json().catch(() => ({}));
     const balJson = await balRes.json().catch(() => ({}));
     const gamesJson = await gamesRes.json().catch(() => ({}));
-    if (meJson?.student?.full_name) {
-      setStudentName(meJson.student.full_name);
-    }
     if (balJson?.ok) setBalance(balJson.balance);
     if (gamesJson?.ok && Array.isArray(gamesJson.games)) {
       setGames(gamesJson.games);
@@ -575,31 +569,21 @@ export default function StudentArcadePage() {
         <title>משחקים — LEO K</title>
       </Head>
       <div className={GH.pageWrap} dir="rtl">
-        <div className={`${GH.container} max-w-7xl`}>
-          <header
-            className={`mb-5 flex flex-col gap-3 border-b pb-5 sm:mb-6 sm:flex-row sm:items-start sm:justify-between sm:gap-4 ${GH.headerBorder}`}
-          >
-            <div className="min-w-0 space-y-1.5 text-right">
-              <h1 className={GH.hubTitle}>משחקים</h1>
-              <p className={`text-xs sm:text-sm ${GH.hubSub}`}>בחר משחק, עלות כניסה והצטרף לחדר</p>
-              <div className="flex flex-wrap items-center justify-end gap-2 pt-1 text-sm">
-                <span className={GH.nameText}>{studentName || "—"}</span>
-                <span className={GH.nameSep}>·</span>
-                <span className={GH.balanceBadge}>
-                  {balanceDisplay}
-                  <span className={`mr-1.5 ${GH.balanceSuffix}`}>מטבעות</span>
-                </span>
-              </div>
-            </div>
-            <div className="flex shrink-0 flex-col gap-2 sm:items-end">
-              <div className="flex items-center gap-2">
-                <StudentThemePicker variant="icon" iconSize="nav" />
-                <Link href="/student/home" className={GH.backBtn}>
-                  חזרה ללמידה
-                </Link>
-              </div>
-            </div>
-          </header>
+        <div className={`${GH.container} max-w-7xl space-y-4`}>
+          <GamesHubNavBar
+            backHref="/games"
+            backLabel="משחקים"
+            badge={`🪙 ${balanceDisplay} מטבעות`}
+            backBtnClass={GH.backBtn}
+            badgeClass={GH.badge}
+          />
+
+          <GamesHubHeader
+            title="משחקים עם חברים"
+            subtitle="בחר משחק, עלות כניסה והצטרף לחדר"
+            titleClass={GH.hubTitle}
+            subtitleClass={GH.hubSub}
+          />
 
           {!initialSyncDone ? (
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">

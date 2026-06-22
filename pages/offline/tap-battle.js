@@ -105,13 +105,13 @@ export default function TapBattle() {
 
   function finalizeRound() {
     setPhase("finished");
-    let message = "It's a tie!";
+    let message = "תיקו!";
     const nextScore = { ...score };
     if (counts.left > counts.right) {
-      message = "Left wins! 🏆";
+      message = "הצד השמאלי ניצח! 🏆";
       nextScore.left += 1;
     } else if (counts.right > counts.left) {
-      message = "Right wins! 🏆";
+      message = "הצד הימני ניצח! 🏆";
       nextScore.right += 1;
     } else {
       nextScore.ties += 1;
@@ -189,12 +189,12 @@ export default function TapBattle() {
                 onClick={backSafe}
                 className="min-w-[60px] px-3 py-1 rounded-lg text-sm font-bold bg-white/5 border border-white/10 hover:bg-white/10"
               >
-                BACK
+                חזרה
               </button>
             </div>
             <div className="absolute right-2 top-2 pointer-events-auto">
               <span className="text-xs uppercase tracking-[0.3em] text-white/60">
-                Local
+                מקומי
               </span>
             </div>
           </div>
@@ -212,10 +212,10 @@ export default function TapBattle() {
         >
           <div className="text-center mb-1">
             <h1 className="text-2xl font-extrabold text-white mb-0.5">
-              ⚡️ Tap Battle
+              ⚡️ קרב הקשות
             </h1>
             <p className="text-white/70 text-xs">
-              Round {round} • {roundDuration}s
+              סיבוב {round} • {roundDuration} שניות
             </p>
           </div>
 
@@ -224,15 +224,15 @@ export default function TapBattle() {
             className="grid grid-cols-3 gap-1 mb-1 w-full max-w-md"
           >
             <div className="bg-black/30 border border-white/10 rounded-lg p-1 text-center">
-              <div className="text-[10px] text-white/60">Left</div>
+              <div className="text-[10px] text-white/60">שמאל</div>
               <div className="text-sm font-bold text-purple-400">{score.left}</div>
             </div>
             <div className="bg-black/30 border border-white/10 rounded-lg p-1 text-center">
-              <div className="text-[10px] text-white/60">Ties</div>
+              <div className="text-[10px] text-white/60">תיקו</div>
               <div className="text-sm font-bold text-amber-400">{score.ties}</div>
             </div>
             <div className="bg-black/30 border border-white/10 rounded-lg p-1 text-center">
-              <div className="text-[10px] text-white/60">Right</div>
+              <div className="text-[10px] text-white/60">ימין</div>
               <div className="text-sm font-bold text-orange-400">{score.right}</div>
             </div>
           </div>
@@ -248,7 +248,7 @@ export default function TapBattle() {
             >
               {DURATIONS.map((dur) => (
                 <option key={dur} value={dur}>
-                  {dur}s
+                  {dur} שניות
                 </option>
               ))}
             </select>
@@ -269,14 +269,14 @@ export default function TapBattle() {
               onClick={resetMatch}
               className="h-9 px-4 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold text-sm"
             >
-              Reset
+              איפוס
             </button>
           </div>
 
           <div className="text-center mb-1 text-sm text-white/80 font-semibold">
             {phase === "idle" && "לחצו התחל כדי להתחיל"}
-            {phase === "countdown" && `Get ready... ${countdown}`}
-            {phase === "playing" && `Time: ${timeLeft.toFixed(1)}s`}
+            {phase === "countdown" && `מתכוננים... ${countdown}`}
+            {phase === "playing" && `זמן: ${timeLeft.toFixed(1)} שניות`}
             {phase === "finished" && winnerMessage}
           </div>
 
@@ -303,8 +303,8 @@ export default function TapBattle() {
                   : "bg-[#120f1b] opacity-80"
               }`}
             >
-              <div className="text-4xl font-black">L</div>
-              <div className="text-sm text-white/80 font-semibold mt-2">{counts.left} taps</div>
+              <div className="text-4xl font-black">ש</div>
+              <div className="text-sm text-white/80 font-semibold mt-2">{counts.left} הקשות</div>
             </button>
             <button
               onClick={() => handleTap("right")}
@@ -314,8 +314,8 @@ export default function TapBattle() {
                   : "bg-[#120f1b] opacity-80"
               }`}
             >
-              <div className="text-4xl font-black">R</div>
-              <div className="text-sm text-white/80 font-semibold mt-2">{counts.right} taps</div>
+              <div className="text-4xl font-black">י</div>
+              <div className="text-sm text-white/80 font-semibold mt-2">{counts.right} הקשות</div>
             </button>
           </div>
         </div>

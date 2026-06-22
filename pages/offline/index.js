@@ -1,18 +1,18 @@
 import Layout from "../../components/Layout";
-import Link from "next/link";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
 import { useGamesHubUi } from "../../hooks/useGamesHubUi.js";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import GameAccessGuard from "../../components/games/GameAccessGuard.jsx";
 import GamesHubNavBar from "../../components/games/GamesHubNavBar.jsx";
 import GamesHubHeader from "../../components/games/GamesHubHeader.jsx";
+import OfflineHubGameCard from "../../components/games/OfflineHubGameCard.jsx";
 import { useStudentGameAccess } from "../../hooks/useStudentGameAccess.js";
 
 const OFFLINE_GAMES = [
   {
     slug: "tic-tac-toe",
     gameKey: "tic-tac-toe",
-    title: "איקס עיגול XL",
+    title: "איקס עיגול",
     emoji: "❌⭕️",
     players: "2 שחקנים",
     blurb: "לוחות מ 3×3 ועד 7×7 עם מעקב ציון.",
@@ -21,9 +21,10 @@ const OFFLINE_GAMES = [
     slug: "rock-paper-scissors",
     gameKey: "rock-paper-scissors",
     title: "אבן · נייר · מספריים",
+    titleOneLine: true,
     emoji: "🪨📄✂️",
     players: "2 שחקנים או נגד רובוט",
-    blurb: "משחקים מהירים, סיבובים הטוב מול כולם והיסטוריית ציון.",
+    blurb: "משחקים מהירים, סיבובים הטוב מול כולם.",
   },
   {
     slug: "tap-battle",
@@ -31,7 +32,7 @@ const OFFLINE_GAMES = [
     title: "קרב הקשות",
     emoji: "⚡️",
     players: "2 שחקנים",
-    blurb: "כל צד מקיש מהר ככל האפשר — מי שמגיע קודם ליעד מנצח.",
+    blurb: "כל צד מקיש מהר ככל האפשר — מי ינצח?",
   },
   {
     slug: "memory-match",
@@ -39,7 +40,7 @@ const OFFLINE_GAMES = [
     title: "התאמת זיכרון",
     emoji: "🧠",
     players: "1–2 שחקנים",
-    blurb: "הופכים קלפים, מוצאים זוגות ומנסים לנצח את השעון.",
+    blurb: "הופכים קלפים, מוצאים זוגות ומנסים לנצח.",
   },
 ];
 
@@ -62,13 +63,13 @@ export default function OfflineHub() {
             <GamesHubNavBar
               backHref="/games"
               backLabel="משחקים"
-              badge="🔌 לא מקוון"
+              badge="🔌כל הזמן עם ליאו"
               backBtnClass={GH.backBtn}
               badgeClass={GH.badge}
             />
 
             <GamesHubHeader
-              title="משחקים לא מקוונים"
+              title="משחקים כל הזמן עם ליאו"
               subtitle="משחקים על אותו מכשיר — גם בלי אינטרנט."
               titleClass={GH.hubTitle}
               subtitleClass={GH.hubSub}
@@ -77,19 +78,9 @@ export default function OfflineHub() {
             {state === "loading" ? (
               <p className={`text-center text-sm ${GH.muted}`}>טוען...</p>
             ) : (
-              <section className="grid sm:grid-cols-2 gap-3 md:gap-4">
+              <section className="grid grid-cols-2 gap-3 md:gap-4">
                 {visibleGames.map((game) => (
-                  <Link key={game.slug} href={`/offline/${game.slug}`} className={GH.card}>
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className={GH.cardEmoji}>{game.emoji}</div>
-                      <div>
-                        <h2 className={GH.cardTitle}>{game.title}</h2>
-                        <p className={GH.cardMeta}>{game.players}</p>
-                      </div>
-                    </div>
-                    <p className={`${GH.cardBlurb} flex-1`}>{game.blurb}</p>
-                    <span className={GH.cardCta}>שחק עכשיו</span>
-                  </Link>
+                  <OfflineHubGameCard key={game.slug} game={game} GH={GH} />
                 ))}
               </section>
             )}

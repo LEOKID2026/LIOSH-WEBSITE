@@ -11,7 +11,7 @@ export default function GamesHubNavBar({ backHref, backLabel, badge, backBtnClas
       <Link href={backHref} className={`${backBtnClass} justify-self-start`}>
         {backLabel}
       </Link>
-      <p className={`${badgeClass} justify-self-center text-center whitespace-nowrap`}>{badge}</p>
+      <p className={`${badgeClass} justify-self-center text-center`}>{badge}</p>
       <div className="justify-self-end">
         <StudentThemePicker variant="icon" iconSize="nav" />
       </div>
