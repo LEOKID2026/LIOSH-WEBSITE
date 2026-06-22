@@ -37,9 +37,9 @@ export default function AdminDiamondsTab({ accessToken }) {
     setError("");
     try {
       const [settingsRes, soloRes, boxRes] = await Promise.all([
-        adminAuthFetch("/api/admin/rewards/diamonds/settings", accessToken),
-        adminAuthFetch("/api/admin/rewards/diamonds/solo-rules", accessToken),
-        adminAuthFetch("/api/admin/rewards/diamonds/surprise-box", accessToken),
+        adminAuthFetch(accessToken, "/api/admin/rewards/diamonds/settings"),
+        adminAuthFetch(accessToken, "/api/admin/rewards/diamonds/solo-rules"),
+        adminAuthFetch(accessToken, "/api/admin/rewards/diamonds/surprise-box"),
       ]);
       const settingsJson = await settingsRes.json().catch(() => ({}));
       const soloJson = await soloRes.json().catch(() => ({}));
@@ -77,7 +77,7 @@ export default function AdminDiamondsTab({ accessToken }) {
     setBusy(true);
     setError("");
     try {
-      const res = await adminAuthFetch("/api/admin/rewards/diamonds/settings", accessToken, {
+      const res = await adminAuthFetch(accessToken, "/api/admin/rewards/diamonds/settings", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(patch),
@@ -124,7 +124,7 @@ export default function AdminDiamondsTab({ accessToken }) {
     setError("");
     setMessage("");
     try {
-      const res = await adminAuthFetch("/api/admin/rewards/diamonds/solo-rules", accessToken, {
+      const res = await adminAuthFetch(accessToken, "/api/admin/rewards/diamonds/solo-rules", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ gameKey, diamondRules: row.diamondRules }),
@@ -153,7 +153,7 @@ export default function AdminDiamondsTab({ accessToken }) {
     setError("");
     setMessage("");
     try {
-      const res = await adminAuthFetch("/api/admin/rewards/diamonds/surprise-box", accessToken, {
+      const res = await adminAuthFetch(accessToken, "/api/admin/rewards/diamonds/surprise-box", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ rewards: boxRewards }),
@@ -180,8 +180,8 @@ export default function AdminDiamondsTab({ accessToken }) {
     setStudentInfo(null);
     try {
       const res = await adminAuthFetch(
-        `/api/admin/students/${encodeURIComponent(id)}/diamonds`,
-        accessToken
+        accessToken,
+        `/api/admin/students/${encodeURIComponent(id)}/diamonds`
       );
       const json = await res.json().catch(() => ({}));
       if (!res.ok || !json.ok) {
@@ -209,8 +209,8 @@ export default function AdminDiamondsTab({ accessToken }) {
     setMessage("");
     try {
       const res = await adminAuthFetch(
-        `/api/admin/students/${encodeURIComponent(id)}/diamonds/adjust`,
         accessToken,
+        `/api/admin/students/${encodeURIComponent(id)}/diamonds/adjust`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

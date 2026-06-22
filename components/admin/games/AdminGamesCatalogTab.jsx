@@ -1,6 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { adminAuthFetch } from "../../../lib/admin-portal/use-admin-session.js";
 
+const CATEGORY_LABELS = {
+  online: "משחקי אונליין",
+  offline: "משחקים לא מקוונים",
+  solo: "משחקים רגילים",
+};
+
 export default function AdminGamesCatalogTab({ accessToken }) {
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,10 +18,10 @@ export default function AdminGamesCatalogTab({ accessToken }) {
     setLoading(true);
     setError("");
     try {
-      const res = await adminAuthFetch("/api/admin/games/catalog", accessToken);
+      const res = await adminAuthFetch(accessToken, "/api/admin/games/catalog");
       const json = await res.json().catch(() => ({}));
       if (!res.ok || !json.ok) {
-        setError(json.error || "טעינה נכשלה");
+        setError(json.error?.message || json.error?.code || json.error || "טעינה נכשלה");
         setGames([]);
         return;
       }
@@ -36,8 +42,8 @@ export default function AdminGamesCatalogTab({ accessToken }) {
     setSavingKey(gameKey);
     try {
       const res = await adminAuthFetch(
-        `/api/admin/games/catalog/${encodeURIComponent(gameKey)}`,
         accessToken,
+        `/api/admin/games/catalog/${encodeURIComponent(gameKey)}`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -46,7 +52,7 @@ export default function AdminGamesCatalogTab({ accessToken }) {
       );
       const json = await res.json().catch(() => ({}));
       if (!res.ok || !json.ok) {
-        setError(json.error || "שמירה נכשלה");
+        setError(json.error?.message || json.error?.code || json.error || "שמירה נכשלה");
         return;
       }
       setGames((prev) =>
@@ -81,7 +87,9 @@ export default function AdminGamesCatalogTab({ accessToken }) {
 
       {grouped.map(({ category, items }) => (
         <section key={category} className="rounded-xl border border-white/10 bg-white/5 p-4">
-          <h3 className="font-semibold text-amber-200 mb-3">{category}</h3>
+          <h3 className="font-semibold text-amber-200 mb-3">
+            {CATEGORY_LABELS[category] || category}
+          </h3>
           <div className="space-y-2">
             {items.map((g) => (
               <div
