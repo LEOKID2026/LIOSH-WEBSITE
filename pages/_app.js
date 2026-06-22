@@ -16,8 +16,10 @@ import {
 } from "../lib/student-ui/browser-theme-color.client.js";
 
 if (typeof window !== "undefined") {
-  initPwaInstallPromptCapture();
   initParentPwaInstallPromptCapture();
+  if (window.location.pathname !== "/parent/install-app") {
+    initPwaInstallPromptCapture();
+  }
 }
 
 const STUDENT_PROTECTED_ROUTES = new Set([
@@ -72,9 +74,11 @@ export default function MyApp({ Component, pageProps }) {
   useIOSViewportFix();
 
   useEffect(() => {
-    initPwaInstallPromptCapture();
     initParentPwaInstallPromptCapture();
-  }, []);
+    if (router.pathname !== "/parent/install-app") {
+      initPwaInstallPromptCapture();
+    }
+  }, [router.pathname]);
 
   useEffect(() => {
     if (typeof window === "undefined" || !("serviceWorker" in navigator)) {
@@ -180,8 +184,7 @@ export default function MyApp({ Component, pageProps }) {
   }, []);
 
   const shouldGate = STUDENT_PROTECTED_ROUTES.has(router.pathname || "");
-  const isParentPwaInstallMode =
-    router.query.pwa_parent === "1" || router.pathname === "/parent/install-app";
+  const isParentPwaInstallMode = router.pathname === "/parent/install-app";
 
   return (
     <>

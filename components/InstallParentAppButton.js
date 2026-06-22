@@ -1,114 +1,24 @@
-import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
-import {
-  initParentPwaInstallPromptCapture,
-  isParentPwaInstalledStandalone,
-  useParentPwaInstallPromptAvailable,
-  usePromptParentPwaInstall,
-} from "../lib/pwa/pwa-parent-install-prompt";
 import { isCapacitorNative } from "../lib/pwa/pwa-install-prompt";
-import {
-  isParentPwaInstallActive,
-  PARENT_PWA_INSTALL_QUERY,
-  PARENT_PWA_INSTALL_SESSION_KEY,
-} from "../lib/pwa/pwa-install-mode";
+import { isParentPwaInstalledStandalone } from "../lib/pwa/pwa-parent-install-prompt";
+import { PARENT_PWA_INSTALL_PATH } from "../lib/pwa/pwa-install-mode";
 
-function clearParentInstallMode(router) {
-  if (typeof window !== "undefined") {
-    sessionStorage.removeItem(PARENT_PWA_INSTALL_SESSION_KEY);
-  }
-  if (router?.replace) {
-    router.replace("/");
-  } else if (typeof window !== "undefined") {
-    window.history.replaceState({}, "", "/");
-  }
-}
-
-export default function ParentInstallAppButton({ className = "", label = "התקנת אפליקציה להורים" }) {
-  const router = useRouter();
-  const hasNativePrompt = useParentPwaInstallPromptAvailable();
-  const promptInstall = usePromptParentPwaInstall();
-  const autoPromptStarted = useRef(false);
-  const [isIOS, setIsIOS] = useState(false);
-  const [isInstalled, setIsInstalled] = useState(false);
-  const [showManualInstructions, setShowManualInstructions] = useState(false);
-
-  useEffect(() => {
-    initParentPwaInstallPromptCapture();
-  }, []);
-
-  useEffect(() => {
-    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    setIsIOS(iOS);
-    setIsInstalled(isParentPwaInstalledStandalone());
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return undefined;
-    if (!isParentPwaInstallActive()) return undefined;
-    if (isInstalled || isCapacitorNative()) {
-      clearParentInstallMode(router);
-      return undefined;
-    }
-    if (!hasNativePrompt || autoPromptStarted.current) return undefined;
-
-    autoPromptStarted.current = true;
-    void promptInstall()
-      .catch((error) => {
-        console.error("Error installing parent app:", error);
-        setShowManualInstructions(true);
-      })
-      .finally(() => {
-        clearParentInstallMode(router);
-      });
-
-    return undefined;
-  }, [hasNativePrompt, isInstalled, promptInstall, router]);
-
-  const handleInstallClick = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (hasNativePrompt) {
-      try {
-        const { outcome } = await promptInstall();
-        if (outcome === "accepted") {
-          setShowManualInstructions(false);
-          setIsInstalled(isParentPwaInstalledStandalone());
-        }
-        clearParentInstallMode(router);
-      } catch (error) {
-        console.error("Error installing parent app:", error);
-        setShowManualInstructions(true);
-      }
-      return;
-    }
-
-    if (typeof window !== "undefined") {
-      sessionStorage.setItem(PARENT_PWA_INSTALL_SESSION_KEY, "1");
-      window.location.href = `/?${PARENT_PWA_INSTALL_QUERY}`;
-    }
-  };
-
-  useEffect(() => {
-    if (!showManualInstructions) return undefined;
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = prevOverflow;
-    };
-  }, [showManualInstructions]);
-
-  const closeInstructions = (e) => {
-    e?.preventDefault?.();
-    e?.stopPropagation?.();
-    setShowManualInstructions(false);
-    clearParentInstallMode(router);
-  };
-
-  if (isCapacitorNative() || isInstalled) {
+/**
+ * Home page — one click navigates to the parent install route where Chrome loads
+ * manifest-parent and fires beforeinstallprompt (Chrome allows one manifest per load).
+ */
+export default function ParentInstallAppButton({
+  className = "",
+  label = "התקנת אפליקציה להורים",
+}) {
+  if (isCapacitorNative() || isParentPwaInstalledStandalone()) {
     return null;
   }
+
+  const handleInstallClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    window.location.href = PARENT_PWA_INSTALL_PATH;
+  };
 
   return (
     <div className={className || "mt-6"}>
@@ -145,57 +55,6 @@ export default function ParentInstallAppButton({ className = "", label = "התק
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
         </svg>
       </button>
-
-      {showManualInstructions ? (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="install-parent-app-instructions-title"
-          onClick={closeInstructions}
-        >
-          <div
-            className="relative w-full max-w-md rounded-xl border border-white/20 bg-black/85 p-5 text-right shadow-2xl animate-slide-up"
-            dir="rtl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="mb-3 flex items-start justify-between gap-3">
-              <div className="flex min-w-0 items-center gap-2">
-                <h3 id="install-parent-app-instructions-title" className="text-lg font-bold text-white">
-                  {isIOS ? "הוראות התקנה ל-iOS — P-LEO K" : "הוראות התקנה — P-LEO K"}
-                </h3>
-              </div>
-              <button
-                type="button"
-                onClick={closeInstructions}
-                className="shrink-0 rounded-lg border border-white/20 px-2.5 py-1 text-sm font-semibold text-white/80 transition hover:bg-white/10 hover:text-white"
-                aria-label="סגור"
-              >
-                ✕
-              </button>
-            </div>
-
-            {isIOS ? (
-              <ol className="list-decimal list-inside space-y-2 text-sm text-white/90">
-                <li>לחץ על כפתור השיתוף 📤 בתחתית Safari</li>
-                <li>גלול למטה ובחר &quot;הוסף למסך הבית&quot;</li>
-                <li>ודא שהשם הוא P-LEO K ולחץ &quot;הוסף&quot;</li>
-              </ol>
-            ) : (
-              <ol className="list-decimal list-inside space-y-2 text-sm text-white/90">
-                <li>ב-Chrome/Edge: לחץ על אייקון ההתקנה בשורת הכתובת</li>
-                <li>ודא שהשם המוצג הוא P-LEO K</li>
-                <li>לאחר ההתקנה האייקון ייפתח את פורטל ההורים</li>
-              </ol>
-            )}
-          </div>
-        </div>
-      ) : null}
     </div>
   );
-}
-
-/** @deprecated Use default export on home page. Kept for /parent/install-app fallback. */
-export function InstallParentAppButton(props) {
-  return <ParentInstallAppButton {...props} />;
 }
