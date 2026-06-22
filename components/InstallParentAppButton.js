@@ -1,5 +1,5 @@
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useRef, useState } from "react";
 import {
   initParentPwaInstallPromptCapture,
   isParentPwaInstalledStandalone,
@@ -7,47 +7,28 @@ import {
   usePromptParentPwaInstall,
 } from "../lib/pwa/pwa-parent-install-prompt";
 import { isCapacitorNative } from "../lib/pwa/pwa-install-prompt";
+import {
+  isParentPwaInstallActive,
+  PARENT_PWA_INSTALL_QUERY,
+  PARENT_PWA_INSTALL_SESSION_KEY,
+} from "../lib/pwa/pwa-install-mode";
 
-/**
- * Home page entry — navigates to parent PWA install flow (must run under /parent/ scope).
- */
-export function ParentHomeInstallLinkButton({ className = "" }) {
-  if (isCapacitorNative()) return null;
-
-  return (
-    <Link
-      href="/parent/install-app"
-      className={
-        className ||
-        "inline-flex h-10 w-48 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-teal-500 via-emerald-500 to-cyan-600 px-4 text-sm font-bold text-white shadow-md transition-all hover:from-teal-600 hover:via-emerald-600 hover:to-cyan-700 hover:shadow-lg"
-      }
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="h-4 w-4"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        strokeWidth={2.5}
-        aria-hidden
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
-        />
-      </svg>
-      <span>התקנת אפליקציה להורים</span>
-    </Link>
-  );
+function clearParentInstallMode(router) {
+  if (typeof window !== "undefined") {
+    sessionStorage.removeItem(PARENT_PWA_INSTALL_SESSION_KEY);
+  }
+  if (router?.replace) {
+    router.replace("/");
+  } else if (typeof window !== "undefined") {
+    window.history.replaceState({}, "", "/");
+  }
 }
 
-/**
- * Parent install page — triggers P-LEO K install prompt (separate manifest).
- */
-export function InstallParentAppButton({ className = "" }) {
+export default function ParentInstallAppButton({ className = "", label = "התקנת אפליקציה להורים" }) {
+  const router = useRouter();
   const hasNativePrompt = useParentPwaInstallPromptAvailable();
   const promptInstall = usePromptParentPwaInstall();
+  const autoPromptStarted = useRef(false);
   const [isIOS, setIsIOS] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
   const [showManualInstructions, setShowManualInstructions] = useState(false);
@@ -63,10 +44,26 @@ export function InstallParentAppButton({ className = "" }) {
   }, []);
 
   useEffect(() => {
-    if (isInstalled || isCapacitorNative()) return undefined;
-    if (!hasNativePrompt) return undefined;
-    void promptInstall();
-  }, [hasNativePrompt, isInstalled, promptInstall]);
+    if (typeof window === "undefined") return undefined;
+    if (!isParentPwaInstallActive()) return undefined;
+    if (isInstalled || isCapacitorNative()) {
+      clearParentInstallMode(router);
+      return undefined;
+    }
+    if (!hasNativePrompt || autoPromptStarted.current) return undefined;
+
+    autoPromptStarted.current = true;
+    void promptInstall()
+      .catch((error) => {
+        console.error("Error installing parent app:", error);
+        setShowManualInstructions(true);
+      })
+      .finally(() => {
+        clearParentInstallMode(router);
+      });
+
+    return undefined;
+  }, [hasNativePrompt, isInstalled, promptInstall, router]);
 
   const handleInstallClick = async (e) => {
     e.preventDefault();
@@ -79,6 +76,7 @@ export function InstallParentAppButton({ className = "" }) {
           setShowManualInstructions(false);
           setIsInstalled(isParentPwaInstalledStandalone());
         }
+        clearParentInstallMode(router);
       } catch (error) {
         console.error("Error installing parent app:", error);
         setShowManualInstructions(true);
@@ -86,7 +84,10 @@ export function InstallParentAppButton({ className = "" }) {
       return;
     }
 
-    setShowManualInstructions(true);
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem(PARENT_PWA_INSTALL_SESSION_KEY, "1");
+      window.location.href = `/?${PARENT_PWA_INSTALL_QUERY}`;
+    }
   };
 
   useEffect(() => {
@@ -102,6 +103,7 @@ export function InstallParentAppButton({ className = "" }) {
     e?.preventDefault?.();
     e?.stopPropagation?.();
     setShowManualInstructions(false);
+    clearParentInstallMode(router);
   };
 
   if (isCapacitorNative() || isInstalled) {
@@ -113,9 +115,35 @@ export function InstallParentAppButton({ className = "" }) {
       <button
         onClick={handleInstallClick}
         type="button"
-        className="inline-flex h-10 w-full max-w-xs items-center justify-center gap-2 rounded-full bg-gradient-to-r from-teal-500 via-emerald-500 to-cyan-600 px-4 text-sm font-bold text-white shadow-md transition-all hover:from-teal-600 hover:via-emerald-600 hover:to-cyan-700 hover:shadow-lg sm:w-56"
+        className="inline-flex h-10 w-48 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-teal-500 via-emerald-500 to-cyan-600 px-4 text-sm font-bold text-white shadow-md transition-all hover:from-teal-600 hover:via-emerald-600 hover:to-cyan-700 hover:shadow-lg"
       >
-        <span>התקנת אפליקציה להורים</span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-4 w-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2.5}
+          aria-hidden
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
+          />
+        </svg>
+        <span>{label}</span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-4 w-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2.5}
+          aria-hidden
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+        </svg>
       </button>
 
       {showManualInstructions ? (
@@ -165,4 +193,9 @@ export function InstallParentAppButton({ className = "" }) {
       ) : null}
     </div>
   );
+}
+
+/** @deprecated Use default export on home page. Kept for /parent/install-app fallback. */
+export function InstallParentAppButton(props) {
+  return <ParentInstallAppButton {...props} />;
 }

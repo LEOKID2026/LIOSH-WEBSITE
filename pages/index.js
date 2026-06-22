@@ -4,7 +4,7 @@ import Layout from "../components/Layout";
 import Link from "next/link";
 import InstallAppPrompt from "../components/InstallAppPrompt";
 import InstallAppButton from "../components/InstallAppButton";
-import { ParentHomeInstallLinkButton } from "../components/InstallParentAppButton";
+import ParentInstallAppButton from "../components/InstallParentAppButton";
 import { useStudentTheme } from "../contexts/StudentThemeContext.jsx";
 
 const PORTAL_CARDS = [
@@ -183,7 +183,7 @@ export default function HomePage() {
 
         <section className="flex shrink-0 flex-col items-center gap-3 px-1 sm:flex-row sm:justify-center sm:gap-4">
           <InstallAppButton className="" label="התקנת אפליקציה לילדים" />
-          <ParentHomeInstallLinkButton />
+          <ParentInstallAppButton />
         </section>
       </div>
     </Layout>

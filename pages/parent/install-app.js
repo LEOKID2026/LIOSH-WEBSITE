@@ -2,7 +2,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Layout from "../../components/Layout";
-import { InstallParentAppButton } from "../../components/InstallParentAppButton";
+import ParentInstallAppButton from "../../components/InstallParentAppButton";
 import { isParentPwaInstalledStandalone } from "../../lib/pwa/pwa-parent-install-prompt";
 import { isCapacitorNative, isPwaInstalledStandalone } from "../../lib/pwa/pwa-install-prompt";
 
@@ -47,7 +47,7 @@ export default function ParentPwaInstallPage() {
               P-LEO K כבר מותקן במכשיר.
             </p>
           ) : (
-            <InstallParentAppButton />
+            <ParentInstallAppButton />
           )}
 
           <Link

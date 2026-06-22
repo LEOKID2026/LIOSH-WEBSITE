@@ -7,6 +7,7 @@ import StudentAccessGate from "../components/student/StudentAccessGate";
 import DevServiceWorkerCleanup from "../components/dev/DevServiceWorkerCleanup";
 import { useIOSViewportFix } from "../hooks/useIOSViewportFix";
 import { initPwaInstallPromptCapture } from "../lib/pwa/pwa-install-prompt";
+import { initParentPwaInstallPromptCapture } from "../lib/pwa/pwa-parent-install-prompt";
 import { StudentThemeProvider } from "../contexts/StudentThemeContext.jsx";
 import BrowserThemeColorSync from "../components/BrowserThemeColorSync.jsx";
 import {
@@ -16,6 +17,7 @@ import {
 
 if (typeof window !== "undefined") {
   initPwaInstallPromptCapture();
+  initParentPwaInstallPromptCapture();
 }
 
 const STUDENT_PROTECTED_ROUTES = new Set([
@@ -71,6 +73,7 @@ export default function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     initPwaInstallPromptCapture();
+    initParentPwaInstallPromptCapture();
   }, []);
 
   useEffect(() => {
@@ -177,7 +180,8 @@ export default function MyApp({ Component, pageProps }) {
   }, []);
 
   const shouldGate = STUDENT_PROTECTED_ROUTES.has(router.pathname || "");
-  const isParentPwaInstallPage = router.pathname === "/parent/install-app";
+  const isParentPwaInstallMode =
+    router.query.pwa_parent === "1" || router.pathname === "/parent/install-app";
 
   return (
     <>
@@ -208,8 +212,12 @@ export default function MyApp({ Component, pageProps }) {
         <link rel="apple-touch-icon" sizes="167x167" href="/images/leo-icons/icon-192.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/images/leo-icons/icon-192.png" />
         
-        {/* Manifest — kids default; parent install page uses its own manifest link */}
-        {!isParentPwaInstallPage ? <link rel="manifest" href="/manifest.json" /> : null}
+        {/* Manifest — kids default; parent install uses manifest-parent on same origin */}
+        {isParentPwaInstallMode ? (
+          <link rel="manifest" href="/manifest-parent.webmanifest" />
+        ) : (
+          <link rel="manifest" href="/manifest.json" />
+        )}
         
         <title>LEO K - Kids Games & Learning</title>
       </Head>
