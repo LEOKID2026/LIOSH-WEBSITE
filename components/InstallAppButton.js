@@ -39,6 +39,21 @@ export default function InstallAppButton({ className = "" }) {
     setShowManualInstructions(true);
   };
 
+  useEffect(() => {
+    if (!showManualInstructions) return undefined;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [showManualInstructions]);
+
+  const closeInstructions = (e) => {
+    e?.preventDefault?.();
+    e?.stopPropagation?.();
+    setShowManualInstructions(false);
+  };
+
   if (isCapacitorNative() || isInstalled) {
     return null;
   }
@@ -48,7 +63,7 @@ export default function InstallAppButton({ className = "" }) {
       <button
         onClick={handleInstallClick}
         type="button"
-        className="inline-flex items-center justify-center gap-2 w-48 h-10 px-4 bg-gradient-to-r from-amber-500 to-orange-600 text-white text-sm font-bold rounded-full hover:from-amber-600 hover:to-orange-700 transition-all shadow-md hover:shadow-lg"
+        className="inline-flex items-center justify-center gap-2 w-48 h-10 px-4 bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-500 text-blue-800 text-sm font-bold rounded-full hover:from-yellow-400 hover:via-yellow-500 hover:to-yellow-600 transition-all shadow-md hover:shadow-lg"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -73,56 +88,69 @@ export default function InstallAppButton({ className = "" }) {
         </svg>
       </button>
 
-      {showManualInstructions && (
-        <div className="mt-4 max-w-md mx-auto bg-black/60 backdrop-blur-sm rounded-xl p-5 border border-white/20 shadow-2xl animate-slide-up">
-          <div className="flex items-start gap-3">
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setShowManualInstructions(false);
-              }}
-              type="button"
-              className="text-white/60 hover:text-white text-xl leading-none transition hover:scale-110"
-            >
-              ✕
-            </button>
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-3">
+      {showManualInstructions ? (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="install-app-instructions-title"
+          onClick={closeInstructions}
+        >
+          <div
+            className="relative w-full max-w-md rounded-xl border border-white/20 bg-black/85 p-5 shadow-2xl text-right animate-slide-up"
+            dir="rtl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-3 flex items-start justify-between gap-3">
+              <div className="flex min-w-0 items-center gap-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-amber-400"
+                  className="h-5 w-5 shrink-0 text-amber-400"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                   strokeWidth={2}
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
-                <h3 className="text-white font-bold text-lg">
-                  {isIOS ? "הוראות התקנה ל-iOS:" : "הוראות התקנה:"}
+                <h3 id="install-app-instructions-title" className="text-lg font-bold text-white">
+                  {isIOS ? "הוראות התקנה ל-iOS" : "הוראות התקנה"}
                 </h3>
               </div>
-
-              {isIOS ? (
-                <ol className="text-sm text-white/90 space-y-2 list-decimal list-inside">
-                  <li>לחץ על כפתור השיתוף <span className="font-bold">📤</span> בתחתית Safari</li>
-                  <li>גלול למטה ובחר "הוסף למסך הבית"</li>
-                  <li>לחץ "הוסף" בפינה הימנית העליונה</li>
-                  <li>האפליקציה תופיע במסך הבית שלך</li>
-                </ol>
-              ) : (
-                <ol className="text-sm text-white/90 space-y-2 list-decimal list-inside">
-                  <li>בדפדפן Chrome/Edge: לחץ על אייקון ההתקנה בשורת הכתובת</li>
-                  <li>בדפדפן Firefox: לחץ על תפריט (☰) ובחר "התקן"</li>
-                  <li>במובייל: לחץ על "הוסף למסך הבית" בתפריט הדפדפן</li>
-                  <li>האפליקציה תופיע במסך הבית שלך</li>
-                </ol>
-              )}
+              <button
+                type="button"
+                onClick={closeInstructions}
+                className="shrink-0 rounded-lg border border-white/20 px-2.5 py-1 text-sm font-semibold text-white/80 hover:bg-white/10 hover:text-white transition"
+                aria-label="סגור"
+              >
+                ✕
+              </button>
             </div>
+
+            {isIOS ? (
+              <ol className="list-decimal list-inside space-y-2 text-sm text-white/90">
+                <li>
+                  לחץ על כפתור השיתוף <span className="font-bold">📤</span> בתחתית Safari
+                </li>
+                <li>גלול למטה ובחר &quot;הוסף למסך הבית&quot;</li>
+                <li>לחץ &quot;הוסף&quot; בפינה הימנית העליונה</li>
+                <li>האפליקציה תופיע במסך הבית שלך</li>
+              </ol>
+            ) : (
+              <ol className="list-decimal list-inside space-y-2 text-sm text-white/90">
+                <li>בדפדפן Chrome/Edge: לחץ על אייקון ההתקנה בשורת הכתובת</li>
+                <li>בדפדפן Firefox: לחץ על תפריט (☰) ובחר &quot;התקן&quot;</li>
+                <li>במובייל: לחץ על &quot;הוסף למסך הבית&quot; בתפריט הדפדפן</li>
+                <li>האפליקציה תופיע במסך הבית שלך</li>
+              </ol>
+            )}
           </div>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

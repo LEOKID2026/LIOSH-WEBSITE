@@ -35,7 +35,7 @@ const PORTAL_CARDS = [
     emoji: "📋",
     classicGradient: "from-sky-500/60 to-indigo-600/70",
     brightFace:
-      "bg-gradient-to-br from-yellow-300 via-yellow-400 to-yellow-500 text-white shadow-lg shadow-yellow-300/50",
+      "bg-gradient-to-br from-orange-500 via-amber-500 to-yellow-500 text-white shadow-lg shadow-amber-300/45",
     href: "/teacher/login",
   },
 ];
