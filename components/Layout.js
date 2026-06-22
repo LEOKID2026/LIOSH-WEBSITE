@@ -101,7 +101,9 @@ export default function Layout({
         <nav className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-2 md:gap-3">
           <Link
             href="/"
-            className={`flex items-center gap-2 font-extrabold tracking-widest text-lg shrink-0 ${isStudentBright ? "text-slate-800" : ""}`}
+            className={`flex items-center gap-2 font-extrabold tracking-widest text-lg shrink-0 ${
+              isStudentBright ? "text-red-600" : ""
+            }`}
           >
             <img
               src="/images/coin.png"

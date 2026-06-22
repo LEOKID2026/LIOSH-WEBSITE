@@ -85,7 +85,7 @@ export default function HomePage() {
           <p
             className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] md:tracking-[0.25em] ${
               isBright
-                ? "border border-sky-200 bg-sky-100 text-sky-800"
+                ? "border border-sky-200 bg-yellow-100 text-red-600"
                 : "bg-white/10 text-amber-300"
             }`}
           >
@@ -97,7 +97,7 @@ export default function HomePage() {
             }`}
           >
             ברוכים הבאים אל{" "}
-            <span className={isBright ? "text-sky-700" : "text-amber-300"}>LEO KIDS</span>
+            <span className={isBright ? "text-red-600" : "text-amber-300"}>LEO KIDS</span>
           </h1>
           <p
             className={`mx-auto max-w-2xl px-1 text-sm leading-relaxed md:text-base md:leading-normal lg:text-lg ${
