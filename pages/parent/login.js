@@ -229,20 +229,18 @@ export default function ParentLoginPage() {
         />
 
         <section
-          className="mb-5 rounded-xl border border-white/10 bg-white/5 p-4 space-y-3 text-right"
+          className="mb-3 rounded-lg border border-white/10 bg-white/5 px-3.5 py-3 space-y-2 text-right"
           aria-label="מידע לפתיחת חשבון הורה"
         >
-          <h2 className="text-lg font-bold text-white">ברוכים הבאים הורים 👋</h2>
+          <h2 className="text-base font-bold text-white leading-snug">ברוכים הבאים הורים 👋</h2>
           <p className="text-sm text-white/80 leading-relaxed">
-            כאן תוכלו לפתוח חשבון הורה, להוסיף את הילד/ה שלכם,
-            ולאפשר לו/לה להיכנס לאזור הלמידה של LEO KIDS.
+            כאן תוכלו לפתוח חשבון הורה, להוסיף את הילד/ה שלכם, ולאפשר לו/לה להיכנס לאזור הלמידה של
+            LEO KIDS.
           </p>
-          <p className="text-sm text-white/70">אחרי פתיחת החשבון תוכלו:</p>
-          <ul className="text-sm text-white/70 list-disc list-inside space-y-1 leading-relaxed">
-            <li>להוסיף ילד/ה</li>
-            <li>לקבל שם משתמש וקוד כניסה לילד/ה</li>
-            <li>לעקוב אחרי ההתקדמות בלמידה</li>
-          </ul>
+          <p className="text-sm text-white/70 leading-relaxed">אחרי פתיחת החשבון תוכלו:</p>
+          <p className="text-sm text-white/70 leading-relaxed">
+            להוסיף ילד/ה, לקבל דוחות ולעקוב אחרי ההתקדמות בלמידה ועוד
+          </p>
         </section>
 
         <div className="flex gap-2 mb-4">
