@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Head from "next/head";
+import Link from "next/link";
 import Layout from "../../components/Layout";
 import { useGamesHubUi } from "../../hooks/useGamesHubUi.js";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
