@@ -23,6 +23,9 @@ export default function ParentPwaInstallPage() {
         >
           <p className="text-sm font-semibold uppercase tracking-widest text-teal-300">P-LEO K</p>
           <h1 className="text-xl font-bold text-white md:text-2xl">התקנת אפליקציה להורים</h1>
+          <p className="text-sm leading-relaxed text-white/75">
+            לחץ על הכפתור למטה כדי לפתוח את חלון ההתקנה של Chrome.
+          </p>
           <ParentPwaInstallLauncher />
           <Link
             href="/"

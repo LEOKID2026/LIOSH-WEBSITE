@@ -1,0 +1,209 @@
+import { useEffect, useState } from "react";
+import {
+  isCapacitorNative,
+  isPwaInstalledStandalone,
+  usePwaInstallPromptAvailable,
+  usePromptPwaInstall,
+} from "../lib/pwa/pwa-install-prompt";
+import { PARENT_PWA_INSTALL_PATH } from "../lib/pwa/pwa-install-mode";
+
+/**
+ * Single home-page install entry: opens a choice modal (kids vs parents).
+ * Kids use the existing prompt flow unchanged; parents navigate to the dedicated install page.
+ */
+export default function InstallAppChoiceButton({ className = "" }) {
+  const hasKidsPrompt = usePwaInstallPromptAvailable();
+  const promptKidsInstall = usePromptPwaInstall();
+  const [isIOS, setIsIOS] = useState(false);
+  const [isInstalled, setIsInstalled] = useState(false);
+  const [showChoiceModal, setShowChoiceModal] = useState(false);
+  const [showKidsManualInstructions, setShowKidsManualInstructions] = useState(false);
+
+  useEffect(() => {
+    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    setIsIOS(iOS);
+    setIsInstalled(isPwaInstalledStandalone());
+  }, []);
+
+  useEffect(() => {
+    if (!showChoiceModal && !showKidsManualInstructions) return undefined;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [showChoiceModal, showKidsManualInstructions]);
+
+  const closeChoiceModal = () => setShowChoiceModal(false);
+
+  const closeKidsInstructions = (e) => {
+    e?.preventDefault?.();
+    e?.stopPropagation?.();
+    setShowKidsManualInstructions(false);
+  };
+
+  const handleKidsChoice = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setShowChoiceModal(false);
+
+    if (hasKidsPrompt) {
+      try {
+        await promptKidsInstall();
+      } catch (error) {
+        console.error("Error installing kids app:", error);
+        setShowKidsManualInstructions(true);
+      }
+      return;
+    }
+
+    setShowKidsManualInstructions(true);
+  };
+
+  const handleParentsChoice = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setShowChoiceModal(false);
+    window.location.href = PARENT_PWA_INSTALL_PATH;
+  };
+
+  if (isCapacitorNative() || isInstalled) {
+    return null;
+  }
+
+  return (
+    <div className={className || "mt-6"}>
+      <button
+        onClick={() => setShowChoiceModal(true)}
+        type="button"
+        className="inline-flex h-10 w-48 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-500 px-4 text-sm font-bold text-blue-800 shadow-md transition-all hover:from-yellow-400 hover:via-yellow-500 hover:to-yellow-600 hover:shadow-lg"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-4 w-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2.5}
+          aria-hidden
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
+          />
+        </svg>
+        <span>התקנת אפליקציה</span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-4 w-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2.5}
+          aria-hidden
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+        </svg>
+      </button>
+
+      {showChoiceModal ? (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="install-app-choice-title"
+          onClick={closeChoiceModal}
+        >
+          <div
+            className="relative w-full max-w-md rounded-xl border border-white/20 bg-black/85 p-5 text-right shadow-2xl animate-slide-up"
+            dir="rtl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-4 flex items-start justify-between gap-3">
+              <h3 id="install-app-choice-title" className="text-lg font-bold text-white">
+                מה תרצה להתקין?
+              </h3>
+              <button
+                type="button"
+                onClick={closeChoiceModal}
+                className="shrink-0 rounded-lg border border-white/20 px-2.5 py-1 text-sm font-semibold text-white/80 transition hover:bg-white/10 hover:text-white"
+                aria-label="סגור"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <button
+                type="button"
+                onClick={handleKidsChoice}
+                className="flex w-full flex-col items-start gap-1 rounded-xl border border-amber-400/30 bg-gradient-to-l from-amber-500/20 to-yellow-500/10 px-4 py-3 text-right transition hover:border-amber-400/50 hover:from-amber-500/30"
+              >
+                <span className="text-base font-bold text-amber-200">התקנת אפליקציה לילדים</span>
+                <span className="text-sm text-white/75">LEO K</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleParentsChoice}
+                className="flex w-full flex-col items-start gap-1 rounded-xl border border-teal-400/30 bg-gradient-to-l from-teal-500/20 to-cyan-500/10 px-4 py-3 text-right transition hover:border-teal-400/50 hover:from-teal-500/30"
+              >
+                <span className="text-base font-bold text-teal-200">התקנת אפליקציה להורים</span>
+                <span className="text-sm text-white/75">P-LEO K</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {showKidsManualInstructions ? (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="install-app-instructions-title"
+          onClick={closeKidsInstructions}
+        >
+          <div
+            className="relative w-full max-w-md rounded-xl border border-white/20 bg-black/85 p-5 text-right shadow-2xl animate-slide-up"
+            dir="rtl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-3 flex items-start justify-between gap-3">
+              <h3 id="install-app-instructions-title" className="text-lg font-bold text-white">
+                {isIOS ? "הוראות התקנה ל-iOS" : "הוראות התקנה"}
+              </h3>
+              <button
+                type="button"
+                onClick={closeKidsInstructions}
+                className="shrink-0 rounded-lg border border-white/20 px-2.5 py-1 text-sm font-semibold text-white/80 transition hover:bg-white/10 hover:text-white"
+                aria-label="סגור"
+              >
+                ✕
+              </button>
+            </div>
+
+            {isIOS ? (
+              <ol className="list-decimal list-inside space-y-2 text-sm text-white/90">
+                <li>
+                  לחץ על כפתור השיתוף <span className="font-bold">📤</span> בתחתית Safari
+                </li>
+                <li>גלול למטה ובחר &quot;הוסף למסך הבית&quot;</li>
+                <li>לחץ &quot;הוסף&quot; בפינה הימנית העליונה</li>
+                <li>האפליקציה תופיע במסך הבית שלך</li>
+              </ol>
+            ) : (
+              <ol className="list-decimal list-inside space-y-2 text-sm text-white/90">
+                <li>בדפדפן Chrome/Edge: לחץ על אייקון ההתקנה בשורת הכתובת</li>
+                <li>בדפדפן Firefox: לחץ על תפריט (☰) ובחר &quot;התקן&quot;</li>
+                <li>במובייל: לחץ על &quot;הוסף למסך הבית&quot; בתפריט הדפדפן</li>
+                <li>האפליקציה תופיע במסך הבית שלך</li>
+              </ol>
+            )}
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}

@@ -3,8 +3,7 @@ import { useRouter } from "next/router";
 import Layout from "../components/Layout";
 import Link from "next/link";
 import InstallAppPrompt from "../components/InstallAppPrompt";
-import InstallAppButton from "../components/InstallAppButton";
-import ParentInstallAppButton from "../components/InstallParentAppButton";
+import InstallAppChoiceButton from "../components/InstallAppChoiceButton";
 import { useStudentTheme } from "../contexts/StudentThemeContext.jsx";
 
 const PORTAL_CARDS = [
@@ -181,9 +180,8 @@ export default function HomePage() {
           })}
         </section>
 
-        <section className="flex shrink-0 flex-col items-center gap-3 px-1 sm:flex-row sm:justify-center sm:gap-4">
-          <InstallAppButton className="" label="התקנת אפליקציה לילדים" />
-          <ParentInstallAppButton />
+        <section className="flex shrink-0 justify-center px-1">
+          <InstallAppChoiceButton />
         </section>
       </div>
     </Layout>
