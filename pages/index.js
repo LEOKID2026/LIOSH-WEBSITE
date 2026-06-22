@@ -35,7 +35,7 @@ const PORTAL_CARDS = [
     emoji: "📋",
     classicGradient: "from-sky-500/60 to-indigo-600/70",
     brightFace:
-      "bg-gradient-to-br from-orange-500 via-amber-500 to-yellow-500 text-white shadow-lg shadow-amber-300/45",
+      "bg-gradient-to-br from-yellow-300 via-yellow-400 to-yellow-500 text-white shadow-lg shadow-yellow-300/50",
     href: "/teacher/login",
   },
 ];
@@ -85,7 +85,7 @@ export default function HomePage() {
           <p
             className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] md:tracking-[0.25em] ${
               isBright
-                ? "border border-sky-200 bg-yellow-100 text-red-600"
+                ? "border border-green-400 bg-green-300 text-blue-800"
                 : "bg-white/10 text-amber-300"
             }`}
           >
