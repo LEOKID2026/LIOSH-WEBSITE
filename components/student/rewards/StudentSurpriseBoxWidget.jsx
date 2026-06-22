@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import StudentShareFriendsButton from "../StudentShareFriendsButton.jsx";
 import { useStudentTheme } from "../../../contexts/StudentThemeContext.jsx";
 import { isCardRewardsEnabledClient } from "../../../lib/rewards/reward-feature-flags.client.js";
 import { formatCountdownHe } from "../../../lib/rewards/rewards-ui.he.js";
@@ -124,6 +125,9 @@ export default function StudentSurpriseBoxWidget({ onOpen }) {
           <Link href="/student/cards" className={`${T.ctaCollection} ${compactBtn}`}>
             לאוסף שלי
           </Link>
+          <div className="hidden md:contents">
+            <StudentShareFriendsButton variant="desktop-surprise" />
+          </div>
         </div>
       </div>
     </section>

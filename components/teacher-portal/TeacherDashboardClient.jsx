@@ -13,6 +13,7 @@ import {
   subjectLabelHe,
   teacherAuthFetch,
 } from "../../lib/teacher-portal/teacher-ui.he.js";
+import TeacherInviteOthersButton from "./TeacherInviteOthersButton";
 
 const FILTER_OPTIONS = [
   { key: "all", label: "הכל" },
@@ -888,6 +889,8 @@ export default function TeacherDashboardClient({ accessToken, dashboard, activit
           </ul>
         )}
       </section>
+
+      <TeacherInviteOthersButton />
 
       {manageClass ? (
         <ClassManagePanel

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   initPwaInstallPromptCapture,
   isStudentPwaInstalledStandalone,
@@ -10,9 +10,11 @@ import {
 } from "../../lib/pwa/pwa-install-prompt";
 import { isCapacitorNative } from "../../lib/pwa/pwa-install-prompt";
 import { logPwaInstallDiagnostics, logPwaInstallEvent } from "../../lib/pwa/pwa-install-debug";
+import { getPwaInstallPageTheme } from "../../lib/pwa/pwa-install-page-theme.client.js";
 
 /** Student install page — explicit button; success only on appinstalled or standalone student PWA. */
-export default function StudentPwaInstallLauncher() {
+export default function StudentPwaInstallLauncher({ isBright = false }) {
+  const T = useMemo(() => getPwaInstallPageTheme("student", isBright).launcher, [isBright]);
   const hasNativePrompt = usePwaInstallPromptAvailable();
   const promptInstall = usePromptPwaInstall();
   const [runningStandalone, setRunningStandalone] = useState(false);
@@ -84,39 +86,29 @@ export default function StudentPwaInstallLauncher() {
   };
 
   if (isCapacitorNative()) {
-    return (
-      <p className="rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white/70">
-        התקנת PWA זמינה בדפדפן, לא באפליקציה המותקנת.
-      </p>
-    );
+    return <p className={T.nativeMsg}>התקנת PWA זמינה בדפדפן, לא באפליקציה המותקנת.</p>;
   }
 
   if (runningStandalone || installConfirmed) {
     return (
-      <p className="rounded-xl border border-emerald-400/30 bg-emerald-950/40 px-4 py-3 text-sm text-emerald-100">
-        LEO K מותקנת. פתחו את האייקון LEO K ממסך הבית.
-      </p>
+      <p className={T.successMsg}>LEO K מותקנת. פתחו את האייקון LEO K ממסך הבית.</p>
     );
   }
 
   return (
     <div className="flex w-full max-w-xs flex-col items-center gap-4">
-      <button
-        type="button"
-        onClick={handleInstallClick}
-        className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-500 px-5 text-sm font-bold text-blue-800 shadow-md transition-all hover:from-yellow-400 hover:via-yellow-500 hover:to-yellow-600 hover:shadow-lg"
-      >
+      <button type="button" onClick={handleInstallClick} className={T.installBtn}>
         התקן LEO K
       </button>
 
       {promptAccepted ? (
-        <p className="rounded-xl border border-sky-400/30 bg-sky-950/40 px-4 py-3 text-sm leading-relaxed text-sky-100">
+        <p className={T.infoMsg}>
           Chrome אישר את ההתקנה. אם האייקון LEO K לא הופיע במסך הבית תוך דקה, רענן את הדף ונסה שוב.
         </p>
       ) : null}
 
       {installUnavailable ? (
-        <p className="rounded-xl border border-amber-400/30 bg-amber-950/40 px-4 py-3 text-sm leading-relaxed text-amber-100">
+        <p className={T.warnMsg}>
           {unavailableReason === "consumed"
             ? "חלון ההתקנה כבר נוצל. רענן את הדף כדי לנסות שוב, אם Chrome עדיין מאפשר."
             : unavailableReason === "error"

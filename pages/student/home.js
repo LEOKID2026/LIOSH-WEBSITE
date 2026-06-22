@@ -36,6 +36,7 @@ import { normalizeStudentActivityScope } from "../../lib/classroom-activities/st
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import StudentSurpriseBoxWidget from "../../components/student/rewards/StudentSurpriseBoxWidget";
 import StudentSurpriseBoxOpenModal from "../../components/student/rewards/StudentSurpriseBoxOpenModal";
+import StudentShareFriendsButton from "../../components/student/StudentShareFriendsButton";
 import { isCardRewardsEnabledClient } from "../../lib/rewards/reward-feature-flags.client.js";
 
 import { syncMonthlyProgressCacheFromServer } from "../../utils/progress-storage.js";
@@ -890,14 +891,17 @@ export default function StudentHomePage() {
                   <p className={T.heroTagline}>{heroTagline}</p>
                 </div>
               </div>
-              <button
-                type="button"
-                disabled={logoutBusy}
-                onClick={() => void onLogout()}
-                className={`${T.ctaLogout} !inline-flex md:!hidden shrink-0 !min-h-[2.75rem] !px-3 !py-2 !text-sm`}
-              >
-                {logoutBusy ? "יוצאים..." : "התנתקות"}
-              </button>
+              <div className="flex flex-col items-stretch gap-1 shrink-0 md:hidden">
+                <button
+                  type="button"
+                  disabled={logoutBusy}
+                  onClick={() => void onLogout()}
+                  className={`${T.ctaLogout} !inline-flex shrink-0 !min-h-[2.75rem] !px-3 !py-2 !text-sm`}
+                >
+                  {logoutBusy ? "יוצאים..." : "התנתקות"}
+                </button>
+                <StudentShareFriendsButton />
+              </div>
             </div>
             <div className="flex flex-col gap-2 md:gap-3 shrink-0 w-full md:w-auto">
               <div className="grid grid-cols-2 gap-2 md:flex md:flex-row md:gap-3">
