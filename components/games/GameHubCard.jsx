@@ -31,12 +31,14 @@ export default function GameHubCard({
   const inner = (
     <>
       <div className="space-y-2 flex-1">
-        {emoji ? (
-          <div className="text-3xl md:text-4xl" aria-hidden>
-            {emoji}
-          </div>
-        ) : null}
-        <h2 className="text-lg md:text-xl font-bold">{title}</h2>
+        <div className="flex items-center gap-3">
+          {emoji ? (
+            <div className="text-3xl md:text-4xl shrink-0" aria-hidden>
+              {emoji}
+            </div>
+          ) : null}
+          <h2 className="text-lg md:text-xl font-bold">{title}</h2>
+        </div>
         {blurb ? <p className="text-sm opacity-80">{blurb}</p> : null}
       </div>
       {locked ? (

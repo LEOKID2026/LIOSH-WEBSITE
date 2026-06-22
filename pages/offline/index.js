@@ -3,8 +3,9 @@ import Link from "next/link";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
 import { useGamesHubUi } from "../../hooks/useGamesHubUi.js";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
-import StudentThemePicker from "../../components/student/StudentThemePicker";
 import GameAccessGuard from "../../components/games/GameAccessGuard.jsx";
+import GamesHubNavBar from "../../components/games/GamesHubNavBar.jsx";
+import GamesHubHeader from "../../components/games/GamesHubHeader.jsx";
 import { useStudentGameAccess } from "../../hooks/useStudentGameAccess.js";
 
 const OFFLINE_GAMES = [
@@ -57,19 +58,21 @@ export default function OfflineHub() {
     <GameAccessGuard category="offline">
       <Layout studentTheme={theme} studentShell="home">
         <main className={GH.pageWrap} dir="rtl">
-          <div className={`${GH.container} space-y-6`}>
-            <div className="flex justify-between items-center gap-3 flex-wrap">
-              <Link href="/games" className={GH.backBtn}>
-                משחקים
-              </Link>
-              <StudentThemePicker variant="icon" iconSize="nav" />
-            </div>
+          <div className={`${GH.container} space-y-4`}>
+            <GamesHubNavBar
+              backHref="/games"
+              backLabel="משחקים"
+              badge="🔌 לא מקוון"
+              backBtnClass={GH.backBtn}
+              badgeClass={GH.badge}
+            />
 
-            <header className="text-center space-y-3">
-              <p className={GH.badge}>🔌 לא מקוון</p>
-              <h1 className={GH.hubTitle}>משחקים לא מקוונים</h1>
-              <p className={GH.hubSub}>משחקים על אותו מכשיר — גם בלי אינטרנט.</p>
-            </header>
+            <GamesHubHeader
+              title="משחקים לא מקוונים"
+              subtitle="משחקים על אותו מכשיר — גם בלי אינטרנט."
+              titleClass={GH.hubTitle}
+              subtitleClass={GH.hubSub}
+            />
 
             {state === "loading" ? (
               <p className={`text-center text-sm ${GH.muted}`}>טוען...</p>

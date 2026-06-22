@@ -1,31 +1,31 @@
 import Layout from "../components/Layout";
-import Link from "next/link";
 import { useIOSViewportFix } from "../hooks/useIOSViewportFix";
 import { useGamesHubUi } from "../hooks/useGamesHubUi.js";
 import { useStudentTheme } from "../contexts/StudentThemeContext.jsx";
-import StudentThemePicker from "../components/student/StudentThemePicker";
 import GameHubCard from "../components/games/GameHubCard.jsx";
+import GamesHubNavBar from "../components/games/GamesHubNavBar.jsx";
+import GamesHubHeader from "../components/games/GamesHubHeader.jsx";
 import { useStudentGameAccess } from "../hooks/useStudentGameAccess.js";
 import { hubCardKeyToCategory } from "../lib/games/game-catalog.constants.js";
 
 const GAME_HUB_CARDS = [
   {
     key: "regular",
-    title: "משחקים רגילים",
+    title: "המשחקים של ליאו",
     emoji: "🎮",
     blurb: "משחקי ליאו הקלאסיים — ריצה, טיסה, חידות ועוד.",
     href: "/game",
   },
   {
     key: "offline",
-    title: "משחקים לא מקוונים",
+    title: "משחקים כל הזמן עם ליאו",
     emoji: "🔌",
     blurb: "משחקים על אותו מכשיר — גם בלי אינטרנט.",
     href: "/offline",
   },
   {
     key: "online",
-    title: "משחקי אונליין",
+    title: "משחקים עם חברים",
     emoji: "🌐",
     blurb: "חדרי משחק מרובי משתתפים עם חברים ושחקנים אחרים.",
     href: "/student/arcade",
@@ -42,20 +42,20 @@ export default function GamesHubPage() {
     <Layout studentTheme={theme} studentShell="home">
       <div className={GH.pageWrap} dir="rtl">
         <div className={GH.container}>
-          <div className="mb-4 md:mb-6 flex items-center justify-between gap-3 flex-wrap">
-            <Link href="/student/home" className={GH.backBtn}>
-              חזרה
-            </Link>
-            <StudentThemePicker variant="icon" iconSize="nav" />
-          </div>
+          <GamesHubNavBar
+            backHref="/student/home"
+            backLabel="חזרה"
+            badge="🎯 משחקים"
+            backBtnClass={GH.backBtn}
+            badgeClass={GH.badge}
+          />
 
-          <header className="text-center space-y-2 md:space-y-3 mb-5 md:mb-8">
-            <p className={GH.badge}>🎯 בחרו סוג משחק</p>
-            <h1 className={GH.hubTitle}>משחקים</h1>
-            <p className={GH.hubSub}>
-              בחרו את סוג החוויה שמתאימה לכם — משחקי ליאו, משחקים ללא אינטרנט, או משחקים מקוונים.
-            </p>
-          </header>
+          <GamesHubHeader
+            title=""
+            subtitle="בחרו את סוג החוויה שמתאימה לכם — משחקי ליאו, משחקים ללא אינטרנט, או משחקים עם חברים."
+            titleClass={GH.hubTitle}
+            subtitleClass={GH.hubSub}
+          />
 
           {state === "loading" ? (
             <p className="text-center text-sm opacity-70">טוען...</p>
