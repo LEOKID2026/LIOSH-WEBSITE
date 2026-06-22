@@ -60,7 +60,7 @@ export default function OfflineHub() {
           <div className={`${GH.container} space-y-6`}>
             <div className="flex justify-between items-center gap-3 flex-wrap">
               <Link href="/games" className={GH.backBtn}>
-                ← משחקים
+                משחקים
               </Link>
               <StudentThemePicker variant="icon" iconSize="nav" />
             </div>
@@ -85,10 +85,7 @@ export default function OfflineHub() {
                       </div>
                     </div>
                     <p className={`${GH.cardBlurb} flex-1`}>{game.blurb}</p>
-                    <span className={GH.cardCta}>
-                      <span>←</span>
-                      שחק עכשיו
-                    </span>
+                    <span className={GH.cardCta}>שחק עכשיו</span>
                   </Link>
                 ))}
               </section>

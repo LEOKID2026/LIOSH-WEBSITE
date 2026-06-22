@@ -47,10 +47,7 @@ export default function GameHubCard({
           <p className="text-xs opacity-70">{lockSub}</p>
         </div>
       ) : (
-        <span className={ctaClass}>
-          <span aria-hidden>←</span>
-          כניסה
-        </span>
+        <span className={ctaClass}>כניסה</span>
       )}
     </>
   );

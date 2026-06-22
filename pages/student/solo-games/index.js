@@ -26,7 +26,7 @@ export default function SoloGamesHubPage() {
           <div className={`${GH.container} space-y-6`}>
             <div className="flex items-center justify-between gap-3">
               <Link href="/games" className={GH.backBtn}>
-                ← חזרה למשחקים
+                חזרה למשחקים
               </Link>
               <StudentThemePicker variant="icon" iconSize="nav" />
             </div>
@@ -56,10 +56,7 @@ export default function SoloGamesHubPage() {
                         </div>
                       </div>
                       <p className={`${GH.cardBlurb} flex-1`}>{game.blurbHe}</p>
-                      <span className={GH.cardCta}>
-                        <span>←</span>
-                        שחק עכשיו
-                      </span>
+                      <span className={GH.cardCta}>שחק עכשיו</span>
                     </Link>
                   );
                 })}
