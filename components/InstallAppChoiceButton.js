@@ -125,7 +125,7 @@ export default function InstallAppChoiceButton({ className = "" }) {
                 className="flex w-full flex-col items-start gap-1 rounded-xl border border-teal-400/30 bg-gradient-to-l from-teal-500/20 to-cyan-500/10 px-4 py-3 text-right transition hover:border-teal-400/50 hover:from-teal-500/30"
               >
                 <span className="text-base font-bold text-teal-200">התקנת אפליקציה להורים</span>
-                <span className="text-sm text-white/75">P-LEO K</span>
+                <span className="text-sm text-white/75">P LEO K</span>
               </button>
 
               <button

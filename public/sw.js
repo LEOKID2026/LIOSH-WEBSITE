@@ -11,10 +11,10 @@ const STATIC_ASSETS = [
   '/styles/globals.css',
   // Essential images
   '/images/leo-intro.png',
-  '/images/leo-icons/icon-192.png',
-  '/images/leo-icons/icon-512.png',
-  '/images/leo-icons/icon-192-maskable.png',
-  '/images/leo-icons/icon-512-maskable.png',
+  '/icons/child/pwa-192x192.png',
+  '/icons/child/pwa-512x512.png',
+  '/icons/child/maskable-192x192.png',
+  '/icons/child/maskable-512x512.png',
   // Game images
   '/images/dog.png',
   '/images/leo2.png',
@@ -421,8 +421,8 @@ function syncScores() {
 self.addEventListener('push', (event) => {
   const options = {
     body: event.data ? event.data.text() : 'New update available!',
-    icon: '/images/leo-icons/android-chrome-192x192.png',
-    badge: '/images/leo-icons/android-chrome-192x192.png',
+    icon: '/icons/child/android-chrome-192x192.png',
+    badge: '/icons/child/android-chrome-192x192.png',
     vibrate: [200, 100, 200],
     tag: 'leo-k-notification'
   };

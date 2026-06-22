@@ -2,9 +2,8 @@
 <browserconfig>
   <msapplication>
     <tile>
-      <square150x150logo src="/images/leo-icons/mstile-150x150.png"/>
+      <square150x150logo src="/icons/child/mstile-150x150.png"/>
       <TileColor>#c9f4ff</TileColor>
     </tile>
   </msapplication>
 </browserconfig>
-

@@ -14,7 +14,7 @@ export default function TeacherPwaInstallPage() {
       title="התקנת אפליקציה למורים"
       pageTitle="T LEO K — התקנה"
       appleTitle="T LEO K"
-      appleTouchIcon="/images/teacher-icons/icon-192.png"
+      appleTouchIcon="/icons/teacher/apple-touch-icon.png"
       launcher={TeacherPwaInstallLauncher}
     />
   );

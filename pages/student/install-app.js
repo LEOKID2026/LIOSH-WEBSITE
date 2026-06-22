@@ -13,6 +13,7 @@ export default function StudentPwaInstallPage() {
       badge="LEO K"
       title="התקנת אפליקציה לילדים"
       pageTitle="LEO K — התקנה"
+      appleTouchIcon="/icons/child/apple-touch-icon.png"
       launcher={StudentPwaInstallLauncher}
     />
   );

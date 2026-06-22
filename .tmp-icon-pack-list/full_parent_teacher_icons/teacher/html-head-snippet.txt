@@ -1,0 +1,8 @@
+<!-- LEO K - Teachers icons -->
+<link rel="icon" href="/icons/teacher/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/teacher/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/icons/teacher/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/teacher/apple-touch-icon.png">
+<meta name="theme-color" content="#8b2be2">
+<meta name="msapplication-TileColor" content="#ff7a00">
+<meta name="msapplication-TileImage" content="/icons/teacher/mstile-150x150.png">

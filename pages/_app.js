@@ -246,18 +246,21 @@ export default function MyApp({ Component, pageProps }) {
             <meta name="theme-color" content={BROWSER_THEME_COLOR_BRIGHT} />
             <meta name="apple-mobile-web-app-title" content="LEO K" />
             <meta name="msapplication-TileColor" content={BROWSER_THEME_COLOR_BRIGHT} />
+            <meta name="msapplication-TileImage" content="/icons/child/mstile-150x150.png" />
           </>
         ) : isParentPwaInstallMode ? (
           <>
             <meta name="theme-color" content="#0d9488" />
-            <meta name="apple-mobile-web-app-title" content="P-LEO K" />
+            <meta name="apple-mobile-web-app-title" content="P LEO K" />
             <meta name="msapplication-TileColor" content="#0d9488" />
+            <meta name="msapplication-TileImage" content="/icons/parent/mstile-150x150.png" />
           </>
         ) : isTeacherPwaInstallMode ? (
           <>
             <meta name="theme-color" content="#4338ca" />
             <meta name="apple-mobile-web-app-title" content="T LEO K" />
             <meta name="msapplication-TileColor" content="#4338ca" />
+            <meta name="msapplication-TileImage" content="/icons/teacher/mstile-150x150.png" />
           </>
         ) : (
           <>
@@ -274,35 +277,43 @@ export default function MyApp({ Component, pageProps }) {
 
         {isStudentPwaInstallMode ? (
           <>
-            <link rel="icon" href="/images/leo-icons/icon-192.png" sizes="any" />
-            <link rel="icon" type="image/png" sizes="192x192" href="/images/leo-icons/icon-192.png" />
-            <link rel="icon" type="image/png" sizes="512x512" href="/images/leo-icons/icon-512.png" />
-            <link rel="apple-touch-icon" href="/images/leo-icons/icon-192.png" />
+            <link rel="icon" href="/icons/child/favicon.ico" sizes="any" />
+            <link rel="icon" type="image/png" sizes="48x48" href="/icons/child/favicon-48x48.png" />
+            <link rel="icon" type="image/png" sizes="32x32" href="/icons/child/favicon-32x32.png" />
+            <link rel="icon" type="image/png" sizes="16x16" href="/icons/child/favicon-16x16.png" />
+            <link rel="apple-touch-icon" sizes="180x180" href="/icons/child/apple-touch-icon.png" />
+            <link rel="icon" type="image/png" sizes="192x192" href="/icons/child/android-chrome-192x192.png" />
+            <link rel="icon" type="image/png" sizes="512x512" href="/icons/child/android-chrome-512x512.png" />
           </>
         ) : isParentPwaInstallMode ? (
           <>
-            <link rel="icon" href="/images/parent-icons/icon-192.png" sizes="any" />
-            <link rel="icon" type="image/png" sizes="192x192" href="/images/parent-icons/icon-192.png" />
-            <link rel="icon" type="image/png" sizes="512x512" href="/images/parent-icons/icon-512.png" />
-            <link rel="apple-touch-icon" href="/images/parent-icons/icon-192.png" />
+            <link rel="icon" href="/icons/parent/favicon.ico" sizes="any" />
+            <link rel="icon" type="image/png" sizes="48x48" href="/icons/parent/favicon-48x48.png" />
+            <link rel="icon" type="image/png" sizes="32x32" href="/icons/parent/favicon-32x32.png" />
+            <link rel="icon" type="image/png" sizes="16x16" href="/icons/parent/favicon-16x16.png" />
+            <link rel="apple-touch-icon" sizes="180x180" href="/icons/parent/apple-touch-icon.png" />
+            <link rel="icon" type="image/png" sizes="192x192" href="/icons/parent/android-chrome-192x192.png" />
+            <link rel="icon" type="image/png" sizes="512x512" href="/icons/parent/android-chrome-512x512.png" />
           </>
         ) : isTeacherPwaInstallMode ? (
           <>
-            <link rel="icon" href="/images/teacher-icons/icon-192.png" sizes="any" />
-            <link rel="icon" type="image/png" sizes="192x192" href="/images/teacher-icons/icon-192.png" />
-            <link rel="icon" type="image/png" sizes="512x512" href="/images/teacher-icons/icon-512.png" />
-            <link rel="apple-touch-icon" href="/images/teacher-icons/icon-192.png" />
+            <link rel="icon" href="/icons/teacher/favicon.ico" sizes="any" />
+            <link rel="icon" type="image/png" sizes="48x48" href="/icons/teacher/favicon-48x48.png" />
+            <link rel="icon" type="image/png" sizes="32x32" href="/icons/teacher/favicon-32x32.png" />
+            <link rel="icon" type="image/png" sizes="16x16" href="/icons/teacher/favicon-16x16.png" />
+            <link rel="apple-touch-icon" sizes="180x180" href="/icons/teacher/apple-touch-icon.png" />
+            <link rel="icon" type="image/png" sizes="192x192" href="/icons/teacher/android-chrome-192x192.png" />
+            <link rel="icon" type="image/png" sizes="512x512" href="/icons/teacher/android-chrome-512x512.png" />
           </>
         ) : (
           <>
-            <link rel="icon" href="/images/leo-icons/icon-192.png" sizes="any" />
-            <link rel="icon" type="image/png" sizes="192x192" href="/images/leo-icons/icon-192.png" />
-            <link rel="icon" type="image/png" sizes="512x512" href="/images/leo-icons/icon-512.png" />
-            <link rel="apple-touch-icon" href="/images/leo-icons/icon-192.png" />
-            <link rel="apple-touch-icon" sizes="120x120" href="/images/leo-icons/icon-192.png" />
-            <link rel="apple-touch-icon" sizes="152x152" href="/images/leo-icons/icon-192.png" />
-            <link rel="apple-touch-icon" sizes="167x167" href="/images/leo-icons/icon-192.png" />
-            <link rel="apple-touch-icon" sizes="180x180" href="/images/leo-icons/icon-192.png" />
+            <link rel="icon" href="/icons/child/favicon.ico" sizes="any" />
+            <link rel="icon" type="image/png" sizes="48x48" href="/icons/child/favicon-48x48.png" />
+            <link rel="icon" type="image/png" sizes="32x32" href="/icons/child/favicon-32x32.png" />
+            <link rel="icon" type="image/png" sizes="16x16" href="/icons/child/favicon-16x16.png" />
+            <link rel="apple-touch-icon" sizes="180x180" href="/icons/child/apple-touch-icon.png" />
+            <link rel="icon" type="image/png" sizes="192x192" href="/icons/child/android-chrome-192x192.png" />
+            <link rel="icon" type="image/png" sizes="512x512" href="/icons/child/android-chrome-512x512.png" />
           </>
         )}
 

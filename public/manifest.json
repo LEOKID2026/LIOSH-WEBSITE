@@ -12,25 +12,61 @@
   "scope": "/student/",
   "icons": [
     {
-      "src": "/images/leo-icons/icon-192.png",
+      "src": "/icons/child/pwa-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/child/pwa-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/child/pwa-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/child/pwa-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/child/pwa-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/child/pwa-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/images/leo-icons/icon-512.png",
+      "src": "/icons/child/pwa-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/child/pwa-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/images/leo-icons/icon-192-maskable.png",
+      "src": "/icons/child/maskable-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/images/leo-icons/icon-512-maskable.png",
+      "src": "/icons/child/maskable-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -46,11 +82,10 @@
       "url": "/student/home",
       "icons": [
         {
-          "src": "/images/leo-icons/icon-192.png",
+          "src": "/icons/child/pwa-192x192.png",
           "sizes": "192x192"
         }
       ]
     }
   ]
 }
-

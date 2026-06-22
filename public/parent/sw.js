@@ -1,4 +1,4 @@
-// Minimal service worker for P-LEO K parent PWA (scope /parent/ only).
+// Minimal service worker for P LEO K parent PWA (scope /parent/ only).
 // Keeps parent install separate from the kids SW at scope /.
 
 self.addEventListener("install", (event) => {
