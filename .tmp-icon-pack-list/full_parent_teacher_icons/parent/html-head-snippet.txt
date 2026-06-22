@@ -1,8 +1,0 @@
-<!-- LEO K - Parents icons -->
-<link rel="icon" href="/icons/parent/favicon.ico" sizes="any">
-<link rel="icon" type="image/png" sizes="32x32" href="/icons/parent/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/icons/parent/favicon-16x16.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/icons/parent/apple-touch-icon.png">
-<meta name="theme-color" content="#0077c8">
-<meta name="msapplication-TileColor" content="#06b6b0">
-<meta name="msapplication-TileImage" content="/icons/parent/mstile-150x150.png">
