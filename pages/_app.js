@@ -17,7 +17,7 @@ import {
 
 if (typeof window !== "undefined") {
   initParentPwaInstallPromptCapture();
-  if (window.location.pathname !== "/parent/install-app") {
+  if (window.location.pathname === "/student/install-app") {
     initPwaInstallPromptCapture();
   }
 }
@@ -75,7 +75,7 @@ export default function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     initParentPwaInstallPromptCapture();
-    if (router.pathname !== "/parent/install-app") {
+    if (router.pathname === "/student/install-app") {
       initPwaInstallPromptCapture();
     }
   }, [router.pathname]);
@@ -118,6 +118,7 @@ export default function MyApp({ Component, pageProps }) {
     }
 
     const isParentRoute = (router.pathname || "").startsWith("/parent/");
+    const isStudentRoute = (router.pathname || "").startsWith("/student/");
 
     const registerSW = () => {
       if (isParentRoute) {
@@ -128,6 +129,18 @@ export default function MyApp({ Component, pageProps }) {
           })
           .catch((registrationError) => {
             console.error("[SW parent] Registration failed:", registrationError);
+          });
+        return;
+      }
+
+      if (isStudentRoute) {
+        navigator.serviceWorker
+          .register("/student/sw.js", { scope: "/student/" })
+          .then((registration) => {
+            console.log("[SW student] Registered:", registration.scope);
+          })
+          .catch((registrationError) => {
+            console.error("[SW student] Registration failed:", registrationError);
           });
         return;
       }
@@ -198,6 +211,7 @@ export default function MyApp({ Component, pageProps }) {
   }, [router.pathname]);
 
   const shouldGate = STUDENT_PROTECTED_ROUTES.has(router.pathname || "");
+  const isStudentPwaInstallMode = router.pathname === "/student/install-app";
   const isParentPwaInstallMode = router.pathname === "/parent/install-app";
 
   return (
@@ -229,7 +243,21 @@ export default function MyApp({ Component, pageProps }) {
         <script dangerouslySetInnerHTML={{ __html: BROWSER_THEME_COLOR_BOOTSTRAP_SCRIPT }} />
         <meta name="msapplication-config" content="/browserconfig.xml" />
 
-        {!isParentPwaInstallMode ? (
+        {isStudentPwaInstallMode ? (
+          <>
+            <link rel="icon" href="/images/leo-icons/icon-192.png" sizes="any" />
+            <link rel="icon" type="image/png" sizes="192x192" href="/images/leo-icons/icon-192.png" />
+            <link rel="icon" type="image/png" sizes="512x512" href="/images/leo-icons/icon-512.png" />
+            <link rel="apple-touch-icon" href="/images/leo-icons/icon-192.png" />
+          </>
+        ) : isParentPwaInstallMode ? (
+          <>
+            <link rel="icon" href="/images/parent-icons/icon-192.png" sizes="any" />
+            <link rel="icon" type="image/png" sizes="192x192" href="/images/parent-icons/icon-192.png" />
+            <link rel="icon" type="image/png" sizes="512x512" href="/images/parent-icons/icon-512.png" />
+            <link rel="apple-touch-icon" href="/images/parent-icons/icon-192.png" />
+          </>
+        ) : (
           <>
             <link rel="icon" href="/images/leo-icons/icon-192.png" sizes="any" />
             <link rel="icon" type="image/png" sizes="192x192" href="/images/leo-icons/icon-192.png" />
@@ -240,20 +268,14 @@ export default function MyApp({ Component, pageProps }) {
             <link rel="apple-touch-icon" sizes="167x167" href="/images/leo-icons/icon-192.png" />
             <link rel="apple-touch-icon" sizes="180x180" href="/images/leo-icons/icon-192.png" />
           </>
-        ) : (
-          <>
-            <link rel="icon" href="/images/parent-icons/icon-192.png" sizes="any" />
-            <link rel="icon" type="image/png" sizes="192x192" href="/images/parent-icons/icon-192.png" />
-            <link rel="icon" type="image/png" sizes="512x512" href="/images/parent-icons/icon-512.png" />
-            <link rel="apple-touch-icon" href="/images/parent-icons/icon-192.png" />
-          </>
         )}
-        
+
+        {isStudentPwaInstallMode ? (
+          <link rel="manifest" href="/manifest.json" />
+        ) : null}
         {isParentPwaInstallMode ? (
           <link rel="manifest" href="/manifest-parent.webmanifest" />
-        ) : (
-          <link rel="manifest" href="/manifest.json" />
-        )}
+        ) : null}
         
         <title>LEO K - Kids Games & Learning</title>
       </Head>

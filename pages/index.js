@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "../components/Layout";
 import Link from "next/link";
-import InstallAppPrompt from "../components/InstallAppPrompt";
 import InstallAppChoiceButton from "../components/InstallAppChoiceButton";
 import { useStudentTheme } from "../contexts/StudentThemeContext.jsx";
 
@@ -76,7 +75,6 @@ export default function HomePage() {
 
   return (
     <Layout homepage studentTheme={theme} studentShell="home">
-      <InstallAppPrompt />
       <div
         className="mx-auto flex h-full min-h-0 w-full max-w-5xl flex-1 flex-col items-stretch justify-between gap-5 overflow-hidden px-3 pb-3 pt-3.5 md:min-h-[calc(100vh-9.5rem)] md:justify-center md:gap-7 md:px-4 md:py-6 md:flex-initial"
         dir="rtl"

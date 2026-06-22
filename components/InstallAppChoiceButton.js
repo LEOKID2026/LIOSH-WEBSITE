@@ -1,63 +1,30 @@
 import { useEffect, useState } from "react";
+import { isCapacitorNative, isPwaInstalledStandalone } from "../lib/pwa/pwa-install-prompt";
 import {
-  isCapacitorNative,
-  isPwaInstalledStandalone,
-  usePwaInstallPromptAvailable,
-  usePromptPwaInstall,
-} from "../lib/pwa/pwa-install-prompt";
-import { PARENT_PWA_INSTALL_PATH } from "../lib/pwa/pwa-install-mode";
+  PARENT_PWA_INSTALL_PATH,
+  STUDENT_PWA_INSTALL_PATH,
+} from "../lib/pwa/pwa-install-mode";
 
 /**
- * Single home-page install entry: opens a choice modal (kids vs parents).
- * Kids use the existing prompt flow unchanged; parents navigate to the dedicated install page.
+ * Home page — one button opens choice modal; each option goes to its dedicated install page.
  */
 export default function InstallAppChoiceButton({ className = "" }) {
-  const hasKidsPrompt = usePwaInstallPromptAvailable();
-  const promptKidsInstall = usePromptPwaInstall();
-  const [isIOS, setIsIOS] = useState(false);
-  const [isInstalled, setIsInstalled] = useState(false);
   const [showChoiceModal, setShowChoiceModal] = useState(false);
-  const [showKidsManualInstructions, setShowKidsManualInstructions] = useState(false);
 
   useEffect(() => {
-    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    setIsIOS(iOS);
-    setIsInstalled(isPwaInstalledStandalone());
-  }, []);
-
-  useEffect(() => {
-    if (!showChoiceModal && !showKidsManualInstructions) return undefined;
+    if (!showChoiceModal) return undefined;
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = prevOverflow;
     };
-  }, [showChoiceModal, showKidsManualInstructions]);
+  }, [showChoiceModal]);
 
-  const closeChoiceModal = () => setShowChoiceModal(false);
-
-  const closeKidsInstructions = (e) => {
-    e?.preventDefault?.();
-    e?.stopPropagation?.();
-    setShowKidsManualInstructions(false);
-  };
-
-  const handleKidsChoice = async (e) => {
+  const handleKidsChoice = (e) => {
     e.preventDefault();
     e.stopPropagation();
     setShowChoiceModal(false);
-
-    if (hasKidsPrompt) {
-      try {
-        await promptKidsInstall();
-      } catch (error) {
-        console.error("Error installing kids app:", error);
-        setShowKidsManualInstructions(true);
-      }
-      return;
-    }
-
-    setShowKidsManualInstructions(true);
+    window.location.href = STUDENT_PWA_INSTALL_PATH;
   };
 
   const handleParentsChoice = (e) => {
@@ -67,7 +34,7 @@ export default function InstallAppChoiceButton({ className = "" }) {
     window.location.href = PARENT_PWA_INSTALL_PATH;
   };
 
-  if (isCapacitorNative() || isInstalled) {
+  if (isCapacitorNative() || isPwaInstalledStandalone()) {
     return null;
   }
 
@@ -113,7 +80,7 @@ export default function InstallAppChoiceButton({ className = "" }) {
           role="dialog"
           aria-modal="true"
           aria-labelledby="install-app-choice-title"
-          onClick={closeChoiceModal}
+          onClick={() => setShowChoiceModal(false)}
         >
           <div
             className="relative w-full max-w-md rounded-xl border border-white/20 bg-black/85 p-5 text-right shadow-2xl animate-slide-up"
@@ -126,7 +93,7 @@ export default function InstallAppChoiceButton({ className = "" }) {
               </h3>
               <button
                 type="button"
-                onClick={closeChoiceModal}
+                onClick={() => setShowChoiceModal(false)}
                 className="shrink-0 rounded-lg border border-white/20 px-2.5 py-1 text-sm font-semibold text-white/80 transition hover:bg-white/10 hover:text-white"
                 aria-label="סגור"
               >
@@ -153,54 +120,6 @@ export default function InstallAppChoiceButton({ className = "" }) {
                 <span className="text-sm text-white/75">P-LEO K</span>
               </button>
             </div>
-          </div>
-        </div>
-      ) : null}
-
-      {showKidsManualInstructions ? (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="install-app-instructions-title"
-          onClick={closeKidsInstructions}
-        >
-          <div
-            className="relative w-full max-w-md rounded-xl border border-white/20 bg-black/85 p-5 text-right shadow-2xl animate-slide-up"
-            dir="rtl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="mb-3 flex items-start justify-between gap-3">
-              <h3 id="install-app-instructions-title" className="text-lg font-bold text-white">
-                {isIOS ? "הוראות התקנה ל-iOS" : "הוראות התקנה"}
-              </h3>
-              <button
-                type="button"
-                onClick={closeKidsInstructions}
-                className="shrink-0 rounded-lg border border-white/20 px-2.5 py-1 text-sm font-semibold text-white/80 transition hover:bg-white/10 hover:text-white"
-                aria-label="סגור"
-              >
-                ✕
-              </button>
-            </div>
-
-            {isIOS ? (
-              <ol className="list-decimal list-inside space-y-2 text-sm text-white/90">
-                <li>
-                  לחץ על כפתור השיתוף <span className="font-bold">📤</span> בתחתית Safari
-                </li>
-                <li>גלול למטה ובחר &quot;הוסף למסך הבית&quot;</li>
-                <li>לחץ &quot;הוסף&quot; בפינה הימנית העליונה</li>
-                <li>האפליקציה תופיע במסך הבית שלך</li>
-              </ol>
-            ) : (
-              <ol className="list-decimal list-inside space-y-2 text-sm text-white/90">
-                <li>בדפדפן Chrome/Edge: לחץ על אייקון ההתקנה בשורת הכתובת</li>
-                <li>בדפדפן Firefox: לחץ על תפריט (☰) ובחר &quot;התקן&quot;</li>
-                <li>במובייל: לחץ על &quot;הוסף למסך הבית&quot; בתפריט הדפדפן</li>
-                <li>האפליקציה תופיע במסך הבית שלך</li>
-              </ol>
-            )}
           </div>
         </div>
       ) : null}

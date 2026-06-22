@@ -3,13 +3,13 @@
   "name": "LEO K - Kids Games & Learning",
   "short_name": "LEO K",
   "description": "A small world of mini games and learning activities for kids. Run, fly, solve puzzles and practice math, geometry and English.",
-  "start_url": "/",
+  "start_url": "/student/login",
   "display": "standalone",
   "offline_enabled": true,
   "background_color": "#050816",
   "theme_color": "#c9f4ff",
   "orientation": "any",
-  "scope": "/",
+  "scope": "/student/",
   "icons": [
     {
       "src": "/images/leo-icons/icon-192.png",
@@ -40,22 +40,10 @@
   "screenshots": [],
   "shortcuts": [
     {
-      "name": "Arcade Games",
-      "short_name": "Games",
-      "description": "Play arcade games",
-      "url": "/game",
-      "icons": [
-        {
-          "src": "/images/leo-icons/icon-192.png",
-          "sizes": "192x192"
-        }
-      ]
-    },
-    {
-      "name": "Learning Zone",
-      "short_name": "Learn",
-      "description": "Practice math, geometry and English",
-      "url": "/learning",
+      "name": "Student Home",
+      "short_name": "Home",
+      "description": "Student home",
+      "url": "/student/home",
       "icons": [
         {
           "src": "/images/leo-icons/icon-192.png",
