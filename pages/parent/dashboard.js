@@ -6,6 +6,7 @@ import ParentPolicyAcceptanceGate from "../../components/parent/ParentPolicyAcce
 import AssignActivityModal from "../../components/parent/AssignActivityModal";
 import ParentDashboardModal from "../../components/parent/ParentDashboardModal";
 import ChildGamePermissionsPanel from "../../components/parent/ChildGamePermissionsPanel";
+import ParentInviteOthersButton from "../../components/parent/ParentInviteOthersButton";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import { getParentPortalTheme } from "../../lib/parent-ui/parent-portal-theme.client.js";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
@@ -749,13 +750,13 @@ export default function ParentDashboardPage() {
                       <Link
                         href={reportHref}
                         prefetch={false}
-                        className={T.cardAction}
+                        className={T.cardReportBtn}
                       >
                         דוח הורים
                       </Link>
                       <button
                         type="button"
-                        className={T.cardAction}
+                        className={T.cardActivityBtn}
                         disabled={busy}
                         onClick={() =>
                           setActivityModalStudent({
@@ -769,7 +770,7 @@ export default function ParentDashboardPage() {
                       </button>
                       <button
                         type="button"
-                        className={T.cardAction}
+                        className={T.cardDetailsBtn}
                         disabled={busy}
                         onClick={() => openDetailsModal(student)}
                       >
@@ -781,6 +782,7 @@ export default function ParentDashboardPage() {
               })}
             </div>
           )}
+          <ParentInviteOthersButton bright={isBright} />
         </section>
 
         <ParentDashboardModal

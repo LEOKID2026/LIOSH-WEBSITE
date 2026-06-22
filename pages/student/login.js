@@ -3,7 +3,13 @@ import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 import PortalLoginHeading from "../../components/auth/PortalLoginHeading";
 import StudentParentInviteModal from "../../components/student/StudentParentInviteModal";
+import CopyConfirmPopup from "../../components/ui/CopyConfirmPopup.jsx";
 import { buildParentInviteMessageHe } from "../../lib/site/public-site-origin.client.js";
+import {
+  COPY_INVITE_ERROR_MESSAGE_HE,
+  COPY_INVITE_SUCCESS_MESSAGE_HE,
+  copyTextToClipboard,
+} from "../../lib/ui/copy-confirm-message.he.js";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import { syncStudentLocalStorageIdentity } from "../../lib/learning-student-local-sync";
 import { isStudentIdentityDiagnosticsEnabled } from "../../lib/dev-student-identity-client";
@@ -43,7 +49,9 @@ export default function StudentLoginPage() {
   const [message, setMessage] = useState("");
   const [sessionCheck, setSessionCheck] = useState("pending");
   const [parentInviteOpen, setParentInviteOpen] = useState(false);
-  const [copyMessageFeedback, setCopyMessageFeedback] = useState("");
+  const [copyPopupOpen, setCopyPopupOpen] = useState(false);
+  const [copyPopupMessage, setCopyPopupMessage] = useState("");
+  const [copyPopupIsError, setCopyPopupIsError] = useState(false);
 
   const layoutProps = { studentTheme: theme, studentShell: "home" };
   const labelClass = isBright ? "text-slate-700" : "text-white/80";
@@ -61,7 +69,6 @@ export default function StudentLoginPage() {
   const parentCopyMsgBtnClass = isBright
     ? "w-full rounded-lg border border-violet-500 bg-violet-600 px-3 py-2 text-sm font-semibold text-white hover:bg-violet-700 transition shadow-sm"
     : "w-full rounded-lg border border-violet-300/45 bg-violet-400/10 px-3 py-2 text-sm font-semibold text-violet-100 hover:bg-violet-400/20 hover:border-violet-200/55 transition";
-  const copyFeedbackClass = isBright ? "text-sm text-emerald-700 font-medium" : "text-sm text-emerald-300 font-medium";
 
   useEffect(() => {
     if (!router.isReady) return undefined;
@@ -83,12 +90,6 @@ export default function StudentLoginPage() {
     };
     // רק isReady — לא router (re-run מבטל fetch → stuck על "בודקים חיבור...").
   }, [router.isReady]);
-
-  useEffect(() => {
-    if (!copyMessageFeedback) return undefined;
-    const timer = window.setTimeout(() => setCopyMessageFeedback(""), 2200);
-    return () => window.clearTimeout(timer);
-  }, [copyMessageFeedback]);
 
   if (sessionCheck === "pending") {
     return (
@@ -139,12 +140,15 @@ export default function StudentLoginPage() {
   };
 
   const handleCopyParentMessage = async () => {
-    try {
-      await navigator.clipboard.writeText(buildParentInviteMessageHe());
-      setCopyMessageFeedback("ההודעה הועתקה");
-    } catch {
-      /* ignore */
+    const ok = await copyTextToClipboard(buildParentInviteMessageHe());
+    if (ok) {
+      setCopyPopupIsError(false);
+      setCopyPopupMessage(COPY_INVITE_SUCCESS_MESSAGE_HE);
+    } else {
+      setCopyPopupIsError(true);
+      setCopyPopupMessage(COPY_INVITE_ERROR_MESSAGE_HE);
     }
+    setCopyPopupOpen(true);
   };
 
   return (
@@ -208,13 +212,18 @@ export default function StudentLoginPage() {
             >
               העתק הודעה להורה
             </button>
-            {copyMessageFeedback ? (
-              <p className={copyFeedbackClass} role="status" aria-live="polite">
-                {copyMessageFeedback}
-              </p>
-            ) : null}
           </div>
         </form>
+
+        <CopyConfirmPopup
+          open={copyPopupOpen}
+          onClose={() => setCopyPopupOpen(false)}
+          message={copyPopupMessage}
+          isError={copyPopupIsError}
+          bright={isBright}
+          autoCloseMs={5000}
+          testId="student-login-copy-message-popup"
+        />
 
         <StudentParentInviteModal
           open={parentInviteOpen}
