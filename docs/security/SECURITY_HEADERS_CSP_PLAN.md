@@ -62,7 +62,7 @@ Roll out as `Content-Security-Policy-Report-Only` for ≥ 7 days, capture violat
 ## Frame protection
 
 - `X-Frame-Options: DENY` AND CSP `frame-ancestors 'none'` (defense in depth).
-- Public games (`/mleo-*`) — confirm none must be embeddable; if any must, switch to `frame-ancestors` allowlist for those routes only.
+- Public solo game routes (`/student/solo-games/*`) — confirm none must be embeddable; if any must, switch to `frame-ancestors` allowlist for those routes only.
 
 ## Method
 

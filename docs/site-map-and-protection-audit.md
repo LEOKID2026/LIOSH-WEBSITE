@@ -63,8 +63,7 @@ No code changes performed.
 - `/api/learning-simulator/generate-expert-review-pack` -> `pages/api/learning-simulator/generate-expert-review-pack.js`
 
 ## Public Routes
-- `/`, `/about`, `/contact`, `/gallery`, `/game`
-- `/mleo-catcher`, `/mleo-flyer`, `/mleo-memory`, `/mleo-penalty`, `/mleo-puzzle`, `/mleo-runner`
+- `/`, `/about`, `/contact`, `/gallery`, `/game`, `/games`, `/student/solo-games/*`
 - `/offline`, `/offline/memory-match`, `/offline/rock-paper-scissors`, `/offline/tap-battle`, `/offline/tic-tac-toe`
 - Public utility API observed: `/api/gallery`
 

@@ -7,8 +7,7 @@
 
 Pages reachable without authentication:
 
-- `/` (home), `/about`, `/contact`, `/gallery`, `/game`
-- `/mleo-catcher`, `/mleo-flyer`, `/mleo-memory`, `/mleo-penalty`, `/mleo-puzzle`, `/mleo-runner`
+- `/` (home), `/about`, `/contact`, `/gallery`, `/game`, `/games`
 - `/offline`, `/offline/memory-match`, `/offline/rock-paper-scissors`, `/offline/tap-battle`, `/offline/tic-tac-toe`
 - `/api/gallery`
 
@@ -21,8 +20,7 @@ Pages reachable without authentication:
 | `/contact` | spam, PII overshare, phishing-by-impersonation | rate-limit B-CONTACT, captcha optional, server-side validation, no auto-reply that echoes input verbatim |
 | `/gallery` | static images; low risk | confirm assets are repo-controlled |
 | `/api/gallery` | abuse, scraping | rate-limit B-PUB; static cache; no body input |
-| `/game` | client-only game; low risk | none extra |
-| `/mleo-*` (6 games) | client-only games; low risk | confirm no third-party network calls; CSP enforces |
+| `/game` | client-only game hub; low risk | none extra |
 | `/offline/*` (4 mini-games) | client-only games; low risk | same |
 
 ## `/contact` form — required posture
@@ -39,7 +37,7 @@ Pages reachable without authentication:
 
 ## Public game routes — defense-in-depth
 
-- Confirm none of `/mleo-*` or `/offline/*` make outbound HTTP requests beyond same-origin static assets. Audit in next pass via grep `fetch(`, `XMLHttpRequest`, `<script src=` in those page files.
+- Confirm none of `/offline/*` or solo game shells make outbound HTTP requests beyond same-origin static assets.
 - CSP `connect-src 'self'` blocks accidental external calls.
 - Confirm none read or write `localStorage` keys that overlap with student/parent state.
 

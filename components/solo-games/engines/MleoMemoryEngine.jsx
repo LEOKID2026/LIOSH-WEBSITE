@@ -8,6 +8,71 @@ import SoloGameNavButtons from "../SoloGameNavButtons.jsx";
 
 const SHOP_CARD_BACK = "/rewards/cards/common/card_back.webp";
 const MISMATCH_HOLD_MS = 1200;
+/** Portrait shop card: width : height = 2 : 3 */
+const CARD_ASPECT = 3 / 2;
+
+/**
+ * @param {{ totalCards: number, difficulty: string, boardW: number, boardH: number, isMobile: boolean }} opts
+ */
+function computeMemoryGridLayout({ totalCards, difficulty, boardW, boardH, isMobile }) {
+  if (!totalCards || boardW < 40 || boardH < 40) {
+    return { columns: 4, rows: 3, cardWidth: 72, cardHeight: 108, gap: 8 };
+  }
+
+  const gapMin = isMobile ? 4 : 6;
+  const gapMax = isMobile ? 8 : 10;
+  const minCardW = isMobile ? 52 : 64;
+  const maxCardWByDiff = {
+    easy: isMobile ? 132 : 220,
+    medium: isMobile ? 112 : 180,
+    hard: isMobile ? 96 : 148,
+  };
+  const maxCardW = maxCardWByDiff[difficulty] || maxCardWByDiff.medium;
+
+  const colPrefs = {
+    easy: isMobile ? [3, 4, 2] : [4, 3, 6, 2],
+    medium: isMobile ? [4, 2] : [4, 8, 2],
+    hard: isMobile ? [4, 3] : [6, 8, 4, 3],
+  };
+  const prefs = colPrefs[difficulty] || colPrefs.medium;
+
+  const candidates = [];
+  const seen = new Set();
+  const addCols = (cols) => {
+    if (cols < 2 || cols > totalCards || seen.has(cols)) return;
+    seen.add(cols);
+    candidates.push({ cols, rows: Math.ceil(totalCards / cols) });
+  };
+  prefs.forEach(addCols);
+  const maxCols = isMobile ? 4 : 8;
+  for (let cols = 2; cols <= Math.min(totalCards, maxCols); cols += 1) addCols(cols);
+
+  let best = null;
+  for (const { cols, rows } of candidates) {
+    for (let gap = gapMax; gap >= gapMin; gap -= 2) {
+      const maxW = (boardW - gap * (cols - 1)) / cols;
+      const maxH = (boardH - gap * (rows - 1)) / rows;
+      let cardW = Math.min(maxW, maxH / CARD_ASPECT);
+      cardW = Math.max(minCardW, Math.min(maxCardW, cardW));
+      const cardH = cardW * CARD_ASPECT;
+      const gridW = cardW * cols + gap * (cols - 1);
+      const gridH = cardH * rows + gap * (rows - 1);
+      if (gridW > boardW + 0.5 || gridH > boardH + 0.5) continue;
+
+      if (!best || cardW > best.cardWidth) {
+        best = {
+          columns: cols,
+          rows,
+          cardWidth: Math.floor(cardW),
+          cardHeight: Math.floor(cardH),
+          gap,
+        };
+      }
+    }
+  }
+
+  return best || { columns: 4, rows: 3, cardWidth: 72, cardHeight: 108, gap: 8 };
+}
 
 /**
  * @param {{ autoStart?: boolean, initialDifficulty?: string, onSessionEnd?: (metrics: object) => void, onPreGameUiChange?: (active: boolean) => void }} props
@@ -33,8 +98,8 @@ export default function MleoMemoryEngine({
   const [flipped, setFlipped] = useState([]);
   const [matched, setMatched] = useState([]);
   const [difficulty, setDifficulty] = useState(initialDifficulty);
-  const [windowWidth, setWindowWidth] = useState(1200);
-  const [windowHeight, setWindowHeight] = useState(800);
+  const [boardSize, setBoardSize] = useState({ w: 0, h: 0 });
+  const boardRef = useRef(null);
   const [time, setTime] = useState(0);
   const [timerRunning, setTimerRunning] = useState(false);
   const [startedPlaying, setStartedPlaying] = useState(false);
@@ -155,18 +220,28 @@ export default function MleoMemoryEngine({
   }, [matched, cards, time]);
 
   useEffect(() => {
-    const updateSize = () => {
-      setWindowWidth(window.innerWidth);
-      setWindowHeight(window.innerHeight);
+    const el = boardRef.current;
+    if (!el) return undefined;
+
+    const measure = () => {
+      const rect = el.getBoundingClientRect();
+      setBoardSize({
+        w: Math.max(0, Math.floor(rect.width)),
+        h: Math.max(0, Math.floor(rect.height)),
+      });
     };
-    updateSize();
-    window.addEventListener("resize", updateSize);
-    window.addEventListener("orientationchange", updateSize);
+
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    window.addEventListener("resize", measure);
+    window.addEventListener("orientationchange", measure);
     return () => {
-      window.removeEventListener("resize", updateSize);
-      window.removeEventListener("orientationchange", updateSize);
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+      window.removeEventListener("orientationchange", measure);
     };
-  }, []);
+  }, [deckLoading, deckError, showIntro, gameRunning]);
 
   function handleFlip(card) {
     if (gameOver || !gameRunning || deckLoading) return;
@@ -206,18 +281,15 @@ export default function MleoMemoryEngine({
   }
 
   const totalCards = cards.length;
-  let columns = windowWidth < 600 ? Math.min(6, totalCards) : Math.min(10, totalCards);
-  const rows = Math.ceil(totalCards / Math.max(columns, 1));
-  const containerWidth = windowWidth * 0.95;
-  const containerHeight = typeof window !== "undefined" ? window.innerHeight * 0.55 : 500;
-  const gapSize = windowWidth < 600 ? 4 : windowWidth < 1024 ? 6 : 10;
-  const cardWidth = Math.max(
-    35,
-    Math.min(
-      windowWidth < 600 ? 72 : 110,
-      Math.min(containerWidth / Math.max(columns, 1) - 6, containerHeight / Math.max(rows, 1) / 1.35 - 6)
-    )
-  );
+  const isMobile = boardSize.w > 0 ? boardSize.w < 640 : typeof window !== "undefined" && window.innerWidth < 640;
+  const layout = computeMemoryGridLayout({
+    totalCards,
+    difficulty,
+    boardW: boardSize.w || (typeof window !== "undefined" ? window.innerWidth * 0.92 : 360),
+    boardH: boardSize.h || (typeof window !== "undefined" ? window.innerHeight * 0.5 : 400),
+    isMobile,
+  });
+  const { columns, cardWidth, cardHeight, gap: gapSize } = layout;
 
   useSoloGameKeyboard(gameRunning && !gameOver && !showIntro && !deckLoading && !deckError, (e) => {
     setKeyboardNavActive(true);
@@ -275,7 +347,10 @@ export default function MleoMemoryEngine({
             </div>
           ) : null}
 
-          <div className="flex min-h-0 flex-1 items-center justify-center overflow-hidden px-2 pb-2">
+          <div
+            ref={boardRef}
+            className="flex min-h-0 w-full flex-1 items-center justify-center overflow-hidden px-2 pb-2"
+          >
             {deckLoading ? (
               <p className={SG.preGameLoading}>טוען קלפים מהחנות…</p>
             ) : deckError ? (
@@ -293,14 +368,17 @@ export default function MleoMemoryEngine({
               </div>
             ) : (
               <div
-                className={`${gameOver ? "pointer-events-none opacity-50" : ""}`}
+                className={`mx-auto ${gameOver ? "pointer-events-none opacity-50" : ""}`}
                 style={{
                   display: "grid",
                   gap: `${gapSize}px`,
                   gridTemplateColumns: `repeat(${columns}, ${cardWidth}px)`,
                   justifyContent: "center",
-                  maxWidth: `${containerWidth}px`,
-                  maxHeight: `${containerHeight}px`,
+                  alignContent: "center",
+                  width: "100%",
+                  maxWidth: `${cardWidth * columns + gapSize * (columns - 1)}px`,
+                  height: "100%",
+                  maxHeight: `${layout.cardHeight * layout.rows + gapSize * (layout.rows - 1)}px`,
                 }}
               >
                 {cards.map((card, idx) => {
@@ -315,7 +393,7 @@ export default function MleoMemoryEngine({
                       className={`relative flex cursor-pointer items-center justify-center overflow-hidden rounded-lg border-2 transition hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 ${
                         isFocused ? "ring-4 ring-sky-400" : isMatched ? "border-emerald-400/80" : "border-yellow-400/30"
                       } ${isFlipped ? "border-yellow-300/70 bg-slate-900/40" : "border-amber-500/40 bg-slate-900"}`}
-                      style={{ width: `${cardWidth}px`, height: `${cardWidth * 1.35}px` }}
+                      style={{ width: `${cardWidth}px`, height: `${cardHeight}px` }}
                       aria-label={isFlipped ? card.nameHe || "קלף פתוח" : "קלף סגור"}
                     >
                       {isFlipped ? (
@@ -332,7 +410,7 @@ export default function MleoMemoryEngine({
                         <img
                           src={SHOP_CARD_BACK}
                           alt=""
-                          className="h-full w-full object-cover"
+                          className="h-full w-full object-contain"
                           draggable={false}
                         />
                       )}

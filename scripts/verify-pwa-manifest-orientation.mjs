@@ -1,6 +1,6 @@
 /**
  * Ensures public/manifest.json does not lock the installed PWA to portrait-only,
- * so pages like /mleo-catcher can rotate to landscape while learning stays usable in portrait.
+ * Verify manifest orientation allows any on game/solo routes while learning stays usable in portrait.
  */
 import { readFileSync } from "fs";
 import { join, dirname } from "path";

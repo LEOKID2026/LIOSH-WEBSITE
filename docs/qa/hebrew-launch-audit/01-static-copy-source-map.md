@@ -6,7 +6,7 @@
 - `pages/index.js` — כותרות שיווק, CTA, טעינה (`טוען...`).
 - `pages/about.js` — תוכן ערכי (נמצאה שגיאת כתיב בשורה 95).
 - `pages/contact.js` — FAQ ותוכן פנייה.
-- `pages/mleo-flyer.js` — מסך פתיחה עם טקסטים באנגלית (`431-436`).
+- `archive/deprecated-mleo-games/pages/mleo-flyer.js` — **ארכיון** (הוסר מהאתר); מסך פתיחה עם טקסטים באנגלית (`431-436`).
 
 ## כניסת הורה
 - `pages/parent/login.js` — הודעות הרשמה/כניסה, תנאים ומדיניות (`130`, `135`).

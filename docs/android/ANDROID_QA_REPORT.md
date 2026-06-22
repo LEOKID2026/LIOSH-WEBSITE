@@ -110,7 +110,7 @@ These tests validate the same production site the APK WebView loads, on a mobile
 | S4 | Answer submission in APK | **Not run in APK** | Playwright reached hebrew-master; submit flow not exercised in WebView |
 | T3 | Staff SameSite=Strict session | **Blocked** | Production staff login returned HTTP 403 with available local QA credentials; owner must provide valid production staff code + PIN |
 | T4 | Teacher activities in APK | **Pending APK manual** | Teacher login works on production (Playwright T1b) |
-| G4 | Game touch controls in APK | **Pending APK manual** | `/game` and `/mleo-runner` return HTTP 200; touch/play not automated in WebView |
+| G4 | Game touch controls in APK | **Pending APK manual** | `/game` and `/student/solo-games/*` return HTTP 200; touch/play not automated in WebView |
 | W3 | Cookie persistence after login | **Pending APK manual** | Login in APK → background 5 min → reopen; verify session |
 | W4 | Offline indicator | **Pending APK manual** | Disable network in emulator settings |
 | W5 | Audio / TTS / sound effects | **Pending APK manual** | Open game or Hebrew TTS; may require user gesture |

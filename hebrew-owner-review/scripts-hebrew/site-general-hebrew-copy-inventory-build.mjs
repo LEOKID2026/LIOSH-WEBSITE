@@ -105,7 +105,7 @@ const EXCLUDE_PATH_RE = [
   // Games / arcade (not main learning product UI)
   /^pages\/student\/games\//,
   /^pages\/student\/arcade\//,
-  /^pages\/mleo-/,
+  /^archive\/deprecated-mleo-games\//,
   /^pages\/game\.js$/,
   /reward-options/i,
   // Curriculum / question banks (exercise content, not UI chrome)

@@ -21,7 +21,7 @@ STRIDE-lite per surface. Severity-bearing rows live only in the [register](./SEC
 
 ## STRIDE-lite per surface
 
-### S1. Public marketing (`/`, `/about`, `/contact`, `/gallery`, `/mleo-*`, `/offline/*`)
+### S1. Public marketing (`/`, `/about`, `/contact`, `/gallery`, `/game`, `/offline/*`)
 
 | Threat | Vector | Risk row |
 |--------|--------|----------|

@@ -122,7 +122,7 @@ The following features are fully built and working as of the audit date. No chan
 ### Online games (existing, fully working)
 
 - **Online Games Area** (`/student/arcade`, `/student/games/*`) — 7 multiplayer games (Connect Four, Checkers, Chess, Snakes & Ladders, Dominoes, Bingo, Ludo), room-based, authenticated, coin-entry and pot-payout system
-- **Fun Zone** (`/game`, `/mleo-runner`, `/mleo-flyer`, `/mleo-catcher`, `/mleo-puzzle`, `/mleo-memory`, `/mleo-penalty`) — 6 public single-player games, local scores only, no authentication required
+- **Solo Leo games** (`/game`, `/student/solo-games/*`) — 10 authenticated solo games with coins/diamonds rewards
 - **Offline Games** (`/offline/*`) — 4 same-device local games, no persistence
 
 ### Parent reports (fully working, must not be disrupted)

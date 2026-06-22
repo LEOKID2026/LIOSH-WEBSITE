@@ -25,14 +25,7 @@ const HUB_GAMES = [
   "מיון צורות",
 ];
 
-const LEGACY_ROUTES = [
-  "/mleo-catcher",
-  "/mleo-puzzle",
-  "/mleo-memory",
-  "/mleo-flyer",
-  "/game",
-  "/games",
-];
+const HUB_ROUTES = ["/game", "/games"];
 
 const SOLO_ROUTES = [
   "/student/solo-games",
@@ -437,9 +430,9 @@ async function verifyBrowserFlow(supabase, studentId) {
       await vpContext.close();
     }
 
-    // --- Legacy routes unchanged (HTTP 200) ---
-    console.log("\n=== Legacy routes ===");
-    for (const route of LEGACY_ROUTES) {
+    // --- Hub routes (HTTP 200) ---
+    console.log("\n=== Hub routes ===");
+    for (const route of HUB_ROUTES) {
       const res = await page.request.get(`${BASE}${route}`, { maxRedirects: 0 }).catch(() => null);
       const status = res?.status() ?? 0;
       if (status >= 200 && status < 400) pass(`${route} → HTTP ${status}`);

@@ -19,7 +19,7 @@
 - הערה: ספירה זו כוללת גם מאגרי תוכן לימוד (`data/`, `utils/`) ולא רק shell UI.
 
 ## חלוקה לפי אזור באתר
-- דף בית/שיווק: `pages/index.js`, `pages/about.js`, `pages/contact.js`, `pages/mleo-flyer.js`.
+- דף בית/שיווק: `pages/index.js`, `pages/about.js`, `pages/contact.js` (legacy `mleo-flyer` archived — see `archive/deprecated-mleo-games/`).
 - כניסת הורה: `pages/parent/login.js`.
 - פורטל הורה: `pages/parent/dashboard.js`, `pages/learning/parent-report.js`, `pages/learning/parent-report-detailed.js`, `components/parent/*`.
 - כניסת ילד: `pages/student/login.js`.
@@ -31,7 +31,7 @@
 
 ## ממצאים חוסמי השקה
 1. **BLOCKER** — ערבוב אנגלית גלויה במסך פתיחה משחקי:
-   - `pages/mleo-flyer.js:431-432,436` (`LEO Flyer`, `Hold to fly...`, `Enter your name`).
+   - `archive/deprecated-mleo-games/pages/mleo-flyer.js:431-432,436` (ארכיון — לא באתר פעיל).
 2. **BLOCKER** — שגיאת כתיב גלויה בדף About:
    - `pages/about.js:95` (`האתר מותאם לילד/הי כיתות א׳–ו׳`).
 3. **BLOCKER** — רכיב נגישות מרכזי עם `aria-label` אנגלי בהיקף רחב:

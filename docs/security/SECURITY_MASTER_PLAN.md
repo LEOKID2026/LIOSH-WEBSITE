@@ -68,7 +68,7 @@ Current security hardening work continues in parallel **without** any ENV modifi
 | 16 | [PARENT_REPORT_PRIVACY_AUDIT_PLAN.md](./PARENT_REPORT_PRIVACY_AUDIT_PLAN.md) | raw-key + narrative + screenshot privacy |
 | 17 | [PARENT_COPILOT_SECURITY_PLAN.md](./PARENT_COPILOT_SECURITY_PLAN.md) | 422 invariant + scope-leak + short-report off |
 | 18 | [LOGGING_ARTIFACT_PRIVACY_PLAN.md](./LOGGING_ARTIFACT_PRIVACY_PLAN.md) | reports/ retention + PII in logs |
-| 19 | [PUBLIC_SURFACE_SECURITY_PLAN.md](./PUBLIC_SURFACE_SECURITY_PLAN.md) | `/`, `/contact`, gallery, mleo-* games |
+| 19 | [PUBLIC_SURFACE_SECURITY_PLAN.md](./PUBLIC_SURFACE_SECURITY_PLAN.md) | `/`, `/contact`, gallery, game hubs |
 | 20 | [DEPENDENCY_SUPPLY_CHAIN_AUDIT_PLAN.md](./DEPENDENCY_SUPPLY_CHAIN_AUDIT_PLAN.md) | npm audit + lockfile + transitive |
 | 21 | [VERCEL_DEPLOYMENT_SECURITY_PLAN.md](./VERCEL_DEPLOYMENT_SECURITY_PLAN.md) | env separation + preview policy |
 | 22 | [PRIVACY_COOKIES_CHILD_DATA_PLAN.md](./PRIVACY_COOKIES_CHILD_DATA_PLAN.md) | child data + parental consent + cookie banner |

@@ -1,7 +1,7 @@
 id,file,line,exact_text,user_surface,audience,context,issue_type,severity,recommendation,owner_decision_needed
-HLA-001,pages/mleo-flyer.js,431,"🛩️ LEO Flyer",דף בית/משחקי מותג,ילד/ה+הורה,"כותרת מסך פתיחה",MIXED_LANGUAGE,BLOCKER,"להחליף לכותרת עברית או לנוסח דו-לשוני עקבי מוגדר מוצרית",YES
-HLA-002,pages/mleo-flyer.js,432,"Hold to fly. Collect coins, avoid obstacles.",דף בית/משחקי מותג,ילד/ה+הורה,"טקסט הסבר פתיחה",MIXED_LANGUAGE,BLOCKER,"להמיר לעברית מלאה",NO
-HLA-003,pages/mleo-flyer.js,436,"Enter your name",דף בית/משחקי מותג,ילד/ה+הורה,"placeholder הזנת שם",MIXED_LANGUAGE,BLOCKER,"להמיר ל""הכנס/י שם"" או ניסוח אחיד מול שאר האתר",NO
+HLA-001,archive/deprecated-mleo-games/pages/mleo-flyer.js,431,"🛩️ LEO Flyer",ארכיון (לא באתר),—,"כותרת מסך פתיחה — legacy",ARCHIVED,N/A,"הוסר מהאתר 2026-06-22",NO
+HLA-002,archive/deprecated-mleo-games/pages/mleo-flyer.js,432,"Hold to fly. Collect coins, avoid obstacles.",ארכיון (לא באתר),—,"טקסט הסבר פתיחה — legacy",ARCHIVED,N/A,"הוסר מהאתר 2026-06-22",NO
+HLA-003,archive/deprecated-mleo-games/pages/mleo-flyer.js,436,"Enter your name",ארכיון (לא באתר),—,"placeholder הזנת שם — legacy",ARCHIVED,N/A,"הוסר מהאתר 2026-06-22",NO
 HLA-004,pages/about.js,95,"האתר מותאם לילד/הי כיתות א׳–ו׳",עמוד About,הורה,"פסקת ערך מוצר",TYPO_OR_GRAMMAR,BLOCKER,"לתקן שגיאת כתיב (ילד/הי)",NO
 HLA-005,pages/parent/dashboard.js,105,"Failed to load students",פורטל הורה,הורה,"שגיאת טעינה",MIXED_LANGUAGE,HIGH,"להחליף להודעת עברית",NO
 HLA-006,pages/parent/dashboard.js,121,"Network error while loading students",פורטל הורה,הורה,"שגיאת רשת",MIXED_LANGUAGE,HIGH,"להחליף להודעת עברית",NO

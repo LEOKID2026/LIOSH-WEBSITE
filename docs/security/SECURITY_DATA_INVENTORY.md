@@ -42,7 +42,7 @@ Goal: enumerate every data class the product handles, classify sensitivity, iden
 - **Student → learning session:** student session cookie → `session/start` → `answer` (write) → `session/finish` → row in Supabase. Service-role used server-side; ownership currently enforced in application code (R-RLS-01).
 - **Parent → report:** parent bearer → `/api/parent/students/[studentId]/report-data` → server filters by parent ownership → returns child summary. Cross-parent leak surface = R-OWN-01.
 - **Parent → Copilot:** parent bearer (or student session) → `/api/parent/copilot-turn` → in production, server rebuilds snapshot from Supabase (HTTP 422 if not implemented for current path) → returns grounded reply. Trust invariant = R-COPILOT-01/02.
-- **Child → public games (`/student/games/*`, `/mleo-*`):** mostly client-side; do not write child-PII to external services. Confirm in surface audit (doc 19).
+- **Child → solo games (`/student/solo-games/*`, `/student/games/*`):** mostly client-side; do not write child-PII to external services.
 
 ## Retention targets (proposed; owner approval needed)
 
