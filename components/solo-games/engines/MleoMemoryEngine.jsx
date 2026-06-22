@@ -392,7 +392,7 @@ export default function MleoMemoryEngine({
                       onClick={() => handleFlip(card)}
                       className={`relative flex cursor-pointer items-center justify-center overflow-hidden rounded-lg border-2 transition hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 ${
                         isFocused ? "ring-4 ring-sky-400" : isMatched ? "border-emerald-400/80" : "border-yellow-400/30"
-                      } ${isFlipped ? "border-yellow-300/70 bg-slate-900/40" : "border-amber-500/40 bg-slate-900"}`}
+                      } ${isFlipped ? "border-yellow-300/70 bg-transparent" : "border-amber-500/40 bg-slate-900"}`}
                       style={{ width: `${cardWidth}px`, height: `${cardHeight}px` }}
                       aria-label={isFlipped ? card.nameHe || "קלף פתוח" : "קלף סגור"}
                     >
@@ -401,10 +401,11 @@ export default function MleoMemoryEngine({
                           src={card.src}
                           preBaked={card.preBaked}
                           size="tile"
-                          fit="contain"
+                          fit="cover"
                           loading="eager"
                           alt={card.nameHe || "קלף"}
-                          wrapperClassName="h-[92%] w-[88%]"
+                          wrapperClassName="absolute inset-0 h-full w-full"
+                          className="h-full w-full"
                         />
                       ) : (
                         <img
