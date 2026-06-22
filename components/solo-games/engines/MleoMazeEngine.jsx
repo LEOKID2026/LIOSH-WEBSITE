@@ -144,12 +144,15 @@ export default function MleoMazeEngine({
       const desktopSide = window.matchMedia("(min-width: 768px)").matches;
 
       if (desktopSide) {
-        const dpadW = 200;
-        const availW = Math.max(100, rect.width - dpadW - 12);
-        const availH = Math.max(100, rect.height - 8);
+        const availW = Math.max(100, rect.width - 16);
+        const availH = Math.max(100, rect.height - 12);
         const fromW = availW / settings.cols;
         const fromH = availH / settings.rows;
-        setCellPx(Math.max(14, Math.floor(Math.min(fromW, fromH))));
+        const maxCell =
+          difficulty === "hard" ? 26 : difficulty === "medium" ? 30 : 34;
+        setCellPx(
+          Math.max(14, Math.min(maxCell, Math.floor(Math.min(fromW, fromH))))
+        );
         return;
       }
 
@@ -175,7 +178,7 @@ export default function MleoMazeEngine({
       window.removeEventListener("resize", compute);
       window.removeEventListener("orientationchange", compute);
     };
-  }, [showIntro, gameRunning, settings.cols, settings.rows, settings.cellMin, settings.cellMinLg, mazeId]);
+  }, [showIntro, gameRunning, settings.cols, settings.rows, settings.cellMin, settings.cellMinLg, mazeId, difficulty]);
 
   const flashMsg = useCallback((text, ms = 1400) => {
     setStatusMsg(text);
@@ -528,11 +531,11 @@ export default function MleoMazeEngine({
 
               <div
                 ref={mazeLayoutRef}
-                className="flex min-h-0 flex-1 flex-col items-center justify-center gap-1 max-md:landscape:flex-row max-md:landscape:gap-2 md:flex-row md:gap-3 md:overflow-hidden"
+                className="flex min-h-0 flex-1 flex-col items-center justify-center gap-1 max-md:landscape:flex-row max-md:landscape:gap-2 md:overflow-hidden"
               >
                 <div
                   ref={boardRef}
-                  className="mx-auto w-fit max-w-full shrink-0 rounded-2xl border-[3px] border-amber-700/50 bg-amber-950/20 p-1 shadow-inner sm:p-1.5 md:mx-0"
+                  className="mx-auto w-fit max-w-full shrink-0 rounded-2xl border-[3px] border-amber-700/50 bg-amber-950/20 p-1 shadow-inner sm:p-1.5"
                   style={{ touchAction: "manipulation" }}
                   onTouchStart={(e) => {
                     const t = e.touches[0];
@@ -656,7 +659,7 @@ export default function MleoMazeEngine({
 
               <div
                 dir="ltr"
-                className="mx-auto grid w-full max-w-[252px] shrink-0 grid-cols-3 gap-2 pb-1 pt-1 max-md:landscape:mx-0 max-md:landscape:max-w-[196px] max-md:landscape:pb-0 md:mx-0 md:max-w-[196px] md:pb-0 md:pt-0"
+                className="mx-auto grid w-full max-w-[252px] shrink-0 grid-cols-3 gap-2 pb-1 pt-1 max-md:landscape:mx-0 max-md:landscape:max-w-[196px] max-md:landscape:pb-0 md:hidden"
               >
                 <span />
                 <button
