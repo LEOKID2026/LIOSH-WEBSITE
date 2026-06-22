@@ -7,7 +7,7 @@ import { formatCountdownHe } from "../../../lib/rewards/rewards-ui.he.js";
 const STATUS_PATH = "/api/student/rewards/surprise-box/status";
 
 export default function StudentSurpriseBoxWidget({ onOpen }) {
-  const { tokens: T } = useStudentTheme();
+  const { tokens: T, isBright } = useStudentTheme();
   const [phase, setPhase] = useState("idle");
   const [ready, setReady] = useState(false);
   const [pendingBoxCount, setPendingBoxCount] = useState(0);
@@ -69,18 +69,27 @@ export default function StudentSurpriseBoxWidget({ onOpen }) {
   const compactBtn =
     "flex-1 md:flex-none !min-h-[2.75rem] !px-3 !py-2 !text-sm text-center whitespace-nowrap disabled:opacity-50 disabled:pointer-events-none";
 
+  const titleColorClass = isBright ? "!text-orange-600" : "!text-amber-300";
+
   return (
     <section
-      className={`mt-4 md:mt-5 w-full md:max-w-md text-right overflow-x-hidden ${T.statCard}`}
+      className={`mt-4 md:mt-5 w-full text-right overflow-x-hidden ${T.statCard}`}
       aria-label="קופסת הפתעה"
     >
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between md:gap-3">
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2 justify-end">
-            <h2 className={`text-sm md:text-base font-bold ${T.tileTitle}`}>קופסת הפתעה</h2>
-            <span className="text-xl shrink-0" aria-hidden>
+          <div className="flex items-center gap-2 justify-start">
+            <span
+              className="text-[1.625rem] md:text-xl shrink-0 leading-none inline-flex items-center"
+              aria-hidden
+            >
               🎁
             </span>
+            <h2
+              className={`${T.tileTitle} ${titleColorClass} !text-[1.625rem] md:!text-base !leading-[1.625rem] md:!leading-snug !min-h-0 !line-clamp-none`}
+            >
+              קופסת הפתעה
+            </h2>
           </div>
           {phase === "loading" ? (
             <p className={`mt-0.5 text-xs md:text-sm ${T.tileSub}`}>טוען...</p>
@@ -108,11 +117,11 @@ export default function StudentSurpriseBoxWidget({ onOpen }) {
             type="button"
             disabled={!canOpen}
             onClick={() => onOpen?.()}
-            className={`${T.ctaPrimary} ${compactBtn}`}
+            className={`${T.ctaSurpriseOpen} ${compactBtn}`}
           >
             פתח קופסה
           </button>
-          <Link href="/student/cards" className={`${T.ctaGames} ${compactBtn}`}>
+          <Link href="/student/cards" className={`${T.ctaCollection} ${compactBtn}`}>
             לאוסף שלי
           </Link>
         </div>
