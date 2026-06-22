@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { fetchArcadeRoomChessBundle, requestChessMove } from "../../lib/arcade/chess/chessSessionAdapter";
+import { useArcadeSnapshotPollEffect } from "./useArcadeSnapshotPollEffect";
 
 function preferNewer(prev, next) {
   if (!next) return prev;
@@ -29,8 +30,6 @@ export function useChessSession(ctx) {
   const [bundleError, setBundleError] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
-  const joinRecoveryAttemptedRef = useRef(false);
-  const bundleLoadedOnceRef = useRef(false);
   const lastPollSigRef = useRef("");
   const snapRef = useRef(null);
   snapRef.current = snap;
@@ -43,84 +42,58 @@ export function useChessSession(ctx) {
     setBundleLoaded(false);
     setBundleError("");
     setErr("");
-    joinRecoveryAttemptedRef.current = false;
-    bundleLoadedOnceRef.current = false;
     lastPollSigRef.current = "";
   }, [roomId]);
 
-  useEffect(() => {
-    if (!roomId) return undefined;
-    let cancelled = false;
+  const fetchBundle = useCallback(() => fetchArcadeRoomChessBundle(roomId || ""), [roomId]);
 
-    const tick = async () => {
-      let b = await fetchArcadeRoomChessBundle(roomId);
-      if (cancelled) return;
-
-      if (!b.ok && b.code === "forbidden" && b.httpStatus === 403 && !joinRecoveryAttemptedRef.current) {
-        joinRecoveryAttemptedRef.current = true;
-        try {
-          await fetch("/api/arcade/rooms/join", {
-            method: "POST",
-            credentials: "same-origin",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ roomId }),
-          });
-        } catch {
-          /* */
-        }
-        b = await fetchArcadeRoomChessBundle(roomId);
+  const onPollBundle = useCallback((b, ctx) => {
+    if (!ctx.ok) {
+      if (!ctx.bundleLoadedOnceRef.current) {
+        const msg =
+          b.code === "forbidden"
+            ? "אין גישה לחדר (לא רשום כשחקן)."
+            : b.error || b.code || "טעינת החדר נכשלה";
+        setBundleError(msg);
       }
+      return;
+    }
 
-      if (cancelled) return;
+    const ch = b.chess;
+    const roomSt = b.room?.status != null ? String(b.room.status) : "";
+    const gsSt = b.gameSession?.status != null ? String(b.gameSession.status) : "";
+    const rev = ch?.revision != null ? Number(ch.revision) : -1;
+    const phase = ch?.phase != null ? String(ch.phase) : "";
+    const fenSig = ch?.fen != null ? String(ch.fen).slice(0, 80) : "";
+    const playerSig = Array.isArray(b.players)
+      ? b.players.map((p) => `${p.student_id}:${String(p.display_name ?? "").slice(0, 24)}`).join("|")
+      : "";
+    const pollSig = `${roomSt}|${gsSt}|${rev}|${phase}|${fenSig}|${playerSig}`;
 
-      if (!b.ok) {
-        if (!bundleLoadedOnceRef.current) {
-          const msg =
-            b.code === "forbidden"
-              ? "אין גישה לחדר (לא רשום כשחקן)."
-              : b.error || b.code || "טעינת החדר נכשלה";
-          setBundleError(msg);
-        }
-        return;
-      }
+    const unchanged =
+      ctx.bundleLoadedOnceRef.current &&
+      pollSig === lastPollSigRef.current &&
+      lastPollSigRef.current !== "";
 
-      const ch = b.chess;
-      const roomSt = b.room?.status != null ? String(b.room.status) : "";
-      const gsSt = b.gameSession?.status != null ? String(b.gameSession.status) : "";
-      const rev = ch?.revision != null ? Number(ch.revision) : -1;
-      const phase = ch?.phase != null ? String(ch.phase) : "";
-      const fenSig = ch?.fen != null ? String(ch.fen).slice(0, 80) : "";
-      const playerSig = Array.isArray(b.players)
-        ? b.players.map((p) => `${p.student_id}:${String(p.display_name ?? "").slice(0, 24)}`).join("|")
-        : "";
-      const pollSig = `${roomSt}|${gsSt}|${rev}|${phase}|${fenSig}|${playerSig}`;
+    if (unchanged) {
+      return;
+    }
+    lastPollSigRef.current = pollSig;
 
-      const unchanged =
-        bundleLoadedOnceRef.current &&
-        pollSig === lastPollSigRef.current &&
-        lastPollSigRef.current !== "";
+    setBundleError("");
+    ctx.bundleLoadedOnceRef.current = true;
+    setBundleLoaded(true);
+    setRoomRow(b.room);
+    setPlayers(b.players || []);
+    setGameSessionRow(b.gameSession ?? null);
+    setSnap((prev) => preferNewer(prev, b.chess));
+  }, []);
 
-      if (unchanged) {
-        return;
-      }
-      lastPollSigRef.current = pollSig;
-
-      setBundleError("");
-      bundleLoadedOnceRef.current = true;
-      setBundleLoaded(true);
-      setRoomRow(b.room);
-      setPlayers(b.players || []);
-      setGameSessionRow(b.gameSession ?? null);
-      setSnap((prev) => preferNewer(prev, b.chess));
-    };
-
-    void tick();
-    const interval = window.setInterval(() => void tick(), 1500);
-    return () => {
-      cancelled = true;
-      window.clearInterval(interval);
-    };
-  }, [roomId]);
+  const { stopPolling } = useArcadeSnapshotPollEffect({
+    roomId,
+    fetchBundle,
+    onBundle: onPollBundle,
+  });
 
   const submitMove = useCallback(
     async (fromSquare, toSquare, promotion = null) => {
@@ -196,5 +169,6 @@ export function useChessSession(ctx) {
     gameSession: gameSessionRow,
     bundleLoaded,
     bundleError,
+    stopPolling,
   };
 }

@@ -3,6 +3,7 @@ import {
   fetchArcadeRoomSnakesLaddersBundle,
   requestSnakesAndLaddersGameAction,
 } from "../../lib/arcade/snakes-ladders/snakesSessionAdapter";
+import { useArcadeSnapshotPollEffect } from "./useArcadeSnapshotPollEffect";
 import {
   ARCADE_SNAKES_BOARD_EDGES,
   ARCADE_SNAKES_EDGE_HOLD_MS,
@@ -68,8 +69,6 @@ export function useSnakesLaddersSession(ctx) {
   const [bundleError, setBundleError] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
-  const joinRecoveryAttemptedRef = useRef(false);
-  const bundleLoadedOnceRef = useRef(false);
   const lastPollSigRef = useRef("");
   const snapRef = useRef(null);
   snapRef.current = snap;
@@ -186,8 +185,6 @@ export function useSnakesLaddersSession(ctx) {
     setBundleLoaded(false);
     setBundleError("");
     setErr("");
-    joinRecoveryAttemptedRef.current = false;
-    bundleLoadedOnceRef.current = false;
     lastPollSigRef.current = "";
     setDiceRolling(false);
     diceRollingRef.current = false;
@@ -227,81 +224,57 @@ export function useSnakesLaddersSession(ctx) {
     return () => window.clearInterval(id);
   }, [diceRolling, liveRollServerFace]);
 
-  useEffect(() => {
-    if (!roomId) return undefined;
-    let cancelled = false;
+  const fetchBundle = useCallback(() => fetchArcadeRoomSnakesLaddersBundle(roomId || ""), [roomId]);
 
-    const tick = async () => {
-      let b = await fetchArcadeRoomSnakesLaddersBundle(roomId);
-      if (cancelled) return;
-
-      if (!b.ok && b.code === "forbidden" && b.httpStatus === 403 && !joinRecoveryAttemptedRef.current) {
-        joinRecoveryAttemptedRef.current = true;
-        try {
-          await fetch("/api/arcade/rooms/join", {
-            method: "POST",
-            credentials: "same-origin",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ roomId }),
-          });
-        } catch {
-          /* */
-        }
-        b = await fetchArcadeRoomSnakesLaddersBundle(roomId);
+  const onPollBundle = useCallback((b, ctx) => {
+    if (!ctx.ok) {
+      if (!ctx.bundleLoadedOnceRef.current) {
+        const msg =
+          b.code === "forbidden"
+            ? "אין גישה לחדר (לא רשום כשחקן)."
+            : b.error || b.code || "טעינת החדר נכשלה";
+        setBundleError(msg);
       }
+      return;
+    }
 
-      if (cancelled) return;
+    const sl = b.snakesAndLadders;
+    const roomSt = b.room?.status != null ? String(b.room.status) : "";
+    const gsSt = b.gameSession?.status != null ? String(b.gameSession.status) : "";
+    const rev = sl?.revision != null ? Number(sl.revision) : -1;
+    const phase = sl?.phase != null ? String(sl.phase) : "";
+    const ts = sl?.turnSeat != null ? String(sl.turnSeat) : "";
+    const lr = sl?.lastRoll != null ? String(sl.lastRoll) : "";
+    const playerSig = Array.isArray(b.players)
+      ? b.players.map((p) => `${p.student_id}:${String(p.display_name ?? "").slice(0, 24)}`).join("|")
+      : "";
+    const flexWaitSig = `${b.room?.flex_auto_start_at ?? ""}|${b.room?.start_window_started_at ?? ""}`;
+    const pollSig = `${roomSt}|${gsSt}|${rev}|${phase}|${ts}|${lr}|${playerSig}|${flexWaitSig}`;
 
-      if (!b.ok) {
-        if (!bundleLoadedOnceRef.current) {
-          const msg =
-            b.code === "forbidden"
-              ? "אין גישה לחדר (לא רשום כשחקן)."
-              : b.error || b.code || "טעינת החדר נכשלה";
-          setBundleError(msg);
-        }
-        return;
-      }
+    const unchanged =
+      ctx.bundleLoadedOnceRef.current &&
+      pollSig === lastPollSigRef.current &&
+      lastPollSigRef.current !== "";
 
-      const sl = b.snakesAndLadders;
-      const roomSt = b.room?.status != null ? String(b.room.status) : "";
-      const gsSt = b.gameSession?.status != null ? String(b.gameSession.status) : "";
-      const rev = sl?.revision != null ? Number(sl.revision) : -1;
-      const phase = sl?.phase != null ? String(sl.phase) : "";
-      const ts = sl?.turnSeat != null ? String(sl.turnSeat) : "";
-      const lr = sl?.lastRoll != null ? String(sl.lastRoll) : "";
-      const playerSig = Array.isArray(b.players)
-        ? b.players.map((p) => `${p.student_id}:${String(p.display_name ?? "").slice(0, 24)}`).join("|")
-        : "";
-      const flexWaitSig = `${b.room?.flex_auto_start_at ?? ""}|${b.room?.start_window_started_at ?? ""}`;
-      const pollSig = `${roomSt}|${gsSt}|${rev}|${phase}|${ts}|${lr}|${playerSig}|${flexWaitSig}`;
+    if (unchanged) {
+      return;
+    }
+    lastPollSigRef.current = pollSig;
 
-      const unchanged =
-        bundleLoadedOnceRef.current &&
-        pollSig === lastPollSigRef.current &&
-        lastPollSigRef.current !== "";
+    setBundleError("");
+    ctx.bundleLoadedOnceRef.current = true;
+    setBundleLoaded(true);
+    setRoomRow(b.room);
+    setPlayers(b.players || []);
+    setGameSessionRow(b.gameSession ?? null);
+    setSnap((prev) => preferNewer(prev, b.snakesAndLadders));
+  }, []);
 
-      if (unchanged) {
-        return;
-      }
-      lastPollSigRef.current = pollSig;
-
-      setBundleError("");
-      bundleLoadedOnceRef.current = true;
-      setBundleLoaded(true);
-      setRoomRow(b.room);
-      setPlayers(b.players || []);
-      setGameSessionRow(b.gameSession ?? null);
-      setSnap((prev) => preferNewer(prev, b.snakesAndLadders));
-    };
-
-    void tick();
-    const interval = window.setInterval(() => void tick(), 1500);
-    return () => {
-      cancelled = true;
-      window.clearInterval(interval);
-    };
-  }, [roomId]);
+  const { stopPolling } = useArcadeSnapshotPollEffect({
+    roomId,
+    fetchBundle,
+    onBundle: onPollBundle,
+  });
 
   useEffect(() => {
     if (typeof window === "undefined") return undefined;
@@ -493,5 +466,6 @@ export function useSnakesLaddersSession(ctx) {
     gameSession: gameSessionRow,
     bundleLoaded,
     bundleError,
+    stopPolling,
   };
 }

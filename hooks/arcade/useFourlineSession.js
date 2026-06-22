@@ -3,6 +3,7 @@ import {
   fetchArcadeRoomFourlineBundle,
   requestFourlinePlayColumn,
 } from "../../lib/arcade/fourline/fourlineSessionAdapter";
+import { useArcadeSnapshotPollEffect } from "./useArcadeSnapshotPollEffect";
 
 function preferNewer(prev, next) {
   if (!next) return prev;
@@ -34,9 +35,6 @@ export function useFourlineSession(ctx) {
   const [bundleError, setBundleError] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
-  const joinRecoveryAttemptedRef = useRef(false);
-  const bundleLoadedOnceRef = useRef(false);
-  /** מניעת setState בכל poll כשה-snapshot בפועל לא השתנה — מפחית רענוני HMR/רינדור */
   const lastPollSigRef = useRef("");
   const snapRef = useRef(null);
   snapRef.current = snap;
@@ -49,102 +47,76 @@ export function useFourlineSession(ctx) {
     setBundleLoaded(false);
     setBundleError("");
     setErr("");
-    joinRecoveryAttemptedRef.current = false;
-    bundleLoadedOnceRef.current = false;
     lastPollSigRef.current = "";
   }, [roomId]);
 
-  useEffect(() => {
-    if (!roomId) return undefined;
-    let cancelled = false;
+  const fetchBundle = useCallback(() => fetchArcadeRoomFourlineBundle(roomId || ""), [roomId]);
 
-    const tick = async () => {
-      let b = await fetchArcadeRoomFourlineBundle(roomId);
-      if (cancelled) return;
-
-      if (!b.ok && b.code === "forbidden" && b.httpStatus === 403 && !joinRecoveryAttemptedRef.current) {
-        joinRecoveryAttemptedRef.current = true;
-        try {
-          await fetch("/api/arcade/rooms/join", {
-            method: "POST",
-            credentials: "same-origin",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ roomId }),
-          });
-        } catch {
-          /* נמשיך לניסיון snapshot — join עלול להיכשל בלי רשת */
-        }
-        b = await fetchArcadeRoomFourlineBundle(roomId);
+  const onPollBundle = useCallback((b, ctx) => {
+    if (!ctx.ok) {
+      if (!ctx.bundleLoadedOnceRef.current) {
+        const msg =
+          b.code === "forbidden"
+            ? "אין גישה לחדר (לא רשום כשחקן). נסה מהלובי «משחק מהיר» או «הצטרף לחדר»."
+            : b.error || b.code || "טעינת החדר נכשלה";
+        setBundleError(msg);
       }
+      return;
+    }
 
-      if (cancelled) return;
-
-      if (!b.ok) {
-        if (!bundleLoadedOnceRef.current) {
-          const msg =
-            b.code === "forbidden"
-              ? "אין גישה לחדר (לא רשום כשחקן). נסה מהלובי «משחק מהיר» או «הצטרף לחדר»."
-              : b.error || b.code || "טעינת החדר נכשלה";
-          setBundleError(msg);
-        }
-        return;
-      }
-
-      const fl = b.fourline;
-      const roomSt = b.room?.status != null ? String(b.room.status) : "";
-      const gsSt = b.gameSession?.status != null ? String(b.gameSession.status) : "";
-      const rev = fl?.revision != null ? Number(fl.revision) : -1;
-      const phase = fl?.phase != null ? String(fl.phase) : "";
-      const wa = fl?.walkaway === true ? "1" : "0";
-      const settle =
-        fl?.mySettlementAmount != null && fl.mySettlementAmount !== ""
-          ? Number(fl.mySettlementAmount)
-          : "";
-      const playerSig = Array.isArray(b.players)
-        ? b.players.map((p) => `${p.student_id}:${String(p.display_name ?? "").slice(0, 24)}`).join("|")
+    const fl = b.fourline;
+    const roomSt = b.room?.status != null ? String(b.room.status) : "";
+    const gsSt = b.gameSession?.status != null ? String(b.gameSession.status) : "";
+    const rev = fl?.revision != null ? Number(fl.revision) : -1;
+    const phase = fl?.phase != null ? String(fl.phase) : "";
+    const wa = fl?.walkaway === true ? "1" : "0";
+    const settle =
+      fl?.mySettlementAmount != null && fl.mySettlementAmount !== ""
+        ? Number(fl.mySettlementAmount)
         : "";
-      const pollSig = `${roomSt}|${gsSt}|${rev}|${phase}|${wa}|${settle}|${playerSig}`;
+    const playerSig = Array.isArray(b.players)
+      ? b.players.map((p) => `${p.student_id}:${String(p.display_name ?? "").slice(0, 24)}`).join("|")
+      : "";
+    const pollSig = `${roomSt}|${gsSt}|${rev}|${phase}|${wa}|${settle}|${playerSig}`;
 
-      const unchanged =
-        bundleLoadedOnceRef.current &&
-        pollSig === lastPollSigRef.current &&
-        lastPollSigRef.current !== "";
+    const unchanged =
+      ctx.bundleLoadedOnceRef.current &&
+      pollSig === lastPollSigRef.current &&
+      lastPollSigRef.current !== "";
 
-      if (unchanged) {
-        return;
+    if (unchanged) {
+      return;
+    }
+    lastPollSigRef.current = pollSig;
+
+    setBundleError("");
+    ctx.bundleLoadedOnceRef.current = true;
+    setBundleLoaded(true);
+    setRoomRow(b.room);
+    setPlayers(b.players || []);
+    setGameSessionRow(b.gameSession ?? null);
+    setSnap((prev) => {
+      const merged = preferNewer(prev, b.fourline);
+      if (
+        prev &&
+        merged &&
+        Number(prev.revision) === Number(merged.revision) &&
+        String(prev.phase || "") === String(merged.phase || "") &&
+        String(prev.sessionId || "") === String(merged.sessionId || "") &&
+        Boolean(prev.walkaway) === Boolean(merged.walkaway) &&
+        String(prev.mySettlementAmount ?? "") === String(merged?.mySettlementAmount ?? "")
+      ) {
+        return prev;
       }
-      lastPollSigRef.current = pollSig;
+      return merged;
+    });
+  }, []);
 
-      setBundleError("");
-      bundleLoadedOnceRef.current = true;
-      setBundleLoaded(true);
-      setRoomRow(b.room);
-      setPlayers(b.players || []);
-      setGameSessionRow(b.gameSession ?? null);
-      setSnap((prev) => {
-        const merged = preferNewer(prev, b.fourline);
-        if (
-          prev &&
-          merged &&
-          Number(prev.revision) === Number(merged.revision) &&
-          String(prev.phase || "") === String(merged.phase || "") &&
-          String(prev.sessionId || "") === String(merged.sessionId || "") &&
-          Boolean(prev.walkaway) === Boolean(merged.walkaway) &&
-          String(prev.mySettlementAmount ?? "") === String(merged?.mySettlementAmount ?? "")
-        ) {
-          return prev;
-        }
-        return merged;
-      });
-    };
-
-    void tick();
-    const interval = window.setInterval(() => void tick(), 1500);
-    return () => {
-      cancelled = true;
-      window.clearInterval(interval);
-    };
-  }, [roomId]);
+  const { stopPolling } = useArcadeSnapshotPollEffect({
+    roomId,
+    fetchBundle,
+    onBundle: onPollBundle,
+  });
 
   const playColumn = useCallback(
     async (col) => {
@@ -219,5 +191,6 @@ export function useFourlineSession(ctx) {
     gameSession: gameSessionRow,
     bundleLoaded,
     bundleError,
+    stopPolling,
   };
 }

@@ -361,6 +361,7 @@ export default function FourlineScreen({ roomId }) {
     gameSession,
     bundleLoaded,
     bundleError,
+    stopPolling,
   } = session;
 
   const [balance, setBalance] = useState(/** @type {number|null} */ (null));
@@ -416,6 +417,7 @@ export default function FourlineScreen({ roomId }) {
     if (!id || leaveBusyRef.current) return;
     leaveBusyRef.current = true;
     setLeaveBusy(true);
+    stopPolling();
     try {
       await fetch("/api/arcade/rooms/leave", {
         method: "POST",
@@ -430,7 +432,7 @@ export default function FourlineScreen({ roomId }) {
       setLeaveBusy(false);
       goBack();
     }
-  }, [roomId, goBack]);
+  }, [roomId, goBack, stopPolling]);
 
   const cells = useMemo(() => parseFourLineCells(vm.cells), [vm.cells]);
 

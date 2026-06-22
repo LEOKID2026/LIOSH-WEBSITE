@@ -107,7 +107,7 @@ export default function DominoesScreen({ roomId }) {
   routerRef.current = router;
 
   const session = useDominoesSession({ roomId });
-  const { snapshot, vm, busy, err, setErr, submitPlay, submitPass, room, players, gameSession, bundleLoaded, bundleError } =
+  const { snapshot, vm, busy, err, setErr, submitPlay, submitPass, room, players, gameSession, bundleLoaded, bundleError, stopPolling } =
     session;
 
   const [balance, setBalance] = useState(/** @type {number|null} */ (null));
@@ -151,6 +151,7 @@ export default function DominoesScreen({ roomId }) {
     if (!id || leaveBusyRef.current) return;
     leaveBusyRef.current = true;
     setLeaveBusy(true);
+    stopPolling();
     try {
       await fetch("/api/arcade/rooms/leave", {
         method: "POST",
@@ -165,7 +166,7 @@ export default function DominoesScreen({ roomId }) {
       setLeaveBusy(false);
       goBack();
     }
-  }, [roomId, goBack]);
+  }, [roomId, goBack, stopPolling]);
 
   const showLobbyWait = room?.status === "waiting";
   const showSessionInitError = bundleLoaded && room?.status === "active" && !snapshot && !gameSession;

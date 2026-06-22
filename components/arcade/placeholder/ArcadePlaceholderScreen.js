@@ -67,7 +67,7 @@ export default function ArcadePlaceholderScreen({ roomId, title }) {
   const routerRef = useRef(router);
   routerRef.current = router;
 
-  const { placeholder, room, players, bundleLoaded, bundleError } = useArcadePlaceholderSession({ roomId });
+  const { placeholder, room, players, bundleLoaded, bundleError, stopPolling } = useArcadePlaceholderSession({ roomId });
 
   const [balance, setBalance] = useState(/** @type {number|null} */ (null));
   const [leaveBusy, setLeaveBusy] = useState(false);
@@ -107,6 +107,7 @@ export default function ArcadePlaceholderScreen({ roomId, title }) {
     if (!id || leaveBusyRef.current) return;
     leaveBusyRef.current = true;
     setLeaveBusy(true);
+    stopPolling();
     try {
       await fetch("/api/arcade/rooms/leave", {
         method: "POST",
@@ -121,7 +122,7 @@ export default function ArcadePlaceholderScreen({ roomId, title }) {
       setLeaveBusy(false);
       goBack();
     }
-  }, [roomId, goBack]);
+  }, [roomId, goBack, stopPolling]);
 
   const board =
     placeholder?.board && typeof placeholder.board === "object"

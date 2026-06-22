@@ -1,0 +1,85 @@
+import { useCallback, useEffect, useRef } from "react";
+import {
+  haltArcadeRoomPolling,
+  pollArcadeRoomSnapshot,
+  useArcadePollRouteStop,
+} from "./arcadeRoomSnapshotPoll";
+
+/**
+ * Standard snapshot poll loop for arcade game session hooks.
+ *
+ * @param {{
+ *   roomId: string | null,
+ *   fetchBundle: () => Promise<{ ok: boolean, code?: string, httpStatus?: number, error?: string, [key: string]: unknown }>,
+ *   onBundle: (
+ *     bundle: { ok: boolean, code?: string, httpStatus?: number, error?: string, [key: string]: unknown },
+ *     ctx: { ok: boolean, stopped: boolean, bundleLoadedOnceRef: { current: boolean } },
+ *   ) => void,
+ *   pollMs?: number,
+ * }} options
+ */
+export function useArcadeSnapshotPollEffect({ roomId, fetchBundle, onBundle, pollMs = 1500 }) {
+  const joinRecoveryAttemptedRef = useRef(false);
+  const pollStoppedRef = useRef(false);
+  const pollIntervalRef = useRef(/** @type {ReturnType<typeof setInterval> | null} */ (null));
+  const tickInFlightRef = useRef(false);
+  const bundleLoadedOnceRef = useRef(false);
+  const pollRefs = { pollStoppedRef, joinRecoveryAttemptedRef, bundleLoadedOnceRef };
+
+  const stopPolling = useCallback(() => {
+    haltArcadeRoomPolling(pollRefs, pollIntervalRef);
+  }, []);
+
+  useArcadePollRouteStop(stopPolling);
+
+  const activeRoomIdRef = useRef(/** @type {string | null} */ (null));
+
+  useEffect(() => {
+    if (!roomId) {
+      activeRoomIdRef.current = null;
+      haltArcadeRoomPolling(pollRefs, pollIntervalRef);
+      return undefined;
+    }
+    let cancelled = false;
+    if (activeRoomIdRef.current !== roomId) {
+      activeRoomIdRef.current = roomId;
+      pollStoppedRef.current = false;
+      joinRecoveryAttemptedRef.current = false;
+      bundleLoadedOnceRef.current = false;
+    }
+    if (pollStoppedRef.current) return undefined;
+    if (pollIntervalRef.current != null) {
+      clearInterval(pollIntervalRef.current);
+      pollIntervalRef.current = null;
+    }
+
+    const tick = async () => {
+      if (cancelled || pollStoppedRef.current || tickInFlightRef.current) return;
+      tickInFlightRef.current = true;
+      try {
+        const { bundle: b, stopped } = await pollArcadeRoomSnapshot(pollRefs, roomId, fetchBundle);
+        if (cancelled || pollStoppedRef.current) return;
+        if (!b.ok) {
+          if (stopped) haltArcadeRoomPolling(pollRefs, pollIntervalRef);
+          onBundle(b, { ok: false, stopped, bundleLoadedOnceRef });
+          return;
+        }
+        onBundle(b, { ok: true, stopped: false, bundleLoadedOnceRef });
+      } finally {
+        tickInFlightRef.current = false;
+      }
+    };
+
+    void tick();
+    pollIntervalRef.current = window.setInterval(() => void tick(), pollMs);
+    return () => {
+      cancelled = true;
+      if (pollIntervalRef.current != null) {
+        clearInterval(pollIntervalRef.current);
+        pollIntervalRef.current = null;
+      }
+    };
+  }, [roomId, fetchBundle, onBundle, pollMs]);
+
+  return { stopPolling, bundleLoadedOnceRef };
+}

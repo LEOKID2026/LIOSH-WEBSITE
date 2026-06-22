@@ -112,7 +112,7 @@ export default function CheckersScreen({ roomId }) {
   routerRef.current = router;
 
   const session = useCheckersSession({ roomId });
-  const { snapshot, vm, busy, err, setErr, submitMove, room, players, gameSession, bundleLoaded, bundleError } =
+  const { snapshot, vm, busy, err, setErr, submitMove, room, players, gameSession, bundleLoaded, bundleError, stopPolling } =
     session;
 
   const [balance, setBalance] = useState(/** @type {number|null} */ (null));
@@ -157,6 +157,7 @@ export default function CheckersScreen({ roomId }) {
     if (!id || leaveBusyRef.current) return;
     leaveBusyRef.current = true;
     setLeaveBusy(true);
+    stopPolling();
     try {
       await fetch("/api/arcade/rooms/leave", {
         method: "POST",
@@ -171,7 +172,7 @@ export default function CheckersScreen({ roomId }) {
       setLeaveBusy(false);
       goBack();
     }
-  }, [roomId, goBack]);
+  }, [roomId, goBack, stopPolling]);
 
   const showLobbyWait = room?.status === "waiting";
   const showSessionInitError = bundleLoaded && room?.status === "active" && !snapshot && !gameSession;

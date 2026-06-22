@@ -140,6 +140,7 @@ export default function SnakesLaddersScreen({ roomId }) {
     gameSession,
     bundleLoaded,
     bundleError,
+    stopPolling,
   } = session;
 
   const [balance, setBalance] = useState(/** @type {number|null} */ (null));
@@ -203,6 +204,7 @@ export default function SnakesLaddersScreen({ roomId }) {
     if (!id || leaveBusyRef.current) return;
     leaveBusyRef.current = true;
     setLeaveBusy(true);
+    stopPolling();
     try {
       await fetch("/api/arcade/rooms/leave", {
         method: "POST",
@@ -217,7 +219,7 @@ export default function SnakesLaddersScreen({ roomId }) {
       setLeaveBusy(false);
       goBack();
     }
-  }, [roomId, goBack]);
+  }, [roomId, goBack, stopPolling]);
 
   const showSessionInitError =
     bundleLoaded && room?.status === "active" && !snapshot && !gameSession;

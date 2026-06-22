@@ -3,6 +3,7 @@ import {
   fetchArcadeRoomDominoesBundle,
   requestDominoesAction,
 } from "../../lib/arcade/dominoes/dominoesSessionAdapter";
+import { useArcadeSnapshotPollEffect } from "./useArcadeSnapshotPollEffect";
 
 function preferNewer(prev, next) {
   if (!next) return prev;
@@ -32,8 +33,6 @@ export function useDominoesSession(ctx) {
   const [bundleError, setBundleError] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
-  const joinRecoveryAttemptedRef = useRef(false);
-  const bundleLoadedOnceRef = useRef(false);
   const lastPollSigRef = useRef("");
   const snapRef = useRef(null);
   snapRef.current = snap;
@@ -46,87 +45,61 @@ export function useDominoesSession(ctx) {
     setBundleLoaded(false);
     setBundleError("");
     setErr("");
-    joinRecoveryAttemptedRef.current = false;
-    bundleLoadedOnceRef.current = false;
     lastPollSigRef.current = "";
   }, [roomId]);
 
-  useEffect(() => {
-    if (!roomId) return undefined;
-    let cancelled = false;
+  const fetchBundle = useCallback(() => fetchArcadeRoomDominoesBundle(roomId || ""), [roomId]);
 
-    const tick = async () => {
-      let b = await fetchArcadeRoomDominoesBundle(roomId);
-      if (cancelled) return;
-
-      if (!b.ok && b.code === "forbidden" && b.httpStatus === 403 && !joinRecoveryAttemptedRef.current) {
-        joinRecoveryAttemptedRef.current = true;
-        try {
-          await fetch("/api/arcade/rooms/join", {
-            method: "POST",
-            credentials: "same-origin",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ roomId }),
-          });
-        } catch {
-          /* */
-        }
-        b = await fetchArcadeRoomDominoesBundle(roomId);
+  const onPollBundle = useCallback((b, ctx) => {
+    if (!ctx.ok) {
+      if (!ctx.bundleLoadedOnceRef.current) {
+        const msg =
+          b.code === "forbidden"
+            ? "אין גישה לחדר (לא רשום כשחקן)."
+            : b.error || b.code || "טעינת החדר נכשלה";
+        setBundleError(msg);
       }
+      return;
+    }
 
-      if (cancelled) return;
+    const d = b.dominoes;
+    const roomSt = b.room?.status != null ? String(b.room.status) : "";
+    const gsSt = b.gameSession?.status != null ? String(b.gameSession.status) : "";
+    const rev = d?.revision != null ? Number(d.revision) : -1;
+    const phase = d?.phase != null ? String(d.phase) : "";
+    const chainSig = Array.isArray(d?.chain)
+      ? d.chain.map((c) => `${c.tileId}:${c.leftPip}:${c.rightPip}`).join("|")
+      : "";
+    const handSig = Array.isArray(d?.myHand)
+      ? d.myHand.map((t) => `${t.id}:${t.a}:${t.b}`).join(",")
+      : "";
+    const playerSig = Array.isArray(b.players)
+      ? b.players.map((p) => `${p.student_id}:${String(p.display_name ?? "").slice(0, 24)}`).join("|")
+      : "";
+    const pollSig = `${roomSt}|${gsSt}|${rev}|${phase}|${chainSig}|${handSig}|${playerSig}`;
 
-      if (!b.ok) {
-        if (!bundleLoadedOnceRef.current) {
-          const msg =
-            b.code === "forbidden"
-              ? "אין גישה לחדר (לא רשום כשחקן)."
-              : b.error || b.code || "טעינת החדר נכשלה";
-          setBundleError(msg);
-        }
-        return;
-      }
+    const unchanged =
+      ctx.bundleLoadedOnceRef.current && pollSig === lastPollSigRef.current && lastPollSigRef.current !== "";
 
-      const d = b.dominoes;
-      const roomSt = b.room?.status != null ? String(b.room.status) : "";
-      const gsSt = b.gameSession?.status != null ? String(b.gameSession.status) : "";
-      const rev = d?.revision != null ? Number(d.revision) : -1;
-      const phase = d?.phase != null ? String(d.phase) : "";
-      const chainSig = Array.isArray(d?.chain)
-        ? d.chain.map((c) => `${c.tileId}:${c.leftPip}:${c.rightPip}`).join("|")
-        : "";
-      const handSig = Array.isArray(d?.myHand)
-        ? d.myHand.map((t) => `${t.id}:${t.a}:${t.b}`).join(",")
-        : "";
-      const playerSig = Array.isArray(b.players)
-        ? b.players.map((p) => `${p.student_id}:${String(p.display_name ?? "").slice(0, 24)}`).join("|")
-        : "";
-      const pollSig = `${roomSt}|${gsSt}|${rev}|${phase}|${chainSig}|${handSig}|${playerSig}`;
+    if (unchanged) {
+      return;
+    }
+    lastPollSigRef.current = pollSig;
 
-      const unchanged =
-        bundleLoadedOnceRef.current && pollSig === lastPollSigRef.current && lastPollSigRef.current !== "";
+    setBundleError("");
+    ctx.bundleLoadedOnceRef.current = true;
+    setBundleLoaded(true);
+    setRoomRow(b.room);
+    setPlayers(b.players || []);
+    setGameSessionRow(b.gameSession ?? null);
+    setSnap((prev) => preferNewer(prev, b.dominoes));
+  }, []);
 
-      if (unchanged) {
-        return;
-      }
-      lastPollSigRef.current = pollSig;
-
-      setBundleError("");
-      bundleLoadedOnceRef.current = true;
-      setBundleLoaded(true);
-      setRoomRow(b.room);
-      setPlayers(b.players || []);
-      setGameSessionRow(b.gameSession ?? null);
-      setSnap((prev) => preferNewer(prev, b.dominoes));
-    };
-
-    void tick();
-    const interval = window.setInterval(() => void tick(), 1500);
-    return () => {
-      cancelled = true;
-      window.clearInterval(interval);
-    };
-  }, [roomId]);
+  const { stopPolling } = useArcadeSnapshotPollEffect({
+    roomId,
+    fetchBundle,
+    onBundle: onPollBundle,
+  });
 
   const submitPlay = useCallback(
     async (tileId, side) => {
@@ -235,5 +208,6 @@ export function useDominoesSession(ctx) {
     gameSession: gameSessionRow,
     bundleLoaded,
     bundleError,
+    stopPolling,
   };
 }

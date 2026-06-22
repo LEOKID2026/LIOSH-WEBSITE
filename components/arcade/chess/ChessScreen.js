@@ -120,7 +120,7 @@ export default function ChessScreen({ roomId }) {
   routerRef.current = router;
 
   const session = useChessSession({ roomId });
-  const { snapshot, vm, busy, err, setErr, submitMove, room, players, gameSession, bundleLoaded, bundleError } =
+  const { snapshot, vm, busy, err, setErr, submitMove, room, players, gameSession, bundleLoaded, bundleError, stopPolling } =
     session;
 
   const [balance, setBalance] = useState(/** @type {number|null} */ (null));
@@ -165,6 +165,7 @@ export default function ChessScreen({ roomId }) {
     if (!id || leaveBusyRef.current) return;
     leaveBusyRef.current = true;
     setLeaveBusy(true);
+    stopPolling();
     try {
       await fetch("/api/arcade/rooms/leave", {
         method: "POST",
@@ -179,7 +180,7 @@ export default function ChessScreen({ roomId }) {
       setLeaveBusy(false);
       goBack();
     }
-  }, [roomId, goBack]);
+  }, [roomId, goBack, stopPolling]);
 
   const showLobbyWait = room?.status === "waiting";
   const showSessionInitError = bundleLoaded && room?.status === "active" && !snapshot && !gameSession;

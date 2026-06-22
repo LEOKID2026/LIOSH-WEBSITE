@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { fetchArcadeRoomLudoBundle, requestLudoGameAction } from "../../lib/arcade/ludo/ludoSessionAdapter";
+import { useArcadeSnapshotPollEffect } from "./useArcadeSnapshotPollEffect";
 
 /** כמו OV2 `useOv2LudoSession.js` — משך מינימלי לזריקה + הצגת תוצאה */
 const OV2_LUDO_LIVE_ROLL_MIN_MS = 2000;
@@ -55,8 +56,6 @@ export function useLudoSession(ctx) {
   const [bundleError, setBundleError] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
-  const joinRecoveryAttemptedRef = useRef(false);
-  const bundleLoadedOnceRef = useRef(false);
   const lastPollSigRef = useRef("");
   const snapRef = useRef(null);
   snapRef.current = snap;
@@ -80,8 +79,6 @@ export function useLudoSession(ctx) {
     setBundleLoaded(false);
     setBundleError("");
     setErr("");
-    joinRecoveryAttemptedRef.current = false;
-    bundleLoadedOnceRef.current = false;
     lastPollSigRef.current = "";
     setDiceRolling(false);
     diceRollingRef.current = false;
@@ -118,80 +115,56 @@ export function useLudoSession(ctx) {
     return () => window.clearInterval(id);
   }, [diceRolling, liveRollServerFace]);
 
-  useEffect(() => {
-    if (!roomId) return undefined;
-    let cancelled = false;
+  const fetchBundle = useCallback(() => fetchArcadeRoomLudoBundle(roomId || ""), [roomId]);
 
-    const tick = async () => {
-      let b = await fetchArcadeRoomLudoBundle(roomId);
-      if (cancelled) return;
-
-      if (!b.ok && b.code === "forbidden" && b.httpStatus === 403 && !joinRecoveryAttemptedRef.current) {
-        joinRecoveryAttemptedRef.current = true;
-        try {
-          await fetch("/api/arcade/rooms/join", {
-            method: "POST",
-            credentials: "same-origin",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ roomId }),
-          });
-        } catch {
-          /* */
-        }
-        b = await fetchArcadeRoomLudoBundle(roomId);
+  const onPollBundle = useCallback((b, ctx) => {
+    if (!ctx.ok) {
+      if (!ctx.bundleLoadedOnceRef.current) {
+        const msg =
+          b.code === "forbidden"
+            ? "אין גישה לחדר (לא רשום כשחקן). נסה מהלובי «משחק מהיר» או «הצטרף לחדר»."
+            : b.error || b.code || "טעינת החדר נכשלה";
+        setBundleError(msg);
       }
+      return;
+    }
 
-      if (cancelled) return;
+    const ld = b.ludo;
+    const roomSt = b.room?.status != null ? String(b.room.status) : "";
+    const gsSt = b.gameSession?.status != null ? String(b.gameSession.status) : "";
+    const rev = ld?.revision != null ? Number(ld.revision) : -1;
+    const phase = ld?.phase != null ? String(ld.phase) : "";
+    const ts = ld?.turnSeat != null ? String(ld.turnSeat) : "";
+    const di = ld?.dice != null ? String(ld.dice) : "";
+    const playerSig = Array.isArray(b.players)
+      ? b.players.map((p) => `${p.student_id}:${String(p.display_name ?? "").slice(0, 24)}`).join("|")
+      : "";
+    const pollSig = `${roomSt}|${gsSt}|${rev}|${phase}|${ts}|${di}|${playerSig}`;
 
-      if (!b.ok) {
-        if (!bundleLoadedOnceRef.current) {
-          const msg =
-            b.code === "forbidden"
-              ? "אין גישה לחדר (לא רשום כשחקן). נסה מהלובי «משחק מהיר» או «הצטרף לחדר»."
-              : b.error || b.code || "טעינת החדר נכשלה";
-          setBundleError(msg);
-        }
-        return;
-      }
+    const unchanged =
+      ctx.bundleLoadedOnceRef.current &&
+      pollSig === lastPollSigRef.current &&
+      lastPollSigRef.current !== "";
 
-      const ld = b.ludo;
-      const roomSt = b.room?.status != null ? String(b.room.status) : "";
-      const gsSt = b.gameSession?.status != null ? String(b.gameSession.status) : "";
-      const rev = ld?.revision != null ? Number(ld.revision) : -1;
-      const phase = ld?.phase != null ? String(ld.phase) : "";
-      const ts = ld?.turnSeat != null ? String(ld.turnSeat) : "";
-      const di = ld?.dice != null ? String(ld.dice) : "";
-      const playerSig = Array.isArray(b.players)
-        ? b.players.map((p) => `${p.student_id}:${String(p.display_name ?? "").slice(0, 24)}`).join("|")
-        : "";
-      const pollSig = `${roomSt}|${gsSt}|${rev}|${phase}|${ts}|${di}|${playerSig}`;
+    if (unchanged) {
+      return;
+    }
+    lastPollSigRef.current = pollSig;
 
-      const unchanged =
-        bundleLoadedOnceRef.current &&
-        pollSig === lastPollSigRef.current &&
-        lastPollSigRef.current !== "";
+    setBundleError("");
+    ctx.bundleLoadedOnceRef.current = true;
+    setBundleLoaded(true);
+    setRoomRow(b.room);
+    setPlayers(b.players || []);
+    setGameSessionRow(b.gameSession ?? null);
+    setSnap((prev) => preferNewer(prev, b.ludo));
+  }, []);
 
-      if (unchanged) {
-        return;
-      }
-      lastPollSigRef.current = pollSig;
-
-      setBundleError("");
-      bundleLoadedOnceRef.current = true;
-      setBundleLoaded(true);
-      setRoomRow(b.room);
-      setPlayers(b.players || []);
-      setGameSessionRow(b.gameSession ?? null);
-      setSnap((prev) => preferNewer(prev, b.ludo));
-    };
-
-    void tick();
-    const interval = window.setInterval(() => void tick(), 1500);
-    return () => {
-      cancelled = true;
-      window.clearInterval(interval);
-    };
-  }, [roomId]);
+  const { stopPolling } = useArcadeSnapshotPollEffect({
+    roomId,
+    fetchBundle,
+    onBundle: onPollBundle,
+  });
 
   const runLiveRoll = useCallback(async () => {
     const s = snapRef.current;
@@ -420,5 +393,6 @@ export function useLudoSession(ctx) {
     gameSession: gameSessionRow,
     bundleLoaded,
     bundleError,
+    stopPolling,
   };
 }
