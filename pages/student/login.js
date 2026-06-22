@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 import PortalLoginHeading from "../../components/auth/PortalLoginHeading";
 import StudentThemePicker from "../../components/student/StudentThemePicker";
+import StudentParentInviteModal from "../../components/student/StudentParentInviteModal";
+import { buildParentInviteMessageHe } from "../../lib/site/public-site-origin.client.js";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import { syncStudentLocalStorageIdentity } from "../../lib/learning-student-local-sync";
 import { isStudentIdentityDiagnosticsEnabled } from "../../lib/dev-student-identity-client";
@@ -41,6 +43,8 @@ export default function StudentLoginPage() {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [sessionCheck, setSessionCheck] = useState("pending");
+  const [parentInviteOpen, setParentInviteOpen] = useState(false);
+  const [copyMessageFeedback, setCopyMessageFeedback] = useState("");
 
   const layoutProps = { studentTheme: theme, studentShell: "home" };
   const labelClass = isBright ? "text-slate-700" : "text-white/80";
@@ -51,6 +55,14 @@ export default function StudentLoginPage() {
     ? "w-full rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 disabled:opacity-60 shadow-sm"
     : "w-full rounded bg-amber-500 text-black font-semibold py-2 disabled:opacity-60";
   const errorClass = isBright ? "mt-3 text-sm text-rose-600" : "mt-3 text-sm text-red-300";
+  const parentInviteHintClass = isBright ? "text-slate-600" : "text-white/65";
+  const parentShowBtnClass = isBright
+    ? "w-full rounded-lg border border-amber-400 bg-amber-300 px-3 py-2 text-sm font-semibold text-amber-950 hover:bg-amber-400 transition shadow-sm"
+    : "w-full rounded-lg border border-amber-300/50 bg-amber-400/10 px-3 py-2 text-sm font-semibold text-amber-100 hover:bg-amber-400/20 hover:border-amber-200/60 transition";
+  const parentCopyMsgBtnClass = isBright
+    ? "w-full rounded-lg border border-violet-500 bg-violet-600 px-3 py-2 text-sm font-semibold text-white hover:bg-violet-700 transition shadow-sm"
+    : "w-full rounded-lg border border-violet-300/45 bg-violet-400/10 px-3 py-2 text-sm font-semibold text-violet-100 hover:bg-violet-400/20 hover:border-violet-200/55 transition";
+  const copyFeedbackClass = isBright ? "text-sm text-emerald-700 font-medium" : "text-sm text-emerald-300 font-medium";
 
   useEffect(() => {
     if (!router.isReady) return undefined;
@@ -72,6 +84,12 @@ export default function StudentLoginPage() {
     };
     // רק isReady — לא router (re-run מבטל fetch → stuck על "בודקים חיבור...").
   }, [router.isReady]);
+
+  useEffect(() => {
+    if (!copyMessageFeedback) return undefined;
+    const timer = window.setTimeout(() => setCopyMessageFeedback(""), 2200);
+    return () => window.clearTimeout(timer);
+  }, [copyMessageFeedback]);
 
   if (sessionCheck === "pending") {
     return (
@@ -121,6 +139,15 @@ export default function StudentLoginPage() {
     }
   };
 
+  const handleCopyParentMessage = async () => {
+    try {
+      await navigator.clipboard.writeText(buildParentInviteMessageHe());
+      setCopyMessageFeedback("ההודעה הועתקה");
+    } catch {
+      /* ignore */
+    }
+  };
+
   return (
     <Layout {...layoutProps}>
       <div className="max-w-md mx-auto px-4 py-3 md:py-10" dir="rtl" lang="he">
@@ -160,10 +187,43 @@ export default function StudentLoginPage() {
           >
             {busy ? "מתחבר…" : "כניסה ללמידה"}
           </button>
+          <div className="pt-1 space-y-2 text-center">
+            <p className={`text-sm leading-relaxed ${parentInviteHintClass}`}>
+              אין לך חשבון עדיין?
+              <br />
+              בקש מההורה לפתוח לך חשבון
+            </p>
+            <button
+              type="button"
+              className={parentShowBtnClass}
+              onClick={() => setParentInviteOpen(true)}
+              data-testid="student-parent-invite-open"
+            >
+              הצג להורה
+            </button>
+            <button
+              type="button"
+              className={parentCopyMsgBtnClass}
+              onClick={() => void handleCopyParentMessage()}
+              data-testid="student-parent-invite-copy-message-inline"
+            >
+              העתק הודעה להורה
+            </button>
+            {copyMessageFeedback ? (
+              <p className={copyFeedbackClass} role="status" aria-live="polite">
+                {copyMessageFeedback}
+              </p>
+            ) : null}
+          </div>
           <div className="pt-2">
             <StudentThemePicker className="w-full" />
           </div>
         </form>
+
+        <StudentParentInviteModal
+          open={parentInviteOpen}
+          onClose={() => setParentInviteOpen(false)}
+        />
 
         {message ? (
           <p className={errorClass} role="alert">
