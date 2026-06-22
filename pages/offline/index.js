@@ -78,7 +78,7 @@ export default function OfflineHub() {
             {state === "loading" ? (
               <p className={`text-center text-sm ${GH.muted}`}>טוען...</p>
             ) : (
-              <section className="grid grid-cols-2 gap-3 md:gap-4">
+              <section className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4">
                 {visibleGames.map((game) => (
                   <OfflineHubGameCard key={game.slug} game={game} GH={GH} />
                 ))}
