@@ -144,12 +144,26 @@ export default function MleoMazeEngine({
       const desktopSide = window.matchMedia("(min-width: 768px)").matches;
 
       if (desktopSide) {
-        const availW = Math.max(100, rect.width - 16);
-        const availH = Math.max(100, rect.height - 12);
-        const fromW = availW / settings.cols;
-        const fromH = availH / settings.rows;
+        const gapPx = 4;
+        const boardPad = 14;
+        const verticalReserve = 12;
+        const availW = Math.max(100, rect.width - boardPad);
+        const availH = Math.max(100, rect.height - boardPad - verticalReserve);
+        const fromW = (availW - (settings.cols - 1) * gapPx) / settings.cols;
+        const fromH = (availH - (settings.rows - 1) * gapPx) / settings.rows;
+        const largeDesktop = window.matchMedia("(min-width: 1024px)").matches;
         const maxCell =
-          difficulty === "hard" ? 26 : difficulty === "medium" ? 30 : 34;
+          difficulty === "hard"
+            ? largeDesktop
+              ? 44
+              : 36
+            : difficulty === "medium"
+              ? largeDesktop
+                ? 52
+                : 44
+              : largeDesktop
+                ? 58
+                : 50;
         setCellPx(
           Math.max(14, Math.min(maxCell, Math.floor(Math.min(fromW, fromH))))
         );
@@ -493,7 +507,7 @@ export default function MleoMazeEngine({
         </div>
       ) : (
         <div className="flex min-h-0 w-full flex-1 flex-col overflow-hidden px-1 pb-1 pt-1">
-          <div className="pointer-events-none absolute left-1/2 top-1.5 z-[80] w-[98vw] max-w-lg -translate-x-1/2 rounded-xl border border-yellow-400/30 bg-black/70 px-2 py-2 text-center text-xs font-bold leading-relaxed sm:text-sm">
+          <div className="pointer-events-none absolute left-1/2 top-1.5 z-[80] w-[98vw] max-w-lg -translate-x-1/2 rounded-xl border border-yellow-400/30 bg-black/70 px-2 py-2 text-center text-xs font-bold leading-relaxed sm:text-sm md:top-0">
             <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5">
               <span className="text-amber-300">ניקוד: {score}</span>
               <span>⏱ {timeLeft}s</span>
@@ -509,14 +523,14 @@ export default function MleoMazeEngine({
             </div>
           </div>
 
-          <p className="pointer-events-none absolute left-1/2 top-[5.25rem] z-[80] max-w-[95vw] -translate-x-1/2 px-2 text-center text-[11px] font-semibold leading-snug text-lime-200 sm:top-[4.4rem] sm:text-xs">
+          <p className="pointer-events-none absolute left-1/2 top-[5.25rem] z-[80] max-w-[95vw] -translate-x-1/2 px-2 text-center text-[11px] font-semibold leading-snug text-lime-200 sm:top-[4.4rem] sm:text-xs md:top-[3.25rem]">
             🎯 {hasKey ? "הגיעו לשער!" : "מצאו את המפתח!"}
             {isEasy ? ` כיוון: ${goalArrow()}` : ""}
             {mazeId ? ` · מבוך #${mazeId}` : ""}
           </p>
 
-          <div className="relative z-0 mx-auto mt-16 flex h-full min-h-0 w-full max-w-[1180px] flex-1 flex-col overflow-hidden rounded-lg border-4 border-yellow-400 bg-gradient-to-b from-emerald-950/80 to-slate-950 shadow-lg sm:mt-[4.25rem] md:mt-14">
-            <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden bg-gradient-to-b from-emerald-950/35 via-slate-950 to-slate-900 p-1 sm:p-2">
+          <div className="relative z-0 mx-auto mt-16 flex h-full min-h-0 w-full max-w-[1180px] flex-1 flex-col overflow-hidden rounded-lg border-4 border-yellow-400 bg-gradient-to-b from-emerald-950/80 to-slate-950 shadow-lg sm:mt-[4.25rem] md:mt-9 md:max-w-[min(92vw,1360px)] lg:max-w-[min(94vw,1480px)]">
+            <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden bg-gradient-to-b from-emerald-950/35 via-slate-950 to-slate-900 p-1 sm:p-2 md:p-1.5">
               {statusMsg ? (
                 <div className="pointer-events-none absolute left-1/2 top-2 z-30 -translate-x-1/2 rounded-xl bg-orange-600/95 px-4 py-2 text-sm font-bold text-white shadow-lg">
                   {statusMsg}
