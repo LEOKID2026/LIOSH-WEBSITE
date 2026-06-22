@@ -40,8 +40,8 @@ export default function GamesHubPage() {
 
   return (
     <Layout studentTheme={theme} studentShell="home">
-      <div className={GH.pageWrap} dir="rtl">
-        <div className={GH.container}>
+      <main className={GH.pageWrap} dir="rtl">
+        <div className={`${GH.container} space-y-4`}>
           <GamesHubNavBar
             backHref="/student/home"
             backLabel="חזרה"
@@ -81,7 +81,7 @@ export default function GamesHubPage() {
             </section>
           )}
         </div>
-      </div>
+      </main>
     </Layout>
   );
 }
