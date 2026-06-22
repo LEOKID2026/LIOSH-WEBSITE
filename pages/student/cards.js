@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Layout from "../../components/Layout";
-import StudentThemePicker from "../../components/student/StudentThemePicker";
 import {
   StudentCardsTabPanel,
   StudentSeriesProgressCard,
@@ -140,8 +139,8 @@ function coinBalanceBadgeClass(theme) {
 
 function CardsPageHeaderActions({ theme, coinBalanceAmount, backVariant = "games" }) {
   const gridCols = coinBalanceAmount != null
-    ? "grid-cols-[auto_auto_auto]"
-    : "grid-cols-[auto_auto]";
+    ? "grid-cols-[auto_auto]"
+    : "grid-cols-[auto]";
 
   return (
     <div dir="ltr" className={`grid ${gridCols} gap-1 sm:gap-2 w-full sm:w-auto min-w-0 items-stretch`}>
@@ -159,9 +158,6 @@ function CardsPageHeaderActions({ theme, coinBalanceAmount, backVariant = "games
           <span className="shrink-0">{formatCoinAmountNumberHe(coinBalanceAmount)}</span>
         </span>
       ) : null}
-      <div className="flex items-stretch justify-end min-w-0">
-        <StudentThemePicker variant="icon" iconSize="cta" className="min-w-0" />
-      </div>
     </div>
   );
 }

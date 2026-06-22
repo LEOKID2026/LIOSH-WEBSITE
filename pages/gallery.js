@@ -3,7 +3,6 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import Layout from "../components/Layout";
 import { useStudentTheme } from "../contexts/StudentThemeContext.jsx";
-import StudentThemePicker from "../components/student/StudentThemePicker";
 import { useGalleryUi } from "../hooks/useGalleryUi.js";
 
 export default function Gallery() {
@@ -65,9 +64,6 @@ export default function Gallery() {
             >
               גלריה
             </motion.h1>
-            <div className={T.hubTopBarTheme}>
-              <StudentThemePicker variant="icon" />
-            </div>
           </div>
 
           <motion.p

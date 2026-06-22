@@ -8,12 +8,15 @@ import {
 
 const DEFAULT_INPUT_CLASS =
   "w-full rounded bg-black/40 border border-white/20 px-3 py-2 pe-10";
+const BRIGHT_INPUT_CLASS =
+  "w-full rounded-lg bg-white border border-slate-300 px-3 py-2 pe-10 text-slate-900 shadow-sm";
 
 export default function PasswordField({
   label,
-  labelClassName = "text-white/80",
+  bright = false,
+  labelClassName,
   wrapperClassName = "",
-  inputClassName = DEFAULT_INPUT_CLASS,
+  inputClassName,
   value,
   onChange,
   id,
@@ -28,6 +31,13 @@ export default function PasswordField({
   showToggle = true,
   bare = false,
 }) {
+  const resolvedLabelClass = labelClassName || (bright ? "text-slate-700" : "text-white/80");
+  const resolvedInputClass =
+    inputClassName || (bright ? BRIGHT_INPUT_CLASS : DEFAULT_INPUT_CLASS);
+  const toggleClass = bright
+    ? "absolute left-2 top-1/2 -translate-y-1/2 text-xs text-slate-500 hover:text-slate-800 px-1"
+    : "absolute left-2 top-1/2 -translate-y-1/2 text-xs text-white/70 hover:text-white px-1";
+
   const [visible, setVisible] = useState(false);
   const inputId = id || testId;
   const toggleLabel = visible ? AUTH_PASSWORD_HIDE : AUTH_PASSWORD_SHOW;
@@ -48,7 +58,7 @@ export default function PasswordField({
         placeholder={placeholder}
         inputMode={inputMode}
         data-testid={testId}
-        className={inputClassName}
+        className={resolvedInputClass}
       />
       {showToggle ? (
         <button
@@ -57,7 +67,7 @@ export default function PasswordField({
           aria-label={toggleLabel}
           aria-pressed={visible}
           data-testid={testId ? `${testId}-toggle` : undefined}
-          className="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-white/70 hover:text-white px-1"
+          className={toggleClass}
         >
           {toggleText}
         </button>
@@ -71,7 +81,7 @@ export default function PasswordField({
 
   return (
     <label className="block text-sm">
-      {label ? <span className={labelClassName}>{label}</span> : null}
+      {label ? <span className={resolvedLabelClass}>{label}</span> : null}
       <div className={label ? "mt-1" : ""}>{field}</div>
     </label>
   );

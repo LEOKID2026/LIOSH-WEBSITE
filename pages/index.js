@@ -4,7 +4,6 @@ import Layout from "../components/Layout";
 import Link from "next/link";
 import InstallAppPrompt from "../components/InstallAppPrompt";
 import InstallAppButton from "../components/InstallAppButton";
-import StudentThemePicker from "../components/student/StudentThemePicker";
 import { useStudentTheme } from "../contexts/StudentThemeContext.jsx";
 
 const PORTAL_CARDS = [
@@ -182,12 +181,8 @@ export default function HomePage() {
         </section>
 
         <section className="flex shrink-0 justify-center px-1">
-          <StudentThemePicker className="w-full max-w-[17.5rem] sm:max-w-xs" />
-        </section>
-
-        <div className="flex shrink-0 justify-center pt-1 md:pt-0">
           <InstallAppButton className="" />
-        </div>
+        </section>
       </div>
     </Layout>
   );

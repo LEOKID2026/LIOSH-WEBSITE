@@ -34,7 +34,6 @@ import StudentWorksheetsPanel from "../../components/worksheet-activities/Studen
 import { isClassroomActivitiesEnabled } from "../../lib/classroom-activities/classroom-activities-labels.client.js";
 import { normalizeStudentActivityScope } from "../../lib/classroom-activities/student-activity-scope-labels.client.js";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
-import StudentThemePicker from "../../components/student/StudentThemePicker";
 import StudentSurpriseBoxWidget from "../../components/student/rewards/StudentSurpriseBoxWidget";
 import StudentSurpriseBoxOpenModal from "../../components/student/rewards/StudentSurpriseBoxOpenModal";
 import { isCardRewardsEnabledClient } from "../../lib/rewards/reward-feature-flags.client.js";
@@ -910,7 +909,6 @@ export default function StudentHomePage() {
                   {logoutBusy ? "יוצאים..." : "התנתקות"}
                 </button>
               </div>
-              <StudentThemePicker className="w-full sm:max-w-xs" />
             </div>
           </div>
           {logoutMessage ? (

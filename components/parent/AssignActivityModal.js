@@ -10,6 +10,7 @@ import { activitySubjectsForGrade, subjectLabelHe } from "../../lib/teacher-port
 import AssignedActivityQuestionDisplay from "../classroom-activities/AssignedActivityQuestionDisplay.jsx";
 import ParentSentActivitiesPanel from "./ParentSentActivitiesPanel.jsx";
 import { trackProductEvent } from "../../lib/analytics/track-event.client.js";
+import { getParentPortalTheme } from "../../lib/parent-ui/parent-portal-theme.client.js";
 
 const PARENT_ACTIVITY_MODE = "guided_practice";
 const MAX_QUESTION_COUNT = 30;
@@ -36,9 +37,17 @@ function resolveQuestionCountForApi(raw) {
 }
 
 /**
- * @param {{ student: { id: string, full_name?: string, grade_level?: string|null }, accessToken: string, onClose: () => void, onSuccess: () => void, refreshKey?: number }} props
+ * @param {{ student: { id: string, full_name?: string, grade_level?: string|null }, accessToken: string, onClose: () => void, onSuccess: () => void, refreshKey?: number, bright?: boolean }} props
  */
-export default function AssignActivityModal({ student, accessToken, onClose, onSuccess, refreshKey = 0 }) {
+export default function AssignActivityModal({
+  student,
+  accessToken,
+  onClose,
+  onSuccess,
+  refreshKey = 0,
+  bright = false,
+}) {
+  const T = getParentPortalTheme(bright);
   // Registered profile grade — used only as the default; never mutated here.
   const profileGradeKey = useMemo(
     () => normalizeGradeLevelToKey(student?.grade_level),
@@ -196,19 +205,19 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+      className={T.activityOverlay}
       role="dialog"
       aria-modal="true"
       aria-labelledby="assign-activity-title"
     >
-      <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl border border-white/15 bg-slate-900 p-5 shadow-xl space-y-4">
+      <div className={T.activityPanel}>
         <div className="flex items-start justify-between gap-3">
           <h2 id="assign-activity-title" className="text-lg font-semibold">
             {`שליחת פעילות ל${student.full_name || "ילד"}`}
           </h2>
           <button
             type="button"
-            className="rounded bg-white/10 px-2 py-1 text-sm hover:bg-white/20"
+            className={T.activityClose}
             onClick={onClose}
             disabled={busy}
           >
@@ -216,17 +225,13 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
           </button>
         </div>
 
-        {error ? (
-          <p className="text-red-200 text-sm rounded border border-red-400/30 bg-red-500/10 px-3 py-2">
-            {error}
-          </p>
-        ) : null}
+        {error ? <p className={T.activityError}>{error}</p> : null}
 
         <div className="grid gap-4 md:grid-cols-2">
           <label className="block text-sm md:col-span-2">
-            <span className="text-white/70">כותרת</span>
+            <span className={T.label}>כותרת</span>
             <input
-              className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
+              className={T.inputMt}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               maxLength={120}
@@ -235,9 +240,9 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
           </label>
 
           <label className="block text-sm">
-            <span className="text-white/70">מקצוע</span>
+            <span className={T.label}>מקצוע</span>
             <select
-              className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
+              className={T.inputMt}
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
               disabled={busy}
@@ -251,9 +256,9 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
           </label>
 
           <label className="block text-sm">
-            <span className="text-white/70">כיתה לפעילות</span>
+            <span className={T.label}>כיתה לפעילות</span>
             <select
-              className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
+              className={T.inputMt}
               value={activityGradeKey}
               onChange={(e) => {
                 setActivityGradeKey(e.target.value);
@@ -270,10 +275,10 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
           </label>
 
           <label className="block text-sm md:col-span-2">
-            <span className="text-white/70">נושא</span>
+            <span className={T.label}>נושא</span>
             {topicOpts.length > 0 ? (
               <select
-                className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
+                className={T.inputMt}
                 value={topic}
                 onChange={(e) => {
                   setTopic(e.target.value);
@@ -289,7 +294,7 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
               </select>
             ) : (
               <input
-                className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
+                className={T.inputMt}
                 value={topic}
                 onChange={(e) => {
                   setTopic(e.target.value);
@@ -301,12 +306,12 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
           </label>
 
           <label className="block text-sm">
-            <span className="text-white/70">מספר שאלות</span>
+            <span className={T.label}>מספר שאלות</span>
             <input
               type="text"
               inputMode="numeric"
               pattern="[0-9]*"
-              className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
+              className={T.inputMt}
               value={questionCountInput}
               onChange={(e) => {
                 setQuestionCountInput(e.target.value.replace(/\D/g, ""));
@@ -318,14 +323,14 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
               }
             />
             {questionCountExceedsMax(questionCountInput) ? (
-              <p id="question-count-max-hint" className="text-amber-200/90 text-xs mt-1">
+              <p id="question-count-max-hint" className={`${T.warning} text-xs mt-1`}>
                 {`מספר השאלות מוגבל עד ${MAX_QUESTION_COUNT}`}
               </p>
             ) : null}
           </label>
 
           <fieldset className="block text-sm">
-            <legend className="text-white/70 mb-1">רמת קושי</legend>
+            <legend className={`${T.label} mb-1`}>רמת קושי</legend>
             <div className="flex flex-wrap gap-3">
               {["easy", "medium", "hard"].map((level) => (
                 <label key={level} className="flex items-center gap-1">
@@ -350,7 +355,7 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
         <div className="flex flex-wrap gap-2 items-center">
           <button
             type="button"
-            className="rounded border border-sky-500/40 bg-sky-950/30 text-sky-100 px-3 py-2 text-sm font-semibold hover:bg-sky-900/40 disabled:opacity-60"
+            className={T.activityPreviewBtn}
             onClick={runPreview}
             disabled={busy || missingGrade}
           >
@@ -358,7 +363,7 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
           </button>
           <button
             type="button"
-            className="rounded border border-violet-500/40 bg-violet-950/30 text-violet-100 px-3 py-2 text-sm font-semibold hover:bg-violet-900/40 disabled:opacity-60"
+            className={T.activitySendBtn}
             onClick={sendActivity}
             disabled={busy || missingGrade}
           >
@@ -368,17 +373,18 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
             studentId={student.id}
             accessToken={accessToken}
             refreshKey={refreshKey}
+            bright={bright}
           />
         </div>
 
         {preview.length > 0 ? (
           <div className="space-y-2">
-            <h3 className="text-sm font-semibold text-white/80">שאלות ({preview.length})</h3>
+            <h3 className={`text-sm font-semibold ${T.label}`}>שאלות ({preview.length})</h3>
             <ul className="space-y-2 max-h-48 overflow-y-auto text-sm">
               {preview.map((q, i) => (
-                <li key={i} className="rounded border border-white/10 bg-black/30 px-3 py-2">
+                <li key={i} className={T.activityPreviewItem}>
                   <div className="flex gap-2 items-start">
-                    <span className="shrink-0 text-white/70">{i + 1}.</span>
+                    <span className={T.activityPreviewIndex}>{i + 1}.</span>
                     <AssignedActivityQuestionDisplay question={q} variant="preview" />
                   </div>
                 </li>

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import StudentThemePicker from "./StudentThemePicker";
 import { useStudentActivityUi } from "../../hooks/useStudentActivityUi.js";
 
 /**
@@ -51,7 +50,6 @@ export default function StudentAssignedActivityShell({
             <Link href="/student/home" className={L.backLink}>
               ← חזרה לבית
             </Link>
-            <StudentThemePicker variant="icon" iconSize="nav" />
           </div>
           <div className={L.titleBlock} dir="rtl">
             <h1 className={L.title}>{title}</h1>

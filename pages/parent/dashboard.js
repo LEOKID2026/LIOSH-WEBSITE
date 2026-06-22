@@ -6,6 +6,8 @@ import ParentPolicyAcceptanceGate from "../../components/parent/ParentPolicyAcce
 import AssignActivityModal from "../../components/parent/AssignActivityModal";
 import ParentDashboardModal from "../../components/parent/ParentDashboardModal";
 import ChildGamePermissionsPanel from "../../components/parent/ChildGamePermissionsPanel";
+import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
+import { getParentPortalTheme } from "../../lib/parent-ui/parent-portal-theme.client.js";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
 import { shouldDisplayStudentAccessCode } from "../../lib/teacher-portal/student-access-display.js";
 import { trackProductEvent } from "../../lib/analytics/track-event.client.js";
@@ -23,13 +25,7 @@ function gradeLabelFromValue(value) {
   return GRADE_OPTIONS.find((g) => g.value === value)?.label || value || "—";
 }
 
-/** Neutral action buttons on child cards — responsive sizing, no per-action colors */
-const CHILD_CARD_ACTION_CLASS =
-  "flex-1 min-w-0 inline-flex items-center justify-center rounded-lg border border-white/15 bg-white/[0.04] " +
-  "px-2 py-2 text-xs font-medium text-white/85 text-center " +
-  "sm:text-sm sm:py-2.5 " +
-  "md:px-3 md:py-2.5 md:min-h-[42px] md:text-sm " +
-  "hover:bg-white/[0.07] hover:border-white/25 transition disabled:opacity-60 leading-snug";
+/** Neutral action buttons on child cards — theme applied via getParentPortalTheme(). */
 
 function normalizeBalance(student) {
   const rel = student?.student_coin_balances;
@@ -56,6 +52,9 @@ const CHILD_PIN_INPUT_PROPS = {
 
 export default function ParentDashboardPage() {
   const router = useRouter();
+  const { theme, isBright } = useStudentTheme();
+  const T = getParentPortalTheme(isBright);
+  const layoutProps = { studentTheme: theme, studentShell: "home" };
   const supabaseRef = useRef(null);
   const trackedDashboardOpenRef = useRef(false);
 
@@ -437,14 +436,14 @@ export default function ParentDashboardPage() {
       onSubmit={createStudent}
       className={`space-y-2 ${students.length >= studentLimit ? "opacity-60" : ""}`}
     >
-      <p className="text-sm text-white/75">
+      <p className={`text-sm ${T.muted}`}>
         ילדים בחשבון: {students.length} / {studentLimit}
       </p>
       {students.length >= studentLimit ? (
-        <p className="text-sm text-amber-200">{`הגעת למגבלת ${studentLimit} ילדים לחשבון`}</p>
+        <p className={T.warning}>{`הגעת למגבלת ${studentLimit} ילדים לחשבון`}</p>
       ) : null}
       <input
-        className="w-full rounded bg-black/40 border border-white/20 px-3 py-2 disabled:opacity-50"
+        className={T.input}
         value={newName}
         onChange={(e) => setNewName(e.target.value)}
         placeholder="שם הילד"
@@ -454,7 +453,7 @@ export default function ParentDashboardPage() {
         disabled={busy || students.length >= studentLimit}
       />
       <select
-        className="w-full rounded bg-black/40 border border-white/20 px-3 py-2 disabled:opacity-50"
+        className={T.input}
         value={newGrade}
         onChange={(e) => setNewGrade(e.target.value)}
         required
@@ -467,10 +466,7 @@ export default function ParentDashboardPage() {
           </option>
         ))}
       </select>
-      <button
-        className="w-full rounded bg-amber-500 text-black px-3 py-2 font-semibold disabled:opacity-60"
-        disabled={busy || students.length >= studentLimit}
-      >
+      <button className={`w-full ${T.amberBtn}`} disabled={busy || students.length >= studentLimit}>
         הוסף ילד
       </button>
     </form>
@@ -494,7 +490,7 @@ export default function ParentDashboardPage() {
     return (
       <div className="space-y-3">
         <input
-          className="w-full rounded bg-black/40 border border-white/20 px-3 py-2"
+          className={T.input}
           value={edit.fullName}
           onChange={(e) =>
             setEditById((prev) => ({
@@ -504,7 +500,7 @@ export default function ParentDashboardPage() {
           }
         />
         <select
-          className="w-full rounded bg-black/40 border border-white/20 px-3 py-2"
+          className={T.input}
           value={edit.gradeLevel}
           onChange={(e) =>
             setEditById((prev) => ({
@@ -520,7 +516,7 @@ export default function ParentDashboardPage() {
             </option>
           ))}
         </select>
-        <label className="flex items-center gap-2 text-sm">
+        <label className={`flex items-center gap-2 text-sm ${T.label}`}>
           <input
             type="checkbox"
             checked={edit.isActive}
@@ -533,16 +529,17 @@ export default function ParentDashboardPage() {
           />
           פעיל
         </label>
-        <div className="text-sm text-white/80">יתרת מטבעות: {balance ? balance.balance : 0}</div>
+        <div className={`text-sm ${T.muted}`}>יתרת מטבעות: {balance ? balance.balance : 0}</div>
         {session?.access_token ? (
           <ChildGamePermissionsPanel
+            bright={isBright}
             studentId={student.id}
             accessToken={session.access_token}
           />
         ) : null}
         <div className="flex flex-wrap gap-2 items-center">
           <button
-            className="rounded bg-amber-500 text-black px-3 py-2 font-semibold disabled:opacity-60"
+            className={T.amberBtn}
             disabled={busy}
             onClick={() => saveStudent(student.id)}
             type="button"
@@ -551,7 +548,7 @@ export default function ParentDashboardPage() {
           </button>
           <button
             type="button"
-            className="rounded border border-red-500/60 text-red-300 px-3 py-2 text-sm disabled:opacity-60 hover:bg-red-950/40"
+            className={T.deleteBtn}
             disabled={busy}
             onClick={() => {
               setDeleteConfirmName("");
@@ -565,25 +562,19 @@ export default function ParentDashboardPage() {
           </button>
         </div>
 
-        <div className="rounded border border-white/15 p-3 bg-black/30 space-y-3">
-          <div className="font-semibold">פרטי כניסת ילד/ה</div>
+        <div className={T.panel}>
+          <div className={T.panelTitle}>פרטי כניסת ילד/ה</div>
 
           {showConfirmationHere ? (
-            <div className="rounded border border-emerald-500/40 bg-emerald-950/40 p-3 space-y-2 text-sm">
-              <div className="font-semibold text-emerald-200">
-                חשוב לשמור את הפרטים — ה-PIN לא יוצג שוב.
+            <div className={T.confirmBox}>
+              <div className={T.confirmTitle}>חשוב לשמור את הפרטים — ה-PIN לא יוצג שוב.</div>
+              <div>
+                שם משתמש: <strong className={T.confirmStrong}>{credentialConfirmation.username}</strong>
               </div>
               <div>
-                שם משתמש: <strong className="text-white">{credentialConfirmation.username}</strong>
+                PIN חדש: <strong className={T.confirmStrong}>{credentialConfirmation.pin}</strong>
               </div>
-              <div>
-                PIN חדש: <strong className="text-white">{credentialConfirmation.pin}</strong>
-              </div>
-              <button
-                type="button"
-                className="rounded bg-white/15 px-3 py-1 text-xs"
-                onClick={() => setCredentialConfirmation(null)}
-              >
+              <button type="button" className={T.ghostBtn} onClick={() => setCredentialConfirmation(null)}>
                 סגירה
               </button>
             </div>
@@ -591,25 +582,25 @@ export default function ParentDashboardPage() {
 
           {visibleLoginUsername ? (
             <div className="space-y-2">
-              <div className="flex flex-wrap items-center gap-2 text-sm">
+              <div className={`flex flex-wrap items-center gap-2 text-sm ${T.muted}`}>
                 <span>
-                  שם משתמש: <strong className="text-white">{visibleLoginUsername}</strong>
+                  שם משתמש: <strong className={T.confirmStrong}>{visibleLoginUsername}</strong>
                 </span>
                 <button
                   type="button"
-                  className="rounded bg-white/10 px-2 py-1 text-xs"
+                  className={T.copyBtn}
                   onClick={() => copyUsername(visibleLoginUsername)}
                 >
                   העתק שם משתמש
                 </button>
               </div>
-              <div className="text-sm">
+              <div className={`text-sm ${T.muted}`}>
                 PIN: {student.has_active_access_code ? "מוגדר" : "לא מוגדר"}
               </div>
               <div>
-                <label className="text-sm text-white/80">PIN חדש (איפוס / שינוי)</label>
+                <label className={`text-sm ${T.label}`}>PIN חדש (איפוס / שינוי)</label>
                 <input
-                  className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
+                  className={T.inputMt}
                   value={credentialsByStudentId[student.id]?.pin || ""}
                   onChange={(e) =>
                     setCredentialsByStudentId((prev) => ({
@@ -625,7 +616,7 @@ export default function ParentDashboardPage() {
                 />
               </div>
               <button
-                className="rounded bg-sky-400 text-black px-3 py-2 font-semibold disabled:opacity-60"
+                className={T.skyBtn}
                 disabled={busy}
                 onClick={() => savePinReset(student.id, visibleLoginUsername, student.full_name)}
                 type="button"
@@ -635,24 +626,24 @@ export default function ParentDashboardPage() {
             </div>
           ) : hasHiddenDemoAccess ? (
             <div className="space-y-2">
-              <div className="text-sm text-white/80">כניסת ילד/ה פעילה</div>
-              <div className="text-sm">
+              <div className={`text-sm ${T.muted}`}>כניסת ילד/ה פעילה</div>
+              <div className={`text-sm ${T.muted}`}>
                 PIN: {student.has_active_access_code ? "מוגדר" : "לא מוגדר"}
               </div>
             </div>
           ) : (
             <div className="space-y-2">
-              <div className="text-sm text-amber-200/95">שם משתמש: טרם נקבע שם משתמש</div>
-              <div className="text-sm">
+              <div className={T.warning}>שם משתמש: טרם נקבע שם משתמש</div>
+              <div className={`text-sm ${T.muted}`}>
                 PIN: {student.has_active_access_code ? "מוגדר" : "לא מוגדר"}
               </div>
-              <p className="text-xs text-white/60">
+              <p className={`text-xs ${T.faint}`}>
                 יש להגדיר שם משתמש ו-PIN לכניסת הילד/ה. אם כבר קיימת כניסה ישנה, הגדרה זו תחליף אותה.
               </p>
               <div>
-                <label className="text-sm text-white/80">שם משתמש לילד/ה</label>
+                <label className={`text-sm ${T.label}`}>שם משתמש לילד/ה</label>
                 <input
-                  className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
+                  className={T.inputMt}
                   value={credentialsByStudentId[student.id]?.username || ""}
                   onChange={(e) =>
                     setCredentialsByStudentId((prev) => ({
@@ -668,9 +659,9 @@ export default function ParentDashboardPage() {
                 />
               </div>
               <div>
-                <label className="text-sm text-white/80">PIN לילד/ה</label>
+                <label className={`text-sm ${T.label}`}>PIN לילד/ה</label>
                 <input
-                  className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
+                  className={T.inputMt}
                   value={credentialsByStudentId[student.id]?.pin || ""}
                   onChange={(e) =>
                     setCredentialsByStudentId((prev) => ({
@@ -686,7 +677,7 @@ export default function ParentDashboardPage() {
                 />
               </div>
               <button
-                className="rounded bg-sky-400 text-black px-3 py-2 font-semibold disabled:opacity-60"
+                className={T.skyBtn}
                 disabled={busy}
                 onClick={() => saveStudentCredentials(student.id, student.full_name)}
                 type="button"
@@ -702,8 +693,8 @@ export default function ParentDashboardPage() {
 
   if (!session) {
     return (
-      <Layout>
-        <div className="max-w-6xl mx-auto px-3 py-4 text-sm text-white/70">בודק התחברות הורה...</div>
+      <Layout {...layoutProps}>
+        <div className={`max-w-6xl mx-auto px-3 py-4 text-sm ${T.loading}`}>בודק התחברות הורה...</div>
       </Layout>
     );
   }
@@ -713,8 +704,9 @@ export default function ParentDashboardPage() {
     : null;
 
   return (
-    <Layout>
+    <Layout {...layoutProps}>
       <ParentPolicyAcceptanceGate
+        bright={isBright}
         accessToken={session.access_token}
         onLogout={logout}
         onReady={() => fetchStudents(session)}
@@ -722,32 +714,24 @@ export default function ParentDashboardPage() {
       <div className="max-w-6xl mx-auto w-full px-3 py-3 md:px-8 md:py-8 space-y-4 md:space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 md:gap-y-3">
           <div className="min-w-0">
-            <h1 className="text-xl md:text-2xl font-bold leading-tight">דשבורד הורים</h1>
-            <p className="text-white/60 text-sm truncate mt-1">{session.user?.email}</p>
+            <h1 className={`text-xl md:text-2xl font-bold leading-tight ${T.heading}`}>דשבורד הורים</h1>
+            <p className={`${T.subheading} text-sm truncate mt-1`}>{session.user?.email}</p>
           </div>
           <div className="flex gap-2 shrink-0">
-            <button
-              type="button"
-              onClick={() => setAddChildModalOpen(true)}
-              className="rounded-lg bg-amber-500 text-black px-3 py-2 md:px-4 md:py-2.5 text-sm font-semibold hover:bg-amber-400 transition"
-            >
+            <button type="button" onClick={() => setAddChildModalOpen(true)} className={T.amberBtn}>
               הוספת ילד
             </button>
-            <button
-              type="button"
-              onClick={logout}
-              className="rounded-lg border border-white/15 bg-white/[0.04] px-3 py-2 md:px-4 md:py-2.5 text-sm text-white/80 hover:bg-white/[0.07] hover:border-white/25 transition"
-            >
+            <button type="button" onClick={logout} className={T.secondaryBtn}>
               יציאה
             </button>
           </div>
         </div>
 
-        {message ? <p className="text-sm text-white/75 leading-relaxed">{message}</p> : null}
+        {message ? <p className={T.message}>{message}</p> : null}
 
         <section>
           {students.length === 0 ? (
-            <p className="text-sm text-white/60">עדיין לא נוספו ילדים</p>
+            <p className={`text-sm ${T.faint}`}>עדיין לא נוספו ילדים</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 md:gap-5">
               {students.map((student) => {
@@ -756,27 +740,22 @@ export default function ParentDashboardPage() {
                 const reportHref = `/learning/parent-report?studentId=${encodeURIComponent(student.id)}&source=parent`;
 
                 return (
-                  <div
-                    key={student.id}
-                    className="rounded-xl border border-white/10 bg-white/[0.04] p-3.5 md:p-5 md:min-h-[168px] flex flex-col justify-between gap-3 md:gap-4"
-                  >
+                  <div key={student.id} className={T.card}>
                     <div className="min-w-0">
-                      <h3 className="font-bold text-base md:text-lg text-white truncate">
-                        {displayName}
-                      </h3>
-                      <p className="text-sm text-white/55 mt-1">{gradeLabel}</p>
+                      <h3 className={T.cardTitle}>{displayName}</h3>
+                      <p className={T.cardMeta}>{gradeLabel}</p>
                     </div>
                     <div className="flex gap-2 md:gap-2.5">
                       <Link
                         href={reportHref}
                         prefetch={false}
-                        className={CHILD_CARD_ACTION_CLASS}
+                        className={T.cardAction}
                       >
                         דוח הורים
                       </Link>
                       <button
                         type="button"
-                        className={CHILD_CARD_ACTION_CLASS}
+                        className={T.cardAction}
                         disabled={busy}
                         onClick={() =>
                           setActivityModalStudent({
@@ -790,7 +769,7 @@ export default function ParentDashboardPage() {
                       </button>
                       <button
                         type="button"
-                        className={CHILD_CARD_ACTION_CLASS}
+                        className={T.cardAction}
                         disabled={busy}
                         onClick={() => openDetailsModal(student)}
                       >
@@ -805,6 +784,7 @@ export default function ParentDashboardPage() {
         </section>
 
         <ParentDashboardModal
+          bright={isBright}
           open={addChildModalOpen}
           title="הוספת ילד"
           onClose={closeAddChildModal}
@@ -814,6 +794,7 @@ export default function ParentDashboardPage() {
         </ParentDashboardModal>
 
         <ParentDashboardModal
+          bright={isBright}
           open={Boolean(detailsStudent)}
           title={detailsStudent ? `פרטים — ${detailsStudent.full_name || "ילד"}` : "פרטים"}
           onClose={closeDetailsModal}
@@ -824,6 +805,7 @@ export default function ParentDashboardPage() {
 
         {activityModalStudent && session?.access_token ? (
           <AssignActivityModal
+            bright={isBright}
             student={activityModalStudent}
             accessToken={session.access_token}
             refreshKey={sentActivitiesRefresh}
@@ -838,25 +820,25 @@ export default function ParentDashboardPage() {
 
         {deleteModalStudent ? (
           <div
-            className="fixed inset-0 z-[160] flex items-center justify-center bg-black/75 p-4"
+            className={T.deleteOverlay}
             role="dialog"
             aria-modal="true"
             aria-labelledby="delete-child-title"
           >
-            <div className="max-w-md w-full rounded-lg border border-red-500/35 bg-[#0f1629] p-4 space-y-3 shadow-xl" dir="rtl">
-              <h3 id="delete-child-title" className="text-lg font-bold text-white">
+            <div className={T.deletePanel} dir="rtl">
+              <h3 id="delete-child-title" className={T.deleteTitle}>
                 מחיקת ילד לצמיתות
               </h3>
-              <p className="text-sm text-white/85 leading-relaxed">
+              <p className={T.deleteText}>
                 מחיקה זו תמחק לצמיתות את הילד, פרטי הכניסה, הסשנים, התשובות, הדוחות, המטבעות וכל הנתונים הקשורים אליו.
                 לא ניתן לשחזר פעולה זו.
               </p>
-              <p className="text-xs text-white/65">
+              <p className={T.deleteHint}>
                 הקלידו את שם הילד בדיוק:{" "}
-                <strong className="text-white">{deleteModalStudent.full_name}</strong>
+                <strong className={T.deleteStrong}>{deleteModalStudent.full_name}</strong>
               </p>
               <input
-                className="w-full rounded bg-black/40 border border-white/20 px-3 py-2 text-white"
+                className={T.input}
                 value={deleteConfirmName}
                 onChange={(e) => setDeleteConfirmName(e.target.value)}
                 placeholder="הקלדת שם לאישור"
@@ -866,7 +848,7 @@ export default function ParentDashboardPage() {
               <div className="flex flex-wrap gap-2 justify-end pt-1">
                 <button
                   type="button"
-                  className="rounded bg-white/10 px-4 py-2 text-sm text-white"
+                  className={T.deleteCancel}
                   onClick={() => {
                     setDeleteModalStudent(null);
                     setDeleteConfirmName("");
@@ -876,7 +858,7 @@ export default function ParentDashboardPage() {
                 </button>
                 <button
                   type="button"
-                  className="rounded bg-red-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-40"
+                  className={T.deleteConfirm}
                   disabled={
                     busy ||
                     String(deleteConfirmName).trim() !==

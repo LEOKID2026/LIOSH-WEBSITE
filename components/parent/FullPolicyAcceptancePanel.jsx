@@ -23,9 +23,40 @@ export default function FullPolicyAcceptancePanel({
   onBack,
   persistToApi = true,
   layout = "default",
+  bright = false,
 }) {
   const policyDocument = buildTermsPrivacyAcceptanceDocument();
   const bottomSentinelRef = useRef(null);
+
+  const shellClass = bright
+    ? "rounded-xl border border-sky-200 bg-white px-4 sm:px-5 py-4 space-y-2 text-right shadow-sm"
+    : "rounded-xl border border-amber-400/30 bg-black/60 px-4 sm:px-5 py-4 space-y-2 text-right";
+  const titleClass = bright ? "text-lg sm:text-xl font-bold text-slate-900" : "text-lg sm:text-xl font-bold text-amber-200";
+  const introClass = bright ? "text-sm text-slate-700 leading-relaxed" : "text-sm text-white/80 leading-relaxed";
+  const hintClass = bright ? "text-xs sm:text-sm text-slate-600 leading-relaxed" : "text-xs sm:text-sm text-white/65 leading-relaxed";
+  const metaClass = bright ? "grid grid-cols-1 sm:grid-cols-3 gap-x-4 gap-y-1 text-xs text-slate-500" : "grid grid-cols-1 sm:grid-cols-3 gap-x-4 gap-y-1 text-xs text-white/55";
+  const metaLabelClass = bright ? "inline font-semibold text-slate-700" : "inline font-semibold text-white/70";
+  const backClass = bright ? "text-xs text-slate-500 hover:text-slate-800 underline" : "text-xs text-white/50 hover:text-white underline";
+  const bodyShellClass = bright
+    ? "rounded-xl border border-sky-200 bg-slate-50 px-3 sm:px-4 py-4 space-y-8 min-w-0"
+    : "rounded-xl border border-amber-400/30 bg-black/60 px-3 sm:px-4 py-4 space-y-8 min-w-0";
+  const partTitleClass = bright
+    ? "text-lg font-bold text-amber-800 border-b border-slate-200 pb-2"
+    : "text-lg font-bold text-amber-100/90 border-b border-white/10 pb-2";
+  const partIntroClass = bright ? "text-sm text-slate-700 leading-relaxed break-words" : "text-sm text-white/75 leading-relaxed break-words";
+  const footerShellClass = shellClass;
+  const footerTextClass = bright ? "rounded-xl border border-sky-200 bg-white px-4 sm:px-5 py-4 space-y-3 text-right text-sm text-slate-700" : "rounded-xl border border-amber-400/30 bg-black/60 px-4 sm:px-5 py-4 space-y-3 text-right text-sm text-white/75";
+  const footerHintClass = bright ? "text-xs text-slate-500 mb-2" : "text-xs text-white/55 mb-2";
+  const footerLinkClass = bright ? "text-sky-700 hover:text-sky-900 underline" : "text-amber-300 hover:text-amber-200 underline";
+  const footerContactClass = bright ? "text-xs sm:text-sm pt-1 border-t border-slate-200" : "text-xs sm:text-sm pt-1 border-t border-white/10";
+  const footerContactLabelClass = bright ? "text-slate-500" : "text-white/60";
+  const actionShellClass = shellClass;
+  const scrollHintClass = bright
+    ? "text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 text-center"
+    : "text-xs text-amber-200/80 bg-amber-950/30 border border-amber-400/20 rounded-lg px-3 py-2 text-center";
+  const declineClass = bright ? "rounded border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50" : "rounded border border-white/20 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white/80 hover:bg-white/10 disabled:opacity-50";
+  const approveClass = "rounded bg-amber-500 text-black px-4 py-2.5 text-sm font-bold disabled:opacity-40";
+  const errorClass = bright ? "text-sm text-rose-600 break-words" : "text-sm text-red-300 break-words";
 
   const [scrolledToBottom, setScrolledToBottom] = useState(false);
   const [confirmChecked, setConfirmChecked] = useState(false);
@@ -108,87 +139,78 @@ export default function FullPolicyAcceptancePanel({
       className={`w-full mx-auto ${widthClass} px-3 sm:px-4 py-6 sm:py-8 space-y-6`}
       aria-label="אישור תנאי שימוש ומדיניות פרטיות"
     >
-      <header className="rounded-xl border border-amber-400/30 bg-black/60 px-4 sm:px-5 py-4 space-y-2 text-right">
-        <h1 className="text-lg sm:text-xl font-bold text-amber-200">{policyDocument.meta.title}</h1>
-        <p className="text-sm text-white/80 leading-relaxed">{policyDocument.meta.intro}</p>
-        <p className="text-xs sm:text-sm text-white/65 leading-relaxed">
+      <header className={shellClass}>
+        <h1 className={titleClass}>{policyDocument.meta.title}</h1>
+        <p className={introClass}>{policyDocument.meta.intro}</p>
+        <p className={hintClass}>
           גללו את דף האתר עד הסוף, סמנו את תיבת האישור, ואשרו לפני המשך.
         </p>
-        <dl className="grid grid-cols-1 sm:grid-cols-3 gap-x-4 gap-y-1 text-xs text-white/55">
+        <dl className={metaClass}>
           <div>
-            <dt className="inline font-semibold text-white/70">גרסת תנאים: </dt>
+            <dt className={metaLabelClass}>גרסת תנאים: </dt>
             <dd className="inline">{policyDocument.meta.termsVersion}</dd>
           </div>
           <div>
-            <dt className="inline font-semibold text-white/70">גרסת פרטיות: </dt>
+            <dt className={metaLabelClass}>גרסת פרטיות: </dt>
             <dd className="inline">{policyDocument.meta.privacyVersion}</dd>
           </div>
           <div>
-            <dt className="inline font-semibold text-white/70">עודכן: </dt>
+            <dt className={metaLabelClass}>עודכן: </dt>
             <dd className="inline">{policyDocument.meta.lastUpdated}</dd>
           </div>
         </dl>
         {onBack ? (
-          <button
-            type="button"
-            onClick={onBack}
-            className="text-xs text-white/50 hover:text-white underline"
-          >
+          <button type="button" onClick={onBack} className={backClass}>
             חזרה
           </button>
         ) : null}
       </header>
 
-      <div className="rounded-xl border border-amber-400/30 bg-black/60 px-3 sm:px-4 py-4 space-y-8 min-w-0">
+      <div className={bodyShellClass}>
         {policyDocument.parts.map((part) => (
           <article key={part.key} className="space-y-3 min-w-0">
-            <h2 className="text-lg font-bold text-amber-100/90 border-b border-white/10 pb-2">
-              {part.title}
-            </h2>
-            {part.intro ? (
-              <p className="text-sm text-white/75 leading-relaxed break-words">{part.intro}</p>
-            ) : null}
-            <PolicySectionsBody sections={part.sections} linkComponent="anchor" />
+            <h2 className={partTitleClass}>{part.title}</h2>
+            {part.intro ? <p className={partIntroClass}>{part.intro}</p> : null}
+            <PolicySectionsBody sections={part.sections} linkComponent="anchor" bright={bright} />
           </article>
         ))}
       </div>
 
-      <div className="rounded-xl border border-amber-400/30 bg-black/60 px-4 sm:px-5 py-4 space-y-3 text-right text-sm text-white/75">
+      <div className={footerTextClass}>
         <nav aria-label="מסמכים משלימים">
-          <p className="text-xs text-white/55 mb-2">מסמכים משלימים (לא כלולים במסך האישור):</p>
+          <p className={footerHintClass}>מסמכים משלימים (לא כלולים במסך האישור):</p>
           <ul className="flex flex-wrap gap-x-4 gap-y-1 text-xs">
             {policyDocument.relatedLinks.map((link) => (
               <li key={link.href}>
-                <a href={link.href} className="text-amber-300 hover:text-amber-200 underline">
+                <a href={link.href} className={footerLinkClass}>
                   {link.label}
                 </a>
               </li>
             ))}
           </ul>
         </nav>
-        <p className="text-xs sm:text-sm pt-1 border-t border-white/10">
-          <span className="text-white/60">יצירת קשר: </span>
-          <a
-            href={`mailto:${policyDocument.meta.contactEmail}`}
-            className="text-amber-300 hover:text-amber-200 underline break-all"
-          >
+        <p className={footerContactClass}>
+          <span className={footerContactLabelClass}>יצירת קשר: </span>
+          <a href={`mailto:${policyDocument.meta.contactEmail}`} className={`${footerLinkClass} break-all`}>
             {policyDocument.meta.contactEmail}
           </a>
         </p>
       </div>
 
-      <div className="rounded-xl border border-amber-400/30 bg-black/60 px-4 sm:px-5 py-4 space-y-3 text-right">
-        {!scrolledToBottom ? (
-          <p className="text-xs text-amber-200/80 bg-amber-950/30 border border-amber-400/20 rounded-lg px-3 py-2 text-center">
-            גללו את דף האתר עד כאן כדי לאפשר אישור
-          </p>
-        ) : null}
+      <div className={actionShellClass}>
+        {!scrolledToBottom ? <p className={scrollHintClass}>גללו את דף האתר עד כאן כדי לאפשר אישור</p> : null}
 
         <div ref={bottomSentinelRef} data-policy-bottom-sentinel className="h-px w-full" aria-hidden />
 
         <label
           className={`flex items-start gap-2 text-sm leading-relaxed cursor-pointer ${
-            scrolledToBottom ? "text-white/85" : "text-white/40 cursor-not-allowed"
+            scrolledToBottom
+              ? bright
+                ? "text-slate-800"
+                : "text-white/85"
+              : bright
+                ? "text-slate-400 cursor-not-allowed"
+                : "text-white/40 cursor-not-allowed"
           }`}
         >
           <input
@@ -202,25 +224,20 @@ export default function FullPolicyAcceptancePanel({
         </label>
 
         {error ? (
-          <p className="text-sm text-red-300 break-words" role="alert">
+          <p className={errorClass} role="alert">
             {error}
           </p>
         ) : null}
 
         <div className="flex flex-col sm:flex-row gap-2 sm:justify-end pt-1">
-          <button
-            type="button"
-            onClick={onDeclined}
-            disabled={busy}
-            className="rounded border border-white/20 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white/80 hover:bg-white/10 disabled:opacity-50"
-          >
+          <button type="button" onClick={onDeclined} disabled={busy} className={declineClass}>
             אינני מסכים/ה
           </button>
           <button
             type="button"
             onClick={() => void handleApprove()}
             disabled={!canApprove}
-            className="rounded bg-amber-500 text-black px-4 py-2.5 text-sm font-bold disabled:opacity-40"
+            className={approveClass}
           >
             {busy ? "שומר..." : "אני מסכים/ה וממשיך/ה"}
           </button>

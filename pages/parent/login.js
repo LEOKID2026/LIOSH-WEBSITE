@@ -17,6 +17,8 @@ import {
   redirectAfterParentTeacherCodeLogin,
 } from "../../lib/parent-client/parent-teacher-code-access.js";
 import PasswordField from "../../components/auth/PasswordField";
+import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
+import { getParentPortalTheme } from "../../lib/parent-ui/parent-portal-theme.client.js";
 import { AUTH_FORGOT_PASSWORD_LINK } from "../../lib/auth/auth-reset.he";
 import { trackProductEvent } from "../../lib/analytics/track-event.client.js";
 
@@ -34,6 +36,9 @@ function isEmailIdentifier(value) {
 
 export default function ParentLoginPage() {
   const router = useRouter();
+  const { theme, isBright } = useStudentTheme();
+  const T = getParentPortalTheme(isBright);
+  const layoutProps = { studentTheme: theme, studentShell: "home" };
   const supabaseRef = useRef(null);
 
   const [mode, setMode] = useState("login");
@@ -178,15 +183,16 @@ export default function ParentLoginPage() {
 
   if (mode === "signup" && !preSignupPolicyCompleted) {
     return (
-      <Layout>
+      <Layout {...layoutProps}>
         <div className="max-w-4xl mx-auto px-4 py-8" dir="rtl" lang="he">
           <div className="max-w-md mx-auto">
             <div className="flex justify-end mb-4">
-              <PortalHomeBackLink />
+              <PortalHomeBackLink bright={isBright} />
             </div>
           </div>
           {signupPolicyDeclined ? (
             <PolicyAcceptanceDeclinedBlock
+              bright={isBright}
               returnLabel="חזרה למסך הכניסה"
               message="לא ניתן להמשיך בהרשמה ללא אישור תנאי השימוש ומדיניות הפרטיות."
               onReviewAgain={() => {
@@ -201,6 +207,7 @@ export default function ParentLoginPage() {
           ) : (
             <FullPolicyAcceptancePanel
               key={signupPanelKey}
+              bright={isBright}
               layout="fullPage"
               accessToken={null}
               acceptanceSource="parent_signup"
@@ -221,24 +228,22 @@ export default function ParentLoginPage() {
   }
 
   return (
-    <Layout>
+    <Layout {...layoutProps}>
       <div className="max-w-md mx-auto px-4 py-3 md:py-10" dir="rtl" lang="he">
         <PortalLoginHeading
           title="כניסת הורים"
           subtitle="כניסה והרשמה מהירה להורים."
+          bright={isBright}
         />
 
-        <section
-          className="mb-3 rounded-lg border border-white/10 bg-white/5 px-3.5 py-3 space-y-2 text-right"
-          aria-label="מידע לפתיחת חשבון הורה"
-        >
-          <h2 className="text-base font-bold text-white leading-snug">ברוכים הבאים הורים 👋</h2>
-          <p className="text-sm text-white/80 leading-relaxed">
+        <section className={T.infoBox} aria-label="מידע לפתיחת חשבון הורה">
+          <h2 className={T.infoTitle}>ברוכים הבאים הורים 👋</h2>
+          <p className={T.infoText}>
             כאן תוכלו לפתוח חשבון הורה, להוסיף את הילד/ה שלכם, ולאפשר לו/לה להיכנס לאזור הלמידה של
             LEO KIDS.
           </p>
-          <p className="text-sm text-white/70 leading-relaxed">אחרי פתיחת החשבון תוכלו:</p>
-          <p className="text-sm text-white/70 leading-relaxed">
+          <p className={T.infoText}>אחרי פתיחת החשבון תוכלו:</p>
+          <p className={T.infoText}>
             להוסיף ילד/ה, לקבל דוחות ולעקוב אחרי ההתקדמות בלמידה ועוד
           </p>
         </section>
@@ -251,7 +256,7 @@ export default function ParentLoginPage() {
               setMessage("");
             }}
             className={`flex-1 rounded px-3 py-2 text-sm font-semibold ${
-              mode === "login" ? "bg-amber-500 text-black" : "bg-white/10 text-white/80"
+              mode === "login" ? T.tabActive : T.tabIdle
             }`}
           >
             כניסה
@@ -263,7 +268,7 @@ export default function ParentLoginPage() {
               setMessage("");
             }}
             className={`flex-1 rounded px-3 py-2 text-sm font-semibold ${
-              mode === "signup" ? "bg-amber-500 text-black" : "bg-white/10 text-white/80"
+              mode === "signup" ? T.tabActive : T.tabIdle
             }`}
           >
             הרשמה
@@ -274,10 +279,10 @@ export default function ParentLoginPage() {
           {mode === "login" ? (
             <>
               <label className="block text-sm">
-                <span className="text-white/80">אימייל או שם משתמש</span>
+                <span className={T.label}>אימייל או שם משתמש</span>
                 <input
                   data-testid="parent-login-identifier"
-                  className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
+                  className={T.inputMt}
                   type="text"
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
@@ -287,6 +292,7 @@ export default function ParentLoginPage() {
                 />
               </label>
               <PasswordField
+                bright={isBright}
                 label="סיסמה או קוד כניסה"
                 value={secret}
                 onChange={(e) => setSecret(e.target.value)}
@@ -299,7 +305,7 @@ export default function ParentLoginPage() {
           ) : (
             <>
               <input
-                className="w-full rounded bg-black/40 border border-white/20 px-3 py-2"
+                className={T.input}
                 type="email"
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
@@ -307,6 +313,7 @@ export default function ParentLoginPage() {
                 required
               />
               <PasswordField
+                bright={isBright}
                 bare
                 value={secret}
                 onChange={(e) => setSecret(e.target.value)}
@@ -315,28 +322,21 @@ export default function ParentLoginPage() {
                 minLength={6}
                 autoComplete="new-password"
                 testId="parent-signup-password"
-                inputClassName="w-full rounded bg-black/40 border border-white/20 px-3 py-2 pe-10"
               />
               {preSignupPolicyCompleted ? (
-                <p className="text-xs text-emerald-300/90">
-                  ✓ המדיניות נקראה ואושרה — אפשר להמשיך בהרשמה.
-                </p>
+                <p className={T.success}>✓ המדיניות נקראה ואושרה — אפשר להמשיך בהרשמה.</p>
               ) : null}
             </>
           )}
 
-          <button
-            className="w-full rounded bg-amber-500 text-black font-semibold py-2 disabled:opacity-60"
-            disabled={signupSubmitDisabled}
-            type="submit"
-          >
+          <button className={T.submit} disabled={signupSubmitDisabled} type="submit">
             {busy ? "מבצע פעולה..." : mode === "signup" ? "יצירת חשבון הורה" : "כניסה"}
           </button>
           {mode === "login" ? (
             <p className="text-sm text-center">
               <Link
                 href="/auth/forgot-password?portal=parent"
-                className="text-amber-300 underline"
+                className={T.link}
                 data-testid="parent-forgot-password-link"
               >
                 {AUTH_FORGOT_PASSWORD_LINK}
@@ -348,6 +348,7 @@ export default function ParentLoginPage() {
         {multiStudents?.length ? (
           <div className="mt-4">
             <GuardianChildSelectForm
+              bright={isBright}
               students={multiStudents}
               busy={busy}
               onSelect={(id) => void onSelectGuardianChild(id)}
@@ -357,7 +358,7 @@ export default function ParentLoginPage() {
 
         {message ? (
           <p
-            className={`mt-3 text-sm ${messageKind === "teacher_code" ? "text-red-300" : "text-white/80"}`}
+            className={`mt-3 text-sm ${messageKind === "teacher_code" ? T.error : T.message}`}
             role="alert"
           >
             {message}
@@ -365,13 +366,13 @@ export default function ParentLoginPage() {
         ) : null}
 
         {mode === "login" ? (
-          <p className="mt-4 text-xs text-white/60 leading-relaxed">
+          <p className={`mt-4 text-xs leading-relaxed ${T.faint}`}>
             ביצירת חשבון או בשימוש באתר, מומלץ לעיין ב
-            <Link href="/terms" className="text-amber-300 underline mx-1">
+            <Link href="/terms" className={T.linkInline}>
               תנאי שימוש
             </Link>
             וב
-            <Link href="/privacy" className="text-amber-300 underline mx-1">
+            <Link href="/privacy" className={T.linkInline}>
               מדיניות פרטיות
             </Link>
             .

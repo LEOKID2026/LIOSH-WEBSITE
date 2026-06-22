@@ -3,6 +3,7 @@ import {
   fetchPolicyAcceptanceStatus,
   POLICY_STATUS_UNAVAILABLE_HE,
 } from "../../lib/parent-client/policy-acceptance-api";
+import { getParentPortalTheme } from "../../lib/parent-ui/parent-portal-theme.client.js";
 import FullPolicyAcceptancePanel from "./FullPolicyAcceptancePanel";
 import PolicyAcceptanceDeclinedBlock from "./PolicyAcceptanceDeclinedBlock";
 
@@ -15,9 +16,17 @@ import PolicyAcceptanceDeclinedBlock from "./PolicyAcceptanceDeclinedBlock";
  *   onLogout: () => void | Promise<void>;
  *   onReady?: () => void | Promise<void>;
  *   children: import("react").ReactNode;
+ *   bright?: boolean;
  * }} props
  */
-export default function ParentPolicyAcceptanceGate({ accessToken, onLogout, onReady, children }) {
+export default function ParentPolicyAcceptanceGate({
+  accessToken,
+  onLogout,
+  onReady,
+  children,
+  bright = false,
+}) {
+  const T = getParentPortalTheme(bright);
   const [loading, setLoading] = useState(true);
   const [statusChecked, setStatusChecked] = useState(false);
   const [accepted, setAccepted] = useState(false);
@@ -86,7 +95,7 @@ export default function ParentPolicyAcceptanceGate({ accessToken, onLogout, onRe
   if (loading) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-10" dir="rtl" lang="he">
-        <p className="text-white/70 text-sm">בודק אישור מדיניות...</p>
+        <p className={T.loading}>בודק אישור מדיניות...</p>
       </div>
     );
   }
@@ -94,27 +103,18 @@ export default function ParentPolicyAcceptanceGate({ accessToken, onLogout, onRe
   if (!statusChecked) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-10" dir="rtl" lang="he">
-        <div
-          className="rounded-xl border border-amber-400/35 bg-black/50 p-5 sm:p-6 space-y-4 text-right"
-          role="alert"
-        >
-          <p className="text-sm text-white/85 leading-relaxed">
-            {error || POLICY_STATUS_UNAVAILABLE_HE}
-          </p>
+        <div className={`${T.gateBox}`} role="alert">
+          <p className={T.gateText}>{error || POLICY_STATUS_UNAVAILABLE_HE}</p>
           <div className="flex flex-col sm:flex-row gap-2 sm:justify-end">
             <button
               type="button"
               onClick={() => void loadStatus()}
-              className="rounded bg-amber-500 text-black px-4 py-2 text-sm font-bold"
+              className={T.amberBtn}
             >
               נסו שוב
             </button>
             {typeof onLogout === "function" ? (
-              <button
-                type="button"
-                onClick={() => void onLogout()}
-                className="rounded border border-white/20 bg-white/5 px-4 py-2 text-sm font-semibold text-white/80"
-              >
+              <button type="button" onClick={() => void onLogout()} className={T.gateSecondary}>
                 יציאה
               </button>
             ) : null}
@@ -132,6 +132,7 @@ export default function ParentPolicyAcceptanceGate({ accessToken, onLogout, onRe
     return (
       <div className="max-w-3xl mx-auto px-4 py-8" dir="rtl" lang="he">
         <PolicyAcceptanceDeclinedBlock
+          bright={bright}
           onReviewAgain={() => {
             setDeclined(false);
             setPanelKey((k) => k + 1);
@@ -146,6 +147,7 @@ export default function ParentPolicyAcceptanceGate({ accessToken, onLogout, onRe
     <div className="max-w-3xl mx-auto px-4 py-8" dir="rtl" lang="he">
       <FullPolicyAcceptancePanel
         key={panelKey}
+        bright={bright}
         layout="fullPage"
         accessToken={accessToken}
         acceptanceSource="parent_dashboard"

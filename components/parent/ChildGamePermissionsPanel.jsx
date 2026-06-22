@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { getParentPortalTheme } from "../../lib/parent-ui/parent-portal-theme.client.js";
 
 const CATEGORY_LABELS = {
   online: "משחקים מקוונים",
@@ -6,7 +7,8 @@ const CATEGORY_LABELS = {
   solo: "משחקים עצמאיים",
 };
 
-export default function ChildGamePermissionsPanel({ studentId, accessToken }) {
+export default function ChildGamePermissionsPanel({ studentId, accessToken, bright = false }) {
+  const T = getParentPortalTheme(bright);
   const [permissions, setPermissions] = useState({
     onlineEnabled: true,
     offlineEnabled: true,
@@ -69,34 +71,31 @@ export default function ChildGamePermissionsPanel({ studentId, accessToken }) {
 
   if (loading) {
     return (
-      <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-        <p className="text-xs text-white/50 text-right">טוען הרשאות משחקים...</p>
+      <div className={T.permissionsBox}>
+        <p className={`${T.permissionsHint} text-right`}>טוען הרשאות משחקים...</p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl border border-white/10 bg-white/5 p-4 space-y-3">
-      <h3 className="text-sm font-semibold text-white text-right">הרשאות משחקים</h3>
-      <p className="text-xs text-white/50 text-right">
+    <div className={`${T.permissionsBox} space-y-3`}>
+      <h3 className={T.permissionsTitle}>הרשאות משחקים</h3>
+      <p className={T.permissionsHint}>
         כיבוי קטגוריה נועל את כל המשחקים בה. הילד יראה את הקטגוריה עם הודעת נעילה.
       </p>
-      {error ? <p className="text-xs text-red-300 text-right">{error}</p> : null}
+      {error ? <p className={`text-xs text-right ${bright ? "text-rose-600" : "text-red-300"}`}>{error}</p> : null}
       <div className="space-y-2">
         {["online", "offline", "solo"].map((key) => {
           const field = `${key}Enabled`;
           const enabled = permissions[field] !== false;
           return (
-            <div
-              key={key}
-              className="flex items-center justify-between gap-3 rounded-lg border border-white/10 bg-black/20 px-3 py-2"
-            >
+            <div key={key} className={T.permissionsRow}>
               <button
                 type="button"
                 disabled={saving === key}
                 onClick={() => toggleCategory(key)}
                 className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition ${
-                  enabled ? "bg-emerald-500" : "bg-white/20"
+                  enabled ? "bg-emerald-500" : bright ? "bg-slate-300" : "bg-white/20"
                 } ${saving === key ? "opacity-60" : ""}`}
                 aria-pressed={enabled}
               >
@@ -106,7 +105,7 @@ export default function ChildGamePermissionsPanel({ studentId, accessToken }) {
                   }`}
                 />
               </button>
-              <span className="text-sm text-white text-right flex-1">{CATEGORY_LABELS[key]}</span>
+              <span className={T.permissionsLabel}>{CATEGORY_LABELS[key]}</span>
             </div>
           );
         })}

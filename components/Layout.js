@@ -4,7 +4,8 @@ import { useState } from "react";
 import DevCoinTopupNav from "./layout/DevCoinTopupNav";
 import SiteLegalFooterBar from "./layout/SiteLegalFooterBar.jsx";
 import StudentAdSlot from "./student/StudentAdSlot.jsx";
-import { getContextNav, isImmersiveGameLayoutPath, shouldLayoutUseRtl, shouldShowLayoutStudentAdSlot } from "../lib/site-nav";
+import StudentThemePicker from "./student/StudentThemePicker.jsx";
+import { getContextNav, isImmersiveGameLayoutPath, shouldLayoutUseRtl, shouldShowLayoutStudentAdSlot, shouldShowLayoutThemePicker } from "../lib/site-nav";
 import { STUDENT_BRIGHT_PAGE_BG_STYLE, STUDENT_BRIGHT_SITE_CHROME_BG } from "../lib/student-ui/student-bright-page-background.client.js";
 import { STUDENT_LAYOUT_CHROME_BOTTOM_CSS } from "../lib/student-ui/student-ad-slot.client.js";
 
@@ -37,6 +38,7 @@ export default function Layout({
       : undefined;
   const { links: menuLinks, showDevCoinTopup } = getContextNav(pathname, { authPortal });
   const layoutRtlHebrew = shouldLayoutUseRtl(pathname);
+  const showThemePicker = shouldShowLayoutThemePicker(pathname);
 
   const resolvedTheme =
     studentTheme ||
@@ -66,8 +68,8 @@ export default function Layout({
     ? "px-2 py-1.5 rounded-full hover:bg-sky-50 text-slate-700 transition whitespace-nowrap"
     : "px-2 py-1.5 rounded-full hover:bg-white/10 transition whitespace-nowrap";
   const menuBtnClass = isStudentBright
-    ? "md:hidden ms-auto px-3 py-2 rounded-lg border border-slate-200 hover:bg-sky-50 text-slate-700 transition"
-    : "md:hidden ms-auto px-3 py-2 rounded-lg border border-white/20 hover:bg-white/10 transition";
+    ? "md:hidden px-3 py-2 rounded-lg border border-slate-200 hover:bg-sky-50 text-slate-700 transition"
+    : "md:hidden px-3 py-2 rounded-lg border border-white/20 hover:bg-white/10 transition";
   const mobileMenuOverlay = isStudentBright ? "bg-slate-900/40" : "bg-black/70";
   const mobileMenuPanel = isStudentBright
     ? "absolute top-4 right-4 bg-white border border-slate-200 rounded-2xl p-4 w-64 shadow-xl"
@@ -123,13 +125,18 @@ export default function Layout({
             {showDevCoinTopup ? <DevCoinTopupNav variant="desktop" /> : null}
           </div>
 
-          <button
-            className={menuBtnClass}
-            onClick={() => setMenuOpen((prev) => !prev)}
-            aria-label="פתיחת תפריט"
-          >
-            ☰
-          </button>
+          <div className="ms-auto flex items-center gap-1.5 shrink-0">
+            {showThemePicker ? (
+              <StudentThemePicker variant="icon" iconSize="nav" />
+            ) : null}
+            <button
+              className={`${menuBtnClass} md:hidden`}
+              onClick={() => setMenuOpen((prev) => !prev)}
+              aria-label="פתיחת תפריט"
+            >
+              ☰
+            </button>
+          </div>
         </nav>
       </header>
 
@@ -160,6 +167,15 @@ export default function Layout({
                 </Link>
               ))}
             </div>
+            {showThemePicker ? (
+              <div
+                className={`mt-3 pt-3 flex justify-center ${
+                  isStudentBright ? "border-t border-slate-200" : "border-t border-white/10"
+                }`}
+              >
+                <StudentThemePicker variant="icon" iconSize="nav" />
+              </div>
+            ) : null}
             {showDevCoinTopup ? <DevCoinTopupNav variant="mobile" /> : null}
           </div>
         </div>

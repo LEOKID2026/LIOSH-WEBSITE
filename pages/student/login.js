@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 import PortalLoginHeading from "../../components/auth/PortalLoginHeading";
-import StudentThemePicker from "../../components/student/StudentThemePicker";
 import StudentParentInviteModal from "../../components/student/StudentParentInviteModal";
 import { buildParentInviteMessageHe } from "../../lib/site/public-site-origin.client.js";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
@@ -214,9 +213,6 @@ export default function StudentLoginPage() {
                 {copyMessageFeedback}
               </p>
             ) : null}
-          </div>
-          <div className="pt-2">
-            <StudentThemePicker className="w-full" />
           </div>
         </form>
 

@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
 import { isStudentIdentityDiagnosticsEnabled } from "../../lib/dev-student-identity-client";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
-import StudentThemePicker from "../../components/student/StudentThemePicker";
 
 const LEARNING_GAMES = [
   {
@@ -103,9 +102,6 @@ export default function LearningHub({ showDevStudentSimulator }) {
           <p className={`${T.hubBadge} max-w-[min(100%,14rem)] sm:max-w-none text-center leading-tight`}>
             📚 תרגול · חזרה · שיפור
           </p>
-          <div className={T.hubTopBarTheme}>
-            <StudentThemePicker variant="icon" />
-          </div>
         </div>
 
         <header className={T.hubHeaderCard}>

@@ -1,8 +1,8 @@
 import Link from "next/link";
-import StudentThemePicker from "../student/StudentThemePicker";
 
 /**
- * Top bar for game hub pages — back, category badge, and theme picker on one row.
+ * Top bar for game hub pages — back and category badge on one row.
+ * Theme toggle lives in the site header HUD (Layout).
  * @param {{ backHref: string, backLabel: string, badge: string, backBtnClass: string, badgeClass: string }} props
  */
 export default function GamesHubNavBar({ backHref, backLabel, badge, backBtnClass, badgeClass }) {
@@ -12,9 +12,7 @@ export default function GamesHubNavBar({ backHref, backLabel, badge, backBtnClas
         {backLabel}
       </Link>
       <p className={`${badgeClass} justify-self-center text-center leading-none`}>{badge}</p>
-      <div className="flex h-8 min-h-8 items-center justify-self-end">
-        <StudentThemePicker variant="icon" iconSize="nav" />
-      </div>
+      <span className="justify-self-end" aria-hidden="true" />
     </div>
   );
 }
