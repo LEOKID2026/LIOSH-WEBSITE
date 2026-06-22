@@ -14,6 +14,10 @@ import {
   teacherAuthFetch,
 } from "../../lib/teacher-portal/teacher-ui.he.js";
 import TeacherInviteOthersButton from "./TeacherInviteOthersButton";
+import {
+  getTeacherPortalTheme,
+  teacherStatusBadgeClass,
+} from "../../lib/teacher-ui/teacher-portal-theme.client.js";
 
 const FILTER_OPTIONS = [
   { key: "all", label: "הכל" },
@@ -42,12 +46,12 @@ function formatCompactStudentStats(student, { activityLoading = false } = {}) {
   return `מפגשים: ${sessions} · תשובות: ${answers} · הצלחה: ${acc}`;
 }
 
-function StudentDashboardCard({ student, activityLoading = false }) {
+function StudentDashboardCard({ student, activityLoading = false, T, bright = false }) {
   const pending = Boolean(student.activityPending || activityLoading);
   const badgeLabel = pending ? "טוען…" : student.statusBadge || "—";
 
   return (
-    <li className="rounded-lg border border-white/10 bg-black/30 p-2.5 sm:p-3 flex flex-col gap-1.5 min-w-0 h-full">
+    <li className={T.studentCard}>
       <p
         className="font-semibold text-sm leading-tight truncate"
         title={student.studentFullName}
@@ -55,54 +59,32 @@ function StudentDashboardCard({ student, activityLoading = false }) {
         {student.studentFullName}
       </p>
       <span
-        className={`self-start text-[10px] sm:text-xs font-medium px-2 py-0.5 rounded-full border leading-none ${statusBadgeClass(
-          pending ? null : student.statusBadge
+        className={`self-start text-[10px] sm:text-xs font-medium px-2 py-0.5 rounded-full border leading-none ${teacherStatusBadgeClass(
+          pending ? null : student.statusBadge,
+          bright
         )}`}
       >
         {badgeLabel}
       </span>
-      <p className="text-[10px] sm:text-xs text-white/60 leading-snug break-words">
+      <p className={T.studentStats}>
         {formatCompactStudentStats(student, { activityLoading })}
       </p>
-      <Link
-        href={`/teacher/student/${student.studentId}`}
-        className="mt-auto w-full rounded border border-amber-400/40 text-amber-300 text-xs font-semibold px-2 py-1.5 hover:bg-amber-500/10 text-center"
-      >
+      <Link href={`/teacher/student/${student.studentId}`} className={T.studentReportLink}>
         צפייה בדוח
       </Link>
     </li>
   );
 }
 
-function statusBadgeClass(badge) {
-  switch (badge) {
-    case "חזק":
-      return "bg-emerald-500/20 text-emerald-200 border-emerald-400/40";
-    case "תקין":
-      return "bg-sky-500/20 text-sky-200 border-sky-400/40";
-    case "במעקב":
-      return "bg-amber-500/20 text-amber-200 border-amber-400/40";
-    case "צריך חיזוק":
-      return "bg-orange-500/20 text-orange-200 border-orange-400/40";
-    case "דורש התערבות":
-      return "bg-red-500/20 text-red-200 border-red-400/40";
-    case "פעילות נמוכה":
-    case "אין מספיק נתונים":
-      return "bg-white/10 text-white/70 border-white/20";
-    default:
-      return "bg-white/10 text-white/70 border-white/20";
-  }
-}
-
-function Modal({ title, onClose, children }) {
+function Modal({ title, onClose, children, T }) {
   return (
     <OverlayFixed>
-      <div className="absolute inset-0 bg-black/70" aria-hidden="true" onClick={onClose} />
+      <div className={T.modalOverlay} aria-hidden="true" onClick={onClose} />
       <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto">
-        <ModalCard>
+        <ModalCard T={T}>
           <div className="flex items-center justify-between gap-2 mb-4">
             <h3 className="text-lg font-semibold">{title}</h3>
-            <button type="button" onClick={onClose} className="text-white/60 text-sm">
+            <button type="button" onClick={onClose} className={T.modalClose}>
               סגור
             </button>
           </div>
@@ -127,7 +109,15 @@ function resolveManageClassIds(classInfo) {
   return classInfo?.primaryClassId || classInfo?.classId ? [classInfo.primaryClassId || classInfo.classId] : [];
 }
 
-function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerClass, onClose, onRefresh }) {
+function ClassManagePanel({
+  accessToken,
+  classInfo,
+  allStudents,
+  maxStudentsPerClass,
+  onClose,
+  onRefresh,
+  T,
+}) {
   const manageClassIds = useMemo(() => resolveManageClassIds(classInfo), [classInfo]);
   const primaryClassId = classInfo?.primaryClassId || classInfo?.classId;
   const [className, setClassName] = useState(classInfo?.name || "");
@@ -295,13 +285,13 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerC
   };
 
   return (
-    <Modal title="ניהול כיתה" onClose={onClose}>
+    <Modal title="ניהול כיתה" onClose={onClose} T={T}>
       <div className="space-y-4">
         <div>
-          <label className="block text-sm text-white/70 mb-1">שם הכיתה</label>
+          <label className={T.label}>שם הכיתה</label>
           <div className="flex flex-wrap gap-2">
             <input
-              className="flex-1 min-w-0 rounded bg-black/40 border border-white/20 px-3 py-2 text-sm"
+              className={T.input}
               value={className}
               onChange={(e) => setClassName(e.target.value)}
             />
@@ -309,7 +299,7 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerC
               type="button"
               disabled={busy}
               onClick={onRenameClass}
-              className="shrink-0 rounded bg-amber-500 text-black text-sm font-semibold px-3 py-2 disabled:opacity-60"
+              className={T.primaryBtn}
             >
               שמור
             </button>
@@ -320,7 +310,7 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerC
           <h4 className="text-sm font-semibold mb-2">הוספת ילד/ה</h4>
           <div className="flex flex-wrap gap-2">
             <input
-              className="flex-1 min-w-0 rounded bg-black/40 border border-white/20 px-3 py-2 text-sm"
+              className={T.input}
               placeholder="שם מלא של ילד/ה חדש"
               value={newStudentName}
               onChange={(e) => setNewStudentName(e.target.value)}
@@ -329,14 +319,14 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerC
               type="button"
               disabled={busy || atClassCap}
               onClick={onCreateAndAdd}
-              className="shrink-0 rounded bg-emerald-600 text-white text-sm font-semibold px-3 py-2 disabled:opacity-60"
+              className={T.emeraldBtn}
             >
               הוסף
             </button>
           </div>
           {addableStudents.length > 0 ? (
             <div className="mt-2 space-y-1">
-              <p className="text-xs text-white/50">ילדים מקושרים שלא בכיתה:</p>
+              <p className={`text-xs ${T.faint}`}>ילדים מקושרים שלא בכיתה:</p>
               {addableStudents.slice(0, 5).map((s) => (
                 <div key={s.studentId} className="flex items-center justify-between gap-2 text-sm">
                   <span className="truncate">{s.studentFullName}</span>
@@ -344,7 +334,7 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerC
                     type="button"
                     disabled={busy || atClassCap}
                     onClick={() => onAddExisting(s.studentId)}
-                    className="text-amber-300 text-xs font-semibold shrink-0 disabled:opacity-50"
+                    className={`${T.ghostLink} disabled:opacity-50`}
                   >
                     הוסף לכיתה
                   </button>
@@ -359,24 +349,17 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerC
             ילדים בכיתה ({members.length}
             {perClassCap != null ? ` / ${perClassCap}` : ""})
           </h4>
-          {atClassCap ? (
-            <p className="text-sm text-amber-200 mb-2">
-              הכיתה הגיעה למגבלת {perClassCap} ילדים.
-            </p>
-          ) : null}
+          {atClassCap ? <p className={T.warningText}>הכיתה הגיעה למגבלת {perClassCap} ילדים.</p> : null}
           {members.length === 0 ? (
-            <p className="text-sm text-white/60">אין ילדים בכיתה.</p>
+            <p className={T.muted}>אין ילדים בכיתה.</p>
           ) : (
             <ul className="space-y-2 max-h-64 overflow-y-auto">
               {members.map((m) => (
-                <li
-                  key={m.studentId}
-                  className="rounded-lg border border-white/10 bg-black/30 p-3 space-y-2"
-                >
+                <li key={m.studentId} className={T.panelListItem}>
                   {editStudentId === m.studentId ? (
                     <EditRow>
                       <input
-                        className="flex-1 min-w-0 rounded bg-black/40 border border-white/20 px-2 py-1.5 text-sm"
+                        className={T.inputSm}
                         value={editName}
                         onChange={(e) => setEditName(e.target.value)}
                       />
@@ -384,14 +367,14 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerC
                         type="button"
                         disabled={busy}
                         onClick={() => onSaveStudentName(m.studentId)}
-                        className="text-emerald-300 text-xs font-semibold"
+                        className={T.successLink}
                       >
                         שמור
                       </button>
                       <button
                         type="button"
                         onClick={() => setEditStudentId(null)}
-                        className="text-white/50 text-xs"
+                        className={T.mutedLink}
                       >
                         ביטול
                       </button>
@@ -404,7 +387,7 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerC
                       <div className="flex flex-wrap gap-2 shrink-0">
                         <button
                           type="button"
-                          className="text-xs text-amber-300"
+                          className={T.ghostLink}
                           onClick={() => {
                             setEditStudentId(m.studentId);
                             setEditName(m.studentFullName || m.studentFullNameMasked || "");
@@ -414,14 +397,14 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerC
                         </button>
                         <button
                           type="button"
-                          className="text-xs text-white/60"
+                          className={T.mutedLink}
                           onClick={() => onRemoveFromClass(m)}
                         >
                           הסר מהכיתה
                         </button>
                         <button
                           type="button"
-                          className="text-xs text-red-300"
+                          className={T.dangerLink}
                           onClick={() => onArchiveStudent(m.studentId)}
                         >
                           הסר מרשימה
@@ -436,7 +419,7 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerC
         </section>
 
         {error ? (
-          <p className="text-red-300 text-sm" role="alert">
+          <p className={T.error} role="alert">
             {error}
           </p>
         ) : null}
@@ -453,12 +436,8 @@ function OverlayFixed({ children }) {
   );
 }
 
-function ModalCard({ children }) {
-  return (
-    <div className="rounded-xl border border-white/15 bg-gray-900 p-5 w-full shadow-xl">
-      {children}
-    </div>
-  );
+function ModalCard({ children, T }) {
+  return <div className={T.modalPanel}>{children}</div>;
 }
 
 function EditRow({ children }) {
@@ -469,7 +448,7 @@ function rosterFilterLabel(option) {
   return rosterFilterLabelHe(option) || "";
 }
 
-function ClassesEmptyState({ accessToken, onCreated }) {
+function ClassesEmptyState({ accessToken, onCreated, T }) {
   const [className, setClassName] = useState("כיתה ג׳ - LEO");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -493,17 +472,14 @@ function ClassesEmptyState({ accessToken, onCreated }) {
   };
 
   return (
-    <section
-      className="rounded-xl border border-dashed border-white/20 bg-black/20 p-4 sm:p-5"
-      data-testid="teacher-classes-empty-state"
-    >
+    <section className={T.emptySection} data-testid="teacher-classes-empty-state">
       <h2 className="text-lg font-semibold mb-2">כיתות</h2>
-      <p className="text-sm text-white/70 mb-1">{DASHBOARD_NO_CLASSES_TITLE}</p>
-      <p className="text-sm text-white/50 mb-4">{DASHBOARD_NO_CLASSES_HINT}</p>
+      <p className={`text-sm mb-1 ${T.muted}`}>{DASHBOARD_NO_CLASSES_TITLE}</p>
+      <p className={`text-sm mb-4 ${T.faint}`}>{DASHBOARD_NO_CLASSES_HINT}</p>
       <label className="block text-sm mb-3">
-        <span className="text-white/70">{DASHBOARD_CREATE_CLASS_LABEL}</span>
+        <span className={T.emptyLabel}>{DASHBOARD_CREATE_CLASS_LABEL}</span>
         <input
-          className="mt-1 w-full rounded-lg bg-black/40 border border-white/20 px-3 py-2 text-sm text-right"
+          className={T.emptyInput}
           value={className}
           onChange={(e) => setClassName(e.target.value)}
           placeholder={DASHBOARD_CREATE_CLASS_PLACEHOLDER}
@@ -513,12 +489,12 @@ function ClassesEmptyState({ accessToken, onCreated }) {
         type="button"
         disabled={busy || !className.trim()}
         onClick={() => void onCreateClass()}
-        className="rounded-lg bg-amber-500 text-black text-sm font-semibold px-4 py-2 disabled:opacity-60"
+        className={T.primaryBtn}
       >
         {busy ? "יוצר…" : DASHBOARD_CREATE_CLASS_BUTTON}
       </button>
       {error ? (
-        <p className="text-red-300 text-sm mt-3" role="alert">
+        <p className={`${T.error} mt-3`} role="alert">
           {error}
         </p>
       ) : null}
@@ -526,7 +502,15 @@ function ClassesEmptyState({ accessToken, onCreated }) {
   );
 }
 
-export default function TeacherDashboardClient({ accessToken, dashboard, activityLoading = false, onLogout, onRefresh }) {
+export default function TeacherDashboardClient({
+  accessToken,
+  dashboard,
+  activityLoading = false,
+  onLogout,
+  onRefresh,
+  bright = false,
+}) {
+  const T = getTeacherPortalTheme(bright);
   const [search, setSearch] = useState("");
   const [rosterFilterKey, setRosterFilterKey] = useState(
     () => dashboard?.defaultRosterFilterKey || "all"
@@ -579,32 +563,29 @@ export default function TeacherDashboardClient({ accessToken, dashboard, activit
     <div className="space-y-6 overflow-x-hidden">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xl font-semibold">
+          <p className={`text-xl font-semibold ${T.heading}`}>
             {displayName ? `שלום, ${displayName}` : "שלום, מורה"}
           </p>
-          <p className="text-sm text-white/60 mt-1">לוח בקרה — כיתות וילדים</p>
+          <p className={`text-sm mt-1 ${T.subheading}`}>לוח בקרה — כיתות וילדים</p>
         </div>
-        <button
-          type="button"
-          onClick={onLogout}
-          className="text-sm px-3 py-1.5 rounded border border-white/20 hover:bg-white/10 shrink-0"
-        >
+        <button type="button" onClick={onLogout} className={T.logoutBtn}>
           יציאה
         </button>
       </div>
 
-      <section className="rounded-xl border border-white/15 bg-black/30 p-4 sm:p-5">
+      <section className={T.section}>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <SummaryStat
             label="ילדים"
             value={dashboard?.summary?.studentCount ?? 0}
             testId="teacher-dashboard-summary-students"
+            T={T}
           />
-          <SummaryStat label="כיתות" value={dashboard?.summary?.classCount ?? 0} />
+          <SummaryStat label="כיתות" value={dashboard?.summary?.classCount ?? 0} T={T} />
           <div className="col-span-2 flex flex-col justify-center gap-2">
-            <p className="text-xs text-white/50 mb-1">נושא/פעילות אחרונה</p>
+            <p className={`text-xs mb-1 ${T.faint}`}>נושא/פעילות אחרונה</p>
             <p
-              className="text-sm font-medium leading-snug"
+              className={`text-sm font-medium leading-snug ${T.heading}`}
               data-testid="teacher-dashboard-latest-subject"
             >
               {activityLoading
@@ -613,14 +594,14 @@ export default function TeacherDashboardClient({ accessToken, dashboard, activit
             </p>
             <Link
               href="/teacher/worksheets"
-              className="text-sm text-violet-300 hover:underline font-medium w-fit"
+              className={T.linkViolet}
               data-testid="teacher-dashboard-worksheets-link"
             >
               דפי עבודה →
             </Link>
             <Link
               href="/teacher/students/activities/new"
-              className="text-sm text-emerald-300 hover:underline font-medium w-fit"
+              className={T.linkEmerald}
               data-testid="teacher-dashboard-private-students-activity-link"
             >
               שלח פעילות לילדים פרטיים →
@@ -630,24 +611,18 @@ export default function TeacherDashboardClient({ accessToken, dashboard, activit
       </section>
 
       {(dashboard?.teacherAttentionSignals?.topAttentionStudents || []).length > 0 ? (
-        <section
-          className="rounded-xl border border-amber-400/25 bg-amber-500/5 p-4 sm:p-5"
-          data-testid="teacher-dashboard-attention-signals"
-        >
-          <h2 className="text-lg font-semibold mb-3">ילדים הדורשים תשומת לב</h2>
+        <section className={T.attentionSection} data-testid="teacher-dashboard-attention-signals">
+          <h2 className={`text-lg font-semibold mb-3 ${T.heading}`}>ילדים הדורשים תשומת לב</h2>
           <ul className="grid gap-2 sm:grid-cols-3">
             {dashboard.teacherAttentionSignals.topAttentionStudents.map((s) => (
-              <li
-                key={s.studentId}
-                className="rounded-lg border border-white/10 bg-black/30 p-3 text-sm flex flex-col gap-1"
-              >
+              <li key={s.studentId} className={T.attentionCard}>
                 <span className="font-semibold truncate">
                   {formatTeacherAttentionStudentLineHe(
                     s.studentFullNameMasked,
                     s.classDisplayLabel
                   )}
                 </span>
-                <span className="text-xs text-amber-200">
+                <span className={T.attentionSeverity}>
                   {s.guidanceSeverityTier === "critical"
                     ? "דורש התערבות מיידית"
                     : s.guidanceSeverityTier === "needs_reinforcement"
@@ -657,15 +632,15 @@ export default function TeacherDashboardClient({ accessToken, dashboard, activit
                         : "כדאי לעקוב"}
                 </span>
                 {s.topWeakTopicLabelHe ? (
-                  <span className="text-white/70 text-xs">{s.topWeakTopicLabelHe}</span>
+                  <span className={T.attentionTopic}>{s.topWeakTopicLabelHe}</span>
                 ) : null}
-                <span className="text-white/50 text-xs">
+                <span className={T.attentionMeta}>
                   {s.accuracyPct != null ? `${Math.round(s.accuracyPct)}% הצלחה` : ""}
                   {s.totalAnswers ? ` · ${s.totalAnswers} תשובות` : ""}
                 </span>
                 <Link
                   href={`/teacher/student/${encodeURIComponent(s.studentId)}`}
-                  className="text-amber-300 text-xs hover:underline mt-1"
+                  className={T.attentionLink}
                 >
                   צפייה בדוח
                 </Link>
@@ -676,11 +651,8 @@ export default function TeacherDashboardClient({ accessToken, dashboard, activit
       ) : null}
 
       {(dashboard?.classes || []).length > 0 ? (
-        <section
-          className="rounded-xl border border-white/15 bg-black/30 p-4 sm:p-5"
-          data-testid="teacher-class-cards-section"
-        >
-          <h2 className="text-lg font-semibold mb-3">כיתות שלי</h2>
+        <section className={T.classSection} data-testid="teacher-class-cards-section">
+          <h2 className={`text-lg font-semibold mb-3 ${T.heading}`}>כיתות שלי</h2>
           <ul className="grid gap-3 sm:grid-cols-2">
             {(dashboard.classes || []).map((c) => {
               const rosterKey = c.physicalGroupKey || c.classId;
@@ -726,75 +698,71 @@ export default function TeacherDashboardClient({ accessToken, dashboard, activit
                       ]
                     : [];
               return (
-              <li
-                key={rosterKey}
-                className={`rounded-lg border p-3 flex flex-col gap-2 ${
-                  rosterFilterKey === rosterKey
-                    ? "border-amber-400/50 bg-amber-500/10"
-                    : "border-white/10 bg-black/20"
-                }`}
-                data-testid={`teacher-physical-class-card-${rosterKey}`}
-              >
-                <div>
-                  <p className="font-semibold break-words">{c.name}</p>
-                  <p className="text-sm text-white/65 mt-1">
-                    ילדים: {studentCount}
-                  </p>
-                  {c.subjectsLabel ? (
-                    <p className="text-sm text-white/55 mt-0.5">מקצועות: {c.subjectsLabel}</p>
-                  ) : null}
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setRosterFilterKey(rosterKey)}
-                    className="text-xs rounded border border-white/25 px-3 py-1.5 hover:bg-white/10"
-                    data-testid={`teacher-roster-filter-class-${rosterKey}`}
-                  >
-                    הצגת ילדי הכיתה
-                  </button>
-                  {reportLinks.map((link) => (
-                    <Link
-                      key={link.classId}
-                      href={link.href}
-                      className="text-xs rounded bg-amber-500 text-black font-semibold px-3 py-1.5"
-                      data-testid={`teacher-class-report-${link.classId}`}
+                <li
+                  key={rosterKey}
+                  className={
+                    rosterFilterKey === rosterKey ? T.classCardActive : T.classCard
+                  }
+                  data-testid={`teacher-physical-class-card-${rosterKey}`}
+                >
+                  <div>
+                    <p className="font-semibold break-words">{c.name}</p>
+                    <p className={T.classMeta}>ילדים: {studentCount}</p>
+                    {c.subjectsLabel ? (
+                      <p className={T.classSubjects}>מקצועות: {c.subjectsLabel}</p>
+                    ) : null}
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setRosterFilterKey(rosterKey)}
+                      className={T.secondaryBtn}
+                      data-testid={`teacher-roster-filter-class-${rosterKey}`}
                     >
-                      {link.label}
-                    </Link>
-                  ))}
-                  {activityLinks.map((link) => (
-                    <Link
-                      key={link.classId}
-                      href={link.href}
-                      className="text-xs rounded border border-amber-400/40 text-amber-200 px-3 py-1.5 hover:bg-amber-500/10"
-                      data-testid={`teacher-class-activities-${link.classId}`}
+                      הצגת ילדי הכיתה
+                    </button>
+                    {reportLinks.map((link) => (
+                      <Link
+                        key={link.classId}
+                        href={link.href}
+                        className={T.amberReportBtn}
+                        data-testid={`teacher-class-report-${link.classId}`}
+                      >
+                        {link.label}
+                      </Link>
+                    ))}
+                    {activityLinks.map((link) => (
+                      <Link
+                        key={link.classId}
+                        href={link.href}
+                        className={T.amberOutlineBtn}
+                        data-testid={`teacher-class-activities-${link.classId}`}
+                      >
+                        {link.label}
+                      </Link>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => setManageClass(c)}
+                      className={T.secondaryBtn}
+                      data-testid={`teacher-class-manage-${rosterKey}`}
                     >
-                      {link.label}
-                    </Link>
-                  ))}
-                  <button
-                    type="button"
-                    onClick={() => setManageClass(c)}
-                    className="text-xs rounded border border-white/25 px-3 py-1.5 hover:bg-white/10"
-                    data-testid={`teacher-class-manage-${rosterKey}`}
-                  >
-                    ניהול כיתה
-                  </button>
-                </div>
-              </li>
+                      ניהול כיתה
+                    </button>
+                  </div>
+                </li>
               );
             })}
           </ul>
         </section>
       ) : (
-        <ClassesEmptyState accessToken={accessToken} onCreated={onRefresh} />
+        <ClassesEmptyState accessToken={accessToken} onCreated={onRefresh} T={T} />
       )}
 
       <section data-testid="teacher-student-roster-section">
-        <h2 className="text-lg font-semibold mb-1">ילדים</h2>
+        <h2 className={`text-lg font-semibold mb-1 ${T.heading}`}>ילדים</h2>
         {activeRosterOption && rosterFilterLabel(activeRosterOption) ? (
-          <p className="text-sm text-white/60 mb-3" data-testid="teacher-roster-active-label">
+          <p className={`text-sm mb-3 ${T.muted}`} data-testid="teacher-roster-active-label">
             מציג: {rosterFilterLabel(activeRosterOption)}
           </p>
         ) : null}
@@ -809,24 +777,21 @@ export default function TeacherDashboardClient({ accessToken, dashboard, activit
             {rosterFilters.map((opt) => {
               const tabLabel = rosterFilterLabel(opt);
               if (!tabLabel) return null;
+              const isActive = rosterFilterKey === opt.key;
+              const activeClass =
+                opt.type === "direct" ? T.rosterTabActiveDirect : T.rosterTabActiveClass;
               return (
-              <button
-                key={opt.key}
-                type="button"
-                role="tab"
-                aria-selected={rosterFilterKey === opt.key}
-                onClick={() => setRosterFilterKey(opt.key)}
-                className={`text-xs sm:text-sm px-3 py-1.5 rounded-full border transition ${
-                  rosterFilterKey === opt.key
-                    ? opt.type === "direct"
-                      ? "bg-violet-500/25 border-violet-400/50 text-violet-100"
-                      : "bg-amber-500/20 border-amber-400/50 text-amber-100"
-                    : "border-white/15 text-white/70 hover:bg-white/5"
-                }`}
-                data-testid={`teacher-roster-tab-${opt.key}`}
-              >
-                {tabLabel}
-              </button>
+                <button
+                  key={opt.key}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => setRosterFilterKey(opt.key)}
+                  className={isActive ? activeClass : T.rosterTabIdle}
+                  data-testid={`teacher-roster-tab-${opt.key}`}
+                >
+                  {tabLabel}
+                </button>
               );
             })}
           </div>
@@ -838,7 +803,7 @@ export default function TeacherDashboardClient({ accessToken, dashboard, activit
             placeholder="חיפוש לפי שם…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-lg bg-black/40 border border-white/20 px-3 py-2.5 text-sm"
+            className={T.searchInput}
           />
           <div className="flex flex-wrap gap-2">
             {FILTER_OPTIONS.map((f) => (
@@ -846,26 +811,20 @@ export default function TeacherDashboardClient({ accessToken, dashboard, activit
                 key={f.key}
                 type="button"
                 onClick={() => setFilterKey(f.key)}
-                className={`text-xs px-3 py-1.5 rounded-full border transition ${
-                  filterKey === f.key
-                    ? "bg-amber-500/20 border-amber-400/50 text-amber-100"
-                    : "border-white/15 text-white/70 hover:bg-white/5"
-                }`}
+                className={filterKey === f.key ? T.filterChipActive : T.filterChipIdle}
               >
                 {f.label}
               </button>
             ))}
           </div>
           <div className="flex flex-wrap items-center gap-2 text-sm">
-            <span className="text-white/50">מיון:</span>
+            <span className={T.faint}>מיון:</span>
             {SORT_OPTIONS.map((s) => (
               <button
                 key={s.key}
                 type="button"
                 onClick={() => setSortKey(s.key)}
-                className={`px-2 py-1 rounded ${
-                  sortKey === s.key ? "text-amber-300 font-semibold" : "text-white/60"
-                }`}
+                className={sortKey === s.key ? T.sortActive : T.sortIdle}
               >
                 {s.label}
               </button>
@@ -874,7 +833,7 @@ export default function TeacherDashboardClient({ accessToken, dashboard, activit
         </div>
 
         {filteredStudents.length === 0 ? (
-          <p className="text-white/60 text-sm" data-testid="teacher-roster-empty">
+          <p className={T.emptyHint} data-testid="teacher-roster-empty">
             אין ילדים להצגה בסינון זה.
           </p>
         ) : (
@@ -884,13 +843,15 @@ export default function TeacherDashboardClient({ accessToken, dashboard, activit
                 key={s.studentId}
                 student={s}
                 activityLoading={activityLoading && !dashboard?.activityLoaded}
+                T={T}
+                bright={bright}
               />
             ))}
           </ul>
         )}
       </section>
 
-      <TeacherInviteOthersButton />
+      <TeacherInviteOthersButton bright={bright} />
 
       {manageClass ? (
         <ClassManagePanel
@@ -900,17 +861,18 @@ export default function TeacherDashboardClient({ accessToken, dashboard, activit
           maxStudentsPerClass={dashboard?.limits?.maxStudentsPerClass ?? null}
           onClose={() => setManageClass(null)}
           onRefresh={onRefresh}
+          T={T}
         />
       ) : null}
     </div>
   );
 }
 
-function SummaryStat({ label, value, testId }) {
+function SummaryStat({ label, value, testId, T }) {
   return (
     <div data-testid={testId}>
-      <p className="text-xs text-white/50 mb-1">{label}</p>
-      <p className="text-2xl font-bold">{value}</p>
+      <p className={T.statLabel}>{label}</p>
+      <p className={T.statValue}>{value}</p>
     </div>
   );
 }

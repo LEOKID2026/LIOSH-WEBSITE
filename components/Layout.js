@@ -18,6 +18,8 @@ export default function Layout({
   studentLearningShell = false,
   studentTheme = null,
   studentShell = null,
+  /** When true, show bright/classic picker even if pathname is not in the default allowlist. */
+  layoutShowThemePicker = false,
 }) {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -38,7 +40,7 @@ export default function Layout({
       : undefined;
   const { links: menuLinks, showDevCoinTopup } = getContextNav(pathname, { authPortal });
   const layoutRtlHebrew = shouldLayoutUseRtl(pathname);
-  const showThemePicker = shouldShowLayoutThemePicker(pathname);
+  const showThemePicker = layoutShowThemePicker || shouldShowLayoutThemePicker(pathname);
 
   const resolvedTheme =
     studentTheme ||

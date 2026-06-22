@@ -8,7 +8,7 @@ import {
 } from "../../lib/ui/copy-confirm-message.he.js";
 
 /** Teacher dashboard — copy invite message + centered popup (same flow as parent dashboard). */
-export default function TeacherInviteOthersButton() {
+export default function TeacherInviteOthersButton({ bright = false }) {
   const [popupOpen, setPopupOpen] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
   const [popupIsError, setPopupIsError] = useState(false);
@@ -43,7 +43,7 @@ export default function TeacherInviteOthersButton() {
         onClose={() => setPopupOpen(false)}
         message={popupMessage}
         isError={popupIsError}
-        bright={false}
+        bright={bright}
         autoCloseMs={3000}
         zIndexClass="z-[170]"
         testId="teacher-invite-others-popup"

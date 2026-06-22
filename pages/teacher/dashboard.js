@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 import TeacherPortalShell from "../../components/teacher-portal/TeacherPortalShell";
 import TeacherDashboardClient from "../../components/teacher-portal/TeacherDashboardClient";
+import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
+import { getTeacherPortalTheme } from "../../lib/teacher-ui/teacher-portal-theme.client.js";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
 import { withTimeout } from "../../lib/teacher-portal/async-utils.js";
 import { resolveTeacherPortalAuth } from "../../lib/teacher-portal/use-teacher-portal-session";
@@ -30,6 +32,7 @@ async function postTeacherOnboard(accessToken) {
 
 export default function TeacherDashboardPage({ linkEnabled }) {
   const router = useRouter();
+  const { theme, isBright } = useStudentTheme();
   const supabaseRef = useRef(null);
   const activityRequestRef = useRef(0);
   const [state, setState] = useState("loading");
@@ -195,11 +198,18 @@ export default function TeacherDashboardPage({ linkEnabled }) {
     if (accessToken) await loadDashboardShell(accessToken);
   }, [accessToken, loadDashboardShell]);
 
+  const isPrivateTeacher = Boolean(dashboard && !dashboard?.schoolMembership?.schoolId);
+  const usePrivateTeacherTheme = isPrivateTeacher && state === "ready";
+  const privateLayoutProps = usePrivateTeacherTheme
+    ? { studentTheme: theme, studentShell: "home", layoutShowThemePicker: true }
+    : {};
+  const shellTheme = getTeacherPortalTheme(usePrivateTeacherTheme && isBright);
+
   if (state === "loading" || state === "unauthenticated") {
     return (
-      <Layout>
+      <Layout {...privateLayoutProps}>
         <TeacherPortalShell>
-          <p className="text-white/60" data-testid="teacher-dashboard-root" data-state={state}>
+          <p className={shellTheme.shellLoading} data-testid="teacher-dashboard-root" data-state={state}>
             {loadingHint}
           </p>
         </TeacherPortalShell>
@@ -213,9 +223,9 @@ export default function TeacherDashboardPage({ linkEnabled }) {
         ? "המערכת עדיין מתכוננת. נסה שנית בעוד מספר דקות."
         : "אירעה שגיאה בטעינת הנתונים. רענן את הדף ונסה שנית.";
     return (
-      <Layout>
-        <TeacherPortalShell title="לוח הבקרה שלי">
-          <p className="text-red-300" data-testid="teacher-dashboard-root" data-state={state} role="alert">
+      <Layout {...privateLayoutProps}>
+        <TeacherPortalShell title="לוח הבקרה שלי" titleClassName={shellTheme.shellTitle}>
+          <p className={shellTheme.shellError} data-testid="teacher-dashboard-root" data-state={state} role="alert">
             {msg}
           </p>
         </TeacherPortalShell>
@@ -224,7 +234,7 @@ export default function TeacherDashboardPage({ linkEnabled }) {
   }
 
   return (
-    <Layout>
+    <Layout {...privateLayoutProps}>
       <div
         data-testid="teacher-dashboard-root"
         data-state="ready"
@@ -234,6 +244,7 @@ export default function TeacherDashboardPage({ linkEnabled }) {
       >
         <TeacherPortalShell
           title="לוח הבקרה שלי"
+          titleClassName={shellTheme.shellTitle}
           schoolMembership={dashboard?.schoolMembership}
         >
           <TeacherDashboardClient
@@ -242,6 +253,7 @@ export default function TeacherDashboardPage({ linkEnabled }) {
             activityLoading={activityLoading}
             onLogout={onLogout}
             onRefresh={onRefresh}
+            bright={usePrivateTeacherTheme && isBright}
           />
         </TeacherPortalShell>
       </div>

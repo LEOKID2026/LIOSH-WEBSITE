@@ -4,6 +4,7 @@ import { SC_NAV_SCHOOL_MESSAGES_TEACHER } from "../../lib/school-portal/school-c
 export default function TeacherPortalShell({
   children,
   title,
+  titleClassName = "text-2xl font-bold mb-6",
   backHref,
   backLabel = "← חזרה ללוח הבקרה",
   schoolMembership = null,
@@ -44,7 +45,7 @@ export default function TeacherPortalShell({
           {backLabel}
         </a>
       ) : null}
-      {title ? <h1 className="text-2xl font-bold mb-6">{title}</h1> : null}
+      {title ? <h1 className={titleClassName}>{title}</h1> : null}
       {children}
     </div>
   );
