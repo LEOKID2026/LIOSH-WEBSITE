@@ -121,7 +121,7 @@ export default function SoloGameShell({ gameKey }) {
           >
             משחקים
           </Link>
-          <h1 className={themedShell ? SG.headerTitle : "truncate text-sm font-extrabold sm:text-base"}>
+          <h1 className={themedShell ? SG.headerTitle : SG.playHeaderTitle}>
             {game.titleHe}
           </h1>
           <Link
