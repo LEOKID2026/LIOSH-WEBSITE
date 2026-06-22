@@ -4,6 +4,11 @@ import Link from "next/link";
 import Layout from "../../components/Layout";
 import PortalLoginHeading from "../../components/auth/PortalLoginHeading";
 import TeacherRegistrationRequestForm from "../../components/auth/TeacherRegistrationRequestForm";
+import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
+import {
+  getPrivateTeacherLayoutProps,
+  getTeacherPortalTheme,
+} from "../../lib/teacher-ui/teacher-portal-theme.client.js";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
 import { isAdminAppMetadataUser } from "../../lib/admin-portal/use-admin-session";
 import {
@@ -20,28 +25,26 @@ import {
 } from "../../lib/auth/auth-registration.he";
 import { resolveTeacherAccessToken } from "../../lib/teacher-portal/use-teacher-portal-session";
 
-const PORTAL_AUX_BTN_CLASS =
-  "flex-1 min-w-0 rounded px-2 py-2 text-xs sm:text-sm font-semibold text-center bg-white/10 text-white/80 hover:bg-white/15 transition";
+function portalTabBtnClass(T, active) {
+  return `flex-1 min-w-0 rounded px-3 py-2 text-sm font-semibold text-center transition ${
+    active ? T.loginTabActive : T.loginTabIdle
+  }`;
+}
 
-const PORTAL_TAB_BTN_CLASS = (active) =>
-  `flex-1 min-w-0 rounded px-3 py-2 text-sm font-semibold text-center ${
-    active ? "bg-amber-500 text-black" : "bg-white/10 text-white/80 hover:bg-white/15"
-  } transition`;
-
-function TeacherPortalAuxButtons({ className = "" }) {
+function TeacherPortalAuxButtons({ T, className = "" }) {
   return (
     <div className={`grid grid-cols-2 gap-2 w-full md:contents ${className}`}>
-      <Link href="/school/staff/login" className={PORTAL_AUX_BTN_CLASS}>
+      <Link href="/school/staff/login" className={T.portalAuxBtn}>
         מורה בית ספר / צוות בית ספר
       </Link>
-      <Link href="/school/register" className={PORTAL_AUX_BTN_CLASS}>
+      <Link href="/school/register" className={T.portalAuxBtn}>
         רישום בית ספר
       </Link>
     </div>
   );
 }
 
-function TeacherPortalTopActions({ mode, setMode }) {
+function TeacherPortalTopActions({ mode, setMode, T }) {
   return (
     <div className="flex flex-col md:flex-row gap-2 mb-1.5 md:mb-3">
       <div
@@ -52,7 +55,7 @@ function TeacherPortalTopActions({ mode, setMode }) {
         <button
           type="button"
           onClick={() => setMode("login")}
-          className={PORTAL_TAB_BTN_CLASS(mode === "login")}
+          className={portalTabBtnClass(T, mode === "login")}
           data-testid="teacher-login-tab"
         >
           {REG_TEACHER_LOGIN_TAB}
@@ -60,13 +63,13 @@ function TeacherPortalTopActions({ mode, setMode }) {
         <button
           type="button"
           onClick={() => setMode("request")}
-          className={PORTAL_TAB_BTN_CLASS(mode === "request")}
+          className={portalTabBtnClass(T, mode === "request")}
           data-testid="teacher-request-tab"
         >
           {REG_TEACHER_TAB}
         </button>
       </div>
-      <TeacherPortalAuxButtons />
+      <TeacherPortalAuxButtons T={T} />
     </div>
   );
 }
@@ -98,11 +101,15 @@ async function postTeacherOnboard(accessToken, payload) {
 
 export default function TeacherLoginPage({ inviteOnly }) {
   const router = useRouter();
+  const { theme, isBright } = useStudentTheme();
+  const layoutProps = getPrivateTeacherLayoutProps(theme);
+  const T = getTeacherPortalTheme(isBright);
   const supabaseRef = useRef(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [clientReady, setClientReady] = useState(false);
+  const [sessionCheckPending, setSessionCheckPending] = useState(true);
   const [loginError, setLoginError] = useState("");
   const [mode, setMode] = useState("login");
 
@@ -120,13 +127,18 @@ export default function TeacherLoginPage({ inviteOnly }) {
     const supabase = supabaseRef.current;
     supabase.auth.getSession().then(async () => {
       const session = await resolveTeacherAccessToken(supabase);
-      if (!mounted || !session.ok) return;
+      if (!mounted) return;
+      if (!session.ok) {
+        setSessionCheckPending(false);
+        return;
+      }
       const { data: userData } = await supabase.auth.getUser();
       if (isAdminAppMetadataUser(userData?.user)) {
         router.replace("/admin/teachers");
         return;
       }
       const me = await fetchTeacherMe(session.token);
+      if (!mounted) return;
       if (me.status === 200) {
         void trackProductEvent({
           eventName: "teacher_login",
@@ -140,8 +152,10 @@ export default function TeacherLoginPage({ inviteOnly }) {
         const code = me.body?.error?.code;
         if (code === "entitlement_pending" || code === "entitlement_rejected") {
           router.replace("/teacher/pending");
+          return;
         }
       }
+      setSessionCheckPending(false);
     });
     return () => {
       mounted = false;
@@ -257,7 +271,7 @@ export default function TeacherLoginPage({ inviteOnly }) {
   };
 
   return (
-    <Layout>
+    <Layout {...layoutProps}>
       <div
         className={`mx-auto px-3 md:px-4 py-3 md:py-8 ${
           mode === "request" ? "max-w-4xl" : "max-w-md"
@@ -265,69 +279,73 @@ export default function TeacherLoginPage({ inviteOnly }) {
         dir="rtl"
         lang="he"
       >
-        <PortalLoginHeading title="כניסה למורים" className="!mb-2 md:!mb-4" />
+        <PortalLoginHeading title="כניסה למורים" className="!mb-2 md:!mb-4" bright={isBright} />
 
-        <div
-          data-testid="teacher-login-root"
-          data-invite-only={inviteOnly ? "true" : "false"}
-        >
-          <TeacherPortalTopActions mode={mode} setMode={setMode} />
+        {sessionCheckPending ? (
+          <p className={T.shellLoading} data-testid="teacher-login-root" data-state="loading">
+            מאמת חיבור…
+          </p>
+        ) : (
+          <div
+            data-testid="teacher-login-root"
+            data-invite-only={inviteOnly ? "true" : "false"}
+            data-state="ready"
+          >
+            <TeacherPortalTopActions mode={mode} setMode={setMode} T={T} />
 
-          {mode === "request" ? (
-            <TeacherRegistrationRequestForm />
-          ) : (
-            <>
-              {inviteOnly ? (
-                <p className="text-white/70 text-sm mb-3">{REG_TEACHER_INVITE_ONLY_LOGIN_NOTE}</p>
-              ) : null}
-              <form onSubmit={onSubmit} className="space-y-3" autoComplete="on" noValidate>
-                <label className="block text-sm">
-                  <span className="text-white/80">כתובת דוא״ל</span>
-                  <input
-                    type="email"
-                    name="email"
-                    value={email}
-                    onChange={(ev) => setEmail(ev.target.value)}
+            {mode === "request" ? (
+              <TeacherRegistrationRequestForm bright={isBright} />
+            ) : (
+              <>
+                {inviteOnly ? (
+                  <p className={`${T.inviteNote} mb-3`}>{REG_TEACHER_INVITE_ONLY_LOGIN_NOTE}</p>
+                ) : null}
+                <form onSubmit={onSubmit} className="space-y-3" autoComplete="on" noValidate>
+                  <label className="block text-sm">
+                    <span className={T.loginLabel}>כתובת דוא״ל</span>
+                    <input
+                      type="email"
+                      name="email"
+                      value={email}
+                      onChange={(ev) => setEmail(ev.target.value)}
+                      required
+                      autoComplete="username"
+                      placeholder="המייל שלך"
+                      className={T.loginInputMt}
+                    />
+                  </label>
+                  <PasswordField
+                    label="סיסמה"
+                    name="password"
+                    value={password}
+                    onChange={(ev) => setPassword(ev.target.value)}
                     required
-                    autoComplete="username"
-                    placeholder="המייל שלך"
-                    className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
+                    autoComplete="current-password"
+                    testId="teacher-login-password"
+                    bright={isBright}
                   />
-                </label>
-                <PasswordField
-                  label="סיסמה"
-                  name="password"
-                  value={password}
-                  onChange={(ev) => setPassword(ev.target.value)}
-                  required
-                  autoComplete="current-password"
-                  testId="teacher-login-password"
-                />
-                <button
-                  type="submit"
-                  disabled={busy}
-                  className="w-full rounded bg-amber-500 text-black font-semibold py-2 disabled:opacity-60"
-                >
-                  {busy ? "מתחבר…" : "כניסה"}
-                </button>
-                <p className="text-sm text-center">
-                  <Link
-                    href="/auth/forgot-password?portal=teacher"
-                    className="text-amber-300 underline"
-                    data-testid="teacher-forgot-password-link"
-                  >
-                    {AUTH_FORGOT_PASSWORD_LINK}
-                  </Link>
-                </p>
-              </form>
-              {loginError ? (
-                <p className="mt-3 text-sm text-red-300" role="alert">
-                  {loginError}
-                </p>
-              ) : null}
-            </>
-          )}
-        </div>
+                  <button type="submit" disabled={busy} className={T.submitBtn}>
+                    {busy ? "מתחבר…" : "כניסה"}
+                  </button>
+                  <p className="text-sm text-center">
+                    <Link
+                      href="/auth/forgot-password?portal=teacher"
+                      className={T.forgotLink}
+                      data-testid="teacher-forgot-password-link"
+                    >
+                      {AUTH_FORGOT_PASSWORD_LINK}
+                    </Link>
+                  </p>
+                </form>
+                {loginError ? (
+                  <p className={`mt-3 ${T.error}`} role="alert">
+                    {loginError}
+                  </p>
+                ) : null}
+              </>
+            )}
+          </div>
+        )}
       </div>
     </Layout>
   );

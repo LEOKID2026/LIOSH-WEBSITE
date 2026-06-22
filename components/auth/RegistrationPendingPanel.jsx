@@ -8,9 +8,9 @@ import {
 } from "../../lib/auth/auth-registration.he.js";
 
 /**
- * @param {{ variant: "teacher"|"school", rejected?: boolean }} props
+ * @param {{ variant: "teacher"|"school", rejected?: boolean, bright?: boolean }} props
  */
-export default function RegistrationPendingPanel({ variant, rejected = false }) {
+export default function RegistrationPendingPanel({ variant, rejected = false, bright = false }) {
   const heading = rejected
     ? PENDING_REJECTED_HEADING
     : variant === "school"
@@ -22,6 +22,12 @@ export default function RegistrationPendingPanel({ variant, rejected = false }) 
       ? PENDING_SCHOOL_BODY
       : PENDING_TEACHER_BODY;
 
+  const useTeacherBright = variant === "teacher" && bright;
+  const headingClass = useTeacherBright ? "text-xl font-bold text-slate-900" : "text-xl font-bold";
+  const bodyClass = useTeacherBright
+    ? "text-sm text-slate-600 leading-relaxed"
+    : "text-white/70 text-sm leading-relaxed";
+
   return (
     <div
       className="max-w-lg space-y-3 text-right"
@@ -30,8 +36,8 @@ export default function RegistrationPendingPanel({ variant, rejected = false }) 
       dir="rtl"
       lang="he"
     >
-      <h2 className="text-xl font-bold">{heading}</h2>
-      <p className="text-white/70 text-sm leading-relaxed">{body}</p>
+      <h2 className={headingClass}>{heading}</h2>
+      <p className={bodyClass}>{body}</p>
     </div>
   );
 }

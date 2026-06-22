@@ -4,7 +4,11 @@ import Layout from "../../components/Layout";
 import TeacherPortalShell from "../../components/teacher-portal/TeacherPortalShell";
 import TeacherDashboardClient from "../../components/teacher-portal/TeacherDashboardClient";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
-import { getTeacherPortalTheme } from "../../lib/teacher-ui/teacher-portal-theme.client.js";
+import {
+  getPrivateTeacherLayoutProps,
+  getTeacherPortalTheme,
+  isPrivateTeacherPortalAuth,
+} from "../../lib/teacher-ui/teacher-portal-theme.client.js";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
 import { withTimeout } from "../../lib/teacher-portal/async-utils.js";
 import { resolveTeacherPortalAuth } from "../../lib/teacher-portal/use-teacher-portal-session";
@@ -40,6 +44,7 @@ export default function TeacherDashboardPage({ linkEnabled }) {
   const [dashboard, setDashboard] = useState(null);
   const [activityLoading, setActivityLoading] = useState(false);
   const [accessToken, setAccessToken] = useState(null);
+  const [authMethod, setAuthMethod] = useState(null);
 
   const loadDashboardActivity = useCallback(async (token) => {
     const requestId = activityRequestRef.current + 1;
@@ -115,6 +120,7 @@ export default function TeacherDashboardPage({ linkEnabled }) {
 
       const token = session.token;
       const isStaffCookie = session.authMethod === "staff_cookie";
+      setAuthMethod(session.authMethod);
       setAccessToken(token);
       setLoadingHint("טוען לוח בקרה…");
 
@@ -199,10 +205,14 @@ export default function TeacherDashboardPage({ linkEnabled }) {
   }, [accessToken, loadDashboardShell]);
 
   const isPrivateTeacher = Boolean(dashboard && !dashboard?.schoolMembership?.schoolId);
-  const usePrivateTeacherTheme = isPrivateTeacher && state === "ready";
-  const privateLayoutProps = usePrivateTeacherTheme
-    ? { studentTheme: theme, studentShell: "home", layoutShowThemePicker: true }
-    : {};
+  const isPrivateTeacherSession = authMethod ? isPrivateTeacherPortalAuth(authMethod) : true;
+  const usePrivateTeacherTheme =
+    isPrivateTeacherSession &&
+    (state === "loading" ||
+      state === "schema_not_ready" ||
+      state === "data_load_error" ||
+      (isPrivateTeacher && state === "ready"));
+  const privateLayoutProps = usePrivateTeacherTheme ? getPrivateTeacherLayoutProps(theme) : {};
   const shellTheme = getTeacherPortalTheme(usePrivateTeacherTheme && isBright);
 
   if (state === "loading" || state === "unauthenticated") {

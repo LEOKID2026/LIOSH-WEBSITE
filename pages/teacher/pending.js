@@ -3,12 +3,20 @@ import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 import TeacherPortalShell from "../../components/teacher-portal/TeacherPortalShell";
 import RegistrationPendingPanel from "../../components/auth/RegistrationPendingPanel";
+import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
+import {
+  getPrivateTeacherLayoutProps,
+  getTeacherPortalTheme,
+} from "../../lib/teacher-ui/teacher-portal-theme.client.js";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
 import { fetchTeacherMe, teacherPostLoginPath } from "../../lib/auth/auth-post-reset-redirect";
 import { resolveTeacherAccessToken } from "../../lib/teacher-portal/use-teacher-portal-session";
 
 export default function TeacherPendingPage() {
   const router = useRouter();
+  const { theme, isBright } = useStudentTheme();
+  const layoutProps = getPrivateTeacherLayoutProps(theme);
+  const T = getTeacherPortalTheme(isBright);
   const supabaseRef = useRef(null);
   const [state, setState] = useState("loading");
   const [rejected, setRejected] = useState(false);
@@ -68,19 +76,19 @@ export default function TeacherPendingPage() {
   };
 
   return (
-    <Layout>
-      <TeacherPortalShell title="סטטוס בקשה">
+    <Layout {...layoutProps}>
+      <TeacherPortalShell title="סטטוס בקשה" titleClassName={T.shellTitle}>
         {state === "loading" ? (
-          <p className="text-white/60 text-sm" data-testid="teacher-pending-root" data-state="loading">
+          <p className={T.shellLoading} data-testid="teacher-pending-root" data-state="loading">
             טוען…
           </p>
         ) : (
           <div data-testid="teacher-pending-root" data-state={rejected ? "rejected" : "pending"}>
-            <RegistrationPendingPanel variant="teacher" rejected={rejected} />
+            <RegistrationPendingPanel variant="teacher" rejected={rejected} bright={isBright} />
             <button
               type="button"
               onClick={() => void onLogout()}
-              className="mt-6 rounded border border-white/20 px-4 py-2 text-sm text-white/70 hover:bg-white/5"
+              className={`mt-6 ${T.logoutBtn}`}
             >
               יציאה
             </button>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { LEARNING_SUBJECT_ALLOWLIST } from "../../lib/learning-supabase/learning-activity.js";
+import { getTeacherPortalTheme } from "../../lib/teacher-ui/teacher-portal-theme.client.js";
 import {
   REG_REQUEST_INTENT_OPTIONS,
   REG_TEACHER_ALREADY_PENDING,
@@ -16,10 +17,8 @@ import {
   SUBJECT_LABELS_HE,
 } from "../../lib/auth/auth-registration.he.js";
 
-const INPUT_CLASS =
-  "mt-0.5 w-full rounded bg-black/40 border border-white/20 px-3 py-1.5 text-sm";
-
-export default function TeacherRegistrationRequestForm() {
+export default function TeacherRegistrationRequestForm({ bright = false }) {
+  const T = getTeacherPortalTheme(bright);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -76,33 +75,33 @@ export default function TeacherRegistrationRequestForm() {
 
   return (
     <div data-testid="teacher-registration-request-form" dir="rtl" lang="he">
-      <h2 className="text-base md:text-xl font-bold mb-1">{REG_TEACHER_TITLE}</h2>
+      <h2 className={T.regTitle}>{REG_TEACHER_TITLE}</h2>
       {message ? (
-        <p className="text-emerald-300 text-sm mb-1" role="status">
+        <p className={`${T.regSuccess} mb-1`} role="status">
           {message}
         </p>
       ) : (
         <form onSubmit={(e) => void onSubmit(e)} className="space-y-1.5 md:space-y-3">
           <div className="grid grid-cols-2 gap-x-2 gap-y-1.5 md:flex md:flex-row md:gap-x-4 md:gap-y-0">
             <label className="block text-sm min-w-0 col-span-1 order-1 md:flex-1">
-              <span className="text-white/80">{REG_TEACHER_NAME_LABEL}</span>
+              <span className={T.loginLabel}>{REG_TEACHER_NAME_LABEL}</span>
               <input
                 type="text"
                 value={fullName}
                 onChange={(ev) => setFullName(ev.target.value)}
                 required
                 maxLength={120}
-                className={INPUT_CLASS}
+                className={T.loginInputMt}
                 data-testid="teacher-reg-full-name"
               />
             </label>
             <label className="block text-sm min-w-0 col-span-1 order-2 md:flex-1">
-              <span className="text-white/80">{REG_TEACHER_INTENT_LABEL}</span>
+              <span className={T.loginLabel}>{REG_TEACHER_INTENT_LABEL}</span>
               <select
                 value={requestIntent}
                 onChange={(ev) => setRequestIntent(ev.target.value)}
                 required
-                className={INPUT_CLASS}
+                className={T.loginInputMt}
                 data-testid="teacher-reg-intent"
               >
                 {REG_REQUEST_INTENT_OPTIONS.map((option) => (
@@ -113,18 +112,18 @@ export default function TeacherRegistrationRequestForm() {
               </select>
             </label>
             <label className="block text-sm col-span-2 order-3 md:order-3 md:flex-none md:w-full md:max-w-md md:shrink-0">
-              <span className="text-white/80">{REG_TEACHER_EMAIL_LABEL}</span>
+              <span className={T.loginLabel}>{REG_TEACHER_EMAIL_LABEL}</span>
               <input
                 type="email"
                 value={email}
                 onChange={(ev) => setEmail(ev.target.value)}
                 required
-                className={INPUT_CLASS}
+                className={T.loginInputMt}
                 data-testid="teacher-reg-email"
               />
             </label>
             <label className="block text-sm col-span-2 order-4 md:order-4 md:flex-none md:w-full md:max-w-md md:shrink-0">
-              <span className="text-white/80">{REG_TEACHER_PHONE_LABEL}</span>
+              <span className={T.loginLabel}>{REG_TEACHER_PHONE_LABEL}</span>
               <input
                 type="tel"
                 value={phone}
@@ -133,17 +132,15 @@ export default function TeacherRegistrationRequestForm() {
                 inputMode="tel"
                 autoComplete="tel"
                 maxLength={30}
-                className={INPUT_CLASS}
+                className={T.loginInputMt}
                 data-testid="teacher-reg-phone"
               />
             </label>
           </div>
 
           <label className="block text-sm">
-            <span className="text-white/80">{REG_TEACHER_EXPLANATION_LABEL}</span>
-            <span className="block text-xs text-white/50 leading-snug">
-              {REG_TEACHER_EXPLANATION_HINT}
-            </span>
+            <span className={T.loginLabel}>{REG_TEACHER_EXPLANATION_LABEL}</span>
+            <span className={`block ${T.regHint}`}>{REG_TEACHER_EXPLANATION_HINT}</span>
             <textarea
               value={description}
               onChange={(ev) => setDescription(ev.target.value)}
@@ -151,19 +148,16 @@ export default function TeacherRegistrationRequestForm() {
               minLength={10}
               maxLength={1000}
               rows={3}
-              className={`${INPUT_CLASS} mt-0.5 resize-y min-h-[3.75rem] md:min-h-[4.5rem] max-h-28`}
+              className={T.regTextarea}
               data-testid="teacher-reg-description"
             />
           </label>
 
           <fieldset className="text-sm pt-0">
-            <legend className="text-white/80 mb-1">{REG_TEACHER_SUBJECTS_LABEL}</legend>
+            <legend className={T.regLegend}>{REG_TEACHER_SUBJECTS_LABEL}</legend>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1 md:gap-1.5">
               {[...LEARNING_SUBJECT_ALLOWLIST].map((key) => (
-                <label
-                  key={key}
-                  className="inline-flex items-center gap-1 rounded border border-white/20 px-1.5 py-0.5 md:px-2 md:py-1 cursor-pointer text-[11px] md:text-xs leading-tight"
-                >
+                <label key={key} className={T.regSubjectChip}>
                   <input
                     type="checkbox"
                     checked={subjects.includes(key)}
@@ -180,7 +174,7 @@ export default function TeacherRegistrationRequestForm() {
           <button
             type="submit"
             disabled={busy || !explanationReady}
-            className="w-full md:w-auto rounded bg-amber-500 text-black font-semibold px-6 py-1.5 md:py-2 disabled:opacity-60"
+            className={`${T.submitBtn} md:w-auto md:px-6 md:py-2`}
             data-testid="teacher-reg-submit"
           >
             {busy ? "שולח…" : REG_TEACHER_SUBMIT}
@@ -188,7 +182,7 @@ export default function TeacherRegistrationRequestForm() {
         </form>
       )}
       {error ? (
-        <p className="mt-1.5 text-sm text-red-300" role="alert">
+        <p className={`mt-1.5 ${T.error}`} role="alert">
           {error}
         </p>
       ) : null}
