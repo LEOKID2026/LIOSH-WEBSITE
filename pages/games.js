@@ -17,18 +17,18 @@ const GAME_HUB_CARDS = [
     href: "/game",
   },
   {
-    key: "offline",
-    title: "משחקים כל הזמן עם ליאו",
-    emoji: "🔌",
-    blurb: "משחקים על אותו מכשיר — גם בלי אינטרנט.",
-    href: "/offline",
-  },
-  {
     key: "online",
     title: "משחקים עם חברים",
     emoji: "🌐",
     blurb: "חדרי משחק מרובי משתתפים עם חברים ושחקנים אחרים.",
     href: "/student/arcade",
+  },
+  {
+    key: "offline",
+    title: "משחקים כל הזמן עם ליאו",
+    emoji: "🔌",
+    blurb: "משחקים על אותו מכשיר — גם בלי אינטרנט.",
+    href: "/offline",
   },
 ];
 
