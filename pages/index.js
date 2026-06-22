@@ -76,10 +76,10 @@ export default function HomePage() {
   return (
     <Layout homepage studentTheme={theme} studentShell="home">
       <div
-        className="mx-auto flex h-full min-h-0 w-full max-w-5xl flex-1 flex-col items-stretch justify-between gap-5 overflow-hidden px-3 pb-3 pt-3.5 md:min-h-[calc(100vh-9.5rem)] md:justify-center md:gap-7 md:px-4 md:py-6 md:flex-initial"
+        className="mx-auto flex h-full min-h-0 w-full max-w-5xl flex-1 flex-col items-stretch justify-start gap-4 overflow-hidden px-3 pb-3 pt-2.5 md:min-h-[calc(100vh-9.5rem)] md:justify-center md:gap-7 md:px-4 md:py-6 md:flex-initial"
         dir="rtl"
       >
-        <section className="mt-1.5 shrink-0 space-y-2.5 text-center md:mt-0 md:space-y-4">
+        <section className="shrink-0 space-y-2 text-center md:space-y-4">
           <p
             className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] md:tracking-[0.25em] ${
               isBright
@@ -107,7 +107,8 @@ export default function HomePage() {
           </p>
         </section>
 
-        <section className="grid shrink-0 grid-cols-2 gap-x-2.5 gap-y-3.5 md:gap-5 lg:grid-cols-3">
+        <section className="flex w-full shrink-0 flex-col items-center gap-6 md:gap-0">
+          <div className="grid w-full shrink-0 grid-cols-2 gap-x-2.5 gap-y-3.5 md:gap-5 lg:grid-cols-3">
           {PORTAL_CARDS.map((card) => {
             const gridClass = cardGridClass(card.key);
 
@@ -176,10 +177,9 @@ export default function HomePage() {
               </Link>
             );
           })}
-        </section>
+          </div>
 
-        <section className="flex shrink-0 justify-center px-1">
-          <InstallAppChoiceButton />
+          <InstallAppChoiceButton className="mt-6 md:mt-6" />
         </section>
       </div>
     </Layout>
