@@ -64,23 +64,26 @@ We will travel by train
 
 ## 5. נסו בעצמכם
 
-חופשה מתקרבת — בוחרים רכבת.
+קיץ מתקרב — טסים לחו"ל.
 
-We will travel by train
+We will fly abroad in summer.
 
-(רמז: will travel = ננסע בעתיד.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-We travel by train tomorrow — שגוי!
+תרגיל: "אנחנו נטוס לחו"ל בקיץ."
 
-❌ travel הוא בזמן הווה. כאן מדברים על עתיד.
+will + פועל = עתיד.
 
-✓ We will travel by train.
+fly abroad = לטוס לחו"ל; in summer = בקיץ.
 
-will travel = ננסע (עתיד).
+אנחנו נטוס לחו"ל בקיץ.
+
+✓ We will fly abroad in summer.
 
 ---
 

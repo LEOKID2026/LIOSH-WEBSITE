@@ -64,23 +64,26 @@ Last week we learned about the environment
 
 ## 5. נסו בעצמכם
 
-פרויקט כיתתי על הטבע.
+הכיתה עסוקה בפרויקט שנה שעברה.
 
-Last week we learned about the environment
+Last year our class made a project about the environment.
 
-(רמז: Last week = בשבוע שעבר.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-Last week we learn about the environment — שגוי!
+תרגיל: "בשנה שעברה כיתתנו עשתה פרויקט על הסביבה."
 
-❌ learn הוא בזמן הווה. כאן צריך פועל בעבר.
+Last year = בשנה שעברה → פועל בעבר.
 
-✓ Last week we learned about the environment.
+make → made (פועל חריג בעבר).
 
-learned = למדנו (עבר).
+בשנה שעברה כיתתנו עשתה פרויקט על הסביבה.
+
+✓ Last year our class made a project about the environment.
 
 ---
 

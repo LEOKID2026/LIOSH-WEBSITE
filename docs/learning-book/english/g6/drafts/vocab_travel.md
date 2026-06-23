@@ -64,23 +64,26 @@ We have visited three countries so far
 
 ## 5. נסו בעצמכם
 
-משפחה שמספרת על טיולים.
+שנה מרתקת — ביקרו בהרבה מדינות.
 
-We have visited three countries so far
+They have already visited five countries this year.
 
-(רמז: have visited = ביקרנו (עד עכשיו).)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-We visited three countries so far — לא תמיד אותה משמעות!
+תרגיל: "הם כבר ביקרו בחמש מדינות השנה."
 
-❌ visited לבד — Past Simple, דגש על מתי!
+Present Perfect: have + V3 (visited).
 
-✓ We have visited three countries so far.
+already = כבר; this year = השנה (עד עכשיו).
 
-have visited = עד כה, so far.
+הם כבר ביקרו בחמש מדינות השנה.
+
+✓ They have already visited five countries this year.
 
 ---
 

@@ -64,23 +64,26 @@ We visited the museum yesterday
 
 ## 5. נסו בעצמכם
 
-טיול כיתתי למוזיאון.
+יום כיף בחופשה — גן חיות.
 
-We visited the museum yesterday
+We visited the zoo on holiday.
 
-(רמז: visited = ביקרנו בעבר.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-We visit the museum yesterday — שגוי!
+תרגיל: "ביקרנו בגן חיות בחופשה."
 
-❌ visit הוא בזמן הווה. כאן צריך פועל בעבר.
+פועל סדיר בעבר: visit → visited.
 
-✓ We visited the museum yesterday.
+on holiday = בחופשה.
 
-visited = ביקרנו (עבר).
+ביקרנו בגן חיות בחופשה.
+
+✓ We visited the zoo on holiday.
 
 ---
 

@@ -64,23 +64,26 @@ He washes his hands
 
 ## 5. נסו בעצמכם
 
-לפני ארוחה — שוטפים ידיים.
+בבוקר — מסרקים שיער.
 
-He washes his hands
+He brushes his hair.
 
-(רמז: washes his hands = שוטף ידיים.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-He wash his hands — שגוי!
+תרגיל: "הוא מסרק את שיערו."
 
-❌ He wash — אחרי he מוסיפים es לפועל wash: He washes.
+he = יחיד זכר → מוסיפים es לפועל brush: brush → brushes.
 
-✓ He washes his hands.
+his hair = שיערו.
 
-washes = שוטף (he/she/it).
+הוא מסרק את שיערו.
+
+✓ He brushes his hair.
 
 ---
 

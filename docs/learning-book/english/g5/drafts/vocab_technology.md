@@ -64,23 +64,26 @@ She uses a computer for homework
 
 ## 5. נסו בעצמכם
 
-שיעורי בית — פותחים את המחשב.
+שיעורים — גולשים באינטרנט.
 
-She uses a computer for homework
+We use the internet for lessons.
 
-(רמז: uses = משתמשת.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-She use a computer for homework — שגוי!
+תרגיל: "אנחנו גולשים באינטרנט לשיעורים."
 
-❌ אחרי he, she או it מוסיפים בדרך כלל s לפועל: uses.
+we = אנחנו → אחרי we לא מוסיפים s לפועל use.
 
-✓ She uses a computer for homework.
+the internet = האינטרנט; for lessons = לשיעורים.
 
-uses = משתמשת.
+אנחנו גולשים באינטרנט לשיעורים.
+
+✓ We use the internet for lessons.
 
 ---
 

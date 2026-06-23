@@ -67,23 +67,26 @@ This book is more interesting than that one
 
 ## 5. נסו בעצמכם
 
-בוחרים ספר לקרוא.
+משווים שני סרטים.
 
-This book is more interesting than that one
+This film is more exciting than that one.
 
-(רמז: more … than = יותר … מ…)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-This book is interestinger than that one — שגוי!
+תרגיל: "הסרט הזה מרגש יותר מהסרט ההוא."
 
-❌ interestinger אינה צורה נכונה. אומרים more interesting.
+exciting = שם תואר ארוך (3+ הברות) → more exciting than.
 
-✓ This book is more interesting than that one.
+This film is more exciting than that one.
 
-more + שם תואר ארוך.
+הסרט הזה מרגש יותר מהסרט ההוא.
+
+✓ This film is more exciting than that one.
 
 ---
 

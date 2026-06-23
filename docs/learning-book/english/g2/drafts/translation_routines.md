@@ -63,23 +63,24 @@ I eat breakfast
 
 ## 5. נסו בעצמכם
 
-ארוחת בוקר.
+הולכים לבית ספר.
 
-I eat breakfast
+I go to school
 
-(רמז: eat breakfast = אוכל ארוחת בוקר.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-eat breakfast ו-wake up — לא אותו דבר.
+**השאלה: הולכים לבית ספר — באנגלית?**
 
-❌ I wake up כשאוכלים!
+go to school = הולך לבית ספר.
 
-✓ I eat breakfast.
+I + go to school.
 
-I eat breakfast = ארוחת בוקר.
+**I go to school** ✓
 
 ---
 

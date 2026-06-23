@@ -65,23 +65,26 @@ I need to rest and drink water
 
 ## 5. נסו בעצמכם
 
-אחרי יום ארוך — הגוף צריך מנוחה.
+לא מרגיש טוב — צריך פעילות גופנית.
 
-I need to rest and drink water
+I need to exercise every day.
 
-(רמז: need to = צריך ל…)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-I need rest and drink water — שגוי!
+תרגיל: "אני צריך פעילות גופנית כל יום."
 
-❌ אחרי need צריך להוסיף to לפני הפועל.
+need to + פועל = צריך ל + פועל.
 
-✓ I need to rest and drink water.
+exercise = פעילות גופנית / להתאמן; every day = כל יום.
 
-need to = צריך ל…
+אני צריך להתאמן כל יום.
+
+✓ I need to exercise every day.
 
 ---
 

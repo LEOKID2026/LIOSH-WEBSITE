@@ -64,23 +64,26 @@ She is swimming now
 
 ## 5. נסו בעצמכם
 
-ילדה בבריכה עכשיו.
+ילדים במגרש כדורסל עכשיו.
 
-She is swimming now
+They are playing basketball now.
 
-(רמז: is swimming = שוחה עכשיו.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-She swims now — הרגל, לא Continuous!
+תרגיל: "הם משחקים כדורסל עכשיו."
 
-❌ She swims — Present Simple!
+now = עכשיו → פעולה מתמשכת → Present Continuous.
 
-✓ She is swimming now.
+they = ריבוי → are + playing.
 
-is swimming = עכשיו.
+הם משחקים כדורסל עכשיו.
+
+✓ They are playing basketball now.
 
 ---
 

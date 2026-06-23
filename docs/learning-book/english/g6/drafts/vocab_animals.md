@@ -64,23 +64,26 @@ The whales were swimming when we saw them
 
 ## 5. נסו בעצמכם
 
-שייט בים — רואים דולפינים ולווייתנים.
+טיול בהרים — נשרים מעל.
 
-The whales were swimming when we saw them
+The eagles were flying over the mountains when we arrived.
 
-(רמז: were swimming = שחו (באמצע פעולה).)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-The whales swim when we saw them — שגוי!
+תרגיל: "הנשרים עפו מעל ההרים כשהגענו."
 
-❌ swim הוא בזמן הווה. כאן צריך לתאר פעולה מתמשכת בעבר.
+פעולה מתמשכת בעבר → Past Continuous: were flying.
 
-✓ The whales were swimming when we saw them.
+when we arrived = כשהגענו (Past Simple, פעולה שקרתה).
 
-were swimming = שחו (באמצע), saw = ראינו (באותו רגע).
+הנשרים עפו מעל ההרים כשהגענו.
+
+✓ The eagles were flying over the mountains when we arrived.
 
 ---
 

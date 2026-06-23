@@ -64,23 +64,26 @@ Then we arrived at the station
 
 ## 5. נסו בעצמכם
 
-סיפור נסיעה — רגע ההגעה.
+מסיבה — אכלו ארוחת ערב.
 
-Then we arrived at the station
+After that we had dinner.
 
-(רמז: Then = אחר כך.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-Then we arrive at the station — שגוי!
+תרגיל: "אחרי זה אכלנו ארוחת ערב."
 
-❌ arrive הוא בזמן הווה. כאן צריך פועל בעבר.
+After that = אחרי זה (מילת קישור לרצף בעבר).
 
-✓ Then we arrived at the station.
+have → had (פועל חריג בעבר).
 
-arrived = הגענו (עבר).
+אחרי זה אכלנו ארוחת ערב.
+
+✓ After that we had dinner.
 
 ---
 

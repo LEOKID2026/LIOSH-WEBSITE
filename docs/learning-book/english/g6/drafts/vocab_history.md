@@ -64,23 +64,26 @@ We learned about ancient history in class
 
 ## 5. נסו בעצמכם
 
-סיור במוזיאון היסטוריה.
+מוזיאון — כלי עתיקים מלפני אלפי שנים.
 
-We learned about ancient history in class
+Researchers discovered ancient tools from thousands of years ago.
 
-(רמז: learned = למדנו בעבר.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-We learn about ancient history in class yesterday — שגוי!
+תרגיל: "חוקרים גילו כלים עתיקים מלפני אלפי שנים."
 
-❌ learn הוא בזמן הווה. המילה yesterday מראה שצריך פועל בעבר.
+פועל סדיר בעבר: discover → discovered.
 
-✓ We learned about ancient history in class.
+ancient tools = כלים עתיקים; thousands of years ago = לפני אלפי שנים.
 
-learned = למדנו.
+חוקרים גילו כלים עתיקים מלפני אלפי שנים.
+
+✓ Researchers discovered ancient tools from thousands of years ago.
 
 ---
 

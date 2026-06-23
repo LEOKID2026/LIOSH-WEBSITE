@@ -64,23 +64,26 @@ I will send an email tomorrow
 
 ## 5. נסו בעצמכם
 
-מחר — שולחים הודעה למורה.
+שיעור מחר — משתמשים באינטרנט.
 
-I will send an email tomorrow
+They will use the internet in class.
 
-(רמז: will send = אשלח.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-I send an email tomorrow — שגוי!
+תרגיל: "הם ישתמשו באינטרנט בשיעור."
 
-❌ send הוא בזמן הווה. כאן מדברים על עתיד.
+will + פועל = עתיד (החלטה או תוכנית).
 
-✓ I will send an email tomorrow.
+they will use = הם ישתמשו.
 
-will send = אשלח (עתיד).
+הם ישתמשו באינטרנט בשיעור.
+
+✓ They will use the internet in class.
 
 ---
 

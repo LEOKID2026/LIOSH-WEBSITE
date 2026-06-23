@@ -64,23 +64,26 @@ Our class won the project
 
 ## 5. נסו בעצמכם
 
-יום תחרות פרויקטים בבית הספר.
+הכיתה מציגה פרויקט מדע.
 
-Our class won the project
+Our class presented a science project.
 
-(רמז: won = ניצחה בעבר.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-Our class win the project — שגוי!
+תרגיל: "הכיתה שלנו הציגה פרויקט מדעי."
 
-❌ win הוא בזמן הווה. כאן צריך פועל בעבר.
+פועל סדיר בעבר: present → presented.
 
-✓ Our class won the project.
+a science project = פרויקט מדעי.
 
-won = ניצחה (עבר).
+הכיתה שלנו הציגה פרויקט מדעי.
+
+✓ Our class presented a science project.
 
 ---
 

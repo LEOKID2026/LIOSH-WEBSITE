@@ -62,23 +62,26 @@ The big dog runs fast
 
 ## 5. נסו בעצמכם
 
-כלב גדול רץ בגינה.
+ילדה גבוהה קופצת בגינה.
 
-The big dog runs fast
+The tall girl jumps.
 
-(רמז: big = גדול, fast = מהר.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-The dog big runs — סדר מילים שגוי!
+תרגיל: ילדה גבוהה קופצת בגינה.
 
-❌ The dog big — התאר לפני השם!
+הפתרון:
 
-✓ The big dog runs fast.
+The tall girl jumps.
 
-big dog = כלב גדול.
+הילדה הגבוהה קופצת.
+
+כל הכבוד! הסדר: The + תאר (tall) + שם עצם (girl) + פועל (jumps).
 
 ---
 

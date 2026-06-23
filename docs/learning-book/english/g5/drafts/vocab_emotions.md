@@ -64,23 +64,26 @@ She felt proud after the test
 
 ## 5. נסו בעצמכם
 
-מבחן בכיתה — אחרי הציון.
+אחרי משחק ארוך — כולם עייפים.
 
-She felt proud after the test
+They felt tired after the game.
 
-(רמז: felt = הרגישה בעבר.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-She feel proud after the test — שגוי!
+תרגיל: "הם הרגישו עייפים אחרי המשחק."
 
-❌ feel הוא בזמן הווה. כאן צריך פועל בעבר.
+feel → felt (פועל חריג בעבר).
 
-✓ She felt proud after the test.
+tired = עייף/ה; after the game = אחרי המשחק.
 
-felt = הרגישה (עבר).
+הם הרגישו עייפים אחרי המשחק.
+
+✓ They felt tired after the game.
 
 ---
 

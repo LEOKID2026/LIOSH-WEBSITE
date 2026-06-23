@@ -64,23 +64,26 @@ The book is on the table
 
 ## 5. נסו בעצמכם
 
-ספר פתוח על השולחן.
+תיק ירוק בחדר.
 
-The book is on the table
+The bag is in the room.
 
-(רמז: on = על.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-The book on the table — חסר is!
+תרגיל: תיק ירוק בחדר.
 
-❌ The book on the table — לא משפט!
+הפתרון:
 
-✓ The book is on the table.
+The bag is in the room.
 
-on = על.
+התיק בחדר.
+
+כל הכבוד! in = בתוך/ב-. זוכרים: The + שם עצם + is + מילת מיקום.
 
 ---
 

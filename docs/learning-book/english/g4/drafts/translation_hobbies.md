@@ -64,23 +64,26 @@ He is playing guitar
 
 ## 5. נסו בעצמכם
 
-ילד עם גיטרה.
+ילד על במה שר.
 
-He is playing guitar
+He is singing a song.
 
-(רמז: is playing = מנגן עכשיו.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-He plays guitar — הרגל, לא עכשיו!
+תרגיל: "הוא שר שיר (עכשיו)."
 
-❌ He plays — Present Simple!
+פעולה עכשיו → Present Continuous: is + פועל + ing.
 
-✓ He is playing guitar.
+he = יחיד → is singing.
 
-is playing = עכשיו.
+הוא שר שיר עכשיו.
+
+✓ He is singing a song.
 
 ---
 

@@ -64,23 +64,26 @@ If it rains, we will stay at home
 
 ## 5. נסו בעצמכם
 
-תוכנית לפיקניק — בודקים מזג אוויר.
+תכנון לשיעורים — ציון טוב מחכה.
 
-If it rains, we will stay at home
+If you do your homework, you will get a good grade.
 
-(רמז: If it rains, we will… = אם ירד, נ…)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-If it will rain, we will stay at home — שגוי!
+תרגיל: "אם תעשה שיעורים, תקבל ציון טוב."
 
-❌ אחרי If לא משתמשים ב will.
+Type 1: If + Present Simple, will + פועל.
 
-✓ If it rains, we will stay at home.
+do your homework = תעשה שיעורים (Present); will get = תקבל (עתיד).
 
-If + Present, will + פועל.
+אם תעשה שיעורים, תקבל ציון טוב.
+
+✓ If you do your homework, you will get a good grade.
 
 ---
 

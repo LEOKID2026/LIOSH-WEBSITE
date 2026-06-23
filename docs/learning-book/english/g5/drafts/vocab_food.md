@@ -64,23 +64,26 @@ We cooked healthy soup
 
 ## 5. נסו בעצמכם
 
-ערב בבית — מבשלים יחד.
+ארוחת ערב בבית — אורז ועוף.
 
-We cooked healthy soup
+We cooked rice with chicken for dinner.
 
-(רמז: cooked = בישלנו בעבר.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-We cook healthy soup yesterday — שגוי!
+תרגיל: "בישלנו אורז עם עוף לארוחת ערב."
 
-❌ cook הוא בזמן הווה. כאן צריך פועל בעבר.
+פועל סדיר בעבר: cook → cooked.
 
-✓ We cooked healthy soup.
+for dinner = לארוחת ערב.
 
-cooked = בישלנו (עבר).
+בישלנו אורז עם עוף לארוחת ערב.
+
+✓ We cooked rice with chicken for dinner.
 
 ---
 

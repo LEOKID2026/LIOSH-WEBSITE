@@ -68,23 +68,26 @@ I was reading when my friend called
 
 ## 5. נסו בעצמכם
 
-אתם עסוקים — מישהו מפריע.
+בגינה — ישבו בחוץ כשהגשם הפתיע.
 
-I was reading when my friend called
+They were sitting in the garden when it started to rain.
 
-(רמז: was reading = קראתי (באמצע); called = התקשר.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-I read when my friend was calling — מבלבל!
+תרגיל: "הם ישבו בגינה כשהתחיל לרדת גשם."
 
-❌ read + was calling לא מתאים כאן, כי צריך להראות פעולה מתמשכת ברקע ואירוע שקרה באמצע.
+פעולה מתמשכת ברקע → Past Continuous: were sitting.
 
-✓ I was reading when my friend called.
+אירוע שקרה באמצע → Past Simple: started.
 
-was reading = באמצע, called = באותו רגע.
+הם ישבו בגינה כשהתחיל לרדת גשם.
+
+✓ They were sitting in the garden when it started to rain.
 
 ---
 

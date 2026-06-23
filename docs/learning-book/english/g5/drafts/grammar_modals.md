@@ -66,23 +66,26 @@ You must wear a helmet
 
 ## 5. נסו בעצמכם
 
-רכיבה על אופניים — בטיחות קודמת.
+נסיעה בלוח זמנים — אסור להתאחר.
 
-You must wear a helmet
+We have to arrive on time.
 
-(רמז: must = חייב.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-You must to wear a helmet — שגוי!
+תרגיל: "אנחנו חייבים להגיע בזמן."
 
-❌ אחרי must לא משתמשים ב to.
+have to = חובה (חלופה ל must).
 
-✓ You must wear a helmet.
+we have to + פועל (בלי to נוסף).
 
-אחרי must כותבים את הפועל בלי to.
+אנחנו חייבים להגיע בזמן.
+
+✓ We have to arrive on time.
 
 ---
 

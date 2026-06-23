@@ -66,23 +66,26 @@ We are going to visit grandma
 
 ## 5. נסו בעצמכם
 
-תוכנית לסוף השבוע — סבתא.
+תוכנית לחופשה — טסים לחו"ל.
 
-We are going to visit grandma
+They are going to fly abroad.
 
-(רמז: going to = תוכנית.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-We will going to visit grandma — שגוי!
+תרגיל: "הם הולכים לטוס לחו"ל (תוכנית)."
 
-❌ בדרך כלל לא משתמשים יחד ב will וב going to באותו פועל.
+going to = תוכנית קרובה → are going to + פועל.
 
-✓ We are going to visit grandma.
+they = ריבוי → are going to fly.
 
-going to = תוכנית קרובה.
+הם הולכים לטוס לחו"ל.
+
+✓ They are going to fly abroad.
 
 ---
 

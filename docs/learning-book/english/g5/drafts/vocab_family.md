@@ -64,23 +64,26 @@ My grandparents live far away
 
 ## 5. נסו בעצמכם
 
-חופשה — רוצים לבקר את הסבים.
+מכתב מגיע מרחוק — מהסבים.
 
-My grandparents live far away
+My grandparents send me letters.
 
-(רמז: grandparents = סבא וסבתא.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-My grandparent live far away — שגוי!
+תרגיל: "הסבים שלי שולחים לי מכתבים."
 
-❌ grandparent מדבר על אדם אחד. כאן מדברים על סבא וסבתא, לכן צריך grandparents.
+grandparents = ריבוי → send (ללא s).
 
-✓ My grandparents live far away.
+me = לי; letters = מכתבים.
 
-grandparents = סבא וסבתא.
+הסבים שלי שולחים לי מכתבים.
+
+✓ My grandparents send me letters.
 
 ---
 

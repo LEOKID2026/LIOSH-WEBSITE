@@ -64,23 +64,26 @@ I play football
 
 ## 5. נסו בעצמכם
 
-משחק בכדורגל בחצר.
+ילד קופץ לבריכה.
 
-I play football
+I swim in the pool.
 
-(רמז: football = כדורגל.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-I play the football — לא נכון!
+תרגיל: ילד קופץ לבריכה.
 
-❌ the football — בכדורגל לא שמים the!
+הפתרון:
 
-✓ I play football.
+I swim in the pool.
 
-play football = משחק כדורגל.
+אני שוחה בבריכה.
+
+כל הכבוד! swim היא פעולת ספורט — I swim, ללא s אחרי I.
 
 ---
 

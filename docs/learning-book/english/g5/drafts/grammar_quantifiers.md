@@ -64,23 +64,26 @@ There were many people at the park
 
 ## 5. נסו בעצמכם
 
-אתמול בפארק — עמוס.
+בקבוק מים מלא.
 
-There were many people at the park
+There was much water in the bottle.
 
-(רמז: many people = הרבה אנשים.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-There was many people at the park — שגוי!
+תרגיל: "היה הרבה מים בבקבוק."
 
-❌ people היא מילה ברבים, לכן צריך were.
+water — שם עצם לא ספיר (לא ניתן לספור) → משתמשים ב much.
 
-✓ There were many people at the park.
+was (עבר, יחיד לא ספיר).
 
-many + people → were.
+היה הרבה מים בבקבוק.
+
+✓ There was much water in the bottle.
 
 ---
 

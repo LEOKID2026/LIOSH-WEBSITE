@@ -62,23 +62,26 @@ The cat is under the bed
 
 ## 5. נסו בעצמכם
 
-חתול ישן מתחת למיטה.
+כדור צבעוני בתוך קופסה.
 
-The cat is under the bed
+The ball is in the box.
 
-(רמז: under = מתחת.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-The cat under the bed — חסר is!
+תרגיל: כדור צבעוני בתוך קופסה.
 
-❌ The cat under — לא משפט!
+הפתרון:
 
-✓ The cat is under the bed.
+The ball is in the box.
 
-under = מתחת ל-.
+הכדור בתוך הקופסה.
+
+כל הכבוד! in = בתוך. המבנה: The + שם עצם + is + in/on/under + the + שם עצם.
 
 ---
 

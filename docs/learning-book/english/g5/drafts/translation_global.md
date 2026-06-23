@@ -64,23 +64,26 @@ People around the world speak many languages
 
 ## 5. נסו בעצמכם
 
-לומדים על מדינות ושפות.
+ילדים מכל העולם לומדים.
 
-People around the world speak many languages
+Children around the world learn English.
 
-(רמז: around the world = ברחבי העולם.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-People around the world speaks many languages — שגוי!
+תרגיל: "ילדים ברחבי העולם לומדים אנגלית."
 
-❌ people היא מילה ברבים, לכן צריך speak.
+around the world = ברחבי העולם.
 
-✓ People around the world speak many languages.
+children = ריבוי → learn (ללא s).
 
-People → speak.
+ילדים ברחבי העולם לומדים אנגלית.
+
+✓ Children around the world learn English.
 
 ---
 

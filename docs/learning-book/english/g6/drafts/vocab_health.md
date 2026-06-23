@@ -64,23 +64,26 @@ You should drink water and rest when you are tired
 
 ## 5. נסו בעצמכם
 
-אחרי אימון — מה כדאי לעשות?
+הרגלי אכילה טובים.
 
-You should drink water and rest when you are tired
+You should eat fruits and vegetables every day.
 
-(רמז: should = כדאי.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-You should to drink water and rest — שגוי!
+תרגיל: "כדאי לאכול פירות וירקות כל יום."
 
-❌ אחרי should לא משתמשים ב to.
+should + פועל = כדאי / מומלץ (בלי to אחרי should).
 
-✓ You should drink water and rest when you are tired.
+eat fruits and vegetables = לאכול פירות וירקות; every day = כל יום.
 
-אחרי should כותבים את הפועל בלי to.
+כדאי לאכול פירות וירקות כל יום.
+
+✓ You should eat fruits and vegetables every day.
 
 ---
 

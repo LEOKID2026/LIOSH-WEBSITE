@@ -64,23 +64,26 @@ The elephant walked slowly
 
 ## 5. נסו בעצמכם
 
-פיל גדול בג'ונגל — אתמול.
+דולפין קופץ מהמים.
 
-The elephant walked slowly
+The dolphin jumped high.
 
-(רמז: walked = הלך בעבר.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-The elephant walk slowly — שגוי!
+תרגיל: "הדולפין קפץ גבוה."
 
-❌ walk הוא בזמן הווה. כאן צריך פועל בעבר.
+פועל סדיר בעבר: jump → jumped.
 
-✓ The elephant walked slowly.
+high = גבוה (תואר פועל).
 
-walked = הלך (עבר).
+הדולפין קפץ גבוה.
+
+✓ The dolphin jumped high.
 
 ---
 

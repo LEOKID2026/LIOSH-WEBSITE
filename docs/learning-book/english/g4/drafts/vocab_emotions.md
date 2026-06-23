@@ -64,23 +64,26 @@ They feel excited
 
 ## 5. נסו בעצמכם
 
-ילדים לפני חג.
+ילדים בסוף יום גשום.
 
-They feel excited
+They feel sad.
 
-(רמז: excited = נרגש/ת.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-They feels excited — שגוי!
+תרגיל: "הם/הן עצובים/ות."
 
-❌ They feels — אחרי They לא מוסיפים s לפועל.
+they = ריבוי → אחרי they לא מוסיפים s לפועל feel.
 
-✓ They feel excited.
+sad = עצוב/ה.
 
-They = הם/הן.
+הם/הן עצובים/ות.
+
+✓ They feel sad.
 
 ---
 

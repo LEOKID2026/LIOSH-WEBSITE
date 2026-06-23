@@ -64,23 +64,26 @@ They planted trees last year
 
 ## 5. נסו בעצמכם
 
-פרויקט סביבה בבית הספר.
+ילדים שתלו פרחים ביער.
 
-They planted trees last year
+Children planted flowers in the forest.
 
-(רמז: planted = נטעו בעבר.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-They plant trees last year — שגוי!
+תרגיל: "ילדים שתלו פרחים ביער."
 
-❌ plant הוא בזמן הווה. כאן צריך פועל בעבר.
+פועל סדיר בעבר: plant → planted.
 
-✓ They planted trees last year.
+in the forest = ביער.
 
-planted = נטעו (עבר).
+ילדים שתלו פרחים ביער.
+
+✓ Children planted flowers in the forest.
 
 ---
 

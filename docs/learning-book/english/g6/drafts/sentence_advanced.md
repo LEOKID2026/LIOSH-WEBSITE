@@ -64,23 +64,26 @@ While I was studying, my sister was listening to music
 
 ## 5. נסו בעצמכם
 
-שני אחים באותו חדר.
+ערב בבית — כל אחד עסוק בדבר שלו.
 
-While I was studying, my sister was listening to music
+While my mother was cooking, my father was reading a book.
 
-(רמז: While… was…, … was… = שתי פעולות במקביל.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-While I studied, my sister listened to music — פחות מדויק!
+תרגיל: "בזמן שאמא בישלה, אבא קרא ספר."
 
-❌ studied / listened הם רק Past Simple. כאן רוצים להדגיש שתי פעולות שקרו באותו זמן.
+שתי פעולות שהתרחשו במקביל → Past Continuous לשתיהן.
 
-✓ While I was studying, my sister was listening to music.
+was cooking + was reading = שתי פעולות במקביל.
 
-While + was…ing, was…ing.
+בזמן שאמא בישלה, אבא קרא ספר.
+
+✓ While my mother was cooking, my father was reading a book.
 
 ---
 

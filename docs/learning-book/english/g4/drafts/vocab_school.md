@@ -64,23 +64,26 @@ The students read books
 
 ## 5. נסו בעצמכם
 
-שיעור קריאה בכיתה.
+שיעור — תלמידים מקשיבים.
 
-The students read books
+The students listen to the teacher.
 
-(רמז: students = תלמידים.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-The student read books — שגוי!
+תרגיל: "התלמידים מקשיבים למורה."
 
-❌ The student — כאן מדברים על כמה תלמידים, לכן צריך students.
+the students = התלמידים (ריבוי) → אחרי ריבוי לא מוסיפים s לפועל listen.
 
-✓ The students read books.
+listen to = להקשיב ל-.
 
-students = תלמידים (רבים).
+התלמידים מקשיבים למורה.
+
+✓ The students listen to the teacher.
 
 ---
 

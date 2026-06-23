@@ -63,23 +63,26 @@ We protect the trees
 
 ## 5. נסו בעצמכם
 
-גינה עם עצים ירוקים.
+חוף ים נקי.
 
-We protect the trees
+We protect the sea.
 
-(רמז: protect = לשמור על.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-We protects the trees — שגוי!
+תרגיל: "אנחנו שומרים על הים."
 
-❌ We protects — אחרי We לא מוסיפים s לפועל.
+we = אנחנו → אחרי we לא מוסיפים s לפועל protect.
 
-✓ We protect the trees.
+the sea = הים.
 
-We = אנחנו.
+אנחנו שומרים על הים.
+
+✓ We protect the sea.
 
 ---
 

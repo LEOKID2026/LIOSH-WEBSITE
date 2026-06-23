@@ -64,23 +64,26 @@ My parents work hard
 
 ## 5. נסו בעצמכם
 
-הורים חוזרים מעבודה.
+הורים עוזרים לילד בשיעורים.
 
-My parents work hard
+My parents help me.
 
-(רמז: work hard = עובדים קשה.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-My parents works hard — שגוי!
+תרגיל: "ההורים שלי עוזרים לי."
 
-❌ My parents works — parents היא מילה ברבים, לכן כותבים work.
+parents = הורים (ריבוי) → אחרי ריבוי לא מוסיפים s לפועל help.
 
-✓ My parents work hard.
+me = לי (מושא ראשון).
 
-parents = הורים (רבים).
+ההורים שלי עוזרים לי.
+
+✓ My parents help me.
 
 ---
 

@@ -64,23 +64,26 @@ The birds are flying
 
 ## 5. נסו בעצמכם
 
-ציפורים עפות מעל העץ.
+דגים בים.
 
-The birds are flying
+The fish are swimming in the sea.
 
-(רמז: are flying = עפות עכשיו.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-The birds fly — זה הרגל, לא עכשיו!
+תרגיל: "הדגים שוחים בים (עכשיו)."
 
-❌ The birds fly — Present Simple!
+פעולה שקורית עכשיו → Present Continuous: are + swimming.
 
-✓ The birds are flying.
+the fish = ריבוי → are swimming.
 
-are flying = עכשיו.
+הדגים שוחים בים.
+
+✓ The fish are swimming in the sea.
 
 ---
 

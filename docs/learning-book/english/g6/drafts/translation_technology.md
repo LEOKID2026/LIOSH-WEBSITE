@@ -64,23 +64,26 @@ Scientists might discover new ways to save energy
 
 ## 5. נסו בעצמכם
 
-כתבה על אנרגיה מתחדשת.
+מדענים עובדים על תרופות חדשות.
 
-Scientists might discover new ways to save energy
+Researchers might find a new medicine in the coming years.
 
-(רמז: might discover = אולי יגלו.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-Scientists must discover new ways to save energy — חזק מדי!
+תרגיל: "חוקרים אולי ימצאו תרופה חדשה בשנים הקרובות."
 
-❌ must פירושו חייב. כאן המשמעות היא אולי, לכן מתאים יותר might.
+might + פועל = אולי (אפשרות, לא ודאות).
 
-✓ Scientists might discover new ways to save energy.
+find = למצוא; in the coming years = בשנים הקרובות.
 
-might = אולי.
+חוקרים אולי ימצאו תרופה חדשה בשנים הקרובות.
+
+✓ Researchers might find a new medicine in the coming years.
 
 ---
 

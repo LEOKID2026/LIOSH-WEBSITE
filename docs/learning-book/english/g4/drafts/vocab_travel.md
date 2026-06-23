@@ -63,23 +63,26 @@ We travel by bus
 
 ## 5. נסו בעצמכם
 
-תחנת אוטובוס.
+תחנת רכבת.
 
-We travel by bus
+We travel by train.
 
-(רמז: by bus = באוטובוס.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-We travel in bus — שגוי!
+תרגיל: "אנחנו נוסעים ברכבת."
 
-❌ in bus — כשמדברים על נסיעה באוטובוס אומרים by bus.
+by + אמצעי תחבורה = ב- (train, bus, car...).
 
-✓ We travel by bus.
+We travel by train.
 
-by bus = באמצעות אוטובוס.
+אנחנו נוסעים ברכבת.
+
+✓ We travel by train.
 
 ---
 

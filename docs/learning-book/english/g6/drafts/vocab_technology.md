@@ -64,23 +64,26 @@ If the internet stops, we could use books instead
 
 ## 5. נסו בעצמכם
 
-תרגיל בכיתה — האינטרנט לא עובד.
+חשמל כבוי — מה עושים?
 
-If the internet stops, we could use books instead
+If the electricity goes off, we could use candles.
 
-(רמז: If… stops, we could… = אם… נפסק, נוכל…)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-If the internet will stop, we could use books — שגוי!
+תרגיל: "אם החשמל נכבה, נוכל להשתמש בנרות."
 
-❌ אחרי If לא משתמשים ב will.
+If + Present Simple, could + פועל = אפשרות.
 
-✓ If the internet stops, we could use books instead.
+goes off = נכבה (Present); could use = נוכל להשתמש.
 
-If + Present, could + פועל.
+אם החשמל נכבה, נוכל להשתמש בנרות.
+
+✓ If the electricity goes off, we could use candles.
 
 ---
 

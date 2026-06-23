@@ -64,23 +64,26 @@ Every day I help at home
 
 ## 5. נסו בעצמכם
 
-ערב — עוזרים בבית.
+בוקר — שותים מים.
 
-Every day I help at home
+Every day he drinks water.
 
-(רמז: Every day = כל יום.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-Every day I helps at home — שגוי!
+תרגיל: "כל יום הוא שותה מים."
 
-❌ I helps — אחרי I לא מוסיפים s לפועל.
+Every day = כל יום → הרגל → Present Simple.
 
-✓ Every day I help at home.
+he = יחיד זכר → מוסיפים s לפועל: drink → drinks.
 
-help = עוזר/ת (I/you/we/they).
+כל יום הוא שותה מים.
+
+✓ Every day he drinks water.
 
 ---
 

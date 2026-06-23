@@ -65,23 +65,26 @@ First we pack our bags
 
 ## 5. נסו בעצמכם
 
-לפני טיול — אורזים.
+יוצאים לדרך — תחנת האוטובוס.
 
-First we pack our bags
+Then we go to the bus stop.
 
-(רמז: First = קודם.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-First we pack bags — חסר our!
+תרגיל: "אחר כך אנחנו הולכים לתחנת האוטובוס."
 
-❌ pack bags — כאן צריך our bags כדי לומר "התיקים שלנו".
+Then = אחר כך (מילת קישור לרצף).
 
-✓ First we pack our bags.
+go to the bus stop = הולכים לתחנת האוטובוס.
 
-our bags = התיקים שלנו.
+אחר כך אנחנו הולכים לתחנת האוטובוס.
+
+✓ Then we go to the bus stop.
 
 ---
 

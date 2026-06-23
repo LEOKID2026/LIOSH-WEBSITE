@@ -64,23 +64,26 @@ The park is in our town
 
 ## 5. נסו בעצמכם
 
-ילדים משחקים בפארק.
+בניין בית הספר בעיירה.
 
-The park is in our town
+The school is in our town.
 
-(רמז: in our town = בעיירה שלנו.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-The park on our town — שגוי!
+תרגיל: "בית הספר בעיירה שלנו."
 
-❌ on our town — כשמדברים על מקום כמו town משתמשים ב in.
+in = בתוך/ב- → כשמדברים על מיקום בתוך מקום כמו town משתמשים ב in.
 
-✓ The park is in our town.
+The school is in our town.
 
-in = בתוך/ב-.
+בית הספר בעיירה שלנו.
+
+✓ The school is in our town.
 
 ---
 

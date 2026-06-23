@@ -64,23 +64,26 @@ Many countries work together on global issues
 
 ## 5. נסו בעצמכם
 
-פרויקט על אקלים ושלום.
+שיתוף פעולה בינלאומי לפתרון בעיות.
 
-Many countries work together on global issues
+International organizations help solve global problems.
 
-(רמז: work together = עובדות יחד.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-Many countries works together on global issues — שגוי!
+תרגיל: "ארגונים בינלאומיים עוזרים לפתור בעיות גלובליות."
 
-❌ countries היא מילה ברבים, לכן צריך work.
+organizations = ריבוי → help (ללא s).
 
-✓ Many countries work together on global issues.
+help + פועל (בלי to): help solve.
 
-countries → work.
+ארגונים בינלאומיים עוזרים לפתור בעיות גלובליות.
+
+✓ International organizations help solve global problems.
 
 ---
 

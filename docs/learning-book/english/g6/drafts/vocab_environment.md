@@ -64,23 +64,26 @@ Climate change affects people around the world
 
 ## 5. נסו בעצמכם
 
-פרויקט על הסביבה — נושא גלובלי.
+עולם מתחמם — הטמפרטורות עולות.
 
-Climate change affects people around the world
+Temperatures are rising due to climate change.
 
-(רמז: affects = משפיע (הווה).)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-Climate change affect people around the world — שגוי!
+תרגיל: "הטמפרטורות עולות בגלל שינוי האקלים."
 
-❌ Climate change הוא יחיד, לכן צריך affects.
+temperatures = ריבוי → are rising (Present Continuous).
 
-✓ Climate change affects people around the world.
+due to = בגלל; climate change = שינוי האקלים.
 
-change → affects.
+הטמפרטורות עולות בגלל שינוי האקלים.
+
+✓ Temperatures are rising due to climate change.
 
 ---
 

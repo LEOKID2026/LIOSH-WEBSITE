@@ -64,23 +64,26 @@ I like to draw
 
 ## 5. נסו בעצמכם
 
-ילד/ה עם צבעים.
+ילד עם ספר פתוח.
 
-I like to draw
+He likes to read.
 
-(רמז: like to draw = אוהב/ת לצייר.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-I like draw — חסר to!
+תרגיל: ילד עם ספר פתוח.
 
-❌ I like draw — צריך to draw!
+הפתרון:
 
-✓ I like to draw.
+He likes to read.
 
-like to = אוהב/ת ל-.
+הוא אוהב לקרוא.
+
+כל הכבוד! אחרי he מוסיפים s — likes (לא like), ואחריו to read.
 
 ---
 

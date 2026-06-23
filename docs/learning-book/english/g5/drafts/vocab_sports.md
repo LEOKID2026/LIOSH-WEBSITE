@@ -64,23 +64,26 @@ He scored a goal yesterday
 
 ## 5. נסו בעצמכם
 
-משחק אתמול — רגע הניצחון.
+משחק מרגש — שני שערים.
 
-He scored a goal yesterday
+The footballer scored two goals in the game.
 
-(רמז: scored = הבקיע בעבר.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-He score a goal yesterday — שגוי!
+תרגיל: "הכדורגלן הכניס שני שערים במשחק."
 
-❌ score הוא בזמן הווה. כאן צריך פועל בעבר.
+פועל סדיר בעבר: score → scored.
 
-✓ He scored a goal yesterday.
+two goals = שני שערים; in the game = במשחק.
 
-scored = הבקיע (עבר).
+הכדורגלן הכניס שני שערים במשחק.
+
+✓ The footballer scored two goals in the game.
 
 ---
 

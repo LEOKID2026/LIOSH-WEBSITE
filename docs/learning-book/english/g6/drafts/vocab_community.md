@@ -64,23 +64,26 @@ Our community celebrated the festival last month
 
 ## 5. נסו בעצמכם
 
-אירוע קהילתי — כולם יחד.
+פסטיבל — ריקוד ושמחה לכולם.
 
-Our community celebrated the festival last month
+Children and adults danced together at the festival.
 
-(רמז: celebrated = חגגה בעבר.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-Our community celebrate the festival last month — שגוי!
+תרגיל: "ילדים ומבוגרים ריקדו יחד בפסטיבל."
 
-❌ celebrate הוא בזמן הווה. כאן צריך פועל בעבר.
+פועל סדיר בעבר: dance → danced.
 
-✓ Our community celebrated the festival last month.
+together = יחד; at the festival = בפסטיבל.
 
-celebrated = חגגה (Past Simple).
+ילדים ומבוגרים ריקדו יחד בפסטיבל.
+
+✓ Children and adults danced together at the festival.
 
 ---
 

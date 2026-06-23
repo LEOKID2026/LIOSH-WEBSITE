@@ -64,23 +64,26 @@ The hospital is next to the park
 
 ## 5. נסו בעצמכם
 
-מוצאים את בית החולים בעיירה.
+מוצאים את השוק על המפה.
 
-The hospital is next to the park
+The main street is next to the market.
 
-(רמז: next to = ליד.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-The hospital is in the park — שונה!
+תרגיל: "הרחוב הראשי ליד השוק."
 
-❌ in the park פירושו בתוך הפארק. כאן צריך ליד הפארק: next to the park.
+next to = ליד (מרחק קרוב, לא בתוך).
 
-✓ The hospital is next to the park.
+The main street is next to the market.
 
-next to = ליד, לא בתוך.
+הרחוב הראשי ליד השוק.
+
+✓ The main street is next to the market.
 
 ---
 

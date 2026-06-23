@@ -64,23 +64,26 @@ My brother reads
 
 ## 5. נסו בעצמכם
 
-אח קורא כל יום.
+אמא עומדת ליד הכיריים.
 
-My brother reads
+My mother cooks.
 
-(רמז: reads = קורא.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-My brother read — שגוי!
+תרגיל: אמא עומדת ליד הכיריים.
 
-❌ My brother read — חסר s!
+הפתרון:
 
-✓ My brother reads.
+My mother cooks.
 
-reads = קורא (he/she/it).
+אמי מבשלת.
+
+כל הכבוד! my mother = כינוי + שם + פועל עם s: cooks, ולא cook.
 
 ---
 

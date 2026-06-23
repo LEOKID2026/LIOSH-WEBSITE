@@ -64,23 +64,26 @@ We eat healthy food
 
 ## 5. נסו בעצמכם
 
-ארוחה עם ירקות ופירות.
+שוק ירקות טריים.
 
-We eat healthy food
+We eat fresh vegetables.
 
-(רמז: healthy food = מזון בריא.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-We eats healthy food — שגוי!
+תרגיל: "אנחנו אוכלים ירקות טריים."
 
-❌ We eats — אחרי We לא מוסיפים s לפועל.
+we = אנחנו → אחרי we לא מוסיפים s לפועל eat.
 
-✓ We eat healthy food.
+fresh vegetables = ירקות טריים.
 
-We = אנחנו.
+אנחנו אוכלים ירקות טריים.
+
+✓ We eat fresh vegetables.
 
 ---
 

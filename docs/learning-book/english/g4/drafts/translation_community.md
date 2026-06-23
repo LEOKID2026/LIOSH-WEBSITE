@@ -64,23 +64,26 @@ The library is near the school
 
 ## 5. נסו בעצמכם
 
-ילדים הולכים לספרייה.
+ילדים הולכים לבית הספר.
 
-The library is near the school
+The school is near the park.
 
-(רמז: near = ליד.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-The library is in the school — שונה!
+תרגיל: "בית הספר ליד הפארק."
 
-❌ in the school — בתוך בית הספר!
+near = ליד (מרחק קצר, לא בתוך).
 
-✓ The library is near the school.
+The school is near the park.
 
-near = ליד, לא בתוך.
+בית הספר ליד הפארק.
+
+✓ The school is near the park.
 
 ---
 

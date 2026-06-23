@@ -66,23 +66,26 @@ She is reading now
 
 ## 5. נסו בעצמכם
 
-ילדה עם ספר — עכשיו.
+ילדים במגרש — עכשיו.
 
-She is reading now
+They are playing football now.
 
-(רמז: is reading = קוראת עכשיו.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-She reads now — Simple, לא Continuous!
+תרגיל: "הם משחקים כדורגל עכשיו."
 
-❌ She reads now — המילה now רומזת לפעולה שקורית עכשיו, לכן צריך Continuous.
+המילה now מראה פעולה שקורית עכשיו → Present Continuous.
 
-✓ She is reading now.
+they = הם → are + playing.
 
-is reading = עכשיו.
+הם משחקים כדורגל עכשיו.
+
+✓ They are playing football now.
 
 ---
 

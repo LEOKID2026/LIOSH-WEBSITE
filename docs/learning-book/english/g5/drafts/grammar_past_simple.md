@@ -70,23 +70,26 @@ I played football yesterday
 
 ## 5. נסו בעצמכם
 
-אתמול אחרי בית הספר — מגרש כדורגל.
+בוקר — קבוצה משחקת כדורסל.
 
-I played football yesterday
+We played basketball in the morning.
 
-(רמז: played = שיחקתי בעבר.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-I play football yesterday — שגוי!
+תרגיל: "שיחקנו כדורסל בבוקר."
 
-❌ play — Present Simple!
+פעולה שהסתיימה בעבר → Past Simple: play → played.
 
-✓ I played football yesterday.
+in the morning = בבוקר.
 
-played = שיחקתי (עבר).
+שיחקנו כדורסל בבוקר.
+
+✓ We played basketball in the morning.
 
 ---
 

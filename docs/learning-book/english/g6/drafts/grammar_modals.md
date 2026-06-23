@@ -70,23 +70,26 @@ You should ask the teacher for help
 
 ## 5. נסו בעצמכם
 
-לא מבינים את התרגיל.
+שבת — אולי נלך לים.
 
-You should ask the teacher for help
+We might go to the beach on Saturday.
 
-(רמז: should ask = כדאי לשאול.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-You should to ask the teacher for help — שגוי!
+תרגיל: "אולי נלך לים בשבת."
 
-❌ אחרי should לא משתמשים ב to.
+might = אולי (אפשרות, לא ודאות).
 
-✓ You should ask the teacher for help.
+might + פועל (בלי to): might go.
 
-should + פועל (בלי to).
+אולי נלך לים בשבת.
+
+✓ We might go to the beach on Saturday.
 
 ---
 

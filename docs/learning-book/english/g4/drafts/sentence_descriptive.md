@@ -62,23 +62,26 @@ The tall girl runs quickly
 
 ## 5. נסו בעצמכם
 
-ילדה גבוהה רצה במגרש.
+ילד חכם כותב בפנקס.
 
-The tall girl runs quickly
+The smart boy writes nicely.
 
-(רמז: quickly = מהר.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-The tall girl runs quick — שגוי!
+תרגיל: "הילד החכם כותב יפה."
 
-❌ quick — כאן צריך quickly, כי מתארים איך הפעולה נעשית.
+תבנית: תאר + שם עצם + פועל + תואר פועל.
 
-✓ The tall girl runs quickly.
+smart = חכם (תאר שם עצם); nicely = יפה (תאר פועל, מסביר איך).
 
-quickly = בצורה מהירה.
+הילד החכם כותב יפה.
+
+✓ The smart boy writes nicely.
 
 ---
 

@@ -64,23 +64,26 @@ If we protect the oceans, future generations will benefit
 
 ## 5. נסו בעצמכם
 
-פרויקט סביבתי — אוקיינוסים ועתיד.
+פרויקט על שמירת היערות.
 
-If we protect the oceans, future generations will benefit
+If we protect the forests, animals will survive.
 
-(רמז: If we protect…, … will benefit.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-If we will protect the oceans, future generations benefit — שגוי!
+תרגיל: "אם נגן על היערות, בעלי החיים יינצלו."
 
-❌ אחרי If לא משתמשים ב will, ובחלק השני צריך will.
+Type 1: If + Present Simple, will + פועל.
 
-✓ If we protect the oceans, future generations will benefit.
+protect = נגן (Present); will survive = יינצלו (עתיד).
 
-If + Present, will + פועל.
+אם נגן על היערות, בעלי החיים יינצלו.
+
+✓ If we protect the forests, animals will survive.
 
 ---
 

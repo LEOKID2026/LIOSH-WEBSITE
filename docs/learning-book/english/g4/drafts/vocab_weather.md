@@ -64,23 +64,26 @@ It is raining today
 
 ## 5. נסו בעצמכם
 
-מטריה ביד — גשם.
+שמיים מכוסים בעננים.
 
-It is raining today
+It is snowing today.
 
-(רמז: raining = יורד גשם.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-It rains today — אפשר, אבל כאן Continuous!
+תרגיל: "היום יורד שלג."
 
-❌ It rains — הרגל כללי!
+מזג אוויר שמתרחש עכשיו → Present Continuous: is + פועל + ing.
 
-✓ It is raining today.
+snow → snowing; today = היום.
 
-is raining = עכשיו/היום.
+היום יורד שלג.
+
+✓ It is snowing today.
 
 ---
 

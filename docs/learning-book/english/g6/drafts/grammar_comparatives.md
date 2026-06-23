@@ -64,23 +64,26 @@ This is the most interesting book I have read
 
 ## 5. נסו בעצמכם
 
-מדפי ספרים — איזה הכי מעניין?
+חושבים על סרט מצחיק — הכי טוב שראיתם.
 
-This is the most interesting book I have read
+This is the funniest film I have watched.
 
-(רמז: the most interesting = הכי מעניין.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-This is the more interesting book I have read — שגוי!
+תרגיל: "זה הסרט המצחיק ביותר שראיתי."
 
-❌ more interesting משווה בין דברים. כאן צריך צורת superlative: the most interesting.
+funny = קצר → superlative: the + funniest (כפול y → iest).
 
-✓ This is the most interesting book I have read.
+I have watched = שראיתי (Present Perfect).
 
-the most + שם תואר ארוך.
+זה הסרט המצחיק ביותר שראיתי.
+
+✓ This is the funniest film I have watched.
 
 ---
 

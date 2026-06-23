@@ -64,23 +64,26 @@ Music is an important part of our culture
 
 ## 5. נסו בעצמכם
 
-שיעור על תרבויות שונות.
+ריקוד מסורתי בחג.
 
-Music is an important part of our culture
+Dance is an important part of our tradition.
 
-(רמז: culture = תרבות.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-Music is an important part of our cultures — שגוי!
+תרגיל: "הריקוד הוא חלק חשוב מהמסורת שלנו."
 
-❌ cultures היא צורת רבים. כאן מדברים על תרבות אחת, לכן צריך culture.
+an important part of = חלק חשוב מ-.
 
-✓ Music is an important part of our culture.
+tradition = מסורת (יחיד, ספציפי לתרבות שלנו).
 
-our culture = התרבות שלנו.
+הריקוד הוא חלק חשוב מהמסורת שלנו.
+
+✓ Dance is an important part of our tradition.
 
 ---
 

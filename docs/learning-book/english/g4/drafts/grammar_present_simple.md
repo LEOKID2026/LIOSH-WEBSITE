@@ -64,23 +64,26 @@ He walks to school
 
 ## 5. נסו בעצמכם
 
-בוקר — הולכים לבית ספר.
+שבת — משחקים בחוץ.
 
-He walks to school
+They play football every Saturday.
 
-(רמז: walks to school = הולך לבית ספר.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-He walk to school — שגוי!
+תרגיל: "הם משחקים כדורגל בכל שבת."
 
-❌ He walk — אחרי he מוסיפים s לפועל: He walks.
+הפועל: play — אחרי they (ריבוי) לא מוסיפים s.
 
-✓ He walks to school.
+every Saturday = כל שבת → הרגל → Present Simple.
 
-walks = הולך (he/she/it).
+הם משחקים כדורגל בכל שבת.
+
+✓ They play football every Saturday.
 
 ---
 

@@ -64,23 +64,26 @@ He might feel nervous before the presentation
 
 ## 5. נסו בעצמכם
 
-יום הצגה — מה הוא מרגיש?
+ניצחון בתחרות — שמחים וגאים.
 
-He might feel nervous before the presentation
+They might feel proud after a win.
 
-(רמז: might feel = אולי ירגיש.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-He must feel nervous before the presentation — לא תמיד נכון!
+תרגיל: "הם אולי ירגישו גאים אחרי ניצחון."
 
-❌ must פירושו חובה חזקה. כאן הכוונה היא אולי, לכן מתאים יותר להשתמש ב might.
+might + feel = אולי ירגישו (אפשרות, לא ודאות).
 
-✓ He might feel nervous before the presentation.
+proud = גאה/ים; after a win = אחרי ניצחון.
 
-might = אולי, לא בטוח.
+הם אולי ירגישו גאים אחרי ניצחון.
+
+✓ They might feel proud after a win.
 
 ---
 

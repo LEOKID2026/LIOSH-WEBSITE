@@ -64,23 +64,26 @@ There are ten books
 
 ## 5. נסו בעצמכם
 
-מדף מלא בספרים.
+שלושה כיסאות בחדר.
 
-There are ten books
+There are three chairs.
 
-(רמז: ten = עשר.)
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
 ---
 
-## 6. שימו לב!
+## 6. בואו נבדוק יחד
 
-There is ten books — שגוי!
+תרגיל: שלושה כיסאות בחדר.
 
-❌ There is — לרבים צריך are!
+הפתרון:
 
-✓ There are ten books.
+There are three chairs.
 
-are = יש (רבים).
+יש שלושה כיסאות.
+
+כל הכבוד! לרבים תמיד משתמשים ב-There are — לא There is.
 
 ---
 
