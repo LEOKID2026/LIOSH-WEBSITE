@@ -46,21 +46,21 @@ export const ENGLISH_G2_PAGE_ORDER = ENGLISH_G2_BOOK_BATCHES.flatMap((b) => b.pa
 
 /** Section 5/6 alignment anchors */
 export const ENGLISH_G2_ALIGNMENT_ANCHORS = {
-  vocab_colors: ["blue"],
-  vocab_numbers: ["seven"],
-  vocab_family: ["dad"],
-  vocab_animals: ["dog"],
-  vocab_emotions: ["sad"],
-  vocab_actions: ["jump"],
+  vocab_colors: ["The book is red"],
+  vocab_numbers: ["I am twelve"],
+  vocab_family: ["This is my book"],
+  vocab_animals: ["I see a cat"],
+  vocab_emotions: ["I am happy"],
+  vocab_actions: ["I run"],
   vocab_school: ["pen"],
-  vocab_food: ["apple"],
-  vocab_house: ["bed"],
-  grammar_be: ["She is"],
-  grammar_plural_questions: ["cats"],
-  sentence_base: ["I am seven"],
-  sentence_routine: ["I wake up"],
-  translation_classroom: ["Thank you"],
-  translation_routines: ["I eat breakfast"],
+  vocab_food: ["bread"],
+  vocab_house: ["table"],
+  grammar_be: ["He is sad"],
+  grammar_plural_questions: ["dogs"],
+  sentence_base: ["I have a book"],
+  sentence_routine: ["I go to school"],
+  translation_classroom: ["Hello"],
+  translation_routines: ["I go to school"],
 };
 
 /** @type {Record<string, { skillId: string; linkedSkillIds?: string[]; pageType: string; titleHe: string; scope: string; continuing?: boolean }>} */

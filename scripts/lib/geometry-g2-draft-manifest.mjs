@@ -28,9 +28,9 @@ export const GEOMETRY_G2_PAGE_ORDER = GEOMETRY_G2_BOOK_BATCHES.flatMap((b) => b.
 
 /** Section 5/6 alignment anchors — same context in both sections */
 export const GEOMETRY_G2_ALIGNMENT_ANCHORS = {
-  solids: ["קובייה", "6"],
-  square_area: ["ריבוע", "4", "16"],
-  transformations: ["הזזה", "שיקוף", "מדבקה"],
+  solids: ["גוף", "פחית"],
+  square_area: ["ריבוע", "3"],
+  transformations: ["הזזה", "שיקוף"],
 };
 
 /** @type {Record<string, { skillId: string; pageType: string; titleHe: string; scope: string }>} */

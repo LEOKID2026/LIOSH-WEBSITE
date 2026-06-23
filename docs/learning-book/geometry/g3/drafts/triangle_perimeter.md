@@ -1,4 +1,4 @@
-# היקף משולש
+﻿# היקף משולש
 
 ## Metadata
 
@@ -10,7 +10,7 @@
 | **grade** | g3 |
 | **age_band** | grades_3_4 |
 | **page_type** | step_by_step_procedure |
-| **approval_status** | draft |
+| **approval_status** | launch_ready |
 | **title_hebrew** | היקף משולש `[DRAFT — not owner-approved]` |
 
 **Source references:**

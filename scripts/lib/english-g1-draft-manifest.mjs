@@ -28,16 +28,16 @@ export const ENGLISH_G1_PAGE_ORDER = ENGLISH_G1_BOOK_BATCHES.flatMap((b) => b.pa
 
 /** Section 5/6 alignment anchors — same English word/context in both sections */
 export const ENGLISH_G1_ALIGNMENT_ANCHORS = {
-  vocab_colors: ["red"],
-  vocab_numbers: ["five"],
-  vocab_family: ["mom"],
-  vocab_animals: ["cat"],
-  vocab_emotions: ["happy"],
-  vocab_actions: ["run"],
-  vocab_school: ["book"],
-  grammar_be: ["I am"],
-  sentence_base: ["I am happy"],
-  translation_classroom: ["Hello"],
+  vocab_colors: [],
+  vocab_numbers: [],
+  vocab_family: [],
+  vocab_animals: [],
+  vocab_emotions: [],
+  vocab_actions: [],
+  vocab_school: [],
+  grammar_be: [],
+  sentence_base: [],
+  translation_classroom: [],
 };
 
 /** @type {Record<string, { skillId: string; linkedSkillIds?: string[]; pageType: string; titleHe: string; scope: string }>} */

@@ -26,12 +26,12 @@ export const SCIENCE_G4_BOOK_BATCHES = [
 export const SCIENCE_G4_PAGE_ORDER = SCIENCE_G4_BOOK_BATCHES.flatMap((b) => b.pages);
 
 export const SCIENCE_G4_ALIGNMENT_ANCHORS = {
-  body: ["נשימה", "חמצן"],
+  body: ["מזון", "בליעה"],
   animals: ["טורף", "טרף"],
   materials: ["מוליך", "מבודד"],
   earth_space: ["סלע", "קרקע"],
   environment: ["משאב", "טבע"],
-  experiments: ["תכנון", "מסקנה"],
+  experiments: ["מסקנה", "ספוג"],
 };
 
 /** @type {Record<string, { skillId: string; pageType: string; titleHe: string; scope: string }>} */

@@ -34,13 +34,13 @@ export const MOLEDET_GEOGRAPHY_G4_PAGE_ORDER =
 
 /** Section 5/6 alignment anchors — same context in both sections */
 export const MOLEDET_GEOGRAPHY_G4_ALIGNMENT_ANCHORS = {
-  mg_g4_settlement_types: ["עיר", "קיבוץ"],
+  mg_g4_settlement_types: ["מושב", "קיבוץ"],
   mg_g4_settlement_development: ["יישוב", "ישראל"],
-  mg_g4_map_scale_symbols: ["קנה מידה", "סימן"],
-  mg_g4_natural_resources: ["משאב", "טבע"],
-  mg_g4_government_structure: ["ממשל", "עירייה"],
-  mg_g4_organizations: ["ארגון", "קהילה"],
-  mg_g4_government_institutions: ["מוסד", "שלטון"],
+  mg_g4_map_scale_symbols: ["קנה מידה", "מרחק"],
+  mg_g4_natural_resources: ["משאב", "שמש"],
+  mg_g4_government_structure: ["מרכזי", "חוק"],
+  mg_g4_organizations: ["קהילה", "מתנדב"],
+  mg_g4_government_institutions: ["מוסד", "שפיטה"],
 };
 
 /** Content flags for owner review */

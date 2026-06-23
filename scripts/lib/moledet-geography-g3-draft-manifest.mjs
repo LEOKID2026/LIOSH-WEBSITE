@@ -36,13 +36,13 @@ export const MOLEDET_GEOGRAPHY_G3_PAGE_ORDER =
 /** Section 5/6 alignment anchors — same context in both sections */
 export const MOLEDET_GEOGRAPHY_G3_ALIGNMENT_ANCHORS = {
   mg_g3_israel_map: ["מפת", "ישראל"],
-  mg_g3_regions_cities: ["צפון", "ערים"],
-  mg_g3_landscapes: ["מדבר", "הר"],
+  mg_g3_regions_cities: ["צפון", "הרים"],
+  mg_g3_landscapes: ["הר", "נוף"],
   mg_g3_water_sources: ["ים", "מים"],
   mg_g3_districts_borders: ["מחוז", "גבול"],
   mg_g3_citizenship_basics: ["אזרח", "קהילה"],
   mg_g3_rights_duties: ["זכות", "חובה"],
-  mg_g3_social_participation: ["השתתפות", "קהילה"],
+  mg_g3_social_participation: ["קהילה", "ניקיון"],
 };
 
 /** Place names appearing in child-facing copy — owner must verify spellings */

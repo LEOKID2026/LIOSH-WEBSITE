@@ -115,17 +115,17 @@ for (const pageId of GEOMETRY_G4_PAGE_ORDER) {
   if (FAKE_PRACTICE_RE.test(s7)) {
     errors.push(`${pageId}: Section 7 contains fake practice routing`);
   }
-  if (!/×‘×ª×¨×’×•×œ ×ª×ž×¦××•/i.test(s7)) {
-    errors.push(`${pageId}: Section 7 must use ×‘×ª×¨×’×•×œ ×ª×ž×¦××•â€¦ (no fake links)`);
+  if (!/בתרגול/u.test(s7)) {
+    errors.push(`${pageId}: Section 7 must use "בתרגול…" (no fake links)`);
   }
 
   const anchors = GEOMETRY_G4_ALIGNMENT_ANCHORS[pageId] || [];
   for (const anchor of anchors) {
     if (!s5.includes(anchor)) {
-      errors.push(`${pageId}: Â§5 missing alignment anchor "${anchor}"`);
+      errors.push(`${pageId}: §5 missing alignment anchor "${anchor}"`);
     }
     if (!s6.includes(anchor)) {
-      errors.push(`${pageId}: Â§6 missing alignment anchor "${anchor}"`);
+      errors.push(`${pageId}: §6 missing alignment anchor "${anchor}"`);
     }
   }
 

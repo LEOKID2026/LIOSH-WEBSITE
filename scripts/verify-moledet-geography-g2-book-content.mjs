@@ -53,11 +53,8 @@ for (const pageId of MOLEDET_GEOGRAPHY_G2_PAGE_ORDER) {
     errors.push(e.message);
   }
 
-  if (readMetadataField(raw, "approval_status") !== "draft") {
-    errors.push(`${pageId}: approval_status must be draft`);
-  }
-  if (!readMetadataField(raw, "title_hebrew").includes("[DRAFT")) {
-    errors.push(`${pageId}: title_hebrew missing DRAFT marker`);
+  if (readMetadataField(raw, "approval_status") !== "approved") {
+    errors.push(`${pageId}: approval_status must be approved`);
   }
   if (readMetadataField(raw, "grade") !== "g2") {
     errors.push(`${pageId}: grade must be g2`);
@@ -65,8 +62,8 @@ for (const pageId of MOLEDET_GEOGRAPHY_G2_PAGE_ORDER) {
   if (readMetadataField(raw, "age_band") !== "grades_1_2") {
     errors.push(`${pageId}: age_band must be grades_1_2`);
   }
-  if (readMetadataField(raw, "subject") !== "geography") {
-    errors.push(`${pageId}: subject must be geography`);
+  if (readMetadataField(raw, "subject") !== "moledet") {
+    errors.push(`${pageId}: subject must be moledet`);
   }
 
   const learningPageId = readMetadataField(raw, "learning_page_id").replace(/^`|`$/g, "");

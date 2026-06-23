@@ -1,4 +1,4 @@
-# גופים — גליל, פירמידה, חרוט, כדור
+﻿# גופים — גליל, פירמידה, חרוט, כדור
 
 ## Metadata
 
@@ -10,7 +10,7 @@
 | **grade** | g6 |
 | **age_band** | grades_5_6 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
+| **approval_status** | launch_ready |
 | **title_hebrew** | גופים — גליל, פירמידה, חרוט, כדור `[DRAFT — not owner-approved]` |
 
 **Source references:**

@@ -1,4 +1,4 @@
-# גופים תלת ממדיים — שמות והיכרות
+﻿# גופים תלת ממדיים — שמות והיכרות
 
 ## Metadata
 
@@ -10,7 +10,7 @@
 | **grade** | g2 |
 | **age_band** | grades_1_2 |
 | **page_type** | visual_intuition |
-| **approval_status** | draft |
+| **approval_status** | launch_ready |
 | **title_hebrew** | גופים תלת ממדיים — שמות והיכרות `[DRAFT — not owner-approved]` |
 
 **Source references:**

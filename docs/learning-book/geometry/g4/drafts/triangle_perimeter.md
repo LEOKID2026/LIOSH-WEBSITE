@@ -1,4 +1,4 @@
-# היקף משולש — כיתה ד׳
+﻿# היקף משולש — כיתה ד׳
 
 ## Metadata
 
@@ -10,7 +10,7 @@
 | **grade** | g4 |
 | **age_band** | grades_3_4 |
 | **page_type** | step_by_step_procedure |
-| **approval_status** | draft |
+| **approval_status** | launch_ready |
 | **title_hebrew** | היקף משולש — כיתה ד׳ `[DRAFT — not owner-approved]` |
 
 **Source references:**

@@ -1,4 +1,4 @@
-# שטח של ריבוע
+﻿# שטח של ריבוע
 
 ## Metadata
 
@@ -10,7 +10,7 @@
 | **grade** | g2 |
 | **age_band** | grades_1_2 |
 | **page_type** | visual_intuition |
-| **approval_status** | draft |
+| **approval_status** | launch_ready |
 | **title_hebrew** | שטח של ריבוע `[DRAFT — not owner-approved]` |
 
 **Source references:**

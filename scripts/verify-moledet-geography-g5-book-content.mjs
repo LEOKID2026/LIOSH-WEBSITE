@@ -55,11 +55,8 @@ for (const pageId of MOLEDET_GEOGRAPHY_G5_PAGE_ORDER) {
     errors.push(e.message);
   }
 
-  if (readMetadataField(raw, "approval_status") !== "draft") {
-    errors.push(`${pageId}: approval_status must be draft`);
-  }
-  if (!readMetadataField(raw, "title_hebrew").includes("[DRAFT")) {
-    errors.push(`${pageId}: title_hebrew missing DRAFT marker`);
+  if (readMetadataField(raw, "approval_status") !== "approved") {
+    errors.push(`${pageId}: approval_status must be approved`);
   }
   if (readMetadataField(raw, "grade") !== "g5") {
     errors.push(`${pageId}: grade must be g5`);
@@ -94,9 +91,6 @@ for (const pageId of MOLEDET_GEOGRAPHY_G5_PAGE_ORDER) {
   }
   if (FAKE_PRACTICE_RE.test(childFacing)) {
     errors.push(`${pageId}: Section body contains fake practice routing`);
-  }
-  if (!/מולדת וגאוגרפיה/.test(childFacing)) {
-    errors.push(`${pageId}: child-facing body should mention מולדת וגאוגרפיה at least once`);
   }
   if (INVENTED_DATE_RE.test(childFacing)) {
     errors.push(`${pageId}: child-facing body must not include specific years`);

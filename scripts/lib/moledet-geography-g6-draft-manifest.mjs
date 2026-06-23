@@ -35,14 +35,14 @@ export const MOLEDET_GEOGRAPHY_G6_PAGE_ORDER =
 
 /** Section 5/6 alignment anchors — same context in both sections */
 export const MOLEDET_GEOGRAPHY_G6_ALIGNMENT_ANCHORS = {
-  mg_g6_population: ["מגוון", "אוכלוסי"],
+  mg_g6_population: ["מגוון", "כבד"],
   mg_g6_natural_phenomena: ["תופע", "טבע"],
   mg_g6_environment_quality: ["איכות", "סביבה"],
   mg_g6_human_environment: ["אדם", "סביבה"],
-  mg_g6_democracy: ["דמוקרט", "ישראל"],
-  mg_g6_values: ["ערכ", "מדינה"],
+  mg_g6_democracy: ["דמוקרט", "כבוד"],
+  mg_g6_values: ["תור שווה", "ילד"],
   mg_g6_state_institutions: ["מוסד", "מדינה"],
-  mg_g6_social_involvement: ["החלט", "מעורבות"],
+  mg_g6_social_involvement: ["מעורבות", "מתנדב"],
 };
 
 /** Highest-sensitivity pages — owner must verify before publish */

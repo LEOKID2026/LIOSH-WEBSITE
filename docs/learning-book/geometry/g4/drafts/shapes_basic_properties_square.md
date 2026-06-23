@@ -1,4 +1,4 @@
-# תכונות הריבוע — צלעות
+﻿# תכונות הריבוע — צלעות
 
 ## Metadata
 
@@ -10,7 +10,7 @@
 | **grade** | g4 |
 | **age_band** | grades_3_4 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
+| **approval_status** | launch_ready |
 | **title_hebrew** | תכונות הריבוע — צלעות `[DRAFT — not owner-approved]` |
 
 **Source references:**

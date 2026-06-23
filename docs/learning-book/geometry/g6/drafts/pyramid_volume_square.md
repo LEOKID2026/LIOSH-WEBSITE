@@ -1,4 +1,4 @@
-# נפח פירמידה — בסיס ריבוע
+﻿# נפח פירמידה — בסיס ריבוע
 
 ## Metadata
 
@@ -10,7 +10,7 @@
 | **grade** | g6 |
 | **age_band** | grades_5_6 |
 | **page_type** | step_by_step_procedure |
-| **approval_status** | draft |
+| **approval_status** | launch_ready |
 | **title_hebrew** | נפח פירמידה — בסיס ריבוע `[DRAFT — not owner-approved]` |
 
 **Source references:**

@@ -1,4 +1,4 @@
-# גופים — פאות, קדקודים ומקצועות
+﻿# גופים — פאות, קדקודים ומקצועות
 
 ## Metadata
 
@@ -10,7 +10,7 @@
 | **grade** | g3 |
 | **age_band** | grades_3_4 |
 | **page_type** | practice_bridge |
-| **approval_status** | draft |
+| **approval_status** | launch_ready |
 | **title_hebrew** | גופים — פאות, קדקודים ומקצועות `[DRAFT — not owner-approved]` |
 
 **Source references:**

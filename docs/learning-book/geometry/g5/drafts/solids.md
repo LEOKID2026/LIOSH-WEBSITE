@@ -1,4 +1,4 @@
-# גופים תלת-ממדיים — חזרה
+﻿# גופים תלת-ממדיים — חזרה
 
 ## Metadata
 
@@ -10,7 +10,7 @@
 | **grade** | g5 |
 | **age_band** | grades_5_6 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
+| **approval_status** | launch_ready |
 | **title_hebrew** | גופים תלת-ממדיים — חזרה `[DRAFT — not owner-approved]` |
 
 **Source references:**

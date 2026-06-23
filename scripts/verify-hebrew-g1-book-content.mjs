@@ -21,6 +21,11 @@ const DRAFTS_DIR = path.join(ROOT, "docs/learning-book/hebrew/g1/drafts");
 const SPINE_PATH = path.join(ROOT, "data/curriculum-spine/v1/skills.json");
 
 const EXPECTED_G1_COUNT = 32;
+/** Strip niqqud/cantillation marks for content comparison (MD files store unvocalized text). */
+function stripNiqqud(s) {
+  return String(s ?? "").replace(/[\u0591-\u05C7]/g, "");
+}
+
 const FAKE_PRACTICE_RE =
   /forceKind|fromBook=|hebrew-master\?|resolveHebrew|getHebrewG1Practice|practice_mapping/i;
 const RAW_MARKDOWN_RE = /\*\*[^*]+\*\*/;
@@ -34,7 +39,7 @@ const REQUIRED_SECTION_TITLES = [
   "דוגמה",
   "בואו נפתור",
   "נסו בעצמכם",
-  "שימו לב!",
+  "בואו נבדוק יחד",
   "בואו נתרגל!",
 ];
 
@@ -158,11 +163,14 @@ for (const pageId of HEBREW_G1_PAGE_ORDER) {
   }
 
   const anchors = HEBREW_G1_ALIGNMENT_ANCHORS[pageId] || [];
+  const s5Plain = stripNiqqud(s5);
+  const s6Plain = stripNiqqud(s6);
   for (const anchor of anchors) {
-    if (!s5.includes(anchor)) {
+    const anchorPlain = stripNiqqud(anchor);
+    if (!s5Plain.includes(anchorPlain)) {
       errors.push(`${pageId}: §5 missing alignment anchor "${anchor}"`);
     }
-    if (!s6.includes(anchor)) {
+    if (!s6Plain.includes(anchorPlain)) {
       errors.push(`${pageId}: §6 missing alignment anchor "${anchor}"`);
     }
   }

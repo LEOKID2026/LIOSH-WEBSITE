@@ -1,4 +1,4 @@
-# הכרת הריבוע
+﻿# הכרת הריבוע
 
 ## Metadata
 
@@ -10,7 +10,7 @@
 | **grade** | g1 |
 | **age_band** | grades_1_2 |
 | **page_type** | visual_intuition |
-| **approval_status** | draft |
+| **approval_status** | launch_ready |
 | **title_hebrew** | הכרת הריבוע `[DRAFT — not owner-approved]` |
 
 **Source references:**

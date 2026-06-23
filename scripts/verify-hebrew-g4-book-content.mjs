@@ -21,6 +21,10 @@ const ROOT = path.join(__dirname, "..");
 const DRAFTS_DIR = path.join(ROOT, "docs/learning-book/hebrew/g4/drafts");
 const SPINE_PATH = path.join(ROOT, "data/curriculum-spine/v1/skills.json");
 
+function stripNiqqud(s) {
+  return String(s ?? "").replace(/[\u0591-\u05C7]/g, "");
+}
+
 const FAKE_PRACTICE_RE =
   /forceKind|fromBook=|hebrew-master\?|resolveHebrew|getHebrew.*Practice|learning\/book\/hebrew/i;
 const RAW_MARKDOWN_RE = /\*\*[^*]+\*\*/;
@@ -142,11 +146,14 @@ for (const pageId of HEBREW_G4_PAGE_ORDER) {
   }
 
   const anchors = HEBREW_G4_ALIGNMENT_ANCHORS[pageId] || [];
+  const s5Plain = stripNiqqud(s5);
+  const s6Plain = stripNiqqud(s6);
   for (const anchor of anchors) {
-    if (!s5.includes(anchor)) {
+    const anchorPlain = stripNiqqud(anchor);
+    if (!s5Plain.includes(anchorPlain)) {
       errors.push(`${pageId}: §5 missing alignment anchor "${anchor}"`);
     }
-    if (!s6.includes(anchor)) {
+    if (!s6Plain.includes(anchorPlain)) {
       errors.push(`${pageId}: §6 missing alignment anchor "${anchor}"`);
     }
   }

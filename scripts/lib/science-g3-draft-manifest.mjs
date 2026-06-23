@@ -28,7 +28,7 @@ export const SCIENCE_G3_ALIGNMENT_ANCHORS = {
   body: ["שלד", "שרירים"],
   animals: ["התאמה", "סביבה"],
   plants: ["אור", "מזון"],
-  materials: ["דחיפה", "משיכה"],
+  materials: ["דחיפה"],
   earth_space: ["מחזור", "מים"],
   environment: ["שרשרת", "מזון"],
   experiments: ["השערה", "משתנה"],

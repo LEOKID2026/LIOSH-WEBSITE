@@ -17,10 +17,10 @@ export const SCIENCE_G5_BOOK_BATCHES = [
 export const SCIENCE_G5_PAGE_ORDER = SCIENCE_G5_BOOK_BATCHES.flatMap((b) => b.pages);
 
 export const SCIENCE_G5_ALIGNMENT_ANCHORS = {
-  body: ["שלד", "שרירים"],
-  animals: ["רבייה", "תכונות"],
-  materials: ["אור", "תערובת"],
-  earth_space: ["משאב", "תופעה"],
+  body: ["שרירים", "ברך"],
+  animals: ["תכונות", "פרפר"],
+  materials: ["אור", "מראה"],
+  earth_space: ["תופעה", "קרום"],
   environment: ["מתחדש", "זיהום"],
   experiments: ["גרף", "יומן"],
 };

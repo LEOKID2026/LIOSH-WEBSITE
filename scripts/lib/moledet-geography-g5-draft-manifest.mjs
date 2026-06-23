@@ -35,11 +35,11 @@ export const MOLEDET_GEOGRAPHY_G5_PAGE_ORDER =
 /** Section 5/6 alignment anchors — same context in both sections */
 export const MOLEDET_GEOGRAPHY_G5_ALIGNMENT_ANCHORS = {
   mg_g5_coordinates: ["קואורדינט", "מפה"],
-  mg_g5_climate: ["אקלים", "מדבר"],
-  mg_g5_natural_hazards: ["רעידה", "בטיחות"],
-  mg_g5_resources: ["משאב", "מים"],
-  mg_g5_government_institutions: ["מוסד", "שלטון"],
-  mg_g5_law_society: ["חוק", "חברה"],
+  mg_g5_climate: ["אקלים", "ים"],
+  mg_g5_natural_hazards: ["רעידה", "רגועים"],
+  mg_g5_resources: ["משאב", "בזבוז"],
+  mg_g5_government_institutions: ["מוסד", "ניהול"],
+  mg_g5_law_society: ["חוק", "כלל"],
   mg_g5_identity: ["זהות", "קהילה"],
 };
 

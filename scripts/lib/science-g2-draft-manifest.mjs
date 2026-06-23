@@ -22,13 +22,13 @@ export const SCIENCE_G2_PAGE_ORDER = SCIENCE_G2_BOOK_BATCHES.flatMap((b) => b.pa
 
 /** Section 5/6 alignment anchors — same context in both sections */
 export const SCIENCE_G2_ALIGNMENT_ANCHORS = {
-  body: ["ידיים", "שיניים"],
-  animals: ["ביצה", "גור"],
-  plants: ["זרע", "גדל"],
-  materials: ["קרח", "מים"],
-  earth_space: ["עונה", "שמש"],
-  environment: ["פסולת", "טבע"],
-  experiments: ["תצפית", "משתנה"],
+  body: ["ידיים"],
+  animals: ["צפרדע"],
+  plants: ["צמח", "עלים"],
+  materials: ["מיץ", "בקבוק"],
+  earth_space: ["לילה", "אור"],
+  environment: ["ציפורים", "קן"],
+  experiments: ["משתנה", "צמח"],
 };
 
 /** @type {Record<string, { skillId: string; pageType: string; titleHe: string; scope: string }>} */

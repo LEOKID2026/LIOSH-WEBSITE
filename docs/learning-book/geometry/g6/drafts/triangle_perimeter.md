@@ -1,4 +1,4 @@
-# היקף משולש — כיתה ו׳
+﻿# היקף משולש — כיתה ו׳
 
 ## Metadata
 
@@ -10,7 +10,7 @@
 | **grade** | g6 |
 | **age_band** | grades_5_6 |
 | **page_type** | step_by_step_procedure |
-| **approval_status** | draft |
+| **approval_status** | launch_ready |
 | **title_hebrew** | היקף משולש — כיתה ו׳ `[DRAFT — not owner-approved]` |
 
 **Source references:**

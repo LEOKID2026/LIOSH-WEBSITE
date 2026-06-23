@@ -23,12 +23,12 @@ export const SCIENCE_G1_PAGE_ORDER = SCIENCE_G1_BOOK_BATCHES.flatMap((b) => b.pa
 
 /** Section 5/6 alignment anchors */
 export const SCIENCE_G1_ALIGNMENT_ANCHORS = {
-  body: ["עיניים", "רואים"],
-  animals: ["כלב", "חי"],
+  body: ["חוש", "ריח"],
+  animals: ["חי", "אוגר"],
   plants: ["עציץ", "מים"],
-  materials: ["ספוג", "רך"],
-  earth_space: ["שמש", "יום"],
-  environment: ["פח", "פסולת"],
+  materials: ["כרית", "קשה"],
+  earth_space: ["יום", "גשם"],
+  environment: ["פח", "בקבוק"],
 };
 
 /** @type {Record<string, { skillId: string; pageType: string; titleHe: string; scope: string }>} */

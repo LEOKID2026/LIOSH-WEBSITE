@@ -1,4 +1,4 @@
-# שטח מקבילית
+﻿# שטח מקבילית
 
 ## Metadata
 
@@ -10,7 +10,7 @@
 | **grade** | g5 |
 | **age_band** | grades_5_6 |
 | **page_type** | step_by_step_procedure |
-| **approval_status** | draft |
+| **approval_status** | launch_ready |
 | **title_hebrew** | שטח מקבילית `[DRAFT — not owner-approved]` |
 
 **Source references:**

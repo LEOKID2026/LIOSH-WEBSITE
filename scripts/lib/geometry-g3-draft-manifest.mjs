@@ -38,15 +38,15 @@ export const GEOMETRY_G3_PAGE_ORDER = GEOMETRY_G3_BOOK_BATCHES.flatMap((b) => b.
 
 /** Section 5/6 alignment anchors */
 export const GEOMETRY_G3_ALIGNMENT_ANCHORS = {
-  triangles: ["3", "3", "5", "שווה צלעות"],
+  triangles: ["3", "5"],
   quadrilaterals: ["מלבן", "ריבוע"],
-  parallel_perpendicular: ["מקבילים", "מסילת רכבת"],
-  square_area: ["ריבוע", "5", "25"],
-  square_perimeter: ["ריבוע", "6", "24"],
-  triangle_perimeter: ["3", "4", "5", "12"],
-  triangle_angles: ["50°", "60°", "70°"],
-  rotation: ["90°", "רבע"],
-  solids: ["קובייה", "8", "12"],
+  parallel_perpendicular: ["מקבילים", "מאונכים"],
+  square_area: ["ריבוע", "6"],
+  square_perimeter: ["ריבוע", "8"],
+  triangle_perimeter: ["4", "5", "6"],
+  triangle_angles: ["40°", "75°"],
+  rotation: ["סיבוב", "מעלות"],
+  solids: ["מקצועות", "קוביית"],
 };
 
 /** @type {Record<string, { skillId: string; pageType: string; titleHe: string; scope: string }>} */

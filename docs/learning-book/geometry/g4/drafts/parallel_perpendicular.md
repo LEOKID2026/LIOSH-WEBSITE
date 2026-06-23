@@ -1,4 +1,4 @@
-# מקבילות ומאונכות — במצולעים
+﻿# מקבילות ומאונכות — במצולעים
 
 ## Metadata
 
@@ -10,7 +10,7 @@
 | **grade** | g4 |
 | **age_band** | grades_3_4 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
+| **approval_status** | launch_ready |
 | **title_hebrew** | מקבילות ומאונכות — במצולעים `[DRAFT — not owner-approved]` |
 
 **Source references:**

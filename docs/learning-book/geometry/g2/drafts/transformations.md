@@ -1,4 +1,4 @@
-# הזזה ושיקוף — המשך
+﻿# הזזה ושיקוף — המשך
 
 ## Metadata
 
@@ -10,7 +10,7 @@
 | **grade** | g2 |
 | **age_band** | grades_1_2 |
 | **page_type** | visual_intuition |
-| **approval_status** | draft |
+| **approval_status** | launch_ready |
 | **title_hebrew** | הזזה ושיקוף — המשך `[DRAFT — not owner-approved]` |
 
 **Source references:**

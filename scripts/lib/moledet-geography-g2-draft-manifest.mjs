@@ -36,11 +36,11 @@ export const MOLEDET_GEOGRAPHY_G2_PAGE_ORDER =
 export const MOLEDET_GEOGRAPHY_G2_ALIGNMENT_ANCHORS = {
   mg_g2_neighborhood: ["שכונה", "בית"],
   mg_g2_neighborhood_map: ["מפת", "שכונה"],
-  mg_g2_community_services: ["ספרייה", "שירות"],
+  mg_g2_community_services: ["שירות", "קהיל"],
   mg_g2_israel_basics: ["ארץ ישראל", "ים"],
-  mg_g2_group_decisions: ["קבוצה", "החלטה"],
+  mg_g2_group_decisions: ["קבוצה", "רעיונות"],
   mg_g2_society_responsibility: ["אחריות", "חברה"],
-  mg_g2_community_participation: ["קהילה", "השתתפות"],
+  mg_g2_community_participation: ["קהילה", "ספר"],
 };
 
 const g2Pages = PAGE_CANDIDATES_BY_GRADE.g2;

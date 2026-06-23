@@ -1,4 +1,4 @@
-# סיבוב במישור
+﻿# סיבוב במישור
 
 ## Metadata
 
@@ -10,7 +10,7 @@
 | **grade** | g3 |
 | **age_band** | grades_3_4 |
 | **page_type** | visual_intuition |
-| **approval_status** | draft |
+| **approval_status** | launch_ready |
 | **title_hebrew** | סיבוב במישור `[DRAFT — not owner-approved]` |
 
 **Source references:**

@@ -17,12 +17,12 @@ export const SCIENCE_G6_BOOK_BATCHES = [
 export const SCIENCE_G6_PAGE_ORDER = SCIENCE_G6_BOOK_BATCHES.flatMap((b) => b.pages);
 
 export const SCIENCE_G6_ALIGNMENT_ANCHORS = {
-  body: ["מערכות", "תיאום"],
+  body: ["מערכות", "מזון"],
   animals: ["מגוון", "רשת"],
-  materials: ["כימיה", "בטיחות"],
+  materials: ["בטיחות", "שינוי"],
   earth_space: ["אקלים", "שמש"],
-  environment: ["פעולה", "בחירות"],
-  experiments: ["פרויקט", "הצגה"],
+  environment: ["בחירות", "מיחזור"],
+  experiments: ["פרויקט", "גרף"],
 };
 
 /** @type {Record<string, { skillId: string; pageType: string; titleHe: string; scope: string }>} */

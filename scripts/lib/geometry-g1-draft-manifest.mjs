@@ -24,8 +24,8 @@ export const GEOMETRY_G1_PAGE_ORDER = GEOMETRY_G1_BOOK_BATCHES.flatMap((b) => b.
 /** Section 5/6 alignment anchors — same shape/context in both sections */
 export const GEOMETRY_G1_ALIGNMENT_ANCHORS = {
   shapes_basic_square: ["ריבוע", "4"],
-  shapes_basic_rectangle: ["מלבן", "אורך", "רוחב"],
-  transformations: ["הזזה", "שיקוף"],
+  shapes_basic_rectangle: ["מלבן", "רוחב"],
+  transformations: ["הזזה"],
 };
 
 /** @type {Record<string, { skillId: string; pageType: string; titleHe: string; scope: string }>} */
