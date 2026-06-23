@@ -35,6 +35,8 @@ function parseArgs(argv) {
     else if (arg === "--grade") out.grade = argv[++i];
     else if (arg.startsWith("--pages=")) out.pages = arg.slice("--pages=".length);
     else if (arg === "--pages") out.pages = argv[++i];
+    else if (arg.startsWith("--sections=")) out.sections = arg.slice("--sections=".length);
+    else if (arg === "--sections") out.sections = argv[++i];
   }
   return out;
 }
@@ -134,6 +136,20 @@ for (const pageId of pageIds) {
   }
 }
 
+// Optional: limit which section numbers to regenerate (e.g. --sections=5,6)
+const sectionFilter = args.sections
+  ? new Set(
+      String(args.sections)
+        .split(",")
+        .map((s) => parseInt(s.trim(), 10))
+        .filter((n) => Number.isFinite(n) && n >= 1)
+    )
+  : null;
+
+if (sectionFilter) {
+  console.log(`generate-learning-book-audio: section filter active — only sections: ${[...sectionFilter].join(", ")}`);
+}
+
 const entry = catalogMod.getLearningBookEntry(subject, grade);
 if (!entry) fail(`Unknown learning book: ${subject}/${grade}`);
 
@@ -156,6 +172,10 @@ for (let pi = 0; pi < pageIds.length; pi += 1) {
   );
 
   for (let sectionNumber = 1; sectionNumber <= scope.sectionsPerPage; sectionNumber += 1) {
+    if (sectionFilter && !sectionFilter.has(sectionNumber)) {
+      skipped += 1;
+      continue;
+    }
     const section = page.sections.find((s) => s.number === sectionNumber);
     const sectionIndex = sectionNumber - 1;
     const visiblePage = `${sectionNumber}/${scope.sectionsPerPage}`;
