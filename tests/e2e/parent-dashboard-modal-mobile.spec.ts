@@ -16,11 +16,8 @@ test.describe("Parent dashboard modals — mobile input stability", () => {
     await page.getByPlaceholder("הקלידו סיסמה או קוד כניסה").fill(password);
     await page.locator("form").getByRole("button", { name: "כניסה" }).click();
     await page.waitForURL("**/parent/dashboard", { timeout: 20_000 });
-    const policyApprove = page.getByRole("button", { name: "אני מסכים/ה וממשיך/ה" });
+    const policyApprove = page.getByRole("button", { name: "אישור והמשך" });
     if (await policyApprove.isVisible({ timeout: 3_000 }).catch(() => false)) {
-      await page.evaluate(async () => {
-        window.scrollTo(0, document.documentElement.scrollHeight);
-      });
       await page.getByRole("checkbox").check({ force: true });
       await policyApprove.click();
       await expect(page.getByRole("heading", { name: "דשבורד הורים" })).toBeVisible({

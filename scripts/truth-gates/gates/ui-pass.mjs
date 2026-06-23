@@ -65,7 +65,7 @@ try {
   await page.locator("form").getByRole("button", { name: "כניסה" }).click();
   await page.waitForURL("**/parent/dashboard", { timeout: 25_000 }).catch(() => null);
 
-  const policyApprove = page.getByRole("button", { name: "אני מסכים/ה וממשיך/ה" });
+  const policyApprove = page.getByRole("button", { name: "אישור והמשך" });
   if (await policyApprove.isVisible({ timeout: 3000 }).catch(() => false)) {
     await page.getByRole("checkbox").check({ force: true });
     await policyApprove.click();
