@@ -5,25 +5,26 @@ import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 import { ParentReportImportantDisclaimer } from "../../components/ParentReportImportantDisclaimer";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
-import { buildDetailedParentReportFromBaseReport } from "../../utils/detailed-parent-report";
 import {
   buildSubjectParentLetter,
   buildTopicRecommendationNarrative,
 } from "../../utils/detailed-report-parent-letter-he";
 import {
   Bullets,
-  ExecutiveSummarySection,
   SubjectPhase3Insights,
+  SubjectPrimaryActionBlock,
   SubjectSummaryBlock,
-  TopicRecommendationExplainStrip,
+  SubjectTopicTierGroups,
 } from "../../components/parent-report-detailed-surface.jsx";
 import {
-  ParentSubjectContractSummaryBlock,
-} from "../../components/parent-report-contract-ui-blocks.jsx";
+  buildParentSurfaceHomeActionsHe,
+  buildParentSurfaceWhatToNoticeHe,
+  PARENT_TOPIC_TIER,
+  scrubRepeatedBoilerplateFromSnapshotHe,
+} from "../../utils/parent-report-surface/index.js";
 import ParentReportDataHealthNote from "../../components/parent/ParentReportDataHealthNote.jsx";
 import { ParentDiagnosticExplanationBlock } from "../../components/parent-diagnostic-explanation-block.jsx";
 import { normalizeParentFacing } from "../../components/parent/ParentReportParentSections.jsx";
-import { normalizeExecutiveSummary } from "../../utils/parent-report-payload-normalize";
 import { PARENT_BULLETS_EMPTY_WITH_VOLUME_HE } from "../../utils/parent-data-presence.js";
 import ParentCopilotShell from "../../components/parent-copilot/parent-copilot-shell.jsx";
 import { ParentReportInsight } from "../../components/ParentReportInsight.jsx";
@@ -150,14 +151,14 @@ function SubjectParentLetter({ sp }) {
         </div>
       ) : null}
       {letter.homeAction ? (
-        <details className="rounded-lg border border-white/12 bg-white/[0.03] px-3 py-2.5">
-          <summary className="cursor-pointer text-sm text-white/75 font-semibold select-none">
-            פירוט מקצועי נוסף
-          </summary>
-          <p className="pr-detailed-body-text text-sm md:text-[0.95rem] leading-relaxed m-0 mt-2 text-white/[0.91]">
+        <div className="parent-surface-only rounded-lg border border-amber-400/28 bg-amber-950/14 px-3 py-2.5">
+          <p className="pr-detailed-mini-heading font-bold text-amber-100/95 mb-1 text-sm">
+            איך כדאי לעבוד על זה
+          </p>
+          <p className="pr-detailed-body-text text-sm md:text-[0.95rem] leading-relaxed m-0 text-white/[0.91]">
             {letter.homeAction}
           </p>
-        </details>
+        </div>
       ) : null}
       {letter.closing ? (
         <p className="pr-detailed-body-text text-sm md:text-[0.95rem] leading-relaxed m-0 text-white/[0.91]">
@@ -171,23 +172,6 @@ function SubjectParentLetter({ sp }) {
 /** מצב תצוגה: אותו payload, תצוגה מלאה או תמצית להדפסה */
 function normalizeDisplayMode(raw) {
   return raw === "summary" ? "summary" : "full";
-}
-
-function removeStrongTrendWords(value, strongTrendWords) {
-  if (typeof value === "string") {
-    let out = value;
-    for (const w of strongTrendWords) out = out.split(w).join("");
-    return out.replace(/\s+/g, " ").trim();
-  }
-  if (Array.isArray(value)) {
-    return value.map((v) => removeStrongTrendWords(v, strongTrendWords));
-  }
-  if (value && typeof value === "object") {
-    const out = {};
-    for (const [k, v] of Object.entries(value)) out[k] = removeStrongTrendWords(v, strongTrendWords);
-    return out;
-  }
-  return value;
 }
 
 function normalizeLineForDedupe(value) {
@@ -271,8 +255,6 @@ export default function ParentReportDetailedPage() {
   const queryEnd = typeof router.query.end === "string" ? router.query.end : null;
   const queryModeRaw = router.query.mode;
 
-  const customDatesForCopilot = queryPeriod === "custom" && queryStart && queryEnd;
-
   useEffect(() => {
     if (typeof window === "undefined" || !router.isReady) return undefined;
     if (isRemoteReportSource && parentStudentId && !isTeacherSource) {
@@ -298,25 +280,47 @@ export default function ParentReportDetailedPage() {
 
   const detailedCopilotTurnRunner = useMemo(() => {
     if (!payload || isTeacherSource) return null;
+
+    let p = queryPeriod;
+    let cs = queryStart;
+    let ce = queryEnd;
+    if (p === "custom" && cs && ce) {
+      // keep custom range from URL
+    } else if (p !== "week" && p !== "month" && p !== "custom") {
+      p = "week";
+      cs = null;
+      ce = null;
+    }
+    if (p === "custom" && (!cs || !ce)) {
+      p = "week";
+      cs = null;
+      ce = null;
+    }
+    const customDates = p === "custom" && cs && ce;
+    const { from, to } = computeReportRangeForParentApi(p, Boolean(customDates), cs || "", ce || "");
+    const reportPeriodForApi = customDates ? "custom" : p === "month" ? "month" : "week";
+
     return async (input) =>
       postParentCopilotTurn({
         utterance: input.utterance,
         sessionId: input.sessionId,
         audience: input.audience,
         payload: input.payload,
-        reportPeriod: queryPeriod,
-        ...(customDatesForCopilot ? { rangeFrom: queryStart, rangeTo: queryEnd } : {}),
+        reportPeriod: reportPeriodForApi,
+        rangeFrom: from,
+        rangeTo: to,
         ...(copilotStudentId ? { studentId: copilotStudentId } : {}),
         selectedContextRef: input.selectedContextRef ?? null,
         clickedFollowupFamily: input.clickedFollowupFamily ?? null,
       });
-  }, [payload, queryPeriod, customDatesForCopilot, queryStart, queryEnd, copilotStudentId, isTeacherSource]);
+  }, [payload, queryPeriod, queryStart, queryEnd, copilotStudentId, isTeacherSource]);
 
   useEffect(() => {
     if (!router.isReady || typeof window === "undefined") return undefined;
 
     if (isRemoteReportSource && parentStudentId) {
       let cancelled = false;
+      const abortController = new AbortController();
       setLoading(true);
       setParentReportError("");
 
@@ -365,12 +369,18 @@ export default function ParentReportDetailedPage() {
 
           const qs = new URLSearchParams({ from, to });
           const remoteKind = isTeacherSource ? "teacher" : "parent";
-          const url = parentReportRemoteDataUrl(remoteKind, parentStudentId, qs);
+          const path = parentReportRemoteDataUrl(remoteKind, parentStudentId, qs);
+          const url =
+            typeof window !== "undefined" && window.location?.origin
+              ? new URL(path, window.location.origin).href
+              : path;
           const res = await fetch(url, {
             credentials: "include",
             cache: "no-store",
+            signal: abortController.signal,
             headers: { Authorization: `Bearer ${token}` },
           });
+          if (cancelled) return;
           const body = await res.json().catch(() => ({}));
           if (!res.ok || body?.ok === false) {
             if (!cancelled) {
@@ -407,11 +417,21 @@ export default function ParentReportDetailedPage() {
             setLoading(false);
           }
         } catch (loadErr) {
+          if (abortController.signal.aborted || cancelled) return;
+          const errName = loadErr && typeof loadErr === "object" ? loadErr.name : "";
+          const errMsg = loadErr && typeof loadErr === "object" ? String(loadErr.message || "") : "";
           if (process.env.NODE_ENV === "development") {
-            console.error("[parent-report-detailed] report load failed:", loadErr);
+            console.warn("[parent-report-detailed] report load failed:", errName, errMsg);
           }
           if (!cancelled) {
-            setParentReportError("שגיאת רשת בטעינת הדוח.");
+            const networkLike =
+              errName === "AbortError" ||
+              /failed to fetch|networkerror|load failed|network request failed/i.test(errMsg);
+            setParentReportError(
+              networkLike
+                ? "שגיאת רשת בטעינת הדוח — ודאו שהשרת פועל (npm run dev, פורט 3001) ונסו לרענן."
+                : "לא ניתן לטעון את הדוח המקיף כרגע."
+            );
             setPayload(null);
             setLoading(false);
           }
@@ -421,6 +441,7 @@ export default function ParentReportDetailedPage() {
       void run();
       return () => {
         cancelled = true;
+        abortController.abort();
       };
     }
 
@@ -457,6 +478,32 @@ export default function ParentReportDetailedPage() {
     return () => {
       cancelled = true;
     };
+  }, [payload]);
+
+  const whatToNoticeItems = useMemo(
+    () => (payload ? buildParentSurfaceWhatToNoticeHe(payload) : []),
+    [payload]
+  );
+  const defaultHomeItems = useMemo(
+    () => (payload ? buildParentSurfaceHomeActionsHe(payload) : []),
+    [payload]
+  );
+  const topicRecommendationNarratives = useMemo(() => {
+    const seen = new Set();
+    const out = new Map();
+    if (!payload) return out;
+    for (const sp of payload.subjectProfiles || []) {
+      for (const tr of sp.topicRecommendations || []) {
+        const key = String(tr.topicRowKey || "");
+        if (!key) continue;
+        const nar = buildTopicRecommendationNarrative(tr);
+        out.set(key, {
+          ...nar,
+          snapshot: scrubRepeatedBoilerplateFromSnapshotHe(nar.snapshot, seen),
+        });
+      }
+    }
+    return out;
   }, [payload]);
 
   useEffect(() => {
@@ -617,68 +664,11 @@ export default function ParentReportDetailedPage() {
     (sp) => (Number(sp?.subjectQuestionCount) || 0) > 0
   );
   const topContract = payload?.parentProductContractV1?.top || null;
-  const subjectContracts = payload?.parentProductContractV1?.subjects || {};
-  const hasTopContract = !!topContract && typeof topContract === "object";
-  const isTopTrendInsufficient =
-    String(topContract?.evidence?.trendEvidenceStatus || "") === "insufficient";
-  const strongTrendWords = [
-    "משתפר",
-    "בירידה",
-    "מגמה חיובית",
-    "מגמה שלילית",
-    "שיפור מבוסס",
-    "ירידה מבוססת",
-  ];
-  const normalizedExecutive = normalizeExecutiveSummary(payload);
-  const executiveForUi = hasTopContract
-    ? {
-        ...normalizedExecutive,
-        topImmediateParentActionHe: "",
-        secondPriorityActionHe: "",
-        majorTrendsHe:
-          String(topContract?.evidence?.trendEvidenceStatus || "") === "insufficient"
-            ? []
-            : normalizedExecutive?.majorTrendsHe,
-      }
-    : normalizedExecutive;
-  const executiveForUiSafe =
-    isTopTrendInsufficient && executiveForUi
-      ? removeStrongTrendWords(executiveForUi, strongTrendWords)
-      : executiveForUi;
   const topKeepLines = [
     topContract?.mainPriorityHe || "",
     topContract?.doNowHe || "",
     topContract?.mainStatusHe || "",
   ].filter(Boolean);
-  const executiveForUiDedupe = executiveForUiSafe
-    ? {
-        ...executiveForUiSafe,
-        topStrengthsAcrossHe: dedupeParentVisibleLines(executiveForUiSafe.topStrengthsAcrossHe, {
-          keep: topKeepLines,
-        }),
-        topFocusAreasHe: dedupeParentVisibleLines(executiveForUiSafe.topFocusAreasHe, {
-          keep: topKeepLines,
-        }),
-        majorTrendsHe: dedupeParentVisibleLines(executiveForUiSafe.majorTrendsHe, {
-          keep: topKeepLines,
-        }),
-        monitoringOnlyAreasHe: dedupeParentVisibleLines(executiveForUiSafe.monitoringOnlyAreasHe, {
-          keep: topKeepLines,
-        }),
-        deferForNowAreasHe: dedupeParentVisibleLines(executiveForUiSafe.deferForNowAreasHe, {
-          keep: topKeepLines,
-        }),
-      }
-    : executiveForUiSafe;
-  const crossSubjectBulletsSeed = dedupeParentVisibleLines(payload?.crossSubjectInsights?.bulletsHe, {
-    keep: topKeepLines,
-  });
-  const crossSubjectBulletsForUi = isTopTrendInsufficient
-    ? crossSubjectBulletsSeed.filter((b) => {
-        const t = String(b || "");
-        return !strongTrendWords.some((w) => t.includes(w));
-      })
-    : crossSubjectBulletsSeed;
   const homePlanItemsForUi = dedupeParentVisibleLines(payload?.homePlan?.itemsHe, {
     keep: topKeepLines,
   });
@@ -689,11 +679,6 @@ export default function ParentReportDetailedPage() {
   const { insights: parentFacingInsights, homeRecommendations: parentFacingHomeRecs, teacherMessages } =
     normalizeParentFacing({ parentFacing: uiAuthority.parentFacing });
   const hasServerHomeRecommendations = parentFacingHomeRecs.length > 0;
-  const whatToNoticeItems = dedupeParentVisibleLines(
-    [...parentFacingInsights, ...crossSubjectBulletsForUi],
-    { keep: topKeepLines }
-  );
-  const defaultHomeItems = hasServerHomeRecommendations ? parentFacingHomeRecs : homePlanItemsForUi;
   const activeTeacherMessages = [...teacherMessages]
     .filter((m) => !m.isHidden)
     .sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")));
@@ -1482,9 +1467,20 @@ export default function ParentReportDetailedPage() {
               display: none !important;
             }
 
+            .internal-only {
+              display: none !important;
+            }
+            .parent-surface-only {
+              display: block;
+            }
+
             #parent-report-detailed-print details,
             #parent-report-detailed-print .pr-detailed-technical-details,
-            #parent-report-detailed-print .pr-detailed-phase3-details {
+            #parent-report-detailed-print .pr-detailed-phase3-details,
+            #parent-report-detailed-print .internal-only {
+              display: none !important;
+            }
+            #parent-report-detailed-print .parent-surface-only {
               display: block !important;
             }
             #parent-report-detailed-print details > summary {
@@ -1594,16 +1590,29 @@ export default function ParentReportDetailedPage() {
                     </tbody>
                   </table>
                 </div>
-                <div className="mt-3 grid md:grid-cols-2 gap-3 text-sm">
-                  <div>
-                    <p className="pr-detailed-mini-heading font-semibold text-white/82 mb-1">
-                      מקצועות שלא תורגלו בתקופה
-                    </p>
-                    <Bullets
-                      items={payload.overallSnapshot.lowExposureSubjectsHe}
-                      volumeQuestionsTotal={Number(payload.overallSnapshot?.totalQuestions) || 0}
-                    />
-                  </div>
+                <div className="mt-3 grid md:grid-cols-2 gap-3 text-sm parent-surface-only">
+                  {payload.overallSnapshot.unpracticedSubjectsHe?.length ? (
+                    <div>
+                      <p className="pr-detailed-mini-heading font-semibold text-white/82 mb-1">
+                        מקצועות שלא תורגלו בתקופה
+                      </p>
+                      <Bullets
+                        items={payload.overallSnapshot.unpracticedSubjectsHe}
+                        volumeQuestionsTotal={Number(payload.overallSnapshot?.totalQuestions) || 0}
+                      />
+                    </div>
+                  ) : null}
+                  {payload.overallSnapshot.sparseSubjectsHe?.length ? (
+                    <div>
+                      <p className="pr-detailed-mini-heading font-semibold text-white/82 mb-1">
+                        מקצועות עם מעט נתונים בתקופה
+                      </p>
+                      <Bullets
+                        items={payload.overallSnapshot.sparseSubjectsHe}
+                        volumeQuestionsTotal={Number(payload.overallSnapshot?.totalQuestions) || 0}
+                      />
+                    </div>
+                  ) : null}
                   <div>
                     <p className="pr-detailed-mini-heading font-semibold text-white/82 mb-1">מקצועות בולטים</p>
                     <Bullets
@@ -1673,19 +1682,8 @@ export default function ParentReportDetailedPage() {
                       {visibleSubjectProfiles.map((sp) => (
                         <div key={sp.subject} className="space-y-2">
                           <SubjectSummaryBlock sp={sp} />
-                          <details className="rounded-lg border border-white/12 bg-white/[0.03] px-3 py-2.5">
-                            <summary className="cursor-pointer text-sm text-white/75 font-semibold select-none">
-                              פירוט מקצועי נוסף
-                            </summary>
-                            <div className="mt-2">
-                              <ParentSubjectContractSummaryBlock
-                                contractRow={subjectContracts?.[String(sp?.subject || "")] || null}
-                                compact
-                                topMainPriority={topContract?.mainPriorityHe || ""}
-                                topDoNow={topContract?.doNowHe || ""}
-                              />
-                            </div>
-                          </details>
+                          <SubjectTopicTierGroups sp={sp} />
+                          <SubjectPrimaryActionBlock actionHe={sp.primaryParentActionHe} />
                         </div>
                       ))}
                       {!visibleSubjectProfiles.length ? (
@@ -1717,22 +1715,9 @@ export default function ParentReportDetailedPage() {
                           </div>
                           <div className="pr-detailed-subject-inner space-y-4 pt-3">
                             <SubjectPhase3Insights sp={sp} compact={false} />
-                            {subjectContracts?.[String(sp?.subject || "")] ? (
-                              <details className="rounded-lg border border-white/12 bg-white/[0.03] px-3 py-2.5">
-                                <summary className="cursor-pointer text-sm text-white/75 font-semibold select-none">
-                                  פירוט מקצועי נוסף
-                                </summary>
-                                <div className="mt-2">
-                                  <ParentSubjectContractSummaryBlock
-                                    contractRow={subjectContracts[String(sp?.subject || "")]}
-                                    topMainPriority={topContract?.mainPriorityHe || ""}
-                                    topDoNow={topContract?.doNowHe || ""}
-                                  />
-                                </div>
-                              </details>
-                            ) : (
-                              <SubjectParentLetter sp={sp} />
-                            )}
+                            <SubjectParentLetter sp={sp} />
+                            <SubjectTopicTierGroups sp={sp} />
+                            <SubjectPrimaryActionBlock actionHe={sp.primaryParentActionHe} />
                             {sp.evidenceExamples?.length ? (
                               <div className="pr-detailed-tier-examples">
                                 <p className="pr-detailed-body-text text-sm m-0 mb-2 text-white/[0.82]">
@@ -1751,42 +1736,33 @@ export default function ParentReportDetailedPage() {
                               </div>
                             ) : null}
 
-                            {sp.topicOverviewRows?.length ? (
-                              <div className="pr-detailed-topic-overview-block">
-                                <p className="pr-detailed-topic-rec-head">תמונת מצב לפי נושאים</p>
-                                <div className="space-y-2">
-                                  {sp.topicOverviewRows.map((row) => (
-                                    <div
-                                      key={row.topicRowKey}
-                                      className="pr-detailed-topic-overview-item rounded-lg border border-white/12 bg-white/[0.04] px-3 py-2.5"
-                                    >
-                                      <div className="pr-detailed-body-text font-bold text-white/95 leading-snug">
-                                        {row.narrativeTitleHe}
-                                      </div>
-                                      {row.gradeRelationSublineHe ? (
-                                        <p className="pr-detailed-muted text-xs m-0 mt-0.5 text-white/60">
-                                          {row.gradeRelationSublineHe}
-                                        </p>
-                                      ) : null}
-                                      <p className="pr-detailed-body-text text-sm m-0 mt-1.5 text-white/[0.88]">
-                                        {row.overviewStatusHe} · {row.questions} שאלות · דיוק {row.accuracy}%
-                                      </p>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            ) : null}
-
                             {sp.topicRecommendations?.length ? (
-                              <div className="pr-detailed-topic-rec-block">
-                                <p className="pr-detailed-topic-rec-head">נושאים שדורשים ליווי בתקופה שנבחרה</p>
+                              <div className="pr-detailed-topic-rec-block parent-surface-only">
+                                <p className="pr-detailed-topic-rec-head">
+                                  {(() => {
+                                    const tiers = sp.topicGroupsByTier || {};
+                                    if ((tiers[PARENT_TOPIC_TIER.CLEAR_GAP] || []).length) {
+                                      return "נושאים עם פער ברור";
+                                    }
+                                    if ((tiers[PARENT_TOPIC_TIER.STRENGTHEN] || []).length) {
+                                      return "נושאים לחיזוק";
+                                    }
+                                    return "נושאים שדורשים ליווי";
+                                  })()}
+                                </p>
                                 <div className="space-y-2.5">
-                                  {sp.topicRecommendations.map((tr, idx) => {
+                                  {(() => {
+                                    const seenStepLabels = new Set();
+                                    return sp.topicRecommendations.map((tr, idx) => {
                                     const tv = topicNextStepVisualVariant(tr.recommendedNextStep);
-                                    const nar = buildTopicRecommendationNarrative(tr);
+                                    const nar = topicRecommendationNarratives.get(tr.topicRowKey) || buildTopicRecommendationNarrative(tr);
                                     const snapshotNorm = normalizeLineForDedupe(nar.snapshot);
                                     const homeNorm = normalizeLineForDedupe(nar.homeLine);
                                     const showHomeLine = !!nar.homeLine && homeNorm !== snapshotNorm;
+                                    const stepLabel = String(tr.recommendedStepLabelHe || "").trim();
+                                    const stepNorm = normalizeLineForDedupe(stepLabel);
+                                    const showStepBadge = !!stepLabel && !seenStepLabels.has(stepNorm);
+                                    if (showStepBadge) seenStepLabels.add(stepNorm);
                                     return (
                                       <div key={tr.topicRowKey} className={idx === 0 ? "pr-detailed-topic-first-card-wrap" : ""}>
                                         <div
@@ -1803,11 +1779,13 @@ export default function ParentReportDetailedPage() {
                                                 </p>
                                               ) : null}
                                             </div>
-                                            <span
-                                              className={`pr-detailed-topic-badge shrink-0 pr-detailed-topic-badge--${tv}`}
-                                            >
-                                              {tr.recommendedStepLabelHe}
-                                            </span>
+                                            {showStepBadge ? (
+                                              <span
+                                                className={`pr-detailed-topic-badge shrink-0 pr-detailed-topic-badge--${tv}`}
+                                              >
+                                                {stepLabel}
+                                              </span>
+                                            ) : null}
                                           </div>
                                           <p className="pr-detailed-body-text text-sm leading-relaxed m-0 mt-2 text-white/[0.9]">
                                             {nar.snapshot}
@@ -1817,21 +1795,11 @@ export default function ParentReportDetailedPage() {
                                               {nar.homeLine}
                                             </p>
                                           ) : null}
-                                          <details className="mt-2 rounded-lg border border-white/10 bg-black/10 px-2 py-2">
-                                            <summary className="cursor-pointer text-xs text-white/60 font-semibold select-none">
-                                              פירוט מקצועי נוסף
-                                            </summary>
-                                            <div className="mt-2">
-                                              <TopicRecommendationExplainStrip
-                                                tr={tr}
-                                                suppressedLines={[nar.snapshot, showHomeLine ? nar.homeLine : ""]}
-                                              />
-                                            </div>
-                                          </details>
                                         </div>
                                       </div>
                                     );
-                                  })}
+                                  });
+                                  })()}
                                 </div>
                               </div>
                             ) : null}
@@ -1845,35 +1813,24 @@ export default function ParentReportDetailedPage() {
                   </section>
                 )}
 
-                <details className="pr-detailed-technical-details mb-5 md:mb-6 rounded-xl border border-white/12 bg-white/[0.03] overflow-hidden">
-                  <summary className="cursor-pointer px-3 md:px-4 py-3 md:py-3.5 text-base md:text-lg font-extrabold tracking-tight text-white select-none border-b border-white/10 bg-white/[0.035]">
-                    פירוט נוסף למי שרוצה להעמיק
-                  </summary>
-                  <div className="px-0 py-0">
-                    <SectionCard title="סיכום לתקופה" compact={displayMode === "summary"} className="border-0 rounded-none mb-0">
-                      <ExecutiveSummarySection
-                        es={executiveForUiDedupe}
-                        compact={displayMode === "summary"}
+                <div className="internal-only hidden" aria-hidden="true">
+                  {showCollapsedHomePlan ? (
+                    <SectionCard title="רעיונות קצרים לבית" compact className="border-0 rounded-none mb-0">
+                      <PlanItemCards
+                        items={homePlanItemsForUi}
+                        windowTotalQuestions={Number(payload.overallSnapshot?.totalQuestions) || 0}
                       />
                     </SectionCard>
-                    {showCollapsedHomePlan ? (
-                      <SectionCard title="רעיונות קצרים לבית" compact={displayMode === "summary"} className="border-0 rounded-none mb-0">
-                        <PlanItemCards
-                          items={homePlanItemsForUi}
-                          windowTotalQuestions={Number(payload.overallSnapshot?.totalQuestions) || 0}
-                        />
-                      </SectionCard>
-                    ) : null}
-                    {showCollapsedNextGoals ? (
-                      <SectionCard title="כיוון לימים הבאים" compact={displayMode === "summary"} className="border-0 rounded-none mb-0">
-                        <GoalItemCards
-                          items={nextGoalsItemsForUi}
-                          windowTotalQuestions={Number(payload.overallSnapshot?.totalQuestions) || 0}
-                        />
-                      </SectionCard>
-                    ) : null}
-                  </div>
-                </details>
+                  ) : null}
+                  {showCollapsedNextGoals ? (
+                    <SectionCard title="כיוון לימים הבאים" compact className="border-0 rounded-none mb-0">
+                      <GoalItemCards
+                        items={nextGoalsItemsForUi}
+                        windowTotalQuestions={Number(payload.overallSnapshot?.totalQuestions) || 0}
+                      />
+                    </SectionCard>
+                  ) : null}
+                </div>
 
                 <ParentReportImportantDisclaimer />
               </div>

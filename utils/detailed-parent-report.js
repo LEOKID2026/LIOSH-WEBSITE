@@ -3,13 +3,14 @@
  * מקור נתונים: generateParentReportV2 + diagnosticEngineV2 (מקור ראשי), עם fallback ל-patternDiagnostics.
  */
 
-import { generateParentReportV2 } from "./parent-report-v2";
+import { generateParentReportV2 } from "./parent-report-v2.js";
 import { splitTopicRowKey } from "./parent-report-row-diagnostics.js";
 import { isValidHybridRuntimePayload } from "./ai-hybrid-diagnostic/validate-hybrid-runtime.js";
 import { buildParentProductContractV1 } from "./contracts/parent-product-contract-v1.js";
 import { applyMathScopedParentDisplayNames } from "./math-topic-parent-display.js";
-import { buildTopicRecommendationsForSubject } from "./topic-next-step-engine";
-import { rewriteParentRecommendationForDetailedHe } from "./detailed-report-parent-letter-he";
+import { buildTopicRecommendationsForSubject } from "./topic-next-step-engine.js";
+import { rewriteParentRecommendationForDetailedHe } from "./detailed-report-parent-letter-he.js";
+import { PARENT_DIAGNOSTIC_TYPE_LABEL_HE } from "./parent-report-language/parent-report-hebrew-copy-spec.js";
 import {
   EXPECTED_VS_OBSERVED_MATCH_LABEL_HE,
   LEARNING_STAGE_LABEL_HE,
@@ -94,6 +95,16 @@ import {
   TOPIC_EVIDENCE_THRESHOLDS,
 } from "./parent-report-topic-evidence.js";
 import { buildRowIdentityV1 } from "./parent-report-output-integrity/row-identity-v1.js";
+import {
+  groupTopicRowsByParentTier,
+  parentTopicTierFromUnit,
+  parentTopicTierLabelHe,
+  parentTopicTierPlacementKind,
+  parentTopicTierShowsRecommendationCard,
+  PARENT_TOPIC_TIER,
+  resolveSubjectPrimaryParentActionHe,
+  sanitizeParentSurfaceTextHe,
+} from "./parent-report-surface/index.js";
 import {
   detectGradeSplitContradictions,
   executiveLineFromV2Unit,
@@ -332,14 +343,9 @@ function collectMaintainRows(subjects) {
 }
 
 const CROSS_RISK_LABEL_HE = {
-  knowledge_gap: "קושי בבסיס או בחומר שלא הוסדר מספיק",
-  speed_pressure: "לחץ מהירות במשימות",
-  instruction_friction: "המשימה עמוסה או שהילד נשען הרבה על רמזים",
-  careless_pattern: "רשלנות קטנה או אי יציבות בתשובות",
-  fragile_success: "הצלחה שבירה (דיוק גבוה עם סיכון)",
-  mixed: "כמה סוגי קשיים במקביל",
-  mixed_low_signal: "מעט נתונים — התמונה עדיין לא ברורה",
-  none_sparse: "עדיין מעט נתונים",
+  ...PARENT_DIAGNOSTIC_TYPE_LABEL_HE,
+  mixed: PARENT_DIAGNOSTIC_TYPE_LABEL_HE.mixed_signal,
+  none_sparse: PARENT_DIAGNOSTIC_TYPE_LABEL_HE.none_sparse,
   none_observed: "לא נראה כרגע קושי דומיננטי",
 };
 
@@ -509,7 +515,7 @@ function buildCautionNoteHe(crossRisks, subjects, dominantRiskId) {
   if (crossRisks.hintDependenceRisk) parts.push("בכמה מקצועות הילד עדיין נשען על רמזים — לא כדאי להתקדם מהר מדי.");
   if (crossRisks.falsePromotionRisk) parts.push("סיכון לקידום שווא — לא לפרש הצלחה חלקית כמוכנות לעלייה מהירה מדי ברמה.");
   if (crossRisks.recentTransitionRisk) parts.push("מגמות אחרונות מצביעות על זהירות — לא לרדת מדרגה בכל המקצוע בבת אחת.");
-  if (crossRisks.speedOnlyRisk) parts.push("מופיעה חולשה הקשורה למהירות — לא להכליל לקושי בבסיס בכל התרגול.");
+  if (crossRisks.speedOnlyRisk) parts.push("מופיעה חולשה הקשורה למהירות — לא להכליל לכל סוגי התרגול.");
   if (parts.length) return shortenHe(parts.join(" "), 220);
   const wnts = SUBJECT_IDS.map((sid) => String(subjects?.[sid]?.whatNotToDoHe || "").trim()).filter(Boolean);
   if (wnts.length) return shortenHe(wnts.sort((a, b) => b.length - a.length)[0], 220);
@@ -1587,13 +1593,14 @@ function buildSubjectCoverage(baseReport) {
 
 function buildOverallSnapshot(baseReport, subjectCoverage) {
   const sum = baseReport?.summary || {};
-  const lowExposureSubjectsHe = [];
+  const unpracticedSubjectsHe = [];
+  const sparseSubjectsHe = [];
   const notableSubjectsHe = [];
   for (const row of subjectCoverage) {
     if (row.questionCount === 0) {
-      lowExposureSubjectsHe.push(`${row.subjectLabelHe} — לא נאספו שאלות בתקופה שנבחרה`);
+      unpracticedSubjectsHe.push(`${row.subjectLabelHe} — לא נאספו שאלות בתקופה שנבחרה`);
     } else if (row.questionCount < 15) {
-      lowExposureSubjectsHe.push(
+      sparseSubjectsHe.push(
         `${row.subjectLabelHe} — מספר שאלות נמוך (${row.questionCount} שאלות)`
       );
     }
@@ -1614,7 +1621,10 @@ function buildOverallSnapshot(baseReport, subjectCoverage) {
     totalQuestions: Number(sum.totalQuestions) || 0,
     overallAccuracy: Number(sum.overallAccuracy) || 0,
     subjectCoverage,
-    lowExposureSubjectsHe,
+    /** @deprecated use unpracticedSubjectsHe / sparseSubjectsHe */
+    lowExposureSubjectsHe: [...unpracticedSubjectsHe, ...sparseSubjectsHe],
+    unpracticedSubjectsHe,
+    sparseSubjectsHe,
     notableSubjectsHe,
   };
 }
@@ -1847,17 +1857,13 @@ function groupV2UnitsBySubject(diag) {
  * @param {object} u — diagnosticEngineV2 unit
  * @param {object|null|undefined} mapRow — same-topic row from generateParentReportV2 maps (mathOperations / …Topics)
  */
-function topicOverviewPlacementFromUnit(u) {
-  const action = String(u?.canonicalState?.actionState || "");
-  const q = Number(u?.evidenceTrace?.[0]?.value?.questions) || 0;
-  const acc = Number(u?.evidenceTrace?.[0]?.value?.accuracy) || 0;
-  if (action === "maintain" || action === "expand_cautiously" || (q >= 40 && acc >= 78)) {
-    return { overviewStatusHe: "יציב / חזק", placementKind: "strength" };
-  }
-  if (action === "intervene" || action === "diagnose_only" || (q >= 12 && acc < 55)) {
-    return { overviewStatusHe: "דורש ליווי", placementKind: "focus" };
-  }
-  return { overviewStatusHe: "במעקב", placementKind: "neutral" };
+function topicOverviewPlacementFromUnit(u, mapRow) {
+  const tier = parentTopicTierFromUnit(u, mapRow);
+  return {
+    parentTier: tier,
+    overviewStatusHe: parentTopicTierLabelHe(tier),
+    placementKind: parentTopicTierPlacementKind(tier),
+  };
 }
 
 /**
@@ -1874,8 +1880,8 @@ function buildTopicOverviewRowsFromUnits(baseReport, sid, units, topicMapForSid)
       const gk = gradeKeyForV2UnitFromReport(baseReport, u);
       const ge = buildGradeEvidenceFields(baseReport?.registeredGradeKey, gk);
       const labels = parentFacingDisplayLabelsForV2Unit(baseReport, u);
-      const place = topicOverviewPlacementFromUnit(u);
       const mapR = topicMapForSid[trk];
+      const place = topicOverviewPlacementFromUnit(u, mapR);
       return {
         topicRowKey: trk,
         subjectId: sid,
@@ -1885,6 +1891,7 @@ function buildTopicOverviewRowsFromUnits(baseReport, sid, units, topicMapForSid)
         questions: Number(u?.evidenceTrace?.[0]?.value?.questions) || 0,
         accuracy: Number(u?.evidenceTrace?.[0]?.value?.accuracy) || 0,
         timeMinutes: Number(mapR?.timeMinutes) || 0,
+        parentTier: place.parentTier,
         overviewStatusHe: place.overviewStatusHe,
         placementKind: place.placementKind,
         rowIdentityV1: buildRowIdentityV1({
@@ -2071,12 +2078,15 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
   }
 
   const finalStep = thinEvidenceDowngraded ? "maintain_and_strengthen" : step;
-  const finalLabel =
+  const finalLabelRaw =
     finalStep === "remediate_same_level"
       ? label
       : outQuestions >= TOPIC_REC_MIN_ACTIONABLE_QUESTIONS
         ? "חיזוק ממוקד לפי הדוח"
         : "לאסוף עוד מידע לפני החלטה";
+  const finalLabel =
+    sanitizeParentSurfaceTextHe(finalLabelRaw, { subjectId }) ||
+    (finalStep === "remediate_same_level" ? "חיזוק ממוקד לפני קידום" : "חיזוק ממוקד לפי הדוח");
   const conclusionStrength = cannotConcludeYet
     ? "withheld"
     : canonicalDecisionTier >= 3
@@ -2402,8 +2412,13 @@ function buildSubjectProfilesFromV2(baseReport) {
       applyGateToTextClampToTopicRecommendations(
         units
           .filter((u) => {
-            const a = actionOf(u);
-            return a === "diagnose_only" || a === "intervene";
+            const trk = String(u?.topicRowKey || "");
+            const mapR =
+              trk && topicMapForSid[trk] && typeof topicMapForSid[trk] === "object"
+                ? topicMapForSid[trk]
+                : null;
+            const tier = parentTopicTierFromUnit(u, mapR);
+            return parentTopicTierShowsRecommendationCard(tier);
           })
           .map((u) =>
             recommendationFromV2Unit(u, topicMapForSid[String(u?.topicRowKey || "")] || null, {
@@ -2415,6 +2430,7 @@ function buildSubjectProfilesFromV2(baseReport) {
       )
     );
     const topicOverviewRows = buildTopicOverviewRowsFromUnits(baseReport, sid, units, topicMapForSid);
+    const topicGroupsByTier = groupTopicRowsByParentTier(topicOverviewRows);
 
     const topicRecommendations = [...topicRecommendationsBase]
       .sort((a, b) => {
@@ -2593,6 +2609,7 @@ function buildSubjectProfilesFromV2(baseReport) {
       evidenceExamples: [],
       trendVsPreviousPeriod: null,
       topicOverviewRows,
+      topicGroupsByTier,
       topicRecommendations,
       dominantLearningRisk: subjectAnchorUnit?.competingHypotheses?.hypotheses?.[0]?.hypothesisId || null,
       dominantSuccessPattern: stable > 0 ? "stable_mastery" : null,
@@ -2656,11 +2673,16 @@ function buildSubjectProfilesFromV2(baseReport) {
       subjectDeferredActionHe:
         subjectAnchorUnit && isStrongPositiveUnitForParentGuidance(subjectAnchorUnit)
           ? "להמשיך באותה מורכבות ולבחון הרחבה זהירה רק אחרי עקביות נוספת."
-          : subjectAnchorUnit?.probe?.specificationHe || null,
+          : null,
       subjectMonitoringOnly: units.length === 0,
       subjectDoNowHe: resolveUnitParentActionHe(subjectAnchorUnit, anchorGradeKey),
-      subjectAvoidNowHe: subjectAnchorUnit?.intervention?.avoidHe || null,
-      subjectReviewBeforeAdvanceHe: subjectAnchorUnit?.probe?.objectiveHe || null,
+      subjectAvoidNowHe: sanitizeParentSurfaceTextHe(subjectAnchorUnit?.intervention?.avoidHe, {
+        subjectId: sid,
+      }),
+      subjectReviewBeforeAdvanceHe: sanitizeParentSurfaceTextHe(
+        subjectAnchorUnit?.probe?.objectiveHe,
+        { subjectId: sid },
+      ),
       subjectTransferReadiness: units.some((u) => u?.diagnosis?.allowed) ? "emerging" : "not_ready",
       subjectSupportAdjustmentNeedHe: highPriority > 0 ? "להדק תמיכה ולבחון מחדש." : "לשמור על מה שעובד ולבדוק שוב.",
       subjectRecalibrationNeedHe: units.some((u) => u?.outputGating?.cannotConcludeYet)
@@ -2735,14 +2757,9 @@ function buildExecutiveSummaryFromV2(baseReport, subjectCoverage) {
     mixedSignalNoticeHe: executiveV2MixedSignalNoticeHe(uncertain.length > 0),
     reportReadinessHe: executiveV2ReportReadinessHe(units.length),
     evidenceBalanceHe: executiveV2EvidenceBalanceHe(stable.length, diagnosed.length),
-    topImmediateParentActionHe:
-      resolveUnitParentActionHe(diagnosed[0], gk(diagnosed[0])) ||
-      diagnosed[0]?.intervention?.immediateActionHe ||
-      "",
+    topImmediateParentActionHe: resolveUnitParentActionHe(diagnosed[0], gk(diagnosed[0])) || "",
     secondPriorityActionHe: diagnosed[1]
-      ? resolveUnitParentActionHe(diagnosed[1], gk(diagnosed[1])) ||
-        diagnosed[1]?.intervention?.immediateActionHe ||
-        ""
+      ? resolveUnitParentActionHe(diagnosed[1], gk(diagnosed[1])) || ""
       : "",
     monitoringOnlyAreasHe: units
       .filter((u) => actionOf(u) === "withhold" || actionOf(u) === "probe_only")
@@ -2762,9 +2779,18 @@ function buildCrossSubjectInsightsFromV2(baseReport) {
   const units = Array.isArray(baseReport?.diagnosticEngineV2?.units) ? baseReport.diagnosticEngineV2.units : [];
   const contradictory = units.filter((u) => String(u?.confidence?.level || "") === "contradictory").length;
   const p4 = units.filter((u) => String(u?.priority?.level || "") === "P4").length;
+  const strengthenTopicCount = units.filter((u) => {
+    const tier = parentTopicTierFromUnit(u, null);
+    return (
+      tier === PARENT_TOPIC_TIER.STRENGTHEN ||
+      tier === PARENT_TOPIC_TIER.CLEAR_GAP ||
+      tier === PARENT_TOPIC_TIER.NEEDS_GUIDANCE
+    );
+  }).length;
   const bulletsHe = crossSubjectV2BulletsHe({
     unitsLength: units.length,
     highPriorityCount: p4,
+    strengthenTopicCount,
     contradictoryCount: contradictory,
   });
   return {
@@ -2877,10 +2903,14 @@ export function buildDetailedParentReportFromBaseReport(baseReport, meta = {}) {
   );
   const subjectProfiles = rawSubjectProfiles.map((sp) => {
     const cov = subjectCoverageById[String(sp?.subject)] || null;
-    return {
+    const enriched = {
       ...sp,
       subjectQuestionCount: Number(cov?.questionCount) || 0,
       subjectAccuracy: Number(cov?.accuracy) || 0,
+    };
+    return {
+      ...enriched,
+      primaryParentActionHe: resolveSubjectPrimaryParentActionHe(enriched, baseReport),
     };
   });
   executiveSummary = applyNarrativeConsistencyToExecutiveSummary(executiveSummary, subjectProfiles);

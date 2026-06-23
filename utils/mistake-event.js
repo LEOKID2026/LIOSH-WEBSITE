@@ -31,6 +31,12 @@
  *   firstTryCorrect: boolean|null,
  *   diagnosticSkillId: string|null,
  *   expectedErrorTags: string[]|null,
+ *   possibleErrorPatterns: string[]|null,
+ *   skillId: string|null,
+ *   subskillId: string|null,
+ *   metadata: Record<string, unknown>|null,
+ *   metadataPresent: boolean|null,
+ *   reasonMissingMetadata: string|null,
  *   nextProbeSkillId: string|null,
  *   probePower: string|null,
  * }
@@ -105,6 +111,7 @@ export function normalizeMistakeEvent(raw, subjectId) {
   const exerciseText =
     String(
       p.exerciseText ??
+        p.prompt ??
         p.question ??
         p.stem ??
         snap?.exerciseText ??
@@ -115,20 +122,24 @@ export function normalizeMistakeEvent(raw, subjectId) {
   const correctAnswer =
     p.correctAnswer !== undefined
       ? p.correctAnswer
-      : p.correct !== undefined
-        ? p.correct
-        : snap?.correctAnswer !== undefined
-          ? snap.correctAnswer
-          : null;
+      : p.expectedAnswer !== undefined
+        ? p.expectedAnswer
+        : p.correct !== undefined
+          ? p.correct
+          : snap?.correctAnswer !== undefined
+            ? snap.correctAnswer
+            : null;
 
   const userAnswer =
     p.userAnswer !== undefined
       ? p.userAnswer
-      : p.wrongAnswer !== undefined
-        ? p.wrongAnswer
-        : p.wrong !== undefined
-          ? p.wrong
-          : null;
+      : p.selectedAnswer !== undefined
+        ? p.selectedAnswer
+        : p.wrongAnswer !== undefined
+          ? p.wrongAnswer
+          : p.wrong !== undefined
+            ? p.wrong
+            : null;
 
   const kind = strOrNull(p.kind ?? params.kind);
   const patternFamily =
@@ -154,6 +165,54 @@ export function normalizeMistakeEvent(raw, subjectId) {
   if (Array.isArray(rawExpected)) {
     const arr = rawExpected.map((x) => String(x).trim()).filter(Boolean);
     if (arr.length) expectedErrorTags = arr;
+  }
+
+  const rawPossible =
+    p.possibleErrorPatterns !== undefined
+      ? p.possibleErrorPatterns
+      : p.metadata && typeof p.metadata === "object" && !Array.isArray(p.metadata)
+        ? p.metadata.possibleErrorPatterns
+        : null;
+  /** @type {string[]|null} */
+  let possibleErrorPatterns = null;
+  if (Array.isArray(rawPossible)) {
+    const arr = rawPossible.map((x) => String(x).trim()).filter(Boolean);
+    if (arr.length) possibleErrorPatterns = arr;
+  } else if (expectedErrorTags?.length) {
+    possibleErrorPatterns = expectedErrorTags;
+  }
+
+  const skillId =
+    strOrNull(p.skillId) ||
+    strOrNull(p.metadata && typeof p.metadata === "object" ? p.metadata.skillId : null) ||
+    diagnosticSkillId;
+  const subskillId =
+    strOrNull(p.subskillId) ||
+    strOrNull(p.metadata && typeof p.metadata === "object" ? p.metadata.subskillId : null) ||
+    strOrNull(p.metadata && typeof p.metadata === "object" ? p.metadata.subSkill : null) ||
+    subtype;
+
+  /** @type {Record<string, unknown>|null} */
+  let metadata = null;
+  if (p.metadata && typeof p.metadata === "object" && !Array.isArray(p.metadata)) {
+    metadata = { ...p.metadata };
+  } else if (
+    patternFamily ||
+    skillId ||
+    subskillId ||
+    possibleErrorPatterns?.length ||
+    p.metadataPresent === true
+  ) {
+    metadata = {
+      ...(patternFamily ? { patternFamily } : {}),
+      ...(skillId ? { skillId } : {}),
+      ...(subskillId ? { subskillId } : {}),
+      ...(possibleErrorPatterns?.length ? { possibleErrorPatterns } : {}),
+      ...(p.metadataPresent === true ? { metadataPresent: true } : {}),
+      ...(strOrNull(p.reasonMissingMetadata)
+        ? { reasonMissingMetadata: strOrNull(p.reasonMissingMetadata) }
+        : {}),
+    };
   }
 
   const isCorrectRaw = p.isCorrect;
@@ -194,13 +253,23 @@ export function normalizeMistakeEvent(raw, subjectId) {
     distractorFamily,
     conceptTag,
     answerMode: strOrNull(p.answerMode),
-    responseMs: optFiniteNumber(p.responseMs ?? params.responseMs),
+    responseMs: optFiniteNumber(p.responseMs ?? p.timeSpentMs ?? params.responseMs),
     retryCount: optFiniteNumber(p.retryCount ?? params.retryCount),
-    hintUsed: optBoolOrNull(p.hintUsed ?? params.hintUsed),
+    hintUsed:
+      optBoolOrNull(p.hintUsed ?? params.hintUsed) ??
+      (p.hintsUsed != null && Number.isFinite(Number(p.hintsUsed))
+        ? Number(p.hintsUsed) > 0
+        : null),
     changedAnswer: optBoolOrNull(p.changedAnswer ?? params.changedAnswer),
     firstTryCorrect: optBoolOrNull(p.firstTryCorrect ?? params.firstTryCorrect),
     diagnosticSkillId,
     expectedErrorTags,
+    possibleErrorPatterns,
+    skillId,
+    subskillId,
+    metadata,
+    metadataPresent: p.metadataPresent === true ? true : metadata ? true : null,
+    reasonMissingMetadata: strOrNull(p.reasonMissingMetadata),
     nextProbeSkillId,
     probePower,
   };

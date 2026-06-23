@@ -22,14 +22,14 @@ const GEOMETRY_HEBREW_LABEL_KINDS = new Set([
   "triangles",
   "transformations",
   "concept_transform",
-]);
-
-const GEOMETRY_INDEX_LABEL_KINDS = new Set([
   "shapes_basic_square",
   "shapes_basic_rectangle",
   "shapes_basic_properties_square",
   "shapes_basic_properties_rectangle",
   "shapes_basic_properties_angles",
+]);
+
+const GEOMETRY_INDEX_LABEL_KINDS = new Set([
   "quadrilaterals",
   "solids",
 ]);

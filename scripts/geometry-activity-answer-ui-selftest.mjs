@@ -19,6 +19,8 @@ assert.equal(geometryQuestionUsesChoiceUi({ kind: "triangles" }), true);
 assert.equal(geometryQuestionUsesChoiceUi({ kind: "quadrilaterals" }), true);
 assert.equal(geometryQuestionUsesChoiceUi({ kind: "story_parallel_perpendicular" }), true);
 assert.equal(geometryQuestionUsesChoiceUi({ kind: "square_area" }), false);
+assert.equal(geometryQuestionUsesChoiceUi({ kind: "concept_shape_truth", answerMode: "binary" }), true);
+assert.equal(geometryQuestionUsesChoiceUi({ kind: "concept_solids", answerMode: "mcq_text" }), true);
 
 assert.equal(
   assignedActivityQuestionUsesChoiceUi({
@@ -38,10 +40,18 @@ assert.equal(
 );
 assert.equal(
   assignedActivityQuestionUsesChoiceUi({
+    subject: "geometry",
+    params: { kind: "concept_shape_truth", answerMode: "binary", optionCount: 2 },
+    choices: ["נכון", "לא נכון"],
+  }),
+  true
+);
+assert.equal(
+  assignedActivityQuestionUsesChoiceUi({
     subject: "math",
     choices: ["4", "5", "6"],
   }),
-  true
+  false
 );
 
 const numericQuestion = {

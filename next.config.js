@@ -58,6 +58,7 @@ if (isProdBuild) {
 }
 
 const nextConfig = {
+  ...(process.env.NEXT_DIST_DIR ? { distDir: process.env.NEXT_DIST_DIR } : {}),
   // Avoid wrong workspace root when another package-lock.json exists under the user profile.
   outputFileTracingRoot: path.join(__dirname),
   reactStrictMode: false, // זמנית - כדי למנוע רענון אינסופי בפיתוח

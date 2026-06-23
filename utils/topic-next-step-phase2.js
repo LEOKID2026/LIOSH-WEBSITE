@@ -14,6 +14,12 @@ import {
   NEXT_CYCLE_DECISION_FOCUS_LABEL_HE,
   diagnosticTypeLabelHe,
 } from "./parent-report-ui-explain-he.js";
+import {
+  meaningExplainSentenceHe,
+  preliminarySignalHe,
+} from "./parent-report-language/parent-report-hebrew-copy-spec.js";
+
+const VAGUE_FOUNDATION_PHRASE = /חלקים פשוטים יותר|יסוד שעליו הוא נשען/i;
 
 const AGGRESSIVE = new Set([
   "advance_level",
@@ -579,11 +585,11 @@ export function buildPhase7RecommendationFields(p) {
   reasoningParts.push(`לגבי «${displayName}»: ${nar || "לפי התרגול האחרון, זה הכיוון שעולה כרגע."}`);
   reasoningParts.push(`הצעד שנבחר: ${stepLab}.`);
   reasoningParts.push(`מה מומלץ לעשות עכשיו: ${interventionLabelHe}.`);
-  if (legacyRuleId) reasoningParts.push("נשמרו גם שיקולי זהירות.");
+  if (legacyRuleId) reasoningParts.push(preliminarySignalHe());
   if (riskFlags?.speedOnlyRisk) reasoningParts.push("הופעל הקשר מהירות.");
   if (trendDer?.fragileProgressPattern) reasoningParts.push("ההצלחה עדיין לא יציבה לגמרי.");
   if (behaviorType && behaviorType !== "undetermined") {
-    reasoningParts.push(`הדפוס הנראה בביצוע: ${diagnosticTypeLabelHe(behaviorType)}.`);
+    reasoningParts.push(meaningExplainSentenceHe(null, behaviorType));
   }
 
   const alt = Array.isArray(restraint?.alternativeExplanations) ? restraint.alternativeExplanations : [];
@@ -1185,11 +1191,106 @@ export function buildRecommendationStructuredTrace(p) {
 }
 
 export function buildWhyThisRecommendationHe(p) {
-  const { displayName, finalStep, riskFlags, trendDer, behaviorType, legacyRuleId } = p;
+  const {
+    displayName,
+    finalStep,
+    riskFlags,
+    trendDer,
+    behaviorType,
+    legacyRuleId,
+    acc,
+    q,
+    wrongRatio,
+    behaviorSignals,
+    dominantMistakePatternLabelHe,
+    mistakePatternNarrativeHe,
+    dependencyState,
+    likelyFoundationalBlocker,
+    likelyFoundationalBlockerLabelHe,
+    whyFoundationFirstHe,
+  } = p;
   const parts = [];
   parts.push(`המלצה לגבי «${displayName}»: ${stepLabelHe(finalStep)}.`);
-  parts.push(`הדפוס הנראה בביצוע: ${diagnosticTypeLabelHe(behaviorType)}.`);
-  if (legacyRuleId) parts.push("נשמרו גם שיקולי זהירות.");
+
+  const accPct = typeof acc === "number" && !isNaN(acc) ? Math.round(acc) : null;
+  const qNum = typeof q === "number" && !isNaN(q) ? Math.round(q) : null;
+  const wrPct = typeof wrongRatio === "number" && !isNaN(wrongRatio) ? Math.round(wrongRatio * 100) : null;
+  const firstTryMiss = typeof behaviorSignals?.firstTryMissRateOnWrong === "number"
+    ? behaviorSignals.firstTryMissRateOnWrong : null;
+  const changedRate = typeof behaviorSignals?.changedAnswerRateOnWrong === "number"
+    ? behaviorSignals.changedAnswerRateOnWrong : null;
+  const avgRetry = typeof behaviorSignals?.avgRetryOnWrong === "number"
+    ? behaviorSignals.avgRetryOnWrong : null;
+  const patternLab = String(dominantMistakePatternLabelHe || "").trim();
+  const patternNar = String(mistakePatternNarrativeHe || "").trim();
+  const dep = String(dependencyState || "");
+  const blocker = String(likelyFoundationalBlocker || "unknown");
+  const blockerLabel = String(likelyFoundationalBlockerLabelHe || "").trim();
+  const whyFoundation = String(whyFoundationFirstHe || "").trim();
+
+  if (behaviorType === "fragile_success") {
+    if (firstTryMiss !== null && firstTryMiss >= 0.4) {
+      parts.push(
+        `הילד מגיע לתשובה נכונה אבל לרוב רק אחרי ניסיון נוסף — ` +
+        `בניסיון הראשון יש פספוס ב-${Math.round(firstTryMiss * 100)}% מהשאלות הבעייתיות.` +
+        ` כדאי לחזק את הביטחון בפתרון הראשוני, לא רק את תוצאת הסוף.`
+      );
+    } else if (changedRate !== null && changedRate >= 0.3) {
+      parts.push(
+        `הילד מחליף תשובה לעיתים קרובות (${Math.round(changedRate * 100)}% מהמקרים הבעייתיים) — ` +
+        `כנראה שהידע עדיין לא בטוח מספיק. כדאי לתרגל החלטה בוטחת ולא רק נכונה.`
+      );
+    } else if (avgRetry !== null && avgRetry >= 1.15) {
+      parts.push(
+        `הילד צריך יותר מניסיון אחד בחלק ניכר מהשאלות הקשות ` +
+        `(ממוצע ${avgRetry.toFixed(1)} ניסיונות לשאלה שגויה) — ` +
+        `כדאי לחזק את דרך הפתרון ולא רק את התוצאה הסופית.`
+      );
+    } else {
+      const statStr = accPct !== null && qNum !== null ? ` (דיוק ${accPct}% מתוך ${qNum} שאלות)` : "";
+      parts.push(
+        `הדיוק הכללי נראה סביר${statStr}, אבל התשובה הסופית לא תמיד משקפת שליטה יציבה — ` +
+        `יש אותות של היסוס בתגובות.`
+      );
+    }
+  } else if (behaviorType === "knowledge_gap") {
+    const statParts = [];
+    if (accPct !== null) statParts.push(`דיוק ${accPct}%`);
+    if (qNum !== null) statParts.push(`${qNum} שאלות`);
+    if (wrPct !== null) statParts.push(`${wrPct}% טעויות`);
+    const statsStr = statParts.length ? ` (${statParts.join(", ")})` : "";
+    parts.push(`${meaningExplainSentenceHe("knowledge_gap", "knowledge_gap")}${statsStr}`);
+    if (patternNar) {
+      parts.push(patternNar.replace(/\s+/g, " ").trim());
+    } else if (patternLab) {
+      parts.push(`דפוס: ${patternLab.replace(/^דפוס:\s*/, "").replace(/^דפוס הטעות הבולט:\s*/, "")}.`);
+    } else {
+      parts.push(
+        "יש טעויות בנושא — כדאי לבדוק שוב אחרי עוד תרגול קצר לפני מסקנה מדויקת יותר.",
+      );
+    }
+    if (whyFoundation && blocker !== "unknown" && blockerLabel && !VAGUE_FOUNDATION_PHRASE.test(blockerLabel)) {
+      parts.push(whyFoundation);
+    } else if (dep === "likely_foundational_block" || dep === "mixed_dependency_signal") {
+      parts.push(
+        "הנתונים מרמזים שהבעיה אולי קשורה לבסיס של הנושא, אבל כרגע אין מספיק מידע כדי לזהות איזה חלק בסיסי צריך לחזק.",
+      );
+    }
+  } else if (behaviorType === "stable_mastery") {
+    const statStr = accPct !== null && qNum !== null ? ` (דיוק ${accPct}% מתוך ${qNum} שאלות)` : "";
+    parts.push(`הנושא נראה בשליטה טובה ויציבה${statStr}.`);
+  } else if (behaviorType === "undetermined" || behaviorType === "insufficient_evidence") {
+    const qStr = qNum !== null ? ` (יש ${qNum} שאלות בלבד)` : "";
+    parts.push(
+      `עדיין אין מספיק נתונים כדי לזהות דפוס ברור בנושא הזה${qStr}. ` +
+      `ניתן להציג תמונה מדויקת יותר כשיהיו עוד שאלות מתועדות.`
+    );
+  } else {
+    const statStr = accPct !== null && qNum !== null ? ` (${accPct}% דיוק מתוך ${qNum} שאלות)` : "";
+    parts.push(`${meaningExplainSentenceHe(null, behaviorType)}${statStr}`);
+  }
+
+  if (legacyRuleId) parts.push(preliminarySignalHe());
   const rf = [];
   if (riskFlags.falsePromotionRisk) rf.push("חשש מקידום מוקדם");
   if (riskFlags.falseRemediationRisk) rf.push("חשש מטיפול יתר");

@@ -5,6 +5,7 @@
  * exactly 4 product buckets:
  *   - off_topic               (not about the report / child / learning)
  *   - diagnostic_sensitive    (asks for a clinical label / diagnosis)
+ *   - privacy_sensitive       (other children, passwords, DB, system internals)
  *   - ambiguous_or_unclear    (too short, contradictory, or pure topic-name without report intent)
  *   - report_related          (clearly asking about this report / child's learning)
  *
@@ -49,6 +50,8 @@ export { buildTopicClarificationQuestionHe };
  *   "report_related" |
  *   "off_topic" |
  *   "diagnostic_sensitive" |
+ *   "health_sensitive" |
+ *   "privacy_sensitive" |
  *   "peer_comparison" |
  *   "ambiguous_or_unclear"
  * )} ClassifierBucket
@@ -76,17 +79,29 @@ export { buildTopicClarificationQuestionHe };
 /**
  * Public boundary copy. Imported by question-router.js / index.js.
  */
-export const OFF_TOPIC_RESPONSE_HE =
-  "אפשר לשאול כאן שאלות על הדוח והתקדמות הלמידה שמופיעה בו. למשל: מה כדאי לתרגל השבוע? או איפה נראו תוצאות טובות יחסית?";
+export const GENERAL_OFF_TOPIC_RESPONSE_HE =
+  "אני יכול לעזור כאן רק עם הדוח, התרגול וההתקדמות של הילד באתר. אפשר לשאול למשל: מה חשוב לתרגל השבוע, איפה רואים התקדמות, או מה לעשות בבית.";
+
+/** @deprecated alias — use {@link GENERAL_OFF_TOPIC_RESPONSE_HE} */
+export const OFF_TOPIC_RESPONSE_HE = GENERAL_OFF_TOPIC_RESPONSE_HE;
 
 export const DIAGNOSTIC_BOUNDARY_RESPONSE_HE =
-  "על סמך הדוח הזה אי אפשר לקבוע אבחנה או להצמיד תווית קלינית. הדוח מבוסס על נתוני תרגול בלבד. אם יש חשש, מומלץ לפנות לאיש מקצוע מוסמך.";
+  "אני יכול להתייחס רק למה שמופיע בנתוני התרגול באתר. לפי הדוח אפשר לראות באילו מקצועות ונושאים כדאי לחזק את הלמידה, אבל אי אפשר להסיק מכאן מסקנה אישית על הילד. אם תרצו, אפשר להתמקד עכשיו במה שהדוח כן מראה: נושא חזק, נושא לחיזוק, או צעד קטן לבית.";
+
+export const HEALTH_BOUNDARY_RESPONSE_HE =
+  "אני יכול להתייחס רק לנתוני התרגול שמופיעים באתר. הדוח לא נועד לקבוע מסקנות אישיות על הילד, אלא לעזור להבין איזה נושא כדאי לחזק בלמידה. אפשר להמשיך מכאן לצעד לימודי קטן לפי הנתונים בדוח.";
+
+export const PRIVACY_BOUNDARY_RESPONSE_HE =
+  "אני יכול לעזור רק עם הדוח של הילד שמחובר לחשבון ההורה הזה. אין לי אפשרות להציג נתונים של ילדים אחרים, סיסמאות, רשימות משתמשים או מידע פנימי של המערכת.";
 
 export const PEER_COMPARISON_RESPONSE_HE =
   "הדוח מתבסס על תרגול הילד בלבד ואינו משווה לילדים אחרים בכיתה. אפשר להתמקד במה שמופיע בדוח ולשאול על נושא ספציפי.";
 
 export const AMBIGUOUS_RESPONSE_HE =
-  "לא הבנתי בדיוק על מה השאלה. אפשר לשאול כאן שאלות על הדוח, למשל: מה הכי חשוב לתרגל השבוע? או איפה נראו תוצאות טובות יחסית? או מה לעשות בבית?";
+  "לא הצלחתי להבין בדיוק לאיזה חלק בדוח התכוונתם. אפשר לשאול בצורה פשוטה יותר, למשל: מה הכי חשוב השבוע, איפה רואים התקדמות, או מה כדאי לעשות בבית.";
+
+export const NO_DATA_FOR_REQUEST_RESPONSE_HE =
+  "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון ברור יותר בדוח.";
 
 /**
  * Decision thresholds. Exported so tests can assert behavior without re-deriving them.
@@ -272,6 +287,7 @@ const OFF_TOPIC_CATEGORIES = {
   shopping: ["איפה לקנות", "כמה עולה", "מחיר של", "נעליים", "ביטקוין", "מטבע", "דולר"],
   songs: ["תכתוב לי שיר", "שיר על", "כתוב שיר"],
   news: ["מה החדשות", "חדשות היום", "מה קרה בעולם"],
+  investments: ["השקעות", "השקעה", "בורסה", "מניות", "קריפטו", "ביטקוין"],
   generic_knowledge_qa: [
     "מה זה ", "מהו ", "מהי ", "מי המציא", "מי גילה", "מי כתב", "מתי קרה",
     "באיזו שנה", "באיזה תאריך", "איפה נמצאת", "איפה נמצא",
@@ -306,6 +322,43 @@ const GENERIC_KNOWLEDGE_FRAMING = [
   /תסביר\s+לי\s+על\s+(?!הדוח)/u,
 ];
 
+/** Privacy / system-internals — must refuse before report routing. */
+const PRIVACY_SENSITIVE_PATTERNS = [
+  /(?:נתונים|דוח|מידע)\s+של\s+ילד\s+אחר/u,
+  /(?:מה|תראה|הראה|תן).{0,32}ילד\s+אחר/u,
+  /(?:כל\s+)(?:ה)?ילדים(?:\s+באתר|\s+ש(?:ל|ב)|\s*$|\?)/u,
+  /רשימ(?:ה|ת)\s+ילדים/u,
+  /סיסמ(?:ה|א)|password/u,
+  /דאטה\s*בייס|database|\bdb\b|מה\s+יש\s+ב(?:ד)?אטה/u,
+  /(?:כל\s+)?(?:ה)?משתמשים|רשימ(?:ה|ת)\s+משתמשים/u,
+  /חשבון\s+אחר|נתונים\s+של\s+מישהו\s+אחר/u,
+  /ת(?:ן|ני)\s+(?:לי\s+)?(?:את\s+)?(?:כל\s+)?(?:ה)?(?:משתמשים|ילדים)/u,
+  /תרא(?:ה|י)\s+(?:לי\s+)?(?:את\s+)?(?:כל\s+)?(?:ה)?ילדים/u,
+];
+
+/** Health / clinical / diagnosis — route to HEALTH_BOUNDARY (not sensitive_education). */
+const HEALTH_SENSITIVE_PATTERNS = [
+  /(?:רופא|רפואי|נוירולוג|פסיכולוג)/u,
+  /בעיה\s+בראש/u,
+  /בעיה\s+פסיכולוגית/u,
+  /(?:האם\s+)?(?:צריך|כדאי)\s+אבחון/u,
+  /המלצה\s+לאבחון|תכתוב\s+לי\s+המלצה\s+לאבחון/u,
+  /(?:האם\s+)?(?:ל|אל)\s*פנ(?:ות|ות)\s*(?:ל)?(?:נוירולוג|פסיכולוג|רופא)/u,
+  /סימן\s+ל(?:לקות|וקות)/u,
+  /(?:זה\s+)?(?:אומר|מעיד)\s+.*(?:דיסלקצ|דיסלקס|הפרעת\s+קשב|לקות)/u,
+  /(?:האם\s+)?(?:יש\s+ל(?:ו|ה)|ל(?:ילד|ילדה)\s+יש)\s+הפרעת\s+קשב/u,
+  /חשד\s+ל(?:דיסלקצ|הפרעת|לקות|אבחון)/u,
+  /(?:האם\s+)?(?:צריך|כדאי)\s+(?:טיפול|תרופה)/u,
+  /(?:אבחון|אבחנה)\s*(?:מומלץ|נדרש|כדאי)/u,
+  /טיפול\s+(?:פסיכ|נוירו|רפוא)/u,
+  /האם\s+ז(?:ה|ו)\s+אומר\s+ש(?:יש|יהי)/u,
+  /זה\s+אומר\s+ש(?:יש|יהי)\s+בעיה/u,
+  /האם\s+יש\s+כאן\s+בעיה/u,
+  /האם\s+ז(?:ה|ו)\s+משהו\s+רציני/u,
+  /יש\s+סיבה\s+לדאוג/u,
+  /^(?:ז(?:ה|ו)\s+)?חמור\s*\??$/u,
+];
+
 /** Diagnostic / clinical lexicon — independent of report context. */
 const DIAGNOSTIC_PATTERNS = [
   /דיסלקצי[הא]|דיסלקסי[הא]?|דיסלקסי[ת]?\b|דיסקלקולי[הא]/u,
@@ -325,6 +378,74 @@ const DIAGNOSTIC_PATTERNS = [
   /עצוב\s+מאוד/u,
   /(?:^|\s)(הוא|היא)\s+חרד(?:\s|$)/u,
 ];
+
+/** Off-topic patterns beyond category lexicon. */
+const OFF_TOPIC_EXTRA_PATTERNS = [
+  /תעזור\s+לי\s+ב(?:ה)?שקעות/u,
+  /שיעורי\s+בית\s+ש(?:לא|אינ(?:ם|ן))\s+קשורים\s+לדוח/u,
+  /ת(?:ן|ני)\s+(?:לי\s+)?שיעורי\s+בית\s+ש(?:לא|אינ(?:ם|ן))/u,
+];
+
+/** Legitimate parent report questions — must never land in ambiguous_or_unclear. */
+const LEGITIMATE_PARENT_PATTERNS = [
+  /איפה\s+(?:הוא|היא|הילד|הילדה)\s+צריך\s+עזרה/u,
+  /מה\s+לעשות\s+(?:איתו|איתה|עמו|עמה)(?:\s+בבית)?\s+היום/u,
+  /למה\s+כ(?:תוב|תב)\s+ש(?:יש|יהי)\s+פער/u,
+  /האם\s+הבעיה\s+היא\s+נשיאה/u,
+  /מה\s+השתנה\s+מ(?:ה)?שבוע(?:\s+ה)?קודם/u,
+  /האם\s+הפעילות\s+.*השפיע/u,
+  /(?:מה\s+)?(?:שלוש(?:ת)?|3)\s*(?:ה)?דברים(?:\s+הכי\s+חשוב(?:ים)?)?/u,
+  /מה\s+לא\s+כדאי\s+לי\s+להסיק/u,
+  /ת(?:ן|ני)\s+(?:לי\s+)?תוכנית(?:\s+עבודה)?\s+(?:ל)?שבוע/u,
+  /מה\s+לשאול\s+(?:אותו|אותה)\s+בבית/u,
+  /על\s+איזה\s+נושא\s+ל(?:פתוח|התחיל)/u,
+  /האם\s+(?:הוא|היא)\s+מתקדם/u,
+  /האם\s+ז(?:ה|ו)\s+בגלל\s+לחץ\s+זמן/u,
+  /ת(?:ן|ני)\s+(?:לי\s+)?תרגול/u,
+  /^תסביר\s+לי(?:\s|$)/u,
+  /תקצר\s+לי/u,
+  /(?:פשוט|קל)\s+יותר/u,
+  /תעש(?:ה|י)\s+.*\s+פשוט\s+יותר/u,
+  /^(?:אז\s+)?מה\s+עושים/u,
+  /^איך\s+לשמר/u,
+  /^ו?מה\s+אם\s+(?:ה(?:וא|יא)|(?:הילד|הילדה))\s+טוע/u,
+  /^למה\s*\??$/u,
+];
+
+/**
+ * @param {string} utterance
+ */
+export function matchesLegitimateParentQuestion(utterance) {
+  const t = normalizeForClassifier(utterance);
+  if (!t) return false;
+  return LEGITIMATE_PARENT_PATTERNS.some((re) => re.test(t));
+}
+
+/**
+ * @param {string} t — normalized utterance
+ */
+function matchesPrivacySensitive(t) {
+  if (scorePeerComparisonSignal(t) >= 0.9) return false;
+  return PRIVACY_SENSITIVE_PATTERNS.some((re) => re.test(t));
+}
+
+/**
+ * @param {string} t — normalized utterance
+ */
+function matchesHealthSensitive(t) {
+  if (HEALTH_SENSITIVE_PATTERNS.some((re) => re.test(t))) return true;
+  for (const re of DIAGNOSTIC_PATTERNS) {
+    if (re.test(t)) return true;
+  }
+  return false;
+}
+
+/**
+ * @param {string} t — normalized utterance
+ */
+function matchesOffTopicExtra(t) {
+  return OFF_TOPIC_EXTRA_PATTERNS.some((re) => re.test(t));
+}
 
 /** Peer / class norm comparison — not clinical diagnosis; separate early-exit copy. */
 const PEER_COMPARISON_PATTERNS = [
@@ -509,6 +630,7 @@ function scoreReportSignal(t, vocab, payload, rawUtterance) {
  */
 function scoreOffTopicSignal(t, hasStrongReportToken) {
   let score = 0;
+  if (matchesOffTopicExtra(t)) score += 0.8;
   for (const cat of Object.values(OFF_TOPIC_CATEGORIES)) {
     for (const phrase of cat) {
       if (t.includes(phrase.toLowerCase())) {
@@ -610,11 +732,21 @@ export function classifyParentQuestionDeterministic({ utterance, payload }) {
   };
 
   // Decision rules in strict order.
-  // 1. Diagnostic takes precedence over everything (clinical safety).
-  if (diagnosticSignal >= CLASSIFIER_THRESHOLDS.diagnostic) {
+  // 0. Privacy / system internals — refuse before any report access.
+  if (matchesPrivacySensitive(t)) {
     return {
-      bucket: "diagnostic_sensitive",
-      confidence: diagnosticSignal,
+      bucket: "privacy_sensitive",
+      confidence: 0.96,
+      source: "deterministic",
+      signals,
+    };
+  }
+
+  // 1. Health / clinical takes precedence over everything else (clinical safety).
+  if (matchesHealthSensitive(t)) {
+    return {
+      bucket: "health_sensitive",
+      confidence: 0.95,
       source: "deterministic",
       signals,
     };
@@ -762,7 +894,7 @@ export function classifyParentQuestionDeterministic({ utterance, payload }) {
 
   // 2e. Education-adjacent sensitive decisions — Stage A `sensitive_education_choice` (not ambiguous early-exit).
   if (
-    /האם\s*כדאי\s*להעביר\s*בית\s*ספר|מעבר\s*בית\s*ספר|להעביר\s*בית\s*ספר|האם\s*לעבור\s*בית\s*ספר|מורה\s*פרטי|שיעורים\s*פרטיים|האם\s*הוא\s*מחונן|האם\s*יש\s*לו\s*בעיית\s*קשב|האם\s*צריך\s*אבחון/u.test(
+    /האם\s*כדאי\s*להעביר\s*בית\s*ספר|מעבר\s*בית\s*ספר|להעביר\s*בית\s*ספר|האם\s*לעבור\s*בית\s*ספר|מורה\s*פרטי|שיעורים\s*פרטיים|האם\s*הוא\s*מחונן/u.test(
       t,
     )
   ) {
@@ -1008,7 +1140,22 @@ export function classifyParentQuestionDeterministic({ utterance, payload }) {
     };
   }
 
-  // 5. Everything else => ambiguous_or_unclear (the LLM may upgrade in async path).
+  // 5. Legitimate parent report questions — must not fall to ambiguous.
+  if (matchesLegitimateParentQuestion(String(utterance || ""))) {
+    return {
+      bucket: "report_related",
+      confidence: 0.88,
+      source: "deterministic",
+      signals: {
+        ...signals,
+        reportSignal: Math.max(reportRes.score, 0.78),
+        hasStrongReportToken: true,
+        ambiguitySignal: Math.min(ambiguitySignal, 0.15),
+      },
+    };
+  }
+
+  // 6. Everything else => ambiguous_or_unclear (the LLM may upgrade in async path).
   return {
     bucket: "ambiguous_or_unclear",
     confidence: ambiguitySignal,
@@ -1043,7 +1190,9 @@ function computeAmbiguity(args) {
 export function bucketToCanonicalIntent(bucket) {
   switch (bucket) {
     case "off_topic": return "off_topic_redirect";
+    case "health_sensitive":
     case "diagnostic_sensitive": return "clinical_boundary";
+    case "privacy_sensitive": return "parent_policy_refusal";
     case "peer_comparison": return "unclear";
     case "ambiguous_or_unclear": return "unclear";
     case "report_related":
@@ -1056,8 +1205,13 @@ export default {
   classifyParentQuestionDeterministic,
   bucketToCanonicalIntent,
   maImSubjectAbsentFromPayload,
+  matchesLegitimateParentQuestion,
   OFF_TOPIC_RESPONSE_HE,
+  GENERAL_OFF_TOPIC_RESPONSE_HE,
   DIAGNOSTIC_BOUNDARY_RESPONSE_HE,
+  HEALTH_BOUNDARY_RESPONSE_HE,
+  PRIVACY_BOUNDARY_RESPONSE_HE,
+  NO_DATA_FOR_REQUEST_RESPONSE_HE,
   PEER_COMPARISON_RESPONSE_HE,
   AMBIGUOUS_RESPONSE_HE,
   CLASSIFIER_THRESHOLDS,

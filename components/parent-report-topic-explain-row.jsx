@@ -4,18 +4,18 @@
 import React from "react";
 import {
   activeRiskFlagLabelsHe,
+  buildTopicDiagnosticExplainSectionsHe,
   confidenceBadgeLabelHe,
   learningMemoryLineHe,
   mistakePatternLineHe,
   sanitizeEngineSnippetHe,
   sufficiencyBadgeLabelHe,
+  topicFoundationDependencyCompactLineHe,
   trendCompactLineHe,
-  truncateHe,
 } from "../utils/parent-report-ui-explain-he";
 import { normalizeParentFacingHe } from "../utils/parent-report-language/index.js";
 
 /**
- * ניסוח להצגת הורה בלבד — לא משנה נתונים; רק מנקה שאריות טכניות נפוצות מהמנוע.
  * @param {string} raw
  */
 function parentFacingEngineLine(raw) {
@@ -26,7 +26,7 @@ function parentFacingEngineLine(raw) {
   return normalizeParentFacingHe(s);
 }
 
-/** תג קומפקטי — RTL, לא מגדיל את גובה השורה יתר על המידה */
+/** תג קומפקטי — RTL */
 export function PrMiniBadge({ children, tone = "neutral" }) {
   const tones = {
     neutral: "border-white/15 bg-white/[0.06] text-white/75",
@@ -44,8 +44,17 @@ export function PrMiniBadge({ children, tone = "neutral" }) {
   );
 }
 
+function ExplainSectionLine({ label, text }) {
+  if (!text) return null;
+  return (
+    <p className="text-[10px] md:text-[11px] text-white/72 leading-relaxed m-0 pr-0.5 break-words">
+      {label ? <span className="text-white/45 font-semibold">{label} </span> : null}
+      {text}
+    </p>
+  );
+}
+
 /**
- * הסבר שורת נושא מתחת לגרף — שורה ראשית קומפקטית; פרטים ב details.
  * @param {{ row: Record<string, unknown> }} props
  */
 export function ParentReportTopicExplainRow({ row }) {
@@ -54,26 +63,24 @@ export function ParentReportTopicExplainRow({ row }) {
 
   const sig = row.topicEngineRowSignals;
   const trend = row.trend;
-  const bp = row.behaviorProfile;
-  const whyRaw = sig?.whyThisRecommendationHe ? String(sig.whyThisRecommendationHe) : "";
-  const whyOne = truncateHe(parentFacingEngineLine(whyRaw), 140);
+  const sections = buildTopicDiagnosticExplainSectionsHe(row);
   const trendLine = trendCompactLineHe(trend);
-  const trendFacing = trendLine ? truncateHe(parentFacingEngineLine(trendLine), 120) : "";
+  const trendFacing = trendLine ? parentFacingEngineLine(trendLine) : "";
   const confLab = sig?.confidenceBadge != null ? confidenceBadgeLabelHe(sig.confidenceBadge) : "";
   const suffLab = sig?.sufficiencyBadge != null ? sufficiencyBadgeLabelHe(sig.sufficiencyBadge) : "";
   const risks = activeRiskFlagLabelsHe(sig?.riskFlags, 4);
-  const hasSignals = !!(sig || trendFacing);
-  const ip = sig?.interventionPlanHe ? truncateHe(parentFacingEngineLine(String(sig.interventionPlanHe)), 130) : "";
-  const dn = sig?.doNowHe ? truncateHe(parentFacingEngineLine(String(sig.doNowHe)), 100) : "";
-  const av = sig?.avoidNowHe ? truncateHe(parentFacingEngineLine(String(sig.avoidNowHe)), 100) : "";
-  const caut = sig?.cautionLineHe ? truncateHe(parentFacingEngineLine(String(sig.cautionLineHe)), 110) : "";
   const mp = mistakePatternLineHe(row);
-  const mpFacing = mp ? truncateHe(parentFacingEngineLine(mp), 120) : "";
+  const mpFacing = mp ? parentFacingEngineLine(mp) : "";
   const lm = learningMemoryLineHe(row);
-  const lmFacing = lm ? truncateHe(parentFacingEngineLine(lm), 120) : "";
+  const lmFacing = lm ? parentFacingEngineLine(lm) : "";
+  const fdRaw = topicFoundationDependencyCompactLineHe(row);
+  const fdFacing = fdRaw ? parentFacingEngineLine(fdRaw) : "";
+  const caut = sig?.cautionLineHe ? parentFacingEngineLine(String(sig.cautionLineHe)) : "";
+  const dn = sig?.doNowHe ? parentFacingEngineLine(String(sig.doNowHe)) : "";
+  const av = sig?.avoidNowHe ? parentFacingEngineLine(String(sig.avoidNowHe)) : "";
 
   return (
-    <div className="parent-report-topic-explain-row border-b border-white/[0.07] last:border-b-0 py-1.5 px-1 md:px-2">
+    <div className="parent-report-topic-explain-row border-b border-white/[0.07] last:border-b-0 py-2 px-1 md:px-2 avoid-break">
       <div className="flex flex-col gap-1 min-w-0">
         <div className="flex flex-wrap items-center gap-1 md:gap-1.5 min-w-0">
           <span className="text-[10px] md:text-xs font-semibold text-white/88 truncate max-w-[58%] md:max-w-[50%]">
@@ -86,17 +93,20 @@ export function ParentReportTopicExplainRow({ row }) {
           ) : null}
         </div>
         {trendFacing ? (
-          <p className="text-[10px] md:text-[11px] text-white/65 leading-snug m-0 pr-0.5">
-            <span className="text-white/45 font-semibold">בתקופה האחרונה: </span>
-            {trendFacing}
-          </p>
+          <ExplainSectionLine label="בתקופה האחרונה:" text={trendFacing} />
         ) : null}
-        {whyOne ? (
-          <p className="text-[10px] md:text-[11px] text-white/70 leading-snug m-0 pr-0.5">
-            <span className="text-white/45 font-semibold">מה זה אומר: </span>
-            {whyOne}
-          </p>
-        ) : hasSignals ? null : null}
+        {sections ? (
+          <div
+            className="parent-report-topic-diagnostic-explain space-y-1 rounded border border-white/10 bg-black/20 px-1.5 py-1.5"
+            data-testid="parent-report-topic-diagnostic-explain"
+          >
+            <ExplainSectionLine text={sections.identified} />
+            <ExplainSectionLine text={sections.data} />
+            <ExplainSectionLine text={sections.pattern} />
+            <ExplainSectionLine text={sections.meaning} />
+            <ExplainSectionLine text={sections.action} />
+          </div>
+        ) : null}
         {risks.length ? (
           <div className="flex flex-wrap gap-1">
             {risks.map((lab) => (
@@ -106,63 +116,34 @@ export function ParentReportTopicExplainRow({ row }) {
             ))}
           </div>
         ) : null}
-        {ip ? (
-          <div className="text-[9px] md:text-[10px] text-emerald-100/85 leading-snug space-y-0.5 m-0 pr-0.5">
-            <p className="m-0">
-              <span className="text-white/45 font-semibold">כיוון עבודה: </span>
-              {ip}
-            </p>
-          </div>
+        {fdFacing && !sections?.meaning?.includes(fdFacing.slice(0, 24)) ? (
+          <ExplainSectionLine label="בסיס ותלויות:" text={fdFacing} />
         ) : null}
+        {mpFacing && !sections?.pattern?.includes(mpFacing.slice(0, 20)) ? (
+          <ExplainSectionLine label="איפה נתקעים לעיתים:" text={mpFacing} />
+        ) : null}
+        {lmFacing ? <ExplainSectionLine label="שימור בבית:" text={lmFacing} /> : null}
         {dn || av ? (
           <div className="text-[9px] md:text-[10px] text-sky-100/88 leading-snug border border-sky-400/20 rounded px-1.5 py-1 bg-sky-950/12 space-y-0.5 m-0 pr-0.5">
-            {dn ? (
-              <p className="m-0">
-                <span className="text-white/45 font-semibold">עכשיו: </span>
-                {dn}
-              </p>
-            ) : null}
-            {av ? (
-              <p className="m-0">
-                <span className="text-white/45 font-semibold">להימנע: </span>
-                {av}
-              </p>
-            ) : null}
+            {dn ? <ExplainSectionLine label="עכשיו:" text={dn} /> : null}
+            {av ? <ExplainSectionLine label="להימנע:" text={av} /> : null}
           </div>
         ) : null}
-        {caut ? (
-          <p className="text-[9px] md:text-[10px] text-amber-100/85 m-0 pr-0.5 leading-snug">
-            <span className="text-white/45 font-semibold">זהירות: </span>
-            {caut}
-          </p>
-        ) : null}
-        {mpFacing ? (
-          <p className="text-[9px] md:text-[10px] text-white/70 m-0 pr-0.5 leading-snug">
-            <span className="text-white/45 font-semibold">איפה נתקעים לעיתים: </span>
-            {mpFacing}
-          </p>
-        ) : null}
-        {lmFacing ? (
-          <p className="text-[9px] md:text-[10px] text-white/68 m-0 pr-0.5 leading-snug">
-            <span className="text-white/45 font-semibold">שימור בבית: </span>
-            {lmFacing}
-          </p>
-        ) : null}
+        {caut ? <ExplainSectionLine label="זהירות:" text={caut} /> : null}
       </div>
     </div>
   );
 }
 
-/** רשימת הסברים קומפקטית מתחת לגרף נושאים */
 export function ParentReportTopicExplainBlock({ rows }) {
   const withQ = (rows || []).filter((r) => Number(r?.questions) > 0);
   if (!withQ.length) return null;
   return (
-    <div className="parent-report-topic-explain-block mt-2 rounded-lg border border-white/10 bg-black/25 overflow-hidden">
+    <div className="parent-report-topic-explain-block mt-2 rounded-lg border border-white/10 bg-black/25 overflow-hidden avoid-break">
       <div className="px-2 py-1 text-[10px] md:text-[11px] font-bold text-white/55 border-b border-white/10">
         מה בולט בכל נושא
       </div>
-      <div className="max-h-[min(42vh,320px)] overflow-y-auto overscroll-contain">
+      <div className="max-h-none overflow-visible">
         {withQ.map((r) => (
           <ParentReportTopicExplainRow key={r.rowKey} row={r} />
         ))}

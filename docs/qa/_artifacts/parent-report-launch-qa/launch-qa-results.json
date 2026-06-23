@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-06-08T19:37:55.950Z",
+  "generatedAt": "2026-06-23T19:23:38.813Z",
   "flags": {
     "subskill": false,
     "gating": false,
     "promotion": false
   },
-  "juneWeekSeeded": true,
+  "juneWeekSeeded": false,
   "summary": {
-    "pass": 0,
+    "pass": 39,
     "warn": 0,
-    "fail": 48,
+    "fail": 9,
     "total": 48,
     "overall": "FAIL"
   },
@@ -26,11 +26,11 @@
     },
     {
       "name": "AAA5 supported (full)",
-      "result": "FAIL"
+      "result": "PASS"
     },
     {
       "name": "AAA6 parent activity (full)",
-      "result": "FAIL"
+      "result": "PASS"
     },
     {
       "name": "AAA7 book/learning (full)",
@@ -38,17 +38,222 @@
     },
     {
       "name": "AAA12 parent+science (full)",
-      "result": "FAIL"
+      "result": "PASS"
     },
     {
       "name": "one_week June activity (AAA3)",
-      "result": "FAIL"
+      "result": "PASS"
     }
   ],
   "results": [
     {
       "child": "AAA1",
       "scenario": "A_no_data",
+      "range": "one_day",
+      "rangeDates": {
+        "from": "2026-06-08",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 22,
+      "totalAnswers": 22,
+      "totalSessions": 2,
+      "dataSufficiency": "preliminary_signal",
+      "insights": [
+        "מומלץ לשמור על תרגול קצר וקבוע כדי ליצור רצף למידה."
+      ],
+      "visibleOk": true,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA2",
+      "scenario": "B_insufficient_data",
+      "range": "one_day",
+      "rangeDates": {
+        "from": "2026-06-08",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 9,
+      "totalAnswers": 9,
+      "totalSessions": 1,
+      "dataSufficiency": "preliminary_signal",
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+        "בעברית נראה קושי יחסי לפי התרגולים — כדאי לעקוב אחרי עוד תרגול קצר.",
+        "כדאי לשים לב לקריאה — זה נושא שחוזר בתרגולים."
+      ],
+      "visibleOk": true,
+      "verdict": "PASS"
+    },
+    {
+      "child": "AAA3",
+      "scenario": "C_preliminary_by_count",
+      "range": "one_day",
+      "rangeDates": {
+        "from": "2026-06-08",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 22,
+      "totalAnswers": 22,
+      "totalSessions": 2,
+      "dataSufficiency": "preliminary_signal",
+      "insights": [
+        "מומלץ לשמור על תרגול קצר וקבוע כדי ליצור רצף למידה."
+      ],
+      "visibleOk": true,
+      "verdict": "PASS"
+    },
+    {
+      "child": "AAA4",
+      "scenario": "D_preliminary_no_recurrence",
+      "range": "one_day",
+      "rangeDates": {
+        "from": "2026-06-08",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 16,
+      "totalAnswers": 16,
+      "totalSessions": 1,
+      "dataSufficiency": "preliminary_signal",
+      "insights": [
+        "במתמטיקה נראה קושי יחסי לפי התרגולים — כדאי לעקוב אחרי עוד תרגול קצר.",
+        "כדאי לשים לב לחיבור — זה נושא שחוזר בתרגולים."
+      ],
+      "visibleOk": true,
+      "verdict": "PASS"
+    },
+    {
+      "child": "AAA5",
+      "scenario": "E_supported_diagnosis",
+      "range": "one_day",
+      "rangeDates": {
+        "from": "2026-06-08",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 20,
+      "totalAnswers": 20,
+      "totalSessions": 2,
+      "dataSufficiency": "preliminary_signal",
+      "insights": [
+        "בגאומטריה נראה קושי יחסי לפי התרגולים — כדאי לעקוב אחרי עוד תרגול קצר.",
+        "כדאי לשים לב לצורות בסיסיות — זה נושא שחוזר בתרגולים."
+      ],
+      "visibleOk": true,
+      "verdict": "PASS"
+    },
+    {
+      "child": "AAA6",
+      "scenario": "F_parent_assigned",
+      "range": "one_day",
+      "rangeDates": {
+        "from": "2026-06-08",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 16,
+      "totalAnswers": 16,
+      "totalSessions": 1,
+      "dataSufficiency": "preliminary_signal",
+      "insights": [
+        "מומלץ לשמור על תרגול קצר וקבוע כדי ליצור רצף למידה."
+      ],
+      "visibleOk": true,
+      "verdict": "PASS"
+    },
+    {
+      "child": "AAA7",
+      "scenario": "G_non_diagnostic_exclusion",
+      "range": "one_day",
+      "rangeDates": {
+        "from": "2026-06-08",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 22,
+      "totalAnswers": 22,
+      "totalSessions": 2,
+      "dataSufficiency": "preliminary_signal",
+      "insights": [
+        "באנגלית נראה קושי יחסי לפי התרגולים — כדאי לעקוב אחרי עוד תרגול קצר.",
+        "כדאי לשים לב לאוצר מילים — זה נושא שחוזר בתרגולים."
+      ],
+      "visibleOk": true,
+      "verdict": "PASS"
+    },
+    {
+      "child": "AAA8",
+      "scenario": "H_questionType_contrast",
+      "range": "one_day",
+      "rangeDates": {
+        "from": "2026-06-08",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 16,
+      "totalAnswers": 16,
+      "totalSessions": 1,
+      "dataSufficiency": "preliminary_signal",
+      "insights": [
+        "מומלץ לשמור על תרגול קצר וקבוע כדי ליצור רצף למידה."
+      ],
+      "visibleOk": true,
+      "verdict": "PASS"
+    },
+    {
+      "child": "AAA9",
+      "scenario": "I_weak_metadata_suppression",
+      "range": "one_day",
+      "rangeDates": {
+        "from": "2026-06-08",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 20,
+      "totalAnswers": 20,
+      "totalSessions": 2,
+      "dataSufficiency": "preliminary_signal",
+      "insights": [
+        "בעברית נראה קושי יחסי לפי התרגולים — כדאי לעקוב אחרי עוד תרגול קצר.",
+        "כדאי לשים לב לקריאה — זה נושא שחוזר בתרגולים."
+      ],
+      "visibleOk": true,
+      "verdict": "PASS"
+    },
+    {
+      "child": "AAA10",
+      "scenario": "J_english_metadata",
+      "range": "one_day",
+      "rangeDates": {
+        "from": "2026-06-08",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 16,
+      "totalAnswers": 16,
+      "totalSessions": 1,
+      "dataSufficiency": "preliminary_signal",
+      "insights": [
+        "במדעים נראה קושי יחסי לפי התרגולים — כדאי לעקוב אחרי עוד תרגול קצר.",
+        "כדאי לשים לב לניסויים ותהליכים — זה נושא שחוזר בתרגולים."
+      ],
+      "visibleOk": true,
+      "verdict": "PASS"
+    },
+    {
+      "child": "AAA11",
+      "scenario": "K_hebrew_metadata",
+      "range": "one_day",
+      "rangeDates": {
+        "from": "2026-06-08",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 22,
+      "totalAnswers": 22,
+      "totalSessions": 2,
+      "dataSufficiency": "preliminary_signal",
+      "insights": [
+        "מומלץ לשמור על תרגול קצר וקבוע כדי ליצור רצף למידה."
+      ],
+      "visibleOk": true,
+      "verdict": "PASS"
+    },
+    {
+      "child": "AAA12",
+      "scenario": "L_science_moledet",
       "range": "one_day",
       "rangeDates": {
         "from": "2026-06-08",
@@ -61,205 +266,7 @@
       "insights": [
         "לא הייתה פעילות תרגול בתקופה האחרונה — כדאי לעודד התחלה קצרה ונעימה."
       ],
-      "visibleOk": false,
-      "verdict": "FAIL"
-    },
-    {
-      "child": "AAA2",
-      "scenario": "B_insufficient_data",
-      "range": "one_day",
-      "rangeDates": {
-        "from": "2026-06-08",
-        "to": "2026-06-08"
-      },
-      "diagnosticAnswers": 2,
-      "totalAnswers": 2,
-      "totalSessions": 0,
-      "dataSufficiency": "insufficient_data",
-      "insights": [
-        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
-      ],
-      "visibleOk": false,
-      "verdict": "FAIL"
-    },
-    {
-      "child": "AAA3",
-      "scenario": "C_preliminary_by_count",
-      "range": "one_day",
-      "rangeDates": {
-        "from": "2026-06-08",
-        "to": "2026-06-08"
-      },
-      "diagnosticAnswers": 2,
-      "totalAnswers": 2,
-      "totalSessions": 0,
-      "dataSufficiency": "insufficient_data",
-      "insights": [
-        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
-      ],
-      "visibleOk": false,
-      "verdict": "FAIL"
-    },
-    {
-      "child": "AAA4",
-      "scenario": "D_preliminary_no_recurrence",
-      "range": "one_day",
-      "rangeDates": {
-        "from": "2026-06-08",
-        "to": "2026-06-08"
-      },
-      "diagnosticAnswers": 2,
-      "totalAnswers": 2,
-      "totalSessions": 0,
-      "dataSufficiency": "insufficient_data",
-      "insights": [
-        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
-      ],
-      "visibleOk": false,
-      "verdict": "FAIL"
-    },
-    {
-      "child": "AAA5",
-      "scenario": "E_supported_diagnosis",
-      "range": "one_day",
-      "rangeDates": {
-        "from": "2026-06-08",
-        "to": "2026-06-08"
-      },
-      "diagnosticAnswers": 2,
-      "totalAnswers": 2,
-      "totalSessions": 0,
-      "dataSufficiency": "insufficient_data",
-      "insights": [
-        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
-      ],
-      "visibleOk": false,
-      "verdict": "FAIL"
-    },
-    {
-      "child": "AAA6",
-      "scenario": "F_parent_assigned",
-      "range": "one_day",
-      "rangeDates": {
-        "from": "2026-06-08",
-        "to": "2026-06-08"
-      },
-      "diagnosticAnswers": 2,
-      "totalAnswers": 2,
-      "totalSessions": 0,
-      "dataSufficiency": "insufficient_data",
-      "insights": [
-        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
-      ],
-      "visibleOk": false,
-      "verdict": "FAIL"
-    },
-    {
-      "child": "AAA7",
-      "scenario": "G_non_diagnostic_exclusion",
-      "range": "one_day",
-      "rangeDates": {
-        "from": "2026-06-08",
-        "to": "2026-06-08"
-      },
-      "diagnosticAnswers": 2,
-      "totalAnswers": 2,
-      "totalSessions": 0,
-      "dataSufficiency": "insufficient_data",
-      "insights": [
-        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
-      ],
-      "visibleOk": false,
-      "verdict": "FAIL"
-    },
-    {
-      "child": "AAA8",
-      "scenario": "H_questionType_contrast",
-      "range": "one_day",
-      "rangeDates": {
-        "from": "2026-06-08",
-        "to": "2026-06-08"
-      },
-      "diagnosticAnswers": 2,
-      "totalAnswers": 2,
-      "totalSessions": 0,
-      "dataSufficiency": "insufficient_data",
-      "insights": [
-        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
-      ],
-      "visibleOk": false,
-      "verdict": "FAIL"
-    },
-    {
-      "child": "AAA9",
-      "scenario": "I_weak_metadata_suppression",
-      "range": "one_day",
-      "rangeDates": {
-        "from": "2026-06-08",
-        "to": "2026-06-08"
-      },
-      "diagnosticAnswers": 2,
-      "totalAnswers": 2,
-      "totalSessions": 0,
-      "dataSufficiency": "insufficient_data",
-      "insights": [
-        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
-      ],
-      "visibleOk": false,
-      "verdict": "FAIL"
-    },
-    {
-      "child": "AAA10",
-      "scenario": "J_english_metadata",
-      "range": "one_day",
-      "rangeDates": {
-        "from": "2026-06-08",
-        "to": "2026-06-08"
-      },
-      "diagnosticAnswers": 2,
-      "totalAnswers": 2,
-      "totalSessions": 0,
-      "dataSufficiency": "insufficient_data",
-      "insights": [
-        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
-      ],
-      "visibleOk": false,
-      "verdict": "FAIL"
-    },
-    {
-      "child": "AAA11",
-      "scenario": "K_hebrew_metadata",
-      "range": "one_day",
-      "rangeDates": {
-        "from": "2026-06-08",
-        "to": "2026-06-08"
-      },
-      "diagnosticAnswers": 2,
-      "totalAnswers": 2,
-      "totalSessions": 0,
-      "dataSufficiency": "insufficient_data",
-      "insights": [
-        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
-      ],
-      "visibleOk": false,
-      "verdict": "FAIL"
-    },
-    {
-      "child": "AAA12",
-      "scenario": "L_science_moledet",
-      "range": "one_day",
-      "rangeDates": {
-        "from": "2026-06-08",
-        "to": "2026-06-08"
-      },
-      "diagnosticAnswers": 2,
-      "totalAnswers": 2,
-      "totalSessions": 0,
-      "dataSufficiency": "insufficient_data",
-      "insights": [
-        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
-      ],
-      "visibleOk": false,
+      "visibleOk": true,
       "verdict": "FAIL"
     },
     {
@@ -270,364 +277,392 @@
         "from": "2026-06-02",
         "to": "2026-06-08"
       },
-      "diagnosticAnswers": 0,
-      "totalAnswers": 16,
-      "totalSessions": 1,
-      "dataSufficiency": "no_data",
-      "insights": [
-        "מומלץ לשמור על תרגול קצר וקבוע כדי ליצור רצף למידה."
-      ],
-      "visibleOk": false,
-      "verdict": "FAIL"
-    },
-    {
-      "child": "AAA2",
-      "scenario": "B_insufficient_data",
-      "range": "one_week",
-      "rangeDates": {
-        "from": "2026-06-02",
-        "to": "2026-06-08"
-      },
-      "diagnosticAnswers": 4,
-      "totalAnswers": 4,
-      "totalSessions": 1,
-      "dataSufficiency": "insufficient_data",
-      "insights": [
-        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
-      ],
-      "visibleOk": false,
-      "verdict": "FAIL"
-    },
-    {
-      "child": "AAA3",
-      "scenario": "C_preliminary_by_count",
-      "range": "one_week",
-      "rangeDates": {
-        "from": "2026-06-02",
-        "to": "2026-06-08"
-      },
-      "diagnosticAnswers": 4,
-      "totalAnswers": 20,
-      "totalSessions": 2,
-      "dataSufficiency": "insufficient_data",
-      "insights": [
-        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
-      ],
-      "visibleOk": false,
-      "verdict": "FAIL"
-    },
-    {
-      "child": "AAA4",
-      "scenario": "D_preliminary_no_recurrence",
-      "range": "one_week",
-      "rangeDates": {
-        "from": "2026-06-02",
-        "to": "2026-06-08"
-      },
-      "diagnosticAnswers": 4,
-      "totalAnswers": 19,
-      "totalSessions": 3,
-      "dataSufficiency": "insufficient_data",
-      "insights": [
-        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
-      ],
-      "visibleOk": false,
-      "verdict": "FAIL"
-    },
-    {
-      "child": "AAA5",
-      "scenario": "E_supported_diagnosis",
-      "range": "one_week",
-      "rangeDates": {
-        "from": "2026-06-02",
-        "to": "2026-06-08"
-      },
-      "diagnosticAnswers": 4,
-      "totalAnswers": 20,
-      "totalSessions": 2,
-      "dataSufficiency": "insufficient_data",
-      "insights": [
-        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
-      ],
-      "visibleOk": false,
-      "verdict": "FAIL"
-    },
-    {
-      "child": "AAA6",
-      "scenario": "F_parent_assigned",
-      "range": "one_week",
-      "rangeDates": {
-        "from": "2026-06-02",
-        "to": "2026-06-08"
-      },
-      "diagnosticAnswers": 4,
-      "totalAnswers": 27,
-      "totalSessions": 3,
-      "dataSufficiency": "insufficient_data",
-      "insights": [
-        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
-      ],
-      "visibleOk": false,
-      "verdict": "FAIL"
-    },
-    {
-      "child": "AAA7",
-      "scenario": "G_non_diagnostic_exclusion",
-      "range": "one_week",
-      "rangeDates": {
-        "from": "2026-06-02",
-        "to": "2026-06-08"
-      },
-      "diagnosticAnswers": 4,
-      "totalAnswers": 20,
-      "totalSessions": 2,
-      "dataSufficiency": "insufficient_data",
-      "insights": [
-        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
-      ],
-      "visibleOk": false,
-      "verdict": "FAIL"
-    },
-    {
-      "child": "AAA8",
-      "scenario": "H_questionType_contrast",
-      "range": "one_week",
-      "rangeDates": {
-        "from": "2026-06-02",
-        "to": "2026-06-08"
-      },
-      "diagnosticAnswers": 4,
-      "totalAnswers": 40,
-      "totalSessions": 5,
-      "dataSufficiency": "insufficient_data",
-      "insights": [
-        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
-      ],
-      "visibleOk": false,
-      "verdict": "FAIL"
-    },
-    {
-      "child": "AAA9",
-      "scenario": "I_weak_metadata_suppression",
-      "range": "one_week",
-      "rangeDates": {
-        "from": "2026-06-02",
-        "to": "2026-06-08"
-      },
-      "diagnosticAnswers": 4,
-      "totalAnswers": 16,
-      "totalSessions": 2,
-      "dataSufficiency": "insufficient_data",
-      "insights": [
-        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
-      ],
-      "visibleOk": false,
-      "verdict": "FAIL"
-    },
-    {
-      "child": "AAA10",
-      "scenario": "J_english_metadata",
-      "range": "one_week",
-      "rangeDates": {
-        "from": "2026-06-02",
-        "to": "2026-06-08"
-      },
-      "diagnosticAnswers": 4,
-      "totalAnswers": 4,
-      "totalSessions": 1,
-      "dataSufficiency": "insufficient_data",
-      "insights": [
-        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
-      ],
-      "visibleOk": false,
-      "verdict": "FAIL"
-    },
-    {
-      "child": "AAA11",
-      "scenario": "K_hebrew_metadata",
-      "range": "one_week",
-      "rangeDates": {
-        "from": "2026-06-02",
-        "to": "2026-06-08"
-      },
-      "diagnosticAnswers": 4,
-      "totalAnswers": 55,
-      "totalSessions": 5,
-      "dataSufficiency": "insufficient_data",
-      "insights": [
-        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
-      ],
-      "visibleOk": false,
-      "verdict": "FAIL"
-    },
-    {
-      "child": "AAA12",
-      "scenario": "L_science_moledet",
-      "range": "one_week",
-      "rangeDates": {
-        "from": "2026-06-02",
-        "to": "2026-06-08"
-      },
-      "diagnosticAnswers": 4,
-      "totalAnswers": 11,
-      "totalSessions": 2,
-      "dataSufficiency": "insufficient_data",
-      "insights": [
-        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
-      ],
-      "visibleOk": false,
-      "verdict": "FAIL"
-    },
-    {
-      "child": "AAA1",
-      "scenario": "A_no_data",
-      "range": "may_month",
-      "rangeDates": {
-        "from": "2026-05-01",
-        "to": "2026-05-31"
-      },
-      "diagnosticAnswers": 0,
-      "totalAnswers": 231,
-      "totalSessions": 21,
-      "dataSufficiency": "no_data",
-      "insights": [
-        "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה."
-      ],
-      "visibleOk": false,
-      "verdict": "FAIL"
-    },
-    {
-      "child": "AAA2",
-      "scenario": "B_insufficient_data",
-      "range": "may_month",
-      "rangeDates": {
-        "from": "2026-05-01",
-        "to": "2026-05-31"
-      },
-      "diagnosticAnswers": 4,
-      "totalAnswers": 10,
-      "totalSessions": 6,
-      "dataSufficiency": "insufficient_data",
-      "insights": [
-        "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה."
-      ],
-      "visibleOk": false,
-      "verdict": "FAIL"
-    },
-    {
-      "child": "AAA3",
-      "scenario": "C_preliminary_by_count",
-      "range": "may_month",
-      "rangeDates": {
-        "from": "2026-05-01",
-        "to": "2026-05-31"
-      },
-      "diagnosticAnswers": 9,
-      "totalAnswers": 105,
+      "diagnosticAnswers": 110,
+      "totalAnswers": 110,
       "totalSessions": 10,
-      "dataSufficiency": "preliminary_signal",
+      "dataSufficiency": "supported_diagnosis",
       "insights": [
-        "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-        "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי."
+        "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי.",
+        "יש התקדמות יחסית בעברית — כדאי לשמר את הרצף."
       ],
-      "visibleOk": false,
+      "visibleOk": true,
       "verdict": "FAIL"
+    },
+    {
+      "child": "AAA2",
+      "scenario": "B_insufficient_data",
+      "range": "one_week",
+      "rangeDates": {
+        "from": "2026-06-02",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 45,
+      "totalAnswers": 45,
+      "totalSessions": 5,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "נראה שיש קושי בעברית, בעיקר לפי התרגולים האחרונים.",
+        "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
+        "כדאי לשים לב לקריאה — זה נושא שחוזר בתרגולים."
+      ],
+      "visibleOk": true,
+      "verdict": "PASS"
+    },
+    {
+      "child": "AAA3",
+      "scenario": "C_preliminary_by_count",
+      "range": "one_week",
+      "rangeDates": {
+        "from": "2026-06-02",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 134,
+      "totalAnswers": 134,
+      "totalSessions": 12,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי."
+      ],
+      "visibleOk": true,
+      "verdict": "PASS"
     },
     {
       "child": "AAA4",
       "scenario": "D_preliminary_no_recurrence",
-      "range": "may_month",
+      "range": "one_week",
       "rangeDates": {
-        "from": "2026-05-01",
-        "to": "2026-05-31"
+        "from": "2026-06-02",
+        "to": "2026-06-08"
       },
-      "diagnosticAnswers": 14,
-      "totalAnswers": 66,
-      "totalSessions": 11,
+      "diagnosticAnswers": 75,
+      "totalAnswers": 75,
+      "totalSessions": 6,
       "dataSufficiency": "supported_diagnosis",
       "insights": [
-        "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
-        "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+        "נראה שיש קושי במתמטיקה, בעיקר לפי התרגולים האחרונים.",
+        "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
+        "כדאי לשים לב לחיבור — זה נושא שחוזר בתרגולים."
       ],
-      "visibleOk": false,
-      "verdict": "FAIL"
+      "visibleOk": true,
+      "verdict": "PASS"
     },
     {
       "child": "AAA5",
       "scenario": "E_supported_diagnosis",
-      "range": "may_month",
+      "range": "one_week",
       "rangeDates": {
-        "from": "2026-05-01",
-        "to": "2026-05-31"
+        "from": "2026-06-02",
+        "to": "2026-06-08"
       },
-      "diagnosticAnswers": 14,
-      "totalAnswers": 165,
-      "totalSessions": 15,
+      "diagnosticAnswers": 115,
+      "totalAnswers": 115,
+      "totalSessions": 10,
       "dataSufficiency": "supported_diagnosis",
       "insights": [
-        "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
         "יש טעויות חוזרות בגאומטריה — שווה לחזור עליהן בקצב איטי.",
-        "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+        "יש התקדמות יחסית בעברית — כדאי לשמר את הרצף.",
+        "כדאי לשים לב לצורות בסיסיות — זה נושא שחוזר בתרגולים."
       ],
-      "visibleOk": false,
-      "verdict": "FAIL"
+      "visibleOk": true,
+      "verdict": "PASS"
     },
     {
       "child": "AAA6",
       "scenario": "F_parent_assigned",
-      "range": "may_month",
+      "range": "one_week",
       "rangeDates": {
-        "from": "2026-05-01",
-        "to": "2026-05-31"
+        "from": "2026-06-02",
+        "to": "2026-06-08"
       },
-      "diagnosticAnswers": 8,
-      "totalAnswers": 136,
-      "totalSessions": 12,
-      "dataSufficiency": "preliminary_signal",
-      "insights": [
-        "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-        "יש טעויות חוזרות בגאומטריה — שווה לחזור עליהן בקצב איטי."
-      ],
-      "visibleOk": false,
-      "verdict": "FAIL"
-    },
-    {
-      "child": "AAA7",
-      "scenario": "G_non_diagnostic_exclusion",
-      "range": "may_month",
-      "rangeDates": {
-        "from": "2026-05-01",
-        "to": "2026-05-31"
-      },
-      "diagnosticAnswers": 0,
-      "totalAnswers": 166,
-      "totalSessions": 16,
-      "dataSufficiency": "no_data",
-      "insights": [
-        "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה."
-      ],
-      "visibleOk": false,
-      "verdict": "FAIL"
-    },
-    {
-      "child": "AAA8",
-      "scenario": "H_questionType_contrast",
-      "range": "may_month",
-      "rangeDates": {
-        "from": "2026-05-01",
-        "to": "2026-05-31"
-      },
-      "diagnosticAnswers": 15,
-      "totalAnswers": 39,
+      "diagnosticAnswers": 121,
+      "totalAnswers": 121,
       "totalSessions": 9,
       "dataSufficiency": "supported_diagnosis",
       "insights": [
-        "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+        "נראה שיש קושי בגאומטריה, בעיקר לפי התרגולים האחרונים.",
+        "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+        "כדאי לשים לב לשטח — זה נושא שחוזר בתרגולים."
       ],
-      "visibleOk": false,
+      "visibleOk": true,
+      "verdict": "PASS"
+    },
+    {
+      "child": "AAA7",
+      "scenario": "G_non_diagnostic_exclusion",
+      "range": "one_week",
+      "rangeDates": {
+        "from": "2026-06-02",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 114,
+      "totalAnswers": 114,
+      "totalSessions": 9,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "נראה שיש קושי באנגלית, בעיקר לפי התרגולים האחרונים.",
+        "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
+        "יש התקדמות יחסית במולדת וגאוגרפיה — כדאי לשמר את הרצף.",
+        "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+      ],
+      "visibleOk": true,
+      "verdict": "PASS"
+    },
+    {
+      "child": "AAA8",
+      "scenario": "H_questionType_contrast",
+      "range": "one_week",
+      "rangeDates": {
+        "from": "2026-06-02",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 42,
+      "totalAnswers": 42,
+      "totalSessions": 3,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "נראה שיש קושי במתמטיקה, בעיקר לפי התרגולים האחרונים.",
+        "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+        "כדאי לשים לב לחיבור — זה נושא שחוזר בתרגולים."
+      ],
+      "visibleOk": true,
+      "verdict": "PASS"
+    },
+    {
+      "child": "AAA9",
+      "scenario": "I_weak_metadata_suppression",
+      "range": "one_week",
+      "rangeDates": {
+        "from": "2026-06-02",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 120,
+      "totalAnswers": 120,
+      "totalSessions": 11,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "נראה שיש קושי בעברית, בעיקר לפי התרגולים האחרונים.",
+        "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+        "יש התקדמות יחסית במתמטיקה — כדאי לשמר את הרצף.",
+        "כדאי לשים לב לקריאה — זה נושא שחוזר בתרגולים."
+      ],
+      "visibleOk": true,
+      "verdict": "PASS"
+    },
+    {
+      "child": "AAA10",
+      "scenario": "J_english_metadata",
+      "range": "one_week",
+      "rangeDates": {
+        "from": "2026-06-02",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 54,
+      "totalAnswers": 54,
+      "totalSessions": 4,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי.",
+        "יש התקדמות יחסית במתמטיקה — כדאי לשמר את הרצף.",
+        "כדאי לשים לב לניסויים ותהליכים — זה נושא שחוזר בתרגולים."
+      ],
+      "visibleOk": true,
+      "verdict": "PASS"
+    },
+    {
+      "child": "AAA11",
+      "scenario": "K_hebrew_metadata",
+      "range": "one_week",
+      "rangeDates": {
+        "from": "2026-06-02",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 129,
+      "totalAnswers": 129,
+      "totalSessions": 11,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי.",
+        "יש התקדמות יחסית בעברית — כדאי לשמר את הרצף.",
+        "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+      ],
+      "visibleOk": true,
+      "verdict": "PASS"
+    },
+    {
+      "child": "AAA12",
+      "scenario": "L_science_moledet",
+      "range": "one_week",
+      "rangeDates": {
+        "from": "2026-06-02",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 42,
+      "totalAnswers": 42,
+      "totalSessions": 5,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "נראה שיש קושי במדעים, בעיקר לפי התרגולים האחרונים.",
+        "יש טעויות חוזרות במולדת וגאוגרפיה — שווה לחזור עליהן בקצב איטי.",
+        "כדאי לשים לב לגוף האדם — זה נושא שחוזר בתרגולים."
+      ],
+      "visibleOk": true,
+      "verdict": "PASS"
+    },
+    {
+      "child": "AAA1",
+      "scenario": "A_no_data",
+      "range": "may_month",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "diagnosticAnswers": 468,
+      "totalAnswers": 468,
+      "totalSessions": 35,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+        "יש התקדמות יחסית בעברית — כדאי לשמר את הרצף."
+      ],
+      "visibleOk": true,
       "verdict": "FAIL"
+    },
+    {
+      "child": "AAA2",
+      "scenario": "B_insufficient_data",
+      "range": "may_month",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "diagnosticAnswers": 165,
+      "totalAnswers": 165,
+      "totalSessions": 24,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "נראה שיש קושי בעברית, בעיקר לפי התרגולים האחרונים.",
+        "כדאי לשים לב לקריאה — זה נושא שחוזר בתרגולים."
+      ],
+      "visibleOk": true,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA3",
+      "scenario": "C_preliminary_by_count",
+      "range": "may_month",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "diagnosticAnswers": 448,
+      "totalAnswers": 448,
+      "totalSessions": 34,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "יש טעויות חוזרות בגאומטריה — שווה לחזור עליהן בקצב איטי."
+      ],
+      "visibleOk": true,
+      "verdict": "PASS"
+    },
+    {
+      "child": "AAA4",
+      "scenario": "D_preliminary_no_recurrence",
+      "range": "may_month",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "diagnosticAnswers": 316,
+      "totalAnswers": 316,
+      "totalSessions": 28,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "נראה שיש קושי במתמטיקה, בעיקר לפי התרגולים האחרונים.",
+        "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
+        "יש התקדמות יחסית במדעים — כדאי לשמר את הרצף.",
+        "כדאי לשים לב לחיבור — זה נושא שחוזר בתרגולים."
+      ],
+      "visibleOk": true,
+      "verdict": "PASS"
+    },
+    {
+      "child": "AAA5",
+      "scenario": "E_supported_diagnosis",
+      "range": "may_month",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "diagnosticAnswers": 439,
+      "totalAnswers": 439,
+      "totalSessions": 32,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "יש טעויות חוזרות בגאומטריה — שווה לחזור עליהן בקצב איטי.",
+        "יש התקדמות יחסית במתמטיקה — כדאי לשמר את הרצף."
+      ],
+      "visibleOk": true,
+      "verdict": "PASS"
+    },
+    {
+      "child": "AAA6",
+      "scenario": "F_parent_assigned",
+      "range": "may_month",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "diagnosticAnswers": 407,
+      "totalAnswers": 407,
+      "totalSessions": 33,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "נראה שיש קושי במדעים, בעיקר לפי התרגולים האחרונים.",
+        "יש טעויות חוזרות בגאומטריה — שווה לחזור עליהן בקצב איטי.",
+        "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
+        "כדאי לשים לב לגוף האדם — זה נושא שחוזר בתרגולים."
+      ],
+      "visibleOk": true,
+      "verdict": "PASS"
+    },
+    {
+      "child": "AAA7",
+      "scenario": "G_non_diagnostic_exclusion",
+      "range": "may_month",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "diagnosticAnswers": 533,
+      "totalAnswers": 533,
+      "totalSessions": 42,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "נראה שיש קושי באנגלית, בעיקר לפי התרגולים האחרונים.",
+        "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
+        "כדאי לשים לב לאוצר מילים — זה נושא שחוזר בתרגולים."
+      ],
+      "visibleOk": true,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA8",
+      "scenario": "H_questionType_contrast",
+      "range": "may_month",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "diagnosticAnswers": 149,
+      "totalAnswers": 149,
+      "totalSessions": 18,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "נראה שיש קושי באנגלית, בעיקר לפי התרגולים האחרונים.",
+        "כדאי לשים לב לאוצר מילים — זה נושא שחוזר בתרגולים."
+      ],
+      "visibleOk": true,
+      "verdict": "PASS"
     },
     {
       "child": "AAA9",
@@ -637,17 +672,18 @@
         "from": "2026-05-01",
         "to": "2026-05-31"
       },
-      "diagnosticAnswers": 14,
-      "totalAnswers": 170,
-      "totalSessions": 14,
+      "diagnosticAnswers": 525,
+      "totalAnswers": 525,
+      "totalSessions": 47,
       "dataSufficiency": "supported_diagnosis",
       "insights": [
-        "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-        "יש טעויות חוזרות בעברית — שווה לחזור עליהן בקצב איטי.",
-        "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+        "נראה שיש קושי בעברית, בעיקר לפי התרגולים האחרונים.",
+        "יש התקדמות יחסית במולדת וגאוגרפיה — כדאי לשמר את הרצף.",
+        "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי.",
+        "כדאי לשים לב לקריאה — זה נושא שחוזר בתרגולים."
       ],
-      "visibleOk": false,
-      "verdict": "FAIL"
+      "visibleOk": true,
+      "verdict": "PASS"
     },
     {
       "child": "AAA10",
@@ -657,16 +693,18 @@
         "from": "2026-05-01",
         "to": "2026-05-31"
       },
-      "diagnosticAnswers": 14,
-      "totalAnswers": 132,
-      "totalSessions": 12,
+      "diagnosticAnswers": 427,
+      "totalAnswers": 427,
+      "totalSessions": 33,
       "dataSufficiency": "supported_diagnosis",
       "insights": [
-        "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-        "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי."
+        "נראה שיש קושי במתמטיקה, בעיקר לפי התרגולים האחרונים.",
+        "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי.",
+        "יש התקדמות יחסית בעברית — כדאי לשמר את הרצף.",
+        "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
       ],
-      "visibleOk": false,
-      "verdict": "FAIL"
+      "visibleOk": true,
+      "verdict": "PASS"
     },
     {
       "child": "AAA11",
@@ -676,16 +714,18 @@
         "from": "2026-05-01",
         "to": "2026-05-31"
       },
-      "diagnosticAnswers": 14,
-      "totalAnswers": 294,
-      "totalSessions": 24,
+      "diagnosticAnswers": 556,
+      "totalAnswers": 556,
+      "totalSessions": 45,
       "dataSufficiency": "supported_diagnosis",
       "insights": [
-        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
-        "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי."
+        "נראה שיש קושי באנגלית, בעיקר לפי התרגולים האחרונים.",
+        "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי.",
+        "יש התקדמות יחסית במתמטיקה — כדאי לשמר את הרצף.",
+        "כדאי לשים לב לאוצר מילים — זה נושא שחוזר בתרגולים."
       ],
-      "visibleOk": false,
-      "verdict": "FAIL"
+      "visibleOk": true,
+      "verdict": "PASS"
     },
     {
       "child": "AAA12",
@@ -695,17 +735,18 @@
         "from": "2026-05-01",
         "to": "2026-05-31"
       },
-      "diagnosticAnswers": 14,
-      "totalAnswers": 64,
-      "totalSessions": 15,
+      "diagnosticAnswers": 168,
+      "totalAnswers": 168,
+      "totalSessions": 17,
       "dataSufficiency": "supported_diagnosis",
       "insights": [
-        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
-        "יש טעויות חוזרות במולדת וגאוגרפיה — שווה לחזור עליהן בקצב איטי.",
-        "יש התקדמות יחסית במולדת וגאוגרפיה — כדאי לשמר את הרצף."
+        "נראה שיש קושי באנגלית, בעיקר לפי התרגולים האחרונים.",
+        "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי.",
+        "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי.",
+        "כדאי לשים לב לאוצר מילים — זה נושא שחוזר בתרגולים."
       ],
-      "visibleOk": false,
-      "verdict": "FAIL"
+      "visibleOk": true,
+      "verdict": "PASS"
     },
     {
       "child": "AAA1",
@@ -715,14 +756,15 @@
         "from": "2026-05-01",
         "to": "2026-06-08"
       },
-      "diagnosticAnswers": 0,
-      "totalAnswers": 247,
-      "totalSessions": 22,
-      "dataSufficiency": "no_data",
+      "diagnosticAnswers": 593,
+      "totalAnswers": 593,
+      "totalSessions": 46,
+      "dataSufficiency": "supported_diagnosis",
       "insights": [
-        "מומלץ לשמור על תרגול קצר וקבוע כדי ליצור רצף למידה."
+        "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי.",
+        "יש התקדמות יחסית בעברית — כדאי לשמר את הרצף."
       ],
-      "visibleOk": false,
+      "visibleOk": true,
       "verdict": "FAIL"
     },
     {
@@ -733,15 +775,16 @@
         "from": "2026-05-01",
         "to": "2026-06-08"
       },
-      "diagnosticAnswers": 8,
-      "totalAnswers": 14,
-      "totalSessions": 7,
-      "dataSufficiency": "preliminary_signal",
+      "diagnosticAnswers": 225,
+      "totalAnswers": 225,
+      "totalSessions": 30,
+      "dataSufficiency": "supported_diagnosis",
       "insights": [
-        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
-        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+        "נראה שיש קושי בעברית, בעיקר לפי התרגולים האחרונים.",
+        "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
+        "כדאי לשים לב לקריאה — זה נושא שחוזר בתרגולים."
       ],
-      "visibleOk": false,
+      "visibleOk": true,
       "verdict": "FAIL"
     },
     {
@@ -752,16 +795,15 @@
         "from": "2026-05-01",
         "to": "2026-06-08"
       },
-      "diagnosticAnswers": 13,
-      "totalAnswers": 125,
-      "totalSessions": 12,
+      "diagnosticAnswers": 582,
+      "totalAnswers": 582,
+      "totalSessions": 46,
       "dataSufficiency": "supported_diagnosis",
       "insights": [
-        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
-        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+        "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי."
       ],
-      "visibleOk": false,
-      "verdict": "FAIL"
+      "visibleOk": true,
+      "verdict": "PASS"
     },
     {
       "child": "AAA4",
@@ -771,15 +813,18 @@
         "from": "2026-05-01",
         "to": "2026-06-08"
       },
-      "diagnosticAnswers": 18,
-      "totalAnswers": 85,
-      "totalSessions": 14,
+      "diagnosticAnswers": 391,
+      "totalAnswers": 391,
+      "totalSessions": 34,
       "dataSufficiency": "supported_diagnosis",
       "insights": [
-        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+        "נראה שיש קושי במתמטיקה, בעיקר לפי התרגולים האחרונים.",
+        "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
+        "יש התקדמות יחסית במדעים — כדאי לשמר את הרצף.",
+        "כדאי לשים לב לחיבור — זה נושא שחוזר בתרגולים."
       ],
-      "visibleOk": false,
-      "verdict": "FAIL"
+      "visibleOk": true,
+      "verdict": "PASS"
     },
     {
       "child": "AAA5",
@@ -789,15 +834,17 @@
         "from": "2026-05-01",
         "to": "2026-06-08"
       },
-      "diagnosticAnswers": 18,
-      "totalAnswers": 185,
-      "totalSessions": 17,
+      "diagnosticAnswers": 570,
+      "totalAnswers": 570,
+      "totalSessions": 43,
       "dataSufficiency": "supported_diagnosis",
       "insights": [
-        "יש טעויות חוזרות בגאומטריה — שווה לחזור עליהן בקצב איטי."
+        "יש טעויות חוזרות בגאומטריה — שווה לחזור עליהן בקצב איטי.",
+        "יש התקדמות יחסית בעברית — כדאי לשמר את הרצף.",
+        "כדאי לשים לב לצורות בסיסיות — זה נושא שחוזר בתרגולים."
       ],
-      "visibleOk": false,
-      "verdict": "FAIL"
+      "visibleOk": true,
+      "verdict": "PASS"
     },
     {
       "child": "AAA6",
@@ -807,16 +854,18 @@
         "from": "2026-05-01",
         "to": "2026-06-08"
       },
-      "diagnosticAnswers": 12,
-      "totalAnswers": 163,
-      "totalSessions": 15,
+      "diagnosticAnswers": 550,
+      "totalAnswers": 550,
+      "totalSessions": 44,
       "dataSufficiency": "supported_diagnosis",
       "insights": [
-        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
-        "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי."
+        "נראה שיש קושי במדעים, בעיקר לפי התרגולים האחרונים.",
+        "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+        "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
+        "כדאי לשים לב לגוף האדם — זה נושא שחוזר בתרגולים."
       ],
-      "visibleOk": false,
-      "verdict": "FAIL"
+      "visibleOk": true,
+      "verdict": "PASS"
     },
     {
       "child": "AAA7",
@@ -826,14 +875,16 @@
         "from": "2026-05-01",
         "to": "2026-06-08"
       },
-      "diagnosticAnswers": 4,
-      "totalAnswers": 186,
-      "totalSessions": 18,
-      "dataSufficiency": "insufficient_data",
+      "diagnosticAnswers": 663,
+      "totalAnswers": 663,
+      "totalSessions": 52,
+      "dataSufficiency": "supported_diagnosis",
       "insights": [
-        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+        "נראה שיש קושי באנגלית, בעיקר לפי התרגולים האחרונים.",
+        "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
+        "כדאי לשים לב לאוצר מילים — זה נושא שחוזר בתרגולים."
       ],
-      "visibleOk": false,
+      "visibleOk": true,
       "verdict": "FAIL"
     },
     {
@@ -844,15 +895,16 @@
         "from": "2026-05-01",
         "to": "2026-06-08"
       },
-      "diagnosticAnswers": 19,
-      "totalAnswers": 79,
-      "totalSessions": 14,
+      "diagnosticAnswers": 204,
+      "totalAnswers": 204,
+      "totalSessions": 23,
       "dataSufficiency": "supported_diagnosis",
       "insights": [
-        "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי."
+        "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+        "יש התקדמות יחסית בגאומטריה — כדאי לשמר את הרצף."
       ],
-      "visibleOk": false,
-      "verdict": "FAIL"
+      "visibleOk": true,
+      "verdict": "PASS"
     },
     {
       "child": "AAA9",
@@ -862,15 +914,18 @@
         "from": "2026-05-01",
         "to": "2026-06-08"
       },
-      "diagnosticAnswers": 18,
-      "totalAnswers": 186,
-      "totalSessions": 16,
+      "diagnosticAnswers": 645,
+      "totalAnswers": 645,
+      "totalSessions": 58,
       "dataSufficiency": "supported_diagnosis",
       "insights": [
-        "יש טעויות חוזרות בעברית — שווה לחזור עליהן בקצב איטי."
+        "נראה שיש קושי בעברית, בעיקר לפי התרגולים האחרונים.",
+        "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+        "יש התקדמות יחסית במולדת וגאוגרפיה — כדאי לשמר את הרצף.",
+        "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
       ],
-      "visibleOk": false,
-      "verdict": "FAIL"
+      "visibleOk": true,
+      "verdict": "PASS"
     },
     {
       "child": "AAA10",
@@ -880,15 +935,18 @@
         "from": "2026-05-01",
         "to": "2026-06-08"
       },
-      "diagnosticAnswers": 18,
-      "totalAnswers": 136,
-      "totalSessions": 13,
+      "diagnosticAnswers": 497,
+      "totalAnswers": 497,
+      "totalSessions": 38,
       "dataSufficiency": "supported_diagnosis",
       "insights": [
-        "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי."
+        "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי.",
+        "יש התקדמות יחסית בעברית — כדאי לשמר את הרצף.",
+        "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי.",
+        "כדאי לשים לב לניסויים ותהליכים — זה נושא שחוזר בתרגולים."
       ],
-      "visibleOk": false,
-      "verdict": "FAIL"
+      "visibleOk": true,
+      "verdict": "PASS"
     },
     {
       "child": "AAA11",
@@ -898,15 +956,16 @@
         "from": "2026-05-01",
         "to": "2026-06-08"
       },
-      "diagnosticAnswers": 18,
-      "totalAnswers": 349,
-      "totalSessions": 29,
+      "diagnosticAnswers": 705,
+      "totalAnswers": 705,
+      "totalSessions": 58,
       "dataSufficiency": "supported_diagnosis",
       "insights": [
-        "יש טעויות חוזרות בעברית — שווה לחזור עליהן בקצב איטי."
+        "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי.",
+        "יש התקדמות יחסית בגאומטריה — כדאי לשמר את הרצף."
       ],
-      "visibleOk": false,
-      "verdict": "FAIL"
+      "visibleOk": true,
+      "verdict": "PASS"
     },
     {
       "child": "AAA12",
@@ -916,16 +975,17 @@
         "from": "2026-05-01",
         "to": "2026-06-08"
       },
-      "diagnosticAnswers": 18,
-      "totalAnswers": 75,
-      "totalSessions": 17,
+      "diagnosticAnswers": 219,
+      "totalAnswers": 219,
+      "totalSessions": 23,
       "dataSufficiency": "supported_diagnosis",
       "insights": [
+        "נראה שיש קושי באנגלית, בעיקר לפי התרגולים האחרונים.",
         "יש טעויות חוזרות במולדת וגאוגרפיה — שווה לחזור עליהן בקצב איטי.",
-        "יש התקדמות יחסית במולדת וגאוגרפיה — כדאי לשמר את הרצף."
+        "כדאי לשים לב לאוצר מילים — זה נושא שחוזר בתרגולים."
       ],
-      "visibleOk": false,
-      "verdict": "FAIL"
+      "visibleOk": true,
+      "verdict": "PASS"
     }
   ],
   "failures": [
@@ -933,340 +993,71 @@
       "child": "AAA1",
       "range": "one_day",
       "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA2",
-      "range": "one_day",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA3",
-      "range": "one_day",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA4",
-      "range": "one_day",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA5",
-      "range": "one_day",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA6",
-      "range": "one_day",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA7",
-      "range": "one_day",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA8",
-      "range": "one_day",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA9",
-      "range": "one_day",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA10",
-      "range": "one_day",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA11",
-      "range": "one_day",
-      "issues": [
-        "detailed_build"
+        "diagnostic_zero(22)"
       ]
     },
     {
       "child": "AAA12",
       "range": "one_day",
       "issues": [
-        "detailed_build"
+        "parent_activity_reflected({\"pa\":0,\"paAlt\":0,\"answers\":0})"
       ]
     },
     {
       "child": "AAA1",
       "range": "one_week",
       "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA2",
-      "range": "one_week",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA3",
-      "range": "one_week",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA4",
-      "range": "one_week",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA5",
-      "range": "one_week",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA6",
-      "range": "one_week",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA7",
-      "range": "one_week",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA8",
-      "range": "one_week",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA9",
-      "range": "one_week",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA10",
-      "range": "one_week",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA11",
-      "range": "one_week",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA12",
-      "range": "one_week",
-      "issues": [
-        "detailed_build"
+        "diagnostic_zero(110)"
       ]
     },
     {
       "child": "AAA1",
       "range": "may_month",
       "issues": [
-        "detailed_build"
+        "diagnostic_zero(468)",
+        "no_data_sufficiency(\"supported_diagnosis\")",
+        "no_strong_diagnosis_language([\"יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.\",\"יש התקדמות יחסית בעברית — כדאי לשמר את הרצף.\"])"
       ]
     },
     {
       "child": "AAA2",
       "range": "may_month",
       "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA3",
-      "range": "may_month",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA4",
-      "range": "may_month",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA5",
-      "range": "may_month",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA6",
-      "range": "may_month",
-      "issues": [
-        "detailed_build"
+        "diagnostic_max(165)",
+        "insufficient_or_less(\"supported_diagnosis\")",
+        "no_strong_diagnosis_language([\"נראה שיש קושי בעברית, בעיקר לפי התרגולים האחרונים.\",\"כדאי לשים לב לקריאה — זה נושא שחוזר בתרגולים.\"])"
       ]
     },
     {
       "child": "AAA7",
       "range": "may_month",
       "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA8",
-      "range": "may_month",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA9",
-      "range": "may_month",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA10",
-      "range": "may_month",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA11",
-      "range": "may_month",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA12",
-      "range": "may_month",
-      "issues": [
-        "detailed_build"
+        "diagnostic_zero(533)"
       ]
     },
     {
       "child": "AAA1",
       "range": "full",
       "issues": [
-        "detailed_build"
+        "diagnostic_zero(593)",
+        "no_data_sufficiency(\"supported_diagnosis\")",
+        "no_strong_diagnosis_language([\"יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי.\",\"יש התקדמות יחסית בעברית — כדאי לשמר את הרצף.\"])"
       ]
     },
     {
       "child": "AAA2",
       "range": "full",
       "issues": [
-        "diagnostic_max(8)",
-        "insufficient_or_less(\"preliminary_signal\")",
-        "no_strong_diagnosis_language([\"יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.\",\"יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.\"])",
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA3",
-      "range": "full",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA4",
-      "range": "full",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA5",
-      "range": "full",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA6",
-      "range": "full",
-      "issues": [
-        "detailed_build"
+        "diagnostic_max(225)",
+        "insufficient_or_less(\"supported_diagnosis\")",
+        "no_strong_diagnosis_language([\"נראה שיש קושי בעברית, בעיקר לפי התרגולים האחרונים.\",\"הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.\",\"כדאי לשים לב לקריאה — זה נושא שחוזר בתרגולים.\"])"
       ]
     },
     {
       "child": "AAA7",
       "range": "full",
       "issues": [
-        "diagnostic_zero(4)",
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA8",
-      "range": "full",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA9",
-      "range": "full",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA10",
-      "range": "full",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA11",
-      "range": "full",
-      "issues": [
-        "detailed_build"
-      ]
-    },
-    {
-      "child": "AAA12",
-      "range": "full",
-      "issues": [
-        "detailed_build"
+        "diagnostic_zero(663)"
       ]
     }
   ],
@@ -1275,5 +1066,5 @@
     "skipped": true,
     "reason": "skipped by flag"
   },
-  "recommendation": "**Not launch-ready** — fix FAIL rows before release."
+  "recommendation": "**Not launch-ready** — fix FAIL rows before release. Re-run with `--seed-june-week` for June one_day/one_week QA."
 }

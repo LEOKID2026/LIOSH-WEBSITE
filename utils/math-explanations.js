@@ -568,6 +568,30 @@ export function getSolutionSteps(question, operation, gradeKey) {
         ];
       }
 
+      if (p.kind === "ns_counting_forward") {
+        return [
+          toSpan(mix`1. בספירה קדימה מוסיפים 1 למספר שמופיע.`, "1"),
+          toSpan(mix`2. ${M(String(p.start))} ועוד 1 הוא ${M(String(ans))}.`, "2"),
+          toSpan(mix`3. לכן המספר הבא הוא ${ans}.`, "3"),
+        ];
+      }
+
+      if (p.kind === "ns_counting_backward") {
+        return [
+          toSpan(mix`1. בספירה אחורה מחסרים 1 מהמספר שמופיע.`, "1"),
+          toSpan(mix`2. ${M(String(p.start))} פחות 1 הוא ${M(String(ans))}.`, "2"),
+          toSpan(mix`3. לכן המספר הקודם הוא ${ans}.`, "3"),
+        ];
+      }
+
+      if (p.kind === "ns_number_line") {
+        return [
+          toSpan(mix`1. על ישר המספרים המספרים עולים ב-1 בכל צעד.`, "1"),
+          toSpan(mix`2. מסתכלים בין ${M(String(p.start))} ל-${M(String(p.end))} ומאתרים את המקום החסר.`, "2"),
+          toSpan(mix`3. המספר החסר הוא ${ans}.`, "3"),
+        ];
+      }
+
       return [];
     }
 
@@ -609,6 +633,42 @@ export function getSolutionSteps(question, operation, gradeKey) {
         ];
       }
       return [];
+    }
+
+    case "prime_composite": {
+      const divisors = [];
+      if (typeof p.num === "number") {
+        for (let i = 1; i <= p.num; i += 1) {
+          if (p.num % i === 0) divisors.push(i);
+        }
+      }
+      if (p.subKind === "pc_factor_count") {
+        return [
+          toSpan(mix`1. מחלקים הם מספרים שמחלקים את ${M(String(p.num))} בלי שארית.`, "1"),
+          toSpan(mix`2. סופרים את כל המחלקים, כולל 1 והמספר עצמו.`, "2"),
+          toSpan(mix`3. מתקבלים ${ans} מחלקים.`, "3"),
+        ];
+      }
+      if (p.subKind === "pc_smallest_prime") {
+        return [
+          toSpan(mix`1. מחפשים גורם ראשוני שמחלק את ${M(String(p.num))}.`, "1"),
+          toSpan(mix`2. בודקים מהקטן לגדול: 2, 3, 5, 7 וכן הלאה.`, "2"),
+          toSpan(mix`3. הגורם הראשוני הקטן ביותר הוא ${ans}.`, "3"),
+        ];
+      }
+      if (p.subKind === "pc_divisor_pick") {
+        return [
+          toSpan(mix`1. בודקים אם ${M(String(p.divisorCandidate))} מחלק את ${M(String(p.num))} בלי שארית.`, "1"),
+          toSpan(mix`2. אם אין שארית התשובה היא כן; אם יש שארית התשובה היא לא.`, "2"),
+          toSpan(mix`3. התשובה: ${ans}.`, "3"),
+        ];
+      }
+      const divisorsText = divisors.length ? `: ${divisors.join(", ")}` : "";
+      return [
+        toSpan(mix`1. מספר ראשוני מתחלק רק ב-1 ובעצמו.`, "1"),
+        toSpan(mix`2. בודקים את המחלקים של ${M(String(p.num))}${divisorsText}.`, "2"),
+        toSpan(mix`3. לכן המספר הוא ${ans}.`, "3"),
+      ];
     }
 
     case "word_problems":
@@ -947,11 +1007,12 @@ export function getSolutionSteps(question, operation, gradeKey) {
     }
 
     case "division_with_remainder": {
+      const remainder = p.remainder ?? 0;
       return [
         toSpan(mix`1. נחלק: ${M(`${p.dividend} ÷ ${p.divisor}`)}.`, "1"),
         toSpan(mix`2. כמה פעמים ${M(String(p.divisor))} נכנס? ${M(String(p.quotient))} פעמים.`, "2"),
-        toSpan(mix`3. שארית: ${M(`${p.dividend} − (${p.quotient} × ${p.divisor}) = ${p.remainder}`)}.`, "3"),
-        toSpan(mix`4. בדיקה: ${M(`${p.divisor} × ${p.quotient} + ${p.remainder} = ${p.dividend}`)} ✓`, "4"),
+        toSpan(mix`3. שארית: ${M(`${p.dividend} − (${p.quotient} × ${p.divisor}) = ${remainder}`)}.`, "3"),
+        toSpan(mix`4. בדיקה: ${M(`${p.divisor} × ${p.quotient} + ${remainder} = ${p.dividend}`)} ✓`, "4"),
       ];
     }
 

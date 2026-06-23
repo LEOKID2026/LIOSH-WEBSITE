@@ -14,15 +14,8 @@ function assignedActivityMcqAnswersMatch(a, b) {
   return left.toLowerCase() === right.toLowerCase();
 }
 
-/** Stems use (1 = …, 2 = …) — options must be index strings, not unrelated numeric distractors. */
-export const GEOMETRY_INDEX_LABEL_KINDS = {
-  shapes_basic_square: 2,
-  shapes_basic_rectangle: 2,
-  shapes_basic_properties_square: 4,
-  shapes_basic_properties_rectangle: 4,
-  shapes_basic_properties_angles: 4,
-  quadrilaterals: 4,
-};
+/** Reserved for legacy index-label MCQ kinds (none in current child-facing geometry UI). */
+export const GEOMETRY_INDEX_LABEL_KINDS = {};
 
 /** Hebrew solid names pool used for 4-option MCQ in identification questions. */
 export const GEOMETRY_SOLID_NAMES_HE = ["קובייה", "תיבה", "גליל", "פירמידה", "חרוט", "כדור"];
@@ -30,8 +23,14 @@ export const GEOMETRY_SOLID_NAMES_HE = ["קובייה", "תיבה", "גליל", 
 export const GEOMETRY_HEBREW_LABEL_OPTIONS = {
   parallel_perpendicular: ["מקבילות", "מאונכות"],
   triangles: ["שווה צלעות", "שווה שוקיים", "שונה צלעות"],
+  quadrilaterals: ["ריבוע", "מלבן", "מקבילית", "טרפז"],
   transformations: ["הזזה", "שיקוף", "סיבוב", "ללא תנועה"],
   concept_transform: ["הזזה", "שיקוף", "סיבוב", "ללא תנועה"],
+  shapes_basic_square: ["ריבוע", "מלבן"],
+  shapes_basic_rectangle: ["ריבוע", "מלבן"],
+  shapes_basic_properties_square: ["2", "3", "4", "אין צלעות שוות"],
+  shapes_basic_properties_rectangle: ["1", "2", "3", "4"],
+  shapes_basic_properties_angles: ["2", "3", "4", "אין זוויות ישרות"],
 };
 
 /** Same tolerances as geometry-master learning/practice numeric input. */
@@ -45,7 +44,11 @@ export const GEOMETRY_ACTIVITY_NUMERIC_MIN_TOLERANCE = 1e-9;
 export function geometryQuestionUsesChoiceUi(params) {
   if (!params || typeof params !== "object") return false;
   const baseKind = String(params.kind || "").replace(/^story_/, "");
+  const answerMode = String(params.answerMode || "").trim();
   return (
+    answerMode === "binary" ||
+    answerMode === "mcq_text" ||
+    baseKind.startsWith("concept_") ||
     Boolean(GEOMETRY_HEBREW_LABEL_OPTIONS[baseKind]) ||
     Boolean(GEOMETRY_INDEX_LABEL_KINDS[baseKind]) ||
     baseKind === "solids"

@@ -4,6 +4,10 @@
  */
 
 import { practicedSubjectCountFromReport } from "../lib/learning/normalized-subject-practice.js";
+import {
+  rawMetricStrengthMixedSubjectHe,
+  rawMetricStrengthPositiveHe,
+} from "./parent-report-language/parent-report-hebrew-copy-spec.js";
 
 export const ParentDataPresence = Object.freeze({
   noData: "noData",
@@ -137,31 +141,47 @@ export function deriveParentDataPresenceForDiagnosticsView(report, diagnosticsVi
  * @param {Record<string, unknown>|null|undefined} summary
  * @returns {string[]}
  */
-export function deriveRawMetricStrengthLinesHe(summary) {
+/**
+ * @param {Record<string, unknown>|null|undefined} summary
+ * @param {Record<string, unknown>|null|undefined} [report]
+ * @param {Set<string>|string[]|null} [weakSubjectIds]
+ */
+export function deriveRawMetricStrengthLinesHe(summary, report = null, weakSubjectIds = null) {
   if (!summary || typeof summary !== "object") return [];
+
+  const weakSubjects = new Set(
+    weakSubjectIds instanceof Set
+      ? weakSubjectIds
+      : Array.isArray(weakSubjectIds)
+        ? weakSubjectIds
+        : [],
+  );
+  void report;
+
   const rows = [
-    { label: "אנגלית", q: summary.englishQuestions, acc: summary.englishAccuracy },
-    { label: "עברית", q: summary.hebrewQuestions, acc: summary.hebrewAccuracy },
-    { label: "מדעים", q: summary.scienceQuestions, acc: summary.scienceAccuracy },
-    { label: "חשבון", q: summary.mathQuestions, acc: summary.mathAccuracy },
-    { label: "גאומטריה", q: summary.geometryQuestions, acc: summary.geometryAccuracy },
+    { subjectId: "english", label: "אנגלית", q: summary.englishQuestions, acc: summary.englishAccuracy },
+    { subjectId: "hebrew", label: "עברית", q: summary.hebrewQuestions, acc: summary.hebrewAccuracy },
+    { subjectId: "science", label: "מדעים", q: summary.scienceQuestions, acc: summary.scienceAccuracy },
+    { subjectId: "math", label: "חשבון", q: summary.mathQuestions, acc: summary.mathAccuracy },
+    { subjectId: "geometry", label: "גאומטריה", q: summary.geometryQuestions, acc: summary.geometryAccuracy },
     {
+      subjectId: "moledet-geography",
       label: "מולדת וגאוגרפיה",
       q: summary.moledetGeographyQuestions,
       acc: summary.moledetGeographyAccuracy,
     },
   ];
   const out = [];
-  for (const { label, q, acc } of rows) {
+  for (const { subjectId, label, q, acc } of rows) {
     const nq = Math.max(0, Math.floor(Number(q) || 0));
     const ac = Math.round(Number(acc) || 0);
     if (nq < RAW_STRENGTH_MIN_Q) continue;
-    if (ac >= RAW_STRENGTH_HIGH_ACC) {
-      out.push(`${label} נראה כמו מקצוע שהילד מצליח בו יותר כרגע: דיוק גבוה (${ac}%) לאורך ${nq} שאלות בתקופה.`);
-    } else if (ac >= RAW_STRENGTH_MID_LO && ac < RAW_STRENGTH_HIGH_ACC) {
-      out.push(
-        `ב${label} התוצאות נראות די עקביות בתקופה הזו (${ac}% דיוק, ${nq} שאלות) — יש עדיין נושאים שכדאי לחזק.`
-      );
+    if (ac >= RAW_STRENGTH_MID_LO) {
+      if (weakSubjects.has(subjectId)) {
+        out.push(rawMetricStrengthMixedSubjectHe(label));
+      } else {
+        out.push(rawMetricStrengthPositiveHe(label, nq, ac));
+      }
     }
   }
   return out.slice(0, 4);

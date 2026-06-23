@@ -33,6 +33,7 @@ import {
   TARGET_EVIDENCE_TYPE_LABEL_HE,
   TARGET_OBSERVATION_WINDOW_LABEL_HE,
 } from "./parent-report-ui-explain-he.js";
+import { PARENT_DIAGNOSTIC_TYPE_LABEL_HE } from "./parent-report-language/parent-report-hebrew-copy-spec.js";
 import { pickRecommendedInterventionType } from "./topic-next-step-phase2.js";
 import { mathReportBaseOperationKey, canonicalParentReportGradeKey } from "./math-report-generator.js";
 import {
@@ -930,7 +931,7 @@ function computeSubjectPriorityFieldsPhase8(subjectId, args) {
   ) {
     return {
       subjectPriorityLevel: "immediate",
-      subjectPriorityReasonHe: `ב${lab} נראה שיש קושי בחלקים פשוטים יותר של הנושא — מומלץ להתחיל בתרגול קצר וממוקד.`,
+      subjectPriorityReasonHe: `ב${lab} ${ROOT_CAUSE_LABEL_HE.knowledge_gap} מומלץ להתחיל בתרגול קצר וממוקד.`,
       subjectImmediateActionHe: home || `ב${lab}: משימה אחת קצרה עם חזרה על טעות טיפוסית באותה רמה.`,
       subjectDeferredActionHe: `ב${lab}: להמתין עם הרחבת נושאים עד שייצבו הצלחות קטנות חוזרות.`,
       subjectMonitoringOnly: false,
@@ -1451,7 +1452,7 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
     trendNarrativeHe =
       rows.some((r) => r.row.trend)
         ? "יש נתוני מגמה בשורות, אך אין עדיין סיפור מגמה אחיד ברמת המקצוע — כדאי לאסוף עוד תרגול."
-        : "עדיין אין מספיק מידע על שינוי לאורך זמן.";
+        : "עדיין מעט נתונים על שינוי לאורך זמן — כדאי לבדוק שוב אחרי עוד תרגול.";
   }
   trendNarrativeHe = normalizeParentFacingHe(trendNarrativeHe);
 
@@ -1468,13 +1469,9 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
   }
 
   const riskLabelHe = {
-    knowledge_gap: "קושי בבסיס / חוסר בסיס",
-    speed_pressure: "לחץ מהירות במצב תרגול עם זמן",
-    instruction_friction: "משימה לא תמיד ברורה או הילד עדיין נעזר ברמזים",
-    careless_pattern: "חוסר תשומת לב שחוזר בתשובות",
-    fragile_success: "הצלחה שעדיין דורשת עזרה",
-    mixed: "תערובת קשיים",
-    mixed_low_signal: "תערובת חלקית — מעט סימנים מהתנהגות בפתרון",
+    ...PARENT_DIAGNOSTIC_TYPE_LABEL_HE,
+    mixed: PARENT_DIAGNOSTIC_TYPE_LABEL_HE.mixed_signal,
+    fragile_success: PARENT_DIAGNOSTIC_TYPE_LABEL_HE.fragile_success,
     none_sparse: "מעט מדי תרגול בשורות",
     none_observed: "לא זוהה סוג התנהגות חוזר אחד שבולט",
   };

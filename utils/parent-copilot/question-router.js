@@ -20,8 +20,11 @@
 import {
   classifyParentQuestionDeterministic,
   buildTopicClarificationQuestionHe,
+  GENERAL_OFF_TOPIC_RESPONSE_HE,
   OFF_TOPIC_RESPONSE_HE,
   DIAGNOSTIC_BOUNDARY_RESPONSE_HE,
+  HEALTH_BOUNDARY_RESPONSE_HE,
+  PRIVACY_BOUNDARY_RESPONSE_HE,
   PEER_COMPARISON_RESPONSE_HE,
   AMBIGUOUS_RESPONSE_HE,
   CLASSIFIER_THRESHOLDS,
@@ -32,7 +35,15 @@ import {
 } from "./report-row-resolver.js";
 import { foldUtteranceForHeMatch } from "./utterance-normalize-he.js";
 
-export { OFF_TOPIC_RESPONSE_HE, DIAGNOSTIC_BOUNDARY_RESPONSE_HE, PEER_COMPARISON_RESPONSE_HE, AMBIGUOUS_RESPONSE_HE };
+export {
+  OFF_TOPIC_RESPONSE_HE,
+  GENERAL_OFF_TOPIC_RESPONSE_HE,
+  DIAGNOSTIC_BOUNDARY_RESPONSE_HE,
+  HEALTH_BOUNDARY_RESPONSE_HE,
+  PRIVACY_BOUNDARY_RESPONSE_HE,
+  PEER_COMPARISON_RESPONSE_HE,
+  AMBIGUOUS_RESPONSE_HE,
+};
 
 /**
  * @typedef {(
@@ -95,7 +106,29 @@ export function routeParentQuestion(utteranceRaw, payload) {
       return {
         routerIntent: "off_topic",
         requiresLlm: false,
-        deterministicResponse: OFF_TOPIC_RESPONSE_HE,
+        deterministicResponse: GENERAL_OFF_TOPIC_RESPONSE_HE,
+        exitEarly: true,
+        classifierBucket: result.bucket,
+        classifierConfidence: result.confidence,
+        classifierSource: "deterministic",
+        classifierSignals: result.signals,
+      };
+    case "health_sensitive":
+      return {
+        routerIntent: "unsafe_or_diagnostic_request",
+        requiresLlm: false,
+        deterministicResponse: HEALTH_BOUNDARY_RESPONSE_HE,
+        exitEarly: true,
+        classifierBucket: result.bucket,
+        classifierConfidence: result.confidence,
+        classifierSource: "deterministic",
+        classifierSignals: result.signals,
+      };
+    case "privacy_sensitive":
+      return {
+        routerIntent: "privacy_sensitive_request",
+        requiresLlm: false,
+        deterministicResponse: PRIVACY_BOUNDARY_RESPONSE_HE,
         exitEarly: true,
         classifierBucket: result.bucket,
         classifierConfidence: result.confidence,
@@ -162,6 +195,7 @@ export function routerIntentToCanonical(routerIntent) {
     case "off_topic": return "off_topic_redirect";
     case "ambiguous_or_unclear": return "unclear";
     case "unsafe_or_diagnostic_request": return "clinical_boundary";
+    case "privacy_sensitive_request": return "parent_policy_refusal";
     case "unknown_report_question": return "explain_report";
     default: return null;
   }

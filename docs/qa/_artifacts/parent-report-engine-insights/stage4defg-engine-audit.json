@@ -1,0 +1,1706 @@
+{
+  "generatedAt": "2026-06-23T21:35:21.960Z",
+  "stage": "4D-4G",
+  "period": {
+    "from": "2026-05-01",
+    "to": "2026-06-01"
+  },
+  "stage4D": {
+    "summary": "Shared routing haystack + taxonomy pattern scoring + WithMeta disambiguation for english/geometry/moledet; geography definition rows stay topic-only.",
+    "modules": [
+      "utils/diagnostic-engine-v2/diagnostic-routing-haystack.js",
+      "utils/diagnostic-engine-v2/taxonomy-pattern-routing-scores.js",
+      "utils/diagnostic-engine-v2/english-taxonomy-candidate-order.js",
+      "utils/diagnostic-engine-v2/geometry-taxonomy-candidate-order.js",
+      "utils/diagnostic-engine-v2/moledet-taxonomy-candidate-order.js",
+      "utils/parent-report-engine-taxonomy-bridge.js",
+      "utils/subskill-candidate-safety.js"
+    ]
+  },
+  "stage4E": {
+    "modeSourceAudit": [
+      {
+        "modeSource": "self_practice/practice",
+        "source": "self_practice",
+        "mode": "practice",
+        "countsForParentEngine": true,
+        "parentGateReason": "",
+        "isDiagnosticEligible": true,
+        "evidenceCategory": "diagnostic_independent",
+        "sessionCountable": true,
+        "rawEventCreated": "yes (diagnosticMistakes when wrong)",
+        "metadataPreserved": "yes via buildDiagnosticEvidenceRow",
+        "timeHintsRetryPreserved": "yes (responseMs/hintUsed/retryCount fields)",
+        "parentReportUses": "yes — topic rows + engine",
+        "gaps": null
+      },
+      {
+        "modeSource": "self_practice/graded",
+        "source": "self_practice",
+        "mode": "graded",
+        "countsForParentEngine": true,
+        "parentGateReason": "",
+        "isDiagnosticEligible": true,
+        "evidenceCategory": "diagnostic_independent",
+        "sessionCountable": true,
+        "rawEventCreated": "yes (diagnosticMistakes when wrong)",
+        "metadataPreserved": "yes via buildDiagnosticEvidenceRow",
+        "timeHintsRetryPreserved": "yes (responseMs/hintUsed/retryCount fields)",
+        "parentReportUses": "yes — topic rows + engine",
+        "gaps": null
+      },
+      {
+        "modeSource": "self_practice/drill",
+        "source": "self_practice",
+        "mode": "drill",
+        "countsForParentEngine": true,
+        "parentGateReason": "",
+        "isDiagnosticEligible": true,
+        "evidenceCategory": "diagnostic_independent",
+        "sessionCountable": true,
+        "rawEventCreated": "yes (diagnosticMistakes when wrong)",
+        "metadataPreserved": "yes via buildDiagnosticEvidenceRow",
+        "timeHintsRetryPreserved": "yes (responseMs/hintUsed/retryCount fields)",
+        "parentReportUses": "yes — topic rows + engine",
+        "gaps": null
+      },
+      {
+        "modeSource": "self_practice/review",
+        "source": "self_practice",
+        "mode": "review",
+        "countsForParentEngine": true,
+        "parentGateReason": "",
+        "isDiagnosticEligible": true,
+        "evidenceCategory": "diagnostic_independent",
+        "sessionCountable": true,
+        "rawEventCreated": "yes (diagnosticMistakes when wrong)",
+        "metadataPreserved": "yes via buildDiagnosticEvidenceRow",
+        "timeHintsRetryPreserved": "yes (responseMs/hintUsed/retryCount fields)",
+        "parentReportUses": "yes — topic rows + engine",
+        "gaps": null
+      },
+      {
+        "modeSource": "self_practice/normal",
+        "source": "self_practice",
+        "mode": "normal",
+        "countsForParentEngine": true,
+        "parentGateReason": "",
+        "isDiagnosticEligible": true,
+        "evidenceCategory": "diagnostic_independent",
+        "sessionCountable": true,
+        "rawEventCreated": "yes (diagnosticMistakes when wrong)",
+        "metadataPreserved": "yes via buildDiagnosticEvidenceRow",
+        "timeHintsRetryPreserved": "yes (responseMs/hintUsed/retryCount fields)",
+        "parentReportUses": "yes — topic rows + engine",
+        "gaps": null
+      },
+      {
+        "modeSource": "self_practice/practice_mistakes",
+        "source": "self_practice",
+        "mode": "practice_mistakes",
+        "countsForParentEngine": true,
+        "parentGateReason": "",
+        "isDiagnosticEligible": true,
+        "evidenceCategory": "diagnostic_guided",
+        "sessionCountable": true,
+        "rawEventCreated": "yes (diagnosticMistakes when wrong)",
+        "metadataPreserved": "yes via buildDiagnosticEvidenceRow",
+        "timeHintsRetryPreserved": "yes (responseMs/hintUsed/retryCount fields)",
+        "parentReportUses": "yes — topic rows + engine",
+        "gaps": null
+      },
+      {
+        "modeSource": "self_practice/challenge",
+        "source": "self_practice",
+        "mode": "challenge",
+        "countsForParentEngine": false,
+        "parentGateReason": "parent-report-evidence-gate excludes diagnostic_competitive",
+        "isDiagnosticEligible": true,
+        "evidenceCategory": "diagnostic_competitive",
+        "sessionCountable": false,
+        "rawEventCreated": "no",
+        "metadataPreserved": "n/a",
+        "timeHintsRetryPreserved": "n/a",
+        "parentReportUses": "no",
+        "gaps": "parent-report-evidence-gate excludes diagnostic_competitive"
+      },
+      {
+        "modeSource": "self_practice/speed",
+        "source": "self_practice",
+        "mode": "speed",
+        "countsForParentEngine": false,
+        "parentGateReason": "parent-report-evidence-gate excludes diagnostic_competitive",
+        "isDiagnosticEligible": true,
+        "evidenceCategory": "diagnostic_competitive",
+        "sessionCountable": false,
+        "rawEventCreated": "no",
+        "metadataPreserved": "n/a",
+        "timeHintsRetryPreserved": "n/a",
+        "parentReportUses": "no",
+        "gaps": "parent-report-evidence-gate excludes diagnostic_competitive"
+      },
+      {
+        "modeSource": "self_practice/marathon",
+        "source": "self_practice",
+        "mode": "marathon",
+        "countsForParentEngine": false,
+        "parentGateReason": "parent-report-evidence-gate excludes diagnostic_competitive",
+        "isDiagnosticEligible": true,
+        "evidenceCategory": "diagnostic_competitive",
+        "sessionCountable": false,
+        "rawEventCreated": "no",
+        "metadataPreserved": "n/a",
+        "timeHintsRetryPreserved": "n/a",
+        "parentReportUses": "no",
+        "gaps": "parent-report-evidence-gate excludes diagnostic_competitive"
+      },
+      {
+        "modeSource": "self_practice/learning",
+        "source": "self_practice",
+        "mode": "learning",
+        "countsForParentEngine": false,
+        "parentGateReason": "explicit non-countable mode in evidence gate",
+        "isDiagnosticEligible": false,
+        "evidenceCategory": "learning_guided",
+        "sessionCountable": false,
+        "rawEventCreated": "no",
+        "metadataPreserved": "n/a",
+        "timeHintsRetryPreserved": "n/a",
+        "parentReportUses": "no",
+        "gaps": "explicit non-countable mode in evidence gate"
+      },
+      {
+        "modeSource": "self_practice/mistakes",
+        "source": "self_practice",
+        "mode": "mistakes",
+        "countsForParentEngine": false,
+        "parentGateReason": "explicit non-countable mode in evidence gate",
+        "isDiagnosticEligible": false,
+        "evidenceCategory": "learning_review",
+        "sessionCountable": false,
+        "rawEventCreated": "no",
+        "metadataPreserved": "n/a",
+        "timeHintsRetryPreserved": "n/a",
+        "parentReportUses": "no",
+        "gaps": "explicit non-countable mode in evidence gate"
+      },
+      {
+        "modeSource": "self_practice/learning_book",
+        "source": "self_practice",
+        "mode": "learning_book",
+        "countsForParentEngine": false,
+        "parentGateReason": "explicit non-countable mode in evidence gate",
+        "isDiagnosticEligible": false,
+        "evidenceCategory": "learning_book",
+        "sessionCountable": false,
+        "rawEventCreated": "no",
+        "metadataPreserved": "n/a",
+        "timeHintsRetryPreserved": "n/a",
+        "parentReportUses": "no",
+        "gaps": "explicit non-countable mode in evidence gate"
+      },
+      {
+        "modeSource": "self_practice/discussion",
+        "source": "self_practice",
+        "mode": "discussion",
+        "countsForParentEngine": false,
+        "parentGateReason": "explicit non-countable mode in evidence gate",
+        "isDiagnosticEligible": false,
+        "evidenceCategory": "learning_context",
+        "sessionCountable": true,
+        "rawEventCreated": "no",
+        "metadataPreserved": "n/a",
+        "timeHintsRetryPreserved": "n/a",
+        "parentReportUses": "no",
+        "gaps": "explicit non-countable mode in evidence gate"
+      },
+      {
+        "modeSource": "assigned_parent/quiz",
+        "source": "assigned_parent",
+        "mode": "quiz",
+        "countsForParentEngine": true,
+        "parentGateReason": "",
+        "isDiagnosticEligible": true,
+        "evidenceCategory": "diagnostic_independent",
+        "sessionCountable": true,
+        "rawEventCreated": "yes (diagnosticMistakes when wrong)",
+        "metadataPreserved": "yes via buildDiagnosticEvidenceRow",
+        "timeHintsRetryPreserved": "yes (responseMs/hintUsed/retryCount fields)",
+        "parentReportUses": "yes — topic rows + engine",
+        "gaps": null
+      },
+      {
+        "modeSource": "assigned_individual/quiz",
+        "source": "assigned_individual",
+        "mode": "quiz",
+        "countsForParentEngine": false,
+        "parentGateReason": "private-teacher attempts not in parent aggregate (by design)",
+        "isDiagnosticEligible": true,
+        "evidenceCategory": "diagnostic_independent",
+        "sessionCountable": false,
+        "rawEventCreated": "no",
+        "metadataPreserved": "n/a",
+        "timeHintsRetryPreserved": "n/a",
+        "parentReportUses": "no",
+        "gaps": "private-teacher attempts not in parent aggregate (by design)"
+      },
+      {
+        "modeSource": "assigned_class/quiz",
+        "source": "assigned_class",
+        "mode": "quiz",
+        "countsForParentEngine": false,
+        "parentGateReason": "school/classroom not in parent aggregate (by design)",
+        "isDiagnosticEligible": true,
+        "evidenceCategory": "diagnostic_independent",
+        "sessionCountable": false,
+        "rawEventCreated": "no",
+        "metadataPreserved": "n/a",
+        "timeHintsRetryPreserved": "n/a",
+        "parentReportUses": "no",
+        "gaps": "school/classroom not in parent aggregate (by design)"
+      },
+      {
+        "modeSource": "assigned_parent/homework",
+        "source": "assigned_parent",
+        "mode": "homework",
+        "countsForParentEngine": true,
+        "parentGateReason": "",
+        "isDiagnosticEligible": true,
+        "evidenceCategory": "diagnostic_independent",
+        "sessionCountable": true,
+        "rawEventCreated": "yes (diagnosticMistakes when wrong)",
+        "metadataPreserved": "yes via buildDiagnosticEvidenceRow",
+        "timeHintsRetryPreserved": "yes (responseMs/hintUsed/retryCount fields)",
+        "parentReportUses": "yes — topic rows + engine",
+        "gaps": null
+      },
+      {
+        "modeSource": "assigned_individual/homework",
+        "source": "assigned_individual",
+        "mode": "homework",
+        "countsForParentEngine": false,
+        "parentGateReason": "private-teacher attempts not in parent aggregate (by design)",
+        "isDiagnosticEligible": true,
+        "evidenceCategory": "diagnostic_independent",
+        "sessionCountable": false,
+        "rawEventCreated": "no",
+        "metadataPreserved": "n/a",
+        "timeHintsRetryPreserved": "n/a",
+        "parentReportUses": "no",
+        "gaps": "private-teacher attempts not in parent aggregate (by design)"
+      },
+      {
+        "modeSource": "assigned_class/homework",
+        "source": "assigned_class",
+        "mode": "homework",
+        "countsForParentEngine": false,
+        "parentGateReason": "school/classroom not in parent aggregate (by design)",
+        "isDiagnosticEligible": true,
+        "evidenceCategory": "diagnostic_independent",
+        "sessionCountable": false,
+        "rawEventCreated": "no",
+        "metadataPreserved": "n/a",
+        "timeHintsRetryPreserved": "n/a",
+        "parentReportUses": "no",
+        "gaps": "school/classroom not in parent aggregate (by design)"
+      },
+      {
+        "modeSource": "assigned_parent/worksheet",
+        "source": "assigned_parent",
+        "mode": "worksheet",
+        "countsForParentEngine": true,
+        "parentGateReason": "",
+        "isDiagnosticEligible": true,
+        "evidenceCategory": "diagnostic_independent",
+        "sessionCountable": true,
+        "rawEventCreated": "yes (diagnosticMistakes when wrong)",
+        "metadataPreserved": "yes via buildDiagnosticEvidenceRow",
+        "timeHintsRetryPreserved": "yes (responseMs/hintUsed/retryCount fields)",
+        "parentReportUses": "yes — topic rows + engine",
+        "gaps": null
+      },
+      {
+        "modeSource": "assigned_individual/worksheet",
+        "source": "assigned_individual",
+        "mode": "worksheet",
+        "countsForParentEngine": false,
+        "parentGateReason": "private-teacher attempts not in parent aggregate (by design)",
+        "isDiagnosticEligible": true,
+        "evidenceCategory": "diagnostic_independent",
+        "sessionCountable": false,
+        "rawEventCreated": "no",
+        "metadataPreserved": "n/a",
+        "timeHintsRetryPreserved": "n/a",
+        "parentReportUses": "no",
+        "gaps": "private-teacher attempts not in parent aggregate (by design)"
+      },
+      {
+        "modeSource": "assigned_class/worksheet",
+        "source": "assigned_class",
+        "mode": "worksheet",
+        "countsForParentEngine": false,
+        "parentGateReason": "school/classroom not in parent aggregate (by design)",
+        "isDiagnosticEligible": true,
+        "evidenceCategory": "diagnostic_independent",
+        "sessionCountable": false,
+        "rawEventCreated": "no",
+        "metadataPreserved": "n/a",
+        "timeHintsRetryPreserved": "n/a",
+        "parentReportUses": "no",
+        "gaps": "school/classroom not in parent aggregate (by design)"
+      },
+      {
+        "modeSource": "assigned_parent/live_lesson",
+        "source": "assigned_parent",
+        "mode": "live_lesson",
+        "countsForParentEngine": true,
+        "parentGateReason": "",
+        "isDiagnosticEligible": true,
+        "evidenceCategory": "diagnostic_guided",
+        "sessionCountable": true,
+        "rawEventCreated": "yes (diagnosticMistakes when wrong)",
+        "metadataPreserved": "yes via buildDiagnosticEvidenceRow",
+        "timeHintsRetryPreserved": "yes (responseMs/hintUsed/retryCount fields)",
+        "parentReportUses": "yes — topic rows + engine",
+        "gaps": null
+      },
+      {
+        "modeSource": "assigned_individual/live_lesson",
+        "source": "assigned_individual",
+        "mode": "live_lesson",
+        "countsForParentEngine": false,
+        "parentGateReason": "private-teacher attempts not in parent aggregate (by design)",
+        "isDiagnosticEligible": true,
+        "evidenceCategory": "diagnostic_guided",
+        "sessionCountable": false,
+        "rawEventCreated": "no",
+        "metadataPreserved": "n/a",
+        "timeHintsRetryPreserved": "n/a",
+        "parentReportUses": "no",
+        "gaps": "private-teacher attempts not in parent aggregate (by design)"
+      },
+      {
+        "modeSource": "assigned_class/live_lesson",
+        "source": "assigned_class",
+        "mode": "live_lesson",
+        "countsForParentEngine": false,
+        "parentGateReason": "school/classroom not in parent aggregate (by design)",
+        "isDiagnosticEligible": true,
+        "evidenceCategory": "diagnostic_guided",
+        "sessionCountable": false,
+        "rawEventCreated": "no",
+        "metadataPreserved": "n/a",
+        "timeHintsRetryPreserved": "n/a",
+        "parentReportUses": "no",
+        "gaps": "school/classroom not in parent aggregate (by design)"
+      },
+      {
+        "modeSource": "assigned_parent/guided_practice",
+        "source": "assigned_parent",
+        "mode": "guided_practice",
+        "countsForParentEngine": true,
+        "parentGateReason": "",
+        "isDiagnosticEligible": false,
+        "evidenceCategory": "learning_guided",
+        "sessionCountable": true,
+        "rawEventCreated": "yes (diagnosticMistakes when wrong)",
+        "metadataPreserved": "yes via buildDiagnosticEvidenceRow",
+        "timeHintsRetryPreserved": "yes (responseMs/hintUsed/retryCount fields)",
+        "parentReportUses": "yes — topic rows + engine",
+        "gaps": null
+      },
+      {
+        "modeSource": "assigned_individual/guided_practice",
+        "source": "assigned_individual",
+        "mode": "guided_practice",
+        "countsForParentEngine": false,
+        "parentGateReason": "private-teacher attempts not in parent aggregate (by design)",
+        "isDiagnosticEligible": false,
+        "evidenceCategory": "learning_guided",
+        "sessionCountable": false,
+        "rawEventCreated": "no",
+        "metadataPreserved": "n/a",
+        "timeHintsRetryPreserved": "n/a",
+        "parentReportUses": "no",
+        "gaps": "private-teacher attempts not in parent aggregate (by design)"
+      },
+      {
+        "modeSource": "assigned_class/guided_practice",
+        "source": "assigned_class",
+        "mode": "guided_practice",
+        "countsForParentEngine": false,
+        "parentGateReason": "school/classroom not in parent aggregate (by design)",
+        "isDiagnosticEligible": false,
+        "evidenceCategory": "learning_guided",
+        "sessionCountable": false,
+        "rawEventCreated": "no",
+        "metadataPreserved": "n/a",
+        "timeHintsRetryPreserved": "n/a",
+        "parentReportUses": "no",
+        "gaps": "school/classroom not in parent aggregate (by design)"
+      },
+      {
+        "modeSource": "assigned_parent/discussion",
+        "source": "assigned_parent",
+        "mode": "discussion",
+        "countsForParentEngine": true,
+        "parentGateReason": "",
+        "isDiagnosticEligible": false,
+        "evidenceCategory": "learning_context",
+        "sessionCountable": true,
+        "rawEventCreated": "yes (diagnosticMistakes when wrong)",
+        "metadataPreserved": "yes via buildDiagnosticEvidenceRow",
+        "timeHintsRetryPreserved": "yes (responseMs/hintUsed/retryCount fields)",
+        "parentReportUses": "yes — topic rows + engine",
+        "gaps": null
+      },
+      {
+        "modeSource": "assigned_individual/discussion",
+        "source": "assigned_individual",
+        "mode": "discussion",
+        "countsForParentEngine": false,
+        "parentGateReason": "private-teacher attempts not in parent aggregate (by design)",
+        "isDiagnosticEligible": false,
+        "evidenceCategory": "learning_context",
+        "sessionCountable": false,
+        "rawEventCreated": "no",
+        "metadataPreserved": "n/a",
+        "timeHintsRetryPreserved": "n/a",
+        "parentReportUses": "no",
+        "gaps": "private-teacher attempts not in parent aggregate (by design)"
+      },
+      {
+        "modeSource": "assigned_class/discussion",
+        "source": "assigned_class",
+        "mode": "discussion",
+        "countsForParentEngine": false,
+        "parentGateReason": "school/classroom not in parent aggregate (by design)",
+        "isDiagnosticEligible": false,
+        "evidenceCategory": "learning_context",
+        "sessionCountable": false,
+        "rawEventCreated": "no",
+        "metadataPreserved": "n/a",
+        "timeHintsRetryPreserved": "n/a",
+        "parentReportUses": "no",
+        "gaps": "school/classroom not in parent aggregate (by design)"
+      },
+      {
+        "modeSource": "learning_book/learning_book",
+        "source": "learning_book",
+        "mode": "learning_book",
+        "countsForParentEngine": false,
+        "parentGateReason": "books excluded",
+        "isDiagnosticEligible": false,
+        "evidenceCategory": "learning_book",
+        "sessionCountable": false,
+        "rawEventCreated": "no",
+        "metadataPreserved": "n/a",
+        "timeHintsRetryPreserved": "n/a",
+        "parentReportUses": "no",
+        "gaps": "books excluded"
+      }
+    ]
+  },
+  "stage4F": {
+    "coverage": {
+      "math": {
+        "phase": "Q2-C1",
+        "total": 1,
+        "withCanonical": 1,
+        "samples": [
+          {
+            "operation": "fractions",
+            "params": {
+              "kind": "frac_add_like",
+              "diagnosticSkillId": "math_frac_add_like",
+              "subtype": "frac_add_like",
+              "patternFamily": "math_frac_add_like",
+              "subjectId": "math",
+              "canonicalMetadata": {
+                "contractVersion": "question-metadata-contract-v1",
+                "subject": "math",
+                "topic": "fractions",
+                "grade": "g4",
+                "skillId": "math_frac_add_like",
+                "subSkill": "frac_add_like",
+                "questionType": "technical",
+                "problemClass": "procedural",
+                "difficulty": "medium",
+                "difficultyDepth": "simple_application",
+                "requiresVisual": false,
+                "requiresAudio": false,
+                "answerFormat": "mcq",
+                "metadataConfidence": "high",
+                "diagnosticEligibleByMetadata": true,
+                "possibleErrorPatterns": [
+                  "calculation_error",
+                  "careless_error",
+                  "fraction_misconception",
+                  "denominator_confusion",
+                  "numerator_denominator_confusion"
+                ],
+                "notes": null
+              }
+            },
+            "answers": [
+              "a",
+              "b"
+            ],
+            "correctAnswer": "a",
+            "subject": "math",
+            "skillId": "math_frac_add_like",
+            "subskillId": "frac_add_like",
+            "difficulty": "standard",
+            "cognitiveLevel": "understanding",
+            "expectedErrorTypes": [
+              "calculation_error",
+              "careless_error",
+              "fraction_misconception",
+              "denominator_confusion",
+              "numerator_denominator_confusion"
+            ],
+            "prerequisiteSkillIds": [],
+            "topic": "fractions",
+            "grade": "g4",
+            "subSkill": "frac_add_like"
+          }
+        ]
+      },
+      "geometry": {
+        "phase": "Q2-C1",
+        "total": 1,
+        "withCanonical": 1,
+        "samples": [
+          {
+            "topic": "area",
+            "shape": "square",
+            "params": {
+              "kind": "square_area",
+              "diagnosticSkillId": "geo_area_square_formula",
+              "patternFamily": "area_square_area",
+              "conceptTag": "square_area_compute",
+              "probePower": "medium",
+              "expectedErrorTags": [
+                "square_area_compute",
+                "formula_selection_error",
+                "measurement_error"
+              ],
+              "canonicalMetadata": {
+                "contractVersion": "question-metadata-contract-v1",
+                "subject": "geometry",
+                "topic": "area",
+                "grade": "g4",
+                "skillId": "geo_area_square_formula",
+                "subSkill": "area_square_area",
+                "questionType": "diagram",
+                "problemClass": "procedural",
+                "difficulty": null,
+                "difficultyDepth": "simple_application",
+                "requiresVisual": true,
+                "requiresAudio": false,
+                "answerFormat": "mcq",
+                "metadataConfidence": "high",
+                "diagnosticEligibleByMetadata": true,
+                "possibleErrorPatterns": [
+                  "square_area_compute",
+                  "formula_selection_error",
+                  "measurement_error"
+                ],
+                "notes": null
+              }
+            },
+            "answers": [
+              "1",
+              "2"
+            ],
+            "correctAnswer": "1",
+            "subject": "geometry",
+            "grade": "g4",
+            "skillId": "geo_area_square_formula",
+            "subSkill": "area_square_area"
+          }
+        ]
+      },
+      "science": {
+        "phase": "Q2-C2",
+        "total": 1017,
+        "withCanonical": 1017,
+        "samples": [
+          {
+            "id": "body_1",
+            "topic": "body",
+            "grades": [
+              "g1",
+              "g2"
+            ],
+            "minLevel": "easy",
+            "maxLevel": "easy",
+            "type": "mcq",
+            "stem": "איפה נמצא הלב בגוף האדם?",
+            "options": [
+              "בחזה, בצד ימין של הגוף",
+              "בחזה, מעט משמאל למרכז",
+              "בבטן העליונה, באזור הכבד",
+              "בגובה הצוואר, מאחורי קנה הנשימה"
+            ],
+            "correctIndex": 1,
+            "explanation": "הלב נמצא בחזה, מעט שמאלה מקו האמצע, ומזרים דם לכל הגוף.",
+            "params": {
+              "patternFamily": "science_body_heart_location",
+              "subtype": "sci_body_general",
+              "conceptTag": "body_heart_place",
+              "diagnosticSkillId": "sci_body_fact_recall",
+              "probePower": "medium",
+              "expectedErrorTags": [
+                "fact_recall_gap",
+                "concept_confusion"
+              ],
+              "cognitiveLevel": "understanding",
+              "expectedErrorTypes": [
+                "fact_recall_gap",
+                "concept_confusion"
+              ],
+              "difficulty": "basic",
+              "canonicalMetadata": {
+                "contractVersion": "question-metadata-contract-v1",
+                "subject": "science",
+                "topic": "body",
+                "grade": "g1",
+                "skillId": "sci_body_fact_recall",
+                "subSkill": "sci_body_general",
+                "questionType": "technical",
+                "problemClass": "conceptual",
+                "difficulty": "basic",
+                "difficultyDepth": "simple_application",
+                "requiresVisual": false,
+                "requiresAudio": false,
+                "answerFormat": "mcq",
+                "metadataConfidence": "high",
+                "diagnosticEligibleByMetadata": true,
+                "possibleErrorPatterns": [
+                  "fact_recall_gap",
+                  "concept_confusion"
+                ],
+                "notes": null
+              }
+            },
+            "theoryLines": [
+              "הלב הוא איבר שרירי שפועל ללא הפסקה.",
+              "תפקידו להזרים דם המכיל חמצן וחומרי מזון לכל חלקי הגוף."
+            ],
+            "subSkill": "sci_body_general",
+            "skillId": "sci_body_fact_recall"
+          },
+          {
+            "id": "body_2",
+            "topic": "body",
+            "grades": [
+              "g1",
+              "g2"
+            ],
+            "minLevel": "easy",
+            "maxLevel": "easy",
+            "type": "mcq",
+            "stem": "באיזה איבר אנחנו משתמשים כדי לראות?",
+            "options": [
+              "אוזניים",
+              "עיניים",
+              "אף",
+              "לשון"
+            ],
+            "correctIndex": 1,
+            "explanation": "העיניים הן איבר הראייה. דרכן נכנס האור למוח שמפרש את התמונה.",
+            "params": {
+              "patternFamily": "science_body_sense_organs",
+              "subtype": "sci_body_general",
+              "conceptTag": "sense_vision",
+              "diagnosticSkillId": "sci_body_fact_recall",
+              "probePower": "medium",
+              "expectedErrorTags": [
+                "fact_recall_gap",
+                "classification_error"
+              ],
+              "cognitiveLevel": "understanding",
+              "expectedErrorTypes": [
+                "fact_recall_gap",
+                "classification_error"
+              ],
+              "difficulty": "basic",
+              "canonicalMetadata": {
+                "contractVersion": "question-metadata-contract-v1",
+                "subject": "science",
+                "topic": "body",
+                "grade": "g1",
+                "skillId": "sci_body_fact_recall",
+                "subSkill": "sci_body_general",
+                "questionType": "technical",
+                "problemClass": "conceptual",
+                "difficulty": "basic",
+                "difficultyDepth": "simple_application",
+                "requiresVisual": false,
+                "requiresAudio": false,
+                "answerFormat": "mcq",
+                "metadataConfidence": "high",
+                "diagnosticEligibleByMetadata": true,
+                "possibleErrorPatterns": [
+                  "fact_recall_gap",
+                  "classification_error"
+                ],
+                "notes": null
+              }
+            },
+            "theoryLines": [
+              "חמשת החושים: ראייה, שמיעה, ריח, טעם ומישוש.",
+              "העיניים קשורות למוח בעזרת עצב הראייה."
+            ],
+            "subSkill": "sci_body_general",
+            "skillId": "sci_body_fact_recall"
+          },
+          {
+            "id": "body_3",
+            "topic": "body",
+            "grades": [
+              "g3",
+              "g4"
+            ],
+            "minLevel": "medium",
+            "maxLevel": "medium",
+            "type": "mcq",
+            "stem": "מה תפקידה העיקרי של מערכת הנשימה?",
+            "options": [
+              "להוביל דם לרקמות עם חמצן ומזון",
+              "להחליף חמצן ופחמן דוחמצני מול האוויר",
+              "לפרק מזון לחומרים קטנים במעיים",
+              "לתת שלד, להגין על איברים ולסייע בתנועה"
+            ],
+            "correctIndex": 1,
+            "explanation": "מערכת הנשימה אחראית על חילוף הגזים: הכנסת חמצן הדרוש לתאים והוצאת פחמן דוחמצני מהגוף.",
+            "params": {
+              "patternFamily": "science_respiratory_gas_exchange",
+              "subtype": "sci_body_general",
+              "conceptTag": "resp_o2_co2_exchange",
+              "diagnosticSkillId": "sci_respiration_concept",
+              "probePower": "high",
+              "expectedErrorTags": [
+                "concept_confusion",
+                "cause_effect_gap"
+              ],
+              "cognitiveLevel": "application",
+              "expectedErrorTypes": [
+                "concept_confusion",
+                "cause_effect_gap"
+              ],
+              "difficulty": "standard",
+              "prerequisiteSkillIds": [
+                "sci_body_fact_recall"
+              ],
+              "canonicalMetadata": {
+                "contractVersion": "question-metadata-contract-v1",
+                "subject": "science",
+                "topic": "body",
+                "grade": "g3",
+                "skillId": "sci_respiration_concept",
+                "subSkill": "sci_body_general",
+                "questionType": "technical",
+                "problemClass": "mixed",
+                "difficulty": "medium",
+                "difficultyDepth": "simple_application",
+                "requiresVisual": false,
+                "requiresAudio": false,
+                "answerFormat": "mcq",
+                "metadataConfidence": "high",
+                "diagnosticEligibleByMetadata": true,
+                "possibleErrorPatterns": [
+                  "concept_confusion",
+                  "cause_effect_gap"
+                ],
+                "notes": null
+              }
+            },
+            "theoryLines": [
+              "איברי מערכת הנשימה כוללים אף, קנה הנשימה וריאות.",
+              "בתוך הריאות מתבצע חילוף הגזים בין האוויר לדם."
+            ],
+            "subSkill": "sci_body_general",
+            "skillId": "sci_respiration_concept"
+          },
+          {
+            "id": "body_4",
+            "topic": "body",
+            "grades": [
+              "g3",
+              "g4",
+              "g5",
+              "g6"
+            ],
+            "minLevel": "medium",
+            "maxLevel": "medium",
+            "type": "true_false",
+            "stem": "השרירים והשלד עובדים יחד כדי לאפשר לנו תנועה.",
+            "options": [
+              "נכון",
+              "לא נכון"
+            ],
+            "correctIndex": 0,
+            "explanation": "השלד נותן מסגרת לגוף, והשרירים מחוברים לעצמות ומושכים אותן כדי לייצר תנועה.",
+            "theoryLines": [
+              "ללא שלד הגוף היה רפוי ולא יציב.",
+              "ללא שרירים לא היינו יכולים להזיז את העצמות והגוף."
+            ],
+            "params": {
+              "patternFamily": "sci_body_systems",
+              "subtype": "sci_body_general",
+              "cognitiveLevel": "understanding",
+              "expectedErrorTypes": [
+                "skeleton_muscles_role",
+                "structure_function_confusion",
+                "fact_recall_gap"
+              ],
+              "difficulty": "standard",
+              "conceptTag": "skeleton_muscles_role",
+              "diagnosticSkillId": "sci_body_skeleton_muscles",
+              "expectedErrorTags": [
+                "skeleton_muscles_role",
+                "structure_function_confusion",
+                "fact_recall_gap"
+              ],
+              "canonicalMetadata": {
+                "contractVersion": "question-metadata-contract-v1",
+                "subject": "science",
+                "topic": "body",
+                "grade": "g3",
+                "skillId": "sci_body_skeleton_muscles",
+                "subSkill": "sci_body_general",
+                "questionType": "technical",
+                "problemClass": "conceptual",
+                "difficulty": "medium",
+                "difficultyDepth": "simple_application",
+                "requiresVisual": false,
+                "requiresAudio": false,
+                "answerFormat": "mcq",
+                "metadataConfidence": "high",
+                "diagnosticEligibleByMetadata": true,
+                "possibleErrorPatterns": [
+                  "skeleton_muscles_role",
+                  "structure_function_confusion",
+                  "fact_recall_gap"
+                ],
+                "notes": null
+              }
+            },
+            "subSkill": "sci_body_general",
+            "skillId": "sci_body_skeleton_muscles"
+          },
+          {
+            "id": "body_5",
+            "topic": "body",
+            "grades": [
+              "g5",
+              "g6"
+            ],
+            "minLevel": "hard",
+            "maxLevel": "hard",
+            "type": "mcq",
+            "stem": "איזה משפט מתאר בצורה הטובה ביותר את תפקיד מערכת הדם?",
+            "options": [
+              "המערכת שמעכלת מזון ומפרקת אותו לחומרים פשוטים.",
+              "המערכת שמובילה אותות עצביים בין המוח לשרירים.",
+              "המערכת שמזרימה דם עם חמצן ומזון ומפנה פסולת.",
+              "המערכת שמגינה בעיקר דרך העור ולא דרך מחזור הדם."
+            ],
+            "correctIndex": 2,
+            "explanation": "מערכת הדם מורכבת מהלב, כלי הדם והדם עצמו, ותפקידה להוביל חומרים חיוניים ולפנות פסולת.",
+            "theoryLines": [
+              "הדם זורם בעורקים, ורידים ונימים.",
+              "הלב משמש משאבה שמניעה את הדם בכל הגוף."
+            ],
+            "params": {
+              "patternFamily": "sci_body_systems",
+              "subtype": "sci_body_general",
+              "cognitiveLevel": "analysis",
+              "expectedErrorTypes": [
+                "circulatory_system_role",
+                "body_system_confusion",
+                "fact_recall_gap"
+              ],
+              "difficulty": "advanced",
+              "conceptTag": "circulatory_system_role",
+              "diagnosticSkillId": "sci_body_circulatory_system",
+              "expectedErrorTags": [
+                "circulatory_system_role",
+                "body_system_confusion",
+                "fact_recall_gap"
+              ],
+              "canonicalMetadata": {
+                "contractVersion": "question-metadata-contract-v1",
+                "subject": "science",
+                "topic": "body",
+                "grade": "g5",
+                "skillId": "sci_body_circulatory_system",
+                "subSkill": "sci_body_general",
+                "questionType": "technical",
+                "problemClass": "mixed",
+                "difficulty": "hard",
+                "difficultyDepth": "inference",
+                "requiresVisual": false,
+                "requiresAudio": false,
+                "answerFormat": "mcq",
+                "metadataConfidence": "high",
+                "diagnosticEligibleByMetadata": true,
+                "possibleErrorPatterns": [
+                  "circulatory_system_role",
+                  "body_system_confusion",
+                  "fact_recall_gap"
+                ],
+                "notes": null
+              }
+            },
+            "subSkill": "sci_body_general",
+            "skillId": "sci_body_circulatory_system"
+          }
+        ]
+      },
+      "english": {
+        "phase": "Q2-C3",
+        "total": 1191,
+        "withCanonical": 1191,
+        "samples": [
+          {
+            "minGrade": 1,
+            "maxGrade": 1,
+            "patternFamily": "be_basic_g1_1",
+            "conceptTag": "english_be_agreement",
+            "diagnosticSkillId": "en_grammar_be_present",
+            "probePower": "medium",
+            "expectedErrorTags": [
+              "grammar_pattern_error"
+            ],
+            "question": "Choose the correct word: \"I ___ ten years old\"",
+            "options": [
+              "am",
+              "is",
+              "are"
+            ],
+            "correct": "am",
+            "explanation": "עם I משתמשים ב-am.",
+            "difficulty": "basic",
+            "cognitiveLevel": "understanding",
+            "expectedErrorTypes": [
+              "grammar_pattern_error",
+              "grammar_error",
+              "careless_error"
+            ],
+            "subtype": "be_basic",
+            "canonicalMetadata": {
+              "contractVersion": "question-metadata-contract-v1",
+              "subject": "english",
+              "topic": "grammar",
+              "skillId": "en_grammar_be_present",
+              "subSkill": "be_basic",
+              "questionType": "grammar",
+              "problemClass": "conceptual",
+              "difficulty": "basic",
+              "difficultyDepth": "simple_application",
+              "requiresVisual": false,
+              "requiresAudio": false,
+              "answerFormat": "mcq",
+              "metadataConfidence": "high",
+              "diagnosticEligibleByMetadata": true,
+              "possibleErrorPatterns": [
+                "grammar_pattern_error",
+                "grammar_error",
+                "careless_error"
+              ],
+              "notes": null
+            }
+          },
+          {
+            "minGrade": 1,
+            "maxGrade": 1,
+            "patternFamily": "be_basic_g1_2",
+            "conceptTag": "english_be_agreement",
+            "diagnosticSkillId": "en_grammar_be_present",
+            "probePower": "medium",
+            "expectedErrorTags": [
+              "grammar_pattern_error"
+            ],
+            "question": "Choose the correct word: \"He ___ my teacher\"",
+            "options": [
+              "are",
+              "is",
+              "am"
+            ],
+            "correct": "is",
+            "explanation": "He/She/It → is.",
+            "difficulty": "basic",
+            "cognitiveLevel": "understanding",
+            "expectedErrorTypes": [
+              "grammar_pattern_error",
+              "grammar_error",
+              "careless_error"
+            ],
+            "subtype": "be_basic",
+            "canonicalMetadata": {
+              "contractVersion": "question-metadata-contract-v1",
+              "subject": "english",
+              "topic": "grammar",
+              "skillId": "en_grammar_be_present",
+              "subSkill": "be_basic",
+              "questionType": "grammar",
+              "problemClass": "conceptual",
+              "difficulty": "basic",
+              "difficultyDepth": "simple_application",
+              "requiresVisual": false,
+              "requiresAudio": false,
+              "answerFormat": "mcq",
+              "metadataConfidence": "high",
+              "diagnosticEligibleByMetadata": true,
+              "possibleErrorPatterns": [
+                "grammar_pattern_error",
+                "grammar_error",
+                "careless_error"
+              ],
+              "notes": null
+            }
+          },
+          {
+            "question": "\"___ do you want?\" - \"A sandwich\"",
+            "questionLabel": "Choose:",
+            "exerciseText": "\"___ do you want?\" - \"A sandwich\"",
+            "correctAnswer": "What",
+            "acceptedAnswers": [
+              "What"
+            ],
+            "answers": [
+              "Where",
+              "What",
+              "am",
+              "When"
+            ],
+            "topic": "grammar",
+            "params": {
+              "explanation": "שואלים על דבר עם What.",
+              "patternFamily": "question_frames_question_frames",
+              "distractorFamily": "grammar_forms",
+              "grammarOptionSet": [
+                "What",
+                "Where",
+                "When"
+              ],
+              "diagnosticSkillId": "en_grammar_question_frames",
+              "conceptTag": "english_question_frames",
+              "probePower": "medium",
+              "expectedErrorTags": [
+                "question_word_order_error",
+                "auxiliary_error",
+                "grammar_pattern_error"
+              ],
+              "answerMode": "choice",
+              "levelKey": "easy",
+              "optionCount": 4,
+              "subtype": "question_frames_question_frames",
+              "canonicalMetadata": {
+                "contractVersion": "question-metadata-contract-v1",
+                "subject": "english",
+                "topic": "grammar",
+                "grade": "g3",
+                "skillId": "en_grammar_question_frames",
+                "subSkill": "question_frames_question_frames",
+                "questionType": "grammar",
+                "problemClass": "conceptual",
+                "difficulty": "basic",
+                "difficultyDepth": "simple_application",
+                "requiresVisual": false,
+                "requiresAudio": false,
+                "answerFormat": "mcq",
+                "metadataConfidence": "high",
+                "diagnosticEligibleByMetadata": true,
+                "possibleErrorPatterns": [
+                  "question_word_order_error",
+                  "auxiliary_error",
+                  "grammar_pattern_error",
+                  "grammar_forms"
+                ],
+                "notes": null
+              }
+            },
+            "qType": "choice",
+            "subject": "english",
+            "skillId": "en_grammar_question_frames",
+            "subSkill": "question_frames_question_frames"
+          },
+          {
+            "question": "מה פירוש המילה \"החלקה\"‏?",
+            "correctAnswer": "skating",
+            "acceptedAnswers": [
+              "skating"
+            ],
+            "answers": [
+              "tennis",
+              "wrestling",
+              "skating",
+              "ping_pong"
+            ],
+            "topic": "vocabulary",
+            "params": {
+              "word": "החלקה",
+              "translation": "skating",
+              "direction": "he_to_en",
+              "listKey": "sports",
+              "patternFamily": "vocab_recall_en",
+              "answerMode": "choice",
+              "levelKey": "easy",
+              "optionCount": 4,
+              "diagnosticSkillId": "eng_vocabulary_sports",
+              "subtype": "vocab_recall_en",
+              "canonicalMetadata": {
+                "contractVersion": "question-metadata-contract-v1",
+                "subject": "english",
+                "topic": "vocabulary",
+                "grade": "g3",
+                "skillId": "eng_vocabulary_sports",
+                "subSkill": "vocab_recall_en",
+                "questionType": "vocabulary",
+                "problemClass": "mixed",
+                "difficulty": "basic",
+                "difficultyDepth": null,
+                "requiresVisual": false,
+                "requiresAudio": false,
+                "answerFormat": "mcq",
+                "metadataConfidence": "medium",
+                "diagnosticEligibleByMetadata": true,
+                "possibleErrorPatterns": null,
+                "notes": null
+              }
+            },
+            "qType": "choice",
+            "subject": "english",
+            "skillId": "eng_vocabulary_sports",
+            "subSkill": "vocab_recall_en"
+          }
+        ]
+      },
+      "hebrew": {
+        "phase": "Q2-C4",
+        "total": 3358,
+        "withCanonical": 3358,
+        "samples": [
+          {
+            "topic": "comprehension",
+            "minGrade": 3,
+            "maxGrade": 3,
+            "levels": [
+              "easy"
+            ],
+            "patternFamily": "passage_explicit",
+            "subtype": "detail",
+            "distractorFamily": "wrong_detail",
+            "diagnosticSkillId": "he_comp_explicit_detail",
+            "probePower": "medium",
+            "expectedErrorTags": [
+              "detail_recall_error",
+              "comprehension_gap"
+            ],
+            "question": "כיתה ג׳ — קראו: 'דני שם את הספר בתיק לפני שיצא לבית הספר.' מה עשה דני לפני היציאה?",
+            "answers": [
+              "שם את הספר בתיק",
+              "קנה ספר חדש",
+              "שכח את התיק בבית",
+              "קרא את הספר בדרך"
+            ],
+            "correct": 0,
+            "difficulty": "basic",
+            "cognitiveLevel": "understanding",
+            "expectedErrorTypes": [
+              "detail_recall_error",
+              "comprehension_gap",
+              "reading_comprehension_error"
+            ],
+            "conceptTag": "explicit_detail",
+            "canonicalMetadata": {
+              "contractVersion": "question-metadata-contract-v1",
+              "subject": "hebrew",
+              "topic": "comprehension",
+              "skillId": "he_comp_explicit_detail",
+              "subSkill": "detail",
+              "questionType": "reading_comprehension",
+              "problemClass": "mixed",
+              "difficulty": "basic",
+              "difficultyDepth": "simple_application",
+              "requiresVisual": false,
+              "requiresAudio": false,
+              "answerFormat": "mcq",
+              "metadataConfidence": "high",
+              "diagnosticEligibleByMetadata": true,
+              "possibleErrorPatterns": [
+                "detail_recall_error",
+                "comprehension_gap",
+                "reading_comprehension_error",
+                "wrong_detail"
+              ],
+              "notes": null
+            }
+          },
+          {
+            "question": "למה נרטבים מסלול החצר אחרי גשם?",
+            "questionLabel": "",
+            "exerciseText": "למה נרטבים מסלול החצר אחרי גשם?",
+            "answers": [
+              "כי הספר נסגר",
+              "כי הילדים ישנים",
+              "כי השמש חמה מאוד",
+              "כי הגשם שוטף את האדמה"
+            ],
+            "correctAnswer": "כי הגשם שוטף את האדמה",
+            "acceptedAnswers": [
+              "כי הגשם שוטף את האדמה"
+            ],
+            "answerMode": "choice",
+            "optionCount": 4,
+            "correctIndex": 3,
+            "topic": "comprehension",
+            "operation": "comprehension",
+            "a": null,
+            "b": null,
+            "params": {
+              "kind": "comprehension",
+              "grade": "g3",
+              "gradeKey": "g3",
+              "levelKey": "easy",
+              "patternFamily": "comprehension_wh",
+              "subtype": "literal_detail",
+              "distractorFamily": "mixed",
+              "difficultyBand": "easy",
+              "optionCount": 4,
+              "answerMode": "choice",
+              "requestedLevelKey": "easy",
+              "hebrewLegacyMeta": {
+                "answerMode": "choice",
+                "allowedLevels": [
+                  "easy",
+                  "medium"
+                ],
+                "minGrade": 3,
+                "maxGrade": 3,
+                "allowedGrades": [
+                  "g3"
+                ],
+                "inferredDifficultyBand": "easy"
+              },
+              "subtopicId": "g3.cause_effect",
+              "subtopicFlags": {
+                "scoring": "none",
+                "niqqud": "inherit",
+                "audio": "off",
+                "speaking": "off"
+              },
+              "modesAllowed": [
+                "learning",
+                "challenge",
+                "speed",
+                "marathon",
+                "practice"
+              ],
+              "sourceTrace": {
+                "runtimeEntry": "utils/hebrew-question-generator.js#generateQuestion",
+                "question": "למה נרטבים מסלול החצר אחרי גשם?",
+                "gradeKey": "g3",
+                "topic": "comprehension",
+                "levelKey": "easy",
+                "requestedLevelKey": "easy",
+                "subtopicId": "g3.cause_effect",
+                "preferredAnswerMode": null,
+                "patternFamily": "comprehension_wh",
+                "subtype": "literal_detail",
+                "sourceBank": "HEBREW_LEGACY_INLINE",
+                "sourceFile": "utils/hebrew-question-generator.js",
+                "fromRich": false,
+                "dataHebrewQuestionsG1Imported": false,
+                "dataHebrewQuestionsG2Imported": false,
+                "dataHebrewQuestionsNote": "data/hebrew-questions/g*.js is not imported by the app; grep the repo for 'hebrew-questions' / 'data/hebrew-questions' on JS/TS entrypoints."
+              },
+              "diagnosticSkillId": "heb_comprehension_g3_cause_effect",
+              "canonicalMetadata": {
+                "contractVersion": "question-metadata-contract-v1",
+                "subject": "hebrew",
+                "topic": "comprehension",
+                "grade": "g3",
+                "skillId": "heb_comprehension_g3_cause_effect",
+                "subSkill": "g3.cause_effect",
+                "questionType": "reading_comprehension",
+                "problemClass": "mixed",
+                "difficulty": "basic",
+                "difficultyDepth": "recall",
+                "requiresVisual": false,
+                "requiresAudio": false,
+                "answerFormat": "mcq",
+                "metadataConfidence": "medium",
+                "diagnosticEligibleByMetadata": true,
+                "possibleErrorPatterns": [
+                  "mixed"
+                ],
+                "notes": null
+              }
+            },
+            "subject": "hebrew",
+            "skillId": "heb_comprehension_g3_cause_effect",
+            "subSkill": "g3.cause_effect"
+          }
+        ]
+      },
+      "moledet": {
+        "phase": "Q2-C5",
+        "total": 3508,
+        "withCanonical": 3508,
+        "samples": [
+          {
+            "question": "מה היא ארץ ישראל?",
+            "answers": [
+              "הארץ שלנו",
+              "ארץ רחוקה",
+              "ים",
+              "שמיים"
+            ],
+            "correct": 0,
+            "skillId": "moledet_geo_homeland",
+            "subtype": "g1",
+            "difficulty": "basic",
+            "cognitiveLevel": "recall",
+            "expectedErrorTypes": [
+              "place_identification_error",
+              "detail_recall_error",
+              "vocabulary_confusion",
+              "careless_error"
+            ],
+            "params": {
+              "kind": "homeland",
+              "patternFamily": "moledet_geo_homeland",
+              "conceptTag": "moledet_homeland",
+              "diagnosticSkillId": "moledet_geo_homeland",
+              "subtype": "g1",
+              "cognitiveLevel": "recall",
+              "difficulty": "basic",
+              "expectedErrorTags": [
+                "place_identification_error",
+                "detail_recall_error",
+                "vocabulary_confusion",
+                "careless_error"
+              ],
+              "expectedErrorTypes": [
+                "place_identification_error",
+                "detail_recall_error",
+                "vocabulary_confusion",
+                "careless_error"
+              ],
+              "probePower": "medium",
+              "canonicalMetadata": {
+                "contractVersion": "question-metadata-contract-v1",
+                "subject": "moledet_geography",
+                "topic": "homeland",
+                "grade": null,
+                "skillId": "moledet_geo_homeland",
+                "subSkill": "moledet_homeland",
+                "questionType": "vocabulary",
+                "problemClass": "conceptual",
+                "difficulty": "basic",
+                "difficultyDepth": "recall",
+                "requiresVisual": false,
+                "requiresAudio": false,
+                "answerFormat": "mcq",
+                "metadataConfidence": "high",
+                "diagnosticEligibleByMetadata": true,
+                "possibleErrorPatterns": [
+                  "place_identification_error",
+                  "detail_recall_error",
+                  "vocabulary_confusion",
+                  "careless_error"
+                ],
+                "notes": null
+              }
+            },
+            "subSkill": "moledet_homeland"
+          },
+          {
+            "question": "מה זה הר הכרמל?",
+            "exerciseText": "מה זה הר הכרמל?",
+            "answers": [
+              "הר בישראל",
+              "הר באמריקה",
+              "הר באסיה",
+              "הר באירופה"
+            ],
+            "correctAnswer": "הר בישראל",
+            "correctIndex": 0,
+            "topic": "homeland",
+            "operation": "homeland",
+            "gradeKey": "g3",
+            "levelKey": "easy",
+            "a": null,
+            "b": null,
+            "params": {
+              "kind": "homeland",
+              "grade": "g3",
+              "gradeKey": "g3",
+              "levelKey": "easy",
+              "uiLevel": "easy",
+              "contentPoolLevel": "easy",
+              "poolFallbackCode": "none",
+              "diagnosticSkillId": "moledet_geo_homeland",
+              "patternFamily": "moledet_geo_homeland",
+              "conceptTag": "moledet_homeland",
+              "subtype": "g3",
+              "probePower": "medium",
+              "expectedErrorTags": [
+                "place_identification_error",
+                "detail_recall_error",
+                "vocabulary_confusion",
+                "careless_error"
+              ],
+              "optionCount": 4,
+              "canonicalMetadata": {
+                "contractVersion": "question-metadata-contract-v1",
+                "subject": "moledet_geography",
+                "topic": "homeland",
+                "grade": null,
+                "skillId": "moledet_geo_homeland",
+                "subSkill": "moledet_homeland",
+                "questionType": "vocabulary",
+                "problemClass": "conceptual",
+                "difficulty": "basic",
+                "difficultyDepth": "recall",
+                "requiresVisual": false,
+                "requiresAudio": false,
+                "answerFormat": "mcq",
+                "metadataConfidence": "high",
+                "diagnosticEligibleByMetadata": true,
+                "possibleErrorPatterns": [
+                  "place_identification_error",
+                  "detail_recall_error",
+                  "vocabulary_confusion",
+                  "careless_error"
+                ],
+                "notes": null
+              }
+            },
+            "id": "homeland:מה זה הר הכרמל?",
+            "subject": "moledet_geography",
+            "skillId": "moledet_geo_homeland",
+            "subSkill": "moledet_homeland"
+          },
+          {
+            "params": {
+              "kind": "homeland",
+              "patternFamily": "moledet_geo_homeland",
+              "conceptTag": "moledet_homeland",
+              "diagnosticSkillId": "moledet_geo_homeland",
+              "subtype": "g1",
+              "cognitiveLevel": "recall",
+              "difficulty": "basic",
+              "expectedErrorTags": [
+                "place_identification_error",
+                "detail_recall_error",
+                "vocabulary_confusion",
+                "careless_error"
+              ],
+              "expectedErrorTypes": [
+                "place_identification_error",
+                "detail_recall_error",
+                "vocabulary_confusion",
+                "careless_error"
+              ],
+              "probePower": "medium",
+              "canonicalMetadata": {
+                "contractVersion": "question-metadata-contract-v1",
+                "subject": "moledet_geography",
+                "topic": "homeland",
+                "grade": null,
+                "skillId": "moledet_geo_homeland",
+                "subSkill": "moledet_homeland",
+                "questionType": "vocabulary",
+                "problemClass": "conceptual",
+                "difficulty": "basic",
+                "difficultyDepth": "recall",
+                "requiresVisual": false,
+                "requiresAudio": false,
+                "answerFormat": "mcq",
+                "metadataConfidence": "high",
+                "diagnosticEligibleByMetadata": true,
+                "possibleErrorPatterns": [
+                  "place_identification_error",
+                  "detail_recall_error",
+                  "vocabulary_confusion",
+                  "careless_error"
+                ],
+                "notes": null
+              },
+              "grade": "g3",
+              "gradeKey": "g3",
+              "levelKey": "easy"
+            }
+          }
+        ]
+      }
+    },
+    "thresholdResults": [
+      {
+        "subject": "math",
+        "pass": true,
+        "message": "1/1 (100.0%) phase Q2-C1 need >=100% & >=1 rows"
+      },
+      {
+        "subject": "geometry",
+        "pass": true,
+        "message": "1/1 (100.0%) phase Q2-C1 need >=100% & >=1 rows"
+      },
+      {
+        "subject": "science",
+        "pass": true,
+        "message": "1017/1017 (100.0%) phase Q2-C2 need >=100% & >=1000 rows"
+      },
+      {
+        "subject": "english",
+        "pass": true,
+        "message": "1191/1191 (100.0%) phase Q2-C3 need >=100% & >=1000 rows"
+      },
+      {
+        "subject": "hebrew",
+        "pass": true,
+        "message": "3358/3358 (100.0%) phase Q2-C4 need >=100% & >=50 rows"
+      },
+      {
+        "subject": "moledet",
+        "pass": true,
+        "message": "3508/3508 (100.0%) phase Q2-C5 need >=100% & >=3000 rows"
+      }
+    ],
+    "qualityIssueCount": 0,
+    "pass": true
+  },
+  "stage4G": {
+    "scenarioResults": [
+      {
+        "scenario": "math_carry_addition",
+        "expectedDiagnosis": "M-02",
+        "actualDiagnosis": "topic-only",
+        "passFail": "fail",
+        "reason": "expected M-02 got topic-only",
+        "disambiguationApplied": false,
+        "fallbackUsed": false
+      },
+      {
+        "scenario": "math_addition_no_carry",
+        "expectedDiagnosis": "M-01",
+        "actualDiagnosis": "topic-only",
+        "passFail": "fail",
+        "reason": "expected M-01 got topic-only",
+        "disambiguationApplied": false,
+        "fallbackUsed": false
+      },
+      {
+        "scenario": "geometry_area_height_confusion",
+        "expectedDiagnosis": "G-03",
+        "actualDiagnosis": "blocked:no_technical_subskill_candidate",
+        "passFail": "fail",
+        "reason": "expected G-03 got blocked:no_technical_subskill_candidate",
+        "disambiguationApplied": false,
+        "fallbackUsed": false
+      },
+      {
+        "scenario": "english_vocab_recall",
+        "expectedDiagnosis": "E-01",
+        "actualDiagnosis": "blocked:no_technical_subskill_candidate",
+        "passFail": "fail",
+        "reason": "expected E-01 got blocked:no_technical_subskill_candidate",
+        "disambiguationApplied": false,
+        "fallbackUsed": false
+      },
+      {
+        "scenario": "moledet_geography_definition_topic_only",
+        "expectedDiagnosis": "blocked:|topic-only",
+        "actualDiagnosis": "blocked:no_technical_subskill_candidate",
+        "passFail": "pass",
+        "reason": "matched",
+        "disambiguationApplied": false,
+        "fallbackUsed": false
+      },
+      {
+        "scenario": "science_concept_confusion",
+        "expectedDiagnosis": "S-03",
+        "actualDiagnosis": "blocked:no_technical_subskill_candidate",
+        "passFail": "fail",
+        "reason": "expected S-03 got blocked:no_technical_subskill_candidate",
+        "disambiguationApplied": false,
+        "fallbackUsed": false
+      }
+    ]
+  },
+  "stage4cSnapshot": [
+    {
+      "subject": "math",
+      "subskillCandidateBefore": 11,
+      "subskillCandidateAfter": 11,
+      "safeSubskillToShow": 10,
+      "blockedAsUnsafe": 1,
+      "no_taxonomy_match": 0,
+      "weak_taxonomy": 1,
+      "fallbackBlocked": 0,
+      "falsePositiveRisk": 2
+    },
+    {
+      "subject": "geometry",
+      "subskillCandidateBefore": 9,
+      "subskillCandidateAfter": 9,
+      "safeSubskillToShow": 8,
+      "blockedAsUnsafe": 1,
+      "no_taxonomy_match": 0,
+      "weak_taxonomy": 1,
+      "fallbackBlocked": 0,
+      "falsePositiveRisk": 3
+    },
+    {
+      "subject": "english",
+      "subskillCandidateBefore": 9,
+      "subskillCandidateAfter": 9,
+      "safeSubskillToShow": 9,
+      "blockedAsUnsafe": 0,
+      "no_taxonomy_match": 0,
+      "weak_taxonomy": 0,
+      "fallbackBlocked": 0,
+      "falsePositiveRisk": 0
+    },
+    {
+      "subject": "science",
+      "subskillCandidateBefore": 12,
+      "subskillCandidateAfter": 12,
+      "safeSubskillToShow": 12,
+      "blockedAsUnsafe": 0,
+      "no_taxonomy_match": 0,
+      "weak_taxonomy": 0,
+      "fallbackBlocked": 0,
+      "falsePositiveRisk": 0
+    },
+    {
+      "subject": "hebrew",
+      "subskillCandidateBefore": 10,
+      "subskillCandidateAfter": 10,
+      "safeSubskillToShow": 9,
+      "blockedAsUnsafe": 1,
+      "no_taxonomy_match": 0,
+      "weak_taxonomy": 1,
+      "fallbackBlocked": 0,
+      "falsePositiveRisk": 3
+    },
+    {
+      "subject": "moledet-geography",
+      "subskillCandidateBefore": 7,
+      "subskillCandidateAfter": 7,
+      "safeSubskillToShow": 0,
+      "blockedAsUnsafe": 7,
+      "no_taxonomy_match": 0,
+      "weak_taxonomy": 1,
+      "fallbackBlocked": 7,
+      "falsePositiveRisk": 8
+    }
+  ],
+  "firstCandidateFallbacksRemaining": false
+}

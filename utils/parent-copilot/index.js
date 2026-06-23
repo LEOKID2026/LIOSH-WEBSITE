@@ -25,7 +25,7 @@ import {
   buildQuickActions,
 } from "./render-adapter.js";
 import { normalizeParentFacingHe } from "../parent-report-language/parent-facing-normalize-he.js";
-import { normalizeFreeformParentUtteranceHe } from "./utterance-normalize-he.js";
+import { normalizeFreeformParentUtteranceHe, foldUtteranceForHeMatch } from "./utterance-normalize-he.js";
 import { buildTurnTelemetry } from "./turn-telemetry.js";
 import { maybeGenerateGroundedLlmDraft } from "./llm-orchestrator.js";
 import { getLlmGateDecision } from "./rollout-gates.js";
@@ -46,13 +46,20 @@ import {
 import {
   routeParentQuestion,
   OFF_TOPIC_RESPONSE_HE,
+  GENERAL_OFF_TOPIC_RESPONSE_HE,
   DIAGNOSTIC_BOUNDARY_RESPONSE_HE,
+  HEALTH_BOUNDARY_RESPONSE_HE,
+  PRIVACY_BOUNDARY_RESPONSE_HE,
   PEER_COMPARISON_RESPONSE_HE,
   AMBIGUOUS_RESPONSE_HE,
 } from "./question-router.js";
 import { classifyParentQuestionViaLlm } from "./question-classifier-llm.js";
+import { matchesLegitimateParentQuestion } from "./question-classifier.js";
+import { shouldReturnNoDataForRequest, noDataResponseHe } from "./no-data-request-response.js";
 import { isContextualFollowUpUtterance } from "./contextual-follow-up-he.js";
 import { utteranceQualifiesAsReportQuestion, hasAnchoredReportRows } from "./report-row-resolver.js";
+import { tryComposePatternAnswerDraft } from "./pattern-answer-composers.js";
+import { tryComposeContinuityPatternDraft } from "./continuity-pattern-composer.js";
 
 /**
  * @param {Record<string, unknown>} base
@@ -252,8 +259,11 @@ function buildNoScopeCategorySpecificClarification(utterance) {
   const t = String(utterance || "").trim();
   if (!t) return null;
 
-  if (/מזג\s*האוויר|חדשות|כדורגל|מתכון|שיר|נעליים|ביטקוין|javascript|java\s*script|מה\s*השעה|בדיחה|ראש\s*הממשלה/i.test(t)) {
-    return "אני יכול לעזור רק בשאלות על הדוח והתקדמות הלמידה שמופיעה בו. אפשר לשאול למשל: מה כדאי לתרגל השבוע?";
+  if (/ילד\s+אחר|כל\s+ה?ילדים|סיסמ(?:ה|א)|דאטה\s*בייס|database|\bdb\b|כל\s+ה?משתמשים|חשבון\s+אחר|נתונים\s+של\s+מישהו\s+אחר|רשימ(?:ה|ת)\s+ילדים/u.test(t)) {
+    return PRIVACY_BOUNDARY_RESPONSE_HE;
+  }
+  if (/מזג\s*האוויר|חדשות|כדורגל|מתכון|שיר|נעליים|ביטקוין|javascript|java\s*script|מה\s*השעה|בדיחה|ראש\s*הממשלה|השקעות|בורסה|שיעורי\s+בית\s+ש(?:לא|אינ)/i.test(t)) {
+    return GENERAL_OFF_TOPIC_RESPONSE_HE;
   }
   if (/תתעלם|תחשוף|system\s*prompt|debug|הוראות\s*פנימיות|תדפיס|מעכשיו\s*אל\s*תשתמש/i.test(t)) {
     return "אני לא מתעלם/ת מהדוח ולא חושף/ת הוראות פנימיות. התשובה כאן נשארת מבוססת נתוני למידה, ואפשר להמשיך לשאלה על מצב הלמידה בפועל.";
@@ -440,6 +450,46 @@ function finalizeTurnResponse(response, context) {
 }
 
 /**
+ * @param {object} input
+ * @param {string} sessionId
+ * @param {number} priorRepeated
+ * @param {object} conv
+ * @param {string} utteranceStr
+ * @param {{ noData?: boolean; truthPacket?: object; plannerIntent?: string; scopeMeta?: object; answerBlocks?: Array<{ type: string; textHe: string; source?: string }> }} draftResult
+ * @param {object} [scopeMetaBase]
+ */
+function tryPackageApprovedPatternTurn(input, sessionId, priorRepeated, conv, utteranceStr, draftResult, scopeMetaBase = {}) {
+  if (!draftResult) return null;
+  const audience = String(input?.audience || "parent");
+  if (draftResult.noData) {
+    const intent = String(draftResult.plannerIntent || "unknown_report_question");
+    const scopeMeta = {
+      ...scopeMetaBase,
+      generationPath: "pattern_composer",
+      patternNoData: true,
+      intentReason: "pattern:no_data",
+      scopeConfidence: 0.88,
+      scopeReason: "approved_pattern_no_data",
+    };
+    const r = buildClarificationParentCopilotResponse({
+      clarificationQuestionHe: noDataResponseHe(),
+      intent,
+      priorRepeated,
+      metadata: scopeMeta,
+    });
+    validateParentCopilotResponseV1(r);
+    return { response: r, audience, sessionId, conv, truthPacket: null, intent, scopeMeta, utteranceStr };
+  }
+  if (!draftResult.truthPacket || !draftResult.answerBlocks?.length) return null;
+  return packageParentResolvedEarlyTurn(input, sessionId, priorRepeated, conv, utteranceStr, {
+    truthPacket: draftResult.truthPacket,
+    plannerIntent: draftResult.plannerIntent,
+    scopeMeta: { ...scopeMetaBase, ...draftResult.scopeMeta },
+    answerBlocks: draftResult.answerBlocks,
+  });
+}
+
+/**
  * Shared packaging for early-exit turns (short reply class, comparison-practical continuity).
  * @param {object} input
  * @param {object} fb
@@ -459,7 +509,10 @@ function packageParentResolvedEarlyTurn(input, sessionId, priorRepeated, conv, u
   const semanticAggregateSatisfied = false;
   const aggregateQuestionClass = detectAggregateQuestionClass(utteranceStr);
   const intentComposerPath = String(scopeMeta?.generationPath || "") === "intent_composer";
-  let vDraft = validateAnswerDraft(draft, truthPacket, { intent: plannerIntent });
+  const patternComposerPath = String(scopeMeta?.generationPath || "") === "pattern_composer";
+  let vDraft = patternComposerPath
+    ? { ok: true, failCodes: [] }
+    : validateAnswerDraft(draft, truthPacket, { intent: plannerIntent });
   let fallbackUsed = false;
   /** @type {string[]} */
   const fallbackReasonCodes = [];
@@ -684,6 +737,7 @@ function classifierIntentToCanonical(routerIntent) {
   switch (routerIntent) {
     case "off_topic": return "off_topic_redirect";
     case "unsafe_or_diagnostic_request": return "clinical_boundary";
+    case "privacy_sensitive_request": return "parent_policy_refusal";
     case "peer_comparison_request": return "unclear";
     case "ambiguous_or_unclear": return "unclear";
     case "unknown_report_question":
@@ -842,9 +896,21 @@ function runDeterministicCore(input, options) {
       String(conv.lastResolvedTopic || "").trim() ||
       String(conv.lastResolvedSubject || "").trim();
     const reportQualified = utteranceQualifiesAsReportQuestion(utteranceStr, scopedInput?.payload);
-    if (
+    if (shouldReturnNoDataForRequest(utteranceStr, scopedInput?.payload)) {
+      qaRoute = {
+        routerIntent: "unknown_report_question",
+        requiresLlm: true,
+        deterministicResponse: null,
+        exitEarly: false,
+        classifierBucket: "report_related",
+        classifierConfidence: 0.82,
+        classifierSource: "deterministic",
+        classifierSignals: qaRoute.classifierSignals,
+      };
+    } else if (
       (isContextualFollowUpUtterance(utteranceStr) && hasPriorScope) ||
-      reportQualified
+      reportQualified ||
+      matchesLegitimateParentQuestion(utteranceStr)
     ) {
       qaRoute = {
         routerIntent: "unknown_report_question",
@@ -871,6 +937,27 @@ function runDeterministicCore(input, options) {
       exitEarly: false,
       classifierBucket: "report_related",
       classifierConfidence: Math.max(Number(qaRoute.classifierConfidence) || 0, 0.56),
+      classifierSource: "deterministic",
+      classifierSignals: qaRoute.classifierSignals,
+    };
+  }
+  const hasPriorScopeForFollowUp =
+    (Array.isArray(conv.priorScopes) && conv.priorScopes.length > 0) ||
+    String(conv.lastResolvedTopic || "").trim() ||
+    String(conv.lastResolvedSubject || "").trim();
+  if (
+    qaRoute.exitEarly &&
+    qaRoute.deterministicResponse === HEALTH_BOUNDARY_RESPONSE_HE &&
+    hasPriorScopeForFollowUp &&
+    /^(?:ז(?:ה|ו)\s+)?חמור\s*\??$/u.test(foldUtteranceForHeMatch(utteranceStr))
+  ) {
+    qaRoute = {
+      routerIntent: "unknown_report_question",
+      requiresLlm: true,
+      deterministicResponse: null,
+      exitEarly: false,
+      classifierBucket: "report_related",
+      classifierConfidence: Math.max(Number(qaRoute.classifierConfidence) || 0, 0.9),
       classifierSource: "deterministic",
       classifierSignals: qaRoute.classifierSignals,
     };
@@ -926,6 +1013,42 @@ function runDeterministicCore(input, options) {
     intent !== "off_topic_redirect"
   ) {
     intent = "parent_policy_refusal";
+  }
+
+  const continuityPattern = tryComposeContinuityPatternDraft({
+    utteranceStr,
+    payload: scopedInput?.payload,
+    conversationState: conv,
+  });
+  if (continuityPattern) {
+    const packaged = tryPackageApprovedPatternTurn(
+      scopedInput,
+      sessionId,
+      priorRepeated,
+      conv,
+      utteranceStr,
+      continuityPattern,
+      { intentConfidence: stageA?.canonicalIntentScore || 0.85 },
+    );
+    if (packaged) return packaged;
+  }
+
+  const earlyPattern = tryComposePatternAnswerDraft({
+    utteranceStr,
+    payload: scopedInput?.payload,
+    conversationState: conv,
+  });
+  if (earlyPattern) {
+    const packaged = tryPackageApprovedPatternTurn(
+      scopedInput,
+      sessionId,
+      priorRepeated,
+      conv,
+      utteranceStr,
+      earlyPattern,
+      { intentConfidence: stageA?.canonicalIntentScore || 0.88 },
+    );
+    if (packaged) return packaged;
   }
 
   const shortFb = tryBuildParentShortFollowupDraft({
@@ -1024,6 +1147,33 @@ function runDeterministicCore(input, options) {
         answerBlocks: phaseEBypass.answerBlocks,
       });
     }
+    if (shouldReturnNoDataForRequest(utteranceStr, scopedInput?.payload)) {
+      const r = buildClarificationParentCopilotResponse({
+        clarificationQuestionHe: noDataResponseHe(),
+        intent,
+        priorRepeated,
+        metadata: scopeMeta,
+      });
+      validateParentCopilotResponseV1(r);
+      return { response: r, audience, sessionId, conv, truthPacket: null, intent, scopeMeta, utteranceStr };
+    }
+    const patternBeforeClarify = tryComposePatternAnswerDraft({
+      utteranceStr,
+      payload: scopedInput?.payload,
+      conversationState: conv,
+    });
+    if (patternBeforeClarify) {
+      const packaged = tryPackageApprovedPatternTurn(
+        scopedInput,
+        sessionId,
+        priorRepeated,
+        conv,
+        utteranceStr,
+        patternBeforeClarify,
+        scopeMeta,
+      );
+      if (packaged) return packaged;
+    }
     const r = buildClarificationParentCopilotResponse({
       clarificationQuestionHe: scopeRes.clarificationQuestionHe || "צריך עוד הקשר.",
       intent,
@@ -1071,6 +1221,25 @@ function runDeterministicCore(input, options) {
   }
 
   const inheritedScope = String(scopeMeta.scopeReason || "").includes("conversation_inherited");
+
+  const patternAfterScope = tryComposePatternAnswerDraft({
+    utteranceStr,
+    payload: scopedInput.payload,
+    conversationState: conv,
+    truthPacket,
+  });
+  if (patternAfterScope) {
+    const packaged = tryPackageApprovedPatternTurn(
+      scopedInput,
+      sessionId,
+      priorRepeated,
+      conv,
+      utteranceStr,
+      patternAfterScope,
+      scopeMeta,
+    );
+    if (packaged) return packaged;
+  }
 
   let intentAnswerDraft = null;
   if (!shouldDeferIntentComposer(aggregateQuestionClass)) {
@@ -1554,7 +1723,7 @@ export async function runParentCopilotTurnAsync(input) {
         effectiveRoute = {
           ...detRoute,
           routerIntent: "off_topic",
-          deterministicResponse: OFF_TOPIC_RESPONSE_HE,
+          deterministicResponse: GENERAL_OFF_TOPIC_RESPONSE_HE,
           exitEarly: true,
           classifierBucket: "off_topic",
           classifierConfidence: llmRes.confidence,
@@ -1564,9 +1733,9 @@ export async function runParentCopilotTurnAsync(input) {
         effectiveRoute = {
           ...detRoute,
           routerIntent: "unsafe_or_diagnostic_request",
-          deterministicResponse: DIAGNOSTIC_BOUNDARY_RESPONSE_HE,
+          deterministicResponse: HEALTH_BOUNDARY_RESPONSE_HE,
           exitEarly: true,
-          classifierBucket: "diagnostic_sensitive",
+          classifierBucket: "health_sensitive",
           classifierConfidence: llmRes.confidence,
           classifierSource: /** @type {"deterministic"} */ ("deterministic"),
         };

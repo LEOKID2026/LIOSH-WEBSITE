@@ -14,6 +14,13 @@ function shuffleOptions(correct, options) {
   const arr = [...new Set(options.map((s) => String(s).trim()))].filter(Boolean);
   if (!arr.includes(correct)) arr.push(correct);
   const isBinaryTf = arr.every((t) => t === "נכון" || t === "לא נכון");
+  if (isBinaryTf) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return { answers: arr, correctAnswer: correct };
+  }
   let guard = 0;
   while (arr.length < NORMAL_MCQ_OPTION_COUNT && guard < 40) {
     guard += 1;
@@ -60,14 +67,20 @@ export function renderGeometryConceptualRowToQuestion(row, ctx) {
   const { gradeKey, levelKey, topic } = ctx;
   const lv = levelKey || "easy";
   const correct = String(row.correct).trim();
+  const qText = String(row.question || "").trim();
+  const rowKind = String(row.kind || "").trim();
+  const isTrueFalseRow =
+    rowKind === "concept_tf" ||
+    row.binary === true ||
+    (/נכון/u.test(qText) && /לא\s+נכון/u.test(qText));
   let answers;
   const baseParams = {
-    kind: row.kind || "conceptual_mcq",
+    kind: rowKind || "conceptual_mcq",
     patternFamily: row.patternFamily,
     subtype: row.subtype,
     conceptTag: row.conceptTag,
     distractorFamily: row.distractorFamily || "conceptual",
-    answerMode: row.binary ? "binary" : "mcq_text",
+    answerMode: isTrueFalseRow ? "binary" : "mcq_text",
   };
   let params = mergeDiagnosticContractIntoParams(baseParams, {
     diagnosticSkillId: row.diagnosticSkillId,
@@ -75,18 +88,13 @@ export function renderGeometryConceptualRowToQuestion(row, ctx) {
     probePower: row.probePower,
     suggestedQuestionType: row.suggestedQuestionType,
   });
-  if (row.kind === "concept_transform") {
+  if (rowKind === "concept_transform") {
     params.type = correct;
     params.subtype = row.subtype || params.subtype;
   }
 
-  if (row.binary) {
-    const opts =
-      row.options.length >= NORMAL_MCQ_OPTION_COUNT
-        ? row.options
-        : row.options.length === 2
-          ? row.options
-          : [correct, row.options.find((x) => x !== correct)];
+  if (isTrueFalseRow) {
+    const opts = ["נכון", "לא נכון"];
     const sh = shuffleOptions(correct, opts);
     answers = sh.answers;
     params.optionCount = answers.length;
@@ -102,9 +110,8 @@ export function renderGeometryConceptualRowToQuestion(row, ctx) {
       : lv === "medium"
         ? "מושגים (בינוני)"
         : "מושגים (אתגר)";
-  const qText = String(row.question || "").trim();
   const correctIdx = answers.findIndex((a) => String(a).trim() === correct);
-  const skipLabelRepair = row.kind === "concept_transform";
+  const skipLabelRepair = rowKind === "concept_transform" || isTrueFalseRow;
   const repaired = skipLabelRepair
     ? { answers, correctAnswer: correct }
     : repairMcqObviousAnswerContent(
@@ -526,7 +533,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
       "triangle_angle_sum_error",
       "angle_measure_error"
     ],
-    "question": "במשולש במישור, שתי זוויות פנימיות ידועות (למשל 50° ו 60°). לפני חישוב המספר המדויק — איזה עיקרון גיאומטרי מאפשר להסיק על השלישית?",
+    "question": "במשולש, שתי זוויות פנימיות ידועות (למשל 50° ו 60°). לפני חישוב המספר המדויק — איזה עיקרון גיאומטרי מאפשר להסיק על השלישית?",
     "correct": "סכום שלוש הזוויות במשולש הוא 180°",
     "options": [
       "סכום שלוש הזוויות במשולש הוא 180°",
@@ -757,7 +764,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
       "opposite_sides_parallel_error",
       "shape_property_misread"
     ],
-    "question": "במקבילית במישור — לגבי זוגות צלעות נגדיות נכון לומר שהם:",
+    "question": "במקבילית — לגבי זוגות צלעות נגדיות נכון לומר שהם:",
     "correct": "מקבילות ושוות באורך",
     "options": [
       "מקבילות ושוות באורך",
@@ -993,7 +1000,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "definition_late",
     "conceptTag": "perp_meeting_late",
     "distractorFamily": "line_relation",
-    "question": "במישור, שני ישרים מאונכים זה לזה — מה תכונה נכונה בנקודת החיתוך?",
+    "question": "שני ישרים מאונכים זה לזה — מה תכונה נכונה בנקודת החיתוך?",
     "correct": "הם נפגשים בזווית של 90°",
     "options": [
       "הם נפגשים בזווית של 90°",
@@ -1081,7 +1088,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "parallel_symbol",
     "conceptTag": "parallel_symbol",
     "distractorFamily": "line_relation",
-    "question": "סמל ∥ במישור מסמן בדרך כלל:",
+    "question": "סמל ∥ מסמן בדרך כלל:",
     "correct": "ישרים מקבילים",
     "options": [
       "ישרים מקבילים",
@@ -1136,7 +1143,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "perp_symbol_mid",
     "conceptTag": "perp_symbol_mid",
     "distractorFamily": "line_relation",
-    "question": "סמל ⊥ במישור מסמן בדרך כלל:",
+    "question": "סמל ⊥ מסמן בדרך כלל:",
     "correct": "ישרים מאונכים",
     "options": [
       "ישרים מאונכים",
@@ -1163,7 +1170,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "perp_angle_mid",
     "conceptTag": "perp_angle_mid",
     "distractorFamily": "line_relation",
-    "question": "כששני ישרים במישור מאונכים, זווית החיתוך ביניהם היא:",
+    "question": "כששני ישרים מאונכים, זווית החיתוך ביניהם היא:",
     "correct": "90°",
     "options": [
       "90°",
@@ -1543,7 +1550,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "angles_around_point",
     "conceptTag": "360_at_vertex",
     "distractorFamily": "tiling_angle",
-    "question": "בריצוף במישור סביב כל נקודת מפגש של צורות משוכללות, סכום הזוויות סביב הנקודה הוא:",
+    "question": "בריצוף סביב כל נקודת מפגש של צורות משוכללות, סכום הזוויות סביב הנקודה הוא:",
     "correct": "360°",
     "options": [
       "360°",
@@ -1685,7 +1692,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "compare_relation",
     "conceptTag": "parallel_vs_perp",
     "distractorFamily": "line_relation",
-    "question": "במישור: מה ההבדל העיקרי בין ישרים מקבילים לישרים מאונכים?",
+    "question": "מה ההבדל העיקרי בין ישרים מקבילים לישרים מאונכים?",
     "correct": "מקבילים לא נפגשים; מאונכים נפגשים בזווית 90°",
     "options": [
       "מקבילים לא נפגשים; מאונכים נפגשים בזווית 90°",
@@ -1712,7 +1719,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "symbol_recognition",
     "conceptTag": "perp_symbol",
     "distractorFamily": "line_relation",
-    "question": "סמל ⊥ במישור מסמן בדרך כלל:",
+    "question": "סמל ⊥ מסמן בדרך כלל:",
     "correct": "ישרים מאונכים",
     "options": [
       "ישרים מאונכים",
@@ -1740,7 +1747,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "perp_def_late",
     "conceptTag": "perp_def_late",
     "distractorFamily": "line_relation",
-    "question": "כששני ישרים במישור מאונכים, זווית החיתוך ביניהם היא:",
+    "question": "כששני ישרים מאונכים, זווית החיתוך ביניהם היא:",
     "correct": "90°",
     "options": [
       "90°",
@@ -1767,7 +1774,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "parallel_symbol_late",
     "conceptTag": "parallel_symbol_late",
     "distractorFamily": "line_relation",
-    "question": "סמל ∥ במישור מסמן בדרך כלל:",
+    "question": "סמל ∥ מסמן בדרך כלל:",
     "correct": "ישרים מקבילים",
     "options": [
       "ישרים מקבילים",
@@ -1795,7 +1802,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "property_late",
     "conceptTag": "diag_equal_rect_late",
     "distractorFamily": "diagonal_confusion",
-    "question": "במלבן כללי במישור — לגבי שני האלכסונים נכון ש:",
+    "question": "במלבן — לגבי שני האלכסונים נכון ש:",
     "correct": "שווים באורך וחוצים זה את זה",
     "options": [
       "שווים באורך וחוצים זה את זה",
@@ -1966,7 +1973,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
       "shape_property_misread"
     ],
     "binary": false,
-    "question": "במלבן במישור, כל ארבע הזוויות הפנימיות ישרות (90°). נכון או לא נכון?",
+    "question": "במלבן, כל ארבע הזוויות הפנימיות ישרות (90°). נכון או לא נכון?",
     "correct": "נכון",
     "options": [
       "נכון",
@@ -2248,7 +2255,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "translation_hard",
     "conceptTag": "slide_only",
     "distractorFamily": "transform_confusion",
-    "question": "אתגר: רק המיקום במישור משתנה, בלי סיבוב ובלי שינוי גודל — איזו תנועה?",
+    "question": "אתגר: רק המיקום משתנה, בלי סיבוב ובלי שינוי גודל — איזו תנועה?",
     "correct": "הזזה",
     "options": [
       "הזזה",

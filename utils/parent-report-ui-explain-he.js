@@ -7,21 +7,25 @@ import { normalizeParentFacingHe } from "./parent-report-language/parent-facing-
 import { SUBJECT_V2_RECALIBRATION_NEED_NO_HE } from "./parent-report-language/v2-parent-copy.js";
 import { narrativeSectionTextHe } from "./contracts/narrative-contract-v1.js";
 import { stripKnownParentReportLeakageHe } from "./parent-data-presence.js";
+import { buildEngineDecisionParentTopicCopyHe, buildExplainIdentifiedLineHe, PARENT_TECHNICAL_ID_STRIP_RE } from "./parent-report-language/engine-decision-parent-copy-he.js";
+import {
+  DEPENDENCY_STATE_PARENT_HE,
+  MISTAKE_PATTERN_PARENT_HE,
+  PARENT_DIAGNOSTIC_TYPE_LABEL_HE,
+  ROOT_CAUSE_PARENT_HE,
+  explainActionHe,
+  explainDataHe,
+  explainIdentifiedHe,
+  explainMeaningHe,
+  explainPatternHe,
+  foundationTextFromEngineHe,
+  meaningExplainSentenceHe,
+  parentDiagnosticTypeLabelHe,
+  parentStepLabelHe,
+  patternTextFromEngineHe,
+} from "./parent-report-language/parent-report-hebrew-copy-spec.js";
 
-const BEHAVIOR_OR_DIAGNOSTIC_HE = {
-  knowledge_gap: "קושי בבסיס",
-  speed_pressure: "לחץ מהירות",
-  instruction_friction: "עוזר לו יותר כשיש ליווי או הסבר ליד",
-  careless_pattern: "רגעים של חוסר ריכוז שחוזרים",
-  fragile_success: "הצלחה שבירה",
-  stable_mastery: "שליטה טובה בנושא לאורך זמן",
-  undetermined: "לא נקבע",
-  mixed: "מעורב",
-  mixed_low_signal: "עדיין מעט מידע — אי אפשר להסיק בוודאות",
-  none_sparse: "עדיין מעט תרגול בנושא זה",
-  none_observed: "עדיין אין דפוס בולט בתרגול",
-  fragile_success_cluster: "רצף הצלחות שבירות",
-};
+const BEHAVIOR_OR_DIAGNOSTIC_HE = { ...PARENT_DIAGNOSTIC_TYPE_LABEL_HE };
 
 const CONF_BADGE_HE = {
   high: "יש מספיק שאלות בתקופה",
@@ -74,6 +78,7 @@ export function sanitizeEngineSnippetHe(text) {
     s = s.replace(new RegExp(`\\b${k}\\b`, "g"), v);
   }
   s = s.replace(/\b(falsePromotionRisk|falseRemediationRisk|speedOnlyRisk|hintDependenceRisk|insufficientEvidenceRisk|recentTransitionRisk)\b/g, "");
+  s = s.replace(PARENT_TECHNICAL_ID_STRIP_RE, "");
   s = s.replace(/\s{2,}/g, " ").trim();
   return stripKnownParentReportLeakageHe(s);
 }
@@ -110,8 +115,7 @@ export function shortReportDiagnosticsParentVisibleHe(s) {
 }
 
 export function diagnosticTypeLabelHe(id) {
-  const k = String(id || "").trim();
-  return BEHAVIOR_OR_DIAGNOSTIC_HE[k] || (k ? "מה שנראה בתרגול" : "לא נקבע");
+  return parentDiagnosticTypeLabelHe(String(id || "").trim());
 }
 
 export function behaviorDominantLabelHe(id) {
@@ -193,19 +197,10 @@ export function subjectMajorRiskLabelsHe(majorRiskFlagsAcrossRows, maxLabels = 5
   return activeRiskFlagLabelsHe(majorRiskFlagsAcrossRows, maxLabels);
 }
 
-/** מקור הקושי Phase 7 — מזהים לעומת תוויות UI */
+/** מקור הקושי Phase 7 — parent_report_hebrew_copy_spec.md §1.1 meaningSentence */
 export const ROOT_CAUSE_LABEL_HE = {
-  knowledge_gap: "קושי בחלקים פשוטים יותר של הנושא",
-  instruction_friction: "המשימה לא תמיד ברורה, או שהילד צריך הרבה הכוונה",
-  speed_pressure: "לחץ מהירות או תחרותיות",
-  careless_execution: "טעויות מיהרות למרות שהחומר מוכר",
-  weak_independence: "הילד עדיין צריך ליווי בזמן הפתרון",
-  early_stage_instability: "שלב מוקדם — עדיין לא ברור איך זה יתיישב",
-  mixed_signal: "התמונה מעורבת — יש גם כאן וגם שם",
-  insufficient_evidence: "עדיין לא ברור מה בדיוק מקשה כאן — צריך עוד כמה דוגמאות",
-  retention_fragility: "החומר נשמר בקושי (שלב מוקדם)",
-  language_load: "עומס בשפה או בניסוח המשימה (מוקדם)",
-  transition_gap: "קשה קצת במעבר בין רמות (מוקדם)",
+  ...ROOT_CAUSE_PARENT_HE,
+  insufficient_evidence: ROOT_CAUSE_PARENT_HE.insufficient_evidence,
 };
 
 /** סוג התערבות מומלץ Phase 7 */
@@ -218,18 +213,8 @@ export const INTERVENTION_TYPE_LABEL_HE = {
   monitor_before_escalation: "עוד קצת תרגול מבוקר לפני שמחמירים",
 };
 
-/** Phase 9 — דפוס טעות דומיננטי (מזהה → עברית להורה) */
-export const MISTAKE_PATTERN_LABEL_HE = {
-  concept_confusion: "בלבול מושגי חוזר",
-  procedure_break: "בלבול בסדר הפעולות",
-  instruction_misread: "טעות בקריאה או בהבנת המשימה",
-  speed_driven_error: "טעות שנובעת ממהירות",
-  careless_flip: "טעות קטנה כשנמהרים או מדלגים על צעד",
-  support_dependent_success: "הצלחה בעיקר כשיש ליווי ליד",
-  early_learning_noise: "רעש טבעי של למידה מוקדמת",
-  mixed_mistake_pattern: "תערובת טעויות — בלי דפוס אחד ברור",
-  insufficient_mistake_evidence: "עדיין אין מספיק דוגמאות כדי לראות טעות חוזרת ברורה",
-};
+/** Phase 9 — דפוס טעות דומיננטי (מזהה → עברית להורה) — parent_report_hebrew_copy_spec.md §3 */
+export const MISTAKE_PATTERN_LABEL_HE = { ...MISTAKE_PATTERN_PARENT_HE };
 
 /** Phase 9 — שלב למידה לאורך זמן */
 export const LEARNING_STAGE_LABEL_HE = {
@@ -324,11 +309,154 @@ export function mistakePatternLineHe(rowOrRec) {
   const o = rowOrRec && typeof rowOrRec === "object" ? rowOrRec : {};
   const sig = o.topicEngineRowSignals && typeof o.topicEngineRowSignals === "object" ? o.topicEngineRowSignals : null;
   const src = sig || o;
-  const lab = String(src.dominantMistakePatternLabelHe || "").trim();
-  const nar = String(src.mistakePatternNarrativeHe || "").trim();
-  if (nar) return truncateHe(nar, 140);
-  if (lab) return truncateHe(`מה שחוזר: ${lab}.`, 120);
+  const fromSpec = patternTextFromEngineHe(
+    String(src.dominantMistakePattern || ""),
+    src.dominantMistakePatternLabelHe,
+  );
+  if (fromSpec) return truncateHe(fromSpec, 140);
   return "";
+}
+
+const VAGUE_FOUNDATION_PHRASE =
+  /חלקים פשוטים יותר|יסוד שעליו הוא נשען|לא מרחיבים|קושי אולי מתחיל בחלקים/i;
+
+/**
+ * דפוס טעות להורה — רק כשיש מיפוי; אחרת ניסוח כנה.
+ * @param {Record<string, unknown>|null|undefined} sig
+ */
+export function parentFacingPatternLineHe(sig) {
+  if (!sig || typeof sig !== "object") return "";
+  const patternId = String(sig.dominantMistakePattern || "").trim();
+  const fromSpec = patternTextFromEngineHe(patternId, sig.dominantMistakePatternLabelHe);
+  return fromSpec ? fromSpec.replace(/\s+/g, " ").trim() : "";
+}
+
+/**
+ * בסיס/prerequisite להורה — mapping אמיתי או כנות.
+ * @param {Record<string, unknown>|null|undefined} rowOrRec
+ */
+export function parentFacingFoundationLineHe(rowOrRec) {
+  const o = rowOrRec && typeof rowOrRec === "object" ? rowOrRec : {};
+  const sig = o.topicEngineRowSignals && typeof o.topicEngineRowSignals === "object" ? o.topicEngineRowSignals : null;
+  if (!sig) return "";
+  const dep = String(sig.dependencyState || "");
+  const blocker = String(sig.likelyFoundationalBlocker || "unknown");
+  if (blocker === "accuracy_foundation_gap") {
+    return DEPENDENCY_STATE_PARENT_HE.accuracy_foundation_gap || "";
+  }
+  return foundationTextFromEngineHe(dep);
+}
+
+/**
+ * @param {Record<string, unknown>|null|undefined} sig
+ */
+function parentFacingActionLineHe(sig) {
+  if (!sig || typeof sig !== "object") return "";
+  return (
+    String(sig.doNowHe || "").trim() ||
+    String(sig.interventionPlanHe || "").trim() ||
+    String(sig.recommendedParentActionHe || "").trim()
+  );
+}
+
+/**
+ * @param {Record<string, unknown>|null|undefined} sig
+ * @param {Record<string, unknown>|null|undefined} row
+ */
+function parentFacingMeaningLineHe(sig, row) {
+  if (!sig || typeof sig !== "object") return "";
+  const meaning = meaningExplainSentenceHe(
+    String(sig.rootCause || ""),
+    String(sig.diagnosticType || ""),
+  );
+  if (meaning) return meaning;
+  const step = parentStepLabelHe(
+    String(sig.recommendedNextStep || ""),
+    String(sig.recommendedStepLabelHe || ""),
+  );
+  if (step) return step;
+  if (rowNeedsAttentionForExplain(row)) {
+    return meaningExplainSentenceHe("insufficient_evidence", "undetermined");
+  }
+  return "";
+}
+
+/** @param {Record<string, unknown>|null|undefined} row */
+function rowNeedsAttentionForExplain(row) {
+  const acc = Number(row?.accuracy) || 0;
+  const q = Number(row?.questions) || 0;
+  return q >= 3 && acc < 70;
+}
+
+/**
+ * הסבר אבחוני מלא לנושא — מסך + PDF (ללא חיתוך באמצע משפט).
+ * @param {Record<string, unknown>|null|undefined} row
+ * @returns {{ identified: string, data: string, pattern: string, meaning: string, action: string } | null}
+ */
+export function buildTopicDiagnosticExplainSectionsHe(row) {
+  if (!row || typeof row !== "object") return null;
+  const q = Number(row.questions) || 0;
+  if (q <= 0) return null;
+
+  const sig = row.topicEngineRowSignals && typeof row.topicEngineRowSignals === "object" ? row.topicEngineRowSignals : null;
+  const label = String(row.label || "").trim();
+  const acc = Math.round(Number(row.accuracy) || 0);
+
+  const engineCopy = buildEngineDecisionParentTopicCopyHe({
+    subjectId: row.subjectId,
+    subjectLabelHe: row.subjectLabelHe,
+    topic: label,
+    topicKey: row.topicKey,
+    q,
+    acc,
+    gradeKey: row.gradeKey,
+    topicEngineRowSignals: sig,
+  });
+
+  if (engineCopy) {
+    const identified = buildExplainIdentifiedLineHe(engineCopy, label);
+
+    return {
+      identified: shortReportDiagnosticsParentVisibleHe(identified),
+      data: shortReportDiagnosticsParentVisibleHe(`הנתונים: ${engineCopy.dataHe}`),
+      pattern: "",
+      meaning: shortReportDiagnosticsParentVisibleHe(`משמעות: ${engineCopy.whyHe}`),
+      action: shortReportDiagnosticsParentVisibleHe(engineCopy.actionHe),
+    };
+  }
+
+  const wrong = Number(row.wrong);
+  const wr =
+    q > 0 && Number.isFinite(wrong) && wrong >= 0
+      ? Math.round((wrong / q) * 100)
+      : acc <= 100
+        ? Math.max(0, 100 - acc)
+        : null;
+
+  const stepLabel = sig
+    ? parentStepLabelHe(String(sig.recommendedNextStep || ""), String(sig.recommendedStepLabelHe || ""))
+    : "";
+  const identified = explainIdentifiedHe(stepLabel, label);
+  const data = explainDataHe(q, acc, wr);
+
+  const patternText = sig ? parentFacingPatternLineHe(sig) : "";
+  const pattern = explainPatternHe(patternText);
+
+  const rootCause = String(sig?.rootCause || "");
+  const diagnosticType = String(sig?.diagnosticType || "");
+  const foundation = parentFacingFoundationLineHe(row);
+  const meaning = explainMeaningHe(rootCause, diagnosticType, foundation);
+
+  const engineAction = parentFacingActionLineHe(sig);
+  const action = explainActionHe(rootCause, diagnosticType, engineAction);
+
+  return {
+    identified: shortReportDiagnosticsParentVisibleHe(identified),
+    data: shortReportDiagnosticsParentVisibleHe(data),
+    pattern: shortReportDiagnosticsParentVisibleHe(pattern),
+    meaning: shortReportDiagnosticsParentVisibleHe(meaning),
+    action: shortReportDiagnosticsParentVisibleHe(action),
+  };
 }
 
 /**
@@ -445,7 +573,7 @@ export const SUPPORT_SEQUENCE_STATE_LABEL_HE = {
   sequence_ready_for_release: "אפשר לנסות להפחית מעט את התמיכה",
   sequence_stalled: "הכיוון לא מתקדם מספיק — לדייק מטרה או לשנות דרך",
   sequence_exhausted: "התרגול חוזר על עצמו יותר מדי — כדאי לעצור ולבדוק דרך אחרת",
-  insufficient_sequence_evidence: "עדיין אין מספיק מידע כדי לדעת איך העזרה התקדמה.",
+  insufficient_sequence_evidence: "עדיין מעט ניסיון — כדאי לבדוק שוב אחרי עוד תרגול קצר.",
 };
 
 export const PRIOR_SUPPORT_PATTERN_LABEL_HE = {
@@ -513,7 +641,7 @@ export const RECOMMENDATION_ROTATION_NEED_LABEL_HE = {
 
 /** Phase 12 — מה נוסה לאחרונה */
 export const RECOMMENDATION_MEMORY_STATE_LABEL_HE = {
-  no_memory: "עדיין אין מספיק מידע מהעבר כדי לדעת אם מה שניסינו קודם עדיין מתאים",
+  no_memory: "עדיין מעט ניסיון מהעבר — כדאי לבדוק שוב אחרי עוד תרגול קצר",
   light_memory: "יש רק מעט מידע מהעבר — בעיקר מהתקופה הנוכחית",
   usable_memory: "יש מספיק רקע להשוות המשך מול מה שהיה לאחרונה",
   strong_memory: "יש כמה תקופות להשוואה — אפשר לסמוך קצת יותר על המשכיות",
@@ -654,17 +782,11 @@ export const NEXT_CYCLE_DECISION_FOCUS_LABEL_HE = {
   prepare_for_controlled_release: "להתכונן להפחתת עזרה בהדרגה — לא לעבור לבד בבת אחת",
 };
 
-/** Phase 14 — מאיפה מתחיל הקושי */
-export const DEPENDENCY_STATE_LABEL_HE = {
-  likely_local_issue: "נראה שהקושי ממוקד בנושא הזה — אפשר לתרגל נקודה ספציפית",
-  /* QA wording: פחות «ייתכן» מוערם — ניסוח ישיר יותר */
-  likely_foundational_block: "הנתונים מרמזים שהקושי אולי מתחיל בחלקים פשוטים יותר של הנושא",
-  mixed_dependency_signal: "לא ברור עדיין אם הקושי ממוקד בנושא הזה או מתחיל בחלקים פשוטים יותר",
-  insufficient_dependency_evidence: "אין מספיק מידע כדי לדעת מאיפה הקושי מתחיל",
-};
+/** Phase 14 — parent_report_hebrew_copy_spec.md §4 */
+export const DEPENDENCY_STATE_LABEL_HE = { ...DEPENDENCY_STATE_PARENT_HE };
 
 export const FOUNDATIONAL_BLOCKER_LABEL_HE = {
-  accuracy_foundation_gap: "נראה שהילד צריך עוד תרגול בחלקים פשוטים יותר של הנושא",
+  accuracy_foundation_gap: DEPENDENCY_STATE_PARENT_HE.accuracy_foundation_gap,
   procedure_automaticity_gap: "קשה לו לשחזר את הדרך לפתרון לבד, גם כשהחומר מוכר",
   instruction_language_load: "עומס בניסוח המשימה",
   independence_readiness_gap: "עדיין מוקדם לעבודה עצמאית מלאה",
@@ -1131,24 +1253,10 @@ export function topicGatesEvidenceDecisionCompactLineHe(rowOrRec) {
 
 /** יסוד/מקומי + סדר התערבות + לפני הרחבה + תסמין משנה — מניעת כפילות בין שורות Phase 14 */
 export function topicFoundationDependencyCompactLineHe(rowOrRec) {
-  const dep = dependencyStateLineHe(rowOrRec);
+  const foundation = parentFacingFoundationLineHe(rowOrRec);
+  if (foundation) return foundation;
   const ord = interventionOrderingLineHe(rowOrRec);
-  const fbe = foundationBeforeExpansionLineHe(rowOrRec);
-  const dss = downstreamSymptomLineHe(rowOrRec);
-  const parts = [];
-  let acc = "";
-  if (dep) {
-    parts.push(dep);
-    acc = dep;
-  }
-  if (ord && !pr15HayContainsProbe(acc, ord, 12)) {
-    parts.push(ord);
-    acc = parts.join(" ");
-  }
-  if (fbe && !pr15HayContainsProbe(acc, fbe, 16)) {
-    parts.push(fbe);
-    acc = parts.join(" ");
-  }
-  if (dss && !pr15HayContainsProbe(acc, dss, 16)) parts.push(dss);
-  return parts.length ? truncateHe(parts.join(" · "), 220) : "";
+  const dep = dependencyStateLineHe(rowOrRec);
+  if (dep && !VAGUE_FOUNDATION_PHRASE.test(dep)) return dep;
+  return ord ? truncateHe(ord, 220) : "";
 }

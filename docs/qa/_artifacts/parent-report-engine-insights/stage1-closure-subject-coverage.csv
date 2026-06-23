@@ -1,0 +1,7 @@
+subject,total_topic_rows_checked,rows_with_taxonomy_match,rows_with_strong_taxonomy_match,rows_with_weak_taxonomy_blocked,rows_with_subskill_candidate,rows_still_mixed_last_resort,rows_still_insufficient
+english,9,0,0,0,0,0,2
+geometry,11,0,0,0,0,0,10
+hebrew,12,0,0,0,0,0,8
+math,12,3,3,9,3,0,8
+moledet-geography,8,0,0,0,0,0,5
+science,12,0,0,0,0,0,4

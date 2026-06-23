@@ -1,4 +1,5 @@
 import { normalizeParentFacingHe } from "./parent-report-language/index.js";
+import { sanitizeParentSurfaceActionHe } from "./parent-report-surface/index.js";
 import { resolveGradeAwareParentRecommendationHe } from "./parent-report-language/grade-aware-recommendation-resolver.js";
 import { shouldOmitRawDiagnosticRecommendationFallback } from "./report-diagnostic-safety-guards.js";
 import { gradeScopeMeaningHe } from "./parent-report-language/grade-insight-he.js";
@@ -111,6 +112,12 @@ function omitRawFallbackForUnit(unit, opts = {}) {
   return shouldOmitRawDiagnosticRecommendationFallback(unit?.subjectId, taxonomyId);
 }
 
+function surfaceActionOut(unit, text) {
+  const t = String(text || "").trim();
+  if (!t) return null;
+  return sanitizeParentSurfaceActionHe(unit, t, { subjectId: unit?.subjectId }) || null;
+}
+
 /**
  * @param {unknown} unit
  * @param {string|null|undefined} [gradeKey] from topic map row for this unit's topicRowKey
@@ -124,19 +131,25 @@ export function resolveUnitParentActionHe(unit, gradeKey, opts = {}) {
   if (cs?.recommendation?.allowed) {
     const family = cs.recommendation.family;
     if (family === "expand_cautiously") {
-      return withGradeScopeInsight(
-        normalizeParentFacingHe(
-          `ב${name} מומלץ להישאר בינתיים באותה רמה, ורק אם ההצלחה נמשכת גם בהמשך — להוסיף קושי קטן ומדוד.`
-        ),
-        unit
+      return surfaceActionOut(
+        unit,
+        withGradeScopeInsight(
+          normalizeParentFacingHe(
+            `ב${name} מומלץ להישאר בינתיים באותה רמה, ורק אם ההצלחה נמשכת גם בהמשך — להוסיף קושי קטן ומדוד.`
+          ),
+          unit
+        )
       );
     }
     if (family === "maintain") {
-      return withGradeScopeInsight(
-        normalizeParentFacingHe(
-          `ב${name} מומלץ להמשיך באותה רמה, ורק אם זה ממשיך להצליח באופן יציב — להוסיף מעט קושי.`
-        ),
-        unit
+      return surfaceActionOut(
+        unit,
+        withGradeScopeInsight(
+          normalizeParentFacingHe(
+            `ב${name} מומלץ להמשיך באותה רמה, ורק אם זה ממשיך להצליח באופן יציב — להוסיף מעט קושי.`
+          ),
+          unit
+        )
       );
     }
   }
@@ -151,14 +164,14 @@ export function resolveUnitParentActionHe(unit, gradeKey, opts = {}) {
     bucketKey: unit?.bucketKey,
     slot: "action",
   });
-  if (gradeAware) return gradeAware;
+  if (gradeAware) return surfaceActionOut(unit, gradeAware);
 
   if (noRaw) return null;
 
   const fallback = bestEffortText(
     unit?.intervention?.immediateActionHe || unit?.probe?.specificationHe || ""
   );
-  return fallback || null;
+  return surfaceActionOut(unit, fallback);
 }
 
 /**
@@ -186,14 +199,14 @@ export function resolveUnitNextGoalHe(unit, gradeKey, opts = {}) {
     bucketKey: unit?.bucketKey,
     slot: "nextGoal",
   });
-  if (gradeAware) return gradeAware;
+  if (gradeAware) return surfaceActionOut(unit, gradeAware);
 
   if (noRaw) return null;
 
   const fallback = bestEffortText(
     unit?.probe?.objectiveHe || unit?.intervention?.shortPracticeHe || ""
   );
-  return fallback || null;
+  return surfaceActionOut(unit, fallback);
 }
 
 /**
@@ -217,7 +230,7 @@ export function resolveUnitHomeMethodHe(unit, gradeKey, opts = {}) {
     bucketKey: unit?.bucketKey,
     slot: "nextGoal",
   });
-  if (nextG) return nextG;
+  if (nextG) return surfaceActionOut(unit, nextG);
   const act = resolveGradeAwareParentRecommendationHe({
     subjectId: unit?.subjectId,
     gradeKey: gradeKey ?? null,
@@ -225,10 +238,10 @@ export function resolveUnitHomeMethodHe(unit, gradeKey, opts = {}) {
     bucketKey: unit?.bucketKey,
     slot: "action",
   });
-  if (act) return act;
+  if (act) return surfaceActionOut(unit, act);
   if (noRaw) return null;
   const fallback = bestEffortText(unit?.intervention?.shortPracticeHe || "");
-  return fallback || null;
+  return surfaceActionOut(unit, fallback);
 }
 
 export function isStrongPositiveUnitForParentGuidance(unit) {

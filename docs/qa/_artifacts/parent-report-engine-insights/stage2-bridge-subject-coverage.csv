@@ -1,0 +1,7 @@
+subject,total_rows,taxonomy_candidates_before,taxonomy_candidates_after,strong_match,weak_blocked,subskill_candidate,no_taxonomy_mapping,no_raw_mistake_events,missing_metadata,insufficient,mixed_last_resort
+english,9,0,9,9,0,0,0,0,9,2,0
+geometry,11,0,11,9,1,0,0,0,10,10,0
+hebrew,12,0,12,10,1,0,0,0,12,8,0
+math,12,12,12,11,1,0,0,0,12,8,0
+moledet-geography,8,0,8,7,1,0,0,0,8,5,0
+science,12,0,12,12,0,0,0,0,12,4,0

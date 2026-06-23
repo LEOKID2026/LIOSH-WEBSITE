@@ -27,13 +27,13 @@ function assignedActivityQuestionUsesChoiceUiMirror(question) {
       triangles: ["שווה צלעות", "שווה שוקיים", "שונה צלעות"],
       transformations: ["הזזה", "שיקוף", "סיבוב", "ללא תנועה"],
       concept_transform: ["הזזה", "שיקוף", "סיבוב", "ללא תנועה"],
+      shapes_basic_square: ["ריבוע", "מלבן"],
+      shapes_basic_rectangle: ["ריבוע", "מלבן"],
+      shapes_basic_properties_square: ["2", "3", "4", "אין צלעות שוות"],
+      shapes_basic_properties_rectangle: ["1", "2", "3", "4"],
+      shapes_basic_properties_angles: ["2", "3", "4", "אין זוויות ישרות"],
     };
     const indexKinds = {
-      shapes_basic_square: 2,
-      shapes_basic_rectangle: 2,
-      shapes_basic_properties_square: 4,
-      shapes_basic_properties_rectangle: 4,
-      shapes_basic_properties_angles: 4,
       quadrilaterals: 4,
       solids: 6,
     };

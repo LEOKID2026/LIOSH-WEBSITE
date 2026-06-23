@@ -24,8 +24,19 @@ async function main() {
     process.env.NODE_ENV = "production";
     delete process.env.PARENT_COPILOT_ALLOW_CLIENT_PAYLOAD_IN_PRODUCTION;
 
-    let { resolveCopilotTurnPayloadForApi, isStrictProductionCopilotPayloadMode } = await loadPayloadModule();
+    let { resolveCopilotTurnPayloadForApi, isStrictProductionCopilotPayloadMode, parseReportRangeFromBody } =
+      await loadPayloadModule();
     assert.equal(isStrictProductionCopilotPayloadMode(), true);
+
+    const explicitRange = parseReportRangeFromBody({
+      reportPeriod: "month",
+      rangeFrom: "2026-05-25",
+      rangeTo: "2026-06-23",
+    });
+    assert.equal(explicitRange.ok, true);
+    assert.equal(explicitRange.from, "2026-05-25");
+    assert.equal(explicitRange.to, "2026-06-23");
+    assert.equal(explicitRange.period, "month");
 
     let r = await resolveCopilotTurnPayloadForApi({
       body: {

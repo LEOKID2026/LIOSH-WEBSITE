@@ -686,9 +686,13 @@ export function interpretFreeformStageA(utteranceRaw, payload) {
     second = 0;
   }
 
-  /** Product routing: clinical labels (ADHD/קשב) must hit clinical_boundary composer — not generic executive summary. */
+  /** Product routing: clinical / health labels must hit clinical_boundary composer — not generic executive summary. */
   if (
-    (/הפרעת\s*קשב|בעיית\s*קשב|\bADHD\b/i.test(t) || /הפרעת\s*קשב|בעיית\s*קשב/u.test(folded)) &&
+    (/הפרעת\s*קשב|בעיית\s*קשב|\bADHD\b/i.test(t) ||
+      /הפרעת\s*קשב|בעיית\s*קשב/u.test(folded) ||
+      /(?:האם\s+)?(?:צריך|כדאי)\s+אבחון|המלצה\s+לאבחון|תכתוב\s+לי\s+המלצה\s+לאבחון|נוירולוג|פסיכולוג|בעיה\s+פסיכולוגית|בעיה\s+בראש|סימן\s+ל(?:לקות|וקות)|(?:זה\s+)?(?:אומר|מעיד)\s+.*(?:דיסלקצ|דיסלקס|הפרעת\s+קשב)/u.test(
+        t,
+      )) &&
     best !== "parent_policy_refusal"
   ) {
     best = "clinical_boundary";
@@ -697,10 +701,10 @@ export function interpretFreeformStageA(utteranceRaw, payload) {
     second = 0;
   }
 
-  /** Diagnosis / placement / tutoring — use sensitive-education draft (bounded), not explain_report dump. */
+  /** School placement / tutoring — use sensitive-education draft (bounded), not explain_report dump. */
   if (
-    (/צריך\s+אבחון|צריכים\s+אבחון|מומחה\s+לאבחון|מורה\s+פרטי|שיעור\s+פרטי|מעבר\s+בית\s*ספר|ילד\s+מחונן/u.test(t) ||
-      /צריך\s+אבחון|מורה\s+פרטי/u.test(folded)) &&
+    (/מורה\s+פרטי|שיעור\s+פרטי|מעבר\s+בית\s*ספר|ילד\s+מחונן|האם\s+כדאי\s+להעביר\s+בית\s*ספר/u.test(t) ||
+      /מורה\s+פרטי|מעבר\s+בית\s*ספר/u.test(folded)) &&
     best !== "clinical_boundary" &&
     best !== "parent_policy_refusal"
   ) {

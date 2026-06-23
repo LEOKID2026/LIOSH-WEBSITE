@@ -28,6 +28,7 @@ import { enrichMultiplicationSteps } from "./learning-step-multiplication-exerci
 import { enrichDivisionSteps } from "./learning-step-division-exercise.js";
 import { enrichFractionSteps } from "./learning-step-fraction-exercise.js";
 import { enrichWordProblemSteps } from "./learning-step-word-problem-exercise.js";
+import { annotateAnimationSteps } from "./learning-step-exercise-types.js";
 
 const EXPRESSION_OPS = new Set([
   "percentages",

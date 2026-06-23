@@ -1,0 +1,106 @@
+{
+  "generatedAt": "2026-06-23T20:45:55.883Z",
+  "period": {
+    "from": "2026-05-01",
+    "to": "2026-06-01"
+  },
+  "bySubject": [
+    {
+      "subject": "english",
+      "totalRows": 9,
+      "rowsWithTaxonomyCandidates": 9,
+      "rowsWithStrongTaxonomy": 5,
+      "rowsBlockedMissingMetadata": 5,
+      "rowsBlockedNoRawMistakeEvents": 4,
+      "rowsBlockedNotWeaknessRow": 0,
+      "rowsBlockedLowQ": 0,
+      "rowsBlockedWeakTaxonomy": 0,
+      "rowsSubskillSafeIfMetadataExisted": 5,
+      "rowsWithSubskill": 0
+    },
+    {
+      "subject": "geometry",
+      "totalRows": 11,
+      "rowsWithTaxonomyCandidates": 11,
+      "rowsWithStrongTaxonomy": 6,
+      "rowsBlockedMissingMetadata": 6,
+      "rowsBlockedNoRawMistakeEvents": 4,
+      "rowsBlockedNotWeaknessRow": 1,
+      "rowsBlockedLowQ": 0,
+      "rowsBlockedWeakTaxonomy": 0,
+      "rowsSubskillSafeIfMetadataExisted": 6,
+      "rowsWithSubskill": 0
+    },
+    {
+      "subject": "hebrew",
+      "totalRows": 12,
+      "rowsWithTaxonomyCandidates": 12,
+      "rowsWithStrongTaxonomy": 5,
+      "rowsBlockedMissingMetadata": 9,
+      "rowsBlockedNoRawMistakeEvents": 3,
+      "rowsBlockedNotWeaknessRow": 0,
+      "rowsBlockedLowQ": 0,
+      "rowsBlockedWeakTaxonomy": 0,
+      "rowsSubskillSafeIfMetadataExisted": 5,
+      "rowsWithSubskill": 0
+    },
+    {
+      "subject": "math",
+      "totalRows": 12,
+      "rowsWithTaxonomyCandidates": 12,
+      "rowsWithStrongTaxonomy": 0,
+      "rowsBlockedMissingMetadata": 0,
+      "rowsBlockedNoRawMistakeEvents": 12,
+      "rowsBlockedNotWeaknessRow": 0,
+      "rowsBlockedLowQ": 0,
+      "rowsBlockedWeakTaxonomy": 0,
+      "rowsSubskillSafeIfMetadataExisted": 0,
+      "rowsWithSubskill": 0
+    },
+    {
+      "subject": "moledet-geography",
+      "totalRows": 8,
+      "rowsWithTaxonomyCandidates": 8,
+      "rowsWithStrongTaxonomy": 2,
+      "rowsBlockedMissingMetadata": 3,
+      "rowsBlockedNoRawMistakeEvents": 5,
+      "rowsBlockedNotWeaknessRow": 0,
+      "rowsBlockedLowQ": 0,
+      "rowsBlockedWeakTaxonomy": 0,
+      "rowsSubskillSafeIfMetadataExisted": 2,
+      "rowsWithSubskill": 0
+    },
+    {
+      "subject": "science",
+      "totalRows": 12,
+      "rowsWithTaxonomyCandidates": 12,
+      "rowsWithStrongTaxonomy": 6,
+      "rowsBlockedMissingMetadata": 9,
+      "rowsBlockedNoRawMistakeEvents": 3,
+      "rowsBlockedNotWeaknessRow": 0,
+      "rowsBlockedLowQ": 0,
+      "rowsBlockedWeakTaxonomy": 0,
+      "rowsSubskillSafeIfMetadataExisted": 6,
+      "rowsWithSubskill": 0
+    }
+  ],
+  "reasonGlobal": {
+    "no_raw_mistake_events": 31,
+    "missing_metadata": 32,
+    "not_weakness_row": 1
+  },
+  "engineDecisionCounts": {
+    "partial_stable": 29,
+    "mastery_stable": 4,
+    "early_direction_only": 3,
+    "clear_topic_gap": 6,
+    "topic_needs_strengthening": 22
+  },
+  "qRangeCounts": {
+    "100+": 13,
+    "50-99": 22,
+    "20-49": 23,
+    "5-9": 4,
+    "10-19": 2
+  }
+}

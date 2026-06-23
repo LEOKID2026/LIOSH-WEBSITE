@@ -27,7 +27,7 @@ const { interpretFreeformStageA } = stageAMod;
 const { AMBIGUOUS_RESPONSE_HE } = classifierMod;
 const { validateAnswerDraft } = guardrailMod;
 const { maxGlobalReportQuestionCount, STRONG_GLOBAL_QUESTION_FLOOR } = reportVolumeMod;
-const { routeParentQuestion, OFF_TOPIC_RESPONSE_HE } = questionRouterMod;
+const { routeParentQuestion, OFF_TOPIC_RESPONSE_HE, GENERAL_OFF_TOPIC_RESPONSE_HE } = questionRouterMod;
 
 let failures = 0;
 let runs = 0;
@@ -263,7 +263,7 @@ for (const q of offTopicQuestions) {
   // Must contain the exact expected boundary text
   check(
     `[A] off_topic boundary text :: "${q}"`,
-    text.includes("אפשר לשאול כאן שאלות על הדוח") || text.includes("שאלות על הדוח"),
+    text === GENERAL_OFF_TOPIC_RESPONSE_HE || text === OFF_TOPIC_RESPONSE_HE,
     `got: ${text.slice(0, 120)}`,
   );
 
@@ -593,7 +593,7 @@ process.stdout.write("\n── Group I: Diagnostic request ──\n");
     // Must mention practice-data limitation or professional evaluation
     check(
       `[I] diagnostic — mentions limitation or professional eval :: "${q}"`,
-      /(אי\s*אפשר\s*לקבוע\s*אבחנה|הדוח\s*(מבוסס|מציג)\s*נתוני?\s*תרגול|לפנות\s+(ל)?איש\s+מקצוע|אבחון\s+מקצועי|הדוח\s+לא\s+מחליף|אינו\s+מחליף)/u.test(text),
+      /(נתוני\s*תרגול|מסקנ(?:ה|ות)\s+אישיות|לא\s+נועד\s+לקבוע|אי\s+אפשר\s+להסיק)/u.test(text),
       text.slice(0, 300),
     );
   }

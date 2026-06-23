@@ -6,7 +6,7 @@ import { splitTopicRowKey } from "../parent-report-row-diagnostics.js";
 import { filterMistakesForRow } from "../parent-report-row-trend.js";
 import { mathReportBaseOperationKey } from "../math-report-generator.js";
 import { TAXONOMY_BY_ID } from "./taxonomy-registry.js";
-import { taxonomyIdsForReportBucket } from "./topic-taxonomy-bridge.js";
+import { taxonomyIdsForReportBucket, normalizeReportBucketKey } from "./topic-taxonomy-bridge.js";
 import { orderFractionTaxonomyCandidates } from "./fraction-taxonomy-candidate-order.js";
 import { orderMultiplicationTaxonomyCandidates } from "./multiplication-taxonomy-candidate-order.js";
 import { orderWordProblemsTaxonomyCandidates } from "./word-problems-taxonomy-candidate-order.js";
@@ -67,6 +67,7 @@ export function runDiagnosticEngineV2({ maps, rawMistakesBySubject, startMs, end
       const rowWrongTotal = Math.max(0, Number(row.wrong) || 0);
       const wrongCountForRules = Math.max(wrongs.length, rowWrongTotal);
       const { bucketKey } = splitTopicRowKey(topicRowKey);
+      const { normalizedBucketKey: taxonomyBucketKey } = normalizeReportBucketKey(bucketKey);
 
       const evidenceTrace = [
         { type: "volume", source: "report_row", value: { questions: row.questions, correct: row.correct, wrong: row.wrong, accuracy: row.accuracy } },
@@ -109,16 +110,16 @@ export function runDiagnosticEngineV2({ maps, rawMistakesBySubject, startMs, end
         candidateIds = orderWordProblemsTaxonomyCandidates(candidateIdsRaw, wrongs, { row });
       } else if (
         subjectId === "geometry" &&
-        (bucketKey === "quadrilaterals" || bucketKey === "area")
+        (taxonomyBucketKey === "quadrilaterals" || taxonomyBucketKey === "area")
       ) {
-        candidateIds = orderGeometryTaxonomyCandidates(candidateIdsRaw, wrongs, { row, bucketKey });
+        candidateIds = orderGeometryTaxonomyCandidates(candidateIdsRaw, wrongs, { row, bucketKey: taxonomyBucketKey });
       } else if (subjectId === "english") {
-        const bk = String(bucketKey || "").trim().toLowerCase();
+        const bk = String(taxonomyBucketKey || "").trim().toLowerCase();
         if (bk === "vocabulary" || bk === "grammar") {
-          candidateIds = orderEnglishTaxonomyCandidates(candidateIdsRaw, wrongs, { row, bucketKey });
+          candidateIds = orderEnglishTaxonomyCandidates(candidateIdsRaw, wrongs, { row, bucketKey: bk });
         }
       } else if (subjectId === "hebrew") {
-        const bk = String(bucketKey || "").trim().toLowerCase();
+        const bk = String(taxonomyBucketKey || "").trim().toLowerCase();
         if (
           (bk === "grammar" && candidateIdsRaw.includes("H-02") && candidateIdsRaw.includes("H-06")) ||
           (bk === "writing" && candidateIdsRaw.includes("H-03") && candidateIdsRaw.includes("H-07"))
@@ -126,7 +127,7 @@ export function runDiagnosticEngineV2({ maps, rawMistakesBySubject, startMs, end
           candidateIds = orderHebrewTaxonomyCandidates(candidateIdsRaw, wrongs, { row, bucketKey });
         }
       } else if (subjectId === "moledet-geography") {
-        const bk = String(bucketKey || "").trim().toLowerCase();
+        const bk = String(taxonomyBucketKey || "").trim().toLowerCase();
         if (
           bk === "maps" &&
           candidateIdsRaw.includes("MG-01") &&
@@ -169,16 +170,20 @@ export function runDiagnosticEngineV2({ maps, rawMistakesBySubject, startMs, end
         }
       }
       const weakTaxonomyFallbackBlocked = !chosenId && candidateIdsRaw.length > 0 && wrongCountForRules >= 2;
-      const classificationState = weakTaxonomyFallbackBlocked
-        ? "unclassified_weak_evidence"
-        : chosenId
-          ? "classified"
-          : "unclassified_no_taxonomy_match";
-      const classificationReasonCode = weakTaxonomyFallbackBlocked
-        ? "weak_taxonomy_fallback_blocked"
-        : !chosenId
-          ? "taxonomy_not_matched"
-          : null;
+      const classificationState = !candidateIdsRaw.length
+        ? "unclassified_no_taxonomy_match"
+        : weakTaxonomyFallbackBlocked
+          ? "unclassified_weak_evidence"
+          : chosenId
+            ? "classified"
+            : "unclassified_no_taxonomy_match";
+      const classificationReasonCode = !candidateIdsRaw.length
+        ? "no_taxonomy_mapping"
+        : weakTaxonomyFallbackBlocked
+          ? "weak_taxonomy_fallback_blocked"
+          : !chosenId
+            ? "taxonomy_not_matched"
+            : null;
 
       const recurrenceFull = !!(() => {
         if (!chosenId) return false;

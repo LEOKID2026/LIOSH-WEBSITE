@@ -12,7 +12,7 @@ const runParentCopilotTurn = parentCopilot.runParentCopilotTurn;
 const resetSession = sessionMemory.resetParentCopilotSessionForTests;
 
 /** Generic ambiguous fallback opener — must not appear on contextual follow-ups. */
-const AMBIGUOUS_SNIP = "לא הבנתי בדיוק";
+const AMBIGUOUS_SNIP = "לא הצלחתי להבין בדיוק";
 
 function answerText(res) {
   if (res?.resolutionStatus === "resolved") {
@@ -334,7 +334,7 @@ const freshSid = () => `pcq-${++sid}`;
     "english zero-evidence should resolve or clarify with no-data policy",
   );
   const text = answerText(r);
-  assert.ok(/לא תורגל|אין.*תרגול|0|לא נצפ|בטווח/i.test(text), "must communicate no practice in period");
+  assert.ok(/לא תורגל|אין.*תרגול|לא נאספו|0|לא נצפ|בטווח/i.test(text), "must communicate no practice in period");
 }
 
 process.stdout.write("OK parent-copilot-conversation-quality\n");

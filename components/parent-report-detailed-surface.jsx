@@ -11,6 +11,7 @@ import {
 } from "../utils/detailed-report-parent-letter-he";
 import {
   behaviorDominantLabelHe,
+  buildTopicDiagnosticExplainSectionsHe,
   learningMemoryLineHe,
   mistakePatternLineHe,
   sanitizeEngineSnippetHe,
@@ -18,6 +19,10 @@ import {
   transferReadinessLineHe,
   truncateHe,
 } from "../utils/parent-report-ui-explain-he";
+import {
+  PARENT_TOPIC_TIER,
+  parentTopicTierSectionTitleHe,
+} from "../utils/parent-report-surface/index.js";
 import {
   SUBJECT_PHASE3_ROW_LABEL_HE,
   SUBJECT_V2_RECALIBRATION_NEED_NO_HE,
@@ -539,196 +544,99 @@ function trendOverlapsDiagnosis(diagnosisHe, trendNarrativeHe) {
   return d.includes(t.slice(0, Math.min(28, t.length)));
 }
 
-/** שדות Phase 3 — מבנה תוויות; מצמצם חזרה על מגמה אם כבר במכתב */
+/** Parent-facing extras only — inline, no accordion. */
 export function SubjectPhase3Insights({ sp, compact }) {
-  const letter = useMemo(() => (compact ? null : buildSubjectParentLetter(sp)), [sp, compact]);
-  const trendHidden = letter && trendOverlapsDiagnosis(letter.diagnosisHe, sp?.trendNarrativeHe);
-  const homeNorm = sp?.recommendedHomeMethodHe
-    ? String(rewriteParentRecommendationForDetailedHe(String(sp.recommendedHomeMethodHe)))
-        .replace(/\s+/g, " ")
-        .trim()
-    : "";
-  const letterHomeNorm = letter?.homeAction ? String(letter.homeAction).replace(/\s+/g, " ").trim() : "";
-  const hideStructuredHome =
-    homeNorm && letterHomeNorm && (homeNorm === letterHomeNorm || letterHomeNorm.includes(homeNorm.slice(0, 50)));
-
+  void compact;
+  const letter = useMemo(() => buildSubjectParentLetter(sp), [sp]);
   const rows = [];
   const dr = String(sp?.dominantLearningRiskLabelHe || "").trim();
-  if (dr) rows.push({ k: "אילו טעויות חוזרות כאן", v: pr1ParentVisibleTextHe(dr) });
+  if (dr) rows.push({ k: "מה חוזר בטעויות", v: pr1ParentVisibleTextHe(dr) });
   const ds = String(sp?.dominantSuccessPatternLabelHe || "").trim();
-  if (ds) rows.push({ k: "מה נראה חזק כאן", v: pr1ParentVisibleTextHe(ds) });
-  if (sp?.trendNarrativeHe && String(sp.trendNarrativeHe).trim()) {
-    rows.push({
-      k: "מגמה",
-      v: trendHidden
-        ? "מפורט במשפט האבחה למטה."
-        : truncateHe(pr1ParentVisibleTextHe(String(sp.trendNarrativeHe)), compact ? 120 : 220),
-    });
-  }
-  const conf = String(sp?.confidenceSummaryHe || "").trim();
-  if (conf)
-    rows.push({
-      k: "עד כמה המידע מספיק ברור",
-      v: truncateHe(pr1ParentVisibleTextHe(conf), compact ? 100 : 200),
-    });
-  const beh = sp?.dominantBehaviorProfileAcrossRows;
-  if (beh && String(beh).trim() && String(beh) !== "undetermined") {
-    rows.push({ k: "מה קורה בדרך כלל בזמן התרגול", v: behaviorDominantLabelHe(beh) });
-  }
-  const fr = Number(sp?.fragileSuccessRowCount) || 0;
-  const stb = Number(sp?.stableMasteryRowCount) || 0;
-  if (fr > 0 || stb > 0) {
-    rows.push({
-      k: SUBJECT_PHASE3_ROW_LABEL_HE.topicPatternCounts,
-      v: `${stb} התקדמות יציבה וטובה · ${fr} הצלחה שבירה`,
-    });
-  }
-  const modeNote = String(sp?.modeConcentrationNoteHe || "").trim();
-  if (modeNote) rows.push({ k: "ממה מתחשבים כשמתאמים תרגול", v: pr1ParentVisibleTextHe(modeNote) });
-  const risks = subjectMajorRiskLabelsHe(sp?.majorRiskFlagsAcrossRows, 5);
-  if (risks.length) {
-    rows.push({
-      k: SUBJECT_PHASE3_ROW_LABEL_HE.majorRisks,
-      v: risks.map((x) => pr1ParentVisibleTextHe(String(x))).join(" · "),
-    });
-  }
-  if (sp?.recommendedHomeMethodHe && String(sp.recommendedHomeMethodHe).trim() && !hideStructuredHome) {
-    rows.push({
-      k: "מה לעשות בבית (מבנה)",
-      v: truncateHe(
-        pr1ParentVisibleTextHe(rewriteParentRecommendationForDetailedHe(String(sp.recommendedHomeMethodHe))),
-        compact ? 140 : 260
-      ),
-    });
-  }
+  if (ds) rows.push({ k: "מה עובד טוב", v: pr1ParentVisibleTextHe(ds) });
   const wnt = String(sp?.whatNotToDoHe || "").trim();
   if (wnt && (!letter?.closing || !String(letter.closing).includes(wnt.slice(0, 24)))) {
-    rows.push({
-      k: "מה להימנע ממנו",
-      v: truncateHe(pr1ParentVisibleTextHe(wnt), compact ? 120 : 220),
-    });
+    rows.push({ k: "מה לא לעשות", v: truncateHe(pr1ParentVisibleTextHe(wnt), 200) });
   }
-  const sdn = String(sp?.subjectDoNowHe || "").trim();
-  if (sdn)
-    rows.push({
-      k: "עכשיו (מקצוע)",
-      v: truncateHe(pr1ParentVisibleTextHe(sdn), compact ? 110 : 200),
-    });
-  const san = String(sp?.subjectAvoidNowHe || "").trim();
-  if (san)
-    rows.push({
-      k: "להימנע עכשיו (מקצוע)",
-      v: truncateHe(pr1ParentVisibleTextHe(san), compact ? 110 : 200),
-    });
-  const spr = String(sp?.subjectPriorityReasonHe || "").trim();
-  if (spr && (!letter?.opening || !String(letter.opening).includes(spr.slice(0, 20)))) {
-    rows.push({
-      k: "מה כדאי לתרגל קודם",
-      v: truncateHe(pr1ParentVisibleTextHe(spr), compact ? 120 : 220),
-    });
-  }
-  const dmp = String(sp?.dominantMistakePatternLabelHe || "").trim();
-  if (dmp)
-    rows.push({
-      k: "סוג טעות נפוצה בנושא",
-      v: truncateHe(pr1ParentVisibleTextHe(dmp), compact ? 100 : 180),
-    });
-  const sls = String(sp?.subjectLearningStageLabelHe || "").trim();
-  if (sls)
-    rows.push({
-      k: "שימור למידה",
-      v: truncateHe(pr1ParentVisibleTextHe(sls), compact ? 100 : 180),
-    });
-  const srb = String(sp?.subjectReviewBeforeAdvanceHe || "").trim();
-  if (srb)
-    rows.push({
-      k: "לפני שמעלים רמה",
-      v: truncateHe(pr1ParentVisibleTextHe(srb), compact ? 110 : 200),
-    });
-  const strRaw = String(sp?.subjectTransferReadiness || "").trim();
   const trLine = String(transferReadinessLineHe(sp) || "").trim();
-  const trMapped = pr1CrossSubjectTransferDisplayHe(strRaw);
+  const trMapped = pr1CrossSubjectTransferDisplayHe(String(sp?.subjectTransferReadiness || "").trim());
   const trCombined = pr1ParentVisibleTextHe(trLine || (trMapped !== "לא ברור" ? trMapped : ""));
   if (trCombined) {
-    rows.push({
-      k: "האם זה מצליח גם בשאלה חדשה",
-      v: truncateHe(trCombined, compact ? 90 : 160),
-    });
-  }
-  const effN = String(sp?.subjectEffectivenessNarrativeHe || "").trim();
-  if (effN)
-    rows.push({
-      k: "מה קורה עם העזרה וההתקדמות",
-      v: truncateHe(pr1ParentVisibleTextHe(effN), compact ? 130 : 240),
-    });
-  const sAdj = String(sp?.subjectSupportAdjustmentNeedHe || "").trim();
-  if (sAdj && (!effN || !effN.includes(sAdj.slice(0, 12)))) {
-    rows.push({
-      k: "התאמה לשבוע הבא",
-      v: truncateHe(pr1ParentVisibleTextHe(sAdj), compact ? 100 : 200),
-    });
-  }
-  const sRec = String(sp?.subjectRecalibrationNeedHe || "").trim();
-  if (sRec && sRec !== SUBJECT_V2_RECALIBRATION_NEED_NO_HE && (!effN || !effN.includes(sRec.slice(0, 10)))) {
-    rows.push({
-      k: "האם כדאי לבדוק כיוון אחר",
-      v: truncateHe(pr1ParentVisibleTextHe(sRec), compact ? 100 : 200),
-    });
-  }
-  const seqN = String(sp?.subjectSequenceNarrativeHe || "").trim();
-  if (seqN && (!effN || !effN.includes(seqN.slice(0, 14)))) {
-    rows.push({
-      k: "איך העזרה מתקדמת לאורך זמן",
-      v: truncateHe(pr1ParentVisibleTextHe(seqN), compact ? 130 : 240),
-    });
-  }
-  const outN = String(sp?.subjectOutcomeNarrativeHe || "").trim();
-  if (outN && (!seqN || !seqN.includes(outN.slice(0, 12)))) {
-    rows.push({
-      k: "מה ניסינו לאחרונה והאם זה עזר",
-      v: truncateHe(pr1ParentVisibleTextHe(outN), compact ? 130 : 240),
-    });
-  }
-  const gateN = String(sp?.subjectGateNarrativeHe || "").trim();
-  if (gateN && (!outN || !outN.includes(gateN.slice(0, 14)))) {
-    rows.push({
-      k: "מה צריך לבדוק בהמשך",
-      v: truncateHe(pr1ParentVisibleTextHe(gateN), compact ? 130 : 240),
-    });
-  }
-  const depSub = String(sp?.subjectDependencyNarrativeHe || "").trim();
-  if (depSub && (!gateN || !gateN.includes(depSub.slice(0, 14)))) {
-    rows.push({
-      k: "איפה מתחיל הקושי?",
-      v: truncateHe(pr1ParentVisibleTextHe(depSub), compact ? 130 : 240),
-    });
-  }
-  const ffp = String(sp?.subjectFoundationFirstPriorityHe || "").trim();
-  if (ffp && sp?.subjectFoundationFirstPriority && (!depSub || !depSub.includes(ffp.slice(0, 12)))) {
-    rows.push({
-      k: "מה צריך לחזק לפני הכל",
-      v: truncateHe(pr1ParentVisibleTextHe(ffp), compact ? 120 : 200),
-    });
+    rows.push({ k: "האם זה נשמר בשאלה חדשה", v: truncateHe(trCombined, 160) });
   }
 
   if (!rows.length) return null;
 
   return (
-    <details className="pr-detailed-phase3-details m-0 mb-2 rounded-lg border border-white/10 bg-black/10 px-2 py-2">
-      <summary className="cursor-pointer text-white/70 font-semibold text-xs md:text-sm mb-1 select-none">
-        פירוט מקצועי נוסף
-      </summary>
-      <div className="pr-detailed-phase3-dl space-y-2 m-0 mt-2">
-        {rows.map(({ k, v }) => (
-          <div key={k} className="min-w-0">
-            <div className="text-white/50 font-bold text-[11px] md:text-xs m-0 mb-0.5">{k}</div>
-            <div className="m-0 text-white/[0.88] leading-relaxed text-[11px] md:text-sm">
-              {pr1ParentVisibleTextHe(String(v))}
-            </div>
+    <div className="parent-surface-only pr-detailed-phase3-dl space-y-2 m-0 mb-2 rounded-lg border border-white/10 bg-black/10 px-2 py-2">
+      {rows.map(({ k, v }) => (
+        <div key={k} className="min-w-0">
+          <div className="text-white/50 font-bold text-[11px] md:text-xs m-0 mb-0.5">{k}</div>
+          <div className="m-0 text-white/[0.88] leading-relaxed text-[11px] md:text-sm">
+            {pr1ParentVisibleTextHe(String(v))}
           </div>
-        ))}
-      </div>
-    </details>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/** Parent-facing topic rows grouped by unified tier. */
+export function SubjectTopicTierGroups({ sp }) {
+  const groups = sp?.topicGroupsByTier;
+  if (!groups || typeof groups !== "object") return null;
+  const order = [
+    PARENT_TOPIC_TIER.STRONG,
+    PARENT_TOPIC_TIER.MONITOR,
+    PARENT_TOPIC_TIER.STRENGTHEN,
+    PARENT_TOPIC_TIER.CLEAR_GAP,
+    PARENT_TOPIC_TIER.NEEDS_GUIDANCE,
+    PARENT_TOPIC_TIER.LOW_EVIDENCE,
+  ];
+  const sections = order
+    .map((tier) => {
+      const rows = Array.isArray(groups[tier]) ? groups[tier] : [];
+      if (!rows.length) return null;
+      return (
+        <div key={tier} className="parent-surface-only pr-detailed-topic-tier-group mb-3">
+          <p className="pr-detailed-topic-rec-head">{parentTopicTierSectionTitleHe(tier)}</p>
+          <div className="space-y-2">
+            {rows.map((row) => (
+              <div
+                key={row.topicRowKey}
+                className="pr-detailed-topic-overview-item rounded-lg border border-white/12 bg-white/[0.04] px-3 py-2.5"
+              >
+                <div className="pr-detailed-body-text font-bold text-white/95 leading-snug">
+                  {row.narrativeTitleHe}
+                </div>
+                {row.gradeRelationSublineHe ? (
+                  <p className="pr-detailed-muted text-xs m-0 mt-0.5 text-white/60">
+                    {row.gradeRelationSublineHe}
+                  </p>
+                ) : null}
+                <p className="pr-detailed-body-text text-sm m-0 mt-1.5 text-white/[0.88]">
+                  {row.overviewStatusHe} · {row.questions} שאלות · דיוק {row.accuracy}%
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    })
+    .filter(Boolean);
+  if (!sections.length) return null;
+  return <div className="pr-detailed-topic-overview-block parent-surface-only space-y-1">{sections}</div>;
+}
+
+export function SubjectPrimaryActionBlock({ actionHe }) {
+  const text = pr1ParentVisibleTextHe(String(actionHe || ""));
+  if (!text) return null;
+  return (
+    <div className="parent-surface-only rounded-lg border border-amber-400/28 bg-amber-950/14 px-3 py-2.5">
+      <p className="pr-detailed-mini-heading font-bold text-amber-100/95 mb-1 text-sm">
+        מה כדאי לעשות במקצוע הזה
+      </p>
+      <p className="pr-detailed-body-text text-sm leading-relaxed m-0 text-white/[0.91]">{text}</p>
+    </div>
   );
 }
 
@@ -755,14 +663,10 @@ export function SubjectSummaryBlock({ sp }) {
           <p className="pr-detailed-body-text text-sm leading-relaxed m-0 text-white/[0.86]">{L.middle}</p>
         ) : null}
         {L.homeAction ? (
-          <details className="rounded-lg border border-white/12 bg-white/[0.03] px-3 py-2.5">
-            <summary className="cursor-pointer text-sm text-white/75 font-semibold select-none">
-              פירוט מקצועי נוסף
-            </summary>
-            <p className="pr-detailed-body-text text-sm leading-relaxed m-0 mt-2 rounded-lg border border-amber-400/28 bg-amber-950/14 px-3 py-2.5">
-              {L.homeAction}
-            </p>
-          </details>
+          <div className="parent-surface-only rounded-lg border border-amber-400/28 bg-amber-950/14 px-3 py-2.5">
+            <p className="pr-detailed-mini-heading font-bold text-amber-100/95 mb-1 text-sm">איך כדאי לעבוד על זה</p>
+            <p className="pr-detailed-body-text text-sm leading-relaxed m-0">{L.homeAction}</p>
+          </div>
         ) : null}
         {riskChips.length ? (
           <div className="flex flex-wrap gap-1">
@@ -833,8 +737,26 @@ export function TopicRecommendationExplainStrip({ tr, suppressedLines = [] }) {
   const seenRaw = [mp, lm].filter(Boolean).join(" · ");
   let seen = truncateHe(seenRaw, 224);
 
+  const explainRow =
+    tr && typeof tr === "object"
+      ? {
+          label: String(tr.displayName || tr.topicLabelHe || tr.label || "").trim(),
+          questions: Number(tr.questions ?? tr.q) || 0,
+          accuracy: Number(tr.accuracy ?? tr.acc) || 0,
+          wrong: Number(tr.wrong) || 0,
+          topicEngineRowSignals: sig,
+        }
+      : null;
+  const explainSections = buildTopicDiagnosticExplainSectionsHe(explainRow);
+
   const whyRaw = String(tr?.whyThisRecommendationHe || sig?.whyThisRecommendationHe || "").trim();
-  let meaning = truncateHe(topicStripParentClean(whyRaw), 224);
+  const meaningFromExplain = explainSections?.meaning
+    ? String(explainSections.meaning).replace(/^משמעות:\s*/, "").trim()
+    : "";
+  let meaning = truncateHe(
+    topicStripParentClean(meaningFromExplain || whyRaw),
+    224,
+  );
 
   if (seen && meaning && topicStripNorm(seen) === topicStripNorm(meaning)) {
     meaning = "";

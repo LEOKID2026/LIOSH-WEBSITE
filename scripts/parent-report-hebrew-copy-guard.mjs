@@ -31,6 +31,8 @@ const {
 const SKIP_FILES = new Set([
   "utils/parent-report-language/forbidden-terms.js",
   "utils/parent-report-language/parent-facing-normalize-he.js",
+  "utils/parent-report-language/parent-report-hebrew-copy-spec.js",
+  "utils/parent-report-language/engine-decision-parent-copy-he.js",
 ]);
 
 /**
@@ -43,6 +45,10 @@ const INTERNAL_ONLY_SOURCE_SNIPPETS = Object.freeze({
     "ייתכן שהקושי קשור להבנת המשימה או לצורך ברמזים — לא מורידים רמה בלי מספיק תרגול שמראה שזה באמת נחוץ.",
     "יש סימן לקושי, אבל הדיוק משתפר — עדיף לחזק באותה רמה לפני שמורידים רמה.",
     "כשהמידע חלקי או ישן — כדאי לעשות בדיקה קצרה לפני שמחליטים לשנות כיוון.",
+    "אין מספיק מידע לשינוי גדול עכשיו.",
+    "לא מורידים רמה או כיתה כשעדיין אין מספיק מידע — ממשיכים בחיזוק באותה רמה.",
+    "הנתונים מרמזים שהבעיה אולי קשורה לבסיס של הנושא, אבל כרגע אין מספיק מידע כדי לזהות איזה חלק בסיסי צריך לחזק.",
+    "אין עדיין מספיק מידע כדי להבין מאיפה הקושי מתחיל — לא מורידים רמה; ממשיכים בחיזוק מבוקר.",
   ],
   "utils/topic-next-step-engine.js": [],
   "utils/learning-patterns-analysis.js": [],

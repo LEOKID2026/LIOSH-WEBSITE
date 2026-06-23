@@ -60,6 +60,8 @@ import { computeTopicPriority } from "./system-intelligence/priority-engine.js";
 import { computeGlobalScore } from "./system-intelligence/global-score.js";
 import { applyMathScopedParentDisplayNames } from "./math-topic-parent-display.js";
 import { deriveRawMetricStrengthLinesHe } from "./parent-data-presence.js";
+import { strengthOverviewLineHe } from "./parent-report-language/parent-report-hebrew-copy-spec.js";
+import { collectTopicEngineRowsFromReport } from "./parent-report-engine-insights-he.js";
 import { runDiagnosticEngineV2 } from "./diagnostic-engine-v2/index.js";
 import { enrichDiagnosticEngineV2WithProfessionalFrameworkV1 } from "./learning-diagnostics/diagnostic-framework-v1.js";
 import { enrichDiagnosticEngineV2WithProfessionalEngineV1 } from "./learning-diagnostics/professional-engine-output-v1.js";
@@ -1179,10 +1181,17 @@ function overviewShortLineWithSubject(subjectId, unit, kind) {
     }
   } else {
     if (vol && safeNumber(vol.questions) > 0) {
-      core = `${name}: ${Math.round(safeNumber(vol.questions))} שאלות, דיוק ${Math.round(safeNumber(vol.accuracy))}%`;
-    } else {
-      core = name;
+      return stripParentOverviewLeakageHe(
+        strengthOverviewLineHe({
+          subject: subj,
+          subjectId,
+          topic: name,
+          q: Math.round(safeNumber(vol.questions)),
+          acc: Math.round(safeNumber(vol.accuracy)),
+        }),
+      );
     }
+    core = name;
   }
   const line = `${subj}: ${core}`.replace(/\s+/g, " ").trim();
   const out = stripParentOverviewLeakageHe(line);
@@ -1825,7 +1834,7 @@ export function generateParentReportV2(
   customStartDate = null,
   customEndDate = null
 ) {
-  if (typeof window === "undefined") return null;
+  if (typeof window === "undefined" && typeof globalThis?.window === "undefined") return null;
 
   const now = new Date();
   let startDate;
@@ -2222,7 +2231,10 @@ export function generateParentReportV2(
   if (contractsV1TraceEnabled) {
     attachEvidenceContractsV1ToTopicMaps(maps, startMs, endMs);
   }
-  enrichReportMapsWithTopicStepHints(maps, mistakesBySubjectMaps, endMs);
+  enrichReportMapsWithTopicStepHints(maps, mistakesBySubjectMaps, endMs, undefined, {
+    rawMistakesBySubject,
+    startMs,
+  });
 
   const systemIntelligenceLayer = applySystemIntelligenceLayerToMaps(maps);
 
@@ -2448,21 +2460,39 @@ export function generateParentReportV2(
     ? "חלק מהתרגול בוצע בכיתה שונה מהכיתה הרשומה, ולכן הוא מוצג בנפרד."
     : null;
 
-  const rawMetricStrengthsHe = deriveRawMetricStrengthLinesHe({
-    totalQuestions,
-    englishQuestions: englishTotalQuestions,
-    englishAccuracy,
-    hebrewQuestions: hebrewTotalQuestions,
-    hebrewAccuracy,
-    scienceQuestions: scienceTotalQuestions,
-    scienceAccuracy,
-    mathQuestions: mathTotalQuestions,
-    mathAccuracy,
-    geometryQuestions: geometryTotalQuestions,
-    geometryAccuracy,
-    moledetGeographyQuestions: moledetGeographyTotalQuestions,
-    moledetGeographyAccuracy,
-  });
+  const weakSubjectIds = new Set();
+  for (const row of collectTopicEngineRowsFromReport({
+    mathOperations: maps.mathOperations,
+    geometryTopics: maps.geometryTopics,
+    englishTopics: maps.englishTopics,
+    scienceTopics: maps.scienceTopics,
+    hebrewTopics: maps.hebrewTopics,
+    moledetGeographyTopics: maps.moledetGeographyTopics,
+  })) {
+    const acc = Number(row.accuracy) || 0;
+    const q = Number(row.questions) || 0;
+    if (q >= 3 && acc < 60) weakSubjectIds.add(String(row.subjectId || ""));
+  }
+
+  const rawMetricStrengthsHe = deriveRawMetricStrengthLinesHe(
+    {
+      totalQuestions,
+      englishQuestions: englishTotalQuestions,
+      englishAccuracy,
+      hebrewQuestions: hebrewTotalQuestions,
+      hebrewAccuracy,
+      scienceQuestions: scienceTotalQuestions,
+      scienceAccuracy,
+      mathQuestions: mathTotalQuestions,
+      mathAccuracy,
+      geometryQuestions: geometryTotalQuestions,
+      geometryAccuracy,
+      moledetGeographyQuestions: moledetGeographyTotalQuestions,
+      moledetGeographyAccuracy,
+    },
+    null,
+    weakSubjectIds,
+  );
 
   hardenBaseReportWithRowIdentity({
     registeredGradeKey,

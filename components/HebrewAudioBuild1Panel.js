@@ -217,6 +217,7 @@ export default function HebrewAudioBuild1Panel({
         className="inline-flex items-center justify-center gap-1.5 h-8 md:h-10 px-2 md:px-3 rounded-lg bg-cyan-600/85 hover:bg-cyan-600 disabled:opacity-50 text-[11px] md:text-xs font-bold text-white border border-cyan-400/35 shadow-sm shrink-0 tabular-nums"
         title={playTitle}
         aria-label={playTitle}
+        data-testid="hebrew-audio-button"
       >
         <span aria-hidden>🔊</span>
         <span>נגן</span>

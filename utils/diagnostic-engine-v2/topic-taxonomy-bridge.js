@@ -101,11 +101,58 @@ const MOLEDET_TOPIC_TO_IDS = {
 };
 
 /**
+ * Product bucket aliases → canonical keys that exist in taxonomy maps above.
+ * No invented taxonomy — only redirects to keys already mapped.
+ * @type {Record<string, string>}
+ */
+const TOPIC_BUCKET_ALIASES = {
+  shapes: "shapes_basic",
+  sentence: "sentences",
+  map: "maps",
+  human_body: "body",
+};
+
+const GRADE_SCOPE_SEP = "::grade:";
+
+/**
+ * Normalize report bucket keys: strip `::grade:gN`, then first `::` segment; apply aliases.
+ * @param {string|null|undefined} bucketKeyRaw
+ * @returns {{ rawBucketKey: string, normalizedBucketKey: string, gradeScope: string|null, baseBeforeAlias: string }}
+ */
+export function normalizeReportBucketKey(bucketKeyRaw) {
+  const raw = String(bucketKeyRaw ?? "").trim();
+  if (!raw) {
+    return { rawBucketKey: raw, normalizedBucketKey: "", gradeScope: null, baseBeforeAlias: "" };
+  }
+
+  let gradeScope = null;
+  let key = raw;
+  const gradeIdx = key.indexOf(GRADE_SCOPE_SEP);
+  if (gradeIdx !== -1) {
+    gradeScope = key.slice(gradeIdx + GRADE_SCOPE_SEP.length).trim() || null;
+    key = key.slice(0, gradeIdx);
+  }
+
+  const nextSep = key.indexOf("::");
+  const baseBeforeAlias = nextSep === -1 ? key : key.slice(0, nextSep);
+  const aliased = TOPIC_BUCKET_ALIASES[baseBeforeAlias] || baseBeforeAlias;
+
+  return {
+    rawBucketKey: raw,
+    normalizedBucketKey: aliased,
+    gradeScope,
+    baseBeforeAlias,
+  };
+}
+
+/**
+ * Legacy lookup (pre stage-2) — direct key without grade/alias normalization.
+ * Used for audit before/after only.
  * @param {string} subjectId
  * @param {string} bucketKeyRaw
  * @returns {string[]}
  */
-export function taxonomyIdsForReportBucket(subjectId, bucketKeyRaw) {
+export function taxonomyIdsForReportBucketLegacy(subjectId, bucketKeyRaw) {
   const bucketKey = String(bucketKeyRaw || "").trim();
   if (!bucketKey) return [];
 
@@ -126,6 +173,43 @@ export function taxonomyIdsForReportBucket(subjectId, bucketKeyRaw) {
     return SCIENCE_TOPIC_TO_IDS[bucketKey] ? [...SCIENCE_TOPIC_TO_IDS[bucketKey]] : [];
   }
   if (subjectId === "moledet-geography") {
+    return MOLEDET_TOPIC_TO_IDS[bucketKey] ? [...MOLEDET_TOPIC_TO_IDS[bucketKey]] : [];
+  }
+  return [];
+}
+
+/**
+ * @param {string} subjectId
+ * @param {string} bucketKeyRaw
+ * @returns {string[]}
+ */
+export function taxonomyIdsForReportBucket(subjectId, bucketKeyRaw) {
+  const sid = String(subjectId || "").trim();
+  const raw = String(bucketKeyRaw || "").trim();
+  if (!raw) return [];
+
+  if (sid === "math") {
+    const base = mathReportBaseOperationKey(raw);
+    return MATH_OP_TO_IDS[base] ? [...MATH_OP_TO_IDS[base]] : [];
+  }
+
+  const { normalizedBucketKey } = normalizeReportBucketKey(raw);
+  const bucketKey = normalizedBucketKey;
+  if (!bucketKey) return [];
+
+  if (sid === "geometry") {
+    return GEOMETRY_TOPIC_TO_IDS[bucketKey] ? [...GEOMETRY_TOPIC_TO_IDS[bucketKey]] : [];
+  }
+  if (sid === "english") {
+    return ENGLISH_TOPIC_TO_IDS[bucketKey] ? [...ENGLISH_TOPIC_TO_IDS[bucketKey]] : [];
+  }
+  if (sid === "hebrew") {
+    return HEBREW_TOPIC_TO_IDS[bucketKey] ? [...HEBREW_TOPIC_TO_IDS[bucketKey]] : [];
+  }
+  if (sid === "science") {
+    return SCIENCE_TOPIC_TO_IDS[bucketKey] ? [...SCIENCE_TOPIC_TO_IDS[bucketKey]] : [];
+  }
+  if (sid === "moledet-geography") {
     return MOLEDET_TOPIC_TO_IDS[bucketKey] ? [...MOLEDET_TOPIC_TO_IDS[bucketKey]] : [];
   }
   return [];

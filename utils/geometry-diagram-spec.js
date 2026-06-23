@@ -17,15 +17,38 @@ export function getGeometryDiagramSpec(question, options = {}) {
   if (!question?.params || !question.topic) return null;
   const hideUnknownValues = options.hideUnknownValues === true;
   const { topic, shape, params: p } = question;
+  const stem = String(question.question || question.exerciseText || "").trim();
+  const asksForAreaGrid =
+    topic === "area" &&
+    /(משבצות|רשת|לוח ריבועים|ריבועים קטנים|תאים)/u.test(stem);
 
   if (topic === "area") {
     switch (shape) {
       case "square":
         if (typeof p.side !== "number") return null;
-        return { kind: "square", mode: "area", side: p.side };
+        return asksForAreaGrid
+          ? {
+              kind: "square",
+              mode: "area",
+              side: p.side,
+              grid: true,
+              gridCols: p.side,
+              gridRows: p.side,
+            }
+          : { kind: "square", mode: "area", side: p.side };
       case "rectangle":
         if (typeof p.length !== "number" || typeof p.width !== "number") return null;
-        return { kind: "rectangle", mode: "area", length: p.length, width: p.width };
+        return asksForAreaGrid
+          ? {
+              kind: "rectangle",
+              mode: "area",
+              length: p.length,
+              width: p.width,
+              grid: true,
+              gridCols: p.length,
+              gridRows: p.width,
+            }
+          : { kind: "rectangle", mode: "area", length: p.length, width: p.width };
       case "triangle":
         if (typeof p.base !== "number" || typeof p.height !== "number") return null;
         return { kind: "triangle", mode: "area", base: p.base, height: p.height };

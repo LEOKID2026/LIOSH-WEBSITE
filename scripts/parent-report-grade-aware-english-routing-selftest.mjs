@@ -36,16 +36,37 @@ const { GRADE_AWARE_RECOMMENDATION_TEMPLATES } = await import(
   assert.ok(s.e01Score > s.e05Score, "sanity: vocab-basic constructed evidence should favor E-01 score");
 }
 
-// —— 2. Vocabulary-in-context / collocation / false friend → E-05 before E-01 ——
+// —— 2. Collocation / false friend / vocab recall metadata → E-01 before E-05 ——
 {
   const out = orderEnglishTaxonomyCandidates(
     ["E-01", "E-05"],
-    [{ params: { kind: "collocation", semanticFamily: "meaning_from_context" } }, { conceptTag: "false_friend" }],
-    { bucketKey: "vocabulary" }
+    [
+      {
+        patternFamily: "vocab_recall_en",
+        questionLabel: "vocabulary|vocab_recall_en|לתת|מה פירוש המילה",
+        metadata: { possibleErrorPatterns: ["תרגום מילולי שגוי", "false friend"] },
+        params: { direction: "he_to_en", patternFamily: "vocab_recall_en" },
+      },
+      { conceptTag: "false_friend" },
+    ],
+    { bucketKey: "vocabulary" },
   );
-  assert.deepEqual(out, ["E-05", "E-01"], "context/collocation/false-friend evidence should prefer E-05 first");
-  const s = englishVocabularyRoutingScores([{ diagnosticSkillId: "choose_word", topicOrOperation: "sentence_context" }], {});
-  assert.ok(s.e05Score > s.e01Score, "sanity: vocab-context constructed evidence should favor E-05 score");
+  assert.deepEqual(out, ["E-01", "E-05"], "vocab recall / false-friend evidence should prefer E-01 first");
+}
+
+// —— 2b. Preposition-in-context → E-05 before E-01 ——
+{
+  const out = orderEnglishTaxonomyCandidates(
+    ["E-01", "E-05"],
+    [{ params: { kind: "preposition", semanticFamily: "meaning_from_context" } }],
+    { bucketKey: "vocabulary" },
+  );
+  assert.deepEqual(out, ["E-05", "E-01"], "preposition-in-context evidence should prefer E-05 first");
+  const s = englishVocabularyRoutingScores(
+    [{ diagnosticSkillId: "choose_word", topicOrOperation: "sentence_context", params: { kind: "preposition" } }],
+    {},
+  );
+  assert.ok(s.e05Score > s.e01Score, "sanity: preposition-context constructed evidence should favor E-05 score");
 }
 
 // —— 3. Basic grammar / tense → E-02 before E-04 ——

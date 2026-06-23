@@ -41,10 +41,12 @@ function DiagramAnimationStyles() {
 function GridFillOverlay({ x, y, w, h, cols = 4, rows = 4, active = false }) {
   if (!active) return null;
   const cells = [];
-  const cw = w / cols;
-  const rh = h / rows;
-  for (let r = 0; r < rows; r += 1) {
-    for (let c = 0; c < cols; c += 1) {
+  const safeCols = Math.max(1, Math.round(Number(cols) || 1));
+  const safeRows = Math.max(1, Math.round(Number(rows) || 1));
+  const cw = w / safeCols;
+  const rh = h / safeRows;
+  for (let r = 0; r < safeRows; r += 1) {
+    for (let c = 0; c < safeCols; c += 1) {
       cells.push(
         <rect
           key={`${r}-${c}`}
@@ -54,9 +56,9 @@ function GridFillOverlay({ x, y, w, h, cols = 4, rows = 4, active = false }) {
           height={rh}
           fill="rgba(253, 224, 71, 0.12)"
           stroke="rgba(253, 224, 71, 0.35)"
-          strokeWidth="0.8"
+          strokeWidth="1"
           className="geo-animate-grid"
-          style={{ animationDelay: `${(r * cols + c) * 0.04}s` }}
+          style={{ animationDelay: `${(r * safeCols + c) * 0.04}s` }}
         />
       );
     }
@@ -308,9 +310,9 @@ export default function GeometryExplanationDiagram({
             y={cy - half}
             w={sz}
             h={sz}
-            cols={Math.min(6, Math.max(2, Math.round(s / 2)))}
-            rows={Math.min(6, Math.max(2, Math.round(s / 2)))}
-            active={showGrid && spec.mode === "area"}
+            cols={spec.gridCols ?? Math.min(6, Math.max(2, Math.round(s / 2)))}
+            rows={spec.gridRows ?? Math.min(6, Math.max(2, Math.round(s / 2)))}
+            active={(showGrid || spec.grid === true) && spec.mode === "area"}
           />
           <TracePerimeterRect
             x={cx - half}
@@ -390,9 +392,9 @@ export default function GeometryExplanationDiagram({
             y={top}
             w={rw}
             h={rh}
-            cols={4}
-            rows={3}
-            active={showGrid}
+            cols={spec.gridCols ?? 4}
+            rows={spec.gridRows ?? 3}
+            active={showGrid || spec.grid === true}
           />
           <TracePerimeterRect x={left} y={top} w={rw} h={rh} active={showTrace} />
           <line

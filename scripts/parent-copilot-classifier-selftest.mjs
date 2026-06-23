@@ -16,8 +16,9 @@ import parentCopilot from "../utils/parent-copilot/index.js";
 
 const {
   classifyParentQuestionDeterministic,
-  OFF_TOPIC_RESPONSE_HE,
+  HEALTH_BOUNDARY_RESPONSE_HE,
   DIAGNOSTIC_BOUNDARY_RESPONSE_HE,
+  OFF_TOPIC_RESPONSE_HE,
   PEER_COMPARISON_RESPONSE_HE,
   AMBIGUOUS_RESPONSE_HE,
 } = classifierMod;
@@ -275,7 +276,7 @@ const detClinical = classifyParentQuestionDeterministic({
   utterance: "האם הוא דיסלקסי?",
   payload: richReportPayload(),
 });
-check("[B2] clinical still diagnostic_sensitive", detClinical.bucket === "diagnostic_sensitive", detClinical.bucket);
+check("[B2] clinical still health_sensitive", detClinical.bucket === "health_sensitive", detClinical.bucket);
 
 // Group B — Diagnostic
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -293,12 +294,12 @@ const diagnostic = [
 for (const q of diagnostic) {
   const det = classifyParentQuestionDeterministic({ utterance: q, payload: richReportPayload() });
   check(
-    `[B] classifier diagnostic :: "${q}"`,
-    det.bucket === "diagnostic_sensitive",
+    `[B] classifier health_sensitive :: "${q}"`,
+    det.bucket === "health_sensitive",
     `bucket=${det.bucket} confidence=${det.confidence.toFixed(2)}`,
   );
-  if (det.bucket === "diagnostic_sensitive") {
-    pipelineHardGateChecks("B-pipe", q, "diagnostic_sensitive", DIAGNOSTIC_BOUNDARY_RESPONSE_HE);
+  if (det.bucket === "health_sensitive") {
+    pipelineHardGateChecks("B-pipe", q, "health_sensitive", HEALTH_BOUNDARY_RESPONSE_HE);
   }
 }
 
@@ -462,12 +463,12 @@ process.stdout.write("\n── Group F: Router compatibility (back-compat shape)
 }
 {
   const r = routeParentQuestion("יש לו ADHD?", richReportPayload());
-  check(`[F] router diagnostic exitEarly`, r.exitEarly === true, String(r.exitEarly));
-  check(`[F] router diagnostic deterministicResponse exact`,
-    r.deterministicResponse === DIAGNOSTIC_BOUNDARY_RESPONSE_HE,
+  check(`[F] router health exitEarly`, r.exitEarly === true, String(r.exitEarly));
+  check(`[F] router health deterministicResponse exact`,
+    r.deterministicResponse === HEALTH_BOUNDARY_RESPONSE_HE,
     r.deterministicResponse || "null");
-  check(`[F] router diagnostic classifierBucket`,
-    r.classifierBucket === "diagnostic_sensitive",
+  check(`[F] router health classifierBucket`,
+    r.classifierBucket === "health_sensitive",
     r.classifierBucket);
 }
 {

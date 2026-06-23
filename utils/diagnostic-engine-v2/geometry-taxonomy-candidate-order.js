@@ -1,16 +1,24 @@
 /**
- * Phase 3-B0 — order geometry taxonomy candidates for conflict buckets only:
+ * Phase 3-B0 / Stage 4D — order geometry taxonomy candidates for conflict buckets only:
  * - `quadrilaterals`: G-01 vs G-03
  * - `area`: G-03 vs G-08
  *
- * Uses wrong-event metadata (patternFamily, kind, params, etc.) plus row grade/level only.
- * Row bucket/topic keys are excluded from the routing haystack so literal bucket names do not dominate.
- * Never removes candidates; only reorders when both conflict ids are present.
+ * Uses wrong-event metadata (patternFamily, kind, params, possibleErrorPatterns, questionLabel)
+ * plus row grade/level only. Never removes candidates; only reorders with real evidence.
  */
 import {
   parseGeometryGateGrade,
   TRIANGLE_AREA_FORMULA_MIN_GRADE,
 } from "../geometry-curriculum-gates.js";
+import {
+  routingHaystackForWrongEvent,
+  routingRowGradeLevelHaystack,
+  countRoutingIndicatorHits,
+} from "./diagnostic-routing-haystack.js";
+import {
+  taxonomyPatternRoutingScores,
+  reorderPairByPreference,
+} from "./taxonomy-pattern-routing-scores.js";
 
 /** Longer phrases first to reduce redundant double-counting on the same haystack. */
 const G01_INDICATORS = [
@@ -30,6 +38,8 @@ const G01_INDICATORS = [
   "tiling",
   "square",
   "shape",
+  "identify_rectangle",
+  "shapes_basic_rectangle",
 ];
 
 const G03_INDICATORS = [
@@ -43,6 +53,11 @@ const G03_INDICATORS = [
   "area_height",
   "height",
   "base",
+  "rectangle_area_procedural",
+  "procedural",
+  "צלעות כגובה",
+  "בחירת גובה",
+  "כפל שגוי",
 ];
 
 const G08_INDICATORS = [
@@ -57,6 +72,7 @@ const G08_INDICATORS = [
   "theorem",
   "formula",
   "leg",
+  "triangle_area_formula",
 ];
 
 const G08_FORMULA_INDICATORS = new Set([
@@ -77,7 +93,7 @@ function g08IndicatorsForRow(row) {
     row && typeof row === "object"
       ? /** @type {Record<string, unknown>} */ (row).gradeKey ??
           /** @type {Record<string, unknown>} */ (row).contentGradeKey
-      : null
+      : null,
   );
   if (n == null || n < TRIANGLE_AREA_FORMULA_MIN_GRADE) {
     return G08_INDICATORS.filter((ind) => !G08_FORMULA_INDICATORS.has(ind));
@@ -86,84 +102,24 @@ function g08IndicatorsForRow(row) {
 }
 
 /**
- * @param {unknown} ev
- * @returns {string}
- */
-function haystackForWrong(ev) {
-  if (!ev || typeof ev !== "object") return "";
-  const e = /** @type {Record<string, unknown>} */ (ev);
-  const parts = [];
-  for (const k of ["patternFamily", "kind", "conceptTag", "diagnosticSkillId", "topicOrOperation"]) {
-    if (e[k] != null && String(e[k]).trim()) parts.push(String(e[k]));
-  }
-  const params = e.params;
-  if (params && typeof params === "object") {
-    const p = /** @type {Record<string, unknown>} */ (params);
-    for (const k of ["kind", "patternFamily", "operation", "conceptTag", "diagnosticSkillId", "semanticFamily"]) {
-      if (p[k] != null && String(p[k]).trim()) parts.push(String(p[k]));
-    }
-    try {
-      parts.push(JSON.stringify(p).toLowerCase());
-    } catch {
-      /* ignore */
-    }
-    const contract = p.contract;
-    if (contract && typeof contract === "object") {
-      try {
-        parts.push(JSON.stringify(contract).toLowerCase());
-      } catch {
-        /* ignore */
-      }
-    }
-  }
-  return parts.join(" ").toLowerCase();
-}
-
-/**
- * Grade / level only — avoids bucket/topic literals skewing scores.
- *
- * @param {unknown} row
- * @returns {string}
- */
-function rowGradeLevelHaystack(row) {
-  const parts = [];
-  if (row && typeof row === "object") {
-    const r = /** @type {Record<string, unknown>} */ (row);
-    for (const k of ["levelKey", "gradeKey"]) {
-      if (r[k] != null && String(r[k]).trim()) parts.push(String(r[k]).toLowerCase());
-    }
-  }
-  return parts.join(" ");
-}
-
-/**
- * @param {string} hay
- * @param {readonly string[]} phrases
- * @returns {number}
- */
-function countIndicatorHits(hay, phrases) {
-  let n = 0;
-  for (const ph of phrases) {
-    if (!ph) continue;
-    if (hay.includes(ph)) n += 1;
-  }
-  return n;
-}
-
-/**
  * @param {unknown[]} wrongEvents
  * @param {unknown} [row]
  * @returns {{ g01Score: number; g03Score: number }}
  */
 export function geometryQuadrilateralRoutingScores(wrongEvents, row) {
-  const rowHay = rowGradeLevelHaystack(row);
+  const rowHay = routingRowGradeLevelHaystack(row);
   let g01Score = 0;
   let g03Score = 0;
   const list = Array.isArray(wrongEvents) ? wrongEvents : [];
+
+  const tax = taxonomyPatternRoutingScores(["G-01", "G-03"], list, row);
+  g01Score += tax["G-01"] || 0;
+  g03Score += tax["G-03"] || 0;
+
   for (const ev of list) {
-    const wh = `${rowHay} ${haystackForWrong(ev)}`.trim().toLowerCase();
-    g01Score += countIndicatorHits(wh, G01_INDICATORS);
-    g03Score += countIndicatorHits(wh, G03_INDICATORS);
+    const wh = `${rowHay} ${routingHaystackForWrongEvent(ev)}`.trim().toLowerCase();
+    g01Score += countRoutingIndicatorHits(wh, G01_INDICATORS);
+    g03Score += countRoutingIndicatorHits(wh, G03_INDICATORS);
   }
   return { g01Score, g03Score };
 }
@@ -174,58 +130,53 @@ export function geometryQuadrilateralRoutingScores(wrongEvents, row) {
  * @returns {{ g03Score: number; g08Score: number }}
  */
 export function geometryAreaRoutingScores(wrongEvents, row) {
-  const rowHay = rowGradeLevelHaystack(row);
+  const rowHay = routingRowGradeLevelHaystack(row);
   const g08Indicators = g08IndicatorsForRow(row);
   let g03Score = 0;
   let g08Score = 0;
   const list = Array.isArray(wrongEvents) ? wrongEvents : [];
+
+  const tax = taxonomyPatternRoutingScores(["G-03", "G-08"], list, row);
+  g03Score += tax["G-03"] || 0;
+  g08Score += tax["G-08"] || 0;
+
   for (const ev of list) {
-    const wh = `${rowHay} ${haystackForWrong(ev)}`.trim().toLowerCase();
-    g03Score += countIndicatorHits(wh, G03_INDICATORS);
-    g08Score += countIndicatorHits(wh, g08Indicators);
+    const wh = `${rowHay} ${routingHaystackForWrongEvent(ev)}`.trim().toLowerCase();
+    g03Score += countRoutingIndicatorHits(wh, G03_INDICATORS);
+    g08Score += countRoutingIndicatorHits(wh, g08Indicators);
+
+    if (/perimeter|היקף/.test(wh)) g03Score += 1;
+    if (/unit|יחיד|cm|מ\"ר|sq/.test(wh) && !/formula|נוסח/.test(wh)) g03Score += 1;
   }
   return { g03Score, g08Score };
 }
 
 /**
  * @param {string[]} candidateIds
- * @param {string} a
- * @param {string} b
- * @param {boolean} preferA
- * @param {boolean} preferB
- * @returns {string[]}
- */
-function reorderConflictPair(candidateIds, a, b, preferA, preferB) {
-  const rest = candidateIds.filter((id) => id !== a && id !== b);
-  if (preferA && !preferB) return [a, b, ...rest];
-  if (preferB && !preferA) return [b, a, ...rest];
-  return [...candidateIds];
-}
-
-/**
- * Reorders G-01/G-03 on `quadrilaterals`, and G-03/G-08 on `area`, when both appear.
- *
- * @param {string[]} candidateIds
  * @param {unknown[]} wrongEvents
  * @param {{ row?: unknown; bucketKey?: string }} [ctx]
- * @returns {string[]}
+ * @returns {{ orderedIds: string[]; disambiguationApplied: boolean; winnerId: string|null; scores?: Record<string, number> }}
  */
-export function orderGeometryTaxonomyCandidates(candidateIds, wrongEvents, ctx = {}) {
-  if (!Array.isArray(candidateIds) || candidateIds.length === 0) return candidateIds ? [...candidateIds] : [];
+export function orderGeometryTaxonomyCandidatesWithMeta(candidateIds, wrongEvents, ctx = {}) {
+  if (!Array.isArray(candidateIds) || candidateIds.length === 0) {
+    return { orderedIds: candidateIds ? [...candidateIds] : [], disambiguationApplied: false, winnerId: null };
+  }
   const bucketKey = String(ctx.bucketKey || "").trim();
+  const list = Array.isArray(wrongEvents) ? wrongEvents : [];
 
   if (bucketKey === "quadrilaterals") {
     const has1 = candidateIds.includes("G-01");
     const has3 = candidateIds.includes("G-03");
     if (has1 && has3) {
-      const { g01Score, g03Score } = geometryQuadrilateralRoutingScores(wrongEvents, ctx.row);
-      if (g01Score > g03Score) {
-        return reorderConflictPair(candidateIds, "G-01", "G-03", true, false);
-      }
-      if (g03Score > g01Score) {
-        return reorderConflictPair(candidateIds, "G-01", "G-03", false, true);
-      }
-      return [...candidateIds];
+      const { g01Score, g03Score } = geometryQuadrilateralRoutingScores(list, ctx.row);
+      const pair = reorderPairByPreference(
+        "G-01",
+        "G-03",
+        g01Score > g03Score,
+        g03Score > g01Score,
+        candidateIds,
+      );
+      return { ...pair, scores: { "G-01": g01Score, "G-03": g03Score } };
     }
   }
 
@@ -233,16 +184,27 @@ export function orderGeometryTaxonomyCandidates(candidateIds, wrongEvents, ctx =
     const has3 = candidateIds.includes("G-03");
     const has8 = candidateIds.includes("G-08");
     if (has3 && has8) {
-      const { g03Score, g08Score } = geometryAreaRoutingScores(wrongEvents, ctx.row);
-      if (g08Score > g03Score) {
-        return reorderConflictPair(candidateIds, "G-03", "G-08", false, true);
-      }
-      if (g03Score > g08Score) {
-        return reorderConflictPair(candidateIds, "G-03", "G-08", true, false);
-      }
-      return [...candidateIds];
+      const { g03Score, g08Score } = geometryAreaRoutingScores(list, ctx.row);
+      const pair = reorderPairByPreference(
+        "G-03",
+        "G-08",
+        g03Score > g08Score,
+        g08Score > g03Score,
+        candidateIds,
+      );
+      return { ...pair, scores: { "G-03": g03Score, "G-08": g08Score } };
     }
   }
 
-  return [...candidateIds];
+  return { orderedIds: [...candidateIds], disambiguationApplied: false, winnerId: null };
+}
+
+/**
+ * @param {string[]} candidateIds
+ * @param {unknown[]} wrongEvents
+ * @param {{ row?: unknown; bucketKey?: string }} [ctx]
+ * @returns {string[]}
+ */
+export function orderGeometryTaxonomyCandidates(candidateIds, wrongEvents, ctx = {}) {
+  return orderGeometryTaxonomyCandidatesWithMeta(candidateIds, wrongEvents, ctx).orderedIds;
 }

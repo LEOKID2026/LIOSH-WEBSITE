@@ -68,6 +68,7 @@ export default async function handler(req, res) {
     const serviceClient = getLearningSupabaseServiceRoleClient();
     const analytics = await aggregateParentReportPayload(serviceClient, student, fromDate, toDate, {
       includeParentActivities: true,
+      includePrivateTeacherActivities: true,
     });
     const payload = await attachStudentLearningAccountToParentReportPayload(serviceClient, student, analytics);
     const enriched = await enrichPayloadWithParentFacing(serviceClient, payload, studentId);

@@ -115,11 +115,18 @@ export function nextPeriodGoalsV2EmptyFallbackHe() {
 export function crossSubjectV2BulletsHe(p) {
   const units = Math.max(0, Number(p.unitsLength) || 0);
   const hi = Math.max(0, Number(p.highPriorityCount) || 0);
+  const strengthenCount = Math.max(0, Number(p.strengthenTopicCount) || 0);
   const c = Math.max(0, Number(p.contradictoryCount) || 0);
-  const bullets = [
-    `במבט על כל המקצועות יחד: ${units} נושאים בתקופה שנבחרה.`,
-    `${hi} נושאים שכדאי לעקוב אחריהם השבוע מקרוב.`,
-  ];
+  /** @type {string[]} */
+  const bullets = [];
+  if (units > 0) {
+    bullets.push(`במבט על כל המקצועות יחד: ${units} נושאים בתקופה שנבחרה.`);
+  }
+  if (hi > 0) {
+    bullets.push(`${hi} נושאים שכדאי לעקוב אחריהם השבוע מקרוב.`);
+  } else if (strengthenCount > 0) {
+    bullets.push("יש כמה נושאים שכדאי לחזק בתקופה הקרובה.");
+  }
   if (c > 0) {
     bullets.push(
       `ב ${c} נושאים התוצאות עדיין לא אחידות — עוד תרגול קצר יעזור לראות אם זה נשאר או מתייצב.`

@@ -1,0 +1,7 @@
+subject,topic_rows,metadata_present_pct,possibleErrorPatterns_pct,skillId_pct,subskillId_pct,taxonomyIds_pct,subskill_eligible,subskill_candidate_before,subskill_candidate_after,safe_subskill_to_show,blockers
+math,12,100,100,100,100,100,11,11,11,10,{"weak_taxonomy":1}
+geometry,11,91,91,91,91,91,9,9,9,8,{"recurrence_not_met":1,"weak_taxonomy":1}
+english,9,100,100,100,100,100,9,9,9,9,{}
+science,12,100,100,100,100,100,12,12,12,12,{}
+hebrew,12,100,100,100,100,100,10,10,10,9,{"recurrence_not_met":1,"weak_taxonomy":1}
+moledet-geography,8,100,100,100,100,100,7,7,7,0,{"weak_taxonomy":1}

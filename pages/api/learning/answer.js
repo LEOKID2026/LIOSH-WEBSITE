@@ -25,6 +25,7 @@ import {
 import { guardCookieMutationOrigin } from "../../../lib/security/api-guards.js";
 import { classifyActivityEvidence } from "../../../lib/learning/activity-classification.js";
 import { normalizeQuestionEnginePayload } from "../../../lib/learning/question-engine-metadata.js";
+import { buildDiagnosticCanonicalMetadata } from "../../../lib/learning/diagnostic-canonical-metadata.js";
 import { trackServerAnalyticsEvent } from "../../../lib/analytics/track-event.server.js";
 
 async function verifyLearningSessionOwnership(supabase, learningSessionId, studentId) {
@@ -156,7 +157,6 @@ export default async function handler(req, res) {
       prompt: normalizeOptionalString(body.prompt, 5000),
       expectedAnswer: normalizeOptionalString(body.expectedAnswer, 1000),
       userAnswer: normalizeOptionalString(body.userAnswer, 1000),
-      ...(questionEngine ? { questionEngine } : {}),
       hintsUsed,
       // Phase 3: raw wall time preserved; credited time capped by policy
       timeSpentMs: rawTimeSpentMs,
@@ -174,6 +174,32 @@ export default async function handler(req, res) {
       isDiagnosticEligible: classification.isDiagnosticEligible,
       contextFlags: classification.contextFlags,
     };
+
+    const canonicalBundle = buildDiagnosticCanonicalMetadata({
+      subject,
+      topic: answerPayload.topic,
+      contentGradeKey: gradeEvidence.contentGradeLevel,
+      questionId,
+      isDiagnosticEligible: classification.isDiagnosticEligible,
+      source: {
+        ...answerPayload,
+        params:
+          body.params && typeof body.params === "object" && !Array.isArray(body.params)
+            ? body.params
+            : undefined,
+        questionEngine,
+      },
+      questionEngine,
+    });
+
+    if (canonicalBundle.enrichedQuestionEngine) {
+      answerPayload.questionEngine = canonicalBundle.enrichedQuestionEngine;
+    } else if (questionEngine) {
+      answerPayload.questionEngine = questionEngine;
+    }
+    if (canonicalBundle.diagnosticMetadata) {
+      answerPayload.diagnosticMetadata = canonicalBundle.diagnosticMetadata;
+    }
 
     logLearningPipelineDebug("answer-save", {
       authenticatedStudentId: auth.studentId,

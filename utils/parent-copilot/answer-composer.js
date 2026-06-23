@@ -14,19 +14,19 @@ import { PEER_COMPARISON_RESPONSE_HE } from "./question-classifier.js";
 
 /** Fixed Copilot-only clinical boundary copy (Task C / Task G). */
 export const CLINICAL_BOUNDARY_LINE_1_HE =
-  "על סמך הדוח הזה אי אפשר לקבוע אבחנה או להצמיד תווית קלינית.";
+  "אני יכול להתייחס רק למה שמופיע בנתוני התרגול באתר.";
 export const CLINICAL_BOUNDARY_LINE_2_HE =
-  "הדוח יכול להצביע על תחומים שמצביעים על נושאים שכדאי לחזק או לבדוק שוב, אבל הוא לא מחליף אבחון מקצועי.";
+  "הדוח יכול לעזור לזהות נושאים שכדאי לחזק בלמידה, אבל הוא לא קובע מסקנות אישיות על הילד.";
 export const CLINICAL_BOUNDARY_LINE_3_HE =
-  "אם יש חשש אמיתי, נכון לשתף מורה או איש מקצוע במה שנראה בפועל, בלי להסיק אבחנה מתוך הדוח בלבד.";
+  "אפשר להמשיך מכאן בצורה מעשית: לבחור נושא אחד מהדוח, לתרגל כמה דקות, ולבדוק אם יש שיפור בתרגול הבא.";
 
 /** School placement / non-clinical sensitive education decisions — no diagnosis, no “move/don’t move” from practice data alone. */
 export const SENSITIVE_EDUCATION_LINE_1_HE =
-  "שאלה על מעבר בית ספר נוגעת להחלטה משפחתית וחינוכית רחבה. נתוני התרגול בדוח עוזרים לראות דפוסי למידה בתקופה שנבחרה, אבל הם לא נועדו ולא מספיקים כדי להחליט על מעבר בית ספר.";
+  "שאלה כזו רחבה יותר ממה שהדוח באתר יכול לקבוע.";
 export const SENSITIVE_EDUCATION_LINE_2_HE =
-  "מה שכן מומלץ הוא לשלב את מה שמופיע בדוח עם מה שאתם רואים בבית ובכיתה, ולשוחח עם המורה או עם גורם חינוכי/ייעוצי במוסד — שם נשקלת התאמה והמשך, לא מתוך הדוח לבד.";
+  "הדוח מציג רק נתוני תרגול מהתקופה שנבחרה: מקצועות, נושאים, כמות שאלות ודיוק.";
 export const SENSITIVE_EDUCATION_LINE_3_HE =
-  "אם תרצו, אפשר להמשיך כאן בצעדי תרגול קטנים לשבוע הקרוב לפי הנושאים שבולטים בדוח, או לנסח נקודות קצרות לשאלה ממוקדת למורה.";
+  "מה שאפשר לעשות כאן הוא לבחור מתוך הדוח נושא אחד לחיזוק, ולבנות סביבו צעד קטן וברור לבית או לשיחה עם הצוות החינוכי.";
 
 /**
  * @returns {{ answerBlocks: Array<{ type: string; textHe: string; source: "composed" }> }}
@@ -435,7 +435,7 @@ export function composeAnswerDraft(plan, truthPacket, coachingCtx = null) {
           "יש כאן נפח תרגול משמעותי בדוח; עדיין יש הבדל טבעי בין מה שקורה בבית לבין מה שנספר בטווח — נעדכן שוב אחרי עוד תרגול.";
       }
       if (hasIntelligenceSignals && ivConf === "low" && sfQ < 90) {
-        reason = "רמת הביטחון בתמונה נמוכה כרגע — " + reason;
+        reason = "זו תמונה ראשונית בלבד — " + reason;
       }
       if (hasIntelligenceSignals && ivWeak === "tentative" && sfQ < 100) {
         reason = "יש סימן ראשוני בלבד לחולשה — " + reason;

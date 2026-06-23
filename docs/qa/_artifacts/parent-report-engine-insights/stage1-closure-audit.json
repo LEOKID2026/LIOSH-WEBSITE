@@ -1,0 +1,1009 @@
+{
+  "generatedAt": "2026-06-23T20:32:49.015Z",
+  "hardcodeScan": {
+    "files": [
+      "utils/parent-report-engine-taxonomy-bridge.js",
+      "utils/parent-report-engine-v1-signals.js",
+      "utils/parent-report-mistake-intelligence.js",
+      "utils/topic-next-step-engine.js"
+    ],
+    "patterns": [
+      "/aaa\\d/i",
+      "/childId/i",
+      "/studentId.*===/",
+      "/audit/i"
+    ],
+    "hits": [],
+    "verdict": "no AAA/child/audit-specific conditions in engine files"
+  },
+  "generalRulesOnly": {
+    "verdict": "PASS",
+    "notes": [
+      "Engine files contain no AAA1–12, child id, or audit-specific branching.",
+      "All decisions derive from q, accuracy, accuracyBand, engineConfidenceTier, taxonomyMatch, riskFlags, behaviorType."
+    ]
+  },
+  "subjectCoverage": [
+    {
+      "subject": "english",
+      "totalTopicRowsChecked": 9,
+      "rowsWithTaxonomyMatch": 0,
+      "rowsWithStrongTaxonomyMatch": 0,
+      "rowsWithWeakTaxonomyBlocked": 0,
+      "rowsWithSubskillCandidate": 0,
+      "rowsStillMixedLastResort": 0,
+      "rowsStillInsufficient": 2
+    },
+    {
+      "subject": "geometry",
+      "totalTopicRowsChecked": 11,
+      "rowsWithTaxonomyMatch": 0,
+      "rowsWithStrongTaxonomyMatch": 0,
+      "rowsWithWeakTaxonomyBlocked": 0,
+      "rowsWithSubskillCandidate": 0,
+      "rowsStillMixedLastResort": 0,
+      "rowsStillInsufficient": 10
+    },
+    {
+      "subject": "hebrew",
+      "totalTopicRowsChecked": 12,
+      "rowsWithTaxonomyMatch": 0,
+      "rowsWithStrongTaxonomyMatch": 0,
+      "rowsWithWeakTaxonomyBlocked": 0,
+      "rowsWithSubskillCandidate": 0,
+      "rowsStillMixedLastResort": 0,
+      "rowsStillInsufficient": 8
+    },
+    {
+      "subject": "math",
+      "totalTopicRowsChecked": 12,
+      "rowsWithTaxonomyMatch": 3,
+      "rowsWithStrongTaxonomyMatch": 3,
+      "rowsWithWeakTaxonomyBlocked": 9,
+      "rowsWithSubskillCandidate": 3,
+      "rowsStillMixedLastResort": 0,
+      "rowsStillInsufficient": 8
+    },
+    {
+      "subject": "moledet-geography",
+      "totalTopicRowsChecked": 8,
+      "rowsWithTaxonomyMatch": 0,
+      "rowsWithStrongTaxonomyMatch": 0,
+      "rowsWithWeakTaxonomyBlocked": 0,
+      "rowsWithSubskillCandidate": 0,
+      "rowsStillMixedLastResort": 0,
+      "rowsStillInsufficient": 5
+    },
+    {
+      "subject": "science",
+      "totalTopicRowsChecked": 12,
+      "rowsWithTaxonomyMatch": 0,
+      "rowsWithStrongTaxonomyMatch": 0,
+      "rowsWithWeakTaxonomyBlocked": 0,
+      "rowsWithSubskillCandidate": 0,
+      "rowsStillMixedLastResort": 0,
+      "rowsStillInsufficient": 4
+    }
+  ],
+  "aaa7EnglishDiagnosis": {
+    "bucketKey": "vocabulary::grade:g4",
+    "candidateIds": [],
+    "filteredEvents": 15,
+    "filteredWrongEvents": 15,
+    "rowWrongTotal": 234,
+    "wrongCountForRules": 234,
+    "classificationState": "unclassified_no_taxonomy_match",
+    "classificationReasonCode": "taxonomy_not_matched",
+    "matchStrength": "none",
+    "taxonomyId": null,
+    "recurrenceProbe": [],
+    "sampleWrong": [
+      {
+        "patternFamily": "to:vocabulary",
+        "hintUsed": null,
+        "metadataKeys": []
+      },
+      {
+        "patternFamily": "to:vocabulary",
+        "hintUsed": null,
+        "metadataKeys": []
+      },
+      {
+        "patternFamily": "to:vocabulary",
+        "hintUsed": null,
+        "metadataKeys": []
+      }
+    ],
+    "possibleErrorPatternsConnected": false,
+    "metadataPresentRate": 0,
+    "deV2Unit": {
+      "state": "unclassified_no_taxonomy_match",
+      "reasonCode": "taxonomy_not_matched",
+      "weakFallbackBlocked": false
+    },
+    "deV2Evidence": [
+      {
+        "type": "volume",
+        "source": "report_row",
+        "value": {
+          "questions": 313,
+          "correct": 79,
+          "wrong": 234,
+          "accuracy": 25
+        }
+      },
+      {
+        "type": "mistake_events",
+        "source": "normalized_mistake_event",
+        "value": {
+          "total": 15,
+          "wrong": 15,
+          "rowWrongTotal": 234,
+          "wrongCountForRules": 234
+        }
+      },
+      {
+        "type": "recency",
+        "source": "row",
+        "value": {
+          "lastSessionMs": 1780242240000
+        }
+      }
+    ]
+  },
+  "spotValidation": {
+    "AAA2_geometry_5q_100pct": {
+      "ok": true,
+      "q": 5,
+      "accuracy": 100,
+      "engineDecision": "early_direction_only",
+      "engineTier": "T1",
+      "accuracyBand": "mastery",
+      "note": "T0/T1 guard — not mastery_stable on 5 questions"
+    },
+    "AAA3_area_77pct": {
+      "ok": true,
+      "engineDecision": "partial_stable",
+      "rootCause": "early_stage_instability",
+      "pattern": "insufficient_mistake_evidence"
+    },
+    "AAA4_addition_38pct": {
+      "ok": true,
+      "engineDecision": "clear_topic_gap",
+      "subskill": "נשיאה",
+      "pattern": "procedure_break"
+    },
+    "AAA5_area_82pct": {
+      "ok": true,
+      "engineDecision": "partial_stable",
+      "rootCause": "early_stage_instability",
+      "pattern": "insufficient_mistake_evidence"
+    },
+    "AAA7_english_25pct": {
+      "ok": true,
+      "engineDecision": "clear_topic_gap",
+      "pattern": "concept_confusion",
+      "taxonomyMatch": false,
+      "taxonomyDiagnosis": {
+        "bucketKey": "vocabulary::grade:g4",
+        "candidateIds": [],
+        "filteredEvents": 15,
+        "filteredWrongEvents": 15,
+        "rowWrongTotal": 234,
+        "wrongCountForRules": 234,
+        "classificationState": "unclassified_no_taxonomy_match",
+        "classificationReasonCode": "taxonomy_not_matched",
+        "matchStrength": "none",
+        "taxonomyId": null,
+        "recurrenceProbe": [],
+        "sampleWrong": [
+          {
+            "patternFamily": "to:vocabulary",
+            "hintUsed": null,
+            "metadataKeys": []
+          },
+          {
+            "patternFamily": "to:vocabulary",
+            "hintUsed": null,
+            "metadataKeys": []
+          },
+          {
+            "patternFamily": "to:vocabulary",
+            "hintUsed": null,
+            "metadataKeys": []
+          }
+        ],
+        "possibleErrorPatternsConnected": false,
+        "metadataPresentRate": 0,
+        "deV2Unit": {
+          "state": "unclassified_no_taxonomy_match",
+          "reasonCode": "taxonomy_not_matched",
+          "weakFallbackBlocked": false
+        },
+        "deV2Evidence": [
+          {
+            "type": "volume",
+            "source": "report_row",
+            "value": {
+              "questions": 313,
+              "correct": 79,
+              "wrong": 234,
+              "accuracy": 25
+            }
+          },
+          {
+            "type": "mistake_events",
+            "source": "normalized_mistake_event",
+            "value": {
+              "total": 15,
+              "wrong": 15,
+              "rowWrongTotal": 234,
+              "wrongCountForRules": 234
+            }
+          },
+          {
+            "type": "recency",
+            "source": "row",
+            "value": {
+              "lastSessionMs": 1780242240000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "noSubskillHighQ": [
+    {
+      "child": "AAA7",
+      "subject": "english",
+      "topic": "אוצר מילים - כיתה ד׳",
+      "q": 313,
+      "accuracy": 25,
+      "reason_no_subskill": "no_taxonomy_candidates_for_bucket",
+      "what_data_is_missing": "bucketKey=vocabulary::grade:g4 not mapped in topic-taxonomy-bridge",
+      "engine_or_metadata_block": "metadata_bridge",
+      "taxonomyMatchId": null,
+      "dominantPattern": "concept_confusion",
+      "taxonomy_trace": {
+        "bucketKey": "vocabulary::grade:g4",
+        "candidateIds": [],
+        "filteredWrongEvents": 15,
+        "rowWrongTotal": 234,
+        "recurrenceProbe": [],
+        "metadataPresentRate": 0,
+        "possibleErrorPatternsConnected": false
+      }
+    },
+    {
+      "child": "AAA10",
+      "subject": "science",
+      "topic": "גוף האדם - כיתה ה׳",
+      "q": 307,
+      "accuracy": 62,
+      "reason_no_subskill": "no_taxonomy_diagnosis",
+      "what_data_is_missing": "gap detected at accuracy-band layer without taxonomy recurrence",
+      "engine_or_metadata_block": "metadata/recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "concept_confusion"
+    },
+    {
+      "child": "AAA5",
+      "subject": "geometry",
+      "topic": "שטח - כיתה ג׳",
+      "q": 278,
+      "accuracy": 82,
+      "reason_no_subskill": "partial_good_or_mastery_no_subskill_needed",
+      "what_data_is_missing": "accuracy band guard — not a weakness row",
+      "engine_or_metadata_block": "engine_guard",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA9",
+      "subject": "hebrew",
+      "topic": "קריאה - כיתה ה׳",
+      "q": 187,
+      "accuracy": 35,
+      "reason_no_subskill": "no_taxonomy_diagnosis",
+      "what_data_is_missing": "gap detected at accuracy-band layer without taxonomy recurrence",
+      "engine_or_metadata_block": "metadata/recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "concept_confusion"
+    },
+    {
+      "child": "AAA11",
+      "subject": "science",
+      "topic": "גוף האדם - כיתה ו׳",
+      "q": 168,
+      "accuracy": 65,
+      "reason_no_subskill": "no_taxonomy_diagnosis",
+      "what_data_is_missing": "no taxonomyMatchId on row",
+      "engine_or_metadata_block": "metadata/recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "procedure_break"
+    },
+    {
+      "child": "AAA9",
+      "subject": "math",
+      "topic": "חיבור - כיתה ה׳",
+      "q": 152,
+      "accuracy": 84,
+      "reason_no_subskill": "weak_taxonomy_fallback_blocked",
+      "what_data_is_missing": "recurrence failed for all candidates",
+      "engine_or_metadata_block": "engine_recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA6",
+      "subject": "science",
+      "topic": "גוף האדם - כיתה ג׳",
+      "q": 138,
+      "accuracy": 49,
+      "reason_no_subskill": "no_taxonomy_diagnosis",
+      "what_data_is_missing": "gap detected at accuracy-band layer without taxonomy recurrence",
+      "engine_or_metadata_block": "metadata/recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "concept_confusion"
+    },
+    {
+      "child": "AAA3",
+      "subject": "math",
+      "topic": "חיבור - כיתה ב׳",
+      "q": 124,
+      "accuracy": 77,
+      "reason_no_subskill": "weak_taxonomy_fallback_blocked",
+      "what_data_is_missing": "recurrence failed for all candidates",
+      "engine_or_metadata_block": "engine_recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA3",
+      "subject": "geometry",
+      "topic": "שטח - כיתה ב׳",
+      "q": 111,
+      "accuracy": 77,
+      "reason_no_subskill": "partial_good_or_mastery_no_subskill_needed",
+      "what_data_is_missing": "accuracy band guard — not a weakness row",
+      "engine_or_metadata_block": "engine_guard",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA1",
+      "subject": "science",
+      "topic": "גוף האדם - כיתה א׳",
+      "q": 107,
+      "accuracy": 87,
+      "reason_no_subskill": "partial_good_or_mastery_no_subskill_needed",
+      "what_data_is_missing": "accuracy band guard — not a weakness row",
+      "engine_or_metadata_block": "engine_guard",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA11",
+      "subject": "math",
+      "topic": "חיבור - כיתה ו׳",
+      "q": 103,
+      "accuracy": 91,
+      "reason_no_subskill": "weak_taxonomy_fallback_blocked",
+      "what_data_is_missing": "recurrence failed for all candidates",
+      "engine_or_metadata_block": "engine_recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA1",
+      "subject": "geometry",
+      "topic": "צורות בסיסיות - כיתה א׳",
+      "q": 96,
+      "accuracy": 88,
+      "reason_no_subskill": "partial_good_or_mastery_no_subskill_needed",
+      "what_data_is_missing": "accuracy band guard — not a weakness row",
+      "engine_or_metadata_block": "engine_guard",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA11",
+      "subject": "hebrew",
+      "topic": "קריאה - כיתה ו׳",
+      "q": 93,
+      "accuracy": 87,
+      "reason_no_subskill": "partial_good_or_mastery_no_subskill_needed",
+      "what_data_is_missing": "accuracy band guard — not a weakness row",
+      "engine_or_metadata_block": "engine_guard",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA1",
+      "subject": "hebrew",
+      "topic": "קריאה - כיתה א׳",
+      "q": 90,
+      "accuracy": 96,
+      "reason_no_subskill": "partial_good_or_mastery_no_subskill_needed",
+      "what_data_is_missing": "accuracy band guard — not a weakness row",
+      "engine_or_metadata_block": "engine_guard",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA9",
+      "subject": "geometry",
+      "topic": "שטח - כיתה ה׳",
+      "q": 87,
+      "accuracy": 89,
+      "reason_no_subskill": "partial_good_or_mastery_no_subskill_needed",
+      "what_data_is_missing": "accuracy band guard — not a weakness row",
+      "engine_or_metadata_block": "engine_guard",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA6",
+      "subject": "hebrew",
+      "topic": "קריאה - כיתה ג׳",
+      "q": 85,
+      "accuracy": 58,
+      "reason_no_subskill": "no_taxonomy_diagnosis",
+      "what_data_is_missing": "gap detected at accuracy-band layer without taxonomy recurrence",
+      "engine_or_metadata_block": "metadata/recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "concept_confusion"
+    },
+    {
+      "child": "AAA7",
+      "subject": "hebrew",
+      "topic": "קריאה - כיתה ד׳",
+      "q": 84,
+      "accuracy": 74,
+      "reason_no_subskill": "partial_good_or_mastery_no_subskill_needed",
+      "what_data_is_missing": "accuracy band guard — not a weakness row",
+      "engine_or_metadata_block": "engine_guard",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA3",
+      "subject": "hebrew",
+      "topic": "קריאה - כיתה ב׳",
+      "q": 76,
+      "accuracy": 68,
+      "reason_no_subskill": "no_taxonomy_diagnosis",
+      "what_data_is_missing": "no taxonomyMatchId on row",
+      "engine_or_metadata_block": "metadata/recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "procedure_break"
+    },
+    {
+      "child": "AAA6",
+      "subject": "math",
+      "topic": "חיבור - כיתה ג׳",
+      "q": 76,
+      "accuracy": 54,
+      "reason_no_subskill": "weak_taxonomy_fallback_blocked",
+      "what_data_is_missing": "recurrence failed for all candidates",
+      "engine_or_metadata_block": "engine_recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "concept_confusion"
+    },
+    {
+      "child": "AAA11",
+      "subject": "geometry",
+      "topic": "שטח - כיתה ו׳",
+      "q": 76,
+      "accuracy": 91,
+      "reason_no_subskill": "partial_good_or_mastery_no_subskill_needed",
+      "what_data_is_missing": "accuracy band guard — not a weakness row",
+      "engine_or_metadata_block": "engine_guard",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA12",
+      "subject": "geometry",
+      "topic": "שטח - כיתה ו׳",
+      "q": 75,
+      "accuracy": 79,
+      "reason_no_subskill": "partial_good_or_mastery_no_subskill_needed",
+      "what_data_is_missing": "accuracy band guard — not a weakness row",
+      "engine_or_metadata_block": "engine_guard",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA3",
+      "subject": "science",
+      "topic": "גוף האדם - כיתה ב׳",
+      "q": 73,
+      "accuracy": 75,
+      "reason_no_subskill": "partial_good_or_mastery_no_subskill_needed",
+      "what_data_is_missing": "accuracy band guard — not a weakness row",
+      "engine_or_metadata_block": "engine_guard",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA11",
+      "subject": "moledet-geography",
+      "topic": "גאוגרפיה - כיתה ו׳",
+      "q": 71,
+      "accuracy": 86,
+      "reason_no_subskill": "partial_good_or_mastery_no_subskill_needed",
+      "what_data_is_missing": "accuracy band guard — not a weakness row",
+      "engine_or_metadata_block": "engine_guard",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA2",
+      "subject": "science",
+      "topic": "גוף האדם - כיתה א׳",
+      "q": 68,
+      "accuracy": 72,
+      "reason_no_subskill": "partial_good_or_mastery_no_subskill_needed",
+      "what_data_is_missing": "accuracy band guard — not a weakness row",
+      "engine_or_metadata_block": "engine_guard",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA11",
+      "subject": "english",
+      "topic": "אוצר מילים - כיתה ו׳",
+      "q": 65,
+      "accuracy": 58,
+      "reason_no_subskill": "no_taxonomy_diagnosis",
+      "what_data_is_missing": "gap detected at accuracy-band layer without taxonomy recurrence",
+      "engine_or_metadata_block": "metadata/recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "concept_confusion"
+    },
+    {
+      "child": "AAA3",
+      "subject": "english",
+      "topic": "אוצר מילים - כיתה ב׳",
+      "q": 64,
+      "accuracy": 72,
+      "reason_no_subskill": "partial_good_or_mastery_no_subskill_needed",
+      "what_data_is_missing": "accuracy band guard — not a weakness row",
+      "engine_or_metadata_block": "engine_guard",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA2",
+      "subject": "hebrew",
+      "topic": "קריאה - כיתה א׳",
+      "q": 61,
+      "accuracy": 34,
+      "reason_no_subskill": "no_taxonomy_diagnosis",
+      "what_data_is_missing": "gap detected at accuracy-band layer without taxonomy recurrence",
+      "engine_or_metadata_block": "metadata/recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "concept_confusion"
+    },
+    {
+      "child": "AAA4",
+      "subject": "english",
+      "topic": "אוצר מילים - כיתה ב׳",
+      "q": 59,
+      "accuracy": 68,
+      "reason_no_subskill": "no_taxonomy_diagnosis",
+      "what_data_is_missing": "no taxonomyMatchId on row",
+      "engine_or_metadata_block": "metadata/recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "procedure_break"
+    },
+    {
+      "child": "AAA8",
+      "subject": "english",
+      "topic": "אוצר מילים - כיתה ד׳",
+      "q": 59,
+      "accuracy": 59,
+      "reason_no_subskill": "no_taxonomy_diagnosis",
+      "what_data_is_missing": "gap detected at accuracy-band layer without taxonomy recurrence",
+      "engine_or_metadata_block": "metadata/recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "concept_confusion"
+    },
+    {
+      "child": "AAA6",
+      "subject": "geometry",
+      "topic": "שטח - כיתה ג׳",
+      "q": 57,
+      "accuracy": 56,
+      "reason_no_subskill": "no_taxonomy_diagnosis",
+      "what_data_is_missing": "gap detected at accuracy-band layer without taxonomy recurrence",
+      "engine_or_metadata_block": "metadata/recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "concept_confusion"
+    },
+    {
+      "child": "AAA1",
+      "subject": "english",
+      "topic": "אוצר מילים - כיתה א׳",
+      "q": 55,
+      "accuracy": 85,
+      "reason_no_subskill": "partial_good_or_mastery_no_subskill_needed",
+      "what_data_is_missing": "accuracy band guard — not a weakness row",
+      "engine_or_metadata_block": "engine_guard",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA9",
+      "subject": "english",
+      "topic": "אוצר מילים - כיתה ה׳",
+      "q": 55,
+      "accuracy": 67,
+      "reason_no_subskill": "no_taxonomy_diagnosis",
+      "what_data_is_missing": "no taxonomyMatchId on row",
+      "engine_or_metadata_block": "metadata/recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "procedure_break"
+    },
+    {
+      "child": "AAA5",
+      "subject": "moledet-geography",
+      "topic": "גאוגרפיה - כיתה ג׳",
+      "q": 53,
+      "accuracy": 66,
+      "reason_no_subskill": "no_taxonomy_diagnosis",
+      "what_data_is_missing": "no taxonomyMatchId on row",
+      "engine_or_metadata_block": "metadata/recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "procedure_break"
+    },
+    {
+      "child": "AAA5",
+      "subject": "hebrew",
+      "topic": "קריאה - כיתה ג׳",
+      "q": 49,
+      "accuracy": 82,
+      "reason_no_subskill": "partial_good_or_mastery_no_subskill_needed",
+      "what_data_is_missing": "accuracy band guard — not a weakness row",
+      "engine_or_metadata_block": "engine_guard",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA7",
+      "subject": "science",
+      "topic": "גוף האדם - כיתה ד׳",
+      "q": 49,
+      "accuracy": 65,
+      "reason_no_subskill": "no_taxonomy_diagnosis",
+      "what_data_is_missing": "no taxonomyMatchId on row",
+      "engine_or_metadata_block": "metadata/recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "procedure_break"
+    },
+    {
+      "child": "AAA10",
+      "subject": "moledet-geography",
+      "topic": "גאוגרפיה - כיתה ה׳",
+      "q": 49,
+      "accuracy": 78,
+      "reason_no_subskill": "partial_good_or_mastery_no_subskill_needed",
+      "what_data_is_missing": "accuracy band guard — not a weakness row",
+      "engine_or_metadata_block": "engine_guard",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA4",
+      "subject": "science",
+      "topic": "גוף האדם - כיתה ב׳",
+      "q": 48,
+      "accuracy": 85,
+      "reason_no_subskill": "partial_good_or_mastery_no_subskill_needed",
+      "what_data_is_missing": "accuracy band guard — not a weakness row",
+      "engine_or_metadata_block": "engine_guard",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA2",
+      "subject": "math",
+      "topic": "חיבור - כיתה א׳",
+      "q": 46,
+      "accuracy": 76,
+      "reason_no_subskill": "weak_taxonomy_fallback_blocked",
+      "what_data_is_missing": "recurrence failed for all candidates",
+      "engine_or_metadata_block": "engine_recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA12",
+      "subject": "moledet-geography",
+      "topic": "גאוגרפיה - כיתה ו׳",
+      "q": 46,
+      "accuracy": 72,
+      "reason_no_subskill": "partial_good_or_mastery_no_subskill_needed",
+      "what_data_is_missing": "accuracy band guard — not a weakness row",
+      "engine_or_metadata_block": "engine_guard",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA7",
+      "subject": "geometry",
+      "topic": "שטח - כיתה ד׳",
+      "q": 44,
+      "accuracy": 80,
+      "reason_no_subskill": "partial_good_or_mastery_no_subskill_needed",
+      "what_data_is_missing": "accuracy band guard — not a weakness row",
+      "engine_or_metadata_block": "engine_guard",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA10",
+      "subject": "hebrew",
+      "topic": "קריאה - כיתה ה׳",
+      "q": 44,
+      "accuracy": 84,
+      "reason_no_subskill": "partial_good_or_mastery_no_subskill_needed",
+      "what_data_is_missing": "accuracy band guard — not a weakness row",
+      "engine_or_metadata_block": "engine_guard",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA5",
+      "subject": "science",
+      "topic": "גוף האדם - כיתה ג׳",
+      "q": 43,
+      "accuracy": 60,
+      "reason_no_subskill": "no_taxonomy_diagnosis",
+      "what_data_is_missing": "gap detected at accuracy-band layer without taxonomy recurrence",
+      "engine_or_metadata_block": "metadata/recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "concept_confusion"
+    },
+    {
+      "child": "AAA10",
+      "subject": "math",
+      "topic": "חיבור - כיתה ה׳",
+      "q": 43,
+      "accuracy": 56,
+      "reason_no_subskill": "weak_taxonomy_fallback_blocked",
+      "what_data_is_missing": "recurrence failed for all candidates",
+      "engine_or_metadata_block": "engine_recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "concept_confusion"
+    },
+    {
+      "child": "AAA4",
+      "subject": "hebrew",
+      "topic": "קריאה - כיתה ב׳",
+      "q": 41,
+      "accuracy": 73,
+      "reason_no_subskill": "partial_good_or_mastery_no_subskill_needed",
+      "what_data_is_missing": "accuracy band guard — not a weakness row",
+      "engine_or_metadata_block": "engine_guard",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA6",
+      "subject": "moledet-geography",
+      "topic": "גאוגרפיה - כיתה ג׳",
+      "q": 35,
+      "accuracy": 60,
+      "reason_no_subskill": "no_taxonomy_diagnosis",
+      "what_data_is_missing": "gap detected at accuracy-band layer without taxonomy recurrence",
+      "engine_or_metadata_block": "metadata/recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "concept_confusion"
+    },
+    {
+      "child": "AAA8",
+      "subject": "science",
+      "topic": "גוף האדם - כיתה ד׳",
+      "q": 33,
+      "accuracy": 67,
+      "reason_no_subskill": "no_taxonomy_diagnosis",
+      "what_data_is_missing": "no taxonomyMatchId on row",
+      "engine_or_metadata_block": "metadata/recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "procedure_break"
+    },
+    {
+      "child": "AAA4",
+      "subject": "geometry",
+      "topic": "שטח - כיתה ב׳",
+      "q": 32,
+      "accuracy": 75,
+      "reason_no_subskill": "partial_good_or_mastery_no_subskill_needed",
+      "what_data_is_missing": "accuracy band guard — not a weakness row",
+      "engine_or_metadata_block": "engine_guard",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA5",
+      "subject": "math",
+      "topic": "חיבור - כיתה ג׳",
+      "q": 32,
+      "accuracy": 81,
+      "reason_no_subskill": "weak_taxonomy_fallback_blocked",
+      "what_data_is_missing": "recurrence failed for all candidates",
+      "engine_or_metadata_block": "engine_recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA7",
+      "subject": "moledet-geography",
+      "topic": "גאוגרפיה - כיתה ד׳",
+      "q": 32,
+      "accuracy": 69,
+      "reason_no_subskill": "no_taxonomy_diagnosis",
+      "what_data_is_missing": "no taxonomyMatchId on row",
+      "engine_or_metadata_block": "metadata/recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "procedure_break"
+    },
+    {
+      "child": "AAA8",
+      "subject": "moledet-geography",
+      "topic": "גאוגרפיה - כיתה ד׳",
+      "q": 31,
+      "accuracy": 77,
+      "reason_no_subskill": "partial_good_or_mastery_no_subskill_needed",
+      "what_data_is_missing": "accuracy band guard — not a weakness row",
+      "engine_or_metadata_block": "engine_guard",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA6",
+      "subject": "english",
+      "topic": "אוצר מילים - כיתה ג׳",
+      "q": 30,
+      "accuracy": 57,
+      "reason_no_subskill": "no_taxonomy_diagnosis",
+      "what_data_is_missing": "gap detected at accuracy-band layer without taxonomy recurrence",
+      "engine_or_metadata_block": "metadata/recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "concept_confusion"
+    },
+    {
+      "child": "AAA12",
+      "subject": "english",
+      "topic": "אוצר מילים - כיתה ו׳",
+      "q": 30,
+      "accuracy": 43,
+      "reason_no_subskill": "no_taxonomy_diagnosis",
+      "what_data_is_missing": "gap detected at accuracy-band layer without taxonomy recurrence",
+      "engine_or_metadata_block": "metadata/recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "concept_confusion"
+    },
+    {
+      "child": "AAA7",
+      "subject": "math",
+      "topic": "חיבור - כיתה ד׳",
+      "q": 27,
+      "accuracy": 70,
+      "reason_no_subskill": "weak_taxonomy_fallback_blocked",
+      "what_data_is_missing": "recurrence failed for all candidates",
+      "engine_or_metadata_block": "engine_recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA9",
+      "subject": "science",
+      "topic": "גוף האדם - כיתה ה׳",
+      "q": 22,
+      "accuracy": 64,
+      "reason_no_subskill": "no_taxonomy_diagnosis",
+      "what_data_is_missing": "no taxonomyMatchId on row",
+      "engine_or_metadata_block": "metadata/recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "procedure_break"
+    },
+    {
+      "child": "AAA9",
+      "subject": "moledet-geography",
+      "topic": "גאוגרפיה - כיתה ה׳",
+      "q": 22,
+      "accuracy": 91,
+      "reason_no_subskill": "partial_good_or_mastery_no_subskill_needed",
+      "what_data_is_missing": "accuracy band guard — not a weakness row",
+      "engine_or_metadata_block": "engine_guard",
+      "taxonomyMatchId": null,
+      "dominantPattern": "insufficient_mistake_evidence"
+    },
+    {
+      "child": "AAA12",
+      "subject": "science",
+      "topic": "גוף האדם - כיתה ו׳",
+      "q": 20,
+      "accuracy": 65,
+      "reason_no_subskill": "no_taxonomy_diagnosis",
+      "what_data_is_missing": "no taxonomyMatchId on row",
+      "engine_or_metadata_block": "metadata/recurrence",
+      "taxonomyMatchId": null,
+      "dominantPattern": "procedure_break"
+    }
+  ],
+  "qa": {
+    "auditRerun": true,
+    "forbiddenHitsTotal": 0,
+    "screenPdfMatchAll": true,
+    "uiChanged": false,
+    "dbChanged": false,
+    "newParentHebrewCopy": false,
+    "englishTextToParent": false,
+    "perChild": [
+      {
+        "child": "AAA1",
+        "forbiddenHits": [],
+        "screenPdfMatch": true
+      },
+      {
+        "child": "AAA2",
+        "forbiddenHits": [],
+        "screenPdfMatch": true
+      },
+      {
+        "child": "AAA3",
+        "forbiddenHits": [],
+        "screenPdfMatch": true
+      },
+      {
+        "child": "AAA4",
+        "forbiddenHits": [],
+        "screenPdfMatch": true
+      },
+      {
+        "child": "AAA5",
+        "forbiddenHits": [],
+        "screenPdfMatch": true
+      },
+      {
+        "child": "AAA6",
+        "forbiddenHits": [],
+        "screenPdfMatch": true
+      },
+      {
+        "child": "AAA7",
+        "forbiddenHits": [],
+        "screenPdfMatch": true
+      },
+      {
+        "child": "AAA8",
+        "forbiddenHits": [],
+        "screenPdfMatch": true
+      },
+      {
+        "child": "AAA9",
+        "forbiddenHits": [],
+        "screenPdfMatch": true
+      },
+      {
+        "child": "AAA10",
+        "forbiddenHits": [],
+        "screenPdfMatch": true
+      },
+      {
+        "child": "AAA11",
+        "forbiddenHits": [],
+        "screenPdfMatch": true
+      },
+      {
+        "child": "AAA12",
+        "forbiddenHits": [],
+        "screenPdfMatch": true
+      }
+    ]
+  }
+}

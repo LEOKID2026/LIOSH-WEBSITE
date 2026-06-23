@@ -101,10 +101,7 @@ function injectStemTokenIntoDistractor(tok, distractor, stem) {
 
   const isHebrew = /[\u0590-\u05FF]/.test(stem) || /[\u0590-\u05FF]/.test(d);
   if (isHebrew) {
-    if (d.length <= 8) {
-      return `${d} — לא ${t}`;
-    }
-    return `${d} (בלי ${t})`;
+    return d;
   }
   if (d.length <= 10) {
     return `${d} (not ${t})`;
@@ -116,7 +113,9 @@ function injectStemTokenIntoDistractor(tok, distractor, stem) {
 function padShortOption(text, isHebrew, targetLen = 10) {
   let out = String(text ?? "").trim();
   if (out.length >= targetLen) return out;
-  const pads = isHebrew ? LENGTH_PAD_HE : LENGTH_PAD_EN;
+  // Never pad Hebrew answers with suffix phrases — produces unnatural distractor text visible to children
+  if (isHebrew) return out;
+  const pads = LENGTH_PAD_EN;
   let pi = 0;
   while (out.length < targetLen && pi < pads.length * 3) {
     out += pads[pi % pads.length];
@@ -226,12 +225,15 @@ function hasParens(text) {
  */
 function repairFormatOutliers(answers, ci) {
   const correct = String(answers[ci] ?? "");
+  const isHebrew = /[\u0590-\u05FF]/.test(correct);
   if (hasParens(correct)) {
     for (let i = 0; i < answers.length; i++) {
       if (i === ci) continue;
       const t = String(answers[i] ?? "").trim();
+      // Skip Hebrew — adding (לא)/(אחר) produces metadata-like text unnatural for children
+      if (isHebrew) continue;
       if (!hasParens(t) && t.length >= 4 && t.length <= 24) {
-        answers[i] = t.length <= 12 ? `${t} (לא)` : `${t} (אחר)`;
+        answers[i] = t.length <= 12 ? `${t} (not)` : `${t} (other)`;
       }
     }
   }

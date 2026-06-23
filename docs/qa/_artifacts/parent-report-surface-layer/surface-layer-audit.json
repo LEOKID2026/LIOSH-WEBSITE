@@ -1,0 +1,522 @@
+{
+  "generatedAt": "2026-06-23T22:49:25.460Z",
+  "period": {
+    "from": "2026-05-01",
+    "to": "2026-06-01"
+  },
+  "totals": {
+    "children": 12,
+    "issues": 0,
+    "byKind": {}
+  },
+  "qa": {
+    "noProbeLeak": true,
+    "noSubjectInvalidLabels": true,
+    "noZeroTopicBullets": true,
+    "noMisleadingUnpracticed": true,
+    "noContradictoryPlacement": true,
+    "noHighAccGuidance": true,
+    "noInternalSurfaceLeaks": true,
+    "maxThreeInsights": true,
+    "maxThreeHomeActions": true,
+    "lowPhraseRepetition": true,
+    "screenPdfSurfaceParity": true,
+    "noEngineChangeClaim": true,
+    "noEvidenceChangeClaim": true,
+    "noMetadataChangeClaim": true
+  },
+  "issues": [],
+  "samples": {
+    "AAA1": {
+      "whatToNotice": [
+        "בעברית — «קריאה - כיתה א׳»: נפתרו 90 שאלות, והדיוק היה 96%. נראית שליטה טובה בנושא. מה כדאי לעשות: לשמר את הנושא בתרגול קצר מדי פעם, ולבדוק שהדיוק נשמר גם בשאלות חדשות.",
+        "במבט על כל המקצועות יחד: 5 נושאים בתקופה שנבחרה.",
+        "עברית: קריאה - כיתה א׳ — חזק (96%)."
+      ],
+      "homeActions": [
+        "בבית: לתרגל מעט מילים או משפטים קצרים, ולבדוק שהילד מבין את המשמעות ולא רק מזהה את התשובה."
+      ],
+      "periodSummary": {
+        "unpracticed": [
+          "מולדת וגאוגרפיה — לא נאספו שאלות בתקופה שנבחרה"
+        ],
+        "sparse": [],
+        "notable": [
+          "מתמטיקה — נאספו 135 שאלות עם דיוק טוב (88%)",
+          "גאומטריה — נאספו 96 שאלות עם דיוק טוב (88%)",
+          "אנגלית — נאספו 55 שאלות עם דיוק טוב (85%)",
+          "מדעים — נאספו 107 שאלות עם דיוק טוב (87%)",
+          "עברית — נאספו 90 שאלות עם דיוק טוב (96%)"
+        ]
+      },
+      "subjects": [
+        {
+          "subject": "מתמטיקה",
+          "q": 135,
+          "acc": 88,
+          "tierCounts": {
+            "strong": 0,
+            "monitor": 1,
+            "strengthen": 0,
+            "needs_guidance": 0,
+            "clear_gap": 0,
+            "low_evidence": 0
+          },
+          "recommendations": []
+        },
+        {
+          "subject": "גאומטריה",
+          "q": 96,
+          "acc": 88,
+          "tierCounts": {
+            "strong": 0,
+            "monitor": 1,
+            "strengthen": 0,
+            "needs_guidance": 0,
+            "clear_gap": 0,
+            "low_evidence": 0
+          },
+          "recommendations": []
+        },
+        {
+          "subject": "אנגלית",
+          "q": 55,
+          "acc": 85,
+          "tierCounts": {
+            "strong": 0,
+            "monitor": 1,
+            "strengthen": 0,
+            "needs_guidance": 0,
+            "clear_gap": 0,
+            "low_evidence": 0
+          },
+          "recommendations": []
+        },
+        {
+          "subject": "מדעים",
+          "q": 107,
+          "acc": 87,
+          "tierCounts": {
+            "strong": 0,
+            "monitor": 1,
+            "strengthen": 0,
+            "needs_guidance": 0,
+            "clear_gap": 0,
+            "low_evidence": 0
+          },
+          "recommendations": []
+        },
+        {
+          "subject": "עברית",
+          "q": 90,
+          "acc": 96,
+          "tierCounts": {
+            "strong": 1,
+            "monitor": 0,
+            "strengthen": 0,
+            "needs_guidance": 0,
+            "clear_gap": 0,
+            "low_evidence": 0
+          },
+          "recommendations": []
+        },
+        {
+          "subject": "מולדת וגאוגרפיה",
+          "q": 0,
+          "acc": 0,
+          "tierCounts": {},
+          "recommendations": []
+        }
+      ]
+    },
+    "AAA2": {
+      "whatToNotice": [
+        "בעברית בנושא «קריאה - כיתה א׳» מופיע פער ברור בתרגול. הילד פתר 61 שאלות בדיוק של 34%, ולכן כדאי לעצור ולחזק את הבסיס לפני שמתקדמים. הנקודה המרכזית לחיזוק היא איתור מידע בטקסט. מה כדאי לעשות בבית: לקרוא משפט קצר בקול, לעצור, ולבקש מהילד להסביר מה קרא.",
+        "במבט על כל המקצועות יחד: 4 נושאים בתקופה שנבחרה.",
+        "יש כמה נושאים שכדאי לחזק בתקופה הקרובה."
+      ],
+      "homeActions": [
+        "בבית: לקרוא טקסט קצר, לעצור אחרי כל קטע, ולבקש מהילד להסביר במילים שלו מה הבין."
+      ],
+      "periodSummary": {
+        "unpracticed": [
+          "אנגלית — לא נאספו שאלות בתקופה שנבחרה",
+          "מולדת וגאוגרפיה — לא נאספו שאלות בתקופה שנבחרה"
+        ],
+        "sparse": [
+          "גאומטריה — מספר שאלות נמוך (5 שאלות)"
+        ],
+        "notable": [
+          "אין עדיין מקצוע בולט לפי כמות השאלות והדיוק — המשך תרגול יעשה את ההבדל."
+        ]
+      },
+      "subjects": [
+        {
+          "subject": "מתמטיקה",
+          "q": 46,
+          "acc": 76,
+          "tierCounts": {
+            "strong": 0,
+            "monitor": 0,
+            "strengthen": 1,
+            "needs_guidance": 0,
+            "clear_gap": 0,
+            "low_evidence": 0
+          },
+          "recommendations": [
+            {
+              "topicRowKey": "addition::grade:g1",
+              "title": "חיבור - כיתה א׳",
+              "accuracy": 76,
+              "snapshot": "בחיבור נאספו 46 שאלות בתקופה, עם דיוק ממוצע של כ 76%. יש כאן כיוון עבודה הגיוני, ונעדיף לראות את זה חוזר עוד פעם לפני שמחמירים בקביעת כיוון",
+              "homeLine": "",
+              "stepLabel": "חיזוק ממוקד לפני שמעלים רמה"
+            }
+          ]
+        },
+        {
+          "subject": "גאומטריה",
+          "q": 5,
+          "acc": 100,
+          "tierCounts": {
+            "strong": 0,
+            "monitor": 0,
+            "strengthen": 0,
+            "needs_guidance": 0,
+            "clear_gap": 0,
+            "low_evidence": 1
+          },
+          "recommendations": []
+        },
+        {
+          "subject": "אנגלית",
+          "q": 0,
+          "acc": 0,
+          "tierCounts": {},
+          "recommendations": []
+        },
+        {
+          "subject": "מדעים",
+          "q": 68,
+          "acc": 72,
+          "tierCounts": {
+            "strong": 0,
+            "monitor": 0,
+            "strengthen": 1,
+            "needs_guidance": 0,
+            "clear_gap": 0,
+            "low_evidence": 0
+          },
+          "recommendations": [
+            {
+              "topicRowKey": "body::grade:g1",
+              "title": "גוף האדם - כיתה א׳",
+              "accuracy": 72,
+              "snapshot": "בגוף האדם בתקופה שנבחרה יש 68 שאלות, עם דיוק של כ 72%. הדוח נראה מתקדם לטובה, וכדאי לוודא שזה לא מקרה חד פעמי",
+              "homeLine": "",
+              "stepLabel": "חיזוק ממוקד לפני שמעלים רמה"
+            }
+          ]
+        },
+        {
+          "subject": "עברית",
+          "q": 61,
+          "acc": 34,
+          "tierCounts": {
+            "strong": 0,
+            "monitor": 0,
+            "strengthen": 0,
+            "needs_guidance": 0,
+            "clear_gap": 1,
+            "low_evidence": 0
+          },
+          "recommendations": [
+            {
+              "topicRowKey": "reading::grade:g1",
+              "title": "קריאה - כיתה א׳",
+              "accuracy": 34,
+              "snapshot": "בקריאה נאספו 61 שאלות בתקופה, ורמת הדיוק סביב 34%. הנתון מראה פעילות בתקופה, אבל הדיוק נמוך יחסית — נשארים עם ניסוח זהיר ותרגול ממוקד",
+              "homeLine": "",
+              "stepLabel": "חיזוק ממוקד לפני שמעלים רמה"
+            }
+          ]
+        },
+        {
+          "subject": "מולדת וגאוגרפיה",
+          "q": 0,
+          "acc": 0,
+          "tierCounts": {},
+          "recommendations": []
+        }
+      ]
+    },
+    "AAA8": {
+      "whatToNotice": [
+        "באנגלית בנושא «אוצר מילים - כיתה ד׳» יש נקודת חיזוק שכדאי לעבוד עליה. הילד פתר 59 שאלות בדיוק של 59%. הנתונים מראים שהנושא עדיין לא יציב, ולכן כדאי לתרגל אותו בצורה ממוקדת. מה כדאי לעשות בבית: לתרגל מספר קטן של שאלות באותו נושא, ולבקש מהילד להסביר בקול איך הגיע לתשובה. אם אותו סוג טעות חוזר, הדוח יוכל לדייק יותר בהמשך.",
+        "במתמטיקה בנושא «חיבור - כיתה ד׳» יש נקודת חיזוק שכדאי לעבוד עליה. הילד פתר 17 שאלות בדיוק של 65%. הנתונים מראים שהנושא עדיין לא יציב, ולכן כדאי לתרגל אותו בצורה ממוקדת. החיזוק המרכזי הוא בנשיאה בחיבור. מה כדאי לעשות בבית: לפתור תרגילים בטור, לסמן יחידות ועשרות, ולבקש מהילד להסביר מתי מעבירים עשרת לעמודה הבאה.",
+        "במבט על כל המקצועות יחד: 6 נושאים בתקופה שנבחרה."
+      ],
+      "homeActions": [
+        "בבית: לתרגל מעט מילים או משפטים קצרים, ולבדוק שהילד מבין את המשמעות ולא רק מזהה את התשובה."
+      ],
+      "periodSummary": {
+        "unpracticed": [],
+        "sparse": [
+          "עברית — מספר שאלות נמוך (6 שאלות)"
+        ],
+        "notable": [
+          "אין עדיין מקצוע בולט לפי כמות השאלות והדיוק — המשך תרגול יעשה את ההבדל."
+        ]
+      },
+      "subjects": [
+        {
+          "subject": "מתמטיקה",
+          "q": 17,
+          "acc": 65,
+          "tierCounts": {
+            "strong": 0,
+            "monitor": 0,
+            "strengthen": 1,
+            "needs_guidance": 0,
+            "clear_gap": 0,
+            "low_evidence": 0
+          },
+          "recommendations": [
+            {
+              "topicRowKey": "addition::grade:g4",
+              "title": "חיבור - כיתה ד׳",
+              "accuracy": 65,
+              "snapshot": "בחיבור נאספו 17 שאלות בתקופה, עם דיוק ממוצע של כ 65%. הדוח נראה מתקדם לטובה, וכדאי לוודא שזה לא מקרה חד פעמי",
+              "homeLine": "",
+              "stepLabel": "חיזוק ממוקד לפי הדוח"
+            }
+          ]
+        },
+        {
+          "subject": "גאומטריה",
+          "q": 16,
+          "acc": 88,
+          "tierCounts": {
+            "strong": 0,
+            "monitor": 1,
+            "strengthen": 0,
+            "needs_guidance": 0,
+            "clear_gap": 0,
+            "low_evidence": 0
+          },
+          "recommendations": []
+        },
+        {
+          "subject": "אנגלית",
+          "q": 59,
+          "acc": 59,
+          "tierCounts": {
+            "strong": 0,
+            "monitor": 0,
+            "strengthen": 1,
+            "needs_guidance": 0,
+            "clear_gap": 0,
+            "low_evidence": 0
+          },
+          "recommendations": [
+            {
+              "topicRowKey": "vocabulary::grade:g4",
+              "title": "אוצר מילים - כיתה ד׳",
+              "accuracy": 59,
+              "snapshot": "באוצר מילים בתקופה שנבחרה יש 59 שאלות, עם דיוק של כ 59%. הכיוון חיובי יחסית; נשארים עם חיזוק קצר וברור לפני שקובעים שהנושא יציב",
+              "homeLine": "",
+              "stepLabel": "חיזוק ממוקד לפני שמעלים רמה"
+            }
+          ]
+        },
+        {
+          "subject": "מדעים",
+          "q": 33,
+          "acc": 67,
+          "tierCounts": {
+            "strong": 0,
+            "monitor": 0,
+            "strengthen": 1,
+            "needs_guidance": 0,
+            "clear_gap": 0,
+            "low_evidence": 0
+          },
+          "recommendations": [
+            {
+              "topicRowKey": "body::grade:g4",
+              "title": "גוף האדם - כיתה ד׳",
+              "accuracy": 67,
+              "snapshot": "בגוף האדם בתקופה שנבחרה יש 33 שאלות עם דיוק של כ 67%",
+              "homeLine": "",
+              "stepLabel": "חיזוק ממוקד לפי הדוח"
+            }
+          ]
+        },
+        {
+          "subject": "עברית",
+          "q": 6,
+          "acc": 83,
+          "tierCounts": {
+            "strong": 0,
+            "monitor": 0,
+            "strengthen": 0,
+            "needs_guidance": 0,
+            "clear_gap": 0,
+            "low_evidence": 1
+          },
+          "recommendations": []
+        },
+        {
+          "subject": "מולדת וגאוגרפיה",
+          "q": 31,
+          "acc": 77,
+          "tierCounts": {
+            "strong": 0,
+            "monitor": 0,
+            "strengthen": 1,
+            "needs_guidance": 0,
+            "clear_gap": 0,
+            "low_evidence": 0
+          },
+          "recommendations": [
+            {
+              "topicRowKey": "geography::grade:g4",
+              "title": "גאוגרפיה - כיתה ד׳",
+              "accuracy": 77,
+              "snapshot": "בגאוגרפיה נאספו 31 שאלות בתקופה, עם דיוק ממוצע של כ 77%. נראה שהביצוע נשמר טוב יחסית לתקופה הזו, ונמשיך בעדינות לעקוב",
+              "homeLine": "",
+              "stepLabel": "חיזוק ממוקד לפי הדוח"
+            }
+          ]
+        }
+      ]
+    },
+    "AAA12": {
+      "whatToNotice": [
+        "באנגלית בנושא «אוצר מילים - כיתה ו׳» מופיע פער ברור בתרגול. הילד פתר 30 שאלות בדיוק של 43%, ולכן כדאי לעצור ולחזק את הבסיס לפני שמתקדמים. מה כדאי לעשות בבית: לחזור לשאלות פשוטות יותר באותו נושא, לפתור יחד 3–5 דוגמאות, ואז לתת לילד להסביר את דרך הפתרון במילים שלו.",
+        "במדעים בנושא «גוף האדם - כיתה ו׳» יש נקודת חיזוק שכדאי לעבוד עליה. הילד פתר 20 שאלות בדיוק של 65%. הנתונים מראים שהנושא עדיין לא יציב, ולכן כדאי לתרגל אותו בצורה ממוקדת. החיזוק המרכזי הוא בהבנת הקשר בין חלקי הגוף. מה כדאי לעשות בבית: לשים שני מושגים זה ליד זה, לשאול «מה דומה?» ו«מה שונה?», ואז לפתור שאלה אחת.",
+        "במבט על כל המקצועות יחד: 5 נושאים בתקופה שנבחרה."
+      ],
+      "homeActions": [
+        "בבית: לתרגל מעט מילים או משפטים קצרים, ולבדוק שהילד מבין את המשמעות ולא רק מזהה את התשובה."
+      ],
+      "periodSummary": {
+        "unpracticed": [
+          "מתמטיקה — לא נאספו שאלות בתקופה שנבחרה"
+        ],
+        "sparse": [
+          "עברית — מספר שאלות נמוך (6 שאלות)"
+        ],
+        "notable": [
+          "אין עדיין מקצוע בולט לפי כמות השאלות והדיוק — המשך תרגול יעשה את ההבדל."
+        ]
+      },
+      "subjects": [
+        {
+          "subject": "מתמטיקה",
+          "q": 0,
+          "acc": 0,
+          "tierCounts": {},
+          "recommendations": []
+        },
+        {
+          "subject": "גאומטריה",
+          "q": 75,
+          "acc": 79,
+          "tierCounts": {
+            "strong": 0,
+            "monitor": 1,
+            "strengthen": 0,
+            "needs_guidance": 0,
+            "clear_gap": 0,
+            "low_evidence": 0
+          },
+          "recommendations": []
+        },
+        {
+          "subject": "אנגלית",
+          "q": 30,
+          "acc": 43,
+          "tierCounts": {
+            "strong": 0,
+            "monitor": 0,
+            "strengthen": 0,
+            "needs_guidance": 0,
+            "clear_gap": 1,
+            "low_evidence": 0
+          },
+          "recommendations": [
+            {
+              "topicRowKey": "vocabulary::grade:g6",
+              "title": "אוצר מילים - כיתה ו׳",
+              "accuracy": 43,
+              "snapshot": "באוצר מילים בתקופה שנבחרה יש 30 שאלות, עם דיוק של כ 43%. הנתון מראה פעילות בתקופה, אבל הדיוק נמוך יחסית — נשארים עם ניסוח זהיר ותרגול ממוקד",
+              "homeLine": "",
+              "stepLabel": "חיזוק ממוקד לפי הדוח"
+            }
+          ]
+        },
+        {
+          "subject": "מדעים",
+          "q": 20,
+          "acc": 65,
+          "tierCounts": {
+            "strong": 0,
+            "monitor": 0,
+            "strengthen": 1,
+            "needs_guidance": 0,
+            "clear_gap": 0,
+            "low_evidence": 0
+          },
+          "recommendations": [
+            {
+              "topicRowKey": "body::grade:g6",
+              "title": "גוף האדם - כיתה ו׳",
+              "accuracy": 65,
+              "snapshot": "בגוף האדם נאספו 20 שאלות בתקופה, ורמת הדיוק סביב 65%. הכיוון חיובי יחסית; נשארים עם חיזוק קצר וברור לפני שקובעים שהנושא יציב",
+              "homeLine": "",
+              "stepLabel": "חיזוק ממוקד לפי הדוח"
+            }
+          ]
+        },
+        {
+          "subject": "עברית",
+          "q": 6,
+          "acc": 67,
+          "tierCounts": {
+            "strong": 0,
+            "monitor": 0,
+            "strengthen": 0,
+            "needs_guidance": 0,
+            "clear_gap": 0,
+            "low_evidence": 1
+          },
+          "recommendations": []
+        },
+        {
+          "subject": "מולדת וגאוגרפיה",
+          "q": 46,
+          "acc": 72,
+          "tierCounts": {
+            "strong": 0,
+            "monitor": 0,
+            "strengthen": 1,
+            "needs_guidance": 0,
+            "clear_gap": 0,
+            "low_evidence": 0
+          },
+          "recommendations": [
+            {
+              "topicRowKey": "geography::grade:g6",
+              "title": "גאוגרפיה - כיתה ו׳",
+              "accuracy": 72,
+              "snapshot": "בגאוגרפיה בתקופה שנבחרה יש 46 שאלות, עם דיוק של כ 72%. הדוח נראה מתקדם לטובה, וכדאי לוודא שזה לא מקרה חד פעמי",
+              "homeLine": "",
+              "stepLabel": "חיזוק ממוקד לפני שמעלים רמה"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

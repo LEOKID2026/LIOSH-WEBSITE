@@ -519,7 +519,6 @@ export function getSolutionSteps(question, topic, gradeKey) {
     case "shapes_basic": {
       if (p.kind === "shapes_basic_square" || p.kind === "shapes_basic_rectangle") {
         const shapeName = p.shape || "ריבוע";
-        const num = shapeName === "ריבוע" ? 1 : 2;
         return [
           toSpan(mix`1. בודקים את אורכי הצלעות מהנתונים — מופיעה הצורה "${shapeName}".`, "1"),
           toSpan(
@@ -528,8 +527,8 @@ export function getSolutionSteps(question, topic, gradeKey) {
               : "2. במלבן יש שני אורכים שונים, כל אחד מופיע בזוג נגדי.",
             "2"
           ),
-          toSpan(mix`3. במפתח התשובות: 1 = ריבוע, 2 = מלבן.`, "3"),
-          toSpan(mix`4. לכן האפשרות הנכונה היא ${num}.`, "4"),
+          toSpan(mix`3. בוחרים את שם הצורה המתאים — "${shapeName}".`, "3"),
+          toSpan(mix`4. לכן התשובה הנכונה היא "${shapeName}".`, "4"),
         ];
       }
       if (p.kind === "shapes_basic_properties_square") {
@@ -992,10 +991,11 @@ export function getErrorExplanation(question, topic, wrongAnswer, gradeKey) {
 
     case "shapes_basic": {
       if (p.kind === "shapes_basic_square" || p.kind === "shapes_basic_rectangle") {
-        if (userAnsNum === 2 && p.shape === "ריבוע") {
+        const userAns = String(wrongAnswer ?? "").trim();
+        if (userAns === "מלבן" && p.shape === "ריבוע") {
           return "כל ארבע הצלעות בריבוע שוות — לא מלבן עם שני אורכים שונים.";
         }
-        if (userAnsNum === 1 && p.shape === "מלבן") {
+        if (userAns === "ריבוע" && p.shape === "מלבן") {
           return "מלבן נקבע כשיש שני אורכי צלע שונים (שני זוגות) — לא ריבוע.";
         }
         return "השוו בין כל הצלעות: ארבע שוות ⇒ ריבוע; שני אורכים שונים לזוגות ⇒ מלבן.";

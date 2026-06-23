@@ -9,6 +9,7 @@ import {
   getDeterministicParentAiExplanationFromParentReportV2,
 } from "../../utils/parent-report-ai/parent-report-ai-adapter";
 import { ParentReportInsight } from "../../components/ParentReportInsight.jsx";
+import { ParentReportTopicExplainBlock } from "../../components/parent-report-topic-explain-row.jsx";
 import { ParentDiagnosticExplanationBlock } from "../../components/parent-diagnostic-explanation-block.jsx";
 import ParentReportParentSections from "../../components/parent/ParentReportParentSections.jsx";
 import ParentReportDataHealthNote from "../../components/parent/ParentReportDataHealthNote.jsx";
@@ -946,19 +947,39 @@ export default function ParentReport() {
 
   const shortReportCopilotTurnRunner = useMemo(() => {
     if (!enableParentCopilotOnShortEffective) return null;
+    const { from, to } = computeReportRangeForParentApi(
+      period,
+      customDates,
+      appliedStartDate,
+      appliedEndDate
+    );
+    const reportPeriodForApi =
+      customDates && appliedStartDate && appliedEndDate
+        ? "custom"
+        : period === "month"
+          ? "month"
+          : "week";
     return async (input) =>
       postParentCopilotTurn({
         utterance: input.utterance,
         sessionId: input.sessionId,
         audience: input.audience,
         payload: input.payload,
-        reportPeriod: period,
-        ...(customDates ? { rangeFrom: appliedStartDate, rangeTo: appliedEndDate } : {}),
+        reportPeriod: reportPeriodForApi,
+        rangeFrom: from,
+        rangeTo: to,
         ...(copilotStudentId ? { studentId: copilotStudentId } : {}),
         selectedContextRef: input.selectedContextRef ?? null,
         clickedFollowupFamily: input.clickedFollowupFamily ?? null,
       });
-  }, [enableParentCopilotOnShortEffective, copilotStudentId, period, customDates, appliedStartDate, appliedEndDate]);
+  }, [
+    enableParentCopilotOnShortEffective,
+    copilotStudentId,
+    period,
+    customDates,
+    appliedStartDate,
+    appliedEndDate,
+  ]);
 
   useEffect(() => {
     if (typeof window === "undefined") return undefined;
@@ -1530,6 +1551,10 @@ export default function ParentReport() {
             #parent-report-pdf .parent-report-topic-explain-row {
               color: #1e293b !important;
             }
+            #parent-report-pdf .parent-report-topic-explain-block > div:last-child {
+              max-height: none !important;
+              overflow: visible !important;
+            }
             #parent-report-pdf .parent-report-topic-explain-details > summary {
               display: none !important;
             }
@@ -1905,6 +1930,7 @@ export default function ParentReport() {
 
           <ParentReportDataHealthNote
             diagnosticOverviewHe={report.summary?.diagnosticOverviewHe}
+            dataQualityNoteHe={report.summary?.activityGapNoteHe || null}
             mixedGradePracticeNoteHe={report?.gradePracticeMeta?.mixedGradePracticeNoteHe}
           />
 
@@ -3962,6 +3988,7 @@ export default function ParentReport() {
                         </ResponsiveContainer>
                       </div>
                     </div>
+                    <ParentReportTopicExplainBlock rows={rows} />
                   </div>
                 );
               })}

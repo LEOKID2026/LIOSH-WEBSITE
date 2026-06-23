@@ -236,18 +236,66 @@ export function collectStudentFacingStemsFromQuestion(q) {
 }
 
 /**
+ * Strip generator-artifact suffixes from a single Hebrew MCQ answer option.
+ * These patterns are never natural child-facing answer text.
+ * @param {string} text
+ * @returns {string}
+ */
+export function sanitizeHebrewMcqAnswer(text) {
+  let t = String(text ?? "").trim();
+  if (!t) return t;
+  // Trailing padding phrases injected by mcq-fail-content-repair LENGTH_PAD_HE
+  t = t.replace(/\s+באופן שונה\s*$/u, "");
+  t = t.replace(/\s+במקרה אחר\s*$/u, "");
+  t = t.replace(/\s+באזור אחר\s*$/u, "");
+  // Trailing parenthetical artifacts from repairFormatOutliers (Hebrew)
+  t = t.replace(/\s+\(לא\)\s*$/u, "");
+  t = t.replace(/\s+\(אחר\)\s*$/u, "");
+  // (בלי ...) patterns — generator metadata in parentheses
+  t = t.replace(/\s*\(בלי[^)]*\)\s*/gu, " ").trim();
+  // Bare metadata tokens — \b doesn't work for Hebrew; use surrounding whitespace/anchors
+  t = t.replace(/\s*בלי קריאה\s*/gu, " ").trim();
+  t = t.replace(/\s*בלי בתיק\s*/gu, " ").trim();
+  t = t.replace(/\s*בלי רשימת\s*/gu, " ").trim();
+  t = t.replace(/\s*בלי מילים\s*/gu, " ").trim();
+  return t.replace(/\s{2,}/g, " ").trim();
+}
+
+/**
+ * Apply sanitizeHebrewMcqAnswer to all answer/option slots in a question object (in-place clone).
+ * Only runs when the question contains Hebrew text.
+ * @param {Record<string, unknown>} q
+ * @returns {Record<string, unknown>}
+ */
+function sanitizeHebrewAnswers(q) {
+  const isHebrewQ =
+    /[\u0590-\u05FF]/.test(String(q.question ?? q.stem ?? q.exerciseText ?? ""));
+  if (!isHebrewQ) return q;
+  const next = { ...q };
+  for (const key of ["answers", "options"]) {
+    if (Array.isArray(next[key])) {
+      next[key] = next[key].map((a) =>
+        typeof a === "string" ? sanitizeHebrewMcqAnswer(a) : a
+      );
+    }
+  }
+  return next;
+}
+
+/**
  * @param {Record<string, unknown>|null|undefined} q
  * @returns {Record<string, unknown>|null|undefined}
  */
 export function sanitizeQuestionForStudentDisplay(q) {
   if (!q || typeof q !== "object") return q;
-  const next = { ...q };
+  let next = { ...q };
   for (const key of ["stem", "question", "exerciseText", "questionLabel"]) {
     if (typeof next[key] === "string") {
       const cleaned = sanitizeStudentQuestionStem(next[key]);
       next[key] = cleaned;
     }
   }
+  next = sanitizeHebrewAnswers(next);
   if (
     typeof next.question === "string" &&
     typeof next.exerciseText === "string" &&
@@ -263,6 +311,9 @@ export function sanitizeQuestionForStudentDisplay(q) {
   }
   const normalized = normalizeStudentQuestionDisplayFields(next);
   const cmpReady = finalizeComparisonSignMcq(normalized);
+  if (cmpReady?.params?.answerMode === "binary") {
+    return cmpReady;
+  }
   if (shouldEnforceFourMcqOptions(cmpReady)) {
     const subject =
       cmpReady.subject ||

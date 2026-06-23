@@ -48,6 +48,17 @@ test("guided_practice may include hint and explanation", () => {
   assert.equal(out[0].explanation, "e");
 });
 
+test("parent activity student payload may hide explanation without hiding hint", () => {
+  const out = stripQuestionSetForStudent(
+    [{ question: "Q?", hint: "h", explanation: "e", correctAnswer: "1" }],
+    "guided_practice",
+    { hideExplanation: true }
+  );
+  assert.equal(out[0].hint, "h");
+  assert.equal(out[0].explanation, undefined);
+  assert.equal(out[0].correctAnswer, undefined);
+});
+
 test("classroom activity preview supported subjects", () => {
   assert.equal(isActivityPreviewSubjectSupported("math"), true);
   assert.equal(isActivityPreviewSubjectSupported("science"), true);

@@ -38,6 +38,13 @@ import { estimateRowRootCause } from "./parent-report-root-cause.js";
 import { buildInterventionPlanPhase8 } from "./parent-report-intervention-plan.js";
 import { buildMistakeIntelligencePhase9 } from "./parent-report-mistake-intelligence.js";
 import { buildLearningMemoryPhase9 } from "./parent-report-learning-memory.js";
+import { resolveRowTaxonomyMatch } from "./parent-report-engine-taxonomy-bridge.js";
+import {
+  applyAccuracyBandRootCauseGuard,
+  buildEngineDiagnosticDecision,
+  computeAccuracyBand,
+  computeEngineConfidenceTier,
+} from "./parent-report-engine-v1-signals.js";
 import { buildInterventionEffectivenessPhase10 } from "./parent-report-intervention-effectiveness.js";
 import { buildConfidenceAgingPhase10 } from "./parent-report-confidence-aging.js";
 import { buildSupportSequencingPhase11 } from "./parent-report-support-sequencing.js";
@@ -567,6 +574,9 @@ export function decideTopicNextStep(row, mistakeEventCount, cfg = DEFAULT_TOPIC_
   const wrong = Math.max(0, Number(row?.wrong) ?? 0);
   const wrongRatio = q > 0 ? wrong / q : 0;
   const recencyScore = Number.isFinite(Number(row?.recencyScore)) ? Number(row.recencyScore) : 55;
+  const engineConfidenceTier = row?.engineConfidenceTier || computeEngineConfidenceTier(q);
+  const accuracyBand = row?.accuracyBand || computeAccuracyBand(acc, q);
+  const taxonomyMatch = row?.taxonomyMatch && typeof row.taxonomyMatch === "object" ? row.taxonomyMatch : null;
 
   const restraintPayload = computeDiagnosticRestraint({
     q,
@@ -582,17 +592,27 @@ export function decideTopicNextStep(row, mistakeEventCount, cfg = DEFAULT_TOPIC_
     behaviorProfile,
   });
 
-  const rootCausePayload = estimateRowRootCause({
-    row,
-    restraint: restraintPayload,
-    riskFlags,
-    trendDer,
-    behaviorProfile,
-    q,
-    accuracy: acc,
-    wrongRatio,
-    behaviorType,
-  });
+  const rootCausePayload = applyAccuracyBandRootCauseGuard(
+    estimateRowRootCause({
+      row,
+      restraint: restraintPayload,
+      riskFlags,
+      trendDer,
+      behaviorProfile,
+      q,
+      accuracy: acc,
+      wrongRatio,
+      behaviorType,
+    }),
+    {
+      accuracyBand,
+      q,
+      acc,
+      behaviorType,
+      riskFlags,
+      modeKey: row?.modeKey,
+    }
+  );
 
   const afterP2 = applyPhase2GuardsToStep(legacy.step, {
     row,
@@ -761,6 +781,23 @@ export function decideTopicNextStep(row, mistakeEventCount, cfg = DEFAULT_TOPIC_
     conclusionStrength: restraintPayload.conclusionStrength,
     modeKey: String(row?.modeKey || ""),
     displayName,
+    engineConfidenceTier,
+    accuracyBand,
+    taxonomyMatch,
+  });
+
+  const engineDiagnosticDecision = buildEngineDiagnosticDecision({
+    q,
+    acc,
+    wrongRatio,
+    engineConfidenceTier,
+    accuracyBand,
+    taxonomyMatch,
+    rootCause: rootCausePayload.rootCause,
+    behaviorType,
+    dominantMistakePattern: mistakeIntel.dominantMistakePattern,
+    riskFlags: riskFlagsPayload,
+    modeKey: row?.modeKey,
   });
 
   const memoryPhase9 = buildLearningMemoryPhase9({
@@ -1016,6 +1053,17 @@ export function decideTopicNextStep(row, mistakeEventCount, cfg = DEFAULT_TOPIC_
     trendDer,
     behaviorType,
     legacyRuleId,
+    acc,
+    q,
+    wrongRatio,
+    behaviorSignals: behaviorProfile?.signals && typeof behaviorProfile.signals === "object"
+      ? behaviorProfile.signals : {},
+    dominantMistakePatternLabelHe: mistakeIntel.dominantMistakePatternLabelHe,
+    mistakePatternNarrativeHe: mistakeIntel.mistakePatternNarrativeHe,
+    dependencyState: phase14Dep.dependencyState,
+    likelyFoundationalBlocker: phase14Dep.likelyFoundationalBlocker,
+    likelyFoundationalBlockerLabelHe: phase14Dep.likelyFoundationalBlockerLabelHe,
+    whyFoundationFirstHe: phase14Overlay.whyFoundationFirstHe,
   });
   if (capped.postCapApplied) {
     whyThisRecommendationHe += " נשמר כלל זהירות — לא עושים שינוי גדול כשהמידע עדיין חלקי.";
@@ -1112,6 +1160,10 @@ export function decideTopicNextStep(row, mistakeEventCount, cfg = DEFAULT_TOPIC_
     diagnosticType: behaviorType,
     whyThisRecommendationHe,
     whatCouldChangeThisHe: buildWhatCouldChangeThisHe({ q, behaviorType }),
+    engineConfidenceTier,
+    accuracyBand,
+    taxonomyMatch,
+    engineDiagnosticDecision,
   };
 }
 
@@ -1150,14 +1202,35 @@ export function buildTopicRecommendationRecord(
   mistakesByBucket,
   cfg = DEFAULT_TOPIC_NEXT_STEP_CONFIG,
   periodEndMs = null,
-  toneContext = null
+  toneContext = null,
+  engineContext = null
 ) {
   const bucketKey =
     row?.bucketKey || splitBucketModeRowKey(String(topicRowKey)).bucketKey || null;
   const mC = resolveMistakeEventCount(subjectId, mistakesByBucket, bucketKey, topicRowKey, row);
   const endMs = Number.isFinite(periodEndMs) ? periodEndMs : Date.now();
+  const startMs = Number.isFinite(Number(engineContext?.startMs)) ? Number(engineContext.startMs) : null;
+  const rawMistakes =
+    engineContext?.rawMistakesBySubject && typeof engineContext.rawMistakesBySubject === "object"
+      ? engineContext.rawMistakesBySubject[subjectId] || []
+      : null;
   const signals = computeRowDiagnosticSignals(subjectId, topicRowKey, row, mistakesByBucket, endMs, cfg);
-  const rowAug = { ...row, ...signals };
+  const qPreview = Number(row?.questions) || 0;
+  const accPreview = Math.round(Number(row?.accuracy) || 0);
+  const engineConfidenceTier = computeEngineConfidenceTier(qPreview);
+  const accuracyBand = computeAccuracyBand(accPreview, qPreview);
+  let taxonomyMatch = null;
+  if (rawMistakes && startMs != null) {
+    taxonomyMatch = resolveRowTaxonomyMatch({
+      subjectId,
+      topicRowKey,
+      row,
+      rawMistakes,
+      startMs,
+      endMs,
+    });
+  }
+  const rowAug = { ...row, ...signals, engineConfidenceTier, accuracyBand, taxonomyMatch };
   const decision = decideTopicNextStep(rowAug, mC, cfg);
   const q = Number(row?.questions) || 0;
 
@@ -1545,6 +1618,16 @@ export function buildTopicRecommendationRecord(
     nextCycleSupportLevelHe: decision.nextCycleSupportLevelHe ?? "",
     foundationBeforeExpansion: !!decision.foundationBeforeExpansion,
     foundationBeforeExpansionHe: decision.foundationBeforeExpansionHe ?? "",
+    engineConfidenceTier: decision.engineConfidenceTier ?? null,
+    accuracyBand: decision.accuracyBand ?? null,
+    taxonomyMatch: decision.taxonomyMatch ?? null,
+    engineDiagnosticDecision: decision.engineDiagnosticDecision ?? null,
+    taxonomyMatchId: decision.engineDiagnosticDecision?.taxonomyMatchId ?? decision.taxonomyMatch?.taxonomyId ?? null,
+    taxonomyMatchStrength:
+      decision.engineDiagnosticDecision?.taxonomyMatchStrength ?? decision.taxonomyMatch?.matchStrength ?? null,
+    subskillCandidate: decision.engineDiagnosticDecision?.subskillCandidate ?? null,
+    patternCandidate: decision.engineDiagnosticDecision?.patternCandidate ?? null,
+    interventionActionCandidate: decision.engineDiagnosticDecision?.actionCandidate ?? null,
   };
 
   const contractAppliedRecord = applyRecommendationContractToRecord(
@@ -1573,12 +1656,14 @@ export function buildTopicRecommendationRecord(
  * @param {Record<string, Record<string, { count?: number }>>} mistakesBySubject
  * @param {number} periodEndMs
  * @param {typeof DEFAULT_TOPIC_NEXT_STEP_CONFIG} [cfg]
+ * @param {{ rawMistakesBySubject?: Record<string, unknown[]>, startMs?: number }|null} [engineContext]
  */
 export function enrichReportMapsWithTopicStepHints(
   maps,
   mistakesBySubject,
   periodEndMs,
-  cfg = DEFAULT_TOPIC_NEXT_STEP_CONFIG
+  cfg = DEFAULT_TOPIC_NEXT_STEP_CONFIG,
+  engineContext = null
 ) {
   const endMs = Number.isFinite(periodEndMs) ? periodEndMs : Date.now();
   for (const [subjectId, topicMap] of Object.entries(maps || {})) {
@@ -1594,7 +1679,9 @@ export function enrichReportMapsWithTopicStepHints(
         row,
         mistakesByBucket,
         cfg,
-        endMs
+        endMs,
+        null,
+        engineContext
       );
       row.diagnosticRecommendedStepLabelHe = rec.recommendedStepLabelHe;
       row.diagnosticRecommendedEvidenceHe = rec.recommendedEvidenceLevelHe;
@@ -1805,6 +1892,15 @@ export function enrichReportMapsWithTopicStepHints(
         nextCycleSupportLevelHe: rec.nextCycleSupportLevelHe ?? null,
         foundationBeforeExpansion: rec.foundationBeforeExpansion ?? false,
         foundationBeforeExpansionHe: rec.foundationBeforeExpansionHe ?? null,
+        engineConfidenceTier: rec.engineConfidenceTier ?? null,
+        accuracyBand: rec.accuracyBand ?? null,
+        engineDiagnosticDecision: rec.engineDiagnosticDecision ?? null,
+        taxonomyMatchId: rec.taxonomyMatchId ?? null,
+        taxonomyMatchStrength: rec.taxonomyMatchStrength ?? null,
+        taxonomyMatch: rec.engineDiagnosticDecision?.taxonomyMatch ?? !!rec.taxonomyMatchId,
+        subskillCandidate: rec.subskillCandidate ?? null,
+        patternCandidate: rec.patternCandidate ?? null,
+        interventionActionCandidate: rec.interventionActionCandidate ?? null,
       };
     }
   }
