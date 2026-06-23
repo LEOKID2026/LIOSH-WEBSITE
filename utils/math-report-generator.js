@@ -89,6 +89,7 @@ export function getTopicName(topic) {
 }
 
 const ENGLISH_TOPIC_NAMES = {
+  phonics: "פוניקה",
   vocabulary: "אוצר מילים",
   grammar: "דקדוק",
   grammar_basics: "יסודות דקדוק",

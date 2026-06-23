@@ -1,5 +1,6 @@
 /**
- * English G1/G2 phonics practice-question audio — child-friendly mixed Hebrew + US English TTS.
+ * English G1/G2 phonics + vocabulary practice-question audio —
+ * child-friendly mixed Hebrew + US English TTS.
  * Mirrors Hebrew question audioStem pattern; uses browser speech synthesis (no book MP3 mapping).
  */
 
@@ -247,6 +248,91 @@ export function attachEnglishPhonicsPracticeAudio(question, ctx) {
     ...question.params,
     audioStem: stem,
     phonicsAudioAttached: true,
+  };
+
+  return true;
+}
+
+/**
+ * Attach TTS audio stem to an English vocabulary MCQ question for G1/G2.
+ * Audio reads the target word aloud in the appropriate language, followed by answer options.
+ *
+ * @param {object} question
+ * @param {{ gradeKey: string }} ctx
+ * @returns {boolean}
+ */
+export function attachEnglishVocabPracticeAudio(question, ctx) {
+  if (!question || typeof question !== "object") return false;
+  if (question.topic !== "vocabulary") return false;
+
+  const g = String(ctx.gradeKey || "").toLowerCase();
+  if (g !== "g1" && g !== "g2") return false;
+  if (question.qType !== "choice") return false;
+  if (!Array.isArray(question.answers) || question.answers.length < 2) return false;
+
+  const params = question.params || {};
+  const word = String(params.word || "").trim();
+  const direction = String(params.direction || "en_to_he");
+  const listKey = String(params.listKey || "vocab");
+
+  if (!word) return false;
+
+  /** @type {{ locale: string, text: string }[]} */
+  const segments = [];
+
+  if (direction === "en_to_he") {
+    // Q: "מה פירוש המילה 'dog'?" → say English word; answers are Hebrew
+    segments.push({ locale: "he-IL", text: "מה פירוש המילה" });
+    segments.push({ locale: "en-US", text: word });
+    const heAnswers = question.answers.slice(0, 4).map(String).filter(Boolean);
+    if (heAnswers.length > 0) {
+      segments.push({ locale: "he-IL", text: "אפשרויות: " + heAnswers.join(", ") });
+    }
+  } else {
+    // direction === "he_to_en": Q: "מה פירוש המילה 'כלב'?" → answers are English
+    segments.push({ locale: "he-IL", text: "מה פירוש המילה " + word + " באנגלית?" });
+    const enAnswers = question.answers.slice(0, 4).map(String).filter(Boolean);
+    if (enAnswers.length > 0) {
+      segments.push({ locale: "he-IL", text: "אפשרויות:" });
+      segments.push({ locale: "en-US", text: enAnswers.join(", ") });
+    }
+  }
+
+  if (segments.length === 0) return false;
+
+  const transcript = clip(
+    [word, ...(question.answers || []).map(String)].join(" · "),
+    300
+  );
+  const fallbackTts = clip(
+    segments.map((s) => s.text).join(" "),
+    400
+  );
+
+  const stem = {
+    schema_version: 1,
+    audio_asset_id: `en.vocab.${g}.${listKey}.${word.replace(/\s+/g, "_")}`,
+    transcript,
+    locale: direction === "en_to_he" ? "en-US" : "he-IL",
+    task_mode: "listen_and_choose",
+    recording_required: false,
+    playback_kind: "tts",
+    stem_audio_url: null,
+    tts_text: fallbackTts,
+    tts_segments: segments,
+    max_replays: 5,
+    max_duration_sec: 15,
+    scoring_policy: "mcq_after_audio_auto",
+    fallback_mode: "degraded_skip",
+    review_route: "none",
+  };
+
+  if (!validateAudioStemV1(stem)) return false;
+
+  question.params = {
+    ...question.params,
+    audioStem: stem,
+    vocabAudioAttached: true,
   };
 
   return true;

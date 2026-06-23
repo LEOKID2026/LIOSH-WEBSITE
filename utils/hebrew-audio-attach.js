@@ -210,8 +210,15 @@ export function attachHebrewAudioToQuestion(question, ctx) {
           : task_mode === "phonological_discrimination_he"
             ? "בחרו את המילה המתאימה."
             : "האזינו ובחרו את התשובה הנכונה.";
-    question.questionLabel = question.questionLabel || "האזינו ובחרו";
-    question.exerciseText = `${hint}\n\n${qText}`;
+    // Set the label only if not already set. Use the short form so the heading
+    // does not duplicate the instruction that appears in the question body below.
+    if (!question.questionLabel) {
+      question.questionLabel = "האזינו ובחרו";
+    }
+    // Do NOT prepend the hint instruction into exerciseText — it would create a
+    // visible duplicate because the UI already displays questionLabel as a heading
+    // above the question. Keep only the question text in the body.
+    question.exerciseText = qText;
     question.question = question.exerciseText;
   }
 

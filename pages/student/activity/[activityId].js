@@ -4,6 +4,7 @@ import { attachHebrewAudioToQuestion } from "../../../utils/hebrew-audio-attach"
 import { isLowerGradeG1G2Key } from "../../../utils/lower-grade-practice-runtime-quality";
 import { validateAudioStem } from "../../../utils/audio-task-contract";
 import HebrewAudioBuild1Panel from "../../../components/HebrewAudioBuild1Panel";
+import EnglishPhonicsAudioPanel from "../../../components/EnglishPhonicsAudioPanel";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Layout from "../../../components/Layout";
@@ -300,6 +301,18 @@ export default function StudentActivityPage({ activityId }) {
   const currentActivityAudioStem = activityAudioStems[effectiveIdx] ?? null;
   const showActivityAudio =
     Boolean(currentActivityAudioStem) && validateAudioStem(currentActivityAudioStem);
+
+  // שמע vocabulary אנגלית G1/G2 — stem כבר בנוי בגנרטור ונשמר ב-params
+  const currentEnglishVocabAudioStem =
+    currentQuestion?.subject === "english" &&
+    currentQuestion?.topic === "vocabulary" &&
+    isLowerGradeG1G2Key(String(currentQuestion?.gradeLevel || "").toLowerCase()) &&
+    currentQuestion?.params?.audioStem
+      ? currentQuestion.params.audioStem
+      : null;
+  const showEnglishVocabAudio =
+    Boolean(currentEnglishVocabAudioStem) &&
+    validateAudioStem(currentEnglishVocabAudioStem);
 
   useEffect(() => {
     if (activity?.mode === "live_lesson") return;
@@ -940,6 +953,21 @@ export default function StudentActivityPage({ activityId }) {
                     topic={currentQuestion.topic || currentQuestion.operation || "reading"}
                     guidedMode={false}
                     onGuidedNeutralDone={() => {}}
+                  />
+                </div>
+                <StudentAssignedActivityQuestionStage
+                  question={displayQuestion || currentQuestion}
+                  questionIndex={effectiveIdx}
+                />
+              </div>
+            ) : showEnglishVocabAudio ? (
+              <div className="flex flex-col gap-1 w-full" dir="rtl">
+                <div className="flex justify-start">
+                  <EnglishPhonicsAudioPanel
+                    stem={currentEnglishVocabAudioStem}
+                    gameActive={!isCurrentQuestionAnswered}
+                    grade={String(currentQuestion.gradeLevel || "").toLowerCase()}
+                    topic={currentQuestion.topic || "vocabulary"}
                   />
                 </div>
                 <StudentAssignedActivityQuestionStage

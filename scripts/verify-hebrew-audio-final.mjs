@@ -165,7 +165,7 @@ if (
 )
   fail("unknown topic skip");
 
-if (EnReady.ENGLISH_AUDIO_PRODUCT_ACTIVATED !== false) fail("English audio must stay disabled");
+// English TTS audio is now active (phonics + vocabulary G1/G2); no longer guarded here.
 if (EnReady.listEnglishPhonicsEvaluators().length !== 0) fail("English evaluators must be empty");
 
 console.log("verify-hebrew-audio-final: OK");

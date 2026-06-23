@@ -198,14 +198,24 @@ export function ensureMcqFourOptions(q, ctx = {}) {
         ? answers[ci]
         : answers[0];
 
+  // Niqqud codepoints — used for a lighter key that preserves punctuation.
+  const NIQQUD_RE_LOCAL = /[\u0591-\u05C7]/g;
+
   /** @type {string[]} */
   const deduped = [];
   const usedKeys = new Set();
   const pushUnique = (text) => {
     const t = String(text ?? "").trim();
     if (!t) return false;
-    const key = normalizeOptionForCompare(t);
-    if (!key || usedKeys.has(key)) return false;
+    // Use a lightweight key: lowercase + strip niqqud + collapse whitespace.
+    // We intentionally do NOT strip punctuation from edges (unlike normalizeOptionForCompare)
+    // because MCQ options that differ only in punctuation (e.g. "היום חם." vs "היום חם?"
+    // vs "היום חם" in a grammar question) are semantically distinct and must all be kept.
+    // For purely-punctuation options such as "." or "?" we fall back to the raw lowercase
+    // text so they are never silently dropped.
+    const lightKey = t.toLowerCase().replace(NIQQUD_RE_LOCAL, "").replace(/\s+/g, " ");
+    const key = lightKey || t.toLowerCase();
+    if (usedKeys.has(key)) return false;
     usedKeys.add(key);
     deduped.push(t);
     return true;
@@ -254,7 +264,13 @@ export function ensureMcqFourOptions(q, ctx = {}) {
 
   answers = shuffleMcqOptions(answers);
 
-  const newIdx = answers.findIndex((a) => normalizeOptionForCompare(a) === normalizeOptionForCompare(correct));
+  // Use the same lighter key as pushUnique so that punctuation-distinguishing options
+  // (e.g. "שלי?" vs "שלי.") are not accidentally conflated when locating the correct answer.
+  const correctLightKey = (correct.toLowerCase().replace(NIQQUD_RE_LOCAL, "").replace(/\s+/g, " ")) || correct.toLowerCase();
+  const newIdx = answers.findIndex((a) => {
+    const ak = (a.toLowerCase().replace(NIQQUD_RE_LOCAL, "").replace(/\s+/g, " ")) || a.toLowerCase();
+    return ak === correctLightKey;
+  });
   const out = { ...q };
   out.answers = answers;
   if (Array.isArray(q.options)) out.options = answers;

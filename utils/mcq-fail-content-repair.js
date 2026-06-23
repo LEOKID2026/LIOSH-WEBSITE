@@ -236,11 +236,20 @@ function repairFormatOutliers(answers, ci) {
     }
   }
   if (/[.!?]$/.test(correct.trim())) {
+    // Build a set of existing (lowercased) answer texts so we can detect
+    // whether appending "." to an option would create a duplicate.
+    const existingLower = new Set(answers.map((a) => String(a ?? "").trim().toLowerCase()));
     for (let i = 0; i < answers.length; i++) {
       if (i === ci) continue;
       const t = String(answers[i] ?? "").trim();
       if (t && !/[.!?]$/.test(t) && t.length >= 4) {
-        answers[i] = `${t}.`;
+        const candidate = `${t}.`;
+        // Skip if adding a period would produce a string identical to an existing option.
+        if (!existingLower.has(candidate.toLowerCase())) {
+          existingLower.delete(t.toLowerCase());
+          existingLower.add(candidate.toLowerCase());
+          answers[i] = candidate;
+        }
       }
     }
   }

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+﻿import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import Layout from "../../components/Layout";
 import { useRouter } from "next/router";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
@@ -26,6 +26,7 @@ import {
 } from "../../utils/learning-master-question-pressure.client.js";
 import EnglishPhonicsAudioPanel from "../../components/EnglishPhonicsAudioPanel";
 import { validateAudioStem } from "../../utils/audio-task-contract";
+import { isLowerGradeG1G2Key } from "../../utils/lower-grade-practice-runtime-quality";
 import { compareAnswers } from "../../utils/answer-compare";
 import {
   computeMcqIndicesForQuestion,
@@ -150,7 +151,7 @@ import {
 
 const ENGLISH_BOOK_GRADE_SET = new Set(ENGLISH_BOOK_GRADES);
 
-/** Grades 1–2: hard band excluded from default practice UI (owner policy). */
+/** Grades 1â€“2: hard band excluded from default practice UI (owner policy). */
 function englishLevelKeysForGradeKey(gradeKey) {
   const gNum = parseInt(String(gradeKey).replace(/\D/g, ""), 10) || 3;
   if (gNum <= 2) return ["easy", "medium"];
@@ -163,51 +164,51 @@ function clampEnglishLevelForGrade(gradeKey, levelKey) {
 }
 
 const MODES = {
-  learning: { name: "למידה", description: "ללא סיום משחק, תרגול בקצב שלך" },
-  challenge: { name: "אתגר", description: "טיימר + חיים, מרוץ ניקוד גבוה" },
-  speed: { name: "מהירות", description: "תשובות מהירות = יותר נקודות! ⚡" },
-  marathon: { name: "מרתון", description: "כמה שאלות תוכל לפתור? 🏃" },
-  practice: { name: "תרגול", description: "בוחר נושא/מצב אימון מדויק" },
+  learning: { name: "×œ×ž×™×“×”", description: "×œ×œ× ×¡×™×•× ×ž×©×—×§, ×ª×¨×’×•×œ ×‘×§×¦×‘ ×©×œ×š" },
+  challenge: { name: "××ª×’×¨", description: "×˜×™×™×ž×¨ + ×—×™×™×, ×ž×¨×•×¥ × ×™×§×•×“ ×’×‘×•×”" },
+  speed: { name: "×ž×”×™×¨×•×ª", description: "×ª×©×•×‘×•×ª ×ž×”×™×¨×•×ª = ×™×•×ª×¨ × ×§×•×“×•×ª! âš¡" },
+  marathon: { name: "×ž×¨×ª×•×Ÿ", description: "×›×ž×” ×©××œ×•×ª ×ª×•×›×œ ×œ×¤×ª×•×¨? ðŸƒ" },
+  practice: { name: "×ª×¨×’×•×œ", description: "×‘×•×—×¨ × ×•×©×/×ž×¦×‘ ××™×ž×•×Ÿ ×ž×“×•×™×§" },
 };
 
 const STORAGE_KEY = "mleo_english_master";
 
 const PRACTICE_FOCUS_OPTIONS = [
-  { value: "balanced", label: "📚 כל הנושאים" },
-  { value: "vocab_core", label: "🔤 אוצר מילים בסיסי" },
-  { value: "grammar_forms", label: "✏️ דקדוק ומבנים" },
-  { value: "writing_lab", label: "📝 כתיבה ומשפטים" },
-  { value: "translation_boost", label: "📖 תרגום והבנת קטע" },
+  { value: "balanced", label: "ðŸ“š ×›×œ ×”× ×•×©××™×" },
+  { value: "vocab_core", label: "ðŸ”¤ ××•×¦×¨ ×ž×™×œ×™× ×‘×¡×™×¡×™" },
+  { value: "grammar_forms", label: "âœï¸ ×“×§×“×•×§ ×•×ž×‘× ×™×" },
+  { value: "writing_lab", label: "ðŸ“ ×›×ª×™×‘×” ×•×ž×©×¤×˜×™×" },
+  { value: "translation_boost", label: "ðŸ“– ×ª×¨×’×•× ×•×”×‘× ×ª ×§×˜×¢" },
 ];
 
 const AVATAR_OPTIONS = [
-  "👤",
-  "🧑",
-  "👦",
-  "👧",
-  "🦁",
-  "🐱",
-  "🐶",
-  "🐰",
-  "🐻",
-  "🐼",
-  "🦊",
-  "🐸",
-  "🦄",
-  "🌟",
-  "🎮",
-  "🏆",
-  "⭐",
-  "💫",
+  "ðŸ‘¤",
+  "ðŸ§‘",
+  "ðŸ‘¦",
+  "ðŸ‘§",
+  "ðŸ¦",
+  "ðŸ±",
+  "ðŸ¶",
+  "ðŸ°",
+  "ðŸ»",
+  "ðŸ¼",
+  "ðŸ¦Š",
+  "ðŸ¸",
+  "ðŸ¦„",
+  "ðŸŒŸ",
+  "ðŸŽ®",
+  "ðŸ†",
+  "â­",
+  "ðŸ’«",
 ];
 
 const REFERENCE_CATEGORIES = {
-  colors: { label: "צבעים", lists: ["colors"] },
-  animals: { label: "חיות", lists: ["animals"] },
-  actions: { label: "פעלים נפוצים", lists: ["actions"] },
-  emotions: { label: "רגשות", lists: ["emotions"] },
-  school: { label: "חיי בית ספר", lists: ["school", "family"] },
-  technology: { label: "טכנולוגיה", lists: ["technology", "global_issues"] },
+  colors: { label: "×¦×‘×¢×™×", lists: ["colors"] },
+  animals: { label: "×—×™×•×ª", lists: ["animals"] },
+  actions: { label: "×¤×¢×œ×™× × ×¤×•×¦×™×", lists: ["actions"] },
+  emotions: { label: "×¨×’×©×•×ª", lists: ["emotions"] },
+  school: { label: "×—×™×™ ×‘×™×ª ×¡×¤×¨", lists: ["school", "family"] },
+  technology: { label: "×˜×›× ×•×œ×•×’×™×”", lists: ["technology", "global_issues"] },
 };
 
 const REFERENCE_CATEGORY_KEYS = Object.keys(REFERENCE_CATEGORIES);
@@ -223,7 +224,7 @@ function buildTop10ByScore(saved, level) {
         const bestStreak = entry.bestStreak ?? entry.streak ?? 0;
         if (bestScore > 0) {
           allScores.push({
-            name: entry.playerName || entry.name || "שחקן",
+            name: entry.playerName || entry.name || "×©×—×§×Ÿ",
             bestScore,
             bestStreak,
             topic,
@@ -286,7 +287,7 @@ function saveScoreEntry(saved, key, entry) {
   saved[key] = levelData;
 }
 
-// פונקציית עזר למיספור צעדים
+// ×¤×•× ×§×¦×™×™×ª ×¢×–×¨ ×œ×ž×™×¡×¤×•×¨ ×¦×¢×“×™×
 function makeStep(num, text) {
   return (
     <div
@@ -298,7 +299,7 @@ function makeStep(num, text) {
         gap: "0.4rem",
       }}
     >
-      {/* המספר – תמיד מיושר וכיווני LTR כדי שלא יברח לסוף */}
+      {/* ×”×ž×¡×¤×¨ â€“ ×ª×ž×™×“ ×ž×™×•×©×¨ ×•×›×™×•×•× ×™ LTR ×›×“×™ ×©×œ× ×™×‘×¨×— ×œ×¡×•×£ */}
       <span
         dir="ltr"
         style={{
@@ -309,13 +310,13 @@ function makeStep(num, text) {
       >
         .{num}
       </span>
-      {/* הטקסט – בעברית, RTL */}
+      {/* ×”×˜×§×¡×˜ â€“ ×‘×¢×‘×¨×™×ª, RTL */}
       <span style={{ flex: 1 }}>{text}</span>
     </div>
   );
 }
 
-// הסבר מפורט צעד-אחר-צעד לפי נושא וכיתה
+// ×”×¡×‘×¨ ×ž×¤×•×¨×˜ ×¦×¢×“-××—×¨-×¦×¢×“ ×œ×¤×™ × ×•×©× ×•×›×™×ª×”
 function getSolutionSteps(question, topic, gradeKey) {
   if (!question || !question.params) return [];
   const { correctAnswer } = question;
@@ -324,33 +325,33 @@ function getSolutionSteps(question, topic, gradeKey) {
     case "vocabulary": {
       if (question.params.direction === "en_to_he") {
         return [
-          makeStep(1, `נבין שהמילה "${question.params.word}" היא באנגלית.`),
-          makeStep(2, "נחפש את הפירוש של המילה בעברית."),
-          makeStep(3, `הפירוש הנכון הוא: ${correctAnswer}.`),
-          makeStep(4, "נבדוק שהפירוש הגיוני ונכון."),
+          makeStep(1, `× ×‘×™×Ÿ ×©×”×ž×™×œ×” "${question.params.word}" ×”×™× ×‘×× ×’×œ×™×ª.`),
+          makeStep(2, "× ×—×¤×© ××ª ×”×¤×™×¨×•×© ×©×œ ×”×ž×™×œ×” ×‘×¢×‘×¨×™×ª."),
+          makeStep(3, `×”×¤×™×¨×•×© ×”× ×›×•×Ÿ ×”×•×: ${correctAnswer}.`),
+          makeStep(4, "× ×‘×“×•×§ ×©×”×¤×™×¨×•×© ×”×’×™×•× ×™ ×•× ×›×•×Ÿ."),
         ];
       } else {
         return [
-          makeStep(1, `נבין שהמילה "${question.params.word}" היא בעברית.`),
-          makeStep(2, "נחפש את הפירוש של המילה באנגלית."),
-          makeStep(3, `הפירוש הנכון הוא: ${correctAnswer}.`),
-          makeStep(4, "נבדוק שהפירוש הגיוני ונכון."),
+          makeStep(1, `× ×‘×™×Ÿ ×©×”×ž×™×œ×” "${question.params.word}" ×”×™× ×‘×¢×‘×¨×™×ª.`),
+          makeStep(2, "× ×—×¤×© ××ª ×”×¤×™×¨×•×© ×©×œ ×”×ž×™×œ×” ×‘×× ×’×œ×™×ª."),
+          makeStep(3, `×”×¤×™×¨×•×© ×”× ×›×•×Ÿ ×”×•×: ${correctAnswer}.`),
+          makeStep(4, "× ×‘×“×•×§ ×©×”×¤×™×¨×•×© ×”×’×™×•× ×™ ×•× ×›×•×Ÿ."),
         ];
       }
     }
 
     case "grammar": {
       return [
-        makeStep(1, "נבין את כללי הדקדוק באנגלית."),
+        makeStep(1, "× ×‘×™×Ÿ ××ª ×›×œ×œ×™ ×”×“×§×“×•×§ ×‘×× ×’×œ×™×ª."),
         makeStep(
           2,
-          "I (אני) = am, You/We/They (אתה/אנחנו/הם) = are, He/She/It (הוא/היא/זה) = is."
+          "I (×× ×™) = am, You/We/They (××ª×”/×× ×—× ×•/×”×) = are, He/She/It (×”×•×/×”×™×/×–×”) = is."
         ),
-        makeStep(3, `התשובה הנכונה היא: ${correctAnswer}.`),
+        makeStep(3, `×”×ª×©×•×‘×” ×”× ×›×•× ×” ×”×™×: ${correctAnswer}.`),
         makeStep(
           4,
           question.params.explanation ||
-            "נבדוק שהתשובה מתאימה לנושא המשפט."
+            "× ×‘×“×•×§ ×©×”×ª×©×•×‘×” ×ž×ª××™×ž×” ×œ× ×•×©× ×”×ž×©×¤×˜."
         ),
       ];
     }
@@ -360,39 +361,39 @@ function getSolutionSteps(question, topic, gradeKey) {
         return [
           makeStep(
             1,
-            `נקרא את המשפט באנגלית: "${question.params.sentence}".`
+            `× ×§×¨× ××ª ×”×ž×©×¤×˜ ×‘×× ×’×œ×™×ª: "${question.params.sentence}".`
           ),
-          makeStep(2, "ננסה לתרגם כל מילה או חלק מהמשפט."),
-          makeStep(3, "נחבר את המילים למשפט בעברית."),
-          makeStep(4, `התרגום הנכון: ${correctAnswer}.`),
+          makeStep(2, "× × ×¡×” ×œ×ª×¨×’× ×›×œ ×ž×™×œ×” ××• ×—×œ×§ ×ž×”×ž×©×¤×˜."),
+          makeStep(3, "× ×—×‘×¨ ××ª ×”×ž×™×œ×™× ×œ×ž×©×¤×˜ ×‘×¢×‘×¨×™×ª."),
+          makeStep(4, `×”×ª×¨×’×•× ×”× ×›×•×Ÿ: ${correctAnswer}.`),
         ];
       } else {
         return [
           makeStep(
             1,
-            `נקרא את המשפט בעברית: "${question.params.sentence}".`
+            `× ×§×¨× ××ª ×”×ž×©×¤×˜ ×‘×¢×‘×¨×™×ª: "${question.params.sentence}".`
           ),
-          makeStep(2, "ננסה לתרגם כל מילה או חלק מהמשפט לאנגלית."),
-          makeStep(3, "נחבר את המילים למשפט באנגלית."),
-          makeStep(4, `התרגום הנכון: ${correctAnswer}.`),
+          makeStep(2, "× × ×¡×” ×œ×ª×¨×’× ×›×œ ×ž×™×œ×” ××• ×—×œ×§ ×ž×”×ž×©×¤×˜ ×œ×× ×’×œ×™×ª."),
+          makeStep(3, "× ×—×‘×¨ ××ª ×”×ž×™×œ×™× ×œ×ž×©×¤×˜ ×‘×× ×’×œ×™×ª."),
+          makeStep(4, `×”×ª×¨×’×•× ×”× ×›×•×Ÿ: ${correctAnswer}.`),
         ];
       }
     }
 
     case "sentences": {
       return [
-        makeStep(1, `נקרא את המשפט: "${question.params.template}".`),
+        makeStep(1, `× ×§×¨× ××ª ×”×ž×©×¤×˜: "${question.params.template}".`),
         makeStep(
           2,
-          "נבין מה חסר במשפט - איזו מילה או צורה דקדוקית."
+          "× ×‘×™×Ÿ ×ž×” ×—×¡×¨ ×‘×ž×©×¤×˜ - ××™×–×• ×ž×™×œ×” ××• ×¦×•×¨×” ×“×§×“×•×§×™×ª."
         ),
         makeStep(
           3,
-          "נבדוק מה מתאים לפי כללי הדקדוק: I/You/We/They = are, He/She/It = is."
+          "× ×‘×“×•×§ ×ž×” ×ž×ª××™× ×œ×¤×™ ×›×œ×œ×™ ×”×“×§×“×•×§: I/You/We/They = are, He/She/It = is."
         ),
         makeStep(
           4,
-          `התשובה הנכונה: ${correctAnswer}. ${
+          `×”×ª×©×•×‘×” ×”× ×›×•× ×”: ${correctAnswer}. ${
             question.params.explanation || ""
           }`
         ),
@@ -404,31 +405,31 @@ function getSolutionSteps(question, topic, gradeKey) {
         return [
           makeStep(
             1,
-            `נקרא את המילה בעברית: "${question.params.wordHe}".`
+            `× ×§×¨× ××ª ×”×ž×™×œ×” ×‘×¢×‘×¨×™×ª: "${question.params.wordHe}".`
           ),
-          makeStep(2, "נזכר בצורה שלה באנגלית שלמדנו קודם."),
+          makeStep(2, "× ×–×›×¨ ×‘×¦×•×¨×” ×©×œ×” ×‘×× ×’×œ×™×ª ×©×œ×ž×“× ×• ×§×•×“×."),
           makeStep(
             3,
-            "נכתוב אות-אחר-אות, ושמים לב לאיות (spelling)."
+            "× ×›×ª×•×‘ ××•×ª-××—×¨-××•×ª, ×•×©×ž×™× ×œ×‘ ×œ××™×•×ª (spelling)."
           ),
-          makeStep(4, `התשובה הנכונה היא: ${correctAnswer}.`),
+          makeStep(4, `×”×ª×©×•×‘×” ×”× ×›×•× ×” ×”×™×: ${correctAnswer}.`),
         ];
       }
       if (question.params.type === "sentence") {
         return [
           makeStep(
             1,
-            `נקרא את המשפט בעברית: "${question.params.sentenceHe}".`
+            `× ×§×¨× ××ª ×”×ž×©×¤×˜ ×‘×¢×‘×¨×™×ª: "${question.params.sentenceHe}".`
           ),
           makeStep(
             2,
-            "נפרק את המשפט לחלקים ונחשוב איך אומרים כל חלק באנגלית."
+            "× ×¤×¨×§ ××ª ×”×ž×©×¤×˜ ×œ×—×œ×§×™× ×•× ×—×©×•×‘ ××™×š ××•×ž×¨×™× ×›×œ ×—×œ×§ ×‘×× ×’×œ×™×ª."
           ),
           makeStep(
             3,
-            "נבדוק סדר מילים נכון ואות גדולה בתחילת המשפט."
+            "× ×‘×“×•×§ ×¡×“×¨ ×ž×™×œ×™× × ×›×•×Ÿ ×•××•×ª ×’×“×•×œ×” ×‘×ª×—×™×œ×ª ×”×ž×©×¤×˜."
           ),
-          makeStep(4, `המשפט הנכון: ${correctAnswer}.`),
+          makeStep(4, `×”×ž×©×¤×˜ ×”× ×›×•×Ÿ: ${correctAnswer}.`),
         ];
       }
       return [];
@@ -439,7 +440,7 @@ function getSolutionSteps(question, topic, gradeKey) {
   }
 }
 
-// "למה טעיתי?" – הסבר קצר לטעות נפוצה
+// "×œ×ž×” ×˜×¢×™×ª×™?" â€“ ×”×¡×‘×¨ ×§×¦×¨ ×œ×˜×¢×•×ª × ×¤×•×¦×”
 function getErrorExplanation(question, topic, wrongAnswer, gradeKey, opts = {}) {
   if (!question) return "";
   const userAns = String(wrongAnswer).toLowerCase();
@@ -450,34 +451,34 @@ function getErrorExplanation(question, topic, wrongAnswer, gradeKey, opts = {}) 
   switch (topic) {
     case "vocabulary":
       return learning
-        ? `התשובה הנכונה היא "${ca}". בדוק שוב: האם הפירוש שבחרת מתאים למילה?`
-        : "בדוק שוב: האם הפירוש שבחרת מתאים למילה? נסה לחשוב על המילה בעברית/אנגלית לפי ההקשר.";
+        ? `×”×ª×©×•×‘×” ×”× ×›×•× ×” ×”×™× "${ca}". ×‘×“×•×§ ×©×•×‘: ×”×× ×”×¤×™×¨×•×© ×©×‘×—×¨×ª ×ž×ª××™× ×œ×ž×™×œ×”?`
+        : "×‘×“×•×§ ×©×•×‘: ×”×× ×”×¤×™×¨×•×© ×©×‘×—×¨×ª ×ž×ª××™× ×œ×ž×™×œ×”? × ×¡×” ×œ×—×©×•×‘ ×¢×œ ×”×ž×™×œ×” ×‘×¢×‘×¨×™×ª/×× ×’×œ×™×ª ×œ×¤×™ ×”×”×§×©×¨.";
 
     case "grammar":
       if (userAns === "is" && correctAns === "am") {
-        return "זכור: I (אני) תמיד עם am, לא is. I am = אני.";
+        return "×–×›×•×¨: I (×× ×™) ×ª×ž×™×“ ×¢× am, ×œ× is. I am = ×× ×™.";
       }
       if (userAns === "am" && (correctAns === "is" || correctAns === "are")) {
-        return "זכור: am משמש רק עם I (אני). He/She/It = is, You/We/They = are.";
+        return "×–×›×•×¨: am ×ž×©×ž×© ×¨×§ ×¢× I (×× ×™). He/She/It = is, You/We/They = are.";
       }
       return learning
-        ? `התשובה הנכונה היא "${ca}". בדוק שוב את כללי הדקדוק: I am, You/We/They are, He/She/It is.`
-        : "בדוק שוב את כללי הדקדוק: I am, You/We/They are, He/She/It is.";
+        ? `×”×ª×©×•×‘×” ×”× ×›×•× ×” ×”×™× "${ca}". ×‘×“×•×§ ×©×•×‘ ××ª ×›×œ×œ×™ ×”×“×§×“×•×§: I am, You/We/They are, He/She/It is.`
+        : "×‘×“×•×§ ×©×•×‘ ××ª ×›×œ×œ×™ ×”×“×§×“×•×§: I am, You/We/They are, He/She/It is.";
 
     case "translation":
       return learning
-        ? `התרגום הנכון: ${ca}. בדוק שוב: האם תרגמת את כל המילים נכון?`
-        : "בדוק שוב: האם תרגמת את כל המילים נכון? נסה לחשוב על המשמעות של המשפט ולא רק על מילים בודדות.";
+        ? `×”×ª×¨×’×•× ×”× ×›×•×Ÿ: ${ca}. ×‘×“×•×§ ×©×•×‘: ×”×× ×ª×¨×’×ž×ª ××ª ×›×œ ×”×ž×™×œ×™× × ×›×•×Ÿ?`
+        : "×‘×“×•×§ ×©×•×‘: ×”×× ×ª×¨×’×ž×ª ××ª ×›×œ ×”×ž×™×œ×™× × ×›×•×Ÿ? × ×¡×” ×œ×—×©×•×‘ ×¢×œ ×”×ž×©×ž×¢×•×ª ×©×œ ×”×ž×©×¤×˜ ×•×œ× ×¨×§ ×¢×œ ×ž×™×œ×™× ×‘×•×“×“×•×ª.";
 
     case "sentences":
       return learning
-        ? `התשובה הנכונה היא "${ca}". בדוק שוב: האם המילה שבחרת מתאימה לנושא המשפט?`
-        : "בדוק שוב: האם המילה שבחרת מתאימה לנושא המשפט? זכור: I/You/We/They = are, He/She/It = is.";
+        ? `×”×ª×©×•×‘×” ×”× ×›×•× ×” ×”×™× "${ca}". ×‘×“×•×§ ×©×•×‘: ×”×× ×”×ž×™×œ×” ×©×‘×—×¨×ª ×ž×ª××™×ž×” ×œ× ×•×©× ×”×ž×©×¤×˜?`
+        : "×‘×“×•×§ ×©×•×‘: ×”×× ×”×ž×™×œ×” ×©×‘×—×¨×ª ×ž×ª××™×ž×” ×œ× ×•×©× ×”×ž×©×¤×˜? ×–×›×•×¨: I/You/We/They = are, He/She/It = is.";
 
     case "writing":
       return learning
-        ? `התשובה הנכונה היא "${ca}". כנראה שטעית באיות — בדוק שוב אות-אחר-אות.`
-        : "כנראה שטעית באיות (spelling). בדוק שוב אות-אחר-אות, שים לב אל th / sh / ch ולסיום המילה (s / ed / ing).";
+        ? `×”×ª×©×•×‘×” ×”× ×›×•× ×” ×”×™× "${ca}". ×›× ×¨××” ×©×˜×¢×™×ª ×‘××™×•×ª â€” ×‘×“×•×§ ×©×•×‘ ××•×ª-××—×¨-××•×ª.`
+        : "×›× ×¨××” ×©×˜×¢×™×ª ×‘××™×•×ª (spelling). ×‘×“×•×§ ×©×•×‘ ××•×ª-××—×¨-××•×ª, ×©×™× ×œ×‘ ××œ th / sh / ch ×•×œ×¡×™×•× ×”×ž×™×œ×” (s / ed / ing).";
 
     default:
       return "";
@@ -623,7 +624,7 @@ export default function EnglishMaster() {
   });
   const [showDailyChallenge, setShowDailyChallenge] = useState(false);
 
-  // הסבר מפורט לשאלה
+  // ×”×¡×‘×¨ ×ž×¤×•×¨×˜ ×œ×©××œ×”
   const [showSolution, setShowSolution] = useState(false);
   const [showPreviousSolution, setShowPreviousSolution] = useState(false);
   const {
@@ -637,7 +638,7 @@ export default function EnglishMaster() {
   const bookContextRef = useRef(null);
   const bookContextConsumedRef = useRef(false);
 
-  // הסבר לטעות אחרונה
+  // ×”×¡×‘×¨ ×œ×˜×¢×•×ª ××—×¨×•× ×”
   const [errorExplanation, setErrorExplanation] = useState("");
 
   const [showMixedSelector, setShowMixedSelector] = useState(false);
@@ -834,16 +835,16 @@ export default function EnglishMaster() {
   const [playerAvatar, setPlayerAvatar] = useState(() => {
     if (typeof window !== "undefined") {
       try {
-        return localStorage.getItem("mleo_player_avatar") || "👤";
+        return localStorage.getItem("mleo_player_avatar") || "ðŸ‘¤";
       } catch {
-        return "👤";
+        return "ðŸ‘¤";
       }
     }
-    return "👤";
+    return "ðŸ‘¤";
   });
-  const [playerAvatarImage, setPlayerAvatarImage] = useState(null); // תמונת אווטר מותאמת אישית
+  const [playerAvatarImage, setPlayerAvatarImage] = useState(null); // ×ª×ž×•× ×ª ××•×•×˜×¨ ×ž×•×ª××ž×ª ××™×©×™×ª
   const [showPlayerProfile, setShowPlayerProfile] = useState(false);
-  const gradeLabels = ["א", "ב", "ג", "ד", "ה", "ו"];
+  const gradeLabels = ["×", "×‘", "×’", "×“", "×”", "×•"];
 
   useEffect(() => {
     clearActiveDiagnosticState(
@@ -968,7 +969,7 @@ export default function EnglishMaster() {
     refreshMonthlyPersistenceView();
   }, [refreshMonthlyPersistenceView]);
 
-  // טעינת תמונת אווטר מ-localStorage
+  // ×˜×¢×™× ×ª ×ª×ž×•× ×ª ××•×•×˜×¨ ×ž-localStorage
   useEffect(() => {
     if (typeof window !== "undefined") {
       try {
@@ -983,18 +984,18 @@ export default function EnglishMaster() {
     }
   }, []);
 
-  // טיפול בהעלאת תמונת אווטר (דחיסה + שמירה בפרופיל — סנכרון בין מכשירים)
+  // ×˜×™×¤×•×œ ×‘×”×¢×œ××ª ×ª×ž×•× ×ª ××•×•×˜×¨ (×“×—×™×¡×” + ×©×ž×™×¨×” ×‘×¤×¨×•×¤×™×œ â€” ×¡× ×›×¨×•×Ÿ ×‘×™×Ÿ ×ž×›×©×™×¨×™×)
   const handleAvatarImageUpload = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     if (file.size > 5 * 1024 * 1024) {
-      alert("התמונה גדולה מדי. נא לבחור תמונה עד 5MB");
+      alert("×”×ª×ž×•× ×” ×’×“×•×œ×” ×ž×“×™. × × ×œ×‘×—×•×¨ ×ª×ž×•× ×” ×¢×“ 5MB");
       return;
     }
 
     if (!file.type.startsWith("image/")) {
-      alert("נא לבחור קובץ תמונה בלבד");
+      alert("× × ×œ×‘×—×•×¨ ×§×•×‘×¥ ×ª×ž×•× ×” ×‘×œ×‘×“");
       return;
     }
 
@@ -1011,16 +1012,16 @@ export default function EnglishMaster() {
         }
         await patchLearningProfileAvatarCustomImage(dataUrl);
       } catch (err) {
-        alert(err && typeof err === "object" && "message" in err ? String(err.message) : "שמירת התמונה נכשלה");
+        alert(err && typeof err === "object" && "message" in err ? String(err.message) : "×©×ž×™×¨×ª ×”×ª×ž×•× ×” × ×›×©×œ×”");
       }
     })();
     e.target.value = "";
   };
 
-  // טיפול במחיקת תמונת אווטר
+  // ×˜×™×¤×•×œ ×‘×ž×—×™×§×ª ×ª×ž×•× ×ª ××•×•×˜×¨
   const handleRemoveAvatarImage = () => {
     void (async () => {
-      const defaultAvatar = "👤";
+      const defaultAvatar = "ðŸ‘¤";
       setPlayerAvatarImage(null);
       try {
         localStorage.removeItem("mleo_player_avatar_image");
@@ -1100,7 +1101,7 @@ export default function EnglishMaster() {
       if (playerName.trim()) {
         startGame();
       } else {
-        setFeedback("הכנס שם שחקן כדי לתרגל את הטעות שנבחרה");
+        setFeedback("×”×›× ×¡ ×©× ×©×—×§×Ÿ ×›×“×™ ×œ×ª×¨×’×œ ××ª ×”×˜×¢×•×ª ×©× ×‘×—×¨×”");
       }
     }, 200);
   }
@@ -1646,6 +1647,8 @@ export default function EnglishMaster() {
 
     levelForQuestion = clampEnglishLevelForGrade(gradeForQuestion, levelForQuestion);
 
+    const translationVisible = visibleEnglishTopics.includes("translation");
+
     if (mode === "practice") {
       switch (practiceFocus) {
         case "vocab_core":
@@ -1658,16 +1661,16 @@ export default function EnglishMaster() {
           topicForState = "writing";
           break;
         case "translation_boost":
-          topicForState = "translation";
+          if (translationVisible) topicForState = "translation";
           break;
         default:
           break;
       }
     }
 
-    if (storyOnly) {
+    if (storyOnly && translationVisible) {
       topicForState = "translation";
-    } else if (useStoryQuestions && topicForState !== "translation") {
+    } else if (useStoryQuestions && translationVisible && topicForState !== "translation") {
       topicForState = Math.random() < 0.5 ? "translation" : topicForState;
     }
 
@@ -1905,7 +1908,7 @@ export default function EnglishMaster() {
     recordSessionProgress();
     setWrong((prev) => prev + 1);
     setStreak(0);
-    setFeedback("הזמן נגמר! המשחק נגמר! ⏰");
+    setFeedback("×”×–×ž×Ÿ × ×’×ž×¨! ×”×ž×©×—×§ × ×’×ž×¨! â°");
     setGameActive(false);
     englishTrackingTopicKeyRef.current = null;
     setCurrentQuestion(null);
@@ -2076,8 +2079,8 @@ export default function EnglishMaster() {
         });
       }
       const newStreak = streak + 1;
-      if (newStreak === 10 && !badges.includes("🔥 Hot Streak")) {
-        const newBadge = "🔥 Hot Streak";
+      if (newStreak === 10 && !badges.includes("ðŸ”¥ Hot Streak")) {
+        const newBadge = "ðŸ”¥ Hot Streak";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
         sound.playSound("badge-earned");
@@ -2089,8 +2092,8 @@ export default function EnglishMaster() {
             localStorage.setItem(STORAGE_KEY + "_progress", JSON.stringify(saved));
           } catch {}
         }
-      } else if (newStreak === 25 && !badges.includes("⚡ Lightning Fast")) {
-        const newBadge = "⚡ Lightning Fast";
+      } else if (newStreak === 25 && !badges.includes("âš¡ Lightning Fast")) {
+        const newBadge = "âš¡ Lightning Fast";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
         sound.playSound("badge-earned");
@@ -2102,8 +2105,8 @@ export default function EnglishMaster() {
             localStorage.setItem(STORAGE_KEY + "_progress", JSON.stringify(saved));
           } catch {}
         }
-      } else if (newStreak === 50 && !badges.includes("🌟 אלוף") && !badges.includes("🌟 מאסטר") && !badges.includes("🌟 Master")) {
-        const newBadge = "🌟 אלוף";
+      } else if (newStreak === 50 && !badges.includes("ðŸŒŸ ××œ×•×£") && !badges.includes("ðŸŒŸ ×ž××¡×˜×¨") && !badges.includes("ðŸŒŸ Master")) {
+        const newBadge = "ðŸŒŸ ××œ×•×£";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
         sound.playSound("badge-earned");
@@ -2283,7 +2286,7 @@ export default function EnglishMaster() {
           setTimeLeft(null);
         });
       } else if (mode === "challenge") {
-        setFeedback(`${LIVE_PRACTICE_WRONG_HE} (-1 ❤️)`);
+        setFeedback(`${LIVE_PRACTICE_WRONG_HE} (-1 â¤ï¸)`);
         setLives((prevLives) => {
           const nextLives = prevLives - 1;
           if (nextLives <= 0) {
@@ -2375,15 +2378,15 @@ export default function EnglishMaster() {
 
   const getTopicName = (t) => {
     const meta = TOPICS[t];
-    if (!meta) return "נושא";
+    if (!meta) return "× ×•×©×";
     const icon = meta.icon ? `${meta.icon} ` : "";
-    return `${icon}${meta.name || "נושא"}`.trim();
+    return `${icon}${meta.name || "× ×•×©×"}`.trim();
   };
 
   const getGradeLabel = (gradeKey) => {
     const idx = GRADE_ORDER.indexOf(gradeKey);
     if (idx === -1) return "";
-    return `כיתה ${gradeLabels[idx]}`;
+    return `×›×™×ª×” ${gradeLabels[idx]}`;
   };
 
   const profileSnap = getCachedStudentLearningProfile();
@@ -2451,7 +2454,7 @@ export default function EnglishMaster() {
   if (!mounted || !gradeReady)
     return (
         <div className={`min-h-screen ${shellClass} flex items-center justify-center`} style={shellBgStyle}>
-        <div className="text-slate-700 text-xl">טוען...</div>
+        <div className="text-slate-700 text-xl">×˜×•×¢×Ÿ...</div>
       </div>
     );
 
@@ -2475,13 +2478,14 @@ export default function EnglishMaster() {
     Object.entries(WORD_LISTS[listKey] || {})
   );
 
-  const hasPhonicsAudio =
+  const hasEnglishAudio =
     gameActive &&
-    currentQuestion?.topic === "phonics" &&
+    (currentQuestion?.topic === "phonics" ||
+      (currentQuestion?.topic === "vocabulary" && isLowerGradeG1G2Key(grade))) &&
     currentQuestion?.params?.audioStem &&
     validateAudioStem(currentQuestion.params.audioStem);
 
-  const showMobileQuestionActions = Boolean(hasPhonicsAudio || questionBookHref);
+  const showMobileQuestionActions = Boolean(hasEnglishAudio || questionBookHref);
 
   const questionPressureLayout = currentQuestion
     ? buildLearningMasterQuestionPressureLayout({
@@ -2492,7 +2496,7 @@ export default function EnglishMaster() {
           currentQuestion.exerciseText,
         ],
         answers: currentQuestion.answers ?? [],
-        hasFloatButtons: Boolean(hasPhonicsAudio || questionBookHref),
+        hasFloatButtons: Boolean(hasEnglishAudio || questionBookHref),
       })
     : null;
 
@@ -2523,8 +2527,8 @@ export default function EnglishMaster() {
         <LearningMasterDesktopHeader
           MB={MB}
           desktopHeaderRef={desktopHeaderRef}
-          title="🇬🇧 אנגלית"
-          subtitle={`${playerName || "שחקן"} • ${gradeInfo.name} • ${LEVELS[level].name} • ${getTopicName(topic)} • ${MODES[mode].name}`}
+          title="ðŸ‡¬ðŸ‡§ ×× ×’×œ×™×ª"
+          subtitle={`${playerName || "×©×—×§×Ÿ"} â€¢ ${gradeInfo.name} â€¢ ${LEVELS[level].name} â€¢ ${getTopicName(topic)} â€¢ ${MODES[mode].name}`}
           onBack={backSafe}
           onCurriculumClick={() => router.push("/learning/curriculum?subject=english")}
           sound={sound}
@@ -2550,7 +2554,7 @@ export default function EnglishMaster() {
           <div className="md:hidden text-center mb-3">
             <div className="flex items-center justify-center gap-2 mb-0.5">
               <h1 className={MB.pageTitle}>
-                🇬🇧 אנגלית
+                ðŸ‡¬ðŸ‡§ ×× ×’×œ×™×ª
               </h1>
               <button
                 onClick={() => {
@@ -2560,14 +2564,14 @@ export default function EnglishMaster() {
                 className={
                   sound.soundsEnabled && sound.musicEnabled ? MB.btnSoundOn : MB.btnSoundOff
                 }
-                title={sound.soundsEnabled && sound.musicEnabled ? "השתק צלילים" : "הפעל צלילים"}
+                title={sound.soundsEnabled && sound.musicEnabled ? "×”×©×ª×§ ×¦×œ×™×œ×™×" : "×”×¤×¢×œ ×¦×œ×™×œ×™×"}
               >
-                {sound.soundsEnabled && sound.musicEnabled ? "🔊" : "🔇"}
+                {sound.soundsEnabled && sound.musicEnabled ? "ðŸ”Š" : "ðŸ”‡"}
               </button>
             </div>
             <p className={MB.pageSub}>
-              {playerName || "שחקן"} • {gradeInfo.name} •{" "}
-              {LEVELS[level].name} • {getTopicName(topic)} • {MODES[mode].name}
+              {playerName || "×©×—×§×Ÿ"} â€¢ {gradeInfo.name} â€¢{" "}
+              {LEVELS[level].name} â€¢ {getTopicName(topic)} â€¢ {MODES[mode].name}
             </p>
           </div>
 
@@ -2585,7 +2589,7 @@ export default function EnglishMaster() {
             playerAvatarImage={playerAvatarImage}
           />
 
-          {/* בחירת מצב (תרגול / למידה / מהירות / מרתון / אתגר) */}
+          {/* ×‘×—×™×¨×ª ×ž×¦×‘ (×ª×¨×’×•×œ / ×œ×ž×™×“×” / ×ž×”×™×¨×•×ª / ×ž×¨×ª×•×Ÿ / ××ª×’×¨) */}
           <div
             className="mx-auto flex items-center justify-center gap-1.5 md:gap-2 lg:gap-2.5 mb-3 md:mb-1 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl flex-wrap px-1 md:px-2"
             dir="rtl"
@@ -2606,9 +2610,9 @@ export default function EnglishMaster() {
             ))}
             <div
               className={MB.coinBadgeDesktop}
-              title="מטבעות משחק"
+              title="×ž×˜×‘×¢×•×ª ×ž×©×—×§"
             >
-              <span className={MB.coinBadgeLabel}>מטבעות:</span>
+              <span className={MB.coinBadgeLabel}>×ž×˜×‘×¢×•×ª:</span>
               <span dir="ltr" className={MB.coinBadgeValue}>
                 {childCoinBalance}
               </span>
@@ -2627,8 +2631,8 @@ export default function EnglishMaster() {
           {showBadge && (
             <div className="fixed inset-0 z-[200] flex items-center justify-center pointer-events-none">
               <div className="bg-gradient-to-br from-yellow-400 to-orange-500 text-white px-8 py-6 rounded-2xl shadow-2xl text-center animate-bounce">
-                <div className="text-4xl mb-2">🎉</div>
-                <div className="text-2xl font-bold">תג חדש!</div>
+                <div className="text-4xl mb-2">ðŸŽ‰</div>
+                <div className="text-2xl font-bold">×ª×’ ×—×“×©!</div>
                 <div className="text-xl">{showBadge}</div>
               </div>
             </div>
@@ -2638,9 +2642,9 @@ export default function EnglishMaster() {
           {showLevelUp && (
             <div className="fixed inset-0 z-[200] flex items-center justify-center pointer-events-none">
               <div className="bg-gradient-to-br from-purple-500 to-pink-500 text-white px-8 py-6 rounded-2xl shadow-2xl text-center animate-pulse">
-                <div className="text-4xl mb-2">🌟</div>
-                <div className="text-2xl font-bold">עלית רמה!</div>
-                <div className="text-xl">אתה עכשיו ברמה {playerLevel}!</div>
+                <div className="text-4xl mb-2">ðŸŒŸ</div>
+                <div className="text-2xl font-bold">×¢×œ×™×ª ×¨×ž×”!</div>
+                <div className="text-xl">××ª×” ×¢×›×©×™×• ×‘×¨×ž×” {playerLevel}!</div>
               </div>
             </div>
           )}
@@ -2665,19 +2669,19 @@ export default function EnglishMaster() {
                   className={MB.preGamePlayerBadge}
                   dir={playerName && /[\u0590-\u05FF]/.test(playerName) ? "rtl" : "ltr"}
                   title={playerName.trim() ? playerName.trim() : undefined}
-                  aria-label={playerName.trim() ? `שם ילד/ה: ${playerName.trim()}` : "שם ילד/ה לא זמין"}
+                  aria-label={playerName.trim() ? `×©× ×™×œ×“/×”: ${playerName.trim()}` : "×©× ×™×œ×“/×” ×œ× ×–×ž×™×Ÿ"}
                 >
-                  {playerName.trim() ? playerName.trim() : "שחקן"}
+                  {playerName.trim() ? playerName.trim() : "×©×—×§×Ÿ"}
                 </div>
                 <select
                   value={gradeNumber}
-                  title={`כיתה ${gradeLabels[gradeNumber - 1]}`}
+                  title={`×›×™×ª×” ${gradeLabels[gradeNumber - 1]}`}
                   onChange={(e) => handleGradeNumberChange(e.target.value)}
                   className={`${MB.selectControl} shrink-0 min-w-0 w-[5.75rem] max-w-[6.25rem] md:w-[6.5rem] md:max-w-[7rem]`}
                 >
                   {GRADE_ORDER.map((_, idx) => (
                     <option key={`grade-${idx + 1}`} value={idx + 1}>
-                      {`כיתה ${gradeLabels[idx]}`}
+                      {`×›×™×ª×” ${gradeLabels[idx]}`}
                     </option>
                   ))}
                 </select>
@@ -2729,9 +2733,9 @@ export default function EnglishMaster() {
                       type="button"
                       onClick={() => setShowMixedSelector(true)}
                       className={MB.preGameGearBtn}
-                      title="ערוך נושאים למיקס"
+                      title="×¢×¨×•×š × ×•×©××™× ×œ×ž×™×§×¡"
                     >
-                      ⚙️
+                      âš™ï¸
                     </button>
                   )}
                 </div>
@@ -2741,7 +2745,7 @@ export default function EnglishMaster() {
               <div className="grid grid-cols-4 gap-1.5 md:gap-2 lg:gap-2.5 mb-3 md:mb-4 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto" dir="rtl">
                 <div className={MB.preGameTile}>
                   <div className="flex shrink-0 items-center justify-center md:min-h-[28px] lg:min-h-[30px] px-0.5">
-                    <span className={MB.preGameTileLabel}>שיא ניקוד</span>
+                    <span className={MB.preGameTileLabel}>×©×™× × ×™×§×•×“</span>
                   </div>
                   <div className="flex flex-1 items-center justify-center min-h-0">
                     <span className={MB.preGameTileValueEmerald} dir="ltr">
@@ -2751,7 +2755,7 @@ export default function EnglishMaster() {
                 </div>
                 <div className={MB.preGameTile}>
                   <div className="flex shrink-0 items-center justify-center md:min-h-[28px] lg:min-h-[30px] px-0.5">
-                    <span className={MB.preGameTileLabel}>שיא רצף</span>
+                    <span className={MB.preGameTileLabel}>×©×™× ×¨×¦×£</span>
                   </div>
                   <div className="flex flex-1 items-center justify-center min-h-0">
                     <span className={MB.preGameTileValueAmber} dir="ltr">
@@ -2761,7 +2765,7 @@ export default function EnglishMaster() {
                 </div>
                 <div className={MB.preGameTile}>
                   <div className="flex shrink-0 items-center justify-center md:min-h-[28px] lg:min-h-[30px] px-0.5">
-                    <span className={MB.preGameTileLabel}>דיוק</span>
+                    <span className={MB.preGameTileLabel}>×“×™×•×§</span>
                   </div>
                   <div className="flex flex-1 items-center justify-center min-h-0">
                     <span className={MB.preGameTileValueBlue}>{subjectView.middleTiles.accuracyDisplayHe}</span>
@@ -2769,7 +2773,7 @@ export default function EnglishMaster() {
                 </div>
                 <div className={MB.preGameTile}>
                   <div className="flex shrink-0 items-center justify-center md:min-h-[28px] lg:min-h-[30px] px-0.5">
-                    <span className={MB.preGameTileLabel}>אתגרים</span>
+                    <span className={MB.preGameTileLabel}>××ª×’×¨×™×</span>
                   </div>
                   <div className="flex flex-1 items-center justify-center min-h-0">
                     <button
@@ -2790,7 +2794,7 @@ export default function EnglishMaster() {
                       }}
                       className={MB.btnOpenSmall}
                     >
-                      פתיחה
+                      ×¤×ª×™×—×”
                     </button>
                   </div>
                 </div>
@@ -2811,29 +2815,29 @@ export default function EnglishMaster() {
                   disabled={!playerName.trim()}
                   className={MB.btnPrimary}
                 >
-                  ▶️ התחל
+                  â–¶ï¸ ×”×ª×—×œ
                 </button>
                 <button
                   onClick={() => setShowLeaderboard(true)}
                   className={`${MB.btnAction} ${MB.btnActionOrange}`}
                 >
-                  🏆 לוח תוצאות
+                  ðŸ† ×œ×•×— ×ª×•×¦××•×ª
                 </button>
               </div>
 
-              {/* כפתורים עזרה ותרגול ממוקד */}
+              {/* ×›×¤×ª×•×¨×™× ×¢×–×¨×” ×•×ª×¨×’×•×œ ×ž×ž×•×§×“ */}
               <div className="w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl flex justify-center gap-2 md:gap-2.5 flex-wrap mx-auto px-1 md:px-2">
                 <button
                   onClick={() => setShowHowTo(true)}
                   className={`${MB.btnActionHelp} ${MB.btnActionCyan}`}
                 >
-                  ❓ איך לומדים אנגלית כאן?
+                  â“ ××™×š ×œ×•×ž×“×™× ×× ×’×œ×™×ª ×›××Ÿ?
                 </button>
                 <button
                   onClick={() => setShowReferenceModal(true)}
                   className={`${MB.btnActionHelp} ${MB.btnActionPurple}`}
                 >
-                  📚 לוח עזרה
+                  ðŸ“š ×œ×•×— ×¢×–×¨×”
                 </button>
                 {bookTopicHref ? (
                   <button
@@ -2842,14 +2846,14 @@ export default function EnglishMaster() {
                     onClick={() => router.push(bookTopicHref)}
                     className={`${MB.btnActionHelp} ${MB.btnActionTeal}`}
                   >
-                    הסבר בספר
+                    ×”×¡×‘×¨ ×‘×¡×¤×¨
                   </button>
                 ) : null}
                 <div
                   className={MB.coinBadgeMobile}
-                  title="מטבעות משחק"
+                  title="×ž×˜×‘×¢×•×ª ×ž×©×—×§"
                 >
-                  <span className={MB.coinBadgeLabel}>מטבעות:</span>
+                  <span className={MB.coinBadgeLabel}>×ž×˜×‘×¢×•×ª:</span>
                   <span dir="ltr" className={MB.coinBadgeValue}>
                     {childCoinBalance}
                   </span>
@@ -2859,14 +2863,14 @@ export default function EnglishMaster() {
                     onClick={() => setShowPracticeOptions(true)}
                     className={`${MB.btnActionHelp} ${MB.btnActionPink}`}
                   >
-                    תרגול ממוקד ({mistakes.length})
+                    ×ª×¨×’×•×œ ×ž×ž×•×§×“ ({mistakes.length})
                   </button>
                 )}
               </div>
 
               {!playerName.trim() && (
                 <p className={MB.mutedHint}>
-                  הכנס את שמך כדי להתחיל
+                  ×”×›× ×¡ ××ª ×©×ž×š ×›×“×™ ×œ×”×ª×—×™×œ
                 </p>
               )}
               </div>
@@ -2885,7 +2889,7 @@ export default function EnglishMaster() {
                           <div
                             className={`px-4 py-2 rounded-lg text-sm font-semibold text-center ${
                               feedback.includes("Correct") ||
-                              feedback.includes("∞") ||
+                              feedback.includes("âˆž") ||
                               feedback.includes("Start")
                                 ? MB.feedbackOk
                                 : MB.feedbackBad
@@ -2897,7 +2901,7 @@ export default function EnglishMaster() {
                         {errorExplanation && (
                           <div className={MB.errorBox}>
                             <div className={MB.errorTitle}>
-                              למה הטעות קרתה?
+                              ×œ×ž×” ×”×˜×¢×•×ª ×§×¨×ª×”?
                             </div>
                             <div className={MB.errorBody} dir="ltr">
                               {errorExplanation}
@@ -2908,7 +2912,7 @@ export default function EnglishMaster() {
                     </div>
                   )}
 
-                  {hasPhonicsAudio ? (
+                  {hasEnglishAudio ? (
                     <div
                       className="absolute top-2 left-2 z-10 max-md:hidden pointer-events-auto"
                       dir="rtl"
@@ -2928,9 +2932,9 @@ export default function EnglishMaster() {
                         data-testid={`english-${grade}-book-question-button`}
                         onClick={() => openBookFromLearning(questionBookHref)}
                         className={`${MB.floatBtnHelper} ${MB.floatBtnBookColors}`}
-                        title="הסבר בספר לנושא הנוכחי"
+                        title="×”×¡×‘×¨ ×‘×¡×¤×¨ ×œ× ×•×©× ×”× ×•×›×—×™"
                       >
-                        הסבר
+                        ×”×¡×‘×¨
                       </button>
                     </div>
                   ) : null}
@@ -2974,14 +2978,14 @@ export default function EnglishMaster() {
                           data-testid={`english-${grade}-book-question-button`}
                           onClick={() => openBookFromLearning(questionBookHref)}
                           className={`${MB.questionActionBtn} ${MB.floatBtnBookColors}`}
-                          title="הסבר בספר לנושא הנוכחי"
+                          title="×”×¡×‘×¨ ×‘×¡×¤×¨ ×œ× ×•×©× ×”× ×•×›×—×™"
                         >
-                          הסבר
+                          ×”×¡×‘×¨
                         </button>
                       ) : null
                     }
                     secondarySlot={
-                      hasPhonicsAudio ? (
+                      hasEnglishAudio ? (
                         <EnglishPhonicsAudioPanel
                           stem={currentQuestion.params.audioStem}
                           gameActive={gameActive && !selectedAnswer}
@@ -3008,7 +3012,7 @@ export default function EnglishMaster() {
                               }
                             }}
                             disabled={!!selectedAnswer || !gameActive}
-                            placeholder="כתוב את התשובה שלך כאן..."
+                            placeholder="×›×ª×•×‘ ××ª ×”×ª×©×•×‘×” ×©×œ×š ×›××Ÿ..."
                             className={`w-full max-w-[300px] ${MB.inputDesktop} disabled:opacity-50`}
                           />
                         </div>
@@ -3031,7 +3035,7 @@ export default function EnglishMaster() {
                                 }
                               >
                                 {primaryBtn.action === "check"
-                                  ? "✅ בדוק תשובה"
+                                  ? "âœ… ×‘×“×•×§ ×ª×©×•×‘×”"
                                   : primaryBtn.label}
                               </button>
                             );
@@ -3086,25 +3090,27 @@ export default function EnglishMaster() {
                     )}
 
                     <div className="w-full flex justify-center gap-2 flex-wrap mb-2 min-h-[2.75rem]" dir="rtl">
-                      {mode === "learning" && currentQuestion && (
-                        <button
-                          onClick={() => {
-                            clearWrongAnswerAdvanceTimer();
-                            stepByStepViewedRef.current = true;
-                            setShowSolution(true);
-                          }}
-                          className={learningExplainOpenBtn}
-                        >
-                          📘 הסבר מלא
-                        </button>
-                      )}
+                      {mode === "learning" &&
+                        currentQuestion &&
+                        currentQuestion.topic !== "phonics" && (
+                          <button
+                            onClick={() => {
+                              clearWrongAnswerAdvanceTimer();
+                              stepByStepViewedRef.current = true;
+                              setShowSolution(true);
+                            }}
+                            className={learningExplainOpenBtn}
+                          >
+                            📘 הסבר מלא
+                          </button>
+                        )}
                       <button
                         type="button"
                         data-testid="learning-stop-game"
                         onClick={stopGame}
                         className={MB.btnStop}
                       >
-                        ⏹️ עצור
+                        â¹ï¸ ×¢×¦×•×¨
                       </button>
                       {(mode === "learning" || mode === "practice") &&
                         previousExplanationQuestion && (
@@ -3113,7 +3119,7 @@ export default function EnglishMaster() {
                             onClick={openPreviousExplanation}
                             className={learningExplainOpenBtn}
                           >
-                            🕘 תרגיל קודם
+                            ðŸ•˜ ×ª×¨×’×™×œ ×§×•×“×
                           </button>
                         )}
                     </div>
@@ -3135,9 +3141,9 @@ export default function EnglishMaster() {
               >
                 <div className="text-center mb-4">
                   <h2 className="text-2xl font-extrabold text-white mb-1">
-                    🏆 לוח תוצאות
+                    ðŸ† ×œ×•×— ×ª×•×¦××•×ª
                   </h2>
-                  <p className="text-white/70 text-xs">שיאים מקומיים</p>
+                  <p className="text-white/70 text-xs">×©×™××™× ×ž×§×•×ž×™×™×</p>
                 </div>
 
                 <div className="flex gap-2 mb-4 justify-center">
@@ -3174,16 +3180,16 @@ export default function EnglishMaster() {
                     <thead>
                       <tr className="border-b border-white/20">
                         <th className="text-white/80 p-2 font-bold text-xs">
-                          דירוג
+                          ×“×™×¨×•×’
                         </th>
                         <th className="text-white/80 p-2 font-bold text-xs">
-                          שחקן
+                          ×©×—×§×Ÿ
                         </th>
                         <th className="text-white/80 p-2 font-bold text-xs">
-                          ניקוד
+                          × ×™×§×•×“
                         </th>
                         <th className="text-white/80 p-2 font-bold text-xs">
-                          רצף
+                          ×¨×¦×£
                         </th>
                       </tr>
                     </thead>
@@ -3194,7 +3200,7 @@ export default function EnglishMaster() {
                             colSpan={4}
                             className="text-white/60 p-4 text-sm"
                           >
-                            עדיין אין תוצאות עבור רמה {LEVELS[leaderboardLevel].name}
+                            ×¢×“×™×™×Ÿ ××™×Ÿ ×ª×•×¦××•×ª ×¢×‘×•×¨ ×¨×ž×” {LEVELS[leaderboardLevel].name}
                           </td>
                         </tr>
                       ) : (
@@ -3217,11 +3223,11 @@ export default function EnglishMaster() {
                               {score.placeholder
                                 ? `#${idx + 1}`
                                 : idx === 0
-                                ? "🥇"
+                                ? "ðŸ¥‡"
                                 : idx === 1
-                                ? "🥈"
+                                ? "ðŸ¥ˆ"
                                 : idx === 2
-                                ? "🥉"
+                                ? "ðŸ¥‰"
                                 : `#${idx + 1}`}
                             </td>
                             <td className="text-white p-2 text-sm font-semibold">
@@ -3231,7 +3237,7 @@ export default function EnglishMaster() {
                               {score.bestScore}
                             </td>
                             <td className="text-amber-400 p-2 text-sm font-bold">
-                              🔥{score.bestStreak}
+                              ðŸ”¥{score.bestStreak}
                             </td>
                           </tr>
                         ))
@@ -3245,7 +3251,7 @@ export default function EnglishMaster() {
                     onClick={() => setShowLeaderboard(false)}
                     className="px-6 py-2 rounded-lg bg-amber-500/80 hover:bg-amber-500 font-bold text-sm"
                   >
-                    סגור
+                    ×¡×’×•×¨
                   </button>
                 </div>
               </div>
@@ -3272,10 +3278,10 @@ export default function EnglishMaster() {
               >
                 <div className="text-center mb-4 flex-shrink-0">
                   <h2 className="text-2xl font-extrabold text-white mb-2">
-                    🎲 בחר נושאים למיקס
+                    ðŸŽ² ×‘×—×¨ × ×•×©××™× ×œ×ž×™×§×¡
                   </h2>
                   <p className="text-white/70 text-sm">
-                    בחר אילו נושאים לכלול במיקס
+                    ×‘×—×¨ ××™×œ×• × ×•×©××™× ×œ×›×œ×•×œ ×‘×ž×™×§×¡
                   </p>
                 </div>
 
@@ -3315,7 +3321,7 @@ export default function EnglishMaster() {
                     }}
                     className="flex-1 px-4 py-2 rounded-lg bg-blue-500/80 hover:bg-blue-500 font-bold text-sm"
                   >
-                    הכל
+                    ×”×›×œ
                   </button>
                   <button
                     onClick={() => {
@@ -3328,7 +3334,7 @@ export default function EnglishMaster() {
                     }}
                     className="flex-1 px-4 py-2 rounded-lg bg-gray-500/80 hover:bg-gray-500 font-bold text-sm"
                   >
-                    בטל הכל
+                    ×‘×˜×œ ×”×›×œ
                   </button>
                   <button
                     onClick={() => {
@@ -3338,12 +3344,12 @@ export default function EnglishMaster() {
                       if (hasSelected) {
                         setShowMixedSelector(false);
                       } else {
-                        alert("אנא בחר לפחות נושא אחד");
+                        alert("×× × ×‘×—×¨ ×œ×¤×—×•×ª × ×•×©× ××—×“");
                       }
                     }}
                     className="flex-1 px-4 py-2 rounded-lg bg-emerald-500/80 hover:bg-emerald-500 font-bold text-sm"
                   >
-                    שמור
+                    ×©×ž×•×¨
                   </button>
                 </div>
               </div>
@@ -3362,16 +3368,16 @@ export default function EnglishMaster() {
               >
                 <div className="text-center mb-4">
                   <h2 className="text-2xl font-extrabold text-white mb-1">
-                    🎯 תרגול טעויות אחרונות
+                    ðŸŽ¯ ×ª×¨×’×•×œ ×˜×¢×•×™×•×ª ××—×¨×•× ×•×ª
                   </h2>
                   <p className="text-white/70 text-sm">
-                    בחר טעות אחרונה כדי לפתוח משחק ממוקד באותו נושא, כיתה ורמת קושי.
+                    ×‘×—×¨ ×˜×¢×•×ª ××—×¨×•× ×” ×›×“×™ ×œ×¤×ª×•×— ×ž×©×—×§ ×ž×ž×•×§×“ ×‘××•×ª×• × ×•×©×, ×›×™×ª×” ×•×¨×ž×ª ×§×•×©×™.
                   </p>
                 </div>
 
                 {mistakes.length === 0 ? (
                   <div className="text-center py-6 text-white/60">
-                    אין טעויות פעילות כרגע. תתחיל משחק, אסוף נתונים ואז חזור לכאן.
+                    ××™×Ÿ ×˜×¢×•×™×•×ª ×¤×¢×™×œ×•×ª ×›×¨×’×¢. ×ª×ª×—×™×œ ×ž×©×—×§, ××¡×•×£ × ×ª×•× ×™× ×•××– ×—×–×•×¨ ×œ×›××Ÿ.
                   </div>
                 ) : (
                   <div className="space-y-3">
@@ -3384,7 +3390,7 @@ export default function EnglishMaster() {
                         <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-white font-semibold mb-1">
                           <span>{getTopicName(mistake.topic || "vocabulary")}</span>
                           <span className="text-white/70 text-xs">
-                            {getGradeLabel(mistake.grade) || "כיתה נוכחית"} ·{" "}
+                            {getGradeLabel(mistake.grade) || "×›×™×ª×” × ×•×›×—×™×ª"} Â·{" "}
                             {LEVELS[mistake.level || level]?.name || LEVELS[level].name}
                           </span>
                         </div>
@@ -3395,14 +3401,14 @@ export default function EnglishMaster() {
                         )}
                         {mistake.correctAnswer && (
                           <p className="text-xs text-emerald-300 mb-1" dir="auto">
-                            תשובה נכונה: {mistake.correctAnswer}
+                            ×ª×©×•×‘×” × ×›×•× ×”: {mistake.correctAnswer}
                           </p>
                         )}
                         <button
                           onClick={() => handleMistakePractice(mistake)}
                           className="mt-2 w-full px-3 py-2 rounded-lg bg-emerald-500/80 hover:bg-emerald-500 text-xs font-bold text-white"
                         >
-                          תרגל עכשיו
+                          ×ª×¨×’×œ ×¢×›×©×™×•
                         </button>
                       </div>
                     ))}
@@ -3414,14 +3420,14 @@ export default function EnglishMaster() {
                     onClick={() => setShowPracticeModal(false)}
                     className="flex-1 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-sm font-bold text-white"
                   >
-                    סגור
+                    ×¡×’×•×¨
                   </button>
                   {mistakes.length > 0 && (
                     <button
                       onClick={clearMistakes}
                       className="flex-1 px-4 py-2 rounded-lg bg-red-500/80 hover:bg-red-500 text-sm font-bold text-white"
                     >
-                      🧹 איפוס טעויות
+                      ðŸ§¹ ××™×¤×•×¡ ×˜×¢×•×™×•×ª
                     </button>
                   )}
                 </div>
@@ -3440,16 +3446,16 @@ export default function EnglishMaster() {
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex items-center justify-between mb-3">
-                  <h2 className="text-2xl font-extrabold">📚 לוח מילים אינטראקטיבי</h2>
+                  <h2 className="text-2xl font-extrabold">ðŸ“š ×œ×•×— ×ž×™×œ×™× ××™× ×˜×¨××§×˜×™×‘×™</h2>
                   <button
                     onClick={() => setShowReferenceModal(false)}
                     className="text-white/80 hover:text-white text-xl px-2"
                   >
-                    ✖
+                    âœ–
                   </button>
                 </div>
                 <p className="text-sm text-white/70 mb-3">
-                  בחר קטגוריה כדי לראות מילים חשובות באנגלית ובעברית, בדיוק כמו בעזרי העזר של משחק החשבון.
+                  ×‘×—×¨ ×§×˜×’×•×¨×™×” ×›×“×™ ×œ×¨××•×ª ×ž×™×œ×™× ×—×©×•×‘×•×ª ×‘×× ×’×œ×™×ª ×•×‘×¢×‘×¨×™×ª, ×‘×“×™×•×§ ×›×ž×• ×‘×¢×–×¨×™ ×”×¢×–×¨ ×©×œ ×ž×©×—×§ ×”×—×©×‘×•×Ÿ.
                 </p>
                 <div className="flex flex-wrap gap-2 mb-4">
                   {REFERENCE_CATEGORY_KEYS.map((key) => (
@@ -3481,7 +3487,7 @@ export default function EnglishMaster() {
                   ))}
                   {referenceEntries.length === 0 && (
                     <div className="text-center col-span-full text-white/60 py-4">
-                      אין מילים להצגה בקטגוריה זו.
+                      ××™×Ÿ ×ž×™×œ×™× ×œ×”×¦×’×” ×‘×§×˜×’×•×¨×™×” ×–×•.
                     </div>
                   )}
                 </div>
@@ -3500,23 +3506,23 @@ export default function EnglishMaster() {
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex items-center justify-between mb-3">
-                  <h2 className="text-2xl font-extrabold">🎛️ הגדרות תרגול חכם</h2>
+                  <h2 className="text-2xl font-extrabold">ðŸŽ›ï¸ ×”×’×“×¨×•×ª ×ª×¨×’×•×œ ×—×›×</h2>
                   <button
                     onClick={() => setShowPracticeOptions(false)}
                     className="text-white/80 hover:text-white text-xl px-2"
                   >
-                    ✖
+                    âœ–
                   </button>
                 </div>
                 <p className="text-sm text-white/70 mb-3">
-                  כמו במשחקי החשבון והגאומטריה, ניתן לבחור כאן מצב אימון מיוחד, חיבור לשגיאות אחרונות או מעבר מדורג בין רמות.
+                  ×›×ž×• ×‘×ž×©×—×§×™ ×”×—×©×‘×•×Ÿ ×•×”×’××•×ž×˜×¨×™×”, × ×™×ª×Ÿ ×œ×‘×—×•×¨ ×›××Ÿ ×ž×¦×‘ ××™×ž×•×Ÿ ×ž×™×•×—×“, ×—×™×‘×•×¨ ×œ×©×’×™××•×ª ××—×¨×•× ×•×ª ××• ×ž×¢×‘×¨ ×ž×“×•×¨×’ ×‘×™×Ÿ ×¨×ž×•×ª.
                 </p>
                 <div className="space-y-2 mb-4">
-                  <p className="text-xs text-white/60 font-semibold">מצב מיקוד</p>
+                  <p className="text-xs text-white/60 font-semibold">×ž×¦×‘ ×ž×™×§×•×“</p>
                   {[
-                    { value: "normal", label: "ברירת מחדל" },
-                    { value: "mistakes", label: "חזרה על טעויות אחרונות" },
-                    { value: "graded", label: "תרגול מדורג (קל → בינוני → רמתך)" },
+                    { value: "normal", label: "×‘×¨×™×¨×ª ×ž×—×“×œ" },
+                    { value: "mistakes", label: "×—×–×¨×” ×¢×œ ×˜×¢×•×™×•×ª ××—×¨×•× ×•×ª" },
+                    { value: "graded", label: "×ª×¨×’×•×œ ×ž×“×•×¨×’ (×§×œ â†’ ×‘×™× ×•× ×™ â†’ ×¨×ž×ª×š)" },
                   ].map((opt) => (
                     <label key={opt.value} className="flex items-center gap-2 text-sm">
                       <input
@@ -3531,7 +3537,7 @@ export default function EnglishMaster() {
                   ))}
                 </div>
                 <div className="space-y-2 mb-4">
-                  <p className="text-xs text-white/60 font-semibold">שאלות תרגום/סיפור</p>
+                  <p className="text-xs text-white/60 font-semibold">×©××œ×•×ª ×ª×¨×’×•×/×¡×™×¤×•×¨</p>
                   <label className="flex items-center gap-2 text-sm">
                     <input
                       type="checkbox"
@@ -3541,7 +3547,7 @@ export default function EnglishMaster() {
                         if (!e.target.checked) setStoryOnly(false);
                       }}
                     />
-                    <span>שלב שאלות תרגום בתוך משחקי האוצר מילים/דקדוק</span>
+                    <span>×©×œ×‘ ×©××œ×•×ª ×ª×¨×’×•× ×‘×ª×•×š ×ž×©×—×§×™ ×”××•×¦×¨ ×ž×™×œ×™×/×“×§×“×•×§</span>
                   </label>
                   <label className="flex items-center gap-2 text-sm">
                     <input
@@ -3550,22 +3556,22 @@ export default function EnglishMaster() {
                       disabled={!useStoryQuestions}
                       onChange={(e) => setStoryOnly(e.target.checked)}
                     />
-                    <span>הצג רק שאלות תרגום/סיפור</span>
+                    <span>×”×¦×’ ×¨×§ ×©××œ×•×ª ×ª×¨×’×•×/×¡×™×¤×•×¨</span>
                   </label>
                 </div>
                 <div className="bg-white/5 border border-white/10 rounded-lg p-3 text-xs text-white/80">
-                  <div className="font-semibold mb-1">סיכום מצב נוכחי</div>
-                  <p>מצב תרגול: {MODES[mode].name}</p>
-                  <p>פוקוס: {PRACTICE_FOCUS_OPTIONS.find((o) => o.value === practiceFocus)?.label || ""}</p>
-                  <p>מיקוד שגיאות: {focusedPracticeMode === "normal" ? "רגיל" : focusedPracticeMode === "mistakes" ? "טעויות אחרונות" : "מדורג"}</p>
-                  <p>שאלות תרגום: {storyOnly ? "רק תרגום" : useStoryQuestions ? "מעורב" : "כבוי"}</p>
+                  <div className="font-semibold mb-1">×¡×™×›×•× ×ž×¦×‘ × ×•×›×—×™</div>
+                  <p>×ž×¦×‘ ×ª×¨×’×•×œ: {MODES[mode].name}</p>
+                  <p>×¤×•×§×•×¡: {PRACTICE_FOCUS_OPTIONS.find((o) => o.value === practiceFocus)?.label || ""}</p>
+                  <p>×ž×™×§×•×“ ×©×’×™××•×ª: {focusedPracticeMode === "normal" ? "×¨×’×™×œ" : focusedPracticeMode === "mistakes" ? "×˜×¢×•×™×•×ª ××—×¨×•× ×•×ª" : "×ž×“×•×¨×’"}</p>
+                  <p>×©××œ×•×ª ×ª×¨×’×•×: {storyOnly ? "×¨×§ ×ª×¨×’×•×" : useStoryQuestions ? "×ž×¢×•×¨×‘" : "×›×‘×•×™"}</p>
                 </div>
                 <div className="flex gap-2 mt-4">
                   <button
                     onClick={() => setShowPracticeOptions(false)}
                     className="flex-1 px-4 py-2 rounded-lg bg-emerald-500/80 hover:bg-emerald-500 text-sm font-bold"
                   >
-                    סגור
+                    ×¡×’×•×¨
                   </button>
                   <button
                     onClick={() => {
@@ -3577,7 +3583,7 @@ export default function EnglishMaster() {
                     }}
                     className="flex-1 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-sm font-bold"
                   >
-                    איפוס ברירות מחדל
+                    ××™×¤×•×¡ ×‘×¨×™×¨×•×ª ×ž×—×“×œ
                   </button>
                 </div>
               </div>
@@ -3601,11 +3607,11 @@ export default function EnglishMaster() {
                   className="absolute left-4 top-4 text-white/80 hover:text-white text-2xl font-bold z-10"
                   style={{ direction: "ltr" }}
                 >
-                  ✖
+                  âœ–
                 </button>
                 <div className="text-center mb-4">
                   <h2 className="text-2xl font-extrabold text-white mb-2">
-                    👤 פרופיל שחקן
+                    ðŸ‘¤ ×¤×¨×•×¤×™×œ ×©×—×§×Ÿ
                   </h2>
                 </div>
 
@@ -3614,16 +3620,16 @@ export default function EnglishMaster() {
                     {playerAvatarImage ? (
                       <img 
                         src={playerAvatarImage} 
-                        alt="אווטר" 
+                        alt="××•×•×˜×¨" 
                         className="w-24 h-24 rounded-full object-cover mx-auto"
                       />
                     ) : (
                       playerAvatar
                     )}
                   </div>
-                  <div className="text-sm text-white/60 mb-3">בחר אווטר:</div>
+                  <div className="text-sm text-white/60 mb-3">×‘×—×¨ ××•×•×˜×¨:</div>
                   
-                  {/* כפתור לבחירת תמונה */}
+                  {/* ×›×¤×ª×•×¨ ×œ×‘×—×™×¨×ª ×ª×ž×•× ×” */}
                   <div className="mb-3">
                     <label className="block w-full">
                       <input
@@ -3639,7 +3645,7 @@ export default function EnglishMaster() {
                           onClick={() => document.getElementById("avatar-image-upload-english").click()}
                           className="px-3 py-2 rounded-lg bg-blue-500/80 hover:bg-blue-500 text-white text-xs font-bold transition-all flex-1"
                         >
-                          📷 בחר תמונה
+                          ðŸ“· ×‘×—×¨ ×ª×ž×•× ×”
                         </button>
                         {playerAvatarImage && (
                           <button
@@ -3647,14 +3653,14 @@ export default function EnglishMaster() {
                             onClick={handleRemoveAvatarImage}
                             className="px-3 py-2 rounded-lg bg-red-500/80 hover:bg-red-500 text-white text-xs font-bold transition-all"
                           >
-                            🗑️ מחק תמונה
+                            ðŸ—‘ï¸ ×ž×—×§ ×ª×ž×•× ×”
                           </button>
                         )}
                       </div>
                     </label>
                     {playerAvatarImage && (
                       <div className="mt-2 text-xs text-white/60 text-center">
-                        תמונה נבחרה ✓
+                        ×ª×ž×•× ×” × ×‘×—×¨×” âœ“
                       </div>
                     )}
                   </div>
@@ -3687,30 +3693,30 @@ export default function EnglishMaster() {
 
                 <div className="space-y-3 mb-4">
                   <div className="bg-black/30 border border-white/10 rounded-lg p-3">
-                    <div className="text-sm text-white/60 mb-1">שם שחקן</div>
-                    <div className="text-lg font-bold text-white">{playerName || "שחקן"}</div>
+                    <div className="text-sm text-white/60 mb-1">×©× ×©×—×§×Ÿ</div>
+                    <div className="text-lg font-bold text-white">{playerName || "×©×—×§×Ÿ"}</div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-2">
                     <div className="bg-black/30 border border-white/10 rounded-lg p-3">
-                      <div className="text-xs text-white/60 mb-1">ניקוד שיא</div>
+                      <div className="text-xs text-white/60 mb-1">× ×™×§×•×“ ×©×™×</div>
                       <div className="text-xl font-bold text-emerald-400">{bestScore}</div>
                     </div>
                     <div className="bg-black/30 border border-white/10 rounded-lg p-3">
-                      <div className="text-xs text-white/60 mb-1">רצף שיא</div>
+                      <div className="text-xs text-white/60 mb-1">×¨×¦×£ ×©×™×</div>
                       <div className="text-xl font-bold text-amber-400">{bestStreak}</div>
                     </div>
                     <div className="bg-black/30 border border-white/10 rounded-lg p-3">
-                      <div className="text-xs text-white/60 mb-1">כוכבים</div>
-                      <div className="text-xl font-bold text-yellow-400">⭐ {stars}</div>
+                      <div className="text-xs text-white/60 mb-1">×›×•×›×‘×™×</div>
+                      <div className="text-xl font-bold text-yellow-400">â­ {stars}</div>
                     </div>
                     <div className="bg-black/30 border border-white/10 rounded-lg p-3">
-                      <div className="text-xs text-white/60 mb-1">רמה</div>
-                      <div className="text-xl font-bold text-purple-400">רמה {playerLevel}</div>
+                      <div className="text-xs text-white/60 mb-1">×¨×ž×”</div>
+                      <div className="text-xl font-bold text-purple-400">×¨×ž×” {playerLevel}</div>
                       {/* XP Progress Bar */}
                       <div className="mt-2">
                         <div className="flex justify-between text-xs text-white/60 mb-1">
-                          <span>נק׳ ניסיון</span>
+                          <span>× ×§×³ × ×™×¡×™×•×Ÿ</span>
                           <span>{xp} / {playerLevel * 100}</span>
                         </div>
                         <div className="w-full bg-black/50 rounded-full h-2">
@@ -3725,20 +3731,20 @@ export default function EnglishMaster() {
                   
                   {/* Daily Streak */}
                   <div className="bg-black/30 border border-white/10 rounded-lg p-3">
-                    <div className="text-sm text-white/60 mb-2">🔥 רצף יומי</div>
-                    <div className="text-2xl font-bold text-orange-400">{dailyStreak.streak || 0} ימים</div>
+                    <div className="text-sm text-white/60 mb-2">ðŸ”¥ ×¨×¦×£ ×™×•×ž×™</div>
+                    <div className="text-2xl font-bold text-orange-400">{dailyStreak.streak || 0} ×™×ž×™×</div>
                     {dailyStreak.streak >= 3 && (
                       <div className="text-xs text-white/60 mt-1">
-                        {dailyStreak.streak >= 30 ? "👑 אלוף!" : dailyStreak.streak >= 14 ? "🌟 מצוין!" : dailyStreak.streak >= 7 ? "⭐ יופי!" : "🔥 המשך כך!"}
+                        {dailyStreak.streak >= 30 ? "ðŸ‘‘ ××œ×•×£!" : dailyStreak.streak >= 14 ? "ðŸŒŸ ×ž×¦×•×™×Ÿ!" : dailyStreak.streak >= 7 ? "â­ ×™×•×¤×™!" : "ðŸ”¥ ×”×ž×©×š ×›×š!"}
                       </div>
                     )}
                   </div>
                   
                   {/* Monthly Progress */}
                   <div className="bg-black/30 border border-white/10 rounded-lg p-3">
-                    <div className="text-sm text-white/60 mb-2">התקדמות חודשית</div>
+                    <div className="text-sm text-white/60 mb-2">×”×ª×§×“×ž×•×ª ×—×•×“×©×™×ª</div>
                     <div className="flex justify-between text-xs text-white/60 mb-1">
-                      <span>{Math.round(monthlyPersistenceView?.currentMinutes ?? 0)} / {monthlyPersistenceView?.goalMinutes ?? "—"} דק׳</span>
+                      <span>{Math.round(monthlyPersistenceView?.currentMinutes ?? 0)} / {monthlyPersistenceView?.goalMinutes ?? "â€”"} ×“×§×³</span>
                       <span>{monthlyPersistenceView?.progressPct ?? 0}%</span>
                     </div>
                     <div className="w-full bg-black/50 rounded-full h-3 mb-2">
@@ -3747,20 +3753,20 @@ export default function EnglishMaster() {
                         style={{ width: `${monthlyPersistenceView?.progressPct ?? 0}%` }}
                       />
                     </div>
-                    {monthlyPersistenceView?.encouragementHe ?? "טוען..."}
+                    {monthlyPersistenceView?.encouragementHe ?? "×˜×•×¢×Ÿ..."}
                   </div>
 
                   <div className="bg-black/30 border border-white/10 rounded-lg p-3">
-                    <div className="text-sm text-white/60 mb-2">דיוק כללי</div>
+                    <div className="text-sm text-white/60 mb-2">×“×™×•×§ ×›×œ×œ×™</div>
                     <div className="text-2xl font-bold text-blue-400">{accuracy}%</div>
                     <div className="text-xs text-white/60 mt-1">
-                      {correct} נכון מתוך {totalQuestions} שאלות
+                      {correct} × ×›×•×Ÿ ×ž×ª×•×š {totalQuestions} ×©××œ×•×ª
                     </div>
                   </div>
 
                   {Object.keys(progress).some((topicKey) => progress[topicKey]?.total > 0) && (
                     <div className="bg-black/30 border border-white/10 rounded-lg p-3">
-                      <div className="text-sm text-white/60 mb-2">התקדמות לפי נושאים</div>
+                      <div className="text-sm text-white/60 mb-2">×”×ª×§×“×ž×•×ª ×œ×¤×™ × ×•×©××™×</div>
                       <div className="space-y-2 max-h-[200px] overflow-y-auto">
                         {Object.entries(progress)
                           .filter(([, data]) => (data?.total || 0) > 0)
@@ -3799,7 +3805,7 @@ export default function EnglishMaster() {
                 </div>
 
                 <div className="bg-black/30 border border-white/10 rounded-lg p-3 mt-4">
-                  <div className="text-sm text-white/60 mb-2">תגים</div>
+                  <div className="text-sm text-white/60 mb-2">×ª×’×™×</div>
                   {badges.length > 0 ? (
                     <div className="space-y-2 max-h-[200px] overflow-y-auto">
                       {badges.map((badge, index) => (
@@ -3816,7 +3822,7 @@ export default function EnglishMaster() {
                     </div>
                   ) : (
                     <div className="text-center text-white/60 text-sm py-4">
-                      עדיין לא הרווחת תגים. המשך לתרגל!
+                      ×¢×“×™×™×Ÿ ×œ× ×”×¨×•×•×—×ª ×ª×’×™×. ×”×ž×©×š ×œ×ª×¨×’×œ!
                     </div>
                   )}
                 </div>
@@ -3825,7 +3831,7 @@ export default function EnglishMaster() {
                   onClick={() => setShowPlayerProfile(false)}
                   className="w-full px-4 py-2 rounded-lg bg-emerald-500/80 hover:bg-emerald-500 font-bold text-sm"
                 >
-                  סגור
+                  ×¡×’×•×¨
                 </button>
               </div>
             </div>
@@ -3846,26 +3852,26 @@ export default function EnglishMaster() {
                     type="button"
                     onClick={() => setShowHowTo(false)}
                     className={learningModalCloseBtn}
-                    aria-label="סגור"
+                    aria-label="×¡×’×•×¨"
                   >
-                    ✖
+                    âœ–
                   </button>
                   <h2 className={learningModalTitle}>
-                    📘 איך לומדים אנגלית כאן?
+                    ðŸ“˜ ××™×š ×œ×•×ž×“×™× ×× ×’×œ×™×ª ×›××Ÿ?
                   </h2>
                   <span className="w-10 shrink-0" aria-hidden />
                 </div>
 
                 <div className={`${learningModalScrollBody} text-sm`}>
                   <p className="text-xs mb-3 text-center">
-                    המטרה היא לתרגל אנגלית בצורה משחקית, עם התאמה לכיתה, נושא ורמת קושי.
+                    ×”×ž×˜×¨×” ×”×™× ×œ×ª×¨×’×œ ×× ×’×œ×™×ª ×‘×¦×•×¨×” ×ž×©×—×§×™×ª, ×¢× ×”×ª××ž×” ×œ×›×™×ª×”, × ×•×©× ×•×¨×ž×ª ×§×•×©×™.
                   </p>
 
                   <ul className="list-disc pr-4 space-y-1 text-[13px]">
-                    <li>בחר כיתה, רמת קושי ונושא (אוצר מילים, דקדוק, תרגום, כתיבה ועוד).</li>
-                    <li>בחר מצב משחק: למידה, אתגר עם טיימר וחיים, מהירות או מרתון.</li>
-                    <li>קרא היטב את השאלה – לפעמים צריך לבחור תשובה, ולפעמים לכתוב באנגלית.</li>
-                    <li>ניקוד גבוה, רצף תשובות נכון, כוכבים ו Badges עוזרים לך לעלות רמה כשחקן.</li>
+                    <li>×‘×—×¨ ×›×™×ª×”, ×¨×ž×ª ×§×•×©×™ ×•× ×•×©× (××•×¦×¨ ×ž×™×œ×™×, ×“×§×“×•×§, ×ª×¨×’×•×, ×›×ª×™×‘×” ×•×¢×•×“).</li>
+                    <li>×‘×—×¨ ×ž×¦×‘ ×ž×©×—×§: ×œ×ž×™×“×”, ××ª×’×¨ ×¢× ×˜×™×™×ž×¨ ×•×—×™×™×, ×ž×”×™×¨×•×ª ××• ×ž×¨×ª×•×Ÿ.</li>
+                    <li>×§×¨× ×”×™×˜×‘ ××ª ×”×©××œ×” â€“ ×œ×¤×¢×ž×™× ×¦×¨×™×š ×œ×‘×—×•×¨ ×ª×©×•×‘×”, ×•×œ×¤×¢×ž×™× ×œ×›×ª×•×‘ ×‘×× ×’×œ×™×ª.</li>
+                    <li>× ×™×§×•×“ ×’×‘×•×”, ×¨×¦×£ ×ª×©×•×‘×•×ª × ×›×•×Ÿ, ×›×•×›×‘×™× ×• Badges ×¢×•×–×¨×™× ×œ×š ×œ×¢×œ×•×ª ×¨×ž×” ×›×©×—×§×Ÿ.</li>
                   </ul>
                 </div>
 
@@ -3876,7 +3882,7 @@ export default function EnglishMaster() {
                       onClick={() => setShowHowTo(false)}
                       className={learningPrimaryCloseBtn}
                     >
-                      סגור
+                      ×¡×’×•×¨
                     </button>
                   </div>
                 </div>
@@ -3884,7 +3890,7 @@ export default function EnglishMaster() {
             </div>
           )}
 
-          {/* חלון הסבר מלא - Modal גדול ומרכזי */}
+          {/* ×—×œ×•×Ÿ ×”×¡×‘×¨ ×ž×œ× - Modal ×’×“×•×œ ×•×ž×¨×›×–×™ */}
           {isShowingAnySolution && explanationQuestion && (
             <div
               className={learningModalOverlay}
@@ -3899,14 +3905,14 @@ export default function EnglishMaster() {
                     type="button"
                     onClick={closeExplanationModal}
                     className={learningModalCloseBtn}
-                    aria-label="סגור"
+                    aria-label="×¡×’×•×¨"
                   >
-                    ✖
+                    âœ–
                   </button>
                   <h3 className={learningModalTitle} dir="rtl">
                     {showPreviousSolution
-                      ? "פתרון התרגיל הקודם"
-                      : "\u200Fאיך פותרים את השאלה?"}
+                      ? "×¤×ª×¨×•×Ÿ ×”×ª×¨×’×™×œ ×”×§×•×“×"
+                      : "\u200F××™×š ×¤×•×ª×¨×™× ××ª ×”×©××œ×”?"}
                   </h3>
                   <span className="w-10 shrink-0" aria-hidden />
                 </div>
@@ -3946,7 +3952,7 @@ export default function EnglishMaster() {
                       className={learningPrimaryCloseBtn}
                       dir="rtl"
                     >
-                      {"\u200Fסגור"}
+                      {"\u200F×¡×’×•×¨"}
                     </button>
                   </div>
                 </div>

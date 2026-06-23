@@ -121,6 +121,29 @@
     },
     {
       "subject": "english",
+      "grade": "g1",
+      "topic": "translation",
+      "cellKey": "english:g1:translation",
+      "launchLevel": "HIDE",
+      "surfaces": {
+        "selfPractice": false,
+        "parentAssign": false,
+        "teacherAssign": false,
+        "learningBookEntry": false
+      },
+      "diagnosticContribution": "excluded",
+      "bookFirstRecommended": false,
+      "bookFirstSoftGateTopics": [],
+      "audioRequired": true,
+      "marketingEligible": false,
+      "marketingNoteInternal": "hidden_from_launch_surfaces",
+      "inventoryStatus": "NEEDS_AUTHORING",
+      "topicTotal": 0,
+      "reason": "G1 curriculum does not include translation; explicitly hidden.",
+      "registryVersion": "launch-policy-v1"
+    },
+    {
+      "subject": "english",
       "grade": "g2",
       "topic": "translation",
       "cellKey": "english:g2:translation",

@@ -12,6 +12,15 @@ export const LOWER_GRADE_APPROVED_NON_LEAK_ITEM_TYPES = Object.freeze(
   new Set(["match_uppercase_lowercase", "choose_matching_letter"])
 );
 
+/**
+ * Item types where the displayed stimulus IS the correct answer by design.
+ * E.g. early_word_reading: student sees "cat", must decode it and select "cat"
+ * from distractors. stimulus === correct is intentional — not a copy-leak.
+ */
+export const LOWER_GRADE_WORD_READING_ITEM_TYPES = Object.freeze(
+  new Set(["early_word_reading"])
+);
+
 const INTERNAL_CHILD_LABEL_PATTERNS = [
   /משפט\s+\d+/u,
   /בחנה.{0,8}פונולוגית/u,
@@ -135,6 +144,9 @@ export function hasMcqCopyAnswerLeak(question) {
     question.params?.itemType || question.params?.subtype || ""
   ).trim();
 
+  // Word-reading exercises: stimulus IS the target word by design; not a copy-leak.
+  if (LOWER_GRADE_WORD_READING_ITEM_TYPES.has(itemType)) return false;
+
   if (LOWER_GRADE_APPROVED_NON_LEAK_ITEM_TYPES.has(itemType)) {
     const stimulus = String(
       question.params?.phonicsStimulus ||
@@ -196,11 +208,11 @@ export function isHebrewReadAloudCopyLeakRaw(row) {
  * @param {Record<string, unknown>|null|undefined} row
  */
 export function isEnglishPhonicsCopyLeakRow(row) {
+  // early_word_reading: displayWord === correct is the intended design (word recognition).
+  // Students decode the displayed word and select it — not a copy-leak.
   if (!row || typeof row !== "object") return false;
-  if (row.itemType !== "early_word_reading") return false;
-  const stim = String(row.displayWord || "").trim().toLowerCase();
-  const correct = String(row.correct || "").trim().toLowerCase();
-  return Boolean(stim && correct && stim === correct);
+  if (LOWER_GRADE_WORD_READING_ITEM_TYPES.has(String(row.itemType || ""))) return false;
+  return false;
 }
 
 /**

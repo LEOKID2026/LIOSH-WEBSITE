@@ -1,0 +1,603 @@
+{
+  "summary": {
+    "math": {
+      "count": 189,
+      "issueCount": 0,
+      "pass": true
+    },
+    "geometry": {
+      "count": 66,
+      "issueCount": 0,
+      "pass": true
+    },
+    "english": {
+      "count": 124,
+      "issueCount": 0,
+      "pass": true
+    },
+    "hebrew": {
+      "count": 172,
+      "issueCount": 1,
+      "pass": false
+    },
+    "science": {
+      "count": 38,
+      "issueCount": 0,
+      "pass": true
+    },
+    "moledet": {
+      "count": 37,
+      "issueCount": 0,
+      "pass": true
+    }
+  },
+  "issues": [
+    {
+      "file": "docs/learning-book/hebrew/g1/drafts/writing_spell_word_early_ab_writing_object_riddle.md",
+      "section": 5,
+      "problem": "invalid ramaz: רמז: יְשֵׁנִים עָלָיו. מה המילה — מִיטָה או כּוֹס?",
+      "critical": true,
+      "subject": "hebrew"
+    }
+  ],
+  "legitRamaz": [
+    {
+      "file": "docs/learning-book/hebrew/g1/drafts/writing_spell_word_early_ab_writing_object_riddle.md",
+      "line": 22,
+      "section": 0,
+      "quote": "**Content scope:** רמז לחפץ; בחירת מילה"
+    },
+    {
+      "file": "docs/learning-book/hebrew/g1/drafts/writing_spell_word_early_ab_writing_object_riddle.md",
+      "line": 29,
+      "section": 1,
+      "quote": "יש רמז על חפץ — ומוצאים את המילה."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g1/drafts/writing_spell_word_early_ab_writing_object_riddle.md",
+      "line": 36,
+      "section": 2,
+      "quote": "רמז: שׁוֹתִים ממנו."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g1/drafts/writing_spell_word_early_ab_writing_object_riddle.md",
+      "line": 39,
+      "section": 2,
+      "quote": "הרמז מוביל למילה."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g1/drafts/writing_spell_word_early_ab_writing_object_riddle.md",
+      "line": 74,
+      "section": 6,
+      "quote": "שאלנו: רמז — יְשֵׁנִים עָלָיו. מה המילה — מִיטָה או כּוֹס?"
+    },
+    {
+      "file": "docs/learning-book/hebrew/g1/drafts/writing_spell_word_early_ab_writing_object_riddle.md",
+      "line": 79,
+      "section": 6,
+      "quote": "✓ התשובה: מִיטָה. הרמז מוביל למילה מִיטָה."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g1/drafts/writing_spell_word_early_ab_writing_object_riddle.md",
+      "line": 86,
+      "section": 7,
+      "quote": "בתרגול תמצאו רמזים עם כּוֹס וְשׁוֹתִים. חשבו!"
+    },
+    {
+      "file": "docs/learning-book/hebrew/g2/drafts/g2.context_clue_easy.md",
+      "line": 1,
+      "section": 0,
+      "quote": "# רמז מההקשר"
+    },
+    {
+      "file": "docs/learning-book/hebrew/g2/drafts/g2.context_clue_easy.md",
+      "line": 14,
+      "section": 0,
+      "quote": "| **title_hebrew** | רמז מההקשר |"
+    },
+    {
+      "file": "docs/learning-book/hebrew/g2/drafts/g2.context_clue_easy.md",
+      "line": 22,
+      "section": 0,
+      "quote": "**Content scope:** מילה לא מוכרת; רמזים במשפט"
+    },
+    {
+      "file": "docs/learning-book/hebrew/g2/drafts/g2.context_clue_easy.md",
+      "line": 89,
+      "section": 7,
+      "quote": "עכשיו אתם יודעים למצוא רמז מההקשר בעברית."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g2/drafts/g2.light_inference.md",
+      "line": 22,
+      "section": 0,
+      "quote": "**Content scope:** רמז במשפט; לא מידע מפורש בלבד"
+    },
+    {
+      "file": "docs/learning-book/hebrew/g2/drafts/g2.light_inference.md",
+      "line": 29,
+      "section": 1,
+      "quote": "לפעמים התשובה לא כתובה במפורש — אבל יש רמז במשפט."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g2/drafts/g2.light_inference.md",
+      "line": 36,
+      "section": 2,
+      "quote": "קוראים את המשפט, מחפשים רמז, ומבינים מה כנראה קורה."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g2/drafts/g2.light_inference.md",
+      "line": 45,
+      "section": 3,
+      "quote": "רמז: מעיל כבד — קר בחוץ."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g2/drafts/g2.light_inference.md",
+      "line": 54,
+      "section": 4,
+      "quote": "שלב 1: מטריה — רמז."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g2/drafts/g2.light_inference.md",
+      "line": 77,
+      "section": 6,
+      "quote": "שלב 1: מחפשים את הרמז — כפפות וכובע הם בגדים חמים."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g2/drafts/g2.light_inference.md",
+      "line": 81,
+      "section": 6,
+      "quote": "תשובה: קר בחוץ — רמז מהכפפות והכובע. ✓"
+    },
+    {
+      "file": "docs/learning-book/hebrew/g2/drafts/g2.light_inference.md",
+      "line": 88,
+      "section": 7,
+      "quote": "בתרגול תמצאו רמזים — ותחשבו מה כנראה קורה."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g2/drafts/object_riddle.md",
+      "line": 24,
+      "section": 0,
+      "quote": "**Content scope:** רמזים ארוכים יותר מכיתה א׳; פחות תמונה; G2 depth"
+    },
+    {
+      "file": "docs/learning-book/hebrew/g2/drafts/object_riddle.md",
+      "line": 31,
+      "section": 1,
+      "quote": "יש רמזים; צריך לחשוב ולמצוא את המילה."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g2/drafts/object_riddle.md",
+      "line": 37,
+      "section": 2,
+      "quote": "בכיתה ב׳ החידות ארוכות יותר — עם יותר רמזים."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g2/drafts/object_riddle.md",
+      "line": 38,
+      "section": 2,
+      "quote": "קוראים את כל הרמזים."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g2/drafts/object_riddle.md",
+      "line": 39,
+      "section": 2,
+      "quote": "חושבים: מה מתאים לכל הרמזים?"
+    },
+    {
+      "file": "docs/learning-book/hebrew/g2/drafts/object_riddle.md",
+      "line": 47,
+      "section": 3,
+      "quote": "רמזים:"
+    },
+    {
+      "file": "docs/learning-book/hebrew/g2/drafts/object_riddle.md",
+      "line": 61,
+      "section": 4,
+      "quote": "שלב 2: כיס — מתאים לכל הרמזים."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g2/drafts/object_riddle.md",
+      "line": 69,
+      "section": 5,
+      "quote": "רמזים:"
+    },
+    {
+      "file": "docs/learning-book/hebrew/g2/drafts/object_riddle.md",
+      "line": 84,
+      "section": 6,
+      "quote": "שלב 1: קוראים את כל הרמזים — נייר, כתיבה, בית ספר."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g2/drafts/object_riddle.md",
+      "line": 86,
+      "section": 6,
+      "quote": "שלב 2: מחברת — מתאים לכל הרמזים. עט? — בו לא כותבים, הוא כלי הכתיבה."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g2/drafts/object_riddle.md",
+      "line": 95,
+      "section": 7,
+      "quote": "בתרגול תקבלו רמזים ארוכים יותר — ותמצאו את המילה."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g3/drafts/comprehension_cause_effect_because.md",
+      "line": 46,
+      "section": 3,
+      "quote": "מילת הרמז: כי — אחריה כתוב עייפה."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g3/drafts/comprehension_completion_context_clue.md",
+      "line": 22,
+      "section": 0,
+      "quote": "**Content scope:** מילת רמז מהמשפט; השלמה הגיונית"
+    },
+    {
+      "file": "docs/learning-book/hebrew/g3/drafts/comprehension_completion_context_clue.md",
+      "line": 45,
+      "section": 3,
+      "quote": "רמזים: ציון טוב — בדרך כלשמחים."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g3/drafts/comprehension_completion_context_clue.md",
+      "line": 54,
+      "section": 4,
+      "quote": "שלב 1: ציון טוב — רמז חיובי."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g3/drafts/comprehension_completion_context_clue.md",
+      "line": 77,
+      "section": 6,
+      "quote": "שלב 1: ניצחנו — רמז חיובי."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g3/drafts/comprehension_completion_context_clue.md",
+      "line": 79,
+      "section": 6,
+      "quote": "שלב 2: חייכנו — רמז לשמחה."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g3/drafts/comprehension_completion_context_clue.md",
+      "line": 90,
+      "section": 7,
+      "quote": "בתרגול תמצאו משפטים עם שמח וחייך. חפשו רמזים מסביב!"
+    },
+    {
+      "file": "docs/learning-book/hebrew/g3/drafts/comprehension_passage_inference_implied.md",
+      "line": 22,
+      "section": 0,
+      "quote": "**Content scope:** הסקה קלה מרמזים; לא ניחוש חופשי"
+    },
+    {
+      "file": "docs/learning-book/hebrew/g3/drafts/comprehension_passage_inference_implied.md",
+      "line": 29,
+      "section": 1,
+      "quote": "לפעמים הרמזים בטקסט — והמסקנה בראש."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g3/drafts/comprehension_passage_inference_implied.md",
+      "line": 30,
+      "section": 1,
+      "quote": "זה לא ניחוש חופשי — צריך רמזים בכתב."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g3/drafts/comprehension_passage_inference_implied.md",
+      "line": 38,
+      "section": 2,
+      "quote": "שונה מעמוד הכלל: כאן מותר להבין מרמז, כשיש בסיס."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g3/drafts/comprehension_passage_inference_implied.md",
+      "line": 45,
+      "section": 3,
+      "quote": "לא כתוב המילה קר לי — אבל המעיל והקור מרמזים."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g3/drafts/comprehension_passage_inference_implied.md",
+      "line": 54,
+      "section": 4,
+      "quote": "שלב 1: רמז — קור בחוץ."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g3/drafts/comprehension_passage_inference_implied.md",
+      "line": 56,
+      "section": 4,
+      "quote": "שלב 2: רמז — מעיל כבד."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g3/drafts/comprehension_passage_inference_implied.md",
+      "line": 77,
+      "section": 6,
+      "quote": "שלב 1: רוח נשבה — רמז לקור."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g3/drafts/comprehension_passage_inference_implied.md",
+      "line": 81,
+      "section": 6,
+      "quote": "שלב 3: שני רמזים מצביעים על קור."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g3/drafts/comprehension_passage_inference_implied.md",
+      "line": 89,
+      "section": 7,
+      "quote": "עכשיו אתם יודעים להסיק מרמזים בטקסט בעברית."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g3/drafts/comprehension_passage_inference_implied.md",
+      "line": 90,
+      "section": 7,
+      "quote": "בתרגול תמצאו קטעים עם קור ומעיל. חפשו רמזים לפני המסקנה!"
+    },
+    {
+      "file": "docs/learning-book/hebrew/g3/drafts/g3.explicit_only.md",
+      "line": 79,
+      "section": 6,
+      "quote": "שלב 2: שקט — רמז הפוך לצעקה."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g3/drafts/g3.tense_system_intro.md",
+      "line": 56,
+      "section": 4,
+      "quote": "שלב 1: המילה מחר — רמז לעתיד."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g3/drafts/g3.tense_system_intro.md",
+      "line": 79,
+      "section": 6,
+      "quote": "שלב 1: המילה אתמול — רמז לעבר."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g4/drafts/best_word.md",
+      "line": 83,
+      "section": 6,
+      "quote": "שלב 2: \"לא שיחה קצרה בלי הכנה\" — רמז לראיון מוכן וחשוב."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g4/drafts/context_clue.md",
+      "line": 38,
+      "section": 2,
+      "quote": "חפשו רמזים — מה הנושא? מה קורה?"
+    },
+    {
+      "file": "docs/learning-book/hebrew/g4/drafts/context_clue.md",
+      "line": 82,
+      "section": 6,
+      "quote": "שלב 2: \"מסוכן לריצה\" — רמז שהשביל מחליק."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g4/drafts/implied.md",
+      "line": 23,
+      "section": 0,
+      "quote": "**Content scope:** הסקה מקטע; רמזים; G4 depth"
+    },
+    {
+      "file": "docs/learning-book/hebrew/g4/drafts/implied.md",
+      "line": 30,
+      "section": 1,
+      "quote": "לפעמים יש רמזים במילים ובפעולות."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g4/drafts/implied.md",
+      "line": 36,
+      "section": 2,
+      "quote": "הסקה: מחברים רמזים לרעיון סביר."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g4/drafts/implied.md",
+      "line": 37,
+      "section": 2,
+      "quote": "דוגמה לרמז: מישהו עונד מעיל ומטריה — משתמע שיורד גשם."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g4/drafts/implied.md",
+      "line": 48,
+      "section": 3,
+      "quote": "משתמע: לתומר יש מבחן או הרבה שיעורי בית — הרמזים: תיק כבד, לא משחק."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g4/drafts/implied.md",
+      "line": 60,
+      "section": 4,
+      "quote": "תשובה: היא מכינה הצגה — רמזים: שעה של קריאה, העתקות, מחר מציגה."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g4/drafts/implied.md",
+      "line": 80,
+      "section": 6,
+      "quote": "שלב 1: עיניים לחות — רמז לרגש חזק."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g4/drafts/implied.md",
+      "line": 86,
+      "section": 6,
+      "quote": "**תשובה: דנה מתרגשת מהזיכרון מסבתא — מה שמשתמע מהרמזים. ✓**"
+    },
+    {
+      "file": "docs/learning-book/hebrew/g4/drafts/implied.md",
+      "line": 92,
+      "section": 7,
+      "quote": "עכשיו אתם יודעים לקרוא רמזים ולהבין מה משתמע."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g4/drafts/tf.md",
+      "line": 38,
+      "section": 2,
+      "quote": "אם אין רמז — אולי לא נכון."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g5/drafts/comprehension_compare_statements_contrast.md",
+      "line": 37,
+      "section": 2,
+      "quote": "מילים כמו מצד אחד, מצד שני, אבל, לעומת זאת — רמזים."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g5/drafts/comprehension_implicit_tone_attitude.md",
+      "line": 30,
+      "section": 1,
+      "quote": "בלי מונחים כבדים — לפי מילים ורמזים."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g5/drafts/comprehension_implicit_tone_attitude.md",
+      "line": 38,
+      "section": 2,
+      "quote": "מילים חזקות, סימני קריאה, בחירת מילים — כולם רמזים."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g5/drafts/comprehension_main_idea_summary.md",
+      "line": 30,
+      "section": 1,
+      "quote": "זה לא הסקה מרמז — אלא סיכום של מה הטקסט בעיקר אומר."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g5/drafts/g5.inference.md",
+      "line": 22,
+      "section": 0,
+      "quote": "**Content scope:** מסקנה מרמזים; לא ניחוש חופשי"
+    },
+    {
+      "file": "docs/learning-book/hebrew/g5/drafts/g5.inference.md",
+      "line": 29,
+      "section": 1,
+      "quote": "הסקה אומרת: מסקנה מרמזים — לא ניחוש חופשי."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g5/drafts/g5.inference.md",
+      "line": 37,
+      "section": 2,
+      "quote": "צריך רמז בטקסט, ואז מסקנה שמתחברת אליו."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g5/drafts/g5.inference.md",
+      "line": 38,
+      "section": 2,
+      "quote": "זה שונה מלסכם רעיון מרכזי: כאן מחפשים מה הרמז מוביל."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g5/drafts/g5.inference.md",
+      "line": 45,
+      "section": 3,
+      "quote": "רמז: מהירות, שעון, תיק."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g5/drafts/g5.inference.md",
+      "line": 46,
+      "section": 3,
+      "quote": "מסקנה: יוסי מאחר או חושש לא לאחר — לא כתוב במפורש, אבל מתקבל מהרמזים."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g5/drafts/g5.inference.md",
+      "line": 54,
+      "section": 4,
+      "quote": "שלב 1: רמז — שעון, תיק, ריצה."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g5/drafts/g5.inference.md",
+      "line": 60,
+      "section": 4,
+      "quote": "תשובה: כי הרמזים מראים לחץ זמן (הסקה, לא רק עובדה)."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g5/drafts/g5.inference.md",
+      "line": 78,
+      "section": 6,
+      "quote": "שלב 1: רמזים — מטריה, מעיל, רעם."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g5/drafts/g5.inference.md",
+      "line": 82,
+      "section": 6,
+      "quote": "שלב 3: הרמזים מובילים למסקנה — מתכוננים לגשם."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g5/drafts/g5.inference.md",
+      "line": 90,
+      "section": 7,
+      "quote": "עכשיו אתם יודעים להסיק מסקנה מרמזים בטקסט."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g5/drafts/g5.inference.md",
+      "line": 91,
+      "section": 7,
+      "quote": "בתרגול תמצאו קטעים עם רמזים. בנו מסקנה צעד אחר צעד!"
+    },
+    {
+      "file": "docs/learning-book/hebrew/g5/drafts/g5.multi_layer_read.md",
+      "line": 22,
+      "section": 0,
+      "quote": "**Content scope:** עובדה, רמז, משמעות עמוקה יותר; לא ניתוח אקדמי"
+    },
+    {
+      "file": "docs/learning-book/hebrew/g5/drafts/g5.multi_layer_read.md",
+      "line": 30,
+      "section": 1,
+      "quote": "שכבה שנייה: מה הרמזים מראים."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g5/drafts/g5.multi_layer_read.md",
+      "line": 38,
+      "section": 2,
+      "quote": "שואלים: מה העובדה? מה הרמז? מה המשמעות שמתחברת?"
+    },
+    {
+      "file": "docs/learning-book/hebrew/g5/drafts/g5.multi_layer_read.md",
+      "line": 47,
+      "section": 3,
+      "quote": "שכבה 2 — רמז: החיוך וההכנה מרמזים להפתעה נעימה."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g5/drafts/g5.multi_layer_read.md",
+      "line": 54,
+      "section": 4,
+      "quote": "שאלה: מה הרמז בקטע על הקערה והחיוך?"
+    },
+    {
+      "file": "docs/learning-book/hebrew/g5/drafts/g5.multi_layer_read.md",
+      "line": 58,
+      "section": 4,
+      "quote": "שלב 2: רמז — הכנה וחיוך לפני שהילדים רואים."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g5/drafts/g5.multi_layer_read.md",
+      "line": 62,
+      "section": 4,
+      "quote": "תשובה: הרמז הוא ההכנה והחיוך; המשמעות — הפתעה חמה."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g5/drafts/g5.multi_layer_read.md",
+      "line": 69,
+      "section": 5,
+      "quote": "איזו שכבה היא הרמז — השקט והעיפרון, או שדנה אוכלת?"
+    },
+    {
+      "file": "docs/learning-book/hebrew/g5/drafts/g5.multi_layer_read.md",
+      "line": 78,
+      "section": 6,
+      "quote": "נחזור לשאלה: איזו שכבה היא הרמז?"
+    },
+    {
+      "file": "docs/learning-book/hebrew/g5/drafts/g5.multi_layer_read.md",
+      "line": 82,
+      "section": 6,
+      "quote": "שלב 2: שכבה 2 (רמז) — השקט, העיפרון והמחברת רומזים על ריכוז ועבודה."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g5/drafts/g5.multi_layer_read.md",
+      "line": 86,
+      "section": 6,
+      "quote": "✓ תשובה: השכבה של הרמז היא — השקט והעיפרון (רומזים שדנה עסוקה בכתיבה)."
+    },
+    {
+      "file": "docs/learning-book/hebrew/g5/drafts/g5.multi_layer_read.md",
+      "line": 93,
+      "section": 7,
+      "quote": "בתרגול תמצאו קטעים עם עובדות ורמזים. עברו שכבה אחר שכבה!"
+    },
+    {
+      "file": "docs/learning-book/moledet-geography/g4/drafts/mg_g4_government_structure.md",
+      "line": 41,
+      "section": 3,
+      "quote": "בעיר: מנקים רחוב, מדליקים רמזורים — עירייה."
+    }
+  ]
+}

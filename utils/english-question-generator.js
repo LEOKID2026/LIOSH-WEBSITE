@@ -33,7 +33,10 @@ import {
   englishWordListKeyFromPageId,
   englishPhonicsSkillIdFromBookPageRef,
 } from "../lib/learning-book/english-book-practice-map.js";
-import { attachEnglishPhonicsPracticeAudio } from "./english-phonics-practice-audio.js";
+import {
+  attachEnglishPhonicsPracticeAudio,
+  attachEnglishVocabPracticeAudio,
+} from "./english-phonics-practice-audio.js";
 import {
   isG1G2RuntimePracticeEligible,
   isLowerGradeG1G2Key,
@@ -958,6 +961,10 @@ export function generateQuestion(
       gradeKey,
       sourceRow: englishSourceRow,
     });
+  }
+
+  if (selectedTopic === "vocabulary" && isLowerGradeG1G2Key(gradeKey)) {
+    attachEnglishVocabPracticeAudio(display, { gradeKey });
   }
 
   const finalized = attachCanonicalMetadataToEnglishQuestion(display, {

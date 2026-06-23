@@ -290,6 +290,22 @@ export function rebalanceGenericHebrewReadingDistractors(q) {
  * Dedupe MCQ options in-place (keeps correct).
  * @param {{ answers: string[], correct: number }} q
  */
+/**
+ * Lighter key for MCQ deduplication: strips niqqud and collapses whitespace but
+ * intentionally does NOT strip punctuation from the edges of the string.
+ * This prevents distinct MCQ options such as "היום חם." and "היום חם?" from being
+ * collapsed into one another when the punctuation is the entire point of the question.
+ * @param {string} t
+ */
+function mcqDedupKey(t) {
+  const light = String(t ?? "")
+    .trim()
+    .toLowerCase()
+    .replace(NIQQUD_RE, "")
+    .replace(/\s+/g, " ");
+  return light || t.toLowerCase().trim();
+}
+
 export function dedupeMcqOptionsInPlace(q) {
   if (!Array.isArray(q.answers) || q.answers.length < 2) return q;
   let correctIdx = Number(q.correct);
@@ -306,8 +322,8 @@ export function dedupeMcqOptionsInPlace(q) {
 
   const acc = [];
   for (const { t, isCorrect } of entries) {
-    const key = normalizeOptionForCompare(t);
-    const existing = acc.findIndex((x) => normalizeOptionForCompare(x.t) === key);
+    const key = mcqDedupKey(t);
+    const existing = acc.findIndex((x) => mcqDedupKey(x.t) === key);
     if (existing < 0) {
       acc.push({ t, isCorrect });
     } else if (isCorrect) {
