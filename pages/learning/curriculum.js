@@ -56,7 +56,7 @@ export default function Curriculum() {
     geometry: "גאומטריה",
     english: "אנגלית",
     science: "מדעים",
-    hebrew: "שפה עברית",
+    hebrew: "עברית",
     "moledet-geography": "מולדת, חברה ואזרחות + גאוגרפיה",
   };
 

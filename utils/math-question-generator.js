@@ -1569,6 +1569,40 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       operandB = b;
     }
   } else if (selectedOp === "multiplication") {
+    // כיתה א׳ — ללא כפל פורמלי (סימן ×); רק קבוצות שוות וספירה בקפיצות
+    if (gradeKey === "g1") {
+      const groups = randInt(2, 5);
+      const perGroup = randInt(2, 4);
+      const total = groups * perGroup;
+      const mulG1Variant = Math.random();
+      if (mulG1Variant < 0.5) {
+        // קבוצות שוות — שאלה מילולית
+        correctAnswer = total;
+        const objects = ["כדורים", "תפוחים", "עפרונות", "כוכבים"][randInt(0, 3)];
+        question = `יש ${groups} קבוצות. בכל קבוצה ${perGroup} ${objects}. כמה ${objects} יש בסך הכול?`;
+        params = { kind: "mul_groups_g1", groups, perGroup, total, objects };
+        isStory = true;
+      } else {
+        // ספירה בקפיצות — השלם את הסדרה
+        const seq = [];
+        for (let i = 1; i <= groups; i++) seq.push(i * perGroup);
+        correctAnswer = seq[seq.length - 1];
+        question = `ספרו בקפיצות של ${perGroup}: ${seq.slice(0, -1).join(", ")}, ${BLANK}`;
+        params = { kind: "mul_skip_count_g1", groups, perGroup, total: seq[seq.length - 1], seq };
+      }
+      question = applyMathLevelPresentation(question, { selectedOp, params, mathLevelKey, gradeKey });
+      return finalizeMathQuestionOutput({
+        question,
+        correctAnswer,
+        answers: buildMathMcqAnswerList(correctAnswer, selectedOp, params, randInt, round),
+        operation: selectedOp,
+        params,
+        a: groups,
+        b: perGroup,
+        isStory,
+      });
+    }
+
     // שימוש ב-levelConfig.multiplication.max ישירות מ-GRADE_LEVELS
     const maxM = levelConfig.multiplication?.max || 10;
 
@@ -2855,10 +2889,11 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       }
     }
   } else if (selectedOp === "compare") {
-    const isLowGrade = gradeKey === "g1" || gradeKey === "g2";
     const maxVal = levelConfig.compare?.max || levelConfig.addition?.max || 500;
-    const a = isLowGrade ? randInt(0, 100) : randInt(-20, maxVal);
-    const b = isLowGrade ? randInt(0, 100) : randInt(-20, maxVal);
+    // מספרים שליליים רק לכיתות שמוגדרות allowNegatives=true (ה׳ ו-ו׳)
+    const allowNeg = gradeCfg.allowNegatives;
+    const a = allowNeg ? randInt(-20, maxVal) : randInt(0, maxVal);
+    const b = allowNeg ? randInt(-20, maxVal) : randInt(0, maxVal);
 
     // חשוב: הסימן צריך להיות מתמטי נכון. כדי למנוע היפוך בתצוגת RTL,
     // נעטוף את התרגיל עצמו ב-LTR markers (LRI/PDI).
@@ -3396,13 +3431,20 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
         give,
       };
     } else if (t === "pocket_money" || t === "pocket_money_g2") {
-      const money = randInt(20, 80);
-      const toy = randInt(10, money - 5);
+      // כיתה א׳: טווח מספרים לפי רמת הכיתה (addition.max) — לא ערכים קשוחים
+      // כיתה ב׳: טווח גדול יותר אך גם מגוון לפי levelConfig
+      const maxMoney =
+        gradeKey === "g1"
+          ? (levelConfig.addition?.max || 20)
+          : Math.min(80, levelConfig.addition?.max || 80);
+      const minMoney = gradeKey === "g1" ? 3 : 10;
+      const money = randInt(minMoney, Math.max(minMoney + 2, maxMoney));
+      const toy = randInt(1, Math.max(1, money - 1));
       correctAnswer = money - toy;
       question =
         t === "pocket_money_g2"
           ? `לאמה יש ${money}₪. היא קונה חטיף ב-${toy}₪. כמה כסף נשאר?`
-          : `לליאו יש ${money}₪ דמי כיס. הוא קונה משחק ב-${toy}₪. כמה כסף נשאר לו?`;
+          : `לליאו יש ${money} שקלים. הוא קונה ${toy > 5 ? "ספר" : "עיפרון"} ב-${toy} שקלים. כמה שקלים נשארו לו?`;
       params = {
         kind: t === "pocket_money_g2" ? "wp_pocket_money_g2" : "wp_pocket_money",
         semanticFamily: "money_remaining",
@@ -3497,15 +3539,21 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       if (mathForce === "wp_time_days") variant = 0.1;
       else if (mathForce === "wp_time_date") variant = 0.9;
       if (variant < 0.5) {
+        // בוחרים startDay ו-days, מחשבים endDay — כך התשובה תמיד נכונה
+        const weekdays = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
+        const startDayIdx = randInt(0, 5); // ראשון עד שישי (לא שבת כנקודת התחלה)
         const days = randInt(1, 6);
-        const startDay = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי"][randInt(0, 5)];
-        const endDay = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"][randInt(0, 6)];
+        const endDayIdx = (startDayIdx + days) % 7;
+        const startDay = weekdays[startDayIdx];
+        const endDay = weekdays[endDayIdx];
         correctAnswer = days;
         question = `אם היום יום ${startDay}, כמה ימים יעברו עד יום ${endDay}?`;
         params = {
           kind: "wp_time_days",
           semanticFamily: "time_calendar",
           days,
+          startDayIdx,
+          endDayIdx,
         };
       } else {
         const today = randInt(1, 5);
@@ -3571,9 +3619,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       const groups = Math.floor(total / groupSize);
       const leftover = total - groups * groupSize;
       correctAnswer = leftover;
-      question = `יש ${total} תלמידים והם מתחלקים לקבוצות של ${groupSize} תלמידים בכל קבוצה. כמה תלמידים יישארו בלי קבוצה מלאה?${
-        gradeHebrewScope ? ` · כיתה ${gradeHebrewScope}` : ""
-      }`;
+      question = `יש ${total} תלמידים והם מתחלקים לקבוצות של ${groupSize} תלמידים בכל קבוצה. כמה תלמידים יישארו ללא קבוצה מלאה?`;
       params = {
         kind: "wp_leftover",
         semanticFamily: "division_remainder",
@@ -3660,13 +3706,11 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       correctAnswer = l1 + l2;
       const timeSumByGrade =
         gradeKey === "g3" || gradeKey === "g4"
-          ? `שני קטעי וידאו נמשכים ${l1} דקות ו-${l2} דקות. מה סה״כ זמן הצפייה?`
+          ? `שני קטעי וידאו נמשכים ${l1} דקות ו-${l2} דקות. כמה דקות נמשכים שני הקטעים יחד?`
           : gradeKey === "g5"
-          ? `אורך סרטון אחד ${l1} דק׳ וסרטון שני ${l2} דק׳ — חשבו את משך הצפייה המצטבר.`
-          : `סכום זמני צפייה: קטע ראשון ${l1} דק׳, קטע שני ${l2} דק׳. מה האורך הכולל?`;
-      question = `${timeSumByGrade}${
-        gradeHebrewScope ? ` · כיתה ${gradeHebrewScope}` : ""
-      }`;
+          ? `סרטון אחד נמשך ${l1} דקות וסרטון שני נמשך ${l2} דקות. כמה דקות נמשכים שניהם יחד?`
+          : `קטע ראשון נמשך ${l1} דקות. קטע שני נמשך ${l2} דקות. כמה דקות נמשכו שני הקטעים יחד?`;
+      question = timeSumByGrade;
       params = {
         kind: "wp_time_sum",
         semanticFamily: "duration_sum",
@@ -4016,21 +4060,24 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       }
       params.answers = answers;
     } else if (variant < 0.66) {
-      // מציאת המספר הראשון
-      const ratio = simplifiedA / simplifiedB;
-      const secondNum = randInt(1, 20);
-      const firstNum = Math.round(secondNum * ratio);
+      // מציאת המספר הראשון — בוחרים k כמספר שלם כך ש-first=simplifiedA*k, second=simplifiedB*k
+      // בכך היחס first:second שמור בדיוק (ללא Math.round)
+      const kMax = Math.max(1, Math.floor(20 / Math.max(simplifiedA, simplifiedB)));
+      const k = randInt(1, kMax);
+      const firstNum = simplifiedA * k;
+      const secondNum = simplifiedB * k;
       correctAnswer = firstNum;
       question = `היחס בין מספר למספר ${secondNum} הוא ${simplifiedA}:${simplifiedB}. מה המספר הראשון?`;
-      params = { kind: "ratio_first", firstNum, secondNum, simplifiedA, simplifiedB };
+      params = { kind: "ratio_first", firstNum, secondNum, simplifiedA, simplifiedB, k };
     } else {
-      // מציאת המספר השני
-      const ratio = simplifiedA / simplifiedB;
-      const firstNum = randInt(1, 20);
-      const secondNum = Math.round(firstNum / ratio);
+      // מציאת המספר השני — אותו עיקרון, k מספר שלם
+      const kMax = Math.max(1, Math.floor(20 / Math.max(simplifiedA, simplifiedB)));
+      const k = randInt(1, kMax);
+      const firstNum = simplifiedA * k;
+      const secondNum = simplifiedB * k;
       correctAnswer = secondNum;
       question = `היחס בין מספר ${firstNum} למספר הוא ${simplifiedA}:${simplifiedB}. מה המספר השני?`;
-      params = { kind: "ratio_second", firstNum, secondNum, simplifiedA, simplifiedB };
+      params = { kind: "ratio_second", firstNum, secondNum, simplifiedA, simplifiedB, k };
     }
     
     operandA = a;
@@ -4153,10 +4200,10 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       operandA = realLength;
       operandB = scale;
     } else {
-      // מציאת קנה מידה
+      // מציאת קנה מידה — scale תמיד שלם: בוחרים scale ו-mapLength, מחשבים realLength
       const mapLength = randInt(1, 5);
-      const realLength = randInt(10, 50);
-      const scale = realLength / mapLength;
+      const scale = randInt(2, 10); // קנה מידה שלם בלבד
+      const realLength = mapLength * scale;
       correctAnswer = scale;
       question = `אורך של ${mapLength} ס"מ במפה שווה ל-${realLength} ס"מ במציאות. מה קנה המידה? (1:${BLANK})`;
       params = { kind: "scale_find", mapLength, realLength, scale };

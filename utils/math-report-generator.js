@@ -64,7 +64,7 @@ const TOPIC_NAMES = {
 };
 
 export function getOperationName(op) {
-  return OPERATION_NAMES[op] || op;
+  return OPERATION_NAMES[op] || "נושא";
 }
 
 /** מפתח טעויות/התקדמות: חלק לפני :: במפתח דוח מורכב (addition::kind → addition) */
@@ -85,7 +85,7 @@ export function getMathReportBucketDisplayName(bucketKey) {
 }
 
 export function getTopicName(topic) {
-  return TOPIC_NAMES[topic] || topic;
+  return TOPIC_NAMES[topic] || "נושא";
 }
 
 const ENGLISH_TOPIC_NAMES = {
@@ -105,7 +105,7 @@ const ENGLISH_TOPIC_NAMES = {
 };
 
 export function getEnglishTopicName(topic) {
-  return ENGLISH_TOPIC_NAMES[topic] || topic;
+  return ENGLISH_TOPIC_NAMES[topic] || "נושא";
 }
 
 const SCIENCE_TOPIC_NAMES = {
@@ -125,7 +125,7 @@ const SCIENCE_TOPIC_NAMES = {
 };
 
 export function getScienceTopicName(topic) {
-  return SCIENCE_TOPIC_NAMES[topic] || topic;
+  return SCIENCE_TOPIC_NAMES[topic] || "נושא";
 }
 
 const HEBREW_TOPIC_NAMES = {
@@ -148,7 +148,7 @@ const HEBREW_TOPIC_NAMES = {
 };
 
 export function getHebrewTopicName(topic) {
-  return HEBREW_TOPIC_NAMES[topic] || topic;
+  return HEBREW_TOPIC_NAMES[topic] || "נושא";
 }
 
 const MOLEDET_GEOGRAPHY_TOPIC_NAMES = {
@@ -169,7 +169,7 @@ const MOLEDET_GEOGRAPHY_TOPIC_NAMES = {
 };
 
 export function getMoledetGeographyTopicName(topic) {
-  return MOLEDET_GEOGRAPHY_TOPIC_NAMES[topic] || topic;
+  return MOLEDET_GEOGRAPHY_TOPIC_NAMES[topic] || "נושא";
 }
 
 /** תווית כיתה בעברית לפי מפתח g1…g6 (דוח הורים / המלצות) */
@@ -972,7 +972,7 @@ export function generateParentReport(playerName, period = 'week', customStartDat
     const needsPractice = [
       ...Object.entries(mathOperationsSummary)
         .filter(([_, data]) => data.needsPractice)
-        .map(([op, _]) => `חשבון: ${getOperationName(op)}`),
+        .map(([op, _]) => `מתמטיקה: ${getOperationName(op)}`),
       ...Object.entries(geometryTopicsSummary)
         .filter(([_, data]) => data.needsPractice)
         .map(([topic, _]) => `גאומטריה: ${getTopicName(topic)}`),
@@ -994,7 +994,7 @@ export function generateParentReport(playerName, period = 'week', customStartDat
     const excellent = [
       ...Object.entries(mathOperationsSummary)
         .filter(([_, data]) => data.excellent && data.questions >= 10)
-        .map(([op, _]) => `חשבון: ${getOperationName(op)}`),
+        .map(([op, _]) => `מתמטיקה: ${getOperationName(op)}`),
       ...Object.entries(geometryTopicsSummary)
         .filter(([_, data]) => data.excellent && data.questions >= 10)
         .map(([topic, _]) => `גאומטריה: ${getTopicName(topic)}`),

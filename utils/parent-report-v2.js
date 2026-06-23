@@ -868,7 +868,7 @@ const V2_SUBJECT_ORDER = [
 ];
 
 const V2_SUBJECT_LABEL_HE = {
-  math: "חשבון",
+  math: "מתמטיקה",
   geometry: "גאומטריה",
   english: "אנגלית",
   science: "מדעים",
@@ -2098,7 +2098,7 @@ export function generateParentReportV2(
       .filter(([_, d]) => d.needsPractice)
       .map(
         ([_, d]) =>
-          `חשבון: ${d.displayName || getMathReportBucketDisplayName(d.bucketKey)}`
+          `מתמטיקה: ${d.displayName || getMathReportBucketDisplayName(d.bucketKey)}`
       ),
     ...Object.entries(geometryTopics)
       .filter(([_, d]) => d.needsPractice)
@@ -2125,7 +2125,7 @@ export function generateParentReportV2(
       .filter(([_, d]) => d.excellent && d.questions >= 10)
       .map(
         ([_, d]) =>
-          `חשבון: ${d.displayName || getMathReportBucketDisplayName(d.bucketKey)}`
+          `מתמטיקה: ${d.displayName || getMathReportBucketDisplayName(d.bucketKey)}`
       ),
     ...Object.entries(geometryTopics)
       .filter(([_, d]) => d.excellent && d.questions >= 10)

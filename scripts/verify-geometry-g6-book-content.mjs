@@ -72,8 +72,8 @@ for (const pageId of GEOMETRY_G6_PAGE_ORDER) {
     errors.push(e.message);
   }
 
-  if (readMetadataField(raw, "approval_status") !== "draft") {
-    errors.push(`${pageId}: approval_status must be draft`);
+  if (readMetadataField(raw, "approval_status") !== "launch_ready") {
+    errors.push(`${pageId}: approval_status must be launch_ready`);
   }
   if (!readMetadataField(raw, "title_hebrew").includes("[DRAFT")) {
     errors.push(`${pageId}: title_hebrew missing DRAFT marker`);
@@ -96,8 +96,8 @@ for (const pageId of GEOMETRY_G6_PAGE_ORDER) {
     /:::geometry-diagram[\s\S]*?:::/g,
     ""
   );
-  if (childFacing.includes("הנדסה")) {
-    errors.push(`${pageId}: child-facing body must use גאומטריה, not הנדסה`);
+  if (childFacing.includes("×”× ×“×¡×”")) {
+    errors.push(`${pageId}: child-facing body must use ×’××•×ž×˜×¨×™×”, not ×”× ×“×¡×”`);
   }
   if (/\bgeometry\b/i.test(childFacingNoDiagramDirectives)) {
     errors.push(`${pageId}: child-facing body contains English geometry`);
@@ -119,36 +119,36 @@ for (const pageId of GEOMETRY_G6_PAGE_ORDER) {
   const anchors = GEOMETRY_G6_ALIGNMENT_ANCHORS[pageId] || [];
   for (const anchor of anchors) {
     if (!s5.includes(anchor)) {
-      errors.push(`${pageId}: §5 missing alignment anchor "${anchor}"`);
+      errors.push(`${pageId}: Â§5 missing alignment anchor "${anchor}"`);
     }
     if (!s6.includes(anchor)) {
-      errors.push(`${pageId}: §6 missing alignment anchor "${anchor}"`);
+      errors.push(`${pageId}: Â§6 missing alignment anchor "${anchor}"`);
     }
   }
 
-  pushNote(notationByCategory.lengthUnits, pageId, uniqueMatches(/ס״מ/g, childFacing));
+  pushNote(notationByCategory.lengthUnits, pageId, uniqueMatches(/×¡×´×ž/g, childFacing));
   pushNote(
     notationByCategory.areaUnits,
     pageId,
-    uniqueMatches(/סמ״ר|מ״ר/g, childFacing)
+    uniqueMatches(/×¡×ž×´×¨|×ž×´×¨/g, childFacing)
   );
   pushNote(
     notationByCategory.volumeUnits,
     pageId,
-    uniqueMatches(/ס״מ³|סמ״ק|מ״ק/g, childFacing)
+    uniqueMatches(/×¡×´×žÂ³|×¡×ž×´×§|×ž×´×§/g, childFacing)
   );
-  pushNote(notationByCategory.angles, pageId, uniqueMatches(/\d+°/g, childFacing));
+  pushNote(notationByCategory.angles, pageId, uniqueMatches(/\d+Â°/g, childFacing));
   pushNote(
     notationByCategory.formulas,
     pageId,
-    uniqueMatches(/√\([^)]+\)|√\d+|\([^)]+\)\s*×\s*[^÷]+÷\s*2|\(1\/3\)|\(4\/3\)/g, childFacing)
+    uniqueMatches(/âˆš\([^)]+\)|âˆš\d+|\([^)]+\)\s*Ã—\s*[^Ã·]+Ã·\s*2|\(1\/3\)|\(4\/3\)/g, childFacing)
   );
-  pushNote(notationByCategory.multiply, pageId, uniqueMatches(/×/g, childFacing));
+  pushNote(notationByCategory.multiply, pageId, uniqueMatches(/Ã—/g, childFacing));
   pushNote(notationByCategory.shapeLabels, pageId, uniqueMatches(/\b[A-D]{1,2}\b/g, childFacing));
-  pushNote(notationByCategory.sqrt, pageId, uniqueMatches(/√2|√\d+/g, childFacing));
+  pushNote(notationByCategory.sqrt, pageId, uniqueMatches(/âˆš2|âˆš\d+/g, childFacing));
   pushNote(notationByCategory.piDecimals, pageId, uniqueMatches(/3\.14|\d+\.\d+/g, childFacing));
-  pushNote(notationByCategory.powers, pageId, uniqueMatches(/\d+²|\d+³|r²|r³/g, childFacing));
-  pushNote(notationByCategory.fractions, pageId, uniqueMatches(/⅓|÷\s*2|÷\s*3/g, childFacing));
+  pushNote(notationByCategory.powers, pageId, uniqueMatches(/\d+Â²|\d+Â³|rÂ²|rÂ³/g, childFacing));
+  pushNote(notationByCategory.fractions, pageId, uniqueMatches(/â…“|Ã·\s*2|Ã·\s*3/g, childFacing));
 
   if (RAW_MD_RE.test(childFacing)) {
     errors.push(`${pageId}: raw markdown structure in child-facing body`);
@@ -163,22 +163,22 @@ if (errors.length) {
 console.log(`G6 geometry content verification PASSED: ${GEOMETRY_G6_PAGE_ORDER.length} pages.`);
 console.log("- 7 sections each");
 console.log("- draft metadata + geometry:g6:{pageId} ids");
-console.log("- no הנדסה / English geometry in body");
+console.log("- no ×”× ×“×¡×” / English geometry in body");
 console.log("- Section 5/6 alignment anchors present");
-console.log("- no fake practice routing in §7");
+console.log("- no fake practice routing in Â§7");
 
 const notationLabels = {
-  lengthUnits: "Length units (ס״מ — verify Bidi in browser)",
-  areaUnits: "Area units (סמ״ר / מ״ר — verify Bidi in browser)",
-  volumeUnits: "Volume units (ס״מ³ / סמ״ק / מ״ק — verify Bidi in browser)",
-  angles: "Angle notation (e.g. 90°, 180° — verify ° placement)",
+  lengthUnits: "Length units (×¡×´×ž â€” verify Bidi in browser)",
+  areaUnits: "Area units (×¡×ž×´×¨ / ×ž×´×¨ â€” verify Bidi in browser)",
+  volumeUnits: "Volume units (×¡×´×žÂ³ / ×¡×ž×´×§ / ×ž×´×§ â€” verify Bidi in browser)",
+  angles: "Angle notation (e.g. 90Â°, 180Â° â€” verify Â° placement)",
   formulas: "Formulas / parentheses (verify LTR isolation)",
-  multiply: "Multiplication sign (× — verify spacing and direction)",
-  shapeLabels: "Shape vertex labels (A, B, C — verify LTR)",
-  sqrt: "Square-root notation (√25, √100 — verify rendering)",
-  piDecimals: "Pi / decimal measurements (3.14, 31.4 — verify LTR)",
-  powers: "Powers / squares (², ³, r² — verify rendering)",
-  fractions: "Fractions / division steps (⅓, ÷2, ÷3 — verify direction)",
+  multiply: "Multiplication sign (Ã— â€” verify spacing and direction)",
+  shapeLabels: "Shape vertex labels (A, B, C â€” verify LTR)",
+  sqrt: "Square-root notation (âˆš25, âˆš100 â€” verify rendering)",
+  piDecimals: "Pi / decimal measurements (3.14, 31.4 â€” verify LTR)",
+  powers: "Powers / squares (Â², Â³, rÂ² â€” verify rendering)",
+  fractions: "Fractions / division steps (â…“, Ã·2, Ã·3 â€” verify direction)",
 };
 
 let anyNotation = false;
@@ -186,7 +186,7 @@ for (const [key, label] of Object.entries(notationLabels)) {
   const notes = notationByCategory[key];
   if (notes.length) {
     anyNotation = true;
-    console.log(`\nNotation / Bidi review — ${label}:`);
+    console.log(`\nNotation / Bidi review â€” ${label}:`);
     for (const note of notes) {
       console.log(`  - ${note}`);
     }

@@ -28,7 +28,7 @@ export default function MathG5BookShell({
   const isIndex = activePageId === null;
   const fromLearning = isMathG5BookLearningReturn(router.query);
   const returnQuerySuffix = getMathG5BookReturnQuerySuffix(router.query);
-  const returnLabel = fromLearning ? "סגור" : "חזרה לחשבון";
+  const returnLabel = fromLearning ? "סגור" : "חזרה למתמטיקה";
 
   const handleReturnClick = () => {
     if (fromLearning) {

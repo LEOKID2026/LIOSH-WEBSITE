@@ -28,7 +28,7 @@ export default function MathG6BookShell({
   const isIndex = activePageId === null;
   const fromLearning = isMathG6BookLearningReturn(router.query);
   const returnQuerySuffix = getMathG6BookReturnQuerySuffix(router.query);
-  const returnLabel = fromLearning ? "סגור" : "חזרה לחשבון";
+  const returnLabel = fromLearning ? "סגור" : "חזרה למתמטיקה";
 
   const handleReturnClick = () => {
     if (fromLearning) {

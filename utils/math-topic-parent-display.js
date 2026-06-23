@@ -43,7 +43,7 @@ function effectiveMathLevelKeyFromRowOrKey(rowKey, row) {
 
 function modeSuffixLabel(m) {
   if (m == null || m === "") return "לא זמין";
-  return MODE_SUFFIX_LABELS[m] || String(m);
+  return MODE_SUFFIX_LABELS[m] || "מצב תרגול";
 }
 
 /** Hebrew operation name only (same as chart/table fallback without grade/level). */

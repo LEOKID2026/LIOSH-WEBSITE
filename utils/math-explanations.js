@@ -73,8 +73,24 @@ export function getHint(question, operation, gradeKey) {
       return "מחלק (גורם) מתחלק במספר בלי שארית. כפולה מתקבלת כשמכפילים את המספר במספר שלם.";
     case "word_problems":
       return "קרא לאט, סמן את המספרים ותרגם את הסיפור לתרגיל פשוט (חיבור, חיסור, כפל או חילוק).";
+    case "ratio":
+      return "מחפשים בכמה להכפיל את שני חלקי היחס כדי לקבל את המספרים בשאלה.";
+    case "scale":
+      return `קנה מידה 1:X אומר שכל ס"מ במפה = X ס"מ במציאות. כפל/חלק בהתאם.`;
+    case "divisibility":
+      return "נסה לחלק את המספר במחלק ולבדוק אם יוצא שלם (ללא שארית).";
+    case "powers":
+      return "חזקה = כפל חוזר של הבסיס בעצמו. לדוגמה: 3² = 3 × 3 = 9, 2³ = 2 × 2 × 2 = 8.";
+    case "order_of_operations":
+      return "זכור סדר פעולות: סוגריים קודם, כפל/חילוק לפני חיבור/חיסור.";
+    case "estimation":
+      return "עגל כל מספר לעשרות/מאות הקרובות, ואז חשב בקירוב.";
+    case "zero_one_properties":
+      return "מספר × 0 = 0. מספר × 1 = אותו מספר. מספר + 0 = אותו מספר.";
+    case "division_with_remainder":
+      return "חשב כמה פעמים המחלק נכנס — ומה נשאר. בדיקה: מחלק × מנה + שארית = מחולק.";
     default:
-      return "נסה לתרגם את השאלה לתרגיל חשבון פשוט.";
+      return "נסה לפתור את השאלה לפי הנושא המתאים.";
   }
 }
 
@@ -746,9 +762,198 @@ export function getSolutionSteps(question, operation, gradeKey) {
 
       return [
         toSpan(mix`1. לזהות מה שואלים – כמה ביחד? כמה נשאר? כמה בכל קבוצה?`, "1"),
-        toSpan(mix`2. לכתוב תרגיל חשבון שמתאים לסיפור.`, "2"),
+        toSpan(mix`2. לכתוב תרגיל מתמטיקה שמתאים לסיפור.`, "2"),
         toSpan(mix`3. לפתור את התרגיל ולקשר אותו למילים.`, "3"),
       ];
+
+    case "ratio": {
+      if (p.kind === "ratio_find") {
+        return [
+          toSpan(mix`1. נמצא את המחלק המשותף הגדול (מ.מ.ג) של ${M(String(p.a))} ו-${M(String(p.b))}.`, "1"),
+          toSpan(mix`2. נחלק שניהם במ.מ.ג: ${M(`${p.a}÷${p.a/p.simplifiedA}`)} ו-${M(`${p.b}÷${p.b/p.simplifiedB}`)}.`, "2"),
+          toSpan(mix`3. היחס המצומצם: ${ans}.`, "3"),
+        ];
+      }
+      if (p.kind === "ratio_first") {
+        return [
+          toSpan(mix`1. היחס ${M(`${p.simplifiedA}:${p.simplifiedB}`)} אומר: ראשון = ${M(String(p.simplifiedA))} חלקים, שני = ${M(String(p.simplifiedB))} חלקים.`, "1"),
+          toSpan(mix`2. השני הוא ${M(String(p.secondNum))} = ${M(`${p.k} × ${p.simplifiedB}`)}, לכן k=${M(String(p.k))}.`, "2"),
+          toSpan(mix`3. הראשון: ${M(`${p.k} × ${p.simplifiedA} = ${ans}`)}.`, "3"),
+        ];
+      }
+      if (p.kind === "ratio_second") {
+        return [
+          toSpan(mix`1. היחס ${M(`${p.simplifiedA}:${p.simplifiedB}`)} אומר: ראשון = ${M(String(p.simplifiedA))} חלקים, שני = ${M(String(p.simplifiedB))} חלקים.`, "1"),
+          toSpan(mix`2. הראשון הוא ${M(String(p.firstNum))} = ${M(`${p.k} × ${p.simplifiedA}`)}, לכן k=${M(String(p.k))}.`, "2"),
+          toSpan(mix`3. השני: ${M(`${p.k} × ${p.simplifiedB} = ${ans}`)}.`, "3"),
+        ];
+      }
+      return [
+        toSpan(mix`1. מזהים את שני הכמויות ומחשבים יחס.`, "1"),
+        toSpan(mix`2. מצמצמים על ידי חלוקה במ.מ.ג.`, "2"),
+        toSpan(mix`3. התשובה: ${ans}.`, "3"),
+      ];
+    }
+
+    case "scale": {
+      if (p.kind === "scale_map_to_real") {
+        return [
+          toSpan(mix`1. קנה מידה 1:${M(String(p.scale))} — כל ס"מ במפה = ${M(String(p.scale))} ס"מ במציאות.`, "1"),
+          toSpan(mix`2. נכפול: ${M(`${p.mapLength} × ${p.scale} = ${ans}`)}.`, "2"),
+          toSpan(mix`3. המרחק במציאות: ${ans} ס"מ.`, "3"),
+        ];
+      }
+      if (p.kind === "scale_find") {
+        return [
+          toSpan(mix`1. מחפשים בכמה לכפול כדי לעבור מהמפה למציאות.`, "1"),
+          toSpan(mix`2. נחלק: ${M(`${p.realLength} ÷ ${p.mapLength} = ${ans}`)}.`, "2"),
+          toSpan(mix`3. קנה המידה: 1:${ans}.`, "3"),
+        ];
+      }
+      return [
+        toSpan(mix`1. קנה מידה 1:X — כל יחידה במפה = X יחידות במציאות.`, "1"),
+        toSpan(mix`2. מציאות = מפה × X. מפה = מציאות ÷ X.`, "2"),
+        toSpan(mix`3. התשובה: ${ans}.`, "3"),
+      ];
+    }
+
+    case "divisibility": {
+      return [
+        toSpan(mix`1. בודקים: האם ${M(String(p.num))} מתחלק ב-${M(String(p.divisor))} בלי שארית?`, "1"),
+        toSpan(mix`2. מחשבים: ${M(`${p.num} ÷ ${p.divisor}`)}.`, "2"),
+        toSpan(
+          p.isDivisible
+            ? mix`3. יוצא שלם — ${M(String(p.num))} כן מתחלק ב-${M(String(p.divisor))}.`
+            : mix`3. לא יוצא שלם — ${M(String(p.num))} לא מתחלק ב-${M(String(p.divisor))}.`,
+          "3"
+        ),
+      ];
+    }
+
+    case "powers": {
+      if (p.kind === "power_calc") {
+        const factors = Array.from({ length: p.exp }, () => p.base);
+        return [
+          toSpan(mix`1. חזקה: ${M(`${p.base}^${p.exp}`)} = ${M(String(p.base))} כפול עצמו ${M(String(p.exp))} פעמים.`, "1"),
+          toSpan(mix`2. נחשב: ${M(factors.join(" × "))} = ${M(String(p.result))}.`, "2"),
+          toSpan(mix`3. התשובה: ${ans}.`, "3"),
+        ];
+      }
+      if (p.kind === "power_base") {
+        return [
+          toSpan(mix`1. מחפשים בסיס: איזה מספר בחזקת ${M(String(p.exp))} נותן ${M(String(p.result))}?`, "1"),
+          toSpan(mix`2. נסה: ${M(String(p.base))}^${M(String(p.exp))} = ${M(String(p.result))}.`, "2"),
+          toSpan(mix`3. התשובה: ${ans}.`, "3"),
+        ];
+      }
+      return [
+        toSpan(mix`1. חזקה = כפל חוזר של הבסיס בעצמו.`, "1"),
+        toSpan(mix`2. לדוגמה: 3² = 3 × 3 = 9.`, "2"),
+        toSpan(mix`3. התשובה: ${ans}.`, "3"),
+      ];
+    }
+
+    case "order_of_operations": {
+      if (p.kind === "order_add_mul") {
+        const prod = p.b * p.c;
+        return [
+          toSpan(mix`1. כפל לפני חיבור: ${M(`${p.a} + ${p.b} × ${p.c}`)} — כופלים קודם.`, "1"),
+          toSpan(mix`2. ${M(`${p.b} × ${p.c} = ${prod}`)}, ואז ${M(`${p.a} + ${prod} = ${ans}`)}.`, "2"),
+          toSpan(mix`3. התשובה: ${ans}.`, "3"),
+        ];
+      }
+      if (p.kind === "order_mul_sub") {
+        const prod = p.a * p.b;
+        return [
+          toSpan(mix`1. כפל לפני חיסור: ${M(`${p.a} × ${p.b} - ${p.c}`)} — כופלים קודם.`, "1"),
+          toSpan(mix`2. ${M(`${p.a} × ${p.b} = ${prod}`)}, ואז ${M(`${prod} - ${p.c} = ${ans}`)}.`, "2"),
+          toSpan(mix`3. התשובה: ${ans}.`, "3"),
+        ];
+      }
+      if (p.kind === "order_parentheses") {
+        const sum = p.a + p.b;
+        return [
+          toSpan(mix`1. סוגריים קודם: ${M(`(${p.a} + ${p.b}) × ${p.c}`)} — חישוב הסוגריים תחילה.`, "1"),
+          toSpan(mix`2. ${M(`${p.a} + ${p.b} = ${sum}`)}, ואז ${M(`${sum} × ${p.c} = ${ans}`)}.`, "2"),
+          toSpan(mix`3. התשובה: ${ans}.`, "3"),
+        ];
+      }
+      return [
+        toSpan(mix`1. הסדר: סוגריים → כפל/חילוק → חיבור/חיסור.`, "1"),
+        toSpan(mix`2. מחשבים לפי הסדר הנכון.`, "2"),
+        toSpan(mix`3. התשובה: ${ans}.`, "3"),
+      ];
+    }
+
+    case "estimation": {
+      if (p.kind === "est_add") {
+        const roundA = Math.round(p.a / 10) * 10;
+        const roundB = Math.round(p.b / 10) * 10;
+        return [
+          toSpan(mix`1. מעגלים לעשרות: ${M(String(p.a))} ≈ ${M(String(roundA))}, ${M(String(p.b))} ≈ ${M(String(roundB))}.`, "1"),
+          toSpan(mix`2. מחברים בקירוב: ${M(`${roundA} + ${roundB} = ${roundA + roundB}`)}.`, "2"),
+          toSpan(mix`3. האומדן: ${ans}.`, "3"),
+        ];
+      }
+      if (p.kind === "est_mul") {
+        const roundA = Math.round(p.a / 10) * 10;
+        const roundB = Math.round(p.b / 10) * 10;
+        return [
+          toSpan(mix`1. מעגלים לעשרות: ${M(String(p.a))} ≈ ${M(String(roundA))}, ${M(String(p.b))} ≈ ${M(String(roundB))}.`, "1"),
+          toSpan(mix`2. כופלים בקירוב: ${M(`${roundA} × ${roundB} = ${roundA * roundB}`)}.`, "2"),
+          toSpan(mix`3. האומדן: ${ans}.`, "3"),
+        ];
+      }
+      if (p.kind === "est_quantity") {
+        const rounded = Math.round(p.quantity / 10) * 10;
+        return [
+          toSpan(mix`1. מעגלים ${M(String(p.quantity))} לעשרות הקרובות: ${M(String(rounded))}.`, "1"),
+          toSpan(mix`2. האומדן: ${ans}.`, "2"),
+        ];
+      }
+      return [
+        toSpan(mix`1. מעגלים את המספרים לעשרות/מאות הקרובות.`, "1"),
+        toSpan(mix`2. מחשבים בקירוב.`, "2"),
+        toSpan(mix`3. האומדן: ${ans}.`, "3"),
+      ];
+    }
+
+    case "zero_one_properties": {
+      if (p.kind === "zero_mul" || p.kind === "zero_mul_eq" || p.kind === "zero_mul_word") {
+        return [
+          toSpan(mix`1. תכונה: כל מספר × 0 = 0.`, "1"),
+          toSpan(mix`2. ${M(`${p.a} × 0 = 0`)}.`, "2"),
+          toSpan(mix`3. התשובה: ${ans}.`, "3"),
+        ];
+      }
+      if (p.kind === "zero_add_expr" || p.kind === "zero_add_swap" || p.kind === "zero_sub_line") {
+        return [
+          toSpan(mix`1. תכונה: חיבור/חיסור 0 לא משנה את המספר.`, "1"),
+          toSpan(mix`2. ${M(`${p.a} + 0 = ${p.a}`)} ו-${M(`${p.a} - 0 = ${p.a}`)}.`, "2"),
+          toSpan(mix`3. התשובה: ${ans}.`, "3"),
+        ];
+      }
+      if (p.kind === "one_mul_identity" || p.kind === "one_mul_comm") {
+        return [
+          toSpan(mix`1. תכונה: כל מספר × 1 = אותו המספר.`, "1"),
+          toSpan(mix`2. ${M(`${p.a} × 1 = ${p.a}`)}.`, "2"),
+          toSpan(mix`3. התשובה: ${ans}.`, "3"),
+        ];
+      }
+      return [
+        toSpan(mix`1. מספר × 0 = 0. מספר × 1 = אותו מספר. מספר ± 0 = אותו מספר.`, "1"),
+        toSpan(mix`2. התשובה: ${ans}.`, "2"),
+      ];
+    }
+
+    case "division_with_remainder": {
+      return [
+        toSpan(mix`1. נחלק: ${M(`${p.dividend} ÷ ${p.divisor}`)}.`, "1"),
+        toSpan(mix`2. כמה פעמים ${M(String(p.divisor))} נכנס? ${M(String(p.quotient))} פעמים.`, "2"),
+        toSpan(mix`3. שארית: ${M(`${p.dividend} − (${p.quotient} × ${p.divisor}) = ${p.remainder}`)}.`, "3"),
+        toSpan(mix`4. בדיקה: ${M(`${p.divisor} × ${p.quotient} + ${p.remainder} = ${p.dividend}`)} ✓`, "4"),
+      ];
+    }
 
     default:
       return [];

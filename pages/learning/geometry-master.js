@@ -82,6 +82,7 @@ import { reportModeFromGameState } from "../../utils/report-track-meta";
 import { learningMixedHebrewMathStyle } from "../../utils/learning-mixed-hebrew-math";
 import { renderLearningMixedHebrewMathText } from "../../components/learning/LearningMixedHebrewMathText";
 import { getGeometryDiagramSpec } from "../../utils/geometry-diagram-spec";
+import { geometryQuestionUsesChoiceUi } from "../../utils/geometry-activity-answer-ui.js";
 import GeometryExplanationDiagram from "../../components/learning/geometry/GeometryExplanationDiagram";
 import StepGeometryStepPanel from "../../components/learning/geometry/StepGeometryStepPanel";
 import { useLearningMasterUi } from "../../hooks/useLearningMasterUi.js";
@@ -153,6 +154,7 @@ import {
   gradeKeyToNumber,
 } from "../../lib/learning-student-defaults";
 import { useSubjectSessionDefaults } from "../../hooks/useSubjectSessionDefaults";
+import { listVisibleTopicsForSelfPractice } from "../../lib/launch-readiness/topic-launch-policy.js";
 import {
   debounceStudentLearningProfilePatch,
   fetchStudentLearningProfile,
@@ -276,6 +278,16 @@ export default function GeometryMaster() {
     fullName: sessionFullName,
     coinBalance: sessionCoinBalance,
   } = useSubjectSessionDefaults();
+  const safeGrade = grade || "g1";
+  const visibleGeometryTopics = useMemo(
+    () => listVisibleTopicsForSelfPractice("geometry", safeGrade, GRADES[safeGrade]?.topics ?? []),
+    [safeGrade]
+  );
+  const geometryTopicSelectOptions = useMemo(() => {
+    const curriculum = GRADES[safeGrade]?.topics ?? [];
+    if (curriculum.includes("mixed")) return [...visibleGeometryTopics, "mixed"];
+    return visibleGeometryTopics;
+  }, [safeGrade, visibleGeometryTopics]);
   const [mode, setMode] = useState("practice");
   const [level, setLevel] = useState("easy");
   const [topic, setTopic] = useState("area");
@@ -297,6 +309,16 @@ export default function GeometryMaster() {
     };
     return getGeometryBookHref(ctx);
   }, [grade, mode, currentQuestion, topic]);
+
+  /** שרטוט בזמן השאלה — מוסתר אם null, לא מציג placeholder */
+  const questionDiagramSpec = useMemo(
+    () =>
+      currentQuestion && currentQuestion.params?.kind !== "no_question"
+        ? getGeometryDiagramSpec(currentQuestion, { hideUnknownValues: true })
+        : null,
+    [currentQuestion]
+  );
+
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
   const [correct, setCorrect] = useState(0);
@@ -406,6 +428,7 @@ export default function GeometryMaster() {
   const [leaderboardLevel, setLeaderboardLevel] = useState("easy");
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [showReferenceModal, setShowReferenceModal] = useState(false);
+  const [showDiagramModal, setShowDiagramModal] = useState(false);
   const [referenceCategory, setReferenceCategory] = useState("shapes");
   
   // Daily Streak
@@ -475,6 +498,17 @@ export default function GeometryMaster() {
     const presetGrade = preset.grade;
     if (!GEOMETRY_BOOK_GRADES.has(presetGrade)) return;
     if (!GRADES[presetGrade]?.topics?.includes(preset.topic)) return;
+    const presetVisible = listVisibleTopicsForSelfPractice(
+      "geometry",
+      presetGrade,
+      GRADES[presetGrade]?.topics ?? []
+    );
+    const presetSelectable =
+      GRADES[presetGrade]?.topics?.includes("mixed") &&
+      preset.topic === "mixed"
+        ? ["mixed", ...presetVisible]
+        : presetVisible;
+    if (!presetSelectable.includes(preset.topic)) return;
     bookPracticePresetRef.current = preset;
     setGrade(presetGrade);
     const presetGradeNumber = gradeKeyToNumber(presetGrade);
@@ -977,7 +1011,7 @@ export default function GeometryMaster() {
       focusedPracticeModeRef.current = "normal";
     }
 
-    const allowedTopics = GRADES[grade].topics || [];
+    const allowedTopics = geometryTopicSelectOptions;
     
     // בדיקה שיש נושאים זמינים
     if (allowedTopics.length === 0) {
@@ -1229,6 +1263,7 @@ export default function GeometryMaster() {
     setShowSolution(false);
     setShowPreviousSolution(false);
     setShowTheoryHelp(false);
+    setShowDiagramModal(false);
     setErrorExplanation("");
     stepByStepViewedRef.current = false;
   };
@@ -2256,7 +2291,10 @@ export default function GeometryMaster() {
   };
 
   const getTopicName = (t) => {
-    return TOPICS[t]?.icon + " " + TOPICS[t]?.name || t;
+    const meta = TOPICS[t];
+    if (!meta) return "נושא";
+    const icon = meta.icon ? `${meta.icon} ` : "";
+    return `${icon}${meta.name || "נושא"}`.trim();
   };
 
   const isShowingAnySolution = showSolution || showPreviousSolution;
@@ -2667,14 +2705,21 @@ export default function GeometryMaster() {
                     setShowSolution(false);
 
                     // בחירת נושא ברירת מחדל שמתאים לכיתה
-                    const allowed = GRADES[newGrade]?.topics || [];
-                    const firstAllowed = allowed.find((t) => t !== "mixed") || allowed[0] || "area";
+                    const allowed = listVisibleTopicsForSelfPractice(
+                      "geometry",
+                      newGrade,
+                      GRADES[newGrade]?.topics ?? []
+                    );
+                    const curriculum = GRADES[newGrade]?.topics ?? [];
+                    const selectable =
+                      curriculum.includes("mixed") ? [...allowed, "mixed"] : allowed;
+                    const firstAllowed = selectable.find((t) => t !== "mixed") || selectable[0] || "area";
                     if (firstAllowed) {
                       setTopic(firstAllowed);
                     }
 
                     // עדכון נושאים זמינים למיקס לפי הכיתה החדשה
-                    const availableTopics = allowed.filter((t) => t !== "mixed");
+                    const availableTopics = allowed;
                     const newMixedTopics = {
                       area: availableTopics.includes("area"),
                       perimeter: availableTopics.includes("perimeter"),
@@ -2741,11 +2786,14 @@ export default function GeometryMaster() {
                     }}
                     className={`${MB.selectControl} min-w-0 w-full md:w-[min(22rem,42vw)] md:max-w-[22rem]`}
                   >
-                    {(GRADES[grade]?.topics || []).map((t) => (
+                    {visibleGeometryTopics.map((t) => (
                       <option key={t} value={t}>
                         {getTopicName(t)}
                       </option>
                     ))}
+                    {(GRADES[safeGrade]?.topics || []).includes("mixed") && (
+                      <option value="mixed">{getTopicName("mixed")}</option>
+                    )}
                   </select>
                 </div>
                 </div>
@@ -2905,7 +2953,7 @@ export default function GeometryMaster() {
               {currentQuestion && (
                 <div
                   ref={gameRef}
-                  className="relative w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-4xl flex flex-col flex-1 min-h-0 items-stretch mb-2 mx-auto overflow-hidden max-md:h-[var(--game-h,400px)] max-md:min-h-[300px] md:min-h-[280px]"
+                  className="relative w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-4xl flex flex-col flex-1 min-h-0 items-stretch mb-2 mx-auto overflow-y-auto max-md:max-h-[var(--game-h,400px)] max-md:min-h-[300px] md:min-h-[280px]"
                 >
                   {/* שכבת הודעות לא דוחפת פריסה */}
                   {(feedback || errorExplanation) && (
@@ -3039,9 +3087,36 @@ export default function GeometryMaster() {
                   />
                   </div>
 
+                  {/* ══ שרטוט בזמן השאלה ══ */}
+                  {questionDiagramSpec && (
+                    <div
+                      className="w-full px-2 md:px-4 mb-1 md:mb-2 shrink-0"
+                      data-testid="geometry-question-diagram"
+                      dir="ltr"
+                    >
+                      <div className="relative">
+                        <GeometryExplanationDiagram
+                          spec={questionDiagramSpec}
+                          mini
+                          question={currentQuestion}
+                          emphasis="neutral"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowDiagramModal(true)}
+                          className="absolute bottom-1.5 left-1.5 text-[11px] leading-none bg-emerald-950/90 hover:bg-emerald-900 border border-emerald-500/40 text-emerald-300 rounded px-2 py-0.5 shadow z-10"
+                          title="הגדל שרטוט"
+                          aria-label="הגדל שרטוט"
+                        >
+                          ⛶ הגדל
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
                     <div className={LEARNING_MASTER_ANSWER_SURFACE_CLASS}>
                       {currentQuestion.params?.kind !== "no_question" &&
-                        ((mode === "learning" || mode === "practice") ? (
+                        ((mode === "learning" || mode === "practice") && !geometryQuestionUsesChoiceUi(currentQuestion.params) ? (
                           (() => {
                             const primaryBtn = getLearningPrimaryAnswerButtonState({
                               selectedAnswer,
@@ -3504,7 +3579,7 @@ export default function GeometryMaster() {
                   (selected) => selected
                 );
                 if (!hasSelected && topic === "mixed") {
-                  const allowed = GRADES[grade]?.topics || [];
+                  const allowed = geometryTopicSelectOptions;
                   const firstAllowed = allowed.find((t) => t !== "mixed") || allowed[0];
                   if (firstAllowed) {
                     setTopic(firstAllowed);
@@ -3527,9 +3602,7 @@ export default function GeometryMaster() {
                 </div>
 
                 <div className="space-y-3 mb-4 overflow-y-auto flex-1 min-h-0">
-                  {(GRADES[grade]?.topics || [])
-                    .filter((t) => t !== "mixed")
-                    .map((t) => (
+                  {visibleGeometryTopics.map((t) => (
                       <label
                         key={t}
                         className="flex items-center gap-3 p-3 rounded-lg bg-black/30 border border-white/10 hover:bg-black/40 cursor-pointer transition-all"
@@ -3555,9 +3628,7 @@ export default function GeometryMaster() {
                 <div className="flex gap-2 flex-shrink-0" dir="rtl">
                   <button
                     onClick={() => {
-                      const availableTopics = (GRADES[grade]?.topics || []).filter(
-                        (t) => t !== "mixed"
-                      );
+                      const availableTopics = visibleGeometryTopics;
                       const allSelected = {};
                       availableTopics.forEach((t) => {
                         allSelected[t] = true;
@@ -3570,9 +3641,7 @@ export default function GeometryMaster() {
                   </button>
                   <button
                     onClick={() => {
-                      const availableTopics = (GRADES[grade]?.topics || []).filter(
-                        (t) => t !== "mixed"
-                      );
+                      const availableTopics = visibleGeometryTopics;
                       const noneSelected = {};
                       availableTopics.forEach((t) => {
                         noneSelected[t] = false;
@@ -4013,6 +4082,42 @@ export default function GeometryMaster() {
           )}
 
           {/* לוח צורות ונוסחאות */}
+          {/* מודל הגדלת שרטוט */}
+          {showDiagramModal && questionDiagramSpec && currentQuestion && (
+            <div
+              className="fixed inset-0 bg-black/80 flex items-center justify-center z-[186] p-4"
+              onClick={() => setShowDiagramModal(false)}
+              role="dialog"
+              aria-modal="true"
+              aria-label="שרטוט מוגדל"
+            >
+              <div
+                className="w-full max-w-lg bg-gradient-to-br from-[#080c16] to-[#0a0f1d] border-2 border-emerald-500/50 rounded-2xl p-4 shadow-2xl"
+                onClick={(e) => e.stopPropagation()}
+                dir="rtl"
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-emerald-300 font-bold text-sm">שרטוט</span>
+                  <button
+                    type="button"
+                    onClick={() => setShowDiagramModal(false)}
+                    className="text-slate-400 hover:text-white text-lg leading-none px-1"
+                    aria-label="סגור שרטוט"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <div dir="ltr">
+                  <GeometryExplanationDiagram
+                    spec={questionDiagramSpec}
+                    question={currentQuestion}
+                    emphasis="neutral"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
           {showReferenceModal && (
             <div
               className="fixed inset-0 bg-black/80 flex items-center justify-center z-[185] p-4"

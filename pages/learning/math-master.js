@@ -243,6 +243,8 @@ import {
   shouldPauseWrongAnswerAutoAdvance,
 } from "../../utils/math-wrong-answer-feedback-timing";
 import { getMathPrimaryAnswerButtonState } from "../../utils/math-answer-primary-button";
+import { getMathReportBucketDisplayName } from "../../utils/math-report-generator";
+import { listVisibleTopicsForSelfPractice } from "../../lib/launch-readiness/topic-launch-policy.js";
 
 /** Passed into compareMathLearnerAnswer — tolerance is not defaulted inside answer-compare. */
 const MATH_NUMERIC_TOLERANCE = 0.01;
@@ -269,7 +271,7 @@ const AVATAR_OPTIONS = [
 ];
 
 const REFERENCE_CATEGORIES = {
-  operations: { label: "פעולות חשבון", icon: "➕" },
+  operations: { label: "פעולות מתמטיקה", icon: "➕" },
   formulas: { label: "נוסחאות", icon: "📐" },
   terms: { label: "מונחים", icon: "📚" },
 };
@@ -457,6 +459,16 @@ export default function MathMaster() {
     fullName: sessionFullName,
     coinBalance: sessionCoinBalance,
   } = useSubjectSessionDefaults();
+
+  // Policy-filtered topic list for the current grade.
+  // Excludes HIDE topics (per launch registry) and always excludes "mixed"
+  // (mixed is a child-only pseudo-option handled separately in the UI, not a registry topic).
+  const safeGrade = grade || "g1";
+  const visibleMathOps = listVisibleTopicsForSelfPractice(
+    "math",
+    safeGrade,
+    GRADES[safeGrade]?.operations ?? []
+  );
   const bookIndexHref = grade ? getLearningBookIndexHref("math", grade) : null;
   const bookTopicHref = useMemo(() => {
     if (!MATH_BOOK_GRADES.has(grade)) return null;
@@ -1242,10 +1254,10 @@ export default function MathMaster() {
     // אל תשנה אם ה-modal פתוח
     if (showMixedSelector) return;
     
-    const allowed = GRADES[grade].operations;
-    if (!allowed.includes(operation)) {
-      // מצא את הפעולה הראשונה שזמינה (לא mixed)
-      const firstAllowed = allowed.find(op => op !== "mixed") || allowed[0];
+    const allowed = listVisibleTopicsForSelfPractice("math", grade, GRADES[grade].operations);
+    if (!allowed.includes(operation) && operation !== "mixed") {
+      // מצא את הנושא הראשון שזמין לפי מדיניות ההשקה
+      const firstAllowed = allowed[0] || GRADES[grade].operations.find(op => op !== "mixed") || "addition";
       setOperation(firstAllowed);
     }
   }, [grade]); // רק כשהכיתה משתנה, לא כשהפעולה משתנה
@@ -1253,9 +1265,7 @@ export default function MathMaster() {
   // עדכון mixedOperations לפי הכיתה — כל פעולה זמינה לכיתה מקבלת מפתח (ברירת מחדל: הכל פעיל)
   useEffect(() => {
     if (!grade) return;
-    const availableOps = GRADES[grade].operations.filter(
-      (op) => op !== "mixed"
-    );
+    const availableOps = listVisibleTopicsForSelfPractice("math", grade, GRADES[grade].operations);
     const newMixedOps = {};
     for (const op of availableOps) {
       newMixedOps[op] = true;
@@ -3053,59 +3063,12 @@ export default function MathMaster() {
     navigateToStudentHome(router);
   };
 
+  // Unified operation name resolver — delegates to the canonical report label map.
+  // Falls back to "נושא" for any unknown key to prevent raw English leaking to the UI.
   const getOperationName = (op) => {
-    switch (op) {
-      case "addition":
-        return "חיבור";
-      case "subtraction":
-        return "חיסור";
-      case "multiplication":
-        return "כפל";
-      case "division":
-        return "חילוק";
-      case "division_with_remainder":
-        return "חילוק עם שארית";
-      case "fractions":
-        return "שברים";
-      case "percentages":
-        return "אחוזים";
-      case "sequences":
-        return "סדרות";
-      case "decimals":
-        return "עשרוניים";
-      case "rounding":
-        return "עיגול";
-      case "divisibility":
-        return "סימני התחלקות";
-      case "prime_composite":
-        return "מספרים ראשוניים ופריקים";
-      case "powers":
-        return "חזקות";
-      case "ratio":
-        return "יחס";
-      case "equations":
-        return "משוואות";
-      case "order_of_operations":
-        return "סדר פעולות";
-      case "zero_one_properties":
-        return "תכונות ה-0 וה-1";
-      case "estimation":
-        return "אומדן";
-      case "scale":
-        return "קנה מידה";
-      case "compare":
-        return "השוואה";
-      case "number_sense":
-        return "חוש מספרים";
-      case "factors_multiples":
-        return "גורמים וכפולות";
-      case "word_problems":
-        return "בעיות מילוליות";
-      case "mixed":
-        return "ערבוב";
-      default:
-        return op;
-    }
+    if (!op) return "נושא";
+    const name = getMathReportBucketDisplayName(String(op));
+    return name && name !== String(op) ? name : "נושא";
   };
 
   const profileSnap = getCachedStudentLearningProfile();
@@ -3392,7 +3355,7 @@ export default function MathMaster() {
           MB={MB}
           desktopHeaderRef={desktopHeaderRef}
           titleAnchorRef={desktopScratchpadAnchorRef}
-          title="🧮 חשבון"
+          title="🧮 מתמטיקה"
           subtitle={`${playerName || "שחקן"} • ${GRADES[grade].name} • ${LEVELS[level].name} • ${getOperationName(operation)} • ${MODES[mode].name}`}
           onBack={backSafe}
           onCurriculumClick={() => router.push("/learning/curriculum?subject=math")}
@@ -3419,7 +3382,7 @@ export default function MathMaster() {
           <div className="md:hidden text-center mb-3" ref={mobileScratchpadAnchorRef}>
             <div className="flex items-center justify-center gap-2 mb-0.5">
               <h1 className={MB.pageTitle}>
-                🧮 חשבון
+                🧮 מתמטיקה
               </h1>
               <button
                 onClick={() => {
@@ -3942,11 +3905,16 @@ export default function MathMaster() {
                     }}
                     className={`${MB.selectControl} min-w-0 w-full md:w-[min(22rem,42vw)] md:max-w-[22rem]`}
                   >
-                    {GRADES[grade].operations.map((op) => (
-                      <option key={op} value={op}>
-                        {getOperationName(op)}
-                      </option>
-                    ))}
+                    <optgroup label="נושאים">
+                      {visibleMathOps.map((op) => (
+                        <option key={op} value={op}>
+                          {getOperationName(op)}
+                        </option>
+                      ))}
+                    </optgroup>
+                    <optgroup label="תרגול מעורב">
+                      <option value="mixed">🔀 ערבוב נושאים</option>
+                    </optgroup>
                   </select>
                   {operation === "mixed" && (
                     <button
@@ -4057,7 +4025,7 @@ export default function MathMaster() {
                   onClick={() => setShowHowTo(true)}
                   className={`${MB.btnActionHelp} ${MB.btnActionCyan}`}
                 >
-                  ❓ איך לומדים חשבון כאן?
+                  ❓ איך לומדים מתמטיקה כאן?
                 </button>
                 <button
                   onClick={() => setShowReferenceModal(true)}
@@ -5848,8 +5816,8 @@ export default function MathMaster() {
                   (selected) => selected
                 );
                 if (!hasSelected && operation === "mixed") {
-                  const allowed = GRADES[grade].operations;
-                  setOperation(allowed.find(op => op !== "mixed") || allowed[0]);
+                  const allowed = listVisibleTopicsForSelfPractice("math", grade, GRADES[grade].operations);
+                  setOperation(allowed[0] || GRADES[grade].operations.find(op => op !== "mixed") || "addition");
                 }
               }}
               dir="rtl"
@@ -5869,8 +5837,7 @@ export default function MathMaster() {
                 </div>
 
                 <div className="space-y-1.5 mb-2 overflow-y-auto flex-1 min-h-0">
-                  {GRADES[grade].operations
-                    .filter((op) => op !== "mixed")
+                  {visibleMathOps
                     .map((op) => (
                       <label
                         key={op}
@@ -5915,9 +5882,7 @@ export default function MathMaster() {
                     <button
                       onClick={() => {
                         // בטל הכל
-                        const availableOps = GRADES[grade].operations.filter(
-                          (op) => op !== "mixed"
-                        );
+                        const availableOps = listVisibleTopicsForSelfPractice("math", grade, GRADES[grade].operations);
                         const noneSelected = {};
                         availableOps.forEach((op) => {
                           noneSelected[op] = false;
@@ -5931,9 +5896,7 @@ export default function MathMaster() {
                     <button
                       onClick={() => {
                         // בחר הכל
-                        const availableOps = GRADES[grade].operations.filter(
-                          (op) => op !== "mixed"
-                        );
+                        const availableOps = listVisibleTopicsForSelfPractice("math", grade, GRADES[grade].operations);
                         const allSelected = {};
                         availableOps.forEach((op) => {
                           allSelected[op] = true;
@@ -5969,11 +5932,11 @@ export default function MathMaster() {
                 onClick={(e) => e.stopPropagation()}
               >
                 <h2 className="text-xl font-extrabold mb-2 text-center">
-                  📘 איך לומדים חשבון כאן?
+                  📘 איך לומדים מתמטיקה כאן?
                 </h2>
 
                 <p className="text-white/80 text-xs mb-3 text-center">
-                  המטרה היא לתרגל חשבון בצורה משחקית, עם התאמה לכיתה, פעולה ורמת קושי.
+                  המטרה היא לתרגל מתמטיקה בצורה משחקית, עם התאמה לכיתה, נושא ורמת קושי.
                 </p>
 
                 <ul className="list-disc pr-4 space-y-1 text-[13px] text-white/90">
@@ -6006,7 +5969,7 @@ export default function MathMaster() {
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex items-center justify-between mb-3">
-                  <h2 className="text-2xl font-extrabold">📚 לוח עזרה בחשבון</h2>
+                  <h2 className="text-2xl font-extrabold">📚 לוח עזרה במתמטיקה</h2>
                   <button
                     onClick={() => setShowReferenceModal(false)}
                     className="text-white/80 hover:text-white text-xl px-2"
@@ -6015,7 +5978,7 @@ export default function MathMaster() {
                   </button>
                 </div>
                 <p className="text-sm text-white/70 mb-3">
-                  בחר קטגוריה כדי לראות פעולות, נוסחאות ומונחים חשובים בחשבון.
+                  בחר קטגוריה כדי לראות פעולות, נוסחאות ומונחים חשובים במתמטיקה.
                 </p>
                 <div className="flex flex-wrap gap-2 mb-4">
                   {REFERENCE_CATEGORY_KEYS.map((key) => (

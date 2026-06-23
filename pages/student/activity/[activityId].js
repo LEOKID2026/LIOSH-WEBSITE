@@ -10,6 +10,8 @@ import { formatStudentActivityCompletionSummaryHe } from "../../../lib/classroom
 import { resolveStudentActivityApiErrorHe } from "../../../lib/classroom-activities/student-activity-error-labels.client.js";
 import { resolveStudentActivityAnswerInputProps, assignedActivityUsesNumericKeyboard, resolveAssignedActivityMathScratchpadContext, assignedActivityUsesMathScratchpad, getStudentActivityQuestionFontStyle } from "../../../lib/classroom-activities/student-activity-question-ui.client.js";
 import { assignedActivityQuestionUsesChoiceUi } from "../../../utils/geometry-activity-answer-ui.js";
+import { getGeometryDiagramSpec } from "../../../utils/geometry-diagram-spec.js";
+import GeometryExplanationDiagram from "../../../components/learning/geometry/GeometryExplanationDiagram";
 import StudentNumericAnswerField, {
   useMobileEmbeddedNumericSubmit,
 } from "../../../components/learning/StudentNumericAnswerField";
@@ -85,6 +87,7 @@ export default function StudentActivityPage({ activityId }) {
   const [activeScratchpadCell, setActiveScratchpadCell] = useState(null);
   const [verticalExerciseHeadline, setVerticalExerciseHeadline] = useState(null);
   const [submitConfirmOpen, setSubmitConfirmOpen] = useState(false);
+  const [showDiagramModal, setShowDiagramModal] = useState(false);
   const isTouchDevice = useTouchPrimaryDevice();
 
   const startSession = useCallback(async () => {
@@ -207,6 +210,7 @@ export default function StudentActivityPage({ activityId }) {
     setScratchpadOpen(false);
     setActiveScratchpadCell(null);
     setVerticalExerciseHeadline(null);
+    setShowDiagramModal(false);
   }, [effectiveIdx]);
 
   const usesMathScratchpad = assignedActivityUsesMathScratchpad(currentQuestion);
@@ -217,6 +221,12 @@ export default function StudentActivityPage({ activityId }) {
         : null,
     [usesMathScratchpad, currentQuestion, activity]
   );
+
+  /** שרטוט בזמן השאלה — גאומטריה בלבד, לא חושף correctAnswer */
+  const questionDiagramSpec = useMemo(() => {
+    if (currentQuestion?.subject !== "geometry") return null;
+    return getGeometryDiagramSpec(currentQuestion, { hideUnknownValues: true });
+  }, [currentQuestion]);
   const mathVkPolicy = resolveVirtualAnswerKeyboard({
     subject: "math",
     hasTextInput: true,
@@ -318,7 +328,7 @@ export default function StudentActivityPage({ activityId }) {
       if (activity?.mode !== "live_lesson" && effectiveIdx < questionSet.length - 1) {
         setTimeout(() => {
           setCurrentIdx((i) => i + 1);
-        }, showExplanation ? 1500 : 600);
+        }, explanationText ? 1500 : 600);
       }
     } finally {
       setBusy(false);
@@ -579,6 +589,28 @@ export default function StudentActivityPage({ activityId }) {
 
   const renderActions = ({ includeInlineKeyboard = true, includePerQuestionSubmit = true } = {}) => (
     <>
+      {/* שרטוט בזמן השאלה — גאומטריה בלבד */}
+      {questionDiagramSpec && !isCurrentQuestionAnswered && (
+        <div className="w-full mb-2" dir="ltr" data-testid="activity-geometry-diagram">
+          <div className="relative">
+            <GeometryExplanationDiagram
+              spec={questionDiagramSpec}
+              mini
+              question={currentQuestion}
+              emphasis="neutral"
+            />
+            <button
+              type="button"
+              onClick={() => setShowDiagramModal(true)}
+              className="absolute bottom-1.5 left-1.5 text-[11px] leading-none bg-emerald-950/90 hover:bg-emerald-900 border border-emerald-500/40 text-emerald-300 rounded px-2 py-0.5 shadow z-10"
+              title="הגדל שרטוט"
+              aria-label="הגדל שרטוט"
+            >
+              ⛶ הגדל
+            </button>
+          </div>
+        </div>
+      )}
       {isExplanationOnly ? (
         <>
           <p className={L.explanationBanner}>
@@ -827,6 +859,42 @@ export default function StudentActivityPage({ activityId }) {
       ) : (
         <div className={L.page} dir="rtl" lang="he" />
       )}
+      {/* מודל הגדלת שרטוט */}
+      {showDiagramModal && questionDiagramSpec && currentQuestion && (
+        <div
+          className="fixed inset-0 bg-black/80 flex items-center justify-center z-[186] p-4"
+          onClick={() => setShowDiagramModal(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="שרטוט מוגדל"
+        >
+          <div
+            className="w-full max-w-lg bg-gradient-to-br from-[#080c16] to-[#0a0f1d] border-2 border-emerald-500/50 rounded-2xl p-4 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+            dir="rtl"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-emerald-300 font-bold text-sm">שרטוט</span>
+              <button
+                type="button"
+                onClick={() => setShowDiagramModal(false)}
+                className="text-slate-400 hover:text-white text-lg leading-none px-1"
+                aria-label="סגור שרטוט"
+              >
+                ✕
+              </button>
+            </div>
+            <div dir="ltr">
+              <GeometryExplanationDiagram
+                spec={questionDiagramSpec}
+                question={currentQuestion}
+                emphasis="neutral"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
       <StudentActivitySubmitConfirmModal
         open={submitConfirmOpen}
         busy={busy}

@@ -256,7 +256,7 @@ function buildSubjectOverviewRows(report) {
   return [
     {
       key: "math",
-      name: "חשבון",
+      name: "מתמטיקה",
       minutes: sumTopicMapMinutes(report.mathOperations),
       questions: Number(s.mathQuestions) || 0,
       accuracy: Math.round(Number(s.mathAccuracy) || 0),
@@ -586,7 +586,7 @@ function buildParentReportDiagnosticsView(report) {
 
 /** הגדרות כרטיסי נושא — מקור אחד לרשימת המקצועות + איסוף תוויות גלובלי */
 const TOPIC_BAR_SUBJECT_CARDS = [
-  { title: "חשבון — דיוק לפי נושא", mapKey: "mathOperations", prefix: "math_", border: "border-blue-400/25" },
+  { title: "מתמטיקה — דיוק לפי נושא", mapKey: "mathOperations", prefix: "math_", border: "border-blue-400/25" },
   { title: "גאומטריה — דיוק לפי נושא", mapKey: "geometryTopics", prefix: "geometry_", border: "border-emerald-400/25" },
   { title: "אנגלית — דיוק לפי נושא", mapKey: "englishTopics", prefix: "english_", border: "border-purple-400/25" },
   { title: "מדעים — דיוק לפי נושא", mapKey: "scienceTopics", prefix: "science_", border: "border-green-400/25" },
@@ -1973,7 +1973,7 @@ export default function ParentReport() {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3 mb-3 md:mb-6 avoid-break">
             <div className="parent-report-print-summary-card bg-blue-500/20 border border-blue-400/50 rounded-lg p-2 md:p-4 text-center">
               <div className="parent-report-print-summary-label text-xs md:text-sm text-white/60 mb-1">
-                🧮 חשבון
+                🧮 מתמטיקה
               </div>
               <div className="parent-report-print-summary-stat text-base md:text-lg font-bold text-blue-400">
                 {report.summary.mathQuestions || 0} שאלות
@@ -2081,10 +2081,10 @@ export default function ParentReport() {
             </div>
           ) : null}
 
-          {/* טבלת פעולות חשבון */}
+          {/* טבלת פעולות מתמטיקה */}
           {Object.keys(report.mathOperations || {}).length > 0 && (
             <div className="bg-black/30 border border-white/10 rounded-lg p-2 md:p-4 mb-3 md:mb-6 avoid-break">
-              <h2 className="parent-report-math-progress-title text-base md:text-xl font-bold mb-2 md:mb-3 text-center">🧮 התקדמות בחשבון</h2>
+              <h2 className="parent-report-math-progress-title text-base md:text-xl font-bold mb-2 md:mb-3 text-center">🧮 התקדמות במתמטיקה</h2>
               {/* Desktop Table */}
               <div className="parent-report-desktop-only parent-report-table-wrap-print hidden md:block mt-2">
                 <table className="w-full table-fixed text-sm parent-report-subject-table">
@@ -3635,7 +3635,7 @@ export default function ParentReport() {
                         dataKey="mathTopics"
                         stroke={SUBJECT_CHART_COLORS.math}
                         strokeWidth={1.8}
-                        name="חשבון"
+                        name="מתמטיקה"
                         dot={{ r: 2 }}
                         activeDot={{ r: 4 }}
                       />

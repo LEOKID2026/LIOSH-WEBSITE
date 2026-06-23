@@ -22,8 +22,10 @@ export const GEOMETRY_INDEX_LABEL_KINDS = {
   shapes_basic_properties_rectangle: 4,
   shapes_basic_properties_angles: 4,
   quadrilaterals: 4,
-  solids: 6,
 };
+
+/** Hebrew solid names pool used for 4-option MCQ in identification questions. */
+export const GEOMETRY_SOLID_NAMES_HE = ["קובייה", "תיבה", "גליל", "פירמידה", "חרוט", "כדור"];
 
 export const GEOMETRY_HEBREW_LABEL_OPTIONS = {
   parallel_perpendicular: ["מקבילות", "מאונכות"],
@@ -45,7 +47,8 @@ export function geometryQuestionUsesChoiceUi(params) {
   const baseKind = String(params.kind || "").replace(/^story_/, "");
   return (
     Boolean(GEOMETRY_HEBREW_LABEL_OPTIONS[baseKind]) ||
-    Boolean(GEOMETRY_INDEX_LABEL_KINDS[baseKind])
+    Boolean(GEOMETRY_INDEX_LABEL_KINDS[baseKind]) ||
+    baseKind === "solids"
   );
 }
 

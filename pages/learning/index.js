@@ -8,7 +8,7 @@ import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 const LEARNING_GAMES = [
   {
     slug: "math-master",
-    title: "חשבון",
+    title: "מתמטיקה",
     emoji: "🧮",
     blurb: "תרגול חיבור, חיסור, כפל, חילוק ועוד.",
   },
@@ -38,9 +38,9 @@ const LEARNING_GAMES = [
   },
   {
     slug: "moledet-geography-master",
-    title: "מולדת וגיאוגרפיה",
+    title: "מולדת וגאוגרפיה",
     emoji: "🗺️",
-    blurb: "מולדת, חברה, אזרחות וגיאוגרפיה ועוד.",
+    blurb: "מולדת, חברה, אזרחות וגאוגרפיה ועוד.",
   },
 ];
 

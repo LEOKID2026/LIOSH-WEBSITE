@@ -28,7 +28,7 @@ export default function MathG3BookShell({
   const isIndex = activePageId === null;
   const fromLearning = isMathG3BookLearningReturn(router.query);
   const returnQuerySuffix = getMathG3BookReturnQuerySuffix(router.query);
-  const returnLabel = fromLearning ? "סגור" : "חזרה לחשבון";
+  const returnLabel = fromLearning ? "סגור" : "חזרה למתמטיקה";
 
   const handleReturnClick = () => {
     if (fromLearning) {

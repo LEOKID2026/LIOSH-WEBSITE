@@ -70,8 +70,8 @@ for (const pageId of GEOMETRY_G5_PAGE_ORDER) {
     errors.push(e.message);
   }
 
-  if (readMetadataField(raw, "approval_status") !== "draft") {
-    errors.push(`${pageId}: approval_status must be draft`);
+  if (readMetadataField(raw, "approval_status") !== "launch_ready") {
+    errors.push(`${pageId}: approval_status must be launch_ready`);
   }
   if (!readMetadataField(raw, "title_hebrew").includes("[DRAFT")) {
     errors.push(`${pageId}: title_hebrew missing DRAFT marker`);
@@ -94,8 +94,8 @@ for (const pageId of GEOMETRY_G5_PAGE_ORDER) {
     /:::geometry-diagram[\s\S]*?:::/g,
     ""
   );
-  if (childFacing.includes("הנדסה")) {
-    errors.push(`${pageId}: child-facing body must use גאומטריה, not הנדסה`);
+  if (childFacing.includes("×”× ×“×¡×”")) {
+    errors.push(`${pageId}: child-facing body must use ×’××•×ž×˜×¨×™×”, not ×”× ×“×¡×”`);
   }
   const cyrillicHits = childFacing.match(CYRILLIC_IN_CHILD_FACING_RE);
   if (cyrillicHits) {
@@ -124,28 +124,28 @@ for (const pageId of GEOMETRY_G5_PAGE_ORDER) {
   const anchors = GEOMETRY_G5_ALIGNMENT_ANCHORS[pageId] || [];
   for (const anchor of anchors) {
     if (!s5.includes(anchor)) {
-      errors.push(`${pageId}: §5 missing alignment anchor "${anchor}"`);
+      errors.push(`${pageId}: Â§5 missing alignment anchor "${anchor}"`);
     }
     if (!s6.includes(anchor)) {
-      errors.push(`${pageId}: §6 missing alignment anchor "${anchor}"`);
+      errors.push(`${pageId}: Â§6 missing alignment anchor "${anchor}"`);
     }
   }
 
-  pushNote(notationByCategory.lengthUnits, pageId, uniqueMatches(/ס״מ/g, childFacing));
+  pushNote(notationByCategory.lengthUnits, pageId, uniqueMatches(/×¡×´×ž/g, childFacing));
   pushNote(
     notationByCategory.areaUnits,
     pageId,
-    uniqueMatches(/סמ״ר|מ״ר/g, childFacing)
+    uniqueMatches(/×¡×ž×´×¨|×ž×´×¨/g, childFacing)
   );
-  pushNote(notationByCategory.angles, pageId, uniqueMatches(/\d+°/g, childFacing));
+  pushNote(notationByCategory.angles, pageId, uniqueMatches(/\d+Â°/g, childFacing));
   pushNote(
     notationByCategory.formulas,
     pageId,
-    uniqueMatches(/√\([^)]+\)|√\d+|\([^)]+\)\s*×\s*[^÷]+÷\s*2/g, childFacing)
+    uniqueMatches(/âˆš\([^)]+\)|âˆš\d+|\([^)]+\)\s*Ã—\s*[^Ã·]+Ã·\s*2/g, childFacing)
   );
-  pushNote(notationByCategory.multiply, pageId, uniqueMatches(/×/g, childFacing));
+  pushNote(notationByCategory.multiply, pageId, uniqueMatches(/Ã—/g, childFacing));
   pushNote(notationByCategory.shapeLabels, pageId, uniqueMatches(/\b[A-D]{1,2}\b/g, childFacing));
-  pushNote(notationByCategory.sqrt, pageId, uniqueMatches(/√2|√\d+/g, childFacing));
+  pushNote(notationByCategory.sqrt, pageId, uniqueMatches(/âˆš2|âˆš\d+/g, childFacing));
 
   if (RAW_MD_RE.test(childFacing)) {
     errors.push(`${pageId}: raw markdown structure in child-facing body`);
@@ -160,18 +160,18 @@ if (errors.length) {
 console.log(`G5 geometry content verification PASSED: ${GEOMETRY_G5_PAGE_ORDER.length} pages.`);
 console.log("- 7 sections each");
 console.log("- draft metadata + geometry:g5:{pageId} ids");
-console.log("- no הנדסה / English geometry / Cyrillic in child-facing body");
+console.log("- no ×”× ×“×¡×” / English geometry / Cyrillic in child-facing body");
 console.log("- Section 5/6 alignment anchors present");
-console.log("- no fake practice routing in §7");
+console.log("- no fake practice routing in Â§7");
 
 const notationLabels = {
-  lengthUnits: "Length units (ס״מ — verify Bidi in browser)",
-  areaUnits: "Area units (סמ״ר / מ״ר — verify Bidi in browser)",
-  angles: "Angle notation (e.g. 90°, 60° — verify ° placement)",
+  lengthUnits: "Length units (×¡×´×ž â€” verify Bidi in browser)",
+  areaUnits: "Area units (×¡×ž×´×¨ / ×ž×´×¨ â€” verify Bidi in browser)",
+  angles: "Angle notation (e.g. 90Â°, 60Â° â€” verify Â° placement)",
   formulas: "Formulas / parentheses (verify LTR isolation)",
-  multiply: "Multiplication sign (× — verify spacing and direction)",
-  shapeLabels: "Shape vertex labels (A, B, C, D — verify LTR)",
-  sqrt: "Square-root notation (√2, √100 — verify rendering)",
+  multiply: "Multiplication sign (Ã— â€” verify spacing and direction)",
+  shapeLabels: "Shape vertex labels (A, B, C, D â€” verify LTR)",
+  sqrt: "Square-root notation (âˆš2, âˆš100 â€” verify rendering)",
 };
 
 let anyNotation = false;
@@ -179,7 +179,7 @@ for (const [key, label] of Object.entries(notationLabels)) {
   const notes = notationByCategory[key];
   if (notes.length) {
     anyNotation = true;
-    console.log(`\nNotation / Bidi review — ${label}:`);
+    console.log(`\nNotation / Bidi review â€” ${label}:`);
     for (const note of notes) {
       console.log(`  - ${note}`);
     }

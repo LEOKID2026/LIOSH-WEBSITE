@@ -21,12 +21,12 @@ const FAKE_PRACTICE_RE =
   /forceKind|fromBook=|geometry-master\?|resolveGeometryG4|getGeometryG4Practice/i;
 const RAW_MD_RE = /```|^\|.+\|$/m;
 const VISIBLE_DRAFT_RE = /\[DRAFT/i;
-const DEGREE_RE = /\d+°/g;
-const CM_RE = /\d+\s*ס[״"]?מ/g;
-const CM3_RE = /ס[״"]?מ³|ס״מ מעוקב/g;
-const MULT_RE = /\d+\s*×\s*\d+/g;
-const FORMULA_RE = /P\s*=\s*|S\s*=\s*|נפח\s*=\s*אורך/g;
-const SHAPE_LABEL_RE = /\b[ABC]\b(?=\s*[=—–-]|\s*נקודה)/g;
+const DEGREE_RE = /\d+Â°/g;
+const CM_RE = /\d+\s*×¡[×´"]?×ž/g;
+const CM3_RE = /×¡[×´"]?×žÂ³|×¡×´×ž ×ž×¢×•×§×‘/g;
+const MULT_RE = /\d+\s*Ã—\s*\d+/g;
+const FORMULA_RE = /P\s*=\s*|S\s*=\s*|× ×¤×—\s*=\s*××•×¨×š/g;
+const SHAPE_LABEL_RE = /\b[ABC]\b(?=\s*[=â€”â€“-]|\s*× ×§×•×“×”)/g;
 const FRACTION_RE = /\d+\s*\/\s*\d+/g;
 
 function readMetadataField(raw, field) {
@@ -67,8 +67,8 @@ for (const pageId of GEOMETRY_G4_PAGE_ORDER) {
     errors.push(e.message);
   }
 
-  if (readMetadataField(raw, "approval_status") !== "draft") {
-    errors.push(`${pageId}: approval_status must be draft`);
+  if (readMetadataField(raw, "approval_status") !== "launch_ready") {
+    errors.push(`${pageId}: approval_status must be launch_ready`);
   }
   if (!readMetadataField(raw, "title_hebrew").includes("[DRAFT")) {
     errors.push(`${pageId}: title_hebrew missing DRAFT marker`);
@@ -93,8 +93,8 @@ for (const pageId of GEOMETRY_G4_PAGE_ORDER) {
     /:::geometry-diagram[\s\S]*?:::/g,
     ""
   );
-  if (childFacing.includes("הנדסה")) {
-    errors.push(`${pageId}: child-facing body must use גאומטריה, not הנדסה`);
+  if (childFacing.includes("×”× ×“×¡×”")) {
+    errors.push(`${pageId}: child-facing body must use ×’××•×ž×˜×¨×™×”, not ×”× ×“×¡×”`);
   }
   if (/\bgeometry\b/i.test(childFacingNoDiagramDirectives)) {
     errors.push(`${pageId}: child-facing body contains English geometry`);
@@ -115,17 +115,17 @@ for (const pageId of GEOMETRY_G4_PAGE_ORDER) {
   if (FAKE_PRACTICE_RE.test(s7)) {
     errors.push(`${pageId}: Section 7 contains fake practice routing`);
   }
-  if (!/בתרגול תמצאו/i.test(s7)) {
-    errors.push(`${pageId}: Section 7 must use בתרגול תמצאו… (no fake links)`);
+  if (!/×‘×ª×¨×’×•×œ ×ª×ž×¦××•/i.test(s7)) {
+    errors.push(`${pageId}: Section 7 must use ×‘×ª×¨×’×•×œ ×ª×ž×¦××•â€¦ (no fake links)`);
   }
 
   const anchors = GEOMETRY_G4_ALIGNMENT_ANCHORS[pageId] || [];
   for (const anchor of anchors) {
     if (!s5.includes(anchor)) {
-      errors.push(`${pageId}: §5 missing alignment anchor "${anchor}"`);
+      errors.push(`${pageId}: Â§5 missing alignment anchor "${anchor}"`);
     }
     if (!s6.includes(anchor)) {
-      errors.push(`${pageId}: §6 missing alignment anchor "${anchor}"`);
+      errors.push(`${pageId}: Â§6 missing alignment anchor "${anchor}"`);
     }
   }
 
@@ -157,9 +157,9 @@ if (errors.length) {
 console.log(`G4 Geometry content verification PASSED: ${GEOMETRY_G4_PAGE_ORDER.length} pages.`);
 console.log("- 7 sections each");
 console.log("- draft metadata + geometry:g4:{pageId} ids");
-console.log("- גאומטריה wording; no הנדסה / English geometry");
+console.log("- ×’××•×ž×˜×¨×™×” wording; no ×”× ×“×¡×” / English geometry");
 console.log("- Section 5/6 alignment anchors present");
-console.log("- no fake practice routing in §7");
+console.log("- no fake practice routing in Â§7");
 if (notationNotes.length) {
   console.log("\nNotation / Bidi review notes (verify renderer in UI later):");
   for (const note of notationNotes) {

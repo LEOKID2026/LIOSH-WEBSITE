@@ -187,7 +187,7 @@ function SvgText({ x, y, children, variant = "caption", anchor = "middle" }) {
   );
 }
 
-function DiagramFrame({ children, compact = false, embedded = false }) {
+function DiagramFrame({ children, compact = false, embedded = false, mini = false }) {
   if (embedded) {
     return (
       <div
@@ -195,6 +195,16 @@ function DiagramFrame({ children, compact = false, embedded = false }) {
         data-testid="geometry-diagram-embedded"
       >
         {children}
+      </div>
+    );
+  }
+  /* mini — שרטוט קטן inline בזמן השאלה: מוגבל 120px מובייל, 180px sm+ */
+  if (mini) {
+    return (
+      <div className="w-full max-w-[min(100%,300px)] mx-auto mb-0 rounded-xl bg-emerald-950/50 border border-emerald-400/25 px-2 py-1.5 sm:py-2 max-h-[120px] sm:max-h-[180px] flex items-center justify-center shadow-inner shadow-black/15 ring-1 ring-emerald-500/10 overflow-hidden">
+        <div className="w-full flex items-center justify-center [&>svg]:w-full [&>svg]:max-w-full [&>svg]:h-auto [&>svg]:max-h-[108px] sm:[&>svg]:max-h-[164px]">
+          {children}
+        </div>
       </div>
     );
   }
@@ -222,13 +232,14 @@ export default function GeometryExplanationDiagram({
   question = null,
   compact = false,
   embedded = false,
+  mini = false,
   reveal = [],
   animationPreset = GEOMETRY_ANIMATION_PRESETS.none,
   stepId = "",
 }) {
   if (!spec?.kind) return null;
 
-  const frameProps = { compact, embedded };
+  const frameProps = { compact, embedded, mini };
   const preset = animationPreset || GEOMETRY_ANIMATION_PRESETS.none;
   const showGrid = preset === GEOMETRY_ANIMATION_PRESETS.gridFill;
   const showTrace = preset === GEOMETRY_ANIMATION_PRESETS.tracePerimeter;

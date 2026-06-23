@@ -51,8 +51,8 @@ for (const pageId of GEOMETRY_G2_PAGE_ORDER) {
     errors.push(e.message);
   }
 
-  if (readMetadataField(raw, "approval_status") !== "draft") {
-    errors.push(`${pageId}: approval_status must be draft`);
+  if (readMetadataField(raw, "approval_status") !== "launch_ready") {
+    errors.push(`${pageId}: approval_status must be launch_ready`);
   }
   if (!readMetadataField(raw, "title_hebrew").includes("[DRAFT")) {
     errors.push(`${pageId}: title_hebrew missing DRAFT marker`);
@@ -77,8 +77,8 @@ for (const pageId of GEOMETRY_G2_PAGE_ORDER) {
     /:::geometry-diagram[\s\S]*?:::/g,
     ""
   );
-  if (childFacing.includes("הנדסה")) {
-    errors.push(`${pageId}: child-facing body must use גאומטריה, not הנדסה`);
+  if (childFacing.includes("×”× ×“×¡×”")) {
+    errors.push(`${pageId}: child-facing body must use ×’××•×ž×˜×¨×™×”, not ×”× ×“×¡×”`);
   }
   if (/\bgeometry\b/i.test(childFacingNoDiagramDirectives)) {
     errors.push(`${pageId}: child-facing body contains English geometry`);
@@ -100,10 +100,10 @@ for (const pageId of GEOMETRY_G2_PAGE_ORDER) {
   const anchors = GEOMETRY_G2_ALIGNMENT_ANCHORS[pageId] || [];
   for (const anchor of anchors) {
     if (!s5.includes(anchor)) {
-      errors.push(`${pageId}: §5 missing alignment anchor "${anchor}"`);
+      errors.push(`${pageId}: Â§5 missing alignment anchor "${anchor}"`);
     }
     if (!s6.includes(anchor)) {
-      errors.push(`${pageId}: §6 missing alignment anchor "${anchor}"`);
+      errors.push(`${pageId}: Â§6 missing alignment anchor "${anchor}"`);
     }
   }
 
@@ -125,9 +125,9 @@ if (errors.length) {
 console.log(`G2 Geometry content verification PASSED: ${GEOMETRY_G2_PAGE_ORDER.length} pages.`);
 console.log("- 7 sections each");
 console.log("- draft metadata + geometry:g2:{pageId} ids");
-console.log("- גאומטריה naming; no הנדסה / English geometry in body");
+console.log("- ×’××•×ž×˜×¨×™×” naming; no ×”× ×“×¡×” / English geometry in body");
 console.log("- Section 5/6 alignment anchors present");
-console.log("- no fake practice routing in §7");
+console.log("- no fake practice routing in Â§7");
 if (markdownNotes.length) {
   console.log("\nMarkdown / structure review notes:");
   for (const note of markdownNotes) {

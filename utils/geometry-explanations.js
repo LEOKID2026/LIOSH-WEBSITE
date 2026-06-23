@@ -745,19 +745,32 @@ export function getSolutionSteps(question, topic, gradeKey) {
     }
 
     case "tiling": {
+      // tiling_count: כמה אריחים מכסים שטח נתון
+      if (p.kind === "tiling_count") {
+        const tileSide = p.tileSide || 1;
+        const floorL = p.floorL || 1;
+        const floorW = p.floorW || 1;
+        const tileArea = p.tileArea || tileSide * tileSide;
+        const floorArea = p.floorArea || floorL * floorW;
+        return [
+          toSpan(mix`1. שטח הרצפה: ${M(`${floorL} × ${floorW} = ${floorArea}`)}.`, "1"),
+          toSpan(mix`2. שטח אריח אחד: ${M(`${tileSide} × ${tileSide} = ${tileArea}`)}.`, "2"),
+          toSpan(mix`3. מספר אריחים: ${M(`${floorArea} ÷ ${tileArea} = ${correctAnswer}`)}.`, "3"),
+        ];
+      }
       const shape = p.shape || "ריבוע";
       const angle = p.angle || 90;
       return [
-        toSpan(mix`1. בריצוף סביב כל קודקוד סכום הזוויות החוצות צריך להסתדר אל 360°.`, "1"),
+        toSpan(mix`1. בריצוף סביב כל קודקוד סכום הזוויות חייב להיות בדיוק 360°.`, "1"),
         toSpan(
-          shape === "ריבוע"
-            ? "2. לריבוע זווית פנימית 90° — 4 × 90° = 360°."
+          shape === "ריבוע" || shape === "מלבן"
+            ? "2. לריבוע ולמלבן זווית פנימית 90° — 4 × 90° = 360°."
             : shape === "משולש שווה צלעות"
-            ? "2. במשולש שווהצלעות זווית בסיס 60°."
-            : "2. במשושה זווית פנימית 120°.",
+            ? "2. במשולש שווה-צלעות זווית פנימית 60° — 6 × 60° = 360°."
+            : "2. במשושה זווית פנימית 120° — 3 × 120° = 360°.",
           "2"
         ),
-        toSpan(mix`3. בצורה "${shape}" הזווית הרלוונטית לריצוף היא ${angle}°.`, "3"),
+        toSpan(mix`3. בצורה "${shape}" הזווית הפנימית היא ${angle}°.`, "3"),
         toSpan(mix`4. לכן התשובה: ${angle}°.`, "4"),
       ];
     }
@@ -783,6 +796,36 @@ export function getSolutionSteps(question, topic, gradeKey) {
 
     case "solids": {
       const solid = p.solid || "קובייה";
+      const kind = p.kind || "solids";
+
+      if (kind === "solids_faces") {
+        const faces = p.faces ?? correctAnswer;
+        return [
+          toSpan(mix`1. שאלה: כמה פאות יש ל${solid}?`, "1"),
+          toSpan(mix`2. סופרים כל משטח שטוח או מעוגל של הגוף.`, "2"),
+          toSpan(mix`3. ל${solid} יש ${faces} פאות.`, "3"),
+        ];
+      }
+
+      if (kind === "solids_vertices") {
+        const vertices = p.vertices ?? correctAnswer;
+        return [
+          toSpan(mix`1. שאלה: כמה קודקודים יש ל${solid}?`, "1"),
+          toSpan(mix`2. קודקוד = נקודה שבה נפגשות לפחות שתי צלעות.`, "2"),
+          toSpan(mix`3. ל${solid} יש ${vertices} קודקודים.`, "3"),
+        ];
+      }
+
+      if (kind === "solids_edges") {
+        const edges = p.edges ?? correctAnswer;
+        return [
+          toSpan(mix`1. שאלה: כמה צלעות יש ל${solid}?`, "1"),
+          toSpan(mix`2. צלע = קו שבו נפגשות שתי פאות.`, "2"),
+          toSpan(mix`3. ל${solid} יש ${edges} צלעות.`, "3"),
+        ];
+      }
+
+      // זיהוי גוף לפי תיאור (kind: "solids")
       const desc = p.desc || "";
       const key =
         solid === "קובייה"
@@ -800,12 +843,8 @@ export function getSolutionSteps(question, topic, gradeKey) {
           : "התאימו תיאור לגוף.";
       return [
         toSpan(mix`1. בתיאור: "${desc}".`, "1"),
-        toSpan(mix`2. מזהים לפי פאות ובסיס: ${key}`, "2"),
-        toSpan(mix`3. שם הגוף בשאלה: ${solid}.`, "3"),
-        toSpan(
-          mix`4. לפי מפתח התשובות (1–6) בוחרים את המספר המתאים לתיאור.`,
-          "4"
-        ),
+        toSpan(mix`2. מזהים לפי מאפיינים: ${key}`, "2"),
+        toSpan(mix`3. שם הגוף התואם: ${solid}.`, "3"),
       ];
     }
 

@@ -28,7 +28,7 @@ export default function MathG4BookShell({
   const isIndex = activePageId === null;
   const fromLearning = isMathG4BookLearningReturn(router.query);
   const returnQuerySuffix = getMathG4BookReturnQuerySuffix(router.query);
-  const returnLabel = fromLearning ? "סגור" : "חזרה לחשבון";
+  const returnLabel = fromLearning ? "סגור" : "חזרה למתמטיקה";
 
   const handleReturnClick = () => {
     if (fromLearning) {

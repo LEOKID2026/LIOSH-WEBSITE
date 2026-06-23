@@ -3315,7 +3315,7 @@ export function buildWordProblemsAnimation(params, answer) {
     steps.push({
       id: "write-equation",
       title: "כתיבת התרגיל",
-      ...learningStepFields(mix`כותבים תרגיל חשבון שמתאים לסיפור.`),
+      ...learningStepFields(mix`כותבים תרגיל מתמטיקה שמתאים לסיפור.`),
       highlights: ["equation"],
       type: "word_problems",
       params,

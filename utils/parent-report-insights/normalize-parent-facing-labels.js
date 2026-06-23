@@ -8,12 +8,12 @@
  */
 
 const SUBJECT_LABEL_HE = Object.freeze({
-  math: "חשבון",
+  math: "מתמטיקה",
   geometry: "גאומטריה",
   english: "אנגלית",
   hebrew: "עברית",
   science: "מדעים",
-  moledet_geography: "מולדת וגיאוגרפיה",
+  moledet_geography: "מולדת וגאוגרפיה",
 });
 
 const MATH_OPERATION_NAMES_HE = Object.freeze({

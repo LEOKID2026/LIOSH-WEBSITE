@@ -15,7 +15,7 @@ export { SUBJECT_VALID_MIN_QUESTIONS };
 
 /** Card-visible Hebrew labels (+ aliases used in parentFacing insights). */
 export const SUBJECT_VISIBLE_LABELS_HE = Object.freeze({
-  math: ["חשבון", "מתמטיקה"],
+  math: ["מתמטיקה", "חשבון"],
   geometry: ["גאומטריה"],
   english: ["אנגלית"],
   science: ["מדעים"],
@@ -25,7 +25,7 @@ export const SUBJECT_VISIBLE_LABELS_HE = Object.freeze({
 
 /** Primary label per subject id (matches subject cards). */
 export const SUBJECT_LABEL_BY_ID = Object.freeze({
-  math: "חשבון",
+  math: "מתמטיקה",
   geometry: "גאומטריה",
   english: "אנגלית",
   science: "מדעים",

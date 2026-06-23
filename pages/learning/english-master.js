@@ -101,6 +101,7 @@ import {
   gradeKeyToNumber,
 } from "../../lib/learning-student-defaults";
 import { useSubjectSessionDefaults } from "../../hooks/useSubjectSessionDefaults";
+import { listVisibleTopicsForSelfPractice } from "../../lib/launch-readiness/topic-launch-policy.js";
 import {
   debounceStudentLearningProfilePatch,
   fetchStudentLearningProfile,
@@ -537,6 +538,16 @@ export default function EnglishMaster() {
     fullName: sessionFullName,
     coinBalance: sessionCoinBalance,
   } = useSubjectSessionDefaults();
+  const safeGrade = grade || "g1";
+  const visibleEnglishTopics = useMemo(
+    () => listVisibleTopicsForSelfPractice("english", safeGrade, GRADES[safeGrade]?.topics ?? []),
+    [safeGrade]
+  );
+  const englishTopicSelectOptions = useMemo(() => {
+    const curriculum = GRADES[safeGrade]?.topics ?? [];
+    if (curriculum.includes("mixed")) return [...visibleEnglishTopics, "mixed"];
+    return visibleEnglishTopics;
+  }, [safeGrade, visibleEnglishTopics]);
   const [mode, setMode] = useState("practice");
   const [practiceFocus, setPracticeFocus] = useState("balanced");
   const [focusedPracticeMode, setFocusedPracticeMode] = useState("normal");
@@ -1394,16 +1405,16 @@ export default function EnglishMaster() {
     if (!grade) return;
     if (showMixedSelector) return;
     if (practiceForceKindRef.current) return;
-    const allowed = GRADES[grade].topics;
+    const allowed = englishTopicSelectOptions;
     if (!allowed.includes(topic)) {
       const firstAllowed = allowed.find((t) => t !== "mixed") || allowed[0];
       setTopic(firstAllowed);
     }
-  }, [grade, showMixedSelector]);
+  }, [grade, showMixedSelector, englishTopicSelectOptions, topic]);
 
   useEffect(() => {
     if (!grade) return;
-    const availableTopics = GRADES[grade].topics.filter((t) => t !== "mixed");
+    const availableTopics = visibleEnglishTopics;
     const newMixedTopics = {
       vocabulary: availableTopics.includes("vocabulary"),
       grammar: availableTopics.includes("grammar"),
@@ -1412,7 +1423,7 @@ export default function EnglishMaster() {
       writing: availableTopics.includes("writing"),
     };
     setMixedTopics(newMixedTopics);
-  }, [grade]);
+  }, [grade, visibleEnglishTopics]);
 
   useEffect(() => {
     const today = new Date();
@@ -2363,7 +2374,10 @@ export default function EnglishMaster() {
   };
 
   const getTopicName = (t) => {
-    return TOPICS[t]?.icon + " " + TOPICS[t]?.name || t;
+    const meta = TOPICS[t];
+    if (!meta) return "נושא";
+    const icon = meta.icon ? `${meta.icon} ` : "";
+    return `${icon}${meta.name || "נושא"}`.trim();
   };
 
   const getGradeLabel = (gradeKey) => {
@@ -2704,7 +2718,7 @@ export default function EnglishMaster() {
                     }}
                     className={`${MB.selectControl} min-w-0 w-full md:w-[min(22rem,42vw)] md:max-w-[22rem]`}
                   >
-                    {GRADES[grade].topics.map((t) => (
+                    {englishTopicSelectOptions.map((t) => (
                       <option key={t} value={t}>
                         {getTopicName(t)}
                       </option>
@@ -3247,7 +3261,7 @@ export default function EnglishMaster() {
                   (selected) => selected
                 );
                 if (!hasSelected && topic === "mixed") {
-                  const allowed = GRADES[grade].topics;
+                  const allowed = englishTopicSelectOptions;
                   setTopic(allowed.find((t) => t !== "mixed") || allowed[0]);
                 }
               }}
@@ -3266,9 +3280,7 @@ export default function EnglishMaster() {
                 </div>
 
                 <div className="space-y-3 mb-4 overflow-y-auto flex-1 min-h-0">
-                  {GRADES[grade].topics
-                    .filter((t) => t !== "mixed")
-                    .map((t) => (
+                  {visibleEnglishTopics.map((t) => (
                       <label
                         key={t}
                         className="flex items-center gap-3 p-3 rounded-lg bg-black/30 border border-white/10 hover:bg-black/40 cursor-pointer transition-all"
@@ -3294,9 +3306,7 @@ export default function EnglishMaster() {
                 <div className="flex gap-2 flex-shrink-0">
                   <button
                     onClick={() => {
-                      const availableTopics = GRADES[grade].topics.filter(
-                        (t) => t !== "mixed"
-                      );
+                      const availableTopics = visibleEnglishTopics;
                       const allSelected = {};
                       availableTopics.forEach((t) => {
                         allSelected[t] = true;
@@ -3309,9 +3319,7 @@ export default function EnglishMaster() {
                   </button>
                   <button
                     onClick={() => {
-                      const availableTopics = GRADES[grade].topics.filter(
-                        (t) => t !== "mixed"
-                      );
+                      const availableTopics = visibleEnglishTopics;
                       const noneSelected = {};
                       availableTopics.forEach((t) => {
                         noneSelected[t] = false;

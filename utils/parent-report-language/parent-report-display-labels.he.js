@@ -9,14 +9,14 @@ import { normalizeParentFacingHe } from "./parent-facing-normalize-he.js";
 
 /** @type {Record<string, string>} */
 export const PARENT_REPORT_SUBJECT_LABELS_HE = {
-  math: "חשבון",
+  math: "מתמטיקה",
   geometry: "גאומטריה",
   english: "אנגלית",
   hebrew: "עברית",
   science: "מדעים",
   moledet: "מולדת",
-  moledet_geography: "מולדת וגיאוגרפיה",
-  "moledet-geography": "מולדת וגיאוגרפיה",
+  moledet_geography: "מולדת וגאוגרפיה",
+  "moledet-geography": "מולדת וגאוגרפיה",
 };
 
 /** @type {Record<string, string>} */

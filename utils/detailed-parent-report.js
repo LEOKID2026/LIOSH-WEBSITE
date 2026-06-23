@@ -116,7 +116,7 @@ const SUBJECT_IDS = [
 ];
 
 const SUBJECT_LABEL_HE = {
-  math: "חשבון",
+  math: "מתמטיקה",
   geometry: "גאומטריה",
   english: "אנגלית",
   science: "מדעים",

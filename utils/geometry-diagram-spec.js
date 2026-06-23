@@ -136,8 +136,18 @@ export function getGeometryDiagramSpec(question, options = {}) {
     return { kind: "rotation_step", angle, template: "square" };
   }
 
-  if (topic === "solids" || p.kind === "solids_identify") {
-    const solidShape = shape || p.solidShape || "cube";
+  if (topic === "solids" || p.kind === "solids_identify" || p.kind === "solids_faces" || p.kind === "solids_vertices" || p.kind === "solids_edges") {
+    // Hebrew name → English solidShape fallback for older questions without solidShape in params
+    const hebrewToSolidKey = {
+      "קובייה": "cube",
+      "תיבה": "rectangular_prism",
+      "גליל": "cylinder",
+      "פירמידה": "pyramid",
+      "חרוט": "cone",
+      "כדור": "sphere",
+    };
+    const solidShape = p.solidShape || (p.solid && hebrewToSolidKey[p.solid]) || shape || null;
+    if (!solidShape) return null;
     return { kind: "solid_identify", solidShape, mode: "identify" };
   }
 
@@ -315,6 +325,8 @@ export function getGeometryDiagramSpec(question, options = {}) {
     }
     return null;
   }
+
+  if (p.kind === "tiling_count") return null;
 
   if (topic === "tiling" || p.kind === "tiling" || p.kind === "concept_tiling") {
     const shapeHe = String(p.shape || "");
