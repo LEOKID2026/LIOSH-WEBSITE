@@ -13,6 +13,7 @@ import {
   SC_NAV_SCHOOL_INBOX_PARENT,
 } from "../../lib/school-portal/school-communication.he";
 import { formatDateHe } from "../../lib/teacher-portal/teacher-ui.he.js";
+import { formatParentReportSubjectHe } from "../../utils/parent-report-language/parent-report-display-labels.he.js";
 
 async function fetchGuardianMe() {
   const res = await fetch("/api/guardian/me", {
@@ -258,7 +259,7 @@ export default function ParentTeacherCodeReport({
                 <ul className="text-sm space-y-2 mb-3">
                   {miniReport.subjectSummary.map((s) => (
                     <li key={s.subjectKey} className="flex justify-between gap-2">
-                      <span>{s.subjectKey}</span>
+                      <span>{formatParentReportSubjectHe(s.subjectKey)}</span>
                       <span className="text-white/60">
                         {Math.round((s.accuracy || 0) * 100)}% · {s.answers} תשובות
                       </span>

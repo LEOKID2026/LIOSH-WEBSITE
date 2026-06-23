@@ -264,6 +264,8 @@ export default function HebrewMaster() {
   const progressStringRef = useRef("");
   /** עדכני אל handleAnswer (משוב שגוי) כדי להציג תשובה נכונה מנוקדת כשה map כבר הגיע */
   const niqqudByIdRef = useRef({});
+  /** cache ניקוד ברמת session: text → vocalized — שומר ניקוד שנטען מ-API גם אם ה-API נכשל אחר כך */
+  const niqqudSessionCacheRef = useRef(new Map());
   const audioBuild1CounterRef = useRef(0);
   const currentQuestionRef = useRef(null);
   const bookPracticePresetRef = useRef(null);
@@ -1122,13 +1124,25 @@ export default function HebrewMaster() {
 
     const q = currentQuestion;
     const entries = [];
+    const sessionCache = niqqudSessionCacheRef.current;
+    const preMap = {};
     const pushIf = (id, text) => {
       const s = String(text ?? "").trim();
       if (!s) return;
       if (!hebrewScriptLikely(s)) return;
+      // אם הטקסט המקורי כבר מנוקד — השתמש בו ישירות כ-fallback מנוקד
+      if (textAlreadyHasNiqqud(s)) {
+        preMap[id] = s;
+      }
       const stripped = stripHebrewNiqqudMarks(s).trim();
       if (!stripped) return;
       if (!hebrewScriptLikely(stripped)) return;
+      // אם הטקסט נמצא ב-session cache — השתמש בו ישירות
+      const cached = sessionCache.get(stripped);
+      if (cached) {
+        preMap[id] = cached;
+        return;
+      }
       entries.push({ id, text: stripped });
     };
 
@@ -1141,7 +1155,14 @@ export default function HebrewMaster() {
       });
     }
 
-    if (entries.length === 0) return;
+    // אם כל הטקסטים נמצאו ב-cache או כבר מנוקדים — אפשר להציג מיד בלי API
+    if (entries.length === 0) {
+      if (Object.keys(preMap).length > 0) setNiqqudById(preMap);
+      return;
+    }
+
+    // הצגה מהירה של מה שכבר ידוע (מ-cache / pre-vocalized) תוך המתנה ל-API
+    if (Object.keys(preMap).length > 0) setNiqqudById(preMap);
 
     const ac = new AbortController();
     let cancelled = false;
@@ -1214,10 +1235,18 @@ export default function HebrewMaster() {
                 map[id] = stripNiqqudInsideQuotedHebrewWordSpans(map[id]);
             }
           }
-          setNiqqudById(map);
+          // שמירת תוצאות ה-API ב-session cache לשימוש עתידי בלי API
+          for (const { id, text } of entries) {
+            const vocalized = map[id];
+            if (vocalized) sessionCache.set(text, vocalized);
+          }
+          setNiqqudById({ ...preMap, ...map });
         } catch (e) {
           if (e?.name === "AbortError") return;
-          if (!cancelled) setNiqqudById({});
+          if (!cancelled) {
+            // כשל API — השתמש ב-preMap (cache + pre-vocalized) במקום למחוק את הניקוד
+            setNiqqudById(preMap);
+          }
         }
       })();
     }, 60);

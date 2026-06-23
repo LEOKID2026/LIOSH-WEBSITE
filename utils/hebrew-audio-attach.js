@@ -43,8 +43,14 @@ export function attachHebrewAudioToQuestion(question, ctx) {
   const gNum = parseInt(g.slice(1), 10);
 
   if (question.answerMode === "typing") return false;
-  if (!Array.isArray(question.answers) || question.answers.length < 2) return false;
-  if (!question.correctAnswer) return false;
+  // Support both `answers` (self-practice format) and `choices` (activity/stripped format)
+  const optionsArr = Array.isArray(question.answers) ? question.answers
+    : Array.isArray(question.choices) ? question.choices : null;
+  if (!optionsArr || optionsArr.length < 2) return false;
+  // correctAnswer is only used for recording modes (guided_recording etc.) which are G3+;
+  // G1/G2 never gets a recording mode so we can proceed without it.
+  const lowerGradeCheck = gNum <= 2;
+  if (!lowerGradeCheck && !question.correctAnswer) return false;
 
   const seq = Math.max(0, Number(ctx.sequenceIndex) || 0);
   const lowerGrade = gNum <= 2;
