@@ -9,7 +9,7 @@
 | **subject** | math |
 | **grade** | g5 |
 | **page_type** | placeholder |
-| **approval_status** | draft |
+| **approval_status** | launch_ready |
 | **title_hebrew** | ספר בהכנה |
 
 ---
