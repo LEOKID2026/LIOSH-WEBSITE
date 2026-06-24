@@ -4,25 +4,24 @@
  *
  * Never stops on ISSUES_FOUND / BLOCKED / exit 1|2 from a single harness run.
  *
- * Usage (full night):
- *   npx next dev -p 3002 -H 127.0.0.1
- *   $env:PLAYWRIGHT_BASE_URL="http://127.0.0.1:3002"
+ * Usage (full night — wrapper owns dev on isolated port 3100):
+ *   $env:VISUAL_QA_DEEP_PORT="3100"
  *   $env:VISUAL_QA_SAMPLES_PER_GRADE="50"
  *   $env:VISUAL_QA_DEEP_ROUNDS="2"
  *   node scripts/qa/run-visual-qa-deep-nightly.mjs
  *
- * Smoke:
- *   $env:VISUAL_QA_SAMPLES_PER_GRADE="2"
- *   $env:VISUAL_QA_DEEP_ROUNDS="1"
- *   node scripts/qa/run-visual-qa-deep-nightly.mjs
+ * Do NOT point Deep QA at port 3002 (manual dev). Wrapper starts:
+ *   npx next dev -p <VISUAL_QA_DEEP_PORT> -H 127.0.0.1
  *
  * Env:
+ *   VISUAL_QA_DEEP_PORT           default 3100, fallback 3050 if busy (non-QA)
  *   VISUAL_QA_DEEP_SUBJECTS       default geometry,math,hebrew,english
  *   VISUAL_QA_DEEP_ROUNDS         default 2
  *   VISUAL_QA_SAMPLES_PER_GRADE    default 50 (passed to harness)
  *   VISUAL_QA_RUN_TIMEOUT_MINUTES default 75 per harness run
  *   VISUAL_QA_DEEP_RUN_ID         optional override for reports/visual-qa-deep/<runId>/
- *   PLAYWRIGHT_BASE_URL / VISUAL_QA_BASE_URL
+ *   VISUAL_QA_DEEP_RESTART_EACH_RUN default true — fresh dev before each harness run
+ *   PLAYWRIGHT_BASE_URL           derived from VISUAL_QA_DEEP_PORT (not 3002)
  */
 
 import { spawn, exec } from "node:child_process";
@@ -40,6 +39,11 @@ const REPO_ROOT = getRepoRoot();
 const SCRIPT_DIR = join(REPO_ROOT, "scripts", "qa");
 const HARNESS_PATH = join(SCRIPT_DIR, "visual-qa-harness.mjs");
 const DEEP_LOCK_PATH = join(REPO_ROOT, "reports", "visual-qa-deep", ".deep-run.lock");
+const DEEP_DEV_STATE_PATH = join(REPO_ROOT, "reports", "visual-qa-deep", ".deep-dev-server.json");
+const DEFAULT_DEEP_PORT = 3100;
+const FALLBACK_DEEP_PORT = 3050;
+const DEEP_DEV_HOST = "127.0.0.1";
+const BLOCKED_MANUAL_DEV_PORT = 3002;
 
 const DEFAULT_SUBJECTS = ["geometry", "math", "hebrew", "english"];
 const COHORTS = [
@@ -65,7 +69,216 @@ const VISUAL_QA_ENV_KEYS = [
   "VISUAL_QA_DEEP_PROGRESS_MINUTES",
   "VISUAL_QA_DEEP_HEALTH_RETRIES",
   "VISUAL_QA_DEEP_COOLDOWN_SEC",
+  "VISUAL_QA_DEEP_PORT",
+  "VISUAL_QA_LOGIN_TIMEOUT_MS",
 ];
+
+async function readDeepDevState() {
+  try {
+    return JSON.parse(await readFile(DEEP_DEV_STATE_PATH, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+async function writeDeepDevState(state) {
+  await mkdir(join(REPO_ROOT, "reports", "visual-qa-deep"), { recursive: true });
+  await writeFile(DEEP_DEV_STATE_PATH, `${JSON.stringify(state, null, 2)}\n`, "utf8");
+}
+
+async function clearDeepDevState() {
+  try {
+    await unlink(DEEP_DEV_STATE_PATH);
+  } catch {
+    /* ignore */
+  }
+}
+
+async function getProcessCommandLine(pid) {
+  if (!pid) return "";
+  try {
+    if (process.platform === "win32") {
+      const { stdout } = await execAsync(
+        `powershell -NoProfile -Command "(Get-CimInstance Win32_Process -Filter \\"ProcessId=${pid}\\").CommandLine"`,
+        { windowsHide: true }
+      );
+      return String(stdout || "").trim();
+    }
+    const { stdout } = await execAsync(`ps -p ${pid} -o args=`, { windowsHide: true });
+    return String(stdout || "").trim();
+  } catch {
+    return "";
+  }
+}
+
+function isQaNextDevCommand(cmd, port) {
+  if (!cmd) return false;
+  const lower = cmd.toLowerCase();
+  if (!lower.includes("next") || !lower.includes("dev")) return false;
+  const portStr = String(port);
+  if (!new RegExp(`-p\\s*${portStr}\\b|-p${portStr}\\b`).test(lower)) return false;
+  const repoLower = REPO_ROOT.toLowerCase();
+  return lower.includes(repoLower) || lower.includes("liosh-web-try");
+}
+
+async function listListeningPidsOnPort(port) {
+  const portNum = String(port);
+  const pids = new Set();
+  if (process.platform === "win32") {
+    try {
+      const { stdout } = await execAsync(`netstat -ano | findstr :${portNum}`, { windowsHide: true });
+      for (const line of stdout.split(/\r?\n/)) {
+        const trimmed = line.trim();
+        if (!trimmed.includes("LISTENING")) continue;
+        const parts = trimmed.split(/\s+/);
+        const pid = Number(parts[parts.length - 1]);
+        if (pid > 0) pids.add(pid);
+      }
+    } catch {
+      /* no listeners */
+    }
+  } else {
+    try {
+      const { stdout } = await execAsync(`lsof -tiTCP:${portNum} -sTCP:LISTEN`, { windowsHide: true });
+      for (const pid of stdout.split(/\s+/)) {
+        const n = Number(pid);
+        if (n > 0) pids.add(n);
+      }
+    } catch {
+      /* ignore */
+    }
+  }
+  return [...pids];
+}
+
+async function killProcessByPid(pid) {
+  if (!pid || pid <= 0) return;
+  try {
+    if (process.platform === "win32") {
+      await execAsync(`taskkill /PID ${pid} /T /F`, { windowsHide: true });
+    } else {
+      process.kill(pid, "SIGKILL");
+    }
+  } catch {
+    /* ignore */
+  }
+}
+
+async function killQaOwnedDevOnPort(port) {
+  const stale = await readDeepDevState();
+  if (stale?.port === port && stale?.pid) {
+    if (await isPidAlive(stale.pid)) {
+      log(`  stopping prior Deep QA dev server pid=${stale.pid} on port ${port}`);
+      await killProcessByPid(stale.pid);
+    }
+    await clearDeepDevState();
+    await sleep(2000);
+  }
+
+  for (const pid of await listListeningPidsOnPort(port)) {
+    const cmd = await getProcessCommandLine(pid);
+    if (isQaNextDevCommand(cmd, port)) {
+      log(`  stopping stale QA next dev pid=${pid} on port ${port}`);
+      await killProcessByPid(pid);
+    }
+  }
+  await sleep(2000);
+}
+
+async function isPortFree(port) {
+  return (await listListeningPidsOnPort(port)).length === 0;
+}
+
+async function resolveDeepPort(preferredPort) {
+  let port = preferredPort;
+  const listeners = await listListeningPidsOnPort(port);
+  if (listeners.length === 0) return port;
+
+  let qaKillable = false;
+  for (const pid of listeners) {
+    const cmd = await getProcessCommandLine(pid);
+    const stale = await readDeepDevState();
+    if (isQaNextDevCommand(cmd, port) || stale?.pid === pid) {
+      qaKillable = true;
+    }
+  }
+
+  if (qaKillable) {
+    await killQaOwnedDevOnPort(port);
+    if (await isPortFree(port)) return port;
+  }
+
+  if (port === DEFAULT_DEEP_PORT) {
+    log(
+      `Port ${DEFAULT_DEEP_PORT} in use by non-QA process — trying fallback ${FALLBACK_DEEP_PORT}`
+    );
+    port = FALLBACK_DEEP_PORT;
+    const fbListeners = await listListeningPidsOnPort(port);
+    if (fbListeners.length === 0) return port;
+    let fbQa = false;
+    for (const pid of fbListeners) {
+      const cmd = await getProcessCommandLine(pid);
+      if (isQaNextDevCommand(cmd, port)) fbQa = true;
+    }
+    if (fbQa) {
+      await killQaOwnedDevOnPort(port);
+      if (await isPortFree(port)) return port;
+    }
+    throw new Error(
+      `Deep QA ports ${DEFAULT_DEEP_PORT} and ${FALLBACK_DEEP_PORT} are busy. Free one or set VISUAL_QA_DEEP_PORT.`
+    );
+  }
+
+  throw new Error(`Deep QA port ${port} is in use by a non-QA process.`);
+}
+
+async function spawnOwnedDevServer(cfg) {
+  const port = cfg.port;
+  const host = cfg.devHost;
+  log(`Starting isolated Next dev for Deep QA: http://${host}:${port}`);
+  await killQaOwnedDevOnPort(port);
+
+  const child = spawn(`npx next dev -p ${port} -H ${host}`, {
+    cwd: REPO_ROOT,
+    detached: true,
+    stdio: "ignore",
+    shell: true,
+    windowsHide: true,
+  });
+  child.unref();
+
+  await sleep(8000);
+  await warmUpLoginRoute(cfg.baseUrl, { attempts: 12 });
+
+  let listenPid = null;
+  for (let i = 0; i < 20; i += 1) {
+    const pids = await listListeningPidsOnPort(port);
+    if (pids.length > 0) {
+      listenPid = pids[0];
+      break;
+    }
+    await sleep(2000);
+  }
+
+  await writeDeepDevState({
+    pid: listenPid ?? child.pid ?? null,
+    spawnPid: child.pid ?? null,
+    port,
+    host,
+    baseUrl: cfg.baseUrl,
+    runId: cfg.runId,
+    startedAt: new Date().toISOString(),
+    ownedBy: "visual-qa-deep",
+  });
+
+  return waitForInfraReady(cfg.baseUrl, cfg, { purpose: "startup" });
+}
+
+async function stopOwnedDevServer(cfg) {
+  if (!cfg?.ownsDevServer) return;
+  log(`Stopping Deep QA dev server on port ${cfg.port}…`);
+  await killQaOwnedDevOnPort(cfg.port);
+}
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -81,40 +294,15 @@ async function warmUpLoginRoute(baseUrl, { attempts = 3 } = {}) {
 }
 
 async function killDevServerOnPort(port) {
-  const portNum = String(port || "3002");
-  if (process.platform === "win32") {
-    try {
-      const { stdout } = await execAsync(`netstat -ano | findstr :${portNum}`, { windowsHide: true });
-      const pids = new Set();
-      for (const line of stdout.split(/\r?\n/)) {
-        const trimmed = line.trim();
-        if (!trimmed || !/(LISTENING|ESTABLISHED)/.test(trimmed)) continue;
-        const parts = trimmed.split(/\s+/);
-        const pid = Number(parts[parts.length - 1]);
-        if (pid > 0) pids.add(pid);
-      }
-      for (const pid of pids) {
-        await execAsync(`taskkill /PID ${pid} /T /F`, { windowsHide: true }).catch(() => {});
-      }
-    } catch {
-      /* no listeners */
-    }
-  } else {
-    try {
-      await execAsync(`lsof -ti:${portNum} | xargs -r kill -9`, { shell: true });
-    } catch {
-      /* ignore */
-    }
-  }
-  await sleep(3000);
+  const portNum = String(port || DEFAULT_DEEP_PORT);
+  await killQaOwnedDevOnPort(Number(portNum));
 }
 
 async function restartDevServer(cfg) {
-  const parsed = new URL(cfg.baseUrl);
-  const port = parsed.port || "3002";
-  const host = parsed.hostname || "127.0.0.1";
+  const port = cfg.port || new URL(cfg.baseUrl).port || String(DEFAULT_DEEP_PORT);
+  const host = cfg.devHost || new URL(cfg.baseUrl).hostname || DEEP_DEV_HOST;
   log(`  restarting Next dev on ${host}:${port}…`);
-  await killDevServerOnPort(port);
+  await killQaOwnedDevOnPort(port);
   const child = spawn(`npx next dev -p ${port} -H ${host}`, {
     cwd: REPO_ROOT,
     detached: true,
@@ -125,6 +313,27 @@ async function restartDevServer(cfg) {
   child.unref();
   await sleep(10_000);
   await warmUpLoginRoute(cfg.baseUrl, { attempts: 10 });
+
+  let listenPid = null;
+  for (let i = 0; i < 15; i += 1) {
+    const pids = await listListeningPidsOnPort(port);
+    if (pids.length > 0) {
+      listenPid = pids[0];
+      break;
+    }
+    await sleep(2000);
+  }
+  await writeDeepDevState({
+    pid: listenPid ?? child.pid ?? null,
+    spawnPid: child.pid ?? null,
+    port: Number(port),
+    host,
+    baseUrl: cfg.baseUrl,
+    runId: cfg.runId,
+    restartedAt: new Date().toISOString(),
+    ownedBy: "visual-qa-deep",
+  });
+
   return waitForInfraReady(cfg.baseUrl, cfg, { purpose: "startup" });
 }
 
@@ -407,8 +616,18 @@ function parseDeepEnv() {
     1,
     Number(process.env.VISUAL_QA_RUN_TIMEOUT_MINUTES || 75) || 75
   );
-  const baseUrl =
-    String(process.env.PLAYWRIGHT_BASE_URL || process.env.VISUAL_QA_BASE_URL || "http://127.0.0.1:3002").trim();
+  const preferredPort = Math.max(
+    1024,
+    Number(process.env.VISUAL_QA_DEEP_PORT || DEFAULT_DEEP_PORT) || DEFAULT_DEEP_PORT
+  );
+  const explicitBase = String(
+    process.env.PLAYWRIGHT_BASE_URL || process.env.VISUAL_QA_BASE_URL || ""
+  ).trim();
+  if (explicitBase.includes(`:${BLOCKED_MANUAL_DEV_PORT}`)) {
+    log(
+      `NOTE: Deep QA ignores manual dev port ${BLOCKED_MANUAL_DEV_PORT} — using isolated VISUAL_QA_DEEP_PORT instead.`
+    );
+  }
   const runId = String(process.env.VISUAL_QA_DEEP_RUN_ID || makeRunId()).trim();
   const progressIntervalMinutes = Math.max(
     1,
@@ -451,13 +670,22 @@ function parseDeepEnv() {
   const autoRestartDev =
     process.env.VISUAL_QA_DEEP_AUTO_RESTART_DEV !== "0" &&
     process.env.VISUAL_QA_DEEP_AUTO_RESTART_DEV !== "false";
+  const restartEachRun =
+    process.env.VISUAL_QA_DEEP_RESTART_EACH_RUN !== "0" &&
+    process.env.VISUAL_QA_DEEP_RESTART_EACH_RUN !== "false";
+  const ownsDevServer =
+    process.env.VISUAL_QA_DEEP_MANAGE_DEV !== "0" &&
+    process.env.VISUAL_QA_DEEP_MANAGE_DEV !== "false";
 
   return {
     subjects,
     rounds,
     samplesPerGrade,
     runTimeoutMinutes,
-    baseUrl,
+    preferredPort,
+    devHost: DEEP_DEV_HOST,
+    baseUrl: null,
+    port: null,
     runId,
     progressIntervalMs: progressIntervalMinutes * 60_000,
     runTimeoutMs: runTimeoutMinutes * 60_000,
@@ -473,9 +701,17 @@ function parseDeepEnv() {
       Number(process.env.VISUAL_QA_LOGIN_TIMEOUT_MS || 60_000) || 60_000
     ),
     autoRestartDev,
+    restartEachRun,
+    ownsDevServer,
     diagnostic,
     autoFullAfterDiagnostic,
   };
+}
+
+async function finalizeDeepConfig(cfg) {
+  cfg.port = await resolveDeepPort(cfg.preferredPort);
+  cfg.baseUrl = `http://${cfg.devHost}:${cfg.port}`;
+  return cfg;
 }
 
 function roundDirName(round) {
@@ -700,7 +936,14 @@ function renderSummaryText(summary) {
 }
 
 async function main() {
-  const cfg = parseDeepEnv();
+  let cfg = parseDeepEnv();
+  try {
+    cfg = await finalizeDeepConfig(cfg);
+  } catch (error) {
+    log(`RUNNER_FAILED: ${error.message}`);
+    process.exit(3);
+  }
+
   const deepRoot = join(REPO_ROOT, "reports", "visual-qa-deep", cfg.runId);
   await mkdir(deepRoot, { recursive: true });
 
@@ -712,15 +955,23 @@ async function main() {
     process.exit(3);
   }
 
-  const startupHealth = await warmUpLoginRoute(cfg.baseUrl, { attempts: 4 }).then(() =>
-    waitForInfraReady(cfg.baseUrl, cfg, { purpose: "startup" })
-  );
+  let startupHealth;
+  if (cfg.ownsDevServer) {
+    startupHealth = await spawnOwnedDevServer(cfg);
+  } else {
+    startupHealth = await warmUpLoginRoute(cfg.baseUrl, { attempts: 4 }).then(() =>
+      waitForInfraReady(cfg.baseUrl, cfg, { purpose: "startup" })
+    );
+  }
   if (!startupHealth.ok) {
     log("RUNNER_FAILED: app/login UI not ready before deep run started");
     log(JSON.stringify(startupHealth.attempts, null, 2));
     await releaseDeepRunLock(cfg.runId);
+    if (cfg.ownsDevServer) await stopOwnedDevServer(cfg);
     process.exit(3);
   }
+
+  log(`Deep QA isolated dev: ${cfg.baseUrl} (port ${cfg.port})`);
 
   const startedAt = Date.now();
   const startedAtIso = new Date(startedAt).toISOString();
@@ -740,6 +991,10 @@ async function main() {
     totalRuns,
     harnessPath: relative(REPO_ROOT, HARNESS_PATH),
     lockPath: relative(REPO_ROOT, DEEP_LOCK_PATH),
+    deepPort: cfg.port,
+    devHost: cfg.devHost,
+    ownsDevServer: cfg.ownsDevServer,
+    restartEachRun: cfg.restartEachRun,
     startupHealth: startupHealth.attempts,
   };
 
@@ -786,7 +1041,12 @@ async function main() {
     currentRound = round;
     for (const subject of cfg.subjects) {
       currentSubject = subject;
-      if (cfg.autoRestartDev && lastSubject && lastSubject !== subject) {
+      if (
+        cfg.autoRestartDev &&
+        !cfg.restartEachRun &&
+        lastSubject &&
+        lastSubject !== subject
+      ) {
         log(`  subject boundary ${lastSubject} → ${subject}: refreshing dev server…`);
         const boundary = await restartDevServer(cfg);
         log(`  subject boundary refresh: ok=${boundary.ok}`);
@@ -816,6 +1076,12 @@ async function main() {
         log(
           `[${completedRuns + 1}/${totalRuns}] round ${round} ${subject} ${cohort.id} seed=${sampleSeed}`
         );
+
+        if (cfg.restartEachRun && completedRuns > 0 && cfg.ownsDevServer) {
+          log(`  pre-run dev refresh (${completedRuns + 1}/${totalRuns})…`);
+          const refresh = await restartDevServer(cfg);
+          log(`  pre-run dev refresh: ok=${refresh.ok}`);
+        }
 
         let preRunHealth = await waitForInfraReady(cfg.baseUrl, cfg, { purpose: "pre-run" });
         if (!preRunHealth.ok && cfg.autoRestartDev) {
@@ -1186,21 +1452,29 @@ async function main() {
 
   await releaseDeepRunLock(cfg.runId);
 
-  if (
+  const willChainFull =
     cfg.diagnostic &&
     process.env.VISUAL_QA_DEEP_CHAIN_FULL === "1" &&
     diagOk &&
-    !runnerFailures
-  ) {
+    !runnerFailures;
+
+  if (!willChainFull && cfg.ownsDevServer) {
+    await stopOwnedDevServer(cfg);
+  }
+
+  if (willChainFull) {
     log("");
     log("Diagnostic passed — chaining full deep run (50/grade × 2 rounds)…");
+    if (cfg.ownsDevServer) await stopOwnedDevServer(cfg);
     const fullRunId = makeRunId();
     const fullEnv = { ...process.env };
     for (const key of VISUAL_QA_ENV_KEYS) delete fullEnv[key];
     delete fullEnv.VISUAL_QA_DEEP_DIAGNOSTIC;
     delete fullEnv.VISUAL_QA_DEEP_CHAIN_FULL;
     delete fullEnv.VISUAL_QA_DEEP_AUTO_FULL;
+    fullEnv.VISUAL_QA_DEEP_PORT = String(cfg.port);
     fullEnv.PLAYWRIGHT_BASE_URL = cfg.baseUrl;
+    fullEnv.VISUAL_QA_BASE_URL = cfg.baseUrl;
     fullEnv.VISUAL_QA_DEEP_SUBJECTS = cfg.subjects.join(",");
     fullEnv.VISUAL_QA_SAMPLES_PER_GRADE = "50";
     fullEnv.VISUAL_QA_DEEP_ROUNDS = "2";
@@ -1208,6 +1482,7 @@ async function main() {
     fullEnv.VISUAL_QA_DEEP_RUN_ID = fullRunId;
     fullEnv.VISUAL_QA_DEEP_COOLDOWN_SEC = "30";
     fullEnv.VISUAL_QA_DEEP_RECOVERY_RETRIES = "8";
+    fullEnv.VISUAL_QA_LOGIN_TIMEOUT_MS = String(cfg.loginTimeoutMs);
 
     await new Promise((resolve, reject) => {
       const child = spawn(process.execPath, [SELF_PATH], {
@@ -1234,6 +1509,8 @@ main().catch(async (error) => {
   try {
     const runId = String(process.env.VISUAL_QA_DEEP_RUN_ID || "").trim();
     if (runId) await releaseDeepRunLock(runId);
+    const port = Number(process.env.VISUAL_QA_DEEP_PORT || DEFAULT_DEEP_PORT);
+    await killQaOwnedDevOnPort(port);
   } catch {
     /* ignore */
   }

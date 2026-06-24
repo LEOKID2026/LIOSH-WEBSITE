@@ -10,10 +10,10 @@ import {
   SLIDING_DIFFICULTY_SETTINGS,
 } from "../../../lib/solo-games/picture-puzzle-config.js";
 import {
-  applyPlacement,
+  applyFreeMoveToSlot,
   createPlacementBoard,
   isPlacementComplete,
-  removeTrayPiece,
+  returnPieceToTray,
 } from "../../../lib/solo-games/picture-puzzle-placement.js";
 import MleoPicturePuzzlePlacementPlay from "./MleoPicturePuzzlePlacementPlay.jsx";
 import MleoPicturePuzzleSlidingPlay, {
@@ -96,7 +96,6 @@ export default function MleoPicturePuzzleEngine({
   const playStartedAtRef = useRef(null);
   const movesRef = useRef(0);
   const hintTimerRef = useRef(null);
-  const feedbackTimerRef = useRef(null);
   const previewTouchStartX = useRef(null);
 
   const [difficulty, setDifficulty] = useState(initialDifficulty);
@@ -115,13 +114,10 @@ export default function MleoPicturePuzzleEngine({
   const [blockedMsg, setBlockedMsg] = useState("");
 
   // placement state
+  /** @type {[null | { pieceId: number, source: "tray" | "board", sourceSlotId: number | null }, Function]} */
+  const [selectedPiece, setSelectedPiece] = useState(null);
   const [boardSlots, setBoardSlots] = useState([]);
   const [trayPieces, setTrayPieces] = useState([]);
-  const [fixedIndices, setFixedIndices] = useState([]);
-  const [selectedPieceId, setSelectedPieceId] = useState(null);
-  const [feedbackMsg, setFeedbackMsg] = useState("");
-  const [successSlotId, setSuccessSlotId] = useState(null);
-  const [wrongSlotId, setWrongSlotId] = useState(null);
 
   const { SG, pageBgStyle } = useSoloGameShellUi();
 
@@ -137,7 +133,6 @@ export default function MleoPicturePuzzleEngine({
   useEffect(
     () => () => {
       if (hintTimerRef.current) clearTimeout(hintTimerRef.current);
-      if (feedbackTimerRef.current) clearTimeout(feedbackTimerRef.current);
     },
     []
   );
@@ -251,16 +246,15 @@ export default function MleoPicturePuzzleEngine({
     hintTimerRef.current = setTimeout(() => setShowHintPreview(false), 3000);
   };
 
-  const flashFeedback = (msg, slotId, kind) => {
-    setFeedbackMsg(msg);
-    if (kind === "success") setSuccessSlotId(slotId);
-    if (kind === "wrong") setWrongSlotId(slotId);
-    if (feedbackTimerRef.current) clearTimeout(feedbackTimerRef.current);
-    feedbackTimerRef.current = setTimeout(() => {
-      setFeedbackMsg("");
-      setSuccessSlotId(null);
-      setWrongSlotId(null);
-    }, kind === "success" ? 500 : 900);
+  const countMove = () => {
+    movesRef.current += 1;
+    setMoves(movesRef.current);
+  };
+
+  const checkPlacementWin = (slots) => {
+    if (isPlacementComplete(slots)) {
+      endGame(true, timeLeft);
+    }
   };
 
   const startGame = (imageId) => {
@@ -274,23 +268,18 @@ export default function MleoPicturePuzzleEngine({
     setWon(false);
     setShowHintPreview(false);
     setBlockedMsg("");
-    setFeedbackMsg("");
-    setSuccessSlotId(null);
-    setWrongSlotId(null);
-    setSelectedPieceId(null);
+    setSelectedPiece(null);
     setTimeLeft(settings.timeSec);
 
     if (USE_PLACEMENT) {
-      const board = createPlacementBoard(gridSize, placementSettings.holes);
+      const board = createPlacementBoard(gridSize);
       setBoardSlots(board.boardSlots);
       setTrayPieces(board.trayPieces);
-      setFixedIndices(board.fixedIndices);
       setTiles([]);
     } else {
       setTiles(legalShuffle(gridSize, shuffleMoveCount(difficulty)));
       setBoardSlots([]);
       setTrayPieces([]);
-      setFixedIndices([]);
     }
 
     setGameRunning(true);
@@ -337,39 +326,74 @@ export default function MleoPicturePuzzleEngine({
     }
   };
 
-  const handleSelectPiece = (pieceId) => {
+  const handleSelectTrayPiece = (pieceId) => {
     if (!gameRunning || gameOver) return;
-    setSelectedPieceId((prev) => (prev === pieceId ? null : pieceId));
-    setFeedbackMsg("");
+
+    if (selectedPiece?.source === "board") {
+      handleReturnToTray();
+      return;
+    }
+
+    setSelectedPiece((prev) =>
+      prev?.source === "tray" && prev.pieceId === pieceId
+        ? null
+        : { pieceId, source: "tray", sourceSlotId: null }
+    );
   };
 
-  const handlePlaceOnSlot = (slotId, pieceId) => {
+  const handleReturnToTray = () => {
     if (!gameRunning || gameOver) return;
-    const activePiece = pieceId ?? selectedPieceId;
-    if (activePiece == null) {
-      setFeedbackMsg("קודם בחרו חלק מהמגש");
-      window.setTimeout(() => setFeedbackMsg(""), 1200);
+    if (selectedPiece?.source !== "board" || selectedPiece.sourceSlotId == null) return;
+
+    const returned = returnPieceToTray(
+      boardSlots,
+      trayPieces,
+      selectedPiece.sourceSlotId
+    );
+    if (!returned.changed) return;
+
+    countMove();
+    setBoardSlots(returned.boardSlots);
+    setTrayPieces(returned.trayPieces);
+    setSelectedPiece(null);
+  };
+
+  const handleSelectBoardSlot = (slotId) => {
+    if (!gameRunning || gameOver) return;
+
+    const slot = boardSlots.find((s) => s.slotId === slotId);
+    if (!slot) return;
+
+    if (selectedPiece) {
+      const { pieceId, source, sourceSlotId } = selectedPiece;
+      if (source === "board" && sourceSlotId === slotId) {
+        setSelectedPiece(null);
+        return;
+      }
+
+      const result = applyFreeMoveToSlot(
+        boardSlots,
+        trayPieces,
+        slotId,
+        pieceId,
+        source === "board" ? sourceSlotId : null
+      );
+      if (!result.changed) return;
+
+      countMove();
+      setBoardSlots(result.boardSlots);
+      setTrayPieces(result.trayPieces);
+      setSelectedPiece(null);
+      checkPlacementWin(result.boardSlots);
       return;
     }
 
-    const result = applyPlacement(boardSlots, slotId, activePiece);
-    if (!result.ok) return;
-
-    movesRef.current += 1;
-    setMoves(movesRef.current);
-
-    if (!result.correct) {
-      flashFeedback("לא במקום — נסו שוב", slotId, "wrong");
-      return;
-    }
-
-    setBoardSlots(result.boardSlots);
-    setTrayPieces((prev) => removeTrayPiece(prev, activePiece));
-    setSelectedPieceId(null);
-    flashFeedback("מצוין!", slotId, "success");
-
-    if (isPlacementComplete(result.boardSlots)) {
-      endGame(true, timeLeft);
+    if (slot.placedPieceId != null) {
+      setSelectedPiece({
+        pieceId: slot.placedPieceId,
+        source: "board",
+        sourceSlotId: slotId,
+      });
     }
   };
 
@@ -497,7 +521,6 @@ export default function MleoPicturePuzzleEngine({
           puzzleImage={puzzleImage}
           gridSize={gridSize}
           settings={placementSettings}
-          isEasy={isEasy}
           gameRunning={gameRunning}
           gameOver={gameOver}
           won={won}
@@ -505,14 +528,11 @@ export default function MleoPicturePuzzleEngine({
           moves={moves}
           boardSlots={boardSlots}
           trayPieces={trayPieces}
-          fixedIndices={fixedIndices}
-          selectedPieceId={selectedPieceId}
-          feedbackMsg={feedbackMsg}
-          successSlotId={successSlotId}
-          wrongSlotId={wrongSlotId}
+          selectedPiece={selectedPiece}
           showHintPreview={showHintPreview}
-          onSelectPiece={handleSelectPiece}
-          onPlaceOnSlot={handlePlaceOnSlot}
+          onSelectTrayPiece={handleSelectTrayPiece}
+          onSelectBoardSlot={handleSelectBoardSlot}
+          onReturnToTray={handleReturnToTray}
           onTriggerHint={triggerHint}
           computeWinScore={computeWinScore}
         />

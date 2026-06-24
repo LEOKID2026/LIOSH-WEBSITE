@@ -163,3 +163,21 @@ button[aria-disabled="true"],
 a[href][aria-disabled="true"] {
   cursor: not-allowed;
 }
+
+/* Picture puzzle — compact tray pieces on mobile portrait only */
+@media (max-width: 767px) and (orientation: portrait) {
+  .puzzle-tray-portrait .puzzle-tray-grid {
+    grid-template-columns: repeat(auto-fill, 42px);
+    justify-content: center;
+    gap: 4px;
+  }
+
+  .puzzle-tray-portrait .puzzle-tray-piece {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    min-height: 42px;
+    max-width: 42px;
+    flex-shrink: 0;
+  }
+}
