@@ -8,19 +8,43 @@ import {
   pickRandomItem,
 } from "./recycling-factory-data.js";
 import { buildRecyclingFactoryMetrics } from "./recycling-factory-metrics.js";
+import RecyclingItemVisual from "./RecyclingItemVisual.jsx";
 import styles from "./RecyclingFactoryPrototype.module.css";
 
 /** @typedef {import('./recycling-factory-data.js').DifficultyId} DifficultyId */
 /** @typedef {import('./recycling-factory-data.js').BinId} BinId */
+/** @typedef {import('./recycling-factory-data.js').RecyclingItem} RecyclingItem */
 
 /**
- * @typedef {{ uid: string, item: import('./recycling-factory-data.js').ITEMS[0], progress: number, status: 'moving'|'success'|'shake', spawnTime: number }} BeltItem
+ * @typedef {{ uid: string, item: RecyclingItem, progress: number, status: 'moving'|'success'|'shake', spawnTime: number }} BeltItem
  */
+
+const DRAG_THRESHOLD_PX = 10;
 
 let uidCounter = 0;
 function nextUid() {
   uidCounter += 1;
   return `belt-${uidCounter}`;
+}
+
+/** @param {number} x @param {number} y */
+function findBinIdAtPoint(x, y) {
+  const ghost = document.querySelector('[data-drag-ghost="true"]');
+  if (ghost) ghost.style.visibility = "hidden";
+  const hit = document.elementFromPoint(x, y);
+  if (ghost) ghost.style.visibility = "visible";
+
+  const fromPoint = hit?.closest("[data-bin-id]")?.getAttribute("data-bin-id");
+  if (fromPoint) return /** @type {BinId} */ (fromPoint);
+
+  for (const bin of document.querySelectorAll("[data-bin-id]")) {
+    const rect = bin.getBoundingClientRect();
+    if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+      const id = bin.getAttribute("data-bin-id");
+      if (id) return /** @type {BinId} */ (id);
+    }
+  }
+  return null;
 }
 
 /**
@@ -46,9 +70,9 @@ function RecyclingBin({ bin, selected, highlight, onClick }) {
 }
 
 /**
- * @param {{ item: BeltItem, selected: boolean, dragging: boolean, onPointerDown: (e: React.PointerEvent) => void, onPointerMove: (e: React.PointerEvent) => void, onPointerUp: (e: React.PointerEvent) => void, onPointerCancel: (e: React.PointerEvent) => void, onClick: () => void }} props
+ * @param {{ item: BeltItem, selected: boolean, dragging: boolean, onPointerDown: (e: React.PointerEvent) => void, onClick: () => void }} props
  */
-function BeltItemView({ item, selected, dragging, onPointerDown, onPointerMove, onPointerUp, onPointerCancel, onClick }) {
+function BeltItemView({ item, selected, dragging, onPointerDown, onClick }) {
   const leftPct = `${Math.min(96, Math.max(4, item.progress * 100))}%`;
   const className = [
     styles.beltItem,
@@ -65,19 +89,15 @@ function BeltItemView({ item, selected, dragging, onPointerDown, onPointerMove, 
   return (
     <div
       className={className}
-      style={{ left: leftPct }}
+      style={{ left: leftPct, touchAction: "none" }}
       onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove}
-      onPointerUp={onPointerUp}
-      onPointerCancel={onPointerCancel}
       onClick={onClick}
       role="button"
       tabIndex={0}
       aria-label={`פריט ${item.item.name}`}
     >
       <div className={styles.itemCard}>
-        <span className={styles.itemEmoji}>{item.item.emoji}</span>
-        <span className={styles.itemName}>{item.item.name}</span>
+        <RecyclingItemVisual item={item.item} />
       </div>
     </div>
   );
@@ -103,10 +123,17 @@ export default function RecyclingFactoryPrototype() {
   }));
   const [highlightBin, setHighlightBin] = useState(/** @type {BinId|null} */ (null));
   const [startTime, setStartTime] = useState(0);
-  const [dragGhost, setDragGhost] = useState(/** @type {{ emoji: string, name: string, x: number, y: number }|null} */ (null));
+  const [dragGhost, setDragGhost] = useState(
+    /** @type {{ item: RecyclingItem, x: number, y: number }|null} */ (null),
+  );
   const [draggingUid, setDraggingUid] = useState(/** @type {string|null} */ (null));
 
-  const dragRef = useRef(/** @type {{ uid: string, pointerId: number, moved: boolean, startX: number, startY: number }|null} */ (null));
+  const dragRef = useRef(
+    /** @type {{ uid: string, pointerId: number, moved: boolean, active: boolean, startX: number, startY: number }|null} */ (null),
+  );
+  const draggingUidRef = useRef(/** @type {string|null} */ (null));
+  const suppressClickRef = useRef(false);
+  const sortToBinRef = useRef(/** @type {(uid: string, binId: BinId) => void} */ (() => {}));
   const phaseRef = useRef(phase);
   const difficultyRef = useRef(difficulty);
   const processingRef = useRef(new Set());
@@ -120,6 +147,7 @@ export default function RecyclingFactoryPrototype() {
   beltItemsRef.current = beltItems;
   sortedCountRef.current = sortedCount;
   mistakesRef.current = mistakes;
+  draggingUidRef.current = draggingUid;
 
   const diffConfig = DIFFICULTIES[difficulty];
   const activeBins = useMemo(
@@ -302,6 +330,8 @@ export default function RecyclingFactoryPrototype() {
     [handleCorrect, handleWrong],
   );
 
+  sortToBinRef.current = sortToBin;
+
   const resetGame = useCallback(() => {
     processingRef.current.clear();
     setPhase("intro");
@@ -320,6 +350,7 @@ export default function RecyclingFactoryPrototype() {
     setDragGhost(null);
     dragRef.current = null;
     setDraggingUid(null);
+    suppressClickRef.current = false;
   }, []);
 
   const startGame = useCallback(() => {
@@ -356,6 +387,7 @@ export default function RecyclingFactoryPrototype() {
         const next = prev
           .map((bi) => {
             if (bi.status !== "moving") return bi;
+            if (bi.uid === draggingUidRef.current) return bi;
             const prog = bi.progress + dt / duration;
             if (prog >= 1) {
               missedUids.push(bi.uid);
@@ -400,69 +432,93 @@ export default function RecyclingFactoryPrototype() {
 
   const onItemPointerDown = useCallback((e, uid) => {
     if (phaseRef.current !== "play") return;
-    e.currentTarget.setPointerCapture(e.pointerId);
+    if (e.button !== 0 && e.pointerType === "mouse") return;
+
+    const beltItem = beltItemsRef.current.find((b) => b.uid === uid);
+    if (!beltItem || beltItem.status !== "moving") return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
     dragRef.current = {
       uid,
       pointerId: e.pointerId,
       moved: false,
+      active: true,
       startX: e.clientX,
       startY: e.clientY,
     };
-    const item = beltItemsRef.current.find((b) => b.uid === uid);
-    if (item) {
-      setDraggingUid(uid);
-      setDragGhost({ emoji: item.item.emoji, name: item.item.name, x: e.clientX, y: e.clientY });
-    }
+    setDraggingUid(uid);
+    setDragGhost({ item: beltItem.item, x: e.clientX, y: e.clientY });
   }, []);
 
-  const onItemPointerMove = useCallback((e) => {
-    const drag = dragRef.current;
-    if (!drag || drag.pointerId !== e.pointerId) return;
-    const dx = e.clientX - drag.startX;
-    const dy = e.clientY - drag.startY;
-    if (Math.hypot(dx, dy) > 8) drag.moved = true;
-    setDragGhost((g) => (g ? { ...g, x: e.clientX, y: e.clientY } : null));
-  }, []);
+  useEffect(() => {
+    if (!draggingUid) return undefined;
 
-  const finishPointer = useCallback(
-    (e) => {
+    const onMove = (e) => {
       const drag = dragRef.current;
-      if (!drag || drag.pointerId !== e.pointerId) return;
+      if (!drag?.active || e.pointerId !== drag.pointerId) return;
 
-      try {
-        e.currentTarget.releasePointerCapture(e.pointerId);
-      } catch {
-        /* ignore */
+      if (Math.hypot(e.clientX - drag.startX, e.clientY - drag.startY) >= DRAG_THRESHOLD_PX) {
+        drag.moved = true;
       }
+      e.preventDefault();
+      setDragGhost((g) => (g ? { ...g, x: e.clientX, y: e.clientY } : null));
+    };
+
+    const finishDrag = (e) => {
+      const drag = dragRef.current;
+      if (!drag?.active || e.pointerId !== drag.pointerId) return;
+
+      drag.active = false;
 
       if (drag.moved) {
-        const el = document.elementFromPoint(e.clientX, e.clientY);
-        const binEl = el?.closest("[data-bin-id]");
-        const binId = binEl?.getAttribute("data-bin-id");
-        if (binId) sortToBin(drag.uid, /** @type {BinId} */ (binId));
+        suppressClickRef.current = true;
+        const binId = findBinIdAtPoint(e.clientX, e.clientY);
+        if (binId) {
+          sortToBinRef.current(drag.uid, binId);
+        }
       } else {
         setSelectedUid((s) => (s === drag.uid ? null : drag.uid));
       }
 
       dragRef.current = null;
-      setDragGhost(null);
       setDraggingUid(null);
-    },
-    [sortToBin],
-  );
+      setDragGhost(null);
+    };
+
+    document.addEventListener("pointermove", onMove, { passive: false });
+    document.addEventListener("pointerup", finishDrag);
+    document.addEventListener("pointercancel", finishDrag);
+
+    const prevTouchAction = document.body.style.touchAction;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.touchAction = "none";
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("pointermove", onMove);
+      document.removeEventListener("pointerup", finishDrag);
+      document.removeEventListener("pointercancel", finishDrag);
+      document.body.style.touchAction = prevTouchAction;
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [draggingUid]);
+
+  const onItemClick = useCallback((uid) => {
+    if (suppressClickRef.current) {
+      suppressClickRef.current = false;
+      return;
+    }
+    if (dragRef.current?.moved) return;
+    setSelectedUid((s) => (s === uid ? null : uid));
+  }, []);
 
   const onBinActivate = useCallback(
     (binId) => {
       if (phase !== "play") return;
       if (selectedUid) {
         sortToBin(selectedUid, binId);
-        return;
-      }
-      if (dragRef.current) {
-        sortToBin(dragRef.current.uid, binId);
-        dragRef.current = null;
-        setDragGhost(null);
-        setDraggingUid(null);
       }
     },
     [phase, selectedUid, sortToBin],
@@ -569,10 +625,7 @@ export default function RecyclingFactoryPrototype() {
                   <div className={styles.beltSurface} aria-hidden />
                   <div className={styles.beltRollLeft} aria-hidden />
                   <div className={styles.beltRollRight} aria-hidden />
-                  <div
-                    className={styles.beltItemsLayer}
-                    onPointerMove={onItemPointerMove}
-                  >
+                  <div className={styles.beltItemsLayer}>
                     {beltItems.map((bi) => (
                       <BeltItemView
                         key={bi.uid}
@@ -580,14 +633,7 @@ export default function RecyclingFactoryPrototype() {
                         selected={selectedUid === bi.uid}
                         dragging={draggingUid === bi.uid}
                         onPointerDown={(e) => onItemPointerDown(e, bi.uid)}
-                        onPointerMove={onItemPointerMove}
-                        onPointerUp={finishPointer}
-                        onPointerCancel={finishPointer}
-                        onClick={() => {
-                          if (!dragRef.current?.moved) {
-                            setSelectedUid((s) => (s === bi.uid ? null : bi.uid));
-                          }
-                        }}
+                        onClick={() => onItemClick(bi.uid)}
                       />
                     ))}
                   </div>
@@ -612,9 +658,8 @@ export default function RecyclingFactoryPrototype() {
               )}
             </div>
 
-            <div className={styles.binsArea}>
+            <div className={styles.binsArea} data-bin-count={activeBins.length}>
               {renderBins(`${styles.binsGrid} ${binsGridClass}`)}
-              {renderBins(styles.binsScroll)}
             </div>
           </div>
         </div>
@@ -662,14 +707,15 @@ export default function RecyclingFactoryPrototype() {
       ) : null}
 
       {dragGhost ? (
-        <div
-          className={styles.dragGhost}
-          style={{ left: dragGhost.x, top: dragGhost.y }}
-          aria-hidden
-        >
-          <div className={styles.itemCard}>
-            <span className={styles.itemEmoji}>{dragGhost.emoji}</span>
-            <span className={styles.itemName}>{dragGhost.name}</span>
+        <div className={styles.dragOverlay} aria-hidden>
+          <div
+            data-drag-ghost="true"
+            className={styles.dragGhost}
+            style={{ left: dragGhost.x, top: dragGhost.y }}
+          >
+            <div className={`${styles.itemCard} ${styles.itemCardDragging}`}>
+              <RecyclingItemVisual item={dragGhost.item} />
+            </div>
           </div>
         </div>
       ) : null}

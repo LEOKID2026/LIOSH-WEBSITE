@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 
 import {
-  exitMobileGameFullscreen,
+  applyPendingPseudoFullscreenToGameWrapper,
+  enterPseudoFullscreen,
+  exitPseudoFullscreen,
   isMobileGameFullscreenEligible,
-  requestMobileGameFullscreen,
+  isPseudoFullscreenActive,
+  togglePseudoFullscreen,
 } from "../../lib/solo-games/solo-game-fullscreen.client.js";
 
 function isPortraitViewport() {
@@ -33,9 +36,8 @@ function shouldShowPortraitPrompt(dismissKey, portraitDismissed) {
 }
 
 /**
- * Mobile fullscreen + portrait recommendation for solo games.
- * Fullscreen is never requested from effects or state watchers — only call
- * `enterFromUserGesture` / `toggleFromUserGesture` from a click/pointer handler.
+ * Mobile pseudo-fullscreen + portrait recommendation for solo games.
+ * Never uses the Fullscreen API — only toggles a CSS class on #game-wrapper.
  *
  * @param {{
  *   gameKey: string,
@@ -52,31 +54,36 @@ export function useSoloGameMobileFullscreen({
 }) {
   const dismissKey = soloGamePortraitDismissStorageKey(gameKey);
 
-  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isPseudoFullscreen, setIsPseudoFullscreen] = useState(false);
   const [mobileEligible, setMobileEligible] = useState(false);
   const [showPortraitPrompt, setShowPortraitPrompt] = useState(false);
   const [portraitDismissed, setPortraitDismissed] = useState(false);
 
+  const syncPseudoState = useCallback(() => {
+    setIsPseudoFullscreen(isPseudoFullscreenActive());
+    setMobileEligible(isMobileGameFullscreenEligible());
+  }, []);
+
   useEffect(() => {
-    const update = () => {
-      const fullscreenEl =
-        document.fullscreenElement || document.webkitFullscreenElement;
-      setIsFullscreen(Boolean(fullscreenEl));
-      setMobileEligible(isMobileGameFullscreenEligible());
-    };
-
-    update();
-
-    document.addEventListener("fullscreenchange", update);
-    document.addEventListener("webkitfullscreenchange", update);
-    window.addEventListener("resize", update);
-    window.addEventListener("orientationchange", update);
-
+    syncPseudoState();
+    window.addEventListener("resize", syncPseudoState);
+    window.addEventListener("orientationchange", syncPseudoState);
     return () => {
-      document.removeEventListener("fullscreenchange", update);
-      document.removeEventListener("webkitfullscreenchange", update);
-      window.removeEventListener("resize", update);
-      window.removeEventListener("orientationchange", update);
+      window.removeEventListener("resize", syncPseudoState);
+      window.removeEventListener("orientationchange", syncPseudoState);
+    };
+  }, [syncPseudoState]);
+
+  useEffect(() => {
+    if (!gameRunning || showIntro || gameOver) return;
+    if (applyPendingPseudoFullscreenToGameWrapper()) {
+      syncPseudoState();
+    }
+  }, [gameRunning, showIntro, gameOver, syncPseudoState]);
+
+  useEffect(() => {
+    return () => {
+      exitPseudoFullscreen();
     };
   }, []);
 
@@ -104,27 +111,31 @@ export function useSoloGameMobileFullscreen({
   );
 
   /** @param {HTMLElement | null | undefined} [element] */
-  const enterFromUserGesture = useCallback((element) => {
-    if (!isMobileGameFullscreenEligible()) return;
-    void requestMobileGameFullscreen(resolveFullscreenTarget(element));
-  }, []);
+  const enterFromUserGesture = useCallback(
+    (element) => {
+      if (!isMobileGameFullscreenEligible()) return;
+      const target = resolveFullscreenTarget(element);
+      if (enterPseudoFullscreen(target)) {
+        setIsPseudoFullscreen(true);
+      }
+    },
+    [],
+  );
 
   const toggleFromUserGesture = useCallback(() => {
     if (!isMobileGameFullscreenEligible()) return;
-    const active =
-      document.fullscreenElement || document.webkitFullscreenElement;
-    if (active) {
-      void exitMobileGameFullscreen();
-      return;
-    }
-    void requestMobileGameFullscreen(resolveFullscreenTarget());
+    const target = resolveFullscreenTarget();
+    if (!target) return;
+    togglePseudoFullscreen(target);
+    setIsPseudoFullscreen(isPseudoFullscreenActive());
   }, []);
 
   const showFullscreenButton =
     mobileEligible && gameRunning && !showIntro && !gameOver;
 
   return {
-    isFullscreen,
+    isFullscreen: isPseudoFullscreen,
+    isPseudoFullscreen,
     mobileEligible,
     showPortraitPrompt,
     dismissPortraitPrompt,

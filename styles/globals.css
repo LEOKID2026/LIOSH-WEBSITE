@@ -222,7 +222,32 @@ a[href][aria-disabled="true"] {
   }
 }
 
-/* Picture puzzle — mobile play shell (Fullscreen API target) */
+/* Solo games — mobile pseudo-fullscreen (no Fullscreen API; keeps status bar + Android nav) */
+@media (max-width: 1023px) {
+  #game-wrapper.solo-game-mobile-pseudo-fullscreen,
+  [data-solo-game-shell].solo-game-mobile-pseudo-fullscreen {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    overflow: hidden;
+    z-index: 9999;
+    background: #020617;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  @supports (height: 100svh) {
+    #game-wrapper.solo-game-mobile-pseudo-fullscreen,
+    [data-solo-game-shell].solo-game-mobile-pseudo-fullscreen {
+      height: 100svh;
+      max-height: 100svh;
+    }
+  }
+}
+
+/* Legacy Fullscreen API styles — kept for deprecated archive pages only */
 @media (max-width: 1023px) {
   #game-wrapper.solo-game-mobile-fullscreen-shell:fullscreen,
   #game-wrapper.solo-game-mobile-fullscreen-shell:-webkit-full-screen {

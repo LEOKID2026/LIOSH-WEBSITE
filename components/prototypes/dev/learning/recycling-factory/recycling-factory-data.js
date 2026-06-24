@@ -1,6 +1,15 @@
 /** @typedef {'paper'|'plastic'|'glass'|'metal'|'trash'} BinId */
 /** @typedef {'easy'|'medium'|'hard'} DifficultyId */
 
+/**
+ * @typedef {Object} RecyclingItem
+ * @property {string} id
+ * @property {string} emoji
+ * @property {string} name
+ * @property {BinId} bin
+ * @property {string} [imageSrc] — optional product image; falls back to emoji
+ */
+
 /** @type {Record<BinId, { id: BinId, label: string, emoji: string, accent: string, lid: string, body: string }>} */
 export const BINS = {
   paper: {
@@ -45,23 +54,71 @@ export const BINS = {
   },
 };
 
-/** @type {Array<{ id: string, emoji: string, name: string, bin: BinId }>} */
+/** @type {RecyclingItem[]} */
 export const ITEMS = [
-  { id: "newspaper", emoji: "📰", name: "עיתון", bin: "paper" },
-  { id: "page", emoji: "📄", name: "דף", bin: "paper" },
-  { id: "box", emoji: "📦", name: "קרטון", bin: "paper" },
+  {
+    id: "newspaper",
+    emoji: "📰",
+    name: "עיתון",
+    bin: "paper",
+    imageSrc: "/images/recycling-items/newspaper.svg",
+  },
+  {
+    id: "page",
+    emoji: "📄",
+    name: "דף",
+    bin: "paper",
+    imageSrc: "/images/recycling-items/paper-page.svg",
+  },
+  {
+    id: "box",
+    emoji: "📦",
+    name: "קרטון",
+    bin: "paper",
+    imageSrc: "/images/recycling-items/cardboard-box.svg",
+  },
   { id: "notebook", emoji: "📓", name: "מחברת", bin: "paper" },
-  { id: "bottle-plastic", emoji: "🧴", name: "בקבוק פלסטיק", bin: "plastic" },
-  { id: "bag", emoji: "🛍️", name: "שקית", bin: "plastic" },
+  {
+    id: "bottle-plastic",
+    emoji: "🧴",
+    name: "בקבוק פלסטיק",
+    bin: "plastic",
+    imageSrc: "/images/recycling-items/plastic-bottle.svg",
+  },
+  {
+    id: "bag",
+    emoji: "🛍️",
+    name: "שקית",
+    bin: "plastic",
+    imageSrc: "/images/recycling-items/plastic-bag.svg",
+  },
   { id: "yogurt", emoji: "🥛", name: "גביע יוגורט", bin: "plastic" },
   { id: "plastic-box", emoji: "📦", name: "קופסת פלסטיק", bin: "plastic" },
   { id: "bottle-glass", emoji: "🍾", name: "בקבוק זכוכית", bin: "glass" },
-  { id: "jar", emoji: "🫙", name: "צנצנת", bin: "glass" },
+  {
+    id: "jar",
+    emoji: "🫙",
+    name: "צנצנת",
+    bin: "glass",
+    imageSrc: "/images/recycling-items/glass-jar.svg",
+  },
   { id: "cup", emoji: "🥃", name: "כוס זכוכית", bin: "glass" },
-  { id: "can", emoji: "🥫", name: "פחית", bin: "metal" },
+  {
+    id: "can",
+    emoji: "🥫",
+    name: "פחית",
+    bin: "metal",
+    imageSrc: "/images/recycling-items/metal-can.svg",
+  },
   { id: "tin", emoji: "🥫", name: "קופסת שימורים", bin: "metal" },
   { id: "lid", emoji: "⭕", name: "מכסה מתכת", bin: "metal" },
-  { id: "banana", emoji: "🍌", name: "קליפת בננה", bin: "trash" },
+  {
+    id: "banana",
+    emoji: "🍌",
+    name: "קליפת בננה",
+    bin: "trash",
+    imageSrc: "/images/recycling-items/banana-peel.svg",
+  },
   { id: "tissue", emoji: "🧻", name: "טישו מלוכלך", bin: "trash" },
   { id: "toy", emoji: "🧸", name: "צעצוע שבור", bin: "trash" },
   { id: "food", emoji: "🍎", name: "שאריות אוכל", bin: "trash" },
