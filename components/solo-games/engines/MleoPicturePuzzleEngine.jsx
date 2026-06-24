@@ -3,18 +3,28 @@ import SoloGameAdSlot from "../SoloGameAdSlot.jsx";
 import { useSoloGameShellUi } from "../../../hooks/solo-games/useSoloGameShellUi.js";
 import { useSoloGameKeyboard } from "./solo-v2-ui.jsx";
 
-/** 10 תמונות ייעודיות לפאזל — public/images/puzzle/ */
+/** 20 תמונות ייעודיות לפאזל — public/images/puzzle/ */
 export const PUZZLE_IMAGES = Object.freeze([
-  { id: "01-leo", label: "ליאו חייך", src: "/images/puzzle/01-leo.png" },
-  { id: "02-leo-smile", label: "ליאו מחייך", src: "/images/puzzle/02-leo-smile.png" },
-  { id: "03-dog", label: "כלב חבר", src: "/images/puzzle/03-dog.png" },
-  { id: "04-leo-play", label: "ליאו משחק", src: "/images/puzzle/04-leo-play.png" },
-  { id: "05-leo-intro", label: "ליאו מברך", src: "/images/puzzle/05-leo-intro.png" },
-  { id: "06-leo-keeper", label: "ליאו שומר", src: "/images/puzzle/06-leo-keeper.png" },
-  { id: "07-leo-keeper2", label: "ליאו כחול", src: "/images/puzzle/07-leo-keeper2.png" },
-  { id: "08-lio", label: "ליו", src: "/images/puzzle/08-lio.png" },
-  { id: "09-shiba", label: "שייבה חמוד", src: "/images/puzzle/09-shiba.png" },
-  { id: "10-leo-run", label: "ליאו רץ", src: "/images/puzzle/10-leo-run.png" },
+  { id: "01-leo-class", label: "ליאו בשיעור", src: "/images/puzzle/01-leo-class.png" },
+  { id: "02-leo-math", label: "ליאו בחשבון", src: "/images/puzzle/02-leo-math.png" },
+  { id: "03-leo-reading", label: "ליאו קורא ספר", src: "/images/puzzle/03-leo-reading.png" },
+  { id: "04-leo-science", label: "ליאו במעבדה", src: "/images/puzzle/04-leo-science.png" },
+  { id: "05-leo-soccer", label: "ליאו בכדורגל", src: "/images/puzzle/05-leo-soccer.png" },
+  { id: "06-leo-playground", label: "ליאו במגרש", src: "/images/puzzle/06-leo-playground.png" },
+  { id: "07-leo-pool", label: "ליאו בבריכה", src: "/images/puzzle/07-leo-pool.png" },
+  { id: "08-leo-beach", label: "ליאו בים", src: "/images/puzzle/08-leo-beach.png" },
+  { id: "09-leo-picnic", label: "ליאו בפיקניק", src: "/images/puzzle/09-leo-picnic.png" },
+  { id: "10-leo-scooter", label: "ליאו בקורקינט", src: "/images/puzzle/10-leo-scooter.png" },
+  { id: "11-leo-frisbee", label: "ליאו בפריסבי", src: "/images/puzzle/11-leo-frisbee.png" },
+  { id: "12-leo-forest", label: "ליאו ביער", src: "/images/puzzle/12-leo-forest.png" },
+  { id: "13-leo-rain", label: "ליאו בגשם", src: "/images/puzzle/13-leo-rain.png" },
+  { id: "14-leo-space", label: "ליאו בחלל", src: "/images/puzzle/14-leo-space.png" },
+  { id: "15-leo-snow", label: "ליאו בשלג", src: "/images/puzzle/15-leo-snow.png" },
+  { id: "16-leo-dogpark", label: "ליאו בגינת כלבים", src: "/images/puzzle/16-leo-dogpark.png" },
+  { id: "17-leo-friend", label: "ליאו עם חבר", src: "/images/puzzle/17-leo-friend.png" },
+  { id: "18-leo-bus", label: "ליאו באוטובוס", src: "/images/puzzle/18-leo-bus.png" },
+  { id: "19-leo-bus-ride", label: "ליאו נוסע", src: "/images/puzzle/19-leo-bus-ride.png" },
+  { id: "20-leo-train", label: "ליאו ברכבת", src: "/images/puzzle/20-leo-train.png" },
 ]);
 
 const DIFFICULTY_SETTINGS = {
@@ -22,6 +32,11 @@ const DIFFICULTY_SETTINGS = {
   medium: { grid: 4, timeSec: 240, parMoves: 45, maxGridWidth: "max-w-[min(92vw,380px)]" },
   hard: { grid: 5, timeSec: 300, parMoves: 95, maxGridWidth: "max-w-[min(92vw,400px)]" },
 };
+
+const PREVIEW_SWIPE_THRESHOLD_PX = 48;
+
+const PREVIEW_NAV_BTN_CLASS =
+  "hidden sm:inline-flex shrink-0 items-center justify-center rounded-xl border-2 border-white/40 bg-black/50 text-yellow-100 text-2xl leading-none min-h-11 min-w-11 hover:bg-black/70 disabled:opacity-30 disabled:pointer-events-none transition";
 
 function createSolvedTiles(gridSize) {
   const tiles = [];
@@ -102,10 +117,11 @@ export default function MleoPicturePuzzleEngine({
   const playStartedAtRef = useRef(null);
   const movesRef = useRef(0);
   const hintTimerRef = useRef(null);
+  const previewTouchStartX = useRef(null);
 
   const [difficulty, setDifficulty] = useState(initialDifficulty);
   const [selectedImageId, setSelectedImageId] = useState(PUZZLE_IMAGES[0].id);
-  const [previewImage, setPreviewImage] = useState(null);
+  const [previewIndex, setPreviewIndex] = useState(null);
   const [showPicker, setShowPicker] = useState(true);
   const [gameRunning, setGameRunning] = useState(false);
   const [gameOver, setGameOver] = useState(false);
@@ -132,6 +148,69 @@ export default function MleoPicturePuzzleEngine({
     },
     []
   );
+
+  const safePreviewIndex =
+    previewIndex == null
+      ? null
+      : Math.min(Math.max(previewIndex, 0), PUZZLE_IMAGES.length - 1);
+  const previewImage = safePreviewIndex == null ? null : PUZZLE_IMAGES[safePreviewIndex];
+  const canPreviewPrev = safePreviewIndex != null && safePreviewIndex > 0;
+  const canPreviewNext =
+    safePreviewIndex != null && safePreviewIndex < PUZZLE_IMAGES.length - 1;
+
+  const closePreview = () => setPreviewIndex(null);
+
+  const goPreviewPrev = () => {
+    setPreviewIndex((index) => (index == null ? index : Math.max(0, index - 1)));
+  };
+
+  const goPreviewNext = () => {
+    setPreviewIndex((index) =>
+      index == null ? index : Math.min(PUZZLE_IMAGES.length - 1, index + 1)
+    );
+  };
+
+  const handlePreviewTouchStart = (event) => {
+    previewTouchStartX.current = event.touches[0]?.clientX ?? null;
+  };
+
+  const handlePreviewTouchEnd = (event) => {
+    if (previewTouchStartX.current == null || PUZZLE_IMAGES.length < 2) return;
+    const endX = event.changedTouches[0]?.clientX;
+    if (endX == null) return;
+    const delta = endX - previewTouchStartX.current;
+    previewTouchStartX.current = null;
+    if (Math.abs(delta) < PREVIEW_SWIPE_THRESHOLD_PX) return;
+    setPreviewIndex((index) => {
+      if (index == null) return index;
+      if (delta > 0 && index < PUZZLE_IMAGES.length - 1) return index + 1;
+      if (delta < 0 && index > 0) return index - 1;
+      return index;
+    });
+  };
+
+  useEffect(() => {
+    if (previewIndex == null) return undefined;
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setPreviewIndex(null);
+        return;
+      }
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        setPreviewIndex((index) =>
+          index == null ? index : Math.min(PUZZLE_IMAGES.length - 1, index + 1)
+        );
+        return;
+      }
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        setPreviewIndex((index) => (index == null ? index : Math.max(0, index - 1)));
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [previewIndex]);
 
   const settings = DIFFICULTY_SETTINGS[difficulty] || DIFFICULTY_SETTINGS.medium;
   const gridSize = settings.grid;
@@ -282,22 +361,22 @@ export default function MleoPicturePuzzleEngine({
       dir="rtl"
     >
       {showPicker ? (
-        <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden px-1 py-1 sm:px-2">
-          <div className="shrink-0 text-center leading-tight">
+        <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden px-1 py-0.5 sm:px-2 sm:py-1">
+          <div className="shrink-0 py-0.5 text-center leading-tight">
             <h2 className={SG.preGameTitle}>בחרו תמונה לפאזל</h2>
             <p className={SG.preGameSub}>לחצו · בחרו · התחילו</p>
           </div>
 
-          <div className="flex flex-1 items-center justify-center overflow-hidden py-2">
-            <div className="grid grid-cols-4 gap-2 sm:grid-cols-5 sm:gap-2.5">
-              {PUZZLE_IMAGES.map((img) => {
+          <div className="flex min-h-0 flex-1 items-center justify-center overflow-hidden py-1">
+            <div className="grid w-full max-w-[min(calc(100vw-12px),328px)] grid-cols-4 grid-rows-5 gap-1 sm:max-w-[min(560px,90vw)] sm:grid-cols-5 sm:grid-rows-4 sm:gap-2">
+              {PUZZLE_IMAGES.map((img, index) => {
                 const selected = selectedImageId === img.id;
                 return (
                   <button
                     key={img.id}
                     type="button"
-                    onClick={() => setPreviewImage(img)}
-                    className={`relative h-[78px] w-[78px] shrink-0 overflow-hidden rounded-md border-2 p-0 transition sm:h-[96px] sm:w-[96px] sm:rounded-lg ${
+                    onClick={() => setPreviewIndex(index)}
+                    className={`relative aspect-square w-full min-w-0 overflow-hidden rounded-md border-2 p-0 transition sm:rounded-lg ${
                       selected ? SG.preGameImageBorderSelected : SG.preGameImageBorderDefault
                     }`}
                     style={{ touchAction: "manipulation" }}
@@ -334,21 +413,55 @@ export default function MleoPicturePuzzleEngine({
               role="dialog"
               aria-modal="true"
               aria-label={`תצוגת ${previewImage.label}`}
+              onClick={closePreview}
             >
-              <div className="flex w-full max-w-sm flex-col items-center gap-3">
-                <img
-                  src={previewImage.src}
-                  alt={previewImage.label}
-                  className="max-h-[min(52dvh,320px)] w-full max-w-[min(88vw,320px)] rounded-xl object-contain ring-2 ring-yellow-400"
-                  draggable={false}
-                />
-                <p className="text-sm font-bold text-yellow-100">{previewImage.label}</p>
+              <div
+                className="flex w-full max-w-2xl flex-col items-center gap-3 sm:max-w-3xl"
+                onClick={(event) => event.stopPropagation()}
+                dir="rtl"
+              >
+                <div className="flex w-full items-center justify-center gap-1 sm:gap-2">
+                  <button
+                    type="button"
+                    onClick={goPreviewPrev}
+                    disabled={!canPreviewPrev}
+                    className={PREVIEW_NAV_BTN_CLASS}
+                    aria-label="תמונה קודמת"
+                  >
+                    ‹
+                  </button>
+
+                  <div
+                    className="flex min-w-0 flex-1 touch-pan-y flex-col items-center gap-2"
+                    onTouchStart={handlePreviewTouchStart}
+                    onTouchEnd={handlePreviewTouchEnd}
+                  >
+                    <img
+                      src={previewImage.src}
+                      alt={previewImage.label}
+                      className="max-h-[min(72dvh,480px)] w-full max-w-[min(92vw,480px)] rounded-xl object-contain ring-2 ring-yellow-400"
+                      draggable={false}
+                    />
+                    <p className="text-sm font-bold text-yellow-100">{previewImage.label}</p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={goPreviewNext}
+                    disabled={!canPreviewNext}
+                    className={PREVIEW_NAV_BTN_CLASS}
+                    aria-label="תמונה הבאה"
+                  >
+                    ›
+                  </button>
+                </div>
+
                 <div className="flex w-full max-w-xs gap-2">
                   <button
                     type="button"
                     onClick={() => {
                       setSelectedImageId(previewImage.id);
-                      setPreviewImage(null);
+                      closePreview();
                     }}
                     className="min-h-[44px] flex-1 rounded-xl bg-yellow-400 px-3 py-2 text-sm font-bold text-black"
                     style={{ touchAction: "manipulation" }}
@@ -357,7 +470,7 @@ export default function MleoPicturePuzzleEngine({
                   </button>
                   <button
                     type="button"
-                    onClick={() => setPreviewImage(null)}
+                    onClick={closePreview}
                     className="min-h-[44px] flex-1 rounded-xl border-2 border-white/40 bg-black/50 px-3 py-2 text-sm font-bold text-white"
                     style={{ touchAction: "manipulation" }}
                   >
