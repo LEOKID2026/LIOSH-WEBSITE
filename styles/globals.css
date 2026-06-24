@@ -237,29 +237,15 @@ a[href][aria-disabled="true"] {
     }
   }
 
-  /* Picture puzzle — portrait fullscreen: score + bottom tray nudge only */
-  @media (orientation: portrait) {
-    #game-wrapper.solo-game-mobile-fullscreen-shell:fullscreen .picture-puzzle-play-root,
-    #game-wrapper.solo-game-mobile-fullscreen-shell:-webkit-full-screen .picture-puzzle-play-root {
-      box-sizing: border-box;
-      padding-top: max(8px, env(safe-area-inset-top, 0px));
-      padding-bottom: max(10px, env(safe-area-inset-bottom, 0px));
-    }
+}
 
-    #game-wrapper.solo-game-mobile-fullscreen-shell:fullscreen .picture-puzzle-score-bar,
-    #game-wrapper.solo-game-mobile-fullscreen-shell:-webkit-full-screen .picture-puzzle-score-bar {
-      top: max(6px, env(safe-area-inset-top, 0px));
-    }
-
-    #game-wrapper.solo-game-mobile-fullscreen-shell:fullscreen .picture-puzzle-play-frame,
-    #game-wrapper.solo-game-mobile-fullscreen-shell:-webkit-full-screen .picture-puzzle-play-frame {
-      margin-top: 1.375rem;
-    }
-
-    #game-wrapper.solo-game-mobile-fullscreen-shell:fullscreen .puzzle-tray-portrait-bottom,
-    #game-wrapper.solo-game-mobile-fullscreen-shell:-webkit-full-screen .puzzle-tray-portrait-bottom {
-      transform: translateY(-12px);
-    }
+@media (max-width: 1023px) and (orientation: portrait) {
+  .picture-puzzle-portrait-fullscreen .picture-puzzle-score-bar {
+    top: max(18px, calc(env(safe-area-inset-top, 0px) + 12px));
   }
 
+  .picture-puzzle-portrait-fullscreen .puzzle-tray-portrait-bottom {
+    transform: none;
+    margin-bottom: max(24px, calc(env(safe-area-inset-bottom, 0px) + 14px));
+  }
 }

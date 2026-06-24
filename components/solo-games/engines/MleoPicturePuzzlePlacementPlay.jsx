@@ -335,6 +335,58 @@ export default function MleoPicturePuzzlePlacementPlay({
 
   const { areaRef, squareSize } = useSquareBoardSize();
 
+  const [isPortraitFullscreen, setIsPortraitFullscreen] = useState(false);
+
+
+
+  useEffect(() => {
+
+    const update = () => {
+
+      const fullscreenEl =
+
+        document.fullscreenElement ||
+
+        document.webkitFullscreenElement;
+
+      setIsPortraitFullscreen(
+
+        Boolean(fullscreenEl) && isPortraitViewport() && isMobileViewport(),
+
+      );
+
+    };
+
+
+
+    update();
+
+
+
+    document.addEventListener("fullscreenchange", update);
+
+    document.addEventListener("webkitfullscreenchange", update);
+
+    window.addEventListener("resize", update);
+
+    window.addEventListener("orientationchange", update);
+
+
+
+    return () => {
+
+      document.removeEventListener("fullscreenchange", update);
+
+      document.removeEventListener("webkitfullscreenchange", update);
+
+      window.removeEventListener("resize", update);
+
+      window.removeEventListener("orientationchange", update);
+
+    };
+
+  }, []);
+
 
 
   const recalcPortrait = useCallback(() => {
@@ -583,7 +635,15 @@ export default function MleoPicturePuzzlePlacementPlay({
 
   return (
 
-    <div className="picture-puzzle-play-root relative flex min-h-0 w-full flex-1 flex-col overflow-hidden px-0.5 pb-0.5 pt-0.5 sm:px-1">
+    <div
+
+      className={`picture-puzzle-play-root relative flex min-h-0 w-full flex-1 flex-col overflow-hidden px-0.5 pb-0.5 pt-0.5 sm:px-1 ${
+
+        isPortraitFullscreen ? "picture-puzzle-portrait-fullscreen" : ""
+
+      }`}
+
+    >
 
       <div className="picture-puzzle-score-bar pointer-events-none absolute left-1/2 top-1 z-[80] max-w-[98vw] -translate-x-1/2 rounded-lg bg-black/65 px-2 py-1 text-center text-[10px] font-bold leading-snug sm:top-1.5 sm:px-3 sm:py-1.5 sm:text-sm">
 
