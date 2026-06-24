@@ -1,29 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.jsx";
 import { pieceTileStyle, splitTrayPieces } from "../../../lib/solo-games/picture-puzzle-placement.js";
-
-import {
-
-  exitMobileGameFullscreen,
-
-  isMobileGameFullscreenEligible,
-
-  requestMobileGameFullscreen,
-
-} from "../../../lib/solo-games/solo-game-fullscreen.client.js";
-
-
-
-const PORTRAIT_DISMISS_KEY = "picture-puzzle-portrait-dismiss";
-
-function getInitialPortraitPrompt() {
-  if (typeof window === "undefined") return false;
-  if (!isMobileViewport() || !isPortraitViewport()) return false;
-  if (sessionStorage.getItem(PORTRAIT_DISMISS_KEY) === "1") return false;
-  return true;
-}
-
-
 
 function isMobileViewport() {
 
@@ -98,42 +76,6 @@ function useSquareBoardSize() {
 
 
   return { areaRef, squareSize: size };
-
-}
-
-
-
-function MobileFullscreenToggleButton({ isFullscreen, onToggle, compact = false }) {
-
-  const className = compact
-
-    ? "puzzle-tray-hint-btn shrink-0 rounded-md border border-sky-400/70 bg-sky-950/70 px-1.5 py-0.5 text-[9px] font-bold leading-tight text-sky-100"
-
-    : "shrink-0 rounded-lg border border-sky-400/70 bg-sky-950/70 px-2 py-1 text-[10px] font-bold text-sky-100 min-h-[36px]";
-
-
-
-  return (
-
-    <button
-
-      type="button"
-
-      onClick={onToggle}
-
-      className={className}
-
-      style={{ touchAction: "manipulation" }}
-
-      aria-label={isFullscreen ? "יציאה ממסך מלא" : "מסך מלא"}
-
-    >
-
-      {isFullscreen ? "יציאה" : "מסך מלא"}
-
-    </button>
-
-  );
 
 }
 
@@ -369,159 +311,34 @@ export default function MleoPicturePuzzlePlacementPlay({
 
   onCloseHint,
 
-  onEnterPlayFullscreen,
+  isFullscreen,
+
+  showFullscreenButton,
+
+  toggleFromUserGesture,
 
   computeWinScore,
 
 }) {
 
-  const [portraitDismissed, setPortraitDismissed] = useState(false);
-
-  const [showPortraitPrompt, setShowPortraitPrompt] = useState(getInitialPortraitPrompt);
-
   const { areaRef, squareSize } = useSquareBoardSize();
-
-  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const [isPortraitFullscreen, setIsPortraitFullscreen] = useState(false);
 
-  const [mobileFullscreenEligible, setMobileFullscreenEligible] = useState(false);
-
-
-
   useEffect(() => {
-
     const update = () => {
-
-      const fullscreenEl =
-
-        document.fullscreenElement ||
-
-        document.webkitFullscreenElement;
-
-      const fs = Boolean(fullscreenEl);
-
-      setIsFullscreen(fs);
-
-      setIsPortraitFullscreen(fs && isPortraitViewport() && isMobileViewport());
-
-      setMobileFullscreenEligible(isMobileGameFullscreenEligible());
-
+      setIsPortraitFullscreen(
+        isFullscreen && isPortraitViewport() && isMobileViewport(),
+      );
     };
-
-
-
     update();
-
-
-
-    document.addEventListener("fullscreenchange", update);
-
-    document.addEventListener("webkitfullscreenchange", update);
-
-    window.addEventListener("resize", update);
-
     window.addEventListener("orientationchange", update);
-
-
-
+    window.addEventListener("resize", update);
     return () => {
-
-      document.removeEventListener("fullscreenchange", update);
-
-      document.removeEventListener("webkitfullscreenchange", update);
-
-      window.removeEventListener("resize", update);
-
       window.removeEventListener("orientationchange", update);
-
+      window.removeEventListener("resize", update);
     };
-
-  }, []);
-
-
-
-  const handleFullscreenToggle = useCallback(() => {
-
-    if (isFullscreen) {
-
-      void exitMobileGameFullscreen();
-
-      return;
-
-    }
-
-    void requestMobileGameFullscreen(document.getElementById("game-wrapper"));
-
   }, [isFullscreen]);
-
-
-
-  const recalcPortrait = useCallback(() => {
-
-    if (!isMobileViewport() || !isPortraitViewport()) {
-
-      setShowPortraitPrompt(false);
-
-      return;
-
-    }
-
-    if (portraitDismissed || sessionStorage.getItem(PORTRAIT_DISMISS_KEY) === "1") {
-
-      setShowPortraitPrompt(false);
-
-      return;
-
-    }
-
-    setShowPortraitPrompt(true);
-
-  }, [portraitDismissed]);
-
-
-
-  useEffect(() => {
-
-    recalcPortrait();
-
-    window.addEventListener("resize", recalcPortrait);
-
-    window.addEventListener("orientationchange", recalcPortrait);
-
-    return () => {
-
-      window.removeEventListener("resize", recalcPortrait);
-
-      window.removeEventListener("orientationchange", recalcPortrait);
-
-    };
-
-  }, [recalcPortrait]);
-
-
-
-  useEffect(() => {
-
-    if (!gameRunning || gameOver || showPortraitPrompt || !onEnterPlayFullscreen) return;
-
-    onEnterPlayFullscreen();
-
-  }, [gameRunning, gameOver, showPortraitPrompt, onEnterPlayFullscreen]);
-
-
-
-  const dismissPortraitPrompt = (persist) => {
-
-    setPortraitDismissed(true);
-
-    setShowPortraitPrompt(false);
-
-    if (persist) sessionStorage.setItem(PORTRAIT_DISMISS_KEY, "1");
-
-  };
-
-
 
   const handleDragStart = (event, pieceId, sourceSlotId = null) => {
 
@@ -795,21 +612,21 @@ export default function MleoPicturePuzzlePlacementPlay({
 
               className={`puzzle-tray-hint-row flex w-full shrink-0 items-center px-0.5 ${
 
-                mobileFullscreenEligible ? "justify-between" : "justify-end"
+                showFullscreenButton ? "justify-between" : "justify-end"
 
               }`}
 
             >
 
-              {mobileFullscreenEligible ? (
+              {showFullscreenButton ? (
 
-                <MobileFullscreenToggleButton
+                <SoloGameMobileFullscreenButton
 
                   isFullscreen={isFullscreen}
 
-                  onToggle={handleFullscreenToggle}
+                  onToggle={toggleFromUserGesture}
 
-                  compact
+                  variant="compact"
 
                 />
 
@@ -937,15 +754,15 @@ export default function MleoPicturePuzzlePlacementPlay({
 
             </button>
 
-            {mobileFullscreenEligible ? (
+            {showFullscreenButton ? (
 
               <div className="absolute right-1 top-1 z-10 hidden max-lg:landscape:block lg:hidden">
 
-                <MobileFullscreenToggleButton
+                <SoloGameMobileFullscreenButton
 
                   isFullscreen={isFullscreen}
 
-                  onToggle={handleFullscreenToggle}
+                  onToggle={toggleFromUserGesture}
 
                 />
 
@@ -1178,66 +995,6 @@ export default function MleoPicturePuzzlePlacementPlay({
         ) : null}
 
       </div>
-
-
-
-      {showPortraitPrompt ? (
-
-        <div className="absolute inset-0 z-[90] flex items-center justify-center bg-black/88 p-4">
-
-          <div className="max-w-sm rounded-2xl border-2 border-yellow-400 bg-slate-900 p-5 text-center shadow-xl">
-
-            <p className="text-3xl">📱↔️</p>
-
-            <p className="mt-3 text-base font-bold leading-snug text-yellow-100">
-
-              כדי לשחק בנוחות, מומלץ לסובב את המסך לרוחב.
-
-            </p>
-
-            <p className="mt-2 text-sm text-white/75">הלוח והמגש יוצגו בצורה נוחה יותר.</p>
-
-            <div className="mt-4 flex flex-col gap-2">
-
-              <button
-
-                type="button"
-
-                onClick={() => dismissPortraitPrompt(false)}
-
-                className="min-h-[44px] rounded-xl bg-yellow-400 px-4 py-2 text-sm font-bold text-black"
-
-                style={{ touchAction: "manipulation" }}
-
-              >
-
-                הבנתי — אסובב
-
-              </button>
-
-              <button
-
-                type="button"
-
-                onClick={() => dismissPortraitPrompt(true)}
-
-                className="min-h-[44px] rounded-xl border-2 border-white/35 bg-black/40 px-4 py-2 text-sm font-bold text-white"
-
-                style={{ touchAction: "manipulation" }}
-
-              >
-
-                המשך בכל זאת
-
-              </button>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      ) : null}
 
     </div>
 

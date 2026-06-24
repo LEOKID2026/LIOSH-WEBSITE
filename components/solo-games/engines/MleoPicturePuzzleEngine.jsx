@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import SoloGameAdSlot from "../SoloGameAdSlot.jsx";
+import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
 import { useSoloGameShellUi } from "../../../hooks/solo-games/useSoloGameShellUi.js";
-import {
-  exitMobileGameFullscreen,
-  requestMobileGameFullscreen,
-} from "../../../lib/solo-games/solo-game-fullscreen.client.js";
+import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
+import { exitMobileGameFullscreen } from "../../../lib/solo-games/solo-game-fullscreen.client.js";
 import {
   ACTIVE_PICTURE_PUZZLE_MECHANIC,
   PLACEMENT_DIFFICULTY_SETTINGS,
@@ -112,6 +111,22 @@ export default function MleoPicturePuzzleEngine({
   const [timeLeft, setTimeLeft] = useState(240);
   const [won, setWon] = useState(false);
   const [showHintPreview, setShowHintPreview] = useState(false);
+
+  const {
+    isFullscreen,
+    mobileEligible,
+    showPortraitPrompt,
+    dismissPortraitPrompt,
+    syncPortraitPromptForRun,
+    enterFromUserGesture,
+    toggleFromUserGesture,
+    showFullscreenButton,
+  } = useSoloGameMobileFullscreen({
+    gameKey: "picture-puzzle",
+    gameRunning,
+    showIntro: showPicker,
+    gameOver,
+  });
 
   // sliding state
   const [tiles, setTiles] = useState([]);
@@ -292,6 +307,7 @@ export default function MleoPicturePuzzleEngine({
       setTrayPieces([]);
     }
 
+    syncPortraitPromptForRun();
     setGameRunning(true);
   };
 
@@ -406,11 +422,6 @@ export default function MleoPicturePuzzleEngine({
       });
     }
   };
-
-  const enterMobilePlayFullscreen = useCallback(() => {
-    const wrapper = document.getElementById("game-wrapper");
-    requestMobileGameFullscreen(wrapper);
-  }, []);
 
   useEffect(() => {
     if (showPicker) return undefined;
@@ -557,7 +568,9 @@ export default function MleoPicturePuzzleEngine({
           onReturnToTray={handleReturnToTray}
           onTriggerHint={triggerHint}
           onCloseHint={closeHint}
-          onEnterPlayFullscreen={enterMobilePlayFullscreen}
+          isFullscreen={isFullscreen}
+          showFullscreenButton={showFullscreenButton}
+          toggleFromUserGesture={toggleFromUserGesture}
           computeWinScore={computeWinScore}
         />
       ) : (
@@ -579,6 +592,18 @@ export default function MleoPicturePuzzleEngine({
           computeWinScore={computeWinScore}
         />
       )}
+      <SoloGamePortraitRecommendationModal
+        show={showPortraitPrompt}
+        subtitle="הלוח והמגש יוצגו בצורה נוחה יותר."
+        onDismissRotate={() => {
+          dismissPortraitPrompt(false);
+          enterFromUserGesture();
+        }}
+        onContinueAnyway={() => {
+          dismissPortraitPrompt(true);
+          enterFromUserGesture();
+        }}
+      />
     </div>
   );
 }
