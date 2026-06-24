@@ -34,8 +34,8 @@ function shouldShowPortraitPrompt(dismissKey, portraitDismissed) {
 
 /**
  * Mobile fullscreen + portrait recommendation for solo games.
- * Auto-enters fullscreen on #game-wrapper when play starts (same as catcher / picture puzzle).
- * Manual toggle still uses gesture helpers only.
+ * Fullscreen is never requested from effects or state watchers — only call
+ * `enterFromUserGesture` / `toggleFromUserGesture` from a click/pointer handler.
  *
  * @param {{
  *   gameKey: string,
@@ -88,12 +88,6 @@ export function useSoloGameMobileFullscreen({
 
     setShowPortraitPrompt(shouldShowPortraitPrompt(dismissKey, portraitDismissed));
   }, [gameRunning, showIntro, gameOver, portraitDismissed, dismissKey]);
-
-  useEffect(() => {
-    if (!gameRunning || showIntro || gameOver || showPortraitPrompt) return;
-    if (!isMobileGameFullscreenEligible()) return;
-    void requestMobileGameFullscreen(resolveFullscreenTarget());
-  }, [gameRunning, showIntro, gameOver, showPortraitPrompt]);
 
   const syncPortraitPromptForRun = useCallback(() => {
     setPortraitDismissed(false);

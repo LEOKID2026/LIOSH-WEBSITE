@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { resetSoloGameDocumentShell } from "../../lib/solo-games/solo-game-document-cleanup.client.js";
+import { enterMobileGameFullscreenFromUserGesture } from "../../lib/solo-games/solo-game-fullscreen.client.js";
 import Head from "next/head";
 import Link from "next/link";
 import { findSoloGame } from "../../lib/solo-games/solo-game-registry.js";
@@ -60,6 +61,12 @@ export default function SoloGameShell({ gameKey }) {
   } = useSoloGameSession(gameKey);
 
   const handleStart = useCallback(async () => {
+    // Preserve the "התחל משחק" click gesture for autoStart engines (landscape mobile only).
+    if (typeof document !== "undefined") {
+      enterMobileGameFullscreenFromUserGesture(
+        document.querySelector("[data-solo-game-shell]"),
+      );
+    }
     const diff = game?.hasDifficultyPicker ? difficulty : null;
     const id = await startSession(diff);
     if (id) setPhase("playing");
@@ -113,6 +120,7 @@ export default function SoloGameShell({ gameKey }) {
         className={themedShell ? SG.shell : PLAY_SHELL}
         style={themedShell ? pageBgStyle : undefined}
         dir="rtl"
+        data-solo-game-shell=""
       >
         <header className={themedShell ? SG.header : "flex shrink-0 items-center justify-between gap-2 border-b border-white/10 px-3 py-2 sm:px-4"}>
           <Link

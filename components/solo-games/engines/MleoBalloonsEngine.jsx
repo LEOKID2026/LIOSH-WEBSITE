@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.jsx";
+import SoloGameEndInterstitialOverlay from "../SoloGameEndInterstitialOverlay.jsx";
 import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
 import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
 import { useSoloBoardTap } from "./solo-v2-ui.jsx";
@@ -64,6 +65,7 @@ function rollKind(level) {
 export default function MleoBalloonsEngine({ autoStart = false, onSessionEnd }) {
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
+  const pendingSessionEndRef = useRef(null);
   const boardRef = useRef(null);
   const captureRef = useRef(null);
   const loopRef = useRef(null);
@@ -197,7 +199,14 @@ export default function MleoBalloonsEngine({ autoStart = false, onSessionEnd }) 
     if (loopRef.current) clearInterval(loopRef.current);
     if (spawnRef.current) clearInterval(spawnRef.current);
     if (timerRef.current) clearInterval(timerRef.current);
-    fireSessionEnd(didWin, remaining);
+    pendingSessionEndRef.current = { didWin, remaining };
+  };
+
+  const completeEndInterstitial = () => {
+    const pending = pendingSessionEndRef.current;
+    if (!pending) return;
+    pendingSessionEndRef.current = null;
+    fireSessionEnd(pending.didWin, pending.remaining);
   };
 
   const loseLife = (remaining) => {
@@ -471,19 +480,10 @@ export default function MleoBalloonsEngine({ autoStart = false, onSessionEnd }) 
             />
 
             {gameOver ? (
-              <div className="pointer-events-auto absolute inset-0 z-40 flex flex-col items-center justify-center gap-2 overflow-y-auto bg-black/82 px-4 py-6 text-center">
-                <h2 className={`text-2xl font-extrabold sm:text-4xl ${won ? "text-emerald-300" : "text-rose-400"}`}>
-                  {won ? "כל הכבוד! פיצצתם מספיק בלונים!" : "לא הצלחתם הפעם"}
-                </h2>
-                <p className="max-w-md text-sm font-semibold text-white/90 sm:text-base">
-                  ניקוד: {score} · פגיעות: {pops}/{target} · פספוסים: {misses} · רמה: {level}
-                </p>
-                {!won ? (
-                  <p className="text-xs text-gray-300 sm:text-sm">הפסד = 0 מטבעות · ממתין לסיכום...</p>
-                ) : (
-                  <p className="text-xs text-gray-300 sm:text-sm">ממתין לסיכום מטבעות...</p>
-                )}
-              </div>
+              <SoloGameEndInterstitialOverlay
+                didWin={won}
+                onDone={completeEndInterstitial}
+              />
             ) : null}
           </div>
         </div>
