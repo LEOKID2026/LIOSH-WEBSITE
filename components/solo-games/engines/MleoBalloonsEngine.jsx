@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.jsx";
+import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
+import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
 import { useSoloBoardTap } from "./solo-v2-ui.jsx";
 
 const BG_BALLOONS = "/images/game-balloons-bg.png";
@@ -93,6 +96,21 @@ export default function MleoBalloonsEngine({ autoStart = false, onSessionEnd }) 
   const [balloons, setBalloons] = useState([]);
   const [popFx, setPopFx] = useState([]);
   const [levelFlash, setLevelFlash] = useState(false);
+
+  const {
+    isFullscreen,
+    showPortraitPrompt,
+    dismissPortraitPrompt,
+    syncPortraitPromptForRun,
+    enterFromUserGesture,
+    toggleFromUserGesture,
+    showFullscreenButton,
+  } = useSoloGameMobileFullscreen({
+    gameKey: "balloons",
+    gameRunning,
+    showIntro,
+    gameOver,
+  });
 
   useEffect(() => {
     const wrapper = document.getElementById("game-wrapper");
@@ -308,6 +326,7 @@ export default function MleoBalloonsEngine({ autoStart = false, onSessionEnd }) 
     setPopFx([]);
     setLevelFlash(false);
 
+    syncPortraitPromptForRun();
     setGameRunning(true);
     runningRef.current = true;
 
@@ -378,7 +397,7 @@ export default function MleoBalloonsEngine({ autoStart = false, onSessionEnd }) 
   return (
     <div
       id="game-wrapper"
-      className="relative isolate flex h-full min-h-0 flex-1 flex-col overflow-hidden bg-gray-900 text-white select-none"
+      className="relative isolate flex h-full min-h-0 flex-1 flex-col overflow-hidden bg-gray-900 text-white select-none solo-game-mobile-fullscreen-shell"
       dir="rtl"
     >
       {!showIntro && (
@@ -407,6 +426,15 @@ export default function MleoBalloonsEngine({ autoStart = false, onSessionEnd }) 
               touchAction: "none",
             }}
           >
+            {showFullscreenButton ? (
+              <div className="pointer-events-auto absolute right-2 top-2 z-[70]">
+                <SoloGameMobileFullscreenButton
+                  isFullscreen={isFullscreen}
+                  onToggle={toggleFromUserGesture}
+                />
+              </div>
+            ) : null}
+
             {balloons.map((b) => (
               <div
                 key={b.id}
@@ -460,6 +488,18 @@ export default function MleoBalloonsEngine({ autoStart = false, onSessionEnd }) 
           </div>
         </div>
       )}
+
+      <SoloGamePortraitRecommendationModal
+        show={showPortraitPrompt}
+        onDismissRotate={() => {
+          dismissPortraitPrompt(false);
+          enterFromUserGesture();
+        }}
+        onContinueAnyway={() => {
+          dismissPortraitPrompt(true);
+          enterFromUserGesture();
+        }}
+      />
     </div>
   );
 }

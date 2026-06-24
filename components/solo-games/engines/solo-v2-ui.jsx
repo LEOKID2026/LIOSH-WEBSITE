@@ -138,6 +138,7 @@ export function useSoloBoardTap(boardRef, captureRef, runningRef, onTap, active)
 
     const handle = (e) => {
       if (!runningRef.current) return;
+      if (e.target?.closest?.("button, [data-solo-fullscreen-toggle]")) return;
       if (e.type === "touchstart") {
         ignoreNextPointer = true;
         window.setTimeout(() => {
