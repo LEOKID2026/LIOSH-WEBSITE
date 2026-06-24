@@ -1,42 +1,28 @@
 import { useEffect, useRef, useState } from "react";
 import SoloGameAdSlot from "../SoloGameAdSlot.jsx";
 import { useSoloGameShellUi } from "../../../hooks/solo-games/useSoloGameShellUi.js";
-import { useSoloGameKeyboard } from "./solo-v2-ui.jsx";
+import {
+  ACTIVE_PICTURE_PUZZLE_MECHANIC,
+  PLACEMENT_DIFFICULTY_SETTINGS,
+  PREVIEW_NAV_BTN_CLASS,
+  PREVIEW_SWIPE_THRESHOLD_PX,
+  PUZZLE_IMAGES,
+  SLIDING_DIFFICULTY_SETTINGS,
+} from "../../../lib/solo-games/picture-puzzle-config.js";
+import {
+  applyPlacement,
+  createPlacementBoard,
+  isPlacementComplete,
+  removeTrayPiece,
+} from "../../../lib/solo-games/picture-puzzle-placement.js";
+import MleoPicturePuzzlePlacementPlay from "./MleoPicturePuzzlePlacementPlay.jsx";
+import MleoPicturePuzzleSlidingPlay, {
+  isSlidingPuzzleSolved,
+} from "./MleoPicturePuzzleSlidingPlay.jsx";
 
-/** 20 תמונות ייעודיות לפאזל — public/images/puzzle/ */
-export const PUZZLE_IMAGES = Object.freeze([
-  { id: "01-leo-class", label: "ליאו בשיעור", src: "/images/puzzle/01-leo-class.png" },
-  { id: "02-leo-math", label: "ליאו בחשבון", src: "/images/puzzle/02-leo-math.png" },
-  { id: "03-leo-reading", label: "ליאו קורא ספר", src: "/images/puzzle/03-leo-reading.png" },
-  { id: "04-leo-science", label: "ליאו במעבדה", src: "/images/puzzle/04-leo-science.png" },
-  { id: "05-leo-soccer", label: "ליאו בכדורגל", src: "/images/puzzle/05-leo-soccer.png" },
-  { id: "06-leo-playground", label: "ליאו במגרש", src: "/images/puzzle/06-leo-playground.png" },
-  { id: "07-leo-pool", label: "ליאו בבריכה", src: "/images/puzzle/07-leo-pool.png" },
-  { id: "08-leo-beach", label: "ליאו בים", src: "/images/puzzle/08-leo-beach.png" },
-  { id: "09-leo-picnic", label: "ליאו בפיקניק", src: "/images/puzzle/09-leo-picnic.png" },
-  { id: "10-leo-scooter", label: "ליאו בקורקינט", src: "/images/puzzle/10-leo-scooter.png" },
-  { id: "11-leo-frisbee", label: "ליאו בפריסבי", src: "/images/puzzle/11-leo-frisbee.png" },
-  { id: "12-leo-forest", label: "ליאו ביער", src: "/images/puzzle/12-leo-forest.png" },
-  { id: "13-leo-rain", label: "ליאו בגשם", src: "/images/puzzle/13-leo-rain.png" },
-  { id: "14-leo-space", label: "ליאו בחלל", src: "/images/puzzle/14-leo-space.png" },
-  { id: "15-leo-snow", label: "ליאו בשלג", src: "/images/puzzle/15-leo-snow.png" },
-  { id: "16-leo-dogpark", label: "ליאו בגינת כלבים", src: "/images/puzzle/16-leo-dogpark.png" },
-  { id: "17-leo-friend", label: "ליאו עם חבר", src: "/images/puzzle/17-leo-friend.png" },
-  { id: "18-leo-bus", label: "ליאו באוטובוס", src: "/images/puzzle/18-leo-bus.png" },
-  { id: "19-leo-bus-ride", label: "ליאו נוסע", src: "/images/puzzle/19-leo-bus-ride.png" },
-  { id: "20-leo-train", label: "ליאו ברכבת", src: "/images/puzzle/20-leo-train.png" },
-]);
+export { PUZZLE_IMAGES };
 
-const DIFFICULTY_SETTINGS = {
-  easy: { grid: 3, timeSec: 300, parMoves: 18, maxGridWidth: "max-w-[min(92vw,340px)]" },
-  medium: { grid: 4, timeSec: 240, parMoves: 45, maxGridWidth: "max-w-[min(92vw,380px)]" },
-  hard: { grid: 5, timeSec: 300, parMoves: 95, maxGridWidth: "max-w-[min(92vw,400px)]" },
-};
-
-const PREVIEW_SWIPE_THRESHOLD_PX = 48;
-
-const PREVIEW_NAV_BTN_CLASS =
-  "hidden sm:inline-flex shrink-0 items-center justify-center rounded-xl border-2 border-white/40 bg-black/50 text-yellow-100 text-2xl leading-none min-h-11 min-w-11 hover:bg-black/70 disabled:opacity-30 disabled:pointer-events-none transition";
+const USE_PLACEMENT = ACTIVE_PICTURE_PUZZLE_MECHANIC === "placement";
 
 function createSolvedTiles(gridSize) {
   const tiles = [];
@@ -62,7 +48,6 @@ function shuffleMoveCount(difficulty) {
   return 60 + Math.floor(Math.random() * 31);
 }
 
-/** ערבוב חוקי בלבד — מהלכים לאחור מהמצב המסודר */
 function legalShuffle(gridSize, shuffleMoves) {
   const solved = createSolvedTiles(gridSize);
   let tiles = [...solved];
@@ -76,19 +61,13 @@ function legalShuffle(gridSize, shuffleMoves) {
     blankIndex = pick;
   }
 
-  if (isSolved(tiles, gridSize)) {
+  if (isSlidingPuzzleSolved(tiles, gridSize)) {
     const neighbors = getAdjacentIndices(blankIndex, gridSize);
     const pick = neighbors[0];
     [tiles[blankIndex], tiles[pick]] = [tiles[pick], tiles[blankIndex]];
   }
 
   return tiles;
-}
-
-function isSolved(tiles, gridSize) {
-  const goal = createSolvedTiles(gridSize);
-  if (tiles.length !== goal.length) return false;
-  return tiles.every((t, i) => t === goal[i]);
 }
 
 function canMoveTile(tiles, index, gridSize) {
@@ -117,6 +96,7 @@ export default function MleoPicturePuzzleEngine({
   const playStartedAtRef = useRef(null);
   const movesRef = useRef(0);
   const hintTimerRef = useRef(null);
+  const feedbackTimerRef = useRef(null);
   const previewTouchStartX = useRef(null);
 
   const [difficulty, setDifficulty] = useState(initialDifficulty);
@@ -125,12 +105,24 @@ export default function MleoPicturePuzzleEngine({
   const [showPicker, setShowPicker] = useState(true);
   const [gameRunning, setGameRunning] = useState(false);
   const [gameOver, setGameOver] = useState(false);
-  const [tiles, setTiles] = useState([]);
   const [moves, setMoves] = useState(0);
   const [timeLeft, setTimeLeft] = useState(240);
   const [won, setWon] = useState(false);
-  const [blockedMsg, setBlockedMsg] = useState("");
   const [showHintPreview, setShowHintPreview] = useState(false);
+
+  // sliding state
+  const [tiles, setTiles] = useState([]);
+  const [blockedMsg, setBlockedMsg] = useState("");
+
+  // placement state
+  const [boardSlots, setBoardSlots] = useState([]);
+  const [trayPieces, setTrayPieces] = useState([]);
+  const [fixedIndices, setFixedIndices] = useState([]);
+  const [selectedPieceId, setSelectedPieceId] = useState(null);
+  const [feedbackMsg, setFeedbackMsg] = useState("");
+  const [successSlotId, setSuccessSlotId] = useState(null);
+  const [wrongSlotId, setWrongSlotId] = useState(null);
+
   const { SG, pageBgStyle } = useSoloGameShellUi();
 
   useEffect(() => {
@@ -145,9 +137,19 @@ export default function MleoPicturePuzzleEngine({
   useEffect(
     () => () => {
       if (hintTimerRef.current) clearTimeout(hintTimerRef.current);
+      if (feedbackTimerRef.current) clearTimeout(feedbackTimerRef.current);
     },
     []
   );
+
+  const slidingSettings = SLIDING_DIFFICULTY_SETTINGS[difficulty] || SLIDING_DIFFICULTY_SETTINGS.medium;
+  const placementSettings =
+    PLACEMENT_DIFFICULTY_SETTINGS[difficulty] || PLACEMENT_DIFFICULTY_SETTINGS.medium;
+  const settings = USE_PLACEMENT ? placementSettings : slidingSettings;
+  const gridSize = settings.grid;
+  const puzzleImage =
+    PUZZLE_IMAGES.find((img) => img.id === selectedImageId)?.src || PUZZLE_IMAGES[0].src;
+  const isEasy = difficulty === "easy";
 
   const safePreviewIndex =
     previewIndex == null
@@ -212,16 +214,6 @@ export default function MleoPicturePuzzleEngine({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [previewIndex]);
 
-  const settings = DIFFICULTY_SETTINGS[difficulty] || DIFFICULTY_SETTINGS.medium;
-  const gridSize = settings.grid;
-  const puzzleImage = PUZZLE_IMAGES.find((img) => img.id === selectedImageId)?.src || PUZZLE_IMAGES[0].src;
-  const isEasy = difficulty === "easy";
-
-  const blankIndex = tiles.indexOf(null);
-  const movableSet = new Set(
-    blankIndex >= 0 ? getAdjacentIndices(blankIndex, gridSize).filter((i) => tiles[i] != null) : []
-  );
-
   const computeWinScore = (remaining, moveCount) => {
     const extra = Math.max(0, moveCount - settings.parMoves);
     const timeBonus = isEasy ? remaining * 2 : remaining * 3;
@@ -252,16 +244,23 @@ export default function MleoPicturePuzzleEngine({
     fireSessionEnd(didWin, remaining, movesRef.current, finalScore);
   };
 
-  const flashBlocked = () => {
-    setBlockedMsg("אי אפשר להזיז את האריח הזה");
-    window.setTimeout(() => setBlockedMsg(""), 1200);
-  };
-
   const triggerHint = () => {
     if (!gameRunning || gameOver) return;
     setShowHintPreview(true);
     if (hintTimerRef.current) clearTimeout(hintTimerRef.current);
     hintTimerRef.current = setTimeout(() => setShowHintPreview(false), 3000);
+  };
+
+  const flashFeedback = (msg, slotId, kind) => {
+    setFeedbackMsg(msg);
+    if (kind === "success") setSuccessSlotId(slotId);
+    if (kind === "wrong") setWrongSlotId(slotId);
+    if (feedbackTimerRef.current) clearTimeout(feedbackTimerRef.current);
+    feedbackTimerRef.current = setTimeout(() => {
+      setFeedbackMsg("");
+      setSuccessSlotId(null);
+      setWrongSlotId(null);
+    }, kind === "success" ? 500 : 900);
   };
 
   const startGame = () => {
@@ -272,30 +271,51 @@ export default function MleoPicturePuzzleEngine({
     setShowPicker(false);
     setGameOver(false);
     setWon(false);
-    setBlockedMsg("");
     setShowHintPreview(false);
+    setBlockedMsg("");
+    setFeedbackMsg("");
+    setSuccessSlotId(null);
+    setWrongSlotId(null);
+    setSelectedPieceId(null);
     setTimeLeft(settings.timeSec);
-    setTiles(legalShuffle(gridSize, shuffleMoveCount(difficulty)));
+
+    if (USE_PLACEMENT) {
+      const board = createPlacementBoard(gridSize, placementSettings.holes);
+      setBoardSlots(board.boardSlots);
+      setTrayPieces(board.trayPieces);
+      setFixedIndices(board.fixedIndices);
+      setTiles([]);
+    } else {
+      setTiles(legalShuffle(gridSize, shuffleMoveCount(difficulty)));
+      setBoardSlots([]);
+      setTrayPieces([]);
+      setFixedIndices([]);
+    }
+
     setGameRunning(true);
   };
 
   useEffect(() => {
     if (!gameRunning) return undefined;
     if (timeLeft <= 0) {
-      if (!isSolved(tiles, gridSize)) endGame(false, 0);
+      const incomplete = USE_PLACEMENT
+        ? !isPlacementComplete(boardSlots)
+        : !isSlidingPuzzleSolved(tiles, gridSize);
+      if (incomplete) endGame(false, 0);
       return undefined;
     }
     const t = setTimeout(() => setTimeLeft((s) => s - 1), 1000);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gameRunning, timeLeft]);
+  }, [gameRunning, timeLeft, boardSlots, tiles]);
 
   const tryMove = (index) => {
     if (!gameRunning || gameOver) return;
     if (tiles[index] == null) return;
 
     if (!canMoveTile(tiles, index, gridSize)) {
-      flashBlocked();
+      setBlockedMsg("אי אפשר להזיז את האריח הזה");
+      window.setTimeout(() => setBlockedMsg(""), 1200);
       return;
     }
 
@@ -306,49 +326,46 @@ export default function MleoPicturePuzzleEngine({
     setMoves(movesRef.current);
     setTiles(next);
 
-    if (isSolved(next, gridSize)) {
+    if (isSlidingPuzzleSolved(next, gridSize)) {
       endGame(true, timeLeft);
     }
   };
 
-  useSoloGameKeyboard(gameRunning && !gameOver && !showPicker, (e) => {
-    if (e.code === "KeyH" && isEasy) {
-      triggerHint();
-      return true;
-    }
-    const blank = tiles.indexOf(null);
-    if (blank < 0) return false;
-    const br = Math.floor(blank / gridSize);
-    const bc = blank % gridSize;
-    let target = null;
-    if (e.code === "ArrowUp" || e.code === "KeyW") {
-      if (br + 1 < gridSize) target = (br + 1) * gridSize + bc;
-    } else if (e.code === "ArrowDown" || e.code === "KeyS") {
-      if (br > 0) target = (br - 1) * gridSize + bc;
-    } else if (e.code === "ArrowLeft" || e.code === "KeyA") {
-      if (bc + 1 < gridSize) target = br * gridSize + (bc + 1);
-    } else if (e.code === "ArrowRight" || e.code === "KeyD") {
-      if (bc > 0) target = br * gridSize + (bc - 1);
-    }
-    if (target == null) return true;
-    tryMove(target);
-    return true;
-  });
-
-  const tileBg = (tile) => {
-    const row = Math.floor(tile / gridSize);
-    const col = tile % gridSize;
-    const posX = gridSize > 1 ? (col / (gridSize - 1)) * 100 : 0;
-    const posY = gridSize > 1 ? (row / (gridSize - 1)) * 100 : 0;
-    return {
-      backgroundImage: `url(${puzzleImage})`,
-      backgroundSize: `${gridSize * 100}% ${gridSize * 100}%`,
-      backgroundPosition: `${posX}% ${posY}%`,
-    };
+  const handleSelectPiece = (pieceId) => {
+    if (!gameRunning || gameOver) return;
+    setSelectedPieceId((prev) => (prev === pieceId ? null : pieceId));
+    setFeedbackMsg("");
   };
 
-  const tileMinClass =
-    gridSize === 3 ? "min-h-[92px] sm:min-h-[108px]" : gridSize === 4 ? "min-h-[72px] sm:min-h-[84px]" : "min-h-[58px] sm:min-h-[68px]";
+  const handlePlaceOnSlot = (slotId, pieceId) => {
+    if (!gameRunning || gameOver) return;
+    const activePiece = pieceId ?? selectedPieceId;
+    if (activePiece == null) {
+      setFeedbackMsg("קודם בחרו חלק מהמגש");
+      window.setTimeout(() => setFeedbackMsg(""), 1200);
+      return;
+    }
+
+    const result = applyPlacement(boardSlots, slotId, activePiece);
+    if (!result.ok) return;
+
+    movesRef.current += 1;
+    setMoves(movesRef.current);
+
+    if (!result.correct) {
+      flashFeedback("לא במקום — נסו שוב", slotId, "wrong");
+      return;
+    }
+
+    setBoardSlots(result.boardSlots);
+    setTrayPieces((prev) => removeTrayPiece(prev, activePiece));
+    setSelectedPieceId(null);
+    flashFeedback("מצוין!", slotId, "success");
+
+    if (isPlacementComplete(result.boardSlots)) {
+      endGame(true, timeLeft);
+    }
+  };
 
   const playWrap =
     "relative isolate flex h-full min-h-0 flex-1 flex-col overflow-hidden bg-gray-900 text-white select-none";
@@ -481,123 +498,48 @@ export default function MleoPicturePuzzleEngine({
             </div>
           ) : null}
         </div>
+      ) : USE_PLACEMENT ? (
+        <MleoPicturePuzzlePlacementPlay
+          puzzleImage={puzzleImage}
+          gridSize={gridSize}
+          settings={placementSettings}
+          isEasy={isEasy}
+          gameRunning={gameRunning}
+          gameOver={gameOver}
+          won={won}
+          timeLeft={timeLeft}
+          moves={moves}
+          boardSlots={boardSlots}
+          trayPieces={trayPieces}
+          fixedIndices={fixedIndices}
+          selectedPieceId={selectedPieceId}
+          feedbackMsg={feedbackMsg}
+          successSlotId={successSlotId}
+          wrongSlotId={wrongSlotId}
+          showHintPreview={showHintPreview}
+          onSelectPiece={handleSelectPiece}
+          onPlaceOnSlot={handlePlaceOnSlot}
+          onTriggerHint={triggerHint}
+          computeWinScore={computeWinScore}
+        />
       ) : (
-        <div className="flex min-h-0 w-full flex-1 flex-col overflow-hidden px-1 pb-1 pt-1">
-          <div className="pointer-events-none absolute left-1/2 top-2 z-[80] max-w-[98vw] -translate-x-1/2 rounded-lg bg-black/65 px-3 py-2 text-center text-[11px] font-bold leading-snug sm:text-sm">
-            <span className="text-amber-300">ניקוד: {won ? computeWinScore(timeLeft, moves) : 0}</span>
-            {" · "}
-            <span>מהלכים: {moves}</span>
-            {" · "}
-            <span>{timeLeft}s</span>
-            {" · "}
-            <span>{gridSize}×{gridSize}</span>
-          </div>
-
-          <div className="relative z-0 mx-auto mt-11 flex h-full min-h-0 w-full max-w-[1180px] flex-1 flex-col overflow-hidden rounded-lg border-4 border-yellow-400 bg-gradient-to-b from-slate-900 to-slate-950 shadow-lg sm:mt-12">
-            <div className="flex min-h-0 flex-1 flex-col items-center justify-start gap-2 overflow-y-auto p-2 sm:flex-row sm:items-start sm:justify-center sm:gap-4 sm:p-3">
-              <div className="flex w-full shrink-0 flex-col items-center gap-2 sm:w-auto">
-                <div
-                  className={`rounded-xl border-2 border-yellow-400/60 bg-black/40 p-2 text-center ${
-                    isEasy ? "ring-2 ring-sky-400/50" : ""
-                  }`}
-                >
-                  <p className="mb-1 text-xs font-bold text-yellow-200 sm:text-sm">תמונת היעד 🐶</p>
-                  <img
-                    src={puzzleImage}
-                    alt=""
-                    className={`rounded-lg object-cover ring-2 ring-yellow-400 ${
-                      isEasy ? "h-24 w-24 sm:h-28 sm:w-28" : "h-20 w-20 sm:h-24 sm:w-24"
-                    }`}
-                  />
-                </div>
-                {isEasy ? (
-                  <button
-                    type="button"
-                    onClick={triggerHint}
-                    disabled={!gameRunning || gameOver}
-                    className="min-h-[44px] rounded-xl border-2 border-sky-400 bg-sky-950/60 px-4 py-2 text-sm font-bold text-sky-100 disabled:opacity-40"
-                    style={{ touchAction: "manipulation" }}
-                  >
-                    💡 רמז — תמונה מלאה
-                  </button>
-                ) : null}
-              </div>
-
-              <div className={`relative w-full shrink-0 ${settings.maxGridWidth}`}>
-                {blockedMsg ? (
-                  <div className="pointer-events-none absolute left-1/2 top-0 z-20 -translate-x-1/2 -translate-y-1 rounded-lg bg-rose-600/90 px-3 py-1.5 text-xs font-bold text-white shadow-lg sm:text-sm">
-                    {blockedMsg}
-                  </div>
-                ) : null}
-
-                <div
-                  className="grid gap-1.5 rounded-xl border-2 border-yellow-400 bg-slate-950/80 p-2 shadow-inner sm:gap-2 sm:p-3"
-                  style={{ gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))` }}
-                >
-                  {tiles.map((tile, index) => {
-                    if (tile == null) {
-                      return (
-                        <div
-                          key={`blank-${index}`}
-                          className={`aspect-square rounded-lg border-2 border-dashed ${
-                            isEasy
-                              ? "border-sky-400 bg-sky-950/50 ring-2 ring-sky-400/40"
-                              : "border-white/30 bg-white/8"
-                          } ${tileMinClass}`}
-                          aria-label="מקום ריק"
-                        />
-                      );
-                    }
-                    const movable = movableSet.has(index);
-                    return (
-                      <button
-                        key={`tile-${index}-${tile}`}
-                        type="button"
-                        className={`aspect-square overflow-hidden rounded-lg border-2 bg-slate-800 shadow-md transition touch-manipulation active:scale-[0.97] ${tileMinClass} ${
-                          movable
-                            ? "border-sky-300 ring-2 ring-sky-400/50"
-                            : "border-yellow-300/70 opacity-95"
-                        }`}
-                        style={tileBg(tile)}
-                        onClick={() => tryMove(index)}
-                        aria-label={`חלק ${tile + 1}${movable ? " — ניתן להזיז" : ""}`}
-                      />
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
-            {showHintPreview ? (
-              <div className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center bg-black/75 p-4">
-                <div className="text-center">
-                  <img
-                    src={puzzleImage}
-                    alt=""
-                    className="mx-auto max-h-[min(50vh,280px)] max-w-[min(85vw,280px)] rounded-xl object-contain ring-4 ring-sky-400"
-                  />
-                  <p className="mt-2 text-sm font-bold text-sky-200">כך צריכה להיראות התמונה!</p>
-                </div>
-              </div>
-            ) : null}
-
-            {gameOver ? (
-              <div className="pointer-events-auto absolute inset-0 z-40 flex flex-col items-center justify-center gap-2 overflow-y-auto bg-black/82 px-4 py-6 text-center">
-                <h2 className={`text-2xl font-extrabold sm:text-4xl ${won ? "text-emerald-300" : "text-rose-400"}`}>
-                  {won ? "מעולה! הפאזל מוכן!" : "הזמן נגמר — לא הספקתם"}
-                </h2>
-                <p className="max-w-md text-sm font-semibold text-white/90 sm:text-base">
-                  {won
-                    ? `ניקוד: ${computeWinScore(timeLeft, moves)} · מהלכים: ${moves}`
-                    : "נסו שוב — סדרו את כל החלקים לפני שהזמן נגמר"}
-                </p>
-                {!won ? (
-                  <p className="text-xs text-gray-300 sm:text-sm">הפסד = 0 מטבעות</p>
-                ) : null}
-              </div>
-            ) : null}
-          </div>
-        </div>
+        <MleoPicturePuzzleSlidingPlay
+          puzzleImage={puzzleImage}
+          gridSize={gridSize}
+          settings={slidingSettings}
+          isEasy={isEasy}
+          gameRunning={gameRunning}
+          gameOver={gameOver}
+          won={won}
+          timeLeft={timeLeft}
+          moves={moves}
+          tiles={tiles}
+          blockedMsg={blockedMsg}
+          showHintPreview={showHintPreview}
+          onTryMove={tryMove}
+          onTriggerHint={triggerHint}
+          computeWinScore={computeWinScore}
+        />
       )}
     </div>
   );
