@@ -30,6 +30,13 @@ const GAME_HUB_CARDS = [
     blurb: "משחקים על אותו מכשיר — גם בלי אינטרנט.",
     href: "/offline",
   },
+  {
+    key: "educational",
+    title: "המשחקים החינוכיים של ליאו",
+    emoji: "📚",
+    blurb: "משחקי העשרה, חשיבה וידע כללי",
+    href: "/student/educational-games",
+  },
 ];
 
 export default function GamesHubPage() {

@@ -1,1 +1,1 @@
-export { default } from "./recycling-factory/RecyclingFactoryPrototype.jsx";
+export { default } from "../../../educational-games/recycling-factory/RecyclingFactoryGame.jsx";

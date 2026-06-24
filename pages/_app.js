@@ -53,6 +53,8 @@ const STUDENT_PROTECTED_ROUTES = new Set([
   "/student/solo-games/sort-shapes",
   "/student/solo-games/smart-blocks",
   "/student/solo-games/fruit-slice",
+  "/student/educational-games",
+  "/student/educational-games/recycling-factory",
   "/learning",
   "/learning/math-master",
   "/learning/geometry-master",
