@@ -7,8 +7,10 @@ import { useSoloGameShellUi } from "../../hooks/solo-games/useSoloGameShellUi.js
 import { enterMobileGameFullscreenFromUserGesture } from "../../lib/solo-games/solo-game-fullscreen.client.js";
 import GameAccessGuard from "../games/GameAccessGuard.jsx";
 import EducationalGameEntryScreen from "./EducationalGameEntryScreen.jsx";
-import EducationalGameFinishScreen from "./EducationalGameFinishScreen.jsx";
+import SoloGameFinishScreen from "../solo-games/SoloGameFinishScreen.jsx";
+import SoloGameHelpModal from "../solo-games/SoloGameHelpModal.jsx";
 import SoloGameSettlingOverlay from "../solo-games/SoloGameSettlingOverlay.jsx";
+import { useSoloGameHelp } from "../../hooks/solo-games/useSoloGameHelp.js";
 import MleoRecyclingFactoryEngine from "./engines/MleoRecyclingFactoryEngine.jsx";
 
 const ENGINE_MAP = {
@@ -32,6 +34,8 @@ export default function EducationalGameShell({ gameKey }) {
 
   const { sessionId, busy, error, startSession, finishSession, resetSession } =
     useEducationalGameSession(gameKey);
+
+  const { helpGame, openSoloGameHelp, closeSoloGameHelp } = useSoloGameHelp();
 
   const handleStart = useCallback(async () => {
     if (typeof document !== "undefined") {
@@ -123,6 +127,7 @@ export default function EducationalGameShell({ gameKey }) {
                 difficulty={difficulty}
                 setDifficulty={setDifficulty}
                 onStart={handleStart}
+                onOpenHelp={openSoloGameHelp}
                 busy={busy}
                 error={error}
               />
@@ -141,15 +146,11 @@ export default function EducationalGameShell({ gameKey }) {
             <SoloGameSettlingOverlay open={phase === "settling"} />
 
             {phase === "finish" && finishData ? (
-              <EducationalGameFinishScreen
+              <SoloGameFinishScreen
                 didWin={finishData.didWin === true}
                 score={finishData.score ?? 0}
-                coinsAwarded={finishData.coinsAwarded ?? 0}
-                accuracy={finishData.accuracy ?? 0}
-                correctItems={finishData.correctItems ?? 0}
-                mistakes={finishData.mistakes ?? 0}
-                bestStreak={finishData.bestStreak ?? 0}
                 displayLevelHe={finishData.displayLevelHe || "—"}
+                coinsAwarded={finishData.coinsAwarded ?? 0}
                 breakdownHe={finishData.breakdownHe}
                 balanceAfter={finishData.balanceAfter}
                 onPlayAgain={handlePlayAgain}
@@ -157,6 +158,7 @@ export default function EducationalGameShell({ gameKey }) {
               />
             ) : null}
           </main>
+          <SoloGameHelpModal game={helpGame} onClose={closeSoloGameHelp} />
         </div>
       </>
     </GameAccessGuard>

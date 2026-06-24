@@ -1,5 +1,7 @@
 import { EDUCATIONAL_DIFFICULTIES, difficultyLabelHe } from "../../lib/educational-games/educational-game-registry.js";
 import { useSoloGameShellUi } from "../../hooks/solo-games/useSoloGameShellUi.js";
+import SoloGameNavButtons from "../solo-games/SoloGameNavButtons.jsx";
+import SoloGameHelpButton from "../solo-games/SoloGameHelpButton.jsx";
 
 /**
  * @param {{
@@ -7,6 +9,7 @@ import { useSoloGameShellUi } from "../../hooks/solo-games/useSoloGameShellUi.js
  *   difficulty: string,
  *   setDifficulty: (d: string) => void,
  *   onStart: () => void,
+ *   onOpenHelp?: (game: object) => void,
  *   busy?: boolean,
  *   error?: string,
  * }} props
@@ -16,6 +19,7 @@ export default function EducationalGameEntryScreen({
   difficulty,
   setDifficulty,
   onStart,
+  onOpenHelp,
   busy = false,
   error = "",
 }) {
@@ -23,10 +27,17 @@ export default function EducationalGameEntryScreen({
 
   return (
     <div
-      className="relative flex h-full min-h-0 flex-col items-center justify-center overflow-hidden px-4 py-2 text-center"
+      className="relative flex h-full min-h-0 flex-col items-center justify-center overflow-hidden overflow-x-hidden px-4 py-2 sm:py-3 text-center"
       dir="rtl"
     >
-      <div className="w-full max-w-md space-y-4">
+      {onOpenHelp ? (
+        <SoloGameHelpButton
+          game={game}
+          onOpen={onOpenHelp}
+          className="absolute left-4 top-4 sm:left-6 sm:top-6"
+        />
+      ) : null}
+      <div className="w-full max-w-md space-y-4 sm:space-y-5">
         <div className="text-5xl" aria-hidden>
           {game.emoji}
         </div>
@@ -47,7 +58,7 @@ export default function EducationalGameEntryScreen({
                     onClick={() => setDifficulty(id)}
                     className={`min-h-[44px] min-w-[5.5rem] rounded-xl border px-4 py-2 text-sm font-bold transition ${
                       selected ? GH.entryBtnSelected : GH.entryBtnDefault
-                    }`}
+                    } ${selected ? "scale-105" : ""}`}
                   >
                     {difficultyLabelHe(id)}
                   </button>
@@ -59,14 +70,13 @@ export default function EducationalGameEntryScreen({
 
         {error ? <p className={SG.errorBox}>{error}</p> : null}
 
-        <button
-          type="button"
-          disabled={busy}
-          onClick={onStart}
-          className={`${GH.entryBtnSelected} mx-auto min-h-[48px] rounded-xl px-8 py-2.5 text-base font-bold`}
-        >
-          {busy ? "טוען…" : "התחל משחק"}
-        </button>
+        <SoloGameNavButtons
+          primaryLabel="התחל משחק"
+          onPrimary={onStart}
+          primaryDisabled={busy}
+          primaryBusy={busy}
+          primaryBusyLabel="טוען…"
+        />
       </div>
     </div>
   );
