@@ -1,0 +1,270 @@
+{
+  "generatedAt": "2026-06-24T08:32:22.873Z",
+  "status": "NOT_APPROVED — incomplete (429 or stopped early)",
+  "productionOrigin": "https://liosh-website.vercel.app",
+  "isRealProductionHttp": true,
+  "localGitHead": "f972c1581c8732935e75cd9c44823fa645d91697 2026-06-24 11:29:44 +0300 Auto update - 24/06/2026 11:29:44.69",
+  "vercelBuildIdFromHomepage": "YHex4tOYPm6mnOWNss46M",
+  "vercelResponseIds": [
+    "fra1::iad1::prpbm-1782289697452-52244b23fcea",
+    "fra1::iad1::z748s-1782289781653-4702e2a94363",
+    "fra1::iad1::dq68l-1782289861022-15859bd5ed41",
+    "fra1::iad1::pd6ql-1782289939984-4e9fe710e948"
+  ],
+  "deployNote": "Production Next.js buildId=YHex4tOYPm6mnOWNss46M. Prior partial QA showed updated copy on Q1–Q2 before this run — deploy occurred before final QA. Earlier production-fix-qa-report.json (partial 2/10 + 429) superseded by this final run.",
+  "rangeUsed": {
+    "reportPeriod": "custom",
+    "rangeFrom": "2026-05-26",
+    "rangeTo": "2026-06-24"
+  },
+  "authAccount": "admin@admin.com",
+  "matchedStudent": {
+    "id": "38e2dbcf-a927-419f-a2ed-b26c7100e656",
+    "name": "בדיקה-ב2",
+    "summary": {
+      "totalQuestions": 214,
+      "overallAccuracy": 52.8,
+      "totalMinutes": 372,
+      "subjectBreakdown": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      }
+    }
+  },
+  "runParams": {
+    "initialDelayMs": 600000,
+    "betweenDelayMs": 65000
+  },
+  "stoppedOn429": true,
+  "http200Count": 3,
+  "any429": true,
+  "allManualPass": false,
+  "results": [
+    {
+      "index": 1,
+      "utterance": "מה הכי חשוב כרגע?",
+      "httpStatus": 200,
+      "resolutionStatus": "resolved",
+      "intent": "what_is_most_important",
+      "route": "pattern_composer",
+      "ambiguous": false,
+      "isNoData": false,
+      "fullText": "הדבר הכי חשוב כרגע הוא לבחור נושא אחד לחיזוק ולא לפזר את התרגול. לפי הדוח, המקום הראשון להתחלה הוא חשבון — חיבור: 102 שאלות, 33% הצלחה. כדאי לתרגל 5–10 דקות, 3–5 שאלות, ואז לבדוק אם התשובות יציבות יותר.",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      },
+      "forbidden": {
+        "magbil": false,
+        "circularAmbiguousExample": false
+      },
+      "responseHeaders": {
+        "x-vercel-id": "fra1::iad1::prpbm-1782289697452-52244b23fcea",
+        "x-vercel-cache": "MISS",
+        "date": "Wed, 24 Jun 2026 08:28:36 GMT"
+      },
+      "error": null,
+      "manualPass": true,
+      "manualFailReasons": [],
+      "matches214qReport": true
+    },
+    {
+      "index": 2,
+      "utterance": "איפה רואים התקדמות?",
+      "httpStatus": 200,
+      "resolutionStatus": "resolved",
+      "intent": "explain_report",
+      "route": "pattern_composer",
+      "ambiguous": false,
+      "isNoData": false,
+      "fullText": "בדוח הנוכחי לא מופיעה השוואה מספיקה שמוכיחה שינוי מהשבוע הקודם. כן אפשר לראות איפה התרגול נראה יציב יותר בתקופה הזו: מדעים — גוף האדם, עם 7 שאלות ו־86% הצלחה. לכן כדאי להמשיך שם בתרגול קצר ולבדוק אם היציבות נשמרת גם בהמשך.",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      },
+      "forbidden": {
+        "magbil": false,
+        "circularAmbiguousExample": false
+      },
+      "responseHeaders": {
+        "x-vercel-id": "fra1::iad1::z748s-1782289781653-4702e2a94363",
+        "x-vercel-cache": "MISS",
+        "date": "Wed, 24 Jun 2026 08:29:55 GMT"
+      },
+      "error": null,
+      "manualPass": true,
+      "manualFailReasons": [],
+      "matches214qReport": true
+    },
+    {
+      "index": 3,
+      "utterance": "מה כדאי להימנע ממנו עכשיו?",
+      "httpStatus": 200,
+      "resolutionStatus": "resolved",
+      "intent": "what_not_to_do_now",
+      "route": "pattern_composer",
+      "ambiguous": false,
+      "isNoData": false,
+      "fullText": "כרגע כדאי להימנע משלושה דברים: לא להסיק מסקנה אישית על הילד, לא לפתוח הרבה נושאים יחד, ולא להחליט לפי שאלה אחת או שתיים. לפי הדוח, עדיף לבחור נושא אחד לתרגול קצר, לבדוק כמה תשובות ברצף, ואז לראות אם הכיוון חוזר גם בהמשך. הנושא להתחלה: חשבון — חיבור.",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      },
+      "forbidden": {
+        "magbil": false,
+        "circularAmbiguousExample": false
+      },
+      "responseHeaders": {
+        "x-vercel-id": "fra1::iad1::dq68l-1782289861022-15859bd5ed41",
+        "x-vercel-cache": "MISS",
+        "date": "Wed, 24 Jun 2026 08:31:14 GMT"
+      },
+      "error": null,
+      "manualPass": true,
+      "manualFailReasons": [],
+      "matches214qReport": true
+    },
+    {
+      "index": 4,
+      "utterance": "מה לעשות בבית היום?",
+      "httpStatus": 429,
+      "ambiguous": false,
+      "isNoData": false,
+      "fullText": "",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      },
+      "forbidden": {
+        "magbil": false,
+        "circularAmbiguousExample": false
+      },
+      "responseHeaders": {
+        "x-vercel-id": "fra1::iad1::pd6ql-1782289939984-4e9fe710e948",
+        "x-vercel-cache": "MISS",
+        "date": "Wed, 24 Jun 2026 08:32:21 GMT"
+      },
+      "error": null,
+      "manualPass": false,
+      "manualFailReasons": [
+        "http 429",
+        "no clear home action"
+      ],
+      "matches214qReport": true
+    }
+  ]
+}

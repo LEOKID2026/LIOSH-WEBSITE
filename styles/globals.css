@@ -166,6 +166,21 @@ a[href][aria-disabled="true"] {
 
 /* Picture puzzle — compact tray pieces on mobile portrait only */
 @media (max-width: 767px) and (orientation: portrait) {
+  .puzzle-play-layout {
+    gap: 0;
+    padding: 2px;
+  }
+
+  .puzzle-tray-portrait-top .puzzle-tray-hint-row {
+    margin-bottom: 1px;
+    line-height: 1;
+  }
+
+  .puzzle-tray-portrait-top .puzzle-tray-grid-single-row,
+  .puzzle-tray-portrait-bottom .puzzle-tray-grid {
+    gap: 3px;
+  }
+
   .puzzle-tray-portrait .puzzle-tray-grid {
     grid-template-columns: repeat(auto-fill, 42px);
     justify-content: center;
@@ -206,14 +221,16 @@ a[href][aria-disabled="true"] {
     height: 42px;
     max-height: 42px;
   }
-
-  .puzzle-hint-close {
-    display: flex;
-  }
 }
 
 .puzzle-hint-close {
   display: none;
+}
+
+@media (max-width: 1023px) {
+  .puzzle-hint-close {
+    display: flex;
+  }
 }
 
 /* Picture puzzle — mobile play shell (Fullscreen API target) */

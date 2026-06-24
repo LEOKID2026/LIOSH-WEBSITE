@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-06-24T08:09:45.878Z",
+  "generatedAt": "2026-06-24T08:31:24.436Z",
   "status": "NOT_APPROVED — ready for owner re-test only",
-  "localGitHead": "382f4f6c001ce72453e19a3c5bb425894c67db43 2026-06-24 11:01:31 +0300 Auto update - 24/06/2026 11:01:31.01",
+  "localGitHead": "f972c1581c8732935e75cd9c44823fa645d91697 2026-06-24 11:29:44 +0300 Auto update - 24/06/2026 11:29:44.69",
   "rangeUsed": {
     "reportPeriod": "custom",
     "rangeFrom": "2026-05-26",
@@ -9,43 +9,9 @@
   },
   "rangeNote": "Owner UI showed 26/05/2026–24/06/2026; API uses inclusive YYYY-MM-DD (same as computeReportRangeForParentApi custom path)",
   "authAccount": "admin@admin.com",
-  "studentsScanned": 1,
-  "owner214Found": true,
-  "matchedStudent": {
-    "id": "38e2dbcf-a927-419f-a2ed-b26c7100e656",
-    "name": "בדיקה-ב2",
-    "summary": {
-      "totalQuestions": 214,
-      "overallAccuracy": 52.8,
-      "totalMinutes": 372,
-      "subjectBreakdown": {
-        "math": {
-          "questions": 102,
-          "accuracy": 33.33
-        },
-        "geometry": {
-          "questions": 25,
-          "accuracy": 72
-        },
-        "english": {
-          "questions": 18,
-          "accuracy": 66.67
-        },
-        "hebrew": {
-          "questions": 25,
-          "accuracy": 64
-        },
-        "science": {
-          "questions": 44,
-          "accuracy": 75
-        },
-        "moledet_geography": {
-          "questions": 0,
-          "accuracy": 0
-        }
-      }
-    }
-  },
+  "studentsScanned": 500,
+  "owner214Found": false,
+  "matchedStudent": null,
   "closestReports": [
     {
       "studentId": "38e2dbcf-a927-419f-a2ed-b26c7100e656",
@@ -53,34 +19,149 @@
       "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
       "totalQuestions": 214,
       "overallAccuracy": 52.8,
-      "totalMinutes": 372,
-      "subjectBreakdown": {
-        "math": {
-          "questions": 102,
-          "accuracy": 33.33
-        },
-        "geometry": {
-          "questions": 25,
-          "accuracy": 72
-        },
-        "english": {
-          "questions": 18,
-          "accuracy": 66.67
-        },
-        "hebrew": {
-          "questions": 25,
-          "accuracy": 64
-        },
-        "science": {
-          "questions": 44,
-          "accuracy": 75
-        },
-        "moledet_geography": {
-          "questions": 0,
-          "accuracy": 0
-        }
-      },
-      "matchesOwnerFingerprint": true
+      "totalMinutes": null,
+      "subjectBreakdown": {},
+      "matchesOwnerFingerprint": false
+    },
+    {
+      "studentId": "dea2bbce-1712-4862-9de7-00b732672fbb",
+      "fullName": "בדיקה-ה2",
+      "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+      "totalQuestions": 224,
+      "overallAccuracy": 62.5,
+      "totalMinutes": null,
+      "subjectBreakdown": {},
+      "matchesOwnerFingerprint": false
+    },
+    {
+      "studentId": "6c4f6dc1-de43-4b86-abe7-4f041e9d3a8c",
+      "fullName": "בדיקה-א2",
+      "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+      "totalQuestions": 188,
+      "overallAccuracy": 61.17,
+      "totalMinutes": null,
+      "subjectBreakdown": {},
+      "matchesOwnerFingerprint": false
+    },
+    {
+      "studentId": "873c6971-06ed-4b31-9d76-616b4b623a52",
+      "fullName": "בדיקה-ו2",
+      "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+      "totalQuestions": 133,
+      "overallAccuracy": 72.18,
+      "totalMinutes": null,
+      "subjectBreakdown": {},
+      "matchesOwnerFingerprint": false
+    },
+    {
+      "studentId": "a5b644c4-7407-422f-bb23-a78a0a608a98",
+      "fullName": "בדיקה-ב1",
+      "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+      "totalQuestions": 304,
+      "overallAccuracy": 73.68,
+      "totalMinutes": null,
+      "subjectBreakdown": {},
+      "matchesOwnerFingerprint": false
+    },
+    {
+      "studentId": "cd4ba8f0-fe4f-424d-8ed1-0c3acaf5f412",
+      "fullName": "בדיקה-ה1",
+      "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+      "totalQuestions": 309,
+      "overallAccuracy": 63.11,
+      "totalMinutes": null,
+      "subjectBreakdown": {},
+      "matchesOwnerFingerprint": false
+    },
+    {
+      "studentId": "74c30e48-895b-4f4c-a65a-888f656f54f6",
+      "fullName": "עומר יוסף",
+      "parentId": "be71653c-78f5-42e6-951e-c560afaa112a",
+      "totalQuestions": 113,
+      "overallAccuracy": 63.72,
+      "totalMinutes": null,
+      "subjectBreakdown": {},
+      "matchesOwnerFingerprint": false
+    },
+    {
+      "studentId": "921e1c5d-4124-41cd-bad7-a16dbf0dfecc",
+      "fullName": "בדיקה-ד2",
+      "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+      "totalQuestions": 108,
+      "overallAccuracy": 65.74,
+      "totalMinutes": null,
+      "subjectBreakdown": {},
+      "matchesOwnerFingerprint": false
+    },
+    {
+      "studentId": "fd3901da-66ce-46c7-a24c-b33df2141c04",
+      "fullName": "בדיקה-א1",
+      "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+      "totalQuestions": 337,
+      "overallAccuracy": 90.21,
+      "totalMinutes": null,
+      "subjectBreakdown": {},
+      "matchesOwnerFingerprint": false
+    },
+    {
+      "studentId": "79c8f8c7-2494-439e-b867-93b096c8590b",
+      "fullName": "בדיקה-ג1",
+      "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+      "totalQuestions": 343,
+      "overallAccuracy": 66.18,
+      "totalMinutes": null,
+      "subjectBreakdown": {},
+      "matchesOwnerFingerprint": false
+    },
+    {
+      "studentId": "b325272f-b554-4865-a827-6477773fb200",
+      "fullName": "בדיקה-ג2",
+      "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+      "totalQuestions": 362,
+      "overallAccuracy": 58.01,
+      "totalMinutes": null,
+      "subjectBreakdown": {},
+      "matchesOwnerFingerprint": false
+    },
+    {
+      "studentId": "d8f6b184-80f2-4f2b-897e-cbbf557022e7",
+      "fullName": "בדיקה-ד1",
+      "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+      "totalQuestions": 366,
+      "overallAccuracy": 40.16,
+      "totalMinutes": null,
+      "subjectBreakdown": {},
+      "matchesOwnerFingerprint": false
+    },
+    {
+      "studentId": "2352e8c7-ac0b-4daa-afbf-cb7d130062b3",
+      "fullName": "ערן יוסף",
+      "parentId": "be71653c-78f5-42e6-951e-c560afaa112a",
+      "totalQuestions": 49,
+      "overallAccuracy": 67.35,
+      "totalMinutes": null,
+      "subjectBreakdown": {},
+      "matchesOwnerFingerprint": false
+    },
+    {
+      "studentId": "5f3df0a3-4527-4f8b-97cf-6e8ec5624920",
+      "fullName": "בדיקה-ו1",
+      "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+      "totalQuestions": 385,
+      "overallAccuracy": 77.92,
+      "totalMinutes": null,
+      "subjectBreakdown": {},
+      "matchesOwnerFingerprint": false
+    },
+    {
+      "studentId": "8fb635fe-c8eb-467a-b445-ec584b5859da",
+      "fullName": "בדיקה",
+      "parentId": "be71653c-78f5-42e6-951e-c560afaa112a",
+      "totalQuestions": 3,
+      "overallAccuracy": 100,
+      "totalMinutes": null,
+      "subjectBreakdown": {},
+      "matchesOwnerFingerprint": false
     }
   ],
   "productionHttpResults": [
@@ -94,32 +175,7 @@
       "isNoData": false,
       "fullText": "הדבר הכי חשוב כרגע הוא לבחור נושא אחד לחיזוק ולא לפזר את התרגול. לפי הדוח, המקום הראשון להתחלה הוא חשבון — חיבור: 102 שאלות, 33% הצלחה. כדאי לתרגל 5–10 דקות, 3–5 שאלות, ואז לבדוק אם התשובות יציבות יותר.",
       "payloadQuestions": 214,
-      "payloadSubjects": {
-        "math": {
-          "questions": 102,
-          "accuracy": 33.33
-        },
-        "geometry": {
-          "questions": 25,
-          "accuracy": 72
-        },
-        "english": {
-          "questions": 18,
-          "accuracy": 66.67
-        },
-        "hebrew": {
-          "questions": 25,
-          "accuracy": 64
-        },
-        "science": {
-          "questions": 44,
-          "accuracy": 75
-        },
-        "moledet_geography": {
-          "questions": 0,
-          "accuracy": 0
-        }
-      }
+      "payloadSubjects": {}
     },
     {
       "utterance": "איפה רואים התקדמות?",
@@ -131,521 +187,164 @@
       "isNoData": false,
       "fullText": "בדוח הנוכחי לא מופיעה השוואה מספיקה שמוכיחה שינוי מהשבוע הקודם. כן אפשר לראות איפה התרגול נראה יציב יותר בתקופה הזו: מדעים — גוף האדם, עם 7 שאלות ו־86% הצלחה. לכן כדאי להמשיך שם בתרגול קצר ולבדוק אם היציבות נשמרת גם בהמשך.",
       "payloadQuestions": 214,
-      "payloadSubjects": {
-        "math": {
-          "questions": 102,
-          "accuracy": 33.33
-        },
-        "geometry": {
-          "questions": 25,
-          "accuracy": 72
-        },
-        "english": {
-          "questions": 18,
-          "accuracy": 66.67
-        },
-        "hebrew": {
-          "questions": 25,
-          "accuracy": 64
-        },
-        "science": {
-          "questions": 44,
-          "accuracy": 75
-        },
-        "moledet_geography": {
-          "questions": 0,
-          "accuracy": 0
-        }
-      }
+      "payloadSubjects": {}
     },
     {
       "utterance": "מה כדאי להימנע ממנו עכשיו?",
-      "httpStatus": 429,
-      "ambiguous": false,
-      "isNoData": false,
-      "fullText": "",
-      "payloadQuestions": 214,
-      "payloadSubjects": {
-        "math": {
-          "questions": 102,
-          "accuracy": 33.33
-        },
-        "geometry": {
-          "questions": 25,
-          "accuracy": 72
-        },
-        "english": {
-          "questions": 18,
-          "accuracy": 66.67
-        },
-        "hebrew": {
-          "questions": 25,
-          "accuracy": 64
-        },
-        "science": {
-          "questions": 44,
-          "accuracy": 75
-        },
-        "moledet_geography": {
-          "questions": 0,
-          "accuracy": 0
-        }
-      }
-    },
-    {
-      "utterance": "מה לעשות בבית היום?",
-      "httpStatus": 429,
-      "ambiguous": false,
-      "isNoData": false,
-      "fullText": "",
-      "payloadQuestions": 214,
-      "payloadSubjects": {
-        "math": {
-          "questions": 102,
-          "accuracy": 33.33
-        },
-        "geometry": {
-          "questions": 25,
-          "accuracy": 72
-        },
-        "english": {
-          "questions": 18,
-          "accuracy": 66.67
-        },
-        "hebrew": {
-          "questions": 25,
-          "accuracy": 64
-        },
-        "science": {
-          "questions": 44,
-          "accuracy": 75
-        },
-        "moledet_geography": {
-          "questions": 0,
-          "accuracy": 0
-        }
-      }
-    },
-    {
-      "utterance": "איפה הוא צריך עזרה?",
-      "httpStatus": 429,
-      "ambiguous": false,
-      "isNoData": false,
-      "fullText": "",
-      "payloadQuestions": 214,
-      "payloadSubjects": {
-        "math": {
-          "questions": 102,
-          "accuracy": 33.33
-        },
-        "geometry": {
-          "questions": 25,
-          "accuracy": 72
-        },
-        "english": {
-          "questions": 18,
-          "accuracy": 66.67
-        },
-        "hebrew": {
-          "questions": 25,
-          "accuracy": 64
-        },
-        "science": {
-          "questions": 44,
-          "accuracy": 75
-        },
-        "moledet_geography": {
-          "questions": 0,
-          "accuracy": 0
-        }
-      }
-    },
-    {
-      "utterance": "למה כתוב שיש פער במתמטיקה?",
-      "httpStatus": 429,
-      "ambiguous": false,
-      "isNoData": false,
-      "fullText": "",
-      "payloadQuestions": 214,
-      "payloadSubjects": {
-        "math": {
-          "questions": 102,
-          "accuracy": 33.33
-        },
-        "geometry": {
-          "questions": 25,
-          "accuracy": 72
-        },
-        "english": {
-          "questions": 18,
-          "accuracy": 66.67
-        },
-        "hebrew": {
-          "questions": 25,
-          "accuracy": 64
-        },
-        "science": {
-          "questions": 44,
-          "accuracy": 75
-        },
-        "moledet_geography": {
-          "questions": 0,
-          "accuracy": 0
-        }
-      }
-    },
-    {
-      "utterance": "האם הבעיה היא נשיאה?",
-      "httpStatus": 429,
-      "ambiguous": false,
-      "isNoData": false,
-      "fullText": "",
-      "payloadQuestions": 214,
-      "payloadSubjects": {
-        "math": {
-          "questions": 102,
-          "accuracy": 33.33
-        },
-        "geometry": {
-          "questions": 25,
-          "accuracy": 72
-        },
-        "english": {
-          "questions": 18,
-          "accuracy": 66.67
-        },
-        "hebrew": {
-          "questions": 25,
-          "accuracy": 64
-        },
-        "science": {
-          "questions": 44,
-          "accuracy": 75
-        },
-        "moledet_geography": {
-          "questions": 0,
-          "accuracy": 0
-        }
-      }
-    },
-    {
-      "utterance": "האם זה בגלל לחץ זמן?",
-      "httpStatus": 429,
-      "ambiguous": false,
-      "isNoData": false,
-      "fullText": "",
-      "payloadQuestions": 214,
-      "payloadSubjects": {
-        "math": {
-          "questions": 102,
-          "accuracy": 33.33
-        },
-        "geometry": {
-          "questions": 25,
-          "accuracy": 72
-        },
-        "english": {
-          "questions": 18,
-          "accuracy": 66.67
-        },
-        "hebrew": {
-          "questions": 25,
-          "accuracy": 64
-        },
-        "science": {
-          "questions": 44,
-          "accuracy": 75
-        },
-        "moledet_geography": {
-          "questions": 0,
-          "accuracy": 0
-        }
-      }
-    },
-    {
-      "utterance": "האם הפעילות שנתתי לו השפיעה?",
-      "httpStatus": 429,
-      "ambiguous": false,
-      "isNoData": false,
-      "fullText": "",
-      "payloadQuestions": 214,
-      "payloadSubjects": {
-        "math": {
-          "questions": 102,
-          "accuracy": 33.33
-        },
-        "geometry": {
-          "questions": 25,
-          "accuracy": 72
-        },
-        "english": {
-          "questions": 18,
-          "accuracy": 66.67
-        },
-        "hebrew": {
-          "questions": 25,
-          "accuracy": 64
-        },
-        "science": {
-          "questions": 44,
-          "accuracy": 75
-        },
-        "moledet_geography": {
-          "questions": 0,
-          "accuracy": 0
-        }
-      }
-    },
-    {
-      "utterance": "תסביר לי את הדוח במילים פשוטות.",
-      "httpStatus": 429,
-      "ambiguous": false,
-      "isNoData": false,
-      "fullText": "",
-      "payloadQuestions": 214,
-      "payloadSubjects": {
-        "math": {
-          "questions": 102,
-          "accuracy": 33.33
-        },
-        "geometry": {
-          "questions": 25,
-          "accuracy": 72
-        },
-        "english": {
-          "questions": 18,
-          "accuracy": 66.67
-        },
-        "hebrew": {
-          "questions": 25,
-          "accuracy": 64
-        },
-        "science": {
-          "questions": 44,
-          "accuracy": 75
-        },
-        "moledet_geography": {
-          "questions": 0,
-          "accuracy": 0
-        }
-      }
-    }
-  ],
-  "localEngineResults": [
-    {
-      "utterance": "מה הכי חשוב כרגע?",
-      "resolutionStatus": "resolved",
-      "intent": "what_is_most_important",
-      "route": "pattern_composer",
-      "ambiguous": false,
-      "isNoData": false,
-      "fullText": "הדבר הכי חשוב כרגע הוא לבחור נושא אחד לחיזוק ולא לפזר את התרגול. לפי הדוח, המקום הראשון להתחלה הוא חשבון — חיבור (כיתה ב׳): 102 שאלות, 33% הצלחה. כדאי לתרגל 5–10 דקות, 3–5 שאלות, ואז לבדוק אם התשובות יציבות יותר.",
-      "payloadQuestions": 214,
-      "payloadSubjects": {
-        "math": {
-          "questions": 102,
-          "accuracy": 33.33
-        },
-        "geometry": {
-          "questions": 25,
-          "accuracy": 72
-        },
-        "english": {
-          "questions": 18,
-          "accuracy": 66.67
-        },
-        "hebrew": {
-          "questions": 25,
-          "accuracy": 64
-        },
-        "science": {
-          "questions": 44,
-          "accuracy": 75
-        },
-        "moledet_geography": {
-          "questions": 0,
-          "accuracy": 0
-        }
-      }
-    },
-    {
-      "utterance": "איפה רואים התקדמות?",
-      "resolutionStatus": "resolved",
-      "intent": "explain_report",
-      "route": "pattern_composer",
-      "ambiguous": false,
-      "isNoData": false,
-      "fullText": "בדוח הנוכחי לא מופיעה השוואה מספיקה שמוכיחה שינוי מהשבוע הקודם. כן אפשר לראות איפה התרגול נראה יציב יותר בתקופה הזו: מדעים — ניסויים ותהליכים (כיתה ב׳), עם 37 שאלות ו־73% הצלחה. לכן כדאי להמשיך שם בתרגול קצר ולבדוק אם היציבות נשמרת גם בהמשך.",
-      "payloadQuestions": 214,
-      "payloadSubjects": {
-        "math": {
-          "questions": 102,
-          "accuracy": 33.33
-        },
-        "geometry": {
-          "questions": 25,
-          "accuracy": 72
-        },
-        "english": {
-          "questions": 18,
-          "accuracy": 66.67
-        },
-        "hebrew": {
-          "questions": 25,
-          "accuracy": 64
-        },
-        "science": {
-          "questions": 44,
-          "accuracy": 75
-        },
-        "moledet_geography": {
-          "questions": 0,
-          "accuracy": 0
-        }
-      }
-    },
-    {
-      "utterance": "מה כדאי להימנע ממנו עכשיו?",
+      "httpStatus": 200,
       "resolutionStatus": "resolved",
       "intent": "what_not_to_do_now",
       "route": "pattern_composer",
       "ambiguous": false,
       "isNoData": false,
-      "fullText": "כרגע כדאי להימנע משלושה דברים: לא להסיק מסקנה אישית על הילד, לא לפתוח הרבה נושאים יחד, ולא להחליט לפי שאלה אחת או שתיים. לפי הדוח, עדיף לבחור נושא אחד לתרגול קצר, לבדוק כמה תשובות ברצף, ואז לראות אם הכיוון חוזר גם בהמשך. הנושא להתחלה: חשבון — חיבור (כיתה ב׳).",
+      "fullText": "כרגע כדאי להימנע משלושה דברים: לא להסיק מסקנה אישית על הילד, לא לפתוח הרבה נושאים יחד, ולא להחליט לפי שאלה אחת או שתיים. לפי הדוח, עדיף לבחור נושא אחד לתרגול קצר, לבדוק כמה תשובות ברצף, ואז לראות אם הכיוון חוזר גם בהמשך. הנושא להתחלה: חשבון — חיבור.",
       "payloadQuestions": 214,
-      "payloadSubjects": {
-        "math": {
-          "questions": 102,
-          "accuracy": 33.33
-        },
-        "geometry": {
-          "questions": 25,
-          "accuracy": 72
-        },
-        "english": {
-          "questions": 18,
-          "accuracy": 66.67
-        },
-        "hebrew": {
-          "questions": 25,
-          "accuracy": 64
-        },
-        "science": {
-          "questions": 44,
-          "accuracy": 75
-        },
-        "moledet_geography": {
-          "questions": 0,
-          "accuracy": 0
-        }
-      }
+      "payloadSubjects": {}
     },
     {
       "utterance": "מה לעשות בבית היום?",
+      "httpStatus": 200,
       "resolutionStatus": "resolved",
       "intent": "what_to_do_today",
       "route": "pattern_composer",
       "ambiguous": false,
       "isNoData": false,
-      "fullText": "היום הייתי עושה דבר אחד: פעילות קצרה בנושא חשבון — חיבור (כיתה ב׳). בדוח מופיעות שם 102 שאלות עם 33% הצלחה, ולכן זה מקום טוב לתרגול ממוקד. לעשות 5–10 דקות בלבד, 3–5 שאלות, ובסוף לשאול את הילד: איך חשבת על התשובה?",
+      "fullText": "היום הייתי עושה דבר אחד: פעילות קצרה בנושא חשבון — חיבור. בדוח מופיעות שם 102 שאלות עם 33% הצלחה, ולכן זה מקום טוב לתרגול ממוקד. לעשות 5–10 דקות בלבד, 3–5 שאלות, ובסוף לשאול את הילד: איך חשבת על התשובה?",
       "payloadQuestions": 214,
-      "payloadSubjects": {
-        "math": {
-          "questions": 102,
-          "accuracy": 33.33
-        },
-        "geometry": {
-          "questions": 25,
-          "accuracy": 72
-        },
-        "english": {
-          "questions": 18,
-          "accuracy": 66.67
-        },
-        "hebrew": {
-          "questions": 25,
-          "accuracy": 64
-        },
-        "science": {
-          "questions": 44,
-          "accuracy": 75
-        },
-        "moledet_geography": {
-          "questions": 0,
-          "accuracy": 0
-        }
-      }
+      "payloadSubjects": {}
     },
     {
       "utterance": "איפה הוא צריך עזרה?",
+      "httpStatus": 200,
       "resolutionStatus": "resolved",
       "intent": "what_is_still_difficult",
       "route": "pattern_composer",
       "ambiguous": false,
       "isNoData": false,
-      "fullText": "לפי הדוח, המקום הראשון שכדאי לחזק הוא חשבון — חיבור (כיתה ב׳): 102 שאלות, 33% הצלחה. זה הנושא שהכי כדאי להתחיל ממנו כי הוא גם מופיע בדוח וגם נותן כיוון ברור לתרגול קצר בבית. אחריו אפשר לשים לב גם ל־עברית — קריאה (כיתה ב׳): 25 שאלות, 64% הצלחה. הצעד המעשי: לפתוח פעילות קצרה אחת בנושא הראשון, 5–10 דקות, ואז לבדוק אם התשובות הבאות יציבות יותר.",
+      "fullText": "לפי הדוח, המקום הראשון שכדאי לחזק הוא חשבון — חיבור: 102 שאלות, 33% הצלחה. זה הנושא שהכי כדאי להתחיל ממנו כי הוא גם מופיע בדוח וגם נותן כיוון ברור לתרגול קצר בבית. אחריו אפשר לשים לב גם ל־עברית — קריאה: 25 שאלות, 64% הצלחה. הצעד המעשי: לפתוח פעילות קצרה אחת בנושא הראשון, 5–10 דקות, ואז לבדוק אם התשובות הבאות יציבות יותר.",
       "payloadQuestions": 214,
-      "payloadSubjects": {
-        "math": {
-          "questions": 102,
-          "accuracy": 33.33
-        },
-        "geometry": {
-          "questions": 25,
-          "accuracy": 72
-        },
-        "english": {
-          "questions": 18,
-          "accuracy": 66.67
-        },
-        "hebrew": {
-          "questions": 25,
-          "accuracy": 64
-        },
-        "science": {
-          "questions": 44,
-          "accuracy": 75
-        },
-        "moledet_geography": {
-          "questions": 0,
-          "accuracy": 0
-        }
-      }
+      "payloadSubjects": {}
     },
     {
       "utterance": "למה כתוב שיש פער במתמטיקה?",
+      "httpStatus": 200,
       "resolutionStatus": "resolved",
       "intent": "unclear",
       "ambiguous": false,
       "isNoData": false,
-      "fullText": "בחיבור בתקופה שנבחרה יש 102 שאלות, עם דיוק של כ 33%. בשלב זה — הדוח מתבסס על התרגול שבוצע באתר בתקופה שנבחרה. הנתון מראה פעילות בתקופה, אבל הדיוק נמוך יחסית — נשארים עם ניסוח זהיר ותרגול ממוקד.",
+      "fullText": "בחיבור נאספו 102 שאלות בתקופה, ורמת הדיוק סביב 33%. יש כאן מספיק תרגול כדי לראות דפוס, אבל הדיוק עדיין נמוך יחסית — זה מצב שדורש חיזוק ממוקד.",
       "payloadQuestions": 214,
-      "payloadSubjects": {
-        "math": {
-          "questions": 102,
-          "accuracy": 33.33
-        },
-        "geometry": {
-          "questions": 25,
-          "accuracy": 72
-        },
-        "english": {
-          "questions": 18,
-          "accuracy": 66.67
-        },
-        "hebrew": {
-          "questions": 25,
-          "accuracy": 64
-        },
-        "science": {
-          "questions": 44,
-          "accuracy": 75
-        },
-        "moledet_geography": {
-          "questions": 0,
-          "accuracy": 0
-        }
-      }
+      "payloadSubjects": {}
+    },
+    {
+      "utterance": "האם הבעיה היא נשיאה?",
+      "httpStatus": 200,
+      "resolutionStatus": "clarification_required",
+      "intent": "unknown_report_question",
+      "ambiguous": false,
+      "isNoData": true,
+      "fullText": "יש בדוח נתוני תרגול מהתקופה, אבל אין מספיק מידע כדי לענות דווקא על הנקודה הזו בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם מופיע כיוון ברור יותר בנושא הזה.",
+      "payloadQuestions": 214,
+      "payloadSubjects": {}
+    },
+    {
+      "utterance": "האם זה בגלל לחץ זמן?",
+      "httpStatus": 200,
+      "resolutionStatus": "clarification_required",
+      "intent": "unknown_report_question",
+      "route": "pattern_composer",
+      "ambiguous": false,
+      "isNoData": true,
+      "fullText": "יש בדוח נתוני תרגול מהתקופה, אבל אין מספיק מידע כדי לענות דווקא על הנקודה הזו בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם מופיע כיוון ברור יותר בנושא הזה.",
+      "payloadQuestions": 214,
+      "payloadSubjects": {}
+    },
+    {
+      "utterance": "האם הפעילות שנתתי לו השפיעה?",
+      "httpStatus": 200,
+      "resolutionStatus": "clarification_required",
+      "intent": "unknown_report_question",
+      "route": "pattern_composer",
+      "ambiguous": false,
+      "isNoData": true,
+      "fullText": "יש בדוח נתוני תרגול מהתקופה, אבל אין מספיק מידע כדי לענות דווקא על הנקודה הזו בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם מופיע כיוון ברור יותר בנושא הזה.",
+      "payloadQuestions": 214,
+      "payloadSubjects": {}
+    },
+    {
+      "utterance": "תסביר לי את הדוח במילים פשוטות.",
+      "httpStatus": 429,
+      "ambiguous": false,
+      "isNoData": false,
+      "fullText": "",
+      "payloadQuestions": 214,
+      "payloadSubjects": {}
+    }
+  ],
+  "localEngineResults": [
+    {
+      "utterance": "מה הכי חשוב כרגע?",
+      "resolutionStatus": "clarification_required",
+      "intent": "unknown_report_question",
+      "route": "pattern_composer",
+      "ambiguous": false,
+      "isNoData": true,
+      "fullText": "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון ברור יותר בדוח.",
+      "payloadQuestions": 214,
+      "payloadSubjects": {}
+    },
+    {
+      "utterance": "איפה רואים התקדמות?",
+      "resolutionStatus": "clarification_required",
+      "intent": "unknown_report_question",
+      "route": "pattern_composer",
+      "ambiguous": false,
+      "isNoData": true,
+      "fullText": "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון ברור יותר בדוח.",
+      "payloadQuestions": 214,
+      "payloadSubjects": {}
+    },
+    {
+      "utterance": "מה כדאי להימנע ממנו עכשיו?",
+      "resolutionStatus": "resolved",
+      "intent": "what_not_to_do_now",
+      "ambiguous": false,
+      "isNoData": false,
+      "fullText": "כרגע אין מספיק נתוני תרגול מעוגנים בדוח כדי לקבוע חולשה מובהקת במקצוע מסוים, ולכן אי אפשר לבנות כאן תמונת קושי קונקרטית בוודאות. לפי מעט הנתונים שכן מופיעים אפשר לדבר רק על סימנים ראשוניים, ולא להסיק מעבר למה שמוצג בפועל בדוח בתקופה הזו.",
+      "payloadQuestions": 214,
+      "payloadSubjects": {}
+    },
+    {
+      "utterance": "מה לעשות בבית היום?",
+      "resolutionStatus": "clarification_required",
+      "intent": "unknown_report_question",
+      "route": "pattern_composer",
+      "ambiguous": false,
+      "isNoData": true,
+      "fullText": "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון ברור יותר בדוח.",
+      "payloadQuestions": 214,
+      "payloadSubjects": {}
+    },
+    {
+      "utterance": "איפה הוא צריך עזרה?",
+      "resolutionStatus": "clarification_required",
+      "intent": "unknown_report_question",
+      "route": "pattern_composer",
+      "ambiguous": false,
+      "isNoData": true,
+      "fullText": "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון ברור יותר בדוח.",
+      "payloadQuestions": 214,
+      "payloadSubjects": {}
+    },
+    {
+      "utterance": "למה כתוב שיש פער במתמטיקה?",
+      "resolutionStatus": "clarification_required",
+      "intent": "unclear",
+      "ambiguous": false,
+      "isNoData": false,
+      "fullText": "בתקופה שנבחרה לא נאספו נתוני תרגול בחשבון, ולכן אי אפשר לקבוע כיוון לפי הדוח הנוכחי.",
+      "payloadQuestions": 214,
+      "payloadSubjects": {}
     },
     {
       "utterance": "האם הבעיה היא נשיאה?",
@@ -653,34 +352,9 @@
       "intent": "unknown_report_question",
       "ambiguous": false,
       "isNoData": true,
-      "fullText": "יש בדוח נתוני תרגול מהתקופה, אבל אין מספיק מידע כדי לענות דווקא על הנקודה הזו בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם מופיע כיוון ברור יותר בנושא הזה.",
+      "fullText": "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון ברור יותר בדוח.",
       "payloadQuestions": 214,
-      "payloadSubjects": {
-        "math": {
-          "questions": 102,
-          "accuracy": 33.33
-        },
-        "geometry": {
-          "questions": 25,
-          "accuracy": 72
-        },
-        "english": {
-          "questions": 18,
-          "accuracy": 66.67
-        },
-        "hebrew": {
-          "questions": 25,
-          "accuracy": 64
-        },
-        "science": {
-          "questions": 44,
-          "accuracy": 75
-        },
-        "moledet_geography": {
-          "questions": 0,
-          "accuracy": 0
-        }
-      }
+      "payloadSubjects": {}
     },
     {
       "utterance": "האם זה בגלל לחץ זמן?",
@@ -689,34 +363,9 @@
       "route": "pattern_composer",
       "ambiguous": false,
       "isNoData": true,
-      "fullText": "יש בדוח נתוני תרגול מהתקופה, אבל אין מספיק מידע כדי לענות דווקא על הנקודה הזו בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם מופיע כיוון ברור יותר בנושא הזה.",
+      "fullText": "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון ברור יותר בדוח.",
       "payloadQuestions": 214,
-      "payloadSubjects": {
-        "math": {
-          "questions": 102,
-          "accuracy": 33.33
-        },
-        "geometry": {
-          "questions": 25,
-          "accuracy": 72
-        },
-        "english": {
-          "questions": 18,
-          "accuracy": 66.67
-        },
-        "hebrew": {
-          "questions": 25,
-          "accuracy": 64
-        },
-        "science": {
-          "questions": 44,
-          "accuracy": 75
-        },
-        "moledet_geography": {
-          "questions": 0,
-          "accuracy": 0
-        }
-      }
+      "payloadSubjects": {}
     },
     {
       "utterance": "האם הפעילות שנתתי לו השפיעה?",
@@ -725,69 +374,19 @@
       "route": "pattern_composer",
       "ambiguous": false,
       "isNoData": true,
-      "fullText": "יש בדוח נתוני תרגול מהתקופה, אבל אין מספיק מידע כדי לענות דווקא על הנקודה הזו בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם מופיע כיוון ברור יותר בנושא הזה.",
+      "fullText": "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון ברור יותר בדוח.",
       "payloadQuestions": 214,
-      "payloadSubjects": {
-        "math": {
-          "questions": 102,
-          "accuracy": 33.33
-        },
-        "geometry": {
-          "questions": 25,
-          "accuracy": 72
-        },
-        "english": {
-          "questions": 18,
-          "accuracy": 66.67
-        },
-        "hebrew": {
-          "questions": 25,
-          "accuracy": 64
-        },
-        "science": {
-          "questions": 44,
-          "accuracy": 75
-        },
-        "moledet_geography": {
-          "questions": 0,
-          "accuracy": 0
-        }
-      }
+      "payloadSubjects": {}
     },
     {
       "utterance": "תסביר לי את הדוח במילים פשוטות.",
-      "resolutionStatus": "resolved",
+      "resolutionStatus": "clarification_required",
       "intent": "explain_report",
       "ambiguous": false,
       "isNoData": false,
-      "fullText": "לפי מה שמוצג עכשיו בדוח, אלה המקצועות והנושאים שאפשר להסתמך עליהם כרגע: עברית — קריאה — בקריאה נאספו 25 שאלות בתקופה, עם דיוק ממוצע של כ 64%. · חשבון — חיבור — בחיבור בתקופה שנבחרה יש 102 שאלות, עם דיוק של כ 33%. · גאומטריה — צורות בסיסיות — בצורות בסיסיות נאספו 25 שאלות בתקופה, ורמת הדיוק סביב 72%. · אנגלית — אוצר מילים — באוצר מילים בתקופה שנבחרה יש 18 שאלות, עם דיוק של כ 67%. יש כאן כיוון עבודה הגיוני, ונעדיף לראות את זה חוזר עוד פעם לפני שמחמירים בקביעת כיוון. בנוסף, בחשבון — חיבור: הנתון מראה פעילות בתקופה, אבל הדיוק נמוך יחסית — נשארים עם ניסוח זהיר ותרגול ממוקד. בתקופה שנבחרה נבדקו 6 נושאים.",
+      "fullText": "בדוח אין כרגע מספיק שאלות מעוגנות כדי לענות בצורה מדויקת — הנתונים עדיין מצומצמים ומוקדם לכיוון ברור. כדאי לצבור עוד קצת תרגול בטווח התאריכים (למשל 5–8 שאלות ממוקדות בשבוע), ואז לנסות שוב.",
       "payloadQuestions": 214,
-      "payloadSubjects": {
-        "math": {
-          "questions": 102,
-          "accuracy": 33.33
-        },
-        "geometry": {
-          "questions": 25,
-          "accuracy": 72
-        },
-        "english": {
-          "questions": 18,
-          "accuracy": 66.67
-        },
-        "hebrew": {
-          "questions": 25,
-          "accuracy": 64
-        },
-        "science": {
-          "questions": 44,
-          "accuracy": 75
-        },
-        "moledet_geography": {
-          "questions": 0,
-          "accuracy": 0
-        }
-      }
+      "payloadSubjects": {}
     }
   ],
   "forbiddenChecks": {

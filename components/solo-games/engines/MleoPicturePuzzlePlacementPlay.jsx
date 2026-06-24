@@ -611,7 +611,7 @@ export default function MleoPicturePuzzlePlacementPlay({
 
       <div className="relative z-0 mx-auto mt-8 flex h-full min-h-0 w-full max-w-[1280px] flex-1 overflow-hidden rounded-lg border-4 border-yellow-400 bg-gradient-to-b from-slate-900 to-slate-950 shadow-lg sm:mt-9">
 
-        <div className="flex min-h-0 w-full flex-1 flex-col gap-1 overflow-hidden p-1 max-lg:landscape:flex-row lg:flex-row sm:gap-2 sm:p-2">
+        <div className="puzzle-play-layout flex min-h-0 w-full flex-1 flex-col gap-1 overflow-hidden p-1 max-lg:landscape:flex-row lg:flex-row sm:gap-2 sm:p-2">
 
           {/* Desktop left sidebar */}
 
@@ -663,15 +663,7 @@ export default function MleoPicturePuzzlePlacementPlay({
 
           <div className="puzzle-tray-portrait-top shrink-0 max-lg:landscape:hidden lg:hidden">
 
-            <div className="mb-0.5 flex shrink-0 items-center justify-between gap-1 px-0.5">
-
-              <p className="text-[10px] font-bold text-yellow-200">
-
-                מגש עליון 🧩 ({trayFirst.length})
-
-                {returnTarget ? " · לחצו להחזיר" : ""}
-
-              </p>
+            <div className="puzzle-tray-hint-row flex shrink-0 justify-end px-0.5">
 
               <button
 
@@ -839,7 +831,7 @@ export default function MleoPicturePuzzlePlacementPlay({
 
           {/* Mobile portrait — bottom tray */}
 
-          <div className="max-h-[22%] min-h-0 shrink-0 max-lg:landscape:hidden lg:hidden">
+          <div className="puzzle-tray-portrait-bottom max-h-[22%] min-h-0 shrink-0 max-lg:landscape:hidden lg:hidden">
 
             <TrayGrid
 
@@ -868,6 +860,8 @@ export default function MleoPicturePuzzlePlacementPlay({
               onDragStart={(e, id) => handleDragStart(e, id)}
 
               portraitMobile
+
+              hideLabel
 
             />
 

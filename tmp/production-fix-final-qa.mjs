@@ -4,7 +4,7 @@
  * Run: node --env-file=.env.local --env-file=.env.e2e.local tmp/production-fix-final-qa.mjs
  */
 import { createClient } from "@supabase/supabase-js";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { execSync } from "node:child_process";
@@ -24,7 +24,9 @@ const PROD_ORIGIN = process.env.COPILOT_PROD_ORIGIN || "https://liosh-website.ve
 const STUDENT_ID = process.env.COPILOT_QA_STUDENT_ID || "38e2dbcf-a927-419f-a2ed-b26c7100e656";
 const RANGE = { reportPeriod: "custom", rangeFrom: "2026-05-26", rangeTo: "2026-06-24" };
 const INITIAL_DELAY_MS = Number(process.env.COPILOT_QA_INITIAL_DELAY_MS || 600_000);
-const BETWEEN_DELAY_MS = Number(process.env.COPILOT_QA_BETWEEN_DELAY_MS || 65_000);
+const BETWEEN_DELAY_MS = Number(process.env.COPILOT_QA_BETWEEN_DELAY_MS || 90_000);
+const START_INDEX = Math.max(1, Number(process.env.COPILOT_QA_START_INDEX || 1));
+const APPEND_PRIOR = process.env.COPILOT_QA_APPEND_PRIOR === "1";
 
 const QUESTIONS = [
   "מה הכי חשוב כרגע?",
@@ -236,13 +238,28 @@ async function main() {
   }
 
   /** @type {object[]} */
-  const results = [];
+  let results = [];
+  if (APPEND_PRIOR) {
+    const priorPath = path.join(OUT_DIR, "production-fix-final-qa-report.json");
+    try {
+      const prior = JSON.parse(await readFile(priorPath, "utf8"));
+      results = (prior.results || []).filter((r) => r.httpStatus === 200 && r.index < START_INDEX);
+      console.error(`[final-qa] Appended ${results.length} prior 200 results before Q${START_INDEX}`);
+    } catch {
+      console.error("[final-qa] No prior report to append");
+    }
+  }
+
   let stoppedOn429 = false;
   let vercelIds = [];
   let buildHint = null;
+  let last429Detail = null;
 
-  for (let i = 0; i < QUESTIONS.length; i++) {
-    const utterance = QUESTIONS[i];
+  const questionSlice = QUESTIONS.slice(START_INDEX - 1);
+
+  for (let j = 0; j < questionSlice.length; j++) {
+    const i = START_INDEX - 1 + j;
+    const utterance = questionSlice[j];
     const sessionId = `final-qa-${Date.now()}-${i}-${Math.random().toString(36).slice(2, 8)}`;
     console.error(`[final-qa] Q${i + 1}/10 POST ${utterance.slice(0, 40)}…`);
 
@@ -269,9 +286,17 @@ async function main() {
         "x-vercel-id": res.headers.get("x-vercel-id"),
         "x-vercel-cache": res.headers.get("x-vercel-cache"),
         date: res.headers.get("date"),
+        "retry-after": res.headers.get("retry-after"),
       };
       if (headers["x-vercel-id"]) vercelIds.push(headers["x-vercel-id"]);
       prodJson = await res.json().catch(() => ({}));
+      if (httpStatus === 429) {
+        last429Detail = {
+          body: prodJson,
+          retryAfterSec: headers["retry-after"],
+          rateLimitType: "production_in_memory_Too_many_requests",
+        };
+      }
     } catch (err) {
       errMsg = String(err?.message || err);
     }
@@ -318,6 +343,8 @@ async function main() {
     }
   }
 
+  results.sort((a, b) => a.index - b.index);
+
   // Try to read Next.js buildId from homepage
   try {
     const home = await fetch(PROD_ORIGIN, { signal: AbortSignal.timeout(30_000) });
@@ -330,7 +357,8 @@ async function main() {
 
   const http200Count = results.filter((r) => r.httpStatus === 200).length;
   const any429 = results.some((r) => r.httpStatus === 429);
-  const allPass = results.length === 10 && results.every((r) => r.manualPass && r.httpStatus === 200);
+  const allPass =
+    results.length === 10 && results.every((r) => r.manualPass && r.httpStatus === 200);
   const priorReportNote =
     "Earlier production-fix-qa-report.json (partial 2/10 + 429) superseded by this final run.";
 
@@ -353,7 +381,15 @@ async function main() {
     rangeUsed: RANGE,
     authAccount: identifier || "[redacted]",
     matchedStudent: { id: student.id, name: student.full_name, summary },
-    runParams: { initialDelayMs: INITIAL_DELAY_MS, betweenDelayMs: BETWEEN_DELAY_MS },
+    runParams: {
+      initialDelayMs: INITIAL_DELAY_MS,
+      betweenDelayMs: BETWEEN_DELAY_MS,
+      startIndex: START_INDEX,
+      appendPrior: APPEND_PRIOR,
+    },
+    rateLimit429Note:
+      "Production returns 429 {error:'Too many requests'} from in-memory limiter (copilot-turn-ip 25/10min + copilot-turn-auth 12/10min per IP). Not monthly_ai_limit (admin unlimited).",
+    last429Detail,
     stoppedOn429,
     http200Count,
     any429,
