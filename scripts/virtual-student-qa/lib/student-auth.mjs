@@ -15,7 +15,7 @@ const STUDENT_HOME = "/student/home";
 const STUDENT_LOGIN = "/student/login";
 const MAX_UI_AUTH_ATTEMPTS = 3;
 const RETRYABLE_AUTH_RE =
-  /שגיאת רשת|network|timeout|locator\.fill|did not reach \/student\/home|page\.goto/i;
+  /שגיאת רשת|network|timeout|locator\.fill|did not reach \/student\/home|page\.goto|student-login-username/i;
 
 async function probeLoginHttp(baseUrl, timeoutMs = 12_000) {
   const url = `${String(baseUrl).replace(/\/$/, "")}/student/login`;
@@ -47,6 +47,8 @@ export async function authenticateStudent({ context, page, account, baseUrl, mod
   if (mode === "api") {
     return authenticateViaApi({ context, page, account, baseUrl, log });
   }
+
+  await context.clearCookies();
 
   const url = new URL(STUDENT_LOGIN, baseUrl).toString();
   let lastError = null;
@@ -92,6 +94,7 @@ async function authenticateViaUi({ page, account, baseUrl, log, loginUrl }) {
   }
 
   await page.getByText("בודקים חיבור...").waitFor({ state: "detached", timeout: loginTimeoutMs() }).catch(() => {});
+  await page.waitForTimeout(500);
 
   const usernameField =
     page.getByTestId("student-login-username").or(page.getByPlaceholder("שם משתמש")).or(

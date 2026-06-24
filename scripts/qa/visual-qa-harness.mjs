@@ -47,6 +47,7 @@ import {
   stopActiveGameIfAny,
   selectTopicIfAvailable,
 } from "./lib/visual-qa-surface.mjs";
+import { attachPageDiagnostics, captureTimeoutArtifacts } from "./lib/visual-qa-timeout-artifacts.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = getRepoRoot();
@@ -135,17 +136,40 @@ async function verifyGradeOrBlock(page, plan, expectedGrade, student, baseUrl, s
 }
 
 async function loginStudent(context, account, baseUrl) {
+  await context.clearCookies();
   const page = await context.newPage();
   page.setDefaultTimeout(120_000);
-  await authenticateStudent({
-    context,
-    page,
-    account,
-    baseUrl,
-    mode: resolveStudentAuthMode(),
-    log,
-  });
+  page._qaDiagnostics = attachPageDiagnostics(page);
+  try {
+    await authenticateStudent({
+      context,
+      page,
+      account,
+      baseUrl,
+      mode: resolveStudentAuthMode(),
+      log,
+    });
+  } catch (error) {
+    error.failedAt = "login";
+    throw error;
+  }
   return page;
+}
+
+function blockedFromError({ baseUrl, subject, student, error, stage, timeoutArtifacts = null }) {
+  return blockedReport({
+    baseUrl,
+    subject,
+    blocked: {
+      route: stage || "(harness)",
+      account: student ? `${student.label} (${student.username || student.code})` : "(varies by grade)",
+      missingEnv: [],
+      supabaseHint: supabaseHintForRoute("/student/login"),
+      whatYouNeed: error?.message || String(error),
+      stage,
+      timeoutArtifacts,
+    },
+  });
 }
 
 function resolveHarnessOutputDir(subject, outputDirEnv) {
@@ -173,13 +197,44 @@ async function sampleGrade({
   const gradeSamples = [];
   let gradeBlocked = null;
   let authOk = false;
-
-  const page = await loginStudent(context, student, baseUrl);
-  authOk = true;
+  const artifactDir = join(screenshotDir, "timeout-artifacts");
+  let page = null;
 
   try {
-    await navigateToPlayerShell(page, plan, baseUrl, { log });
+    page = await loginStudent(context, student, baseUrl);
+    authOk = true;
 
+    await navigateToPlayerShell(page, plan, baseUrl, {
+      log,
+      artifactDir,
+      repoRoot: REPO_ROOT,
+    });
+  } catch (error) {
+    if (page) {
+      const diagnostics = page._qaDiagnostics || { consoleErrors: [], pageErrors: [] };
+      const artifacts =
+        error.timeoutArtifacts ||
+        (await captureTimeoutArtifacts(page, artifactDir, error.failedAt || "blocked", {
+          repoRoot: REPO_ROOT,
+          playerTestId: plan.playerTestId,
+          consoleErrors: diagnostics.consoleErrors,
+          pageErrors: diagnostics.pageErrors,
+        }).catch(() => null));
+      gradeBlocked = blockedFromError({
+        baseUrl,
+        subject,
+        student,
+        error,
+        stage: error.failedAt || "player-shell",
+        timeoutArtifacts: artifacts,
+      });
+      await page.close().catch(() => {});
+      return { gradeBlocked, gradeSamples, authOk, studentLabel: student.label };
+    }
+    throw error;
+  }
+
+  try {
     const gradeCheck = await verifyGradeOrBlock(page, plan, gradeNumber, student, baseUrl, subject);
     if (!gradeCheck.ok) {
       gradeBlocked = gradeCheck.blocked;
@@ -458,6 +513,7 @@ async function main() {
 
       log(`Grade ${gradeNumber}: login ${student.label}…`);
       const context = await browser.newContext({ baseURL: baseUrl, locale: "he-IL" });
+      await context.clearCookies();
       const topics = topicsForGrade(plan, gradeNumber);
       const topicOffset = env.sampleSeed ? sampleSeedTopicOffset(env.sampleSeed, topics.length) : 0;
 

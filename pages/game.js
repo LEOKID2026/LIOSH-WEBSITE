@@ -9,6 +9,7 @@ import GamesHubHeader from "../components/games/GamesHubHeader.jsx";
 import { useStudentGameAccess } from "../hooks/useStudentGameAccess.js";
 import { resetSoloGameDocumentShell } from "../lib/solo-games/solo-game-document-cleanup.client.js";
 import { SOLO_GAME_LIST } from "../lib/solo-games/solo-game-registry.js";
+import { SOLO_DEV_PROTOTYPES_HUB } from "../lib/solo-games/dev-prototype-hub-list.js";
 
 export default function Games() {
   const { theme } = useStudentTheme();
@@ -41,11 +42,11 @@ export default function Games() {
             />
 
             <section className="space-y-3">
-              {state === "loading" ? (
-                <p className={`text-center text-sm ${GH.muted}`}>טוען...</p>
-              ) : (
-                <div className="grid sm:grid-cols-2 gap-3 md:gap-4">
-                  {games.map((row) => {
+              <div className="grid sm:grid-cols-2 gap-3 md:gap-4">
+                {state === "loading" ? (
+                  <p className={`col-span-full text-center text-sm ${GH.muted}`}>טוען...</p>
+                ) : (
+                  games.map((row) => {
                     const game = SOLO_GAME_LIST.find((g) => g.id === row.gameKey);
                     if (!game) return null;
                     return (
@@ -61,9 +62,20 @@ export default function Games() {
                         <span className={GH.cardCta}>שחק עכשיו</span>
                       </Link>
                     );
-                  })}
-                </div>
-              )}
+                  })
+                )}
+                <Link href={SOLO_DEV_PROTOTYPES_HUB.route} className={GH.card}>
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className={GH.cardEmoji}>{SOLO_DEV_PROTOTYPES_HUB.emoji}</div>
+                    <div>
+                      <h2 className={GH.cardTitle}>{SOLO_DEV_PROTOTYPES_HUB.titleHe}</h2>
+                      <p className={GH.cardMeta}>פיתוח · בדיקות פנימיות</p>
+                    </div>
+                  </div>
+                  <p className={`${GH.cardBlurb} flex-1`}>{SOLO_DEV_PROTOTYPES_HUB.blurbHe}</p>
+                  <span className={GH.cardCta}>{SOLO_DEV_PROTOTYPES_HUB.ctaHe}</span>
+                </Link>
+              </div>
             </section>
           </div>
         </main>

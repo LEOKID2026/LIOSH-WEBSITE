@@ -638,6 +638,18 @@ function parseSubjects() {
     .filter(Boolean);
 }
 
+function parseDeepGrades() {
+  const raw = String(
+    process.env.VISUAL_QA_DEEP_GRADE_FILTER || process.env.VISUAL_QA_GRADE_FILTER || ""
+  ).trim();
+  if (!raw) return [...GRADES];
+  const parsed = raw
+    .split(/[,;\s]+/)
+    .map((part) => parseInt(String(part).replace(/^g/i, ""), 10))
+    .filter((n) => Number.isFinite(n) && n >= 1 && n <= 6);
+  return parsed.length ? parsed : [...GRADES];
+}
+
 function parseDeepEnv() {
   const subjects = parseSubjects();
   const rounds = Math.max(1, Number(process.env.VISUAL_QA_DEEP_ROUNDS || 2) || 2);
@@ -712,6 +724,7 @@ function parseDeepEnv() {
 
   return {
     subjects,
+    gradesFilter: parseDeepGrades(),
     rounds,
     samplesPerGrade,
     runTimeoutMinutes,
@@ -1027,7 +1040,7 @@ async function main() {
   const startedAt = Date.now();
   const startedAtIso = new Date(startedAt).toISOString();
 
-  const totalRuns = cfg.rounds * cfg.subjects.length * COHORTS.length * GRADES.length;
+  const totalRuns = cfg.rounds * cfg.subjects.length * COHORTS.length * cfg.gradesFilter.length;
   const totalPlannedSamples = totalRuns * plannedSamplesPerGradeRun(cfg.samplesPerGrade);
 
   const manifest = {
@@ -1047,7 +1060,7 @@ async function main() {
     ownsDevServer: cfg.ownsDevServer,
     restartEachRun: cfg.restartEachRun,
     gradeLevelRuns: true,
-    grades: GRADES.map((g) => `g${g}`),
+    grades: cfg.gradesFilter.map((g) => `g${g}`),
     startupHealth: startupHealth.attempts,
   };
 
@@ -1096,7 +1109,7 @@ async function main() {
       currentSubject = subject;
       for (const cohort of COHORTS) {
         currentCohort = cohort.id;
-        for (const gradeNumber of GRADES) {
+        for (const gradeNumber of cfg.gradesFilter) {
           currentGrade = `g${gradeNumber}`;
           const outRel = runOutputRel(cfg.runId, round, subject, cohort.id, gradeNumber);
           const outAbs = join(REPO_ROOT, outRel);
@@ -1273,6 +1286,7 @@ async function main() {
               reportExists: Boolean(report),
               logPath: relative(REPO_ROOT, logPath),
               latestScreenshot,
+              timeoutArtifacts: report?.blocked?.timeoutArtifacts || null,
               stderrTail: (result.stderr || "").slice(-4000),
               stdoutTail: (result.stdout || "").slice(-4000),
             });

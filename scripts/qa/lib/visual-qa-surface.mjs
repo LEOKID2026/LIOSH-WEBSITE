@@ -3,6 +3,7 @@
  */
 
 import { compact, analyzeSample, dedupeRepeatedStem } from "./visual-qa-analyze.mjs";
+import { captureTimeoutArtifacts } from "./visual-qa-timeout-artifacts.mjs";
 
 const MCQ_PREFIX_BY_SUBJECT = {
   math: "math-mcq-",
@@ -90,29 +91,48 @@ function subjectRouteTimeoutMs() {
 }
 
 /** Navigate to subject master and wait for player shell — retries reload on cold dev. */
-export async function navigateToPlayerShell(page, plan, baseUrl, { log = () => {} } = {}) {
+export async function navigateToPlayerShell(page, plan, baseUrl, { log = () => {}, artifactDir = null, repoRoot = null } = {}) {
   const routeTimeout = subjectRouteTimeoutMs();
   const shellTimeout = playerShellTimeoutMs();
   const targetUrl = `${String(baseUrl).replace(/\/$/, "")}${plan.path}`;
   const player = page.getByTestId(plan.playerTestId);
+  const maxAttempts = Math.max(2, Number(process.env.VISUAL_QA_PLAYER_SHELL_ATTEMPTS || 3) || 3);
   let lastError = null;
 
-  for (let attempt = 1; attempt <= 2; attempt += 1) {
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
     try {
       if (attempt > 1) {
-        log(`player-shell: retry ${attempt}/2 for ${plan.playerTestId}`);
+        log(`player-shell: retry ${attempt}/${maxAttempts} for ${plan.playerTestId}`);
       }
       await page.goto(targetUrl, { waitUntil: "domcontentloaded", timeout: routeTimeout });
+      await stopActiveGameIfAny(page);
       await dismissBlockingUi(page);
+      await page.waitForTimeout(800);
       await player.waitFor({ state: "visible", timeout: shellTimeout });
       return;
     } catch (error) {
       lastError = error;
-      if (attempt < 2) {
-        await page.reload({ waitUntil: "domcontentloaded", timeout: routeTimeout }).catch(() => {});
+      if (attempt < maxAttempts) {
+        await stopActiveGameIfAny(page).catch(() => {});
+        await page.goto(targetUrl, { waitUntil: "domcontentloaded", timeout: routeTimeout }).catch(() =>
+          page.reload({ waitUntil: "domcontentloaded", timeout: routeTimeout })
+        );
         await page.waitForTimeout(1500);
       }
     }
+  }
+
+  if (artifactDir) {
+    const diagnostics = page._qaDiagnostics || { consoleErrors: [], pageErrors: [] };
+    const artifacts = await captureTimeoutArtifacts(page, artifactDir, "player-shell", {
+      repoRoot: repoRoot || process.cwd(),
+      playerTestId: plan.playerTestId,
+      consoleErrors: diagnostics.consoleErrors,
+      pageErrors: diagnostics.pageErrors,
+    });
+    const err = lastError || new Error(`player shell not ready: ${plan.playerTestId}`);
+    err.timeoutArtifacts = artifacts;
+    throw err;
   }
 
   throw lastError || new Error(`player shell not ready: ${plan.playerTestId}`);
