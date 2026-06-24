@@ -48,6 +48,8 @@ function emptyState() {
     lastAnswerAggregateClass: "",
     lastComparisonSubjectId: "",
     lastComparisonRole: "",
+    lastTurnWasNoData: false,
+    lastTurnWasWhatNotInfer: false,
     lastActivityMs: now,
     createdAtMs: now,
   };
@@ -124,6 +126,8 @@ export function getConversationState(sessionId) {
  *   lastAnswerAggregateClass?: string;
  *   lastComparisonSubjectId?: string;
  *   lastComparisonRole?: string;
+ *   lastTurnWasNoData?: boolean;
+ *   lastTurnWasWhatNotInfer?: boolean;
  * }} delta
  */
 export function applyConversationStateDelta(sessionId, delta) {
@@ -212,6 +216,10 @@ export function applyConversationStateDelta(sessionId, delta) {
   if (delta.lastComparisonRole !== undefined) {
     s.lastComparisonRole = String(delta.lastComparisonRole || "").trim();
   }
+  if (delta.lastTurnWasNoData === true) s.lastTurnWasNoData = true;
+  if (delta.lastTurnWasNoData === false) s.lastTurnWasNoData = false;
+  if (delta.lastTurnWasWhatNotInfer === true) s.lastTurnWasWhatNotInfer = true;
+  if (delta.lastTurnWasWhatNotInfer === false) s.lastTurnWasWhatNotInfer = false;
   const ans = String(delta.assistantAnswerSummary || "").trim();
   if (ans) {
     s.lastAnswerSummary = ans.slice(0, 480);

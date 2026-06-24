@@ -34,6 +34,7 @@ import { tryBuildParentShortFollowupDraft } from "./short-followup-composer.js";
 import { tryComposeIntentAnswer, fingerprintAnswerHe } from "./intent-answer-composers.js";
 import { tryBuildComparisonPracticalFollowupDraft } from "./comparison-practical-continuity.js";
 import { compactParentAnswerBlocks } from "./answer-compaction.js";
+import { postprocessParentFacingBlocksHe } from "./parent-facing-answer-postprocess.js";
 import { maxGlobalReportQuestionCount, STRONG_GLOBAL_QUESTION_FLOOR } from "./report-volume-context.js";
 import { redactPayloadForCopilotGrounding } from "./redact-payload-for-copilot-grounding.js";
 import { augmentHighVolumeEvidenceAnchorDraft } from "./data-grounded-evidence-augmentation.js";
@@ -179,7 +180,7 @@ function contractNarrativeSlotBundleHe(truthPacket) {
 function normalizeAnswerBlocksHe(answerBlocks, truthPacket = null, opts = null) {
   const slotBundle = truthPacket ? contractNarrativeSlotBundleHe(truthPacket) : "";
   const preserveSlot = !!(opts && opts.preserveContractSlotSources);
-  return (Array.isArray(answerBlocks) ? answerBlocks : []).map((b) => {
+  const mapped = (Array.isArray(answerBlocks) ? answerBlocks : []).map((b) => {
     const textHe = normalizeParentFacingHe(String(b?.textHe || "").trim());
     let source = String(b?.source || "composed");
     if (
@@ -194,6 +195,7 @@ function normalizeAnswerBlocksHe(answerBlocks, truthPacket = null, opts = null) 
     }
     return { ...b, textHe, source };
   });
+  return postprocessParentFacingBlocksHe(mapped);
 }
 
 const THIN_DATA_APPROVED_SCARCITY_RE =
@@ -445,8 +447,25 @@ function persistTelemetryBestEffort(response, context) {
 
 function finalizeTurnResponse(response, context) {
   const withTelemetry = ensureResponseTelemetry(response, context);
+  persistClarificationConversationMemory(withTelemetry, context);
   persistTelemetryBestEffort(withTelemetry, context);
   return withTelemetry;
+}
+
+function persistClarificationConversationMemory(response, context) {
+  const sessionId = String(context?.sessionId || "").trim();
+  if (!sessionId) return;
+  if (String(response?.resolutionStatus || "") !== "clarification_required") return;
+  const text = String(response?.clarificationQuestionHe || "").trim();
+  if (!text) return;
+  const isNoData =
+    text === noDataResponseHe() ||
+    text.includes("אין מספיק מידע") ||
+    text.includes("בדוח הנוכחי אין מספיק");
+  applyConversationStateDelta(sessionId, {
+    assistantAnswerSummary: text.slice(0, 480),
+    ...(isNoData ? { lastTurnWasNoData: true, lastTurnWasWhatNotInfer: false } : {}),
+  });
 }
 
 /**
@@ -471,13 +490,19 @@ function tryPackageApprovedPatternTurn(input, sessionId, priorRepeated, conv, ut
       scopeConfidence: 0.88,
       scopeReason: "approved_pattern_no_data",
     };
+    const noDataText = noDataResponseHe();
     const r = buildClarificationParentCopilotResponse({
-      clarificationQuestionHe: noDataResponseHe(),
+      clarificationQuestionHe: noDataText,
       intent,
       priorRepeated,
       metadata: scopeMeta,
     });
     validateParentCopilotResponseV1(r);
+    applyConversationStateDelta(sessionId, {
+      assistantAnswerSummary: noDataText.slice(0, 480),
+      lastTurnWasNoData: true,
+      lastTurnWasWhatNotInfer: false,
+    });
     return { response: r, audience, sessionId, conv, truthPacket: null, intent, scopeMeta, utteranceStr };
   }
   if (!draftResult.truthPacket || !draftResult.answerBlocks?.length) return null;
@@ -706,6 +731,10 @@ function packageParentResolvedEarlyTurn(input, sessionId, priorRepeated, conv, u
     scopeLabelSnapshotHe: truthPacket.scopeLabel || "",
     plannerIntentSnapshot: responseIntentEarly,
     lastOfferedFollowupFamily: suggestedFollowUp?.family ?? null,
+    lastTurnWasNoData: false,
+    lastTurnWasWhatNotInfer:
+      String(scopeMeta?.patternId || "") === "what_not_infer" ||
+      assistantAnswerSummary.includes("לא כדאי להסיק מהדוח"),
     ...(memoryHints && memoryHints.lastAnswerAggregateClass !== undefined
       ? {
           lastAnswerAggregateClass: memoryHints.lastAnswerAggregateClass,
@@ -1049,6 +1078,35 @@ function runDeterministicCore(input, options) {
       { intentConfidence: stageA?.canonicalIntentScore || 0.88 },
     );
     if (packaged) return packaged;
+  }
+
+  if (shouldReturnNoDataForRequest(utteranceStr, scopedInput?.payload)) {
+    const scopeMetaNoData = {
+      scopeConfidence: 0.88,
+      scopeReason: "no_data_for_request",
+      intentConfidence: Number(stageA?.canonicalIntentScore || 0.85),
+      intentReason: "no_data:evidence_missing",
+      classifierBucket: classifierMetaForResolved.classifierBucket,
+      classifierSource: classifierMetaForResolved.classifierSource,
+      classifierConfidence: classifierMetaForResolved.classifierConfidence,
+    };
+    const r = buildClarificationParentCopilotResponse({
+      clarificationQuestionHe: noDataResponseHe(),
+      intent: "unknown_report_question",
+      priorRepeated,
+      metadata: scopeMetaNoData,
+    });
+    validateParentCopilotResponseV1(r);
+    return {
+      response: r,
+      audience,
+      sessionId,
+      conv,
+      truthPacket: null,
+      intent: "unknown_report_question",
+      scopeMeta: scopeMetaNoData,
+      utteranceStr,
+    };
   }
 
   const shortFb = tryBuildParentShortFollowupDraft({

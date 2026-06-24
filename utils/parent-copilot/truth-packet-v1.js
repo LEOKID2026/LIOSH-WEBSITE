@@ -819,13 +819,13 @@ function buildExecutiveIntentNarrativeSlots(x) {
           ? `מה שמופיע בדוח כרגע הוא בעיקר מוקד אחד: ${labelPair(m0)}. ${m0.obs ? clipHe(m0.obs, 210) : "אין עדיין הרחבה נוספת מעבר לכותרת הנושא."} לכן התמונה מוגבלת למה שכבר הוכנס לטווח התקופה.`
           : defaultObs;
       } else {
-        obs = `לפי הדוח, כרגע מופיעים: ${namedBits}. זה אומר שהתמונה בנויה ממקצועות ונושאים שכבר הוכנסו לטווח התקופה.`;
+        obs = `לפי הדוח, כרגע מופיעים: ${namedBits}. הדוח מתבסס על התרגול שבוצע באתר בתקופה שנבחרה.`;
       }
       let interp = sparseExecutive
         ? "הדוח עדיין מסכם תקופה חלקית: ככל שיופיעו ניסוחים נוספים, אפשר יהיה לרכז תמונה עשירה יותר — בלי להסיק מעבר לנתוני התצוגה."
         : metas.some((m) => m.cannot || m.readiness === "insufficient" || m.confidenceBand === "low")
           ? "חלק מהמוקדים עדיין עם ניסוח זהיר או מוקדם לסגירה — זה מגביל כמה ברורה התמונה הכוללת."
-          : "רוב המוקדים עם ניסוח יציב יחסית, כך שניתן לקרוא את הדוח כהדרגה של נקודות קונקרטיות ולא כציון כללי אחד.";
+          : "כדאי להתמקד עכשיו בנושא אחד ולבדוק שוב אחרי עוד תרגול קצר.";
       interp = appendDistinctSentence(interp, supportingNumericTail(x, intent));
       const narrTrendLead = trends.find(
         (line) => line && !looksLikeNumericOrCountLead(line) && shouldAttachExecutiveSecondTrendLine(line, x.totalQ),

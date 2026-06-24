@@ -7,6 +7,7 @@ import {
   listCopilotAnchoredTopicRows,
   normalizeSubjectId,
   subjectLabelHe,
+  SUBJECT_ORDER,
 } from "./contract-reader.js";
 import { parentFacingTopicRowLabelHe } from "../parent-report-topic-evidence.js";
 
@@ -135,30 +136,99 @@ export function topicAnchorFields(m) {
 }
 
 /**
+ * Resolve topic metrics for continuity / follow-ups.
+ * When allowWeakestFallback is false, never jumps to a global weakest topic.
+ *
  * @param {unknown} payload
  * @param {object} conv
+ * @param {{ allowWeakestFallback?: boolean }} [opts]
  */
-export function resolveLastTopicMetrics(payload, conv) {
-  const topicKey = String(conv?.lastResolvedTopic || "").trim();
-  const subjectId = String(conv?.lastResolvedSubject || "").trim();
+export function resolveContextTopicMetrics(payload, conv, opts = {}) {
+  const allowWeakestFallback = opts.allowWeakestFallback !== false;
+  let topicKey = String(conv?.lastResolvedTopic || "").trim();
+  let subjectId = normalizeSubjectId(String(conv?.lastResolvedSubject || "").trim());
+
+  const scopes = Array.isArray(conv?.priorScopes) ? conv.priorScopes : [];
+  for (let i = scopes.length - 1; i >= 0; i -= 1) {
+    const last = String(scopes[i] || "");
+    const colon = last.indexOf(":");
+    if (colon <= 0) continue;
+    const st = last.slice(0, colon);
+    const sid = last.slice(colon + 1);
+    if (st === "topic" && sid && !topicKey) topicKey = sid;
+    if (st === "subject" && sid && !subjectId) subjectId = normalizeSubjectId(sid);
+  }
+
   if (topicKey) {
     const hit = findTopicRowByKey(payload, topicKey, subjectId || undefined);
     if (hit?.tr) return rowMetricsFromTopicRow({ ...hit.tr, subjectId: hit.subject || subjectId });
   }
-  const scopes = Array.isArray(conv?.priorScopes) ? conv.priorScopes : [];
-  if (scopes.length) {
-    const last = String(scopes[scopes.length - 1] || "");
-    const colon = last.indexOf(":");
-    if (colon > 0) {
-      const st = last.slice(0, colon);
-      const sid = last.slice(colon + 1);
-      if (st === "topic" && sid) {
-        const hit = findTopicRowByKey(payload, sid);
-        if (hit?.tr) return rowMetricsFromTopicRow({ ...hit.tr, subjectId: hit.subject });
-      }
+
+  if (subjectId) {
+    const within = collectTopicMetrics(payload).filter((m) => normalizeSubjectId(m.sid) === subjectId);
+    if (within.length) {
+      const picked = pickWeakestTopic(within) || [...within].sort((a, b) => b.q - a.q)[0];
+      if (picked) return picked;
     }
   }
-  return pickWeakestTopic(collectTopicMetrics(payload));
+
+  const summary = String(conv?.lastAnswerSummary || conv?.lastAssistantAnswerDigestHe || "");
+  if (summary.length > 8) {
+    for (const sid of SUBJECT_ORDER) {
+      const label = subjectLabelHe(sid);
+      if (!summary.includes(label)) continue;
+      const within = collectTopicMetrics(payload).filter((m) => normalizeSubjectId(m.sid) === sid);
+      if (!within.length) continue;
+      const picked = pickWeakestTopic(within) || [...within].sort((a, b) => b.q - a.q)[0];
+      if (picked) return picked;
+    }
+    for (const m of collectTopicMetrics(payload)) {
+      const name = m.label || m.displayName;
+      if (name && summary.includes(name)) return m;
+    }
+  }
+
+  if (allowWeakestFallback) return pickWeakestTopic(collectTopicMetrics(payload));
+  return null;
+}
+
+/**
+ * @param {unknown} payload
+ * @param {object} conv
+ * @param {{ allowWeakestFallback?: boolean }} [opts]
+ */
+export function resolveLastTopicMetrics(payload, conv, opts = {}) {
+  return resolveContextTopicMetrics(payload, conv, { allowWeakestFallback: true, ...opts });
+}
+
+/**
+ * @param {unknown} payload
+ * @param {object} conv
+ * @param {number} [limit]
+ */
+export function extractTopicAnchorsFromSummary(payload, conv, limit = 2) {
+  const text = String(conv?.lastAnswerSummary || conv?.lastAssistantAnswerDigestHe || "");
+  if (!text.trim()) return [];
+  const metas = collectTopicMetrics(payload);
+  /** @type {ReturnType<typeof topicAnchorFields>[]} */
+  const found = [];
+  const sorted = [...metas].sort((a, b) => {
+    const pos = (m) => {
+      const names = [m.label, m.displayName, String(m.displayName || "").split("(")[0].trim()].filter(Boolean);
+      const hits = names.map((n) => text.indexOf(n)).filter((i) => i >= 0);
+      return hits.length ? Math.min(...hits) : 99999;
+    };
+    return pos(a) - pos(b);
+  });
+  for (const m of sorted) {
+    const names = [m.label, m.displayName, String(m.displayName || "").split("(")[0].trim()].filter(Boolean);
+    if (!names.some((n) => n && text.includes(n))) continue;
+    const a = topicAnchorFields(m);
+    if (found.some((f) => f.topicRowKey === a.topicRowKey)) continue;
+    found.push(a);
+    if (found.length >= limit) break;
+  }
+  return found;
 }
 
 export { STRONG_ACC_MIN, STRONG_Q_MIN, WEAK_ACC_MAX };

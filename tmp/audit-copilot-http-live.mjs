@@ -24,6 +24,56 @@ const ROOT = path.resolve(__dirname, "..");
 const OUT_DIR = path.join(ROOT, "docs/qa/_artifacts/copilot-closure-round");
 const ORIGIN = process.env.COPILOT_HTTP_ORIGIN || "http://127.0.0.1:3098";
 const RANGE = { reportPeriod: "custom", rangeFrom: "2026-05-25", rangeTo: "2026-06-23" };
+const WARMUP_UTTERANCE = "מה הכי חשוב לי לדעת השבוע?";
+
+async function waitForServer(origin, maxMs = 120_000) {
+  const started = Date.now();
+  while (Date.now() - started < maxMs) {
+    try {
+      const res = await fetch(`${origin}/api/parent/copilot-turn`, {
+        method: "OPTIONS",
+        signal: AbortSignal.timeout(5000),
+      }).catch(() => null);
+      if (res) return true;
+      const home = await fetch(origin, { signal: AbortSignal.timeout(5000) }).catch(() => null);
+      if (home?.ok || home?.status === 404) return true;
+    } catch {
+      /* retry */
+    }
+    await new Promise((r) => setTimeout(r, 2000));
+  }
+  throw new Error(`Server not ready at ${origin} after ${maxMs}ms`);
+}
+
+/**
+ * @param {string} origin
+ * @param {string} token
+ * @param {string} studentId
+ * @param {unknown} payload
+ */
+async function warmupCopilotTurn(origin, token, studentId, payload) {
+  const fakePayload = { version: 999, shouldBeIgnored: true, diagnosticEngineV2: { units: [] } };
+  const strictProd = process.env.NODE_ENV === "production";
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    try {
+      const res = await fetch(`${origin}/api/parent/copilot-turn`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          studentId,
+          utterance: WARMUP_UTTERANCE,
+          sessionId: `http-warmup-${Date.now()}`,
+          ...RANGE,
+          payload: strictProd ? fakePayload : payload,
+        }),
+        signal: AbortSignal.timeout(120_000),
+      });
+      if (res.ok) return;
+    } catch {
+      await new Promise((r) => setTimeout(r, 3000));
+    }
+  }
+}
 
 const LIVE_QUESTIONS = [
   "מה הכי חשוב לי לדעת השבוע?",
@@ -89,10 +139,40 @@ async function main() {
     payloadCache.set(entry.label, await loadPayloadForStudent(supabase, entry));
   }
 
+  await waitForServer(ORIGIN);
+  const warmEntry = aaa[0];
+  await warmupCopilotTurn(ORIGIN, token, warmEntry.studentId, payloadCache.get(warmEntry.label));
+
   /** @type {object[]} */
   const rows = [];
   let httpPass = 0;
   let comparePass = 0;
+  let fetchRetries = 0;
+
+  async function postTurn(body) {
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      try {
+        const res = await fetch(`${ORIGIN}/api/parent/copilot-turn`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+          signal: AbortSignal.timeout(120_000),
+        });
+        return res;
+      } catch (err) {
+        if (attempt === 0) {
+          fetchRetries += 1;
+          await new Promise((r) => setTimeout(r, 2500));
+          continue;
+        }
+        throw err;
+      }
+    }
+    return null;
+  }
 
   for (const entry of aaa) {
     for (const utterance of LIVE_QUESTIONS) {
@@ -102,23 +182,20 @@ async function main() {
       const strictProd = process.env.NODE_ENV === "production";
       let httpRes;
       try {
-        httpRes = await fetch(`${ORIGIN}/api/parent/copilot-turn`, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            studentId: entry.studentId,
-            utterance,
-            sessionId,
-            ...RANGE,
-            payload: strictProd ? fakePayload : payload,
-            decoyPayload: fakePayload,
-          }),
+        httpRes = await postTurn({
+          studentId: entry.studentId,
+          utterance,
+          sessionId,
+          ...RANGE,
+          payload: strictProd ? fakePayload : payload,
+          decoyPayload: fakePayload,
         });
       } catch (err) {
         rows.push({ child: entry.label, utterance, ok: false, error: String(err?.message || err) });
+        continue;
+      }
+      if (!httpRes) {
+        rows.push({ child: entry.label, utterance, ok: false, error: "fetch failed" });
         continue;
       }
       const json = await httpRes.json().catch(() => ({}));
@@ -159,6 +236,8 @@ async function main() {
     generatedAt: new Date().toISOString(),
     origin: ORIGIN,
     mode: process.env.NODE_ENV === "production" ? "strict_production" : "dev_authenticated_rebuild_payload",
+    warmupPerformed: true,
+    fetchRetries,
     total: rows.length,
     httpPass,
     engineComparePass: comparePass,

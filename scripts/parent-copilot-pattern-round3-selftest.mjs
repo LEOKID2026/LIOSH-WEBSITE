@@ -88,6 +88,65 @@ function main() {
   });
   assert.ok(cont?.answerBlocks?.[0]?.textHe.includes("הצעד הבא"));
 
+  const englishConv = {
+    priorScopes: ["subject:english"],
+    lastResolvedSubject: "english",
+    lastAnswerSummary: "באנגלית מופיע נושא מילים עם דיוק נמוך יחסית.",
+  };
+  const severity = tryComposeContinuityPatternDraft({
+    utteranceStr: "זה חמור?",
+    payload: {
+      subjectProfiles: [
+        {
+          subject: "english",
+          topicRecommendations: [
+            { topicRowKey: "english:vocab", displayName: "מילים", questions: 12, accuracy: 40 },
+          ],
+        },
+        {
+          subject: "math",
+          topicRecommendations: [
+            { topicRowKey: "math:geom", displayName: "גאומטריה", questions: 20, accuracy: 35 },
+          ],
+        },
+      ],
+    },
+    conversationState: englishConv,
+  });
+  assert.ok(severity?.answerBlocks?.[0]?.textHe.includes("אנגלית"));
+  assert.ok(!severity?.answerBlocks?.[0]?.textHe.includes("גאומטריה"));
+
+  const home = tryComposePatternAnswerDraft({
+    utteranceStr: "מה לעשות בבית?",
+    payload,
+    conversationState: {},
+  });
+  assert.ok(home?.answerBlocks?.[0]?.textHe.includes("היום הייתי עושה"));
+
+  const askHome = tryComposePatternAnswerDraft({
+    utteranceStr: "מה לשאול אותו בבית?",
+    payload,
+    conversationState: {},
+  });
+  assert.ok(askHome?.answerBlocks?.[0]?.textHe.includes("שלוש שאלות"));
+
+  const notInfer = tryComposePatternAnswerDraft({
+    utteranceStr: "מה לא כדאי להסיק?",
+    payload,
+    conversationState: {},
+  });
+  assert.ok(notInfer?.answerBlocks?.[0]?.textHe.includes("לא כדאי להסיק מהדוח"));
+
+  const whyNotInfer = tryComposeContinuityPatternDraft({
+    utteranceStr: "למה?",
+    payload,
+    conversationState: {
+      lastTurnWasWhatNotInfer: true,
+      lastAnswerSummary: notInfer.answerBlocks[0].textHe,
+    },
+  });
+  assert.ok(whyNotInfer?.answerBlocks?.[0]?.textHe.includes("כי הדוח מציג רק נתוני תרגול"));
+
   const preserve = tryComposeContinuityPatternDraft({
     utteranceStr: "איך לשמר?",
     payload,

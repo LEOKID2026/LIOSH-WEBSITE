@@ -12,8 +12,10 @@ import {
   pickWeakestTopics,
   pickStrongForThreeThings,
   pickWeakForThreeThings,
+  resolveContextTopicMetrics,
   topicAnchorFields,
 } from "./pattern-topic-metrics.js";
+import { findTopicRowByKey } from "./contract-reader.js";
 import {
   exportTrendEvidence,
   exportParentActivityEvidence,
@@ -29,6 +31,10 @@ const TREND_RE =
 const PARENT_ACTIVITY_RE = /הפעילות\s+.*השפיע|האם\s+הפעילות\s+.*השפיע|מה\s+נתתי\s+ל(?:ו|ה)/u;
 const SPEED_RE =
   /האם\s+ז(?:ה|ו)\s+בגלל\s+לחץ\s+זמן|אולי\s+ז(?:ה|ו)\s+בגלל\s+מהירות|האם\s+(?:הוא|היא)\s+טע(?:ה|תה)\s+כי\s+עבד(?:ה)?\s+מהר|לחץ\s+זמן|עונה\s+מהר|מהר\s+מדי/u;
+const HOME_TODAY_RE =
+  /(?:^|\s)(?:מה\s+לעשות\s+(?:אית(?:ו|ה|ם)|עמ(?:ו|ה))(?:\s+בבית)?\s+היום|מה\s+לעשות\s+בבית(?:\s+היום)?|מה\s+עושים\s+עכשיו|ו?מה\s+לעשות\s+(?:עם\s+ז(?:ה|ו)\s+)?בבית)(?:\s*[.?؟]*)?$/u;
+const ASK_AT_HOME_RE = /מה\s+לשאול\s+(?:אות(?:ו|ה)|את(?:ו|ה))\s+בבית/u;
+const WHAT_NOT_INFER_RE = /מה\s+לא\s+כדאי\s+(?:לי\s+)?להסיק/u;
 const LEARNING_SEVERITY_FOLLOWUP_RE = /^(?:ז(?:ה|ו)\s+)?חמור\s*\??$/u;
 
 /**
@@ -37,13 +43,16 @@ const LEARNING_SEVERITY_FOLLOWUP_RE = /^(?:ז(?:ה|ו)\s+)?חמור\s*\??$/u;
 export function classifyApprovedPatternQuestion(utterance) {
   const t = foldUtteranceForHeMatch(String(utterance || ""));
   if (!t) return null;
+  if (HOME_TODAY_RE.test(t)) return "home_today";
+  if (ASK_AT_HOME_RE.test(t)) return "ask_at_home";
+  if (WHAT_NOT_INFER_RE.test(t)) return "what_not_infer";
   if (WHERE_HELP_RE.test(t)) return "where_help";
   if (THREE_THINGS_RE.test(t)) return "three_things";
   if (OPEN_ACTIVITY_RE.test(t)) return "open_activity";
   if (TREND_RE.test(t)) return "trend";
   if (PARENT_ACTIVITY_RE.test(t)) return "parent_activity";
   if (SPEED_RE.test(t)) return "speed";
-  if (LEARNING_SEVERITY_FOLLOWUP_RE.test(t)) return "learning_severity_followup";
+  if (LEARNING_SEVERITY_FOLLOWUP_RE.test(t) && t.length <= 24) return "learning_severity_followup";
   return null;
 }
 
@@ -112,6 +121,57 @@ function composeThreeThings(payload) {
   text += `3. לעשות צעד קטן בבית: פעילות קצרה אחת בנושא ${wLabel}, בלי להעמיס הרבה נושאים ביחד.`;
   const focus = fallbackWeak ? topicAnchorFields(fallbackWeak) : strong ? topicAnchorFields(strong) : topicAnchorFields(metas[0]);
   return patternDraft(text, focus, "what_is_most_important");
+}
+
+function composeHomeToday(payload, conv) {
+  const weak = resolveContextTopicMetrics(payload, conv, { allowWeakestFallback: true });
+  if (!weak?.q) return null;
+  const a = topicAnchorFields(weak);
+  let text = `היום הייתי עושה דבר אחד: פעילות קצרה בנושא ${a.subjectLabel} — ${a.topicLabel}. בדוח מופיעות שם ${a.questionCount} שאלות עם ${a.accuracyPercent}% הצלחה, ולכן זה מקום טוב לתרגול ממוקד. לעשות 5–10 דקות בלבד, 3–5 שאלות, ובסוף לשאול את הילד: איך חשבת על התשובה?`;
+  const hit = findTopicRowByKey(payload, a.topicRowKey, a.subjectId || undefined);
+  const sub =
+    hit?.tr?.contractsV1?.evidence?.safeSubskillHe ||
+    hit?.tr?.safeSubskillHe ||
+    hit?.tr?.contractsV1?.narrative?.safeSubskillHe;
+  if (String(sub || "").trim().length >= 3) {
+    text += " אם מופיעה בדוח תת־מיומנות ברורה, כדאי להתמקד בה ולא לפתוח כמה נושאים ביחד.";
+  }
+  return patternDraft(text, a, "what_to_do_today");
+}
+
+function composeAskAtHome(payload, conv) {
+  const weak = resolveContextTopicMetrics(payload, conv, { allowWeakestFallback: true });
+  if (!weak?.q) return null;
+  const a = topicAnchorFields(weak);
+  const text = `אפשר לשאול אותו שלוש שאלות קצרות על ${a.subjectLabel} — ${a.topicLabel}:\n\n1. מה ביקשו ממך למצוא בשאלה?\n\n2. איך החלטת מה הצעד הראשון?\n\n3. איפה הרגשת שזה נהיה קשה?\n\nהמטרה היא להבין את דרך החשיבה שלו, לא לבחון אותו הרבה זמן.`;
+  return patternDraft(text, a, "what_to_do_today");
+}
+
+function composeWhatNotInfer(payload, utterance) {
+  const text =
+    "לא כדאי להסיק מהדוח מסקנה אישית על הילד, ולא להשוות אותו לילדים אחרים. הדוח מציג רק את מה שקרה בתרגול באתר בתקופה שנבחרה: מקצועות, נושאים, כמות שאלות ודיוק. לכן נכון להתמקד בצעד לימודי קטן אחד לפי הנתונים, ולא להסיק מעבר למה שמופיע בדוח.";
+  const truthPacket = buildTruthPacketV1(payload, {
+    scopeType: "executive",
+    scopeId: "executive",
+    scopeLabel: "סיכום דוח",
+    canonicalIntent: "report_trust_question",
+    parentUtterance: utterance,
+  });
+  if (!truthPacket) return null;
+  return {
+    answerBlocks: [{ type: "observation", textHe: text, source: "pattern_composer" }],
+    plannerIntent: "report_trust_question",
+    focusTopic: null,
+    answerComposerUsed: "pattern_composer",
+    truthPacket,
+    scopeMeta: {
+      generationPath: "pattern_composer",
+      patternId: "what_not_infer",
+      intentReason: "pattern:what_not_infer",
+      scopeConfidence: 0.95,
+      scopeReason: "approved_pattern_composer",
+    },
+  };
 }
 
 function composeOpenActivity(payload) {
@@ -184,13 +244,8 @@ function composeLearningSeverityFollowup(payload, conv) {
  * @param {object} conv
  */
 function resolveLastTopicFromConv(payload, conv) {
-  const topicKey = String(conv?.lastResolvedTopic || "").trim();
-  const subjectId = String(conv?.lastResolvedSubject || "").trim();
-  if (topicKey) {
-    const metas = collectTopicMetrics(payload);
-    const hit = metas.find((m) => m.topicRowKey === topicKey);
-    if (hit) return topicAnchorFields(hit);
-  }
+  const ctx = resolveContextTopicMetrics(payload, conv, { allowWeakestFallback: false });
+  if (ctx) return topicAnchorFields(ctx);
   const weak = pickWeakestTopic(collectTopicMetrics(payload));
   return weak ? topicAnchorFields(weak) : null;
 }
@@ -216,6 +271,17 @@ export function tryComposePatternAnswerDraft(params) {
   /** @type {null|ReturnType<typeof patternDraft>} */
   let composed = null;
   switch (pattern) {
+    case "home_today":
+      composed = composeHomeToday(payload, conv);
+      break;
+    case "ask_at_home":
+      composed = composeAskAtHome(payload, conv);
+      break;
+    case "what_not_infer": {
+      const fixed = composeWhatNotInfer(payload, utteranceStr);
+      if (fixed) return { ...fixed, patternId: "what_not_infer" };
+      return { noData: true, patternId: pattern, plannerIntent: "report_trust_question" };
+    }
     case "where_help":
       composed = composeWhereHelp(payload);
       break;

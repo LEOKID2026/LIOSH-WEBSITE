@@ -25,21 +25,355 @@
  *   PLAYWRIGHT_BASE_URL / VISUAL_QA_BASE_URL
  */
 
-import { spawn } from "node:child_process";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { spawn, exec } from "node:child_process";
+import { mkdir, readFile, writeFile, readdir, stat, unlink } from "node:fs/promises";
 import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
+import { promisify } from "node:util";
 import { getRepoRoot } from "../virtual-student-qa/lib/config.mjs";
+
+const SELF_PATH = fileURLToPath(import.meta.url);
+
+const execAsync = promisify(exec);
 
 const REPO_ROOT = getRepoRoot();
 const SCRIPT_DIR = join(REPO_ROOT, "scripts", "qa");
 const HARNESS_PATH = join(SCRIPT_DIR, "visual-qa-harness.mjs");
+const DEEP_LOCK_PATH = join(REPO_ROOT, "reports", "visual-qa-deep", ".deep-run.lock");
 
 const DEFAULT_SUBJECTS = ["geometry", "math", "hebrew", "english"];
 const COHORTS = [
   { id: "primary", useSecondStudent: false },
   { id: "secondary", useSecondStudent: true },
 ];
+
+const VISUAL_QA_ENV_KEYS = [
+  "VISUAL_QA_SUBJECT",
+  "VISUAL_QA_MODE",
+  "VISUAL_QA_SAMPLES_PER_GRADE",
+  "VISUAL_QA_SAMPLES_PER_SUBJECT",
+  "VISUAL_QA_USE_SECOND_STUDENT",
+  "VISUAL_QA_ALLOW_MUTATIONS",
+  "VISUAL_QA_OUTPUT_DIR",
+  "VISUAL_QA_SAMPLE_SEED",
+  "VISUAL_QA_BASE_URL",
+  "VISUAL_QA_DEEP_SUBJECTS",
+  "VISUAL_QA_DEEP_ROUNDS",
+  "VISUAL_QA_DEEP_RUN_ID",
+  "VISUAL_QA_DEEP_DIAGNOSTIC",
+  "VISUAL_QA_RUN_TIMEOUT_MINUTES",
+  "VISUAL_QA_DEEP_PROGRESS_MINUTES",
+  "VISUAL_QA_DEEP_HEALTH_RETRIES",
+  "VISUAL_QA_DEEP_COOLDOWN_SEC",
+];
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function warmUpLoginRoute(baseUrl, { attempts = 3 } = {}) {
+  for (let i = 0; i < attempts; i += 1) {
+    const probe = await probeServerHealth(baseUrl, 30_000);
+    if (probe.ok) return probe;
+    await sleep(3000);
+  }
+  return probeServerHealth(baseUrl, 30_000);
+}
+
+async function killDevServerOnPort(port) {
+  const portNum = String(port || "3002");
+  if (process.platform === "win32") {
+    try {
+      const { stdout } = await execAsync(`netstat -ano | findstr :${portNum}`, { windowsHide: true });
+      const pids = new Set();
+      for (const line of stdout.split(/\r?\n/)) {
+        const trimmed = line.trim();
+        if (!trimmed || !/(LISTENING|ESTABLISHED)/.test(trimmed)) continue;
+        const parts = trimmed.split(/\s+/);
+        const pid = Number(parts[parts.length - 1]);
+        if (pid > 0) pids.add(pid);
+      }
+      for (const pid of pids) {
+        await execAsync(`taskkill /PID ${pid} /T /F`, { windowsHide: true }).catch(() => {});
+      }
+    } catch {
+      /* no listeners */
+    }
+  } else {
+    try {
+      await execAsync(`lsof -ti:${portNum} | xargs -r kill -9`, { shell: true });
+    } catch {
+      /* ignore */
+    }
+  }
+  await sleep(3000);
+}
+
+async function restartDevServer(cfg) {
+  const parsed = new URL(cfg.baseUrl);
+  const port = parsed.port || "3002";
+  const host = parsed.hostname || "127.0.0.1";
+  log(`  restarting Next dev on ${host}:${port}…`);
+  await killDevServerOnPort(port);
+  const child = spawn(`npx next dev -p ${port} -H ${host}`, {
+    cwd: REPO_ROOT,
+    detached: true,
+    stdio: "ignore",
+    shell: true,
+    windowsHide: true,
+  });
+  child.unref();
+  await sleep(10_000);
+  await warmUpLoginRoute(cfg.baseUrl, { attempts: 10 });
+  return waitForInfraReady(cfg.baseUrl, cfg, { purpose: "startup" });
+}
+
+async function probeServerHealth(baseUrl, timeoutMs = 15_000) {
+  const url = `${baseUrl.replace(/\/$/, "")}/student/login`;
+  try {
+    const res = await fetch(url, { signal: AbortSignal.timeout(timeoutMs) });
+    return { ok: res.ok, status: res.status, url, error: null };
+  } catch (error) {
+    return { ok: false, status: 0, url, error: error?.message || String(error) };
+  }
+}
+
+async function waitForServerHealth(baseUrl, { retries = 8, delayMs = 5000, timeoutMs = 15_000 } = {}) {
+  const attempts = [];
+  for (let i = 0; i < retries; i += 1) {
+    const probe = await probeServerHealth(baseUrl, timeoutMs);
+    attempts.push({ attempt: i + 1, kind: "http", ...probe });
+    if (probe.ok) return { ok: true, attempts };
+    if (i < retries - 1) await sleep(delayMs);
+  }
+  return { ok: false, attempts };
+}
+
+async function probeLoginUiReady(baseUrl, { timeoutMs = 30_000 } = {}) {
+  const { chromium } = await import("@playwright/test");
+  const browser = await chromium.launch({ headless: true });
+  const loginUrl = `${baseUrl.replace(/\/$/, "")}/student/login`;
+  const navTimeout = timeoutMs;
+  const fieldTimeout = timeoutMs;
+  try {
+    const page = await browser.newPage();
+    await page.goto(loginUrl, { waitUntil: "domcontentloaded", timeout: navTimeout });
+    await page
+      .getByText("בודקים חיבור...")
+      .waitFor({ state: "detached", timeout: fieldTimeout })
+      .catch(() => {});
+    const usernameField = page
+      .getByTestId("student-login-username")
+      .or(page.getByPlaceholder("שם משתמש"))
+      .or(page.getByLabel("שם משתמש"));
+    await usernameField.first().waitFor({ state: "visible", timeout: fieldTimeout });
+    return { ok: true, url: loginUrl, error: null };
+  } catch (error) {
+    return { ok: false, url: loginUrl, error: error?.message || String(error) };
+  } finally {
+    await browser.close().catch(() => {});
+  }
+}
+
+async function waitForInfraReady(baseUrl, cfg, { purpose = "default" } = {}) {
+  const attempts = [];
+  const retries =
+    purpose === "pre-run"
+      ? (cfg.preRunRetries ?? 6)
+      : purpose === "recovery"
+        ? (cfg.recoveryRetries ?? 8)
+        : (cfg.healthRetries ?? 8);
+  const delayMs = cfg.recoveryDelayMs ?? 10_000;
+  const uiTimeoutMs =
+    purpose === "recovery"
+      ? (cfg.recoveryUiTimeoutMs ?? 25_000)
+      : purpose === "pre-run"
+        ? (cfg.preRunUiTimeoutMs ?? 35_000)
+        : (cfg.startupUiTimeoutMs ?? 45_000);
+  const maxWallMs =
+    purpose === "recovery"
+      ? (cfg.recoveryMaxWallMs ?? 180_000)
+      : purpose === "pre-run"
+        ? (cfg.preRunMaxWallMs ?? 120_000)
+        : (cfg.startupMaxWallMs ?? 300_000);
+  const started = Date.now();
+
+  for (let i = 0; i < retries; i += 1) {
+    if (Date.now() - started >= maxWallMs) {
+      attempts.push({
+        attempt: i + 1,
+        kind: "wall-clock",
+        ok: false,
+        error: `infra wait exceeded ${maxWallMs}ms (${purpose})`,
+      });
+      break;
+    }
+
+    const http = await probeServerHealth(baseUrl, 12_000);
+    attempts.push({ attempt: i + 1, kind: "http", ...http });
+    if (!http.ok) {
+      if (i < retries - 1) await sleep(delayMs);
+      continue;
+    }
+    const ui = await probeLoginUiReady(baseUrl, { timeoutMs: uiTimeoutMs });
+    attempts.push({ attempt: i + 1, kind: "login-ui", ...ui });
+    if (ui.ok) return { ok: true, attempts };
+    if (i < retries - 1) await sleep(delayMs);
+  }
+  return { ok: false, attempts };
+}
+
+function isInfraBlockedRun(run) {
+  if (run.spawnError) return true;
+  if (run.preRunHealthOk === false) return true;
+  if (run.status === "BLOCKED_TIMEOUT") return true;
+  const reason = String(run.blockedReason || "");
+  if (/dev server not responding|Wrapper blocked harness spawn|pre-run health/i.test(reason)) {
+    return true;
+  }
+  if (
+    run.status === "BLOCKED" &&
+    run.samplesCompleted === 0 &&
+    /student-login-username|Timeout 30000ms exceeded/i.test(reason)
+  ) {
+    return true;
+  }
+  return false;
+}
+
+function diagnosticRunPassed(summary, plannedPerRun) {
+  if (summary.runnerFailures > 0) return false;
+  const infraBlocked = summary.runs.filter(isInfraBlockedRun).length;
+  if (infraBlocked > 0) return false;
+  const completedRuns = summary.runs.filter((r) => r.samplesCompleted >= plannedPerRun).length;
+  if (completedRuns < summary.runs.length) return false;
+  if (summary.totalCompletedSamples < summary.totalPlannedSamples) return false;
+  return true;
+}
+
+async function isPidAlive(pid) {
+  if (!pid || pid <= 0) return false;
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function acquireDeepRunLock(runId) {
+  await mkdir(join(REPO_ROOT, "reports", "visual-qa-deep"), { recursive: true });
+  let existing = null;
+  try {
+    existing = JSON.parse(await readFile(DEEP_LOCK_PATH, "utf8"));
+  } catch {
+    existing = null;
+  }
+  if (existing?.pid && (await isPidAlive(existing.pid)) && existing.runId !== runId) {
+    throw new Error(
+      `Another deep Visual QA run is active: runId=${existing.runId} pid=${existing.pid}. ` +
+        `Stop it before starting ${runId}.`
+    );
+  }
+  const lock = {
+    runId,
+    pid: process.pid,
+    startedAt: new Date().toISOString(),
+  };
+  await writeFile(DEEP_LOCK_PATH, `${JSON.stringify(lock, null, 2)}\n`, "utf8");
+  return lock;
+}
+
+async function releaseDeepRunLock(runId) {
+  try {
+    const existing = JSON.parse(await readFile(DEEP_LOCK_PATH, "utf8"));
+    if (existing?.runId === runId && existing?.pid === process.pid) {
+      await unlink(DEEP_LOCK_PATH);
+    }
+  } catch {
+    /* ignore */
+  }
+}
+
+function buildCleanHarnessEnv(cfg, { subject, cohort, outRel, sampleSeed }) {
+  const env = { ...process.env };
+  for (const key of VISUAL_QA_ENV_KEYS) {
+    delete env[key];
+  }
+  delete env.__RUN_TIMEOUT_MS;
+
+  env.PLAYWRIGHT_BASE_URL = cfg.baseUrl;
+  env.VISUAL_QA_BASE_URL = cfg.baseUrl;
+  env.VISUAL_QA_SUBJECT = subject;
+  env.VISUAL_QA_SAMPLES_PER_GRADE = String(cfg.samplesPerGrade);
+  env.VISUAL_QA_MODE = "sample";
+  env.VISUAL_QA_OUTPUT_DIR = outRel;
+  env.VISUAL_QA_SAMPLE_SEED = sampleSeed;
+  env.__RUN_TIMEOUT_MS = String(cfg.runTimeoutMs);
+  env.VISUAL_QA_LOGIN_TIMEOUT_MS = String(cfg.loginTimeoutMs ?? 60_000);
+
+  if (cohort.useSecondStudent) {
+    env.VISUAL_QA_USE_SECOND_STUDENT = "1";
+  }
+
+  return env;
+}
+
+function harnessEnvSnapshot(env) {
+  return {
+    PLAYWRIGHT_BASE_URL: env.PLAYWRIGHT_BASE_URL,
+    VISUAL_QA_SUBJECT: env.VISUAL_QA_SUBJECT,
+    VISUAL_QA_SAMPLES_PER_GRADE: env.VISUAL_QA_SAMPLES_PER_GRADE,
+    VISUAL_QA_MODE: env.VISUAL_QA_MODE,
+    VISUAL_QA_USE_SECOND_STUDENT: env.VISUAL_QA_USE_SECOND_STUDENT ?? null,
+    VISUAL_QA_OUTPUT_DIR: env.VISUAL_QA_OUTPUT_DIR,
+    VISUAL_QA_SAMPLE_SEED: env.VISUAL_QA_SAMPLE_SEED,
+    VISUAL_QA_ALLOW_MUTATIONS: env.VISUAL_QA_ALLOW_MUTATIONS ?? null,
+  };
+}
+
+async function killProcessTree(child) {
+  if (!child?.pid) return;
+  try {
+    if (process.platform === "win32") {
+      await execAsync(`taskkill /PID ${child.pid} /T /F`, { windowsHide: true });
+    } else {
+      process.kill(-child.pid, "SIGKILL");
+    }
+  } catch {
+    try {
+      child.kill("SIGKILL");
+    } catch {
+      /* ignore */
+    }
+  }
+}
+
+async function findLatestScreenshot(screenshotDir) {
+  try {
+    const files = await readdir(screenshotDir);
+    const pngs = files.filter((f) => f.endsWith(".png"));
+    let latest = null;
+    let latestMtime = 0;
+    for (const name of pngs) {
+      const full = join(screenshotDir, name);
+      const st = await stat(full);
+      if (st.mtimeMs > latestMtime) {
+        latestMtime = st.mtimeMs;
+        latest = full;
+      }
+    }
+    return latest ? relative(REPO_ROOT, latest) : null;
+  } catch {
+    return null;
+  }
+}
+
+async function writeBlockedDiagnostic(outAbs, payload) {
+  const path = join(outAbs, "blocked-detail.json");
+  await writeFile(path, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
+  return relative(REPO_ROOT, path);
+}
 
 function log(msg) {
   process.stderr.write(`${msg}\n`);
@@ -80,6 +414,43 @@ function parseDeepEnv() {
     1,
     Number(process.env.VISUAL_QA_DEEP_PROGRESS_MINUTES || 10) || 10
   );
+  const healthRetries = Math.max(
+    1,
+    Number(process.env.VISUAL_QA_DEEP_HEALTH_RETRIES || 8) || 8
+  );
+  const cooldownSec = Math.max(
+    0,
+    Number(process.env.VISUAL_QA_DEEP_COOLDOWN_SEC || 30) || 30
+  );
+  const recoveryRetries = Math.max(
+    3,
+    Number(process.env.VISUAL_QA_DEEP_RECOVERY_RETRIES || 8) || 8
+  );
+  const recoveryDelayMs = Math.max(
+    3000,
+    Number(process.env.VISUAL_QA_DEEP_RECOVERY_DELAY_MS || 8_000) || 8_000
+  );
+  const preRunRetries = Math.max(
+    3,
+    Number(process.env.VISUAL_QA_DEEP_PRERUN_RETRIES || 6) || 6
+  );
+  const recoveryMaxWallMs = Math.max(
+    60_000,
+    Number(process.env.VISUAL_QA_DEEP_RECOVERY_MAX_WALL_MS || 180_000) || 180_000
+  );
+  const preRunMaxWallMs = Math.max(
+    45_000,
+    Number(process.env.VISUAL_QA_DEEP_PRERUN_MAX_WALL_MS || 120_000) || 120_000
+  );
+  const diagnostic =
+    process.env.VISUAL_QA_DEEP_DIAGNOSTIC === "1" ||
+    process.env.VISUAL_QA_DEEP_DIAGNOSTIC === "true";
+  const autoFullAfterDiagnostic =
+    process.env.VISUAL_QA_DEEP_AUTO_FULL === "1" ||
+    process.env.VISUAL_QA_DEEP_AUTO_FULL === "true";
+  const autoRestartDev =
+    process.env.VISUAL_QA_DEEP_AUTO_RESTART_DEV !== "0" &&
+    process.env.VISUAL_QA_DEEP_AUTO_RESTART_DEV !== "false";
 
   return {
     subjects,
@@ -90,6 +461,20 @@ function parseDeepEnv() {
     runId,
     progressIntervalMs: progressIntervalMinutes * 60_000,
     runTimeoutMs: runTimeoutMinutes * 60_000,
+    healthRetries,
+    cooldownSec,
+    recoveryRetries,
+    recoveryDelayMs,
+    preRunRetries,
+    recoveryMaxWallMs,
+    preRunMaxWallMs,
+    loginTimeoutMs: Math.max(
+      30_000,
+      Number(process.env.VISUAL_QA_LOGIN_TIMEOUT_MS || 60_000) || 60_000
+    ),
+    autoRestartDev,
+    diagnostic,
+    autoFullAfterDiagnostic,
   };
 }
 
@@ -145,7 +530,7 @@ function summarizeRunReport(report, fallbackStatus) {
   return { status, samplesCompleted, samplesWithIssues, blockedCount };
 }
 
-function spawnHarnessRun({ env, logPath }) {
+function spawnHarnessRun({ env, timeoutMs }) {
   return new Promise((resolve) => {
     const chunks = [];
     const errChunks = [];
@@ -167,22 +552,20 @@ function spawnHarnessRun({ env, logPath }) {
         spawnError: error?.message || String(error),
         stdout: "",
         stderr: "",
+        childPid: null,
       });
       return;
     }
 
-    const timeoutMs = Number(env.__RUN_TIMEOUT_MS) || 75 * 60_000;
+    const effectiveTimeoutMs = timeoutMs || Number(env.__RUN_TIMEOUT_MS) || 75 * 60_000;
+    let killTimer = null;
     const timer = setTimeout(() => {
       timedOut = true;
       child.kill("SIGTERM");
-      setTimeout(() => {
-        try {
-          child.kill("SIGKILL");
-        } catch {
-          /* ignore */
-        }
+      killTimer = setTimeout(() => {
+        killProcessTree(child).catch(() => {});
       }, 5000);
-    }, timeoutMs);
+    }, effectiveTimeoutMs);
 
     child.stdout.on("data", (buf) => chunks.push(buf));
     child.stderr.on("data", (buf) => errChunks.push(buf));
@@ -193,6 +576,7 @@ function spawnHarnessRun({ env, logPath }) {
 
     child.on("close", (code) => {
       clearTimeout(timer);
+      if (killTimer) clearTimeout(killTimer);
       const stdout = Buffer.concat(chunks).toString("utf8");
       const stderr = Buffer.concat(errChunks).toString("utf8");
       resolve({
@@ -201,6 +585,7 @@ function spawnHarnessRun({ env, logPath }) {
         spawnError,
         stdout,
         stderr,
+        childPid: child.pid ?? null,
       });
     });
   });
@@ -319,6 +704,24 @@ async function main() {
   const deepRoot = join(REPO_ROOT, "reports", "visual-qa-deep", cfg.runId);
   await mkdir(deepRoot, { recursive: true });
 
+  let runLock = null;
+  try {
+    runLock = await acquireDeepRunLock(cfg.runId);
+  } catch (error) {
+    log(`RUNNER_FAILED: ${error.message}`);
+    process.exit(3);
+  }
+
+  const startupHealth = await warmUpLoginRoute(cfg.baseUrl, { attempts: 4 }).then(() =>
+    waitForInfraReady(cfg.baseUrl, cfg, { purpose: "startup" })
+  );
+  if (!startupHealth.ok) {
+    log("RUNNER_FAILED: app/login UI not ready before deep run started");
+    log(JSON.stringify(startupHealth.attempts, null, 2));
+    await releaseDeepRunLock(cfg.runId);
+    process.exit(3);
+  }
+
   const startedAt = Date.now();
   const startedAtIso = new Date(startedAt).toISOString();
 
@@ -336,6 +739,8 @@ async function main() {
     totalPlannedSamples,
     totalRuns,
     harnessPath: relative(REPO_ROOT, HARNESS_PATH),
+    lockPath: relative(REPO_ROOT, DEEP_LOCK_PATH),
+    startupHealth: startupHealth.attempts,
   };
 
   await writeFile(join(deepRoot, "manifest.json"), `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
@@ -375,10 +780,18 @@ async function main() {
   log(`Planned: ${totalRuns} harness runs, ${totalPlannedSamples} samples`);
   log(`Output: ${relative(REPO_ROOT, deepRoot)}`);
 
+  let lastSubject = "";
+
   for (let round = 1; round <= cfg.rounds; round += 1) {
     currentRound = round;
     for (const subject of cfg.subjects) {
       currentSubject = subject;
+      if (cfg.autoRestartDev && lastSubject && lastSubject !== subject) {
+        log(`  subject boundary ${lastSubject} → ${subject}: refreshing dev server…`);
+        const boundary = await restartDevServer(cfg);
+        log(`  subject boundary refresh: ok=${boundary.ok}`);
+      }
+      lastSubject = subject;
       for (const cohort of COHORTS) {
         currentCohort = cohort.id;
         const outRel = runOutputRel(cfg.runId, round, subject, cohort.id);
@@ -390,45 +803,81 @@ async function main() {
         const reportJsonPath = join(outAbs, "visual-qa-report.json");
         const reportTxtPath = join(outAbs, "visual-qa-report.txt");
         const screenshotsPath = join(outRel, "screenshots");
+        const screenshotAbsDir = join(outAbs, "screenshots");
 
-        const harnessEnv = {
-          ...process.env,
-          PLAYWRIGHT_BASE_URL: cfg.baseUrl,
-          VISUAL_QA_BASE_URL: cfg.baseUrl,
-          VISUAL_QA_SUBJECT: subject,
-          VISUAL_QA_SAMPLES_PER_GRADE: String(cfg.samplesPerGrade),
-          VISUAL_QA_MODE: "sample",
-          VISUAL_QA_OUTPUT_DIR: outRel,
-          VISUAL_QA_SAMPLE_SEED: sampleSeed,
-          __RUN_TIMEOUT_MS: String(cfg.runTimeoutMs),
-        };
-
-        if (cohort.useSecondStudent) {
-          harnessEnv.VISUAL_QA_USE_SECOND_STUDENT = "1";
-        } else {
-          delete harnessEnv.VISUAL_QA_USE_SECOND_STUDENT;
-        }
-        delete harnessEnv.VISUAL_QA_ALLOW_MUTATIONS;
+        const harnessEnv = buildCleanHarnessEnv(cfg, {
+          subject,
+          cohort,
+          outRel,
+          sampleSeed,
+        });
+        const envSnapshot = harnessEnvSnapshot(harnessEnv);
 
         log(
           `[${completedRuns + 1}/${totalRuns}] round ${round} ${subject} ${cohort.id} seed=${sampleSeed}`
         );
 
+        let preRunHealth = await waitForInfraReady(cfg.baseUrl, cfg, { purpose: "pre-run" });
+        if (!preRunHealth.ok && cfg.autoRestartDev) {
+          log("  pre-run infra not ready — restarting dev server…");
+          preRunHealth = await restartDevServer(cfg);
+        }
+        const preRunHealthOk = preRunHealth.ok;
+
         const runStarted = Date.now();
         let result;
-        try {
-          result = await spawnHarnessRun({ env: harnessEnv, logPath });
-        } catch (error) {
+        let report = null;
+        let status;
+        let blockedDetailPath = null;
+
+        if (!preRunHealthOk) {
+          status = "BLOCKED";
           result = {
-            exitCode: null,
+            exitCode: 2,
             timedOut: false,
-            spawnError: error?.message || String(error),
+            spawnError: null,
             stdout: "",
-            stderr: "",
+            stderr: "wrapper: pre-run health check failed — dev server not responding",
+            childPid: null,
           };
+          report = {
+            status: "BLOCKED",
+            generatedAt: new Date().toISOString(),
+            baseUrl: cfg.baseUrl,
+            subject,
+            blocked: {
+              route: `${cfg.baseUrl}/student/login`,
+              account: "(wrapper pre-run health)",
+              missingEnv: ["dev server not responding at pre-run health check"],
+              supabaseHint: "Ensure only one deep run hammers port 3002; restart Next dev if saturated.",
+              whatYouNeed: "Wrapper blocked harness spawn until server responds.",
+              healthAttempts: preRunHealth.attempts,
+            },
+          };
+          await writeFile(reportJsonPath, `${JSON.stringify(report, null, 2)}\n`, "utf8");
+        } else {
+          try {
+            result = await spawnHarnessRun({
+              env: harnessEnv,
+              timeoutMs: cfg.runTimeoutMs,
+            });
+          } catch (error) {
+            result = {
+              exitCode: null,
+              timedOut: false,
+              spawnError: error?.message || String(error),
+              stdout: "",
+              stderr: "",
+              childPid: null,
+            };
+          }
         }
 
         const runDurationSec = Math.round((Date.now() - runStarted) / 1000);
+        if (!report) {
+          report = await readReportJson(reportJsonPath);
+        }
+
         const logBody = [
           `# Visual QA Deep harness run`,
           `runId=${cfg.runId}`,
@@ -439,7 +888,15 @@ async function main() {
           `exitCode=${result.exitCode}`,
           `timedOut=${result.timedOut}`,
           `spawnError=${result.spawnError || ""}`,
+          `childPid=${result.childPid ?? ""}`,
           `durationSec=${runDurationSec}`,
+          `preRunHealthOk=${preRunHealthOk}`,
+          "",
+          "=== pre-run infra attempts ===",
+          JSON.stringify(preRunHealth.attempts, null, 2),
+          "",
+          "=== harness env (effective) ===",
+          JSON.stringify(envSnapshot, null, 2),
           "",
           "=== stdout ===",
           result.stdout || "",
@@ -449,14 +906,71 @@ async function main() {
         ].join("\n");
         await writeFile(logPath, logBody, "utf8");
 
-        let status = mapExitToStatus(result.exitCode, result.timedOut, result.spawnError);
+        status = mapExitToStatus(result.exitCode, result.timedOut, result.spawnError);
         if (result.spawnError) {
           runnerFailures += 1;
         }
 
-        const report = await readReportJson(reportJsonPath);
         if (report?.status) {
           status = result.timedOut ? "BLOCKED_TIMEOUT" : report.status;
+        }
+
+        const latestScreenshot = await findLatestScreenshot(screenshotAbsDir);
+        const blockedReason =
+          report?.blocked?.whatYouNeed ||
+          report?.blocked?.detail ||
+          (result.timedOut ? "wrapper timeout" : null);
+
+        if (
+          cfg.diagnostic ||
+          status === "BLOCKED" ||
+          status === "BLOCKED_TIMEOUT" ||
+          result.spawnError
+        ) {
+          blockedDetailPath = await writeBlockedDiagnostic(outAbs, {
+            runId: cfg.runId,
+            round,
+            subject,
+            cohort: cohort.id,
+            status,
+            exitCode: result.exitCode,
+            timedOut: result.timedOut,
+            spawnError: result.spawnError || null,
+            durationSec: runDurationSec,
+            env: envSnapshot,
+            preRunHealth: preRunHealth.attempts,
+            blocked: report?.blocked || null,
+            blockedReason,
+            reportPath: report ? relative(REPO_ROOT, reportJsonPath) : null,
+            reportExists: Boolean(report),
+            logPath: relative(REPO_ROOT, logPath),
+            latestScreenshot,
+            stderrTail: (result.stderr || "").slice(-4000),
+            stdoutTail: (result.stdout || "").slice(-4000),
+          });
+          log(`  blocked-detail: ${blockedDetailPath}`);
+          if (blockedReason) log(`  blocked-reason: ${String(blockedReason).slice(0, 240)}`);
+        }
+
+        const needsRecovery =
+          result.timedOut || status === "BLOCKED" || status === "BLOCKED_TIMEOUT";
+        if (needsRecovery) {
+          log(`  recovering infra after ${status} (${runDurationSec}s)…`);
+          let recovery = await waitForInfraReady(cfg.baseUrl, cfg, { purpose: "recovery" });
+          log(`  recovery: ok=${recovery.ok} attempts=${recovery.attempts.length}`);
+          if (!recovery.ok) {
+            log("  extended recovery: cool-down 90s + warm-up + startup probe…");
+            await sleep(90_000);
+            await warmUpLoginRoute(cfg.baseUrl, { attempts: 6 });
+            recovery = await waitForInfraReady(cfg.baseUrl, cfg, { purpose: "startup" });
+            log(`  extended recovery: ok=${recovery.ok} attempts=${recovery.attempts.length}`);
+          }
+          if (!recovery.ok && cfg.autoRestartDev) {
+            recovery = await restartDevServer(cfg);
+            log(`  dev restart recovery: ok=${recovery.ok} attempts=${recovery.attempts.length}`);
+          }
+        } else if (runDurationSec >= 30 || status === "VISUAL_QA_PASS" || status === "ISSUES_FOUND") {
+          await sleep(cfg.cooldownSec * 1000);
         }
 
         const summary = summarizeRunReport(report, status);
@@ -546,6 +1060,11 @@ async function main() {
           reportTxtPath: relative(REPO_ROOT, reportTxtPath),
           logPath: relative(REPO_ROOT, logPath),
           screenshotsPath,
+          blockedDetailPath,
+          blockedReason,
+          preRunHealthOk,
+          preRunHealthAttempts: preRunHealth.attempts,
+          latestScreenshot,
         };
 
         runRecords.push(runRecord);
@@ -660,10 +1179,63 @@ async function main() {
   log(`Summary: ${relative(REPO_ROOT, summaryJsonPath)}`);
   log(`Duration: ${durationSec}s | samples ${completedSamples}/${totalPlannedSamples} | issues ${issuesSoFar}`);
 
+  const perRunPlanned = plannedSamplesPerRun(cfg.samplesPerGrade);
+  const diagOk = diagnosticRunPassed(summary, perRunPlanned);
+  summary.diagnosticPassed = cfg.diagnostic ? diagOk : undefined;
+  await writeFile(summaryJsonPath, `${JSON.stringify(summary, null, 2)}\n`, "utf8");
+
+  await releaseDeepRunLock(cfg.runId);
+
+  if (
+    cfg.diagnostic &&
+    process.env.VISUAL_QA_DEEP_CHAIN_FULL === "1" &&
+    diagOk &&
+    !runnerFailures
+  ) {
+    log("");
+    log("Diagnostic passed — chaining full deep run (50/grade × 2 rounds)…");
+    const fullRunId = makeRunId();
+    const fullEnv = { ...process.env };
+    for (const key of VISUAL_QA_ENV_KEYS) delete fullEnv[key];
+    delete fullEnv.VISUAL_QA_DEEP_DIAGNOSTIC;
+    delete fullEnv.VISUAL_QA_DEEP_CHAIN_FULL;
+    delete fullEnv.VISUAL_QA_DEEP_AUTO_FULL;
+    fullEnv.PLAYWRIGHT_BASE_URL = cfg.baseUrl;
+    fullEnv.VISUAL_QA_DEEP_SUBJECTS = cfg.subjects.join(",");
+    fullEnv.VISUAL_QA_SAMPLES_PER_GRADE = "50";
+    fullEnv.VISUAL_QA_DEEP_ROUNDS = "2";
+    fullEnv.VISUAL_QA_RUN_TIMEOUT_MINUTES = "75";
+    fullEnv.VISUAL_QA_DEEP_RUN_ID = fullRunId;
+    fullEnv.VISUAL_QA_DEEP_COOLDOWN_SEC = "30";
+    fullEnv.VISUAL_QA_DEEP_RECOVERY_RETRIES = "8";
+
+    await new Promise((resolve, reject) => {
+      const child = spawn(process.execPath, [SELF_PATH], {
+        cwd: REPO_ROOT,
+        env: fullEnv,
+        stdio: "inherit",
+        windowsHide: true,
+      });
+      child.on("error", reject);
+      child.on("close", (code) => resolve(code ?? 1));
+    });
+    return;
+  }
+
+  if (cfg.diagnostic && process.env.VISUAL_QA_DEEP_CHAIN_FULL === "1" && !diagOk) {
+    log("Diagnostic failed — full deep run NOT started.");
+  }
+
   process.exit(runnerFailures ? 3 : 0);
 }
 
-main().catch((error) => {
+main().catch(async (error) => {
   log(`RUNNER_FAILED: ${error?.message || error}`);
+  try {
+    const runId = String(process.env.VISUAL_QA_DEEP_RUN_ID || "").trim();
+    if (runId) await releaseDeepRunLock(runId);
+  } catch {
+    /* ignore */
+  }
   process.exit(3);
 });

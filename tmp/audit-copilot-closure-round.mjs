@@ -12,6 +12,10 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 import parentCopilot from "../utils/parent-copilot/index.js";
 import {
+  BANNED_PARENT_PHRASE_SNIPPETS,
+  dedupeSentencesHe,
+} from "../utils/parent-copilot/parent-facing-answer-postprocess.js";
+import {
   GENERAL_OFF_TOPIC_RESPONSE_HE,
   HEALTH_BOUNDARY_RESPONSE_HE,
   PRIVACY_BOUNDARY_RESPONSE_HE,
@@ -130,6 +134,50 @@ function answerText(res) {
   return String(res.clarificationQuestionHe || res?.response?.clarificationQuestionHe || "");
 }
 
+function scanBannedParentPhrases(text) {
+  const t = String(text || "");
+  return BANNED_PARENT_PHRASE_SNIPPETS.filter((s) => t.includes(s));
+}
+
+function scanDuplicateSentences(text) {
+  const raw = String(text || "");
+  const parts = raw
+    .split(/(?<=[.!?؟])\s+/)
+    .map((p) => p.replace(/\s+/g, " ").trim().toLowerCase())
+    .filter((p) => p.length >= 12);
+  const seen = new Set();
+  /** @type {string[]} */
+  const dups = [];
+  for (const p of parts) {
+    if (seen.has(p)) dups.push(p);
+    else seen.add(p);
+  }
+  return dups;
+}
+
+function scanQuality(text) {
+  const banned = scanBannedParentPhrases(text);
+  const duplicateSentences = scanDuplicateSentences(text);
+  const deduped = dedupeSentencesHe(text);
+  const needsDedupe = deduped !== String(text || "").replace(/\s+/g, " ").trim();
+  return { banned, duplicateSentences, needsDedupe };
+}
+
+function recordQualityScan(report, source, meta, text) {
+  const qscan = scanQuality(text);
+  if (qscan.banned.length) {
+    report.qualityScan.bannedHits.push({ source, ...meta, banned: qscan.banned });
+  }
+  if (qscan.duplicateSentences.length) {
+    report.qualityScan.duplicateSentenceHits.push({
+      source,
+      ...meta,
+      duplicateSentences: qscan.duplicateSentences,
+    });
+  }
+  return qscan;
+}
+
 function scanForbidden(text) {
   const t = String(text || "");
   const hits = [];
@@ -241,6 +289,11 @@ function evaluateLiveTurn({ child, q, text, facts, forbidden }) {
     reasons.push("ambiguous");
   } else if (text === NO_DATA_FOR_REQUEST_RESPONSE_HE) {
     // ok when thin
+  } else if (/האם\s+הבעיה\s+היא\s+נשיאה/u.test(q)) {
+    if (text !== NO_DATA_FOR_REQUEST_RESPONSE_HE) {
+      pass = false;
+      reasons.push("carry_requires_no_data");
+    }
   } else if (/מה\s+השתנה|מתקדם|התקדמות/i.test(q)) {
     if (!/בדוח מופיע שינוי/u.test(text) && text !== NO_DATA_FOR_REQUEST_RESPONSE_HE) {
       pass = false;
@@ -351,6 +404,7 @@ async function main() {
     batch40: [],
     boundaryLive: [],
     continuity: [],
+    qualityScan: { bannedHits: [], duplicateSentenceHits: [] },
     forbiddenScan: { totalTexts: 0, hits: [] },
     summary: {},
   };
@@ -375,6 +429,7 @@ async function main() {
       const res = runTurn(payload, q, sessionId);
       const text = answerText(res);
       const forbidden = scanForbidden(text);
+      const quality = recordQualityScan(report, "live", { child: entry.label, q }, text);
       const dataFound = dataInAnswer(text, facts);
       const evalRes = evaluateLiveTurn({ child: entry.label, q, text, facts, forbidden });
       const align = checkAlignment({ q, text, facts, reportSummary });
@@ -393,8 +448,17 @@ async function main() {
         noDataCorrect: text === NO_DATA_FOR_REQUEST_RESPONSE_HE,
         reportSummary,
         alignment: align,
-        pass: evalRes.pass && align.pass,
-        failReasons: [...evalRes.reasons, ...align.reasons],
+        pass:
+          evalRes.pass &&
+          align.pass &&
+          quality.banned.length === 0 &&
+          quality.duplicateSentences.length === 0,
+        failReasons: [
+          ...evalRes.reasons,
+          ...align.reasons,
+          ...(quality.banned.length ? [`banned:${quality.banned.join(",")}`] : []),
+          ...(quality.duplicateSentences.length ? ["duplicate_sentences"] : []),
+        ],
       };
       report.liveAaa.push(row);
       if (forbidden.length) report.forbiddenScan.hits.push({ source: "live", child: entry.label, q, forbidden });
@@ -471,29 +535,33 @@ async function main() {
   }
 
   // ── Continuity (AAA5) ──
-  const convos = [
-    ["מה הכי חשוב במתמטיקה?", "ומה לעשות עם זה בבית?"],
-    ["מה עם אנגלית?", "זה חמור?"],
-    ["תן לי תוכנית לשבוע.", "תקצר לי."],
-    ["איפה הוא צריך עזרה?", "תעשה את זה פשוט יותר."],
-    ["האם זה בגלל לחץ זמן?", "אז מה עושים?"],
-    ["מה לא כדאי להסיק?", "למה?"],
-    ["על איזה נושא לפתוח פעילות?", "ומה אם הוא טועה בזה?"],
-    ["במה הוא חזק?", "איך לשמר את זה?"],
+  const continuitySpecs = [
+    { q1: "מה הכי חשוב במתמטיקה?", q2: "ומה לעשות עם זה בבית?" },
+    { q1: "מה עם אנגלית?", q2: "זה חמור?", mustInclude: "אנגלית", mustExclude: "גאומטריה" },
+    { q1: "תן לי תוכנית לשבוע.", q2: "תקצר לי.", mustInclude: "בקצרה" },
+    { q1: "איפה הוא צריך עזרה?", q2: "תעשה את זה פשוט יותר." },
+    { q1: "האם זה בגלל לחץ זמן?", q2: "אז מה עושים?", mustInclude: "כדי לבדוק את זה בצורה פשוטה", mustExclude: "מילון משמעויות" },
+    { q1: "מה לא כדאי להסיק?", q2: "למה?", mustInclude: "כי הדוח מציג רק נתוני תרגול" },
+    { q1: "על איזה נושא לפתוח פעילות?", q2: "ומה אם הוא טועה בזה?" },
+    { q1: "במה הוא חזק?", q2: "איך לשמר את זה?" },
   ];
 
-  for (let i = 0; i < convos.length; i++) {
-    const [q1, q2] = convos[i];
+  for (let i = 0; i < continuitySpecs.length; i++) {
+    const { q1, q2, mustInclude, mustExclude } = continuitySpecs[i];
     const sid = `continuity-${i}-${Date.now()}`;
     const r1 = runTurn(refPayload, q1, sid);
     const t1 = answerText(r1);
     const r2 = runTurn(refPayload, q2, sid);
     const t2 = answerText(r2);
+    recordQualityScan(report, "continuity", { conversation: i + 1, q: q2 }, t2);
     const amb2 = t2.includes(AMBIGUOUS_RESPONSE_HE.slice(0, 24));
+    const qscan = scanQuality(t2);
     const ctxKept =
       !amb2 &&
       (t2.includes(t1.slice(0, 12)) ||
         /מתמטיקה|אנגלית|חשבון|גאומטריה|שברים|בבית|תרגול|נושא|לחץ|הסיק|חזק/u.test(t2));
+    const subjectOk =
+      (!mustInclude || t2.includes(mustInclude)) && (!mustExclude || !t2.includes(mustExclude));
     report.continuity.push({
       conversation: i + 1,
       q1,
@@ -501,7 +569,14 @@ async function main() {
       q2,
       a2: t2,
       contextKept: ctxKept,
-      pass: !amb2 && t1.length > 20 && t2.length > 15,
+      subjectOk,
+      pass:
+        !amb2 &&
+        t1.length > 20 &&
+        t2.length > 15 &&
+        subjectOk &&
+        qscan.banned.length === 0 &&
+        qscan.duplicateSentences.length === 0,
     });
   }
 
@@ -526,12 +601,16 @@ async function main() {
     continuityPass: report.continuity.filter((r) => r.pass).length,
     continuityTotal: report.continuity.length,
     forbiddenHitCount: report.forbiddenScan.hits.length,
+    bannedPhraseHitCount: report.qualityScan.bannedHits.length,
+    duplicateSentenceHitCount: report.qualityScan.duplicateSentenceHits.length,
     readyForOwnerManualReview:
       liveFails.length === 0 &&
       batchFails.length === 0 &&
       boundaryFails.length === 0 &&
       continuityFails.length === 0 &&
-      report.forbiddenScan.hits.length === 0,
+      report.forbiddenScan.hits.length === 0 &&
+      report.qualityScan.bannedHits.length === 0 &&
+      report.qualityScan.duplicateSentenceHits.length === 0,
   };
 
   await mkdir(OUT_DIR, { recursive: true });
@@ -547,6 +626,8 @@ async function main() {
   process.stdout.write(`Boundary: ${report.summary.boundaryPass}/${report.summary.boundaryTotal}\n`);
   process.stdout.write(`Continuity: ${report.summary.continuityPass}/${report.summary.continuityTotal}\n`);
   process.stdout.write(`Forbidden hits: ${report.summary.forbiddenHitCount}\n`);
+  process.stdout.write(`Banned phrase hits: ${report.summary.bannedPhraseHitCount}\n`);
+  process.stdout.write(`Duplicate sentence hits: ${report.summary.duplicateSentenceHitCount}\n`);
   if (liveFails.length) {
     process.stdout.write(`\nFirst 5 live FAILs:\n`);
     for (const f of liveFails.slice(0, 5)) {
@@ -571,6 +652,8 @@ function buildMarkdown(report) {
     `- Boundary: **${report.summary.boundaryPass}/${report.summary.boundaryTotal}**`,
     `- Continuity: **${report.summary.continuityPass}/${report.summary.continuityTotal}**`,
     `- Forbidden hits: **${report.summary.forbiddenHitCount}**`,
+    `- Banned phrase hits: **${report.summary.bannedPhraseHitCount}**`,
+    `- Duplicate sentence hits: **${report.summary.duplicateSentenceHitCount}**`,
     "",
     report.summary.readyForOwnerManualReview
       ? "**מוכן לבדיקה ידנית של הבעלים** (לא מוכן להשקה)"

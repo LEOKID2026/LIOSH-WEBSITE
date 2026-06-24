@@ -17,6 +17,13 @@ const MAX_UI_AUTH_ATTEMPTS = 3;
 const RETRYABLE_AUTH_RE =
   /שגיאת רשת|network|timeout|locator\.fill|did not reach \/student\/home/i;
 
+function loginTimeoutMs() {
+  const raw = Number(
+    process.env.VISUAL_QA_LOGIN_TIMEOUT_MS || process.env.STUDENT_AUTH_UI_TIMEOUT_MS || 60_000
+  );
+  return Number.isFinite(raw) && raw > 0 ? raw : 60_000;
+}
+
 /**
  * @param {object} args
  * @param {import("playwright").BrowserContext} args.context
@@ -68,7 +75,7 @@ async function authenticateViaUi({ page, account, baseUrl, log, loginUrl }) {
     return { mode: "ui", path: STUDENT_HOME, alreadyAuthenticated: true };
   }
 
-  await page.getByText("בודקים חיבור...").waitFor({ state: "detached", timeout: 30_000 }).catch(() => {});
+  await page.getByText("בודקים חיבור...").waitFor({ state: "detached", timeout: loginTimeoutMs() }).catch(() => {});
 
   const usernameField =
     page.getByTestId("student-login-username").or(page.getByPlaceholder("שם משתמש")).or(
@@ -83,16 +90,17 @@ async function authenticateViaUi({ page, account, baseUrl, log, loginUrl }) {
     .or(page.getByRole("button", { name: /כניסה ללמידה/ }))
     .or(page.getByRole("button", { name: "כניסה" }));
 
-  await usernameField.first().waitFor({ state: "visible", timeout: 30_000 });
-  await pinField.first().waitFor({ state: "visible", timeout: 30_000 });
+  const loginMs = loginTimeoutMs();
+  await usernameField.first().waitFor({ state: "visible", timeout: loginMs });
+  await pinField.first().waitFor({ state: "visible", timeout: loginMs });
 
   const identifier = account.username || account.code;
   if (!identifier) {
     throw new Error("student-auth(ui): account is missing both username and code");
   }
 
-  await usernameField.first().fill(identifier, { timeout: 30_000 });
-  await pinField.first().fill(account.pin, { timeout: 30_000 });
+  await usernameField.first().fill(identifier, { timeout: loginMs });
+  await pinField.first().fill(account.pin, { timeout: loginMs });
 
   log(`student-auth(ui): submitting login form for label=${account.label}`);
   const navigationPromise = page.waitForURL(

@@ -143,12 +143,29 @@ function hasSafeSubskillEvidence(payload) {
 }
 
 /**
+ * @param {unknown} payload
+ */
+function hasCarrySubskillEvidence(payload) {
+  const profiles = Array.isArray(payload?.subjectProfiles) ? payload.subjectProfiles : [];
+  for (const sp of profiles) {
+    const recs = Array.isArray(sp?.topicRecommendations) ? sp.topicRecommendations : [];
+    for (const tr of recs) {
+      const sub = String(tr?.contractsV1?.evidence?.safeSubskillHe || tr?.safeSubskillHe || "").trim();
+      if (/נשיא/u.test(sub)) return true;
+    }
+  }
+  return false;
+}
+
+/**
  * @param {string} utterance
  * @param {unknown} payload
  */
 export function shouldReturnNoDataForRequest(utterance, payload) {
   const t = foldUtteranceForHeMatch(String(utterance || ""));
   if (!t) return false;
+
+  if (/האם\s+הבעיה\s+היא\s+נשיאה/u.test(t) && !hasCarrySubskillEvidence(payload)) return true;
 
   const globalQ = maxGlobalReportQuestionCount(payload);
   if (globalQ > 0 && globalQ < 8) {
