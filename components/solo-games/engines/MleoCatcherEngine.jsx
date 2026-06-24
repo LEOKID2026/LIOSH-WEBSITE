@@ -1,28 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import {
-  exitMobileGameFullscreen,
-  isMobileGameFullscreenEligible,
-  requestMobileGameFullscreen,
-} from "../../../lib/solo-games/solo-game-fullscreen.client.js";
-
-const PORTRAIT_DISMISS_KEY = "catcher-portrait-dismiss";
-
-function isMobileViewport() {
-  if (typeof window === "undefined") return false;
-  return window.matchMedia("(max-width: 1023px)").matches;
-}
-
-function isPortraitViewport() {
-  if (typeof window === "undefined") return false;
-  return window.matchMedia("(orientation: portrait)").matches;
-}
-
-function getInitialPortraitPrompt() {
-  if (typeof window === "undefined") return false;
-  if (!isMobileViewport() || !isPortraitViewport()) return false;
-  if (sessionStorage.getItem(PORTRAIT_DISMISS_KEY) === "1") return false;
-  return true;
-}
+import { useEffect, useRef, useState } from "react";
+import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.jsx";
+import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
+import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
 
 const DEFAULT_PLAYER_NAME = "שחקן";
 
@@ -117,10 +96,21 @@ export default function MleoCatcherEngine({ autoStart = false, onSessionEnd }) {
   const [highScore, setHighScore] = useState(0);
   const [playerName, setPlayerName] = useState("");
   const [leaderboard, setLeaderboard] = useState([]);
-  const [portraitDismissed, setPortraitDismissed] = useState(false);
-  const [showPortraitPrompt, setShowPortraitPrompt] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [mobileFullscreenEligible, setMobileFullscreenEligible] = useState(false);
+
+  const {
+    isFullscreen,
+    showPortraitPrompt,
+    dismissPortraitPrompt,
+    syncPortraitPromptForRun,
+    enterFromUserGesture,
+    toggleFromUserGesture,
+    showFullscreenButton,
+  } = useSoloGameMobileFullscreen({
+    gameKey: "catcher",
+    gameRunning,
+    showIntro,
+    gameOver,
+  });
 
   /** Trimmed field → localStorage `mleo_player_name` → default `שחקן`. Never blocks starting. */
   const resolveEffectivePlayerName = () => {
@@ -159,8 +149,7 @@ export default function MleoCatcherEngine({ autoStart = false, onSessionEnd }) {
     setPlayerName(resolved);
     playerNameRef.current = resolved;
     setShowIntro(false);
-    setPortraitDismissed(false);
-    setShowPortraitPrompt(getInitialPortraitPrompt());
+    syncPortraitPromptForRun();
     setGameRunning(true);
   };
 
@@ -462,71 +451,6 @@ export default function MleoCatcherEngine({ autoStart = false, onSessionEnd }) {
     };
   }, [gameRunning]);
 
-  const recalcPortrait = useCallback(() => {
-    if (!gameRunning || !isMobileViewport() || !isPortraitViewport()) {
-      setShowPortraitPrompt(false);
-      return;
-    }
-    if (portraitDismissed || sessionStorage.getItem(PORTRAIT_DISMISS_KEY) === "1") {
-      setShowPortraitPrompt(false);
-      return;
-    }
-    setShowPortraitPrompt(true);
-  }, [gameRunning, portraitDismissed]);
-
-  useEffect(() => {
-    if (!gameRunning) return undefined;
-    recalcPortrait();
-    window.addEventListener("resize", recalcPortrait);
-    window.addEventListener("orientationchange", recalcPortrait);
-    return () => {
-      window.removeEventListener("resize", recalcPortrait);
-      window.removeEventListener("orientationchange", recalcPortrait);
-    };
-  }, [gameRunning, recalcPortrait]);
-
-  useEffect(() => {
-    if (!gameRunning || showPortraitPrompt) return;
-    requestMobileGameFullscreen(document.getElementById("game-wrapper"));
-  }, [gameRunning, showPortraitPrompt]);
-
-  useEffect(() => {
-    const update = () => {
-      const fullscreenEl =
-        document.fullscreenElement || document.webkitFullscreenElement;
-      setIsFullscreen(Boolean(fullscreenEl));
-      setMobileFullscreenEligible(isMobileGameFullscreenEligible());
-    };
-
-    update();
-
-    document.addEventListener("fullscreenchange", update);
-    document.addEventListener("webkitfullscreenchange", update);
-    window.addEventListener("resize", update);
-    window.addEventListener("orientationchange", update);
-
-    return () => {
-      document.removeEventListener("fullscreenchange", update);
-      document.removeEventListener("webkitfullscreenchange", update);
-      window.removeEventListener("resize", update);
-      window.removeEventListener("orientationchange", update);
-    };
-  }, []);
-
-  const handleFullscreenToggle = useCallback(() => {
-    if (isFullscreen) {
-      void exitMobileGameFullscreen();
-      return;
-    }
-    void requestMobileGameFullscreen(document.getElementById("game-wrapper"));
-  }, [isFullscreen]);
-
-  const dismissPortraitPrompt = (persist) => {
-    setPortraitDismissed(true);
-    setShowPortraitPrompt(false);
-    if (persist) sessionStorage.setItem(PORTRAIT_DISMISS_KEY, "1");
-  };
-
   useEffect(() => {
     if (!gameRunning || showIntro) return;
     const board = boardRef.current;
@@ -558,7 +482,7 @@ export default function MleoCatcherEngine({ autoStart = false, onSessionEnd }) {
   return (
       <div
         id="game-wrapper"
-        className="relative isolate flex h-full min-h-0 flex-1 flex-col items-center justify-center overflow-hidden bg-gray-900 text-white select-none"
+        className="relative isolate flex h-full min-h-0 flex-1 flex-col items-center justify-center overflow-hidden bg-gray-900 text-white select-none solo-game-mobile-fullscreen-shell"
         dir="rtl"
       >
         {!showIntro && (
@@ -573,17 +497,12 @@ export default function MleoCatcherEngine({ autoStart = false, onSessionEnd }) {
                 aria-hidden
               />
 
-              {gameRunning && !gameOver && !showIntro && mobileFullscreenEligible ? (
-                <div className="pointer-events-auto absolute right-2 top-2 z-20">
-                  <button
-                    type="button"
-                    onClick={handleFullscreenToggle}
-                    className="shrink-0 rounded-lg border border-sky-400/70 bg-sky-950/70 px-2 py-1 text-[10px] font-bold text-sky-100 min-h-[36px]"
-                    style={{ touchAction: "manipulation" }}
-                    aria-label={isFullscreen ? "יציאה ממסך מלא" : "מסך מלא"}
-                  >
-                    {isFullscreen ? "יציאה" : "מסך מלא"}
-                  </button>
+              {showFullscreenButton ? (
+                <div className="pointer-events-auto absolute right-2 top-2 z-[70]">
+                  <SoloGameMobileFullscreenButton
+                    isFullscreen={isFullscreen}
+                    onToggle={toggleFromUserGesture}
+                  />
                 </div>
               ) : null}
 
@@ -657,35 +576,17 @@ export default function MleoCatcherEngine({ autoStart = false, onSessionEnd }) {
           </div>
         )}
 
-        {showPortraitPrompt ? (
-          <div className="absolute inset-0 z-[90] flex items-center justify-center bg-black/88 p-4">
-            <div className="max-w-sm rounded-2xl border-2 border-yellow-400 bg-slate-900 p-5 text-center shadow-xl">
-              <p className="text-3xl">📱↔️</p>
-              <p className="mt-3 text-base font-bold leading-snug text-yellow-100">
-                כדי לשחק בנוחות, מומלץ לסובב את המסך לרוחב.
-              </p>
-              <p className="mt-2 text-sm text-white/75">המשחק יוצג בצורה נוחה יותר.</p>
-              <div className="mt-4 flex flex-col gap-2">
-                <button
-                  type="button"
-                  onClick={() => dismissPortraitPrompt(false)}
-                  className="min-h-[44px] rounded-xl bg-yellow-400 px-4 py-2 text-sm font-bold text-black"
-                  style={{ touchAction: "manipulation" }}
-                >
-                  הבנתי — אסובב
-                </button>
-                <button
-                  type="button"
-                  onClick={() => dismissPortraitPrompt(true)}
-                  className="min-h-[44px] rounded-xl border-2 border-white/35 bg-black/40 px-4 py-2 text-sm font-bold text-white"
-                  style={{ touchAction: "manipulation" }}
-                >
-                  המשך בכל זאת
-                </button>
-              </div>
-            </div>
-          </div>
-        ) : null}
+        <SoloGamePortraitRecommendationModal
+          show={showPortraitPrompt}
+          onDismissRotate={() => {
+            dismissPortraitPrompt(false);
+            enterFromUserGesture();
+          }}
+          onContinueAnyway={() => {
+            dismissPortraitPrompt(true);
+            enterFromUserGesture();
+          }}
+        />
       </div>
   );
 }
