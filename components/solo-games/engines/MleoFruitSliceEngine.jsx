@@ -17,6 +17,8 @@ const HIT_RADIUS = 22;
 const EMOJI_SIZE = 36;
 const BOMB_CHANCE = 0.11;
 const SPAWN_INTERVAL_MS = 1050;
+/** Only count a fruit miss after it falls below the visible board. */
+const MISS_BOTTOM_MARGIN = 36;
 
 /**
  * @param {{ x1: number, y1: number, x2: number, y2: number, cx: number, cy: number, r: number }} p
@@ -53,6 +55,10 @@ export default function MleoFruitSliceEngine({
   const boardRef = useRef(null);
   const canvasRef = useRef(null);
   const rafRef = useRef(null);
+  const loopSessionRef = useRef(0);
+  const gameOverRef = useRef(false);
+  const struckItemIdsRef = useRef(new Set());
+  const addStrikeRef = useRef(/** @type {((reason: string, itemId?: number, item?: object) => void) | null} */ (null));
   const swipeRef = useRef(null);
   const lastSpawnRef = useRef(0);
   const idRef = useRef(0);
@@ -138,26 +144,51 @@ export default function MleoFruitSliceEngine({
       rot: Math.random() * Math.PI,
       rotSpeed: (Math.random() - 0.5) * 0.08,
       sliced: false,
+      enteredScreen: false,
+      countedMiss: false,
     });
   }, []);
 
-  const registerStrike = useCallback((reason) => {
-    if (!runningRef.current) return;
+  const addStrike = useCallback((reason, itemId, item) => {
+    if (!runningRef.current || gameOverRef.current) return;
+    if (itemId != null && struckItemIdsRef.current.has(itemId)) return;
+
+    if (itemId != null) struckItemIdsRef.current.add(itemId);
+
+    // eslint-disable-next-line no-console
+    console.log("[fruit-slice strike]", {
+      reason,
+      itemId,
+      type: item?.type?.id ?? item?.type,
+      x: item?.x,
+      y: item?.y,
+      sliced: item?.sliced,
+      enteredScreen: item?.enteredScreen,
+    });
+
     strikesRef.current += 1;
     setStrikes(strikesRef.current);
     if (reason === "miss") missedFruitsRef.current += 1;
     if (reason === "bomb") bombHitsRef.current += 1;
     setFlashBad(true);
     window.setTimeout(() => setFlashBad(false), 320);
+
     if (strikesRef.current >= FRUIT_SLICE_MAX_STRIKES) {
       runningRef.current = false;
       setGameRunning(false);
+      gameOverRef.current = true;
       setGameOver(true);
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
       const didWin = scoreRef.current >= FRUIT_SLICE_SCORE_TARGET[difficultyRef.current];
       setWon(didWin);
       pendingSessionEndRef.current = { didWin };
     }
   }, []);
+
+  addStrikeRef.current = addStrike;
 
   const fireSessionEnd = useCallback(
     (didWin) => {
@@ -209,25 +240,21 @@ export default function MleoFruitSliceEngine({
       if (!hitIds.size) return;
 
       let goodCount = 0;
-      let bombHit = false;
 
-      fruitsRef.current = fruitsRef.current.filter((f) => {
-        if (!hitIds.has(f.id)) return true;
+      for (const f of fruitsRef.current) {
+        if (!hitIds.has(f.id)) continue;
         if (f.type.bad) {
-          bombHit = true;
+          f.sliced = true;
           addParticles(f.x, f.y, "#ef4444", 10);
-          return false;
+          addStrike("bomb", f.id, f);
+        } else {
+          goodCount += 1;
+          f.sliced = true;
+          addParticles(f.x, f.y, "#fbbf24", 8);
         }
-        goodCount += 1;
-        f.sliced = true;
-        addParticles(f.x, f.y, "#fbbf24", 8);
-        return false;
-      });
-
-      if (bombHit) {
-        registerStrike("bomb");
-        return;
       }
+
+      fruitsRef.current = fruitsRef.current.filter((f) => !f.sliced);
 
       if (goodCount > 0) {
         const { points, comboBonus } = fruitSliceSwipeScore(goodCount);
@@ -243,10 +270,16 @@ export default function MleoFruitSliceEngine({
         }
       }
     },
-    [registerStrike],
+    [addStrike],
   );
 
   const startGame = useCallback(() => {
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
+    loopSessionRef.current += 1;
+
     sessionEndFiredRef.current = false;
     pendingSessionEndRef.current = null;
     playStartedAtRef.current = Date.now();
@@ -257,6 +290,7 @@ export default function MleoFruitSliceEngine({
     bombHitsRef.current = 0;
     combosRef.current = 0;
     bestComboRef.current = 0;
+    struckItemIdsRef.current = new Set();
     fruitsRef.current = [];
     particlesRef.current = [];
     lastSpawnRef.current = 0;
@@ -267,6 +301,7 @@ export default function MleoFruitSliceEngine({
     setTargetScore(FRUIT_SLICE_SCORE_TARGET[diff]);
 
     setShowIntro(false);
+    gameOverRef.current = false;
     setGameOver(false);
     setWon(false);
     setScore(0);
@@ -282,7 +317,11 @@ export default function MleoFruitSliceEngine({
     if (autoStart) startGame();
     return () => {
       runningRef.current = false;
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      loopSessionRef.current += 1;
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
     };
   }, [autoStart, startGame]);
 
@@ -291,6 +330,7 @@ export default function MleoFruitSliceEngine({
     const canvas = canvasRef.current;
     if (!board || !canvas || !gameRunning) return undefined;
 
+    const sessionId = loopSessionRef.current;
     const ctx = canvas.getContext("2d");
     if (!ctx) return undefined;
 
@@ -310,10 +350,7 @@ export default function MleoFruitSliceEngine({
     let lastTs = performance.now();
 
     const tick = (ts) => {
-      if (!runningRef.current && !gameOver) {
-        rafRef.current = requestAnimationFrame(tick);
-        return;
-      }
+      if (loopSessionRef.current !== sessionId) return;
 
       const dt = Math.min(32, ts - lastTs);
       lastTs = ts;
@@ -334,17 +371,35 @@ export default function MleoFruitSliceEngine({
         f.vy += 0.1 * (dt / 16);
         f.rot += f.rotSpeed * (dt / 16);
 
-        const out =
-          f.y > h + 60 ||
-          f.y < -80 ||
-          f.x < -60 ||
-          f.x > w + 60;
+        if (
+          !f.enteredScreen &&
+          f.y >= 0 &&
+          f.y <= h &&
+          f.x >= 0 &&
+          f.x <= w
+        ) {
+          f.enteredScreen = true;
+        }
 
-        if (out) {
-          if (runningRef.current && !f.type.bad && !f.sliced) {
-            registerStrike("miss");
-          }
-        } else {
+        const fellBelow =
+          !f.type.bad &&
+          f.enteredScreen &&
+          f.sliced !== true &&
+          f.countedMiss !== true &&
+          f.y > h + MISS_BOTTOM_MARGIN;
+
+        if (fellBelow && runningRef.current && !gameOverRef.current) {
+          f.countedMiss = true;
+          addStrikeRef.current?.("miss", f.id, f);
+        }
+
+        const offScreen =
+          f.y > h + 120 ||
+          f.y < -120 ||
+          f.x < -80 ||
+          f.x > w + 80;
+
+        if (!offScreen && !f.sliced) {
           nextFruits.push(f);
         }
       }
@@ -394,16 +449,21 @@ export default function MleoFruitSliceEngine({
         ctx.stroke();
       }
 
-      rafRef.current = requestAnimationFrame(tick);
+      if (loopSessionRef.current === sessionId) {
+        rafRef.current = requestAnimationFrame(tick);
+      }
     };
 
     rafRef.current = requestAnimationFrame(tick);
 
     return () => {
       window.removeEventListener("resize", resize);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
     };
-  }, [gameRunning, gameOver, spawnFruit, registerStrike]);
+  }, [gameRunning, spawnFruit]);
 
   const onPointerDown = (e) => {
     if (!runningRef.current) return;
