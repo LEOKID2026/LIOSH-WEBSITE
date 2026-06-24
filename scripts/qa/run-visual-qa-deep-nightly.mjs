@@ -295,6 +295,30 @@ async function warmUpLoginRoute(baseUrl, { attempts = 3 } = {}) {
   return probeServerHealth(baseUrl, 30_000);
 }
 
+async function warmUpSubjectRoute(baseUrl, subject, { attempts = 3 } = {}) {
+  const path = `/learning/${subject}-master`;
+  const url = `${baseUrl.replace(/\/$/, "")}${path}`;
+  for (let i = 0; i < attempts; i += 1) {
+    try {
+      const res = await fetch(url, { signal: AbortSignal.timeout(30_000) });
+      if (res.ok || res.status === 307 || res.status === 308) return { ok: true, url, status: res.status };
+    } catch {
+      /* retry */
+    }
+    await sleep(2000);
+  }
+  return { ok: false, url };
+}
+
+async function confirmSpawnReady(baseUrl, { probes = 3, gapMs = 1500 } = {}) {
+  for (let i = 0; i < probes; i += 1) {
+    const probe = await probeServerHealth(baseUrl, 12_000);
+    if (!probe.ok) return { ok: false, attempts: i + 1, last: probe };
+    if (i < probes - 1) await sleep(gapMs);
+  }
+  return { ok: true };
+}
+
 async function killDevServerOnPort(port) {
   const portNum = String(port || DEFAULT_DEEP_PORT);
   await killQaOwnedDevOnPort(Number(portNum));
@@ -313,8 +337,8 @@ async function restartDevServer(cfg) {
     windowsHide: true,
   });
   child.unref();
-  await sleep(10_000);
-  await warmUpLoginRoute(cfg.baseUrl, { attempts: 10 });
+  await sleep(12_000);
+  await warmUpLoginRoute(cfg.baseUrl, { attempts: 12 });
 
   let listenPid = null;
   for (let i = 0; i < 15; i += 1) {
@@ -454,6 +478,10 @@ function isInfraBlockedRun(run) {
 
 function diagnosticRunPassed(summary, plannedPerRun) {
   if (summary.runnerFailures > 0) return false;
+  const blockedRuns = summary.runs.filter(
+    (r) => r.status === "BLOCKED" || r.status === "BLOCKED_TIMEOUT"
+  ).length;
+  if (blockedRuns > 0) return false;
   const infraBlocked = summary.runs.filter(isInfraBlockedRun).length;
   if (infraBlocked > 0) return false;
   const completedRuns = summary.runs.filter((r) => r.samplesCompleted >= plannedPerRun).length;
@@ -523,6 +551,7 @@ function buildCleanHarnessEnv(cfg, { subject, cohort, outRel, sampleSeed, gradeN
   env.VISUAL_QA_GRADE_FILTER = String(gradeNumber);
   env.__RUN_TIMEOUT_MS = String(cfg.runTimeoutMs);
   env.VISUAL_QA_LOGIN_TIMEOUT_MS = String(cfg.loginTimeoutMs ?? 60_000);
+  env.VISUAL_QA_PLAYER_SHELL_TIMEOUT_MS = String(cfg.playerShellTimeoutMs ?? 120_000);
 
   if (cohort.useSecondStudent) {
     env.VISUAL_QA_USE_SECOND_STUDENT = "1";
@@ -703,6 +732,10 @@ function parseDeepEnv() {
     loginTimeoutMs: Math.max(
       30_000,
       Number(process.env.VISUAL_QA_LOGIN_TIMEOUT_MS || 60_000) || 60_000
+    ),
+    playerShellTimeoutMs: Math.max(
+      60_000,
+      Number(process.env.VISUAL_QA_PLAYER_SHELL_TIMEOUT_MS || 120_000) || 120_000
     ),
     autoRestartDev,
     restartEachRun,
@@ -1100,6 +1133,18 @@ async function main() {
           if (!preRunHealth.ok && cfg.autoRestartDev) {
             log("  pre-run infra not ready — restarting dev server…");
             preRunHealth = await restartDevServer(cfg);
+          }
+          if (preRunHealth.ok) {
+            await warmUpSubjectRoute(cfg.baseUrl, subject, { attempts: 2 });
+            const spawnReady = await confirmSpawnReady(cfg.baseUrl);
+            if (!spawnReady.ok && cfg.autoRestartDev) {
+              log("  spawn-ready probe failed — restarting dev server…");
+              preRunHealth = await restartDevServer(cfg);
+              if (preRunHealth.ok) {
+                await warmUpSubjectRoute(cfg.baseUrl, subject, { attempts: 2 });
+                await confirmSpawnReady(cfg.baseUrl);
+              }
+            }
           }
           const preRunHealthOk = preRunHealth.ok;
 

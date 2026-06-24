@@ -15,7 +15,17 @@ const STUDENT_HOME = "/student/home";
 const STUDENT_LOGIN = "/student/login";
 const MAX_UI_AUTH_ATTEMPTS = 3;
 const RETRYABLE_AUTH_RE =
-  /שגיאת רשת|network|timeout|locator\.fill|did not reach \/student\/home/i;
+  /שגיאת רשת|network|timeout|locator\.fill|did not reach \/student\/home|page\.goto/i;
+
+async function probeLoginHttp(baseUrl, timeoutMs = 12_000) {
+  const url = `${String(baseUrl).replace(/\/$/, "")}/student/login`;
+  try {
+    const res = await fetch(url, { signal: AbortSignal.timeout(timeoutMs) });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
 
 function loginTimeoutMs() {
   const raw = Number(
@@ -47,8 +57,13 @@ export async function authenticateStudent({ context, page, account, baseUrl, mod
         `student-auth(ui): retry ${attempt}/${MAX_UI_AUTH_ATTEMPTS} after ` +
           `${String(lastError?.message || lastError).slice(0, 160)}`
       );
+      for (let probe = 0; probe < 4; probe += 1) {
+        if (await probeLoginHttp(baseUrl)) break;
+        await page.waitForTimeout(2500);
+      }
       await page.waitForTimeout(1200 * attempt);
-      await page.goto(url, { waitUntil: "domcontentloaded" }).catch(() => {});
+      const retryNavTimeout = Math.max(loginTimeoutMs(), 90_000);
+      await page.goto(url, { waitUntil: "domcontentloaded", timeout: retryNavTimeout }).catch(() => {});
     }
 
     try {
@@ -67,8 +82,9 @@ export async function authenticateStudent({ context, page, account, baseUrl, mod
 
 async function authenticateViaUi({ page, account, baseUrl, log, loginUrl }) {
   const url = loginUrl || new URL(STUDENT_LOGIN, baseUrl).toString();
+  const navTimeout = Math.max(loginTimeoutMs(), 90_000);
   log(`student-auth(ui): navigate ${url}`);
-  await page.goto(url, { waitUntil: "domcontentloaded" });
+  await page.goto(url, { waitUntil: "domcontentloaded", timeout: navTimeout });
 
   if (new URL(page.url()).pathname === STUDENT_HOME) {
     log("student-auth(ui): already authenticated, /student/login redirected to /student/home");
@@ -103,9 +119,10 @@ async function authenticateViaUi({ page, account, baseUrl, log, loginUrl }) {
   await pinField.first().fill(account.pin, { timeout: loginMs });
 
   log(`student-auth(ui): submitting login form for label=${account.label}`);
+  const postSubmitTimeout = Math.max(loginTimeoutMs(), 60_000);
   const navigationPromise = page.waitForURL(
     (targetUrl) => new URL(targetUrl).pathname === STUDENT_HOME,
-    { timeout: 45_000 }
+    { timeout: postSubmitTimeout }
   );
   await submitButton.first().click();
 

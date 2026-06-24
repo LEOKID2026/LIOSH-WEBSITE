@@ -79,6 +79,45 @@ export async function dismissBlockingUi(page, { stopActiveGame = false } = {}) {
   }
 }
 
+function playerShellTimeoutMs() {
+  const raw = Number(process.env.VISUAL_QA_PLAYER_SHELL_TIMEOUT_MS || 120_000);
+  return Number.isFinite(raw) && raw > 0 ? raw : 120_000;
+}
+
+function subjectRouteTimeoutMs() {
+  const raw = Number(process.env.VISUAL_QA_SUBJECT_ROUTE_TIMEOUT_MS || 120_000);
+  return Number.isFinite(raw) && raw > 0 ? raw : 120_000;
+}
+
+/** Navigate to subject master and wait for player shell — retries reload on cold dev. */
+export async function navigateToPlayerShell(page, plan, baseUrl, { log = () => {} } = {}) {
+  const routeTimeout = subjectRouteTimeoutMs();
+  const shellTimeout = playerShellTimeoutMs();
+  const targetUrl = `${String(baseUrl).replace(/\/$/, "")}${plan.path}`;
+  const player = page.getByTestId(plan.playerTestId);
+  let lastError = null;
+
+  for (let attempt = 1; attempt <= 2; attempt += 1) {
+    try {
+      if (attempt > 1) {
+        log(`player-shell: retry ${attempt}/2 for ${plan.playerTestId}`);
+      }
+      await page.goto(targetUrl, { waitUntil: "domcontentloaded", timeout: routeTimeout });
+      await dismissBlockingUi(page);
+      await player.waitFor({ state: "visible", timeout: shellTimeout });
+      return;
+    } catch (error) {
+      lastError = error;
+      if (attempt < 2) {
+        await page.reload({ waitUntil: "domcontentloaded", timeout: routeTimeout }).catch(() => {});
+        await page.waitForTimeout(1500);
+      }
+    }
+  }
+
+  throw lastError || new Error(`player shell not ready: ${plan.playerTestId}`);
+}
+
 export async function readQuestionStem(page, subject) {
   const parts = [];
   for (const testid of ["student-question-lead", "student-question-body"]) {

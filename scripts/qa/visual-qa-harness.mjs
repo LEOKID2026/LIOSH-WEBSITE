@@ -40,6 +40,7 @@ import { sampleHasIssues, mergeIssues, analyzeVisibleText } from "./lib/visual-q
 import {
   captureQuestionSample,
   dismissBlockingUi,
+  navigateToPlayerShell,
   readDisplayedGrade,
   selectPracticeMode,
   startQuestionSurface,
@@ -58,14 +59,26 @@ function blockedReport(partial) {
   return { status: "BLOCKED", generatedAt: new Date().toISOString(), ...partial };
 }
 
-async function probeServer(baseUrl) {
-  const url = `${baseUrl}/student/login`;
+async function probeServerOnce(baseUrl, timeoutMs = 15_000) {
+  const url = `${baseUrl.replace(/\/$/, "")}/student/login`;
   try {
-    const res = await fetch(url, { signal: AbortSignal.timeout(15_000) });
+    const res = await fetch(url, { signal: AbortSignal.timeout(timeoutMs) });
     return { ok: res.ok, status: res.status, url };
   } catch (error) {
     return { ok: false, status: 0, url, error: error?.message || String(error) };
   }
+}
+
+async function probeServer(baseUrl) {
+  const retries = Math.max(1, Number(process.env.VISUAL_QA_SERVER_PROBE_RETRIES || 5) || 5);
+  const delayMs = Math.max(500, Number(process.env.VISUAL_QA_SERVER_PROBE_DELAY_MS || 2000) || 2000);
+  let last = null;
+  for (let i = 0; i < retries; i += 1) {
+    last = await probeServerOnce(baseUrl);
+    if (last.ok) return last;
+    if (i < retries - 1) await new Promise((r) => setTimeout(r, delayMs));
+  }
+  return last;
 }
 
 function supabaseHintForRoute(route) {
@@ -165,8 +178,7 @@ async function sampleGrade({
   authOk = true;
 
   try {
-    await page.goto(plan.path, { waitUntil: "domcontentloaded", timeout: 120_000 });
-    await page.getByTestId(plan.playerTestId).waitFor({ state: "visible", timeout: 60_000 });
+    await navigateToPlayerShell(page, plan, baseUrl, { log });
 
     const gradeCheck = await verifyGradeOrBlock(page, plan, gradeNumber, student, baseUrl, subject);
     if (!gradeCheck.ok) {
@@ -193,8 +205,7 @@ async function sampleGrade({
 
       try {
         await stopActiveGameIfAny(page);
-        await page.goto(plan.path, { waitUntil: "domcontentloaded", timeout: 120_000 });
-        await page.getByTestId(plan.playerTestId).waitFor({ state: "visible", timeout: 60_000 });
+        await navigateToPlayerShell(page, plan, baseUrl, { log });
 
         const recheck = await readDisplayedGrade(page, plan);
         if (recheck !== gradeNumber) {
@@ -388,7 +399,7 @@ async function main() {
         route: server.url,
         account: "(server probe)",
         missingEnv: [`dev server not responding at ${baseUrl}`],
-        supabaseHint: "Start: npx next dev -p 3002 -H 127.0.0.1",
+        supabaseHint: `Start: npx next dev -p ${new URL(baseUrl).port || "3100"} -H 127.0.0.1`,
         whatYouNeed: "Run Next dev and re-run harness.",
       },
     });
