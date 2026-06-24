@@ -2,6 +2,16 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { pieceTileStyle, splitTrayPieces } from "../../../lib/solo-games/picture-puzzle-placement.js";
 
+import {
+
+  exitMobileGameFullscreen,
+
+  isMobileGameFullscreenEligible,
+
+  requestMobileGameFullscreen,
+
+} from "../../../lib/solo-games/solo-game-fullscreen.client.js";
+
 
 
 const PORTRAIT_DISMISS_KEY = "picture-puzzle-portrait-dismiss";
@@ -88,6 +98,42 @@ function useSquareBoardSize() {
 
 
   return { areaRef, squareSize: size };
+
+}
+
+
+
+function MobileFullscreenToggleButton({ isFullscreen, onToggle, compact = false }) {
+
+  const className = compact
+
+    ? "puzzle-tray-hint-btn shrink-0 rounded-md border border-sky-400/70 bg-sky-950/70 px-1.5 py-0.5 text-[9px] font-bold leading-tight text-sky-100"
+
+    : "shrink-0 rounded-lg border border-sky-400/70 bg-sky-950/70 px-2 py-1 text-[10px] font-bold text-sky-100 min-h-[36px]";
+
+
+
+  return (
+
+    <button
+
+      type="button"
+
+      onClick={onToggle}
+
+      className={className}
+
+      style={{ touchAction: "manipulation" }}
+
+      aria-label={isFullscreen ? "יציאה ממסך מלא" : "מסך מלא"}
+
+    >
+
+      {isFullscreen ? "יציאה" : "מסך מלא"}
+
+    </button>
+
+  );
 
 }
 
@@ -335,7 +381,11 @@ export default function MleoPicturePuzzlePlacementPlay({
 
   const { areaRef, squareSize } = useSquareBoardSize();
 
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
   const [isPortraitFullscreen, setIsPortraitFullscreen] = useState(false);
+
+  const [mobileFullscreenEligible, setMobileFullscreenEligible] = useState(false);
 
 
 
@@ -349,11 +399,13 @@ export default function MleoPicturePuzzlePlacementPlay({
 
         document.webkitFullscreenElement;
 
-      setIsPortraitFullscreen(
+      const fs = Boolean(fullscreenEl);
 
-        Boolean(fullscreenEl) && isPortraitViewport() && isMobileViewport(),
+      setIsFullscreen(fs);
 
-      );
+      setIsPortraitFullscreen(fs && isPortraitViewport() && isMobileViewport());
+
+      setMobileFullscreenEligible(isMobileGameFullscreenEligible());
 
     };
 
@@ -386,6 +438,22 @@ export default function MleoPicturePuzzlePlacementPlay({
     };
 
   }, []);
+
+
+
+  const handleFullscreenToggle = useCallback(() => {
+
+    if (isFullscreen) {
+
+      void exitMobileGameFullscreen();
+
+      return;
+
+    }
+
+    void requestMobileGameFullscreen(document.getElementById("game-wrapper"));
+
+  }, [isFullscreen]);
 
 
 
@@ -723,7 +791,29 @@ export default function MleoPicturePuzzlePlacementPlay({
 
           <div className="puzzle-tray-portrait-top shrink-0 max-lg:landscape:hidden lg:hidden">
 
-            <div className="puzzle-tray-hint-row flex shrink-0 justify-end px-0.5">
+            <div
+
+              className={`puzzle-tray-hint-row flex w-full shrink-0 items-center px-0.5 ${
+
+                mobileFullscreenEligible ? "justify-between" : "justify-end"
+
+              }`}
+
+            >
+
+              {mobileFullscreenEligible ? (
+
+                <MobileFullscreenToggleButton
+
+                  isFullscreen={isFullscreen}
+
+                  onToggle={handleFullscreenToggle}
+
+                  compact
+
+                />
+
+              ) : null}
 
               <button
 
@@ -837,7 +927,7 @@ export default function MleoPicturePuzzlePlacementPlay({
 
               disabled={!gameRunning || gameOver}
 
-              className="absolute left-1 top-1 z-10 hidden min-h-[36px] rounded-lg border border-sky-400/70 bg-sky-950/70 px-2 py-1 text-[10px] font-bold text-sky-100 disabled:opacity-40 max-lg:landscape:block lg:hidden"
+              className="absolute left-1 top-1 z-10 hidden min-h-[36px] shrink-0 rounded-lg border border-sky-400/70 bg-sky-950/70 px-2 py-1 text-[10px] font-bold text-sky-100 disabled:opacity-40 max-lg:landscape:block lg:hidden"
 
               style={{ touchAction: "manipulation" }}
 
@@ -846,6 +936,22 @@ export default function MleoPicturePuzzlePlacementPlay({
               💡 הצג תמונה
 
             </button>
+
+            {mobileFullscreenEligible ? (
+
+              <div className="absolute right-1 top-1 z-10 hidden max-lg:landscape:block lg:hidden">
+
+                <MobileFullscreenToggleButton
+
+                  isFullscreen={isFullscreen}
+
+                  onToggle={handleFullscreenToggle}
+
+                />
+
+              </div>
+
+            ) : null}
 
 
 
