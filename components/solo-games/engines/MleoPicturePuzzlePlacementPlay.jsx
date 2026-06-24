@@ -583,7 +583,7 @@ export default function MleoPicturePuzzlePlacementPlay({
 
   return (
 
-    <div className="relative flex min-h-0 w-full flex-1 flex-col overflow-hidden px-0.5 pb-0.5 pt-0.5 sm:px-1">
+    <div className="picture-puzzle-play-root relative flex min-h-0 w-full flex-1 flex-col overflow-hidden px-0.5 pb-0.5 pt-0.5 sm:px-1">
 
       <div className="pointer-events-none absolute left-1/2 top-1 z-[80] max-w-[98vw] -translate-x-1/2 rounded-lg bg-black/65 px-2 py-1 text-center text-[10px] font-bold leading-snug sm:top-1.5 sm:px-3 sm:py-1.5 sm:text-sm">
 
@@ -611,7 +611,7 @@ export default function MleoPicturePuzzlePlacementPlay({
 
       <div className="relative z-0 mx-auto mt-8 flex h-full min-h-0 w-full max-w-[1280px] flex-1 overflow-hidden rounded-lg border-4 border-yellow-400 bg-gradient-to-b from-slate-900 to-slate-950 shadow-lg sm:mt-9">
 
-        <div className="flex min-h-0 w-full flex-1 flex-col gap-1 overflow-hidden p-1 max-lg:landscape:flex-row lg:flex-row sm:gap-2 sm:p-2">
+        <div className="flex min-h-0 w-full flex-1 flex-col overflow-hidden gap-1 p-1 max-lg:landscape:flex-row lg:flex-row sm:gap-2 sm:p-2">
 
           {/* Desktop left sidebar */}
 

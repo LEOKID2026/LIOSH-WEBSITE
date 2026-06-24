@@ -237,4 +237,14 @@ a[href][aria-disabled="true"] {
     }
   }
 
+  /* Picture puzzle — portrait fullscreen outer padding only */
+  @media (orientation: portrait) {
+    #game-wrapper.solo-game-mobile-fullscreen-shell:fullscreen .picture-puzzle-play-root,
+    #game-wrapper.solo-game-mobile-fullscreen-shell:-webkit-full-screen .picture-puzzle-play-root {
+      box-sizing: border-box;
+      padding-top: max(8px, env(safe-area-inset-top, 0px));
+      padding-bottom: max(10px, env(safe-area-inset-bottom, 0px));
+    }
+  }
+
 }
