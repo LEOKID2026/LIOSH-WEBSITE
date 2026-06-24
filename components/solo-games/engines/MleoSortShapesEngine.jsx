@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.jsx";
+import SoloGameEndInterstitialOverlay from "../SoloGameEndInterstitialOverlay.jsx";
 import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
 import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
 import {
   SOLO_V2_ASSETS,
-  SoloV2EndBanner,
   SoloV2Goal,
   SoloV2Hud,
   SoloV2Intro,
@@ -206,6 +206,7 @@ export default function MleoSortShapesEngine({
 }) {
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
+  const pendingSessionEndRef = useRef(null);
   const mistakesRef = useRef(0);
   const sortedRef = useRef(0);
   const scoreRef = useRef(0);
@@ -263,11 +264,18 @@ export default function MleoSortShapesEngine({
   };
 
   const endGame = (didWin, remaining) => {
-    if (sessionEndFiredRef.current) return;
+    if (pendingSessionEndRef.current) return;
     setGameRunning(false);
     setGameOver(true);
     setWon(didWin);
-    fireSessionEnd(didWin, remaining);
+    pendingSessionEndRef.current = { didWin, remaining };
+  };
+
+  const completeEndInterstitial = () => {
+    const pending = pendingSessionEndRef.current;
+    if (!pending) return;
+    pendingSessionEndRef.current = null;
+    fireSessionEnd(pending.didWin, pending.remaining);
   };
 
   const loseLife = (remaining) => {
@@ -280,6 +288,7 @@ export default function MleoSortShapesEngine({
 
   const startGame = () => {
     sessionEndFiredRef.current = false;
+    pendingSessionEndRef.current = null;
     playStartedAtRef.current = Date.now();
     mistakesRef.current = 0;
     sortedRef.current = 0;
@@ -320,7 +329,7 @@ export default function MleoSortShapesEngine({
     if (!gameRunning) return undefined;
     if (timeLeft <= 0) {
       const timerId = window.setTimeout(() => {
-        if (sessionEndFiredRef.current) return;
+        if (pendingSessionEndRef.current) return;
         const won =
           sortedRef.current >= settings.itemCount || queueRef.current.length === 0;
         endGame(won, 0);
@@ -467,10 +476,9 @@ export default function MleoSortShapesEngine({
             ) : null}
 
             {gameOver ? (
-              <SoloV2EndBanner
-                success={won}
-                title={won ? "כל הכבוד! מיינתם הכל!" : "לא הספקתם הפעם"}
-                subtitle={`ניקוד: ${score} · ממוין: ${sortedCount}/${settings.itemCount}`}
+              <SoloGameEndInterstitialOverlay
+                didWin={won}
+                onDone={completeEndInterstitial}
               />
             ) : null}
           </div>

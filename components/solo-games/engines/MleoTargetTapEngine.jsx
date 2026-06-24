@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useSoloBoardTap } from "./solo-v2-ui.jsx";
 import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.jsx";
+import SoloGameEndInterstitialOverlay from "../SoloGameEndInterstitialOverlay.jsx";
 import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
 import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
 const BG_TARGET = "/images/game-day.png";
@@ -67,6 +68,7 @@ export default function MleoTargetTapEngine({
 }) {
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
+  const pendingSessionEndRef = useRef(null);
   const boardRef = useRef(null);
   const captureRef = useRef(null);
   const tickRef = useRef(null);
@@ -217,7 +219,14 @@ export default function MleoTargetTapEngine({
     if (tickRef.current) clearInterval(tickRef.current);
     if (spawnRef.current) clearInterval(spawnRef.current);
     if (timerRef.current) clearInterval(timerRef.current);
-    fireSessionEnd(didWin, remaining);
+    pendingSessionEndRef.current = { didWin, remaining };
+  };
+
+  const completeEndInterstitial = () => {
+    const pending = pendingSessionEndRef.current;
+    if (!pending) return;
+    pendingSessionEndRef.current = null;
+    fireSessionEnd(pending.didWin, pending.remaining);
   };
 
   const spawnTarget = () => {
@@ -298,6 +307,7 @@ export default function MleoTargetTapEngine({
     const cfg = levelConfig(1, diff);
 
     sessionEndFiredRef.current = false;
+    pendingSessionEndRef.current = null;
     playStartedAtRef.current = Date.now();
     scoreRef.current = 0;
     hitsRef.current = 0;
@@ -465,17 +475,10 @@ export default function MleoTargetTapEngine({
             />
 
             {gameOver ? (
-              <div className="pointer-events-auto absolute inset-0 z-40 flex flex-col items-center justify-center gap-2 overflow-y-auto bg-black/82 px-4 py-6 text-center">
-                <h2 className={`text-2xl font-extrabold sm:text-4xl ${won ? "text-emerald-300" : "text-rose-400"}`}>
-                  {won ? "קלעת מעולה!" : "לא עמדת ביעד"}
-                </h2>
-                <p className="max-w-md text-sm font-semibold text-white/90 sm:text-base">
-                  ניקוד: {score} · פגיעות: {hits}/{targetGoal} · טעויות: {misses} · רמה: {level}
-                </p>
-                <p className="text-xs text-gray-300 sm:text-sm">
-                  {won ? "ממתין לסיכום מטבעות..." : "הפסד = 0 מטבעות · ממתין לסיכום..."}
-                </p>
-              </div>
+              <SoloGameEndInterstitialOverlay
+                didWin={won}
+                onDone={completeEndInterstitial}
+              />
             ) : null}
           </div>
         </div>

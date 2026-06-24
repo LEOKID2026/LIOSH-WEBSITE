@@ -310,6 +310,7 @@ export default function MleoBalloonsEngine({ autoStart = false, onSessionEnd }) 
 
   const startGame = () => {
     sessionEndFiredRef.current = false;
+    pendingSessionEndRef.current = null;
     playStartedAtRef.current = Date.now();
     scoreRef.current = 0;
     scoringPopsRef.current = 0;

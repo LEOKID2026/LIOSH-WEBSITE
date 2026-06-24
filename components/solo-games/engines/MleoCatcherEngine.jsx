@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.jsx";
+import SoloGameEndInterstitialOverlay from "../SoloGameEndInterstitialOverlay.jsx";
 import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
 import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
 
@@ -11,6 +12,7 @@ const DEFAULT_PLAYER_NAME = "שחקן";
 export default function MleoCatcherEngine({ autoStart = false, onSessionEnd }) {
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
+  const pendingSessionEndRef = useRef(null);
 
   // Movement intent: updated by keyboard (window) + on-screen pads (pointer). Read every frame in updateGame.
   const keysRef = useRef({ left: false, right: false });
@@ -142,8 +144,16 @@ export default function MleoCatcherEngine({ autoStart = false, onSessionEnd }) {
     });
   };
 
+  const completeEndInterstitial = () => {
+    const pending = pendingSessionEndRef.current;
+    if (!pending) return;
+    pendingSessionEndRef.current = null;
+    fireSessionEnd(pending.finalScore);
+  };
+
   const beginRun = () => {
     sessionEndFiredRef.current = false;
+    pendingSessionEndRef.current = null;
     playStartedAtRef.current = Date.now();
     const resolved = resolveEffectivePlayerName();
     setPlayerName(resolved);
@@ -364,7 +374,7 @@ export default function MleoCatcherEngine({ autoStart = false, onSessionEnd }) {
           resetInputState();
           runningRef.current = false;
           setGameOver(true);
-          fireSessionEnd(currentScoreRef.current);
+          pendingSessionEndRef.current = { finalScore: currentScoreRef.current };
         }
         setScore(currentScoreRef.current);
         continue;
@@ -511,6 +521,13 @@ export default function MleoCatcherEngine({ autoStart = false, onSessionEnd }) {
                   <h2 className="mb-4 text-4xl font-bold text-red-500 sm:text-5xl">סיום משחק</h2>
                 </div>
               )}
+
+              {gameOver && onSessionEnd ? (
+                <SoloGameEndInterstitialOverlay
+                  didWin={false}
+                  onDone={completeEndInterstitial}
+                />
+              ) : null}
             </div>
 
             {gameRunning && !gameOver && (

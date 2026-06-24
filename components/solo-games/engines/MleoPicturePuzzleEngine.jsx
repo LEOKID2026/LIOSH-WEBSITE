@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import SoloGameAdSlot from "../SoloGameAdSlot.jsx";
+import SoloGameEndInterstitialOverlay from "../SoloGameEndInterstitialOverlay.jsx";
 import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
 import { useSoloGameShellUi } from "../../../hooks/solo-games/useSoloGameShellUi.js";
 import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
@@ -97,6 +98,7 @@ export default function MleoPicturePuzzleEngine({
 }) {
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
+  const pendingSessionEndRef = useRef(null);
   const movesRef = useRef(0);
   const hintTimerRef = useRef(null);
   const previewTouchStartX = useRef(null);
@@ -256,7 +258,19 @@ export default function MleoPicturePuzzleEngine({
     setGameOver(true);
     setWon(didWin);
     const finalScore = didWin ? computeWinScore(remaining, movesRef.current) : 0;
-    fireSessionEnd(didWin, remaining, movesRef.current, finalScore);
+    pendingSessionEndRef.current = {
+      didWin,
+      remaining,
+      moveCount: movesRef.current,
+      finalScore,
+    };
+  };
+
+  const completeEndInterstitial = () => {
+    const pending = pendingSessionEndRef.current;
+    if (!pending) return;
+    pendingSessionEndRef.current = null;
+    fireSessionEnd(pending.didWin, pending.remaining, pending.moveCount, pending.finalScore);
   };
 
   const closeHint = () => {
@@ -285,6 +299,7 @@ export default function MleoPicturePuzzleEngine({
   const startGame = (imageId) => {
     if (imageId) setSelectedImageId(imageId);
     sessionEndFiredRef.current = false;
+    pendingSessionEndRef.current = null;
     playStartedAtRef.current = Date.now();
     movesRef.current = 0;
     setMoves(0);
@@ -592,6 +607,12 @@ export default function MleoPicturePuzzleEngine({
           computeWinScore={computeWinScore}
         />
       )}
+      {gameOver && !showPicker ? (
+        <SoloGameEndInterstitialOverlay
+          didWin={won}
+          onDone={completeEndInterstitial}
+        />
+      ) : null}
       <SoloGamePortraitRecommendationModal
         show={showPortraitPrompt}
         subtitle="הלוח והמגש יוצגו בצורה נוחה יותר."

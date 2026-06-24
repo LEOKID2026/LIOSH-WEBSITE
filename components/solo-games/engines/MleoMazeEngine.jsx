@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.jsx";
+import SoloGameEndInterstitialOverlay from "../SoloGameEndInterstitialOverlay.jsx";
 import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
 import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
 import { buildMazeLevel, findPath } from "../../../lib/solo-games/maze-generator.js";
@@ -82,6 +83,7 @@ export default function MleoMazeEngine({
 }) {
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
+  const pendingSessionEndRef = useRef(null);
   const boardRef = useRef(null);
   const mazeLayoutRef = useRef(null);
   const swipeRef = useRef({ x: 0, y: 0, active: false });
@@ -245,7 +247,14 @@ export default function MleoMazeEngine({
       : 0;
     scoreRef.current = finalScore;
     setScore(finalScore);
-    fireSessionEnd(didWin, remaining, finalScore);
+    pendingSessionEndRef.current = { didWin, remaining, finalScore };
+  };
+
+  const completeEndInterstitial = () => {
+    const pending = pendingSessionEndRef.current;
+    if (!pending) return;
+    pendingSessionEndRef.current = null;
+    fireSessionEnd(pending.didWin, pending.remaining, pending.finalScore);
   };
 
   const applyLevel = useCallback(
@@ -327,6 +336,7 @@ export default function MleoMazeEngine({
 
   const startGame = () => {
     sessionEndFiredRef.current = false;
+    pendingSessionEndRef.current = null;
     playStartedAtRef.current = Date.now();
     scoreRef.current = 0;
     mistakesRef.current = 0;
@@ -746,21 +756,10 @@ export default function MleoMazeEngine({
             </div>
 
             {gameOver ? (
-              <div className="pointer-events-auto absolute inset-0 z-40 flex flex-col items-center justify-center gap-2 overflow-y-auto bg-black/85 px-4 py-6 text-center">
-                <h2 className={`text-2xl font-extrabold sm:text-4xl ${won ? "text-emerald-300" : "text-rose-400"}`}>
-                  {won ? "כל הכבוד!" : "נגמר המשחק"}
-                </h2>
-                <p className="max-w-md text-sm font-semibold text-white/90 sm:text-base">
-                  מבוכים: {mazesCompleted} · כוכבים: {starsTaken} · טעויות: {mistakes}
-                </p>
-                <p className="max-w-md text-sm font-semibold text-amber-200 sm:text-base">
-                  ניקוד: {score}
-                  {won && timeLeft > 0 ? ` · זמן שנשאר: ${timeLeft}s` : ""}
-                </p>
-                <p className="text-xs text-gray-300 sm:text-sm">
-                  {won ? "ממתין לסיכום מטבעות..." : "הפסד = 0 מטבעות"}
-                </p>
-              </div>
+              <SoloGameEndInterstitialOverlay
+                didWin={won}
+                onDone={completeEndInterstitial}
+              />
             ) : null}
           </div>
         </div>

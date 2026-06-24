@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.jsx";
+import SoloGameEndInterstitialOverlay from "../SoloGameEndInterstitialOverlay.jsx";
 import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
 import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
 
@@ -59,6 +60,7 @@ function shrinkHitbox(rect, shrink) {
 export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
+  const pendingSessionEndRef = useRef(null);
   const canvasRef = useRef(null);
   const boardRef = useRef(null);
   const rafRef = useRef(null);
@@ -364,6 +366,12 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
     setGameRunning(false);
     setGameOver(true);
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    pendingSessionEndRef.current = { done: true };
+  };
+
+  const completeEndInterstitial = () => {
+    if (!pendingSessionEndRef.current) return;
+    pendingSessionEndRef.current = null;
     fireSessionEnd();
   };
 
@@ -407,6 +415,7 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
 
   const startGame = () => {
     sessionEndFiredRef.current = false;
+    pendingSessionEndRef.current = null;
     playStartedAtRef.current = Date.now();
     setShowIntro(false);
     setGameOver(false);
@@ -639,13 +648,10 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
             ) : null}
 
             {gameOver ? (
-              <div className="pointer-events-auto absolute inset-0 z-40 flex flex-col items-center justify-center gap-2 bg-black/80 px-4 text-center">
-                <h2 className="text-2xl font-extrabold text-red-400 sm:text-4xl">אוי! פגעת במכשול</h2>
-                <p className="text-sm font-semibold text-white/90 sm:text-base">
-                  ניקוד: {score} · מכשולים: {passed} · פריטים: {collected}
-                </p>
-                <p className="text-xs text-gray-300 sm:text-sm">המשחק הסתיים — אין המשך אחרי פגיעה</p>
-              </div>
+              <SoloGameEndInterstitialOverlay
+                didWin={false}
+                onDone={completeEndInterstitial}
+              />
             ) : null}
           </div>
 

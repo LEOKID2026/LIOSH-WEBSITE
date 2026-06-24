@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.jsx";
+import SoloGameEndInterstitialOverlay from "../SoloGameEndInterstitialOverlay.jsx";
 import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
 import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
 import { useSoloGameKeyboard } from "./solo-v2-ui.jsx";
@@ -29,6 +30,7 @@ export default function MleoPuzzleEngine({
 }) {
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
+  const pendingSessionEndRef = useRef(null);
   const [difficulty, setDifficulty] = useState(initialDifficulty);
   const [grid, setGrid] = useState([]);
   const [score, setScore] = useState(0);
@@ -84,11 +86,19 @@ export default function MleoPuzzleEngine({
       setGameOver(true);
       setDidWin(won);
       setGameRunning(false);
-      fireSessionEnd(score, won);
+      pendingSessionEndRef.current = { finalScore: score, won };
+      return undefined;
     }
     const interval = setInterval(() => setTime((t) => t - 1), 1000);
     return () => clearInterval(interval);
   }, [gameRunning, time, score, difficulty]);
+
+  const completeEndInterstitial = () => {
+    const pending = pendingSessionEndRef.current;
+    if (!pending) return;
+    pendingSessionEndRef.current = null;
+    fireSessionEnd(pending.finalScore, pending.won);
+  };
 
   useEffect(() => {
     const preventTouchScroll = (e) => {
@@ -254,6 +264,7 @@ export default function MleoPuzzleEngine({
 
   const startGame = () => {
     sessionEndFiredRef.current = false;
+    pendingSessionEndRef.current = null;
     playStartedAtRef.current = Date.now();
     setShowIntro(false);
     syncPortraitPromptForRun();
@@ -351,6 +362,13 @@ export default function MleoPuzzleEngine({
             </div>
           </>
         )}
+
+        {gameOver ? (
+          <SoloGameEndInterstitialOverlay
+            didWin={didWin}
+            onDone={completeEndInterstitial}
+          />
+        ) : null}
       <SoloGamePortraitRecommendationModal
         show={showPortraitPrompt}
         onDismissRotate={() => {

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.jsx";
+import SoloGameEndInterstitialOverlay from "../SoloGameEndInterstitialOverlay.jsx";
 import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
 import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
 
@@ -26,6 +27,7 @@ const sizeBomb = 50;
 export default function MleoFlyerEngine({ autoStart = false, onSessionEnd }) {
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
+  const pendingSessionEndRef = useRef(null);
   const boardRef = useRef(null);
   const canvasRef = useRef(null);
   const rafRef = useRef(null);
@@ -338,7 +340,7 @@ export default function MleoFlyerEngine({ autoStart = false, onSessionEnd }) {
           runningRef.current = false;
           setGameRunning(false);
           setGameOver(true);
-          fireSessionEnd(scoreRef.current);
+          pendingSessionEndRef.current = { finalScore: scoreRef.current };
           cancelAnimationFrame(rafRef.current);
           return;
         }
@@ -440,8 +442,16 @@ export default function MleoFlyerEngine({ autoStart = false, onSessionEnd }) {
     });
   };
 
+  const completeEndInterstitial = () => {
+    const pending = pendingSessionEndRef.current;
+    if (!pending) return;
+    pendingSessionEndRef.current = null;
+    fireSessionEnd(pending.finalScore);
+  };
+
   function startGame() {
     sessionEndFiredRef.current = false;
+    pendingSessionEndRef.current = null;
     playStartedAtRef.current = Date.now();
     setShowIntro(false);
     if (!canvasRef.current) { requestAnimationFrame(startGame); return; }
@@ -501,6 +511,13 @@ export default function MleoFlyerEngine({ autoStart = false, onSessionEnd }) {
                 ref={canvasRef}
                 className="absolute inset-0 block h-full w-full touch-none"
               />
+
+              {gameOver ? (
+                <SoloGameEndInterstitialOverlay
+                  didWin={false}
+                  onDone={completeEndInterstitial}
+                />
+              ) : null}
             </div>
 
             <button

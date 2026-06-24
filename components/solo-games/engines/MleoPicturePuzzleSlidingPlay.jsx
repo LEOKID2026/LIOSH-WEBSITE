@@ -200,19 +200,6 @@ export default function MleoPicturePuzzleSlidingPlay({
           </div>
         ) : null}
 
-        {gameOver ? (
-          <div className="pointer-events-auto absolute inset-0 z-40 flex flex-col items-center justify-center gap-2 overflow-y-auto bg-black/82 px-4 py-6 text-center">
-            <h2 className={`text-2xl font-extrabold sm:text-4xl ${won ? "text-emerald-300" : "text-rose-400"}`}>
-              {won ? "מעולה! הפאזל מוכן!" : "הזמן נגמר — לא הספקתם"}
-            </h2>
-            <p className="max-w-md text-sm font-semibold text-white/90 sm:text-base">
-              {won
-                ? `ניקוד: ${computeWinScore(timeLeft, moves)} · מהלכים: ${moves}`
-                : "נסו שוב — סדרו את כל החלקים לפני שהזמן נגמר"}
-            </p>
-            {!won ? <p className="text-xs text-gray-300 sm:text-sm">הפסד = 0 מטבעות</p> : null}
-          </div>
-        ) : null}
       </div>
     </div>
   );

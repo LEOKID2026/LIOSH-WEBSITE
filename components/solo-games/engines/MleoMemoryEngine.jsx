@@ -5,6 +5,7 @@ import { buildMemoryDeckFromShop } from "../../../lib/solo-games/memory-shop-car
 import { useSoloGameShellUi } from "../../../hooks/solo-games/useSoloGameShellUi.js";
 import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
 import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.jsx";
+import SoloGameEndInterstitialOverlay from "../SoloGameEndInterstitialOverlay.jsx";
 import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
 import { useSoloGameKeyboard, loadImage } from "./solo-v2-ui.jsx";
 import SoloGameNavButtons from "../SoloGameNavButtons.jsx";
@@ -88,6 +89,7 @@ export default function MleoMemoryEngine({
 }) {
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
+  const pendingSessionEndRef = useRef(null);
   const initialScoreRef = useRef(0);
   const initSeqRef = useRef(0);
 
@@ -163,10 +165,26 @@ export default function MleoMemoryEngine({
     });
   };
 
+  const endGame = (won, timeLeftVal) => {
+    if (pendingSessionEndRef.current) return;
+    setTimerRunning(false);
+    setGameOver(true);
+    setDidWin(won);
+    pendingSessionEndRef.current = { won, timeLeft: timeLeftVal };
+  };
+
+  const completeEndInterstitial = () => {
+    const pending = pendingSessionEndRef.current;
+    if (!pending) return;
+    pendingSessionEndRef.current = null;
+    fireSessionEnd(scoreRef.current, pending.won, pending.timeLeft);
+  };
+
   async function initGameWithDifficulty(diffKey) {
     const seq = initSeqRef.current + 1;
     initSeqRef.current = seq;
     sessionEndFiredRef.current = false;
+    pendingSessionEndRef.current = null;
     playStartedAtRef.current = Date.now();
     const { score: startScore, time, pairs } = difficultySettings[diffKey] || difficultySettings.medium;
     initialScoreRef.current = startScore;
@@ -215,10 +233,7 @@ export default function MleoMemoryEngine({
       setTime((prev) => {
         if (prev <= 1) {
           clearInterval(interval);
-          setTimerRunning(false);
-          setGameOver(true);
-          setDidWin(false);
-          fireSessionEnd(scoreRef.current, false, 0);
+          endGame(false, 0);
           return 0;
         }
         return prev - 1;
@@ -230,11 +245,10 @@ export default function MleoMemoryEngine({
 
   useEffect(() => {
     if (matched.length > 0 && matched.length === cards.length) {
-      setTimerRunning(false);
       setDidWin(true);
       setGameOver(true);
       confetti({ particleCount: 120, spread: 100, origin: { y: 0.6 } });
-      fireSessionEnd(scoreRef.current, true, time);
+      endGame(true, time);
     }
   }, [matched, cards, time]);
 
@@ -451,6 +465,14 @@ export default function MleoMemoryEngine({
           </div>
         </>
       )}
+
+      {gameOver && !showIntro ? (
+        <SoloGameEndInterstitialOverlay
+          didWin={didWin}
+          onDone={completeEndInterstitial}
+        />
+      ) : null}
+
       <SoloGamePortraitRecommendationModal
         show={showPortraitPrompt}
         onDismissRotate={() => {
