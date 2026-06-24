@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.jsx";
+import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
+import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
 import { useSoloGameKeyboard } from "./solo-v2-ui.jsx";
 
 const SHAPES = [
@@ -37,6 +40,21 @@ export default function MleoPuzzleEngine({
   const [selected, setSelected] = useState(null);
   const [focusIndex, setFocusIndex] = useState(0);
   const [touchStart, setTouchStart] = useState(null);
+
+  const {
+    isFullscreen,
+    showPortraitPrompt,
+    dismissPortraitPrompt,
+    syncPortraitPromptForRun,
+    enterFromUserGesture,
+    toggleFromUserGesture,
+    showFullscreenButton,
+  } = useSoloGameMobileFullscreen({
+    gameKey: "puzzle",
+    gameRunning,
+    showIntro,
+    gameOver,
+  });
 
   const size = DIFFICULTY_SETTINGS[difficulty].grid;
 
@@ -238,6 +256,7 @@ export default function MleoPuzzleEngine({
     sessionEndFiredRef.current = false;
     playStartedAtRef.current = Date.now();
     setShowIntro(false);
+    syncPortraitPromptForRun();
     setGameRunning(true);
     setGameOver(false);
     setDidWin(false);
@@ -278,7 +297,20 @@ export default function MleoPuzzleEngine({
   }, [autoStart, difficulty]);
 
   return (
-      <div className="flex h-full min-h-0 flex-1 flex-col items-center justify-start overflow-hidden bg-gray-900 text-white w-full relative">
+      <div
+        id="game-wrapper"
+        className="relative isolate flex h-full min-h-0 flex-1 flex-col items-center justify-start overflow-hidden bg-gray-900 text-white w-full solo-game-mobile-fullscreen-shell"
+        dir="rtl"
+      >
+        {showFullscreenButton ? (
+          <div className="pointer-events-auto absolute right-2 top-2 z-[70]">
+            <SoloGameMobileFullscreenButton
+              isFullscreen={isFullscreen}
+              onToggle={toggleFromUserGesture}
+            />
+          </div>
+        ) : null}
+
         {!showIntro && (
           <>
             <div className="flex shrink-0 gap-4 py-2 text-base font-bold z-10 sm:text-lg">
@@ -319,6 +351,17 @@ export default function MleoPuzzleEngine({
             </div>
           </>
         )}
+      <SoloGamePortraitRecommendationModal
+        show={showPortraitPrompt}
+        onDismissRotate={() => {
+          dismissPortraitPrompt(false);
+          enterFromUserGesture();
+        }}
+        onContinueAnyway={() => {
+          dismissPortraitPrompt(true);
+          enterFromUserGesture();
+        }}
+      />
       </div>
   );
 }

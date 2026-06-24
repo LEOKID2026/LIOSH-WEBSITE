@@ -1,4 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.jsx";
+import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
+import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
 import { buildMazeLevel, findPath } from "../../../lib/solo-games/maze-generator.js";
 
 const IMG_LEO = "/images/leo.png";
@@ -117,6 +120,21 @@ export default function MleoMazeEngine({
   const [diamondBanner, setDiamondBanner] = useState(false);
   const [wallHitCell, setWallHitCell] = useState(null);
   const [cellPx, setCellPx] = useState(24);
+
+  const {
+    isFullscreen,
+    showPortraitPrompt,
+    dismissPortraitPrompt,
+    syncPortraitPromptForRun,
+    enterFromUserGesture,
+    toggleFromUserGesture,
+    showFullscreenButton,
+  } = useSoloGameMobileFullscreen({
+    gameKey: "maze",
+    gameRunning,
+    showIntro,
+    gameOver,
+  });
 
   useEffect(() => {
     if (initialDifficulty) setDifficulty(initialDifficulty);
@@ -331,6 +349,7 @@ export default function MleoMazeEngine({
     setDiamondBanner(false);
     setTimeLeft(settings.timeSec);
     loadNextMaze();
+    syncPortraitPromptForRun();
     setGameRunning(true);
   };
 
@@ -482,7 +501,7 @@ export default function MleoMazeEngine({
       `}</style>
     <div
       id="game-wrapper"
-      className="relative isolate flex h-full min-h-0 flex-1 flex-col overflow-hidden bg-gray-900 text-white select-none"
+      className="relative isolate flex h-full min-h-0 flex-1 flex-col overflow-hidden bg-gray-900 text-white select-none solo-game-mobile-fullscreen-shell"
       dir="rtl"
     >
       {showIntro ? (
@@ -506,7 +525,16 @@ export default function MleoMazeEngine({
           </button>
         </div>
       ) : (
-        <div className="flex min-h-0 w-full flex-1 flex-col overflow-hidden px-1 pb-1 pt-1">
+        <div className="relative flex min-h-0 w-full flex-1 flex-col overflow-hidden px-1 pb-1 pt-1">
+          {showFullscreenButton ? (
+            <div className="pointer-events-auto absolute right-2 top-[5.5rem] z-[70]">
+              <SoloGameMobileFullscreenButton
+                isFullscreen={isFullscreen}
+                onToggle={toggleFromUserGesture}
+              />
+            </div>
+          ) : null}
+
           <div className="pointer-events-none absolute left-1/2 top-1.5 z-[80] w-[98vw] max-w-lg -translate-x-1/2 rounded-xl border border-yellow-400/30 bg-black/70 px-2 py-2 text-center text-xs font-bold leading-relaxed sm:text-sm md:top-0">
             <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5">
               <span className="text-amber-300">ניקוד: {score}</span>
@@ -737,6 +765,17 @@ export default function MleoMazeEngine({
           </div>
         </div>
       )}
+      <SoloGamePortraitRecommendationModal
+        show={showPortraitPrompt}
+        onDismissRotate={() => {
+          dismissPortraitPrompt(false);
+          enterFromUserGesture();
+        }}
+        onContinueAnyway={() => {
+          dismissPortraitPrompt(true);
+          enterFromUserGesture();
+        }}
+      />
     </div>
     </>
   );

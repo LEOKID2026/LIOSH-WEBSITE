@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.jsx";
+import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
+import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
 import {
   SOLO_V2_ASSETS,
   SoloV2EndBanner,
@@ -222,6 +225,21 @@ export default function MleoSortShapesEngine({
   const [binOrder, setBinOrder] = useState([0, 1, 2]);
   const [shuffleWarning, setShuffleWarning] = useState(false);
 
+  const {
+    isFullscreen,
+    showPortraitPrompt,
+    dismissPortraitPrompt,
+    syncPortraitPromptForRun,
+    enterFromUserGesture,
+    toggleFromUserGesture,
+    showFullscreenButton,
+  } = useSoloGameMobileFullscreen({
+    gameKey: "sort-shapes",
+    gameRunning,
+    showIntro,
+    gameOver,
+  });
+
   useEffect(() => {
     if (initialDifficulty) setDifficulty(initialDifficulty);
   }, [initialDifficulty]);
@@ -279,6 +297,7 @@ export default function MleoSortShapesEngine({
     setSelectedBin(0);
     setBinOrder([0, 1, 2]);
     setShuffleWarning(false);
+    syncPortraitPromptForRun();
     setGameRunning(true);
   };
 
@@ -363,7 +382,11 @@ export default function MleoSortShapesEngine({
   });
 
   return (
-    <div className="flex h-full min-h-0 flex-1 flex-col items-center gap-2 overflow-hidden px-2 py-2 text-white w-full" dir="rtl">
+    <div
+      id="game-wrapper"
+      className="relative isolate flex h-full min-h-0 flex-1 flex-col items-center gap-2 overflow-hidden px-2 py-2 text-white w-full solo-game-mobile-fullscreen-shell"
+      dir="rtl"
+    >
       <SoloV2Goal text="גררו את הצורה לקבוצה הנכונה! +50 על כל מיון נכון." />
       {!showIntro ? (
         <SoloV2Hud
@@ -390,6 +413,15 @@ export default function MleoSortShapesEngine({
           />
         ) : (
           <div className="relative flex h-full min-h-0 flex-col gap-3 p-3">
+            {showFullscreenButton ? (
+              <div className="pointer-events-auto absolute right-2 top-2 z-[70]">
+                <SoloGameMobileFullscreenButton
+                  isFullscreen={isFullscreen}
+                  onToggle={toggleFromUserGesture}
+                />
+              </div>
+            ) : null}
+
             <div className="flex shrink-0 flex-col items-center gap-2 rounded-2xl border border-yellow-400/40 bg-black/40 p-4">
               <p className="text-sm font-semibold text-yellow-100">הפריט הבא:</p>
               {currentItem ? (
@@ -444,6 +476,17 @@ export default function MleoSortShapesEngine({
           </div>
         )}
       </SoloV2Playfield>
+      <SoloGamePortraitRecommendationModal
+        show={showPortraitPrompt}
+        onDismissRotate={() => {
+          dismissPortraitPrompt(false);
+          enterFromUserGesture();
+        }}
+        onContinueAnyway={() => {
+          dismissPortraitPrompt(true);
+          enterFromUserGesture();
+        }}
+      />
     </div>
   );
 }

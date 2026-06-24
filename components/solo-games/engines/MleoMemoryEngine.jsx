@@ -3,6 +3,9 @@ import confetti from "canvas-confetti";
 import RewardCardImage from "../../student/rewards/RewardCardImage.jsx";
 import { buildMemoryDeckFromShop } from "../../../lib/solo-games/memory-shop-cards.client.js";
 import { useSoloGameShellUi } from "../../../hooks/solo-games/useSoloGameShellUi.js";
+import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
+import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.jsx";
+import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
 import { useSoloGameKeyboard, loadImage } from "./solo-v2-ui.jsx";
 import SoloGameNavButtons from "../SoloGameNavButtons.jsx";
 
@@ -110,6 +113,21 @@ export default function MleoMemoryEngine({
   const { SG, pageBgStyle } = useSoloGameShellUi();
   const isPreGame = deckLoading || deckError;
 
+  const {
+    isFullscreen,
+    showPortraitPrompt,
+    dismissPortraitPrompt,
+    syncPortraitPromptForRun,
+    enterFromUserGesture,
+    toggleFromUserGesture,
+    showFullscreenButton,
+  } = useSoloGameMobileFullscreen({
+    gameKey: "memory",
+    gameRunning,
+    showIntro,
+    gameOver,
+  });
+
   useEffect(() => {
     onPreGameUiChange?.(isPreGame);
     return () => onPreGameUiChange?.(false);
@@ -179,6 +197,7 @@ export default function MleoMemoryEngine({
     }
 
     setCards(result.deck);
+    syncPortraitPromptForRun();
     setGameRunning(true);
     setDeckLoading(false);
     void Promise.all([loadImage(SHOP_CARD_BACK), ...result.deck.map((c) => loadImage(c.src))]);
@@ -318,7 +337,7 @@ export default function MleoMemoryEngine({
   });
 
   const playWrap =
-    "relative flex h-full min-h-0 w-full flex-1 flex-col items-center justify-start overflow-hidden bg-gray-900 text-white";
+    "relative flex h-full min-h-0 w-full flex-1 flex-col items-center justify-start overflow-hidden bg-gray-900 text-white solo-game-mobile-fullscreen-shell";
 
   return (
     <div
@@ -349,8 +368,17 @@ export default function MleoMemoryEngine({
 
           <div
             ref={boardRef}
-            className="flex min-h-0 w-full flex-1 items-center justify-center overflow-hidden px-2 pb-2"
+            className="relative flex min-h-0 w-full flex-1 items-center justify-center overflow-hidden px-2 pb-2"
           >
+            {showFullscreenButton ? (
+              <div className="pointer-events-auto absolute right-2 top-2 z-[70]">
+                <SoloGameMobileFullscreenButton
+                  isFullscreen={isFullscreen}
+                  onToggle={toggleFromUserGesture}
+                />
+              </div>
+            ) : null}
+
             {deckLoading ? (
               <p className={SG.preGameLoading}>טוען קלפים מהחנות…</p>
             ) : deckError ? (
@@ -423,6 +451,17 @@ export default function MleoMemoryEngine({
           </div>
         </>
       )}
+      <SoloGamePortraitRecommendationModal
+        show={showPortraitPrompt}
+        onDismissRotate={() => {
+          dismissPortraitPrompt(false);
+          enterFromUserGesture();
+        }}
+        onContinueAnyway={() => {
+          dismissPortraitPrompt(true);
+          enterFromUserGesture();
+        }}
+      />
     </div>
   );
 }

@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.jsx";
+import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
+import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
 
 const BG_IMAGES = ["/images/game1.png", "/images/game2.png", "/images/game3.png", "/images/game4.png"];
 const SPRITE_DOG = "/images/leo2.png";
@@ -30,12 +33,28 @@ export default function MleoFlyerEngine({ autoStart = false, onSessionEnd }) {
 
   // UI / general state
   const [showIntro, setShowIntro] = useState(!autoStart);
+  const [gameRunning, setGameRunning] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [playerName, setPlayerName] = useState("");
   const [score, setScore] = useState(0);
   const scoreRef = useRef(0);
   const [highScore, setHighScore] = useState(0);
   const [leaderboard, setLeaderboard] = useState([]);
+
+  const {
+    isFullscreen,
+    showPortraitPrompt,
+    dismissPortraitPrompt,
+    syncPortraitPromptForRun,
+    enterFromUserGesture,
+    toggleFromUserGesture,
+    showFullscreenButton,
+  } = useSoloGameMobileFullscreen({
+    gameKey: "flyer",
+    gameRunning,
+    showIntro,
+    gameOver,
+  });
 
   // world
   const dogRef = useRef(null);
@@ -317,6 +336,7 @@ export default function MleoFlyerEngine({ autoStart = false, onSessionEnd }) {
         } else {
           assetsRef.current.sounds.bomb?.play().catch(() => {});
           runningRef.current = false;
+          setGameRunning(false);
           setGameOver(true);
           fireSessionEnd(scoreRef.current);
           cancelAnimationFrame(rafRef.current);
@@ -427,6 +447,8 @@ export default function MleoFlyerEngine({ autoStart = false, onSessionEnd }) {
     if (!canvasRef.current) { requestAnimationFrame(startGame); return; }
 
     initGame();
+    syncPortraitPromptForRun();
+    setGameRunning(true);
     runningRef.current = true;
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
     rafRef.current = requestAnimationFrame(loop);
@@ -445,6 +467,7 @@ export default function MleoFlyerEngine({ autoStart = false, onSessionEnd }) {
   useEffect(() => {
     return () => {
       runningRef.current = false;
+      setGameRunning(false);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, []);
@@ -453,7 +476,7 @@ export default function MleoFlyerEngine({ autoStart = false, onSessionEnd }) {
   return (
       <div
         id="game-wrapper"
-        className="relative isolate flex h-full min-h-0 flex-1 flex-col items-center justify-center overflow-hidden bg-gray-900 text-white select-none"
+        className="relative isolate flex h-full min-h-0 flex-1 flex-col items-center justify-center overflow-hidden bg-gray-900 text-white select-none solo-game-mobile-fullscreen-shell"
         dir="rtl"
       >
         {!showIntro && (
@@ -462,6 +485,15 @@ export default function MleoFlyerEngine({ autoStart = false, onSessionEnd }) {
               ref={boardRef}
               className="relative z-0 mx-auto flex h-full min-h-0 w-full max-w-[1180px] flex-1 overflow-hidden rounded-lg border-4 border-yellow-400 bg-black/30 shadow-lg"
             >
+              {showFullscreenButton ? (
+                <div className="pointer-events-auto absolute right-2 top-2 z-[70]">
+                  <SoloGameMobileFullscreenButton
+                    isFullscreen={isFullscreen}
+                    onToggle={toggleFromUserGesture}
+                  />
+                </div>
+              ) : null}
+
               <div className="pointer-events-none absolute left-1/2 top-2 z-20 max-w-[95vw] -translate-x-1/2 rounded-lg bg-black/60 px-4 py-2 text-base font-bold sm:text-lg">
                 ניקוד: {score}
               </div>
@@ -480,6 +512,17 @@ export default function MleoFlyerEngine({ autoStart = false, onSessionEnd }) {
             </button>
           </div>
         )}
+      <SoloGamePortraitRecommendationModal
+        show={showPortraitPrompt}
+        onDismissRotate={() => {
+          dismissPortraitPrompt(false);
+          enterFromUserGesture();
+        }}
+        onContinueAnyway={() => {
+          dismissPortraitPrompt(true);
+          enterFromUserGesture();
+        }}
+      />
       </div>
   );
 }

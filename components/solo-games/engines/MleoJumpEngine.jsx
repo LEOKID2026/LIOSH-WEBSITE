@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.jsx";
+import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
+import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
 
 const BG_IMAGES = ["/images/game-day.png", "/images/game1.png", "/images/game2.png", "/images/game-park.png"];
 const IMG_LEO = "/images/leo.png";
@@ -104,6 +107,22 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
   const [showIntro, setShowIntro] = useState(!autoStart);
   const [gameRunning, setGameRunning] = useState(false);
   const [gameOver, setGameOver] = useState(false);
+
+  const {
+    isFullscreen,
+    showPortraitPrompt,
+    dismissPortraitPrompt,
+    syncPortraitPromptForRun,
+    enterFromUserGesture,
+    toggleFromUserGesture,
+    showFullscreenButton,
+  } = useSoloGameMobileFullscreen({
+    gameKey: "leo-jump",
+    gameRunning,
+    showIntro,
+    gameOver,
+  });
+
   const [score, setScore] = useState(0);
   const [level, setLevel] = useState(1);
   const [passed, setPassed] = useState(0);
@@ -394,6 +413,7 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
     resetWorld();
     syncCanvasSize();
     worldRef.current.nextSpawnGap = pickNextSpawnGap(1, worldRef.current.scale);
+    syncPortraitPromptForRun();
     setGameRunning(true);
     runningRef.current = true;
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
@@ -576,7 +596,7 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
   return (
     <div
       id="game-wrapper"
-      className="relative isolate flex h-full min-h-0 flex-1 flex-col items-center justify-center overflow-hidden bg-gray-900 text-white select-none"
+      className="relative isolate flex h-full min-h-0 flex-1 flex-col items-center justify-center overflow-hidden bg-gray-900 text-white select-none solo-game-mobile-fullscreen-shell"
       dir="rtl"
     >
       {!showIntro && (
@@ -599,6 +619,15 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
               jump();
             }}
           >
+            {showFullscreenButton ? (
+              <div className="pointer-events-auto absolute right-2 top-2 z-[70]">
+                <SoloGameMobileFullscreenButton
+                  isFullscreen={isFullscreen}
+                  onToggle={toggleFromUserGesture}
+                />
+              </div>
+            ) : null}
+
             <canvas ref={canvasRef} className="absolute inset-0 block h-full w-full touch-none" />
 
             {levelFlash ? (
@@ -635,6 +664,17 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
           ) : null}
         </div>
       )}
+      <SoloGamePortraitRecommendationModal
+        show={showPortraitPrompt}
+        onDismissRotate={() => {
+          dismissPortraitPrompt(false);
+          enterFromUserGesture();
+        }}
+        onContinueAnyway={() => {
+          dismissPortraitPrompt(true);
+          enterFromUserGesture();
+        }}
+      />
     </div>
   );
 }

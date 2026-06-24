@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useSoloBoardTap } from "./solo-v2-ui.jsx";
+import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.jsx";
+import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
+import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
 const BG_TARGET = "/images/game-day.png";
 const IMG_COIN = "/images/coin.png";
 const IMG_DIAMOND = "/images/diamond.png";
@@ -97,6 +100,21 @@ export default function MleoTargetTapEngine({
   const [targets, setTargets] = useState([]);
   const [popFx, setPopFx] = useState([]);
   const [levelFlash, setLevelFlash] = useState(false);
+
+  const {
+    isFullscreen,
+    showPortraitPrompt,
+    dismissPortraitPrompt,
+    syncPortraitPromptForRun,
+    enterFromUserGesture,
+    toggleFromUserGesture,
+    showFullscreenButton,
+  } = useSoloGameMobileFullscreen({
+    gameKey: "target-tap",
+    gameRunning,
+    showIntro,
+    gameOver,
+  });
 
   useEffect(() => {
     if (initialDifficulty) difficultyRef.current = initialDifficulty;
@@ -305,6 +323,7 @@ export default function MleoTargetTapEngine({
     setPopFx([]);
     setLevelFlash(false);
 
+    syncPortraitPromptForRun();
     setGameRunning(true);
     runningRef.current = true;
 
@@ -362,7 +381,7 @@ export default function MleoTargetTapEngine({
   return (
     <div
       id="game-wrapper"
-      className="relative isolate flex h-full min-h-0 flex-1 flex-col overflow-hidden bg-gray-900 text-white select-none"
+      className="relative isolate flex h-full min-h-0 flex-1 flex-col overflow-hidden bg-gray-900 text-white select-none solo-game-mobile-fullscreen-shell"
       dir="rtl"
     >
       {!showIntro && (
@@ -391,6 +410,15 @@ export default function MleoTargetTapEngine({
               touchAction: "none",
             }}
           >
+            {showFullscreenButton ? (
+              <div className="pointer-events-auto absolute right-2 top-2 z-[70]">
+                <SoloGameMobileFullscreenButton
+                  isFullscreen={isFullscreen}
+                  onToggle={toggleFromUserGesture}
+                />
+              </div>
+            ) : null}
+
             {targets.map((t) => (
               <div
                 key={t.id}
@@ -452,6 +480,17 @@ export default function MleoTargetTapEngine({
           </div>
         </div>
       )}
+      <SoloGamePortraitRecommendationModal
+        show={showPortraitPrompt}
+        onDismissRotate={() => {
+          dismissPortraitPrompt(false);
+          enterFromUserGesture();
+        }}
+        onContinueAnyway={() => {
+          dismissPortraitPrompt(true);
+          enterFromUserGesture();
+        }}
+      />
     </div>
   );
 }
