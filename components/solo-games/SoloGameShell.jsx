@@ -21,6 +21,7 @@ import MleoMazeEngine from "./engines/MleoMazeEngine.jsx";
 import MleoPicturePuzzleEngine from "./engines/MleoPicturePuzzleEngine.jsx";
 import MleoTargetTapEngine from "./engines/MleoTargetTapEngine.jsx";
 import MleoSortShapesEngine from "./engines/MleoSortShapesEngine.jsx";
+import MleoSmartBlocksEngine from "./engines/MleoSmartBlocksEngine.jsx";
 
 const ENGINE_MAP = {
   catcher: MleoCatcherEngine,
@@ -33,6 +34,7 @@ const ENGINE_MAP = {
   "picture-puzzle": MleoPicturePuzzleEngine,
   "target-tap": MleoTargetTapEngine,
   "sort-shapes": MleoSortShapesEngine,
+  "smart-blocks": MleoSmartBlocksEngine,
 };
 
 const PLAY_SHELL =
