@@ -229,21 +229,52 @@ a[href][aria-disabled="true"] {
     position: fixed;
     inset: 0;
     width: 100vw;
+    /* svh fallback for older browsers; dvh uses full dynamic viewport (Android nav stays outside) */
+    height: 100svh;
     height: 100dvh;
     max-height: 100dvh;
     overflow: hidden;
     z-index: 9999;
     background: #020617;
+    box-sizing: border-box;
+    margin: 0;
     padding-top: env(safe-area-inset-top, 0px);
-    padding-bottom: env(safe-area-inset-bottom, 0px);
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    display: flex;
+    flex-direction: column;
   }
 
-  @supports (height: 100svh) {
-    #game-wrapper.solo-game-mobile-pseudo-fullscreen,
-    [data-solo-game-shell].solo-game-mobile-pseudo-fullscreen {
-      height: 100svh;
-      max-height: 100svh;
-    }
+  /* Engine play shell + board stack should consume all available height */
+  #game-wrapper.solo-game-mobile-pseudo-fullscreen > * {
+    flex: 1 1 auto;
+    height: 100%;
+    min-height: 0;
+    max-height: 100%;
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Brief landscape-start path: shell pseudo before #game-wrapper mounts */
+  [data-solo-game-shell].solo-game-mobile-pseudo-fullscreen > header {
+    display: none;
+  }
+
+  [data-solo-game-shell].solo-game-mobile-pseudo-fullscreen > main {
+    flex: 1 1 auto;
+    height: 100%;
+    min-height: 0;
+    max-height: 100%;
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  [data-solo-game-shell].solo-game-mobile-pseudo-fullscreen > main > * {
+    flex: 1 1 auto;
+    height: 100%;
+    min-height: 0;
+    max-height: 100%;
   }
 }
 
