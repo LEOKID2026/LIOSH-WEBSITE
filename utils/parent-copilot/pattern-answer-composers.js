@@ -45,6 +45,125 @@ const IMPORTANT_NOW_RE =
 const AVOID_NOW_RE =
   /מה\s+כדאי\s+להימנע(?:\s+ממנ(?:ו|ה))?(?:\s+עכשיו)?|ממה\s+להימנע|מה\s+לא\s+(?:כדאי\s+)?(?:ל)?עשות|מה\s+לא\s+כדאי\s+(?:לי\s+)?להסיק/u;
 const LEARNING_SEVERITY_FOLLOWUP_RE = /^(?:ז(?:ה|ו)\s+)?חמור\s*\??$/u;
+const EXPLAIN_REPORT_SIMPLE_RE =
+  /תסביר\s+לי\s+א(?:ת|ת)?\s+הדוח\s+במילים\s+פשוטות|במילים\s+פשוטות.*(?:א(?:ת|ת)?\s+)?(?:ה)?דוח|תסביר.*(?:א(?:ת|ת)?\s+)?(?:ה)?דוח.*(?:במילים\s+פשוטות|פשוט)/u;
+
+export function matchesExplainReportSimpleWordsUtterance(utterance) {
+  return EXPLAIN_REPORT_SIMPLE_RE.test(foldUtteranceForHeMatch(String(utterance || "")));
+}
+
+function globalReportQuestionCount(payload) {
+  const s = payload?.summary || payload?.practiceSummary || {};
+  const os = payload?.overallSnapshot && typeof payload.overallSnapshot === "object" ? payload.overallSnapshot : {};
+  return Math.max(
+    0,
+    Number(s.totalAnswers ?? s.totalQuestions ?? os.totalQuestions ?? 0) || 0,
+  );
+}
+
+function subjectRowsFromPayload(payload) {
+  const coverage = payload?.overallSnapshot?.subjectCoverage;
+  if (Array.isArray(coverage) && coverage.length) {
+    return coverage
+      .map((row) => ({
+        sid: normalizeSubjectId(row?.subject),
+        q: Math.max(0, Number(row?.questionCount ?? row?.answers ?? 0) || 0),
+        acc: Math.max(0, Math.min(100, Math.round(Number(row?.accuracy ?? 0)))),
+      }))
+      .filter((r) => r.sid && r.q > 0);
+  }
+  const subjects = payload?.subjects && typeof payload.subjects === "object" ? payload.subjects : null;
+  if (subjects && Object.keys(subjects).length) {
+    return Object.entries(subjects).map(([sid, row]) => ({
+      sid: normalizeSubjectId(sid),
+      q: Math.max(0, Number(row?.answers ?? row?.questions ?? 0) || 0),
+      acc: Math.max(0, Math.min(100, Math.round(Number(row?.accuracy ?? 0)))),
+    })).filter((r) => r.sid && r.q > 0);
+  }
+  /** @type {Map<string, { q: number; correct: number }>} */
+  const bySid = new Map();
+  for (const m of collectTopicMetrics(payload)) {
+    if (!m.sid) continue;
+    const prev = bySid.get(m.sid) || { q: 0, correct: 0 };
+    prev.q += m.q;
+    prev.correct += Math.round((m.q * m.acc) / 100);
+    bySid.set(m.sid, prev);
+  }
+  return [...bySid.entries()].map(([sid, v]) => ({
+    sid,
+    q: v.q,
+    acc: v.q ? Math.round((v.correct / v.q) * 100) : 0,
+  }));
+}
+
+function hasEnoughReportVolumeForSimpleExplain(payload) {
+  if (globalReportQuestionCount(payload) >= 30) return true;
+  return subjectRowsFromPayload(payload).some((r) => r.q >= 20);
+}
+
+/**
+ * @param {unknown} payload
+ * @param {string} excludeSid
+ */
+function stableSubjectPhraseList(payload, excludeSid) {
+  const rows = subjectRowsFromPayload(payload)
+    .filter((r) => r.sid !== excludeSid && r.q >= 8)
+    .sort((a, b) => b.acc - a.acc || b.q - a.q);
+  if (!rows.length) return "";
+  return rows
+    .slice(0, 4)
+    .map((r) => `${subjectLabelHe(r.sid)} עם ${r.q} שאלות ו־${r.acc}%`)
+    .join(", ");
+}
+
+function composeExplainReportSimpleWords(payload) {
+  const weak = pickWeakestTopic(collectTopicMetrics(payload));
+  if (!weak?.q) return null;
+  const a = topicAnchorFields(weak);
+  const stableList = stableSubjectPhraseList(payload, a.subjectId || "");
+  let text =
+    `במילים פשוטות: יש מספיק תרגול כדי לראות איפה להתחיל. הנקודה המרכזית היא ${a.subjectLabel} — ${a.topicLabel}: ${a.questionCount} שאלות עם ${a.accuracyPercent}% הצלחה. זה הנושא הראשון שכדאי לחזק.`;
+  if (stableList) {
+    text += ` לצד זה, יש תחומים שנראים יציבים יותר בתקופה הזו: ${stableList}.`;
+  }
+  text += ` לכן ההמלצה היא לא לפזר את התרגול: להתחיל ב${a.subjectLabel} — ${a.topicLabel}, 5–10 דקות, 3–5 שאלות בכל פעם, ואז לבדוק אם התשובות יציבות יותר.`;
+  return patternDraft(text, a, "explain_report");
+}
+
+/**
+ * Approved narrative for "תסביר לי את הדוח במילים פשוטות" when report volume is sufficient.
+ * Not routed via classifyApprovedPatternQuestion — invoked explicitly from index.js.
+ */
+export function tryComposeExplainReportSimpleWordsDraft(params) {
+  const utteranceStr = String(params?.utteranceStr || "");
+  const payload = params?.payload;
+  if (!matchesExplainReportSimpleWordsUtterance(utteranceStr)) return null;
+  if (!hasEnoughReportVolumeForSimpleExplain(payload)) return null;
+  const composed = composeExplainReportSimpleWords(payload);
+  if (!composed) return null;
+
+  const truthPacket = buildTruthPacketV1(payload, {
+    scopeType: "topic",
+    scopeId: composed.focusTopic?.topicRowKey || "explain-simple-words",
+    scopeLabel: composed.focusTopic?.displayName || composed.focusTopic?.topicLabel || "סיכום דוח",
+    canonicalIntent: "explain_report",
+    parentUtterance: utteranceStr,
+  });
+  if (!truthPacket) return null;
+
+  return {
+    ...composed,
+    patternId: "explain_report_simple_words",
+    truthPacket,
+    scopeMeta: {
+      generationPath: "pattern_composer",
+      patternId: "explain_report_simple_words",
+      intentReason: "composer:explain_report_simple_words",
+      scopeConfidence: 0.94,
+      scopeReason: "approved_simple_explain_composer",
+    },
+  };
+}
 
 /**
  * @param {string} utterance

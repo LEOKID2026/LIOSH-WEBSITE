@@ -59,7 +59,7 @@ import { matchesLegitimateParentQuestion } from "./question-classifier.js";
 import { shouldReturnNoDataForRequest, noDataResponseHe, isNoDataClarificationText } from "./no-data-request-response.js";
 import { isContextualFollowUpUtterance } from "./contextual-follow-up-he.js";
 import { utteranceQualifiesAsReportQuestion, hasAnchoredReportRows } from "./report-row-resolver.js";
-import { tryComposePatternAnswerDraft } from "./pattern-answer-composers.js";
+import { tryComposePatternAnswerDraft, tryComposeExplainReportSimpleWordsDraft } from "./pattern-answer-composers.js";
 import { tryComposeContinuityPatternDraft } from "./continuity-pattern-composer.js";
 
 /**
@@ -1075,6 +1075,24 @@ function runDeterministicCore(input, options) {
       utteranceStr,
       earlyPattern,
       { intentConfidence: stageA?.canonicalIntentScore || 0.88 },
+    );
+    if (packaged) return packaged;
+  }
+
+  const simpleExplainDraft = tryComposeExplainReportSimpleWordsDraft({
+    utteranceStr,
+    payload: scopedInput?.payload,
+    conversationState: conv,
+  });
+  if (simpleExplainDraft) {
+    const packaged = tryPackageApprovedPatternTurn(
+      scopedInput,
+      sessionId,
+      priorRepeated,
+      conv,
+      utteranceStr,
+      simpleExplainDraft,
+      { intentConfidence: stageA?.canonicalIntentScore || 0.9 },
     );
     if (packaged) return packaged;
   }
