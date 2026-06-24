@@ -1,2338 +1,797 @@
 {
-  "generatedAt": "2026-06-24T07:58:10.830Z",
-  "status": "NOT_APPROVED — awaiting owner re-test on deployed build",
-  "matchedReport": {
-    "label": "AAA4",
-    "studentId": "38e2dbcf-a927-419f-a2ed-b26c7100e656",
-    "range": {
-      "reportPeriod": "custom",
-      "rangeFrom": "2026-05-26",
-      "rangeTo": "2026-06-24"
-    },
-    "payloadSummary": {
-      "total": 214,
-      "acc": 52.8,
-      "mins": 372,
-      "subjects": {
+  "generatedAt": "2026-06-24T08:09:45.878Z",
+  "status": "NOT_APPROVED — ready for owner re-test only",
+  "localGitHead": "382f4f6c001ce72453e19a3c5bb425894c67db43 2026-06-24 11:01:31 +0300 Auto update - 24/06/2026 11:01:31.01",
+  "rangeUsed": {
+    "reportPeriod": "custom",
+    "rangeFrom": "2026-05-26",
+    "rangeTo": "2026-06-24"
+  },
+  "rangeNote": "Owner UI showed 26/05/2026–24/06/2026; API uses inclusive YYYY-MM-DD (same as computeReportRangeForParentApi custom path)",
+  "authAccount": "admin@admin.com",
+  "studentsScanned": 1,
+  "owner214Found": true,
+  "matchedStudent": {
+    "id": "38e2dbcf-a927-419f-a2ed-b26c7100e656",
+    "name": "בדיקה-ב2",
+    "summary": {
+      "totalQuestions": 214,
+      "overallAccuracy": 52.8,
+      "totalMinutes": 372,
+      "subjectBreakdown": {
         "math": {
-          "latestActivityAt": "2026-06-24T07:31:12.135Z",
-          "latestActivityMs": 1782286272135,
-          "latestActivitySource": "session.started_at",
-          "lastAnswerAt": "2026-06-12T15:02:29.529Z",
-          "lastAnswerMs": 1781276549529,
-          "sessionStartedAt": "2026-06-24T07:31:12.135Z",
-          "sessionStartedMs": 1782286272135,
-          "sessionFinishedAt": "2026-06-24T07:31:09.692Z",
-          "sessionFinishedMs": 1782286269692,
-          "sessions": 78,
-          "answers": 102,
-          "correct": 34,
-          "wrong": 68,
-          "accuracy": 33.33,
-          "diagnosticAnswers": 102,
-          "diagnosticCorrect": 34,
-          "diagnosticWrong": 68,
-          "diagnosticAccuracy": 33.33,
-          "competitiveAnswers": 0,
-          "competitiveCorrect": 0,
-          "competitiveAccuracy": 0,
-          "learningAnswers": 0,
-          "stepByStepCount": 0,
-          "durationSeconds": 10800,
-          "hintsSum": 0,
-          "hintsCount": 102,
-          "timeMsSum": 11317865,
-          "timeMsCount": 102,
-          "correctSlowAnswers": 34,
-          "correctManyHintsAnswers": 0,
-          "wrongFastAnswers": 0,
-          "avgHintsPerQuestion": 0,
-          "avgTimePerQuestionSec": 110.96,
-          "modeCounts": {
-            "unknown": 0,
-            "challenge": 0,
-            "discussion": 0,
-            "drill": 0,
-            "graded": 0,
-            "guided_practice": 0,
-            "homework": 0,
-            "learning": 0,
-            "learning_book": 0,
-            "live_lesson": 0,
-            "marathon": 0,
-            "mistakes": 0,
-            "normal": 0,
-            "practice": 180,
-            "practice_mistakes": 0,
-            "quiz": 0,
-            "review": 0,
-            "speed": 0,
-            "worksheet": 0
-          },
-          "levelCounts": {
-            "unknown": 0,
-            "easy": 102,
-            "medium": 0,
-            "hard": 0
-          },
-          "topics": {
-            "addition": {
-              "latestActivityAt": "2026-06-24T07:31:12.135Z",
-              "latestActivityMs": 1782286272135,
-              "latestActivitySource": "session.started_at",
-              "lastAnswerAt": "2026-06-12T15:02:29.529Z",
-              "lastAnswerMs": 1781276549529,
-              "sessionStartedAt": "2026-06-24T07:31:12.135Z",
-              "sessionStartedMs": 1782286272135,
-              "sessionFinishedAt": "2026-06-24T07:31:02.328Z",
-              "sessionFinishedMs": 1782286262328,
-              "answers": 102,
-              "correct": 34,
-              "wrong": 68,
-              "accuracy": 33.33,
-              "diagnosticAnswers": 102,
-              "diagnosticCorrect": 34,
-              "diagnosticWrong": 68,
-              "diagnosticAccuracy": 33.33,
-              "competitiveAnswers": 0,
-              "competitiveCorrect": 0,
-              "competitiveAccuracy": 0,
-              "learningAnswers": 0,
-              "stepByStepCount": 0,
-              "durationSeconds": 10800,
-              "hintsSum": 0,
-              "hintsCount": 102,
-              "timeMsSum": 11317865,
-              "timeMsCount": 102,
-              "correctSlowAnswers": 34,
-              "correctManyHintsAnswers": 0,
-              "wrongFastAnswers": 0,
-              "avgHintsPerQuestion": 0,
-              "avgTimePerQuestionSec": 110.96,
-              "modeCounts": {
-                "unknown": 0,
-                "challenge": 0,
-                "discussion": 0,
-                "drill": 0,
-                "graded": 0,
-                "guided_practice": 0,
-                "homework": 0,
-                "learning": 0,
-                "learning_book": 0,
-                "live_lesson": 0,
-                "marathon": 0,
-                "mistakes": 0,
-                "normal": 0,
-                "practice": 144,
-                "practice_mistakes": 0,
-                "quiz": 0,
-                "review": 0,
-                "speed": 0,
-                "worksheet": 0
-              },
-              "levelCounts": {
-                "unknown": 0,
-                "easy": 102,
-                "medium": 0,
-                "hard": 0
-              },
-              "contentGradeLevel": null,
-              "registeredGradeLevel": null,
-              "gradeRelation": "unknown",
-              "gradeDelta": null,
-              "evidenceSourceCounts": {
-                "self_practice": 102
-              },
-              "byContentGrade": {
-                "g2": {
-                  "latestActivityAt": "2026-06-24T07:31:12.135Z",
-                  "latestActivityMs": 1782286272135,
-                  "latestActivitySource": "session.started_at",
-                  "lastAnswerAt": "2026-06-12T15:02:29.529Z",
-                  "lastAnswerMs": 1781276549529,
-                  "sessionStartedAt": "2026-06-24T07:31:12.135Z",
-                  "sessionStartedMs": 1782286272135,
-                  "sessionFinishedAt": "2026-06-24T07:31:02.328Z",
-                  "sessionFinishedMs": 1782286262328,
-                  "answers": 102,
-                  "correct": 34,
-                  "wrong": 68,
-                  "accuracy": 33.33,
-                  "diagnosticAnswers": 102,
-                  "diagnosticCorrect": 34,
-                  "diagnosticWrong": 68,
-                  "diagnosticAccuracy": 33.33,
-                  "competitiveAnswers": 0,
-                  "competitiveCorrect": 0,
-                  "competitiveAccuracy": 0,
-                  "learningAnswers": 0,
-                  "stepByStepCount": 0,
-                  "durationSeconds": 135,
-                  "hintsSum": 0,
-                  "hintsCount": 102,
-                  "timeMsSum": 11317865,
-                  "timeMsCount": 102,
-                  "correctSlowAnswers": 34,
-                  "correctManyHintsAnswers": 0,
-                  "wrongFastAnswers": 0,
-                  "avgHintsPerQuestion": 0,
-                  "avgTimePerQuestionSec": 110.96,
-                  "modeCounts": {
-                    "unknown": 0,
-                    "challenge": 0,
-                    "discussion": 0,
-                    "drill": 0,
-                    "graded": 0,
-                    "guided_practice": 0,
-                    "homework": 0,
-                    "learning": 0,
-                    "learning_book": 0,
-                    "live_lesson": 0,
-                    "marathon": 0,
-                    "mistakes": 0,
-                    "normal": 0,
-                    "practice": 102,
-                    "practice_mistakes": 0,
-                    "quiz": 0,
-                    "review": 0,
-                    "speed": 0,
-                    "worksheet": 0
-                  },
-                  "levelCounts": {
-                    "unknown": 0,
-                    "easy": 102,
-                    "medium": 0,
-                    "hard": 0
-                  },
-                  "contentGradeLevel": "g2",
-                  "registeredGradeLevel": "g2",
-                  "gradeRelation": "same",
-                  "gradeDelta": 0,
-                  "evidenceSourceCounts": {
-                    "self_practice": 102
-                  },
-                  "diagnosticConfidence": "sufficient",
-                  "evidenceSources": [
-                    "self_practice"
-                  ],
-                  "primaryEvidenceSource": "self_practice"
-                }
-              },
-              "diagnosticConfidence": "sufficient",
-              "evidenceSources": [
-                "self_practice"
-              ],
-              "primaryEvidenceSource": "self_practice"
-            },
-            "fractions": {
-              "latestActivityAt": "2026-06-24T07:31:09.692Z",
-              "latestActivityMs": 1782286269692,
-              "latestActivitySource": "session.ended_at",
-              "lastAnswerAt": null,
-              "lastAnswerMs": null,
-              "sessionStartedAt": "2026-06-24T07:31:05.367Z",
-              "sessionStartedMs": 1782286265367,
-              "sessionFinishedAt": "2026-06-24T07:31:09.692Z",
-              "sessionFinishedMs": 1782286269692,
-              "answers": 0,
-              "correct": 0,
-              "wrong": 0,
-              "accuracy": 0,
-              "diagnosticAnswers": 0,
-              "diagnosticCorrect": 0,
-              "diagnosticWrong": 0,
-              "diagnosticAccuracy": 0,
-              "competitiveAnswers": 0,
-              "competitiveCorrect": 0,
-              "competitiveAccuracy": 0,
-              "learningAnswers": 0,
-              "stepByStepCount": 0,
-              "durationSeconds": 0,
-              "hintsSum": 0,
-              "hintsCount": 0,
-              "timeMsSum": 0,
-              "timeMsCount": 0,
-              "correctSlowAnswers": 0,
-              "correctManyHintsAnswers": 0,
-              "wrongFastAnswers": 0,
-              "avgHintsPerQuestion": null,
-              "avgTimePerQuestionSec": null,
-              "modeCounts": {
-                "unknown": 0,
-                "challenge": 0,
-                "discussion": 0,
-                "drill": 0,
-                "graded": 0,
-                "guided_practice": 0,
-                "homework": 0,
-                "learning": 0,
-                "learning_book": 0,
-                "live_lesson": 0,
-                "marathon": 0,
-                "mistakes": 0,
-                "normal": 0,
-                "practice": 36,
-                "practice_mistakes": 0,
-                "quiz": 0,
-                "review": 0,
-                "speed": 0,
-                "worksheet": 0
-              },
-              "levelCounts": {
-                "unknown": 0,
-                "easy": 0,
-                "medium": 0,
-                "hard": 0
-              },
-              "contentGradeLevel": null,
-              "registeredGradeLevel": null,
-              "gradeRelation": "unknown",
-              "gradeDelta": null,
-              "evidenceSourceCounts": {},
-              "byContentGrade": {
-                "g2": {
-                  "latestActivityAt": "2026-06-24T07:31:09.692Z",
-                  "latestActivityMs": 1782286269692,
-                  "latestActivitySource": "session.ended_at",
-                  "lastAnswerAt": null,
-                  "lastAnswerMs": null,
-                  "sessionStartedAt": "2026-06-24T07:31:05.367Z",
-                  "sessionStartedMs": 1782286265367,
-                  "sessionFinishedAt": "2026-06-24T07:31:09.692Z",
-                  "sessionFinishedMs": 1782286269692,
-                  "answers": 0,
-                  "correct": 0,
-                  "wrong": 0,
-                  "accuracy": 0,
-                  "diagnosticAnswers": 0,
-                  "diagnosticCorrect": 0,
-                  "diagnosticWrong": 0,
-                  "diagnosticAccuracy": 0,
-                  "competitiveAnswers": 0,
-                  "competitiveCorrect": 0,
-                  "competitiveAccuracy": 0,
-                  "learningAnswers": 0,
-                  "stepByStepCount": 0,
-                  "durationSeconds": 0,
-                  "hintsSum": 0,
-                  "hintsCount": 0,
-                  "timeMsSum": 0,
-                  "timeMsCount": 0,
-                  "correctSlowAnswers": 0,
-                  "correctManyHintsAnswers": 0,
-                  "wrongFastAnswers": 0,
-                  "avgHintsPerQuestion": null,
-                  "avgTimePerQuestionSec": null,
-                  "modeCounts": {
-                    "unknown": 0,
-                    "challenge": 0,
-                    "discussion": 0,
-                    "drill": 0,
-                    "graded": 0,
-                    "guided_practice": 0,
-                    "homework": 0,
-                    "learning": 0,
-                    "learning_book": 0,
-                    "live_lesson": 0,
-                    "marathon": 0,
-                    "mistakes": 0,
-                    "normal": 0,
-                    "practice": 0,
-                    "practice_mistakes": 0,
-                    "quiz": 0,
-                    "review": 0,
-                    "speed": 0,
-                    "worksheet": 0
-                  },
-                  "levelCounts": {
-                    "unknown": 0,
-                    "easy": 0,
-                    "medium": 0,
-                    "hard": 0
-                  },
-                  "contentGradeLevel": "g2",
-                  "registeredGradeLevel": "g2",
-                  "gradeRelation": "same",
-                  "gradeDelta": 0,
-                  "evidenceSourceCounts": {},
-                  "diagnosticConfidence": "insufficient",
-                  "evidenceSources": [],
-                  "primaryEvidenceSource": null
-                }
-              },
-              "diagnosticConfidence": "insufficient",
-              "evidenceSources": [],
-              "primaryEvidenceSource": null
-            }
-          }
+          "questions": 102,
+          "accuracy": 33.33
         },
         "geometry": {
-          "latestActivityAt": "2026-06-24T07:20:38.836Z",
-          "latestActivityMs": 1782285638836,
-          "latestActivitySource": "session.started_at",
-          "lastAnswerAt": "2026-06-16T14:58:38.438Z",
-          "lastAnswerMs": 1781621918438,
-          "sessionStartedAt": "2026-06-24T07:20:38.836Z",
-          "sessionStartedMs": 1782285638836,
-          "sessionFinishedAt": "2026-06-24T07:20:36.286Z",
-          "sessionFinishedMs": 1782285636286,
-          "sessions": 34,
-          "answers": 25,
-          "correct": 18,
-          "wrong": 7,
-          "accuracy": 72,
-          "diagnosticAnswers": 25,
-          "diagnosticCorrect": 18,
-          "diagnosticWrong": 7,
-          "diagnosticAccuracy": 72,
-          "competitiveAnswers": 0,
-          "competitiveCorrect": 0,
-          "competitiveAccuracy": 0,
-          "learningAnswers": 0,
-          "stepByStepCount": 0,
-          "durationSeconds": 2505,
-          "hintsSum": 0,
-          "hintsCount": 25,
-          "timeMsSum": 2328072,
-          "timeMsCount": 25,
-          "correctSlowAnswers": 18,
-          "correctManyHintsAnswers": 0,
-          "wrongFastAnswers": 0,
-          "avgHintsPerQuestion": 0,
-          "avgTimePerQuestionSec": 93.12,
-          "modeCounts": {
-            "unknown": 0,
-            "challenge": 0,
-            "discussion": 0,
-            "drill": 0,
-            "graded": 0,
-            "guided_practice": 0,
-            "homework": 0,
-            "learning": 0,
-            "learning_book": 0,
-            "live_lesson": 0,
-            "marathon": 0,
-            "mistakes": 0,
-            "normal": 0,
-            "practice": 59,
-            "practice_mistakes": 0,
-            "quiz": 0,
-            "review": 0,
-            "speed": 0,
-            "worksheet": 0
-          },
-          "levelCounts": {
-            "unknown": 0,
-            "easy": 25,
-            "medium": 0,
-            "hard": 0
-          },
-          "topics": {
-            "shapes_basic": {
-              "latestActivityAt": "2026-06-24T07:20:38.836Z",
-              "latestActivityMs": 1782285638836,
-              "latestActivitySource": "session.started_at",
-              "lastAnswerAt": "2026-06-16T14:58:38.438Z",
-              "lastAnswerMs": 1781621918438,
-              "sessionStartedAt": "2026-06-24T07:20:38.836Z",
-              "sessionStartedMs": 1782285638836,
-              "sessionFinishedAt": "2026-06-24T07:20:15.704Z",
-              "sessionFinishedMs": 1782285615704,
-              "answers": 25,
-              "correct": 18,
-              "wrong": 7,
-              "accuracy": 72,
-              "diagnosticAnswers": 25,
-              "diagnosticCorrect": 18,
-              "diagnosticWrong": 7,
-              "diagnosticAccuracy": 72,
-              "competitiveAnswers": 0,
-              "competitiveCorrect": 0,
-              "competitiveAccuracy": 0,
-              "learningAnswers": 0,
-              "stepByStepCount": 0,
-              "durationSeconds": 2505,
-              "hintsSum": 0,
-              "hintsCount": 25,
-              "timeMsSum": 2328072,
-              "timeMsCount": 25,
-              "correctSlowAnswers": 18,
-              "correctManyHintsAnswers": 0,
-              "wrongFastAnswers": 0,
-              "avgHintsPerQuestion": 0,
-              "avgTimePerQuestionSec": 93.12,
-              "modeCounts": {
-                "unknown": 0,
-                "challenge": 0,
-                "discussion": 0,
-                "drill": 0,
-                "graded": 0,
-                "guided_practice": 0,
-                "homework": 0,
-                "learning": 0,
-                "learning_book": 0,
-                "live_lesson": 0,
-                "marathon": 0,
-                "mistakes": 0,
-                "normal": 0,
-                "practice": 35,
-                "practice_mistakes": 0,
-                "quiz": 0,
-                "review": 0,
-                "speed": 0,
-                "worksheet": 0
-              },
-              "levelCounts": {
-                "unknown": 0,
-                "easy": 25,
-                "medium": 0,
-                "hard": 0
-              },
-              "contentGradeLevel": null,
-              "registeredGradeLevel": null,
-              "gradeRelation": "unknown",
-              "gradeDelta": null,
-              "evidenceSourceCounts": {
-                "self_practice": 25
-              },
-              "byContentGrade": {
-                "g2": {
-                  "latestActivityAt": "2026-06-24T07:20:38.836Z",
-                  "latestActivityMs": 1782285638836,
-                  "latestActivitySource": "session.started_at",
-                  "lastAnswerAt": "2026-06-16T14:58:38.438Z",
-                  "lastAnswerMs": 1781621918438,
-                  "sessionStartedAt": "2026-06-24T07:20:38.836Z",
-                  "sessionStartedMs": 1782285638836,
-                  "sessionFinishedAt": "2026-06-24T07:20:15.704Z",
-                  "sessionFinishedMs": 1782285615704,
-                  "answers": 25,
-                  "correct": 18,
-                  "wrong": 7,
-                  "accuracy": 72,
-                  "diagnosticAnswers": 25,
-                  "diagnosticCorrect": 18,
-                  "diagnosticWrong": 7,
-                  "diagnosticAccuracy": 72,
-                  "competitiveAnswers": 0,
-                  "competitiveCorrect": 0,
-                  "competitiveAccuracy": 0,
-                  "learningAnswers": 0,
-                  "stepByStepCount": 0,
-                  "durationSeconds": 80,
-                  "hintsSum": 0,
-                  "hintsCount": 25,
-                  "timeMsSum": 2328072,
-                  "timeMsCount": 25,
-                  "correctSlowAnswers": 18,
-                  "correctManyHintsAnswers": 0,
-                  "wrongFastAnswers": 0,
-                  "avgHintsPerQuestion": 0,
-                  "avgTimePerQuestionSec": 93.12,
-                  "modeCounts": {
-                    "unknown": 0,
-                    "challenge": 0,
-                    "discussion": 0,
-                    "drill": 0,
-                    "graded": 0,
-                    "guided_practice": 0,
-                    "homework": 0,
-                    "learning": 0,
-                    "learning_book": 0,
-                    "live_lesson": 0,
-                    "marathon": 0,
-                    "mistakes": 0,
-                    "normal": 0,
-                    "practice": 25,
-                    "practice_mistakes": 0,
-                    "quiz": 0,
-                    "review": 0,
-                    "speed": 0,
-                    "worksheet": 0
-                  },
-                  "levelCounts": {
-                    "unknown": 0,
-                    "easy": 25,
-                    "medium": 0,
-                    "hard": 0
-                  },
-                  "contentGradeLevel": "g2",
-                  "registeredGradeLevel": "g2",
-                  "gradeRelation": "same",
-                  "gradeDelta": 0,
-                  "evidenceSourceCounts": {
-                    "self_practice": 25
-                  },
-                  "diagnosticConfidence": "sufficient",
-                  "evidenceSources": [
-                    "self_practice"
-                  ],
-                  "primaryEvidenceSource": "self_practice"
-                }
-              },
-              "diagnosticConfidence": "sufficient",
-              "evidenceSources": [
-                "self_practice"
-              ],
-              "primaryEvidenceSource": "self_practice"
-            },
-            "transformations": {
-              "latestActivityAt": "2026-06-24T07:20:36.286Z",
-              "latestActivityMs": 1782285636286,
-              "latestActivitySource": "session.ended_at",
-              "lastAnswerAt": null,
-              "lastAnswerMs": null,
-              "sessionStartedAt": "2026-06-24T07:20:31.785Z",
-              "sessionStartedMs": 1782285631785,
-              "sessionFinishedAt": "2026-06-24T07:20:36.286Z",
-              "sessionFinishedMs": 1782285636286,
-              "answers": 0,
-              "correct": 0,
-              "wrong": 0,
-              "accuracy": 0,
-              "diagnosticAnswers": 0,
-              "diagnosticCorrect": 0,
-              "diagnosticWrong": 0,
-              "diagnosticAccuracy": 0,
-              "competitiveAnswers": 0,
-              "competitiveCorrect": 0,
-              "competitiveAccuracy": 0,
-              "learningAnswers": 0,
-              "stepByStepCount": 0,
-              "durationSeconds": 0,
-              "hintsSum": 0,
-              "hintsCount": 0,
-              "timeMsSum": 0,
-              "timeMsCount": 0,
-              "correctSlowAnswers": 0,
-              "correctManyHintsAnswers": 0,
-              "wrongFastAnswers": 0,
-              "avgHintsPerQuestion": null,
-              "avgTimePerQuestionSec": null,
-              "modeCounts": {
-                "unknown": 0,
-                "challenge": 0,
-                "discussion": 0,
-                "drill": 0,
-                "graded": 0,
-                "guided_practice": 0,
-                "homework": 0,
-                "learning": 0,
-                "learning_book": 0,
-                "live_lesson": 0,
-                "marathon": 0,
-                "mistakes": 0,
-                "normal": 0,
-                "practice": 8,
-                "practice_mistakes": 0,
-                "quiz": 0,
-                "review": 0,
-                "speed": 0,
-                "worksheet": 0
-              },
-              "levelCounts": {
-                "unknown": 0,
-                "easy": 0,
-                "medium": 0,
-                "hard": 0
-              },
-              "contentGradeLevel": null,
-              "registeredGradeLevel": null,
-              "gradeRelation": "unknown",
-              "gradeDelta": null,
-              "evidenceSourceCounts": {},
-              "byContentGrade": {
-                "g2": {
-                  "latestActivityAt": "2026-06-24T07:20:36.286Z",
-                  "latestActivityMs": 1782285636286,
-                  "latestActivitySource": "session.ended_at",
-                  "lastAnswerAt": null,
-                  "lastAnswerMs": null,
-                  "sessionStartedAt": "2026-06-24T07:20:31.785Z",
-                  "sessionStartedMs": 1782285631785,
-                  "sessionFinishedAt": "2026-06-24T07:20:36.286Z",
-                  "sessionFinishedMs": 1782285636286,
-                  "answers": 0,
-                  "correct": 0,
-                  "wrong": 0,
-                  "accuracy": 0,
-                  "diagnosticAnswers": 0,
-                  "diagnosticCorrect": 0,
-                  "diagnosticWrong": 0,
-                  "diagnosticAccuracy": 0,
-                  "competitiveAnswers": 0,
-                  "competitiveCorrect": 0,
-                  "competitiveAccuracy": 0,
-                  "learningAnswers": 0,
-                  "stepByStepCount": 0,
-                  "durationSeconds": 0,
-                  "hintsSum": 0,
-                  "hintsCount": 0,
-                  "timeMsSum": 0,
-                  "timeMsCount": 0,
-                  "correctSlowAnswers": 0,
-                  "correctManyHintsAnswers": 0,
-                  "wrongFastAnswers": 0,
-                  "avgHintsPerQuestion": null,
-                  "avgTimePerQuestionSec": null,
-                  "modeCounts": {
-                    "unknown": 0,
-                    "challenge": 0,
-                    "discussion": 0,
-                    "drill": 0,
-                    "graded": 0,
-                    "guided_practice": 0,
-                    "homework": 0,
-                    "learning": 0,
-                    "learning_book": 0,
-                    "live_lesson": 0,
-                    "marathon": 0,
-                    "mistakes": 0,
-                    "normal": 0,
-                    "practice": 0,
-                    "practice_mistakes": 0,
-                    "quiz": 0,
-                    "review": 0,
-                    "speed": 0,
-                    "worksheet": 0
-                  },
-                  "levelCounts": {
-                    "unknown": 0,
-                    "easy": 0,
-                    "medium": 0,
-                    "hard": 0
-                  },
-                  "contentGradeLevel": "g2",
-                  "registeredGradeLevel": "g2",
-                  "gradeRelation": "same",
-                  "gradeDelta": 0,
-                  "evidenceSourceCounts": {},
-                  "diagnosticConfidence": "insufficient",
-                  "evidenceSources": [],
-                  "primaryEvidenceSource": null
-                }
-              },
-              "diagnosticConfidence": "insufficient",
-              "evidenceSources": [],
-              "primaryEvidenceSource": null
-            },
-            "solids": {
-              "latestActivityAt": "2026-06-24T07:20:28.934Z",
-              "latestActivityMs": 1782285628934,
-              "latestActivitySource": "session.ended_at",
-              "lastAnswerAt": null,
-              "lastAnswerMs": null,
-              "sessionStartedAt": "2026-06-24T07:20:24.677Z",
-              "sessionStartedMs": 1782285624677,
-              "sessionFinishedAt": "2026-06-24T07:20:28.934Z",
-              "sessionFinishedMs": 1782285628934,
-              "answers": 0,
-              "correct": 0,
-              "wrong": 0,
-              "accuracy": 0,
-              "diagnosticAnswers": 0,
-              "diagnosticCorrect": 0,
-              "diagnosticWrong": 0,
-              "diagnosticAccuracy": 0,
-              "competitiveAnswers": 0,
-              "competitiveCorrect": 0,
-              "competitiveAccuracy": 0,
-              "learningAnswers": 0,
-              "stepByStepCount": 0,
-              "durationSeconds": 0,
-              "hintsSum": 0,
-              "hintsCount": 0,
-              "timeMsSum": 0,
-              "timeMsCount": 0,
-              "correctSlowAnswers": 0,
-              "correctManyHintsAnswers": 0,
-              "wrongFastAnswers": 0,
-              "avgHintsPerQuestion": null,
-              "avgTimePerQuestionSec": null,
-              "modeCounts": {
-                "unknown": 0,
-                "challenge": 0,
-                "discussion": 0,
-                "drill": 0,
-                "graded": 0,
-                "guided_practice": 0,
-                "homework": 0,
-                "learning": 0,
-                "learning_book": 0,
-                "live_lesson": 0,
-                "marathon": 0,
-                "mistakes": 0,
-                "normal": 0,
-                "practice": 7,
-                "practice_mistakes": 0,
-                "quiz": 0,
-                "review": 0,
-                "speed": 0,
-                "worksheet": 0
-              },
-              "levelCounts": {
-                "unknown": 0,
-                "easy": 0,
-                "medium": 0,
-                "hard": 0
-              },
-              "contentGradeLevel": null,
-              "registeredGradeLevel": null,
-              "gradeRelation": "unknown",
-              "gradeDelta": null,
-              "evidenceSourceCounts": {},
-              "byContentGrade": {
-                "g2": {
-                  "latestActivityAt": "2026-06-24T07:20:28.934Z",
-                  "latestActivityMs": 1782285628934,
-                  "latestActivitySource": "session.ended_at",
-                  "lastAnswerAt": null,
-                  "lastAnswerMs": null,
-                  "sessionStartedAt": "2026-06-24T07:20:24.677Z",
-                  "sessionStartedMs": 1782285624677,
-                  "sessionFinishedAt": "2026-06-24T07:20:28.934Z",
-                  "sessionFinishedMs": 1782285628934,
-                  "answers": 0,
-                  "correct": 0,
-                  "wrong": 0,
-                  "accuracy": 0,
-                  "diagnosticAnswers": 0,
-                  "diagnosticCorrect": 0,
-                  "diagnosticWrong": 0,
-                  "diagnosticAccuracy": 0,
-                  "competitiveAnswers": 0,
-                  "competitiveCorrect": 0,
-                  "competitiveAccuracy": 0,
-                  "learningAnswers": 0,
-                  "stepByStepCount": 0,
-                  "durationSeconds": 0,
-                  "hintsSum": 0,
-                  "hintsCount": 0,
-                  "timeMsSum": 0,
-                  "timeMsCount": 0,
-                  "correctSlowAnswers": 0,
-                  "correctManyHintsAnswers": 0,
-                  "wrongFastAnswers": 0,
-                  "avgHintsPerQuestion": null,
-                  "avgTimePerQuestionSec": null,
-                  "modeCounts": {
-                    "unknown": 0,
-                    "challenge": 0,
-                    "discussion": 0,
-                    "drill": 0,
-                    "graded": 0,
-                    "guided_practice": 0,
-                    "homework": 0,
-                    "learning": 0,
-                    "learning_book": 0,
-                    "live_lesson": 0,
-                    "marathon": 0,
-                    "mistakes": 0,
-                    "normal": 0,
-                    "practice": 0,
-                    "practice_mistakes": 0,
-                    "quiz": 0,
-                    "review": 0,
-                    "speed": 0,
-                    "worksheet": 0
-                  },
-                  "levelCounts": {
-                    "unknown": 0,
-                    "easy": 0,
-                    "medium": 0,
-                    "hard": 0
-                  },
-                  "contentGradeLevel": "g2",
-                  "registeredGradeLevel": "g2",
-                  "gradeRelation": "same",
-                  "gradeDelta": 0,
-                  "evidenceSourceCounts": {},
-                  "diagnosticConfidence": "insufficient",
-                  "evidenceSources": [],
-                  "primaryEvidenceSource": null
-                }
-              },
-              "diagnosticConfidence": "insufficient",
-              "evidenceSources": [],
-              "primaryEvidenceSource": null
-            },
-            "area": {
-              "latestActivityAt": "2026-06-24T07:20:22.333Z",
-              "latestActivityMs": 1782285622333,
-              "latestActivitySource": "session.ended_at",
-              "lastAnswerAt": null,
-              "lastAnswerMs": null,
-              "sessionStartedAt": "2026-06-24T07:20:18.074Z",
-              "sessionStartedMs": 1782285618074,
-              "sessionFinishedAt": "2026-06-24T07:20:22.333Z",
-              "sessionFinishedMs": 1782285622333,
-              "answers": 0,
-              "correct": 0,
-              "wrong": 0,
-              "accuracy": 0,
-              "diagnosticAnswers": 0,
-              "diagnosticCorrect": 0,
-              "diagnosticWrong": 0,
-              "diagnosticAccuracy": 0,
-              "competitiveAnswers": 0,
-              "competitiveCorrect": 0,
-              "competitiveAccuracy": 0,
-              "learningAnswers": 0,
-              "stepByStepCount": 0,
-              "durationSeconds": 0,
-              "hintsSum": 0,
-              "hintsCount": 0,
-              "timeMsSum": 0,
-              "timeMsCount": 0,
-              "correctSlowAnswers": 0,
-              "correctManyHintsAnswers": 0,
-              "wrongFastAnswers": 0,
-              "avgHintsPerQuestion": null,
-              "avgTimePerQuestionSec": null,
-              "modeCounts": {
-                "unknown": 0,
-                "challenge": 0,
-                "discussion": 0,
-                "drill": 0,
-                "graded": 0,
-                "guided_practice": 0,
-                "homework": 0,
-                "learning": 0,
-                "learning_book": 0,
-                "live_lesson": 0,
-                "marathon": 0,
-                "mistakes": 0,
-                "normal": 0,
-                "practice": 9,
-                "practice_mistakes": 0,
-                "quiz": 0,
-                "review": 0,
-                "speed": 0,
-                "worksheet": 0
-              },
-              "levelCounts": {
-                "unknown": 0,
-                "easy": 0,
-                "medium": 0,
-                "hard": 0
-              },
-              "contentGradeLevel": null,
-              "registeredGradeLevel": null,
-              "gradeRelation": "unknown",
-              "gradeDelta": null,
-              "evidenceSourceCounts": {},
-              "byContentGrade": {
-                "g2": {
-                  "latestActivityAt": "2026-06-24T07:20:22.333Z",
-                  "latestActivityMs": 1782285622333,
-                  "latestActivitySource": "session.ended_at",
-                  "lastAnswerAt": null,
-                  "lastAnswerMs": null,
-                  "sessionStartedAt": "2026-06-24T07:20:18.074Z",
-                  "sessionStartedMs": 1782285618074,
-                  "sessionFinishedAt": "2026-06-24T07:20:22.333Z",
-                  "sessionFinishedMs": 1782285622333,
-                  "answers": 0,
-                  "correct": 0,
-                  "wrong": 0,
-                  "accuracy": 0,
-                  "diagnosticAnswers": 0,
-                  "diagnosticCorrect": 0,
-                  "diagnosticWrong": 0,
-                  "diagnosticAccuracy": 0,
-                  "competitiveAnswers": 0,
-                  "competitiveCorrect": 0,
-                  "competitiveAccuracy": 0,
-                  "learningAnswers": 0,
-                  "stepByStepCount": 0,
-                  "durationSeconds": 0,
-                  "hintsSum": 0,
-                  "hintsCount": 0,
-                  "timeMsSum": 0,
-                  "timeMsCount": 0,
-                  "correctSlowAnswers": 0,
-                  "correctManyHintsAnswers": 0,
-                  "wrongFastAnswers": 0,
-                  "avgHintsPerQuestion": null,
-                  "avgTimePerQuestionSec": null,
-                  "modeCounts": {
-                    "unknown": 0,
-                    "challenge": 0,
-                    "discussion": 0,
-                    "drill": 0,
-                    "graded": 0,
-                    "guided_practice": 0,
-                    "homework": 0,
-                    "learning": 0,
-                    "learning_book": 0,
-                    "live_lesson": 0,
-                    "marathon": 0,
-                    "mistakes": 0,
-                    "normal": 0,
-                    "practice": 0,
-                    "practice_mistakes": 0,
-                    "quiz": 0,
-                    "review": 0,
-                    "speed": 0,
-                    "worksheet": 0
-                  },
-                  "levelCounts": {
-                    "unknown": 0,
-                    "easy": 0,
-                    "medium": 0,
-                    "hard": 0
-                  },
-                  "contentGradeLevel": "g2",
-                  "registeredGradeLevel": "g2",
-                  "gradeRelation": "same",
-                  "gradeDelta": 0,
-                  "evidenceSourceCounts": {},
-                  "diagnosticConfidence": "insufficient",
-                  "evidenceSources": [],
-                  "primaryEvidenceSource": null
-                }
-              },
-              "diagnosticConfidence": "insufficient",
-              "evidenceSources": [],
-              "primaryEvidenceSource": null
-            }
-          }
+          "questions": 25,
+          "accuracy": 72
         },
         "english": {
-          "latestActivityAt": "2026-06-24T07:01:20.453Z",
-          "latestActivityMs": 1782284480453,
-          "latestActivitySource": "session.started_at",
-          "lastAnswerAt": "2026-05-28T14:46:38.125Z",
-          "lastAnswerMs": 1779979598125,
-          "sessionStartedAt": "2026-06-24T07:01:20.453Z",
-          "sessionStartedMs": 1782284480453,
-          "sessionFinishedAt": "2026-06-24T07:01:18.048Z",
-          "sessionFinishedMs": 1782284478048,
-          "sessions": 9,
-          "answers": 18,
-          "correct": 12,
-          "wrong": 6,
-          "accuracy": 66.67,
-          "diagnosticAnswers": 18,
-          "diagnosticCorrect": 12,
-          "diagnosticWrong": 6,
-          "diagnosticAccuracy": 66.67,
-          "competitiveAnswers": 0,
-          "competitiveCorrect": 0,
-          "competitiveAccuracy": 0,
-          "learningAnswers": 0,
-          "stepByStepCount": 0,
-          "durationSeconds": 1922,
-          "hintsSum": 0,
-          "hintsCount": 18,
-          "timeMsSum": 1842108,
-          "timeMsCount": 18,
-          "correctSlowAnswers": 12,
-          "correctManyHintsAnswers": 0,
-          "wrongFastAnswers": 0,
-          "avgHintsPerQuestion": 0,
-          "avgTimePerQuestionSec": 102.34,
-          "modeCounts": {
-            "unknown": 0,
-            "challenge": 0,
-            "discussion": 0,
-            "drill": 0,
-            "graded": 0,
-            "guided_practice": 0,
-            "homework": 0,
-            "learning": 0,
-            "learning_book": 0,
-            "live_lesson": 0,
-            "marathon": 0,
-            "mistakes": 0,
-            "normal": 0,
-            "practice": 27,
-            "practice_mistakes": 0,
-            "quiz": 0,
-            "review": 0,
-            "speed": 0,
-            "worksheet": 0
-          },
-          "levelCounts": {
-            "unknown": 0,
-            "easy": 18,
-            "medium": 0,
-            "hard": 0
-          },
-          "topics": {
-            "phonics": {
-              "latestActivityAt": "2026-06-24T07:01:20.453Z",
-              "latestActivityMs": 1782284480453,
-              "latestActivitySource": "session.started_at",
-              "lastAnswerAt": null,
-              "lastAnswerMs": null,
-              "sessionStartedAt": "2026-06-24T07:01:20.453Z",
-              "sessionStartedMs": 1782284480453,
-              "sessionFinishedAt": "2026-06-24T07:01:10.778Z",
-              "sessionFinishedMs": 1782284470778,
-              "answers": 0,
-              "correct": 0,
-              "wrong": 0,
-              "accuracy": 0,
-              "diagnosticAnswers": 0,
-              "diagnosticCorrect": 0,
-              "diagnosticWrong": 0,
-              "diagnosticAccuracy": 0,
-              "competitiveAnswers": 0,
-              "competitiveCorrect": 0,
-              "competitiveAccuracy": 0,
-              "learningAnswers": 0,
-              "stepByStepCount": 0,
-              "durationSeconds": 0,
-              "hintsSum": 0,
-              "hintsCount": 0,
-              "timeMsSum": 0,
-              "timeMsCount": 0,
-              "correctSlowAnswers": 0,
-              "correctManyHintsAnswers": 0,
-              "wrongFastAnswers": 0,
-              "avgHintsPerQuestion": null,
-              "avgTimePerQuestionSec": null,
-              "modeCounts": {
-                "unknown": 0,
-                "challenge": 0,
-                "discussion": 0,
-                "drill": 0,
-                "graded": 0,
-                "guided_practice": 0,
-                "homework": 0,
-                "learning": 0,
-                "learning_book": 0,
-                "live_lesson": 0,
-                "marathon": 0,
-                "mistakes": 0,
-                "normal": 0,
-                "practice": 4,
-                "practice_mistakes": 0,
-                "quiz": 0,
-                "review": 0,
-                "speed": 0,
-                "worksheet": 0
-              },
-              "levelCounts": {
-                "unknown": 0,
-                "easy": 0,
-                "medium": 0,
-                "hard": 0
-              },
-              "contentGradeLevel": null,
-              "registeredGradeLevel": null,
-              "gradeRelation": "unknown",
-              "gradeDelta": null,
-              "evidenceSourceCounts": {},
-              "byContentGrade": {
-                "g2": {
-                  "latestActivityAt": "2026-06-24T07:01:20.453Z",
-                  "latestActivityMs": 1782284480453,
-                  "latestActivitySource": "session.started_at",
-                  "lastAnswerAt": null,
-                  "lastAnswerMs": null,
-                  "sessionStartedAt": "2026-06-24T07:01:20.453Z",
-                  "sessionStartedMs": 1782284480453,
-                  "sessionFinishedAt": "2026-06-24T07:01:10.778Z",
-                  "sessionFinishedMs": 1782284470778,
-                  "answers": 0,
-                  "correct": 0,
-                  "wrong": 0,
-                  "accuracy": 0,
-                  "diagnosticAnswers": 0,
-                  "diagnosticCorrect": 0,
-                  "diagnosticWrong": 0,
-                  "diagnosticAccuracy": 0,
-                  "competitiveAnswers": 0,
-                  "competitiveCorrect": 0,
-                  "competitiveAccuracy": 0,
-                  "learningAnswers": 0,
-                  "stepByStepCount": 0,
-                  "durationSeconds": 0,
-                  "hintsSum": 0,
-                  "hintsCount": 0,
-                  "timeMsSum": 0,
-                  "timeMsCount": 0,
-                  "correctSlowAnswers": 0,
-                  "correctManyHintsAnswers": 0,
-                  "wrongFastAnswers": 0,
-                  "avgHintsPerQuestion": null,
-                  "avgTimePerQuestionSec": null,
-                  "modeCounts": {
-                    "unknown": 0,
-                    "challenge": 0,
-                    "discussion": 0,
-                    "drill": 0,
-                    "graded": 0,
-                    "guided_practice": 0,
-                    "homework": 0,
-                    "learning": 0,
-                    "learning_book": 0,
-                    "live_lesson": 0,
-                    "marathon": 0,
-                    "mistakes": 0,
-                    "normal": 0,
-                    "practice": 0,
-                    "practice_mistakes": 0,
-                    "quiz": 0,
-                    "review": 0,
-                    "speed": 0,
-                    "worksheet": 0
-                  },
-                  "levelCounts": {
-                    "unknown": 0,
-                    "easy": 0,
-                    "medium": 0,
-                    "hard": 0
-                  },
-                  "contentGradeLevel": "g2",
-                  "registeredGradeLevel": "g2",
-                  "gradeRelation": "same",
-                  "gradeDelta": 0,
-                  "evidenceSourceCounts": {},
-                  "diagnosticConfidence": "insufficient",
-                  "evidenceSources": [],
-                  "primaryEvidenceSource": null
-                }
-              },
-              "diagnosticConfidence": "insufficient",
-              "evidenceSources": [],
-              "primaryEvidenceSource": null
-            },
-            "vocabulary": {
-              "latestActivityAt": "2026-06-24T07:01:18.048Z",
-              "latestActivityMs": 1782284478048,
-              "latestActivitySource": "session.ended_at",
-              "lastAnswerAt": "2026-05-28T14:46:38.125Z",
-              "lastAnswerMs": 1779979598125,
-              "sessionStartedAt": "2026-06-24T07:01:13.778Z",
-              "sessionStartedMs": 1782284473778,
-              "sessionFinishedAt": "2026-06-24T07:01:18.048Z",
-              "sessionFinishedMs": 1782284478048,
-              "answers": 18,
-              "correct": 12,
-              "wrong": 6,
-              "accuracy": 66.67,
-              "diagnosticAnswers": 18,
-              "diagnosticCorrect": 12,
-              "diagnosticWrong": 6,
-              "diagnosticAccuracy": 66.67,
-              "competitiveAnswers": 0,
-              "competitiveCorrect": 0,
-              "competitiveAccuracy": 0,
-              "learningAnswers": 0,
-              "stepByStepCount": 0,
-              "durationSeconds": 1922,
-              "hintsSum": 0,
-              "hintsCount": 18,
-              "timeMsSum": 1842108,
-              "timeMsCount": 18,
-              "correctSlowAnswers": 12,
-              "correctManyHintsAnswers": 0,
-              "wrongFastAnswers": 0,
-              "avgHintsPerQuestion": 0,
-              "avgTimePerQuestionSec": 102.34,
-              "modeCounts": {
-                "unknown": 0,
-                "challenge": 0,
-                "discussion": 0,
-                "drill": 0,
-                "graded": 0,
-                "guided_practice": 0,
-                "homework": 0,
-                "learning": 0,
-                "learning_book": 0,
-                "live_lesson": 0,
-                "marathon": 0,
-                "mistakes": 0,
-                "normal": 0,
-                "practice": 23,
-                "practice_mistakes": 0,
-                "quiz": 0,
-                "review": 0,
-                "speed": 0,
-                "worksheet": 0
-              },
-              "levelCounts": {
-                "unknown": 0,
-                "easy": 18,
-                "medium": 0,
-                "hard": 0
-              },
-              "contentGradeLevel": null,
-              "registeredGradeLevel": null,
-              "gradeRelation": "unknown",
-              "gradeDelta": null,
-              "evidenceSourceCounts": {
-                "self_practice": 18
-              },
-              "byContentGrade": {
-                "g2": {
-                  "latestActivityAt": "2026-06-24T07:01:18.048Z",
-                  "latestActivityMs": 1782284478048,
-                  "latestActivitySource": "session.ended_at",
-                  "lastAnswerAt": "2026-05-28T14:46:38.125Z",
-                  "lastAnswerMs": 1779979598125,
-                  "sessionStartedAt": "2026-06-24T07:01:13.778Z",
-                  "sessionStartedMs": 1782284473778,
-                  "sessionFinishedAt": "2026-06-24T07:01:18.048Z",
-                  "sessionFinishedMs": 1782284478048,
-                  "answers": 18,
-                  "correct": 12,
-                  "wrong": 6,
-                  "accuracy": 66.67,
-                  "diagnosticAnswers": 18,
-                  "diagnosticCorrect": 12,
-                  "diagnosticWrong": 6,
-                  "diagnosticAccuracy": 66.67,
-                  "competitiveAnswers": 0,
-                  "competitiveCorrect": 0,
-                  "competitiveAccuracy": 0,
-                  "learningAnswers": 0,
-                  "stepByStepCount": 0,
-                  "durationSeconds": 12,
-                  "hintsSum": 0,
-                  "hintsCount": 18,
-                  "timeMsSum": 1842108,
-                  "timeMsCount": 18,
-                  "correctSlowAnswers": 12,
-                  "correctManyHintsAnswers": 0,
-                  "wrongFastAnswers": 0,
-                  "avgHintsPerQuestion": 0,
-                  "avgTimePerQuestionSec": 102.34,
-                  "modeCounts": {
-                    "unknown": 0,
-                    "challenge": 0,
-                    "discussion": 0,
-                    "drill": 0,
-                    "graded": 0,
-                    "guided_practice": 0,
-                    "homework": 0,
-                    "learning": 0,
-                    "learning_book": 0,
-                    "live_lesson": 0,
-                    "marathon": 0,
-                    "mistakes": 0,
-                    "normal": 0,
-                    "practice": 18,
-                    "practice_mistakes": 0,
-                    "quiz": 0,
-                    "review": 0,
-                    "speed": 0,
-                    "worksheet": 0
-                  },
-                  "levelCounts": {
-                    "unknown": 0,
-                    "easy": 18,
-                    "medium": 0,
-                    "hard": 0
-                  },
-                  "contentGradeLevel": "g2",
-                  "registeredGradeLevel": "g2",
-                  "gradeRelation": "same",
-                  "gradeDelta": 0,
-                  "evidenceSourceCounts": {
-                    "self_practice": 18
-                  },
-                  "diagnosticConfidence": "sufficient",
-                  "evidenceSources": [
-                    "self_practice"
-                  ],
-                  "primaryEvidenceSource": "self_practice"
-                }
-              },
-              "diagnosticConfidence": "sufficient",
-              "evidenceSources": [
-                "self_practice"
-              ],
-              "primaryEvidenceSource": "self_practice"
-            }
-          }
+          "questions": 18,
+          "accuracy": 66.67
         },
         "hebrew": {
-          "latestActivityAt": "2026-06-24T06:44:29.884Z",
-          "latestActivityMs": 1782283469884,
-          "latestActivitySource": "session.ended_at",
-          "lastAnswerAt": "2026-06-11T14:57:04.500Z",
-          "lastAnswerMs": 1781189824500,
-          "sessionStartedAt": "2026-06-24T06:44:22.259Z",
-          "sessionStartedMs": 1782283462259,
-          "sessionFinishedAt": "2026-06-24T06:44:29.884Z",
-          "sessionFinishedMs": 1782283469884,
-          "sessions": 8,
-          "answers": 25,
-          "correct": 16,
-          "wrong": 9,
-          "accuracy": 64,
-          "diagnosticAnswers": 25,
-          "diagnosticCorrect": 16,
-          "diagnosticWrong": 9,
-          "diagnosticAccuracy": 64,
-          "competitiveAnswers": 0,
-          "competitiveCorrect": 0,
-          "competitiveAccuracy": 0,
-          "learningAnswers": 0,
-          "stepByStepCount": 0,
-          "durationSeconds": 2460,
-          "hintsSum": 0,
-          "hintsCount": 25,
-          "timeMsSum": 2354705,
-          "timeMsCount": 25,
-          "correctSlowAnswers": 16,
-          "correctManyHintsAnswers": 0,
-          "wrongFastAnswers": 0,
-          "avgHintsPerQuestion": 0,
-          "avgTimePerQuestionSec": 94.19,
-          "modeCounts": {
-            "unknown": 0,
-            "challenge": 0,
-            "discussion": 0,
-            "drill": 0,
-            "graded": 0,
-            "guided_practice": 0,
-            "homework": 0,
-            "learning": 0,
-            "learning_book": 0,
-            "live_lesson": 0,
-            "marathon": 0,
-            "mistakes": 0,
-            "normal": 0,
-            "practice": 33,
-            "practice_mistakes": 0,
-            "quiz": 0,
-            "review": 0,
-            "speed": 0,
-            "worksheet": 0
-          },
-          "levelCounts": {
-            "unknown": 0,
-            "easy": 25,
-            "medium": 0,
-            "hard": 0
-          },
-          "topics": {
-            "reading": {
-              "latestActivityAt": "2026-06-24T06:44:29.884Z",
-              "latestActivityMs": 1782283469884,
-              "latestActivitySource": "session.ended_at",
-              "lastAnswerAt": "2026-06-11T14:57:04.500Z",
-              "lastAnswerMs": 1781189824500,
-              "sessionStartedAt": "2026-06-24T06:44:22.259Z",
-              "sessionStartedMs": 1782283462259,
-              "sessionFinishedAt": "2026-06-24T06:44:29.884Z",
-              "sessionFinishedMs": 1782283469884,
-              "answers": 25,
-              "correct": 16,
-              "wrong": 9,
-              "accuracy": 64,
-              "diagnosticAnswers": 25,
-              "diagnosticCorrect": 16,
-              "diagnosticWrong": 9,
-              "diagnosticAccuracy": 64,
-              "competitiveAnswers": 0,
-              "competitiveCorrect": 0,
-              "competitiveAccuracy": 0,
-              "learningAnswers": 0,
-              "stepByStepCount": 0,
-              "durationSeconds": 2460,
-              "hintsSum": 0,
-              "hintsCount": 25,
-              "timeMsSum": 2354705,
-              "timeMsCount": 25,
-              "correctSlowAnswers": 16,
-              "correctManyHintsAnswers": 0,
-              "wrongFastAnswers": 0,
-              "avgHintsPerQuestion": 0,
-              "avgTimePerQuestionSec": 94.19,
-              "modeCounts": {
-                "unknown": 0,
-                "challenge": 0,
-                "discussion": 0,
-                "drill": 0,
-                "graded": 0,
-                "guided_practice": 0,
-                "homework": 0,
-                "learning": 0,
-                "learning_book": 0,
-                "live_lesson": 0,
-                "marathon": 0,
-                "mistakes": 0,
-                "normal": 0,
-                "practice": 31,
-                "practice_mistakes": 0,
-                "quiz": 0,
-                "review": 0,
-                "speed": 0,
-                "worksheet": 0
-              },
-              "levelCounts": {
-                "unknown": 0,
-                "easy": 25,
-                "medium": 0,
-                "hard": 0
-              },
-              "contentGradeLevel": null,
-              "registeredGradeLevel": null,
-              "gradeRelation": "unknown",
-              "gradeDelta": null,
-              "evidenceSourceCounts": {
-                "self_practice": 25
-              },
-              "byContentGrade": {
-                "g2": {
-                  "latestActivityAt": "2026-06-24T06:44:29.884Z",
-                  "latestActivityMs": 1782283469884,
-                  "latestActivitySource": "session.ended_at",
-                  "lastAnswerAt": "2026-06-11T14:57:04.500Z",
-                  "lastAnswerMs": 1781189824500,
-                  "sessionStartedAt": "2026-06-24T06:44:22.259Z",
-                  "sessionStartedMs": 1782283462259,
-                  "sessionFinishedAt": "2026-06-24T06:44:29.884Z",
-                  "sessionFinishedMs": 1782283469884,
-                  "answers": 25,
-                  "correct": 16,
-                  "wrong": 9,
-                  "accuracy": 64,
-                  "diagnosticAnswers": 25,
-                  "diagnosticCorrect": 16,
-                  "diagnosticWrong": 9,
-                  "diagnosticAccuracy": 64,
-                  "competitiveAnswers": 0,
-                  "competitiveCorrect": 0,
-                  "competitiveAccuracy": 0,
-                  "learningAnswers": 0,
-                  "stepByStepCount": 0,
-                  "durationSeconds": 4,
-                  "hintsSum": 0,
-                  "hintsCount": 25,
-                  "timeMsSum": 2354705,
-                  "timeMsCount": 25,
-                  "correctSlowAnswers": 16,
-                  "correctManyHintsAnswers": 0,
-                  "wrongFastAnswers": 0,
-                  "avgHintsPerQuestion": 0,
-                  "avgTimePerQuestionSec": 94.19,
-                  "modeCounts": {
-                    "unknown": 0,
-                    "challenge": 0,
-                    "discussion": 0,
-                    "drill": 0,
-                    "graded": 0,
-                    "guided_practice": 0,
-                    "homework": 0,
-                    "learning": 0,
-                    "learning_book": 0,
-                    "live_lesson": 0,
-                    "marathon": 0,
-                    "mistakes": 0,
-                    "normal": 0,
-                    "practice": 25,
-                    "practice_mistakes": 0,
-                    "quiz": 0,
-                    "review": 0,
-                    "speed": 0,
-                    "worksheet": 0
-                  },
-                  "levelCounts": {
-                    "unknown": 0,
-                    "easy": 25,
-                    "medium": 0,
-                    "hard": 0
-                  },
-                  "contentGradeLevel": "g2",
-                  "registeredGradeLevel": "g2",
-                  "gradeRelation": "same",
-                  "gradeDelta": 0,
-                  "evidenceSourceCounts": {
-                    "self_practice": 25
-                  },
-                  "diagnosticConfidence": "sufficient",
-                  "evidenceSources": [
-                    "self_practice"
-                  ],
-                  "primaryEvidenceSource": "self_practice"
-                }
-              },
-              "diagnosticConfidence": "sufficient",
-              "evidenceSources": [
-                "self_practice"
-              ],
-              "primaryEvidenceSource": "self_practice"
-            },
-            "grammar": {
-              "latestActivityAt": "2026-06-24T06:44:16.303Z",
-              "latestActivityMs": 1782283456303,
-              "latestActivitySource": "session.ended_at",
-              "lastAnswerAt": null,
-              "lastAnswerMs": null,
-              "sessionStartedAt": "2026-06-24T06:44:12.039Z",
-              "sessionStartedMs": 1782283452039,
-              "sessionFinishedAt": "2026-06-24T06:44:16.303Z",
-              "sessionFinishedMs": 1782283456303,
-              "answers": 0,
-              "correct": 0,
-              "wrong": 0,
-              "accuracy": 0,
-              "diagnosticAnswers": 0,
-              "diagnosticCorrect": 0,
-              "diagnosticWrong": 0,
-              "diagnosticAccuracy": 0,
-              "competitiveAnswers": 0,
-              "competitiveCorrect": 0,
-              "competitiveAccuracy": 0,
-              "learningAnswers": 0,
-              "stepByStepCount": 0,
-              "durationSeconds": 0,
-              "hintsSum": 0,
-              "hintsCount": 0,
-              "timeMsSum": 0,
-              "timeMsCount": 0,
-              "correctSlowAnswers": 0,
-              "correctManyHintsAnswers": 0,
-              "wrongFastAnswers": 0,
-              "avgHintsPerQuestion": null,
-              "avgTimePerQuestionSec": null,
-              "modeCounts": {
-                "unknown": 0,
-                "challenge": 0,
-                "discussion": 0,
-                "drill": 0,
-                "graded": 0,
-                "guided_practice": 0,
-                "homework": 0,
-                "learning": 0,
-                "learning_book": 0,
-                "live_lesson": 0,
-                "marathon": 0,
-                "mistakes": 0,
-                "normal": 0,
-                "practice": 2,
-                "practice_mistakes": 0,
-                "quiz": 0,
-                "review": 0,
-                "speed": 0,
-                "worksheet": 0
-              },
-              "levelCounts": {
-                "unknown": 0,
-                "easy": 0,
-                "medium": 0,
-                "hard": 0
-              },
-              "contentGradeLevel": null,
-              "registeredGradeLevel": null,
-              "gradeRelation": "unknown",
-              "gradeDelta": null,
-              "evidenceSourceCounts": {},
-              "byContentGrade": {
-                "g2": {
-                  "latestActivityAt": "2026-06-24T06:44:16.303Z",
-                  "latestActivityMs": 1782283456303,
-                  "latestActivitySource": "session.ended_at",
-                  "lastAnswerAt": null,
-                  "lastAnswerMs": null,
-                  "sessionStartedAt": "2026-06-24T06:44:12.039Z",
-                  "sessionStartedMs": 1782283452039,
-                  "sessionFinishedAt": "2026-06-24T06:44:16.303Z",
-                  "sessionFinishedMs": 1782283456303,
-                  "answers": 0,
-                  "correct": 0,
-                  "wrong": 0,
-                  "accuracy": 0,
-                  "diagnosticAnswers": 0,
-                  "diagnosticCorrect": 0,
-                  "diagnosticWrong": 0,
-                  "diagnosticAccuracy": 0,
-                  "competitiveAnswers": 0,
-                  "competitiveCorrect": 0,
-                  "competitiveAccuracy": 0,
-                  "learningAnswers": 0,
-                  "stepByStepCount": 0,
-                  "durationSeconds": 0,
-                  "hintsSum": 0,
-                  "hintsCount": 0,
-                  "timeMsSum": 0,
-                  "timeMsCount": 0,
-                  "correctSlowAnswers": 0,
-                  "correctManyHintsAnswers": 0,
-                  "wrongFastAnswers": 0,
-                  "avgHintsPerQuestion": null,
-                  "avgTimePerQuestionSec": null,
-                  "modeCounts": {
-                    "unknown": 0,
-                    "challenge": 0,
-                    "discussion": 0,
-                    "drill": 0,
-                    "graded": 0,
-                    "guided_practice": 0,
-                    "homework": 0,
-                    "learning": 0,
-                    "learning_book": 0,
-                    "live_lesson": 0,
-                    "marathon": 0,
-                    "mistakes": 0,
-                    "normal": 0,
-                    "practice": 0,
-                    "practice_mistakes": 0,
-                    "quiz": 0,
-                    "review": 0,
-                    "speed": 0,
-                    "worksheet": 0
-                  },
-                  "levelCounts": {
-                    "unknown": 0,
-                    "easy": 0,
-                    "medium": 0,
-                    "hard": 0
-                  },
-                  "contentGradeLevel": "g2",
-                  "registeredGradeLevel": "g2",
-                  "gradeRelation": "same",
-                  "gradeDelta": 0,
-                  "evidenceSourceCounts": {},
-                  "diagnosticConfidence": "insufficient",
-                  "evidenceSources": [],
-                  "primaryEvidenceSource": null
-                }
-              },
-              "diagnosticConfidence": "insufficient",
-              "evidenceSources": [],
-              "primaryEvidenceSource": null
-            }
-          }
+          "questions": 25,
+          "accuracy": 64
         },
         "science": {
-          "latestActivityAt": "2026-06-22T22:36:35.229Z",
-          "latestActivityMs": 1782167795229,
-          "latestActivitySource": "session.updated_at",
-          "lastAnswerAt": "2026-06-14T15:04:29.059Z",
-          "lastAnswerMs": 1781449469059,
-          "sessionStartedAt": "2026-06-14T14:36:00.000Z",
-          "sessionStartedMs": 1781447760000,
-          "sessionFinishedAt": "2026-06-14T15:06:44.000Z",
-          "sessionFinishedMs": 1781449604000,
-          "sessions": 4,
-          "answers": 44,
-          "correct": 33,
-          "wrong": 11,
-          "accuracy": 75,
-          "diagnosticAnswers": 44,
-          "diagnosticCorrect": 33,
-          "diagnosticWrong": 11,
-          "diagnosticAccuracy": 75,
-          "competitiveAnswers": 0,
-          "competitiveCorrect": 0,
-          "competitiveAccuracy": 0,
-          "learningAnswers": 0,
-          "stepByStepCount": 0,
-          "durationSeconds": 4623,
-          "hintsSum": 0,
-          "hintsCount": 44,
-          "timeMsSum": 4683888,
-          "timeMsCount": 44,
-          "correctSlowAnswers": 33,
-          "correctManyHintsAnswers": 0,
-          "wrongFastAnswers": 0,
-          "avgHintsPerQuestion": 0,
-          "avgTimePerQuestionSec": 106.45,
-          "modeCounts": {
-            "unknown": 0,
-            "challenge": 0,
-            "discussion": 0,
-            "drill": 0,
-            "graded": 0,
-            "guided_practice": 0,
-            "homework": 0,
-            "learning": 0,
-            "learning_book": 0,
-            "live_lesson": 0,
-            "marathon": 0,
-            "mistakes": 0,
-            "normal": 0,
-            "practice": 48,
-            "practice_mistakes": 0,
-            "quiz": 0,
-            "review": 0,
-            "speed": 0,
-            "worksheet": 0
-          },
-          "levelCounts": {
-            "unknown": 0,
-            "easy": 44,
-            "medium": 0,
-            "hard": 0
-          },
-          "topics": {
-            "experiments": {
-              "latestActivityAt": "2026-06-22T22:36:35.229Z",
-              "latestActivityMs": 1782167795229,
-              "latestActivitySource": "session.updated_at",
-              "lastAnswerAt": "2026-06-14T15:04:29.059Z",
-              "lastAnswerMs": 1781449469059,
-              "sessionStartedAt": "2026-06-14T14:36:00.000Z",
-              "sessionStartedMs": 1781447760000,
-              "sessionFinishedAt": "2026-06-14T15:06:44.000Z",
-              "sessionFinishedMs": 1781449604000,
-              "answers": 37,
-              "correct": 27,
-              "wrong": 10,
-              "accuracy": 72.97,
-              "diagnosticAnswers": 37,
-              "diagnosticCorrect": 27,
-              "diagnosticWrong": 10,
-              "diagnosticAccuracy": 72.97,
-              "competitiveAnswers": 0,
-              "competitiveCorrect": 0,
-              "competitiveAccuracy": 0,
-              "learningAnswers": 0,
-              "stepByStepCount": 0,
-              "durationSeconds": 3899,
-              "hintsSum": 0,
-              "hintsCount": 37,
-              "timeMsSum": 3959699,
-              "timeMsCount": 37,
-              "correctSlowAnswers": 27,
-              "correctManyHintsAnswers": 0,
-              "wrongFastAnswers": 0,
-              "avgHintsPerQuestion": 0,
-              "avgTimePerQuestionSec": 107.02,
-              "modeCounts": {
-                "unknown": 0,
-                "challenge": 0,
-                "discussion": 0,
-                "drill": 0,
-                "graded": 0,
-                "guided_practice": 0,
-                "homework": 0,
-                "learning": 0,
-                "learning_book": 0,
-                "live_lesson": 0,
-                "marathon": 0,
-                "mistakes": 0,
-                "normal": 0,
-                "practice": 40,
-                "practice_mistakes": 0,
-                "quiz": 0,
-                "review": 0,
-                "speed": 0,
-                "worksheet": 0
-              },
-              "levelCounts": {
-                "unknown": 0,
-                "easy": 37,
-                "medium": 0,
-                "hard": 0
-              },
-              "contentGradeLevel": null,
-              "registeredGradeLevel": null,
-              "gradeRelation": "unknown",
-              "gradeDelta": null,
-              "evidenceSourceCounts": {
-                "self_practice": 37
-              },
-              "byContentGrade": {
-                "g2": {
-                  "latestActivityAt": "2026-06-22T22:36:35.229Z",
-                  "latestActivityMs": 1782167795229,
-                  "latestActivitySource": "session.updated_at",
-                  "lastAnswerAt": "2026-06-14T15:04:29.059Z",
-                  "lastAnswerMs": 1781449469059,
-                  "sessionStartedAt": "2026-06-14T14:36:00.000Z",
-                  "sessionStartedMs": 1781447760000,
-                  "sessionFinishedAt": "2026-06-14T15:06:44.000Z",
-                  "sessionFinishedMs": 1781449604000,
-                  "answers": 37,
-                  "correct": 27,
-                  "wrong": 10,
-                  "accuracy": 72.97,
-                  "diagnosticAnswers": 37,
-                  "diagnosticCorrect": 27,
-                  "diagnosticWrong": 10,
-                  "diagnosticAccuracy": 72.97,
-                  "competitiveAnswers": 0,
-                  "competitiveCorrect": 0,
-                  "competitiveAccuracy": 0,
-                  "learningAnswers": 0,
-                  "stepByStepCount": 0,
-                  "durationSeconds": 0,
-                  "hintsSum": 0,
-                  "hintsCount": 37,
-                  "timeMsSum": 3959699,
-                  "timeMsCount": 37,
-                  "correctSlowAnswers": 27,
-                  "correctManyHintsAnswers": 0,
-                  "wrongFastAnswers": 0,
-                  "avgHintsPerQuestion": 0,
-                  "avgTimePerQuestionSec": 107.02,
-                  "modeCounts": {
-                    "unknown": 0,
-                    "challenge": 0,
-                    "discussion": 0,
-                    "drill": 0,
-                    "graded": 0,
-                    "guided_practice": 0,
-                    "homework": 0,
-                    "learning": 0,
-                    "learning_book": 0,
-                    "live_lesson": 0,
-                    "marathon": 0,
-                    "mistakes": 0,
-                    "normal": 0,
-                    "practice": 37,
-                    "practice_mistakes": 0,
-                    "quiz": 0,
-                    "review": 0,
-                    "speed": 0,
-                    "worksheet": 0
-                  },
-                  "levelCounts": {
-                    "unknown": 0,
-                    "easy": 37,
-                    "medium": 0,
-                    "hard": 0
-                  },
-                  "contentGradeLevel": "g2",
-                  "registeredGradeLevel": "g2",
-                  "gradeRelation": "same",
-                  "gradeDelta": 0,
-                  "evidenceSourceCounts": {
-                    "self_practice": 37
-                  },
-                  "diagnosticConfidence": "sufficient",
-                  "evidenceSources": [
-                    "self_practice"
-                  ],
-                  "primaryEvidenceSource": "self_practice"
-                }
-              },
-              "diagnosticConfidence": "sufficient",
-              "evidenceSources": [
-                "self_practice"
-              ],
-              "primaryEvidenceSource": "self_practice"
-            },
-            "body": {
-              "latestActivityAt": "2026-06-20T12:12:26.275Z",
-              "latestActivityMs": 1781957546275,
-              "latestActivitySource": "session.updated_at",
-              "lastAnswerAt": "2026-05-28T15:00:46.000Z",
-              "lastAnswerMs": 1779980446000,
-              "sessionStartedAt": "2026-05-28T14:50:35.000Z",
-              "sessionStartedMs": 1779979835000,
-              "sessionFinishedAt": "2026-05-28T15:02:39.000Z",
-              "sessionFinishedMs": 1779980559000,
-              "answers": 7,
-              "correct": 6,
-              "wrong": 1,
-              "accuracy": 85.71,
-              "diagnosticAnswers": 7,
-              "diagnosticCorrect": 6,
-              "diagnosticWrong": 1,
-              "diagnosticAccuracy": 85.71,
-              "competitiveAnswers": 0,
-              "competitiveCorrect": 0,
-              "competitiveAccuracy": 0,
-              "learningAnswers": 0,
-              "stepByStepCount": 0,
-              "durationSeconds": 724,
-              "hintsSum": 0,
-              "hintsCount": 7,
-              "timeMsSum": 724189,
-              "timeMsCount": 7,
-              "correctSlowAnswers": 6,
-              "correctManyHintsAnswers": 0,
-              "wrongFastAnswers": 0,
-              "avgHintsPerQuestion": 0,
-              "avgTimePerQuestionSec": 103.46,
-              "modeCounts": {
-                "unknown": 0,
-                "challenge": 0,
-                "discussion": 0,
-                "drill": 0,
-                "graded": 0,
-                "guided_practice": 0,
-                "homework": 0,
-                "learning": 0,
-                "learning_book": 0,
-                "live_lesson": 0,
-                "marathon": 0,
-                "mistakes": 0,
-                "normal": 0,
-                "practice": 8,
-                "practice_mistakes": 0,
-                "quiz": 0,
-                "review": 0,
-                "speed": 0,
-                "worksheet": 0
-              },
-              "levelCounts": {
-                "unknown": 0,
-                "easy": 7,
-                "medium": 0,
-                "hard": 0
-              },
-              "contentGradeLevel": null,
-              "registeredGradeLevel": null,
-              "gradeRelation": "unknown",
-              "gradeDelta": null,
-              "evidenceSourceCounts": {
-                "self_practice": 7
-              },
-              "byContentGrade": {
-                "g2": {
-                  "latestActivityAt": "2026-06-20T12:12:26.275Z",
-                  "latestActivityMs": 1781957546275,
-                  "latestActivitySource": "session.updated_at",
-                  "lastAnswerAt": "2026-05-28T15:00:46.000Z",
-                  "lastAnswerMs": 1779980446000,
-                  "sessionStartedAt": "2026-05-28T14:50:35.000Z",
-                  "sessionStartedMs": 1779979835000,
-                  "sessionFinishedAt": "2026-05-28T15:02:39.000Z",
-                  "sessionFinishedMs": 1779980559000,
-                  "answers": 7,
-                  "correct": 6,
-                  "wrong": 1,
-                  "accuracy": 85.71,
-                  "diagnosticAnswers": 7,
-                  "diagnosticCorrect": 6,
-                  "diagnosticWrong": 1,
-                  "diagnosticAccuracy": 85.71,
-                  "competitiveAnswers": 0,
-                  "competitiveCorrect": 0,
-                  "competitiveAccuracy": 0,
-                  "learningAnswers": 0,
-                  "stepByStepCount": 0,
-                  "durationSeconds": 0,
-                  "hintsSum": 0,
-                  "hintsCount": 7,
-                  "timeMsSum": 724189,
-                  "timeMsCount": 7,
-                  "correctSlowAnswers": 6,
-                  "correctManyHintsAnswers": 0,
-                  "wrongFastAnswers": 0,
-                  "avgHintsPerQuestion": 0,
-                  "avgTimePerQuestionSec": 103.46,
-                  "modeCounts": {
-                    "unknown": 0,
-                    "challenge": 0,
-                    "discussion": 0,
-                    "drill": 0,
-                    "graded": 0,
-                    "guided_practice": 0,
-                    "homework": 0,
-                    "learning": 0,
-                    "learning_book": 0,
-                    "live_lesson": 0,
-                    "marathon": 0,
-                    "mistakes": 0,
-                    "normal": 0,
-                    "practice": 7,
-                    "practice_mistakes": 0,
-                    "quiz": 0,
-                    "review": 0,
-                    "speed": 0,
-                    "worksheet": 0
-                  },
-                  "levelCounts": {
-                    "unknown": 0,
-                    "easy": 7,
-                    "medium": 0,
-                    "hard": 0
-                  },
-                  "contentGradeLevel": "g2",
-                  "registeredGradeLevel": "g2",
-                  "gradeRelation": "same",
-                  "gradeDelta": 0,
-                  "evidenceSourceCounts": {
-                    "self_practice": 7
-                  },
-                  "diagnosticConfidence": "sufficient",
-                  "evidenceSources": [
-                    "self_practice"
-                  ],
-                  "primaryEvidenceSource": "self_practice"
-                }
-              },
-              "diagnosticConfidence": "sufficient",
-              "evidenceSources": [
-                "self_practice"
-              ],
-              "primaryEvidenceSource": "self_practice"
-            }
-          }
+          "questions": 44,
+          "accuracy": 75
         },
         "moledet_geography": {
-          "latestActivityAt": null,
-          "latestActivityMs": null,
-          "latestActivitySource": null,
-          "lastAnswerAt": null,
-          "lastAnswerMs": null,
-          "sessionStartedAt": null,
-          "sessionStartedMs": null,
-          "sessionFinishedAt": null,
-          "sessionFinishedMs": null,
-          "sessions": 0,
-          "answers": 0,
-          "correct": 0,
-          "wrong": 0,
-          "accuracy": 0,
-          "diagnosticAnswers": 0,
-          "diagnosticCorrect": 0,
-          "diagnosticWrong": 0,
-          "diagnosticAccuracy": 0,
-          "competitiveAnswers": 0,
-          "competitiveCorrect": 0,
-          "competitiveAccuracy": 0,
-          "learningAnswers": 0,
-          "stepByStepCount": 0,
-          "durationSeconds": 0,
-          "hintsSum": 0,
-          "hintsCount": 0,
-          "timeMsSum": 0,
-          "timeMsCount": 0,
-          "correctSlowAnswers": 0,
-          "correctManyHintsAnswers": 0,
-          "wrongFastAnswers": 0,
-          "avgHintsPerQuestion": null,
-          "avgTimePerQuestionSec": null,
-          "modeCounts": {
-            "unknown": 0,
-            "challenge": 0,
-            "discussion": 0,
-            "drill": 0,
-            "graded": 0,
-            "guided_practice": 0,
-            "homework": 0,
-            "learning": 0,
-            "learning_book": 0,
-            "live_lesson": 0,
-            "marathon": 0,
-            "mistakes": 0,
-            "normal": 0,
-            "practice": 0,
-            "practice_mistakes": 0,
-            "quiz": 0,
-            "review": 0,
-            "speed": 0,
-            "worksheet": 0
-          },
-          "levelCounts": {
-            "unknown": 0,
-            "easy": 0,
-            "medium": 0,
-            "hard": 0
-          },
-          "topics": {}
+          "questions": 0,
+          "accuracy": 0
+        }
+      }
+    }
+  },
+  "closestReports": [
+    {
+      "studentId": "38e2dbcf-a927-419f-a2ed-b26c7100e656",
+      "fullName": "בדיקה-ב2",
+      "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+      "totalQuestions": 214,
+      "overallAccuracy": 52.8,
+      "totalMinutes": 372,
+      "subjectBreakdown": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      },
+      "matchesOwnerFingerprint": true
+    }
+  ],
+  "productionHttpResults": [
+    {
+      "utterance": "מה הכי חשוב כרגע?",
+      "httpStatus": 200,
+      "resolutionStatus": "resolved",
+      "intent": "what_is_most_important",
+      "route": "pattern_composer",
+      "ambiguous": false,
+      "isNoData": false,
+      "fullText": "הדבר הכי חשוב כרגע הוא לבחור נושא אחד לחיזוק ולא לפזר את התרגול. לפי הדוח, המקום הראשון להתחלה הוא חשבון — חיבור: 102 שאלות, 33% הצלחה. כדאי לתרגל 5–10 דקות, 3–5 שאלות, ואז לבדוק אם התשובות יציבות יותר.",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
         }
       }
     },
-    "topicMetrics": 5
-  },
-  "localEngine": [
-    {
-      "utterance": "מה הכי חשוב כרגע?",
-      "text": "הדבר הכי חשוב כרגע הוא לבחור נושא אחד לחיזוק ולא לפזר את התרגול. לפי הדוח, המקום הראשון להתחלה הוא חשבון — חיבור (כיתה ב׳): 102 שאלות, 33% הצלחה. כדאי לתרגל 5–10 דקות, 3–5 שאלות, ואז לבדוק אם התשובות יציבות יותר.",
-      "intent": "what_is_most_important",
-      "resolved": true,
-      "ambiguous": false,
-      "noData": false,
-      "specificNoData": false,
-      "magbil": false
-    },
     {
       "utterance": "איפה רואים התקדמות?",
-      "text": "בדוח מופיע שינוי ב־חשבון — חיבור (כיתה ב׳): כשנבדקים יחסית הרבה נושאים במקביל, לא תמיד נראית מיד «יציבות חזקה» באותה משמעות בכולם — זה נורמלי; כדאי להמשיך בתרגול כדי לייצב מה שנראה חוזר. לכן אפשר לומר שיש כאן כיוון בדוח, אבל עדיין כדאי לבדוק אותו בעוד תרגול קצר.",
+      "httpStatus": 200,
+      "resolutionStatus": "resolved",
       "intent": "explain_report",
-      "resolved": true,
+      "route": "pattern_composer",
       "ambiguous": false,
-      "noData": false,
-      "specificNoData": false,
-      "magbil": false
+      "isNoData": false,
+      "fullText": "בדוח הנוכחי לא מופיעה השוואה מספיקה שמוכיחה שינוי מהשבוע הקודם. כן אפשר לראות איפה התרגול נראה יציב יותר בתקופה הזו: מדעים — גוף האדם, עם 7 שאלות ו־86% הצלחה. לכן כדאי להמשיך שם בתרגול קצר ולבדוק אם היציבות נשמרת גם בהמשך.",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      }
     },
     {
       "utterance": "מה כדאי להימנע ממנו עכשיו?",
-      "text": "כרגע כדאי להימנע משלושה דברים: לא להסיק מסקנה אישית על הילד, לא לפתוח הרבה נושאים יחד, ולא להחליט לפי שאלה אחת או שתיים. לפי הדוח, עדיף לבחור נושא אחד לתרגול קצר, לבדוק כמה תשובות ברצף, ואז לראות אם הכיוון חוזר גם בהמשך. הנושא להתחלה: חשבון — חיבור (כיתה ב׳).",
-      "intent": "what_not_to_do_now",
-      "resolved": true,
+      "httpStatus": 429,
       "ambiguous": false,
-      "noData": false,
-      "specificNoData": false,
-      "magbil": false
+      "isNoData": false,
+      "fullText": "",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      }
     },
     {
       "utterance": "מה לעשות בבית היום?",
-      "text": "היום הייתי עושה דבר אחד: פעילות קצרה בנושא חשבון — חיבור (כיתה ב׳). בדוח מופיעות שם 102 שאלות עם 33% הצלחה, ולכן זה מקום טוב לתרגול ממוקד. לעשות 5–10 דקות בלבד, 3–5 שאלות, ובסוף לשאול את הילד: איך חשבת על התשובה?",
-      "intent": "what_to_do_today",
-      "resolved": true,
+      "httpStatus": 429,
       "ambiguous": false,
-      "noData": false,
-      "specificNoData": false,
-      "magbil": false
+      "isNoData": false,
+      "fullText": "",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      }
     },
     {
       "utterance": "איפה הוא צריך עזרה?",
-      "text": "לפי הדוח, המקום הראשון שכדאי לחזק הוא חשבון — חיבור (כיתה ב׳): 102 שאלות, 33% הצלחה. זה הנושא שהכי כדאי להתחיל ממנו כי הוא גם מופיע בדוח וגם נותן כיוון ברור לתרגול קצר בבית. אחריו אפשר לשים לב גם ל־עברית — קריאה (כיתה ב׳): 25 שאלות, 64% הצלחה. הצעד המעשי: לפתוח פעילות קצרה אחת בנושא הראשון, 5–10 דקות, ואז לבדוק אם התשובות הבאות יציבות יותר.",
-      "intent": "what_is_still_difficult",
-      "resolved": true,
+      "httpStatus": 429,
       "ambiguous": false,
-      "noData": false,
-      "specificNoData": false,
-      "magbil": false
+      "isNoData": false,
+      "fullText": "",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      }
     },
     {
       "utterance": "למה כתוב שיש פער במתמטיקה?",
-      "text": "בחיבור בתקופה שנבחרה יש 102 שאלות, עם דיוק של כ 33%. בשלב זה — הדוח מתבסס על התרגול שבוצע באתר בתקופה שנבחרה. הנתון מראה פעילות בתקופה, אבל הדיוק נמוך יחסית — נשארים עם ניסוח זהיר ותרגול ממוקד.",
-      "intent": "unclear",
-      "resolved": true,
+      "httpStatus": 429,
       "ambiguous": false,
-      "noData": false,
-      "specificNoData": false,
-      "magbil": false
+      "isNoData": false,
+      "fullText": "",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      }
     },
     {
       "utterance": "האם הבעיה היא נשיאה?",
-      "text": "יש בדוח נתוני תרגול מהתקופה, אבל אין מספיק מידע כדי לענות דווקא על הנקודה הזו בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם מופיע כיוון ברור יותר בנושא הזה.",
-      "intent": "unknown_report_question",
-      "resolved": false,
+      "httpStatus": 429,
       "ambiguous": false,
-      "noData": true,
-      "specificNoData": true,
-      "magbil": false
+      "isNoData": false,
+      "fullText": "",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      }
     },
     {
       "utterance": "האם זה בגלל לחץ זמן?",
-      "text": "יש בדוח נתוני תרגול מהתקופה, אבל אין מספיק מידע כדי לענות דווקא על הנקודה הזו בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם מופיע כיוון ברור יותר בנושא הזה.",
-      "intent": "unknown_report_question",
-      "resolved": false,
+      "httpStatus": 429,
       "ambiguous": false,
-      "noData": true,
-      "specificNoData": true,
-      "magbil": false
+      "isNoData": false,
+      "fullText": "",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      }
     },
     {
       "utterance": "האם הפעילות שנתתי לו השפיעה?",
-      "text": "יש בדוח נתוני תרגול מהתקופה, אבל אין מספיק מידע כדי לענות דווקא על הנקודה הזו בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם מופיע כיוון ברור יותר בנושא הזה.",
-      "intent": "unknown_report_question",
-      "resolved": false,
+      "httpStatus": 429,
       "ambiguous": false,
-      "noData": true,
-      "specificNoData": true,
-      "magbil": false
+      "isNoData": false,
+      "fullText": "",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      }
     },
     {
       "utterance": "תסביר לי את הדוח במילים פשוטות.",
-      "text": "לפי מה שמוצג עכשיו בדוח, אלה המקצועות והנושאים שאפשר להסתמך עליהם כרגע: עברית — קריאה — בקריאה נאספו 25 שאלות בתקופה, עם דיוק ממוצע של כ 64%. · חשבון — חיבור — בחיבור בתקופה שנבחרה יש 102 שאלות, עם דיוק של כ 33%. · גאומטריה — צורות בסיסיות — בצורות בסיסיות נאספו 25 שאלות בתקופה, ורמת הדיוק סביב 72%. · אנגלית — אוצר מילים — באוצר מילים בתקופה שנבחרה יש 18 שאלות, עם דיוק של כ 67%. יש כאן כיוון עבודה הגיוני, ונעדיף לראות את זה חוזר עוד פעם לפני שמחמירים בקביעת כיוון. בנוסף, בחשבון — חיבור: הנתון מראה פעילות בתקופה, אבל הדיוק נמוך יחסית — נשארים עם ניסוח זהיר ותרגול ממוקד. בתקופה שנבחרה נבדקו 6 נושאים.",
-      "intent": "explain_report",
-      "resolved": true,
+      "httpStatus": 429,
       "ambiguous": false,
-      "noData": false,
-      "specificNoData": false,
-      "magbil": false
+      "isNoData": false,
+      "fullText": "",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      }
     }
   ],
-  "productionHttp": [
+  "localEngineResults": [
     {
       "utterance": "מה הכי חשוב כרגע?",
-      "httpStatus": 200,
-      "text": "לפי הדוח, כרגע מופיעים: חשבון — חיבור · גאומטריה — צורות בסיסיות · אנגלית — אוצר מילים · מדעים — ניסויים ותהליכים · מדעים — גוף האדם. הדוח מתבסס על התרגול שבוצע באתר בתקופה שנבחרה. בתקופה שנבחרה עדיין אין מספיק תרגול כדי לזהות מגמה ברורה במקצוע זה. חלק מהמוקדים עדיין עם ניסוח זהיר או מוקדם לסגירה — זה מגביל כמה ברורה התמונה הכוללת.",
-      "intent": "what_to_do_today",
-      "resolved": true,
+      "resolutionStatus": "resolved",
+      "intent": "what_is_most_important",
+      "route": "pattern_composer",
       "ambiguous": false,
-      "noData": false,
-      "specificNoData": false,
-      "magbil": true
+      "isNoData": false,
+      "fullText": "הדבר הכי חשוב כרגע הוא לבחור נושא אחד לחיזוק ולא לפזר את התרגול. לפי הדוח, המקום הראשון להתחלה הוא חשבון — חיבור (כיתה ב׳): 102 שאלות, 33% הצלחה. כדאי לתרגל 5–10 דקות, 3–5 שאלות, ואז לבדוק אם התשובות יציבות יותר.",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      }
     },
     {
       "utterance": "איפה רואים התקדמות?",
-      "httpStatus": 200,
-      "text": "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון ברור יותר בדוח.",
-      "intent": "unknown_report_question",
-      "resolved": false,
+      "resolutionStatus": "resolved",
+      "intent": "explain_report",
+      "route": "pattern_composer",
       "ambiguous": false,
-      "noData": true,
-      "specificNoData": false,
-      "magbil": false
+      "isNoData": false,
+      "fullText": "בדוח הנוכחי לא מופיעה השוואה מספיקה שמוכיחה שינוי מהשבוע הקודם. כן אפשר לראות איפה התרגול נראה יציב יותר בתקופה הזו: מדעים — ניסויים ותהליכים (כיתה ב׳), עם 37 שאלות ו־73% הצלחה. לכן כדאי להמשיך שם בתרגול קצר ולבדוק אם היציבות נשמרת גם בהמשך.",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      }
     },
     {
       "utterance": "מה כדאי להימנע ממנו עכשיו?",
-      "httpStatus": 429,
-      "text": "",
-      "resolved": false,
+      "resolutionStatus": "resolved",
+      "intent": "what_not_to_do_now",
+      "route": "pattern_composer",
       "ambiguous": false,
-      "noData": false,
-      "specificNoData": false,
-      "magbil": false
+      "isNoData": false,
+      "fullText": "כרגע כדאי להימנע משלושה דברים: לא להסיק מסקנה אישית על הילד, לא לפתוח הרבה נושאים יחד, ולא להחליט לפי שאלה אחת או שתיים. לפי הדוח, עדיף לבחור נושא אחד לתרגול קצר, לבדוק כמה תשובות ברצף, ואז לראות אם הכיוון חוזר גם בהמשך. הנושא להתחלה: חשבון — חיבור (כיתה ב׳).",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      }
     },
     {
       "utterance": "מה לעשות בבית היום?",
-      "httpStatus": 429,
-      "text": "",
-      "resolved": false,
+      "resolutionStatus": "resolved",
+      "intent": "what_to_do_today",
+      "route": "pattern_composer",
       "ambiguous": false,
-      "noData": false,
-      "specificNoData": false,
-      "magbil": false
+      "isNoData": false,
+      "fullText": "היום הייתי עושה דבר אחד: פעילות קצרה בנושא חשבון — חיבור (כיתה ב׳). בדוח מופיעות שם 102 שאלות עם 33% הצלחה, ולכן זה מקום טוב לתרגול ממוקד. לעשות 5–10 דקות בלבד, 3–5 שאלות, ובסוף לשאול את הילד: איך חשבת על התשובה?",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      }
     },
     {
       "utterance": "איפה הוא צריך עזרה?",
-      "httpStatus": 429,
-      "text": "",
-      "resolved": false,
+      "resolutionStatus": "resolved",
+      "intent": "what_is_still_difficult",
+      "route": "pattern_composer",
       "ambiguous": false,
-      "noData": false,
-      "specificNoData": false,
-      "magbil": false
+      "isNoData": false,
+      "fullText": "לפי הדוח, המקום הראשון שכדאי לחזק הוא חשבון — חיבור (כיתה ב׳): 102 שאלות, 33% הצלחה. זה הנושא שהכי כדאי להתחיל ממנו כי הוא גם מופיע בדוח וגם נותן כיוון ברור לתרגול קצר בבית. אחריו אפשר לשים לב גם ל־עברית — קריאה (כיתה ב׳): 25 שאלות, 64% הצלחה. הצעד המעשי: לפתוח פעילות קצרה אחת בנושא הראשון, 5–10 דקות, ואז לבדוק אם התשובות הבאות יציבות יותר.",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      }
     },
     {
       "utterance": "למה כתוב שיש פער במתמטיקה?",
-      "httpStatus": 429,
-      "text": "",
-      "resolved": false,
+      "resolutionStatus": "resolved",
+      "intent": "unclear",
       "ambiguous": false,
-      "noData": false,
-      "specificNoData": false,
-      "magbil": false
+      "isNoData": false,
+      "fullText": "בחיבור בתקופה שנבחרה יש 102 שאלות, עם דיוק של כ 33%. בשלב זה — הדוח מתבסס על התרגול שבוצע באתר בתקופה שנבחרה. הנתון מראה פעילות בתקופה, אבל הדיוק נמוך יחסית — נשארים עם ניסוח זהיר ותרגול ממוקד.",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      }
     },
     {
       "utterance": "האם הבעיה היא נשיאה?",
-      "httpStatus": 429,
-      "text": "",
-      "resolved": false,
+      "resolutionStatus": "clarification_required",
+      "intent": "unknown_report_question",
       "ambiguous": false,
-      "noData": false,
-      "specificNoData": false,
-      "magbil": false
+      "isNoData": true,
+      "fullText": "יש בדוח נתוני תרגול מהתקופה, אבל אין מספיק מידע כדי לענות דווקא על הנקודה הזו בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם מופיע כיוון ברור יותר בנושא הזה.",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      }
     },
     {
       "utterance": "האם זה בגלל לחץ זמן?",
-      "httpStatus": 429,
-      "text": "",
-      "resolved": false,
+      "resolutionStatus": "clarification_required",
+      "intent": "unknown_report_question",
+      "route": "pattern_composer",
       "ambiguous": false,
-      "noData": false,
-      "specificNoData": false,
-      "magbil": false
+      "isNoData": true,
+      "fullText": "יש בדוח נתוני תרגול מהתקופה, אבל אין מספיק מידע כדי לענות דווקא על הנקודה הזו בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם מופיע כיוון ברור יותר בנושא הזה.",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      }
     },
     {
       "utterance": "האם הפעילות שנתתי לו השפיעה?",
-      "httpStatus": 429,
-      "text": "",
-      "resolved": false,
+      "resolutionStatus": "clarification_required",
+      "intent": "unknown_report_question",
+      "route": "pattern_composer",
       "ambiguous": false,
-      "noData": false,
-      "specificNoData": false,
-      "magbil": false
+      "isNoData": true,
+      "fullText": "יש בדוח נתוני תרגול מהתקופה, אבל אין מספיק מידע כדי לענות דווקא על הנקודה הזו בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם מופיע כיוון ברור יותר בנושא הזה.",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      }
     },
     {
       "utterance": "תסביר לי את הדוח במילים פשוטות.",
-      "httpStatus": 429,
-      "text": "",
-      "resolved": false,
+      "resolutionStatus": "resolved",
+      "intent": "explain_report",
       "ambiguous": false,
-      "noData": false,
-      "specificNoData": false,
-      "magbil": false
+      "isNoData": false,
+      "fullText": "לפי מה שמוצג עכשיו בדוח, אלה המקצועות והנושאים שאפשר להסתמך עליהם כרגע: עברית — קריאה — בקריאה נאספו 25 שאלות בתקופה, עם דיוק ממוצע של כ 64%. · חשבון — חיבור — בחיבור בתקופה שנבחרה יש 102 שאלות, עם דיוק של כ 33%. · גאומטריה — צורות בסיסיות — בצורות בסיסיות נאספו 25 שאלות בתקופה, ורמת הדיוק סביב 72%. · אנגלית — אוצר מילים — באוצר מילים בתקופה שנבחרה יש 18 שאלות, עם דיוק של כ 67%. יש כאן כיוון עבודה הגיוני, ונעדיף לראות את זה חוזר עוד פעם לפני שמחמירים בקביעת כיוון. בנוסף, בחשבון — חיבור: הנתון מראה פעילות בתקופה, אבל הדיוק נמוך יחסית — נשארים עם ניסוח זהיר ותרגול ממוקד. בתקופה שנבחרה נבדקו 6 נושאים.",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      }
     }
-  ]
+  ],
+  "forbiddenChecks": {
+    "magbil": false,
+    "circularAmbiguous": false
+  }
 }

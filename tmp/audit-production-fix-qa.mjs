@@ -65,8 +65,12 @@ function summaryFromBody(enriched) {
   const s = enriched?.summary || enriched?.practiceSummary || {};
   const totalQuestions = Number(s.totalAnswers ?? s.totalQuestions ?? 0) || 0;
   const accuracy = s.accuracy ?? s.accuracyPercent ?? null;
-  const totalMinutes = s.totalTimeMinutes ?? s.totalMinutes ?? null;
-  const bySubject = s.bySubject || enriched?.derived?.bySubject || enriched?.bySubject || {};
+  const totalMinutes =
+    s.totalTimeMinutes ??
+    s.totalMinutes ??
+    (Number(s.totalDurationSeconds) > 0 ? Math.round(Number(s.totalDurationSeconds) / 60) : null);
+  const bySubject =
+    s.bySubject || enriched?.derived?.bySubject || enriched?.bySubject || enriched?.subjects || {};
   /** @type {Record<string, {questions: number, accuracy: number|null}>} */
   const subjectBreakdown = {};
   for (const [sid, row] of Object.entries(bySubject)) {
@@ -99,7 +103,7 @@ async function loadStudentReport(supabase, student, range) {
   });
   const withAcc = await attachStudentLearningAccountToParentReportPayload(supabase, student, reportBody);
   const enriched = await enrichPayloadWithParentFacing(supabase, withAcc, student.id);
-  const detailed = buildDetailedPayloadFromAggregatedReportBody(enriched, range.reportPeriod);
+  const detailed = await buildDetailedPayloadFromAggregatedReportBody(enriched, range.reportPeriod);
   return { enriched, detailed, summary: summaryFromBody(enriched) };
 }
 
@@ -135,35 +139,58 @@ async function main() {
   const { token, identifier } = await resolveParentBearer(PROD_ORIGIN);
   if (!token) throw new Error("Parent bearer unavailable");
 
-  const { data: students, error } = await supabase
-    .from("students")
-    .select("id, full_name, grade_level, parent_id, is_active")
-    .not("parent_id", "is", null)
-    .eq("is_active", true)
-    .limit(500);
-  if (error) throw error;
+  const directStudentId = String(process.env.COPILOT_QA_STUDENT_ID || "").trim();
 
   /** @type {object[]} */
   const scans = [];
   /** @type {object|null} */
   let matched = null;
 
-  for (const st of students || []) {
-    try {
-      const loaded = await loadStudentReport(supabase, st, RANGE);
-      const row = {
-        studentId: st.id,
-        fullName: st.full_name,
-        parentId: st.parent_id,
-        ...loaded.summary,
-        matchesOwnerFingerprint: fingerprintMatch(loaded.summary),
-      };
-      scans.push(row);
-      if (row.matchesOwnerFingerprint && !matched) {
-        matched = { student: st, ...loaded };
+  if (directStudentId) {
+    const { data: st, error: stErr } = await supabase
+      .from("students")
+      .select("id, full_name, grade_level, parent_id, is_active")
+      .eq("id", directStudentId)
+      .maybeSingle();
+    if (stErr) throw stErr;
+    if (!st) throw new Error(`COPILOT_QA_STUDENT_ID not found: ${directStudentId}`);
+    const loaded = await loadStudentReport(supabase, st, RANGE);
+    const row = {
+      studentId: st.id,
+      fullName: st.full_name,
+      parentId: st.parent_id,
+      ...loaded.summary,
+      matchesOwnerFingerprint: fingerprintMatch(loaded.summary),
+    };
+    scans.push(row);
+    if (row.matchesOwnerFingerprint) matched = { student: st, ...loaded };
+    else matched = { student: st, ...loaded };
+  } else {
+    const { data: students, error } = await supabase
+      .from("students")
+      .select("id, full_name, grade_level, parent_id, is_active")
+      .not("parent_id", "is", null)
+      .eq("is_active", true)
+      .limit(500);
+    if (error) throw error;
+
+    for (const st of students || []) {
+      try {
+        const loaded = await loadStudentReport(supabase, st, RANGE);
+        const row = {
+          studentId: st.id,
+          fullName: st.full_name,
+          parentId: st.parent_id,
+          ...loaded.summary,
+          matchesOwnerFingerprint: fingerprintMatch(loaded.summary),
+        };
+        scans.push(row);
+        if (row.matchesOwnerFingerprint && !matched) {
+          matched = { student: st, ...loaded };
+        }
+      } catch (err) {
+        scans.push({ studentId: st.id, fullName: st.full_name, error: String(err?.message || err) });
       }
-    } catch (err) {
-      scans.push({ studentId: st.id, fullName: st.full_name, error: String(err?.message || err) });
     }
   }
 
@@ -173,11 +200,14 @@ async function main() {
     .slice(0, 20);
 
   let target = matched;
-  if (!target) {
+  if (!target && !directStudentId) {
     const best = close214[0];
     if (best?.studentId) {
-      const st = (students || []).find((s) => s.id === best.studentId);
-      if (st) target = { student: st, ...(await loadStudentReport(supabase, st, RANGE)) };
+      const st = scans.find((s) => s.studentId === best.studentId);
+      const fullSt = st
+        ? { id: st.studentId, full_name: st.fullName, parent_id: st.parentId }
+        : null;
+      if (fullSt) target = { student: fullSt, ...(await loadStudentReport(supabase, fullSt, RANGE)) };
     }
   }
 

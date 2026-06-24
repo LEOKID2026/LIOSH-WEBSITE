@@ -215,3 +215,23 @@ a[href][aria-disabled="true"] {
 .puzzle-hint-close {
   display: none;
 }
+
+/* Picture puzzle — mobile play shell (Fullscreen API target) */
+@media (max-width: 1023px) {
+  #game-wrapper.solo-game-mobile-fullscreen-shell:fullscreen,
+  #game-wrapper.solo-game-mobile-fullscreen-shell:-webkit-full-screen {
+    width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    overflow: hidden;
+    background: #111827;
+  }
+
+  @supports (height: 100svh) {
+    #game-wrapper.solo-game-mobile-fullscreen-shell:fullscreen,
+    #game-wrapper.solo-game-mobile-fullscreen-shell:-webkit-full-screen {
+      height: 100svh;
+      max-height: 100svh;
+    }
+  }
+}

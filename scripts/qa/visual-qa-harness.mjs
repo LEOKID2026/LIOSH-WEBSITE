@@ -18,6 +18,7 @@
  *   VISUAL_QA_ALLOW_MUTATIONS    1 → allow answer submit (future full-flow)
  *   VISUAL_QA_OUTPUT_DIR         optional report dir (default reports/visual-qa/<subject>/)
  *   VISUAL_QA_SAMPLE_SEED        optional seed string → topic rotation offset per run
+ *   VISUAL_QA_GRADE_FILTER       optional 1–6 — run only this grade (one AAA student)
  */
 
 import { mkdir, writeFile } from "node:fs/promises";
@@ -29,6 +30,7 @@ import { authenticateStudent } from "../virtual-student-qa/lib/student-auth.mjs"
 import {
   GRADE_HE,
   parseHarnessEnv,
+  parseGradeFilter,
   resolveSubject,
   sampleSeedTopicOffset,
   studentForGrade,
@@ -320,6 +322,25 @@ async function writeOutputs(report, subject, outputDirOverride) {
 async function main() {
   const baseUrl = resolveBaseUrl(process.env.PLAYWRIGHT_BASE_URL || process.env.VISUAL_QA_BASE_URL);
   const env = parseHarnessEnv();
+  const gradeFilterCheck = parseGradeFilter(process.env.VISUAL_QA_GRADE_FILTER);
+  if (!gradeFilterCheck.ok) {
+    const out = blockedReport({
+      baseUrl,
+      subject: env.subject || null,
+      blocked: {
+        route: "(env)",
+        account: "(none)",
+        missingEnv: ["VISUAL_QA_GRADE_FILTER"],
+        supabaseHint: "",
+        whatYouNeed: gradeFilterCheck.error,
+      },
+    });
+    await writeOutputs(out, env.subject || "unknown", env.outputDir);
+    console.log(JSON.stringify(out, null, 2));
+    process.exit(2);
+  }
+  env.gradeFilter = gradeFilterCheck.grade;
+
   const subjectResult = resolveSubject(env.subject);
 
   if (!subjectResult.ok) {
@@ -386,6 +407,7 @@ async function main() {
     useSecondStudent: env.useSecondStudent,
     allowMutations: env.allowMutations,
     sampleSeed: env.sampleSeed || null,
+    gradeFilter: env.gradeFilter ?? null,
     outputDir: env.outputDir || null,
     dataMutations: {
       sessionStartOnAaaAccounts: true,
@@ -403,7 +425,8 @@ async function main() {
   await mkdir(screenshotDir, { recursive: true });
 
   try {
-    for (let gradeNumber = 1; gradeNumber <= 6; gradeNumber += 1) {
+    const gradeNumbers = env.gradeFilter != null ? [env.gradeFilter] : [1, 2, 3, 4, 5, 6];
+    for (const gradeNumber of gradeNumbers) {
       const student = studentForGrade(gradeNumber, env.useSecondStudent);
       if (!student) {
         const out = blockedReport({

@@ -6,6 +6,13 @@ import { pieceTileStyle, splitTrayPieces } from "../../../lib/solo-games/picture
 
 const PORTRAIT_DISMISS_KEY = "picture-puzzle-portrait-dismiss";
 
+function getInitialPortraitPrompt() {
+  if (typeof window === "undefined") return false;
+  if (!isMobileViewport() || !isPortraitViewport()) return false;
+  if (sessionStorage.getItem(PORTRAIT_DISMISS_KEY) === "1") return false;
+  return true;
+}
+
 
 
 function isMobileViewport() {
@@ -316,13 +323,15 @@ export default function MleoPicturePuzzlePlacementPlay({
 
   onCloseHint,
 
+  onEnterPlayFullscreen,
+
   computeWinScore,
 
 }) {
 
   const [portraitDismissed, setPortraitDismissed] = useState(false);
 
-  const [showPortraitPrompt, setShowPortraitPrompt] = useState(false);
+  const [showPortraitPrompt, setShowPortraitPrompt] = useState(getInitialPortraitPrompt);
 
   const { areaRef, squareSize } = useSquareBoardSize();
 
@@ -369,6 +378,16 @@ export default function MleoPicturePuzzlePlacementPlay({
     };
 
   }, [recalcPortrait]);
+
+
+
+  useEffect(() => {
+
+    if (!gameRunning || gameOver || showPortraitPrompt || !onEnterPlayFullscreen) return;
+
+    onEnterPlayFullscreen();
+
+  }, [gameRunning, gameOver, showPortraitPrompt, onEnterPlayFullscreen]);
 
 
 

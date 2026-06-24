@@ -50,6 +50,7 @@ const COHORTS = [
   { id: "primary", useSecondStudent: false },
   { id: "secondary", useSecondStudent: true },
 ];
+const GRADES = [1, 2, 3, 4, 5, 6];
 
 const VISUAL_QA_ENV_KEYS = [
   "VISUAL_QA_SUBJECT",
@@ -71,6 +72,7 @@ const VISUAL_QA_ENV_KEYS = [
   "VISUAL_QA_DEEP_COOLDOWN_SEC",
   "VISUAL_QA_DEEP_PORT",
   "VISUAL_QA_LOGIN_TIMEOUT_MS",
+  "VISUAL_QA_GRADE_FILTER",
 ];
 
 async function readDeepDevState() {
@@ -504,7 +506,7 @@ async function releaseDeepRunLock(runId) {
   }
 }
 
-function buildCleanHarnessEnv(cfg, { subject, cohort, outRel, sampleSeed }) {
+function buildCleanHarnessEnv(cfg, { subject, cohort, outRel, sampleSeed, gradeNumber }) {
   const env = { ...process.env };
   for (const key of VISUAL_QA_ENV_KEYS) {
     delete env[key];
@@ -518,6 +520,7 @@ function buildCleanHarnessEnv(cfg, { subject, cohort, outRel, sampleSeed }) {
   env.VISUAL_QA_MODE = "sample";
   env.VISUAL_QA_OUTPUT_DIR = outRel;
   env.VISUAL_QA_SAMPLE_SEED = sampleSeed;
+  env.VISUAL_QA_GRADE_FILTER = String(gradeNumber);
   env.__RUN_TIMEOUT_MS = String(cfg.runTimeoutMs);
   env.VISUAL_QA_LOGIN_TIMEOUT_MS = String(cfg.loginTimeoutMs ?? 60_000);
 
@@ -537,6 +540,7 @@ function harnessEnvSnapshot(env) {
     VISUAL_QA_USE_SECOND_STUDENT: env.VISUAL_QA_USE_SECOND_STUDENT ?? null,
     VISUAL_QA_OUTPUT_DIR: env.VISUAL_QA_OUTPUT_DIR,
     VISUAL_QA_SAMPLE_SEED: env.VISUAL_QA_SAMPLE_SEED,
+    VISUAL_QA_GRADE_FILTER: env.VISUAL_QA_GRADE_FILTER ?? null,
     VISUAL_QA_ALLOW_MUTATIONS: env.VISUAL_QA_ALLOW_MUTATIONS ?? null,
   };
 }
@@ -718,16 +722,24 @@ function roundDirName(round) {
   return `round-${String(round).padStart(2, "0")}`;
 }
 
-function runOutputRel(runId, round, subject, cohort) {
-  return join("reports", "visual-qa-deep", runId, roundDirName(round), subject, cohort);
+function runOutputRel(runId, round, subject, cohort, gradeNumber) {
+  return join(
+    "reports",
+    "visual-qa-deep",
+    runId,
+    roundDirName(round),
+    subject,
+    cohort,
+    `g${gradeNumber}`
+  );
 }
 
-function sampleSeedFor(runId, round, subject, cohort) {
-  return `${runId}-r${round}-${subject}-${cohort}`;
+function sampleSeedFor(runId, round, subject, cohort, gradeNumber) {
+  return `${runId}-r${round}-${subject}-${cohort}-g${gradeNumber}`;
 }
 
-function plannedSamplesPerRun(samplesPerGrade) {
-  return samplesPerGrade * 6;
+function plannedSamplesPerGradeRun(samplesPerGrade) {
+  return samplesPerGrade;
 }
 
 function issueKey(subject, sample, detail) {
@@ -844,6 +856,7 @@ function printProgress(state) {
     totalRounds,
     currentSubject,
     currentCohort,
+    currentGrade,
     currentStatus,
     completedRuns,
     totalRuns,
@@ -866,6 +879,7 @@ function printProgress(state) {
   log(`round: ${currentRound}/${totalRounds}`);
   log(`subject: ${currentSubject || "(pending)"}`);
   log(`cohort: ${currentCohort || "(pending)"}`);
+  log(`grade: ${currentGrade || "(pending)"}`);
   log(`last status: ${currentStatus || "(pending)"}`);
   log(`runs: ${completedRuns}/${totalRuns}`);
   log(`samples: ${completedSamples}/${plannedSamples}`);
@@ -907,13 +921,17 @@ function renderSummaryText(summary) {
         `round ${r.round}`,
         r.subject,
         r.cohort,
+        r.grade || "?",
         r.status,
         `exit=${r.exitCode ?? "null"}`,
         `samples=${r.samplesCompleted}`,
         `issues=${r.samplesWithIssues}`,
         `duration=${r.durationSec}s`,
+        r.blockedReason ? `blocked=${String(r.blockedReason).slice(0, 80)}` : "",
         r.reportPath,
-      ].join(" | ")
+      ]
+        .filter(Boolean)
+        .join(" | ")
     );
   }
 
@@ -976,8 +994,8 @@ async function main() {
   const startedAt = Date.now();
   const startedAtIso = new Date(startedAt).toISOString();
 
-  const totalRuns = cfg.rounds * cfg.subjects.length * COHORTS.length;
-  const totalPlannedSamples = totalRuns * plannedSamplesPerRun(cfg.samplesPerGrade);
+  const totalRuns = cfg.rounds * cfg.subjects.length * COHORTS.length * GRADES.length;
+  const totalPlannedSamples = totalRuns * plannedSamplesPerGradeRun(cfg.samplesPerGrade);
 
   const manifest = {
     runId: cfg.runId,
@@ -995,6 +1013,8 @@ async function main() {
     devHost: cfg.devHost,
     ownsDevServer: cfg.ownsDevServer,
     restartEachRun: cfg.restartEachRun,
+    gradeLevelRuns: true,
+    grades: GRADES.map((g) => `g${g}`),
     startupHealth: startupHealth.attempts,
   };
 
@@ -1012,6 +1032,7 @@ async function main() {
   let currentSubject = "";
   let currentCohort = "";
   let currentStatus = "";
+  let currentGrade = "";
 
   const progressTimer = setInterval(() => {
     printProgress({
@@ -1020,6 +1041,7 @@ async function main() {
       totalRounds: cfg.rounds,
       currentSubject,
       currentCohort,
+      currentGrade,
       currentStatus,
       completedRuns,
       totalRuns,
@@ -1032,330 +1054,332 @@ async function main() {
   }, cfg.progressIntervalMs);
 
   log(`Visual QA Deep runId=${cfg.runId}`);
-  log(`Planned: ${totalRuns} harness runs, ${totalPlannedSamples} samples`);
+  log(`Planned: ${totalRuns} grade-level harness runs, ${totalPlannedSamples} samples`);
   log(`Output: ${relative(REPO_ROOT, deepRoot)}`);
-
-  let lastSubject = "";
 
   for (let round = 1; round <= cfg.rounds; round += 1) {
     currentRound = round;
     for (const subject of cfg.subjects) {
       currentSubject = subject;
-      if (
-        cfg.autoRestartDev &&
-        !cfg.restartEachRun &&
-        lastSubject &&
-        lastSubject !== subject
-      ) {
-        log(`  subject boundary ${lastSubject} → ${subject}: refreshing dev server…`);
-        const boundary = await restartDevServer(cfg);
-        log(`  subject boundary refresh: ok=${boundary.ok}`);
-      }
-      lastSubject = subject;
       for (const cohort of COHORTS) {
         currentCohort = cohort.id;
-        const outRel = runOutputRel(cfg.runId, round, subject, cohort.id);
-        const outAbs = join(REPO_ROOT, outRel);
-        await mkdir(outAbs, { recursive: true });
+        for (const gradeNumber of GRADES) {
+          currentGrade = `g${gradeNumber}`;
+          const outRel = runOutputRel(cfg.runId, round, subject, cohort.id, gradeNumber);
+          const outAbs = join(REPO_ROOT, outRel);
+          await mkdir(outAbs, { recursive: true });
 
-        const sampleSeed = sampleSeedFor(cfg.runId, round, subject, cohort.id);
-        const logPath = join(outAbs, "run.log");
-        const reportJsonPath = join(outAbs, "visual-qa-report.json");
-        const reportTxtPath = join(outAbs, "visual-qa-report.txt");
-        const screenshotsPath = join(outRel, "screenshots");
-        const screenshotAbsDir = join(outAbs, "screenshots");
+          const sampleSeed = sampleSeedFor(cfg.runId, round, subject, cohort.id, gradeNumber);
+          const logPath = join(outAbs, "run.log");
+          const reportJsonPath = join(outAbs, "visual-qa-report.json");
+          const reportTxtPath = join(outAbs, "visual-qa-report.txt");
+          const screenshotsPath = join(outRel, "screenshots");
+          const screenshotAbsDir = join(outAbs, "screenshots");
+          const gradeKey = `g${gradeNumber}`;
 
-        const harnessEnv = buildCleanHarnessEnv(cfg, {
-          subject,
-          cohort,
-          outRel,
-          sampleSeed,
-        });
-        const envSnapshot = harnessEnvSnapshot(harnessEnv);
-
-        log(
-          `[${completedRuns + 1}/${totalRuns}] round ${round} ${subject} ${cohort.id} seed=${sampleSeed}`
-        );
-
-        if (cfg.restartEachRun && completedRuns > 0 && cfg.ownsDevServer) {
-          log(`  pre-run dev refresh (${completedRuns + 1}/${totalRuns})…`);
-          const refresh = await restartDevServer(cfg);
-          log(`  pre-run dev refresh: ok=${refresh.ok}`);
-        }
-
-        let preRunHealth = await waitForInfraReady(cfg.baseUrl, cfg, { purpose: "pre-run" });
-        if (!preRunHealth.ok && cfg.autoRestartDev) {
-          log("  pre-run infra not ready — restarting dev server…");
-          preRunHealth = await restartDevServer(cfg);
-        }
-        const preRunHealthOk = preRunHealth.ok;
-
-        const runStarted = Date.now();
-        let result;
-        let report = null;
-        let status;
-        let blockedDetailPath = null;
-
-        if (!preRunHealthOk) {
-          status = "BLOCKED";
-          result = {
-            exitCode: 2,
-            timedOut: false,
-            spawnError: null,
-            stdout: "",
-            stderr: "wrapper: pre-run health check failed — dev server not responding",
-            childPid: null,
-          };
-          report = {
-            status: "BLOCKED",
-            generatedAt: new Date().toISOString(),
-            baseUrl: cfg.baseUrl,
+          const harnessEnv = buildCleanHarnessEnv(cfg, {
             subject,
-            blocked: {
-              route: `${cfg.baseUrl}/student/login`,
-              account: "(wrapper pre-run health)",
-              missingEnv: ["dev server not responding at pre-run health check"],
-              supabaseHint: "Ensure only one deep run hammers port 3002; restart Next dev if saturated.",
-              whatYouNeed: "Wrapper blocked harness spawn until server responds.",
-              healthAttempts: preRunHealth.attempts,
-            },
-          };
-          await writeFile(reportJsonPath, `${JSON.stringify(report, null, 2)}\n`, "utf8");
-        } else {
-          try {
-            result = await spawnHarnessRun({
-              env: harnessEnv,
-              timeoutMs: cfg.runTimeoutMs,
-            });
-          } catch (error) {
+            cohort,
+            outRel,
+            sampleSeed,
+            gradeNumber,
+          });
+          const envSnapshot = harnessEnvSnapshot(harnessEnv);
+
+          log(
+            `[${completedRuns + 1}/${totalRuns}] round ${round} ${subject} ${cohort.id} g${gradeNumber} seed=${sampleSeed}`
+          );
+
+          if (cfg.restartEachRun && completedRuns > 0 && cfg.ownsDevServer) {
+            log(`  pre-run dev refresh (${completedRuns + 1}/${totalRuns})…`);
+            const refresh = await restartDevServer(cfg);
+            log(`  pre-run dev refresh: ok=${refresh.ok}`);
+          }
+
+          let preRunHealth = await waitForInfraReady(cfg.baseUrl, cfg, { purpose: "pre-run" });
+          if (!preRunHealth.ok && cfg.autoRestartDev) {
+            log("  pre-run infra not ready — restarting dev server…");
+            preRunHealth = await restartDevServer(cfg);
+          }
+          const preRunHealthOk = preRunHealth.ok;
+
+          const runStarted = Date.now();
+          let result;
+          let report = null;
+          let status;
+          let blockedDetailPath = null;
+
+          if (!preRunHealthOk) {
+            status = "BLOCKED";
             result = {
-              exitCode: null,
+              exitCode: 2,
               timedOut: false,
-              spawnError: error?.message || String(error),
+              spawnError: null,
               stdout: "",
-              stderr: "",
+              stderr: "wrapper: pre-run health check failed — dev server not responding",
               childPid: null,
             };
+            report = {
+              status: "BLOCKED",
+              generatedAt: new Date().toISOString(),
+              baseUrl: cfg.baseUrl,
+              subject,
+              gradeFilter: gradeNumber,
+              blocked: {
+                route: `${cfg.baseUrl}/student/login`,
+                account: "(wrapper pre-run health)",
+                missingEnv: ["dev server not responding at pre-run health check"],
+                supabaseHint: `Ensure Deep QA dev on port ${cfg.port} is healthy; wrapper restarts isolated dev automatically.`,
+                whatYouNeed: "Wrapper blocked harness spawn until server responds.",
+                healthAttempts: preRunHealth.attempts,
+              },
+            };
+            await writeFile(reportJsonPath, `${JSON.stringify(report, null, 2)}\n`, "utf8");
+          } else {
+            try {
+              result = await spawnHarnessRun({
+                env: harnessEnv,
+                timeoutMs: cfg.runTimeoutMs,
+              });
+            } catch (error) {
+              result = {
+                exitCode: null,
+                timedOut: false,
+                spawnError: error?.message || String(error),
+                stdout: "",
+                stderr: "",
+                childPid: null,
+              };
+            }
           }
-        }
 
-        const runDurationSec = Math.round((Date.now() - runStarted) / 1000);
-        if (!report) {
-          report = await readReportJson(reportJsonPath);
-        }
+          const runDurationSec = Math.round((Date.now() - runStarted) / 1000);
+          if (!report) {
+            report = await readReportJson(reportJsonPath);
+          }
 
-        const logBody = [
-          `# Visual QA Deep harness run`,
-          `runId=${cfg.runId}`,
-          `round=${round}`,
-          `subject=${subject}`,
-          `cohort=${cohort.id}`,
-          `sampleSeed=${sampleSeed}`,
-          `exitCode=${result.exitCode}`,
-          `timedOut=${result.timedOut}`,
-          `spawnError=${result.spawnError || ""}`,
-          `childPid=${result.childPid ?? ""}`,
-          `durationSec=${runDurationSec}`,
-          `preRunHealthOk=${preRunHealthOk}`,
-          "",
-          "=== pre-run infra attempts ===",
-          JSON.stringify(preRunHealth.attempts, null, 2),
-          "",
-          "=== harness env (effective) ===",
-          JSON.stringify(envSnapshot, null, 2),
-          "",
-          "=== stdout ===",
-          result.stdout || "",
-          "",
-          "=== stderr ===",
-          result.stderr || "",
-        ].join("\n");
-        await writeFile(logPath, logBody, "utf8");
+          const logBody = [
+            `# Visual QA Deep harness run (grade-level)`,
+            `runId=${cfg.runId}`,
+            `round=${round}`,
+            `subject=${subject}`,
+            `cohort=${cohort.id}`,
+            `grade=${gradeKey}`,
+            `sampleSeed=${sampleSeed}`,
+            `exitCode=${result.exitCode}`,
+            `timedOut=${result.timedOut}`,
+            `spawnError=${result.spawnError || ""}`,
+            `childPid=${result.childPid ?? ""}`,
+            `durationSec=${runDurationSec}`,
+            `preRunHealthOk=${preRunHealthOk}`,
+            "",
+            "=== pre-run infra attempts ===",
+            JSON.stringify(preRunHealth.attempts, null, 2),
+            "",
+            "=== harness env (effective) ===",
+            JSON.stringify(envSnapshot, null, 2),
+            "",
+            "=== stdout ===",
+            result.stdout || "",
+            "",
+            "=== stderr ===",
+            result.stderr || "",
+          ].join("\n");
+          await writeFile(logPath, logBody, "utf8");
 
-        status = mapExitToStatus(result.exitCode, result.timedOut, result.spawnError);
-        if (result.spawnError) {
-          runnerFailures += 1;
-        }
+          status = mapExitToStatus(result.exitCode, result.timedOut, result.spawnError);
+          if (result.spawnError) {
+            runnerFailures += 1;
+          }
 
-        if (report?.status) {
-          status = result.timedOut ? "BLOCKED_TIMEOUT" : report.status;
-        }
+          if (report?.status) {
+            status = result.timedOut ? "BLOCKED_TIMEOUT" : report.status;
+          }
 
-        const latestScreenshot = await findLatestScreenshot(screenshotAbsDir);
-        const blockedReason =
-          report?.blocked?.whatYouNeed ||
-          report?.blocked?.detail ||
-          (result.timedOut ? "wrapper timeout" : null);
+          const latestScreenshot = await findLatestScreenshot(screenshotAbsDir);
+          const blockedReason =
+            report?.blocked?.whatYouNeed ||
+            report?.blocked?.detail ||
+            (result.timedOut ? "wrapper timeout" : null);
 
-        if (
-          cfg.diagnostic ||
-          status === "BLOCKED" ||
-          status === "BLOCKED_TIMEOUT" ||
-          result.spawnError
-        ) {
-          blockedDetailPath = await writeBlockedDiagnostic(outAbs, {
-            runId: cfg.runId,
+          if (
+            cfg.diagnostic ||
+            status === "BLOCKED" ||
+            status === "BLOCKED_TIMEOUT" ||
+            result.spawnError
+          ) {
+            blockedDetailPath = await writeBlockedDiagnostic(outAbs, {
+              runId: cfg.runId,
+              round,
+              subject,
+              cohort: cohort.id,
+              grade: gradeKey,
+              gradeNumber,
+              status,
+              exitCode: result.exitCode,
+              timedOut: result.timedOut,
+              spawnError: result.spawnError || null,
+              durationSec: runDurationSec,
+              env: envSnapshot,
+              preRunHealth: preRunHealth.attempts,
+              blocked: report?.blocked || null,
+              blockedReason,
+              reportPath: report ? relative(REPO_ROOT, reportJsonPath) : null,
+              reportExists: Boolean(report),
+              logPath: relative(REPO_ROOT, logPath),
+              latestScreenshot,
+              stderrTail: (result.stderr || "").slice(-4000),
+              stdoutTail: (result.stdout || "").slice(-4000),
+            });
+            log(`  blocked-detail: ${blockedDetailPath}`);
+            if (blockedReason) log(`  blocked-reason: ${String(blockedReason).slice(0, 240)}`);
+          }
+
+          const needsRecovery =
+            result.timedOut || status === "BLOCKED" || status === "BLOCKED_TIMEOUT";
+          if (needsRecovery) {
+            log(`  recovering infra after ${status} (${runDurationSec}s)…`);
+            let recovery = await waitForInfraReady(cfg.baseUrl, cfg, { purpose: "recovery" });
+            log(`  recovery: ok=${recovery.ok} attempts=${recovery.attempts.length}`);
+            if (!recovery.ok) {
+              log("  extended recovery: cool-down 90s + warm-up + startup probe…");
+              await sleep(90_000);
+              await warmUpLoginRoute(cfg.baseUrl, { attempts: 6 });
+              recovery = await waitForInfraReady(cfg.baseUrl, cfg, { purpose: "startup" });
+              log(`  extended recovery: ok=${recovery.ok} attempts=${recovery.attempts.length}`);
+            }
+            if (!recovery.ok && cfg.autoRestartDev) {
+              recovery = await restartDevServer(cfg);
+              log(`  dev restart recovery: ok=${recovery.ok} attempts=${recovery.attempts.length}`);
+            }
+          } else if (runDurationSec >= 30 || status === "VISUAL_QA_PASS" || status === "ISSUES_FOUND") {
+            await sleep(cfg.cooldownSec * 1000);
+          }
+
+          const runSummary = summarizeRunReport(report, status);
+          completedSamples += runSummary.samplesCompleted;
+          issuesSoFar += runSummary.samplesWithIssues;
+          if (runSummary.blockedCount || status === "BLOCKED" || status === "BLOCKED_TIMEOUT") {
+            blockedSoFar += 1;
+          }
+
+          if (report?.samples?.length) {
+            for (const sample of report.samples) {
+              for (const detail of extractIssueDetails(sample)) {
+                const key = issueKey(subject, sample, detail);
+                const prev = groupedMap.get(key) || {
+                  subject,
+                  cohort: cohort.id,
+                  grade: sample.grade || gradeKey,
+                  topic: sample.topic || "",
+                  issueTitle: detail,
+                  issueCode: detail,
+                  count: 0,
+                  examples: [],
+                  screenshots: [],
+                };
+                prev.count += 1;
+                if (prev.examples.length < 5) {
+                  prev.examples.push({
+                    questionText: (sample.questionText || "").slice(0, 200),
+                    studentLabel: sample.studentLabel,
+                    topicDisplay: sample.topicDisplay,
+                  });
+                }
+                if (sample.screenshotPath && prev.screenshots.length < 5) {
+                  prev.screenshots.push(sample.screenshotPath);
+                }
+                groupedMap.set(key, prev);
+              }
+            }
+          }
+
+          if (status === "BLOCKED" && report?.blocked && !report.samples?.length) {
+            const detail = report.blocked.whatYouNeed || report.blocked.detail || "blocked";
+            const key = issueKey(subject, { grade: gradeKey, topic: "?" }, `BLOCKED: ${detail}`);
+            const prev = groupedMap.get(key) || {
+              subject,
+              cohort: cohort.id,
+              grade: gradeKey,
+              topic: "?",
+              issueTitle: `BLOCKED: ${detail}`,
+              issueCode: "BLOCKED",
+              count: 0,
+              examples: [{ blocked: report.blocked }],
+              screenshots: [],
+            };
+            prev.count += 1;
+            groupedMap.set(key, prev);
+          }
+
+          if (status === "BLOCKED_TIMEOUT") {
+            const key = issueKey(subject, { grade: gradeKey, topic: "?" }, "BLOCKED_TIMEOUT");
+            const prev = groupedMap.get(key) || {
+              subject,
+              cohort: cohort.id,
+              grade: gradeKey,
+              topic: "?",
+              issueTitle: "BLOCKED_TIMEOUT",
+              issueCode: "BLOCKED_TIMEOUT",
+              count: 0,
+              examples: [],
+              screenshots: [],
+            };
+            prev.count += 1;
+            groupedMap.set(key, prev);
+          }
+
+          const runRecord = {
             round,
             subject,
             cohort: cohort.id,
+            grade: gradeKey,
+            gradeNumber,
+            sampleSeed,
             status,
             exitCode: result.exitCode,
             timedOut: result.timedOut,
             spawnError: result.spawnError || null,
+            samplesCompleted: runSummary.samplesCompleted,
+            samplesWithIssues: runSummary.samplesWithIssues,
+            blockedCount: runSummary.blockedCount,
             durationSec: runDurationSec,
-            env: envSnapshot,
-            preRunHealth: preRunHealth.attempts,
-            blocked: report?.blocked || null,
-            blockedReason,
-            reportPath: report ? relative(REPO_ROOT, reportJsonPath) : null,
-            reportExists: Boolean(report),
+            reportPath: relative(REPO_ROOT, reportJsonPath),
+            reportTxtPath: relative(REPO_ROOT, reportTxtPath),
             logPath: relative(REPO_ROOT, logPath),
+            screenshotsPath,
+            blockedDetailPath,
+            blockedReason,
+            preRunHealthOk,
+            preRunHealthAttempts: preRunHealth.attempts,
             latestScreenshot,
-            stderrTail: (result.stderr || "").slice(-4000),
-            stdoutTail: (result.stdout || "").slice(-4000),
+          };
+
+          runRecords.push(runRecord);
+          completedRuns += 1;
+          currentStatus = status;
+
+          log(
+            `  → ${status} exit=${result.exitCode} samples=${runSummary.samplesCompleted} issues=${runSummary.samplesWithIssues} (${runDurationSec}s)`
+          );
+
+          printProgress({
+            runId: cfg.runId,
+            currentRound,
+            totalRounds: cfg.rounds,
+            currentSubject,
+            currentCohort,
+            currentGrade,
+            currentStatus,
+            completedRuns,
+            totalRuns,
+            completedSamples,
+            plannedSamples: totalPlannedSamples,
+            issuesSoFar,
+            blockedSoFar,
+            startedAt,
           });
-          log(`  blocked-detail: ${blockedDetailPath}`);
-          if (blockedReason) log(`  blocked-reason: ${String(blockedReason).slice(0, 240)}`);
         }
-
-        const needsRecovery =
-          result.timedOut || status === "BLOCKED" || status === "BLOCKED_TIMEOUT";
-        if (needsRecovery) {
-          log(`  recovering infra after ${status} (${runDurationSec}s)…`);
-          let recovery = await waitForInfraReady(cfg.baseUrl, cfg, { purpose: "recovery" });
-          log(`  recovery: ok=${recovery.ok} attempts=${recovery.attempts.length}`);
-          if (!recovery.ok) {
-            log("  extended recovery: cool-down 90s + warm-up + startup probe…");
-            await sleep(90_000);
-            await warmUpLoginRoute(cfg.baseUrl, { attempts: 6 });
-            recovery = await waitForInfraReady(cfg.baseUrl, cfg, { purpose: "startup" });
-            log(`  extended recovery: ok=${recovery.ok} attempts=${recovery.attempts.length}`);
-          }
-          if (!recovery.ok && cfg.autoRestartDev) {
-            recovery = await restartDevServer(cfg);
-            log(`  dev restart recovery: ok=${recovery.ok} attempts=${recovery.attempts.length}`);
-          }
-        } else if (runDurationSec >= 30 || status === "VISUAL_QA_PASS" || status === "ISSUES_FOUND") {
-          await sleep(cfg.cooldownSec * 1000);
-        }
-
-        const summary = summarizeRunReport(report, status);
-        completedSamples += summary.samplesCompleted;
-        issuesSoFar += summary.samplesWithIssues;
-        if (summary.blockedCount || status === "BLOCKED" || status === "BLOCKED_TIMEOUT") {
-          blockedSoFar += 1;
-        }
-
-        if (report?.samples?.length) {
-          for (const sample of report.samples) {
-            for (const detail of extractIssueDetails(sample)) {
-              const key = issueKey(subject, sample, detail);
-              const prev = groupedMap.get(key) || {
-                subject,
-                grade: sample.grade || "",
-                topic: sample.topic || "",
-                issueTitle: detail,
-                issueCode: detail,
-                count: 0,
-                examples: [],
-                screenshots: [],
-              };
-              prev.count += 1;
-              if (prev.examples.length < 5) {
-                prev.examples.push({
-                  questionText: (sample.questionText || "").slice(0, 200),
-                  studentLabel: sample.studentLabel,
-                  topicDisplay: sample.topicDisplay,
-                });
-              }
-              if (sample.screenshotPath && prev.screenshots.length < 5) {
-                prev.screenshots.push(sample.screenshotPath);
-              }
-              groupedMap.set(key, prev);
-            }
-          }
-        }
-
-        if (status === "BLOCKED" && report?.blocked && !report.samples?.length) {
-          const detail = report.blocked.whatYouNeed || report.blocked.detail || "blocked";
-          const key = issueKey(subject, { grade: "?", topic: "?" }, `BLOCKED: ${detail}`);
-          const prev = groupedMap.get(key) || {
-            subject,
-            grade: "?",
-            topic: "?",
-            issueTitle: `BLOCKED: ${detail}`,
-            issueCode: "BLOCKED",
-            count: 0,
-            examples: [{ blocked: report.blocked }],
-            screenshots: [],
-          };
-          prev.count += 1;
-          groupedMap.set(key, prev);
-        }
-
-        if (status === "BLOCKED_TIMEOUT") {
-          const key = issueKey(subject, { grade: "?", topic: "?" }, "BLOCKED_TIMEOUT");
-          const prev = groupedMap.get(key) || {
-            subject,
-            grade: "?",
-            topic: "?",
-            issueTitle: "BLOCKED_TIMEOUT",
-            issueCode: "BLOCKED_TIMEOUT",
-            count: 0,
-            examples: [],
-            screenshots: [],
-          };
-          prev.count += 1;
-          groupedMap.set(key, prev);
-        }
-
-        const runRecord = {
-          round,
-          subject,
-          cohort: cohort.id,
-          sampleSeed,
-          status,
-          exitCode: result.exitCode,
-          timedOut: result.timedOut,
-          spawnError: result.spawnError || null,
-          samplesCompleted: summary.samplesCompleted,
-          samplesWithIssues: summary.samplesWithIssues,
-          blockedCount: summary.blockedCount,
-          durationSec: runDurationSec,
-          reportPath: relative(REPO_ROOT, reportJsonPath),
-          reportTxtPath: relative(REPO_ROOT, reportTxtPath),
-          logPath: relative(REPO_ROOT, logPath),
-          screenshotsPath,
-          blockedDetailPath,
-          blockedReason,
-          preRunHealthOk,
-          preRunHealthAttempts: preRunHealth.attempts,
-          latestScreenshot,
-        };
-
-        runRecords.push(runRecord);
-        completedRuns += 1;
-        currentStatus = status;
-
-        log(
-          `  → ${status} exit=${result.exitCode} samples=${summary.samplesCompleted} issues=${summary.samplesWithIssues} (${runDurationSec}s)`
-        );
-
-        printProgress({
-          runId: cfg.runId,
-          currentRound,
-          totalRounds: cfg.rounds,
-          currentSubject,
-          currentCohort,
-          currentStatus,
-          completedRuns,
-          totalRuns,
-          completedSamples,
-          plannedSamples: totalPlannedSamples,
-          issuesSoFar,
-          blockedSoFar,
-          startedAt,
-        });
       }
     }
   }
@@ -1429,6 +1453,7 @@ async function main() {
     totalBlockedRuns,
     runnerFailures,
     overallStatus,
+    gradeLevelRuns: true,
     runs: runRecords,
     groupedFindings,
     topIssues,
@@ -1445,7 +1470,7 @@ async function main() {
   log(`Summary: ${relative(REPO_ROOT, summaryJsonPath)}`);
   log(`Duration: ${durationSec}s | samples ${completedSamples}/${totalPlannedSamples} | issues ${issuesSoFar}`);
 
-  const perRunPlanned = plannedSamplesPerRun(cfg.samplesPerGrade);
+  const perRunPlanned = plannedSamplesPerGradeRun(cfg.samplesPerGrade);
   const diagOk = diagnosticRunPassed(summary, perRunPlanned);
   summary.diagnosticPassed = cfg.diagnostic ? diagOk : undefined;
   await writeFile(summaryJsonPath, `${JSON.stringify(summary, null, 2)}\n`, "utf8");

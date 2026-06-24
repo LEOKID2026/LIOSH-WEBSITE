@@ -173,8 +173,30 @@ export function parseHarnessEnv() {
     process.env.VISUAL_QA_ALLOW_MUTATIONS === "true";
   const outputDir = String(process.env.VISUAL_QA_OUTPUT_DIR || "").trim();
   const sampleSeed = String(process.env.VISUAL_QA_SAMPLE_SEED || "").trim();
+  const gradeFilterParsed = parseGradeFilter(process.env.VISUAL_QA_GRADE_FILTER);
+  const gradeFilter = gradeFilterParsed.ok ? gradeFilterParsed.grade : null;
 
-  return { subject, mode, samplesPerGrade, useSecondStudent, allowMutations, outputDir, sampleSeed };
+  return {
+    subject,
+    mode,
+    samplesPerGrade,
+    useSecondStudent,
+    allowMutations,
+    outputDir,
+    sampleSeed,
+    gradeFilter,
+  };
+}
+
+/** @returns {{ ok: true, grade: number } | { ok: false, error: string }} */
+export function parseGradeFilter(raw) {
+  const s = String(raw ?? "").trim();
+  if (!s) return { ok: true, grade: null };
+  const n = Number(s);
+  if (!Number.isInteger(n) || n < 1 || n > 6) {
+    return { ok: false, error: `VISUAL_QA_GRADE_FILTER must be an integer 1–6, got "${raw}"` };
+  }
+  return { ok: true, grade: n };
 }
 
 export function resolveSubject(subject) {

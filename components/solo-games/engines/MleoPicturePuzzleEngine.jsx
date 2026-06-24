@@ -1,6 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import SoloGameAdSlot from "../SoloGameAdSlot.jsx";
 import { useSoloGameShellUi } from "../../../hooks/solo-games/useSoloGameShellUi.js";
+import {
+  exitMobileGameFullscreen,
+  requestMobileGameFullscreen,
+} from "../../../lib/solo-games/solo-game-fullscreen.client.js";
 import {
   ACTIVE_PICTURE_PUZZLE_MECHANIC,
   PLACEMENT_DIFFICULTY_SETTINGS,
@@ -232,6 +236,7 @@ export default function MleoPicturePuzzleEngine({
   };
 
   const endGame = (didWin, remaining) => {
+    exitMobileGameFullscreen();
     setGameRunning(false);
     setGameOver(true);
     setWon(didWin);
@@ -402,8 +407,20 @@ export default function MleoPicturePuzzleEngine({
     }
   };
 
+  const enterMobilePlayFullscreen = useCallback(() => {
+    const wrapper = document.getElementById("game-wrapper");
+    requestMobileGameFullscreen(wrapper);
+  }, []);
+
+  useEffect(() => {
+    if (showPicker) return undefined;
+    return () => {
+      exitMobileGameFullscreen();
+    };
+  }, [showPicker]);
+
   const playWrap =
-    "relative isolate flex h-full min-h-0 flex-1 flex-col overflow-hidden bg-gray-900 text-white select-none";
+    "relative isolate flex h-full min-h-0 flex-1 flex-col overflow-hidden bg-gray-900 text-white select-none solo-game-mobile-fullscreen-shell";
 
   return (
     <div
@@ -540,6 +557,7 @@ export default function MleoPicturePuzzleEngine({
           onReturnToTray={handleReturnToTray}
           onTriggerHint={triggerHint}
           onCloseHint={closeHint}
+          onEnterPlayFullscreen={enterMobilePlayFullscreen}
           computeWinScore={computeWinScore}
         />
       ) : (
