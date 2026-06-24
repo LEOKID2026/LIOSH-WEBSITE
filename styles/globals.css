@@ -248,6 +248,10 @@ a[href][aria-disabled="true"] {
     margin-top: 40px !important;
   }
 
+  .picture-puzzle-portrait-fullscreen .puzzle-tray-hint-row {
+    margin-bottom: 8px !important;
+  }
+
   .picture-puzzle-portrait-fullscreen .puzzle-tray-portrait-bottom {
     margin-bottom: 72px !important;
     transform: none !important;
