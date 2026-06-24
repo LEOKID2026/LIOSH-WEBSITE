@@ -15,9 +15,22 @@ import {
 import { finalizeSoloGameSession } from "../../../../lib/solo-games/server/solo-game-payout.server.js";
 import { assertStudentCanPlayGame } from "../../../../lib/games/server/game-access.server.js";
 
+/** Metrics persisted for smart-blocks finish validation + metrics_json. */
+const SMART_BLOCKS_METRIC_KEYS = Object.freeze([
+  "moves",
+  "placedBlocks",
+  "clearedRows",
+  "clearedColumns",
+  "clearedLinesTotal",
+  "combos",
+  "bestCombo",
+  "durationSec",
+  "accuracy",
+]);
+
 function normalizeMetrics(raw) {
   if (!raw || typeof raw !== "object") return null;
-  return {
+  const metrics = {
     score: Number(raw.score),
     didWin: raw.didWin === true,
     difficulty: raw.difficulty != null ? String(raw.difficulty).trim().toLowerCase() : null,
@@ -26,6 +39,14 @@ function normalizeMetrics(raw) {
     timeRemainingSec: raw.timeRemainingSec != null ? Number(raw.timeRemainingSec) : null,
     durationMs: raw.durationMs != null ? Number(raw.durationMs) : null,
   };
+
+  for (const key of SMART_BLOCKS_METRIC_KEYS) {
+    if (raw[key] != null) {
+      metrics[key] = Number(raw[key]);
+    }
+  }
+
+  return metrics;
 }
 
 export default async function handler(req, res) {
