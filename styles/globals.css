@@ -244,8 +244,12 @@ a[href][aria-disabled="true"] {
     top: max(18px, calc(env(safe-area-inset-top, 0px) + 12px));
   }
 
+  .picture-puzzle-portrait-fullscreen .puzzle-tray-portrait-top {
+    margin-top: 40px !important;
+  }
+
   .picture-puzzle-portrait-fullscreen .puzzle-tray-portrait-bottom {
-    transform: none;
-    margin-bottom: max(24px, calc(env(safe-area-inset-bottom, 0px) + 14px));
+    margin-bottom: 72px !important;
+    transform: none !important;
   }
 }
