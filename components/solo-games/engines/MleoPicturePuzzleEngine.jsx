@@ -263,7 +263,8 @@ export default function MleoPicturePuzzleEngine({
     }, kind === "success" ? 500 : 900);
   };
 
-  const startGame = () => {
+  const startGame = (imageId) => {
+    if (imageId) setSelectedImageId(imageId);
     sessionEndFiredRef.current = false;
     playStartedAtRef.current = Date.now();
     movesRef.current = 0;
@@ -293,6 +294,11 @@ export default function MleoPicturePuzzleEngine({
     }
 
     setGameRunning(true);
+  };
+
+  const chooseImageAndStart = (imageId) => {
+    closePreview();
+    startGame(imageId);
   };
 
   useEffect(() => {
@@ -381,7 +387,7 @@ export default function MleoPicturePuzzleEngine({
         <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden px-1 py-0.5 sm:px-2 sm:py-1">
           <div className="shrink-0 py-0.5 text-center leading-tight">
             <h2 className={SG.preGameTitle}>בחרו תמונה לפאזל</h2>
-            <p className={SG.preGameSub}>לחצו · בחרו · התחילו</p>
+            <p className={SG.preGameSub}>לחצו על תמונה ובחרו</p>
           </div>
 
           <div className="flex min-h-0 flex-1 items-center justify-center overflow-hidden py-1">
@@ -412,17 +418,8 @@ export default function MleoPicturePuzzleEngine({
           </div>
 
           <div className="shrink-0 px-1 pb-1 pt-1 sm:px-2">
-            <button
-              type="button"
-              onClick={startGame}
-              className={SG.preGameStartBtn}
-              style={{ touchAction: "manipulation" }}
-            >
-              התחל משחק
-            </button>
+            <SoloGameAdSlot />
           </div>
-
-          <SoloGameAdSlot />
 
           {previewImage ? (
             <div
@@ -476,10 +473,7 @@ export default function MleoPicturePuzzleEngine({
                 <div className="flex w-full max-w-xs gap-2">
                   <button
                     type="button"
-                    onClick={() => {
-                      setSelectedImageId(previewImage.id);
-                      closePreview();
-                    }}
+                    onClick={() => chooseImageAndStart(previewImage.id)}
                     className="min-h-[44px] flex-1 rounded-xl bg-yellow-400 px-3 py-2 text-sm font-bold text-black"
                     style={{ touchAction: "manipulation" }}
                   >
