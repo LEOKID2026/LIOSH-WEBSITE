@@ -28,6 +28,18 @@ const SMART_BLOCKS_METRIC_KEYS = Object.freeze([
   "accuracy",
 ]);
 
+/** Metrics persisted for fruit-slice finish validation + metrics_json. */
+const FRUIT_SLICE_METRIC_KEYS = Object.freeze([
+  "slicedFruits",
+  "missedFruits",
+  "bombHits",
+  "strikes",
+  "combos",
+  "bestCombo",
+  "durationSec",
+  "accuracy",
+]);
+
 function normalizeMetrics(raw) {
   if (!raw || typeof raw !== "object") return null;
   const metrics = {
@@ -41,6 +53,12 @@ function normalizeMetrics(raw) {
   };
 
   for (const key of SMART_BLOCKS_METRIC_KEYS) {
+    if (raw[key] != null) {
+      metrics[key] = Number(raw[key]);
+    }
+  }
+
+  for (const key of FRUIT_SLICE_METRIC_KEYS) {
     if (raw[key] != null) {
       metrics[key] = Number(raw[key]);
     }
