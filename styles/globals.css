@@ -188,6 +188,10 @@ a[href][aria-disabled="true"] {
     white-space: nowrap;
   }
 
+  .puzzle-tray-portrait-top .puzzle-tray-hint-row {
+    margin-bottom: 8px;
+  }
+
   .puzzle-tray-portrait-top .puzzle-tray-grid-single-row {
     display: flex;
     flex-wrap: nowrap;
@@ -249,7 +253,7 @@ a[href][aria-disabled="true"] {
   }
 
   .picture-puzzle-portrait-fullscreen .puzzle-tray-hint-row {
-    margin-bottom: 8px !important;
+    margin-bottom: 12px !important;
   }
 
   .picture-puzzle-portrait-fullscreen .puzzle-tray-portrait-bottom {
