@@ -12,6 +12,8 @@ import {
   pickWeakestTopics,
   pickStrongForThreeThings,
   pickWeakForThreeThings,
+  pickStableTopicForProgress,
+  pickStableSubjectForProgress,
   resolveContextTopicMetrics,
   topicAnchorFields,
 } from "./pattern-topic-metrics.js";
@@ -21,6 +23,7 @@ import {
   exportParentActivityEvidence,
   exportSpeedEvidence,
   isRealTrendLineHe,
+  hasProgressComparisonTrend,
 } from "./no-data-request-response.js";
 
 const WHERE_HELP_RE = /איפה\s+(?:ה(?:וא|יא)|(?:הילד|הילדה))\s+צ(?:ר|ר)יך\s+עזרה/u;
@@ -34,7 +37,13 @@ const SPEED_RE =
 const HOME_TODAY_RE =
   /(?:^|\s)(?:מה\s+לעשות\s+(?:אית(?:ו|ה|ם)|עמ(?:ו|ה))(?:\s+בבית)?\s+היום|מה\s+לעשות\s+בבית(?:\s+היום)?|מה\s+עושים\s+עכשיו|ו?מה\s+לעשות\s+(?:עם\s+ז(?:ה|ו)\s+)?בבית)(?:\s*[.?؟]*)?$/u;
 const ASK_AT_HOME_RE = /מה\s+לשאול\s+(?:אות(?:ו|ה)|את(?:ו|ה))\s+בבית/u;
-const WHAT_NOT_INFER_RE = /מה\s+לא\s+כדאי\s+(?:לי\s+)?להסיק/u;
+const WHAT_NOT_INFER_RE = /מה\s+לא\s+כדאי\s+(?:לי\s+)?להסיק(?:\s+עדיין)?/u;
+const PROGRESS_WHERE_RE =
+  /איפה\s+רואים(?:\s+(?:ש(?:יפור|התקדמות)|(?:ש(?:ה)?)?מצב\s+טוב\s+יותר))?|מה\s+השתפר/u;
+const IMPORTANT_NOW_RE =
+  /מה\s+ה(?:כי\s+)?חשוב(?:\s+(?:כרגע|לי(?:\s+ל)?דעת(?:\s+השבוע)?|עכשיו))?|במה\s+להתמקד\s+(?:עכשיו|השבוע)?|מה\s+העיקר|מה\s+חשוב\s+עכשיו/u;
+const AVOID_NOW_RE =
+  /מה\s+כדאי\s+להימנע(?:\s+ממנ(?:ו|ה))?(?:\s+עכשיו)?|ממה\s+להימנע|מה\s+לא\s+(?:כדאי\s+)?(?:ל)?עשות|מה\s+לא\s+כדאי\s+(?:לי\s+)?להסיק/u;
 const LEARNING_SEVERITY_FOLLOWUP_RE = /^(?:ז(?:ה|ו)\s+)?חמור\s*\??$/u;
 
 /**
@@ -43,6 +52,9 @@ const LEARNING_SEVERITY_FOLLOWUP_RE = /^(?:ז(?:ה|ו)\s+)?חמור\s*\??$/u;
 export function classifyApprovedPatternQuestion(utterance) {
   const t = foldUtteranceForHeMatch(String(utterance || ""));
   if (!t) return null;
+  if (PROGRESS_WHERE_RE.test(t)) return "progress_where";
+  if (IMPORTANT_NOW_RE.test(t)) return "important_now";
+  if (AVOID_NOW_RE.test(t)) return "avoid_now";
   if (HOME_TODAY_RE.test(t)) return "home_today";
   if (ASK_AT_HOME_RE.test(t)) return "ask_at_home";
   if (WHAT_NOT_INFER_RE.test(t)) return "what_not_infer";
@@ -121,6 +133,84 @@ function composeThreeThings(payload) {
   text += `3. לעשות צעד קטן בבית: פעילות קצרה אחת בנושא ${wLabel}, בלי להעמיס הרבה נושאים ביחד.`;
   const focus = fallbackWeak ? topicAnchorFields(fallbackWeak) : strong ? topicAnchorFields(strong) : topicAnchorFields(metas[0]);
   return patternDraft(text, focus, "what_is_most_important");
+}
+
+function composeAvoidNow(payload, utteranceStr = "") {
+  let text =
+    "כרגע כדאי להימנע משלושה דברים: לא להסיק מסקנה אישית על הילד, לא לפתוח הרבה נושאים יחד, ולא להחליט לפי שאלה אחת או שתיים. לפי הדוח, עדיף לבחור נושא אחד לתרגול קצר, לבדוק כמה תשובות ברצף, ואז לראות אם הכיוון חוזר גם בהמשך.";
+  const weak = pickWeakestTopic(collectTopicMetrics(payload));
+  if (weak?.q) {
+    const a = topicAnchorFields(weak);
+    text += ` הנושא להתחלה: ${a.subjectLabel} — ${a.topicLabel}.`;
+    return patternDraft(text, a, "what_not_to_do_now");
+  }
+  const truthPacket = buildTruthPacketV1(payload, {
+    scopeType: "executive",
+    scopeId: "executive",
+    scopeLabel: "סיכום דוח",
+    canonicalIntent: "what_not_to_do_now",
+    parentUtterance: utteranceStr,
+  });
+  if (!truthPacket) return null;
+  return {
+    answerBlocks: [{ type: "observation", textHe: text, source: "pattern_composer" }],
+    plannerIntent: "what_not_to_do_now",
+    focusTopic: null,
+    answerComposerUsed: "pattern_composer",
+    truthPacket,
+  };
+}
+
+function composeImportantNow(payload) {
+  const metas = collectTopicMetrics(payload);
+  const weak = pickWeakestTopic(metas);
+  if (weak?.q) {
+    const a = topicAnchorFields(weak);
+    const text = `הדבר הכי חשוב כרגע הוא לבחור נושא אחד לחיזוק ולא לפזר את התרגול. לפי הדוח, המקום הראשון להתחלה הוא ${a.subjectLabel} — ${a.topicLabel}: ${a.questionCount} שאלות, ${a.accuracyPercent}% הצלחה. כדאי לתרגל 5–10 דקות, 3–5 שאלות, ואז לבדוק אם התשובות יציבות יותר.`;
+    return patternDraft(text, a, "what_is_most_important");
+  }
+  const stable = pickStableTopicForProgress(metas);
+  if (stable?.q) {
+    const a = topicAnchorFields(stable);
+    const text = `הדבר הכי חשוב כרגע הוא לשמור על תרגול קצר וקבוע. לפי הדוח, הנושא שנראה יציב יותר בתקופה הזו הוא ${a.subjectLabel} — ${a.topicLabel}: ${a.questionCount} שאלות, ${a.accuracyPercent}% הצלחה. כדאי לתרגל 5–10 דקות, 3–5 שאלות, ואז לבדוק אם היציבות נשמרת.`;
+    return patternDraft(text, a, "what_is_most_important");
+  }
+  return null;
+}
+
+function composeProgressWhere(payload) {
+  const trend = hasProgressComparisonTrend(payload) ? composeTrend(payload) : null;
+  if (trend) return { ...trend, patternId: "progress_where" };
+
+  const metas = collectTopicMetrics(payload);
+  const stableTopic = pickStableTopicForProgress(metas);
+  if (stableTopic?.q) {
+    const a = topicAnchorFields(stableTopic);
+    const text = `בדוח הנוכחי לא מופיעה השוואה מספיקה שמוכיחה שינוי מהשבוע הקודם. כן אפשר לראות איפה התרגול נראה יציב יותר בתקופה הזו: ${a.subjectLabel} — ${a.topicLabel}, עם ${a.questionCount} שאלות ו־${a.accuracyPercent}% הצלחה. לכן כדאי להמשיך שם בתרגול קצר ולבדוק אם היציבות נשמרת גם בהמשך.`;
+    return patternDraft(text, a, "explain_report");
+  }
+
+  const subjectAnchor = pickStableSubjectForProgress(payload);
+  if (subjectAnchor?.questionCount) {
+    const text = `בדוח הנוכחי לא מופיעה השוואה מספיקה שמוכיחה שינוי מהשבוע הקודם. כן אפשר לראות איפה התרגול נראה יציב יותר בתקופה הזו: ${subjectAnchor.subjectLabel}, עם ${subjectAnchor.questionCount} שאלות ו־${subjectAnchor.accuracyPercent}% הצלחה. לכן כדאי להמשיך שם בתרגול קצר ולבדוק אם היציבות נשמרת גם בהמשך.`;
+    const truthPacket = buildTruthPacketV1(payload, {
+      scopeType: "subject",
+      scopeId: subjectAnchor.subjectId,
+      scopeLabel: subjectAnchor.subjectLabel,
+      canonicalIntent: "explain_report",
+      parentUtterance: "",
+    });
+    if (!truthPacket) return null;
+    return {
+      answerBlocks: [{ type: "observation", textHe: text, source: "pattern_composer" }],
+      plannerIntent: "explain_report",
+      focusTopic: subjectAnchor,
+      answerComposerUsed: "pattern_composer",
+      truthPacket,
+    };
+  }
+
+  return null;
 }
 
 function composeHomeToday(payload, conv) {
@@ -271,6 +361,18 @@ export function tryComposePatternAnswerDraft(params) {
   /** @type {null|ReturnType<typeof patternDraft>} */
   let composed = null;
   switch (pattern) {
+    case "progress_where":
+      composed = composeProgressWhere(payload);
+      break;
+    case "important_now":
+      composed = composeImportantNow(payload);
+      break;
+    case "avoid_now": {
+      const fixed = composeAvoidNow(payload, utteranceStr);
+      if (fixed?.truthPacket) return { ...fixed, patternId: "avoid_now" };
+      composed = fixed;
+      break;
+    }
     case "home_today":
       composed = composeHomeToday(payload, conv);
       break;
@@ -312,6 +414,20 @@ export function tryComposePatternAnswerDraft(params) {
       noData: true,
       patternId: pattern,
       plannerIntent: "unknown_report_question",
+    };
+  }
+
+  if (composed.truthPacket) {
+    return {
+      ...composed,
+      patternId: pattern,
+      scopeMeta: composed.scopeMeta || {
+        generationPath: "pattern_composer",
+        patternId: pattern,
+        intentReason: `pattern:${pattern}`,
+        scopeConfidence: 0.92,
+        scopeReason: "approved_pattern_composer",
+      },
     };
   }
 

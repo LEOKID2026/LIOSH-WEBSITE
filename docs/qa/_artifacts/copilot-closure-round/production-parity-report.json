@@ -1,0 +1,685 @@
+{
+  "generatedAt": "2026-06-24T07:31:37.920Z",
+  "status": "NOT_APPROVED — investigation only",
+  "localGitHead": "0acb9f6a6493a43e615c21e4d18f74e074c0f8e3 2026-06-24 10:11:47 +0300 Auto update - 24/06/2026 10:11:46.83",
+  "productionOrigin": "https://liosh-website.vercel.app",
+  "productionHeaders": {
+    "status": 200,
+    "headers": {
+      "cache-control": "public, max-age=0, must-revalidate",
+      "date": "Wed, 24 Jun 2026 07:29:35 GMT",
+      "server": "Vercel",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "x-matched-path": "/",
+      "x-vercel-cache": "HIT",
+      "x-vercel-id": "fra1::gggfg-1782286175657-4d418eb0a0aa"
+    }
+  },
+  "productionRunsLatestLocalCommit": "UNKNOWN — compare local HEAD to Vercel deployment commit manually",
+  "uiEndpointVerifiedInCode": {
+    "file": "lib/parent-client/copilot-turn-api.js",
+    "endpoint": "/api/parent/copilot-turn",
+    "method": "POST",
+    "wiredFrom": "pages/learning/parent-report-detailed.js → detailedCopilotTurnRunner → postParentCopilotTurn",
+    "clientPayloadInProduction": "ignored — server rebuild via resolveCopilotTurnPayloadForApi"
+  },
+  "authUsed": {
+    "identifier": "admin@admin.com",
+    "mode": "parent_bearer"
+  },
+  "targetChild": {
+    "label": "AAA11",
+    "studentId": "5f3df0a3-4527-4f8b-97cf-6e8ec5624920",
+    "matchesOwner214Fingerprint": false,
+    "payloadSummary": {
+      "totalQuestions": 401,
+      "overallAccuracy": 77.31,
+      "totalMinutes": null,
+      "topicRowCount": 0,
+      "topicRowsSample": [],
+      "hasDetailedPayload": false
+    },
+    "reportPeriod": {
+      "reportPeriod": "custom",
+      "rangeFrom": "2026-05-25",
+      "rangeTo": "2026-06-23"
+    }
+  },
+  "childScanTop": [
+    {
+      "label": "AAA11",
+      "studentId": "5f3df0a3-4527-4f8b-97cf-6e8ec5624920",
+      "totalQuestions": 401,
+      "overallAccuracy": 77.31,
+      "totalMinutes": null,
+      "topicRowCount": 0,
+      "topicRowsSample": [],
+      "hasDetailedPayload": false,
+      "matchesOwnerFingerprint": false
+    },
+    {
+      "label": "AAA7",
+      "studentId": "d8f6b184-80f2-4f2b-897e-cbbf557022e7",
+      "totalQuestions": 382,
+      "overallAccuracy": 41.62,
+      "totalMinutes": null,
+      "topicRowCount": 0,
+      "topicRowsSample": [],
+      "hasDetailedPayload": false,
+      "matchesOwnerFingerprint": false
+    },
+    {
+      "label": "AAA6",
+      "studentId": "b325272f-b554-4865-a827-6477773fb200",
+      "totalQuestions": 362,
+      "overallAccuracy": 58.01,
+      "totalMinutes": null,
+      "topicRowCount": 0,
+      "topicRowsSample": [],
+      "hasDetailedPayload": false,
+      "matchesOwnerFingerprint": false
+    },
+    {
+      "label": "AAA5",
+      "studentId": "79c8f8c7-2494-439e-b867-93b096c8590b",
+      "totalQuestions": 359,
+      "overallAccuracy": 65.74,
+      "totalMinutes": null,
+      "topicRowCount": 0,
+      "topicRowsSample": [],
+      "hasDetailedPayload": false,
+      "matchesOwnerFingerprint": false
+    },
+    {
+      "label": "AAA1",
+      "studentId": "fd3901da-66ce-46c7-a24c-b33df2141c04",
+      "totalQuestions": 353,
+      "overallAccuracy": 88.95,
+      "totalMinutes": null,
+      "topicRowCount": 0,
+      "topicRowsSample": [],
+      "hasDetailedPayload": false,
+      "matchesOwnerFingerprint": false
+    },
+    {
+      "label": "AAA9",
+      "studentId": "cd4ba8f0-fe4f-424d-8ed1-0c3acaf5f412",
+      "totalQuestions": 325,
+      "overallAccuracy": 63.38,
+      "totalMinutes": null,
+      "topicRowCount": 0,
+      "topicRowsSample": [],
+      "hasDetailedPayload": false,
+      "matchesOwnerFingerprint": false
+    },
+    {
+      "label": "AAA3",
+      "studentId": "a5b644c4-7407-422f-bb23-a78a0a608a98",
+      "totalQuestions": 320,
+      "overallAccuracy": 74.38,
+      "totalMinutes": null,
+      "topicRowCount": 0,
+      "topicRowsSample": [],
+      "hasDetailedPayload": false,
+      "matchesOwnerFingerprint": false
+    },
+    {
+      "label": "AAA8",
+      "studentId": "921e1c5d-4124-41cd-bad7-a16dbf0dfecc",
+      "totalQuestions": 126,
+      "overallAccuracy": 65.08,
+      "totalMinutes": null,
+      "topicRowCount": 0,
+      "topicRowsSample": [],
+      "hasDetailedPayload": false,
+      "matchesOwnerFingerprint": false
+    },
+    {
+      "label": "AAA12",
+      "studentId": "873c6971-06ed-4b31-9d76-616b4b623a52",
+      "totalQuestions": 146,
+      "overallAccuracy": 71.92,
+      "totalMinutes": null,
+      "topicRowCount": 0,
+      "topicRowsSample": [],
+      "hasDetailedPayload": false,
+      "matchesOwnerFingerprint": false
+    },
+    {
+      "label": "AAA10",
+      "studentId": "dea2bbce-1712-4862-9de7-00b732672fbb",
+      "totalQuestions": 240,
+      "overallAccuracy": 62.08,
+      "totalMinutes": null,
+      "topicRowCount": 0,
+      "topicRowsSample": [],
+      "hasDetailedPayload": false,
+      "matchesOwnerFingerprint": false
+    },
+    {
+      "label": "AAA2",
+      "studentId": "6c4f6dc1-de43-4b86-abe7-4f041e9d3a8c",
+      "totalQuestions": 188,
+      "overallAccuracy": 61.17,
+      "totalMinutes": null,
+      "topicRowCount": 0,
+      "topicRowsSample": [],
+      "hasDetailedPayload": false,
+      "matchesOwnerFingerprint": false
+    },
+    {
+      "label": "AAA4",
+      "studentId": "38e2dbcf-a927-419f-a2ed-b26c7100e656",
+      "totalQuestions": 228,
+      "overallAccuracy": 52.19,
+      "totalMinutes": null,
+      "topicRowCount": 0,
+      "topicRowsSample": [],
+      "hasDetailedPayload": false,
+      "matchesOwnerFingerprint": false
+    }
+  ],
+  "parityTable": [
+    {
+      "question": "מה הכי חשוב כרגע?",
+      "uiProduction": "same as HTTP (verified wiring)",
+      "httpProduction": "יש כמות תרגול בדוח, אבל חלק מהניסוחים עדיין זהירים — כדאי לצעדים קטנים ומדידים: לפי הדוח, כרגע מופיעים: חשבון — חיבור · …",
+      "engineLocal": "יש כרגע מעט נתוני תרגול, ולכן אין עדיין מספיק מידע לכיוון ברור. כדאי להתחיל בצעד קטן ולצבור עוד תרגול: כרגע אין מספיק נת…",
+      "identical": "לא",
+      "note": "awkward executive narrative phrase"
+    },
+    {
+      "question": "איפה רואים התקדמות?",
+      "uiProduction": "same as HTTP (verified wiring)",
+      "httpProduction": "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון…",
+      "engineLocal": "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון…",
+      "identical": "כן",
+      "note": "FAIL: ambiguous despite being listed as example in AMBIGUOUS_RESPONSE_HE; deterministic bucket=report_related"
+    },
+    {
+      "question": "מה כדאי להימנע ממנו עכשיו?",
+      "uiProduction": "same as HTTP (verified wiring)",
+      "httpProduction": "לא הצלחתי להבין בדיוק לאיזה חלק בדוח התכוונתם. אפשר לשאול בצורה פשוטה יותר, למשל: מה הכי חשוב השבוע, איפה רואים התקדמות,…",
+      "engineLocal": "לא הצלחתי להבין בדיוק לאיזה חלק בדוח התכוונתם. אפשר לשאול בצורה פשוטה יותר, למשל: מה הכי חשוב השבוע, איפה רואים התקדמות,…",
+      "identical": "כן",
+      "note": ""
+    },
+    {
+      "question": "מה לעשות בבית היום?",
+      "uiProduction": "same as HTTP (verified wiring)",
+      "httpProduction": "היום הייתי עושה דבר אחד: פעילות קצרה בנושא אנגלית — אוצר מילים. בדוח מופיעות שם 65 שאלות עם 62% הצלחה, ולכן זה מקום טוב …",
+      "engineLocal": "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון…",
+      "identical": "לא",
+      "note": "HTTP≠Engine — deploy/payload divergence"
+    },
+    {
+      "question": "איפה הוא צריך עזרה?",
+      "uiProduction": "same as HTTP (verified wiring)",
+      "httpProduction": "התחום שדורש חיזוק כרגע הוא אוצר מילים. נכון לעכשיו, באוצר מילים נאספו 65 שאלות בתקופה, ורמת הדיוק סביב 62%. כדאי להמשיך …",
+      "engineLocal": "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון…",
+      "identical": "לא",
+      "note": "HTTP≠Engine — deploy/payload divergence"
+    },
+    {
+      "question": "למה כתוב שיש פער במתמטיקה?",
+      "uiProduction": "same as HTTP (verified wiring)",
+      "httpProduction": "[null]",
+      "engineLocal": "בתקופה שנבחרה לא נאספו נתוני תרגול בחשבון, ולכן אי אפשר לקבוע כיוון לפי הדוח הנוכחי.",
+      "identical": "לא",
+      "note": "HTTP≠Engine — deploy/payload divergence"
+    },
+    {
+      "question": "האם הבעיה היא נשיאה?",
+      "uiProduction": "same as HTTP (verified wiring)",
+      "httpProduction": "[null]",
+      "engineLocal": "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון…",
+      "identical": "לא",
+      "note": "HTTP≠Engine — deploy/payload divergence"
+    }
+  ],
+  "progressQuestionDeepDive": {
+    "utterance": "איפה רואים התקדמות?",
+    "deterministicClassification": "report_related",
+    "deterministicConfidence": 0.82,
+    "uiProduction": "NOT_CAPTURED_BROWSER — code path verified: postParentCopilotTurn → /api/parent/copilot-turn",
+    "httpProduction": {
+      "url": "https://liosh-website.vercel.app/api/parent/copilot-turn",
+      "httpStatus": 200,
+      "textPreview": "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון ברור יותר בדוח.",
+      "fullText": "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון ברור יותר בדוח.",
+      "resolutionStatus": "clarification_required",
+      "intent": "unknown_report_question",
+      "route": null,
+      "fallbackUsed": false,
+      "ambiguous": true,
+      "isNoData": true,
+      "classification": null,
+      "clientPayloadIgnored": false,
+      "grounding": null,
+      "serverRebuild": false,
+      "requestBody": {
+        "studentId": "5f3df0a3-4527-4f8b-97cf-6e8ec5624920",
+        "utterance": "איפה רואים התקדמות?",
+        "sessionId": "prod-parity-1782286264122-a4r3y4",
+        "reportPeriod": "custom",
+        "rangeFrom": "2026-05-25",
+        "rangeTo": "2026-06-23",
+        "payload": "[REDACTED_FAKE]"
+      }
+    },
+    "engineLocal": {
+      "path": "runParentCopilotTurnAsync (same as production API handler)",
+      "textPreview": "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון ברור יותר בדוח.",
+      "fullText": "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון ברור יותר בדוח.",
+      "resolutionStatus": "clarification_required",
+      "intent": "unknown_report_question",
+      "route": null,
+      "fallbackUsed": false,
+      "ambiguous": true,
+      "isNoData": true,
+      "classification": null,
+      "clientPayloadIgnored": false,
+      "grounding": null,
+      "serverRebuild": false
+    },
+    "identicalHttpEngine": true,
+    "note": "FAIL: ambiguous despite being listed as example in AMBIGUOUS_RESPONSE_HE; deterministic bucket=report_related"
+  },
+  "suggestionsSource": {
+    "quickActionsChips": "utils/parent-copilot/render-adapter.js buildQuickActions — labels: צעד קטן היום, תוכנית לשבוע, מה להימנע ממנו עכשיו, etc.",
+    "quickActionPresets": "components/parent-copilot/parent-copilot-panel.jsx — maps chip id → preset utterance (NOT 'איפה רואים התקדמות')",
+    "suggestedFollowUp": "utils/parent-copilot/followup-engine.js selectFollowUp — contract-bound families",
+    "ambiguousExamplesText": "utils/parent-copilot/question-classifier.js AMBIGUOUS_RESPONSE_HE mentions 'איפה רואים התקדמות' as example only",
+    "uiIntroExamples": "parent-copilot-panel.jsx intro mentions 'מה הכי חשוב כרגע' — NOT 'איפה רואים התקדמות'",
+    "progressQuestionLikelySource": "AMBIGUOUS_RESPONSE_HE or GENERAL_OFF_TOPIC_RESPONSE_HE example text shown after failed classification; OR user typed manually after seeing example in prior ambiguous/off-topic answer"
+  },
+  "awkwardHebrewSource": {
+    "phrase": "זה מגביל כמה ברורה התמונה הכוללת",
+    "file": "utils/parent-copilot/truth-packet-v1.js:827",
+    "ownerReportedAs": "מגדיל כמה ברורה התמונה הכוללת (possible misread or postprocess truncation)"
+  },
+  "ownerReport11Points": {
+    "1_productionRunsLatestCode": "UNKNOWN — local HEAD synced with origin/main; Vercel commit id not fetched (gh CLI unavailable)",
+    "2_commitBuildId": "fra1::gggfg-1782286175657-4d418eb0a0aa",
+    "3_uiCallsCopilotTurn": "YES — lib/parent-client/copilot-turn-api.js POST /api/parent/copilot-turn",
+    "4_progressQuestionLog": {
+      "url": "https://liosh-website.vercel.app/api/parent/copilot-turn",
+      "httpStatus": 200,
+      "textPreview": "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון ברור יותר בדוח.",
+      "fullText": "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון ברור יותר בדוח.",
+      "resolutionStatus": "clarification_required",
+      "intent": "unknown_report_question",
+      "route": null,
+      "fallbackUsed": false,
+      "ambiguous": true,
+      "isNoData": true,
+      "classification": null,
+      "clientPayloadIgnored": false,
+      "grounding": null,
+      "serverRebuild": false,
+      "requestBody": {
+        "studentId": "5f3df0a3-4527-4f8b-97cf-6e8ec5624920",
+        "utterance": "איפה רואים התקדמות?",
+        "sessionId": "prod-parity-1782286264122-a4r3y4",
+        "reportPeriod": "custom",
+        "rangeFrom": "2026-05-25",
+        "rangeTo": "2026-06-23",
+        "payload": "[REDACTED_FAKE]"
+      }
+    },
+    "5_payloadSummary": "see targetChild.payloadSummary",
+    "6_classificationRoute": {
+      "utterance": "איפה רואים התקדמות?",
+      "deterministic": "report_related",
+      "httpIntent": "unknown_report_question",
+      "httpRoute": null
+    },
+    "7_fallbackAmbiguous": {
+      "fallback": false,
+      "ambiguous": true
+    },
+    "8_whySuggestionAppeared": "Not from quickActions chips — likely prior ambiguous/off-topic response example text or manual entry",
+    "9_oldCopyInProduction": "HTTP≠Engine — possible stale deploy or env",
+    "10_artifactVsProduction": "Artifact used AAA synthetic children; owner tested real child with 214q — fingerprint match: NOT FOUND in QA parent scan",
+    "11_fixProposalDeferred": "After parity proof only — route 'איפה רואים התקדמות' to trend/stable-subject composer; ban ambiguous for catalog questions"
+  },
+  "fullRows": [
+    {
+      "utterance": "מה הכי חשוב כרגע?",
+      "deterministicClassification": "report_related",
+      "deterministicConfidence": 0.5,
+      "uiProduction": "NOT_CAPTURED_BROWSER — code path verified: postParentCopilotTurn → /api/parent/copilot-turn",
+      "httpProduction": {
+        "url": "https://liosh-website.vercel.app/api/parent/copilot-turn",
+        "httpStatus": 200,
+        "textPreview": "יש כמות תרגול בדוח, אבל חלק מהניסוחים עדיין זהירים — כדאי לצעדים קטנים ומדידים: לפי הדוח, כרגע מופיעים: חשבון — חיבור · גאומטריה — שטח · אנגלית — אוצר מילים · מדעים — גוף האדם · מדעים — ניסויים ותהליכים. הדוח מתבסס על התרגול שבוצע באתר בתקופה שנבחרה. בתקופה שנבחרה עדיין אין מספיק תרגול כדי לזהות מגמה ברורה במקצוע זה. חלק מהמוקדים עדיין עם ניסוח זהיר או מוקדם לסגירה — זה מגביל כמה ברורה התמונה הכוללת. כדאי להמשיך לעקוב — נכון לעכשיו — מה שמוצג כאן עדיין לא מבוסס מספיק בתקופה שנבחרה, ולכן נשמרת זה…",
+        "fullText": "יש כמות תרגול בדוח, אבל חלק מהניסוחים עדיין זהירים — כדאי לצעדים קטנים ומדידים: לפי הדוח, כרגע מופיעים: חשבון — חיבור · גאומטריה — שטח · אנגלית — אוצר מילים · מדעים — גוף האדם · מדעים — ניסויים ותהליכים. הדוח מתבסס על התרגול שבוצע באתר בתקופה שנבחרה. בתקופה שנבחרה עדיין אין מספיק תרגול כדי לזהות מגמה ברורה במקצוע זה. חלק מהמוקדים עדיין עם ניסוח זהיר או מוקדם לסגירה — זה מגביל כמה ברורה התמונה הכוללת. כדאי להמשיך לעקוב — נכון לעכשיו — מה שמוצג כאן עדיין לא מבוסס מספיק בתקופה שנבחרה, ולכן נשמרת זהירות בניסוח. 10 דקות תרגול ממוקד באנגלית, 5–8 שאלות קצרות.",
+        "resolutionStatus": "resolved",
+        "intent": "what_to_do_today",
+        "route": null,
+        "fallbackUsed": false,
+        "ambiguous": false,
+        "isNoData": false,
+        "classification": null,
+        "clientPayloadIgnored": false,
+        "grounding": null,
+        "serverRebuild": false,
+        "requestBody": {
+          "studentId": "5f3df0a3-4527-4f8b-97cf-6e8ec5624920",
+          "utterance": "מה הכי חשוב כרגע?",
+          "sessionId": "prod-parity-1782286254163-s8lvai",
+          "reportPeriod": "custom",
+          "rangeFrom": "2026-05-25",
+          "rangeTo": "2026-06-23",
+          "payload": "[REDACTED_FAKE]"
+        }
+      },
+      "engineLocal": {
+        "path": "runParentCopilotTurnAsync (same as production API handler)",
+        "textPreview": "יש כרגע מעט נתוני תרגול, ולכן אין עדיין מספיק מידע לכיוון ברור. כדאי להתחיל בצעד קטן ולצבור עוד תרגול: כרגע אין מספיק נתוני תרגול מעוגנים בדוח כדי לקבוע חולשה מובהקת במקצוע מסוים, ולכן אי אפשר לבנות כאן תמונת קושי קונקרטית בוודאות. לפי מעט הנתונים שכן מופיעים אפשר לדבר רק על סימנים ראשוניים, ולא להסיק מעבר למה שמוצג בפועל בדוח בתקופה הזו. עדיין מוקדם לקבוע — בשלב זה — זו תמונה ראשונית בלבד — לפי המסגרת של הדוח עדיין לא ניתן לקבוע כיוון עקבי — ממשיכים בתרגול ובדיקה חוזרת. 10 דקות תרגול ממוקד במקצ…",
+        "fullText": "יש כרגע מעט נתוני תרגול, ולכן אין עדיין מספיק מידע לכיוון ברור. כדאי להתחיל בצעד קטן ולצבור עוד תרגול: כרגע אין מספיק נתוני תרגול מעוגנים בדוח כדי לקבוע חולשה מובהקת במקצוע מסוים, ולכן אי אפשר לבנות כאן תמונת קושי קונקרטית בוודאות. לפי מעט הנתונים שכן מופיעים אפשר לדבר רק על סימנים ראשוניים, ולא להסיק מעבר למה שמוצג בפועל בדוח בתקופה הזו. עדיין מוקדם לקבוע — בשלב זה — זו תמונה ראשונית בלבד — לפי המסגרת של הדוח עדיין לא ניתן לקבוע כיוון עקבי — ממשיכים בתרגול ובדיקה חוזרת. 10 דקות תרגול ממוקד במקצוע, 5–8 שאלות קצרות.",
+        "resolutionStatus": "resolved",
+        "intent": "what_to_do_today",
+        "route": null,
+        "fallbackUsed": false,
+        "ambiguous": false,
+        "isNoData": false,
+        "classification": null,
+        "clientPayloadIgnored": false,
+        "grounding": null,
+        "serverRebuild": false
+      },
+      "identicalHttpEngine": false,
+      "note": "awkward executive narrative phrase"
+    },
+    {
+      "utterance": "איפה רואים התקדמות?",
+      "deterministicClassification": "report_related",
+      "deterministicConfidence": 0.82,
+      "uiProduction": "NOT_CAPTURED_BROWSER — code path verified: postParentCopilotTurn → /api/parent/copilot-turn",
+      "httpProduction": {
+        "url": "https://liosh-website.vercel.app/api/parent/copilot-turn",
+        "httpStatus": 200,
+        "textPreview": "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון ברור יותר בדוח.",
+        "fullText": "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון ברור יותר בדוח.",
+        "resolutionStatus": "clarification_required",
+        "intent": "unknown_report_question",
+        "route": null,
+        "fallbackUsed": false,
+        "ambiguous": true,
+        "isNoData": true,
+        "classification": null,
+        "clientPayloadIgnored": false,
+        "grounding": null,
+        "serverRebuild": false,
+        "requestBody": {
+          "studentId": "5f3df0a3-4527-4f8b-97cf-6e8ec5624920",
+          "utterance": "איפה רואים התקדמות?",
+          "sessionId": "prod-parity-1782286264122-a4r3y4",
+          "reportPeriod": "custom",
+          "rangeFrom": "2026-05-25",
+          "rangeTo": "2026-06-23",
+          "payload": "[REDACTED_FAKE]"
+        }
+      },
+      "engineLocal": {
+        "path": "runParentCopilotTurnAsync (same as production API handler)",
+        "textPreview": "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון ברור יותר בדוח.",
+        "fullText": "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון ברור יותר בדוח.",
+        "resolutionStatus": "clarification_required",
+        "intent": "unknown_report_question",
+        "route": null,
+        "fallbackUsed": false,
+        "ambiguous": true,
+        "isNoData": true,
+        "classification": null,
+        "clientPayloadIgnored": false,
+        "grounding": null,
+        "serverRebuild": false
+      },
+      "identicalHttpEngine": true,
+      "note": "FAIL: ambiguous despite being listed as example in AMBIGUOUS_RESPONSE_HE; deterministic bucket=report_related"
+    },
+    {
+      "utterance": "מה כדאי להימנע ממנו עכשיו?",
+      "deterministicClassification": "ambiguous_or_unclear",
+      "deterministicConfidence": 0,
+      "uiProduction": "NOT_CAPTURED_BROWSER — code path verified: postParentCopilotTurn → /api/parent/copilot-turn",
+      "httpProduction": {
+        "url": "https://liosh-website.vercel.app/api/parent/copilot-turn",
+        "httpStatus": 200,
+        "textPreview": "לא הצלחתי להבין בדיוק לאיזה חלק בדוח התכוונתם. אפשר לשאול בצורה פשוטה יותר, למשל: מה הכי חשוב השבוע, איפה רואים התקדמות, או מה כדאי לעשות בבית.",
+        "fullText": "לא הצלחתי להבין בדיוק לאיזה חלק בדוח התכוונתם. אפשר לשאול בצורה פשוטה יותר, למשל: מה הכי חשוב השבוע, איפה רואים התקדמות, או מה כדאי לעשות בבית.",
+        "resolutionStatus": "clarification_required",
+        "intent": "unclear",
+        "route": null,
+        "fallbackUsed": false,
+        "ambiguous": true,
+        "isNoData": false,
+        "classification": null,
+        "clientPayloadIgnored": false,
+        "grounding": null,
+        "serverRebuild": false,
+        "requestBody": {
+          "studentId": "5f3df0a3-4527-4f8b-97cf-6e8ec5624920",
+          "utterance": "מה כדאי להימנע ממנו עכשיו?",
+          "sessionId": "prod-parity-1782286270322-jtsv6i",
+          "reportPeriod": "custom",
+          "rangeFrom": "2026-05-25",
+          "rangeTo": "2026-06-23",
+          "payload": "[REDACTED_FAKE]"
+        }
+      },
+      "engineLocal": {
+        "path": "runParentCopilotTurnAsync (same as production API handler)",
+        "textPreview": "לא הצלחתי להבין בדיוק לאיזה חלק בדוח התכוונתם. אפשר לשאול בצורה פשוטה יותר, למשל: מה הכי חשוב השבוע, איפה רואים התקדמות, או מה כדאי לעשות בבית.",
+        "fullText": "לא הצלחתי להבין בדיוק לאיזה חלק בדוח התכוונתם. אפשר לשאול בצורה פשוטה יותר, למשל: מה הכי חשוב השבוע, איפה רואים התקדמות, או מה כדאי לעשות בבית.",
+        "resolutionStatus": "clarification_required",
+        "intent": "unclear",
+        "route": null,
+        "fallbackUsed": false,
+        "ambiguous": true,
+        "isNoData": false,
+        "classification": null,
+        "clientPayloadIgnored": false,
+        "grounding": null,
+        "serverRebuild": false
+      },
+      "identicalHttpEngine": true,
+      "note": ""
+    },
+    {
+      "utterance": "מה לעשות בבית היום?",
+      "deterministicClassification": "report_related",
+      "deterministicConfidence": 0.7,
+      "uiProduction": "NOT_CAPTURED_BROWSER — code path verified: postParentCopilotTurn → /api/parent/copilot-turn",
+      "httpProduction": {
+        "url": "https://liosh-website.vercel.app/api/parent/copilot-turn",
+        "httpStatus": 200,
+        "textPreview": "היום הייתי עושה דבר אחד: פעילות קצרה בנושא אנגלית — אוצר מילים. בדוח מופיעות שם 65 שאלות עם 62% הצלחה, ולכן זה מקום טוב לתרגול ממוקד. לעשות 5–10 דקות בלבד, 3–5 שאלות, ובסוף לשאול את הילד: איך חשבת על התשובה?",
+        "fullText": "היום הייתי עושה דבר אחד: פעילות קצרה בנושא אנגלית — אוצר מילים. בדוח מופיעות שם 65 שאלות עם 62% הצלחה, ולכן זה מקום טוב לתרגול ממוקד. לעשות 5–10 דקות בלבד, 3–5 שאלות, ובסוף לשאול את הילד: איך חשבת על התשובה?",
+        "resolutionStatus": "resolved",
+        "intent": "what_to_do_today",
+        "route": null,
+        "fallbackUsed": false,
+        "ambiguous": false,
+        "isNoData": false,
+        "classification": null,
+        "clientPayloadIgnored": false,
+        "grounding": null,
+        "serverRebuild": false,
+        "requestBody": {
+          "studentId": "5f3df0a3-4527-4f8b-97cf-6e8ec5624920",
+          "utterance": "מה לעשות בבית היום?",
+          "sessionId": "prod-parity-1782286277830-crce1j",
+          "reportPeriod": "custom",
+          "rangeFrom": "2026-05-25",
+          "rangeTo": "2026-06-23",
+          "payload": "[REDACTED_FAKE]"
+        }
+      },
+      "engineLocal": {
+        "path": "runParentCopilotTurnAsync (same as production API handler)",
+        "textPreview": "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון ברור יותר בדוח.",
+        "fullText": "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון ברור יותר בדוח.",
+        "resolutionStatus": "clarification_required",
+        "intent": "unknown_report_question",
+        "route": null,
+        "fallbackUsed": false,
+        "ambiguous": true,
+        "isNoData": true,
+        "classification": null,
+        "clientPayloadIgnored": false,
+        "grounding": null,
+        "serverRebuild": false
+      },
+      "identicalHttpEngine": false,
+      "note": "HTTP≠Engine — deploy/payload divergence"
+    },
+    {
+      "utterance": "איפה הוא צריך עזרה?",
+      "deterministicClassification": "report_related",
+      "deterministicConfidence": 0.88,
+      "uiProduction": "NOT_CAPTURED_BROWSER — code path verified: postParentCopilotTurn → /api/parent/copilot-turn",
+      "httpProduction": {
+        "url": "https://liosh-website.vercel.app/api/parent/copilot-turn",
+        "httpStatus": 200,
+        "textPreview": "התחום שדורש חיזוק כרגע הוא אוצר מילים. נכון לעכשיו, באוצר מילים נאספו 65 שאלות בתקופה, ורמת הדיוק סביב 62%. כדאי להמשיך לעקוב, יש כאן כיוון עבודה הגיוני, ונעדיף לראות את זה חוזר עוד פעם לפני שמחמירים בקביעת כיוון.",
+        "fullText": "התחום שדורש חיזוק כרגע הוא אוצר מילים. נכון לעכשיו, באוצר מילים נאספו 65 שאלות בתקופה, ורמת הדיוק סביב 62%. כדאי להמשיך לעקוב, יש כאן כיוון עבודה הגיוני, ונעדיף לראות את זה חוזר עוד פעם לפני שמחמירים בקביעת כיוון.",
+        "resolutionStatus": "resolved",
+        "intent": "what_is_still_difficult",
+        "route": null,
+        "fallbackUsed": false,
+        "ambiguous": false,
+        "isNoData": false,
+        "classification": null,
+        "clientPayloadIgnored": false,
+        "grounding": null,
+        "serverRebuild": false,
+        "requestBody": {
+          "studentId": "5f3df0a3-4527-4f8b-97cf-6e8ec5624920",
+          "utterance": "איפה הוא צריך עזרה?",
+          "sessionId": "prod-parity-1782286287158-33v6xl",
+          "reportPeriod": "custom",
+          "rangeFrom": "2026-05-25",
+          "rangeTo": "2026-06-23",
+          "payload": "[REDACTED_FAKE]"
+        }
+      },
+      "engineLocal": {
+        "path": "runParentCopilotTurnAsync (same as production API handler)",
+        "textPreview": "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון ברור יותר בדוח.",
+        "fullText": "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון ברור יותר בדוח.",
+        "resolutionStatus": "clarification_required",
+        "intent": "unknown_report_question",
+        "route": null,
+        "fallbackUsed": false,
+        "ambiguous": true,
+        "isNoData": true,
+        "classification": null,
+        "clientPayloadIgnored": false,
+        "grounding": null,
+        "serverRebuild": false
+      },
+      "identicalHttpEngine": false,
+      "note": "HTTP≠Engine — deploy/payload divergence"
+    },
+    {
+      "utterance": "למה כתוב שיש פער במתמטיקה?",
+      "deterministicClassification": "report_related",
+      "deterministicConfidence": 0.88,
+      "uiProduction": "NOT_CAPTURED_BROWSER — code path verified: postParentCopilotTurn → /api/parent/copilot-turn",
+      "httpProduction": {
+        "url": "https://liosh-website.vercel.app/api/parent/copilot-turn",
+        "httpStatus": 429,
+        "textPreview": "",
+        "fullText": "",
+        "resolutionStatus": null,
+        "intent": null,
+        "route": null,
+        "fallbackUsed": false,
+        "ambiguous": false,
+        "isNoData": false,
+        "classification": null,
+        "clientPayloadIgnored": false,
+        "grounding": null,
+        "serverRebuild": false,
+        "requestBody": {
+          "studentId": "5f3df0a3-4527-4f8b-97cf-6e8ec5624920",
+          "utterance": "למה כתוב שיש פער במתמטיקה?",
+          "sessionId": "prod-parity-1782286295250-fnga80",
+          "reportPeriod": "custom",
+          "rangeFrom": "2026-05-25",
+          "rangeTo": "2026-06-23",
+          "payload": "[REDACTED_FAKE]"
+        }
+      },
+      "engineLocal": {
+        "path": "runParentCopilotTurnAsync (same as production API handler)",
+        "textPreview": "בתקופה שנבחרה לא נאספו נתוני תרגול בחשבון, ולכן אי אפשר לקבוע כיוון לפי הדוח הנוכחי.",
+        "fullText": "בתקופה שנבחרה לא נאספו נתוני תרגול בחשבון, ולכן אי אפשר לקבוע כיוון לפי הדוח הנוכחי.",
+        "resolutionStatus": "clarification_required",
+        "intent": "unclear",
+        "route": null,
+        "fallbackUsed": false,
+        "ambiguous": true,
+        "isNoData": false,
+        "classification": null,
+        "clientPayloadIgnored": false,
+        "grounding": null,
+        "serverRebuild": false
+      },
+      "identicalHttpEngine": false,
+      "note": "HTTP≠Engine — deploy/payload divergence"
+    },
+    {
+      "utterance": "האם הבעיה היא נשיאה?",
+      "deterministicClassification": "report_related",
+      "deterministicConfidence": 0.88,
+      "uiProduction": "NOT_CAPTURED_BROWSER — code path verified: postParentCopilotTurn → /api/parent/copilot-turn",
+      "httpProduction": {
+        "url": "https://liosh-website.vercel.app/api/parent/copilot-turn",
+        "httpStatus": 429,
+        "textPreview": "",
+        "fullText": "",
+        "resolutionStatus": null,
+        "intent": null,
+        "route": null,
+        "fallbackUsed": false,
+        "ambiguous": false,
+        "isNoData": false,
+        "classification": null,
+        "clientPayloadIgnored": false,
+        "grounding": null,
+        "serverRebuild": false,
+        "requestBody": {
+          "studentId": "5f3df0a3-4527-4f8b-97cf-6e8ec5624920",
+          "utterance": "האם הבעיה היא נשיאה?",
+          "sessionId": "prod-parity-1782286296510-5re5i9",
+          "reportPeriod": "custom",
+          "rangeFrom": "2026-05-25",
+          "rangeTo": "2026-06-23",
+          "payload": "[REDACTED_FAKE]"
+        }
+      },
+      "engineLocal": {
+        "path": "runParentCopilotTurnAsync (same as production API handler)",
+        "textPreview": "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון ברור יותר בדוח.",
+        "fullText": "בדוח הנוכחי אין מספיק מידע כדי לענות על זה בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם כבר מופיע כיוון ברור יותר בדוח.",
+        "resolutionStatus": "clarification_required",
+        "intent": "unknown_report_question",
+        "route": null,
+        "fallbackUsed": false,
+        "ambiguous": true,
+        "isNoData": true,
+        "classification": null,
+        "clientPayloadIgnored": false,
+        "grounding": null,
+        "serverRebuild": false
+      },
+      "identicalHttpEngine": false,
+      "note": "HTTP≠Engine — deploy/payload divergence"
+    }
+  ]
+}

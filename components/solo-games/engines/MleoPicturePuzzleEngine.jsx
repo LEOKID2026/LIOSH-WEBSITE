@@ -239,6 +239,11 @@ export default function MleoPicturePuzzleEngine({
     fireSessionEnd(didWin, remaining, movesRef.current, finalScore);
   };
 
+  const closeHint = () => {
+    if (hintTimerRef.current) clearTimeout(hintTimerRef.current);
+    setShowHintPreview(false);
+  };
+
   const triggerHint = () => {
     if (!gameRunning || gameOver) return;
     setShowHintPreview(true);
@@ -534,6 +539,7 @@ export default function MleoPicturePuzzleEngine({
           onSelectBoardSlot={handleSelectBoardSlot}
           onReturnToTray={handleReturnToTray}
           onTriggerHint={triggerHint}
+          onCloseHint={closeHint}
           computeWinScore={computeWinScore}
         />
       ) : (

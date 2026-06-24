@@ -121,6 +121,53 @@ export function pickStrongForThreeThings(rows) {
 }
 
 /**
+ * Best stable topic/subject anchor for progress-without-trend answers.
+ * @param {ReturnType<typeof rowMetricsFromTopicRow>[]} rows
+ */
+export function pickStableTopicForProgress(rows) {
+  const strong = pickStrongestTopic(rows);
+  if (strong) return strong;
+  const withQ = rows.filter((r) => r.q > 0);
+  if (!withQ.length) return null;
+  return [...withQ].sort((a, b) => b.acc - a.acc || b.q - a.q)[0];
+}
+
+/**
+ * Subject-level rollup when no topic anchor exists.
+ * @param {unknown} payload
+ */
+export function pickStableSubjectForProgress(payload) {
+  const metas = collectTopicMetrics(payload);
+  if (!metas.length) return null;
+  /** @type {Map<string, { sid: string; q: number; correct: number }>} */
+  const bySid = new Map();
+  for (const m of metas) {
+    const prev = bySid.get(m.sid) || { sid: m.sid, q: 0, correct: 0 };
+    prev.q += m.q;
+    prev.correct += Math.round((m.q * m.acc) / 100);
+    bySid.set(m.sid, prev);
+  }
+  const subjects = [...bySid.values()].map((s) => ({
+    sid: s.sid,
+    q: s.q,
+    acc: s.q ? Math.round((s.correct / s.q) * 100) : 0,
+  }));
+  const stable = subjects.filter((s) => s.q >= STRONG_Q_MIN);
+  const pool = stable.length ? stable : subjects;
+  const best = [...pool].sort((a, b) => b.acc - a.acc || b.q - a.q)[0];
+  if (!best) return null;
+  return {
+    subjectLabel: subjectLabelHe(best.sid),
+    topicLabel: "",
+    questionCount: best.q,
+    accuracyPercent: best.acc,
+    topicRowKey: "",
+    subjectId: best.sid,
+    displayName: subjectLabelHe(best.sid),
+  };
+}
+
+/**
  * @param {ReturnType<typeof rowMetricsFromTopicRow>} m
  */
 export function topicAnchorFields(m) {

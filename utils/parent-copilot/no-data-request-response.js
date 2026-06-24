@@ -3,12 +3,15 @@
  * return NO_DATA_FOR_REQUEST_RESPONSE_HE instead of ambiguous clarification.
  */
 
-import { NO_DATA_FOR_REQUEST_RESPONSE_HE } from "./question-classifier.js";
+import {
+  NO_DATA_FOR_REQUEST_RESPONSE_HE,
+  NO_DATA_SPECIFIC_FOR_REQUEST_RESPONSE_HE,
+} from "./question-classifier.js";
 import { maxGlobalReportQuestionCount } from "./report-volume-context.js";
 import { foldUtteranceForHeMatch } from "./utterance-normalize-he.js";
 
 const TREND_UTTERANCE_RE =
-  /מה\s+השתנה|משבוע\s+קודם|מהשבוע\s+קודם|השבוע\s+קודם|האם\s+(?:הוא|היא)\s+מתקדם|יש\s+שיפור|התקדמות/u;
+  /מה\s+השתנה|משבוע\s+קודם|מהשבוע\s+קודם|השבוע\s+קודם|האם\s+(?:הוא|היא)\s+מתקדם|יש\s+שיפור/u;
 const PARENT_ACTIVITY_UTTERANCE_RE = /הפעילות\s+.*השפיע|מה\s+נתתי\s+ל(?:ו|ה)/u;
 const SPEED_UTTERANCE_RE = /לחץ\s+זמן|עונה\s+מהר|מהר\s+מדי|בגלל\s+לחץ/u;
 const SUBSKILL_UTTERANCE_RE = /תת[-\s]?מיומנות|מיומנות\s+ספ(?:צ|ס)יפית|האם\s+הבעיה\s+היא\s+נשיאה/u;
@@ -37,6 +40,28 @@ export function isRealTrendLineHe(line) {
   return /שיפור|ירידה|עלי(?:ה|ת)|ירד|עלה|התקד|מגמת|לעומת|מהשבוע|קודם|נמוך\s+יותר|גבוה\s+יותר|יציבות|דיוק\s+(?:עלה|ירד)/u.test(
     t,
   );
+}
+
+/**
+ * Week-over-week or directional change — excludes cautionary «יציבות» without comparison.
+ * @param {string} line
+ */
+export function isProgressComparisonTrendLineHe(line) {
+  const t = String(line || "").trim();
+  if (!t || !isRealTrendLineHe(t)) return false;
+  if (/יציבות/u.test(t) && !/שיפור|ירידה|עלי(?:ה|ת)|ירד|עלה|התקד|לעומת|מהשבוע|השבוע\s+קודם|מגמת|דיוק\s+(?:עלה|ירד)/u.test(t)) {
+    return false;
+  }
+  return /שיפור|ירידה|עלי(?:ה|ת)|ירד|עלה|התקד|לעומת|מהשבוע|השבוע\s+קודם|מגמת|דיוק\s+(?:עלה|ירד)/u.test(t);
+}
+
+/**
+ * @param {unknown} payload
+ */
+export function hasProgressComparisonTrend(payload) {
+  const trends = payload?.executiveSummary?.majorTrendsHe;
+  if (!Array.isArray(trends) || trends.length === 0) return false;
+  return trends.some((line) => isProgressComparisonTrendLineHe(line));
 }
 
 /**
@@ -182,6 +207,29 @@ export function shouldReturnNoDataForRequest(utterance, payload) {
   return false;
 }
 
-export function noDataResponseHe() {
+/**
+ * @param {string} [utterance]
+ * @param {unknown} [payload]
+ */
+export function noDataResponseHe(utterance = "", payload = null) {
+  const globalQ = maxGlobalReportQuestionCount(payload);
+  if (globalQ >= 8) {
+    return NO_DATA_SPECIFIC_FOR_REQUEST_RESPONSE_HE;
+  }
   return NO_DATA_FOR_REQUEST_RESPONSE_HE;
+}
+
+/**
+ * @param {string} text
+ */
+export function isNoDataClarificationText(text) {
+  const t = String(text || "").trim();
+  if (!t) return false;
+  return (
+    t === NO_DATA_FOR_REQUEST_RESPONSE_HE ||
+    t === NO_DATA_SPECIFIC_FOR_REQUEST_RESPONSE_HE ||
+    t.includes("אין מספיק מידע") ||
+    t.includes("בדוח הנוכחי אין מספיק") ||
+    t.includes("יש בדוח נתוני תרגול")
+  );
 }

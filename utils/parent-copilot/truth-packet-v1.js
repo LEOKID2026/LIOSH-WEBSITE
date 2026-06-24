@@ -824,7 +824,7 @@ function buildExecutiveIntentNarrativeSlots(x) {
       let interp = sparseExecutive
         ? "הדוח עדיין מסכם תקופה חלקית: ככל שיופיעו ניסוחים נוספים, אפשר יהיה לרכז תמונה עשירה יותר — בלי להסיק מעבר לנתוני התצוגה."
         : metas.some((m) => m.cannot || m.readiness === "insufficient" || m.confidenceBand === "low")
-          ? "חלק מהמוקדים עדיין עם ניסוח זהיר או מוקדם לסגירה — זה מגביל כמה ברורה התמונה הכוללת."
+          ? "כדאי להתמקד עכשיו בנושא אחד ולבדוק שוב אחרי עוד תרגול קצר."
           : "כדאי להתמקד עכשיו בנושא אחד ולבדוק שוב אחרי עוד תרגול קצר.";
       interp = appendDistinctSentence(interp, supportingNumericTail(x, intent));
       const narrTrendLead = trends.find(

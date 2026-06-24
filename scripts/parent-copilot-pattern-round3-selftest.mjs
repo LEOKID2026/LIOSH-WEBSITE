@@ -135,7 +135,7 @@ function main() {
     payload,
     conversationState: {},
   });
-  assert.ok(notInfer?.answerBlocks?.[0]?.textHe.includes("לא כדאי להסיק מהדוח"));
+  assert.ok(notInfer?.answerBlocks?.[0]?.textHe.includes("כרגע כדאי להימנע משלושה דברים"));
 
   const whyNotInfer = tryComposeContinuityPatternDraft({
     utteranceStr: "למה?",

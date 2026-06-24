@@ -180,4 +180,38 @@ a[href][aria-disabled="true"] {
     max-width: 42px;
     flex-shrink: 0;
   }
+
+  .puzzle-tray-portrait-top .puzzle-tray-hint-btn {
+    height: auto;
+    min-height: 28px;
+    max-width: none;
+    white-space: nowrap;
+  }
+
+  .puzzle-tray-portrait-top .puzzle-tray-grid-single-row {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    height: 42px;
+    overflow: visible;
+  }
+
+  .puzzle-tray-portrait-top .puzzle-tray-grid-single-row .puzzle-tray-piece {
+    flex: 1 1 0;
+    width: auto;
+    min-width: 0;
+    max-width: 42px;
+    height: 42px;
+    max-height: 42px;
+  }
+
+  .puzzle-hint-close {
+    display: flex;
+  }
+}
+
+.puzzle-hint-close {
+  display: none;
 }

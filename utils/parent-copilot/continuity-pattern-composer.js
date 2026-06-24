@@ -88,7 +88,7 @@ function priorTurnWasNoData(conv) {
 function priorTurnWasWhatNotInfer(conv) {
   if (conv?.lastTurnWasWhatNotInfer === true) return true;
   const s = String(conv?.lastAnswerSummary || conv?.lastAssistantAnswerDigestHe || "");
-  return s.includes("לא כדאי להסיק מהדוח");
+  return s.includes("לא כדאי להסיק מהדוח") || s.includes("לא להסיק מסקנה אישית");
 }
 
 const WHY_NOT_INFER_EXPLANATION_HE =

@@ -138,6 +138,10 @@ function TrayGrid({
 
   portraitMobile = false,
 
+  hideLabel = false,
+
+  singleRow = false,
+
 }) {
 
   return (
@@ -148,7 +152,7 @@ function TrayGrid({
 
         portraitMobile ? "puzzle-tray-portrait" : ""
 
-      } ${returnTarget ? "ring-2 ring-sky-400/40 rounded-lg" : ""}`}
+      } ${hideLabel ? (singleRow ? "w-full shrink-0" : "min-h-0 w-full flex-1") : ""} ${returnTarget ? "ring-2 ring-sky-400/40 rounded-lg" : ""}`}
 
       onClick={() => {
 
@@ -158,6 +162,7 @@ function TrayGrid({
 
     >
 
+      {!hideLabel ? (
       <p className="mb-0.5 shrink-0 text-center text-[10px] font-bold text-yellow-200 sm:text-xs">
 
         {label} ({pieces.length})
@@ -165,16 +170,35 @@ function TrayGrid({
         {returnTarget ? " · לחצו להחזיר" : ""}
 
       </p>
+      ) : null}
 
       <div
 
-        className="puzzle-tray-grid grid min-h-0 flex-1 content-start gap-0.5 overflow-y-auto overflow-x-hidden sm:gap-1"
+        className={`puzzle-tray-grid grid content-start gap-0.5 sm:gap-1 ${
 
-        style={
-          portraitMobile
-            ? undefined
-            : { gridTemplateColumns: `repeat(${trayCols}, minmax(0, 1fr))` }
-        }
+          singleRow
+
+            ? "puzzle-tray-grid-single-row shrink-0 overflow-visible"
+
+            : "min-h-0 flex-1 overflow-y-auto overflow-x-hidden"
+
+        }`}
+
+        style={{
+
+          ...(singleRow && pieces.length > 0
+
+            ? { "--tray-piece-count": pieces.length }
+
+            : {}),
+
+          ...(!portraitMobile && !singleRow
+
+            ? { gridTemplateColumns: `repeat(${trayCols}, minmax(0, 1fr))` }
+
+            : {}),
+
+        }}
 
       >
 
@@ -289,6 +313,8 @@ export default function MleoPicturePuzzlePlacementPlay({
   onReturnToTray,
 
   onTriggerHint,
+
+  onCloseHint,
 
   computeWinScore,
 
@@ -614,9 +640,39 @@ export default function MleoPicturePuzzlePlacementPlay({
 
 
 
-          {/* Mobile portrait — top tray */}
+          {/* Mobile portrait — top tray + hint */}
 
-          <div className="max-h-[22%] min-h-0 shrink-0 max-lg:landscape:hidden lg:hidden">
+          <div className="puzzle-tray-portrait-top shrink-0 max-lg:landscape:hidden lg:hidden">
+
+            <div className="mb-0.5 flex shrink-0 items-center justify-between gap-1 px-0.5">
+
+              <p className="text-[10px] font-bold text-yellow-200">
+
+                מגש עליון 🧩 ({trayFirst.length})
+
+                {returnTarget ? " · לחצו להחזיר" : ""}
+
+              </p>
+
+              <button
+
+                type="button"
+
+                onClick={onTriggerHint}
+
+                disabled={!gameRunning || gameOver}
+
+                className="puzzle-tray-hint-btn shrink-0 rounded-md border border-sky-400/70 bg-sky-950/70 px-1.5 py-0.5 text-[9px] font-bold leading-tight text-sky-100 disabled:opacity-40"
+
+                style={{ touchAction: "manipulation" }}
+
+              >
+
+                💡 הצג תמונה
+
+              </button>
+
+            </div>
 
             <TrayGrid
 
@@ -645,6 +701,10 @@ export default function MleoPicturePuzzlePlacementPlay({
               onDragStart={(e, id) => handleDragStart(e, id)}
 
               portraitMobile
+
+              hideLabel
+
+              singleRow
 
             />
 
@@ -706,7 +766,7 @@ export default function MleoPicturePuzzlePlacementPlay({
 
               disabled={!gameRunning || gameOver}
 
-              className="absolute left-1 top-1 z-10 min-h-[36px] rounded-lg border border-sky-400/70 bg-sky-950/70 px-2 py-1 text-[10px] font-bold text-sky-100 disabled:opacity-40 lg:hidden"
+              className="absolute left-1 top-1 z-10 hidden min-h-[36px] rounded-lg border border-sky-400/70 bg-sky-950/70 px-2 py-1 text-[10px] font-bold text-sky-100 disabled:opacity-40 max-lg:landscape:block lg:hidden"
 
               style={{ touchAction: "manipulation" }}
 
@@ -874,15 +934,37 @@ export default function MleoPicturePuzzlePlacementPlay({
 
           <div className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center bg-black/75 p-4">
 
-            <img
+            <div className="relative pointer-events-auto">
 
-              src={puzzleImage}
+              <button
 
-              alt=""
+                type="button"
 
-              className="mx-auto max-h-[min(62vh,420px)] max-w-[min(88vw,420px)] rounded-xl object-contain ring-4 ring-sky-400"
+                onClick={onCloseHint}
 
-            />
+                className="puzzle-hint-close absolute -right-1 -top-1 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-white/40 bg-black/80 text-base font-bold leading-none text-white shadow-md"
+
+                style={{ touchAction: "manipulation" }}
+
+                aria-label="סגור תמונה"
+
+              >
+
+                ×
+
+              </button>
+
+              <img
+
+                src={puzzleImage}
+
+                alt=""
+
+                className="mx-auto max-h-[min(62vh,420px)] max-w-[min(88vw,420px)] rounded-xl object-contain ring-4 ring-sky-400"
+
+              />
+
+            </div>
 
           </div>
 

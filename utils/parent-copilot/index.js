@@ -56,7 +56,7 @@ import {
 } from "./question-router.js";
 import { classifyParentQuestionViaLlm } from "./question-classifier-llm.js";
 import { matchesLegitimateParentQuestion } from "./question-classifier.js";
-import { shouldReturnNoDataForRequest, noDataResponseHe } from "./no-data-request-response.js";
+import { shouldReturnNoDataForRequest, noDataResponseHe, isNoDataClarificationText } from "./no-data-request-response.js";
 import { isContextualFollowUpUtterance } from "./contextual-follow-up-he.js";
 import { utteranceQualifiesAsReportQuestion, hasAnchoredReportRows } from "./report-row-resolver.js";
 import { tryComposePatternAnswerDraft } from "./pattern-answer-composers.js";
@@ -458,10 +458,7 @@ function persistClarificationConversationMemory(response, context) {
   if (String(response?.resolutionStatus || "") !== "clarification_required") return;
   const text = String(response?.clarificationQuestionHe || "").trim();
   if (!text) return;
-  const isNoData =
-    text === noDataResponseHe() ||
-    text.includes("אין מספיק מידע") ||
-    text.includes("בדוח הנוכחי אין מספיק");
+  const isNoData = isNoDataClarificationText(text);
   applyConversationStateDelta(sessionId, {
     assistantAnswerSummary: text.slice(0, 480),
     ...(isNoData ? { lastTurnWasNoData: true, lastTurnWasWhatNotInfer: false } : {}),
@@ -490,7 +487,7 @@ function tryPackageApprovedPatternTurn(input, sessionId, priorRepeated, conv, ut
       scopeConfidence: 0.88,
       scopeReason: "approved_pattern_no_data",
     };
-    const noDataText = noDataResponseHe();
+    const noDataText = noDataResponseHe(utteranceStr, input?.payload);
     const r = buildClarificationParentCopilotResponse({
       clarificationQuestionHe: noDataText,
       intent,
@@ -734,7 +731,9 @@ function packageParentResolvedEarlyTurn(input, sessionId, priorRepeated, conv, u
     lastTurnWasNoData: false,
     lastTurnWasWhatNotInfer:
       String(scopeMeta?.patternId || "") === "what_not_infer" ||
-      assistantAnswerSummary.includes("לא כדאי להסיק מהדוח"),
+      String(scopeMeta?.patternId || "") === "avoid_now" ||
+      assistantAnswerSummary.includes("לא כדאי להסיק מהדוח") ||
+      assistantAnswerSummary.includes("לא להסיק מסקנה אישית"),
     ...(memoryHints && memoryHints.lastAnswerAggregateClass !== undefined
       ? {
           lastAnswerAggregateClass: memoryHints.lastAnswerAggregateClass,
@@ -1091,7 +1090,7 @@ function runDeterministicCore(input, options) {
       classifierConfidence: classifierMetaForResolved.classifierConfidence,
     };
     const r = buildClarificationParentCopilotResponse({
-      clarificationQuestionHe: noDataResponseHe(),
+      clarificationQuestionHe: noDataResponseHe(utteranceStr, scopedInput?.payload),
       intent: "unknown_report_question",
       priorRepeated,
       metadata: scopeMetaNoData,
@@ -1207,7 +1206,7 @@ function runDeterministicCore(input, options) {
     }
     if (shouldReturnNoDataForRequest(utteranceStr, scopedInput?.payload)) {
       const r = buildClarificationParentCopilotResponse({
-        clarificationQuestionHe: noDataResponseHe(),
+        clarificationQuestionHe: noDataResponseHe(utteranceStr, scopedInput?.payload),
         intent,
         priorRepeated,
         metadata: scopeMeta,
