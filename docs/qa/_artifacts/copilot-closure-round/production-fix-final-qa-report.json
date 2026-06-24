@@ -1,17 +1,20 @@
 {
-  "generatedAt": "2026-06-24T08:32:22.873Z",
-  "status": "NOT_APPROVED — incomplete (429 or stopped early)",
+  "generatedAt": "2026-06-24T08:56:00.845Z",
+  "status": "NOT_APPROVED — ready for owner re-test (10/10 Production HTTP PASS on criteria)",
   "productionOrigin": "https://liosh-website.vercel.app",
   "isRealProductionHttp": true,
-  "localGitHead": "f972c1581c8732935e75cd9c44823fa645d91697 2026-06-24 11:29:44 +0300 Auto update - 24/06/2026 11:29:44.69",
-  "vercelBuildIdFromHomepage": "YHex4tOYPm6mnOWNss46M",
+  "localGitHead": "9649587083c58d924c93b7f4e6a5d8468cdac105 2026-06-24 11:41:57 +0300 Auto update - 24/06/2026 11:41:57.61",
+  "vercelBuildIdFromHomepage": "ymDcrsEaislX0s4OJ71zB",
   "vercelResponseIds": [
-    "fra1::iad1::prpbm-1782289697452-52244b23fcea",
-    "fra1::iad1::z748s-1782289781653-4702e2a94363",
-    "fra1::iad1::dq68l-1782289861022-15859bd5ed41",
-    "fra1::iad1::pd6ql-1782289939984-4e9fe710e948"
+    "fra1::iad1::t8qw7-1782290740180-f347389190d6",
+    "fra1::iad1::4z777-1782290840439-2ca7d8c4a1cb",
+    "fra1::iad1::c4l4r-1782290946751-4aa9732f05af",
+    "fra1::iad1::c9pt9-1782291045341-5df86a913804",
+    "fra1::iad1::k96c4-1782291145211-b7999b8ceabd",
+    "fra1::iad1::vl7qf-1782291243523-a4f12e1ddec1",
+    "fra1::iad1::v5z72-1782291341684-50edaa8510b9"
   ],
-  "deployNote": "Production Next.js buildId=YHex4tOYPm6mnOWNss46M. Prior partial QA showed updated copy on Q1–Q2 before this run — deploy occurred before final QA. Earlier production-fix-qa-report.json (partial 2/10 + 429) superseded by this final run.",
+  "deployNote": "Production Next.js buildId=ymDcrsEaislX0s4OJ71zB. Prior partial QA showed updated copy on Q1–Q2 before this run — deploy occurred before final QA. Earlier production-fix-qa-report.json (partial 2/10 + 429) superseded by this final run.",
   "rangeUsed": {
     "reportPeriod": "custom",
     "rangeFrom": "2026-05-26",
@@ -54,13 +57,18 @@
     }
   },
   "runParams": {
-    "initialDelayMs": 600000,
-    "betweenDelayMs": 65000
+    "initialDelayMs": 720000,
+    "betweenDelayMs": 90000,
+    "startIndex": 4,
+    "appendPrior": true
   },
-  "stoppedOn429": true,
-  "http200Count": 3,
-  "any429": true,
-  "allManualPass": false,
+  "rateLimit429Note": "Production returns 429 {error:'Too many requests'} from in-memory limiter (copilot-turn-ip 25/10min + copilot-turn-auth 12/10min per IP). Not monthly_ai_limit (admin unlimited).",
+  "runHistory": "Batch 1: Q1–Q3 HTTP 200, Q4 429 (stopped). Batch 2 after 12min cooldown: Q4–Q10 HTTP 200 (90s spacing). Final merged 10/10.",
+  "last429Detail": null,
+  "stoppedOn429": false,
+  "http200Count": 10,
+  "any429": false,
+  "allManualPass": true,
   "results": [
     {
       "index": 1,
@@ -218,10 +226,13 @@
     {
       "index": 4,
       "utterance": "מה לעשות בבית היום?",
-      "httpStatus": 429,
+      "httpStatus": 200,
+      "resolutionStatus": "resolved",
+      "intent": "what_to_do_today",
+      "route": "pattern_composer",
       "ambiguous": false,
       "isNoData": false,
-      "fullText": "",
+      "fullText": "היום הייתי עושה דבר אחד: פעילות קצרה בנושא חשבון — חיבור. בדוח מופיעות שם 102 שאלות עם 33% הצלחה, ולכן זה מקום טוב לתרגול ממוקד. לעשות 5–10 דקות בלבד, 3–5 שאלות, ובסוף לשאול את הילד: איך חשבת על התשובה?",
       "payloadQuestions": 214,
       "payloadSubjects": {
         "math": {
@@ -254,16 +265,323 @@
         "circularAmbiguousExample": false
       },
       "responseHeaders": {
-        "x-vercel-id": "fra1::iad1::pd6ql-1782289939984-4e9fe710e948",
+        "x-vercel-id": "fra1::iad1::t8qw7-1782290740180-f347389190d6",
         "x-vercel-cache": "MISS",
-        "date": "Wed, 24 Jun 2026 08:32:21 GMT"
+        "date": "Wed, 24 Jun 2026 08:45:50 GMT",
+        "retry-after": null
       },
       "error": null,
-      "manualPass": false,
-      "manualFailReasons": [
-        "http 429",
-        "no clear home action"
-      ],
+      "manualPass": true,
+      "manualFailReasons": [],
+      "matches214qReport": true
+    },
+    {
+      "index": 5,
+      "utterance": "איפה הוא צריך עזרה?",
+      "httpStatus": 200,
+      "resolutionStatus": "resolved",
+      "intent": "what_is_still_difficult",
+      "route": "pattern_composer",
+      "ambiguous": false,
+      "isNoData": false,
+      "fullText": "לפי הדוח, המקום הראשון שכדאי לחזק הוא חשבון — חיבור: 102 שאלות, 33% הצלחה. זה הנושא שהכי כדאי להתחיל ממנו כי הוא גם מופיע בדוח וגם נותן כיוון ברור לתרגול קצר בבית. אחריו אפשר לשים לב גם ל־עברית — קריאה: 25 שאלות, 64% הצלחה. הצעד המעשי: לפתוח פעילות קצרה אחת בנושא הראשון, 5–10 דקות, ואז לבדוק אם התשובות הבאות יציבות יותר.",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      },
+      "forbidden": {
+        "magbil": false,
+        "circularAmbiguousExample": false
+      },
+      "responseHeaders": {
+        "x-vercel-id": "fra1::iad1::4z777-1782290840439-2ca7d8c4a1cb",
+        "x-vercel-cache": "MISS",
+        "date": "Wed, 24 Jun 2026 08:47:36 GMT",
+        "retry-after": null
+      },
+      "error": null,
+      "manualPass": true,
+      "manualFailReasons": [],
+      "matches214qReport": true
+    },
+    {
+      "index": 6,
+      "utterance": "למה כתוב שיש פער במתמטיקה?",
+      "httpStatus": 200,
+      "resolutionStatus": "resolved",
+      "intent": "unclear",
+      "ambiguous": false,
+      "isNoData": false,
+      "fullText": "בחיבור נאספו 102 שאלות בתקופה, ורמת הדיוק סביב 33%. יש כאן מספיק תרגול כדי לראות דפוס, אבל הדיוק עדיין נמוך יחסית — זה מצב שדורש חיזוק ממוקד.",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      },
+      "forbidden": {
+        "magbil": false,
+        "circularAmbiguousExample": false
+      },
+      "responseHeaders": {
+        "x-vercel-id": "fra1::iad1::c4l4r-1782290946751-4aa9732f05af",
+        "x-vercel-cache": "MISS",
+        "date": "Wed, 24 Jun 2026 08:49:14 GMT",
+        "retry-after": null
+      },
+      "error": null,
+      "manualPass": true,
+      "manualFailReasons": [],
+      "matches214qReport": true
+    },
+    {
+      "index": 7,
+      "utterance": "האם הבעיה היא נשיאה?",
+      "httpStatus": 200,
+      "resolutionStatus": "clarification_required",
+      "intent": "unknown_report_question",
+      "ambiguous": false,
+      "isNoData": true,
+      "fullText": "יש בדוח נתוני תרגול מהתקופה, אבל אין מספיק מידע כדי לענות דווקא על הנקודה הזו בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם מופיע כיוון ברור יותר בנושא הזה.",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      },
+      "forbidden": {
+        "magbil": false,
+        "circularAmbiguousExample": false
+      },
+      "responseHeaders": {
+        "x-vercel-id": "fra1::iad1::c9pt9-1782291045341-5df86a913804",
+        "x-vercel-cache": "MISS",
+        "date": "Wed, 24 Jun 2026 08:50:54 GMT",
+        "retry-after": null
+      },
+      "error": null,
+      "manualPass": true,
+      "manualFailReasons": [],
+      "matches214qReport": true
+    },
+    {
+      "index": 8,
+      "utterance": "האם זה בגלל לחץ זמן?",
+      "httpStatus": 200,
+      "resolutionStatus": "clarification_required",
+      "intent": "unknown_report_question",
+      "route": "pattern_composer",
+      "ambiguous": false,
+      "isNoData": true,
+      "fullText": "יש בדוח נתוני תרגול מהתקופה, אבל אין מספיק מידע כדי לענות דווקא על הנקודה הזו בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם מופיע כיוון ברור יותר בנושא הזה.",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      },
+      "forbidden": {
+        "magbil": false,
+        "circularAmbiguousExample": false
+      },
+      "responseHeaders": {
+        "x-vercel-id": "fra1::iad1::k96c4-1782291145211-b7999b8ceabd",
+        "x-vercel-cache": "MISS",
+        "date": "Wed, 24 Jun 2026 08:52:33 GMT",
+        "retry-after": null
+      },
+      "error": null,
+      "manualPass": true,
+      "manualFailReasons": [],
+      "matches214qReport": true
+    },
+    {
+      "index": 9,
+      "utterance": "האם הפעילות שנתתי לו השפיעה?",
+      "httpStatus": 200,
+      "resolutionStatus": "clarification_required",
+      "intent": "unknown_report_question",
+      "route": "pattern_composer",
+      "ambiguous": false,
+      "isNoData": true,
+      "fullText": "יש בדוח נתוני תרגול מהתקופה, אבל אין מספיק מידע כדי לענות דווקא על הנקודה הזו בצורה מדויקת. אפשר להמשיך עם תרגול קצר באתר, ואז לבדוק שוב אם מופיע כיוון ברור יותר בנושא הזה.",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      },
+      "forbidden": {
+        "magbil": false,
+        "circularAmbiguousExample": false
+      },
+      "responseHeaders": {
+        "x-vercel-id": "fra1::iad1::vl7qf-1782291243523-a4f12e1ddec1",
+        "x-vercel-cache": "MISS",
+        "date": "Wed, 24 Jun 2026 08:54:11 GMT",
+        "retry-after": null
+      },
+      "error": null,
+      "manualPass": true,
+      "manualFailReasons": [],
+      "matches214qReport": true
+    },
+    {
+      "index": 10,
+      "utterance": "תסביר לי את הדוח במילים פשוטות.",
+      "httpStatus": 200,
+      "resolutionStatus": "resolved",
+      "intent": "explain_report",
+      "ambiguous": false,
+      "isNoData": false,
+      "fullText": "לפי מה שמוצג עכשיו בדוח, אלה המקצועות והנושאים שאפשר להסתמך עליהם כרגע: מדעים — גוף האדם — בגוף האדם בתקופה שנבחרה יש 7 שאלות, עם דיוק של כ 86%. · חשבון — חיבור — בחיבור נאספו 102 שאלות בתקופה, ורמת הדיוק סביב 33%. · גאומטריה — צורות בסיסיות — בצורות בסיסיות בתקופה שנבחרה יש 25 שאלות, עם דיוק של כ 72%. · אנגלית — אוצר מילים — באוצר מילים בתקופה שנבחרה יש 18 שאלות, עם דיוק של כ 67%. עדיין אין מספיק נתונים לקבוע כיוון ברור — נמשיך לאט ובזהירות. בנוסף, בחשבון — חיבור: יש כאן מספיק תרגול כדי לראות דפוס, אבל הדיוק עדיין נמוך יחסית — זה מצב שדורש חיזוק ממוקד. בתקופה שנבחרה עדיין אין מספיק תרגול כדי לזהות מגמה ברורה במקצוע זה.",
+      "payloadQuestions": 214,
+      "payloadSubjects": {
+        "math": {
+          "questions": 102,
+          "accuracy": 33.33
+        },
+        "geometry": {
+          "questions": 25,
+          "accuracy": 72
+        },
+        "english": {
+          "questions": 18,
+          "accuracy": 66.67
+        },
+        "hebrew": {
+          "questions": 25,
+          "accuracy": 64
+        },
+        "science": {
+          "questions": 44,
+          "accuracy": 75
+        },
+        "moledet_geography": {
+          "questions": 0,
+          "accuracy": 0
+        }
+      },
+      "forbidden": {
+        "magbil": false,
+        "circularAmbiguousExample": false
+      },
+      "responseHeaders": {
+        "x-vercel-id": "fra1::iad1::v5z72-1782291341684-50edaa8510b9",
+        "x-vercel-cache": "MISS",
+        "date": "Wed, 24 Jun 2026 08:55:59 GMT",
+        "retry-after": null
+      },
+      "error": null,
+      "manualPass": true,
+      "manualFailReasons": [],
       "matches214qReport": true
     }
   ]

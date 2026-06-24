@@ -113,15 +113,15 @@
 |----------|-----|
 | דוח 214q נמצא | ✓ AAA4, טווח 26/05–24/06 |
 | תיקון engine local | ✓ 7/10 resolved, 3 NO_DATA ספצифי נכון |
-| Production HTTP | ✗ עדיין קוד ישן (לא deploy) |
-| UI parity | ממתין deploy + בדיקת בעלים |
-| commit / push / deploy | **לא בוצע** |
+| Production HTTP 10/10 | ✓ [`production-fix-final-qa-report.md`](production-fix-final-qa-report.md) |
+| commit / push / deploy | **לא בוצע מכאן** |
 
-**מוכן לבדיקה חוזרת של הבעלים** — אחרי deploy מקומי/staging, לא production עד אישור.
+**מוכן לבדיקה חוזרת של הבעלים** — Production HTTP 10/10 PASS על קריטריונים (**לא מאושר**).
 
 ---
 
 ## 9. קבצי artifact
 
-- `docs/qa/_artifacts/copilot-closure-round/production-fix-report.md` (זה)
-- `docs/qa/_artifacts/copilot-closure-round/production-fix-qa-report.json` (תשובות מלאות local + prod partial)
+- `docs/qa/_artifacts/copilot-closure-round/production-fix-report.md` (תיקון engine)
+- `docs/qa/_artifacts/copilot-closure-round/production-fix-final-qa-report.md` + `.json` (**Production HTTP סופי — 10/10**)
+- `docs/qa/_artifacts/copilot-closure-round/production-fix-qa-report.json` (הוחלף — partial)

@@ -151,6 +151,9 @@ function renderMd(report) {
   lines.push(`**Deploy/build note:** ${report.deployNote}`);
   lines.push(`**HTTP 200 count:** ${report.http200Count}/10`);
   lines.push(`**Any 429:** ${report.any429 ? "YES — run incomplete" : "NO"}`);
+  if (report.runHistory) {
+    lines.push(`**Run history:** ${report.runHistory}`);
+  }
   lines.push("");
   lines.push("## Report match");
   lines.push("");

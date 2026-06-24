@@ -611,7 +611,7 @@ export default function MleoPicturePuzzlePlacementPlay({
 
       <div className="relative z-0 mx-auto mt-8 flex h-full min-h-0 w-full max-w-[1280px] flex-1 overflow-hidden rounded-lg border-4 border-yellow-400 bg-gradient-to-b from-slate-900 to-slate-950 shadow-lg sm:mt-9">
 
-        <div className="puzzle-play-layout flex min-h-0 w-full flex-1 flex-col gap-1 overflow-hidden p-1 max-lg:landscape:flex-row lg:flex-row sm:gap-2 sm:p-2">
+        <div className="flex min-h-0 w-full flex-1 flex-col gap-1 overflow-hidden p-1 max-lg:landscape:flex-row lg:flex-row sm:gap-2 sm:p-2">
 
           {/* Desktop left sidebar */}
 
