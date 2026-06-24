@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { requestMobileGameFullscreen } from "../../../lib/solo-games/solo-game-fullscreen.client.js";
+import {
+  exitMobileGameFullscreen,
+  isMobileGameFullscreenEligible,
+  requestMobileGameFullscreen,
+} from "../../../lib/solo-games/solo-game-fullscreen.client.js";
 
 const PORTRAIT_DISMISS_KEY = "catcher-portrait-dismiss";
 
@@ -115,6 +119,8 @@ export default function MleoCatcherEngine({ autoStart = false, onSessionEnd }) {
   const [leaderboard, setLeaderboard] = useState([]);
   const [portraitDismissed, setPortraitDismissed] = useState(false);
   const [showPortraitPrompt, setShowPortraitPrompt] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [mobileFullscreenEligible, setMobileFullscreenEligible] = useState(false);
 
   /** Trimmed field → localStorage `mleo_player_name` → default `שחקן`. Never blocks starting. */
   const resolveEffectivePlayerName = () => {
@@ -484,6 +490,37 @@ export default function MleoCatcherEngine({ autoStart = false, onSessionEnd }) {
     requestMobileGameFullscreen(document.getElementById("game-wrapper"));
   }, [gameRunning, showPortraitPrompt]);
 
+  useEffect(() => {
+    const update = () => {
+      const fullscreenEl =
+        document.fullscreenElement || document.webkitFullscreenElement;
+      setIsFullscreen(Boolean(fullscreenEl));
+      setMobileFullscreenEligible(isMobileGameFullscreenEligible());
+    };
+
+    update();
+
+    document.addEventListener("fullscreenchange", update);
+    document.addEventListener("webkitfullscreenchange", update);
+    window.addEventListener("resize", update);
+    window.addEventListener("orientationchange", update);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", update);
+      document.removeEventListener("webkitfullscreenchange", update);
+      window.removeEventListener("resize", update);
+      window.removeEventListener("orientationchange", update);
+    };
+  }, []);
+
+  const handleFullscreenToggle = useCallback(() => {
+    if (isFullscreen) {
+      void exitMobileGameFullscreen();
+      return;
+    }
+    void requestMobileGameFullscreen(document.getElementById("game-wrapper"));
+  }, [isFullscreen]);
+
   const dismissPortraitPrompt = (persist) => {
     setPortraitDismissed(true);
     setShowPortraitPrompt(false);
@@ -535,6 +572,20 @@ export default function MleoCatcherEngine({ autoStart = false, onSessionEnd }) {
                 className="pointer-events-none absolute inset-0 block h-full w-full touch-none"
                 aria-hidden
               />
+
+              {gameRunning && !gameOver && !showIntro && mobileFullscreenEligible ? (
+                <div className="pointer-events-auto absolute right-2 top-2 z-20">
+                  <button
+                    type="button"
+                    onClick={handleFullscreenToggle}
+                    className="shrink-0 rounded-lg border border-sky-400/70 bg-sky-950/70 px-2 py-1 text-[10px] font-bold text-sky-100 min-h-[36px]"
+                    style={{ touchAction: "manipulation" }}
+                    aria-label={isFullscreen ? "יציאה ממסך מלא" : "מסך מלא"}
+                  >
+                    {isFullscreen ? "יציאה" : "מסך מלא"}
+                  </button>
+                </div>
+              ) : null}
 
               {gameOver && !onSessionEnd && (
                 <div className="pointer-events-auto absolute inset-0 z-40 flex flex-col items-center justify-center bg-black/70">
