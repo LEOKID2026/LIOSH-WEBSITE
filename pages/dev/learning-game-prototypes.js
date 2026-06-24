@@ -6,6 +6,7 @@ import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import GamesHubNavBar from "../../components/games/GamesHubNavBar.jsx";
 import GamesHubHeader from "../../components/games/GamesHubHeader.jsx";
 import { LEARNING_DEV_PROTOTYPE_LIST } from "../../lib/dev/learning-prototype-hub-list.js";
+import { SOLO_DEV_PROTOTYPES_HUB } from "../../lib/solo-games/dev-prototype-hub-list.js";
 
 /** Dev hub — learning / enrichment game prototypes */
 export default function LearningGamePrototypesHubPage() {
@@ -22,8 +23,8 @@ export default function LearningGamePrototypesHubPage() {
         <main className={GH.pageWrap} dir="rtl">
           <div className={`${GH.container} space-y-4`}>
             <GamesHubNavBar
-              backHref="/game"
-              backLabel="משחקים"
+              backHref={SOLO_DEV_PROTOTYPES_HUB.route}
+              backLabel="אבטיפוסים"
               badge="📚 לימודי"
               backBtnClass={GH.backBtn}
               badgeClass={GH.badge}

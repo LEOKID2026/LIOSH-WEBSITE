@@ -2,6 +2,7 @@ import { useSoloGameShellUi } from "../../hooks/solo-games/useSoloGameShellUi.js
 import { SOLO_DIFFICULTY_OPTIONS } from "../../lib/solo-games/solo-game-registry.js";
 import { useSoloOrientationHint } from "../../hooks/solo-games/useSoloOrientationHint.js";
 import SoloGameNavButtons from "./SoloGameNavButtons.jsx";
+import SoloGameHelpButton from "./SoloGameHelpButton.jsx";
 
 /**
  * @param {{
@@ -9,6 +10,7 @@ import SoloGameNavButtons from "./SoloGameNavButtons.jsx";
  *   difficulty: string,
  *   setDifficulty: (d: string) => void,
  *   onStart: () => void,
+ *   onOpenHelp?: (game: object) => void,
  *   busy?: boolean,
  *   error?: string,
  * }} props
@@ -18,6 +20,7 @@ export default function SoloGameEntryScreen({
   difficulty,
   setDifficulty,
   onStart,
+  onOpenHelp,
   busy = false,
   error = "",
 }) {
@@ -26,9 +29,16 @@ export default function SoloGameEntryScreen({
 
   return (
     <div
-      className="flex h-full min-h-0 flex-col items-center justify-center overflow-hidden overflow-x-hidden px-4 py-2 sm:py-3 text-center"
+      className="relative flex h-full min-h-0 flex-col items-center justify-center overflow-hidden overflow-x-hidden px-4 py-2 sm:py-3 text-center"
       dir="rtl"
     >
+      {onOpenHelp ? (
+        <SoloGameHelpButton
+          game={game}
+          onOpen={onOpenHelp}
+          className="absolute left-4 top-4 sm:left-6 sm:top-6"
+        />
+      ) : null}
       <div className="w-full max-w-md space-y-4 sm:space-y-5">
         <div className="text-5xl" aria-hidden>
           {game.emoji}

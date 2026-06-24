@@ -1,36 +1,36 @@
 import Head from "next/head";
-import Layout from "../../components/Layout";
+import Layout from "../../../components/Layout";
 import Link from "next/link";
-import { useGamesHubUi } from "../../hooks/useGamesHubUi.js";
-import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
-import GamesHubNavBar from "../../components/games/GamesHubNavBar.jsx";
-import GamesHubHeader from "../../components/games/GamesHubHeader.jsx";
-import { SOLO_DEV_PROTOTYPE_LIST } from "../../lib/solo-games/dev-prototype-hub-list.js";
+import { useGamesHubUi } from "../../../hooks/useGamesHubUi.js";
+import { useStudentTheme } from "../../../contexts/StudentThemeContext.jsx";
+import GamesHubNavBar from "../../../components/games/GamesHubNavBar.jsx";
+import GamesHubHeader from "../../../components/games/GamesHubHeader.jsx";
+import { SOLO_DEV_PROTOTYPE_LIST } from "../../../lib/solo-games/dev-prototype-hub-list.js";
 
-/** Dev hub — links to all solo game prototypes */
-export default function SoloGamePrototypesHubPage() {
+/** Dev hub — links to all solo play prototypes */
+export default function SoloGamePrototypesListPage() {
   const { theme } = useStudentTheme();
   const { GH } = useGamesHubUi();
 
   return (
     <>
       <Head>
-        <title>אבטיפוסי משחקים — פיתוח</title>
+        <title>אבטיפוסי משחקי סולו — פיתוח</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <Layout studentTheme={theme} studentShell="home">
         <main className={GH.pageWrap} dir="rtl">
           <div className={`${GH.container} space-y-4`}>
             <GamesHubNavBar
-              backHref="/game"
-              backLabel="משחקי ליאו"
-              badge="🧪 אבטיפוסים"
+              backHref="/dev/solo-game-prototypes"
+              backLabel="אבטיפוסים"
+              badge="🎮 סולו"
               backBtnClass={GH.backBtn}
               badgeClass={GH.badge}
             />
 
             <GamesHubHeader
-              title="אבטיפוסי משחקים"
+              title="אבטיפוסי משחקי סולו"
               subtitle="רעיונות למשחקי סולו חדשים — לבדיקה בלבד, לא מחוברים לפרסים או לעולם הילד."
               titleClass={GH.hubTitle}
               subtitleClass={GH.hubSub}

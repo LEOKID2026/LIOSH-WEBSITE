@@ -10,12 +10,16 @@ import { useStudentGameAccess } from "../hooks/useStudentGameAccess.js";
 import { resetSoloGameDocumentShell } from "../lib/solo-games/solo-game-document-cleanup.client.js";
 import { SOLO_GAME_LIST } from "../lib/solo-games/solo-game-registry.js";
 import { SOLO_DEV_PROTOTYPES_HUB } from "../lib/solo-games/dev-prototype-hub-list.js";
+import SoloGameHelpButton from "../components/solo-games/SoloGameHelpButton.jsx";
+import SoloGameHelpModal from "../components/solo-games/SoloGameHelpModal.jsx";
+import { useSoloGameHelp } from "../hooks/solo-games/useSoloGameHelp.js";
 
 export default function Games() {
   const { theme } = useStudentTheme();
   const { GH } = useGamesHubUi();
   const { state, playableGames } = useStudentGameAccess();
   const games = playableGames("solo");
+  const { helpGame, openSoloGameHelp, closeSoloGameHelp } = useSoloGameHelp();
 
   useEffect(() => {
     resetSoloGameDocumentShell();
@@ -50,7 +54,12 @@ export default function Games() {
                     const game = SOLO_GAME_LIST.find((g) => g.id === row.gameKey);
                     if (!game) return null;
                     return (
-                      <Link key={game.id} href={game.route} className={GH.card}>
+                      <Link key={game.id} href={game.route} className={`${GH.card} relative`}>
+                        <SoloGameHelpButton
+                          game={game}
+                          onOpen={openSoloGameHelp}
+                          stopPropagation
+                        />
                         <div className="flex items-center gap-3 mb-2">
                           <div className={GH.cardEmoji}>{game.emoji}</div>
                           <div>
@@ -78,6 +87,7 @@ export default function Games() {
               </div>
             </section>
           </div>
+          <SoloGameHelpModal game={helpGame} onClose={closeSoloGameHelp} />
         </main>
       </Layout>
     </GameAccessGuard>

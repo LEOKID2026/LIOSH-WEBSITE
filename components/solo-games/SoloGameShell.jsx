@@ -10,7 +10,9 @@ import SoloGameEntryScreen from "./SoloGameEntryScreen.jsx";
 import SoloGameFinishScreen from "./SoloGameFinishScreen.jsx";
 import SoloGameSettlingOverlay from "./SoloGameSettlingOverlay.jsx";
 import SoloGameAdSlot from "./SoloGameAdSlot.jsx";
+import SoloGameHelpModal from "./SoloGameHelpModal.jsx";
 import GameAccessGuard from "../games/GameAccessGuard.jsx";
+import { useSoloGameHelp } from "../../hooks/solo-games/useSoloGameHelp.js";
 import MleoCatcherEngine from "./engines/MleoCatcherEngine.jsx";
 import MleoFlyerEngine from "./engines/MleoFlyerEngine.jsx";
 import MleoPuzzleEngine from "./engines/MleoPuzzleEngine.jsx";
@@ -63,6 +65,7 @@ export default function SoloGameShell({ gameKey }) {
     finishSession,
     resetSession,
   } = useSoloGameSession(gameKey);
+  const { helpGame, openSoloGameHelp, closeSoloGameHelp } = useSoloGameHelp();
 
   const handleStart = useCallback(async () => {
     // Preserve the "התחל משחק" click gesture for autoStart engines (landscape mobile only).
@@ -151,6 +154,7 @@ export default function SoloGameShell({ gameKey }) {
               difficulty={difficulty}
               setDifficulty={setDifficulty}
               onStart={handleStart}
+              onOpenHelp={openSoloGameHelp}
               busy={busy}
               error={error}
             />
@@ -187,6 +191,7 @@ export default function SoloGameShell({ gameKey }) {
         </main>
 
         {showReservedAd ? <SoloGameAdSlot /> : null}
+        <SoloGameHelpModal game={helpGame} onClose={closeSoloGameHelp} />
       </div>
     </>
     </GameAccessGuard>
