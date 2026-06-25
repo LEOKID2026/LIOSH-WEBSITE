@@ -43,6 +43,12 @@ function normalizeBalance(student) {
  */
 const MAX_CHILDREN_DEFAULT = 3;
 
+/** Deterministic login username for optional PIN-at-create (unique per student id). */
+function suggestLoginUsernameForNewStudent(studentId) {
+  const compact = String(studentId || "").replace(/-/g, "");
+  return `kid${compact.slice(-9)}`;
+}
+
 const CHILD_PIN_INPUT_PROPS = {
   type: "tel",
   inputMode: "numeric",
@@ -68,6 +74,7 @@ export default function ParentDashboardPage() {
 
   const [newName, setNewName] = useState("");
   const [newGrade, setNewGrade] = useState("");
+  const [newChildPin, setNewChildPin] = useState("");
   const [credentialsByStudentId, setCredentialsByStudentId] = useState({});
   /** One-time display after creating or resetting credentials (new PIN shown once). */
   const [credentialConfirmation, setCredentialConfirmation] = useState(null);
@@ -174,6 +181,11 @@ export default function ParentDashboardPage() {
       setMessage("יש לבחור כיתה");
       return;
     }
+    const initialPin = String(newChildPin || "").trim();
+    if (initialPin && !/^\d{4}$/.test(initialPin)) {
+      setMessage("PIN חייב להיות בארבע ספרות");
+      return;
+    }
     setBusy(true);
     setMessage("");
 
@@ -193,17 +205,53 @@ export default function ParentDashboardPage() {
     if (!res.ok) {
       setMessage(payload.error || "Failed to create student");
     } else {
+      const createdStudentId = payload?.student?.id;
+      let credentialMessage = "";
+
+      if (initialPin && createdStudentId) {
+        const username = suggestLoginUsernameForNewStudent(createdStudentId);
+        const credRes = await fetch("/api/parent/create-student-access-code", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({ studentId: createdStudentId, username, pin: initialPin }),
+        });
+        const credPayload = await credRes.json();
+        if (!credRes.ok) {
+          credentialMessage =
+            credPayload.error || "הילד/ה נוצר/ה, אך הגדרת PIN נכשלה — ניתן להגדיר בפרטי הילד/ה";
+        } else {
+          const loginUsername = credPayload.username || username;
+          setCredentialConfirmation({
+            studentId: createdStudentId,
+            username: loginUsername,
+            pin: initialPin,
+          });
+          setDetailsModalStudent({
+            id: createdStudentId,
+            full_name: payload.student.full_name,
+            grade_level: payload.student.grade_level,
+            is_active: payload.student.is_active,
+            login_username: loginUsername,
+            has_active_access_code: true,
+          });
+        }
+      }
+
       setNewName("");
       setNewGrade("");
+      setNewChildPin("");
       setAddChildModalOpen(false);
       void trackProductEvent({
         eventName: "child_created",
         actorType: "parent",
-        studentId: payload?.student?.id,
+        studentId: createdStudentId,
         grade: payload?.student?.grade_level || newGrade,
       });
       await fetchStudents(session);
-      setMessage("Student created.");
+      setMessage(credentialMessage || "Student created.");
     }
     setBusy(false);
   };
@@ -415,6 +463,7 @@ export default function ParentDashboardPage() {
 
   const closeAddChildModal = useCallback(() => {
     setAddChildModalOpen(false);
+    setNewChildPin("");
   }, []);
 
   const closeDetailsModal = useCallback(() => {
@@ -471,6 +520,21 @@ export default function ParentDashboardPage() {
           </option>
         ))}
       </select>
+      <div className={T.panel}>
+        <div className={T.panelTitle}>פרטי כניסת ילד/ה</div>
+        <p className={`text-xs ${T.faint}`}>ניתן להגדיר PIN ראשוני לילד/ה כבר עכשיו.</p>
+        <div>
+          <label className={`text-sm ${T.label}`}>PIN לילד/ה</label>
+          <input
+            className={T.inputMt}
+            value={newChildPin}
+            onChange={(e) => setNewChildPin(e.target.value.replace(/\D/g, "").slice(0, 4))}
+            placeholder="4 ספרות"
+            disabled={busy || students.length >= studentLimit}
+            {...CHILD_PIN_INPUT_PROPS}
+          />
+        </div>
+      </div>
       <button className={`w-full ${T.amberBtn}`} disabled={busy || students.length >= studentLimit}>
         הוסף ילד
       </button>
@@ -535,38 +599,6 @@ export default function ParentDashboardPage() {
           פעיל
         </label>
         <div className={`text-sm ${T.muted}`}>יתרת מטבעות: {balance ? balance.balance : 0}</div>
-        {session?.access_token ? (
-          <ChildGamePermissionsPanel
-            bright={isBright}
-            studentId={student.id}
-            accessToken={session.access_token}
-          />
-        ) : null}
-        <div className="flex flex-wrap gap-2 items-center">
-          <button
-            className={T.amberBtn}
-            disabled={busy}
-            onClick={() => saveStudent(student.id)}
-            type="button"
-          >
-            שמור
-          </button>
-          <button
-            type="button"
-            className={T.deleteBtn}
-            disabled={busy}
-            onClick={() => {
-              setDeleteConfirmName("");
-              setDeleteError("");
-              setDeleteModalStudent({
-                id: student.id,
-                full_name: student.full_name || "",
-              });
-            }}
-          >
-            מחיקת ילד
-          </button>
-        </div>
 
         <div className={T.panel}>
           <div className={T.panelTitle}>פרטי כניסת ילד/ה</div>
@@ -692,6 +724,39 @@ export default function ParentDashboardPage() {
               </button>
             </div>
           )}
+        </div>
+
+        {session?.access_token ? (
+          <ChildGamePermissionsPanel
+            bright={isBright}
+            studentId={student.id}
+            accessToken={session.access_token}
+          />
+        ) : null}
+        <div className="flex flex-wrap gap-2 items-center">
+          <button
+            className={T.amberBtn}
+            disabled={busy}
+            onClick={() => saveStudent(student.id)}
+            type="button"
+          >
+            שמור
+          </button>
+          <button
+            type="button"
+            className={T.deleteBtn}
+            disabled={busy}
+            onClick={() => {
+              setDeleteConfirmName("");
+              setDeleteError("");
+              setDeleteModalStudent({
+                id: student.id,
+                full_name: student.full_name || "",
+              });
+            }}
+          >
+            מחיקת ילד
+          </button>
         </div>
       </div>
     );
