@@ -30,21 +30,66 @@ function formatScore(scorePct) {
   return `${Number(scorePct).toFixed(0)}%`;
 }
 
+function parentActivityResultStatusClass(isCorrect, bright) {
+  if (isCorrect === true) {
+    return bright ? "text-emerald-700 font-semibold" : "text-emerald-300 font-semibold";
+  }
+  if (isCorrect === false) {
+    return bright ? "text-rose-600 font-semibold" : "text-red-300 font-semibold";
+  }
+  return bright ? "text-slate-600" : "text-white/70";
+}
+
+function parentActivityResultItemClass(isCorrect, bright) {
+  const base = "rounded border p-2.5 text-sm";
+  if (isCorrect === true) {
+    return bright
+      ? `${base} border-emerald-300/90 bg-emerald-100/85`
+      : `${base} border-emerald-500/35 bg-emerald-950/30`;
+  }
+  if (isCorrect === false) {
+    return bright
+      ? `${base} border-rose-300/90 bg-rose-100/85`
+      : `${base} border-red-500/35 bg-red-950/30`;
+  }
+  return bright
+    ? `${base} border-slate-200 bg-slate-50`
+    : `${base} border-white/10 bg-black/30`;
+}
+
+function parentActivityAnswerValueClass(isCorrect, bright) {
+  const base = "font-bold [&_*]:!text-inherit";
+  if (isCorrect === true) {
+    return bright ? `${base} text-emerald-700` : `${base} text-emerald-300`;
+  }
+  if (isCorrect === false) {
+    return bright ? `${base} text-rose-600` : `${base} text-red-300`;
+  }
+  return bright ? `${base} text-slate-800` : `${base} text-white/90`;
+}
+
+function parentViewResultsButtonClass(bright, { compact = false } = {}) {
+  const sizing = compact ? "px-2 py-1 text-xs" : "px-3 py-2 text-sm";
+  const prefix = compact ? "mt-1 " : "";
+  if (bright) {
+    return `${prefix}rounded-lg border border-emerald-300 bg-emerald-50 text-emerald-800 ${sizing} font-semibold hover:bg-emerald-100`;
+  }
+  return `${prefix}rounded border border-emerald-500/40 bg-emerald-950/30 text-emerald-100 ${sizing} font-semibold hover:bg-emerald-900/40`;
+}
+
 function ParentActivityResultsModal({ activityId, accessToken, onClose, bright = false }) {
   const T = getParentPortalTheme(bright);
   const panelClass = bright
-    ? "max-w-lg w-full max-h-[85vh] overflow-y-auto rounded-lg border border-slate-200 bg-white p-4 space-y-3 shadow-xl text-right text-slate-900"
+    ? "max-w-lg w-full max-h-[85vh] overflow-y-auto rounded-lg border border-amber-200 bg-amber-50 p-4 space-y-3 shadow-xl text-right text-slate-900"
     : "max-w-lg w-full max-h-[85vh] overflow-y-auto rounded-lg border border-white/20 bg-[#0f1629] p-4 space-y-3 shadow-xl text-right";
   const titleClass = bright ? "text-lg font-bold text-slate-900" : "text-lg font-bold text-white";
   const mutedClass = bright ? "text-sm text-slate-600" : "text-sm text-white/70";
   const errorClass = bright ? "text-sm text-rose-600" : "text-sm text-red-300";
   const bodyClass = bright ? "text-sm text-slate-700 space-y-1" : "text-sm text-white/80 space-y-1";
-  const itemClass = bright
-    ? "rounded border border-slate-200 bg-slate-50 p-2 text-sm"
-    : "rounded border border-white/10 bg-black/30 p-2 text-sm";
   const itemTitleClass = bright ? "font-medium text-slate-900" : "font-medium text-white";
   const itemMetaClass = bright ? "text-slate-600 text-xs mt-1" : "text-white/60 text-xs mt-1";
-  const itemAnswerClass = bright ? "text-slate-700 mt-1" : "text-white/70 mt-1";
+  const itemAnswerLabelClass = bright ? "text-slate-600 mt-1" : "text-white/70 mt-1";
+  const itemCorrectAnswerClass = bright ? "text-slate-700 mt-1" : "text-white/70 mt-1";
   const itemLegacyClass = bright ? "text-slate-400 text-xs mt-1" : "text-white/45 text-xs mt-1";
   const dividerClass = bright ? "space-y-2 pt-2 border-t border-slate-200" : "space-y-2 pt-2 border-t border-white/10";
   const [detail, setDetail] = useState(null);
@@ -130,16 +175,18 @@ function ParentActivityResultsModal({ activityId, accessToken, onClose, bright =
             {questions.map((q) => (
               <div
                 key={q.questionIndex}
-                className={itemClass}
+                className={parentActivityResultItemClass(q.isCorrect, bright)}
                 data-testid={`parent-activity-question-${q.questionIndex}`}
               >
                 <div className={itemTitleClass}>
                   שאלה {Number(q.questionIndex) + 1}:{" "}
-                  {q.isCorrect === true
-                    ? "נכון"
-                    : q.isCorrect === false
-                      ? "לא נכון"
-                      : "—"}
+                  <span className={parentActivityResultStatusClass(q.isCorrect, bright)}>
+                    {q.isCorrect === true
+                      ? "נכון"
+                      : q.isCorrect === false
+                        ? "לא נכון"
+                        : "—"}
+                  </span>
                 </div>
                 {q.question ? (
                   <div className="mt-1">
@@ -162,10 +209,13 @@ function ParentActivityResultsModal({ activityId, accessToken, onClose, bright =
                     ))}
                   </div>
                 ) : null}
-                <div className={itemAnswerClass}>
-                  תשובה: <AssignedActivityBidiText text={q.selectedAnswer || "—"} />
+                <div className={itemAnswerLabelClass}>
+                  תשובה:{" "}
+                  <span className={parentActivityAnswerValueClass(q.isCorrect, bright)}>
+                    <AssignedActivityBidiText text={q.selectedAnswer || "—"} />
+                  </span>
                 </div>
-                <div className={itemAnswerClass}>
+                <div className={itemCorrectAnswerClass}>
                   תשובה נכונה: <AssignedActivityBidiText text={q.correctAnswer || "—"} />
                 </div>
                 {q.legacyFallback ? (
@@ -180,17 +230,25 @@ function ParentActivityResultsModal({ activityId, accessToken, onClose, bright =
           <div className={dividerClass}>
             <div className={`font-semibold text-sm ${bright ? "text-slate-900" : "text-white"}`}>פירוט תשובות</div>
             {attempts.map((attempt) => (
-              <div key={attempt.questionIndex} className={itemClass}>
+              <div
+                key={attempt.questionIndex}
+                className={parentActivityResultItemClass(attempt.isCorrect, bright)}
+              >
                 <div className={itemTitleClass}>
                   שאלה {Number(attempt.questionIndex) + 1}:{" "}
-                  {attempt.isCorrect === true
-                    ? "נכון"
-                    : attempt.isCorrect === false
-                      ? "לא נכון"
-                      : "—"}
+                  <span className={parentActivityResultStatusClass(attempt.isCorrect, bright)}>
+                    {attempt.isCorrect === true
+                      ? "נכון"
+                      : attempt.isCorrect === false
+                        ? "לא נכון"
+                        : "—"}
+                  </span>
                 </div>
-                <div className={itemAnswerClass}>
-                  תשובה: {attempt.selectedAnswer || "—"}
+                <div className={itemAnswerLabelClass}>
+                  תשובה:{" "}
+                  <span className={parentActivityAnswerValueClass(attempt.isCorrect, bright)}>
+                    {attempt.selectedAnswer || "—"}
+                  </span>
                 </div>
               </div>
             ))}
@@ -204,17 +262,17 @@ function ParentActivityResultsModal({ activityId, accessToken, onClose, bright =
 function ParentSentActivitiesModal({ studentId, accessToken, refreshKey, onClose, bright = false }) {
   const T = getParentPortalTheme(bright);
   const panelClass = bright
-    ? "max-w-lg w-full max-h-[85vh] overflow-y-auto rounded-lg border border-emerald-200 bg-white p-4 space-y-3 shadow-xl text-right text-slate-900"
+    ? "max-w-lg w-full max-h-[85vh] overflow-y-auto rounded-lg border border-amber-200 bg-amber-50 p-4 space-y-3 shadow-xl text-right text-slate-900"
     : "max-w-lg w-full max-h-[85vh] overflow-y-auto rounded-lg border border-emerald-500/30 bg-[#0f1629] p-4 space-y-3 shadow-xl text-right";
-  const titleClass = bright ? "text-lg font-bold text-emerald-800" : "text-lg font-bold text-emerald-100";
+  const titleClass = bright ? "text-lg font-bold text-slate-900" : "text-lg font-bold text-emerald-100";
   const mutedClass = bright ? "text-sm text-slate-500" : "text-sm text-white/60";
   const cardClass = bright
-    ? "rounded border border-slate-200 bg-slate-50 p-3 text-sm space-y-1"
+    ? "rounded border border-sky-200 bg-sky-50 p-3 text-sm space-y-1"
     : "rounded border border-white/10 bg-black/30 p-3 text-sm space-y-1";
   const cardTitleClass = bright ? "font-semibold text-slate-900" : "font-semibold text-white";
   const cardBodyClass = bright ? "text-slate-700" : "text-white/75";
   const cardMetaClass = bright ? "text-slate-500 text-xs" : "text-white/60 text-xs";
-  const cardBtnClass = bright ? T.copyBtn + " mt-1" : "mt-1 rounded bg-white/10 hover:bg-white/15 px-2 py-1 text-xs text-white";
+  const cardBtnClass = parentViewResultsButtonClass(bright, { compact: true });
   const [activities, setActivities] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [resultsActivityId, setResultsActivityId] = useState(null);
@@ -351,9 +409,7 @@ export default function ParentSentActivitiesPanel({
 
   if (!accessToken) return null;
 
-  const defaultBtnClass = bright
-    ? "rounded-lg border border-emerald-300 bg-emerald-50 text-emerald-800 px-3 py-2 text-sm font-semibold hover:bg-emerald-100"
-    : "rounded border border-emerald-500/40 bg-emerald-950/30 text-emerald-100 px-3 py-2 text-sm font-semibold hover:bg-emerald-900/40";
+  const defaultBtnClass = parentViewResultsButtonClass(bright);
 
   return (
     <>

@@ -419,13 +419,14 @@ export default function StudentActivityPage({ activityId }) {
       const showExplanation =
         !isDiscussion &&
         (activity?.mode === "guided_practice" || activity?.mode === "homework");
+      let explanationText;
       if (isDiscussion) {
         setFeedback({
           type: "submitted",
           message: "התשובה נשלחה",
         });
       } else {
-        const explanationText = showExplanation ? json.explanation : undefined;
+        explanationText = showExplanation ? json.explanation : undefined;
         // Phase 3: mark that an explanation was shown; next question submit will carry explanationViewed=true
         if (explanationText) explanationViewedRef.current = true;
         setFeedback({
