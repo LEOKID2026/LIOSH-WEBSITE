@@ -73,7 +73,7 @@ export function detectAggregateQuestionClass(utterance) {
     /תכנון\s+לשבוע/u.test(t) && /מה\s+מתחילים/u.test(t) ||
     /מה\s+הצעד\s+הבא|הצעד\s+הבא/.test(t) ||
     /על\s+מה\s+להתמקד\s+עכשיו|על\s+מה\s+להתמקד/.test(t) ||
-    /מה\s+הכי\s+חשוב\s+(כרגע|עכשיו|היום)/.test(t)
+    /מה\s+הכי\s+חשוב\s+(?:כרגע|עכשיו|היום|לתרגל)/.test(t)
   ) {
     return "recommendation_action";
   }

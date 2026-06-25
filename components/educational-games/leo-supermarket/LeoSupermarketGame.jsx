@@ -6,7 +6,6 @@ import {
   DENOM_STYLES,
   PRODUCTS,
   SCORE,
-  customerRequestText,
   formatShekel,
   generateCustomers,
   getExpectedChange,
@@ -56,6 +55,43 @@ function MoneyChip({ value, count = 1, onRemove, dragging = false }) {
       {style.label}
       {count > 1 ? <span className={styles.changeChipCount}> × {count}</span> : null}
     </button>
+  );
+}
+
+/** @param {{ customer: import('./leo-supermarket-data.js').SupermarketCustomer }} props */
+function CustomerRequestBubble({ customer }) {
+  const items = customer.items;
+  if (items.length === 1) {
+    const item = items[0];
+    return (
+      <p className={styles.speechBubble}>
+        {item.name}{" "}
+        <span className={styles.speechRequestIcon} aria-hidden>
+          {item.requestIcon}
+        </span>
+      </p>
+    );
+  }
+
+  const last = items[items.length - 1];
+  const rest = items.slice(0, -1);
+
+  return (
+    <p className={styles.speechBubble}>
+      {rest.map((item, index) => (
+        <span key={item.id}>
+          {index > 0 ? ", " : ""}
+          {item.name}{" "}
+          <span className={styles.speechRequestIcon} aria-hidden>
+            {item.requestIcon}
+          </span>
+        </span>
+      ))}{" "}
+      ו-{last.name}{" "}
+      <span className={styles.speechRequestIcon} aria-hidden>
+        {last.requestIcon}
+      </span>
+    </p>
   );
 }
 
@@ -638,7 +674,7 @@ export default function LeoSupermarketGame({
               {customer.avatar}
             </span>
             <div className={styles.customerMain}>
-              <p className={styles.speechBubble}>{customerRequestText(customer)}</p>
+              <CustomerRequestBubble customer={customer} />
               <ZoneFeedbackLine fb={zoneFeedback.customer} />
             </div>
             <div className={styles.leoCashier}>
@@ -700,10 +736,16 @@ export default function LeoSupermarketGame({
               <div className={styles.checkoutFooter}>
                 <div className={styles.checkoutFooterStack}>
                   <span className={styles.checkoutAmountLine}>
-                    סכום הקנייה: {step === "change" ? formatShekel(customer.total) : "—"}
+                    <span className={styles.checkoutAmountLabel}>סכום הקנייה:</span>
+                    <span className={styles.checkoutAmountValue}>
+                      {step === "change" ? formatShekel(customer.total) : "—"}
+                    </span>
                   </span>
                   <span className={styles.checkoutAmountLinePaid}>
-                    הלקוח שילם: {step === "change" ? formatShekel(customer.paid) : "—"}
+                    <span className={styles.checkoutAmountLabel}>הלקוח שילם:</span>
+                    <span className={styles.checkoutAmountValue}>
+                      {step === "change" ? formatShekel(customer.paid) : "—"}
+                    </span>
                   </span>
                 </div>
               </div>
@@ -737,7 +779,10 @@ export default function LeoSupermarketGame({
               </div>
               <ZoneFeedbackLine fb={{ text: "", type: "" }} />
               <div className={styles.checkoutFooter}>
-                <p className={styles.checkoutAmountChange}>סכום שהחזרת: {formatShekel(changeSum)}</p>
+                <p className={styles.checkoutAmountChange}>
+                  <span className={styles.checkoutAmountLabel}>סכום שהחזרת:</span>
+                  <span className={styles.checkoutAmountValue}>{formatShekel(changeSum)}</span>
+                </p>
               </div>
             </div>
           </div>

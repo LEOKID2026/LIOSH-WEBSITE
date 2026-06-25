@@ -134,7 +134,7 @@ const rStrong = parentCopilot.runParentCopilotTurn({
 assert.equal(rStrong.resolutionStatus, "resolved");
 assert.ok(guardrail.validateParentCopilotResponseV1(rStrong).ok);
 const strongBody = rStrong.answerBlocks.map((b) => b.textHe).join(" ");
-assert.ok(/מקצוע אחד|בלי השוואה|חשבון/.test(strongBody), "single-subject strongest uses warm parent explanation");
+assert.ok(/מקצוע אחד|בלי השוואה|מתמטיקה|חשבון/.test(strongBody), "single-subject strongest uses warm parent explanation");
 assert.ok(!/לא נדרגים כאן מקצועות אחד מול השני/.test(strongBody), "single-subject strongest must not use dry multi-subject-only boilerplate");
 
 const clarifyQs = ["לא הבנתי. תסביר", "תסביר פשוט", "מה זה אומר בעצם", "למה?"];

@@ -1,6 +1,6 @@
 {
   "artifact": "stage-s2-classifier-gate",
-  "generatedAt": "2026-06-20T12:08:11.313Z",
+  "generatedAt": "2026-06-25T09:06:14.350Z",
   "checks": {
     "intentAccuracy": true,
     "semanticAccuracy": true,

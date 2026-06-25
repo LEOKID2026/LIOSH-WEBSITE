@@ -25,6 +25,7 @@ import {
   isRealTrendLineHe,
   hasProgressComparisonTrend,
 } from "./no-data-request-response.js";
+import { detectAggregateQuestionClass } from "./semantic-question-class.js";
 
 const WHERE_HELP_RE = /איפה\s+(?:ה(?:וא|יא)|(?:הילד|הילדה))\s+צ(?:ר|ר)יך\s+עזרה/u;
 const THREE_THINGS_RE = /(?:מה\s+)?(?:שלוש(?:ת)?|3)\s*(?:ה)?דברים(?:\s+הכי\s+חשוב(?:ים)?)?(?:\s+להורה)?/u;
@@ -39,7 +40,7 @@ const HOME_TODAY_RE =
 const ASK_AT_HOME_RE = /מה\s+לשאול\s+(?:אות(?:ו|ה)|את(?:ו|ה))\s+בבית/u;
 const WHAT_NOT_INFER_RE = /מה\s+לא\s+כדאי\s+(?:לי\s+)?להסיק(?:\s+עדיין)?/u;
 const PROGRESS_WHERE_RE =
-  /איפה\s+רואים(?:\s+(?:ש(?:יפור|התקדמות)|(?:ש(?:ה)?)?מצב\s+טוב\s+יותר))?|מה\s+השתפר/u;
+  /איפה\s+רואים(?:\s+(?:ש(?:יפור|התקדמות)|(?:ש(?:ה)?)?מצב\s+טוב\s+יותר))?/u;
 const IMPORTANT_NOW_RE =
   /מה\s+ה(?:כי\s+)?חשוב(?:\s+(?:כרגע|לי(?:\s+ל)?דעת(?:\s+השבוע)?|עכשיו))?|במה\s+להתמקד\s+(?:עכשיו|השבוע)?|מה\s+העיקר|מה\s+חשוב\s+עכשיו/u;
 const AVOID_NOW_RE =
@@ -171,6 +172,8 @@ export function tryComposeExplainReportSimpleWordsDraft(params) {
 export function classifyApprovedPatternQuestion(utterance) {
   const t = foldUtteranceForHeMatch(String(utterance || ""));
   if (!t) return null;
+  const aggregateClass = detectAggregateQuestionClass(utterance);
+  if (aggregateClass === "recommendation_action" || aggregateClass === "improved") return null;
   if (PROGRESS_WHERE_RE.test(t)) return "progress_where";
   if (IMPORTANT_NOW_RE.test(t)) return "important_now";
   if (AVOID_NOW_RE.test(t)) return "avoid_now";
@@ -203,11 +206,34 @@ function buildTopicTruthPacket(payload, a, utterance, plannerIntent) {
 
 /**
  * @param {string} textHe
+ */
+function patternAnswerBlocks(textHe) {
+  const text = String(textHe || "").trim();
+  if (!text) return [];
+  const sentenceBreak = text.search(/(?<=[.!?])\s+(?=\S)/u);
+  if (sentenceBreak >= 12 && sentenceBreak < text.length - 12) {
+    return [
+      { type: "observation", textHe: text.slice(0, sentenceBreak).trim(), source: "pattern_composer" },
+      { type: "meaning", textHe: text.slice(sentenceBreak).trim(), source: "pattern_composer" },
+    ];
+  }
+  return [
+    { type: "observation", textHe: text, source: "pattern_composer" },
+    {
+      type: "meaning",
+      textHe: "זו תשובה ממוקדת לפי מה שמופיע בדוח בתקופה שנבחרה, בלי להסיק מעבר לנתונים שמוצגים.",
+      source: "pattern_composer",
+    },
+  ];
+}
+
+/**
+ * @param {string} textHe
  * @param {object} focus
  */
 function patternDraft(textHe, focus, plannerIntent) {
   return {
-    answerBlocks: [{ type: "observation", textHe: String(textHe || "").trim(), source: "pattern_composer" }],
+    answerBlocks: patternAnswerBlocks(textHe),
     plannerIntent,
     focusTopic: focus,
     answerComposerUsed: "pattern_composer",
@@ -272,7 +298,7 @@ function composeAvoidNow(payload, utteranceStr = "") {
   });
   if (!truthPacket) return null;
   return {
-    answerBlocks: [{ type: "observation", textHe: text, source: "pattern_composer" }],
+    answerBlocks: patternAnswerBlocks(text),
     plannerIntent: "what_not_to_do_now",
     focusTopic: null,
     answerComposerUsed: "pattern_composer",
@@ -321,7 +347,7 @@ function composeProgressWhere(payload) {
     });
     if (!truthPacket) return null;
     return {
-      answerBlocks: [{ type: "observation", textHe: text, source: "pattern_composer" }],
+      answerBlocks: patternAnswerBlocks(text),
       plannerIntent: "explain_report",
       focusTopic: subjectAnchor,
       answerComposerUsed: "pattern_composer",
@@ -368,7 +394,7 @@ function composeWhatNotInfer(payload, utterance) {
   });
   if (!truthPacket) return null;
   return {
-    answerBlocks: [{ type: "observation", textHe: text, source: "pattern_composer" }],
+    answerBlocks: patternAnswerBlocks(text),
     plannerIntent: "report_trust_question",
     focusTopic: null,
     answerComposerUsed: "pattern_composer",

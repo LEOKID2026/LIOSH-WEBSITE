@@ -1,6 +1,6 @@
 {
   "artifact": "stage-s3-observability-gate",
-  "generatedAt": "2026-06-20T12:08:19.919Z",
+  "generatedAt": "2026-06-25T09:08:37.735Z",
   "checks": {
     "ingestSuccessRate": true,
     "traceQueryP95Minutes": true,
