@@ -13,15 +13,17 @@ import {
 import { pickNextTask } from "../../../lib/educational-games/educational-task-picker.js";
 import {
   bakeryFeedback,
+  bakeryInfoBar,
   bakeryPrompt,
   bakeryTaskKey,
   DIFFICULTIES,
   generateBakeryPool,
   trayItemDisplay,
-  traysGridClass,
   validateBakery,
 } from "./leo-bakery-data.js";
 import { buildLeoBakeryMetrics } from "./leo-bakery-metrics.js";
+import { sharedStyles as s } from "../../prototypes/dev/learning/shared/LearningPrototypeFrame.jsx";
+import gameUi from "../../prototypes/dev/learning/leo-bakery/LeoBakeryGame.module.css";
 import styles from "./LeoBakeryGame.module.css";
 
 /** @typedef {import('./leo-bakery-data.js').DifficultyId} DifficultyId */
@@ -77,10 +79,6 @@ export default function LeoBakeryGame({
   const lockTotal = task?.mode === "build" || task?.mode === "findTrays" || task?.mode === "findPerTray";
 
   const displayPerTray = task?.mode === "findTrays" ? (task.perTray ?? 1) : perTray;
-  const displayTotal =
-    task?.mode === "findTrays" || task?.mode === "findPerTray"
-      ? (task?.total ?? total)
-      : total;
 
   const trayPreview = useMemo(() => {
     if (!task) return [];
@@ -89,8 +87,6 @@ export default function LeoBakeryGame({
       count: displayPerTray,
     }));
   }, [task, trays, displayPerTray]);
-
-  const trayGridClass = traysGridClass(trays);
 
   const resetTaskUi = useCallback(() => {
     setTrays(1);
@@ -306,23 +302,23 @@ export default function LeoBakeryGame({
       : "—";
 
   return (
-    <div className={`${styles.shell} ${productionMode ? styles.shellEmbedded : ""}`} dir="rtl">
-      <header className={styles.header}>
+    <div className={`${s.shell} ${s.shellWarm} ${productionMode ? styles.shellEmbedded : ""}`} dir="rtl">
+      <header className={s.header}>
         {!productionMode ? (
-          <Link href={backHref} className={styles.backBtn}>
+          <Link href={backHref} className={s.backBtn}>
             ← חזרה
           </Link>
         ) : (
           <div style={{ minWidth: 40 }} aria-hidden />
         )}
         {phase === "play" ? (
-          <div className={styles.hud}>
-            <span className={`${styles.hudChip} ${styles.hudScore}`}>⭐ {score}</span>
-            <span className={styles.hudChip}>שלב {internalStage}</span>
-            <span className={`${styles.hudChip} ${styles.hudTime} ${timeLeft <= 8 ? styles.hudTimeWarn : ""}`}>
+          <div className={s.hud}>
+            <span className={`${s.hudChip} ${s.hudScore}`}>⭐ {score}</span>
+            <span className={s.hudChip}>שלב {internalStage}</span>
+            <span className={`${s.hudChip} ${styles.hudTime} ${timeLeft <= 8 ? styles.hudTimeWarn : ""}`}>
               ⏱ {timeLeft}
             </span>
-            <span className={`${styles.hudChip} ${styles.hudBad}`}>
+            <span className={`${s.hudChip} ${s.hudBad}`}>
               ❌ {mistakes}/{diffConfig.maxMistakes}
             </span>
             {showFullscreenButton && onFullscreenToggle ? (
@@ -333,8 +329,8 @@ export default function LeoBakeryGame({
             ) : null}
           </div>
         ) : (
-          <div className={styles.hud}>
-            <span className={styles.hudChip}>{productionMode ? "🥐" : "🥐 אבטיפוס"}</span>
+          <div className={s.hud}>
+            <span className={s.hudChip}>{productionMode ? "🥐" : "🥐 אבטיפוס"}</span>
           </div>
         )}
         <div style={{ minWidth: 40 }} aria-hidden />
@@ -364,47 +360,41 @@ export default function LeoBakeryGame({
       ) : null}
 
       {phase === "play" && task ? (
-        <div className={styles.main}>
-          <div className={styles.taskTop}>
-            <div className={styles.missionCard}>
-              <span className={styles.missionIcon}>{task.itemEmoji}</span>
-              <div className={styles.missionBody}>
-                <p className={styles.missionLabel}>הזמנה</p>
-                <h2 className={styles.missionTitle}>מאפיית ליאו</h2>
-                <p className={styles.missionPrompt}>{bakeryPrompt(task)}</p>
-              </div>
-            </div>
-
-            <div className={styles.formulaBar}>
-              {trays} תבניות × {displayPerTray} בכל תבנית = {displayTotal} {task.itemEmoji}
+        <div className={s.main}>
+          <div className={s.missionCard}>
+            <span className={s.missionIcon}>{task.itemEmoji}</span>
+            <div className={s.missionBody}>
+              <p className={s.missionLabel}>הזמנה</p>
+              <h2 className={s.missionTitle}>מאפיית ליאו</h2>
+              <p className={s.missionPrompt}>{bakeryPrompt(task)}</p>
             </div>
           </div>
 
-          <div className={styles.gameArea}>
-            <div className={styles.traysPanel}>
-              <p className={styles.panelTitle}>🧁 התבניות שלכם</p>
-              <div className={`${styles.trayGrid} ${styles[trayGridClass]}`}>
+          <div className={gameUi.formulaBar}>{bakeryInfoBar(task)}</div>
+
+          <div className={s.playArea}>
+            <div className={`${s.panel} ${gameUi.traysPanel} ${styles.traysPanelFull}`}>
+              <p className={s.panelTitle}>🧁 התבניות שלכם</p>
+              <div className={`${gameUi.trayGrid} ${styles.trayGridFull}`}>
                 {trayPreview.map((tr) => {
                   const disp = trayItemDisplay(tr.count, task.itemEmoji);
                   return (
-                    <div key={tr.id} className={styles.trayCard}>
-                      <span className={styles.trayLabel}>תבנית {tr.id + 1}</span>
-                      <span className={styles.trayItems}>{disp.text}</span>
+                    <div key={tr.id} className={gameUi.trayCard}>
+                      <span className={gameUi.trayLabel}>תבנית {tr.id + 1}</span>
+                      <span className={gameUi.trayItems}>{disp.text}</span>
                     </div>
                   );
                 })}
               </div>
             </div>
-          </div>
 
-          <div className={styles.controlsFooter}>
-            <div className={styles.controlsPanel}>
-              <div className={styles.controlCol}>
-                <span className={styles.controlLabel}>תבניות</span>
-                <div className={styles.stepperRow}>
+            <div className={`${s.panel} ${gameUi.controlsPanel}`}>
+              <div className={gameUi.controlCol}>
+                <span className={gameUi.controlLabel}>תבניות</span>
+                <div className={s.stepperRow}>
                   <button
                     type="button"
-                    className={styles.stepperBtn}
+                    className={s.stepperBtn}
                     disabled={lockTrays}
                     onClick={() => {
                       setTrays((v) => Math.max(1, v - 1));
@@ -413,10 +403,10 @@ export default function LeoBakeryGame({
                   >
                     −
                   </button>
-                  <span className={styles.stepperValue}>{trays}</span>
+                  <span className={s.stepperValue}>{trays}</span>
                   <button
                     type="button"
-                    className={styles.stepperBtn}
+                    className={s.stepperBtn}
                     disabled={lockTrays}
                     onClick={() => {
                       setTrays((v) => Math.min(12, v + 1));
@@ -427,12 +417,12 @@ export default function LeoBakeryGame({
                   </button>
                 </div>
               </div>
-              <div className={styles.controlCol}>
-                <span className={styles.controlLabel}>בכל תבנית</span>
-                <div className={styles.stepperRow}>
+              <div className={gameUi.controlCol}>
+                <span className={gameUi.controlLabel}>בכל תבנית</span>
+                <div className={s.stepperRow}>
                   <button
                     type="button"
-                    className={styles.stepperBtn}
+                    className={s.stepperBtn}
                     disabled={lockPerTray}
                     onClick={() => {
                       setPerTray((v) => Math.max(1, v - 1));
@@ -441,10 +431,10 @@ export default function LeoBakeryGame({
                   >
                     −
                   </button>
-                  <span className={styles.stepperValue}>{displayPerTray}</span>
+                  <span className={s.stepperValue}>{displayPerTray}</span>
                   <button
                     type="button"
-                    className={styles.stepperBtn}
+                    className={s.stepperBtn}
                     disabled={lockPerTray}
                     onClick={() => {
                       setPerTray((v) => Math.min(12, v + 1));
@@ -456,32 +446,32 @@ export default function LeoBakeryGame({
                 </div>
               </div>
               {!lockTotal ? (
-                <div className={`${styles.controlCol} ${styles.totalCol}`}>
-                  <span className={styles.controlLabel}>סך הכול</span>
-                  <span className={styles.totalValue}>{total}</span>
+                <div className={`${gameUi.controlCol} ${gameUi.totalCol}`}>
+                  <span className={gameUi.controlLabel}>סך הכול</span>
+                  <span className={gameUi.totalValue}>{total}</span>
                 </div>
               ) : null}
             </div>
 
             <div
-              className={`${styles.feedbackBar} ${
+              className={`${s.feedbackBar} ${
                 checkState === "ok"
-                  ? styles.feedbackOk
+                  ? s.feedbackOk
                   : checkState === "bad"
-                    ? styles.feedbackBad
-                    : styles.feedbackNeutral
+                    ? s.feedbackBad
+                    : s.feedbackNeutral
               }`}
             >
-              <p className={styles.feedbackText}>
+              <p className={s.feedbackText}>
                 {feedback || "הגדירו תבניות וכמות בכל תבנית, ואז לחצו בדיקה"}
               </p>
             </div>
 
-            <div className={styles.actionRow}>
-              <button type="button" className={styles.primaryBtn} onClick={runCheck}>
+            <div className={s.actionRow}>
+              <button type="button" className={s.primaryBtn} onClick={runCheck}>
                 בדוק הזמנה
               </button>
-              <button type="button" className={styles.secondaryBtn} onClick={resetTaskUi}>
+              <button type="button" className={s.secondaryBtn} onClick={resetTaskUi}>
                 איפוס
               </button>
             </div>

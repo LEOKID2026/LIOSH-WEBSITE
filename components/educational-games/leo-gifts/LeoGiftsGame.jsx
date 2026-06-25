@@ -22,6 +22,8 @@ import {
   validateGiftsDivision,
 } from "./leo-gifts-data.js";
 import { buildLeoGiftsMetrics } from "./leo-gifts-metrics.js";
+import { sharedStyles as s } from "../../prototypes/dev/learning/shared/LearningPrototypeFrame.jsx";
+import gameUi from "../../prototypes/dev/learning/leo-gifts/LeoGiftsGame.module.css";
 import styles from "./LeoGiftsGame.module.css";
 
 /** @typedef {import('./leo-gifts-data.js').DifficultyId} DifficultyId */
@@ -70,7 +72,7 @@ export default function LeoGiftsGame({
   const [feedback, setFeedback] = useState("");
 
   const diffConfig = getContinuousDifficulty(difficulty);
-  const gridClass = task ? styles[childrenGridClass(task.children)] : "";
+  const gridClass = task ? gameUi[childrenGridClass(task.children)] : "";
 
   const resetTaskUi = useCallback(() => {
     setPerChild(0);
@@ -269,23 +271,23 @@ export default function LeoGiftsGame({
       : "—";
 
   return (
-    <div className={`${styles.shell} ${productionMode ? styles.shellEmbedded : ""}`} dir="rtl">
-      <header className={styles.header}>
+    <div className={`${s.shell} ${s.shellPink} ${productionMode ? styles.shellEmbedded : ""}`} dir="rtl">
+      <header className={s.header}>
         {!productionMode ? (
-          <Link href={backHref} className={styles.backBtn}>
+          <Link href={backHref} className={s.backBtn}>
             ← חזרה
           </Link>
         ) : (
           <div style={{ minWidth: 40 }} aria-hidden />
         )}
         {phase === "play" ? (
-          <div className={styles.hud}>
-            <span className={`${styles.hudChip} ${styles.hudScore}`}>⭐ {score}</span>
-            <span className={styles.hudChip}>שלב {internalStage}</span>
-            <span className={`${styles.hudChip} ${styles.hudTime} ${timeLeft <= 8 ? styles.hudTimeWarn : ""}`}>
+          <div className={s.hud}>
+            <span className={`${s.hudChip} ${s.hudScore}`}>⭐ {score}</span>
+            <span className={s.hudChip}>שלב {internalStage}</span>
+            <span className={`${s.hudChip} ${styles.hudTime} ${timeLeft <= 8 ? styles.hudTimeWarn : ""}`}>
               ⏱ {timeLeft}
             </span>
-            <span className={`${styles.hudChip} ${styles.hudBad}`}>
+            <span className={`${s.hudChip} ${s.hudBad}`}>
               ❌ {mistakes}/{diffConfig.maxMistakes}
             </span>
             {showFullscreenButton && onFullscreenToggle ? (
@@ -296,8 +298,8 @@ export default function LeoGiftsGame({
             ) : null}
           </div>
         ) : (
-          <div className={styles.hud}>
-            <span className={styles.hudChip}>{productionMode ? "🎁" : "🎁 אבטיפוס"}</span>
+          <div className={s.hud}>
+            <span className={s.hudChip}>{productionMode ? "🎁" : "🎁 אבטיפוס"}</span>
           </div>
         )}
         <div style={{ minWidth: 40 }} aria-hidden />
@@ -327,72 +329,109 @@ export default function LeoGiftsGame({
       ) : null}
 
       {phase === "play" && task ? (
-        <div className={styles.main}>
-          <div className={styles.taskTop}>
-            <div className={styles.missionCard}>
-              <span className={styles.missionIcon}>{task.itemEmoji}</span>
-              <div className={styles.missionBody}>
-                <p className={styles.missionLabel}>משימה</p>
-                <h2 className={styles.missionTitle}>חלוקה שווה</h2>
-                <p className={styles.missionPrompt}>{giftsPrompt(task)}</p>
-              </div>
-            </div>
-            <div className={styles.infoBar}>
-              {task.total} {task.itemLabel} · {task.children} ילדים
+        <div className={s.main}>
+          <div className={s.missionCard}>
+            <span className={s.missionIcon}>{task.itemEmoji}</span>
+            <div className={s.missionBody}>
+              <p className={s.missionLabel}>משימה</p>
+              <h2 className={s.missionTitle}>חלוקה שווה</h2>
+              <p className={s.missionPrompt}>{giftsPrompt(task)}</p>
             </div>
           </div>
 
-          <div className={styles.gameArea}>
-            <div className={styles.childrenPanel}>
-              <p className={styles.panelTitle}>👧👦 הילדים</p>
-              <div className={`${styles.childrenGrid} ${gridClass}`}>
+          <div className={gameUi.infoBar}>
+            {task.total} {task.itemLabel} · {task.children} ילדים
+          </div>
+
+          <div className={s.playArea}>
+            <div className={`${s.panel} ${gameUi.childrenPanel} ${styles.childrenPanelFull}`}>
+              <p className={s.panelTitle}>👧👦 הילדים</p>
+              <div className={`${gameUi.childrenGrid} ${gridClass} ${styles.childrenGridFull}`}>
                 {Array.from({ length: task.children }, (_, i) => (
-                  <div key={i} className={styles.childCard}>
-                    <span className={styles.childLabel}>ילד {i + 1}</span>
-                    <span className={styles.childEmoji}>{childEmojiAt(i)}</span>
-                    <span className={styles.childGift}>{task.itemEmoji}</span>
-                    <span className={styles.childCount}>{perChild}</span>
+                  <div key={i} className={gameUi.childCard}>
+                    <span className={gameUi.childLabel}>ילד {i + 1}</span>
+                    <span className={gameUi.childEmoji}>{childEmojiAt(i)}</span>
+                    <span className={gameUi.childGift}>{task.itemEmoji}</span>
+                    <span className={gameUi.childCount}>{perChild}</span>
                   </div>
                 ))}
               </div>
             </div>
-          </div>
 
-          <div className={styles.controlsFooter}>
-            <div className={styles.controlsPanel}>
-              <div className={styles.controlCol}>
-                <span className={styles.controlLabel}>לכל ילד</span>
-                <div className={styles.stepperRow}>
-                  <button type="button" className={styles.stepperBtn} onClick={() => { setPerChild((v) => Math.max(0, v - 1)); setCheckState("idle"); setFeedback(""); }}>
+            <div className={`${s.panel} ${gameUi.controlsPanel}`}>
+              <div className={gameUi.controlCol}>
+                <span className={gameUi.controlLabel}>לכל ילד</span>
+                <div className={s.stepperRow}>
+                  <button
+                    type="button"
+                    className={s.stepperBtn}
+                    onClick={() => {
+                      setPerChild((v) => Math.max(0, v - 1));
+                      setCheckState("idle");
+                      setFeedback("");
+                    }}
+                  >
                     −
                   </button>
-                  <span className={styles.stepperValue}>{perChild}</span>
-                  <button type="button" className={styles.stepperBtn} onClick={() => { setPerChild((v) => Math.min(task.total, v + 1)); setCheckState("idle"); setFeedback(""); }}>
+                  <span className={s.stepperValue}>{perChild}</span>
+                  <button
+                    type="button"
+                    className={s.stepperBtn}
+                    onClick={() => {
+                      setPerChild((v) => Math.min(task.total, v + 1));
+                      setCheckState("idle");
+                      setFeedback("");
+                    }}
+                  >
                     +
                   </button>
                 </div>
               </div>
-              <div className={styles.controlCol}>
-                <span className={styles.controlLabel}>נשאר לליאו 🧺</span>
-                <div className={styles.stepperRow}>
-                  <button type="button" className={styles.stepperBtn} onClick={() => { setRemainder((v) => Math.max(0, v - 1)); setCheckState("idle"); setFeedback(""); }}>
+              <div className={gameUi.controlCol}>
+                <span className={gameUi.controlLabel}>נשאר לליאו 🧺</span>
+                <div className={s.stepperRow}>
+                  <button
+                    type="button"
+                    className={s.stepperBtn}
+                    onClick={() => {
+                      setRemainder((v) => Math.max(0, v - 1));
+                      setCheckState("idle");
+                      setFeedback("");
+                    }}
+                  >
                     −
                   </button>
-                  <span className={styles.stepperValue}>{remainder}</span>
-                  <button type="button" className={styles.stepperBtn} onClick={() => { setRemainder((v) => Math.min(task.total, v + 1)); setCheckState("idle"); setFeedback(""); }}>
+                  <span className={s.stepperValue}>{remainder}</span>
+                  <button
+                    type="button"
+                    className={s.stepperBtn}
+                    onClick={() => {
+                      setRemainder((v) => Math.min(task.total, v + 1));
+                      setCheckState("idle");
+                      setFeedback("");
+                    }}
+                  >
                     +
                   </button>
                 </div>
               </div>
             </div>
-            <div className={`${styles.feedbackBar} ${checkState === "ok" ? styles.feedbackOk : checkState === "bad" ? styles.feedbackBad : styles.feedbackNeutral}`}>
-              <p className={styles.feedbackText}>{feedback || "בחרו כמה כל ילד מקבל וכמה נשאר לליאו"}</p>
+
+            <div
+              className={`${s.feedbackBar} ${
+                checkState === "ok" ? s.feedbackOk : checkState === "bad" ? s.feedbackBad : s.feedbackNeutral
+              }`}
+            >
+              <p className={s.feedbackText}>
+                {feedback || "בחרו כמה כל ילד מקבל וכמה נשאר לליאו"}
+              </p>
             </div>
-            <div className={styles.actionRow}>
-              <button type="button" className={styles.primaryBtn} onClick={runCheck}>
+
+            <div className={s.actionRow}>
+              <button type="button" className={s.primaryBtn} onClick={runCheck}>
                 בדוק חלוקה
               </button>
-              <button type="button" className={styles.secondaryBtn} onClick={resetTaskUi}>
+              <button type="button" className={s.secondaryBtn} onClick={resetTaskUi}>
                 איפוס
               </button>
             </div>

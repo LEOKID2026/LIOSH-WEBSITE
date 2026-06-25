@@ -173,6 +173,20 @@ export function bakeryPrompt(task) {
 }
 
 /** @param {BakeryTask} task */
+export function bakeryInfoBar(task) {
+  if (task.mode === "findTrays") {
+    return `${task.total} ${task.itemLabel} · בכל תבנית ${task.perTray}`;
+  }
+  if (task.mode === "findPerTray") {
+    return `${task.total} ${task.itemLabel} · ${task.trays} תבניות`;
+  }
+  if (task.mode === "findTotal") {
+    return `${task.trays} תבניות · בכל תבנית ${task.perTray} ${task.itemLabel}`;
+  }
+  return `${task.trays} תבניות · בכל תבנית ${task.perTray} ${task.itemLabel}`;
+}
+
+/** @param {BakeryTask} task */
 export function bakeryExpected(task) {
   if (task.mode === "build") {
     const trays = task.trays ?? 0;
@@ -213,12 +227,4 @@ export function bakeryFeedback(ok) {
 export function trayItemDisplay(count, emoji) {
   if (count <= 4) return { type: "icons", text: emoji.repeat(count) };
   return { type: "multiply", text: `${emoji} × ${count}` };
-}
-
-/** @param {number} trayCount */
-export function traysGridClass(trayCount) {
-  if (trayCount <= 4) return "trayGridFew";
-  if (trayCount <= 6) return "trayGridMedium";
-  if (trayCount <= 9) return "trayGridMany";
-  return "trayGridDense";
 }
