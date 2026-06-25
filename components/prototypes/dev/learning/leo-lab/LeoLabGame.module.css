@@ -1,0 +1,767 @@
+.shell {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  max-height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  background: linear-gradient(180deg, #fff7ed 0%, #fef3c7 38%, #ecfdf5 100%);
+  color: #1e293b;
+  position: relative;
+}
+
+.shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.42;
+  background-image:
+    radial-gradient(circle at 14% 20%, rgba(251, 191, 36, 0.24) 0, transparent 45%),
+    radial-gradient(circle at 86% 16%, rgba(56, 189, 248, 0.2) 0, transparent 42%),
+    radial-gradient(circle at 50% 92%, rgba(74, 222, 128, 0.18) 0, transparent 40%);
+}
+
+.deco {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.flaskDeco {
+  top: 11%;
+  right: 4%;
+  font-size: clamp(24px, 5vw, 36px);
+  opacity: 0.32;
+}
+
+.atomDeco {
+  bottom: 7%;
+  left: 3%;
+  font-size: clamp(26px, 5vw, 40px);
+  opacity: 0.26;
+}
+
+.header {
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.45rem;
+  min-height: 52px;
+  padding: 0.5rem 0.75rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 251, 235, 0.92));
+  border-bottom: 2px solid #fdba74;
+  box-shadow: 0 2px 10px rgba(251, 146, 60, 0.1);
+}
+
+.backBtn {
+  min-height: 34px;
+  padding: 0.28rem 0.62rem;
+  border-radius: 999px;
+  border: 2px solid #fdba74;
+  background: #fff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #c2410c;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.hud {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.hudChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  min-height: 32px;
+  padding: 0.22rem 0.52rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 2px solid #fed7aa;
+  font-size: clamp(0.66rem, 2.4vw, 0.82rem);
+  font-weight: 800;
+  white-space: nowrap;
+  box-shadow: 0 2px 0 rgba(251, 146, 60, 0.12);
+}
+
+.hudScore {
+  border-color: #fbbf24;
+  background: #fffbeb;
+  color: #92400e;
+}
+
+.hudBad {
+  border-color: #fca5a5;
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.hudProgress {
+  border-color: #a78bfa;
+  background: #f5f3ff;
+  color: #5b21b6;
+}
+
+.main {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.4rem 0.55rem 0.5rem;
+  overflow: hidden;
+}
+
+.screenCenter {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  text-align: center;
+}
+
+.introHero {
+  margin: 0;
+  font-size: clamp(2.5rem, 10vw, 3.5rem);
+  line-height: 1;
+}
+
+.introTitle {
+  margin: 0;
+  font-size: clamp(1.15rem, 4.5vw, 1.55rem);
+  font-weight: 900;
+  color: #0c4a6e;
+}
+
+.introText {
+  margin: 0;
+  max-width: 22rem;
+  font-size: clamp(0.78rem, 3vw, 0.92rem);
+  font-weight: 700;
+  color: #475569;
+  line-height: 1.45;
+}
+
+.difficultyRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.diffBtn {
+  min-height: 42px;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  border: 2px solid #fdba74;
+  background: #fff;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #c2410c;
+  box-shadow: 0 3px 0 #fdba74;
+}
+
+.diffBtnSelected {
+  border-color: #a78bfa;
+  background: #ede9fe;
+  color: #5b21b6;
+  box-shadow: 0 3px 0 #c4b5fd;
+}
+
+.startBtn {
+  min-height: 48px;
+  padding: 0.5rem 1.5rem;
+  border-radius: 1rem;
+  border: none;
+  background: linear-gradient(180deg, #38bdf8, #0284c7);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 900;
+  box-shadow: 0 4px 0 #0369a1;
+}
+
+.missionCard {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.5rem 0.7rem;
+  border-radius: 1rem;
+  border: 3px solid #c4b5fd;
+  background: linear-gradient(180deg, #fff, #faf5ff);
+  box-shadow: 0 3px 0 rgba(167, 139, 250, 0.22);
+}
+
+.missionIcon {
+  font-size: clamp(1.45rem, 5vw, 1.9rem);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.missionBody {
+  min-width: 0;
+  flex: 1;
+}
+
+.missionLabel {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #7c3aed;
+}
+
+.missionTitle {
+  margin: 0.1rem 0 0;
+  font-size: clamp(0.86rem, 3.1vw, 1.02rem);
+  font-weight: 900;
+  color: #312e81;
+  line-height: 1.25;
+}
+
+.missionPrompt {
+  margin: 0.15rem 0 0;
+  font-size: clamp(0.66rem, 2.4vw, 0.76rem);
+  font-weight: 700;
+  color: #64748b;
+  line-height: 1.35;
+}
+
+.leoRow {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.leoBadge {
+  font-size: clamp(1.5rem, 4.5vw, 2rem);
+  filter: drop-shadow(0 2px 4px rgba(15, 23, 42, 0.1));
+}
+
+.leoCaption {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #0369a1;
+}
+
+.playStack {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+  overflow: hidden;
+}
+
+.benchSection {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.24rem;
+}
+
+.benchLabel {
+  margin: 0;
+  flex-shrink: 0;
+  font-size: 0.7rem;
+  font-weight: 900;
+  color: #0f766e;
+  text-align: center;
+}
+
+.benchZone {
+  flex: 0 0 auto;
+  min-height: clamp(152px, 26dvh, 216px);
+  max-height: clamp(176px, 30dvh, 236px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.32rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 1rem;
+  border: 3px dashed #5eead4;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.97), rgba(204, 251, 241, 0.55));
+  box-shadow:
+    inset 0 2px 8px rgba(15, 118, 110, 0.06),
+    0 2px 0 rgba(20, 184, 166, 0.1);
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.benchZoneActive {
+  border-color: #2dd4bf;
+  background: linear-gradient(180deg, #fff, rgba(153, 246, 228, 0.4));
+}
+
+.benchZoneSuccess {
+  border-color: #86efac;
+  background: linear-gradient(180deg, #f0fdf4, #dcfce7);
+  animation: benchPulse 0.6s ease;
+}
+
+@keyframes benchPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.01);
+  }
+}
+
+.benchEmptyHint {
+  margin: 0;
+  font-size: clamp(0.74rem, 2.8vw, 0.88rem);
+  font-weight: 700;
+  color: #64748b;
+  text-align: center;
+  line-height: 1.35;
+  max-width: 16rem;
+}
+
+.benchItems {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  width: 100%;
+}
+
+.benchItemBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.44rem 0.63rem;
+  min-width: clamp(73px, 17.5vw, 95px);
+  border-radius: 0.85rem;
+  border: 2px solid #99f6e4;
+  background: #fff;
+  box-shadow: 0 3px 0 rgba(20, 184, 166, 0.18);
+  touch-action: manipulation;
+}
+
+.benchItemBtn:active {
+  transform: translateY(1px);
+}
+
+.resultDisplay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  text-align: center;
+}
+
+.resultIcon {
+  font-size: clamp(1.65rem, 5.5vw, 2.2rem);
+  line-height: 1;
+  animation: resultPop 0.45s ease;
+}
+
+@keyframes resultPop {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.resultText {
+  margin: 0;
+  font-size: clamp(0.72rem, 2.6vw, 0.84rem);
+  font-weight: 900;
+  color: #166534;
+  line-height: 1.2;
+}
+
+.feedbackBar {
+  flex-shrink: 0;
+  align-self: stretch;
+  width: 100%;
+  min-height: clamp(34px, 6dvh, 44px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(6px, 1.2vw, 9px) 0.55rem;
+  border-radius: 0.8rem;
+  border: 2px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.94);
+  text-align: center;
+}
+
+.feedbackOk {
+  border-color: #86efac;
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.feedbackBad {
+  border-color: #fca5a5;
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+.feedbackNeutral {
+  border-color: #cbd5e1;
+  color: #475569;
+}
+
+.feedbackText {
+  margin: 0;
+  font-size: clamp(0.68rem, 2.6vw, 0.82rem);
+  font-weight: 800;
+  line-height: 1.28;
+}
+
+.feedbackFact {
+  display: block;
+  margin-top: 0.1rem;
+  font-size: clamp(0.6rem, 2.2vw, 0.7rem);
+  font-weight: 700;
+  opacity: 0.88;
+}
+
+.shelfSection {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  overflow: hidden;
+  justify-content: flex-end;
+}
+
+.shelfTitle {
+  margin: 0;
+  flex-shrink: 0;
+  font-size: 0.7rem;
+  font-weight: 900;
+  color: #c2410c;
+  text-align: center;
+}
+
+.shelfGrid {
+  flex: 0 0 auto;
+  display: grid;
+  gap: clamp(0.2rem, 0.75vw, 0.32rem);
+  overflow: hidden;
+  padding: 0.08rem;
+}
+
+.shelfGridEasy {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: repeat(2, clamp(73px, 16.9vw, 90px));
+}
+
+.shelfGridTwelve {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: repeat(3, clamp(65px, 15vw, 83px));
+}
+
+.shelfItemBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  height: 100%;
+  padding: 0.14rem 0.18rem;
+  border-radius: 0.7rem;
+  border: 2px solid #fed7aa;
+  background: linear-gradient(180deg, #fff, #fff7ed);
+  box-shadow: 0 2px 0 rgba(251, 146, 60, 0.15);
+  touch-action: none;
+  overflow: hidden;
+}
+
+.shelfItemBtn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.shelfItemBtn:disabled {
+  opacity: 0.42;
+}
+
+.shelfItemOnBench {
+  border-color: #86efac;
+  background: linear-gradient(180deg, #f0fdf4, #ecfdf5);
+}
+
+.shelfItemVisual,
+.benchItemVisual,
+.ghostItemVisual {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.04rem;
+  width: 100%;
+  min-height: 0;
+}
+
+.shelfItemBtn .itemVisualCenter {
+  min-height: clamp(35px, 8.1vw, 45px);
+}
+
+.shelfItemBtn .itemIcon {
+  font-size: clamp(1.6rem, 5.75vw, 1.98rem);
+}
+
+.shelfItemBtn .itemName {
+  font-size: clamp(0.73rem, 2.7vw, 0.9rem);
+  line-height: 1.12;
+  font-weight: 800;
+}
+
+.benchItemBtn .itemVisualCenter {
+  min-height: clamp(38px, 8.75vw, 48px);
+}
+
+.benchItemBtn .itemIcon {
+  font-size: clamp(1.63rem, 6vw, 2.06rem);
+}
+
+.benchItemBtn .itemName {
+  font-size: clamp(0.7rem, 2.5vw, 0.85rem);
+}
+
+.itemVisualCenter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: clamp(33px, 8.1vw, 43px);
+}
+
+.itemIcon {
+  font-size: clamp(1.44rem, 5.25vw, 1.94rem);
+  line-height: 1;
+}
+
+.ghostItemVisual .itemIcon {
+  font-size: clamp(1.88rem, 6.9vw, 2.5rem);
+}
+
+.itemImage {
+  width: clamp(33px, 8.1vw, 43px);
+  height: clamp(33px, 8.1vw, 43px);
+  object-fit: contain;
+}
+
+.itemName {
+  font-size: clamp(0.63rem, 2.4vw, 0.78rem);
+  font-weight: 800;
+  color: #334155;
+  text-align: center;
+  line-height: 1.1;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.actionRow {
+  flex-shrink: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.primaryBtn {
+  min-height: 44px;
+  padding: 0.4rem 1rem;
+  border-radius: 0.9rem;
+  border: none;
+  background: linear-gradient(180deg, #a78bfa, #7c3aed);
+  color: #fff;
+  font-size: clamp(0.8rem, 2.8vw, 0.92rem);
+  font-weight: 900;
+  box-shadow: 0 3px 0 #5b21b6;
+}
+
+.primaryBtn:disabled {
+  opacity: 0.45;
+  box-shadow: none;
+}
+
+.secondaryBtn {
+  min-height: 40px;
+  padding: 0.35rem 0.75rem;
+  border-radius: 0.8rem;
+  border: 2px solid #94a3b8;
+  background: #fff;
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: #475569;
+}
+
+.endCard {
+  width: min(100%, 380px);
+  padding: 1.25rem;
+  border-radius: 1.25rem;
+  border: 3px solid #fdba74;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(251, 146, 60, 0.14);
+}
+
+.endTitle {
+  margin: 0 0 0.75rem;
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: #0c4a6e;
+}
+
+.endStats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.45rem;
+  margin-bottom: 0.85rem;
+}
+
+.endStat {
+  padding: 0.45rem;
+  border-radius: 0.75rem;
+  background: #fff7ed;
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #c2410c;
+}
+
+.endStatValue {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 1rem;
+  color: #0f172a;
+}
+
+.dragOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.dragGhost {
+  position: fixed;
+  z-index: 1001;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.8rem;
+  border: 2px solid #5eead4;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.16);
+  will-change: left, top;
+}
+
+@media (min-width: 641px) {
+  .playStack {
+    max-width: 680px;
+    margin-inline: auto;
+    width: 100%;
+  }
+
+  .benchZone {
+    min-height: clamp(176px, 22dvh, 224px);
+    max-height: 236px;
+  }
+
+  .shelfGridEasy {
+    grid-template-columns: repeat(4, minmax(80px, 1fr));
+    grid-template-rows: repeat(2, 85px);
+  }
+
+  .shelfGridTwelve {
+    grid-template-columns: repeat(6, minmax(75px, 1fr));
+    grid-template-rows: repeat(2, 80px);
+  }
+}
+
+@media (max-width: 900px) and (orientation: landscape) {
+  .main {
+    gap: 0.28rem;
+  }
+
+  .leoRow {
+    display: none;
+  }
+
+  .playStack {
+    display: grid;
+    grid-template-columns: 0.95fr 1.05fr;
+    grid-template-rows: 1fr auto;
+    gap: 0.28rem;
+    min-height: 0;
+  }
+
+  .benchSection {
+    grid-column: 1;
+    grid-row: 1;
+    min-height: 0;
+  }
+
+  .shelfSection {
+    grid-column: 2;
+    grid-row: 1;
+    min-height: 0;
+    justify-content: center;
+  }
+
+  .actionRow {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .benchZone {
+    min-height: clamp(144px, 36dvh, 192px);
+    max-height: 208px;
+  }
+
+  .shelfGridTwelve {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: repeat(4, clamp(60px, 12.5dvh, 73px));
+  }
+
+  .shelfGridEasy {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(4, clamp(60px, 12.5dvh, 73px));
+  }
+}
+
+@media (max-width: 640px) and (orientation: portrait) {
+  .leoRow {
+    display: none;
+  }
+
+  .missionCard {
+    padding: 0.38rem 0.52rem;
+  }
+
+  .benchZone {
+    min-height: clamp(152px, 28dvh, 200px);
+    max-height: 216px;
+  }
+}
