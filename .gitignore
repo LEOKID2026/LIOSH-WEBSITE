@@ -25,6 +25,7 @@ reports/virtual-student-longitudinal/
 
 # Next.js
 /.next/
+/.next-qa-deep/
 /out/
 
 # Production

@@ -80,7 +80,10 @@ const nextConfig = {
           "**/node_modules/**",
           "**/.git/**",
           "**/.next/**",
+          "**/.next-qa-deep/**",
           "**/.cursor/**",
+          "**/reports/**",
+          "**/tmp/**",
         ],
       };
       /**

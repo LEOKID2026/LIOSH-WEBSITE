@@ -21,7 +21,8 @@
  *   VISUAL_QA_RUN_TIMEOUT_MINUTES default 75 per harness run
  *   VISUAL_QA_DEEP_RUN_ID         optional override for reports/visual-qa-deep/<runId>/
  *   VISUAL_QA_DEEP_RESTART_EACH_RUN default true — fresh dev before each harness run
- *   PLAYWRIGHT_BASE_URL           derived from VISUAL_QA_DEEP_PORT (not 3002)
+ *   VISUAL_QA_DEEP_USE_PROD=1       next build + next start (no HMR) for long QA runs
+ *   VISUAL_QA_DEEP_COHORT_FILTER    optional primary | secondary
  */
 
 import { spawn, exec } from "node:child_process";
@@ -43,6 +44,7 @@ const DEEP_DEV_STATE_PATH = join(REPO_ROOT, "reports", "visual-qa-deep", ".deep-
 const DEFAULT_DEEP_PORT = 3100;
 const FALLBACK_DEEP_PORT = 3050;
 const DEEP_DEV_HOST = "127.0.0.1";
+const QA_NEXT_DIST_DIR = ".next-qa-deep";
 const BLOCKED_MANUAL_DEV_PORT = 3002;
 
 const DEFAULT_SUBJECTS = ["geometry", "math", "hebrew", "english"];
@@ -234,14 +236,68 @@ async function resolveDeepPort(preferredPort) {
   throw new Error(`Deep QA port ${port} is in use by a non-QA process.`);
 }
 
+function buildDeepDevChildEnv(cfg, { forBuild = false } = {}) {
+  return {
+    ...process.env,
+    VISUAL_QA_DEEP_DEV: "1",
+    NEXT_TELEMETRY_DISABLED: "1",
+    NEXT_DIST_DIR: QA_NEXT_DIST_DIR,
+    NODE_ENV: forBuild || cfg.useProdServer ? "production" : "development",
+    // Reduce dev reload churn from QA artifacts touching the repo tree.
+    WATCHPACK_POLLING: "false",
+  };
+}
+
+function deepDevStartCommand(cfg) {
+  const port = cfg.port;
+  const host = cfg.devHost;
+  if (cfg.useProdServer) {
+    return { cmd: `npx next start -p ${port} -H ${host}`, shell: true, needsBuild: true };
+  }
+  return { cmd: `npx next dev -p ${port} -H ${host}`, shell: true, needsBuild: false };
+}
+
+async function runDeepDevBuild(cfg) {
+  log(`  building isolated Next production bundle for Deep QA (${QA_NEXT_DIST_DIR})…`);
+  const env = buildDeepDevChildEnv(cfg, { forBuild: true });
+  await new Promise((resolve, reject) => {
+    const child = spawn("npx next build", {
+      cwd: REPO_ROOT,
+      env,
+      stdio: "inherit",
+      shell: true,
+      windowsHide: true,
+    });
+    child.on("error", reject);
+    child.on("close", (code) => {
+      if (code === 0) resolve();
+      else reject(new Error(`next build exited ${code}`));
+    });
+  });
+}
+
 async function spawnOwnedDevServer(cfg) {
   const port = cfg.port;
   const host = cfg.devHost;
-  log(`Starting isolated Next dev for Deep QA: http://${host}:${port}`);
+  const modeLabel = cfg.useProdServer ? "production (next start)" : "development (next dev)";
+  log(`Starting isolated Next ${modeLabel} for Deep QA: http://${host}:${port}`);
   await killQaOwnedDevOnPort(port);
 
-  const child = spawn(`npx next dev -p ${port} -H ${host}`, {
+  const { cmd, needsBuild: wantsBuild } = deepDevStartCommand(cfg);
+  let needsBuild = wantsBuild;
+  if (needsBuild && process.env.VISUAL_QA_DEEP_FORCE_BUILD !== "1") {
+    if (await prodBuildExists()) {
+      log(`  reusing existing Deep QA production build (${QA_NEXT_DIST_DIR})`);
+      needsBuild = false;
+    }
+  }
+  if (needsBuild) {
+    await runDeepDevBuild(cfg);
+  }
+
+  const child = spawn(cmd, {
     cwd: REPO_ROOT,
+    env: buildDeepDevChildEnv(cfg),
     detached: true,
     stdio: "ignore",
     shell: true,
@@ -249,8 +305,8 @@ async function spawnOwnedDevServer(cfg) {
   });
   child.unref();
 
-  await sleep(8000);
-  await warmUpLoginRoute(cfg.baseUrl, { attempts: 12 });
+  await sleep(cfg.useProdServer ? 5000 : 8000);
+  await warmUpLoginRoute(cfg.baseUrl, { attempts: cfg.useProdServer ? 8 : 12 });
 
   let listenPid = null;
   for (let i = 0; i < 20; i += 1) {
@@ -327,17 +383,19 @@ async function killDevServerOnPort(port) {
 async function restartDevServer(cfg) {
   const port = cfg.port || new URL(cfg.baseUrl).port || String(DEFAULT_DEEP_PORT);
   const host = cfg.devHost || new URL(cfg.baseUrl).hostname || DEEP_DEV_HOST;
-  log(`  restarting Next dev on ${host}:${port}…`);
+  log(`  restarting Next on ${host}:${port}…`);
   await killQaOwnedDevOnPort(port);
-  const child = spawn(`npx next dev -p ${port} -H ${host}`, {
+  const { cmd } = deepDevStartCommand(cfg);
+  const child = spawn(cmd, {
     cwd: REPO_ROOT,
+    env: buildDeepDevChildEnv(cfg),
     detached: true,
     stdio: "ignore",
     shell: true,
     windowsHide: true,
   });
   child.unref();
-  await sleep(12_000);
+  await sleep(cfg.useProdServer ? 5000 : 12_000);
   await warmUpLoginRoute(cfg.baseUrl, { attempts: 12 });
 
   let listenPid = null;
@@ -650,6 +708,67 @@ function parseDeepGrades() {
   return parsed.length ? parsed : [...GRADES];
 }
 
+function parseDeepCohorts() {
+  const raw = String(process.env.VISUAL_QA_DEEP_COHORT_FILTER || "").trim();
+  if (!raw) return [...COHORTS];
+  const ids = raw
+    .split(/[,;\s]+/)
+    .map((part) => part.trim().toLowerCase())
+    .filter(Boolean);
+  const filtered = COHORTS.filter((c) => ids.includes(c.id));
+  return filtered.length ? filtered : [...COHORTS];
+}
+
+/** Optional: math:secondary:1,hebrew:primary:5 — explicit grade-runs instead of full grid. */
+function parseFocusedRuns() {
+  const raw = String(process.env.VISUAL_QA_DEEP_FOCUSED_RUNS || "").trim();
+  if (!raw) return null;
+  const out = [];
+  for (const part of raw.split(/[,;]+/)) {
+    const bits = part.trim().split(/[:/\s]+/).filter(Boolean);
+    if (bits.length < 3) continue;
+    const [subjectRaw, cohortId, gradeRaw] = bits;
+    const gradeNumber = parseInt(String(gradeRaw).replace(/^g/i, ""), 10);
+    const cohort = COHORTS.find((c) => c.id === String(cohortId).toLowerCase());
+    if (!cohort || !Number.isFinite(gradeNumber) || gradeNumber < 1 || gradeNumber > 6) continue;
+    out.push({ subject: String(subjectRaw).toLowerCase(), cohort, gradeNumber });
+  }
+  return out.length ? out : null;
+}
+
+function buildRunPlan(cfg) {
+  const focused = parseFocusedRuns();
+  if (focused) {
+    return focused.map((entry, idx) => ({
+      round: 1,
+      subject: entry.subject,
+      cohort: entry.cohort,
+      gradeNumber: entry.gradeNumber,
+      order: idx + 1,
+    }));
+  }
+  const plan = [];
+  for (let round = 1; round <= cfg.rounds; round += 1) {
+    for (const subject of cfg.subjects) {
+      for (const cohort of cfg.cohortsFilter) {
+        for (const gradeNumber of cfg.gradesFilter) {
+          plan.push({ round, subject, cohort, gradeNumber, order: plan.length + 1 });
+        }
+      }
+    }
+  }
+  return plan;
+}
+
+async function prodBuildExists() {
+  try {
+    await stat(join(REPO_ROOT, QA_NEXT_DIST_DIR, "BUILD_ID"));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function parseDeepEnv() {
   const subjects = parseSubjects();
   const rounds = Math.max(1, Number(process.env.VISUAL_QA_DEEP_ROUNDS || 2) || 2);
@@ -721,10 +840,14 @@ function parseDeepEnv() {
   const ownsDevServer =
     process.env.VISUAL_QA_DEEP_MANAGE_DEV !== "0" &&
     process.env.VISUAL_QA_DEEP_MANAGE_DEV !== "false";
+  const useProdServer =
+    process.env.VISUAL_QA_DEEP_USE_PROD === "1" ||
+    process.env.VISUAL_QA_DEEP_USE_PROD === "true";
 
   return {
     subjects,
     gradesFilter: parseDeepGrades(),
+    cohortsFilter: parseDeepCohorts(),
     rounds,
     samplesPerGrade,
     runTimeoutMinutes,
@@ -753,6 +876,7 @@ function parseDeepEnv() {
     autoRestartDev,
     restartEachRun,
     ownsDevServer,
+    useProdServer,
     diagnostic,
     autoFullAfterDiagnostic,
   };
@@ -1040,7 +1164,8 @@ async function main() {
   const startedAt = Date.now();
   const startedAtIso = new Date(startedAt).toISOString();
 
-  const totalRuns = cfg.rounds * cfg.subjects.length * COHORTS.length * cfg.gradesFilter.length;
+  const runPlan = buildRunPlan(cfg);
+  const totalRuns = runPlan.length;
   const totalPlannedSamples = totalRuns * plannedSamplesPerGradeRun(cfg.samplesPerGrade);
 
   const manifest = {
@@ -1050,7 +1175,8 @@ async function main() {
     subjects: cfg.subjects,
     rounds: cfg.rounds,
     samplesPerGrade: cfg.samplesPerGrade,
-    cohorts: COHORTS.map((c) => c.id),
+    cohorts: cfg.cohortsFilter.map((c) => c.id),
+    focusedRuns: parseFocusedRuns()?.map((f) => `${f.subject}:${f.cohort.id}:g${f.gradeNumber}`) ?? null,
     totalPlannedSamples,
     totalRuns,
     harnessPath: relative(REPO_ROOT, HARNESS_PATH),
@@ -1103,14 +1229,12 @@ async function main() {
   log(`Planned: ${totalRuns} grade-level harness runs, ${totalPlannedSamples} samples`);
   log(`Output: ${relative(REPO_ROOT, deepRoot)}`);
 
-  for (let round = 1; round <= cfg.rounds; round += 1) {
+  for (const planEntry of runPlan) {
+    const { round, subject, cohort, gradeNumber } = planEntry;
     currentRound = round;
-    for (const subject of cfg.subjects) {
-      currentSubject = subject;
-      for (const cohort of COHORTS) {
-        currentCohort = cohort.id;
-        for (const gradeNumber of cfg.gradesFilter) {
-          currentGrade = `g${gradeNumber}`;
+    currentSubject = subject;
+    currentCohort = cohort.id;
+    currentGrade = `g${gradeNumber}`;
           const outRel = runOutputRel(cfg.runId, round, subject, cohort.id, gradeNumber);
           const outAbs = join(REPO_ROOT, outRel);
           await mkdir(outAbs, { recursive: true });
@@ -1438,9 +1562,6 @@ async function main() {
             blockedSoFar,
             startedAt,
           });
-        }
-      }
-    }
   }
 
   clearInterval(progressTimer);
