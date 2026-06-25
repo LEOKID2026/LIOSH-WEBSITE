@@ -193,6 +193,23 @@ export function customerRequestText(customer) {
   return `אני רוצה ${parts.join(", ")} ו-${last}`;
 }
 
+/** @param {SupermarketCustomer} customer */
+export function getExpectedChange(customer) {
+  const paid = Number(customer?.paid) || 0;
+  const total = Number(customer?.total) || 0;
+  return paid - total;
+}
+
+/** @param {number[]} changeDenoms */
+export function sumChangeDenoms(changeDenoms) {
+  return (changeDenoms || []).reduce((sum, value) => sum + (Number(value) || 0), 0);
+}
+
+/** @param {SupermarketCustomer} customer @param {number[]} changeDenoms */
+export function isChangeAmountCorrect(customer, changeDenoms) {
+  return sumChangeDenoms(changeDenoms) === getExpectedChange(customer);
+}
+
 /** @param {number} value */
 export function formatShekel(value) {
   return `${value}₪`;

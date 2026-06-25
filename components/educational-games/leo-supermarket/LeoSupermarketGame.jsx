@@ -9,7 +9,10 @@ import {
   customerRequestText,
   formatShekel,
   generateCustomers,
+  getExpectedChange,
+  isChangeAmountCorrect,
   isSupermarketWin,
+  sumChangeDenoms,
   LEO_CASHIER_IMAGE,
 } from "./leo-supermarket-data.js";
 import { buildLeoSupermarketMetrics } from "./leo-supermarket-metrics.js";
@@ -304,10 +307,9 @@ export default function LeoSupermarketGame({
     const cust = customersRef.current[customerIndexRef.current];
     if (!cust) return;
 
-    const sum = changeDenomsRef.current.reduce((s, v) => s + v, 0);
     const isFirstTry = changeAttemptsRef.current === 0;
 
-    if (sum === cust.correctChange) {
+    if (isChangeAmountCorrect(cust, changeDenomsRef.current)) {
       addScore(SCORE.correctChange);
       if (isFirstTry) addScore(SCORE.firstTryBonus);
       showZoneFeedback("register", "מעולה! החזרת עודף נכון", "ok");
@@ -488,7 +490,8 @@ export default function LeoSupermarketGame({
     };
   }, [draggingKey, finishDrag]);
 
-  const changeSum = useMemo(() => changeDenoms.reduce((s, v) => s + v, 0), [changeDenoms]);
+  const changeSum = useMemo(() => sumChangeDenoms(changeDenoms), [changeDenoms]);
+  const expectedChangeForCustomer = customer ? getExpectedChange(customer) : 0;
 
   const groupedChangeDenoms = useMemo(() => {
     /** @type {Map<number, number[]>} */
@@ -651,8 +654,6 @@ export default function LeoSupermarketGame({
                     disabled={step !== "product" || onRegister}
                     className={`${styles.productBtn} ${onRegister ? styles.productBtnOnRegister : ""}`}
                     onPointerDown={(e) => onProductPointerDown(e, product.id)}
-                    onPointerUp={finishDrag}
-                    onPointerCancel={finishDrag}
                     aria-label={product.name}
                   >
                     {!isDragging ? <GroceryItemVisual product={product} variant="shelf" /> : null}
@@ -705,7 +706,13 @@ export default function LeoSupermarketGame({
               <p className={styles.zoneTitle}>💵 העודף שאני מחזיר</p>
               <div className={styles.zoneItems}>
                 {changeDenoms.length === 0 ? (
-                  <span className={styles.zoneEmpty}>{step === "change" ? "בחרו מטבעות" : "—"}</span>
+                  <span className={styles.zoneEmpty}>
+                    {step === "change"
+                      ? expectedChangeForCustomer === 0
+                        ? "אין עודף — לחצו מסור עודף"
+                        : "בחרו מטבעות"
+                      : "—"}
+                  </span>
                 ) : (
                   groupedChangeDenoms.map(({ value, count, lastIndex }) => (
                     <MoneyChip
@@ -738,8 +745,6 @@ export default function LeoSupermarketGame({
                     className={styles.moneyBtn}
                     style={{ background: style?.color, color: style?.text }}
                     onPointerDown={(e) => onMoneyPointerDown(e, value)}
-                    onPointerUp={finishDrag}
-                    onPointerCancel={finishDrag}
                   >
                     {style?.label || `${value}₪`}
                   </button>
