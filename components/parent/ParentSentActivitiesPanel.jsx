@@ -43,6 +43,9 @@ function ParentActivityResultsModal({ activityId, accessToken, onClose, bright =
     ? "rounded border border-slate-200 bg-slate-50 p-2 text-sm"
     : "rounded border border-white/10 bg-black/30 p-2 text-sm";
   const itemTitleClass = bright ? "font-medium text-slate-900" : "font-medium text-white";
+  const itemMetaClass = bright ? "text-slate-600 text-xs mt-1" : "text-white/60 text-xs mt-1";
+  const itemAnswerClass = bright ? "text-slate-700 mt-1" : "text-white/70 mt-1";
+  const itemLegacyClass = bright ? "text-slate-400 text-xs mt-1" : "text-white/45 text-xs mt-1";
   const dividerClass = bright ? "space-y-2 pt-2 border-t border-slate-200" : "space-y-2 pt-2 border-t border-white/10";
   const [detail, setDetail] = useState(null);
   const [error, setError] = useState("");
@@ -139,16 +142,17 @@ function ParentActivityResultsModal({ activityId, accessToken, onClose, bright =
                       : "—"}
                 </div>
                 {q.question ? (
-                  <div className="text-white/85 mt-1">
+                  <div className="mt-1">
                     <AssignedActivityQuestionDisplay
                       question={q}
                       variant="compact"
+                      tone={bright ? "light" : "dark"}
                       testId={`parent-activity-question-text-${q.questionIndex}`}
                     />
                   </div>
                 ) : null}
                 {Array.isArray(q.choices) && q.choices.length > 0 ? (
-                  <div className="text-white/60 text-xs mt-1">
+                  <div className={itemMetaClass}>
                     אפשרויות:{" "}
                     {q.choices.map((choice, choiceIndex) => (
                       <span key={choiceIndex}>
@@ -158,14 +162,14 @@ function ParentActivityResultsModal({ activityId, accessToken, onClose, bright =
                     ))}
                   </div>
                 ) : null}
-                <div className="text-white/70 mt-1">
+                <div className={itemAnswerClass}>
                   תשובה: <AssignedActivityBidiText text={q.selectedAnswer || "—"} />
                 </div>
-                <div className="text-white/70">
+                <div className={itemAnswerClass}>
                   תשובה נכונה: <AssignedActivityBidiText text={q.correctAnswer || "—"} />
                 </div>
                 {q.legacyFallback ? (
-                  <div className="text-white/45 text-xs mt-1" data-testid="legacy-fallback-indicator">
+                  <div className={itemLegacyClass} data-testid="legacy-fallback-indicator">
                     —
                   </div>
                 ) : null}
@@ -185,7 +189,7 @@ function ParentActivityResultsModal({ activityId, accessToken, onClose, bright =
                       ? "לא נכון"
                       : "—"}
                 </div>
-                <div className="text-white/70 mt-1">
+                <div className={itemAnswerClass}>
                   תשובה: {attempt.selectedAnswer || "—"}
                 </div>
               </div>

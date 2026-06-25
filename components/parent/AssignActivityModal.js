@@ -385,7 +385,11 @@ export default function AssignActivityModal({
                 <li key={i} className={T.activityPreviewItem}>
                   <div className="flex gap-2 items-start">
                     <span className={T.activityPreviewIndex}>{i + 1}.</span>
-                    <AssignedActivityQuestionDisplay question={q} variant="preview" />
+                    <AssignedActivityQuestionDisplay
+                      question={q}
+                      variant="preview"
+                      tone={bright ? "light" : "dark"}
+                    />
                   </div>
                 </li>
               ))}
