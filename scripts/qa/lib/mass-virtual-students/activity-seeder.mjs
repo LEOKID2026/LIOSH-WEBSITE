@@ -3,7 +3,7 @@ import crypto from "node:crypto";
 import { classifyActivityEvidence } from "../../../../lib/learning/activity-classification.js";
 import { estimatePracticeDurationSeconds } from "../../../../lib/parent-server/report-duration-sanity.js";
 import { insertParentAssignedActivity } from "./parent-activity-seeder.mjs";
-import { buildRichAnswerPayload, buildSpeedPressureAnswerSchedule, SEED_META_KEY } from "./seed-metadata.mjs";
+import { buildRichAnswerPayload, SEED_META_KEY } from "./seed-metadata.mjs";
 
 function fnv1a(str) {
   let h = 2166136261;
@@ -81,27 +81,7 @@ export function buildStudentActivityPlan(student, { days, minutesPerDay, startDa
       const isWeakTopic = weaknessList.includes(topic);
 
       const answers = [];
-      const useSpeedMode = profile.speedPressure === true;
       const answerCount = Math.ceil(selfQuestions / subjectsToday.length);
-
-      if (useSpeedMode && subject === student.primarySubject) {
-        // Practice mode (countable); speed mode answers are excluded by parent-report evidence gate.
-        const speedAnswers = buildSpeedPressureAnswerSchedule({
-          count: Math.max(28, answerCount),
-          correctRate: 0.7,
-          day,
-        });
-        sessions.push({
-          type: "self_practice",
-          subject,
-          topic: topicPool[0] || topic,
-          grade: student.grade,
-          mode: "practice",
-          answers: speedAnswers,
-        });
-        totalAnswers += speedAnswers.length;
-        continue;
-      }
 
       for (let q = 0; q < answerCount; q += 1) {
         let pCorrect = isWeakTopic ? Math.max(0.25, correctRate - 0.35) : correctRate;

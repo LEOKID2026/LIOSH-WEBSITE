@@ -14,11 +14,17 @@ import { useSoloGameHelp } from "../../hooks/solo-games/useSoloGameHelp.js";
 import MleoRecyclingFactoryEngine from "./engines/MleoRecyclingFactoryEngine.jsx";
 import MleoLeoSupermarketEngine from "./engines/MleoLeoSupermarketEngine.jsx";
 import MleoLeoLabEngine from "./engines/MleoLeoLabEngine.jsx";
+import MleoLeoGiftsEngine from "./engines/MleoLeoGiftsEngine.jsx";
+import MleoLeoBakeryEngine from "./engines/MleoLeoBakeryEngine.jsx";
+import MleoLeoNumberPathEngine from "./engines/MleoLeoNumberPathEngine.jsx";
 
 const ENGINE_MAP = {
   "recycling-factory": MleoRecyclingFactoryEngine,
   "leo-supermarket": MleoLeoSupermarketEngine,
   "leo-lab": MleoLeoLabEngine,
+  "leo-gifts": MleoLeoGiftsEngine,
+  "leo-bakery": MleoLeoBakeryEngine,
+  "leo-number-path": MleoLeoNumberPathEngine,
 };
 
 const PLAY_SHELL =

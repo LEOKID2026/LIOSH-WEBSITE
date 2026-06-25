@@ -55,6 +55,30 @@ const LEO_LAB_METRIC_KEYS = Object.freeze([
   "completedAllExperiments",
 ]);
 
+const LEO_CONTINUOUS_METRIC_KEYS = Object.freeze([
+  "successfulQuestions",
+  "questionsReached",
+  "failedAttempts",
+  "mistakes",
+  "bestStreak",
+  "highestStage",
+  "durationSec",
+  "avgAnswerSec",
+  "accuracy",
+]);
+
+const LEO_NUMBER_PATH_METRIC_KEYS = Object.freeze([
+  "tasksTotal",
+  "tasksReached",
+  "successfulTasks",
+  "failedAttempts",
+  "mistakes",
+  "bestStreak",
+  "durationSec",
+  "accuracy",
+  "completedAllTasks",
+]);
+
 function clampMetricNumber(value, min, max) {
   const n = Number(value);
   if (!Number.isFinite(n)) return null;
@@ -172,11 +196,82 @@ function normalizeLeoLabMetrics(raw) {
   return base;
 }
 
+function normalizeLeoContinuousMetrics(raw, gameKey) {
+  const base = normalizeBaseMetrics(raw, gameKey);
+  if (!base) return null;
+
+  for (const key of LEO_CONTINUOUS_METRIC_KEYS) {
+    if (raw[key] != null) {
+      const max = key === "accuracy" ? 1 : key === "avgAnswerSec" ? 120 : 10000;
+      const val = clampMetricNumber(raw[key], 0, max);
+      if (val == null) return null;
+      base[key] = key === "accuracy" || key === "avgAnswerSec" ? val : Math.floor(val);
+    }
+  }
+
+  if (base.mistakes == null && base.failedAttempts != null) {
+    base.mistakes = base.failedAttempts;
+  }
+
+  if (base.accuracy == null && base.successfulQuestions != null) {
+    base.accuracy = (base.successfulQuestions ?? 0) / Math.max(1, base.questionsReached ?? 1);
+  }
+
+  base.positiveProgress = base.successfulQuestions ?? 0;
+
+  return base;
+}
+
+function normalizeLeoGiftsMetrics(raw) {
+  return normalizeLeoContinuousMetrics(raw, "leo-gifts");
+}
+
+function normalizeLeoBakeryMetrics(raw) {
+  return normalizeLeoContinuousMetrics(raw, "leo-bakery");
+}
+
+function normalizeLeoNumberPathMetrics(raw) {
+  const base = normalizeBaseMetrics(raw, "leo-number-path");
+  if (!base) return null;
+
+  for (const key of LEO_NUMBER_PATH_METRIC_KEYS) {
+    if (key === "completedAllTasks") {
+      base.completedAllTasks = raw.completedAllTasks === true;
+      continue;
+    }
+    if (raw[key] != null) {
+      const val = clampMetricNumber(raw[key], 0, key === "accuracy" ? 1 : 10000);
+      if (val == null) return null;
+      base[key] = key === "accuracy" ? val : Math.floor(val);
+    }
+  }
+
+  if (base.tasksTotal == null) base.tasksTotal = 12;
+  if (base.mistakes == null && base.failedAttempts != null) {
+    base.mistakes = base.failedAttempts;
+  }
+
+  if (base.accuracy == null && base.successfulTasks != null) {
+    base.accuracy = (base.successfulTasks ?? 0) / Math.max(1, base.tasksReached ?? 1);
+  }
+
+  if (base.completedAllTasks == null && base.successfulTasks != null && base.tasksTotal != null) {
+    base.completedAllTasks = base.successfulTasks >= base.tasksTotal;
+  }
+
+  base.positiveProgress = base.successfulTasks ?? 0;
+
+  return base;
+}
+
 function normalizeMetrics(raw, gameKey) {
   if (!raw || typeof raw !== "object") return null;
   const key = String(gameKey || raw.gameKey || "").trim().toLowerCase();
   if (key === "leo-supermarket") return normalizeLeoSupermarketMetrics(raw);
   if (key === "leo-lab") return normalizeLeoLabMetrics(raw);
+  if (key === "leo-gifts") return normalizeLeoGiftsMetrics(raw);
+  if (key === "leo-bakery") return normalizeLeoBakeryMetrics(raw);
+  if (key === "leo-number-path") return normalizeLeoNumberPathMetrics(raw);
   if (key === "recycling-factory") return normalizeRecyclingFactoryMetrics(raw);
   return null;
 }

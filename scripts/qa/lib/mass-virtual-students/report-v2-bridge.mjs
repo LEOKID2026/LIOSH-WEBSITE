@@ -28,6 +28,16 @@ function mergeTopicModeCountsIntoGradeSlices(raw) {
       if (!parentModes || typeof parentModes !== "object") continue;
       const byGrade = topicAgg.byContentGrade;
       if (!byGrade || typeof byGrade !== "object") continue;
+
+      const unknownSlice = byGrade.unknown;
+      const registeredKey =
+        unknownSlice?.registeredGradeLevel ||
+        Object.values(byGrade).find((s) => s?.registeredGradeLevel)?.registeredGradeLevel;
+      if (unknownSlice && registeredKey && registeredKey !== "unknown" && !byGrade[registeredKey]) {
+        byGrade[registeredKey] = { ...unknownSlice, gradeRelation: "same" };
+        delete byGrade.unknown;
+      }
+
       for (const gradeSlice of Object.values(byGrade)) {
         if (!gradeSlice || typeof gradeSlice !== "object") continue;
         if (!gradeSlice.modeCounts || typeof gradeSlice.modeCounts !== "object") {
