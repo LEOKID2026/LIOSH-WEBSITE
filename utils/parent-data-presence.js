@@ -162,7 +162,7 @@ export function deriveRawMetricStrengthLinesHe(summary, report = null, weakSubje
     { subjectId: "english", label: "אנגלית", q: summary.englishQuestions, acc: summary.englishAccuracy },
     { subjectId: "hebrew", label: "עברית", q: summary.hebrewQuestions, acc: summary.hebrewAccuracy },
     { subjectId: "science", label: "מדעים", q: summary.scienceQuestions, acc: summary.scienceAccuracy },
-    { subjectId: "math", label: "חשבון", q: summary.mathQuestions, acc: summary.mathAccuracy },
+    { subjectId: "math", label: "מתמטיקה", q: summary.mathQuestions, acc: summary.mathAccuracy },
     { subjectId: "geometry", label: "גאומטריה", q: summary.geometryQuestions, acc: summary.geometryAccuracy },
     {
       subjectId: "moledet-geography",

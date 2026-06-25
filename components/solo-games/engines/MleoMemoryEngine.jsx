@@ -102,6 +102,7 @@ export default function MleoMemoryEngine({
   const [cards, setCards] = useState([]);
   const [flipped, setFlipped] = useState([]);
   const [matched, setMatched] = useState([]);
+  const matchedRef = useRef([]);
   const [difficulty, setDifficulty] = useState(initialDifficulty);
   const [boardSize, setBoardSize] = useState({ w: 0, h: 0 });
   const boardRef = useRef(null);
@@ -152,11 +153,13 @@ export default function MleoMemoryEngine({
     sessionEndFiredRef.current = true;
     const initial = initialScoreRef.current || difficultySettings[difficulty]?.score || 0;
     const mistakes = Math.max(0, Math.round((initial - finalScore) / 10));
+    const pairsMatched = Math.floor(matchedRef.current.length / 2);
     onSessionEnd({
       score: finalScore,
       didWin: won,
       difficulty,
       mistakes,
+      pairsMatched,
       timeRemainingSec: timeLeft,
       durationMs:
         playStartedAtRef.current != null
@@ -193,6 +196,7 @@ export default function MleoMemoryEngine({
     setDeckError(false);
     setFlipped([]);
     setMatched([]);
+    matchedRef.current = [];
     setScore(startScore);
     scoreRef.current = startScore;
     setTime(time);
@@ -295,7 +299,11 @@ export default function MleoMemoryEngine({
       const card2 = cards.find((c) => c.id === second);
 
       if (card1?.pairKey && card1.pairKey === card2?.pairKey) {
-        setMatched((prev) => [...prev, first, second]);
+        setMatched((prev) => {
+          const next = [...prev, first, second];
+          matchedRef.current = next;
+          return next;
+        });
         setFlipped([]);
       } else {
         setScore((s) => {

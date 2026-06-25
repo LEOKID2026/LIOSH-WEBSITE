@@ -614,7 +614,7 @@ export function buildSemanticAggregateDraft(input) {
       const uImp = norm(utterance).toLowerCase();
       const mathRow = roll.find((r) => r.sid === "math");
       if (/מתמטיקה|חשבון/.test(uImp) && mathRow && mathRow.avg != null && mathRow.totalQ > 0) {
-        obs = `${lead}בחשבון נספרו בטווח כ ${mathRow.totalQ} שאלות, עם דיוק ממוצע של כ ${mathRow.avg}% לפי הדוח.`;
+        obs = `${lead}במתמטיקה נספרו בטווח כ ${mathRow.totalQ} שאלות, עם דיוק ממוצע של כ ${mathRow.avg}% לפי הדוח.`;
         meaning =
           "מגמת שיפור מפורשת לא תמיד מופיעה כשורה נפרדת בדוח — עדיין אפשר לעגן לנפח ולדיוק במקצוע מתוך הנתונים שמוצגים.";
       } else {

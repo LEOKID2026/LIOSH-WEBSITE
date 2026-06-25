@@ -2,9 +2,14 @@
  * English pool taxonomy allowlists built from static banks (no scanner import — avoids circular deps).
  * Keep walking / effective-id logic aligned with `question-metadata-scanner.js`.
  */
-import { GRAMMAR_POOLS } from "../../data/english-questions/grammar-pools.js";
-import { TRANSLATION_POOLS } from "../../data/english-questions/translation-pools.js";
-import { SENTENCE_POOLS } from "../../data/english-questions/sentence-pools.js";
+import * as grammarPoolsMod from "../../data/english-questions/grammar-pools.js";
+import * as translationPoolsMod from "../../data/english-questions/translation-pools.js";
+import * as sentencePoolsMod from "../../data/english-questions/sentence-pools.js";
+import { resolveModuleExport } from "../resolve-module-export.js";
+
+const GRAMMAR_POOLS = resolveModuleExport(grammarPoolsMod, "GRAMMAR_POOLS");
+const TRANSLATION_POOLS = resolveModuleExport(translationPoolsMod, "TRANSLATION_POOLS");
+const SENTENCE_POOLS = resolveModuleExport(sentencePoolsMod, "SENTENCE_POOLS");
 
 function isPlainObject(o) {
   return o !== null && typeof o === "object" && !Array.isArray(o);

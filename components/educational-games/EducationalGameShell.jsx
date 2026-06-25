@@ -12,9 +12,11 @@ import SoloGameHelpModal from "../solo-games/SoloGameHelpModal.jsx";
 import SoloGameSettlingOverlay from "../solo-games/SoloGameSettlingOverlay.jsx";
 import { useSoloGameHelp } from "../../hooks/solo-games/useSoloGameHelp.js";
 import MleoRecyclingFactoryEngine from "./engines/MleoRecyclingFactoryEngine.jsx";
+import MleoLeoSupermarketEngine from "./engines/MleoLeoSupermarketEngine.jsx";
 
 const ENGINE_MAP = {
   "recycling-factory": MleoRecyclingFactoryEngine,
+  "leo-supermarket": MleoLeoSupermarketEngine,
 };
 
 const PLAY_SHELL =
@@ -155,6 +157,10 @@ export default function EducationalGameShell({ gameKey }) {
                 balanceAfter={finishData.balanceAfter}
                 onPlayAgain={handlePlayAgain}
                 busy={busy}
+                subtitleHe={finishData.subtitleHe}
+                statsLines={finishData.statsLines}
+                gamesHubHref="/student/educational-games"
+                gamesHubLabel="חזרה למשחקים החינוכיים"
               />
             ) : null}
           </main>

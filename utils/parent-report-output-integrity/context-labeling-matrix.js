@@ -23,7 +23,7 @@ const SUBJECT_MAP_KEYS = {
 };
 
 const SUBJECT_LABEL_HE = {
-  math: "חשבון",
+  math: "מתמטיקה",
   geometry: "גאומטריה",
   english: "אנגלית",
   science: "מדעים",

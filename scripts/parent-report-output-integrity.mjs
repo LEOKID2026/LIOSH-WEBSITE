@@ -466,7 +466,7 @@ for (const t of TRACE_TABLE.slice(0, 4)) {
   hardenBaseReportWithRowIdentity(zBase);
   const zCounts = subjectQuestionCountsFromBase(zBase);
   const labels = {
-    math: "חשבון",
+    math: "מתמטיקה",
     geometry: "גאומטריה",
     english: "אנגלית",
     science: "מדעים",

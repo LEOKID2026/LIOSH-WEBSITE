@@ -13,7 +13,7 @@ import {
 const ALL_SUBJECTS = ["math", "geometry", "english", "science", "hebrew", "moledet-geography"];
 
 const SUBJECT_LABEL_HE = {
-  math: "חשבון",
+  math: "מתמטיקה",
   geometry: "גאומטריה",
   english: "אנגלית",
   science: "מדעים",

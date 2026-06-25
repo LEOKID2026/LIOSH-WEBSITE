@@ -332,7 +332,7 @@ const REPORT_ROWS_KEY = {
 };
 
 const SUBJECT_LABEL_HE = {
-  math: "חשבון",
+  math: "מתמטיקה",
   geometry: "גאומטריה",
   english: "אנגלית",
   science: "מדעים",
@@ -2278,12 +2278,12 @@ export const EXAMPLE_PATTERN_DIAGNOSTICS_PAYLOAD = {
   subjects: {
     math: {
       subject: "math",
-      subjectLabelHe: "חשבון",
+      subjectLabelHe: "מתמטיקה",
       mistakeEventCount: 12,
       wrongCount: 12,
       hasAnySignal: true,
       summaryHe:
-        "תמונת המקצוע בחשבון: הילד מצליח בחיבור לאורך זמן. יש גם מקום לחיזוק בהשוואת כמויות או מספרים.",
+        "תמונת המקצוע במתמטיקה: הילד מצליח בחיבור לאורך זמן. יש גם מקום לחיזוק בהשוואת כמויות או מספרים.",
       stableExcellence: [
         {
           id: "math:addition:learning",
@@ -2309,7 +2309,7 @@ export const EXAMPLE_PATTERN_DIAGNOSTICS_PAYLOAD = {
       parentTopicToneByKey: {},
       parentStrengthWithCautionLinesByKey: {},
       parentActionHe:
-        "שלוש פעמים בשבוע, 15–20 דק׳ בכל מפגש: לבחור משימה אחת בחשבון בנושא בהשוואת כמויות או מספרים — לקרוא יחד את הניסוח, לנסח בקול מה נתון ומה מבקשים, לבצע צעד ראשון על דף טיוטה ורק אז לכתוב תשובה סופית ולבדוק מול הפתרון.",
+        "שלוש פעמים בשבוע, 15–20 דק׳ בכל מפגש: לבחור משימה אחת במתמטיקה בנושא בהשוואת כמויות או מספרים — לקרוא יחד את הניסוח, לנסח בקול מה נתון ומה מבקשים, לבצע צעד ראשון על דף טיוטה ורק אז לכתוב תשובה סופית ולבדוק מול הפתרון.",
       nextWeekGoalHe:
         "יעד לחיזוק: להעלות את אחוזי ההצלחה בהשוואת כמויות או מספרים (לפחות ניסיון אחד מוצלח יותר מהשבוע שעבר). יעד לשימור: להמשיך בשגרת תרגול נינוחה בנושא חיבור כדי לשמר את רמת הדיוק.",
       evidenceExamples: [

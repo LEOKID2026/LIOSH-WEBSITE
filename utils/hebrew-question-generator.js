@@ -34,11 +34,12 @@ import {
   rebalanceGenericHebrewReadingDistractors,
 } from './question-quality.js';
 import { hebrewStemNorm, hebrewQuestionFingerprint } from './hebrew-learning-intel.js';
-import {
-  G3_READING_EASY,
-  G3_READING_MEDIUM as G3_READING_MEDIUM_BANK,
-  G3_READING_HARD,
-} from '../data/hebrew-g3-reading-bank.js';
+import * as g3ReadingBankMod from '../data/hebrew-g3-reading-bank.js';
+import { resolveModuleExport } from './resolve-module-export.js';
+
+const G3_READING_EASY = resolveModuleExport(g3ReadingBankMod, 'G3_READING_EASY');
+const G3_READING_MEDIUM_BANK = resolveModuleExport(g3ReadingBankMod, 'G3_READING_MEDIUM');
+const G3_READING_HARD = resolveModuleExport(g3ReadingBankMod, 'G3_READING_HARD');
 
 /** Layer 3: typing רק לפריטים עם preferredAnswerMode + תת נושא מאושר (א׳–ב׳). */
 const G12_ALLOWED_TYPING_SUBTOPICS = new Set([

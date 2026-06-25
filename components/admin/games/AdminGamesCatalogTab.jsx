@@ -5,6 +5,7 @@ const CATEGORY_LABELS = {
   online: "משחקי אונליין",
   offline: "משחקים לא מקוונים",
   solo: "משחקים רגילים",
+  educational: "משחקים חינוכיים",
 };
 
 export default function AdminGamesCatalogTab({ accessToken }) {
@@ -65,7 +66,7 @@ export default function AdminGamesCatalogTab({ accessToken }) {
     }
   };
 
-  const grouped = ["online", "offline", "solo"].map((cat) => ({
+  const grouped = ["online", "offline", "solo", "educational"].map((cat) => ({
     category: cat,
     items: games.filter((g) => g.category === cat),
   }));

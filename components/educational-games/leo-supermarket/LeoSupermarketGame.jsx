@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
+  CUSTOMERS_PER_LEVEL,
   DIFFICULTIES,
   DENOM_STYLES,
   PRODUCTS,
@@ -13,7 +14,7 @@ import {
 } from "./leo-supermarket-data.js";
 import { buildLeoSupermarketMetrics } from "./leo-supermarket-metrics.js";
 import GroceryItemVisual from "./GroceryItemVisual.jsx";
-import styles from "./LeoSupermarketPrototype.module.css";
+import styles from "./LeoSupermarketGame.module.css";
 
 /** @typedef {import('./leo-supermarket-data.js').DifficultyId} DifficultyId */
 /** @typedef {'customer'|'register'|'global'} FeedbackZone */
@@ -68,9 +69,23 @@ function ZoneFeedbackLine({ fb }) {
   );
 }
 
-export default function LeoSupermarketGame({ backHref = "/dev/learning-game-prototypes" }) {
-  const [phase, setPhase] = useState(/** @type {'intro'|'play'|'won'|'lost'} */ ("intro"));
-  const [difficulty, setDifficulty] = useState(/** @type {DifficultyId} */ ("easy"));
+export default function LeoSupermarketGame({
+  autoStart = false,
+  initialDifficulty = "easy",
+  productionMode = false,
+  onSessionEnd,
+  backHref = "/dev/learning-game-prototypes",
+}) {
+  const onSessionEndRef = useRef(onSessionEnd);
+  onSessionEndRef.current = onSessionEnd;
+  const sessionEndFiredRef = useRef(false);
+
+  const [phase, setPhase] = useState(/** @type {'intro'|'play'|'won'|'lost'} */ (
+    productionMode && autoStart ? "play" : "intro",
+  ));
+  const [difficulty, setDifficulty] = useState(/** @type {DifficultyId} */ (
+    productionMode && autoStart ? /** @type {DifficultyId} */ (initialDifficulty) : "easy",
+  ));
   const [customers, setCustomers] = useState(/** @type {import('./leo-supermarket-data.js').SupermarketCustomer[]} */ ([]));
   const [customerIndex, setCustomerIndex] = useState(0);
   const [step, setStep] = useState(/** @type {'product'|'change'} */ ("product"));
@@ -80,6 +95,7 @@ export default function LeoSupermarketGame({ backHref = "/dev/learning-game-prot
   const [score, setScore] = useState(0);
   const [mistakes, setMistakes] = useState(0);
   const [correctCustomers, setCorrectCustomers] = useState(0);
+  const [customersCompleted, setCustomersCompleted] = useState(0);
   const [wrongProducts, setWrongProducts] = useState(0);
   const [wrongChange, setWrongChange] = useState(0);
   const [timeoutMistakes, setTimeoutMistakes] = useState(0);
@@ -92,6 +108,7 @@ export default function LeoSupermarketGame({ backHref = "/dev/learning-game-prot
 
   const mistakesRef = useRef(mistakes);
   const correctCustomersRef = useRef(correctCustomers);
+  const customersCompletedRef = useRef(customersCompleted);
   const timeoutHandledForCustomerRef = useRef(-1);
 
   const [dragGhost, setDragGhost] = useState(
@@ -123,6 +140,7 @@ export default function LeoSupermarketGame({ backHref = "/dev/learning-game-prot
   timeLeftRef.current = timeLeft;
   mistakesRef.current = mistakes;
   correctCustomersRef.current = correctCustomers;
+  customersCompletedRef.current = customersCompleted;
 
   const diffConfig = DIFFICULTIES[difficulty];
   const customer = customers[customerIndex] || null;
@@ -156,9 +174,41 @@ export default function LeoSupermarketGame({ backHref = "/dev/learning-game-prot
     clearAllZoneFeedback();
   }, [clearAllZoneFeedback]);
 
-  const finishGame = useCallback((won) => {
-    setPhase(won ? "won" : "lost");
-  }, []);
+  const finishGame = useCallback(
+    (won) => {
+      setPhase(won ? "won" : "lost");
+    },
+    [],
+  );
+
+  const advanceAfterCustomer = useCallback(
+    (idx, list) => {
+      const handled = customersCompletedRef.current + 1;
+      customersCompletedRef.current = handled;
+      setCustomersCompleted(handled);
+
+      const diff = DIFFICULTIES[difficulty];
+      if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current);
+
+      if (idx + 1 >= list.length) {
+        finishGame(
+          isSupermarketWin(handled, diff.customerCount, mistakesRef.current, diff.maxMistakes),
+        );
+        return;
+      }
+
+      advanceTimerRef.current = setTimeout(() => {
+        timeoutHandledForCustomerRef.current = -1;
+        const nextIdx = idx + 1;
+        setCustomerIndex(nextIdx);
+        setCustomerEnterKey((k) => k + 1);
+        resetCustomerState();
+        const nextCustomer = list[nextIdx];
+        setTimeLeft(nextCustomer?.timeLimitSec ?? diff.timeLimitsByBand[0]);
+      }, 900);
+    },
+    [difficulty, finishGame, resetCustomerState],
+  );
 
   const completeCustomerSuccess = useCallback(
     (wasFast) => {
@@ -175,22 +225,9 @@ export default function LeoSupermarketGame({ backHref = "/dev/learning-game-prot
 
       const idx = customerIndexRef.current;
       const list = customersRef.current;
-      const diff = DIFFICULTIES[difficulty];
-
-      if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current);
-      advanceTimerRef.current = setTimeout(() => {
-        if (idx + 1 >= list.length) {
-          finishGame(isSupermarketWin(difficulty, newCorrect, mistakesRef.current));
-          return;
-        }
-        timeoutHandledForCustomerRef.current = -1;
-        setCustomerIndex(idx + 1);
-        setCustomerEnterKey((k) => k + 1);
-        resetCustomerState();
-        setTimeLeft(diff.timeLimitSec);
-      }, 900);
+      advanceAfterCustomer(idx, list);
     },
-    [addScore, difficulty, finishGame, resetCustomerState],
+    [addScore, advanceAfterCustomer],
   );
 
   const handleTimeout = useCallback(() => {
@@ -213,17 +250,8 @@ export default function LeoSupermarketGame({ backHref = "/dev/learning-game-prot
       return;
     }
 
-    if (idx + 1 >= list.length) {
-      finishGame(isSupermarketWin(difficulty, correctCustomersRef.current, nextMistakes));
-      return;
-    }
-
-    timeoutHandledForCustomerRef.current = -1;
-    setCustomerIndex(idx + 1);
-    setCustomerEnterKey((k) => k + 1);
-    resetCustomerState();
-    setTimeLeft(diff.timeLimitSec);
-  }, [addScore, difficulty, finishGame, resetCustomerState, showZoneFeedback]);
+    advanceAfterCustomer(idx, list);
+  }, [addScore, difficulty, finishGame, advanceAfterCustomer, showZoneFeedback]);
 
   const tryAddProduct = useCallback(
     (productId) => {
@@ -283,7 +311,7 @@ export default function LeoSupermarketGame({ backHref = "/dev/learning-game-prot
       addScore(SCORE.correctChange);
       if (isFirstTry) addScore(SCORE.firstTryBonus);
       showZoneFeedback("register", "מעולה! החזרת עודף נכון", "ok");
-      const wasFast = timeLeftRef.current > Math.floor(diffConfig.timeLimitSec * 0.35);
+      const wasFast = timeLeftRef.current > Math.floor(cust.timeLimitSec * 0.35);
       completeCustomerSuccess(wasFast);
       return;
     }
@@ -300,7 +328,7 @@ export default function LeoSupermarketGame({ backHref = "/dev/learning-game-prot
     if (nextMistakes > DIFFICULTIES[difficulty].maxMistakes) {
       finishGame(false);
     }
-  }, [addScore, completeCustomerSuccess, diffConfig.timeLimitSec, difficulty, finishGame, showZoneFeedback]);
+  }, [addScore, completeCustomerSuccess, difficulty, finishGame, showZoneFeedback]);
 
   const startGame = useCallback(() => {
     const list = generateCustomers(difficulty);
@@ -311,19 +339,28 @@ export default function LeoSupermarketGame({ backHref = "/dev/learning-game-prot
     setScore(0);
     setMistakes(0);
     setCorrectCustomers(0);
+    setCustomersCompleted(0);
     setWrongProducts(0);
     setWrongChange(0);
     setTimeoutMistakes(0);
     setStreak(0);
     setBestStreak(0);
     correctCustomersRef.current = 0;
+    customersCompletedRef.current = 0;
     mistakesRef.current = 0;
     timeoutHandledForCustomerRef.current = -1;
+    sessionEndFiredRef.current = false;
     setStartTime(Date.now());
     resetCustomerState();
-    setTimeLeft(diffConfig.timeLimitSec);
+    setTimeLeft(list[0]?.timeLimitSec ?? diffConfig.timeLimitsByBand[0]);
     setCustomerEnterKey((k) => k + 1);
-  }, [difficulty, diffConfig.timeLimitSec, resetCustomerState]);
+  }, [difficulty, diffConfig.timeLimitsByBand, resetCustomerState]);
+
+  useEffect(() => {
+    if (!autoStart || phase !== "play") return;
+    if (customers.length > 0) return;
+    startGame();
+  }, [autoStart, phase, customers.length, startGame]);
 
   useEffect(() => {
     if (phase !== "play" || !customer) return undefined;
@@ -466,16 +503,26 @@ export default function LeoSupermarketGame({ backHref = "/dev/learning-game-prot
 
   const endMetrics = useMemo(() => {
     if (phase !== "won" && phase !== "lost") return null;
+    const total = customers.length || CUSTOMERS_PER_LEVEL;
+    const reached = Math.min(total, customerIndex + 1);
+    const completed = customersCompleted;
+    const didWin = isSupermarketWin(
+      completed,
+      total,
+      wrongProducts + wrongChange + timeoutMistakes,
+      diffConfig.maxMistakes,
+    );
     return buildLeoSupermarketMetrics({
       score,
-      didWin: phase === "won",
+      didWin,
       difficulty,
-      customersServed: customers.length,
+      customersTotal: total,
+      customersReached: reached,
+      customersCompleted: completed,
       correctCustomers,
       wrongProducts,
       wrongChange,
       timeoutMistakes,
-      mistakes: wrongProducts + wrongChange + timeoutMistakes,
       bestStreak,
       durationSec: Math.max(1, Math.round((Date.now() - startTime) / 1000)),
     });
@@ -484,13 +531,23 @@ export default function LeoSupermarketGame({ backHref = "/dev/learning-game-prot
     score,
     difficulty,
     customers.length,
+    customerIndex,
+    customersCompleted,
     correctCustomers,
     wrongProducts,
     wrongChange,
     timeoutMistakes,
     bestStreak,
     startTime,
+    diffConfig.maxMistakes,
   ]);
+
+  useEffect(() => {
+    if (phase !== "won" && phase !== "lost") return;
+    if (!productionMode || !onSessionEndRef.current || sessionEndFiredRef.current || !endMetrics) return;
+    sessionEndFiredRef.current = true;
+    onSessionEndRef.current(endMetrics);
+  }, [phase, productionMode, endMetrics]);
 
   const accuracyPct = endMetrics ? Math.round(endMetrics.accuracy * 100) : 0;
 
@@ -504,9 +561,13 @@ export default function LeoSupermarketGame({ backHref = "/dev/learning-game-prot
       </span>
 
       <header className={styles.header}>
-        <Link href={backHref} className={styles.backBtn}>
-          ← חזרה
-        </Link>
+        {!productionMode ? (
+          <Link href={backHref} className={styles.backBtn}>
+            ← חזרה
+          </Link>
+        ) : (
+          <div style={{ minWidth: 40 }} aria-hidden />
+        )}
         {phase === "play" ? (
           <div className={styles.hud}>
             <span className={`${styles.hudChip} ${styles.hudTime} ${timeLeft <= 8 ? styles.hudTimeWarn : ""}`}>
@@ -514,7 +575,7 @@ export default function LeoSupermarketGame({ backHref = "/dev/learning-game-prot
             </span>
             <span className={styles.hudChip}>{DIFFICULTIES[difficulty].label}</span>
             <span className={styles.hudChip}>
-              👤 {customerIndex + 1}/{customers.length}
+              👤 {customerIndex + 1}/{CUSTOMERS_PER_LEVEL}
             </span>
             <span className={`${styles.hudChip} ${styles.hudBad}`}>
               ❌ {mistakes}/{diffConfig.maxMistakes}
@@ -523,7 +584,7 @@ export default function LeoSupermarketGame({ backHref = "/dev/learning-game-prot
           </div>
         ) : (
           <div className={styles.hud}>
-            <span className={styles.hudChip}>🧪 אבטיפוס</span>
+            <span className={styles.hudChip}>{productionMode ? "🏪" : "🧪 אבטיפוס"}</span>
           </div>
         )}
         <div style={{ minWidth: 40 }} aria-hidden />
@@ -549,8 +610,7 @@ export default function LeoSupermarketGame({ backHref = "/dev/learning-game-prot
             ))}
           </div>
           <p className={styles.introText} style={{ fontSize: "0.78rem" }}>
-            {diffConfig.customerCount} לקוחות · לפחות {diffConfig.minCorrectToWin} נכונים · עד{" "}
-            {diffConfig.maxMistakes} טעויות · {diffConfig.timeLimitSec} שניות ללקוח
+            {CUSTOMERS_PER_LEVEL} לקוחות · עד {diffConfig.maxMistakes} פסילות · הקושי עולה כל 10 לקוחות
           </p>
           <button type="button" className={styles.startBtn} onClick={startGame}>
             התחל משחק
@@ -712,19 +772,21 @@ export default function LeoSupermarketGame({ backHref = "/dev/learning-game-prot
       ) : null}
 
       {phase === "won" || phase === "lost" ? (
+        !productionMode ? (
         <div className={styles.screenCenter}>
           <p className={styles.introHero}>{phase === "won" ? "🎉" : "💪"}</p>
           <h2 className={styles.introTitle}>
-            {phase === "won"
-              ? "כל הכבוד! עזרתם לליאו לשרת את הלקוחות"
-              : "לא נורא, ננסה שוב להחזיר עודף נכון"}
+            {endMetrics?.completedAllCustomers
+              ? `כל הכבוד! שירתת ${endMetrics.correctCustomers} לקוחות ועזרת לליאו במכולת`
+              : `כל הכבוד! שירתת ${endMetrics?.correctCustomers ?? 0} לקוחות ועזרת לליאו במכולת`}
           </h2>
           <div className={styles.endStats}>
             <p>⭐ ניקוד: {score}</p>
             <p>
-              👤 לקוחות שטופלו נכון: {correctCustomers}/{customers.length}
+              👤 לקוחות נכונים: {correctCustomers}/{CUSTOMERS_PER_LEVEL}
             </p>
-            <p>❌ טעויות: {wrongProducts + wrongChange + timeoutMistakes}</p>
+            <p>🛒 לקוחות שטופלו: {customersCompleted}/{CUSTOMERS_PER_LEVEL}</p>
+            <p>❌ פסילות: {wrongProducts + wrongChange + timeoutMistakes}</p>
             <p>🎯 דיוק: {accuracyPct}%</p>
             <p>📊 רמה: {DIFFICULTIES[difficulty].label}</p>
             <p>🔥 רצף הכי טוב: {bestStreak}</p>
@@ -733,6 +795,7 @@ export default function LeoSupermarketGame({ backHref = "/dev/learning-game-prot
             משחק חדש
           </button>
         </div>
+        ) : null
       ) : null}
 
       {dragGhost ? (

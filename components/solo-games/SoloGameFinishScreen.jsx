@@ -14,6 +14,10 @@ import SoloGameNavButtons from "./SoloGameNavButtons.jsx";
  *   diamondBalanceAfter?: number|null,
  *   onPlayAgain: () => void,
  *   busy?: boolean,
+ *   subtitleHe?: string,
+ *   statsLines?: Array<{ label: string, value: string }>,
+ *   gamesHubHref?: string,
+ *   gamesHubLabel?: string,
  * }} props
  */
 export default function SoloGameFinishScreen({
@@ -28,6 +32,10 @@ export default function SoloGameFinishScreen({
   diamondBalanceAfter = null,
   onPlayAgain,
   busy = false,
+  subtitleHe = "",
+  statsLines = [],
+  gamesHubHref = "/game",
+  gamesHubLabel = "חזרה למשחקים",
 }) {
   const { SG } = useSoloGameShellUi();
 
@@ -41,6 +49,7 @@ export default function SoloGameFinishScreen({
           <h2 className={SG.finishTitle}>
             {didWin ? "כל הכבוד! 🎉" : "כל הכבוד על המאמץ!"}
           </h2>
+          {subtitleHe ? <p className={SG.finishMuted}>{subtitleHe}</p> : null}
 
           <div className={SG.finishBody}>
             <p>
@@ -51,6 +60,12 @@ export default function SoloGameFinishScreen({
               <span className={SG.finishLabel}>רמה: </span>
               <span className={SG.finishValue}>{displayLevelHe}</span>
             </p>
+            {statsLines.map((row) => (
+              <p key={row.label}>
+                <span className={SG.finishLabel}>{row.label}: </span>
+                <span className={SG.finishValue}>{row.value}</span>
+              </p>
+            ))}
             <p className={SG.finishCoins}>
               <img src="/images/coin.png" alt="" className="h-6 w-6 sm:h-8 sm:w-8 landscape:h-5 landscape:w-5" />
               +{coinsAwarded} מטבעות
@@ -83,6 +98,8 @@ export default function SoloGameFinishScreen({
               primaryDisabled={busy}
               primaryBusy={busy}
               compact
+              gamesHubHref={gamesHubHref}
+              gamesHubLabel={gamesHubLabel}
             />
           </div>
         </div>

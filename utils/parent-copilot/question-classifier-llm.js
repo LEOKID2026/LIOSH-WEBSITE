@@ -29,7 +29,7 @@ const VALID_BUCKETS = new Set([
 function subjectLabelLocalHe(subjectId) {
   const sid = normalizeSubjectId(subjectId);
   switch (sid) {
-    case "math": return "חשבון";
+    case "math": return "מתמטיקה";
     case "geometry": return "גאומטריה";
     case "english": return "אנגלית";
     case "science": return "מדעים";

@@ -1,9 +1,10 @@
-import {
-  G1_FLAGS_DEFAULT,
-  HEBREW_G1_CONTENT_MAP,
-  pickG1SubtopicId,
-  getG1SubtopicSpec,
-} from "../data/hebrew-g1-content-map.js";
+import * as g1ContentMod from "../data/hebrew-g1-content-map.js";
+import { resolveModuleExport } from "./resolve-module-export.js";
+
+const G1_FLAGS_DEFAULT = resolveModuleExport(g1ContentMod, "G1_FLAGS_DEFAULT");
+const HEBREW_G1_CONTENT_MAP = resolveModuleExport(g1ContentMod, "HEBREW_G1_CONTENT_MAP");
+const pickG1SubtopicId = resolveModuleExport(g1ContentMod, "pickG1SubtopicId");
+const getG1SubtopicSpec = resolveModuleExport(g1ContentMod, "getG1SubtopicSpec");
 
 /** כיתה א׳–ב׳ קל: אם צמצום לתת נושא משאיר בריכה קטנה מדי — מרחיבים לפי סדר תתי נושאים או חוזרים למלא. */
 export const EARLY_G12_SUBTOPIC_POOL_MIN = 18;

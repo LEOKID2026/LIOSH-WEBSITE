@@ -28,6 +28,7 @@ const {
   practicedSubjectsSummaryLineHe,
   notPracticedSubjectsSummaryLineHe,
   filterInsightLinesForUnpracticedSubjects,
+  SUBJECT_VISIBLE_LABELS_HE,
 } = await load("utils/parent-report-language/subject-evidence-policy.js");
 const parentCopilot = await load("utils/parent-copilot/index.js");
 const { detailedReportToCopilotPayload } = await load(
@@ -101,7 +102,7 @@ for (const msg of assertZeroEvidencePolicyOnReports(mathOnlyBase, mathOnlyDetail
 }
 
 const ov = mathOnlyBase.summary.diagnosticOverviewHe;
-assert.ok(String(ov.practicedSubjectsSummaryHe || "").includes("חשבון"), "practiced summary mentions math");
+assert.ok(String(ov.practicedSubjectsSummaryHe || "").includes("מתמטיקה"), "practiced summary mentions math");
 assert.ok(
   String(ov.notPracticedSubjectsSummaryHe || "").includes("גאומטריה"),
   "not-practiced summary lists inactive subjects",
@@ -118,7 +119,10 @@ const insightText = [
   ov.strongestAreaLineHe,
   ...(ov.requiresAttentionPreviewHe || []),
 ].join("\n");
-assert.ok(/חשבון/u.test(insightText), "insights mention practiced math");
+assert.ok(
+  (SUBJECT_VISIBLE_LABELS_HE.math || []).some((label) => insightText.includes(label)),
+  "insights mention practiced math",
+);
 assert.ok(!/גאומטריה:/u.test(insightText), "geometry not in insight lines");
 assert.ok(!/אנגלית:/u.test(insightText), "english not in insight lines");
 

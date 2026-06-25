@@ -27,52 +27,110 @@ const RECYCLING_FACTORY_METRIC_KEYS = Object.freeze([
   "accuracy",
 ]);
 
+const LEO_SUPERMARKET_METRIC_KEYS = Object.freeze([
+  "customersTotal",
+  "customersReached",
+  "customersCompleted",
+  "correctCustomers",
+  "wrongProducts",
+  "wrongChange",
+  "timeoutMistakes",
+  "mistakes",
+  "bestStreak",
+  "durationSec",
+  "accuracy",
+  "completedAllCustomers",
+]);
+
 function clampMetricNumber(value, min, max) {
   const n = Number(value);
   if (!Number.isFinite(n)) return null;
   return Math.max(min, Math.min(max, n));
 }
 
-function normalizeMetrics(raw) {
-  if (!raw || typeof raw !== "object") return null;
-
+function normalizeBaseMetrics(raw, gameKey) {
   const score = clampMetricNumber(raw.score, 0, 100000);
   if (score == null) return null;
 
-  const metrics = {
-    gameKey: "recycling-factory",
+  return {
+    gameKey,
     category: "educational",
     score,
     didWin: raw.didWin === true,
     difficulty: raw.difficulty != null ? String(raw.difficulty).trim().toLowerCase() : null,
     durationMs: raw.durationMs != null ? clampMetricNumber(raw.durationMs, 0, 3600000) : null,
   };
+}
+
+function normalizeRecyclingFactoryMetrics(raw) {
+  const base = normalizeBaseMetrics(raw, "recycling-factory");
+  if (!base) return null;
 
   for (const key of RECYCLING_FACTORY_METRIC_KEYS) {
     if (raw[key] != null) {
       const val = clampMetricNumber(raw[key], 0, key === "accuracy" ? 1 : 10000);
       if (val == null) return null;
-      metrics[key] = key === "accuracy" ? val : Math.floor(val);
+      base[key] = key === "accuracy" ? val : Math.floor(val);
     }
   }
 
-  if (metrics.streaks == null && raw.streak != null) {
-    metrics.streaks = Math.floor(clampMetricNumber(raw.streak, 0, 200) ?? 0);
+  if (base.streaks == null && raw.streak != null) {
+    base.streaks = Math.floor(clampMetricNumber(raw.streak, 0, 200) ?? 0);
   }
 
-  if (metrics.mistakes == null && metrics.wrongItems != null && metrics.missedItems != null) {
-    metrics.mistakes = metrics.wrongItems + metrics.missedItems;
+  if (base.mistakes == null && base.wrongItems != null && base.missedItems != null) {
+    base.mistakes = base.wrongItems + base.missedItems;
   }
 
-  if (metrics.accuracy == null && metrics.correctItems != null) {
+  if (base.accuracy == null && base.correctItems != null) {
     const denom = Math.max(
       1,
-      (metrics.correctItems ?? 0) + (metrics.wrongItems ?? 0) + (metrics.missedItems ?? 0),
+      (base.correctItems ?? 0) + (base.wrongItems ?? 0) + (base.missedItems ?? 0),
     );
-    metrics.accuracy = (metrics.correctItems ?? 0) / denom;
+    base.accuracy = (base.correctItems ?? 0) / denom;
   }
 
-  return metrics;
+  return base;
+}
+
+function normalizeLeoSupermarketMetrics(raw) {
+  const base = normalizeBaseMetrics(raw, "leo-supermarket");
+  if (!base) return null;
+
+  for (const key of LEO_SUPERMARKET_METRIC_KEYS) {
+    if (key === "completedAllCustomers") {
+      base.completedAllCustomers = raw.completedAllCustomers === true;
+      continue;
+    }
+    if (raw[key] != null) {
+      const val = clampMetricNumber(raw[key], 0, key === "accuracy" ? 1 : 10000);
+      if (val == null) return null;
+      base[key] = key === "accuracy" ? val : Math.floor(val);
+    }
+  }
+
+  if (base.customersTotal == null) base.customersTotal = 30;
+  if (base.mistakes == null && base.wrongProducts != null && base.wrongChange != null && base.timeoutMistakes != null) {
+    base.mistakes = base.wrongProducts + base.wrongChange + base.timeoutMistakes;
+  }
+
+  if (base.accuracy == null && base.correctCustomers != null) {
+    base.accuracy = (base.correctCustomers ?? 0) / Math.max(1, base.customersReached ?? 1);
+  }
+
+  if (base.completedAllCustomers == null && base.customersCompleted != null && base.customersTotal != null) {
+    base.completedAllCustomers = base.customersCompleted >= base.customersTotal;
+  }
+
+  return base;
+}
+
+function normalizeMetrics(raw, gameKey) {
+  if (!raw || typeof raw !== "object") return null;
+  const key = String(gameKey || raw.gameKey || "").trim().toLowerCase();
+  if (key === "leo-supermarket") return normalizeLeoSupermarketMetrics(raw);
+  if (key === "recycling-factory") return normalizeRecyclingFactoryMetrics(raw);
+  return null;
 }
 
 export default async function handler(req, res) {
@@ -92,22 +150,27 @@ export default async function handler(req, res) {
 
     const body = await readJsonBody(req);
     const sessionId = String(body?.sessionId || "").trim();
-    const metrics = normalizeMetrics(body?.metrics);
+    const rawMetrics = body?.metrics;
 
     if (!sessionId) {
       return res.status(400).json({ ok: false, error: "חסר מזהה משחק" });
-    }
-    if (!metrics) {
-      return res.status(400).json({ ok: false, error: "נתוני משחק לא תקינים" });
-    }
-    if (metrics.category !== "educational") {
-      return res.status(400).json({ ok: false, error: "קטגוריה לא תקינה" });
     }
 
     const supabase = getLearningSupabaseServiceRoleClient();
     const loaded = await loadActiveEducationalGameSession(supabase, sessionId, auth.studentId);
     if (!loaded.ok) {
       return res.status(404).json({ ok: false, error: loaded.message, code: loaded.code });
+    }
+
+    const metrics = normalizeMetrics(rawMetrics, loaded.session.game_key);
+    if (!metrics) {
+      return res.status(400).json({ ok: false, error: "נתוני משחק לא תקינים" });
+    }
+    if (metrics.gameKey !== loaded.session.game_key) {
+      return res.status(400).json({ ok: false, error: "משחק לא תואם לסשן" });
+    }
+    if (metrics.category !== "educational") {
+      return res.status(400).json({ ok: false, error: "קטגוריה לא תקינה" });
     }
 
     const access = await assertStudentCanPlayGame(supabase, auth.studentId, loaded.session.game_key);

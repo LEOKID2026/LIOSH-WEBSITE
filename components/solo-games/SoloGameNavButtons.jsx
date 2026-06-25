@@ -10,6 +10,8 @@ import { useSoloGameShellUi } from "../../hooks/solo-games/useSoloGameShellUi.js
  *   primaryBusy?: boolean,
  *   primaryBusyLabel?: string,
  *   compact?: boolean,
+ *   gamesHubHref?: string,
+ *   gamesHubLabel?: string,
  * }} props
  */
 export default function SoloGameNavButtons({
@@ -19,6 +21,8 @@ export default function SoloGameNavButtons({
   primaryBusy = false,
   primaryBusyLabel = "טוען…",
   compact = false,
+  gamesHubHref = "/game",
+  gamesHubLabel = "חזרה למשחקים",
 }) {
   const { SG, tokens: T } = useSoloGameShellUi();
   const minH = compact ? "min-h-[44px] landscape:min-h-[36px]" : "min-h-[48px]";
@@ -36,10 +40,10 @@ export default function SoloGameNavButtons({
         {primaryBusy ? primaryBusyLabel : primaryLabel}
       </button>
       <Link
-        href="/game"
+        href={gamesHubHref}
         className={`${gamesBtn} ${minH} w-full flex items-center justify-center ${textSize}`}
       >
-        חזרה למשחקים
+        {gamesHubLabel}
       </Link>
       <Link
         href="/student/home"

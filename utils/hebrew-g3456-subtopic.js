@@ -1,7 +1,17 @@
-import { HEBREW_G3_CONTENT_MAP, G3_FLAGS_DEFAULT } from "../data/hebrew-g3-content-map.js";
-import { HEBREW_G4_CONTENT_MAP, G4_FLAGS_DEFAULT } from "../data/hebrew-g4-content-map.js";
-import { HEBREW_G5_CONTENT_MAP, G5_FLAGS_DEFAULT } from "../data/hebrew-g5-content-map.js";
-import { HEBREW_G6_CONTENT_MAP, G6_FLAGS_DEFAULT } from "../data/hebrew-g6-content-map.js";
+import * as g3ContentMod from "../data/hebrew-g3-content-map.js";
+import * as g4ContentMod from "../data/hebrew-g4-content-map.js";
+import * as g5ContentMod from "../data/hebrew-g5-content-map.js";
+import * as g6ContentMod from "../data/hebrew-g6-content-map.js";
+import { resolveModuleExport } from "./resolve-module-export.js";
+
+const HEBREW_G3_CONTENT_MAP = resolveModuleExport(g3ContentMod, "HEBREW_G3_CONTENT_MAP");
+const G3_FLAGS_DEFAULT = resolveModuleExport(g3ContentMod, "G3_FLAGS_DEFAULT");
+const HEBREW_G4_CONTENT_MAP = resolveModuleExport(g4ContentMod, "HEBREW_G4_CONTENT_MAP");
+const G4_FLAGS_DEFAULT = resolveModuleExport(g4ContentMod, "G4_FLAGS_DEFAULT");
+const HEBREW_G5_CONTENT_MAP = resolveModuleExport(g5ContentMod, "HEBREW_G5_CONTENT_MAP");
+const G5_FLAGS_DEFAULT = resolveModuleExport(g5ContentMod, "G5_FLAGS_DEFAULT");
+const HEBREW_G6_CONTENT_MAP = resolveModuleExport(g6ContentMod, "HEBREW_G6_CONTENT_MAP");
+const G6_FLAGS_DEFAULT = resolveModuleExport(g6ContentMod, "G6_FLAGS_DEFAULT");
 
 const ALL_MODES_FALLBACK = ["learning", "challenge", "speed", "marathon", "practice"];
 

@@ -15,7 +15,7 @@ function envStr(name, env = typeof process !== "undefined" ? process.env : {}) {
 }
 
 const SUBJECT_LABEL_HE = {
-  math: "חשבון",
+  math: "מתמטיקה",
   hebrew: "עברית",
   science: "מדעים",
   geometry: "גאומטריה",

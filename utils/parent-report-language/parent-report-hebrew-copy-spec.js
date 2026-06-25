@@ -141,7 +141,7 @@ const STEP_LABEL_BY_ENGINE_STEP = Object.freeze({
 });
 
 const SUBJECT_ID_TO_LABEL = Object.freeze({
-  math: "חשבון",
+  math: "מתמטיקה",
   geometry: "גאומטריה",
   english: "אנגלית",
   science: "מדעים",
@@ -497,7 +497,7 @@ export const PARENT_DIAGNOSTIC_TYPE_LABEL_HE = Object.freeze({
   mixed_signal: "יש סימנים לכמה כיוונים שונים, ולכן הדוח ממליץ להתקדם בזהירות.",
   mixed: "יש סימנים לכמה כיוונים שונים, ולכן הדוח ממליץ להתקדם בזהירות.",
   weak_independence: "הילד מצליח יותר כשיש ליווי או רמזים, ועדיין צריך לחזק פתרון עצמאי.",
-  none_sparse: "יש מעט מדי שאלות בנושא הזה, ולכן לא מסיקים ממנו מסקנה חזקה.",
+  none_sparse: "יש מעט מדי שאלות בנושא הזה, ולכן לא מסיקים ממנו מסקנה ברורה.",
   none_observed: "אין עדיין מספיק חזרתיות כדי לומר שהטעות היא דפוס קבוע.",
 });
 
@@ -518,7 +518,7 @@ export const ROOT_CAUSE_PARENT_HE = Object.freeze({
 
 /** Spec §6 preliminary_signal */
 export function preliminarySignalHe() {
-  return "יש סימן ראשוני, אבל עדיין אין מספיק חזרתיות כדי לקבוע מסקנה חזקה.";
+  return "יש סימן ראשוני, אבל עדיין אין מספיק חזרתיות כדי לקבוע מסקנה ברורה.";
 }
 
 /**

@@ -1,12 +1,20 @@
 import { itemAllowedForGrade, itemAllowedForLevel } from "./grade-gating.js";
 import { enrichHebrewRichPoolRows } from "./hebrew-rich-diagnostic-metadata-enrich.js";
 import { enrichHebrewRichPoolWithCanonicalMetadata } from "../lib/learning/hebrew-canonical-metadata.js";
-import { HEBREW_G1_LITERACY_POOL } from "../data/hebrew-literacy-g1/literacy-pool-builder.js";
-import { HEBREW_G2_LITERACY_POOL } from "../data/hebrew-literacy-g2/literacy-pool-builder.js";
-import { HEBREW_G3_LITERACY_POOL } from "../data/hebrew-literacy-g3/literacy-pool-builder.js";
-import { HEBREW_G4_LITERACY_POOL } from "../data/hebrew-literacy-g4/literacy-pool-builder.js";
-import { HEBREW_G5_LITERACY_POOL } from "../data/hebrew-literacy-g5/literacy-pool-builder.js";
-import { HEBREW_G6_LITERACY_POOL } from "../data/hebrew-literacy-g6/literacy-pool-builder.js";
+import * as g1LiteracyMod from "../data/hebrew-literacy-g1/literacy-pool-builder.js";
+import * as g2LiteracyMod from "../data/hebrew-literacy-g2/literacy-pool-builder.js";
+import * as g3LiteracyMod from "../data/hebrew-literacy-g3/literacy-pool-builder.js";
+import * as g4LiteracyMod from "../data/hebrew-literacy-g4/literacy-pool-builder.js";
+import * as g5LiteracyMod from "../data/hebrew-literacy-g5/literacy-pool-builder.js";
+import * as g6LiteracyMod from "../data/hebrew-literacy-g6/literacy-pool-builder.js";
+import { resolveModuleExport } from "./resolve-module-export.js";
+
+const HEBREW_G1_LITERACY_POOL = resolveModuleExport(g1LiteracyMod, "HEBREW_G1_LITERACY_POOL");
+const HEBREW_G2_LITERACY_POOL = resolveModuleExport(g2LiteracyMod, "HEBREW_G2_LITERACY_POOL");
+const HEBREW_G3_LITERACY_POOL = resolveModuleExport(g3LiteracyMod, "HEBREW_G3_LITERACY_POOL");
+const HEBREW_G4_LITERACY_POOL = resolveModuleExport(g4LiteracyMod, "HEBREW_G4_LITERACY_POOL");
+const HEBREW_G5_LITERACY_POOL = resolveModuleExport(g5LiteracyMod, "HEBREW_G5_LITERACY_POOL");
+const HEBREW_G6_LITERACY_POOL = resolveModuleExport(g6LiteracyMod, "HEBREW_G6_LITERACY_POOL");
 
 /**
  * בנק שאלות עברית מובנה — משלים את המאגר הקלאסי.

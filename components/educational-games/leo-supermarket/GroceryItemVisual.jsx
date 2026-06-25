@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import styles from "./LeoSupermarketPrototype.module.css";
+import styles from "./LeoSupermarketGame.module.css";
 
 /**
  * @param {{
