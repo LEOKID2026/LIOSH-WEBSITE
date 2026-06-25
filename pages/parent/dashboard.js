@@ -75,6 +75,7 @@ export default function ParentDashboardPage() {
   const [editById, setEditById] = useState({});
   const [deleteModalStudent, setDeleteModalStudent] = useState(null);
   const [deleteConfirmName, setDeleteConfirmName] = useState("");
+  const [deleteError, setDeleteError] = useState("");
   const [activityModalStudent, setActivityModalStudent] = useState(null);
   const [addChildModalOpen, setAddChildModalOpen] = useState(false);
   const [detailsModalStudent, setDetailsModalStudent] = useState(null);
@@ -352,6 +353,7 @@ export default function ParentDashboardPage() {
     const deletedId = deleteModalStudent.id;
     setBusy(true);
     setMessage("");
+    setDeleteError("");
     try {
       const res = await fetch("/api/parent/delete-student", {
         method: "POST",
@@ -363,7 +365,7 @@ export default function ParentDashboardPage() {
       });
       const payload = await res.json();
       if (!res.ok) {
-        setMessage(payload.error || "מחיקה נכשלה");
+        setDeleteError(payload.error || "מחיקה נכשלה");
       } else {
         setDeleteModalStudent(null);
         setDeleteConfirmName("");
@@ -385,7 +387,7 @@ export default function ParentDashboardPage() {
         setMessage("הילד נמחק לצמיתות");
       }
     } catch (_err) {
-      setMessage("שגיאת רשת במחיקה");
+      setDeleteError("שגיאת רשת — נסה שנית");
     }
     setBusy(false);
   };
@@ -553,6 +555,7 @@ export default function ParentDashboardPage() {
             disabled={busy}
             onClick={() => {
               setDeleteConfirmName("");
+              setDeleteError("");
               setDeleteModalStudent({
                 id: student.id,
                 full_name: student.full_name || "",
@@ -847,6 +850,9 @@ export default function ParentDashboardPage() {
                 dir="rtl"
                 autoComplete="off"
               />
+              {deleteError ? (
+                <p className="text-sm text-red-500 text-right" role="alert">{deleteError}</p>
+              ) : null}
               <div className="flex flex-wrap gap-2 justify-end pt-1">
                 <button
                   type="button"
@@ -854,6 +860,7 @@ export default function ParentDashboardPage() {
                   onClick={() => {
                     setDeleteModalStudent(null);
                     setDeleteConfirmName("");
+                    setDeleteError("");
                   }}
                 >
                   ביטול

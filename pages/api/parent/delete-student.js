@@ -20,6 +20,7 @@ export default async function handler(req, res) {
 
     if (rpcErr) {
       const msg = String(rpcErr.message || rpcErr.details || "");
+      console.error("[delete-student] rpc error", { message: msg, code: rpcErr.code, studentId });
       if (
         msg.includes("DELETE_STUDENT_NOT_OWNED") ||
         msg.includes("DELETE_STUDENT_MISSING_ID") ||
