@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import LearningPrototypeFrame, { sharedStyles as s } from "../shared/LearningPrototypeFrame.jsx";
-import { pickTasksForRun, SCORE, TASKS_PER_LEVEL } from "../shared/learning-prototype-constants.js";
+import { SCORE, SESSION_TASK_COUNT } from "../shared/learning-prototype-constants.js";
+import { pickSessionTasks } from "../shared/task-session.js";
 import {
-  BAKERY_TASKS,
+  bakeryExpected,
   bakeryFeedback,
   bakeryPrompt,
+  generateBakeryPool,
+  trayItemDisplay,
   validateBakery,
 } from "./leo-bakery-data.js";
 import styles from "./LeoBakeryGame.module.css";
@@ -27,33 +30,33 @@ export default function LeoBakeryGame({ backHref = "/dev/learning-game-prototype
 
   const task = tasks[taskIndex] ?? null;
   const total = trays * perTray;
-  const fixedPerTray = task?.mode === "findTrays" ? (task.perTray ?? 1) : perTray;
+
+  const lockTrays = task?.mode === "findTotal" || task?.mode === "findPerTray";
+  const lockPerTray = task?.mode === "findTrays";
+  const lockTotal = task?.mode === "build" || task?.mode === "findTrays" || task?.mode === "findPerTray";
+
+  const displayPerTray = task?.mode === "findTrays" ? (task.perTray ?? 1) : perTray;
   const displayTotal =
-    task?.mode === "findTrays" ? (task.total ?? total) : total;
+    task?.mode === "findTrays" || task?.mode === "findPerTray"
+      ? (task?.total ?? total)
+      : total;
 
   useEffect(() => {
     if (!task) return;
-    if (task.mode === "findTrays") {
-      setTrays(1);
-      setPerTray(task.perTray ?? 1);
-    } else if (task.mode === "findTotal") {
-      setTrays(1);
-      setPerTray(1);
-    } else {
-      setTrays(1);
-      setPerTray(1);
-    }
+    setTrays(1);
+    setPerTray(task.mode === "findTrays" ? (task.perTray ?? 1) : 1);
     setCheckState("idle");
     setFeedback("");
   }, [task]);
 
   const trayPreview = useMemo(() => {
     if (!task) return [];
-    return Array.from({ length: Math.min(trays, 8) }, (_, i) => ({
+    const count = Math.min(trays, 10);
+    return Array.from({ length: count }, (_, i) => ({
       id: i,
-      count: perTray,
+      count: displayPerTray,
     }));
-  }, [task, trays, perTray]);
+  }, [task, trays, displayPerTray]);
 
   const resetTaskUi = useCallback(() => {
     setTrays(1);
@@ -63,7 +66,17 @@ export default function LeoBakeryGame({ backHref = "/dev/learning-game-prototype
   }, []);
 
   const startGame = useCallback(() => {
-    setTasks(pickTasksForRun(difficulty, BAKERY_TASKS));
+    setTasks(
+      pickSessionTasks(
+        generateBakeryPool,
+        difficulty,
+        (t) => {
+          const e = bakeryExpected(t);
+          return `${t.mode}-${e.trays}-${e.perTray}-${e.total}`;
+        },
+        SESSION_TASK_COUNT,
+      ),
+    );
     setTaskIndex(0);
     setScore(0);
     setMistakes(0);
@@ -75,13 +88,13 @@ export default function LeoBakeryGame({ backHref = "/dev/learning-game-prototype
 
   const advance = useCallback(() => {
     const next = taskIndex + 1;
-    if (next >= TASKS_PER_LEVEL) {
+    if (next >= tasks.length) {
       setPhase("won");
       return;
     }
     setTaskIndex(next);
     resetTaskUi();
-  }, [taskIndex, resetTaskUi]);
+  }, [taskIndex, tasks.length, resetTaskUi]);
 
   const clearFeedback = useCallback(() => {
     setCheckState("idle");
@@ -91,8 +104,9 @@ export default function LeoBakeryGame({ backHref = "/dev/learning-game-prototype
   const runCheck = useCallback(() => {
     if (!task) return;
     setAttemptsTotal((a) => a + 1);
-    const answerTotal = task.mode === "findTrays" ? (task.total ?? 0) : total;
     const answerPerTray = task.mode === "findTrays" ? (task.perTray ?? 1) : perTray;
+    const answerTotal =
+      task.mode === "findTrays" || task.mode === "findPerTray" ? (task.total ?? 0) : total;
     const result = validateBakery(task, { trays, perTray: answerPerTray, total: answerTotal });
     if (result.ok) {
       setCheckState("ok");
@@ -107,8 +121,6 @@ export default function LeoBakeryGame({ backHref = "/dev/learning-game-prototype
     setFeedback(bakeryFeedback(false));
   }, [task, trays, perTray, total, advance]);
 
-  const lockPerTray = task?.mode === "findTrays";
-
   return (
     <LearningPrototypeFrame
       backHref={backHref}
@@ -119,11 +131,12 @@ export default function LeoBakeryGame({ backHref = "/dev/learning-game-prototype
       title="המאפייה של ליאו"
       introHero="🥐🦁"
       introText="בנו תבניות עם כמות שווה של מאפים — כפל וקבוצות שוות!"
-      introHint={`${TASKS_PER_LEVEL} משימות · תבניות ומגשים`}
+      introHint="מאגר משימות גדול · תבניות ומגשים"
       onStart={startGame}
       score={score}
       mistakes={mistakes}
       taskIndex={taskIndex}
+      tasksTotal={tasks.length || SESSION_TASK_COUNT}
       successCount={successCount}
       attemptsTotal={attemptsTotal}
       onPlayAgain={() => setPhase("intro")}
@@ -139,88 +152,90 @@ export default function LeoBakeryGame({ backHref = "/dev/learning-game-prototype
             </div>
           </div>
 
-          <div className={s.leoRow}>
-            <span className={s.leoBadge}>🦁👨‍🍳</span>
-            <span className={s.leoCaption}>
-              סך הכול: {displayTotal} {task.itemEmoji}
-            </span>
+          <div className={styles.formulaBar}>
+            {trays} תבניות × {displayPerTray} בכל תבנית = {displayTotal} {task.itemEmoji}
           </div>
 
           <div className={s.playArea}>
             <div className={`${s.panel} ${styles.traysPanel}`}>
               <p className={s.panelTitle}>🧁 התבניות שלכם</p>
               <div className={styles.trayGrid}>
-                {trayPreview.map((tr) => (
-                  <div key={tr.id} className={styles.trayCard}>
-                    <span className={styles.trayLabel}>תבנית {tr.id + 1}</span>
-                    <span className={styles.trayItems}>
-                      {Array.from({ length: Math.min(tr.count, 6) }, (_, j) => (
-                        <span key={j}>{task.itemEmoji}</span>
-                      ))}
-                      {tr.count > 6 ? <span className={styles.trayMore}>+{tr.count - 6}</span> : null}
-                    </span>
-                  </div>
-                ))}
-                {trays > 8 ? <p className={styles.moreTrays}>+{trays - 8} תבניות נוספות</p> : null}
+                {trayPreview.map((tr) => {
+                  const disp = trayItemDisplay(tr.count, task.itemEmoji);
+                  return (
+                    <div key={tr.id} className={styles.trayCard}>
+                      <span className={styles.trayLabel}>תבנית {tr.id + 1}</span>
+                      <span className={styles.trayItems}>
+                        {disp.type === "icons" ? disp.text : disp.text}
+                      </span>
+                    </div>
+                  );
+                })}
+                {trays > 10 ? <p className={styles.moreTrays}>+{trays - 10} תבניות נוספות</p> : null}
               </div>
             </div>
 
-            <div className={s.panel}>
-              <div className={s.stepperRow}>
-                <span className={s.stepperLabel}>תבניות</span>
-                <button
-                  type="button"
-                  className={s.stepperBtn}
-                  disabled={lockPerTray}
-                  onClick={() => {
-                    setTrays((v) => Math.max(1, v - 1));
-                    clearFeedback();
-                  }}
-                >
-                  −
-                </button>
-                <span className={s.stepperValue}>{trays}</span>
-                <button
-                  type="button"
-                  className={s.stepperBtn}
-                  onClick={() => {
-                    setTrays((v) => Math.min(12, v + 1));
-                    clearFeedback();
-                  }}
-                >
-                  +
-                </button>
-              </div>
-              <div className={s.stepperRow}>
-                <span className={s.stepperLabel}>בכל תבנית</span>
-                <button
-                  type="button"
-                  className={s.stepperBtn}
-                  disabled={lockPerTray}
-                  onClick={() => {
-                    setPerTray((v) => Math.max(1, v - 1));
-                    clearFeedback();
-                  }}
-                >
-                  −
-                </button>
-                <span className={s.stepperValue}>{fixedPerTray}</span>
-                <button
-                  type="button"
-                  className={s.stepperBtn}
-                  disabled={lockPerTray}
-                  onClick={() => {
-                    setPerTray((v) => Math.min(12, v + 1));
-                    clearFeedback();
-                  }}
-                >
-                  +
-                </button>
-              </div>
-              {task.mode !== "findTrays" ? (
+            <div className={`${s.panel} ${styles.controlsPanel}`}>
+              <div className={styles.controlCol}>
+                <span className={styles.controlLabel}>תבניות</span>
                 <div className={s.stepperRow}>
-                  <span className={s.stepperLabel}>סך הכול</span>
-                  <span className={s.stepperValue}>{total}</span>
+                  <button
+                    type="button"
+                    className={s.stepperBtn}
+                    disabled={lockTrays}
+                    onClick={() => {
+                      setTrays((v) => Math.max(1, v - 1));
+                      clearFeedback();
+                    }}
+                  >
+                    −
+                  </button>
+                  <span className={s.stepperValue}>{trays}</span>
+                  <button
+                    type="button"
+                    className={s.stepperBtn}
+                    disabled={lockTrays}
+                    onClick={() => {
+                      setTrays((v) => Math.min(12, v + 1));
+                      clearFeedback();
+                    }}
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+              <div className={styles.controlCol}>
+                <span className={styles.controlLabel}>בכל תבנית</span>
+                <div className={s.stepperRow}>
+                  <button
+                    type="button"
+                    className={s.stepperBtn}
+                    disabled={lockPerTray}
+                    onClick={() => {
+                      setPerTray((v) => Math.max(1, v - 1));
+                      clearFeedback();
+                    }}
+                  >
+                    −
+                  </button>
+                  <span className={s.stepperValue}>{displayPerTray}</span>
+                  <button
+                    type="button"
+                    className={s.stepperBtn}
+                    disabled={lockPerTray}
+                    onClick={() => {
+                      setPerTray((v) => Math.min(12, v + 1));
+                      clearFeedback();
+                    }}
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+              {!lockTotal ? (
+                <div className={`${styles.controlCol} ${styles.totalCol}`}>
+                  <span className={styles.controlLabel}>סך הכול</span>
+                  <span className={styles.totalValue}>{total}</span>
                 </div>
               ) : null}
             </div>

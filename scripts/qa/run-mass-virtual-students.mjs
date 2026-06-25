@@ -10,6 +10,12 @@
  *     --students=60 --parents=6 --days=7 --minutesPerDay=30 --password=747975 \
  *     --subjects=math,geometry,hebrew,english,science --grades=g1,g2,g3,g4,g5,g6 \
  *     --mode=staging --timestampStamping=1
+ *
+ * Speed-pressure re-patch on existing run (writes DB):
+ *   node --env-file=.env.local scripts/qa/run-mass-virtual-students.mjs \
+ *     --verify-only --runId=mass-YYYY-MM-DDTHH-MM-SS --patch-speed-pressure --no-sync-names
+ *
+ * Full seed includes speed-pressure cohort by default (--no-seed-speed-pressure to skip).
  */
 import { readFile } from "node:fs/promises";
 import { bootstrapQaDbWriteGuard } from "./lib/db-write-guard.mjs";
@@ -19,7 +25,7 @@ import { buildPlannedCohort } from "./lib/mass-virtual-students/cohort.mjs";
 import { parseMassSimulationCli } from "./lib/mass-virtual-students/config.mjs";
 import { BEHAVIOR_PROFILES, SUBJECT_LABELS_HE } from "./lib/mass-virtual-students/constants.mjs";
 import { provisionMassAccounts } from "./lib/mass-virtual-students/provision.mjs";
-import { patchSpeedPressureForStudents } from "./lib/mass-virtual-students/speed-pressure-patch.mjs";
+import { patchSpeedPressureForStudents, seedSpeedPressureCohort } from "./lib/mass-virtual-students/speed-pressure-patch.mjs";
 import { backfillParentActivityAttempts } from "./lib/mass-virtual-students/parent-activity-seeder.mjs";
 import {
   buildCoverageRows,
@@ -60,14 +66,22 @@ async function runVerifyOnly(cfg) {
   }
 
   if (cfg.patchSpeedPressure) {
+    const beforeCounts = prior.engineDecisionDebug?.actualCounts || {};
     const patch = await patchSpeedPressureForStudents({
       students: manifest.students,
       runId: cfg.runId,
       endDay: to,
     });
+    patch.before = {
+      speed_pressure_pattern: beforeCounts.speed_pressure_pattern ?? 0,
+      missingDecisions: prior.missingDecisions || [],
+      decisionsSeen: prior.decisionsSeen || [],
+      actualCounts: beforeCounts,
+    };
     console.log(
-      `[mass-sim] speed-pressure patch: ${patch.patched} ok, ${patch.failed} failed (fast_errors profile)`,
+      `[mass-sim] speed-pressure patch: ${patch.studentsPatched} patched, ${patch.studentsSkipped} skipped, ${patch.studentsFailed} failed (${patch.answersInserted} answers, ${patch.speedShellsInserted} shells)`,
     );
+    cfg._speedPressurePatchAudit = patch;
   }
 
   if (cfg.syncNames) {
@@ -110,6 +124,18 @@ async function runVerifyOnly(cfg) {
     topicCoverage: reportVerification.topicCoverage,
     parentAssignedDebug: reportVerification.parentAssignedDebug,
     speedPressurePatched: cfg.patchSpeedPressure || false,
+    speedPressurePatchAudit: cfg._speedPressurePatchAudit
+      ? {
+          ...cfg._speedPressurePatchAudit,
+          after: {
+            speed_pressure_pattern:
+              reportVerification.engineDecisionDebug?.actualCounts?.speed_pressure_pattern ?? 0,
+            missingDecisions: reportVerification.missingDecisions,
+            decisionsSeen: reportVerification.decisionsSeen,
+            actualCounts: reportVerification.engineDecisionDebug?.actualCounts || {},
+          },
+        }
+      : undefined,
     parentAssignedBackfilled: cfg.patchParentAssigned || false,
     verifyOnly: true,
     verifiedAt: new Date().toISOString(),
@@ -229,6 +255,21 @@ async function main() {
     bySubjectGrade[key] = (bySubjectGrade[key] || 0) + 1;
   }
 
+  let speedPressureSeedAudit = null;
+  if (cfg.seedSpeedPressure) {
+    const seedAudit = await seedSpeedPressureCohort({
+      students: provisioned.students,
+      runId: cfg.runId,
+      endDay,
+    });
+    totalAnswers += seedAudit.answersInserted || 0;
+    totalSessions += (seedAudit.speedShellsInserted || 0) + (seedAudit.practiceSessionsInserted || 0);
+    speedPressureSeedAudit = seedAudit;
+    console.log(
+      `[mass-sim] speed-pressure cohort: ${seedAudit.studentsPatched} patched, ${seedAudit.studentsSkipped} skipped, ${seedAudit.studentsFailed} failed (${seedAudit.answersInserted} answers, ${seedAudit.speedShellsInserted} shells)`,
+    );
+  }
+
   const reportVerification = await verifyParentReports({
     students: provisioned.students,
     fromDate: startDay,
@@ -250,6 +291,16 @@ async function main() {
   const technicalIssues = reportVerification.results.filter((r) => r.technicalHits?.length).length;
   const hebrewIssues = reportVerification.results.filter((r) => r.hebrewIssues?.length).length;
   const slowApis = reportVerification.results.filter((r) => r.durationMs > 5000).length;
+
+  if (speedPressureSeedAudit) {
+    speedPressureSeedAudit.after = {
+      speed_pressure_pattern:
+        reportVerification.engineDecisionDebug?.actualCounts?.speed_pressure_pattern ?? 0,
+      missingDecisions: reportVerification.missingDecisions,
+      decisionsSeen: reportVerification.decisionsSeen,
+      actualCounts: reportVerification.engineDecisionDebug?.actualCounts || {},
+    };
+  }
 
   const subjectCoverageGaps = cfg.subjects.filter((sub) =>
     cfg.grades.every((g) => (bySubjectGrade[`${sub}:${g}`] || 0) === 0),
@@ -284,6 +335,8 @@ async function main() {
     engineDecisionDebug: reportVerification.engineDecisionDebug,
     topicCoverage: reportVerification.topicCoverage,
     parentAssignedDebug: reportVerification.parentAssignedDebug,
+    speedPressureSeedAudit,
+    seedSpeedPressure: cfg.seedSpeedPressure,
     subjectCoverageGaps,
     gradeCoverageGaps,
     lowCoverageTopics: subjectCoverageGaps.map((s) => SUBJECT_LABELS_HE[s] || s),

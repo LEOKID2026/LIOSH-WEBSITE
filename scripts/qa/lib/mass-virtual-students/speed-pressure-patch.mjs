@@ -6,6 +6,14 @@ const SPEED_PROBE_TOPIC = "speed_pressure_probe_v4";
 const SPEED_SHELL_COUNT = 40;
 const PRACTICE_ANSWER_COUNT = 22;
 
+export { SPEED_PROBE_TOPIC, SPEED_SHELL_COUNT, PRACTICE_ANSWER_COUNT };
+
+const FIELDS_WRITTEN = [
+  "learning_sessions (speed shells: metadata.mode=speed)",
+  "learning_sessions (practice session: metadata.mode=practice, patch=speed_pressure_probe)",
+  "answers (practice mode, timeSpentMs, questionEngine, diagnosticMetadata, skillId)",
+];
+
 /**
  * Empty speed-mode learning_session rows boost topic modeCounts (dominantMode=speed)
  * while countable evidence stays in practice-mode answers on the same isolated topic.
@@ -114,9 +122,25 @@ export async function patchSpeedPressureForStudents({ students, runId, endDay })
     }
   }
 
+  const patchedNew = results.filter((r) => r.ok && !r.skipped);
+  const skipped = results.filter((r) => r.skipped);
+  const failed = results.filter((r) => !r.ok);
+
   return {
+    mutatesDatabase: true,
+    targetProfile: "fast_errors",
+    probeTopic: SPEED_PROBE_TOPIC,
+    fieldsWritten: FIELDS_WRITTEN,
+    studentsTargeted: targets.length,
+    studentsPatched: patchedNew.length,
+    studentsSkipped: skipped.length,
+    studentsFailed: failed.length,
     patched: results.filter((r) => r.ok).length,
-    failed: results.filter((r) => !r.ok).length,
+    failed: failed.length,
+    answersInserted: patchedNew.reduce((s, r) => s + (r.practiceAnswerCount || 0), 0),
+    speedShellsInserted: patchedNew.reduce((s, r) => s + (r.speedShellCount || 0), 0),
+    practiceSessionsInserted: patchedNew.filter((r) => r.practiceSessionId).length,
+    students: results,
     results,
     engineConditions: {
       modeKey: "speed (via dominantMode from speed session shells; not from excluded speed answers)",
@@ -132,3 +156,6 @@ export async function patchSpeedPressureForStudents({ students, runId, endDay })
     },
   };
 }
+
+/** Same as patch — used inline after full seed (default on). */
+export const seedSpeedPressureCohort = patchSpeedPressureForStudents;

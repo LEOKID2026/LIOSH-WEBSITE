@@ -1,3 +1,15 @@
+.formulaBar {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 0.35rem 0.5rem;
+  border-radius: 0.75rem;
+  border: 2px solid #fdba74;
+  background: #fffbeb;
+  font-size: clamp(0.72rem, 2.6vw, 0.88rem);
+  font-weight: 900;
+  color: #9a3412;
+}
+
 .traysPanel {
   flex: 1;
   min-height: 0;
@@ -6,48 +18,80 @@
 
 .trayGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
-  gap: 0.3rem;
-  max-height: clamp(100px, 24vh, 160px);
+  grid-template-columns: repeat(auto-fill, minmax(68px, 1fr));
+  gap: 0.28rem;
+  max-height: clamp(110px, 26vh, 170px);
   overflow: auto;
+  align-content: start;
 }
 
 .trayCard {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0.25rem;
+  justify-content: center;
+  padding: 0.22rem;
   border-radius: 0.65rem;
   border: 2px solid #fdba74;
   background: #fffbeb;
-  min-height: 58px;
+  min-height: 54px;
 }
 
 .trayLabel {
-  font-size: 0.58rem;
+  font-size: 0.56rem;
   font-weight: 800;
   color: #9a3412;
 }
 
 .trayItems {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.05rem;
-  font-size: 0.85rem;
-}
-
-.trayMore {
-  font-size: 0.65rem;
+  font-size: clamp(0.75rem, 2.8vw, 0.95rem);
   font-weight: 800;
-  color: #c2410c;
+  line-height: 1.15;
+  text-align: center;
+  word-break: break-word;
 }
 
 .moreTrays {
   grid-column: 1 / -1;
   margin: 0;
   text-align: center;
-  font-size: 0.68rem;
+  font-size: 0.65rem;
   font-weight: 800;
   color: #9a3412;
+}
+
+.controlsPanel {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem;
+}
+
+.controlCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.controlLabel {
+  font-size: 0.66rem;
+  font-weight: 900;
+  color: #9a3412;
+}
+
+.totalCol {
+  grid-column: 1 / -1;
+}
+
+.totalValue {
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: #c2410c;
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  .trayGrid {
+    max-height: 90px;
+  }
 }

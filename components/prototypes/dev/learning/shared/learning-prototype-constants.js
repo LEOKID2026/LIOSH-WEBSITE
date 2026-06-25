@@ -1,6 +1,14 @@
 /** @typedef {'easy' | 'medium' | 'hard'} DifficultyId */
 
-export const TASKS_PER_LEVEL = 10;
+import {
+  SESSION_TASK_COUNT,
+  MIN_POOL_SIZE,
+  pickSessionTasks,
+  shuffle,
+  randInt,
+} from "./task-session.js";
+
+export { SESSION_TASK_COUNT, MIN_POOL_SIZE, pickSessionTasks, shuffle, randInt };
 
 export const DIFFICULTIES = {
   easy: { id: "easy", label: "קל" },
@@ -14,13 +22,10 @@ export const SCORE = {
   streakBonus: 10,
 };
 
-/** @param {DifficultyId} difficulty @param {Record<DifficultyId, unknown[]>} pools */
+/** @deprecated use pickSessionTasks — kept for english prototypes not in current scope */
 export function pickTasksForRun(difficulty, pools) {
   const list = pools[difficulty] ?? [];
-  return list.slice(0, TASKS_PER_LEVEL);
+  return list.slice(0, SESSION_TASK_COUNT);
 }
 
-/** @param {string} [imageSrc] @param {string} fallbackEmoji */
-export function visualEmoji(imageSrc, fallbackEmoji) {
-  return imageSrc ? null : fallbackEmoji;
-}
+export const TASKS_PER_LEVEL = SESSION_TASK_COUNT;

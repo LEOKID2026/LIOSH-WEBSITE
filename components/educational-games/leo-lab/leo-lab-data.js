@@ -1,5 +1,11 @@
 /** @typedef {'easy' | 'medium' | 'hard'} DifficultyId */
 
+import {
+  EASY_EXPERIMENTS_EXTRA,
+  MEDIUM_EXPERIMENTS_EXTRA,
+  HARD_EXPERIMENTS_EXTRA,
+} from "./leo-lab-experiments-extra.js";
+
 /** @typedef {{
  *   id: string
  *   name: string
@@ -480,7 +486,7 @@ export const MEDIUM_EXPERIMENTS = [
     prompt: "בחרו 2 חפצים להחזרת אור",
     missionIcon: "🪞",
     pickCount: 2,
-    validItems: ["mirror", "sun", "water", "bowl"],
+    validItems: ["mirror", "sun", "bulb"],
     resultText: "מעולה! המראה מחזירה אור.",
     fact: "מראה חלקה יכולה להחזיר קרני אור.",
     resultIcon: "✨",
@@ -492,7 +498,7 @@ export const MEDIUM_EXPERIMENTS = [
     prompt: "בחרו 2 חפצים לבדיקת ציפה",
     missionIcon: "💧",
     pickCount: 2,
-    validItems: ["water", "bowl", "ice", "plant"],
+    validItems: ["water", "bowl", "ice"],
     resultText: "מעולה! אפשר לבדוק במים.",
     fact: "במים בודקים אם חומר צף או שוקע.",
     resultIcon: "🪵",
@@ -504,7 +510,7 @@ export const MEDIUM_EXPERIMENTS = [
     prompt: "בחרו 2 חפצים לחיבור חשמלי",
     missionIcon: "🔋",
     pickCount: 2,
-    validItems: ["battery", "bulb", "wire", "magnet"],
+    validItems: ["battery", "bulb", "wire"],
     resultText: "מעולה! סוללה ונורה מתחברים.",
     fact: "נורה צריכה מקור חשמל.",
     resultIcon: "💡",
@@ -516,7 +522,7 @@ export const MEDIUM_EXPERIMENTS = [
     prompt: "בחרו 2 חפצים להמסת קרח",
     missionIcon: "🧊",
     pickCount: 2,
-    validItems: ["ice", "sun", "bowl", "water"],
+    validItems: ["ice", "sun", "bowl"],
     resultText: "מעולה! הקרח מתחיל להימס.",
     fact: "חום גורם לקרח להפוך למים.",
     resultIcon: "💦",
@@ -528,7 +534,7 @@ export const MEDIUM_EXPERIMENTS = [
     prompt: "בחרו 2 חפצים לניסוי בקערה",
     missionIcon: "🥣",
     pickCount: 2,
-    validItems: ["bowl", "water", "ice", "plant"],
+    validItems: ["bowl", "water", "ice"],
     resultText: "מעולה! הקערה מוכנה לניסוי.",
     fact: "קערה יכולה להחזיק מים לניסוי.",
     resultIcon: "🧪",
@@ -540,7 +546,7 @@ export const MEDIUM_EXPERIMENTS = [
     prompt: "בחרו 2 חפצים להעברת חשמל",
     missionIcon: "🧵",
     pickCount: 2,
-    validItems: ["wire", "bulb", "battery", "mirror"],
+    validItems: ["wire", "bulb", "battery"],
     resultText: "מעולה! חוט מחבר את הנורה.",
     fact: "חוט מוליך חשמל במעגל.",
     resultIcon: "⚡",
@@ -552,7 +558,7 @@ export const MEDIUM_EXPERIMENTS = [
     prompt: "בחרו 2 דברים לצמיחה באור",
     missionIcon: "🌱",
     pickCount: 2,
-    validItems: ["plant", "sun", "water", "bowl"],
+    validItems: ["plant", "sun", "water"],
     resultText: "מעולה! לצמח יש אור.",
     fact: "צמחים גדלים טוב עם אור.",
     resultIcon: "🌿",
@@ -624,7 +630,7 @@ export const MEDIUM_EXPERIMENTS = [
     prompt: "בחרו 2 חפצים מתכתיים מהמדף",
     missionIcon: "🔩",
     pickCount: 2,
-    validItems: ["nail", "metal_spoon", "magnet", "bowl"],
+    validItems: ["nail", "metal_spoon", "magnet"],
     resultText: "מעולה! אלה חפצים מתכתיים.",
     fact: "מסמר וכפית עשויים ממתכת.",
     resultIcon: "🥄",
@@ -636,7 +642,7 @@ export const MEDIUM_EXPERIMENTS = [
     prompt: "בחרו 2 חפצים להמסה באור שמש",
     missionIcon: "☀️",
     pickCount: 2,
-    validItems: ["sun", "ice", "bowl", "water"],
+    validItems: ["sun", "ice", "bowl"],
     resultText: "מעולה! השמש מחממת.",
     fact: "אור השמש מספק חום.",
     resultIcon: "🌡️",
@@ -909,9 +915,9 @@ export const HARD_EXPERIMENTS = [
 
 /** @type {Record<DifficultyId, LabExperiment[]>} */
 export const EXPERIMENTS_BY_DIFFICULTY = {
-  easy: EASY_EXPERIMENTS,
-  medium: MEDIUM_EXPERIMENTS,
-  hard: HARD_EXPERIMENTS,
+  easy: [...EASY_EXPERIMENTS, ...EASY_EXPERIMENTS_EXTRA],
+  medium: [...MEDIUM_EXPERIMENTS, ...MEDIUM_EXPERIMENTS_EXTRA],
+  hard: [...HARD_EXPERIMENTS, ...HARD_EXPERIMENTS_EXTRA],
 };
 
 export const SCORE = {

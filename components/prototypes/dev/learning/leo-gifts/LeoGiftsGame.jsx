@@ -1,9 +1,11 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import LearningPrototypeFrame, { sharedStyles as s } from "../shared/LearningPrototypeFrame.jsx";
-import { pickTasksForRun, SCORE, TASKS_PER_LEVEL } from "../shared/learning-prototype-constants.js";
+import { SCORE, SESSION_TASK_COUNT } from "../shared/learning-prototype-constants.js";
+import { pickSessionTasks } from "../shared/task-session.js";
 import {
-  GIFTS_TASKS,
   childEmojiAt,
+  childrenGridClass,
+  generateGiftsPool,
   giftsFeedback,
   giftsPrompt,
   validateGiftsDivision,
@@ -27,6 +29,7 @@ export default function LeoGiftsGame({ backHref = "/dev/learning-game-prototypes
   const [feedback, setFeedback] = useState("");
 
   const task = tasks[taskIndex] ?? null;
+  const gridClass = task ? styles[childrenGridClass(task.children)] : "";
 
   const resetTaskUi = useCallback(() => {
     setPerChild(0);
@@ -35,8 +38,15 @@ export default function LeoGiftsGame({ backHref = "/dev/learning-game-prototypes
     setFeedback("");
   }, []);
 
+  useEffect(() => {
+    if (!task) return;
+    resetTaskUi();
+  }, [task, resetTaskUi]);
+
   const startGame = useCallback(() => {
-    setTasks(pickTasksForRun(difficulty, GIFTS_TASKS));
+    setTasks(
+      pickSessionTasks(generateGiftsPool, difficulty, (t) => `${t.total}x${t.children}`, SESSION_TASK_COUNT),
+    );
     setTaskIndex(0);
     setScore(0);
     setMistakes(0);
@@ -48,22 +58,36 @@ export default function LeoGiftsGame({ backHref = "/dev/learning-game-prototypes
 
   const advance = useCallback(() => {
     const next = taskIndex + 1;
-    if (next >= TASKS_PER_LEVEL) {
+    if (next >= tasks.length) {
       setPhase("won");
       return;
     }
     setTaskIndex(next);
     resetTaskUi();
-  }, [taskIndex, resetTaskUi]);
+  }, [taskIndex, tasks.length, resetTaskUi]);
 
-  const bumpAll = useCallback(
+  const clearFeedback = useCallback(() => {
+    setCheckState("idle");
+    setFeedback("");
+  }, []);
+
+  const bumpPerChild = useCallback(
     (delta) => {
       if (!task) return;
-      setPerChild((v) => Math.max(0, Math.min(Math.floor(task.total / Math.max(1, task.children)) + 5, v + delta)));
-      setCheckState("idle");
-      setFeedback("");
+      const cap = Math.ceil(task.total / Math.max(1, task.children)) + 2;
+      setPerChild((v) => Math.max(0, Math.min(cap, v + delta)));
+      clearFeedback();
     },
-    [task],
+    [task, clearFeedback],
+  );
+
+  const bumpRemainder = useCallback(
+    (delta) => {
+      if (!task) return;
+      setRemainder((v) => Math.max(0, Math.min(task.total, v + delta)));
+      clearFeedback();
+    },
+    [task, clearFeedback],
   );
 
   const runCheck = useCallback(() => {
@@ -72,7 +96,7 @@ export default function LeoGiftsGame({ backHref = "/dev/learning-game-prototypes
     const result = validateGiftsDivision(task, perChild, remainder);
     if (result.ok) {
       setCheckState("ok");
-      setFeedback(giftsFeedback(true, task, perChild, remainder));
+      setFeedback(giftsFeedback(true, perChild, remainder));
       setSuccessCount((c) => c + 1);
       setScore((sc) => sc + SCORE.correct);
       window.setTimeout(advance, 1600);
@@ -80,7 +104,7 @@ export default function LeoGiftsGame({ backHref = "/dev/learning-game-prototypes
     }
     setCheckState("bad");
     setMistakes((m) => m + 1);
-    setFeedback(giftsFeedback(false, task, perChild, remainder));
+    setFeedback(giftsFeedback(false, perChild, remainder));
   }, [task, perChild, remainder, advance]);
 
   return (
@@ -93,16 +117,15 @@ export default function LeoGiftsGame({ backHref = "/dev/learning-game-prototypes
       title="המתנות של ליאו"
       introHero="🎁🦁"
       introText="עזרו לליאו לחלק מתנות וסוכריות בין הילדים בצורה שווה!"
-      introHint={`${TASKS_PER_LEVEL} משימות · חלוקה שווה ושארית`}
+      introHint="מאגר משימות גדול · חלוקה שווה ושארית"
       onStart={startGame}
       score={score}
       mistakes={mistakes}
       taskIndex={taskIndex}
+      tasksTotal={tasks.length || SESSION_TASK_COUNT}
       successCount={successCount}
       attemptsTotal={attemptsTotal}
-      onPlayAgain={() => {
-        setPhase("intro");
-      }}
+      onPlayAgain={() => setPhase("intro")}
     >
       {task ? (
         <div className={s.main}>
@@ -115,70 +138,49 @@ export default function LeoGiftsGame({ backHref = "/dev/learning-game-prototypes
             </div>
           </div>
 
-          <div className={s.leoRow}>
-            <span className={s.leoBadge}>🦁🧺</span>
-            <span className={s.leoCaption}>
-              {task.total} {task.itemEmoji} · {task.children} ילדים
-            </span>
+          <div className={styles.infoBar}>
+            {task.total} {task.itemLabel} · {task.children} ילדים
           </div>
 
           <div className={s.playArea}>
             <div className={`${s.panel} ${styles.childrenPanel}`}>
               <p className={s.panelTitle}>👧👦 הילדים</p>
-              <div className={styles.childrenGrid}>
+              <div className={`${styles.childrenGrid} ${gridClass}`}>
                 {Array.from({ length: task.children }, (_, i) => (
                   <div key={i} className={styles.childCard}>
+                    <span className={styles.childLabel}>ילד {i + 1}</span>
                     <span className={styles.childEmoji}>{childEmojiAt(i)}</span>
-                    <span className={styles.childBag}>🛍️</span>
+                    <span className={styles.childGift}>{task.itemEmoji}</span>
                     <span className={styles.childCount}>{perChild}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className={s.panel}>
-              <p className={s.panelTitle}>⚙️ שליטה בחלוקה</p>
-              <div className={s.stepperRow}>
-                <span className={s.stepperLabel}>לכל ילד</span>
-                <button type="button" className={s.stepperBtn} onClick={() => bumpAll(-1)}>
-                  −
-                </button>
-                <span className={s.stepperValue}>{perChild}</span>
-                <button type="button" className={s.stepperBtn} onClick={() => bumpAll(1)}>
-                  +
-                </button>
-                <button type="button" className={s.secondaryBtn} onClick={() => bumpAll(1)}>
-                  +1 לכולם
-                </button>
-                <button type="button" className={s.secondaryBtn} onClick={() => bumpAll(-1)}>
-                  −1 מכולם
-                </button>
+            <div className={`${s.panel} ${styles.controlsPanel}`}>
+              <div className={styles.controlCol}>
+                <span className={styles.controlLabel}>לכל ילד</span>
+                <div className={s.stepperRow}>
+                  <button type="button" className={s.stepperBtn} onClick={() => bumpPerChild(-1)}>
+                    −
+                  </button>
+                  <span className={s.stepperValue}>{perChild}</span>
+                  <button type="button" className={s.stepperBtn} onClick={() => bumpPerChild(1)}>
+                    +
+                  </button>
+                </div>
               </div>
-              <div className={`${s.stepperRow} ${styles.remainderRow}`}>
-                <span className={s.stepperLabel}>נשאר לליאו</span>
-                <button
-                  type="button"
-                  className={s.stepperBtn}
-                  onClick={() => {
-                    setRemainder((v) => Math.max(0, v - 1));
-                    setCheckState("idle");
-                    setFeedback("");
-                  }}
-                >
-                  −
-                </button>
-                <span className={s.stepperValue}>{remainder}</span>
-                <button
-                  type="button"
-                  className={s.stepperBtn}
-                  onClick={() => {
-                    setRemainder((v) => Math.min(task.total, v + 1));
-                    setCheckState("idle");
-                    setFeedback("");
-                  }}
-                >
-                  +
-                </button>
+              <div className={styles.controlCol}>
+                <span className={styles.controlLabel}>נשאר לליאו 🧺</span>
+                <div className={s.stepperRow}>
+                  <button type="button" className={s.stepperBtn} onClick={() => bumpRemainder(-1)}>
+                    −
+                  </button>
+                  <span className={s.stepperValue}>{remainder}</span>
+                  <button type="button" className={s.stepperBtn} onClick={() => bumpRemainder(1)}>
+                    +
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -188,7 +190,7 @@ export default function LeoGiftsGame({ backHref = "/dev/learning-game-prototypes
               }`}
             >
               <p className={s.feedbackText}>
-                {feedback || "בחרו כמה כל ילד מקבל וכמה נשאר לליאו, ואז לחצו בדיקה"}
+                {feedback || "בחרו כמה כל ילד מקבל וכמה נשאר לליאו"}
               </p>
             </div>
 

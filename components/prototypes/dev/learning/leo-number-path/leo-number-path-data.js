@@ -1,5 +1,7 @@
 /** @typedef {'easy' | 'medium' | 'hard'} DifficultyId */
-/** @typedef {'skip' | 'even' | 'odd' | 'multiples' | 'sequence_pick'} PathRule */
+/** @typedef {'even' | 'odd' | 'multiples' | 'skip' | 'sequence'} PathRule */
+
+import { MIN_POOL_SIZE, randInt, shuffle } from "../shared/task-session.js";
 
 /** @typedef {{
  *   id: string
@@ -8,264 +10,171 @@
  *   multiple?: number
  *   numbers: number[]
  *   correctPath: number[]
+ *   orderMatters: boolean
  *   promptHe: string
  * }} PathTask */
 
-/** @type {Record<DifficultyId, PathTask[]>} */
-export const PATH_TASKS = {
-  easy: [
-    {
-      id: "e1",
-      rule: "skip",
-      step: 2,
-      numbers: [2, 3, 4, 5, 6, 7, 8, 9, 10],
-      correctPath: [2, 4, 6, 8, 10],
-      promptHe: "קפצו על 2, 4, 6, 8",
-    },
-    {
-      id: "e2",
-      rule: "skip",
-      step: 5,
-      numbers: [5, 7, 10, 12, 15, 18, 20, 22, 25],
-      correctPath: [5, 10, 15, 20, 25],
-      promptHe: "קפצו על 5, 10, 15, 20",
-    },
-    {
-      id: "e3",
-      rule: "even",
-      numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-      correctPath: [2, 4, 6, 8, 10, 12],
-      promptHe: "בחרו מספרים זוגיים",
-    },
-    {
-      id: "e4",
-      rule: "odd",
-      numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-      correctPath: [1, 3, 5, 7, 9, 11],
-      promptHe: "בחרו מספרים אי־זוגיים",
-    },
-    {
-      id: "e5",
-      rule: "skip",
-      step: 2,
-      numbers: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20],
-      correctPath: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20],
-      promptHe: "קפצו ב־2 כל פעם מההתחלה",
-    },
-    {
-      id: "e6",
-      rule: "skip",
-      step: 5,
-      numbers: [5, 6, 10, 11, 15, 16, 20, 21, 25, 26, 30],
-      correctPath: [5, 10, 15, 20, 25, 30],
-      promptHe: "קפצו ב־5",
-    },
-    {
-      id: "e7",
-      rule: "even",
-      numbers: [3, 6, 8, 11, 14, 16, 19, 22, 24, 27, 30],
-      correctPath: [6, 8, 14, 16, 22, 24, 30],
-      promptHe: "רק מספרים זוגיים",
-    },
-    {
-      id: "e8",
-      rule: "odd",
-      numbers: [2, 5, 7, 10, 13, 15, 18, 21, 23, 26, 29],
-      correctPath: [5, 7, 13, 15, 21, 23, 29],
-      promptHe: "רק מספרים אי־זוגיים",
-    },
-    {
-      id: "e9",
-      rule: "skip",
-      step: 2,
-      numbers: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
-      correctPath: [4, 6, 8, 10, 12, 14],
-      promptHe: "קפצו על כפולות של 2",
-    },
-    {
-      id: "e10",
-      rule: "skip",
-      step: 5,
-      numbers: [3, 5, 8, 10, 13, 15, 18, 20, 23, 25, 28, 30],
-      correctPath: [5, 10, 15, 20, 25, 30],
-      promptHe: "קפצו על 5, 10, 15…",
-    },
-  ],
-  medium: [
-    {
-      id: "m1",
-      rule: "multiples",
-      multiple: 3,
-      numbers: [3, 4, 6, 8, 9, 12, 14, 15, 18, 20, 21, 24],
-      correctPath: [3, 6, 9, 12, 15, 18, 21, 24],
-      promptHe: "קפצו רק על כפולות של 3",
-    },
-    {
-      id: "m2",
-      rule: "multiples",
-      multiple: 4,
-      numbers: [4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28],
-      correctPath: [4, 8, 12, 16, 20, 24, 28],
-      promptHe: "קפצו על כפולות של 4",
-    },
-    {
-      id: "m3",
-      rule: "multiples",
-      multiple: 6,
-      numbers: [6, 8, 12, 14, 18, 20, 24, 26, 30, 32, 36, 38, 42],
-      correctPath: [6, 12, 18, 24, 30, 36, 42],
-      promptHe: "כפולות של 6",
-    },
-    {
-      id: "m4",
-      rule: "skip",
-      step: 7,
-      numbers: [7, 9, 14, 16, 21, 23, 28, 30, 35, 37, 42, 44, 49],
-      correctPath: [7, 14, 21, 28, 35, 42, 49],
-      promptHe: "סדרה בקפיצות של 7",
-    },
-    {
-      id: "m5",
-      rule: "multiples",
-      multiple: 3,
-      numbers: [2, 3, 5, 6, 9, 10, 12, 15, 17, 18, 21, 24, 26],
-      correctPath: [3, 6, 9, 12, 15, 18, 21, 24],
-      promptHe: "כל הכפולות של 3",
-    },
-    {
-      id: "m6",
-      rule: "multiples",
-      multiple: 4,
-      numbers: [3, 4, 7, 8, 11, 12, 15, 16, 19, 20, 23, 24, 27, 28],
-      correctPath: [4, 8, 12, 16, 20, 24, 28],
-      promptHe: "מסלול של 4",
-    },
-    {
-      id: "m7",
-      rule: "skip",
-      step: 7,
-      numbers: [7, 8, 14, 15, 21, 22, 28, 29, 35, 36, 42, 43, 49, 50],
-      correctPath: [7, 14, 21, 28, 35, 42, 49],
-      promptHe: "קפיצות של 7",
-    },
-    {
-      id: "m8",
-      rule: "multiples",
-      multiple: 6,
-      numbers: [5, 6, 11, 12, 17, 18, 23, 24, 29, 30, 35, 36, 41, 42],
-      correctPath: [6, 12, 18, 24, 30, 36, 42],
-      promptHe: "כפולות של 6",
-    },
-    {
-      id: "m9",
-      rule: "multiples",
-      multiple: 3,
-      numbers: [1, 3, 4, 6, 7, 9, 10, 12, 13, 15, 16, 18, 19, 21],
-      correctPath: [3, 6, 9, 12, 15, 18, 21],
-      promptHe: "כפולות של 3",
-    },
-    {
-      id: "m10",
-      rule: "skip",
-      step: 7,
-      numbers: [7, 10, 14, 17, 21, 24, 28, 31, 35, 38, 42, 45, 49],
-      correctPath: [7, 14, 21, 28, 35, 42, 49],
-      promptHe: "עלו ב־7",
-    },
-  ],
-  hard: [
-    {
-      id: "h1",
-      rule: "sequence_pick",
-      numbers: [6, 12, 18, 22, 24, 30, 36, 40],
-      correctPath: [6, 12, 18, 24, 30, 36],
-      promptHe: "המשיכו: 6, 12, 18, __",
-    },
-    {
-      id: "h2",
-      rule: "sequence_pick",
-      numbers: [3, 6, 12, 18, 24, 25, 48, 50],
-      correctPath: [3, 6, 12, 24, 48],
-      promptHe: "3, 6, 12, 24, __",
-    },
-    {
-      id: "h3",
-      rule: "multiples",
-      multiple: 8,
-      numbers: [6, 8, 14, 16, 22, 24, 30, 32, 38, 40, 46, 48, 54, 56, 64],
-      correctPath: [8, 16, 24, 32, 40, 48, 56, 64],
-      promptHe: "בחרו את כל הכפולות של 8",
-    },
-    {
-      id: "h4",
-      rule: "skip",
-      step: 9,
-      numbers: [9, 11, 18, 20, 27, 29, 36, 38, 45, 47, 54, 56, 63, 65, 72],
-      correctPath: [9, 18, 27, 36, 45, 54, 63, 72],
-      promptHe: "מסלול שעולה ב־9 כל פעם",
-    },
-    {
-      id: "h5",
-      rule: "sequence_pick",
-      numbers: [5, 10, 15, 20, 22, 25, 30, 35, 38, 40],
-      correctPath: [5, 10, 15, 20, 25, 30, 35, 40],
-      promptHe: "המשיכו בקפיצות של 5",
-    },
-    {
-      id: "h6",
-      rule: "multiples",
-      multiple: 8,
-      numbers: [4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64],
-      correctPath: [8, 16, 24, 32, 40, 48, 56, 64],
-      promptHe: "כל הכפולות של 8",
-    },
-    {
-      id: "h7",
-      rule: "skip",
-      step: 9,
-      numbers: [9, 10, 18, 19, 27, 28, 36, 37, 45, 46, 54, 55, 63, 64, 72, 73],
-      correctPath: [9, 18, 27, 36, 45, 54, 63, 72],
-      promptHe: "קפיצות של 9",
-    },
-    {
-      id: "h8",
-      rule: "sequence_pick",
-      numbers: [4, 8, 16, 20, 32, 34, 64, 68],
-      correctPath: [4, 8, 16, 32, 64],
-      promptHe: "4, 8, 16, 32, __",
-    },
-    {
-      id: "h9",
-      rule: "multiples",
-      multiple: 8,
-      numbers: [7, 8, 15, 16, 23, 24, 31, 32, 39, 40, 47, 48, 55, 56, 63, 64],
-      correctPath: [8, 16, 24, 32, 40, 48, 56, 64],
-      promptHe: "כפולות של 8",
-    },
-    {
-      id: "h10",
-      rule: "skip",
-      step: 9,
-      numbers: [9, 12, 18, 21, 27, 30, 36, 39, 45, 48, 54, 57, 63, 66, 72, 75],
-      correctPath: [9, 18, 27, 36, 45, 54, 63, 72],
-      promptHe: "עלו ב־9",
-    },
-  ],
+/** @type {Record<DifficultyId, { maxNum: number, multiples: number[], skipSteps: number[] }>} */
+const LEVEL = {
+  easy: { maxNum: 40, multiples: [], skipSteps: [2, 5, 10] },
+  medium: { maxNum: 80, multiples: [3, 4, 5, 6, 7], skipSteps: [7, 8] },
+  hard: { maxNum: 120, multiples: [8, 9, 10, 11, 12], skipSteps: [9, 11] },
 };
+
+/** @param {number} n @param {number} count @param {number} max */
+function distractorsAround(correctSet, count, max) {
+  const correct = new Set(correctSet);
+  const out = [];
+  let guard = 0;
+  while (out.length < count && guard < 200) {
+    guard += 1;
+    const n = randInt(1, max);
+    if (correct.has(n) || out.includes(n)) continue;
+    out.push(n);
+  }
+  return out;
+}
+
+/**
+ * @param {DifficultyId} difficulty
+ * @param {{ salt?: number }} [opts]
+ */
+export function generatePathPool(difficulty, opts = {}) {
+  const cfg = LEVEL[difficulty];
+  const salt = opts.salt ?? 0;
+  const seen = new Set();
+  /** @type {PathTask[]} */
+  const pool = [];
+  let guard = 0;
+
+  while (pool.length < MIN_POOL_SIZE + 10 && guard < 1200) {
+    guard += 1;
+    const kindRoll = (guard + salt) % 6;
+
+    if (difficulty === "easy" || (difficulty === "medium" && kindRoll < 2)) {
+      const isEven = kindRoll % 2 === 0;
+      const max = cfg.maxNum;
+      const span = randInt(10, 16);
+      const start = randInt(1, Math.max(1, max - span));
+      const nums = [];
+      for (let i = 0; i < span; i += 1) nums.push(start + i);
+      const correct = nums.filter((n) => (isEven ? n % 2 === 0 : n % 2 === 1));
+      const extra = distractorsAround(correct, randInt(2, 4), max).filter((n) => !nums.includes(n));
+      const numbers = shuffle([...nums, ...extra]).slice(0, 16);
+      const key = `eo-${isEven ? "e" : "o"}-${numbers.join(",")}`;
+      if (seen.has(key) || correct.length < 3) continue;
+      seen.add(key);
+      pool.push({
+        id: `p-${difficulty}-${pool.length}`,
+        rule: isEven ? "even" : "odd",
+        numbers: shuffle(numbers),
+        correctPath: correct,
+        orderMatters: false,
+        promptHe: isEven ? "בחרו מספרים זוגיים" : "בחרו מספרים אי־זוגיים",
+      });
+      continue;
+    }
+
+    if (difficulty === "easy" || (difficulty === "medium" && kindRoll === 2)) {
+      const step = cfg.skipSteps[guard % cfg.skipSteps.length];
+      const start = randInt(1, step);
+      const len = randInt(4, 6);
+      const correct = [];
+      for (let i = 0; i < len; i += 1) correct.push(start + i * step);
+      if (correct[correct.length - 1] > cfg.maxNum) continue;
+      const numbers = shuffle([
+        ...correct,
+        ...distractorsAround(correct, randInt(4, 7), cfg.maxNum),
+      ]).slice(0, 18);
+      const key = `sk-${step}-${start}-${len}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      pool.push({
+        id: `p-${difficulty}-${pool.length}`,
+        rule: "skip",
+        step,
+        numbers,
+        correctPath: correct,
+        orderMatters: true,
+        promptHe: `קפצו במסלול: ${correct.slice(0, 4).join(" → ")}${correct.length > 4 ? "…" : ""}`,
+      });
+      continue;
+    }
+
+    const mults = cfg.multiples.length ? cfg.multiples : [2, 3];
+    const multiple = mults[guard % mults.length];
+    const max = cfg.maxNum;
+    const correct = [];
+    for (let n = multiple; n <= max; n += multiple) {
+      if (correct.length >= randInt(4, 8)) break;
+      correct.push(n);
+    }
+    if (correct.length < 3) continue;
+    const numbers = shuffle([
+      ...correct,
+      ...distractorsAround(correct, randInt(5, 9), max),
+    ]).slice(0, 18);
+    const key = `m-${multiple}-${numbers.length}-${correct.length}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    pool.push({
+      id: `p-${difficulty}-${pool.length}`,
+      rule: "multiples",
+      multiple,
+      numbers,
+      correctPath: correct,
+      orderMatters: false,
+      promptHe: `בחרו את כל הכפולות של ${multiple}`,
+    });
+
+    if (difficulty === "hard" && guard % 4 === 0) {
+      const step = difficulty === "hard" ? randInt(2, 4) * 2 : 2;
+      const start = randInt(2, 6);
+      const correctSeq = [start];
+      for (let i = 1; i < 5; i += 1) correctSeq.push(correctSeq[i - 1] * step);
+      if (correctSeq[correctSeq.length - 1] > cfg.maxNum) continue;
+      const numbersSeq = shuffle([
+        ...correctSeq,
+        ...distractorsAround(correctSeq, randInt(4, 6), cfg.maxNum),
+      ]);
+      const keySeq = `sq-${correctSeq.join("-")}`;
+      if (!seen.has(keySeq)) {
+        seen.add(keySeq);
+        pool.push({
+          id: `p-${difficulty}-seq-${pool.length}`,
+          rule: "sequence",
+          numbers: numbersSeq,
+          correctPath: correctSeq,
+          orderMatters: true,
+          promptHe: `המשיכו את המסלול: ${correctSeq.slice(0, 3).join(" → ")} → ?`,
+        });
+      }
+    }
+  }
+
+  return shuffle(pool);
+}
 
 /** @param {PathTask} task @param {number[]} selected */
 export function validatePath(task, selected) {
   const expected = task.correctPath;
-  if (task.rule === "multiples" || task.rule === "even" || task.rule === "odd") {
-    const a = [...selected].sort((x, y) => x - y);
-    const b = [...expected].sort((x, y) => x - y);
-    if (a.length !== b.length) return false;
-    return a.every((n, i) => n === b[i]);
+  if (task.orderMatters) {
+    if (selected.length !== expected.length) return false;
+    return selected.every((n, i) => n === expected[i]);
   }
   if (selected.length !== expected.length) return false;
-  return selected.every((n, i) => n === expected[i]);
+  const a = [...selected].sort((x, y) => x - y);
+  const b = [...expected].sort((x, y) => x - y);
+  return a.every((n, i) => n === b[i]);
 }
 
+/** @param {boolean} ok */
 export function pathFeedback(ok) {
   return ok ? "מעולה! בחרתם מסלול נכון." : "כמעט! בדקו את הקפיצות בין המספרים.";
+}
+
+/** @param {number[]} selected @param {boolean} orderMatters */
+export function formatSelectedPath(selected, orderMatters) {
+  if (!selected.length) return "—";
+  return orderMatters ? selected.join(" → ") : selected.join(" · ");
 }

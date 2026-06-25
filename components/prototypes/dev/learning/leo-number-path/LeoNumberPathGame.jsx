@@ -1,7 +1,13 @@
 import { useCallback, useState } from "react";
 import LearningPrototypeFrame, { sharedStyles as s } from "../shared/LearningPrototypeFrame.jsx";
-import { pickTasksForRun, SCORE, TASKS_PER_LEVEL } from "../shared/learning-prototype-constants.js";
-import { PATH_TASKS, pathFeedback, validatePath } from "./leo-number-path-data.js";
+import { SCORE, SESSION_TASK_COUNT } from "../shared/learning-prototype-constants.js";
+import { pickSessionTasks } from "../shared/task-session.js";
+import {
+  formatSelectedPath,
+  generatePathPool,
+  pathFeedback,
+  validatePath,
+} from "./leo-number-path-data.js";
 import styles from "./LeoNumberPathGame.module.css";
 
 /** @typedef {import('../shared/learning-prototype-constants.js').DifficultyId} DifficultyId */
@@ -20,7 +26,7 @@ export default function LeoNumberPathGame({ backHref = "/dev/learning-game-proto
   const [feedback, setFeedback] = useState("");
 
   const task = tasks[taskIndex] ?? null;
-  const isOrdered = task?.rule === "skip" || task?.rule === "sequence_pick";
+  const orderMatters = task?.orderMatters ?? false;
 
   const resetTaskUi = useCallback(() => {
     setSelected([]);
@@ -29,7 +35,14 @@ export default function LeoNumberPathGame({ backHref = "/dev/learning-game-proto
   }, []);
 
   const startGame = useCallback(() => {
-    setTasks(pickTasksForRun(difficulty, PATH_TASKS));
+    setTasks(
+      pickSessionTasks(
+        generatePathPool,
+        difficulty,
+        (t) => `${t.rule}-${t.promptHe}-${t.correctPath.join(",")}`,
+        SESSION_TASK_COUNT,
+      ),
+    );
     setTaskIndex(0);
     setScore(0);
     setMistakes(0);
@@ -41,13 +54,13 @@ export default function LeoNumberPathGame({ backHref = "/dev/learning-game-proto
 
   const advance = useCallback(() => {
     const next = taskIndex + 1;
-    if (next >= TASKS_PER_LEVEL) {
+    if (next >= tasks.length) {
       setPhase("won");
       return;
     }
     setTaskIndex(next);
     resetTaskUi();
-  }, [taskIndex, resetTaskUi]);
+  }, [taskIndex, tasks.length, resetTaskUi]);
 
   const tapNumber = useCallback(
     (n) => {
@@ -55,13 +68,12 @@ export default function LeoNumberPathGame({ backHref = "/dev/learning-game-proto
       setSelected((prev) => {
         const idx = prev.indexOf(n);
         if (idx >= 0) return prev.filter((x) => x !== n);
-        if (isOrdered) return [...prev, n];
         return [...prev, n];
       });
       setCheckState("idle");
       setFeedback("");
     },
-    [task, isOrdered],
+    [task],
   );
 
   const runCheck = useCallback(() => {
@@ -81,6 +93,8 @@ export default function LeoNumberPathGame({ backHref = "/dev/learning-game-proto
     setFeedback(pathFeedback(false));
   }, [task, selected, advance]);
 
+  const stoneCols = task && task.numbers.length > 14 ? styles.stonesDense : styles.stonesNormal;
+
   return (
     <LearningPrototypeFrame
       backHref={backHref}
@@ -91,11 +105,12 @@ export default function LeoNumberPathGame({ backHref = "/dev/learning-game-proto
       title="מסלול המספרים של ליאו"
       introHero="🔢🦁"
       introText="בחרו מספרים במסלול לפי הכלל — קפיצות, זוגי/אי־זוגי וכפולות!"
-      introHint={`${TASKS_PER_LEVEL} משימות · Tap על מספרים`}
+      introHint="מאגר משימות גדול · Tap על מספרים"
       onStart={startGame}
       score={score}
       mistakes={mistakes}
       taskIndex={taskIndex}
+      tasksTotal={tasks.length || SESSION_TASK_COUNT}
       successCount={successCount}
       attemptsTotal={attemptsTotal}
       onPlayAgain={() => setPhase("intro")}
@@ -111,27 +126,29 @@ export default function LeoNumberPathGame({ backHref = "/dev/learning-game-proto
             </div>
           </div>
 
-          <div className={s.leoRow}>
-            <span className={s.leoBadge}>🦁🥾</span>
-            <span className={s.leoCaption}>
-              נבחרו: {selected.length > 0 ? selected.join(" → ") : "—"}
+          <div className={styles.selectedBar}>
+            <span className={styles.selectedLabel}>בחרנו:</span>
+            <span className={styles.selectedPath} dir="ltr">
+              {formatSelectedPath(selected, orderMatters)}
             </span>
           </div>
 
           <div className={s.playArea}>
             <div className={`${s.panel} ${styles.pathPanel}`}>
-              <div className={styles.stonePath}>
+              <div className={`${styles.stonePath} ${stoneCols}`}>
                 {task.numbers.map((n) => {
                   const selIdx = selected.indexOf(n);
                   const isSel = selIdx >= 0;
                   return (
                     <button
-                      key={n}
+                      key={`${n}-${task.id}`}
                       type="button"
                       className={`${styles.stone} ${isSel ? styles.stoneSelected : ""}`}
                       onClick={() => tapNumber(n)}
                     >
-                      {isSel ? <span className={styles.stoneOrder}>{selIdx + 1}</span> : null}
+                      {isSel && orderMatters ? (
+                        <span className={styles.stoneOrder}>{selIdx + 1}</span>
+                      ) : null}
                       {n}
                     </button>
                   );

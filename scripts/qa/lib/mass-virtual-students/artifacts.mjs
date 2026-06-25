@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { buildEnglishAnalysisMarkdown } from "./english-analysis.mjs";
 import { buildEngineDecisionDebugMarkdown } from "./engine-decision-debug.mjs";
 import { buildParentAssignedDebugMarkdown } from "./parent-assigned-debug.mjs";
+import { buildSpeedPressurePatchMarkdown } from "./speed-pressure-audit.mjs";
 import {
   buildTopicCoverageMarkdown,
   topicCoverageToCsv,
@@ -174,7 +175,17 @@ export async function writeAllArtifacts(reportDir, bundle) {
       buildParentAssignedDebugMarkdown(bundle.summary.parentAssignedDebug),
       "utf8",
     );
-  }await writeFile(
+  }
+  const speedAudit = bundle.summary?.speedPressurePatchAudit || bundle.summary?.speedPressureSeedAudit;
+  if (speedAudit) {
+    await writeJson(reportDir, "speed-pressure-patch.json", speedAudit);
+    await writeFile(
+      join(reportDir, "speed-pressure-patch.md"),
+      buildSpeedPressurePatchMarkdown(speedAudit),
+      "utf8",
+    );
+  }
+  await writeFile(
     join(reportDir, "qa-accounts.md"),
     buildQaAccountsMarkdown(bundle.parents, { studentPin: bundle.studentPin, runId: bundle.runId }),
     "utf8",

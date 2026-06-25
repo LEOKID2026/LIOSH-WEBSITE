@@ -1,6 +1,6 @@
 import Link from "next/link";
 import styles from "./learning-prototype-shared.module.css";
-import { DIFFICULTIES, TASKS_PER_LEVEL } from "./learning-prototype-constants.js";
+import { DIFFICULTIES, SESSION_TASK_COUNT } from "./learning-prototype-constants.js";
 
 /**
  * @param {{
@@ -40,7 +40,7 @@ export default function LearningPrototypeFrame({
   score,
   mistakes,
   taskIndex,
-  tasksTotal = TASKS_PER_LEVEL,
+  tasksTotal = SESSION_TASK_COUNT,
   successCount,
   attemptsTotal,
   onPlayAgain,

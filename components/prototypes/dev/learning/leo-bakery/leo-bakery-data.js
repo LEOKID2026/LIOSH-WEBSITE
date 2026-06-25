@@ -1,5 +1,7 @@
 /** @typedef {'easy' | 'medium' | 'hard'} DifficultyId */
-/** @typedef {'build' | 'findTrays' | 'findTotal'} BakeryMode */
+/** @typedef {'build' | 'findTrays' | 'findPerTray' | 'findTotal'} BakeryMode */
+
+import { MIN_POOL_SIZE, randInt, shuffle } from "../shared/task-session.js";
 
 /** @typedef {{
  *   id: string
@@ -12,46 +14,112 @@
  *   imageSrc?: string
  * }} BakeryTask */
 
-/** @type {Record<DifficultyId, BakeryTask[]>} */
-export const BAKERY_TASKS = {
-  easy: [
-    { id: "e1", mode: "build", trays: 3, perTray: 4, itemLabel: "עוגיות", itemEmoji: "🍪" },
-    { id: "e2", mode: "build", trays: 5, perTray: 2, itemLabel: "קאפקייקס", itemEmoji: "🧁" },
-    { id: "e3", mode: "build", trays: 4, perTray: 5, itemLabel: "לחמניות", itemEmoji: "🥖" },
-    { id: "e4", mode: "build", trays: 2, perTray: 5, itemLabel: "עוגיות", itemEmoji: "🍪" },
-    { id: "e5", mode: "build", trays: 3, perTray: 3, itemLabel: "קאפקייקס", itemEmoji: "🧁" },
-    { id: "e6", mode: "build", trays: 5, perTray: 4, itemLabel: "לחמניות", itemEmoji: "🥐" },
-    { id: "e7", mode: "build", trays: 4, perTray: 2, itemLabel: "עוגיות", itemEmoji: "🍪" },
-    { id: "e8", mode: "build", trays: 2, perTray: 4, itemLabel: "קאפקייקס", itemEmoji: "🧁" },
-    { id: "e9", mode: "build", trays: 5, perTray: 5, itemLabel: "לחמניות", itemEmoji: "🥖" },
-    { id: "e10", mode: "build", trays: 3, perTray: 2, itemLabel: "עוגיות", itemEmoji: "🍪" },
-  ],
-  medium: [
-    { id: "m1", mode: "build", trays: 6, perTray: 7, itemLabel: "עוגיות", itemEmoji: "🍪" },
-    { id: "m2", mode: "build", trays: 8, perTray: 5, itemLabel: "קאפקייקס", itemEmoji: "🧁" },
-    { id: "m3", mode: "build", trays: 9, perTray: 4, itemLabel: "לחמניות", itemEmoji: "🥖" },
-    { id: "m4", mode: "build", trays: 7, perTray: 6, itemLabel: "עוגיות", itemEmoji: "🍪" },
-    { id: "m5", mode: "build", trays: 5, perTray: 8, itemLabel: "קאפקייקס", itemEmoji: "🧁" },
-    { id: "m6", mode: "build", trays: 10, perTray: 3, itemLabel: "לחמניות", itemEmoji: "🥐" },
-    { id: "m7", mode: "build", trays: 6, perTray: 5, itemLabel: "עוגיות", itemEmoji: "🍪" },
-    { id: "m8", mode: "build", trays: 8, perTray: 4, itemLabel: "קאפקייקס", itemEmoji: "🧁" },
-    { id: "m9", mode: "build", trays: 9, perTray: 5, itemLabel: "לחמניות", itemEmoji: "🥖" },
-    { id: "m10", mode: "build", trays: 7, perTray: 7, itemLabel: "עוגיות", itemEmoji: "🍪" },
-  ],
-  hard: [
-    { id: "h1", mode: "findTrays", total: 36, perTray: 6, itemLabel: "עוגיות", itemEmoji: "🍪" },
-    { id: "h2", mode: "findTrays", total: 48, perTray: 8, itemLabel: "לחמניות", itemEmoji: "🥖" },
-    { id: "h3", mode: "findTotal", trays: 7, perTray: 9, itemLabel: "קאפקייקס", itemEmoji: "🧁" },
-    { id: "h4", mode: "findTrays", total: 54, perTray: 6, itemLabel: "עוגיות", itemEmoji: "🍪" },
-    { id: "h5", mode: "findTotal", trays: 8, perTray: 7, itemLabel: "לחמניות", itemEmoji: "🥐" },
-    { id: "h6", mode: "findTrays", total: 63, perTray: 9, itemLabel: "קאפקייקס", itemEmoji: "🧁" },
-    { id: "h7", mode: "findTotal", trays: 9, perTray: 6, itemLabel: "עוגיות", itemEmoji: "🍪" },
-    { id: "h8", mode: "findTrays", total: 72, perTray: 8, itemLabel: "לחמניות", itemEmoji: "🥖" },
-    { id: "h9", mode: "findTotal", trays: 6, perTray: 11, itemLabel: "קאפקייקס", itemEmoji: "🧁" },
-    { id: "h10", mode: "findTrays", total: 80, perTray: 10, itemLabel: "עוגיות", itemEmoji: "🍪" },
-  ],
+const ITEM_TYPES = [
+  { itemLabel: "עוגיות", itemEmoji: "🍪" },
+  { itemLabel: "קאפקייקס", itemEmoji: "🧁" },
+  { itemLabel: "לחמניות", itemEmoji: "🥖" },
+  { itemLabel: "מאפינס", itemEmoji: "🧁" },
+  { itemLabel: "קרואסונים", itemEmoji: "🥐" },
+];
+
+/** @type {Record<DifficultyId, { traysMin: number, traysMax: number, perMin: number, perMax: number, maxTotal: number, inverseRatio: number }>} */
+const LEVEL = {
+  easy: { traysMin: 2, traysMax: 6, perMin: 2, perMax: 6, maxTotal: 36, inverseRatio: 0 },
+  medium: { traysMin: 2, traysMax: 10, perMin: 2, perMax: 10, maxTotal: 100, inverseRatio: 0 },
+  hard: { traysMin: 3, traysMax: 12, perMin: 3, perMax: 12, maxTotal: 144, inverseRatio: 0.55 },
 };
 
+/**
+ * @param {DifficultyId} difficulty
+ * @param {{ salt?: number }} [opts]
+ */
+export function generateBakeryPool(difficulty, opts = {}) {
+  const cfg = LEVEL[difficulty];
+  const salt = opts.salt ?? 0;
+  const seen = new Set();
+  /** @type {BakeryTask[]} */
+  const pool = [];
+
+  for (let trays = cfg.traysMin; trays <= cfg.traysMax; trays += 1) {
+    for (let perTray = cfg.perMin; perTray <= cfg.perMax; perTray += 1) {
+      const total = trays * perTray;
+      if (total > cfg.maxTotal || total < 4) continue;
+
+      for (let itemIdx = 0; itemIdx < ITEM_TYPES.length; itemIdx += 1) {
+        const item = ITEM_TYPES[(itemIdx + salt) % ITEM_TYPES.length];
+        const key = `bd-${trays}-${perTray}-${item.itemLabel}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        pool.push({
+          id: `b-${difficulty}-${pool.length}`,
+          mode: "build",
+          trays,
+          perTray,
+          itemLabel: item.itemLabel,
+          itemEmoji: item.itemEmoji,
+        });
+      }
+    }
+  }
+
+  let guard = 0;
+  while (pool.length < MIN_POOL_SIZE + 10 && guard < 900) {
+    guard += 1;
+    const item = ITEM_TYPES[(pool.length + salt + guard) % ITEM_TYPES.length];
+    const roll = (guard + salt) % 100;
+    let mode = /** @type {BakeryMode} */ ("build");
+    if (difficulty === "hard" && roll < cfg.inverseRatio * 100) {
+      mode = roll % 3 === 0 ? "findTrays" : roll % 3 === 1 ? "findTotal" : "findPerTray";
+    } else if (difficulty === "hard" && roll < cfg.inverseRatio * 100 + 15) {
+      mode = "findTrays";
+    } else if (difficulty === "medium" && roll < 20) {
+      mode = "findTotal";
+    }
+
+    let trays = randInt(cfg.traysMin, cfg.traysMax);
+    let perTray = randInt(cfg.perMin, cfg.perMax);
+    let total = trays * perTray;
+    if (total > cfg.maxTotal) {
+      perTray = Math.max(cfg.perMin, Math.floor(cfg.maxTotal / trays));
+      total = trays * perTray;
+    }
+    if (total < 4) continue;
+
+    let key;
+    /** @type {BakeryTask} */
+    let task;
+
+    if (mode === "findTrays") {
+      key = `ft-${total}-${perTray}-${item.itemLabel}`;
+      if (seen.has(key)) continue;
+      task = { id: `b-${difficulty}-${pool.length}`, mode, total, perTray, itemLabel: item.itemLabel, itemEmoji: item.itemEmoji };
+    } else if (mode === "findTotal") {
+      key = `fx-${trays}-${perTray}-${item.itemLabel}`;
+      if (seen.has(key)) continue;
+      task = { id: `b-${difficulty}-${pool.length}`, mode, trays, perTray, itemLabel: item.itemLabel, itemEmoji: item.itemEmoji };
+    } else if (mode === "findPerTray") {
+      trays = randInt(cfg.traysMin, Math.min(10, cfg.traysMax));
+      total = randInt(trays * cfg.perMin, Math.min(cfg.maxTotal, trays * cfg.perMax));
+      if (total % trays !== 0) total -= total % trays;
+      perTray = total / trays;
+      if (perTray < cfg.perMin || perTray > cfg.perMax) continue;
+      key = `fp-${total}-${trays}-${item.itemLabel}`;
+      if (seen.has(key)) continue;
+      task = { id: `b-${difficulty}-${pool.length}`, mode, trays, total, itemLabel: item.itemLabel, itemEmoji: item.itemEmoji };
+    } else {
+      key = `bd-${trays}-${perTray}-${item.itemLabel}`;
+      if (seen.has(key)) continue;
+      task = { id: `b-${difficulty}-${pool.length}`, mode, trays, perTray, itemLabel: item.itemLabel, itemEmoji: item.itemEmoji };
+    }
+
+    seen.add(key);
+    pool.push(task);
+  }
+
+  return shuffle(pool);
+}
+
+/** @param {BakeryTask} task */
 export function bakeryPrompt(task) {
   if (task.mode === "build") {
     return `הכינו ${task.trays} תבניות. בכל תבנית ${task.perTray} ${task.itemLabel}. כמה ${task.itemLabel} צריך?`;
@@ -59,28 +127,37 @@ export function bakeryPrompt(task) {
   if (task.mode === "findTrays") {
     return `יש ${task.total} ${task.itemLabel}. בכל תבנית ${task.perTray}. כמה תבניות צריך?`;
   }
+  if (task.mode === "findPerTray") {
+    return `יש ${task.total} ${task.itemLabel} ל-${task.trays} תבניות. כמה בכל תבנית?`;
+  }
   return `יש ${task.trays} מגשים, בכל מגש ${task.perTray} ${task.itemLabel}. כמה סך הכול?`;
+}
+
+/** @param {BakeryTask} task */
+export function bakeryExpected(task) {
+  if (task.mode === "build") {
+    const trays = task.trays ?? 0;
+    const perTray = task.perTray ?? 0;
+    return { trays, perTray, total: trays * perTray };
+  }
+  if (task.mode === "findTrays") {
+    const total = task.total ?? 0;
+    const perTray = task.perTray ?? 1;
+    return { trays: Math.floor(total / perTray), perTray, total };
+  }
+  if (task.mode === "findPerTray") {
+    const trays = task.trays ?? 1;
+    const total = task.total ?? 0;
+    return { trays, perTray: Math.floor(total / trays), total };
+  }
+  const trays = task.trays ?? 0;
+  const perTray = task.perTray ?? 0;
+  return { trays, perTray, total: trays * perTray };
 }
 
 /** @param {BakeryTask} task @param {{ trays: number, perTray: number, total: number }} answer */
 export function validateBakery(task, answer) {
-  let expected = { trays: 0, perTray: 0, total: 0 };
-  if (task.mode === "build") {
-    expected = { trays: task.trays ?? 0, perTray: task.perTray ?? 0, total: (task.trays ?? 0) * (task.perTray ?? 0) };
-  } else if (task.mode === "findTrays") {
-    expected = {
-      trays: Math.floor((task.total ?? 0) / (task.perTray ?? 1)),
-      perTray: task.perTray ?? 0,
-      total: task.total ?? 0,
-    };
-  } else {
-    expected = {
-      trays: task.trays ?? 0,
-      perTray: task.perTray ?? 0,
-      total: (task.trays ?? 0) * (task.perTray ?? 0),
-    };
-  }
-
+  const expected = bakeryExpected(task);
   const ok =
     answer.trays === expected.trays &&
     answer.perTray === expected.perTray &&
@@ -88,6 +165,15 @@ export function validateBakery(task, answer) {
   return { ok, expected };
 }
 
+/** @param {boolean} ok */
 export function bakeryFeedback(ok) {
-  return ok ? "מעולה! הכנתם בדיוק את ההזמנה." : "כמעט! בדקו כמה יש בכל תבנית וכמה תבניות יש.";
+  return ok ? "מעולה! הכנתם בדיוק את ההזמנה." : "כמעט! בדקו כמה תבניות יש וכמה יש בכל תבנית.";
+}
+
+/** @param {number} count @param {string} emoji */
+export function trayItemDisplay(count, emoji) {
+  if (count <= 4) {
+    return { type: "icons", text: emoji.repeat(count) };
+  }
+  return { type: "multiply", text: `${emoji} × ${count}` };
 }
