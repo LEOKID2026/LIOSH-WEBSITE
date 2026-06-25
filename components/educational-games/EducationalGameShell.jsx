@@ -13,10 +13,12 @@ import SoloGameSettlingOverlay from "../solo-games/SoloGameSettlingOverlay.jsx";
 import { useSoloGameHelp } from "../../hooks/solo-games/useSoloGameHelp.js";
 import MleoRecyclingFactoryEngine from "./engines/MleoRecyclingFactoryEngine.jsx";
 import MleoLeoSupermarketEngine from "./engines/MleoLeoSupermarketEngine.jsx";
+import MleoLeoLabEngine from "./engines/MleoLeoLabEngine.jsx";
 
 const ENGINE_MAP = {
   "recycling-factory": MleoRecyclingFactoryEngine,
   "leo-supermarket": MleoLeoSupermarketEngine,
+  "leo-lab": MleoLeoLabEngine,
 };
 
 const PLAY_SHELL =

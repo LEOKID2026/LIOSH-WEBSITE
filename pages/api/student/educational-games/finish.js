@@ -42,6 +42,19 @@ const LEO_SUPERMARKET_METRIC_KEYS = Object.freeze([
   "completedAllCustomers",
 ]);
 
+const LEO_LAB_METRIC_KEYS = Object.freeze([
+  "experimentsTotal",
+  "experimentsReached",
+  "successfulExperiments",
+  "failedAttempts",
+  "mistakes",
+  "firstTrySuccesses",
+  "bestStreak",
+  "durationSec",
+  "accuracy",
+  "completedAllExperiments",
+]);
+
 function clampMetricNumber(value, min, max) {
   const n = Number(value);
   if (!Number.isFinite(n)) return null;
@@ -125,10 +138,45 @@ function normalizeLeoSupermarketMetrics(raw) {
   return base;
 }
 
+function normalizeLeoLabMetrics(raw) {
+  const base = normalizeBaseMetrics(raw, "leo-lab");
+  if (!base) return null;
+
+  for (const key of LEO_LAB_METRIC_KEYS) {
+    if (key === "completedAllExperiments") {
+      base.completedAllExperiments = raw.completedAllExperiments === true;
+      continue;
+    }
+    if (raw[key] != null) {
+      const val = clampMetricNumber(raw[key], 0, key === "accuracy" ? 1 : 10000);
+      if (val == null) return null;
+      base[key] = key === "accuracy" ? val : Math.floor(val);
+    }
+  }
+
+  if (base.experimentsTotal == null) base.experimentsTotal = 20;
+  if (base.mistakes == null && base.failedAttempts != null) {
+    base.mistakes = base.failedAttempts;
+  }
+
+  if (base.accuracy == null && base.successfulExperiments != null) {
+    base.accuracy = (base.successfulExperiments ?? 0) / Math.max(1, base.experimentsReached ?? 1);
+  }
+
+  if (base.completedAllExperiments == null && base.successfulExperiments != null && base.experimentsTotal != null) {
+    base.completedAllExperiments = base.successfulExperiments >= base.experimentsTotal;
+  }
+
+  base.positiveProgress = base.successfulExperiments ?? 0;
+
+  return base;
+}
+
 function normalizeMetrics(raw, gameKey) {
   if (!raw || typeof raw !== "object") return null;
   const key = String(gameKey || raw.gameKey || "").trim().toLowerCase();
   if (key === "leo-supermarket") return normalizeLeoSupermarketMetrics(raw);
+  if (key === "leo-lab") return normalizeLeoLabMetrics(raw);
   if (key === "recycling-factory") return normalizeRecyclingFactoryMetrics(raw);
   return null;
 }
