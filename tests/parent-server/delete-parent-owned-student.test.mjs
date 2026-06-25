@@ -63,6 +63,22 @@ test("cleanupStudentDependenciesBeforeDelete runs arcade steps in host-room-firs
         },
       }),
     },
+    classroom_activity_attempts: {
+      delete: () => ({
+        eq: async () => {
+          order.push("classroom_activity_attempts");
+          return { error: null };
+        },
+      }),
+    },
+    classroom_activity_student_status: {
+      delete: () => ({
+        eq: async () => {
+          order.push("classroom_activity_student_status");
+          return { error: null };
+        },
+      }),
+    },
   });
 
   const failure = await cleanupStudentDependenciesBeforeDelete(db, "00000000-0000-4000-8000-000000000001");
@@ -73,6 +89,8 @@ test("cleanupStudentDependenciesBeforeDelete runs arcade steps in host-room-firs
     "arcade_rooms",
     "arcade_room_players",
     "arcade_results",
+    "classroom_activity_attempts",
+    "classroom_activity_student_status",
   ]);
 });
 

@@ -39,7 +39,7 @@ export default function PwaInstallPageShell({
         <div className={T.pageWrap} dir="rtl" lang="he">
           <p className={T.badge}>{badge}</p>
           <h1 className={T.heading}>{title}</h1>
-          <p className={T.body}>לחץ על הכפתור למטה כדי לפתוח את חלון ההתקנה של Chrome.</p>
+          <p className={T.body}>לחצו «התקן» למטה כדי להוסיף את האפליקציה למסך הבית.</p>
           <Launcher isBright={isBright} />
           <Link href="/" className={T.backLink}>
             חזרה לעמוד הבית

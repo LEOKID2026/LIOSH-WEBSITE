@@ -365,7 +365,9 @@ export default function ParentDashboardPage() {
       });
       const payload = await res.json();
       if (!res.ok) {
-        setDeleteError(payload.error || "מחיקה נכשלה");
+        const detail =
+          payload.detail && payload.detail !== payload.error ? ` (${payload.detail})` : "";
+        setDeleteError((payload.error || "מחיקה נכשלה") + detail);
       } else {
         setDeleteModalStudent(null);
         setDeleteConfirmName("");
