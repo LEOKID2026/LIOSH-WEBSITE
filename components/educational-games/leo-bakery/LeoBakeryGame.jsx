@@ -18,6 +18,7 @@ import {
   DIFFICULTIES,
   generateBakeryPool,
   trayItemDisplay,
+  traysGridClass,
   validateBakery,
 } from "./leo-bakery-data.js";
 import { buildLeoBakeryMetrics } from "./leo-bakery-metrics.js";
@@ -83,12 +84,13 @@ export default function LeoBakeryGame({
 
   const trayPreview = useMemo(() => {
     if (!task) return [];
-    const count = Math.min(trays, 10);
-    return Array.from({ length: count }, (_, i) => ({
+    return Array.from({ length: trays }, (_, i) => ({
       id: i,
       count: displayPerTray,
     }));
   }, [task, trays, displayPerTray]);
+
+  const trayGridClass = traysGridClass(trays);
 
   const resetTaskUi = useCallback(() => {
     setTrays(1);
@@ -363,23 +365,25 @@ export default function LeoBakeryGame({
 
       {phase === "play" && task ? (
         <div className={styles.main}>
-          <div className={styles.missionCard}>
-            <span className={styles.missionIcon}>{task.itemEmoji}</span>
-            <div className={styles.missionBody}>
-              <p className={styles.missionLabel}>הזמנה</p>
-              <h2 className={styles.missionTitle}>מאפיית ליאו</h2>
-              <p className={styles.missionPrompt}>{bakeryPrompt(task)}</p>
+          <div className={styles.taskTop}>
+            <div className={styles.missionCard}>
+              <span className={styles.missionIcon}>{task.itemEmoji}</span>
+              <div className={styles.missionBody}>
+                <p className={styles.missionLabel}>הזמנה</p>
+                <h2 className={styles.missionTitle}>מאפיית ליאו</h2>
+                <p className={styles.missionPrompt}>{bakeryPrompt(task)}</p>
+              </div>
+            </div>
+
+            <div className={styles.formulaBar}>
+              {trays} תבניות × {displayPerTray} בכל תבנית = {displayTotal} {task.itemEmoji}
             </div>
           </div>
 
-          <div className={styles.formulaBar}>
-            {trays} תבניות × {displayPerTray} בכל תבנית = {displayTotal} {task.itemEmoji}
-          </div>
-
-          <div className={styles.playStack}>
+          <div className={styles.gameArea}>
             <div className={styles.traysPanel}>
               <p className={styles.panelTitle}>🧁 התבניות שלכם</p>
-              <div className={styles.trayGrid}>
+              <div className={`${styles.trayGrid} ${styles[trayGridClass]}`}>
                 {trayPreview.map((tr) => {
                   const disp = trayItemDisplay(tr.count, task.itemEmoji);
                   return (
@@ -389,12 +393,11 @@ export default function LeoBakeryGame({
                     </div>
                   );
                 })}
-                {trays > 10 ? (
-                  <p className={styles.moreTrays}>+{trays - 10} תבניות נוספות</p>
-                ) : null}
               </div>
             </div>
+          </div>
 
+          <div className={styles.controlsFooter}>
             <div className={styles.controlsPanel}>
               <div className={styles.controlCol}>
                 <span className={styles.controlLabel}>תבניות</span>

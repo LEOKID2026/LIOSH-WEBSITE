@@ -235,8 +235,11 @@ export default function MyApp({ Component, pageProps }) {
     return () => window.removeEventListener("load", registerSW);
   }, [router.pathname]);
 
-  const shouldGate = STUDENT_PROTECTED_ROUTES.has(router.pathname || "");
-  const isStudentPwaInstallMode = router.pathname === "/student/install-app";
+  const pathname = router.pathname || "";
+  const shouldGate = STUDENT_PROTECTED_ROUTES.has(pathname);
+  const isStudentPwaInstallMode = pathname === "/student/install-app";
+  const isStudentPwaManifestRoute =
+    pathname.startsWith("/student/") || shouldGate;
   const isParentPwaInstallMode = router.pathname === "/parent/install-app";
   const isTeacherPwaInstallMode = router.pathname === "/teacher/install-app";
 
@@ -326,7 +329,7 @@ export default function MyApp({ Component, pageProps }) {
           </>
         )}
 
-        {isStudentPwaInstallMode ? (
+        {isStudentPwaManifestRoute ? (
           <link rel="manifest" href="/manifest.json" />
         ) : null}
         {isParentPwaInstallMode ? (

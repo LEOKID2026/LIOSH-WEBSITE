@@ -328,18 +328,21 @@ export default function LeoGiftsGame({
 
       {phase === "play" && task ? (
         <div className={styles.main}>
-          <div className={styles.missionCard}>
-            <span className={styles.missionIcon}>{task.itemEmoji}</span>
-            <div className={styles.missionBody}>
-              <p className={styles.missionLabel}>משימה</p>
-              <h2 className={styles.missionTitle}>חלוקה שווה</h2>
-              <p className={styles.missionPrompt}>{giftsPrompt(task)}</p>
+          <div className={styles.taskTop}>
+            <div className={styles.missionCard}>
+              <span className={styles.missionIcon}>{task.itemEmoji}</span>
+              <div className={styles.missionBody}>
+                <p className={styles.missionLabel}>משימה</p>
+                <h2 className={styles.missionTitle}>חלוקה שווה</h2>
+                <p className={styles.missionPrompt}>{giftsPrompt(task)}</p>
+              </div>
+            </div>
+            <div className={styles.infoBar}>
+              {task.total} {task.itemLabel} · {task.children} ילדים
             </div>
           </div>
-          <div className={styles.infoBar}>
-            {task.total} {task.itemLabel} · {task.children} ילדים
-          </div>
-          <div className={styles.playStack}>
+
+          <div className={styles.gameArea}>
             <div className={styles.childrenPanel}>
               <p className={styles.panelTitle}>👧👦 הילדים</p>
               <div className={`${styles.childrenGrid} ${gridClass}`}>
@@ -353,6 +356,9 @@ export default function LeoGiftsGame({
                 ))}
               </div>
             </div>
+          </div>
+
+          <div className={styles.controlsFooter}>
             <div className={styles.controlsPanel}>
               <div className={styles.controlCol}>
                 <span className={styles.controlLabel}>לכל ילד</span>

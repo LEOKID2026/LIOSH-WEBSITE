@@ -214,3 +214,11 @@ export function trayItemDisplay(count, emoji) {
   if (count <= 4) return { type: "icons", text: emoji.repeat(count) };
   return { type: "multiply", text: `${emoji} × ${count}` };
 }
+
+/** @param {number} trayCount */
+export function traysGridClass(trayCount) {
+  if (trayCount <= 4) return "trayGridFew";
+  if (trayCount <= 6) return "trayGridMedium";
+  if (trayCount <= 9) return "trayGridMany";
+  return "trayGridDense";
+}

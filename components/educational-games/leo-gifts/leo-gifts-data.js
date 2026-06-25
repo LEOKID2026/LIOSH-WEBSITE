@@ -172,6 +172,7 @@ export function childEmojiAt(index) {
 /** @param {number} childCount */
 export function childrenGridClass(childCount) {
   if (childCount <= 4) return "gridFew";
-  if (childCount <= 8) return "gridMedium";
-  return "gridMany";
+  if (childCount <= 6) return "gridMedium";
+  if (childCount <= 9) return "gridMany";
+  return "gridDense";
 }

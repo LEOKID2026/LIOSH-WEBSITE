@@ -9,7 +9,7 @@
   "background_color": "#050816",
   "theme_color": "#c9f4ff",
   "orientation": "any",
-  "scope": "/student/",
+  "scope": "/",
   "icons": [
     {
       "src": "/icons/child/pwa-72x72.png",

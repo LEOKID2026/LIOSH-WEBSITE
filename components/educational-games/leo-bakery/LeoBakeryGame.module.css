@@ -99,9 +99,31 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-  padding: 0.4rem 0.55rem 0.5rem;
+  gap: 0.22rem;
+  padding: 0.32rem 0.5rem 0.4rem;
   overflow: hidden;
+}
+
+.taskTop {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+}
+
+.gameArea {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.controlsFooter {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
 }
 
 .screenCenter {
@@ -172,15 +194,21 @@
 .missionCard {
   flex-shrink: 0;
   display: flex;
-  gap: 0.5rem;
-  padding: 0.5rem 0.7rem;
-  border-radius: 1rem;
-  border: 3px solid #fdba74;
+  gap: 0.45rem;
+  padding: 0.38rem 0.55rem;
+  border-radius: 0.85rem;
+  border: 2px solid #fdba74;
   background: #fff;
 }
 
 .missionIcon {
   font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+.missionBody {
+  min-width: 0;
+  flex: 1;
 }
 
 .missionLabel {
@@ -207,27 +235,20 @@
 .formulaBar {
   flex-shrink: 0;
   text-align: center;
-  padding: 0.35rem 0.5rem;
-  border-radius: 0.75rem;
+  padding: 0.28rem 0.4rem;
+  border-radius: 0.65rem;
   border: 2px solid #fdba74;
   background: #fffbeb;
-  font-size: clamp(0.72rem, 2.6vw, 0.88rem);
+  font-size: clamp(0.68rem, 2.4vw, 0.82rem);
   font-weight: 900;
   color: #9a3412;
 }
 
-.playStack {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.28rem;
-}
-
 .panelTitle {
-  margin: 0 0 0.2rem;
+  flex-shrink: 0;
+  margin: 0 0 0.15rem;
   text-align: center;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 900;
   color: #9a3412;
 }
@@ -235,16 +256,43 @@
 .traysPanel {
   flex: 1;
   min-height: 0;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
+  border-radius: 0.75rem;
+  border: 2px solid #fdba74;
+  background: rgba(255, 251, 235, 0.65);
+  padding: 0.25rem 0.3rem 0.3rem;
 }
 
 .trayGrid {
+  flex: 1;
+  min-height: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(68px, 1fr));
-  gap: 0.28rem;
-  max-height: clamp(110px, 26vh, 170px);
-  overflow: auto;
-  align-content: start;
+  gap: 0.22rem;
+  height: 100%;
+  overflow: hidden;
+  align-content: stretch;
+}
+
+.trayGridFew {
+  grid-template-columns: repeat(auto-fit, minmax(68px, 1fr));
+  grid-auto-rows: 1fr;
+}
+
+.trayGridMedium {
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 1fr;
+}
+
+.trayGridMany {
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 1fr;
+}
+
+.trayGridDense {
+  grid-template-columns: repeat(6, 1fr);
+  grid-auto-rows: 1fr;
 }
 
 .trayCard {
@@ -252,41 +300,39 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0.22rem;
-  border-radius: 0.65rem;
+  padding: 0.15rem 0.1rem;
+  border-radius: 0.55rem;
   border: 2px solid #fdba74;
   background: #fffbeb;
-  min-height: 54px;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.trayGridDense .trayCard {
+  padding: 0.1rem 0.05rem;
 }
 
 .trayLabel {
-  font-size: 0.56rem;
+  font-size: clamp(0.48rem, 1.8vw, 0.56rem);
   font-weight: 800;
   color: #9a3412;
+  line-height: 1.1;
 }
 
 .trayItems {
-  font-size: clamp(0.75rem, 2.8vw, 0.95rem);
+  font-size: clamp(0.62rem, 2.2vw, 0.88rem);
   font-weight: 800;
-  line-height: 1.15;
+  line-height: 1.1;
   text-align: center;
   word-break: break-word;
-}
-
-.moreTrays {
-  grid-column: 1 / -1;
-  margin: 0;
-  text-align: center;
-  font-size: 0.65rem;
-  font-weight: 800;
-  color: #9a3412;
 }
 
 .controlsPanel {
   flex-shrink: 0;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.35rem;
+  gap: 0.28rem;
 }
 
 .controlCol {
@@ -319,12 +365,12 @@
 }
 
 .stepperBtn {
-  width: 40px;
-  height: 40px;
-  border-radius: 0.65rem;
+  width: 38px;
+  height: 38px;
+  border-radius: 0.6rem;
   border: 2px solid #fdba74;
   background: #fff;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 900;
   color: #9a3412;
 }
@@ -376,8 +422,9 @@
 .primaryBtn,
 .secondaryBtn {
   flex: 1;
-  min-height: 44px;
-  border-radius: 0.75rem;
+  min-height: 40px;
+  border-radius: 0.7rem;
+  font-size: 0.82rem;
   font-weight: 900;
 }
 
@@ -423,7 +470,34 @@
 }
 
 @media (orientation: landscape) and (max-height: 520px) {
-  .trayGrid {
-    max-height: 90px;
+  .main {
+    gap: 0.15rem;
+    padding: 0.2rem 0.4rem 0.28rem;
+  }
+
+  .missionCard {
+    padding: 0.25rem 0.45rem;
+  }
+
+  .missionPrompt {
+    font-size: 0.66rem;
+  }
+
+  .trayGridMany {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  .trayGridDense {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  .stepperBtn {
+    width: 34px;
+    height: 34px;
+  }
+
+  .primaryBtn,
+  .secondaryBtn {
+    min-height: 36px;
   }
 }
