@@ -7,7 +7,6 @@ import {
   AUTH_FORGOT_PASSWORD_BACK,
   AUTH_FORGOT_PASSWORD_EMAIL_LABEL,
   AUTH_FORGOT_PASSWORD_SUBMIT,
-  AUTH_FORGOT_PASSWORD_SUCCESS,
   AUTH_FORGOT_PASSWORD_TITLE,
 } from "../../lib/auth/auth-reset.he";
 
@@ -62,7 +61,7 @@ export default function ForgotPasswordPage() {
 
         {submitted ? (
           <p className="text-emerald-300 text-sm mb-6" role="status">
-            {AUTH_FORGOT_PASSWORD_SUCCESS}
+            {`אם קיים חשבון עם הכתובת ${email.trim()}, ישלח קישור לאיפוס הסיסמה.`}
           </p>
         ) : (
           <form onSubmit={(e) => void onSubmit(e)} className="space-y-4">
