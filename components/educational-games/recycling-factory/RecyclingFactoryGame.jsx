@@ -9,6 +9,7 @@ import {
 } from "./recycling-factory-data.js";
 import { buildRecyclingFactoryMetrics } from "./recycling-factory-metrics.js";
 import RecyclingItemVisual from "./RecyclingItemVisual.jsx";
+import EducationalGameHudFullscreenButton from "../EducationalGameHudFullscreenButton.jsx";
 import styles from "./RecyclingFactoryGame.module.css";
 
 /** @typedef {import('./recycling-factory-data.js').DifficultyId} DifficultyId */
@@ -109,6 +110,9 @@ export default function RecyclingFactoryGame({
   productionMode = false,
   onSessionEnd,
   backHref = "/dev/learning-game-prototypes",
+  showFullscreenButton = false,
+  isFullscreen = false,
+  onFullscreenToggle,
 }) {
   const sessionEndFiredRef = useRef(false);
   const onSessionEndRef = useRef(onSessionEnd);
@@ -518,6 +522,7 @@ export default function RecyclingFactoryGame({
           sortToBinRef.current(drag.uid, binId);
         }
       } else {
+        suppressClickRef.current = true;
         setSelectedUid((s) => (s === drag.uid ? null : drag.uid));
       }
 
@@ -582,7 +587,7 @@ export default function RecyclingFactoryGame({
   );
 
   return (
-    <div className={styles.shell} dir="rtl">
+    <div className={`${styles.shell} ${productionMode ? styles.shellEmbedded : ""}`} dir="rtl">
       <span className={`${styles.deco} ${styles.gear1}`} aria-hidden>
         ⚙️
       </span>
@@ -617,6 +622,12 @@ export default function RecyclingFactoryGame({
               ❌ {mistakes}/{diffConfig.maxMistakes}
             </span>
             <span className={`${styles.hudChip} ${styles.hudChipGood}`}>🔥 {streak}</span>
+            {showFullscreenButton && onFullscreenToggle ? (
+              <EducationalGameHudFullscreenButton
+                isFullscreen={isFullscreen}
+                onToggle={onFullscreenToggle}
+              />
+            ) : null}
           </div>
         ) : (
           <div className={styles.hud}>

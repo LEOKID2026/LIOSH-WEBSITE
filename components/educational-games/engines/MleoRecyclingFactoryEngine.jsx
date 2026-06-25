@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import SoloGameMobileFullscreenButton from "../../solo-games/SoloGameMobileFullscreenButton.jsx";
 import SoloGamePortraitRecommendationModal from "../../solo-games/SoloGamePortraitRecommendationModal.jsx";
 import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
 import RecyclingFactoryGame from "../recycling-factory/RecyclingFactoryGame.jsx";
@@ -54,17 +53,14 @@ export default function MleoRecyclingFactoryEngine({
         productionMode
         onSessionEnd={handleSessionEnd}
         backHref="/student/educational-games"
+        showFullscreenButton={showFullscreenButton}
+        isFullscreen={isFullscreen}
+        onFullscreenToggle={toggleFromUserGesture}
       />
       <SoloGamePortraitRecommendationModal
         open={showPortraitPrompt}
         onDismiss={dismissPortraitPrompt}
       />
-      {showFullscreenButton ? (
-        <SoloGameMobileFullscreenButton
-          isFullscreen={isFullscreen}
-          onToggle={toggleFromUserGesture}
-        />
-      ) : null}
     </div>
   );
 }

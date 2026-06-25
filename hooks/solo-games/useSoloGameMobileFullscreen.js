@@ -15,7 +15,11 @@ function isPortraitViewport() {
 }
 
 function resolveFullscreenTarget(element) {
-  return element ?? document.getElementById("game-wrapper");
+  if (element) return element;
+  return (
+    document.getElementById("game-wrapper") ??
+    document.querySelector("[data-educational-game-shell]")
+  );
 }
 
 /**

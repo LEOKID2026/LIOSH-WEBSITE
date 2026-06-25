@@ -17,6 +17,7 @@ import {
 } from "./leo-supermarket-data.js";
 import { buildLeoSupermarketMetrics } from "./leo-supermarket-metrics.js";
 import GroceryItemVisual from "./GroceryItemVisual.jsx";
+import EducationalGameHudFullscreenButton from "../EducationalGameHudFullscreenButton.jsx";
 import styles from "./LeoSupermarketGame.module.css";
 
 /** @typedef {import('./leo-supermarket-data.js').DifficultyId} DifficultyId */
@@ -78,6 +79,9 @@ export default function LeoSupermarketGame({
   productionMode = false,
   onSessionEnd,
   backHref = "/dev/learning-game-prototypes",
+  showFullscreenButton = false,
+  isFullscreen = false,
+  onFullscreenToggle,
 }) {
   const onSessionEndRef = useRef(onSessionEnd);
   onSessionEndRef.current = onSessionEnd;
@@ -555,7 +559,7 @@ export default function LeoSupermarketGame({
   const accuracyPct = endMetrics ? Math.round(endMetrics.accuracy * 100) : 0;
 
   return (
-    <div className={styles.shell} dir="rtl">
+    <div className={`${styles.shell} ${productionMode ? styles.shellEmbedded : ""}`} dir="rtl">
       <span className={`${styles.deco} ${styles.sign}`} aria-hidden>
         🏪
       </span>
@@ -584,6 +588,12 @@ export default function LeoSupermarketGame({
               ❌ {mistakes}/{diffConfig.maxMistakes}
             </span>
             <span className={`${styles.hudChip} ${styles.hudScore}`}>⭐ {score}</span>
+            {showFullscreenButton && onFullscreenToggle ? (
+              <EducationalGameHudFullscreenButton
+                isFullscreen={isFullscreen}
+                onToggle={onFullscreenToggle}
+              />
+            ) : null}
           </div>
         ) : (
           <div className={styles.hud}>
