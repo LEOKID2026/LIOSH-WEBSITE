@@ -20,8 +20,10 @@ export default function MleoLeoSupermarketEngine({
     showPortraitPrompt,
     dismissPortraitPrompt,
     syncPortraitPromptForRun,
+    enterFromUserGesture,
     toggleFromUserGesture,
     showFullscreenButton,
+    mobileEligible,
   } = useSoloGameMobileFullscreen({
     gameKey: "leo-supermarket",
     gameRunning: true,
@@ -30,8 +32,14 @@ export default function MleoLeoSupermarketEngine({
   });
 
   useEffect(() => {
-    if (autoStart) syncPortraitPromptForRun();
+    if (!autoStart) return;
+    syncPortraitPromptForRun();
   }, [autoStart, syncPortraitPromptForRun]);
+
+  useEffect(() => {
+    if (!autoStart || !mobileEligible || showPortraitPrompt) return;
+    enterFromUserGesture();
+  }, [autoStart, mobileEligible, showPortraitPrompt, enterFromUserGesture]);
 
   const handleSessionEnd = (metrics) => {
     if (sessionEndFiredRef.current || !onSessionEndRef.current) return;
@@ -52,8 +60,15 @@ export default function MleoLeoSupermarketEngine({
         onFullscreenToggle={toggleFromUserGesture}
       />
       <SoloGamePortraitRecommendationModal
-        open={showPortraitPrompt}
-        onDismiss={dismissPortraitPrompt}
+        show={showPortraitPrompt}
+        onDismissRotate={() => {
+          dismissPortraitPrompt(false);
+          enterFromUserGesture();
+        }}
+        onContinueAnyway={() => {
+          dismissPortraitPrompt(true);
+          enterFromUserGesture();
+        }}
       />
     </div>
   );

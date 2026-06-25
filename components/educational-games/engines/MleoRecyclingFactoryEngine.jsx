@@ -21,8 +21,10 @@ export default function MleoRecyclingFactoryEngine({
     showPortraitPrompt,
     dismissPortraitPrompt,
     syncPortraitPromptForRun,
+    enterFromUserGesture,
     toggleFromUserGesture,
     showFullscreenButton,
+    mobileEligible,
   } = useSoloGameMobileFullscreen({
     gameKey: "recycling-factory",
     gameRunning: true,
@@ -31,8 +33,14 @@ export default function MleoRecyclingFactoryEngine({
   });
 
   useEffect(() => {
-    if (autoStart) syncPortraitPromptForRun();
+    if (!autoStart) return;
+    syncPortraitPromptForRun();
   }, [autoStart, syncPortraitPromptForRun]);
+
+  useEffect(() => {
+    if (!autoStart || !mobileEligible || showPortraitPrompt) return;
+    enterFromUserGesture();
+  }, [autoStart, mobileEligible, showPortraitPrompt, enterFromUserGesture]);
 
   const handleSessionEnd = (partial) => {
     if (sessionEndFiredRef.current || !onSessionEndRef.current) return;
@@ -58,8 +66,15 @@ export default function MleoRecyclingFactoryEngine({
         onFullscreenToggle={toggleFromUserGesture}
       />
       <SoloGamePortraitRecommendationModal
-        open={showPortraitPrompt}
-        onDismiss={dismissPortraitPrompt}
+        show={showPortraitPrompt}
+        onDismissRotate={() => {
+          dismissPortraitPrompt(false);
+          enterFromUserGesture();
+        }}
+        onContinueAnyway={() => {
+          dismissPortraitPrompt(true);
+          enterFromUserGesture();
+        }}
       />
     </div>
   );
