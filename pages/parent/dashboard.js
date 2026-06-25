@@ -43,12 +43,6 @@ function normalizeBalance(student) {
  */
 const MAX_CHILDREN_DEFAULT = 3;
 
-/** Deterministic login username for optional PIN-at-create (unique per student id). */
-function suggestLoginUsernameForNewStudent(studentId) {
-  const compact = String(studentId || "").replace(/-/g, "");
-  return `kid${compact.slice(-9)}`;
-}
-
 const CHILD_PIN_INPUT_PROPS = {
   type: "tel",
   inputMode: "numeric",
@@ -74,6 +68,7 @@ export default function ParentDashboardPage() {
 
   const [newName, setNewName] = useState("");
   const [newGrade, setNewGrade] = useState("");
+  const [newChildUsername, setNewChildUsername] = useState("");
   const [newChildPin, setNewChildPin] = useState("");
   const [credentialsByStudentId, setCredentialsByStudentId] = useState({});
   /** One-time display after creating or resetting credentials (new PIN shown once). */
@@ -181,9 +176,18 @@ export default function ParentDashboardPage() {
       setMessage("יש לבחור כיתה");
       return;
     }
+    const initialUsername = String(newChildUsername || "").trim().toLowerCase();
     const initialPin = String(newChildPin || "").trim();
     if (initialPin && !/^\d{4}$/.test(initialPin)) {
       setMessage("PIN חייב להיות בארבע ספרות");
+      return;
+    }
+    if (initialPin && !initialUsername) {
+      setMessage("יש להזין שם משתמש");
+      return;
+    }
+    if (initialUsername && !/^[a-z0-9_-]{3,24}$/.test(initialUsername)) {
+      setMessage("שם משתמש לא תקין");
       return;
     }
     setBusy(true);
@@ -208,22 +212,25 @@ export default function ParentDashboardPage() {
       const createdStudentId = payload?.student?.id;
       let credentialMessage = "";
 
-      if (initialPin && createdStudentId) {
-        const username = suggestLoginUsernameForNewStudent(createdStudentId);
+      if (initialUsername && initialPin && createdStudentId) {
         const credRes = await fetch("/api/parent/create-student-access-code", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${session.access_token}`,
           },
-          body: JSON.stringify({ studentId: createdStudentId, username, pin: initialPin }),
+          body: JSON.stringify({
+            studentId: createdStudentId,
+            username: initialUsername,
+            pin: initialPin,
+          }),
         });
         const credPayload = await credRes.json();
         if (!credRes.ok) {
           credentialMessage =
-            credPayload.error || "הילד/ה נוצר/ה, אך הגדרת PIN נכשלה — ניתן להגדיר בפרטי הילד/ה";
+            credPayload.error || "הילד/ה נוצר/ה, אך הגדרת פרטי כניסה נכשלה — ניתן להגדיר בפרטי הילד/ה";
         } else {
-          const loginUsername = credPayload.username || username;
+          const loginUsername = credPayload.username || initialUsername;
           setCredentialConfirmation({
             studentId: createdStudentId,
             username: loginUsername,
@@ -242,6 +249,7 @@ export default function ParentDashboardPage() {
 
       setNewName("");
       setNewGrade("");
+      setNewChildUsername("");
       setNewChildPin("");
       setAddChildModalOpen(false);
       void trackProductEvent({
@@ -463,6 +471,7 @@ export default function ParentDashboardPage() {
 
   const closeAddChildModal = useCallback(() => {
     setAddChildModalOpen(false);
+    setNewChildUsername("");
     setNewChildPin("");
   }, []);
 
@@ -522,7 +531,17 @@ export default function ParentDashboardPage() {
       </select>
       <div className={T.panel}>
         <div className={T.panelTitle}>פרטי כניסת ילד/ה</div>
-        <p className={`text-xs ${T.faint}`}>ניתן להגדיר PIN ראשוני לילד/ה כבר עכשיו.</p>
+        <div>
+          <label className={`text-sm ${T.label}`}>שם משתמש לילד/ה</label>
+          <input
+            className={T.inputMt}
+            value={newChildUsername}
+            onChange={(e) => setNewChildUsername(e.target.value)}
+            placeholder="לדוגמה: noam123"
+            autoComplete="off"
+            disabled={busy || students.length >= studentLimit}
+          />
+        </div>
         <div>
           <label className={`text-sm ${T.label}`}>PIN לילד/ה</label>
           <input
