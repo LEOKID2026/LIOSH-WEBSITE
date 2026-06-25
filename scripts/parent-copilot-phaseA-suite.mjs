@@ -482,7 +482,7 @@ const rSubjectsList = parentCopilot.runParentCopilotTurn({
   utterance: "יש עוד מקצועות?",
   sessionId: "semantic-subjects-list",
 });
-assert.ok(rSubjectsList.answerBlocks[0].textHe.includes("חשבון"));
+assert.ok(rSubjectsList.answerBlocks[0].textHe.includes("מתמטיקה"));
 assert.ok(rSubjectsList.answerBlocks[0].textHe.includes("אנגלית"));
 assert.ok(rSubjectsList.answerBlocks[0].textHe.includes("עברית"));
 assert.equal(rSubjectsList.suggestedFollowUp, null);
