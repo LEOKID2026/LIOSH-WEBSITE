@@ -1,0 +1,49 @@
+.childrenPanel {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.childrenGrid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(56px, 1fr));
+  gap: 0.3rem;
+  overflow: auto;
+  align-content: start;
+  max-height: clamp(120px, 28vh, 200px);
+}
+
+.childCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem;
+  border-radius: 0.65rem;
+  border: 2px solid #f9a8d4;
+  background: linear-gradient(180deg, #fff, #fdf2f8);
+  min-height: 64px;
+}
+
+.childEmoji {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.childBag {
+  font-size: 0.85rem;
+}
+
+.childCount {
+  font-size: 0.95rem;
+  font-weight: 900;
+  color: #9d174d;
+}
+
+.remainderRow {
+  margin-top: 0.35rem;
+}

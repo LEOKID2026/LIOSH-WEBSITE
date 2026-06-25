@@ -1,0 +1,64 @@
+.wordPanel {
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.builtWord {
+  margin: 0;
+  font-size: clamp(1.5rem, 6vw, 2rem);
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  color: #1d4ed8;
+}
+
+.pickedRow {
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  margin-top: 0.35rem;
+}
+
+.pickedChip {
+  min-width: 36px;
+  min-height: 36px;
+  border-radius: 0.5rem;
+  border: 2px solid #93c5fd;
+  background: #eff6ff;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.bankPanel {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.letterGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+  max-height: clamp(100px, 22vh, 140px);
+  overflow: auto;
+}
+
+.letterBtn {
+  min-width: 42px;
+  min-height: 42px;
+  border-radius: 0.65rem;
+  border: 2px solid #93c5fd;
+  background: linear-gradient(180deg, #fff, #eff6ff);
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: #1e40af;
+  text-transform: lowercase;
+}
+
+.letterBtn:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.letterUsed {
+  opacity: 0.35;
+}

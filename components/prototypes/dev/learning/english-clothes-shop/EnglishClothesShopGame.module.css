@@ -1,0 +1,98 @@
+.customerRow {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.35rem 0.5rem;
+}
+
+.customerEmoji {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.speechBubble {
+  flex: 1;
+  padding: 0.5rem 0.65rem;
+  border-radius: 1rem 1rem 0.25rem 1rem;
+  border: 2px solid #c4b5fd;
+  background: #fff;
+  box-shadow: 0 2px 0 #a78bfa44;
+}
+
+.speechText {
+  margin: 0;
+  font-size: clamp(0.85rem, 3vw, 1rem);
+  font-weight: 800;
+  color: #5b21b6;
+}
+
+.shelfPanel {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.shelfGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.35rem;
+  max-height: clamp(140px, 32vh, 220px);
+  overflow: auto;
+}
+
+.clothCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  min-height: 72px;
+  padding: 0.3rem;
+  border-radius: 0.75rem;
+  border: 2px solid #ddd6fe;
+  background: linear-gradient(180deg, #fff, #f5f3ff);
+  position: relative;
+}
+
+.clothSelected {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 2px #c4b5fd;
+}
+
+.colorDot {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid #94a3b8;
+}
+
+.clothLabel {
+  font-size: 0.58rem;
+  font-weight: 800;
+  color: #475569;
+  text-align: center;
+  line-height: 1.15;
+}
+
+.pickHint {
+  margin: 0;
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #5b21b6;
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  .shelfGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    max-height: 120px;
+  }
+
+  .clothCard {
+    min-height: 58px;
+  }
+}

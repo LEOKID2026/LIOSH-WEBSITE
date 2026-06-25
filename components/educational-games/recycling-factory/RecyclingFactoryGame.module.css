@@ -251,7 +251,7 @@
 
 .beltTrack {
   position: relative;
-  height: clamp(88px, 18vh, 120px);
+  height: clamp(104px, 22vh, 142px);
   border-radius: 0.75rem;
   overflow: hidden;
   background: #1e293b;
@@ -365,11 +365,11 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-width: clamp(64px, 16vw, 88px);
-  padding: 0.35rem 0.5rem 0.45rem;
+  min-width: clamp(72px, 17vw, 96px);
+  padding: 0.42rem 0.55rem 0.5rem;
   border-radius: 1rem;
   background: linear-gradient(180deg, #fff, #f8fafc);
-  border: 3px solid #e2e8f0;
+  border: 4px solid #e2e8f0;
   box-shadow:
     0 4px 0 #cbd5e1,
     0 8px 16px rgba(15, 23, 42, 0.12);
@@ -383,13 +383,13 @@
 }
 
 .itemEmoji {
-  font-size: clamp(1.75rem, 6vw, 2.25rem);
+  font-size: clamp(2rem, 6.5vw, 2.55rem);
   line-height: 1;
 }
 
 .itemImage {
-  width: clamp(36px, 10vw, 52px);
-  height: clamp(36px, 10vw, 52px);
+  width: clamp(42px, 11vw, 58px);
+  height: clamp(42px, 11vw, 58px);
   object-fit: contain;
   pointer-events: none;
   user-select: none;
@@ -397,11 +397,11 @@
 }
 
 .itemName {
-  margin-top: 0.15rem;
-  font-size: clamp(0.55rem, 2vw, 0.7rem);
+  margin-top: 0.18rem;
+  font-size: clamp(0.6rem, 2.2vw, 0.78rem);
   font-weight: 800;
   color: #334155;
-  max-width: 72px;
+  max-width: 84px;
   text-align: center;
   line-height: 1.15;
 }
@@ -447,10 +447,11 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  gap: 0.15rem;
+  gap: 0.18rem;
   min-width: 0;
   width: 100%;
-  padding: 0.25rem 0.15rem 0.35rem;
+  min-height: 58px;
+  padding: 0.3rem 0.18rem 0.4rem;
   border: none;
   background: transparent;
   touch-action: manipulation;
@@ -473,7 +474,7 @@
 .binBody {
   position: relative;
   width: 100%;
-  max-width: 72px;
+  max-width: 88px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -481,7 +482,7 @@
 
 .binLid {
   width: 78%;
-  height: 10px;
+  height: 12px;
   border-radius: 4px 4px 2px 2px;
   border: 2px solid rgba(15, 23, 42, 0.25);
   margin-bottom: -2px;
@@ -490,14 +491,14 @@
 
 .binCan {
   width: 100%;
-  min-height: clamp(52px, 12vw, 64px);
+  min-height: clamp(58px, 13vw, 76px);
   border-radius: 4px 4px 10px 10px;
   border: 3px solid rgba(15, 23, 42, 0.2);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0.25rem 0.15rem;
+  padding: 0.32rem 0.18rem;
   box-shadow:
     inset 0 -6px 0 rgba(15, 23, 42, 0.12),
     0 4px 0 rgba(15, 23, 42, 0.18);
@@ -505,13 +506,13 @@
 }
 
 .binEmoji {
-  font-size: clamp(1.25rem, 4.5vw, 1.6rem);
+  font-size: clamp(1.45rem, 5vw, 1.85rem);
   line-height: 1;
 }
 
 .binLabel {
-  margin-top: 0.1rem;
-  font-size: clamp(0.58rem, 2vw, 0.68rem);
+  margin-top: 0.12rem;
+  font-size: clamp(0.62rem, 2.2vw, 0.74rem);
   font-weight: 900;
   color: #fff;
   text-shadow: 0 1px 2px rgba(15, 23, 42, 0.35);
@@ -751,22 +752,39 @@
     padding: 0.25rem 0;
   }
 
+  .conveyorFrame {
+    padding: 0.55rem 0.45rem 0.85rem;
+  }
+
   .beltTrack {
-    height: clamp(72px, 16dvh, 100px);
+    height: clamp(136px, 31dvh, 180px);
+  }
+
+  .beltRollLeft,
+  .beltRollRight {
+    width: 34px;
+    height: 34px;
+    margin-top: -17px;
   }
 
   .itemCard {
-    min-width: clamp(52px, 14vw, 72px);
-    padding: clamp(0.2rem, 1.2vw, 0.35rem) clamp(0.25rem, 1.5vw, 0.5rem);
+    min-width: clamp(84px, 21vw, 112px);
+    padding: clamp(0.42rem, 1.8vw, 0.55rem) clamp(0.42rem, 2vw, 0.68rem);
+    border-width: 4px;
   }
 
   .itemEmoji {
-    font-size: clamp(1.35rem, 5.5vw, 1.85rem);
+    font-size: clamp(2.25rem, 8.8vw, 2.85rem);
+  }
+
+  .itemImage {
+    width: clamp(52px, 15vw, 70px);
+    height: clamp(52px, 15vw, 70px);
   }
 
   .itemName {
-    font-size: clamp(0.48rem, 2.2vw, 0.62rem);
-    max-width: clamp(48px, 13vw, 68px);
+    font-size: clamp(0.7rem, 3.1vw, 0.88rem);
+    max-width: clamp(76px, 19vw, 100px);
   }
 
   .feedbackBar {
@@ -819,16 +837,16 @@
   }
 
   .binBtn {
-    padding: clamp(1px, 0.35vw, 3px) clamp(0px, 0.2vw, 2px);
-    min-height: clamp(48px, calc((100vw - 16px) / 5 * 1.05), 72px);
+    padding: clamp(3px, 0.55vw, 5px) clamp(0px, 0.25vw, 2px);
+    min-height: clamp(74px, calc((100vw - 16px) / 5 * 1.54), 110px);
   }
 
   .binsGrid3 .binBtn {
-    min-height: clamp(52px, 15vw, 72px);
+    min-height: clamp(78px, 22vw, 110px);
   }
 
   .binsGrid4 .binBtn {
-    min-height: clamp(50px, 13vw, 72px);
+    min-height: clamp(76px, 20vw, 110px);
   }
 
   .binBody {
@@ -837,48 +855,48 @@
   }
 
   .binLid {
-    height: clamp(4px, 1.5vw, 8px);
+    height: clamp(8px, 2.4vw, 13px);
     border-width: clamp(1px, 0.35vw, 2px);
   }
 
   .binCan {
-    min-height: clamp(44px, calc((100vw - 24px) / 5 * 0.88), 60px);
-    padding: clamp(1px, 0.45vw, 3px) clamp(1px, 0.25vw, 2px);
-    border-width: clamp(1px, 0.35vw, 2px);
+    min-height: clamp(68px, calc((100vw - 24px) / 5 * 1.3), 94px);
+    padding: clamp(3px, 0.7vw, 5px) clamp(2px, 0.35vw, 4px);
+    border-width: clamp(2px, 0.45vw, 3px);
   }
 
   .binsGrid3 .binCan {
-    min-height: clamp(48px, 14vw, 60px);
+    min-height: clamp(73px, 21vw, 94px);
   }
 
   .binsGrid4 .binCan {
-    min-height: clamp(46px, 12vw, 60px);
+    min-height: clamp(70px, 18vw, 94px);
   }
 
   .binEmoji {
-    font-size: clamp(0.72rem, calc((100vw - 24px) / 5 * 0.36), 1.45rem);
+    font-size: clamp(1.2rem, calc((100vw - 24px) / 5 * 0.55), 2.15rem);
   }
 
   .binsGrid3 .binEmoji {
-    font-size: clamp(1rem, 5.2vw, 1.45rem);
+    font-size: clamp(1.5rem, 7.8vw, 2.15rem);
   }
 
   .binsGrid4 .binEmoji {
-    font-size: clamp(0.82rem, 4.5vw, 1.45rem);
+    font-size: clamp(1.3rem, 6.8vw, 2.15rem);
   }
 
   .binLabel {
-    font-size: clamp(0.4rem, calc((100vw - 24px) / 5 * 0.165), 0.62rem);
+    font-size: clamp(0.6rem, calc((100vw - 24px) / 5 * 0.24), 0.86rem);
     line-height: 1.05;
-    margin-top: 0;
+    margin-top: 0.05rem;
   }
 
   .binsGrid3 .binLabel {
-    font-size: clamp(0.52rem, 2.8vw, 0.62rem);
+    font-size: clamp(0.72rem, 3.9vw, 0.86rem);
   }
 
   .binsGrid4 .binLabel {
-    font-size: clamp(0.46rem, 2.4vw, 0.62rem);
+    font-size: clamp(0.65rem, 3.4vw, 0.86rem);
   }
 }
 
@@ -894,6 +912,40 @@
     min-width: 0;
   }
 
+  .conveyorFrame {
+    padding: 0.65rem 0.5rem 1.05rem;
+  }
+
+  .beltTrack {
+    height: clamp(120px, 32dvh, 148px);
+  }
+
+  .beltRollLeft,
+  .beltRollRight {
+    width: 32px;
+    height: 32px;
+    margin-top: -16px;
+  }
+
+  .itemCard {
+    min-width: clamp(72px, 15vw, 96px);
+    padding: 0.42rem 0.52rem 0.48rem;
+  }
+
+  .itemEmoji {
+    font-size: clamp(1.85rem, 5.8vw, 2.35rem);
+  }
+
+  .itemImage {
+    width: clamp(44px, 10.5vw, 58px);
+    height: clamp(44px, 10.5vw, 58px);
+  }
+
+  .itemName {
+    font-size: clamp(0.58rem, 2.2vw, 0.72rem);
+    max-width: 84px;
+  }
+
   .binsArea {
     flex: 0.85;
     min-width: 0;
@@ -902,7 +954,8 @@
   }
 
   .binsGrid {
-    grid-template-columns: repeat(2, minmax(64px, 1fr));
+    grid-template-columns: repeat(2, minmax(72px, 1fr));
+    --bin-gap: 0.35rem;
     max-width: none;
     width: 100%;
   }
@@ -910,7 +963,28 @@
   .binsGrid3,
   .binsGrid4,
   .binsGrid5 {
-    grid-template-columns: repeat(2, minmax(64px, 1fr));
+    grid-template-columns: repeat(2, minmax(72px, 1fr));
+  }
+
+  .binBody {
+    max-width: 96px;
+  }
+
+  .binBtn {
+    min-height: 81px;
+    padding: 0.34rem 0.18rem 0.46rem;
+  }
+
+  .binCan {
+    min-height: clamp(73px, 14vw, 94px);
+  }
+
+  .binEmoji {
+    font-size: clamp(1.6rem, 5.2vw, 2.1rem);
+  }
+
+  .binLabel {
+    font-size: clamp(0.68rem, 2.4vw, 0.82rem);
   }
 
   .factorySign {

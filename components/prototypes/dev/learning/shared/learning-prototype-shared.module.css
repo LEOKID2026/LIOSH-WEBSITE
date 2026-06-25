@@ -1,0 +1,518 @@
+.shell {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  max-height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  color: #1e293b;
+  position: relative;
+}
+
+.shellWarm {
+  background: linear-gradient(180deg, #fff7ed 0%, #fef3c7 38%, #ecfdf5 100%);
+}
+
+.shellPink {
+  background: linear-gradient(180deg, #fdf2f8 0%, #fce7f3 40%, #fff7ed 100%);
+}
+
+.shellSky {
+  background: linear-gradient(180deg, #eff6ff 0%, #dbeafe 42%, #ecfdf5 100%);
+}
+
+.shellMint {
+  background: linear-gradient(180deg, #ecfdf5 0%, #d1fae5 40%, #fef9c3 100%);
+}
+
+.shellLavender {
+  background: linear-gradient(180deg, #f5f3ff 0%, #ede9fe 42%, #fdf2f8 100%);
+}
+
+.header {
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.45rem;
+  min-height: 52px;
+  padding: 0.5rem 0.75rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 251, 235, 0.92));
+  border-bottom: 2px solid #fdba74;
+  box-shadow: 0 2px 10px rgba(251, 146, 60, 0.1);
+}
+
+.backBtn {
+  min-height: 34px;
+  padding: 0.28rem 0.62rem;
+  border-radius: 999px;
+  border: 2px solid #fdba74;
+  background: #fff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #c2410c;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.hud {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.hudChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  min-height: 32px;
+  padding: 0.22rem 0.52rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 2px solid #fed7aa;
+  font-size: clamp(0.66rem, 2.4vw, 0.82rem);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.hudScore {
+  border-color: #fbbf24;
+  background: #fffbeb;
+  color: #92400e;
+}
+
+.hudBad {
+  border-color: #fca5a5;
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.hudProgress {
+  border-color: #a78bfa;
+  background: #f5f3ff;
+  color: #5b21b6;
+}
+
+.screenCenter {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 1rem;
+  text-align: center;
+  overflow: auto;
+}
+
+.introHero {
+  margin: 0;
+  font-size: clamp(2.5rem, 10vw, 3.5rem);
+  line-height: 1;
+}
+
+.introTitle {
+  margin: 0;
+  font-size: clamp(1.2rem, 4.5vw, 1.55rem);
+  font-weight: 900;
+  color: #9a3412;
+}
+
+.introText {
+  margin: 0;
+  max-width: 22rem;
+  font-size: clamp(0.78rem, 2.8vw, 0.9rem);
+  font-weight: 700;
+  line-height: 1.45;
+  color: #475569;
+}
+
+.difficultyRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+  width: min(100%, 24rem);
+}
+
+.diffBtn {
+  flex: 1 1 30%;
+  min-height: 42px;
+  min-width: 5.5rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 0.75rem;
+  border: 2px solid #fed7aa;
+  background: #fff;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #9a3412;
+}
+
+.diffBtnSelected {
+  border-color: #7c3aed;
+  background: #f5f3ff;
+  color: #5b21b6;
+  box-shadow: 0 2px 0 #7c3aed33;
+}
+
+.startBtn {
+  min-height: 48px;
+  padding: 0.5rem 1.5rem;
+  border-radius: 1rem;
+  border: none;
+  background: linear-gradient(180deg, #fb923c, #ea580c);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 900;
+  box-shadow: 0 4px 0 #c2410c;
+}
+
+.main {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.45rem 0.55rem 0.55rem;
+  max-width: 42rem;
+  width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.missionCard {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 1rem;
+  border: 2px solid #fdba74;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 3px 0 rgba(251, 146, 60, 0.12);
+}
+
+.missionIcon {
+  font-size: clamp(1.6rem, 5vw, 2rem);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.missionBody {
+  min-width: 0;
+  text-align: right;
+}
+
+.missionLabel {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 900;
+  color: #ea580c;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.missionTitle {
+  margin: 0.1rem 0 0;
+  font-size: clamp(0.82rem, 3vw, 0.95rem);
+  font-weight: 900;
+  color: #1e293b;
+  line-height: 1.25;
+}
+
+.missionPrompt {
+  margin: 0.2rem 0 0;
+  font-size: clamp(0.74rem, 2.6vw, 0.86rem);
+  font-weight: 700;
+  color: #475569;
+  line-height: 1.35;
+}
+
+.playArea {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  overflow: hidden;
+}
+
+.panel {
+  border-radius: 1rem;
+  border: 2px solid #fed7aa;
+  background: rgba(255, 255, 255, 0.92);
+  padding: 0.5rem;
+}
+
+.panelTitle {
+  margin: 0 0 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 900;
+  color: #c2410c;
+  text-align: center;
+}
+
+.feedbackBar {
+  flex-shrink: 0;
+  min-height: 2.4rem;
+  padding: 0.35rem 0.55rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.feedbackNeutral {
+  background: rgba(255, 255, 255, 0.75);
+  border: 2px dashed #cbd5e1;
+}
+
+.feedbackOk {
+  background: #ecfdf5;
+  border: 2px solid #86efac;
+}
+
+.feedbackBad {
+  background: #fef2f2;
+  border: 2px solid #fca5a5;
+}
+
+.feedbackText {
+  margin: 0;
+  font-size: clamp(0.68rem, 2.6vw, 0.82rem);
+  font-weight: 800;
+  line-height: 1.28;
+}
+
+.actionRow {
+  flex-shrink: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.primaryBtn {
+  min-height: 44px;
+  padding: 0.4rem 1rem;
+  border-radius: 0.9rem;
+  border: none;
+  background: linear-gradient(180deg, #a78bfa, #7c3aed);
+  color: #fff;
+  font-size: clamp(0.8rem, 2.8vw, 0.92rem);
+  font-weight: 900;
+  box-shadow: 0 3px 0 #5b21b6;
+}
+
+.primaryBtn:disabled {
+  opacity: 0.45;
+  box-shadow: none;
+}
+
+.secondaryBtn {
+  min-height: 40px;
+  padding: 0.35rem 0.75rem;
+  border-radius: 0.8rem;
+  border: 2px solid #94a3b8;
+  background: #fff;
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: #475569;
+}
+
+.stepperRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.stepperLabel {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #475569;
+  min-width: 4.5rem;
+  text-align: center;
+}
+
+.stepperBtn {
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: 0.65rem;
+  border: 2px solid #c4b5fd;
+  background: #f5f3ff;
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: #5b21b6;
+}
+
+.stepperValue {
+  min-width: 2.5rem;
+  text-align: center;
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: #1e293b;
+}
+
+.cardGrid {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.cardGrid2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.cardGrid3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.cardGrid4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.tapCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: clamp(56px, 14vw, 72px);
+  padding: 0.25rem;
+  border-radius: 0.75rem;
+  border: 2px solid #fed7aa;
+  background: linear-gradient(180deg, #fff, #fff7ed);
+  font-weight: 800;
+  touch-action: manipulation;
+}
+
+.tapCard:active {
+  transform: scale(0.97);
+}
+
+.tapCardSelected {
+  border-color: #7c3aed;
+  background: linear-gradient(180deg, #f5f3ff, #ede9fe);
+  box-shadow: 0 0 0 2px #c4b5fd;
+}
+
+.tapCardUsed {
+  opacity: 0.4;
+}
+
+.leoRow {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.leoBadge {
+  font-size: 1.5rem;
+}
+
+.leoCaption {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #9a3412;
+}
+
+.endCard {
+  width: min(100%, 380px);
+  padding: 1.25rem;
+  border-radius: 1.25rem;
+  border: 3px solid #fdba74;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(251, 146, 60, 0.14);
+}
+
+.endTitle {
+  margin: 0 0 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: #9a3412;
+}
+
+.endStat {
+  margin: 0.25rem 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #475569;
+}
+
+.endActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.85rem;
+}
+
+.visualImg {
+  object-fit: contain;
+}
+
+.visualEmoji {
+  line-height: 1;
+}
+
+.visualSm {
+  font-size: 1.5rem;
+}
+
+.visualMd {
+  font-size: 2rem;
+}
+
+.visualLg {
+  font-size: clamp(2.5rem, 12vw, 4rem);
+}
+
+.visualImg.visualSm {
+  width: 36px;
+  height: 36px;
+}
+
+.visualImg.visualMd {
+  width: 52px;
+  height: 52px;
+}
+
+.visualImg.visualLg {
+  width: clamp(80px, 28vw, 120px);
+  height: clamp(80px, 28vw, 120px);
+}
+
+@media (max-width: 380px) {
+  .main {
+    padding: 0.35rem 0.4rem 0.45rem;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  .introHero {
+    font-size: 2rem;
+  }
+
+  .missionCard {
+    padding: 0.4rem 0.5rem;
+  }
+
+  .tapCard {
+    min-height: 48px;
+  }
+}

@@ -1,0 +1,48 @@
+.pathPanel {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.stonePath {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+  align-content: flex-start;
+}
+
+.stone {
+  position: relative;
+  min-width: 48px;
+  min-height: 48px;
+  border-radius: 50%;
+  border: 3px solid #6ee7b7;
+  background: linear-gradient(180deg, #ecfdf5, #d1fae5);
+  font-size: 1rem;
+  font-weight: 900;
+  color: #047857;
+  box-shadow: 0 3px 0 #10b98144;
+}
+
+.stoneSelected {
+  border-color: #7c3aed;
+  background: linear-gradient(180deg, #f5f3ff, #ede9fe);
+  color: #5b21b6;
+}
+
+.stoneOrder {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #7c3aed;
+  color: #fff;
+  font-size: 0.55rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
