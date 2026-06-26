@@ -405,3 +405,166 @@ a[href][aria-disabled="true"] {
 .animate-vb-zoom-in {
   animation: vb-zoom-in 0.8s ease-out both;
 }
+
+@keyframes vb-slide-up {
+  from { transform: translateY(24px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes vb-slide-down {
+  from { transform: translateY(-24px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes vb-slide-left {
+  from { transform: translateX(24px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes vb-slide-right {
+  from { transform: translateX(-24px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes vb-blur-in {
+  from { filter: blur(8px); opacity: 0; }
+  to { filter: blur(0); opacity: 1; }
+}
+@keyframes vb-scale-pop {
+  from { transform: scale(0.88); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+@keyframes vb-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+.animate-vb-slide-up { animation: vb-slide-up 0.65s ease-out both; }
+.animate-vb-slide-down { animation: vb-slide-down 0.65s ease-out both; }
+.animate-vb-slide-left { animation: vb-slide-left 0.65s ease-out both; }
+.animate-vb-slide-right { animation: vb-slide-right 0.65s ease-out both; }
+.animate-vb-blur-in { animation: vb-blur-in 0.7s ease-out both; }
+.animate-vb-scale-pop { animation: vb-scale-pop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+.animate-vb-pulse { animation: vb-pulse 1.2s ease-in-out both; }
+
+@keyframes vb-ken-burns {
+  from { transform: scale(1) translate(0, 0); }
+  to { transform: scale(1.12) translate(-2%, -1.5%); }
+}
+.animate-vb-ken-burns {
+  animation: vb-ken-burns 8s ease-out both;
+  transform-origin: center center;
+}
+
+.vb-text-bg-soft {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  background: rgba(0, 0, 0, 0.35);
+}
+.vb-text-bg-solid {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  background: rgba(0, 0, 0, 0.65);
+}
+.vb-text-bg-pill {
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.vb-overlay-dim::after,
+.vb-overlay-dark::after,
+.vb-overlay-light::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+.vb-overlay-dim::after { background: rgba(0, 0, 0, 0.3); }
+.vb-overlay-dark::after { background: rgba(0, 0, 0, 0.55); }
+.vb-overlay-light::after { background: rgba(255, 255, 255, 0.25); }
+
+/* Admin video builder — workspace layout */
+.vb-editor-root {
+  max-width: 100%;
+}
+
+.vb-editor-workspace {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto auto;
+  gap: 0;
+  min-height: min(72vh, 820px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+@media (min-width: 1024px) {
+  .vb-editor-workspace {
+    grid-template-columns: 320px 1fr 220px;
+    grid-template-rows: 1fr;
+    min-height: calc(100vh - 11rem);
+  }
+}
+
+.vb-editor-stage {
+  order: 1;
+}
+
+.vb-editor-rail {
+  order: 2;
+}
+
+.vb-editor-inspector {
+  order: 3;
+}
+
+@media (min-width: 1024px) {
+  .vb-editor-stage,
+  .vb-editor-rail,
+  .vb-editor-inspector {
+    order: unset;
+  }
+}
+
+.vb-editor-rail {
+  background: rgba(0, 0, 0, 0.35);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  max-height: 220px;
+}
+
+@media (min-width: 1024px) {
+  .vb-editor-rail {
+    border-bottom: none;
+    border-inline-end: 1px solid rgba(255, 255, 255, 0.08);
+    max-height: none;
+  }
+}
+
+.vb-editor-stage {
+  background: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  min-height: 280px;
+}
+
+@media (min-width: 1024px) {
+  .vb-editor-stage {
+    border-bottom: none;
+  }
+}
+
+.vb-editor-inspector {
+  background: rgba(0, 0, 0, 0.35);
+  border-inline-start: 1px solid rgba(255, 255, 255, 0.08);
+  max-height: 420px;
+}
+
+@media (min-width: 1024px) {
+  .vb-editor-inspector {
+    max-height: none;
+  }
+}
+
+.vb-editor-inspector summary::-webkit-details-marker {
+  display: none;
+}

@@ -1,25 +1,22 @@
 import AdminSectionCard from "../AdminSectionCard.jsx";
 import AdminVideoScenePreview from "./AdminVideoScenePreview.jsx";
+import AdminVideoSceneStylePanel from "./AdminVideoSceneStylePanel.jsx";
+import { defaultSceneFields, pickSceneStyleFields, VB_SCENE_TEMPLATES } from "../../../lib/admin-portal/admin-video-builder-catalog.js";
 import {
   VB_ADD_SCENE,
-  VB_ANIM_FADE,
-  VB_ANIM_NONE,
-  VB_ANIM_ZOOM,
+  VB_APPLY_STYLE_ALL,
   VB_ASPECT_RATIO,
-  VB_BG_COLORFUL,
-  VB_BG_DARK,
-  VB_BG_LIGHT,
   VB_DELETE_SCENE_CONFIRM,
+  VB_DUPLICATE_SCENE,
   VB_MOVE_DOWN,
   VB_MOVE_UP,
-  VB_SCENE_ANIMATION,
-  VB_SCENE_BG,
   VB_SCENE_DURATION,
   VB_SCENE_MEDIA,
   VB_SCENE_N,
   VB_SCENE_SUBTITLE,
   VB_SCENE_TITLE,
   VB_SCENES,
+  VB_TEMPLATE_APPLY,
   VB_VIDEO_NAME,
 } from "../../../lib/admin-portal/admin-video-builder-ui.he.js";
 
@@ -67,14 +64,35 @@ export default function AdminVideoSceneList({ project, assets, onChange, onSelec
       ...scenes,
       {
         id: clientUuid(),
-        title: "כותרת חדשה",
-        subtitle: "טקסט משנה",
-        mediaAssetId: null,
-        durationSec: 5,
-        bgType: "light",
-        animation: "none",
+        ...defaultSceneFields(),
       },
     ]);
+  }
+
+  function duplicateScene(index) {
+    const src = scenes[index];
+    if (!src) return;
+    const copy = { ...src, id: clientUuid(), title: `${src.title} (עותק)` };
+    const next = [...scenes];
+    next.splice(index + 1, 0, copy);
+    updateScenes(next);
+  }
+
+  function applyStyleToAll(index) {
+    const style = pickSceneStyleFields(scenes[index] || {});
+    updateScenes(scenes.map((s, i) => (i === index ? s : { ...s, ...style })));
+  }
+
+  function applyTemplate(templateId) {
+    const tpl = VB_SCENE_TEMPLATES.find((t) => t.id === templateId);
+    if (!tpl) return;
+    updateScenes(
+      tpl.scenes.map((s) => ({
+        id: clientUuid(),
+        ...defaultSceneFields(),
+        ...s,
+      }))
+    );
   }
 
   return (
@@ -105,15 +123,32 @@ export default function AdminVideoSceneList({ project, assets, onChange, onSelec
         </div>
       </AdminSectionCard>
 
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-base font-semibold">{VB_SCENES}</h2>
-        <button
-          type="button"
-          onClick={addScene}
-          className="rounded-lg bg-emerald-600/70 border border-emerald-400/30 px-3 py-1.5 text-sm font-semibold"
-        >
-          {VB_ADD_SCENE}
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <select
+            defaultValue=""
+            onChange={(e) => {
+              if (e.target.value) applyTemplate(e.target.value);
+              e.target.value = "";
+            }}
+            className="rounded border border-white/20 bg-black/30 px-2 py-1.5 text-xs"
+          >
+            <option value="">{VB_TEMPLATE_APPLY}</option>
+            {VB_SCENE_TEMPLATES.map((t) => (
+              <option key={t.id} value={t.id}>
+                {t.label}
+              </option>
+            ))}
+          </select>
+          <button
+            type="button"
+            onClick={addScene}
+            className="rounded-lg bg-emerald-600/70 border border-emerald-400/30 px-3 py-1.5 text-sm font-semibold"
+          >
+            {VB_ADD_SCENE}
+          </button>
+        </div>
       </div>
 
       <div className="space-y-4">
@@ -151,6 +186,22 @@ export default function AdminVideoSceneList({ project, assets, onChange, onSelec
                 >
                   ✕
                 </button>
+                <button
+                  type="button"
+                  onClick={() => duplicateScene(index)}
+                  className="rounded border border-white/20 px-2 py-0.5 text-xs"
+                  title={VB_DUPLICATE_SCENE}
+                >
+                  ⧉
+                </button>
+                <button
+                  type="button"
+                  onClick={() => applyStyleToAll(index)}
+                  className="rounded border border-amber-400/30 px-2 py-0.5 text-xs text-amber-200"
+                  title={VB_APPLY_STYLE_ALL}
+                >
+                  ⊕
+                </button>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-6">
@@ -174,7 +225,7 @@ export default function AdminVideoSceneList({ project, assets, onChange, onSelec
                     />
                   </label>
                   <div className="grid grid-cols-2 gap-2">
-                    <label className="block text-right">
+                    <label className="block text-right col-span-2 sm:col-span-1">
                       <span className="text-xs text-white/50">{VB_SCENE_DURATION}</span>
                       <input
                         type="number"
@@ -187,31 +238,11 @@ export default function AdminVideoSceneList({ project, assets, onChange, onSelec
                         className="mt-1 w-full rounded border border-white/20 bg-black/30 px-3 py-2 text-sm text-right"
                       />
                     </label>
-                    <label className="block text-right">
-                      <span className="text-xs text-white/50">{VB_SCENE_BG}</span>
-                      <select
-                        value={String(scene.bgType || "light")}
-                        onChange={(e) => updateScene(index, { bgType: e.target.value })}
-                        className="mt-1 w-full rounded border border-white/20 bg-black/30 px-3 py-2 text-sm text-right"
-                      >
-                        <option value="light">{VB_BG_LIGHT}</option>
-                        <option value="colorful">{VB_BG_COLORFUL}</option>
-                        <option value="dark">{VB_BG_DARK}</option>
-                      </select>
-                    </label>
                   </div>
-                  <label className="block text-right">
-                    <span className="text-xs text-white/50">{VB_SCENE_ANIMATION}</span>
-                    <select
-                      value={String(scene.animation || "none")}
-                      onChange={(e) => updateScene(index, { animation: e.target.value })}
-                      className="mt-1 w-full rounded border border-white/20 bg-black/30 px-3 py-2 text-sm text-right"
-                    >
-                      <option value="none">{VB_ANIM_NONE}</option>
-                      <option value="fade">{VB_ANIM_FADE}</option>
-                      <option value="zoom">{VB_ANIM_ZOOM}</option>
-                    </select>
-                  </label>
+                  <AdminVideoSceneStylePanel
+                    scene={scene}
+                    onPatch={(patch) => updateScene(index, patch)}
+                  />
                   <div>
                     <span className="text-xs text-white/50">{VB_SCENE_MEDIA}</span>
                     <div className="mt-1 flex items-center gap-2 justify-end">

@@ -1,13 +1,25 @@
 import {
-  VB_BG_PREVIEW_CLASS,
-  VB_ANIM_PREVIEW_CLASS,
-} from "../../../lib/admin-portal/admin-video-builder-utils.js";
+  getAnimationPreviewClass,
+  getBackgroundPreviewClass,
+  getBackgroundPreviewStyle,
+  normalizeSceneStyle,
+  VB_MEDIA_OVERLAYS,
+  VB_TEXT_BACKGROUNDS,
+  VB_TEXT_SHADOWS,
+  VB_TEXT_SIZES,
+  VB_MEDIA_SCALE_FACTOR,
+} from "../../../lib/admin-portal/admin-video-builder-catalog.js";
 
-const BG_CLASS = VB_BG_PREVIEW_CLASS;
-const ANIM_CLASS = VB_ANIM_PREVIEW_CLASS;
+const MEDIA_Y_CLASS = { center: "top-[22%]", top: "top-[10%]", bottom: "top-[38%]" };
+const WM_CLASS = {
+  top_right: "top-3 left-3",
+  top_left: "top-3 right-3",
+  bottom_right: "bottom-3 left-3",
+  bottom_left: "bottom-3 right-3",
+};
 
 /**
- * @param {{ scene: Record<string, unknown>, mediaUrl?: string | null, mediaType?: string, aspectRatio?: string, active?: boolean }} props
+ * @param {{ scene: Record<string, unknown>, mediaUrl?: string | null, mediaType?: string, aspectRatio?: string, active?: boolean, watermarkUrl?: string | null, watermarkPosition?: string, showSafeZone?: boolean }} props
  */
 export default function AdminVideoScenePreview({
   scene,
@@ -15,9 +27,32 @@ export default function AdminVideoScenePreview({
   mediaType,
   aspectRatio = "16:9",
   active = true,
+  watermarkUrl,
+  watermarkPosition = "top_right",
+  showSafeZone = false,
 }) {
-  const bg = BG_CLASS[scene.bgType] || BG_CLASS.light;
-  const anim = active ? ANIM_CLASS[scene.animation] || "" : "";
+  const styled = normalizeSceneStyle(scene);
+  const bgClass = getBackgroundPreviewClass(styled.bgType);
+  const bgStyle = getBackgroundPreviewStyle(styled.bgType);
+  const anim =
+    styled.animation === "ken_burns" && active
+      ? "animate-vb-ken-burns"
+      : getAnimationPreviewClass(styled.animation, active);
+  const overlayClass = VB_MEDIA_OVERLAYS[styled.mediaOverlay]?.previewClass || "";
+  const textBgClass = VB_TEXT_BACKGROUNDS[styled.textBg]?.previewClass || "";
+  const titleSize = VB_TEXT_SIZES[styled.titleSize]?.previewTitle || VB_TEXT_SIZES.md.previewTitle;
+  const subtitleSize =
+    VB_TEXT_SIZES[styled.subtitleSize]?.previewSubtitle || VB_TEXT_SIZES.md.previewSubtitle;
+  const shadowClass = VB_TEXT_SHADOWS[styled.textShadow]?.previewClass || "";
+  const alignClass =
+    styled.textAlign === "right"
+      ? "text-right items-end"
+      : styled.textAlign === "left"
+        ? "text-left items-start"
+        : "text-center items-center";
+  const mediaScale = VB_MEDIA_SCALE_FACTOR[styled.mediaScale] || 0.65;
+  const mediaMax = `${Math.round(mediaScale * 100)}%`;
+
   const ratioClass =
     aspectRatio === "9:16"
       ? "aspect-[9/16]"
@@ -27,32 +62,54 @@ export default function AdminVideoScenePreview({
 
   return (
     <div
-      className={`relative w-full ${ratioClass} rounded-lg overflow-hidden border border-white/20 ${bg} ${anim}`}
+      className={`relative w-full ${ratioClass} rounded-lg overflow-hidden border border-white/20 ${bgClass} ${anim} ${overlayClass}`}
+      style={bgStyle}
       dir="rtl"
     >
+      {showSafeZone && aspectRatio === "9:16" ? (
+        <div className="absolute inset-3 border border-dashed border-white/30 pointer-events-none z-20 rounded" />
+      ) : null}
       {mediaUrl && mediaType === "image" ? (
         <img
           src={mediaUrl}
           alt=""
-          className="absolute inset-0 m-auto max-h-[55%] max-w-[70%] object-contain"
+          style={{ maxHeight: mediaMax, maxWidth: mediaMax }}
+          className={`absolute inset-x-0 mx-auto object-contain z-[1] ${MEDIA_Y_CLASS[styled.mediaPosition] || MEDIA_Y_CLASS.center}`}
         />
       ) : null}
       {mediaUrl && mediaType === "video" ? (
         <video
           src={mediaUrl}
-          className="absolute inset-0 w-full h-full object-cover opacity-80"
+          className="absolute inset-0 w-full h-full object-cover opacity-80 z-[1]"
           muted
           playsInline
           autoPlay={active}
           loop
         />
       ) : null}
-      <div className="absolute inset-x-0 top-[8%] px-4 text-center z-10">
-        {scene.title ? (
-          <h3 className="text-lg sm:text-2xl font-bold drop-shadow-md">{scene.title}</h3>
+      {watermarkUrl ? (
+        <img
+          src={watermarkUrl}
+          alt=""
+          className={`absolute w-12 h-12 object-contain z-20 opacity-90 ${WM_CLASS[watermarkPosition] || WM_CLASS.top_right}`}
+        />
+      ) : null}
+      <div
+        className={`absolute inset-x-0 top-[8%] px-4 flex flex-col z-10 ${alignClass} ${textBgClass}`}
+        style={{ color: styled.titleColor }}
+      >
+        {styled.title ? (
+          <h3 className={`${titleSize} ${styled.titleBold ? "font-bold" : "font-semibold"} ${shadowClass}`}>
+            {styled.title}
+          </h3>
         ) : null}
-        {scene.subtitle ? (
-          <p className="mt-2 text-sm sm:text-base opacity-90 drop-shadow">{scene.subtitle}</p>
+        {styled.subtitle ? (
+          <p
+            className={`mt-2 ${subtitleSize} opacity-95 ${shadowClass}`}
+            style={{ color: styled.subtitleColor }}
+          >
+            {styled.subtitle}
+          </p>
         ) : null}
       </div>
     </div>

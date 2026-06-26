@@ -14,15 +14,23 @@ function parseRunIdArg(argv) {
   return hit.slice("--runId=".length);
 }
 
+function parseProvisionedAfter(argv) {
+  const hit = argv.find((a) => a.startsWith("--provisioned-after="));
+  if (!hit) return undefined;
+  return hit.slice("--provisioned-after=".length);
+}
+
 async function main() {
   const argv = process.argv.slice(2);
   const runId = parseRunIdArg(argv);
   const execute = argv.includes("--execute");
+  const provisionedAfter = parseProvisionedAfter(argv);
   const cfg = parseMassSimulationCli(argv);
 
   const result = await cleanupMassSimulationRun(runId, {
     execute,
     emailDomain: cfg.emailDomain,
+    provisionedAfter,
   });
 
   console.log(JSON.stringify(result, null, 2));

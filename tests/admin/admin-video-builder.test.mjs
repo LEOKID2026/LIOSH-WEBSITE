@@ -16,7 +16,9 @@ import {
   createVideoProject,
   defaultScene,
   deleteVideoProject,
+  deleteMediaAsset,
   exportVideoProjectMp4,
+  getMediaAssetById,
   getVideoProject,
   listVideoProjects,
   parseVideoProjectBody,
@@ -50,6 +52,7 @@ describe("admin video builder — page & auth contract", () => {
       "pages/api/admin/video-builder/index.js",
       "pages/api/admin/video-builder/[id].js",
       "pages/api/admin/video-builder/media.js",
+      "pages/api/admin/video-builder/media/[id].js",
       "pages/api/admin/video-builder/[id]/export.js",
       "pages/api/admin/video-builder/ffmpeg-status.js",
     ]) {
@@ -89,6 +92,42 @@ describe("parseVideoProjectBody", () => {
       scenes: [{ ...defaultScene(), durationSec: 0 }],
     });
     assert.equal(parsed.ok, false);
+  });
+
+  test("accepts extended style fields", () => {
+    const parsed = parseVideoProjectBody({
+      name: "x",
+      aspectRatio: "16:9",
+      scenes: [
+        {
+          ...defaultScene(),
+          bgType: "gradient_ocean",
+          animation: "slide_up",
+          titleColor: "#fbbf24",
+          subtitleColor: "#ffffff",
+          titleSize: "lg",
+          textShadow: "strong",
+          mediaOverlay: "dim",
+          transitionOut: "fade_black",
+          textBg: "soft",
+          fontFamily: "arial",
+          titleBold: true,
+          mediaPosition: "top",
+          mediaScale: "lg",
+        },
+      ],
+      exportQuality: "720p",
+      defaultTransition: "crossfade",
+      voiceoverVolume: 90,
+      backgroundMusicVolume: 25,
+      watermarkPosition: "bottom_left",
+    });
+    assert.equal(parsed.ok, true);
+    assert.equal(parsed.payload.scenes[0].bgType, "gradient_ocean");
+    assert.equal(parsed.payload.scenes[0].titleColor, "#fbbf24");
+    assert.equal(parsed.payload.scenes[0].transitionOut, "fade_black");
+    assert.equal(parsed.payload.exportQuality, "720p");
+    assert.equal(parsed.payload.voiceoverVolume, 90);
   });
 });
 
@@ -138,6 +177,11 @@ describe("local storage CRUD", () => {
     const saved = await saveMediaAsset(png, "image/png", "test.png");
     assert.equal(saved.ok, true);
     assert.match(String(saved.asset.url), /^\/admin-video-assets\/uploads\//);
+
+    const deleted = await deleteMediaAsset(saved.asset.id);
+    assert.equal(deleted.ok, true);
+    const after = await getMediaAssetById(saved.asset.id);
+    assert.equal(after, null);
   });
 
   test("delete project cleans up", async () => {
@@ -204,5 +248,21 @@ describe("preview component contract", () => {
     assert.match(src, /AdminVideoScenePreview/);
     assert.match(src, /VB_PREVIEW_PLAY/);
     assert.match(src, /computePreviewTotalDurationSec/);
+    assert.match(src, /AdminVideoTimeline/);
+  });
+
+  test("editor includes project settings and auto-save", () => {
+    const src = readSrc("components/admin/video-builder/AdminVideoBuilderEditor.jsx");
+    assert.match(src, /AdminVideoInspector/);
+    assert.match(src, /AdminVideoSceneRail/);
+    assert.match(src, /backgroundMusicAssetId/);
+    assert.match(src, /AUTO_SAVE_MS/);
+    assert.match(src, /vb-editor-workspace/);
+  });
+
+  test("media library component has delete control", () => {
+    const src = readSrc("components/admin/video-builder/AdminVideoMediaLibrary.jsx");
+    assert.match(src, /VB_MEDIA_DELETE/);
+    assert.match(src, /method: "DELETE"/);
   });
 });

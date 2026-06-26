@@ -21,6 +21,7 @@ import {
  *   voiceoverAssetId: string | null,
  *   onChange: (assetId: string | null) => void,
  *   onUploaded: (asset: Record<string, unknown>) => void,
+ *   embedded?: boolean,
  * }} props
  */
 export default function AdminVideoVoiceoverPanel({
@@ -29,6 +30,7 @@ export default function AdminVideoVoiceoverPanel({
   voiceoverAssetId,
   onChange,
   onUploaded,
+  embedded = false,
 }) {
   const [recording, setRecording] = useState(false);
   const [recordedBlob, setRecordedBlob] = useState(null);
@@ -99,85 +101,108 @@ export default function AdminVideoVoiceoverPanel({
     }
   }
 
-  return (
-    <AdminSectionCard title={VB_VOICEOVER}>
-      <div className="space-y-4">
-        {selected ? (
-          <div className="flex flex-wrap items-center gap-2 justify-between">
-            <p className="text-sm text-white/80">{selected.filename}</p>
+  const body = (
+    <div className="space-y-4">
+      {selected ? (
+        <div className="flex flex-wrap items-center gap-2 justify-between">
+          <p className="text-sm text-white/80 truncate">{selected.filename}</p>
+          <button
+            type="button"
+            onClick={() => onChange(null)}
+            className="text-xs text-red-300 border border-red-400/30 rounded px-2 py-1 hover:bg-red-500/10 shrink-0"
+          >
+            {VB_VOICEOVER_CLEAR}
+          </button>
+        </div>
+      ) : (
+        <p className="text-sm text-white/50">{VB_VOICEOVER_NONE}</p>
+      )}
+
+      {playbackUrl ? <audio ref={audioRef} src={playbackUrl} controls className="w-full" /> : null}
+
+      <div className="rounded-lg border border-white/10 p-3 space-y-2">
+        <p className="text-xs text-white/50">{VB_VOICEOVER_RECORD}</p>
+        <div className="flex flex-wrap gap-2 justify-end">
+          {!recording ? (
             <button
               type="button"
-              onClick={() => onChange(null)}
-              className="text-xs text-red-300 border border-red-400/30 rounded px-2 py-1 hover:bg-red-500/10"
+              onClick={() => void startRecording()}
+              className="rounded border border-white/20 px-3 py-1.5 text-sm hover:bg-white/5"
             >
-              {VB_VOICEOVER_CLEAR}
+              {VB_VOICEOVER_START}
             </button>
-          </div>
-        ) : (
-          <p className="text-sm text-white/50">{VB_VOICEOVER_NONE}</p>
-        )}
-
-        {playbackUrl ? (
-          <audio ref={audioRef} src={playbackUrl} controls className="w-full" />
-        ) : null}
-
-        <div className="rounded-lg border border-white/10 p-3 space-y-2">
-          <p className="text-xs text-white/50">{VB_VOICEOVER_RECORD}</p>
-          <div className="flex flex-wrap gap-2 justify-end">
-            {!recording ? (
+          ) : (
+            <button
+              type="button"
+              onClick={stopRecording}
+              className="rounded border border-red-400/40 px-3 py-1.5 text-sm text-red-200 hover:bg-red-500/10"
+            >
+              {VB_VOICEOVER_STOP}
+            </button>
+          )}
+          {recordedBlob ? (
+            <>
               <button
                 type="button"
-                onClick={() => void startRecording()}
-                className="rounded border border-white/20 px-3 py-1.5 text-sm hover:bg-white/5"
+                onClick={() => audioRef.current?.play()}
+                className="rounded border border-white/20 px-3 py-1.5 text-sm"
               >
-                {VB_VOICEOVER_START}
+                {VB_VOICEOVER_PLAY}
               </button>
-            ) : (
               <button
                 type="button"
-                onClick={stopRecording}
-                className="rounded border border-red-400/40 px-3 py-1.5 text-sm text-red-200 hover:bg-red-500/10"
+                onClick={() => void saveRecording()}
+                disabled={saving}
+                className="rounded bg-emerald-600/70 px-3 py-1.5 text-sm disabled:opacity-50"
               >
-                {VB_VOICEOVER_STOP}
+                {saving ? "…" : VB_VOICEOVER_SAVE}
               </button>
-            )}
-            {recordedBlob ? (
-              <>
-                <button
-                  type="button"
-                  onClick={() => audioRef.current?.play()}
-                  className="rounded border border-white/20 px-3 py-1.5 text-sm"
-                >
-                  {VB_VOICEOVER_PLAY}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => void saveRecording()}
-                  disabled={saving}
-                  className="rounded bg-emerald-600/70 px-3 py-1.5 text-sm disabled:opacity-50"
-                >
-                  {saving ? "…" : VB_VOICEOVER_SAVE}
-                </button>
-              </>
-            ) : null}
-          </div>
+            </>
+          ) : null}
         </div>
-
-        <p className="text-xs text-white/50">{VB_VOICEOVER_UPLOAD}</p>
-        <AdminVideoMediaLibrary
-          accessToken={accessToken}
-          assets={assets}
-          onUploaded={(asset) => {
-            onUploaded(asset);
-            if (asset.type === "audio") onChange(String(asset.id));
-          }}
-          selectedId={voiceoverAssetId}
-          onSelect={(asset) => onChange(String(asset.id))}
-          filterTypes={["audio"]}
-        />
-
-        {error ? <p className="text-xs text-red-300 text-right">{error}</p> : null}
       </div>
-    </AdminSectionCard>
+
+      {!embedded ? (
+        <>
+          <p className="text-xs text-white/50">{VB_VOICEOVER_UPLOAD}</p>
+          <AdminVideoMediaLibrary
+            accessToken={accessToken}
+            assets={assets}
+            onUploaded={(asset) => {
+              onUploaded(asset);
+              if (asset.type === "audio") onChange(String(asset.id));
+            }}
+            selectedId={voiceoverAssetId}
+            onSelect={(asset) => onChange(String(asset.id))}
+            filterTypes={["audio"]}
+          />
+        </>
+      ) : (
+        <>
+          <p className="text-xs text-white/50">{VB_VOICEOVER_UPLOAD}</p>
+          <select
+            value={String(voiceoverAssetId || "")}
+            onChange={(e) => onChange(e.target.value || null)}
+            className="w-full rounded border border-white/20 bg-black/30 px-2 py-1.5 text-sm text-right"
+          >
+            <option value="">— בחר קובץ —</option>
+            {assets
+              .filter((a) => a.type === "audio")
+              .map((a) => (
+                <option key={String(a.id)} value={String(a.id)}>
+                  {a.filename}
+                </option>
+              ))}
+          </select>
+          <p className="text-xs text-white/40">העלאת קבצים חדשים — בטאב «מדיה»</p>
+        </>
+      )}
+
+      {error ? <p className="text-xs text-red-300 text-right">{error}</p> : null}
+    </div>
   );
+
+  if (embedded) return body;
+
+  return <AdminSectionCard title={VB_VOICEOVER}>{body}</AdminSectionCard>;
 }

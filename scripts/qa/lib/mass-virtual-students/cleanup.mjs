@@ -59,27 +59,50 @@ async function deleteQaParents(admin, supabase, parentIds, emailDomain) {
   return deleted;
 }
 
+async function resolveStudentIdsForRun(runId, { provisionedAfter } = {}) {
+  const manifestPath = join(REPO_ROOT, "reports", "mass-simulation", runId, "manifest.json");
+  try {
+    const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+    return {
+      source: "manifest",
+      studentIds: (manifest.students || []).map((s) => s.studentId).filter(Boolean),
+      parentIds: (manifest.parents || []).map((p) => p.parentId).filter(Boolean),
+    };
+  } catch {
+    if (!provisionedAfter) {
+      throw new Error(
+        `manifest not found for runId=${runId}. Pass --provisioned-after=<ISO> to cleanup partial run without manifest.`,
+      );
+    }
+    const supabase = createServiceClient();
+    const { data: codes, error } = await supabase
+      .from("student_access_codes")
+      .select("student_id, login_username")
+      .like("login_username", "qp%")
+      .gte("created_at", provisionedAfter);
+    if (error) throw error;
+    const studentIds = [...new Set((codes || []).map((c) => c.student_id).filter(Boolean))];
+    return { source: "provisioned-after", studentIds, parentIds: [], provisionedAfter };
+  }
+}
+
 /**
  * Delete only data created by a specific mass simulation run.
  */
-export async function cleanupMassSimulationRun(runId, { execute = false, emailDomain = "leo.test" } = {}) {
-  const manifestPath = join(REPO_ROOT, "reports", "mass-simulation", runId, "manifest.json");
-  let manifest;
-  try {
-    manifest = JSON.parse(await readFile(manifestPath, "utf8"));
-  } catch {
-    throw new Error(`manifest not found for runId=${runId} at ${manifestPath}`);
-  }
-
-  const studentIds = (manifest.students || []).map((s) => s.studentId).filter(Boolean);
-  const parentIds = (manifest.parents || []).map((p) => p.parentId).filter(Boolean);
+export async function cleanupMassSimulationRun(
+  runId,
+  { execute = false, emailDomain = "leo.test", provisionedAfter } = {},
+) {
+  const { source, studentIds, parentIds } = await resolveStudentIdsForRun(runId, { provisionedAfter });
 
   if (!execute) {
     return {
       dryRun: true,
       runId,
+      source,
       studentIds: studentIds.length,
       parentIds: parentIds.length,
+      provisionedAfter: provisionedAfter || null,
     };
   }
 
@@ -89,11 +112,13 @@ export async function cleanupMassSimulationRun(runId, { execute = false, emailDo
   const removedSessions = await cleanTaggedSessions(supabase, studentIds, runId);
   const removedActivities = await cleanParentActivities(supabase, studentIds, runId);
   const removedStudents = await deleteStudents(supabase, studentIds);
-  const removedParents = await deleteQaParents(admin, supabase, parentIds, emailDomain);
+  const removedParents =
+    parentIds.length > 0 ? await deleteQaParents(admin, supabase, parentIds, emailDomain) : 0;
 
   return {
     dryRun: false,
     runId,
+    source,
     removedSessions,
     removedActivities,
     removedStudents,
