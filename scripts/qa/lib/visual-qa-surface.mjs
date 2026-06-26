@@ -261,7 +261,10 @@ export async function readDisplayedGrade(page, plan) {
 
 export async function readSubjectLabelOnPage(page) {
   const body = await page.locator("body").innerText().catch(() => "");
-  return { hasHeshbonLabel: body.includes("חשבון") && !body.includes("מתמטיקה") };
+  const withoutCalculator = body.replace(/מחשבון/g, "");
+  return {
+    hasHeshbonLabel: withoutCalculator.includes("חשבון") && !body.includes("מתמטיקה"),
+  };
 }
 
 export async function captureQuestionSample(page, meta, { screenshotPath } = {}) {

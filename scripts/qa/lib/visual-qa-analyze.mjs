@@ -2,9 +2,12 @@
  * Visual QA — issue detection on text the child actually sees.
  */
 
+const TOPIC_SLUG_LEAK_PATTERN =
+  /\b(?:vocabulary|phonics|grammar|reading|writing|area_grid|concept_tf|translation|shapes_basic|mixed)\b/i;
+
 const RAW_ID_PATTERNS = [
   /\b(?:addition|subtraction|multiplication|division|division_with_remainder|word_problems|fractions|percentages|ratio|scale|order_of_operations|number_sense|prime_composite)\b/i,
-  /\b(?:vocabulary|phonics|grammar|reading|writing|area_grid|concept_tf|translation|shapes_basic|mixed)\b/i,
+  TOPIC_SLUG_LEAK_PATTERN,
   /\b(?:patternFamily|diagnosticSkillId|subtopicId|skillKey|gradeBand|grade_\d|g[1-6]_)\b/i,
   /\b[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}\b/i,
 ];
@@ -69,7 +72,7 @@ export function analyzeVisibleText(text, context = {}) {
     duplicateAnswers: false,
   };
 
-  const { inputType, answersDisplayed = [], questionText = "" } = context;
+  const { inputType, answersDisplayed = [], questionText = "", subject } = context;
   const q = compact(questionText || combined);
 
   if (!q && !combined) {
@@ -84,11 +87,19 @@ export function analyzeVisibleText(text, context = {}) {
     }
   }
 
-  for (const re of RAW_ID_PATTERNS) {
+  const nonTopicSlugPatterns = RAW_ID_PATTERNS.filter((re) => re !== TOPIC_SLUG_LEAK_PATTERN);
+  for (const re of nonTopicSlugPatterns) {
     if (re.test(combined)) {
       details.push(`raw id pattern: ${re.source}`);
       flags.rawIds = true;
     }
+  }
+
+  // English MCQ options legitimately contain words like "reading"/"writing" as verbs.
+  const topicSlugBlob = subject === "english" ? q : combined;
+  if (TOPIC_SLUG_LEAK_PATTERN.test(topicSlugBlob)) {
+    details.push(`raw id pattern: ${TOPIC_SLUG_LEAK_PATTERN.source}`);
+    flags.rawIds = true;
   }
 
   for (const re of METADATA_FRAGMENTS) {
@@ -250,6 +261,7 @@ export function mergeIssues(...parts) {
 export function analyzeSample(sample) {
   const visibleBlob = [sample.questionText, ...(sample.answersDisplayed || [])].join("\n");
   const base = analyzeVisibleText(visibleBlob, {
+    subject: sample.subject,
     inputType: sample.inputType,
     answersDisplayed: sample.answersDisplayed || [],
     questionText: sample.questionText,

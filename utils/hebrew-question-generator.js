@@ -1758,7 +1758,7 @@ const G2_EASY_QUESTIONS = {
       subtopicId: "g2.short_sentence",
     },
     {
-      question: "בחרו את הניסוח התקין (בלי חזרה מיותרת):",
+      question: "בחרו את המשפט הקצר והנכון:",
       answers: ["נכנסנו לכיתה בשקט", "נכנסנו בשקט לכיתה בשקט", "נכנסנו כיתה בשקט", "שקט כיתה נכנסנו"],
       correct: 0,
       subtopicId: "g2.short_sentence",

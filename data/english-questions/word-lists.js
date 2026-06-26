@@ -225,7 +225,7 @@ export const WORD_LISTS = {
     notebook: "מחברת",
     eraser: "מחק",
     ruler: "סרגל",
-    calculator: "מחשבון",
+    calculator: "מחשבון כיס",
     dictionary: "מילון",
     library: "ספרייה",
     homework: "שיעורי בית",
