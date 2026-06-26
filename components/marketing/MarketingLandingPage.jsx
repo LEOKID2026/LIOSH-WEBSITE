@@ -3,7 +3,6 @@ import Link from "next/link";
 import Layout from "../Layout";
 import MarketingFeatureCard from "./MarketingFeatureCard";
 import PortalPwaInstallButton from "../pwa/PortalPwaInstallButton";
-import StudentThemePicker from "../student/StudentThemePicker.jsx";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import { getPrivateTeacherLayoutProps } from "../../lib/teacher-ui/teacher-portal-theme.client.js";
 
@@ -124,7 +123,11 @@ function getMarketingLayoutProps(audience, theme) {
   if (audience === "teachers") {
     return getPrivateTeacherLayoutProps(theme);
   }
-  return { studentTheme: theme, studentShell: "home" };
+  const base = { studentTheme: theme, studentShell: "home" };
+  if (audience === "parents") {
+    return { ...base, layoutShowThemePicker: true };
+  }
+  return base;
 }
 
 function CtaButton({ cta, accent, isBright, size = "lg" }) {
@@ -214,9 +217,6 @@ export default function MarketingLandingPage({ audience, content }) {
             >
               {content.badge}
             </p>
-            <div className="flex justify-center">
-              <StudentThemePicker className="max-w-xs w-full sm:w-auto" />
-            </div>
             <h1
               className={`text-3xl font-black leading-tight md:text-4xl lg:text-5xl ${
                 isBright
