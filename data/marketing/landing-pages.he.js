@@ -2,6 +2,7 @@
  *   pageTitle: string,
  *   metaDescription?: string,
  *   badge: string,
+ *   installLabel?: string,
  *   hero: {
  *     title: string,
  *     subtitle: string,
@@ -33,6 +34,7 @@ export const KIDS_LANDING = {
   metaDescription:
     "תרגול במתמטיקה, עברית, אנגלית וגאומטריה — עם משחקים, מטבעות, קלפים והפתעות בדרך.",
   badge: "ילדים · משחקים · התקדמות",
+  installLabel: "התקנת אפליקציית הילדים",
   hero: {
     title: "לומדים, משחקים ומתקדמים עם ליאו",
     subtitle:
@@ -99,6 +101,7 @@ export const PARENTS_LANDING = {
   metaDescription:
     "Leo Kids עוזר לילדים לתרגל בצורה חווייתית, ולכם לקבל תמונת מצב ברורה על ההתקדמות.",
   badge: "הורים · מעקב · תמונת מצב",
+  installLabel: "התקנת אפליקציית ההורים",
   hero: {
     title: "הילד לומד בכיף — ואתם מבינים מה באמת קורה",
     subtitle:
@@ -167,6 +170,7 @@ export const TEACHERS_LANDING = {
   metaDescription:
     "נהלו תלמידים, שלחו תרגול ממוקד, עקבו אחרי התקדמות, והגיעו לשיעור הבא עם תמונת מצב ברורה יותר.",
   badge: "מורים פרטיים · מעקב · תרגול",
+  installLabel: "התקנת אפליקציית המורים",
   hero: {
     title: "כלי עבודה חכם למורים פרטיים",
     subtitle:

@@ -19,7 +19,7 @@ import {
 if (typeof window !== "undefined") {
   initParentPwaInstallPromptCapture();
   initTeacherPwaInstallPromptCapture();
-  if (window.location.pathname === "/student/install-app") {
+  if (window.location.pathname === "/student/install-app" || window.location.pathname === "/kids") {
     initPwaInstallPromptCapture();
   }
 }
@@ -87,7 +87,7 @@ export default function MyApp({ Component, pageProps }) {
   useEffect(() => {
     initParentPwaInstallPromptCapture();
     initTeacherPwaInstallPromptCapture();
-    if (router.pathname === "/student/install-app") {
+    if (router.pathname === "/student/install-app" || router.pathname === "/kids") {
       initPwaInstallPromptCapture();
     }
   }, [router.pathname]);
@@ -237,11 +237,14 @@ export default function MyApp({ Component, pageProps }) {
 
   const pathname = router.pathname || "";
   const shouldGate = STUDENT_PROTECTED_ROUTES.has(pathname);
-  const isStudentPwaInstallMode = pathname === "/student/install-app";
+  const isKidsLanding = pathname === "/kids";
+  const isParentsLanding = pathname === "/parents";
+  const isTeachersLanding = pathname === "/teachers";
+  const isStudentPwaInstallMode = pathname === "/student/install-app" || isKidsLanding;
   const isStudentPwaManifestRoute =
-    pathname.startsWith("/student/") || shouldGate;
-  const isParentPwaInstallMode = router.pathname === "/parent/install-app";
-  const isTeacherPwaInstallMode = router.pathname === "/teacher/install-app";
+    pathname.startsWith("/student/") || shouldGate || isKidsLanding;
+  const isParentPwaInstallMode = pathname === "/parent/install-app" || isParentsLanding;
+  const isTeacherPwaInstallMode = pathname === "/teacher/install-app" || isTeachersLanding;
 
   return (
     <>

@@ -2,7 +2,14 @@ import Head from "next/head";
 import Link from "next/link";
 import Layout from "../Layout";
 import MarketingFeatureCard from "./MarketingFeatureCard";
+import PortalPwaInstallButton from "../pwa/PortalPwaInstallButton";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
+
+const AUDIENCE_PORTAL = {
+  kids: "student",
+  parents: "parent",
+  teachers: "teacher",
+};
 
 const ACCENT = {
   kids: {
@@ -20,6 +27,10 @@ const ACCENT = {
       "border-2 border-violet-400 bg-white text-violet-800 hover:bg-violet-50",
     secondaryBtnClassic:
       "border border-white/25 bg-white/10 text-white hover:bg-white/15",
+    installBtnBright:
+      "bg-gradient-to-r from-fuchsia-100 via-violet-100 to-purple-100 border-2 border-fuchsia-400 text-fuchsia-900 shadow-md shadow-fuchsia-200/50 hover:from-fuchsia-200 hover:via-violet-200 hover:to-purple-200",
+    installBtnClassic:
+      "bg-gradient-to-r from-violet-600/35 via-fuchsia-600/30 to-purple-700/35 border border-fuchsia-400/55 text-fuchsia-100 shadow-lg shadow-fuchsia-950/25 hover:from-violet-600/45 hover:to-purple-700/45",
   },
   parents: {
     classicCardGradient: "from-cyan-500/60 to-blue-700/70",
@@ -36,6 +47,10 @@ const ACCENT = {
       "border-2 border-cyan-400 bg-white text-cyan-800 hover:bg-cyan-50",
     secondaryBtnClassic:
       "border border-white/25 bg-white/10 text-white hover:bg-white/15",
+    installBtnBright:
+      "bg-gradient-to-r from-cyan-100 via-sky-100 to-blue-100 border-2 border-cyan-400 text-cyan-900 shadow-md shadow-cyan-200/50 hover:from-cyan-200 hover:via-sky-200 hover:to-blue-200",
+    installBtnClassic:
+      "bg-gradient-to-r from-cyan-600/35 via-sky-600/30 to-blue-700/35 border border-cyan-400/55 text-cyan-100 shadow-lg shadow-cyan-950/25 hover:from-cyan-600/45 hover:to-blue-700/45",
   },
   teachers: {
     classicCardGradient: "from-orange-500/60 to-amber-600/70",
@@ -52,6 +67,10 @@ const ACCENT = {
       "border-2 border-amber-400 bg-white text-amber-800 hover:bg-amber-50",
     secondaryBtnClassic:
       "border border-white/25 bg-white/10 text-white hover:bg-white/15",
+    installBtnBright:
+      "bg-gradient-to-r from-amber-100 via-orange-100 to-yellow-100 border-2 border-amber-400 text-amber-900 shadow-md shadow-amber-200/50 hover:from-amber-200 hover:via-orange-200 hover:to-yellow-200",
+    installBtnClassic:
+      "bg-gradient-to-r from-orange-600/35 via-amber-600/30 to-yellow-600/35 border border-amber-400/55 text-amber-100 shadow-lg shadow-amber-950/25 hover:from-orange-600/45 hover:to-yellow-600/45",
   },
 };
 
@@ -103,6 +122,7 @@ function CtaButton({ cta, accent, isBright, size = "lg" }) {
 export default function MarketingLandingPage({ audience, content }) {
   const { theme, isBright } = useStudentTheme();
   const accent = ACCENT[audience];
+  const portal = AUDIENCE_PORTAL[audience];
   const cardGradient = isBright ? accent.brightCardGradient : accent.classicCardGradient;
 
   const sectionTitleClass = isBright
@@ -148,13 +168,21 @@ export default function MarketingLandingPage({ audience, content }) {
             >
               {content.hero.subtitle}
             </p>
-            <div className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
+            <div className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-stretch sm:justify-center sm:gap-4">
               <CtaButton cta={content.hero.primaryCta} accent={accent} isBright={isBright} />
               {content.hero.secondaryCta ? (
                 <CtaButton
                   cta={{ ...content.hero.secondaryCta, variant: "secondary" }}
                   accent={accent}
                   isBright={isBright}
+                />
+              ) : null}
+              {content.installLabel ? (
+                <PortalPwaInstallButton
+                  portal={portal}
+                  isBright={isBright}
+                  accent={accent}
+                  label={content.installLabel}
                 />
               ) : null}
             </div>
