@@ -6,8 +6,8 @@
  *   hero: {
  *     title: string,
  *     subtitle: string,
- *     primaryCta: { label: string, href?: string, scrollTo?: string },
- *     secondaryCta?: { label: string, href?: string, scrollTo?: string },
+ *     primaryCta: { label: string, href?: string, scrollTo?: string, action?: string },
+ *     secondaryCta?: { label: string, href?: string, scrollTo?: string, action?: string },
  *   },
  *   benefits: {
  *     title?: string,
@@ -23,8 +23,8 @@
  *   closing: {
  *     title: string,
  *     text: string,
- *     primaryCta: { label: string, href: string },
- *     secondaryCta?: { label: string, href: string },
+ *     primaryCta: { label: string, href?: string, action?: string },
+ *     secondaryCta?: { label: string, href?: string, action?: string },
  *   },
  * }} MarketingPageContent */
 
@@ -40,7 +40,7 @@ export const KIDS_LANDING = {
     subtitle:
       "תרגול במתמטיקה, עברית, אנגלית וגאומטריה — עם משחקים, מטבעות, קלפים והפתעות בדרך.",
     primaryCta: { label: "יש לי קוד כניסה", href: "/student/login" },
-    secondaryCta: { label: "בקשו מההורה להצטרף", href: "/parent/login" },
+    secondaryCta: { label: "בקשו מההורה להצטרף", action: "parentInvite" },
   },
   benefits: {
     items: [
@@ -90,7 +90,7 @@ export const KIDS_LANDING = {
   closing: {
     title: "רוצה להתחיל עם ליאו?",
     text: "בקשו מההורה לפתוח חשבון, לקבל קוד כניסה ולהתחיל ללמוד בדרך כיפית יותר.",
-    primaryCta: { label: "בקשו מההורה להצטרף", href: "/parent/login" },
+    primaryCta: { label: "בקשו מההורה להצטרף", action: "parentInvite" },
     secondaryCta: { label: "כבר יש לי קוד כניסה", href: "/student/login" },
   },
 };

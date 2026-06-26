@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import Layout from "../Layout";
@@ -5,6 +6,7 @@ import MarketingFeatureCard from "./MarketingFeatureCard";
 import PortalPwaInstallButton from "../pwa/PortalPwaInstallButton";
 import ParentPromoVideo from "../parent/ParentPromoVideo";
 import StudentPromoVideo from "../student/StudentPromoVideo";
+import StudentParentInviteModal from "../student/StudentParentInviteModal";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import { getPrivateTeacherLayoutProps } from "../../lib/teacher-ui/teacher-portal-theme.client.js";
 
@@ -132,7 +134,7 @@ function getMarketingLayoutProps(audience, theme) {
   return base;
 }
 
-function CtaButton({ cta, accent, isBright, size = "lg" }) {
+function CtaButton({ cta, accent, isBright, size = "lg", onParentInvite }) {
   const sizeClass =
     size === "lg"
       ? "w-full sm:w-auto min-h-[48px] px-6 py-3 text-base font-bold rounded-2xl"
@@ -140,6 +142,22 @@ function CtaButton({ cta, accent, isBright, size = "lg" }) {
 
   const primaryClass = isBright ? accent.primaryBtnBright : accent.primaryBtnClassic;
   const secondaryClass = isBright ? accent.secondaryBtnBright : accent.secondaryBtnClassic;
+  const isSecondary = cta.variant === "secondary";
+
+  if (cta.action === "parentInvite" && onParentInvite) {
+    return (
+      <button
+        type="button"
+        onClick={onParentInvite}
+        className={`inline-flex items-center justify-center ${sizeClass} ${
+          isSecondary ? secondaryClass : primaryClass
+        } transition`}
+        data-testid="kids-parent-invite-cta"
+      >
+        {cta.label}
+      </button>
+    );
+  }
 
   if (cta.scrollTo) {
     return (
@@ -177,6 +195,9 @@ export default function MarketingLandingPage({ audience, content }) {
   const accent = ACCENT[audience];
   const portal = AUDIENCE_PORTAL[audience];
   const isKidsPage = audience === "kids";
+  const [parentInviteOpen, setParentInviteOpen] = useState(false);
+  const openParentInvite = () => setParentInviteOpen(true);
+  const ctaParentInvite = isKidsPage ? openParentInvite : undefined;
   const defaultCardGradient = isBright ? accent.brightCardGradient : accent.classicCardGradient;
 
   const sectionTitleClass = isBright
@@ -234,12 +255,18 @@ export default function MarketingLandingPage({ audience, content }) {
               {content.hero.subtitle}
             </p>
             <div className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-stretch sm:justify-center sm:gap-4">
-              <CtaButton cta={content.hero.primaryCta} accent={accent} isBright={isBright} />
+              <CtaButton
+                cta={content.hero.primaryCta}
+                accent={accent}
+                isBright={isBright}
+                onParentInvite={ctaParentInvite}
+              />
               {content.hero.secondaryCta ? (
                 <CtaButton
                   cta={{ ...content.hero.secondaryCta, variant: "secondary" }}
                   accent={accent}
                   isBright={isBright}
+                  onParentInvite={ctaParentInvite}
                 />
               ) : null}
               {content.installLabel ? (
@@ -343,13 +370,19 @@ export default function MarketingLandingPage({ audience, content }) {
               {content.closing.text}
             </p>
             <div className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
-              <CtaButton cta={content.closing.primaryCta} accent={accent} isBright={isBright} />
+              <CtaButton
+                cta={content.closing.primaryCta}
+                accent={accent}
+                isBright={isBright}
+                onParentInvite={ctaParentInvite}
+              />
               {content.closing.secondaryCta ? (
                 <CtaButton
                   cta={{ ...content.closing.secondaryCta, variant: "secondary" }}
                   accent={accent}
                   isBright={isBright}
                   size="sm"
+                  onParentInvite={ctaParentInvite}
                 />
               ) : null}
             </div>
@@ -367,6 +400,13 @@ export default function MarketingLandingPage({ audience, content }) {
           </p>
         </div>
       </Layout>
+
+      {isKidsPage ? (
+        <StudentParentInviteModal
+          open={parentInviteOpen}
+          onClose={() => setParentInviteOpen(false)}
+        />
+      ) : null}
     </>
   );
 }

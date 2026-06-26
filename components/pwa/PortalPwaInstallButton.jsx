@@ -1,39 +1,32 @@
 import { useEffect, useState } from "react";
 import { isCapacitorNative } from "../../lib/pwa/pwa-install-prompt";
 import {
-  initPwaInstallPromptCapture,
-  isStudentPwaInstalledStandalone,
-  subscribeStudentAppInstalled,
-  usePwaInstallPromptAvailable,
-  usePromptPwaInstall,
-  wasStudentAppInstalledEventFired,
-} from "../../lib/pwa/pwa-install-prompt";
-import {
-  initParentPwaInstallPromptCapture,
-  isParentPwaInstalledStandalone,
-  subscribeParentAppInstalled,
-  useParentPwaInstallPromptAvailable,
-  usePromptParentPwaInstall,
-  wasParentAppInstalledEventFired,
-} from "../../lib/pwa/pwa-parent-install-prompt";
-import {
-  initTeacherPwaInstallPromptCapture,
-  isTeacherPwaInstalledStandalone,
-  subscribeTeacherAppInstalled,
-  useTeacherPwaInstallPromptAvailable,
-  usePromptTeacherPwaInstall,
-  wasTeacherAppInstalledEventFired,
-} from "../../lib/pwa/pwa-teacher-install-prompt";
-import { logPwaInstallEvent } from "../../lib/pwa/pwa-install-debug";
+  PARENT_PWA_INSTALL_PATH,
+  STUDENT_PWA_INSTALL_PATH,
+  TEACHER_PWA_INSTALL_PATH,
+} from "../../lib/pwa/pwa-install-mode";
+import { isStudentPwaInstalledStandalone } from "../../lib/pwa/pwa-install-prompt";
+import { isParentPwaInstalledStandalone } from "../../lib/pwa/pwa-parent-install-prompt";
+import { isTeacherPwaInstalledStandalone } from "../../lib/pwa/pwa-teacher-install-prompt";
 
-const UNAVAILABLE_MSG =
-  "במכשיר הזה ניתן להתקין את האפליקציה דרך תפריט הדפדפן או לאחר הכניסה.";
 const INSTALLED_MSG = "האפליקציה כבר מותקנת במכשיר.";
 
 const PORTAL_LABELS = {
   student: "התקנת אפליקציית הילדים",
   parent: "התקנת אפליקציית ההורים",
   teacher: "התקנת אפליקציית המורים",
+};
+
+const INSTALL_PATHS = {
+  student: STUDENT_PWA_INSTALL_PATH,
+  parent: PARENT_PWA_INSTALL_PATH,
+  teacher: TEACHER_PWA_INSTALL_PATH,
+};
+
+const INSTALLED_CHECKS = {
+  student: isStudentPwaInstalledStandalone,
+  parent: isParentPwaInstalledStandalone,
+  teacher: isTeacherPwaInstalledStandalone,
 };
 
 function InstallPhoneIcon() {
@@ -56,67 +49,22 @@ function InstallPhoneIcon() {
   );
 }
 
-function PortalPwaInstallButtonInner({
-  portal,
-  label,
-  isBright,
-  accent,
-  initCapture,
-  hasNativePrompt,
-  promptInstall,
-  isInstalledStandalone,
-  subscribeInstalled,
-  wasAppInstalledFired,
-}) {
+/**
+ * Marketing landing pages — same install flow as home page, direct to portal install route.
+ * @param {{ portal: 'student' | 'parent' | 'teacher', isBright?: boolean, accent: object, label?: string }} props
+ */
+export default function PortalPwaInstallButton({ portal, isBright = false, accent, label }) {
+  const resolvedLabel = label || PORTAL_LABELS[portal];
   const [alreadyInstalled, setAlreadyInstalled] = useState(false);
-  const [statusMsg, setStatusMsg] = useState("");
 
   useEffect(() => {
-    initCapture();
-    setAlreadyInstalled(isInstalledStandalone());
+    setAlreadyInstalled(INSTALLED_CHECKS[portal]());
+  }, [portal]);
 
-    return subscribeInstalled(() => {
-      setAlreadyInstalled(true);
-      setStatusMsg(INSTALLED_MSG);
-    });
-  }, [initCapture, isInstalledStandalone, subscribeInstalled]);
-
-  const handleInstallClick = async (e) => {
+  const handleInstallClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setStatusMsg("");
-
-    if (isInstalledStandalone()) {
-      setAlreadyInstalled(true);
-      setStatusMsg(INSTALLED_MSG);
-      return;
-    }
-
-    logPwaInstallEvent(`${portal}:marketing-install-click`, {
-      promptAvailable: hasNativePrompt,
-    });
-
-    if (!hasNativePrompt) {
-      setStatusMsg(UNAVAILABLE_MSG);
-      return;
-    }
-
-    try {
-      const { outcome } = await promptInstall();
-      if (outcome === "accepted") {
-        if (wasAppInstalledFired() || isInstalledStandalone()) {
-          setAlreadyInstalled(true);
-          setStatusMsg(INSTALLED_MSG);
-        }
-        return;
-      }
-      if (outcome === "dismissed") {
-        return;
-      }
-      setStatusMsg(UNAVAILABLE_MSG);
-    } catch {
-      setStatusMsg(UNAVAILABLE_MSG);
-    }
+    window.location.href = INSTALL_PATHS[portal];
   };
 
   if (isCapacitorNative()) {
@@ -126,101 +74,21 @@ function PortalPwaInstallButtonInner({
   const installBtnClass = isBright ? accent.installBtnBright : accent.installBtnClassic;
   const msgClass = isBright ? "text-slate-600" : "text-white/70";
 
-  if (alreadyInstalled && !statusMsg) {
+  if (alreadyInstalled) {
     return <p className={`text-sm ${msgClass}`}>{INSTALLED_MSG}</p>;
   }
 
   return (
     <div className="flex w-full flex-col items-stretch gap-2 sm:w-auto sm:items-center">
-      {!alreadyInstalled ? (
-        <button
-          type="button"
-          onClick={handleInstallClick}
-          className={`inline-flex w-full min-h-[48px] items-center justify-center gap-2 rounded-2xl px-6 py-3 text-base font-bold transition sm:w-auto ${installBtnClass}`}
-        >
-          <InstallPhoneIcon />
-          <span>{label}</span>
-        </button>
-      ) : null}
-      {statusMsg ? (
-        <p className={`max-w-sm text-center text-sm leading-relaxed ${msgClass}`} role="status">
-          {statusMsg}
-        </p>
-      ) : null}
+      <button
+        type="button"
+        onClick={handleInstallClick}
+        className={`inline-flex w-full min-h-[48px] items-center justify-center gap-2 rounded-2xl px-6 py-3 text-base font-bold transition sm:w-auto ${installBtnClass}`}
+      >
+        <InstallPhoneIcon />
+        <span>{resolvedLabel}</span>
+      </button>
     </div>
-  );
-}
-
-function StudentPortalPwaInstallButton(props) {
-  const hasNativePrompt = usePwaInstallPromptAvailable();
-  const promptInstall = usePromptPwaInstall();
-  return (
-    <PortalPwaInstallButtonInner
-      {...props}
-      portal="student"
-      initCapture={initPwaInstallPromptCapture}
-      hasNativePrompt={hasNativePrompt}
-      promptInstall={promptInstall}
-      isInstalledStandalone={isStudentPwaInstalledStandalone}
-      subscribeInstalled={subscribeStudentAppInstalled}
-      wasAppInstalledFired={wasStudentAppInstalledEventFired}
-    />
-  );
-}
-
-function ParentPortalPwaInstallButton(props) {
-  const hasNativePrompt = useParentPwaInstallPromptAvailable();
-  const promptInstall = usePromptParentPwaInstall();
-  return (
-    <PortalPwaInstallButtonInner
-      {...props}
-      portal="parent"
-      initCapture={initParentPwaInstallPromptCapture}
-      hasNativePrompt={hasNativePrompt}
-      promptInstall={promptInstall}
-      isInstalledStandalone={isParentPwaInstalledStandalone}
-      subscribeInstalled={subscribeParentAppInstalled}
-      wasAppInstalledFired={wasParentAppInstalledEventFired}
-    />
-  );
-}
-
-function TeacherPortalPwaInstallButton(props) {
-  const hasNativePrompt = useTeacherPwaInstallPromptAvailable();
-  const promptInstall = usePromptTeacherPwaInstall();
-  return (
-    <PortalPwaInstallButtonInner
-      {...props}
-      portal="teacher"
-      initCapture={initTeacherPwaInstallPromptCapture}
-      hasNativePrompt={hasNativePrompt}
-      promptInstall={promptInstall}
-      isInstalledStandalone={isTeacherPwaInstalledStandalone}
-      subscribeInstalled={subscribeTeacherAppInstalled}
-      wasAppInstalledFired={wasTeacherAppInstalledEventFired}
-    />
-  );
-}
-
-/**
- * Focused PWA install button for a single portal (no multi-app choice modal).
- * @param {{ portal: 'student' | 'parent' | 'teacher', isBright?: boolean, accent: object, label?: string }} props
- */
-export default function PortalPwaInstallButton({ portal, isBright = false, accent, label }) {
-  const resolvedLabel = label || PORTAL_LABELS[portal];
-
-  if (portal === "parent") {
-    return (
-      <ParentPortalPwaInstallButton label={resolvedLabel} isBright={isBright} accent={accent} />
-    );
-  }
-  if (portal === "teacher") {
-    return (
-      <TeacherPortalPwaInstallButton label={resolvedLabel} isBright={isBright} accent={accent} />
-    );
-  }
-  return (
-    <StudentPortalPwaInstallButton label={resolvedLabel} isBright={isBright} accent={accent} />
   );
 }
 
