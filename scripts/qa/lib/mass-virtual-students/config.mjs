@@ -85,6 +85,7 @@ export function parseMassSimulationCli(argv = process.argv.slice(2)) {
   const patchParentAssigned = parseBoolFlag("patch-parent-assigned", argv);
   const noSeedSpeedPressure = parseBoolFlag("no-seed-speed-pressure", argv);
   const seedSpeedPressure = !noSeedSpeedPressure;
+  const focusProfile = parseFlag("focus-profile", argv) || undefined;
   const runId =
     parseFlag("runId", argv) ||
     `mass-${new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19)}`;
@@ -120,6 +121,7 @@ export function parseMassSimulationCli(argv = process.argv.slice(2)) {
     patchSpeedPressure,
     patchParentAssigned,
     seedSpeedPressure,
+    focusProfile,
     runId,
     emailDomain,
     baseUrl,

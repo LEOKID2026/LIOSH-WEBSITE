@@ -1,24 +1,25 @@
 import { insertSelfPracticeSession } from "./activity-seeder.mjs";
+import {
+  countTopicPracticeAnswersBeforeCohort,
+  resolveSpeedPressureCurriculumTargetFromSeed,
+  SPEED_COHORT_PATCH_TAG,
+} from "./curriculum-speed-pressure.mjs";
 import { createServiceClient } from "./supabase.mjs";
 import { buildSpeedPressureAnswerSchedule, SEED_META_KEY } from "./seed-metadata.mjs";
 
-const SPEED_PROBE_TOPIC = "speed_pressure_probe_v4";
 const SPEED_SHELL_COUNT = 40;
 const PRACTICE_ANSWER_COUNT = 22;
+/** Speed sessions must strictly outnumber practice answers on topic so V2 dominantMode=speed. */
+const SPEED_SHELL_BUFFER = 9;
 
-export { SPEED_PROBE_TOPIC, SPEED_SHELL_COUNT, PRACTICE_ANSWER_COUNT };
+export { SPEED_SHELL_COUNT, PRACTICE_ANSWER_COUNT, SPEED_COHORT_PATCH_TAG };
 
 const FIELDS_WRITTEN = [
-  "learning_sessions (speed shells: metadata.mode=speed)",
-  "learning_sessions (practice session: metadata.mode=practice, patch=speed_pressure_probe)",
-  "answers (practice mode, timeSpentMs, questionEngine, diagnosticMetadata, skillId)",
+  "learning_sessions (speed shells: metadata.mode=speed on curriculum topic)",
+  "learning_sessions (practice session: metadata.mode=practice, patch=speed_pressure_cohort)",
+  "answers (practice mode, curriculum topic, timeSpentMs, questionEngine, diagnosticMetadata, skillId)",
 ];
 
-/**
- * Empty speed-mode learning_session rows boost topic modeCounts (dominantMode=speed)
- * while countable evidence stays in practice-mode answers on the same isolated topic.
- * Self-practice speed answers are excluded by isCountableSelfPracticeAnswer.
- */
 async function insertSpeedSessionShells(supabase, studentId, runId, { subject, topic, grade, day, count }) {
   const shells = [];
   for (let i = 0; i < count; i += 1) {
@@ -39,7 +40,7 @@ async function insertSpeedSessionShells(supabase, studentId, runId, { subject, t
         gradeLevel: grade,
         [SEED_META_KEY]: runId,
         patch: "speed_mode_shell",
-        probeTopic: SPEED_PROBE_TOPIC,
+        curriculumTopic: topic,
         shellIndex: i,
       },
     });
@@ -50,7 +51,7 @@ async function insertSpeedSessionShells(supabase, studentId, runId, { subject, t
 }
 
 /**
- * Patch existing mass-sim run: practice answers + speed session shells for fast_errors profile.
+ * Speed-pressure cohort on real curriculum topic for fast_errors profile.
  */
 export async function patchSpeedPressureForStudents({ students, runId, endDay }) {
   const supabase = createServiceClient();
@@ -58,24 +59,28 @@ export async function patchSpeedPressureForStudents({ students, runId, endDay })
   const results = [];
 
   for (const student of targets) {
-    const subject = student.primarySubject || "math";
-    const topic = SPEED_PROBE_TOPIC;
+    const curriculum = await resolveSpeedPressureCurriculumTargetFromSeed(supabase, student, runId);
+    const { subject, topic, grade, taxonomy, topicSource } = curriculum;
     const day = endDay || new Date().toISOString().slice(0, 10);
 
-    const { count: existingProbeSessions } = await supabase
+    const { count: existingCohortSessions } = await supabase
       .from("learning_sessions")
       .select("id", { count: "exact", head: true })
       .eq("student_id", student.studentId)
       .eq("subject", subject)
-      .eq("topic", topic);
+      .eq("topic", topic)
+      .contains("metadata", { patch: SPEED_COHORT_PATCH_TAG });
 
-    if ((existingProbeSessions || 0) > 0) {
+    if ((existingCohortSessions || 0) > 0) {
       results.push({
         login: student.login,
         studentId: student.studentId,
         ok: true,
         skipped: true,
-        reason: "speed_pressure_probe already seeded",
+        reason: "speed_pressure_cohort already seeded on curriculum topic",
+        subject,
+        topic,
+        topicSource,
       });
       continue;
     }
@@ -87,29 +92,47 @@ export async function patchSpeedPressureForStudents({ students, runId, endDay })
     });
 
     try {
+      const priorPractice = await countTopicPracticeAnswersBeforeCohort(
+        supabase,
+        student.studentId,
+        subject,
+        topic,
+        runId,
+      );
+      const shellCount = Math.max(
+        SPEED_SHELL_COUNT,
+        priorPractice + PRACTICE_ANSWER_COUNT + SPEED_SHELL_BUFFER,
+      );
+
       const practiceRes = await insertSelfPracticeSession(supabase, student.studentId, runId, {
         subject,
         topic,
-        grade: student.grade,
+        grade,
         mode: "practice",
         answers,
-        patchTag: "speed_pressure_probe",
+        patchTag: SPEED_COHORT_PATCH_TAG,
+        speedPressure: true,
       });
-      const shellCount = await insertSpeedSessionShells(supabase, student.studentId, runId, {
+      const speedShellCount = await insertSpeedSessionShells(supabase, student.studentId, runId, {
         subject,
         topic,
-        grade: student.grade,
+        grade,
         day,
-        count: SPEED_SHELL_COUNT,
+        count: shellCount,
       });
       results.push({
         login: student.login,
         studentId: student.studentId,
         subject,
         topic,
+        topicSource,
+        grade,
+        taxonomy,
+        priorPracticeAnswers: priorPractice,
+        shellCountTarget: shellCount,
         practiceSessionId: practiceRes.sessionId,
         practiceAnswerCount: practiceRes.answerCount,
-        speedShellCount: shellCount,
+        speedShellCount,
         ok: true,
       });
     } catch (err) {
@@ -129,7 +152,7 @@ export async function patchSpeedPressureForStudents({ students, runId, endDay })
   return {
     mutatesDatabase: true,
     targetProfile: "fast_errors",
-    probeTopic: SPEED_PROBE_TOPIC,
+    curriculumTopicStrategy: "lightest_seed_answer_volume (fallback defaultTopicForSubject)",
     fieldsWritten: FIELDS_WRITTEN,
     studentsTargeted: targets.length,
     studentsPatched: patchedNew.length,
@@ -143,7 +166,8 @@ export async function patchSpeedPressureForStudents({ students, runId, endDay })
     students: results,
     results,
     engineConditions: {
-      modeKey: "speed (via dominantMode from speed session shells; not from excluded speed answers)",
+      modeKey: "speed (dominantMode when speed session count > practice answer count on topic)",
+      topicRequirement: "real curriculum topicKey — not synthetic probe",
       speedOnlyRisk:
         "behaviorType speed_pressure (median wrong responseMs < 2200) OR mode speed + acc>=55 + wrongRatio<0.32",
       minWrongFastMs: "<2200 median on wrong answers in diagnosticMistakes",
@@ -157,5 +181,4 @@ export async function patchSpeedPressureForStudents({ students, runId, endDay })
   };
 }
 
-/** Same as patch — used inline after full seed (default on). */
 export const seedSpeedPressureCohort = patchSpeedPressureForStudents;

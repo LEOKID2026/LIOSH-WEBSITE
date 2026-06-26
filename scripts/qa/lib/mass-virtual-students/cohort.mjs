@@ -41,10 +41,16 @@ function topicsForSubjectGrade(subject, grade) {
  * Build a planned cohort — deterministic, not random.
  * Ensures subject×grade coverage and distributes behavior profiles.
  */
-export function buildPlannedCohort({ students, parents, subjects, grades, runId }) {
+export function buildPlannedCohort({ students, parents, subjects, grades, runId, focusProfile }) {
   const cohort = [];
   const profileIds = BEHAVIOR_PROFILES.map((p) => p.id);
   const studentsPerParent = Math.ceil(students / parents);
+  const focusedProfile = focusProfile
+    ? BEHAVIOR_PROFILES.find((p) => p.id === focusProfile)
+    : null;
+  if (focusProfile && !focusedProfile) {
+    throw new Error(`Unknown --focus-profile=${focusProfile}`);
+  }
 
   let seq = 0;
   for (let i = 0; i < students; i += 1) {
@@ -54,9 +60,10 @@ export function buildPlannedCohort({ students, parents, subjects, grades, runId 
 
     const grade = grades[i % grades.length];
     const primarySubject = subjects[i % subjects.length];
-    const profile = BEHAVIOR_PROFILES[i % profileIds.length];
+    const profile = focusedProfile || BEHAVIOR_PROFILES[i % profileIds.length];
     const secondarySubjects = subjects.filter((s) => s !== primarySubject);
     const topicPool = topicsForSubjectGrade(primarySubject, grade);
+    const defaultTopic = defaultTopicForSubject(primarySubject, grade);
     const weaknessCount = profile.weaknessTopics || 0;
     const weaknessTopics = topicPool.slice(0, Math.max(0, weaknessCount));
 
@@ -85,7 +92,7 @@ export function buildPlannedCohort({ students, parents, subjects, grades, runId 
         [primarySubject]: weaknessTopics,
       },
       defaultTopic: {
-        [primarySubject]: defaultTopicForSubject(primarySubject, grade),
+        [primarySubject]: defaultTopic,
       },
       attendanceRoll: rng(),
       runId,

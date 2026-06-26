@@ -16,6 +16,9 @@
  *     --verify-only --runId=mass-YYYY-MM-DDTHH-MM-SS --patch-speed-pressure --no-sync-names
  *
  * Full seed includes speed-pressure cohort by default (--no-seed-speed-pressure to skip).
+ *
+ * Focus repro (all students same profile):
+ *   ... --students=24 --parents=3 --focus-profile=fast_errors --write
  */
 import { readFile } from "node:fs/promises";
 import { bootstrapQaDbWriteGuard } from "./lib/db-write-guard.mjs";
@@ -39,6 +42,22 @@ function isoTodayMinusDays(days) {
   const d = new Date();
   d.setUTCDate(d.getUTCDate() - days + 1);
   return d.toISOString().slice(0, 10);
+}
+
+function applyVerdict(summaryBase) {
+  const v = computePassVerdict(summaryBase);
+  return {
+    ...summaryBase,
+    ...v,
+    verdict: v.finalVerdict,
+  };
+}
+
+function logVerdicts(summary, reportDir) {
+  console.log(
+    `[mass-sim] infrastructure=${summary.infrastructureVerdict} engineCoverage=${summary.engineCoverageVerdict} final=${summary.finalVerdict} artifacts → ${reportDir}`,
+  );
+  if (summary.blockers?.length) console.log(`[mass-sim] blockers: ${summary.blockers.join(", ")}`);
 }
 
 async function runVerifyOnly(cfg) {
@@ -123,6 +142,7 @@ async function runVerifyOnly(cfg) {
     engineDecisionDebug: reportVerification.engineDecisionDebug,
     topicCoverage: reportVerification.topicCoverage,
     parentAssignedDebug: reportVerification.parentAssignedDebug,
+    speedPressureBridgeDebug: reportVerification.speedPressureBridgeDebug,
     speedPressurePatched: cfg.patchSpeedPressure || false,
     speedPressurePatchAudit: cfg._speedPressurePatchAudit
       ? {
@@ -141,8 +161,7 @@ async function runVerifyOnly(cfg) {
     verifiedAt: new Date().toISOString(),
   };
 
-  const { verdict, blockers } = computePassVerdict(summaryBase);
-  const summary = { ...summaryBase, verdict, blockers };
+  const summary = applyVerdict(summaryBase);
 
   await writeAllArtifacts(cfg.reportDir, {
     runId: cfg.runId,
@@ -161,9 +180,8 @@ async function runVerifyOnly(cfg) {
     summary,
   });
 
-  console.log(`[mass-sim] verdict=${verdict} artifacts → ${cfg.reportDir}`);
-  if (blockers.length) console.log(`[mass-sim] blockers: ${blockers.join(", ")}`);
-  if (verdict !== "PASS") process.exit(1);
+  logVerdicts(summary, cfg.reportDir);
+  if (summary.finalVerdict !== "PASS") process.exit(1);
 }
 
 async function main() {
@@ -174,7 +192,7 @@ async function main() {
   }
   const guard = bootstrapQaDbWriteGuard("run-mass-virtual-students", "mass virtual students QA seed", cfg.argv);
 
-  console.log(`[mass-sim] runId=${cfg.runId} students=${cfg.students} parents=${cfg.parents} days=${cfg.days}`);
+  console.log(`[mass-sim] runId=${cfg.runId} students=${cfg.students} parents=${cfg.parents} days=${cfg.days}${cfg.focusProfile ? ` focus=${cfg.focusProfile}` : ""}`);
 
   const { cohort, studentsPerParent, coverageMatrix } = buildPlannedCohort({
     students: cfg.students,
@@ -182,6 +200,7 @@ async function main() {
     subjects: cfg.subjects,
     grades: cfg.grades,
     runId: cfg.runId,
+    focusProfile: cfg.focusProfile,
   });
 
   const provisioned = await provisionMassAccounts({
@@ -335,8 +354,10 @@ async function main() {
     engineDecisionDebug: reportVerification.engineDecisionDebug,
     topicCoverage: reportVerification.topicCoverage,
     parentAssignedDebug: reportVerification.parentAssignedDebug,
+    speedPressureBridgeDebug: reportVerification.speedPressureBridgeDebug,
     speedPressureSeedAudit,
     seedSpeedPressure: cfg.seedSpeedPressure,
+    focusProfile: cfg.focusProfile || null,
     subjectCoverageGaps,
     gradeCoverageGaps,
     lowCoverageTopics: subjectCoverageGaps.map((s) => SUBJECT_LABELS_HE[s] || s),
@@ -347,13 +368,11 @@ async function main() {
     mode: cfg.mode,
   };
 
-  const { verdict, blockers } = computePassVerdict({
+  const summary = applyVerdict({
     ...summaryBase,
     subjectCoverageGaps,
     gradeCoverageGaps,
   });
-
-  const summary = { ...summaryBase, verdict, blockers };
 
   await writeAllArtifacts(cfg.reportDir, {
     runId: cfg.runId,
@@ -378,9 +397,8 @@ async function main() {
     summary,
   });
 
-  console.log(`[mass-sim] verdict=${verdict} artifacts → ${cfg.reportDir}`);
-  if (blockers.length) console.log(`[mass-sim] blockers: ${blockers.join(", ")}`);
-  if (verdict !== "PASS") process.exit(1);
+  logVerdicts(summary, cfg.reportDir);
+  if (summary.finalVerdict !== "PASS") process.exit(1);
 }
 
 main().catch((err) => {

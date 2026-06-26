@@ -2,7 +2,7 @@
 export const SPEED_PRESSURE_FIELDS_WRITTEN = [
   "learning_sessions.metadata.mode (speed shells)",
   "learning_sessions.metadata.gameMode",
-  "learning_sessions.metadata.patch (speed_mode_shell | speed_pressure_probe)",
+  "learning_sessions.metadata.patch (speed_mode_shell | speed_pressure_cohort)",
   "learning_sessions.metadata.massVirtualStudents (runId)",
   "answers.answer_payload.mode (practice)",
   "answers.answer_payload.gameMode (practice)",
@@ -24,7 +24,7 @@ export function buildSpeedPressurePatchMarkdown(audit) {
     "",
     "## Scope",
     `- target profile: \`${audit.targetProfile || "fast_errors"}\``,
-    `- probe topic: \`${audit.probeTopic || "speed_pressure_probe_v4"}\``,
+    `- curriculum topic strategy: \`${audit.curriculumTopicStrategy || "defaultTopicForSubject"}\``,
     `- students targeted: ${audit.studentsTargeted ?? "—"}`,
     `- students patched (new data): ${audit.studentsPatched ?? "—"}`,
     `- students skipped (probe already present): ${audit.studentsSkipped ?? "—"}`,
@@ -71,7 +71,7 @@ export function buildSpeedPressurePatchMarkdown(audit) {
 
   lines.push("", "## Why patch exists");
   lines.push(
-    "Self-practice `mode=speed` answers are excluded by `isCountableSelfPracticeAnswer`. Cohort uses practice answers + speed session shells on isolated topic `speed_pressure_probe_v4` so V2 `modeKey=speed` triggers `speed_pressure_pattern`.",
+    "Self-practice `mode=speed` answers are excluded by `isCountableSelfPracticeAnswer`. Cohort uses practice answers + speed session shells on a **real curriculum topic** (via `defaultTopicForSubject`) so V2 emits a recognized topic row with `modeKey=speed`.",
   );
   lines.push("", "## Built-in seed (1000+)");
   lines.push(

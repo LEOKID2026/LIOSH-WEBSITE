@@ -178,6 +178,7 @@ export async function insertSelfPracticeSession(supabase, studentId, runId, sess
       grade: session.grade,
       isCorrect: a.isCorrect,
       timeSpentMs: a.timeSpentMs ?? 5000,
+      speedPressure: session.speedPressure === true,
     }),
   }));
 

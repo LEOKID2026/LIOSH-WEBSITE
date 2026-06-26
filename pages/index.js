@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { useRouter } from "next/router";
 import Layout from "../components/Layout";
 import Link from "next/link";
 import InstallAppChoiceButton from "../components/InstallAppChoiceButton";
@@ -17,7 +15,7 @@ const PORTAL_CARDS = [
     /** Same 🎒 — shifted to teal/green so it reads on the purple face. */
     brightEmojiFilter:
       "[filter:hue-rotate(118deg)_saturate(2.5)_brightness(1.12)_contrast(1.05)]",
-    authAware: true,
+    href: "/kids",
   },
   {
     key: "parent",
@@ -26,7 +24,7 @@ const PORTAL_CARDS = [
     classicGradient: "from-emerald-500/60 to-teal-600/70",
     brightFace:
       "bg-gradient-to-br from-cyan-500 via-sky-500 to-blue-700 text-white shadow-lg shadow-cyan-300/45",
-    href: "/parent/login",
+    href: "/parents",
   },
   {
     key: "teacher",
@@ -35,7 +33,7 @@ const PORTAL_CARDS = [
     classicGradient: "from-sky-500/60 to-indigo-600/70",
     brightFace:
       "bg-gradient-to-br from-orange-500 via-amber-500 to-yellow-500 text-white shadow-lg shadow-amber-300/45",
-    href: "/teacher/login",
+    href: "/teachers",
   },
 ];
 
@@ -48,30 +46,7 @@ function cardGridClass(key) {
 }
 
 export default function HomePage() {
-  const router = useRouter();
   const { theme, isBright } = useStudentTheme();
-  const [studentPortalBusy, setStudentPortalBusy] = useState(false);
-
-  const goStudentPortal = async () => {
-    setStudentPortalBusy(true);
-    try {
-      const res = await fetch("/api/student/me", {
-        credentials: "include",
-        cache: "no-store",
-        headers: { Accept: "application/json" },
-      });
-      const payload = await res.json().catch(() => ({}));
-      if (res.ok && payload?.student?.id) {
-        await router.push("/student/home");
-      } else {
-        await router.push("/student/login");
-      }
-    } catch {
-      await router.push("/student/login");
-    } finally {
-      setStudentPortalBusy(false);
-    }
-  };
 
   return (
     <Layout homepage studentTheme={theme} studentShell="home">
@@ -124,27 +99,11 @@ export default function HomePage() {
                   </span>
                 </div>
                 <h2 className="text-lg font-bold leading-snug md:text-xl">{card.title}</h2>
-                {card.authAware && studentPortalBusy ? (
-                  <span className="mt-1 text-xs text-white/80">טוען...</span>
-                ) : null}
               </>
             );
 
             if (isBright) {
               const brightClass = `${CARD_BODY} ${card.brightFace} ${gridClass}`;
-              if (card.authAware) {
-                return (
-                  <button
-                    key={card.key}
-                    type="button"
-                    disabled={studentPortalBusy}
-                    onClick={() => void goStudentPortal()}
-                    className={`${brightClass} text-right disabled:opacity-60 disabled:pointer-events-none`}
-                  >
-                    {cardContent}
-                  </button>
-                );
-              }
               return (
                 <Link key={card.key} href={card.href} className={brightClass}>
                   {cardContent}
@@ -156,20 +115,6 @@ export default function HomePage() {
             const inner = (
               <div className={`${CARD_BODY} bg-black/60 text-white`}>{cardContent}</div>
             );
-
-            if (card.authAware) {
-              return (
-                <button
-                  key={card.key}
-                  type="button"
-                  disabled={studentPortalBusy}
-                  onClick={() => void goStudentPortal()}
-                  className={`${shellClass} text-right disabled:opacity-60 disabled:pointer-events-none`}
-                >
-                  {inner}
-                </button>
-              );
-            }
 
             return (
               <Link key={card.key} href={card.href} className={shellClass}>

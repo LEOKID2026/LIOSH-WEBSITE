@@ -1,13 +1,29 @@
 import { classifyActivityEvidence } from "../../../../lib/learning/activity-classification.js";
+import { enrichMetadataFromTaxonomy } from "../../../../utils/diagnostic-engine-v2/topic-taxonomy-metadata-enrichment.js";
+import { normalizeDiagnosticSubjectId } from "../../../../utils/diagnostic-evidence.js";
 import { SEED_META_KEY } from "./constants.mjs";
 
-/** Minimal taxonomy linkage for math addition speed-pressure QA seed. */
+/** @deprecated use per-subject taxonomy via enrichMetadataFromTaxonomy */
 const MATH_ADDITION_TAXONOMY = {
   skillId: "M-03",
   subskillId: "M-03-01",
   taxonomyId: "M-03",
   patternFamily: "addition_basic",
 };
+
+function resolvePayloadTaxonomy({ subject, topic, grade, speedPressure, isCorrect }) {
+  const subjectId = normalizeDiagnosticSubjectId(subject);
+  return enrichMetadataFromTaxonomy({
+    subjectId,
+    topic,
+    contentGradeKey: `g${grade}`,
+    source: { params: { kind: "facts" } },
+    baseMeta: {
+      possibleErrorPatterns: speedPressure && !isCorrect ? ["לחץ זמן"] : [],
+      metadataSource: "mass_virtual_students_seed",
+    },
+  });
+}
 
 /**
  * Build answer_payload aligned with engine expectations (timing, mode, metadata).
@@ -28,10 +44,18 @@ export function buildRichAnswerPayload({
     { hintsUsed: 0 },
   );
 
+  const taxonomy = resolvePayloadTaxonomy({ subject, topic, grade, speedPressure, isCorrect });
+  const skillId = taxonomy.skillId || MATH_ADDITION_TAXONOMY.skillId;
+  const subskillId = taxonomy.subskillId || taxonomy.subSkill || MATH_ADDITION_TAXONOMY.subskillId;
+  const patternFamily = taxonomy.patternFamily || MATH_ADDITION_TAXONOMY.patternFamily;
+
   const diagnosticMetadata = {
-    possibleErrorPatterns: speedPressure && !isCorrect ? ["לחץ זמן"] : [],
-    metadataSource: "question_metadata_normalizer",
-    patternFamily: MATH_ADDITION_TAXONOMY.patternFamily,
+    possibleErrorPatterns: taxonomy.possibleErrorPatterns || (speedPressure && !isCorrect ? ["לחץ זמן"] : []),
+    metadataSource: taxonomy.metadataSource || "question_metadata_normalizer",
+    patternFamily,
+    taxonomyId: taxonomy.taxonomyId || skillId,
+    taxonomyIds: taxonomy.taxonomyIds,
+    taxonomyMissing: taxonomy.taxonomyMissing,
   };
 
   return {
@@ -50,21 +74,21 @@ export function buildRichAnswerPayload({
     evidenceCategory: classification.evidenceCategory,
     contextFlags: classification.contextFlags || {},
     clientMeta: { [SEED_META_KEY]: runId },
-    patternFamily: MATH_ADDITION_TAXONOMY.patternFamily,
+    patternFamily,
     diagnosticMetadata,
     questionEngine: {
-      patternFamily: MATH_ADDITION_TAXONOMY.patternFamily,
-      skillId: MATH_ADDITION_TAXONOMY.skillId,
-      subskillId: MATH_ADDITION_TAXONOMY.subskillId,
+      patternFamily,
+      skillId,
+      subskillId,
     },
     params: {
       kind: "facts",
-      skillId: MATH_ADDITION_TAXONOMY.skillId,
-      subskillId: MATH_ADDITION_TAXONOMY.subskillId,
+      skillId,
+      subskillId,
       clientMeta: { [SEED_META_KEY]: runId },
     },
-    skillId: MATH_ADDITION_TAXONOMY.skillId,
-    subSkill: MATH_ADDITION_TAXONOMY.subskillId,
+    skillId,
+    subSkill: subskillId,
   };
 }
 

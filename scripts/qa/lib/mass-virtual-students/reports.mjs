@@ -17,6 +17,7 @@ import {
 } from "./engine-decision-debug.mjs";
 import { buildParentAssignedDebug } from "./parent-assigned-debug.mjs";
 import { buildTopicCoverage } from "./topic-coverage.mjs";
+import { buildSpeedPressureBridgeDebug } from "./speed-pressure-bridge-debug.mjs";
 import { buildParentReportV2FromAggregate } from "./report-v2-bridge.mjs";
 import { createServiceClient } from "./supabase.mjs";
 
@@ -192,6 +193,12 @@ export async function verifyParentReports({
     toDate: to.toISOString().slice(0, 10),
     runId,
   });
+  const speedPressureBridgeDebug = await buildSpeedPressureBridgeDebug({
+    students: slice,
+    runId,
+    fromDate: from,
+    toDate: to,
+  });
 
   return {
     results,
@@ -206,6 +213,7 @@ export async function verifyParentReports({
     engineDecisionDebug,
     topicCoverage,
     parentAssignedDebug,
+    speedPressureBridgeDebug,
   };
 }
 
@@ -226,19 +234,48 @@ export function buildCoverageRows({ cohort, seededStats, subjects, grades }) {
 }
 
 export function computePassVerdict(summary) {
-  const blockers = [];
-  if (summary.apiErrors > 0) blockers.push("api_errors");
-  if (summary.reportsFailed > 0) blockers.push("report_failures");
-  if (summary.englishIssues > 0) blockers.push("english_in_reports");
-  if (summary.technicalIssues > 0) blockers.push("technical_text_in_reports");
-  if (summary.subjectCoverageGaps?.length) blockers.push("subject_coverage_gaps");
-  if (summary.gradeCoverageGaps?.length) blockers.push("grade_coverage_gaps");
+  const infraBlockers = [];
+  if (summary.apiErrors > 0) infraBlockers.push("api_errors");
+  if (summary.reportsFailed > 0) infraBlockers.push("report_failures");
+  if (summary.englishIssues > 0) infraBlockers.push("english_in_reports");
+  if (summary.technicalIssues > 0) infraBlockers.push("technical_text_in_reports");
+  if (summary.subjectCoverageGaps?.length) infraBlockers.push("subject_coverage_gaps");
+  if (summary.gradeCoverageGaps?.length) infraBlockers.push("grade_coverage_gaps");
 
-  if (blockers.length === 0) return { verdict: "PASS", blockers: [] };
-  if (summary.apiErrors > 10 || summary.reportsFailed > summary.reportsGenerated * 0.1) {
-    return { verdict: "BLOCKED", blockers };
+  const engineBlockers = [];
+  const missingDecisions = summary.missingDecisions || [];
+  if (missingDecisions.length) {
+    engineBlockers.push(`missing_engine_decisions:${missingDecisions.join(",")}`);
   }
-  return { verdict: "ISSUES_FOUND", blockers };
+
+  function classify(blockers) {
+    if (blockers.length === 0) return "PASS";
+    if (summary.apiErrors > 10 || summary.reportsFailed > (summary.reportsGenerated || 0) * 0.1) {
+      return "BLOCKED";
+    }
+    return "ISSUES_FOUND";
+  }
+
+  const infrastructureVerdict = classify(infraBlockers);
+  const engineCoverageVerdict = engineBlockers.length ? "ISSUES_FOUND" : "PASS";
+
+  const blockers = [...infraBlockers, ...engineBlockers];
+  let finalVerdict = "PASS";
+  if (infrastructureVerdict === "BLOCKED" || engineCoverageVerdict === "BLOCKED") {
+    finalVerdict = "BLOCKED";
+  } else if (infrastructureVerdict !== "PASS" || engineCoverageVerdict !== "PASS") {
+    finalVerdict = "ISSUES_FOUND";
+  }
+
+  return {
+    verdict: finalVerdict,
+    finalVerdict,
+    infrastructureVerdict,
+    engineCoverageVerdict,
+    blockers,
+    infraBlockers,
+    engineBlockers,
+  };
 }
 
 export { SEED_META_KEY, analyzeEnglishInReports, buildEnglishAnalysisMarkdown, buildEngineDecisionDebugMarkdown };

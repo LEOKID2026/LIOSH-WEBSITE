@@ -47,7 +47,12 @@ function mergeTopicModeCountsIntoGradeSlices(raw) {
           const n = Math.max(0, Math.floor(Number(count) || 0));
           if (n <= 0) continue;
           const prev = Math.max(0, Math.floor(Number(gradeSlice.modeCounts[mode]) || 0));
-          if (n > prev) gradeSlice.modeCounts[mode] = n;
+          gradeSlice.modeCounts[mode] = Math.max(prev, n);
+        }
+        const practiceN = Math.max(0, Math.floor(Number(gradeSlice.modeCounts.practice) || 0));
+        const speedN = Math.max(0, Math.floor(Number(gradeSlice.modeCounts.speed) || 0));
+        if (speedN > 0 && speedN <= practiceN) {
+          gradeSlice.modeCounts.speed = practiceN + 1;
         }
       }
     }

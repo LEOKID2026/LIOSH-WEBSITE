@@ -6,6 +6,10 @@ import { buildEngineDecisionDebugMarkdown } from "./engine-decision-debug.mjs";
 import { buildParentAssignedDebugMarkdown } from "./parent-assigned-debug.mjs";
 import { buildSpeedPressurePatchMarkdown } from "./speed-pressure-audit.mjs";
 import {
+  buildSpeedPressureBridgeDebugMarkdown,
+  buildSpeedPressureBridgeCompareMarkdown,
+} from "./speed-pressure-bridge-debug.mjs";
+import {
   buildTopicCoverageMarkdown,
   topicCoverageToCsv,
 } from "./topic-coverage.mjs";
@@ -51,7 +55,9 @@ export function buildSummaryMarkdown(summary) {
     `# Mass Virtual Students — Summary`,
     "",
     `**Run ID:** ${summary.runId}`,
-    `**Verdict:** ${summary.verdict}`,
+    `**Final verdict:** ${summary.finalVerdict || summary.verdict}`,
+    `**Infrastructure:** ${summary.infrastructureVerdict || "—"}`,
+    `**Engine coverage:** ${summary.engineCoverageVerdict || "—"}`,
     "",
     "## ספירות",
     "",
@@ -184,6 +190,22 @@ export async function writeAllArtifacts(reportDir, bundle) {
       buildSpeedPressurePatchMarkdown(speedAudit),
       "utf8",
     );
+  }
+  if (bundle.summary?.speedPressureBridgeDebug) {
+    await writeJson(reportDir, "speed-pressure-bridge-debug.json", bundle.summary.speedPressureBridgeDebug);
+    await writeFile(
+      join(reportDir, "speed-pressure-bridge-debug.md"),
+      buildSpeedPressureBridgeDebugMarkdown(bundle.summary.speedPressureBridgeDebug),
+      "utf8",
+    );
+    if (bundle.summary.speedPressureBridgeCompare) {
+      await writeJson(reportDir, "speed-pressure-bridge-compare.json", bundle.summary.speedPressureBridgeCompare);
+      await writeFile(
+        join(reportDir, "speed-pressure-bridge-compare.md"),
+        buildSpeedPressureBridgeCompareMarkdown(bundle.summary.speedPressureBridgeCompare),
+        "utf8",
+      );
+    }
   }
   await writeFile(
     join(reportDir, "qa-accounts.md"),
