@@ -13,24 +13,53 @@ const AUDIENCE_PORTAL = {
 
 const ACCENT = {
   kids: {
+    cardGradientsClassic: [
+      "from-violet-500/60 to-fuchsia-700/70",
+      "from-amber-500/60 to-orange-600/70",
+      "from-emerald-500/60 to-teal-600/70",
+      "from-sky-500/60 to-indigo-600/70",
+      "from-rose-500/60 to-pink-600/70",
+      "from-yellow-500/60 to-amber-600/70",
+    ],
+    cardGradientsBright: [
+      "from-violet-400/85 to-fuchsia-500/85",
+      "from-amber-400/85 to-orange-500/85",
+      "from-emerald-400/85 to-teal-500/85",
+      "from-sky-400/85 to-blue-500/85",
+      "from-rose-400/85 to-pink-500/85",
+      "from-yellow-400/85 to-amber-500/85",
+    ],
+    stepBadgesBright: [
+      "bg-violet-600 text-white",
+      "bg-amber-500 text-white",
+      "bg-emerald-500 text-white",
+      "bg-sky-500 text-white",
+    ],
+    stepBadgesClassic: [
+      "bg-fuchsia-400/90 text-black",
+      "bg-amber-400/90 text-black",
+      "bg-emerald-400/90 text-black",
+      "bg-sky-400/90 text-black",
+    ],
     classicCardGradient: "from-violet-500/60 to-fuchsia-700/70",
     brightCardGradient: "from-violet-400/80 to-fuchsia-500/80",
-    heroBadgeClassic: "bg-white/10 text-fuchsia-300",
-    heroBadgeBright: "border border-violet-300 bg-violet-100 text-violet-900",
-    heroTitleBright: "text-violet-700",
-    heroTitleClassic: "from-violet-300 via-fuchsia-200 to-rose-300",
+    heroBadgeClassic: "bg-white/10 text-amber-300",
+    heroBadgeBright: "border border-green-400 bg-green-300 text-violet-900",
+    heroTitleBright:
+      "bg-gradient-to-r from-violet-600 via-fuchsia-500 to-amber-500 bg-clip-text text-transparent",
+    heroTitleClassic: "from-amber-300 via-fuchsia-200 to-emerald-300",
     primaryBtnBright:
-      "bg-gradient-to-r from-violet-500 via-fuchsia-500 to-purple-600 text-white shadow-lg shadow-fuchsia-300/40 hover:brightness-105",
+      "bg-gradient-to-r from-violet-500 via-fuchsia-500 to-amber-400 text-white shadow-lg shadow-fuchsia-300/40 hover:brightness-105",
     primaryBtnClassic:
-      "bg-gradient-to-r from-violet-500 via-fuchsia-500 to-purple-600 text-white shadow-lg shadow-fuchsia-900/30 hover:brightness-110",
+      "bg-gradient-to-r from-violet-500 via-fuchsia-500 to-amber-400 text-white shadow-lg shadow-fuchsia-900/30 hover:brightness-110",
     secondaryBtnBright:
-      "border-2 border-violet-400 bg-white text-violet-800 hover:bg-violet-50",
+      "border-2 border-teal-400 bg-white text-teal-800 hover:bg-teal-50",
     secondaryBtnClassic:
-      "border border-white/25 bg-white/10 text-white hover:bg-white/15",
+      "border border-teal-400/45 bg-teal-500/10 text-teal-100 hover:bg-teal-500/20",
     installBtnBright:
-      "bg-gradient-to-r from-fuchsia-100 via-violet-100 to-purple-100 border-2 border-fuchsia-400 text-fuchsia-900 shadow-md shadow-fuchsia-200/50 hover:from-fuchsia-200 hover:via-violet-200 hover:to-purple-200",
+      "bg-gradient-to-r from-amber-300 via-yellow-300 to-amber-400 border-2 border-teal-400 text-violet-900 shadow-md shadow-amber-200/50 hover:from-amber-400 hover:via-yellow-400 hover:to-orange-300",
     installBtnClassic:
-      "bg-gradient-to-r from-violet-600/35 via-fuchsia-600/30 to-purple-700/35 border border-fuchsia-400/55 text-fuchsia-100 shadow-lg shadow-fuchsia-950/25 hover:from-violet-600/45 hover:to-purple-700/45",
+      "bg-gradient-to-r from-amber-400/90 via-yellow-400/85 to-orange-400/80 border border-amber-300/60 text-violet-950 shadow-lg shadow-amber-900/25 hover:brightness-110",
   },
   parents: {
     classicCardGradient: "from-cyan-500/60 to-blue-700/70",
@@ -79,6 +108,16 @@ function scrollToSection(id) {
   if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+function getKidsCardGradient(accent, isBright, index) {
+  const list = isBright ? accent.cardGradientsBright : accent.cardGradientsClassic;
+  return list[index % list.length];
+}
+
+function getKidsStepBadge(accent, isBright, index) {
+  const list = isBright ? accent.stepBadgesBright : accent.stepBadgesClassic;
+  return list[index % list.length];
+}
+
 function CtaButton({ cta, accent, isBright, size = "lg" }) {
   const sizeClass =
     size === "lg"
@@ -123,17 +162,28 @@ export default function MarketingLandingPage({ audience, content }) {
   const { theme, isBright } = useStudentTheme();
   const accent = ACCENT[audience];
   const portal = AUDIENCE_PORTAL[audience];
-  const cardGradient = isBright ? accent.brightCardGradient : accent.classicCardGradient;
+  const isKidsPage = audience === "kids";
+  const defaultCardGradient = isBright ? accent.brightCardGradient : accent.classicCardGradient;
 
   const sectionTitleClass = isBright
     ? "text-xl font-black text-slate-900 md:text-2xl"
     : "text-xl font-black text-white md:text-2xl";
 
+  const kidsSectionTitleClass = isBright
+    ? "text-xl font-black md:text-2xl bg-gradient-to-r from-violet-600 via-fuchsia-500 to-teal-600 bg-clip-text text-transparent"
+    : "text-xl font-black text-white md:text-2xl bg-gradient-to-r from-amber-300 via-fuchsia-200 to-emerald-300 bg-clip-text text-transparent";
+
   const sectionTextClass = isBright ? "text-slate-600" : "text-white/75";
 
   const panelClass = isBright
-    ? "rounded-2xl border border-slate-200/80 bg-white/70 p-5 md:p-6 shadow-sm"
-    : "rounded-2xl border border-white/10 bg-white/5 p-5 md:p-6";
+    ? isKidsPage
+      ? "rounded-2xl border border-violet-200/80 bg-gradient-to-br from-violet-50/80 via-white/70 to-amber-50/60 p-5 md:p-6 shadow-sm"
+      : "rounded-2xl border border-slate-200/80 bg-white/70 p-5 md:p-6 shadow-sm"
+    : isKidsPage
+      ? "rounded-2xl border border-fuchsia-400/20 bg-gradient-to-br from-violet-500/10 via-white/5 to-amber-500/10 p-5 md:p-6"
+      : "rounded-2xl border border-white/10 bg-white/5 p-5 md:p-6";
+
+  const resolvedSectionTitleClass = isKidsPage ? kidsSectionTitleClass : sectionTitleClass;
 
   return (
     <>
@@ -191,16 +241,20 @@ export default function MarketingLandingPage({ audience, content }) {
           {/* Benefits */}
           <section id="benefits" className="scroll-mt-24 space-y-6">
             {content.benefits.title ? (
-              <h2 className={`text-center ${sectionTitleClass}`}>{content.benefits.title}</h2>
+              <h2 className={`text-center ${resolvedSectionTitleClass}`}>{content.benefits.title}</h2>
             ) : null}
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {content.benefits.items.map((item) => (
+              {content.benefits.items.map((item, index) => (
                 <MarketingFeatureCard
                   key={item.title}
                   title={item.title}
                   text={item.text}
                   emoji={item.emoji}
-                  gradientClass={cardGradient}
+                  gradientClass={
+                    isKidsPage
+                      ? getKidsCardGradient(accent, isBright, index)
+                      : defaultCardGradient
+                  }
                   isBright={isBright}
                 />
               ))}
@@ -210,7 +264,7 @@ export default function MarketingLandingPage({ audience, content }) {
           {/* How it works / info blocks */}
           {content.infoSections?.map((section) => (
             <section key={section.title} className="space-y-4">
-              <h2 className={sectionTitleClass}>{section.title}</h2>
+              <h2 className={resolvedSectionTitleClass}>{section.title}</h2>
               {section.intro ? (
                 <p className={`text-sm md:text-base ${sectionTextClass}`}>{section.intro}</p>
               ) : null}
@@ -220,9 +274,11 @@ export default function MarketingLandingPage({ audience, content }) {
                     <li key={step} className="flex gap-3 text-sm md:text-base">
                       <span
                         className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-                          isBright
-                            ? "bg-slate-900 text-white"
-                            : "bg-amber-400/90 text-black"
+                          isKidsPage
+                            ? getKidsStepBadge(accent, isBright, index)
+                            : isBright
+                              ? "bg-slate-900 text-white"
+                              : "bg-amber-400/90 text-black"
                         }`}
                       >
                         {index + 1}
@@ -259,7 +315,7 @@ export default function MarketingLandingPage({ audience, content }) {
 
           {/* Closing */}
           <section className={`space-y-5 text-center ${panelClass}`}>
-            <h2 className={sectionTitleClass}>{content.closing.title}</h2>
+            <h2 className={resolvedSectionTitleClass}>{content.closing.title}</h2>
             <p className={`mx-auto max-w-2xl text-sm md:text-base ${sectionTextClass}`}>
               {content.closing.text}
             </p>
