@@ -82,5 +82,13 @@ public/audio/hebrew/gen/v1/
 # AI-hybrid synthetic gold (regenerate: npm run ai-hybrid:generate-gold)
 data/ai-hybrid-gold/synthetic-gold-v1.jsonl
 
+# Admin video builder (local MVP — JSON projects + uploaded assets)
+data/admin-video-builder/projects/
+data/admin-video-builder/projects-index.json
+data/admin-video-builder/media-index.json
+data/admin-video-builder/export-work/
+public/admin-video-assets/uploads/
+public/admin-video-assets/outputs/
+
 
 .vercel

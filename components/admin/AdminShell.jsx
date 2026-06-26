@@ -11,6 +11,7 @@ import {
   ADMIN_NAV_TEACHERS,
   ADMIN_NAV_REWARDS,
   ADMIN_NAV_GAMES,
+  ADMIN_NAV_VIDEO_BUILDER,
   ADMIN_PLATFORM_LABEL,
 } from "../../lib/admin-portal/admin-ui.he.js";
 
@@ -23,6 +24,7 @@ const NAV_ITEMS = [
   { href: "/admin/analytics", label: ADMIN_NAV_ANALYTICS },
   { href: "/admin/games", label: ADMIN_NAV_GAMES },
   { href: "/admin/rewards", label: ADMIN_NAV_REWARDS },
+  { href: "/admin/video-builder", label: ADMIN_NAV_VIDEO_BUILDER },
   { href: "/admin/teachers", label: ADMIN_NAV_TEACHERS },
   { href: "/admin/schools", label: ADMIN_NAV_SCHOOLS },
   { href: "/admin/parents", label: ADMIN_NAV_PARENTS },
