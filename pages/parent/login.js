@@ -20,6 +20,7 @@ import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import { getParentPortalTheme } from "../../lib/parent-ui/parent-portal-theme.client.js";
 import { AUTH_FORGOT_PASSWORD_LINK } from "../../lib/auth/auth-reset.he";
 import { trackProductEvent } from "../../lib/analytics/track-event.client.js";
+import ParentPromoVideo from "../../components/parent/ParentPromoVideo";
 
 async function storeSignupPolicyAcceptance(accessToken) {
   return postPolicyAcceptance(accessToken, {
@@ -185,6 +186,8 @@ export default function ParentLoginPage() {
           subtitle="כניסה והרשמה מהירה להורים."
           bright={isBright}
         />
+
+        <ParentPromoVideo isBright={isBright} compact className="mb-4" />
 
         <section className={T.infoBox} aria-label="מידע לפתיחת חשבון הורה">
           <h2 className={T.infoTitle}>ברוכים הבאים הורים 👋</h2>

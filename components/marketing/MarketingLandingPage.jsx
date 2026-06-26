@@ -3,6 +3,7 @@ import Link from "next/link";
 import Layout from "../Layout";
 import MarketingFeatureCard from "./MarketingFeatureCard";
 import PortalPwaInstallButton from "../pwa/PortalPwaInstallButton";
+import ParentPromoVideo from "../parent/ParentPromoVideo";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import { getPrivateTeacherLayoutProps } from "../../lib/teacher-ui/teacher-portal-theme.client.js";
 
@@ -250,6 +251,10 @@ export default function MarketingLandingPage({ audience, content }) {
               ) : null}
             </div>
           </header>
+
+          {audience === "parents" ? (
+            <ParentPromoVideo isBright={isBright} className="py-2" />
+          ) : null}
 
           {/* Benefits */}
           <section id="benefits" className="scroll-mt-24 space-y-6">
