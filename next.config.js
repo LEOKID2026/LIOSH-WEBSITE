@@ -57,10 +57,23 @@ if (isProdBuild) {
   });
 }
 
+// Video-builder API reads runtime files only under public/admin-video-assets and
+// data/admin-video-builder. Without excludes, Next output tracing pulls in all of public/.
+const VIDEO_BUILDER_API_ROUTE = "/api/admin/video-builder/**";
+
 const nextConfig = {
   ...(process.env.NEXT_DIST_DIR ? { distDir: process.env.NEXT_DIST_DIR } : {}),
   // Avoid wrong workspace root when another package-lock.json exists under the user profile.
   outputFileTracingRoot: path.join(__dirname),
+  outputFileTracingExcludes: {
+    [VIDEO_BUILDER_API_ROUTE]: ["./public/**"],
+  },
+  outputFileTracingIncludes: {
+    [VIDEO_BUILDER_API_ROUTE]: [
+      "./public/admin-video-assets/**",
+      "./data/admin-video-builder/**",
+    ],
+  },
   reactStrictMode: false, // זמנית - כדי למנוע רענון אינסופי בפיתוח
   // Windows: lower parallel SSG concurrency to avoid intermittent PageNotFoundError
   // during prerender ("Cannot find module for page") when workers race on .next artifacts.
