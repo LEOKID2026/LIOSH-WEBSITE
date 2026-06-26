@@ -3,9 +3,22 @@
  */
 
 import { STUDENT_TRUTH_LABELS_HE } from "../../lib/learning-shared/student-display-truth.js";
+import { SUBJECT_MONTHLY_TIER_DISPLAY_LABELS } from "../../lib/learning-client/subjectMonthlyPersistenceView.js";
 
-function TierMilestone({ tier, currentMinutes }) {
+function tierCoinLabel(tier, idx) {
+  return (
+    tier.label ||
+    tier.labelHe ||
+    SUBJECT_MONTHLY_TIER_DISPLAY_LABELS[idx] ||
+    (Number.isFinite(Number(tier.coins))
+      ? `${Number(tier.coins).toLocaleString("he-IL")} מטבעות`
+      : "")
+  );
+}
+
+function TierMilestone({ tier, tierIndex, currentMinutes }) {
   const done = typeof currentMinutes === "number" && currentMinutes >= tier.minutes;
+  const label = tierCoinLabel(tier, tierIndex);
 
   return (
     <div className="flex flex-col items-center min-w-0 flex-1">
@@ -24,7 +37,7 @@ function TierMilestone({ tier, currentMinutes }) {
         {tier.minutes} דק׳
       </p>
       <p className={`text-[10px] sm:text-xs text-center mt-0.5 tabular-nums ${done ? "text-amber-600" : "text-slate-400"}`}>
-        {tier.label.replace(" מטבעות", "")}
+        {label.replace(" מטבעות", "")}
       </p>
     </div>
   );
@@ -79,18 +92,20 @@ export default function StudentMonthlyPersistencePanel({ monthlyPersistence }) {
 
       <div className="hidden sm:flex relative items-start justify-between gap-1 mb-6 px-2">
         <div className="absolute top-5 sm:top-6 left-8 right-8 h-0.5 bg-slate-200" aria-hidden />
-        {tiers.map((tier) => (
+        {tiers.map((tier, tierIndex) => (
           <TierMilestone
             key={tier.minutes}
             tier={tier}
+            tierIndex={tierIndex}
             currentMinutes={currentMinutes}
           />
         ))}
       </div>
 
       <div className="sm:hidden space-y-2 mb-5">
-        {tiers.map((tier) => {
+        {tiers.map((tier, tierIndex) => {
           const done = typeof currentMinutes === "number" && currentMinutes >= tier.minutes;
+          const label = tierCoinLabel(tier, tierIndex);
           return (
             <div
               key={tier.minutes}
@@ -108,7 +123,7 @@ export default function StudentMonthlyPersistencePanel({ monthlyPersistence }) {
                 {tier.minutes} דקות
               </span>
               <span className={`tabular-nums text-xs font-bold ${done ? "text-amber-600" : "text-slate-400"}`}>
-                {tier.label}
+                {label}
               </span>
             </div>
           );
@@ -128,7 +143,7 @@ export default function StudentMonthlyPersistencePanel({ monthlyPersistence }) {
             {nextTierEncouragementHe || `עוד ${Math.ceil(nextTier.minutes - currentMinutes)} דקות לפרס הבא`}
           </p>
           <p className="text-slate-500 text-xs text-right">
-            היעד הבא: {nextTier.minutes} דקות → {nextTier.label}
+            היעד הבא: {nextTier.minutes} דקות → {tierCoinLabel(nextTier, tiers.findIndex((t) => t.minutes === nextTier.minutes))}
           </p>
           <div className="h-3 rounded-full bg-slate-200 overflow-hidden border border-slate-100">
             <div
