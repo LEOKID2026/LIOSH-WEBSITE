@@ -4,6 +4,7 @@ import Layout from "../Layout";
 import MarketingFeatureCard from "./MarketingFeatureCard";
 import PortalPwaInstallButton from "../pwa/PortalPwaInstallButton";
 import ParentPromoVideo from "../parent/ParentPromoVideo";
+import StudentPromoVideo from "../student/StudentPromoVideo";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import { getPrivateTeacherLayoutProps } from "../../lib/teacher-ui/teacher-portal-theme.client.js";
 
@@ -254,6 +255,10 @@ export default function MarketingLandingPage({ audience, content }) {
 
           {audience === "parents" ? (
             <ParentPromoVideo isBright={isBright} className="py-2" />
+          ) : null}
+
+          {audience === "kids" ? (
+            <StudentPromoVideo isBright={isBright} className="py-2" />
           ) : null}
 
           {/* Benefits */}

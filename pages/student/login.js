@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 import PortalLoginHeading from "../../components/auth/PortalLoginHeading";
+import StudentPromoVideo from "../../components/student/StudentPromoVideo";
 import StudentParentInviteModal from "../../components/student/StudentParentInviteModal";
 import CopyConfirmPopup from "../../components/ui/CopyConfirmPopup.jsx";
 import { buildParentInviteMessageHe } from "../../lib/site/public-site-origin.client.js";
@@ -155,6 +156,8 @@ export default function StudentLoginPage() {
     <Layout {...layoutProps}>
       <div className="max-w-md mx-auto px-4 py-3 md:py-10" dir="rtl" lang="he">
         <PortalLoginHeading title="כניסת ילד/ה" bright={isBright} />
+
+        <StudentPromoVideo isBright={isBright} compact className="mb-4" />
 
         <form onSubmit={submitLogin} className="space-y-3">
           <label className="block text-sm">
