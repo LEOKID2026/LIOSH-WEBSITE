@@ -1,0 +1,6 @@
+קצר: big → bigger than
+ארוך: interesting → more interesting than
+This book is more interesting than that one.
+הספר הזה מעניין יותר מהספר ההוא.
+He is taller than me.
+הוא גבוה ממני.

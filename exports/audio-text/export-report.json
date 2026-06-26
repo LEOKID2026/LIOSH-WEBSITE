@@ -1,0 +1,287 @@
+{
+  "generatedAt": "2026-06-26T20:51:26.870Z",
+  "outputRoot": "exports\\audio-text\\books",
+  "books": [
+    {
+      "slug": "math-g1",
+      "bookTitle": "ספר מתמטיקה — כיתה א׳",
+      "subject": "math",
+      "grade": "g1",
+      "pageCount": 133,
+      "issues": []
+    },
+    {
+      "slug": "math-g2",
+      "bookTitle": "ספר מתמטיקה — כיתה ב׳",
+      "subject": "math",
+      "grade": "g2",
+      "pageCount": 154,
+      "issues": []
+    },
+    {
+      "slug": "math-g3",
+      "bookTitle": "ספר מתמטיקה — כיתה ג׳",
+      "subject": "math",
+      "grade": "g3",
+      "pageCount": 189,
+      "issues": []
+    },
+    {
+      "slug": "math-g4",
+      "bookTitle": "ספר מתמטיקה — כיתה ד׳",
+      "subject": "math",
+      "grade": "g4",
+      "pageCount": 259,
+      "issues": []
+    },
+    {
+      "slug": "math-g5",
+      "bookTitle": "ספר מתמטיקה — כיתה ה׳",
+      "subject": "math",
+      "grade": "g5",
+      "pageCount": 280,
+      "issues": []
+    },
+    {
+      "slug": "math-g6",
+      "bookTitle": "ספר מתמטיקה — כיתה ו׳",
+      "subject": "math",
+      "grade": "g6",
+      "pageCount": 308,
+      "issues": []
+    },
+    {
+      "slug": "geometry-g1",
+      "bookTitle": "ספר גאומטריה — כיתה א׳",
+      "subject": "geometry",
+      "grade": "g1",
+      "pageCount": 21,
+      "issues": []
+    },
+    {
+      "slug": "geometry-g2",
+      "bookTitle": "ספר גאומטריה — כיתה ב׳",
+      "subject": "geometry",
+      "grade": "g2",
+      "pageCount": 21,
+      "issues": []
+    },
+    {
+      "slug": "geometry-g3",
+      "bookTitle": "ספר גאומטריה — כיתה ג׳",
+      "subject": "geometry",
+      "grade": "g3",
+      "pageCount": 63,
+      "issues": []
+    },
+    {
+      "slug": "geometry-g4",
+      "bookTitle": "ספר גאומטריה — כיתה ד׳",
+      "subject": "geometry",
+      "grade": "g4",
+      "pageCount": 98,
+      "issues": []
+    },
+    {
+      "slug": "geometry-g5",
+      "bookTitle": "ספר גאומטריה — כיתה ה׳",
+      "subject": "geometry",
+      "grade": "g5",
+      "pageCount": 126,
+      "issues": []
+    },
+    {
+      "slug": "geometry-g6",
+      "bookTitle": "ספר גאומטריה — כיתה ו׳",
+      "subject": "geometry",
+      "grade": "g6",
+      "pageCount": 133,
+      "issues": []
+    },
+    {
+      "slug": "science-g1",
+      "bookTitle": "ספר מדעים — כיתה א׳",
+      "subject": "science",
+      "grade": "g1",
+      "pageCount": 42,
+      "issues": []
+    },
+    {
+      "slug": "science-g2",
+      "bookTitle": "ספר מדעים — כיתה ב׳",
+      "subject": "science",
+      "grade": "g2",
+      "pageCount": 49,
+      "issues": []
+    },
+    {
+      "slug": "science-g3",
+      "bookTitle": "ספר מדעים — כיתה ג׳",
+      "subject": "science",
+      "grade": "g3",
+      "pageCount": 49,
+      "issues": []
+    },
+    {
+      "slug": "science-g4",
+      "bookTitle": "ספר מדעים — כיתה ד׳",
+      "subject": "science",
+      "grade": "g4",
+      "pageCount": 42,
+      "issues": []
+    },
+    {
+      "slug": "science-g5",
+      "bookTitle": "ספר מדעים — כיתה ה׳",
+      "subject": "science",
+      "grade": "g5",
+      "pageCount": 42,
+      "issues": []
+    },
+    {
+      "slug": "science-g6",
+      "bookTitle": "ספר מדעים — כיתה ו׳",
+      "subject": "science",
+      "grade": "g6",
+      "pageCount": 42,
+      "issues": []
+    },
+    {
+      "slug": "hebrew-g1",
+      "bookTitle": "ספר עברית — כיתה א׳",
+      "subject": "hebrew",
+      "grade": "g1",
+      "pageCount": 224,
+      "issues": []
+    },
+    {
+      "slug": "hebrew-g2",
+      "bookTitle": "ספר עברית — כיתה ב׳",
+      "subject": "hebrew",
+      "grade": "g2",
+      "pageCount": 161,
+      "issues": []
+    },
+    {
+      "slug": "hebrew-g3",
+      "bookTitle": "ספר עברית — כיתה ג׳",
+      "subject": "hebrew",
+      "grade": "g3",
+      "pageCount": 217,
+      "issues": []
+    },
+    {
+      "slug": "hebrew-g4",
+      "bookTitle": "ספר עברית — כיתה ד׳",
+      "subject": "hebrew",
+      "grade": "g4",
+      "pageCount": 203,
+      "issues": []
+    },
+    {
+      "slug": "hebrew-g5",
+      "bookTitle": "ספר עברית — כיתה ה׳",
+      "subject": "hebrew",
+      "grade": "g5",
+      "pageCount": 196,
+      "issues": []
+    },
+    {
+      "slug": "hebrew-g6",
+      "bookTitle": "ספר עברית — כיתה ו׳",
+      "subject": "hebrew",
+      "grade": "g6",
+      "pageCount": 203,
+      "issues": []
+    },
+    {
+      "slug": "english-g1",
+      "bookTitle": "ספר אנגלית — כיתה א׳",
+      "subject": "english",
+      "grade": "g1",
+      "pageCount": 154,
+      "issues": []
+    },
+    {
+      "slug": "english-g2",
+      "bookTitle": "ספר אנגלית — כיתה ב׳",
+      "subject": "english",
+      "grade": "g2",
+      "pageCount": 182,
+      "issues": []
+    },
+    {
+      "slug": "english-g3",
+      "bookTitle": "ספר אנגלית — כיתה ג׳",
+      "subject": "english",
+      "grade": "g3",
+      "pageCount": 133,
+      "issues": []
+    },
+    {
+      "slug": "english-g4",
+      "bookTitle": "ספר אנגלית — כיתה ד׳",
+      "subject": "english",
+      "grade": "g4",
+      "pageCount": 133,
+      "issues": []
+    },
+    {
+      "slug": "english-g5",
+      "bookTitle": "ספר אנגלית — כיתה ה׳",
+      "subject": "english",
+      "grade": "g5",
+      "pageCount": 147,
+      "issues": []
+    },
+    {
+      "slug": "english-g6",
+      "bookTitle": "ספר אנגלית — כיתה ו׳",
+      "subject": "english",
+      "grade": "g6",
+      "pageCount": 119,
+      "issues": []
+    },
+    {
+      "slug": "moledet-g2",
+      "bookTitle": "ספר מולדת — כיתה ב׳",
+      "subject": "moledet",
+      "grade": "g2",
+      "pageCount": 49,
+      "issues": []
+    },
+    {
+      "slug": "moledet-g3",
+      "bookTitle": "ספר מולדת — כיתה ג׳",
+      "subject": "moledet",
+      "grade": "g3",
+      "pageCount": 56,
+      "issues": []
+    },
+    {
+      "slug": "moledet-g4",
+      "bookTitle": "ספר מולדת — כיתה ד׳",
+      "subject": "moledet",
+      "grade": "g4",
+      "pageCount": 49,
+      "issues": []
+    },
+    {
+      "slug": "geography-g5",
+      "bookTitle": "ספר גאוגרפיה — כיתה ה׳",
+      "subject": "geography",
+      "grade": "g5",
+      "pageCount": 49,
+      "issues": []
+    },
+    {
+      "slug": "geography-g6",
+      "bookTitle": "ספר גאוגרפיה — כיתה ו׳",
+      "subject": "geography",
+      "grade": "g6",
+      "pageCount": 56,
+      "issues": []
+    }
+  ],
+  "validationFailures": []
+}

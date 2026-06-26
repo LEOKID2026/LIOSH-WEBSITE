@@ -1,0 +1,5 @@
+a — לפני עצם כללי (a cat)
+an — לפני תנועה (an apple)
+the — ידוע (the cat)
+The cat is under the bed.
+החתול מתחת למיטה.

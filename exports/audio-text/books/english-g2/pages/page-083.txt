@@ -1,0 +1,3 @@
+השאלה: הספר אדום — באנגלית?
+The book = הספר, is red = אדום.
+The book is red ✓

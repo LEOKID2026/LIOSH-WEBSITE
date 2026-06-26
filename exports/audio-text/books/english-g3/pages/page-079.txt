@@ -1,0 +1,6 @@
+מילים:
+sunny — שמשי
+rainy — גשום
+cloudy — מעונן
+It is sunny.
+בחוץ שמש.

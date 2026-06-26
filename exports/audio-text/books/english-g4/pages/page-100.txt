@@ -1,0 +1,5 @@
+תבנית:
+תאר + שם עצם + פועל + תואר פועל
+The tall girl runs quickly.
+הילדה הגבוהה רצה מהר.
+The fast boy jumps high.

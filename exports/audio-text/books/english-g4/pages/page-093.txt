@@ -1,0 +1,7 @@
+כמות:
+some apples — כמה תפוחים
+many books — הרבה ספרים
+שייכות: my, your, his
+תואר פועל: quickly, slowly
+I have some apples.
+יש לי כמה תפוחים.

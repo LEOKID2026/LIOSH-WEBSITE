@@ -1,0 +1,5 @@
+תבנית:
+It is raining today.
+היום יורד גשם.
+It is sunny today.
+היום שמש.

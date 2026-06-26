@@ -1,0 +1,6 @@
+מילים:
+park — פארק
+town — עיירה
+library — ספרייה
+The park is in our town.
+הפארק בעיירה שלנו.

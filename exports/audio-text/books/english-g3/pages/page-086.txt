@@ -1,0 +1,5 @@
+חיובי:
+I play tennis.
+שלילי:
+I do not play tennis.
+Do you play tennis?

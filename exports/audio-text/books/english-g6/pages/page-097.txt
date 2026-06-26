@@ -1,0 +1,6 @@
+תרגיל: "זה הסרט המצחיק ביותר שראיתי.
+"
+funny = קצר → superlative: the + funniest (כפול y → iest).
+I have watched = שראיתי (Present Perfect).
+זה הסרט המצחיק ביותר שראיתי.
+This is the funniest film I have watched.
