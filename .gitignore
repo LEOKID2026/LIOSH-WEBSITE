@@ -90,5 +90,10 @@ data/admin-video-builder/export-work/
 public/admin-video-assets/uploads/
 public/admin-video-assets/outputs/
 
+# Permanent marketing promo videos (deployed to Vercel)
+!public/videos/
+!public/videos/promo/
+!public/videos/promo/*.mp4
+
 
 .vercel

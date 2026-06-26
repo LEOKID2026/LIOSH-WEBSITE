@@ -1,7 +1,5 @@
-export const PARENT_PROMO_DESKTOP_SRC =
-  "/admin-video-assets/outputs/leo-kids-parent-desktop-promo-draft-9.mp4";
-export const PARENT_PROMO_MOBILE_SRC =
-  "/admin-video-assets/outputs/leo-kids-parent-mobile-promo-draft-9.mp4";
+export const PARENT_PROMO_DESKTOP_SRC = "/videos/promo/leo-kids-parent-desktop.mp4";
+export const PARENT_PROMO_MOBILE_SRC = "/videos/promo/leo-kids-parent-mobile.mp4";
 
 /**
  * Responsive parent promo — desktop 16:9 on md+, mobile 9:16 below md.
