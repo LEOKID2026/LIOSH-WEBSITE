@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-08T19:17:15.831Z",
+  "generatedAt": "2026-06-26T17:01:22.830Z",
   "parent": {
     "email": "admin@admin.com",
     "id": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec"
@@ -7,7 +7,7 @@
   "confirmedChildren": "AAA1–AAA12 via student_access_codes login aaa1..aaa12",
   "range": {
     "from": "2026-05-01",
-    "to": "2026-06-08"
+    "to": "2026-05-31"
   },
   "summary": {
     "totalChildren": 12,
@@ -26,17 +26,17 @@
       "isActive": true,
       "range": {
         "from": "2026-05-01",
-        "to": "2026-06-08"
+        "to": "2026-05-31"
       },
-      "answers": 247,
-      "sessions": 22,
+      "answers": 468,
+      "sessions": 35,
       "parentActivities": 0,
       "bookEvents": 0,
       "reportSummary": {
-        "totalAnswers": 247,
-        "diagnosticAnswers": 0,
-        "totalSessions": 22,
-        "totalDurationSeconds": 2622,
+        "totalAnswers": 468,
+        "diagnosticAnswers": 468,
+        "totalSessions": 35,
+        "totalDurationSeconds": 45655,
         "coins": 0
       },
       "hasEnoughData": true,
@@ -53,21 +53,21 @@
       "isActive": true,
       "range": {
         "from": "2026-05-01",
-        "to": "2026-06-08"
+        "to": "2026-05-31"
       },
-      "answers": 6,
-      "sessions": 5,
+      "answers": 165,
+      "sessions": 24,
       "parentActivities": 0,
       "bookEvents": 0,
       "reportSummary": {
-        "totalAnswers": 6,
-        "diagnosticAnswers": 0,
-        "totalSessions": 5,
-        "totalDurationSeconds": 250,
+        "totalAnswers": 165,
+        "diagnosticAnswers": 165,
+        "totalSessions": 24,
+        "totalDurationSeconds": 15516,
         "coins": 0
       },
       "hasEnoughData": true,
-      "enoughDataReason": "raw answers >= 5"
+      "enoughDataReason": "report aggregate has activity"
     },
     {
       "label": "AAA3",
@@ -80,17 +80,17 @@
       "isActive": true,
       "range": {
         "from": "2026-05-01",
-        "to": "2026-06-08"
+        "to": "2026-05-31"
       },
-      "answers": 112,
-      "sessions": 10,
+      "answers": 448,
+      "sessions": 34,
       "parentActivities": 0,
       "bookEvents": 0,
       "reportSummary": {
-        "totalAnswers": 112,
-        "diagnosticAnswers": 0,
-        "totalSessions": 10,
-        "totalDurationSeconds": 828,
+        "totalAnswers": 448,
+        "diagnosticAnswers": 448,
+        "totalSessions": 34,
+        "totalDurationSeconds": 45092,
         "coins": 0
       },
       "hasEnoughData": true,
@@ -107,17 +107,17 @@
       "isActive": true,
       "range": {
         "from": "2026-05-01",
-        "to": "2026-06-08"
+        "to": "2026-05-31"
       },
-      "answers": 67,
-      "sessions": 12,
+      "answers": 316,
+      "sessions": 28,
       "parentActivities": 0,
       "bookEvents": 0,
       "reportSummary": {
-        "totalAnswers": 67,
-        "diagnosticAnswers": 0,
-        "totalSessions": 12,
-        "totalDurationSeconds": 429,
+        "totalAnswers": 316,
+        "diagnosticAnswers": 316,
+        "totalSessions": 28,
+        "totalDurationSeconds": 29156,
         "coins": 0
       },
       "hasEnoughData": true,
@@ -134,17 +134,17 @@
       "isActive": true,
       "range": {
         "from": "2026-05-01",
-        "to": "2026-06-08"
+        "to": "2026-05-31"
       },
-      "answers": 167,
-      "sessions": 15,
+      "answers": 439,
+      "sessions": 32,
       "parentActivities": 0,
       "bookEvents": 0,
       "reportSummary": {
-        "totalAnswers": 167,
-        "diagnosticAnswers": 0,
-        "totalSessions": 15,
-        "totalDurationSeconds": 632,
+        "totalAnswers": 439,
+        "diagnosticAnswers": 439,
+        "totalSessions": 32,
+        "totalDurationSeconds": 28720,
         "coins": 0
       },
       "hasEnoughData": true,
@@ -161,17 +161,17 @@
       "isActive": true,
       "range": {
         "from": "2026-05-01",
-        "to": "2026-06-08"
+        "to": "2026-05-31"
       },
-      "answers": 151,
-      "sessions": 14,
-      "parentActivities": 1,
+      "answers": 399,
+      "sessions": 33,
+      "parentActivities": 0,
       "bookEvents": 0,
       "reportSummary": {
-        "totalAnswers": 151,
-        "diagnosticAnswers": 0,
-        "totalSessions": 14,
-        "totalDurationSeconds": 1190,
+        "totalAnswers": 407,
+        "diagnosticAnswers": 407,
+        "totalSessions": 33,
+        "totalDurationSeconds": 38757,
         "coins": 0
       },
       "hasEnoughData": true,
@@ -188,17 +188,17 @@
       "isActive": true,
       "range": {
         "from": "2026-05-01",
-        "to": "2026-06-08"
+        "to": "2026-05-31"
       },
-      "answers": 174,
-      "sessions": 16,
+      "answers": 533,
+      "sessions": 42,
       "parentActivities": 0,
-      "bookEvents": 1,
+      "bookEvents": 0,
       "reportSummary": {
-        "totalAnswers": 174,
-        "diagnosticAnswers": 0,
-        "totalSessions": 16,
-        "totalDurationSeconds": 805,
+        "totalAnswers": 533,
+        "diagnosticAnswers": 533,
+        "totalSessions": 42,
+        "totalDurationSeconds": 34069,
         "coins": 0
       },
       "hasEnoughData": true,
@@ -215,17 +215,17 @@
       "isActive": true,
       "range": {
         "from": "2026-05-01",
-        "to": "2026-06-08"
+        "to": "2026-05-31"
       },
-      "answers": 60,
-      "sessions": 11,
+      "answers": 149,
+      "sessions": 18,
       "parentActivities": 0,
       "bookEvents": 0,
       "reportSummary": {
-        "totalAnswers": 60,
-        "diagnosticAnswers": 0,
-        "totalSessions": 11,
-        "totalDurationSeconds": 704,
+        "totalAnswers": 149,
+        "diagnosticAnswers": 149,
+        "totalSessions": 18,
+        "totalDurationSeconds": 14862,
         "coins": 0
       },
       "hasEnoughData": true,
@@ -242,17 +242,17 @@
       "isActive": true,
       "range": {
         "from": "2026-05-01",
-        "to": "2026-06-08"
+        "to": "2026-05-31"
       },
-      "answers": 168,
-      "sessions": 14,
+      "answers": 525,
+      "sessions": 47,
       "parentActivities": 0,
       "bookEvents": 0,
       "reportSummary": {
-        "totalAnswers": 168,
-        "diagnosticAnswers": 0,
-        "totalSessions": 14,
-        "totalDurationSeconds": 568,
+        "totalAnswers": 525,
+        "diagnosticAnswers": 525,
+        "totalSessions": 47,
+        "totalDurationSeconds": 40695,
         "coins": 0
       },
       "hasEnoughData": true,
@@ -269,17 +269,17 @@
       "isActive": true,
       "range": {
         "from": "2026-05-01",
-        "to": "2026-06-08"
+        "to": "2026-05-31"
       },
-      "answers": 118,
-      "sessions": 10,
+      "answers": 427,
+      "sessions": 33,
       "parentActivities": 0,
       "bookEvents": 0,
       "reportSummary": {
-        "totalAnswers": 118,
-        "diagnosticAnswers": 0,
-        "totalSessions": 10,
-        "totalDurationSeconds": 1959,
+        "totalAnswers": 427,
+        "diagnosticAnswers": 427,
+        "totalSessions": 33,
+        "totalDurationSeconds": 23083,
         "coins": 0
       },
       "hasEnoughData": true,
@@ -296,17 +296,17 @@
       "isActive": true,
       "range": {
         "from": "2026-05-01",
-        "to": "2026-06-08"
+        "to": "2026-05-31"
       },
-      "answers": 331,
-      "sessions": 26,
+      "answers": 556,
+      "sessions": 45,
       "parentActivities": 0,
       "bookEvents": 0,
       "reportSummary": {
-        "totalAnswers": 331,
-        "diagnosticAnswers": 0,
-        "totalSessions": 26,
-        "totalDurationSeconds": 2502,
+        "totalAnswers": 556,
+        "diagnosticAnswers": 556,
+        "totalSessions": 45,
+        "totalDurationSeconds": 53329,
         "coins": 0
       },
       "hasEnoughData": true,
@@ -323,17 +323,17 @@
       "isActive": true,
       "range": {
         "from": "2026-05-01",
-        "to": "2026-06-08"
+        "to": "2026-05-31"
       },
-      "answers": 57,
-      "sessions": 14,
-      "parentActivities": 1,
+      "answers": 168,
+      "sessions": 17,
+      "parentActivities": 0,
       "bookEvents": 0,
       "reportSummary": {
-        "totalAnswers": 57,
-        "diagnosticAnswers": 0,
-        "totalSessions": 14,
-        "totalDurationSeconds": 1079,
+        "totalAnswers": 168,
+        "diagnosticAnswers": 168,
+        "totalSessions": 17,
+        "totalDurationSeconds": 17037,
         "coins": 0
       },
       "hasEnoughData": true,
