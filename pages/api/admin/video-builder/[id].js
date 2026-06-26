@@ -8,6 +8,7 @@ import {
   deleteVideoProject,
   getVideoProject,
   parseVideoProjectBody,
+  setVideoProjectArchived,
   updateVideoProject,
 } from "../../../../lib/admin-server/admin-video-builder.server.js";
 
@@ -44,6 +45,20 @@ export default async function handler(req, res) {
       return res.status(200).json({ data: { project: updated.project } });
     }
 
+    if (req.method === "PATCH") {
+      if (rejectIfCrossOriginCookieMutation(req, res)) return undefined;
+
+      if (typeof req.body?.archived !== "boolean") {
+        return sendAdminApiError(res, 400, "validation_failed", "נדרש שדה archived (boolean)");
+      }
+
+      const updated = await setVideoProjectArchived(id, req.body.archived);
+      if (!updated.ok) {
+        return sendAdminApiError(res, 404, updated.code, updated.message);
+      }
+      return res.status(200).json({ data: { project: updated.project } });
+    }
+
     if (req.method === "DELETE") {
       if (rejectIfCrossOriginCookieMutation(req, res)) return undefined;
 
@@ -54,7 +69,7 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true });
     }
 
-    res.setHeader("Allow", "GET, PUT, DELETE");
+    res.setHeader("Allow", "GET, PUT, PATCH, DELETE");
     return sendAdminApiError(res, 405, "method_not_allowed", "Method not allowed");
   } catch (_e) {
     safeApiLog("admin_video_builder_id_error", { route: "admin/video-builder/[id]" });

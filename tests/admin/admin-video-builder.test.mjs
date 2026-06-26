@@ -23,6 +23,7 @@ import {
   listVideoProjects,
   parseVideoProjectBody,
   saveMediaAsset,
+  setVideoProjectArchived,
   updateVideoProject,
 } from "../../lib/admin-server/admin-video-builder.server.js";
 import { computePreviewTotalDurationSec } from "../../lib/admin-portal/admin-video-builder-utils.js";
@@ -175,6 +176,8 @@ describe("local storage CRUD", () => {
     assert.ok(projectId);
     const list = await listVideoProjects();
     assert.ok(list.some((p) => p.id === projectId));
+    const all = await listVideoProjects({ includeArchived: true });
+    assert.ok(all.some((p) => p.id === projectId));
   });
 
   test("add scene via update", async () => {
@@ -211,6 +214,20 @@ describe("local storage CRUD", () => {
     assert.equal(deleted.ok, true);
     const after = await getVideoProject(projectId);
     assert.equal(after.ok, false);
+  });
+
+  test("archive hides project from default list", async () => {
+    const created = await createVideoProject(createEmptyProjectPayload("ארכיון בדיקה"));
+    assert.equal(created.ok, true);
+    const id = created.project.id;
+    const archived = await setVideoProjectArchived(id, true);
+    assert.equal(archived.ok, true);
+    assert.equal(archived.project.archived, true);
+    const visible = await listVideoProjects();
+    assert.ok(!visible.some((p) => p.id === id));
+    const all = await listVideoProjects({ includeArchived: true });
+    assert.ok(all.some((p) => p.id === id && p.archived));
+    await deleteVideoProject(id);
   });
 });
 

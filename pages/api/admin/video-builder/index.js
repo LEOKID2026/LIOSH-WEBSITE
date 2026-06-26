@@ -17,7 +17,9 @@ export default async function handler(req, res) {
     if (ctx.stopped) return undefined;
 
     if (req.method === "GET") {
-      const projects = await listVideoProjects();
+      const includeArchived =
+        req.query?.includeArchived === "1" || req.query?.includeArchived === "true";
+      const projects = await listVideoProjects({ includeArchived });
       return res.status(200).json({ data: { projects } });
     }
 
