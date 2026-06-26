@@ -3,7 +3,9 @@ import Link from "next/link";
 import Layout from "../Layout";
 import MarketingFeatureCard from "./MarketingFeatureCard";
 import PortalPwaInstallButton from "../pwa/PortalPwaInstallButton";
+import StudentThemePicker from "../student/StudentThemePicker.jsx";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
+import { getPrivateTeacherLayoutProps } from "../../lib/teacher-ui/teacher-portal-theme.client.js";
 
 const AUDIENCE_PORTAL = {
   kids: "student",
@@ -118,6 +120,13 @@ function getKidsStepBadge(accent, isBright, index) {
   return list[index % list.length];
 }
 
+function getMarketingLayoutProps(audience, theme) {
+  if (audience === "teachers") {
+    return getPrivateTeacherLayoutProps(theme);
+  }
+  return { studentTheme: theme, studentShell: "home" };
+}
+
 function CtaButton({ cta, accent, isBright, size = "lg" }) {
   const sizeClass =
     size === "lg"
@@ -184,6 +193,7 @@ export default function MarketingLandingPage({ audience, content }) {
       : "rounded-2xl border border-white/10 bg-white/5 p-5 md:p-6";
 
   const resolvedSectionTitleClass = isKidsPage ? kidsSectionTitleClass : sectionTitleClass;
+  const layoutProps = getMarketingLayoutProps(audience, theme);
 
   return (
     <>
@@ -193,7 +203,7 @@ export default function MarketingLandingPage({ audience, content }) {
           <meta name="description" content={content.metaDescription} />
         ) : null}
       </Head>
-      <Layout studentTheme={theme} studentShell="home">
+      <Layout {...layoutProps}>
         <div dir="rtl" lang="he" className="mx-auto w-full max-w-5xl px-4 py-8 md:py-12 space-y-12 md:space-y-16">
           {/* Hero */}
           <header className="space-y-5 text-center">
@@ -204,6 +214,9 @@ export default function MarketingLandingPage({ audience, content }) {
             >
               {content.badge}
             </p>
+            <div className="flex justify-center">
+              <StudentThemePicker className="max-w-xs w-full sm:w-auto" />
+            </div>
             <h1
               className={`text-3xl font-black leading-tight md:text-4xl lg:text-5xl ${
                 isBright
