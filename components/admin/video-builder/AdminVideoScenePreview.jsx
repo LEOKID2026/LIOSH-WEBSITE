@@ -2,6 +2,9 @@ import {
   getAnimationPreviewClass,
   getBackgroundPreviewClass,
   getBackgroundPreviewStyle,
+  getAspectRatioPreviewClass,
+  aspectRatioHasSafeZone,
+  getMediaObjectPositionClass,
   normalizeSceneStyle,
   VB_MEDIA_OVERLAYS,
   VB_TEXT_BACKGROUNDS,
@@ -32,8 +35,9 @@ export default function AdminVideoScenePreview({
   showSafeZone = false,
 }) {
   const styled = normalizeSceneStyle(scene);
-  const bgClass = getBackgroundPreviewClass(styled.bgType);
-  const bgStyle = getBackgroundPreviewStyle(styled.bgType);
+  const isCover = styled.mediaFit === "cover" && Boolean(mediaUrl);
+  const bgClass = isCover ? "" : getBackgroundPreviewClass(styled.bgType);
+  const bgStyle = isCover ? undefined : getBackgroundPreviewStyle(styled.bgType);
   const anim =
     styled.animation === "ken_burns" && active
       ? "animate-vb-ken-burns"
@@ -52,24 +56,27 @@ export default function AdminVideoScenePreview({
         : "text-center items-center";
   const mediaScale = VB_MEDIA_SCALE_FACTOR[styled.mediaScale] || 0.65;
   const mediaMax = `${Math.round(mediaScale * 100)}%`;
+  const objectPos = getMediaObjectPositionClass(styled.mediaPosition);
 
-  const ratioClass =
-    aspectRatio === "9:16"
-      ? "aspect-[9/16]"
-      : aspectRatio === "1:1"
-        ? "aspect-square"
-        : "aspect-video";
+  const ratioClass = getAspectRatioPreviewClass(aspectRatio);
 
   return (
     <div
-      className={`relative w-full ${ratioClass} rounded-lg overflow-hidden border border-white/20 ${bgClass} ${anim} ${overlayClass}`}
+      className={`relative w-full ${ratioClass} rounded-lg overflow-hidden border border-white/20 ${bgClass} ${!isCover ? anim : ""} ${overlayClass}`}
       style={bgStyle}
       dir="rtl"
     >
-      {showSafeZone && aspectRatio === "9:16" ? (
+      {showSafeZone && aspectRatioHasSafeZone(aspectRatio) ? (
         <div className="absolute inset-3 border border-dashed border-white/30 pointer-events-none z-20 rounded" />
       ) : null}
-      {mediaUrl && mediaType === "image" ? (
+      {mediaUrl && mediaType === "image" && isCover ? (
+        <img
+          src={mediaUrl}
+          alt=""
+          className={`absolute inset-0 w-full h-full object-cover z-[1] ${objectPos} ${anim}`}
+        />
+      ) : null}
+      {mediaUrl && mediaType === "image" && !isCover ? (
         <img
           src={mediaUrl}
           alt=""
@@ -80,7 +87,9 @@ export default function AdminVideoScenePreview({
       {mediaUrl && mediaType === "video" ? (
         <video
           src={mediaUrl}
-          className="absolute inset-0 w-full h-full object-cover opacity-80 z-[1]"
+          className={`absolute inset-0 w-full h-full z-[1] opacity-90 ${
+            isCover ? `object-cover ${objectPos}` : "object-contain"
+          }`}
           muted
           playsInline
           autoPlay={active}

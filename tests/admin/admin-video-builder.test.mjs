@@ -26,6 +26,7 @@ import {
   updateVideoProject,
 } from "../../lib/admin-server/admin-video-builder.server.js";
 import { computePreviewTotalDurationSec } from "../../lib/admin-portal/admin-video-builder-utils.js";
+import { getExportDimensions, VB_ASPECT_RATIOS } from "../../lib/admin-portal/admin-video-builder-catalog.js";
 import { VB_FFMPEG_UNAVAILABLE } from "../../lib/admin-portal/admin-video-builder-ui.he.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -114,6 +115,7 @@ describe("parseVideoProjectBody", () => {
           titleBold: true,
           mediaPosition: "top",
           mediaScale: "lg",
+          mediaFit: "cover",
         },
       ],
       exportQuality: "720p",
@@ -140,6 +142,25 @@ describe("computePreviewTotalDurationSec", () => {
       ]),
       8
     );
+  });
+});
+
+describe("aspect ratios", () => {
+  test("accepts 4:5 and 4:3", () => {
+    for (const ratio of ["4:5", "4:3"]) {
+      const parsed = parseVideoProjectBody({
+        name: "ratio",
+        aspectRatio: ratio,
+        scenes: [defaultScene()],
+      });
+      assert.equal(parsed.ok, true, ratio);
+      assert.equal(parsed.payload.aspectRatio, ratio);
+    }
+  });
+
+  test("export dimensions for portrait feed", () => {
+    assert.deepEqual(getExportDimensions("4:5", "1080p"), { width: 1080, height: 1350 });
+    assert.deepEqual(getExportDimensions("4:3", "720p"), { width: 960, height: 720 });
   });
 });
 

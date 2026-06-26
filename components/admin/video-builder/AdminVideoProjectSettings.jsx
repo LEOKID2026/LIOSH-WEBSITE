@@ -7,6 +7,8 @@ import {
   VB_WATERMARK_POSITIONS,
   VB_WATERMARK_POSITION_IDS,
   VB_EXPORT_QUALITY_IDS,
+  VB_ASPECT_RATIO_IDS,
+  VB_ASPECT_RATIOS,
 } from "../../../lib/admin-portal/admin-video-builder-catalog.js";
 import {
   VB_ASPECT_RATIO,
@@ -65,9 +67,11 @@ export default function AdminVideoProjectSettings({
               onChange={(e) => onChange({ aspectRatio: e.target.value })}
               className="mt-1 w-full rounded-lg border border-white/20 bg-black/30 px-3 py-2 text-sm text-right"
             >
-              <option value="16:9">16:9 — רחב</option>
-              <option value="9:16">9:16 — סטורי</option>
-              <option value="1:1">1:1 — ריבוע</option>
+              {VB_ASPECT_RATIO_IDS.map((id) => (
+                <option key={id} value={id}>
+                  {VB_ASPECT_RATIOS[id].label}
+                </option>
+              ))}
             </select>
           </label>
         </>

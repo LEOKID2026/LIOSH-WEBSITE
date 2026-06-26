@@ -20,6 +20,8 @@ import {
   VB_MEDIA_POSITION_IDS,
   VB_MEDIA_SCALE_IDS,
   VB_MEDIA_SCALE_FACTOR,
+  VB_MEDIA_FIT_IDS,
+  VB_MEDIA_FITS,
 } from "../../../lib/admin-portal/admin-video-builder-catalog.js";
 import {
   VB_SCENE_ANIMATION,
@@ -28,6 +30,8 @@ import {
   VB_SCENE_MEDIA_OVERLAY,
   VB_SCENE_MEDIA_POSITION,
   VB_SCENE_MEDIA_SCALE,
+  VB_SCENE_MEDIA_FIT,
+  VB_SCENE_MEDIA_FIT_HINT,
   VB_SCENE_STYLE,
   VB_SCENE_SUBTITLE_COLOR,
   VB_SCENE_SUBTITLE_SIZE,
@@ -262,9 +266,28 @@ export default function AdminVideoSceneStylePanel({ scene, onPatch, compact = fa
 
   const mediaFields = (
     <>
+      <label className="block text-right">
+        <span className="text-xs text-white/50">{VB_SCENE_MEDIA_FIT}</span>
+        <select
+          value={String(scene.mediaFit || "contain")}
+          onChange={(e) => onPatch({ mediaFit: e.target.value })}
+          className="mt-1 w-full rounded border border-white/20 bg-black/30 px-2 py-1.5 text-sm text-right"
+        >
+          {VB_MEDIA_FIT_IDS.map((id) => (
+            <option key={id} value={id}>
+              {VB_MEDIA_FITS[id].label}
+            </option>
+          ))}
+        </select>
+        {String(scene.mediaFit || "contain") === "cover" ? (
+          <p className="mt-1 text-[10px] text-white/40">{VB_SCENE_MEDIA_FIT_HINT}</p>
+        ) : null}
+      </label>
       <div className="grid grid-cols-2 gap-2">
         <label className="block text-right">
-          <span className="text-xs text-white/50">{VB_SCENE_MEDIA_POSITION}</span>
+          <span className="text-xs text-white/50">
+            {String(scene.mediaFit || "contain") === "cover" ? "מיקום חיתוך" : VB_SCENE_MEDIA_POSITION}
+          </span>
           <select
             value={String(scene.mediaPosition || "center")}
             onChange={(e) => onPatch({ mediaPosition: e.target.value })}
@@ -277,21 +300,23 @@ export default function AdminVideoSceneStylePanel({ scene, onPatch, compact = fa
             ))}
           </select>
         </label>
-        <label className="block text-right">
-          <span className="text-xs text-white/50">{VB_SCENE_MEDIA_SCALE}</span>
-          <select
-            value={String(scene.mediaScale || "md")}
-            onChange={(e) => onPatch({ mediaScale: e.target.value })}
-            className="mt-1 w-full rounded border border-white/20 bg-black/30 px-2 py-1.5 text-sm text-right"
-          >
-            {VB_MEDIA_SCALE_IDS.map((id) => (
-              <option key={id} value={id}>
-                {id === "sm" ? "קטן" : id === "md" ? "בינוני" : "גדול"} (
-                {Math.round((VB_MEDIA_SCALE_FACTOR[id] || 0.65) * 100)}%)
-              </option>
-            ))}
-          </select>
-        </label>
+        {String(scene.mediaFit || "contain") !== "cover" ? (
+          <label className="block text-right">
+            <span className="text-xs text-white/50">{VB_SCENE_MEDIA_SCALE}</span>
+            <select
+              value={String(scene.mediaScale || "md")}
+              onChange={(e) => onPatch({ mediaScale: e.target.value })}
+              className="mt-1 w-full rounded border border-white/20 bg-black/30 px-2 py-1.5 text-sm text-right"
+            >
+              {VB_MEDIA_SCALE_IDS.map((id) => (
+                <option key={id} value={id}>
+                  {id === "sm" ? "קטן" : id === "md" ? "בינוני" : "גדול"} (
+                  {Math.round((VB_MEDIA_SCALE_FACTOR[id] || 0.65) * 100)}%)
+                </option>
+              ))}
+            </select>
+          </label>
+        ) : null}
       </div>
       <label className="block text-right">
         <span className="text-xs text-white/50">{VB_SCENE_MEDIA_OVERLAY}</span>

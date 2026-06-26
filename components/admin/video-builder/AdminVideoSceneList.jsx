@@ -1,7 +1,7 @@
 import AdminSectionCard from "../AdminSectionCard.jsx";
 import AdminVideoScenePreview from "./AdminVideoScenePreview.jsx";
 import AdminVideoSceneStylePanel from "./AdminVideoSceneStylePanel.jsx";
-import { defaultSceneFields, pickSceneStyleFields, VB_SCENE_TEMPLATES } from "../../../lib/admin-portal/admin-video-builder-catalog.js";
+import { defaultSceneFields, pickSceneStyleFields, VB_SCENE_TEMPLATES, VB_ASPECT_RATIO_IDS, VB_ASPECT_RATIOS } from "../../../lib/admin-portal/admin-video-builder-catalog.js";
 import {
   VB_ADD_SCENE,
   VB_APPLY_STYLE_ALL,
@@ -115,9 +115,11 @@ export default function AdminVideoSceneList({ project, assets, onChange, onSelec
               onChange={(e) => onChange({ aspectRatio: e.target.value })}
               className="mt-1 w-full rounded-lg border border-white/20 bg-black/30 px-3 py-2 text-sm text-white text-right"
             >
-              <option value="16:9">16:9</option>
-              <option value="9:16">9:16</option>
-              <option value="1:1">1:1</option>
+              {VB_ASPECT_RATIO_IDS.map((id) => (
+                <option key={id} value={id}>
+                  {VB_ASPECT_RATIOS[id].label}
+                </option>
+              ))}
             </select>
           </label>
         </div>
