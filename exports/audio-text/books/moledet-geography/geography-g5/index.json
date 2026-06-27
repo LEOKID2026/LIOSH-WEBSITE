@@ -107,22 +107,22 @@
       "pageNumber": 15,
       "title": "מה לומדים?",
       "textFile": "pages/page-015.txt",
-      "estimatedCharacters": 114,
+      "estimatedCharacters": 115,
       "estimatedWords": 22
     },
     {
       "pageNumber": 16,
       "title": "הסבר",
       "textFile": "pages/page-016.txt",
-      "estimatedCharacters": 225,
-      "estimatedWords": 45
+      "estimatedCharacters": 221,
+      "estimatedWords": 42
     },
     {
       "pageNumber": 17,
       "title": "דוגמה",
       "textFile": "pages/page-017.txt",
-      "estimatedCharacters": 136,
-      "estimatedWords": 25
+      "estimatedCharacters": 166,
+      "estimatedWords": 30
     },
     {
       "pageNumber": 18,
@@ -142,8 +142,8 @@
       "pageNumber": 20,
       "title": "בואו נבדוק יחד",
       "textFile": "pages/page-020.txt",
-      "estimatedCharacters": 200,
-      "estimatedWords": 39
+      "estimatedCharacters": 226,
+      "estimatedWords": 41
     },
     {
       "pageNumber": 21,

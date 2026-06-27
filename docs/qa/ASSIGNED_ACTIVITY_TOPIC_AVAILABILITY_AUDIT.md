@@ -1,6 +1,6 @@
 # Assigned Activity Topic Availability Audit
 
-Generated: 2026-06-27T15:57:10.256Z
+Generated: 2026-06-27T17:04:49.931Z
 Script: `scripts/audit-assigned-activity-topic-availability.mjs`
 
 ## Scope
@@ -119,14 +119,14 @@ Verification per topic:
 | hebrew | g5 | grammar | דקדוק ולשון | yes | supported | supported | supported (book pages) — related pages: grammar_sentence_correction_choose_correct, grammar_sentence_correction_sv_agreement_plural, grammar_verb_agreement_plural_subject, grammar_tense_shift_past_present, grammar_transform_negation, grammar_binary_grammar_tf | hebrew-question-generator (dynamic) |  | must-have core topic | keep visible |
 | hebrew | g5 | vocabulary | עושר שפתי | yes | supported | supported | supported (book pages) — related pages: vocabulary_collocation_verb_noun_fit, vocabulary_category_exclusion_odd_out, vocabulary_context_fit_register | hebrew-question-generator (dynamic) |  | must-have core topic | keep visible |
 | hebrew | g5 | speaking | דיבור ושיח | yes | unsupported-activity-type | typing-only (master) | explanation-only-or-absent — topic not in book TOC | hebrew-question-generator (dynamic) | master generates typing/speaking mode; assigned MCQ path filters these out | writing/speaking/manual assessment only | disable with explanation |
-| hebrew | g5 | mixed | ערבוב | yes | mixed-intentional | partial | explanation-only-or-absent — topic not in book TOC | hebrew-question-generator (dynamic) | stored topic varies by design | duplicate/ambiguous/mixed | relabel as mixed practice |
+| hebrew | g5 | mixed | ערבוב | yes | mixed-intentional | supported | explanation-only-or-absent — topic not in book TOC | hebrew-question-generator (dynamic) | stored topic varies by design | duplicate/ambiguous/mixed | relabel as mixed practice |
 | hebrew | g6 | reading | קריאה | yes | supported | supported | explanation-only-or-absent — topic not in book TOC | hebrew-question-generator (dynamic) |  | must-have core topic | keep visible |
 | hebrew | g6 | comprehension | הבנת הנקרא | yes | supported | supported | explanation-only-or-absent — topic not in book TOC | hebrew-question-generator (dynamic) |  | must-have core topic | keep visible |
 | hebrew | g6 | writing | כתיבה והבעה | yes | unsupported-activity-type | typing-only (master) | explanation-only-or-absent — topic not in book TOC | hebrew-question-generator (dynamic) | master generates typing/speaking mode; assigned MCQ path filters these out | writing/speaking/manual assessment only | disable with explanation |
 | hebrew | g6 | grammar | דקדוק ולשון | yes | supported | supported | supported (book pages) — related pages: grammar_tf | hebrew-question-generator (dynamic) |  | must-have core topic | keep visible |
 | hebrew | g6 | vocabulary | עושר שפתי | yes | supported | supported | explanation-only-or-absent — topic not in book TOC | hebrew-question-generator (dynamic) |  | must-have core topic | keep visible |
 | hebrew | g6 | speaking | דיבור ושיח | yes | unsupported-activity-type | typing-only (master) | explanation-only-or-absent — topic not in book TOC | hebrew-question-generator (dynamic) | master generates typing/speaking mode; assigned MCQ path filters these out | writing/speaking/manual assessment only | disable with explanation |
-| hebrew | g6 | mixed | ערבוב | yes | mixed-intentional | supported | explanation-only-or-absent — topic not in book TOC | hebrew-question-generator (dynamic) | stored topic varies by design | duplicate/ambiguous/mixed | relabel as mixed practice |
+| hebrew | g6 | mixed | ערבוב | yes | mixed-intentional | partial | explanation-only-or-absent — topic not in book TOC | hebrew-question-generator (dynamic) | stored topic varies by design | duplicate/ambiguous/mixed | relabel as mixed practice |
 | english | g1 | phonics | פוניקה | yes | supported | supported | supported (book pages) — related pages: phonics_sounds, phonics_first_sound | english-questions pools + generator (grammar/sentences/translation/vocabulary) |  | nice-to-have | keep visible |
 | english | g1 | vocabulary | אוצר מילים | yes | supported | supported | explanation-only-or-absent — topic not in book TOC | english-questions pools + generator (grammar/sentences/translation/vocabulary) |  | must-have core topic | keep visible |
 | english | g2 | phonics | פוניקה | yes | supported | supported | supported (book pages) — related pages: phonics_sounds_review, phonics_blending | english-questions pools + generator (grammar/sentences/translation/vocabulary) |  | nice-to-have | keep visible |

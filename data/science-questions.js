@@ -156,10 +156,10 @@ const SCIENCE_QUESTIONS_RAW = [
     "type": "mcq",
     "stem": "איך השרירים והשלד תורמים לתנועה בגוף?",
     "options": [
-        "השרירים והשלד פועלים יחד — השרירים מושכים עצמות וכך נוצרת תנועה",
-        "רק השלד זז בלי שרירים",
-        "רק השרירים פועלים בלי עצמות",
-        "העור אחראי לכל התנועות בגוף"
+      "השרירים מושכים עצמות וכך נוצרת תנועה",
+      "רק העצמות זזות בלי השרירים",
+      "הגוף זז בלי קשר לשרירים ולשלד",
+      "התנועה נוצרת רק מהנשימה"
     ],
     "correctIndex": 0,
     "explanation": "השלד נותן מסגרת לגוף, והשרירים מחוברים לעצמות ומושכים אותן כדי לייצר תנועה.",
@@ -225,12 +225,12 @@ const SCIENCE_QUESTIONS_RAW = [
     "type": "mcq",
     "stem": "מהו תפקידה העיקרי של מערכת העצבים?",
     "options": [
-      "לסנן פסולת מהדם",
-      "לתאם ולהעביר מידע בין חלקי הגוף והסביבה",
-      "להוביל מזון מהמעיים לדם",
-      "לאחסן אנרגיה כשומן"
+      "לתאם ולהעביר מידע בין חלקי הגוף",
+      "רק לאגור אנרגיה בלי קשר למידע",
+      "להפריד בין מערכות הגוף בלבד",
+      "לשמור על חום הגוף בלבד"
     ],
-    "correctIndex": 1,
+    "correctIndex": 0,
     "explanation": "מערכת העצבים אחראית על קבלת מידע מהחושים, עיבודו במוח ושליחת הוראות לשרירים ולאיברים.",
     "theoryLines": [
       "מערכת העצבים כוללת מוח, חוט שדרה ועצבים רבים.",
@@ -295,12 +295,12 @@ const SCIENCE_QUESTIONS_RAW = [
     "type": "mcq",
     "stem": "מהי תכונה שמתאימה דג לחיים במים?",
     "options": [
-      "כנפיים גדולות",
-      "פרווה עבה",
       "סנפירים וגוף בצורת טורפדו",
-      "רגליים ארוכות"
+      "רגליים ארוכות וזנב שטוח",
+      "כנפיים רחבות ומקור דק",
+      "קשקשים וגוף ארוך ודק"
     ],
-    "correctIndex": 2,
+    "correctIndex": 0,
     "explanation": "הסנפירים והגוף הצר והמאורך מאפשרים לדג לשחות ביעילות במים.",
     "theoryLines": [
       "בעלי חיים מותאמים לסביבת החיים שלהם.",
@@ -401,12 +401,12 @@ const SCIENCE_QUESTIONS_RAW = [
     "type": "mcq",
     "stem": "מה נכון לגבי התאמות התנהגותיות אצל בעלי חיים?",
     "options": [
-      "הן תמיד קשורות רק לצבע הגוף.",
-      "הן כוללות שינויי התנהגות שעוזרים לשרוד, כמו נדידה או תרדמת חורף.",
-      "הן קורות רק אצל חיות מחמד.",
-      "הן תלויות רק במזג האוויר."
+      "שינויי התנהגות שעוזרים לשרוד, כמו נדידה",
+      "רק שינוי צבע בלי קשר לשרוד",
+      "התנהגות קבועה בכל עונות השנה",
+      "התנהגות אקראית בלי קשר לסביבה"
     ],
-    "correctIndex": 1,
+    "correctIndex": 0,
     "explanation": "התאמות התנהגותיות הן דרכי פעולה שעוזרות לבעל החיים לשרוד בסביבתו, כמו נדידה או פעילות לילה.",
     "theoryLines": [
       "יש התאמות מבניות (צורת גוף) והתאמות התנהגותיות.",
@@ -436,12 +436,12 @@ const SCIENCE_QUESTIONS_RAW = [
     "type": "mcq",
     "stem": "מה נכון בהשוואה בין דג לדולפין?",
     "options": [
-      "שניהם סוגי דגים כי שניהם חיים במים",
-      "דולפין נושם אוויר דרך ריאות כמו יונק, ודג נושם במים בעזרת זימים",
-      "דולפין ודג שייכים לאותה קבוצה ביולוגית בדיוק",
-      "לדולפין יש נוצות כמו לעוף"
+      "דולפין נושם אוויר; דג נושם במים בזימים",
+      "גם דולפין וגם דג נושמים רק בזימים",
+      "שניהם נושמים רק אוויר מחוץ למים",
+      "אין הבדל בין דולפין לדג בנשימה"
     ],
-    "correctIndex": 1,
+    "correctIndex": 0,
     "explanation": "דולפינים הם יונקים ונושמים אוויר דרך ריאות כמו יונקים אחרים; דגים נושמים במים בעזרת זימים ואינם יונקים.",
     "theoryLines": [
       "בעלי חיים יכולים להיראות דומים כשחיים במים, אך השיוך הביולוגי נקבע מתכונות כמו דרך הנשימה וההולדה.",
@@ -472,12 +472,12 @@ const SCIENCE_QUESTIONS_RAW = [
     "type": "mcq",
     "stem": "איזה משפט נכון לגבי צרכים בסיסיים של בעלי חיים?",
     "options": [
+      "בעלי חיים צריכים מזון, מים ומקום מתאים",
       "בעלי חיים צריכים רק מזון",
-      "בעלי חיים צריכים מזון, מים ותנאים מתאימים לסוג שלהם",
-      "בעלי חיים צריכים רק מים",
-      "אם יש מזון, בעלי חיים לא צריכים מים"
+      "בעלי חיים לא צריכים מים",
+      "בעלי חיים חיים בלי תנאים מיוחדים"
     ],
-    "correctIndex": 1,
+    "correctIndex": 0,
     "explanation": "כל בעל חיים צריך מזון, מים ותנאים סביבתיים מתאימים (כמו חום, מקום להימצא בו) כדי לשרוד ולהתפתח.",
     "theoryLines": [
       "צרכים בסיסיים כוללים מזון לאנרגיה, מים לתפקוד הגוף, וסביבה שמתאימה לסוג החיה.",
@@ -673,7 +673,9 @@ const SCIENCE_QUESTIONS_RAW = [
     "topic": "materials",
     "grades": [
       "g3",
-      "g4"
+      "g4",
+      "g5",
+      "g6"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -752,10 +754,10 @@ const SCIENCE_QUESTIONS_RAW = [
     "type": "mcq",
     "stem": "מה נכון לגבי פלסטיק?",
     "options": [
-        "פלסטיק נוצר בתעשייה ולא נמצא בטבע כפי שהוא",
-        "פלסטיק גדל על עצים ביער",
-        "פלסטיק הוא סוג של עץ",
-        "כל חומר בטבע הוא פלסטיק"
+      "פלסטיק נוצר בתעשייה ולא נמצא בטבע",
+      "פלסטיק נמצא בטבע כמו אבן",
+      "פלסטיק הוא סוג של עץ",
+      "פלסטיק נוצר רק מחול"
     ],
     "correctIndex": 0,
     "explanation": "פלסטיק מיוצר במפעלים מחומרי גלם, בעיקר מנפט, ואינו חומר טבעי כמו עץ או אבן.",
@@ -849,7 +851,9 @@ const SCIENCE_QUESTIONS_RAW = [
     "topic": "earth_space",
     "grades": [
       "g3",
-      "g4"
+      "g4",
+      "g5",
+      "g6"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -883,6 +887,8 @@ const SCIENCE_QUESTIONS_RAW = [
     "id": "earth_2",
     "topic": "earth_space",
     "grades": [
+      "g1",
+      "g2",
       "g3",
       "g4",
       "g5",
@@ -928,10 +934,10 @@ const SCIENCE_QUESTIONS_RAW = [
     "type": "mcq",
     "stem": "מה נכון לגבי הירח?",
     "options": [
-        "הירח הוא לוויין שמחזיר אור שמש — הוא לא כוכב שמאיר מעצמו",
-        "הירח הוא כוכב שמאיר מעצמו",
-        "הירח הוא כוכב לכת כמו כדור הארץ",
-        "הירח נוצר מאש ולכן הוא זוהר"
+      "הירח מחזיר אור שמש — הוא לא מאיר מעצמו",
+      "הירח הוא כוכב שמאיר כמו השמש",
+      "הירח יוצר אור משלו בלילה",
+      "הירח לא קשור לאור השמש"
     ],
     "correctIndex": 0,
     "explanation": "הירח אינו כוכב ואינו מייצר אור. הוא מחזיר את אור השמש שמאיר עליו.",
@@ -990,7 +996,9 @@ const SCIENCE_QUESTIONS_RAW = [
     "topic": "environment",
     "grades": [
       "g3",
-      "g4"
+      "g4",
+      "g5",
+      "g6"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -1998,7 +2006,10 @@ const SCIENCE_QUESTIONS_RAW = [
     "topic": "materials",
     "grades": [
       "g1",
-      "g2"
+      "g2",
+      "g3",
+      "g4",
+      "g5"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -2033,7 +2044,10 @@ const SCIENCE_QUESTIONS_RAW = [
     "topic": "materials",
     "grades": [
       "g1",
-      "g2"
+      "g2",
+      "g3",
+      "g4",
+      "g5"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -2068,7 +2082,9 @@ const SCIENCE_QUESTIONS_RAW = [
     "topic": "materials",
     "grades": [
       "g1",
-      "g2"
+      "g2",
+      "g3",
+      "g4"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -2103,7 +2119,9 @@ const SCIENCE_QUESTIONS_RAW = [
     "topic": "materials",
     "grades": [
       "g1",
-      "g2"
+      "g2",
+      "g3",
+      "g4"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -2246,10 +2264,10 @@ const SCIENCE_QUESTIONS_RAW = [
     "type": "mcq",
     "stem": "מתי השמש מאירה?",
     "options": [
-        "השמש מאירה כל הזמן — ביום אנחנו רואים אותה כשאין עננים",
-        "השמש מאירה רק בחלק מהימים",
-        "השמש מאירה רק בלילה",
-        "השמש נדלקת ונכבית כל יום"
+      "השמש מאירה תמיד — ביום רואים אותה כשאין עננים",
+      "השמש מאירה רק בלילה",
+      "השמש נדלקת ונכבית כל יום",
+      "השמש לא קשורה ליום וללילה"
     ],
     "correctIndex": 0,
     "explanation": "לא נכון. השמש מאירה כל יום, אבל לפעמים עננים מכסים אותה ואז נראית שמש פחות.",
@@ -2274,7 +2292,10 @@ const SCIENCE_QUESTIONS_RAW = [
     "topic": "environment",
     "grades": [
       "g1",
-      "g2"
+      "g2",
+      "g3",
+      "g4",
+      "g5"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -2309,7 +2330,10 @@ const SCIENCE_QUESTIONS_RAW = [
     "topic": "environment",
     "grades": [
       "g1",
-      "g2"
+      "g2",
+      "g3",
+      "g4",
+      "g5"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -2344,17 +2368,19 @@ const SCIENCE_QUESTIONS_RAW = [
     "topic": "environment",
     "grades": [
       "g1",
-      "g2"
+      "g2",
+      "g3",
+      "g4"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
     "type": "mcq",
     "stem": "איפה כדאי לזרוק פסולת?",
     "options": [
-        "בפח אשפה או במיכל מיחזור מתאים",
-        "על הרצפה בכיתה",
-        "בגינה בלי פח",
-        "בנחל או בים"
+      "בפח אשפה או במיכל מיחזור מתאים",
+      "לזרוק לכל מקום בחוץ",
+      "להטמין בכל מקום באדמה",
+      "לשים רק במים"
     ],
     "correctIndex": 0,
     "explanation": "נכון. זריקת פסולת לפח עוזרת לשמור על הסביבה נקייה.",
@@ -2794,7 +2820,9 @@ const SCIENCE_QUESTIONS_RAW = [
     "topic": "materials",
     "grades": [
       "g3",
-      "g4"
+      "g4",
+      "g5",
+      "g6"
     ],
     "minLevel": "medium",
     "maxLevel": "medium",
@@ -2829,7 +2857,9 @@ const SCIENCE_QUESTIONS_RAW = [
     "topic": "materials",
     "grades": [
       "g3",
-      "g4"
+      "g4",
+      "g5",
+      "g6"
     ],
     "minLevel": "medium",
     "maxLevel": "medium",
@@ -2864,7 +2894,8 @@ const SCIENCE_QUESTIONS_RAW = [
     "topic": "materials",
     "grades": [
       "g3",
-      "g4"
+      "g4",
+      "g5"
     ],
     "minLevel": "hard",
     "maxLevel": "hard",
@@ -3003,6 +3034,8 @@ const SCIENCE_QUESTIONS_RAW = [
     "id": "env_8",
     "topic": "environment",
     "grades": [
+      "g1",
+      "g2",
       "g3",
       "g4"
     ],
@@ -3038,6 +3071,8 @@ const SCIENCE_QUESTIONS_RAW = [
     "id": "env_9",
     "topic": "environment",
     "grades": [
+      "g1",
+      "g2",
       "g3",
       "g4"
     ],
@@ -4721,7 +4756,8 @@ const SCIENCE_QUESTIONS_RAW = [
     "topic": "materials",
     "grades": [
       "g1",
-      "g2"
+      "g2",
+      "g3"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -4756,7 +4792,8 @@ const SCIENCE_QUESTIONS_RAW = [
     "topic": "materials",
     "grades": [
       "g1",
-      "g2"
+      "g2",
+      "g3"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -4826,7 +4863,10 @@ const SCIENCE_QUESTIONS_RAW = [
     "topic": "materials",
     "grades": [
       "g2",
-      "g3"
+      "g3",
+      "g4",
+      "g5",
+      "g6"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -4860,6 +4900,7 @@ const SCIENCE_QUESTIONS_RAW = [
     "id": "materials_19",
     "topic": "materials",
     "grades": [
+      "g1",
       "g2",
       "g3"
     ],
@@ -4896,7 +4937,9 @@ const SCIENCE_QUESTIONS_RAW = [
     "topic": "materials",
     "grades": [
       "g3",
-      "g4"
+      "g4",
+      "g5",
+      "g6"
     ],
     "minLevel": "medium",
     "maxLevel": "medium",
@@ -4931,7 +4974,9 @@ const SCIENCE_QUESTIONS_RAW = [
     "topic": "materials",
     "grades": [
       "g3",
-      "g4"
+      "g4",
+      "g5",
+      "g6"
     ],
     "minLevel": "medium",
     "maxLevel": "medium",
@@ -4966,7 +5011,8 @@ const SCIENCE_QUESTIONS_RAW = [
     "topic": "materials",
     "grades": [
       "g3",
-      "g4"
+      "g4",
+      "g5"
     ],
     "minLevel": "hard",
     "maxLevel": "hard",
@@ -5172,7 +5218,10 @@ const SCIENCE_QUESTIONS_RAW = [
     "id": "earth_17",
     "topic": "earth_space",
     "grades": [
-      "g3"
+      "g3",
+      "g4",
+      "g5",
+      "g6"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -5416,7 +5465,9 @@ const SCIENCE_QUESTIONS_RAW = [
     "topic": "environment",
     "grades": [
       "g1",
-      "g2"
+      "g2",
+      "g3",
+      "g4"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -5451,7 +5502,8 @@ const SCIENCE_QUESTIONS_RAW = [
     "topic": "environment",
     "grades": [
       "g1",
-      "g2"
+      "g2",
+      "g3"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -5485,6 +5537,7 @@ const SCIENCE_QUESTIONS_RAW = [
     "id": "env_14",
     "topic": "environment",
     "grades": [
+      "g1",
       "g2",
       "g3"
     ],
@@ -6744,6 +6797,7 @@ const SCIENCE_QUESTIONS_RAW = [
     "id": "materials_28",
     "topic": "materials",
     "grades": [
+      "g1",
       "g2",
       "g3"
     ],
@@ -6779,7 +6833,8 @@ const SCIENCE_QUESTIONS_RAW = [
     "id": "earth_26",
     "topic": "earth_space",
     "grades": [
-      "g1"
+      "g1",
+      "g2"
     ],
     "minLevel": "medium",
     "maxLevel": "medium",
@@ -6882,6 +6937,7 @@ const SCIENCE_QUESTIONS_RAW = [
     "id": "env_24",
     "topic": "environment",
     "grades": [
+      "g1",
       "g2",
       "g3"
     ],
@@ -7092,7 +7148,9 @@ const SCIENCE_QUESTIONS_RAW = [
     "topic": "materials",
     "grades": [
       "g3",
-      "g4"
+      "g4",
+      "g5",
+      "g6"
     ],
     "minLevel": "medium",
     "maxLevel": "medium",
@@ -8209,7 +8267,8 @@ const SCIENCE_QUESTIONS_RAW = [
     "topic": "environment",
     "grades": [
       "g1",
-      "g2"
+      "g2",
+      "g3"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -9177,7 +9236,9 @@ const SCIENCE_QUESTIONS_RAW = [
     "topic": "materials",
     "grades": [
       "g3",
-      "g4"
+      "g4",
+      "g5",
+      "g6"
     ],
     "minLevel": "medium",
     "maxLevel": "medium",
@@ -9212,7 +9273,8 @@ const SCIENCE_QUESTIONS_RAW = [
     "topic": "materials",
     "grades": [
       "g3",
-      "g4"
+      "g4",
+      "g5"
     ],
     "minLevel": "medium",
     "maxLevel": "medium",
@@ -9247,7 +9309,8 @@ const SCIENCE_QUESTIONS_RAW = [
     "topic": "materials",
     "grades": [
       "g3",
-      "g4"
+      "g4",
+      "g5"
     ],
     "minLevel": "medium",
     "maxLevel": "medium",
@@ -9282,7 +9345,8 @@ const SCIENCE_QUESTIONS_RAW = [
     "topic": "materials",
     "grades": [
       "g3",
-      "g4"
+      "g4",
+      "g5"
     ],
     "minLevel": "medium",
     "maxLevel": "medium",
@@ -10296,7 +10360,10 @@ const SCIENCE_QUESTIONS_RAW = [
     "id": "earth_space_phase717_g2_1",
     "topic": "earth_space",
     "grades": [
-      "g2"
+      "g2",
+      "g3",
+      "g4",
+      "g5"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -10330,7 +10397,10 @@ const SCIENCE_QUESTIONS_RAW = [
     "id": "earth_space_phase717_g2_2",
     "topic": "earth_space",
     "grades": [
-      "g2"
+      "g2",
+      "g3",
+      "g4",
+      "g5"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -10364,7 +10434,9 @@ const SCIENCE_QUESTIONS_RAW = [
     "id": "earth_space_phase717_g2_3",
     "topic": "earth_space",
     "grades": [
-      "g2"
+      "g2",
+      "g3",
+      "g4"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -10602,7 +10674,10 @@ const SCIENCE_QUESTIONS_RAW = [
     "id": "science_remaining_g2_earth_space_easy_hard",
     "topic": "earth_space",
     "grades": [
-      "g2"
+      "g1",
+      "g2",
+      "g3",
+      "g4"
     ],
     "minLevel": "easy",
     "maxLevel": "hard",
@@ -10636,7 +10711,8 @@ const SCIENCE_QUESTIONS_RAW = [
     "id": "science_remaining_g2_hard_environment",
     "topic": "environment",
     "grades": [
-      "g2"
+      "g2",
+      "g3"
     ],
     "minLevel": "hard",
     "maxLevel": "hard",
@@ -10704,7 +10780,10 @@ const SCIENCE_QUESTIONS_RAW = [
     "id": "science_remaining_g2_hard_materials",
     "topic": "materials",
     "grades": [
-      "g2"
+      "g2",
+      "g3",
+      "g4",
+      "g5"
     ],
     "minLevel": "hard",
     "maxLevel": "hard",

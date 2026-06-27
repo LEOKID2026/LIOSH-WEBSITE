@@ -73,7 +73,9 @@ export const SCIENCE_QUESTIONS_CLOSURE_FILL = [
     "id": "sci_closure_g4es_003",
     "topic": "earth_space",
     "grades": [
-      "g4"
+      "g4",
+      "g5",
+      "g6"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -106,7 +108,9 @@ export const SCIENCE_QUESTIONS_CLOSURE_FILL = [
     "id": "sci_closure_g4es_004",
     "topic": "earth_space",
     "grades": [
-      "g4"
+      "g4",
+      "g5",
+      "g6"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -139,7 +143,9 @@ export const SCIENCE_QUESTIONS_CLOSURE_FILL = [
     "id": "sci_closure_g4env_005",
     "topic": "environment",
     "grades": [
-      "g4"
+      "g4",
+      "g5",
+      "g6"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -172,7 +178,9 @@ export const SCIENCE_QUESTIONS_CLOSURE_FILL = [
     "id": "sci_closure_g4env_006",
     "topic": "environment",
     "grades": [
-      "g4"
+      "g4",
+      "g5",
+      "g6"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -337,7 +345,8 @@ export const SCIENCE_QUESTIONS_CLOSURE_FILL = [
     "id": "sci_closure_g5es_011",
     "topic": "earth_space",
     "grades": [
-      "g5"
+      "g5",
+      "g6"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -370,7 +379,8 @@ export const SCIENCE_QUESTIONS_CLOSURE_FILL = [
     "id": "sci_closure_g5es_012",
     "topic": "earth_space",
     "grades": [
-      "g5"
+      "g5",
+      "g6"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -403,7 +413,8 @@ export const SCIENCE_QUESTIONS_CLOSURE_FILL = [
     "id": "sci_closure_g5env_013",
     "topic": "environment",
     "grades": [
-      "g5"
+      "g5",
+      "g6"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -436,7 +447,8 @@ export const SCIENCE_QUESTIONS_CLOSURE_FILL = [
     "id": "sci_closure_g5env_014",
     "topic": "environment",
     "grades": [
-      "g5"
+      "g5",
+      "g6"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -733,7 +745,10 @@ export const SCIENCE_QUESTIONS_CLOSURE_FILL = [
     "id": "sci_closure_g3mat_023",
     "topic": "materials",
     "grades": [
-      "g3"
+      "g3",
+      "g4",
+      "g5",
+      "g6"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -766,7 +781,10 @@ export const SCIENCE_QUESTIONS_CLOSURE_FILL = [
     "id": "sci_closure_g3mat_024",
     "topic": "materials",
     "grades": [
-      "g3"
+      "g1",
+      "g2",
+      "g3",
+      "g4"
     ],
     "minLevel": "hard",
     "maxLevel": "hard",
@@ -832,7 +850,10 @@ export const SCIENCE_QUESTIONS_CLOSURE_FILL = [
     "id": "sci_closure_g3es_026",
     "topic": "earth_space",
     "grades": [
-      "g3"
+      "g3",
+      "g4",
+      "g5",
+      "g6"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -865,6 +886,8 @@ export const SCIENCE_QUESTIONS_CLOSURE_FILL = [
     "id": "sci_closure_g3es_027",
     "topic": "earth_space",
     "grades": [
+      "g1",
+      "g2",
       "g3"
     ],
     "minLevel": "hard",
@@ -898,7 +921,9 @@ export const SCIENCE_QUESTIONS_CLOSURE_FILL = [
     "id": "sci_closure_g3env_028",
     "topic": "environment",
     "grades": [
-      "g3"
+      "g3",
+      "g4",
+      "g5"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -931,6 +956,8 @@ export const SCIENCE_QUESTIONS_CLOSURE_FILL = [
     "id": "sci_closure_g3env_029",
     "topic": "environment",
     "grades": [
+      "g1",
+      "g2",
       "g3"
     ],
     "minLevel": "hard",
@@ -997,7 +1024,9 @@ export const SCIENCE_QUESTIONS_CLOSURE_FILL = [
     "id": "sci_closure_g4mat_031",
     "topic": "materials",
     "grades": [
-      "g4"
+      "g4",
+      "g5",
+      "g6"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -1063,7 +1092,8 @@ export const SCIENCE_QUESTIONS_CLOSURE_FILL = [
     "id": "sci_closure_g5mat_033",
     "topic": "materials",
     "grades": [
-      "g5"
+      "g5",
+      "g6"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
