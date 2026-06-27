@@ -1,0 +1,1069 @@
+{
+  "generatedAt": "2026-06-27T20:44:50.752Z",
+  "direction": "TXT → site (TXT is source of truth)",
+  "subjectsChecked": [
+    "math",
+    "geometry",
+    "science",
+    "moledet",
+    "geography"
+  ],
+  "booksChecked": 23,
+  "summary": {
+    "totalTxtFilesChecked": 2310,
+    "identicalFromStart": 2310,
+    "formatOnly": 0,
+    "contentDiff": 0,
+    "exportNarrationDrift": 82,
+    "allBooksMdBodyMatchTxt": true,
+    "txtFilesModified": 0,
+    "mdFilesModified": [],
+    "safeToProduceAudio": true
+  },
+  "books": [
+    {
+      "subject": "math",
+      "grade": "g1",
+      "slug": "math-g1",
+      "txtDir": "exports/audio-text/books/math/math-g1",
+      "totalPages": 133,
+      "expectedPages": 133,
+      "identical": 133,
+      "formatOnly": 0,
+      "contentDiff": 0,
+      "mdBodySynced": 133,
+      "ok": true
+    },
+    {
+      "subject": "math",
+      "grade": "g2",
+      "slug": "math-g2",
+      "txtDir": "exports/audio-text/books/math/math-g2",
+      "totalPages": 154,
+      "expectedPages": 154,
+      "identical": 154,
+      "formatOnly": 0,
+      "contentDiff": 0,
+      "mdBodySynced": 154,
+      "ok": true
+    },
+    {
+      "subject": "math",
+      "grade": "g3",
+      "slug": "math-g3",
+      "txtDir": "exports/audio-text/books/math/math-g3",
+      "totalPages": 189,
+      "expectedPages": 189,
+      "identical": 189,
+      "formatOnly": 0,
+      "contentDiff": 0,
+      "mdBodySynced": 189,
+      "ok": true
+    },
+    {
+      "subject": "math",
+      "grade": "g4",
+      "slug": "math-g4",
+      "txtDir": "exports/audio-text/books/math/math-g4",
+      "totalPages": 259,
+      "expectedPages": 259,
+      "identical": 259,
+      "formatOnly": 0,
+      "contentDiff": 0,
+      "mdBodySynced": 259,
+      "ok": true
+    },
+    {
+      "subject": "math",
+      "grade": "g5",
+      "slug": "math-g5",
+      "txtDir": "exports/audio-text/books/math/math-g5",
+      "totalPages": 280,
+      "expectedPages": 280,
+      "identical": 280,
+      "formatOnly": 0,
+      "contentDiff": 0,
+      "mdBodySynced": 280,
+      "ok": true
+    },
+    {
+      "subject": "math",
+      "grade": "g6",
+      "slug": "math-g6",
+      "txtDir": "exports/audio-text/books/math/math-g6",
+      "totalPages": 308,
+      "expectedPages": 308,
+      "identical": 308,
+      "formatOnly": 0,
+      "contentDiff": 0,
+      "mdBodySynced": 308,
+      "ok": true
+    },
+    {
+      "subject": "geometry",
+      "grade": "g1",
+      "slug": "geometry-g1",
+      "txtDir": "exports/audio-text/books/geometry/geometry-g1",
+      "totalPages": 21,
+      "expectedPages": 21,
+      "identical": 21,
+      "formatOnly": 0,
+      "contentDiff": 0,
+      "mdBodySynced": 21,
+      "ok": true
+    },
+    {
+      "subject": "geometry",
+      "grade": "g2",
+      "slug": "geometry-g2",
+      "txtDir": "exports/audio-text/books/geometry/geometry-g2",
+      "totalPages": 21,
+      "expectedPages": 21,
+      "identical": 21,
+      "formatOnly": 0,
+      "contentDiff": 0,
+      "mdBodySynced": 21,
+      "ok": true
+    },
+    {
+      "subject": "geometry",
+      "grade": "g3",
+      "slug": "geometry-g3",
+      "txtDir": "exports/audio-text/books/geometry/geometry-g3",
+      "totalPages": 63,
+      "expectedPages": 63,
+      "identical": 63,
+      "formatOnly": 0,
+      "contentDiff": 0,
+      "mdBodySynced": 63,
+      "ok": true
+    },
+    {
+      "subject": "geometry",
+      "grade": "g4",
+      "slug": "geometry-g4",
+      "txtDir": "exports/audio-text/books/geometry/geometry-g4",
+      "totalPages": 98,
+      "expectedPages": 98,
+      "identical": 98,
+      "formatOnly": 0,
+      "contentDiff": 0,
+      "mdBodySynced": 98,
+      "ok": true
+    },
+    {
+      "subject": "geometry",
+      "grade": "g5",
+      "slug": "geometry-g5",
+      "txtDir": "exports/audio-text/books/geometry/geometry-g5",
+      "totalPages": 126,
+      "expectedPages": 126,
+      "identical": 126,
+      "formatOnly": 0,
+      "contentDiff": 0,
+      "mdBodySynced": 126,
+      "ok": true
+    },
+    {
+      "subject": "geometry",
+      "grade": "g6",
+      "slug": "geometry-g6",
+      "txtDir": "exports/audio-text/books/geometry/geometry-g6",
+      "totalPages": 133,
+      "expectedPages": 133,
+      "identical": 133,
+      "formatOnly": 0,
+      "contentDiff": 0,
+      "mdBodySynced": 133,
+      "ok": true
+    },
+    {
+      "subject": "science",
+      "grade": "g1",
+      "slug": "science-g1",
+      "txtDir": "exports/audio-text/books/science/science-g1",
+      "totalPages": 42,
+      "expectedPages": 42,
+      "identical": 42,
+      "formatOnly": 0,
+      "contentDiff": 0,
+      "mdBodySynced": 42,
+      "ok": true
+    },
+    {
+      "subject": "science",
+      "grade": "g2",
+      "slug": "science-g2",
+      "txtDir": "exports/audio-text/books/science/science-g2",
+      "totalPages": 49,
+      "expectedPages": 49,
+      "identical": 49,
+      "formatOnly": 0,
+      "contentDiff": 0,
+      "mdBodySynced": 49,
+      "ok": true
+    },
+    {
+      "subject": "science",
+      "grade": "g3",
+      "slug": "science-g3",
+      "txtDir": "exports/audio-text/books/science/science-g3",
+      "totalPages": 49,
+      "expectedPages": 49,
+      "identical": 49,
+      "formatOnly": 0,
+      "contentDiff": 0,
+      "mdBodySynced": 49,
+      "ok": true
+    },
+    {
+      "subject": "science",
+      "grade": "g4",
+      "slug": "science-g4",
+      "txtDir": "exports/audio-text/books/science/science-g4",
+      "totalPages": 42,
+      "expectedPages": 42,
+      "identical": 42,
+      "formatOnly": 0,
+      "contentDiff": 0,
+      "mdBodySynced": 42,
+      "ok": true
+    },
+    {
+      "subject": "science",
+      "grade": "g5",
+      "slug": "science-g5",
+      "txtDir": "exports/audio-text/books/science/science-g5",
+      "totalPages": 42,
+      "expectedPages": 42,
+      "identical": 42,
+      "formatOnly": 0,
+      "contentDiff": 0,
+      "mdBodySynced": 42,
+      "ok": true
+    },
+    {
+      "subject": "science",
+      "grade": "g6",
+      "slug": "science-g6",
+      "txtDir": "exports/audio-text/books/science/science-g6",
+      "totalPages": 42,
+      "expectedPages": 42,
+      "identical": 42,
+      "formatOnly": 0,
+      "contentDiff": 0,
+      "mdBodySynced": 42,
+      "ok": true
+    },
+    {
+      "subject": "moledet",
+      "grade": "g2",
+      "slug": "moledet-g2",
+      "txtDir": "exports/audio-text/books/moledet-geography/moledet-g2",
+      "totalPages": 49,
+      "expectedPages": 49,
+      "identical": 49,
+      "formatOnly": 0,
+      "contentDiff": 0,
+      "mdBodySynced": 49,
+      "ok": true
+    },
+    {
+      "subject": "moledet",
+      "grade": "g3",
+      "slug": "moledet-g3",
+      "txtDir": "exports/audio-text/books/moledet-geography/moledet-g3",
+      "totalPages": 56,
+      "expectedPages": 56,
+      "identical": 56,
+      "formatOnly": 0,
+      "contentDiff": 0,
+      "mdBodySynced": 56,
+      "ok": true
+    },
+    {
+      "subject": "moledet",
+      "grade": "g4",
+      "slug": "moledet-g4",
+      "txtDir": "exports/audio-text/books/moledet-geography/moledet-g4",
+      "totalPages": 49,
+      "expectedPages": 49,
+      "identical": 49,
+      "formatOnly": 0,
+      "contentDiff": 0,
+      "mdBodySynced": 49,
+      "ok": true
+    },
+    {
+      "subject": "geography",
+      "grade": "g5",
+      "slug": "geography-g5",
+      "txtDir": "exports/audio-text/books/moledet-geography/geography-g5",
+      "totalPages": 49,
+      "expectedPages": 49,
+      "identical": 49,
+      "formatOnly": 0,
+      "contentDiff": 0,
+      "mdBodySynced": 49,
+      "ok": true
+    },
+    {
+      "subject": "geography",
+      "grade": "g6",
+      "slug": "geography-g6",
+      "txtDir": "exports/audio-text/books/moledet-geography/geography-g6",
+      "totalPages": 56,
+      "expectedPages": 56,
+      "identical": 56,
+      "formatOnly": 0,
+      "contentDiff": 0,
+      "mdBodySynced": 56,
+      "ok": true
+    }
+  ],
+  "issues": [
+    {
+      "book": "math-g1",
+      "pageNumber": 31,
+      "sectionNumber": 3,
+      "type": "export_narration_drift",
+      "txtFile": "math-g1/pages/page-031.txt",
+      "mdFile": "docs/learning-book/math/g1/drafts/cmp.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g1",
+      "pageNumber": 60,
+      "sectionNumber": 4,
+      "type": "export_narration_drift",
+      "txtFile": "math-g1/pages/page-060.txt",
+      "mdFile": "docs/learning-book/math/g1/drafts/add_second_decade.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g1",
+      "pageNumber": 62,
+      "sectionNumber": 6,
+      "type": "export_narration_drift",
+      "txtFile": "math-g1/pages/page-062.txt",
+      "mdFile": "docs/learning-book/math/g1/drafts/add_second_decade.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g1",
+      "pageNumber": 67,
+      "sectionNumber": 4,
+      "type": "export_narration_drift",
+      "txtFile": "math-g1/pages/page-067.txt",
+      "mdFile": "docs/learning-book/math/g1/drafts/add_tens_only.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g1",
+      "pageNumber": 81,
+      "sectionNumber": 4,
+      "type": "export_narration_drift",
+      "txtFile": "math-g1/pages/page-081.txt",
+      "mdFile": "docs/learning-book/math/g1/drafts/sub_two.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g1",
+      "pageNumber": 93,
+      "sectionNumber": 2,
+      "type": "export_narration_drift",
+      "txtFile": "math-g1/pages/page-093.txt",
+      "mdFile": "docs/learning-book/math/g1/drafts/eq_sub_simple.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g2",
+      "pageNumber": 52,
+      "sectionNumber": 3,
+      "type": "export_narration_drift",
+      "txtFile": "math-g2/pages/page-052.txt",
+      "mdFile": "docs/learning-book/math/g2/drafts/add_vertical.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g2",
+      "pageNumber": 58,
+      "sectionNumber": 2,
+      "type": "export_narration_drift",
+      "txtFile": "math-g2/pages/page-058.txt",
+      "mdFile": "docs/learning-book/math/g2/drafts/sub_vertical.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g2",
+      "pageNumber": 59,
+      "sectionNumber": 3,
+      "type": "export_narration_drift",
+      "txtFile": "math-g2/pages/page-059.txt",
+      "mdFile": "docs/learning-book/math/g2/drafts/sub_vertical.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g3",
+      "pageNumber": 6,
+      "sectionNumber": 6,
+      "type": "export_narration_drift",
+      "txtFile": "math-g3/pages/page-006.txt",
+      "mdFile": "docs/learning-book/math/g3/drafts/ns_place_hundreds.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g3",
+      "pageNumber": 30,
+      "sectionNumber": 2,
+      "type": "export_narration_drift",
+      "txtFile": "math-g3/pages/page-030.txt",
+      "mdFile": "docs/learning-book/math/g3/drafts/ns_even_odd.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g3",
+      "pageNumber": 177,
+      "sectionNumber": 2,
+      "type": "export_narration_drift",
+      "txtFile": "math-g3/pages/page-177.txt",
+      "mdFile": "docs/learning-book/math/g3/drafts/wp_leftover.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g4",
+      "pageNumber": 31,
+      "sectionNumber": 3,
+      "type": "export_narration_drift",
+      "txtFile": "math-g4/pages/page-031.txt",
+      "mdFile": "docs/learning-book/math/g4/drafts/ns_even_odd.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g4",
+      "pageNumber": 149,
+      "sectionNumber": 2,
+      "type": "export_narration_drift",
+      "txtFile": "math-g4/pages/page-149.txt",
+      "mdFile": "docs/learning-book/math/g4/drafts/prime_composite.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g4",
+      "pageNumber": 153,
+      "sectionNumber": 6,
+      "type": "export_narration_drift",
+      "txtFile": "math-g4/pages/page-153.txt",
+      "mdFile": "docs/learning-book/math/g4/drafts/prime_composite.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g4",
+      "pageNumber": 169,
+      "sectionNumber": 1,
+      "type": "export_narration_drift",
+      "txtFile": "math-g4/pages/page-169.txt",
+      "mdFile": "docs/learning-book/math/g4/drafts/fm_gcd.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g4",
+      "pageNumber": 170,
+      "sectionNumber": 2,
+      "type": "export_narration_drift",
+      "txtFile": "math-g4/pages/page-170.txt",
+      "mdFile": "docs/learning-book/math/g4/drafts/fm_gcd.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g4",
+      "pageNumber": 171,
+      "sectionNumber": 3,
+      "type": "export_narration_drift",
+      "txtFile": "math-g4/pages/page-171.txt",
+      "mdFile": "docs/learning-book/math/g4/drafts/fm_gcd.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g4",
+      "pageNumber": 172,
+      "sectionNumber": 4,
+      "type": "export_narration_drift",
+      "txtFile": "math-g4/pages/page-172.txt",
+      "mdFile": "docs/learning-book/math/g4/drafts/fm_gcd.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g4",
+      "pageNumber": 173,
+      "sectionNumber": 5,
+      "type": "export_narration_drift",
+      "txtFile": "math-g4/pages/page-173.txt",
+      "mdFile": "docs/learning-book/math/g4/drafts/fm_gcd.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g4",
+      "pageNumber": 174,
+      "sectionNumber": 6,
+      "type": "export_narration_drift",
+      "txtFile": "math-g4/pages/page-174.txt",
+      "mdFile": "docs/learning-book/math/g4/drafts/fm_gcd.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g4",
+      "pageNumber": 175,
+      "sectionNumber": 7,
+      "type": "export_narration_drift",
+      "txtFile": "math-g4/pages/page-175.txt",
+      "mdFile": "docs/learning-book/math/g4/drafts/fm_gcd.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g4",
+      "pageNumber": 204,
+      "sectionNumber": 1,
+      "type": "export_narration_drift",
+      "txtFile": "math-g4/pages/page-204.txt",
+      "mdFile": "docs/learning-book/math/g4/drafts/est_add.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g4",
+      "pageNumber": 207,
+      "sectionNumber": 4,
+      "type": "export_narration_drift",
+      "txtFile": "math-g4/pages/page-207.txt",
+      "mdFile": "docs/learning-book/math/g4/drafts/est_add.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g4",
+      "pageNumber": 218,
+      "sectionNumber": 1,
+      "type": "export_narration_drift",
+      "txtFile": "math-g4/pages/page-218.txt",
+      "mdFile": "docs/learning-book/math/g4/drafts/est_quantity.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g4",
+      "pageNumber": 220,
+      "sectionNumber": 3,
+      "type": "export_narration_drift",
+      "txtFile": "math-g4/pages/page-220.txt",
+      "mdFile": "docs/learning-book/math/g4/drafts/est_quantity.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g4",
+      "pageNumber": 228,
+      "sectionNumber": 4,
+      "type": "export_narration_drift",
+      "txtFile": "math-g4/pages/page-228.txt",
+      "mdFile": "docs/learning-book/math/g4/drafts/power_base.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g4",
+      "pageNumber": 247,
+      "sectionNumber": 2,
+      "type": "export_narration_drift",
+      "txtFile": "math-g4/pages/page-247.txt",
+      "mdFile": "docs/learning-book/math/g4/drafts/wp_leftover.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g5",
+      "pageNumber": 93,
+      "sectionNumber": 2,
+      "type": "export_narration_drift",
+      "txtFile": "math-g5/pages/page-093.txt",
+      "mdFile": "docs/learning-book/math/g5/drafts/frac_reduce.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g5",
+      "pageNumber": 94,
+      "sectionNumber": 3,
+      "type": "export_narration_drift",
+      "txtFile": "math-g5/pages/page-094.txt",
+      "mdFile": "docs/learning-book/math/g5/drafts/frac_reduce.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g5",
+      "pageNumber": 95,
+      "sectionNumber": 4,
+      "type": "export_narration_drift",
+      "txtFile": "math-g5/pages/page-095.txt",
+      "mdFile": "docs/learning-book/math/g5/drafts/frac_reduce.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g5",
+      "pageNumber": 97,
+      "sectionNumber": 6,
+      "type": "export_narration_drift",
+      "txtFile": "math-g5/pages/page-097.txt",
+      "mdFile": "docs/learning-book/math/g5/drafts/frac_reduce.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g5",
+      "pageNumber": 98,
+      "sectionNumber": 7,
+      "type": "export_narration_drift",
+      "txtFile": "math-g5/pages/page-098.txt",
+      "mdFile": "docs/learning-book/math/g5/drafts/frac_reduce.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g5",
+      "pageNumber": 183,
+      "sectionNumber": 1,
+      "type": "export_narration_drift",
+      "txtFile": "math-g5/pages/page-183.txt",
+      "mdFile": "docs/learning-book/math/g5/drafts/fm_gcd.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g5",
+      "pageNumber": 184,
+      "sectionNumber": 2,
+      "type": "export_narration_drift",
+      "txtFile": "math-g5/pages/page-184.txt",
+      "mdFile": "docs/learning-book/math/g5/drafts/fm_gcd.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g5",
+      "pageNumber": 185,
+      "sectionNumber": 3,
+      "type": "export_narration_drift",
+      "txtFile": "math-g5/pages/page-185.txt",
+      "mdFile": "docs/learning-book/math/g5/drafts/fm_gcd.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g5",
+      "pageNumber": 186,
+      "sectionNumber": 4,
+      "type": "export_narration_drift",
+      "txtFile": "math-g5/pages/page-186.txt",
+      "mdFile": "docs/learning-book/math/g5/drafts/fm_gcd.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g5",
+      "pageNumber": 187,
+      "sectionNumber": 5,
+      "type": "export_narration_drift",
+      "txtFile": "math-g5/pages/page-187.txt",
+      "mdFile": "docs/learning-book/math/g5/drafts/fm_gcd.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g5",
+      "pageNumber": 188,
+      "sectionNumber": 6,
+      "type": "export_narration_drift",
+      "txtFile": "math-g5/pages/page-188.txt",
+      "mdFile": "docs/learning-book/math/g5/drafts/fm_gcd.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g5",
+      "pageNumber": 189,
+      "sectionNumber": 7,
+      "type": "export_narration_drift",
+      "txtFile": "math-g5/pages/page-189.txt",
+      "mdFile": "docs/learning-book/math/g5/drafts/fm_gcd.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g5",
+      "pageNumber": 190,
+      "sectionNumber": 1,
+      "type": "export_narration_drift",
+      "txtFile": "math-g5/pages/page-190.txt",
+      "mdFile": "docs/learning-book/math/g5/drafts/est_add.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g5",
+      "pageNumber": 205,
+      "sectionNumber": 2,
+      "type": "export_narration_drift",
+      "txtFile": "math-g5/pages/page-205.txt",
+      "mdFile": "docs/learning-book/math/g5/drafts/est_quantity.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g5",
+      "pageNumber": 233,
+      "sectionNumber": 2,
+      "type": "export_narration_drift",
+      "txtFile": "math-g5/pages/page-233.txt",
+      "mdFile": "docs/learning-book/math/g5/drafts/wp_leftover.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g5",
+      "pageNumber": 240,
+      "sectionNumber": 2,
+      "type": "export_narration_drift",
+      "txtFile": "math-g5/pages/page-240.txt",
+      "mdFile": "docs/learning-book/math/g5/drafts/wp_time_sum.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g6",
+      "pageNumber": 91,
+      "sectionNumber": 7,
+      "type": "export_narration_drift",
+      "txtFile": "math-g6/pages/page-091.txt",
+      "mdFile": "docs/learning-book/math/g6/drafts/fm_factor.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g6",
+      "pageNumber": 99,
+      "sectionNumber": 1,
+      "type": "export_narration_drift",
+      "txtFile": "math-g6/pages/page-099.txt",
+      "mdFile": "docs/learning-book/math/g6/drafts/fm_gcd.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g6",
+      "pageNumber": 100,
+      "sectionNumber": 2,
+      "type": "export_narration_drift",
+      "txtFile": "math-g6/pages/page-100.txt",
+      "mdFile": "docs/learning-book/math/g6/drafts/fm_gcd.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g6",
+      "pageNumber": 101,
+      "sectionNumber": 3,
+      "type": "export_narration_drift",
+      "txtFile": "math-g6/pages/page-101.txt",
+      "mdFile": "docs/learning-book/math/g6/drafts/fm_gcd.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g6",
+      "pageNumber": 102,
+      "sectionNumber": 4,
+      "type": "export_narration_drift",
+      "txtFile": "math-g6/pages/page-102.txt",
+      "mdFile": "docs/learning-book/math/g6/drafts/fm_gcd.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g6",
+      "pageNumber": 103,
+      "sectionNumber": 5,
+      "type": "export_narration_drift",
+      "txtFile": "math-g6/pages/page-103.txt",
+      "mdFile": "docs/learning-book/math/g6/drafts/fm_gcd.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g6",
+      "pageNumber": 104,
+      "sectionNumber": 6,
+      "type": "export_narration_drift",
+      "txtFile": "math-g6/pages/page-104.txt",
+      "mdFile": "docs/learning-book/math/g6/drafts/fm_gcd.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g6",
+      "pageNumber": 105,
+      "sectionNumber": 7,
+      "type": "export_narration_drift",
+      "txtFile": "math-g6/pages/page-105.txt",
+      "mdFile": "docs/learning-book/math/g6/drafts/fm_gcd.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g6",
+      "pageNumber": 207,
+      "sectionNumber": 4,
+      "type": "export_narration_drift",
+      "txtFile": "math-g6/pages/page-207.txt",
+      "mdFile": "docs/learning-book/math/g6/drafts/ratio_first.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g6",
+      "pageNumber": 209,
+      "sectionNumber": 6,
+      "type": "export_narration_drift",
+      "txtFile": "math-g6/pages/page-209.txt",
+      "mdFile": "docs/learning-book/math/g6/drafts/ratio_first.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g6",
+      "pageNumber": 212,
+      "sectionNumber": 2,
+      "type": "export_narration_drift",
+      "txtFile": "math-g6/pages/page-212.txt",
+      "mdFile": "docs/learning-book/math/g6/drafts/ratio_second.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g6",
+      "pageNumber": 214,
+      "sectionNumber": 4,
+      "type": "export_narration_drift",
+      "txtFile": "math-g6/pages/page-214.txt",
+      "mdFile": "docs/learning-book/math/g6/drafts/ratio_second.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g6",
+      "pageNumber": 216,
+      "sectionNumber": 6,
+      "type": "export_narration_drift",
+      "txtFile": "math-g6/pages/page-216.txt",
+      "mdFile": "docs/learning-book/math/g6/drafts/ratio_second.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g6",
+      "pageNumber": 261,
+      "sectionNumber": 2,
+      "type": "export_narration_drift",
+      "txtFile": "math-g6/pages/page-261.txt",
+      "mdFile": "docs/learning-book/math/g6/drafts/wp_comparison_more.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g6",
+      "pageNumber": 265,
+      "sectionNumber": 6,
+      "type": "export_narration_drift",
+      "txtFile": "math-g6/pages/page-265.txt",
+      "mdFile": "docs/learning-book/math/g6/drafts/wp_comparison_more.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g6",
+      "pageNumber": 268,
+      "sectionNumber": 2,
+      "type": "export_narration_drift",
+      "txtFile": "math-g6/pages/page-268.txt",
+      "mdFile": "docs/learning-book/math/g6/drafts/wp_leftover.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "math-g6",
+      "pageNumber": 275,
+      "sectionNumber": 2,
+      "type": "export_narration_drift",
+      "txtFile": "math-g6/pages/page-275.txt",
+      "mdFile": "docs/learning-book/math/g6/drafts/wp_time_sum.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "geometry-g5",
+      "pageNumber": 16,
+      "sectionNumber": 2,
+      "type": "export_narration_drift",
+      "txtFile": "geometry-g5/pages/page-016.txt",
+      "mdFile": "docs/learning-book/geometry/g5/drafts/triangle_angles.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "geometry-g5",
+      "pageNumber": 18,
+      "sectionNumber": 4,
+      "type": "export_narration_drift",
+      "txtFile": "geometry-g5/pages/page-018.txt",
+      "mdFile": "docs/learning-book/geometry/g5/drafts/triangle_angles.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "geometry-g5",
+      "pageNumber": 87,
+      "sectionNumber": 3,
+      "type": "export_narration_drift",
+      "txtFile": "geometry-g5/pages/page-087.txt",
+      "mdFile": "docs/learning-book/geometry/g5/drafts/diagonal_square.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "geometry-g6",
+      "pageNumber": 36,
+      "sectionNumber": 1,
+      "type": "export_narration_drift",
+      "txtFile": "geometry-g6/pages/page-036.txt",
+      "mdFile": "docs/learning-book/geometry/g6/drafts/triangle_angles.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "geometry-g6",
+      "pageNumber": 39,
+      "sectionNumber": 4,
+      "type": "export_narration_drift",
+      "txtFile": "geometry-g6/pages/page-039.txt",
+      "mdFile": "docs/learning-book/geometry/g6/drafts/triangle_angles.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "geometry-g6",
+      "pageNumber": 40,
+      "sectionNumber": 5,
+      "type": "export_narration_drift",
+      "txtFile": "geometry-g6/pages/page-040.txt",
+      "mdFile": "docs/learning-book/geometry/g6/drafts/triangle_angles.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "geometry-g6",
+      "pageNumber": 43,
+      "sectionNumber": 1,
+      "type": "export_narration_drift",
+      "txtFile": "geometry-g6/pages/page-043.txt",
+      "mdFile": "docs/learning-book/geometry/g6/drafts/circle_perimeter.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "geometry-g6",
+      "pageNumber": 46,
+      "sectionNumber": 4,
+      "type": "export_narration_drift",
+      "txtFile": "geometry-g6/pages/page-046.txt",
+      "mdFile": "docs/learning-book/geometry/g6/drafts/circle_perimeter.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "geometry-g6",
+      "pageNumber": 49,
+      "sectionNumber": 7,
+      "type": "export_narration_drift",
+      "txtFile": "geometry-g6/pages/page-049.txt",
+      "mdFile": "docs/learning-book/geometry/g6/drafts/circle_perimeter.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "geometry-g6",
+      "pageNumber": 50,
+      "sectionNumber": 1,
+      "type": "export_narration_drift",
+      "txtFile": "geometry-g6/pages/page-050.txt",
+      "mdFile": "docs/learning-book/geometry/g6/drafts/circle_area.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "geometry-g6",
+      "pageNumber": 53,
+      "sectionNumber": 4,
+      "type": "export_narration_drift",
+      "txtFile": "geometry-g6/pages/page-053.txt",
+      "mdFile": "docs/learning-book/geometry/g6/drafts/circle_area.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "geometry-g6",
+      "pageNumber": 56,
+      "sectionNumber": 7,
+      "type": "export_narration_drift",
+      "txtFile": "geometry-g6/pages/page-056.txt",
+      "mdFile": "docs/learning-book/geometry/g6/drafts/circle_area.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "geometry-g6",
+      "pageNumber": 78,
+      "sectionNumber": 1,
+      "type": "export_narration_drift",
+      "txtFile": "geometry-g6/pages/page-078.txt",
+      "mdFile": "docs/learning-book/geometry/g6/drafts/rectangular_prism_volume.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "geometry-g6",
+      "pageNumber": 114,
+      "sectionNumber": 2,
+      "type": "export_narration_drift",
+      "txtFile": "geometry-g6/pages/page-114.txt",
+      "mdFile": "docs/learning-book/geometry/g6/drafts/cylinder_volume.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "geometry-g6",
+      "pageNumber": 116,
+      "sectionNumber": 4,
+      "type": "export_narration_drift",
+      "txtFile": "geometry-g6/pages/page-116.txt",
+      "mdFile": "docs/learning-book/geometry/g6/drafts/cylinder_volume.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "geometry-g6",
+      "pageNumber": 119,
+      "sectionNumber": 7,
+      "type": "export_narration_drift",
+      "txtFile": "geometry-g6/pages/page-119.txt",
+      "mdFile": "docs/learning-book/geometry/g6/drafts/cylinder_volume.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "geometry-g6",
+      "pageNumber": 123,
+      "sectionNumber": 4,
+      "type": "export_narration_drift",
+      "txtFile": "geometry-g6/pages/page-123.txt",
+      "mdFile": "docs/learning-book/geometry/g6/drafts/cone_volume.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "geometry-g6",
+      "pageNumber": 127,
+      "sectionNumber": 1,
+      "type": "export_narration_drift",
+      "txtFile": "geometry-g6/pages/page-127.txt",
+      "mdFile": "docs/learning-book/geometry/g6/drafts/sphere_volume.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "geometry-g6",
+      "pageNumber": 130,
+      "sectionNumber": 4,
+      "type": "export_narration_drift",
+      "txtFile": "geometry-g6/pages/page-130.txt",
+      "mdFile": "docs/learning-book/geometry/g6/drafts/sphere_volume.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "geometry-g6",
+      "pageNumber": 132,
+      "sectionNumber": 6,
+      "type": "export_narration_drift",
+      "txtFile": "geometry-g6/pages/page-132.txt",
+      "mdFile": "docs/learning-book/geometry/g6/drafts/sphere_volume.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    },
+    {
+      "book": "moledet-g2",
+      "pageNumber": 31,
+      "sectionNumber": 3,
+      "type": "export_narration_drift",
+      "txtFile": "moledet-g2/pages/page-031.txt",
+      "mdFile": "docs/learning-book/moledet-geography/g2/drafts/mg_g2_group_decisions.md",
+      "note": "md body matches TXT but prepareBookSectionExportNarrationText differs (words)"
+    }
+  ],
+  "verificationScripts": {
+    "mathGeometry": "node scripts/verify-math-geometry-content-sync.mjs",
+    "science": "node scripts/verify-science-content-sync.mjs",
+    "moledetGeography": "node scripts/verify-moledet-geography-content-sync.mjs"
+  }
+}

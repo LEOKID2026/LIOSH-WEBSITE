@@ -7,10 +7,9 @@ import { mergeDiagnosticContractIntoParams } from './diagnostic-question-contrac
 import { moledetDiagnosticContractFromBankRow } from './moledet-geography-diagnostic-metadata-bridge.js';
 import { attachCanonicalMetadataToMoledetQuestion } from '../lib/learning/moledet-geography-canonical-metadata.js';
 import { selectQuestionWithProbe } from './active-diagnostic-runtime/select-with-probe.js';
-import * as geoIndexModule from "../data/geography-questions/index.js";
+import * as geoPools from "../data/geography-questions/index.js";
 
 /** Launch pools only (G2–G6). G1 is enrichment-only and not exported from the bank index. */
-const geoPools = geoIndexModule.default ?? geoIndexModule;
 const LAUNCH_POOL_EXPORTS = [
   "G2_EASY_QUESTIONS",
   "G2_MEDIUM_QUESTIONS",

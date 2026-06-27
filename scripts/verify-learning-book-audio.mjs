@@ -92,7 +92,7 @@ function verifyFlatPageScope(scope) {
   const slug = `${scope.subject}-${scope.grade}`;
   const dir = path.join(root, "public", "audio", "learning-books", slug);
   const files = fs.readdirSync(dir).filter((f) => f.endsWith(".mp3")).sort();
-  const expected = scope.expectedPages || files.length;
+  const expected = scope.installedPages ?? scope.expectedPages ?? files.length;
 
   if (files.length !== expected) {
     fail(`${slug}: expected ${expected} MP3s, got ${files.length}`);
@@ -114,17 +114,34 @@ function verifyFlatPageScope(scope) {
   const midPageId = scope.pageIds[Math.floor(scope.pageIds.length / 2)];
   const lastPageId = scope.pageIds[scope.pageIds.length - 1];
 
-  for (const [pageId, sectionNumber] of [
+  const sampleSections = [
     [firstPageId, 1],
     [midPageId, 4],
     [lastPageId, 7],
-  ]) {
+  ];
+
+  for (const [pageId, sectionNumber] of sampleSections) {
     const resolved = resolverMod.resolveLearningBookAudio(
       scope.subject,
       scope.grade,
       pageId,
       sectionNumber
     );
+    const globalPage = manifestMod.resolveBookGlobalPageNumber(
+      scope.subject,
+      scope.grade,
+      pageId,
+      sectionNumber
+    );
+    const limit = scope.installedPages ?? scope.expectedPages;
+
+    if (limit != null && globalPage != null && globalPage > limit) {
+      if (resolved !== null) {
+        fail(`${pageId} section ${sectionNumber} (page ${globalPage}) must not resolve — no MP3 installed`);
+      }
+      continue;
+    }
+
     if (!resolved?.src || !resolved?.playbackSrc || !resolved.pageNumber) {
       fail(`${pageId} section ${sectionNumber} should resolve flat-page audio`);
     }
@@ -248,8 +265,34 @@ if (!addS1 || !addS2 || addS1.src === addS2.src) {
 if (resolverMod.resolveLearningBookAudio("math", "g1", "add_two", 99) !== null) {
   fail("missing section must return null, not fallback");
 }
-if (resolverMod.resolveLearningBookAudio("math", "g2", "add_two", 1) !== null) {
-  fail("Math G2 must return null");
+if (resolverMod.resolveLearningBookAudio("math", "g2", "ns_place_tens_units", 7) !== null) {
+  fail("Math G2 page 007 must return null (pilot ends at page 006)");
+}
+const mathG2S1 = resolverMod.resolveLearningBookAudio("math", "g2", "ns_place_tens_units", 1);
+if (!mathG2S1?.src?.includes("/audio/learning-books/math-g2/math_g2_page_001.mp3")) {
+  fail("Math G2 page 001 must resolve flat-page audio");
+}
+if (resolverMod.resolveLearningBookAudio("geometry", "g1", "shapes_basic_square", 1) === null) {
+  fail("Geometry G1 page 001 must resolve flat-page audio");
+}
+const geoG1S1 = resolverMod.resolveLearningBookAudio("geometry", "g1", "shapes_basic_square", 1);
+if (!geoG1S1?.src?.includes("/audio/learning-books/geometry-g1/geometry_g1_page_001.mp3")) {
+  fail("Geometry G1 page 001 src path mismatch");
+}
+if (resolverMod.resolveLearningBookAudio("geometry", "g2", "solids", 7) === null) {
+  fail("Geometry G2 page 007 must resolve flat-page audio");
+}
+const geoG2S1 = resolverMod.resolveLearningBookAudio("geometry", "g2", "solids", 1);
+if (!geoG2S1?.src?.includes("/audio/learning-books/geometry-g2/geometry_g2_page_001.mp3")) {
+  fail("Geometry G2 page 001 must resolve flat-page audio");
+}
+const scienceG1S1 = resolverMod.resolveLearningBookAudio("science", "g1", "body", 1);
+if (!scienceG1S1?.src?.includes("/audio/learning-books/science-g1/science_g1_page_001.mp3")) {
+  fail("Science G1 page 001 must resolve flat-page audio");
+}
+const scienceG2S1 = resolverMod.resolveLearningBookAudio("science", "g2", "body", 1);
+if (!scienceG2S1?.src?.includes("/audio/learning-books/science-g2/science_g2_page_001.mp3")) {
+  fail("Science G2 page 001 must resolve flat-page audio");
 }
 if (resolverMod.resolveLearningBookAudio("english", "g1", "vocab_colors", 1) === null) {
   fail("English G1 vocab pages must resolve flat-page audio");

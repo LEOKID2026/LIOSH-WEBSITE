@@ -4,8 +4,8 @@
  * Uses direct bank import (avoids geography-questions directory import under Node ESM).
  */
 import assert from "node:assert/strict";
-import * as geoIndexModule from "../data/geography-questions/index.js";
-const G4_EASY_QUESTIONS = (geoIndexModule.default ?? geoIndexModule).G4_EASY_QUESTIONS;
+import * as geoPools from "../data/geography-questions/index.js";
+const G4_EASY_QUESTIONS = geoPools.G4_EASY_QUESTIONS;
 import { moledetDiagnosticContractFromBankRow } from "../utils/moledet-geography-diagnostic-metadata-bridge.js";
 import { mergeDiagnosticContractIntoParams } from "../utils/diagnostic-question-contract.js";
 import {
