@@ -12,54 +12,6 @@ function makeStorageShim(store) {
   };
 }
 
-/**
- * Grade slices inherit answer modeCounts only; session-level speed shells live on the
- * parent topic.modeCounts. Merge so dominantMode reflects speed sessions for QA verify.
- */
-function mergeTopicModeCountsIntoGradeSlices(raw) {
-  const subjects = raw?.subjects;
-  if (!subjects || typeof subjects !== "object") return raw;
-
-  for (const subjectAgg of Object.values(subjects)) {
-    const topics = subjectAgg?.topics;
-    if (!topics || typeof topics !== "object") continue;
-    for (const topicAgg of Object.values(topics)) {
-      const parentModes = topicAgg?.modeCounts;
-      if (!parentModes || typeof parentModes !== "object") continue;
-      const byGrade = topicAgg.byContentGrade;
-      if (!byGrade || typeof byGrade !== "object") continue;
-
-      const unknownSlice = byGrade.unknown;
-      const registeredKey =
-        unknownSlice?.registeredGradeLevel ||
-        Object.values(byGrade).find((s) => s?.registeredGradeLevel)?.registeredGradeLevel;
-      if (unknownSlice && registeredKey && registeredKey !== "unknown" && !byGrade[registeredKey]) {
-        byGrade[registeredKey] = { ...unknownSlice, gradeRelation: "same" };
-        delete byGrade.unknown;
-      }
-
-      for (const gradeSlice of Object.values(byGrade)) {
-        if (!gradeSlice || typeof gradeSlice !== "object") continue;
-        if (!gradeSlice.modeCounts || typeof gradeSlice.modeCounts !== "object") {
-          gradeSlice.modeCounts = {};
-        }
-        for (const [mode, count] of Object.entries(parentModes)) {
-          const n = Math.max(0, Math.floor(Number(count) || 0));
-          if (n <= 0) continue;
-          const prev = Math.max(0, Math.floor(Number(gradeSlice.modeCounts[mode]) || 0));
-          gradeSlice.modeCounts[mode] = Math.max(prev, n);
-        }
-        const practiceN = Math.max(0, Math.floor(Number(gradeSlice.modeCounts.practice) || 0));
-        const speedN = Math.max(0, Math.floor(Number(gradeSlice.modeCounts.speed) || 0));
-        if (speedN > 0 && speedN <= practiceN) {
-          gradeSlice.modeCounts.speed = practiceN + 1;
-        }
-      }
-    }
-  }
-  return raw;
-}
-
 /** Preserve responseMs on storage mistakes so row behavior can detect speed_pressure. */
 function patchStorageMistakeTiming(store, dbInput) {
   const subjectMistakeKeys = {
@@ -109,10 +61,9 @@ function patchStorageMistakeTiming(store, dbInput) {
 export async function buildParentReportV2FromAggregate(raw, { studentName, fromDate, toDate }) {
   const from = fromDate.toISOString().slice(0, 10);
   const to = toDate.toISOString().slice(0, 10);
-  const mergedRaw = mergeTopicModeCountsIntoGradeSlices(
-    raw && typeof raw === "object" ? JSON.parse(JSON.stringify(raw)) : raw,
-  );
-  const dbInput = buildReportInputFromDbData(mergedRaw, { period: "custom", timezone: "UTC" });
+  const payload =
+    raw && typeof raw === "object" ? JSON.parse(JSON.stringify(raw)) : raw;
+  const dbInput = buildReportInputFromDbData(payload, { period: "custom", timezone: "UTC" });
   const playerName = String(studentName || dbInput.student?.name || "").trim() || "Student";
 
   return runWithParentReportRebuildLock(async () => {
