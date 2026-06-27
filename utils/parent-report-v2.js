@@ -221,6 +221,31 @@ function sessionDurationSeconds(session) {
   }).seconds;
 }
 
+function mergeAggregateModeCountsFromSessions(sessions) {
+  let merged = null;
+  for (const s of sessions) {
+    if (!s?.aggregateModeCounts || typeof s.aggregateModeCounts !== "object") continue;
+    merged = merged || {};
+    for (const [key, value] of Object.entries(s.aggregateModeCounts)) {
+      const n = Math.max(0, Math.floor(Number(value) || 0));
+      if (!key || n <= 0) continue;
+      merged[key] = (merged[key] || 0) + n;
+    }
+  }
+  return merged;
+}
+
+function mergeAggregateModeCountMaps(a, b) {
+  if (!b || typeof b !== "object") return a;
+  const out = a && typeof a === "object" ? { ...a } : {};
+  for (const [key, value] of Object.entries(b)) {
+    const n = Math.max(0, Math.floor(Number(value) || 0));
+    if (!key || n <= 0) continue;
+    out[key] = (out[key] || 0) + n;
+  }
+  return out;
+}
+
 /**
  * Build rows from a tracking bucket — same rule as geometry: row key = storage bucket id only.
  * Sessions are grouped under the bucket they were saved in; date is the only session filter.
@@ -243,6 +268,19 @@ function buildMapFromBucket({
     const storageKey = String(bucketKey);
     const rowBucketKey =
       subject === "math" ? mathReportBaseOperationKey(storageKey) : storageKey;
+
+    const aggregateModeCountsByComposite = {};
+    for (const s of list) {
+      const modeNorm = normalizeSessionModeForMath(s);
+      const g = mathScopeGradeFromSession(s);
+      const l = mathScopeLevelFromSession(s);
+      const compositeKey = `${rowBucketKey}${TRACK_ROW_MODE_SEP}${modeNorm}${TRACK_ROW_MODE_SEP}${g}${TRACK_ROW_MODE_SEP}${l}`;
+      aggregateModeCountsByComposite[compositeKey] = mergeAggregateModeCountMaps(
+        aggregateModeCountsByComposite[compositeKey],
+        s.aggregateModeCounts,
+      );
+    }
+
     for (const s of list) {
       if (!sessionInRange(s, startMs, endMs)) continue;
       const modeNorm = normalizeSessionModeForMath(s);
@@ -252,21 +290,35 @@ function buildMapFromBucket({
       if (!map[compositeKey]) map[compositeKey] = [];
       map[compositeKey].push(s);
     }
+
+    for (const itemKey of Object.keys(map)) {
+      const sessions = map[itemKey];
+      if (!sessions.length) continue;
+      const { bucketKey: splitBucketKey } = splitBucketModeRowKey(itemKey);
+      const progressLookupKey = splitBucketKey;
+      const legacy = progressData[progressLookupKey] || { total: 0, correct: 0 };
+      map[itemKey] = {
+        sessions,
+        aggregateModeCounts: aggregateModeCountsByComposite[itemKey] || null,
+        legacyProgress: legacy,
+        displayNameFn,
+        subject,
+        itemKey,
+      };
+    }
   }
 
   const out = {};
   for (const itemKey of Object.keys(map)) {
-    const sessions = map[itemKey];
-    if (!sessions.length) continue;
-    const { bucketKey } = splitBucketModeRowKey(itemKey);
-    const progressLookupKey = bucketKey;
-    const legacy = progressData[progressLookupKey] || { total: 0, correct: 0 };
+    const pack = map[itemKey];
+    if (!pack?.sessions?.length) continue;
     out[itemKey] = buildRowSummary({
-      subject,
-      itemKey,
-      sessions,
-      legacyProgress: legacy,
-      displayNameFn,
+      subject: pack.subject,
+      itemKey: pack.itemKey,
+      sessions: pack.sessions,
+      legacyProgress: pack.legacyProgress,
+      displayNameFn: pack.displayNameFn,
+      aggregateModeCounts: pack.aggregateModeCounts,
     });
   }
   return out;
@@ -373,8 +425,18 @@ export function collapseTopicRowsToCanonicalTopicEntity(subjectId, rowsByKey) {
       correct += c;
       wrong += w;
       timeMinutes += tm;
-      const mKey = String(r?.modeKey || "").trim();
-      if (mKey) modeCounts[mKey] = (modeCounts[mKey] || 0) + q;
+      const aggModeCounts =
+        r?.aggregateModeCounts && typeof r.aggregateModeCounts === "object" ? r.aggregateModeCounts : null;
+      if (aggModeCounts) {
+        for (const [mk, cnt] of Object.entries(aggModeCounts)) {
+          const n = Math.max(0, Math.floor(Number(cnt) || 0));
+          if (!mk || n <= 0) continue;
+          modeCounts[mk] = (modeCounts[mk] || 0) + n;
+        }
+      } else {
+        const mKey = String(r?.modeKey || "").trim();
+        if (mKey) modeCounts[mKey] = (modeCounts[mKey] || 0) + q;
+      }
       const gKey = String(r?.gradeKey || "").trim();
       if (gKey) gradeCounts[gKey] = (gradeCounts[gKey] || 0) + q;
       const lKey = String(r?.levelKey || "").trim();
@@ -532,6 +594,7 @@ function buildRowSummary({
   sessions,
   legacyProgress,
   displayNameFn,
+  aggregateModeCounts: aggregateModeCountsInput = null,
 }) {
   const tp = splitTopicRowKey(itemKey);
   const bucketKey = tp.bucketKey;
@@ -543,6 +606,8 @@ function buildRowSummary({
   const gradeDist = countDistribution(sessions, "grade");
   const levelDist = countDistribution(sessions, "level");
   const modeDist = countDistribution(sessions, "mode");
+  const aggregateModeCounts =
+    aggregateModeCountsInput || mergeAggregateModeCountsFromSessions(sessions);
   const gradeKeyLatest = latestSessionFieldValue(sessions, "grade");
   const levelKeyLatest = latestSessionFieldValue(sessions, "level");
 
@@ -572,6 +637,10 @@ function buildRowSummary({
       modeFromKey && modeFromKey !== ""
         ? modeFromKey
         : dominantKey(modeDist) || "learning";
+  }
+  if (aggregateModeCounts && typeof aggregateModeCounts === "object") {
+    const aggregateDominant = dominantKey(aggregateModeCounts);
+    if (aggregateDominant) modeKey = aggregateDominant;
   }
   const registeredFromSession = latestSessionFieldValue(sessions, "registeredGrade");
   const registeredGradeKey = canonicalParentReportGradeKey(registeredFromSession);
@@ -633,6 +702,7 @@ function buildRowSummary({
     levelKey,
     mode: modeStr,
     modeKey,
+    ...(aggregateModeCounts ? { aggregateModeCounts } : {}),
     // Topic/op only — mode appears in the dedicated מצב column in parent-report UI.
     displayName: topicOpLabel,
   };

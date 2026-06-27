@@ -322,12 +322,16 @@ export async function traceFastErrorsBridge({ student, runId, fromDate, toDate, 
       aggregateSpeedCount: aggregateProbe.parentModeCounts?.speed ?? 0,
       gradeSliceSpeedCount,
       V2RowExistsForSelectedTopic: !!v2RowForTopic,
-      rowModeKey: probeRow?.modeKey || null,
+      rowModeKey: probeRow?.modeKey || v2RowForTopic?.modeKey || null,
       rowSignalsExists: !!(probeRow?.topicEngineRowSignals || speedRow?.topicEngineRowSignals),
       engineDecision: gotSpeedPressure
         ? "speed_pressure_pattern"
         : resolvedProbe?.engineDecision || resolvedSpeed?.engineDecision || null,
       whyMissing: gotSpeedPressure ? null : missing.reason,
+      missingV2RowDespiteAggregateSpeed:
+        (aggregateProbe.parentModeCounts?.speed ?? 0) > 0 && !v2RowForTopic ? "yes" : "no",
+      missingV2RowReason:
+        (aggregateProbe.parentModeCounts?.speed ?? 0) > 0 && !v2RowForTopic ? missing.reason : null,
     },
     pipeline: {
       dbSeed: {

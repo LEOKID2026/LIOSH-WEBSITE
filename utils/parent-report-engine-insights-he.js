@@ -159,6 +159,8 @@ export function collectTopicEngineRowsFromReport(report) {
 
         accuracy: Math.round(Number(data.accuracy) || 0),
 
+        modeKey: typeof data.modeKey === "string" ? data.modeKey : null,
+
         topicEngineRowSignals: sig,
 
         excellent: !!data.excellent,

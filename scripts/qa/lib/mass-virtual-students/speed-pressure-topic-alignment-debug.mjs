@@ -23,6 +23,8 @@ export function buildSpeedPressureTopicAlignmentDebug({ runId, bridgeDebug, patc
       engineDecision: a.engineDecision ?? "—",
       speedPressureTriggered: s.speedPressureTriggered ? "yes" : "no",
       topicMismatch: a.topicMismatch ? "yes" : "no",
+      missingV2RowDespiteAggregateSpeed: a.missingV2RowDespiteAggregateSpeed ?? "no",
+      missingV2RowReason: a.missingV2RowReason ?? null,
       whyMissing: a.whyMissing ?? (s.speedPressureTriggered ? null : s.table?.reasonSpeedPressureMissing),
     };
   });
@@ -36,9 +38,7 @@ export function buildSpeedPressureTopicAlignmentDebug({ runId, bridgeDebug, patc
   ).length;
 
   const topicMismatchCount = students.filter((s) => s.topicMismatch === "yes").length;
-  const aggSpeedNoV2 = students.filter(
-    (s) => s.aggregateSpeedCount > 0 && s.V2RowExistsForSelectedTopic === "no",
-  ).length;
+  const missingV2DespiteAggSpeed = students.filter((s) => s.missingV2RowDespiteAggregateSpeed === "yes").length;
   const v2RowWrongMode = students.filter(
     (s) => s.V2RowExistsForSelectedTopic === "yes" && s.rowModeKey !== "speed" && s.rowModeKey !== "—",
   ).length;
@@ -57,7 +57,8 @@ export function buildSpeedPressureTopicAlignmentDebug({ runId, bridgeDebug, patc
     summary: {
       fullyAligned,
       topicMismatchCount,
-      aggregateSpeedButNoV2Row: aggSpeedNoV2,
+      aggregateSpeedButNoV2Row: missingV2DespiteAggSpeed,
+      missingV2RowDespiteAggregateSpeed: missingV2DespiteAggSpeed,
       v2RowButModeKeyNotSpeed: v2RowWrongMode + v2RowMissingMode,
       aggSpeedWithV2Row: aggSpeedWithV2,
       speedPressurePatternCount: speedPressureCount,
