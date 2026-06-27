@@ -201,9 +201,6 @@ describe("Q2-C5 — geography bank coverage", () => {
   test("all exported bank rows have params.canonicalMetadata", async () => {
     const geo = await import("../../data/geography-questions/index.js");
     const pools = [
-      geo.G1_EASY_QUESTIONS,
-      geo.G1_MEDIUM_QUESTIONS,
-      geo.G1_HARD_QUESTIONS,
       geo.G2_EASY_QUESTIONS,
       geo.G2_MEDIUM_QUESTIONS,
       geo.G2_HARD_QUESTIONS,

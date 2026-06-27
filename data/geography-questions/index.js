@@ -3,11 +3,7 @@ import { enrichMoledetGradeQuestionsPool } from "../../lib/learning/moledet-geog
 import { rebalanceObviousMcqDistractors } from "../../utils/mcq-distractor-rebalance.js";
 import { repairMcqObviousAnswerContent } from "../../utils/mcq-fail-content-repair.js";
 
-import {
-  G1_EASY_QUESTIONS as G1_EASY_RAW,
-  G1_MEDIUM_QUESTIONS as G1_MEDIUM_RAW,
-  G1_HARD_QUESTIONS as G1_HARD_RAW,
-} from "./g1.js";
+// G1 pools live in ./g1.js (enrichment/archived only — not exported from launch index).
 import {
   G2_EASY_QUESTIONS as G2_EASY_RAW,
   G2_MEDIUM_QUESTIONS as G2_MEDIUM_RAW,
@@ -85,10 +81,6 @@ function enrichMoledetPool(raw) {
   }
   return out;
 }
-
-export const G1_EASY_QUESTIONS = enrichMoledetPool(G1_EASY_RAW);
-export const G1_MEDIUM_QUESTIONS = enrichMoledetPool(G1_MEDIUM_RAW);
-export const G1_HARD_QUESTIONS = enrichMoledetPool(G1_HARD_RAW);
 
 export const G2_EASY_QUESTIONS = enrichMoledetPool(G2_EASY_RAW);
 export const G2_MEDIUM_QUESTIONS = enrichMoledetPool(G2_MEDIUM_RAW);

@@ -43,6 +43,48 @@ const GEN_SAMPLES = Math.max(3, Math.min(12, Number(process.env.INTEGRITY_GEN_SA
 const LEVELS = ["easy", "medium", "hard"];
 const GRADES = ["g1", "g2", "g3", "g4", "g5", "g6"];
 
+const { MOLEDET_GEOGRAPHY_TEACHABLE_GRADE_ORDER } = await import(
+  href("data/moledet-geography-curriculum.js")
+);
+
+const MOLEDET_LAUNCH_POOL_EXPORTS = [
+  "G2_EASY_QUESTIONS",
+  "G2_MEDIUM_QUESTIONS",
+  "G2_HARD_QUESTIONS",
+  "G3_EASY_QUESTIONS",
+  "G3_MEDIUM_QUESTIONS",
+  "G3_HARD_QUESTIONS",
+  "G4_EASY_QUESTIONS",
+  "G4_MEDIUM_QUESTIONS",
+  "G4_HARD_QUESTIONS",
+  "G5_EASY_QUESTIONS",
+  "G5_MEDIUM_QUESTIONS",
+  "G5_HARD_QUESTIONS",
+  "G6_EASY_QUESTIONS",
+  "G6_MEDIUM_QUESTIONS",
+  "G6_HARD_QUESTIONS",
+];
+
+/** @param {string} subject */
+function integrityGradesForSubject(subject) {
+  if (subject === "moledet_geography") return MOLEDET_GEOGRAPHY_TEACHABLE_GRADE_ORDER;
+  return GRADES;
+}
+
+/** @param {Record<string, unknown>} geoIndex */
+function moledetLaunchPoolEntries(geoIndex) {
+  const geoPools = geoIndex.default ?? geoIndex;
+  if (geoPools !== geoIndex && geoPools && typeof geoPools === "object") {
+    return MOLEDET_LAUNCH_POOL_EXPORTS.map((poolName) => [poolName, geoPools[poolName]]).filter(
+      ([, pool]) => pool && typeof pool === "object"
+    );
+  }
+  return Object.entries(geoIndex).filter(
+    ([poolName, pool]) =>
+      poolName !== "default" && !poolName.startsWith("G1_") && pool && typeof pool === "object"
+  );
+}
+
 const PLACEHOLDER_RE =
   /\b(undefined|null|\[DRAFT\]|\[TODO\]|PLACEHOLDER|TBD|FIXME)\b|^\s*-\s*$/i;
 const BAD_GEOMETRY_SUBJECT_RE = /הנדסה/;
@@ -331,8 +373,7 @@ async function collectStaticBanks() {
 
   try {
     const geoIndex = await import(modUrl("data/geography-questions/index.js"));
-    for (const [poolName, pool] of Object.entries(geoIndex)) {
-      if (!pool || typeof pool !== "object" || poolName === "default") continue;
+    for (const [poolName, pool] of moledetLaunchPoolEntries(geoIndex)) {
       for (const [band, arr] of Object.entries(pool)) {
         if (!Array.isArray(arr)) continue;
         arr.forEach((q, idx) => {
@@ -362,7 +403,7 @@ async function collectGenerated() {
   const refs = [];
   for (const subject of SUPPORTED_SUBJECTS) {
     if (subject === "science" || subject === "english") continue;
-    for (const grade of GRADES) {
+    for (const grade of integrityGradesForSubject(subject)) {
       for (const topic of curriculumTopicsFor(subject, grade)) {
         for (const level of LEVELS) {
           for (let i = 0; i < GEN_SAMPLES; i++) {

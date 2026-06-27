@@ -1,0 +1,2790 @@
+{
+  "generatedAt": "2026-06-27T20:38:19.274Z",
+  "direction": "TXT → site markdown",
+  "filesChanged": 0,
+  "files": [],
+  "pagesSynced": 336,
+  "sectionsUpdatedInChangedFiles": 0,
+  "byGrade": {
+    "g1": {
+      "pages": 154,
+      "changedMdFiles": 0,
+      "updatedSections": 0
+    },
+    "g2": {
+      "pages": 182,
+      "changedMdFiles": 0,
+      "updatedSections": 0
+    }
+  },
+  "exportNarrationMismatches": 11,
+  "exportMismatches": [
+    {
+      "pageNum": 73,
+      "md": "docs/learning-book/english/g1/drafts/listening_classroom.md",
+      "section": 3,
+      "txtPreview": "המורה אומרת: \"Stand up.\"\nעומדים — זו ההוראה.\nהמורה אומרת: \"Sit down.\"\nיושבים.",
+      "exportPreview": "המורה אומרת: \"Stand up.\n\"\nעומדים — זו ההוראה.\nהמורה אומרת: \"Sit down.\n\"\nיושבים."
+    },
+    {
+      "pageNum": 80,
+      "md": "docs/learning-book/english/g1/drafts/listening_commands.md",
+      "section": 3,
+      "txtPreview": "שומעים: \"Show me your pen.\"\nמחפשים pen — עט — ומראים.\nשומעים: \"Point to the door.\"\nמצביעים על door — דלת.",
+      "exportPreview": "שומעים: \"Show me your pen.\n\"\nמחפשים pen — עט — ומראים.\nשומעים: \"Point to the door.\n\"\nמצביעים על door — דלת."
+    },
+    {
+      "pageNum": 82,
+      "md": "docs/learning-book/english/g1/drafts/listening_commands.md",
+      "section": 5,
+      "txtPreview": "מה עושים כששומעים \"Look.\"?\nנסו לפתור בעצמכם.\nבעמוד הבא נבדוק יחד את הדרך ואת התשובה.",
+      "exportPreview": "מה עושים כששומעים \"Look.\n\"?\nנסו לפתור בעצמכם.\nבעמוד הבא נבדוק יחד את הדרך ואת התשובה."
+    },
+    {
+      "pageNum": 83,
+      "md": "docs/learning-book/english/g1/drafts/listening_commands.md",
+      "section": 6,
+      "txtPreview": "מה עושים כששומעים \"Look.\"?\nLook.\nפירוש המילה הוא: הסתכלו.\nמסתכלים — זו הפעולה.\nLook פירושו: הסתכלו.",
+      "exportPreview": "מה עושים כששומעים \"Look.\n\"?\nLook.\nפירוש המילה הוא:\nהסתכלו.\nמסתכלים — זו הפעולה.\nLook פירושו:\nהסתכלו."
+    },
+    {
+      "pageNum": 8,
+      "md": "docs/learning-book/english/g2/drafts/letters_order.md",
+      "section": 1,
+      "txtPreview": "היום נלמד את סדר האותיות באנגלית.\nמתחילים ב-A, ממשיכים ל-B ול-C, ומתקדמים עד Z.\nזה כמו אלף־בית — אבל באנגלית.",
+      "exportPreview": "היום נלמד את סדר האותיות באנגלית.\nמתחילים ב-A, ממשיכים ל-B ול-C, ומתקדמים עד Z.\nזה כמו אלף בית — אבל באנגלית."
+    },
+    {
+      "pageNum": 58,
+      "md": "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+      "section": 2,
+      "txtPreview": "דוגמה 1: \"I see a cat.\" — רואה חתול — בוחרים תמונה של cat.\nדוגמה 2: \"My friend is happy.\" — חבר שמח.\nדוגמה 3: \"We read i",
+      "exportPreview": "דוגמה 1: \"I see a cat.\n\" — רואה חתול — בוחרים תמונה של cat.\nדוגמה 2: \"My friend is happy.\n\" — חבר שמח.\nדוגמה 3: \"We read"
+    },
+    {
+      "pageNum": 59,
+      "md": "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+      "section": 3,
+      "txtPreview": "שומעים: \"I see a dog.\"\nמה רואים?\ndog — כלב — תמונה של dog.",
+      "exportPreview": "שומעים: \"I see a dog.\n\"\nמה רואים?\ndog — כלב — תמונה של dog."
+    },
+    {
+      "pageNum": 60,
+      "md": "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+      "section": 4,
+      "txtPreview": "שומעים \"We play in the playground.\"\nאיפה משחקים?\nplayground — מגרש משחקים.\nתמונה של playground.\nplayground",
+      "exportPreview": "שומעים \"We play in the playground.\n\"\nאיפה משחקים?\nplayground — מגרש משחקים.\nתמונה של playground.\nplayground"
+    },
+    {
+      "pageNum": 61,
+      "md": "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+      "section": 5,
+      "txtPreview": "שומעים: \"We read a book.\"\nמה עושים?\nנסו לפתור בעצמכם.\nבעמוד הבא נבדוק יחד את הדרך ואת התשובה.",
+      "exportPreview": "שומעים: \"We read a book.\n\"\nמה עושים?\nנסו לפתור בעצמכם.\nבעמוד הבא נבדוק יחד את הדרך ואת התשובה."
+    },
+    {
+      "pageNum": 62,
+      "md": "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+      "section": 6,
+      "txtPreview": "השאלה: שומעים \"We read a book.\" — מה עושים?\nהמילה החשובה: read — לקרוא.\nWe read — אנחנו קוראים.\nהתשובה היא: קוראים ספר —",
+      "exportPreview": "השאלה:\nשומעים \"We read a book.\n\" — מה עושים?\nהמילה החשובה: read — לקרוא.\nWe read — אנחנו קוראים.\nהתשובה היא:\nקוראים ספר "
+    },
+    {
+      "pageNum": 76,
+      "md": "docs/learning-book/english/g2/drafts/early_sentences_exposure.md",
+      "section": 6,
+      "txtPreview": "השאלה: \"We read.\" — מה עושים?\nהמילה read פירושה לקרוא.\nהמילה We פירושה אנחנו.\nהתשובה היא: אנחנו קוראים — We read.",
+      "exportPreview": "השאלה: \"We read.\n\" — מה עושים?\nהמילה read פירושה לקרוא.\nהמילה We פירושה אנחנו.\nהתשובה היא:\nאנחנו קוראים — We read."
+    }
+  ],
+  "mapping": [
+    {
+      "grade": "g1",
+      "pageNum": 1,
+      "txt": "english-g1/pages/page-001.txt",
+      "md": "docs/learning-book/english/g1/drafts/letters_upper.md",
+      "section": 1,
+      "topicId": "letters_upper"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 2,
+      "txt": "english-g1/pages/page-002.txt",
+      "md": "docs/learning-book/english/g1/drafts/letters_upper.md",
+      "section": 2,
+      "topicId": "letters_upper"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 3,
+      "txt": "english-g1/pages/page-003.txt",
+      "md": "docs/learning-book/english/g1/drafts/letters_upper.md",
+      "section": 3,
+      "topicId": "letters_upper"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 4,
+      "txt": "english-g1/pages/page-004.txt",
+      "md": "docs/learning-book/english/g1/drafts/letters_upper.md",
+      "section": 4,
+      "topicId": "letters_upper"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 5,
+      "txt": "english-g1/pages/page-005.txt",
+      "md": "docs/learning-book/english/g1/drafts/letters_upper.md",
+      "section": 5,
+      "topicId": "letters_upper"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 6,
+      "txt": "english-g1/pages/page-006.txt",
+      "md": "docs/learning-book/english/g1/drafts/letters_upper.md",
+      "section": 6,
+      "topicId": "letters_upper"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 7,
+      "txt": "english-g1/pages/page-007.txt",
+      "md": "docs/learning-book/english/g1/drafts/letters_upper.md",
+      "section": 7,
+      "topicId": "letters_upper"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 8,
+      "txt": "english-g1/pages/page-008.txt",
+      "md": "docs/learning-book/english/g1/drafts/letters_lower.md",
+      "section": 1,
+      "topicId": "letters_lower"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 9,
+      "txt": "english-g1/pages/page-009.txt",
+      "md": "docs/learning-book/english/g1/drafts/letters_lower.md",
+      "section": 2,
+      "topicId": "letters_lower"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 10,
+      "txt": "english-g1/pages/page-010.txt",
+      "md": "docs/learning-book/english/g1/drafts/letters_lower.md",
+      "section": 3,
+      "topicId": "letters_lower"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 11,
+      "txt": "english-g1/pages/page-011.txt",
+      "md": "docs/learning-book/english/g1/drafts/letters_lower.md",
+      "section": 4,
+      "topicId": "letters_lower"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 12,
+      "txt": "english-g1/pages/page-012.txt",
+      "md": "docs/learning-book/english/g1/drafts/letters_lower.md",
+      "section": 5,
+      "topicId": "letters_lower"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 13,
+      "txt": "english-g1/pages/page-013.txt",
+      "md": "docs/learning-book/english/g1/drafts/letters_lower.md",
+      "section": 6,
+      "topicId": "letters_lower"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 14,
+      "txt": "english-g1/pages/page-014.txt",
+      "md": "docs/learning-book/english/g1/drafts/letters_lower.md",
+      "section": 7,
+      "topicId": "letters_lower"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 15,
+      "txt": "english-g1/pages/page-015.txt",
+      "md": "docs/learning-book/english/g1/drafts/letters_match.md",
+      "section": 1,
+      "topicId": "letters_match"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 16,
+      "txt": "english-g1/pages/page-016.txt",
+      "md": "docs/learning-book/english/g1/drafts/letters_match.md",
+      "section": 2,
+      "topicId": "letters_match"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 17,
+      "txt": "english-g1/pages/page-017.txt",
+      "md": "docs/learning-book/english/g1/drafts/letters_match.md",
+      "section": 3,
+      "topicId": "letters_match"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 18,
+      "txt": "english-g1/pages/page-018.txt",
+      "md": "docs/learning-book/english/g1/drafts/letters_match.md",
+      "section": 4,
+      "topicId": "letters_match"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 19,
+      "txt": "english-g1/pages/page-019.txt",
+      "md": "docs/learning-book/english/g1/drafts/letters_match.md",
+      "section": 5,
+      "topicId": "letters_match"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 20,
+      "txt": "english-g1/pages/page-020.txt",
+      "md": "docs/learning-book/english/g1/drafts/letters_match.md",
+      "section": 6,
+      "topicId": "letters_match"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 21,
+      "txt": "english-g1/pages/page-021.txt",
+      "md": "docs/learning-book/english/g1/drafts/letters_match.md",
+      "section": 7,
+      "topicId": "letters_match"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 22,
+      "txt": "english-g1/pages/page-022.txt",
+      "md": "docs/learning-book/english/g1/drafts/letter_names.md",
+      "section": 1,
+      "topicId": "letter_names"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 23,
+      "txt": "english-g1/pages/page-023.txt",
+      "md": "docs/learning-book/english/g1/drafts/letter_names.md",
+      "section": 2,
+      "topicId": "letter_names"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 24,
+      "txt": "english-g1/pages/page-024.txt",
+      "md": "docs/learning-book/english/g1/drafts/letter_names.md",
+      "section": 3,
+      "topicId": "letter_names"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 25,
+      "txt": "english-g1/pages/page-025.txt",
+      "md": "docs/learning-book/english/g1/drafts/letter_names.md",
+      "section": 4,
+      "topicId": "letter_names"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 26,
+      "txt": "english-g1/pages/page-026.txt",
+      "md": "docs/learning-book/english/g1/drafts/letter_names.md",
+      "section": 5,
+      "topicId": "letter_names"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 27,
+      "txt": "english-g1/pages/page-027.txt",
+      "md": "docs/learning-book/english/g1/drafts/letter_names.md",
+      "section": 6,
+      "topicId": "letter_names"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 28,
+      "txt": "english-g1/pages/page-028.txt",
+      "md": "docs/learning-book/english/g1/drafts/letter_names.md",
+      "section": 7,
+      "topicId": "letter_names"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 29,
+      "txt": "english-g1/pages/page-029.txt",
+      "md": "docs/learning-book/english/g1/drafts/phonics_sounds.md",
+      "section": 1,
+      "topicId": "phonics_sounds"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 30,
+      "txt": "english-g1/pages/page-030.txt",
+      "md": "docs/learning-book/english/g1/drafts/phonics_sounds.md",
+      "section": 2,
+      "topicId": "phonics_sounds"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 31,
+      "txt": "english-g1/pages/page-031.txt",
+      "md": "docs/learning-book/english/g1/drafts/phonics_sounds.md",
+      "section": 3,
+      "topicId": "phonics_sounds"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 32,
+      "txt": "english-g1/pages/page-032.txt",
+      "md": "docs/learning-book/english/g1/drafts/phonics_sounds.md",
+      "section": 4,
+      "topicId": "phonics_sounds"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 33,
+      "txt": "english-g1/pages/page-033.txt",
+      "md": "docs/learning-book/english/g1/drafts/phonics_sounds.md",
+      "section": 5,
+      "topicId": "phonics_sounds"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 34,
+      "txt": "english-g1/pages/page-034.txt",
+      "md": "docs/learning-book/english/g1/drafts/phonics_sounds.md",
+      "section": 6,
+      "topicId": "phonics_sounds"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 35,
+      "txt": "english-g1/pages/page-035.txt",
+      "md": "docs/learning-book/english/g1/drafts/phonics_sounds.md",
+      "section": 7,
+      "topicId": "phonics_sounds"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 36,
+      "txt": "english-g1/pages/page-036.txt",
+      "md": "docs/learning-book/english/g1/drafts/phonics_first_sound.md",
+      "section": 1,
+      "topicId": "phonics_first_sound"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 37,
+      "txt": "english-g1/pages/page-037.txt",
+      "md": "docs/learning-book/english/g1/drafts/phonics_first_sound.md",
+      "section": 2,
+      "topicId": "phonics_first_sound"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 38,
+      "txt": "english-g1/pages/page-038.txt",
+      "md": "docs/learning-book/english/g1/drafts/phonics_first_sound.md",
+      "section": 3,
+      "topicId": "phonics_first_sound"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 39,
+      "txt": "english-g1/pages/page-039.txt",
+      "md": "docs/learning-book/english/g1/drafts/phonics_first_sound.md",
+      "section": 4,
+      "topicId": "phonics_first_sound"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 40,
+      "txt": "english-g1/pages/page-040.txt",
+      "md": "docs/learning-book/english/g1/drafts/phonics_first_sound.md",
+      "section": 5,
+      "topicId": "phonics_first_sound"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 41,
+      "txt": "english-g1/pages/page-041.txt",
+      "md": "docs/learning-book/english/g1/drafts/phonics_first_sound.md",
+      "section": 6,
+      "topicId": "phonics_first_sound"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 42,
+      "txt": "english-g1/pages/page-042.txt",
+      "md": "docs/learning-book/english/g1/drafts/phonics_first_sound.md",
+      "section": 7,
+      "topicId": "phonics_first_sound"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 43,
+      "txt": "english-g1/pages/page-043.txt",
+      "md": "docs/learning-book/english/g1/drafts/classroom_words.md",
+      "section": 1,
+      "topicId": "classroom_words"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 44,
+      "txt": "english-g1/pages/page-044.txt",
+      "md": "docs/learning-book/english/g1/drafts/classroom_words.md",
+      "section": 2,
+      "topicId": "classroom_words"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 45,
+      "txt": "english-g1/pages/page-045.txt",
+      "md": "docs/learning-book/english/g1/drafts/classroom_words.md",
+      "section": 3,
+      "topicId": "classroom_words"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 46,
+      "txt": "english-g1/pages/page-046.txt",
+      "md": "docs/learning-book/english/g1/drafts/classroom_words.md",
+      "section": 4,
+      "topicId": "classroom_words"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 47,
+      "txt": "english-g1/pages/page-047.txt",
+      "md": "docs/learning-book/english/g1/drafts/classroom_words.md",
+      "section": 5,
+      "topicId": "classroom_words"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 48,
+      "txt": "english-g1/pages/page-048.txt",
+      "md": "docs/learning-book/english/g1/drafts/classroom_words.md",
+      "section": 6,
+      "topicId": "classroom_words"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 49,
+      "txt": "english-g1/pages/page-049.txt",
+      "md": "docs/learning-book/english/g1/drafts/classroom_words.md",
+      "section": 7,
+      "topicId": "classroom_words"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 50,
+      "txt": "english-g1/pages/page-050.txt",
+      "md": "docs/learning-book/english/g1/drafts/first_words_simple.md",
+      "section": 1,
+      "topicId": "first_words_simple"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 51,
+      "txt": "english-g1/pages/page-051.txt",
+      "md": "docs/learning-book/english/g1/drafts/first_words_simple.md",
+      "section": 2,
+      "topicId": "first_words_simple"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 52,
+      "txt": "english-g1/pages/page-052.txt",
+      "md": "docs/learning-book/english/g1/drafts/first_words_simple.md",
+      "section": 3,
+      "topicId": "first_words_simple"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 53,
+      "txt": "english-g1/pages/page-053.txt",
+      "md": "docs/learning-book/english/g1/drafts/first_words_simple.md",
+      "section": 4,
+      "topicId": "first_words_simple"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 54,
+      "txt": "english-g1/pages/page-054.txt",
+      "md": "docs/learning-book/english/g1/drafts/first_words_simple.md",
+      "section": 5,
+      "topicId": "first_words_simple"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 55,
+      "txt": "english-g1/pages/page-055.txt",
+      "md": "docs/learning-book/english/g1/drafts/first_words_simple.md",
+      "section": 6,
+      "topicId": "first_words_simple"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 56,
+      "txt": "english-g1/pages/page-056.txt",
+      "md": "docs/learning-book/english/g1/drafts/first_words_simple.md",
+      "section": 7,
+      "topicId": "first_words_simple"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 57,
+      "txt": "english-g1/pages/page-057.txt",
+      "md": "docs/learning-book/english/g1/drafts/first_words_cvc.md",
+      "section": 1,
+      "topicId": "first_words_cvc"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 58,
+      "txt": "english-g1/pages/page-058.txt",
+      "md": "docs/learning-book/english/g1/drafts/first_words_cvc.md",
+      "section": 2,
+      "topicId": "first_words_cvc"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 59,
+      "txt": "english-g1/pages/page-059.txt",
+      "md": "docs/learning-book/english/g1/drafts/first_words_cvc.md",
+      "section": 3,
+      "topicId": "first_words_cvc"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 60,
+      "txt": "english-g1/pages/page-060.txt",
+      "md": "docs/learning-book/english/g1/drafts/first_words_cvc.md",
+      "section": 4,
+      "topicId": "first_words_cvc"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 61,
+      "txt": "english-g1/pages/page-061.txt",
+      "md": "docs/learning-book/english/g1/drafts/first_words_cvc.md",
+      "section": 5,
+      "topicId": "first_words_cvc"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 62,
+      "txt": "english-g1/pages/page-062.txt",
+      "md": "docs/learning-book/english/g1/drafts/first_words_cvc.md",
+      "section": 6,
+      "topicId": "first_words_cvc"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 63,
+      "txt": "english-g1/pages/page-063.txt",
+      "md": "docs/learning-book/english/g1/drafts/first_words_cvc.md",
+      "section": 7,
+      "topicId": "first_words_cvc"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 64,
+      "txt": "english-g1/pages/page-064.txt",
+      "md": "docs/learning-book/english/g1/drafts/picture_word_match.md",
+      "section": 1,
+      "topicId": "picture_word_match"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 65,
+      "txt": "english-g1/pages/page-065.txt",
+      "md": "docs/learning-book/english/g1/drafts/picture_word_match.md",
+      "section": 2,
+      "topicId": "picture_word_match"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 66,
+      "txt": "english-g1/pages/page-066.txt",
+      "md": "docs/learning-book/english/g1/drafts/picture_word_match.md",
+      "section": 3,
+      "topicId": "picture_word_match"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 67,
+      "txt": "english-g1/pages/page-067.txt",
+      "md": "docs/learning-book/english/g1/drafts/picture_word_match.md",
+      "section": 4,
+      "topicId": "picture_word_match"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 68,
+      "txt": "english-g1/pages/page-068.txt",
+      "md": "docs/learning-book/english/g1/drafts/picture_word_match.md",
+      "section": 5,
+      "topicId": "picture_word_match"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 69,
+      "txt": "english-g1/pages/page-069.txt",
+      "md": "docs/learning-book/english/g1/drafts/picture_word_match.md",
+      "section": 6,
+      "topicId": "picture_word_match"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 70,
+      "txt": "english-g1/pages/page-070.txt",
+      "md": "docs/learning-book/english/g1/drafts/picture_word_match.md",
+      "section": 7,
+      "topicId": "picture_word_match"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 71,
+      "txt": "english-g1/pages/page-071.txt",
+      "md": "docs/learning-book/english/g1/drafts/listening_classroom.md",
+      "section": 1,
+      "topicId": "listening_classroom"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 72,
+      "txt": "english-g1/pages/page-072.txt",
+      "md": "docs/learning-book/english/g1/drafts/listening_classroom.md",
+      "section": 2,
+      "topicId": "listening_classroom"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 73,
+      "txt": "english-g1/pages/page-073.txt",
+      "md": "docs/learning-book/english/g1/drafts/listening_classroom.md",
+      "section": 3,
+      "topicId": "listening_classroom"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 74,
+      "txt": "english-g1/pages/page-074.txt",
+      "md": "docs/learning-book/english/g1/drafts/listening_classroom.md",
+      "section": 4,
+      "topicId": "listening_classroom"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 75,
+      "txt": "english-g1/pages/page-075.txt",
+      "md": "docs/learning-book/english/g1/drafts/listening_classroom.md",
+      "section": 5,
+      "topicId": "listening_classroom"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 76,
+      "txt": "english-g1/pages/page-076.txt",
+      "md": "docs/learning-book/english/g1/drafts/listening_classroom.md",
+      "section": 6,
+      "topicId": "listening_classroom"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 77,
+      "txt": "english-g1/pages/page-077.txt",
+      "md": "docs/learning-book/english/g1/drafts/listening_classroom.md",
+      "section": 7,
+      "topicId": "listening_classroom"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 78,
+      "txt": "english-g1/pages/page-078.txt",
+      "md": "docs/learning-book/english/g1/drafts/listening_commands.md",
+      "section": 1,
+      "topicId": "listening_commands"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 79,
+      "txt": "english-g1/pages/page-079.txt",
+      "md": "docs/learning-book/english/g1/drafts/listening_commands.md",
+      "section": 2,
+      "topicId": "listening_commands"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 80,
+      "txt": "english-g1/pages/page-080.txt",
+      "md": "docs/learning-book/english/g1/drafts/listening_commands.md",
+      "section": 3,
+      "topicId": "listening_commands"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 81,
+      "txt": "english-g1/pages/page-081.txt",
+      "md": "docs/learning-book/english/g1/drafts/listening_commands.md",
+      "section": 4,
+      "topicId": "listening_commands"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 82,
+      "txt": "english-g1/pages/page-082.txt",
+      "md": "docs/learning-book/english/g1/drafts/listening_commands.md",
+      "section": 5,
+      "topicId": "listening_commands"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 83,
+      "txt": "english-g1/pages/page-083.txt",
+      "md": "docs/learning-book/english/g1/drafts/listening_commands.md",
+      "section": 6,
+      "topicId": "listening_commands"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 84,
+      "txt": "english-g1/pages/page-084.txt",
+      "md": "docs/learning-book/english/g1/drafts/listening_commands.md",
+      "section": 7,
+      "topicId": "listening_commands"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 85,
+      "txt": "english-g1/pages/page-085.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_colors.md",
+      "section": 1,
+      "topicId": "vocab_colors"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 86,
+      "txt": "english-g1/pages/page-086.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_colors.md",
+      "section": 2,
+      "topicId": "vocab_colors"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 87,
+      "txt": "english-g1/pages/page-087.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_colors.md",
+      "section": 3,
+      "topicId": "vocab_colors"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 88,
+      "txt": "english-g1/pages/page-088.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_colors.md",
+      "section": 4,
+      "topicId": "vocab_colors"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 89,
+      "txt": "english-g1/pages/page-089.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_colors.md",
+      "section": 5,
+      "topicId": "vocab_colors"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 90,
+      "txt": "english-g1/pages/page-090.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_colors.md",
+      "section": 6,
+      "topicId": "vocab_colors"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 91,
+      "txt": "english-g1/pages/page-091.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_colors.md",
+      "section": 7,
+      "topicId": "vocab_colors"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 92,
+      "txt": "english-g1/pages/page-092.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_numbers.md",
+      "section": 1,
+      "topicId": "vocab_numbers"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 93,
+      "txt": "english-g1/pages/page-093.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_numbers.md",
+      "section": 2,
+      "topicId": "vocab_numbers"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 94,
+      "txt": "english-g1/pages/page-094.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_numbers.md",
+      "section": 3,
+      "topicId": "vocab_numbers"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 95,
+      "txt": "english-g1/pages/page-095.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_numbers.md",
+      "section": 4,
+      "topicId": "vocab_numbers"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 96,
+      "txt": "english-g1/pages/page-096.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_numbers.md",
+      "section": 5,
+      "topicId": "vocab_numbers"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 97,
+      "txt": "english-g1/pages/page-097.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_numbers.md",
+      "section": 6,
+      "topicId": "vocab_numbers"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 98,
+      "txt": "english-g1/pages/page-098.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_numbers.md",
+      "section": 7,
+      "topicId": "vocab_numbers"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 99,
+      "txt": "english-g1/pages/page-099.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_family.md",
+      "section": 1,
+      "topicId": "vocab_family"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 100,
+      "txt": "english-g1/pages/page-100.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_family.md",
+      "section": 2,
+      "topicId": "vocab_family"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 101,
+      "txt": "english-g1/pages/page-101.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_family.md",
+      "section": 3,
+      "topicId": "vocab_family"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 102,
+      "txt": "english-g1/pages/page-102.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_family.md",
+      "section": 4,
+      "topicId": "vocab_family"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 103,
+      "txt": "english-g1/pages/page-103.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_family.md",
+      "section": 5,
+      "topicId": "vocab_family"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 104,
+      "txt": "english-g1/pages/page-104.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_family.md",
+      "section": 6,
+      "topicId": "vocab_family"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 105,
+      "txt": "english-g1/pages/page-105.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_family.md",
+      "section": 7,
+      "topicId": "vocab_family"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 106,
+      "txt": "english-g1/pages/page-106.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_animals.md",
+      "section": 1,
+      "topicId": "vocab_animals"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 107,
+      "txt": "english-g1/pages/page-107.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_animals.md",
+      "section": 2,
+      "topicId": "vocab_animals"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 108,
+      "txt": "english-g1/pages/page-108.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_animals.md",
+      "section": 3,
+      "topicId": "vocab_animals"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 109,
+      "txt": "english-g1/pages/page-109.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_animals.md",
+      "section": 4,
+      "topicId": "vocab_animals"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 110,
+      "txt": "english-g1/pages/page-110.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_animals.md",
+      "section": 5,
+      "topicId": "vocab_animals"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 111,
+      "txt": "english-g1/pages/page-111.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_animals.md",
+      "section": 6,
+      "topicId": "vocab_animals"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 112,
+      "txt": "english-g1/pages/page-112.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_animals.md",
+      "section": 7,
+      "topicId": "vocab_animals"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 113,
+      "txt": "english-g1/pages/page-113.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_emotions.md",
+      "section": 1,
+      "topicId": "vocab_emotions"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 114,
+      "txt": "english-g1/pages/page-114.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_emotions.md",
+      "section": 2,
+      "topicId": "vocab_emotions"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 115,
+      "txt": "english-g1/pages/page-115.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_emotions.md",
+      "section": 3,
+      "topicId": "vocab_emotions"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 116,
+      "txt": "english-g1/pages/page-116.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_emotions.md",
+      "section": 4,
+      "topicId": "vocab_emotions"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 117,
+      "txt": "english-g1/pages/page-117.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_emotions.md",
+      "section": 5,
+      "topicId": "vocab_emotions"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 118,
+      "txt": "english-g1/pages/page-118.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_emotions.md",
+      "section": 6,
+      "topicId": "vocab_emotions"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 119,
+      "txt": "english-g1/pages/page-119.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_emotions.md",
+      "section": 7,
+      "topicId": "vocab_emotions"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 120,
+      "txt": "english-g1/pages/page-120.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_actions.md",
+      "section": 1,
+      "topicId": "vocab_actions"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 121,
+      "txt": "english-g1/pages/page-121.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_actions.md",
+      "section": 2,
+      "topicId": "vocab_actions"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 122,
+      "txt": "english-g1/pages/page-122.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_actions.md",
+      "section": 3,
+      "topicId": "vocab_actions"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 123,
+      "txt": "english-g1/pages/page-123.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_actions.md",
+      "section": 4,
+      "topicId": "vocab_actions"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 124,
+      "txt": "english-g1/pages/page-124.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_actions.md",
+      "section": 5,
+      "topicId": "vocab_actions"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 125,
+      "txt": "english-g1/pages/page-125.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_actions.md",
+      "section": 6,
+      "topicId": "vocab_actions"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 126,
+      "txt": "english-g1/pages/page-126.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_actions.md",
+      "section": 7,
+      "topicId": "vocab_actions"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 127,
+      "txt": "english-g1/pages/page-127.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_school.md",
+      "section": 1,
+      "topicId": "vocab_school"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 128,
+      "txt": "english-g1/pages/page-128.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_school.md",
+      "section": 2,
+      "topicId": "vocab_school"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 129,
+      "txt": "english-g1/pages/page-129.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_school.md",
+      "section": 3,
+      "topicId": "vocab_school"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 130,
+      "txt": "english-g1/pages/page-130.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_school.md",
+      "section": 4,
+      "topicId": "vocab_school"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 131,
+      "txt": "english-g1/pages/page-131.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_school.md",
+      "section": 5,
+      "topicId": "vocab_school"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 132,
+      "txt": "english-g1/pages/page-132.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_school.md",
+      "section": 6,
+      "topicId": "vocab_school"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 133,
+      "txt": "english-g1/pages/page-133.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_school.md",
+      "section": 7,
+      "topicId": "vocab_school"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 134,
+      "txt": "english-g1/pages/page-134.txt",
+      "md": "docs/learning-book/english/g1/drafts/grammar_be.md",
+      "section": 1,
+      "topicId": "grammar_be"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 135,
+      "txt": "english-g1/pages/page-135.txt",
+      "md": "docs/learning-book/english/g1/drafts/grammar_be.md",
+      "section": 2,
+      "topicId": "grammar_be"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 136,
+      "txt": "english-g1/pages/page-136.txt",
+      "md": "docs/learning-book/english/g1/drafts/grammar_be.md",
+      "section": 3,
+      "topicId": "grammar_be"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 137,
+      "txt": "english-g1/pages/page-137.txt",
+      "md": "docs/learning-book/english/g1/drafts/grammar_be.md",
+      "section": 4,
+      "topicId": "grammar_be"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 138,
+      "txt": "english-g1/pages/page-138.txt",
+      "md": "docs/learning-book/english/g1/drafts/grammar_be.md",
+      "section": 5,
+      "topicId": "grammar_be"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 139,
+      "txt": "english-g1/pages/page-139.txt",
+      "md": "docs/learning-book/english/g1/drafts/grammar_be.md",
+      "section": 6,
+      "topicId": "grammar_be"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 140,
+      "txt": "english-g1/pages/page-140.txt",
+      "md": "docs/learning-book/english/g1/drafts/grammar_be.md",
+      "section": 7,
+      "topicId": "grammar_be"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 141,
+      "txt": "english-g1/pages/page-141.txt",
+      "md": "docs/learning-book/english/g1/drafts/sentence_base.md",
+      "section": 1,
+      "topicId": "sentence_base"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 142,
+      "txt": "english-g1/pages/page-142.txt",
+      "md": "docs/learning-book/english/g1/drafts/sentence_base.md",
+      "section": 2,
+      "topicId": "sentence_base"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 143,
+      "txt": "english-g1/pages/page-143.txt",
+      "md": "docs/learning-book/english/g1/drafts/sentence_base.md",
+      "section": 3,
+      "topicId": "sentence_base"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 144,
+      "txt": "english-g1/pages/page-144.txt",
+      "md": "docs/learning-book/english/g1/drafts/sentence_base.md",
+      "section": 4,
+      "topicId": "sentence_base"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 145,
+      "txt": "english-g1/pages/page-145.txt",
+      "md": "docs/learning-book/english/g1/drafts/sentence_base.md",
+      "section": 5,
+      "topicId": "sentence_base"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 146,
+      "txt": "english-g1/pages/page-146.txt",
+      "md": "docs/learning-book/english/g1/drafts/sentence_base.md",
+      "section": 6,
+      "topicId": "sentence_base"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 147,
+      "txt": "english-g1/pages/page-147.txt",
+      "md": "docs/learning-book/english/g1/drafts/sentence_base.md",
+      "section": 7,
+      "topicId": "sentence_base"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 148,
+      "txt": "english-g1/pages/page-148.txt",
+      "md": "docs/learning-book/english/g1/drafts/translation_classroom.md",
+      "section": 1,
+      "topicId": "translation_classroom"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 149,
+      "txt": "english-g1/pages/page-149.txt",
+      "md": "docs/learning-book/english/g1/drafts/translation_classroom.md",
+      "section": 2,
+      "topicId": "translation_classroom"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 150,
+      "txt": "english-g1/pages/page-150.txt",
+      "md": "docs/learning-book/english/g1/drafts/translation_classroom.md",
+      "section": 3,
+      "topicId": "translation_classroom"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 151,
+      "txt": "english-g1/pages/page-151.txt",
+      "md": "docs/learning-book/english/g1/drafts/translation_classroom.md",
+      "section": 4,
+      "topicId": "translation_classroom"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 152,
+      "txt": "english-g1/pages/page-152.txt",
+      "md": "docs/learning-book/english/g1/drafts/translation_classroom.md",
+      "section": 5,
+      "topicId": "translation_classroom"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 153,
+      "txt": "english-g1/pages/page-153.txt",
+      "md": "docs/learning-book/english/g1/drafts/translation_classroom.md",
+      "section": 6,
+      "topicId": "translation_classroom"
+    },
+    {
+      "grade": "g1",
+      "pageNum": 154,
+      "txt": "english-g1/pages/page-154.txt",
+      "md": "docs/learning-book/english/g1/drafts/translation_classroom.md",
+      "section": 7,
+      "topicId": "translation_classroom"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 1,
+      "txt": "english-g2/pages/page-001.txt",
+      "md": "docs/learning-book/english/g2/drafts/letters_review.md",
+      "section": 1,
+      "topicId": "letters_review"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 2,
+      "txt": "english-g2/pages/page-002.txt",
+      "md": "docs/learning-book/english/g2/drafts/letters_review.md",
+      "section": 2,
+      "topicId": "letters_review"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 3,
+      "txt": "english-g2/pages/page-003.txt",
+      "md": "docs/learning-book/english/g2/drafts/letters_review.md",
+      "section": 3,
+      "topicId": "letters_review"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 4,
+      "txt": "english-g2/pages/page-004.txt",
+      "md": "docs/learning-book/english/g2/drafts/letters_review.md",
+      "section": 4,
+      "topicId": "letters_review"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 5,
+      "txt": "english-g2/pages/page-005.txt",
+      "md": "docs/learning-book/english/g2/drafts/letters_review.md",
+      "section": 5,
+      "topicId": "letters_review"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 6,
+      "txt": "english-g2/pages/page-006.txt",
+      "md": "docs/learning-book/english/g2/drafts/letters_review.md",
+      "section": 6,
+      "topicId": "letters_review"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 7,
+      "txt": "english-g2/pages/page-007.txt",
+      "md": "docs/learning-book/english/g2/drafts/letters_review.md",
+      "section": 7,
+      "topicId": "letters_review"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 8,
+      "txt": "english-g2/pages/page-008.txt",
+      "md": "docs/learning-book/english/g2/drafts/letters_order.md",
+      "section": 1,
+      "topicId": "letters_order"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 9,
+      "txt": "english-g2/pages/page-009.txt",
+      "md": "docs/learning-book/english/g2/drafts/letters_order.md",
+      "section": 2,
+      "topicId": "letters_order"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 10,
+      "txt": "english-g2/pages/page-010.txt",
+      "md": "docs/learning-book/english/g2/drafts/letters_order.md",
+      "section": 3,
+      "topicId": "letters_order"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 11,
+      "txt": "english-g2/pages/page-011.txt",
+      "md": "docs/learning-book/english/g2/drafts/letters_order.md",
+      "section": 4,
+      "topicId": "letters_order"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 12,
+      "txt": "english-g2/pages/page-012.txt",
+      "md": "docs/learning-book/english/g2/drafts/letters_order.md",
+      "section": 5,
+      "topicId": "letters_order"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 13,
+      "txt": "english-g2/pages/page-013.txt",
+      "md": "docs/learning-book/english/g2/drafts/letters_order.md",
+      "section": 6,
+      "topicId": "letters_order"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 14,
+      "txt": "english-g2/pages/page-014.txt",
+      "md": "docs/learning-book/english/g2/drafts/letters_order.md",
+      "section": 7,
+      "topicId": "letters_order"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 15,
+      "txt": "english-g2/pages/page-015.txt",
+      "md": "docs/learning-book/english/g2/drafts/phonics_sounds_review.md",
+      "section": 1,
+      "topicId": "phonics_sounds_review"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 16,
+      "txt": "english-g2/pages/page-016.txt",
+      "md": "docs/learning-book/english/g2/drafts/phonics_sounds_review.md",
+      "section": 2,
+      "topicId": "phonics_sounds_review"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 17,
+      "txt": "english-g2/pages/page-017.txt",
+      "md": "docs/learning-book/english/g2/drafts/phonics_sounds_review.md",
+      "section": 3,
+      "topicId": "phonics_sounds_review"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 18,
+      "txt": "english-g2/pages/page-018.txt",
+      "md": "docs/learning-book/english/g2/drafts/phonics_sounds_review.md",
+      "section": 4,
+      "topicId": "phonics_sounds_review"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 19,
+      "txt": "english-g2/pages/page-019.txt",
+      "md": "docs/learning-book/english/g2/drafts/phonics_sounds_review.md",
+      "section": 5,
+      "topicId": "phonics_sounds_review"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 20,
+      "txt": "english-g2/pages/page-020.txt",
+      "md": "docs/learning-book/english/g2/drafts/phonics_sounds_review.md",
+      "section": 6,
+      "topicId": "phonics_sounds_review"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 21,
+      "txt": "english-g2/pages/page-021.txt",
+      "md": "docs/learning-book/english/g2/drafts/phonics_sounds_review.md",
+      "section": 7,
+      "topicId": "phonics_sounds_review"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 22,
+      "txt": "english-g2/pages/page-022.txt",
+      "md": "docs/learning-book/english/g2/drafts/phonics_blending.md",
+      "section": 1,
+      "topicId": "phonics_blending"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 23,
+      "txt": "english-g2/pages/page-023.txt",
+      "md": "docs/learning-book/english/g2/drafts/phonics_blending.md",
+      "section": 2,
+      "topicId": "phonics_blending"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 24,
+      "txt": "english-g2/pages/page-024.txt",
+      "md": "docs/learning-book/english/g2/drafts/phonics_blending.md",
+      "section": 3,
+      "topicId": "phonics_blending"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 25,
+      "txt": "english-g2/pages/page-025.txt",
+      "md": "docs/learning-book/english/g2/drafts/phonics_blending.md",
+      "section": 4,
+      "topicId": "phonics_blending"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 26,
+      "txt": "english-g2/pages/page-026.txt",
+      "md": "docs/learning-book/english/g2/drafts/phonics_blending.md",
+      "section": 5,
+      "topicId": "phonics_blending"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 27,
+      "txt": "english-g2/pages/page-027.txt",
+      "md": "docs/learning-book/english/g2/drafts/phonics_blending.md",
+      "section": 6,
+      "topicId": "phonics_blending"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 28,
+      "txt": "english-g2/pages/page-028.txt",
+      "md": "docs/learning-book/english/g2/drafts/phonics_blending.md",
+      "section": 7,
+      "topicId": "phonics_blending"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 29,
+      "txt": "english-g2/pages/page-029.txt",
+      "md": "docs/learning-book/english/g2/drafts/sound_letter_match.md",
+      "section": 1,
+      "topicId": "sound_letter_match"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 30,
+      "txt": "english-g2/pages/page-030.txt",
+      "md": "docs/learning-book/english/g2/drafts/sound_letter_match.md",
+      "section": 2,
+      "topicId": "sound_letter_match"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 31,
+      "txt": "english-g2/pages/page-031.txt",
+      "md": "docs/learning-book/english/g2/drafts/sound_letter_match.md",
+      "section": 3,
+      "topicId": "sound_letter_match"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 32,
+      "txt": "english-g2/pages/page-032.txt",
+      "md": "docs/learning-book/english/g2/drafts/sound_letter_match.md",
+      "section": 4,
+      "topicId": "sound_letter_match"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 33,
+      "txt": "english-g2/pages/page-033.txt",
+      "md": "docs/learning-book/english/g2/drafts/sound_letter_match.md",
+      "section": 5,
+      "topicId": "sound_letter_match"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 34,
+      "txt": "english-g2/pages/page-034.txt",
+      "md": "docs/learning-book/english/g2/drafts/sound_letter_match.md",
+      "section": 6,
+      "topicId": "sound_letter_match"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 35,
+      "txt": "english-g2/pages/page-035.txt",
+      "md": "docs/learning-book/english/g2/drafts/sound_letter_match.md",
+      "section": 7,
+      "topicId": "sound_letter_match"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 36,
+      "txt": "english-g2/pages/page-036.txt",
+      "md": "docs/learning-book/english/g2/drafts/first_word_reading.md",
+      "section": 1,
+      "topicId": "first_word_reading"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 37,
+      "txt": "english-g2/pages/page-037.txt",
+      "md": "docs/learning-book/english/g2/drafts/first_word_reading.md",
+      "section": 2,
+      "topicId": "first_word_reading"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 38,
+      "txt": "english-g2/pages/page-038.txt",
+      "md": "docs/learning-book/english/g2/drafts/first_word_reading.md",
+      "section": 3,
+      "topicId": "first_word_reading"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 39,
+      "txt": "english-g2/pages/page-039.txt",
+      "md": "docs/learning-book/english/g2/drafts/first_word_reading.md",
+      "section": 4,
+      "topicId": "first_word_reading"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 40,
+      "txt": "english-g2/pages/page-040.txt",
+      "md": "docs/learning-book/english/g2/drafts/first_word_reading.md",
+      "section": 5,
+      "topicId": "first_word_reading"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 41,
+      "txt": "english-g2/pages/page-041.txt",
+      "md": "docs/learning-book/english/g2/drafts/first_word_reading.md",
+      "section": 6,
+      "topicId": "first_word_reading"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 42,
+      "txt": "english-g2/pages/page-042.txt",
+      "md": "docs/learning-book/english/g2/drafts/first_word_reading.md",
+      "section": 7,
+      "topicId": "first_word_reading"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 43,
+      "txt": "english-g2/pages/page-043.txt",
+      "md": "docs/learning-book/english/g2/drafts/word_families_cvc.md",
+      "section": 1,
+      "topicId": "word_families_cvc"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 44,
+      "txt": "english-g2/pages/page-044.txt",
+      "md": "docs/learning-book/english/g2/drafts/word_families_cvc.md",
+      "section": 2,
+      "topicId": "word_families_cvc"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 45,
+      "txt": "english-g2/pages/page-045.txt",
+      "md": "docs/learning-book/english/g2/drafts/word_families_cvc.md",
+      "section": 3,
+      "topicId": "word_families_cvc"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 46,
+      "txt": "english-g2/pages/page-046.txt",
+      "md": "docs/learning-book/english/g2/drafts/word_families_cvc.md",
+      "section": 4,
+      "topicId": "word_families_cvc"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 47,
+      "txt": "english-g2/pages/page-047.txt",
+      "md": "docs/learning-book/english/g2/drafts/word_families_cvc.md",
+      "section": 5,
+      "topicId": "word_families_cvc"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 48,
+      "txt": "english-g2/pages/page-048.txt",
+      "md": "docs/learning-book/english/g2/drafts/word_families_cvc.md",
+      "section": 6,
+      "topicId": "word_families_cvc"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 49,
+      "txt": "english-g2/pages/page-049.txt",
+      "md": "docs/learning-book/english/g2/drafts/word_families_cvc.md",
+      "section": 7,
+      "topicId": "word_families_cvc"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 50,
+      "txt": "english-g2/pages/page-050.txt",
+      "md": "docs/learning-book/english/g2/drafts/classroom_vocab_g2.md",
+      "section": 1,
+      "topicId": "classroom_vocab_g2"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 51,
+      "txt": "english-g2/pages/page-051.txt",
+      "md": "docs/learning-book/english/g2/drafts/classroom_vocab_g2.md",
+      "section": 2,
+      "topicId": "classroom_vocab_g2"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 52,
+      "txt": "english-g2/pages/page-052.txt",
+      "md": "docs/learning-book/english/g2/drafts/classroom_vocab_g2.md",
+      "section": 3,
+      "topicId": "classroom_vocab_g2"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 53,
+      "txt": "english-g2/pages/page-053.txt",
+      "md": "docs/learning-book/english/g2/drafts/classroom_vocab_g2.md",
+      "section": 4,
+      "topicId": "classroom_vocab_g2"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 54,
+      "txt": "english-g2/pages/page-054.txt",
+      "md": "docs/learning-book/english/g2/drafts/classroom_vocab_g2.md",
+      "section": 5,
+      "topicId": "classroom_vocab_g2"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 55,
+      "txt": "english-g2/pages/page-055.txt",
+      "md": "docs/learning-book/english/g2/drafts/classroom_vocab_g2.md",
+      "section": 6,
+      "topicId": "classroom_vocab_g2"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 56,
+      "txt": "english-g2/pages/page-056.txt",
+      "md": "docs/learning-book/english/g2/drafts/classroom_vocab_g2.md",
+      "section": 7,
+      "topicId": "classroom_vocab_g2"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 57,
+      "txt": "english-g2/pages/page-057.txt",
+      "md": "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+      "section": 1,
+      "topicId": "listening_comprehension"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 58,
+      "txt": "english-g2/pages/page-058.txt",
+      "md": "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+      "section": 2,
+      "topicId": "listening_comprehension"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 59,
+      "txt": "english-g2/pages/page-059.txt",
+      "md": "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+      "section": 3,
+      "topicId": "listening_comprehension"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 60,
+      "txt": "english-g2/pages/page-060.txt",
+      "md": "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+      "section": 4,
+      "topicId": "listening_comprehension"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 61,
+      "txt": "english-g2/pages/page-061.txt",
+      "md": "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+      "section": 5,
+      "topicId": "listening_comprehension"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 62,
+      "txt": "english-g2/pages/page-062.txt",
+      "md": "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+      "section": 6,
+      "topicId": "listening_comprehension"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 63,
+      "txt": "english-g2/pages/page-063.txt",
+      "md": "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+      "section": 7,
+      "topicId": "listening_comprehension"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 64,
+      "txt": "english-g2/pages/page-064.txt",
+      "md": "docs/learning-book/english/g2/drafts/picture_audio_word_match.md",
+      "section": 1,
+      "topicId": "picture_audio_word_match"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 65,
+      "txt": "english-g2/pages/page-065.txt",
+      "md": "docs/learning-book/english/g2/drafts/picture_audio_word_match.md",
+      "section": 2,
+      "topicId": "picture_audio_word_match"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 66,
+      "txt": "english-g2/pages/page-066.txt",
+      "md": "docs/learning-book/english/g2/drafts/picture_audio_word_match.md",
+      "section": 3,
+      "topicId": "picture_audio_word_match"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 67,
+      "txt": "english-g2/pages/page-067.txt",
+      "md": "docs/learning-book/english/g2/drafts/picture_audio_word_match.md",
+      "section": 4,
+      "topicId": "picture_audio_word_match"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 68,
+      "txt": "english-g2/pages/page-068.txt",
+      "md": "docs/learning-book/english/g2/drafts/picture_audio_word_match.md",
+      "section": 5,
+      "topicId": "picture_audio_word_match"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 69,
+      "txt": "english-g2/pages/page-069.txt",
+      "md": "docs/learning-book/english/g2/drafts/picture_audio_word_match.md",
+      "section": 6,
+      "topicId": "picture_audio_word_match"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 70,
+      "txt": "english-g2/pages/page-070.txt",
+      "md": "docs/learning-book/english/g2/drafts/picture_audio_word_match.md",
+      "section": 7,
+      "topicId": "picture_audio_word_match"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 71,
+      "txt": "english-g2/pages/page-071.txt",
+      "md": "docs/learning-book/english/g2/drafts/early_sentences_exposure.md",
+      "section": 1,
+      "topicId": "early_sentences_exposure"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 72,
+      "txt": "english-g2/pages/page-072.txt",
+      "md": "docs/learning-book/english/g2/drafts/early_sentences_exposure.md",
+      "section": 2,
+      "topicId": "early_sentences_exposure"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 73,
+      "txt": "english-g2/pages/page-073.txt",
+      "md": "docs/learning-book/english/g2/drafts/early_sentences_exposure.md",
+      "section": 3,
+      "topicId": "early_sentences_exposure"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 74,
+      "txt": "english-g2/pages/page-074.txt",
+      "md": "docs/learning-book/english/g2/drafts/early_sentences_exposure.md",
+      "section": 4,
+      "topicId": "early_sentences_exposure"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 75,
+      "txt": "english-g2/pages/page-075.txt",
+      "md": "docs/learning-book/english/g2/drafts/early_sentences_exposure.md",
+      "section": 5,
+      "topicId": "early_sentences_exposure"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 76,
+      "txt": "english-g2/pages/page-076.txt",
+      "md": "docs/learning-book/english/g2/drafts/early_sentences_exposure.md",
+      "section": 6,
+      "topicId": "early_sentences_exposure"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 77,
+      "txt": "english-g2/pages/page-077.txt",
+      "md": "docs/learning-book/english/g2/drafts/early_sentences_exposure.md",
+      "section": 7,
+      "topicId": "early_sentences_exposure"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 78,
+      "txt": "english-g2/pages/page-078.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_colors.md",
+      "section": 1,
+      "topicId": "vocab_colors"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 79,
+      "txt": "english-g2/pages/page-079.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_colors.md",
+      "section": 2,
+      "topicId": "vocab_colors"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 80,
+      "txt": "english-g2/pages/page-080.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_colors.md",
+      "section": 3,
+      "topicId": "vocab_colors"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 81,
+      "txt": "english-g2/pages/page-081.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_colors.md",
+      "section": 4,
+      "topicId": "vocab_colors"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 82,
+      "txt": "english-g2/pages/page-082.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_colors.md",
+      "section": 5,
+      "topicId": "vocab_colors"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 83,
+      "txt": "english-g2/pages/page-083.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_colors.md",
+      "section": 6,
+      "topicId": "vocab_colors"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 84,
+      "txt": "english-g2/pages/page-084.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_colors.md",
+      "section": 7,
+      "topicId": "vocab_colors"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 85,
+      "txt": "english-g2/pages/page-085.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_numbers.md",
+      "section": 1,
+      "topicId": "vocab_numbers"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 86,
+      "txt": "english-g2/pages/page-086.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_numbers.md",
+      "section": 2,
+      "topicId": "vocab_numbers"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 87,
+      "txt": "english-g2/pages/page-087.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_numbers.md",
+      "section": 3,
+      "topicId": "vocab_numbers"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 88,
+      "txt": "english-g2/pages/page-088.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_numbers.md",
+      "section": 4,
+      "topicId": "vocab_numbers"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 89,
+      "txt": "english-g2/pages/page-089.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_numbers.md",
+      "section": 5,
+      "topicId": "vocab_numbers"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 90,
+      "txt": "english-g2/pages/page-090.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_numbers.md",
+      "section": 6,
+      "topicId": "vocab_numbers"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 91,
+      "txt": "english-g2/pages/page-091.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_numbers.md",
+      "section": 7,
+      "topicId": "vocab_numbers"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 92,
+      "txt": "english-g2/pages/page-092.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_family.md",
+      "section": 1,
+      "topicId": "vocab_family"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 93,
+      "txt": "english-g2/pages/page-093.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_family.md",
+      "section": 2,
+      "topicId": "vocab_family"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 94,
+      "txt": "english-g2/pages/page-094.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_family.md",
+      "section": 3,
+      "topicId": "vocab_family"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 95,
+      "txt": "english-g2/pages/page-095.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_family.md",
+      "section": 4,
+      "topicId": "vocab_family"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 96,
+      "txt": "english-g2/pages/page-096.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_family.md",
+      "section": 5,
+      "topicId": "vocab_family"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 97,
+      "txt": "english-g2/pages/page-097.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_family.md",
+      "section": 6,
+      "topicId": "vocab_family"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 98,
+      "txt": "english-g2/pages/page-098.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_family.md",
+      "section": 7,
+      "topicId": "vocab_family"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 99,
+      "txt": "english-g2/pages/page-099.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_animals.md",
+      "section": 1,
+      "topicId": "vocab_animals"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 100,
+      "txt": "english-g2/pages/page-100.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_animals.md",
+      "section": 2,
+      "topicId": "vocab_animals"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 101,
+      "txt": "english-g2/pages/page-101.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_animals.md",
+      "section": 3,
+      "topicId": "vocab_animals"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 102,
+      "txt": "english-g2/pages/page-102.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_animals.md",
+      "section": 4,
+      "topicId": "vocab_animals"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 103,
+      "txt": "english-g2/pages/page-103.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_animals.md",
+      "section": 5,
+      "topicId": "vocab_animals"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 104,
+      "txt": "english-g2/pages/page-104.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_animals.md",
+      "section": 6,
+      "topicId": "vocab_animals"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 105,
+      "txt": "english-g2/pages/page-105.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_animals.md",
+      "section": 7,
+      "topicId": "vocab_animals"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 106,
+      "txt": "english-g2/pages/page-106.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_emotions.md",
+      "section": 1,
+      "topicId": "vocab_emotions"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 107,
+      "txt": "english-g2/pages/page-107.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_emotions.md",
+      "section": 2,
+      "topicId": "vocab_emotions"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 108,
+      "txt": "english-g2/pages/page-108.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_emotions.md",
+      "section": 3,
+      "topicId": "vocab_emotions"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 109,
+      "txt": "english-g2/pages/page-109.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_emotions.md",
+      "section": 4,
+      "topicId": "vocab_emotions"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 110,
+      "txt": "english-g2/pages/page-110.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_emotions.md",
+      "section": 5,
+      "topicId": "vocab_emotions"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 111,
+      "txt": "english-g2/pages/page-111.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_emotions.md",
+      "section": 6,
+      "topicId": "vocab_emotions"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 112,
+      "txt": "english-g2/pages/page-112.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_emotions.md",
+      "section": 7,
+      "topicId": "vocab_emotions"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 113,
+      "txt": "english-g2/pages/page-113.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_actions.md",
+      "section": 1,
+      "topicId": "vocab_actions"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 114,
+      "txt": "english-g2/pages/page-114.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_actions.md",
+      "section": 2,
+      "topicId": "vocab_actions"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 115,
+      "txt": "english-g2/pages/page-115.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_actions.md",
+      "section": 3,
+      "topicId": "vocab_actions"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 116,
+      "txt": "english-g2/pages/page-116.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_actions.md",
+      "section": 4,
+      "topicId": "vocab_actions"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 117,
+      "txt": "english-g2/pages/page-117.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_actions.md",
+      "section": 5,
+      "topicId": "vocab_actions"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 118,
+      "txt": "english-g2/pages/page-118.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_actions.md",
+      "section": 6,
+      "topicId": "vocab_actions"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 119,
+      "txt": "english-g2/pages/page-119.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_actions.md",
+      "section": 7,
+      "topicId": "vocab_actions"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 120,
+      "txt": "english-g2/pages/page-120.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_school.md",
+      "section": 1,
+      "topicId": "vocab_school"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 121,
+      "txt": "english-g2/pages/page-121.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_school.md",
+      "section": 2,
+      "topicId": "vocab_school"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 122,
+      "txt": "english-g2/pages/page-122.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_school.md",
+      "section": 3,
+      "topicId": "vocab_school"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 123,
+      "txt": "english-g2/pages/page-123.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_school.md",
+      "section": 4,
+      "topicId": "vocab_school"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 124,
+      "txt": "english-g2/pages/page-124.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_school.md",
+      "section": 5,
+      "topicId": "vocab_school"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 125,
+      "txt": "english-g2/pages/page-125.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_school.md",
+      "section": 6,
+      "topicId": "vocab_school"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 126,
+      "txt": "english-g2/pages/page-126.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_school.md",
+      "section": 7,
+      "topicId": "vocab_school"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 127,
+      "txt": "english-g2/pages/page-127.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_food.md",
+      "section": 1,
+      "topicId": "vocab_food"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 128,
+      "txt": "english-g2/pages/page-128.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_food.md",
+      "section": 2,
+      "topicId": "vocab_food"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 129,
+      "txt": "english-g2/pages/page-129.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_food.md",
+      "section": 3,
+      "topicId": "vocab_food"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 130,
+      "txt": "english-g2/pages/page-130.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_food.md",
+      "section": 4,
+      "topicId": "vocab_food"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 131,
+      "txt": "english-g2/pages/page-131.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_food.md",
+      "section": 5,
+      "topicId": "vocab_food"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 132,
+      "txt": "english-g2/pages/page-132.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_food.md",
+      "section": 6,
+      "topicId": "vocab_food"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 133,
+      "txt": "english-g2/pages/page-133.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_food.md",
+      "section": 7,
+      "topicId": "vocab_food"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 134,
+      "txt": "english-g2/pages/page-134.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_house.md",
+      "section": 1,
+      "topicId": "vocab_house"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 135,
+      "txt": "english-g2/pages/page-135.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_house.md",
+      "section": 2,
+      "topicId": "vocab_house"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 136,
+      "txt": "english-g2/pages/page-136.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_house.md",
+      "section": 3,
+      "topicId": "vocab_house"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 137,
+      "txt": "english-g2/pages/page-137.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_house.md",
+      "section": 4,
+      "topicId": "vocab_house"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 138,
+      "txt": "english-g2/pages/page-138.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_house.md",
+      "section": 5,
+      "topicId": "vocab_house"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 139,
+      "txt": "english-g2/pages/page-139.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_house.md",
+      "section": 6,
+      "topicId": "vocab_house"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 140,
+      "txt": "english-g2/pages/page-140.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_house.md",
+      "section": 7,
+      "topicId": "vocab_house"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 141,
+      "txt": "english-g2/pages/page-141.txt",
+      "md": "docs/learning-book/english/g2/drafts/grammar_be.md",
+      "section": 1,
+      "topicId": "grammar_be"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 142,
+      "txt": "english-g2/pages/page-142.txt",
+      "md": "docs/learning-book/english/g2/drafts/grammar_be.md",
+      "section": 2,
+      "topicId": "grammar_be"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 143,
+      "txt": "english-g2/pages/page-143.txt",
+      "md": "docs/learning-book/english/g2/drafts/grammar_be.md",
+      "section": 3,
+      "topicId": "grammar_be"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 144,
+      "txt": "english-g2/pages/page-144.txt",
+      "md": "docs/learning-book/english/g2/drafts/grammar_be.md",
+      "section": 4,
+      "topicId": "grammar_be"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 145,
+      "txt": "english-g2/pages/page-145.txt",
+      "md": "docs/learning-book/english/g2/drafts/grammar_be.md",
+      "section": 5,
+      "topicId": "grammar_be"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 146,
+      "txt": "english-g2/pages/page-146.txt",
+      "md": "docs/learning-book/english/g2/drafts/grammar_be.md",
+      "section": 6,
+      "topicId": "grammar_be"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 147,
+      "txt": "english-g2/pages/page-147.txt",
+      "md": "docs/learning-book/english/g2/drafts/grammar_be.md",
+      "section": 7,
+      "topicId": "grammar_be"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 148,
+      "txt": "english-g2/pages/page-148.txt",
+      "md": "docs/learning-book/english/g2/drafts/grammar_plural_questions.md",
+      "section": 1,
+      "topicId": "grammar_plural_questions"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 149,
+      "txt": "english-g2/pages/page-149.txt",
+      "md": "docs/learning-book/english/g2/drafts/grammar_plural_questions.md",
+      "section": 2,
+      "topicId": "grammar_plural_questions"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 150,
+      "txt": "english-g2/pages/page-150.txt",
+      "md": "docs/learning-book/english/g2/drafts/grammar_plural_questions.md",
+      "section": 3,
+      "topicId": "grammar_plural_questions"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 151,
+      "txt": "english-g2/pages/page-151.txt",
+      "md": "docs/learning-book/english/g2/drafts/grammar_plural_questions.md",
+      "section": 4,
+      "topicId": "grammar_plural_questions"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 152,
+      "txt": "english-g2/pages/page-152.txt",
+      "md": "docs/learning-book/english/g2/drafts/grammar_plural_questions.md",
+      "section": 5,
+      "topicId": "grammar_plural_questions"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 153,
+      "txt": "english-g2/pages/page-153.txt",
+      "md": "docs/learning-book/english/g2/drafts/grammar_plural_questions.md",
+      "section": 6,
+      "topicId": "grammar_plural_questions"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 154,
+      "txt": "english-g2/pages/page-154.txt",
+      "md": "docs/learning-book/english/g2/drafts/grammar_plural_questions.md",
+      "section": 7,
+      "topicId": "grammar_plural_questions"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 155,
+      "txt": "english-g2/pages/page-155.txt",
+      "md": "docs/learning-book/english/g2/drafts/sentence_base.md",
+      "section": 1,
+      "topicId": "sentence_base"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 156,
+      "txt": "english-g2/pages/page-156.txt",
+      "md": "docs/learning-book/english/g2/drafts/sentence_base.md",
+      "section": 2,
+      "topicId": "sentence_base"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 157,
+      "txt": "english-g2/pages/page-157.txt",
+      "md": "docs/learning-book/english/g2/drafts/sentence_base.md",
+      "section": 3,
+      "topicId": "sentence_base"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 158,
+      "txt": "english-g2/pages/page-158.txt",
+      "md": "docs/learning-book/english/g2/drafts/sentence_base.md",
+      "section": 4,
+      "topicId": "sentence_base"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 159,
+      "txt": "english-g2/pages/page-159.txt",
+      "md": "docs/learning-book/english/g2/drafts/sentence_base.md",
+      "section": 5,
+      "topicId": "sentence_base"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 160,
+      "txt": "english-g2/pages/page-160.txt",
+      "md": "docs/learning-book/english/g2/drafts/sentence_base.md",
+      "section": 6,
+      "topicId": "sentence_base"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 161,
+      "txt": "english-g2/pages/page-161.txt",
+      "md": "docs/learning-book/english/g2/drafts/sentence_base.md",
+      "section": 7,
+      "topicId": "sentence_base"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 162,
+      "txt": "english-g2/pages/page-162.txt",
+      "md": "docs/learning-book/english/g2/drafts/sentence_routine.md",
+      "section": 1,
+      "topicId": "sentence_routine"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 163,
+      "txt": "english-g2/pages/page-163.txt",
+      "md": "docs/learning-book/english/g2/drafts/sentence_routine.md",
+      "section": 2,
+      "topicId": "sentence_routine"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 164,
+      "txt": "english-g2/pages/page-164.txt",
+      "md": "docs/learning-book/english/g2/drafts/sentence_routine.md",
+      "section": 3,
+      "topicId": "sentence_routine"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 165,
+      "txt": "english-g2/pages/page-165.txt",
+      "md": "docs/learning-book/english/g2/drafts/sentence_routine.md",
+      "section": 4,
+      "topicId": "sentence_routine"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 166,
+      "txt": "english-g2/pages/page-166.txt",
+      "md": "docs/learning-book/english/g2/drafts/sentence_routine.md",
+      "section": 5,
+      "topicId": "sentence_routine"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 167,
+      "txt": "english-g2/pages/page-167.txt",
+      "md": "docs/learning-book/english/g2/drafts/sentence_routine.md",
+      "section": 6,
+      "topicId": "sentence_routine"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 168,
+      "txt": "english-g2/pages/page-168.txt",
+      "md": "docs/learning-book/english/g2/drafts/sentence_routine.md",
+      "section": 7,
+      "topicId": "sentence_routine"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 169,
+      "txt": "english-g2/pages/page-169.txt",
+      "md": "docs/learning-book/english/g2/drafts/translation_classroom.md",
+      "section": 1,
+      "topicId": "translation_classroom"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 170,
+      "txt": "english-g2/pages/page-170.txt",
+      "md": "docs/learning-book/english/g2/drafts/translation_classroom.md",
+      "section": 2,
+      "topicId": "translation_classroom"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 171,
+      "txt": "english-g2/pages/page-171.txt",
+      "md": "docs/learning-book/english/g2/drafts/translation_classroom.md",
+      "section": 3,
+      "topicId": "translation_classroom"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 172,
+      "txt": "english-g2/pages/page-172.txt",
+      "md": "docs/learning-book/english/g2/drafts/translation_classroom.md",
+      "section": 4,
+      "topicId": "translation_classroom"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 173,
+      "txt": "english-g2/pages/page-173.txt",
+      "md": "docs/learning-book/english/g2/drafts/translation_classroom.md",
+      "section": 5,
+      "topicId": "translation_classroom"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 174,
+      "txt": "english-g2/pages/page-174.txt",
+      "md": "docs/learning-book/english/g2/drafts/translation_classroom.md",
+      "section": 6,
+      "topicId": "translation_classroom"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 175,
+      "txt": "english-g2/pages/page-175.txt",
+      "md": "docs/learning-book/english/g2/drafts/translation_classroom.md",
+      "section": 7,
+      "topicId": "translation_classroom"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 176,
+      "txt": "english-g2/pages/page-176.txt",
+      "md": "docs/learning-book/english/g2/drafts/translation_routines.md",
+      "section": 1,
+      "topicId": "translation_routines"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 177,
+      "txt": "english-g2/pages/page-177.txt",
+      "md": "docs/learning-book/english/g2/drafts/translation_routines.md",
+      "section": 2,
+      "topicId": "translation_routines"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 178,
+      "txt": "english-g2/pages/page-178.txt",
+      "md": "docs/learning-book/english/g2/drafts/translation_routines.md",
+      "section": 3,
+      "topicId": "translation_routines"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 179,
+      "txt": "english-g2/pages/page-179.txt",
+      "md": "docs/learning-book/english/g2/drafts/translation_routines.md",
+      "section": 4,
+      "topicId": "translation_routines"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 180,
+      "txt": "english-g2/pages/page-180.txt",
+      "md": "docs/learning-book/english/g2/drafts/translation_routines.md",
+      "section": 5,
+      "topicId": "translation_routines"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 181,
+      "txt": "english-g2/pages/page-181.txt",
+      "md": "docs/learning-book/english/g2/drafts/translation_routines.md",
+      "section": 6,
+      "topicId": "translation_routines"
+    },
+    {
+      "grade": "g2",
+      "pageNum": 182,
+      "txt": "english-g2/pages/page-182.txt",
+      "md": "docs/learning-book/english/g2/drafts/translation_routines.md",
+      "section": 7,
+      "topicId": "translation_routines"
+    }
+  ]
+}

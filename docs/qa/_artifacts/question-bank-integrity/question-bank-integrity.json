@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-06-08T21:01:03.308Z",
-  "totalScanned": 9913,
-  "staticBankRows": 6511,
+  "generatedAt": "2026-06-27T20:29:00.480Z",
+  "totalScanned": 11618,
+  "staticBankRows": 8216,
   "generatedSamples": 3402,
   "genSamplesPerCell": 6,
   "bySubject": {
@@ -24,17 +24,17 @@
       "brokenAnswer": 0
     },
     "hebrew": {
-      "total": 1683,
-      "structuralPass": 1683,
+      "total": 4005,
+      "structuralPass": 4005,
       "structuralFail": 0,
-      "leakRisk": 0,
+      "leakRisk": 2,
       "missingMetadata": 0,
       "duplicateOptions": 0,
       "brokenAnswer": 0
     },
     "moledet_geography": {
-      "total": 4046,
-      "structuralPass": 4046,
+      "total": 3429,
+      "structuralPass": 3429,
       "structuralFail": 0,
       "leakRisk": 0,
       "missingMetadata": 0,
@@ -45,7 +45,7 @@
       "total": 1422,
       "structuralPass": 1422,
       "structuralFail": 0,
-      "leakRisk": 0,
+      "leakRisk": 5,
       "missingMetadata": 0,
       "duplicateOptions": 0,
       "brokenAnswer": 0
@@ -54,12 +54,441 @@
       "total": 792,
       "structuralPass": 792,
       "structuralFail": 0,
-      "leakRisk": 0,
+      "leakRisk": 10,
       "missingMetadata": 0,
       "duplicateOptions": 0,
       "brokenAnswer": 0
     }
   },
-  "top20Examples": [],
-  "verdict": "PASS"
+  "top20Examples": [
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "hebrew",
+      "topic": "grammar",
+      "source": "hebrew_rich_pool",
+      "sourceFile": "utils/hebrew-rich-question-bank.js",
+      "id": "rich:1427",
+      "stem": "'הוא רץ' ו'הוא רץ מחר' — באיזה משפט הפועל בעתיד?",
+      "options": [
+        "שניהם הווה",
+        "הוא רץ",
+        "הוא רץ מחר",
+        "שניהם עבר"
+      ],
+      "correctAnswer": "הוא רץ מחר",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "stem",
+          "message": "Correct answer appears in stem",
+          "correctPreview": "הוא רץ מחר"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "hebrew",
+      "topic": "vocabulary",
+      "source": "hebrew_rich_pool",
+      "sourceFile": "utils/hebrew-rich-question-bank.js",
+      "id": "rich:2107",
+      "stem": "בקטע: 'נועם והכלב יצאו ליער' — מי הדמויות?",
+      "options": [
+        "המורה והלוח",
+        "המחבר והמדפסת",
+        "נועם והכלב",
+        "הקורא והספרן"
+      ],
+      "correctAnswer": "נועם והכלב",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "stem",
+          "message": "Correct answer appears in stem",
+          "correctPreview": "נועם והכלב"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "math",
+      "grade": "g6",
+      "topic": "fractions",
+      "level": "medium",
+      "source": "generator:math:g6:fractions:medium:sample1",
+      "sourceFile": "utils/math-question-generator.js",
+      "stem": "בחרו את השבר הגדול מבין 1/6 ו-3/6: __",
+      "options": [
+        "2/6",
+        "6/3",
+        "3/6",
+        "4/6"
+      ],
+      "correctAnswer": "3/6",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "stem",
+          "message": "Correct answer appears in stem",
+          "correctPreview": "3/6"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "math",
+      "grade": "g6",
+      "topic": "ratio",
+      "level": "easy",
+      "source": "generator:math:g6:ratio:easy:sample2",
+      "sourceFile": "utils/math-question-generator.js",
+      "stem": "היחס בין מספר למספר 9 הוא 11:9.",
+      "options": [
+        "15",
+        "7",
+        "10",
+        "11"
+      ],
+      "correctAnswer": "11",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "stem",
+          "message": "Correct answer appears in stem",
+          "correctPreview": "11"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "math",
+      "grade": "g6",
+      "topic": "ratio",
+      "level": "medium",
+      "source": "generator:math:g6:ratio:medium:sample5",
+      "sourceFile": "utils/math-question-generator.js",
+      "stem": "היחס בין מספר 1 למספר הוא 1:16.",
+      "options": [
+        "16",
+        "12",
+        "20",
+        "14"
+      ],
+      "correctAnswer": "16",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "stem",
+          "message": "Correct answer appears in stem",
+          "correctPreview": "16"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "math",
+      "grade": "g6",
+      "topic": "ratio",
+      "level": "hard",
+      "source": "generator:math:g6:ratio:hard:sample2",
+      "sourceFile": "utils/math-question-generator.js",
+      "stem": "אתגר יחסים — היחס בין מספר למספר 10 הוא 17:10.",
+      "options": [
+        "23",
+        "17",
+        "18",
+        "21"
+      ],
+      "correctAnswer": "17",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "stem",
+          "message": "Correct answer appears in stem",
+          "correctPreview": "17"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "math",
+      "grade": "g6",
+      "topic": "ratio",
+      "level": "hard",
+      "source": "generator:math:g6:ratio:hard:sample5",
+      "sourceFile": "utils/math-question-generator.js",
+      "stem": "אתגר יחסים — היחס בין מספר 13 למספר הוא 13:17.",
+      "options": [
+        "19",
+        "17",
+        "9",
+        "15"
+      ],
+      "correctAnswer": "17",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "stem",
+          "message": "Correct answer appears in stem",
+          "correctPreview": "17"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "geometry",
+      "grade": "g1",
+      "topic": "shapes_basic",
+      "level": "easy",
+      "source": "generator:geometry:g1:shapes_basic:easy:sample0",
+      "sourceFile": "utils/geometry-question-generator.js",
+      "stem": "שאלת זיהוי קצרה — מלבן: אורך 4 , רוחב 10.",
+      "options": [
+        "מלבן",
+        "ריבוע"
+      ],
+      "correctAnswer": "מלבן",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "stem",
+          "message": "Correct answer appears in stem",
+          "correctPreview": "מלבן"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "geometry",
+      "grade": "g1",
+      "topic": "shapes_basic",
+      "level": "easy",
+      "source": "generator:geometry:g1:shapes_basic:easy:sample3",
+      "sourceFile": "utils/geometry-question-generator.js",
+      "stem": "שאלת זיהוי קצרה — מלבן: אורך 10 , רוחב 9.",
+      "options": [
+        "מלבן",
+        "ריבוע"
+      ],
+      "correctAnswer": "מלבן",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "stem",
+          "message": "Correct answer appears in stem",
+          "correctPreview": "מלבן"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "geometry",
+      "grade": "g1",
+      "topic": "shapes_basic",
+      "level": "medium",
+      "source": "generator:geometry:g1:shapes_basic:medium:sample2",
+      "sourceFile": "utils/geometry-question-generator.js",
+      "stem": "ארבע צלעות באורך 3 — האם זה תיאור של ריבוע?",
+      "options": [
+        "ריבוע",
+        "מלבן"
+      ],
+      "correctAnswer": "ריבוע",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "stem",
+          "message": "Correct answer appears in stem",
+          "correctPreview": "ריבוע"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "geometry",
+      "grade": "g1",
+      "topic": "shapes_basic",
+      "level": "hard",
+      "source": "generator:geometry:g1:shapes_basic:hard:sample2",
+      "sourceFile": "utils/geometry-question-generator.js",
+      "stem": "הוכחה מילולית קצרה: מדוע זה ריבוע ולא מלבן כללי?",
+      "options": [
+        "מלבן",
+        "ריבוע"
+      ],
+      "correctAnswer": "ריבוע",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "stem",
+          "message": "Correct answer appears in stem",
+          "correctPreview": "ריבוע"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "geometry",
+      "grade": "g1",
+      "topic": "shapes_basic",
+      "level": "hard",
+      "source": "generator:geometry:g1:shapes_basic:hard:sample5",
+      "sourceFile": "utils/geometry-question-generator.js",
+      "stem": "הסבר מילולי: למה זה מלבן ולא ריבוע?",
+      "options": [
+        "מלבן",
+        "ריבוע"
+      ],
+      "correctAnswer": "מלבן",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "stem",
+          "message": "Correct answer appears in stem",
+          "correctPreview": "מלבן"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "geometry",
+      "grade": "g2",
+      "topic": "shapes_basic",
+      "level": "hard",
+      "source": "generator:geometry:g2:shapes_basic:hard:sample2",
+      "sourceFile": "utils/geometry-question-generator.js",
+      "stem": "הוכחה: למה 37 ו-25 יוצרים מלבן?",
+      "options": [
+        "ריבוע",
+        "מלבן"
+      ],
+      "correctAnswer": "מלבן",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "stem",
+          "message": "Correct answer appears in stem",
+          "correctPreview": "מלבן"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "geometry",
+      "grade": "g2",
+      "topic": "solids",
+      "level": "hard",
+      "source": "generator:geometry:g2:solids:hard:sample4",
+      "sourceFile": "utils/geometry-question-generator.js",
+      "stem": "נראה כמו פירמידה במצרים.",
+      "options": [
+        "תיבה",
+        "קובייה",
+        "גליל",
+        "פירמידה"
+      ],
+      "correctAnswer": "פירמידה",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "stem",
+          "message": "Correct answer appears in stem",
+          "correctPreview": "פירמידה"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "geometry",
+      "grade": "g3",
+      "topic": "solids",
+      "level": "hard",
+      "source": "generator:geometry:g3:solids:hard:sample1",
+      "sourceFile": "utils/geometry-question-generator.js",
+      "stem": "גוף תלת ממדי עם נראה כמו פירמידה במצרים.",
+      "options": [
+        "קובייה",
+        "גליל",
+        "פירמידה",
+        "תיבה"
+      ],
+      "correctAnswer": "פירמידה",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "stem",
+          "message": "Correct answer appears in stem",
+          "correctPreview": "פירמידה"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "geometry",
+      "grade": "g4",
+      "topic": "solids",
+      "level": "easy",
+      "source": "generator:geometry:g4:solids:easy:sample0",
+      "sourceFile": "utils/geometry-question-generator.js",
+      "stem": "גליל נייר נראה כמו — איזה גוף?",
+      "options": [
+        "קובייה",
+        "גליל",
+        "תיבה",
+        "פירמידה"
+      ],
+      "correctAnswer": "גליל",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "stem",
+          "message": "Correct answer appears in stem",
+          "correctPreview": "גליל"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "geometry",
+      "grade": "g5",
+      "topic": "heights",
+      "level": "medium",
+      "source": "generator:geometry:g5:heights:medium:sample2",
+      "sourceFile": "utils/geometry-question-generator.js",
+      "stem": "נתון מקבילית: בסיס 1 , שטח 37.",
+      "options": [
+        "75",
+        "37",
+        "38",
+        "34"
+      ],
+      "correctAnswer": "37",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "stem",
+          "message": "Correct answer appears in stem",
+          "correctPreview": "37"
+        }
+      ]
+    }
+  ],
+  "verdict": "PASS_WITH_WARNINGS"
 }

@@ -7,47 +7,32 @@ import { mergeDiagnosticContractIntoParams } from './diagnostic-question-contrac
 import { moledetDiagnosticContractFromBankRow } from './moledet-geography-diagnostic-metadata-bridge.js';
 import { attachCanonicalMetadataToMoledetQuestion } from '../lib/learning/moledet-geography-canonical-metadata.js';
 import { selectQuestionWithProbe } from './active-diagnostic-runtime/select-with-probe.js';
-import {
-  G1_EASY_QUESTIONS,
-  G1_MEDIUM_QUESTIONS,
-  G1_HARD_QUESTIONS,
-  G2_EASY_QUESTIONS,
-  G2_MEDIUM_QUESTIONS,
-  G2_HARD_QUESTIONS,
-  G3_EASY_QUESTIONS,
-  G3_MEDIUM_QUESTIONS,
-  G3_HARD_QUESTIONS,
-  G4_EASY_QUESTIONS,
-  G4_MEDIUM_QUESTIONS,
-  G4_HARD_QUESTIONS,
-  G5_EASY_QUESTIONS,
-  G5_MEDIUM_QUESTIONS,
-  G5_HARD_QUESTIONS,
-  G6_EASY_QUESTIONS,
-  G6_MEDIUM_QUESTIONS,
-  G6_HARD_QUESTIONS,
-} from "../data/geography-questions/index.js";
+import * as geoIndexModule from "../data/geography-questions/index.js";
 
-const questionsMap = {
-  G1_EASY_QUESTIONS,
-  G1_MEDIUM_QUESTIONS,
-  G1_HARD_QUESTIONS,
-  G2_EASY_QUESTIONS,
-  G2_MEDIUM_QUESTIONS,
-  G2_HARD_QUESTIONS,
-  G3_EASY_QUESTIONS,
-  G3_MEDIUM_QUESTIONS,
-  G3_HARD_QUESTIONS,
-  G4_EASY_QUESTIONS,
-  G4_MEDIUM_QUESTIONS,
-  G4_HARD_QUESTIONS,
-  G5_EASY_QUESTIONS,
-  G5_MEDIUM_QUESTIONS,
-  G5_HARD_QUESTIONS,
-  G6_EASY_QUESTIONS,
-  G6_MEDIUM_QUESTIONS,
-  G6_HARD_QUESTIONS,
-};
+/** Launch pools only (G2–G6). G1 is enrichment-only and not exported from the bank index. */
+const geoPools = geoIndexModule.default ?? geoIndexModule;
+const LAUNCH_POOL_EXPORTS = [
+  "G2_EASY_QUESTIONS",
+  "G2_MEDIUM_QUESTIONS",
+  "G2_HARD_QUESTIONS",
+  "G3_EASY_QUESTIONS",
+  "G3_MEDIUM_QUESTIONS",
+  "G3_HARD_QUESTIONS",
+  "G4_EASY_QUESTIONS",
+  "G4_MEDIUM_QUESTIONS",
+  "G4_HARD_QUESTIONS",
+  "G5_EASY_QUESTIONS",
+  "G5_MEDIUM_QUESTIONS",
+  "G5_HARD_QUESTIONS",
+  "G6_EASY_QUESTIONS",
+  "G6_MEDIUM_QUESTIONS",
+  "G6_HARD_QUESTIONS",
+];
+
+/** @type {Record<string, Record<string, unknown[]>>} */
+const questionsMap = Object.fromEntries(
+  LAUNCH_POOL_EXPORTS.map((exportName) => [exportName, geoPools[exportName]])
+);
 
 /**
  * Questions for exact grade+level+topic only — no silent cross-grade fallback.

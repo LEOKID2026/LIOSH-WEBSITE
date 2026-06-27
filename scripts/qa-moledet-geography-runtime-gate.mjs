@@ -13,7 +13,11 @@ const OUT_DIR = join(ROOT, "reports", "curriculum-audit");
 const modUrl = (rel) => pathToFileURL(join(ROOT, rel)).href;
 
 const { GRADES } = await import(modUrl("utils/moledet-geography-constants.js"));
-const GEO = await import(modUrl("data/geography-questions/index.js"));
+const { MOLEDET_GEOGRAPHY_TEACHABLE_GRADE_ORDER } = await import(
+  modUrl("data/moledet-geography-curriculum.js")
+);
+const geoModule = await import(modUrl("data/geography-questions/index.js"));
+const GEO = geoModule.default ?? geoModule;
 
 const G12_STEM_ADVISORY_LEN = 260;
 
@@ -32,8 +36,8 @@ async function main() {
   const g12LongStemAdvisory = [];
   let checks = 0;
 
-  for (let gNum = 1; gNum <= 6; gNum++) {
-    const gk = `g${gNum}`;
+  for (const gk of MOLEDET_GEOGRAPHY_TEACHABLE_GRADE_ORDER) {
+    const gNum = parseInt(String(gk).replace(/\D/g, ""), 10);
     const topics = (GRADES[gk]?.topics || []).filter((t) => t !== "mixed");
     for (const uiLevel of ["easy", "medium", "hard"]) {
       const pool = poolObj(gNum, uiLevel);
@@ -52,7 +56,7 @@ async function main() {
     }
   }
 
-  for (let gNum = 1; gNum <= 2; gNum++) {
+  for (let gNum = 2; gNum <= 2; gNum++) {
     for (const uiLevel of ["easy", "medium", "hard"]) {
       const pool = poolObj(gNum, uiLevel);
       if (!pool) continue;

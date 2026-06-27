@@ -2,7 +2,14 @@
  * Structured Moledet/Geography subsection catalog — derived from data/moledet-geography-curriculum.js
  * and owner PDF references (not an automated PDF parse).
  */
-import { MOLEDET_GEOGRAPHY_GRADES, MOLEDET_GEOGRAPHY_GRADE_ORDER } from "../../data/moledet-geography-curriculum.js";
+import * as moledetCurriculumModule from "../../data/moledet-geography-curriculum.js";
+
+const MOLEDET_GEOGRAPHY_GRADES =
+  moledetCurriculumModule.default?.MOLEDET_GEOGRAPHY_GRADES ??
+  moledetCurriculumModule.MOLEDET_GEOGRAPHY_GRADES;
+const MOLEDET_GEOGRAPHY_GRADE_ORDER =
+  moledetCurriculumModule.default?.MOLEDET_GEOGRAPHY_GRADE_ORDER ??
+  moledetCurriculumModule.MOLEDET_GEOGRAPHY_GRADE_ORDER;
 
 const POP_MOLEDET_ENTRY = "https://pop.education.gov.il/tchumey_daat/moledet_hevra_ezrahut/yesodi/";
 

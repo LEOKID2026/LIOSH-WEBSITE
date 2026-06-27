@@ -291,6 +291,18 @@ export async function generateForMatrixCell(cell, sampleIndex = 0) {
   }
 
   if (subjectCanonical === "moledet_geography") {
+    const { isMoledetGeographyGradeAllowed } = await import(
+      modUrl("utils/moledet-geography-curriculum-gates.js")
+    );
+    if (!isMoledetGeographyGradeAllowed(grade)) {
+      return {
+        ok: false,
+        mode: "generator",
+        unsupported: true,
+        reason: `moledet_geography grade "${grade}" is enrichment-only (launch band G2–G6)`,
+        raw: null,
+      };
+    }
     const mg = await loadMoledet();
     const topics = mg.GRADES[grade]?.topics || [];
     if (!topics.includes(topic)) {

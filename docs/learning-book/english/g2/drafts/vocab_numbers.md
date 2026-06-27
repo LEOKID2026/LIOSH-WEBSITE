@@ -32,13 +32,10 @@
 ## 2. הסבר
 
 מספרים 11–20:
-
 eleven, twelve, thirteen, fourteen, fifteen
 sixteen, seventeen, eighteen, nineteen, twenty
-
 דוגמה:
 I am seven.
-
 אני בן שבע.
 
 ---
@@ -46,29 +43,23 @@ I am seven.
 ## 3. דוגמה
 
 ילד בן שבע.
-
+באנגלית אומרים:
 I am seven.
-
-seven פירושו 7.
+המילה seven פירושה שבע.
 
 ---
 
 ## 4. בואו נפתור
 
-שאלה: איך אומרים "אני בן שבע"?
-
+איך אומרים "אני בן שבע"?
 I am seven
-
-תשובה: I am seven
 
 ---
 
 ## 5. נסו בעצמכם
 
 ילד בן 12.
-
 I am twelve
-
 נסו לפתור בעצמכם.
 בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
 
@@ -76,13 +67,10 @@ I am twelve
 
 ## 6. בואו נבדוק יחד
 
-**השאלה: ילד בן 12 — באנגלית?**
-
-המספר 12 פירושו twelve.
-
-I am twelve.
-
-**I am twelve** 
+השאלה: ילד בן 12 — באנגלית?
+המספר 12 באנגלית הוא twelve.
+אומרים: I am twelve.
+התשובה היא: I am twelve.
 
 ---
 

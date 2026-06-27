@@ -37,6 +37,9 @@ const rowIdentityMod = await import(
 const truthPacketMod = await import(
   new URL("../utils/parent-copilot/truth-packet-v1.js", import.meta.url).href
 );
+const { EVIDENCE_CATEGORIES } = await import(
+  new URL("../lib/learning/activity-classification.js", import.meta.url).href
+);
 
 const { aggregateReportPayloadFromActivityRows } = aggMod;
 const { runDiagnosticEngineV2 } = engineMod;
@@ -136,7 +139,7 @@ const parentActivityAttempts = [
   },
 ];
 
-// Self-practice answers.
+// Self-practice answers (must carry Phase-1 evidence classification to pass evidence gate).
 const answers = [
   // higher grade self-practice (must keep working as before)
   {
@@ -149,6 +152,9 @@ const answers = [
       registeredGradeLevel: "g3",
       gradeRelation: "higher",
       isCorrect: true,
+      evidenceCategory: EVIDENCE_CATEGORIES.DIAGNOSTIC_INDEPENDENT,
+      isDiagnosticEligible: true,
+      gameMode: "practice",
     },
     is_correct: true,
     answered_at: "2026-02-01T10:00:00.000Z",
@@ -166,6 +172,9 @@ const answers = [
       registeredGradeLevel: "g3",
       gradeRelation: "higher",
       isCorrect: true,
+      evidenceCategory: EVIDENCE_CATEGORIES.DIAGNOSTIC_INDEPENDENT,
+      isDiagnosticEligible: true,
+      gameMode: "practice",
     },
     is_correct: true,
     answered_at: "2026-02-02T10:00:00.000Z",
@@ -470,8 +479,8 @@ assert(
   gradeScopeMeaningHe({ gradeRelation: "same", isStrength: true })
 );
 assert(
-  "evidenceSourcePhraseHe parent",
-  evidenceSourcePhraseHe("parent_assigned_activity") === "בפעילות שנשלחה מההורה"
+  "evidenceSourcePhraseHe parent hidden from parent-facing copy",
+  evidenceSourcePhraseHe("parent_assigned_activity") === ""
 );
 assert("evidenceSourcePhraseHe unknown => empty", evidenceSourcePhraseHe("xyz") === "");
 assert("masteryReallocationHe mentions reallocating time", masteryReallocationHe("שברים").includes("להפנות"));
@@ -572,7 +581,11 @@ assert("focus-elsewhere suggests reallocating time", answerText(aElse).includes(
 const aStrength = tryComposeIntentAnswer({ utteranceStr: "מה המקצוע החזק?", truthPacket: execPacket, payload: progPayload });
 assert("strength contract used", aStrength?.answerContract === ANSWER_CONTRACT.strength, JSON.stringify(aStrength?.answerContract));
 assert("strength next-step is no longer conservative-only for higher+strength", /מעל רמת הכיתה|להעלות קושי/u.test(answerText(aStrength)), answerText(aStrength));
-assert("strength surfaces evidence source gently", answerText(aStrength).includes("בפעילות שנשלחה מההורה"), answerText(aStrength));
+assert(
+  "strength does not surface parent source phrase (internal provenance policy)",
+  !answerText(aStrength).includes("בפעילות שנשלחה מההורה"),
+  answerText(aStrength)
+);
 
 // ---------------------------------------------------------------------------
 

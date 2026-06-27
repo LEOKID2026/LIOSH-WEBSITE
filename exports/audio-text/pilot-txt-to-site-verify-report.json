@@ -1,0 +1,6617 @@
+{
+  "generatedAt": "2026-06-27T20:40:01.243Z",
+  "sourceOfTruth": "exports/audio-text/books/{slug}/pages/page-XXX.txt",
+  "direction": "TXT → site markdown (md section body embedded 1:1 from TXT)",
+  "books": [
+    {
+      "slug": "english-g1",
+      "expected": 154,
+      "mdBodySynced": 154,
+      "fullySynced": 150,
+      "total": 154,
+      "mdOk": true
+    },
+    {
+      "slug": "english-g2",
+      "expected": 182,
+      "mdBodySynced": 182,
+      "fullySynced": 176,
+      "total": 182,
+      "mdOk": true
+    },
+    {
+      "slug": "hebrew-g1",
+      "expected": 224,
+      "mdBodySynced": 224,
+      "fullySynced": 224,
+      "total": 224,
+      "mdOk": true
+    },
+    {
+      "slug": "hebrew-g2",
+      "expected": 161,
+      "mdBodySynced": 161,
+      "fullySynced": 161,
+      "total": 161,
+      "mdOk": true
+    }
+  ],
+  "allMdBodyOk": true,
+  "exportQuoteRenderIssues": [
+    {
+      "book": "english-g1",
+      "pageNumber": 73,
+      "md": "docs/learning-book/english/g1/drafts/listening_classroom.md",
+      "section": 3,
+      "note": "md body matches TXT; export adds space/newline before closing ASCII quote in English phrases"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 80,
+      "md": "docs/learning-book/english/g1/drafts/listening_commands.md",
+      "section": 3,
+      "note": "md body matches TXT; export adds space/newline before closing ASCII quote in English phrases"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 82,
+      "md": "docs/learning-book/english/g1/drafts/listening_commands.md",
+      "section": 5,
+      "note": "md body matches TXT; export adds space/newline before closing ASCII quote in English phrases"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 83,
+      "md": "docs/learning-book/english/g1/drafts/listening_commands.md",
+      "section": 6,
+      "note": "md body matches TXT; export adds space/newline before closing ASCII quote in English phrases"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 58,
+      "md": "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+      "section": 2,
+      "note": "md body matches TXT; export adds space/newline before closing ASCII quote in English phrases"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 59,
+      "md": "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+      "section": 3,
+      "note": "md body matches TXT; export adds space/newline before closing ASCII quote in English phrases"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 60,
+      "md": "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+      "section": 4,
+      "note": "md body matches TXT; export adds space/newline before closing ASCII quote in English phrases"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 61,
+      "md": "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+      "section": 5,
+      "note": "md body matches TXT; export adds space/newline before closing ASCII quote in English phrases"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 62,
+      "md": "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+      "section": 6,
+      "note": "md body matches TXT; export adds space/newline before closing ASCII quote in English phrases"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 76,
+      "md": "docs/learning-book/english/g2/drafts/early_sentences_exposure.md",
+      "section": 6,
+      "note": "md body matches TXT; export adds space/newline before closing ASCII quote in English phrases"
+    }
+  ],
+  "allOk": true,
+  "mismatches": 10,
+  "mismatchSamples": [
+    "english-g1/page-073 (docs/learning-book/english/g1/drafts/listening_classroom.md §3) md=true export=false",
+    "english-g1/page-080 (docs/learning-book/english/g1/drafts/listening_commands.md §3) md=true export=false",
+    "english-g1/page-082 (docs/learning-book/english/g1/drafts/listening_commands.md §5) md=true export=false",
+    "english-g1/page-083 (docs/learning-book/english/g1/drafts/listening_commands.md §6) md=true export=false",
+    "english-g2/page-058 (docs/learning-book/english/g2/drafts/listening_comprehension.md §2) md=true export=false",
+    "english-g2/page-059 (docs/learning-book/english/g2/drafts/listening_comprehension.md §3) md=true export=false",
+    "english-g2/page-060 (docs/learning-book/english/g2/drafts/listening_comprehension.md §4) md=true export=false",
+    "english-g2/page-061 (docs/learning-book/english/g2/drafts/listening_comprehension.md §5) md=true export=false",
+    "english-g2/page-062 (docs/learning-book/english/g2/drafts/listening_comprehension.md §6) md=true export=false",
+    "english-g2/page-076 (docs/learning-book/english/g2/drafts/early_sentences_exposure.md §6) md=true export=false"
+  ],
+  "rows": [
+    {
+      "book": "english-g1",
+      "pageNumber": 1,
+      "md": "docs/learning-book/english/g1/drafts/letters_upper.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 2,
+      "md": "docs/learning-book/english/g1/drafts/letters_upper.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 3,
+      "md": "docs/learning-book/english/g1/drafts/letters_upper.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 4,
+      "md": "docs/learning-book/english/g1/drafts/letters_upper.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 5,
+      "md": "docs/learning-book/english/g1/drafts/letters_upper.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 6,
+      "md": "docs/learning-book/english/g1/drafts/letters_upper.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 7,
+      "md": "docs/learning-book/english/g1/drafts/letters_upper.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 8,
+      "md": "docs/learning-book/english/g1/drafts/letters_lower.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 9,
+      "md": "docs/learning-book/english/g1/drafts/letters_lower.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 10,
+      "md": "docs/learning-book/english/g1/drafts/letters_lower.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 11,
+      "md": "docs/learning-book/english/g1/drafts/letters_lower.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 12,
+      "md": "docs/learning-book/english/g1/drafts/letters_lower.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 13,
+      "md": "docs/learning-book/english/g1/drafts/letters_lower.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 14,
+      "md": "docs/learning-book/english/g1/drafts/letters_lower.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 15,
+      "md": "docs/learning-book/english/g1/drafts/letters_match.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 16,
+      "md": "docs/learning-book/english/g1/drafts/letters_match.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 17,
+      "md": "docs/learning-book/english/g1/drafts/letters_match.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 18,
+      "md": "docs/learning-book/english/g1/drafts/letters_match.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 19,
+      "md": "docs/learning-book/english/g1/drafts/letters_match.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 20,
+      "md": "docs/learning-book/english/g1/drafts/letters_match.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 21,
+      "md": "docs/learning-book/english/g1/drafts/letters_match.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 22,
+      "md": "docs/learning-book/english/g1/drafts/letter_names.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 23,
+      "md": "docs/learning-book/english/g1/drafts/letter_names.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 24,
+      "md": "docs/learning-book/english/g1/drafts/letter_names.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 25,
+      "md": "docs/learning-book/english/g1/drafts/letter_names.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 26,
+      "md": "docs/learning-book/english/g1/drafts/letter_names.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 27,
+      "md": "docs/learning-book/english/g1/drafts/letter_names.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 28,
+      "md": "docs/learning-book/english/g1/drafts/letter_names.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 29,
+      "md": "docs/learning-book/english/g1/drafts/phonics_sounds.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 30,
+      "md": "docs/learning-book/english/g1/drafts/phonics_sounds.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 31,
+      "md": "docs/learning-book/english/g1/drafts/phonics_sounds.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 32,
+      "md": "docs/learning-book/english/g1/drafts/phonics_sounds.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 33,
+      "md": "docs/learning-book/english/g1/drafts/phonics_sounds.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 34,
+      "md": "docs/learning-book/english/g1/drafts/phonics_sounds.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 35,
+      "md": "docs/learning-book/english/g1/drafts/phonics_sounds.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 36,
+      "md": "docs/learning-book/english/g1/drafts/phonics_first_sound.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 37,
+      "md": "docs/learning-book/english/g1/drafts/phonics_first_sound.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 38,
+      "md": "docs/learning-book/english/g1/drafts/phonics_first_sound.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 39,
+      "md": "docs/learning-book/english/g1/drafts/phonics_first_sound.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 40,
+      "md": "docs/learning-book/english/g1/drafts/phonics_first_sound.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 41,
+      "md": "docs/learning-book/english/g1/drafts/phonics_first_sound.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 42,
+      "md": "docs/learning-book/english/g1/drafts/phonics_first_sound.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 43,
+      "md": "docs/learning-book/english/g1/drafts/classroom_words.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 44,
+      "md": "docs/learning-book/english/g1/drafts/classroom_words.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 45,
+      "md": "docs/learning-book/english/g1/drafts/classroom_words.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 46,
+      "md": "docs/learning-book/english/g1/drafts/classroom_words.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 47,
+      "md": "docs/learning-book/english/g1/drafts/classroom_words.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 48,
+      "md": "docs/learning-book/english/g1/drafts/classroom_words.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 49,
+      "md": "docs/learning-book/english/g1/drafts/classroom_words.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 50,
+      "md": "docs/learning-book/english/g1/drafts/first_words_simple.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 51,
+      "md": "docs/learning-book/english/g1/drafts/first_words_simple.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 52,
+      "md": "docs/learning-book/english/g1/drafts/first_words_simple.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 53,
+      "md": "docs/learning-book/english/g1/drafts/first_words_simple.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 54,
+      "md": "docs/learning-book/english/g1/drafts/first_words_simple.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 55,
+      "md": "docs/learning-book/english/g1/drafts/first_words_simple.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 56,
+      "md": "docs/learning-book/english/g1/drafts/first_words_simple.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 57,
+      "md": "docs/learning-book/english/g1/drafts/first_words_cvc.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 58,
+      "md": "docs/learning-book/english/g1/drafts/first_words_cvc.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 59,
+      "md": "docs/learning-book/english/g1/drafts/first_words_cvc.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 60,
+      "md": "docs/learning-book/english/g1/drafts/first_words_cvc.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 61,
+      "md": "docs/learning-book/english/g1/drafts/first_words_cvc.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 62,
+      "md": "docs/learning-book/english/g1/drafts/first_words_cvc.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 63,
+      "md": "docs/learning-book/english/g1/drafts/first_words_cvc.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 64,
+      "md": "docs/learning-book/english/g1/drafts/picture_word_match.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 65,
+      "md": "docs/learning-book/english/g1/drafts/picture_word_match.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 66,
+      "md": "docs/learning-book/english/g1/drafts/picture_word_match.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 67,
+      "md": "docs/learning-book/english/g1/drafts/picture_word_match.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 68,
+      "md": "docs/learning-book/english/g1/drafts/picture_word_match.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 69,
+      "md": "docs/learning-book/english/g1/drafts/picture_word_match.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 70,
+      "md": "docs/learning-book/english/g1/drafts/picture_word_match.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 71,
+      "md": "docs/learning-book/english/g1/drafts/listening_classroom.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 72,
+      "md": "docs/learning-book/english/g1/drafts/listening_classroom.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 73,
+      "md": "docs/learning-book/english/g1/drafts/listening_classroom.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": false,
+      "status": "mismatch"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 74,
+      "md": "docs/learning-book/english/g1/drafts/listening_classroom.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 75,
+      "md": "docs/learning-book/english/g1/drafts/listening_classroom.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 76,
+      "md": "docs/learning-book/english/g1/drafts/listening_classroom.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 77,
+      "md": "docs/learning-book/english/g1/drafts/listening_classroom.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 78,
+      "md": "docs/learning-book/english/g1/drafts/listening_commands.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 79,
+      "md": "docs/learning-book/english/g1/drafts/listening_commands.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 80,
+      "md": "docs/learning-book/english/g1/drafts/listening_commands.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": false,
+      "status": "mismatch"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 81,
+      "md": "docs/learning-book/english/g1/drafts/listening_commands.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 82,
+      "md": "docs/learning-book/english/g1/drafts/listening_commands.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": false,
+      "status": "mismatch"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 83,
+      "md": "docs/learning-book/english/g1/drafts/listening_commands.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": false,
+      "status": "mismatch"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 84,
+      "md": "docs/learning-book/english/g1/drafts/listening_commands.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 85,
+      "md": "docs/learning-book/english/g1/drafts/vocab_colors.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 86,
+      "md": "docs/learning-book/english/g1/drafts/vocab_colors.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 87,
+      "md": "docs/learning-book/english/g1/drafts/vocab_colors.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 88,
+      "md": "docs/learning-book/english/g1/drafts/vocab_colors.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 89,
+      "md": "docs/learning-book/english/g1/drafts/vocab_colors.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 90,
+      "md": "docs/learning-book/english/g1/drafts/vocab_colors.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 91,
+      "md": "docs/learning-book/english/g1/drafts/vocab_colors.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 92,
+      "md": "docs/learning-book/english/g1/drafts/vocab_numbers.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 93,
+      "md": "docs/learning-book/english/g1/drafts/vocab_numbers.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 94,
+      "md": "docs/learning-book/english/g1/drafts/vocab_numbers.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 95,
+      "md": "docs/learning-book/english/g1/drafts/vocab_numbers.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 96,
+      "md": "docs/learning-book/english/g1/drafts/vocab_numbers.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 97,
+      "md": "docs/learning-book/english/g1/drafts/vocab_numbers.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 98,
+      "md": "docs/learning-book/english/g1/drafts/vocab_numbers.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 99,
+      "md": "docs/learning-book/english/g1/drafts/vocab_family.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 100,
+      "md": "docs/learning-book/english/g1/drafts/vocab_family.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 101,
+      "md": "docs/learning-book/english/g1/drafts/vocab_family.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 102,
+      "md": "docs/learning-book/english/g1/drafts/vocab_family.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 103,
+      "md": "docs/learning-book/english/g1/drafts/vocab_family.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 104,
+      "md": "docs/learning-book/english/g1/drafts/vocab_family.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 105,
+      "md": "docs/learning-book/english/g1/drafts/vocab_family.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 106,
+      "md": "docs/learning-book/english/g1/drafts/vocab_animals.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 107,
+      "md": "docs/learning-book/english/g1/drafts/vocab_animals.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 108,
+      "md": "docs/learning-book/english/g1/drafts/vocab_animals.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 109,
+      "md": "docs/learning-book/english/g1/drafts/vocab_animals.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 110,
+      "md": "docs/learning-book/english/g1/drafts/vocab_animals.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 111,
+      "md": "docs/learning-book/english/g1/drafts/vocab_animals.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 112,
+      "md": "docs/learning-book/english/g1/drafts/vocab_animals.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 113,
+      "md": "docs/learning-book/english/g1/drafts/vocab_emotions.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 114,
+      "md": "docs/learning-book/english/g1/drafts/vocab_emotions.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 115,
+      "md": "docs/learning-book/english/g1/drafts/vocab_emotions.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 116,
+      "md": "docs/learning-book/english/g1/drafts/vocab_emotions.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 117,
+      "md": "docs/learning-book/english/g1/drafts/vocab_emotions.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 118,
+      "md": "docs/learning-book/english/g1/drafts/vocab_emotions.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 119,
+      "md": "docs/learning-book/english/g1/drafts/vocab_emotions.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 120,
+      "md": "docs/learning-book/english/g1/drafts/vocab_actions.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 121,
+      "md": "docs/learning-book/english/g1/drafts/vocab_actions.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 122,
+      "md": "docs/learning-book/english/g1/drafts/vocab_actions.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 123,
+      "md": "docs/learning-book/english/g1/drafts/vocab_actions.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 124,
+      "md": "docs/learning-book/english/g1/drafts/vocab_actions.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 125,
+      "md": "docs/learning-book/english/g1/drafts/vocab_actions.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 126,
+      "md": "docs/learning-book/english/g1/drafts/vocab_actions.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 127,
+      "md": "docs/learning-book/english/g1/drafts/vocab_school.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 128,
+      "md": "docs/learning-book/english/g1/drafts/vocab_school.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 129,
+      "md": "docs/learning-book/english/g1/drafts/vocab_school.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 130,
+      "md": "docs/learning-book/english/g1/drafts/vocab_school.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 131,
+      "md": "docs/learning-book/english/g1/drafts/vocab_school.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 132,
+      "md": "docs/learning-book/english/g1/drafts/vocab_school.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 133,
+      "md": "docs/learning-book/english/g1/drafts/vocab_school.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 134,
+      "md": "docs/learning-book/english/g1/drafts/grammar_be.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 135,
+      "md": "docs/learning-book/english/g1/drafts/grammar_be.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 136,
+      "md": "docs/learning-book/english/g1/drafts/grammar_be.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 137,
+      "md": "docs/learning-book/english/g1/drafts/grammar_be.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 138,
+      "md": "docs/learning-book/english/g1/drafts/grammar_be.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 139,
+      "md": "docs/learning-book/english/g1/drafts/grammar_be.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 140,
+      "md": "docs/learning-book/english/g1/drafts/grammar_be.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 141,
+      "md": "docs/learning-book/english/g1/drafts/sentence_base.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 142,
+      "md": "docs/learning-book/english/g1/drafts/sentence_base.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 143,
+      "md": "docs/learning-book/english/g1/drafts/sentence_base.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 144,
+      "md": "docs/learning-book/english/g1/drafts/sentence_base.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 145,
+      "md": "docs/learning-book/english/g1/drafts/sentence_base.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 146,
+      "md": "docs/learning-book/english/g1/drafts/sentence_base.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 147,
+      "md": "docs/learning-book/english/g1/drafts/sentence_base.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 148,
+      "md": "docs/learning-book/english/g1/drafts/translation_classroom.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 149,
+      "md": "docs/learning-book/english/g1/drafts/translation_classroom.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 150,
+      "md": "docs/learning-book/english/g1/drafts/translation_classroom.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 151,
+      "md": "docs/learning-book/english/g1/drafts/translation_classroom.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 152,
+      "md": "docs/learning-book/english/g1/drafts/translation_classroom.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 153,
+      "md": "docs/learning-book/english/g1/drafts/translation_classroom.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g1",
+      "pageNumber": 154,
+      "md": "docs/learning-book/english/g1/drafts/translation_classroom.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 1,
+      "md": "docs/learning-book/english/g2/drafts/letters_review.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 2,
+      "md": "docs/learning-book/english/g2/drafts/letters_review.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 3,
+      "md": "docs/learning-book/english/g2/drafts/letters_review.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 4,
+      "md": "docs/learning-book/english/g2/drafts/letters_review.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 5,
+      "md": "docs/learning-book/english/g2/drafts/letters_review.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 6,
+      "md": "docs/learning-book/english/g2/drafts/letters_review.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 7,
+      "md": "docs/learning-book/english/g2/drafts/letters_review.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 8,
+      "md": "docs/learning-book/english/g2/drafts/letters_order.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 9,
+      "md": "docs/learning-book/english/g2/drafts/letters_order.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 10,
+      "md": "docs/learning-book/english/g2/drafts/letters_order.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 11,
+      "md": "docs/learning-book/english/g2/drafts/letters_order.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 12,
+      "md": "docs/learning-book/english/g2/drafts/letters_order.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 13,
+      "md": "docs/learning-book/english/g2/drafts/letters_order.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 14,
+      "md": "docs/learning-book/english/g2/drafts/letters_order.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 15,
+      "md": "docs/learning-book/english/g2/drafts/phonics_sounds_review.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 16,
+      "md": "docs/learning-book/english/g2/drafts/phonics_sounds_review.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 17,
+      "md": "docs/learning-book/english/g2/drafts/phonics_sounds_review.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 18,
+      "md": "docs/learning-book/english/g2/drafts/phonics_sounds_review.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 19,
+      "md": "docs/learning-book/english/g2/drafts/phonics_sounds_review.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 20,
+      "md": "docs/learning-book/english/g2/drafts/phonics_sounds_review.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 21,
+      "md": "docs/learning-book/english/g2/drafts/phonics_sounds_review.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 22,
+      "md": "docs/learning-book/english/g2/drafts/phonics_blending.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 23,
+      "md": "docs/learning-book/english/g2/drafts/phonics_blending.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 24,
+      "md": "docs/learning-book/english/g2/drafts/phonics_blending.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 25,
+      "md": "docs/learning-book/english/g2/drafts/phonics_blending.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 26,
+      "md": "docs/learning-book/english/g2/drafts/phonics_blending.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 27,
+      "md": "docs/learning-book/english/g2/drafts/phonics_blending.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 28,
+      "md": "docs/learning-book/english/g2/drafts/phonics_blending.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 29,
+      "md": "docs/learning-book/english/g2/drafts/sound_letter_match.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 30,
+      "md": "docs/learning-book/english/g2/drafts/sound_letter_match.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 31,
+      "md": "docs/learning-book/english/g2/drafts/sound_letter_match.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 32,
+      "md": "docs/learning-book/english/g2/drafts/sound_letter_match.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 33,
+      "md": "docs/learning-book/english/g2/drafts/sound_letter_match.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 34,
+      "md": "docs/learning-book/english/g2/drafts/sound_letter_match.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 35,
+      "md": "docs/learning-book/english/g2/drafts/sound_letter_match.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 36,
+      "md": "docs/learning-book/english/g2/drafts/first_word_reading.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 37,
+      "md": "docs/learning-book/english/g2/drafts/first_word_reading.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 38,
+      "md": "docs/learning-book/english/g2/drafts/first_word_reading.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 39,
+      "md": "docs/learning-book/english/g2/drafts/first_word_reading.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 40,
+      "md": "docs/learning-book/english/g2/drafts/first_word_reading.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 41,
+      "md": "docs/learning-book/english/g2/drafts/first_word_reading.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 42,
+      "md": "docs/learning-book/english/g2/drafts/first_word_reading.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 43,
+      "md": "docs/learning-book/english/g2/drafts/word_families_cvc.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 44,
+      "md": "docs/learning-book/english/g2/drafts/word_families_cvc.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 45,
+      "md": "docs/learning-book/english/g2/drafts/word_families_cvc.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 46,
+      "md": "docs/learning-book/english/g2/drafts/word_families_cvc.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 47,
+      "md": "docs/learning-book/english/g2/drafts/word_families_cvc.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 48,
+      "md": "docs/learning-book/english/g2/drafts/word_families_cvc.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 49,
+      "md": "docs/learning-book/english/g2/drafts/word_families_cvc.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 50,
+      "md": "docs/learning-book/english/g2/drafts/classroom_vocab_g2.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 51,
+      "md": "docs/learning-book/english/g2/drafts/classroom_vocab_g2.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 52,
+      "md": "docs/learning-book/english/g2/drafts/classroom_vocab_g2.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 53,
+      "md": "docs/learning-book/english/g2/drafts/classroom_vocab_g2.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 54,
+      "md": "docs/learning-book/english/g2/drafts/classroom_vocab_g2.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 55,
+      "md": "docs/learning-book/english/g2/drafts/classroom_vocab_g2.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 56,
+      "md": "docs/learning-book/english/g2/drafts/classroom_vocab_g2.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 57,
+      "md": "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 58,
+      "md": "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": false,
+      "status": "mismatch"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 59,
+      "md": "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": false,
+      "status": "mismatch"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 60,
+      "md": "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": false,
+      "status": "mismatch"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 61,
+      "md": "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": false,
+      "status": "mismatch"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 62,
+      "md": "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": false,
+      "status": "mismatch"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 63,
+      "md": "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 64,
+      "md": "docs/learning-book/english/g2/drafts/picture_audio_word_match.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 65,
+      "md": "docs/learning-book/english/g2/drafts/picture_audio_word_match.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 66,
+      "md": "docs/learning-book/english/g2/drafts/picture_audio_word_match.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 67,
+      "md": "docs/learning-book/english/g2/drafts/picture_audio_word_match.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 68,
+      "md": "docs/learning-book/english/g2/drafts/picture_audio_word_match.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 69,
+      "md": "docs/learning-book/english/g2/drafts/picture_audio_word_match.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 70,
+      "md": "docs/learning-book/english/g2/drafts/picture_audio_word_match.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 71,
+      "md": "docs/learning-book/english/g2/drafts/early_sentences_exposure.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 72,
+      "md": "docs/learning-book/english/g2/drafts/early_sentences_exposure.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 73,
+      "md": "docs/learning-book/english/g2/drafts/early_sentences_exposure.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 74,
+      "md": "docs/learning-book/english/g2/drafts/early_sentences_exposure.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 75,
+      "md": "docs/learning-book/english/g2/drafts/early_sentences_exposure.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 76,
+      "md": "docs/learning-book/english/g2/drafts/early_sentences_exposure.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": false,
+      "status": "mismatch"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 77,
+      "md": "docs/learning-book/english/g2/drafts/early_sentences_exposure.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 78,
+      "md": "docs/learning-book/english/g2/drafts/vocab_colors.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 79,
+      "md": "docs/learning-book/english/g2/drafts/vocab_colors.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 80,
+      "md": "docs/learning-book/english/g2/drafts/vocab_colors.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 81,
+      "md": "docs/learning-book/english/g2/drafts/vocab_colors.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 82,
+      "md": "docs/learning-book/english/g2/drafts/vocab_colors.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 83,
+      "md": "docs/learning-book/english/g2/drafts/vocab_colors.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 84,
+      "md": "docs/learning-book/english/g2/drafts/vocab_colors.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 85,
+      "md": "docs/learning-book/english/g2/drafts/vocab_numbers.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 86,
+      "md": "docs/learning-book/english/g2/drafts/vocab_numbers.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 87,
+      "md": "docs/learning-book/english/g2/drafts/vocab_numbers.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 88,
+      "md": "docs/learning-book/english/g2/drafts/vocab_numbers.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 89,
+      "md": "docs/learning-book/english/g2/drafts/vocab_numbers.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 90,
+      "md": "docs/learning-book/english/g2/drafts/vocab_numbers.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 91,
+      "md": "docs/learning-book/english/g2/drafts/vocab_numbers.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 92,
+      "md": "docs/learning-book/english/g2/drafts/vocab_family.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 93,
+      "md": "docs/learning-book/english/g2/drafts/vocab_family.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 94,
+      "md": "docs/learning-book/english/g2/drafts/vocab_family.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 95,
+      "md": "docs/learning-book/english/g2/drafts/vocab_family.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 96,
+      "md": "docs/learning-book/english/g2/drafts/vocab_family.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 97,
+      "md": "docs/learning-book/english/g2/drafts/vocab_family.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 98,
+      "md": "docs/learning-book/english/g2/drafts/vocab_family.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 99,
+      "md": "docs/learning-book/english/g2/drafts/vocab_animals.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 100,
+      "md": "docs/learning-book/english/g2/drafts/vocab_animals.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 101,
+      "md": "docs/learning-book/english/g2/drafts/vocab_animals.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 102,
+      "md": "docs/learning-book/english/g2/drafts/vocab_animals.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 103,
+      "md": "docs/learning-book/english/g2/drafts/vocab_animals.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 104,
+      "md": "docs/learning-book/english/g2/drafts/vocab_animals.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 105,
+      "md": "docs/learning-book/english/g2/drafts/vocab_animals.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 106,
+      "md": "docs/learning-book/english/g2/drafts/vocab_emotions.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 107,
+      "md": "docs/learning-book/english/g2/drafts/vocab_emotions.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 108,
+      "md": "docs/learning-book/english/g2/drafts/vocab_emotions.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 109,
+      "md": "docs/learning-book/english/g2/drafts/vocab_emotions.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 110,
+      "md": "docs/learning-book/english/g2/drafts/vocab_emotions.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 111,
+      "md": "docs/learning-book/english/g2/drafts/vocab_emotions.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 112,
+      "md": "docs/learning-book/english/g2/drafts/vocab_emotions.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 113,
+      "md": "docs/learning-book/english/g2/drafts/vocab_actions.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 114,
+      "md": "docs/learning-book/english/g2/drafts/vocab_actions.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 115,
+      "md": "docs/learning-book/english/g2/drafts/vocab_actions.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 116,
+      "md": "docs/learning-book/english/g2/drafts/vocab_actions.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 117,
+      "md": "docs/learning-book/english/g2/drafts/vocab_actions.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 118,
+      "md": "docs/learning-book/english/g2/drafts/vocab_actions.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 119,
+      "md": "docs/learning-book/english/g2/drafts/vocab_actions.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 120,
+      "md": "docs/learning-book/english/g2/drafts/vocab_school.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 121,
+      "md": "docs/learning-book/english/g2/drafts/vocab_school.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 122,
+      "md": "docs/learning-book/english/g2/drafts/vocab_school.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 123,
+      "md": "docs/learning-book/english/g2/drafts/vocab_school.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 124,
+      "md": "docs/learning-book/english/g2/drafts/vocab_school.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 125,
+      "md": "docs/learning-book/english/g2/drafts/vocab_school.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 126,
+      "md": "docs/learning-book/english/g2/drafts/vocab_school.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 127,
+      "md": "docs/learning-book/english/g2/drafts/vocab_food.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 128,
+      "md": "docs/learning-book/english/g2/drafts/vocab_food.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 129,
+      "md": "docs/learning-book/english/g2/drafts/vocab_food.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 130,
+      "md": "docs/learning-book/english/g2/drafts/vocab_food.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 131,
+      "md": "docs/learning-book/english/g2/drafts/vocab_food.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 132,
+      "md": "docs/learning-book/english/g2/drafts/vocab_food.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 133,
+      "md": "docs/learning-book/english/g2/drafts/vocab_food.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 134,
+      "md": "docs/learning-book/english/g2/drafts/vocab_house.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 135,
+      "md": "docs/learning-book/english/g2/drafts/vocab_house.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 136,
+      "md": "docs/learning-book/english/g2/drafts/vocab_house.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 137,
+      "md": "docs/learning-book/english/g2/drafts/vocab_house.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 138,
+      "md": "docs/learning-book/english/g2/drafts/vocab_house.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 139,
+      "md": "docs/learning-book/english/g2/drafts/vocab_house.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 140,
+      "md": "docs/learning-book/english/g2/drafts/vocab_house.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 141,
+      "md": "docs/learning-book/english/g2/drafts/grammar_be.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 142,
+      "md": "docs/learning-book/english/g2/drafts/grammar_be.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 143,
+      "md": "docs/learning-book/english/g2/drafts/grammar_be.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 144,
+      "md": "docs/learning-book/english/g2/drafts/grammar_be.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 145,
+      "md": "docs/learning-book/english/g2/drafts/grammar_be.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 146,
+      "md": "docs/learning-book/english/g2/drafts/grammar_be.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 147,
+      "md": "docs/learning-book/english/g2/drafts/grammar_be.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 148,
+      "md": "docs/learning-book/english/g2/drafts/grammar_plural_questions.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 149,
+      "md": "docs/learning-book/english/g2/drafts/grammar_plural_questions.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 150,
+      "md": "docs/learning-book/english/g2/drafts/grammar_plural_questions.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 151,
+      "md": "docs/learning-book/english/g2/drafts/grammar_plural_questions.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 152,
+      "md": "docs/learning-book/english/g2/drafts/grammar_plural_questions.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 153,
+      "md": "docs/learning-book/english/g2/drafts/grammar_plural_questions.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 154,
+      "md": "docs/learning-book/english/g2/drafts/grammar_plural_questions.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 155,
+      "md": "docs/learning-book/english/g2/drafts/sentence_base.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 156,
+      "md": "docs/learning-book/english/g2/drafts/sentence_base.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 157,
+      "md": "docs/learning-book/english/g2/drafts/sentence_base.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 158,
+      "md": "docs/learning-book/english/g2/drafts/sentence_base.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 159,
+      "md": "docs/learning-book/english/g2/drafts/sentence_base.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 160,
+      "md": "docs/learning-book/english/g2/drafts/sentence_base.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 161,
+      "md": "docs/learning-book/english/g2/drafts/sentence_base.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 162,
+      "md": "docs/learning-book/english/g2/drafts/sentence_routine.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 163,
+      "md": "docs/learning-book/english/g2/drafts/sentence_routine.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 164,
+      "md": "docs/learning-book/english/g2/drafts/sentence_routine.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 165,
+      "md": "docs/learning-book/english/g2/drafts/sentence_routine.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 166,
+      "md": "docs/learning-book/english/g2/drafts/sentence_routine.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 167,
+      "md": "docs/learning-book/english/g2/drafts/sentence_routine.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 168,
+      "md": "docs/learning-book/english/g2/drafts/sentence_routine.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 169,
+      "md": "docs/learning-book/english/g2/drafts/translation_classroom.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 170,
+      "md": "docs/learning-book/english/g2/drafts/translation_classroom.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 171,
+      "md": "docs/learning-book/english/g2/drafts/translation_classroom.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 172,
+      "md": "docs/learning-book/english/g2/drafts/translation_classroom.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 173,
+      "md": "docs/learning-book/english/g2/drafts/translation_classroom.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 174,
+      "md": "docs/learning-book/english/g2/drafts/translation_classroom.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 175,
+      "md": "docs/learning-book/english/g2/drafts/translation_classroom.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 176,
+      "md": "docs/learning-book/english/g2/drafts/translation_routines.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 177,
+      "md": "docs/learning-book/english/g2/drafts/translation_routines.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 178,
+      "md": "docs/learning-book/english/g2/drafts/translation_routines.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 179,
+      "md": "docs/learning-book/english/g2/drafts/translation_routines.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 180,
+      "md": "docs/learning-book/english/g2/drafts/translation_routines.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 181,
+      "md": "docs/learning-book/english/g2/drafts/translation_routines.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "english-g2",
+      "pageNumber": 182,
+      "md": "docs/learning-book/english/g2/drafts/translation_routines.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 1,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.phoneme_awareness.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 2,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.phoneme_awareness.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 3,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.phoneme_awareness.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 4,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.phoneme_awareness.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 5,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.phoneme_awareness.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 6,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.phoneme_awareness.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 7,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.phoneme_awareness.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 8,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.open_close_syllable.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 9,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.open_close_syllable.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 10,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.open_close_syllable.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 11,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.open_close_syllable.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 12,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.open_close_syllable.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 13,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.open_close_syllable.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 14,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.open_close_syllable.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 15,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.rhyme.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 16,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.rhyme.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 17,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.rhyme.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 18,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.rhyme.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 19,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.rhyme.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 20,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.rhyme.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 21,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.rhyme.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 22,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.syllables.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 23,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.syllables.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 24,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.syllables.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 25,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.syllables.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 26,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.syllables.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 27,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.syllables.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 28,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.syllables.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 29,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.letters.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 30,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.letters.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 31,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.letters.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 32,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.letters.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 33,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.letters.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 34,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.letters.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 35,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.letters.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 36,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.final_letters.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 37,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.final_letters.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 38,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.final_letters.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 39,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.final_letters.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 40,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.final_letters.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 41,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.final_letters.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 42,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.final_letters.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 43,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.basic_niqqud.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 44,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.basic_niqqud.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 45,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.basic_niqqud.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 46,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.basic_niqqud.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 47,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.basic_niqqud.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 48,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.basic_niqqud.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 49,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.basic_niqqud.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 50,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.sound_letter_match.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 51,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.sound_letter_match.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 52,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.sound_letter_match.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 53,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.sound_letter_match.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 54,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.sound_letter_match.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 55,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.sound_letter_match.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 56,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.sound_letter_match.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 57,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.simple_words_read.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 58,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.simple_words_read.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 59,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.simple_words_read.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 60,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.simple_words_read.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 61,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.simple_words_read.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 62,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.simple_words_read.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 63,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.simple_words_read.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 64,
+      "md": "docs/learning-book/hebrew/g1/drafts/reading_word_level_early_g1_spelling_meaning_then_choice.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 65,
+      "md": "docs/learning-book/hebrew/g1/drafts/reading_word_level_early_g1_spelling_meaning_then_choice.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 66,
+      "md": "docs/learning-book/hebrew/g1/drafts/reading_word_level_early_g1_spelling_meaning_then_choice.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 67,
+      "md": "docs/learning-book/hebrew/g1/drafts/reading_word_level_early_g1_spelling_meaning_then_choice.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 68,
+      "md": "docs/learning-book/hebrew/g1/drafts/reading_word_level_early_g1_spelling_meaning_then_choice.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 69,
+      "md": "docs/learning-book/hebrew/g1/drafts/reading_word_level_early_g1_spelling_meaning_then_choice.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 70,
+      "md": "docs/learning-book/hebrew/g1/drafts/reading_word_level_early_g1_spelling_meaning_then_choice.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 71,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_pos_roles.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 72,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_pos_roles.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 73,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_pos_roles.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 74,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_pos_roles.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 75,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_pos_roles.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 76,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_pos_roles.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 77,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_pos_roles.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 78,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_wellformed.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 79,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_wellformed.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 80,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_wellformed.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 81,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_wellformed.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 82,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_wellformed.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 83,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_wellformed.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 84,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_wellformed.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 85,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_agreement_light.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 86,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_agreement_light.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 87,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_agreement_light.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 88,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_agreement_light.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 89,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_agreement_light.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 90,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_agreement_light.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 91,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_agreement_light.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 92,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_cloze_deixis.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 93,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_cloze_deixis.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 94,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_cloze_deixis.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 95,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_cloze_deixis.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 96,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_cloze_deixis.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 97,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_cloze_deixis.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 98,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_cloze_deixis.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 99,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_word_order.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 100,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_word_order.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 101,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_word_order.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 102,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_word_order.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 103,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_word_order.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 104,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_word_order.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 105,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_word_order.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 106,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_odd_category.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 107,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_odd_category.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 108,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_odd_category.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 109,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_odd_category.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 110,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_odd_category.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 111,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_odd_category.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 112,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_odd_category.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 113,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_punctuation.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 114,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_punctuation.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 115,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_punctuation.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 116,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_punctuation.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 117,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_punctuation.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 118,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_punctuation.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 119,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_punctuation.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 120,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_connectors_time.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 121,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_connectors_time.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 122,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_connectors_time.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 123,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_connectors_time.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 124,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_connectors_time.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 125,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_connectors_time.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 126,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.grammar_connectors_time.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 127,
+      "md": "docs/learning-book/hebrew/g1/drafts/grammar_gender_number_early_g1_agreement_girl_singular.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 128,
+      "md": "docs/learning-book/hebrew/g1/drafts/grammar_gender_number_early_g1_agreement_girl_singular.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 129,
+      "md": "docs/learning-book/hebrew/g1/drafts/grammar_gender_number_early_g1_agreement_girl_singular.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 130,
+      "md": "docs/learning-book/hebrew/g1/drafts/grammar_gender_number_early_g1_agreement_girl_singular.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 131,
+      "md": "docs/learning-book/hebrew/g1/drafts/grammar_gender_number_early_g1_agreement_girl_singular.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 132,
+      "md": "docs/learning-book/hebrew/g1/drafts/grammar_gender_number_early_g1_agreement_girl_singular.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 133,
+      "md": "docs/learning-book/hebrew/g1/drafts/grammar_gender_number_early_g1_agreement_girl_singular.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 134,
+      "md": "docs/learning-book/hebrew/g1/drafts/comprehension_g1.word_meaning_concrete.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 135,
+      "md": "docs/learning-book/hebrew/g1/drafts/comprehension_g1.word_meaning_concrete.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 136,
+      "md": "docs/learning-book/hebrew/g1/drafts/comprehension_g1.word_meaning_concrete.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 137,
+      "md": "docs/learning-book/hebrew/g1/drafts/comprehension_g1.word_meaning_concrete.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 138,
+      "md": "docs/learning-book/hebrew/g1/drafts/comprehension_g1.word_meaning_concrete.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 139,
+      "md": "docs/learning-book/hebrew/g1/drafts/comprehension_g1.word_meaning_concrete.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 140,
+      "md": "docs/learning-book/hebrew/g1/drafts/comprehension_g1.word_meaning_concrete.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 141,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.one_sentence_who_what.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 142,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.one_sentence_who_what.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 143,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.one_sentence_who_what.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 144,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.one_sentence_who_what.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 145,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.one_sentence_who_what.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 146,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.one_sentence_who_what.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 147,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.one_sentence_who_what.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 148,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.simple_instruction.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 149,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.simple_instruction.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 150,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.simple_instruction.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 151,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.simple_instruction.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 152,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.simple_instruction.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 153,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.simple_instruction.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 154,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.simple_instruction.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 155,
+      "md": "docs/learning-book/hebrew/g1/drafts/comprehension_binary_fact_early_g1_tf_science_simple.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 156,
+      "md": "docs/learning-book/hebrew/g1/drafts/comprehension_binary_fact_early_g1_tf_science_simple.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 157,
+      "md": "docs/learning-book/hebrew/g1/drafts/comprehension_binary_fact_early_g1_tf_science_simple.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 158,
+      "md": "docs/learning-book/hebrew/g1/drafts/comprehension_binary_fact_early_g1_tf_science_simple.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 159,
+      "md": "docs/learning-book/hebrew/g1/drafts/comprehension_binary_fact_early_g1_tf_science_simple.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 160,
+      "md": "docs/learning-book/hebrew/g1/drafts/comprehension_binary_fact_early_g1_tf_science_simple.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 161,
+      "md": "docs/learning-book/hebrew/g1/drafts/comprehension_binary_fact_early_g1_tf_science_simple.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 162,
+      "md": "docs/learning-book/hebrew/g1/drafts/vocabulary_g1.word_meaning_concrete.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 163,
+      "md": "docs/learning-book/hebrew/g1/drafts/vocabulary_g1.word_meaning_concrete.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 164,
+      "md": "docs/learning-book/hebrew/g1/drafts/vocabulary_g1.word_meaning_concrete.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 165,
+      "md": "docs/learning-book/hebrew/g1/drafts/vocabulary_g1.word_meaning_concrete.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 166,
+      "md": "docs/learning-book/hebrew/g1/drafts/vocabulary_g1.word_meaning_concrete.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 167,
+      "md": "docs/learning-book/hebrew/g1/drafts/vocabulary_g1.word_meaning_concrete.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 168,
+      "md": "docs/learning-book/hebrew/g1/drafts/vocabulary_g1.word_meaning_concrete.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 169,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.word_picture.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 170,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.word_picture.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 171,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.word_picture.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 172,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.word_picture.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 173,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.word_picture.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 174,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.word_picture.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 175,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.word_picture.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 176,
+      "md": "docs/learning-book/hebrew/g1/drafts/vocabulary_word_context_early_g1_cloze_morning.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 177,
+      "md": "docs/learning-book/hebrew/g1/drafts/vocabulary_word_context_early_g1_cloze_morning.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 178,
+      "md": "docs/learning-book/hebrew/g1/drafts/vocabulary_word_context_early_g1_cloze_morning.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 179,
+      "md": "docs/learning-book/hebrew/g1/drafts/vocabulary_word_context_early_g1_cloze_morning.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 180,
+      "md": "docs/learning-book/hebrew/g1/drafts/vocabulary_word_context_early_g1_cloze_morning.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 181,
+      "md": "docs/learning-book/hebrew/g1/drafts/vocabulary_word_context_early_g1_cloze_morning.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 182,
+      "md": "docs/learning-book/hebrew/g1/drafts/vocabulary_word_context_early_g1_cloze_morning.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 183,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.copy_word.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 184,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.copy_word.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 185,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.copy_word.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 186,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.copy_word.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 187,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.copy_word.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 188,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.copy_word.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 189,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.copy_word.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 190,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.spell_word_choice.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 191,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.spell_word_choice.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 192,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.spell_word_choice.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 193,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.spell_word_choice.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 194,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.spell_word_choice.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 195,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.spell_word_choice.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 196,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.spell_word_choice.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 197,
+      "md": "docs/learning-book/hebrew/g1/drafts/writing_spell_word_early_ab_writing_object_riddle.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 198,
+      "md": "docs/learning-book/hebrew/g1/drafts/writing_spell_word_early_ab_writing_object_riddle.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 199,
+      "md": "docs/learning-book/hebrew/g1/drafts/writing_spell_word_early_ab_writing_object_riddle.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 200,
+      "md": "docs/learning-book/hebrew/g1/drafts/writing_spell_word_early_ab_writing_object_riddle.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 201,
+      "md": "docs/learning-book/hebrew/g1/drafts/writing_spell_word_early_ab_writing_object_riddle.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 202,
+      "md": "docs/learning-book/hebrew/g1/drafts/writing_spell_word_early_ab_writing_object_riddle.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 203,
+      "md": "docs/learning-book/hebrew/g1/drafts/writing_spell_word_early_ab_writing_object_riddle.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 204,
+      "md": "docs/learning-book/hebrew/g1/drafts/writing_spell_word_early_ab_writing_role_meaning.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 205,
+      "md": "docs/learning-book/hebrew/g1/drafts/writing_spell_word_early_ab_writing_role_meaning.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 206,
+      "md": "docs/learning-book/hebrew/g1/drafts/writing_spell_word_early_ab_writing_role_meaning.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 207,
+      "md": "docs/learning-book/hebrew/g1/drafts/writing_spell_word_early_ab_writing_role_meaning.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 208,
+      "md": "docs/learning-book/hebrew/g1/drafts/writing_spell_word_early_ab_writing_role_meaning.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 209,
+      "md": "docs/learning-book/hebrew/g1/drafts/writing_spell_word_early_ab_writing_role_meaning.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 210,
+      "md": "docs/learning-book/hebrew/g1/drafts/writing_spell_word_early_ab_writing_role_meaning.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 211,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.phrase_appropriateness.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 212,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.phrase_appropriateness.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 213,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.phrase_appropriateness.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 214,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.phrase_appropriateness.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 215,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.phrase_appropriateness.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 216,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.phrase_appropriateness.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 217,
+      "md": "docs/learning-book/hebrew/g1/drafts/g1.phrase_appropriateness.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 218,
+      "md": "docs/learning-book/hebrew/g1/drafts/speaking_social_reply_early_g1_bump_sorry.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 219,
+      "md": "docs/learning-book/hebrew/g1/drafts/speaking_social_reply_early_g1_bump_sorry.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 220,
+      "md": "docs/learning-book/hebrew/g1/drafts/speaking_social_reply_early_g1_bump_sorry.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 221,
+      "md": "docs/learning-book/hebrew/g1/drafts/speaking_social_reply_early_g1_bump_sorry.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 222,
+      "md": "docs/learning-book/hebrew/g1/drafts/speaking_social_reply_early_g1_bump_sorry.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 223,
+      "md": "docs/learning-book/hebrew/g1/drafts/speaking_social_reply_early_g1_bump_sorry.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 224,
+      "md": "docs/learning-book/hebrew/g1/drafts/speaking_social_reply_early_g1_bump_sorry.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 1,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.fluent_words.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 2,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.fluent_words.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 3,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.fluent_words.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 4,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.fluent_words.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 5,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.fluent_words.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 6,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.fluent_words.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 7,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.fluent_words.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 8,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.short_sentence.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 9,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.short_sentence.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 10,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.short_sentence.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 11,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.short_sentence.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 12,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.short_sentence.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 13,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.short_sentence.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 14,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.short_sentence.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 15,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.simple_punctuation_read.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 16,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.simple_punctuation_read.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 17,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.simple_punctuation_read.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 18,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.simple_punctuation_read.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 19,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.simple_punctuation_read.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 20,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.simple_punctuation_read.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": false,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 21,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.simple_punctuation_read.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 22,
+      "md": "docs/learning-book/hebrew/g2/drafts/spelling_choice_niqqud.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 23,
+      "md": "docs/learning-book/hebrew/g2/drafts/spelling_choice_niqqud.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 24,
+      "md": "docs/learning-book/hebrew/g2/drafts/spelling_choice_niqqud.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 25,
+      "md": "docs/learning-book/hebrew/g2/drafts/spelling_choice_niqqud.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 26,
+      "md": "docs/learning-book/hebrew/g2/drafts/spelling_choice_niqqud.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 27,
+      "md": "docs/learning-book/hebrew/g2/drafts/spelling_choice_niqqud.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 28,
+      "md": "docs/learning-book/hebrew/g2/drafts/spelling_choice_niqqud.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 29,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.pos_basic.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 30,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.pos_basic.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 31,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.pos_basic.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 32,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.pos_basic.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 33,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.pos_basic.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 34,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.pos_basic.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 35,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.pos_basic.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 36,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.simple_tense.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 37,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.simple_tense.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 38,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.simple_tense.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 39,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.simple_tense.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 40,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.simple_tense.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 41,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.simple_tense.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 42,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.simple_tense.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 43,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.number_gender_light.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 44,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.number_gender_light.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 45,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.number_gender_light.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 46,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.number_gender_light.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 47,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.number_gender_light.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 48,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.number_gender_light.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 49,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.number_gender_light.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 50,
+      "md": "docs/learning-book/hebrew/g2/drafts/agreement_boy_plural.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 51,
+      "md": "docs/learning-book/hebrew/g2/drafts/agreement_boy_plural.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 52,
+      "md": "docs/learning-book/hebrew/g2/drafts/agreement_boy_plural.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 53,
+      "md": "docs/learning-book/hebrew/g2/drafts/agreement_boy_plural.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 54,
+      "md": "docs/learning-book/hebrew/g2/drafts/agreement_boy_plural.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 55,
+      "md": "docs/learning-book/hebrew/g2/drafts/agreement_boy_plural.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 56,
+      "md": "docs/learning-book/hebrew/g2/drafts/agreement_boy_plural.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 57,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.detail_main_idea.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 58,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.detail_main_idea.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 59,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.detail_main_idea.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 60,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.detail_main_idea.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 61,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.detail_main_idea.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 62,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.detail_main_idea.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 63,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.detail_main_idea.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 64,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.light_inference.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 65,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.light_inference.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 66,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.light_inference.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 67,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.light_inference.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 68,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.light_inference.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 69,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.light_inference.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 70,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.light_inference.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 71,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.simple_sequence.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 72,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.simple_sequence.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 73,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.simple_sequence.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 74,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.simple_sequence.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 75,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.simple_sequence.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 76,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.simple_sequence.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 77,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.simple_sequence.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 78,
+      "md": "docs/learning-book/hebrew/g2/drafts/where_from_sentence.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 79,
+      "md": "docs/learning-book/hebrew/g2/drafts/where_from_sentence.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 80,
+      "md": "docs/learning-book/hebrew/g2/drafts/where_from_sentence.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 81,
+      "md": "docs/learning-book/hebrew/g2/drafts/where_from_sentence.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 82,
+      "md": "docs/learning-book/hebrew/g2/drafts/where_from_sentence.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 83,
+      "md": "docs/learning-book/hebrew/g2/drafts/where_from_sentence.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 84,
+      "md": "docs/learning-book/hebrew/g2/drafts/where_from_sentence.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 85,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.synonyms_basic.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 86,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.synonyms_basic.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 87,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.synonyms_basic.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 88,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.synonyms_basic.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 89,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.synonyms_basic.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 90,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.synonyms_basic.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 91,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.synonyms_basic.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 92,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.context_clue_easy.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 93,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.context_clue_easy.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 94,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.context_clue_easy.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 95,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.context_clue_easy.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 96,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.context_clue_easy.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 97,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.context_clue_easy.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 98,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.context_clue_easy.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 99,
+      "md": "docs/learning-book/hebrew/g2/drafts/cloze_school.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 100,
+      "md": "docs/learning-book/hebrew/g2/drafts/cloze_school.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 101,
+      "md": "docs/learning-book/hebrew/g2/drafts/cloze_school.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 102,
+      "md": "docs/learning-book/hebrew/g2/drafts/cloze_school.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 103,
+      "md": "docs/learning-book/hebrew/g2/drafts/cloze_school.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 104,
+      "md": "docs/learning-book/hebrew/g2/drafts/cloze_school.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 105,
+      "md": "docs/learning-book/hebrew/g2/drafts/cloze_school.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 106,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.sentence_wellformed.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 107,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.sentence_wellformed.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 108,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.sentence_wellformed.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 109,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.sentence_wellformed.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 110,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.sentence_wellformed.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 111,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.sentence_wellformed.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 112,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.sentence_wellformed.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 113,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.punctuation_choice.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 114,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.punctuation_choice.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 115,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.punctuation_choice.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 116,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.punctuation_choice.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 117,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.punctuation_choice.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 118,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.punctuation_choice.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 119,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.punctuation_choice.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 120,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.short_paragraph_choice.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 121,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.short_paragraph_choice.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 122,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.short_paragraph_choice.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 123,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.short_paragraph_choice.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 124,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.short_paragraph_choice.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 125,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.short_paragraph_choice.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 126,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.short_paragraph_choice.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 127,
+      "md": "docs/learning-book/hebrew/g2/drafts/object_riddle.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 128,
+      "md": "docs/learning-book/hebrew/g2/drafts/object_riddle.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 129,
+      "md": "docs/learning-book/hebrew/g2/drafts/object_riddle.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 130,
+      "md": "docs/learning-book/hebrew/g2/drafts/object_riddle.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 131,
+      "md": "docs/learning-book/hebrew/g2/drafts/object_riddle.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 132,
+      "md": "docs/learning-book/hebrew/g2/drafts/object_riddle.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 133,
+      "md": "docs/learning-book/hebrew/g2/drafts/object_riddle.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 134,
+      "md": "docs/learning-book/hebrew/g2/drafts/role_meaning.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 135,
+      "md": "docs/learning-book/hebrew/g2/drafts/role_meaning.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 136,
+      "md": "docs/learning-book/hebrew/g2/drafts/role_meaning.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 137,
+      "md": "docs/learning-book/hebrew/g2/drafts/role_meaning.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 138,
+      "md": "docs/learning-book/hebrew/g2/drafts/role_meaning.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 139,
+      "md": "docs/learning-book/hebrew/g2/drafts/role_meaning.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": false,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 140,
+      "md": "docs/learning-book/hebrew/g2/drafts/role_meaning.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 141,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.describe_prompt_choice.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 142,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.describe_prompt_choice.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 143,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.describe_prompt_choice.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 144,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.describe_prompt_choice.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 145,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.describe_prompt_choice.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 146,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.describe_prompt_choice.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 147,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.describe_prompt_choice.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 148,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.situation_register.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 149,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.situation_register.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 150,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.situation_register.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 151,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.situation_register.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 152,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.situation_register.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 153,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.situation_register.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 154,
+      "md": "docs/learning-book/hebrew/g2/drafts/g2.situation_register.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 155,
+      "md": "docs/learning-book/hebrew/g2/drafts/thanks_response.md",
+      "section": 1,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 156,
+      "md": "docs/learning-book/hebrew/g2/drafts/thanks_response.md",
+      "section": 2,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 157,
+      "md": "docs/learning-book/hebrew/g2/drafts/thanks_response.md",
+      "section": 3,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 158,
+      "md": "docs/learning-book/hebrew/g2/drafts/thanks_response.md",
+      "section": 4,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 159,
+      "md": "docs/learning-book/hebrew/g2/drafts/thanks_response.md",
+      "section": 5,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 160,
+      "md": "docs/learning-book/hebrew/g2/drafts/thanks_response.md",
+      "section": 6,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 161,
+      "md": "docs/learning-book/hebrew/g2/drafts/thanks_response.md",
+      "section": 7,
+      "mdBodyMatch": true,
+      "exportMatch": true,
+      "status": "synced"
+    }
+  ]
+}

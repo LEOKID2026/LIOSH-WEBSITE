@@ -1,0 +1,8 @@
+תבניות:
+I am — אני
+You are — אתה או את
+He is — הוא
+She is — היא
+דוגמה:
+She is happy.
+היא שמחה.

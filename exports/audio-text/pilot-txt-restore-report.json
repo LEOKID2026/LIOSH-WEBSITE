@@ -1,0 +1,202 @@
+{
+  "generatedAt": "2026-06-27T20:39:31.478Z",
+  "reason": "Recover TXT after mistaken site→TXT sync (sync-pilot-audio-text-books.mjs)",
+  "pagesRestored": 39,
+  "restored": [
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 27,
+      "file": "page-027.txt"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 111,
+      "file": "page-111.txt"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 117,
+      "file": "page-117.txt"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 167,
+      "file": "page-167.txt"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 174,
+      "file": "page-174.txt"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 179,
+      "file": "page-179.txt"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 180,
+      "file": "page-180.txt"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 181,
+      "file": "page-181.txt"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 188,
+      "file": "page-188.txt"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 195,
+      "file": "page-195.txt"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 202,
+      "file": "page-202.txt"
+    },
+    {
+      "book": "hebrew-g1",
+      "pageNumber": 209,
+      "file": "page-209.txt"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 13,
+      "file": "page-013.txt"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 20,
+      "file": "page-020.txt"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 27,
+      "file": "page-027.txt"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 34,
+      "file": "page-034.txt"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 41,
+      "file": "page-041.txt"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 55,
+      "file": "page-055.txt"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 62,
+      "file": "page-062.txt"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 67,
+      "file": "page-067.txt"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 69,
+      "file": "page-069.txt"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 74,
+      "file": "page-074.txt"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 76,
+      "file": "page-076.txt"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 81,
+      "file": "page-081.txt"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 83,
+      "file": "page-083.txt"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 95,
+      "file": "page-095.txt"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 97,
+      "file": "page-097.txt"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 104,
+      "file": "page-104.txt"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 111,
+      "file": "page-111.txt"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 118,
+      "file": "page-118.txt"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 125,
+      "file": "page-125.txt"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 130,
+      "file": "page-130.txt"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 132,
+      "file": "page-132.txt"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 139,
+      "file": "page-139.txt"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 142,
+      "file": "page-142.txt"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 146,
+      "file": "page-146.txt"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 151,
+      "file": "page-151.txt"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 153,
+      "file": "page-153.txt"
+    },
+    {
+      "book": "hebrew-g2",
+      "pageNumber": 160,
+      "file": "page-160.txt"
+    }
+  ]
+}

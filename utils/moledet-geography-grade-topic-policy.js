@@ -1,7 +1,10 @@
 /**
  * Moledet/Geography — GRADES topics vs data/moledet-geography-curriculum.js + curriculum map (moledet.bank.*).
  */
-import { MOLEDET_GEOGRAPHY_GRADES } from "../data/moledet-geography-curriculum.js";
+import * as moledetCurriculumModule from "../data/moledet-geography-curriculum.js";
+const MOLEDET_GEOGRAPHY_GRADES =
+  moledetCurriculumModule.default?.MOLEDET_GEOGRAPHY_GRADES ??
+  moledetCurriculumModule.MOLEDET_GEOGRAPHY_GRADES;
 import { GRADES as MG_UI_GRADES } from "./moledet-geography-constants.js";
 import { findTopicPlacement } from "./curriculum-audit/israeli-primary-curriculum-map.js";
 
