@@ -5,7 +5,7 @@
 
 import { pickVariant } from "../parent-report-language/variants.js";
 import {
-  buildSubskillLimitationUncertaintyHe,
+  buildSkillDetailLimitationUncertaintyHe,
   hasTopicLevelEvidence,
   TOPIC_EVIDENCE_THRESHOLDS,
 } from "../parent-report-topic-evidence.js";
@@ -223,7 +223,7 @@ function buildActionSlot(capIntensity, eligible, seed) {
     ]);
   }
   return pickVariant(seed, [
-    "אפשר לשקול צעד התקדמות מדוד בנושא זה בלבד.",
+    "אפשר לשקול צעד התקדמות מדוד בנושא הספציפי בלבד.",
     "ניתן לשקול התקדמות קטנה ומבוקרת בנושא הזה בלבד.",
     "אפשר לעשות צעד התקדמות זהיר ומוגבל רק לנושא הזה.",
   ]);
@@ -278,14 +278,14 @@ export function buildNarrativeContractV1(input) {
   const baseSeed = `${topicKey}|${subjectId}|${displayName}|${envelope}|${q}|${acc}|${cappedIntensity}|${hedgeLevel}`;
   const hasSubskillMetadata = !!(
     input?.hasSubskillMetadata ||
-    input?.subskillDetailAvailable ||
-    input?.contractsV1?.evidence?.subskillBreakdownAvailable
+    input?.skillDetailAvailable ||
+    input?.contractsV1?.evidence?.skillBreakdownAvailable
   );
   let uncertainty = buildUncertaintySlot(hedgeLevel, `${baseSeed}:unc`);
   if (hasTopicLevelEvidence(q) && !hasSubskillMetadata) {
-    const subskillNote = buildSubskillLimitationUncertaintyHe(false);
-    if (subskillNote) {
-      uncertainty = uncertainty && hedgeLevel !== "mandatory" ? `${uncertainty} ${subskillNote}` : subskillNote;
+    const skillDetailNote = buildSkillDetailLimitationUncertaintyHe(false);
+    if (skillDetailNote) {
+      uncertainty = uncertainty && hedgeLevel !== "mandatory" ? `${uncertainty} ${skillDetailNote}` : skillDetailNote;
     }
   }
 

@@ -4167,7 +4167,7 @@ export default function ParentReport() {
                                 if (!p) return ["", ""];
                                 const q = Number(p.questions) || 0;
                                 if (q <= 0) {
-                                  return ["לא תורגל בנושא זה בתקופה שנבחרה", ""];
+                                  return ["לא תורגל באותו נושא בתקופה שנבחרה", ""];
                                 }
                                 return [
                                   `דיוק ${p.accuracy}% · ${q} שאלות · ${p.timeMinutes} דק׳`,

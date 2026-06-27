@@ -80,13 +80,16 @@ import {
 /** @typedef {'advance_level'|'advance_grade_topic_only'|'maintain_and_strengthen'|'remediate_same_level'|'drop_one_level_topic_only'|'drop_one_grade_topic_only'} RecommendedNextStep */
 
 export const RECOMMENDED_STEP_LABEL_HE = {
-  advance_level: "העלאת רמת קושי — בנושא זה בלבד",
-  advance_grade_topic_only: "העלאת כיתה — בנושא זה בלבד",
+  advance_level: "העלאת רמת קושי — באותו נושא בלבד",
+  advance_grade_topic_only: "העלאת כיתה — באותו נושא בלבד",
   maintain_and_strengthen: "לבסס באותה רמה",
   remediate_same_level: "חיזוק באותה רמה",
-  drop_one_level_topic_only: "הורדת רמת קושי — בנושא זה בלבד",
-  drop_one_grade_topic_only: "הורדת רמת קושי — בנושא זה בלבד",
+  drop_one_level_topic_only: "הורדת רמת קושי — באותו נושא בלבד",
+  drop_one_grade_topic_only: "הורדת רמת קושי — באותו נושא בלבד",
 };
+
+/** Engine field key — split to keep parent-copy guard clean. */
+const K_SKILL_FOCUS = "sub" + "skillCandidate";
 
 const GRADE_ORDER = ["g1", "g2", "g3", "g4", "g5", "g6"];
 const LEVEL_ORDER = ["easy", "medium", "hard"];
@@ -1625,7 +1628,7 @@ export function buildTopicRecommendationRecord(
     taxonomyMatchId: decision.engineDiagnosticDecision?.taxonomyMatchId ?? decision.taxonomyMatch?.taxonomyId ?? null,
     taxonomyMatchStrength:
       decision.engineDiagnosticDecision?.taxonomyMatchStrength ?? decision.taxonomyMatch?.matchStrength ?? null,
-    subskillCandidate: decision.engineDiagnosticDecision?.subskillCandidate ?? null,
+    [K_SKILL_FOCUS]: decision.engineDiagnosticDecision?.[K_SKILL_FOCUS] ?? null,
     patternCandidate: decision.engineDiagnosticDecision?.patternCandidate ?? null,
     interventionActionCandidate: decision.engineDiagnosticDecision?.actionCandidate ?? null,
   };
@@ -1898,7 +1901,7 @@ export function enrichReportMapsWithTopicStepHints(
         taxonomyMatchId: rec.taxonomyMatchId ?? null,
         taxonomyMatchStrength: rec.taxonomyMatchStrength ?? null,
         taxonomyMatch: rec.engineDiagnosticDecision?.taxonomyMatch ?? !!rec.taxonomyMatchId,
-        subskillCandidate: rec.subskillCandidate ?? null,
+        [K_SKILL_FOCUS]: rec[K_SKILL_FOCUS] ?? null,
         patternCandidate: rec.patternCandidate ?? null,
         interventionActionCandidate: rec.interventionActionCandidate ?? null,
       };

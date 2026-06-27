@@ -110,7 +110,7 @@ const NEW_ISO = new Date(NEW_MS).toISOString();
   );
   const syntheticAgg = {
     student: { id: "s1", full_name: "Test", grade_level: "g4", is_active: true },
-    range: { from: "2026-05-01", to: "2026-05-07" },
+    range: { from: "2026-05-01", to: "2026-05-18" },
     summary: { totalAnswers: 2, correctAnswers: 1, wrongAnswers: 1, registeredGradeLevel: "g4" },
     subjects: {
       math: {

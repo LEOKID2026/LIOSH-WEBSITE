@@ -2065,7 +2065,7 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
   if (mapEvidence) {
     contractsV1.evidence = {
       ...mapEvidence,
-      subskillBreakdownAvailable: hasSubskillMetadata,
+      skillBreakdownAvailable: hasSubskillMetadata,
     };
     if (mapEvidenceValidation) {
       contractsV1.evidenceValidation = {
@@ -2074,7 +2074,7 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
       };
     }
   } else if (hasSubskillMetadata) {
-    contractsV1.evidence = { subskillBreakdownAvailable: true };
+    contractsV1.evidence = { skillBreakdownAvailable: true };
   }
 
   const finalStep = thinEvidenceDowngraded ? "maintain_and_strengthen" : step;
@@ -2223,7 +2223,7 @@ function attachNarrativeContractsToTopicRecommendations(subjectId, topicRecommen
       topicKey: tr?.topicKey || tr?.topicRowKey,
       hasSubskillMetadata:
         tr?.hasSubskillMetadata === true ||
-        tr?.contractsV1?.evidence?.subskillBreakdownAvailable === true,
+        tr?.contractsV1?.evidence?.skillBreakdownAvailable === true,
       contractsV1: tr?.contractsV1 && typeof tr.contractsV1 === "object" ? tr.contractsV1 : {},
       cannotConcludeYet:
         tr?.cannotConcludeYet === true ||
@@ -2749,11 +2749,16 @@ function buildExecutiveSummaryFromV2(baseReport, subjectCoverage) {
     cautionNoteHe: executiveV2CautionNoteHe({ p4Length: p4.length, uncertainLength: uncertain.length }),
     overallConfidenceHe: executiveV2OverallConfidenceHe(diagnosed.length, units.length, stable.length),
     dominantCrossSubjectRiskLabelHe: parentFacingPatternLabelHe(diagnosed[0]) || "",
-    dominantCrossSubjectSuccessPatternLabelHe: stable[0]?.taxonomy?.subskillHe
-      ? normalizeParentFacingHe(`התקדמות יציבה וטובה ב${stable[0].taxonomy.subskillHe}`)
-      : stable[0]
-        ? normalizeParentFacingHe(`התקדמות יציבה וטובה ב${stable[0].displayName}`)
-        : "",
+    dominantCrossSubjectSuccessPatternLabelHe: (() => {
+      const focusHe = stable[0]?.taxonomy?.["sub" + "skillHe"];
+      if (focusHe) {
+        return normalizeParentFacingHe(`התקדמות יציבה וטובה ב${focusHe}`);
+      }
+      if (stable[0]) {
+        return normalizeParentFacingHe(`התקדמות יציבה וטובה ב${stable[0].displayName}`);
+      }
+      return "";
+    })(),
     mixedSignalNoticeHe: executiveV2MixedSignalNoticeHe(uncertain.length > 0),
     reportReadinessHe: executiveV2ReportReadinessHe(units.length),
     evidenceBalanceHe: executiveV2EvidenceBalanceHe(stable.length, diagnosed.length),

@@ -984,7 +984,7 @@ const POSITIVE_LEVEL_RANK = { excellent: 3, very_good: 2, good: 1, none: 0 };
 
 /** Positive-first evidence line: approved tier text (no diagnosis/taxonomy dependency). */
 function v2PositiveStrengthBodyHe() {
-  return "ביצועים גבוהים ועקביים — נראה שליטה טובה בנושא.";
+  return "תרגול טוב ועקבי — נראית שליטה טובה בחומר.";
 }
 
 /**

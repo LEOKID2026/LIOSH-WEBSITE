@@ -124,10 +124,13 @@ export function resolveParentTopicReadiness(questionCount, engineReadiness = "in
 /**
  * @param {boolean} hasSubskillMetadata
  */
-export function buildSubskillLimitationUncertaintyHe(hasSubskillMetadata) {
+export function buildSkillDetailLimitationUncertaintyHe(hasSubskillMetadata) {
   if (hasSubskillMetadata) return null;
   return SUBSKILL_DETAIL_LIMITATION_HE;
 }
+
+/** @deprecated Use buildSkillDetailLimitationUncertaintyHe */
+export const buildSubskillLimitationUncertaintyHe = buildSkillDetailLimitationUncertaintyHe;
 
 /**
  * Whether real row/engine data already exposes subskill or repeated-mistake detail.
@@ -164,7 +167,7 @@ export function resolveHasSubskillMetadataFromRowSources(unit, mapRow) {
   const patternFamilies = mapRow?.patternFamilies;
   if (Array.isArray(patternFamilies) && patternFamilies.length > 0) return true;
 
-  if (mapRow?.contractsV1?.evidence?.subskillBreakdownAvailable === true) return true;
+  if (mapRow?.contractsV1?.evidence?.skillBreakdownAvailable === true) return true;
 
   return false;
 }
