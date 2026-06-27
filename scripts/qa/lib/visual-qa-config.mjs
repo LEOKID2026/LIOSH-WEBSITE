@@ -3,6 +3,7 @@
  */
 
 import { GRADES as GEOMETRY_GRADES, TOPICS as GEOMETRY_TOPICS } from "../../../utils/geometry-constants.js";
+import { SCIENCE_GRADES } from "../../../data/science-curriculum.js";
 
 export const GRADE_HE = {
   1: "כיתה א׳",
@@ -41,8 +42,8 @@ export const GRADE_STUDENTS = {
   ],
 };
 
-export const PHASE1_SUBJECTS = new Set(["math", "geometry", "hebrew", "english"]);
-export const FUTURE_SUBJECTS = new Set(["science", "moledet"]);
+export const PHASE1_SUBJECTS = new Set(["math", "geometry", "hebrew", "english", "science"]);
+export const FUTURE_SUBJECTS = new Set(["moledet"]);
 
 const TOPIC = (value, label) => ({ value, label });
 
@@ -54,6 +55,29 @@ function geometryTopicsByGradeFromProduct() {
     out[gradeNumber] = keys.map((value) => ({
       value,
       label: GEOMETRY_TOPICS[value]?.name || value,
+    }));
+  }
+  return out;
+}
+
+const SCIENCE_TOPIC_LABELS = {
+  body: "גוף האדם",
+  animals: "בעלי חיים",
+  plants: "צמחים",
+  materials: "חומרים",
+  earth_space: "כדור הארץ והחלל",
+  environment: "סביבה ואקולוגיה",
+  experiments: "ניסויים ותהליכים",
+};
+
+function scienceTopicsByGradeFromProduct() {
+  const out = {};
+  for (let gradeNumber = 1; gradeNumber <= 6; gradeNumber += 1) {
+    const gradeKey = `g${gradeNumber}`;
+    const keys = (SCIENCE_GRADES[gradeKey]?.topics || []).filter((k) => k !== "mixed");
+    out[gradeNumber] = keys.map((value) => ({
+      value,
+      label: SCIENCE_TOPIC_LABELS[value] || value,
     }));
   }
   return out;
@@ -126,10 +150,10 @@ export const SUBJECT_PLANS = {
     path: "/learning/science-master",
     playerTestId: "science-player-name",
     gradeSelectAfterPlayer: true,
-    gradeValueKind: "numeric",
+    gradeValueKind: "g-key",
     topicSelectTestId: "science-topic-select",
     startTestId: "science-start-game",
-    topicsByGrade: {},
+    topicsByGrade: scienceTopicsByGradeFromProduct(),
   },
   moledet: {
     path: "/learning/moledet-geography-master",
@@ -203,19 +227,19 @@ export function resolveSubject(subject) {
   if (!subject) {
     return {
       ok: false,
-      error: "VISUAL_QA_SUBJECT is required (math | geometry | hebrew | english)",
+      error: "VISUAL_QA_SUBJECT is required (math | geometry | hebrew | english | science)",
     };
   }
   if (FUTURE_SUBJECTS.has(subject)) {
     return {
       ok: false,
-      error: `Subject "${subject}" is not implemented in harness phase 1. Supported: math, geometry, hebrew, english.`,
+      error: `Subject "${subject}" is not implemented in harness phase 1. Supported: math, geometry, hebrew, english, science.`,
     };
   }
   if (!PHASE1_SUBJECTS.has(subject)) {
     return {
       ok: false,
-      error: `Unknown VISUAL_QA_SUBJECT="${subject}". Supported: math, geometry, hebrew, english (phase 1); science, moledet (planned).`,
+      error: `Unknown VISUAL_QA_SUBJECT="${subject}". Supported: math, geometry, hebrew, english, science (phase 1); moledet (planned).`,
     };
   }
   return { ok: true, plan: SUBJECT_PLANS[subject], subject };

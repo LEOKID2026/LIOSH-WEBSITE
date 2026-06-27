@@ -16,22 +16,22 @@
 **Source references:**
 - `docs/qa/ENGLISH_G1_G2_PHONICS_CONTENT_MAP.md`
 
-**Content scope:** CVC + sight: the, I, a, is; audio_required: yes — קריאת מילה
+**Content scope:** cat, sit, run, the, I, a, is; audio_required: yes — קריאת מילה
 
 ---
 
 ## 1. מה לומדים?
 
-היום **קוראים** מילים — CVC ומילים קצרות מיוחדות.
+היום **קוראים** מילים — מילים קצרות ומילים מיוחדות.
 **the**, **I**, **a**, **is** — רואים הרבה באנגלית.
 
 ---
 
 ## 2. הסבר
 
-CVC: **cat**, **sit**, **run**
+מילים קצרות: **cat**, **sit**, **run**
 
-מילים קצרות (sight):
+מילים מיוחדות:
 
 **the** — מילה קטנה לפני שם, למשל: the cat  
 **I** — אני  
@@ -79,7 +79,7 @@ CVC: **cat**, **sit**, **run**
 
 שלב 2: מחברים יחד.
 
-**run** ✓
+**run** 
 
 ---
 

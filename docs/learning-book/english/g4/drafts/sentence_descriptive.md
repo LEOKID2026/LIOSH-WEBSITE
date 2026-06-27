@@ -81,7 +81,7 @@ smart = חכם (תאר שם עצם); nicely = יפה (תאר פועל, מסבי�
 
 הילד החכם כותב יפה.
 
-✓ The smart boy writes nicely.
+ The smart boy writes nicely.
 
 ---
 

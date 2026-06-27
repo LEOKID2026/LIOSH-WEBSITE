@@ -83,7 +83,7 @@ they will use = הם ישתמשו.
 
 הם ישתמשו באינטרנט בשיעור.
 
-✓ They will use the internet in class.
+ They will use the internet in class.
 
 ---
 

@@ -39,7 +39,7 @@ She jumps.
 She jumps.
 היא קופצת.
 כל הכבוד!
-אחרי she/he/it מוסיפים s לפועל — jumps, לא jump.
+אחרי she, he או it מוסיפים s לפועל — jumps, לא jump.
 
 ## Chapter 007 — עמוד 7
 
@@ -177,7 +177,7 @@ She feels tired.
 She feels tired.
 היא מרגישה עייפה.
 כל הכבוד!
-אחרי she/he/it מוסיפים s לפועל — feels, לא feel.
+אחרי she, he או it מוסיפים s לפועל — feels, לא feel.
 
 ## Chapter 028 — עמוד 28
 
@@ -313,7 +313,7 @@ The bag is in the room.
 הפתרון:
 The bag is in the room.
 התיק בחדר.
-כל הכבוד! in = בתוך/ב-.
+כל הכבוד! in פירושו בתוך או ב־.
 זוכרים: The + שם עצם + is + מילת מיקום.
 
 ## Chapter 049 — עמוד 49
@@ -597,7 +597,7 @@ She plays tennis.
 She plays tennis.
 היא משחקת טניס.
 כל הכבוד!
-אחרי she/he/it מוסיפים s לפועל — plays.
+אחרי she, he או it מוסיפים s לפועל — plays.
 אחרי I לא מוסיפים s — I play.
 
 ## Chapter 091 — עמוד 91
@@ -644,11 +644,11 @@ The ball is in the box.
 The ball is in the box.
 הכדור בתוך הקופסה.
 כל הכבוד! in = בתוך.
-המבנה: The + שם עצם + is + in/on/under + the + שם עצם.
+המבנה: The + שם עצם + is + מילת מיקום כמו in, on או under + the + שם עצם.
 
 ## Chapter 098 — עמוד 98
 
-עכשיו אתם משתמשים ב-a/an/the וב-in/on/under.
+עכשיו אתם משתמשים ב-a, an ו-the, וגם במילים in, on ו-under.
 בתרגול תמצאו The cat is under the bed.
 
 ## Chapter 099 — עמוד 99

@@ -77,13 +77,13 @@ My parents help me.
 
 תרגיל: "ההורים שלי עוזרים לי."
 
-parents = הורים (ריבוי) → אחרי ריבוי לא מוסיפים s לפועל help.
+parents הם הורים ברבים — אחרי ריבוי לא מוסיפים s לפועל help.
 
 me = לי (מושא ראשון).
 
 ההורים שלי עוזרים לי.
 
-✓ My parents help me.
+ My parents help me.
 
 ---
 

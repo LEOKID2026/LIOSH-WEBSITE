@@ -77,13 +77,13 @@ My grandparents send me letters.
 
 תרגיל: "הסבים שלי שולחים לי מכתבים."
 
-grandparents = ריבוי → send (ללא s).
+grandparents הוא ריבוי — משתמשים ב-send ללא s.
 
 me = לי; letters = מכתבים.
 
 הסבים שלי שולחים לי מכתבים.
 
-✓ My grandparents send me letters.
+ My grandparents send me letters.
 
 ---
 

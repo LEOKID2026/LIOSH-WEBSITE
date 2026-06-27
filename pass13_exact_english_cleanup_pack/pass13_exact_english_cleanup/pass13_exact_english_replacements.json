@@ -1,0 +1,380 @@
+[
+  {
+    "book": "english-g4",
+    "page": "page-006.txt",
+    "from": "פעולה שקורית עכשיו → Present Continuous: are + swimming.",
+    "to": "פעולה שקורית עכשיו — Present Continuous: are + swimming."
+  },
+  {
+    "book": "english-g4",
+    "page": "page-006.txt",
+    "from": "the fish = ריבוי → are swimming.",
+    "to": "the fish הוא ריבוי — משתמשים ב-are swimming."
+  },
+  {
+    "book": "english-g4",
+    "page": "page-013.txt",
+    "from": "he = יחיד זכר → מוסיפים es לפועל brush: brush → brushes.",
+    "to": "he הוא יחיד זכר — מוסיפים es לפועל brush: brush הופך ל-brushes."
+  },
+  {
+    "book": "english-g4",
+    "page": "page-027.txt",
+    "from": "parents = הורים (ריבוי) → אחרי ריבוי לא מוסיפים s לפועל help.",
+    "to": "parents הם הורים ברבים — אחרי ריבוי לא מוסיפים s לפועל help."
+  },
+  {
+    "book": "english-g4",
+    "page": "page-034.txt",
+    "from": "we = אנחנו → אחרי we לא מוסיפים s לפועל eat.",
+    "to": "we פירושו אנחנו — אחרי we לא מוסיפים s לפועל eat."
+  },
+  {
+    "book": "english-g4",
+    "page": "page-041.txt",
+    "from": "the students = התלמידים (ריבוי) → אחרי ריבוי לא מוסיפים s לפועל listen.",
+    "to": "the students הם התלמידים ברבים — אחרי ריבוי לא מוסיפים s לפועל listen."
+  },
+  {
+    "book": "english-g4",
+    "page": "page-048.txt",
+    "from": "now = עכשיו → פעולה מתמשכת → Present Continuous.",
+    "to": "now פירושו עכשיו — פעולה מתמשכת בזמן הווה — Present Continuous."
+  },
+  {
+    "book": "english-g4",
+    "page": "page-048.txt",
+    "from": "they = ריבוי → are + playing.",
+    "to": "they הוא ריבוי — משתמשים ב-are + playing."
+  },
+  {
+    "book": "english-g4",
+    "page": "page-055.txt",
+    "from": "מזג אוויר שמתרחש עכשיו → Present Continuous: is + פועל + ing.",
+    "to": "מזג אוויר שמתרחש עכשיו — Present Continuous: is + פועל + ing."
+  },
+  {
+    "book": "english-g4",
+    "page": "page-055.txt",
+    "from": "snow → snowing; today = היום.",
+    "to": "snow הופך ל-snowing; today פירושו היום."
+  },
+  {
+    "book": "english-g4",
+    "page": "page-062.txt",
+    "from": "in = בתוך/ב- → כשמדברים על מיקום בתוך מקום כמו town משתמשים ב in.",
+    "to": "in פירושו בתוך או ב־. כשמדברים על מיקום בתוך מקום כמו town משתמשים ב-in."
+  },
+  {
+    "book": "english-g4",
+    "page": "page-069.txt",
+    "from": "we = אנחנו → אחרי we לא מוסיפים s לפועל protect.",
+    "to": "we פירושו אנחנו — אחרי we לא מוסיפים s לפועל protect."
+  },
+  {
+    "book": "english-g4",
+    "page": "page-083.txt",
+    "from": "every Saturday = כל שבת → הרגל → Present Simple.",
+    "to": "every Saturday פירושו כל שבת — זה הרגל, ולכן משתמשים ב-Present Simple."
+  },
+  {
+    "book": "english-g4",
+    "page": "page-090.txt",
+    "from": "המילה now מראה פעולה שקורית עכשיו → Present Continuous.",
+    "to": "המילה now מראה פעולה שקורית עכשיו — Present Continuous."
+  },
+  {
+    "book": "english-g4",
+    "page": "page-090.txt",
+    "from": "they = הם → are + playing.",
+    "to": "they פירושו הם — משתמשים ב-are + playing."
+  },
+  {
+    "book": "english-g4",
+    "page": "page-097.txt",
+    "from": "books — שם עצם ספיר (ניתן לספור) → משתמשים ב many.",
+    "to": "books הוא שם עצם ספיר, כלומר אפשר לספור אותו, ולכן משתמשים ב-many."
+  },
+  {
+    "book": "english-g4",
+    "page": "page-111.txt",
+    "from": "Every day = כל יום → הרגל → Present Simple.",
+    "to": "Every day פירושו כל יום — זה הרגל, ולכן משתמשים ב-Present Simple."
+  },
+  {
+    "book": "english-g4",
+    "page": "page-111.txt",
+    "from": "he = יחיד זכר → מוסיפים s לפועל: drink → drinks.",
+    "to": "he הוא יחיד זכר — מוסיפים s לפועל: drink הופך ל-drinks."
+  },
+  {
+    "book": "english-g5",
+    "page": "page-006.txt",
+    "from": "פועל סדיר בעבר: jump → jumped.",
+    "to": "פועל סדיר בעבר: jump הופך ל-jumped."
+  },
+  {
+    "book": "english-g5",
+    "page": "page-013.txt",
+    "from": "פועל סדיר בעבר: visit → visited.",
+    "to": "פועל סדיר בעבר: visit הופך ל-visited."
+  },
+  {
+    "book": "english-g5",
+    "page": "page-020.txt",
+    "from": "feel → felt (פועל חריג בעבר).",
+    "to": "feel הופך ל-felt בעבר, כי זה פועל חריג."
+  },
+  {
+    "book": "english-g5",
+    "page": "page-027.txt",
+    "from": "פועל סדיר בעבר: plant → planted.",
+    "to": "פועל סדיר בעבר: plant הופך ל-planted."
+  },
+  {
+    "book": "english-g5",
+    "page": "page-034.txt",
+    "from": "grandparents = ריבוי → send (ללא s).",
+    "to": "grandparents הוא ריבוי — משתמשים ב-send ללא s."
+  },
+  {
+    "book": "english-g5",
+    "page": "page-041.txt",
+    "from": "פועל סדיר בעבר: cook → cooked.",
+    "to": "פועל סדיר בעבר: cook הופך ל-cooked."
+  },
+  {
+    "book": "english-g5",
+    "page": "page-048.txt",
+    "from": "פועל סדיר בעבר: present → presented.",
+    "to": "פועל סדיר בעבר: present הופך ל-presented."
+  },
+  {
+    "book": "english-g5",
+    "page": "page-083.txt",
+    "from": "פעולה שהסתיימה בעבר → Past Simple: play → played.",
+    "to": "פעולה שהסתיימה בעבר — Past Simple: play הופך ל-played."
+  },
+  {
+    "book": "english-g5",
+    "page": "page-090.txt",
+    "from": "going to = תוכנית קרובה → are going to + פועל.",
+    "to": "going to מראה תוכנית קרובה — משתמשים ב-are going to + פועל."
+  },
+  {
+    "book": "english-g5",
+    "page": "page-090.txt",
+    "from": "they = ריבוי → are going to fly.",
+    "to": "they הוא ריבוי — משתמשים ב-are going to fly."
+  },
+  {
+    "book": "english-g5",
+    "page": "page-100.txt",
+    "from": "קצר: big → bigger than",
+    "to": "שם תואר קצר: big הופך ל-bigger than"
+  },
+  {
+    "book": "english-g5",
+    "page": "page-100.txt",
+    "from": "ארוך: interesting → more interesting than",
+    "to": "שם תואר ארוך: משתמשים ב-more interesting than"
+  },
+  {
+    "book": "english-g5",
+    "page": "page-104.txt",
+    "from": "exciting = שם תואר ארוך (3+ הברות) → more exciting than.",
+    "to": "exciting הוא שם תואר ארוך — משתמשים ב-more exciting than."
+  },
+  {
+    "book": "english-g5",
+    "page": "page-118.txt",
+    "from": "have → had (פועל חריג בעבר).",
+    "to": "have הופך ל-had בעבר, כי זה פועל חריג."
+  },
+  {
+    "book": "english-g5",
+    "page": "page-125.txt",
+    "from": "Last year = בשנה שעברה → פועל בעבר.",
+    "to": "Last year פירושו בשנה שעברה — לכן משתמשים בפועל בעבר."
+  },
+  {
+    "book": "english-g5",
+    "page": "page-146.txt",
+    "from": "children = ריבוי → learn (ללא s).",
+    "to": "children הוא ריבוי — משתמשים ב-learn ללא s."
+  },
+  {
+    "book": "english-g6",
+    "page": "page-006.txt",
+    "from": "פעולה מתמשכת בעבר → Past Continuous: were flying.",
+    "to": "פעולה מתמשכת בעבר — Past Continuous: were flying."
+  },
+  {
+    "book": "english-g6",
+    "page": "page-027.txt",
+    "from": "temperatures = ריבוי → are rising (Present Continuous).",
+    "to": "temperatures הוא ריבוי — משתמשים ב-are rising ב-Present Continuous."
+  },
+  {
+    "book": "english-g6",
+    "page": "page-062.txt",
+    "from": "organizations = ריבוי → help (ללא s).",
+    "to": "organizations הוא ריבוי — משתמשים ב-help ללא s."
+  },
+  {
+    "book": "english-g6",
+    "page": "page-069.txt",
+    "from": "פועל סדיר בעבר: discover → discovered.",
+    "to": "פועל סדיר בעבר: discover הופך ל-discovered."
+  },
+  {
+    "book": "english-g6",
+    "page": "page-076.txt",
+    "from": "פעולה מתמשכת ברקע → Past Continuous: were sitting.",
+    "to": "פעולה מתמשכת ברקע — Past Continuous: were sitting."
+  },
+  {
+    "book": "english-g6",
+    "page": "page-076.txt",
+    "from": "אירוע שקרה באמצע → Past Simple: started.",
+    "to": "אירוע שקרה באמצע — Past Simple: started."
+  },
+  {
+    "book": "english-g6",
+    "page": "page-104.txt",
+    "from": "שתי פעולות שהתרחשו במקביל → Past Continuous לשתיהן.",
+    "to": "שתי פעולות שהתרחשו במקביל — משתמשים ב-Past Continuous לשתיהן."
+  },
+  {
+    "book": "english-g2",
+    "page": "page-051.txt",
+    "from": "friend — חבר/ה",
+    "to": "friend — חבר או חברה"
+  },
+  {
+    "book": "english-g2",
+    "page": "page-072.txt",
+    "from": "I am happy. — אני שמח/ה.",
+    "to": "I am happy. — אני שמח או שמחה."
+  },
+  {
+    "book": "english-g2",
+    "page": "page-142.txt",
+    "from": "You are — אתה/את",
+    "to": "You are — אתה או את"
+  },
+  {
+    "book": "english-g3",
+    "page": "page-006.txt",
+    "from": "אחרי she/he/it מוסיפים s לפועל — jumps, לא jump.",
+    "to": "אחרי she, he או it מוסיפים s לפועל — jumps, לא jump."
+  },
+  {
+    "book": "english-g3",
+    "page": "page-027.txt",
+    "from": "אחרי she/he/it מוסיפים s לפועל — feels, לא feel.",
+    "to": "אחרי she, he או it מוסיפים s לפועל — feels, לא feel."
+  },
+  {
+    "book": "english-g3",
+    "page": "page-048.txt",
+    "from": "כל הכבוד! in = בתוך/ב-.",
+    "to": "כל הכבוד! in פירושו בתוך או ב־."
+  },
+  {
+    "book": "english-g3",
+    "page": "page-090.txt",
+    "from": "אחרי she/he/it מוסיפים s לפועל — plays.",
+    "to": "אחרי she, he או it מוסיפים s לפועל — plays."
+  },
+  {
+    "book": "english-g3",
+    "page": "page-097.txt",
+    "from": "המבנה: The + שם עצם + is + in/on/under + the + שם עצם.",
+    "to": "המבנה: The + שם עצם + is + מילת מיקום כמו in, on או under + the + שם עצם."
+  },
+  {
+    "book": "english-g3",
+    "page": "page-098.txt",
+    "from": "עכשיו אתם משתמשים ב-a/an/the וב-in/on/under.",
+    "to": "עכשיו אתם משתמשים ב-a, an ו-the, וגם במילים in, on ו-under."
+  },
+  {
+    "book": "english-g4",
+    "page": "page-065.txt",
+    "from": "protect — לשמור/להגן",
+    "to": "protect — לשמור או להגן"
+  },
+  {
+    "book": "english-g4",
+    "page": "page-085.txt",
+    "from": "I read every day / I am reading now.",
+    "to": "I read every day לעומת I am reading now."
+  },
+  {
+    "book": "english-g4",
+    "page": "page-098.txt",
+    "from": "עכשיו אתם משתמשים ב-some, my ו-slowly/quickly.",
+    "to": "עכשיו אתם משתמשים ב-some, my, slowly ו-quickly."
+  },
+  {
+    "book": "english-g5",
+    "page": "page-020.txt",
+    "from": "tired = עייף/ה; after the game = אחרי המשחק.",
+    "to": "tired פירושו עייפים; after the game פירושו אחרי המשחק."
+  },
+  {
+    "book": "english-g5",
+    "page": "page-069.txt",
+    "from": "exercise = פעילות גופנית / להתאמן; every day = כל יום.",
+    "to": "exercise כאן פירושו להתאמן; every day פירושו כל יום."
+  },
+  {
+    "book": "english-g5",
+    "page": "page-093.txt",
+    "from": "must / have to — חובה:",
+    "to": "must ו-have to — חובה:"
+  },
+  {
+    "book": "english-g5",
+    "page": "page-106.txt",
+    "from": "היום נחזק much/many — כמות עם שמות עצם ספירים ולא ספירים.",
+    "to": "היום נחזק את ההבדל בין much ל-many — כמות עם שמות עצם ספירים ולא ספירים."
+  },
+  {
+    "book": "english-g6",
+    "page": "page-002.txt",
+    "from": "Past Continuous — was/were + פועל + ing:",
+    "to": "Past Continuous — משתמשים ב-was או were, ואחריהם פועל עם ing:"
+  },
+  {
+    "book": "english-g6",
+    "page": "page-020.txt",
+    "from": "proud = גאה/ים; after a win = אחרי ניצחון.",
+    "to": "proud פירושו גאים; after a win פירושו אחרי ניצחון."
+  },
+  {
+    "book": "english-g6",
+    "page": "page-030.txt",
+    "from": "should + פועל — כדאי / מומלץ:",
+    "to": "should + פועל — כדאי או מומלץ:"
+  },
+  {
+    "book": "english-g6",
+    "page": "page-034.txt",
+    "from": "should + פועל = כדאי / מומלץ (בלי to אחרי should).",
+    "to": "should + פועל פירושו כדאי או מומלץ. לא מוסיפים to אחרי should."
+  },
+  {
+    "book": "english-g6",
+    "page": "page-072.txt",
+    "from": "Past Continuous — was/were + ing (פעולה באמצע):",
+    "to": "Past Continuous — משתמשים ב-was או were עם ing, לפעולה שהייתה באמצע:"
+  },
+  {
+    "book": "english-g6",
+    "page": "page-092.txt",
+    "from": "היום נלמד Superlatives — the most / the best.",
+    "to": "היום נלמד Superlatives — למשל the most או the best."
+  }
+]

@@ -78,11 +78,11 @@ I go to school
 
 **השאלה: ילד יוצא מהבית — באנגלית?**
 
-הולך לבית ספר = go to school.
+go to school פירושו ללכת לבית ספר.
 
-I + go to school.
+I go to school.
 
-**I go to school** ✓
+**I go to school** 
 
 ---
 

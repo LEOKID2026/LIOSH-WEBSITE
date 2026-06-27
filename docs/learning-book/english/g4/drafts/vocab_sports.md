@@ -77,13 +77,13 @@ They are playing basketball now.
 
 תרגיל: "הם משחקים כדורסל עכשיו."
 
-now = עכשיו → פעולה מתמשכת → Present Continuous.
+now פירושו עכשיו — פעולה מתמשכת בזמן הווה — Present Continuous.
 
-they = ריבוי → are + playing.
+they הוא ריבוי — משתמשים ב-are + playing.
 
 הם משחקים כדורסל עכשיו.
 
-✓ They are playing basketball now.
+ They are playing basketball now.
 
 ---
 

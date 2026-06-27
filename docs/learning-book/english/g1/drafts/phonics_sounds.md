@@ -16,7 +16,7 @@
 **Source references:**
 - `docs/qa/ENGLISH_G1_G2_PHONICS_CONTENT_MAP.md`
 
-**Content scope:** צלילי עיצורים + תנועות קצרות a,e,i; audio_required: yes — כל צליל בנפרד
+**Content scope:** צלילי a,e,i וצלילי b,m,s; audio_required: yes — כל צליל בנפרד
 
 ---
 
@@ -29,13 +29,13 @@
 
 ## 2. הסבר
 
-צלילי עיצורים (דוגמאות):
+דוגמאות לצלילים במילים:
 
 **b** — כמו ב-bat  
 **m** — כמו ב-mom  
 **s** — כמו ב-sun  
 
-תנועות קצרות:
+צלילים קצרים במילים:
 
 **a** — כמו ב-cat  
 **e** — כמו ב-bed  
@@ -84,7 +84,7 @@ pen
 
 שלב 2: הצליל הראשון — ppp.
 
-**p — צליל כמו ב-pen** ✓
+**p — צליל כמו ב-pen** 
 
 ---
 

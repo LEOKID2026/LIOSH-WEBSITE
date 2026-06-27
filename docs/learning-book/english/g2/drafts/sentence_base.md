@@ -76,9 +76,9 @@ I have a book
 
 **השאלה: ילד עם ספר — באנגלית?**
 
-I = אני, have = יש לי, a book = ספר.
+I פירושו אני. have פירושו יש לי. a book פירושו ספר.
 
-**I have a book** ✓
+**I have a book** 
 
 ---
 

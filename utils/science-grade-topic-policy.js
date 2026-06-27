@@ -2,8 +2,13 @@
  * Science — SCIENCE_GRADES[].topics consistency + conservative curriculum map placement.
  */
 
-import { SCIENCE_GRADES } from "../data/science-curriculum.js";
+import * as scienceCurriculumModule from "../data/science-curriculum.js";
 import { findTopicPlacement } from "./curriculum-audit/israeli-primary-curriculum-map.js";
+
+/** tsx interop: named exports from data/ may appear on default only when loaded via QA scripts. */
+const SCIENCE_GRADES =
+  scienceCurriculumModule.SCIENCE_GRADES ??
+  scienceCurriculumModule.default?.SCIENCE_GRADES;
 
 /** Representative normalized keys for UI topic ids (prefix-match in curriculum map). */
 export const SCIENCE_TOPIC_TO_REP_NORM = {

@@ -77,13 +77,13 @@ International organizations help solve global problems.
 
 תרגיל: "ארגונים בינלאומיים עוזרים לפתור בעיות גלובליות."
 
-organizations = ריבוי → help (ללא s).
+organizations הוא ריבוי — משתמשים ב-help ללא s.
 
 help + פועל (בלי to): help solve.
 
 ארגונים בינלאומיים עוזרים לפתור בעיות גלובליות.
 
-✓ International organizations help solve global problems.
+ International organizations help solve global problems.
 
 ---
 

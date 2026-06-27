@@ -16,33 +16,33 @@
 **Source references:**
 - `docs/qa/ENGLISH_G1_G2_PHONICS_CONTENT_MAP.md`
 
-**Content scope:** blend CVC: cat, hat, sit, run, big, red, hot, sun; audio_required: yes — segmented + blended
+**Content scope:** blend: cat, hat, sit, run, big, red, hot, sun; audio_required: yes — segmented and blended
 
 ---
 
 ## 1. מה לומדים?
 
-היום נלמד **לחבר** צלילים — c-a-t → **cat**.
+היום נלמד **לחבר** צלילים — c-a-t — **cat**.
 זו מיומנות מרכזית בכיתה ב׳.
 
 ---
 
 ## 2. הסבר
 
-**cat** — שומעים לאט: c … a … t → cat  
-**hat** — שומעים לאט: h … a … t → hat  
-**sit** — שומעים לאט: s … i … t → sit  
-**run** — שומעים לאט: r … u … n → run  
-**big** — שומעים לאט: b … i … g → big  
-**red** — שומעים לאט: r … e … d → red  
-**hot** — שומעים לאט: h … o … t → hot  
-**sun** — שומעים לאט: s … u … n → sun  
+**cat** — שומעים לאט: c … a … t — cat  
+**hat** — שומעים לאט: h … a … t — hat  
+**sit** — שומעים לאט: s … i … t — sit  
+**run** — שומעים לאט: r … u … n — run  
+**big** — שומעים לאט: b … i … g — big  
+**red** — שומעים לאט: r … e … d — red  
+**hot** — שומעים לאט: h … o … t — hot  
+**sun** — שומעים לאט: s … u … n — sun  
 
 ---
 
 ## 3. דוגמה
 
-**cat** — מפרידים: c … a … t → cat
+**cat** — מפרידים: c … a … t — cat
 
 שומעים לאט: c … a … t … **cat**!
 
@@ -77,11 +77,11 @@
 
 שלב 2: מחברים יחד — pig.
 
-**pig** ✓
+**pig** 
 
 ---
 
 ## 7. בואו נתרגל!
 
 עכשיו יודעים לחבר צלילים.
-בעמוד הבא — צליל ↔ אות חזק יותר.
+בעמוד הבא — צליל — אות חזק יותר.

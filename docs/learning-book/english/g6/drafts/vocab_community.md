@@ -77,13 +77,13 @@ Children and adults danced together at the festival.
 
 תרגיל: "ילדים ומבוגרים ריקדו יחד בפסטיבל."
 
-פועל סדיר בעבר: dance → danced.
+פועל סדיר בעבר: dance — danced.
 
 together = יחד; at the festival = בפסטיבל.
 
 ילדים ומבוגרים ריקדו יחד בפסטיבל.
 
-✓ Children and adults danced together at the festival.
+ Children and adults danced together at the festival.
 
 ---
 

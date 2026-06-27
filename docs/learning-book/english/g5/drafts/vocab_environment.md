@@ -77,13 +77,13 @@ Children planted flowers in the forest.
 
 תרגיל: "ילדים שתלו פרחים ביער."
 
-פועל סדיר בעבר: plant → planted.
+פועל סדיר בעבר: plant הופך ל-planted.
 
 in the forest = ביער.
 
 ילדים שתלו פרחים ביער.
 
-✓ Children planted flowers in the forest.
+ Children planted flowers in the forest.
 
 ---
 

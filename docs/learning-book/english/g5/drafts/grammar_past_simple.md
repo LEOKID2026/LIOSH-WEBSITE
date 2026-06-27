@@ -83,13 +83,13 @@ We played basketball in the morning.
 
 תרגיל: "שיחקנו כדורסל בבוקר."
 
-פעולה שהסתיימה בעבר → Past Simple: play → played.
+פעולה שהסתיימה בעבר — Past Simple: play הופך ל-played.
 
 in the morning = בבוקר.
 
 שיחקנו כדורסל בבוקר.
 
-✓ We played basketball in the morning.
+ We played basketball in the morning.
 
 ---
 

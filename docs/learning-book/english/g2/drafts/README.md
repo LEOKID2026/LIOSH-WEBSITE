@@ -50,10 +50,10 @@
 
 | File | Draft title | Merge note |
 |------|-------------|------------|
-| `grammar_be.md` | am / is / are — חיזוק | Merged חיזוק line + be_basic |
-| `grammar_plural_questions.md` | ריבוי ושאלות פשוטות | Merged plural line + question_frames |
+| `grammar_be.md` | am / is / are — חיזוק | Merged חיזוק line ו-be_basic |
+| `grammar_plural_questions.md` | ריבוי ושאלות פשוטות | Merged plural line ו-question_frames |
 
-## Batch D — sentences + translation (4)
+## Batch D — sentences ו-translation (4)
 
 | File | Draft title |
 |------|-------------|

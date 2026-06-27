@@ -32,12 +32,12 @@ You must wear a helmet — אתה חייב לחבוש קסדה.
 
 ## 2. הסבר
 
-can — יכול/מותר:
+can — יכול או מותר:
 I can swim.
 
 אני יודע לשחות.
 
-must / have to — חובה:
+must ו-have to — חובה:
 You must wear a helmet.
 
 אתה חייב לחבוש קסדה.
@@ -85,7 +85,7 @@ we have to + פועל (בלי to נוסף).
 
 אנחנו חייבים להגיע בזמן.
 
-✓ We have to arrive on time.
+ We have to arrive on time.
 
 ---
 

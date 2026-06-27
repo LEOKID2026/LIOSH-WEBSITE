@@ -16,7 +16,7 @@
 **Source references:**
 - `docs/qa/ENGLISH_G1_G2_PHONICS_CONTENT_MAP.md`
 
-**Content scope:** התאמת A↔a … Z↔z; audio_required: yes — "A, a" וזוגות נוספים
+**Content scope:** התאמת A—a … Z—z; audio_required: yes — "A, a" וזוגות נוספים
 
 ---
 
@@ -46,11 +46,11 @@ D — d
 
 רואים **M** גדולה — הזוג שלה: **m** קטנה.
 
-M ↔ m
+M — m
 
 רואים **f** קטנה — הזוג שלה: **F** גדולה.
 
-F ↔ f
+F — f
 
 ---
 
@@ -83,7 +83,7 @@ F ↔ f
 
 שלב 2: מחפשים את האות הגדולה המקבילה — K.
 
-**k ↔ K** ✓
+**k — K** 
 
 ---
 

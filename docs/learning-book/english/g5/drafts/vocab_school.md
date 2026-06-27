@@ -77,13 +77,13 @@ Our class presented a science project.
 
 תרגיל: "הכיתה שלנו הציגה פרויקט מדעי."
 
-פועל סדיר בעבר: present → presented.
+פועל סדיר בעבר: present הופך ל-presented.
 
 a science project = פרויקט מדעי.
 
 הכיתה שלנו הציגה פרויקט מדעי.
 
-✓ Our class presented a science project.
+ Our class presented a science project.
 
 ---
 

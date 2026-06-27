@@ -78,11 +78,11 @@ I see a cat
 
 **השאלה: חתול על הגג — באנגלית?**
 
-חתול = cat.
+$1 פירושו: $2.
 
-I see a + cat.
+I see a cat.
 
-**I see a cat** ✓
+**I see a cat** 
 
 ---
 

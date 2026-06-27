@@ -33,7 +33,7 @@ trees, protect — We protect the trees.
 מילים:
 
 trees — עצים
-protect — לשמור/להגן
+protect — לשמור או להגן
 
 We protect the trees.
 
@@ -76,13 +76,13 @@ We protect the sea.
 
 תרגיל: "אנחנו שומרים על הים."
 
-we = אנחנו → אחרי we לא מוסיפים s לפועל protect.
+we פירושו אנחנו — אחרי we לא מוסיפים s לפועל protect.
 
 the sea = הים.
 
 אנחנו שומרים על הים.
 
-✓ We protect the sea.
+ We protect the sea.
 
 ---
 

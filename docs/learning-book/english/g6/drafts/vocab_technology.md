@@ -83,7 +83,7 @@ goes off = נכבה (Present); could use = נוכל להשתמש.
 
 אם החשמל נכבה, נוכל להשתמש בנרות.
 
-✓ If the electricity goes off, we could use candles.
+ If the electricity goes off, we could use candles.
 
 ---
 

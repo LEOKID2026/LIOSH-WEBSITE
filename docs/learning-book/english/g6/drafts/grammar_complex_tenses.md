@@ -32,7 +32,7 @@ I was reading when my friend called — קראתי כשחבר התקשר.
 
 ## 2. הסבר
 
-Past Continuous — was/were + ing (פעולה באמצע):
+Past Continuous — משתמשים ב-was או were עם ing, לפעולה שהייתה באמצע:
 I was reading when my friend called.
 
 קראתי כשחבר התקשר.
@@ -81,13 +81,13 @@ They were sitting in the garden when it started to rain.
 
 תרגיל: "הם ישבו בגינה כשהתחיל לרדת גשם."
 
-פעולה מתמשכת ברקע → Past Continuous: were sitting.
+פעולה מתמשכת ברקע — Past Continuous: were sitting.
 
-אירוע שקרה באמצע → Past Simple: started.
+אירוע שקרה באמצע — Past Simple: started.
 
 הם ישבו בגינה כשהתחיל לרדת גשם.
 
-✓ They were sitting in the garden when it started to rain.
+ They were sitting in the garden when it started to rain.
 
 ---
 

@@ -80,11 +80,11 @@ I need to exercise every day.
 
 need to + פועל = צריך ל + פועל.
 
-exercise = פעילות גופנית / להתאמן; every day = כל יום.
+exercise כאן פירושו להתאמן; every day פירושו כל יום.
 
 אני צריך להתאמן כל יום.
 
-✓ I need to exercise every day.
+ I need to exercise every day.
 
 ---
 

@@ -79,11 +79,11 @@ After that we had dinner.
 
 After that = אחרי זה (מילת קישור לרצף בעבר).
 
-have → had (פועל חריג בעבר).
+have הופך ל-had בעבר, כי זה פועל חריג.
 
 אחרי זה אכלנו ארוחת ערב.
 
-✓ After that we had dinner.
+ After that we had dinner.
 
 ---
 

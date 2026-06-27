@@ -23,7 +23,7 @@
 
 ## 1. מה לומדים?
 
-היום נלמד Superlatives — the most / the best.
+היום נלמד Superlatives — למשל the most או the best.
 This is the most interesting book I have read — זה הספר המעניין ביותר שקראתי.
 
 ---
@@ -77,13 +77,13 @@ This is the funniest film I have watched.
 
 תרגיל: "זה הסרט המצחיק ביותר שראיתי."
 
-funny = קצר → superlative: the + funniest (כפול y → iest).
+funny = קצר — superlative: the + funniest (כפול y — iest).
 
 I have watched = שראיתי (Present Perfect).
 
 זה הסרט המצחיק ביותר שראיתי.
 
-✓ This is the funniest film I have watched.
+ This is the funniest film I have watched.
 
 ---
 

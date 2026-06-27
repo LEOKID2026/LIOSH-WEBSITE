@@ -16,7 +16,7 @@
 **Source references:**
 - `docs/qa/ENGLISH_G1_G2_PHONICS_CONTENT_MAP.md`
 
-**Content scope:** צליל ראשון במילים cat, dog, sun; audio_required: yes — מילה + צליל מבודד
+**Content scope:** צליל ראשון במילים cat, dog, sun; audio_required: yes — מילה וצליל מבודד
 
 ---
 
@@ -82,7 +82,7 @@ hat…
 
 שלב 2: הצליל הראשון — hhh — כמו h.
 
-**הצליל הראשון ב-hat הוא h** ✓
+**הצליל הראשון ב-hat הוא h** 
 
 ---
 

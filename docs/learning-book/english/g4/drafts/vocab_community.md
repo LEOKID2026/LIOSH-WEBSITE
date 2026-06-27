@@ -77,13 +77,13 @@ The school is in our town.
 
 תרגיל: "בית הספר בעיירה שלנו."
 
-in = בתוך/ב- → כשמדברים על מיקום בתוך מקום כמו town משתמשים ב in.
+in פירושו בתוך או ב־. כשמדברים על מיקום בתוך מקום כמו town משתמשים ב-in.
 
 The school is in our town.
 
 בית הספר בעיירה שלנו.
 
-✓ The school is in our town.
+ The school is in our town.
 
 ---
 

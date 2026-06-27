@@ -2,4 +2,4 @@
 מתחילים ב-You are (אתה).
 מוסיפים sad (עצוב).
 You are sad
-You are sad = אתה עצוב ✓
+You are sad פירושו: אתה עצוב.

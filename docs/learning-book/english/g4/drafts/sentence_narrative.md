@@ -84,7 +84,7 @@ go to the bus stop = הולכים לתחנת האוטובוס.
 
 אחר כך אנחנו הולכים לתחנת האוטובוס.
 
-✓ Then we go to the bus stop.
+ Then we go to the bus stop.
 
 ---
 

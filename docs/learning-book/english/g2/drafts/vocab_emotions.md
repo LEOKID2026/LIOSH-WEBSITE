@@ -73,11 +73,11 @@ I am happy
 
 **השאלה: ילד מחייך — באנגלית?**
 
-שמח = happy.
+$1 פירושו: $2.
 
-I am + happy.
+I am happy.
 
-**I am happy** ✓
+**I am happy** 
 
 ---
 

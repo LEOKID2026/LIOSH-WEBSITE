@@ -77,13 +77,13 @@ It is snowing today.
 
 תרגיל: "היום יורד שלג."
 
-מזג אוויר שמתרחש עכשיו → Present Continuous: is + פועל + ing.
+מזג אוויר שמתרחש עכשיו — Present Continuous: is + פועל + ing.
 
-snow → snowing; today = היום.
+snow הופך ל-snowing; today פירושו היום.
 
 היום יורד שלג.
 
-✓ It is snowing today.
+ It is snowing today.
 
 ---
 

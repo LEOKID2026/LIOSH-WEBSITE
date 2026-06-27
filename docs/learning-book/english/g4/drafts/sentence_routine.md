@@ -77,13 +77,13 @@ Every day he drinks water.
 
 תרגיל: "כל יום הוא שותה מים."
 
-Every day = כל יום → הרגל → Present Simple.
+Every day פירושו כל יום — זה הרגל, ולכן משתמשים ב-Present Simple.
 
-he = יחיד זכר → מוסיפים s לפועל: drink → drinks.
+he הוא יחיד זכר — מוסיפים s לפועל: drink הופך ל-drinks.
 
 כל יום הוא שותה מים.
 
-✓ Every day he drinks water.
+ Every day he drinks water.
 
 ---
 

@@ -1,5 +1,5 @@
 תרגיל: "כל יום הוא שותה מים."
-Every day = כל יום → הרגל → Present Simple.
-he = יחיד זכר → מוסיפים s לפועל: drink → drinks.
+Every day פירושו כל יום — זה הרגל, ולכן משתמשים ב-Present Simple.
+he הוא יחיד זכר — מוסיפים s לפועל: drink הופך ל-drinks.
 כל יום הוא שותה מים.
 Every day he drinks water.

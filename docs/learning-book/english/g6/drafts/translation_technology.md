@@ -83,7 +83,7 @@ find = למצוא; in the coming years = בשנים הקרובות.
 
 חוקרים אולי ימצאו תרופה חדשה בשנים הקרובות.
 
-✓ Researchers might find a new medicine in the coming years.
+ Researchers might find a new medicine in the coming years.
 
 ---
 

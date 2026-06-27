@@ -26,7 +26,7 @@
 ## 1. מה לומדים?
 
 היום נלמד את ההבדל בין Simple ל-Continuous.
-I read every day / I am reading now.
+I read every day לעומת I am reading now.
 
 ---
 
@@ -79,13 +79,13 @@ They are playing football now.
 
 תרגיל: "הם משחקים כדורגל עכשיו."
 
-המילה now מראה פעולה שקורית עכשיו → Present Continuous.
+המילה now מראה פעולה שקורית עכשיו — Present Continuous.
 
-they = הם → are + playing.
+they פירושו הם — משתמשים ב-are + playing.
 
 הם משחקים כדורגל עכשיו.
 
-✓ They are playing football now.
+ They are playing football now.
 
 ---
 

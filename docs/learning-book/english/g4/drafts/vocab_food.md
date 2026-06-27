@@ -77,13 +77,13 @@ We eat fresh vegetables.
 
 תרגיל: "אנחנו אוכלים ירקות טריים."
 
-we = אנחנו → אחרי we לא מוסיפים s לפועל eat.
+we פירושו אנחנו — אחרי we לא מוסיפים s לפועל eat.
 
 fresh vegetables = ירקות טריים.
 
 אנחנו אוכלים ירקות טריים.
 
-✓ We eat fresh vegetables.
+ We eat fresh vegetables.
 
 ---
 

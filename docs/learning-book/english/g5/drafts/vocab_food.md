@@ -77,13 +77,13 @@ We cooked rice with chicken for dinner.
 
 תרגיל: "בישלנו אורז עם עוף לארוחת ערב."
 
-פועל סדיר בעבר: cook → cooked.
+פועל סדיר בעבר: cook הופך ל-cooked.
 
 for dinner = לארוחת ערב.
 
 בישלנו אורז עם עוף לארוחת ערב.
 
-✓ We cooked rice with chicken for dinner.
+ We cooked rice with chicken for dinner.
 
 ---
 

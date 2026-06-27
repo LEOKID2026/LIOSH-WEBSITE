@@ -79,11 +79,11 @@ They might feel proud after a win.
 
 might + feel = אולי ירגישו (אפשרות, לא ודאות).
 
-proud = גאה/ים; after a win = אחרי ניצחון.
+proud פירושו גאים; after a win פירושו אחרי ניצחון.
 
 הם אולי ירגישו גאים אחרי ניצחון.
 
-✓ They might feel proud after a win.
+ They might feel proud after a win.
 
 ---
 

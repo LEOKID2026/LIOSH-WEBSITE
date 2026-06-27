@@ -16,7 +16,7 @@
 **Source references:**
 - `docs/qa/ENGLISH_G1_G2_PHONICS_CONTENT_MAP.md`
 
-**Content scope:** book, pen, desk, chair, door, teacher, hello, bye; audio_required: yes — כל מילה + ביטוי קצר
+**Content scope:** book, pen, desk, chair, door, teacher, hello, bye; audio_required: yes — כל מילה וביטוי קצר
 
 ---
 
@@ -82,7 +82,7 @@
 
 שלב 2: חושבים — door הוא הדבר שדרכו נכנסים לחדר.
 
-**door = דלת** ✓
+**$1 פירושו: $2** 
 
 ---
 

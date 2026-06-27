@@ -30,7 +30,7 @@ The whales were swimming when we saw them — הלווייתנים שחו כשר
 
 ## 2. הסבר
 
-Past Continuous — was/were + פועל + ing:
+Past Continuous — משתמשים ב-was או were, ואחריהם פועל עם ing:
 
 The whales were swimming when we saw them.
 
@@ -77,13 +77,13 @@ The eagles were flying over the mountains when we arrived.
 
 תרגיל: "הנשרים עפו מעל ההרים כשהגענו."
 
-פעולה מתמשכת בעבר → Past Continuous: were flying.
+פעולה מתמשכת בעבר — Past Continuous: were flying.
 
 when we arrived = כשהגענו (Past Simple, פעולה שקרתה).
 
 הנשרים עפו מעל ההרים כשהגענו.
 
-✓ The eagles were flying over the mountains when we arrived.
+ The eagles were flying over the mountains when we arrived.
 
 ---
 

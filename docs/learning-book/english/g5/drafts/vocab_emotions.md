@@ -77,13 +77,13 @@ They felt tired after the game.
 
 תרגיל: "הם הרגישו עייפים אחרי המשחק."
 
-feel → felt (פועל חריג בעבר).
+feel הופך ל-felt בעבר, כי זה פועל חריג.
 
-tired = עייף/ה; after the game = אחרי המשחק.
+tired פירושו עייפים; after the game פירושו אחרי המשחק.
 
 הם הרגישו עייפים אחרי המשחק.
 
-✓ They felt tired after the game.
+ They felt tired after the game.
 
 ---
 

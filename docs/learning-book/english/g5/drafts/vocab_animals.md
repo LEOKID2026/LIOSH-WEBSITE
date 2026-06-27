@@ -77,13 +77,13 @@ The dolphin jumped high.
 
 תרגיל: "הדולפין קפץ גבוה."
 
-פועל סדיר בעבר: jump → jumped.
+פועל סדיר בעבר: jump הופך ל-jumped.
 
 high = גבוה (תואר פועל).
 
 הדולפין קפץ גבוה.
 
-✓ The dolphin jumped high.
+ The dolphin jumped high.
 
 ---
 

@@ -16,22 +16,22 @@
       "pageNumber": 2,
       "title": "הסבר",
       "textFile": "pages/page-002.txt",
-      "estimatedCharacters": 301,
+      "estimatedCharacters": 298,
       "estimatedWords": 54
     },
     {
       "pageNumber": 3,
       "title": "דוגמה",
       "textFile": "pages/page-003.txt",
-      "estimatedCharacters": 160,
+      "estimatedCharacters": 176,
       "estimatedWords": 34
     },
     {
       "pageNumber": 4,
       "title": "בואו נפתור",
       "textFile": "pages/page-004.txt",
-      "estimatedCharacters": 108,
-      "estimatedWords": 18
+      "estimatedCharacters": 127,
+      "estimatedWords": 21
     },
     {
       "pageNumber": 5,
@@ -44,8 +44,8 @@
       "pageNumber": 6,
       "title": "בואו נבדוק יחד",
       "textFile": "pages/page-006.txt",
-      "estimatedCharacters": 394,
-      "estimatedWords": 74
+      "estimatedCharacters": 392,
+      "estimatedWords": 73
     },
     {
       "pageNumber": 7,
@@ -65,15 +65,15 @@
       "pageNumber": 9,
       "title": "הסבר",
       "textFile": "pages/page-009.txt",
-      "estimatedCharacters": 333,
-      "estimatedWords": 66
+      "estimatedCharacters": 350,
+      "estimatedWords": 65
     },
     {
       "pageNumber": 10,
       "title": "דוגמה",
       "textFile": "pages/page-010.txt",
-      "estimatedCharacters": 145,
-      "estimatedWords": 28
+      "estimatedCharacters": 150,
+      "estimatedWords": 27
     },
     {
       "pageNumber": 11,
@@ -86,15 +86,15 @@
       "pageNumber": 12,
       "title": "נסו בעצמכם",
       "textFile": "pages/page-012.txt",
-      "estimatedCharacters": 156,
-      "estimatedWords": 30
+      "estimatedCharacters": 173,
+      "estimatedWords": 33
     },
     {
       "pageNumber": 13,
       "title": "בואו נבדוק יחד",
       "textFile": "pages/page-013.txt",
-      "estimatedCharacters": 388,
-      "estimatedWords": 72
+      "estimatedCharacters": 399,
+      "estimatedWords": 74
     },
     {
       "pageNumber": 14,
@@ -114,8 +114,8 @@
       "pageNumber": 16,
       "title": "הסבר",
       "textFile": "pages/page-016.txt",
-      "estimatedCharacters": 270,
-      "estimatedWords": 60
+      "estimatedCharacters": 308,
+      "estimatedWords": 65
     },
     {
       "pageNumber": 17,
@@ -142,8 +142,8 @@
       "pageNumber": 20,
       "title": "בואו נבדוק יחד",
       "textFile": "pages/page-020.txt",
-      "estimatedCharacters": 457,
-      "estimatedWords": 86
+      "estimatedCharacters": 455,
+      "estimatedWords": 85
     },
     {
       "pageNumber": 21,
@@ -163,8 +163,8 @@
       "pageNumber": 23,
       "title": "הסבר",
       "textFile": "pages/page-023.txt",
-      "estimatedCharacters": 111,
-      "estimatedWords": 19
+      "estimatedCharacters": 373,
+      "estimatedWords": 71
     },
     {
       "pageNumber": 24,
@@ -191,8 +191,8 @@
       "pageNumber": 27,
       "title": "בואו נבדוק יחד",
       "textFile": "pages/page-027.txt",
-      "estimatedCharacters": 471,
-      "estimatedWords": 84
+      "estimatedCharacters": 469,
+      "estimatedWords": 83
     },
     {
       "pageNumber": 28,
@@ -240,8 +240,8 @@
       "pageNumber": 34,
       "title": "בואו נבדוק יחד",
       "textFile": "pages/page-034.txt",
-      "estimatedCharacters": 442,
-      "estimatedWords": 81
+      "estimatedCharacters": 440,
+      "estimatedWords": 80
     },
     {
       "pageNumber": 35,
@@ -261,15 +261,15 @@
       "pageNumber": 37,
       "title": "הסבר",
       "textFile": "pages/page-037.txt",
-      "estimatedCharacters": 305,
+      "estimatedCharacters": 307,
       "estimatedWords": 61
     },
     {
       "pageNumber": 38,
       "title": "דוגמה",
       "textFile": "pages/page-038.txt",
-      "estimatedCharacters": 163,
-      "estimatedWords": 35
+      "estimatedCharacters": 232,
+      "estimatedWords": 47
     },
     {
       "pageNumber": 39,
@@ -289,8 +289,8 @@
       "pageNumber": 41,
       "title": "בואו נבדוק יחד",
       "textFile": "pages/page-041.txt",
-      "estimatedCharacters": 441,
-      "estimatedWords": 87
+      "estimatedCharacters": 474,
+      "estimatedWords": 88
     },
     {
       "pageNumber": 42,

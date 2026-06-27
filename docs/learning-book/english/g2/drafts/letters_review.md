@@ -16,7 +16,7 @@
 **Source references:**
 - `docs/qa/ENGLISH_G1_G2_PHONICS_CONTENT_MAP.md`
 
-**Content scope:** חזרה A–Z גדולות+קטנות+שמות; audio_required: yes
+**Content scope:** חזרה A–Z גדולות, קטנות ושמות; audio_required: yes
 
 ---
 
@@ -34,7 +34,7 @@ A a — B b — C c … Z z
 שם האות A — "A".  
 שם האות Z — "Z".
 
-זוגות: M ↔ m, S ↔ s.
+זוגות: M — m, S — s.
 
 ---
 
@@ -73,9 +73,9 @@ A a — B b — C c … Z z
 
 לכל אות גדולה יש זוג קטן.
 
-Q גדולה → q קטנה.
+Q גדולה — q קטנה.
 
-**q** ✓
+**q** 
 
 ---
 

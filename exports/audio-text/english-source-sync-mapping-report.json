@@ -1,0 +1,1266 @@
+{
+  "summary": {
+    "totalChangedTxt": 179,
+    "mapped": 179,
+    "problematic": 0,
+    "canSyncYes": 54,
+    "canSyncPartial": 125,
+    "canSyncNo": 0
+  },
+  "rows": [
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-006.txt",
+      "sourceMarkdown": "docs/learning-book/english/g1/drafts/letters_upper.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=letters_upper, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-013.txt",
+      "sourceMarkdown": "docs/learning-book/english/g1/drafts/letters_lower.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=letters_lower, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-020.txt",
+      "sourceMarkdown": "docs/learning-book/english/g1/drafts/letters_match.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=letters_match, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-034.txt",
+      "sourceMarkdown": "docs/learning-book/english/g1/drafts/phonics_sounds.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=phonics_sounds, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-041.txt",
+      "sourceMarkdown": "docs/learning-book/english/g1/drafts/phonics_first_sound.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=phonics_first_sound, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-048.txt",
+      "sourceMarkdown": "docs/learning-book/english/g1/drafts/classroom_words.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=classroom_words, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-055.txt",
+      "sourceMarkdown": "docs/learning-book/english/g1/drafts/first_words_simple.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=first_words_simple, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-062.txt",
+      "sourceMarkdown": "docs/learning-book/english/g1/drafts/first_words_cvc.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=first_words_cvc, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-069.txt",
+      "sourceMarkdown": "docs/learning-book/english/g1/drafts/picture_word_match.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=picture_word_match, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-074.txt",
+      "sourceMarkdown": "docs/learning-book/english/g1/drafts/listening_classroom.md",
+      "sectionBlock": "## 4. בואו נפתור (topicId=listening_classroom, section 4/7, UI title: בואו נפתור)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-076.txt",
+      "sourceMarkdown": "docs/learning-book/english/g1/drafts/listening_classroom.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=listening_classroom, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2, PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-083.txt",
+      "sourceMarkdown": "docs/learning-book/english/g1/drafts/listening_commands.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=listening_commands, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-090.txt",
+      "sourceMarkdown": "docs/learning-book/english/g1/drafts/vocab_colors.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_colors, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-094.txt",
+      "sourceMarkdown": "docs/learning-book/english/g1/drafts/vocab_numbers.md",
+      "sectionBlock": "## 3. דוגמה (topicId=vocab_numbers, section 3/7, UI title: דוגמה)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-097.txt",
+      "sourceMarkdown": "docs/learning-book/english/g1/drafts/vocab_numbers.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_numbers, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-101.txt",
+      "sourceMarkdown": "docs/learning-book/english/g1/drafts/vocab_family.md",
+      "sectionBlock": "## 3. דוגמה (topicId=vocab_family, section 3/7, UI title: דוגמה)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-104.txt",
+      "sourceMarkdown": "docs/learning-book/english/g1/drafts/vocab_family.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_family, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-108.txt",
+      "sourceMarkdown": "docs/learning-book/english/g1/drafts/vocab_animals.md",
+      "sectionBlock": "## 3. דוגמה (topicId=vocab_animals, section 3/7, UI title: דוגמה)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-111.txt",
+      "sourceMarkdown": "docs/learning-book/english/g1/drafts/vocab_animals.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_animals, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-115.txt",
+      "sourceMarkdown": "docs/learning-book/english/g1/drafts/vocab_emotions.md",
+      "sectionBlock": "## 3. דוגמה (topicId=vocab_emotions, section 3/7, UI title: דוגמה)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-118.txt",
+      "sourceMarkdown": "docs/learning-book/english/g1/drafts/vocab_emotions.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_emotions, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-122.txt",
+      "sourceMarkdown": "docs/learning-book/english/g1/drafts/vocab_actions.md",
+      "sectionBlock": "## 3. דוגמה (topicId=vocab_actions, section 3/7, UI title: דוגמה)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-125.txt",
+      "sourceMarkdown": "docs/learning-book/english/g1/drafts/vocab_actions.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_actions, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-129.txt",
+      "sourceMarkdown": "docs/learning-book/english/g1/drafts/vocab_school.md",
+      "sectionBlock": "## 3. דוגמה (topicId=vocab_school, section 3/7, UI title: דוגמה)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-132.txt",
+      "sourceMarkdown": "docs/learning-book/english/g1/drafts/vocab_school.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_school, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-135.txt",
+      "sourceMarkdown": "docs/learning-book/english/g1/drafts/grammar_be.md",
+      "sectionBlock": "## 2. הסבר (topicId=grammar_be, section 2/7, UI title: הסבר)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-139.txt",
+      "sourceMarkdown": "docs/learning-book/english/g1/drafts/grammar_be.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=grammar_be, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-146.txt",
+      "sourceMarkdown": "docs/learning-book/english/g1/drafts/sentence_base.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=sentence_base, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-153.txt",
+      "sourceMarkdown": "docs/learning-book/english/g1/drafts/translation_classroom.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=translation_classroom, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-006.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/letters_review.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=letters_review, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-011.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/letters_order.md",
+      "sectionBlock": "## 4. בואו נפתור (topicId=letters_order, section 4/7, UI title: בואו נפתור)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-013.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/letters_order.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=letters_order, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12, PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-020.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/phonics_sounds_review.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=phonics_sounds_review, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-027.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/phonics_blending.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=phonics_blending, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-034.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/sound_letter_match.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=sound_letter_match, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-039.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/first_word_reading.md",
+      "sectionBlock": "## 4. בואו נפתור (topicId=first_word_reading, section 4/7, UI title: בואו נפתור)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-041.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/first_word_reading.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=first_word_reading, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12, PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-042.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/first_word_reading.md",
+      "sectionBlock": "## 7. בואו נתרגל! (topicId=first_word_reading, section 7/7, UI title: בואו נתרגל)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-048.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/word_families_cvc.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=word_families_cvc, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-051.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/classroom_vocab_g2.md",
+      "sectionBlock": "## 2. הסבר (topicId=classroom_vocab_g2, section 2/7, UI title: הסבר)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-055.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/classroom_vocab_g2.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=classroom_vocab_g2, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2, PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-058.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+      "sectionBlock": "## 2. הסבר (topicId=listening_comprehension, section 2/7, UI title: הסבר)",
+      "canSync": "yes",
+      "note": "החלפת חץ → — קיים ב-body; passes: PASS11"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-062.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=listening_comprehension, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-066.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/picture_audio_word_match.md",
+      "sectionBlock": "## 3. דוגמה (topicId=picture_audio_word_match, section 3/7, UI title: דוגמה)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-067.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/picture_audio_word_match.md",
+      "sectionBlock": "## 4. בואו נפתור (topicId=picture_audio_word_match, section 4/7, UI title: בואו נפתור)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-069.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/picture_audio_word_match.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=picture_audio_word_match, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-072.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/early_sentences_exposure.md",
+      "sectionBlock": "## 2. הסבר (topicId=early_sentences_exposure, section 2/7, UI title: הסבר)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-074.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/early_sentences_exposure.md",
+      "sectionBlock": "## 4. בואו נפתור (topicId=early_sentences_exposure, section 4/7, UI title: בואו נפתור)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-076.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/early_sentences_exposure.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=early_sentences_exposure, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2, PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-083.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/vocab_colors.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_colors, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2, PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-087.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/vocab_numbers.md",
+      "sectionBlock": "## 3. דוגמה (topicId=vocab_numbers, section 3/7, UI title: דוגמה)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-090.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/vocab_numbers.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_numbers, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2, PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-097.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/vocab_family.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_family, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2, PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-103.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/vocab_animals.md",
+      "sectionBlock": "## 5. נסו בעצמכם (topicId=vocab_animals, section 5/7, UI title: נסו בעצמכם)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-104.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/vocab_animals.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_animals, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2, PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-110.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/vocab_emotions.md",
+      "sectionBlock": "## 5. נסו בעצמכם (topicId=vocab_emotions, section 5/7, UI title: נסו בעצמכם)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-111.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/vocab_emotions.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_emotions, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2, PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-117.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/vocab_actions.md",
+      "sectionBlock": "## 5. נסו בעצמכם (topicId=vocab_actions, section 5/7, UI title: נסו בעצמכם)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-118.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/vocab_actions.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_actions, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2, PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-125.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/vocab_school.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_school, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2, PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-129.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/vocab_food.md",
+      "sectionBlock": "## 3. דוגמה (topicId=vocab_food, section 3/7, UI title: דוגמה)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-132.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/vocab_food.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_food, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2, PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-136.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/vocab_house.md",
+      "sectionBlock": "## 3. דוגמה (topicId=vocab_house, section 3/7, UI title: דוגמה)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-139.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/vocab_house.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_house, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2, PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-142.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/grammar_be.md",
+      "sectionBlock": "## 2. הסבר (topicId=grammar_be, section 2/7, UI title: הסבר)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-146.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/grammar_be.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=grammar_be, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2, PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-150.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/grammar_plural_questions.md",
+      "sectionBlock": "## 3. דוגמה (topicId=grammar_plural_questions, section 3/7, UI title: דוגמה)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-153.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/grammar_plural_questions.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=grammar_plural_questions, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת חץ → — קיים ב-body; passes: PASS11, PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-160.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/sentence_base.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=sentence_base, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2, PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-166.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/sentence_routine.md",
+      "sectionBlock": "## 5. נסו בעצמכם (topicId=sentence_routine, section 5/7, UI title: נסו בעצמכם)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-167.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/sentence_routine.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=sentence_routine, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2, PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-174.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/translation_classroom.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=translation_classroom, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2, PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-177.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/translation_routines.md",
+      "sectionBlock": "## 2. הסבר (topicId=translation_routines, section 2/7, UI title: הסבר)",
+      "canSync": "yes",
+      "note": "החלפת חץ → — קיים ב-body; passes: PASS11"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-180.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/translation_routines.md",
+      "sectionBlock": "## 5. נסו בעצמכם (topicId=translation_routines, section 5/7, UI title: נסו בעצמכם)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-181.txt",
+      "sourceMarkdown": "docs/learning-book/english/g2/drafts/translation_routines.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=translation_routines, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא לשמע — צריך להתאים חזרה לפורמט markdown (7 sections), לא העתקה 1:1; passes: MANUAL-G1G2, PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g3/pages/page-006.txt",
+      "sourceMarkdown": "docs/learning-book/english/g3/drafts/vocab_actions.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_actions, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g3/pages/page-013.txt",
+      "sourceMarkdown": "docs/learning-book/english/g3/drafts/vocab_animals.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_animals, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g3/pages/page-027.txt",
+      "sourceMarkdown": "docs/learning-book/english/g3/drafts/vocab_emotions.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_emotions, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g3/pages/page-048.txt",
+      "sourceMarkdown": "docs/learning-book/english/g3/drafts/vocab_house.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_house, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g3/pages/page-069.txt",
+      "sourceMarkdown": "docs/learning-book/english/g3/drafts/vocab_body.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_body, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g3/pages/page-090.txt",
+      "sourceMarkdown": "docs/learning-book/english/g3/drafts/grammar_present_simple.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=grammar_present_simple, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g3/pages/page-097.txt",
+      "sourceMarkdown": "docs/learning-book/english/g3/drafts/grammar_articles_prepositions.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=grammar_articles_prepositions, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g3/pages/page-098.txt",
+      "sourceMarkdown": "docs/learning-book/english/g3/drafts/grammar_articles_prepositions.md",
+      "sectionBlock": "## 7. בואו נתרגל! (topicId=grammar_articles_prepositions, section 7/7, UI title: בואו נתרגל)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g3/pages/page-105.txt",
+      "sourceMarkdown": "docs/learning-book/english/g3/drafts/grammar_question_frames.md",
+      "sectionBlock": "## 7. בואו נתרגל! (topicId=grammar_question_frames, section 7/7, UI title: בואו נתרגל)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g3/pages/page-121.txt",
+      "sourceMarkdown": "docs/learning-book/english/g3/drafts/translation_routines.md",
+      "sectionBlock": "## 2. הסבר (topicId=translation_routines, section 2/7, UI title: הסבר)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g3/pages/page-122.txt",
+      "sourceMarkdown": "docs/learning-book/english/g3/drafts/translation_routines.md",
+      "sectionBlock": "## 3. דוגמה (topicId=translation_routines, section 3/7, UI title: דוגמה)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g3/pages/page-123.txt",
+      "sourceMarkdown": "docs/learning-book/english/g3/drafts/translation_routines.md",
+      "sectionBlock": "## 4. בואו נפתור (topicId=translation_routines, section 4/7, UI title: בואו נפתור)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g3/pages/page-125.txt",
+      "sourceMarkdown": "docs/learning-book/english/g3/drafts/translation_routines.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=translation_routines, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g3/pages/page-127.txt",
+      "sourceMarkdown": "docs/learning-book/english/g3/drafts/translation_hobbies.md",
+      "sectionBlock": "## 1. מה לומדים? (topicId=translation_hobbies, section 1/7, UI title: מה לומדים?)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g3/pages/page-128.txt",
+      "sourceMarkdown": "docs/learning-book/english/g3/drafts/translation_hobbies.md",
+      "sectionBlock": "## 2. הסבר (topicId=translation_hobbies, section 2/7, UI title: הסבר)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g3/pages/page-129.txt",
+      "sourceMarkdown": "docs/learning-book/english/g3/drafts/translation_hobbies.md",
+      "sectionBlock": "## 3. דוגמה (topicId=translation_hobbies, section 3/7, UI title: דוגמה)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g3/pages/page-130.txt",
+      "sourceMarkdown": "docs/learning-book/english/g3/drafts/translation_hobbies.md",
+      "sectionBlock": "## 4. בואו נפתור (topicId=translation_hobbies, section 4/7, UI title: בואו נפתור)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-006.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/vocab_animals.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_animals, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-013.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/vocab_body.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_body, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-015.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/vocab_emotions.md",
+      "sectionBlock": "## 1. מה לומדים? (topicId=vocab_emotions, section 1/7, UI title: מה לומדים?)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-016.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/vocab_emotions.md",
+      "sectionBlock": "## 2. הסבר (topicId=vocab_emotions, section 2/7, UI title: הסבר)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-017.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/vocab_emotions.md",
+      "sectionBlock": "## 3. דוגמה (topicId=vocab_emotions, section 3/7, UI title: דוגמה)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-018.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/vocab_emotions.md",
+      "sectionBlock": "## 4. בואו נפתור (topicId=vocab_emotions, section 4/7, UI title: בואו נפתור)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-020.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/vocab_emotions.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_emotions, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-027.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/vocab_family.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_family, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-034.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/vocab_food.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_food, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-037.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/vocab_school.md",
+      "sectionBlock": "## 2. הסבר (topicId=vocab_school, section 2/7, UI title: הסבר)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-041.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/vocab_school.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_school, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-048.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/vocab_sports.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_sports, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-055.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/vocab_weather.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_weather, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-062.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/vocab_community.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_community, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-065.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/vocab_environment.md",
+      "sectionBlock": "## 2. הסבר (topicId=vocab_environment, section 2/7, UI title: הסבר)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-069.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/vocab_environment.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_environment, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-083.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/grammar_present_simple.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=grammar_present_simple, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-085.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/grammar_simple_continuous.md",
+      "sectionBlock": "## 1. מה לומדים? (topicId=grammar_simple_continuous, section 1/7, UI title: מה לומדים?)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-090.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/grammar_simple_continuous.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=grammar_simple_continuous, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-097.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/grammar_quantifiers.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=grammar_quantifiers, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-098.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/grammar_quantifiers.md",
+      "sectionBlock": "## 7. בואו נתרגל! (topicId=grammar_quantifiers, section 7/7, UI title: בואו נתרגל)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-106.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/sentence_routine.md",
+      "sectionBlock": "## 1. מה לומדים? (topicId=sentence_routine, section 1/7, UI title: מה לומדים?)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-107.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/sentence_routine.md",
+      "sectionBlock": "## 2. הסבר (topicId=sentence_routine, section 2/7, UI title: הסבר)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-108.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/sentence_routine.md",
+      "sectionBlock": "## 3. דוגמה (topicId=sentence_routine, section 3/7, UI title: דוגמה)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-109.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/sentence_routine.md",
+      "sectionBlock": "## 4. בואו נפתור (topicId=sentence_routine, section 4/7, UI title: בואו נפתור)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-111.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/sentence_routine.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=sentence_routine, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-120.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/translation_hobbies.md",
+      "sectionBlock": "## 1. מה לומדים? (topicId=translation_hobbies, section 1/7, UI title: מה לומדים?)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-121.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/translation_hobbies.md",
+      "sectionBlock": "## 2. הסבר (topicId=translation_hobbies, section 2/7, UI title: הסבר)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-122.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/translation_hobbies.md",
+      "sectionBlock": "## 3. דוגמה (topicId=translation_hobbies, section 3/7, UI title: דוגמה)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-123.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/translation_hobbies.md",
+      "sectionBlock": "## 4. בואו נפתור (topicId=translation_hobbies, section 4/7, UI title: בואו נפתור)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-125.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/translation_hobbies.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=translation_hobbies, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-126.txt",
+      "sourceMarkdown": "docs/learning-book/english/g4/drafts/translation_hobbies.md",
+      "sectionBlock": "## 7. בואו נתרגל! (topicId=translation_hobbies, section 7/7, UI title: בואו נתרגל)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-006.txt",
+      "sourceMarkdown": "docs/learning-book/english/g5/drafts/vocab_animals.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_animals, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-013.txt",
+      "sourceMarkdown": "docs/learning-book/english/g5/drafts/vocab_community.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_community, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-020.txt",
+      "sourceMarkdown": "docs/learning-book/english/g5/drafts/vocab_emotions.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_emotions, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-027.txt",
+      "sourceMarkdown": "docs/learning-book/english/g5/drafts/vocab_environment.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_environment, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-034.txt",
+      "sourceMarkdown": "docs/learning-book/english/g5/drafts/vocab_family.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_family, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-041.txt",
+      "sourceMarkdown": "docs/learning-book/english/g5/drafts/vocab_food.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_food, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-043.txt",
+      "sourceMarkdown": "docs/learning-book/english/g5/drafts/vocab_school.md",
+      "sectionBlock": "## 1. מה לומדים? (topicId=vocab_school, section 1/7, UI title: מה לומדים?)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-044.txt",
+      "sourceMarkdown": "docs/learning-book/english/g5/drafts/vocab_school.md",
+      "sectionBlock": "## 2. הסבר (topicId=vocab_school, section 2/7, UI title: הסבר)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-045.txt",
+      "sourceMarkdown": "docs/learning-book/english/g5/drafts/vocab_school.md",
+      "sectionBlock": "## 3. דוגמה (topicId=vocab_school, section 3/7, UI title: דוגמה)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-046.txt",
+      "sourceMarkdown": "docs/learning-book/english/g5/drafts/vocab_school.md",
+      "sectionBlock": "## 4. בואו נפתור (topicId=vocab_school, section 4/7, UI title: בואו נפתור)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-048.txt",
+      "sourceMarkdown": "docs/learning-book/english/g5/drafts/vocab_school.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_school, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-049.txt",
+      "sourceMarkdown": "docs/learning-book/english/g5/drafts/vocab_school.md",
+      "sectionBlock": "## 7. בואו נתרגל! (topicId=vocab_school, section 7/7, UI title: בואו נתרגל)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-055.txt",
+      "sourceMarkdown": "docs/learning-book/english/g5/drafts/vocab_sports.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_sports, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-069.txt",
+      "sourceMarkdown": "docs/learning-book/english/g5/drafts/vocab_health.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_health, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-075.txt",
+      "sourceMarkdown": "docs/learning-book/english/g5/drafts/vocab_technology.md",
+      "sectionBlock": "## 5. נסו בעצמכם (topicId=vocab_technology, section 5/7, UI title: נסו בעצמכם)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-076.txt",
+      "sourceMarkdown": "docs/learning-book/english/g5/drafts/vocab_technology.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_technology, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-083.txt",
+      "sourceMarkdown": "docs/learning-book/english/g5/drafts/grammar_past_simple.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=grammar_past_simple, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-090.txt",
+      "sourceMarkdown": "docs/learning-book/english/g5/drafts/grammar_future_forms.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=grammar_future_forms, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-093.txt",
+      "sourceMarkdown": "docs/learning-book/english/g5/drafts/grammar_modals.md",
+      "sectionBlock": "## 2. הסבר (topicId=grammar_modals, section 2/7, UI title: הסבר)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13, PASS14"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-100.txt",
+      "sourceMarkdown": "docs/learning-book/english/g5/drafts/grammar_comparatives.md",
+      "sectionBlock": "## 2. הסבר (topicId=grammar_comparatives, section 2/7, UI title: הסבר)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-104.txt",
+      "sourceMarkdown": "docs/learning-book/english/g5/drafts/grammar_comparatives.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=grammar_comparatives, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-106.txt",
+      "sourceMarkdown": "docs/learning-book/english/g5/drafts/grammar_quantifiers.md",
+      "sectionBlock": "## 1. מה לומדים? (topicId=grammar_quantifiers, section 1/7, UI title: מה לומדים?)",
+      "canSync": "partial",
+      "note": "בדיקה לפי export מ-md מול txt מתוקן; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-118.txt",
+      "sourceMarkdown": "docs/learning-book/english/g5/drafts/sentence_narrative.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=sentence_narrative, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-125.txt",
+      "sourceMarkdown": "docs/learning-book/english/g5/drafts/sentence_advanced.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=sentence_advanced, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-146.txt",
+      "sourceMarkdown": "docs/learning-book/english/g5/drafts/translation_global.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=translation_global, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-002.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/vocab_animals.md",
+      "sectionBlock": "## 2. הסבר (topicId=vocab_animals, section 2/7, UI title: הסבר)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-006.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/vocab_animals.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_animals, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-013.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/vocab_community.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_community, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-016.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/vocab_emotions.md",
+      "sectionBlock": "## 2. הסבר (topicId=vocab_emotions, section 2/7, UI title: הסבר)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-020.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/vocab_emotions.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_emotions, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-027.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/vocab_environment.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_environment, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-030.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/vocab_health.md",
+      "sectionBlock": "## 2. הסבר (topicId=vocab_health, section 2/7, UI title: הסבר)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-034.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/vocab_health.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_health, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-036.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/vocab_technology.md",
+      "sectionBlock": "## 1. מה לומדים? (topicId=vocab_technology, section 1/7, UI title: מה לומדים?)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-037.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/vocab_technology.md",
+      "sectionBlock": "## 2. הסבר (topicId=vocab_technology, section 2/7, UI title: הסבר)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-038.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/vocab_technology.md",
+      "sectionBlock": "## 3. דוגמה (topicId=vocab_technology, section 3/7, UI title: דוגמה)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-039.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/vocab_technology.md",
+      "sectionBlock": "## 4. בואו נפתור (topicId=vocab_technology, section 4/7, UI title: בואו נפתור)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-040.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/vocab_technology.md",
+      "sectionBlock": "## 5. נסו בעצמכם (topicId=vocab_technology, section 5/7, UI title: נסו בעצמכם)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-041.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/vocab_technology.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_technology, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-042.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/vocab_technology.md",
+      "sectionBlock": "## 7. בואו נתרגל! (topicId=vocab_technology, section 7/7, UI title: בואו נתרגל)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-062.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/vocab_global_issues.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_global_issues, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-069.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/vocab_history.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=vocab_history, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-072.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/grammar_complex_tenses.md",
+      "sectionBlock": "## 2. הסבר (topicId=grammar_complex_tenses, section 2/7, UI title: הסבר)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-076.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/grammar_complex_tenses.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=grammar_complex_tenses, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-082.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/grammar_conditionals.md",
+      "sectionBlock": "## 5. נסו בעצמכם (topicId=grammar_conditionals, section 5/7, UI title: נסו בעצמכם)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-083.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/grammar_conditionals.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=grammar_conditionals, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-085.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/grammar_modals.md",
+      "sectionBlock": "## 1. מה לומדים? (topicId=grammar_modals, section 1/7, UI title: מה לומדים?)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-092.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/grammar_comparatives.md",
+      "sectionBlock": "## 1. מה לומדים? (topicId=grammar_comparatives, section 1/7, UI title: מה לומדים?)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-097.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/grammar_comparatives.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=grammar_comparatives, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-104.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/sentence_advanced.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=sentence_advanced, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "yes",
+      "note": "החלפת שורה/ביטוי מדויק — from קיים ב-body של section; passes: PASS13"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-113.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/translation_global.md",
+      "sectionBlock": "## 1. מה לומדים? (topicId=translation_global, section 1/7, UI title: מה לומדים?)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-114.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/translation_global.md",
+      "sectionBlock": "## 2. הסבר (topicId=translation_global, section 2/7, UI title: הסבר)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-115.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/translation_global.md",
+      "sectionBlock": "## 3. דוגמה (topicId=translation_global, section 3/7, UI title: דוגמה)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-116.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/translation_global.md",
+      "sectionBlock": "## 4. בואו נפתור (topicId=translation_global, section 4/7, UI title: בואו נפתור)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-118.txt",
+      "sourceMarkdown": "docs/learning-book/english/g6/drafts/translation_global.md",
+      "sectionBlock": "## 6. בואו נבדוק יחד (topicId=translation_global, section 6/7, UI title: בואו נבדוק יחד)",
+      "canSync": "partial",
+      "note": "החלפת עמוד מלא ב-export — צריך לעדכן body של section במקור, לא להדביק txt; passes: PASS12"
+    }
+  ],
+  "problematic": []
+}

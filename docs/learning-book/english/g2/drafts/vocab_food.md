@@ -18,7 +18,7 @@
 - `docs/learning-book/ENGLISH_GRADE_2_LEARNING_BOOK_PLAN.md`
 - `docs/learning-book/ENGLISH_LEARNING_BOOK_MASTER_SCOPE_PLAN.md`
 
-**Content scope:** apple, bread, milk, water — מילים + כתיבה
+**Content scope:** apple, bread, milk, water — מילים וכתיבה
 
 ---
 
@@ -46,7 +46,7 @@ water — מים
 
 apple
 
-תפוח = apple.
+$1 פירושו: $2.
 
 ---
 
@@ -75,9 +75,9 @@ bread
 
 **השאלה: לחם טרי — באנגלית?**
 
-לחם = bread.
+$1 פירושו: $2.
 
-**bread** ✓
+**bread** 
 
 ---
 

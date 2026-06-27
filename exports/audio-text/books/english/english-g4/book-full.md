@@ -34,8 +34,8 @@ The fish are swimming in the sea.
 ## Chapter 006 — עמוד 6
 
 תרגיל: "הדגים שוחים בים (עכשיו)."
-פעולה שקורית עכשיו → Present Continuous: are + swimming.
-the fish = ריבוי → are swimming.
+פעולה שקורית עכשיו — Present Continuous: are + swimming.
+the fish הוא ריבוי — משתמשים ב-are swimming.
 הדגים שוחים בים.
 The fish are swimming in the sea.
 
@@ -78,7 +78,7 @@ He brushes his hair.
 ## Chapter 013 — עמוד 13
 
 תרגיל: "הוא מסרק את שיערו."
-he = יחיד זכר → מוסיפים es לפועל brush: brush → brushes.
+he הוא יחיד זכר — מוסיפים es לפועל brush: brush הופך ל-brushes.
 his hair = שיערו.
 הוא מסרק את שיערו.
 He brushes his hair.
@@ -166,7 +166,7 @@ My parents help me.
 ## Chapter 027 — עמוד 27
 
 תרגיל: "ההורים שלי עוזרים לי."
-parents = הורים (ריבוי) → אחרי ריבוי לא מוסיפים s לפועל help.
+parents הם הורים ברבים — אחרי ריבוי לא מוסיפים s לפועל help.
 me = לי (מושא ראשון).
 ההורים שלי עוזרים לי.
 My parents help me.
@@ -210,7 +210,7 @@ We eat fresh vegetables.
 ## Chapter 034 — עמוד 34
 
 תרגיל: "אנחנו אוכלים ירקות טריים."
-we = אנחנו → אחרי we לא מוסיפים s לפועל eat.
+we פירושו אנחנו — אחרי we לא מוסיפים s לפועל eat.
 fresh vegetables = ירקות טריים.
 אנחנו אוכלים ירקות טריים.
 We eat fresh vegetables.
@@ -254,7 +254,7 @@ The students listen to the teacher.
 ## Chapter 041 — עמוד 41
 
 תרגיל: "התלמידים מקשיבים למורה."
-the students = התלמידים (ריבוי) → אחרי ריבוי לא מוסיפים s לפועל listen.
+the students הם התלמידים ברבים — אחרי ריבוי לא מוסיפים s לפועל listen.
 listen to = להקשיב ל-.
 התלמידים מקשיבים למורה.
 The students listen to the teacher.
@@ -298,8 +298,8 @@ They are playing basketball now.
 ## Chapter 048 — עמוד 48
 
 תרגיל: "הם משחקים כדורסל עכשיו."
-now = עכשיו → פעולה מתמשכת → Present Continuous.
-they = ריבוי → are + playing.
+now פירושו עכשיו — פעולה מתמשכת בזמן הווה — Present Continuous.
+they הוא ריבוי — משתמשים ב-are + playing.
 הם משחקים כדורסל עכשיו.
 They are playing basketball now.
 
@@ -342,8 +342,8 @@ It is snowing today.
 ## Chapter 055 — עמוד 55
 
 תרגיל: "היום יורד שלג."
-מזג אוויר שמתרחש עכשיו → Present Continuous: is + פועל + ing.
-snow → snowing; today = היום.
+מזג אוויר שמתרחש עכשיו — Present Continuous: is + פועל + ing.
+snow הופך ל-snowing; today פירושו היום.
 היום יורד שלג.
 It is snowing today.
 
@@ -387,7 +387,7 @@ The school is in our town.
 ## Chapter 062 — עמוד 62
 
 תרגיל: "בית הספר בעיירה שלנו."
-in = בתוך/ב- → כשמדברים על מיקום בתוך מקום כמו town משתמשים ב in.
+in פירושו בתוך או ב־. כשמדברים על מיקום בתוך מקום כמו town משתמשים ב-in.
 The school is in our town.
 בית הספר בעיירה שלנו.
 The school is in our town.
@@ -406,7 +406,7 @@ trees, protect — We protect the trees.
 
 מילים:
 trees — עצים
-protect — לשמור/להגן
+protect — לשמור או להגן
 We protect the trees.
 אנחנו שומרים על העצים.
 
@@ -431,7 +431,7 @@ We protect the sea.
 ## Chapter 069 — עמוד 69
 
 תרגיל: "אנחנו שומרים על הים."
-we = אנחנו → אחרי we לא מוסיפים s לפועל protect.
+we פירושו אנחנו — אחרי we לא מוסיפים s לפועל protect.
 the sea = הים.
 אנחנו שומרים על הים.
 We protect the sea.
@@ -520,7 +520,7 @@ They play football every Saturday.
 
 תרגיל: "הם משחקים כדורגל בכל שבת."
 הפועל: play — אחרי they (ריבוי) לא מוסיפים s.
-every Saturday = כל שבת → הרגל → Present Simple.
+every Saturday פירושו כל שבת — זה הרגל, ולכן משתמשים ב-Present Simple.
 הם משחקים כדורגל בכל שבת.
 They play football every Saturday.
 
@@ -532,7 +532,7 @@ They play football every Saturday.
 ## Chapter 085 — עמוד 85
 
 היום נלמד את ההבדל בין Simple ל-Continuous.
-I read every day / I am reading now.
+I read every day לעומת I am reading now.
 
 ## Chapter 086 — עמוד 86
 
@@ -563,8 +563,8 @@ They are playing football now.
 ## Chapter 090 — עמוד 90
 
 תרגיל: "הם משחקים כדורגל עכשיו."
-המילה now מראה פעולה שקורית עכשיו → Present Continuous.
-they = הם → are + playing.
+המילה now מראה פעולה שקורית עכשיו — Present Continuous.
+they פירושו הם — משתמשים ב-are + playing.
 הם משחקים כדורגל עכשיו.
 They are playing football now.
 
@@ -609,14 +609,14 @@ I have many books.
 ## Chapter 097 — עמוד 97
 
 תרגיל: "יש לי הרבה ספרים."
-books — שם עצם ספיר (ניתן לספור) → משתמשים ב many.
+books הוא שם עצם ספיר, כלומר אפשר לספור אותו, ולכן משתמשים ב-many.
 I have — יש לי.
 יש לי הרבה ספרים.
 I have many books.
 
 ## Chapter 098 — עמוד 98
 
-עכשיו אתם משתמשים ב-some, my ו-slowly/quickly.
+עכשיו אתם משתמשים ב-some, my, slowly ו-quickly.
 בתרגול תמצאו I have some apples.
 
 ## Chapter 099 — עמוד 99
@@ -700,8 +700,8 @@ Every day he drinks water.
 ## Chapter 111 — עמוד 111
 
 תרגיל: "כל יום הוא שותה מים."
-Every day = כל יום → הרגל → Present Simple.
-he = יחיד זכר → מוסיפים s לפועל: drink → drinks.
+Every day פירושו כל יום — זה הרגל, ולכן משתמשים ב-Present Simple.
+he הוא יחיד זכר — מוסיפים s לפועל: drink הופך ל-drinks.
 כל יום הוא שותה מים.
 Every day he drinks water.
 

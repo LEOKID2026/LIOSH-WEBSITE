@@ -16,7 +16,7 @@
 **Source references:**
 - `docs/qa/ENGLISH_G1_G2_PHONICS_CONTENT_MAP.md`
 
-**Content scope:** Point to the door, Show me your pen; audio_required: yes — פקודות + בחירת תמונה
+**Content scope:** Point to the door, Show me your pen; audio_required: yes — פקודות ובחירת תמונה
 
 ---
 
@@ -80,11 +80,11 @@
 
 Look.
 
-משמע — הסתכלו.
+פירוש המילה הוא: הסתכלו.
 
 שלב 2: מסתכלים — זו הפעולה.
 
-**Look. = הסתכלו** ✓
+**Look. פירושו: הסתכלו** 
 
 ---
 

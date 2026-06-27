@@ -77,13 +77,13 @@ He brushes his hair.
 
 תרגיל: "הוא מסרק את שיערו."
 
-he = יחיד זכר → מוסיפים es לפועל brush: brush → brushes.
+he הוא יחיד זכר — מוסיפים es לפועל brush: brush הופך ל-brushes.
 
 his hair = שיערו.
 
 הוא מסרק את שיערו.
 
-✓ He brushes his hair.
+ He brushes his hair.
 
 ---
 

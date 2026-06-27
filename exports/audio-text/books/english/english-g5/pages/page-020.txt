@@ -1,5 +1,5 @@
 תרגיל: "הם הרגישו עייפים אחרי המשחק."
-feel → felt (פועל חריג בעבר).
-tired = עייף/ה; after the game = אחרי המשחק.
+feel הופך ל-felt בעבר, כי זה פועל חריג.
+tired פירושו עייפים; after the game פירושו אחרי המשחק.
 הם הרגישו עייפים אחרי המשחק.
 They felt tired after the game.

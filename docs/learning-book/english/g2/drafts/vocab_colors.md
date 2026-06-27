@@ -18,7 +18,7 @@
 - `docs/learning-book/ENGLISH_GRADE_2_LEARNING_BOOK_PLAN.md`
 - `docs/learning-book/ENGLISH_LEARNING_BOOK_MASTER_SCOPE_PLAN.md`
 
-**Content scope:** חזרה + מילים במשפט קצר; כתיבה ראשונית
+**Content scope:** חזרה ומילים במשפט קצר; כתיבה ראשונית
 
 ---
 
@@ -81,9 +81,9 @@ The book is red
 
 **השאלה: הספר אדום — באנגלית?**
 
-The book = הספר, is red = אדום.
+The book פירושו הספר. is red פירושו אדום.
 
-**The book is red** ✓
+**The book is red** 
 
 ---
 

@@ -83,7 +83,7 @@ She jumps.
 
 היא קופצת.
 
-כל הכבוד! אחרי she/he/it מוסיפים s לפועל — jumps, לא jump.
+כל הכבוד! אחרי she, he או it מוסיפים s לפועל — jumps, לא jump.
 
 ---
 

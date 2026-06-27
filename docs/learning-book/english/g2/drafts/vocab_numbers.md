@@ -49,7 +49,7 @@ I am seven.
 
 I am seven.
 
-seven = 7.
+seven פירושו 7.
 
 ---
 
@@ -78,11 +78,11 @@ I am twelve
 
 **השאלה: ילד בן 12 — באנגלית?**
 
-המספר 12 = twelve.
+המספר 12 פירושו twelve.
 
-I am + twelve.
+I am twelve.
 
-**I am twelve** ✓
+**I am twelve** 
 
 ---
 

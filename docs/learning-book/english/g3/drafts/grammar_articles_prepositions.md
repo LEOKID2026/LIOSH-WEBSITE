@@ -81,11 +81,11 @@ The ball is in the box.
 
 הכדור בתוך הקופסה.
 
-כל הכבוד! in = בתוך. המבנה: The + שם עצם + is + in/on/under + the + שם עצם.
+כל הכבוד! in = בתוך. המבנה: The + שם עצם + is + מילת מיקום כמו in, on או under + the + שם עצם.
 
 ---
 
 ## 7. בואו נתרגל!
 
-עכשיו אתם משתמשים ב-a/an/the וב-in/on/under.
+עכשיו אתם משתמשים ב-a, an ו-the, וגם במילים in, on ו-under.
 בתרגול תמצאו The cat is under the bed.

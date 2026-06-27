@@ -78,7 +78,7 @@ Hello
 
 Thank you
 
-**Thank you = תודה** ✓
+**$1 פירושו: $2** 
 
 ---
 

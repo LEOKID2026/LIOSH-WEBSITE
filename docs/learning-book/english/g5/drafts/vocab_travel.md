@@ -83,7 +83,7 @@ fly abroad = לטוס לחו"ל; in summer = בקיץ.
 
 אנחנו נטוס לחו"ל בקיץ.
 
-✓ We will fly abroad in summer.
+ We will fly abroad in summer.
 
 ---
 

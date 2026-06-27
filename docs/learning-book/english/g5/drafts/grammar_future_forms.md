@@ -79,13 +79,13 @@ They are going to fly abroad.
 
 תרגיל: "הם הולכים לטוס לחו"ל (תוכנית)."
 
-going to = תוכנית קרובה → are going to + פועל.
+going to מראה תוכנית קרובה — משתמשים ב-are going to + פועל.
 
-they = ריבוי → are going to fly.
+they הוא ריבוי — משתמשים ב-are going to fly.
 
 הם הולכים לטוס לחו"ל.
 
-✓ They are going to fly abroad.
+ They are going to fly abroad.
 
 ---
 

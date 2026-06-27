@@ -16,7 +16,7 @@
 **Source references:**
 - `docs/qa/ENGLISH_G1_G2_PHONICS_CONTENT_MAP.md`
 
-**Content scope:** סדר A→Z; audio_required: yes — שיר/רצף
+**Content scope:** סדר A—Z; audio_required: yes — שיר/רצף
 
 ---
 
@@ -80,7 +80,7 @@ U — V — W — X — Y — Z
 
 לפני W באה V.
 
-**V** ✓
+**V** 
 
 ---
 

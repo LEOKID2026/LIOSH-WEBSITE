@@ -30,7 +30,7 @@ You should drink water and rest when you are tired — כדאי לשתות מי�
 
 ## 2. הסבר
 
-should + פועל — כדאי / מומלץ:
+should + פועל — כדאי או מומלץ:
 
 You should drink water and rest when you are tired.
 
@@ -77,13 +77,13 @@ You should eat fruits and vegetables every day.
 
 תרגיל: "כדאי לאכול פירות וירקות כל יום."
 
-should + פועל = כדאי / מומלץ (בלי to אחרי should).
+should + פועל פירושו כדאי או מומלץ. לא מוסיפים to אחרי should.
 
 eat fruits and vegetables = לאכול פירות וירקות; every day = כל יום.
 
 כדאי לאכול פירות וירקות כל יום.
 
-✓ You should eat fruits and vegetables every day.
+ You should eat fruits and vegetables every day.
 
 ---
 

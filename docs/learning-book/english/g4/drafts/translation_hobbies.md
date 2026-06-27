@@ -77,13 +77,13 @@ He is singing a song.
 
 תרגיל: "הוא שר שיר (עכשיו)."
 
-פעולה עכשיו → Present Continuous: is + פועל + ing.
+פעולה עכשיו — Present Continuous: is + פועל + ing.
 
-he = יחיד → is singing.
+he = יחיד — is singing.
 
 הוא שר שיר עכשיו.
 
-✓ He is singing a song.
+ He is singing a song.
 
 ---
 

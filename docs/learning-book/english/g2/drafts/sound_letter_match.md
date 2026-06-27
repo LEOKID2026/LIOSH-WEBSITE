@@ -1,4 +1,4 @@
-# צליל ↔ אות
+# צליל — אות
 
 ## Metadata
 
@@ -11,12 +11,12 @@
 | **age_band** | grades_1_2 |
 | **page_type** | phonics_foundation |
 | **approval_status** | approved |
-| **title_hebrew** | צליל ↔ אות |
+| **title_hebrew** | צליל — אות |
 
 **Source references:**
 - `docs/qa/ENGLISH_G1_G2_PHONICS_CONTENT_MAP.md`
 
-**Content scope:** hear /m/→M, letter→sound; audio_required: yes
+**Content scope:** hear /m/—M, letter—sound; audio_required: yes
 
 ---
 
@@ -29,16 +29,16 @@
 
 ## 2. הסבר
 
-צליל → אות:
+צליל — אות:
 
-צליל mmm → **M**  
-צליל sss → **S**  
-צליל כמו ב-cat → **C**  
+צליל mmm — **M**  
+צליל sss — **S**  
+צליל כמו ב-cat — **C**  
 
-אות → צליל:
+אות — צליל:
 
-**B** → bbb  
-**T** → ttt  
+**B** — bbb  
+**T** — ttt  
 
 ---
 
@@ -79,7 +79,7 @@
 
 H מתחיל כמו המילה hat — צליל hhh.
 
-**hhh** ✓
+**hhh** 
 
 ---
 

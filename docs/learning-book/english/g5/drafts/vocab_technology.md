@@ -77,13 +77,13 @@ We use the internet for lessons.
 
 תרגיל: "אנחנו גולשים באינטרנט לשיעורים."
 
-we = אנחנו → אחרי we לא מוסיפים s לפועל use.
+we = אנחנו — אחרי we לא מוסיפים s לפועל use.
 
 the internet = האינטרנט; for lessons = לשיעורים.
 
 אנחנו גולשים באינטרנט לשיעורים.
 
-✓ We use the internet for lessons.
+ We use the internet for lessons.
 
 ---
 

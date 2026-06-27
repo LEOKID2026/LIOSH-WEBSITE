@@ -83,7 +83,7 @@ The school is near the park.
 
 בית הספר ליד הפארק.
 
-✓ The school is near the park.
+ The school is near the park.
 
 ---
 

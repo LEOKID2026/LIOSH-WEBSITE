@@ -83,7 +83,7 @@ You are
 
 You are sad
 
-**You are sad = אתה עצוב** ✓
+**$1 פירושו: $2** 
 
 ---
 

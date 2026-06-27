@@ -37,7 +37,7 @@ I eat breakfast.
 
 אני אוכל ארוחת בוקר.
 
-בעברית → באנגלית, ובהפך.
+מעברית לאנגלית, וגם מאנגלית לעברית.
 
 ---
 
@@ -76,11 +76,11 @@ I go to school
 
 **השאלה: הולכים לבית ספר — באנגלית?**
 
-go to school = הולך לבית ספר.
+go to school פירושו ללכת לבית ספר.
 
-I + go to school.
+I go to school.
 
-**I go to school** ✓
+**I go to school** 
 
 ---
 

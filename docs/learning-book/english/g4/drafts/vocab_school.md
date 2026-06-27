@@ -77,13 +77,13 @@ The students listen to the teacher.
 
 תרגיל: "התלמידים מקשיבים למורה."
 
-the students = התלמידים (ריבוי) → אחרי ריבוי לא מוסיפים s לפועל listen.
+the students הם התלמידים ברבים — אחרי ריבוי לא מוסיפים s לפועל listen.
 
 listen to = להקשיב ל-.
 
 התלמידים מקשיבים למורה.
 
-✓ The students listen to the teacher.
+ The students listen to the teacher.
 
 ---
 

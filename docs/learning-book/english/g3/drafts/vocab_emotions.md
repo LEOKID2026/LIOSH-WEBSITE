@@ -83,7 +83,7 @@ She feels tired.
 
 היא מרגישה עייפה.
 
-כל הכבוד! אחרי she/he/it מוסיפים s לפועל — feels, לא feel.
+כל הכבוד! אחרי she, he או it מוסיפים s לפועל — feels, לא feel.
 
 ---
 

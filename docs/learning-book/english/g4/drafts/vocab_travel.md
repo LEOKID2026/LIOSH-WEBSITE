@@ -82,7 +82,7 @@ We travel by train.
 
 אנחנו נוסעים ברכבת.
 
-✓ We travel by train.
+ We travel by train.
 
 ---
 

@@ -77,13 +77,13 @@ Last year our class made a project about the environment.
 
 תרגיל: "בשנה שעברה כיתתנו עשתה פרויקט על הסביבה."
 
-Last year = בשנה שעברה → פועל בעבר.
+Last year פירושו בשנה שעברה — לכן משתמשים בפועל בעבר.
 
-make → made (פועל חריג בעבר).
+make — made (פועל חריג בעבר).
 
 בשנה שעברה כיתתנו עשתה פרויקט על הסביבה.
 
-✓ Last year our class made a project about the environment.
+ Last year our class made a project about the environment.
 
 ---
 

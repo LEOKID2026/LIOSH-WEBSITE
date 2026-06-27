@@ -83,7 +83,7 @@ The main street is next to the market.
 
 הרחוב הראשי ליד השוק.
 
-✓ The main street is next to the market.
+ The main street is next to the market.
 
 ---
 

@@ -41,9 +41,9 @@
 
 ## 3. דוגמה
 
-cat → hat (c→h)  
-sit → hit (s→h)  
-dog → log (d→l)  
+cat — hat (c—h)  
+sit — hit (s—h)  
+dog — log (d—l)  
 
 ---
 
@@ -74,7 +74,7 @@ dog → log (d→l)
 
 man הוא אחד מהם — אז מחפשים אחרת.
 
-**can (או fan)** ✓
+**can (או fan)** 
 
 ---
 

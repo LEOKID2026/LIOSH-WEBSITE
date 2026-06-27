@@ -77,13 +77,13 @@ The fish are swimming in the sea.
 
 תרגיל: "הדגים שוחים בים (עכשיו)."
 
-פעולה שקורית עכשיו → Present Continuous: are + swimming.
+פעולה שקורית עכשיו — Present Continuous: are + swimming.
 
-the fish = ריבוי → are swimming.
+the fish הוא ריבוי — משתמשים ב-are swimming.
 
 הדגים שוחים בים.
 
-✓ The fish are swimming in the sea.
+ The fish are swimming in the sea.
 
 ---
 

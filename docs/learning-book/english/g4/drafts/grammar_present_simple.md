@@ -79,11 +79,11 @@ They play football every Saturday.
 
 הפועל: play — אחרי they (ריבוי) לא מוסיפים s.
 
-every Saturday = כל שבת → הרגל → Present Simple.
+every Saturday פירושו כל שבת — זה הרגל, ולכן משתמשים ב-Present Simple.
 
 הם משחקים כדורגל בכל שבת.
 
-✓ They play football every Saturday.
+ They play football every Saturday.
 
 ---
 

@@ -1,0 +1,290 @@
+[
+  {
+    "path": "english/english-g1/pages/page-006.txt",
+    "from": "האות הגדולה היא S ✓",
+    "to": "האות הגדולה היא S.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g1/pages/page-013.txt",
+    "from": "האות הקטנה היא b ✓",
+    "to": "האות הקטנה היא b.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g1/pages/page-020.txt",
+    "from": "k מתאימה ל-K ✓",
+    "to": "k מתאימה ל-K.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g1/pages/page-034.txt",
+    "from": "פ ✓",
+    "to": "התשובה היא הצליל פ.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g1/pages/page-041.txt",
+    "from": "הצליל הראשון ב-hat הוא ה ✓",
+    "to": "הצליל הראשון ב-hat הוא ה.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g1/pages/page-048.txt",
+    "from": "door = דלת ✓",
+    "to": "door פירושו: דלת.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g1/pages/page-055.txt",
+    "from": "mom = אמא ✓",
+    "to": "mom פירושו: אמא.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g1/pages/page-062.txt",
+    "from": "bed = מיטה ✓",
+    "to": "bed פירושו: מיטה.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g1/pages/page-069.txt",
+    "from": "hat = כובע ✓",
+    "to": "hat פירושו: כובע.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g1/pages/page-076.txt",
+    "from": "Close your book = סוגרים את הספר ✓",
+    "to": "Close your book פירושו: סוגרים את הספר.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g1/pages/page-083.txt",
+    "from": "Look. = הסתכלו ✓",
+    "to": "Look פירושו: הסתכלו.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g1/pages/page-090.txt",
+    "from": "green = ירוק ✓",
+    "to": "green פירושו: ירוק.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g1/pages/page-097.txt",
+    "from": "seven = שבעה (7) ✓",
+    "to": "seven פירושו: שבעה, המספר 7.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g1/pages/page-104.txt",
+    "from": "sister = אחות ✓",
+    "to": "sister פירושו: אחות.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g1/pages/page-111.txt",
+    "from": "bird = ציפור ✓",
+    "to": "bird פירושו: ציפור.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g1/pages/page-118.txt",
+    "from": "sad = עצוב ✓",
+    "to": "sad פירושו: עצוב.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g1/pages/page-125.txt",
+    "from": "jump = לקפוץ ✓",
+    "to": "jump פירושו: לקפוץ.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g1/pages/page-132.txt",
+    "from": "teacher = מורה ✓",
+    "to": "teacher פירושו: מורה.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g1/pages/page-139.txt",
+    "from": "You are sad = אתה עצוב ✓",
+    "to": "You are sad פירושו: אתה עצוב.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g1/pages/page-146.txt",
+    "from": "You are sad = אתה עצוב ✓",
+    "to": "You are sad פירושו: אתה עצוב.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g1/pages/page-153.txt",
+    "from": "Thank you = תודה ✓",
+    "to": "Thank you פירושו: תודה.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g2/pages/page-006.txt",
+    "from": "q ✓",
+    "to": "התשובה היא q.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g2/pages/page-013.txt",
+    "from": "V ✓",
+    "to": "התשובה היא V.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g2/pages/page-020.txt",
+    "from": "ד ✓",
+    "to": "התשובה היא הצליל ד.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g2/pages/page-027.txt",
+    "from": "pig ✓",
+    "to": "התשובה היא pig.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g2/pages/page-034.txt",
+    "from": "ה ✓",
+    "to": "התשובה היא הצליל ה.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g2/pages/page-041.txt",
+    "from": "run ✓",
+    "to": "התשובה היא run.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g2/pages/page-048.txt",
+    "from": "can או fan ✓",
+    "to": "התשובות המתאימות הן can או fan.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g2/pages/page-055.txt",
+    "from": "לכתוב ✓",
+    "to": "התשובה היא לכתוב.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g2/pages/page-062.txt",
+    "from": "קוראים ספר (read a book) ✓",
+    "to": "התשובה היא: קוראים ספר — read a book.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g2/pages/page-069.txt",
+    "from": "friend ✓",
+    "to": "התשובה היא friend.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g2/pages/page-076.txt",
+    "from": "אנחנו קוראים (We read) ✓",
+    "to": "התשובה היא: אנחנו קוראים — We read.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g2/pages/page-083.txt",
+    "from": "The book is red ✓",
+    "to": "התשובה היא: The book is red.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g2/pages/page-090.txt",
+    "from": "I am twelve ✓",
+    "to": "התשובה היא: I am twelve.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g2/pages/page-097.txt",
+    "from": "This is my book ✓",
+    "to": "התשובה היא: This is my book.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g2/pages/page-104.txt",
+    "from": "I see a cat ✓",
+    "to": "התשובה היא: I see a cat.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g2/pages/page-111.txt",
+    "from": "I am happy ✓",
+    "to": "התשובה היא: I am happy.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g2/pages/page-118.txt",
+    "from": "I run ✓",
+    "to": "התשובה היא: I run.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g2/pages/page-125.txt",
+    "from": "I have a pen ✓",
+    "to": "התשובה היא: I have a pen.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g2/pages/page-132.txt",
+    "from": "bread ✓",
+    "to": "התשובה היא bread.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g2/pages/page-139.txt",
+    "from": "table ✓",
+    "to": "התשובה היא table.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g2/pages/page-146.txt",
+    "from": "He is sad ✓",
+    "to": "התשובה היא: He is sad.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g2/pages/page-153.txt",
+    "from": "dogs ✓",
+    "to": "התשובה היא dogs.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g2/pages/page-160.txt",
+    "from": "I have a book ✓",
+    "to": "התשובה היא: I have a book.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g2/pages/page-167.txt",
+    "from": "I go to school ✓",
+    "to": "התשובה היא: I go to school.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g2/pages/page-174.txt",
+    "from": "Hello ✓",
+    "to": "התשובה היא Hello.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g2/pages/page-181.txt",
+    "from": "I go to school ✓",
+    "to": "התשובה היא: I go to school.",
+    "reason": "הסרת סימן ✓ כדי שהטקסט ייקרא ויישמע טבעי."
+  },
+  {
+    "path": "english/english-g5/pages/page-093.txt",
+    "from": "can — יכול/מותר:",
+    "to": "can — אפשר או מותר:",
+    "reason": "הסרת slash בעברית כדי שהמשפט ייקרא טבעי."
+  }
+]

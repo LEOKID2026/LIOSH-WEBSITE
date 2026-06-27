@@ -34,7 +34,7 @@ The dolphin jumped high.
 ## Chapter 006 — עמוד 6
 
 תרגיל: "הדולפין קפץ גבוה."
-פועל סדיר בעבר: jump → jumped.
+פועל סדיר בעבר: jump הופך ל-jumped.
 high = גבוה (תואר פועל).
 הדולפין קפץ גבוה.
 The dolphin jumped high.
@@ -78,7 +78,7 @@ We visited the zoo on holiday.
 ## Chapter 013 — עמוד 13
 
 תרגיל: "ביקרנו בגן חיות בחופשה."
-פועל סדיר בעבר: visit → visited.
+פועל סדיר בעבר: visit הופך ל-visited.
 on holiday = בחופשה.
 ביקרנו בגן חיות בחופשה.
 We visited the zoo on holiday.
@@ -122,8 +122,8 @@ They felt tired after the game.
 ## Chapter 020 — עמוד 20
 
 תרגיל: "הם הרגישו עייפים אחרי המשחק."
-feel → felt (פועל חריג בעבר).
-tired = עייף/ה; after the game = אחרי המשחק.
+feel הופך ל-felt בעבר, כי זה פועל חריג.
+tired פירושו עייפים; after the game פירושו אחרי המשחק.
 הם הרגישו עייפים אחרי המשחק.
 They felt tired after the game.
 
@@ -166,7 +166,7 @@ Children planted flowers in the forest.
 ## Chapter 027 — עמוד 27
 
 תרגיל: "ילדים שתלו פרחים ביער."
-פועל סדיר בעבר: plant → planted.
+פועל סדיר בעבר: plant הופך ל-planted.
 in the forest = ביער.
 ילדים שתלו פרחים ביער.
 Children planted flowers in the forest.
@@ -210,7 +210,7 @@ My grandparents send me letters.
 ## Chapter 034 — עמוד 34
 
 תרגיל: "הסבים שלי שולחים לי מכתבים."
-grandparents = ריבוי → send (ללא s).
+grandparents הוא ריבוי — משתמשים ב-send ללא s.
 me = לי; letters = מכתבים.
 הסבים שלי שולחים לי מכתבים.
 My grandparents send me letters.
@@ -254,7 +254,7 @@ We cooked rice with chicken for dinner.
 ## Chapter 041 — עמוד 41
 
 תרגיל: "בישלנו אורז עם עוף לארוחת ערב."
-פועל סדיר בעבר: cook → cooked.
+פועל סדיר בעבר: cook הופך ל-cooked.
 for dinner = לארוחת ערב.
 בישלנו אורז עם עוף לארוחת ערב.
 We cooked rice with chicken for dinner.
@@ -298,7 +298,7 @@ Our class presented a science project.
 ## Chapter 048 — עמוד 48
 
 תרגיל: "הכיתה שלנו הציגה פרויקט מדעי."
-פועל סדיר בעבר: present → presented.
+פועל סדיר בעבר: present הופך ל-presented.
 a science project = פרויקט מדעי.
 הכיתה שלנו הציגה פרויקט מדעי.
 Our class presented a science project.
@@ -433,7 +433,7 @@ I need to exercise every day.
 
 תרגיל: "אני צריך פעילות גופנית כל יום."
 need to + פועל = צריך ל + פועל.
-exercise = פעילות גופנית / להתאמן; every day = כל יום.
+exercise כאן פירושו להתאמן; every day פירושו כל יום.
 אני צריך להתאמן כל יום.
 I need to exercise every day.
 
@@ -523,7 +523,7 @@ We played basketball in the morning.
 ## Chapter 083 — עמוד 83
 
 תרגיל: "שיחקנו כדורסל בבוקר."
-פעולה שהסתיימה בעבר → Past Simple: play → played.
+פעולה שהסתיימה בעבר — Past Simple: play הופך ל-played.
 in the morning = בבוקר.
 שיחקנו כדורסל בבוקר.
 We played basketball in the morning.
@@ -568,8 +568,8 @@ They are going to fly abroad.
 ## Chapter 090 — עמוד 90
 
 תרגיל: "הם הולכים לטוס לחו"ל (תוכנית)."
-going to = תוכנית קרובה → are going to + פועל.
-they = ריבוי → are going to fly.
+going to מראה תוכנית קרובה — משתמשים ב-are going to + פועל.
+they הוא ריבוי — משתמשים ב-are going to fly.
 הם הולכים לטוס לחו"ל.
 They are going to fly abroad.
 
@@ -585,10 +585,10 @@ You must wear a helmet — אתה חייב לחבוש קסדה.
 
 ## Chapter 093 — עמוד 93
 
-can — יכול/מותר:
+can — אפשר או מותר:
 I can swim.
 אני יודע לשחות.
-must / have to — חובה:
+must ו-have to — חובה:
 You must wear a helmet.
 אתה חייב לחבוש קסדה.
 
@@ -630,8 +630,8 @@ This book is more interesting than that one — הספר הזה מעניין י�
 
 ## Chapter 100 — עמוד 100
 
-קצר: big → bigger than
-ארוך: interesting → more interesting than
+שם תואר קצר: big הופך ל-bigger than
+שם תואר ארוך: משתמשים ב-more interesting than
 This book is more interesting than that one.
 הספר הזה מעניין יותר מהספר ההוא.
 He is taller than me.
@@ -658,7 +658,7 @@ This film is more exciting than that one.
 ## Chapter 104 — עמוד 104
 
 תרגיל: "הסרט הזה מרגש יותר מהסרט ההוא."
-exciting = שם תואר ארוך (3+ הברות) → more exciting than.
+exciting הוא שם תואר ארוך — משתמשים ב-more exciting than.
 This film is more exciting than that one.
 הסרט הזה מרגש יותר מהסרט ההוא.
 This film is more exciting than that one.
@@ -670,7 +670,7 @@ This film is more exciting than that one.
 
 ## Chapter 106 — עמוד 106
 
-היום נחזק much/many — כמות עם שמות עצם ספירים ולא ספירים.
+היום נחזק את ההבדל בין much ל-many — כמות עם שמות עצם ספירים ולא ספירים.
 There were many people at the park — היו הרבה אנשים בפארק.
 
 ## Chapter 107 — עמוד 107
@@ -749,7 +749,7 @@ After that we had dinner.
 
 תרגיל: "אחרי זה אכלנו ארוחת ערב."
 After that = אחרי זה (מילת קישור לרצף בעבר).
-have → had (פועל חריג בעבר).
+have הופך ל-had בעבר, כי זה פועל חריג.
 אחרי זה אכלנו ארוחת ערב.
 After that we had dinner.
 
@@ -792,7 +792,7 @@ Last year our class worked on a project about the environment.
 ## Chapter 125 — עמוד 125
 
 תרגיל: "בשנה שעברה כיתתנו עבדה על פרויקט בנושא הסביבה."
-Last year = בשנה שעברה → פועל בעבר.
+Last year פירושו בשנה שעברה — לכן משתמשים בפועל בעבר.
 work on a project = לעבוד על פרויקט.
 בשנה שעברה כיתתנו עבדה על פרויקט בנושא הסביבה.
 Last year our class worked on a project about the environment.
@@ -925,7 +925,7 @@ Children around the world learn English.
 
 תרגיל: "ילדים ברחבי העולם לומדים אנגלית."
 around the world = ברחבי העולם.
-children = ריבוי → learn (ללא s).
+children הוא ריבוי — משתמשים ב-learn ללא s.
 ילדים ברחבי העולם לומדים אנגלית.
 Children around the world learn English.
 

@@ -1,3 +1,4 @@
 השאלה: הספר אדום — באנגלית?
-The book = הספר, is red = אדום.
-The book is red ✓
+The book פירושו הספר.
+is red פירושו אדום.
+התשובה היא: The book is red.

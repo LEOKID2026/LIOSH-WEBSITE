@@ -19,7 +19,7 @@
 - `docs/learning-book/ENGLISH_LEARNING_BOOK_MASTER_SCOPE_PLAN.md`
 **Linked skill_ids:** `english:grammar:line:חשיפה_ל_i_am_you_are_ולכינויי_גוף_בסיסיים_בתוך_תבניות_קבועות`
 
-**Content scope:** תבניות קבועות I am / You are + כינויי גוף בסיסיים; ללא טבלת am/is/are
+**Content scope:** תבניות קבועות I am / You are וכינויי גוף בסיסיים; ללא טבלת am/is/are
 
 ---
 
@@ -85,7 +85,7 @@ I am happy
 
 You are sad
 
-**You are sad = אתה עצוב** ✓
+**$1 פירושו: $2** 
 
 ---
 

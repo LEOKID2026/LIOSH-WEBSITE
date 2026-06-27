@@ -77,13 +77,13 @@ Temperatures are rising due to climate change.
 
 תרגיל: "הטמפרטורות עולות בגלל שינוי האקלים."
 
-temperatures = ריבוי → are rising (Present Continuous).
+temperatures הוא ריבוי — משתמשים ב-are rising ב-Present Continuous.
 
 due to = בגלל; climate change = שינוי האקלים.
 
 הטמפרטורות עולות בגלל שינוי האקלים.
 
-✓ Temperatures are rising due to climate change.
+ Temperatures are rising due to climate change.
 
 ---
 

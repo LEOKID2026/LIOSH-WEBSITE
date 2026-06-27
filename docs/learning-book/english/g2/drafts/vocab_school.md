@@ -78,9 +78,9 @@ I have a pen
 
 **השאלה: יש לי עט — באנגלית?**
 
-I = אני, have = יש לי, a pen = עט.
+I פירושו אני. have פירושו יש לי. a pen פירושו עט.
 
-**I have a pen** ✓
+**I have a pen** 
 
 ---
 

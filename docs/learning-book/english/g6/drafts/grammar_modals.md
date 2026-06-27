@@ -89,7 +89,7 @@ might + פועל (בלי to): might go.
 
 אולי נלך לים בשבת.
 
-✓ We might go to the beach on Saturday.
+ We might go to the beach on Saturday.
 
 ---
 

@@ -77,13 +77,13 @@ Researchers discovered ancient tools from thousands of years ago.
 
 תרגיל: "חוקרים גילו כלים עתיקים מלפני אלפי שנים."
 
-פועל סדיר בעבר: discover → discovered.
+פועל סדיר בעבר: discover הופך ל-discovered.
 
 ancient tools = כלים עתיקים; thousands of years ago = לפני אלפי שנים.
 
 חוקרים גילו כלים עתיקים מלפני אלפי שנים.
 
-✓ Researchers discovered ancient tools from thousands of years ago.
+ Researchers discovered ancient tools from thousands of years ago.
 
 ---
 

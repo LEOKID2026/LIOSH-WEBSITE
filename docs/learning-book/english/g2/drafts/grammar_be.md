@@ -35,7 +35,7 @@
 תבניות:
 
 I am — אני
-You are — אתה/את
+You are — אתה או את
 He is — הוא
 She is — היא
 
@@ -81,11 +81,11 @@ He is sad
 
 **השאלה: ילד עצוב — באנגלית?**
 
-ילד = He, עצוב = sad.
+He פירושו הוא. sad פירושו עצוב.
 
-He is + sad.
+He is sad.
 
-**He is sad** ✓
+**He is sad** 
 
 ---
 

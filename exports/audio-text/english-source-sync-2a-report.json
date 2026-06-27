@@ -1,0 +1,499 @@
+{
+  "phase": "English Source Sync 2A",
+  "yesRowsInReport": 54,
+  "replacementsApplied": 63,
+  "yesRowsWithAtLeastOneApply": 54,
+  "skippedCount": 0,
+  "changedMarkdownFiles": [
+    "docs/learning-book/english/g2/drafts/grammar_be.md",
+    "docs/learning-book/english/g2/drafts/grammar_plural_questions.md",
+    "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+    "docs/learning-book/english/g2/drafts/translation_routines.md",
+    "docs/learning-book/english/g3/drafts/grammar_articles_prepositions.md",
+    "docs/learning-book/english/g3/drafts/grammar_present_simple.md",
+    "docs/learning-book/english/g3/drafts/vocab_actions.md",
+    "docs/learning-book/english/g3/drafts/vocab_emotions.md",
+    "docs/learning-book/english/g3/drafts/vocab_house.md",
+    "docs/learning-book/english/g4/drafts/grammar_present_simple.md",
+    "docs/learning-book/english/g4/drafts/grammar_quantifiers.md",
+    "docs/learning-book/english/g4/drafts/grammar_simple_continuous.md",
+    "docs/learning-book/english/g4/drafts/sentence_routine.md",
+    "docs/learning-book/english/g4/drafts/vocab_animals.md",
+    "docs/learning-book/english/g4/drafts/vocab_body.md",
+    "docs/learning-book/english/g4/drafts/vocab_community.md",
+    "docs/learning-book/english/g4/drafts/vocab_environment.md",
+    "docs/learning-book/english/g4/drafts/vocab_family.md",
+    "docs/learning-book/english/g4/drafts/vocab_food.md",
+    "docs/learning-book/english/g4/drafts/vocab_school.md",
+    "docs/learning-book/english/g4/drafts/vocab_sports.md",
+    "docs/learning-book/english/g4/drafts/vocab_weather.md",
+    "docs/learning-book/english/g5/drafts/grammar_comparatives.md",
+    "docs/learning-book/english/g5/drafts/grammar_future_forms.md",
+    "docs/learning-book/english/g5/drafts/grammar_modals.md",
+    "docs/learning-book/english/g5/drafts/grammar_past_simple.md",
+    "docs/learning-book/english/g5/drafts/sentence_advanced.md",
+    "docs/learning-book/english/g5/drafts/sentence_narrative.md",
+    "docs/learning-book/english/g5/drafts/translation_global.md",
+    "docs/learning-book/english/g5/drafts/vocab_animals.md",
+    "docs/learning-book/english/g5/drafts/vocab_community.md",
+    "docs/learning-book/english/g5/drafts/vocab_emotions.md",
+    "docs/learning-book/english/g5/drafts/vocab_environment.md",
+    "docs/learning-book/english/g5/drafts/vocab_family.md",
+    "docs/learning-book/english/g5/drafts/vocab_food.md",
+    "docs/learning-book/english/g5/drafts/vocab_health.md",
+    "docs/learning-book/english/g5/drafts/vocab_school.md",
+    "docs/learning-book/english/g6/drafts/grammar_comparatives.md",
+    "docs/learning-book/english/g6/drafts/grammar_complex_tenses.md",
+    "docs/learning-book/english/g6/drafts/sentence_advanced.md",
+    "docs/learning-book/english/g6/drafts/vocab_animals.md",
+    "docs/learning-book/english/g6/drafts/vocab_emotions.md",
+    "docs/learning-book/english/g6/drafts/vocab_environment.md",
+    "docs/learning-book/english/g6/drafts/vocab_global_issues.md",
+    "docs/learning-book/english/g6/drafts/vocab_health.md",
+    "docs/learning-book/english/g6/drafts/vocab_history.md"
+  ],
+  "applied": [
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-058.txt",
+      "md": "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+      "section": 2,
+      "from": "רואה חתול → תמונה של cat",
+      "to": "רואה חתול — בוחרים תמונה של cat."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-142.txt",
+      "md": "docs/learning-book/english/g2/drafts/grammar_be.md",
+      "section": 2,
+      "from": "You are — אתה/את",
+      "to": "You are — אתה או את"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-153.txt",
+      "md": "docs/learning-book/english/g2/drafts/grammar_plural_questions.md",
+      "section": 6,
+      "from": "dog אחד → שניים:",
+      "to": "dog אחד — שניים הם dogs."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-177.txt",
+      "md": "docs/learning-book/english/g2/drafts/translation_routines.md",
+      "section": 2,
+      "from": "בעברית → באנגלית, ובהפך",
+      "to": "מעברית לאנגלית, וגם מאנגלית לעברית"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g3/pages/page-006.txt",
+      "md": "docs/learning-book/english/g3/drafts/vocab_actions.md",
+      "section": 6,
+      "from": "אחרי she/he/it מוסיפים s לפועל — jumps, לא jump.",
+      "to": "אחרי she, he או it מוסיפים s לפועל — jumps, לא jump."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g3/pages/page-027.txt",
+      "md": "docs/learning-book/english/g3/drafts/vocab_emotions.md",
+      "section": 6,
+      "from": "אחרי she/he/it מוסיפים s לפועל — feels, לא feel.",
+      "to": "אחרי she, he או it מוסיפים s לפועל — feels, לא feel."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g3/pages/page-048.txt",
+      "md": "docs/learning-book/english/g3/drafts/vocab_house.md",
+      "section": 6,
+      "from": "כל הכבוד! in = בתוך/ב-.",
+      "to": "כל הכבוד! in פירושו בתוך או ב־."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g3/pages/page-090.txt",
+      "md": "docs/learning-book/english/g3/drafts/grammar_present_simple.md",
+      "section": 6,
+      "from": "אחרי she/he/it מוסיפים s לפועל — plays.",
+      "to": "אחרי she, he או it מוסיפים s לפועל — plays."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g3/pages/page-097.txt",
+      "md": "docs/learning-book/english/g3/drafts/grammar_articles_prepositions.md",
+      "section": 6,
+      "from": "המבנה: The + שם עצם + is + in/on/under + the + שם עצם.",
+      "to": "המבנה: The + שם עצם + is + מילת מיקום כמו in, on או under + the + שם עצם."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g3/pages/page-098.txt",
+      "md": "docs/learning-book/english/g3/drafts/grammar_articles_prepositions.md",
+      "section": 7,
+      "from": "עכשיו אתם משתמשים ב-a/an/the וב-in/on/under.",
+      "to": "עכשיו אתם משתמשים ב-a, an ו-the, וגם במילים in, on ו-under."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-006.txt",
+      "md": "docs/learning-book/english/g4/drafts/vocab_animals.md",
+      "section": 6,
+      "from": "פעולה שקורית עכשיו → Present Continuous: are + swimming.",
+      "to": "פעולה שקורית עכשיו — Present Continuous: are + swimming."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-006.txt",
+      "md": "docs/learning-book/english/g4/drafts/vocab_animals.md",
+      "section": 6,
+      "from": "the fish = ריבוי → are swimming.",
+      "to": "the fish הוא ריבוי — משתמשים ב-are swimming."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-013.txt",
+      "md": "docs/learning-book/english/g4/drafts/vocab_body.md",
+      "section": 6,
+      "from": "he = יחיד זכר → מוסיפים es לפועל brush: brush → brushes.",
+      "to": "he הוא יחיד זכר — מוסיפים es לפועל brush: brush הופך ל-brushes."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-027.txt",
+      "md": "docs/learning-book/english/g4/drafts/vocab_family.md",
+      "section": 6,
+      "from": "parents = הורים (ריבוי) → אחרי ריבוי לא מוסיפים s לפועל help.",
+      "to": "parents הם הורים ברבים — אחרי ריבוי לא מוסיפים s לפועל help."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-034.txt",
+      "md": "docs/learning-book/english/g4/drafts/vocab_food.md",
+      "section": 6,
+      "from": "we = אנחנו → אחרי we לא מוסיפים s לפועל eat.",
+      "to": "we פירושו אנחנו — אחרי we לא מוסיפים s לפועל eat."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-041.txt",
+      "md": "docs/learning-book/english/g4/drafts/vocab_school.md",
+      "section": 6,
+      "from": "the students = התלמידים (ריבוי) → אחרי ריבוי לא מוסיפים s לפועל listen.",
+      "to": "the students הם התלמידים ברבים — אחרי ריבוי לא מוסיפים s לפועל listen."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-048.txt",
+      "md": "docs/learning-book/english/g4/drafts/vocab_sports.md",
+      "section": 6,
+      "from": "now = עכשיו → פעולה מתמשכת → Present Continuous.",
+      "to": "now פירושו עכשיו — פעולה מתמשכת בזמן הווה — Present Continuous."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-048.txt",
+      "md": "docs/learning-book/english/g4/drafts/vocab_sports.md",
+      "section": 6,
+      "from": "they = ריבוי → are + playing.",
+      "to": "they הוא ריבוי — משתמשים ב-are + playing."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-055.txt",
+      "md": "docs/learning-book/english/g4/drafts/vocab_weather.md",
+      "section": 6,
+      "from": "מזג אוויר שמתרחש עכשיו → Present Continuous: is + פועל + ing.",
+      "to": "מזג אוויר שמתרחש עכשיו — Present Continuous: is + פועל + ing."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-055.txt",
+      "md": "docs/learning-book/english/g4/drafts/vocab_weather.md",
+      "section": 6,
+      "from": "snow → snowing; today = היום.",
+      "to": "snow הופך ל-snowing; today פירושו היום."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-062.txt",
+      "md": "docs/learning-book/english/g4/drafts/vocab_community.md",
+      "section": 6,
+      "from": "in = בתוך/ב- → כשמדברים על מיקום בתוך מקום כמו town משתמשים ב in.",
+      "to": "in פירושו בתוך או ב־. כשמדברים על מיקום בתוך מקום כמו town משתמשים ב-in."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-065.txt",
+      "md": "docs/learning-book/english/g4/drafts/vocab_environment.md",
+      "section": 2,
+      "from": "protect — לשמור/להגן",
+      "to": "protect — לשמור או להגן"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-069.txt",
+      "md": "docs/learning-book/english/g4/drafts/vocab_environment.md",
+      "section": 6,
+      "from": "we = אנחנו → אחרי we לא מוסיפים s לפועל protect.",
+      "to": "we פירושו אנחנו — אחרי we לא מוסיפים s לפועל protect."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-083.txt",
+      "md": "docs/learning-book/english/g4/drafts/grammar_present_simple.md",
+      "section": 6,
+      "from": "every Saturday = כל שבת → הרגל → Present Simple.",
+      "to": "every Saturday פירושו כל שבת — זה הרגל, ולכן משתמשים ב-Present Simple."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-085.txt",
+      "md": "docs/learning-book/english/g4/drafts/grammar_simple_continuous.md",
+      "section": 1,
+      "from": "I read every day / I am reading now.",
+      "to": "I read every day לעומת I am reading now."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-090.txt",
+      "md": "docs/learning-book/english/g4/drafts/grammar_simple_continuous.md",
+      "section": 6,
+      "from": "המילה now מראה פעולה שקורית עכשיו → Present Continuous.",
+      "to": "המילה now מראה פעולה שקורית עכשיו — Present Continuous."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-090.txt",
+      "md": "docs/learning-book/english/g4/drafts/grammar_simple_continuous.md",
+      "section": 6,
+      "from": "they = הם → are + playing.",
+      "to": "they פירושו הם — משתמשים ב-are + playing."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-097.txt",
+      "md": "docs/learning-book/english/g4/drafts/grammar_quantifiers.md",
+      "section": 6,
+      "from": "books — שם עצם ספיר (ניתן לספור) → משתמשים ב many.",
+      "to": "books הוא שם עצם ספיר, כלומר אפשר לספור אותו, ולכן משתמשים ב-many."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-098.txt",
+      "md": "docs/learning-book/english/g4/drafts/grammar_quantifiers.md",
+      "section": 7,
+      "from": "עכשיו אתם משתמשים ב-some, my ו-slowly/quickly.",
+      "to": "עכשיו אתם משתמשים ב-some, my, slowly ו-quickly."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-111.txt",
+      "md": "docs/learning-book/english/g4/drafts/sentence_routine.md",
+      "section": 6,
+      "from": "Every day = כל יום → הרגל → Present Simple.",
+      "to": "Every day פירושו כל יום — זה הרגל, ולכן משתמשים ב-Present Simple."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g4/pages/page-111.txt",
+      "md": "docs/learning-book/english/g4/drafts/sentence_routine.md",
+      "section": 6,
+      "from": "he = יחיד זכר → מוסיפים s לפועל: drink → drinks.",
+      "to": "he הוא יחיד זכר — מוסיפים s לפועל: drink הופך ל-drinks."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-006.txt",
+      "md": "docs/learning-book/english/g5/drafts/vocab_animals.md",
+      "section": 6,
+      "from": "פועל סדיר בעבר: jump → jumped.",
+      "to": "פועל סדיר בעבר: jump הופך ל-jumped."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-013.txt",
+      "md": "docs/learning-book/english/g5/drafts/vocab_community.md",
+      "section": 6,
+      "from": "פועל סדיר בעבר: visit → visited.",
+      "to": "פועל סדיר בעבר: visit הופך ל-visited."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-020.txt",
+      "md": "docs/learning-book/english/g5/drafts/vocab_emotions.md",
+      "section": 6,
+      "from": "feel → felt (פועל חריג בעבר).",
+      "to": "feel הופך ל-felt בעבר, כי זה פועל חריג."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-020.txt",
+      "md": "docs/learning-book/english/g5/drafts/vocab_emotions.md",
+      "section": 6,
+      "from": "tired = עייף/ה; after the game = אחרי המשחק.",
+      "to": "tired פירושו עייפים; after the game פירושו אחרי המשחק."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-027.txt",
+      "md": "docs/learning-book/english/g5/drafts/vocab_environment.md",
+      "section": 6,
+      "from": "פועל סדיר בעבר: plant → planted.",
+      "to": "פועל סדיר בעבר: plant הופך ל-planted."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-034.txt",
+      "md": "docs/learning-book/english/g5/drafts/vocab_family.md",
+      "section": 6,
+      "from": "grandparents = ריבוי → send (ללא s).",
+      "to": "grandparents הוא ריבוי — משתמשים ב-send ללא s."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-041.txt",
+      "md": "docs/learning-book/english/g5/drafts/vocab_food.md",
+      "section": 6,
+      "from": "פועל סדיר בעבר: cook → cooked.",
+      "to": "פועל סדיר בעבר: cook הופך ל-cooked."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-048.txt",
+      "md": "docs/learning-book/english/g5/drafts/vocab_school.md",
+      "section": 6,
+      "from": "פועל סדיר בעבר: present → presented.",
+      "to": "פועל סדיר בעבר: present הופך ל-presented."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-069.txt",
+      "md": "docs/learning-book/english/g5/drafts/vocab_health.md",
+      "section": 6,
+      "from": "exercise = פעילות גופנית / להתאמן; every day = כל יום.",
+      "to": "exercise כאן פירושו להתאמן; every day פירושו כל יום."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-083.txt",
+      "md": "docs/learning-book/english/g5/drafts/grammar_past_simple.md",
+      "section": 6,
+      "from": "פעולה שהסתיימה בעבר → Past Simple: play → played.",
+      "to": "פעולה שהסתיימה בעבר — Past Simple: play הופך ל-played."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-090.txt",
+      "md": "docs/learning-book/english/g5/drafts/grammar_future_forms.md",
+      "section": 6,
+      "from": "going to = תוכנית קרובה → are going to + פועל.",
+      "to": "going to מראה תוכנית קרובה — משתמשים ב-are going to + פועל."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-090.txt",
+      "md": "docs/learning-book/english/g5/drafts/grammar_future_forms.md",
+      "section": 6,
+      "from": "they = ריבוי → are going to fly.",
+      "to": "they הוא ריבוי — משתמשים ב-are going to fly."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-093.txt",
+      "md": "docs/learning-book/english/g5/drafts/grammar_modals.md",
+      "section": 2,
+      "from": "must / have to — חובה:",
+      "to": "must ו-have to — חובה:"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-100.txt",
+      "md": "docs/learning-book/english/g5/drafts/grammar_comparatives.md",
+      "section": 2,
+      "from": "קצר: big → bigger than",
+      "to": "שם תואר קצר: big הופך ל-bigger than"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-100.txt",
+      "md": "docs/learning-book/english/g5/drafts/grammar_comparatives.md",
+      "section": 2,
+      "from": "ארוך: interesting → more interesting than",
+      "to": "שם תואר ארוך: משתמשים ב-more interesting than"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-104.txt",
+      "md": "docs/learning-book/english/g5/drafts/grammar_comparatives.md",
+      "section": 6,
+      "from": "exciting = שם תואר ארוך (3+ הברות) → more exciting than.",
+      "to": "exciting הוא שם תואר ארוך — משתמשים ב-more exciting than."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-118.txt",
+      "md": "docs/learning-book/english/g5/drafts/sentence_narrative.md",
+      "section": 6,
+      "from": "have → had (פועל חריג בעבר).",
+      "to": "have הופך ל-had בעבר, כי זה פועל חריג."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-125.txt",
+      "md": "docs/learning-book/english/g5/drafts/sentence_advanced.md",
+      "section": 6,
+      "from": "Last year = בשנה שעברה → פועל בעבר.",
+      "to": "Last year פירושו בשנה שעברה — לכן משתמשים בפועל בעבר."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-146.txt",
+      "md": "docs/learning-book/english/g5/drafts/translation_global.md",
+      "section": 6,
+      "from": "children = ריבוי → learn (ללא s).",
+      "to": "children הוא ריבוי — משתמשים ב-learn ללא s."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-002.txt",
+      "md": "docs/learning-book/english/g6/drafts/vocab_animals.md",
+      "section": 2,
+      "from": "Past Continuous — was/were + פועל + ing:",
+      "to": "Past Continuous — משתמשים ב-was או were, ואחריהם פועל עם ing:"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-006.txt",
+      "md": "docs/learning-book/english/g6/drafts/vocab_animals.md",
+      "section": 6,
+      "from": "פעולה מתמשכת בעבר → Past Continuous: were flying.",
+      "to": "פעולה מתמשכת בעבר — Past Continuous: were flying."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-020.txt",
+      "md": "docs/learning-book/english/g6/drafts/vocab_emotions.md",
+      "section": 6,
+      "from": "proud = גאה/ים; after a win = אחרי ניצחון.",
+      "to": "proud פירושו גאים; after a win פירושו אחרי ניצחון."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-027.txt",
+      "md": "docs/learning-book/english/g6/drafts/vocab_environment.md",
+      "section": 6,
+      "from": "temperatures = ריבוי → are rising (Present Continuous).",
+      "to": "temperatures הוא ריבוי — משתמשים ב-are rising ב-Present Continuous."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-030.txt",
+      "md": "docs/learning-book/english/g6/drafts/vocab_health.md",
+      "section": 2,
+      "from": "should + פועל — כדאי / מומלץ:",
+      "to": "should + פועל — כדאי או מומלץ:"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-034.txt",
+      "md": "docs/learning-book/english/g6/drafts/vocab_health.md",
+      "section": 6,
+      "from": "should + פועל = כדאי / מומלץ (בלי to אחרי should).",
+      "to": "should + פועל פירושו כדאי או מומלץ. לא מוסיפים to אחרי should."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-062.txt",
+      "md": "docs/learning-book/english/g6/drafts/vocab_global_issues.md",
+      "section": 6,
+      "from": "organizations = ריבוי → help (ללא s).",
+      "to": "organizations הוא ריבוי — משתמשים ב-help ללא s."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-069.txt",
+      "md": "docs/learning-book/english/g6/drafts/vocab_history.md",
+      "section": 6,
+      "from": "פועל סדיר בעבר: discover → discovered.",
+      "to": "פועל סדיר בעבר: discover הופך ל-discovered."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-072.txt",
+      "md": "docs/learning-book/english/g6/drafts/grammar_complex_tenses.md",
+      "section": 2,
+      "from": "Past Continuous — was/were + ing (פעולה באמצע):",
+      "to": "Past Continuous — משתמשים ב-was או were עם ing, לפעולה שהייתה באמצע:"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-076.txt",
+      "md": "docs/learning-book/english/g6/drafts/grammar_complex_tenses.md",
+      "section": 6,
+      "from": "פעולה מתמשכת ברקע → Past Continuous: were sitting.",
+      "to": "פעולה מתמשכת ברקע — Past Continuous: were sitting."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-076.txt",
+      "md": "docs/learning-book/english/g6/drafts/grammar_complex_tenses.md",
+      "section": 6,
+      "from": "אירוע שקרה באמצע → Past Simple: started.",
+      "to": "אירוע שקרה באמצע — Past Simple: started."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-092.txt",
+      "md": "docs/learning-book/english/g6/drafts/grammar_comparatives.md",
+      "section": 1,
+      "from": "היום נלמד Superlatives — the most / the best.",
+      "to": "היום נלמד Superlatives — למשל the most או the best."
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g6/pages/page-104.txt",
+      "md": "docs/learning-book/english/g6/drafts/sentence_advanced.md",
+      "section": 6,
+      "from": "שתי פעולות שהתרחשו במקביל → Past Continuous לשתיהן.",
+      "to": "שתי פעולות שהתרחשו במקביל — משתמשים ב-Past Continuous לשתיהן."
+    }
+  ],
+  "skipped": []
+}

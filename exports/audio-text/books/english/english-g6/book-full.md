@@ -7,7 +7,7 @@ The whales were swimming when we saw them — הלווייתנים שחו כשר
 
 ## Chapter 002 — עמוד 2
 
-Past Continuous — was/were + פועל + ing:
+Past Continuous — משתמשים ב-was או were, ואחריהם פועל עם ing:
 The whales were swimming when we saw them.
 הלווייתנים שחו כשראינו אותם.
 The dolphins were jumping near the boat.
@@ -34,7 +34,7 @@ The eagles were flying over the mountains when we arrived.
 ## Chapter 006 — עמוד 6
 
 תרגיל: "הנשרים עפו מעל ההרים כשהגענו."
-פעולה מתמשכת בעבר → Past Continuous: were flying.
+פעולה מתמשכת בעבר — Past Continuous: were flying.
 when we arrived = כשהגענו (Past Simple, פעולה שקרתה).
 הנשרים עפו מעל ההרים כשהגענו.
 The eagles were flying over the mountains when we arrived.
@@ -123,7 +123,7 @@ They might feel proud after a win.
 
 תרגיל: "הם אולי ירגישו גאים אחרי ניצחון."
 might + feel = אולי ירגישו (אפשרות, לא ודאות).
-proud = גאה/ים; after a win = אחרי ניצחון.
+proud פירושו גאים; after a win פירושו אחרי ניצחון.
 הם אולי ירגישו גאים אחרי ניצחון.
 They might feel proud after a win.
 
@@ -166,7 +166,7 @@ Temperatures are rising due to climate change.
 ## Chapter 027 — עמוד 27
 
 תרגיל: "הטמפרטורות עולות בגלל שינוי האקלים."
-temperatures = ריבוי → are rising (Present Continuous).
+temperatures הוא ריבוי — משתמשים ב-are rising ב-Present Continuous.
 due to = בגלל; climate change = שינוי האקלים.
 הטמפרטורות עולות בגלל שינוי האקלים.
 Temperatures are rising due to climate change.
@@ -183,7 +183,7 @@ You should drink water and rest when you are tired — כדאי לשתות מי�
 
 ## Chapter 030 — עמוד 30
 
-should + פועל — כדאי / מומלץ:
+should + פועל — כדאי או מומלץ:
 You should drink water and rest when you are tired.
 כדאי לשתות מים ולנוח כשאתם עייפים.
 You should sleep eight hours every night.
@@ -210,7 +210,7 @@ You should eat fruits and vegetables every day.
 ## Chapter 034 — עמוד 34
 
 תרגיל: "כדאי לאכול פירות וירקות כל יום."
-should + פועל = כדאי / מומלץ (בלי to אחרי should).
+should + פועל פירושו כדאי או מומלץ. לא מוסיפים to אחרי should.
 eat fruits and vegetables = לאכול פירות וירקות; every day = כל יום.
 כדאי לאכול פירות וירקות כל יום.
 You should eat fruits and vegetables every day.
@@ -386,7 +386,7 @@ International organizations help solve global problems.
 ## Chapter 062 — עמוד 62
 
 תרגיל: "ארגונים בינלאומיים עוזרים לפתור בעיות גלובליות."
-organizations = ריבוי → help (ללא s).
+organizations הוא ריבוי — משתמשים ב-help ללא s.
 help + פועל (בלי to): help solve.
 ארגונים בינלאומיים עוזרים לפתור בעיות גלובליות.
 International organizations help solve global problems.
@@ -430,7 +430,7 @@ Researchers discovered ancient tools from thousands of years ago.
 ## Chapter 069 — עמוד 69
 
 תרגיל: "חוקרים גילו כלים עתיקים מלפני אלפי שנים."
-פועל סדיר בעבר: discover → discovered.
+פועל סדיר בעבר: discover הופך ל-discovered.
 ancient tools = כלים עתיקים; thousands of years ago = לפני אלפי שנים.
 חוקרים גילו כלים עתיקים מלפני אלפי שנים.
 Researchers discovered ancient tools from thousands of years ago.
@@ -447,7 +447,7 @@ I was reading when my friend called — קראתי כשחבר התקשר.
 
 ## Chapter 072 — עמוד 72
 
-Past Continuous — was/were + ing (פעולה באמצע):
+Past Continuous — משתמשים ב-was או were עם ing, לפעולה שהייתה באמצע:
 I was reading when my friend called.
 קראתי כשחבר התקשר.
 Past Simple — called (אירוע קצר):
@@ -476,8 +476,8 @@ They were sitting in the garden when it started to rain.
 ## Chapter 076 — עמוד 76
 
 תרגיל: "הם ישבו בגינה כשהתחיל לרדת גשם."
-פעולה מתמשכת ברקע → Past Continuous: were sitting.
-אירוע שקרה באמצע → Past Simple: started.
+פעולה מתמשכת ברקע — Past Continuous: were sitting.
+אירוע שקרה באמצע — Past Simple: started.
 הם ישבו בגינה כשהתחיל לרדת גשם.
 They were sitting in the garden when it started to rain.
 
@@ -578,7 +578,7 @@ We might go to the beach on Saturday.
 
 ## Chapter 092 — עמוד 92
 
-היום נלמד Superlatives — the most / the best.
+היום נלמד Superlatives — למשל the most או the best.
 This is the most interesting book I have read — זה הספר המעניין ביותר שקראתי.
 
 ## Chapter 093 — עמוד 93
@@ -654,7 +654,7 @@ While my mother was cooking, my father was reading a book.
 ## Chapter 104 — עמוד 104
 
 תרגיל: "בזמן שאמא בישלה, אבא קרא ספר."
-שתי פעולות שהתרחשו במקביל → Past Continuous לשתיהן.
+שתי פעולות שהתרחשו במקביל — משתמשים ב-Past Continuous לשתיהן.
 was cooking + was reading = שתי פעולות במקביל.
 בזמן שאמא בישלה, אבא קרא ספר.
 While my mother was cooking, my father was reading a book.

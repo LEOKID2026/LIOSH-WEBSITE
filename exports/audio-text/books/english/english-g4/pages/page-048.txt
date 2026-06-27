@@ -1,5 +1,5 @@
 תרגיל: "הם משחקים כדורסל עכשיו."
-now = עכשיו → פעולה מתמשכת → Present Continuous.
-they = ריבוי → are + playing.
+now פירושו עכשיו — פעולה מתמשכת בזמן הווה — Present Continuous.
+they הוא ריבוי — משתמשים ב-are + playing.
 הם משחקים כדורסל עכשיו.
 They are playing basketball now.

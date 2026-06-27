@@ -79,11 +79,11 @@ Children around the world learn English.
 
 around the world = ברחבי העולם.
 
-children = ריבוי → learn (ללא s).
+children הוא ריבוי — משתמשים ב-learn ללא s.
 
 ילדים ברחבי העולם לומדים אנגלית.
 
-✓ Children around the world learn English.
+ Children around the world learn English.
 
 ---
 

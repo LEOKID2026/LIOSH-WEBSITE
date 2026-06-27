@@ -83,7 +83,7 @@ tradition = מסורת (יחיד, ספציפי לתרבות שלנו).
 
 הריקוד הוא חלק חשוב מהמסורת שלנו.
 
-✓ Dance is an important part of our tradition.
+ Dance is an important part of our tradition.
 
 ---
 

@@ -77,13 +77,13 @@ While my mother was cooking, my father was reading a book.
 
 תרגיל: "בזמן שאמא בישלה, אבא קרא ספר."
 
-שתי פעולות שהתרחשו במקביל → Past Continuous לשתיהן.
+שתי פעולות שהתרחשו במקביל — משתמשים ב-Past Continuous לשתיהן.
 
 was cooking + was reading = שתי פעולות במקביל.
 
 בזמן שאמא בישלה, אבא קרא ספר.
 
-✓ While my mother was cooking, my father was reading a book.
+ While my mother was cooking, my father was reading a book.
 
 ---
 

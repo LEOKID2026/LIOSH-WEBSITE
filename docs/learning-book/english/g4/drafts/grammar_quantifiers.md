@@ -81,17 +81,17 @@ I have many books.
 
 תרגיל: "יש לי הרבה ספרים."
 
-books — שם עצם ספיר (ניתן לספור) → משתמשים ב many.
+books הוא שם עצם ספיר, כלומר אפשר לספור אותו, ולכן משתמשים ב-many.
 
 I have — יש לי.
 
 יש לי הרבה ספרים.
 
-✓ I have many books.
+ I have many books.
 
 ---
 
 ## 7. בואו נתרגל!
 
-עכשיו אתם משתמשים ב-some, my ו-slowly/quickly.
+עכשיו אתם משתמשים ב-some, my, slowly ו-quickly.
 בתרגול תמצאו I have some apples.

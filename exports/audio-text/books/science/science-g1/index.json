@@ -23,8 +23,8 @@
       "pageNumber": 3,
       "title": "דוגמה",
       "textFile": "pages/page-003.txt",
-      "estimatedCharacters": 175,
-      "estimatedWords": 36
+      "estimatedCharacters": 178,
+      "estimatedWords": 37
     },
     {
       "pageNumber": 4,
@@ -44,8 +44,8 @@
       "pageNumber": 6,
       "title": "בואו נבדוק יחד",
       "textFile": "pages/page-006.txt",
-      "estimatedCharacters": 226,
-      "estimatedWords": 47
+      "estimatedCharacters": 244,
+      "estimatedWords": 49
     },
     {
       "pageNumber": 7,
@@ -65,8 +65,8 @@
       "pageNumber": 9,
       "title": "הסבר",
       "textFile": "pages/page-009.txt",
-      "estimatedCharacters": 236,
-      "estimatedWords": 51
+      "estimatedCharacters": 260,
+      "estimatedWords": 55
     },
     {
       "pageNumber": 10,
@@ -114,8 +114,8 @@
       "pageNumber": 16,
       "title": "הסבר",
       "textFile": "pages/page-016.txt",
-      "estimatedCharacters": 263,
-      "estimatedWords": 59
+      "estimatedCharacters": 285,
+      "estimatedWords": 63
     },
     {
       "pageNumber": 17,
@@ -142,7 +142,7 @@
       "pageNumber": 20,
       "title": "בואו נבדוק יחד",
       "textFile": "pages/page-020.txt",
-      "estimatedCharacters": 250,
+      "estimatedCharacters": 248,
       "estimatedWords": 47
     },
     {
@@ -163,14 +163,14 @@
       "pageNumber": 23,
       "title": "הסבר",
       "textFile": "pages/page-023.txt",
-      "estimatedCharacters": 243,
+      "estimatedCharacters": 245,
       "estimatedWords": 54
     },
     {
       "pageNumber": 24,
       "title": "דוגמה",
       "textFile": "pages/page-024.txt",
-      "estimatedCharacters": 101,
+      "estimatedCharacters": 102,
       "estimatedWords": 22
     },
     {
@@ -212,7 +212,7 @@
       "pageNumber": 30,
       "title": "הסבר",
       "textFile": "pages/page-030.txt",
-      "estimatedCharacters": 252,
+      "estimatedCharacters": 251,
       "estimatedWords": 52
     },
     {
@@ -240,15 +240,15 @@
       "pageNumber": 34,
       "title": "בואו נבדוק יחד",
       "textFile": "pages/page-034.txt",
-      "estimatedCharacters": 233,
-      "estimatedWords": 43
+      "estimatedCharacters": 258,
+      "estimatedWords": 48
     },
     {
       "pageNumber": 35,
       "title": "בואו נתרגל",
       "textFile": "pages/page-035.txt",
-      "estimatedCharacters": 91,
-      "estimatedWords": 16
+      "estimatedCharacters": 102,
+      "estimatedWords": 19
     },
     {
       "pageNumber": 36,
@@ -268,8 +268,8 @@
       "pageNumber": 38,
       "title": "דוגמה",
       "textFile": "pages/page-038.txt",
-      "estimatedCharacters": 124,
-      "estimatedWords": 22
+      "estimatedCharacters": 128,
+      "estimatedWords": 23
     },
     {
       "pageNumber": 39,

@@ -16,13 +16,13 @@
 **Source references:**
 - `docs/qa/ENGLISH_G1_G2_PHONICS_CONTENT_MAP.md`
 
-**Content scope:** חזרה עיצורים+תנועות; b/p, d/t; audio_required: yes
+**Content scope:** חזרה צלילים; b/p, d/t; audio_required: yes
 
 ---
 
 ## 1. מה לומדים?
 
-היום **חוזרים** על צלילי אותיות — עיצורים ותנועות קצרות.
+היום **חוזרים** על צלילי אותיות — צלילים קצרים במילים.
 גם נשמיע הבדלים: b ו-p, d ו-t.
 
 ---
@@ -74,7 +74,7 @@
 
 d — ddd — כמו ב-dog.
 
-**d** ✓
+**d** 
 
 ---
 

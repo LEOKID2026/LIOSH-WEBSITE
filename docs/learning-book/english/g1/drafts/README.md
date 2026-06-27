@@ -48,7 +48,7 @@
 
 | File | Draft title | Merge note |
 |------|-------------|------------|
-| `grammar_be.md` | I am / You are — היכרות | Merged be line + be_basic pool |
+| `grammar_be.md` | I am / You are — היכרות | Merged be line ו-be_basic pool |
 | `sentence_base.md` | משפטים קצרים — בסיס | |
 | `translation_classroom.md` | ביטויי כיתה | |
 

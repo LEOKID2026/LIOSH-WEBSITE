@@ -16,8 +16,8 @@
       "pageNumber": 2,
       "title": "הסבר",
       "textFile": "pages/page-002.txt",
-      "estimatedCharacters": 280,
-      "estimatedWords": 52
+      "estimatedCharacters": 321,
+      "estimatedWords": 54
     },
     {
       "pageNumber": 3,
@@ -44,8 +44,8 @@
       "pageNumber": 6,
       "title": "בואו נבדוק יחד",
       "textFile": "pages/page-006.txt",
-      "estimatedCharacters": 354,
-      "estimatedWords": 65
+      "estimatedCharacters": 367,
+      "estimatedWords": 67
     },
     {
       "pageNumber": 7,
@@ -72,8 +72,8 @@
       "pageNumber": 10,
       "title": "דוגמה",
       "textFile": "pages/page-010.txt",
-      "estimatedCharacters": 131,
-      "estimatedWords": 26
+      "estimatedCharacters": 167,
+      "estimatedWords": 30
     },
     {
       "pageNumber": 11,
@@ -93,8 +93,8 @@
       "pageNumber": 13,
       "title": "בואו נבדוק יחד",
       "textFile": "pages/page-013.txt",
-      "estimatedCharacters": 381,
-      "estimatedWords": 77
+      "estimatedCharacters": 379,
+      "estimatedWords": 76
     },
     {
       "pageNumber": 14,
@@ -107,15 +107,15 @@
       "pageNumber": 15,
       "title": "מה לומדים?",
       "textFile": "pages/page-015.txt",
-      "estimatedCharacters": 69,
+      "estimatedCharacters": 78,
       "estimatedWords": 12
     },
     {
       "pageNumber": 16,
       "title": "הסבר",
       "textFile": "pages/page-016.txt",
-      "estimatedCharacters": 395,
-      "estimatedWords": 78
+      "estimatedCharacters": 403,
+      "estimatedWords": 80
     },
     {
       "pageNumber": 17,
@@ -142,15 +142,15 @@
       "pageNumber": 20,
       "title": "בואו נבדוק יחד",
       "textFile": "pages/page-020.txt",
-      "estimatedCharacters": 414,
-      "estimatedWords": 82
+      "estimatedCharacters": 418,
+      "estimatedWords": 83
     },
     {
       "pageNumber": 21,
       "title": "בואו נתרגל",
       "textFile": "pages/page-021.txt",
-      "estimatedCharacters": 94,
-      "estimatedWords": 14
+      "estimatedCharacters": 99,
+      "estimatedWords": 15
     },
     {
       "pageNumber": 22,
@@ -191,8 +191,8 @@
       "pageNumber": 27,
       "title": "בואו נבדוק יחד",
       "textFile": "pages/page-027.txt",
-      "estimatedCharacters": 391,
-      "estimatedWords": 76
+      "estimatedCharacters": 389,
+      "estimatedWords": 75
     },
     {
       "pageNumber": 28,
@@ -212,8 +212,8 @@
       "pageNumber": 30,
       "title": "הסבר",
       "textFile": "pages/page-030.txt",
-      "estimatedCharacters": 410,
-      "estimatedWords": 81
+      "estimatedCharacters": 417,
+      "estimatedWords": 83
     },
     {
       "pageNumber": 31,
@@ -240,8 +240,8 @@
       "pageNumber": 34,
       "title": "בואו נבדוק יחד",
       "textFile": "pages/page-034.txt",
-      "estimatedCharacters": 374,
-      "estimatedWords": 70
+      "estimatedCharacters": 372,
+      "estimatedWords": 69
     },
     {
       "pageNumber": 35,
@@ -268,8 +268,8 @@
       "pageNumber": 38,
       "title": "דוגמה",
       "textFile": "pages/page-038.txt",
-      "estimatedCharacters": 205,
-      "estimatedWords": 40
+      "estimatedCharacters": 225,
+      "estimatedWords": 43
     },
     {
       "pageNumber": 39,
@@ -289,7 +289,7 @@
       "pageNumber": 41,
       "title": "בואו נבדוק יחד",
       "textFile": "pages/page-041.txt",
-      "estimatedCharacters": 424,
+      "estimatedCharacters": 436,
       "estimatedWords": 84
     },
     {

@@ -83,7 +83,7 @@ do your homework = תעשה שיעורים (Present); will get = תקבל (עת�
 
 אם תעשה שיעורים, תקבל ציון טוב.
 
-✓ If you do your homework, you will get a good grade.
+ If you do your homework, you will get a good grade.
 
 ---
 

@@ -32,8 +32,8 @@ This book is more interesting than that one — הספר הזה מעניין י�
 
 ## 2. הסבר
 
-קצר: big → bigger than
-ארוך: interesting → more interesting than
+שם תואר קצר: big הופך ל-bigger than
+שם תואר ארוך: משתמשים ב-more interesting than
 
 This book is more interesting than that one.
 
@@ -80,13 +80,13 @@ This film is more exciting than that one.
 
 תרגיל: "הסרט הזה מרגש יותר מהסרט ההוא."
 
-exciting = שם תואר ארוך (3+ הברות) → more exciting than.
+exciting הוא שם תואר ארוך — משתמשים ב-more exciting than.
 
 This film is more exciting than that one.
 
 הסרט הזה מרגש יותר מהסרט ההוא.
 
-✓ This film is more exciting than that one.
+ This film is more exciting than that one.
 
 ---
 

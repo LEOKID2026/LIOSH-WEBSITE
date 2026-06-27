@@ -1,0 +1,347 @@
+{
+  "phase": "English Source Sync 2B (PASS14 only)",
+  "pass14RowsInMapping": 48,
+  "changedMarkdownFiles": [
+    "docs/learning-book/english/g1/drafts/classroom_words.md",
+    "docs/learning-book/english/g1/drafts/first_words_cvc.md",
+    "docs/learning-book/english/g1/drafts/first_words_simple.md",
+    "docs/learning-book/english/g1/drafts/grammar_be.md",
+    "docs/learning-book/english/g1/drafts/letters_lower.md",
+    "docs/learning-book/english/g1/drafts/letters_match.md",
+    "docs/learning-book/english/g1/drafts/letters_upper.md",
+    "docs/learning-book/english/g1/drafts/listening_classroom.md",
+    "docs/learning-book/english/g1/drafts/listening_commands.md",
+    "docs/learning-book/english/g1/drafts/phonics_first_sound.md",
+    "docs/learning-book/english/g1/drafts/phonics_sounds.md",
+    "docs/learning-book/english/g1/drafts/picture_word_match.md",
+    "docs/learning-book/english/g1/drafts/sentence_base.md",
+    "docs/learning-book/english/g1/drafts/translation_classroom.md",
+    "docs/learning-book/english/g1/drafts/vocab_actions.md",
+    "docs/learning-book/english/g1/drafts/vocab_animals.md",
+    "docs/learning-book/english/g1/drafts/vocab_colors.md",
+    "docs/learning-book/english/g1/drafts/vocab_emotions.md",
+    "docs/learning-book/english/g1/drafts/vocab_family.md",
+    "docs/learning-book/english/g1/drafts/vocab_numbers.md",
+    "docs/learning-book/english/g1/drafts/vocab_school.md",
+    "docs/learning-book/english/g2/drafts/classroom_vocab_g2.md",
+    "docs/learning-book/english/g2/drafts/early_sentences_exposure.md",
+    "docs/learning-book/english/g2/drafts/first_word_reading.md",
+    "docs/learning-book/english/g2/drafts/grammar_be.md",
+    "docs/learning-book/english/g2/drafts/grammar_plural_questions.md",
+    "docs/learning-book/english/g2/drafts/letters_order.md",
+    "docs/learning-book/english/g2/drafts/letters_review.md",
+    "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+    "docs/learning-book/english/g2/drafts/phonics_blending.md",
+    "docs/learning-book/english/g2/drafts/phonics_sounds_review.md",
+    "docs/learning-book/english/g2/drafts/picture_audio_word_match.md",
+    "docs/learning-book/english/g2/drafts/sentence_base.md",
+    "docs/learning-book/english/g2/drafts/sentence_routine.md",
+    "docs/learning-book/english/g2/drafts/sound_letter_match.md",
+    "docs/learning-book/english/g2/drafts/translation_classroom.md",
+    "docs/learning-book/english/g2/drafts/translation_routines.md",
+    "docs/learning-book/english/g2/drafts/vocab_actions.md",
+    "docs/learning-book/english/g2/drafts/vocab_animals.md",
+    "docs/learning-book/english/g2/drafts/vocab_colors.md",
+    "docs/learning-book/english/g2/drafts/vocab_emotions.md",
+    "docs/learning-book/english/g2/drafts/vocab_family.md",
+    "docs/learning-book/english/g2/drafts/vocab_food.md",
+    "docs/learning-book/english/g2/drafts/vocab_house.md",
+    "docs/learning-book/english/g2/drafts/vocab_numbers.md",
+    "docs/learning-book/english/g2/drafts/vocab_school.md",
+    "docs/learning-book/english/g2/drafts/word_families_cvc.md",
+    "docs/learning-book/english/g5/drafts/grammar_modals.md"
+  ],
+  "appliedCount": 48,
+  "skippedCount": 0,
+  "applied": [
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-006.txt",
+      "md": "docs/learning-book/english/g1/drafts/letters_upper.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-013.txt",
+      "md": "docs/learning-book/english/g1/drafts/letters_lower.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-020.txt",
+      "md": "docs/learning-book/english/g1/drafts/letters_match.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-034.txt",
+      "md": "docs/learning-book/english/g1/drafts/phonics_sounds.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-041.txt",
+      "md": "docs/learning-book/english/g1/drafts/phonics_first_sound.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-048.txt",
+      "md": "docs/learning-book/english/g1/drafts/classroom_words.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-055.txt",
+      "md": "docs/learning-book/english/g1/drafts/first_words_simple.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-062.txt",
+      "md": "docs/learning-book/english/g1/drafts/first_words_cvc.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-069.txt",
+      "md": "docs/learning-book/english/g1/drafts/picture_word_match.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-076.txt",
+      "md": "docs/learning-book/english/g1/drafts/listening_classroom.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-083.txt",
+      "md": "docs/learning-book/english/g1/drafts/listening_commands.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-090.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_colors.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-097.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_numbers.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-104.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_family.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-111.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_animals.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-118.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_emotions.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-125.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_actions.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-132.txt",
+      "md": "docs/learning-book/english/g1/drafts/vocab_school.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-139.txt",
+      "md": "docs/learning-book/english/g1/drafts/grammar_be.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-146.txt",
+      "md": "docs/learning-book/english/g1/drafts/sentence_base.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g1/pages/page-153.txt",
+      "md": "docs/learning-book/english/g1/drafts/translation_classroom.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-006.txt",
+      "md": "docs/learning-book/english/g2/drafts/letters_review.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-013.txt",
+      "md": "docs/learning-book/english/g2/drafts/letters_order.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-020.txt",
+      "md": "docs/learning-book/english/g2/drafts/phonics_sounds_review.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-027.txt",
+      "md": "docs/learning-book/english/g2/drafts/phonics_blending.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-034.txt",
+      "md": "docs/learning-book/english/g2/drafts/sound_letter_match.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-041.txt",
+      "md": "docs/learning-book/english/g2/drafts/first_word_reading.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-048.txt",
+      "md": "docs/learning-book/english/g2/drafts/word_families_cvc.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-055.txt",
+      "md": "docs/learning-book/english/g2/drafts/classroom_vocab_g2.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-062.txt",
+      "md": "docs/learning-book/english/g2/drafts/listening_comprehension.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-069.txt",
+      "md": "docs/learning-book/english/g2/drafts/picture_audio_word_match.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-076.txt",
+      "md": "docs/learning-book/english/g2/drafts/early_sentences_exposure.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-083.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_colors.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-090.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_numbers.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-097.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_family.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-104.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_animals.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-111.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_emotions.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-118.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_actions.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-125.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_school.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-132.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_food.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-139.txt",
+      "md": "docs/learning-book/english/g2/drafts/vocab_house.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-146.txt",
+      "md": "docs/learning-book/english/g2/drafts/grammar_be.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-153.txt",
+      "md": "docs/learning-book/english/g2/drafts/grammar_plural_questions.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-160.txt",
+      "md": "docs/learning-book/english/g2/drafts/sentence_base.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-167.txt",
+      "md": "docs/learning-book/english/g2/drafts/sentence_routine.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-174.txt",
+      "md": "docs/learning-book/english/g2/drafts/translation_classroom.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g2/pages/page-181.txt",
+      "md": "docs/learning-book/english/g2/drafts/translation_routines.md",
+      "section": 6,
+      "change": "removed ✓"
+    },
+    {
+      "exportTxt": "exports/audio-text/books/english/english-g5/pages/page-093.txt",
+      "md": "docs/learning-book/english/g5/drafts/grammar_modals.md",
+      "section": 2,
+      "change": "יכול/מותר → יכול או מותר"
+    }
+  ],
+  "skipped": []
+}

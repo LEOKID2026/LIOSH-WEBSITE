@@ -77,13 +77,13 @@ We visited the zoo on holiday.
 
 תרגיל: "ביקרנו בגן חיות בחופשה."
 
-פועל סדיר בעבר: visit → visited.
+פועל סדיר בעבר: visit הופך ל-visited.
 
 on holiday = בחופשה.
 
 ביקרנו בגן חיות בחופשה.
 
-✓ We visited the zoo on holiday.
+ We visited the zoo on holiday.
 
 ---
 

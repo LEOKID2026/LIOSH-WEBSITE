@@ -16,7 +16,7 @@
 **Source references:**
 - `docs/qa/ENGLISH_G1_G2_PHONICS_CONTENT_MAP.md`
 
-**Content scope:** triple match audio↔picture↔word; audio_required: yes
+**Content scope:** triple match audio—picture—word; audio_required: yes
 
 ---
 
@@ -51,9 +51,9 @@
 
 שלב 1: pen — עט.
 
-שלב 2: תמונה של עט + **pen**.
+שלב 2: תמונה של עט ו-**pen**.
 
-תשובה: pen + תמונת pen
+תשובה: pen ותמונת pen
 
 ---
 
@@ -74,7 +74,7 @@
 
 מכירים את המילה — חבר בכיתה.
 
-**friend** ✓
+**friend** 
 
 ---
 

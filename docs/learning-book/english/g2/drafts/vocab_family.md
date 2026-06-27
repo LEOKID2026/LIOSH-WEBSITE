@@ -78,9 +78,9 @@ This is my book
 
 **השאלה: מחזיקים בספר שלכם — באנגלית?**
 
-This is my + book — אותה תבנית.
+This is my book — אותה תבנית.
 
-**This is my book** ✓
+**This is my book** 
 
 ---
 

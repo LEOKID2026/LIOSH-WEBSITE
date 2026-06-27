@@ -77,13 +77,13 @@ They feel sad.
 
 תרגיל: "הם/הן עצובים/ות."
 
-they = ריבוי → אחרי they לא מוסיפים s לפועל feel.
+they = ריבוי — אחרי they לא מוסיפים s לפועל feel.
 
 sad = עצוב/ה.
 
 הם/הן עצובים/ות.
 
-✓ They feel sad.
+ They feel sad.
 
 ---
 

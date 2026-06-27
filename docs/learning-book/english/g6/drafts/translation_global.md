@@ -83,7 +83,7 @@ protect = נגן (Present); will survive = יינצלו (עתיד).
 
 אם נגן על היערות, בעלי החיים יינצלו.
 
-✓ If we protect the forests, animals will survive.
+ If we protect the forests, animals will survive.
 
 ---
 

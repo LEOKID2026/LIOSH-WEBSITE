@@ -83,7 +83,7 @@ already = כבר; this year = השנה (עד עכשיו).
 
 הם כבר ביקרו בחמש מדינות השנה.
 
-✓ They have already visited five countries this year.
+ They have already visited five countries this year.
 
 ---
 
