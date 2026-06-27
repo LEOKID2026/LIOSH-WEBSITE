@@ -44,7 +44,7 @@ export default function LearningGamePrototypesHubPage() {
                     <div className={GH.cardEmoji}>{item.emoji}</div>
                     <div>
                       <h2 className={GH.cardTitle}>{item.titleHe}</h2>
-                      <p className={GH.cardMeta}>אבטיפוס · ללא שמירה</p>
+                      <p className={GH.cardMeta}>{item.subjectHe ?? "אבטיפוס · ללא שמירה"}</p>
                     </div>
                   </div>
                   <p className={`${GH.cardBlurb} flex-1`}>{item.blurbHe}</p>

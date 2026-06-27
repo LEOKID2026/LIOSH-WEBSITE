@@ -1,0 +1,56 @@
+.caseCard {
+  border-color: #c4b5fd;
+  background: linear-gradient(135deg, #fff 0%, #f5f3ff 100%);
+}
+
+.caseBadge {
+  font-size: clamp(1.8rem, 6vw, 2.4rem);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.passage {
+  margin: 0.35rem 0 0;
+  padding: 0.45rem 0.55rem;
+  border-radius: 0.65rem;
+  background: #faf5ff;
+  border: 1px dashed #c4b5fd;
+  font-size: clamp(0.72rem, 2.5vw, 0.84rem);
+  font-weight: 700;
+  line-height: 1.45;
+  color: #334155;
+  text-align: right;
+}
+
+.wordChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.35rem;
+}
+
+.wordChip {
+  padding: 0.2rem 0.45rem;
+  border-radius: 999px;
+  background: #ede9fe;
+  border: 1px solid #c4b5fd;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #5b21b6;
+}
+
+.optionsArea {
+  overflow: auto;
+  min-height: 0;
+}
+
+.optionCard {
+  min-height: clamp(64px, 16vw, 80px);
+}
+
+.optionText {
+  font-size: clamp(0.78rem, 2.8vw, 0.92rem);
+  line-height: 1.25;
+  text-align: center;
+  padding: 0.15rem;
+}

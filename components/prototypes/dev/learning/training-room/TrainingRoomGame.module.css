@@ -1,0 +1,118 @@
+.areaGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem;
+  width: min(100%, 22rem);
+}
+
+.areaCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: clamp(72px, 18vw, 88px);
+  padding: 0.45rem;
+  border-radius: 0.85rem;
+  border: 2px solid #fed7aa;
+  background: linear-gradient(180deg, #fff, #fff7ed);
+  touch-action: manipulation;
+}
+
+.areaCardSelected {
+  border-color: #7c3aed;
+  background: linear-gradient(180deg, #f5f3ff, #ede9fe);
+  box-shadow: 0 0 0 2px #c4b5fd;
+}
+
+.areaEmoji {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.areaTitle {
+  margin: 0.2rem 0 0;
+  font-size: 0.68rem;
+  font-weight: 900;
+  color: #9a3412;
+  text-align: center;
+}
+
+.areaSub {
+  margin: 0.1rem 0 0;
+  font-size: 0.58rem;
+  font-weight: 700;
+  color: #64748b;
+  text-align: center;
+}
+
+.progressBar {
+  flex-shrink: 0;
+  height: 8px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #a78bfa, #7c3aed);
+  transition: width 0.25s ease;
+}
+
+.summaryCard {
+  width: min(100%, 380px);
+  padding: 1rem;
+  border-radius: 1.1rem;
+  border: 3px solid #fdba74;
+  background: #fff;
+  text-align: center;
+}
+
+.summaryTitle {
+  margin: 0 0 0.5rem;
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: #9a3412;
+}
+
+.summaryLine {
+  margin: 0.25rem 0;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #475569;
+}
+
+.pickScreen {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 1rem;
+  overflow: auto;
+}
+
+.pickTitle {
+  margin: 0;
+  font-size: clamp(0.9rem, 3.2vw, 1.05rem);
+  font-weight: 900;
+  color: #9a3412;
+  text-align: center;
+}
+
+.pickSub {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #64748b;
+  text-align: center;
+  max-width: 20rem;
+}
+
+@media (max-width: 380px) {
+  .areaGrid {
+    grid-template-columns: 1fr;
+  }
+}

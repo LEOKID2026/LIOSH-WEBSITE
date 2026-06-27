@@ -1,0 +1,156 @@
+.board {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.35rem;
+  border-radius: 1rem;
+  border: 2px solid #86efac;
+  background: linear-gradient(180deg, #ecfdf5, #f0fdf4);
+}
+
+.shapePreview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: clamp(80px, 22vw, 120px);
+}
+
+.circle {
+  width: clamp(56px, 16vw, 72px);
+  height: clamp(56px, 16vw, 72px);
+  border-radius: 50%;
+  background: #60a5fa;
+  border: 3px solid #1d4ed8;
+}
+
+.square {
+  width: clamp(52px, 15vw, 68px);
+  height: clamp(52px, 15vw, 68px);
+  background: #f472b6;
+  border: 3px solid #be185d;
+}
+
+.rectangle {
+  width: clamp(72px, 20vw, 96px);
+  height: clamp(44px, 12vw, 56px);
+  background: #a78bfa;
+  border: 3px solid #6d28d9;
+}
+
+.triangle {
+  width: 0;
+  height: 0;
+  border-left: clamp(28px, 8vw, 36px) solid transparent;
+  border-right: clamp(28px, 8vw, 36px) solid transparent;
+  border-bottom: clamp(48px, 14vw, 64px) solid #fbbf24;
+  filter: drop-shadow(0 0 0 #d97706);
+}
+
+.patternRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.patternSlot {
+  min-width: clamp(44px, 12vw, 56px);
+  min-height: clamp(44px, 12vw, 56px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.65rem;
+  border: 2px dashed #94a3b8;
+  background: #fff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #64748b;
+}
+
+.gridBoard {
+  display: grid;
+  gap: 3px;
+  padding: 0.35rem;
+  background: #fff;
+  border-radius: 0.5rem;
+  border: 2px solid #cbd5e1;
+}
+
+.gridCell {
+  width: clamp(22px, 6vw, 28px);
+  height: clamp(22px, 6vw, 28px);
+  border-radius: 3px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+}
+
+.gridCellFilled {
+  background: #34d399;
+  border-color: #059669;
+}
+
+.optionShape {
+  min-height: clamp(72px, 18vw, 88px);
+}
+
+.optionShapeInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.optionLabel {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #475569;
+}
+
+.symmetryLine {
+  width: 4px;
+  height: clamp(60px, 16vw, 80px);
+  background: repeating-linear-gradient(180deg, #ef4444 0 6px, transparent 6px 12px);
+  border-radius: 2px;
+}
+
+.netPreview {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  padding: 0.25rem;
+}
+
+.netFace {
+  width: clamp(24px, 7vw, 32px);
+  height: clamp(24px, 7vw, 32px);
+  background: #fde68a;
+  border: 1px solid #d97706;
+  border-radius: 2px;
+}
+
+.netFaceEmpty {
+  background: transparent;
+  border: none;
+}
+
+.rotateHint {
+  font-size: 2rem;
+  transform-origin: center;
+}
+
+.reflectMirror {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.mirrorLine {
+  width: 3px;
+  height: 64px;
+  background: #6366f1;
+  opacity: 0.6;
+}

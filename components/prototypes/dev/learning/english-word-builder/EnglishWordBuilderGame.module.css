@@ -1,37 +1,61 @@
-.wordPanel {
+.trainTrack {
   flex-shrink: 0;
-  text-align: center;
+  display: flex;
+  align-items: flex-end;
+  gap: 0.25rem;
+  padding: 0.35rem 0.25rem;
+  overflow-x: auto;
+  max-width: 100%;
 }
 
-.builtWord {
-  margin: 0;
-  font-size: clamp(1.5rem, 6vw, 2rem);
+.engine {
+  flex-shrink: 0;
+  font-size: clamp(1.6rem, 6vw, 2.2rem);
+  line-height: 1;
+  padding-bottom: 0.15rem;
+}
+
+.carriage {
+  flex-shrink: 0;
+  min-width: clamp(36px, 10vw, 48px);
+  min-height: clamp(40px, 11vw, 52px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.55rem 0.55rem 0.2rem 0.2rem;
+  border: 2px solid #60a5fa;
+  background: linear-gradient(180deg, #fff, #dbeafe);
+  font-size: clamp(0.85rem, 3vw, 1.05rem);
   font-weight: 900;
-  letter-spacing: 0.15em;
-  color: #1d4ed8;
+  color: #1e40af;
+  box-shadow: 0 2px 0 #3b82f6;
 }
 
-.pickedRow {
+.carriageEmpty {
+  color: #94a3b8;
+  border-style: dashed;
+  background: #f8fafc;
+}
+
+.wheels {
   display: flex;
   justify-content: center;
-  gap: 0.3rem;
-  margin-top: 0.35rem;
+  gap: 0.35rem;
+  margin-top: -0.1rem;
+  padding-bottom: 0.15rem;
 }
 
-.pickedChip {
-  min-width: 36px;
-  min-height: 36px;
-  border-radius: 0.5rem;
-  border: 2px solid #93c5fd;
-  background: #eff6ff;
-  font-size: 1rem;
-  font-weight: 900;
+.wheel {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #334155;
 }
 
 .bankPanel {
   flex: 1;
   min-height: 0;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .letterGrid {
@@ -39,26 +63,69 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.35rem;
-  max-height: clamp(100px, 22vh, 140px);
-  overflow: auto;
 }
 
 .letterBtn {
-  min-width: 42px;
-  min-height: 42px;
+  min-width: clamp(40px, 11vw, 48px);
+  min-height: clamp(40px, 11vw, 48px);
   border-radius: 0.65rem;
   border: 2px solid #93c5fd;
   background: linear-gradient(180deg, #fff, #eff6ff);
-  font-size: 1.1rem;
+  font-size: clamp(0.9rem, 3.2vw, 1.05rem);
   font-weight: 900;
-  color: #1e40af;
-  text-transform: lowercase;
-}
-
-.letterBtn:active:not(:disabled) {
-  transform: scale(0.96);
+  color: #1d4ed8;
+  touch-action: manipulation;
 }
 
 .letterUsed {
   opacity: 0.35;
+}
+
+.listenBtn {
+  min-height: 40px;
+  padding: 0.35rem 0.75rem;
+  border-radius: 0.75rem;
+  border: 2px solid #38bdf8;
+  background: #e0f2fe;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #0369a1;
+  margin-bottom: 0.35rem;
+}
+
+.hebrewHint {
+  margin: 0.2rem 0 0;
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: #7c3aed;
+}
+
+.visualRow {
+  display: flex;
+  justify-content: center;
+  font-size: clamp(2rem, 10vw, 3rem);
+  margin: 0.25rem 0;
+}
+
+.sentenceChipRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.3rem;
+  margin-top: 0.35rem;
+}
+
+.sentenceChip {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  background: #fef3c7;
+  border: 1px solid #fbbf24;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #92400e;
+}
+
+.optionEn {
+  font-size: clamp(0.82rem, 3vw, 0.95rem);
+  direction: ltr;
 }
