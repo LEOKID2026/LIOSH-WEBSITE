@@ -72,7 +72,7 @@
       "pageNumber": 10,
       "title": "דוגמה",
       "textFile": "pages/page-010.txt",
-      "estimatedCharacters": 160,
+      "estimatedCharacters": 161,
       "estimatedWords": 30
     },
     {
@@ -114,8 +114,8 @@
       "pageNumber": 16,
       "title": "הסבר",
       "textFile": "pages/page-016.txt",
-      "estimatedCharacters": 377,
-      "estimatedWords": 76
+      "estimatedCharacters": 369,
+      "estimatedWords": 75
     },
     {
       "pageNumber": 17,
@@ -289,8 +289,8 @@
       "pageNumber": 41,
       "title": "בואו נבדוק יחד",
       "textFile": "pages/page-041.txt",
-      "estimatedCharacters": 264,
-      "estimatedWords": 48
+      "estimatedCharacters": 274,
+      "estimatedWords": 49
     },
     {
       "pageNumber": 42,
