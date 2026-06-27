@@ -1,0 +1,5 @@
+תרגיל: "אנחנו נוסעים ברכבת."
+by + אמצעי תחבורה = ב- (train, bus, car...).
+We travel by train.
+אנחנו נוסעים ברכבת.
+We travel by train.

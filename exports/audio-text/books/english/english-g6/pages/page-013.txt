@@ -1,0 +1,5 @@
+תרגיל: "ילדים ומבוגרים רקדו יחד בפסטיבל."
+פועל סדיר בעבר: dance הופך ל-danced.
+together = יחד; at the festival = בפסטיבל.
+ילדים ומבוגרים רקדו יחד בפסטיבל.
+Children and adults danced together at the festival.

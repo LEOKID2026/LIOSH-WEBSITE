@@ -1,6 +1,0 @@
-תרגיל: "הכדורגלן הכניס שני שערים במשחק.
-"
-פועל סדיר בעבר: score → scored.
-two goals = שני שערים; in the game = במשחק.
-הכדורגלן הכניס שני שערים במשחק.
-The footballer scored two goals in the game.

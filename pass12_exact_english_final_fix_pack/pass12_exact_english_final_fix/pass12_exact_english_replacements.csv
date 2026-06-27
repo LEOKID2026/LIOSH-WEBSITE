@@ -1,0 +1,295 @@
+book,page,reason,new_content
+english-g1,page-135.txt,הסרת סימני … ו-/ כדי שהעמוד ייקרא וישמע טבעי.,"שתי תבניות קבועות:
+I am — מתחיל משפט על עצמי.
+You are — מתחיל משפט על מי שמדברים אליו.
+אחר כך מוסיפים מילה כמו happy או sad.
+דוגמה:
+I am happy — אני שמח.
+You are sad — אתה עצוב.
+"
+english-g2,page-011.txt,הסרת רצף אותיות עם … שלא נשמע טוב בשמע.,"מה בא אחרי K?
+בסדר האותיות, אחרי K באה L.
+L
+L
+"
+english-g2,page-013.txt,הסרת רצף ... T — U — V — W ... שלא נקרא טוב.,"השאלה: מה בא לפני W?
+בסדר האותיות, לפני W באה V.
+V ✓
+"
+english-g2,page-039.txt,החלפת s … i … t למשפט קריא.,"קראו sit
+אומרים את הצלילים לאט: s, i, t.
+מחברים יחד: sit
+"
+english-g2,page-041.txt,החלפת r … u … n למשפט קריא.,"השאלה: קראו — run
+אומרים את הצלילים לאט: r, u, n.
+מחברים יחד.
+run ✓
+"
+english-g2,page-042.txt,הסרת סימן … מתוך סוגריים.,"התחלתם לקרוא מילים קצרות.
+בעמוד הבא נלמד משפחות מילים כמו at ו-an.
+"
+english-g2,page-066.txt,החלפת s … u … n למשפט קריא.,"sun — שומעים את הצלילים לאט: s, u, n. המילה היא sun, תמונה של שמש.
+book — ספר — book.
+"
+english-g2,page-074.txt,הסרת סימן … מתוך דוגמה.,"איזו תמונה ל-""It is red""?
+red — אדום.
+בוחרים תמונה של משהו אדום, כמו תפוח או כדור.
+תמונה של משהו red
+"
+english-g3,page-013.txt,דיוק כלל fly/flies — לא 'מוסיפים ies' בצורה מטעה.,"תרגיל:
+ציפור קטנה בשמיים.
+הפתרון:
+The bird flies.
+הציפור עפה.
+כל הכבוד!
+במילה fly, כשמוסיפים s, הצורה הנכונה היא flies.
+"
+english-g3,page-069.txt,תיקון הסבר מטעה שאמר ש-leg הוא he/she/it.,"תרגיל:
+ילד נפל ומחזיק את רגלו.
+הפתרון:
+My leg hurts.
+הרגל שלי כואבת.
+כל הכבוד! My + חלק גוף + hurts.
+מוסיפים s ל-hurt כי leg הוא שם עצם יחיד.
+"
+english-g3,page-105.txt,הסרת What is… שלא נקרא טוב.,"עכשיו אתם שואלים שאלות עם Do.
+בתרגול תמצאו Do you like music?
+וגם שאלות עם What is.
+"
+english-g3,page-121.txt,החלפת אני הולך/ת וניקוי חץ.,"דוגמה:
+I go to bed.
+אפשר לתרגם: אני הולך לישון.
+אפשר גם: אני הולכת לישון.
+מתרגלים מעבר מעברית לאנגלית, וגם מאנגלית לעברית.
+"
+english-g3,page-122.txt,הסרת אני הולך/ת.,"ילד הולך לישון.
+I go to bed.
+אני הולך לישון.
+"
+english-g3,page-123.txt,הסרת אני הולך/ת.,"איך אומרים ""אני הולך לישון""?
+I go to bed
+"
+english-g3,page-125.txt,הסרת אני קם/ת וניסוח טבעי.,"תרגיל:
+שעון מעורר מצלצל בבוקר.
+הפתרון:
+I wake up early.
+אני קם מוקדם.
+כל הכבוד! wake up = לקום — שתי מילים לפעולה אחת. early = מוקדם.
+"
+english-g3,page-127.txt,הסרת אני אוהב/ת.,"היום נתרגל תרגום על תחביבים.
+I like to draw — אני אוהב לצייר.
+אפשר לומר גם: אני אוהבת לצייר.
+"
+english-g3,page-128.txt,הסרת אני אוהב/ת.,"דוגמה:
+I like to draw.
+אני אוהב לצייר.
+אפשר גם: אני אוהבת לצייר.
+She plays the piano.
+היא מנגנת בפסנתר.
+"
+english-g3,page-129.txt,התאמת התרגום לדמות ילדה.,"ילדה מציירת.
+I like to draw.
+אני אוהבת לצייר.
+"
+english-g3,page-130.txt,הסרת אני אוהב/ת.,"איך אומרים ""אני אוהב לצייר""?
+I like to draw
+"
+english-g4,page-015.txt,החלפת הם/הן מרגישים/ות נרגשים/ות בניסוח טבעי.,"היום נלמד רגשות עם They.
+They feel excited — הם מתרגשים.
+"
+english-g4,page-016.txt,הסרת לוכסנים וניסוח טבעי.,"תבנית:
+They feel excited.
+הם מתרגשים.
+They feel happy.
+הם שמחים.
+"
+english-g4,page-017.txt,הסרת לוכסנים.,"ילדים לפני טיול.
+They feel excited.
+הם מתרגשים.
+"
+english-g4,page-018.txt,הסרת לוכסנים.,"איך אומרים ""הם מתרגשים""?
+They feel excited
+"
+english-g4,page-020.txt,הסרת הם/הן עצובים/ות וניקוי חץ.,"תרגיל: ""הם עצובים.""
+they = ריבוי — אחרי they לא מוסיפים s לפועל feel.
+sad = עצוב.
+הם עצובים.
+They feel sad.
+"
+english-g4,page-037.txt,הסרת כותב/ת.,"תבנית:
+The students read books.
+התלמידים קוראים ספרים.
+The teacher writes on the board.
+המורה כותבת על הלוח.
+"
+english-g4,page-106.txt,הסרת עוזר/ת.,"היום נבנה משפטי שגרה עם every day.
+Every day I help at home — כל יום אני עוזר בבית.
+אפשר לומר גם: כל יום אני עוזרת בבית.
+"
+english-g4,page-107.txt,הסרת עוזר/ת.,"תבנית:
+Every day I help at home.
+כל יום אני עוזר בבית.
+אפשר גם: כל יום אני עוזרת בבית.
+Every day she walks to school.
+כל יום היא הולכת לבית ספר.
+"
+english-g4,page-108.txt,הסרת ילד/ה ועוזר/ת.,"ילד עוזר בבית.
+Every day I help at home.
+כל יום אני עוזר בבית.
+"
+english-g4,page-109.txt,הסרת עוזר/ת.,"איך אומרים ""כל יום אני עוזר בבית""?
+Every day I help at home
+"
+english-g4,page-120.txt,תיקון playing guitar ל-playing the guitar.,"היום נתרגל תרגום תחביבים ב-Continuous.
+He is playing the guitar — הוא מנגן בגיטרה עכשיו.
+"
+english-g4,page-121.txt,תיקון playing guitar ל-playing the guitar.,"Present Continuous בתרגום:
+He is playing the guitar.
+הוא מנגן בגיטרה.
+She is drawing a picture.
+היא מציירת תמונה.
+"
+english-g4,page-122.txt,תיקון playing guitar ל-playing the guitar.,"ילד מנגן בגיטרה.
+He is playing the guitar.
+הוא מנגן בגיטרה.
+"
+english-g4,page-123.txt,תיקון playing guitar ל-playing the guitar.,"איך אומרים ""הוא מנגן בגיטרה"" עכשיו?
+He is playing the guitar
+"
+english-g4,page-125.txt,ניקוי חץ וניסוח טבעי.,"תרגיל: ""הוא שר שיר עכשיו.""
+פעולה עכשיו — Present Continuous: is + פועל + ing.
+he = יחיד, לכן משתמשים ב-is singing.
+הוא שר שיר עכשיו.
+He is singing a song.
+"
+english-g4,page-126.txt,תיקון playing guitar ל-playing the guitar.,"עכשיו אתם מתרגלים תרגום תחביבים ב-Continuous.
+בתרגול תמצאו He is playing the guitar.
+"
+english-g5,page-043.txt,תיקון Our class won the project / ניצחה בפרויקט לניסוח טבעי.,"היום נלמד בית ספר — פרויקט כיתתי.
+Our class won a prize for the project — הכיתה שלנו זכתה בפרס על הפרויקט.
+"
+english-g5,page-044.txt,תיקון won the project.,"won a prize — זכתה בפרס:
+Our class won a prize for the project.
+הכיתה שלנו זכתה בפרס על הפרויקט.
+We worked hard last month.
+עבדנו קשה בחודש שעבר.
+"
+english-g5,page-045.txt,תיקון won the project.,"כיתה מציגה פרויקט.
+Our class won a prize for the project.
+הכיתה שלנו זכתה בפרס על הפרויקט.
+"
+english-g5,page-046.txt,תיקון שאלת תרגום.,"איך אומרים ""הכיתה שלנו זכתה בפרס על הפרויקט""?
+Our class won a prize for the project
+"
+english-g5,page-049.txt,עדכון סיכום לפי התיקון.,"עכשיו אתם מתארים הצלחות בבית הספר.
+בתרגול תמצאו Our class won a prize for the project.
+"
+english-g5,page-055.txt,תיקון 'הכניס שערים' ל'הבקיע שערים' וניקוי חץ.,"תרגיל: ""הכדורגלן הבקיע שני שערים במשחק.""
+פועל סדיר בעבר: score הופך ל-scored.
+two goals = שני שערים; in the game = במשחק.
+הכדורגלן הבקיע שני שערים במשחק.
+The footballer scored two goals in the game.
+"
+english-g5,page-075.txt,תיקון 'גולשים באינטרנט לשיעורים' ל'משתמשים באינטרנט'.,"שיעור בבית ספר — משתמשים באינטרנט.
+We use the internet for lessons.
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
+"
+english-g5,page-076.txt,תיקון תרגום וניקוי חץ.,"תרגיל: ""אנחנו משתמשים באינטרנט לשיעורים.""
+we = אנחנו — אחרי we לא מוסיפים s לפועל use.
+the internet = האינטרנט; for lessons = לשיעורים.
+אנחנו משתמשים באינטרנט לשיעורים.
+We use the internet for lessons.
+"
+english-g6,page-013.txt,תיקון שגיאת עברית ריקדו → רקדו וניקוי חץ.,"תרגיל: ""ילדים ומבוגרים רקדו יחד בפסטיבל.""
+פועל סדיר בעבר: dance הופך ל-danced.
+together = יחד; at the festival = בפסטיבל.
+ילדים ומבוגרים רקדו יחד בפסטיבל.
+Children and adults danced together at the festival.
+"
+english-g6,page-016.txt,תיקון 'תרגיש מתרגשת' לניסוח טבעי.,"might + feel — אולי ירגיש:
+He might feel nervous before the presentation.
+אולי הוא ירגיש לחוץ לפני ההצגה.
+She might feel excited about the trip.
+אולי היא תתרגש מהטיול.
+"
+english-g6,page-036.txt,תיקון 'האינטרנט נפסק' לניסוח טבעי.,"היום נחזק טכנולוגיה עם תנאי type 1 ו-could.
+If the internet stops working, we could use books instead — אם האינטרנט מפסיק לעבוד, נוכל להשתמש בספרים במקום.
+"
+english-g6,page-037.txt,תיקון internet stops ו'המחשב נשבר'.,"If + Present, could — אפשרות:
+If the internet stops working, we could use books instead.
+אם האינטרנט מפסיק לעבוד, נוכל להשתמש בספרים במקום.
+If the computer breaks, we could write by hand.
+אם המחשב מתקלקל, נוכל לכתוב ביד.
+"
+english-g6,page-038.txt,תיקון internet stops.,"בית ספר בלי Wi‑Fi.
+If the internet stops working, we could use books instead.
+אם האינטרנט מפסיק לעבוד, נוכל להשתמש בספרים במקום.
+"
+english-g6,page-039.txt,תיקון שאלת תרגום.,"איך אומרים ""אם האינטרנט מפסיק לעבוד, נוכל להשתמש בספרים במקום""?
+If the internet stops working, we could use books instead
+"
+english-g6,page-040.txt,החלפת candles בפנסים — בטוח וטבעי יותר לילדים.,"חשמל כבוי — מה עושים?
+If the electricity goes off, we could use flashlights.
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
+"
+english-g6,page-041.txt,החלפת candles בפנסים וניקוי חץ.,"תרגיל: ""אם החשמל נכבה, נוכל להשתמש בפנסים.""
+If + Present Simple, could + פועל = אפשרות.
+goes off = נכבה; could use = נוכל להשתמש.
+אם החשמל נכבה, נוכל להשתמש בפנסים.
+If the electricity goes off, we could use flashlights.
+"
+english-g6,page-042.txt,עדכון סיכום לפי התיקון.,"עכשיו אתם מדברים על טכנולוגיה בתנאי.
+בתרגול תמצאו If the internet stops working, we could use books instead.
+"
+english-g6,page-082.txt,תיקון 'תכנון לשיעורים' לניסוח טבעי.,"תכנון שיעורי בית — ציון טוב מחכה.
+If you do your homework, you will get a good grade.
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
+"
+english-g6,page-083.txt,תיקון do homework ל'תכין שיעורי בית'.,"תרגיל: ""אם תכין שיעורי בית, תקבל ציון טוב.""
+Type 1: If + Present Simple, will + פועל.
+do your homework = תכין שיעורי בית; will get = תקבל.
+אם תכין שיעורי בית, תקבל ציון טוב.
+If you do your homework, you will get a good grade.
+"
+english-g6,page-085.txt,הסרת ניסוח מטא 'לא חוזרים על can/must'.,"היום נלמד should, might, could — מילים שעוזרות לתת עצה, אפשרות או רעיון.
+You should ask the teacher for help — כדאי לשאול את המורה לעזרה.
+"
+english-g6,page-097.txt,תיקון הסבר שגוי 'כפול y'.,"תרגיל: ""זה הסרט המצחיק ביותר שראיתי.""
+funny מסתיימת ב-y. בצורה funniest מחליפים את y ב-i ומוסיפים est.
+I have watched = שראיתי (Present Perfect).
+זה הסרט המצחיק ביותר שראיתי.
+This is the funniest film I have watched.
+"
+english-g6,page-113.txt,דיוק תרגום benefit.,"היום נתרגל תרגום על העולם — תנאי type 1 ומשפטים ארוכים.
+If we protect the oceans, future generations will benefit — אם נגן על האוקיינוסים, דורות עתידיים יפיקו מכך תועלת.
+"
+english-g6,page-114.txt,דיוק תרגום benefit.,"If + Present, will — תוצאה בעתיד:
+If we protect the oceans, future generations will benefit.
+אם נגן על האוקיינוסים, דורות עתידיים יפיקו מכך תועלת.
+If people work together, the world will improve.
+אם אנשים יעבדו יחד, העולם ישתפר.
+"
+english-g6,page-115.txt,דיוק תרגום benefit.,"ניקוי חוף — שומרים על הים.
+If we protect the oceans, future generations will benefit.
+אם נגן על האוקיינוסים, דורות עתידיים יפיקו מכך תועלת.
+"
+english-g6,page-116.txt,דיוק שאלת תרגום benefit.,"איך אומרים ""אם נגן על האוקיינוסים, דורות עתידיים יפיקו מכך תועלת""?
+If we protect the oceans, future generations will benefit
+"
+english-g6,page-117.txt,"נשאר משפט האנגלית, הכנה לתיקון התרגום בעמוד הבא.","פרויקט על שמירת היערות.
+If we protect the forests, animals will survive.
+נסו לפתור בעצמכם.
+בעמוד הבא נבדוק יחד את הדרך ואת התשובה.
+"
+english-g6,page-118.txt,"תיקון will survive = ישרדו, לא יינצלו.","תרגיל: ""אם נגן על היערות, בעלי החיים ישרדו.""
+Type 1: If + Present Simple, will + פועל.
+protect = נגן; will survive = ישרדו.
+אם נגן על היערות, בעלי החיים ישרדו.
+If we protect the forests, animals will survive.
+"
+english-g6,page-119.txt,עדכון סיכום אחרי תיקון benefit.,"עכשיו אתם מתרגלים תרגום עם תנאי ומשפטים ארוכים.
+בתרגול תמצאו If we protect the oceans, future generations will benefit.
+"

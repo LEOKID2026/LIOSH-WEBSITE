@@ -1,3 +1,0 @@
-cat → hat (c→h)
-sit → hit (s→h)
-dog → log (d→l)

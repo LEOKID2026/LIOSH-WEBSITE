@@ -1,0 +1,5 @@
+תרגיל: "כדאי לאכול פירות וירקות כל יום."
+should + פועל = כדאי / מומלץ (בלי to אחרי should).
+eat fruits and vegetables = לאכול פירות וירקות; every day = כל יום.
+כדאי לאכול פירות וירקות כל יום.
+You should eat fruits and vegetables every day.

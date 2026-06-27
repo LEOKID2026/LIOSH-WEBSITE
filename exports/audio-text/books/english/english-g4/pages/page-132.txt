@@ -1,0 +1,5 @@
+תרגיל: "בית הספר ליד הפארק."
+near = ליד (מרחק קצר, לא בתוך).
+The school is near the park.
+בית הספר ליד הפארק.
+The school is near the park.

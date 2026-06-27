@@ -1,0 +1,5 @@
+תרגיל: "הרחוב הראשי ליד השוק."
+next to = ליד (מרחק קרוב, לא בתוך).
+The main street is next to the market.
+הרחוב הראשי ליד השוק.
+The main street is next to the market.

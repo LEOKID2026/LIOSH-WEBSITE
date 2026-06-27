@@ -1,0 +1,156 @@
+{
+  "bookSlug": "geometry-g2",
+  "bookTitle": "ספר גאומטריה — כיתה ב׳",
+  "subject": "geometry",
+  "grade": "g2",
+  "pageCount": 21,
+  "pages": [
+    {
+      "pageNumber": 1,
+      "title": "מה לומדים?",
+      "textFile": "pages/page-001.txt",
+      "estimatedCharacters": 125,
+      "estimatedWords": 22
+    },
+    {
+      "pageNumber": 2,
+      "title": "הסבר",
+      "textFile": "pages/page-002.txt",
+      "estimatedCharacters": 352,
+      "estimatedWords": 63
+    },
+    {
+      "pageNumber": 3,
+      "title": "דוגמה",
+      "textFile": "pages/page-003.txt",
+      "estimatedCharacters": 142,
+      "estimatedWords": 28
+    },
+    {
+      "pageNumber": 4,
+      "title": "בואו נפתור",
+      "textFile": "pages/page-004.txt",
+      "estimatedCharacters": 111,
+      "estimatedWords": 23
+    },
+    {
+      "pageNumber": 5,
+      "title": "נסו בעצמכם",
+      "textFile": "pages/page-005.txt",
+      "estimatedCharacters": 135,
+      "estimatedWords": 26
+    },
+    {
+      "pageNumber": 6,
+      "title": "בואו נבדוק יחד",
+      "textFile": "pages/page-006.txt",
+      "estimatedCharacters": 212,
+      "estimatedWords": 43
+    },
+    {
+      "pageNumber": 7,
+      "title": "בואו נתרגל",
+      "textFile": "pages/page-007.txt",
+      "estimatedCharacters": 103,
+      "estimatedWords": 20
+    },
+    {
+      "pageNumber": 8,
+      "title": "מה לומדים?",
+      "textFile": "pages/page-008.txt",
+      "estimatedCharacters": 107,
+      "estimatedWords": 20
+    },
+    {
+      "pageNumber": 9,
+      "title": "הסבר",
+      "textFile": "pages/page-009.txt",
+      "estimatedCharacters": 211,
+      "estimatedWords": 40
+    },
+    {
+      "pageNumber": 10,
+      "title": "דוגמה",
+      "textFile": "pages/page-010.txt",
+      "estimatedCharacters": 96,
+      "estimatedWords": 23
+    },
+    {
+      "pageNumber": 11,
+      "title": "בואו נפתור",
+      "textFile": "pages/page-011.txt",
+      "estimatedCharacters": 105,
+      "estimatedWords": 25
+    },
+    {
+      "pageNumber": 12,
+      "title": "נסו בעצמכם",
+      "textFile": "pages/page-012.txt",
+      "estimatedCharacters": 83,
+      "estimatedWords": 18
+    },
+    {
+      "pageNumber": 13,
+      "title": "בואו נבדוק יחד",
+      "textFile": "pages/page-013.txt",
+      "estimatedCharacters": 122,
+      "estimatedWords": 31
+    },
+    {
+      "pageNumber": 14,
+      "title": "בואו נתרגל",
+      "textFile": "pages/page-014.txt",
+      "estimatedCharacters": 81,
+      "estimatedWords": 15
+    },
+    {
+      "pageNumber": 15,
+      "title": "מה לומדים?",
+      "textFile": "pages/page-015.txt",
+      "estimatedCharacters": 113,
+      "estimatedWords": 21
+    },
+    {
+      "pageNumber": 16,
+      "title": "הסבר",
+      "textFile": "pages/page-016.txt",
+      "estimatedCharacters": 329,
+      "estimatedWords": 64
+    },
+    {
+      "pageNumber": 17,
+      "title": "דוגמה",
+      "textFile": "pages/page-017.txt",
+      "estimatedCharacters": 115,
+      "estimatedWords": 27
+    },
+    {
+      "pageNumber": 18,
+      "title": "בואו נפתור",
+      "textFile": "pages/page-018.txt",
+      "estimatedCharacters": 132,
+      "estimatedWords": 27
+    },
+    {
+      "pageNumber": 19,
+      "title": "נסו בעצמכם",
+      "textFile": "pages/page-019.txt",
+      "estimatedCharacters": 134,
+      "estimatedWords": 27
+    },
+    {
+      "pageNumber": 20,
+      "title": "בואו נבדוק יחד",
+      "textFile": "pages/page-020.txt",
+      "estimatedCharacters": 224,
+      "estimatedWords": 47
+    },
+    {
+      "pageNumber": 21,
+      "title": "בואו נתרגל",
+      "textFile": "pages/page-021.txt",
+      "estimatedCharacters": 107,
+      "estimatedWords": 19
+    }
+  ]
+}

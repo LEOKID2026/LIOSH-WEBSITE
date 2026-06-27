@@ -1,0 +1,5 @@
+תרגיל: "הסרט הזה מרגש יותר מהסרט ההוא."
+exciting = שם תואר ארוך (3+ הברות) → more exciting than.
+This film is more exciting than that one.
+הסרט הזה מרגש יותר מהסרט ההוא.
+This film is more exciting than that one.

@@ -1,6 +1,0 @@
-תרגיל: "הם משחקים כדורסל עכשיו.
-"
-now = עכשיו → פעולה מתמשכת → Present Continuous.
-they = ריבוי → are + playing.
-הם משחקים כדורסל עכשיו.
-They are playing basketball now.

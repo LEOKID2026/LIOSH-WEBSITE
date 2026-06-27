@@ -1,5 +1,0 @@
-b — bat (עם "ב")
-p — pen (עם "פ")
-d — dog
-t — top
-תנועות: a cat, e bed, i sit, o hot, u sun.

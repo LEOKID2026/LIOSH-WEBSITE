@@ -1,6 +1,0 @@
-תרגיל: "בשנה שעברה כיתתנו עשתה פרויקט על הסביבה.
-"
-Last year = בשנה שעברה → פועל בעבר.
-make → made (פועל חריג בעבר).
-בשנה שעברה כיתתנו עשתה פרויקט על הסביבה.
-Last year our class made a project about the environment.

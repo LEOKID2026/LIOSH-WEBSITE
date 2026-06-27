@@ -1,6 +1,0 @@
-תרגיל: "אם נגן על היערות, בעלי החיים יינצלו.
-"
-Type 1: If + Present Simple, will + פועל.
-protect = נגן (Present); will survive = יינצלו (עתיד).
-אם נגן על היערות, בעלי החיים יינצלו.
-If we protect the forests, animals will survive.

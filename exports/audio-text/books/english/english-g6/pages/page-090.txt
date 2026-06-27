@@ -1,0 +1,5 @@
+תרגיל: "אולי נלך לים בשבת."
+might = אולי (אפשרות, לא ודאות).
+might + פועל (בלי to): might go.
+אולי נלך לים בשבת.
+We might go to the beach on Saturday.
