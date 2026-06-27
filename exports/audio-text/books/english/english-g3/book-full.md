@@ -39,7 +39,7 @@ She jumps.
 She jumps.
 היא קופצת.
 כל הכבוד!
-אחרי she, he או it מוסיפים s לפועל — jumps, לא jump.
+אחרי she (היא), he (הוא) או it (זה) מוסיפים s לפועל — jumps, לא jump.
 
 ## Chapter 007 — עמוד 7
 
@@ -177,7 +177,7 @@ She feels tired.
 She feels tired.
 היא מרגישה עייפה.
 כל הכבוד!
-אחרי she, he או it מוסיפים s לפועל — feels, לא feel.
+אחרי she (היא), he (הוא) או it (זה) מוסיפים s לפועל — feels, לא feel.
 
 ## Chapter 028 — עמוד 28
 
@@ -597,7 +597,7 @@ She plays tennis.
 She plays tennis.
 היא משחקת טניס.
 כל הכבוד!
-אחרי she, he או it מוסיפים s לפועל — plays.
+אחרי she (היא), he (הוא) או it (זה) מוסיפים s לפועל — plays.
 אחרי I לא מוסיפים s — I play.
 
 ## Chapter 091 — עמוד 91

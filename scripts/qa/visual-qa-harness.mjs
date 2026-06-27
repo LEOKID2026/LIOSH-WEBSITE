@@ -35,6 +35,7 @@ import {
   sampleSeedTopicOffset,
   studentForGrade,
   topicsForGrade,
+  visualQaGradeNumbersForSubject,
 } from "./lib/visual-qa-config.mjs";
 import { sampleHasIssues, mergeIssues, analyzeVisibleText } from "./lib/visual-qa-analyze.mjs";
 import {
@@ -491,7 +492,26 @@ async function main() {
   await mkdir(screenshotDir, { recursive: true });
 
   try {
-    const gradeNumbers = env.gradeFilter != null ? [env.gradeFilter] : [1, 2, 3, 4, 5, 6];
+    const gradeNumbers = visualQaGradeNumbersForSubject(subject, env.gradeFilter);
+    if (gradeNumbers.length === 0) {
+      const out = blockedReport({
+        baseUrl,
+        subject,
+        blocked: {
+          route: "(config)",
+          account: "(grade filter)",
+          missingEnv: [],
+          whatYouNeed:
+            subject === "moledet" && env.gradeFilter != null && env.gradeFilter < 2
+              ? `Grade ${env.gradeFilter} is not teachable for moledet-geography (min G2).`
+              : "No grades configured for this subject.",
+        },
+      });
+      await browser.close();
+      await writeOutputs(out, subject, env.outputDir);
+      console.log(JSON.stringify(out, null, 2));
+      process.exit(2);
+    }
     for (const gradeNumber of gradeNumbers) {
       const student = studentForGrade(gradeNumber, env.useSecondStudent);
       if (!student) {

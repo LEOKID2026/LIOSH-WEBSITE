@@ -12,14 +12,17 @@ import {
 } from "../../lib/learning-book/audio/learning-book-audio-feature-flags.js";
 import { resolveLearningBookAudio } from "../../lib/learning-book/audio/resolve-learning-book-audio.js";
 import {
-  HEBREW_G1_SECTION_AUDIO,
+  HEBREW_G1_FLAT_PAGE_AUDIO,
   MATH_G1_SECTION_AUDIO,
-  ENGLISH_G1_PHONICS_SECTION_AUDIO,
-  ENGLISH_G2_PHONICS_SECTION_AUDIO,
+  ENGLISH_G1_FLAT_PAGE_AUDIO,
+  ENGLISH_G2_FLAT_PAGE_AUDIO,
+  HEBREW_G2_FLAT_PAGE_AUDIO,
   learningBookAudioManifestKey,
   defaultLearningBookSectionAudioPublicPath,
   appendLearningBookAudioCacheBust,
+  resolveBookGlobalPageNumber,
 } from "../../lib/learning-book/audio/learning-book-audio-manifest.js";
+import { defaultLearningBookFlatPageAudioPublicPath } from "../../lib/learning-book/audio/learning-book-flat-page-audio.js";
 import {
   convertMathExpressionsForTts,
   cardinalHebrewForTts,
@@ -73,44 +76,49 @@ describe("learning book audio feature flags", () => {
   });
 });
 
-describe("resolveLearningBookAudio (section-level Hebrew G1)", () => {
-  test("resolves g1.letters sections with unique src", () => {
+describe("resolveLearningBookAudio (flat-page Hebrew G1)", () => {
+  test("resolves g1.letters sections with unique flat-page src", () => {
     const srcs = new Set();
-    for (let sectionNumber = 1; sectionNumber <= HEBREW_G1_SECTION_AUDIO.sectionsPerPage; sectionNumber += 1) {
+    for (let sectionNumber = 1; sectionNumber <= HEBREW_G1_FLAT_PAGE_AUDIO.sectionsPerPage; sectionNumber += 1) {
       const r = resolveLearningBookAudio("hebrew", "g1", SAMPLE_PAGE, sectionNumber);
       assert.ok(r, `expected audio for section ${sectionNumber}`);
       assert.equal(
         r.key,
         learningBookAudioManifestKey("hebrew", "g1", SAMPLE_PAGE, sectionNumber)
       );
+      assert.equal(r.pageNumber, resolveBookGlobalPageNumber("hebrew", "g1", SAMPLE_PAGE, sectionNumber));
       assert.equal(
         r.src,
-        defaultLearningBookSectionAudioPublicPath("hebrew", "g1", SAMPLE_PAGE, sectionNumber)
+        defaultLearningBookFlatPageAudioPublicPath(
+          "hebrew",
+          "g1",
+          resolveBookGlobalPageNumber("hebrew", "g1", SAMPLE_PAGE, sectionNumber)
+        )
       );
       assert.match(r.playbackSrc, /\?v=/);
       srcs.add(r.src);
     }
-    assert.equal(srcs.size, HEBREW_G1_SECTION_AUDIO.sectionsPerPage);
+    assert.equal(srcs.size, HEBREW_G1_FLAT_PAGE_AUDIO.sectionsPerPage);
   });
 
-  test("different topics return different section src values", () => {
+  test("different topics return different flat-page src values", () => {
     const letters = resolveLearningBookAudio("hebrew", "g1", "g1.letters", 1);
     const rhyme = resolveLearningBookAudio("hebrew", "g1", "g1.rhyme", 1);
     assert.ok(letters?.src);
     assert.ok(rhyme?.src);
     assert.notEqual(letters.src, rhyme.src);
+    assert.equal(letters.pageNumber, resolveBookGlobalPageNumber("hebrew", "g1", "g1.letters", 1));
   });
 
-  test("returns null for non-Hebrew-G1 or missing section", () => {
-    assert.equal(resolveLearningBookAudio("hebrew", "g2", SAMPLE_PAGE, 1), null);
+  test("returns null for unsupported grade or missing section", () => {
+    assert.equal(resolveLearningBookAudio("hebrew", "g3", SAMPLE_PAGE, 1), null);
     assert.equal(resolveLearningBookAudio("math", "g1", SAMPLE_PAGE, 1), null);
-    assert.equal(resolveLearningBookAudio("english", "g1", SAMPLE_PAGE, 1), null);
     assert.equal(resolveLearningBookAudio("hebrew", "g1", SAMPLE_PAGE, 99), null);
     assert.equal(resolveLearningBookAudio("hebrew", "g1", "not.a.page", 1), null);
   });
 
   test("cache bust appends version query", () => {
-    const busted = appendLearningBookAudioCacheBust("/audio/learning-books/hebrew/g1/g1.letters/section-01.mp3");
+    const busted = appendLearningBookAudioCacheBust("/audio/learning-books/hebrew-g1/hebrew_g1_page_001.mp3");
     assert.match(busted, /\?v=/);
   });
 });
@@ -152,7 +160,7 @@ describe("prepareHebrewBookSectionAudioText", () => {
   test("each section script is unique and excludes other section content", () => {
     const entry = getLearningBookEntry("hebrew", "g1");
     const page = entry.loader.loadPage(SAMPLE_PAGE);
-    const scripts = Array.from({ length: HEBREW_G1_SECTION_AUDIO.sectionsPerPage }, (_, i) =>
+    const scripts = Array.from({ length: HEBREW_G1_FLAT_PAGE_AUDIO.sectionsPerPage }, (_, i) =>
       prepareHebrewBookAudioTextForSection(page, i + 1)
     );
 
@@ -187,7 +195,7 @@ describe("prepareHebrewBookSectionAudioText", () => {
       /[\u0590-\u05FF][\u002D\u2010\u2011\u2012\u2013\u2014\u05BE\uFE58\uFE63\uFF0D][\u0590-\u05FF]/;
     for (const pageId of ["g1.letters", "g1.rhyme", "g1.open_close_syllable"]) {
       const page = entry.loader.loadPage(pageId);
-      for (let n = 1; n <= HEBREW_G1_SECTION_AUDIO.sectionsPerPage; n += 1) {
+      for (let n = 1; n <= HEBREW_G1_FLAT_PAGE_AUDIO.sectionsPerPage; n += 1) {
         const script = prepareHebrewBookAudioTextForSection(page, n);
         if (script) assert.doesNotMatch(script, hyphenRe, `${pageId} section ${n}`);
       }
@@ -330,13 +338,22 @@ describe("prepareEnglishBookSectionAudioText (letters_upper)", () => {
 });
 
 describe("manifest coverage", () => {
-  test("all Hebrew G1 pages have 7 section slots", () => {
-    assert.equal(HEBREW_G1_SECTION_AUDIO.pageIds.length, 32);
-    assert.equal(HEBREW_G1_SECTION_AUDIO.sectionsPerPage, 7);
-    for (const pageId of HEBREW_G1_SECTION_AUDIO.pageIds) {
+  test("all Hebrew G1 pages have 7 section slots (flat-page audio)", () => {
+    assert.equal(HEBREW_G1_FLAT_PAGE_AUDIO.pageIds.length, 32);
+    assert.equal(HEBREW_G1_FLAT_PAGE_AUDIO.sectionsPerPage, 7);
+    assert.equal(HEBREW_G1_FLAT_PAGE_AUDIO.expectedPages, 224);
+    for (const pageId of HEBREW_G1_FLAT_PAGE_AUDIO.pageIds) {
       assert.ok(resolveLearningBookAudio("hebrew", "g1", pageId, 1));
       assert.ok(resolveLearningBookAudio("hebrew", "g1", pageId, 7));
       assert.equal(resolveLearningBookAudio("hebrew", "g1", pageId, 8), null);
+    }
+  });
+
+  test("Hebrew G2 full book has flat-page audio slots", () => {
+    assert.equal(HEBREW_G2_FLAT_PAGE_AUDIO.expectedPages, 161);
+    for (const pageId of HEBREW_G2_FLAT_PAGE_AUDIO.pageIds) {
+      assert.ok(resolveLearningBookAudio("hebrew", "g2", pageId, 1));
+      assert.ok(resolveLearningBookAudio("hebrew", "g2", pageId, 7));
     }
   });
 
@@ -354,22 +371,22 @@ describe("manifest coverage", () => {
     }
   });
 
-  test("English G1 phonics pages have 7 section slots; vocab excluded", () => {
-    assert.equal(ENGLISH_G1_PHONICS_SECTION_AUDIO.pageIds.length, 12);
-    for (const pageId of ENGLISH_G1_PHONICS_SECTION_AUDIO.pageIds) {
+  test("English G1 all pages have flat-page audio", () => {
+    assert.equal(ENGLISH_G1_FLAT_PAGE_AUDIO.expectedPages, 154);
+    for (const pageId of ENGLISH_G1_FLAT_PAGE_AUDIO.pageIds) {
       assert.ok(resolveLearningBookAudio("english", "g1", pageId, 1));
       assert.ok(resolveLearningBookAudio("english", "g1", pageId, 7));
       assert.equal(resolveLearningBookAudio("english", "g1", pageId, 8), null);
     }
-    assert.equal(resolveLearningBookAudio("english", "g1", "vocab_colors", 1), null);
+    assert.ok(resolveLearningBookAudio("english", "g1", "vocab_colors", 1));
   });
 
-  test("English G2 phonics-review pages have 7 section slots", () => {
-    assert.equal(ENGLISH_G2_PHONICS_SECTION_AUDIO.pageIds.length, 11);
-    for (const pageId of ENGLISH_G2_PHONICS_SECTION_AUDIO.pageIds) {
+  test("English G2 all pages have flat-page audio", () => {
+    assert.equal(ENGLISH_G2_FLAT_PAGE_AUDIO.expectedPages, 182);
+    for (const pageId of ENGLISH_G2_FLAT_PAGE_AUDIO.pageIds) {
       assert.ok(resolveLearningBookAudio("english", "g2", pageId, 1));
       assert.ok(resolveLearningBookAudio("english", "g2", pageId, 7));
     }
-    assert.equal(resolveLearningBookAudio("english", "g2", "vocab_colors", 1), null);
+    assert.ok(resolveLearningBookAudio("english", "g2", "vocab_colors", 1));
   });
 });

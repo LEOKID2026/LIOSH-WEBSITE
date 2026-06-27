@@ -8,9 +8,6 @@ import { TAXONOMY_BY_ID } from "../diagnostic-engine-v2/taxonomy-registry.js";
 import { resolveGradeAwareParentRecommendationHe } from "./grade-aware-recommendation-resolver.js";
 import { splitTopicRowKey } from "../parent-report-row-diagnostics.js";
 
-const MOLEDET_DEFERRED_HE =
-  "במולדת וגאוגרפיה מוצגת כרגע תמונה כללית לפי נושא ודיוק. פירוט עמוק יותר לפי נקודות חיזוק יתווסף בהמשך.";
-
 /** Home actions by taxonomy id — editorial parent copy, not engine logic. */
 const HOME_ACTION_BY_TAXONOMY_ID = Object.freeze({
   "M-02":
@@ -75,6 +72,22 @@ const HOME_ACTION_BY_TAXONOMY_ID = Object.freeze({
     "לסדר את שלבי התהליך לפי הסדר, ואז להסביר כל שלב במשפט קצר.",
   "S-07":
     "לבחור מושג אחד, לבקש מהילד להסביר אותו במילים שלו, ואז לתת דוגמה מהחיים.",
+  "MG-01":
+    "לתרגל קריאת קנה מידה במפה בעזרת סרגל או קו קנה מידה, ולבקש מהילד להסביר מה מייצג המרחק במפה.",
+  "MG-02":
+    "לתרגל כיוונים במפה בעזרת חץ צפון, ולבקש מהילד להסביר לאיזה כיוון צריך ללכת.",
+  "MG-03":
+    "לתרגל מצבים קצרים שבהם צריך להבחין בין זכות, חובה או כלל, ולבקש מהילד להסביר מה בטקסט תומך בתשובה.",
+  "MG-04":
+    "לתרגל סידור אירועים לפי סדר זמן, ולבקש מהילד להסביר איזה אירוע קרה קודם ומה הראיה לכך.",
+  "MG-05":
+    "לתרגל השוואת אזורים במפה בעזרת מקרא, צבעים וסימנים, ולבקש מהילד להראות באיזה נתון במפה השתמש.",
+  "MG-06":
+    "לתרגל שאלות של סיבה ותוצאה, ולבקש מהילד להפריד בין עובדה שמופיעה בטקסט לבין דעה.",
+  "MG-07":
+    "לתרגל התאמה בין מוסדות בקהילה לתפקיד שלהם, ולבקש מהילד להסביר מי נעזר במוסד ומה השירות שהוא נותן.",
+  "MG-08":
+    "לתרגל קריאת מקרא וסימנים במפה, ולבקש מהילד לזהות את הנתון המתאים לפני שעונה.",
 });
 
 /** Parent-facing subskill labels — taxonomy ids unchanged; editorial copy only. */
@@ -82,6 +95,14 @@ const PARENT_SUBSKILL_LABEL_HE = Object.freeze({
   "M-02": "נשיאה בחיבור",
   "H-04": "איתור מידע בטקסט",
   "S-03": "הבנת הקשר בין חלקי הגוף",
+  "MG-01": "קריאת קנה מידה במפה",
+  "MG-02": "כיוונים וצפון במפה",
+  "MG-03": "זכות, חובה וכלל",
+  "MG-04": "סדר אירועים בציר זמן",
+  "MG-05": "קריאת מפת אקלים",
+  "MG-06": "סיבה ותוצאה",
+  "MG-07": "מוסדות בקהילה",
+  "MG-08": "מקרא וסימנים במפה",
 });
 
 const TOPIC_ONLY_HOME = Object.freeze({
@@ -174,7 +195,7 @@ function competitiveModeContextHe(sig) {
 
   if (decision === "speed_pressure_pattern" || diagType === "speed_pressure" || speedRisk) {
     return (
-      "חלק מהטעויות הופיעו בזמן עבודה מהיר. לכן כדאי לבדוק אם הילד יודע את החומר גם כשהוא עוצר לרגע ובודק את עצמו."
+      "נראה שחלק מהטעויות קשורות לקצב פתרון מהיר מדי. כדאי לתרגל עצירה קצרה לפני שליחה: לקרוא שוב את השאלה, לבדוק את התשובה, ורק אז להמשיך."
     );
   }
   return "";
@@ -225,11 +246,14 @@ function buildDiagnosticBodyByDecision(p) {
   }
 
   if (decision === "early_direction_only") {
-    return `יש עדיין מעט דוגמאות בנושא «${topic}», ולכן זו רק תמונה ראשונית.`;
+    if (q <= 5) return `עדיין מעט נתונים ב«${topic}» — עוד קצת תרגול יעזור לנו להבין טוב יותר.`;
+    return `יש כיוון ראשוני ב«${topic}», אבל כדאי עוד קצת תרגול לפני מסקנה ברורה.`;
   }
 
   if (decision === "insufficient_data" || q < 5) {
-    return `אין עדיין מספיק תשובות בנושא «${topic}» כדי להציג מסקנה אמינה.`;
+    if (q <= 5) return `עדיין מעט נתונים ב«${topic}» — עוד קצת תרגול יעזור לנו להבין טוב יותר.`;
+    if (q <= 15) return `יש כיוון ראשוני ב«${topic}», אבל כדאי עוד קצת תרגול לפני מסקנה ברורה.`;
+    return `נראה שיש ב«${topic}» נושא שכדאי לחזק בתרגול הקרוב.`;
   }
 
   if (decision === "speed_pressure_pattern") {
@@ -298,19 +322,6 @@ export function buildEngineDecisionParentTopicCopyHe(p) {
   const acc = Math.round(Number(p.acc) || 0);
 
   if (!topic || q <= 0) return null;
-
-  if (subjectId === "moledet-geography") {
-    return {
-      summaryHe: MOLEDET_DEFERRED_HE,
-      dataHe: `${topic}: כ-${q} שאלות, דיוק ${acc}%.`,
-      whyHe: MOLEDET_DEFERRED_HE,
-      actionHe: "מה כדאי לעשות: להמשיך בתרגול קצר בנושא, ולבדוק שוב את הדוח אחרי עוד כמה שאלות.",
-      patternHe: "",
-      modeContextHe: "",
-      engineDecision: "deferred_topic_only",
-      safeSubskill: false,
-    };
-  }
 
   let engineDecision = clean(ed?.engineDecision);
   if (!engineDecision && q < 5) engineDecision = "insufficient_data";
@@ -400,7 +411,7 @@ export function buildExplainIdentifiedLineHe(engineCopy, label) {
     case "early_direction_only":
       return `מה זוהה: כיוון ראשוני בלבד ב«${t}».`;
     case "insufficient_data":
-      return `מה זוהה: עדיין מעט תשובות ב«${t}».`;
+      return `מה זוהה: נושא לסקירה ב«${t}».`;
     case "deferred_topic_only":
       return `מה זוהה: תמונה כללית ב«${t}».`;
     case "speed_pressure_pattern":

@@ -30,7 +30,7 @@ const BEHAVIOR_OR_DIAGNOSTIC_HE = { ...PARENT_DIAGNOSTIC_TYPE_LABEL_HE };
 const CONF_BADGE_HE = {
   high: "יש מספיק שאלות בתקופה",
   medium: "כמות בינונית של שאלות בתקופה",
-  low: "מוקדם לקבוע כיוון לפי כמות השאלות הנוכחית",
+  low: "עדיין מעט נתונים — עוד קצת תרגול יעזור לנו להבין טוב יותר",
 };
 
 const SUFF_BADGE_HE = {

@@ -247,7 +247,7 @@ function diagnosticCardConfidenceLabelHe(raw) {
   const x = String(raw || "").trim().toLowerCase();
   if (x === "moderate") return confidenceBadgeLabelHe("medium");
   if (x === "medium" || x === "high" || x === "low") return confidenceBadgeLabelHe(x);
-  if (x === "contradictory") return "לקרוא בזהירות — הסימנים לא אחידים";
+  if (x === "contradictory") return "התוצאות מעורבות — נמשיך לעקוב";
   return diagnosticParentVisibleTextHe(raw || "");
 }
 
@@ -534,18 +534,22 @@ function buildParentReportDiagnosticsView(report) {
   }
 
   const pdVersion = Number(report?.patternDiagnostics?.version) || 0;
+  const isV1Payload = pdVersion < 2;
   let hasGlobalSignal = false;
   const normalizedSubjects = {};
   for (const id of PATTERN_DIAGNOSTIC_SUBJECT_ORDER) {
     const raw = subjects[id];
     if (!raw) continue;
-    const sub =
-      pdVersion >= 2 || Array.isArray(raw.weaknesses)
-        ? raw
-        : migrateDiagnosticSubjectV1ToRow(raw, id);
-    normalizedSubjects[id] = sub;
-    if (sub?.hasAnySignal) hasGlobalSignal = true;
+    const isV2OrHasWeaknesses = pdVersion >= 2 || Array.isArray(raw.weaknesses);
+    if (!isV2OrHasWeaknesses) {
+      // V1 payload — do not run migration; suppress to avoid unvalidated text reaching parent.
+      normalizedSubjects[id] = { ...raw, hasAnySignal: false };
+      continue;
+    }
+    normalizedSubjects[id] = raw;
+    if (raw?.hasAnySignal) hasGlobalSignal = true;
   }
+  void isV1Payload;
 
   if (!hasGlobalSignal) {
     const legacyRecommendations = allowLegacyFallback ? legacy : [];
@@ -769,6 +773,15 @@ const chartTooltipStyle = {
   fontSize: "13px",
 };
 
+const chartTooltipStyleLight = {
+  backgroundColor: "#ffffff",
+  border: "1px solid #e2e8f0",
+  borderRadius: "10px",
+  color: "#0f172a",
+  direction: "rtl",
+  fontSize: "13px",
+};
+
 /** Below this inclusive total-question count, omit charts (thin global evidence). */
 const PARENT_REPORT_THIN_VOLUME_QUESTIONS_MAX = 14;
 
@@ -830,6 +843,7 @@ export default function ParentReport() {
   const [appliedEndDate, setAppliedEndDate] = useState("");
   const [isMobile, setIsMobile] = useState(false);
   const [isPrintLayout, setIsPrintLayout] = useState(false);
+  const [lightMode, setLightMode] = useState(false);
   const parentReportPdfRef = useRef(null);
   /** רוחב פנימי משוער לכרטיס גרף (עמודת PDF − ריפוד כרטיס) — למגרעת X דינמית */
   const [chartHostInnerWidthPx, setChartHostInnerWidthPx] = useState(0);
@@ -1214,6 +1228,8 @@ export default function ParentReport() {
     setPeriod("custom");
   }, []);
 
+  const activeTooltipStyle = lightMode ? chartTooltipStyleLight : chartTooltipStyle;
+
   const parentReportDatePresets = (
     <ReportDateRangeControl
       showDayPreset
@@ -1310,7 +1326,7 @@ export default function ParentReport() {
           className="min-h-screen bg-gradient-to-b from-[#0a0f1d] to-[#141928] flex items-center justify-center"
           dir="rtl"
         >
-          <div className="text-white text-xl">טוען דוח...</div>
+          <div className="text-white text-xl">מכין את דוח הביצועים...</div>
         </div>
       </Layout>
     );
@@ -1397,9 +1413,9 @@ export default function ParentReport() {
             <div className="text-4xl mb-4">📊</div>
             <h1 className="text-2xl font-bold mb-2">דוח להורים</h1>
             <p className="text-white/70 mb-4">
-              אין עדיין מספיק פעילות בתקופה שנבחרה.
+              עדיין אין מספיק תרגול כדי להציג דוח ברור.
               <br />
-              אחרי קצת תרגול יופיע כאן סיכום.
+              אחרי כמה ימי תרגול נוכל להראות לך תמונה מדויקת יותר.
             </p>
             
             {/* בחירת תקופה גם במסך "אין נתונים" */}
@@ -1828,11 +1844,185 @@ export default function ParentReport() {
               }
             }
           }
+
+          /* ===== מצב בהיר / Light Mode ===== */
+          [data-theme="light"] {
+            background: #f1f5f9 !important;
+            color: #0f172a !important;
+          }
+          [data-theme="light"] [class*="text-white"] {
+            color: #1e293b !important;
+          }
+          [data-theme="light"] [class*="bg-black/"] {
+            background: #e8edf5 !important;
+          }
+          [data-theme="light"] [class*="bg-white/"] {
+            background: rgba(255,255,255,0.95) !important;
+          }
+          [data-theme="light"] [class*="border-white/"] {
+            border-color: #cbd5e1 !important;
+          }
+          /* Subject colored card backgrounds */
+          [data-theme="light"] [class*="bg-blue-500/"] {
+            background: rgba(219,234,254,0.85) !important;
+          }
+          [data-theme="light"] [class*="bg-emerald-500/"],
+          [data-theme="light"] [class*="bg-green-500/"] {
+            background: rgba(209,250,229,0.85) !important;
+          }
+          [data-theme="light"] [class*="bg-purple-500/"] {
+            background: rgba(237,233,254,0.85) !important;
+          }
+          [data-theme="light"] [class*="bg-orange-500/"] {
+            background: rgba(255,237,213,0.85) !important;
+          }
+          [data-theme="light"] [class*="bg-cyan-500/"] {
+            background: rgba(207,250,254,0.85) !important;
+          }
+          [data-theme="light"] [class*="bg-amber-950/"] {
+            background: rgba(255,251,235,0.9) !important;
+          }
+          [data-theme="light"] [class*="bg-emerald-950/"] {
+            background: rgba(209,250,229,0.6) !important;
+          }
+          /* Subject border colors in light */
+          [data-theme="light"] [class*="border-blue-400/"] {
+            border-color: rgba(96,165,250,0.6) !important;
+          }
+          [data-theme="light"] [class*="border-emerald-400/"] {
+            border-color: rgba(52,211,153,0.6) !important;
+          }
+          [data-theme="light"] [class*="border-amber-400/"] {
+            border-color: rgba(251,191,36,0.55) !important;
+          }
+          [data-theme="light"] [class*="border-orange-400/"] {
+            border-color: rgba(251,146,60,0.55) !important;
+          }
+          [data-theme="light"] [class*="border-red-400/"] {
+            border-color: rgba(248,113,113,0.6) !important;
+          }
+          [data-theme="light"] [class*="border-sky-500/"],
+          [data-theme="light"] [class*="border-sky-400/"],
+          [data-theme="light"] [class*="border-cyan-500/"] {
+            border-color: rgba(56,189,248,0.6) !important;
+          }
+          [data-theme="light"] [class*="border-violet-400/"],
+          [data-theme="light"] [class*="border-violet-300/"] {
+            border-color: rgba(167,139,250,0.6) !important;
+          }
+          /* Stat number colors: keep vivid but use dark-mode-safe versions */
+          [data-theme="light"] .text-blue-400 { color: #1d4ed8 !important; }
+          [data-theme="light"] .text-emerald-400 { color: #047857 !important; }
+          [data-theme="light"] .text-yellow-400 { color: #b45309 !important; }
+          [data-theme="light"] .text-purple-400 { color: #6d28d9 !important; }
+          [data-theme="light"] [class*="text-amber-100"] { color: #92400e !important; }
+          [data-theme="light"] [class*="text-emerald-100"],
+          [data-theme="light"] [class*="text-emerald-200"] { color: #065f46 !important; }
+          [data-theme="light"] [class*="text-red-300"],
+          [data-theme="light"] [class*="text-red-400"] { color: #b91c1c !important; }
+          [data-theme="light"] [class*="text-sky-"] { color: #0369a1 !important; }
+          [data-theme="light"] [class*="text-violet-"] { color: #6d28d9 !important; }
+          /* Chart SVG */
+          [data-theme="light"] svg text,
+          [data-theme="light"] .recharts-text,
+          [data-theme="light"] .recharts-cartesian-axis-tick-value {
+            fill: #334155 !important;
+            color: #334155 !important;
+          }
+          [data-theme="light"] .recharts-cartesian-grid line,
+          [data-theme="light"] .recharts-cartesian-grid path {
+            stroke: #e2e8f0 !important;
+          }
+          [data-theme="light"] .recharts-legend-item-text {
+            color: #334155 !important;
+            fill: #334155 !important;
+          }
+          /* Named classes from parent-report */
+          [data-theme="light"] .parent-report-print-summary-card {
+            background: #ffffff !important;
+            border-color: #e2e8f0 !important;
+          }
+          [data-theme="light"] .parent-report-print-summary-label {
+            color: #64748b !important;
+          }
+          [data-theme="light"] .parent-report-print-muted-text {
+            color: #475569 !important;
+          }
+          [data-theme="light"] .parent-report-print-section-label,
+          [data-theme="light"] .parent-report-print-page-section-heading {
+            color: #0f172a !important;
+          }
+          [data-theme="light"] .parent-report-print-subheading {
+            color: #1e293b !important;
+          }
+          [data-theme="light"] .parent-report-print-chart-title {
+            color: #0f172a !important;
+          }
+          [data-theme="light"] .parent-report-print-chart-subtitle {
+            color: #475569 !important;
+          }
+          [data-theme="light"] .parent-report-chart-card {
+            background: #ffffff !important;
+            border-color: #e2e8f0 !important;
+          }
+          [data-theme="light"] .parent-report-topic-explain-block {
+            background: #f8fafc !important;
+            border-color: #94a3b8 !important;
+            color: #0f172a !important;
+          }
+          [data-theme="light"] .parent-report-topic-explain-row {
+            color: #1e293b !important;
+          }
+          [data-theme="light"] .parent-report-topic-explain-details > div {
+            background: #fff !important;
+            color: #1e293b !important;
+          }
+          [data-theme="light"] .parent-report-diagnostics-print .parent-report-rec-item {
+            background: #f8fafc !important;
+            border-color: #e2e8f0 !important;
+          }
+          [data-theme="light"] .parent-report-diagnostic-subject-title {
+            color: #0f172a !important;
+            background: #e2e8f0 !important;
+          }
+          [data-theme="light"] .parent-report-diagnostic-subject-block {
+            border-color: #e2e8f0 !important;
+          }
+          [data-theme="light"] .parent-report-print-stable-excellence {
+            background: #ede9fe !important;
+            border-color: #6d28d9 !important;
+          }
+          [data-theme="light"] .parent-report-example-card {
+            background: #ffffff !important;
+            border-color: #e2e8f0 !important;
+          }
+          [data-theme="light"] .parent-report-example-heading { color: #0f172a !important; }
+          [data-theme="light"] .parent-report-example-prose { color: #1e293b !important; }
+          [data-theme="light"] .parent-report-important-disclaimer {
+            background: #f8fafc !important;
+            border-color: #e2e8f0 !important;
+          }
+          [data-theme="light"] .parent-report-important-disclaimer-title { color: #0f172a !important; }
+          [data-theme="light"] .parent-report-important-disclaimer-body p,
+          [data-theme="light"] .parent-report-important-disclaimer-body strong {
+            color: #475569 !important;
+          }
+          /* Tables */
+          [data-theme="light"] table th,
+          [data-theme="light"] table td {
+            color: #1e293b !important;
+            border-color: #e2e8f0 !important;
+          }
+          [data-theme="light"] thead tr {
+            border-color: #e2e8f0 !important;
+            background: #f1f5f9 !important;
+          }
         `}</style>
       </Head>
       <div
-        className="min-h-screen bg-gradient-to-b from-[#0a0f1d] to-[#141928] text-white p-2 md:p-4"
+        className={lightMode ? "min-h-screen bg-[#f1f5f9] text-[#0f172a] p-2 md:p-4" : "min-h-screen bg-gradient-to-b from-[#0a0f1d] to-[#141928] text-white p-2 md:p-4"}
         dir="rtl"
+        data-theme={lightMode ? "light" : "dark"}
         style={{
           paddingTop: "calc(var(--head-h, 56px) - 10px)",
           paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 20px)",
@@ -1860,7 +2050,7 @@ export default function ParentReport() {
               {parentReportDatePresets}
             </div>
 
-            <div className="flex justify-center mt-2 no-pdf">
+            <div className="flex flex-wrap justify-center gap-2 mt-2 no-pdf">
               <Link
                 href={{
                   pathname: "/learning/parent-report-detailed",
@@ -1871,6 +2061,17 @@ export default function ParentReport() {
               >
                 דוח מקיף לתקופה
               </Link>
+              <button
+                type="button"
+                onClick={() => setLightMode((v) => !v)}
+                className={`inline-flex px-4 py-2 rounded-lg text-sm font-bold border transition-all ${
+                  lightMode
+                    ? "bg-slate-800 border-slate-600 text-slate-100 hover:bg-slate-700"
+                    : "bg-yellow-50/10 border-yellow-300/30 text-yellow-100/90 hover:bg-yellow-50/20"
+                }`}
+              >
+                {lightMode ? "🌙 מצב קלאסי" : "☀️ מצב בהיר"}
+              </button>
             </div>
 
             {/* בחירת תאריכים מותאמת אישית (לא נכנס ל-PDF) — rendered inside ReportDateRangeControl */}
@@ -3543,7 +3744,7 @@ export default function ParentReport() {
                         tickMargin={4}
                       />
                       <Tooltip
-                        contentStyle={chartTooltipStyle}
+                        contentStyle={activeTooltipStyle}
                         labelFormatter={(value) =>
                           new Date(value).toLocaleDateString("he-IL", {
                             weekday: "short",
@@ -3631,7 +3832,7 @@ export default function ParentReport() {
                         tickMargin={4}
                       />
                       <Tooltip
-                        contentStyle={chartTooltipStyle}
+                        contentStyle={activeTooltipStyle}
                         labelFormatter={(value) =>
                           new Date(value).toLocaleDateString("he-IL", {
                             weekday: "short",
@@ -3816,7 +4017,7 @@ export default function ParentReport() {
                               }}
                             />
                             <Tooltip
-                                contentStyle={chartTooltipStyle}
+                                contentStyle={activeTooltipStyle}
                                 labelFormatter={(_label, payload) =>
                                   payload?.[0]?.payload?.name ?? ""
                                 }
@@ -3957,7 +4158,7 @@ export default function ParentReport() {
                               }}
                             />
                             <Tooltip
-                              contentStyle={chartTooltipStyle}
+                              contentStyle={activeTooltipStyle}
                               labelFormatter={(_label, payload) =>
                                 payload?.[0]?.payload?.label ?? ""
                               }

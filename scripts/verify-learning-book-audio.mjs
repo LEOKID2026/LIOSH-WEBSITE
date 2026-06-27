@@ -60,9 +60,16 @@ if (!/NODE_ENV\s*!==\s*["']development["']/.test(playerSrc)) {
 }
 
 /**
- * @param {import("../../lib/learning-book/audio/learning-book-audio-manifest.js").BookSectionAudioScope} scope
+ * @param {import("../../lib/learning-book/audio/learning-book-audio-manifest.js").BookAudioScope} scope
  */
-function scopeHasAnySectionMp3(scope) {
+function scopeHasAnyAudioMp3(scope) {
+  if (scope.mode === "flat-page") {
+    const slug = `${scope.subject}-${scope.grade}`;
+    const dir = path.join(root, "public", "audio", "learning-books", slug);
+    if (!fs.existsSync(dir)) return false;
+    return fs.readdirSync(dir).some((f) => f.endsWith(".mp3"));
+  }
+
   for (const pageId of scope.pageIds) {
     for (let sectionNumber = 1; sectionNumber <= scope.sectionsPerPage; sectionNumber += 1) {
       const src = manifestMod.defaultLearningBookSectionAudioPublicPath(
@@ -79,9 +86,68 @@ function scopeHasAnySectionMp3(scope) {
 }
 
 /**
- * @param {import("../../lib/learning-book/audio/learning-book-audio-manifest.js").BookSectionAudioScope} scope
+ * @param {import("../../lib/learning-book/audio/learning-book-audio-manifest.js").BookAudioScope} scope
  */
-function verifyScope(scope) {
+function verifyFlatPageScope(scope) {
+  const slug = `${scope.subject}-${scope.grade}`;
+  const dir = path.join(root, "public", "audio", "learning-books", slug);
+  const files = fs.readdirSync(dir).filter((f) => f.endsWith(".mp3")).sort();
+  const expected = scope.expectedPages || files.length;
+
+  if (files.length !== expected) {
+    fail(`${slug}: expected ${expected} MP3s, got ${files.length}`);
+  }
+
+  for (let pageNumber = 1; pageNumber <= expected; pageNumber += 1) {
+    const name = `${scope.subject}_${scope.grade}_page_${String(pageNumber).padStart(3, "0")}.mp3`;
+    if (!files.includes(name)) {
+      fail(`${slug}: missing ${name}`);
+    }
+    const st = fs.statSync(path.join(dir, name));
+    if (st.size < 500) fail(`audio file too small: ${name}`);
+  }
+
+  const entry = catalogMod.getLearningBookEntry(scope.subject, scope.grade);
+  if (!entry) fail(`missing catalog entry: ${scope.subject}/${scope.grade}`);
+
+  const firstPageId = scope.pageIds[0];
+  const midPageId = scope.pageIds[Math.floor(scope.pageIds.length / 2)];
+  const lastPageId = scope.pageIds[scope.pageIds.length - 1];
+
+  for (const [pageId, sectionNumber] of [
+    [firstPageId, 1],
+    [midPageId, 4],
+    [lastPageId, 7],
+  ]) {
+    const resolved = resolverMod.resolveLearningBookAudio(
+      scope.subject,
+      scope.grade,
+      pageId,
+      sectionNumber
+    );
+    if (!resolved?.src || !resolved?.playbackSrc || !resolved.pageNumber) {
+      fail(`${pageId} section ${sectionNumber} should resolve flat-page audio`);
+    }
+    if (!/_page_\d{3}\.mp3$/.test(resolved.src)) {
+      fail(`${pageId} section ${sectionNumber} must use flat page MP3 path`);
+    }
+    const publicPath = path.join(
+      root,
+      "public",
+      resolved.src.replace(/^\//, "").replace(/\//g, path.sep)
+    );
+    if (!fs.existsSync(publicPath)) {
+      fail(`missing flat-page audio: ${resolved.src}`);
+    }
+  }
+
+  ok(`${scope.subject}/${scope.grade} — ${files.length} flat-page MP3s (${slug})`);
+}
+
+/**
+ * @param {import("../../lib/learning-book/audio/learning-book-audio-manifest.js").BookAudioScope} scope
+ */
+function verifySectionScope(scope) {
   const entry = catalogMod.getLearningBookEntry(scope.subject, scope.grade);
   if (!entry) fail(`missing catalog entry: ${scope.subject}/${scope.grade}`);
 
@@ -155,12 +221,16 @@ function verifyScope(scope) {
   ok(`${scope.subject}/${scope.grade} — ${scopeMp3} section MP3s, ${scopeBytes} bytes`);
 }
 
-for (const scope of manifestMod.BOOK_SECTION_AUDIO_SCOPES) {
-  if (!scopeHasAnySectionMp3(scope)) {
-    ok(`${scope.subject}/${scope.grade} — skipped (no section MP3s on disk yet)`);
+for (const scope of manifestMod.BOOK_AUDIO_SCOPES) {
+  if (!scopeHasAnyAudioMp3(scope)) {
+    ok(`${scope.subject}/${scope.grade} — skipped (no MP3s on disk yet)`);
     continue;
   }
-  verifyScope(scope);
+  if (scope.mode === "flat-page") {
+    verifyFlatPageScope(scope);
+  } else {
+    verifySectionScope(scope);
+  }
 }
 
 const lettersS1 = resolverMod.resolveLearningBookAudio("hebrew", "g1", "g1.letters", 1);
@@ -181,20 +251,28 @@ if (resolverMod.resolveLearningBookAudio("math", "g1", "add_two", 99) !== null) 
 if (resolverMod.resolveLearningBookAudio("math", "g2", "add_two", 1) !== null) {
   fail("Math G2 must return null");
 }
-if (resolverMod.resolveLearningBookAudio("english", "g1", "vocab_colors", 1) !== null) {
-  fail("English G1 non-phonics pages must return null");
+if (resolverMod.resolveLearningBookAudio("english", "g1", "vocab_colors", 1) === null) {
+  fail("English G1 vocab pages must resolve flat-page audio");
 }
-if (resolverMod.resolveLearningBookAudio("english", "g2", "vocab_colors", 1) !== null) {
-  fail("English G2 non-phonics pages must return null");
+if (resolverMod.resolveLearningBookAudio("english", "g2", "vocab_colors", 1) === null) {
+  fail("English G2 vocab pages must resolve flat-page audio");
+}
+if (resolverMod.resolveLearningBookAudio("hebrew", "g2", "g2.fluent_words", 1) === null) {
+  fail("Hebrew G2 must resolve flat-page audio");
 }
 
 const englishG1Letters = resolverMod.resolveLearningBookAudio("english", "g1", "letters_upper", 1);
 const englishG2Review = resolverMod.resolveLearningBookAudio("english", "g2", "letters_review", 1);
 if (!englishG1Letters?.src || !englishG2Review?.src) {
-  fail("English phonics pages must resolve section audio");
+  fail("English G1/G2 pages must resolve flat-page audio");
 }
-if (!englishG1Letters.src.includes("/english/g1/letters_upper/section-01.mp3")) {
-  fail("English G1 phonics src path mismatch");
+if (!englishG1Letters.src.includes("/audio/learning-books/english-g1/english_g1_page_001.mp3")) {
+  fail("English G1 flat-page src path mismatch");
+}
+if (!resolverMod.resolveLearningBookAudio("hebrew", "g1", "g1.phoneme_awareness", 1).src.includes(
+  "/audio/learning-books/hebrew-g1/hebrew_g1_page_001.mp3"
+)) {
+  fail("Hebrew G1 page 001 src path mismatch");
 }
 
 const mathPage = catalogMod.getLearningBookEntry("math", "g1").loader.loadPage("add_two");

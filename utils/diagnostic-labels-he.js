@@ -138,7 +138,7 @@ export function hebrewFromEnglishSlug(slug) {
  */
 export function topicBucketLabelHe(subjectId, bucketKey) {
   const k = bucketKey != null ? String(bucketKey) : "";
-  if (!k) return "נושא זה";
+  if (!k) return null;
   try {
     if (subjectId === "math") return getMathReportBucketDisplayName(k);
     if (subjectId === "geometry") return getTopicName(k);
@@ -149,7 +149,7 @@ export function topicBucketLabelHe(subjectId, bucketKey) {
   } catch {
     /* ignore */
   }
-  return "נושא זה";
+  return null;
 }
 
 /**
@@ -185,7 +185,7 @@ export function weaknessLabelHe(subjectId, sampleEv) {
     if (h.includes("syntax") || h.includes("sequence") || h.includes("רצף"))
       return "קושי ברצף לוגי ובניסוח";
     if (h.includes("clarity") || h.includes("rewrite") || h.includes("היר"))
-      return "קושי בניסוח בהיר ובהבנה מדויקת של הניסוח";
+      return "קושי להבין בדיוק מה נדרש ולנסח תשובה ברורה";
   }
 
   if (subjectId === "math") {
@@ -280,6 +280,15 @@ const TAXONOMY_PARENT_SNIPPET_PAIRS = [
   [/טעות\s+כיוון\s+עיגול/giu, "בלבול בכיוון העיגול"],
   [/שגיאה\s+בעמודות\s+עשרות/giu, "שגיאה בחיבור בעמודות עשרות"],
   [/לא\s+בסדר\s+קריאה/giu, "קריאה לא מסודרת של השאלה"],
+  /* blocked taxonomy patternHe labels — must not reach parent */
+  [/past\/present/gi, "עבר והווה"],
+  [/טעות\s+בתקופה\s+שנבחרה\s+זווית/giu, "קושי בזיהוי או בהבנה של זוויות"],
+  [/טעות\s+בדועמודי/giu, "קושי בהתאמת התרגום למשמעות המשפט"],
+  [/לשנות\s+הכול/giu, "קושי להבין מה משתנה ומה נשאר קבוע בניסוי"],
+  [/נעלם\s+בלי\s+שימור/giu, "קושי להבין שחומר יכול להשתנות בצורה אבל לא להיעלם"],
+  [/רמה\s+שגויה\s+חוזרת/giu, "קושי בהתאמת התשובה לרמת ההסבר הנדרשת"],
+  [/אותה\s+משפחה\s+שגויה/giu, "בחירה במילה קרובה, אבל לא מדויקת"],
+  [/כינוי\/שם\s+עצם\s+שגוי/giu, "בלבול בין כינוי לבין שם עצם"],
 ];
 
 /**

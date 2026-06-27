@@ -249,6 +249,7 @@ export default function ParentReportDetailedPage() {
   const [parentReportError, setParentReportError] = useState("");
   /** Student UUID for secured `/api/parent/copilot-turn` (parent dashboard or cookie session). */
   const [copilotStudentId, setCopilotStudentId] = useState(/** @type {string | null} */ (null));
+  const [lightMode, setLightMode] = useState(false);
 
   const queryPeriod = typeof router.query.period === "string" ? router.query.period : "week";
   const queryStart = typeof router.query.start === "string" ? router.query.start : null;
@@ -549,7 +550,7 @@ export default function ParentReportDetailedPage() {
         className={`inline-flex px-4 py-2 rounded-lg text-sm font-bold border transition-all ${
           displayMode === "full"
             ? "bg-sky-600/80 border-sky-300/60 text-white"
-            : "bg-white/5 border-white/20 text-white/80 hover:bg-white/10"
+            : lightMode ? "bg-slate-100 border-slate-300 text-slate-700 hover:bg-slate-200" : "bg-white/5 border-white/20 text-white/80 hover:bg-white/10"
         }`}
       >
         דוח מלא
@@ -560,10 +561,21 @@ export default function ParentReportDetailedPage() {
         className={`inline-flex px-4 py-2 rounded-lg text-sm font-bold border transition-all ${
           displayMode === "summary"
             ? "bg-amber-600/75 border-amber-300/55 text-white"
-            : "bg-white/5 border-white/20 text-white/80 hover:bg-white/10"
+            : lightMode ? "bg-slate-100 border-slate-300 text-slate-700 hover:bg-slate-200" : "bg-white/5 border-white/20 text-white/80 hover:bg-white/10"
         }`}
       >
         תקציר להדפסה
+      </button>
+      <button
+        type="button"
+        onClick={() => setLightMode((v) => !v)}
+        className={`inline-flex px-4 py-2 rounded-lg text-sm font-bold border transition-all ${
+          lightMode
+            ? "bg-slate-800 border-slate-600 text-slate-100 hover:bg-slate-700"
+            : "bg-yellow-50/10 border-yellow-300/30 text-yellow-100/90 hover:bg-yellow-50/20"
+        }`}
+      >
+        {lightMode ? "🌙 מצב קלאסי" : "☀️ מצב בהיר"}
       </button>
     </div>
   );
@@ -1488,13 +1500,273 @@ export default function ParentReportDetailedPage() {
             }
 
           }
+
+          /* ===== מצב בהיר / Light Mode ===== */
+          [data-theme="light"].pr-detailed-page {
+            background: #f1f5f9 !important;
+            background-image: none !important;
+            color: #0f172a !important;
+          }
+          [data-theme="light"] [class*="text-white"] {
+            color: #1e293b !important;
+          }
+          [data-theme="light"] [class*="bg-white/"] {
+            background: rgba(255,255,255,0.95) !important;
+          }
+          [data-theme="light"] [class*="bg-black/"] {
+            background: #e8edf5 !important;
+          }
+          [data-theme="light"] [class*="border-white/"] {
+            border-color: #cbd5e1 !important;
+          }
+          [data-theme="light"] .pr-detailed-section {
+            background: #ffffff !important;
+            border-color: #e2e8f0 !important;
+          }
+          [data-theme="light"] .pr-detailed-section-head {
+            background: #f8fafc !important;
+            border-bottom-color: #e2e8f0 !important;
+          }
+          [data-theme="light"] .pr-detailed-section-title,
+          [data-theme="light"] .pr-detailed-subject-title,
+          [data-theme="light"] .pr-detailed-doc-title {
+            color: #0f172a !important;
+          }
+          [data-theme="light"] .pr-detailed-muted {
+            color: #64748b !important;
+          }
+          [data-theme="light"] .pr-detailed-subheading {
+            color: #334155 !important;
+            border-bottom-color: #e2e8f0 !important;
+          }
+          [data-theme="light"] .pr-detailed-body-text {
+            color: #1e293b !important;
+          }
+          [data-theme="light"] .pr-detailed-mini-heading {
+            color: #334155 !important;
+          }
+          [data-theme="light"] .pr-detailed-mode-hint {
+            color: #92400e !important;
+          }
+          [data-theme="light"] .pr-detailed-subject-metrics {
+            color: #64748b !important;
+          }
+          [data-theme="light"] .pr-detailed-subjects-region-title {
+            color: #0f172a !important;
+            border-bottom-color: #e2e8f0 !important;
+          }
+          [data-theme="light"] .pr-detailed-subject-heading {
+            border-bottom-color: #e2e8f0 !important;
+          }
+          [data-theme="light"] .pr-detailed-subject-letter {
+            background: #f8fafc !important;
+            border-color: #e2e8f0 !important;
+          }
+          [data-theme="light"] .pr-detailed-phase3-dl {
+            background: rgba(0,0,0,0.04) !important;
+            border-color: #e2e8f0 !important;
+          }
+          [data-theme="light"] .pr-detailed-topic-rec-block {
+            border-top-color: #e2e8f0 !important;
+          }
+          [data-theme="light"] .pr-detailed-topic-rec-head {
+            color: #0f766e !important;
+          }
+          [data-theme="light"] .pr-detailed-topic-metrics {
+            color: #334155 !important;
+          }
+          [data-theme="light"] .pr-detailed-topic-reason {
+            color: #1e293b !important;
+          }
+          [data-theme="light"] .pr-detailed-topic-parent {
+            background: rgba(224,242,254,0.6) !important;
+            border-right-color: #0284c7 !important;
+            color: #0f172a !important;
+          }
+          [data-theme="light"] .pr-detailed-topic-student {
+            background: rgba(209,250,229,0.6) !important;
+            border-right-color: #059669 !important;
+            color: #0f172a !important;
+          }
+          [data-theme="light"] .pr-detailed-topic-parent-label {
+            color: #0369a1 !important;
+          }
+          [data-theme="light"] .pr-detailed-topic-student-label {
+            color: #047857 !important;
+          }
+          [data-theme="light"] .pr-detailed-callout-action {
+            background: #fffbeb !important;
+            border-color: rgba(202,138,4,0.4) !important;
+          }
+          [data-theme="light"] .pr-detailed-callout-goal {
+            background: #fff7ed !important;
+            border-color: rgba(234,88,12,0.35) !important;
+          }
+          [data-theme="light"] .pr-detailed-callout-label {
+            color: #92400e !important;
+          }
+          [data-theme="light"] .pr-detailed-plan-item {
+            background: #f0f9ff !important;
+            border-color: #bae6fd !important;
+            color: #1e293b !important;
+          }
+          [data-theme="light"] .pr-detailed-goal-item {
+            background: #fdf4ff !important;
+            border-color: #e9d5ff !important;
+            color: #1e293b !important;
+          }
+          /* Tier blocks */
+          [data-theme="light"] .pr-detailed-tier-excellence {
+            background: rgba(237,233,254,0.7) !important;
+            border-color: rgba(109,40,217,0.3) !important;
+          }
+          [data-theme="light"] .pr-detailed-tier-excellence .pr-detailed-subheading {
+            color: #5b21b6 !important;
+            border-bottom-color: #ddd6fe !important;
+          }
+          [data-theme="light"] .pr-detailed-tier-strength {
+            background: rgba(209,250,229,0.7) !important;
+            border-color: rgba(4,120,87,0.3) !important;
+          }
+          [data-theme="light"] .pr-detailed-tier-strength .pr-detailed-subheading {
+            color: #047857 !important;
+            border-bottom-color: #a7f3d0 !important;
+          }
+          [data-theme="light"] .pr-detailed-tier-maintain {
+            background: rgba(224,242,254,0.7) !important;
+            border-color: rgba(3,105,161,0.3) !important;
+          }
+          [data-theme="light"] .pr-detailed-tier-maintain .pr-detailed-subheading {
+            color: #0369a1 !important;
+            border-bottom-color: #bae6fd !important;
+          }
+          [data-theme="light"] .pr-detailed-tier-improving {
+            background: rgba(254,243,199,0.7) !important;
+            border-color: rgba(180,83,9,0.3) !important;
+          }
+          [data-theme="light"] .pr-detailed-tier-improving .pr-detailed-subheading {
+            color: #b45309 !important;
+            border-bottom-color: #fde68a !important;
+          }
+          [data-theme="light"] .pr-detailed-tier-attention {
+            background: rgba(254,226,226,0.7) !important;
+            border-color: rgba(185,28,28,0.3) !important;
+          }
+          [data-theme="light"] .pr-detailed-tier-attention .pr-detailed-subheading {
+            color: #b91c1c !important;
+            border-bottom-color: #fecaca !important;
+          }
+          [data-theme="light"] .pr-detailed-tier-examples {
+            background: #f8fafc !important;
+            border-color: #cbd5e1 !important;
+          }
+          [data-theme="light"] .pr-detailed-tier-examples .pr-detailed-subheading {
+            color: #334155 !important;
+          }
+          /* Topic next-step cards */
+          [data-theme="light"] .pr-detailed-topic-nextstep--advance {
+            background: rgba(209,250,229,0.6) !important;
+            border-color: rgba(5,150,105,0.4) !important;
+          }
+          [data-theme="light"] .pr-detailed-topic-nextstep--maintain {
+            background: rgba(224,242,254,0.6) !important;
+            border-color: rgba(3,105,161,0.4) !important;
+          }
+          [data-theme="light"] .pr-detailed-topic-nextstep--remediate {
+            background: rgba(255,237,213,0.6) !important;
+            border-color: rgba(217,119,6,0.4) !important;
+          }
+          [data-theme="light"] .pr-detailed-topic-nextstep--drop {
+            background: rgba(254,226,226,0.6) !important;
+            border-color: rgba(185,28,28,0.4) !important;
+          }
+          /* Badge colors */
+          [data-theme="light"] .pr-detailed-topic-badge--advance {
+            background: #d1fae5 !important;
+            border-color: #059669 !important;
+            color: #065f46 !important;
+          }
+          [data-theme="light"] .pr-detailed-topic-badge--maintain {
+            background: #dbeafe !important;
+            border-color: #2563eb !important;
+            color: #1e3a8a !important;
+          }
+          [data-theme="light"] .pr-detailed-topic-badge--remediate {
+            background: #ffedd5 !important;
+            border-color: #ea580c !important;
+            color: #9a3412 !important;
+          }
+          [data-theme="light"] .pr-detailed-topic-badge--drop {
+            background: #fee2e2 !important;
+            border-color: #dc2626 !important;
+            color: #991b1b !important;
+          }
+          /* Tables */
+          [data-theme="light"] table th,
+          [data-theme="light"] table td {
+            color: #1e293b !important;
+            border-color: #e2e8f0 !important;
+          }
+          [data-theme="light"] thead tr {
+            border-color: #e2e8f0 !important;
+            background: #f1f5f9 !important;
+          }
+          [data-theme="light"] tbody tr {
+            border-color: #e2e8f0 !important;
+          }
+          /* Colored text in light mode */
+          [data-theme="light"] [class*="text-amber-100"],
+          [data-theme="light"] [class*="text-amber-200"] {
+            color: #92400e !important;
+          }
+          [data-theme="light"] [class*="text-sky-"] {
+            color: #0369a1 !important;
+          }
+          [data-theme="light"] [class*="text-emerald-100"],
+          [data-theme="light"] [class*="text-emerald-200"],
+          [data-theme="light"] [class*="text-emerald-300"] {
+            color: #065f46 !important;
+          }
+          [data-theme="light"] [class*="text-violet-"] {
+            color: #6d28d9 !important;
+          }
+          [data-theme="light"] [class*="text-red-300"],
+          [data-theme="light"] [class*="text-red-400"] {
+            color: #b91c1c !important;
+          }
+          [data-theme="light"] [class*="text-cyan-"] {
+            color: #0369a1 !important;
+          }
+          /* Bg overrides for colored sections */
+          [data-theme="light"] [class*="bg-sky-950/"] {
+            background: rgba(224,242,254,0.5) !important;
+          }
+          [data-theme="light"] [class*="bg-violet-950/"] {
+            background: rgba(237,233,254,0.5) !important;
+          }
+          [data-theme="light"] [class*="bg-amber-950/"] {
+            background: rgba(255,251,235,0.8) !important;
+          }
+          /* Disclaimer */
+          [data-theme="light"] .parent-report-important-disclaimer {
+            background: #f8fafc !important;
+            border-color: #e2e8f0 !important;
+          }
+          [data-theme="light"] .parent-report-important-disclaimer-title {
+            color: #0f172a !important;
+          }
+          [data-theme="light"] .parent-report-important-disclaimer-body p,
+          [data-theme="light"] .parent-report-important-disclaimer-body strong {
+            color: #475569 !important;
+          }
         `}</style>
       </Head>
       <div
-        className={`pr-detailed-page min-h-screen bg-[#141d32] text-white p-2.5 md:px-5 md:py-5 ${
+        className={`pr-detailed-page min-h-screen ${lightMode ? "bg-[#f1f5f9]" : "bg-[#141d32]"} text-white p-2.5 md:px-5 md:py-5 ${
           payload ? `pr-detailed-layout-${displayMode}` : ""
         }`}
         dir="rtl"
+        data-theme={lightMode ? "light" : "dark"}
         style={{
           paddingTop: "calc(var(--head-h, 56px) - 6px)",
           paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 24px)",

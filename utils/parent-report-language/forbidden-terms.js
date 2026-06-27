@@ -143,6 +143,16 @@ export const PARENT_READABILITY_LEAK_SUBSTRINGS = [
   "רעש טבעי של למידה מוקדמת",
   "יש התקדמות יחסית ב",
   "נראה כמו מקצוע שהילד מצליח בו יותר כרגע",
+  /* blocked taxonomy patternHe labels — must never reach parent display */
+  "נושא זה",
+  "past/present",
+  "טעות בדועמודי",
+  "לשנות הכול",
+  "נעלם בלי שימור",
+  "רמה שגויה חוזרת",
+  "אותה משפחה שגויה",
+  "כינוי/שם עצם שגוי",
+  "טעות בתקופה שנבחרה זווית",
 ];
 
 /** Adjacent duplicate word pairs that must not appear in parent-facing copy. */
@@ -208,6 +218,13 @@ export const PARENT_COPY_FORBIDDEN_FRAGMENTS = Object.freeze([
   /* Duplicate phrase guard — patch typo must not recur */
   "בתקופה שנבחרה שנבחרה",
   "שנבחרה שנבחרה",
+  /* explicit parent-facing forbidden terms — owner spec */
+  "חולשה ברורה",
+  "מוכן להתקדם",
+  "דפוס לימודי פעיל",
+  "ביצועים גבוהים",
+  "subskill",
+  "oracle",
   /* parent_report_hebrew_copy_spec.md §9 */
   "פער יסוד",
   "קושי בבסיס",
@@ -235,6 +252,16 @@ export const PARENT_COPY_FORBIDDEN_FRAGMENTS = Object.freeze([
   "mastery_stable",
   "engineDecision",
   "safeSubskill",
+  /* blocked taxonomy patternHe labels */
+  "נושא זה",
+  "past/present",
+  "טעות בדועמודי",
+  "לשנות הכול",
+  "נעלם בלי שימור",
+  "רמה שגויה חוזרת",
+  "אותה משפחה שגויה",
+  "כינוי/שם עצם שגוי",
+  "טעות בתקופה שנבחרה זווית",
 ]);
 
 export const FORBIDDEN_PARENT_REPORT_SUBSTRINGS = [

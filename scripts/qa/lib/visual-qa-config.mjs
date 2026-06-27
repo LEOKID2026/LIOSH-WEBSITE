@@ -4,6 +4,8 @@
 
 import { GRADES as GEOMETRY_GRADES, TOPICS as GEOMETRY_TOPICS } from "../../../utils/geometry-constants.js";
 import { SCIENCE_GRADES } from "../../../data/science-curriculum.js";
+import { GRADES as MOLEDET_GRADES, TOPICS as MOLEDET_TOPICS } from "../../../utils/moledet-geography-constants.js";
+import { MOLEDET_GEOGRAPHY_MIN_TEACH_GRADE } from "../../../utils/moledet-geography-curriculum-gates.js";
 
 export const GRADE_HE = {
   1: "כיתה א׳",
@@ -42,8 +44,13 @@ export const GRADE_STUDENTS = {
   ],
 };
 
-export const PHASE1_SUBJECTS = new Set(["math", "geometry", "hebrew", "english", "science"]);
-export const FUTURE_SUBJECTS = new Set(["moledet"]);
+export const PHASE1_SUBJECTS = new Set(["math", "geometry", "hebrew", "english", "science", "moledet"]);
+export const FUTURE_SUBJECTS = new Set([]);
+
+/** Visual QA harness key `moledet` → product subject `moledet-geography` (activities use moledet_geography). */
+export const VISUAL_QA_PRODUCT_SUBJECT_ID = {
+  moledet: "moledet-geography",
+};
 
 const TOPIC = (value, label) => ({ value, label });
 
@@ -81,6 +88,33 @@ function scienceTopicsByGradeFromProduct() {
     }));
   }
   return out;
+}
+
+function moledetTopicsByGradeFromProduct() {
+  const out = {};
+  for (let gradeNumber = MOLEDET_GEOGRAPHY_MIN_TEACH_GRADE; gradeNumber <= 6; gradeNumber += 1) {
+    const gradeKey = `g${gradeNumber}`;
+    const keys = (MOLEDET_GRADES[gradeKey]?.topics || []).filter((k) => k !== "mixed");
+    out[gradeNumber] = keys.map((value) => ({
+      value,
+      label: MOLEDET_TOPICS[value]?.name || value,
+    }));
+  }
+  return out;
+}
+
+/** Grades included in Visual QA for moledet-geography (G1 excluded — enrichment only). */
+export function visualQaGradeNumbersForSubject(subject, gradeFilter = null) {
+  if (gradeFilter != null) {
+    if (subject === "moledet" && gradeFilter < MOLEDET_GEOGRAPHY_MIN_TEACH_GRADE) {
+      return [];
+    }
+    return [gradeFilter];
+  }
+  if (subject === "moledet") {
+    return [2, 3, 4, 5, 6];
+  }
+  return [1, 2, 3, 4, 5, 6];
 }
 
 export const SUBJECT_PLANS = {
@@ -162,7 +196,7 @@ export const SUBJECT_PLANS = {
     gradeValueKind: "numeric",
     topicSelectTestId: "moledet-topic-select",
     startTestId: "moledet-start-game",
-    topicsByGrade: {},
+    topicsByGrade: moledetTopicsByGradeFromProduct(),
   },
 };
 
@@ -227,19 +261,19 @@ export function resolveSubject(subject) {
   if (!subject) {
     return {
       ok: false,
-      error: "VISUAL_QA_SUBJECT is required (math | geometry | hebrew | english | science)",
+      error: "VISUAL_QA_SUBJECT is required (math | geometry | hebrew | english | science | moledet)",
     };
   }
   if (FUTURE_SUBJECTS.has(subject)) {
     return {
       ok: false,
-      error: `Subject "${subject}" is not implemented in harness phase 1. Supported: math, geometry, hebrew, english, science.`,
+      error: `Subject "${subject}" is not implemented in harness phase 1. Supported: math, geometry, hebrew, english, science, moledet.`,
     };
   }
   if (!PHASE1_SUBJECTS.has(subject)) {
     return {
       ok: false,
-      error: `Unknown VISUAL_QA_SUBJECT="${subject}". Supported: math, geometry, hebrew, english, science (phase 1); moledet (planned).`,
+      error: `Unknown VISUAL_QA_SUBJECT="${subject}". Supported: math, geometry, hebrew, english, science, moledet.`,
     };
   }
   return { ok: true, plan: SUBJECT_PLANS[subject], subject };

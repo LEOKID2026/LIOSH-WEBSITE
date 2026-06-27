@@ -496,7 +496,7 @@ test.describe("classroom activities science B0 @science-b0", () => {
 test.describe("classroom activities moledet B1 @moledet-b1", () => {
   test.describe.configure({ mode: "serial" });
 
-  const MOLEDET_GRADE = "g4";
+  const MOLEDET_GRADE = "g3";
   const MOLEDET_TOPIC = "homeland";
   const MOLEDET_DIFFICULTY = "easy";
   const MOLEDET_COUNT = 3;
