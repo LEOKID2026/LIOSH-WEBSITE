@@ -1,6 +1,6 @@
 # Assigned Activity Topic Availability Audit
 
-Generated: 2026-06-08T19:43:43.618Z
+Generated: 2026-06-27T15:57:10.256Z
 Script: `scripts/audit-assigned-activity-topic-availability.mjs`
 
 ## Scope
@@ -19,12 +19,12 @@ Verification per topic:
 | Subject | Grade/topic pairs in UI | Supported in assigned activities | Failing / gated |
 |---------|-------------------------:|---------------------------------:|----------------:|
 | גאומטריה | 44 | 44 | 0 |
-| עברית | 42 | 28 | 14 |
-| אנגלית | 28 | 19 | 9 |
-| מדע | 38 | 36 | 2 |
+| עברית | 42 | 27 | 15 |
+| אנגלית | 25 | 16 | 9 |
+| מדע | 38 | 38 | 0 |
 | מולדת וגאוגרפיה | 30 | 30 | 0 |
 
-**Total pairs audited:** 182
+**Total pairs audited:** 179
 
 ### Key findings (non-math)
 
@@ -92,7 +92,7 @@ Verification per topic:
 | hebrew | g1 | vocabulary | עושר שפתי | yes | supported | supported | supported (book pages) — related pages: vocabulary_g1.word_meaning_concrete, vocabulary_word_context_early_g1_cloze_morning | hebrew-question-generator (dynamic) |  | must-have core topic | keep visible |
 | hebrew | g1 | speaking | דיבור ושיח | yes | supported | supported | supported (book pages) — related pages: speaking_social_reply_early_g1_bump_sorry | hebrew-question-generator (dynamic) |  | writing/speaking/manual assessment only | keep visible |
 | hebrew | g1 | mixed | ערבוב | yes | mixed-intentional | supported | explanation-only-or-absent — topic not in book TOC | hebrew-question-generator (dynamic) | stored topic varies by design | duplicate/ambiguous/mixed | relabel as mixed practice |
-| hebrew | g2 | reading | קריאה | yes | supported | supported | explanation-only-or-absent — topic not in book TOC | hebrew-question-generator (dynamic) |  | must-have core topic | keep visible |
+| hebrew | g2 | reading | קריאה | yes | thin-bank | supported | explanation-only-or-absent — topic not in book TOC | hebrew-question-generator (dynamic) | passes @ count=3 but fails @ count=5 at: hard | must-have core topic | add/expand question bank |
 | hebrew | g2 | comprehension | הבנת הנקרא | yes | supported | supported | explanation-only-or-absent — topic not in book TOC | hebrew-question-generator (dynamic) |  | must-have core topic | keep visible |
 | hebrew | g2 | writing | כתיבה והבעה | yes | supported | supported | explanation-only-or-absent — topic not in book TOC | hebrew-question-generator (dynamic) |  | writing/speaking/manual assessment only | keep visible |
 | hebrew | g2 | grammar | דקדוק ולשון | yes | supported | supported | explanation-only-or-absent — topic not in book TOC | hebrew-question-generator (dynamic) |  | must-have core topic | keep visible |
@@ -119,7 +119,7 @@ Verification per topic:
 | hebrew | g5 | grammar | דקדוק ולשון | yes | supported | supported | supported (book pages) — related pages: grammar_sentence_correction_choose_correct, grammar_sentence_correction_sv_agreement_plural, grammar_verb_agreement_plural_subject, grammar_tense_shift_past_present, grammar_transform_negation, grammar_binary_grammar_tf | hebrew-question-generator (dynamic) |  | must-have core topic | keep visible |
 | hebrew | g5 | vocabulary | עושר שפתי | yes | supported | supported | supported (book pages) — related pages: vocabulary_collocation_verb_noun_fit, vocabulary_category_exclusion_odd_out, vocabulary_context_fit_register | hebrew-question-generator (dynamic) |  | must-have core topic | keep visible |
 | hebrew | g5 | speaking | דיבור ושיח | yes | unsupported-activity-type | typing-only (master) | explanation-only-or-absent — topic not in book TOC | hebrew-question-generator (dynamic) | master generates typing/speaking mode; assigned MCQ path filters these out | writing/speaking/manual assessment only | disable with explanation |
-| hebrew | g5 | mixed | ערבוב | yes | mixed-intentional | supported | explanation-only-or-absent — topic not in book TOC | hebrew-question-generator (dynamic) | stored topic varies by design | duplicate/ambiguous/mixed | relabel as mixed practice |
+| hebrew | g5 | mixed | ערבוב | yes | mixed-intentional | partial | explanation-only-or-absent — topic not in book TOC | hebrew-question-generator (dynamic) | stored topic varies by design | duplicate/ambiguous/mixed | relabel as mixed practice |
 | hebrew | g6 | reading | קריאה | yes | supported | supported | explanation-only-or-absent — topic not in book TOC | hebrew-question-generator (dynamic) |  | must-have core topic | keep visible |
 | hebrew | g6 | comprehension | הבנת הנקרא | yes | supported | supported | explanation-only-or-absent — topic not in book TOC | hebrew-question-generator (dynamic) |  | must-have core topic | keep visible |
 | hebrew | g6 | writing | כתיבה והבעה | yes | unsupported-activity-type | typing-only (master) | explanation-only-or-absent — topic not in book TOC | hebrew-question-generator (dynamic) | master generates typing/speaking mode; assigned MCQ path filters these out | writing/speaking/manual assessment only | disable with explanation |
@@ -127,34 +127,31 @@ Verification per topic:
 | hebrew | g6 | vocabulary | עושר שפתי | yes | supported | supported | explanation-only-or-absent — topic not in book TOC | hebrew-question-generator (dynamic) |  | must-have core topic | keep visible |
 | hebrew | g6 | speaking | דיבור ושיח | yes | unsupported-activity-type | typing-only (master) | explanation-only-or-absent — topic not in book TOC | hebrew-question-generator (dynamic) | master generates typing/speaking mode; assigned MCQ path filters these out | writing/speaking/manual assessment only | disable with explanation |
 | hebrew | g6 | mixed | ערבוב | yes | mixed-intentional | supported | explanation-only-or-absent — topic not in book TOC | hebrew-question-generator (dynamic) | stored topic varies by design | duplicate/ambiguous/mixed | relabel as mixed practice |
+| english | g1 | phonics | פוניקה | yes | supported | supported | supported (book pages) — related pages: phonics_sounds, phonics_first_sound | english-questions pools + generator (grammar/sentences/translation/vocabulary) |  | nice-to-have | keep visible |
 | english | g1 | vocabulary | אוצר מילים | yes | supported | supported | explanation-only-or-absent — topic not in book TOC | english-questions pools + generator (grammar/sentences/translation/vocabulary) |  | must-have core topic | keep visible |
+| english | g2 | phonics | פוניקה | yes | supported | supported | supported (book pages) — related pages: phonics_sounds_review, phonics_blending | english-questions pools + generator (grammar/sentences/translation/vocabulary) |  | nice-to-have | keep visible |
 | english | g2 | vocabulary | אוצר מילים | yes | supported | supported | explanation-only-or-absent — topic not in book TOC | english-questions pools + generator (grammar/sentences/translation/vocabulary) |  | must-have core topic | keep visible |
-| english | g2 | translation | תרגום | yes | supported | supported | supported (book pages) — related pages: translation_classroom, translation_routines | english-questions pools + generator (grammar/sentences/translation/vocabulary) |  | must-have core topic | keep visible |
 | english | g2 | writing | כתיבה | yes | unsupported-activity-type | unsupported-generator | explanation-only-or-absent — topic not in book TOC | english-questions pools + generator (grammar/sentences/translation/vocabulary) | writing uses open/typing modes; no MCQ pool for assigned activities | writing/speaking/manual assessment only | disable with explanation |
 | english | g3 | vocabulary | אוצר מילים | yes | supported | supported | explanation-only-or-absent — topic not in book TOC | english-questions pools + generator (grammar/sentences/translation/vocabulary) |  | must-have core topic | keep visible |
 | english | g3 | grammar | דקדוק | yes | supported | supported | supported (book pages) — related pages: grammar_present_simple, grammar_articles_prepositions, grammar_question_frames | english-questions pools + generator (grammar/sentences/translation/vocabulary) |  | must-have core topic | keep visible |
-| english | g3 | translation | תרגום | yes | supported | supported | supported (book pages) — related pages: translation_routines, translation_hobbies | english-questions pools + generator (grammar/sentences/translation/vocabulary) |  | must-have core topic | keep visible |
 | english | g3 | sentences | משפטים | yes | supported | supported | explanation-only-or-absent — topic not in book TOC | english-questions pools + generator (grammar/sentences/translation/vocabulary) |  | must-have core topic | keep visible |
 | english | g3 | writing | כתיבה | yes | unsupported-activity-type | unsupported-generator | explanation-only-or-absent — topic not in book TOC | english-questions pools + generator (grammar/sentences/translation/vocabulary) | writing uses open/typing modes; no MCQ pool for assigned activities | writing/speaking/manual assessment only | disable with explanation |
 | english | g3 | mixed | ערבוב | yes | mixed-intentional | supported | explanation-only-or-absent — topic not in book TOC | english-questions pools + generator (grammar/sentences/translation/vocabulary) | stored topic varies by design | duplicate/ambiguous/mixed | relabel as mixed practice |
-| english | g4 | vocabulary | אוצר מילים | yes | supported | partial | explanation-only-or-absent — topic not in book TOC | english-questions pools + generator (grammar/sentences/translation/vocabulary) |  | must-have core topic | keep visible |
+| english | g4 | vocabulary | אוצר מילים | yes | supported | supported | explanation-only-or-absent — topic not in book TOC | english-questions pools + generator (grammar/sentences/translation/vocabulary) |  | must-have core topic | keep visible |
 | english | g4 | grammar | דקדוק | yes | supported | supported | supported (book pages) — related pages: grammar_present_simple, grammar_simple_continuous, grammar_quantifiers | english-questions pools + generator (grammar/sentences/translation/vocabulary) |  | must-have core topic | keep visible |
-| english | g4 | translation | תרגום | yes | supported | supported | supported (book pages) — related pages: translation_hobbies, translation_community | english-questions pools + generator (grammar/sentences/translation/vocabulary) |  | must-have core topic | keep visible |
 | english | g4 | sentences | משפטים | yes | supported | supported | explanation-only-or-absent — topic not in book TOC | english-questions pools + generator (grammar/sentences/translation/vocabulary) |  | must-have core topic | keep visible |
 | english | g4 | writing | כתיבה | yes | unsupported-activity-type | unsupported-generator | explanation-only-or-absent — topic not in book TOC | english-questions pools + generator (grammar/sentences/translation/vocabulary) | writing uses open/typing modes; no MCQ pool for assigned activities | writing/speaking/manual assessment only | disable with explanation |
 | english | g4 | mixed | ערבוב | yes | mixed-intentional | supported | explanation-only-or-absent — topic not in book TOC | english-questions pools + generator (grammar/sentences/translation/vocabulary) | stored topic varies by design | duplicate/ambiguous/mixed | relabel as mixed practice |
-| english | g5 | vocabulary | אוצר מילים | yes | supported | supported | explanation-only-or-absent — topic not in book TOC | english-questions pools + generator (grammar/sentences/translation/vocabulary) |  | must-have core topic | keep visible |
+| english | g5 | vocabulary | אוצר מילים | yes | supported | partial | explanation-only-or-absent — topic not in book TOC | english-questions pools + generator (grammar/sentences/translation/vocabulary) |  | must-have core topic | keep visible |
 | english | g5 | grammar | דקדוק | yes | supported | supported | supported (book pages) — related pages: grammar_past_simple, grammar_future_forms, grammar_modals, grammar_comparatives, grammar_quantifiers | english-questions pools + generator (grammar/sentences/translation/vocabulary) |  | must-have core topic | keep visible |
-| english | g5 | translation | תרגום | yes | supported | supported | supported (book pages) — related pages: translation_community, translation_technology, translation_global | english-questions pools + generator (grammar/sentences/translation/vocabulary) |  | must-have core topic | keep visible |
 | english | g5 | sentences | משפטים | yes | supported | supported | explanation-only-or-absent — topic not in book TOC | english-questions pools + generator (grammar/sentences/translation/vocabulary) |  | must-have core topic | keep visible |
 | english | g5 | writing | כתיבה | yes | unsupported-activity-type | unsupported-generator | explanation-only-or-absent — topic not in book TOC | english-questions pools + generator (grammar/sentences/translation/vocabulary) | writing uses open/typing modes; no MCQ pool for assigned activities | writing/speaking/manual assessment only | disable with explanation |
 | english | g5 | mixed | ערבוב | yes | mixed-intentional | supported | explanation-only-or-absent — topic not in book TOC | english-questions pools + generator (grammar/sentences/translation/vocabulary) | stored topic varies by design | duplicate/ambiguous/mixed | relabel as mixed practice |
 | english | g6 | vocabulary | אוצר מילים | yes | supported | partial | explanation-only-or-absent — topic not in book TOC | english-questions pools + generator (grammar/sentences/translation/vocabulary) |  | must-have core topic | keep visible |
 | english | g6 | grammar | דקדוק | yes | supported | supported | supported (book pages) — related pages: grammar_complex_tenses, grammar_conditionals, grammar_modals, grammar_comparatives | english-questions pools + generator (grammar/sentences/translation/vocabulary) |  | must-have core topic | keep visible |
-| english | g6 | translation | תרגום | yes | supported | supported | supported (book pages) — related pages: translation_technology, translation_global | english-questions pools + generator (grammar/sentences/translation/vocabulary) |  | must-have core topic | keep visible |
 | english | g6 | sentences | משפטים | yes | supported | supported | explanation-only-or-absent — topic not in book TOC | english-questions pools + generator (grammar/sentences/translation/vocabulary) |  | must-have core topic | keep visible |
 | english | g6 | writing | כתיבה | yes | unsupported-activity-type | unsupported-generator | explanation-only-or-absent — topic not in book TOC | english-questions pools + generator (grammar/sentences/translation/vocabulary) | writing uses open/typing modes; no MCQ pool for assigned activities | writing/speaking/manual assessment only | disable with explanation |
-| english | g6 | mixed | ערבוב | yes | mixed-intentional | partial | explanation-only-or-absent — topic not in book TOC | english-questions pools + generator (grammar/sentences/translation/vocabulary) | stored topic varies by design | duplicate/ambiguous/mixed | relabel as mixed practice |
+| english | g6 | mixed | ערבוב | yes | mixed-intentional | supported | explanation-only-or-absent — topic not in book TOC | english-questions pools + generator (grammar/sentences/translation/vocabulary) | stored topic varies by design | duplicate/ambiguous/mixed | relabel as mixed practice |
 | science | g1 | body | גוף האדם | yes | supported | supported | supported (book pages) — page: body | static SCIENCE_QUESTIONS ({"easy":21,"medium":12,"hard":12} usable by level) |  | must-have core topic | keep visible |
 | science | g1 | animals | בעלי חיים | yes | supported | supported | supported (book pages) — page: animals | static SCIENCE_QUESTIONS ({"easy":19,"medium":12,"hard":12} usable by level) |  | must-have core topic | keep visible |
 | science | g1 | plants | צמחים | yes | supported | supported | supported (book pages) — page: plants | static SCIENCE_QUESTIONS ({"easy":14,"medium":12,"hard":12} usable by level) |  | must-have core topic | keep visible |
@@ -183,13 +180,13 @@ Verification per topic:
 | science | g4 | experiments | ניסויים | yes | supported | supported | supported (book pages) — page: experiments | static SCIENCE_QUESTIONS ({"easy":12,"medium":16,"hard":12} usable by level) |  | must-have core topic | keep visible |
 | science | g5 | body | גוף האדם | yes | supported | supported | supported (book pages) — page: body | static SCIENCE_QUESTIONS ({"easy":12,"medium":12,"hard":12} usable by level) |  | must-have core topic | keep visible |
 | science | g5 | animals | בעלי חיים | yes | supported | supported | supported (book pages) — page: animals | static SCIENCE_QUESTIONS ({"easy":12,"medium":12,"hard":12} usable by level) |  | must-have core topic | keep visible |
-| science | g5 | materials | חומרים | yes | thin-bank | supported | supported (book pages) — page: materials | static SCIENCE_QUESTIONS ({"easy":5,"medium":5,"hard":7} usable by level) | passes @ count=3 but fails @ count=5 at: medium | must-have core topic | add/expand question bank |
+| science | g5 | materials | חומרים | yes | supported | supported | supported (book pages) — page: materials | static SCIENCE_QUESTIONS ({"easy":5,"medium":5,"hard":7} usable by level) |  | must-have core topic | keep visible |
 | science | g5 | earth_space | כדור הארץ וחלל | yes | supported | supported | supported (book pages) — page: earth_space | static SCIENCE_QUESTIONS ({"easy":5,"medium":11,"hard":18} usable by level) |  | must-have core topic | keep visible |
 | science | g5 | environment | סביבה | yes | supported | supported | supported (book pages) — page: environment | static SCIENCE_QUESTIONS ({"easy":5,"medium":10,"hard":24} usable by level) |  | must-have core topic | keep visible |
 | science | g5 | experiments | ניסויים | yes | supported | supported | supported (book pages) — page: experiments | static SCIENCE_QUESTIONS ({"easy":12,"medium":12,"hard":26} usable by level) |  | must-have core topic | keep visible |
 | science | g6 | body | גוף האדם | yes | supported | supported | supported (book pages) — page: body | static SCIENCE_QUESTIONS ({"easy":14,"medium":12,"hard":12} usable by level) |  | must-have core topic | keep visible |
 | science | g6 | animals | בעלי חיים | yes | supported | supported | supported (book pages) — page: animals | static SCIENCE_QUESTIONS ({"easy":12,"medium":15,"hard":12} usable by level) |  | must-have core topic | keep visible |
-| science | g6 | materials | חומרים | yes | thin-bank | supported | supported (book pages) — page: materials | static SCIENCE_QUESTIONS ({"easy":5,"medium":5,"hard":13} usable by level) | passes @ count=3 but fails @ count=5 at: medium | must-have core topic | add/expand question bank |
+| science | g6 | materials | חומרים | yes | supported | supported | supported (book pages) — page: materials | static SCIENCE_QUESTIONS ({"easy":5,"medium":5,"hard":13} usable by level) |  | must-have core topic | keep visible |
 | science | g6 | earth_space | כדור הארץ וחלל | yes | supported | supported | supported (book pages) — page: earth_space | static SCIENCE_QUESTIONS ({"easy":5,"medium":18,"hard":17} usable by level) |  | must-have core topic | keep visible |
 | science | g6 | environment | סביבה | yes | supported | supported | supported (book pages) — page: environment | static SCIENCE_QUESTIONS ({"easy":6,"medium":10,"hard":29} usable by level) |  | must-have core topic | keep visible |
 | science | g6 | experiments | ניסויים | yes | supported | supported | supported (book pages) — page: experiments | static SCIENCE_QUESTIONS ({"easy":16,"medium":12,"hard":24} usable by level) |  | must-have core topic | keep visible |
@@ -232,8 +229,7 @@ These topics are curriculum-important and fail or are gated only in assigned act
 
 | Subject | Grade | Topic | Assigned status | Why keep visible | Recommended action |
 |---------|-------|-------|-----------------|------------------|-------------------|
-| science | g5 | materials | thin-bank | must-have core topic; exists in learning (supported) | add/expand question bank |
-| science | g6 | materials | thin-bank | must-have core topic; exists in learning (supported) | add/expand question bank |
+| hebrew | g2 | reading | thin-bank | must-have core topic; exists in learning (supported) | add/expand question bank |
 
 ---
 
@@ -263,8 +259,7 @@ Topics with **no suitable assigned-activity workflow today** (not core MCQ gaps 
 
 | Subject | Grade | Topic | Bank detail | Failure |
 |---------|-------|-------|-------------|---------|
-| science | g5 | materials | static SCIENCE_QUESTIONS ({"easy":5,"medium":5,"hard":7} usable by level) | passes @ count=3 but fails @ count=5 at: medium |
-| science | g6 | materials | static SCIENCE_QUESTIONS ({"easy":5,"medium":5,"hard":13} usable by level) | passes @ count=3 but fails @ count=5 at: medium |
+| hebrew | g2 | reading | hebrew-question-generator (dynamic) | passes @ count=3 but fails @ count=5 at: hard |
 
 ---
 
