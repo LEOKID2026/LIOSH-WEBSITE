@@ -1,0 +1,12 @@
+{
+  "title": "Geometry diagram consistency check",
+  "sectionsWithDiagramOrImage": 55,
+  "checked": 55,
+  "matched": 55,
+  "updatedBecauseTextChanged": 0,
+  "updatedSections": [],
+  "needsReview": 0,
+  "needsReviewSections": [],
+  "noContradictionFound": true,
+  "note": "Diagram blocks preserved during sync; generic type-based diagrams remain aligned with section topic text."
+}

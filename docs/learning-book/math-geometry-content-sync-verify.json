@@ -1,0 +1,193 @@
+{
+  "subjects": {
+    "math": {
+      "totalPages": 1323,
+      "expectedTotal": 1323,
+      "synced": 1323,
+      "mismatches": 0,
+      "mismatchSamples": []
+    },
+    "geometry": {
+      "totalPages": 462,
+      "expectedTotal": 462,
+      "synced": 462,
+      "mismatches": 0,
+      "mismatchSamples": []
+    }
+  },
+  "rtl": {
+    "formatterRun": false,
+    "bidiControlCharsFound": [],
+    "mathSymbolsPreserved": true
+  },
+  "phrases": {
+    "עשרת אחת": {
+      "txt": [
+        "math-g1/pages/page-039.txt",
+        "math-g2/pages/page-006.txt",
+        "math-g3/pages/page-059.txt",
+        "math-g4/pages/page-094.txt"
+      ],
+      "md": [
+        "docs/learning-book/math/g1/drafts/ns_place_tens_units.md",
+        "docs/learning-book/math/g2/drafts/ns_place_tens_units.md",
+        "docs/learning-book/math/g3/drafts/sub_two.md",
+        "docs/learning-book/math/g4/drafts/sub_two.md"
+      ]
+    },
+    "11 − 8 = 3": {
+      "txt": [
+        "math-g3/pages/page-059.txt",
+        "math-g4/pages/page-094.txt"
+      ],
+      "md": [
+        "docs/learning-book/math/g3/drafts/sub_two.md",
+        "docs/learning-book/math/g4/drafts/sub_two.md"
+      ]
+    },
+    "√29 ≈ 5.4 — בדקנו מספיק": {
+      "txt": [
+        "math-g4/pages/page-149.txt"
+      ],
+      "md": [
+        "docs/learning-book/math/g4/drafts/prime_composite.md"
+      ]
+    },
+    "38,450 + 16,275 = 54,725": {
+      "txt": [
+        "math-g5/pages/page-045.txt",
+        "math-g5/pages/page-046.txt"
+      ],
+      "md": [
+        "docs/learning-book/math/g5/drafts/add_two.md"
+      ]
+    },
+    "מאה אלף אחת": {
+      "txt": [
+        "math-g6/pages/page-002.txt"
+      ],
+      "md": [
+        "docs/learning-book/math/g6/drafts/ns_place_hundreds.md"
+      ]
+    },
+    "7 במקום עשרות אלפים": {
+      "txt": [
+        "math-g6/pages/page-003.txt"
+      ],
+      "md": [
+        "docs/learning-book/math/g6/drafts/ns_place_hundreds.md"
+      ]
+    },
+    "מעבר למאה אלף": {
+      "txt": [
+        "math-g6/pages/page-009.txt"
+      ],
+      "md": [
+        "docs/learning-book/math/g6/drafts/ns_neighbors.md"
+      ]
+    },
+    "48,750 + 25,680 = 74,430": {
+      "txt": [
+        "math-g6/pages/page-045.txt",
+        "math-g6/pages/page-046.txt"
+      ],
+      "md": [
+        "docs/learning-book/math/g6/drafts/add_two.md"
+      ]
+    },
+    "9 − 6 = 3": {
+      "txt": [
+        "math-g6/pages/page-055.txt"
+      ],
+      "md": [
+        "docs/learning-book/math/g6/drafts/sub_two.md"
+      ]
+    },
+    "מונה × מונה, מכנה × מכנה": {
+      "txt": [
+        "math-g6/pages/page-190.txt"
+      ],
+      "md": [
+        "docs/learning-book/math/g6/drafts/frac_multiply.md"
+      ]
+    },
+    "730 ÷ 9 = 81 ארגזים מלאים ושארית 1.": {
+      "txt": [
+        "math-g6/pages/page-272.txt"
+      ],
+      "md": [
+        "docs/learning-book/math/g6/drafts/wp_leftover.md"
+      ]
+    },
+    "גבהים": {
+      "txt": [
+        "geometry-g5/pages/page-042.txt",
+        "geometry-g5/pages/page-049.txt",
+        "geometry-g5/pages/page-056.txt",
+        "geometry-g5/pages/page-064.txt"
+      ],
+      "md": [
+        "docs/learning-book/geometry/g5/drafts/heights_triangle.md",
+        "docs/learning-book/geometry/g5/drafts/heights_parallelogram.md",
+        "docs/learning-book/geometry/g5/drafts/heights_trapezoid.md",
+        "docs/learning-book/geometry/g5/drafts/triangle_area.md"
+      ]
+    },
+    "שטח × 2": {
+      "txt": [
+        "geometry-g5/pages/page-037.txt",
+        "geometry-g5/pages/page-042.txt",
+        "geometry-g5/pages/page-051.txt",
+        "geometry-g5/pages/page-056.txt"
+      ],
+      "md": [
+        "docs/learning-book/geometry/g5/drafts/heights_triangle.md",
+        "docs/learning-book/geometry/g5/drafts/heights_trapezoid.md"
+      ]
+    },
+    "בסיס 1 + בסיס 2": {
+      "txt": [
+        "geometry-g5/pages/page-056.txt"
+      ],
+      "md": [
+        "docs/learning-book/geometry/g5/drafts/heights_trapezoid.md"
+      ]
+    },
+    "2 × π × רדיוס": {
+      "txt": [
+        "geometry-g6/pages/page-043.txt",
+        "geometry-g6/pages/page-049.txt"
+      ],
+      "md": [
+        "docs/learning-book/geometry/g6/drafts/circle_perimeter.md"
+      ]
+    },
+    "π × רדיוס²": {
+      "txt": [
+        "geometry-g6/pages/page-050.txt",
+        "geometry-g6/pages/page-056.txt"
+      ],
+      "md": [
+        "docs/learning-book/geometry/g6/drafts/circle_area.md"
+      ]
+    },
+    "π × r² = שטח בסיס עגול": {
+      "txt": [
+        "geometry-g6/pages/page-114.txt"
+      ],
+      "md": [
+        "docs/learning-book/geometry/g6/drafts/cylinder_volume.md"
+      ]
+    },
+    "3 × 3 × 3 = 27": {
+      "txt": [
+        "geometry-g6/pages/page-129.txt"
+      ],
+      "md": [
+        "docs/learning-book/geometry/g6/drafts/sphere_volume.md"
+      ]
+    }
+  },
+  "oldPatternHits": [],
+  "phraseMissing": []
+}

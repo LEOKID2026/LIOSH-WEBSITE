@@ -1,0 +1,467 @@
+{
+  "filesChanged": 66,
+  "files": [
+    "docs/learning-book/geometry/g1/drafts/shapes_basic_rectangle.md",
+    "docs/learning-book/geometry/g1/drafts/shapes_basic_square.md",
+    "docs/learning-book/geometry/g1/drafts/transformations.md",
+    "docs/learning-book/geometry/g2/drafts/solids.md",
+    "docs/learning-book/geometry/g2/drafts/square_area.md",
+    "docs/learning-book/geometry/g2/drafts/transformations.md",
+    "docs/learning-book/geometry/g3/drafts/parallel_perpendicular.md",
+    "docs/learning-book/geometry/g3/drafts/quadrilaterals.md",
+    "docs/learning-book/geometry/g3/drafts/rotation.md",
+    "docs/learning-book/geometry/g3/drafts/solids.md",
+    "docs/learning-book/geometry/g3/drafts/square_area.md",
+    "docs/learning-book/geometry/g3/drafts/square_perimeter.md",
+    "docs/learning-book/geometry/g3/drafts/triangle_angles.md",
+    "docs/learning-book/geometry/g3/drafts/triangle_perimeter.md",
+    "docs/learning-book/geometry/g3/drafts/triangles.md",
+    "docs/learning-book/geometry/g4/drafts/diagonal_rectangle.md",
+    "docs/learning-book/geometry/g4/drafts/diagonal_square.md",
+    "docs/learning-book/geometry/g4/drafts/parallel_perpendicular.md",
+    "docs/learning-book/geometry/g4/drafts/quadrilaterals.md",
+    "docs/learning-book/geometry/g4/drafts/rectangular_prism_volume.md",
+    "docs/learning-book/geometry/g4/drafts/shapes_basic_properties_angles.md",
+    "docs/learning-book/geometry/g4/drafts/shapes_basic_properties_rectangle.md",
+    "docs/learning-book/geometry/g4/drafts/shapes_basic_properties_square.md",
+    "docs/learning-book/geometry/g4/drafts/solids.md",
+    "docs/learning-book/geometry/g4/drafts/square_area.md",
+    "docs/learning-book/geometry/g4/drafts/square_perimeter.md",
+    "docs/learning-book/geometry/g4/drafts/symmetry.md",
+    "docs/learning-book/geometry/g4/drafts/triangle_angles.md",
+    "docs/learning-book/geometry/g4/drafts/triangle_perimeter.md",
+    "docs/learning-book/geometry/g5/drafts/diagonal_parallelogram.md",
+    "docs/learning-book/geometry/g5/drafts/diagonal_rectangle.md",
+    "docs/learning-book/geometry/g5/drafts/diagonal_square.md",
+    "docs/learning-book/geometry/g5/drafts/heights_parallelogram.md",
+    "docs/learning-book/geometry/g5/drafts/heights_trapezoid.md",
+    "docs/learning-book/geometry/g5/drafts/heights_triangle.md",
+    "docs/learning-book/geometry/g5/drafts/parallel_perpendicular.md",
+    "docs/learning-book/geometry/g5/drafts/parallelogram_area.md",
+    "docs/learning-book/geometry/g5/drafts/quadrilaterals.md",
+    "docs/learning-book/geometry/g5/drafts/rectangular_prism_volume.md",
+    "docs/learning-book/geometry/g5/drafts/solids.md",
+    "docs/learning-book/geometry/g5/drafts/square_area.md",
+    "docs/learning-book/geometry/g5/drafts/square_perimeter.md",
+    "docs/learning-book/geometry/g5/drafts/tiling.md",
+    "docs/learning-book/geometry/g5/drafts/trapezoid_area.md",
+    "docs/learning-book/geometry/g5/drafts/triangle_angles.md",
+    "docs/learning-book/geometry/g5/drafts/triangle_area.md",
+    "docs/learning-book/geometry/g5/drafts/triangle_perimeter.md",
+    "docs/learning-book/geometry/g6/drafts/circle_area.md",
+    "docs/learning-book/geometry/g6/drafts/circle_perimeter.md",
+    "docs/learning-book/geometry/g6/drafts/cone_volume.md",
+    "docs/learning-book/geometry/g6/drafts/cylinder_volume.md",
+    "docs/learning-book/geometry/g6/drafts/parallelogram_area.md",
+    "docs/learning-book/geometry/g6/drafts/prism_volume_rectangular.md",
+    "docs/learning-book/geometry/g6/drafts/prism_volume_triangle.md",
+    "docs/learning-book/geometry/g6/drafts/pyramid_volume_rectangular.md",
+    "docs/learning-book/geometry/g6/drafts/pyramid_volume_square.md",
+    "docs/learning-book/geometry/g6/drafts/pythagoras_hyp.md",
+    "docs/learning-book/geometry/g6/drafts/pythagoras_leg.md",
+    "docs/learning-book/geometry/g6/drafts/rectangular_prism_volume.md",
+    "docs/learning-book/geometry/g6/drafts/solids.md",
+    "docs/learning-book/geometry/g6/drafts/sphere_volume.md",
+    "docs/learning-book/geometry/g6/drafts/square_area.md",
+    "docs/learning-book/geometry/g6/drafts/square_perimeter.md",
+    "docs/learning-book/geometry/g6/drafts/trapezoid_area.md",
+    "docs/learning-book/geometry/g6/drafts/triangle_angles.md",
+    "docs/learning-book/geometry/g6/drafts/triangle_perimeter.md"
+  ],
+  "pagesSynced": 462,
+  "byGrade": {
+    "g1": 21,
+    "g2": 21,
+    "g3": 63,
+    "g4": 98,
+    "g5": 126,
+    "g6": 133
+  },
+  "diagramActions": [
+    {
+      "md": "docs/learning-book/geometry/g1/drafts/shapes_basic_square.md",
+      "section": 2,
+      "pageNum": 2,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g1/drafts/shapes_basic_rectangle.md",
+      "section": 2,
+      "pageNum": 9,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g2/drafts/solids.md",
+      "section": 2,
+      "pageNum": 2,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g2/drafts/square_area.md",
+      "section": 2,
+      "pageNum": 9,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g3/drafts/triangles.md",
+      "section": 2,
+      "pageNum": 2,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g3/drafts/quadrilaterals.md",
+      "section": 2,
+      "pageNum": 9,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g3/drafts/parallel_perpendicular.md",
+      "section": 2,
+      "pageNum": 16,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g3/drafts/square_area.md",
+      "section": 2,
+      "pageNum": 23,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g3/drafts/square_perimeter.md",
+      "section": 2,
+      "pageNum": 30,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g3/drafts/triangle_perimeter.md",
+      "section": 2,
+      "pageNum": 37,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g3/drafts/triangle_angles.md",
+      "section": 2,
+      "pageNum": 44,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g3/drafts/solids.md",
+      "section": 2,
+      "pageNum": 58,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g4/drafts/shapes_basic_properties_square.md",
+      "section": 2,
+      "pageNum": 2,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g4/drafts/shapes_basic_properties_rectangle.md",
+      "section": 2,
+      "pageNum": 9,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g4/drafts/shapes_basic_properties_angles.md",
+      "section": 2,
+      "pageNum": 16,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g4/drafts/symmetry.md",
+      "section": 2,
+      "pageNum": 23,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g4/drafts/quadrilaterals.md",
+      "section": 2,
+      "pageNum": 30,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g4/drafts/parallel_perpendicular.md",
+      "section": 2,
+      "pageNum": 37,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g4/drafts/square_perimeter.md",
+      "section": 2,
+      "pageNum": 44,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g4/drafts/square_area.md",
+      "section": 2,
+      "pageNum": 51,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g4/drafts/triangle_perimeter.md",
+      "section": 2,
+      "pageNum": 58,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g4/drafts/triangle_angles.md",
+      "section": 2,
+      "pageNum": 65,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g4/drafts/diagonal_square.md",
+      "section": 2,
+      "pageNum": 72,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g4/drafts/diagonal_rectangle.md",
+      "section": 2,
+      "pageNum": 79,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g4/drafts/solids.md",
+      "section": 2,
+      "pageNum": 86,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g4/drafts/rectangular_prism_volume.md",
+      "section": 2,
+      "pageNum": 93,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g5/drafts/parallel_perpendicular.md",
+      "section": 2,
+      "pageNum": 2,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g5/drafts/quadrilaterals.md",
+      "section": 2,
+      "pageNum": 9,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g5/drafts/triangle_angles.md",
+      "section": 2,
+      "pageNum": 16,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g5/drafts/square_perimeter.md",
+      "section": 2,
+      "pageNum": 23,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g5/drafts/triangle_perimeter.md",
+      "section": 2,
+      "pageNum": 30,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g5/drafts/heights_triangle.md",
+      "section": 2,
+      "pageNum": 37,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g5/drafts/heights_parallelogram.md",
+      "section": 2,
+      "pageNum": 44,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g5/drafts/heights_trapezoid.md",
+      "section": 2,
+      "pageNum": 51,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g5/drafts/square_area.md",
+      "section": 2,
+      "pageNum": 58,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g5/drafts/triangle_area.md",
+      "section": 2,
+      "pageNum": 65,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g5/drafts/parallelogram_area.md",
+      "section": 2,
+      "pageNum": 72,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g5/drafts/trapezoid_area.md",
+      "section": 2,
+      "pageNum": 79,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g5/drafts/diagonal_square.md",
+      "section": 2,
+      "pageNum": 86,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g5/drafts/diagonal_rectangle.md",
+      "section": 2,
+      "pageNum": 93,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g5/drafts/diagonal_parallelogram.md",
+      "section": 2,
+      "pageNum": 100,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g5/drafts/solids.md",
+      "section": 2,
+      "pageNum": 107,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g5/drafts/rectangular_prism_volume.md",
+      "section": 2,
+      "pageNum": 114,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g6/drafts/square_perimeter.md",
+      "section": 2,
+      "pageNum": 2,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g6/drafts/triangle_perimeter.md",
+      "section": 2,
+      "pageNum": 9,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g6/drafts/square_area.md",
+      "section": 2,
+      "pageNum": 16,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g6/drafts/parallelogram_area.md",
+      "section": 2,
+      "pageNum": 23,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g6/drafts/trapezoid_area.md",
+      "section": 2,
+      "pageNum": 30,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g6/drafts/triangle_angles.md",
+      "section": 2,
+      "pageNum": 37,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g6/drafts/circle_perimeter.md",
+      "section": 2,
+      "pageNum": 44,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g6/drafts/circle_area.md",
+      "section": 2,
+      "pageNum": 51,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g6/drafts/pythagoras_hyp.md",
+      "section": 2,
+      "pageNum": 58,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g6/drafts/pythagoras_leg.md",
+      "section": 2,
+      "pageNum": 65,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g6/drafts/rectangular_prism_volume.md",
+      "section": 2,
+      "pageNum": 79,
+      "action": "preserved",
+      "blocks": 1
+    },
+    {
+      "md": "docs/learning-book/geometry/g6/drafts/prism_volume_rectangular.md",
+      "section": 2,
+      "pageNum": 86,
+      "action": "preserved",
+      "blocks": 1
+    }
+  ]
+}
