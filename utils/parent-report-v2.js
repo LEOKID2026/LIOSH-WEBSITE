@@ -270,6 +270,7 @@ function buildMapFromBucket({
       subject === "math" ? mathReportBaseOperationKey(storageKey) : storageKey;
 
     const aggregateModeCountsByComposite = {};
+    const aggregateModeCountsByGradeScope = {};
     for (const s of list) {
       const modeNorm = normalizeSessionModeForMath(s);
       const g = mathScopeGradeFromSession(s);
@@ -277,6 +278,11 @@ function buildMapFromBucket({
       const compositeKey = `${rowBucketKey}${TRACK_ROW_MODE_SEP}${modeNorm}${TRACK_ROW_MODE_SEP}${g}${TRACK_ROW_MODE_SEP}${l}`;
       aggregateModeCountsByComposite[compositeKey] = mergeAggregateModeCountMaps(
         aggregateModeCountsByComposite[compositeKey],
+        s.aggregateModeCounts,
+      );
+      const gradeScopeKey = `${rowBucketKey}${TRACK_ROW_MODE_SEP}gradeScope${TRACK_ROW_MODE_SEP}${g}`;
+      aggregateModeCountsByGradeScope[gradeScopeKey] = mergeAggregateModeCountMaps(
+        aggregateModeCountsByGradeScope[gradeScopeKey],
         s.aggregateModeCounts,
       );
     }
@@ -297,9 +303,13 @@ function buildMapFromBucket({
       const { bucketKey: splitBucketKey } = splitBucketModeRowKey(itemKey);
       const progressLookupKey = splitBucketKey;
       const legacy = progressData[progressLookupKey] || { total: 0, correct: 0 };
+      const gradeScopeKey = `${rowBucketKey}${TRACK_ROW_MODE_SEP}gradeScope${TRACK_ROW_MODE_SEP}${mathScopeGradeFromSession(sessions[0])}`;
       map[itemKey] = {
         sessions,
-        aggregateModeCounts: aggregateModeCountsByComposite[itemKey] || null,
+        aggregateModeCounts: mergeAggregateModeCountMaps(
+          aggregateModeCountsByComposite[itemKey] || null,
+          aggregateModeCountsByGradeScope[gradeScopeKey] || null,
+        ),
         legacyProgress: legacy,
         displayNameFn,
         subject,

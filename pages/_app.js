@@ -9,6 +9,7 @@ import { useIOSViewportFix } from "../hooks/useIOSViewportFix";
 import { initPwaInstallPromptCapture } from "../lib/pwa/pwa-install-prompt";
 import { initParentPwaInstallPromptCapture } from "../lib/pwa/pwa-parent-install-prompt";
 import { initTeacherPwaInstallPromptCapture } from "../lib/pwa/pwa-teacher-install-prompt";
+import { resolvePwaManifestHref, resolvePwaPortal } from "../lib/pwa/resolve-pwa-manifest";
 import { StudentThemeProvider } from "../contexts/StudentThemeContext.jsx";
 import BrowserThemeColorSync from "../components/BrowserThemeColorSync.jsx";
 import {
@@ -129,9 +130,10 @@ export default function MyApp({ Component, pageProps }) {
       };
     }
 
-    const isParentRoute = (router.pathname || "").startsWith("/parent/");
-    const isStudentRoute = (router.pathname || "").startsWith("/student/");
-    const isTeacherRoute = (router.pathname || "").startsWith("/teacher/");
+    const pathname = router.pathname || "";
+    const isParentRoute = pathname.startsWith("/parent/");
+    const isStudentRoute = pathname.startsWith("/student/");
+    const isTeacherRoute = pathname.startsWith("/teacher/");
 
     const registerSW = () => {
       if (isParentRoute) {
@@ -237,14 +239,11 @@ export default function MyApp({ Component, pageProps }) {
 
   const pathname = router.pathname || "";
   const shouldGate = STUDENT_PROTECTED_ROUTES.has(pathname);
-  const isKidsLanding = pathname === "/kids";
-  const isParentsLanding = pathname === "/parents";
-  const isTeachersLanding = pathname === "/teachers";
-  const isStudentPwaInstallMode = pathname === "/student/install-app" || isKidsLanding;
-  const isStudentPwaManifestRoute =
-    pathname.startsWith("/student/") || shouldGate || isKidsLanding;
-  const isParentPwaInstallMode = pathname === "/parent/install-app" || isParentsLanding;
-  const isTeacherPwaInstallMode = pathname === "/teacher/install-app" || isTeachersLanding;
+  const pwaPortal = resolvePwaPortal(pathname);
+  const manifestHref = resolvePwaManifestHref(pathname);
+  const isStudentPwaInstallMode = pwaPortal === "student";
+  const isParentPwaInstallMode = pwaPortal === "parent";
+  const isTeacherPwaInstallMode = pwaPortal === "teacher";
 
   return (
     <>
@@ -332,14 +331,8 @@ export default function MyApp({ Component, pageProps }) {
           </>
         )}
 
-        {isStudentPwaManifestRoute ? (
-          <link rel="manifest" href="/manifest.json" />
-        ) : null}
-        {isParentPwaInstallMode ? (
-          <link rel="manifest" href="/manifest-parent.webmanifest" />
-        ) : null}
-        {isTeacherPwaInstallMode ? (
-          <link rel="manifest" href="/manifest-teacher.webmanifest" />
+        {manifestHref ? (
+          <link key="app-manifest" rel="manifest" href={manifestHref} />
         ) : null}
         
         <title>LEO K - Kids Games & Learning</title>

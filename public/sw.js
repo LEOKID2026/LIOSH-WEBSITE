@@ -7,6 +7,7 @@ const REWARD_CARD_PATH_PREFIX = '/rewards/cards/';
 // רק קבצים סטטיים אמיתיים (לא דפי Next.js שנוצרים דינמית)
 const STATIC_ASSETS = [
   '/manifest.json',
+  '/manifest-student.webmanifest',
   '/offline',
   '/styles/globals.css',
   // Essential images
@@ -236,7 +237,13 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(request.url);
 
   // Never intercept web manifests — each PWA page must fetch its own manifest from network.
-  if (url.pathname.endsWith('.webmanifest') || url.pathname === '/manifest.json') {
+  if (
+    url.pathname.endsWith('.webmanifest') ||
+    url.pathname === '/manifest.json' ||
+    url.pathname === '/manifest-student.webmanifest' ||
+    url.pathname === '/manifest-parent.webmanifest' ||
+    url.pathname === '/manifest-teacher.webmanifest'
+  ) {
     return;
   }
 

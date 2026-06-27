@@ -11,7 +11,11 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
-  if (url.pathname.endsWith(".webmanifest") || url.pathname === "/manifest.json") {
+  if (
+    url.pathname.endsWith(".webmanifest") ||
+    url.pathname === "/manifest.json" ||
+    url.pathname === "/manifest-student.webmanifest"
+  ) {
     return;
   }
 });

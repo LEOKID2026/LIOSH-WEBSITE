@@ -1,7 +1,7 @@
 import StudentPwaInstallLauncher from "../../components/student/StudentPwaInstallLauncher";
 import PwaInstallPageShell from "../../components/pwa/PwaInstallPageShell";
 
-/** SSR so manifest.json is chosen in _app Head from the first HTML byte. */
+/** SSR so manifest-student is chosen in _app Head from the first HTML byte. */
 export async function getServerSideProps() {
   return { props: {} };
 }
