@@ -16,15 +16,15 @@
       "pageNumber": 2,
       "title": "הסבר",
       "textFile": "pages/page-002.txt",
-      "estimatedCharacters": 163,
-      "estimatedWords": 31
+      "estimatedCharacters": 200,
+      "estimatedWords": 37
     },
     {
       "pageNumber": 3,
       "title": "דוגמה",
       "textFile": "pages/page-003.txt",
-      "estimatedCharacters": 140,
-      "estimatedWords": 26
+      "estimatedCharacters": 173,
+      "estimatedWords": 31
     },
     {
       "pageNumber": 4,
@@ -37,15 +37,15 @@
       "pageNumber": 5,
       "title": "נסו בעצמכם",
       "textFile": "pages/page-005.txt",
-      "estimatedCharacters": 160,
-      "estimatedWords": 31
+      "estimatedCharacters": 153,
+      "estimatedWords": 30
     },
     {
       "pageNumber": 6,
       "title": "בואו נבדוק יחד",
       "textFile": "pages/page-006.txt",
-      "estimatedCharacters": 180,
-      "estimatedWords": 35
+      "estimatedCharacters": 229,
+      "estimatedWords": 43
     },
     {
       "pageNumber": 7,
