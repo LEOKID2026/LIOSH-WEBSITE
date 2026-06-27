@@ -10,6 +10,9 @@ import {
   buildSpeedPressureBridgeCompareMarkdown,
 } from "./speed-pressure-bridge-debug.mjs";
 import {
+  buildSpeedPressureTopicAlignmentDebugMarkdown,
+} from "./speed-pressure-topic-alignment-debug.mjs";
+import {
   buildTopicCoverageMarkdown,
   topicCoverageToCsv,
 } from "./topic-coverage.mjs";
@@ -206,6 +209,14 @@ export async function writeAllArtifacts(reportDir, bundle) {
         "utf8",
       );
     }
+  }
+  if (bundle.summary?.speedPressureTopicAlignmentDebug) {
+    await writeJson(reportDir, "speed-pressure-topic-alignment-debug.json", bundle.summary.speedPressureTopicAlignmentDebug);
+    await writeFile(
+      join(reportDir, "speed-pressure-topic-alignment-debug.md"),
+      buildSpeedPressureTopicAlignmentDebugMarkdown(bundle.summary.speedPressureTopicAlignmentDebug),
+      "utf8",
+    );
   }
   await writeFile(
     join(reportDir, "qa-accounts.md"),

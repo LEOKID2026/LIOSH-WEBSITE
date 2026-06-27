@@ -65,6 +65,7 @@ export function buildRichAnswerPayload({
     mode,
     level: "medium",
     gradeLevel: grade,
+    ...(speedPressure ? { contentGradeLevel: `g${grade}` } : {}),
     prompt: `Mass sim ${subject}/${topic}`,
     expectedAnswer: "42",
     userAnswer: isCorrect ? "42" : "99",

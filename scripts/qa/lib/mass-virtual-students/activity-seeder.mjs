@@ -146,6 +146,9 @@ export async function insertSelfPracticeSession(supabase, studentId, runId, sess
       wrongAnswers: session.answers.length - correct,
     },
   };
+  if (session.contentGradeKey) {
+    sessionMetadata.contentGradeLevel = session.contentGradeKey;
+  }
   if (session.patchTag) sessionMetadata.patch = session.patchTag;
 
   const { data: sessionRow, error: sessErr } = await supabase

@@ -2,7 +2,7 @@ import { aggregateParentReportPayload } from "../../../../lib/parent-server/repo
 import { collectTopicEngineRowsFromReport } from "../../../../utils/parent-report-engine-insights-he.js";
 import { buildEngineDecisionParentTopicCopyHe } from "../../../../utils/parent-report-language/engine-decision-parent-copy-he.js";
 import { ENGINE_DECISIONS, SEED_META_KEY } from "./constants.mjs";
-import { resolveSpeedPressureCurriculumTarget, SPEED_COHORT_PATCH_TAG } from "./curriculum-speed-pressure.mjs";
+import { resolveAlignedSpeedPressureTopic, SPEED_COHORT_PATCH_TAG } from "./curriculum-speed-pressure.mjs";
 import { buildParentReportV2FromAggregate } from "./report-v2-bridge.mjs";
 import { createServiceClient } from "./supabase.mjs";
 
@@ -148,6 +148,13 @@ async function fetchDbSpeedCohortLayer(supabase, studentId, runId, { subject, to
     .filter("answer_payload->>subject", "eq", subject)
     .order("answered_at", { ascending: false });
 
+  const { data: cohortAnswersRaw } = await supabase
+    .from("answers")
+    .select("id, answer_payload, learning_sessions!inner(topic, subject, metadata)")
+    .eq("student_id", studentId)
+    .eq("learning_sessions.subject", subject)
+    .contains("learning_sessions.metadata", { patch: SPEED_COHORT_PATCH_TAG });
+
   const { data: probeShellsRaw } = await supabase
     .from("learning_sessions")
     .select("id, subject, topic, started_at, metadata")
@@ -163,6 +170,17 @@ async function fetchDbSpeedCohortLayer(supabase, studentId, runId, { subject, to
     .eq("subject", subject)
     .eq("topic", topic)
     .contains("metadata", { patch: SPEED_COHORT_PATCH_TAG });
+
+  const cohortAnswerTopics = [
+    ...new Set(
+      (cohortAnswersRaw || []).map(
+        (a) => a.learning_sessions?.topic || a.answer_payload?.topic || "unknown",
+      ),
+    ),
+  ];
+  const cohortShellTopics = [
+    ...new Set((probeShellsRaw || []).map((s) => s.topic || "unknown")),
+  ];
 
   const answers = (probeAnswersRaw || []).map((a) => {
     const p = a.answer_payload || {};
@@ -187,9 +205,12 @@ async function fetchDbSpeedCohortLayer(supabase, studentId, runId, { subject, to
     seededAnswers: answers.length,
     seededShells: (probeShellsRaw || []).length,
     seededPracticeSessions: (probePracticeSessions || []).length,
+    cohortAnswerTopics,
+    cohortShellTopics,
     answerStats: statsFromAnswers(answers),
     shellsSample: (probeShellsRaw || []).slice(0, 3).map((s) => ({
       subject: s.subject,
+      topic: s.topic,
       startedAt: s.started_at,
       mode: s.metadata?.mode,
     })),
@@ -211,12 +232,12 @@ function countAggregateMistakes(raw, subject) {
 /**
  * Trace speed-pressure pipeline for one fast_errors student.
  */
-export async function traceFastErrorsBridge({ student, runId, fromDate, toDate }) {
+export async function traceFastErrorsBridge({ student, runId, fromDate, toDate, selectedTopic }) {
   const supabase = createServiceClient();
   const from = parseReportDate(fromDate);
   const to = parseReportDate(toDate);
-  const curriculum = resolveSpeedPressureCurriculumTarget(student);
-  const { subject, topic, grade, taxonomy } = curriculum;
+  const curriculum = resolveAlignedSpeedPressureTopic(student, selectedTopic);
+  const { subject, topic, grade, taxonomy, topicSource } = curriculum;
 
   const { data: row } = await supabase
     .from("students")
@@ -239,10 +260,17 @@ export async function traceFastErrorsBridge({ student, runId, fromDate, toDate }
     toDate: to,
   });
   const v2Rows = collectTopicEngineRowsFromReport(v2);
-  const probeRow =
+  const gradeSliceSpeedCount = (aggregateProbe.gradeSlices || []).reduce(
+    (max, slice) => Math.max(max, slice.modeCounts?.speed || 0),
+    0,
+  );
+  const v2RowForTopic =
+    v2Rows.find((r) => (r.topicKey || "").startsWith(`${topic}::grade:g${grade}`)) ||
     v2Rows.find((r) => (r.topicKey || "").startsWith(`${topic}::`)) ||
     v2Rows.find((r) => (r.topicKey || "").includes(topic)) ||
     null;
+
+  const probeRow = v2RowForTopic;
   const speedRow = v2Rows.find((r) => r.modeKey === "speed") || null;
   const resolvedProbe = probeRow ? resolveEngineDecision(probeRow, row.grade_level) : null;
   const resolvedSpeed = speedRow ? resolveEngineDecision(speedRow, row.grade_level) : null;
@@ -280,7 +308,27 @@ export async function traceFastErrorsBridge({ student, runId, fromDate, toDate }
     grade,
     primarySubject: subject,
     curriculumTopic: topic,
+    topicSource,
     taxonomy,
+    alignment: {
+      selectedTopicKey: topic,
+      cohortAnswersTopicKey: db.cohortAnswerTopics?.length === 1 ? db.cohortAnswerTopics[0] : db.cohortAnswerTopics,
+      speedShellsTopicKey: db.cohortShellTopics?.length === 1 ? db.cohortShellTopics[0] : db.cohortShellTopics,
+      probeTopicKey: topic,
+      topicMismatch:
+        (db.cohortAnswerTopics?.length && !db.cohortAnswerTopics.every((t) => t === topic)) ||
+        (db.cohortShellTopics?.length && !db.cohortShellTopics.every((t) => t === topic)),
+      aggregateTopicExists: aggregateProbe.found,
+      aggregateSpeedCount: aggregateProbe.parentModeCounts?.speed ?? 0,
+      gradeSliceSpeedCount,
+      V2RowExistsForSelectedTopic: !!v2RowForTopic,
+      rowModeKey: probeRow?.modeKey || null,
+      rowSignalsExists: !!(probeRow?.topicEngineRowSignals || speedRow?.topicEngineRowSignals),
+      engineDecision: gotSpeedPressure
+        ? "speed_pressure_pattern"
+        : resolvedProbe?.engineDecision || resolvedSpeed?.engineDecision || null,
+      whyMissing: gotSpeedPressure ? null : missing.reason,
+    },
     pipeline: {
       dbSeed: {
         seededAnswers: db.seededAnswers,
@@ -391,11 +439,23 @@ function inferRootCause(students) {
   };
 }
 
-export async function buildSpeedPressureBridgeDebug({ students, runId, fromDate, toDate }) {
+export async function buildSpeedPressureBridgeDebug({ students, runId, fromDate, toDate, patchAudit }) {
   const fastErrors = students.filter((s) => s.profile === "fast_errors");
+  const topicByLogin = new Map();
+  for (const row of patchAudit?.students || patchAudit?.results || []) {
+    if (row?.login && row?.topic) topicByLogin.set(row.login, row.topic);
+  }
   const traces = [];
   for (const student of fastErrors) {
-    traces.push(await traceFastErrorsBridge({ student, runId, fromDate, toDate }));
+    traces.push(
+      await traceFastErrorsBridge({
+        student,
+        runId,
+        fromDate,
+        toDate,
+        selectedTopic: student.speedPressureTopic || topicByLogin.get(student.login),
+      }),
+    );
   }
 
   const triggered = traces.filter((t) => t.speedPressureTriggered).length;

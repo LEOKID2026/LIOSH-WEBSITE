@@ -118,6 +118,7 @@ async function runVerifyOnly(cfg) {
     toDate: to,
     maxReports: manifest.students.length,
     runId: cfg.runId,
+    patchAudit: cfg._speedPressurePatchAudit || prior.speedPressureSeedAudit || null,
   });
 
   const englishIssues = reportVerification.results.filter((r) => r.englishHits?.length).length;
@@ -143,6 +144,7 @@ async function runVerifyOnly(cfg) {
     topicCoverage: reportVerification.topicCoverage,
     parentAssignedDebug: reportVerification.parentAssignedDebug,
     speedPressureBridgeDebug: reportVerification.speedPressureBridgeDebug,
+    speedPressureTopicAlignmentDebug: reportVerification.speedPressureTopicAlignmentDebug,
     speedPressurePatched: cfg.patchSpeedPressure || false,
     speedPressurePatchAudit: cfg._speedPressurePatchAudit
       ? {
@@ -295,6 +297,7 @@ async function main() {
     toDate: endDay,
     maxReports: cfg.students,
     runId: cfg.runId,
+    patchAudit: speedPressureSeedAudit,
   });
 
   const studentsByGrade = {};
@@ -355,6 +358,7 @@ async function main() {
     topicCoverage: reportVerification.topicCoverage,
     parentAssignedDebug: reportVerification.parentAssignedDebug,
     speedPressureBridgeDebug: reportVerification.speedPressureBridgeDebug,
+    speedPressureTopicAlignmentDebug: reportVerification.speedPressureTopicAlignmentDebug,
     speedPressureSeedAudit,
     seedSpeedPressure: cfg.seedSpeedPressure,
     focusProfile: cfg.focusProfile || null,

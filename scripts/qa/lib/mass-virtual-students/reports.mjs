@@ -18,6 +18,9 @@ import {
 import { buildParentAssignedDebug } from "./parent-assigned-debug.mjs";
 import { buildTopicCoverage } from "./topic-coverage.mjs";
 import { buildSpeedPressureBridgeDebug } from "./speed-pressure-bridge-debug.mjs";
+import {
+  buildSpeedPressureTopicAlignmentDebug,
+} from "./speed-pressure-topic-alignment-debug.mjs";
 import { buildParentReportV2FromAggregate } from "./report-v2-bridge.mjs";
 import { createServiceClient } from "./supabase.mjs";
 
@@ -79,6 +82,7 @@ export async function verifyParentReports({
   toDate,
   maxReports = Infinity,
   runId,
+  patchAudit = null,
 }) {
   const from = parseReportDate(fromDate);
   const to = parseReportDate(toDate);
@@ -198,6 +202,12 @@ export async function verifyParentReports({
     runId,
     fromDate: from,
     toDate: to,
+    patchAudit,
+  });
+  const speedPressureTopicAlignmentDebug = buildSpeedPressureTopicAlignmentDebug({
+    runId,
+    bridgeDebug: speedPressureBridgeDebug,
+    patchAudit,
   });
 
   return {
@@ -214,6 +224,7 @@ export async function verifyParentReports({
     topicCoverage,
     parentAssignedDebug,
     speedPressureBridgeDebug,
+    speedPressureTopicAlignmentDebug,
   };
 }
 

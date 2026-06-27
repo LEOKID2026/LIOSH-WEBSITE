@@ -1,7 +1,7 @@
 import { insertSelfPracticeSession } from "./activity-seeder.mjs";
 import {
   countTopicPracticeAnswersBeforeCohort,
-  resolveSpeedPressureCurriculumTargetFromSeed,
+  resolveAlignedSpeedPressureTopic,
   SPEED_COHORT_PATCH_TAG,
 } from "./curriculum-speed-pressure.mjs";
 import { createServiceClient } from "./supabase.mjs";
@@ -38,6 +38,7 @@ async function insertSpeedSessionShells(supabase, studentId, runId, { subject, t
         mode: "speed",
         gameMode: "speed",
         gradeLevel: grade,
+        contentGradeLevel: `g${grade}`,
         [SEED_META_KEY]: runId,
         patch: "speed_mode_shell",
         curriculumTopic: topic,
@@ -59,8 +60,9 @@ export async function patchSpeedPressureForStudents({ students, runId, endDay })
   const results = [];
 
   for (const student of targets) {
-    const curriculum = await resolveSpeedPressureCurriculumTargetFromSeed(supabase, student, runId);
+    const curriculum = resolveAlignedSpeedPressureTopic(student);
     const { subject, topic, grade, taxonomy, topicSource } = curriculum;
+    student.speedPressureTopic = topic;
     const day = endDay || new Date().toISOString().slice(0, 10);
 
     const { count: existingCohortSessions } = await supabase
@@ -108,6 +110,7 @@ export async function patchSpeedPressureForStudents({ students, runId, endDay })
         subject,
         topic,
         grade,
+        contentGradeKey: `g${grade}`,
         mode: "practice",
         answers,
         patchTag: SPEED_COHORT_PATCH_TAG,
@@ -152,7 +155,7 @@ export async function patchSpeedPressureForStudents({ students, runId, endDay })
   return {
     mutatesDatabase: true,
     targetProfile: "fast_errors",
-    curriculumTopicStrategy: "lightest_seed_answer_volume (fallback defaultTopicForSubject)",
+    curriculumTopicStrategy: "defaultTopicForSubject (aligned: patch + probe + V2 use same topicKey)",
     fieldsWritten: FIELDS_WRITTEN,
     studentsTargeted: targets.length,
     studentsPatched: patchedNew.length,

@@ -143,31 +143,29 @@ function buildCurriculumTarget(student, topic) {
 }
 
 /**
- * Real curriculum topic for speed-pressure cohort (never synthetic probe topics).
- * Prefer dominant seeded topic so V2 already emits a row for it.
+ * Single aligned curriculum topic for speed-pressure cohort — same key for seed, probe, aggregate, V2.
+ * Uses defaultTopicForSubject so V2 already emits a row for this topic from regular activity seed.
  */
-export function resolveSpeedPressureCurriculumTarget(student, topicOverride) {
+export function resolveAlignedSpeedPressureTopic(student, topicOverride) {
   const subject = student.primarySubject || "math";
   const topic =
     topicOverride ||
+    student.speedPressureTopic ||
     student.defaultTopic?.[subject] ||
     defaultTopicForSubject(subject, student.grade);
-  return buildCurriculumTarget(student, topic);
+  return {
+    ...buildCurriculumTarget(student, topic),
+    topicSource: "defaultTopicForSubject",
+  };
+}
+
+/**
+ * @deprecated Prefer resolveAlignedSpeedPressureTopic — kept for callers that pass explicit override.
+ */
+export function resolveSpeedPressureCurriculumTarget(student, topicOverride) {
+  return resolveAlignedSpeedPressureTopic(student, topicOverride);
 }
 
 export async function resolveSpeedPressureCurriculumTargetFromSeed(supabase, student, runId) {
-  const subject = student.primarySubject || "math";
-  const lightest = await resolveLightestCurriculumTopicFromSeed(
-    supabase,
-    student.studentId,
-    subject,
-    runId,
-  );
-  const fallback =
-    student.defaultTopic?.[subject] || defaultTopicForSubject(subject, student.grade);
-  const topic = lightest || fallback;
-  return {
-    ...buildCurriculumTarget(student, topic),
-    topicSource: lightest ? "lightest_seed_answer_volume" : "defaultTopicForSubject_fallback",
-  };
+  return resolveAlignedSpeedPressureTopic(student);
 }
