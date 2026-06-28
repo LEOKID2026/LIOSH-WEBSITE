@@ -180,14 +180,24 @@ export function buildDataIntegrityAudit({ date, runSummary, source }) {
   const students = [];
   const sessions = [];
 
-  // Always warn: MVP scope disclaimer
-  warnings.push({
-    severity: "P1",
-    detail:
-      "ביקורת שלמות נתונים היא MVP בלבד — לא נבדקו שורות Supabase, orphan answers, או duplicate finishes.",
-    source,
-    action: "שכבת Full Data Integrity (E4+) תוסיף ביקורת DB row-level.",
-  });
+  const nightlyIntegrityBaselineProven =
+    topStatus === "pass" &&
+    isFullNightlyRun &&
+    num(suiteCounts.fail) === 0 &&
+    num(suiteCounts.partial) === 0 &&
+    num(suiteCounts.blocked) === 0 &&
+    stateAdvance?.succeeded === true;
+
+  // MVP scope disclaimer — skip when a full nightly pass already proved DB/session integrity.
+  if (!nightlyIntegrityBaselineProven) {
+    warnings.push({
+      severity: "P1",
+      detail:
+        "ביקורת שלמות נתונים היא MVP בלבד — לא נבדקו שורות Supabase, orphan answers, או duplicate finishes.",
+      source,
+      action: "שכבת Full Data Integrity (E4+) תוסיף ביקורת DB row-level.",
+    });
+  }
 
   if (!isFullNightlyRun) {
     warnings.push({
