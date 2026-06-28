@@ -15,7 +15,7 @@ const SW_FILES = [
   "/student/offline-precache-generated.js",
 ];
 
-const CACHE_NAME = "student-offline-v5-full";
+const CACHE_NAME = "student-offline-v6-full";
 
 const SOLO_ROUTES = [
   "/student/offline/solo/catcher",
