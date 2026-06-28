@@ -4,6 +4,7 @@ import Link from "next/link";
 import Layout from "../../components/Layout";
 import PortalLoginHeading from "../../components/auth/PortalLoginHeading";
 import TeacherRegistrationRequestForm from "../../components/auth/TeacherRegistrationRequestForm";
+import PortalLoadingPanel from "../../components/ui/PortalLoadingPanel.jsx";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import {
   getPrivateTeacherLayoutProps,
@@ -25,26 +26,36 @@ import {
 } from "../../lib/auth/auth-registration.he";
 import { resolveTeacherAccessToken } from "../../lib/teacher-portal/use-teacher-portal-session";
 
-function portalTabBtnClass(T, active) {
+function portalTabBtnClass(T, active, disabled) {
   return `flex-1 min-w-0 rounded px-3 py-2 text-sm font-semibold text-center transition ${
     active ? T.loginTabActive : T.loginTabIdle
-  }`;
+  } ${disabled ? "opacity-60 pointer-events-none" : ""}`;
 }
 
-function TeacherPortalAuxButtons({ T, className = "" }) {
+function TeacherPortalAuxButtons({ T, className = "", disabled = false }) {
   return (
     <div className={`grid grid-cols-2 gap-2 w-full md:contents ${className}`}>
-      <Link href="/school/staff/login" className={T.portalAuxBtn}>
+      <Link
+        href="/school/staff/login"
+        className={`${T.portalAuxBtn} ${disabled ? "pointer-events-none opacity-60" : ""}`}
+        aria-disabled={disabled || undefined}
+        tabIndex={disabled ? -1 : undefined}
+      >
         מורה בית ספר / צוות בית ספר
       </Link>
-      <Link href="/school/register" className={T.portalAuxBtn}>
+      <Link
+        href="/school/register"
+        className={`${T.portalAuxBtn} ${disabled ? "pointer-events-none opacity-60" : ""}`}
+        aria-disabled={disabled || undefined}
+        tabIndex={disabled ? -1 : undefined}
+      >
         רישום בית ספר
       </Link>
     </div>
   );
 }
 
-function TeacherPortalTopActions({ mode, setMode, T }) {
+function TeacherPortalTopActions({ mode, setMode, T, disabled = false }) {
   return (
     <div className="flex flex-col md:flex-row gap-2 mb-1.5 md:mb-3">
       <div
@@ -54,22 +65,30 @@ function TeacherPortalTopActions({ mode, setMode, T }) {
       >
         <button
           type="button"
-          onClick={() => setMode("login")}
-          className={portalTabBtnClass(T, mode === "login")}
+          disabled={disabled}
+          onClick={() => {
+            if (disabled) return;
+            setMode("login");
+          }}
+          className={portalTabBtnClass(T, mode === "login", disabled)}
           data-testid="teacher-login-tab"
         >
           {REG_TEACHER_LOGIN_TAB}
         </button>
         <button
           type="button"
-          onClick={() => setMode("request")}
-          className={portalTabBtnClass(T, mode === "request")}
+          disabled={disabled}
+          onClick={() => {
+            if (disabled) return;
+            setMode("request");
+          }}
+          className={portalTabBtnClass(T, mode === "request", disabled)}
           data-testid="teacher-request-tab"
         >
           {REG_TEACHER_TAB}
         </button>
       </div>
-      <TeacherPortalAuxButtons T={T} />
+      <TeacherPortalAuxButtons T={T} disabled={disabled} />
     </div>
   );
 }
@@ -171,6 +190,7 @@ export default function TeacherLoginPage({ inviteOnly }) {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    if (busy) return;
     if (!supabaseRef.current) {
       try {
         supabaseRef.current = getLearningSupabaseBrowserClient();
@@ -282,16 +302,16 @@ export default function TeacherLoginPage({ inviteOnly }) {
         <PortalLoginHeading title="כניסה למורים" className="!mb-2 md:!mb-4" bright={isBright} />
 
         {sessionCheckPending ? (
-          <p className={T.shellLoading} data-testid="teacher-login-root" data-state="loading">
-            מאמת חיבור…
-          </p>
+          <div data-testid="teacher-login-root" data-state="loading">
+            <PortalLoadingPanel isBright={isBright} message="מאמת חיבור…" />
+          </div>
         ) : (
           <div
             data-testid="teacher-login-root"
             data-invite-only={inviteOnly ? "true" : "false"}
             data-state="ready"
           >
-            <TeacherPortalTopActions mode={mode} setMode={setMode} T={T} />
+            <TeacherPortalTopActions mode={mode} setMode={setMode} T={T} disabled={busy} />
 
             {mode === "request" ? (
               <TeacherRegistrationRequestForm bright={isBright} />
@@ -312,6 +332,7 @@ export default function TeacherLoginPage({ inviteOnly }) {
                       autoComplete="username"
                       placeholder="המייל שלך"
                       className={T.loginInputMt}
+                      disabled={busy}
                     />
                   </label>
                   <PasswordField
@@ -323,6 +344,7 @@ export default function TeacherLoginPage({ inviteOnly }) {
                     autoComplete="current-password"
                     testId="teacher-login-password"
                     bright={isBright}
+                    disabled={busy}
                   />
                   <button type="submit" disabled={busy} className={T.submitBtn}>
                     {busy ? "מתחבר…" : "כניסה"}

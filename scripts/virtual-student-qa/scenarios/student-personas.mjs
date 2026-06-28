@@ -19,6 +19,7 @@
  *       strong | average | weak | targeted
  */
 import { SCIENCE_GRADES } from "../../../data/science-curriculum.js";
+import { GRADES as GEOMETRY_GRADES } from "../../../utils/geometry-constants.js";
 
 /** Ordered list of subject keys the simulator may schedule. */
 export const SUBJECTS = [
@@ -219,8 +220,12 @@ export function defaultTopicForSubject(subject, grade) {
   switch (subject) {
     case "math":
       return "addition";
-    case "geometry":
-      return "shapes_basic";
+    case "geometry": {
+      const g = Math.min(6, Math.max(1, Number(grade) || 1));
+      const topics = GEOMETRY_GRADES[`g${g}`]?.topics || [];
+      if (topics.includes("shapes_basic")) return "shapes_basic";
+      return topics[0] || "area";
+    }
     case "hebrew":
       return "reading";
     case "english":

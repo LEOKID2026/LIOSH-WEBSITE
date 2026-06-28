@@ -148,6 +148,13 @@ export function activeRiskFlagLabelsHe(riskFlags, maxLabels = 4) {
   return out;
 }
 
+const TREND_ACCURACY_FULL_HE = Object.freeze({
+  up: "נראית מגמת שיפור בתקופה האחרונה.",
+  down: "בתקופה האחרונה נראית ירידה בביצועים, ולכן כדאי לחזור לתרגול קצר וממוקד.",
+  flat: "התוצאות לא אחידות כרגע — יש תשובות טובות לצד טעויות, ולכן כדאי להמשיך לעקוב אחרי הנושא.",
+  unknown: "עדיין אין מספיק תרגול כדי לקבוע מגמה ברורה.",
+});
+
 /**
  * שורת מגמה קצרה — עדיפות אל summaryHe מהמנוע.
  * @param {Record<string, unknown>|null|undefined} trend
@@ -160,14 +167,14 @@ export function trendCompactLineHe(trend) {
     let s = sanitizeEngineSnippetHe(sumRaw);
     s = s.replace(/\bdefault_[a-z0-9_]+\b/gi, "");
     s = s.replace(/\u0001/g, " ");
+    /* block English trend words that must not appear to parent */
+    s = s.replace(/\b(improving|declining|unstable|trend|profile)\b/gi, "");
+    s = s.replace(/\bpast\/present\b/gi, "עבר והווה");
     s = s.replace(/\s{2,}/g, " ").trim();
     return truncateHe(normalizeParentFacingHe(s), 100);
   }
   const ad = String(t.accuracyDirection ?? "unknown").trim().toLowerCase();
-  const ind = String(t.independenceDirection ?? "unknown").trim().toLowerCase();
-  const a = TREND_DIR_HE[ad] || TREND_DIR_HE.unknown;
-  const i = TREND_DIR_HE[ind] || TREND_DIR_HE.unknown;
-  return `מה קורה עם הדיוק: ${a}; העצמאות בפתרון: ${i}`;
+  return TREND_ACCURACY_FULL_HE[ad] || TREND_ACCURACY_FULL_HE.unknown;
 }
 
 /**

@@ -1340,11 +1340,16 @@ function buildDiagnosticOverviewHeV2(p) {
   );
 
   let mainFocusAreaLineHe = null;
+  let mainFocusAreaIsHighAccuracy = false;
   if (attentionCandidates.length === 0) {
     mainFocusAreaLineHe = fallback.mainFocusAreaLineHe ?? null;
   } else if (attentionSorted[0]) {
     const u = attentionSorted[0];
     const sid = String(u.subjectId || "");
+    const uTraces = Array.isArray(u?.evidenceTrace) ? u.evidenceTrace : [];
+    const uVolume = uTraces.find((tr) => String(tr?.type || "") === "volume")?.value || {};
+    const uAcc = Number(uVolume?.accuracy) || 0;
+    mainFocusAreaIsHighAccuracy = uAcc >= 78;
     mainFocusAreaLineHe = overviewShortLineWithSubject(sid, u, "attention");
   }
   if (!String(mainFocusAreaLineHe || "").trim()) {
@@ -1427,6 +1432,7 @@ function buildDiagnosticOverviewHeV2(p) {
   return {
     strongestAreaLineHe,
     mainFocusAreaLineHe,
+    mainFocusAreaIsHighAccuracy,
     readyForProgressPreviewHe,
     requiresAttentionPreviewHe,
     insufficientDataSubjectsHe,

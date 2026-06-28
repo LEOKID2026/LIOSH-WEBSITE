@@ -138,10 +138,17 @@ async function authenticateParentViaUi({ page, account, baseUrl, log }) {
     // submit button. Use the form's submit button explicitly.
     const submitButton = page.locator("form button[type=\"submit\"]");
     await submitButton.waitFor({ state: "visible", timeout: 5_000 });
-    await Promise.all([
-      page.waitForURL("**/parent/dashboard**", { timeout: 30_000 }),
-      submitButton.click(),
-    ]);
+    await submitButton.click();
+    const authDeadline = Date.now() + 45_000;
+    while (Date.now() < authDeadline) {
+      if (isOnParentDashboard(page)) break;
+      await page.waitForTimeout(500);
+    }
+    if (!isOnParentDashboard(page)) {
+      throw new Error(
+        `parent-auth/ui: dashboard not reached within 45s after submit (url=${page.url()})`
+      );
+    }
     log?.("parent-auth/ui: submit + dashboard navigation observed");
   }
 

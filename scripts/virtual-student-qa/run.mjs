@@ -155,6 +155,7 @@ import {
 import { runPhaseD2Suite } from "./lib/phase-d2-orchestrator.mjs";
 import { makeDailyPacer } from "./lib/realtime-pacer.mjs";
 import { assertDailyDbSanity } from "./lib/daily-db-sanity-guard.mjs";
+import { ensureQaParentPasswordSynced } from "./lib/ensure-qa-parent-password.mjs";
 
 function parseArgs(argv) {
   const args = {
@@ -3164,6 +3165,7 @@ async function runPhaseD2FullRun({
   let suiteRuntimeError = null;
   try {
     // ---- 1. Preflight inside the shared browser ----------------------
+    await ensureQaParentPasswordSynced({ log });
     log(
       "fullrun: running preflight (parent UI + list-students + 12 student logins)"
     );
@@ -3662,6 +3664,7 @@ async function runPhaseD2PreflightOnly({
   const headed = args.headed || isHeaded();
   let preflightReport;
   try {
+    await ensureQaParentPasswordSynced({ log });
     preflightReport = await runStandaloneDailyPreflight({
       baseUrl,
       parentAccount,

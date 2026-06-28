@@ -60,6 +60,7 @@ const TOPIC_NAMES = {
   circles: "מעגל ועיגול",
   solids: "גופים",
   pythagoras: "פיתגורס",
+  coordinates: "נקודות וקואורדינטות",
   mixed: "ערבוב"
 };
 

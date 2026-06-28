@@ -136,16 +136,44 @@ export function hebrewFromEnglishSlug(slug) {
  * @param {string} subjectId
  * @param {string|null|undefined} bucketKey
  */
+/** Placeholder strings returned by topic-name functions when a key is missing from their map. */
+const TOPIC_NAME_PLACEHOLDER_LABELS = new Set(["נושא", "נושא זה", "general", "unknown"]);
+
+/**
+ * QA-only log — collects every case where topicBucketLabelHe suppressed a placeholder label.
+ * Never shown to parents. Import getBlockedTopicLabelLog() from QA scripts to inspect.
+ * @type {Array<{subject: string, topicKey: string, blockedLabel: string}>}
+ */
+const _blockedTopicLabelLog = [];
+
+/** Returns a snapshot of all placeholder-blocked entries since last clear. QA use only. */
+export function getBlockedTopicLabelLog() {
+  return [..._blockedTopicLabelLog];
+}
+
+/** Resets the blocked-label log. Call between test runs. */
+export function clearBlockedTopicLabelLog() {
+  _blockedTopicLabelLog.length = 0;
+}
+
 export function topicBucketLabelHe(subjectId, bucketKey) {
   const k = bucketKey != null ? String(bucketKey) : "";
   if (!k) return null;
   try {
-    if (subjectId === "math") return getMathReportBucketDisplayName(k);
-    if (subjectId === "geometry") return getTopicName(k);
-    if (subjectId === "english") return getEnglishTopicName(k);
-    if (subjectId === "science") return getScienceTopicName(k);
-    if (subjectId === "hebrew") return getHebrewTopicName(k);
-    if (subjectId === "moledet-geography") return getMoledetGeographyTopicName(k);
+    let result = null;
+    if (subjectId === "math") result = getMathReportBucketDisplayName(k);
+    else if (subjectId === "geometry") result = getTopicName(k);
+    else if (subjectId === "english") result = getEnglishTopicName(k);
+    else if (subjectId === "science") result = getScienceTopicName(k);
+    else if (subjectId === "hebrew") result = getHebrewTopicName(k);
+    else if (subjectId === "moledet-geography") result = getMoledetGeographyTopicName(k);
+    if (result != null) {
+      if (TOPIC_NAME_PLACEHOLDER_LABELS.has(String(result).trim())) {
+        _blockedTopicLabelLog.push({ subject: String(subjectId), topicKey: k, blockedLabel: String(result).trim() });
+        return null;
+      }
+      return result;
+    }
   } catch {
     /* ignore */
   }

@@ -5,7 +5,15 @@ import { createServiceClient } from "./supabase.mjs";
 const LOW_SAMPLE_ANSWERS = 5;
 const COVERED_ANSWERS = 10;
 
-function topicStatus(totalAnswers) {
+/** topicKeys that are internal probe/diagnostic sessions, not real learning topics. */
+const PROBE_KEY_PATTERN = /_probe/i;
+
+function isProbeKey(topicKey) {
+  return PROBE_KEY_PATTERN.test(String(topicKey || ""));
+}
+
+function topicStatus(topicKey, totalAnswers) {
+  if (isProbeKey(topicKey)) return "INTERNAL_PROBE";
   if (totalAnswers >= COVERED_ANSWERS) return "COVERED";
   if (totalAnswers > 0) return "LOW_SAMPLE";
   return "MISSING";
@@ -118,7 +126,7 @@ export async function buildTopicCoverage({
       skillId: [...c.skillIds].slice(0, 3).join("|") || "",
       subskillId: [...c.subskillIds].slice(0, 3).join("|") || "",
       safeSubskill: "",
-      status: topicStatus(c.totalAnswers),
+      status: topicStatus(c.topicKey, c.totalAnswers),
     }))
     .sort((a, b) =>
       `${a.subject}:${a.grade}:${a.topicKey}`.localeCompare(`${b.subject}:${b.grade}:${b.topicKey}`),
@@ -163,24 +171,34 @@ export function topicCoverageToCsv(rows) {
 }
 
 export function buildTopicCoverageMarkdown({ rows, subskillNote }) {
-  const covered = rows.filter((r) => r.status === "COVERED").length;
-  const low = rows.filter((r) => r.status === "LOW_SAMPLE").length;
-  const missing = rows.filter((r) => r.status === "MISSING").length;
+  const topicRows = rows.filter((r) => r.status !== "INTERNAL_PROBE");
+  const probeRows = rows.filter((r) => r.status === "INTERNAL_PROBE");
+  const covered = topicRows.filter((r) => r.status === "COVERED").length;
+  const low = topicRows.filter((r) => r.status === "LOW_SAMPLE").length;
+  const missing = topicRows.filter((r) => r.status === "MISSING").length;
   const lines = [
     "# Topic-Level Coverage",
     "",
-    `Cells: ${rows.length} | COVERED: ${covered} | LOW_SAMPLE: ${low} | MISSING: ${missing}`,
+    `Cells: ${topicRows.length} | COVERED: ${covered} | LOW_SAMPLE: ${low} | MISSING: ${missing} | INTERNAL_PROBE (excluded): ${probeRows.length}`,
     "",
     `**Subskill:** ${subskillNote}`,
     "",
     "| subject | grade | topic | answers | students | correct% | decisions | status |",
     "| ------- | ----- | ----- | ------- | -------- | -------- | --------- | ------ |",
   ];
-  for (const r of rows.slice(0, 80)) {
+  for (const r of topicRows.slice(0, 80)) {
     lines.push(
       `| ${r.subject} | ${r.grade} | ${r.topicKey} | ${r.totalAnswers} | ${r.studentsCovered} | ${r.correctRate} | ${r.decisionsObserved || "—"} | ${r.status} |`,
     );
   }
-  if (rows.length > 80) lines.push(`| … | | | +${rows.length - 80} more | | | | |`);
+  if (topicRows.length > 80) lines.push(`| … | | | +${topicRows.length - 80} more | | | | |`);
+  if (probeRows.length > 0) {
+    lines.push("", "## Internal Probes (not learning topics)", "");
+    lines.push("| subject | grade | topicKey | answers |");
+    lines.push("| ------- | ----- | -------- | ------- |");
+    for (const r of probeRows) {
+      lines.push(`| ${r.subject} | ${r.grade} | ${r.topicKey} | ${r.totalAnswers} |`);
+    }
+  }
   return `${lines.join("\n")}\n`;
 }

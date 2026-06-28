@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import Layout from "../../components/Layout";
-import { ParentReportExitNav } from "../../components/parent/ParentReportExitNav.jsx";
+import { ParentReportExitNav, ParentReportThemeIcons } from "../../components/parent/ParentReportExitNav.jsx";
 import { ParentReportImportantDisclaimer } from "../../components/ParentReportImportantDisclaimer";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
 import { getMathReportBucketDisplayName, getTopicName, getEnglishTopicName, getScienceTopicName, getHebrewTopicName, getMoledetGeographyTopicName, exportReportToPDF } from "../../utils/math-report-generator";
@@ -13,6 +13,19 @@ import { ParentReportTopicExplainBlock } from "../../components/parent-report-to
 import { ParentDiagnosticExplanationBlock } from "../../components/parent-diagnostic-explanation-block.jsx";
 import ParentReportParentSections from "../../components/parent/ParentReportParentSections.jsx";
 import ParentReportDataHealthNote from "../../components/parent/ParentReportDataHealthNote.jsx";
+import PortalLoadingPanel from "../../components/ui/PortalLoadingPanel.jsx";
+import {
+  PARENT_REPORT_SITE_BRIGHT_CSS,
+  getParentReportLayoutProps,
+  getParentReportPageShellClass,
+  getParentReportPageContentStyle,
+  getParentReportStateShellClass,
+  getParentReportStateShellStyle,
+  getParentReportSecondaryLinkClass,
+  getParentReportErrorTextClass,
+} from "../../lib/parent-ui/parent-report-site-bright-theme.css.js";
+import { useParentReportBrightPageBackground } from "../../lib/parent-ui/use-parent-report-bright-page-bg.js";
+import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import {
   MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID,
   moledetGeographyReportTopicKeyPrefix,
@@ -843,7 +856,9 @@ export default function ParentReport() {
   const [appliedEndDate, setAppliedEndDate] = useState("");
   const [isMobile, setIsMobile] = useState(false);
   const [isPrintLayout, setIsPrintLayout] = useState(false);
-  const [lightMode, setLightMode] = useState(false);
+  const { theme, isBright } = useStudentTheme();
+  const layoutProps = getParentReportLayoutProps(theme);
+  useParentReportBrightPageBackground(isBright);
   const parentReportPdfRef = useRef(null);
   /** רוחב פנימי משוער לכרטיס גרף (עמודת PDF − ריפוד כרטיס) — למגרעת X דינמית */
   const [chartHostInnerWidthPx, setChartHostInnerWidthPx] = useState(0);
@@ -1228,7 +1243,7 @@ export default function ParentReport() {
     setPeriod("custom");
   }, []);
 
-  const activeTooltipStyle = lightMode ? chartTooltipStyleLight : chartTooltipStyle;
+  const activeTooltipStyle = isBright ? chartTooltipStyleLight : chartTooltipStyle;
 
   const parentReportDatePresets = (
     <ReportDateRangeControl
@@ -1321,12 +1336,14 @@ export default function ParentReport() {
 
   if (loading) {
     return (
-      <Layout>
-        <div
-          className="min-h-screen bg-gradient-to-b from-[#0a0f1d] to-[#141928] flex items-center justify-center"
-          dir="rtl"
-        >
-          <div className="text-white text-xl">מכין את דוח הביצועים...</div>
+      <Layout {...layoutProps}>
+        <div className="relative">
+          <ParentReportThemeIcons className="absolute top-4 left-1/2 -translate-x-1/2 z-10" />
+          <PortalLoadingPanel
+            isBright={isBright}
+            fullPage
+            message="מכין את דוח הביצועים..."
+          />
         </div>
       </Layout>
     );
@@ -1334,12 +1351,14 @@ export default function ParentReport() {
 
   if (isRemoteReportSource && parentReportError && !report) {
     return (
-      <Layout>
+      <Layout {...layoutProps}>
         <div
-          className="min-h-screen bg-gradient-to-b from-[#0a0f1d] to-[#141928] flex flex-col items-center justify-center gap-4 p-6"
+          className={getParentReportStateShellClass(isBright)}
+          style={getParentReportStateShellStyle(isBright)}
           dir="rtl"
         >
-          <p className="text-center text-red-300 max-w-md">{parentReportError}</p>
+          <ParentReportThemeIcons className="mb-2" />
+          <p className={getParentReportErrorTextClass(isBright)}>{parentReportError}</p>
           <div className="flex flex-wrap gap-3 justify-center">
             {isTeacherSource && parentStudentId ? (
               <>
@@ -1351,7 +1370,7 @@ export default function ParentReport() {
                 </Link>
                 <Link
                   href="/teacher/dashboard"
-                  className="rounded-lg px-4 py-2 bg-white/10 border border-white/20 text-white"
+                  className={getParentReportSecondaryLinkClass(isBright)}
                 >
                   לוח בקרה
                 </Link>
@@ -1364,7 +1383,7 @@ export default function ParentReport() {
                 >
                   כניסת הורה
                 </Link>
-                <Link href="/parent/dashboard" className="rounded-lg px-4 py-2 bg-white/10 border border-white/20 text-white">
+                <Link href="/parent/dashboard" className={getParentReportSecondaryLinkClass(isBright)}>
                   דשבורד הורים
                 </Link>
               </>
@@ -1377,16 +1396,24 @@ export default function ParentReport() {
 
   if (!isRemoteReportSource) {
     return (
-      <Layout>
+      <Layout {...layoutProps}>
         <div
-          className="min-h-screen bg-gradient-to-b from-[#0a0f1d] to-[#141928] flex flex-col items-center justify-center gap-4 p-6"
+          className={getParentReportStateShellClass(isBright)}
+          style={getParentReportStateShellStyle(isBright)}
           dir="rtl"
           data-testid="parent-report-portal-gate"
         >
+          <ParentReportThemeIcons className="mb-2" />
           <div className="text-4xl">📊</div>
-          <h1 className="text-2xl font-bold text-white">{PARENT_REPORT_PORTAL_GATE.titleHe}</h1>
-          <p className="text-center text-white/80 max-w-md">{PARENT_REPORT_PORTAL_GATE.messageHe}</p>
-          <p className="text-center text-white/50 text-sm max-w-md">{PARENT_REPORT_PORTAL_GATE.hintHe}</p>
+          <h1 className={`text-2xl font-bold ${isBright ? "text-slate-900" : "text-white"}`}>
+            {PARENT_REPORT_PORTAL_GATE.titleHe}
+          </h1>
+          <p className={`text-center max-w-md ${isBright ? "text-slate-600" : "text-white/80"}`}>
+            {PARENT_REPORT_PORTAL_GATE.messageHe}
+          </p>
+          <p className={`text-center text-sm max-w-md ${isBright ? "text-slate-500" : "text-white/50"}`}>
+            {PARENT_REPORT_PORTAL_GATE.hintHe}
+          </p>
           <div className="flex flex-wrap gap-3 justify-center">
             <Link
               href="/parent/login"
@@ -1394,7 +1421,7 @@ export default function ParentReport() {
             >
               כניסת הורה
             </Link>
-            <Link href="/parent/dashboard" className="rounded-lg px-4 py-2 bg-white/10 border border-white/20 text-white">
+            <Link href="/parent/dashboard" className={getParentReportSecondaryLinkClass(isBright)}>
               דשבורד הורים
             </Link>
           </div>
@@ -1405,14 +1432,18 @@ export default function ParentReport() {
 
   if (!report || !report.summary || (report.summary.totalQuestions === 0 && report.summary.totalTimeMinutes === 0)) {
     return (
-      <Layout>
-        <div className="min-h-screen bg-gradient-to-b from-[#0a0f1d] to-[#141928] flex items-center justify-center p-4" dir="rtl">
-          <div className="text-center text-white max-w-md w-full">
-            <ParentReportExitNav className="mb-4" />
+      <Layout {...layoutProps}>
+        <div
+          className={`${getParentReportStateShellClass(isBright)} ${isBright ? "" : "items-center"}`}
+          style={getParentReportStateShellStyle(isBright)}
+          dir="rtl"
+        >
+          <div className={`text-center max-w-md w-full ${isBright ? "text-slate-900" : "text-white"}`}>
+            <ParentReportExitNav className="mb-4" isBright={isBright} />
             
             <div className="text-4xl mb-4">📊</div>
             <h1 className="text-2xl font-bold mb-2">דוח להורים</h1>
-            <p className="text-white/70 mb-4">
+            <p className={`mb-4 ${isBright ? "text-slate-600" : "text-white/70"}`}>
               עדיין אין מספיק תרגול כדי להציג דוח ברור.
               <br />
               אחרי כמה ימי תרגול נוכל להראות לך תמונה מדויקת יותר.
@@ -1420,7 +1451,7 @@ export default function ParentReport() {
             
             {/* בחירת תקופה גם במסך "אין נתונים" */}
             <div className="mb-4 space-y-2">
-              <div className="text-sm text-white/60 mb-2">בחר תקופה:</div>
+              <div className={`text-sm mb-2 ${isBright ? "text-slate-500" : "text-white/60"}`}>בחר תקופה:</div>
               {parentReportDatePresets}
             </div>
           </div>
@@ -1430,7 +1461,7 @@ export default function ParentReport() {
   }
 
   return (
-    <Layout>
+    <Layout {...layoutProps}>
       <Head>
         <style>{`
           /* מסך: בלי גלילה אופקית באזור גרפי עמודות — מניעת לכידת מגע אופקית */
@@ -1845,198 +1876,21 @@ export default function ParentReport() {
             }
           }
 
-          /* ===== מצב בהיר / Light Mode ===== */
-          [data-theme="light"] {
-            background: #f1f5f9 !important;
-            color: #0f172a !important;
-          }
-          [data-theme="light"] [class*="text-white"] {
-            color: #1e293b !important;
-          }
-          [data-theme="light"] [class*="bg-black/"] {
-            background: #e8edf5 !important;
-          }
-          [data-theme="light"] [class*="bg-white/"] {
-            background: rgba(255,255,255,0.95) !important;
-          }
-          [data-theme="light"] [class*="border-white/"] {
-            border-color: #cbd5e1 !important;
-          }
-          /* Subject colored card backgrounds */
-          [data-theme="light"] [class*="bg-blue-500/"] {
-            background: rgba(219,234,254,0.85) !important;
-          }
-          [data-theme="light"] [class*="bg-emerald-500/"],
-          [data-theme="light"] [class*="bg-green-500/"] {
-            background: rgba(209,250,229,0.85) !important;
-          }
-          [data-theme="light"] [class*="bg-purple-500/"] {
-            background: rgba(237,233,254,0.85) !important;
-          }
-          [data-theme="light"] [class*="bg-orange-500/"] {
-            background: rgba(255,237,213,0.85) !important;
-          }
-          [data-theme="light"] [class*="bg-cyan-500/"] {
-            background: rgba(207,250,254,0.85) !important;
-          }
-          [data-theme="light"] [class*="bg-amber-950/"] {
-            background: rgba(255,251,235,0.9) !important;
-          }
-          [data-theme="light"] [class*="bg-emerald-950/"] {
-            background: rgba(209,250,229,0.6) !important;
-          }
-          /* Subject border colors in light */
-          [data-theme="light"] [class*="border-blue-400/"] {
-            border-color: rgba(96,165,250,0.6) !important;
-          }
-          [data-theme="light"] [class*="border-emerald-400/"] {
-            border-color: rgba(52,211,153,0.6) !important;
-          }
-          [data-theme="light"] [class*="border-amber-400/"] {
-            border-color: rgba(251,191,36,0.55) !important;
-          }
-          [data-theme="light"] [class*="border-orange-400/"] {
-            border-color: rgba(251,146,60,0.55) !important;
-          }
-          [data-theme="light"] [class*="border-red-400/"] {
-            border-color: rgba(248,113,113,0.6) !important;
-          }
-          [data-theme="light"] [class*="border-sky-500/"],
-          [data-theme="light"] [class*="border-sky-400/"],
-          [data-theme="light"] [class*="border-cyan-500/"] {
-            border-color: rgba(56,189,248,0.6) !important;
-          }
-          [data-theme="light"] [class*="border-violet-400/"],
-          [data-theme="light"] [class*="border-violet-300/"] {
-            border-color: rgba(167,139,250,0.6) !important;
-          }
-          /* Stat number colors: keep vivid but use dark-mode-safe versions */
-          [data-theme="light"] .text-blue-400 { color: #1d4ed8 !important; }
-          [data-theme="light"] .text-emerald-400 { color: #047857 !important; }
-          [data-theme="light"] .text-yellow-400 { color: #b45309 !important; }
-          [data-theme="light"] .text-purple-400 { color: #6d28d9 !important; }
-          [data-theme="light"] [class*="text-amber-100"] { color: #92400e !important; }
-          [data-theme="light"] [class*="text-emerald-100"],
-          [data-theme="light"] [class*="text-emerald-200"] { color: #065f46 !important; }
-          [data-theme="light"] [class*="text-red-300"],
-          [data-theme="light"] [class*="text-red-400"] { color: #b91c1c !important; }
-          [data-theme="light"] [class*="text-sky-"] { color: #0369a1 !important; }
-          [data-theme="light"] [class*="text-violet-"] { color: #6d28d9 !important; }
-          /* Chart SVG */
-          [data-theme="light"] svg text,
-          [data-theme="light"] .recharts-text,
-          [data-theme="light"] .recharts-cartesian-axis-tick-value {
-            fill: #334155 !important;
-            color: #334155 !important;
-          }
-          [data-theme="light"] .recharts-cartesian-grid line,
-          [data-theme="light"] .recharts-cartesian-grid path {
-            stroke: #e2e8f0 !important;
-          }
-          [data-theme="light"] .recharts-legend-item-text {
-            color: #334155 !important;
-            fill: #334155 !important;
-          }
-          /* Named classes from parent-report */
-          [data-theme="light"] .parent-report-print-summary-card {
-            background: #ffffff !important;
-            border-color: #e2e8f0 !important;
-          }
-          [data-theme="light"] .parent-report-print-summary-label {
-            color: #64748b !important;
-          }
-          [data-theme="light"] .parent-report-print-muted-text {
-            color: #475569 !important;
-          }
-          [data-theme="light"] .parent-report-print-section-label,
-          [data-theme="light"] .parent-report-print-page-section-heading {
-            color: #0f172a !important;
-          }
-          [data-theme="light"] .parent-report-print-subheading {
-            color: #1e293b !important;
-          }
-          [data-theme="light"] .parent-report-print-chart-title {
-            color: #0f172a !important;
-          }
-          [data-theme="light"] .parent-report-print-chart-subtitle {
-            color: #475569 !important;
-          }
-          [data-theme="light"] .parent-report-chart-card {
-            background: #ffffff !important;
-            border-color: #e2e8f0 !important;
-          }
-          [data-theme="light"] .parent-report-topic-explain-block {
-            background: #f8fafc !important;
-            border-color: #94a3b8 !important;
-            color: #0f172a !important;
-          }
-          [data-theme="light"] .parent-report-topic-explain-row {
-            color: #1e293b !important;
-          }
-          [data-theme="light"] .parent-report-topic-explain-details > div {
-            background: #fff !important;
-            color: #1e293b !important;
-          }
-          [data-theme="light"] .parent-report-diagnostics-print .parent-report-rec-item {
-            background: #f8fafc !important;
-            border-color: #e2e8f0 !important;
-          }
-          [data-theme="light"] .parent-report-diagnostic-subject-title {
-            color: #0f172a !important;
-            background: #e2e8f0 !important;
-          }
-          [data-theme="light"] .parent-report-diagnostic-subject-block {
-            border-color: #e2e8f0 !important;
-          }
-          [data-theme="light"] .parent-report-print-stable-excellence {
-            background: #ede9fe !important;
-            border-color: #6d28d9 !important;
-          }
-          [data-theme="light"] .parent-report-example-card {
-            background: #ffffff !important;
-            border-color: #e2e8f0 !important;
-          }
-          [data-theme="light"] .parent-report-example-heading { color: #0f172a !important; }
-          [data-theme="light"] .parent-report-example-prose { color: #1e293b !important; }
-          [data-theme="light"] .parent-report-important-disclaimer {
-            background: #f8fafc !important;
-            border-color: #e2e8f0 !important;
-          }
-          [data-theme="light"] .parent-report-important-disclaimer-title { color: #0f172a !important; }
-          [data-theme="light"] .parent-report-important-disclaimer-body p,
-          [data-theme="light"] .parent-report-important-disclaimer-body strong {
-            color: #475569 !important;
-          }
-          /* Tables */
-          [data-theme="light"] table th,
-          [data-theme="light"] table td {
-            color: #1e293b !important;
-            border-color: #e2e8f0 !important;
-          }
-          [data-theme="light"] thead tr {
-            border-color: #e2e8f0 !important;
-            background: #f1f5f9 !important;
-          }
+          /* ===== מצב בהיר — זהה ל-Layout / דשבורד הורה ===== */
+          ${PARENT_REPORT_SITE_BRIGHT_CSS}
         `}</style>
       </Head>
       <div
-        className={lightMode ? "min-h-screen bg-[#f1f5f9] text-[#0f172a] p-2 md:p-4" : "min-h-screen bg-gradient-to-b from-[#0a0f1d] to-[#141928] text-white p-2 md:p-4"}
+        className={getParentReportPageShellClass(isBright)}
         dir="rtl"
-        data-theme={lightMode ? "light" : "dark"}
-        style={{
-          paddingTop: "calc(var(--head-h, 56px) - 10px)",
-          paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 20px)",
-          overflowY: "auto",
-          overflowX: "hidden",
-          WebkitOverflowScrolling: "touch"
-        }}
+        style={getParentReportPageContentStyle(isBright)}
       >
         <div
           id="parent-report-pdf"
           ref={parentReportPdfRef}
           className="max-w-4xl mx-auto w-full min-w-0 overflow-x-hidden"
         >
-          <ParentReportExitNav className="mb-0" />
+          <ParentReportExitNav className="mb-0" isBright={isBright} />
           
           {/* כותרת */}
           <div className="text-center mb-1 md:mb-2">
@@ -2057,21 +1911,14 @@ export default function ParentReport() {
                   query: detailedReportQuery,
                 }}
                 prefetch={false}
-                className="inline-flex px-4 py-2 rounded-lg text-sm font-bold bg-violet-500/35 border border-violet-300/45 hover:bg-violet-500/50 text-white transition-all"
+                className={
+                  isBright
+                    ? "inline-flex px-4 py-2 rounded-lg text-sm font-bold bg-violet-600 border border-violet-400 text-white hover:bg-violet-700 shadow-sm transition-all"
+                    : "inline-flex px-4 py-2 rounded-lg text-sm font-bold bg-violet-500/35 border border-violet-300/45 hover:bg-violet-500/50 text-white transition-all"
+                }
               >
                 דוח מקיף לתקופה
               </Link>
-              <button
-                type="button"
-                onClick={() => setLightMode((v) => !v)}
-                className={`inline-flex px-4 py-2 rounded-lg text-sm font-bold border transition-all ${
-                  lightMode
-                    ? "bg-slate-800 border-slate-600 text-slate-100 hover:bg-slate-700"
-                    : "bg-yellow-50/10 border-yellow-300/30 text-yellow-100/90 hover:bg-yellow-50/20"
-                }`}
-              >
-                {lightMode ? "🌙 מצב קלאסי" : "☀️ מצב בהיר"}
-              </button>
             </div>
 
             {/* בחירת תאריכים מותאמת אישית (לא נכנס ל-PDF) — rendered inside ReportDateRangeControl */}
@@ -2149,7 +1996,11 @@ export default function ParentReport() {
               ) : null}
               {!shortContractTop && report.summary.diagnosticOverviewHe.mainFocusAreaLineHe ? (
                 <p className="m-0 leading-relaxed">
-                  <span className="text-white/55">דורש תשומת לב כעת: </span>
+                  <span className="text-white/55">
+                    {report.summary.diagnosticOverviewHe.mainFocusAreaIsHighAccuracy
+                      ? "למעקב: "
+                      : "דורש תשומת לב כעת: "}
+                  </span>
                   {report.summary.diagnosticOverviewHe.mainFocusAreaLineHe}
                 </p>
               ) : !shortContractTop ? (

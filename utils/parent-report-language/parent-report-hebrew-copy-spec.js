@@ -289,6 +289,20 @@ export function mixedSubjectStrongWeakHe(subject, strongTopic, weakTopic) {
 }
 
 /**
+ * Post-processes insight/action text for low-data cases so the phrase matches actual q.
+ * @param {string} text
+ * @param {number} q
+ */
+function adjustInsufficientEvidenceByQHe(text, q) {
+  const t = String(text || "");
+  if (!t.includes("מעט תשובות")) return t;
+  const n = Math.round(Number(q) || 0);
+  if (n <= 5) return "עדיין מעט נתונים — עוד קצת תרגול יעזור לנו להבין טוב יותר.";
+  if (n <= 15) return "יש כיוון ראשוני, אבל כדאי עוד קצת תרגול לפני מסקנה ברורה.";
+  return "נראה שיש כאן נושא שכדאי לחזק בתרגול הקרוב.";
+}
+
+/**
  * Spec §1.1 topic attention insight
  * @param {CopyVars & { rootCause?: string, diagnosticType?: string, patternId?: string, engineAction?: string }} p
  */
@@ -308,8 +322,14 @@ export function topicAttentionInsightHe(p) {
       : `${patternText}.`
     : "";
 
-  const meaningSentence = meaningInsightSentenceHe(p.rootCause, p.diagnosticType);
-  const action = actionTextHe(p.rootCause, p.diagnosticType, p.engineAction);
+  const meaningSentence = adjustInsufficientEvidenceByQHe(
+    meaningInsightSentenceHe(p.rootCause, p.diagnosticType),
+    q
+  );
+  const action = adjustInsufficientEvidenceByQHe(
+    actionTextHe(p.rootCause, p.diagnosticType, p.engineAction),
+    q
+  );
 
   const base =
     `ב${subj} — «${topic}»: נפתרו ${q} שאלות, הדיוק היה ${acc}%, ושיעור הטעויות היה ${wr}%. ` +

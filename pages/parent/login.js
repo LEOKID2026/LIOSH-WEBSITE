@@ -17,6 +17,7 @@ import {
 } from "../../lib/parent-client/parent-teacher-code-access.js";
 import PasswordField from "../../components/auth/PasswordField";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
+import PortalLoadingPanel from "../../components/ui/PortalLoadingPanel.jsx";
 import { getParentPortalTheme } from "../../lib/parent-ui/parent-portal-theme.client.js";
 import { AUTH_FORGOT_PASSWORD_LINK } from "../../lib/auth/auth-reset.he";
 import { trackProductEvent } from "../../lib/analytics/track-event.client.js";
@@ -49,6 +50,7 @@ export default function ParentLoginPage() {
   const [message, setMessage] = useState("");
   const [messageKind, setMessageKind] = useState("account");
   const [clientReady, setClientReady] = useState(false);
+  const [sessionCheckPending, setSessionCheckPending] = useState(true);
   const [multiStudents, setMultiStudents] = useState(null);
 
   useEffect(() => {
@@ -64,13 +66,20 @@ export default function ParentLoginPage() {
     let mounted = true;
     const supabase = supabaseRef.current;
     supabase.auth.getSession().then(({ data }) => {
-      if (!mounted || !data?.session) return;
+      if (!mounted) return;
+      if (!data?.session) {
+        setSessionCheckPending(false);
+        return;
+      }
       const meta = data.session.user?.app_metadata;
       const role =
         meta && typeof meta === "object" && typeof meta.role === "string"
           ? meta.role.trim().toLowerCase()
           : "";
-      if (role === "teacher" || role === "admin") return;
+      if (role === "teacher" || role === "admin") {
+        setSessionCheckPending(false);
+        return;
+      }
       router.replace("/parent/dashboard");
     });
     return () => {
@@ -86,6 +95,7 @@ export default function ParentLoginPage() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    if (busy) return;
     setBusy(true);
     setMessage("");
     setMessageKind("account");
@@ -161,6 +171,7 @@ export default function ParentLoginPage() {
   };
 
   const onSelectGuardianChild = async (studentId) => {
+    if (busy) return;
     setBusy(true);
     setMessage("");
     try {
@@ -176,7 +187,23 @@ export default function ParentLoginPage() {
     }
   };
 
-  const signupSubmitDisabled = busy || (mode === "signup" && !signupPolicyChecked);
+  const signupSubmitDisabled = busy || sessionCheckPending || (mode === "signup" && !signupPolicyChecked);
+  const tabsDisabled = busy || sessionCheckPending;
+
+  if (sessionCheckPending) {
+    return (
+      <Layout {...layoutProps}>
+        <div className="max-w-md mx-auto px-4 py-3 md:py-10" dir="rtl" lang="he">
+          <PortalLoginHeading
+            title="כניסת הורים"
+            subtitle="כניסה והרשמה מהירה להורים."
+            bright={isBright}
+          />
+          <PortalLoadingPanel isBright={isBright} message="בודקים חיבור..." />
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout {...layoutProps}>
@@ -204,26 +231,30 @@ export default function ParentLoginPage() {
         <div className="flex gap-2 mb-4">
           <button
             type="button"
+            disabled={tabsDisabled}
             onClick={() => {
+              if (tabsDisabled) return;
               setMode("login");
               setMessage("");
             }}
             className={`flex-1 rounded px-3 py-2 text-sm font-semibold ${
               mode === "login" ? T.tabActive : T.tabIdle
-            }`}
+            } disabled:opacity-60 disabled:pointer-events-none`}
           >
             כניסה
           </button>
           <button
             type="button"
+            disabled={tabsDisabled}
             onClick={() => {
+              if (tabsDisabled) return;
               setMode("signup");
               setMessage("");
               setSignupPolicyChecked(false);
             }}
             className={`flex-1 rounded px-3 py-2 text-sm font-semibold ${
               mode === "signup" ? T.tabActive : T.tabIdle
-            }`}
+            } disabled:opacity-60 disabled:pointer-events-none`}
           >
             הרשמה
           </button>
@@ -243,6 +274,7 @@ export default function ParentLoginPage() {
                   placeholder="הקלידו אימייל או שם משתמש שקיבלתם מהמורה"
                   required
                   autoComplete="username"
+                  disabled={busy}
                 />
               </label>
               <PasswordField
@@ -254,6 +286,7 @@ export default function ParentLoginPage() {
                 required
                 autoComplete="current-password"
                 testId="parent-login-secret"
+                disabled={busy}
               />
             </>
           ) : (
@@ -265,6 +298,7 @@ export default function ParentLoginPage() {
                 onChange={(e) => setIdentifier(e.target.value)}
                 placeholder="אימייל הורה"
                 required
+                disabled={busy}
               />
               <PasswordField
                 bright={isBright}
@@ -276,6 +310,7 @@ export default function ParentLoginPage() {
                 minLength={6}
                 autoComplete="new-password"
                 testId="parent-signup-password"
+                disabled={busy}
               />
               <div
                 data-policy-acceptance-root

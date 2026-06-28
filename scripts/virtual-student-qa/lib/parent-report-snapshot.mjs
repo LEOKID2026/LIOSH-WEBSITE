@@ -25,14 +25,24 @@ import { resolveTimestampStampingEnabled } from "./config.mjs";
 const HEADING_REGEX = /דוח להורים/u;
 const LOADING_TEXT = "טוען דוח...";
 const NO_DATA_TEXT = "אין עדיין מספיק פעילות";
+const PARENT_REPORT_PATH = "/learning/parent-report";
 
 const SUBJECT_LABELS = {
-  math: "חשבון",
+  math: "מתמטיקה",
   geometry: "גאומטריה",
   english: "אנגלית",
   hebrew: "עברית",
   science: "מדעים",
   "moledet-geography": "מולדת",
+};
+/** Product copy varies; try all aliases when scraping summary cards. */
+const HEBREW_SUBJECT_ALIASES = {
+  math: ["מתמטיקה", "חשבון"],
+  geometry: ["גאומטריה"],
+  english: ["אנגלית"],
+  hebrew: ["עברית"],
+  science: ["מדעים"],
+  "moledet-geography": ["מולדת וגאוגרפיה", "גאוגרפיה", "מולדת"],
 };
 // Emojis MUST match what /pages/learning/parent-report.js renders inside
 // each summary card label (verified by grepping the page). If a future
@@ -95,19 +105,23 @@ async function readNumberFollowingLabel(page, labelText) {
 
 async function readSubjectQuestionCount(page, subject) {
   const emoji = SUBJECT_EMOJI[subject];
-  const label = SUBJECT_LABELS[subject];
-  if (!emoji || !label) return null;
-  const subjectLabel = page
-    .getByText(`${emoji} ${label}`, { exact: false })
-    .first();
-  if (!(await subjectLabel.count())) return null;
-  const card = subjectLabel.locator(
-    'xpath=ancestor::*[contains(@class,"rounded-lg")][1]'
-  );
-  const stat = await card.locator(".font-bold").first().textContent().catch(() => null);
-  if (stat == null) return null;
-  const m = String(stat).match(/(\d+)\s*שאלות/);
-  return m ? Number(m[1]) : null;
+  if (!emoji) return null;
+  const labels = HEBREW_SUBJECT_ALIASES[subject] || [SUBJECT_LABELS[subject]];
+  for (const label of labels) {
+    if (!label) continue;
+    const subjectLabel = page
+      .getByText(`${emoji} ${label}`, { exact: false })
+      .first();
+    if (!(await subjectLabel.count())) continue;
+    const card = subjectLabel.locator(
+      'xpath=ancestor::*[contains(@class,"rounded-lg")][1]'
+    );
+    const stat = await card.locator(".font-bold").first().textContent().catch(() => null);
+    if (stat == null) continue;
+    const m = String(stat).match(/(\d+)\s*שאלות/);
+    if (m) return Number(m[1]);
+  }
+  return null;
 }
 
 /**
@@ -141,6 +155,40 @@ export async function snapshotParentReportViaDashboard({
   phase = null,
   simulatedDate = null,
 }) {
+  const useSimRange =
+    simulatedDate &&
+    resolveTimestampStampingEnabled() &&
+    /^\d{4}-\d{2}-\d{2}$/.test(String(simulatedDate));
+
+  // After student sessions the parent tab often remains on the report opened
+  // at baseline. Re-navigating to /parent/dashboard after long student work
+  // can hang on auth hydration and stall the serial nightly run — re-read the
+  // report in place (still real UI; baseline already proved dashboard click).
+  if (phase === "after") {
+    try {
+      const onReport = new URL(page.url()).pathname.startsWith(PARENT_REPORT_PATH);
+      if (onReport) {
+        log?.(
+          `parent-report-snapshot: after capture in-place on open report (${artifactPrefix})`
+        );
+        if (useSimRange) {
+          await applySimulatedReportDateRange(page, simulatedDate, log);
+        }
+        return scrapePopulatedOrEmptyReport({
+          page,
+          log,
+          artifacts,
+          artifactPrefix,
+          studentLabel,
+          phase,
+          expectedStudentName,
+        });
+      }
+    } catch {
+      // fall through to dashboard navigation
+    }
+  }
+
   log?.(
     `parent-report-snapshot: navigating dashboard to capture ${artifactPrefix}`
   );
@@ -154,14 +202,30 @@ export async function snapshotParentReportViaDashboard({
     artifactPrefix,
   });
 
-  const useSimRange =
-    simulatedDate &&
-    resolveTimestampStampingEnabled() &&
-    /^\d{4}-\d{2}-\d{2}$/.test(String(simulatedDate));
   if (useSimRange) {
     await applySimulatedReportDateRange(page, simulatedDate, log);
   }
 
+  return scrapePopulatedOrEmptyReport({
+    page,
+    log,
+    artifacts,
+    artifactPrefix,
+    studentLabel,
+    phase,
+    expectedStudentName,
+  });
+}
+
+async function scrapePopulatedOrEmptyReport({
+  page,
+  log,
+  artifacts,
+  artifactPrefix,
+  studentLabel,
+  phase,
+  expectedStudentName,
+}) {
   // Wait for one of three terminal states: populated report, explicit
   // empty-state, or loading-disappeared (covered by populated path).
   const heading = page.getByRole("heading", { name: HEADING_REGEX }).first();

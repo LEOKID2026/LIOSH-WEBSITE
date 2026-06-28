@@ -63,33 +63,53 @@ async function navigateToParentDashboard(page, baseUrl, log) {
 }
 
 async function waitForDashboardShellSignals(page, log) {
-  await page.waitForFunction(
-    () => {
-      let pathname = "";
-      try {
-        pathname = new URL(location.href).pathname;
-      } catch {
-        return false;
-      }
-      if (pathname !== "/parent/dashboard") return false;
+  const waitOnce = () =>
+    page.waitForFunction(
+      () => {
+        let pathname = "";
+        try {
+          pathname = new URL(location.href).pathname;
+        } catch {
+          return false;
+        }
+        if (pathname !== "/parent/dashboard") return false;
 
-      const bodyText = document.body?.innerText || "";
-      if (bodyText.includes("בודק התחברות הורה")) return false;
+        const bodyText = document.body?.innerText || "";
+        if (bodyText.includes("בודק התחברות הורה")) return false;
 
-      const hasHeading = Array.from(document.querySelectorAll("h1, h2")).some(
-        (el) => (el.textContent || "").trim() === "דשבורד הורים"
+        const hasHeading = Array.from(document.querySelectorAll("h1, h2")).some(
+          (el) => (el.textContent || "").trim() === "דשבורד הורים"
+        );
+        const reportLinks = document.querySelectorAll(
+          'a[href*="/learning/parent-report"]'
+        ).length;
+        const hasAccountLine = bodyText.includes("ילדים בחשבון:");
+        const hasEmptyState = bodyText.includes("עדיין לא נוספו ילדים");
+
+        return hasHeading || reportLinks > 0 || hasAccountLine || hasEmptyState;
+      },
+      undefined,
+      { timeout: DASHBOARD_SIGNAL_TIMEOUT_MS }
+    );
+
+  try {
+    await waitOnce();
+  } catch (error) {
+    const authPending = await page
+      .locator("body")
+      .innerText()
+      .then((t) => t.includes("בודק התחברות הורה"))
+      .catch(() => false);
+    if (authPending) {
+      log?.(
+        "parent-dashboard: parent auth hydration slow — reloading dashboard once"
       );
-      const reportLinks = document.querySelectorAll(
-        'a[href*="/learning/parent-report"]'
-      ).length;
-      const hasAccountLine = bodyText.includes("ילדים בחשבון:");
-      const hasEmptyState = bodyText.includes("עדיין לא נוספו ילדים");
-
-      return hasHeading || reportLinks > 0 || hasAccountLine || hasEmptyState;
-    },
-    undefined,
-    { timeout: DASHBOARD_SIGNAL_TIMEOUT_MS }
-  );
+      await page.reload({ waitUntil: "domcontentloaded", timeout: 60_000 });
+      await waitOnce();
+    } else {
+      throw error;
+    }
+  }
   const headingVisible = await page
     .getByRole("heading", { name: "דשבורד הורים" })
     .isVisible()

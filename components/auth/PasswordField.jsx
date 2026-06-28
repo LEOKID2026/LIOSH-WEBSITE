@@ -30,6 +30,7 @@ export default function PasswordField({
   inputMode,
   showToggle = true,
   bare = false,
+  disabled = false,
 }) {
   const resolvedLabelClass = labelClassName || (bright ? "text-slate-700" : "text-white/80");
   const resolvedInputClass =
@@ -59,6 +60,7 @@ export default function PasswordField({
         inputMode={inputMode}
         data-testid={testId}
         className={resolvedInputClass}
+        disabled={disabled}
       />
       {showToggle ? (
         <button
