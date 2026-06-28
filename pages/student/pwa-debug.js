@@ -136,6 +136,8 @@ export default function PwaDebug() {
       const soloChunkEntries = staticEntries.filter((p) => p.includes("offline/solo"));
       const eduChunkEntries = staticEntries.filter((p) => p.includes("offline/educational"));
       const pageChunkEntries = staticEntries.filter((p) => p.includes("/chunks/pages/"));
+      const allChunkEntries = staticEntries.filter((p) => p.includes("/_next/static/chunks/") && !p.includes("/chunks/pages/"));
+      const cssEntries = staticEntries.filter((p) => p.includes("/_next/static/css/"));
 
       // Per-route cache check
       const checkRoute = async (route) => {
@@ -187,7 +189,9 @@ export default function PwaDebug() {
         soloChunkEntries: soloChunkEntries.length,
         eduChunkEntries: eduChunkEntries.length,
         pageChunkEntries: pageChunkEntries.length,
-        pageChunkList: pageChunkEntries,
+        pageChunkList: pageChunkEntries.sort(),
+        allChunkList: allChunkEntries.sort(),
+        cssList: cssEntries.sort(),
         soloCache,
         eduCache,
         baseCache,
@@ -211,10 +215,12 @@ export default function PwaDebug() {
       .map(([r, v]) => `  ${v ? "✓" : "✗"} ${r}`)
       .join("\n");
     const errRows = gameErrors
-      .map(
-        (e) =>
-          `  [${new Date(e.ts).toISOString()}] ${e.gameType}/${e.gameKey} online=${e.online} cacheHit=${e.cacheHit}\n  msg: ${e.msg}\n  stack: ${e.stack?.slice(0, 200)}`,
-      )
+      .map((e) => {
+        const header = e.source
+          ? `[${new Date(e.ts).toISOString()}] [${e.source}] ${e.route || ""} online=${e.online}${e.filename ? ` file=${e.filename}` : ""}`
+          : `[${new Date(e.ts).toISOString()}] ${e.gameType}/${e.gameKey} online=${e.online} cacheHit=${e.cacheHit}`;
+        return `  ${header}\n  msg: ${e.msg}\n  stack: ${e.stack?.slice(0, 300) || ""}`;
+      })
       .join("\n\n");
 
     return [
@@ -231,7 +237,9 @@ export default function PwaDebug() {
       `cache /chunks/pages/ entries: ${d.pageChunkEntries}`,
       `cache solo-related chunks: ${d.soloChunkEntries}`,
       `cache edu-related chunks: ${d.eduChunkEntries}`,
-      `page chunk files:\n${(d.pageChunkList || []).map((p) => "  " + p).join("\n")}`,
+      `shared chunk files (${(d.allChunkList || []).length}):\n${(d.allChunkList || []).map((p) => "  " + p).join("\n")}`,
+      `page chunk files (${(d.pageChunkList || []).length}):\n${(d.pageChunkList || []).map((p) => "  " + p).join("\n")}`,
+      `css files (${(d.cssList || []).length}):\n${(d.cssList || []).map((p) => "  " + p).join("\n")}`,
       `base nav routes:\n${baseRows}`,
       `solo game routes:\n${soloRows}`,
       `educational game routes:\n${eduRows}`,
@@ -382,20 +390,52 @@ export default function PwaDebug() {
             ))}
           </section>
 
+          {/* Shared Chunks */}
+          <section style={{ marginBottom: 20 }}>
+            <SectionHead title={`Shared Chunks in Cache (${data.allChunkList?.length ?? 0})`} />
+            {!data.allChunkList?.length ? (
+              <div style={{ fontSize: 12, color: "#f87171" }}>NONE — shared chunks missing!</div>
+            ) : (
+              data.allChunkList.map((p) => (
+                <div
+                  key={p}
+                  style={{ fontSize: 10, color: "#64748b", padding: "2px 0", wordBreak: "break-all" }}
+                >
+                  {p.replace("/_next/static/chunks/", "")}
+                </div>
+              ))
+            )}
+          </section>
+
           {/* Page Chunks */}
-          {data.pageChunkList?.length > 0 && (
-            <section style={{ marginBottom: 20 }}>
-              <SectionHead title="Page Chunk Files in Cache" />
-              {data.pageChunkList.map((p) => (
+          <section style={{ marginBottom: 20 }}>
+            <SectionHead title={`Page Chunk Files in Cache (${data.pageChunkList?.length ?? 0})`} />
+            {!data.pageChunkList?.length ? (
+              <div style={{ fontSize: 12, color: "#f87171" }}>NONE — page chunks missing!</div>
+            ) : (
+              data.pageChunkList.map((p) => (
                 <div
                   key={p}
                   style={{ fontSize: 10, color: "#475569", padding: "2px 0", wordBreak: "break-all" }}
                 >
-                  {p}
+                  {p.replace("/_next/static/chunks/pages/", "")}
                 </div>
-              ))}
-            </section>
-          )}
+              ))
+            )}
+          </section>
+
+          {/* CSS */}
+          <section style={{ marginBottom: 20 }}>
+            <SectionHead title={`CSS Files in Cache (${data.cssList?.length ?? 0})`} />
+            {(data.cssList || []).map((p) => (
+              <div
+                key={p}
+                style={{ fontSize: 10, color: "#475569", padding: "2px 0", wordBreak: "break-all" }}
+              >
+                {p.replace("/_next/static/css/", "")}
+              </div>
+            ))}
+          </section>
 
           {/* SW File Fetch */}
           <section style={{ marginBottom: 20 }}>
@@ -423,10 +463,14 @@ export default function PwaDebug() {
                   }}
                 >
                   <div style={{ color: "#f87171", fontWeight: 700 }}>
-                    [{new Date(e.ts).toLocaleTimeString()}] {e.gameType}/{e.gameKey}
+                    [{new Date(e.ts).toLocaleTimeString()}]{" "}
+                    {e.source ? `[${e.source}] ` : ""}
+                    {e.gameType && e.gameKey ? `${e.gameType}/${e.gameKey}` : (e.route || "")}
                   </div>
                   <div style={{ color: "#94a3b8" }}>
-                    online={String(e.online)} | cacheHit={String(e.cacheHit)}
+                    online={String(e.online)}
+                    {e.cacheHit != null ? ` | cacheHit=${String(e.cacheHit)}` : ""}
+                    {e.filename ? ` | file=${e.filename.split("/").pop()}` : ""}
                   </div>
                   <div style={{ color: "#fca5a5", wordBreak: "break-all", marginTop: 3 }}>
                     {e.msg}
@@ -442,7 +486,7 @@ export default function PwaDebug() {
                           wordBreak: "break-all",
                         }}
                       >
-                        {e.stack.slice(0, 400)}
+                        {e.stack.slice(0, 600)}
                       </pre>
                     </details>
                   )}

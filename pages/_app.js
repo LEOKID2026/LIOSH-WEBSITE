@@ -23,6 +23,48 @@ if (typeof window !== "undefined") {
   if (window.location.pathname === "/student/install-app" || window.location.pathname === "/kids") {
     initPwaInstallPromptCapture();
   }
+
+  // Module-level: set up before React renders so chunk-load failures are captured.
+  if (process.env.NODE_ENV === "production") {
+    const _LOG_KEY = "offline_game_err_log";
+    const _persistErr = (record) => {
+      try {
+        const ex = JSON.parse(localStorage.getItem(_LOG_KEY) || "[]");
+        ex.unshift(record);
+        localStorage.setItem(_LOG_KEY, JSON.stringify(ex.slice(0, 5)));
+      } catch {}
+    };
+    window.addEventListener(
+      "error",
+      (e) => {
+        const p = window.location.pathname;
+        if (!p.startsWith("/student/offline/solo/") && !p.startsWith("/student/offline/educational/")) return;
+        _persistErr({
+          ts: Date.now(),
+          source: "window-error",
+          route: p,
+          online: navigator.onLine,
+          msg: e.message || String(e),
+          filename: e.filename || "",
+          stack: e.error?.stack?.slice(0, 600) || "",
+        });
+      },
+      true,
+    );
+    window.addEventListener("unhandledrejection", (e) => {
+      const p = window.location.pathname;
+      if (!p.startsWith("/student/offline/solo/") && !p.startsWith("/student/offline/educational/")) return;
+      const reason = e.reason;
+      _persistErr({
+        ts: Date.now(),
+        source: "unhandledrejection",
+        route: p,
+        online: navigator.onLine,
+        msg: String(reason?.message || reason),
+        stack: reason?.stack?.slice(0, 600) || "",
+      });
+    });
+  }
 }
 
 const STUDENT_PROTECTED_ROUTES = new Set([
