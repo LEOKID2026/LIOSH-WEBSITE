@@ -216,10 +216,34 @@ export default function PwaDebug() {
       .join("\n");
     const errRows = gameErrors
       .map((e) => {
-        const header = e.source
-          ? `[${new Date(e.ts).toISOString()}] [${e.source}] ${e.route || ""} online=${e.online}${e.filename ? ` file=${e.filename}` : ""}`
-          : `[${new Date(e.ts).toISOString()}] ${e.gameType}/${e.gameKey} online=${e.online} cacheHit=${e.cacheHit}`;
-        return `  ${header}\n  msg: ${e.msg}\n  stack: ${e.stack?.slice(0, 300) || ""}`;
+        if (e.source === "resource-error") {
+          return [
+            `  [${new Date(e.ts).toISOString()}] [resource-error] ${e.route || ""} online=${e.online}`,
+            `  tag: ${e.tag || "?"} | url: ${e.src || e.href || e.filename || "(none)"}`,
+            `  outerHTML: ${e.outerHTML || ""}`,
+          ].join("\n");
+        }
+        if (e.source === "js-error") {
+          return [
+            `  [${new Date(e.ts).toISOString()}] [js-error] ${e.route || ""} online=${e.online}`,
+            `  msg: ${e.msg}`,
+            `  at: ${e.filename || ""}:${e.lineno || 0}:${e.colno || 0}`,
+            `  stack: ${e.stack?.slice(0, 400) || ""}`,
+          ].join("\n");
+        }
+        if (e.source === "unhandledrejection") {
+          return [
+            `  [${new Date(e.ts).toISOString()}] [unhandledrejection] ${e.route || ""} online=${e.online}`,
+            `  msg: ${e.msg}`,
+            `  stack: ${e.stack?.slice(0, 400) || ""}`,
+          ].join("\n");
+        }
+        // Error Boundary record
+        return [
+          `  [${new Date(e.ts).toISOString()}] [react-error] ${e.gameType}/${e.gameKey} online=${e.online} cacheHit=${e.cacheHit}`,
+          `  msg: ${e.msg}`,
+          `  stack: ${e.stack?.slice(0, 300) || ""}`,
+        ].join("\n");
       })
       .join("\n\n");
 
@@ -467,14 +491,34 @@ export default function PwaDebug() {
                     {e.source ? `[${e.source}] ` : ""}
                     {e.gameType && e.gameKey ? `${e.gameType}/${e.gameKey}` : (e.route || "")}
                   </div>
-                  <div style={{ color: "#94a3b8" }}>
+                  <div style={{ color: "#94a3b8", fontSize: 10 }}>
                     online={String(e.online)}
                     {e.cacheHit != null ? ` | cacheHit=${String(e.cacheHit)}` : ""}
-                    {e.filename ? ` | file=${e.filename.split("/").pop()}` : ""}
+                    {e.lineno ? ` | line=${e.lineno}:${e.colno}` : ""}
+                    {e.tag ? ` | tag=${e.tag}` : ""}
                   </div>
-                  <div style={{ color: "#fca5a5", wordBreak: "break-all", marginTop: 3 }}>
+                  <div style={{ color: "#fca5a5", wordBreak: "break-all", marginTop: 3, fontWeight: 600 }}>
                     {e.msg}
                   </div>
+                  {e.source === "resource-error" && (e.src || e.href || e.outerHTML) && (
+                    <div style={{ marginTop: 4 }}>
+                      {(e.src || e.href) && (
+                        <div style={{ color: "#fb923c", fontSize: 10, wordBreak: "break-all" }}>
+                          URL: {e.src || e.href}
+                        </div>
+                      )}
+                      {e.outerHTML && (
+                        <div style={{ color: "#78716c", fontSize: 10, wordBreak: "break-all", marginTop: 2 }}>
+                          {e.outerHTML.slice(0, 200)}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {e.filename && e.source !== "resource-error" && (
+                    <div style={{ color: "#94a3b8", fontSize: 10, marginTop: 2, wordBreak: "break-all" }}>
+                      {e.filename}
+                    </div>
+                  )}
                   {e.stack && (
                     <details style={{ marginTop: 3 }}>
                       <summary style={{ color: "#475569", cursor: "pointer" }}>stack</summary>

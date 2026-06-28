@@ -24,7 +24,7 @@ if (typeof window !== "undefined") {
     initPwaInstallPromptCapture();
   }
 
-  // Module-level: set up before React renders so chunk-load failures are captured.
+  // Module-level: set up before React renders so chunk/resource load failures are captured.
   if (process.env.NODE_ENV === "production") {
     const _LOG_KEY = "offline_game_err_log";
     const _persistErr = (record) => {
@@ -39,15 +39,43 @@ if (typeof window !== "undefined") {
       (e) => {
         const p = window.location.pathname;
         if (!p.startsWith("/student/offline/solo/") && !p.startsWith("/student/offline/educational/")) return;
-        _persistErr({
-          ts: Date.now(),
-          source: "window-error",
-          route: p,
-          online: navigator.onLine,
-          msg: e.message || String(e),
-          filename: e.filename || "",
-          stack: e.error?.stack?.slice(0, 600) || "",
-        });
+
+        const t = e.target;
+        const isResourceError = t && t !== window && (t.tagName === "SCRIPT" || t.tagName === "LINK" || t.tagName === "IMG");
+
+        if (isResourceError) {
+          // Resource load failure: script/link/img failed to load.
+          const failedUrl = t.src || t.href || t.currentSrc || "";
+          _persistErr({
+            ts: Date.now(),
+            source: "resource-error",
+            route: p,
+            online: navigator.onLine,
+            msg: `Failed to load ${t.tagName}: ${failedUrl || "(no url)"}`,
+            filename: failedUrl,
+            tag: t.tagName,
+            src: t.src || "",
+            href: t.href || "",
+            currentSrc: t.currentSrc || "",
+            rel: t.rel || "",
+            as: t.as || "",
+            outerHTML: (t.outerHTML || "").slice(0, 300),
+            stack: "",
+          });
+        } else {
+          // JS execution error (ErrorEvent).
+          _persistErr({
+            ts: Date.now(),
+            source: "js-error",
+            route: p,
+            online: navigator.onLine,
+            msg: e.message || "(no message)",
+            filename: e.filename || "",
+            lineno: e.lineno || 0,
+            colno: e.colno || 0,
+            stack: e.error?.stack?.slice(0, 600) || "",
+          });
+        }
       },
       true,
     );
