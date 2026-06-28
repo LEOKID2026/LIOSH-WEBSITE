@@ -30,14 +30,23 @@ export default async function handler(req, res) {
     }
 
     const catalogAmounts = new Set(entryCostOptions.map((o) => o.amount));
+    const isGuest = accessPayload.isGuest === true;
     const playableKeys = new Set(
       (accessPayload.games || [])
         .filter((g) => g.category === "online" && g.playable)
         .map((g) => g.gameKey)
     );
+    const enabledOnlineKeys = new Set(
+      (accessPayload.games || [])
+        .filter((g) => g.category === "online" && g.isEnabled)
+        .map((g) => g.gameKey)
+    );
 
     const list = (rows || [])
-      .filter((r) => playableKeys.has(r.game_key))
+      .filter((r) => {
+        if (isGuest) return enabledOnlineKeys.has(r.game_key);
+        return playableKeys.has(r.game_key);
+      })
       .map((r) => ({
       gameKey: r.game_key,
       title: r.title,
@@ -52,6 +61,8 @@ export default async function handler(req, res) {
         (c) => catalogAmounts.has(c)
       ),
       createdAt: r.created_at,
+      playable: playableKeys.has(r.game_key),
+      guestLocked: isGuest && !playableKeys.has(r.game_key),
     }));
 
     const entryCostPayload = entryCostOptions.map((o) => ({

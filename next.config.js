@@ -86,6 +86,10 @@ const nextConfig = {
     : {}),
   webpack: (config, { dev, isServer }) => {
     if (dev) {
+      // Windows + long paths: filesystem webpack cache often corrupts mid-compile (ENOENT/rename).
+      if (isWindows) {
+        config.cache = { type: "memory" };
+      }
       config.watchOptions = {
         ...config.watchOptions,
         // keep watch ignores as simple string globs to satisfy webpack schema

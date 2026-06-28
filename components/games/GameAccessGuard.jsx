@@ -54,7 +54,7 @@ export default function GameAccessGuard({ gameKey, category, children }) {
             }
             return;
           }
-          if (cat.locked) {
+          if (cat.locked && cat.state !== "guest_locked") {
             if (!cancelled) {
               setBlock({ adminDisabled: false });
               setState("blocked");

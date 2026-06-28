@@ -12,14 +12,16 @@ import { SOLO_GAME_LIST } from "../lib/solo-games/solo-game-registry.js";
 import { SOLO_DEV_PROTOTYPES_HUB } from "../lib/solo-games/dev-prototype-hub-list.js";
 import SoloGameHelpButton from "../components/solo-games/SoloGameHelpButton.jsx";
 import SoloGameHelpModal from "../components/solo-games/SoloGameHelpModal.jsx";
+import GamesHubLockFooter from "../components/games/GamesHubLockFooter.jsx";
+import GamesHubLockFooter from "../components/games/GamesHubLockFooter.jsx";
 import { useSoloGameHelp } from "../hooks/solo-games/useSoloGameHelp.js";
 import StudentLoadingPanel from "../components/ui/StudentLoadingPanel.jsx";
 
 export default function Games() {
   const { theme } = useStudentTheme();
   const { GH } = useGamesHubUi();
-  const { state, playableGames } = useStudentGameAccess();
-  const games = playableGames("solo");
+  const { state, playableGames, enabledGames, isGuest } = useStudentGameAccess();
+  const accessRows = isGuest ? enabledGames("solo") : playableGames("solo");
   const { helpGame, openSoloGameHelp, closeSoloGameHelp } = useSoloGameHelp();
 
   useEffect(() => {
@@ -51,11 +53,12 @@ export default function Games() {
                 {state === "loading" ? (
                   <StudentLoadingPanel message="טוען..." hubGrid />
                 ) : (
-                  games.map((row) => {
+                  accessRows.map((row) => {
                     const game = SOLO_GAME_LIST.find((g) => g.id === row.gameKey);
                     if (!game) return null;
-                    return (
-                      <Link key={game.id} href={game.route} className={`${GH.card} relative`}>
+                    const locked = isGuest && !row.playable;
+                    const cardBody = (
+                      <>
                         <SoloGameHelpButton
                           game={game}
                           onOpen={openSoloGameHelp}
@@ -69,7 +72,27 @@ export default function Games() {
                           </div>
                         </div>
                         <p className={`${GH.cardBlurb} flex-1`}>{game.blurbHe}</p>
-                        <span className={GH.cardCta}>שחק עכשיו</span>
+                        {locked ? (
+                          <GamesHubLockFooter ctaClass={GH.cardCta} />
+                        ) : (
+                          <span className={GH.cardCta}>שחק עכשיו</span>
+                        )}
+                      </>
+                    );
+                    if (locked) {
+                      return (
+                        <div
+                          key={game.id}
+                          className={`${GH.card} relative opacity-80`}
+                          aria-disabled="true"
+                        >
+                          {cardBody}
+                        </div>
+                      );
+                    }
+                    return (
+                      <Link key={game.id} href={game.route} className={`${GH.card} relative`}>
+                        {cardBody}
                       </Link>
                     );
                   })

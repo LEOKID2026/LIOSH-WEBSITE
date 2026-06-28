@@ -7,6 +7,8 @@ import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import GameAccessGuard from "../../components/games/GameAccessGuard.jsx";
 import GamesHubNavBar from "../../components/games/GamesHubNavBar.jsx";
 import GamesHubHeader from "../../components/games/GamesHubHeader.jsx";
+import GamesHubLockFooter from "../../components/games/GamesHubLockFooter.jsx";
+import { GUEST_GAME_LOCK_LABEL_HE } from "../../lib/guest/constants.js";
 import { mapEntryCostOptionsForUi } from "../../lib/learning-client/economyConfigClient.js";
 import { clearArcadeActiveRoom } from "../../lib/arcade/client/arcadeRoomLifecycle.client.js";
 
@@ -163,6 +165,7 @@ function EntryCostSelector({
  * @param {(n: number) => void} props.setEntryCost
  * @param {(cost: number) => string | null} props.costDisabledReason
  * @param {boolean} props.busy
+ * @param {boolean} props.guestLocked
  * @param {() => void} props.onQuickGame
  * @param {(roomType: string, gk?: string) => void} props.onCreateRoom
  * @param {string} props.cardShell
@@ -212,9 +215,11 @@ function ArcadeGameCard({
   entryBtnDisabled,
   btnSecondary,
   btnSecondaryOutline,
+  guestLocked = false,
 }) {
   const quickLabel =
     gameKey === "fourline" ? "משחק מהיר" : gameKey === "ludo" ? "משחק מהיר (לודו)" : `משחק מהיר (${title})`;
+  const showActions = active && !guestLocked;
 
   return (
     <div className={cardShell}>
@@ -222,10 +227,10 @@ function ArcadeGameCard({
         <h2 className={cardTitle}>{title}</h2>
         <span
           className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold sm:text-xs ${
-            active ? badgeActive : badgeInactive
+            guestLocked ? badgeInactive : active ? badgeActive : badgeInactive
           }`}
         >
-          {active ? "פעיל" : "לא זמין"}
+          {guestLocked ? GUEST_GAME_LOCK_LABEL_HE : active ? "פעיל" : "לא זמין"}
         </span>
       </div>
       <p className={`mt-2 text-xs leading-snug sm:text-sm ${cardBlurb}`}>{blurb}</p>
@@ -241,6 +246,12 @@ function ArcadeGameCard({
         <p className={`mt-2 rounded-md border px-2 py-1.5 text-[11px] ${idleBox}`}>{idleReason}</p>
       ) : null}
 
+      {guestLocked ? (
+        <div className="mt-auto pt-3">
+          <GamesHubLockFooter ctaClass={cardCta} />
+        </div>
+      ) : (
+        <>
       <EntryCostSelector
         entryOptions={entryOptions}
         entryCost={entryCost}
@@ -257,8 +268,8 @@ function ArcadeGameCard({
       <div className="mt-auto flex flex-col gap-2 pt-3">
         <button
           type="button"
-          disabled={busy || !active || Boolean(costDisabledReason(entryCost))}
-          title={costDisabledReason(entryCost) || (!active ? idleReason || undefined : undefined)}
+          disabled={busy || !showActions || Boolean(costDisabledReason(entryCost))}
+          title={costDisabledReason(entryCost) || (!showActions ? idleReason || undefined : undefined)}
           onClick={onQuickGame}
           className={`w-full ${cardCta} disabled:cursor-not-allowed disabled:opacity-45`}
         >
@@ -267,7 +278,7 @@ function ArcadeGameCard({
         <div className="grid grid-cols-2 gap-1.5">
           <button
             type="button"
-            disabled={busy || !active || Boolean(costDisabledReason(entryCost))}
+            disabled={busy || !showActions || Boolean(costDisabledReason(entryCost))}
             onClick={() => onCreateRoom("public", gameKey)}
             className={`w-full ${btnSecondary}`}
           >
@@ -275,7 +286,7 @@ function ArcadeGameCard({
           </button>
           <button
             type="button"
-            disabled={busy || !active || Boolean(costDisabledReason(entryCost))}
+            disabled={busy || !showActions || Boolean(costDisabledReason(entryCost))}
             onClick={() => onCreateRoom("private", gameKey)}
             className={`w-full ${btnSecondaryOutline}`}
           >
@@ -283,6 +294,8 @@ function ArcadeGameCard({
           </button>
         </div>
       </div>
+        </>
+      )}
     </div>
   );
 }
@@ -349,11 +362,14 @@ export default function StudentArcadePage() {
   }, [refresh]);
 
   const fourlineMeta = useMemo(() => games.find((g) => g.gameKey === "fourline") || null, [games]);
+  const fourlineGuestLocked = Boolean(fourlineMeta?.guestLocked);
 
   const fourlineActive = Boolean(fourlineMeta?.enabled === true && fourlineMeta?.foundationOnly === false);
 
   const idleReason = !fourlineMeta
     ? "טוען משחקים…"
+    : fourlineGuestLocked
+      ? null
     : !fourlineMeta.enabled
       ? "המשחק כבוי בשרת"
       : fourlineMeta.foundationOnly
@@ -361,11 +377,14 @@ export default function StudentArcadePage() {
         : null;
 
   const ludoMeta = useMemo(() => games.find((g) => g.gameKey === "ludo") || null, [games]);
+  const ludoGuestLocked = Boolean(ludoMeta?.guestLocked);
 
   const ludoActive = Boolean(ludoMeta?.enabled === true && ludoMeta?.foundationOnly === false);
 
   const idleReasonLudo = !ludoMeta
     ? "טוען משחקים…"
+    : ludoGuestLocked
+      ? null
     : !ludoMeta.enabled
       ? "המשחק כבוי בשרת"
       : ludoMeta.foundationOnly
@@ -375,22 +394,25 @@ export default function StudentArcadePage() {
   const anyLobbyGameActive = useMemo(() => {
     return OPEN_ROOM_POLL_KEYS.some((k) => {
       const m = games.find((g) => g.gameKey === k);
-      return Boolean(m?.enabled === true && m?.foundationOnly === false);
+      return Boolean(m?.enabled === true && m?.foundationOnly === false && !m?.guestLocked);
     });
   }, [games]);
 
   const moreArcadeLobbyVm = useMemo(() => {
     return MORE_ARCADE_LOBBY_ROWS.map((row) => {
       const meta = games.find((g) => g.gameKey === row.gameKey) || null;
+      const guestLocked = Boolean(meta?.guestLocked);
       const active = Boolean(meta?.enabled === true && meta?.foundationOnly === false);
       const idleReasonRow = !meta
         ? "טוען משחקים…"
+        : guestLocked
+          ? null
         : !meta.enabled
           ? "המשחק כבוי בשרת"
           : meta.foundationOnly
             ? "עדיין לא פעיל (ממתין להפעלה)"
             : null;
-      return { ...row, active, idleReason: idleReasonRow };
+      return { ...row, active, guestLocked, idleReason: idleReasonRow };
     });
   }, [games]);
 
@@ -608,6 +630,7 @@ export default function StudentArcadePage() {
                   bullets={["שחקנים: 2", "בחר עלות כניסה לפני משחק מהיר או יצירת חדר"]}
                   gameKey="fourline"
                   active={fourlineActive}
+                  guestLocked={fourlineGuestLocked}
                   idleReason={idleReason}
                   entryCost={entryCost}
                   setEntryCost={setEntryCost}
@@ -623,6 +646,7 @@ export default function StudentArcadePage() {
                   bullets={["שחקנים: עד 4", "בחר עלות כניסה לפני משחק מהיר או יצירת חדר"]}
                   gameKey="ludo"
                   active={ludoActive}
+                  guestLocked={ludoGuestLocked}
                   idleReason={idleReasonLudo}
                   entryCost={entryCost}
                   setEntryCost={setEntryCost}
@@ -640,6 +664,7 @@ export default function StudentArcadePage() {
                     bullets={[row.playersLine, "בחר עלות כניסה לפני משחק מהיר או יצירת חדר"]}
                     gameKey={row.gameKey}
                     active={row.active}
+                    guestLocked={row.guestLocked}
                     idleReason={row.idleReason}
                     entryCost={entryCost}
                     setEntryCost={setEntryCost}

@@ -49,12 +49,17 @@ export default function OfflineHub() {
   useIOSViewportFix();
   const { theme } = useStudentTheme();
   const { GH } = useGamesHubUi();
-  const { state, gamesByKey } = useStudentGameAccess();
+  const { state, gamesByKey, isGuest } = useStudentGameAccess();
 
   const visibleGames = OFFLINE_GAMES.filter((g) => {
     const row = gamesByKey[g.gameKey];
-    return row?.isEnabled && row?.playable;
-  });
+    if (!row?.isEnabled) return false;
+    if (isGuest) return true;
+    return row.playable;
+  }).map((g) => ({
+    ...g,
+    locked: isGuest && !gamesByKey[g.gameKey]?.playable,
+  }));
 
   return (
     <GameAccessGuard category="offline">
@@ -81,7 +86,7 @@ export default function OfflineHub() {
             ) : (
               <section className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4">
                 {visibleGames.map((game) => (
-                  <OfflineHubGameCard key={game.slug} game={game} GH={GH} />
+                  <OfflineHubGameCard key={game.slug} game={game} GH={GH} locked={game.locked} />
                 ))}
               </section>
             )}

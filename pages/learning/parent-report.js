@@ -72,7 +72,13 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import ParentReportShortContractPreview from "../../components/parent-report-short-contract-preview.jsx";
+import ParentReportShortContractPreview, {
+  ParentReportWeeklyHomeActionLine,
+} from "../../components/parent-report-short-contract-preview.jsx";
+import {
+  resolveParentReportWeeklyHomeActionHe,
+  mergeParentReportHomeActionHe,
+} from "../../lib/parent-ui/parent-report-parent-copy.js";
 import ReportDateRangeControl from "../../components/reporting/ReportDateRangeControl.jsx";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
 import { postParentCopilotTurn } from "../../lib/parent-client/copilot-turn-api.js";
@@ -1324,6 +1330,21 @@ export default function ParentReport() {
     const recs = report?.parentFacing?.homeRecommendations;
     return Array.isArray(recs) && recs.filter(Boolean).length > 0;
   }, [report]);
+  const weeklyHomeActionHe = useMemo(
+    () =>
+      report
+        ? resolveParentReportWeeklyHomeActionHe({
+            shortContractTop,
+            report,
+            diagnosticsView,
+          })
+        : null,
+    [shortContractTop, report, diagnosticsView]
+  );
+  const showWeeklyInShortContract = !hasServerHomeRecommendations;
+  const showWeeklyInDiagnosticOverview =
+    Boolean(report?.summary?.diagnosticOverviewHe) &&
+    (hasServerHomeRecommendations || !shortContractTop);
   const suppressChartsForThinEvidenceWindow = useMemo(() => {
     if (!report?.summary) return false;
     const q = Number(report.summary.totalQuestions) || 0;
@@ -1983,12 +2004,22 @@ export default function ParentReport() {
           />
 
           {!hasServerHomeRecommendations ? (
-            <ParentReportShortContractPreview top={shortContractTop} />
+            <ParentReportShortContractPreview
+              top={shortContractTop}
+              weeklyHomeActionHe={showWeeklyInShortContract ? weeklyHomeActionHe : null}
+              visibleTextFn={diagnosticParentVisibleTextHe}
+            />
           ) : null}
 
           {report.summary?.diagnosticOverviewHe ? (
             <div className="mb-3 md:mb-5 avoid-break rounded-lg border border-amber-400/25 bg-amber-950/15 p-3 md:p-4 text-sm text-white/90 space-y-2">
-              <p className="font-bold text-amber-100/95 m-0 text-sm md:text-base">מה הכי בולט עכשיו (לפי התרגול שנאסף בתקופה שנבחרה)</p>
+              <p className="font-bold text-amber-100/95 m-0 text-sm md:text-base">מה הכי בולט עכשיו</p>
+              {showWeeklyInDiagnosticOverview ? (
+                <ParentReportWeeklyHomeActionLine
+                  actionHe={weeklyHomeActionHe}
+                  visibleTextFn={diagnosticParentVisibleTextHe}
+                />
+              ) : null}
               {report.summary.diagnosticOverviewHe.practicedSubjectsSummaryHe ? (
                 <p className="m-0 leading-relaxed text-white/70 text-xs md:text-sm">
                   {report.summary.diagnosticOverviewHe.practicedSubjectsSummaryHe}
@@ -2013,13 +2044,13 @@ export default function ParentReport() {
               ) : null}
               {report.summary.diagnosticOverviewHe.strongestAreaLineHe ? (
                 <p className="m-0 leading-relaxed">
-                  <span className="text-white/55">תוצאות טובות יחסית — כדאי לשמר: </span>
+                  <span className="text-white/55">תוצאות טובות — כדאי להמשיך לחזק: </span>
                   {report.summary.diagnosticOverviewHe.strongestAreaLineHe}
                 </p>
               ) : null}
               {report.summary.diagnosticOverviewHe.readyForProgressPreviewHe?.length ? (
                 <p className="m-0 leading-relaxed text-emerald-200/90 text-xs md:text-sm">
-                  <span className="text-white/55">מוכנות להתקדמות נוספת: </span>
+                  <span className="text-white/55">אפשר לחזק שלב נוסף: </span>
                   {report.summary.diagnosticOverviewHe.readyForProgressPreviewHe.join(" · ")}
                 </p>
               ) : null}
@@ -2036,7 +2067,7 @@ export default function ParentReport() {
 
           {(report.rawMetricStrengthsHe?.length || report.summary?.rawMetricStrengthsHe?.length) ? (
             <div className="mb-3 md:mb-5 avoid-break rounded-lg border border-emerald-400/25 bg-emerald-950/15 p-3 md:p-4 text-sm text-white/90 space-y-1">
-              <p className="font-bold text-emerald-100/95 m-0 text-sm md:text-base">איפה נראו תוצאות טובות לפי התרגול שנאסף בתקופה שנבחרה</p>
+              <p className="font-bold text-emerald-100/95 m-0 text-sm md:text-base">חוזקות שבלטו בתרגול</p>
               <ul className="m-0 pr-4 list-disc text-xs md:text-sm text-white/85 space-y-1">
                 {(report.rawMetricStrengthsHe || report.summary?.rawMetricStrengthsHe || []).map((line, i) => (
                   <li key={`rms-${i}`} className="leading-relaxed">
@@ -3145,10 +3176,12 @@ export default function ParentReport() {
                         })
                         .slice(0, 2);
 
-                      const parentActionHe = s.parentActionHe || null;
+                      const parentHomeActionHe = mergeParentReportHomeActionHe({
+                        parentActionHe: s.parentActionHe,
+                        parImp,
+                      });
                       const nextWeekGoalHe = s.nextWeekGoalHe || null;
                       const summaryHe = s.summaryHe || null;
-                      const showLegacyParImp = !parentActionHe && parImp.length > 0;
 
                       return (
                         <div
@@ -3167,7 +3200,7 @@ export default function ParentReport() {
                             {Array.isArray(s.diagnosticCards) && s.diagnosticCards.length > 0 ? (
                               <div className="text-[10px] md:text-[11px] text-white/80 space-y-1.5 border border-white/10 rounded-md bg-white/5 px-2 py-1.5">
                                 <div className="font-semibold text-white/90 text-[11px] md:text-xs">
-                                  לפי השאלות שתורגלו בתקופה שנבחרה
+                                  ממה שתורגל:
                                 </div>
                                 {s.diagnosticCards.map((card, cardIdx) => {
                                   const recHe = String(card.recommendationHe || "").trim();
@@ -3192,7 +3225,7 @@ export default function ParentReport() {
                                         : null}
                                       {recHe ? (
                                         <div className="text-white/78 text-[9px] md:text-[10px] leading-snug break-words">
-                                          <span className="text-white/45">המשך מומלץ: </span>
+                                          <span className="text-white/45">מה לעשות: </span>
                                           {diagnosticParentVisibleTextHe(recHe)}
                                         </div>
                                       ) : null}
@@ -3230,7 +3263,7 @@ export default function ParentReport() {
                                 ) : null}
                                 {s.subjectMemoryNarrativeHe ? (
                                   <p className="m-0">
-                                    <span className="text-white/45 font-bold">שימור למידה: </span>
+                                    <span className="text-white/45 font-bold">מה הילד כבר זוכר טוב: </span>
                                     {diagnosticParentVisibleTextHe(s.subjectMemoryNarrativeHe)}
                                   </p>
                                 ) : null}
@@ -3273,7 +3306,7 @@ export default function ParentReport() {
                                   <span className="text-lg shrink-0">🌟</span>
                                   <div className="flex-1 min-w-0">
                                     <div className="parent-report-print-subheading font-semibold text-xs md:text-sm text-white/90 mb-0.5">
-                                      {x.tierHe || "נושא עם תוצאות טובות יחסית"}
+                                      {x.tierHe || "תוצאות טובות בנושא"}
                                     </div>
                                     <div className="parent-report-print-muted-text text-xs md:text-sm text-white/80 break-words">
                                       {diagnosticParentVisibleTextHe(x.labelHe)} — דיוק {x.accuracy}% ({x.questions} שאלות)
@@ -3361,16 +3394,16 @@ export default function ParentReport() {
                                 </div>
                               </div>
                             ))}
-                            {parentActionHe ? (
+                            {parentHomeActionHe ? (
                               <div className="parent-report-rec-item p-2 md:p-3 rounded-lg border bg-yellow-500/15 border-yellow-400/45">
                                 <div className="flex items-start gap-2">
                                   <span className="text-lg shrink-0">👪</span>
                                   <div className="flex-1 min-w-0">
                                     <div className="parent-report-print-subheading font-semibold text-xs md:text-sm text-white/90 mb-0.5">
-                                      פעולה קונקרטית לבית
+                                      מה אפשר לעשות בבית
                                     </div>
                                     <div className="parent-report-print-muted-text text-xs md:text-sm text-white/80 break-words">
-                                      {diagnosticParentVisibleTextHe(parentActionHe)}
+                                      {diagnosticParentVisibleTextHe(parentHomeActionHe)}
                                     </div>
                                   </div>
                                 </div>
@@ -3427,26 +3460,6 @@ export default function ParentReport() {
                                 </div>
                               </div>
                             ))}
-                            {showLegacyParImp
-                              ? parImp.map((r) => (
-                                  <div
-                                    key={r.id}
-                                    className="parent-report-rec-item p-2 md:p-3 rounded-lg border bg-yellow-500/15 border-yellow-400/45"
-                                  >
-                                    <div className="flex items-start gap-2">
-                                      <span className="text-lg shrink-0">👪</span>
-                                      <div className="flex-1 min-w-0">
-                                        <div className="parent-report-print-subheading font-semibold text-xs md:text-sm text-white/90 mb-0.5">
-                                          המלצה להורה
-                                        </div>
-                                        <div className="parent-report-print-muted-text text-xs md:text-sm text-white/80 break-words">
-                                          {diagnosticParentVisibleTextHe(r.textHe)}
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                ))
-                              : null}
                             {parMaint.map((r) => (
                               <div
                                 key={r.id}
@@ -3654,7 +3667,7 @@ export default function ParentReport() {
                     פעילות לפי מקצועות (יומי)
                   </h2>
                   <p className="parent-report-print-chart-subtitle text-[11px] md:text-xs text-white/55 mt-0.5">
-                    מספר נושאים שונים שנוגעו בכל יום — כולל מדעים
+                    מספר נושאים שונים שתורגלו בכל יום
                   </p>
                 </div>
                 <div className="w-full" style={{ minHeight: isMobile ? 260 : 320 }}>

@@ -229,7 +229,7 @@ export default function ParentDashboardPage() {
         const linkPayload = await linkRes.json();
         if (!linkRes.ok) {
           credentialMessage =
-            linkPayload.error || "הילד/ה נוצר/ה, אך שיוך מספר האורch נכשל";
+            linkPayload.error || "הילד/ה נוצר/ה, אך שיוך מספר האורח נכשל";
         } else {
           credentialMessage = linkPayload.message || "המטבעות והקלפים נשמרו לילד.";
         }
@@ -554,7 +554,7 @@ export default function ParentDashboardPage() {
         ))}
       </select>
       <div>
-        <label className={`text-sm ${T.label}`}>מספר ליאו של אורch (אופציונלי)</label>
+        <label className={`text-sm ${T.label}`}>מספר ליאו של אורח (אופציונלי)</label>
         <input
           className={T.inputMt}
           value={newGuestLeoNumber}

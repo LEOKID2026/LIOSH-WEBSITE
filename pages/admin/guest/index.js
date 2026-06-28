@@ -35,7 +35,7 @@ export default function AdminGuestPage() {
       const listJson = await listRes.json();
       if (settingsRes.ok && settingsJson.ok) setSettings(settingsJson.settings);
       if (listRes.ok && listJson.ok) setGuests(listJson.guests || []);
-      if (!settingsRes.ok || !listRes.ok) setMessage("שגיאה בטעינת נתוני אורch");
+      if (!settingsRes.ok || !listRes.ok) setMessage("שגיאה בטעינת נתוני אורח");
     } catch {
       setMessage("שגיאת רשת");
     } finally {
@@ -78,7 +78,7 @@ export default function AdminGuestPage() {
 
   return (
     <Layout>
-      <AdminShell title="מצb אורch" showLogout>
+      <AdminShell title="מצב אורח" showLogout>
         {state === "loading" ? (
           <p className="text-white/60 text-sm text-right">{ADMIN_LOADING}</p>
         ) : (
@@ -89,7 +89,7 @@ export default function AdminGuestPage() {
               <section className="rounded-xl border border-white/15 bg-white/5 p-4 space-y-3">
                 <h2 className="text-lg font-bold">הגדרות כלליות</h2>
                 <label className="flex items-center gap-2 justify-end">
-                  <span>מצb אורch פעיל</span>
+                  <span>מצב אורח פעיל</span>
                   <input
                     type="checkbox"
                     checked={Boolean(settings.guestModeEnabled ?? settings.enabled)}
@@ -186,7 +186,7 @@ export default function AdminGuestPage() {
             ) : null}
 
             <section className="rounded-xl border border-white/15 bg-white/5 p-4 space-y-3">
-              <h2 className="text-lg font-bold">רשימת אורchים</h2>
+              <h2 className="text-lg font-bold">רשימת אורחים</h2>
               <div className="flex gap-2 justify-end">
                 <input
                   className="rounded bg-black/30 border border-white/20 px-3 py-1"
@@ -227,7 +227,7 @@ export default function AdminGuestPage() {
                     {!guests.length ? (
                       <tr>
                         <td colSpan={5} className="py-4 text-center text-white/50">
-                          אין אורchים
+                          אין אורחים
                         </td>
                       </tr>
                     ) : null}

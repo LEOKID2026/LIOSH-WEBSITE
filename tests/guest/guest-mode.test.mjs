@@ -42,8 +42,8 @@ describe("guest display", () => {
   test("formats guest greeting", () => {
     const student = { account_kind: "guest", leo_number: "482913" };
     assert.equal(isGuestStudent(student), true);
-    assert.equal(formatGuestDisplayNameHe(student), "אורch 482913");
-    assert.equal(formatStudentGreetingHe(student), "שלום אורch 482913");
+    assert.equal(formatGuestDisplayNameHe(student), "אורח 482913");
+    assert.equal(formatStudentGreetingHe(student), "שלום אורח 482913");
   });
 
   test("registered student keeps name greeting", () => {

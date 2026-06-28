@@ -6,9 +6,8 @@ import GameHubCard from "../components/games/GameHubCard.jsx";
 import GamesHubNavBar from "../components/games/GamesHubNavBar.jsx";
 import GamesHubHeader from "../components/games/GamesHubHeader.jsx";
 import { useStudentGameAccess } from "../hooks/useStudentGameAccess.js";
-import { hubCardKeyToCategory } from "../lib/games/game-catalog.constants.js";
+import { hubCardKeyToCategory, GAME_ACCESS_STATES } from "../lib/games/game-catalog.constants.js";
 import StudentLoadingPanel from "../components/ui/StudentLoadingPanel.jsx";
-
 const GAME_HUB_CARDS = [
   {
     key: "regular",
@@ -44,7 +43,7 @@ export default function GamesHubPage() {
   useIOSViewportFix();
   const { theme } = useStudentTheme();
   const { GH } = useGamesHubUi();
-  const { state, categoryState } = useStudentGameAccess();
+  const { state, categoryState, isGuest } = useStudentGameAccess();
 
   return (
     <Layout studentTheme={theme} studentShell="home">
@@ -72,18 +71,23 @@ export default function GamesHubPage() {
               {GAME_HUB_CARDS.map((card) => {
                 const category = hubCardKeyToCategory(card.key);
                 const catState = category ? categoryState(category) : null;
+                const guestBrowseOnly =
+                  isGuest && catState?.state === GAME_ACCESS_STATES.GUEST_LOCKED && catState?.visible;
+                const categoryLocked = Boolean(catState?.locked) && !guestBrowseOnly;
+                const categoryHref =
+                  catState?.playable || guestBrowseOnly ? card.href : undefined;
                 return (
                   <GameHubCard
                     key={card.key}
                     title={card.title}
                     emoji={card.emoji}
                     blurb={card.blurb}
-                    href={catState?.playable ? card.href : undefined}
+                    href={categoryHref}
                     cardClass={`${GH.card} text-right min-h-[9.5rem] md:min-h-[11rem]`}
                     ctaClass={GH.cardCta}
                     hidden={catState ? !catState.visible : false}
-                    locked={catState?.locked === true || catState?.state === "guest_locked"}
-                    lockTitle={catState?.message || (catState?.state === "guest_locked" ? "לא זמין במצb אורch" : undefined)}
+                    locked={categoryLocked}
+                    lockTitle={catState?.message || undefined}
                   />
                 );
               })}

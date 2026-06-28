@@ -57,5 +57,6 @@ export function useStudentGameAccess() {
     playableGames,
     enabledGames,
     permissions: data?.permissions || null,
+    isGuest: data?.isGuest === true,
   };
 }
