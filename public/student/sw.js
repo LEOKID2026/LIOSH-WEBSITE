@@ -1,5 +1,5 @@
 // Service worker for LEO K student PWA (scope /student/ only).
-// Sync STUDENT_OFFLINE_FULL_SW_ENABLED with lib/offline/offline-flags.js — must stay false in commit.
+// Sync STUDENT_OFFLINE_FULL_SW_ENABLED with lib/offline/offline-flags.js.
 
 try {
   importScripts("./offline-precache-generated.js");
@@ -17,16 +17,17 @@ const GENERATED = self.__STUDENT_OFFLINE_PRECACHE__ || {
 };
 
 const CACHE_NAME = STUDENT_OFFLINE_FULL_SW_ENABLED
-  ? "student-offline-v3-full"
+  ? "student-offline-v4-full"
   : "student-offline-v1";
 const CACHE_PREFIX = "student-";
 
 const OFFLINE_HTML = "/student/offline.html";
+const OFFLINE_HUB = "/student/offline";
 
 const INSTALL_PRECACHE = [OFFLINE_HTML, "/icons/child/pwa-192x192.png"];
 
 const BASELINE_OFFLINE_GAME_URLS = [
-  "/student/offline",
+  OFFLINE_HUB,
   "/student/offline/tic-tac-toe",
   "/student/offline/rock-paper-scissors",
   "/student/offline/tap-battle",
@@ -44,6 +45,10 @@ const FULL_DATA_URLS = STUDENT_OFFLINE_FULL_SW_ENABLED ? GENERATED.dataUrls || [
 const FULL_ASSET_URLS = STUDENT_OFFLINE_FULL_SW_ENABLED
   ? GENERATED.assetUrls || []
   : [];
+
+const OFFLINE_CHUNK_SET = new Set(FULL_CHUNK_URLS);
+const OFFLINE_DATA_SET = new Set(FULL_DATA_URLS);
+const OFFLINE_ASSET_SET = new Set(FULL_ASSET_URLS);
 
 const OFFLINE_HTML_FALLBACK = `<!DOCTYPE html>
 <html lang="he" dir="rtl">
@@ -77,16 +82,18 @@ const IMAGE_PATTERNS = [
 ];
 
 const SOUND_PATTERNS = [/^\/sounds\/.*\.(mp3|wav|ogg)$/i];
-
 const REWARD_CARD_PATH_PREFIX = "/rewards/cards/";
 
-function isStudentStaticAsset(pathname) {
-  if (!STUDENT_OFFLINE_FULL_SW_ENABLED) return false;
-  if (pathname.startsWith(REWARD_CARD_PATH_PREFIX)) return true;
-  return (
-    IMAGE_PATTERNS.some((pattern) => pattern.test(pathname)) ||
-    SOUND_PATTERNS.some((pattern) => pattern.test(pathname))
-  );
+/** Navigation documents allowed offline — only /student/offline/** */
+function isAllowedOfflineDocumentPath(pathname) {
+  if (pathname === OFFLINE_HTML) return true;
+  if (pathname === OFFLINE_HUB) return true;
+  return pathname.startsWith(`${OFFLINE_HUB}/`);
+}
+
+function isBlockedStudentDocumentPath(pathname) {
+  if (!pathname.startsWith("/student/")) return false;
+  return !isAllowedOfflineDocumentPath(pathname);
 }
 
 function isStudentNavigation(request, url) {
@@ -100,23 +107,37 @@ function isStudentDataRequest(url) {
   return url.pathname.startsWith("/_next/data/") && url.pathname.endsWith(".json");
 }
 
-/** @param {Request} request */
-async function cacheFirst(request) {
+function isAllowedOfflineDataPath(pathname) {
+  return pathname.includes("/student/offline");
+}
+
+function isOfflineStaticChunk(pathname) {
+  if (!pathname.startsWith("/_next/static/")) return false;
+  if (!STUDENT_OFFLINE_FULL_SW_ENABLED) return true;
+  return OFFLINE_CHUNK_SET.has(pathname);
+}
+
+function isOfflinePrecachedAsset(pathname) {
+  if (OFFLINE_ASSET_SET.has(pathname)) return true;
+  if (!STUDENT_OFFLINE_FULL_SW_ENABLED) return false;
+  if (pathname.startsWith(REWARD_CARD_PATH_PREFIX)) return true;
+  return (
+    IMAGE_PATTERNS.some((pattern) => pattern.test(pathname)) ||
+    SOUND_PATTERNS.some((pattern) => pattern.test(pathname))
+  );
+}
+
+/** @param {Request} request @param {boolean} allowRuntimeCache */
+async function cacheFirstAllowlisted(request, allowRuntimeCache) {
   const cached = await caches.match(request);
   if (cached) return cached;
 
-  try {
-    const response = await fetch(request);
-    if (response.ok) {
-      const clone = response.clone();
-      caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
-    }
-    return response;
-  } catch (err) {
-    const cachedFallback = await caches.match(request.url.split("?")[0]);
-    if (cachedFallback) return cachedFallback;
-    throw err;
+  const response = await fetch(request);
+  if (response.ok && allowRuntimeCache) {
+    const clone = response.clone();
+    caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
   }
+  return response;
 }
 
 async function serveOfflineHtmlFallback() {
@@ -131,16 +152,6 @@ async function serveOfflineHtmlFallback() {
     if (match) return match;
   }
 
-  const cacheNames = await caches.keys();
-  for (const name of cacheNames) {
-    if (!name.startsWith(CACHE_PREFIX)) continue;
-    const altCache = await caches.open(name);
-    for (const candidate of candidates) {
-      const match = await altCache.match(candidate, { ignoreSearch: true });
-      if (match) return match;
-    }
-  }
-
   return new Response(OFFLINE_HTML_FALLBACK, {
     status: 200,
     headers: {
@@ -153,10 +164,23 @@ async function serveOfflineHtmlFallback() {
 /** @param {Request} request */
 async function handleStudentNavigation(request) {
   const url = new URL(request.url);
+  const pathname = url.pathname;
+
+  if (isBlockedStudentDocumentPath(pathname)) {
+    try {
+      return await fetch(request);
+    } catch (_err) {
+      return serveOfflineHtmlFallback();
+    }
+  }
+
+  if (!isAllowedOfflineDocumentPath(pathname)) {
+    return serveOfflineHtmlFallback();
+  }
 
   try {
     const response = await fetch(request);
-    if (response.ok && OFFLINE_GAME_URLS.includes(url.pathname)) {
+    if (response.ok) {
       const clone = response.clone();
       caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
     }
@@ -164,10 +188,48 @@ async function handleStudentNavigation(request) {
   } catch (_err) {
     const cached =
       (await caches.match(request)) ||
-      (await caches.match(url.pathname, { ignoreSearch: true }));
+      (await caches.match(pathname, { ignoreSearch: true }));
     if (cached) return cached;
     return serveOfflineHtmlFallback();
   }
+}
+
+/** Remove cached login/home/register and other non-offline student pages. */
+async function purgeNonOfflineEntries() {
+  const cacheNames = await caches.keys();
+  await Promise.all(
+    cacheNames.map(async (cacheName) => {
+      if (!cacheName.startsWith(CACHE_PREFIX)) return;
+      const cache = await caches.open(cacheName);
+      const requests = await cache.keys();
+      await Promise.all(
+        requests.map(async (req) => {
+          const pathname = new URL(req.url).pathname;
+
+          if (isBlockedStudentDocumentPath(pathname)) {
+            await cache.delete(req);
+            return;
+          }
+
+          if (
+            isStudentDataRequest(new URL(req.url)) &&
+            !isAllowedOfflineDataPath(pathname)
+          ) {
+            await cache.delete(req);
+            return;
+          }
+
+          if (
+            pathname.startsWith("/_next/static/") &&
+            STUDENT_OFFLINE_FULL_SW_ENABLED &&
+            !OFFLINE_CHUNK_SET.has(pathname)
+          ) {
+            await cache.delete(req);
+          }
+        }),
+      );
+    }),
+  );
 }
 
 /** @param {string[]} urls */
@@ -211,14 +273,17 @@ self.addEventListener("install", (event) => {
         ];
         await Promise.allSettled(
           fullUrls.map(async (url) => {
-            const request = new Request(url, { credentials: "same-origin", cache: "reload" });
+            const request = new Request(url, {
+              credentials: "same-origin",
+              cache: "reload",
+            });
             try {
               const response = await fetch(request);
               if (response.ok) {
                 await cache.put(request, response);
               }
             } catch (_err) {
-              // Warm-up from hub will retry while online.
+              // Warm-up from hub retries while online.
             }
           }),
         );
@@ -240,6 +305,7 @@ self.addEventListener("activate", (event) => {
             .map((k) => caches.delete(k)),
         ),
       )
+      .then(() => purgeNonOfflineEntries())
       .then(() => self.clients.claim()),
   );
 });
@@ -291,17 +357,42 @@ self.addEventListener("fetch", (event) => {
   }
 
   if (url.pathname.startsWith("/_next/static/")) {
-    event.respondWith(cacheFirst(event.request));
+    if (!isOfflineStaticChunk(url.pathname)) return;
+    event.respondWith(
+      cacheFirstAllowlisted(event.request, false).catch(() => fetch(event.request)),
+    );
     return;
   }
 
-  if (STUDENT_OFFLINE_FULL_SW_ENABLED && isStudentDataRequest(url)) {
-    event.respondWith(cacheFirst(event.request));
+  if (isStudentDataRequest(url)) {
+    if (!isAllowedOfflineDataPath(url.pathname)) {
+      event.respondWith(
+        fetch(event.request).catch(
+          () =>
+            new Response("{}", {
+              status: 503,
+              headers: { "Content-Type": "application/json" },
+            }),
+        ),
+      );
+      return;
+    }
+
+    const allowCache =
+      OFFLINE_DATA_SET.has(url.pathname) ||
+      url.pathname.includes("/student/offline");
+    event.respondWith(
+      cacheFirstAllowlisted(event.request, allowCache).catch(() =>
+        fetch(event.request),
+      ),
+    );
     return;
   }
 
-  if (STUDENT_OFFLINE_FULL_SW_ENABLED && isStudentStaticAsset(url.pathname)) {
-    event.respondWith(cacheFirst(event.request));
+  if (STUDENT_OFFLINE_FULL_SW_ENABLED && isOfflinePrecachedAsset(url.pathname)) {
+    event.respondWith(
+      cacheFirstAllowlisted(event.request, true).catch(() => fetch(event.request)),
+    );
     return;
   }
 
