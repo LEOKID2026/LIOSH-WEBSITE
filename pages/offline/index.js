@@ -7,6 +7,7 @@ import GamesHubNavBar from "../../components/games/GamesHubNavBar.jsx";
 import GamesHubHeader from "../../components/games/GamesHubHeader.jsx";
 import OfflineHubGameCard from "../../components/games/OfflineHubGameCard.jsx";
 import { useStudentGameAccess } from "../../hooks/useStudentGameAccess.js";
+import StudentLoadingPanel from "../../components/ui/StudentLoadingPanel.jsx";
 
 const OFFLINE_GAMES = [
   {
@@ -76,7 +77,7 @@ export default function OfflineHub() {
             />
 
             {state === "loading" ? (
-              <p className={`text-center text-sm ${GH.muted}`}>טוען...</p>
+              <StudentLoadingPanel message="טוען..." hubGrid />
             ) : (
               <section className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4">
                 {visibleGames.map((game) => (

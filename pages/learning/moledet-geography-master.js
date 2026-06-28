@@ -151,6 +151,7 @@ import { fetchStudentHomeProfile } from "../../lib/learning-client/fetchStudentH
 import { buildSubjectMonthlyPersistenceViewFromProfile } from "../../lib/learning-client/subjectMonthlyPersistenceView";
 import { navigateToStudentHome } from "../../lib/learning-client/navigateToStudentHome";
 import { useLearningMasterUi } from "../../hooks/useLearningMasterUi.js";
+import StudentLoadingPanel from "../../components/ui/StudentLoadingPanel.jsx";
 import { useGuestPlayableTopics } from "../../hooks/useGuestPlayableTopics.js";
 import { GUEST_TOPIC_LOCK_MESSAGE_HE } from "../../lib/guest/constants.js";
 import LearningMasterHud from "../../components/learning/LearningMasterHud.jsx";
@@ -2360,11 +2361,7 @@ export default function MoledetGeographyMaster() {
   }, [subjectView, learningProfileHydrationTick]);
 
   if (!mounted || !gradeReady)
-    return (
-      <div className={`min-h-screen ${shellClass} flex items-center justify-center`} style={shellBgStyle}>
-        <div className="text-slate-700 text-xl">טוען...</div>
-      </div>
-    );
+    return <StudentLoadingPanel message="טוען..." fullPage />;
 
   const accuracy =
     totalQuestions > 0 ? Math.round((correct / totalQuestions) * 100) : 0;

@@ -39,6 +39,7 @@ import StudentSurpriseBoxOpenModal from "../../components/student/rewards/Studen
 import StudentShareFriendsButton from "../../components/student/StudentShareFriendsButton";
 import { isCardRewardsEnabledClient } from "../../lib/rewards/reward-feature-flags.client.js";
 import { GUEST_LOCK_MESSAGE_HE, GUEST_LOCKED_HOME_PANELS, LIOSH_GUEST_RESUME_TOKEN_KEY } from "../../lib/guest/constants.js";
+import StudentLoadingPanel from "../../components/ui/StudentLoadingPanel.jsx";
 
 import { syncMonthlyProgressCacheFromServer } from "../../utils/progress-storage.js";
 
@@ -55,13 +56,10 @@ function mapApiErrorToHebrew(raw) {
 }
 
 function LoadingScreen({ message }) {
-  const { tokens: T, theme } = useStudentTheme();
+  const { theme } = useStudentTheme();
   return (
     <Layout studentTheme={theme} studentShell="home">
-      <div className="min-h-[60vh] flex flex-col items-center justify-center px-4 text-center">
-        <div className={T.loadingSpinner} aria-hidden />
-        <p className={T.loadingText}>{message}</p>
-      </div>
+      <StudentLoadingPanel message={message} reportPage />
     </Layout>
   );
 }

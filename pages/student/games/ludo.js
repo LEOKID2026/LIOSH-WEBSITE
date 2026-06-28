@@ -4,20 +4,14 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import LudoScreen from "../../../components/arcade/ludo/LudoScreen";
+import ArcadeGameRouteLoading from "../../../components/arcade/ArcadeGameRouteLoading.jsx";
 
 export default function StudentLudoPage() {
   const router = useRouter();
   const roomId = router.isReady ? String(router.query.roomId || "").trim() : "";
 
   if (!router.isReady) {
-    return (
-      <>
-        <Head>
-          <title>לודו — ארקייד</title>
-        </Head>
-        <div className="min-h-screen bg-zinc-950 px-4 py-8 text-zinc-300">טוען…</div>
-      </>
-    );
+    return <ArcadeGameRouteLoading title="לודו — ארקייד" />;
   }
 
   if (!roomId) {

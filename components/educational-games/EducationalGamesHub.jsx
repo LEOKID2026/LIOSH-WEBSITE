@@ -7,6 +7,7 @@ import GamesHubNavBar from "../games/GamesHubNavBar.jsx";
 import GamesHubHeader from "../games/GamesHubHeader.jsx";
 import { useStudentGameAccess } from "../../hooks/useStudentGameAccess.js";
 import { EDUCATIONAL_HUB } from "../../lib/educational-games/educational-game-registry.js";
+import StudentLoadingPanel from "../ui/StudentLoadingPanel.jsx";
 
 export default function EducationalGamesHub() {
   const { theme } = useStudentTheme();
@@ -36,7 +37,7 @@ export default function EducationalGamesHub() {
 
             <section className="grid sm:grid-cols-2 gap-3 md:gap-4">
               {state === "loading" ? (
-                <p className={`col-span-full text-center text-sm ${GH.muted}`}>טוען...</p>
+                <StudentLoadingPanel message="טוען..." hubGrid />
               ) : games.length === 0 ? (
                 <p className={`col-span-full text-center text-sm ${GH.muted}`}>
                   אין משחקים חינוכיים זמינים כרגע

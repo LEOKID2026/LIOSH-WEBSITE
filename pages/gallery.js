@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Layout from "../components/Layout";
 import { useStudentTheme } from "../contexts/StudentThemeContext.jsx";
 import { useGalleryUi } from "../hooks/useGalleryUi.js";
+import StudentLoadingPanel from "../components/ui/StudentLoadingPanel.jsx";
 
 export default function Gallery() {
   const { theme, tokens: T } = useStudentTheme();
@@ -76,7 +77,7 @@ export default function Gallery() {
           </motion.p>
 
           {loading ? (
-            <p className={GL.loading}>טוען גלריה...</p>
+            <StudentLoadingPanel message="טוען גלריה..." reportPage />
           ) : items.length === 0 ? (
             <p className={GL.empty}>עדיין לא נוספו תמונות או סרטונים לגלריה.</p>
           ) : (

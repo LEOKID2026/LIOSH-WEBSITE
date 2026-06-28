@@ -121,6 +121,7 @@ import {
   tryConsumeBookContextOnPracticeEntry,
 } from "../../lib/learning-book/book-context-master-helper";
 import { useLearningMasterUi } from "../../hooks/useLearningMasterUi.js";
+import StudentLoadingPanel from "../../components/ui/StudentLoadingPanel.jsx";
 import { useGuestPlayableTopics } from "../../hooks/useGuestPlayableTopics.js";
 import { GUEST_TOPIC_LOCK_MESSAGE_HE } from "../../lib/guest/constants.js";
 import LearningMasterHud from "../../components/learning/LearningMasterHud.jsx";
@@ -2889,13 +2890,7 @@ function saveScienceAnswerInParallel({
   }, [subjectView, learningProfileHydrationTick]);
 
   if (!mounted || !gradeReady) {
-    return (
-      <Layout>
-        <div className={`min-h-screen ${shellClass} flex items-center justify-center`} style={shellBgStyle}>
-        <div className="text-slate-700 text-xl">טוען מדעים...</div>
-        </div>
-      </Layout>
-    );
+    return <StudentLoadingPanel message="טוען מדעים..." fullPage />;
   }
 
   const accuracy =

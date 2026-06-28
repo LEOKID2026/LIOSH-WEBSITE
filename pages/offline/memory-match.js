@@ -4,6 +4,7 @@ import GameAccessGuard from "../../components/games/GameAccessGuard.jsx";
 import StudentAdSlot from "../../components/student/StudentAdSlot.jsx";
 import { useRouter } from "next/router";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
+import StudentLoadingPanel from "../../components/ui/StudentLoadingPanel.jsx";
 
 const CARD_POOL = ["🐶", "🐱", "🪙", "💎", "🦴", "🐾", "🦊", "🌙", "⚡️", "🔥"];
 
@@ -162,12 +163,7 @@ export default function MemoryMatch() {
     }
   };
 
-  if (!mounted)
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-[#090d17] to-[#11172b] flex items-center justify-center">
-        <div className="text-white text-xl">טוען...</div>
-      </div>
-    );
+  if (!mounted) return <StudentLoadingPanel message="טוען..." fullPage />;
 
   return (
     <GameAccessGuard gameKey="memory-match">

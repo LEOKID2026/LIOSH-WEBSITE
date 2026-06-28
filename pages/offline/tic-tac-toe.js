@@ -3,6 +3,7 @@ import Layout from "../../components/Layout";
 import GameAccessGuard from "../../components/games/GameAccessGuard.jsx";
 import StudentAdSlot from "../../components/student/StudentAdSlot.jsx";
 import { useRouter } from "next/router";
+import StudentLoadingPanel from "../../components/ui/StudentLoadingPanel.jsx";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
 
 const SIZES = [3, 5, 7];
@@ -184,12 +185,7 @@ export default function TicTacToeXL() {
     }
   };
 
-  if (!mounted)
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-[#05070f] via-[#0e111b] to-[#020308] flex items-center justify-center">
-        <div className="text-white text-xl">טוען...</div>
-      </div>
-    );
+  if (!mounted) return <StudentLoadingPanel message="טוען..." fullPage />;
 
   return (
     <GameAccessGuard gameKey="tic-tac-toe">

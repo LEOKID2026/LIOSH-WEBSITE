@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
+import StudentLoadingPanel from "../ui/StudentLoadingPanel.jsx";
 import GameLockedScreen from "./GameLockedScreen.jsx";
 
 /**
@@ -8,6 +10,7 @@ import GameLockedScreen from "./GameLockedScreen.jsx";
  */
 export default function GameAccessGuard({ gameKey, category, children }) {
   const router = useRouter();
+  const { tokens: T } = useStudentTheme();
   const [state, setState] = useState("loading");
   const [block, setBlock] = useState(null);
 
@@ -73,11 +76,7 @@ export default function GameAccessGuard({ gameKey, category, children }) {
   }, [gameKey, category, router]);
 
   if (state === "loading") {
-    return (
-      <div className="flex min-h-[40vh] items-center justify-center text-sm opacity-70" dir="rtl">
-        טוען...
-      </div>
-    );
+    return <StudentLoadingPanel message="טוען..." reportPage className="min-h-[40vh]" />;
   }
 
   if (state === "blocked" && block) {
@@ -88,8 +87,8 @@ export default function GameAccessGuard({ gameKey, category, children }) {
 
   if (state === "error") {
     return (
-      <div className="flex min-h-[40vh] items-center justify-center text-sm opacity-70" dir="rtl">
-        שגיאה בטעינה
+      <div className="flex min-h-[40vh] items-center justify-center px-4 text-center" dir="rtl">
+        <p className={T.loadingText}>שגיאה בטעינה</p>
       </div>
     );
   }

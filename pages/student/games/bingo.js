@@ -4,20 +4,14 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import ArcadeBingoScreen from "../../../components/arcade/bingo/ArcadeBingoScreen";
+import ArcadeGameRouteLoading from "../../../components/arcade/ArcadeGameRouteLoading.jsx";
 
 export default function StudentBingoPage() {
   const router = useRouter();
   const roomId = router.isReady ? String(router.query.roomId || "").trim() : "";
 
   if (!router.isReady) {
-    return (
-      <>
-        <Head>
-          <title>בינגו — ארקייד</title>
-        </Head>
-        <div className="min-h-screen bg-zinc-950 px-4 py-8 text-zinc-300">טוען…</div>
-      </>
-    );
+    return <ArcadeGameRouteLoading title="בינגו — ארקייד" />;
   }
 
   if (!roomId) {

@@ -2,18 +2,25 @@ import { getPortalLoadingTheme } from "../../lib/ui/portal-loading-theme.client.
 
 /**
  * Themed loading panel — bright mode uses site sky gradient (same as Layout).
- * @param {{ isBright?: boolean, message: string, fullPage?: boolean, reportPage?: boolean, className?: string, textClassName?: string }} props
+ * @param {{ isBright?: boolean, message: string, fullPage?: boolean, reportPage?: boolean, hubGrid?: boolean, className?: string, textClassName?: string }} props
  */
 export default function PortalLoadingPanel({
   isBright = false,
   message,
   fullPage = false,
   reportPage = false,
+  hubGrid = false,
   className = "",
   textClassName = "",
 }) {
   const L = getPortalLoadingTheme(isBright);
-  const shell = reportPage ? L.reportShell : fullPage ? L.fullShell : L.inlineShell;
+  const shell = hubGrid
+    ? L.hubGridShell
+    : reportPage
+      ? L.reportShell
+      : fullPage
+        ? L.fullShell
+        : L.inlineShell;
   const useBrightBg = isBright && fullPage && L.fullShellStyle;
 
   return (

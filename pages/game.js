@@ -13,6 +13,7 @@ import { SOLO_DEV_PROTOTYPES_HUB } from "../lib/solo-games/dev-prototype-hub-lis
 import SoloGameHelpButton from "../components/solo-games/SoloGameHelpButton.jsx";
 import SoloGameHelpModal from "../components/solo-games/SoloGameHelpModal.jsx";
 import { useSoloGameHelp } from "../hooks/solo-games/useSoloGameHelp.js";
+import StudentLoadingPanel from "../components/ui/StudentLoadingPanel.jsx";
 
 export default function Games() {
   const { theme } = useStudentTheme();
@@ -48,7 +49,7 @@ export default function Games() {
             <section className="space-y-3">
               <div className="grid sm:grid-cols-2 gap-3 md:gap-4">
                 {state === "loading" ? (
-                  <p className={`col-span-full text-center text-sm ${GH.muted}`}>טוען...</p>
+                  <StudentLoadingPanel message="טוען..." hubGrid />
                 ) : (
                   games.map((row) => {
                     const game = SOLO_GAME_LIST.find((g) => g.id === row.gameKey);

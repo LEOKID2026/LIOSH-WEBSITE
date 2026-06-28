@@ -4,6 +4,7 @@ import GameAccessGuard from "../../components/games/GameAccessGuard.jsx";
 import StudentAdSlot from "../../components/student/StudentAdSlot.jsx";
 import { useRouter } from "next/router";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
+import StudentLoadingPanel from "../../components/ui/StudentLoadingPanel.jsx";
 
 const CHOICES = [
   { id: "rock", label: "אבן", emoji: "🪨" },
@@ -214,12 +215,7 @@ export default function RockPaperScissors() {
     }
   };
 
-  if (!mounted)
-    return (
-      <div className="min-h-screen bg-[#0a101d] flex items-center justify-center">
-        <div className="text-white text-xl">טוען...</div>
-      </div>
-    );
+  if (!mounted) return <StudentLoadingPanel message="טוען..." fullPage />;
 
   return (
     <GameAccessGuard gameKey="rock-paper-scissors">

@@ -49,6 +49,7 @@ import {
 import { mergeDiagnosticContractIntoParams } from "../../utils/diagnostic-question-contract";
 import { mcqCellValue } from "../../utils/mcq-option-cell";
 import { useLearningMasterUi } from "../../hooks/useLearningMasterUi";
+import StudentLoadingPanel from "../../components/ui/StudentLoadingPanel.jsx";
 import { useGuestPlayableTopics } from "../../hooks/useGuestPlayableTopics.js";
 import { GUEST_TOPIC_LOCK_MESSAGE_HE } from "../../lib/guest/constants.js";
 import LearningMasterHud from "../../components/learning/LearningMasterHud";
@@ -2459,11 +2460,7 @@ export default function EnglishMaster() {
   }, [subjectView, learningProfileHydrationTick]);
 
   if (!mounted || !gradeReady)
-    return (
-        <div className={`min-h-screen ${shellClass} flex items-center justify-center`} style={shellBgStyle}>
-        <div className="text-slate-700 text-xl">טוען...</div>
-      </div>
-    );
+    return <StudentLoadingPanel message="טוען..." fullPage />;
 
   const accuracy =
     totalQuestions > 0 ? Math.round((correct / totalQuestions) * 100) : 0;

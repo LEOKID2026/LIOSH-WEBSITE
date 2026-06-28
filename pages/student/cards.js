@@ -11,6 +11,7 @@ import { syncStudentLocalStorageIdentity } from "../../lib/learning-student-loca
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import { isCardRewardsEnabledClient } from "../../lib/rewards/reward-feature-flags.client.js";
 import { formatCoinAmountHe, formatCoinAmountNumberHe, SHOP_CARD_ALREADY_OWNED_HE, SHOP_CARD_SELL_DUPLICATE_HE, CATALOG_CARD_OWNED_HE } from "../../lib/rewards/rewards-ui.he.js";
+import StudentLoadingPanel from "../../components/ui/StudentLoadingPanel.jsx";
 
 const CARDS_ENDPOINTS = {
   summary: "/api/student/rewards/cards/summary",
@@ -374,10 +375,7 @@ export default function StudentCardsPage() {
   if (authPhase === "checking" || authPhase === "anon") {
     return (
       <Layout studentTheme={theme} studentShell="home">
-        <div className="min-h-[60vh] flex flex-col items-center justify-center px-4 text-center">
-          <div className={T.loadingSpinner} aria-hidden />
-          <p className={T.loadingText}>טוען...</p>
-        </div>
+        <StudentLoadingPanel message="טוען..." reportPage />
       </Layout>
     );
   }
@@ -403,12 +401,7 @@ export default function StudentCardsPage() {
 
   const renderTabContent = () => {
     if (cardsPhase === "loading") {
-      return (
-        <div className="flex flex-col items-center py-12 gap-3">
-          <div className={T.loadingSpinner} aria-hidden />
-          <p className={T.loadingText}>טוען קלפים...</p>
-        </div>
-      );
+      return <StudentLoadingPanel message="טוען קלפים..." reportPage />;
     }
 
     if (cardsPhase === "error") {
@@ -425,12 +418,7 @@ export default function StudentCardsPage() {
     if (cardsPhase !== "ok") return null;
 
     if (tabLoading[activeTab] || !loadedTabs.has(activeTab)) {
-      return (
-        <div className="flex flex-col items-center py-12 gap-3">
-          <div className={T.loadingSpinner} aria-hidden />
-          <p className={T.loadingText}>טוען קלפים...</p>
-        </div>
-      );
+      return <StudentLoadingPanel message="טוען קלפים..." reportPage />;
     }
 
     if (activeTab === "collection") {

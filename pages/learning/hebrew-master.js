@@ -171,6 +171,7 @@ import {
   shouldShowHebrewG1BookFirstSoftGate,
 } from "../../lib/learning-book/hebrew-g1-literacy-progress";
 import { useLearningMasterUi } from "../../hooks/useLearningMasterUi.js";
+import StudentLoadingPanel from "../../components/ui/StudentLoadingPanel.jsx";
 import { useGuestPlayableTopics } from "../../hooks/useGuestPlayableTopics.js";
 import { GUEST_TOPIC_LOCK_MESSAGE_HE } from "../../lib/guest/constants.js";
 import LearningMasterHud from "../../components/learning/LearningMasterHud.jsx";
@@ -2901,13 +2902,7 @@ export default function HebrewMaster() {
   }, [subjectView, learningProfileHydrationTick]);
 
   if (!mounted || !gradeReady)
-    return (
-      <Layout>
-        <div className={`min-h-screen ${shellClass} flex items-center justify-center`} style={shellBgStyle}>
-          <div className="text-slate-700 text-xl">טוען...</div>
-        </div>
-      </Layout>
-    );
+    return <StudentLoadingPanel message="טוען..." fullPage />;
 
   const accuracy =
     totalQuestions > 0 ? Math.round((correct / totalQuestions) * 100) : 0;

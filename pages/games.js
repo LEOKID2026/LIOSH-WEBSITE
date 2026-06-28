@@ -7,6 +7,7 @@ import GamesHubNavBar from "../components/games/GamesHubNavBar.jsx";
 import GamesHubHeader from "../components/games/GamesHubHeader.jsx";
 import { useStudentGameAccess } from "../hooks/useStudentGameAccess.js";
 import { hubCardKeyToCategory } from "../lib/games/game-catalog.constants.js";
+import StudentLoadingPanel from "../components/ui/StudentLoadingPanel.jsx";
 
 const GAME_HUB_CARDS = [
   {
@@ -65,7 +66,7 @@ export default function GamesHubPage() {
           />
 
           {state === "loading" ? (
-            <p className="text-center text-sm opacity-70">טוען...</p>
+            <StudentLoadingPanel message="טוען..." hubGrid />
           ) : (
             <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5">
               {GAME_HUB_CARDS.map((card) => {
