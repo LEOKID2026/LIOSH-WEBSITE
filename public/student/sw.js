@@ -1,7 +1,7 @@
 // Service worker for LEO K student PWA (scope /student/ only).
 // Sync STUDENT_OFFLINE_FULL_SW_ENABLED with lib/offline/offline-flags.js — must stay false in commit.
 
-const STUDENT_OFFLINE_FULL_SW_ENABLED = false;
+const STUDENT_OFFLINE_FULL_SW_ENABLED = true;
 
 const CACHE_NAME = STUDENT_OFFLINE_FULL_SW_ENABLED
   ? "student-offline-v2-full"
