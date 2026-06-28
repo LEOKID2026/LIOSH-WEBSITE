@@ -1,7 +1,8 @@
 import { useRouter } from "next/router";
 import OfflineFullGamesRouteGuard from "../../../../components/offline/OfflineFullGamesRouteGuard.jsx";
 import OfflineSoloGameShell from "../../../../components/solo-games/OfflineSoloGameShell.jsx";
-import { isValidOfflineSoloGameKey } from "../../../../lib/offline/offline-game-catalog.js";
+import OfflineGameErrorBoundary from "../../../../components/offline/OfflineGameErrorBoundary.jsx";
+import { isValidOfflineSoloGameKey, offlineSoloRoute } from "../../../../lib/offline/offline-game-catalog.js";
 
 export default function StudentOfflineSoloGamePage() {
   const router = useRouter();
@@ -20,8 +21,15 @@ export default function StudentOfflineSoloGamePage() {
   }
 
   return (
-    <OfflineFullGamesRouteGuard>
-      <OfflineSoloGameShell gameKey={gameKey} />
-    </OfflineFullGamesRouteGuard>
+    <OfflineGameErrorBoundary
+      key={gameKey}
+      gameKey={gameKey}
+      gameType="solo"
+      route={offlineSoloRoute(gameKey)}
+    >
+      <OfflineFullGamesRouteGuard>
+        <OfflineSoloGameShell gameKey={gameKey} />
+      </OfflineFullGamesRouteGuard>
+    </OfflineGameErrorBoundary>
   );
 }

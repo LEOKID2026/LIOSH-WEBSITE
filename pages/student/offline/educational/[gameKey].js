@@ -1,7 +1,8 @@
 import { useRouter } from "next/router";
 import OfflineFullGamesRouteGuard from "../../../../components/offline/OfflineFullGamesRouteGuard.jsx";
 import OfflineEducationalGameShell from "../../../../components/educational-games/OfflineEducationalGameShell.jsx";
-import { isValidOfflineEducationalGameKey } from "../../../../lib/offline/offline-game-catalog.js";
+import OfflineGameErrorBoundary from "../../../../components/offline/OfflineGameErrorBoundary.jsx";
+import { isValidOfflineEducationalGameKey, offlineEducationalRoute } from "../../../../lib/offline/offline-game-catalog.js";
 
 export default function StudentOfflineEducationalGamePage() {
   const router = useRouter();
@@ -20,8 +21,15 @@ export default function StudentOfflineEducationalGamePage() {
   }
 
   return (
-    <OfflineFullGamesRouteGuard>
-      <OfflineEducationalGameShell gameKey={gameKey} />
-    </OfflineFullGamesRouteGuard>
+    <OfflineGameErrorBoundary
+      key={gameKey}
+      gameKey={gameKey}
+      gameType="educational"
+      route={offlineEducationalRoute(gameKey)}
+    >
+      <OfflineFullGamesRouteGuard>
+        <OfflineEducationalGameShell gameKey={gameKey} />
+      </OfflineFullGamesRouteGuard>
+    </OfflineGameErrorBoundary>
   );
 }
