@@ -79,13 +79,20 @@ function computeMemoryGridLayout({ totalCards, difficulty, boardW, boardH, isMob
 }
 
 /**
- * @param {{ autoStart?: boolean, initialDifficulty?: string, onSessionEnd?: (metrics: object) => void, onPreGameUiChange?: (active: boolean) => void }} props
+ * @param {{
+ *   autoStart?: boolean,
+ *   initialDifficulty?: string,
+ *   onSessionEnd?: (metrics: object) => void,
+ *   onPreGameUiChange?: (active: boolean) => void,
+ *   deckBuilder?: (pairCount: number) => Promise<{ ok: true, deck: object[] } | { ok: false, reason: string }>,
+ * }} props
  */
 export default function MleoMemoryEngine({
   autoStart = false,
   initialDifficulty = "medium",
   onSessionEnd,
   onPreGameUiChange,
+  deckBuilder = buildMemoryDeckFromShop,
 }) {
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
@@ -209,7 +216,7 @@ export default function MleoMemoryEngine({
     setCards([]);
     setGameRunning(false);
 
-    const result = await buildMemoryDeckFromShop(pairs);
+    const result = await deckBuilder(pairs);
     if (initSeqRef.current !== seq) return;
 
     if (!result.ok) {
