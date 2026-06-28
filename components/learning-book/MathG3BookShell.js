@@ -35,7 +35,7 @@ export default function MathG3BookShell({
       handleMathG3BookClose(router);
       return;
     }
-    router.push("/learning/math-master");
+    router.push("/student/learning/math-master");
   };
 
   return (

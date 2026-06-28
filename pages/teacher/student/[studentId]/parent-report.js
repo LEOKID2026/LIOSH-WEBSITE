@@ -16,7 +16,7 @@ export default function TeacherStudentParentReportPage({ studentId }) {
   useEffect(() => {
     if (!studentId) return;
     router.replace({
-      pathname: "/learning/parent-report",
+      pathname: "/teacher/parent-report",
       query: { studentId, source: "teacher", period: "month" },
     });
   }, [router, studentId]);

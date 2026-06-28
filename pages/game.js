@@ -33,7 +33,7 @@ export default function Games() {
         <main className={GH.pageWrap} dir="rtl">
           <div className={`${GH.container} space-y-4`}>
             <GamesHubNavBar
-              backHref="/games"
+              backHref="/student/games"
               backLabel="משחקים"
               badge="🎮 משחקי ליאו"
               backBtnClass={GH.backBtn}

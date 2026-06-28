@@ -2446,7 +2446,7 @@ export default function MoledetGeographyMaster() {
           title="🗺️ מולדת וגיאוגרפיה"
           subtitle={`${playerName || "שחקן"} • ${GRADES[grade].name} • ${LEVELS[level].name} • ${getOperationName(operation)} • ${MODES[mode].name}`}
           onBack={backSafe}
-          onCurriculumClick={() => router.push("/learning/curriculum?subject=moledet-geography")}
+          onCurriculumClick={() => router.push("/student/learning/curriculum?subject=moledet-geography")}
           sound={sound}
         />
 
@@ -2454,7 +2454,7 @@ export default function MoledetGeographyMaster() {
           <LearningMasterNavBar
             MB={MB}
             headerRef={headerRef}
-            onCurriculumClick={() => router.push("/learning/curriculum?subject=moledet-geography")}
+            onCurriculumClick={() => router.push("/student/learning/curriculum?subject=moledet-geography")}
             onBack={backSafe}
           />
         </div>

@@ -3367,7 +3367,7 @@ export default function MathMaster() {
           title="🧮 מתמטיקה"
           subtitle={`${playerName || "שחקן"} • ${GRADES[grade].name} • ${LEVELS[level].name} • ${getOperationName(operation)} • ${MODES[mode].name}`}
           onBack={backSafe}
-          onCurriculumClick={() => router.push("/learning/curriculum?subject=math")}
+          onCurriculumClick={() => router.push("/student/learning/curriculum?subject=math")}
           sound={sound}
         />
 
@@ -3375,7 +3375,7 @@ export default function MathMaster() {
           <LearningMasterNavBar
             MB={MB}
             headerRef={headerRef}
-            onCurriculumClick={() => router.push("/learning/curriculum?subject=math")}
+            onCurriculumClick={() => router.push("/student/learning/curriculum?subject=math")}
             onBack={backSafe}
           />
         </div>

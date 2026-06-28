@@ -10,6 +10,7 @@ import { initPwaInstallPromptCapture } from "../lib/pwa/pwa-install-prompt";
 import { initParentPwaInstallPromptCapture } from "../lib/pwa/pwa-parent-install-prompt";
 import { initTeacherPwaInstallPromptCapture } from "../lib/pwa/pwa-teacher-install-prompt";
 import { resolvePwaManifestHref, resolvePwaPortal } from "../lib/pwa/resolve-pwa-manifest";
+import { normalizeBrowserPath } from "../lib/pwa/pwa-scope-routes.js";
 import { StudentThemeProvider } from "../contexts/StudentThemeContext.jsx";
 import BrowserThemeColorSync from "../components/BrowserThemeColorSync.jsx";
 import {
@@ -130,10 +131,14 @@ export default function MyApp({ Component, pageProps }) {
       };
     }
 
-    const pathname = router.pathname || "";
-    const isParentRoute = pathname.startsWith("/parent/");
-    const isStudentRoute = pathname.startsWith("/student/");
-    const isTeacherRoute = pathname.startsWith("/teacher/");
+    const browserPath =
+      typeof window !== "undefined"
+        ? window.location.pathname
+        : normalizeBrowserPath(router.asPath || router.pathname);
+
+    const isParentRoute = browserPath.startsWith("/parent/");
+    const isStudentRoute = browserPath.startsWith("/student/") || browserPath === "/kids";
+    const isTeacherRoute = browserPath.startsWith("/teacher/") || browserPath === "/teachers";
 
     const registerSW = () => {
       if (isParentRoute) {
@@ -235,12 +240,12 @@ export default function MyApp({ Component, pageProps }) {
 
     window.addEventListener("load", registerSW);
     return () => window.removeEventListener("load", registerSW);
-  }, [router.pathname]);
+  }, [router.asPath, router.pathname]);
 
-  const pathname = router.pathname || "";
-  const shouldGate = STUDENT_PROTECTED_ROUTES.has(pathname);
-  const pwaPortal = resolvePwaPortal(pathname);
-  const manifestHref = resolvePwaManifestHref(pathname);
+  const browserPath = normalizeBrowserPath(router.asPath || router.pathname);
+  const shouldGate = STUDENT_PROTECTED_ROUTES.has(router.pathname || "");
+  const pwaPortal = resolvePwaPortal(router.pathname, router.asPath);
+  const manifestHref = resolvePwaManifestHref(router.pathname, router.asPath);
   const isStudentPwaInstallMode = pwaPortal === "student";
   const isParentPwaInstallMode = pwaPortal === "parent";
   const isTeacherPwaInstallMode = pwaPortal === "teacher";

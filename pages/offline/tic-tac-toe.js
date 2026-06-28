@@ -181,7 +181,7 @@ export default function TicTacToeXL() {
     if (typeof window !== "undefined" && window.history.length > 1) {
       window.history.back();
     } else {
-      router.push("/offline");
+      router.push("/student/offline");
     }
   };
 

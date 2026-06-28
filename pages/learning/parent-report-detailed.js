@@ -57,6 +57,10 @@ import {
 } from "../../lib/teacher-portal/parent-report-remote-source.js";
 import { ParentReportExitNav, ParentReportThemeIcons } from "../../components/parent/ParentReportExitNav.jsx";
 import { PARENT_REPORT_PORTAL_GATE } from "../../lib/parent-report-server-truth.js";
+import {
+  reportDetailedPathForSource,
+  reportExitPathForSource,
+} from "../../lib/pwa/pwa-scope-routes.js";
 
 /**
  * מיפוי ויזואלי בלבד לפי recommendedNextStep מה payload — לא משנה מנוע או תוכן.
@@ -532,7 +536,7 @@ export default function ParentReportDetailedPage() {
     (mode) => {
       const next = normalizeDisplayMode(mode);
       const q = buildDetailedReportQueryFromQueryObject(router.query, next);
-      router.replace({ pathname: "/learning/parent-report-detailed", query: q }, undefined, {
+      router.replace({ pathname: reportDetailedPathForSource(router.query.source), query: q }, undefined, {
         shallow: true,
       });
       setDisplayMode(next);
@@ -545,7 +549,7 @@ export default function ParentReportDetailedPage() {
       const next = normalizeDisplayMode(mode);
       setDisplayMode(next);
       const q = buildDetailedReportQueryFromQueryObject(router.query, next);
-      router.replace({ pathname: "/learning/parent-report-detailed", query: q }, undefined, {
+      router.replace({ pathname: reportDetailedPathForSource(router.query.source), query: q }, undefined, {
         shallow: true,
       });
       window.setTimeout(() => window.print(), 120);
@@ -1875,7 +1879,7 @@ export default function ParentReportDetailedPage() {
                   🖨️ הדפס תקציר
                 </button>
                 <Link
-                  href="/learning"
+                  href={reportExitPathForSource(router.query.source)}
                   className="inline-flex items-center justify-center px-4 py-2.5 rounded-lg text-sm font-bold bg-violet-600/50 border border-violet-300/40 hover:bg-violet-600/65 text-white transition-all text-center"
                 >
                   חזרה ללמידה

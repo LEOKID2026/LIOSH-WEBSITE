@@ -34,7 +34,7 @@ export default function SoloGameFinishScreen({
   busy = false,
   subtitleHe = "",
   statsLines = [],
-  gamesHubHref = "/game",
+  gamesHubHref = "/student/game",
   gamesHubLabel = "חזרה למשחקים",
 }) {
   const { SG } = useSoloGameShellUi();

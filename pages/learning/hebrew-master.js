@@ -3110,7 +3110,7 @@ export default function HebrewMaster() {
           title="📚 עברית"
           subtitle={`${playerName || "שחקן"} • ${GRADES[grade].name} • ${LEVELS[level].name} • ${getOperationName(operation)} • ${MODES[mode].name}`}
           onBack={backSafe}
-          onCurriculumClick={() => router.push("/learning/curriculum?subject=hebrew")}
+          onCurriculumClick={() => router.push("/student/learning/curriculum?subject=hebrew")}
           sound={sound}
         />
 
@@ -3118,7 +3118,7 @@ export default function HebrewMaster() {
           <LearningMasterNavBar
             MB={MB}
             headerRef={headerRef}
-            onCurriculumClick={() => router.push("/learning/curriculum?subject=hebrew")}
+            onCurriculumClick={() => router.push("/student/learning/curriculum?subject=hebrew")}
             onBack={backSafe}
           />
         </div>

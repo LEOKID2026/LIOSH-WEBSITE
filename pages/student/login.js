@@ -15,6 +15,7 @@ import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import { syncStudentLocalStorageIdentity } from "../../lib/learning-student-local-sync";
 import { isStudentIdentityDiagnosticsEnabled } from "../../lib/dev-student-identity-client";
 import { LIOSH_GUEST_RESUME_TOKEN_KEY } from "../../lib/guest/constants.js";
+import { toStudentLearningPath } from "../../lib/pwa/pwa-scope-routes.js";
 
 function resolveNextTarget(router) {
   const raw = router.query?.next;
@@ -32,7 +33,7 @@ function resolveNextTarget(router) {
     !decoded.startsWith("//") &&
     !decoded.includes("://")
   ) {
-    return decoded;
+    return toStudentLearningPath(decoded);
   }
   return "/student/home";
 }

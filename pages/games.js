@@ -14,7 +14,7 @@ const GAME_HUB_CARDS = [
     title: "המשחקים של ליאו",
     emoji: "🎮",
     blurb: "משחקי ליאו הקלאסיים — ריצה, טיסה, חידות ועוד.",
-    href: "/game",
+    href: "/student/game",
   },
   {
     key: "online",
@@ -28,7 +28,7 @@ const GAME_HUB_CARDS = [
     title: "משחקים כל הזמן עם ליאו",
     emoji: "🔌",
     blurb: "משחקים על אותו מכשיר — גם בלי אינטרנט.",
-    href: "/offline",
+    href: "/student/offline",
   },
   {
     key: "educational",
