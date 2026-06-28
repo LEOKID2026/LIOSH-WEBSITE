@@ -23,7 +23,7 @@
 import { readFile } from "node:fs/promises";
 import { bootstrapQaDbWriteGuard } from "./lib/db-write-guard.mjs";
 import { buildStudentActivityPlan, seedStudentActivity } from "./lib/mass-virtual-students/activity-seeder.mjs";
-import { writeAllArtifacts } from "./lib/mass-virtual-students/artifacts.mjs";
+import { writeAllArtifacts, writeCheckpoint, writeProvisionManifest } from "./lib/mass-virtual-students/artifacts.mjs";
 import { buildPlannedCohort } from "./lib/mass-virtual-students/cohort.mjs";
 import { parseMassSimulationCli } from "./lib/mass-virtual-students/config.mjs";
 import { BEHAVIOR_PROFILES, SUBJECT_LABELS_HE } from "./lib/mass-virtual-students/constants.mjs";
@@ -58,6 +58,60 @@ function logVerdicts(summary, reportDir) {
     `[mass-sim] infrastructure=${summary.infrastructureVerdict} engineCoverage=${summary.engineCoverageVerdict} final=${summary.finalVerdict} artifacts → ${reportDir}`,
   );
   if (summary.blockers?.length) console.log(`[mass-sim] blockers: ${summary.blockers.join(", ")}`);
+}
+
+function simLog(msg) {
+  console.log(msg);
+  if (process.stdout.isTTY) return;
+  try {
+    process.stdout.write("");
+  } catch {
+    /* ignore */
+  }
+}
+
+async function loadResumeCheckpoint(reportDir) {
+  try {
+    return JSON.parse(await readFile(`${reportDir}/checkpoint.json`, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+async function loadExistingManifest(reportDir) {
+  try {
+    return JSON.parse(await readFile(`${reportDir}/manifest.json`, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+async function loadSeededStudentIdsFromDb(supabase, runId) {
+  const ids = new Set();
+  for (let offset = 0; ; offset += 1000) {
+    const { data, error } = await supabase
+      .from("learning_sessions")
+      .select("student_id")
+      .contains("metadata", { massVirtualStudents: runId })
+      .range(offset, offset + 999);
+    if (error) throw error;
+    if (!data?.length) break;
+    for (const row of data) {
+      if (row.student_id) ids.add(row.student_id);
+    }
+    if (data.length < 1000) break;
+  }
+  return ids;
+}
+
+function startHeartbeat(runId, getStats) {
+  const started = Date.now();
+  return setInterval(() => {
+    const s = getStats();
+    simLog(
+      `[mass-sim] heartbeat runId=${runId} elapsed=${Math.round((Date.now() - started) / 60000)}m phase=${s.phase} seeded=${s.studentsSeeded}/${s.studentsTotal} answers=${s.totalAnswers} sessions=${s.totalSessions}`,
+    );
+  }, 5 * 60 * 1000);
 }
 
 async function runVerifyOnly(cfg) {
@@ -205,16 +259,43 @@ async function main() {
     focusProfile: cfg.focusProfile,
   });
 
-  const provisioned = await provisionMassAccounts({
-    cohort,
-    parents: cfg.parents,
-    studentsPerParent,
-    password: cfg.password,
-    studentPin: cfg.studentPin,
-    emailDomain: cfg.emailDomain,
-    runId: cfg.runId,
-    dryRun: cfg.dryRun || guard.isDryRun,
-  });
+  const existingManifest = cfg.resume ? await loadExistingManifest(cfg.reportDir) : null;
+  let provisioned;
+
+  if (existingManifest?.students?.length) {
+    simLog(
+      `[mass-sim] resume: reusing manifest (${existingManifest.students.length} students, ${existingManifest.parents?.length ?? 0} parents) — skipping provision`,
+    );
+    provisioned = {
+      dryRun: false,
+      parents: existingManifest.parents,
+      students: existingManifest.students,
+    };
+  } else {
+    simLog("[mass-sim] provisioning accounts (~12 min, no per-student log)...");
+    provisioned = await provisionMassAccounts({
+      cohort,
+      parents: cfg.parents,
+      studentsPerParent,
+      password: cfg.password,
+      studentPin: cfg.studentPin,
+      emailDomain: cfg.emailDomain,
+      runId: cfg.runId,
+      dryRun: cfg.dryRun || guard.isDryRun,
+    });
+
+    if (!provisioned.dryRun) {
+      await writeProvisionManifest(cfg.reportDir, {
+        runId: cfg.runId,
+        emailDomain: cfg.emailDomain,
+        parents: provisioned.parents,
+        students: provisioned.students,
+        createdAt: new Date().toISOString(),
+        coverageMatrix,
+      });
+      simLog(`[mass-sim] manifest written → ${cfg.reportDir}/manifest.json`);
+    }
+  }
 
   if (provisioned.dryRun) {
     console.log("[mass-sim] dry-run — skipping DB seed + reports");
@@ -258,8 +339,40 @@ async function main() {
   let totalParentActivities = 0;
   const seedErrors = [];
   const bySubjectGrade = {};
+  const seededStudentIds = new Set();
 
+  const priorCheckpoint = cfg.resume ? await loadResumeCheckpoint(cfg.reportDir) : null;
+  if (cfg.resume) {
+    let fromCheckpoint = 0;
+    if (priorCheckpoint?.seededStudentIds?.length) {
+      for (const id of priorCheckpoint.seededStudentIds) seededStudentIds.add(id);
+      fromCheckpoint = priorCheckpoint.seededStudentIds.length;
+      totalAnswers = priorCheckpoint.totalAnswers || 0;
+      totalSessions = priorCheckpoint.totalSessions || 0;
+      totalParentActivities = priorCheckpoint.totalParentActivities || 0;
+    }
+    const fromDb = await loadSeededStudentIdsFromDb(supabase, cfg.runId);
+    for (const id of fromDb) seededStudentIds.add(id);
+    if (seededStudentIds.size) {
+      simLog(
+        `[mass-sim] resume: skipping ${seededStudentIds.size} students (checkpoint=${fromCheckpoint}, db=${fromDb.size})`,
+      );
+    }
+  }
+
+  const heartbeatStats = {
+    phase: "seed",
+    studentsSeeded: seededStudentIds.size,
+    studentsTotal: provisioned.students.length,
+    totalAnswers,
+    totalSessions,
+  };
+  const heartbeat = startHeartbeat(cfg.runId, () => heartbeatStats);
+
+  let seededCount = seededStudentIds.size;
   for (const student of provisioned.students) {
+    if (seededStudentIds.has(student.studentId)) continue;
+
     const cohortStudent = cohort.find((c) => c.login === student.login);
     const plan = buildStudentActivityPlan(
       { ...cohortStudent, parentId: student.parentId, studentId: student.studentId },
@@ -271,12 +384,52 @@ async function main() {
     totalSessions += seeded.sessionCount;
     totalParentActivities += seeded.parentActivityCount;
     seedErrors.push(...seeded.errors);
+    seededStudentIds.add(student.studentId);
+    seededCount += 1;
 
     const key = `${student.primarySubject}:${student.grade}`;
     bySubjectGrade[key] = (bySubjectGrade[key] || 0) + 1;
+
+    heartbeatStats.studentsSeeded = seededCount;
+    heartbeatStats.totalAnswers = totalAnswers;
+    heartbeatStats.totalSessions = totalSessions;
+
+    if (seededCount % cfg.progressEvery === 0 || seededCount === provisioned.students.length) {
+      simLog(
+        `[mass-sim] seed progress ${seededCount}/${provisioned.students.length} login=${student.login} answers=${totalAnswers} sessions=${totalSessions}`,
+      );
+      await writeCheckpoint(cfg.reportDir, {
+        runId: cfg.runId,
+        phase: "seed",
+        updatedAt: new Date().toISOString(),
+        studentsSeeded: seededCount,
+        studentsTotal: provisioned.students.length,
+        seededStudentIds: [...seededStudentIds],
+        totalAnswers,
+        totalSessions,
+        totalParentActivities,
+        lastLogin: student.login,
+        seedErrors,
+      });
+    }
   }
 
+  clearInterval(heartbeat);
+  heartbeatStats.phase = "speed-pressure";
+
   let speedPressureSeedAudit = null;
+  await writeCheckpoint(cfg.reportDir, {
+    runId: cfg.runId,
+    phase: "speed-pressure",
+    updatedAt: new Date().toISOString(),
+    studentsSeeded: seededCount,
+    studentsTotal: provisioned.students.length,
+    seededStudentIds: [...seededStudentIds],
+    totalAnswers,
+    totalSessions,
+    totalParentActivities,
+    seedErrors,
+  });
   if (cfg.seedSpeedPressure) {
     const seedAudit = await seedSpeedPressureCohort({
       students: provisioned.students,

@@ -20,7 +20,22 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-const PARENT_REPORT_PATH = "/learning/parent-report";
+/** Canonical parent report route from dashboard click (PWA-scoped portal). */
+const PARENT_REPORT_PATH = "/parent/parent-report";
+/** Legacy route — still accepted for backward-compatible deployments. */
+const PARENT_REPORT_PATH_LEGACY = "/learning/parent-report";
+const PARENT_REPORT_PATHS = [PARENT_REPORT_PATH, PARENT_REPORT_PATH_LEGACY];
+
+function isParentReportHref(href) {
+  if (!href) return false;
+  return PARENT_REPORT_PATHS.some((p) => href.includes(p));
+}
+
+function isParentReportPathname(pathname) {
+  if (!pathname) return false;
+  return PARENT_REPORT_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+}
+
 const PARENT_DASHBOARD_PATH = "/parent/dashboard";
 const MAX_DASHBOARD_ATTEMPTS = 3;
 const DASHBOARD_SIGNAL_TIMEOUT_MS = 45_000;
@@ -81,7 +96,7 @@ async function waitForDashboardShellSignals(page, log) {
           (el) => (el.textContent || "").trim() === "דשבורד הורים"
         );
         const reportLinks = document.querySelectorAll(
-          'a[href*="/learning/parent-report"]'
+          'a[href*="/parent/parent-report"], a[href*="/learning/parent-report"]'
         ).length;
         const hasAccountLine = bodyText.includes("ילדים בחשבון:");
         const hasEmptyState = bodyText.includes("עדיין לא נוספו ילדים");
@@ -446,15 +461,19 @@ export async function verifyParentDashboardAndOpenReport({
   // URL matches it (proof the report was reached via the dashboard click,
   // not a direct URL construction).
   const linkHref = await reportLink.first().getAttribute("href");
-  if (!linkHref || !linkHref.includes("/learning/parent-report")) {
+  if (!isParentReportHref(linkHref)) {
     throw new Error(
-      `parent-dashboard: "דוח הורים" link href looks wrong: ${String(linkHref)}`
+      `parent-dashboard: "דוח הורים" link href looks wrong: ${String(linkHref)} ` +
+        `(expected ${PARENT_REPORT_PATHS.join(" or ")})`
     );
   }
   log?.(`parent-dashboard: clicking דוח הורים -> ${linkHref}`);
 
   await Promise.all([
-    page.waitForURL("**/learning/parent-report**", { timeout: 30_000 }),
+    page.waitForURL(
+      (url) => isParentReportPathname(new URL(url).pathname),
+      { timeout: 30_000 }
+    ),
     reportLink.first().click(),
   ]);
 
@@ -468,9 +487,9 @@ export async function verifyParentDashboardAndOpenReport({
   } catch {
     // ignore
   }
-  if (reportPathname !== PARENT_REPORT_PATH) {
+  if (!isParentReportPathname(reportPathname)) {
     throw new Error(
-      `parent-dashboard: expected report path ${PARENT_REPORT_PATH}, got ${reportPathname} (${reportUrl})`
+      `parent-dashboard: expected report path ${PARENT_REPORT_PATHS.join(" or ")}, got ${reportPathname} (${reportUrl})`
     );
   }
   if (!studentIdFromUrl) {

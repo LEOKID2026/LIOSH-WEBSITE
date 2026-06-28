@@ -24,6 +24,16 @@ export async function writeJson(reportDir, name, data) {
   await writeFile(join(reportDir, name), `${JSON.stringify(data, null, 2)}\n`, "utf8");
 }
 
+export async function writeProvisionManifest(reportDir, manifest) {
+  await ensureReportDir(reportDir);
+  await writeJson(reportDir, "manifest.json", manifest);
+}
+
+export async function writeCheckpoint(reportDir, checkpoint) {
+  await ensureReportDir(reportDir);
+  await writeJson(reportDir, "checkpoint.json", checkpoint);
+}
+
 export function buildQaAccountsMarkdown(parents, { studentPin, runId }) {
   const lines = [
     `# חשבונות QA — ${runId}`,
