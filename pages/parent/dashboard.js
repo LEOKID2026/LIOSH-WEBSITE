@@ -863,7 +863,7 @@ export default function ParentDashboardPage() {
               {students.map((student) => {
                 const displayName = student.full_name || "ילד";
                 const gradeLabel = gradeLabelFromValue(student.grade_level);
-                const reportHref = `/parent/parent-report?studentId=${encodeURIComponent(student.id)}&source=parent`;
+                const reportHref = `/learning/parent-report?studentId=${encodeURIComponent(student.id)}&source=parent`;
 
                 return (
                   <div key={student.id} className={T.card}>

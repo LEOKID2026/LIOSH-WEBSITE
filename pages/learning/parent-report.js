@@ -92,10 +92,6 @@ import {
   parseParentReportRemoteSource,
 } from "../../lib/teacher-portal/parent-report-remote-source.js";
 import { PARENT_REPORT_PORTAL_GATE } from "../../lib/parent-report-server-truth.js";
-import {
-  reportDetailedPathForSource,
-  reportExitPathForSource,
-} from "../../lib/pwa/pwa-scope-routes.js";
 import { trackProductEvent } from "../../lib/analytics/track-event.client.js";
 
 function parentReportPresetDays(period, customDates) {
@@ -1932,7 +1928,7 @@ export default function ParentReport() {
             <div className="flex flex-wrap justify-center gap-2 mt-2 no-pdf">
               <Link
                 href={{
-                  pathname: reportDetailedPathForSource(router.query.source),
+                  pathname: "/learning/parent-report-detailed",
                   query: detailedReportQuery,
                 }}
                 prefetch={false}
@@ -4141,7 +4137,7 @@ export default function ParentReport() {
               🖨️ הדפס / 📄 ייצא ל-PDF
             </button>
             <button
-              onClick={() => router.push(reportExitPathForSource(router.query.source))}
+              onClick={() => router.push("/learning")}
               className="px-4 md:px-6 py-2 md:py-3 rounded-lg bg-emerald-500/80 hover:bg-emerald-500 font-bold text-sm md:text-base"
             >
               ← חזור ללמידה

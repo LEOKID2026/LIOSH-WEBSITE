@@ -21,7 +21,7 @@ export default function SoloGameNavButtons({
   primaryBusy = false,
   primaryBusyLabel = "טוען…",
   compact = false,
-  gamesHubHref = "/student/game",
+  gamesHubHref = "/game",
   gamesHubLabel = "חזרה למשחקים",
 }) {
   const { SG, tokens: T } = useSoloGameShellUi();

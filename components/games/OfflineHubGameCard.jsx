@@ -78,7 +78,7 @@ export default function OfflineHubGameCard({ game, GH, locked = false }) {
   }
 
   return (
-    <Link href={`/student/offline/${game.slug}`} className={cardShell}>
+    <Link href={`/offline/${game.slug}`} className={cardShell}>
       <div className="flex flex-col gap-1.5 text-right md:hidden">{mobileBody}</div>
       <div className="hidden flex-col md:flex">{desktopBody}</div>
     </Link>

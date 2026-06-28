@@ -118,27 +118,6 @@ const nextConfig = {
     return config;
   },
   // PWA support
-  async rewrites() {
-    return {
-      beforeFiles: [
-        { source: "/student/games", destination: "/games" },
-        { source: "/student/game", destination: "/game" },
-        { source: "/student/gallery", destination: "/gallery" },
-        { source: "/student/offline", destination: "/offline" },
-        { source: "/student/offline/:path*", destination: "/offline/:path*" },
-        { source: "/student/learning", destination: "/learning" },
-        { source: "/student/learning/:path*", destination: "/learning/:path*" },
-        { source: "/parent/parent-report", destination: "/learning/parent-report" },
-        { source: "/parent/parent-report-detailed", destination: "/learning/parent-report-detailed" },
-        { source: "/parent/home", destination: "/parent/dashboard" },
-        { source: "/parent/guardian/view", destination: "/guardian/view" },
-        { source: "/parent/guardian/login", destination: "/guardian/login" },
-        { source: "/teacher/parent-report", destination: "/learning/parent-report" },
-        { source: "/teacher/parent-report-detailed", destination: "/learning/parent-report-detailed" },
-        { source: "/teacher/home", destination: "/teacher/dashboard" },
-      ],
-    };
-  },
   async headers() {
     return [
       {

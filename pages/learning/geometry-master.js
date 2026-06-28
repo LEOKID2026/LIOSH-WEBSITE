@@ -2551,7 +2551,7 @@ export default function GeometryMaster() {
           title="📐 גאומטריה"
           subtitle={`${playerName || "שחקן"} • ${GRADES[grade]?.name || ""} • ${LEVELS[level].name} • ${getTopicName(topic)} • ${MODES[mode].name}`}
           onBack={backSafe}
-          onCurriculumClick={() => router.push("/student/learning/geometry-curriculum")}
+          onCurriculumClick={() => router.push("/learning/geometry-curriculum")}
           sound={sound}
         />
 
@@ -2559,7 +2559,7 @@ export default function GeometryMaster() {
           <LearningMasterNavBar
             MB={MB}
             headerRef={headerRef}
-            onCurriculumClick={() => router.push("/student/learning/geometry-curriculum")}
+            onCurriculumClick={() => router.push("/learning/geometry-curriculum")}
             onBack={backSafe}
           />
         </div>

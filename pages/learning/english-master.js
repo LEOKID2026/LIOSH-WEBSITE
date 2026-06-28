@@ -2534,7 +2534,7 @@ export default function EnglishMaster() {
           title="🇬🇧 אנגלית"
           subtitle={`${playerName || "שחקן"} • ${gradeInfo.name} • ${LEVELS[level].name} • ${getTopicName(topic)} • ${MODES[mode].name}`}
           onBack={backSafe}
-          onCurriculumClick={() => router.push("/student/learning/curriculum?subject=english")}
+          onCurriculumClick={() => router.push("/learning/curriculum?subject=english")}
           sound={sound}
         />
 
@@ -2542,7 +2542,7 @@ export default function EnglishMaster() {
           <LearningMasterNavBar
             MB={MB}
             headerRef={headerRef}
-            onCurriculumClick={() => router.push("/student/learning/curriculum?subject=english")}
+            onCurriculumClick={() => router.push("/learning/curriculum?subject=english")}
             onBack={backSafe}
           />
         </div>

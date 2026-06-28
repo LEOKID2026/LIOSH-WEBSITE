@@ -6,7 +6,7 @@ import Link from "next/link";
 export default function GameLockedScreen({
   title = "נעול על ידי ההורים",
   adminDisabled = false,
-  backHref = "/student/games",
+  backHref = "/games",
   backLabel = "חזרה למשחקים",
 }) {
   const heading = adminDisabled ? "המשחק אינו זמין כרגע" : title;

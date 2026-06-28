@@ -131,7 +131,7 @@ export default function SoloGameShell({ gameKey }) {
       >
         <header className={themedShell ? SG.header : "flex shrink-0 items-center justify-between gap-2 border-b border-white/10 px-3 py-2 sm:px-4"}>
           <Link
-            href="/student/game"
+            href="/game"
             className={themedShell ? SG.navLink : "min-h-[44px] rounded-lg px-3 py-2 text-sm font-bold text-gray-300 hover:bg-white/5 hover:text-white"}
           >
             משחקים

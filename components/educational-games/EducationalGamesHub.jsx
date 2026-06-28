@@ -22,7 +22,7 @@ export default function EducationalGamesHub() {
         <main className={GH.pageWrap} dir="rtl">
           <div className={`${GH.container} space-y-4`}>
             <GamesHubNavBar
-              backHref="/student/games"
+              backHref="/games"
               backLabel="משחקים"
               badge="📚 חינוכי"
               backBtnClass={GH.backBtn}

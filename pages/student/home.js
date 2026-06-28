@@ -923,13 +923,13 @@ export default function StudentHomePage() {
             <div className="flex flex-col gap-2 md:gap-3 shrink-0 w-full md:w-auto">
               <div className="grid grid-cols-2 gap-2 md:flex md:flex-row md:gap-3">
                 <Link
-                  href="/student/learning"
+                  href="/learning"
                   className={`${T.ctaPrimary} w-full !px-2 !py-2.5 !text-sm md:!px-5 md:!py-3 md:!text-lg md:w-auto`}
                 >
                   התחל ללמוד
                 </Link>
                 <Link
-                  href="/student/games"
+                  href="/games"
                   className={`${T.ctaGames} w-full !px-2 !py-2.5 !text-sm md:!px-5 md:!py-3 md:!text-lg md:w-auto`}
                 >
                   משחקים

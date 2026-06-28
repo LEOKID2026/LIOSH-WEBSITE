@@ -117,7 +117,7 @@ export default function LearningHub({ showDevStudentSimulator }) {
             return (
               <Link
                 key={g.slug}
-                href={`/student/learning/${g.slug}`}
+                href={`/learning/${g.slug}`}
                 className={`${T.hubCardBase} ${subject.card}`}
               >
                 <span className={`${T.hubCardBar} ${subject.bar}`} aria-hidden />
@@ -136,7 +136,7 @@ export default function LearningHub({ showDevStudentSimulator }) {
         {false && showDevStudentSimulator ? (
           <section className="mt-4">
             <Link
-              href="/student/learning/dev-student-simulator"
+              href="/learning/dev-student-simulator"
               className="block rounded-2xl border border-indigo-300/40 bg-indigo-500/10 hover:bg-indigo-500/20 transition p-4 text-center"
             >
               <h2 className="font-bold text-lg">סימולטור ילדים (פיתוח)</h2>

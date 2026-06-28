@@ -211,7 +211,7 @@ export default function RockPaperScissors() {
     if (typeof window !== "undefined" && window.history.length > 1) {
       window.history.back();
     } else {
-      router.push("/student/offline");
+      router.push("/offline");
     }
   };
 

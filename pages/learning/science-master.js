@@ -2953,7 +2953,7 @@ function saveScienceAnswerInParallel({
           title="🔬 מדעים"
           subtitle={`${playerName || "שחקן"} • ${GRADES[grade].name} • ${LEVELS[level].name} • ${getTopicLabel(topic)} • ${MODES[mode].name}`}
           onBack={backSafe}
-          onCurriculumClick={() => router.push("/student/learning/curriculum?subject=science")}
+          onCurriculumClick={() => router.push("/learning/curriculum?subject=science")}
           sound={sound}
         />
 
@@ -2961,7 +2961,7 @@ function saveScienceAnswerInParallel({
           <LearningMasterNavBar
             MB={MB}
             headerRef={headerRef}
-            onCurriculumClick={() => router.push("/student/learning/curriculum?subject=science")}
+            onCurriculumClick={() => router.push("/learning/curriculum?subject=science")}
             onBack={backSafe}
           />
         </div>
