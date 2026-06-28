@@ -89,6 +89,13 @@ function main() {
     chunkSet.add(toChunkUrl(file));
   }
 
+  // Also include percent-encoded variants for dynamic-route chunks ([gameKey] → %5BgameKey%5D).
+  // Browsers request these with encoded brackets; cache.match() requires exact URL match.
+  const chunkArray = [...chunkSet].sort();
+  const encodedVariants = chunkArray
+    .filter((c) => c.includes("["))
+    .map((c) => c.replace(/\[/g, "%5B").replace(/\]/g, "%5D"));
+
   const navUrls = [...OFFLINE_FULL_PRECACHE_NAV_URLS];
   const dataUrls = navUrls
     .map((url) => dataRouteForNavUrl(url, buildId))
@@ -97,7 +104,7 @@ function main() {
   writeOutput({
     generatedAt: new Date().toISOString(),
     buildId,
-    chunkUrls: [...chunkSet].sort(),
+    chunkUrls: [...chunkArray, ...encodedVariants],
     navUrls,
     dataUrls,
     assetUrls: [...OFFLINE_FULL_PRECACHE_ASSET_URLS],

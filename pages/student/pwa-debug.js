@@ -373,7 +373,7 @@ export default function PwaDebug() {
               ok={data.cacheNames.some((n) => n.startsWith("student-"))}
             />
             <Row
-              label="student-offline-v4-full"
+              label={CACHE_NAME}
               value={data.cacheNames.includes(CACHE_NAME) ? "exists" : "MISSING"}
               ok={data.cacheNames.includes(CACHE_NAME)}
             />

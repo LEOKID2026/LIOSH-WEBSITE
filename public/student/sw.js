@@ -257,20 +257,24 @@ async function purgeNonOfflineEntries() {
   );
 }
 
-/** @param {string[]} urls */
-async function precacheUrls(urls) {
+/** @param {string[]} urls @param {number} [batchSize] */
+async function precacheUrls(urls, batchSize = 6) {
   const cache = await caches.open(CACHE_NAME);
-  await Promise.allSettled(
-    urls.map(async (url) => {
-      const request = new Request(url, { credentials: "same-origin", cache: "reload" });
-      const existing = await cache.match(request, { ignoreSearch: true });
-      if (existing) return;
-      const response = await fetch(request);
-      if (response.ok) {
-        await cache.put(request, response);
-      }
-    }),
-  );
+  for (let i = 0; i < urls.length; i += batchSize) {
+    await Promise.allSettled(
+      urls.slice(i, i + batchSize).map(async (url) => {
+        const request = new Request(url, { credentials: "same-origin", cache: "reload" });
+        const existing = await cache.match(request, { ignoreSearch: true });
+        if (existing) return;
+        try {
+          const response = await fetch(request);
+          if (response.ok) {
+            await cache.put(request, response);
+          }
+        } catch (_) {}
+      }),
+    );
+  }
 }
 
 self.addEventListener("install", (event) => {
@@ -305,28 +309,38 @@ self.addEventListener("install", (event) => {
       );
 
       if (STUDENT_OFFLINE_FULL_SW_ENABLED) {
+        // De-dupe: DYNAMIC_ROUTE_ENCODED_CHUNKS may already be in FULL_CHUNK_URLS
+        // when the generator ran on Vercel. Using a Set avoids double-fetching.
         const fullUrls = [
-          ...FULL_CHUNK_URLS,
-          ...DYNAMIC_ROUTE_ENCODED_CHUNKS,  // also cache %5BgameKey%5D variants
-          ...FULL_DATA_URLS,
-          ...FULL_ASSET_URLS,
+          ...new Set([
+            ...FULL_CHUNK_URLS,
+            ...DYNAMIC_ROUTE_ENCODED_CHUNKS,
+            ...FULL_DATA_URLS,
+            ...FULL_ASSET_URLS,
+          ]),
         ];
-        await Promise.allSettled(
-          fullUrls.map(async (url) => {
-            const request = new Request(url, {
-              credentials: "same-origin",
-              cache: "reload",
-            });
-            try {
-              const response = await fetch(request);
-              if (response.ok) {
-                await cache.put(request, response);
+
+        // Fetch in batches of 6 to avoid overwhelming the network.
+        // Fetching 100+ URLs simultaneously causes silent failures on mobile.
+        const BATCH = 6;
+        for (let i = 0; i < fullUrls.length; i += BATCH) {
+          await Promise.allSettled(
+            fullUrls.slice(i, i + BATCH).map(async (url) => {
+              const request = new Request(url, {
+                credentials: "same-origin",
+                cache: "reload",
+              });
+              try {
+                const response = await fetch(request);
+                if (response.ok) {
+                  await cache.put(request, response);
+                }
+              } catch (_err) {
+                // Hub warmup fills gaps when online.
               }
-            } catch (_err) {
-              // Warm-up from hub retries while online.
-            }
-          }),
-        );
+            }),
+          );
+        }
       }
 
       await self.skipWaiting();
@@ -336,17 +350,32 @@ self.addEventListener("install", (event) => {
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches
-      .keys()
-      .then((keys) =>
-        Promise.all(
-          keys
-            .filter((k) => k.startsWith(CACHE_PREFIX) && k !== CACHE_NAME)
-            .map((k) => caches.delete(k)),
-        ),
-      )
-      .then(() => purgeNonOfflineEntries())
-      .then(() => self.clients.claim()),
+    (async () => {
+      // Delete old student-* caches.
+      const keys = await caches.keys();
+      await Promise.all(
+        keys
+          .filter((k) => k.startsWith(CACHE_PREFIX) && k !== CACHE_NAME)
+          .map((k) => caches.delete(k)),
+      );
+
+      await purgeNonOfflineEntries();
+      await self.clients.claim();
+
+      // Self-heal: re-fetch URLs the install event missed.
+      // precacheUrls() skips already-cached entries (cheap in the happy path).
+      if (STUDENT_OFFLINE_FULL_SW_ENABLED) {
+        const healUrls = [
+          ...new Set([
+            ...FULL_CHUNK_URLS,
+            ...DYNAMIC_ROUTE_ENCODED_CHUNKS,
+            ...FULL_DATA_URLS,
+            ...FULL_ASSET_URLS,
+          ]),
+        ];
+        await precacheUrls(healUrls);
+      }
+    })(),
   );
 });
 
