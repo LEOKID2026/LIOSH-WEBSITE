@@ -17,7 +17,7 @@ const GENERATED = self.__STUDENT_OFFLINE_PRECACHE__ || {
 };
 
 const CACHE_NAME = STUDENT_OFFLINE_FULL_SW_ENABLED
-  ? "student-offline-v4-full"
+  ? "student-offline-v5-full"
   : "student-offline-v1";
 const CACHE_PREFIX = "student-";
 
@@ -46,7 +46,17 @@ const FULL_ASSET_URLS = STUDENT_OFFLINE_FULL_SW_ENABLED
   ? GENERATED.assetUrls || []
   : [];
 
+// Browsers request Next.js dynamic-route chunks with percent-encoded brackets
+// (%5BgameKey%5D instead of [gameKey]). Cache both forms so cache.match() hits
+// regardless of which encoding the browser uses.
+const DYNAMIC_ROUTE_ENCODED_CHUNKS = FULL_CHUNK_URLS
+  .filter((u) => u.includes("["))
+  .map((u) => u.replace(/\[/g, "%5B").replace(/\]/g, "%5D"));
+
 const OFFLINE_CHUNK_SET = new Set(FULL_CHUNK_URLS);
+// Decoded pathname from new URL() always yields [gameKey], not %5BgameKey%5D,
+// so the encoded set is used only for cache.match() fallback (not isOfflineStaticChunk).
+const OFFLINE_CHUNK_ENCODED_SET = new Set(DYNAMIC_ROUTE_ENCODED_CHUNKS);
 const OFFLINE_DATA_SET = new Set(FULL_DATA_URLS);
 const OFFLINE_ASSET_SET = new Set(FULL_ASSET_URLS);
 
@@ -132,6 +142,18 @@ function isOfflinePrecachedAsset(pathname) {
 async function cacheFirstAllowlisted(request, allowRuntimeCache) {
   const cached = await caches.match(request);
   if (cached) return cached;
+
+  // Browsers request dynamic-route chunks as %5BgameKey%5D (URL-encoded brackets)
+  // but our cache stores them with literal [gameKey]. Try the decoded pathname form.
+  // new URL().pathname always returns the decoded path, so origin+pathname strips encoding.
+  try {
+    const u = new URL(request.url);
+    const decodedHref = u.origin + u.pathname + u.search;
+    if (decodedHref !== request.url) {
+      const cachedDecoded = await caches.match(decodedHref);
+      if (cachedDecoded) return cachedDecoded;
+    }
+  } catch (_) {}
 
   const response = await fetch(request);
   if (response.ok && allowRuntimeCache) {
@@ -285,6 +307,7 @@ self.addEventListener("install", (event) => {
       if (STUDENT_OFFLINE_FULL_SW_ENABLED) {
         const fullUrls = [
           ...FULL_CHUNK_URLS,
+          ...DYNAMIC_ROUTE_ENCODED_CHUNKS,  // also cache %5BgameKey%5D variants
           ...FULL_DATA_URLS,
           ...FULL_ASSET_URLS,
         ];
@@ -342,6 +365,7 @@ self.addEventListener("message", (event) => {
     const urls = [
       ...OFFLINE_GAME_URLS,
       ...FULL_CHUNK_URLS,
+      ...DYNAMIC_ROUTE_ENCODED_CHUNKS,  // also warm %5BgameKey%5D variants
       ...FULL_DATA_URLS,
       ...extraDataUrls,
       ...FULL_ASSET_URLS,

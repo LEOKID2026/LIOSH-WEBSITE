@@ -7,7 +7,7 @@ const SW_FILES = [
   "/student/offline-precache-generated.js",
 ];
 
-const CACHE_NAME = "student-offline-v4-full";
+const CACHE_NAME = "student-offline-v5-full";
 
 const SOLO_ROUTES = [
   "/student/offline/solo/catcher",
@@ -139,6 +139,12 @@ export default function PwaDebug() {
       const allChunkEntries = staticEntries.filter((p) => p.includes("/_next/static/chunks/") && !p.includes("/chunks/pages/"));
       const cssEntries = staticEntries.filter((p) => p.includes("/_next/static/css/"));
 
+      // Check both encoded and decoded variants for dynamic-route chunks
+      const soloRaw = pageChunkEntries.find((p) => p.includes("/solo/[gameKey]")) || null;
+      const soloEncoded = pageChunkEntries.find((p) => p.includes("/solo/%5BgameKey%5D")) || null;
+      const eduRaw = pageChunkEntries.find((p) => p.includes("/educational/[gameKey]")) || null;
+      const eduEncoded = pageChunkEntries.find((p) => p.includes("/educational/%5BgameKey%5D")) || null;
+
       // Per-route cache check
       const checkRoute = async (route) => {
         try {
@@ -192,6 +198,10 @@ export default function PwaDebug() {
         pageChunkList: pageChunkEntries.sort(),
         allChunkList: allChunkEntries.sort(),
         cssList: cssEntries.sort(),
+        soloRaw,
+        soloEncoded,
+        eduRaw,
+        eduEncoded,
         soloCache,
         eduCache,
         baseCache,
@@ -261,6 +271,10 @@ export default function PwaDebug() {
       `cache /chunks/pages/ entries: ${d.pageChunkEntries}`,
       `cache solo-related chunks: ${d.soloChunkEntries}`,
       `cache edu-related chunks: ${d.eduChunkEntries}`,
+      `solo [gameKey] decoded: ${d.soloRaw || "MISSING"}`,
+      `solo %5BgameKey%5D encoded: ${d.soloEncoded || "MISSING"}`,
+      `edu [gameKey] decoded: ${d.eduRaw || "MISSING"}`,
+      `edu %5BgameKey%5D encoded: ${d.eduEncoded || "MISSING"}`,
       `shared chunk files (${(d.allChunkList || []).length}):\n${(d.allChunkList || []).map((p) => "  " + p).join("\n")}`,
       `page chunk files (${(d.pageChunkList || []).length}):\n${(d.pageChunkList || []).map((p) => "  " + p).join("\n")}`,
       `css files (${(d.cssList || []).length}):\n${(d.cssList || []).map((p) => "  " + p).join("\n")}`,
@@ -412,6 +426,41 @@ export default function PwaDebug() {
                 ok={data.eduCache[r]}
               />
             ))}
+          </section>
+
+          {/* Dynamic Route Chunk Variants — key diagnostic for %5B/%5D issue */}
+          <section style={{ marginBottom: 20 }}>
+            <SectionHead title="Dynamic Route Chunks — Encoding Check" />
+            <Row
+              label="solo/[gameKey] (decoded)"
+              value={data.soloRaw ? "✓ in cache" : "✗ MISSING"}
+              ok={Boolean(data.soloRaw)}
+            />
+            <Row
+              label="solo/%5BgameKey%5D (encoded)"
+              value={data.soloEncoded ? "✓ in cache" : "✗ MISSING"}
+              ok={Boolean(data.soloEncoded)}
+            />
+            <Row
+              label="educational/[gameKey] (decoded)"
+              value={data.eduRaw ? "✓ in cache" : "✗ MISSING"}
+              ok={Boolean(data.eduRaw)}
+            />
+            <Row
+              label="educational/%5BgameKey%5D (encoded)"
+              value={data.eduEncoded ? "✓ in cache" : "✗ MISSING"}
+              ok={Boolean(data.eduEncoded)}
+            />
+            {data.soloRaw && (
+              <div style={{ fontSize: 10, color: "#475569", marginTop: 4, wordBreak: "break-all" }}>
+                decoded: {data.soloRaw}
+              </div>
+            )}
+            {data.soloEncoded && (
+              <div style={{ fontSize: 10, color: "#64748b", wordBreak: "break-all" }}>
+                encoded: {data.soloEncoded}
+              </div>
+            )}
           </section>
 
           {/* Shared Chunks */}
