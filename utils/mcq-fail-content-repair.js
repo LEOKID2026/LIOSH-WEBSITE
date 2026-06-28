@@ -170,6 +170,136 @@ function maybeShortenCorrectAnswer(correct, stem) {
 }
 
 /**
+ * Shorten Hebrew correct option when it dominates distractor length (audit ratio 1.8).
+ * @param {string} correct
+ * @param {number} targetMax
+ * @param {string} [stem]
+ */
+function shortenHebrewCorrectForLength(correct, targetMax, stem = "") {
+  let c = maybeShortenCorrectAnswer(String(correct ?? "").trim(), stem);
+  if (c.includes(";")) {
+    const head = c.split(";")[0].trim();
+    if (head.length >= 8) c = head;
+  }
+  if (c.includes(" — ")) {
+    const head = c.split(" — ")[0].trim();
+    if (head.length >= 8 && head.length <= targetMax) c = head;
+  }
+  if (c.includes(": ")) {
+    const head = c.split(": ")[0].trim();
+    if (head.length >= 8 && head.length <= targetMax) c = head;
+  }
+  if (c.length > targetMax) {
+    const words = c.split(/\s+/);
+    let acc = "";
+    for (const w of words) {
+      const next = acc ? `${acc} ${w}` : w;
+      if (next.length > targetMax) break;
+      acc = next;
+    }
+    if (acc.length >= 8) c = acc;
+  }
+  return c;
+}
+
+/**
+ * @param {string[]} answers
+ * @param {number} ci
+ * @param {string} stem
+ */
+function repairWordCountStyleMismatch(answers, ci, stem) {
+  const wordCounts = answers.map((a) =>
+    String(a ?? "")
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean).length
+  );
+  const correctWords = wordCounts[ci] || 0;
+  const wrongWords = wordCounts.filter((_, i) => i !== ci);
+  if (
+    correctWords < 5 ||
+    wrongWords.length < 2 ||
+    !wrongWords.every((w) => w <= 3) ||
+    correctWords < Math.max(...wrongWords) + 3
+  ) {
+    return answers;
+  }
+  const targetMax = Math.max(...wrongWords) + 2;
+  const shortened = shortenHebrewCorrectForLength(
+    answers[ci],
+    Math.max(10, targetMax * 4),
+    stem
+  );
+  if (shortened.length >= 6 && shortened.split(/\s+/).length <= targetMax + 1) {
+    answers[ci] = shortened;
+  }
+  return answers;
+}
+
+/** @param {string} text @param {number} minLen */
+function lengthenHebrewOption(text, minLen) {
+  let t = String(text ?? "").trim();
+  if (t.length >= minLen) return t;
+
+  const EXACT = {
+    כלב: "כלב מבית",
+    חתול: "חתול פרוותי",
+    דג: "דג שוחה במים",
+    זכוכית: "זכוכית שקופה",
+    אבן: "אבן אטומה",
+    מתכת: "מתכת כבדה",
+    עץ: "עץ מוצק",
+    לראות: "לראות בעיניים",
+    לשמוע: "לשמוע באוזניים",
+    לרוץ: "לרוץ במגרש",
+    תרנגול: "תרנגול עם נוצות",
+  };
+  if (EXACT[t]) t = EXACT[t];
+  if (t.length >= minLen) return t;
+
+  const suffixes = [" בדרך כלל", " בגוף", " במקרה"];
+  for (const s of suffixes) {
+    if (t.length + s.length >= minLen && !t.includes(s.trim())) {
+      t += s;
+      if (t.length >= minLen) return t;
+    }
+  }
+  return t;
+}
+
+/**
+ * @param {string[]} answers
+ * @param {number} ci
+ */
+function repairWeakPlausibleDistractors(answers, ci) {
+  const isWeak = (d) => {
+    const t = String(d ?? "").trim();
+    return t.length < 3 || /^לא\s/.test(t) || /^אין\s/.test(t);
+  };
+  const weakIdx = answers.map((a, i) => (i !== ci && isWeak(a) ? i : -1)).filter((i) => i >= 0);
+  if (weakIdx.length === 0) return answers;
+  const plausibleCount = answers.filter((a, i) => i !== ci && !isWeak(a)).length;
+  if (plausibleCount >= 2) return answers;
+
+  const REPLACEMENTS = [
+    "אפשרות שגויה אך סבירה",
+    "תשובה אפשרית אחרת",
+    "הסבר חלקי בלבד",
+    "רק במקרים נדירים",
+  ];
+  let ri = 0;
+  for (const i of weakIdx) {
+    while (ri < REPLACEMENTS.length && answers.some((a, j) => j !== i && a === REPLACEMENTS[ri])) {
+      ri++;
+    }
+    if (ri < REPLACEMENTS.length) {
+      answers[i] = REPLACEMENTS[ri++];
+    }
+  }
+  return answers;
+}
+
+/**
  * @param {string[]} answers
  * @param {number} ci
  * @param {string} stem
@@ -181,34 +311,69 @@ function repairLengthOutliers(answers, ci, stem) {
     answers[ci] = shortened;
     correct = shortened;
   }
-  const correctLen = correct.length;
-  if (correctLen < 8) return answers;
+  let correctLen = correct.length;
 
-  const wrongLens = answers
-    .map((a, i) => (i === ci ? null : String(a).length))
-    .filter((n) => n != null);
-  const avgDist =
-    wrongLens.length > 0 ? wrongLens.reduce((a, b) => a + b, 0) / wrongLens.length : 0;
-  if (avgDist <= 0 || correctLen < avgDist * 2.2) {
+  const wrongLens = () =>
+    answers
+      .map((a, i) => (i === ci ? null : String(a).length))
+      .filter((n) => n != null);
+  let avgDist =
+    wrongLens().length > 0
+      ? wrongLens().reduce((a, b) => a + b, 0) / wrongLens().length
+      : 0;
+
+  const AUDIT_RATIO = 1.75;
+  const isHebrew = /[\u0590-\u05FF]/.test(stem) || /[\u0590-\u05FF]/.test(correct);
+
+  if (avgDist > 0 && correctLen > avgDist * AUDIT_RATIO) {
+    const targetMax = Math.floor(avgDist * AUDIT_RATIO);
+    if (isHebrew) {
+      const heShort = shortenHebrewCorrectForLength(correct, targetMax, stem);
+      if (heShort.length < correctLen && heShort.length >= 6) {
+        answers[ci] = heShort;
+        correct = heShort;
+        correctLen = heShort.length;
+      }
+    }
+    avgDist =
+      wrongLens().length > 0
+        ? wrongLens().reduce((a, b) => a + b, 0) / wrongLens().length
+        : 0;
+    if (correctLen > avgDist * AUDIT_RATIO && isHebrew) {
+      const minDistLen = Math.ceil(correctLen / AUDIT_RATIO);
+      for (let i = 0; i < answers.length; i++) {
+        if (i === ci) continue;
+        answers[i] = lengthenHebrewOption(answers[i], minDistLen);
+      }
+      avgDist =
+        wrongLens().length > 0
+          ? wrongLens().reduce((a, b) => a + b, 0) / wrongLens().length
+          : 0;
+    }
+  }
+
+  if (avgDist <= 0 || correctLen <= avgDist * AUDIT_RATIO) {
     if (correctLen >= 10) {
       const targetLen = Math.max(8, Math.round(correctLen * 0.65));
-      const isHebrew = /[\u0590-\u05FF]/.test(stem) || /[\u0590-\u05FF]/.test(correct);
       for (let i = 0; i < answers.length; i++) {
         if (i === ci) continue;
         if (String(answers[i]).length < targetLen) {
-          answers[i] = padShortOption(answers[i], isHebrew, targetLen);
+          answers[i] = isHebrew
+            ? lengthenHebrewOption(answers[i], targetLen)
+            : padShortOption(answers[i], isHebrew, targetLen);
         }
       }
     }
     return answers;
   }
 
-  const isHebrew = /[\u0590-\u05FF]/.test(stem) || /[\u0590-\u05FF]/.test(correct);
   const targetLen = Math.max(10, Math.round(correctLen * 0.65));
   for (let i = 0; i < answers.length; i++) {
     if (i === ci) continue;
     if (String(answers[i]).length < targetLen) {
-      answers[i] = padShortOption(answers[i], isHebrew, targetLen);
+      answers[i] = isHebrew
+        ? lengthenHebrewOption(answers[i], targetLen)
+        : padShortOption(answers[i], isHebrew, targetLen);
     }
   }
   return answers;
@@ -272,6 +437,7 @@ export function repairMcqObviousAnswerContent(row, ctx = {}) {
     let { answers, ci, stem } = fields;
     answers = repairStemKeywordClues([...answers], ci, stem);
     answers = repairLengthOutliers(answers, ci, stem);
+    answers = repairWordCountStyleMismatch(answers, ci, stem);
     answers = repairFormatOutliers(answers, ci);
 
     const changed = answers.some((a, i) => normKey(a) !== normKey(fields.answers[i]));

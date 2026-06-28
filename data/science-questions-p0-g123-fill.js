@@ -299,7 +299,7 @@ export const SCIENCE_QUESTIONS_P0_G123_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "למה חשוב לשתות מים במהלך היום?",
+  "stem": "מה התועלת בשתיית מים במהלך היום?",
   "options": [
     "כדי לעזור לגוף לעבוד כראוי",
     "כדי שלא נצטרך לנשום",
@@ -791,7 +791,7 @@ export const SCIENCE_QUESTIONS_P0_G123_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "איזה בעל חיים חי במים ויש לו סנפירים?",
+  "stem": "איזה בעל חיים חי במים ויש לו סנפירים לשחייה?",
   "options": [
     "דג",
     "ציפור",
@@ -955,7 +955,7 @@ export const SCIENCE_QUESTIONS_P0_G123_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "איזה בעל חיים הוא יונק?",
+  "stem": "איזו חיה מיניקה את הצאצאים שלה?",
   "options": [
     "כלב",
     "נחש",
@@ -1488,7 +1488,7 @@ export const SCIENCE_QUESTIONS_P0_G123_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "מה צמחים צריכים כדי לגדול?",
+  "stem": "מה צמחים צריכים כדי לגדול בבריאות?",
   "options": [
     "אור, מים וקרקע מתאימה",
     "רק צל כבד",
@@ -2226,7 +2226,7 @@ export const SCIENCE_QUESTIONS_P0_G123_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "למה חשוב לאכול ירקות ופירות?",
+  "stem": "מדוע חשוב לאכול ירקות ופירות?",
   "options": [
     "מספקים ויטמינים וסיבים",
     "מחליפים שינה",
@@ -2636,7 +2636,7 @@ export const SCIENCE_QUESTIONS_P0_G123_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "מה תפקיד הדם בגוף?",
+  "stem": "מה תפקיד הדם במערכת הגוף?",
   "options": [
     "מסיע חמצן וחומרים",
     "מעכל ירקות",
@@ -2759,7 +2759,7 @@ export const SCIENCE_QUESTIONS_P0_G123_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "מה תפקיד השרירים בזרוע?",
+  "stem": "איך השרירים בזרוע עוזרים לתנועה?",
   "options": [
     "יוצרים תנועה",
     "מסננים אוויר",
@@ -2964,7 +2964,7 @@ export const SCIENCE_QUESTIONS_P0_G123_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "למה רושמים תוצאות בטבלה?",
+  "stem": "למה חשוב לרשום תוצאות בטבלה בניסוי?",
   "options": [
     "כדי להשוות ולזהות דפוסים",
     "כדי למחוק",
@@ -3046,7 +3046,7 @@ export const SCIENCE_QUESTIONS_P0_G123_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "למה חוזרים על מדידה?",
+  "stem": "למה חוזרים על מדידה בניסוי מדעי?",
   "options": [
     "לזהות טעויות ופיזור",
     "כי מדידה אחת תמיד מספיקה",
@@ -3087,7 +3087,7 @@ export const SCIENCE_QUESTIONS_P0_G123_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "מה תפקיד השערה?",
+  "stem": "מה תפקיד השערה בניסוי מדעי?",
   "options": [
     "חיזוי שניתן לבדוק",
     "תוצאה סופית",
@@ -3579,7 +3579,7 @@ export const SCIENCE_QUESTIONS_P0_G123_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "מה מאפיין דג?",
+  "stem": "מה מאפיין דג לעומת בעלי חיים אחרים?",
   "options": [
     "חי במים ונושם בזימים",
     "עף באוויר",
@@ -3661,7 +3661,7 @@ export const SCIENCE_QUESTIONS_P0_G123_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "מה מחזור חיים של פרפר?",
+  "stem": "מה שלבי מחזור החיים של פרפר?",
   "options": [
     "ביצה, זחל, גולם, בוגר",
     "רק בוגר",
@@ -4276,7 +4276,7 @@ export const SCIENCE_QUESTIONS_P0_G123_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "מה תפקיד הגבעול?",
+  "stem": "מה התפקיד של הגבעול בצמח?",
   "options": [
     "מעביר מים וחומרים",
     "מאביק פרחים",
@@ -4401,10 +4401,10 @@ export const SCIENCE_QUESTIONS_P0_G123_FILL = [
   "type": "mcq",
   "stem": "למה צמחים ירוקים?",
   "options": [
-    "כלורופיל בולע אור",
-    "אין כלורופיל",
-    "צבע אקראי",
-    "אין אור"
+    "בגלל כלורופיל שקולט אור",
+    "בגלל צבע מהפריחה בלבד",
+    "כי העלים תמיד יבשים",
+    "כי השורש צובע את העלה"
   ],
   "correctIndex": 0,
   "explanation": "כלורופיל קולט אור.",
@@ -4727,7 +4727,7 @@ export const SCIENCE_QUESTIONS_P0_G123_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "מה תפקיד הכליות?",
+  "stem": "מה התפקיד העיקרי של הכליות בגוף?",
   "options": [
     "מסננות דם ומווסתות נוזלים",
     "מייצרות חמצן",
@@ -4850,7 +4850,7 @@ export const SCIENCE_QUESTIONS_P0_G123_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "מה תפקיד מערכת העצבים?",
+  "stem": "מה תפקיד מערכת העצבים בגוף האדם?",
   "options": [
     "מעבירה הודעות בין איברים",
     "מעכלת מזון",
@@ -5055,7 +5055,7 @@ export const SCIENCE_QUESTIONS_P0_G123_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "מה תפקיד השערה?",
+  "stem": "מה תפקידה של השערה בתחילת ניסוי?",
   "options": [
     "חיזוי לבדיקה",
     "תוצאה סופית",
@@ -5301,7 +5301,7 @@ export const SCIENCE_QUESTIONS_P0_G123_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "מה מסקנה מבוססת נתונים?",
+  "stem": "מהי מסקנה המבוססת על נתונים?",
   "options": [
     "נתמכת בתוצאות",
     "לפי רגש",
@@ -5342,7 +5342,7 @@ export const SCIENCE_QUESTIONS_P0_G123_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "מה תפקיד קבוצת ביקורת?",
+  "stem": "מה תפקיד קבוצת הביקורת בניסוי?",
   "options": [
     "השוואה ללא שינוי",
     "למחוק",
@@ -5424,7 +5424,7 @@ export const SCIENCE_QUESTIONS_P0_G123_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "מה אוכלת פרה?",
+  "stem": "מה פרה אוכלת בדרך כלל?",
   "options": [
     "עשב",
     "בשר",
@@ -5465,7 +5465,7 @@ export const SCIENCE_QUESTIONS_P0_G123_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "איזה בעל חיים חי במים?",
+  "stem": "איזה בעל חיים חי במים ונושם בזימים?",
   "options": [
     "דג",
     "חתול",
@@ -5795,10 +5795,10 @@ export const SCIENCE_QUESTIONS_P0_G123_FILL = [
   "type": "mcq",
   "stem": "למה חשוב לשמור על ביצים בקן?",
   "options": [
-    "הפרעה מסכנת",
-    "לא חשוב",
-    "ביצים אבנים",
-    "אין קן"
+    "הפרעה לקן עלולה לפגוע בביצים",
+    "הורים יכולים להשאיר לבד",
+    "ביצים לא שבירות כלל",
+    "קן נמצא רק על הקרקע"
   ],
   "correctIndex": 0,
   "explanation": "הפרעה מזיקה.",

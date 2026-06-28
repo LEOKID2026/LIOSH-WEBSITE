@@ -1345,7 +1345,7 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
     "minLevel": "hard",
     "maxLevel": "hard",
     "type": "mcq",
-    "stem": "מה תפקיד קבוצת הביקורת בניסוי?",
+    "stem": "מה תפקידה של קבוצת ביקורת בניסוי מדעי?",
     "options": [
       "להשוות מול קבוצה ללא שינוי",
       "למחוק טבלה",

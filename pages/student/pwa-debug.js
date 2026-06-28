@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
-import { getOfflineGameErrors } from "../../components/offline/OfflineGameErrorBoundary.jsx";
+import { useRouter } from "next/router";
+
+function getOfflineGameErrors() {
+  try {
+    return JSON.parse(localStorage.getItem("offline_game_err_log") || "[]");
+  } catch {
+    return [];
+  }
+}
 
 const SW_FILES = [
   "/student/sw.js",
@@ -81,12 +89,25 @@ function SectionHead({ title }) {
 }
 
 export default function PwaDebug() {
+  const router = useRouter();
   const [data, setData] = useState(null);
   const [copied, setCopied] = useState(false);
   const [gameErrors, setGameErrors] = useState([]);
+  const [allowed, setAllowed] = useState(false);
+
+  // Production guard: only accessible with ?dbg=1 or in development.
+  useEffect(() => {
+    const isDev = process.env.NODE_ENV === "development";
+    const hasFlag = typeof window !== "undefined" && window.location.search.includes("dbg=1");
+    if (!isDev && !hasFlag) {
+      router.replace("/student/offline");
+      return;
+    }
+    setAllowed(true);
+  }, [router]);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (!allowed || typeof window === "undefined") return;
     setGameErrors(getOfflineGameErrors());
 
     async function gather() {
@@ -211,7 +232,7 @@ export default function PwaDebug() {
     }
 
     gather();
-  }, []);
+  }, [allowed]);
 
   function buildReport(d) {
     if (!d) return "";
@@ -294,6 +315,8 @@ export default function PwaDebug() {
       setTimeout(() => setCopied(false), 2500);
     });
   }
+
+  if (!allowed) return null;
 
   return (
     <div

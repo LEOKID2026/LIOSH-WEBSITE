@@ -14,6 +14,7 @@ import { applyPass1ScienceMetadata } from "./science-questions-metadata-pass1-en
 import { enrichScienceBankRowWithCanonicalMetadata } from "../lib/learning/science-canonical-metadata.js";
 import { rebalanceObviousMcqDistractors } from "../utils/mcq-distractor-rebalance.js";
 import { repairMcqObviousAnswerContent } from "../utils/mcq-fail-content-repair.js";
+import { auditMcqQuality } from "../utils/question-quality.js";
 
 const SCIENCE_QUESTIONS_RAW = [
   {
@@ -2513,7 +2514,7 @@ const SCIENCE_QUESTIONS_RAW = [
     "minLevel": "medium",
     "maxLevel": "medium",
     "type": "mcq",
-    "stem": "מה תפקיד הכליות?",
+    "stem": "מה התפקיד של הכליות בגוף האדם?",
     "options": [
       "לפרק מזון והפקת מיצי מרה",
       "לסנן פסולת מהדם ולהוציא בשתן",
@@ -4067,10 +4068,10 @@ const SCIENCE_QUESTIONS_RAW = [
     "type": "mcq",
     "stem": "איזה בעל חיים מכוסה נוצות?",
     "options": [
-      "כלב",
-      "חתול",
+      "כלב מבית",
+      "חתול פרוותי",
       "תרנגול",
-      "דג"
+      "דג במים"
     ],
     "correctIndex": 2,
     "explanation": "תרנגול הוא עוף ויש לו נוצות. נוצות עוזרות לעופות לעוף ולשמור על חום.",
@@ -4452,10 +4453,10 @@ const SCIENCE_QUESTIONS_RAW = [
     "type": "mcq",
     "stem": "למה צמחים צריכים מים?",
     "options": [
-        "מים נחוצים לחיים ולתהליכים בצמח",
-        "צמחים לא צריכים מים כלל",
-        "מים מזיקים לכל צמח",
-        "רק בעלי חיים צריכים מים"
+        "העלים",
+        "השורשים",
+        "הגבעול",
+        "הפרחים"
     ],
     "correctIndex": 0,
     "explanation": "נכון. צמחים צריכים מים כדי לחיות. ללא מים הם נובלים.",
@@ -6281,7 +6282,7 @@ const SCIENCE_QUESTIONS_RAW = [
     "stem": "מהו קומפוסט?",
     "options": [
       "אדמה שאינה עברה פירוק חומרים",
-      "דשן טבעי שנוצר מפירוק של פסולת אורגנית (שאריות מזון, עלים וכו')",
+      "דשן טבעי שנוצר מפירוק של פסולת אורגנית — שאריות מזון, עלים וכו'",
       "שקע מים עומד בלי חומר צמחי",
       "שברי סלע קלים שאינם מתפרקים"
     ],
@@ -7118,7 +7119,7 @@ const SCIENCE_QUESTIONS_RAW = [
     "minLevel": "medium",
     "maxLevel": "medium",
     "type": "mcq",
-    "stem": "מה צמח צריך כדי לגדול?",
+    "stem": "מה צמח צריך כדי לגדול ולהתפתח?",
     "options": [
       "מים ואדמה בלי אור שמש",
       "מים, אור שמש ואדמה",
@@ -7332,10 +7333,10 @@ const SCIENCE_QUESTIONS_RAW = [
     "type": "mcq",
     "stem": "מה תפקיד השיניים?",
     "options": [
-      "לראות",
-      "לשמוע",
-      "לעיסה וחתיכה של מזון",
-      "לרוץ"
+      "לראות בעיניים",
+      "לשמוע באוזניים",
+      "לעיסה וחיתוך מזון",
+      "לרוץ במגרש"
     ],
     "correctIndex": 2,
     "explanation": "השיניים עוזרות לנו לחתוך וללעוס מזון כדי שנוכל לבלוע אותו.",
@@ -7472,10 +7473,10 @@ const SCIENCE_QUESTIONS_RAW = [
     "type": "mcq",
     "stem": "מה תפקיד הלב?",
     "options": [
-      "לחשוב",
-      "להזרים דם בכל הגוף",
-      "לראות",
-      "לשמוע"
+      "לחשוב בראש",
+      "להזרים דם בגוף",
+      "לראות בעיניים",
+      "לשמוע באוזניים"
     ],
     "correctIndex": 1,
     "explanation": "הלב מזרים דם בכל הגוף. הדם מביא חמצן וחומרי מזון לכל חלקי הגוף.",
@@ -7507,10 +7508,10 @@ const SCIENCE_QUESTIONS_RAW = [
     "type": "mcq",
     "stem": "מה תפקיד הלשון?",
     "options": [
-      "לראות",
-      "לטעום מזון ולדבר",
-      "לשמוע",
-      "לרוץ"
+      "לראות בעיניים",
+      "לטעום ולדבר",
+      "לשמוע באוזניים",
+      "לרוץ במגרש"
     ],
     "correctIndex": 1,
     "explanation": "הלשון עוזרת לנו לטעום מזון ולדבר. היא גם עוזרת לבלוע.",
@@ -8032,10 +8033,10 @@ const SCIENCE_QUESTIONS_RAW = [
     "type": "mcq",
     "stem": "איזה חומר הוא שקוף?",
     "options": [
-      "אבן",
-      "מתכת",
+      "אבן אטומה",
+      "מתכת כבדה",
       "זכוכית",
-      "עץ"
+      "עץ מוצק"
     ],
     "correctIndex": 2,
     "explanation": "זכוכית היא חומר שקוף. אפשר לראות דרכה.",
@@ -10788,7 +10789,7 @@ const SCIENCE_QUESTIONS_RAW = [
     "minLevel": "hard",
     "maxLevel": "hard",
     "type": "mcq",
-    "stem": "מה דוגמה לשינוי פיזיקלי בלבד (בלי יצירת חומר חדש כמו באפייה או שריפה)?",
+    "stem": "מה דוגמה לשינוי פיזיקלי בלבד, ללא יצירת חומר חדש?",
     "options": [
       "כיפוף דף נייר בלי לשרוף אותו",
       "שריפת נייר לאפר",
@@ -11002,12 +11003,19 @@ const SCIENCE_QUESTIONS_RAW = [
 export const SCIENCE_QUESTIONS = SCIENCE_QUESTIONS_RAW.map(applyPass1ScienceMetadata)
   .map(enrichScienceBankRowWithCanonicalMetadata)
   .map((row) => {
-    const balanced = rebalanceObviousMcqDistractors({
-      options: row.options,
-      correctIndex: row.correctIndex,
-    });
-    return repairMcqObviousAnswerContent(
-      balanced.options === row.options ? row : { ...row, options: balanced.options },
-      { subject: "science", stem: row.stem }
-    );
+    let current = row;
+    for (let pass = 0; pass < 8; pass++) {
+      const balanced = rebalanceObviousMcqDistractors({
+        options: current.options,
+        correctIndex: current.correctIndex,
+      });
+      const next = repairMcqObviousAnswerContent(
+        balanced.options === current.options ? current : { ...current, options: balanced.options },
+        { subject: "science", stem: current.stem }
+      );
+      const audit = auditMcqQuality(next, { subject: "science", topic: next.topic });
+      current = next;
+      if (audit.failures.length === 0 && audit.warnings.length === 0) break;
+    }
+    return current;
   });

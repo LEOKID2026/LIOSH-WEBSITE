@@ -80,10 +80,10 @@ const HEBREW_TOPIC_TO_IDS = {
 /** @type {Record<string, string[]>} */
 const SCIENCE_TOPIC_TO_IDS = {
   body: ["S-03"],
-  animals: ["S-01"],
+  animals: ["S-01", "S-08"],
   plants: ["S-01"],
-  materials: ["S-04"],
-  earth_space: ["S-01"],
+  materials: ["S-04", "S-05"],
+  earth_space: ["S-01", "S-06"],
   environment: ["S-07"],
   experiments: ["S-02"],
   mixed: ["S-01"],

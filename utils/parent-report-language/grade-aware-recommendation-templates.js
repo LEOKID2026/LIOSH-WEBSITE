@@ -2234,6 +2234,149 @@ export const GRADE_AWARE_RECOMMENDATION_TEMPLATES = {
         },
       },
     },
+    "S-05": {
+      defaultBands: {
+        g1_g2: {
+          actionTextHe: null,
+          goalTextHe: null,
+          intentDescriptionEn: "S-05 default: use bucketOverrides (materials) or engine fallback.",
+        },
+        g3_g4: {
+          actionTextHe: null,
+          goalTextHe: null,
+          intentDescriptionEn: "S-05 default: use bucketOverrides (materials) or engine fallback.",
+        },
+        g5_g6: {
+          actionTextHe: null,
+          goalTextHe: null,
+          intentDescriptionEn: "S-05 default: use bucketOverrides (materials) or engine fallback.",
+        },
+      },
+      bucketOverrides: {
+        materials: {
+          g3_g4: {
+            actionTextHe:
+              "כדאי לתרגל המרת יחידות פשוטות — למשל גרם לקילוגרם או מ\"ל לליטר — בעזרת טבלת המרה. בקשו מהילד להסביר איזו יחידה מתאימה למדידה ולמה.",
+            goalTextHe:
+              "בשבוע הקרוב התמקדו בהמרת יחידות בסיסיות ובהסבר הבחירה ביחידה הנכונה.",
+            intentDescriptionEn: "Grade 3–4 unit conversion with reference table and unit choice justification.",
+          },
+          g5_g6: {
+            actionTextHe:
+              "כדאי לתרגל המרות יחידות במספר שלבים — כתיבה, חישוב והשוואה — ולבקש מהילד לבדוק אם התוצאה הגיונית לפי סדרי הגודל.",
+            goalTextHe:
+              "בשבוע הקרוב התמקדו בהמרת יחידות, בדיקת הגיון התוצאה ובהסבר השלבים.",
+            intentDescriptionEn: "Grade 5–6 multi-step unit conversion with reasonableness checks.",
+          },
+        },
+      },
+    },
+    "S-06": {
+      defaultBands: {
+        g1_g2: {
+          actionTextHe: null,
+          goalTextHe: null,
+          intentDescriptionEn: "S-06 default: use bucketOverrides (earth_space, experiments) or engine fallback.",
+        },
+        g3_g4: {
+          actionTextHe: null,
+          goalTextHe: null,
+          intentDescriptionEn: "S-06 default: use bucketOverrides (earth_space, experiments) or engine fallback.",
+        },
+        g5_g6: {
+          actionTextHe: null,
+          goalTextHe: null,
+          intentDescriptionEn: "S-06 default: use bucketOverrides (earth_space, experiments) or engine fallback.",
+        },
+      },
+      bucketOverrides: {
+        earth_space: {
+          g3_g4: {
+            actionTextHe:
+              "כדאי לתרגל קריאת ערך מגרף פשוט: מה מסמל כל ציר, איזו נקודה מתאימה לשאלה, ומה הערך שקוראים ממנה.",
+            goalTextHe:
+              "בשבוע הקרוב התמקדו בקריאת ערכים מגרף — זיהוי הצירים, הנקודה והערך.",
+            intentDescriptionEn: "Grade 3–4 graph reading: axes, point location, value extraction.",
+          },
+          g5_g6: {
+            actionTextHe:
+              "כדאי לתרגל השוואה בין שני גרפים או בין נקודות על אותו גרף. בקשו מהילד להסביר מה כל ציר מייצג ואיך יודעים איזו נקודה עונה על השאלה.",
+            goalTextHe:
+              "בשבוע הקרוב התמקדו בקריאת והשוואת נתונים מגרפים עם נימוק לפי הצירים.",
+            intentDescriptionEn: "Grade 5–6 graph comparison and axis-based reasoning.",
+          },
+        },
+        experiments: {
+          g3_g4: {
+            actionTextHe:
+              "כדאי לתרגל קריאת טבלה או גרף של תוצאות ניסוי. בקשו מהילד לומר מה כל ציר או עמודה מייצגים ואיזה ערך מתאים לשאלה.",
+            goalTextHe:
+              "בשבוע הקרוב התמקדו בקריאת נתונים מטבלה או גרף של ניסוי.",
+            intentDescriptionEn: "Grade 3–4 experiment data table/graph reading.",
+          },
+          g5_g6: {
+            actionTextHe:
+              "כדאי לתרגל ניתוח גרף של תוצאות ניסוי: מגמה, נקודות חריגות והסבר הקשר בין המשתנה לתוצאה.",
+            goalTextHe:
+              "בשבוע הקרוב התמקדו בניתוח גרף ניסוי והסבר הקשר בין משתנה לתוצאה.",
+            intentDescriptionEn: "Grade 5–6 experiment graph analysis and variable-result link.",
+          },
+        },
+      },
+    },
+    "S-08": {
+      defaultBands: {
+        g1_g2: {
+          actionTextHe: null,
+          goalTextHe: null,
+          intentDescriptionEn: "S-08 default: use bucketOverrides (animals, experiments) or engine fallback.",
+        },
+        g3_g4: {
+          actionTextHe: null,
+          goalTextHe: null,
+          intentDescriptionEn: "S-08 default: use bucketOverrides (animals, experiments) or engine fallback.",
+        },
+        g5_g6: {
+          actionTextHe: null,
+          goalTextHe: null,
+          intentDescriptionEn: "S-08 default: use bucketOverrides (animals, experiments) or engine fallback.",
+        },
+      },
+      bucketOverrides: {
+        animals: {
+          g3_g4: {
+            actionTextHe:
+              "כדאי לתרגל שאלות שבהן צריך להצביע על מקור מידע — טקסט, תצפית או תרשים. בקשו מהילד לומר «לפי מה יודעים?» לפני התשובה.",
+            goalTextHe:
+              "בשבוע הקרוב התמקדו בביסוס תשובות על מקור מידע ברור.",
+            intentDescriptionEn: "Grade 3–4 evidence/source grounding for animal-science claims.",
+          },
+          g5_g6: {
+            actionTextHe:
+              "כדאי לתרגל הבחנה בין טענה שמבוססת על נתונים לבין ניחוש. בקשו מהילד לצטט את המשפט או הנתון שתומך בתשובה.",
+            goalTextHe:
+              "בשבוע הקרוב התמקדו בביסוס טענות על ראיות מהטקסט או מהנתונים.",
+            intentDescriptionEn: "Grade 5–6 claim-evidence distinction in science texts.",
+          },
+        },
+        experiments: {
+          g3_g4: {
+            actionTextHe:
+              "כדאי לתרגל שאלות «מאין יודעים?» בניסוי — מה נמדד, מה נצפה, ומה כתוב ביומן הניסוי.",
+            goalTextHe:
+              "בשבוע הקרוב התמקדו בביסוס מסקנות על תצפית או רישום בניסוי.",
+            intentDescriptionEn: "Grade 3–4 experiment evidence sourcing from observation/logs.",
+          },
+          g5_g6: {
+            actionTextHe:
+              "כדאי לתרגל כתיבת מסקנה שמציינת במפורש את הנתון שעליו היא מבוססת. בקשו מהילד להפריד בין «חושבים» לבין «יודעים לפי הנתונים».",
+            goalTextHe:
+              "בשבוע הקרוב התמקדו במסקנות מבוססות נתונים בניסוי.",
+            intentDescriptionEn: "Grade 5–6 data-backed conclusions vs speculation.",
+          },
+        },
+      },
+    },
     "S-07": {
       defaultBands: {
         g1_g2: {

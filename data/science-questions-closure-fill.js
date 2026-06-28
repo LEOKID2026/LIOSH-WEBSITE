@@ -1031,7 +1031,7 @@ export const SCIENCE_QUESTIONS_CLOSURE_FILL = [
     "minLevel": "easy",
     "maxLevel": "easy",
     "type": "mcq",
-    "stem": "מה דוגמה לשינוי פיזיקלי במים?",
+    "stem": "מה דוגמה לשינוי פיזיקלי שמתרחש במים?",
     "options": [
       "קיפאון או התאדות תחת תנאים מתאימים",
       "מים הופכים תמיד לאבן חדשה",

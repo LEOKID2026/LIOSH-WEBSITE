@@ -210,7 +210,7 @@
     "audit:curriculum:science-official-skill-catalog": "tsx scripts/curriculum-audit/build-science-official-skill-catalog.mjs",
     "audit:curriculum:science-catalog-vs-official-source": "tsx scripts/curriculum-audit/build-science-catalog-vs-official-source.mjs",
     "audit:curriculum:science-runtime-vs-official-source": "tsx scripts/curriculum-audit/build-science-runtime-vs-official-source.mjs",
-    "audit:curriculum:science-final-closure": "tsx scripts/curriculum-audit/build-science-final-closure.mjs",
+    "audit:curriculum:science-final-closure": "node scripts/curriculum-audit/build-science-final-closure.mjs",
     "audit:curriculum:science-source-hardening": "npm run audit:curriculum:science-official-skill-catalog && npm run audit:curriculum:science-catalog-vs-official-source && npm run audit:curriculum:science-runtime-vs-official-source && npm run qa:science:topic-visibility && npm run qa:science:runtime-gate && npm run audit:curriculum:science-final-closure",
     "qa:science:topic-visibility": "tsx scripts/qa-science-topic-visibility.mjs",
     "qa:science:runtime-gate": "tsx scripts/qa-science-runtime-gate.mjs",

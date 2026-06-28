@@ -306,26 +306,6 @@ export default function StudentLoginPage() {
           </p>
         ) : null}
 
-        {/* TEMP DEBUG — remove after PWA diagnosis */}
-        <a
-          href="/student/pwa-debug"
-          style={{
-            position: "fixed",
-            top: 12,
-            left: 12,
-            zIndex: 99999,
-            background: "#f59e0b",
-            color: "#000",
-            fontWeight: 700,
-            fontSize: 14,
-            padding: "10px 16px",
-            borderRadius: 8,
-            textDecoration: "none",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.5)",
-          }}
-        >
-          בדיקת PWA
-        </a>
       </div>
     </Layout>
   );

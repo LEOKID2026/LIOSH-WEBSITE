@@ -24,75 +24,8 @@ if (typeof window !== "undefined") {
     initPwaInstallPromptCapture();
   }
 
-  // Module-level: set up before React renders so chunk/resource load failures are captured.
-  if (process.env.NODE_ENV === "production") {
-    const _LOG_KEY = "offline_game_err_log";
-    const _persistErr = (record) => {
-      try {
-        const ex = JSON.parse(localStorage.getItem(_LOG_KEY) || "[]");
-        ex.unshift(record);
-        localStorage.setItem(_LOG_KEY, JSON.stringify(ex.slice(0, 5)));
-      } catch {}
-    };
-    window.addEventListener(
-      "error",
-      (e) => {
-        const p = window.location.pathname;
-        if (!p.startsWith("/student/offline/solo/") && !p.startsWith("/student/offline/educational/")) return;
-
-        const t = e.target;
-        const isResourceError = t && t !== window && (t.tagName === "SCRIPT" || t.tagName === "LINK" || t.tagName === "IMG");
-
-        if (isResourceError) {
-          // Resource load failure: script/link/img failed to load.
-          const failedUrl = t.src || t.href || t.currentSrc || "";
-          _persistErr({
-            ts: Date.now(),
-            source: "resource-error",
-            route: p,
-            online: navigator.onLine,
-            msg: `Failed to load ${t.tagName}: ${failedUrl || "(no url)"}`,
-            filename: failedUrl,
-            tag: t.tagName,
-            src: t.src || "",
-            href: t.href || "",
-            currentSrc: t.currentSrc || "",
-            rel: t.rel || "",
-            as: t.as || "",
-            outerHTML: (t.outerHTML || "").slice(0, 300),
-            stack: "",
-          });
-        } else {
-          // JS execution error (ErrorEvent).
-          _persistErr({
-            ts: Date.now(),
-            source: "js-error",
-            route: p,
-            online: navigator.onLine,
-            msg: e.message || "(no message)",
-            filename: e.filename || "",
-            lineno: e.lineno || 0,
-            colno: e.colno || 0,
-            stack: e.error?.stack?.slice(0, 600) || "",
-          });
-        }
-      },
-      true,
-    );
-    window.addEventListener("unhandledrejection", (e) => {
-      const p = window.location.pathname;
-      if (!p.startsWith("/student/offline/solo/") && !p.startsWith("/student/offline/educational/")) return;
-      const reason = e.reason;
-      _persistErr({
-        ts: Date.now(),
-        source: "unhandledrejection",
-        route: p,
-        online: navigator.onLine,
-        msg: String(reason?.message || reason),
-        stack: reason?.stack?.slice(0, 600) || "",
-      });
-    });
-  }
+  // One-time cleanup of temporary PWA diagnosis keys written during debugging.
+  try { localStorage.removeItem("offline_game_err_log"); } catch {}
 }
 
 const STUDENT_PROTECTED_ROUTES = new Set([
