@@ -19,8 +19,8 @@ const reportsDir = join(repoRoot, "reports");
 
 const GRADE_BANDS = ["g1_g2", "g3_g4", "g5_g6"];
 
-const M01_PARTIAL_BUCKET_COVERAGE = ["compare", "number_sense", "estimation"];
-const M01_MISSING_BUCKET_COVERAGE = ["zero_one_properties", "scale", "prime_composite"];
+const M01_PARTIAL_BUCKET_COVERAGE = ["compare", "number_sense", "estimation", "scale", "prime_composite", "zero_one_properties"];
+const M01_MISSING_BUCKET_COVERAGE = [];
 
 /**
  * @param {unknown} band
@@ -86,10 +86,25 @@ function coverageStatus(subjectId, taxonomyId) {
 
   if (tpl.defaultBands != null && typeof tpl.defaultBands === "object") {
     if (subjectId === "math" && taxonomyId === "M-01") {
+      const bo = tpl.bucketOverrides;
+      const required = ["compare", "number_sense", "estimation", "scale", "prime_composite", "zero_one_properties"];
+      if (!bo || typeof bo !== "object") return { status: "pending_manual_hebrew" };
+      for (const k of required) {
+        if (!bo[k] || typeof bo[k] !== "object") return { status: "pending_manual_hebrew" };
+        if (!bandHasNonEmptyActionAndGoal(bo[k].g3_g4) || !bandHasNonEmptyActionAndGoal(bo[k].g5_g6)) {
+          return {
+            status: "pending_manual_hebrew",
+            partialBucketCoverage: required.filter((bk) => bo[bk] && bandHasNonEmptyActionAndGoal(bo[bk].g3_g4)),
+            missingBucketCoverage: required.filter((bk) => !bo[bk] || !bandHasNonEmptyActionAndGoal(bo[bk].g3_g4)),
+          };
+        }
+      }
       return {
-        status: "pending_manual_hebrew",
-        partialBucketCoverage: [...M01_PARTIAL_BUCKET_COVERAGE],
-        missingBucketCoverage: [...M01_MISSING_BUCKET_COVERAGE],
+        status: "partially_covered_by_template",
+        partialBucketCoverage: [...required],
+        missingBucketCoverage: [],
+        coveredGradeBands: ["g3_g4", "g5_g6"],
+        missingGradeBands: ["g1_g2"],
       };
     }
     if (subjectId === "math" && taxonomyId === "M-03") {
@@ -306,6 +321,20 @@ function coverageStatus(subjectId, taxonomyId) {
         missingGradeBands: ["g1_g2", "g3_g4"],
       };
     }
+    if (subjectId === "hebrew" && taxonomyId === "H-05") {
+      const bo = tpl.bucketOverrides;
+      if (!bo?.homophones || typeof bo.homophones !== "object") return { status: "pending_manual_hebrew" };
+      if (!bandHasNonEmptyActionAndGoal(bo.homophones.g3_g4) || !bandHasNonEmptyActionAndGoal(bo.homophones.g5_g6)) {
+        return { status: "pending_manual_hebrew" };
+      }
+      return {
+        status: "partially_covered_by_template",
+        partialBucketCoverage: ["homophones"],
+        missingBucketCoverage: ["vocabulary", "grammar", "writing", "reading", "comprehension", "speaking", "mixed"],
+        coveredGradeBands: ["g3_g4", "g5_g6"],
+        missingGradeBands: ["g1_g2"],
+      };
+    }
     if (subjectId === "english" && taxonomyId === "E-01") {
       const bo = tpl.bucketOverrides;
       if (!bo?.vocabulary || typeof bo.vocabulary !== "object") return { status: "pending_manual_hebrew" };
@@ -381,6 +410,20 @@ function coverageStatus(subjectId, taxonomyId) {
         status: "partially_covered_by_template",
         partialBucketCoverage: ["writing"],
         missingBucketCoverage: ["vocabulary", "grammar", "translation", "sentences", "sentence", "mixed"],
+        coveredGradeBands: ["g3_g4", "g5_g6"],
+        missingGradeBands: ["g1_g2"],
+      };
+    }
+    if (subjectId === "english" && taxonomyId === "E-08") {
+      const bo = tpl.bucketOverrides;
+      if (!bo?.listening || typeof bo.listening !== "object") return { status: "pending_manual_hebrew" };
+      if (!bandHasNonEmptyActionAndGoal(bo.listening.g3_g4) || !bandHasNonEmptyActionAndGoal(bo.listening.g5_g6)) {
+        return { status: "pending_manual_hebrew" };
+      }
+      return {
+        status: "partially_covered_by_template",
+        partialBucketCoverage: ["listening"],
+        missingBucketCoverage: ["vocabulary", "grammar", "translation", "sentences", "sentence", "writing", "mixed"],
         coveredGradeBands: ["g3_g4", "g5_g6"],
         missingGradeBands: ["g1_g2"],
       };

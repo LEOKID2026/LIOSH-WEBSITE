@@ -1582,7 +1582,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
     case "triangles": {
       const types = ["שווה צלעות", "שווה שוקיים", "שונה צלעות"];
       const selectedType = types[Math.floor(Math.random() * types.length)];
-      const triW = Math.floor(Math.random() * 8); // 8 variants
+      const triW = Math.floor(Math.random() * 10); // 10 stem variants
 
       params = {
         type: selectedType,
@@ -1604,7 +1604,9 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
                 `מהו סוג המשולש המוצג?`,
                 `זהו את סוג המשולש לפי הצורה.`,
                 `בחרו שם מתאים למשולש שבשרטוט.`,
-              ][triW]
+                `זיהוי נוסף: מה סוג המשולש לפי הצלעות?`,
+                `בדקו את המשולש בשרטוט ובחרו את סוגו.`,
+              ][triW % 10]
             : levelKey === "medium"
               ? [
                   `סווגו את המשולש לפי סימוני הצלעות בשרטוט.`,
@@ -1615,7 +1617,9 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
                   `ניתוח תכונות: לאיזה סוג שייך המשולש שבשרטוט?`,
                   `בחרו את הקטגוריה המתאימה למשולש המוצג.`,
                   `מהו סיווג המשולש לפי הצלעות?`,
-                ][triW]
+                  `סיווג נוסף: איזה שם מתאים למשולש?`,
+                  `בחרו קטגוריה לפי אורכי הצלעות בשרטוט.`,
+                ][triW % 10]
               : [
                   `אתגר סיווג: קבעו את סוג המשולש לפי השרטוט.`,
                   `ניתוח מעמיק: מהו סיווג המשולש המוצג?`,
@@ -1625,7 +1629,9 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
                   `סיווג מתקדם: לאיזו קטגוריה שייך המשולש?`,
                   `הבנת מונחים: איזה מונח מתאר את המשולש שבשרטוט?`,
                   `אתגר קצר: בחרו את סוג המשולש לפי הצורה.`,
-                ][triW];
+                  `סיווג מדויק: מה סוג המשולש בשרטוט?`,
+                  `בחרו הגדרה מתאימה לפי צלעות המשולש.`,
+                ][triW % 10];
       } else {
         // Late band (G5-G6) - expanded to 16 variants for maximum coverage
         const triLateW = Math.floor(Math.random() * 16);
@@ -1694,7 +1700,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
     case "quadrilaterals": {
       const types = ["ריבוע", "מלבן", "מקבילית", "טרפז"];
       const selectedType = types[Math.floor(Math.random() * types.length)];
-      const quadW = Math.floor(Math.random() * 8); // 8 variants
+      const quadW = Math.floor(Math.random() * 10); // 10 stem variants
       
       params = { 
         type: selectedType, 
@@ -1715,7 +1721,9 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
                 `סיווג: איזה סוג מרובע מופיע בשרטוט?`,
                 `זהו את המרובע לפי הצורה.`,
                 `בחרו שם מתאים לסוג המרובע שבשרטוט.`,
-              ][quadW]
+                `זיהוי נוסף: מה סוג המרובע לפי הצורה?`,
+                `בדקו את המרובע בשרטוט ובחרו את סוגו.`,
+              ][quadW % 10]
             : levelKey === "medium"
               ? [
                   `סווגו את המרובע לפי התכונות שרואים בשרטוט.`,
@@ -1749,7 +1757,9 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
                 `זיהוי בסיסי: מה סוג המרובע?`,
                 `בחירת סוג: איזה מרובע רואים?`,
                 `הגדרה לפי צורה: איזה סוג מרובע זה?`,
-              ][quadW]
+                `זיהוי נוסף: בחרו סוג מרובע לפי השרטוט.`,
+                `מה סוג המרובע לפי הצלעות שבשרטוט?`,
+              ][quadW % 10]
             : levelKey === "medium"
               ? [
                   `התאמת מונח: איזה סוג מרובע רואים בשרטוט?`,

@@ -14,6 +14,7 @@ const modUrl = (rel) => pathToFileURL(join(ROOT, rel)).href;
 const OUT = join(ROOT, "reports", "qa", "moledet-geography-state-audit.json");
 
 const { GRADES } = await import(modUrl("utils/moledet-geography-constants.js"));
+const { MOLEDET_GEOGRAPHY_GRADES } = await import(modUrl("data/moledet-geography-curriculum.js"));
 const GEO = await import(modUrl("data/geography-questions/index.js"));
 const {
   MOLEDET_GEOGRAPHY_MIN_TEACH_GRADE,
@@ -212,11 +213,47 @@ try {
 // --- 8. Visual QA readiness ---
 const vqaConfigText = readFileSync(join(ROOT, "scripts/qa/lib/visual-qa-config.mjs"), "utf8");
 const visualQa = {
-  inPhase1: /PHASE1_SUBJECTS.*moledet/s.test(vqaConfigText) === false,
-  inFutureSubjects: /FUTURE_SUBJECTS.*moledet/.test(vqaConfigText),
+  inPhase1: /PHASE1_SUBJECTS[^\n]*moledet/.test(vqaConfigText),
+  inFutureSubjects: /FUTURE_SUBJECTS\s*=\s*new Set\(\[[^\]]*moledet/.test(vqaConfigText),
   hasPlanConfig: /moledet:\s*\{/.test(vqaConfigText),
-  topicsByGradeEmpty: /topicsByGrade:\s*\{\}/.test(vqaConfigText),
+  topicsByGradeEmpty: /topicsByGrade:\s*moledetTopicsByGradeFromProduct\(\)/.test(vqaConfigText)
+    ? false
+    : /topicsByGrade:\s*\{\}/.test(vqaConfigText),
 };
+
+// --- 9. Topic visibility gate (product curriculum export) ---
+/** @type {{ status: string, error?: string, gradesChecked?: string[], mismatches?: string[] }} */
+let topicVisibilityGate = { status: "PASS", gradesChecked: ["g2", "g3", "g4", "g5", "g6"] };
+try {
+  if (!MOLEDET_GEOGRAPHY_GRADES || typeof MOLEDET_GEOGRAPHY_GRADES !== "object") {
+    throw new Error("MOLEDET_GEOGRAPHY_GRADES export missing in curriculum");
+  }
+  const mismatches = [];
+  for (const g of ["g2", "g3", "g4", "g5", "g6"]) {
+    const curriculumTopics = (MOLEDET_GEOGRAPHY_GRADES[g]?.topics || []).filter((t) => t !== "mixed");
+    const runtimeTopics = (GRADES[g]?.topics || []).filter((t) => t !== "mixed");
+    if (!curriculumTopics.length) {
+      mismatches.push(`${g}: empty topics in MOLEDET_GEOGRAPHY_GRADES`);
+    }
+    if (!runtimeTopics.length) {
+      mismatches.push(`${g}: empty topics in moledet-geography-constants GRADES`);
+    }
+    for (const t of curriculumTopics) {
+      if (!runtimeTopics.includes(t)) mismatches.push(`${g}: curriculum topic "${t}" missing from runtime GRADES`);
+    }
+    for (const t of runtimeTopics) {
+      if (!curriculumTopics.includes(t)) mismatches.push(`${g}: runtime topic "${t}" missing from MOLEDET_GEOGRAPHY_GRADES`);
+    }
+  }
+  if (mismatches.length) {
+    topicVisibilityGate = { status: "ISSUES_FOUND", mismatches, gradesChecked: ["g2", "g3", "g4", "g5", "g6"] };
+  }
+} catch (e) {
+  topicVisibilityGate = {
+    status: "SCRIPT_BROKEN",
+    error: e instanceof Error ? e.message : String(e),
+  };
+}
 
 // --- Verdicts ---
 function verdict(counts, thresholds = { block: 1, issues: 1 }) {
@@ -288,7 +325,7 @@ const report = {
   },
   visualQa,
   runtimeGate: { poolCellsChecked: 90, failureCount: 0, gatePassed: true },
-  topicVisibilityGate: { status: "SCRIPT_BROKEN", error: "MOLEDET_GEOGRAPHY_GRADES export missing in curriculum" },
+  topicVisibilityGate,
   verdicts: {},
 };
 
@@ -309,7 +346,19 @@ report.verdicts.questions =
 report.verdicts.engineMetadata =
   metadataIssues === 0 ? "PASS" : metadataIssues > 100 ? "BLOCKED" : "ISSUES_FOUND";
 
-report.verdicts.visualQaReadiness = visualQa.inFutureSubjects ? "BLOCKED" : "ISSUES_FOUND";
+report.verdicts.visualQaReadiness =
+  visualQa.inFutureSubjects
+    ? "BLOCKED"
+    : visualQa.inPhase1 && visualQa.hasPlanConfig && !visualQa.topicsByGradeEmpty
+      ? "PASS"
+      : "ISSUES_FOUND";
+
+report.verdicts.topicVisibility =
+  topicVisibilityGate.status === "PASS"
+    ? "PASS"
+    : topicVisibilityGate.status === "SCRIPT_BROKEN"
+      ? "BLOCKED"
+      : "ISSUES_FOUND";
 
 const blocked = [report.verdicts.books, report.verdicts.questions].includes("BLOCKED");
 const issues = Object.values(report.verdicts).some((v) => v === "ISSUES_FOUND" || v === "BLOCKED");

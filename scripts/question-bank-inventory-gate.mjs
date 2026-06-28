@@ -388,7 +388,7 @@ function isTopicInGeometryCurriculum(grade, topic) {
     g3: ["shapes_basic", "area", "perimeter", "angles", "triangles", "quadrilaterals"],
     g4: ["area", "perimeter", "volume", "shapes_basic", "symmetry"],
     g5: ["area", "perimeter", "volume", "triangles", "quadrilaterals"],
-    g6: ["area", "perimeter", "volume", "angles", "triangles", "symmetry"]
+    g6: ["area", "perimeter", "volume", "angles", "triangles"]
   };
   const topics = curriculum[grade] || [];
   return topics.includes(topic);

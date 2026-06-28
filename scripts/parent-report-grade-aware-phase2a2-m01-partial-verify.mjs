@@ -1,24 +1,23 @@
 /**
- * Phase 2-A3 product verification: math M-01 partial bucket templates (compare, number_sense, estimation) g4
- * with ENABLE_GRADE_AWARE_RECOMMENDATIONS=true; zero_one_properties / scale / prime_composite remain resolver-null + engine fallback.
+ * Phase 2-A3 product verification: math M-01 bucket templates (compare, number_sense, estimation, scale, prime_composite, zero_one_properties) g4.
  *
  *   npx tsx scripts/parent-report-grade-aware-phase2a2-m01-partial-verify.mjs
  */
 
 const EXPECTED_COMPARE_ACTION =
-  "כדאי לתרגל השוואת מספרים רב־ספרתיים לפי ערך הספרות. בקשו מהילד להתחיל מהספרה בעלת הערך הגבוה ביותר ולהסביר באיזו עמודה נקבע ההבדל.";
+  "כדאי לתרגל השוואת מספרים רב ספרתיים לפי ערך הספרות. בקשו מהילד להתחיל מהספרה בעלת הערך הגבוה ביותר ולהסביר באיזו עמודה נקבע ההבדל.";
 const EXPECTED_COMPARE_GOAL =
   "בשבוע הקרוב התמקדו בהשוואת מספרים לפי ערך מקום, מהספרה הגדולה ביותר ועד העמודה שבה מופיע ההבדל.";
 
 const EXPECTED_NUMBER_SENSE_ACTION =
   "כדאי לתרגל פירוק מספרים לפי ערך מקום: אחדות, עשרות, מאות ואלפים. בקשו מהילד לכתוב את המספר גם בצורה רגילה וגם כפירוק לפי הערך של כל ספרה.";
 const EXPECTED_NUMBER_SENSE_GOAL =
-  "בשבוע הקרוב התמקדו בערך מקום ובפירוק מספרים רב־ספרתיים לפי הספרות שלהם.";
+  "בשבוע הקרוב התמקדו בערך מקום ובפירוק מספרים רב ספרתיים לפי הספרות שלהם.";
 
 const EXPECTED_ESTIMATION_ACTION =
-  "כדאי לתרגל אומדן לפני חישוב במספרים רב־ספרתיים. בקשו מהילד לעגל את המספרים בקירוב, לשער מה גודל התשובה, ואז לבדוק אם החישוב הסופי סביר.";
+  "כדאי לתרגל אומדן לפני חישוב במספרים רב ספרתיים. בקשו מהילד לעגל את המספרים בקירוב, לשער מה גודל התשובה, ואז לבדוק אם החישוב הסופי סביר.";
 const EXPECTED_ESTIMATION_GOAL =
-  "בשבוע הקרוב התמקדו באומדן לפני חישוב ובבדיקת סבירות של תשובות במספרים רב־ספרתיים.";
+  "בשבוע הקרוב התמקדו באומדן לפני חישוב ובבדיקת סבירות של תשובות במספרים רב ספרתיים.";
 
 /** Must not appear in parent-facing resolver output when approved M-01 bucket templates apply. */
 const M01_PARENT_BANNED = [
@@ -217,17 +216,17 @@ function runM01ApprovedBucketsG4() {
   if (rEst === gEst) throw new Error("M-01 estimation g4 action and goal must differ");
 
   for (const b of ["scale", "prime_composite", "zero_one_properties"]) {
-    if (
-      resolveGradeAwareParentRecommendationHe({
-        subjectId: "math",
-        gradeKey: "g4",
-        taxonomyId: "M-01",
-        bucketKey: b,
-        slot: "action",
-      }) !== null
-    ) {
-      throw new Error(`M-01 bucket ${b} must not resolve template action`);
+    const resolved = resolveGradeAwareParentRecommendationHe({
+      subjectId: "math",
+      gradeKey: "g4",
+      taxonomyId: "M-01",
+      bucketKey: b,
+      slot: "action",
+    });
+    if (resolved == null || String(resolved).trim() === "") {
+      throw new Error(`M-01 bucket ${b} must resolve template action`);
     }
+    assertM01ParentBannedAbsent(`M-01 ${b} action`, resolved);
   }
 
   const baseCompare = buildBaseReportM01("compare", "g4");
@@ -350,29 +349,34 @@ function runM01ApprovedBucketsG4() {
   );
 }
 
-function runM01MissingBucketsFallbackStillEngine() {
+function runM01ExtendedBucketsUseTemplatesNotEngineFallback() {
   for (const bucket of ["scale", "prime_composite", "zero_one_properties"]) {
-    if (
-      resolveGradeAwareParentRecommendationHe({
-        subjectId: "math",
-        gradeKey: "g4",
-        taxonomyId: "M-01",
-        bucketKey: bucket,
-        slot: "action",
-      }) !== null
-    ) {
-      throw new Error(`M-01 ${bucket} resolver must be null`);
+    const action = resolveGradeAwareParentRecommendationHe({
+      subjectId: "math",
+      gradeKey: "g4",
+      taxonomyId: "M-01",
+      bucketKey: bucket,
+      slot: "action",
+    });
+    const goal = resolveGradeAwareParentRecommendationHe({
+      subjectId: "math",
+      gradeKey: "g4",
+      taxonomyId: "M-01",
+      bucketKey: bucket,
+      slot: "nextGoal",
+    });
+    if (!action || !goal || action === goal) {
+      throw new Error(`M-01 ${bucket} template action/goal must resolve and differ`);
     }
     const base = buildBaseReportM01(bucket, "g4");
-    const u = base.diagnosticEngineV2.units[0];
-    const act = resolveUnitParentActionHe(u, "g4");
-    if (!act || !act.includes("מניפולציה")) {
-      throw new Error(`M-01 ${bucket} expected engine fallback action containing מניפולציה`);
-    }
     const detailed = buildDetailedParentReportFromBaseReport(base, { period: "week" });
+    const mp = detailed?.subjectProfiles?.find((p) => p.subject === "math");
+    assertEq(`detailed math parentActionHe (M-01 ${bucket} g4)`, mp?.parentActionHe, action);
+    assertEq(`detailed math nextWeekGoalHe (M-01 ${bucket} g4)`, mp?.nextWeekGoalHe, goal);
+    assertM01ParentBannedAbsent(`detailed ${bucket} parentActionHe`, mp?.parentActionHe);
     const dJson = JSON.stringify(detailed);
-    if (!dJson.includes("מניפולציה + מעבר הדרגתי לסמל")) {
-      throw new Error(`M-01 ${bucket}: expected raw engine intervention to remain in detailed JSON (no template)`);
+    if (dJson.includes("מניפולציה + מעבר הדרגתי לסמל")) {
+      throw new Error(`M-01 ${bucket}: detailed JSON must not contain raw engine intervention`);
     }
   }
 }
@@ -405,7 +409,7 @@ function runM01TemplatesAlwaysAvailableWithoutEnv() {
 }
 
 runM01ApprovedBucketsG4();
-runM01MissingBucketsFallbackStillEngine();
+runM01ExtendedBucketsUseTemplatesNotEngineFallback();
 runM01TemplatesAlwaysAvailableWithoutEnv();
 
 process.stdout.write("OK parent-report-grade-aware-phase2a2-m01-partial-verify\n");

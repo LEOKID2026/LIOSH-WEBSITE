@@ -622,6 +622,75 @@ export const GRADE_AWARE_RECOMMENDATION_TEMPLATES = {
               "Upper-grade estimation across larger numbers and more complex contexts, including simple fractions, decimals, or percentages, with before-and-after reasonableness checks.",
           },
         },
+        scale: {
+          g1_g2: {
+            actionTextHe: null,
+            goalTextHe: null,
+            intentDescriptionEn: "Keep scale/magnitude recommendations null for grades 1–2 until early-number copy is approved.",
+          },
+          g3_g4: {
+            actionTextHe:
+              "כדאי לתרגל הבנת גודל מספרים בעזרת השוואה לכמויות מוכרות: עשרות, מאות או אלפים. בקשו מהילד להסביר האם מספר נראה קטן, בינוני או גדול יחסית לדוגמה שמכירים.",
+            goalTextHe:
+              "בשבוע הקרוב התמקדו בהערכת גודל מספרים רב ספרתיים ובהשוואה לכמויות מוכרות מהחיים.",
+            intentDescriptionEn:
+              "Grade 3–4 number magnitude through comparison to familiar quantities (tens, hundreds, thousands).",
+          },
+          g5_g6: {
+            actionTextHe:
+              "כדאי לתרגל קריאת מספרים גדולים, עשרוניים או אחוזים תוך שימת לב לסדר הגודל. בקשו מהילד לומר בערך כמה גדול המספר, ולבדוק אם התשובה הסופית מתאימה לסדר גודל זה.",
+            goalTextHe:
+              "בשבוע הקרוב התמקדו בהבנת סדר גודל, בקריאה נכונה של מספרים גדולים ובבדיקת סבירות התוצאה.",
+            intentDescriptionEn:
+              "Grade 5–6 order-of-magnitude reasoning with large numbers, decimals, or percentages and answer-size checks.",
+          },
+        },
+        prime_composite: {
+          g1_g2: {
+            actionTextHe: null,
+            goalTextHe: null,
+            intentDescriptionEn: "Keep prime/composite recommendations null for grades 1–2.",
+          },
+          g3_g4: {
+            actionTextHe:
+              "כדאי לתרגל זיהוי מספרים ראשוניים ופריקים במספרים קטנים: לבדוק אם למספר יש בדיוק שני גורמים (1 והמספר עצמו) או יותר. בקשו מהילד להסביר איך יודעים.",
+            goalTextHe:
+              "בשבוע הקרוב התמקדו בהבחנה בין מספר ראשוני לפריק במספרים קטנים, עם הסבר לפי גורמים.",
+            intentDescriptionEn:
+              "Grade 3–4 prime vs composite in a small range using factor-count reasoning.",
+          },
+          g5_g6: {
+            actionTextHe:
+              "כדאי לתרגל פירוק לגורמים ראשוניים וזיהוי מספרים ראשוניים במספרים גדולים יותר. בקשו מהילד לכתוב את הפירוק ולהסביר למה מספר הוא ראשוני או פריק.",
+            goalTextHe:
+              "בשבוע הקרוב התמקדו בפירוק לגורמים ראשוניים ובהסבר מדוע מספר הוא ראשוני או פריק.",
+            intentDescriptionEn:
+              "Grade 5–6 prime factorization and prime/composite classification with written justification.",
+          },
+        },
+        zero_one_properties: {
+          g1_g2: {
+            actionTextHe: null,
+            goalTextHe: null,
+            intentDescriptionEn: "Keep zero/one properties recommendations null for grades 1–2.",
+          },
+          g3_g4: {
+            actionTextHe:
+              "כדאי לתרגל מה קורה כשמחברים, מחסירים, מכפילים או מחלקים ב-0 או ב-1. בקשו מהילד לומר את הכלל בכל פעם: «כפל ב-1 לא משנה», «חיבור עם 0 לא משנה», «אי אפשר לחלק ב-0».",
+            goalTextHe:
+              "בשבוע הקרוב התמקדו בכללי 0 ו-1 בפעולות בסיסיות ובהסבר מילולי של כל כלל.",
+            intentDescriptionEn:
+              "Grade 3–4 special properties of 0 and 1 in basic operations with verbal rules.",
+          },
+          g5_g6: {
+            actionTextHe:
+              "כדאי לתרגל תכונות מיוחדות של 0 ו-1 גם בהקשרים מורכבים יותר, כמו שברים, עשרוניים או ביטויים ארוכים. בקשו מהילד לזהות מתי 0 או 1 משנים את התוצאה ומתי לא.",
+            goalTextHe:
+              "בשבוע הקרוב התמקדו בזיהוי השפעת 0 ו-1 על תוצאות בתרגילים מורכבים יותר.",
+            intentDescriptionEn:
+              "Grade 5–6 zero/one identity and annihilator properties in richer numeric contexts.",
+          },
+        },
       },
     },
   },
@@ -1345,6 +1414,54 @@ export const GRADE_AWARE_RECOMMENDATION_TEMPLATES = {
         },
       },
     },
+    "H-05": {
+      defaultBands: {
+        g1_g2: {
+          actionTextHe: null,
+          goalTextHe: null,
+          intentDescriptionEn:
+            "H-05 default: no approved flat copy; use bucketOverrides (homophones) or engine fallback.",
+        },
+        g3_g4: {
+          actionTextHe: null,
+          goalTextHe: null,
+          intentDescriptionEn:
+            "H-05 default: no approved flat copy; use bucketOverrides (homophones) or engine fallback.",
+        },
+        g5_g6: {
+          actionTextHe: null,
+          goalTextHe: null,
+          intentDescriptionEn:
+            "H-05 default: no approved flat copy; use bucketOverrides (homophones) or engine fallback.",
+        },
+      },
+      bucketOverrides: {
+        homophones: {
+          g1_g2: {
+            actionTextHe: null,
+            goalTextHe: null,
+            intentDescriptionEn:
+              "Keep homophone/context recommendations null for grades 1–2 until early Hebrew copy is approved.",
+          },
+          g3_g4: {
+            actionTextHe:
+              "כדאי לתרגל זוגות מילים שנשמעות דומה או זהות, אבל נכתבות אחרת או בעלות משמעות שונה. בקשו מהילד לקרוא שני משפטים קצרים, לבחור את המילה הנכונה לפי ההקשר, ולהסביר למה.",
+            goalTextHe:
+              "בשבוע הקרוב התמקדו בהבחנה בין מילים דומות לפי משמעות המשפט, לא רק לפי הצליל.",
+            intentDescriptionEn:
+              "Grade 3–4 homophone disambiguation using minimal sentence pairs and context-based word choice.",
+          },
+          g5_g6: {
+            actionTextHe:
+              "כדאי לתרגל הומופונים ומילים שנשמעות דומה בטקסטים קצרים. בקשו מהילד לזהות את המילה המתאימה לפי ההקשר, לכתוב את המילה הנכונה, ולהסביר מה היה עלול לבלבל.",
+            goalTextHe:
+              "בשבוע הקרוב התמקדו בבחירת המילה הנכונה לפי הקשר, גם כשמילים נשמעות דומה.",
+            intentDescriptionEn:
+              "Grade 5–6 homophone/context discrimination in short texts with written justification.",
+          },
+        },
+      },
+    },
     "H-01": {
       defaultBands: {
         g1_g2: {
@@ -1970,6 +2087,54 @@ export const GRADE_AWARE_RECOMMENDATION_TEMPLATES = {
               "בשבוע הקרוב התמקדו בעקביות באיות באנגלית בתוך כתיבה, בזיהוי טעויות שחוזרות ובתיקון מסודר שלהן.",
             intentDescriptionEn:
               "Grade 5–6 spelling consistency in English writing, identifying repeated error patterns and correcting them systematically.",
+          },
+        },
+      },
+    },
+    "E-08": {
+      defaultBands: {
+        g1_g2: {
+          actionTextHe: null,
+          goalTextHe: null,
+          intentDescriptionEn:
+            "E-08 default: no approved flat copy; use bucketOverrides (listening) or engine fallback.",
+        },
+        g3_g4: {
+          actionTextHe: null,
+          goalTextHe: null,
+          intentDescriptionEn:
+            "E-08 default: no approved flat copy; use bucketOverrides (listening) or engine fallback.",
+        },
+        g5_g6: {
+          actionTextHe: null,
+          goalTextHe: null,
+          intentDescriptionEn:
+            "E-08 default: no approved flat copy; use bucketOverrides (listening) or engine fallback.",
+        },
+      },
+      bucketOverrides: {
+        listening: {
+          g1_g2: {
+            actionTextHe: null,
+            goalTextHe: null,
+            intentDescriptionEn:
+              "Keep listening/minimal-pair recommendations null for grades 1–2 until early-English listening copy is approved.",
+          },
+          g3_g4: {
+            actionTextHe:
+              "כדאי לתרגל הבחנה בין צלילים דומים באנגלית: להקריא לאט שתי מילים, לבקש מהילד לומר מה שונה ביניהן, ואז לחזור על אותו זוג צלילים במילים אחרות.",
+            goalTextHe:
+              "בשבוע הקרוב התמקדו בהאזנה לזוגות צלילים דומים באנגלית ובהבחנה ביניהם במילים שונות.",
+            intentDescriptionEn:
+              "Grade 3–4 English minimal-pair listening through slow reading and repeated sound pairs in different words.",
+          },
+          g5_g6: {
+            actionTextHe:
+              "כדאי לתרגל האזנה לזוגות צלילים באנגלית גם כשהמילים מופיעות במשפט קצר. בקשו מהילד לזהות איזו מילה שמע, להסביר מה שונה בצליל, ולחזור על ההבחנה בזוג מילים חדש.",
+            goalTextHe:
+              "בשבוע הקרוב התמקדו בהאזנה מדויקת לצלילים דומים באנגלית, גם בתוך משפטים קצרים.",
+            intentDescriptionEn:
+              "Grade 5–6 minimal-pair listening in short English sentences with explicit sound-difference explanation.",
           },
         },
       },

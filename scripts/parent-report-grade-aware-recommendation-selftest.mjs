@@ -531,34 +531,34 @@ check(
     }) === null
   );
   check(
-    "M-01 scale bucket → null (no override)",
+    "M-01 scale bucket → template action",
     resolveGradeAwareParentRecommendationHe({
       subjectId: "math",
       gradeKey: "g4",
       taxonomyId: "M-01",
       bucketKey: "scale",
       slot: "action",
-    }) === null
+    }) != null
   );
   check(
-    "M-01 prime_composite → null",
+    "M-01 prime_composite → template action",
     resolveGradeAwareParentRecommendationHe({
       subjectId: "math",
       gradeKey: "g4",
       taxonomyId: "M-01",
       bucketKey: "prime_composite",
       slot: "action",
-    }) === null
+    }) != null
   );
   check(
-    "M-01 zero_one_properties → null",
+    "M-01 zero_one_properties → template action",
     resolveGradeAwareParentRecommendationHe({
       subjectId: "math",
       gradeKey: "g4",
       taxonomyId: "M-01",
       bucketKey: "zero_one_properties",
       slot: "action",
-    }) === null
+    }) != null
   );
   check(
     "M-01 unknown bucket → null",
@@ -1250,12 +1250,12 @@ check(
   {
     const us = makeM01InterveneUnit("scale");
     const fs = resolveUnitParentActionHe(us, "g4");
-    check("M-01 scale bucket engine fallback", fs != null && String(fs).includes("מניפולציה"));
+    check("M-01 scale bucket template via resolveUnit", fs != null && !String(fs).includes("מניפולציה"));
   }
   {
     const uz = makeM01InterveneUnit("zero_one_properties");
     const fz = resolveUnitParentActionHe(uz, "g4");
-    check("M-01 zero_one_properties bucket engine fallback", fz != null && String(fz).includes("מניפולציה"));
+    check("M-01 zero_one_properties bucket template via resolveUnit", fz != null && !String(fz).includes("מניפולציה"));
   }
 
 }

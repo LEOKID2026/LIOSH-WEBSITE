@@ -5,7 +5,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const BLOCKED_TAXONOMY_IDS = ["M-01", "H-05", "E-08", "S-05", "S-06", "S-08"];
+const BLOCKED_TAXONOMY_IDS = [];
 
 const LEAK_PATTERNS = [
   { id: "axis_symbolic", re: /ציר\s*\+\s*סימבולי/u },

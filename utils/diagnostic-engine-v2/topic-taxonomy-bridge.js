@@ -63,6 +63,7 @@ const ENGLISH_TOPIC_TO_IDS = {
   /** Audit/inventory uses grammar category id `sentence` for sentence pools — alias of UI topic `sentences`. */
   sentence: ["E-06"],
   writing: ["E-07"],
+  listening: ["E-08"],
   mixed: ["E-01"],
 };
 
@@ -73,6 +74,7 @@ const HEBREW_TOPIC_TO_IDS = {
   writing: ["H-03", "H-07"],
   reading: ["H-04"],
   comprehension: ["H-04"],
+  homophones: ["H-05"],
   speaking: ["H-08"],
   mixed: ["H-01"],
 };
