@@ -32,7 +32,7 @@ export default function ParentSchoolInboxPage() {
     }
     const meBody = await me.json().catch(() => ({}));
     if (!meBody?.data?.isSchoolLinked) {
-      router.replace("/guardian/view");
+      router.replace("/parent/guardian/view");
       return;
     }
     setMustChangePin(Boolean(meBody?.data?.mustChangePin));
@@ -96,7 +96,7 @@ export default function ParentSchoolInboxPage() {
     <Layout>
       <TeacherPortalShell title={SC_INBOX_TITLE_PARENT}>
         <div className="mb-4">
-          <Link href="/guardian/view" className="text-sm text-amber-300 hover:underline cursor-pointer">
+          <Link href="/parent/guardian/view" className="text-sm text-amber-300 hover:underline cursor-pointer">
             ← חזרה לדוח
           </Link>
         </div>
