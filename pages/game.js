@@ -13,7 +13,6 @@ import { SOLO_DEV_PROTOTYPES_HUB } from "../lib/solo-games/dev-prototype-hub-lis
 import SoloGameHelpButton from "../components/solo-games/SoloGameHelpButton.jsx";
 import SoloGameHelpModal from "../components/solo-games/SoloGameHelpModal.jsx";
 import GamesHubLockFooter from "../components/games/GamesHubLockFooter.jsx";
-import GamesHubLockFooter from "../components/games/GamesHubLockFooter.jsx";
 import { useSoloGameHelp } from "../hooks/solo-games/useSoloGameHelp.js";
 import StudentLoadingPanel from "../components/ui/StudentLoadingPanel.jsx";
 
