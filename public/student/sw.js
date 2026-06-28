@@ -118,6 +118,7 @@ function isOfflineStaticChunk(pathname) {
 }
 
 function isOfflinePrecachedAsset(pathname) {
+  if (pathname === OFFLINE_HTML) return true;
   if (OFFLINE_ASSET_SET.has(pathname)) return true;
   if (!STUDENT_OFFLINE_FULL_SW_ENABLED) return false;
   if (pathname.startsWith(REWARD_CARD_PATH_PREFIX)) return true;
@@ -141,16 +142,18 @@ async function cacheFirstAllowlisted(request, allowRuntimeCache) {
 }
 
 async function serveOfflineHtmlFallback() {
-  const cache = await caches.open(CACHE_NAME);
-  const candidates = [
-    OFFLINE_HTML,
-    new Request(OFFLINE_HTML, { mode: "navigate" }),
-  ];
+  try {
+    const cache = await caches.open(CACHE_NAME);
+    const candidates = [
+      OFFLINE_HTML,
+      new Request(OFFLINE_HTML, { mode: "navigate" }),
+    ];
 
-  for (const candidate of candidates) {
-    const match = await cache.match(candidate, { ignoreSearch: true });
-    if (match) return match;
-  }
+    for (const candidate of candidates) {
+      const match = await cache.match(candidate, { ignoreSearch: true });
+      if (match) return match;
+    }
+  } catch (_) {}
 
   return new Response(OFFLINE_HTML_FALLBACK, {
     status: 200,
@@ -253,6 +256,20 @@ self.addEventListener("install", (event) => {
     (async () => {
       const cache = await caches.open(CACHE_NAME);
 
+      // Always store the inline fallback first so /student/offline.html is
+      // guaranteed to be in the cache even if the network file is unavailable.
+      await cache.put(
+        new Request(OFFLINE_HTML),
+        new Response(OFFLINE_HTML_FALLBACK, {
+          status: 200,
+          headers: {
+            "Content-Type": "text/html; charset=utf-8",
+            "Cache-Control": "no-store",
+          },
+        }),
+      );
+
+      // Try to fetch the real file; overwrite the inline stub if successful.
       await Promise.allSettled(
         INSTALL_PRECACHE.map((url) =>
           cache.add(new Request(url, { cache: "reload" })),
@@ -397,6 +414,17 @@ self.addEventListener("fetch", (event) => {
   }
 
   if (isStudentNavigation(event.request, url)) {
-    event.respondWith(handleStudentNavigation(event.request));
+    event.respondWith(
+      handleStudentNavigation(event.request).catch(
+        () =>
+          new Response(OFFLINE_HTML_FALLBACK, {
+            status: 200,
+            headers: {
+              "Content-Type": "text/html; charset=utf-8",
+              "Cache-Control": "no-store",
+            },
+          }),
+      ),
+    );
   }
 });
