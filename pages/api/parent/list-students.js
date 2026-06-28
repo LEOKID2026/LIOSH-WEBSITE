@@ -14,8 +14,9 @@ export default async function handler(req, res) {
 
     const { data, error } = await ctx.bearerSupabase
       .from("students")
-      .select("id,full_name,grade_level,is_active,created_at,student_coin_balances(balance,lifetime_earned,lifetime_spent)")
+      .select("id,full_name,grade_level,is_active,created_at,account_kind,student_coin_balances(balance,lifetime_earned,lifetime_spent)")
       .eq("parent_id", ctx.parentUserId)
+      .or("account_kind.eq.registered,account_kind.is.null")
       .order("created_at", { ascending: true });
 
     if (error) {

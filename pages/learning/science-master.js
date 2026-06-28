@@ -121,6 +121,8 @@ import {
   tryConsumeBookContextOnPracticeEntry,
 } from "../../lib/learning-book/book-context-master-helper";
 import { useLearningMasterUi } from "../../hooks/useLearningMasterUi.js";
+import { useGuestPlayableTopics } from "../../hooks/useGuestPlayableTopics.js";
+import { GUEST_TOPIC_LOCK_MESSAGE_HE } from "../../lib/guest/constants.js";
 import LearningMasterHud from "../../components/learning/LearningMasterHud.jsx";
 import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar.jsx";
 import LearningMasterDesktopHeader from "../../components/learning/LearningMasterDesktopHeader.jsx";
@@ -720,6 +722,11 @@ export default function ScienceMaster() {
   const [mode, setMode] = useState("practice");
   const [level, setLevel] = useState("easy");
   const [topic, setTopic] = useState("body");
+  const scienceTopicsForGuest = useMemo(
+    () => (GRADES[grade]?.topics || Object.keys(TOPICS)).filter((t) => t !== "mixed"),
+    [grade]
+  );
+  const guestTopics = useGuestPlayableTopics("science", scienceTopicsForGuest);
   const bookIndexHref = grade ? getLearningBookIndexHref("science", grade) : null;
   const bookTopicHref = useMemo(() => {
     if (!SCIENCE_BOOK_GRADE_SET.has(grade)) return null;
@@ -2227,6 +2234,10 @@ function saveScienceAnswerInParallel({
   }
 
   function startGame(opts = {}) {
+    if (guestTopics.isGuest && guestTopics.isLocked(topic)) {
+      alert(GUEST_TOPIC_LOCK_MESSAGE_HE);
+      return;
+    }
     let plannerResolvedLevel = null;
     if (opts.fromAdaptivePlannerRecommendedPractice && opts.plannerSessionMeta && typeof opts.plannerSessionMeta === "object") {
       plannerNextSessionClientMetaRef.current = opts.plannerSessionMeta;
@@ -3123,14 +3134,19 @@ function saveScienceAnswerInParallel({
                     value={topic}
                     title={getTopicLabel(topic)}
                     onChange={(e) => {
-                      setTopic(e.target.value);
+                      const nextTopic = e.target.value;
+                      if (guestTopics.isGuest && guestTopics.isLocked(nextTopic)) {
+                        alert(GUEST_TOPIC_LOCK_MESSAGE_HE);
+                        return;
+                      }
+                      setTopic(nextTopic);
                       setGameActive(false);
                     }}
                     className={`${MB.selectControl} min-w-0 w-full md:w-[min(22rem,42vw)] md:max-w-[22rem]`}
                   >
                     {allowedTopics.map((t) => (
-                      <option key={t} value={t}>
-                        {getTopicLabel(t)}
+                      <option key={t} value={t} disabled={guestTopics.isLocked(t)}>
+                        {guestTopics.label(t, getTopicLabel(t))}
                       </option>
                     ))}
                   </select>

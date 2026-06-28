@@ -1,0 +1,92 @@
+{
+  "pass": 16,
+  "fail": 1,
+  "skip": 0,
+  "results": [
+    {
+      "id": "browser-guest-login",
+      "status": "PASS",
+      "detail": "631928"
+    },
+    {
+      "id": "browser-learning-profile-blocked",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "id": "browser-tile-locked-stats",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "id": "browser-tile-locked-progress",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "id": "browser-tile-locked-missions",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "id": "browser-tile-locked-classroom",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "id": "browser-tile-locked-worksheets",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "id": "browser-tile-locked-recommendations",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "id": "browser-tile-subjects-open",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "id": "browser-math-topic-locks",
+      "status": "PASS",
+      "detail": "open=2 locked=11"
+    },
+    {
+      "id": "browser-cards-page",
+      "status": "PASS",
+      "detail": "API shop ok"
+    },
+    {
+      "id": "browser-coins-session",
+      "status": "PASS",
+      "detail": "before=200 after=200"
+    },
+    {
+      "id": "browser-admin-guest-page",
+      "status": "FAIL",
+      "detail": "toggle=true games=false box=false"
+    },
+    {
+      "id": "browser-admin-guest-list",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "id": "browser-admin-leo-search-attempt",
+      "status": "PASS",
+      "detail": "631928"
+    },
+    {
+      "id": "browser-parent-link-message",
+      "status": "PASS",
+      "detail": "QA-Browser-v2f0"
+    },
+    {
+      "id": "browser-child-login-after-link",
+      "status": "PASS",
+      "detail": "qax0v2f0"
+    }
+  ]
+}

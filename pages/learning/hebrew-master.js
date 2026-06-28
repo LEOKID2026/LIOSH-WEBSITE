@@ -171,6 +171,8 @@ import {
   shouldShowHebrewG1BookFirstSoftGate,
 } from "../../lib/learning-book/hebrew-g1-literacy-progress";
 import { useLearningMasterUi } from "../../hooks/useLearningMasterUi.js";
+import { useGuestPlayableTopics } from "../../hooks/useGuestPlayableTopics.js";
+import { GUEST_TOPIC_LOCK_MESSAGE_HE } from "../../lib/guest/constants.js";
 import LearningMasterHud from "../../components/learning/LearningMasterHud.jsx";
 import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar.jsx";
 import LearningMasterDesktopHeader from "../../components/learning/LearningMasterDesktopHeader.jsx";
@@ -294,6 +296,11 @@ export default function HebrewMaster() {
 
   const [level, setLevel] = useState("easy");
   const [operation, setOperation] = useState("reading"); // לא mixed כברירת מחדל כדי שה-modal לא יפתח אוטומטית
+  const hebrewTopicsForGuest = useMemo(
+    () => (GRADES[grade]?.topics ?? []).filter((t) => t !== "mixed"),
+    [grade]
+  );
+  const guestTopics = useGuestPlayableTopics("hebrew", hebrewTopicsForGuest);
   const bookTopicHref = useMemo(() => {
     if (!HEBREW_BOOK_GRADE_SET.has(grade)) return null;
     return getHebrewBookHref({ grade, operation, kind: null });
@@ -1946,6 +1953,10 @@ export default function HebrewMaster() {
   }
 
   function startGame(opts = {}) {
+    if (guestTopics.isGuest && operation !== "mixed" && guestTopics.isLocked(operation)) {
+      alert(GUEST_TOPIC_LOCK_MESSAGE_HE);
+      return;
+    }
     if (opts.fromAdaptivePlannerRecommendedPractice && opts.plannerSessionMeta && typeof opts.plannerSessionMeta === "object") {
       plannerNextSessionClientMetaRef.current = opts.plannerSessionMeta;
       if (opts.appliedLevelKey === "easy" || opts.appliedLevelKey === "medium" || opts.appliedLevelKey === "hard") {
@@ -3638,6 +3649,10 @@ export default function HebrewMaster() {
                     title={getOperationName(operation)}
                     onChange={(e) => {
                       const newOp = e.target.value;
+                      if (guestTopics.isGuest && guestTopics.isLocked(newOp)) {
+                        alert(GUEST_TOPIC_LOCK_MESSAGE_HE);
+                        return;
+                      }
                       setGameActive(false);
                       if (newOp === "mixed") {
                         setOperation(newOp);
@@ -3650,8 +3665,8 @@ export default function HebrewMaster() {
                     className={`${MB.selectControl} min-w-0 w-full md:w-[min(22rem,42vw)] md:max-w-[22rem]`}
                   >
                     {GRADES[grade].topics.map((topic) => (
-                      <option key={topic} value={topic}>
-                        {getOperationName(topic)}
+                      <option key={topic} value={topic} disabled={topic !== "mixed" && guestTopics.isLocked(topic)}>
+                        {topic === "mixed" ? getOperationName(topic) : guestTopics.label(topic, getOperationName(topic))}
                       </option>
                     ))}
                   </select>

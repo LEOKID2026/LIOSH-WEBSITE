@@ -49,6 +49,8 @@ import {
 import { mergeDiagnosticContractIntoParams } from "../../utils/diagnostic-question-contract";
 import { mcqCellValue } from "../../utils/mcq-option-cell";
 import { useLearningMasterUi } from "../../hooks/useLearningMasterUi";
+import { useGuestPlayableTopics } from "../../hooks/useGuestPlayableTopics.js";
+import { GUEST_TOPIC_LOCK_MESSAGE_HE } from "../../lib/guest/constants.js";
 import LearningMasterHud from "../../components/learning/LearningMasterHud";
 import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar";
 import LearningMasterDesktopHeader from "../../components/learning/LearningMasterDesktopHeader.jsx";
@@ -549,6 +551,7 @@ export default function EnglishMaster() {
     if (curriculum.includes("mixed")) return [...visibleEnglishTopics, "mixed"];
     return visibleEnglishTopics;
   }, [safeGrade, visibleEnglishTopics]);
+  const guestTopics = useGuestPlayableTopics("english", visibleEnglishTopics);
   const [mode, setMode] = useState("practice");
   const [practiceFocus, setPracticeFocus] = useState("balanced");
   const [focusedPracticeMode, setFocusedPracticeMode] = useState("normal");
@@ -1754,6 +1757,10 @@ export default function EnglishMaster() {
   }
 
   function startGame(opts = {}) {
+    if (guestTopics.isGuest && topic !== "mixed" && guestTopics.isLocked(topic)) {
+      alert(GUEST_TOPIC_LOCK_MESSAGE_HE);
+      return;
+    }
     if (opts.fromAdaptivePlannerRecommendedPractice && opts.plannerSessionMeta && typeof opts.plannerSessionMeta === "object") {
       plannerNextSessionClientMetaRef.current = opts.plannerSessionMeta;
       if (opts.appliedLevelKey === "easy" || opts.appliedLevelKey === "medium" || opts.appliedLevelKey === "hard") {
@@ -2708,6 +2715,10 @@ export default function EnglishMaster() {
                     title={getTopicName(topic)}
                     onChange={(e) => {
                       const newTopic = e.target.value;
+                      if (guestTopics.isGuest && guestTopics.isLocked(newTopic)) {
+                        alert(GUEST_TOPIC_LOCK_MESSAGE_HE);
+                        return;
+                      }
                       setGameActive(false);
                       practiceForceKindRef.current = null;
                       practiceForceSkillIdRef.current = null;
@@ -2723,8 +2734,8 @@ export default function EnglishMaster() {
                     className={`${MB.selectControl} min-w-0 w-full md:w-[min(22rem,42vw)] md:max-w-[22rem]`}
                   >
                     {englishTopicSelectOptions.map((t) => (
-                      <option key={t} value={t}>
-                        {getTopicName(t)}
+                      <option key={t} value={t} disabled={t !== "mixed" && guestTopics.isLocked(t)}>
+                        {t === "mixed" ? getTopicName(t) : guestTopics.label(t, getTopicName(t))}
                       </option>
                     ))}
                   </select>

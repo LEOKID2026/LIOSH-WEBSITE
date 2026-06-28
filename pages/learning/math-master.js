@@ -80,6 +80,8 @@ import {
 } from "../../utils/learning-step-exercise-types";
 import { finalizeAnimationSteps } from "../../utils/learning-step-animation-pipeline";
 import { useLearningMasterUi } from "../../hooks/useLearningMasterUi.js";
+import { useGuestPlayableTopics } from "../../hooks/useGuestPlayableTopics.js";
+import { GUEST_TOPIC_LOCK_MESSAGE_HE } from "../../lib/guest/constants.js";
 import LearningMasterHud from "../../components/learning/LearningMasterHud.jsx";
 import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar.jsx";
 import LearningMasterDesktopHeader from "../../components/learning/LearningMasterDesktopHeader.jsx";
@@ -469,6 +471,7 @@ export default function MathMaster() {
     safeGrade,
     GRADES[safeGrade]?.operations ?? []
   );
+  const guestTopics = useGuestPlayableTopics("math", visibleMathOps);
   const bookIndexHref = grade ? getLearningBookIndexHref("math", grade) : null;
   const bookTopicHref = useMemo(() => {
     if (!MATH_BOOK_GRADES.has(grade)) return null;
@@ -1262,7 +1265,15 @@ export default function MathMaster() {
     }
   }, [grade]); // רק כשהכיתה משתנה, לא כשהפעולה משתנה
 
-  // עדכון mixedOperations לפי הכיתה — כל פעולה זמינה לכיתה מקבלת מפתח (ברירת מחדל: הכל פעיל)
+  useEffect(() => {
+    if (!guestTopics.loaded || !guestTopics.isGuest || showMixedSelector) return;
+    if (operation !== "mixed" && guestTopics.isLocked(operation)) {
+      const next = guestTopics.firstPlayable(visibleMathOps, visibleMathOps[0]);
+      if (next) setOperation(next);
+    }
+  }, [guestTopics.loaded, guestTopics.isGuest, grade, operation, showMixedSelector, visibleMathOps]);
+
+  // עדכון mixedOperations לפי הכיתה
   useEffect(() => {
     if (!grade) return;
     const availableOps = listVisibleTopicsForSelfPractice("math", grade, GRADES[grade].operations);
@@ -2183,6 +2194,10 @@ export default function MathMaster() {
   }
 
   function startGame(opts = {}) {
+    if (guestTopics.isGuest && operation !== "mixed" && guestTopics.isLocked(operation)) {
+      alert(GUEST_TOPIC_LOCK_MESSAGE_HE);
+      return;
+    }
     if (opts.focusedPracticeMode != null) {
       setFocusedPracticeMode(opts.focusedPracticeMode);
       focusedPracticeModeRef.current = opts.focusedPracticeMode;
@@ -3894,6 +3909,10 @@ export default function MathMaster() {
                     title={getOperationName(operation)}
                     onChange={(e) => {
                       const newOp = e.target.value;
+                      if (guestTopics.isGuest && guestTopics.isLocked(newOp)) {
+                        alert(GUEST_TOPIC_LOCK_MESSAGE_HE);
+                        return;
+                      }
                       setGameActive(false);
                       if (newOp === "mixed") {
                         setOperation(newOp);
@@ -3907,8 +3926,8 @@ export default function MathMaster() {
                   >
                     <optgroup label="נושאים">
                       {visibleMathOps.map((op) => (
-                        <option key={op} value={op}>
-                          {getOperationName(op)}
+                        <option key={op} value={op} disabled={guestTopics.isLocked(op)}>
+                          {guestTopics.label(op, getOperationName(op))}
                         </option>
                       ))}
                     </optgroup>

@@ -81,7 +81,8 @@ export default function GamesHubPage() {
                     cardClass={`${GH.card} text-right min-h-[9.5rem] md:min-h-[11rem]`}
                     ctaClass={GH.cardCta}
                     hidden={catState ? !catState.visible : false}
-                    locked={catState?.locked === true}
+                    locked={catState?.locked === true || catState?.state === "guest_locked"}
+                    lockTitle={catState?.message || (catState?.state === "guest_locked" ? "לא זמין במצb אורch" : undefined)}
                   />
                 );
               })}

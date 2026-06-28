@@ -21,6 +21,8 @@ import {
   resolveContentGradeForSessionWrite,
 } from "../../../../lib/learning-supabase/practice-grade-resolution.js";
 import { guardCookieMutationOrigin } from "../../../../lib/security/api-guards.js";
+import { assertGuestTopicPlayable } from "../../../../lib/guest/guest-topic-access.server.js";
+import { isGuestStudent } from "../../../../lib/guest/guest-display.js";
 import { trackServerAnalyticsEvent } from "../../../../lib/analytics/track-event.server.js";
 
 async function insertLearningSession(supabase, row) {
@@ -70,6 +72,23 @@ export default async function handler(req, res) {
 
     const topic = normalizeOptionalString(body.topic, 120);
     const clientMode = normalizeLearningGameMode(body.mode) || "learning";
+
+    if (topic && isGuestStudent(auth.student || {})) {
+      const guestTopic = await assertGuestTopicPlayable(
+        getLearningSupabaseServiceRoleClient(),
+        auth.student,
+        subject,
+        topic
+      );
+      if (!guestTopic.ok) {
+        return res.status(guestTopic.status || 403).json({
+          ok: false,
+          error: guestTopic.message,
+          code: guestTopic.code,
+        });
+      }
+    }
+
     const clientGradeHint = normalizeOptionalString(body.gradeLevel, 40);
     const level = normalizeOptionalString(body.level, 40);
     const clientMeta = normalizeClientMeta(body.clientMeta);

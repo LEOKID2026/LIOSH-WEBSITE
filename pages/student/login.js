@@ -14,6 +14,7 @@ import {
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import { syncStudentLocalStorageIdentity } from "../../lib/learning-student-local-sync";
 import { isStudentIdentityDiagnosticsEnabled } from "../../lib/dev-student-identity-client";
+import { LIOSH_GUEST_RESUME_TOKEN_KEY } from "../../lib/guest/constants.js";
 
 function resolveNextTarget(router) {
   const raw = router.query?.next;
@@ -53,6 +54,7 @@ export default function StudentLoginPage() {
   const [copyPopupOpen, setCopyPopupOpen] = useState(false);
   const [copyPopupMessage, setCopyPopupMessage] = useState("");
   const [copyPopupIsError, setCopyPopupIsError] = useState(false);
+  const [guestBusy, setGuestBusy] = useState(false);
 
   const layoutProps = { studentTheme: theme, studentShell: "home" };
   const labelClass = isBright ? "text-slate-700" : "text-white/80";
@@ -75,11 +77,32 @@ export default function StudentLoginPage() {
     if (!router.isReady) return undefined;
     let mounted = true;
     fetch("/api/student/me", { credentials: "same-origin", cache: "no-store" })
-      .then((res) => {
+      .then(async (res) => {
         if (!mounted) return;
         if (res.ok) {
           redirectAfterStudentLogin(router);
           return;
+        }
+        const resumeToken =
+          typeof window !== "undefined" ? localStorage.getItem(LIOSH_GUEST_RESUME_TOKEN_KEY) : null;
+        if (resumeToken) {
+          const resumeRes = await fetch("/api/student/guest/resume", {
+            method: "POST",
+            credentials: "same-origin",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ resumeToken }),
+          });
+          const resumePayload = await resumeRes.json().catch(() => ({}));
+          if (resumeRes.ok && resumePayload?.ok) {
+            if (resumePayload.resumeToken) {
+              localStorage.setItem(LIOSH_GUEST_RESUME_TOKEN_KEY, resumePayload.resumeToken);
+            }
+            if (resumePayload.student?.id) {
+              syncStudentLocalStorageIdentity(resumePayload.student, "student-login guest resume");
+            }
+            redirectAfterStudentLogin(router);
+            return;
+          }
         }
         setSessionCheck("none");
       })
@@ -105,6 +128,37 @@ export default function StudentLoginPage() {
       </Layout>
     );
   }
+
+  const startGuest = async () => {
+    setGuestBusy(true);
+    setMessage("");
+    try {
+      const resumeToken =
+        typeof window !== "undefined" ? localStorage.getItem(LIOSH_GUEST_RESUME_TOKEN_KEY) : null;
+      const res = await fetch("/api/student/guest/start", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ resumeToken: resumeToken || undefined }),
+      });
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok || !payload?.ok) {
+        setMessage(payload?.error || "לא ניתן להיכנס כאורח כרגע");
+        return;
+      }
+      if (payload.resumeToken && typeof window !== "undefined") {
+        localStorage.setItem(LIOSH_GUEST_RESUME_TOKEN_KEY, payload.resumeToken);
+      }
+      if (payload.student?.id) {
+        syncStudentLocalStorageIdentity(payload.student, "student-login guest start");
+      }
+      redirectAfterStudentLogin(router);
+    } catch {
+      setMessage("שגיאת רשת");
+    } finally {
+      setGuestBusy(false);
+    }
+  };
 
   const submitLogin = async (e) => {
     e.preventDefault();
@@ -191,7 +245,20 @@ export default function StudentLoginPage() {
             disabled={busy}
             type="submit"
           >
-            {busy ? "מתחבר…" : "כניסה ללמידה"}
+            {busy ? "מתחבר…" : "כניסה לעולם הילדים של ליאו"}
+          </button>
+          <button
+            type="button"
+            data-testid="student-guest-start"
+            className={`w-full rounded-xl border px-3 py-2 font-semibold disabled:opacity-60 ${
+              isBright
+                ? "border-violet-400 bg-violet-50 text-violet-900 hover:bg-violet-100"
+                : "border-violet-300/40 bg-violet-400/10 text-violet-100 hover:bg-violet-400/20"
+            }`}
+            disabled={busy || guestBusy}
+            onClick={() => void startGuest()}
+          >
+            {guestBusy ? "נכנסים…" : "כניסה כאורח"}
           </button>
           <div className="pt-1 space-y-2 text-center">
             <p className={`text-sm leading-relaxed ${parentInviteHintClass}`}>

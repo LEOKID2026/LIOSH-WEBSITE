@@ -38,6 +38,7 @@ import StudentSurpriseBoxWidget from "../../components/student/rewards/StudentSu
 import StudentSurpriseBoxOpenModal from "../../components/student/rewards/StudentSurpriseBoxOpenModal";
 import StudentShareFriendsButton from "../../components/student/StudentShareFriendsButton";
 import { isCardRewardsEnabledClient } from "../../lib/rewards/reward-feature-flags.client.js";
+import { GUEST_LOCK_MESSAGE_HE, GUEST_LOCKED_HOME_PANELS, LIOSH_GUEST_RESUME_TOKEN_KEY } from "../../lib/guest/constants.js";
 
 import { syncMonthlyProgressCacheFromServer } from "../../utils/progress-storage.js";
 
@@ -105,24 +106,27 @@ function getTileVariant(T) {
   };
 }
 
-function DashboardTile({ emoji, title, subtitle, onClick, variant = "default" }) {
+function DashboardTile({ id, emoji, title, subtitle, onClick, variant = "default", locked = false, lockMessage = GUEST_LOCK_MESSAGE_HE }) {
   const { tokens: T } = useStudentTheme();
   const tileVariant = getTileVariant(T);
   const v = tileVariant[variant] || tileVariant.default;
   return (
     <button
       type="button"
-      onClick={onClick}
-      className={`${T.tile} ${v.hover}`}
+      data-testid={id ? `student-home-tile-${id}` : undefined}
+      onClick={locked ? undefined : onClick}
+      disabled={locked}
+      aria-disabled={locked || undefined}
+      className={`${T.tile} ${locked ? "opacity-75 cursor-not-allowed" : v.hover}`}
     >
       <span className={v.accent} aria-hidden />
       <div className="flex items-start gap-3 md:gap-3.5">
         <span className={v.iconWrap} aria-hidden>
-          {emoji}
+          {locked ? "🔒" : emoji}
         </span>
         <div className={T.tileBody}>
           <p className={T.tileTitle}>{title}</p>
-          <p className={T.tileSub}>{subtitle ?? "0"}</p>
+          <p className={T.tileSub}>{locked ? lockMessage : (subtitle ?? "0")}</p>
         </div>
       </div>
     </button>
@@ -339,7 +343,13 @@ export default function StudentHomePage() {
   const [heroAvatarImage, setHeroAvatarImage] = useState(null);
   const [heroAvatarEmoji, setHeroAvatarEmoji] = useState("👤");
   const [boxModalOpen, setBoxModalOpen] = useState(false);
+  const [guestPolicy, setGuestPolicy] = useState(null);
   const cardRewardsEnabled = isCardRewardsEnabledClient();
+  const isGuestHome = Boolean(guestPolicy || student?.account_kind === "guest" || student?.accountKind === "guest");
+  const guestLockedPanelSet = useMemo(() => {
+    const ids = guestPolicy?.lockedHomePanels || GUEST_LOCKED_HOME_PANELS;
+    return new Set(ids);
+  }, [guestPolicy]);
 
   const loadHomeAchievementGrants = useCallback(async (studentId) => {
     const sid = String(studentId || "").trim();
@@ -550,6 +560,7 @@ export default function StudentHomePage() {
         setCachedStudentMe(payload);
         syncStudentLocalStorageIdentity(payload.student, "student/home after /me");
         setStudent(payload.student);
+        setGuestPolicy(payload.guestPolicy || null);
         setAuthPhase("authed");
 
         const summaryText = await summaryRes.text();
@@ -767,6 +778,9 @@ export default function StudentHomePage() {
     setLogoutBusy(true);
     try {
       await fetch("/api/student/logout", { method: "POST", credentials: "include" });
+      if (typeof window !== "undefined") {
+        localStorage.removeItem(LIOSH_GUEST_RESUME_TOKEN_KEY);
+      }
       clearAllStudentScopedBrowserStorage(sid);
       invalidateStudentLearningProfileClientCache();
       invalidateStudentHomeProfileClientCache(sid);
@@ -792,7 +806,9 @@ export default function StudentHomePage() {
     return <LoadingScreen message="טוען..." />;
   }
 
-  const heroName = String(student.full_name || "").trim() || "ילד/ה";
+  const heroName = String(student.displayNameHe || student.full_name || "").trim() || "ילד/ה";
+  const heroGreeting = String(student.greetingHe || "").trim() || `שלום ${heroName}`;
+  const heroLeoLabel = String(student.leoNumberLabelHe || "").trim();
   const heroGrade =
     student.grade_level != null && student.grade_level !== "" ? formatGradeLevelHe(student.grade_level) : "";
   const heroCoinsDisplay =
@@ -883,7 +899,10 @@ export default function StudentHomePage() {
                   )}
                 </button>
                 <div className="min-w-0 text-right">
-                  <h1 className={T.heroTitle}>שלום {heroName}</h1>
+                  <h1 className={T.heroTitle}>{isGuestHome ? heroGreeting : `שלום ${heroName}`}</h1>
+                  {isGuestHome && heroLeoLabel ? (
+                    <p className={`text-sm mt-1 ${isBright ? "text-slate-600" : "text-white/70"}`}>{heroLeoLabel}</p>
+                  ) : null}
                   <p className={T.heroSub}>
                     {heroGrade ? heroGrade : "עדיין אין נתונים"}
                   </p>
@@ -985,10 +1004,13 @@ export default function StudentHomePage() {
               {Object.entries(HOME_PANELS).map(([id, panel]) => (
                 <DashboardTile
                   key={id}
+                  id={id}
                   emoji={panel.emoji}
                   title={panel.title}
                   subtitle={dashboardSubtitles[id] || null}
                   variant={panel.variant}
+                  locked={isGuestHome && guestLockedPanelSet.has(id)}
+                  lockMessage={guestPolicy?.lockMessageHe || GUEST_LOCK_MESSAGE_HE}
                   onClick={() => setActivePanel(id)}
                 />
               ))}

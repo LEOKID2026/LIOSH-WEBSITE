@@ -53,7 +53,7 @@ export default async function handler(req, res) {
 
     const { data: student, error: studentErr } = await ctx.bearerSupabase
       .from("students")
-      .select("id,full_name,grade_level,is_active,parent_id")
+      .select("id,full_name,grade_level,is_active,parent_id,account_kind")
       .eq("id", studentId)
       .eq("parent_id", ctx.parentUserId)
       .maybeSingle();
@@ -63,6 +63,9 @@ export default async function handler(req, res) {
     }
     if (!student?.id) {
       return res.status(404).json({ ok: false, error: "Student not found for this parent" });
+    }
+    if (student.account_kind === "guest") {
+      return res.status(403).json({ ok: false, error: "לא זמין לאורch", code: "guest_not_eligible" });
     }
 
     const serviceClient = getLearningSupabaseServiceRoleClient();

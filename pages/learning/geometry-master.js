@@ -86,6 +86,8 @@ import { geometryQuestionUsesChoiceUi } from "../../utils/geometry-activity-answ
 import GeometryExplanationDiagram from "../../components/learning/geometry/GeometryExplanationDiagram";
 import StepGeometryStepPanel from "../../components/learning/geometry/StepGeometryStepPanel";
 import { useLearningMasterUi } from "../../hooks/useLearningMasterUi.js";
+import { useGuestPlayableTopics } from "../../hooks/useGuestPlayableTopics.js";
+import { GUEST_TOPIC_LOCK_MESSAGE_HE } from "../../lib/guest/constants.js";
 import LearningMasterHud from "../../components/learning/LearningMasterHud.jsx";
 import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar.jsx";
 import LearningMasterDesktopHeader from "../../components/learning/LearningMasterDesktopHeader.jsx";
@@ -288,6 +290,7 @@ export default function GeometryMaster() {
     if (curriculum.includes("mixed")) return [...visibleGeometryTopics, "mixed"];
     return visibleGeometryTopics;
   }, [safeGrade, visibleGeometryTopics]);
+  const guestTopics = useGuestPlayableTopics("geometry", visibleGeometryTopics);
   const [mode, setMode] = useState("practice");
   const [level, setLevel] = useState("easy");
   const [topic, setTopic] = useState("area");
@@ -2139,6 +2142,10 @@ export default function GeometryMaster() {
 
 
   function startGame(opts = {}) {
+    if (guestTopics.isGuest && topic !== "mixed" && guestTopics.isLocked(topic)) {
+      alert(GUEST_TOPIC_LOCK_MESSAGE_HE);
+      return;
+    }
     clearActiveDiagnosticState(
       geometryPendingDiagnosticProbeRef,
       geometryHypothesisLedgerRef
@@ -2775,6 +2782,10 @@ export default function GeometryMaster() {
                     title={getTopicName(topic)}
                     onChange={(e) => {
                       const newTopic = e.target.value;
+                      if (guestTopics.isGuest && guestTopics.isLocked(newTopic)) {
+                        alert(GUEST_TOPIC_LOCK_MESSAGE_HE);
+                        return;
+                      }
                       setGameActive(false);
                       if (newTopic === "mixed") {
                         setTopic(newTopic);
@@ -2787,8 +2798,8 @@ export default function GeometryMaster() {
                     className={`${MB.selectControl} min-w-0 w-full md:w-[min(22rem,42vw)] md:max-w-[22rem]`}
                   >
                     {visibleGeometryTopics.map((t) => (
-                      <option key={t} value={t}>
-                        {getTopicName(t)}
+                      <option key={t} value={t} disabled={guestTopics.isLocked(t)}>
+                        {guestTopics.label(t, getTopicName(t))}
                       </option>
                     ))}
                     {(GRADES[safeGrade]?.topics || []).includes("mixed") && (

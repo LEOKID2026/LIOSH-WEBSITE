@@ -106,7 +106,7 @@ async function authenticateViaUi({ page, account, baseUrl, log, loginUrl }) {
     );
   const submitButton = page
     .getByTestId("student-login-submit")
-    .or(page.getByRole("button", { name: /כניסה ללמידה/ }))
+    .or(page.getByRole("button", { name: /כניסה לעולם הילדים של ליאו|כניסה ללמידה/ }))
     .or(page.getByRole("button", { name: "כניסה" }));
 
   const loginMs = loginTimeoutMs();

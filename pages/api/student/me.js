@@ -6,6 +6,15 @@ import {
   getAuthenticatedStudentSession,
 } from "../../../lib/learning-supabase/student-auth";
 import { safeApiLog } from "../../../lib/security/safe-log.js";
+import {
+  buildGuestPolicyPayload,
+} from "../../../lib/guest/guest-access-policy.server.js";
+import {
+  formatGuestDisplayNameHe,
+  formatStudentGreetingHe,
+  formatLeoNumberLabelHe,
+  isGuestStudent,
+} from "../../../lib/guest/guest-display.js";
 
 export default async function handler(req, res) {
   // Authenticated identity must never be served from a shared or disk cache — otherwise
@@ -46,7 +55,21 @@ export default async function handler(req, res) {
       grade_level: student.grade_level,
       is_active: student.is_active,
       coin_balance: balance,
+      account_kind: student.account_kind || "registered",
+      accountKind: student.account_kind || "registered",
+      leo_number: student.leo_number ?? null,
+      leoNumber: student.leo_number ?? null,
+      guest_status: student.guest_status ?? null,
+      guestStatus: student.guest_status ?? null,
+      displayNameHe: isGuestStudent(student) ? formatGuestDisplayNameHe(student) : student.full_name,
+      greetingHe: formatStudentGreetingHe(student),
+      leoNumberLabelHe: formatLeoNumberLabelHe(student),
     };
+
+    const guestPolicy = isGuestStudent(student)
+      ? await buildGuestPolicyPayload(supabase, student)
+      : null;
+
     const debugStudentIdentity = devStudentIdentityPayload("student-me-api", student);
     if (isStudentIdentityDebugEnabled() && debugStudentIdentity) {
       safeApiLog("[LIOSH student identity] API", debugStudentIdentity);
@@ -55,6 +78,8 @@ export default async function handler(req, res) {
     return res.status(200).json({
       ok: true,
       student: bodyStudent,
+      guestPolicy,
+      isGuest: Boolean(guestPolicy),
       ...(debugStudentIdentity ? { debugStudentIdentity } : {}),
     });
   } catch (_e) {

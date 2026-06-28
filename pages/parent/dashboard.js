@@ -70,6 +70,7 @@ export default function ParentDashboardPage() {
   const [newGrade, setNewGrade] = useState("");
   const [newChildUsername, setNewChildUsername] = useState("");
   const [newChildPin, setNewChildPin] = useState("");
+  const [newGuestLeoNumber, setNewGuestLeoNumber] = useState("");
   const [credentialsByStudentId, setCredentialsByStudentId] = useState({});
   /** One-time display after creating or resetting credentials (new PIN shown once). */
   const [credentialConfirmation, setCredentialConfirmation] = useState(null);
@@ -211,6 +212,28 @@ export default function ParentDashboardPage() {
     } else {
       const createdStudentId = payload?.student?.id;
       let credentialMessage = "";
+      const leoDigits = String(newGuestLeoNumber || "").replace(/\D/g, "").slice(0, 6);
+
+      if (leoDigits.length === 6 && createdStudentId) {
+        const linkRes = await fetch("/api/parent/guest/link", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({
+            targetStudentId: createdStudentId,
+            leoNumber: leoDigits,
+          }),
+        });
+        const linkPayload = await linkRes.json();
+        if (!linkRes.ok) {
+          credentialMessage =
+            linkPayload.error || "הילד/ה נוצר/ה, אך שיוך מספר האורch נכשל";
+        } else {
+          credentialMessage = linkPayload.message || "המטבעות והקלפים נשמרו לילד.";
+        }
+      }
 
       if (initialUsername && initialPin && createdStudentId) {
         const credRes = await fetch("/api/parent/create-student-access-code", {
@@ -251,6 +274,7 @@ export default function ParentDashboardPage() {
       setNewGrade("");
       setNewChildUsername("");
       setNewChildPin("");
+      setNewGuestLeoNumber("");
       setAddChildModalOpen(false);
       void trackProductEvent({
         eventName: "child_created",
@@ -529,6 +553,18 @@ export default function ParentDashboardPage() {
           </option>
         ))}
       </select>
+      <div>
+        <label className={`text-sm ${T.label}`}>מספר ליאו של אורch (אופציונלי)</label>
+        <input
+          className={T.inputMt}
+          value={newGuestLeoNumber}
+          onChange={(e) => setNewGuestLeoNumber(e.target.value.replace(/\D/g, "").slice(0, 6))}
+          placeholder="6 ספרות"
+          inputMode="numeric"
+          autoComplete="off"
+          disabled={busy || students.length >= studentLimit}
+        />
+      </div>
       <div className={T.panel}>
         <div className={T.panelTitle}>פרטי כניסת ילד/ה</div>
         <div>

@@ -63,7 +63,7 @@ async function submitStudentLogin(page: Page, username: string, pin: string) {
   await page.getByPlaceholder("שם משתמש").fill(username);
   const pinField = page.getByPlaceholder("קוד כניסה");
   await pinField.fill(pin);
-  await page.getByRole("button", { name: "כניסה ללמידה" }).click({ force: true });
+  await page.getByTestId("student-login-submit").click({ force: true });
 }
 
 async function assertNo404(page: Page) {

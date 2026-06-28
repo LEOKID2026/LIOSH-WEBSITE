@@ -17,7 +17,7 @@ async function waitStudentLoginReady(page: Page) {
 async function submitStudentLogin(page: Page, username: string, pin: string) {
   await page.getByPlaceholder("שם משתמש").fill(username);
   await page.getByPlaceholder("קוד כניסה").fill(pin);
-  await page.getByRole("button", { name: "כניסה ללמידה" }).click({ force: true });
+  await page.getByTestId("student-login-submit").click({ force: true });
 }
 
 test.describe("Android WebView parity — production mobile @android-qa", () => {
