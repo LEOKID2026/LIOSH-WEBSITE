@@ -1,14 +1,29 @@
 // Service worker for LEO K student PWA (scope /student/ only).
 // Sync STUDENT_OFFLINE_FULL_SW_ENABLED with lib/offline/offline-flags.js — must stay false in commit.
 
+try {
+  importScripts("./offline-precache-generated.js");
+} catch (err) {
+  console.warn("[SW student] offline-precache-generated.js not loaded:", err);
+}
+
 const STUDENT_OFFLINE_FULL_SW_ENABLED = true;
 
+const GENERATED = self.__STUDENT_OFFLINE_PRECACHE__ || {
+  chunkUrls: [],
+  navUrls: [],
+  dataUrls: [],
+  assetUrls: [],
+};
+
 const CACHE_NAME = STUDENT_OFFLINE_FULL_SW_ENABLED
-  ? "student-offline-v2-full"
+  ? "student-offline-v3-full"
   : "student-offline-v1";
 const CACHE_PREFIX = "student-";
 
-const INSTALL_PRECACHE = ["/student/offline.html", "/icons/child/pwa-192x192.png"];
+const OFFLINE_HTML = "/student/offline.html";
+
+const INSTALL_PRECACHE = [OFFLINE_HTML, "/icons/child/pwa-192x192.png"];
 
 const BASELINE_OFFLINE_GAME_URLS = [
   "/student/offline",
@@ -19,97 +34,198 @@ const BASELINE_OFFLINE_GAME_URLS = [
 ];
 
 const FULL_OFFLINE_NAV_URLS = STUDENT_OFFLINE_FULL_SW_ENABLED
-  ? [
-      "/student/offline/solo",
-      "/student/offline/educational",
-      "/student/offline/solo/catcher",
-      "/student/offline/solo/flyer",
-      "/student/offline/solo/puzzle",
-      "/student/offline/solo/memory",
-      "/student/offline/solo/leo-jump",
-      "/student/offline/solo/balloons",
-      "/student/offline/solo/maze",
-      "/student/offline/solo/picture-puzzle",
-      "/student/offline/solo/target-tap",
-      "/student/offline/solo/sort-shapes",
-      "/student/offline/solo/smart-blocks",
-      "/student/offline/solo/fruit-slice",
-      "/student/offline/educational/recycling-factory",
-      "/student/offline/educational/leo-supermarket",
-      "/student/offline/educational/leo-lab",
-      "/student/offline/educational/leo-gifts",
-      "/student/offline/educational/leo-bakery",
-      "/student/offline/educational/leo-number-path",
-    ]
-  : [];
-
-const FULL_OFFLINE_ASSET_URLS = STUDENT_OFFLINE_FULL_SW_ENABLED
-  ? [
-      "/images/leo.png",
-      "/images/leo2.png",
-      "/images/leo-logo.png",
-      "/images/coin.png",
-      "/images/coin2.png",
-      "/images/diamond.png",
-      "/images/magnet.png",
-      "/images/obstacle.png",
-      "/images/obstacle1.png",
-      "/images/game-day.png",
-      "/images/game1.png",
-      "/images/game2.png",
-      "/images/game3.png",
-      "/images/game4.png",
-      "/images/game-park.png",
-      "/images/game-balloons-bg.png",
-      "/images/candy/heart.png",
-      "/images/candy/circle.png",
-      "/images/candy/square.png",
-      "/images/candy/drop.png",
-      "/images/candy/diamond.png",
-      "/images/candy/star.png",
-      "/rewards/cards/common/card_back.webp",
-      "/images/card/shiba1.png",
-      "/images/card/shiba2.png",
-      "/images/card/shiba3.png",
-      "/images/card/shiba4.png",
-      "/images/card/shiba5.png",
-      "/sounds/flap.mp3",
-    ]
+  ? GENERATED.navUrls.filter((url) => !BASELINE_OFFLINE_GAME_URLS.includes(url))
   : [];
 
 const OFFLINE_GAME_URLS = [...BASELINE_OFFLINE_GAME_URLS, ...FULL_OFFLINE_NAV_URLS];
 
-const ASSET_ALLOWLIST = STUDENT_OFFLINE_FULL_SW_ENABLED ? FULL_OFFLINE_ASSET_URLS : null;
+const FULL_CHUNK_URLS = STUDENT_OFFLINE_FULL_SW_ENABLED ? GENERATED.chunkUrls || [] : [];
+const FULL_DATA_URLS = STUDENT_OFFLINE_FULL_SW_ENABLED ? GENERATED.dataUrls || [] : [];
+const FULL_ASSET_URLS = STUDENT_OFFLINE_FULL_SW_ENABLED
+  ? GENERATED.assetUrls || []
+  : [];
 
-function isAllowlistedAsset(pathname) {
-  if (!ASSET_ALLOWLIST) return false;
-  return ASSET_ALLOWLIST.includes(pathname);
+const OFFLINE_HTML_FALLBACK = `<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>אין חיבור — LEO K</title>
+<style>
+body{margin:0;min-height:100dvh;display:flex;align-items:center;justify-content:center;background:#050816;color:#fff;font-family:system-ui,sans-serif;padding:1.5rem}
+.card{max-width:22rem;text-align:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#2dd4bf,#0ea5e9);color:#050816;font-weight:700;text-decoration:none;border-radius:1rem;padding:.85rem 2rem;width:100%}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>אין חיבור לאינטרנט</h1>
+<p>ניתן לשחק במשחקים הבאים גם בלי אינטרנט</p>
+<a href="/student/offline" class="btn">🎮 משחקים ללא אינטרנט</a>
+</div>
+</body>
+</html>`;
+
+const IMAGE_PATTERNS = [
+  /^\/images\/.*\.(png|jpg|jpeg|gif|webp|svg)$/i,
+  /^\/images\/card\/.*\.png$/i,
+  /^\/images\/candy\/.*\.png$/i,
+  /^\/images\/puzzle\/.*\.png$/i,
+  /^\/images\/grocery-items\/.*\.svg$/i,
+  /^\/images\/recycling-items\/.*\.svg$/i,
+  /^\/images\/leo-supermarket\/.*\.(png|jpg|webp)$/i,
+];
+
+const SOUND_PATTERNS = [/^\/sounds\/.*\.(mp3|wav|ogg)$/i];
+
+const REWARD_CARD_PATH_PREFIX = "/rewards/cards/";
+
+function isStudentStaticAsset(pathname) {
+  if (!STUDENT_OFFLINE_FULL_SW_ENABLED) return false;
+  if (pathname.startsWith(REWARD_CARD_PATH_PREFIX)) return true;
+  return (
+    IMAGE_PATTERNS.some((pattern) => pattern.test(pathname)) ||
+    SOUND_PATTERNS.some((pattern) => pattern.test(pathname))
+  );
+}
+
+function isStudentNavigation(request, url) {
+  return (
+    url.pathname.startsWith("/student/") &&
+    (request.mode === "navigate" || request.destination === "document")
+  );
+}
+
+function isStudentDataRequest(url) {
+  return url.pathname.startsWith("/_next/data/") && url.pathname.endsWith(".json");
+}
+
+/** @param {Request} request */
+async function cacheFirst(request) {
+  const cached = await caches.match(request);
+  if (cached) return cached;
+
+  try {
+    const response = await fetch(request);
+    if (response.ok) {
+      const clone = response.clone();
+      caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+    }
+    return response;
+  } catch (err) {
+    const cachedFallback = await caches.match(request.url.split("?")[0]);
+    if (cachedFallback) return cachedFallback;
+    throw err;
+  }
+}
+
+async function serveOfflineHtmlFallback() {
+  const cache = await caches.open(CACHE_NAME);
+  const candidates = [
+    OFFLINE_HTML,
+    new Request(OFFLINE_HTML, { mode: "navigate" }),
+  ];
+
+  for (const candidate of candidates) {
+    const match = await cache.match(candidate, { ignoreSearch: true });
+    if (match) return match;
+  }
+
+  const cacheNames = await caches.keys();
+  for (const name of cacheNames) {
+    if (!name.startsWith(CACHE_PREFIX)) continue;
+    const altCache = await caches.open(name);
+    for (const candidate of candidates) {
+      const match = await altCache.match(candidate, { ignoreSearch: true });
+      if (match) return match;
+    }
+  }
+
+  return new Response(OFFLINE_HTML_FALLBACK, {
+    status: 200,
+    headers: {
+      "Content-Type": "text/html; charset=utf-8",
+      "Cache-Control": "no-store",
+    },
+  });
+}
+
+/** @param {Request} request */
+async function handleStudentNavigation(request) {
+  const url = new URL(request.url);
+
+  try {
+    const response = await fetch(request);
+    if (response.ok && OFFLINE_GAME_URLS.includes(url.pathname)) {
+      const clone = response.clone();
+      caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+    }
+    return response;
+  } catch (_err) {
+    const cached =
+      (await caches.match(request)) ||
+      (await caches.match(url.pathname, { ignoreSearch: true }));
+    if (cached) return cached;
+    return serveOfflineHtmlFallback();
+  }
+}
+
+/** @param {string[]} urls */
+async function precacheUrls(urls) {
+  const cache = await caches.open(CACHE_NAME);
+  await Promise.allSettled(
+    urls.map(async (url) => {
+      const request = new Request(url, { credentials: "same-origin", cache: "reload" });
+      const existing = await cache.match(request, { ignoreSearch: true });
+      if (existing) return;
+      const response = await fetch(request);
+      if (response.ok) {
+        await cache.put(request, response);
+      }
+    }),
+  );
 }
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches
-      .open(CACHE_NAME)
-      .then(async (cache) => {
-        await Promise.all(
-          INSTALL_PRECACHE.map((url) =>
-            cache.add(new Request(url, { cache: "reload" })),
-          ),
-        );
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
+
+      await Promise.allSettled(
+        INSTALL_PRECACHE.map((url) =>
+          cache.add(new Request(url, { cache: "reload" })),
+        ),
+      );
+
+      await Promise.allSettled(
+        OFFLINE_GAME_URLS.map((url) =>
+          cache.add(new Request(url, { credentials: "same-origin", cache: "reload" })),
+        ),
+      );
+
+      if (STUDENT_OFFLINE_FULL_SW_ENABLED) {
+        const fullUrls = [
+          ...FULL_CHUNK_URLS,
+          ...FULL_DATA_URLS,
+          ...FULL_ASSET_URLS,
+        ];
         await Promise.allSettled(
-          OFFLINE_GAME_URLS.map((url) =>
-            cache.add(new Request(url, { cache: "reload" })),
-          ),
+          fullUrls.map(async (url) => {
+            const request = new Request(url, { credentials: "same-origin", cache: "reload" });
+            try {
+              const response = await fetch(request);
+              if (response.ok) {
+                await cache.put(request, response);
+              }
+            } catch (_err) {
+              // Warm-up from hub will retry while online.
+            }
+          }),
         );
-        if (STUDENT_OFFLINE_FULL_SW_ENABLED && FULL_OFFLINE_ASSET_URLS.length) {
-          await Promise.allSettled(
-            FULL_OFFLINE_ASSET_URLS.map((url) =>
-              cache.add(new Request(url, { cache: "reload" })),
-            ),
-          );
-        }
-      })
-      .then(() => self.skipWaiting()),
+      }
+
+      await self.skipWaiting();
+    })(),
   );
 });
 
@@ -128,9 +244,42 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+self.addEventListener("message", (event) => {
+  if (!STUDENT_OFFLINE_FULL_SW_ENABLED) return;
+
+  if (event.data?.type === "PRE_CACHE_STUDENT_OFFLINE") {
+    const buildId = event.data.buildId || GENERATED.buildId;
+    const extraDataUrls = buildId
+      ? OFFLINE_GAME_URLS.map((navUrl) => {
+          const suffix = navUrl === "/" ? "/index" : navUrl;
+          return `/_next/data/${buildId}${suffix}.json`;
+        })
+      : [];
+
+    const urls = [
+      ...OFFLINE_GAME_URLS,
+      ...FULL_CHUNK_URLS,
+      ...FULL_DATA_URLS,
+      ...extraDataUrls,
+      ...FULL_ASSET_URLS,
+    ];
+
+    event.waitUntil(
+      precacheUrls([...new Set(urls)]).then(() => {
+        if (event.source) {
+          event.source.postMessage({ type: "PRE_CACHE_STUDENT_OFFLINE_DONE" });
+        }
+      }),
+    );
+  }
+
+  if (event.data?.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
+});
+
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
-
   if (url.origin !== self.location.origin) return;
 
   if (
@@ -142,60 +291,21 @@ self.addEventListener("fetch", (event) => {
   }
 
   if (url.pathname.startsWith("/_next/static/")) {
-    event.respondWith(
-      caches.match(event.request).then(
-        (cached) =>
-          cached ||
-          fetch(event.request).then((response) => {
-            if (response.ok) {
-              const clone = response.clone();
-              caches.open(CACHE_NAME).then((c) => c.put(event.request, clone));
-            }
-            return response;
-          }),
-      ),
-    );
+    event.respondWith(cacheFirst(event.request));
     return;
   }
 
-  if (
-    STUDENT_OFFLINE_FULL_SW_ENABLED &&
-    (url.pathname.startsWith("/images/") ||
-      url.pathname.startsWith("/sounds/") ||
-      url.pathname.startsWith("/rewards/cards/")) &&
-    isAllowlistedAsset(url.pathname)
-  ) {
-    event.respondWith(
-      caches.match(event.request).then(
-        (cached) =>
-          cached ||
-          fetch(event.request).then((response) => {
-            if (response.ok) {
-              const clone = response.clone();
-              caches.open(CACHE_NAME).then((c) => c.put(event.request, clone));
-            }
-            return response;
-          }),
-      ),
-    );
+  if (STUDENT_OFFLINE_FULL_SW_ENABLED && isStudentDataRequest(url)) {
+    event.respondWith(cacheFirst(event.request));
     return;
   }
 
-  if (event.request.mode === "navigate") {
-    event.respondWith(
-      fetch(event.request)
-        .then((response) => {
-          if (response.ok && OFFLINE_GAME_URLS.includes(url.pathname)) {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then((c) => c.put(event.request, clone));
-          }
-          return response;
-        })
-        .catch(() =>
-          caches
-            .match(event.request)
-            .then((cached) => cached || caches.match("/student/offline.html")),
-        ),
-    );
+  if (STUDENT_OFFLINE_FULL_SW_ENABLED && isStudentStaticAsset(url.pathname)) {
+    event.respondWith(cacheFirst(event.request));
+    return;
+  }
+
+  if (isStudentNavigation(event.request, url)) {
+    event.respondWith(handleStudentNavigation(event.request));
   }
 });

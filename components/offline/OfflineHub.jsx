@@ -13,6 +13,7 @@ import {
 } from "../../lib/offline/offline-game-catalog.js";
 import { STUDENT_OFFLINE_FULL_GAMES_ENABLED } from "../../lib/offline/offline-flags.js";
 import OfflineReconnectBanner from "./OfflineReconnectBanner.jsx";
+import OfflinePrecacheWarmup from "./OfflinePrecacheWarmup.jsx";
 
 function OfflineSectionTitle({ children }) {
   return (
@@ -46,6 +47,7 @@ export default function OfflineHub() {
 
   return (
     <Layout studentTheme={theme} studentShell="home">
+      <OfflinePrecacheWarmup />
       <main className={GH.pageWrap} dir="rtl">
         <div className={`${GH.container} space-y-5`}>
           <header className="space-y-2 text-center sm:text-right">

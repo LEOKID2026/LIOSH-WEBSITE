@@ -97,6 +97,10 @@ async function main() {
   await runNodeScript("scripts/ensure-clean-next-build.mjs");
 
   let result = await runNextBuild();
+  if (result.code === 0) {
+    await runNodeScript("scripts/generate-student-offline-precache.mjs");
+  }
+
   if (result.code !== 0 && isTransientPrerenderRace(result.output)) {
     console.warn(
       "\n[run-production-build] Transient prerender PageNotFoundError detected. " +
@@ -107,6 +111,9 @@ async function main() {
     }
     await runNodeScript("scripts/ensure-clean-next-build.mjs");
     result = await runNextBuild();
+    if (result.code === 0) {
+      await runNodeScript("scripts/generate-student-offline-precache.mjs");
+    }
   }
 
   process.exit(result.code);
