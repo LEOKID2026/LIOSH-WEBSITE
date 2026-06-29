@@ -30,6 +30,7 @@ import { BEHAVIOR_PROFILES, SUBJECT_LABELS_HE } from "./lib/mass-virtual-student
 import { provisionMassAccounts } from "./lib/mass-virtual-students/provision.mjs";
 import { patchSpeedPressureForStudents, seedSpeedPressureCohort } from "./lib/mass-virtual-students/speed-pressure-patch.mjs";
 import { backfillParentActivityAttempts } from "./lib/mass-virtual-students/parent-activity-seeder.mjs";
+import { printPreflightReport, runMassSimulationPreflight } from "./lib/mass-virtual-students/preflight.mjs";
 import {
   buildCoverageRows,
   computePassVerdict,
@@ -109,9 +110,18 @@ function startHeartbeat(runId, getStats) {
   return setInterval(() => {
     const s = getStats();
     simLog(
-      `[mass-sim] heartbeat runId=${runId} elapsed=${Math.round((Date.now() - started) / 60000)}m phase=${s.phase} seeded=${s.studentsSeeded}/${s.studentsTotal} answers=${s.totalAnswers} sessions=${s.totalSessions}`,
+      `[mass-sim] runId=${runId} phase=${s.phase} seeded=${s.studentsSeeded}/${s.studentsTotal} answers=${s.totalAnswers} sessions=${s.totalSessions} elapsed=${Math.round((Date.now() - started) / 60000)}m`,
     );
   }, 5 * 60 * 1000);
+}
+
+function abortOnSpeedPressureMissing(summary, reportDir) {
+  if (!(summary.missingDecisions || []).includes("speed_pressure_pattern")) return;
+  console.error(
+    "[mass-sim] STOP: speed_pressure_pattern missing — do NOT start a new 1000. Inspect speed-pressure debug in:",
+    reportDir,
+  );
+  process.exit(1);
 }
 
 async function loadPriorSummaryForVerify(cfg, manifest) {
@@ -263,11 +273,22 @@ async function runVerifyOnly(cfg) {
   });
 
   logVerdicts(summary, cfg.reportDir);
+  abortOnSpeedPressureMissing(summary, cfg.reportDir);
   if (summary.finalVerdict !== "PASS") process.exit(1);
 }
 
 async function main() {
   const cfg = parseMassSimulationCli();
+
+  const preflight = runMassSimulationPreflight({ subjects: cfg.subjects, grades: cfg.grades });
+  printPreflightReport(preflight);
+  if (cfg.preflightOnly) {
+    process.exit(preflight.ok ? 0 : 1);
+  }
+  if (!preflight.ok) {
+    process.exit(1);
+  }
+
   if (cfg.verifyOnly) {
     await runVerifyOnly(cfg);
     return;
@@ -422,7 +443,7 @@ async function main() {
 
     if (seededCount % cfg.progressEvery === 0 || seededCount === provisioned.students.length) {
       simLog(
-        `[mass-sim] seed progress ${seededCount}/${provisioned.students.length} login=${student.login} answers=${totalAnswers} sessions=${totalSessions}`,
+        `[mass-sim] runId=${cfg.runId} phase=seed seeded=${seededCount}/${provisioned.students.length} answers=${totalAnswers} sessions=${totalSessions} login=${student.login}`,
       );
       await writeCheckpoint(cfg.reportDir, {
         runId: cfg.runId,
@@ -581,6 +602,7 @@ async function main() {
   });
 
   logVerdicts(summary, cfg.reportDir);
+  abortOnSpeedPressureMissing(summary, cfg.reportDir);
   if (summary.finalVerdict !== "PASS") process.exit(1);
 }
 

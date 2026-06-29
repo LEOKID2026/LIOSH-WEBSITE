@@ -3,6 +3,7 @@ import crypto from "node:crypto";
 import { classifyActivityEvidence } from "../../../../lib/learning/activity-classification.js";
 import { createServiceClient } from "./supabase.mjs";
 import { buildRichAnswerPayload, SEED_META_KEY } from "./seed-metadata.mjs";
+import { resolveSessionSubject } from "./subject-registry.mjs";
 
 /**
  * Insert parent-assigned attempts using schema columns (no answer_payload on this table).
@@ -13,12 +14,14 @@ export async function insertParentAssignedActivity(supabase, parentId, studentId
   const activityId = crypto.randomUUID();
   const title = `[${runId}] parent ${activityMode} ${session.topic}`;
 
+  const sessionSubject = resolveSessionSubject(session.subject);
+
   const { error: actErr } = await supabase.from("parent_assigned_activities").insert({
     id: activityId,
     parent_id: parentId,
     student_id: studentId,
     title,
-    subject: session.subject,
+    subject: sessionSubject,
     topic: session.topic,
     question_count: session.count,
     mode: activityMode,
@@ -100,6 +103,7 @@ export async function insertAttemptsForExistingActivity(supabase, activity, runI
 
 async function insertAttemptsForActivity(supabase, { activityId, studentId, runId, session }) {
   const classification = session.classification;
+  const sessionSubject = resolveSessionSubject(session.subject);
   let wrongLeft = session.wrongCount ?? Math.round(session.count * 0.35);
 
   for (let i = 0; i < session.count; i += 1) {
@@ -108,7 +112,7 @@ async function insertAttemptsForActivity(supabase, { activityId, studentId, runI
     const timeSpentMs = session.timeSpentMs?.(i, isWrong) ?? (isWrong ? 1200 : 8000);
     const payload = buildRichAnswerPayload({
       runId,
-      subject: session.subject,
+      subject: sessionSubject,
       topic: session.topic,
       grade: session.grade,
       mode: session.mode || "homework",
@@ -128,7 +132,7 @@ async function insertAttemptsForActivity(supabase, { activityId, studentId, runI
       correct_answer: payload.expectedAnswer,
       question_snapshot: {
         prompt: payload.prompt,
-        subject: session.subject,
+        subject: sessionSubject,
         topic: session.topic,
         grade: session.grade,
         gradeLevel: session.grade,

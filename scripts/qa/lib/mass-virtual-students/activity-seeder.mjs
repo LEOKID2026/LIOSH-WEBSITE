@@ -4,6 +4,7 @@ import { classifyActivityEvidence } from "../../../../lib/learning/activity-clas
 import { estimatePracticeDurationSeconds } from "../../../../lib/parent-server/report-duration-sanity.js";
 import { insertParentAssignedActivity } from "./parent-activity-seeder.mjs";
 import { buildRichAnswerPayload, SEED_META_KEY } from "./seed-metadata.mjs";
+import { resolveSessionSubject } from "./subject-registry.mjs";
 
 function fnv1a(str) {
   let h = 2166136261;
@@ -130,6 +131,8 @@ export function buildStudentActivityPlan(student, { days, minutesPerDay, startDa
 export async function insertSelfPracticeSession(supabase, studentId, runId, session) {
   if (!session.answers?.length) return { sessionId: null, answerCount: 0 };
 
+  const sessionSubject = resolveSessionSubject(session.subject);
+
   const startedMs = Date.parse(session.answers[0].answeredAt);
   const durationSeconds = estimatePracticeDurationSeconds(session.answers.length);
   const endedMs = startedMs + durationSeconds * 1000;
@@ -155,7 +158,7 @@ export async function insertSelfPracticeSession(supabase, studentId, runId, sess
     .from("learning_sessions")
     .insert({
       student_id: studentId,
-      subject: session.subject,
+      subject: sessionSubject,
       topic: session.topic,
       started_at: new Date(startedMs).toISOString(),
       ended_at: new Date(endedMs).toISOString(),
@@ -175,7 +178,7 @@ export async function insertSelfPracticeSession(supabase, studentId, runId, sess
     answered_at: a.answeredAt,
     answer_payload: answerPayload({
       runId,
-      subject: session.subject,
+      subject: sessionSubject,
       topic: session.topic,
       mode: session.mode,
       grade: session.grade,

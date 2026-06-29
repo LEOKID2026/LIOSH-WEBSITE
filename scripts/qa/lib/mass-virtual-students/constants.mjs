@@ -54,6 +54,7 @@ export const SUBJECT_LABELS_HE = {
   hebrew: "עברית",
   english: "אנגלית",
   science: "מדעים",
+  "moledet-geography": "מולדת וגאוגרפיה",
 };
 
 export const GRADE_LABELS_HE = {

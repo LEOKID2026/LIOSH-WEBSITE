@@ -6,6 +6,7 @@ import {
 } from "./curriculum-speed-pressure.mjs";
 import { createServiceClient } from "./supabase.mjs";
 import { buildSpeedPressureAnswerSchedule, SEED_META_KEY } from "./seed-metadata.mjs";
+import { resolveSessionSubject } from "./subject-registry.mjs";
 
 const SPEED_SHELL_COUNT = 40;
 const PRACTICE_ANSWER_COUNT = 22;
@@ -21,6 +22,7 @@ const FIELDS_WRITTEN = [
 ];
 
 async function insertSpeedSessionShells(supabase, studentId, runId, { subject, topic, grade, day, count }) {
+  const sessionSubject = resolveSessionSubject(subject);
   const shells = [];
   for (let i = 0; i < count; i += 1) {
     const hour = 14 + (i % 6);
@@ -28,7 +30,7 @@ async function insertSpeedSessionShells(supabase, studentId, runId, { subject, t
     const durationSeconds = 45;
     shells.push({
       student_id: studentId,
-      subject,
+      subject: sessionSubject,
       topic,
       started_at: new Date(startedMs).toISOString(),
       ended_at: new Date(startedMs + durationSeconds * 1000).toISOString(),
@@ -69,7 +71,7 @@ export async function patchSpeedPressureForStudents({ students, runId, endDay })
       .from("learning_sessions")
       .select("id", { count: "exact", head: true })
       .eq("student_id", student.studentId)
-      .eq("subject", subject)
+      .eq("subject", resolveSessionSubject(subject))
       .eq("topic", topic)
       .contains("metadata", { patch: SPEED_COHORT_PATCH_TAG });
 

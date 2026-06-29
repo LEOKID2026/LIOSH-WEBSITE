@@ -10,6 +10,7 @@ import {
   QA_EMAIL_DOMAIN,
   BEHAVIOR_PROFILES,
 } from "./constants.mjs";
+import { normalizeMassSimSubjects } from "./subject-registry.mjs";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 export const REPO_ROOT = resolve(__dirname, "../../../..");
@@ -70,12 +71,14 @@ export function parseMassSimulationCli(argv = process.argv.slice(2)) {
   const minutesPerDay = parseIntFlag("minutesPerDay", argv, 30);
   const password = parseFlag("password", argv) || DEFAULT_PARENT_PASSWORD;
   const studentPin = parseFlag("studentPin", argv) || DEFAULT_STUDENT_PIN;
-  const subjects = parseList("subjects", argv, LAUNCH_SUBJECTS);
+  const subjectsRaw = parseList("subjects", argv, LAUNCH_SUBJECTS);
+  const subjects = normalizeMassSimSubjects(subjectsRaw);
   const grades = parseList("grades", argv, GRADE_KEYS);
   const mode = parseFlag("mode", argv) || "staging";
   const timestampStamping = parseBoolFlag("timestampStamping", argv) || parseFlag("timestampStamping", argv) === "1";
   const dryRun = parseBoolFlag("dry-run", argv);
   const verifyOnly = parseBoolFlag("verify-only", argv);
+  const preflightOnly = parseBoolFlag("preflight-only", argv);
   const syncNames = argv.includes("--sync-names")
     ? true
     : argv.includes("--no-sync-names")
@@ -119,6 +122,7 @@ export function parseMassSimulationCli(argv = process.argv.slice(2)) {
     timestampStamping,
     dryRun,
     verifyOnly,
+    preflightOnly,
     syncNames,
     patchSpeedPressure,
     patchParentAssigned,
@@ -149,6 +153,7 @@ export function studentDisplayName({ grade, subject, profileId, profileLabelHe, 
     hebrew: "עברית",
     english: "אנגלית",
     science: "מדעים",
+    "moledet-geography": "מולדת וגאוגרפיה",
   }[subject] || subject;
   const profileHe =
     profileLabelHe ||
