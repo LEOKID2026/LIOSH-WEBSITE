@@ -112,13 +112,13 @@ function renderFormattedSegment(type, value, sourceText) {
   if (type === "bold") {
     if (mathOnly) {
       return (
-        <strong className="font-bold text-white">
+        <strong className="font-bold text-[color:var(--book-text)]">
           <MathSpan value={value} />
         </strong>
       );
     }
     return (
-      <strong className="font-bold text-white">
+      <strong className="font-bold text-[color:var(--book-text)]">
         {content}
       </strong>
     );
@@ -126,7 +126,7 @@ function renderFormattedSegment(type, value, sourceText) {
 
   if (type === "italic") {
     return (
-      <em className="text-white/85">
+      <em className="text-[color:var(--book-text-muted)]">
         {content}
       </em>
     );
@@ -262,7 +262,7 @@ function BookLineLabel({ label }) {
 
   return (
     <span
-      className="book-line-label inline font-bold text-white"
+      className="book-line-label inline font-bold text-[color:var(--book-text)]"
       style={bookLabelIsolateStyle}
       data-book-label="true"
     >

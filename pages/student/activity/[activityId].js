@@ -838,6 +838,7 @@ export default function StudentActivityPage({ activityId }) {
           }
           onClick={submitAnswer}
           className={L.submitButton}
+          data-testid="activity-submit-answer"
         >
           {isCurrentQuestionAnswered ? "התשובה נשמרה" : "שליחת תשובה"}
         </button>

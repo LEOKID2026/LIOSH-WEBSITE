@@ -1,80 +1,35 @@
 {
-  "startedAt": "2026-06-29T21:28:30.747Z",
+  "startedAt": "2026-06-29T22:07:59.295Z",
   "sections": {
     "parent-activity-e2e": {
-      "pass": true,
+      "pass": false,
       "results": [
         {
           "leo": "AAA1",
           "topic": "classical_greece",
-          "pass": true,
+          "pass": false,
           "studentId": "fd3901da-66ce-46c7-a24c-b33df2141c04",
-          "activityId": "cef6da68-3253-4922-9259-cc9580aea152",
+          "activityId": "c89855ca-6ee3-4840-ada5-f12db1f9e5e4",
           "questionCount": 10,
-          "play": {
-            "answered": 10,
-            "uiVerified": true,
-            "viaApi": true
-          },
-          "db": {
-            "status": "submitted",
-            "answersCount": 10,
-            "correctCount": 10,
-            "attempts": 10,
-            "withParams": 10,
-            "topicMatch": 10,
-            "parentAssignedEvidence": true,
-            "pass": true,
-            "sample": [
-              {
-                "subtopicKey": "hist_sub_athens_democracy",
-                "evidenceCategory": "diagnostic_guided"
-              },
-              {
-                "subtopicKey": "hist_sub_athens_democracy",
-                "evidenceCategory": "diagnostic_guided"
-              }
-            ]
-          },
-          "parentApi": {
-            "listOk": true,
-            "detailOk": true,
-            "studentStatus": "submitted",
-            "answersCount": 10,
-            "listRow": {
-              "activityId": "cef6da68-3253-4922-9259-cc9580aea152",
-              "scope": "parent",
-              "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
-              "studentId": "fd3901da-66ce-46c7-a24c-b33df2141c04",
-              "title": "[QA hist] classical_greece 1782768511996",
-              "subject": "history",
-              "topic": "classical_greece",
-              "subtopic": null,
-              "skillKey": null,
-              "difficultyLevel": "easy",
-              "questionCount": 10,
-              "mode": "guided_practice",
-              "dueAt": null,
-              "status": "active",
-              "activatedAt": "2026-06-29T21:28:33.343+00:00",
-              "closedAt": null,
-              "archivedAt": null,
-              "createdAt": "2026-06-29T21:28:33.132986+00:00",
-              "updatedAt": "2026-06-29T21:28:33.132986+00:00",
-              "snapshotStatus": "frozen",
-              "snapshotFrozenAt": "2026-06-29T21:28:33.343+00:00",
-              "studentStatus": "submitted",
-              "answersCount": 10,
-              "correctCount": 10,
-              "scorePct": 100,
-              "startedAt": "2026-06-29T21:28:43.05+00:00",
-              "submittedAt": "2026-06-29T21:29:33.165+00:00"
-            }
-          },
-          "report": {
-            "historyAnswers": 64,
-            "topicAnswers": 48
-          }
+          "error": "page.waitForSelector: Timeout 90000ms exceeded.\nCall log:\n  - waiting for locator('[data-testid=\"activity-answer-choices\"]') to be visible\n"
+        },
+        {
+          "leo": "AAA7",
+          "topic": "rome_jews",
+          "pass": false,
+          "studentId": "d8f6b184-80f2-4f2b-897e-cbbf557022e7",
+          "activityId": "29f1aee6-50a8-450f-87f4-5c112c58728f",
+          "questionCount": 10,
+          "error": "page.waitForSelector: Timeout 90000ms exceeded.\nCall log:\n  - waiting for locator('[data-testid=\"activity-answer-choices\"]') to be visible\n"
+        },
+        {
+          "leo": "AAA11",
+          "topic": "rome_jews",
+          "pass": false,
+          "studentId": "5f3df0a3-4527-4f8b-97cf-6e8ec5624920",
+          "activityId": "3fe655b0-ae49-4fba-af5d-bbb93622de53",
+          "questionCount": 10,
+          "error": "page.waitForSelector: Timeout 90000ms exceeded.\nCall log:\n  - waiting for locator('[data-testid=\"activity-answer-choices\"]') to be visible\n"
         }
       ]
     },
@@ -89,7 +44,9 @@
       "note": "build ran before QA"
     }
   },
-  "openIssues": [],
-  "finishedAt": "2026-06-29T21:30:17.055Z",
-  "allPass": true
+  "openIssues": [
+    "parent-activity-e2e"
+  ],
+  "finishedAt": "2026-06-29T22:12:57.191Z",
+  "allPass": false
 }

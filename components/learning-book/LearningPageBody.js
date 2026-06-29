@@ -446,7 +446,7 @@ export default function LearningPageBody({
 
   if (!page?.sections?.length) {
     return (
-      <p className="text-center text-white/60" dir="rtl">
+      <p className="text-center text-[color:var(--book-text-muted)]" dir="rtl">
         אין תוכן להצגה בדף זה.
       </p>
     );
@@ -507,7 +507,7 @@ export default function LearningPageBody({
       >
         <article
           key={sectionIndex}
-          className={`book-section-animate rounded-3xl border px-5 py-6 shadow-[0_8px_32px_rgba(0,0,0,0.28)] sm:px-8 sm:py-8 ${theme.cardArticle}`}
+          className={`book-section-animate rounded-3xl border px-5 py-6 sm:px-8 sm:py-8 ${theme.cardArticle}`}
           aria-live="polite"
         >
           <header className="mb-4 shrink-0 text-center">
@@ -523,7 +523,7 @@ export default function LearningPageBody({
                   className={`h-2.5 rounded-full transition-all duration-300 ${
                     i === sectionIndex
                       ? `book-dot-active w-7 ${theme.dotActive}`
-                      : "w-2.5 bg-white/25 hover:bg-white/40"
+                      : "w-2.5 bg-[color:var(--book-divider)] hover:bg-[color:var(--book-accent-muted)]"
                   }`}
                   aria-label={`עמוד ${i + 1}`}
                 />
@@ -568,12 +568,12 @@ export default function LearningPageBody({
 
       {/* Bottom HUD — fixed, always visible */}
       <footer
-        className={`fixed bottom-0 left-0 right-0 z-40 border-t border-white/15 backdrop-blur-md ${theme.footerBg}`}
+        className={`fixed bottom-0 left-0 right-0 z-40 border-t border-[color:var(--book-accent-border)] backdrop-blur-md ${theme.footerBg}`}
         dir="rtl"
         style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
       >
         <div className="mx-auto max-w-4xl space-y-3 px-4 py-3 sm:py-4">
-          <p className="text-center text-sm font-medium text-white/70">
+          <p className="text-center text-sm font-medium text-[color:var(--book-text-muted)]">
             עמוד {pageNumber} מתוך {totalSections}
           </p>
 
@@ -601,7 +601,7 @@ export default function LearningPageBody({
 
           {hasLessonNav ? (
             <nav
-              className="grid grid-cols-2 gap-2 border-t border-white/10 pt-3"
+              className="grid grid-cols-2 gap-2 border-t border-[color:var(--book-divider)] pt-3"
               aria-label="ניווט בין נושאים"
             >
               {prevPageId ? (

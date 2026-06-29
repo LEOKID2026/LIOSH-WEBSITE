@@ -41,11 +41,11 @@ export default function MathG1BookShell({
   return (
     <BookGradeThemeProvider grade={GRADE}>
       <main
-        className={`min-h-screen overflow-x-hidden text-white ${theme.classes.pageBg}`}
+        className={`min-h-screen overflow-x-hidden text-[color:var(--book-text)] ${theme.classes.pageBg}`}
       >
         {/* Top HUD */}
         <header
-          className={`sticky top-0 z-50 border-b border-white/10 backdrop-blur-md ${theme.classes.headerBg}`}
+          className={`sticky top-0 z-50 border-b border-[color:var(--book-accent-border)] backdrop-blur-md ${theme.classes.headerBg}`}
           dir="rtl"
           style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
         >
@@ -56,7 +56,7 @@ export default function MathG1BookShell({
                   <button
                     type="button"
                     onClick={handleReturnClick}
-                    className="max-w-full truncate rounded-full border border-white/20 bg-white/10 px-3 py-2 text-xs font-semibold hover:bg-white/20 transition sm:px-3.5 sm:text-sm"
+                    className="max-w-full truncate rounded-full border border-[color:var(--book-accent-border)] bg-white/70 px-3 py-2 text-xs font-semibold text-[color:var(--book-text)] hover:bg-white/90 transition sm:px-3.5 sm:text-sm"
                   >
                     {returnLabel}
                   </button>
@@ -76,7 +76,7 @@ export default function MathG1BookShell({
                       MATH_G1_BOOK_META.routeBase,
                       returnQuerySuffix
                     )}
-                    className="inline-block max-w-full truncate rounded-full border border-white/20 bg-white/10 px-3 py-2 text-xs font-semibold hover:bg-white/20 transition sm:px-3.5 sm:text-sm"
+                    className="inline-block max-w-full truncate rounded-full border border-[color:var(--book-accent-border)] bg-white/70 px-3 py-2 text-xs font-semibold text-[color:var(--book-text)] hover:bg-white/90 transition sm:px-3.5 sm:text-sm"
                   >
                     חזרה לספר
                   </Link>
@@ -87,16 +87,16 @@ export default function MathG1BookShell({
                 <button
                   type="button"
                   onClick={handleReturnClick}
-                  className="rounded-full border border-white/20 bg-white/10 px-3.5 py-2 text-sm font-semibold hover:bg-white/20 transition"
+                  className="rounded-full border border-[color:var(--book-accent-border)] bg-white/70 px-3.5 py-2 text-sm font-semibold text-[color:var(--book-text)] hover:bg-white/90 transition"
                 >
                   {returnLabel}
                 </button>
-                <div className="text-xs text-white/45">כיתה א׳</div>
+                <div className="text-xs text-[color:var(--book-text-muted)]">כיתה א׳</div>
               </div>
             )}
 
             <div className="text-center pb-0.5">
-              <p className="text-[11px] tracking-[0.15em] text-white/45">ספר לימוד</p>
+              <p className="text-[11px] tracking-[0.15em] text-[color:var(--book-text-muted)]">ספר לימוד</p>
               <h1 className="text-lg font-black leading-tight sm:text-xl">
                 {MATH_G1_BOOK_META.bookTitleHe}
               </h1>
@@ -107,7 +107,7 @@ export default function MathG1BookShell({
                   <MixedHebrewMathText text={pageMeta.displayTitle} />
                 </p>
               ) : isIndex ? (
-                <p className="mt-0.5 text-xs text-white/60">בחרו נושא וקראו עמוד אחר עמוד</p>
+                <p className="mt-0.5 text-xs text-[color:var(--book-text-muted)]">בחרו נושא וקראו עמוד אחר עמוד</p>
               ) : null}
             </div>
           </div>

@@ -209,80 +209,13 @@ async function createParentHistoryActivity(token, studentId, topic, title) {
 }
 
 async function clickActivitySubmit(page) {
-  const submit = page.getByRole("button", { name: /^שליחת תשובה$/ }).first();
+  const submit = page.getByTestId("activity-submit-answer").first();
   await submit.waitFor({ state: "visible", timeout: 15_000 });
   await page.waitForFunction(() => {
-    const buttons = Array.from(document.querySelectorAll("button"));
-    const btn = buttons.find((b) => (b.textContent || "").trim() === "שליחת תשובה");
+    const btn = document.querySelector('[data-testid="activity-submit-answer"]');
     return btn && !btn.disabled;
   }, { timeout: 15_000 });
   await submit.click();
-}
-
-async function getStudentSessionCookie(page) {
-  const cookies = await page.context().cookies();
-  const row = cookies.find((c) => c.name === "liosh_student_session");
-  return row ? `liosh_student_session=${row.value}` : null;
-}
-
-async function answerActivityViaApi(activityId, questionSet, cookie) {
-  const startRes = await fetch(`${BASE}/api/student/activities/${encodeURIComponent(activityId)}/start`, {
-    method: "POST",
-    headers: { Cookie: cookie, Origin: BASE, "Content-Type": "application/json" },
-    body: "{}",
-  });
-  const startBody = await startRes.json().catch(() => ({}));
-  if (!startRes.ok && startRes.status !== 409) {
-    throw new Error(startBody?.error || `activity start ${startRes.status}`);
-  }
-
-  let answered = 0;
-  for (let i = 0; i < questionSet.length; i++) {
-    const correct = String(questionSet[i].correctAnswer ?? "").trim();
-    const res = await fetch(
-      `${BASE}/api/student/activities/${encodeURIComponent(activityId)}/answer`,
-      {
-        method: "POST",
-        headers: { Cookie: cookie, Origin: BASE, "Content-Type": "application/json" },
-        body: JSON.stringify({
-          questionIndex: i,
-          selectedAnswer: correct,
-          rawTimeSpentMs: 8000,
-          creditedTimeMs: 8000,
-          timingStatus: "history_parent_activity_qa",
-        }),
-      }
-    );
-    const body = await res.json().catch(() => ({}));
-    if (
-      res.status === 409 &&
-      String(body?.error || body?.code || "") === "question_already_answered"
-    ) {
-      answered += 1;
-      continue;
-    }
-    if (!res.ok || body?.ok !== true) {
-      throw new Error(body?.error || body?.code || `answer q${i} ${res.status}`);
-    }
-    answered += 1;
-  }
-
-  const submitRes = await fetch(
-    `${BASE}/api/student/activities/${encodeURIComponent(activityId)}/submit`,
-    { method: "POST", headers: { Cookie: cookie, Origin: BASE } }
-  );
-  const submitBody = await submitRes.json().catch(() => ({}));
-  if (
-    !submitRes.ok &&
-    submitRes.status !== 409 &&
-    String(submitBody?.error || submitBody?.code || "") !== "already_submitted"
-  ) {
-    throw new Error(submitBody?.error || submitBody?.code || `submit ${submitRes.status}`);
-  }
-  if (!submitBody?.ok && String(submitBody?.error || submitBody?.code || "") !== "already_submitted") {
-    throw new Error(submitBody?.error || submitBody?.code || "submit failed");
-  }
-  return { answered, submitBody };
 }
 
 async function playActivityInBrowser(page, activityId, questionSet, title) {
@@ -292,21 +225,102 @@ async function playActivityInBrowser(page, activityId, questionSet, title) {
   const dialog = page.getByRole("dialog");
   await dialog.getByText(title, { exact: false }).waitFor({ timeout: 30_000 });
 
-  await page.goto(`${BASE}/student/activity/${encodeURIComponent(activityId)}`, {
-    waitUntil: "domcontentloaded",
-    timeout: 120_000,
-  });
+  const activityUrl = `${BASE}/student/activity/${encodeURIComponent(activityId)}`;
+  const startPromise = page.waitForResponse(
+    (r) =>
+      r.url().includes(`/api/student/activities/${activityId}/start`) &&
+      r.request().method() === "POST",
+    { timeout: 120_000 }
+  );
+  await page.goto(activityUrl, { waitUntil: "domcontentloaded", timeout: 120_000 });
+  const startRes = await startPromise;
+  if (!startRes.ok()) {
+    throw new Error(`activity start HTTP ${startRes.status()}`);
+  }
   await page.waitForSelector('[data-testid="activity-answer-choices"]', {
     state: "visible",
     timeout: 90_000,
   });
 
-  const cookie = await getStudentSessionCookie(page);
-  if (!cookie) throw new Error("missing liosh_student_session cookie after login");
+  let answered = 0;
+  for (let i = 0; i < questionSet.length; i++) {
+    const q = questionSet[i];
+    const correct = String(q.correctAnswer ?? "").trim();
+    if (!correct) throw new Error(`q${i} missing correctAnswer`);
+    const choiceList = Array.isArray(q.choices) ? q.choices.map(String) : [];
 
-  // UI proof: child opens activity and sees MCQ choices; complete via same student session API.
-  const apiPlay = await answerActivityViaApi(activityId, questionSet, cookie);
-  return { answered: apiPlay.answered, uiVerified: true, viaApi: true };
+    await page.waitForFunction(
+      () => {
+        const btns = document.querySelectorAll('[data-testid="activity-answer-choices"] button');
+        return btns.length > 0 && !btns[0].disabled;
+      },
+      { timeout: 30_000 }
+    );
+
+    const choices = page.locator('[data-testid="activity-answer-choices"] button');
+    const count = await choices.count();
+    let choiceIndex = choiceList.findIndex((c) => c.trim() === correct);
+    if (choiceIndex < 0) {
+      choiceIndex = choiceList.findIndex(
+        (c) => c.includes(correct) || correct.includes(c.trim())
+      );
+    }
+    if (choiceIndex >= 0 && choiceIndex < count) {
+      await choices.nth(choiceIndex).click();
+    } else {
+      let clicked = false;
+      for (let c = 0; c < count; c++) {
+        const text = (await choices.nth(c).innerText()).trim();
+        if (text === correct || text.includes(correct) || correct.includes(text)) {
+          await choices.nth(c).click();
+          clicked = true;
+          break;
+        }
+      }
+      if (!clicked) {
+        await choices.filter({ hasText: correct }).first().click();
+      }
+    }
+
+    const answerWait = page.waitForResponse(
+      (r) =>
+        r.url().includes(`/api/student/activities/${activityId}/answer`) &&
+        r.request().method() === "POST",
+      { timeout: 25_000 }
+    );
+    await clickActivitySubmit(page);
+    const answerRes = await answerWait;
+    if (!answerRes.ok()) throw new Error(`answer HTTP ${answerRes.status()}`);
+    answered += 1;
+
+    if (i < questionSet.length - 1) {
+      await page.waitForFunction(
+        (n) => (document.body?.innerText || "").includes(`שאלה ${n} מתוך`),
+        i + 2,
+        { timeout: 25_000 }
+      );
+      await page.waitForFunction(
+        () => {
+          const btns = document.querySelectorAll('[data-testid="activity-answer-choices"] button');
+          return btns.length > 0 && !btns[0].disabled;
+        },
+        { timeout: 20_000 }
+      );
+    }
+  }
+
+  const finishBtn = page.getByRole("button", { name: /סיום והגשה/ });
+  await finishBtn.waitFor({ state: "visible", timeout: 30_000 });
+  await finishBtn.click();
+  const confirm = page.getByRole("button", { name: /כן, סיום והגשה/ });
+  await confirm.waitFor({ state: "visible", timeout: 15_000 });
+  await confirm.click();
+  await page.waitForFunction(
+    () => /הגשת|הושלם|תוצאה|ציון/u.test(document.body?.innerText || ""),
+    { timeout: 60_000 }
+  );
+
+  return { answered, uiVerified: true, viaBrowser: true };
 }
 
 async function verifyActivityDb(supabase, activityId, studentId, expectedTopic) {
@@ -426,6 +440,7 @@ async function runStudentActivityE2E(browser, supabase, parentToken, st) {
 
     row.pass =
       play.answered >= 10 &&
+      play.viaBrowser === true &&
       row.db.pass &&
       row.parentApi.listOk &&
       row.parentApi.detailOk &&
@@ -750,9 +765,9 @@ async function main() {
   }
 
   const topicSmoke =
-    TOPIC_SMOKE.length > 0
-      ? await runTopicCoverageSmoke(browser, supabase, parentAuth.token)
-      : { pass: true, skipped: true, results: [] };
+    process.env.SKIP_TOPIC_SMOKE === "1" || TOPIC_SMOKE.length === 0
+      ? { pass: true, skipped: true, results: [] }
+      : await runTopicCoverageSmoke(browser, supabase, parentAuth.token);
   section("topic-coverage-smoke", topicSmoke.pass, topicSmoke);
 
   await browser.close();

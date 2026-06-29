@@ -7,7 +7,7 @@ function TableCell({ value }) {
   const isNumeric = /^[\d\s.,+\-−×÷<>=%]+$/.test(trimmed);
   return (
     <td
-      className={`border border-white/15 px-2 py-1.5 text-center sm:px-3 sm:py-2 ${
+      className={`border border-[color:var(--book-divider)] px-2 py-1.5 text-center sm:px-3 sm:py-2 ${
         isNumeric ? "tabular-nums" : ""
       }`}
       dir={isNumeric ? "ltr" : "rtl"}
@@ -28,17 +28,17 @@ export default function BookPipeTable({ headers = [], rows = [] }) {
 
   return (
     <div
-      className="book-pipe-table my-4 w-full overflow-x-auto rounded-lg border border-white/10"
+      className="book-pipe-table my-4 w-full overflow-x-auto rounded-lg border border-[color:var(--book-divider)]"
       dir="rtl"
     >
       <table className="w-full min-w-[260px] border-collapse text-sm sm:text-base">
         {headers.length > 0 ? (
           <thead>
-            <tr className={`${theme.inlineCodeBg} text-white/90`}>
+            <tr className={`${theme.inlineCodeBg} text-[color:var(--book-text)]`}>
               {Array.from({ length: colCount }, (_, i) => (
                 <th
                   key={i}
-                  className="border border-white/15 px-2 py-1.5 font-bold sm:px-3 sm:py-2"
+                  className="border border-[color:var(--book-divider)] px-2 py-1.5 font-bold sm:px-3 sm:py-2"
                   dir="rtl"
                 >
                   {headers[i] ? (
@@ -51,7 +51,7 @@ export default function BookPipeTable({ headers = [], rows = [] }) {
         ) : null}
         <tbody>
           {rows.map((row, ri) => (
-            <tr key={ri} className="even:bg-white/[0.03]">
+            <tr key={ri} className="even:bg-[color:var(--book-surface-soft)]">
               {Array.from({ length: colCount }, (_, ci) => (
                 <TableCell key={ci} value={row[ci] ?? ""} />
               ))}

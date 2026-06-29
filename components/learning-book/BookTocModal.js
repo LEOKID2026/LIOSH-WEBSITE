@@ -25,7 +25,7 @@ export default function BookTocModal({
     >
       <button
         type="button"
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/55 backdrop-blur-sm"
         aria-label="סגירה"
         onClick={onClose}
       />
@@ -33,14 +33,14 @@ export default function BookTocModal({
         className={`relative z-10 flex max-h-[min(92vh,40rem)] w-full max-w-lg flex-col rounded-t-3xl sm:rounded-3xl border shadow-2xl ${theme.tocModalPanel}`}
         dir="rtl"
       >
-        <div className="flex items-center justify-between gap-3 border-b border-white/10 px-5 py-4">
-          <h2 id="book-toc-title" className="text-lg font-bold text-white">
+        <div className="flex items-center justify-between gap-3 border-b border-[color:var(--book-divider)] px-5 py-4">
+          <h2 id="book-toc-title" className="text-lg font-bold text-[color:var(--book-text)]">
             תוכן עניינים
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-sm font-semibold hover:bg-white/20"
+            className="rounded-full border border-[color:var(--book-divider)] bg-white/70 px-3 py-1 text-sm font-semibold text-[color:var(--book-text)] hover:bg-white/90"
           >
             ✕ סגור
           </button>
@@ -66,7 +66,7 @@ export default function BookTocModal({
                           className={`block rounded-xl px-4 py-2.5 text-right text-sm transition ${
                             isActive
                               ? theme.tocActiveItem
-                              : "bg-white/5 text-white/85 hover:bg-white/10"
+                              : "bg-[color:var(--book-surface-soft)] text-[color:var(--book-text)] hover:bg-[color:var(--book-accent-muted)]"
                           }`}
                         >
                           <MixedHebrewMathText text={entry.displayTitle} />
@@ -79,7 +79,7 @@ export default function BookTocModal({
             ))}
           </nav>
         </div>
-        <div className="border-t border-white/10 px-5 py-3">
+        <div className="border-t border-[color:var(--book-divider)] px-5 py-3">
           <Link
             href={appendReturnQueryToHref(routeBase, returnQuerySuffix)}
             onClick={onClose}

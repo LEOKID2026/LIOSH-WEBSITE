@@ -21,7 +21,7 @@ export default function LearningBookIndexContent({ batches, routeBase }) {
                   href={`${routeBase}/${entry.pageId}`}
                   className={`flex min-h-[3.25rem] items-center justify-between gap-3 rounded-2xl border px-5 py-4 text-right shadow-sm transition ${theme.indexTopicTile}`}
                 >
-                  <span className="text-base font-semibold text-white/95 sm:text-lg">
+                  <span className="text-base font-semibold text-[color:var(--book-text)] sm:text-lg">
                     <MixedHebrewMathText text={entry.displayTitle} />
                   </span>
                   <span

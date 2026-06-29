@@ -34,7 +34,7 @@ function MarkdownBlock({ block }) {
   }
 
   if (block.type === "hr") {
-    return <hr className="my-6 border-white/10" />;
+    return <hr className="my-6 border-[color:var(--book-divider)]" />;
   }
 
   if (block.type === "ul") {
@@ -81,7 +81,7 @@ export default function LearningMarkdown({ content }) {
   if (!blocks.length) return null;
 
   return (
-    <div className="learning-book-markdown text-white/92">
+    <div className="learning-book-markdown text-[color:var(--book-text)]">
       {blocks.map((block, i) => (
         <MarkdownBlock key={i} block={block} />
       ))}

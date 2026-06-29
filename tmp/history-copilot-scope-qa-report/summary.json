@@ -1,142 +1,92 @@
 {
-  "startedAt": "2026-06-29T20:15:40.020Z",
+  "startedAt": "2026-06-29T21:59:17.220Z",
   "sections": {
     "fresh-practice-db-report": {
       "pass": true,
       "results": [
         {
           "leo": "AAA1",
+          "topic": "what_is_history",
           "pass": true,
+          "practice": {
+            "sessionCountable": 10,
+            "answered": [
+              {
+                "questionIndex": 1,
+                "pickedIndex": 0,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 2,
+                "pickedIndex": 2,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 3,
+                "pickedIndex": 2,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 4,
+                "pickedIndex": 2,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 5,
+                "pickedIndex": 0,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 6,
+                "pickedIndex": 3,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 7,
+                "pickedIndex": 3,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 8,
+                "pickedIndex": 2,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 9,
+                "pickedIndex": 1,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 10,
+                "pickedIndex": 0,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              }
+            ]
+          },
           "studentId": "fd3901da-66ce-46c7-a24c-b33df2141c04",
           "db": {
-            "sessions": 5,
-            "practiceSessions": 5,
-            "answers": 50,
-            "countable": 16,
-            "withParams": 11,
-            "sampleParams": [
-              {
-                "skillId": "hist_simple_source",
-                "topicKey": "what_is_history",
-                "subskillId": "hist_sub_intro_sources_timeline",
-                "subtopicKey": "hist_sub_intro_sources_timeline",
-                "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_conflicting_sources"
-              },
-              {
-                "skillId": "hist_concepts",
-                "topicKey": "what_is_history",
-                "subskillId": "hist_sub_intro_sources_timeline",
-                "subtopicKey": "hist_sub_intro_sources_timeline",
-                "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_chronology"
-              },
-              {
-                "skillId": "hist_simple_source",
-                "topicKey": "what_is_history",
-                "subskillId": "hist_sub_intro_sources_timeline",
-                "subtopicKey": "hist_sub_intro_sources_timeline",
-                "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_primary_example"
-              }
-            ],
-            "sampleEvidence": [
-              {
-                "evidenceCategory": "diagnostic_independent",
-                "isCorrect": true,
-                "topicKey": "what_is_history"
-              },
-              {
-                "evidenceCategory": "diagnostic_independent",
-                "isCorrect": true,
-                "topicKey": "what_is_history"
-              },
-              {
-                "evidenceCategory": "diagnostic_independent",
-                "isCorrect": true,
-                "topicKey": "what_is_history"
-              }
-            ]
-          },
-          "report": {
-            "historyTotal": 16,
-            "subtopicWithQ": 1,
-            "from": "2026-05-31",
-            "to": "2026-06-29"
-          }
-        },
-        {
-          "leo": "AAA7",
-          "pass": true,
-          "studentId": "d8f6b184-80f2-4f2b-897e-cbbf557022e7",
-          "db": {
-            "sessions": 8,
-            "practiceSessions": 8,
-            "answers": 50,
-            "countable": 25,
-            "withParams": 16,
-            "sampleParams": [
-              {
-                "skillId": "hist_simple_source",
-                "topicKey": "what_is_history",
-                "subskillId": "hist_sub_intro_sources_timeline",
-                "subtopicKey": "hist_sub_intro_sources_timeline",
-                "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_conflicting_sources"
-              },
-              {
-                "skillId": "hist_concepts",
-                "topicKey": "what_is_history",
-                "subskillId": "hist_sub_intro_sources_timeline",
-                "subtopicKey": "hist_sub_intro_sources_timeline",
-                "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_historical_questions"
-              },
-              {
-                "skillId": "hist_simple_source",
-                "topicKey": "what_is_history",
-                "subskillId": "hist_sub_intro_sources_timeline",
-                "subtopicKey": "hist_sub_intro_sources_timeline",
-                "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_primary_example"
-              }
-            ],
-            "sampleEvidence": [
-              {
-                "evidenceCategory": "diagnostic_independent",
-                "isCorrect": true,
-                "topicKey": "what_is_history"
-              },
-              {
-                "evidenceCategory": "diagnostic_independent",
-                "isCorrect": true,
-                "topicKey": "what_is_history"
-              },
-              {
-                "evidenceCategory": "diagnostic_independent",
-                "isCorrect": true,
-                "topicKey": "what_is_history"
-              }
-            ]
-          },
-          "report": {
-            "historyTotal": 25,
-            "subtopicWithQ": 1,
-            "from": "2026-05-31",
-            "to": "2026-06-29"
-          }
-        },
-        {
-          "leo": "AAA11",
-          "pass": true,
-          "studentId": "5f3df0a3-4527-4f8b-97cf-6e8ec5624920",
-          "db": {
-            "sessions": 5,
-            "practiceSessions": 5,
-            "answers": 50,
-            "countable": 18,
-            "withParams": 15,
+            "sessions": 1,
+            "practiceSessions": 1,
+            "answers": 10,
+            "countable": 10,
+            "withParams": 10,
             "sampleParams": [
               {
                 "skillId": "hist_concepts",
                 "topicKey": "what_is_history",
                 "subskillId": "hist_sub_intro_sources_timeline",
                 "subtopicKey": "hist_sub_intro_sources_timeline",
-                "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_historical_method"
+                "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_bce_dates"
               },
               {
                 "skillId": "hist_simple_source",
@@ -146,11 +96,11 @@
                 "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_secondary_example"
               },
               {
-                "skillId": "hist_concepts",
+                "skillId": "hist_simple_source",
                 "topicKey": "what_is_history",
                 "subskillId": "hist_sub_intro_sources_timeline",
                 "subtopicKey": "hist_sub_intro_sources_timeline",
-                "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_chronology"
+                "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_source_distinction"
               }
             ],
             "sampleEvidence": [
@@ -172,21 +122,268 @@
             ]
           },
           "report": {
-            "historyTotal": 18,
-            "subtopicWithQ": 1,
+            "historyTotal": 74,
+            "subtopicWithQ": 5,
+            "from": "2026-05-31",
+            "to": "2026-06-29"
+          }
+        },
+        {
+          "leo": "AAA7",
+          "topic": "classical_greece",
+          "pass": true,
+          "practice": {
+            "sessionCountable": 10,
+            "answered": [
+              {
+                "questionIndex": 1,
+                "pickedIndex": 1,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 2,
+                "pickedIndex": 1,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 3,
+                "pickedIndex": 2,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 4,
+                "pickedIndex": 3,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 5,
+                "pickedIndex": 2,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 6,
+                "pickedIndex": 3,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 7,
+                "pickedIndex": 2,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 8,
+                "pickedIndex": 3,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 9,
+                "pickedIndex": 0,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 10,
+                "pickedIndex": 2,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              }
+            ]
+          },
+          "studentId": "d8f6b184-80f2-4f2b-897e-cbbf557022e7",
+          "db": {
+            "sessions": 1,
+            "practiceSessions": 1,
+            "answers": 10,
+            "countable": 10,
+            "withParams": 10,
+            "sampleParams": [
+              {
+                "skillId": "hist_culture_heritage",
+                "topicKey": "classical_greece",
+                "subskillId": "hist_sub_greek_culture_legacy",
+                "subtopicKey": "hist_sub_greek_culture_legacy",
+                "patternFamily": "hist_g6_hist_sub_greek_culture_legacy_greek_art"
+              },
+              {
+                "skillId": "hist_governance_institutions",
+                "topicKey": "classical_greece",
+                "subskillId": "hist_sub_sparta",
+                "subtopicKey": "hist_sub_sparta",
+                "patternFamily": "hist_g6_hist_sub_sparta_hoplites"
+              },
+              {
+                "skillId": "hist_governance_institutions",
+                "topicKey": "classical_greece",
+                "subskillId": "hist_sub_athens_democracy",
+                "subtopicKey": "hist_sub_athens_democracy",
+                "patternFamily": "hist_g6_hist_sub_athens_democracy_democracy_limits"
+              }
+            ],
+            "sampleEvidence": [
+              {
+                "evidenceCategory": "diagnostic_independent",
+                "isCorrect": true,
+                "topicKey": "classical_greece"
+              },
+              {
+                "evidenceCategory": "diagnostic_independent",
+                "isCorrect": true,
+                "topicKey": "classical_greece"
+              },
+              {
+                "evidenceCategory": "diagnostic_independent",
+                "isCorrect": true,
+                "topicKey": "classical_greece"
+              }
+            ]
+          },
+          "report": {
+            "historyTotal": 71,
+            "subtopicWithQ": 12,
+            "from": "2026-05-31",
+            "to": "2026-06-29"
+          }
+        },
+        {
+          "leo": "AAA11",
+          "topic": "rome_jews",
+          "pass": true,
+          "practice": {
+            "sessionCountable": 10,
+            "answered": [
+              {
+                "questionIndex": 1,
+                "pickedIndex": 2,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 2,
+                "pickedIndex": 2,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 3,
+                "pickedIndex": 3,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 4,
+                "pickedIndex": 1,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 5,
+                "pickedIndex": 3,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 6,
+                "pickedIndex": 3,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 7,
+                "pickedIndex": 0,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 8,
+                "pickedIndex": 0,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 9,
+                "pickedIndex": 3,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 10,
+                "pickedIndex": 1,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              }
+            ]
+          },
+          "studentId": "5f3df0a3-4527-4f8b-97cf-6e8ec5624920",
+          "db": {
+            "sessions": 1,
+            "practiceSessions": 1,
+            "answers": 10,
+            "countable": 10,
+            "withParams": 10,
+            "sampleParams": [
+              {
+                "skillId": "hist_governance_institutions",
+                "topicKey": "rome_jews",
+                "subskillId": "hist_sub_judea_province",
+                "subtopicKey": "hist_sub_judea_province",
+                "patternFamily": "hist_g6_hist_sub_judea_province_sadducees_province"
+              },
+              {
+                "skillId": "hist_timeline_sequence",
+                "topicKey": "rome_jews",
+                "subskillId": "hist_sub_rise_of_rome",
+                "subtopicKey": "hist_sub_rise_of_rome",
+                "patternFamily": "hist_g6_hist_sub_rise_of_rome_plebeians"
+              },
+              {
+                "skillId": "hist_culture_heritage",
+                "topicKey": "rome_jews",
+                "subskillId": "hist_sub_roman_culture_law",
+                "subtopicKey": "hist_sub_roman_culture_law",
+                "patternFamily": "hist_g6_hist_sub_roman_culture_law_roman_writing"
+              }
+            ],
+            "sampleEvidence": [
+              {
+                "evidenceCategory": "diagnostic_independent",
+                "isCorrect": true,
+                "topicKey": "rome_jews"
+              },
+              {
+                "evidenceCategory": "diagnostic_independent",
+                "isCorrect": true,
+                "topicKey": "rome_jews"
+              },
+              {
+                "evidenceCategory": "diagnostic_independent",
+                "isCorrect": true,
+                "topicKey": "rome_jews"
+              }
+            ]
+          },
+          "report": {
+            "historyTotal": 53,
+            "subtopicWithQ": 8,
             "from": "2026-05-31",
             "to": "2026-06-29"
           }
         }
       ],
-      "sinceIso": "2026-06-29T20:15:40.591Z",
-      "skipped": true
+      "sinceIso": "2026-06-29T21:59:18.191Z"
     },
     "report-ui-copilot": {
-      "pass": true,
+      "pass": false,
       "studentId": "5f3df0a3-4527-4f8b-97cf-6e8ec5624920",
-      "historyTotal": 18,
-      "subtopicWithQ": 1,
+      "historyTotal": 53,
+      "subtopicWithQ": 8,
       "uiHasHistory": true,
       "uiGeneric": false,
       "uiHasQuestions": true,
@@ -204,27 +401,27 @@
           "mentionsHistory": true,
           "zeroData": false,
           "mentionsWrongSubject": false,
-          "textSample": "הנה מה שמופיע בדוח לגבי הנושא הזה: במהי היסטוריה נספרו 18 שאלות בתקופה, עם דיוק של כ-100%. לפי נתוני הדוח בהיסטוריה, זהו המידע שנאסף מהתרגול בתקופה שנבחרה. כדאי להמשיך לעקוב לאורך כמה ימי תרגול."
+          "textSample": "הנה מה שמופיע בדוח לגבי הנושא הזה: ברומא והיהודים נספרו 35 שאלות בתקופה, עם דיוק של כ-100%. לפי נתוני הדוח בהיסטוריה, זהו המידע שנאסף מהתרגול בתקופה שנבחרה. כדאי להמשיך לעקוב לאורך כמה ימי תרגול."
         },
         {
           "utterance": "איך הוא ברומא והיהודים?",
           "resolutionStatus": "resolved",
-          "scopeReason": "history_lock_zero_data_topic",
+          "scopeReason": "history_lock_topic_with_data",
           "fallbackUsed": true,
           "mentionsHistory": true,
-          "zeroData": true,
+          "zeroData": false,
           "mentionsWrongSubject": false,
-          "textSample": "אין עדיין מספיק נתונים בנושא הזה ברומא והיהודים לא נאספו עדיין מספיק שאלות בתקופה שנבחרה. אפשר לחזור לשאלה אחרי עוד תרגול ממוקד בנושא."
+          "textSample": "ברומא והיהודים נספרו 35 שאלות בתקופה, עם דיוק של כ-100%. לפי נתוני הדוח בהיסטוריה, זהו המידע שנאסף מהתרגול בתקופה שנבחרה. כדאי להמשיך לעקוב לאורך כמה ימי תרגול."
         },
         {
           "utterance": "איך הוא בהורדוס?",
           "resolutionStatus": "resolved",
-          "scopeReason": "history_lock_zero_data_subtopic",
-          "fallbackUsed": true,
-          "mentionsHistory": true,
-          "zeroData": true,
+          "scopeReason": "history_lock_subtopic_with_data",
+          "fallbackUsed": false,
+          "mentionsHistory": false,
+          "zeroData": false,
           "mentionsWrongSubject": false,
-          "textSample": "אין עדיין מספיק נתונים בנושא הזה בהורדוס ומפעלי הבנייה לא נאספו עדיין מספיק שאלות בתקופה שנבחרה. אפשר לחזור לשאלה אחרי עוד תרגול ממוקד בנושא."
+          "textSample": "עדיין מוקדם לקבוע — בשלב זה — זו תמונה ראשונית בלבד — כשלא ניתן לסגור עדיין, עדיף לפרק לצעדים קטנים של איסוף מידע מאשר לנחש. לפי מעט הנתונים שכן מופיעים אפשר לדבר רק על סימנים ראשוניים, ולא להסיק מעבר למה שמוצג בפועל בדוח בתקופה הזו. לפי נתוני הדוח, נענו כ 406 שאלות בתרגול. כרגע "
         },
         {
           "utterance": "איך הוא במרד המקבים?",
@@ -254,37 +451,30 @@
           "mentionsHistory": true,
           "zeroData": false,
           "mentionsWrongSubject": false,
-          "textSample": "הנה מה שעדיין דורש חיזוק ותרגול, לפי הדוח: במהי היסטוריה נספרו 18 שאלות בתקופה, עם דיוק של כ-100%. לפי נתוני הדוח בהיסטוריה, זהו המידע שנאסף מהתרגול בתקופה שנבחרה. כדאי להמשיך לעקוב לאורך כמה ימי תרגול."
+          "textSample": "הנה מה שעדיין דורש חיזוק ותרגול, לפי הדוח: ברומא והיהודים נספרו 35 שאלות בתקופה, עם דיוק של כ-100%. לפי נתוני הדוח בהיסטוריה, זהו המידע שנאסף מהתרגול בתקופה שנבחרה. כדאי להמשיך לעקוב לאורך כמה ימי תרגול."
         },
         {
           "utterance": "מה כדאי לתרגל בבית בהיסטוריה?",
           "resolutionStatus": "resolved",
           "scopeReason": "history_subject_lock",
-          "fallbackUsed": false,
+          "fallbackUsed": true,
           "mentionsHistory": true,
           "zeroData": false,
           "mentionsWrongSubject": false,
-          "textSample": "כדאי לצבור עוד תרגול — הנה כיוון ראשוני: במהי היסטוריה נספרו 18 שאלות בתקופה, עם דיוק של כ-100%. לפי נתוני הדוח בהיסטוריה, זהו המידע שנאסף מהתרגול בתקופה שנבחרה. זו תמונה ראשונית בלבד — מה שמוצג כאן עדיין לא מבוסס מספיק בתקופה שנבחרה, ולכן נשמרת זהירות בניסוח."
+          "textSample": "ברומא והיהודים נספרו 35 שאלות בתקופה, עם דיוק של כ-100%. לפי נתוני הדוח בהיסטוריה, זהו המידע שנאסף מהתרגול בתקופה שנבחרה. כדאי להמשיך לעקוב לאורך כמה ימי תרגול."
         }
       ],
-      "copilotPass": true
+      "copilotPass": false
     },
     "build": {
       "pass": true,
       "skipped": true
-    },
-    "audit-history-child-text": {
-      "pass": true
-    },
-    "verify-history-g6-book": {
-      "pass": true
-    },
-    "test-history-diagnostic-probe-e2e": {
-      "pass": true
     }
   },
-  "openIssues": [],
-  "qaStart": "2026-06-29T20:15:40.021Z",
-  "finishedAt": "2026-06-29T20:16:31.114Z",
-  "allPass": true
+  "openIssues": [
+    "report-ui-copilot"
+  ],
+  "qaStart": "2026-06-29T21:59:17.221Z",
+  "finishedAt": "2026-06-29T22:07:58.811Z",
+  "allPass": false
 }

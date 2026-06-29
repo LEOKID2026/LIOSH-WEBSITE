@@ -25,7 +25,7 @@ function Dot({ kind = "dot" }) {
   if (kind === "cross") {
     return (
       <span
-        className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-red-500/25 text-xs font-bold text-red-300 sm:h-5 sm:w-5"
+        className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-red-100 text-xs font-bold text-red-600 sm:h-5 sm:w-5"
         aria-hidden="true"
       >
         ✕
@@ -146,7 +146,7 @@ function NumberLineRow({ line }) {
       {tokens.map((tok, i) => (
         <span key={i} className="inline-flex items-center gap-x-0.5 sm:gap-x-1">
           {i > 0 && tok.type !== "ellipsis" && (
-            <span className="px-0.5 text-sm text-white/35 sm:text-base">—</span>
+            <span className="px-0.5 text-sm text-[color:var(--book-text-muted)] sm:text-base">—</span>
           )}
           {tok.type === "num" ? (
             <span
@@ -159,9 +159,9 @@ function NumberLineRow({ line }) {
               {tok.value}
             </span>
           ) : tok.type === "ellipsis" ? (
-            <span className="px-1 text-white/50">…</span>
+            <span className="px-1 text-[color:var(--book-text-muted)]">…</span>
           ) : (
-            <span className="text-sm text-white/70">{tok.value}</span>
+            <span className="text-sm text-[color:var(--book-text)]">{tok.value}</span>
           )}
         </span>
       ))}
@@ -230,7 +230,7 @@ function DiagramNumberRow({ numbers, equation }) {
         {numbers.map((n, i) => (
           <bdi
             key={i}
-            className="inline-block min-w-[2rem] text-center text-base font-bold tabular-nums text-white/90 sm:min-w-[2.5rem] sm:text-lg"
+            className="inline-block min-w-[2rem] text-center text-base font-bold tabular-nums text-[color:var(--book-text)] sm:min-w-[2.5rem] sm:text-lg"
           >
             {n}
           </bdi>
@@ -289,7 +289,7 @@ function ObjectDiagram({ lines }) {
 
         if (!hasDots) {
           return (
-            <p key={li} className="text-center text-sm text-white/75 sm:text-base">
+            <p key={li} className="text-center text-sm text-[color:var(--book-text)] sm:text-base">
               <MixedHebrewMathText text={line} />
             </p>
           );
@@ -329,7 +329,7 @@ function ObjectDiagram({ lines }) {
                 return (
                   <span
                     key={gi}
-                    className="px-1 text-xl font-black text-amber-200 sm:text-2xl"
+                    className="px-1 text-xl font-black text-amber-600 sm:text-2xl"
                   >
                     {g.value}
                   </span>
@@ -339,21 +339,21 @@ function ObjectDiagram({ lines }) {
                 return (
                   <span
                     key={gi}
-                    className="min-w-[1.5rem] text-center text-base font-bold tabular-nums text-white/85 sm:text-lg"
+                    className="min-w-[1.5rem] text-center text-base font-bold tabular-nums text-[color:var(--book-text)] sm:text-lg"
                   >
                     {g.value}
                   </span>
                 );
               }
               return (
-                <span key={gi} className="text-xs text-white/55 sm:text-sm">
+                <span key={gi} className="text-xs text-[color:var(--book-text-muted)] sm:text-sm">
                   {g.value}
                 </span>
               );
             })}
             </div>
             {tailLabel ? (
-              <p className="text-center text-sm text-white/65 sm:text-base" dir="rtl">
+              <p className="text-center text-sm text-[color:var(--book-text-muted)] sm:text-base" dir="rtl">
                 <MixedHebrewMathText text={tailLabel} />
               </p>
             ) : null}
@@ -385,7 +385,7 @@ function CardsDiagram({ lines }) {
                 className={`rounded-xl border px-2 py-1.5 text-xs font-semibold sm:px-3 sm:py-2 sm:text-sm ${
                   active
                     ? theme.diagramHighlightBorder
-                    : "border-white/15 bg-white/8 text-white/85"
+                    : "border-[color:var(--book-divider)] bg-[color:var(--book-surface-soft)] text-[color:var(--book-text)]"
                 }`}
               >
                 {inner}
@@ -437,7 +437,7 @@ function CoinsDiagram({ lines }) {
 
 function FrameTextDiagram({ lines }) {
   return (
-    <div className="space-y-2 rounded-xl border border-white/10 bg-white/5 p-3 sm:p-4" dir="rtl">
+    <div className="space-y-2 rounded-xl border border-[color:var(--book-divider)] bg-[color:var(--book-surface-soft)] p-3 sm:p-4" dir="rtl">
       {lines.map((line, i) => (
         <DiagramCodeLineRow key={i} dir="rtl" className="text-right text-base sm:text-lg">
           <MixedHebrewMathText text={line} diagramLayout />
@@ -470,7 +470,7 @@ function PlaceValueDiagram({ parsed }) {
             >
               {col.label}
             </span>
-            <span className="text-center text-2xl font-bold tabular-nums text-white sm:text-3xl">
+            <span className="text-center text-2xl font-bold tabular-nums text-[color:var(--book-text)] sm:text-3xl">
               {col.digit}
             </span>
           </div>
@@ -594,7 +594,7 @@ export default function BookDiagram({ content }) {
 
   return (
     <div
-      className={`my-4 rounded-2xl border px-3 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] sm:px-6 sm:py-6 ${theme.diagramPanel}`}
+      className={`my-4 rounded-2xl border px-3 py-5 sm:px-6 sm:py-6 ${theme.diagramPanel}`}
       role="img"
       aria-label="דוגמה"
     >

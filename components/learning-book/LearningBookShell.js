@@ -62,10 +62,10 @@ export default function LearningBookShell({
   return (
     <BookGradeThemeProvider grade={grade}>
       <main
-        className={`min-h-screen overflow-x-hidden text-white ${theme.classes.pageBg}`}
+        className={`min-h-screen overflow-x-hidden text-[color:var(--book-text)] ${theme.classes.pageBg}`}
       >
         <header
-          className={`sticky top-0 z-50 border-b border-white/10 backdrop-blur-md ${theme.classes.headerBg}`}
+          className={`sticky top-0 z-50 border-b border-[color:var(--book-accent-border)] backdrop-blur-md ${theme.classes.headerBg}`}
           dir="rtl"
           style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
         >
@@ -76,7 +76,7 @@ export default function LearningBookShell({
                   <button
                     type="button"
                     onClick={handleReturnClick}
-                    className="max-w-full truncate rounded-full border border-white/20 bg-white/10 px-3 py-2 text-xs font-semibold hover:bg-white/20 transition sm:px-3.5 sm:text-sm"
+                    className="max-w-full truncate rounded-full border border-[color:var(--book-accent-border)] bg-white/70 px-3 py-2 text-xs font-semibold text-[color:var(--book-text)] hover:bg-white/90 transition sm:px-3.5 sm:text-sm"
                   >
                     {returnLabel}
                   </button>
@@ -96,7 +96,7 @@ export default function LearningBookShell({
                       bookMeta.routeBase,
                       returnQuerySuffix
                     )}
-                    className="inline-block max-w-full truncate rounded-full border border-white/20 bg-white/10 px-3 py-2 text-xs font-semibold hover:bg-white/20 transition sm:px-3.5 sm:text-sm"
+                    className="inline-block max-w-full truncate rounded-full border border-[color:var(--book-accent-border)] bg-white/70 px-3 py-2 text-xs font-semibold text-[color:var(--book-text)] hover:bg-white/90 transition sm:px-3.5 sm:text-sm"
                   >
                     חזרה לספר
                   </Link>
@@ -107,16 +107,16 @@ export default function LearningBookShell({
                 <button
                   type="button"
                   onClick={handleReturnClick}
-                  className="rounded-full border border-white/20 bg-white/10 px-3.5 py-2 text-sm font-semibold hover:bg-white/20 transition"
+                  className="rounded-full border border-[color:var(--book-accent-border)] bg-white/70 px-3.5 py-2 text-sm font-semibold text-[color:var(--book-text)] hover:bg-white/90 transition"
                 >
                   {returnLabel}
                 </button>
-                <div className="text-xs text-white/45">{bookMeta.gradeShortLabel}</div>
+                <div className="text-xs text-[color:var(--book-text-muted)]">{bookMeta.gradeShortLabel}</div>
               </div>
             )}
 
             <div className="text-center pb-0.5">
-              <p className="text-[11px] tracking-[0.15em] text-white/45">ספר לימוד</p>
+              <p className="text-[11px] tracking-[0.15em] text-[color:var(--book-text-muted)]">ספר לימוד</p>
               <h1 className="text-lg font-black leading-tight sm:text-xl">
                 {bookMeta.bookTitleHe}
               </h1>
@@ -127,7 +127,7 @@ export default function LearningBookShell({
                   <MixedHebrewMathText text={pageMeta.displayTitle} />
                 </p>
               ) : isIndex ? (
-                <p className="mt-0.5 text-xs text-white/60">בחרו נושא וקראו עמוד אחר עמוד</p>
+                <p className="mt-0.5 text-xs text-[color:var(--book-text-muted)]">בחרו נושא וקראו עמוד אחר עמוד</p>
               ) : null}
             </div>
           </div>
