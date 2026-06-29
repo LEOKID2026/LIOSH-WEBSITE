@@ -218,6 +218,7 @@ function SubjectsSection({ subjects }) {
     hebrew: subjectAccentBar["hebrew-master"],
     moledet_visual: subjectAccentBar["moledet-master"],
     geography_visual: subjectAccentBar["geography-master"],
+    history: subjectAccentBar["history-master"],
   };
   return (
     <>

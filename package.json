@@ -294,6 +294,8 @@
     "test:english-grammar-diagnostic-e2e": "node scripts/certify-english-grammar-diagnostic-e2e.mjs",
     "test:english-nongrammar-diagnostic-audit": "node scripts/certify-english-nongrammar-diagnostic-audit.mjs",
     "test:moledet-diagnostic-probe-e2e": "node scripts/certify-moledet-diagnostic-probe-e2e.mjs",
+    "test:history-diagnostic-probe-e2e": "node scripts/certify-history-diagnostic-probe-e2e.mjs",
+    "verify:history-g6-book": "node scripts/verify-history-g6-book.mjs",
     "test:ai-hybrid-harness": "tsx scripts/ai-hybrid-harness.mjs",
     "ai-hybrid:review-export": "tsx scripts/ai-hybrid-review-case-export.ts",
     "ai-hybrid:generate-gold": "tsx scripts/ai-hybrid-generate-synthetic-gold.mjs",

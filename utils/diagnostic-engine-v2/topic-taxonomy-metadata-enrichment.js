@@ -87,6 +87,13 @@ export function pickPrimaryTaxonomyIdForMetadata(subjectId, candidateIds, source
     if (ids.includes("E-05") && kind.includes("preposition")) return "E-05";
   }
 
+  if (subjectId === "history") {
+    if (ids.includes("H-08") && (kind.includes("source") || subtype.includes("source"))) return "H-08";
+    if (ids.includes("H-02") && (kind.includes("timeline") || kind.includes("sequence"))) return "H-02";
+    if (ids.includes("H-03") && (kind.includes("cause") || kind.includes("effect"))) return "H-03";
+    if (ids.includes("H-04") && kind.includes("compare")) return "H-04";
+  }
+
   return ids[0];
 }
 

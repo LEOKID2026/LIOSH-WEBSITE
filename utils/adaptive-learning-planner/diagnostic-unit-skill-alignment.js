@@ -7,8 +7,12 @@ import {
   SCIENCE_SKILL_IDS,
   SCIENCE_SUBSKILL_ALLOWLIST_BY_SKILL,
   SCIENCE_TOPIC_ORDER,
+  HISTORY_SKILL_IDS,
+  HISTORY_SUBSKILL_ALLOWLIST_BY_SKILL,
+  HISTORY_TOPIC_ORDER,
   validateTaxonomyForRecord,
 } from "../question-metadata-qa/question-metadata-taxonomy.js";
+import { HISTORY_G6_CONTENT_MAP } from "../../data/history-g6-content-map.js";
 import { HEBREW_ARCHIVE_CATEGORY_KEYS, hebrewArchiveCategoryToSkillId } from "../question-metadata-qa/question-metadata-taxonomy-hebrew-archive.js";
 import { MOLEDET_GEOGRAPHY_STRAND_KEYS, moledetGeographyStrandToSkillId } from "../question-metadata-qa/question-metadata-taxonomy-geography.js";
 
@@ -268,6 +272,33 @@ function scienceTopicPairFromMetadataIndex(bucketKey, index) {
   return { skillId, subskillId };
 }
 
+/**
+ * Map history diagnostic topic bucket → first indexed bank skill/subskill (hist_* rows).
+ * @param {string} bucketKey
+ * @param {{ entries?: unknown[] }} [index]
+ */
+function historyTopicPairFromMetadataIndex(bucketKey, index) {
+  if (!index || !Array.isArray(index.entries)) return null;
+  const topic = String(bucketKey || "").trim();
+  if (!topic) return null;
+  const candidates = index.entries.filter(
+    (e) =>
+      e &&
+      typeof e === "object" &&
+      String(e.subject || "").toLowerCase() === "history" &&
+      (String(e.topic || "") === topic ||
+        String(e.skillId || "").includes(topic) ||
+        String(e.subskillId || "").includes(topic))
+  );
+  if (!candidates.length) return null;
+  const hit = candidates[0];
+  if (!hit || typeof hit !== "object") return null;
+  const skillId = String(hit.skillId || "").trim();
+  const subskillId = String(hit.subskillId || "").trim();
+  if (!skillId || !subskillId) return null;
+  return { skillId, subskillId };
+}
+
 function indexHasExactPair(index, subject, skillId, subskillId) {
   if (!index || !Array.isArray(index.entries) || !skillId || !subskillId) return true;
   const sub = String(subject || "").toLowerCase();
@@ -276,7 +307,9 @@ function indexHasExactPair(index, subject, skillId, subskillId) {
       ? new Set(["hebrew", "hebrew-archive"])
       : sub === "moledet-geography"
         ? new Set(["moledet-geography"])
-        : new Set([sub]);
+        : sub === "history"
+          ? new Set(["history"])
+          : new Set([sub]);
   return index.entries.some(
     (e) =>
       e &&
@@ -486,6 +519,52 @@ export function resolveDiagnosticUnitSkillAlignment(unit, context = {}) {
     }
     if (!indexHasExactPair(context.metadataIndex, "science", skillId, subskillId)) {
       warnings.push("alignment_science_pair_not_in_metadata_index");
+    }
+    return {
+      subject,
+      skillId,
+      subskillId,
+      confidence: "inferred_safe",
+      source: "topic_mapping",
+      warnings,
+    };
+  }
+
+  if (subject === "history") {
+    const bucketKey = String(unit?.bucketKey || "").trim();
+    if (!bucketKey || !HISTORY_TOPIC_ORDER.includes(bucketKey)) {
+      return { ...empty(), warnings: [...warnings] };
+    }
+    const fromIndex = historyTopicPairFromMetadataIndex(bucketKey, context.metadataIndex);
+    if (fromIndex) {
+      return {
+        subject,
+        skillId: fromIndex.skillId,
+        subskillId: fromIndex.subskillId,
+        confidence: "inferred_safe",
+        source: "topic_mapping",
+        warnings,
+      };
+    }
+    const cfg = HISTORY_G6_CONTENT_MAP[bucketKey];
+    const first = cfg?.subtopics?.[0];
+    if (!first) {
+      warnings.push("alignment_history_unknown_topic");
+      return { ...empty(), warnings: [...warnings] };
+    }
+    const skillId = String(first.skillId || "").trim();
+    const subskillId = String(first.id || "").trim();
+    if (!HISTORY_SKILL_IDS.includes(skillId)) {
+      warnings.push("alignment_history_unknown_skill");
+      return { ...empty(), warnings: [...warnings] };
+    }
+    const allow = HISTORY_SUBSKILL_ALLOWLIST_BY_SKILL[skillId];
+    if (!allow || !allow.has(subskillId)) {
+      warnings.push("alignment_history_subskill_mismatch");
+      return { ...empty(), warnings: [...warnings] };
+    }
+    if (!indexHasExactPair(context.metadataIndex, "history", skillId, subskillId)) {
+      warnings.push("alignment_history_pair_not_in_metadata_index");
     }
     return {
       subject,

@@ -7,6 +7,7 @@ import { getEnglishTimeByCustomPeriod } from './english-time-tracking.js';
 import { getScienceTimeByCustomPeriod } from './science-time-tracking.js';
 import { getHebrewTimeByCustomPeriod } from './hebrew-time-tracking.js';
 import { getMoledetGeographyTimeByCustomPeriod } from './moledet-geography-time-tracking.js';
+import { historyTopicLabelHe } from "../data/history-curriculum.js";
 
 // שמות פעולות בעברית (חשבון)
 const OPERATION_NAMES = {
@@ -128,6 +129,10 @@ const SCIENCE_TOPIC_NAMES = {
 
 export function getScienceTopicName(topic) {
   return SCIENCE_TOPIC_NAMES[topic] || "נושא";
+}
+
+export function getHistoryTopicName(topic) {
+  return historyTopicLabelHe(topic) || "נושא";
 }
 
 const HEBREW_TOPIC_NAMES = {

@@ -77,10 +77,12 @@ async function loadCurricula() {
     const { ENGLISH_GRADES } = await import(modUrl("data/english-curriculum.js"));
     const { SCIENCE_GRADES } = await import(modUrl("data/science-curriculum.js"));
     const { HEBREW_GRADES } = await import(modUrl("data/hebrew-curriculum.js"));
+    const { HISTORY_GRADES } = await import(modUrl("data/history-curriculum.js"));
     CURRICULA = {
       english: ENGLISH_GRADES,
       science: SCIENCE_GRADES,
-      hebrew: HEBREW_GRADES
+      hebrew: HEBREW_GRADES,
+      history: HISTORY_GRADES,
     };
   } catch (e) {
     console.warn("Could not load all curricula:", e.message);
@@ -133,6 +135,7 @@ async function runAudit() {
   await auditHebrew(results);
   await auditEnglish(results);
   await auditScience(results);
+  await auditHistory(results);
   await auditMoledet(results);
 
   // Generate summary tables
@@ -854,6 +857,135 @@ async function auditScience(results) {
   }
   
   results.subjects.science = { cells, totalCells: cells.length };
+  results.summary.totalCells += cells.length;
+}
+
+// Audit History (static bank — G6 only)
+async function auditHistory(results) {
+  console.log("Auditing History...");
+  const { HISTORY_QUESTIONS } = await import(modUrl("data/history-questions/index.js"));
+
+  const cells = [];
+  const topics = [
+    "what_is_history",
+    "classical_greece",
+    "hellenism_jews",
+    "hasmonaeans",
+    "rome_jews",
+  ];
+  const grades = ["g6"];
+  const levels = ["easy", "medium", "hard"];
+
+  const byKey = {};
+  for (const q of HISTORY_QUESTIONS) {
+    const gradesArr = q.grades || [q.minGrade || "g6"];
+    for (const g of gradesArr) {
+      const level = q.minLevel || q.maxLevel || "medium";
+      const key = `${g}:${q.topic}:${level}`;
+      if (!byKey[key]) byKey[key] = [];
+      byKey[key].push(q);
+    }
+  }
+
+  for (const grade of grades) {
+    for (const topic of topics) {
+      for (const level of levels) {
+        const items = byKey[`${grade}:${topic}:${level}`] || [];
+        const uniqueStems = new Set(items.map((i) => normalizeStem(i.stem || "")));
+        const uniqueCount = uniqueStems.size;
+
+        let hasPatternFamily = 0;
+        let hasDiagnosticSkillId = 0;
+        let hasExpectedErrorTags = 0;
+        let isProbeCapable = 0;
+
+        for (const item of items) {
+          const params = item.params || {};
+          if (params.patternFamily || item.patternFamily) hasPatternFamily++;
+          if (params.diagnosticSkillId || item.diagnosticSkillId) hasDiagnosticSkillId++;
+          if (params.expectedErrorTags?.length || item.expectedErrorTags?.length) hasExpectedErrorTags++;
+          if (
+            (params.diagnosticSkillId || item.diagnosticSkillId) &&
+            (params.expectedErrorTags?.length || item.expectedErrorTags?.length)
+          ) {
+            isProbeCapable++;
+          }
+        }
+
+        const total = items.length || 1;
+        const isInCurriculum = isTopicInCurriculum("history", grade, topic);
+        const isVisible = isInCurriculum;
+
+        let status, calibratedCategory;
+        if (items.length === 0) {
+          status = isInCurriculum ? STATUS.NEEDS_CONTENT : STATUS.EMPTY_BY_CURRICULUM;
+          calibratedCategory = isInCurriculum ? "needsContent" : "emptyByCurriculum";
+        } else if (uniqueCount < THRESHOLDS.PRACTICE_MIN) {
+          if (isVisible) {
+            status = STATUS.REAL_BLOCKER_VISIBLE;
+            calibratedCategory = "realBlockersVisible";
+          } else {
+            status = STATUS.GATE_FALSE_POSITIVE;
+            calibratedCategory = "gateFalsePositives";
+          }
+        } else if (uniqueCount < THRESHOLDS.MODERATE_MIN) {
+          status = STATUS.NEEDS_MORE;
+          calibratedCategory = "needsMore";
+        } else if (hasDiagnosticSkillId < total * 0.5) {
+          status = STATUS.DIAGNOSTIC_WEAK;
+          calibratedCategory = "diagnosticWeak";
+        } else {
+          status = STATUS.CLOSED;
+          calibratedCategory = null;
+        }
+
+        const cell = {
+          subject: "history",
+          grade,
+          level,
+          topic,
+          subtopic: topic,
+          source: "static_bank",
+          staticCount: items.length,
+          generatorCapacity: "none",
+          uniqueCount,
+          duplicateCount: items.length - uniqueCount,
+          metadataCoverage: {
+            patternFamily: Math.round((hasPatternFamily / total) * 100),
+            conceptTag: Math.round((hasDiagnosticSkillId / total) * 100),
+            diagnosticSkillId: Math.round((hasDiagnosticSkillId / total) * 100),
+            expectedErrorTags: Math.round((hasExpectedErrorTags / total) * 100),
+            probePower: Math.round((hasDiagnosticSkillId / total) * 100),
+          },
+          probeCapableCount: isProbeCapable,
+          practiceReady: uniqueCount >= THRESHOLDS.PRACTICE_MIN || items.length === 0,
+          earlySignalReady: uniqueCount >= THRESHOLDS.EARLY_SIGNAL_MIN || items.length === 0,
+          moderateReady: uniqueCount >= THRESHOLDS.MODERATE_MIN || items.length === 0,
+          strongDiagnosisReady: uniqueCount >= THRESHOLDS.STRONG_DIAGNOSIS_MIN,
+          status,
+          calibratedCategory,
+          isInCurriculum,
+          isVisible,
+          notes: items.length > 0 ? `${items.length} questions` : "No questions for this topic/grade/level",
+        };
+
+        cells.push(cell);
+
+        if (calibratedCategory && results.summary[calibratedCategory]) {
+          results.summary[calibratedCategory].push({
+            subject: cell.subject,
+            grade: cell.grade,
+            level: cell.level,
+            topic: cell.topic,
+            count: cell.uniqueCount,
+            issue: cell.notes,
+          });
+        }
+      }
+    }
+  }
+
+  results.subjects.history = { cells, totalCells: cells.length };
   results.summary.totalCells += cells.length;
 }
 

@@ -92,6 +92,16 @@ const SCIENCE_TOPIC_TO_IDS = {
 };
 
 /** @type {Record<string, string[]>} */
+const HISTORY_TOPIC_TO_IDS = {
+  what_is_history: ["H-01", "H-08"],
+  classical_greece: ["H-04", "H-06", "H-07"],
+  hellenism_jews: ["H-03", "H-05"],
+  hasmonaeans: ["H-02", "H-03", "H-05", "H-06"],
+  rome_jews: ["H-02", "H-03", "H-05", "H-06", "H-09"],
+  mixed: ["H-01"],
+};
+
+/** @type {Record<string, string[]>} */
 const MOLEDET_TOPIC_TO_IDS = {
   maps: ["MG-01", "MG-02", "MG-08"],
   geography: ["MG-01", "MG-02", "MG-05"],
@@ -174,6 +184,9 @@ export function taxonomyIdsForReportBucketLegacy(subjectId, bucketKeyRaw) {
   if (subjectId === "science") {
     return SCIENCE_TOPIC_TO_IDS[bucketKey] ? [...SCIENCE_TOPIC_TO_IDS[bucketKey]] : [];
   }
+  if (subjectId === "history") {
+    return HISTORY_TOPIC_TO_IDS[bucketKey] ? [...HISTORY_TOPIC_TO_IDS[bucketKey]] : [];
+  }
   if (subjectId === "moledet-geography") {
     return MOLEDET_TOPIC_TO_IDS[bucketKey] ? [...MOLEDET_TOPIC_TO_IDS[bucketKey]] : [];
   }
@@ -210,6 +223,9 @@ export function taxonomyIdsForReportBucket(subjectId, bucketKeyRaw) {
   }
   if (sid === "science") {
     return SCIENCE_TOPIC_TO_IDS[bucketKey] ? [...SCIENCE_TOPIC_TO_IDS[bucketKey]] : [];
+  }
+  if (sid === "history") {
+    return HISTORY_TOPIC_TO_IDS[bucketKey] ? [...HISTORY_TOPIC_TO_IDS[bucketKey]] : [];
   }
   if (sid === "moledet-geography") {
     return MOLEDET_TOPIC_TO_IDS[bucketKey] ? [...MOLEDET_TOPIC_TO_IDS[bucketKey]] : [];

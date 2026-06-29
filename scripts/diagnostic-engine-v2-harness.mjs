@@ -14,7 +14,7 @@ assert.equal(typeof runDiagnosticEngineV2, "function", "runDiagnosticEngineV2 mi
 const START_MS = Date.UTC(2026, 3, 1, 0, 0, 0, 0);
 const END_MS = Date.UTC(2026, 3, 14, 23, 59, 59, 999);
 
-const SUBJECTS = ["math", "geometry", "english", "science", "hebrew", "moledet-geography"];
+const SUBJECTS = ["math", "geometry", "english", "science", "history", "hebrew", "moledet-geography"];
 
 function row({ displayName, questions, correct, wrong, accuracy, modeKey = "learning", behaviorType = "knowledge_gap" }) {
   return {
@@ -117,6 +117,24 @@ const MATRIX = [
     row: row({ displayName: "הבנת הנקרא", questions: 20, correct: 10, wrong: 10, accuracy: 50 }),
     mistakes: wrongEvents({ subject: "hebrew", bucketKey: "reading", count: 10, patternFamily: "pf:found" }),
     assertCase: (u) => assert.ok(["P2", "P3", "P4"].includes(String(u.priority.level))),
+  },
+  {
+    id: "history_foundational",
+    subject: "history",
+    scenarioType: "foundational",
+    rowKey: "classical_greece\u0001learning",
+    row: row({ displayName: "יוון הקלאסית", questions: 18, correct: 9, wrong: 9, accuracy: 50 }),
+    mistakes: wrongEvents({ subject: "history", bucketKey: "classical_greece", count: 9, patternFamily: "pf:hist", grade: "g6" }),
+    assertCase: (u) => assert.ok(["P2", "P3", "P4"].includes(String(u.priority.level))),
+  },
+  {
+    id: "history_transfer",
+    subject: "history",
+    scenarioType: "transfer",
+    rowKey: "rome_jews\u0001learning",
+    row: row({ displayName: "רומא והיהודים", questions: 16, correct: 12, wrong: 4, accuracy: 75 }),
+    mistakes: wrongEvents({ subject: "history", bucketKey: "rome_jews", count: 4, patternFamily: "pf:hist_transfer", grade: "g6" }),
+    assertCase: (u) => assert.ok(!!u.competingHypotheses),
   },
   {
     id: "moledet_local_speed",
@@ -344,6 +362,7 @@ for (const tc of MATRIX) {
     geometry: {},
     english: {},
     science: {},
+    history: {},
     hebrew: {},
     "moledet-geography": {},
   };
@@ -353,6 +372,7 @@ for (const tc of MATRIX) {
     geometry: [],
     english: [],
     science: [],
+    history: [],
     hebrew: [],
     "moledet-geography": [],
   };

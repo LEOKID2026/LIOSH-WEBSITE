@@ -19,6 +19,7 @@ function patchStorageMistakeTiming(store, dbInput) {
     geometry: "mleo_geometry_mistakes",
     english: "mleo_english_mistakes",
     science: "mleo_science_mistakes",
+    history: "mleo_history_mistakes",
     hebrew: "mleo_hebrew_mistakes",
     moledet_geography: "mleo_moledet_geography_mistakes",
   };

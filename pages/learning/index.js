@@ -48,6 +48,12 @@ const LEARNING_GAMES = [
     emoji: "🗺️",
     blurb: "גאוגרפיה, מפות, נוף ויישובים.",
   },
+  {
+    slug: "history-master",
+    title: "היסטוריה",
+    emoji: "📜",
+    blurb: "יוון, הלניזם, החשמונאים, רומא והיהודים.",
+  },
 ];
 
 const DEFAULT_SUBJECT_CARD = {
@@ -75,7 +81,7 @@ export default function LearningHub({ showDevStudentSimulator }) {
       liosh_active_student_id: localStorage.getItem("liosh_active_student_id"),
       mleo_player_name: localStorage.getItem("mleo_player_name"),
     });
-    fetch("/api/student/me", { credentials: "same-origin", cache: "no-store" })
+    fetch("/api/student/me", { credentials: "include", cache: "no-store" })
       .then((r) => r.json().catch(() => ({})))
       .then((payload) => {
         console.log("[learning/index] GET /api/student/me", {

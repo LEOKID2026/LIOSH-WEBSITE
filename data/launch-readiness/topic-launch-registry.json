@@ -5909,6 +5909,141 @@
       "topicTotal": 22,
       "reason": "Thin inventory (22 unique); needs authoring",
       "registryVersion": "launch-policy-v1"
+    },
+    {
+      "subject": "history",
+      "grade": "g6",
+      "topic": "what_is_history",
+      "cellKey": "history:g6:what_is_history",
+      "launchLevel": "FULL",
+      "surfaces": {
+        "selfPractice": true,
+        "parentAssign": true,
+        "teacherAssign": true,
+        "learningBookEntry": true
+      },
+      "diagnosticContribution": "normal",
+      "bookFirstRecommended": false,
+      "bookFirstSoftGateTopics": [],
+      "audioRequired": false,
+      "marketingEligible": true,
+      "marketingNoteInternal": "full_launch_surface",
+      "inventoryStatus": "PROFESSIONAL_READY",
+      "topicTotal": 0,
+      "reason": "History G6 launch — registry FULL",
+      "registryVersion": "launch-policy-v1"
+    },
+    {
+      "subject": "history",
+      "grade": "g6",
+      "topic": "classical_greece",
+      "cellKey": "history:g6:classical_greece",
+      "launchLevel": "FULL",
+      "surfaces": {
+        "selfPractice": true,
+        "parentAssign": true,
+        "teacherAssign": true,
+        "learningBookEntry": true
+      },
+      "diagnosticContribution": "normal",
+      "bookFirstRecommended": false,
+      "bookFirstSoftGateTopics": [],
+      "audioRequired": false,
+      "marketingEligible": true,
+      "marketingNoteInternal": "full_launch_surface",
+      "inventoryStatus": "PROFESSIONAL_READY",
+      "topicTotal": 0,
+      "reason": "History G6 launch — registry FULL",
+      "registryVersion": "launch-policy-v1"
+    },
+    {
+      "subject": "history",
+      "grade": "g6",
+      "topic": "hellenism_jews",
+      "cellKey": "history:g6:hellenism_jews",
+      "launchLevel": "FULL",
+      "surfaces": {
+        "selfPractice": true,
+        "parentAssign": true,
+        "teacherAssign": true,
+        "learningBookEntry": true
+      },
+      "diagnosticContribution": "normal",
+      "bookFirstRecommended": false,
+      "bookFirstSoftGateTopics": [],
+      "audioRequired": false,
+      "marketingEligible": true,
+      "marketingNoteInternal": "full_launch_surface",
+      "inventoryStatus": "PROFESSIONAL_READY",
+      "topicTotal": 0,
+      "reason": "History G6 launch — registry FULL",
+      "registryVersion": "launch-policy-v1"
+    },
+    {
+      "subject": "history",
+      "grade": "g6",
+      "topic": "hasmonaeans",
+      "cellKey": "history:g6:hasmonaeans",
+      "launchLevel": "FULL",
+      "surfaces": {
+        "selfPractice": true,
+        "parentAssign": true,
+        "teacherAssign": true,
+        "learningBookEntry": true
+      },
+      "diagnosticContribution": "normal",
+      "bookFirstRecommended": false,
+      "bookFirstSoftGateTopics": [],
+      "audioRequired": false,
+      "marketingEligible": true,
+      "marketingNoteInternal": "full_launch_surface",
+      "inventoryStatus": "PROFESSIONAL_READY",
+      "topicTotal": 0,
+      "reason": "History G6 launch — registry FULL",
+      "registryVersion": "launch-policy-v1"
+    },
+    {
+      "subject": "history",
+      "grade": "g6",
+      "topic": "rome_jews",
+      "cellKey": "history:g6:rome_jews",
+      "launchLevel": "FULL",
+      "surfaces": {
+        "selfPractice": true,
+        "parentAssign": true,
+        "teacherAssign": true,
+        "learningBookEntry": true
+      },
+      "diagnosticContribution": "normal",
+      "bookFirstRecommended": false,
+      "bookFirstSoftGateTopics": [],
+      "audioRequired": false,
+      "marketingEligible": true,
+      "marketingNoteInternal": "full_launch_surface",
+      "inventoryStatus": "PROFESSIONAL_READY",
+      "topicTotal": 0,
+      "reason": "History G6 launch — registry FULL",
+      "registryVersion": "launch-policy-v1"
+    },
+    {
+      "subject": "history",
+      "grade": "g6",
+      "topic": "mixed",
+      "cellKey": "history:g6:mixed",
+      "launchLevel": "FULL",
+      "surfaces": {
+        "selfPractice": true,
+        "parentAssign": true,
+        "teacherAssign": true,
+        "learningBookEntry": false
+      },
+      "diagnosticContribution": "normal",
+      "bookFirstRecommended": false,
+      "bookFirstSoftGateTopics": [],
+      "audioRequired": false,
+      "marketingEligible": true,
+      "marketingNoteInternal": "full_launch_surface",
+      "registryVersion": "launch-policy-v1"
     }
   ]
 }

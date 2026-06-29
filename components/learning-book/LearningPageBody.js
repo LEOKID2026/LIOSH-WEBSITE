@@ -109,6 +109,13 @@ import {
   saveMoledetGeographyBookPracticePreset,
 } from "../../lib/learning-book/moledet-geography-book-nav";
 import { resolveMoledetGeographyPracticeTarget } from "../../lib/learning-book/moledet-geography-book-practice-map";
+import { HISTORY_G6_BOOK_META } from "../../lib/learning-book/history-g6-registry";
+import {
+  getHistoryBookReturnQuerySuffix,
+  getHistoryBookPracticePath,
+  saveHistoryBookPracticePreset,
+} from "../../lib/learning-book/history-book-nav";
+import { resolveHistoryPracticeTarget } from "../../lib/learning-book/history-book-practice-map";
 import { createLearningBookNav } from "../../lib/learning-book/learning-book-nav";
 import { getLearningBookClientMeta, getLearningBookMasterPath } from "../../lib/learning-book/learning-book-catalog-meta";
 import { useBookGradeTheme } from "./BookGradeThemeContext";
@@ -252,6 +259,19 @@ const MOLEDET_G4_BOOK_UI = makeMoledetGeographyBookUi("g4", MOLEDET_G4_BOOK_META
 const GEOGRAPHY_G5_BOOK_UI = makeMoledetGeographyBookUi("g5", GEOGRAPHY_G5_BOOK_META);
 const GEOGRAPHY_G6_BOOK_UI = makeMoledetGeographyBookUi("g6", GEOGRAPHY_G6_BOOK_META);
 
+/** @param {string} grade @param {typeof HISTORY_G6_BOOK_META} bookMeta */
+function makeHistoryBookUi(grade, bookMeta) {
+  return {
+    bookMeta,
+    getReturnQuerySuffix: getHistoryBookReturnQuerySuffix,
+    resolvePracticeTarget: (pageId) => resolveHistoryPracticeTarget(grade, pageId),
+    getPracticePath: getHistoryBookPracticePath,
+    savePracticePreset: (preset) => saveHistoryBookPracticePreset(grade, preset),
+  };
+}
+
+const HISTORY_G6_BOOK_UI = makeHistoryBookUi("g6", HISTORY_G6_BOOK_META);
+
 export default function LearningPageBody({
   page,
   prevPageId = null,
@@ -285,6 +305,7 @@ export default function LearningPageBody({
     if (bookSubject === "english" && bookGrade === "g3") return ENGLISH_G3_BOOK_UI;
     if (bookSubject === "english" && bookGrade === "g2") return ENGLISH_G2_BOOK_UI;
     if (bookSubject === "english" && bookGrade === "g1") return ENGLISH_G1_BOOK_UI;
+    if (bookSubject === "history" && bookGrade === "g6") return HISTORY_G6_BOOK_UI;
     if (bookSubject === "geography" && bookGrade === "g6") return GEOGRAPHY_G6_BOOK_UI;
     if (bookSubject === "geography" && bookGrade === "g5") return GEOGRAPHY_G5_BOOK_UI;
     if (bookSubject === "moledet" && bookGrade === "g4") return MOLEDET_G4_BOOK_UI;

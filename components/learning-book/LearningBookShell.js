@@ -47,7 +47,9 @@ export default function LearningBookShell({
               ? "חזרה למולדת"
               : subject === "geography"
                 ? "חזרה לגאוגרפיה"
-                : "חזרה למתמטיקה";
+                : subject === "history"
+                  ? "חזרה להיסטוריה"
+                  : "חזרה למתמטיקה";
 
   const handleReturnClick = () => {
     if (fromLearning) {

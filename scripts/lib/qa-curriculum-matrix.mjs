@@ -13,6 +13,7 @@ const { GRADES: GEO_GRADES } = await import(href("utils/geometry-constants.js"))
 const { GRADES: HEBREW_GRADES } = await import(href("utils/hebrew-constants.js"));
 const { GRADES: MOLEDET_GRADES } = await import(href("utils/moledet-geography-constants.js"));
 const { SCIENCE_GRADES } = await import(href("data/science-curriculum.js"));
+const { HISTORY_GRADES } = await import(href("data/history-curriculum.js"));
 
 const ENGLISH_TOPICS = ["grammar", "vocabulary", "translation", "sentences", "writing"];
 
@@ -37,6 +38,9 @@ export function curriculumTopicsFor(subject, grade) {
       break;
     case "science":
       list = SCIENCE_GRADES[g]?.topics || [];
+      break;
+    case "history":
+      list = HISTORY_GRADES[g]?.topics || [];
       break;
     case "english":
       list = g === "g1" ? ["grammar", "vocabulary", "sentences"] : ENGLISH_TOPICS;

@@ -33,6 +33,7 @@ function normalizedResolverBucketKey(subjectId, bucketKeyRaw) {
     sid === "hebrew" ||
     sid === "english" ||
     sid === "science" ||
+    sid === "history" ||
     sid === "moledet-geography"
   )
     return raw.toLowerCase();

@@ -2,6 +2,7 @@
  * Fail-fast preflight before mass 1000 seed — all launch subjects including moledet-geography.
  */
 import { SCIENCE_GRADES } from "../../../../data/science-curriculum.js";
+import { HISTORY_GRADES } from "../../../../data/history-curriculum.js";
 import { MOLEDET_GEOGRAPHY_TEACHABLE_GRADE_ORDER } from "../../../../data/moledet-geography-curriculum.js";
 import {
   G2_EASY_QUESTIONS,
@@ -34,11 +35,16 @@ const LEGACY_TOPICS = {
   hebrew: ["reading", "comprehension", "writing", "grammar", "vocabulary"],
   english: ["vocabulary", "grammar", "phonics", "translation", "sentences"],
   science: ["body", "experiments", "materials", "plants", "energy"],
+  history: ["what_is_history", "classical_greece", "hellenism_jews", "hasmonaeans", "rome_jews"],
 };
 
 function topicsForSubjectGrade(subject, grade) {
   if (subject === "science") {
     const gradeTopics = SCIENCE_GRADES[`g${grade}`]?.topics || [];
+    if (gradeTopics.length) return gradeTopics.filter((t) => t !== "mixed");
+  }
+  if (subject === "history") {
+    const gradeTopics = HISTORY_GRADES[`g${grade}`]?.topics || [];
     if (gradeTopics.length) return gradeTopics.filter((t) => t !== "mixed");
   }
   if (subject === MOLEDET_GEOGRAPHY_SUBJECT) {

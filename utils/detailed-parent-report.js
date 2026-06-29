@@ -122,6 +122,7 @@ const SUBJECT_IDS = [
   "geometry",
   "english",
   "science",
+  "history",
   "hebrew",
   "moledet-geography",
 ];
@@ -131,6 +132,7 @@ const SUBJECT_LABEL_HE = {
   geometry: "גאומטריה",
   english: "אנגלית",
   science: "מדעים",
+  history: "היסטוריה",
   hebrew: "עברית",
   "moledet-geography": "מולדת וגאוגרפיה",
 };
@@ -143,6 +145,7 @@ const REPORT_MAP_KEY = {
   geometry: "geometryTopics",
   english: "englishTopics",
   science: "scienceTopics",
+  history: "historyTopics",
   hebrew: "hebrewTopics",
   "moledet-geography": "moledetGeographyTopics",
 };
@@ -220,6 +223,7 @@ const SUMMARY_Q = {
   geometry: ["geometryQuestions", "geometryCorrect", "geometryAccuracy"],
   english: ["englishQuestions", "englishCorrect", "englishAccuracy"],
   science: ["scienceQuestions", "scienceCorrect", "scienceAccuracy"],
+  history: ["historyQuestions", "historyCorrect", "historyAccuracy"],
   hebrew: ["hebrewQuestions", "hebrewCorrect", "hebrewAccuracy"],
   "moledet-geography": [
     "moledetGeographyQuestions",
@@ -2275,6 +2279,7 @@ function collectPerSubjectAggregateRowsFromSummary(summary) {
     { q: Number(s.geometryQuestions) || 0, acc: Number(s.geometryAccuracy) || 0, labelHe: SUBJECT_LABEL_HE.geometry },
     { q: Number(s.englishQuestions) || 0, acc: Number(s.englishAccuracy) || 0, labelHe: SUBJECT_LABEL_HE.english },
     { q: Number(s.scienceQuestions) || 0, acc: Number(s.scienceAccuracy) || 0, labelHe: SUBJECT_LABEL_HE.science },
+    { q: Number(s.historyQuestions) || 0, acc: Number(s.historyAccuracy) || 0, labelHe: SUBJECT_LABEL_HE.history },
     { q: Number(s.hebrewQuestions) || 0, acc: Number(s.hebrewAccuracy) || 0, labelHe: SUBJECT_LABEL_HE.hebrew },
     {
       q: Number(s.moledetGeographyQuestions) || 0,

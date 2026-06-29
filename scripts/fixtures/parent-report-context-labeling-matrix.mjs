@@ -10,6 +10,7 @@ const REPORT_MAP_KEY = {
   geometry: "geometryTopics",
   english: "englishTopics",
   science: "scienceTopics",
+  history: "historyTopics",
   hebrew: "hebrewTopics",
   "moledet-geography": "moledetGeographyTopics",
 };
@@ -29,6 +30,10 @@ export const SUBJECT_MATRIX_TOPICS = {
     solo: { bucket: "matrix_topic_b", labelHe: "נושא ב׳" },
   },
   science: {
+    split: { bucket: "matrix_topic_a", labelHe: "נושא א׳" },
+    solo: { bucket: "matrix_topic_b", labelHe: "נושא ב׳" },
+  },
+  history: {
     split: { bucket: "matrix_topic_a", labelHe: "נושא א׳" },
     solo: { bucket: "matrix_topic_b", labelHe: "נושא ב׳" },
   },
@@ -127,6 +132,7 @@ export function buildSixSubjectContextLabelingMatrixBaseReport() {
     geometryTopics: {},
     englishTopics: {},
     scienceTopics: {},
+    historyTopics: {},
     hebrewTopics: {},
     moledetGeographyTopics: {},
   };
@@ -202,6 +208,7 @@ export function buildSixSubjectContextLabelingMatrixBaseReport() {
     geometryTopics: topicMaps.geometryTopics,
     englishTopics: topicMaps.englishTopics,
     scienceTopics: topicMaps.scienceTopics,
+    historyTopics: topicMaps.historyTopics,
     hebrewTopics: topicMaps.hebrewTopics,
     moledetGeographyTopics: topicMaps.moledetGeographyTopics,
     diagnosticEngineV2: { units },

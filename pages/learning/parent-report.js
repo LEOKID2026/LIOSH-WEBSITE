@@ -3,7 +3,7 @@ import Layout from "../../components/Layout";
 import { ParentReportExitNav, ParentReportThemeIcons } from "../../components/parent/ParentReportExitNav.jsx";
 import { ParentReportImportantDisclaimer } from "../../components/ParentReportImportantDisclaimer";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
-import { getMathReportBucketDisplayName, getTopicName, getEnglishTopicName, getScienceTopicName, getHebrewTopicName, getMoledetGeographyTopicName, exportReportToPDF } from "../../utils/math-report-generator";
+import { getMathReportBucketDisplayName, getTopicName, getEnglishTopicName, getScienceTopicName, getHistoryTopicName, getHebrewTopicName, getMoledetGeographyTopicName, exportReportToPDF } from "../../utils/math-report-generator";
 import {
   enrichParentReportWithParentAi,
   getDeterministicParentAiExplanationFromParentReportV2,
@@ -119,6 +119,8 @@ function parentReportChartLabelFromAllItemKey(key, data) {
             ? getEnglishTopicName(b)
             : subjectId === "science"
               ? getScienceTopicName(b)
+              : subjectId === "history"
+                ? getHistoryTopicName(b)
               : subjectId === "hebrew"
                 ? getHebrewTopicName(b)
                 : subjectId === MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID
@@ -152,6 +154,12 @@ function parentReportChartLabelFromAllItemKey(key, data) {
     const fallbackBucket = sep === -1 ? rest : rest.slice(0, sep);
     return labelFrom("science", bucketKey || displayName || fallbackBucket);
   }
+  if (key.startsWith("history_")) {
+    const rest = key.slice("history_".length);
+    const sep = rest.indexOf("\u0001");
+    const fallbackBucket = sep === -1 ? rest : rest.slice(0, sep);
+    return labelFrom("history", bucketKey || displayName || fallbackBucket);
+  }
   if (key.startsWith("hebrew_")) {
     const rest = key.slice("hebrew_".length);
     const sep = rest.indexOf("\u0001");
@@ -183,6 +191,8 @@ function subjectTopicLabelForParentHe(subjectId, data, fallbackTopic) {
           ? getEnglishTopicName(bucket || displayName)
           : subjectId === "science"
             ? getScienceTopicName(bucket || displayName)
+            : subjectId === "history"
+              ? getHistoryTopicName(bucket || displayName)
             : subjectId === "hebrew"
               ? getHebrewTopicName(bucket || displayName)
               : subjectId === MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID
@@ -197,6 +207,7 @@ const SUBJECT_CHART_COLORS = {
   geometry: "#10b981",
   english: "#a855f7",
   science: "#22c55e",
+  history: "#a16207",
   hebrew: "#f97316",
   moledet: "#06b6d4",
   geography: "#14b8a6",
@@ -314,6 +325,14 @@ function buildSubjectOverviewRows(report) {
       fill: SUBJECT_CHART_COLORS.science,
     },
     {
+      key: "history",
+      name: "היסטוריה",
+      minutes: sumTopicMapMinutes(report.historyTopics),
+      questions: Number(s.historyQuestions) || 0,
+      accuracy: Math.round(Number(s.historyAccuracy) || 0),
+      fill: SUBJECT_CHART_COLORS.history,
+    },
+    {
       key: "hebrew",
       name: "עברית",
       minutes: sumTopicMapMinutes(report.hebrewTopics),
@@ -345,6 +364,7 @@ function chartSubjectIdFromKeyPrefix(keyPrefix) {
   if (String(keyPrefix || "").startsWith("geometry_")) return "geometry";
   if (String(keyPrefix || "").startsWith("english_")) return "english";
   if (String(keyPrefix || "").startsWith("science_")) return "science";
+  if (String(keyPrefix || "").startsWith("history_")) return "history";
   if (String(keyPrefix || "").startsWith("hebrew_")) return "hebrew";
   if (String(keyPrefix || "").startsWith("moledet")) return MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID;
   return "math";
@@ -391,6 +411,7 @@ const PATTERN_DIAGNOSTIC_SUBJECT_ORDER = [
   "geometry",
   "english",
   "science",
+  "history",
   "hebrew",
   MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID,
 ];
@@ -629,6 +650,7 @@ const TOPIC_BAR_SUBJECT_CARDS = [
   { title: "גאומטריה — דיוק לפי נושא", mapKey: "geometryTopics", prefix: "geometry_", border: "border-emerald-400/25" },
   { title: "אנגלית — דיוק לפי נושא", mapKey: "englishTopics", prefix: "english_", border: "border-purple-400/25" },
   { title: "מדעים — דיוק לפי נושא", mapKey: "scienceTopics", prefix: "science_", border: "border-green-400/25" },
+  { title: "היסטוריה — דיוק לפי נושא", mapKey: "historyTopics", prefix: "history_", border: "border-amber-400/25" },
   { title: "עברית — דיוק לפי נושא", mapKey: "hebrewTopics", prefix: "hebrew_", border: "border-orange-400/25" },
   {
     title: `${VISUAL_STRAND_LABEL_HE.moledet} — דיוק לפי נושא`,
@@ -2189,6 +2211,22 @@ export default function ParentReport() {
                   report.summary.scienceQuestions,
                   report.summary.scienceCorrect,
                   report.summary.scienceAccuracy
+                )}
+              </div>
+            </div>
+            
+            <div className="parent-report-print-summary-card bg-amber-700/25 border border-amber-500/50 rounded-lg p-2 md:p-4 text-center">
+              <div className="parent-report-print-summary-label text-xs md:text-sm text-white/60 mb-1">
+                🏛️ היסטוריה
+              </div>
+              <div className="parent-report-print-summary-stat text-base md:text-lg font-bold text-amber-200">
+                {report.summary.historyQuestions || 0} שאלות
+              </div>
+              <div className="parent-report-print-muted-text text-xs text-white/80">
+                {subjectPracticeSecondaryLineHe(
+                  report.summary.historyQuestions,
+                  report.summary.historyCorrect,
+                  report.summary.historyAccuracy
                 )}
               </div>
             </div>
@@ -3964,6 +4002,15 @@ export default function ParentReport() {
                         stroke={SUBJECT_CHART_COLORS.science}
                         strokeWidth={1.8}
                         name="מדעים"
+                        dot={{ r: 2 }}
+                        activeDot={{ r: 4 }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="historyTopics"
+                        stroke={SUBJECT_CHART_COLORS.history}
+                        strokeWidth={1.8}
+                        name="היסטוריה"
                         dot={{ r: 2 }}
                         activeDot={{ r: 4 }}
                       />

@@ -7,12 +7,17 @@ import {
   MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID,
   normalizeMoledetGeographyReportSubjectId,
 } from "../../lib/learning-shared/moledet-geography-subject-id.js";
+import {
+  HISTORY_REPORT_SUBJECT_ID,
+  normalizeHistoryReportSubjectId,
+} from "../../lib/learning-shared/history-subject-id.js";
 
 export const SUBJECT_ORDER = [
   "math",
   "geometry",
   "english",
   "science",
+  "history",
   "hebrew",
   MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID,
 ];
@@ -20,6 +25,8 @@ export const SUBJECT_ORDER = [
 export function normalizeSubjectId(subjectId) {
   const moledet = normalizeMoledetGeographyReportSubjectId(subjectId);
   if (moledet) return moledet;
+  const history = normalizeHistoryReportSubjectId(subjectId);
+  if (history) return history;
   return String(subjectId || "").trim();
 }
 
@@ -142,6 +149,7 @@ const SUBJECT_LABEL_HE = {
   geometry: "גאומטריה",
   english: "אנגלית",
   science: "מדעים",
+  history: "היסטוריה",
   hebrew: "עברית",
   "moledet-geography": "מולדת וגאוגרפיה",
   moledet_geography: "מולדת וגאוגרפיה",

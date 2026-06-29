@@ -19,6 +19,7 @@ export const SUBJECT_VISIBLE_LABELS_HE = Object.freeze({
   geometry: ["גאומטריה"],
   english: ["אנגלית"],
   science: ["מדעים"],
+  history: ["היסטוריה"],
   hebrew: ["עברית"],
   "moledet-geography": ["מולדת וגאוגרפיה"],
   moledet: ["מולדת"],
@@ -31,6 +32,7 @@ export const SUBJECT_LABEL_BY_ID = Object.freeze({
   geometry: "גאומטריה",
   english: "אנגלית",
   science: "מדעים",
+  history: "היסטוריה",
   hebrew: "עברית",
   "moledet-geography": "מולדת וגאוגרפיה",
   moledet: "מולדת",
@@ -181,6 +183,7 @@ export function subjectQuestionCountsFromPayload(payload) {
     s.geometryQuestions != null ||
     s.hebrewQuestions != null ||
     s.scienceQuestions != null ||
+    s.historyQuestions != null ||
     s.moledetGeographyQuestions != null
   ) {
     return {
@@ -188,6 +191,7 @@ export function subjectQuestionCountsFromPayload(payload) {
       geometry: Math.max(0, Math.floor(Number(s.geometryQuestions) || 0)),
       english: Math.max(0, Math.floor(Number(s.englishQuestions) || 0)),
       science: Math.max(0, Math.floor(Number(s.scienceQuestions) || 0)),
+      history: Math.max(0, Math.floor(Number(s.historyQuestions) || 0)),
       hebrew: Math.max(0, Math.floor(Number(s.hebrewQuestions) || 0)),
       "moledet-geography": Math.max(0, Math.floor(Number(s.moledetGeographyQuestions) || 0)),
     };
@@ -206,6 +210,7 @@ export function subjectQuestionCountsFromPayload(payload) {
     geometry: read("geometry"),
     english: read("english"),
     science: read("science"),
+    history: read("history"),
     hebrew: read("hebrew"),
     "moledet-geography": read("moledet-geography"),
   };

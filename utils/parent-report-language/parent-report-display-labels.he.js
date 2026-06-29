@@ -14,6 +14,7 @@ export const PARENT_REPORT_SUBJECT_LABELS_HE = {
   english: "אנגלית",
   hebrew: "עברית",
   science: "מדעים",
+  history: "היסטוריה",
   moledet: "מולדת",
   geography: "גאוגרפיה",
   moledet_geography: "מולדת וגאוגרפיה",
@@ -242,7 +243,7 @@ export function findParentReportEnglishEnumLeaks(text) {
     const re = new RegExp(`\\b${token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i");
     if (re.test(lower)) hits.push(token);
   }
-  for (const token of ["math", "english", "hebrew", "science", "geometry", "moledet"]) {
+  for (const token of ["math", "english", "hebrew", "science", "history", "geometry", "moledet"]) {
     const re = new RegExp(`\\b${token}\\b`, "i");
     if (re.test(lower) && !HEBREW_CHAR.test(text)) hits.push(token);
   }

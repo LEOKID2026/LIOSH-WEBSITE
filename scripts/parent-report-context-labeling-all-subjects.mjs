@@ -1,5 +1,5 @@
 /**
- * Six-subject context-aware labeling + topic overview / focus matrix.
+ * Seven-subject context-aware labeling + topic overview / focus matrix.
  * Run: npm run test:parent-report-context-labeling-all-subjects
  */
 
@@ -43,9 +43,9 @@ function assertMatrix(base, label) {
   return detailed;
 }
 
-// ─── Six-subject generic matrix ─────────────────────────────────────────────
+// ─── Seven-subject generic matrix ─────────────────────────────────────────────
 const matrixBase = buildSixSubjectContextLabelingMatrixBaseReport();
-const matrixDetailed = assertMatrix(matrixBase, "six-subject");
+const matrixDetailed = assertMatrix(matrixBase, "seven-subject");
 
 for (const sid of CONTEXT_LABELING_SUBJECT_IDS) {
   const sp = matrixDetailed.subjectProfiles.find((s) => s.subject === sid);

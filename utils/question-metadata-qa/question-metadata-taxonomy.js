@@ -18,6 +18,8 @@ import {
   MOLEDET_GEOGRAPHY_SKILL_IDS,
   MOLEDET_GEOGRAPHY_SUBSKILL_ALLOWLIST_BY_SKILL,
 } from "./question-metadata-taxonomy-geography.js";
+import { HISTORY_SKILL_IDS, HISTORY_TOPIC_ORDER } from "../../data/history-curriculum.js";
+import { HISTORY_G6_SUBTOPIC_IDS } from "../../data/history-g6-content-map.js";
 import { BANK_ENRICHED_EXPECTED_ERROR_TYPES } from "./bank-enriched-expected-error-types.js";
 
 export { ENGLISH_SKILL_IDS, ENGLISH_SUBSKILL_ALLOWLIST_BY_SKILL };
@@ -71,6 +73,22 @@ function buildScienceSubskillAllowlist() {
 }
 
 export const SCIENCE_SUBSKILL_ALLOWLIST_BY_SKILL = buildScienceSubskillAllowlist();
+
+export { HISTORY_TOPIC_ORDER, HISTORY_SKILL_IDS };
+
+/** @type {Set<string>} */
+export const HISTORY_SKILL_ID_SET = new Set(HISTORY_SKILL_IDS);
+
+function buildHistorySubskillAllowlist() {
+  /** @type {Record<string, Set<string>>} */
+  const m = {};
+  for (const skill of HISTORY_SKILL_IDS) {
+    m[skill] = new Set(HISTORY_G6_SUBTOPIC_IDS);
+  }
+  return m;
+}
+
+export const HISTORY_SUBSKILL_ALLOWLIST_BY_SKILL = buildHistorySubskillAllowlist();
 
 /** Recommended base difficulty (extendable). */
 export const CANONICAL_DIFFICULTY = new Set([
@@ -534,6 +552,18 @@ export function validateTaxonomyForRecord(record) {
     }
     if (skillId && subskillId) {
       const allow = MOLEDET_GEOGRAPHY_SUBSKILL_ALLOWLIST_BY_SKILL[skillId];
+      if (allow && !allow.has(subskillId)) {
+        issues.push(TAXONOMY_ISSUE_CODES.taxonomy_unknown_subskillId);
+      }
+    }
+  }
+
+  if (subject === "history") {
+    if (skillId && !HISTORY_SKILL_ID_SET.has(skillId)) {
+      issues.push(TAXONOMY_ISSUE_CODES.taxonomy_unknown_skillId);
+    }
+    if (skillId && subskillId) {
+      const allow = HISTORY_SUBSKILL_ALLOWLIST_BY_SKILL[skillId];
       if (allow && !allow.has(subskillId)) {
         issues.push(TAXONOMY_ISSUE_CODES.taxonomy_unknown_subskillId);
       }

@@ -3064,4 +3064,262 @@ export const GRADE_AWARE_RECOMMENDATION_TEMPLATES = {
       },
     },
   },
+  history: {
+    "H-01": {
+      defaultBands: {
+        g1_g2: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-01: G6-only history; lower bands null." },
+        g3_g4: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-01: G6-only history; lower bands null." },
+        g5_g6: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-01 default: use bucketOverrides or engine fallback." },
+      },
+      bucketOverrides: {
+        what_is_history: {
+          g5_g6: {
+            actionTextHe: "כדאי לתרגל הבחנה בין מושגים היסטוריים בסיסיים, כמו מקור ראשוני ומקור משני, ולהסביר בפשטות מה כל מושג אומר.",
+            goalTextHe: "בשבוע הקרוב התמקדו בהגדרת מושגים היסטוריים ובהסבר ההבדל ביניהם.",
+            intentDescriptionEn: "Grade 6 historical concepts and source terminology.",
+          },
+        },
+        mixed: {
+          g5_g6: {
+            actionTextHe: "כדאי לתרגל זיהוי מושגים היסטוריים במגוון נושאים, ולבקש מהילד להסביר כל מושג במילים שלו.",
+            goalTextHe: "בשבוע הקרוב התמקדו במושגים היסטוריים מתוך תרגול מעורב.",
+            intentDescriptionEn: "Grade 6 mixed historical concept identification.",
+          },
+        },
+      },
+    },
+    "H-02": {
+      defaultBands: {
+        g1_g2: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-02: G6-only." },
+        g3_g4: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-02: G6-only." },
+        g5_g6: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-02 default: use bucketOverrides." },
+      },
+      bucketOverrides: {
+        hasmonaeans: {
+          g5_g6: {
+            actionTextHe: "כדאי לתרגל סידור אירועים בציר זמן של תקופת החשמונאים. בקשו מהילד לסדר כרטיסיות אירועים ולהסביר מה קרה לפני ואחרי.",
+            goalTextHe: "בשבוע הקרוב התמקדו ברצף אירועים וציר זמן בתקופת החשמונאים.",
+            intentDescriptionEn: "Grade 6 Hasmonaean timeline sequencing.",
+          },
+        },
+        rome_jews: {
+          g5_g6: {
+            actionTextHe: "כדאי לתרגל סידור אירועים מרכזיים בתקופת רומא והיהודים, כמו עליית רומא, חורבן ויבנה, לפי סדר כרונולוגי.",
+            goalTextHe: "בשבוע הקרוב התמקדו בציר זמן של רומא והיהודים.",
+            intentDescriptionEn: "Grade 6 Rome/Judea timeline sequencing.",
+          },
+        },
+        mixed: {
+          g5_g6: {
+            actionTextHe: "כדאי לתרגל סידור אירועים היסטוריים על ציר זמן, תוך שימוש בתאריכים או שלבים ברורים מהשיעור.",
+            goalTextHe: "בשבוע הקרוב התמקדו ברצף אירועים וציר זמן.",
+            intentDescriptionEn: "Grade 6 mixed timeline sequencing.",
+          },
+        },
+      },
+    },
+    "H-03": {
+      defaultBands: {
+        g1_g2: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-03: G6-only." },
+        g3_g4: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-03: G6-only." },
+        g5_g6: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-03 default: use bucketOverrides." },
+      },
+      bucketOverrides: {
+        hellenism_jews: {
+          g5_g6: {
+            actionTextHe: "כדאי לתרגל קשרי סיבה ותוצאה במפגש בין ההלניזם ליהדות. בקשו מהילד להסביר מה גרם למה ומה היו התוצאות.",
+            goalTextHe: "בשבוע הקרוב התמקדו בסיבה ותוצאה בתקופת ההלניזם והיהודים.",
+            intentDescriptionEn: "Grade 6 Hellenism/Judaism cause-effect.",
+          },
+        },
+        hasmonaeans: {
+          g5_g6: {
+            actionTextHe: "כדאי לתרגל הבנת הקשר בין גזרות, מרד ותוצאות בתקופת החשמונאים, עם הסבר מילולי.",
+            goalTextHe: "בשבוע הקרוב התמקדו בסיבה ותוצאה בתקופת החשמונאים.",
+            intentDescriptionEn: "Grade 6 Hasmonaean cause-effect.",
+          },
+        },
+        rome_jews: {
+          g5_g6: {
+            actionTextHe: "כדאי לתרגל ניתוח סיבות ותוצאות של אירועים מרכזיים, כמו המרד הגדול וחורבן בית המקדש.",
+            goalTextHe: "בשבוע הקרוב התמקדו בסיבה ותוצאה בתקופת רומא והיהודים.",
+            intentDescriptionEn: "Grade 6 Rome/Judea cause-effect.",
+          },
+        },
+        mixed: {
+          g5_g6: {
+            actionTextHe: "כדאי לתרגל זיהוי סיבה ותוצאה באירועים היסטוריים, ולבקש מהילד להסביר את הקשר בין שני אירועים.",
+            goalTextHe: "בשבוע הקרוב התמקדו בסיבה ותוצאה בתרגול מעורב.",
+            intentDescriptionEn: "Grade 6 mixed cause-effect.",
+          },
+        },
+      },
+    },
+    "H-04": {
+      defaultBands: {
+        g1_g2: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-04: G6-only." },
+        g3_g4: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-04: G6-only." },
+        g5_g6: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-04 default: use bucketOverrides." },
+      },
+      bucketOverrides: {
+        classical_greece: {
+          g5_g6: {
+            actionTextHe: "כדאי לתרגל השוואה בין אתונה לספרטה לפי קריטריונים ברורים, כמו שלטון, חיים יומיומיים וערכים.",
+            goalTextHe: "בשבוע הקרוב התמקדו בהשוואה בין אתונה לספרטה.",
+            intentDescriptionEn: "Grade 6 Athens/Sparta comparison.",
+          },
+        },
+        mixed: {
+          g5_g6: {
+            actionTextHe: "כדאי לתרגל השוואה בין שני מוסדות, דמויות או תרבויות, תוך הצגת דמיון והבדל.",
+            goalTextHe: "בשבוע הקרוב התמקדו בהשוואה היסטורית מבוססת קריטריונים.",
+            intentDescriptionEn: "Grade 6 mixed historical comparison.",
+          },
+        },
+      },
+    },
+    "H-05": {
+      defaultBands: {
+        g1_g2: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-05: G6-only." },
+        g3_g4: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-05: G6-only." },
+        g5_g6: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-05 default: use bucketOverrides." },
+      },
+      bucketOverrides: {
+        hellenism_jews: {
+          g5_g6: {
+            actionTextHe: "כדאי לתרגל זיהוי דמויות מרכזיות והתפקיד שלהן, כמו אלכסנדר מוקדון, ולהסביר מה עשתה כל דמות.",
+            goalTextHe: "בשבוע הקרוב התמקדו בדמויות ותפקידן בתקופת ההלניזם.",
+            intentDescriptionEn: "Grade 6 Hellenism figures and roles.",
+          },
+        },
+        rome_jews: {
+          g5_g6: {
+            actionTextHe: "כדאי לתרגל התאמת דמויות כמו הורדוס או מנהיגי המרד לתפקידם ההיסטורי, עם הסבר קצר.",
+            goalTextHe: "בשבוע הקרוב התמקדו בדמויות ותפקידן בתקופת רומא והיהודים.",
+            intentDescriptionEn: "Grade 6 Rome/Judea figures and roles.",
+          },
+        },
+        mixed: {
+          g5_g6: {
+            actionTextHe: "כדאי לתרגל זיהוי דמויות היסטוריות והסבר תפקידן, בלי לבלבל בין דמויות דומות.",
+            goalTextHe: "בשבוע הקרוב התמקדו בדמויות ותפקידן.",
+            intentDescriptionEn: "Grade 6 mixed figures and roles.",
+          },
+        },
+      },
+    },
+    "H-06": {
+      defaultBands: {
+        g1_g2: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-06: G6-only." },
+        g3_g4: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-06: G6-only." },
+        g5_g6: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-06 default: use bucketOverrides." },
+      },
+      bucketOverrides: {
+        classical_greece: {
+          g5_g6: {
+            actionTextHe: "כדאי לתרגל הבנת מוסדות שלטון, כמו דמוקרטיה באתונה, והסבר איך הם פעלו.",
+            goalTextHe: "בשבוע הקרוב התמקדו בשלטון ומוסדות ביוון הקלאסית.",
+            intentDescriptionEn: "Grade 6 classical Greece governance.",
+          },
+        },
+        hasmonaeans: {
+          g5_g6: {
+            actionTextHe: "כדאי לתרגל הבנת מבנה ממלכת החשמונאים ותפקידי השלטון בה.",
+            goalTextHe: "בשבוע הקרוב התמקדו בשלטון ומוסדות בתקופת החשמונאים.",
+            intentDescriptionEn: "Grade 6 Hasmonaean governance.",
+          },
+        },
+        rome_jews: {
+          g5_g6: {
+            actionTextHe: "כדאי לתרגל הבנת שלטון רומי ומעמד יהודה כפרובינציה, כולל תפקידי שלטון מקומי.",
+            goalTextHe: "בשבוע הקרוב התמקדו בשלטון ומוסדות בתקופת רומא והיהודים.",
+            intentDescriptionEn: "Grade 6 Roman/Judean governance.",
+          },
+        },
+        mixed: {
+          g5_g6: {
+            actionTextHe: "כדאי לתרגל התאמת מוסדות שלטון לתפקידם, ולהימנע מבלבול בין מערכות שונות.",
+            goalTextHe: "בשבוע הקרוב התמקדו בשלטון ומוסדות.",
+            intentDescriptionEn: "Grade 6 mixed governance institutions.",
+          },
+        },
+      },
+    },
+    "H-07": {
+      defaultBands: {
+        g1_g2: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-07: G6-only." },
+        g3_g4: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-07: G6-only." },
+        g5_g6: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-07 default: use bucketOverrides." },
+      },
+      bucketOverrides: {
+        classical_greece: {
+          g5_g6: {
+            actionTextHe: "כדאי לתרגל זיהוי מרכיבי תרבות יוונית והשפעתם על העולם, עם דוגמאות מהשיעור.",
+            goalTextHe: "בשבוע הקרוב התמקדו בתרבות ומורשת יוון הקלאסית.",
+            intentDescriptionEn: "Grade 6 Greek culture and legacy.",
+          },
+        },
+        rome_jews: {
+          g5_g6: {
+            actionTextHe: "כדאי לתרגל הבנת תרבות ומורשת רומית, וכיצד היא השפיעה על ארץ ישראל.",
+            goalTextHe: "בשבוע הקרוב התמקדו בתרבות ומורשת רומית.",
+            intentDescriptionEn: "Grade 6 Roman culture and legacy.",
+          },
+        },
+        mixed: {
+          g5_g6: {
+            actionTextHe: "כדאי לתרגל זיהוי השפעות תרבותיות ומורשת מהעבר, עם דוגמאות קונקרטיות.",
+            goalTextHe: "בשבוע הקרוב התמקדו בתרבות ומורשת.",
+            intentDescriptionEn: "Grade 6 mixed culture and heritage.",
+          },
+        },
+      },
+    },
+    "H-08": {
+      defaultBands: {
+        g1_g2: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-08: G6-only." },
+        g3_g4: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-08: G6-only." },
+        g5_g6: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-08 default: use bucketOverrides." },
+      },
+      bucketOverrides: {
+        what_is_history: {
+          g5_g6: {
+            actionTextHe: "כדאי לתרגל קריאת מקור היסטורי פשוט ולהסביר מה אפשר ללמוד ממנו. בקשו מהילד לציין פרט אחד מהמקור שתומך בתשובה.",
+            goalTextHe: "בשבוע הקרוב התמקדו בהבנת מקור היסטורי פשוט.",
+            intentDescriptionEn: "Grade 6 simple historical source reading.",
+          },
+        },
+        mixed: {
+          g5_g6: {
+            actionTextHe: "כדאי לתרגל זיהוי מה המקור אומר ומה אפשר להסיק ממנו, בלי להוסיף מידע שלא מופיע.",
+            goalTextHe: "בשבוע הקרוב התמקדו בהבנת מקורות היסטוריים.",
+            intentDescriptionEn: "Grade 6 mixed source comprehension.",
+          },
+        },
+      },
+    },
+    "H-09": {
+      defaultBands: {
+        g1_g2: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-09: G6-only." },
+        g3_g4: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-09: G6-only." },
+        g5_g6: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-09 default: use bucketOverrides." },
+      },
+      bucketOverrides: {
+        rome_jews: {
+          g5_g6: {
+            actionTextHe: "כדאי לתרגל קישור בין אירועים מהעבר, כמו יבנה ומרכז יהודי בבבל, לבין השפעתם על היום.",
+            goalTextHe: "בשבוע הקרוב התמקדו בקשר בין עבר להווה בתקופת רומא והיהודים.",
+            intentDescriptionEn: "Grade 6 past-present link in Rome/Judea period.",
+          },
+        },
+        mixed: {
+          g5_g6: {
+            actionTextHe: "כדאי לתרגל הסבר איך אירוע היסטורי משפיע על ההווה, עם דוגמה מהשיעור.",
+            goalTextHe: "בשבוע הקרוב התמקדו בקשר בין עבר להווה.",
+            intentDescriptionEn: "Grade 6 mixed past-present link.",
+          },
+        },
+      },
+    },
+  },
 };

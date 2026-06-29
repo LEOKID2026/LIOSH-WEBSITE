@@ -18,6 +18,7 @@ const SUBJECT_TOPIC_MAP_KEYS = [
   ["geometry", "geometryTopics"],
   ["english", "englishTopics"],
   ["science", "scienceTopics"],
+  ["history", "historyTopics"],
   ["hebrew", "hebrewTopics"],
   ["moledet-geography", "moledetGeographyTopics"],
 ];

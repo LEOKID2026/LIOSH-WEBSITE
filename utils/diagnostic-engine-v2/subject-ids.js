@@ -1,4 +1,4 @@
-/** @typedef {"math"|"geometry"|"english"|"science"|"hebrew"|"moledet-geography"} SubjectId */
+/** @typedef {"math"|"geometry"|"english"|"science"|"hebrew"|"moledet-geography"|"history"} SubjectId */
 
 export const SUBJECT_IDS = /** @type {const} */ ([
   "math",
@@ -7,4 +7,5 @@ export const SUBJECT_IDS = /** @type {const} */ ([
   "science",
   "hebrew",
   "moledet-geography",
+  "history",
 ]);

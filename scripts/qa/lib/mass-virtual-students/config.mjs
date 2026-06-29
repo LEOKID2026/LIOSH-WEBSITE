@@ -153,6 +153,7 @@ export function studentDisplayName({ grade, subject, profileId, profileLabelHe, 
     hebrew: "עברית",
     english: "אנגלית",
     science: "מדעים",
+    history: "היסטוריה",
     "moledet-geography": "מולדת וגאוגרפיה",
   }[subject] || subject;
   const profileHe =

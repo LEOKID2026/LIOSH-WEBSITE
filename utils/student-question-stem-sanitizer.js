@@ -178,7 +178,8 @@ export function sanitizeStudentQuestionStem(text) {
     ""
   );
 
-  t = t.replace(/^\s*שאלה\s+בנושא\s*:\s*/iu, "");
+  t = t.replace(/\s*\(שאלה\s+\d+\)\s*$/u, "");
+  t = t.replace(/\s*\(שאלה\s+\d+\)\s*/gu, " ");
 
   // Generator topic/difficulty framing — keep exercise body only
   t = t.replace(

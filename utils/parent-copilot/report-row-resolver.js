@@ -14,6 +14,7 @@ export const SUBJECT_HE_ALIASES = Object.freeze({
   geometry: ["גאומטריה", "גיאומטריה"],
   english: ["אנגלית"],
   science: ["מדעים", "מדע"],
+  history: ["היסטוריה"],
   hebrew: ["עברית", "שפה"],
   "moledet-geography": ["מולדת", "גאוגרפיה", "מולדת וגאוגרפיה"],
 });

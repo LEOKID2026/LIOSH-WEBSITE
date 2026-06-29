@@ -4,6 +4,7 @@ import { HEBREW_TAXONOMY_ROWS } from "./taxonomy-hebrew.js";
 import { ENGLISH_TAXONOMY_ROWS } from "./taxonomy-english.js";
 import { SCIENCE_TAXONOMY_ROWS } from "./taxonomy-science.js";
 import { MOLEDET_TAXONOMY_ROWS } from "./taxonomy-moledet.js";
+import { HISTORY_TAXONOMY_ROWS } from "./taxonomy-history.js";
 
 /** @type {import("./taxonomy-types.js").TaxonomyRow[]} */
 export const ALL_TAXONOMY_ROWS = [
@@ -13,6 +14,7 @@ export const ALL_TAXONOMY_ROWS = [
   ...ENGLISH_TAXONOMY_ROWS,
   ...SCIENCE_TAXONOMY_ROWS,
   ...MOLEDET_TAXONOMY_ROWS,
+  ...HISTORY_TAXONOMY_ROWS,
 ];
 
 /** @type {Record<string, import("./taxonomy-types.js").TaxonomyRow>} */

@@ -16,11 +16,12 @@ import {
 } from "../../../../lib/learning-shared/moledet-geography-subject-id.js";
 import { normalizeDiagnosticSubjectId } from "../../../../utils/diagnostic-evidence.js";
 import { isMoledetGeographyGradeAllowed } from "../../../../utils/moledet-geography-curriculum-gates.js";
+import { isHistoryGradeAllowed } from "../../../../utils/history-curriculum-gates.js";
 import { LAUNCH_SUBJECTS } from "./constants.mjs";
 
 export const MOLEDET_GEOGRAPHY_SUBJECT = MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID;
 
-/** All launch subjects including moledet-geography (7 logical subjects). */
+/** All launch subjects including moledet-geography (8 logical subjects). */
 export const ALL_LAUNCH_SUBJECTS = [...LAUNCH_SUBJECTS, MOLEDET_GEOGRAPHY_SUBJECT];
 
 const CLI_SUBJECT_ALIASES = Object.freeze({
@@ -74,6 +75,9 @@ export function isMassSimSubjectGradeAllowed(subject, grade) {
   const g = Number(grade) || 0;
   if (subject === MOLEDET_GEOGRAPHY_SUBJECT) {
     return isMoledetGeographyGradeAllowed(`g${g}`);
+  }
+  if (subject === "history") {
+    return isHistoryGradeAllowed(`g${g}`);
   }
   return g >= 1 && g <= 6;
 }

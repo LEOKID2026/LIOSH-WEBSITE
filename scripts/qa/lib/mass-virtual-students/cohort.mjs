@@ -1,4 +1,5 @@
 import { SCIENCE_GRADES } from "../../../../data/science-curriculum.js";
+import { HISTORY_GRADES } from "../../../../data/history-curriculum.js";
 import { GRADES as MOLEDET_GRADES } from "../../../../utils/moledet-geography-constants.js";
 import { GRADES as GEOMETRY_GRADES } from "../../../../utils/geometry-constants.js";
 import { defaultTopicForSubject } from "../../../virtual-student-qa/scenarios/student-personas.mjs";
@@ -12,6 +13,7 @@ const TOPIC_POOL = {
   hebrew: ["reading", "comprehension", "writing", "grammar", "vocabulary"],
   english: ["vocabulary", "grammar", "phonics", "translation", "sentences"],
   science: ["body", "experiments", "materials", "plants", "energy"],
+  history: ["what_is_history", "classical_greece", "hellenism_jews", "hasmonaeans", "rome_jews"],
   [MOLEDET_GEOGRAPHY_SUBJECT]: ["homeland", "community", "citizenship", "geography", "values", "maps"],
 };
 
@@ -36,6 +38,10 @@ function topicsForSubjectGrade(subject, grade) {
   const pool = TOPIC_POOL[subject] || ["general"];
   if (subject === "science") {
     const gradeTopics = SCIENCE_GRADES[`g${grade}`]?.topics || [];
+    if (gradeTopics.length) return gradeTopics.filter((t) => t !== "mixed");
+  }
+  if (subject === "history") {
+    const gradeTopics = HISTORY_GRADES[`g${grade}`]?.topics || [];
     if (gradeTopics.length) return gradeTopics.filter((t) => t !== "mixed");
   }
   if (subject === MOLEDET_GEOGRAPHY_SUBJECT) {

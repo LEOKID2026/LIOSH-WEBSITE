@@ -2,7 +2,7 @@
 
 export const SEED_META_KEY = "massVirtualStudents";
 
-export const LAUNCH_SUBJECTS = ["math", "geometry", "hebrew", "english", "science"];
+export const LAUNCH_SUBJECTS = ["math", "geometry", "hebrew", "english", "science", "history"];
 
 export const GRADES = [1, 2, 3, 4, 5, 6];
 
@@ -54,6 +54,7 @@ export const SUBJECT_LABELS_HE = {
   hebrew: "עברית",
   english: "אנגלית",
   science: "מדעים",
+  history: "היסטוריה",
   "moledet-geography": "מולדת וגאוגרפיה",
 };
 
