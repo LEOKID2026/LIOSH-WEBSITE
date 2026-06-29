@@ -116,7 +116,7 @@ export default function InstallAppChoiceButton({ className = "" }) {
                 className="flex w-full flex-col items-start gap-1 rounded-xl border border-amber-400/30 bg-gradient-to-l from-amber-500/20 to-yellow-500/10 px-4 py-3 text-right transition hover:border-amber-400/50 hover:from-amber-500/30"
               >
                 <span className="text-base font-bold text-amber-200">התקנת אפליקציה לילדים</span>
-                <span className="text-sm text-white/75">LEO K</span>
+                <span className="text-sm text-white/75">LEO KIDS</span>
               </button>
 
               <button
@@ -125,7 +125,7 @@ export default function InstallAppChoiceButton({ className = "" }) {
                 className="flex w-full flex-col items-start gap-1 rounded-xl border border-teal-400/30 bg-gradient-to-l from-teal-500/20 to-cyan-500/10 px-4 py-3 text-right transition hover:border-teal-400/50 hover:from-teal-500/30"
               >
                 <span className="text-base font-bold text-teal-200">התקנת אפליקציה להורים</span>
-                <span className="text-sm text-white/75">P LEO K</span>
+                <span className="text-sm text-white/75">P LEO KIDS</span>
               </button>
 
               <button
@@ -134,7 +134,7 @@ export default function InstallAppChoiceButton({ className = "" }) {
                 className="flex w-full flex-col items-start gap-1 rounded-xl border border-indigo-400/30 bg-gradient-to-l from-indigo-500/20 to-orange-500/10 px-4 py-3 text-right transition hover:border-indigo-400/50 hover:from-indigo-500/30"
               >
                 <span className="text-base font-bold text-indigo-200">התקנת אפליקציה למורים</span>
-                <span className="text-sm text-white/75">T LEO K</span>
+                <span className="text-sm text-white/75">T LEO KIDS</span>
               </button>
             </div>
           </div>

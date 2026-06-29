@@ -10,9 +10,9 @@ export default function StudentPwaInstallPage() {
   return (
     <PwaInstallPageShell
       portal="student"
-      badge="LEO K"
+      badge="LEO KIDS"
       title="התקנת אפליקציה לילדים"
-      pageTitle="LEO K — התקנה"
+      pageTitle="LEO KIDS — התקנה"
       appleTouchIcon="/icons/child/apple-touch-icon.png"
       launcher={StudentPwaInstallLauncher}
     />

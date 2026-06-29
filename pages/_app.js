@@ -261,28 +261,28 @@ export default function MyApp({ Component, pageProps }) {
         {isStudentPwaInstallMode ? (
           <>
             <meta name="theme-color" content={BROWSER_THEME_COLOR_BRIGHT} />
-            <meta name="apple-mobile-web-app-title" content="LEO K" />
+            <meta name="apple-mobile-web-app-title" content="LEO KIDS" />
             <meta name="msapplication-TileColor" content={BROWSER_THEME_COLOR_BRIGHT} />
             <meta name="msapplication-TileImage" content="/icons/child/mstile-150x150.png" />
           </>
         ) : isParentPwaInstallMode ? (
           <>
             <meta name="theme-color" content="#0d9488" />
-            <meta name="apple-mobile-web-app-title" content="P LEO K" />
+            <meta name="apple-mobile-web-app-title" content="P LEO KIDS" />
             <meta name="msapplication-TileColor" content="#0d9488" />
             <meta name="msapplication-TileImage" content="/icons/parent/mstile-150x150.png" />
           </>
         ) : isTeacherPwaInstallMode ? (
           <>
             <meta name="theme-color" content="#4338ca" />
-            <meta name="apple-mobile-web-app-title" content="T LEO K" />
+            <meta name="apple-mobile-web-app-title" content="T LEO KIDS" />
             <meta name="msapplication-TileColor" content="#4338ca" />
             <meta name="msapplication-TileImage" content="/icons/teacher/mstile-150x150.png" />
           </>
         ) : (
           <>
             <meta name="theme-color" content={BROWSER_THEME_COLOR_BRIGHT} />
-            <meta name="apple-mobile-web-app-title" content="LEO K" />
+            <meta name="apple-mobile-web-app-title" content="LEO KIDS" />
             <meta name="msapplication-TileColor" content={BROWSER_THEME_COLOR_BRIGHT} />
           </>
         )}

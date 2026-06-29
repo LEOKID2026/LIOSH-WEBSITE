@@ -102,7 +102,7 @@ export default function InstallAppPrompt() {
             </svg>
           </div>
           <div className="flex-1">
-            <h3 className="text-lg font-bold text-white mb-1">התקן את LEO K</h3>
+            <h3 className="text-lg font-bold text-white mb-1">התקן את LEO KIDS</h3>
             <p className="text-sm text-white/90 mb-3">
               {isIOS
                 ? "הוסף את האפליקציה למסך הבית לחוויה טובה יותר"

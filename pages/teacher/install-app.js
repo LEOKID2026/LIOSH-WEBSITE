@@ -10,10 +10,10 @@ export default function TeacherPwaInstallPage() {
   return (
     <PwaInstallPageShell
       portal="teacher"
-      badge="T LEO K"
+      badge="T LEO KIDS"
       title="התקנת אפליקציה למורים"
-      pageTitle="T LEO K — התקנה"
-      appleTitle="T LEO K"
+      pageTitle="T LEO KIDS — התקנה"
+      appleTitle="T LEO KIDS"
       appleTouchIcon="/icons/teacher/apple-touch-icon.png"
       launcher={TeacherPwaInstallLauncher}
     />

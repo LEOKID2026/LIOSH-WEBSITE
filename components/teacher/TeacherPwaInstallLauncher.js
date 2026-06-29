@@ -91,19 +91,19 @@ export default function TeacherPwaInstallLauncher({ isBright = false }) {
 
   if (runningStandalone || installConfirmed) {
     return (
-      <p className={T.successMsg}>T LEO K מותקנת. פתחו את האייקון T LEO K ממסך הבית.</p>
+      <p className={T.successMsg}>T LEO KIDS מותקנת. פתחו את האייקון T LEO KIDS ממסך הבית.</p>
     );
   }
 
   return (
     <div className="flex w-full max-w-xs flex-col items-center gap-4">
       <button type="button" onClick={handleInstallClick} className={T.installBtn}>
-        התקן T LEO K
+        התקן T LEO KIDS
       </button>
 
       {promptAccepted ? (
         <p className={T.infoMsg}>
-          Chrome אישר את ההתקנה. אם האייקון T LEO K לא הופיע במסך הבית תוך דקה, רענן את הדף ונסה
+          Chrome אישר את ההתקנה. אם האייקון T LEO KIDS לא הופיע במסך הבית תוך דקה, רענן את הדף ונסה
           שוב.
         </p>
       ) : null}
@@ -114,7 +114,7 @@ export default function TeacherPwaInstallLauncher({ isBright = false }) {
             ? "חלון ההתקנה כבר נוצל. רענן את הדף כדי לנסות שוב, אם Chrome עדיין מאפשר."
             : unavailableReason === "error"
               ? "חלון ההתקנה נכשל. רענן את הדף ונסה שוב."
-              : "Chrome לא הציע חלון התקנה ל-T LEO K כרגע. ודא/י שהאפליקציה לא מותקנת כבר, ונסה/י רענון."}
+              : "Chrome לא הציע חלון התקנה ל-T LEO KIDS כרגע. ודא/י שהאפליקציה לא מותקנת כבר, ונסה/י רענון."}
         </p>
       ) : null}
     </div>

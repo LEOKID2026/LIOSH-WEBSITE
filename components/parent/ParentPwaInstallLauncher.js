@@ -92,19 +92,19 @@ export default function ParentPwaInstallLauncher({ isBright = false }) {
 
   if (runningStandalone || installConfirmed) {
     return (
-      <p className={T.successMsg}>P LEO K מותקנת. פתחי את האייקון P LEO K ממסך הבית.</p>
+      <p className={T.successMsg}>P LEO KIDS מותקנת. פתחי את האייקון P LEO KIDS ממסך הבית.</p>
     );
   }
 
   return (
     <div className="flex w-full max-w-xs flex-col items-center gap-4">
       <button type="button" onClick={handleInstallClick} className={T.installBtn}>
-        התקן P LEO K
+        התקן P LEO KIDS
       </button>
 
       {promptAccepted ? (
         <p className={T.infoMsg}>
-          Chrome אישר את ההתקנה. אם האייקון P LEO K לא הופיע במסך הבית תוך דקה, רענן את הדף ונסה
+          Chrome אישר את ההתקנה. אם האייקון P LEO KIDS לא הופיע במסך הבית תוך דקה, רענן את הדף ונסה
           שוב. אם עדיין אין אייקון — הסר התקנות קודמות של האתר מהגדרות האפליקציות.
         </p>
       ) : null}
@@ -115,7 +115,7 @@ export default function ParentPwaInstallLauncher({ isBright = false }) {
             ? "חלון ההתקנה כבר נוצל. רענן את הדף כדי לנסות שוב, אם Chrome עדיין מאפשר."
             : unavailableReason === "error"
               ? "חלון ההתקנה נכשל. רענן את הדף ונסה שוב."
-              : "Chrome לא הציע חלון התקנה ל-P LEO K כרגע. ודא/י ש-LEO K מותקנת, ונסה/י רענון — שתי האפליקציות אמורות להיות נפרדות."}
+              : "Chrome לא הציע חלון התקנה ל-P LEO KIDS כרגע. ודא/י ש-LEO KIDS מותקנת, ונסה/י רענון — שתי האפליקציות אמורות להיות נפרדות."}
         </p>
       ) : null}
     </div>

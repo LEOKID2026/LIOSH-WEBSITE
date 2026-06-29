@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.leok.kids',
-  appName: 'LEO K',
+  appName: 'LEO KIDS',
   webDir: 'out',
   server: {
     url: 'https://liosh-website.vercel.app',

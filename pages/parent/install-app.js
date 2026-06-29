@@ -10,10 +10,10 @@ export default function ParentPwaInstallPage() {
   return (
     <PwaInstallPageShell
       portal="parent"
-      badge="P LEO K"
+      badge="P LEO KIDS"
       title="התקנת אפליקציה להורים"
-      pageTitle="P LEO K — התקנה"
-      appleTitle="P LEO K"
+      pageTitle="P LEO KIDS — התקנה"
+      appleTitle="P LEO KIDS"
       appleTouchIcon="/icons/parent/apple-touch-icon.png"
       launcher={ParentPwaInstallLauncher}
     />
