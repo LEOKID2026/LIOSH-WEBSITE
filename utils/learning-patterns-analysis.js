@@ -338,6 +338,8 @@ const SUBJECT_LABEL_HE = {
   science: "מדעים",
   hebrew: "עברית",
   "moledet-geography": "מולדת וגאוגרפיה",
+  moledet: "מולדת",
+  geography: "גאוגרפיה",
 };
 
 /** Narrative caps (professional profile) */

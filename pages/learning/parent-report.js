@@ -30,6 +30,11 @@ import {
   MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID,
   moledetGeographyReportTopicKeyPrefix,
 } from "../../lib/learning-shared/moledet-geography-subject-id.js";
+import {
+  enrichDailyActivityWithVisualStrands,
+  splitMoledetGeographyReportForDisplay,
+  VISUAL_STRAND_LABEL_HE,
+} from "../../lib/learning-shared/moledet-geography-display.js";
 
 const ParentCopilotShellLazy = dynamic(
   () => import("../../components/parent-copilot/parent-copilot-shell.jsx"),
@@ -194,6 +199,7 @@ const SUBJECT_CHART_COLORS = {
   science: "#22c55e",
   hebrew: "#f97316",
   moledet: "#06b6d4",
+  geography: "#14b8a6",
 };
 
 function sumTopicMapMinutes(map) {
@@ -273,6 +279,7 @@ function diagnosticCardConfidenceLabelHe(raw) {
 function buildSubjectOverviewRows(report) {
   if (!report?.summary) return [];
   const s = report.summary;
+  const mgVisual = splitMoledetGeographyReportForDisplay(report);
   return [
     {
       key: "math",
@@ -316,11 +323,19 @@ function buildSubjectOverviewRows(report) {
     },
     {
       key: "moledet",
-      name: "מולדת וגאוגרפיה",
-      minutes: sumTopicMapMinutes(report.moledetGeographyTopics),
-      questions: Number(s.moledetGeographyQuestions) || 0,
-      accuracy: Math.round(Number(s.moledetGeographyAccuracy) || 0),
+      name: VISUAL_STRAND_LABEL_HE.moledet,
+      minutes: mgVisual.moledetStats.minutes,
+      questions: mgVisual.moledetStats.questions,
+      accuracy: mgVisual.moledetStats.accuracy,
       fill: SUBJECT_CHART_COLORS.moledet,
+    },
+    {
+      key: "geography",
+      name: VISUAL_STRAND_LABEL_HE.geography,
+      minutes: mgVisual.geographyStats.minutes,
+      questions: mgVisual.geographyStats.questions,
+      accuracy: mgVisual.geographyStats.accuracy,
+      fill: SUBJECT_CHART_COLORS.geography,
     },
   ];
 }
@@ -616,10 +631,16 @@ const TOPIC_BAR_SUBJECT_CARDS = [
   { title: "מדעים — דיוק לפי נושא", mapKey: "scienceTopics", prefix: "science_", border: "border-green-400/25" },
   { title: "עברית — דיוק לפי נושא", mapKey: "hebrewTopics", prefix: "hebrew_", border: "border-orange-400/25" },
   {
-    title: "מולדת וגאוגרפיה — דיוק לפי נושא",
-    mapKey: "moledetGeographyTopics",
+    title: `${VISUAL_STRAND_LABEL_HE.moledet} — דיוק לפי נושא`,
+    mapKey: "_visualMoledetTopics",
     prefix: moledetGeographyReportTopicKeyPrefix(),
     border: "border-cyan-400/25",
+  },
+  {
+    title: `${VISUAL_STRAND_LABEL_HE.geography} — דיוק לפי נושא`,
+    mapKey: "_visualGeographyTopics",
+    prefix: moledetGeographyReportTopicKeyPrefix(),
+    border: "border-teal-400/25",
   },
 ];
 
@@ -663,11 +684,22 @@ const MASTER_BAR_CHART_GEOMETRY = {
   chartHostWidthSlopPx: 6,
 };
 
+function augmentReportWithVisualMgSplit(report) {
+  if (!report) return report;
+  const split = splitMoledetGeographyReportForDisplay(report);
+  return {
+    ...report,
+    _visualMoledetTopics: split.moledetTopics,
+    _visualGeographyTopics: split.geographyTopics,
+  };
+}
+
 function collectAllTopicChartLabels(report) {
   if (!report) return [];
+  const augmented = augmentReportWithVisualMgSplit(report);
   const out = [];
   for (const cfg of TOPIC_BAR_SUBJECT_CARDS) {
-    const map = report[cfg.mapKey];
+    const map = augmented[cfg.mapKey];
     if (!map || typeof map !== "object") continue;
     for (const [k, data] of Object.entries(map)) {
       const label = parentReportChartLabelFromAllItemKey(`${cfg.prefix}${k}`, data);
@@ -847,6 +879,23 @@ export default function ParentReport() {
     enableParentCopilotOnShort && !isTeacherSource;
 
   const [report, setReport] = useState(null);
+  const mgVisualSplit = useMemo(
+    () => (report ? splitMoledetGeographyReportForDisplay(report) : null),
+    [report]
+  );
+  const reportWithVisualMg = useMemo(() => {
+    if (!report) return null;
+    const split = splitMoledetGeographyReportForDisplay(report);
+    return {
+      ...report,
+      _visualMoledetTopics: split.moledetTopics,
+      _visualGeographyTopics: split.geographyTopics,
+    };
+  }, [report]);
+  const dailyActivityVisual = useMemo(
+    () => (report ? enrichDailyActivityWithVisualStrands(report.dailyActivity, report) : []),
+    [report]
+  );
   const [shortContractTop, setShortContractTop] = useState(null);
   /** Same shape as detailed report — required by ParentCopilotShell / truth packet builders. */
   const [copilotDetailedPayload, setCopilotDetailedPayload] = useState(null);
@@ -2162,16 +2211,32 @@ export default function ParentReport() {
             
             <div className="parent-report-print-summary-card bg-cyan-500/20 border border-cyan-400/50 rounded-lg p-2 md:p-4 text-center">
               <div className="parent-report-print-summary-label text-xs md:text-sm text-white/60 mb-1">
-                🗺️ מולדת וגאוגרפיה
+                🏠 {VISUAL_STRAND_LABEL_HE.moledet}
               </div>
               <div className="parent-report-print-summary-stat text-base md:text-lg font-bold text-cyan-300">
-                {report.summary.moledetGeographyQuestions || 0} שאלות
+                {mgVisualSplit?.moledetStats.questions || 0} שאלות
               </div>
               <div className="parent-report-print-muted-text text-xs text-white/80">
                 {subjectPracticeSecondaryLineHe(
-                  report.summary.moledetGeographyQuestions,
-                  report.summary.moledetGeographyCorrect,
-                  report.summary.moledetGeographyAccuracy
+                  mgVisualSplit?.moledetStats.questions,
+                  mgVisualSplit?.moledetStats.correct,
+                  mgVisualSplit?.moledetStats.accuracy
+                )}
+              </div>
+            </div>
+
+            <div className="parent-report-print-summary-card bg-teal-500/20 border border-teal-400/50 rounded-lg p-2 md:p-4 text-center">
+              <div className="parent-report-print-summary-label text-xs md:text-sm text-white/60 mb-1">
+                🗺️ {VISUAL_STRAND_LABEL_HE.geography}
+              </div>
+              <div className="parent-report-print-summary-stat text-base md:text-lg font-bold text-teal-300">
+                {mgVisualSplit?.geographyStats.questions || 0} שאלות
+              </div>
+              <div className="parent-report-print-muted-text text-xs text-white/80">
+                {subjectPracticeSecondaryLineHe(
+                  mgVisualSplit?.geographyStats.questions,
+                  mgVisualSplit?.geographyStats.correct,
+                  mgVisualSplit?.geographyStats.accuracy
                 )}
               </div>
             </div>
@@ -2907,10 +2972,10 @@ export default function ParentReport() {
             </div>
           )}
 
-          {/* טבלת נושאים מולדת וגאוגרפיה */}
-          {Object.keys(report.moledetGeographyTopics || {}).length > 0 && (
+          {/* טבלת נושאים מולדת */}
+          {Object.keys(mgVisualSplit?.moledetTopics || {}).length > 0 && (
             <div className="bg-black/30 border border-white/10 rounded-lg p-2 md:p-4 mb-3 md:mb-6 avoid-break">
-              <h2 className="text-base md:text-xl font-bold mb-2 md:mb-3 text-center">🗺️ התקדמות במולדת וגאוגרפיה</h2>
+              <h2 className="text-base md:text-xl font-bold mb-2 md:mb-3 text-center">🏠 התקדמות ב{VISUAL_STRAND_LABEL_HE.moledet}</h2>
               {/* Desktop Table */}
               <div className="parent-report-desktop-only hidden md:block mt-2">
                 <table className="w-full table-fixed text-sm parent-report-subject-table">
@@ -2941,7 +3006,7 @@ export default function ParentReport() {
                     </tr>
                   </thead>
                   <tbody>
-                    {Object.entries(report.moledetGeographyTopics)
+                    {Object.entries((mgVisualSplit?.moledetTopics || {}))
                       .sort(([_, a], [__, b]) => b.questions - a.questions)
                       .map(([topic, data]) => (
                         <tr key={topic} className="border-b border-white/10">
@@ -3001,7 +3066,7 @@ export default function ParentReport() {
               </div>
               {/* Mobile Cards */}
               <div className="parent-report-mobile-only md:hidden space-y-3">
-                {Object.entries(report.moledetGeographyTopics)
+                {Object.entries((mgVisualSplit?.moledetTopics || {}))
                   .sort(([_, a], [__, b]) => b.questions - a.questions)
                   .map(([topic, data]) => (
                     <div key={topic} className="bg-black/40 border border-white/20 rounded-lg p-3">
@@ -3031,6 +3096,151 @@ export default function ParentReport() {
                         </div>
                         <div>
                           <span className="text-white/60">דיוק:</span> <span className={`font-bold ${
+                            data.accuracy >= 90 ? "text-emerald-400" :
+                            data.accuracy >= 70 ? "text-yellow-400" :
+                            "text-red-400"
+                          }`}>{data.accuracy}%</span>
+                        </div>
+                      </div>
+                      <div className="mt-2 text-center">
+                        {data.excellent ? (
+                          <span className="text-emerald-400 text-xs">✅ מצוין</span>
+                        ) : data.needsPractice ? (
+                          <span className="text-red-400 text-xs">⚠️ דורש תרגול</span>
+                        ) : (
+                          <span className="text-yellow-400 text-xs">👍 טוב</span>
+                        )}
+                        <ParentReportRowDiagnosticsFootnote data={data} />
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
+
+          {/* טבלת נושאים גאוגרפיה */}
+          {Object.keys(mgVisualSplit?.geographyTopics || {}).length > 0 && (
+            <div className="bg-black/30 border border-white/10 rounded-lg p-2 md:p-4 mb-3 md:mb-6 avoid-break">
+              <h2 className="text-base md:text-xl font-bold mb-2 md:mb-3 text-center">🗺️ התקדמות ב{VISUAL_STRAND_LABEL_HE.geography}</h2>
+              <div className="parent-report-desktop-only hidden md:block mt-2">
+                <table className="w-full table-fixed text-sm parent-report-subject-table">
+                  <colgroup>
+                    <col style={{ width: "15%" }} />
+                    <col style={{ width: "8%" }} />
+                    <col style={{ width: "4%" }} />
+                    <col style={{ width: "12%" }} />
+                    <col style={{ width: "15%" }} />
+                    <col style={{ width: "10%" }} />
+                    <col style={{ width: "8%" }} />
+                    <col style={{ width: "8%" }} />
+                    <col style={{ width: "10%" }} />
+                    <col style={{ width: "10%" }} />
+                  </colgroup>
+                  <thead>
+                    <tr className="border-b border-white/20">
+                      <th className="text-right py-1.5 px-0.5 whitespace-nowrap">נושא</th>
+                      <th className="text-center py-1.5 px-0.5 whitespace-nowrap">רמה</th>
+                      <th className="text-center py-1.5 px-0.5 whitespace-nowrap">כיתה</th>
+                      <th className="text-center py-1.5 px-0.5 whitespace-nowrap">מצב</th>
+                      <th className="text-center py-1.5 px-0.5 whitespace-nowrap">תאריך אחרון</th>
+                      <th className="text-center py-1.5 px-0.5 whitespace-nowrap">זמן</th>
+                      <th className="text-center py-1.5 px-0.5 whitespace-nowrap">שאלות</th>
+                      <th className="text-center py-1.5 px-0.5 whitespace-nowrap">נכון</th>
+                      <th className="text-center py-1.5 px-0.5 whitespace-nowrap">דיוק</th>
+                      <th className="text-center py-1.5 px-0.5 whitespace-nowrap">סטטוס</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Object.entries(mgVisualSplit?.geographyTopics || {})
+                      .sort(([_, a], [__, b]) => b.questions - a.questions)
+                      .map(([topic, data]) => (
+                        <tr key={topic} className="border-b border-white/10">
+                          <td className="text-right align-top py-1.5 px-1 min-w-0">
+                            <span className="text-right break-words">
+                              {subjectTopicLabelForParentHe(MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID, data, topic)}
+                            </span>
+                          </td>
+                          <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
+                            {formatParentReportLevelHe(data.levelKey || data.level)}
+                          </td>
+                          <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
+                            {formatParentReportGradeHe(data.gradeKey || data.grade)}
+                          </td>
+                          <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
+                            {formatMode(data.mode)}
+                          </td>
+                          <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap tabular-nums">
+                            {data.lastSessionAt ?? "לא זמין"}
+                          </td>
+                          <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
+                            {data.timeMinutes} דק'
+                          </td>
+                          <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
+                            {data.questions}
+                          </td>
+                          <td className="py-1.5 px-0.5 text-center text-emerald-400 text-[11px] md:text-sm whitespace-nowrap">
+                            {data.correct}
+                          </td>
+                          <td
+                            className={`py-1.5 px-0.5 text-center font-bold text-[11px] md:text-sm whitespace-nowrap ${
+                              data.accuracy >= 90
+                                ? "text-emerald-400"
+                                : data.accuracy >= 70
+                                ? "text-yellow-400"
+                                : "text-red-400"
+                            }`}
+                          >
+                            {data.accuracy}%
+                          </td>
+                          <td className="py-1.5 px-0.5 text-center text-[10px] md:text-sm whitespace-nowrap align-top">
+                            <div className="flex flex-col items-center">
+                              {data.excellent ? (
+                                <span className="text-emerald-400">✅</span>
+                              ) : data.needsPractice ? (
+                                <span className="text-red-400">⚠️</span>
+                              ) : (
+                                <span className="text-yellow-400">👍</span>
+                              )}
+                              <ParentReportRowDiagnosticsFootnote data={data} />
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="parent-report-mobile-only md:hidden space-y-3">
+                {Object.entries(mgVisualSplit?.geographyTopics || {})
+                  .sort(([_, a], [__, b]) => b.questions - a.questions)
+                  .map(([topic, data]) => (
+                    <div key={topic} className="bg-black/40 border border-white/20 rounded-lg p-3">
+                      <div className="font-semibold text-sm mb-2 text-teal-400">{subjectTopicLabelForParentHe(MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID, data, topic)}</div>
+                      <div className="grid grid-cols-2 gap-2 text-xs">
+                        <div>
+                          <span className="text-white/60">רמה:</span> <span className="text-white/90">{formatParentReportLevelHe(data.levelKey || data.level)}</span>
+                        </div>
+                        <div>
+                          <span className="text-white/60">כיתה:</span> <span className="text-white/90">{formatParentReportGradeHe(data.gradeKey || data.grade)}</span>
+                        </div>
+                        <div>
+                          <span className="text-white/60">מצב:</span> <span className="text-white/90">{formatMode(data.mode)}</span>
+                        </div>
+                        <div>
+                          <span className="text-white/60">תאריך אחרון:</span>{" "}
+                          <span className="text-white/90">{data.lastSessionAt ?? "לא זמין"}</span>
+                        </div>
+                        <div>
+                          <span className="text-white/60">זמן:</span> <span className="text-white/90">{data.timeMinutes} דק'</span>
+                        </div>
+                        <div>
+                          <span className="text-white/60">שאלות:</span> <span className="text-white/90">{data.questions}</span>
+                        </div>
+                        <div>
+                          <span className="text-white/60">נכון:</span> <span className="text-emerald-400">{data.correct}</span>
+                        </div>
+                        <div>
+                          <span className="text-white/60">דיוק:</span>{" "}
+                          <span className={`font-bold ${
                             data.accuracy >= 90 ? "text-emerald-400" :
                             data.accuracy >= 70 ? "text-yellow-400" :
                             "text-red-400"
@@ -3573,7 +3783,7 @@ export default function ParentReport() {
               </div>
             ) : (
               <>
-            {report.dailyActivity.length > 0 && (
+            {dailyActivityVisual.length > 0 && (
               <div className="parent-report-chart-card bg-black/30 border border-white/10 rounded-xl p-3 md:p-5 avoid-break shadow-sm shadow-black/20">
                 <div className="text-center mb-1 md:mb-2">
                   <h2 className="parent-report-print-chart-title text-base md:text-xl font-bold tracking-tight">
@@ -3586,7 +3796,7 @@ export default function ParentReport() {
                 <div className="w-full" style={{ minHeight: isMobile ? 240 : 300 }}>
                   <ResponsiveContainer width="100%" height={isMobile ? 240 : 300}>
                     <LineChart
-                      data={report.dailyActivity}
+                      data={dailyActivityVisual}
                       margin={{ top: 4, right: 8, left: 0, bottom: 4 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" stroke="#ffffff22" vertical={false} />
@@ -3660,7 +3870,7 @@ export default function ParentReport() {
               </div>
             )}
 
-            {report.dailyActivity.length > 0 && (
+            {dailyActivityVisual.length > 0 && (
               <div className="parent-report-chart-card bg-black/30 border border-white/10 rounded-xl p-3 md:p-5 avoid-break shadow-sm shadow-black/20">
                 <div className="text-center mb-1 md:mb-2">
                   <h2 className="parent-report-print-chart-title text-base md:text-xl font-bold tracking-tight">
@@ -3673,7 +3883,7 @@ export default function ParentReport() {
                 <div className="w-full" style={{ minHeight: isMobile ? 260 : 320 }}>
                   <ResponsiveContainer width="100%" height={isMobile ? 260 : 320}>
                     <LineChart
-                      data={report.dailyActivity}
+                      data={dailyActivityVisual}
                       margin={{ top: 4, right: 8, left: 0, bottom: 4 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" stroke="#ffffff22" vertical={false} />
@@ -3768,10 +3978,19 @@ export default function ParentReport() {
                       />
                       <Line
                         type="monotone"
-                        dataKey="moledetGeographyTopics"
+                        dataKey="moledetVisualTopics"
                         stroke={SUBJECT_CHART_COLORS.moledet}
                         strokeWidth={1.8}
-                        name="מולדת וגאוגרפיה"
+                        name={VISUAL_STRAND_LABEL_HE.moledet}
+                        dot={{ r: 2 }}
+                        activeDot={{ r: 4 }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="geographyVisualTopics"
+                        stroke={SUBJECT_CHART_COLORS.geography}
+                        strokeWidth={1.8}
+                        name={VISUAL_STRAND_LABEL_HE.geography}
                         dot={{ r: 2 }}
                         activeDot={{ r: 4 }}
                       />
@@ -3918,7 +4137,7 @@ export default function ParentReport() {
 
             {masterBarChartGeometry &&
               TOPIC_BAR_SUBJECT_CARDS.map((cfg) => {
-                const map = report[cfg.mapKey];
+                const map = (reportWithVisualMg || report)[cfg.mapKey];
                 if (!map || Object.keys(map).length === 0) return null;
                 const rows = buildTopicRowsForChart(map, cfg.prefix);
                 const M = masterBarChartGeometry;

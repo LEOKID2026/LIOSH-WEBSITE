@@ -21,6 +21,8 @@ export const SUBJECT_VISIBLE_LABELS_HE = Object.freeze({
   science: ["מדעים"],
   hebrew: ["עברית"],
   "moledet-geography": ["מולדת וגאוגרפיה"],
+  moledet: ["מולדת"],
+  geography: ["גאוגרפיה"],
 });
 
 /** Primary label per subject id (matches subject cards). */
@@ -31,6 +33,8 @@ export const SUBJECT_LABEL_BY_ID = Object.freeze({
   science: "מדעים",
   hebrew: "עברית",
   "moledet-geography": "מולדת וגאוגרפיה",
+  moledet: "מולדת",
+  geography: "גאוגרפיה",
 });
 
 export const SUBJECT_EVIDENCE_TIER = Object.freeze({

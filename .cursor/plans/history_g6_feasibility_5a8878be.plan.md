@@ -1,6 +1,6 @@
 ---
 name: History G6 Standalone Plan
-overview: "תוכנית ביצוע (ללא קוד): היסטוריה = מקצוע עצמאי רגיל (`history` / \"היסטוריה\"), כיתה ו׳ בלבד, כרטיס ו-master עצמאיים, ספר/יחידות, 600–800 שאלות, אבחון/דוחות/Copilot/QA — 8 שלבים."
+overview: "תוכנית ביצוע סופית (ללא קוד): היסטוריה = מקצוע עצמאי (`history` / \"היסטוריה\"), כיתה ו׳ בלבד, 5 topics + 16 subtopics, 600–800 שאלות, 8 שלבים — scope היסטוריה בלבד."
 todos:
   - id: phase-1-registry
     content: "שלב 1 — registry/gates: history ב-allowlists, תווית \"היסטוריה\", grade gate G6, הסתרה G1–G5"
@@ -12,10 +12,10 @@ todos:
     content: "שלב 3 — בנק שאלות: ≥600 (יעד 800), metadata מלא"
     status: pending
   - id: phase-4-ui
-    content: "שלב 4 — history-master + כרטיס תלמיד G6 (ללא Hub)"
+    content: "שלב 4 — history-master + כרטיס תלמיד G6"
     status: pending
   - id: phase-5-diagnostics
-    content: "שלב 5 — diagnostics: taxonomy H-01…H-09, bridge, MG-04 decoupling"
+    content: "שלב 5 — diagnostics history בלבד: taxonomy H-01…H-09, bridge, enrichment, harness"
     status: pending
   - id: phase-6-reports
     content: "שלב 6 — דוחות הורים + פעילות אישית"
@@ -29,15 +29,25 @@ todos:
 isProject: false
 ---
 
-# תוכנית ביצוע: היסטוריה — מקצוע עצמאי, כיתה ו׳
+# תוכנית ביצוע סופית: היסטוריה — מקצוע עצמאי, כיתה ו׳
 
-**סטטוס:** החלטה סופית — **לא לבצע קוד, commit, migrations, או שינוי UI בפועל.**
+**סטטוס:** מאושר עקרונית — **לא לבצע קוד, commit, migrations, או שינוי UI בפועל.**
+
+**הערה:** תוכנית זו מכסה **אך ורק** את מקצוע ההיסטוריה. אין בה פעולות על מקצועות אחרים.
+
+---
+
+## Guardrail — הפרדה מלאה
+
+> **לוודא שהיסטוריה נשמרת כמקצוע עצמאי, ללא ערבוב אבחונים, דוחות, שאלות או metadata עם מקצועות אחרים.**
+
+חל על כל שלב: `subject=history`, maps/mistakes/taxonomy/reports/copilot scope — **history בלבד**.
 
 ---
 
 ## החלטה סופית
 
-**היסטוריה = מקצוע עצמאי רגיל באתר** — כמו מתמטיקה, מדעים וכו'.
+**היסטוריה = מקצוע עצמאי רגיל באתר.**
 
 | פרמטר | ערך |
 |--------|-----|
@@ -46,14 +56,11 @@ isProject: false
 | **כיתה** | **ו׳ בלבד** — מוצג ב-G6, **מוסתר** בא׳–ה׳ |
 | **נושא על (תוכנית לימודים)** | העולם היווני־רומי והיהודים — 60 שעות |
 | **master** | `/learning/history-master` |
-| **הפרדה מ-moledet** | מקצוע, אבחון, דוחות, בנק שאלות — **נפרדים לחלוטין** |
-
-**לא בתוכנית:** Hub "מולדת, גאוגרפיה והיסטוריה", `mgh-g6-display-group`, שילוב תצוגה עם `moledet_geography`.
 
 ```
 מסך ילד (G6)                    מסך ילד (G1–G5)
 ┌─────────┐ ┌─────────┐         ┌─────────┐
-│ מתמטיקה │ │  מדעים  │         │ מתמטיקה │  … (6 מקצועות — ללא היסטוריה)
+│ מתמטיקה │ │  מדעים  │         │ מתמטיקה │  … (ללא כרטיס היסטוריה)
 │   …     │ │   …     │         │   …     │
 │היסטוריה │ ← כרטיס 7          └─────────┘
 └─────────┘
@@ -123,7 +130,7 @@ isProject: false
 | `hist_simple_source` | הבנת מקור היסטורי פשוט | `hist_source_primary_secondary` |
 | `hist_past_present_link` | קשר בין עבר להווה | `hist_legacy_today` |
 
-**Prefix:** `hist_*` בלבד — לא `moledet_geo_*`.
+**Prefix:** `hist_*` בלבד.
 
 ---
 
@@ -143,7 +150,7 @@ isProject: false
 | `expectedErrorTypes` | מערך tags |
 | `diagnosticPattern` / `patternFamily` | לפי contract קיים |
 
-Enrichment: `canonicalMetadata` דרך [`lib/learning/history-canonical-metadata.js`](lib/learning/history-canonical-metadata.js) (חדש).
+Enrichment: `canonicalMetadata` דרך `lib/learning/history-canonical-metadata.js` (חדש).
 
 ---
 
@@ -160,7 +167,7 @@ Enrichment: `canonicalMetadata` דרך [`lib/learning/history-canonical-metadata
 
 ---
 
-## קבצים חדשים (משוער ~18)
+## קבצים חדשים (~18)
 
 | קובץ | תפקיד |
 |------|--------|
@@ -185,81 +192,72 @@ Enrichment: `canonicalMetadata` דרך [`lib/learning/history-canonical-metadata
 
 ---
 
-## קבצים קיימים לעדכון (משוער ~45)
+## קבצים קיימים לעדכון (~45)
 
-### Registry / labels / gates (~10)
-- [`lib/learning-supabase/learning-activity.js`](lib/learning-supabase/learning-activity.js)
-- [`lib/platform-ui/hebrew-display-labels.js`](lib/platform-ui/hebrew-display-labels.js) — `history: "היסטוריה"`, `SUBJECT_ORDER`
-- [`lib/learning-shared/student-learning-profile-model.js`](lib/learning-shared/student-learning-profile-model.js)
-- [`lib/learning-client/studentHomeDashboardClient.js`](lib/learning-client/studentHomeDashboardClient.js) — כרטיס G6 + gate
-- [`pages/learning/index.js`](pages/learning/index.js)
-- [`lib/teacher-portal/teacher-ui.he.js`](lib/teacher-portal/teacher-ui.he.js)
-- [`lib/school-portal/school-drilldown.js`](lib/school-portal/school-drilldown.js)
-- [`lib/school-server/school-subjects.server.js`](lib/school-server/school-subjects.server.js)
+רק הוספות/הרחבות **ל-history** — ללא שינוי לוגיקה של מקצועות אחרים.
 
-### Curriculum / QA matrix (~4)
-- [`lib/teacher-portal/teacher-class-topic-options.js`](lib/teacher-portal/teacher-class-topic-options.js)
-- [`scripts/lib/qa-curriculum-matrix.mjs`](scripts/lib/qa-curriculum-matrix.mjs)
-- [`docs/diagnostics/QUESTION_METADATA_CONTRACT.md`](docs/diagnostics/QUESTION_METADATA_CONTRACT.md)
+### Registry / labels / gates (~8)
+- `lib/learning-supabase/learning-activity.js` — הוספת `history`
+- `lib/platform-ui/hebrew-display-labels.js` — `history: "היסטוריה"`
+- `lib/learning-shared/student-learning-profile-model.js`
+- `lib/learning-client/studentHomeDashboardClient.js` — כרטיס G6 + gate
+- `pages/learning/index.js`
+- `lib/teacher-portal/teacher-ui.he.js`
+- `lib/school-portal/school-drilldown.js`
+- `lib/school-server/school-subjects.server.js`
+
+### Curriculum / QA matrix (~3)
+- `lib/teacher-portal/teacher-class-topic-options.js` — case `history`
+- `scripts/lib/qa-curriculum-matrix.mjs` — case `history`
+- `docs/diagnostics/QUESTION_METADATA_CONTRACT.md` — דוגמאות history
 
 ### Launch (~3)
-- [`data/launch-readiness/topic-launch-registry.json`](data/launch-readiness/topic-launch-registry.json)
-- [`lib/launch-readiness/topic-launch-policy.js`](lib/launch-readiness/topic-launch-policy.js)
-- [`scripts/qa/build-topic-launch-registry.mjs`](scripts/qa/build-topic-launch-registry.mjs)
+- `data/launch-readiness/topic-launch-registry.json`
+- `lib/launch-readiness/topic-launch-policy.js`
+- `scripts/qa/build-topic-launch-registry.mjs`
 
-### Diagnostics (~8)
-- [`utils/diagnostic-engine-v2/subject-ids.js`](utils/diagnostic-engine-v2/subject-ids.js)
-- [`utils/diagnostic-engine-v2/taxonomy-registry.js`](utils/diagnostic-engine-v2/taxonomy-registry.js)
-- [`utils/diagnostic-engine-v2/topic-taxonomy-bridge.js`](utils/diagnostic-engine-v2/topic-taxonomy-bridge.js) — `HISTORY_TOPIC_TO_IDS`; **הסר MG-04 מ-moledet homeland**
-- [`utils/diagnostic-engine-v2/topic-taxonomy-metadata-enrichment.js`](utils/diagnostic-engine-v2/topic-taxonomy-metadata-enrichment.js)
-- [`utils/adaptive-learning-planner/diagnostic-unit-skill-alignment.js`](utils/adaptive-learning-planner/diagnostic-unit-skill-alignment.js)
-- [`lib/learning/question-metadata-normalizer.js`](lib/learning/question-metadata-normalizer.js)
-- [`lib/classroom-activities/classroom-skill-labels-he.js`](lib/classroom-activities/classroom-skill-labels-he.js)
+### Diagnostics — history בלבד (~7)
+- `utils/diagnostic-engine-v2/subject-ids.js` — הוספת `"history"`
+- `utils/diagnostic-engine-v2/taxonomy-registry.js` — import history rows
+- `utils/diagnostic-engine-v2/topic-taxonomy-bridge.js` — **`HISTORY_TOPIC_TO_IDS` בלבד**
+- `utils/diagnostic-engine-v2/topic-taxonomy-metadata-enrichment.js` — branch `history`
+- `utils/adaptive-learning-planner/diagnostic-unit-skill-alignment.js` — alignment history
+- `lib/learning/question-metadata-normalizer.js` — subject `history`
+- `lib/classroom-activities/classroom-skill-labels-he.js` — תוויות `hist_*`
 
-### Reports (~8)
-- [`lib/parent-server/report-data-aggregate.server.js`](lib/parent-server/report-data-aggregate.server.js)
-- [`utils/parent-report-v2.js`](utils/parent-report-v2.js)
-- [`utils/detailed-parent-report.js`](utils/detailed-parent-report.js)
-- [`utils/parent-report-language/subject-evidence-policy.js`](utils/parent-report-language/subject-evidence-policy.js)
-- [`utils/parent-report-language/grade-aware-recommendation-templates.js`](utils/parent-report-language/grade-aware-recommendation-templates.js)
-- [`pages/learning/parent-report.js`](pages/learning/parent-report.js)
-- [`utils/parent-report-ui-explain-he.js`](utils/parent-report-ui-explain-he.js)
+### Reports (~7)
+- `lib/parent-server/report-data-aggregate.server.js`
+- `utils/parent-report-v2.js`
+- `utils/detailed-parent-report.js`
+- `utils/parent-report-language/subject-evidence-policy.js`
+- `utils/parent-report-language/grade-aware-recommendation-templates.js` — H-01…H-09
+- `pages/learning/parent-report.js`
+- `utils/parent-report-ui-explain-he.js`
 
-### Parent activity (~5)
-- [`components/parent/AssignActivityModal.js`](components/parent/AssignActivityModal.js)
-- [`lib/parent-server/parent-activity.server.js`](lib/parent-server/parent-activity.server.js)
-- [`lib/classroom-activities/classroom-activities-preview.js`](lib/classroom-activities/classroom-activities-preview.js)
-- [`lib/classroom-activities/assigned-activity-topic-options.js`](lib/classroom-activities/assigned-activity-topic-options.js)
+### Parent activity (~4)
+- `components/parent/AssignActivityModal.js`
+- `lib/parent-server/parent-activity.server.js`
+- `lib/classroom-activities/classroom-activities-preview.js`
+- `lib/classroom-activities/assigned-activity-topic-options.js`
 
-### Copilot (~6)
-- [`utils/parent-copilot/scope-resolver.js`](utils/parent-copilot/scope-resolver.js)
-- [`utils/parent-copilot/truth-packet-v1.js`](utils/parent-copilot/truth-packet-v1.js)
-- [`utils/parent-copilot/contract-reader.js`](utils/parent-copilot/contract-reader.js)
-- [`pages/api/parent/copilot-turn.js`](pages/api/parent/copilot-turn.js)
-- [`lib/parent-copilot/copilot-turn-payload.server.js`](lib/parent-copilot/copilot-turn-payload.server.js)
+### Copilot (~5)
+- `utils/parent-copilot/scope-resolver.js`
+- `utils/parent-copilot/truth-packet-v1.js`
+- `utils/parent-copilot/contract-reader.js`
+- `pages/api/parent/copilot-turn.js`
+- `lib/parent-copilot/copilot-turn-payload.server.js`
 
-### QA (~10+)
-- [`scripts/question-bank-inventory-gate.mjs`](scripts/question-bank-inventory-gate.mjs)
-- [`scripts/diagnostic-engine-v2-harness.mjs`](scripts/diagnostic-engine-v2-harness.mjs)
-- [`scripts/qa/final-launch-smoke-five-subjects.mjs`](scripts/qa/final-launch-smoke-five-subjects.mjs)
-- [`scripts/parent-report-context-labeling-all-subjects.mjs`](scripts/parent-report-context-labeling-all-subjects.mjs)
-- [`scripts/virtual-student-qa/run.mjs`](scripts/virtual-student-qa/run.mjs)
-- [`scripts/launch-readiness/build-diagnostic-ground-truth-report.mjs`](scripts/launch-readiness/build-diagnostic-ground-truth-report.mjs)
-- [`scripts/launch-readiness/run-copilot-truth-prompts.mjs`](scripts/launch-readiness/run-copilot-truth-prompts.mjs)
-- [`scripts/verify-science-books.mjs`](scripts/verify-science-books.mjs) — pattern ל-`verify-history-g6-book.mjs` (חדש)
+### QA (~8)
+- `scripts/question-bank-inventory-gate.mjs` — `auditHistory()`
+- `scripts/diagnostic-engine-v2-harness.mjs` — fixtures history
+- `scripts/qa/final-launch-smoke-*.mjs` — smoke history
+- `scripts/parent-report-context-labeling-all-subjects.mjs`
+- `scripts/virtual-student-qa/run.mjs` — תרחישי G6 history
+- `scripts/launch-readiness/build-diagnostic-ground-truth-report.mjs`
+- `scripts/launch-readiness/run-copilot-truth-prompts.mjs`
+- **חדש:** `scripts/verify-history-g6-book.mjs`
 
-**סה"כ:** ~18 חדשים + ~45 עדכונים ≈ **~63 קבצים**.
-
-**לא נוגעים:** [`pages/learning/moledet-geography-master.js`](pages/learning/moledet-geography-master.js) (ללא שינוי), Hub, PWA, SW, משחקים, migrations.
-
----
-
-## מניעת ערבוב עם moledet_geography
-
-1. `history` = מקצוע **שביעי** — maps, mistakes, taxonomy, reports נפרדים
-2. **MG-04** ("היסטוריה מקומית") — להסיר מ-`homeland` ב-bridge moledet (שלב 5), לאחר audit
-3. Copilot: scope `history` — units רק מ-`subjectId === "history"`
-4. אין שינוי ל-`moledet_geography` content / labels / G2–G6 behavior
+**סה"כ:** ~18 חדשים + ~45 עדכונים ≈ **~63 קבצים** (scope history).
 
 ---
 
@@ -276,62 +274,123 @@ flowchart LR
   S7 --> S8[8 QA Launch]
 ```
 
+---
+
 ### שלב 1 — קטלוג / registry / gates
-- `history` ב-allowlists; תווית **"היסטוריה"**
-- `isHistoryGradeAllowed()` — G6=true, G1–G5=false
-- student home: כרטיס **נפרד** רק ב-G6
-- **Exit:** history מוכר בקוד; מוסתר G1–G5; moledet ללא שינוי
+
+**Scope:** הוספת `history` למערכת; grade gate G6.
+
+| פעולה | קבצים |
+|--------|--------|
+| `history` ב-allowlists | `learning-activity.js`, `student-learning-profile-model.js` |
+| תווית **"היסטוריה"** | `hebrew-display-labels.js` |
+| grade gate G6 | **חדש:** `history-curriculum-gates.js`, **חדש:** `history-subject-id.js` |
+| כרטיס תלמיד G6 | `studentHomeDashboardClient.js`, `pages/learning/index.js` |
+| teacher/school lists | `teacher-ui.he.js`, `school-drilldown.js`, `school-subjects.server.js` |
+
+**Exit criteria:**
+- [ ] `history` מוכר ב-allowlists
+- [ ] G6: כרטיס "היסטוריה" מופיע
+- [ ] G1–G5: כרטיס **לא** מופיע
+- [ ] Guardrail: אין ערבוב metadata עם מקצועות אחרים
+
+**מוכן לאישור ביצוע:** שלב זה בלבד.
+
+---
 
 ### שלב 2 — curriculum + skills + ספר
+
 - `history-curriculum.js`, `history-g6-content-map.js`
-- ספר G6: registry + nav + practice-map (mirror [`lib/learning-book/science-g6-registry.js`](lib/learning-book/science-g6-registry.js))
-- metadata contract + enricher
-- **Exit:** 5 topics, 16 subtopics, 9 skills; יחידות ספר מוגדרות
+- ספר G6: registry + nav + practice-map + plan doc
+- `history-canonical-metadata.js`
+
+**Exit:** 5 topics, 16 subtopics, 9 skills; יחידות ספר מוגדרות.
+
+---
 
 ### שלב 3 — בנק שאלות
-- ≥600 שאלות (יעד 800); metadata מלא בכל שדה
-- inventory gate + metadata test
-- **Exit:** gate green; 0 שדות חסרים
+
+- ≥600 שאלות (יעד 800); metadata מלא
+- `history-questions/g6.js`, `index.js`, inventory gate, metadata test
+
+**Exit:** gate green; 0 שדות חסרים.
+
+---
 
 ### שלב 4 — history-master + כרטיס תלמיד
-- `pages/learning/history-master.js` — 5 topics + mixed + חיבור ספר
-- student home + learning index
-- launch registry (HIDE → FULL בשלב 8)
-- **Exit:** `/learning/history-master` עובד; G6 רואה כרטיס; G1–G5 לא
 
-### שלב 5 — diagnostics
-- taxonomy H-01…H-09; bridge; MG-04 decouple
-- harness + certify e2e
-- **Exit:** DE מזהה history כמקצוע עצמאי
+- `pages/learning/history-master.js` — 5 topics + mixed + ספר
+- launch registry (HIDE → FULL בשלב 8)
+
+**Exit:** `/learning/history-master` עובד; G6 רואה כרטיס; G1–G5 לא.
+
+---
+
+### שלב 5 — diagnostics (history בלבד)
+
+**Scope:** אין פעולות על מקצועות אחרים — רק הוספת/חיווט history.
+
+| פעולה | קובץ |
+|--------|------|
+| taxonomy H-01…H-09 | **חדש:** `taxonomy-history.js` |
+| רישום ב-registry | `taxonomy-registry.js` |
+| bridge → 5 topicKeys | `topic-taxonomy-bridge.js` — **`HISTORY_TOPIC_TO_IDS` בלבד** |
+| metadata enrichment | `topic-taxonomy-metadata-enrichment.js` — branch history |
+| skill alignment | `diagnostic-unit-skill-alignment.js` |
+| harness | `diagnostic-engine-v2-harness.mjs` — fixtures history |
+| certify e2e | **חדש:** `certify-history-diagnostic-probe-e2e.mjs` |
+
+**Exit:**
+- [ ] DE v2 מזהה `history` כ-`subjectId` עצמאי
+- [ ] units נוצרים רק מ-mistakes של `history`
+- [ ] bridge מכסה 5 topicKeys + mixed
+- [ ] harness + certify pass
+
+---
 
 ### שלב 6 — דוחות הורים + פעילות אישית
-- aggregation, report v2, UI block, AssignActivityModal
-- **Exit:** היסטוריה כמקצוע נפרד בדוח; assign G6 עובד
+
+- aggregation, report v2, detailed, UI block
+- AssignActivityModal, parent-activity, topic options
+- grade-aware templates H-01…H-09
+
+**Exit:** היסטוריה כמקצוע **עצמאי** בדוח; assign G6 עובד.
+
+---
 
 ### שלב 7 — Copilot
-- scope, truth packet, API payload, certify prompts
-- **Exit:** Copilot עונה על history **לפי נתוני דוח בלבד**
+
+- scope `history`, truth packet, API payload
+- certify prompts
+
+**Exit:** Copilot עונה על history **לפי נתוני דוח בלבד**.
+
+---
 
 ### שלב 8 — QA וסגירה
-- launch FULL; virtual students G6; mobile+desktop smoke
-- **Exit:** כל DoD מסומן
+
+- launch registry → FULL
+- virtual students G6; mobile+desktop smoke
+- context labeling; ground truth report
+
+**Exit:** כל Definition of Done מסומן.
 
 ---
 
 ## Definition of Done — השקה
 
-1. [ ] **היסטוריה** מופיעה כמקצוע עצמאי **רק בכיתה ו׳**; **לא** מופיעה בא׳–ה׳
+1. [ ] **היסטוריה** מופיעה כמקצוע עצמאי **רק בכיתה ו׳**; **לא** בא׳–ה׳
 2. [ ] **`/learning/history-master`** עובד — 5 נושאים + mixed
-3. [ ] **ספר/יחידות למידה** להיסטוריה G6 קיימים ומחוברים ל-master
-4. [ ] **≥600 שאלות** (יעד 800) — metadata מלא (כל השדות למעלה)
+3. [ ] **ספר/יחידות למידה** G6 קיימים ומחוברים ל-master
+4. [ ] **≥600 שאלות** (יעד 800) — metadata מלא
 5. [ ] **מנוע אבחון** מזהה `history` כמקצוע עצמאי (H-01…H-09)
-6. [ ] **דוח הורה** מציג **היסטוריה** כמקצוע עצמאי — לא תחת moledet
-7. [ ] **פעילות אישית** מהורה עובדת ב-history (G6, 5 topics)
+6. [ ] **דוח הורה** מציג **היסטוריה** כמקצוע עצמאי
+7. [ ] **פעילות אישית** מהורה עובדת (G6, 5 topics)
 8. [ ] **Parent Copilot** עונה על history לפי נתוני הדוח בלבד
 9. [ ] **UI בעברית מלאה** — ללא labels באנגלית למשתמש
 10. [ ] **QA** מובייל + דסקטופ
 11. [ ] **תלמידים וירטואליים** G6 — תרגול → דוח → copilot
-12. [ ] **אין** שדות חסרים, fallback שבור, או mixing עם moledet
+12. [ ] **Guardrail:** אין שדות חסרים, fallback שבור, או ערבוב עם מקצועות אחרים
 
 ---
 
@@ -339,12 +398,13 @@ flowchart LR
 
 | אסור |
 |------|
-| משחקים (`pages/offline/*`, games catalog) |
-| PWA / service workers / offline precache |
+| משחקים |
+| PWA / service workers |
 | Supabase migrations |
-| שינוי UI בפועל **בשלב תכנון זה** |
-| שמות/כרטיסים של מקצועות קיימים (moledet, math, …) |
+| שינוי UI **לפני אישור שלב** |
+| שמות/כרטיסים של **מקצועות קיימים** (ללא שינוי) |
 | דוחות משחקים |
+| פעולות על מקצועות **אחרים** (מחוץ scope תוכנית זו) |
 | commit (עד אישור ביצוע) |
 
 ---
@@ -353,35 +413,23 @@ flowchart LR
 
 | סיכון | חומרה | mitigation |
 |-------|--------|------------|
-| 600–800 שאלות = bottleneck תוכן | **גבוה** | batches + metadata pass; ספר לפני master |
-| MG-04 overlap ב-moledet | **גבוה** | decouple בשלב 5 + audit |
-| QA scripts assume 6 subjects | בינוני | עדכון smoke/harness בשלב 8 |
-| ספר G6 — scope תוכן גדול | בינוני | plan doc + registry לפני כתיבת טקסט |
+| 600–800 שאלות = bottleneck תוכן | **גבוה** | batches + metadata pass |
+| ספר G6 — scope תוכן גדול | בינוני | plan doc + registry לפני טקסט |
+| QA scripts לא מכירים מקצוע 7 | בינוני | עדכון smoke/harness בשלב 8 |
 | Deploy לפני content מלא | בינוני | launch registry HIDE עד שלב 8 |
 | Copilot hallucination | נמוך | server payload only + truth prompts |
+| ערבוב cross-subject | בינוני | Guardrail + בדיקות harness |
 
 ---
 
 ## הערכת מאמץ
 
-| רכיב | % מערכת |
-|------|---------|
-| תוכן (שאלות + ספר + תוויות עברית) | **~55%** |
+| רכיב | % |
+|------|---|
+| תוכן (שאלות + ספר + עברית) | **~55%** |
 | Engineering (registry, master, DE, reports, copilot) | **~30%** |
 | QA + virtual students | **~15%** |
 
-**זמן משוער (צוות 1):** 4–8 שבועות — תלוי קצב ייצור שאלות וספר.
+**זמן משוער (צוות 1):** 4–8 שבועות.
 
-**תשתית:** דפוס science G6 מוכן לשכפול — **אין חסם ארכיטקטוני**; חסם עיקרי = תוכן + QA.
-
----
-
-## שינוי מהתוכנית הקודמת
-
-| הוסר | הוחלף ב |
-|------|---------|
-| Hub "מולדת, גאוגרפיה והיסטוריה" | כרטיס **"היסטוריה"** עצמאי |
-| `mgh-g6-display-group.js` | `history-curriculum-gates.js` |
-| `pages/learning/mgh-g6-hub.js` | — (לא נדרש) |
-| 5 topics קודמים (history_intro, hellenistic_world…) | 5 topics חדשים (classical_greece, hasmonaeans…) |
-| 16 subtopics קודמים | 16 subtopics לפי תוכנית לימודים מאושרת |
+**תשתית:** דפוס מקצוע standalone (curriculum + bank + master + DE + reports) — **אין חסם ארכיטקטוני**; חסם עיקרי = תוכן + QA.

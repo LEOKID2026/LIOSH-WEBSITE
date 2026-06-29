@@ -241,7 +241,7 @@ function makeMoledetGeographyBookUi(grade, bookMeta) {
     bookMeta,
     getReturnQuerySuffix: getMoledetGeographyBookReturnQuerySuffix,
     resolvePracticeTarget: (pageId) => resolveMoledetGeographyPracticeTarget(grade, pageId),
-    getPracticePath: getMoledetGeographyBookPracticePath,
+    getPracticePath: () => getMoledetGeographyBookPracticePath(grade),
     savePracticePreset: (preset) => saveMoledetGeographyBookPracticePreset(grade, preset),
   };
 }

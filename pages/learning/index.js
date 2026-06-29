@@ -37,10 +37,16 @@ const LEARNING_GAMES = [
     blurb: "תרגול שפה, אוצר מילים, דקדוק, הבנת הנקרא ועוד.",
   },
   {
-    slug: "moledet-geography-master",
-    title: "מולדת וגאוגרפיה",
+    slug: "moledet-master",
+    title: "מולדת",
+    emoji: "🏠",
+    blurb: "מולדת, חברה, אזרחות וערכים.",
+  },
+  {
+    slug: "geography-master",
+    title: "גאוגרפיה",
     emoji: "🗺️",
-    blurb: "מולדת, חברה, אזרחות וגאוגרפיה ועוד.",
+    blurb: "גאוגרפיה, מפות, נוף ויישובים.",
   },
 ];
 

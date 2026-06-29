@@ -11,19 +11,23 @@ import {
   MODES,
   STORAGE_KEY,
 } from "../../utils/moledet-geography-constants";
-import {
-  clampMoledetGeographyGradeNumber,
-  isMoledetGeographyGradeAllowed,
-  MOLEDET_GEOGRAPHY_MIN_TEACH_GRADE,
-} from "../../utils/moledet-geography-curriculum-gates.js";
 import { MOLEDET_GEOGRAPHY_ACTIVITY_SUBJECT_ID } from "../../lib/learning-shared/moledet-geography-subject-id.js";
+import {
+  VISUAL_STRAND_MOLEDET,
+  VISUAL_STRAND_GEOGRAPHY,
+  catalogGradeKeysForVisualStrand,
+  catalogSubjectForVisualStrand,
+  clampGradeKeyToVisualStrand,
+  defaultTopicForVisualStrand,
+  filterTopicsForVisualStrand,
+  gradeNumberFromGradeKey,
+  normalizeVisualStrand,
+  visualStrandTitleHe,
+  VISUAL_STRAND_LABEL_HE,
+} from "../../lib/learning-shared/moledet-geography-display.js";
 import LearningBookIndexTile from "../../components/learning-book/LearningBookIndexTile";
 import { getLearningBookIndexHref } from "../../lib/learning-book/learning-book-catalog-meta.js";
-import {
-  getMoledetGeographyBookHref,
-  getMoledetGeographyBookSubjectForGrade,
-} from "../../lib/learning-book/resolve-moledet-geography-book-page.js";
-import { MOLEDET_GEOGRAPHY_ACTIVE_BOOK_GRADES } from "../../lib/learning-book/moledet-geography-book-practice-map.js";
+import { getMoledetGeographyBookHref } from "../../lib/learning-book/resolve-moledet-geography-book-page.js";
 import {
   consumeAnyMoledetGeographyBookLearningSnapshot,
   consumeAnyMoledetGeographyBookPracticePreset,
@@ -37,7 +41,6 @@ import {
 } from "../../lib/learning-book/book-context-master-helper";
 
 const MG_SUBJECT = MOLEDET_GEOGRAPHY_ACTIVITY_SUBJECT_ID;
-const MG_BOOK_GRADE_SET = new Set(MOLEDET_GEOGRAPHY_ACTIVE_BOOK_GRADES);
 import {
   getLevelConfig,
   getLevelForGrade,
@@ -191,10 +194,36 @@ const REFERENCE_CATEGORIES = {
 
 const REFERENCE_CATEGORY_KEYS = Object.keys(REFERENCE_CATEGORIES);
 
+function referenceCategoryKeysForStrand(visualStrand) {
+  if (visualStrand === VISUAL_STRAND_GEOGRAPHY) return ["geography"];
+  return ["homeland", "citizenship"];
+}
+
 /** Matches `utils/math-report-generator.js` and parent-report mistake readers. */
 const MOLEDET_GEOGRAPHY_MISTAKES_KEY = `mleo_${MOLEDET_GEOGRAPHY_ACTIVITY_SUBJECT_ID}_mistakes`;
 
-export default function MoledetGeographyMaster() {
+/** @param {{ visualStrand?: string }} props */
+export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VISUAL_STRAND_MOLEDET }) {
+  const visualStrand = normalizeVisualStrand(visualStrandProp);
+  const strandGradeKeys = useMemo(
+    () => catalogGradeKeysForVisualStrand(visualStrand),
+    [visualStrand]
+  );
+  const strandGradeNumbers = useMemo(
+    () =>
+      strandGradeKeys
+        .map((gk) => gradeNumberFromGradeKey(gk))
+        .filter((n) => n != null),
+    [strandGradeKeys]
+  );
+  const strandBookGradeSet = useMemo(() => new Set(strandGradeKeys), [strandGradeKeys]);
+  const strandCatalogSubject = catalogSubjectForVisualStrand(visualStrand);
+  const pageTitleHe = visualStrandTitleHe(visualStrand);
+  const strandReferenceKeys = useMemo(
+    () => referenceCategoryKeysForStrand(visualStrand),
+    [visualStrand]
+  );
+
   useIOSViewportFix();
   const { MB, ui, shellClass, shellBgStyle } = useLearningMasterUi();
   const learningModalOverlay = ui.learningModalOverlay;
@@ -240,11 +269,10 @@ export default function MoledetGeographyMaster() {
 
   const [mounted, setMounted] = useState(false);
 
-  const transformMoledetGradeKey = useCallback((gradeKey) => {
-    const n = gradeKeyToNumber(gradeKey);
-    if (n == null) return gradeKey;
-    return `g${clampMoledetGeographyGradeNumber(n)}`;
-  }, []);
+  const transformMoledetGradeKey = useCallback(
+    (gradeKey) => clampGradeKeyToVisualStrand(gradeKey, visualStrand),
+    [visualStrand]
+  );
 
   const {
     grade,
@@ -255,24 +283,27 @@ export default function MoledetGeographyMaster() {
     fullName: sessionFullName,
     coinBalance: sessionCoinBalance,
   } = useSubjectSessionDefaults({ transformGradeKey: transformMoledetGradeKey });
-  const bookSubjectForGrade = grade ? getMoledetGeographyBookSubjectForGrade(grade) : null;
   const bookIndexHref =
-    bookSubjectForGrade && grade
-      ? getLearningBookIndexHref(bookSubjectForGrade, grade)
+    grade && strandBookGradeSet.has(grade)
+      ? getLearningBookIndexHref(strandCatalogSubject, grade)
       : null;
   const [mode, setMode] = useState("practice");
 
   const [level, setLevel] = useState("easy");
-  const [operation, setOperation] = useState("homeland"); // לא mixed כברירת מחדל כדי שה-modal לא יפתח אוטומטית
+  const [operation, setOperation] = useState(() => defaultTopicForVisualStrand(visualStrand));
+  const strandTopicsForGrade = useMemo(
+    () => filterTopicsForVisualStrand(GRADES[grade]?.topics ?? [], visualStrand),
+    [grade, visualStrand]
+  );
   const moledetTopicsForGuest = useMemo(
-    () => (GRADES[grade]?.topics ?? []).filter((t) => t !== "mixed"),
-    [grade]
+    () => strandTopicsForGrade.filter((t) => t !== "mixed"),
+    [strandTopicsForGrade]
   );
   const guestTopics = useGuestPlayableTopics("moledet_geography", moledetTopicsForGuest);
   const bookTopicHref = useMemo(() => {
-    if (!MG_BOOK_GRADE_SET.has(grade)) return null;
+    if (!strandBookGradeSet.has(grade)) return null;
     return getMoledetGeographyBookHref({ grade, topic: operation, kind: null });
-  }, [grade, operation]);
+  }, [grade, operation, strandBookGradeSet]);
   const [gameActive, setGameActive] = useState(false);
   const [adaptivePlannerRecommendationView, setAdaptivePlannerRecommendationView] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(null);
@@ -281,7 +312,7 @@ export default function MoledetGeographyMaster() {
   const practiceForceSkillIdRef = useRef(null);
   const questionBookHref = useMemo(() => {
     if (mode !== "learning" || !currentQuestion) return null;
-    if (!MG_BOOK_GRADE_SET.has(grade)) return null;
+    if (!strandBookGradeSet.has(grade)) return null;
     const params = currentQuestion.params || {};
     return getMoledetGeographyBookHref({
       grade,
@@ -307,7 +338,7 @@ export default function MoledetGeographyMaster() {
   const openBookFromLearning = useCallback(
     (href) => {
       if (!href) return;
-      if (!MG_BOOK_GRADE_SET.has(grade)) return;
+      if (!strandBookGradeSet.has(grade)) return;
       const snapshot = {
         gameActive: true,
         mode,
@@ -347,7 +378,7 @@ export default function MoledetGeographyMaster() {
   const applyBookPracticePreset = useCallback((preset) => {
     if (!preset || preset.mode !== "learning") return;
     const presetGrade = preset.grade;
-    if (!MG_BOOK_GRADE_SET.has(presetGrade)) return;
+    if (!strandBookGradeSet.has(presetGrade)) return;
     const presetTopic = preset.topic || preset.operation;
     if (!presetTopic || typeof preset.forceKind !== "string") return;
     if (!GRADES[presetGrade]?.topics?.includes(presetTopic)) return;
@@ -1015,26 +1046,23 @@ export default function MoledetGeographyMaster() {
     if (showMixedSelector) return;
     if (practiceForceKindRef.current) return;
 
-    const allowed = GRADES[grade].topics;
+    const allowed = strandTopicsForGrade.length ? strandTopicsForGrade : GRADES[grade]?.topics ?? [];
     if (!allowed.includes(operation)) {
-      // מצא את הנושא הראשון שזמין (לא mixed)
-      const firstAllowed = allowed.find(topic => topic !== "mixed") || allowed[0];
-      setOperation(firstAllowed);
+      const firstAllowed = allowed.find((topic) => topic !== "mixed") || allowed[0];
+      if (firstAllowed) setOperation(firstAllowed);
     }
-  }, [grade]); // רק כשהכיתה משתנה, לא כשהפעולה משתנה
+  }, [grade, strandTopicsForGrade, operation, showMixedSelector]);
 
   // עדכון mixedOperations לפי הכיתה
   useEffect(() => {
     if (!grade) return;
-    const availableTopics = GRADES[grade].topics.filter(
-      (topic) => topic !== "mixed"
-    );
+    const availableTopics = strandTopicsForGrade.filter((topic) => topic !== "mixed");
     const newMixedOps = {};
     availableTopics.forEach(topic => {
       newMixedOps[topic] = true;
     });
     setMixedOperations(newMixedOps);
-  }, [grade]);
+  }, [grade, strandTopicsForGrade]);
 
   // לא צריך useEffect - ה-modal נפתח ישירות ב-onChange
 
@@ -2443,7 +2471,7 @@ export default function MoledetGeographyMaster() {
         <LearningMasterDesktopHeader
           MB={MB}
           desktopHeaderRef={desktopHeaderRef}
-          title="🗺️ מולדת וגיאוגרפיה"
+          title={pageTitleHe}
           subtitle={`${playerName || "שחקן"} • ${GRADES[grade].name} • ${LEVELS[level].name} • ${getOperationName(operation)} • ${MODES[mode].name}`}
           onBack={backSafe}
           onCurriculumClick={() => router.push("/learning/curriculum?subject=moledet-geography")}
@@ -2470,7 +2498,7 @@ export default function MoledetGeographyMaster() {
           <div className="md:hidden text-center mb-3">
             <div className="flex items-center justify-center gap-2 mb-0.5">
               <h1 className={MB.pageTitle}>
-                🗺️ מולדת וגיאוגרפיה
+                {pageTitleHe}
               </h1>
               <button
                 onClick={() => {
@@ -2914,9 +2942,9 @@ export default function MoledetGeographyMaster() {
 
           {!gameActive ? (
             <div className="relative flex flex-col flex-1 min-h-0 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl items-center justify-start md:gap-1">
-              {bookIndexHref && bookSubjectForGrade ? (
+              {bookIndexHref ? (
                 <LearningBookIndexTile
-                  subject={bookSubjectForGrade}
+                  subject={strandCatalogSubject}
                   grade={grade}
                   testId={`moledet-geography-${grade}-book-index-button`}
                   onClick={() => router.push(bookIndexHref)}
@@ -2951,7 +2979,7 @@ export default function MoledetGeographyMaster() {
                     className={`${MB.selectControl} shrink-0 min-w-0 w-[5.75rem] max-w-[6.25rem] md:w-[6.5rem] md:max-w-[7rem]`}
                   >
                     {[1, 2, 3, 4, 5, 6]
-                      .filter((g) => g >= MOLEDET_GEOGRAPHY_MIN_TEACH_GRADE)
+                      .filter((g) => strandGradeNumbers.includes(g))
                       .map((g) => (
                       <option key={g} value={g}>
                         {`כיתה ${["א","ב","ג","ד","ה","ו"][g - 1]}`}
@@ -2998,7 +3026,7 @@ export default function MoledetGeographyMaster() {
                       }}
                       className={`${MB.selectControl} min-w-0 w-full md:w-[min(22rem,42vw)] md:max-w-[22rem]`}
                     >
-                      {GRADES[grade].topics.map((topic) => (
+                      {(strandTopicsForGrade.length ? strandTopicsForGrade : []).map((topic) => (
                         <option key={topic} value={topic} disabled={topic !== "mixed" && guestTopics.isLocked(topic)}>
                           {topic === "mixed" ? getOperationName(topic) : guestTopics.label(topic, getOperationName(topic))}
                         </option>
@@ -3111,7 +3139,7 @@ export default function MoledetGeographyMaster() {
                   onClick={() => setShowHowTo(true)}
                   className={`${MB.btnActionHelp} ${MB.btnActionCyan}`}
                 >
-                  ❓ איך לומדים מולדת וגאוגרפיה כאן?
+                  ❓ איך לומדים {VISUAL_STRAND_LABEL_HE[visualStrand] || "כאן"} כאן?
                 </button>
                 <button
                   onClick={() => setShowReferenceModal(true)}
@@ -3948,15 +3976,21 @@ export default function MoledetGeographyMaster() {
                 onClick={(e) => e.stopPropagation()}
               >
                 <h2 className="text-xl font-extrabold mb-2 text-center">
-                  📘 איך לומדים מולדת וגאוגרפיה כאן?
+                  📘 איך לומדים {VISUAL_STRAND_LABEL_HE[visualStrand]} כאן?
                 </h2>
 
                 <p className="text-white/80 text-xs mb-3 text-center">
-                  המטרה היא לתרגל מולדת, חברה ואזרחות וגאוגרפיה בצורה משחקית, עם התאמה לכיתה, נושא ורמת קושי.
+                  {visualStrand === VISUAL_STRAND_GEOGRAPHY
+                    ? "המטרה היא לתרגל גאוגרפיה, מפות ונוף בצורה משחקית, עם התאמה לכיתה, נושא ורמת קושי."
+                    : "המטרה היא לתרגל מולדת, חברה ואזרחות בצורה משחקית, עם התאמה לכיתה, נושא ורמת קושי."}
                 </p>
 
                 <ul className="list-disc pr-4 space-y-1 text-[13px] text-white/90">
-                  <li>בחר כיתה, רמת קושי ונושא (מולדת, חברה ואזרחות, גאוגרפיה, היסטוריה ועוד).</li>
+                  <li>
+                    {visualStrand === VISUAL_STRAND_GEOGRAPHY
+                      ? "בחר כיתה, רמת קושי ונושא (גאוגרפיה, מפות ועוד)."
+                      : "בחר כיתה, רמת קושי ונושא (מולדת, חברה, אזרחות, ערכים ועוד)."}
+                  </li>
                   <li>בחר מצב משחק: למידה, אתגר עם טיימר וחיים, מהירות או מרתון.</li>
                   <li>קרא היטב את השאלה – לפעמים יש שאלות מורכבות שצריך להבין את ההקשר.</li>
                   <li>ניקוד גבוה, רצף תשובות נכון, כוכבים ו Badges עוזרים לך לעלות רמה כשחקן.</li>
@@ -3985,7 +4019,7 @@ export default function MoledetGeographyMaster() {
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex items-center justify-between mb-3">
-                  <h2 className="text-2xl font-extrabold">📚 לוח עזרה במולדת וגאוגרפיה</h2>
+                  <h2 className="text-2xl font-extrabold">📚 לוח עזרה ב{VISUAL_STRAND_LABEL_HE[visualStrand]}</h2>
                   <button
                     onClick={() => setShowReferenceModal(false)}
                     className="text-white/80 hover:text-white text-xl px-2"
@@ -3994,10 +4028,10 @@ export default function MoledetGeographyMaster() {
                   </button>
                 </div>
                 <p className="text-sm text-white/70 mb-3">
-                  בחר קטגוריה כדי לראות מושגים, עובדות וטיפים חשובים במולדת וגאוגרפיה.
+                  בחר קטגוריה כדי לראות מושגים, עובדות וטיפים חשובים ב{VISUAL_STRAND_LABEL_HE[visualStrand]}.
                 </p>
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {REFERENCE_CATEGORY_KEYS.map((key) => (
+                  {strandReferenceKeys.map((key) => (
                     <button
                       key={key}
                       onClick={() => setReferenceCategory(key)}
@@ -4096,6 +4130,11 @@ export default function MoledetGeographyMaster() {
     />
     </Layout>
   );
+}
+
+/** Legacy route — same as moledet strand entry. */
+export default function MoledetGeographyMasterLegacyRoute() {
+  return <MoledetGeographyMasterPage visualStrand={VISUAL_STRAND_MOLEDET} />;
 }
 
 

@@ -145,6 +145,8 @@ const SUBJECT_LABEL_HE = {
   hebrew: "עברית",
   "moledet-geography": "מולדת וגאוגרפיה",
   moledet_geography: "מולדת וגאוגרפיה",
+  moledet: "מולדת",
+  geography: "גאוגרפיה",
 };
 
 export function subjectLabelHe(subjectId) {

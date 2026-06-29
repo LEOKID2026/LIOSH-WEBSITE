@@ -15,6 +15,7 @@ export const PARENT_REPORT_SUBJECT_LABELS_HE = {
   hebrew: "עברית",
   science: "מדעים",
   moledet: "מולדת",
+  geography: "גאוגרפיה",
   moledet_geography: "מולדת וגאוגרפיה",
   "moledet-geography": "מולדת וגאוגרפיה",
 };
