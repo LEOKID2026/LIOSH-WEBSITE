@@ -2,7 +2,7 @@ export const PARENT_PROMO_DESKTOP_SRC = "/videos/promo/leo-kids-parent-desktop.m
 export const PARENT_PROMO_MOBILE_SRC = "/videos/promo/leo-kids-parent-mobile.mp4";
 
 /**
- * Responsive parent promo — desktop 16:9 on md+, mobile 9:16 below md.
+ * Responsive parent promo — desktop 16:9 on md+; below md uses the same desktop asset in 16:9 (not the mobile file).
  * CSS-only visibility avoids hydration mismatch (both tags in DOM, one hidden).
  * @param {{
  *   desktopSrc?: string,
@@ -34,8 +34,8 @@ export default function ParentPromoVideo({
     : "hidden md:block mx-auto w-full max-w-3xl overflow-hidden rounded-2xl border";
 
   const mobileWrapClass = compact
-    ? "md:hidden mx-auto w-full max-w-[280px] overflow-hidden rounded-xl border"
-    : "md:hidden mx-auto w-full max-w-[min(100%,320px)] overflow-hidden rounded-2xl border";
+    ? "md:hidden w-full overflow-hidden rounded-xl border"
+    : "md:hidden mx-auto w-full max-w-3xl overflow-hidden rounded-2xl border";
 
   return (
     <section
@@ -63,14 +63,14 @@ export default function ParentPromoVideo({
 
       <div className={`${mobileWrapClass} ${frameClass}`}>
         <video
-          className="block h-auto w-full aspect-[9/16] max-h-[min(55vh,480px)] bg-black object-contain mx-auto"
+          className="block h-auto w-full aspect-video bg-black object-contain"
           controls
           playsInline
           preload="metadata"
-          aria-label="סרטון הורים — גרסת נייד"
+          aria-label="סרטון הורים — גרסת מחשב (מובייל)"
           data-testid="parent-promo-video-mobile"
         >
-          <source src={mobileSrc} type="video/mp4" />
+          <source src={desktopSrc} type="video/mp4" />
         </video>
       </div>
     </section>
