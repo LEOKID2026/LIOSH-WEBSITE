@@ -109,7 +109,55 @@ export function findFirstAnchoredTopicRowForSubject(payload, subjectId) {
       return { subject: sid, tr };
     }
   }
+  const overview = Array.isArray(sp?.topicOverviewRows) ? sp.topicOverviewRows : [];
+  for (const row of overview) {
+    const tr = topicRowFromOverviewRow(row, sid);
+    if (tr) return { subject: sid, tr };
+  }
+  const syntheticRows = listSyntheticAggregateAnchoredTopicRows(payload);
+  const synthetic = syntheticRows.find((r) => normalizeSubjectId(r.subject) === sid);
+  if (synthetic) return synthetic;
   return null;
+}
+
+/**
+ * Build a Copilot-anchorable topic row from detailed-report overview rows (e.g. history from DB sync).
+ * @param {Record<string, unknown>|null|undefined} overviewRow
+ * @param {string} subjectId
+ */
+function topicRowFromOverviewRow(overviewRow, subjectId) {
+  if (!overviewRow || typeof overviewRow !== "object") return null;
+  const topicRowKey = String(overviewRow.topicRowKey || overviewRow.topicKey || "").trim();
+  const displayName = String(overviewRow.displayName || "").trim();
+  if (!topicRowKey || displayName.length < 2) return null;
+  const q = Math.max(0, Math.round(Number(overviewRow.questions) || 0));
+  if (q <= 0) return null;
+  const acc = Math.max(0, Math.min(100, Math.round(Number(overviewRow.accuracy) || 0)));
+  const cannotConcludeYet = q < 10 || acc < 38;
+  return {
+    topicRowKey,
+    topicKey: topicRowKey,
+    displayName,
+    questions: q,
+    q,
+    accuracy: acc,
+    contractsV1: {
+      narrative: {
+        contractVersion: "v1",
+        textSlots: {
+          observation: `ב${displayName} נספרו ${q} שאלות בתקופה, עם דיוק של כ-${acc}%.`,
+          interpretation: `לפי נתוני הדוח ב${subjectLabelHe(subjectId)}, זהו המידע שנאסף מהתרגול בתקופה שנבחרה.`,
+          uncertainty: cannotConcludeYet
+            ? "עדיין יש מעט נקודות — נבדוק שוב אחרי עוד תרגול."
+            : "כדאי להמשיך לעקוב לאורך כמה ימי תרגול.",
+        },
+      },
+      readiness: { readiness: q >= 28 ? "ready" : q >= 12 ? "forming" : "insufficient" },
+      confidence: { confidenceBand: acc >= 78 ? "high" : acc >= 58 ? "medium" : "low" },
+      decision: { cannotConcludeYet },
+    },
+    __copilotOverviewRowAnchor: true,
+  };
 }
 
 /**
@@ -139,6 +187,13 @@ export function findTopicRowByKey(payload, topicRowKey, subjectIdHint = "") {
         const nar = tr?.contractsV1?.narrative;
         if (nar && typeof nar === "object") return { subject: sid || hint, tr };
       }
+    }
+    const overview = Array.isArray(sp?.topicOverviewRows) ? sp.topicOverviewRows : [];
+    for (const row of overview) {
+      const k = String(row?.topicRowKey || row?.topicKey || "").trim();
+      if (k !== key) continue;
+      const tr = topicRowFromOverviewRow(row, sid);
+      if (tr) return { subject: sid || hint, tr };
     }
   }
   return null;

@@ -1,0 +1,1466 @@
+{
+  "historySubtopicCount": 16,
+  "sampleSubtopics": [
+    {
+      "subject": "history",
+      "bucketKey": "hist_sub_intro_sources_timeline",
+      "parentTopicKey": "what_is_history",
+      "parentTopicLabelHe": "מהי היסטוריה",
+      "displayName": "מהי היסטוריה, מקור ראשוני, מקור משני, ציר זמן",
+      "questions": 0,
+      "correct": 0,
+      "accuracy": 0,
+      "timeMinutes": 0,
+      "mistakes": 0,
+      "mistakeLastSeen": null,
+      "needsPractice": false,
+      "excellent": false,
+      "subtopicReport": true,
+      "mistakeEventCountResolved": 0,
+      "masteryScore": 0,
+      "stabilityScore": 0,
+      "confidenceScore": 0,
+      "recencyScore": 55,
+      "evidenceStrength": "low",
+      "dataSufficiencyLevel": "low",
+      "dataSufficiencyLabelHe": "לא נאספו שאלות בתקופה שנבחרה — אין בסיס נתונים לשורה זו.",
+      "suppressAggressiveStep": true,
+      "patternStabilityHe": "עדיין מוקדם — לא ברור אם זה נשמר לאורך זמן רק מהנתונים כאן.",
+      "isEarlySignalOnly": true,
+      "recommendationContextHe": "ההמלצה מבוססת על נתונים חלקיים; עדיף לא לעשות שינוי דרמטי בלי לבדוק שוב אחרי עוד תרגול.",
+      "decisionTrace": [
+        {
+          "source": "diagnostics",
+          "phase": "inputs",
+          "detailHe": "קלטים לשורה לפני חישוב אותות.",
+          "data": {
+            "subjectId": "historySubtopics",
+            "topicRowKey": "hist_sub_intro_sources_timeline",
+            "questions": 0,
+            "wrong": null,
+            "wrongRatio": 0,
+            "mistakeEventCountResolved": 0,
+            "periodEndMs": 1782739778906,
+            "cfg": {
+              "stabilityVolumeDivisor": 28,
+              "confidenceExpDivisor": 20
+            }
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "stability_01",
+          "data": {
+            "stability01": 0,
+            "formula": "volume*(1-mistakePressure), mistakePressure from wrongRatio+mistake/q"
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "confidence_01",
+          "data": {
+            "confidence01": 0,
+            "formula": "(1-exp(-q/divisor))*noise(mistakesVsQ)"
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "recency_score",
+          "data": {
+            "recencyScore": 55,
+            "lastSessionMs": null
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "mastery_score",
+          "data": {
+            "masteryScore": 0
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "evidence_strength",
+          "data": {
+            "evidenceStrength": "low"
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "data_sufficiency",
+          "detailHe": "כמות המידע משפיעה על מידת הזהירות בהמלצה הבאה.",
+          "data": {
+            "dataSufficiencyLevel": "low",
+            "suppressAggressiveStep": true,
+            "labelHe": "לא נאספו שאלות בתקופה שנבחרה — אין בסיס נתונים לשורה זו."
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "pattern_flags",
+          "data": {
+            "isStablePattern": false,
+            "isEarlySignalOnly": true
+          }
+        }
+      ],
+      "trend": {
+        "version": 1,
+        "windows": {
+          "currentPeriod": {
+            "startMs": 1780185600000,
+            "endMs": 1782739778906,
+            "questions": 0,
+            "accuracy": null,
+            "sessionCount": 0
+          },
+          "previousComparablePeriod": {
+            "startMs": 1777631421093,
+            "endMs": 1780185599999,
+            "questions": 0,
+            "accuracy": null,
+            "sessionCount": 0
+          },
+          "recentShortWindow": {
+            "startMs": 1782480578906,
+            "endMs": 1782739778906,
+            "questions": 0,
+            "accuracy": null,
+            "sessionCount": 0,
+            "windowMs": 259200000
+          },
+          "lastSessionsInRow": {
+            "sessionCount": 0,
+            "questions": 0,
+            "accuracy": null
+          }
+        },
+        "accuracyDirection": "unknown",
+        "fluencyDirection": "unknown",
+        "independenceDirection": "unknown",
+        "confidence": 0,
+        "trendEvidenceStatus": "insufficient",
+        "summaryHe": "אין מספיק מפגשים בטווח כדי להשוות מגמה · אין מספיק מפגשים תקינים להשוואת מגמה אמינה (נדרשים לפחות 3). בשלב הזה ההשוואה בין תקופות רגישה לרעש — כדאי לאמת שוב אחרי עוד תרגול.",
+        "evidence": {
+          "validCurrentSessionCount": 0,
+          "validPreviousSessionCount": 0,
+          "trendEvidencePoints": 0,
+          "minTrendPointsRequired": 3,
+          "medianSessionDurationSecFullPeriod": null,
+          "medianSessionDurationSecRecentWindow": null,
+          "mistakeWrongCountCurrent": 0,
+          "mistakeWrongCountPrevious": 0,
+          "independenceCurrent": {
+            "hintRate": null,
+            "avgRetry": null,
+            "changedRate": null,
+            "firstTryCorrectRate": null
+          },
+          "independencePrevious": {
+            "hintRate": null,
+            "avgRetry": null,
+            "changedRate": null,
+            "firstTryCorrectRate": null
+          }
+        }
+      },
+      "behaviorProfile": {
+        "version": 1,
+        "dominantType": "undetermined",
+        "strength01": 0,
+        "signals": {
+          "questions": 0,
+          "accuracy": 0,
+          "wrongRatio": 0,
+          "wrongEventCount": 0,
+          "modeKey": null,
+          "medianResponseMsWrong": null,
+          "hintRate": null,
+          "hintKnownCount": 0,
+          "avgRetryOnWrong": null,
+          "changedAnswerRateOnWrong": null,
+          "firstTryMissRateOnWrong": null,
+          "maxPatternFamilyRepeats": 0,
+          "typeScores": {
+            "knowledge_gap": 0,
+            "careless_pattern": 0,
+            "speed_pressure": 0,
+            "instruction_friction": 0,
+            "fragile_success": 0,
+            "stable_mastery": 0
+          }
+        },
+        "summaryHe": "אין מספיק אותות התנהגותיים באירועי טעות ובנפח כדי לסווג דומיננטית.",
+        "decisionTrace": [
+          {
+            "source": "behavior",
+            "phase": "inputs",
+            "data": {
+              "subjectId": "historySubtopics",
+              "topicRowKey": "hist_sub_intro_sources_timeline",
+              "questions": 0,
+              "accuracy": 0,
+              "wrongRatio": 0,
+              "wrongEventsInRow": 0,
+              "modeKey": null
+            }
+          },
+          {
+            "source": "behavior",
+            "phase": "aggregates",
+            "data": {
+              "medianResponseMsWrong": null,
+              "hintRate": null,
+              "hintKnown": 0,
+              "avgRetry": null,
+              "changedRate": null,
+              "firstTryMissRate": null,
+              "maxPatternFamilyRepeats": 0
+            }
+          },
+          {
+            "source": "behavior",
+            "phase": "scores",
+            "data": {
+              "knowledge_gap": 0,
+              "careless_pattern": 0,
+              "speed_pressure": 0,
+              "instruction_friction": 0,
+              "fragile_success": 0,
+              "stable_mastery": 0,
+              "winner": "undetermined",
+              "bestScore": 0
+            }
+          }
+        ]
+      },
+      "contractsV1": {
+        "evidence": {
+          "contractVersion": "v1",
+          "topicKey": "hist_sub_intro_sources_timeline",
+          "subjectId": "historySubtopics",
+          "periodStartMs": 1780185600000,
+          "periodEndMs": 1782739778906,
+          "questionCount": 0,
+          "accuracyPct": 0,
+          "wrongCount": 0,
+          "responseSpeedMsMedian": null,
+          "repetitionRate01": 0,
+          "hintRate01": 0,
+          "retryRate01": 0,
+          "recencyScore01": 0.55,
+          "stability01": 0,
+          "confidence01": 0,
+          "varianceState": "high",
+          "trendState": "unknown",
+          "evidenceStrength": "low",
+          "evidenceBand": "E0",
+          "signalQuality": "noisy",
+          "anchorEventIds": [],
+          "dataSufficiency": "insufficient",
+          "modeDiff": null,
+          "errorConcentration": null
+        },
+        "evidenceValidation": {
+          "ok": true,
+          "errors": []
+        }
+      },
+      "intelligenceV1": {
+        "version": "1.0.0",
+        "weakness": {
+          "level": "none",
+          "rationaleCodes": [
+            "canonical_withhold"
+          ]
+        },
+        "confidence": {
+          "band": "low",
+          "rationaleCodes": [
+            "low_volume_caps_low"
+          ]
+        },
+        "patterns": {
+          "taxonomyId": null,
+          "recurrenceFull": false,
+          "patternFamilies": [],
+          "taxonomyBlocked": false,
+          "noPatternClaims": true
+        },
+        "gates": {
+          "canonicalWithhold": true,
+          "insufficientVolume": true
+        }
+      }
+    },
+    {
+      "subject": "history",
+      "bucketKey": "hist_sub_athens_democracy",
+      "parentTopicKey": "classical_greece",
+      "parentTopicLabelHe": "יוון הקלאסית",
+      "displayName": "אתונה הדמוקרטית",
+      "questions": 0,
+      "correct": 0,
+      "accuracy": 0,
+      "timeMinutes": 0,
+      "mistakes": 0,
+      "mistakeLastSeen": null,
+      "needsPractice": false,
+      "excellent": false,
+      "subtopicReport": true,
+      "mistakeEventCountResolved": 0,
+      "masteryScore": 0,
+      "stabilityScore": 0,
+      "confidenceScore": 0,
+      "recencyScore": 55,
+      "evidenceStrength": "low",
+      "dataSufficiencyLevel": "low",
+      "dataSufficiencyLabelHe": "לא נאספו שאלות בתקופה שנבחרה — אין בסיס נתונים לשורה זו.",
+      "suppressAggressiveStep": true,
+      "patternStabilityHe": "עדיין מוקדם — לא ברור אם זה נשמר לאורך זמן רק מהנתונים כאן.",
+      "isEarlySignalOnly": true,
+      "recommendationContextHe": "ההמלצה מבוססת על נתונים חלקיים; עדיף לא לעשות שינוי דרמטי בלי לבדוק שוב אחרי עוד תרגול.",
+      "decisionTrace": [
+        {
+          "source": "diagnostics",
+          "phase": "inputs",
+          "detailHe": "קלטים לשורה לפני חישוב אותות.",
+          "data": {
+            "subjectId": "historySubtopics",
+            "topicRowKey": "hist_sub_athens_democracy",
+            "questions": 0,
+            "wrong": null,
+            "wrongRatio": 0,
+            "mistakeEventCountResolved": 0,
+            "periodEndMs": 1782739778906,
+            "cfg": {
+              "stabilityVolumeDivisor": 28,
+              "confidenceExpDivisor": 20
+            }
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "stability_01",
+          "data": {
+            "stability01": 0,
+            "formula": "volume*(1-mistakePressure), mistakePressure from wrongRatio+mistake/q"
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "confidence_01",
+          "data": {
+            "confidence01": 0,
+            "formula": "(1-exp(-q/divisor))*noise(mistakesVsQ)"
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "recency_score",
+          "data": {
+            "recencyScore": 55,
+            "lastSessionMs": null
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "mastery_score",
+          "data": {
+            "masteryScore": 0
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "evidence_strength",
+          "data": {
+            "evidenceStrength": "low"
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "data_sufficiency",
+          "detailHe": "כמות המידע משפיעה על מידת הזהירות בהמלצה הבאה.",
+          "data": {
+            "dataSufficiencyLevel": "low",
+            "suppressAggressiveStep": true,
+            "labelHe": "לא נאספו שאלות בתקופה שנבחרה — אין בסיס נתונים לשורה זו."
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "pattern_flags",
+          "data": {
+            "isStablePattern": false,
+            "isEarlySignalOnly": true
+          }
+        }
+      ],
+      "trend": {
+        "version": 1,
+        "windows": {
+          "currentPeriod": {
+            "startMs": 1780185600000,
+            "endMs": 1782739778906,
+            "questions": 0,
+            "accuracy": null,
+            "sessionCount": 0
+          },
+          "previousComparablePeriod": {
+            "startMs": 1777631421093,
+            "endMs": 1780185599999,
+            "questions": 0,
+            "accuracy": null,
+            "sessionCount": 0
+          },
+          "recentShortWindow": {
+            "startMs": 1782480578906,
+            "endMs": 1782739778906,
+            "questions": 0,
+            "accuracy": null,
+            "sessionCount": 0,
+            "windowMs": 259200000
+          },
+          "lastSessionsInRow": {
+            "sessionCount": 0,
+            "questions": 0,
+            "accuracy": null
+          }
+        },
+        "accuracyDirection": "unknown",
+        "fluencyDirection": "unknown",
+        "independenceDirection": "unknown",
+        "confidence": 0,
+        "trendEvidenceStatus": "insufficient",
+        "summaryHe": "אין מספיק מפגשים בטווח כדי להשוות מגמה · אין מספיק מפגשים תקינים להשוואת מגמה אמינה (נדרשים לפחות 3). בשלב הזה ההשוואה בין תקופות רגישה לרעש — כדאי לאמת שוב אחרי עוד תרגול.",
+        "evidence": {
+          "validCurrentSessionCount": 0,
+          "validPreviousSessionCount": 0,
+          "trendEvidencePoints": 0,
+          "minTrendPointsRequired": 3,
+          "medianSessionDurationSecFullPeriod": null,
+          "medianSessionDurationSecRecentWindow": null,
+          "mistakeWrongCountCurrent": 0,
+          "mistakeWrongCountPrevious": 0,
+          "independenceCurrent": {
+            "hintRate": null,
+            "avgRetry": null,
+            "changedRate": null,
+            "firstTryCorrectRate": null
+          },
+          "independencePrevious": {
+            "hintRate": null,
+            "avgRetry": null,
+            "changedRate": null,
+            "firstTryCorrectRate": null
+          }
+        }
+      },
+      "behaviorProfile": {
+        "version": 1,
+        "dominantType": "undetermined",
+        "strength01": 0,
+        "signals": {
+          "questions": 0,
+          "accuracy": 0,
+          "wrongRatio": 0,
+          "wrongEventCount": 0,
+          "modeKey": null,
+          "medianResponseMsWrong": null,
+          "hintRate": null,
+          "hintKnownCount": 0,
+          "avgRetryOnWrong": null,
+          "changedAnswerRateOnWrong": null,
+          "firstTryMissRateOnWrong": null,
+          "maxPatternFamilyRepeats": 0,
+          "typeScores": {
+            "knowledge_gap": 0,
+            "careless_pattern": 0,
+            "speed_pressure": 0,
+            "instruction_friction": 0,
+            "fragile_success": 0,
+            "stable_mastery": 0
+          }
+        },
+        "summaryHe": "אין מספיק אותות התנהגותיים באירועי טעות ובנפח כדי לסווג דומיננטית.",
+        "decisionTrace": [
+          {
+            "source": "behavior",
+            "phase": "inputs",
+            "data": {
+              "subjectId": "historySubtopics",
+              "topicRowKey": "hist_sub_athens_democracy",
+              "questions": 0,
+              "accuracy": 0,
+              "wrongRatio": 0,
+              "wrongEventsInRow": 0,
+              "modeKey": null
+            }
+          },
+          {
+            "source": "behavior",
+            "phase": "aggregates",
+            "data": {
+              "medianResponseMsWrong": null,
+              "hintRate": null,
+              "hintKnown": 0,
+              "avgRetry": null,
+              "changedRate": null,
+              "firstTryMissRate": null,
+              "maxPatternFamilyRepeats": 0
+            }
+          },
+          {
+            "source": "behavior",
+            "phase": "scores",
+            "data": {
+              "knowledge_gap": 0,
+              "careless_pattern": 0,
+              "speed_pressure": 0,
+              "instruction_friction": 0,
+              "fragile_success": 0,
+              "stable_mastery": 0,
+              "winner": "undetermined",
+              "bestScore": 0
+            }
+          }
+        ]
+      },
+      "contractsV1": {
+        "evidence": {
+          "contractVersion": "v1",
+          "topicKey": "hist_sub_athens_democracy",
+          "subjectId": "historySubtopics",
+          "periodStartMs": 1780185600000,
+          "periodEndMs": 1782739778906,
+          "questionCount": 0,
+          "accuracyPct": 0,
+          "wrongCount": 0,
+          "responseSpeedMsMedian": null,
+          "repetitionRate01": 0,
+          "hintRate01": 0,
+          "retryRate01": 0,
+          "recencyScore01": 0.55,
+          "stability01": 0,
+          "confidence01": 0,
+          "varianceState": "high",
+          "trendState": "unknown",
+          "evidenceStrength": "low",
+          "evidenceBand": "E0",
+          "signalQuality": "noisy",
+          "anchorEventIds": [],
+          "dataSufficiency": "insufficient",
+          "modeDiff": null,
+          "errorConcentration": null
+        },
+        "evidenceValidation": {
+          "ok": true,
+          "errors": []
+        }
+      },
+      "intelligenceV1": {
+        "version": "1.0.0",
+        "weakness": {
+          "level": "none",
+          "rationaleCodes": [
+            "canonical_withhold"
+          ]
+        },
+        "confidence": {
+          "band": "low",
+          "rationaleCodes": [
+            "low_volume_caps_low"
+          ]
+        },
+        "patterns": {
+          "taxonomyId": null,
+          "recurrenceFull": false,
+          "patternFamilies": [],
+          "taxonomyBlocked": false,
+          "noPatternClaims": true
+        },
+        "gates": {
+          "canonicalWithhold": true,
+          "insufficientVolume": true
+        }
+      }
+    },
+    {
+      "subject": "history",
+      "bucketKey": "hist_sub_sparta",
+      "parentTopicKey": "classical_greece",
+      "parentTopicLabelHe": "יוון הקלאסית",
+      "displayName": "ספרטה",
+      "questions": 0,
+      "correct": 0,
+      "accuracy": 0,
+      "timeMinutes": 0,
+      "mistakes": 0,
+      "mistakeLastSeen": null,
+      "needsPractice": false,
+      "excellent": false,
+      "subtopicReport": true,
+      "mistakeEventCountResolved": 0,
+      "masteryScore": 0,
+      "stabilityScore": 0,
+      "confidenceScore": 0,
+      "recencyScore": 55,
+      "evidenceStrength": "low",
+      "dataSufficiencyLevel": "low",
+      "dataSufficiencyLabelHe": "לא נאספו שאלות בתקופה שנבחרה — אין בסיס נתונים לשורה זו.",
+      "suppressAggressiveStep": true,
+      "patternStabilityHe": "עדיין מוקדם — לא ברור אם זה נשמר לאורך זמן רק מהנתונים כאן.",
+      "isEarlySignalOnly": true,
+      "recommendationContextHe": "ההמלצה מבוססת על נתונים חלקיים; עדיף לא לעשות שינוי דרמטי בלי לבדוק שוב אחרי עוד תרגול.",
+      "decisionTrace": [
+        {
+          "source": "diagnostics",
+          "phase": "inputs",
+          "detailHe": "קלטים לשורה לפני חישוב אותות.",
+          "data": {
+            "subjectId": "historySubtopics",
+            "topicRowKey": "hist_sub_sparta",
+            "questions": 0,
+            "wrong": null,
+            "wrongRatio": 0,
+            "mistakeEventCountResolved": 0,
+            "periodEndMs": 1782739778906,
+            "cfg": {
+              "stabilityVolumeDivisor": 28,
+              "confidenceExpDivisor": 20
+            }
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "stability_01",
+          "data": {
+            "stability01": 0,
+            "formula": "volume*(1-mistakePressure), mistakePressure from wrongRatio+mistake/q"
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "confidence_01",
+          "data": {
+            "confidence01": 0,
+            "formula": "(1-exp(-q/divisor))*noise(mistakesVsQ)"
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "recency_score",
+          "data": {
+            "recencyScore": 55,
+            "lastSessionMs": null
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "mastery_score",
+          "data": {
+            "masteryScore": 0
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "evidence_strength",
+          "data": {
+            "evidenceStrength": "low"
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "data_sufficiency",
+          "detailHe": "כמות המידע משפיעה על מידת הזהירות בהמלצה הבאה.",
+          "data": {
+            "dataSufficiencyLevel": "low",
+            "suppressAggressiveStep": true,
+            "labelHe": "לא נאספו שאלות בתקופה שנבחרה — אין בסיס נתונים לשורה זו."
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "pattern_flags",
+          "data": {
+            "isStablePattern": false,
+            "isEarlySignalOnly": true
+          }
+        }
+      ],
+      "trend": {
+        "version": 1,
+        "windows": {
+          "currentPeriod": {
+            "startMs": 1780185600000,
+            "endMs": 1782739778906,
+            "questions": 0,
+            "accuracy": null,
+            "sessionCount": 0
+          },
+          "previousComparablePeriod": {
+            "startMs": 1777631421093,
+            "endMs": 1780185599999,
+            "questions": 0,
+            "accuracy": null,
+            "sessionCount": 0
+          },
+          "recentShortWindow": {
+            "startMs": 1782480578906,
+            "endMs": 1782739778906,
+            "questions": 0,
+            "accuracy": null,
+            "sessionCount": 0,
+            "windowMs": 259200000
+          },
+          "lastSessionsInRow": {
+            "sessionCount": 0,
+            "questions": 0,
+            "accuracy": null
+          }
+        },
+        "accuracyDirection": "unknown",
+        "fluencyDirection": "unknown",
+        "independenceDirection": "unknown",
+        "confidence": 0,
+        "trendEvidenceStatus": "insufficient",
+        "summaryHe": "אין מספיק מפגשים בטווח כדי להשוות מגמה · אין מספיק מפגשים תקינים להשוואת מגמה אמינה (נדרשים לפחות 3). בשלב הזה ההשוואה בין תקופות רגישה לרעש — כדאי לאמת שוב אחרי עוד תרגול.",
+        "evidence": {
+          "validCurrentSessionCount": 0,
+          "validPreviousSessionCount": 0,
+          "trendEvidencePoints": 0,
+          "minTrendPointsRequired": 3,
+          "medianSessionDurationSecFullPeriod": null,
+          "medianSessionDurationSecRecentWindow": null,
+          "mistakeWrongCountCurrent": 0,
+          "mistakeWrongCountPrevious": 0,
+          "independenceCurrent": {
+            "hintRate": null,
+            "avgRetry": null,
+            "changedRate": null,
+            "firstTryCorrectRate": null
+          },
+          "independencePrevious": {
+            "hintRate": null,
+            "avgRetry": null,
+            "changedRate": null,
+            "firstTryCorrectRate": null
+          }
+        }
+      },
+      "behaviorProfile": {
+        "version": 1,
+        "dominantType": "undetermined",
+        "strength01": 0,
+        "signals": {
+          "questions": 0,
+          "accuracy": 0,
+          "wrongRatio": 0,
+          "wrongEventCount": 0,
+          "modeKey": null,
+          "medianResponseMsWrong": null,
+          "hintRate": null,
+          "hintKnownCount": 0,
+          "avgRetryOnWrong": null,
+          "changedAnswerRateOnWrong": null,
+          "firstTryMissRateOnWrong": null,
+          "maxPatternFamilyRepeats": 0,
+          "typeScores": {
+            "knowledge_gap": 0,
+            "careless_pattern": 0,
+            "speed_pressure": 0,
+            "instruction_friction": 0,
+            "fragile_success": 0,
+            "stable_mastery": 0
+          }
+        },
+        "summaryHe": "אין מספיק אותות התנהגותיים באירועי טעות ובנפח כדי לסווג דומיננטית.",
+        "decisionTrace": [
+          {
+            "source": "behavior",
+            "phase": "inputs",
+            "data": {
+              "subjectId": "historySubtopics",
+              "topicRowKey": "hist_sub_sparta",
+              "questions": 0,
+              "accuracy": 0,
+              "wrongRatio": 0,
+              "wrongEventsInRow": 0,
+              "modeKey": null
+            }
+          },
+          {
+            "source": "behavior",
+            "phase": "aggregates",
+            "data": {
+              "medianResponseMsWrong": null,
+              "hintRate": null,
+              "hintKnown": 0,
+              "avgRetry": null,
+              "changedRate": null,
+              "firstTryMissRate": null,
+              "maxPatternFamilyRepeats": 0
+            }
+          },
+          {
+            "source": "behavior",
+            "phase": "scores",
+            "data": {
+              "knowledge_gap": 0,
+              "careless_pattern": 0,
+              "speed_pressure": 0,
+              "instruction_friction": 0,
+              "fragile_success": 0,
+              "stable_mastery": 0,
+              "winner": "undetermined",
+              "bestScore": 0
+            }
+          }
+        ]
+      },
+      "contractsV1": {
+        "evidence": {
+          "contractVersion": "v1",
+          "topicKey": "hist_sub_sparta",
+          "subjectId": "historySubtopics",
+          "periodStartMs": 1780185600000,
+          "periodEndMs": 1782739778906,
+          "questionCount": 0,
+          "accuracyPct": 0,
+          "wrongCount": 0,
+          "responseSpeedMsMedian": null,
+          "repetitionRate01": 0,
+          "hintRate01": 0,
+          "retryRate01": 0,
+          "recencyScore01": 0.55,
+          "stability01": 0,
+          "confidence01": 0,
+          "varianceState": "high",
+          "trendState": "unknown",
+          "evidenceStrength": "low",
+          "evidenceBand": "E0",
+          "signalQuality": "noisy",
+          "anchorEventIds": [],
+          "dataSufficiency": "insufficient",
+          "modeDiff": null,
+          "errorConcentration": null
+        },
+        "evidenceValidation": {
+          "ok": true,
+          "errors": []
+        }
+      },
+      "intelligenceV1": {
+        "version": "1.0.0",
+        "weakness": {
+          "level": "none",
+          "rationaleCodes": [
+            "canonical_withhold"
+          ]
+        },
+        "confidence": {
+          "band": "low",
+          "rationaleCodes": [
+            "low_volume_caps_low"
+          ]
+        },
+        "patterns": {
+          "taxonomyId": null,
+          "recurrenceFull": false,
+          "patternFamilies": [],
+          "taxonomyBlocked": false,
+          "noPatternClaims": true
+        },
+        "gates": {
+          "canonicalWithhold": true,
+          "insufficientVolume": true
+        }
+      }
+    },
+    {
+      "subject": "history",
+      "bucketKey": "hist_sub_athens_sparta_compare",
+      "parentTopicKey": "classical_greece",
+      "parentTopicLabelHe": "יוון הקלאסית",
+      "displayName": "השוואה בין אתונה לספרטה",
+      "questions": 0,
+      "correct": 0,
+      "accuracy": 0,
+      "timeMinutes": 0,
+      "mistakes": 0,
+      "mistakeLastSeen": null,
+      "needsPractice": false,
+      "excellent": false,
+      "subtopicReport": true,
+      "mistakeEventCountResolved": 0,
+      "masteryScore": 0,
+      "stabilityScore": 0,
+      "confidenceScore": 0,
+      "recencyScore": 55,
+      "evidenceStrength": "low",
+      "dataSufficiencyLevel": "low",
+      "dataSufficiencyLabelHe": "לא נאספו שאלות בתקופה שנבחרה — אין בסיס נתונים לשורה זו.",
+      "suppressAggressiveStep": true,
+      "patternStabilityHe": "עדיין מוקדם — לא ברור אם זה נשמר לאורך זמן רק מהנתונים כאן.",
+      "isEarlySignalOnly": true,
+      "recommendationContextHe": "ההמלצה מבוססת על נתונים חלקיים; עדיף לא לעשות שינוי דרמטי בלי לבדוק שוב אחרי עוד תרגול.",
+      "decisionTrace": [
+        {
+          "source": "diagnostics",
+          "phase": "inputs",
+          "detailHe": "קלטים לשורה לפני חישוב אותות.",
+          "data": {
+            "subjectId": "historySubtopics",
+            "topicRowKey": "hist_sub_athens_sparta_compare",
+            "questions": 0,
+            "wrong": null,
+            "wrongRatio": 0,
+            "mistakeEventCountResolved": 0,
+            "periodEndMs": 1782739778906,
+            "cfg": {
+              "stabilityVolumeDivisor": 28,
+              "confidenceExpDivisor": 20
+            }
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "stability_01",
+          "data": {
+            "stability01": 0,
+            "formula": "volume*(1-mistakePressure), mistakePressure from wrongRatio+mistake/q"
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "confidence_01",
+          "data": {
+            "confidence01": 0,
+            "formula": "(1-exp(-q/divisor))*noise(mistakesVsQ)"
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "recency_score",
+          "data": {
+            "recencyScore": 55,
+            "lastSessionMs": null
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "mastery_score",
+          "data": {
+            "masteryScore": 0
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "evidence_strength",
+          "data": {
+            "evidenceStrength": "low"
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "data_sufficiency",
+          "detailHe": "כמות המידע משפיעה על מידת הזהירות בהמלצה הבאה.",
+          "data": {
+            "dataSufficiencyLevel": "low",
+            "suppressAggressiveStep": true,
+            "labelHe": "לא נאספו שאלות בתקופה שנבחרה — אין בסיס נתונים לשורה זו."
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "pattern_flags",
+          "data": {
+            "isStablePattern": false,
+            "isEarlySignalOnly": true
+          }
+        }
+      ],
+      "trend": {
+        "version": 1,
+        "windows": {
+          "currentPeriod": {
+            "startMs": 1780185600000,
+            "endMs": 1782739778906,
+            "questions": 0,
+            "accuracy": null,
+            "sessionCount": 0
+          },
+          "previousComparablePeriod": {
+            "startMs": 1777631421093,
+            "endMs": 1780185599999,
+            "questions": 0,
+            "accuracy": null,
+            "sessionCount": 0
+          },
+          "recentShortWindow": {
+            "startMs": 1782480578906,
+            "endMs": 1782739778906,
+            "questions": 0,
+            "accuracy": null,
+            "sessionCount": 0,
+            "windowMs": 259200000
+          },
+          "lastSessionsInRow": {
+            "sessionCount": 0,
+            "questions": 0,
+            "accuracy": null
+          }
+        },
+        "accuracyDirection": "unknown",
+        "fluencyDirection": "unknown",
+        "independenceDirection": "unknown",
+        "confidence": 0,
+        "trendEvidenceStatus": "insufficient",
+        "summaryHe": "אין מספיק מפגשים בטווח כדי להשוות מגמה · אין מספיק מפגשים תקינים להשוואת מגמה אמינה (נדרשים לפחות 3). בשלב הזה ההשוואה בין תקופות רגישה לרעש — כדאי לאמת שוב אחרי עוד תרגול.",
+        "evidence": {
+          "validCurrentSessionCount": 0,
+          "validPreviousSessionCount": 0,
+          "trendEvidencePoints": 0,
+          "minTrendPointsRequired": 3,
+          "medianSessionDurationSecFullPeriod": null,
+          "medianSessionDurationSecRecentWindow": null,
+          "mistakeWrongCountCurrent": 0,
+          "mistakeWrongCountPrevious": 0,
+          "independenceCurrent": {
+            "hintRate": null,
+            "avgRetry": null,
+            "changedRate": null,
+            "firstTryCorrectRate": null
+          },
+          "independencePrevious": {
+            "hintRate": null,
+            "avgRetry": null,
+            "changedRate": null,
+            "firstTryCorrectRate": null
+          }
+        }
+      },
+      "behaviorProfile": {
+        "version": 1,
+        "dominantType": "undetermined",
+        "strength01": 0,
+        "signals": {
+          "questions": 0,
+          "accuracy": 0,
+          "wrongRatio": 0,
+          "wrongEventCount": 0,
+          "modeKey": null,
+          "medianResponseMsWrong": null,
+          "hintRate": null,
+          "hintKnownCount": 0,
+          "avgRetryOnWrong": null,
+          "changedAnswerRateOnWrong": null,
+          "firstTryMissRateOnWrong": null,
+          "maxPatternFamilyRepeats": 0,
+          "typeScores": {
+            "knowledge_gap": 0,
+            "careless_pattern": 0,
+            "speed_pressure": 0,
+            "instruction_friction": 0,
+            "fragile_success": 0,
+            "stable_mastery": 0
+          }
+        },
+        "summaryHe": "אין מספיק אותות התנהגותיים באירועי טעות ובנפח כדי לסווג דומיננטית.",
+        "decisionTrace": [
+          {
+            "source": "behavior",
+            "phase": "inputs",
+            "data": {
+              "subjectId": "historySubtopics",
+              "topicRowKey": "hist_sub_athens_sparta_compare",
+              "questions": 0,
+              "accuracy": 0,
+              "wrongRatio": 0,
+              "wrongEventsInRow": 0,
+              "modeKey": null
+            }
+          },
+          {
+            "source": "behavior",
+            "phase": "aggregates",
+            "data": {
+              "medianResponseMsWrong": null,
+              "hintRate": null,
+              "hintKnown": 0,
+              "avgRetry": null,
+              "changedRate": null,
+              "firstTryMissRate": null,
+              "maxPatternFamilyRepeats": 0
+            }
+          },
+          {
+            "source": "behavior",
+            "phase": "scores",
+            "data": {
+              "knowledge_gap": 0,
+              "careless_pattern": 0,
+              "speed_pressure": 0,
+              "instruction_friction": 0,
+              "fragile_success": 0,
+              "stable_mastery": 0,
+              "winner": "undetermined",
+              "bestScore": 0
+            }
+          }
+        ]
+      },
+      "contractsV1": {
+        "evidence": {
+          "contractVersion": "v1",
+          "topicKey": "hist_sub_athens_sparta_compare",
+          "subjectId": "historySubtopics",
+          "periodStartMs": 1780185600000,
+          "periodEndMs": 1782739778906,
+          "questionCount": 0,
+          "accuracyPct": 0,
+          "wrongCount": 0,
+          "responseSpeedMsMedian": null,
+          "repetitionRate01": 0,
+          "hintRate01": 0,
+          "retryRate01": 0,
+          "recencyScore01": 0.55,
+          "stability01": 0,
+          "confidence01": 0,
+          "varianceState": "high",
+          "trendState": "unknown",
+          "evidenceStrength": "low",
+          "evidenceBand": "E0",
+          "signalQuality": "noisy",
+          "anchorEventIds": [],
+          "dataSufficiency": "insufficient",
+          "modeDiff": null,
+          "errorConcentration": null
+        },
+        "evidenceValidation": {
+          "ok": true,
+          "errors": []
+        }
+      },
+      "intelligenceV1": {
+        "version": "1.0.0",
+        "weakness": {
+          "level": "none",
+          "rationaleCodes": [
+            "canonical_withhold"
+          ]
+        },
+        "confidence": {
+          "band": "low",
+          "rationaleCodes": [
+            "low_volume_caps_low"
+          ]
+        },
+        "patterns": {
+          "taxonomyId": null,
+          "recurrenceFull": false,
+          "patternFamilies": [],
+          "taxonomyBlocked": false,
+          "noPatternClaims": true
+        },
+        "gates": {
+          "canonicalWithhold": true,
+          "insufficientVolume": true
+        }
+      }
+    },
+    {
+      "subject": "history",
+      "bucketKey": "hist_sub_greek_culture_legacy",
+      "parentTopicKey": "classical_greece",
+      "parentTopicLabelHe": "יוון הקלאסית",
+      "displayName": "תרבות יוון והשפעתה עד היום",
+      "questions": 0,
+      "correct": 0,
+      "accuracy": 0,
+      "timeMinutes": 0,
+      "mistakes": 0,
+      "mistakeLastSeen": null,
+      "needsPractice": false,
+      "excellent": false,
+      "subtopicReport": true,
+      "mistakeEventCountResolved": 0,
+      "masteryScore": 0,
+      "stabilityScore": 0,
+      "confidenceScore": 0,
+      "recencyScore": 55,
+      "evidenceStrength": "low",
+      "dataSufficiencyLevel": "low",
+      "dataSufficiencyLabelHe": "לא נאספו שאלות בתקופה שנבחרה — אין בסיס נתונים לשורה זו.",
+      "suppressAggressiveStep": true,
+      "patternStabilityHe": "עדיין מוקדם — לא ברור אם זה נשמר לאורך זמן רק מהנתונים כאן.",
+      "isEarlySignalOnly": true,
+      "recommendationContextHe": "ההמלצה מבוססת על נתונים חלקיים; עדיף לא לעשות שינוי דרמטי בלי לבדוק שוב אחרי עוד תרגול.",
+      "decisionTrace": [
+        {
+          "source": "diagnostics",
+          "phase": "inputs",
+          "detailHe": "קלטים לשורה לפני חישוב אותות.",
+          "data": {
+            "subjectId": "historySubtopics",
+            "topicRowKey": "hist_sub_greek_culture_legacy",
+            "questions": 0,
+            "wrong": null,
+            "wrongRatio": 0,
+            "mistakeEventCountResolved": 0,
+            "periodEndMs": 1782739778906,
+            "cfg": {
+              "stabilityVolumeDivisor": 28,
+              "confidenceExpDivisor": 20
+            }
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "stability_01",
+          "data": {
+            "stability01": 0,
+            "formula": "volume*(1-mistakePressure), mistakePressure from wrongRatio+mistake/q"
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "confidence_01",
+          "data": {
+            "confidence01": 0,
+            "formula": "(1-exp(-q/divisor))*noise(mistakesVsQ)"
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "recency_score",
+          "data": {
+            "recencyScore": 55,
+            "lastSessionMs": null
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "mastery_score",
+          "data": {
+            "masteryScore": 0
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "evidence_strength",
+          "data": {
+            "evidenceStrength": "low"
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "data_sufficiency",
+          "detailHe": "כמות המידע משפיעה על מידת הזהירות בהמלצה הבאה.",
+          "data": {
+            "dataSufficiencyLevel": "low",
+            "suppressAggressiveStep": true,
+            "labelHe": "לא נאספו שאלות בתקופה שנבחרה — אין בסיס נתונים לשורה זו."
+          }
+        },
+        {
+          "source": "diagnostics",
+          "phase": "pattern_flags",
+          "data": {
+            "isStablePattern": false,
+            "isEarlySignalOnly": true
+          }
+        }
+      ],
+      "trend": {
+        "version": 1,
+        "windows": {
+          "currentPeriod": {
+            "startMs": 1780185600000,
+            "endMs": 1782739778906,
+            "questions": 0,
+            "accuracy": null,
+            "sessionCount": 0
+          },
+          "previousComparablePeriod": {
+            "startMs": 1777631421093,
+            "endMs": 1780185599999,
+            "questions": 0,
+            "accuracy": null,
+            "sessionCount": 0
+          },
+          "recentShortWindow": {
+            "startMs": 1782480578906,
+            "endMs": 1782739778906,
+            "questions": 0,
+            "accuracy": null,
+            "sessionCount": 0,
+            "windowMs": 259200000
+          },
+          "lastSessionsInRow": {
+            "sessionCount": 0,
+            "questions": 0,
+            "accuracy": null
+          }
+        },
+        "accuracyDirection": "unknown",
+        "fluencyDirection": "unknown",
+        "independenceDirection": "unknown",
+        "confidence": 0,
+        "trendEvidenceStatus": "insufficient",
+        "summaryHe": "אין מספיק מפגשים בטווח כדי להשוות מגמה · אין מספיק מפגשים תקינים להשוואת מגמה אמינה (נדרשים לפחות 3). בשלב הזה ההשוואה בין תקופות רגישה לרעש — כדאי לאמת שוב אחרי עוד תרגול.",
+        "evidence": {
+          "validCurrentSessionCount": 0,
+          "validPreviousSessionCount": 0,
+          "trendEvidencePoints": 0,
+          "minTrendPointsRequired": 3,
+          "medianSessionDurationSecFullPeriod": null,
+          "medianSessionDurationSecRecentWindow": null,
+          "mistakeWrongCountCurrent": 0,
+          "mistakeWrongCountPrevious": 0,
+          "independenceCurrent": {
+            "hintRate": null,
+            "avgRetry": null,
+            "changedRate": null,
+            "firstTryCorrectRate": null
+          },
+          "independencePrevious": {
+            "hintRate": null,
+            "avgRetry": null,
+            "changedRate": null,
+            "firstTryCorrectRate": null
+          }
+        }
+      },
+      "behaviorProfile": {
+        "version": 1,
+        "dominantType": "undetermined",
+        "strength01": 0,
+        "signals": {
+          "questions": 0,
+          "accuracy": 0,
+          "wrongRatio": 0,
+          "wrongEventCount": 0,
+          "modeKey": null,
+          "medianResponseMsWrong": null,
+          "hintRate": null,
+          "hintKnownCount": 0,
+          "avgRetryOnWrong": null,
+          "changedAnswerRateOnWrong": null,
+          "firstTryMissRateOnWrong": null,
+          "maxPatternFamilyRepeats": 0,
+          "typeScores": {
+            "knowledge_gap": 0,
+            "careless_pattern": 0,
+            "speed_pressure": 0,
+            "instruction_friction": 0,
+            "fragile_success": 0,
+            "stable_mastery": 0
+          }
+        },
+        "summaryHe": "אין מספיק אותות התנהגותיים באירועי טעות ובנפח כדי לסווג דומיננטית.",
+        "decisionTrace": [
+          {
+            "source": "behavior",
+            "phase": "inputs",
+            "data": {
+              "subjectId": "historySubtopics",
+              "topicRowKey": "hist_sub_greek_culture_legacy",
+              "questions": 0,
+              "accuracy": 0,
+              "wrongRatio": 0,
+              "wrongEventsInRow": 0,
+              "modeKey": null
+            }
+          },
+          {
+            "source": "behavior",
+            "phase": "aggregates",
+            "data": {
+              "medianResponseMsWrong": null,
+              "hintRate": null,
+              "hintKnown": 0,
+              "avgRetry": null,
+              "changedRate": null,
+              "firstTryMissRate": null,
+              "maxPatternFamilyRepeats": 0
+            }
+          },
+          {
+            "source": "behavior",
+            "phase": "scores",
+            "data": {
+              "knowledge_gap": 0,
+              "careless_pattern": 0,
+              "speed_pressure": 0,
+              "instruction_friction": 0,
+              "fragile_success": 0,
+              "stable_mastery": 0,
+              "winner": "undetermined",
+              "bestScore": 0
+            }
+          }
+        ]
+      },
+      "contractsV1": {
+        "evidence": {
+          "contractVersion": "v1",
+          "topicKey": "hist_sub_greek_culture_legacy",
+          "subjectId": "historySubtopics",
+          "periodStartMs": 1780185600000,
+          "periodEndMs": 1782739778906,
+          "questionCount": 0,
+          "accuracyPct": 0,
+          "wrongCount": 0,
+          "responseSpeedMsMedian": null,
+          "repetitionRate01": 0,
+          "hintRate01": 0,
+          "retryRate01": 0,
+          "recencyScore01": 0.55,
+          "stability01": 0,
+          "confidence01": 0,
+          "varianceState": "high",
+          "trendState": "unknown",
+          "evidenceStrength": "low",
+          "evidenceBand": "E0",
+          "signalQuality": "noisy",
+          "anchorEventIds": [],
+          "dataSufficiency": "insufficient",
+          "modeDiff": null,
+          "errorConcentration": null
+        },
+        "evidenceValidation": {
+          "ok": true,
+          "errors": []
+        }
+      },
+      "intelligenceV1": {
+        "version": "1.0.0",
+        "weakness": {
+          "level": "none",
+          "rationaleCodes": [
+            "canonical_withhold"
+          ]
+        },
+        "confidence": {
+          "band": "low",
+          "rationaleCodes": [
+            "low_volume_caps_low"
+          ]
+        },
+        "patterns": {
+          "taxonomyId": null,
+          "recurrenceFull": false,
+          "patternFamilies": [],
+          "taxonomyBlocked": false,
+          "noPatternClaims": true
+        },
+        "gates": {
+          "canonicalWithhold": true,
+          "insufficientVolume": true
+        }
+      }
+    }
+  ],
+  "recommendations": []
+}

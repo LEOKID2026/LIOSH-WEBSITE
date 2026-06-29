@@ -39,6 +39,8 @@ import {
   buildTopicClarificationQuestionHe,
   hasAnchoredReportRows,
   isGeneralReportQuestion,
+  isSubjectStatusInquiry,
+  isTopicWeaknessInquiry,
   resolveReportRowFromUtterance,
   utteranceQualifiesAsReportQuestion,
 } from "./report-row-resolver.js";
@@ -536,6 +538,7 @@ function subjectLabelLocalHe(subjectId) {
     case "geometry": return "גאומטריה";
     case "english": return "אנגלית";
     case "science": return "מדעים";
+    case "history": return "היסטוריה";
     case "hebrew": return "עברית";
     case "moledet-geography": return "מולדת";
     default: return "";
@@ -1150,6 +1153,24 @@ export function classifyParentQuestionDeterministic({ utterance, payload }) {
       confidence: 0.65,
       source: "deterministic",
       signals: { ...signals, hasStrongReportToken: true },
+    };
+  }
+
+  // 5b. Subject-scoped status / weakness when report vocabulary matches the subject label.
+  if (
+    reportRes.subjectTopicNameMatched &&
+    (isSubjectStatusInquiry(t) || isTopicWeaknessInquiry(t))
+  ) {
+    return {
+      bucket: "report_related",
+      confidence: 0.86,
+      source: "deterministic",
+      signals: {
+        ...signals,
+        reportSignal: Math.max(reportRes.score, 0.76),
+        hasStrongReportToken: true,
+        ambiguitySignal: Math.min(ambiguitySignal, 0.15),
+      },
     };
   }
 

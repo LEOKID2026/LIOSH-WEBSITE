@@ -184,6 +184,12 @@ const PRACTICE_FOCUS_OPTIONS = [
   { value: "hasmonaeans_rome", label: "🕎 חשמונאים ורומא" },
 ];
 
+const PRACTICE_TOPIC_GROUPS = {
+  balanced: null,
+  greece_hellenism: ["what_is_history", "classical_greece", "hellenism_jews"],
+  hasmonaeans_rome: ["hasmonaeans", "rome_jews"],
+};
+
 const AVATAR_OPTIONS = [
   "👤",
   "🧑",
@@ -232,9 +238,9 @@ const REFERENCE_SECTIONS = {
     label: "חשמונאים ורומא",
     entries: [
       { term: "גזרות אנטיוכוס", desc: "לחץ על היהדות — זרז למרד." },
-      { term: "חנukah", desc: "ניצחון המכבים וחידוש המקדש." },
+      { term: "חנוכה", desc: "ניצחון המכבים וחידוש המקדש." },
       { term: "פרובינציה", desc: "יהודה תחת שלטון רומי." },
-      { term: "יבנה", desc: "מרכז ללימוד לאחר החורban." },
+      { term: "יבנה", desc: "מרכז ללימוד לאחר החורבן." },
     ],
   },
 };
@@ -1800,6 +1806,17 @@ function saveScienceAnswerInParallel({
         }
       )
     : null;
+  const qParams =
+    question?.params && typeof question.params === "object" ? question.params : {};
+  const answerParams = question
+    ? {
+        subtopicKey: qParams.subtopicKey || question.subtopicKey || null,
+        subskillId: qParams.subskillId || qParams.subtopicKey || question.subtopicKey || null,
+        topicKey: question.topic || topic || "history",
+        skillId: qParams.diagnosticSkillId || question.skillId || qParams.skillId || null,
+        patternFamily: qParams.patternFamily || null,
+      }
+    : null;
   ensureLearningSessionId()
     .then((learningSessionId) => {
       if (!learningSessionId) return;
@@ -1818,6 +1835,7 @@ function saveScienceAnswerInParallel({
               ? String(answerIndex)
               : "",
         questionEngine,
+        ...(answerParams ? { params: answerParams } : {}),
         isCorrect: Boolean(isCorrect),
         hintsUsed: 0,
         // Phase 3: send both raw and credited time
@@ -1869,8 +1887,9 @@ function saveScienceAnswerInParallel({
     let entry = {
       id: question.id,
       topic: question.topic,
-      topicOrOperation: question.topic,
-      bucketKey: question.topic,
+      subtopicKey: qParams.subtopicKey || question.subtopicKey || null,
+      topicOrOperation: qParams.subtopicKey || question.subtopicKey || question.topic,
+      bucketKey: qParams.subtopicKey || question.subtopicKey || question.topic,
       grade: assignedGrade,
       level: assignedLevel,
       stem: question.stem,

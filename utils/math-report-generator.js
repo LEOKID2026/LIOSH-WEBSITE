@@ -7,7 +7,7 @@ import { getEnglishTimeByCustomPeriod } from './english-time-tracking.js';
 import { getScienceTimeByCustomPeriod } from './science-time-tracking.js';
 import { getHebrewTimeByCustomPeriod } from './hebrew-time-tracking.js';
 import { getMoledetGeographyTimeByCustomPeriod } from './moledet-geography-time-tracking.js';
-import { historyTopicLabelHe } from "../data/history-curriculum.js";
+import { historyTopicLabelHe, historySubtopicLabelHe } from "../data/history-curriculum.js";
 
 // שמות פעולות בעברית (חשבון)
 const OPERATION_NAMES = {
@@ -133,6 +133,10 @@ export function getScienceTopicName(topic) {
 
 export function getHistoryTopicName(topic) {
   return historyTopicLabelHe(topic) || "נושא";
+}
+
+export function getHistorySubtopicName(subtopicKey) {
+  return historySubtopicLabelHe(subtopicKey) || getHistoryTopicName(subtopicKey);
 }
 
 const HEBREW_TOPIC_NAMES = {
@@ -1218,6 +1222,10 @@ function getDisplayNameForEntry(op, data) {
   if (data.subject === 'geometry') return getTopicName(keyForLookup);
   if (data.subject === 'english') return getEnglishTopicName(keyForLookup);
   if (data.subject === 'science') return getScienceTopicName(keyForLookup);
+  if (data.subject === 'history') {
+    if (String(keyForLookup).startsWith("hist_sub_")) return getHistorySubtopicName(keyForLookup);
+    return getHistoryTopicName(keyForLookup);
+  }
   if (data.subject === 'hebrew') return getHebrewTopicName(keyForLookup);
   if (data.subject === 'moledet-geography')
     return getMoledetGeographyTopicName(keyForLookup);

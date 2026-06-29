@@ -119,6 +119,10 @@ export default async function handler(req, res) {
     const registeredGradeKey = canonicalGradeLevelKeyFromAuth(auth);
     const clientGradeHint = normalizeOptionalString(body.gradeLevel, 40);
     const clientMeta = normalizeClientMeta(body.clientMeta);
+    const answerParams =
+      body.params && typeof body.params === "object" && !Array.isArray(body.params)
+        ? body.params
+        : null;
     const contentGradeKey =
       normalizePracticeGradeKey(clientGradeHint) ||
       resolveContentGradeFromAnswerPayload(
@@ -174,6 +178,9 @@ export default async function handler(req, res) {
       isDiagnosticEligible: classification.isDiagnosticEligible,
       contextFlags: classification.contextFlags,
     };
+    if (answerParams) {
+      answerPayload.params = answerParams;
+    }
 
     const canonicalBundle = buildDiagnosticCanonicalMetadata({
       subject,
@@ -183,10 +190,7 @@ export default async function handler(req, res) {
       isDiagnosticEligible: classification.isDiagnosticEligible,
       source: {
         ...answerPayload,
-        params:
-          body.params && typeof body.params === "object" && !Array.isArray(body.params)
-            ? body.params
-            : undefined,
+        params: answerParams || undefined,
         questionEngine,
       },
       questionEngine,

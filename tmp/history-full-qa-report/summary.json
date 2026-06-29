@@ -1,0 +1,270 @@
+{
+  "startedAt": "2026-06-29T13:23:27.406Z",
+  "base": "http://127.0.0.1:3011",
+  "sections": {
+    "build": {
+      "pass": true
+    },
+    "audit-history-child-text": {
+      "pass": true
+    },
+    "verify-history-g6-book": {
+      "pass": true
+    },
+    "certify-history-diagnostic-probe-e2e": {
+      "pass": true
+    },
+    "book-16-sections-static": {
+      "pass": false,
+      "totalSections": 16,
+      "details": {
+        "classical_greece": {
+          "sections": 4,
+          "expected": 4,
+          "ok": true,
+          "hasLatin": true
+        },
+        "hasmonaeans": {
+          "sections": 2,
+          "expected": 2,
+          "ok": true,
+          "hasLatin": true
+        },
+        "hellenism_jews": {
+          "sections": 2,
+          "expected": 2,
+          "ok": true,
+          "hasLatin": true
+        },
+        "rome_jews": {
+          "sections": 7,
+          "expected": 7,
+          "ok": true,
+          "hasLatin": true
+        },
+        "what_is_history": {
+          "sections": 1,
+          "expected": 1,
+          "ok": true,
+          "hasLatin": true
+        }
+      },
+      "fileCount": 5
+    },
+    "dom-audit": {
+      "pass": true,
+      "hits": 0,
+      "sample": []
+    },
+    "e2e-student-practice": {
+      "pass": true,
+      "results": [
+        {
+          "leo": "AAA1",
+          "label": "g1",
+          "pin": "1234",
+          "login": "aaa1",
+          "pass": true,
+          "historyVisible": true,
+          "masterOk": true,
+          "storage": {
+            "mistakesCount": 9,
+            "mistakesSample": [
+              {
+                "topic": "what_is_history",
+                "subtopicKey": "hist_sub_intro_sources_timeline"
+              },
+              {
+                "topic": "what_is_history",
+                "subtopicKey": "hist_sub_intro_sources_timeline"
+              },
+              {
+                "topic": "what_is_history",
+                "subtopicKey": "hist_sub_intro_sources_timeline"
+              },
+              {
+                "topic": "what_is_history",
+                "subtopicKey": "hist_sub_intro_sources_timeline"
+              },
+              {
+                "topic": "what_is_history",
+                "subtopicKey": "hist_sub_intro_sources_timeline"
+              }
+            ],
+            "trackingKeys": [
+              "topics",
+              "daily"
+            ],
+            "masterKeys": [
+              "easy_what_is_history"
+            ],
+            "totalQuestions": null
+          },
+          "subtopicInMistakes": true
+        },
+        {
+          "leo": "AAA7",
+          "label": "g4",
+          "pin": "1234",
+          "login": "aaa7",
+          "pass": true,
+          "historyVisible": true,
+          "masterOk": true,
+          "storage": {
+            "mistakesCount": 8,
+            "mistakesSample": [
+              {
+                "topic": "what_is_history",
+                "subtopicKey": "hist_sub_intro_sources_timeline"
+              },
+              {
+                "topic": "what_is_history",
+                "subtopicKey": "hist_sub_intro_sources_timeline"
+              },
+              {
+                "topic": "what_is_history",
+                "subtopicKey": "hist_sub_intro_sources_timeline"
+              },
+              {
+                "topic": "what_is_history",
+                "subtopicKey": "hist_sub_intro_sources_timeline"
+              },
+              {
+                "topic": "what_is_history",
+                "subtopicKey": "hist_sub_intro_sources_timeline"
+              }
+            ],
+            "trackingKeys": [
+              "topics",
+              "daily"
+            ],
+            "masterKeys": [
+              "medium_what_is_history",
+              "easy_what_is_history"
+            ],
+            "totalQuestions": null
+          },
+          "subtopicInMistakes": true
+        },
+        {
+          "leo": "AAA11",
+          "label": "g6",
+          "pin": "1234",
+          "login": "aaa11",
+          "pass": true,
+          "historyVisible": true,
+          "masterOk": true,
+          "storage": {
+            "mistakesCount": 10,
+            "mistakesSample": [
+              {
+                "topic": "what_is_history",
+                "subtopicKey": "hist_sub_intro_sources_timeline"
+              },
+              {
+                "topic": "what_is_history",
+                "subtopicKey": "hist_sub_intro_sources_timeline"
+              },
+              {
+                "topic": "what_is_history",
+                "subtopicKey": "hist_sub_intro_sources_timeline"
+              },
+              {
+                "topic": "what_is_history",
+                "subtopicKey": "hist_sub_intro_sources_timeline"
+              },
+              {
+                "topic": "what_is_history",
+                "subtopicKey": "hist_sub_intro_sources_timeline"
+              }
+            ],
+            "trackingKeys": [
+              "topics",
+              "daily"
+            ],
+            "masterKeys": [
+              "easy_what_is_history"
+            ],
+            "totalQuestions": null
+          },
+          "subtopicInMistakes": true
+        }
+      ]
+    },
+    "parent-report-ui-and-copilot": {
+      "pass": false,
+      "subtopicKeys": 16,
+      "expectedSubtopics": 16,
+      "hebrewLabels": 16,
+      "uiHasHistory": false,
+      "uiGeneric": false,
+      "genericRec": false,
+      "historyProfileRows": 0,
+      "copilotResults": [
+        {
+          "utterance": "איך הילד שלי בהיסטוריה?",
+          "resolutionStatus": "clarification_required",
+          "fallbackUsed": false,
+          "mentionsHistory": false,
+          "textSample": ""
+        },
+        {
+          "utterance": "איך הוא ברומא והיהודים?",
+          "resolutionStatus": "resolved",
+          "fallbackUsed": false,
+          "mentionsHistory": false,
+          "textSample": "לפי הדוח, כרגע מופיעים: אנגלית — אוצר מילים · מדעים — גוף האדם · מדעים — ניסויים ותהליכים. הדוח מתבסס על התרגול שבוצע באתר בתקופה שנבחרה. בתקופה שנבחרה נבדקו 23 נושאים. כדאי להמשיך"
+        },
+        {
+          "utterance": "איך הוא בהורדוס?",
+          "resolutionStatus": "resolved",
+          "fallbackUsed": false,
+          "mentionsHistory": false,
+          "textSample": "כדאי להמשיך לעקוב — נכון לעכשיו — ההמלצות כאן משקפות את אותו מקור נתונים שבדוח בלבד, בלי הרחבה מעבר לו. כדאי להתמקד עכשיו בנושא אחד ולבדוק שוב אחרי עוד תרגול קצר. לפי נתוני הדוח, נ"
+        },
+        {
+          "utterance": "איך הוא במרד המקבים?",
+          "resolutionStatus": "resolved",
+          "fallbackUsed": false,
+          "mentionsHistory": false,
+          "textSample": "כדאי להמשיך לעקוב — נכון לעכשיו — הדוח מתבסס על התרגול שבוצע באתר בתקופה שנבחרה. כדאי להתמקד עכשיו בנושא אחד ולבדוק שוב אחרי עוד תרגול קצר. לפי נתוני הדוח, נענו כ 353 שאלות בתרגול,"
+        },
+        {
+          "utterance": "איך הוא באתונה וספרטה?",
+          "resolutionStatus": "resolved",
+          "fallbackUsed": false,
+          "mentionsHistory": false,
+          "textSample": "כדאי להמשיך לעקוב — נכון לעכשיו — הדוח מתבסס על התרגול שבוצע באתר בתקופה שנבחרה. כדאי להתמקד עכשיו בנושא אחד ולבדוק שוב אחרי עוד תרגול קצר. לפי נתוני הדוח, נענו כ 353 שאלות בתרגול,"
+        },
+        {
+          "utterance": "מה קשה לו בהיסטוריה?",
+          "resolutionStatus": "resolved",
+          "fallbackUsed": false,
+          "mentionsHistory": false,
+          "textSample": "המוקד שדורש כרגע הכי הרבה חיזוק הוא גאומטריה. הסיבה המרכזית היא שיש מעט מדי נתונים במקצוע הזה בתקופה הנוכחית. · נכון לעכשיו. · כדאי להמשיך לעקוב."
+        },
+        {
+          "utterance": "מה כדאי לתרגל בבית?",
+          "resolutionStatus": "resolved",
+          "fallbackUsed": true,
+          "mentionsHistory": false,
+          "textSample": "לפי מוקדי החיזוק בדוח, השבוע כדאי להקדיש זמן למדעים — גוף האדם ולמדעים — ניסויים ותהליכים. יש כאן כיוון עבודה הגיוני, ונעדיף לראות את זה חוזר עוד פעם לפני שמחמירים בקביעת כיוון."
+        }
+      ]
+    },
+    "parent-activity-e2e": {
+      "pass": false,
+      "activityId": "394cafc8-7126-430e-9711-6d221477caf8",
+      "answered": 0,
+      "topic": "rome_jews",
+      "subject": "history"
+    }
+  },
+  "openIssues": [
+    "book-16-sections-static",
+    "parent-report-ui-and-copilot",
+    "parent-activity-e2e"
+  ],
+  "allPass": false,
+  "finishedAt": "2026-06-29T13:29:57.477Z"
+}

@@ -53,6 +53,15 @@ export function subjectQuestionCountFromPayload(payload, subjectId) {
   const topics = Array.isArray(sp?.topicRecommendations) ? sp.topicRecommendations : [];
   let sum = 0;
   for (const tr of topics) sum += Math.max(0, Number(tr?.questions ?? tr?.questionCount) || 0);
+  if (sum > 0) return sum;
+  for (const row of Array.isArray(sp?.topicOverviewRows) ? sp.topicOverviewRows : []) {
+    sum += Math.max(0, Number(row?.questions) || 0);
+  }
+  if (sum > 0) return sum;
+  if (subjectId === "history") {
+    const summary = payload?.summary && typeof payload.summary === "object" ? payload.summary : {};
+    return Math.max(0, Number(summary.historyQuestions) || 0);
+  }
   return sum;
 }
 

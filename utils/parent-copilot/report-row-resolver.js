@@ -7,6 +7,7 @@ import { listTopicRowsForClassifier } from "../parent-ai-topic-classifier/classi
 import { SUBJECT_ORDER, subjectLabelHe } from "./contract-reader.js";
 import { foldUtteranceForHeMatch } from "./utterance-normalize-he.js";
 import { isContextualFollowUpUtterance } from "./contextual-follow-up-he.js";
+import { detectHistoryCopilotLock } from "./history-scope-he.js";
 
 /** @type {Record<string, string[]>} */
 export const SUBJECT_HE_ALIASES = Object.freeze({
@@ -29,6 +30,27 @@ export const TOPIC_HE_ALIASES = Object.freeze({
   "reading-comprehension": ["הבנת הנקרא", "הבנה", "קריאה"],
   grammar: ["דקדוק", "דקדוק עברית"],
   vocabulary: ["אוצר מילים", "אוצר"],
+  what_is_history: ["מהי היסטוריה", "מקור ראשוני", "מקור משני", "ציר זמן"],
+  classical_greece: ["יוון הקלאסית", "אתונה", "ספרטה", "דמוקרטיה", "השוואה אתונה ספרטה"],
+  hellenism_jews: ["הלניזם", "אלכסנדר מוקדון", "אלכסנדר", "הלניזם והיהודים"],
+  hasmonaeans: ["החשמונאים", "חשמונאים", "אנטיוכוס", "מרד המקבים", "המקבים", "חנוכה"],
+  rome_jews: ["רומא והיהודים", "רומא", "הורדוס", "המרד הגדול", "חורבן בית המקדש", "חורבן", "יבנה", "בר כוכבא", "בבל"],
+  hist_sub_intro_sources_timeline: ["מקור ראשוני", "מקור משני", "ציר זמן", "מהי היסטוריה"],
+  hist_sub_athens_democracy: ["אתונה", "דמוקרטיה", "אתונה הדמוקרטית"],
+  hist_sub_sparta: ["ספרטה"],
+  hist_sub_athens_sparta_compare: ["השוואה אתונה ספרטה", "השוואה בין אתונה לספרטה"],
+  hist_sub_greek_culture_legacy: ["תרבות יוון", "מורשת יוון", "אולימפיאדה"],
+  hist_sub_alexander_hellenism: ["אלכסנדר מוקדון", "הלניזם"],
+  hist_sub_hellenism_meets_judaism: ["המפגש בין הלניזם ליהדות", "הלניזם והיהודים"],
+  hist_sub_antiochus_maccabees: ["גזרות אנטיוכוס", "מרד המקבים", "המקבים"],
+  hist_sub_hasmonaean_kingdom: ["ממלכת החשמונאים"],
+  hist_sub_rise_of_rome: ["עליית רומא", "רומא"],
+  hist_sub_roman_culture_law: ["תרבות רומית", "משפט רומי", "חוק רומי"],
+  hist_sub_hasmonaean_loss_roman_conquest: ["כיבוש רומי", "פומפיוס", "אובדן עצמאות"],
+  hist_sub_herod_building: ["הורדוס", "מפעלי בנייה", "הרודיון"],
+  hist_sub_judea_province: ["יהודה כפרובינציה", "פרובינציה"],
+  hist_sub_great_revolt_destruction: ["המרד הגדול", "חורבן בית המקדש", "מצדה"],
+  hist_sub_yavne_bar_kokhba_babylon: ["יבנה", "בר כוכבא", "מרכז בבל", "בבל"],
 });
 
 const TOPIC_INQUIRY_PREFIX_RE =
@@ -87,6 +109,10 @@ export function listReportRows(payload) {
     for (const tr of Array.isArray(sp?.topicRecommendations) ? sp.topicRecommendations : []) {
       const trk = String(tr?.topicRowKey || tr?.topicKey || "").trim();
       if (trk) trByKey.set(`${sid}|${trk}`, tr);
+    }
+    for (const row of Array.isArray(sp?.topicOverviewRows) ? sp.topicOverviewRows : []) {
+      const trk = String(row?.topicRowKey || row?.topicKey || "").trim();
+      if (trk && !trByKey.has(`${sid}|${trk}`)) trByKey.set(`${sid}|${trk}`, row);
     }
   }
   return raw.map((row) => {
@@ -240,6 +266,23 @@ export function resolveReportRowFromUtterance(utterance, payload) {
     subjectId = subjHits[0].subjectId;
   }
 
+  const historyLock = detectHistoryCopilotLock(utterance);
+  if (historyLock?.locked) {
+    subjectId = "history";
+    if (historyLock.topicBaseKey) {
+      const histRows = rows.filter(
+        (r) => r.subjectId === "history" && r.topicBaseKey === historyLock.topicBaseKey,
+      );
+      const histBest = [...histRows].sort(
+        (a, b) => (Number(b.questions) || 0) - (Number(a.questions) || 0) || b.score - a.score,
+      )[0];
+      if (histBest) {
+        best = { row: histBest, score: Math.max(best?.score ?? 0, 100) };
+        ambiguous = false;
+      }
+    }
+  }
+
   if (best && subjectId && best.row.subjectId === subjectId) {
     const topicNamed =
       foldedIncludesPhrase(folded, best.row.displayNameFolded) ||
@@ -312,7 +355,7 @@ export function resolveReportRowFromUtterance(utterance, payload) {
  */
 export function isSubjectStatusInquiry(folded) {
   const t = String(folded || "").trim();
-  return /^(?:איך\s+הוא|איך\s+היא|מה\s+המצב|מה\s+קורה)\s+ב/u.test(t);
+  return /^(?:איך\s+(?:הוא|היא|הילד|הילדה|בני|בתי)|מה\s+המצב|מה\s+קורה)(?:\s|$)/u.test(t) && /\s+ב/u.test(t);
 }
 
 /**

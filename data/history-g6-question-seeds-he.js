@@ -18,6 +18,7 @@ export const HISTORY_G6_QUESTION_SEEDS = {
       correctIndex: 0,
       explanation: "מקור ראשוני נוצר בזמן האירועים או קרוב אליהם, כמו מכתב או מטבע עתיק.",
       concept: "primary_source",
+      skillId: "hist_simple_source",
     },
     {
       stem: "מהו מקור משני?",
@@ -25,6 +26,7 @@ export const HISTORY_G6_QUESTION_SEEDS = {
       correctIndex: 0,
       explanation: "מקור משני מסביר ומפרש את העבר בעזרת מקורות ראשוניים ומחקר.",
       concept: "secondary_source",
+      skillId: "hist_simple_source",
     },
     {
       stem: "למה משמש ציר זמן?",
@@ -39,6 +41,7 @@ export const HISTORY_G6_QUESTION_SEEDS = {
       correctIndex: 0,
       explanation: "מטבע מהתקופה הוא עדות ישירה מהעבר.",
       concept: "primary_example",
+      skillId: "hist_simple_source",
     },
     {
       stem: "איזה פריט הוא מקור משני?",
@@ -46,6 +49,7 @@ export const HISTORY_G6_QUESTION_SEEDS = {
       correctIndex: 0,
       explanation: "אנציקלופדיה מסכמת מחקר ואינה נוצרה בזמן האירועים.",
       concept: "secondary_example",
+      skillId: "hist_simple_source",
     },
     {
       stem: "מה חשוב בעבודה היסטורית?",
@@ -81,6 +85,7 @@ export const HISTORY_G6_QUESTION_SEEDS = {
       correctIndex: 0,
       explanation: "עדות היא כל מידע רלוונטי ממקורות על העבר.",
       concept: "historical_evidence",
+      skillId: "hist_simple_source",
     },
     {
       stem: "למה חשוב להבחין בין מקור ראשוני למשני?",
@@ -88,6 +93,7 @@ export const HISTORY_G6_QUESTION_SEEDS = {
       correctIndex: 0,
       explanation: "הבחנה זו עוזרת לשקול את אמינות המידע.",
       concept: "source_distinction",
+      skillId: "hist_simple_source",
     },
     {
       stem: "איזה שאלה מתאימה לחוקר היסטוריה?",
@@ -102,6 +108,7 @@ export const HISTORY_G6_QUESTION_SEEDS = {
       correctIndex: 0,
       explanation: "סתירה בין מקורות מחייבת בדיקה נוספת ולא ויתור על חשיבה.",
       concept: "conflicting_sources",
+      skillId: "hist_simple_source",
     },
   ],
 

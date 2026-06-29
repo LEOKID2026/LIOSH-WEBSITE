@@ -45,7 +45,7 @@ const SUBJECT_TOPIC_MAPS = [
 
   { subjectId: "science", mapKey: "scienceTopics", prefix: "science_" },
 
-  { subjectId: "history", mapKey: "historyTopics", prefix: "history_" },
+  { subjectId: "history", mapKey: "historySubtopics", prefix: "history_" },
 
   { subjectId: "hebrew", mapKey: "hebrewTopics", prefix: "hebrew_" },
 

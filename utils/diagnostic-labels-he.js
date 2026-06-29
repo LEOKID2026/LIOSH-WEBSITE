@@ -7,6 +7,8 @@ import {
   getTopicName,
   getEnglishTopicName,
   getScienceTopicName,
+  getHistoryTopicName,
+  getHistorySubtopicName,
   getHebrewTopicName,
   getMoledetGeographyTopicName,
 } from "./math-report-generator.js";
@@ -165,6 +167,9 @@ export function topicBucketLabelHe(subjectId, bucketKey) {
     else if (subjectId === "geometry") result = getTopicName(k);
     else if (subjectId === "english") result = getEnglishTopicName(k);
     else if (subjectId === "science") result = getScienceTopicName(k);
+    else if (subjectId === "history") {
+      result = String(k).startsWith("hist_sub_") ? getHistorySubtopicName(k) : getHistoryTopicName(k);
+    }
     else if (subjectId === "hebrew") result = getHebrewTopicName(k);
     else if (subjectId === "moledet-geography") result = getMoledetGeographyTopicName(k);
     if (result != null) {
@@ -238,6 +243,29 @@ export function weaknessLabelHe(subjectId, sampleEv) {
     if (h.includes("spelling")) return "קושי באיות ובכתיב";
     if (h.includes("writing")) return "קושי בכתיבה ובניסוח באנגלית";
     if (h.includes("reading")) return "קושי בקריאה והבנת הנקרא";
+  }
+
+  if (subjectId === "history") {
+    const h = `${pf} ${k} ${st} ${ct}`.toLowerCase();
+    if (h.includes("source") || h.includes("מקור")) {
+      return "קושי בהבחנה בין מקור ראשוני למשני";
+    }
+    if (h.includes("timeline") || h.includes("sequence") || h.includes("ציר")) {
+      return "קושי בסדר אירועים וציר זמן";
+    }
+    if (h.includes("cause") || h.includes("effect") || h.includes("סיבה")) {
+      return "קושי בקשר סיבה ותוצאה";
+    }
+    if (h.includes("compare") || h.includes("comparison") || h.includes("השוואה")) {
+      return "קושי בהשוואה בין תקופות או מוסדות";
+    }
+    if (h.includes("figure") || h.includes("role") || h.includes("דמות")) {
+      return "קושי בהבחנה בין דמויות ותפקידיהן";
+    }
+    if (st.startsWith("hist_sub_")) {
+      const nice = getHistorySubtopicName(st);
+      if (nice && !isMostlyAsciiIdentifier(nice)) return `בנושא ${nice}`;
+    }
   }
 
   const fromPf = hebrewFromEnglishSlug(pf);

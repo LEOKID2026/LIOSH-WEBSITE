@@ -145,7 +145,7 @@ const REPORT_MAP_KEY = {
   geometry: "geometryTopics",
   english: "englishTopics",
   science: "scienceTopics",
-  history: "historyTopics",
+  history: "historySubtopics",
   hebrew: "hebrewTopics",
   "moledet-geography": "moledetGeographyTopics",
 };

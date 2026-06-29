@@ -32,6 +32,20 @@ export function listTopicRowsForClassifier(payload) {
         anchored,
       });
     }
+    const overview = Array.isArray(sp?.topicOverviewRows) ? sp.topicOverviewRows : [];
+    for (const row of overview) {
+      const displayNameHe = String(row?.displayName || "").trim();
+      const topicRowKey = String(row?.topicRowKey || row?.topicKey || "").trim();
+      if (!topicRowKey || displayNameHe.length < 2) continue;
+      if (out.some((r) => r.subjectId === sid && r.topicRowKey === topicRowKey)) continue;
+      out.push({
+        subjectId: sid,
+        topicRowKey,
+        displayName: displayNameHe,
+        displayNameFolded: foldUtteranceForHeMatch(displayNameHe),
+        anchored: Math.max(0, Number(row?.questions) || 0) > 0,
+      });
+    }
   }
   return out;
 }

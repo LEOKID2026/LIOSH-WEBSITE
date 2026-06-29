@@ -78,12 +78,28 @@ function collectPracticeMetrics(payload) {
   const profiles = Array.isArray(payload?.subjectProfiles) ? payload.subjectProfiles : [];
   /** @type {ReturnType<typeof rowMetrics>[]} */
   const metas = [];
+  const seen = new Set();
+  const pushMetric = (m) => {
+    if (!m || m.q <= 0) return;
+    const key = `${m.sid}|${m.topicRowKey}`;
+    if (seen.has(key)) return;
+    seen.add(key);
+    metas.push(m);
+  };
   for (const sp of profiles) {
     const sid = normalizeSubjectId(sp?.subject);
     const list = Array.isArray(sp?.topicRecommendations) ? sp.topicRecommendations : [];
     for (const tr of list) {
-      const m = rowMetrics({ ...tr, subjectId: sid });
-      if (m.q > 0) metas.push(m);
+      pushMetric(rowMetrics({ ...tr, subjectId: sid }));
+    }
+    for (const row of Array.isArray(sp?.topicOverviewRows) ? sp.topicOverviewRows : []) {
+      pushMetric(
+        rowMetrics({
+          ...row,
+          topicRowKey: row.topicRowKey || row.topicKey,
+          subjectId: sid,
+        }),
+      );
     }
   }
   if (metas.length) return metas;

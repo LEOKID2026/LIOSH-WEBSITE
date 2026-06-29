@@ -47,6 +47,11 @@ import {
 } from "../lib/learning-supabase/evidence-source.js";
 import { normalizeGradeLevelToKey } from "../lib/learning-student-defaults.js";
 import { isMoledetGeographyGradeAllowed } from "./moledet-geography-curriculum-gates.js";
+import {
+  buildHistorySubtopicReportMap,
+  historyMistakeSubtopicKey,
+  enrichHistoryRecommendations,
+} from "./history-subtopic-report.js";
 import { enrichTopicMapsWithRowTrends, filterMistakesForRow } from "./parent-report-row-trend.js";
 import { buildWeaknessConfidencePatternsV1 } from "./intelligence-layer-v1/weakness-confidence-patterns.js";
 import { enrichTopicMapsWithRowBehaviorProfiles } from "./parent-report-row-behavior.js";
@@ -2157,6 +2162,17 @@ export function generateParentReportV2(
     endMs,
     (m) => m.topic
   );
+  const historyMistakesBySubtopic = filterMistakes(
+    historyMistakesRaw,
+    startMs,
+    endMs,
+    historyMistakeSubtopicKey
+  );
+  const historySubtopics = buildHistorySubtopicReportMap({
+    historyTopics,
+    mistakeCountsBySubtopic: historyMistakesBySubtopic,
+  });
+  maps.historySubtopics = historySubtopics;
   const hebrewMistakesByTopic = filterMistakes(
     hebrewMistakesRaw,
     startMs,
@@ -2200,9 +2216,10 @@ export function generateParentReportV2(
     scienceTopics,
     scienceMistakesByTopic
   );
-  const historyRecommendations = generateRecommendations(
-    historyTopics,
-    historyMistakesByTopic
+  const historyRecommendations = enrichHistoryRecommendations(
+    historySubtopics,
+    historyMistakesBySubtopic,
+    generateRecommendations
   );
   const hebrewRecommendations = generateRecommendations(
     hebrewTopics,
@@ -2508,6 +2525,7 @@ export function generateParentReportV2(
       englishTopics,
       scienceTopics,
       historyTopics,
+      historySubtopics,
       hebrewTopics,
       moledetGeographyTopics,
     },
@@ -2623,6 +2641,7 @@ export function generateParentReportV2(
     englishTopics: maps.englishTopics,
     scienceTopics: maps.scienceTopics,
     historyTopics: maps.historyTopics,
+    historySubtopics: maps.historySubtopics,
     hebrewTopics: maps.hebrewTopics,
     moledetGeographyTopics: maps.moledetGeographyTopics,
   })) {
@@ -2720,6 +2739,7 @@ export function generateParentReportV2(
     englishTopics,
     scienceTopics,
     historyTopics,
+    historySubtopics,
     hebrewTopics,
     moledetGeographyTopics,
     allItems,
@@ -2732,6 +2752,7 @@ export function generateParentReportV2(
       englishMistakesByTopic,
       scienceMistakesByTopic,
       historyMistakesByTopic,
+      historyMistakesBySubtopic,
       hebrewMistakesByTopic,
       moledetGeographyMistakesByTopic,
       recommendations,

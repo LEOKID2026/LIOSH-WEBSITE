@@ -81,12 +81,52 @@ function resolveSubtopicMeta(subtopicKey) {
   return { topicKey: "mixed", skillId: "hist_concepts", weight: 5 };
 }
 
+function inferLevelStem(lvl, bankItem) {
+  const easy = String(bankItem.stem || "").trim();
+  if (lvl === "medium" && bankItem.stemMedium) return String(bankItem.stemMedium).trim();
+  if (lvl === "hard" && bankItem.stemHard) return String(bankItem.stemHard).trim();
+  if (lvl === "easy") return easy;
+
+  const skillId = bankItem.skillId || "";
+  if (lvl === "medium") {
+    if (easy.startsWith("מהו ") || easy.startsWith("מהי ")) {
+      return easy.replace(/^מה[וי]\s+/, "איזו הגדרה מתאימה ל");
+    }
+    if (easy.startsWith("למה ")) return easy;
+    if (easy.startsWith("איזה ") || easy.startsWith("איזו ")) return easy;
+    return `בחרו את התשובה המדויקת ביותר: ${easy}`;
+  }
+
+  if (skillId === "hist_cause_effect" || String(bankItem.concept || "").includes("cause")) {
+    if (easy.startsWith("למה ")) return easy.replace(/^למה /, "מהי התוצאה העיקרית של ");
+    return `מהי הקשר הסיבתי הנכון בין האירועים: ${easy.replace(/\?$/, "")}?`;
+  }
+  if (skillId === "hist_comparison") {
+    return `השוו והסבירו: ${easy.replace(/\?$/, "")}?`;
+  }
+  if (skillId === "hist_timeline_sequence") {
+    return `סדרו לפי הזמן — ${easy.replace(/\?$/, "")}?`;
+  }
+  if (skillId === "hist_simple_source") {
+    return `על סמך מקור היסטורי — ${easy.replace(/\?$/, "")}?`;
+  }
+  if (easy.startsWith("מה ")) {
+    return easy.replace(/^מה /, "הסבירו מדוע חשוב לדעת: מה ");
+  }
+  return `הסבירו והוכיחו: ${easy.replace(/\?$/, "")}?`;
+}
+
+function stemForLevel(lvl, bankItem) {
+  return inferLevelStem(lvl, bankItem);
+}
+
 function emitQuestion(subtopicKey, lvl, bankItem, idx) {
-  const { topicKey, skillId } = resolveSubtopicMeta(subtopicKey);
+  const { topicKey, skillId: mapSkillId } = resolveSubtopicMeta(subtopicKey);
+  const skillId = bankItem.skillId || mapSkillId;
   const diff = DIFF[lvl];
   const cog = COG[lvl];
   const id = `hist_g6_${subtopicKey}_${lvl}_${String(idx + 1).padStart(2, "0")}`;
-  const stem = childStem(lvl, bankItem.stem);
+  const stem = childStem(lvl, stemForLevel(lvl, bankItem));
   const errTypes = bankItem.errorTypes || errorTypesForSkill(skillId);
 
   assertChildHebrew(`${id}.stem`, stem);
@@ -146,20 +186,6 @@ for (const subtopicKey of expectedSubtopics) {
       usedStems.add(ns);
       generated.push(q);
     });
-    for (let v = 0; v < 3; v++) {
-      bank.forEach((item, idx) => {
-        const variant = {
-          ...item,
-          concept: `${item.concept}_alt${v + 1}`,
-          stem: item.stem,
-        };
-        const q = emitQuestion(subtopicKey, lvl, variant, idx + 100 + v);
-        const ns = `${lvl}|${subtopicKey}|${variant.concept}|${normStem(q.stem)}`;
-        if (usedStems.has(ns)) return;
-        usedStems.add(ns);
-        generated.push(q);
-      });
-    }
   }
 }
 

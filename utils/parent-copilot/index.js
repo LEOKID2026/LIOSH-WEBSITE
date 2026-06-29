@@ -40,6 +40,11 @@ import { redactPayloadForCopilotGrounding } from "./redact-payload-for-copilot-g
 import { augmentHighVolumeEvidenceAnchorDraft } from "./data-grounded-evidence-augmentation.js";
 import { semanticIntentForMetadata } from "./semantic-intent-labels.js";
 import {
+  composeHistoryZeroDataAnswerDraft,
+  detectHistoryCopilotLock,
+  isHistoryZeroDataScope,
+} from "./history-scope-he.js";
+import {
   tryBuildPhaseEClarificationBypassDraft,
   augmentPhaseEThinEvidenceDraft,
   tryBuildPhaseEResolvedShortcutDraft,
@@ -1271,7 +1276,18 @@ function runDeterministicCore(input, options) {
     return { response: r, audience, sessionId, conv, truthPacket: null, intent, scopeMeta, utteranceStr };
   }
 
-  /** Executive `what_to_do_*` intent overwrites narrative.action with micro-plans; eligible recommendation questions still need contract action text for semantic aggregate + QA. */
+  if (isHistoryZeroDataScope(scope)) {
+    const zeroDraft = composeHistoryZeroDataAnswerDraft({ scope });
+    const zeroEarly = packageParentResolvedEarlyTurn(scopedInput, sessionId, priorRepeated, conv, utteranceStr, {
+      truthPacket: zeroDraft.truthPacket,
+      plannerIntent: zeroDraft.plannerIntent,
+      scopeMeta: { ...scopeMeta, ...zeroDraft.scopeMeta },
+      answerBlocks: zeroDraft.answerBlocks,
+    });
+    if (zeroEarly) return zeroEarly;
+  }
+
+  const historyCopilotLock = detectHistoryCopilotLock(utteranceStr);
   const truthPacketBuildIntent =
     aggregateQuestionClass === "recommendation_action" &&
     String(scope?.scopeType || "") === "executive" &&
@@ -1317,7 +1333,9 @@ function runDeterministicCore(input, options) {
   }
 
   let intentAnswerDraft = null;
-  if (!shouldDeferIntentComposer(aggregateQuestionClass)) {
+  const deferIntentComposer =
+    shouldDeferIntentComposer(aggregateQuestionClass) && !historyCopilotLock?.locked;
+  if (!deferIntentComposer) {
     intentAnswerDraft = tryComposeIntentAnswer({
       utteranceStr,
       truthPacket,
@@ -1436,6 +1454,7 @@ function runDeterministicCore(input, options) {
     aggregateQuestionClass !== "none" &&
     aggregateQuestionClass !== "vague_summary_question" &&
     !skipSemanticAggregateForIneligibleRec &&
+    !historyCopilotLock?.locked &&
     intent !== "clinical_boundary" &&
     intent !== "sensitive_education_choice" &&
     intent !== "parent_policy_refusal" &&

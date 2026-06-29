@@ -318,6 +318,7 @@ const SUBJECT_IDS = [
   "geometry",
   "english",
   "science",
+  "history",
   "hebrew",
   "moledet-geography",
 ];
@@ -327,6 +328,7 @@ const REPORT_ROWS_KEY = {
   geometry: "geometryTopics",
   english: "englishTopics",
   science: "scienceTopics",
+  history: "historySubtopics",
   hebrew: "hebrewTopics",
   "moledet-geography": "moledetGeographyTopics",
 };
@@ -336,6 +338,7 @@ const SUBJECT_LABEL_HE = {
   geometry: "גאומטריה",
   english: "אנגלית",
   science: "מדעים",
+  history: "היסטוריה",
   hebrew: "עברית",
   "moledet-geography": "מולדת וגאוגרפיה",
   moledet: "מולדת",
@@ -1005,7 +1008,10 @@ function computeSubjectPriorityFieldsPhase8(subjectId, args) {
  */
 function synthesizeSubjectPhase3FromRows(subjectId, report) {
   const rowsKey = REPORT_ROWS_KEY[subjectId];
-  const map = rowsKey && report[rowsKey] ? report[rowsKey] : {};
+  const map =
+    (rowsKey && report[rowsKey] ? report[rowsKey] : null) ||
+    (subjectId === "history" && report.historyTopics ? report.historyTopics : {}) ||
+    {};
   const entries = Object.entries(map || {}).filter(([, row]) => row && typeof row === "object");
   const rows = entries
     .map(([rowKey, row]) => ({ rowKey, row }))
