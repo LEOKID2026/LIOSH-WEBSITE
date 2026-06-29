@@ -219,6 +219,9 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
   const strandBookGradeSet = useMemo(() => new Set(strandGradeKeys), [strandGradeKeys]);
   const strandCatalogSubject = catalogSubjectForVisualStrand(visualStrand);
   const pageTitleHe = visualStrandTitleHe(visualStrand);
+  const curriculumSubject =
+    visualStrand === VISUAL_STRAND_GEOGRAPHY ? "geography" : "moledet";
+  const curriculumHref = `/learning/curriculum?subject=${curriculumSubject}`;
   const strandReferenceKeys = useMemo(
     () => referenceCategoryKeysForStrand(visualStrand),
     [visualStrand]
@@ -2474,7 +2477,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
           title={pageTitleHe}
           subtitle={`${playerName || "שחקן"} • ${GRADES[grade].name} • ${LEVELS[level].name} • ${getOperationName(operation)} • ${MODES[mode].name}`}
           onBack={backSafe}
-          onCurriculumClick={() => router.push("/learning/curriculum?subject=moledet-geography")}
+          onCurriculumClick={() => router.push(curriculumHref)}
           sound={sound}
         />
 
@@ -2482,7 +2485,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
           <LearningMasterNavBar
             MB={MB}
             headerRef={headerRef}
-            onCurriculumClick={() => router.push("/learning/curriculum?subject=moledet-geography")}
+            onCurriculumClick={() => router.push(curriculumHref)}
             onBack={backSafe}
           />
         </div>

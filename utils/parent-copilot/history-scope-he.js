@@ -240,12 +240,35 @@ export function isHistoryZeroDataScope(scope) {
  * @param {object} scope
  */
 export function composeHistoryZeroDataAnswerDraft({ scope }) {
-  const label = historyScopeLabelFromLock(scope);
+  const label =
+    String(scope?.scopeLabel || "").trim() ||
+    historyScopeLabelFromLock({
+      subtopicKey: scope?.historySubtopicKey || scope?.subtopicKey,
+      topicBaseKey: scope?.topicBaseKey,
+    });
   const truthPacket = {
+    schemaVersion: "v1",
+    audience: "parent",
     scopeType: scope.scopeType || "topic",
     scopeId: scope.scopeId || "history",
     scopeLabel: label,
-    surfaceFacts: { subjectId: "history", questions: 0, displayName: label, accuracy: 0 },
+    interpretationScope: "executive",
+    derivedLimits: {
+      cannotConcludeYet: true,
+      recommendationEligible: false,
+      recommendationIntensityCap: "RI0",
+      readiness: "insufficient",
+      confidenceBand: "low",
+    },
+    allowedFollowupFamilies: ["uncertainty_boundary"],
+    surfaceFacts: {
+      subjectId: "history",
+      questions: 0,
+      reportQuestionTotalGlobal: 0,
+      displayName: label,
+      accuracy: 0,
+      subjectLabelHe: "היסטוריה",
+    },
     contracts: {
       narrative: {
         textSlots: {
@@ -254,6 +277,10 @@ export function composeHistoryZeroDataAnswerDraft({ scope }) {
           uncertainty: "אפשר לחזור לשאלה אחרי עוד תרגול ממוקד בנושא.",
         },
       },
+      decision: { cannotConcludeYet: true },
+      readiness: { readiness: "insufficient" },
+      confidence: { confidenceBand: "low" },
+      recommendation: { eligible: false, intensity: "RI0" },
     },
   };
   return {

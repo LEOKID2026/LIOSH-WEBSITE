@@ -1,0 +1,289 @@
+{
+  "startedAt": "2026-06-29T19:55:03.329Z",
+  "sections": {
+    "fresh-practice-db-report": {
+      "pass": true,
+      "results": [
+        {
+          "leo": "AAA1",
+          "pass": true,
+          "studentId": "fd3901da-66ce-46c7-a24c-b33df2141c04",
+          "db": {
+            "sessions": 5,
+            "practiceSessions": 5,
+            "answers": 50,
+            "countable": 16,
+            "withParams": 11,
+            "sampleParams": [
+              {
+                "skillId": "hist_simple_source",
+                "topicKey": "what_is_history",
+                "subskillId": "hist_sub_intro_sources_timeline",
+                "subtopicKey": "hist_sub_intro_sources_timeline",
+                "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_conflicting_sources"
+              },
+              {
+                "skillId": "hist_concepts",
+                "topicKey": "what_is_history",
+                "subskillId": "hist_sub_intro_sources_timeline",
+                "subtopicKey": "hist_sub_intro_sources_timeline",
+                "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_chronology"
+              },
+              {
+                "skillId": "hist_simple_source",
+                "topicKey": "what_is_history",
+                "subskillId": "hist_sub_intro_sources_timeline",
+                "subtopicKey": "hist_sub_intro_sources_timeline",
+                "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_primary_example"
+              }
+            ],
+            "sampleEvidence": [
+              {
+                "evidenceCategory": "diagnostic_independent",
+                "isCorrect": true,
+                "topicKey": "what_is_history"
+              },
+              {
+                "evidenceCategory": "diagnostic_independent",
+                "isCorrect": true,
+                "topicKey": "what_is_history"
+              },
+              {
+                "evidenceCategory": "diagnostic_independent",
+                "isCorrect": true,
+                "topicKey": "what_is_history"
+              }
+            ]
+          },
+          "report": {
+            "historyTotal": 16,
+            "subtopicWithQ": 1,
+            "from": "2026-05-31",
+            "to": "2026-06-29"
+          }
+        },
+        {
+          "leo": "AAA7",
+          "pass": true,
+          "studentId": "d8f6b184-80f2-4f2b-897e-cbbf557022e7",
+          "db": {
+            "sessions": 8,
+            "practiceSessions": 8,
+            "answers": 50,
+            "countable": 25,
+            "withParams": 16,
+            "sampleParams": [
+              {
+                "skillId": "hist_simple_source",
+                "topicKey": "what_is_history",
+                "subskillId": "hist_sub_intro_sources_timeline",
+                "subtopicKey": "hist_sub_intro_sources_timeline",
+                "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_conflicting_sources"
+              },
+              {
+                "skillId": "hist_concepts",
+                "topicKey": "what_is_history",
+                "subskillId": "hist_sub_intro_sources_timeline",
+                "subtopicKey": "hist_sub_intro_sources_timeline",
+                "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_historical_questions"
+              },
+              {
+                "skillId": "hist_simple_source",
+                "topicKey": "what_is_history",
+                "subskillId": "hist_sub_intro_sources_timeline",
+                "subtopicKey": "hist_sub_intro_sources_timeline",
+                "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_primary_example"
+              }
+            ],
+            "sampleEvidence": [
+              {
+                "evidenceCategory": "diagnostic_independent",
+                "isCorrect": true,
+                "topicKey": "what_is_history"
+              },
+              {
+                "evidenceCategory": "diagnostic_independent",
+                "isCorrect": true,
+                "topicKey": "what_is_history"
+              },
+              {
+                "evidenceCategory": "diagnostic_independent",
+                "isCorrect": true,
+                "topicKey": "what_is_history"
+              }
+            ]
+          },
+          "report": {
+            "historyTotal": 25,
+            "subtopicWithQ": 1,
+            "from": "2026-05-31",
+            "to": "2026-06-29"
+          }
+        },
+        {
+          "leo": "AAA11",
+          "pass": true,
+          "studentId": "5f3df0a3-4527-4f8b-97cf-6e8ec5624920",
+          "db": {
+            "sessions": 5,
+            "practiceSessions": 5,
+            "answers": 50,
+            "countable": 18,
+            "withParams": 15,
+            "sampleParams": [
+              {
+                "skillId": "hist_concepts",
+                "topicKey": "what_is_history",
+                "subskillId": "hist_sub_intro_sources_timeline",
+                "subtopicKey": "hist_sub_intro_sources_timeline",
+                "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_historical_method"
+              },
+              {
+                "skillId": "hist_simple_source",
+                "topicKey": "what_is_history",
+                "subskillId": "hist_sub_intro_sources_timeline",
+                "subtopicKey": "hist_sub_intro_sources_timeline",
+                "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_secondary_example"
+              },
+              {
+                "skillId": "hist_concepts",
+                "topicKey": "what_is_history",
+                "subskillId": "hist_sub_intro_sources_timeline",
+                "subtopicKey": "hist_sub_intro_sources_timeline",
+                "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_chronology"
+              }
+            ],
+            "sampleEvidence": [
+              {
+                "evidenceCategory": "diagnostic_independent",
+                "isCorrect": true,
+                "topicKey": "what_is_history"
+              },
+              {
+                "evidenceCategory": "diagnostic_independent",
+                "isCorrect": true,
+                "topicKey": "what_is_history"
+              },
+              {
+                "evidenceCategory": "diagnostic_independent",
+                "isCorrect": true,
+                "topicKey": "what_is_history"
+              }
+            ]
+          },
+          "report": {
+            "historyTotal": 18,
+            "subtopicWithQ": 1,
+            "from": "2026-05-31",
+            "to": "2026-06-29"
+          }
+        }
+      ],
+      "sinceIso": "2026-06-29T19:55:03.936Z",
+      "skipped": true
+    },
+    "report-ui-copilot": {
+      "pass": false,
+      "studentId": "5f3df0a3-4527-4f8b-97cf-6e8ec5624920",
+      "historyTotal": 18,
+      "subtopicWithQ": 1,
+      "uiHasHistory": false,
+      "uiGeneric": false,
+      "uiHasQuestions": true,
+      "uiFallbackOnly": false,
+      "screenshotPath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\tmp\\history-copilot-scope-qa-report\\parent-report-ui-aaa11.png",
+      "copilotResults": [
+        {
+          "utterance": "איך הילד שלי בהיסטוריה?",
+          "resolutionStatus": "resolved",
+          "scopeReason": "history_subject_lock",
+          "fallbackUsed": false,
+          "mentionsHistory": true,
+          "zeroData": false,
+          "mentionsWrongSubject": false,
+          "textSample": "הנה מה שמופיע בדוח לגבי הנושא הזה: במהי היסטוריה נספרו 18 שאלות בתקופה, עם דיוק של כ-100%. לפי נתוני הדוח בהיסטוריה, זהו המידע שנאסף מהתרגול בתקופה שנבחרה. כדאי להמשיך לעקוב לאורך כמה ימי תרגול."
+        },
+        {
+          "utterance": "איך הוא ברומא והיהודים?",
+          "resolutionStatus": "resolved",
+          "scopeReason": "history_lock_zero_data_topic",
+          "fallbackUsed": true,
+          "mentionsHistory": true,
+          "zeroData": true,
+          "mentionsWrongSubject": false,
+          "textSample": "אין עדיין מספיק נתונים בנושא הזה ברומא והיהודים לא נאספו עדיין מספיק שאלות בתקופה שנבחרה. אפשר לחזור לשאלה אחרי עוד תרגול ממוקד בנושא."
+        },
+        {
+          "utterance": "איך הוא בהורדוס?",
+          "resolutionStatus": "resolved",
+          "scopeReason": "history_lock_zero_data_subtopic",
+          "fallbackUsed": true,
+          "mentionsHistory": true,
+          "zeroData": true,
+          "mentionsWrongSubject": false,
+          "textSample": "אין עדיין מספיק נתונים בנושא הזה בהורדוס ומפעלי הבנייה לא נאספו עדיין מספיק שאלות בתקופה שנבחרה. אפשר לחזור לשאלה אחרי עוד תרגול ממוקד בנושא."
+        },
+        {
+          "utterance": "איך הוא במרד המקבים?",
+          "resolutionStatus": "resolved",
+          "scopeReason": "history_lock_zero_data_subtopic",
+          "fallbackUsed": true,
+          "mentionsHistory": true,
+          "zeroData": true,
+          "mentionsWrongSubject": false,
+          "textSample": "אין עדיין מספיק נתונים בנושא הזה בגזרות אנטיוכוס ומרד המקבים לא נאספו עדיין מספיק שאלות בתקופה שנבחרה. אפשר לחזור לשאלה אחרי עוד תרגול ממוקד בנושא."
+        },
+        {
+          "utterance": "איך הוא באתונה וספרטה?",
+          "resolutionStatus": "resolved",
+          "scopeReason": "history_lock_zero_data_subtopic",
+          "fallbackUsed": true,
+          "mentionsHistory": true,
+          "zeroData": true,
+          "mentionsWrongSubject": false,
+          "textSample": "אין עדיין מספיק נתונים בנושא הזה בהשוואה בין אתונה לספרטה לא נאספו עדיין מספיק שאלות בתקופה שנבחרה. אפשר לחזור לשאלה אחרי עוד תרגול ממוקד בנושא."
+        },
+        {
+          "utterance": "מה קשה לו בהיסטוריה?",
+          "resolutionStatus": "resolved",
+          "scopeReason": "history_subject_lock",
+          "fallbackUsed": false,
+          "mentionsHistory": true,
+          "zeroData": false,
+          "mentionsWrongSubject": false,
+          "textSample": "הנה מה שעדיין דורש חיזוק ותרגול, לפי הדוח: במהי היסטוריה נספרו 18 שאלות בתקופה, עם דיוק של כ-100%. לפי נתוני הדוח בהיסטוריה, זהו המידע שנאסף מהתרגול בתקופה שנבחרה. כדאי להמשיך לעקוב לאורך כמה ימי תרגול."
+        },
+        {
+          "utterance": "מה כדאי לתרגל בבית בהיסטוריה?",
+          "resolutionStatus": "resolved",
+          "scopeReason": "history_subject_lock",
+          "fallbackUsed": false,
+          "mentionsHistory": true,
+          "zeroData": false,
+          "mentionsWrongSubject": false,
+          "textSample": "כדאי לצבור עוד תרגול — הנה כיוון ראשוני: במהי היסטוריה נספרו 18 שאלות בתקופה, עם דיוק של כ-100%. לפי נתוני הדוח בהיסטוריה, זהו המידע שנאסף מהתרגול בתקופה שנבחרה. זו תמונה ראשונית בלבד — מה שמוצג כאן עדיין לא מבוסס מספיק בתקופה שנבחרה, ולכן נשמרת זהירות בניסוח."
+        }
+      ],
+      "copilotPass": true
+    },
+    "build": {
+      "pass": true,
+      "skipped": true
+    },
+    "audit-history-child-text": {
+      "pass": true
+    },
+    "verify-history-g6-book": {
+      "pass": true
+    },
+    "test-history-diagnostic-probe-e2e": {
+      "pass": true
+    }
+  },
+  "openIssues": [
+    "report-ui-copilot"
+  ],
+  "qaStart": "2026-06-29T19:55:03.330Z",
+  "finishedAt": "2026-06-29T19:56:51.163Z",
+  "allPass": false
+}

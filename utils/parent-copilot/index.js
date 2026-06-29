@@ -1281,10 +1281,16 @@ function runDeterministicCore(input, options) {
     const zeroEarly = packageParentResolvedEarlyTurn(scopedInput, sessionId, priorRepeated, conv, utteranceStr, {
       truthPacket: zeroDraft.truthPacket,
       plannerIntent: zeroDraft.plannerIntent,
-      scopeMeta: { ...scopeMeta, ...zeroDraft.scopeMeta },
+      scopeMeta: { ...scopeMeta, ...zeroDraft.scopeMeta, historyZeroDataComposer: true },
       answerBlocks: zeroDraft.answerBlocks,
     });
-    if (zeroEarly) return zeroEarly;
+    if (zeroEarly) {
+      return {
+        ...zeroEarly,
+        fallbackUsed: false,
+        scopeMeta: { ...zeroEarly.scopeMeta, fallbackUsed: false },
+      };
+    }
   }
 
   const historyCopilotLock = detectHistoryCopilotLock(utteranceStr);

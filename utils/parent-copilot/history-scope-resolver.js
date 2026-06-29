@@ -3,6 +3,7 @@
  */
 
 import { subjectLabelHe } from "./contract-reader.js";
+import { historySubtopicLabelHe } from "../../data/history-curriculum.js";
 import {
   detectHistoryCopilotLock,
   findHistoryTopicRowKey,
@@ -36,8 +37,12 @@ export function tryResolveHistoryLockedScope(params) {
   });
 
   if (historyLock.subtopicKey) {
-    const subQ = historySubtopicQuestionsFromPayload(payload, historyLock.subtopicKey);
-    const label = historyScopeLabelFromLock(historyLock);
+    const subMap =
+      payload?.historySubtopics?.[historyLock.subtopicKey] ||
+      payload?.maps?.historySubtopics?.[historyLock.subtopicKey] ||
+      null;
+    const subQ = Math.max(0, Number(subMap?.questions) || historySubtopicQuestionsFromPayload(payload, historyLock.subtopicKey));
+    const label = historySubtopicLabelHe(historyLock.subtopicKey);
     if (subQ === 0) {
       return attach(
         {
@@ -52,6 +57,17 @@ export function tryResolveHistoryLockedScope(params) {
         0.94,
       );
     }
+    return attach(
+      {
+        scopeType: "topic",
+        scopeId: historyLock.subtopicKey,
+        scopeLabel: label,
+        historySubtopicKey: historyLock.subtopicKey,
+        topicBaseKey: historyLock.topicBaseKey,
+      },
+      "history_lock_subtopic_with_data",
+      0.94,
+    );
   }
 
   if (historyLock.topicBaseKey) {

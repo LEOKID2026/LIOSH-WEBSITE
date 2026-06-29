@@ -1,0 +1,176 @@
+[
+  {
+    "leo": "AAA1",
+    "pass": true,
+    "studentId": "fd3901da-66ce-46c7-a24c-b33df2141c04",
+    "db": {
+      "sessions": 5,
+      "practiceSessions": 5,
+      "answers": 50,
+      "countable": 16,
+      "withParams": 11,
+      "sampleParams": [
+        {
+          "skillId": "hist_simple_source",
+          "topicKey": "what_is_history",
+          "subskillId": "hist_sub_intro_sources_timeline",
+          "subtopicKey": "hist_sub_intro_sources_timeline",
+          "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_conflicting_sources"
+        },
+        {
+          "skillId": "hist_concepts",
+          "topicKey": "what_is_history",
+          "subskillId": "hist_sub_intro_sources_timeline",
+          "subtopicKey": "hist_sub_intro_sources_timeline",
+          "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_chronology"
+        },
+        {
+          "skillId": "hist_simple_source",
+          "topicKey": "what_is_history",
+          "subskillId": "hist_sub_intro_sources_timeline",
+          "subtopicKey": "hist_sub_intro_sources_timeline",
+          "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_primary_example"
+        }
+      ],
+      "sampleEvidence": [
+        {
+          "evidenceCategory": "diagnostic_independent",
+          "isCorrect": true,
+          "topicKey": "what_is_history"
+        },
+        {
+          "evidenceCategory": "diagnostic_independent",
+          "isCorrect": true,
+          "topicKey": "what_is_history"
+        },
+        {
+          "evidenceCategory": "diagnostic_independent",
+          "isCorrect": true,
+          "topicKey": "what_is_history"
+        }
+      ]
+    },
+    "report": {
+      "historyTotal": 16,
+      "subtopicWithQ": 1,
+      "from": "2026-05-31",
+      "to": "2026-06-29"
+    }
+  },
+  {
+    "leo": "AAA7",
+    "pass": true,
+    "studentId": "d8f6b184-80f2-4f2b-897e-cbbf557022e7",
+    "db": {
+      "sessions": 8,
+      "practiceSessions": 8,
+      "answers": 50,
+      "countable": 25,
+      "withParams": 16,
+      "sampleParams": [
+        {
+          "skillId": "hist_simple_source",
+          "topicKey": "what_is_history",
+          "subskillId": "hist_sub_intro_sources_timeline",
+          "subtopicKey": "hist_sub_intro_sources_timeline",
+          "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_conflicting_sources"
+        },
+        {
+          "skillId": "hist_concepts",
+          "topicKey": "what_is_history",
+          "subskillId": "hist_sub_intro_sources_timeline",
+          "subtopicKey": "hist_sub_intro_sources_timeline",
+          "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_historical_questions"
+        },
+        {
+          "skillId": "hist_simple_source",
+          "topicKey": "what_is_history",
+          "subskillId": "hist_sub_intro_sources_timeline",
+          "subtopicKey": "hist_sub_intro_sources_timeline",
+          "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_primary_example"
+        }
+      ],
+      "sampleEvidence": [
+        {
+          "evidenceCategory": "diagnostic_independent",
+          "isCorrect": true,
+          "topicKey": "what_is_history"
+        },
+        {
+          "evidenceCategory": "diagnostic_independent",
+          "isCorrect": true,
+          "topicKey": "what_is_history"
+        },
+        {
+          "evidenceCategory": "diagnostic_independent",
+          "isCorrect": true,
+          "topicKey": "what_is_history"
+        }
+      ]
+    },
+    "report": {
+      "historyTotal": 25,
+      "subtopicWithQ": 1,
+      "from": "2026-05-31",
+      "to": "2026-06-29"
+    }
+  },
+  {
+    "leo": "AAA11",
+    "pass": true,
+    "studentId": "5f3df0a3-4527-4f8b-97cf-6e8ec5624920",
+    "db": {
+      "sessions": 5,
+      "practiceSessions": 5,
+      "answers": 50,
+      "countable": 18,
+      "withParams": 15,
+      "sampleParams": [
+        {
+          "skillId": "hist_concepts",
+          "topicKey": "what_is_history",
+          "subskillId": "hist_sub_intro_sources_timeline",
+          "subtopicKey": "hist_sub_intro_sources_timeline",
+          "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_historical_method"
+        },
+        {
+          "skillId": "hist_simple_source",
+          "topicKey": "what_is_history",
+          "subskillId": "hist_sub_intro_sources_timeline",
+          "subtopicKey": "hist_sub_intro_sources_timeline",
+          "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_secondary_example"
+        },
+        {
+          "skillId": "hist_concepts",
+          "topicKey": "what_is_history",
+          "subskillId": "hist_sub_intro_sources_timeline",
+          "subtopicKey": "hist_sub_intro_sources_timeline",
+          "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_chronology"
+        }
+      ],
+      "sampleEvidence": [
+        {
+          "evidenceCategory": "diagnostic_independent",
+          "isCorrect": true,
+          "topicKey": "what_is_history"
+        },
+        {
+          "evidenceCategory": "diagnostic_independent",
+          "isCorrect": true,
+          "topicKey": "what_is_history"
+        },
+        {
+          "evidenceCategory": "diagnostic_independent",
+          "isCorrect": true,
+          "topicKey": "what_is_history"
+        }
+      ]
+    },
+    "report": {
+      "historyTotal": 18,
+      "subtopicWithQ": 1,
+      "from": "2026-05-31",
+      "to": "2026-06-29"
+    }
+  }
+]

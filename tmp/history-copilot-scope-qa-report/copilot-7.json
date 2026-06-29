@@ -1,0 +1,72 @@
+[
+  {
+    "utterance": "איך הילד שלי בהיסטוריה?",
+    "resolutionStatus": "resolved",
+    "scopeReason": "history_subject_lock",
+    "fallbackUsed": false,
+    "mentionsHistory": true,
+    "zeroData": false,
+    "mentionsWrongSubject": false,
+    "textSample": "הנה מה שמופיע בדוח לגבי הנושא הזה: במהי היסטוריה נספרו 18 שאלות בתקופה, עם דיוק של כ-100%. לפי נתוני הדוח בהיסטוריה, זהו המידע שנאסף מהתרגול בתקופה שנבחרה. כדאי להמשיך לעקוב לאורך כמה ימי תרגול."
+  },
+  {
+    "utterance": "איך הוא ברומא והיהודים?",
+    "resolutionStatus": "resolved",
+    "scopeReason": "history_lock_zero_data_topic",
+    "fallbackUsed": true,
+    "mentionsHistory": true,
+    "zeroData": true,
+    "mentionsWrongSubject": false,
+    "textSample": "אין עדיין מספיק נתונים בנושא הזה ברומא והיהודים לא נאספו עדיין מספיק שאלות בתקופה שנבחרה. אפשר לחזור לשאלה אחרי עוד תרגול ממוקד בנושא."
+  },
+  {
+    "utterance": "איך הוא בהורדוס?",
+    "resolutionStatus": "resolved",
+    "scopeReason": "history_lock_zero_data_subtopic",
+    "fallbackUsed": true,
+    "mentionsHistory": true,
+    "zeroData": true,
+    "mentionsWrongSubject": false,
+    "textSample": "אין עדיין מספיק נתונים בנושא הזה בהורדוס ומפעלי הבנייה לא נאספו עדיין מספיק שאלות בתקופה שנבחרה. אפשר לחזור לשאלה אחרי עוד תרגול ממוקד בנושא."
+  },
+  {
+    "utterance": "איך הוא במרד המקבים?",
+    "resolutionStatus": "resolved",
+    "scopeReason": "history_lock_zero_data_subtopic",
+    "fallbackUsed": true,
+    "mentionsHistory": true,
+    "zeroData": true,
+    "mentionsWrongSubject": false,
+    "textSample": "אין עדיין מספיק נתונים בנושא הזה בגזרות אנטיוכוס ומרד המקבים לא נאספו עדיין מספיק שאלות בתקופה שנבחרה. אפשר לחזור לשאלה אחרי עוד תרגול ממוקד בנושא."
+  },
+  {
+    "utterance": "איך הוא באתונה וספרטה?",
+    "resolutionStatus": "resolved",
+    "scopeReason": "history_lock_zero_data_subtopic",
+    "fallbackUsed": true,
+    "mentionsHistory": true,
+    "zeroData": true,
+    "mentionsWrongSubject": false,
+    "textSample": "אין עדיין מספיק נתונים בנושא הזה בהשוואה בין אתונה לספרטה לא נאספו עדיין מספיק שאלות בתקופה שנבחרה. אפשר לחזור לשאלה אחרי עוד תרגול ממוקד בנושא."
+  },
+  {
+    "utterance": "מה קשה לו בהיסטוריה?",
+    "resolutionStatus": "resolved",
+    "scopeReason": "history_subject_lock",
+    "fallbackUsed": false,
+    "mentionsHistory": true,
+    "zeroData": false,
+    "mentionsWrongSubject": false,
+    "textSample": "הנה מה שעדיין דורש חיזוק ותרגול, לפי הדוח: במהי היסטוריה נספרו 18 שאלות בתקופה, עם דיוק של כ-100%. לפי נתוני הדוח בהיסטוריה, זהו המידע שנאסף מהתרגול בתקופה שנבחרה. כדאי להמשיך לעקוב לאורך כמה ימי תרגול."
+  },
+  {
+    "utterance": "מה כדאי לתרגל בבית בהיסטוריה?",
+    "resolutionStatus": "resolved",
+    "scopeReason": "history_subject_lock",
+    "fallbackUsed": false,
+    "mentionsHistory": true,
+    "zeroData": false,
+    "mentionsWrongSubject": false,
+    "textSample": "כדאי לצבור עוד תרגול — הנה כיוון ראשוני: במהי היסטוריה נספרו 18 שאלות בתקופה, עם דיוק של כ-100%. לפי נתוני הדוח בהיסטוריה, זהו המידע שנאסף מהתרגול בתקופה שנבחרה. זו תמונה ראשונית בלבד — מה שמוצג כאן עדיין לא מבוסס מספיק בתקופה שנבחרה, ולכן נשמרת זהירות בניסוח."
+  }
+]

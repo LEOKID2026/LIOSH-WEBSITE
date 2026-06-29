@@ -2983,6 +2983,10 @@ export function buildDetailedParentReportFromBaseReport(baseReport, meta = {}) {
         ? { ...baseReport.gradePracticeMeta }
         : null,
     probeEvidence: baseReport.probeEvidence ?? null,
+    ...(baseReport.historySubtopics && typeof baseReport.historySubtopics === "object"
+      ? { historySubtopics: baseReport.historySubtopics }
+      : {}),
+    ...(baseReport.summary && typeof baseReport.summary === "object" ? { summary: baseReport.summary } : {}),
   };
 }
 

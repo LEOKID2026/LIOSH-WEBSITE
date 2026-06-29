@@ -18,37 +18,84 @@ import {
   HEBREW_GRADE_ORDER,
 } from "../../data/hebrew-curriculum";
 import {
-  MOLEDET_GEOGRAPHY_GENERAL_GOALS,
-  MOLEDET_GEOGRAPHY_GRADES,
-  MOLEDET_GEOGRAPHY_TEACHABLE_GRADE_ORDER,
-} from "../../data/moledet-geography-curriculum";
+  MOLEDET_GENERAL_GOALS,
+  MOLEDET_GRADES,
+  MOLEDET_TEACHABLE_GRADE_ORDER,
+} from "../../data/moledet-curriculum";
+import {
+  GEOGRAPHY_SUBJECT_GENERAL_GOALS,
+  GEOGRAPHY_SUBJECT_GRADES,
+  GEOGRAPHY_SUBJECT_TEACHABLE_GRADE_ORDER,
+} from "../../data/geography-subject-curriculum";
+import {
+  HISTORY_GENERAL_GOALS,
+  HISTORY_GRADES,
+  HISTORY_GRADE_ORDER,
+  HISTORY_TOPIC_LABEL_HE,
+  HISTORY_TOPIC_ORDER,
+  HISTORY_TOPIC_SUBTOPICS,
+  historySubtopicLabelHe,
+} from "../../data/history-curriculum";
 import {
   GRADES as GEOMETRY_GRADES,
   TOPICS as GEOMETRY_TOPIC_META,
   topicDescriptionForCurriculumPage,
 } from "../../utils/geometry-constants";
+import { TOPICS as MOLEDET_GEO_TOPICS } from "../../utils/moledet-geography-constants";
 
 const GEOMETRY_GRADE_ORDER = ["g1", "g2", "g3", "g4", "g5", "g6"];
+
+const CURRICULUM_SUPPORTED_SUBJECTS = [
+  "math",
+  "geometry",
+  "english",
+  "science",
+  "hebrew",
+  "history",
+  "moledet",
+  "geography",
+  "moledet-geography",
+];
+
+/** Read ?subject= from query or asPath (asPath works before router.query hydrates). */
+function resolveCurriculumSubjectParam(router) {
+  const fromQuery = Array.isArray(router.query.subject)
+    ? router.query.subject[0]
+    : router.query.subject;
+  if (fromQuery) return String(fromQuery).toLowerCase();
+
+  const path = router.asPath || "";
+  const qIndex = path.indexOf("?");
+  if (qIndex >= 0) {
+    const fromPath = new URLSearchParams(path.slice(qIndex + 1)).get("subject");
+    if (fromPath) return fromPath.toLowerCase();
+  }
+  return null;
+}
 
 export default function Curriculum() {
   useIOSViewportFix();
   const router = useRouter();
-  const subjectParam = Array.isArray(router.query.subject)
-    ? router.query.subject[0]
-    : router.query.subject;
-  const normalizedSubject = (subjectParam || "math").toString().toLowerCase();
-  const supportedSubjects = ["math", "geometry", "english", "science", "hebrew", "moledet-geography"];
-  const subject = supportedSubjects.includes(normalizedSubject) ? normalizedSubject : "math";
+  const rawSubject = resolveCurriculumSubjectParam(router);
+  const normalizedSubject = (rawSubject || "math").toString().toLowerCase();
+  let subject = CURRICULUM_SUPPORTED_SUBJECTS.includes(normalizedSubject)
+    ? normalizedSubject
+    : "math";
+  if (subject === "moledet-geography") subject = "moledet";
   const isEnglish = subject === "english";
   const isScience = subject === "science";
   const isHebrew = subject === "hebrew";
-  const isMoledetGeography = subject === "moledet-geography";
+  const isHistory = subject === "history";
+  const isMoledet = subject === "moledet";
+  const isGeographySubject = subject === "geography";
   const isGeometry = subject === "geometry";
   const englishGrades = ENGLISH_GRADE_ORDER.map((key) => ENGLISH_GRADES[key]);
   const scienceGrades = SCIENCE_GRADE_ORDER.map((key) => SCIENCE_GRADES[key]);
   const hebrewGrades = HEBREW_GRADE_ORDER.map((key) => HEBREW_GRADES[key]);
-  const moledetGeographyGrades = MOLEDET_GEOGRAPHY_TEACHABLE_GRADE_ORDER.map(
-    (key) => MOLEDET_GEOGRAPHY_GRADES[key]
+  const historyGrades = HISTORY_GRADE_ORDER.map((key) => HISTORY_GRADES[key]);
+  const moledetGrades = MOLEDET_TEACHABLE_GRADE_ORDER.map((key) => MOLEDET_GRADES[key]);
+  const geographySubjectGrades = GEOGRAPHY_SUBJECT_TEACHABLE_GRADE_ORDER.map(
+    (key) => GEOGRAPHY_SUBJECT_GRADES[key]
   );
   
   const subjectTitles = {
@@ -57,7 +104,9 @@ export default function Curriculum() {
     english: "אנגלית",
     science: "מדעים",
     hebrew: "עברית",
-    "moledet-geography": "מולדת, חברה ואזרחות + גאוגרפיה",
+    history: "היסטוריה",
+    moledet: "מולדת, חברה ואזרחות",
+    geography: "גאוגרפיה",
   };
 
   const subjectDescriptions = {
@@ -71,8 +120,12 @@ export default function Curriculum() {
       "מותאם לפי כיתה, נושא ורמת קושי — כפי שמוצגים בדף הגאומטריה. בהתאם לנושאים המקובלים בלימודי המקצוע בבתי הספר היסודיים.",
     hebrew:
       "מותאם לפי כיתה, נושא ורמת קושי — כפי שמוצגים בדף השפה העברית. בהתאם לנושאים המקובלים בלימודי המקצוע בבתי הספר היסודיים.",
-    "moledet-geography":
-      "מותאם לפי כיתה, נושא ורמת קושי — כפי שמוצגים בדף מולדת/גיאוגרפיה. בהתאם לנושאים המקובלים בלימודי המקצוע בבתי הספר היסודיים.",
+    history:
+      "מותאם לכיתה ו׳ — כפי שמוצג בדף ההיסטוריה. נושאי העולם היווני־רומי והיהודים.",
+    moledet:
+      "מותאם לכיתות ב׳–ד׳ — כפי שמוצג בדף המולדת. נושאי תרגול: מולדת, קהילה, אזרחות, ערכים וערבוב.",
+    geography:
+      "מותאם לכיתות ה׳–ו׳ — כפי שמוצג בדף הגאוגרפיה. נושאי תרגול: גאוגרפיה, מפות וערבוב.",
   };
 
   const subjectTitle = subjectTitles[subject] || subjectTitles.math;
@@ -238,17 +291,33 @@ export default function Curriculum() {
                 </div>
               ))}
             </div>
-          ) : isMoledetGeography ? (
+          ) : isMoledet ? (
             <div className="bg-white/5 rounded-2xl border border-white/10 p-6" dir="rtl">
               <div className="bg-blue-500/20 border-r-4 border-blue-500 p-4 rounded-lg mb-6">
                 <h3 className="text-xl font-bold mb-2">מטרות כלליות</h3>
                 <ul className="list-disc pr-6 space-y-2">
-                  {MOLEDET_GEOGRAPHY_GENERAL_GOALS.map((goal, idx) => (
+                  {MOLEDET_GENERAL_GOALS.map((goal, idx) => (
                     <li key={`goal-${idx}`}>{goal}</li>
                   ))}
                 </ul>
+                <p className="text-sm text-white/70 mt-3">
+                  גאוגרפיה (כיתות ה׳–ו׳) מוצגת בנפרד —{" "}
+                  <button
+                    type="button"
+                    onClick={() => router.push("/learning/curriculum?subject=geography")}
+                    className="underline hover:text-white"
+                  >
+                    תוכנית לימודים בגאוגרפיה
+                  </button>
+                </p>
               </div>
-              {moledetGeographyGrades.map((grade) => (
+              <div className="bg-white/10 border border-white/15 p-4 rounded-lg mb-6 text-sm text-white/85">
+                <strong>נושאים זמינים בדף המולדת:</strong>{" "}
+                {["homeland", "community", "citizenship", "values", "mixed"]
+                  .map((k) => MOLEDET_GEO_TOPICS[k]?.name || k)
+                  .join(" · ")}
+              </div>
+              {moledetGrades.map((grade) => (
                 <div
                   key={grade.key}
                   className="bg-blue-500/15 border-r-4 border-blue-400 p-4 rounded-lg mb-6"
@@ -280,10 +349,18 @@ export default function Curriculum() {
                       </ul>
                     </div>
                     <div>
-                      <h4 className="font-semibold mb-1 text-white">גאוגרפיה</h4>
+                      <h4 className="font-semibold mb-1 text-white">מולדת</h4>
                       <ul className="list-disc pr-5 space-y-1 text-sm text-white/80">
-                        {grade.curriculum?.geography?.map((item, idx) => (
-                          <li key={`geo-${grade.key}-${idx}`}>{item}</li>
+                        {grade.curriculum?.homeland?.map((item, idx) => (
+                          <li key={`homeland-${grade.key}-${idx}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-1 text-white">קהילה</h4>
+                      <ul className="list-disc pr-5 space-y-1 text-sm text-white/80">
+                        {grade.curriculum?.community?.map((item, idx) => (
+                          <li key={`community-${grade.key}-${idx}`}>{item}</li>
                         ))}
                       </ul>
                     </div>
@@ -294,6 +371,186 @@ export default function Curriculum() {
                           <li key={`cit-${grade.key}-${idx}`}>{item}</li>
                         ))}
                       </ul>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-1 text-white">ערכים</h4>
+                      <ul className="list-disc pr-5 space-y-1 text-sm text-white/80">
+                        {grade.curriculum?.values?.map((item, idx) => (
+                          <li key={`values-${grade.key}-${idx}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : isGeographySubject ? (
+            <div className="bg-white/5 rounded-2xl border border-white/10 p-6" dir="rtl">
+              <div className="bg-emerald-500/20 border-r-4 border-emerald-500 p-4 rounded-lg mb-6">
+                <h3 className="text-xl font-bold mb-2">מטרות כלליות</h3>
+                <ul className="list-disc pr-6 space-y-2">
+                  {GEOGRAPHY_SUBJECT_GENERAL_GOALS.map((goal, idx) => (
+                    <li key={`geo-goal-${idx}`}>{goal}</li>
+                  ))}
+                </ul>
+                <p className="text-sm text-white/70 mt-3">
+                  מולדת (כיתות ב׳–ד׳) מוצגת בנפרד —{" "}
+                  <button
+                    type="button"
+                    onClick={() => router.push("/learning/curriculum?subject=moledet")}
+                    className="underline hover:text-white"
+                  >
+                    תוכנית לימודים במולדת
+                  </button>
+                </p>
+              </div>
+              <div className="bg-white/10 border border-white/15 p-4 rounded-lg mb-6 text-sm text-white/85">
+                <strong>נושאים זמינים בדף הגאוגרפיה:</strong>{" "}
+                {["geography", "maps", "mixed"]
+                  .map((k) => MOLEDET_GEO_TOPICS[k]?.name || k)
+                  .join(" · ")}
+              </div>
+              {geographySubjectGrades.map((grade) => (
+                <div
+                  key={grade.key}
+                  className="bg-emerald-500/15 border-r-4 border-emerald-400 p-4 rounded-lg mb-6"
+                >
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-3">
+                    <h2 className="text-2xl font-bold">{grade.name}</h2>
+                    <span className="text-sm text-white/70">{grade.stage}</span>
+                  </div>
+                  {grade.curriculum?.summary && (
+                    <p className="text-sm text-white/80 mb-3" dir="rtl">
+                      {grade.curriculum.summary}
+                    </p>
+                  )}
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div>
+                      <h4 className="font-semibold mb-1 text-white">מוקדי למידה</h4>
+                      <ul className="list-disc pr-5 space-y-1 text-sm text-white/80">
+                        {grade.curriculum?.focus?.map((item, idx) => (
+                          <li key={`geo-focus-${grade.key}-${idx}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-1 text-white">מיומנויות</h4>
+                      <ul className="list-disc pr-5 space-y-1 text-sm text-white/80">
+                        {grade.curriculum?.skills?.map((item, idx) => (
+                          <li key={`geo-skills-${grade.key}-${idx}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-1 text-white">גאוגרפיה</h4>
+                      <ul className="list-disc pr-5 space-y-1 text-sm text-white/80">
+                        {grade.curriculum?.geography?.map((item, idx) => (
+                          <li key={`geo-geo-${grade.key}-${idx}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-1 text-white">מפות</h4>
+                      <ul className="list-disc pr-5 space-y-1 text-sm text-white/80">
+                        {grade.curriculum?.maps?.map((item, idx) => (
+                          <li key={`geo-maps-${grade.key}-${idx}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-1 text-white">סביבה</h4>
+                      <ul className="list-disc pr-5 space-y-1 text-sm text-white/80">
+                        {grade.curriculum?.environment?.map((item, idx) => (
+                          <li key={`geo-env-${grade.key}-${idx}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : isHistory ? (
+            <div className="bg-white/5 rounded-2xl border border-white/10 p-6" dir="rtl">
+              <div className="bg-amber-500/20 border-r-4 border-amber-500 p-4 rounded-lg mb-6">
+                <h3 className="text-xl font-bold mb-2">מטרות כלליות</h3>
+                <ul className="list-disc pr-6 space-y-2">
+                  {HISTORY_GENERAL_GOALS.map((goal, idx) => (
+                    <li key={`hist-goal-${idx}`}>{goal}</li>
+                  ))}
+                </ul>
+              </div>
+              <div className="bg-white/10 border border-white/15 p-4 rounded-lg mb-6 text-sm text-white/85 space-y-2">
+                <p>
+                  <strong>מבנה ההיסטוריה באתר:</strong> תוכן לימודי לכיתה ו׳ בלבד —{" "}
+                  <strong>3 רמות קושי</strong> (קל, בינוני, קשה) ונושאי תרגול כפי שמופיעים
+                  בדף ההיסטוריה.
+                </p>
+                <p>
+                  <strong>נושאים זמינים:</strong>{" "}
+                  {HISTORY_TOPIC_ORDER.filter((k) => k !== "mixed")
+                    .map((k) => HISTORY_TOPIC_LABEL_HE[k] || k)
+                    .join(" · ")}{" "}
+                  · תערובת
+                </p>
+              </div>
+              {historyGrades.map((grade) => (
+                <div
+                  key={grade.key}
+                  className="bg-amber-500/15 border-r-4 border-amber-400 p-4 rounded-lg mb-6"
+                >
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-3">
+                    <h2 className="text-2xl font-bold">{grade.name}</h2>
+                    <span className="text-sm text-white/70">{grade.stage}</span>
+                  </div>
+                  {grade.curriculum?.summary && (
+                    <p className="text-sm text-white/80 mb-3" dir="rtl">
+                      {grade.curriculum.summary}
+                    </p>
+                  )}
+                  <div className="grid gap-4 md:grid-cols-2 mb-6">
+                    <div>
+                      <h4 className="font-semibold mb-1 text-white">מוקדי למידה</h4>
+                      <ul className="list-disc pr-5 space-y-1 text-sm text-white/80">
+                        {grade.curriculum?.focus?.map((item, idx) => (
+                          <li key={`hist-focus-${grade.key}-${idx}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-1 text-white">מיומנויות היסטוריות</h4>
+                      <ul className="list-disc pr-5 space-y-1 text-sm text-white/80">
+                        {grade.curriculum?.skills?.map((item, idx) => (
+                          <li key={`hist-skills-${grade.key}-${idx}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-semibold mb-3">נושאים ותת-נושאים בדף ההיסטוריה</h3>
+                  <div className="space-y-4">
+                    {HISTORY_TOPIC_ORDER.filter((topicKey) => topicKey !== "mixed").map(
+                      (topicKey) => (
+                        <div
+                          key={topicKey}
+                          className="bg-white/5 border border-white/10 rounded-lg p-3"
+                        >
+                          <h4 className="font-semibold text-white mb-2">
+                            {HISTORY_TOPIC_LABEL_HE[topicKey] || topicKey}
+                          </h4>
+                          <ul className="list-disc pr-5 space-y-1 text-sm text-white/80">
+                            {(HISTORY_TOPIC_SUBTOPICS[topicKey] || []).map((subKey) => (
+                              <li key={subKey}>{historySubtopicLabelHe(subKey)}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )
+                    )}
+                    <div className="bg-white/5 border border-white/10 rounded-lg p-3">
+                      <h4 className="font-semibold text-white mb-1">
+                        {HISTORY_TOPIC_LABEL_HE.mixed}
+                      </h4>
+                      <p className="text-sm text-white/75">
+                        תרגול מעורב מכל הנושאים והתת-נושאים של כיתה ו׳
+                      </p>
                     </div>
                   </div>
                 </div>
