@@ -22,6 +22,8 @@ import { getParentPortalTheme } from "../../lib/parent-ui/parent-portal-theme.cl
 import { AUTH_FORGOT_PASSWORD_LINK } from "../../lib/auth/auth-reset.he";
 import { trackProductEvent } from "../../lib/analytics/track-event.client.js";
 import ParentPromoVideo from "../../components/parent/ParentPromoVideo";
+import { PARENT_PROMO_MOBILE_SRC } from "../../components/parent/ParentPromoVideo";
+import PromoMobileCompareVideo from "../../components/promo/PromoMobileCompareVideo";
 
 async function storeSignupPolicyAcceptance(accessToken) {
   return postPolicyAcceptance(accessToken, {
@@ -377,6 +379,12 @@ export default function ParentLoginPage() {
             .
           </p>
         ) : null}
+
+        <PromoMobileCompareVideo
+          mobileSrc={PARENT_PROMO_MOBILE_SRC}
+          isBright={isBright}
+          testId="parent-promo-mobile-compare"
+        />
       </div>
     </Layout>
   );

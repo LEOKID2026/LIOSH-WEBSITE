@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 import PortalLoginHeading from "../../components/auth/PortalLoginHeading";
 import StudentPromoVideo from "../../components/student/StudentPromoVideo";
+import { STUDENT_PROMO_MOBILE_SRC } from "../../components/student/StudentPromoVideo";
+import PromoMobileCompareVideo from "../../components/promo/PromoMobileCompareVideo";
 import StudentParentInviteModal from "../../components/student/StudentParentInviteModal";
 import CopyConfirmPopup from "../../components/ui/CopyConfirmPopup.jsx";
 import { buildParentInviteMessageHe } from "../../lib/site/public-site-origin.client.js";
@@ -305,6 +307,12 @@ export default function StudentLoginPage() {
             {message}
           </p>
         ) : null}
+
+        <PromoMobileCompareVideo
+          mobileSrc={STUDENT_PROMO_MOBILE_SRC}
+          isBright={isBright}
+          testId="student-promo-mobile-compare"
+        />
 
       </div>
     </Layout>

@@ -1,3 +1,5 @@
+import { usePromoVideoInlineRef } from "../../lib/promo/promo-video-inline-playback.client.js";
+
 export const STUDENT_PROMO_DESKTOP_SRC = "/videos/promo/leo-kids-children-desktop.mp4";
 export const STUDENT_PROMO_MOBILE_SRC = "/videos/promo/leo-kids-children-mobile.mp4";
 
@@ -22,6 +24,8 @@ export default function StudentPromoVideo({
   compact = false,
   className = "",
 }) {
+  const desktopVideoRef = usePromoVideoInlineRef();
+  const mobileVideoRef = usePromoVideoInlineRef();
   const titleClass = isBright ? "text-slate-900" : "text-white";
   const textClass = isBright ? "text-slate-600" : "text-white/75";
   const frameClass = isBright
@@ -49,9 +53,11 @@ export default function StudentPromoVideo({
 
       <div className={`${desktopWrapClass} ${frameClass}`}>
         <video
+          ref={desktopVideoRef}
           className="block h-auto w-full aspect-video bg-black object-contain"
           controls
           playsInline
+          disableRemotePlayback
           preload="metadata"
           aria-label="סרטון ילדים — גרסת מחשב"
           data-testid="student-promo-video-desktop"
@@ -62,9 +68,11 @@ export default function StudentPromoVideo({
 
       <div className={`${mobileWrapClass} ${frameClass}`}>
         <video
+          ref={mobileVideoRef}
           className="block h-auto w-full aspect-video bg-black object-contain"
           controls
           playsInline
+          disableRemotePlayback
           preload="metadata"
           aria-label="סרטון ילדים — גרסת מחשב (מובייל)"
           data-testid="student-promo-video-mobile"
