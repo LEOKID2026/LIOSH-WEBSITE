@@ -137,6 +137,9 @@ export async function verifyParentReports({
       englishSamples.push({ student, publicPayload, rawPayload: raw });
 
       reportsGenerated += 1;
+      if (reportsGenerated % 50 === 0 || reportsGenerated === slice.length) {
+        console.log(`[mass-sim] verify progress ${reportsGenerated}/${slice.length} login=${student.login}`);
+      }
       results.push({
         studentId: student.studentId,
         login: student.login,

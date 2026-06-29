@@ -1,7 +1,7 @@
 {
   "id": "/pwa-parent",
-  "name": "P LEO K",
-  "short_name": "P LEO K",
+  "name": "P LEO KIDS",
+  "short_name": "P LEO KIDS",
   "description": "Parent portal for LEO KIDS — follow progress, manage children, and stay connected.",
   "start_url": "/parent/login",
   "display": "standalone",

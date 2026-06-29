@@ -1,7 +1,7 @@
 {
   "id": "/pwa-student",
-  "name": "LEO K",
-  "short_name": "LEO K",
+  "name": "LEO KIDS",
+  "short_name": "LEO KIDS",
   "description": "A small world of mini games and learning activities for kids. Run, fly, solve puzzles and practice math, geometry and English.",
   "start_url": "/student/login",
   "display": "standalone",

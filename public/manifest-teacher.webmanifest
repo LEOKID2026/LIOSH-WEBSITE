@@ -1,7 +1,7 @@
 {
   "id": "/pwa-teacher",
-  "name": "T LEO K",
-  "short_name": "T LEO K",
+  "name": "T LEO KIDS",
+  "short_name": "T LEO KIDS",
   "description": "Teacher portal for LEO KIDS — manage classes, students, and school activities.",
   "start_url": "/teacher/login",
   "display": "standalone",

@@ -114,6 +114,32 @@ function startHeartbeat(runId, getStats) {
   }, 5 * 60 * 1000);
 }
 
+async function loadPriorSummaryForVerify(cfg, manifest) {
+  try {
+    return JSON.parse(await readFile(`${cfg.reportDir}/summary.json`, "utf8"));
+  } catch {
+    const checkpoint = await loadResumeCheckpoint(cfg.reportDir);
+    const from = isoTodayMinusDays(cfg.days);
+    const to = isoTodayMinusDays(1);
+    console.log(
+      `[mass-sim] verify-only: no summary.json — bootstrapping dateRange --days=${cfg.days} (${from}..${to})`,
+    );
+    return {
+      runId: cfg.runId,
+      dateRange: { from, to },
+      parentsCreated: manifest.parents?.length ?? cfg.parents,
+      studentsCreated: manifest.students?.length ?? cfg.students,
+      simulatedDays: cfg.days,
+      totalAnswers: checkpoint?.totalAnswers ?? null,
+      totalSessions: checkpoint?.totalSessions ?? null,
+      totalParentActivities: checkpoint?.totalParentActivities ?? null,
+      mode: cfg.mode,
+      timestampStamping: cfg.timestampStamping,
+      seedSpeedPressure: cfg.seedSpeedPressure,
+    };
+  }
+}
+
 async function runVerifyOnly(cfg) {
   bootstrapQaDbWriteGuard("run-mass-virtual-students", "mass virtual students QA verify", [
     ...cfg.argv,
@@ -121,7 +147,7 @@ async function runVerifyOnly(cfg) {
   ]);
 
   const manifest = JSON.parse(await readFile(`${cfg.reportDir}/manifest.json`, "utf8"));
-  const prior = JSON.parse(await readFile(`${cfg.reportDir}/summary.json`, "utf8"));
+  const prior = await loadPriorSummaryForVerify(cfg, manifest);
   const { from, to } = prior.dateRange;
 
   console.log(`[mass-sim] verify-only runId=${cfg.runId} students=${manifest.students.length}`);
