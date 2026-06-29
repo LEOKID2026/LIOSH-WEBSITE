@@ -237,7 +237,7 @@ function DiagramNumberRow({ numbers, equation }) {
         ))}
       </div>
       {equation ? (
-        <p className="text-sm font-semibold text-emerald-100/90 sm:text-base">
+        <p className="text-sm font-semibold text-[color:var(--book-accent)]/90 sm:text-base">
           <MixedHebrewMathText text={equation} />
         </p>
       ) : null}

@@ -1,5 +1,5 @@
 {
-  "startedAt": "2026-06-29T19:55:03.329Z",
+  "startedAt": "2026-06-29T20:15:40.020Z",
   "sections": {
     "fresh-practice-db-report": {
       "pass": true,
@@ -179,18 +179,21 @@
           }
         }
       ],
-      "sinceIso": "2026-06-29T19:55:03.936Z",
+      "sinceIso": "2026-06-29T20:15:40.591Z",
       "skipped": true
     },
     "report-ui-copilot": {
-      "pass": false,
+      "pass": true,
       "studentId": "5f3df0a3-4527-4f8b-97cf-6e8ec5624920",
       "historyTotal": 18,
       "subtopicWithQ": 1,
-      "uiHasHistory": false,
+      "uiHasHistory": true,
       "uiGeneric": false,
       "uiHasQuestions": true,
       "uiFallbackOnly": false,
+      "uiLoad": {
+        "apiOk": true
+      },
       "screenshotPath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\tmp\\history-copilot-scope-qa-report\\parent-report-ui-aaa11.png",
       "copilotResults": [
         {
@@ -280,10 +283,8 @@
       "pass": true
     }
   },
-  "openIssues": [
-    "report-ui-copilot"
-  ],
-  "qaStart": "2026-06-29T19:55:03.330Z",
-  "finishedAt": "2026-06-29T19:56:51.163Z",
-  "allPass": false
+  "openIssues": [],
+  "qaStart": "2026-06-29T20:15:40.021Z",
+  "finishedAt": "2026-06-29T20:16:31.114Z",
+  "allPass": true
 }

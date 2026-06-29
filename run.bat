@@ -44,7 +44,18 @@ for /f "tokens=5" %%a in ('netstat -ano ^| findstr ":%P%" ^| findstr LISTENING')
   )
 )
 if "!FOUND!"=="1" (
-  timeout /t 3 /nobreak >nul
+  REM Wait until the port is actually free (up to 10 seconds).
+  set "WAITED=0"
+  :WaitPortFree
+  netstat -ano 2>nul | findstr ":%P%" | findstr LISTENING >nul
+  if not errorlevel 1 (
+    if !WAITED! lss 10 (
+      timeout /t 1 /nobreak >nul
+      set /a WAITED+=1
+      goto :WaitPortFree
+    )
+    echo [WARN] Port %P% still busy after 10s — proceeding anyway.
+  )
   echo [OK] Port %P% cleared — starting fresh dev server.
 ) else (
   echo [OK] Port %P% was free — starting dev server.
@@ -52,19 +63,12 @@ if "!FOUND!"=="1" (
 exit /b 0
 
 :PrepareDevNextCache
-if not exist .next goto :CleanWebpackCacheOnly
-if not exist .next\routes-manifest.json goto :RemoveFullNext
-if not exist .next\required-server-files.json goto :RemoveFullNext
-goto :CleanWebpackCacheOnly
-
-:RemoveFullNext
-echo [INFO] Broken .next build detected — removing full .next folder...
-rmdir /s /q .next 2>nul
-exit /b 0
-
-:CleanWebpackCacheOnly
-if exist .next\cache (
-  echo [INFO] Clearing .next\cache before dev start ^(prevents Windows webpack corruption^)...
-  rmdir /s /q .next\cache 2>nul
+REM Always remove the entire .next directory before starting next dev.
+REM A partial/corrupted dev build (missing routes-manifest.json or _document.js)
+REM causes ENOENT and 500 errors on restart. Full delete is the only safe option.
+if exist .next (
+  echo [INFO] Removing .next before dev start to prevent stale/partial build errors...
+  rmdir /s /q .next 2>nul
+  echo [OK] .next removed.
 )
 exit /b 0

@@ -107,7 +107,14 @@ async function main() {
         "Removing .next and retrying build once...\n"
     );
     if (fs.existsSync(NEXT_DIR)) {
-      fs.rmSync(NEXT_DIR, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
+      for (let i = 0; i < 5; i += 1) {
+        try {
+          fs.rmSync(NEXT_DIR, { recursive: true, force: true, maxRetries: 8, retryDelay: 300 });
+          break;
+        } catch (err) {
+          if (i === 4) throw err;
+        }
+      }
     }
     await runNodeScript("scripts/ensure-clean-next-build.mjs");
     result = await runNextBuild();

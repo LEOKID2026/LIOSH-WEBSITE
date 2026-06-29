@@ -1,0 +1,74 @@
+[
+  {
+    "leo": "AAA1",
+    "topic": "classical_greece",
+    "pass": true,
+    "studentId": "fd3901da-66ce-46c7-a24c-b33df2141c04",
+    "activityId": "cef6da68-3253-4922-9259-cc9580aea152",
+    "questionCount": 10,
+    "play": {
+      "answered": 10,
+      "uiVerified": true,
+      "viaApi": true
+    },
+    "db": {
+      "status": "submitted",
+      "answersCount": 10,
+      "correctCount": 10,
+      "attempts": 10,
+      "withParams": 10,
+      "topicMatch": 10,
+      "parentAssignedEvidence": true,
+      "pass": true,
+      "sample": [
+        {
+          "subtopicKey": "hist_sub_athens_democracy",
+          "evidenceCategory": "diagnostic_guided"
+        },
+        {
+          "subtopicKey": "hist_sub_athens_democracy",
+          "evidenceCategory": "diagnostic_guided"
+        }
+      ]
+    },
+    "parentApi": {
+      "listOk": true,
+      "detailOk": true,
+      "studentStatus": "submitted",
+      "answersCount": 10,
+      "listRow": {
+        "activityId": "cef6da68-3253-4922-9259-cc9580aea152",
+        "scope": "parent",
+        "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+        "studentId": "fd3901da-66ce-46c7-a24c-b33df2141c04",
+        "title": "[QA hist] classical_greece 1782768511996",
+        "subject": "history",
+        "topic": "classical_greece",
+        "subtopic": null,
+        "skillKey": null,
+        "difficultyLevel": "easy",
+        "questionCount": 10,
+        "mode": "guided_practice",
+        "dueAt": null,
+        "status": "active",
+        "activatedAt": "2026-06-29T21:28:33.343+00:00",
+        "closedAt": null,
+        "archivedAt": null,
+        "createdAt": "2026-06-29T21:28:33.132986+00:00",
+        "updatedAt": "2026-06-29T21:28:33.132986+00:00",
+        "snapshotStatus": "frozen",
+        "snapshotFrozenAt": "2026-06-29T21:28:33.343+00:00",
+        "studentStatus": "submitted",
+        "answersCount": 10,
+        "correctCount": 10,
+        "scorePct": 100,
+        "startedAt": "2026-06-29T21:28:43.05+00:00",
+        "submittedAt": "2026-06-29T21:29:33.165+00:00"
+      }
+    },
+    "report": {
+      "historyAnswers": 64,
+      "topicAnswers": 48
+    }
+  }
+]

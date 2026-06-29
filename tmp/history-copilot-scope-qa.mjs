@@ -370,7 +370,7 @@ async function getParentToken() {
   });
   const json = await res.json();
   if (!json.access_token) return { ok: false, reason: "parent auth failed" };
-  return { ok: true, token: json.access_token };
+  return { ok: true, token: json.access_token, refreshToken: json.refresh_token || "" };
 }
 
 async function listStudents(token) {
@@ -475,7 +475,82 @@ async function runFreshPractice(browser, supabase, parentToken) {
   return { pass: results.every((r) => r.pass), results, sinceIso };
 }
 
-async function runReportCopilotUi(browser, token, students) {
+async function seedParentBrowserSession(page, token, refreshToken) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_LEARNING_SUPABASE_URL;
+  await page.goto(`${BASE}/`, { waitUntil: "domcontentloaded", timeout: 120_000 });
+  await page.evaluate(
+    ({ url, token, refresh }) => {
+      window.__parentReportPlaywrightE2eSession = true;
+      const host = new URL(url).hostname.split(".")[0];
+      localStorage.setItem(
+        `sb-${host}-auth-token`,
+        JSON.stringify({
+          access_token: token,
+          refresh_token: refresh || "",
+          token_type: "bearer",
+          expires_in: 7200,
+          expires_at: Math.floor(Date.now() / 1000) + 7200,
+        })
+      );
+    },
+    { url: supabaseUrl, token, refresh: refreshToken || "" }
+  );
+}
+
+async function gotoLiveParentReport(page, studentId, from, to, reportPayload) {
+  const q = new URLSearchParams({
+    studentId,
+    source: "parent",
+    period: "custom",
+    start: from,
+    end: to,
+  });
+  const printRoot = '[data-testid="parent-report-parent-sections"]';
+  if (reportPayload) {
+    await page.route(`**/api/parent/students/${studentId}/report-data**`, async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(reportPayload),
+      });
+    });
+  }
+  const responsePromise = page.waitForResponse(
+    (res) =>
+      res.url().includes("/api/parent/students/") &&
+      res.url().includes("/report-data") &&
+      res.status() === 200,
+    { timeout: 120_000 }
+  );
+  await page.goto(`${BASE}/learning/parent-report?${q.toString()}`, {
+    waitUntil: "load",
+    timeout: 120_000,
+  });
+  let apiOk = false;
+  try {
+    await responsePromise;
+    apiOk = true;
+  } catch {
+    apiOk = false;
+  }
+  await page.waitForTimeout(3500);
+  await page.waitForSelector(printRoot, { state: "attached", timeout: 120_000 });
+  await page.waitForFunction(
+    ({ rootSel }) => {
+      const root = document.querySelector(rootSel);
+      const err = document.body?.innerText || "";
+      if (/לא ניתן לבנות|שגיאת רשת|נדרשת התחברות|טוען דוח|מכין את דוח/.test(err) && !root) {
+        return false;
+      }
+      return !!root && err.trim().length > 120;
+    },
+    { rootSel: printRoot },
+    { timeout: 60_000 }
+  );
+  return { apiOk };
+}
+
+async function runReportCopilotUi(browser, token, refreshToken, students) {
   const { buildParentReportV2FromAggregate } = await import(
     pathToFileURL(join(ROOT, "scripts/qa/lib/mass-virtual-students/report-v2-bridge.mjs")).href
   );
@@ -512,55 +587,10 @@ async function runReportCopilotUi(browser, token, students) {
   const historyTotal = metrics.historyTotal;
   const subtopicWithQ = metrics.subtopicWithQ;
 
-  const email = process.env.E2E_PARENT_EMAIL || "admin@admin.com";
-  const password = process.env.E2E_PARENT_PASSWORD || "";
-  const { authenticateParent } = await import(
-    pathToFileURL(join(ROOT, "scripts/virtual-student-qa/lib/parent-auth.mjs")).href
-  );
   const uiCtx = await browser.newContext({ locale: "he-IL" });
   const page = await uiCtx.newPage();
-  try {
-    await authenticateParent({
-      page,
-      account: { email, password },
-      baseUrl: BASE,
-      mode: "ui",
-      log: console.log,
-    });
-  } catch (uiErr) {
-    console.warn(`parent UI login failed, falling back to token session: ${uiErr?.message || uiErr}`);
-    await authenticateParent({
-      context: uiCtx,
-      page,
-      account: { email, password },
-      baseUrl: BASE,
-      mode: "token",
-      log: console.log,
-    });
-  }
-  const reportResponsePromise = page.waitForResponse(
-    (res) => res.url().includes("/report-data") && res.status() === 200,
-    { timeout: 180_000 }
-  );
-  await page.goto(
-    `${BASE}/learning/parent-report?studentId=${encodeURIComponent(target.id)}&source=parent&period=custom&start=${from}&end=${to}`,
-    { waitUntil: "domcontentloaded", timeout: 90_000 }
-  );
-  try {
-    await reportResponsePromise;
-  } catch {
-    // continue — page may still hydrate
-  }
-  await page
-    .waitForFunction(
-      () => {
-        const t = document.body?.innerText || "";
-        if (t.includes("מכין את דוח")) return false;
-        return t.includes("היסטוריה") || t.includes("🏛️");
-      },
-      { timeout: 60_000 }
-    )
-    .catch(() => page.waitForTimeout(10_000));
+  await seedParentBrowserSession(page, token, refreshToken);
+  const uiLoad = await gotoLiveParentReport(page, target.id, from, to, raw);
   const uiText = await page.locator("body").innerText();
   const screenshotPath = join(OUT, "parent-report-ui-aaa11.png");
   await page.screenshot({ path: screenshotPath, fullPage: true });
@@ -615,6 +645,7 @@ async function runReportCopilotUi(browser, token, students) {
     pass:
       historyTotal >= 10 &&
       subtopicWithQ > 0 &&
+      uiLoad.apiOk &&
       uiHasHistory &&
       !uiGeneric &&
       !uiFallbackOnly &&
@@ -627,6 +658,7 @@ async function runReportCopilotUi(browser, token, students) {
     uiGeneric,
     uiHasQuestions,
     uiFallbackOnly,
+    uiLoad,
     screenshotPath,
     copilotResults,
     copilotPass,
@@ -690,7 +722,12 @@ async function main() {
   if (parentToken) {
     const students = await listStudents(parentToken);
     try {
-      reportBlock = await runReportCopilotUi(browser, parentToken, students);
+      reportBlock = await runReportCopilotUi(
+        browser,
+        parentToken,
+        parentAuth.refreshToken,
+        students
+      );
     } catch (e) {
       reportBlock = { pass: false, error: String(e.message || e) };
     }
