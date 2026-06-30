@@ -17,6 +17,7 @@ import MleoLeoLabEngine from "./engines/MleoLeoLabEngine.jsx";
 import MleoLeoGiftsEngine from "./engines/MleoLeoGiftsEngine.jsx";
 import MleoLeoBakeryEngine from "./engines/MleoLeoBakeryEngine.jsx";
 import MleoLeoNumberPathEngine from "./engines/MleoLeoNumberPathEngine.jsx";
+import MleoLeoPizzeriaEngine from "./engines/MleoLeoPizzeriaEngine.jsx";
 
 const SHOP_LAYOUT_GAME_KEYS = new Set([
   "leo-lab",
@@ -25,6 +26,7 @@ const SHOP_LAYOUT_GAME_KEYS = new Set([
   "leo-supermarket",
   "recycling-factory",
   "leo-number-path",
+  "leo-pizzeria",
 ]);
 
 const ENGINE_MAP = {
@@ -34,6 +36,7 @@ const ENGINE_MAP = {
   "leo-gifts": MleoLeoGiftsEngine,
   "leo-bakery": MleoLeoBakeryEngine,
   "leo-number-path": MleoLeoNumberPathEngine,
+  "leo-pizzeria": MleoLeoPizzeriaEngine,
 };
 
 const PLAY_SHELL =

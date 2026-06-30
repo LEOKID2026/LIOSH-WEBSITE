@@ -64,6 +64,7 @@ const STUDENT_PROTECTED_ROUTES = new Set([
   "/student/educational-games/leo-gifts",
   "/student/educational-games/leo-bakery",
   "/student/educational-games/leo-number-path",
+  "/student/educational-games/leo-pizzeria",
   "/learning",
   "/learning/math-master",
   "/learning/geometry-master",

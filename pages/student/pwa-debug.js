@@ -39,6 +39,7 @@ const EDUCATIONAL_ROUTES = [
   "/student/offline/educational/leo-gifts",
   "/student/offline/educational/leo-bakery",
   "/student/offline/educational/leo-number-path",
+  "/student/offline/educational/leo-pizzeria",
 ];
 
 const BASE_NAV_ROUTES = [

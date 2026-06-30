@@ -55,6 +55,18 @@ const LEO_LAB_METRIC_KEYS = Object.freeze([
   "completedAllExperiments",
 ]);
 
+const LEO_PIZZERIA_METRIC_KEYS = Object.freeze([
+  "customersTotal",
+  "customersReached",
+  "successfulCustomers",
+  "failedAttempts",
+  "mistakes",
+  "bestStreak",
+  "durationSec",
+  "accuracy",
+  "completedAllCustomers",
+]);
+
 const LEO_CONTINUOUS_METRIC_KEYS = Object.freeze([
   "successfulQuestions",
   "questionsReached",
@@ -196,6 +208,40 @@ function normalizeLeoLabMetrics(raw) {
   return base;
 }
 
+function normalizeLeoPizzeriaMetrics(raw) {
+  const base = normalizeBaseMetrics(raw, "leo-pizzeria");
+  if (!base) return null;
+
+  for (const key of LEO_PIZZERIA_METRIC_KEYS) {
+    if (key === "completedAllCustomers") {
+      base.completedAllCustomers = raw.completedAllCustomers === true;
+      continue;
+    }
+    if (raw[key] != null) {
+      const val = clampMetricNumber(raw[key], 0, key === "accuracy" ? 1 : 10000);
+      if (val == null) return null;
+      base[key] = key === "accuracy" ? val : Math.floor(val);
+    }
+  }
+
+  if (base.customersTotal == null) base.customersTotal = 20;
+  if (base.mistakes == null && base.failedAttempts != null) {
+    base.mistakes = base.failedAttempts;
+  }
+
+  if (base.accuracy == null && base.successfulCustomers != null) {
+    base.accuracy = (base.successfulCustomers ?? 0) / Math.max(1, base.customersReached ?? 1);
+  }
+
+  if (base.completedAllCustomers == null && base.successfulCustomers != null && base.customersTotal != null) {
+    base.completedAllCustomers = base.successfulCustomers >= base.customersTotal;
+  }
+
+  base.positiveProgress = base.successfulCustomers ?? 0;
+
+  return base;
+}
+
 function normalizeLeoContinuousMetrics(raw, gameKey) {
   const base = normalizeBaseMetrics(raw, gameKey);
   if (!base) return null;
@@ -269,6 +315,7 @@ function normalizeMetrics(raw, gameKey) {
   const key = String(gameKey || raw.gameKey || "").trim().toLowerCase();
   if (key === "leo-supermarket") return normalizeLeoSupermarketMetrics(raw);
   if (key === "leo-lab") return normalizeLeoLabMetrics(raw);
+  if (key === "leo-pizzeria") return normalizeLeoPizzeriaMetrics(raw);
   if (key === "leo-gifts") return normalizeLeoGiftsMetrics(raw);
   if (key === "leo-bakery") return normalizeLeoBakeryMetrics(raw);
   if (key === "leo-number-path") return normalizeLeoNumberPathMetrics(raw);
