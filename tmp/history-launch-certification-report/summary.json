@@ -1,5 +1,5 @@
 {
-  "startedAt": "2026-06-30T05:12:31.371Z",
+  "startedAt": "2026-06-30T07:19:31.378Z",
   "sections": {
     "build": {
       "pass": true,
@@ -7,32 +7,223 @@
       "note": "BUILD_ID present"
     },
     "parent-activity-browser-e2e": {
-      "pass": false,
+      "pass": true,
       "results": [
         {
           "leo": "AAA1",
           "topic": "classical_greece",
-          "pass": false,
+          "pass": true,
           "studentId": "fd3901da-66ce-46c7-a24c-b33df2141c04",
-          "activityId": "22f677ff-81d5-4114-a823-72cac2c227b6",
+          "activityId": "b65711aa-ee2d-4d77-8a02-451be721e1f0",
           "questionCount": 10,
-          "error": "page.waitForSelector: Timeout 90000ms exceeded.\nCall log:\n  - waiting for locator('[data-testid=\"activity-answer-choices\"]') to be visible\n"
+          "play": {
+            "answered": 10,
+            "uiVerified": true,
+            "viaBrowser": true
+          },
+          "db": {
+            "status": "submitted",
+            "answersCount": 10,
+            "correctCount": 10,
+            "attempts": 10,
+            "withParams": 10,
+            "topicMatch": 10,
+            "parentAssignedEvidence": true,
+            "pass": true,
+            "sample": [
+              {
+                "subtopicKey": "hist_sub_athens_sparta_compare",
+                "evidenceCategory": "diagnostic_guided"
+              },
+              {
+                "subtopicKey": "hist_sub_athens_democracy",
+                "evidenceCategory": "diagnostic_guided"
+              }
+            ]
+          },
+          "parentApi": {
+            "listOk": true,
+            "detailOk": true,
+            "studentStatus": "submitted",
+            "answersCount": 10,
+            "listRow": {
+              "activityId": "b65711aa-ee2d-4d77-8a02-451be721e1f0",
+              "scope": "parent",
+              "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+              "studentId": "fd3901da-66ce-46c7-a24c-b33df2141c04",
+              "title": "[QA hist] classical_greece 1782804021229",
+              "subject": "history",
+              "topic": "classical_greece",
+              "subtopic": null,
+              "skillKey": null,
+              "difficultyLevel": "easy",
+              "questionCount": 10,
+              "mode": "guided_practice",
+              "dueAt": null,
+              "status": "active",
+              "activatedAt": "2026-06-30T07:20:22.633+00:00",
+              "closedAt": null,
+              "archivedAt": null,
+              "createdAt": "2026-06-30T07:20:22.324601+00:00",
+              "updatedAt": "2026-06-30T07:20:22.324601+00:00",
+              "snapshotStatus": "frozen",
+              "snapshotFrozenAt": "2026-06-30T07:20:22.634+00:00",
+              "studentStatus": "submitted",
+              "answersCount": 10,
+              "correctCount": 10,
+              "scorePct": 100,
+              "startedAt": "2026-06-30T07:20:32.572+00:00",
+              "submittedAt": "2026-06-30T07:21:41.771+00:00"
+            }
+          },
+          "report": {
+            "historyAnswers": 214,
+            "topicAnswers": 138
+          }
         },
         {
           "leo": "AAA7",
           "topic": "rome_jews",
-          "pass": false,
+          "pass": true,
           "studentId": "d8f6b184-80f2-4f2b-897e-cbbf557022e7",
-          "error": "fetch failed"
+          "activityId": "29c06aed-f1e8-4c07-963b-323e99b8e21c",
+          "questionCount": 10,
+          "play": {
+            "answered": 10,
+            "uiVerified": true,
+            "viaBrowser": true
+          },
+          "db": {
+            "status": "submitted",
+            "answersCount": 10,
+            "correctCount": 10,
+            "attempts": 10,
+            "withParams": 10,
+            "topicMatch": 10,
+            "parentAssignedEvidence": true,
+            "pass": true,
+            "sample": [
+              {
+                "subtopicKey": "hist_sub_great_revolt_destruction",
+                "evidenceCategory": "diagnostic_guided"
+              },
+              {
+                "subtopicKey": "hist_sub_roman_culture_law",
+                "evidenceCategory": "diagnostic_guided"
+              }
+            ]
+          },
+          "parentApi": {
+            "listOk": true,
+            "detailOk": true,
+            "studentStatus": "submitted",
+            "answersCount": 10,
+            "listRow": {
+              "activityId": "29c06aed-f1e8-4c07-963b-323e99b8e21c",
+              "scope": "parent",
+              "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+              "studentId": "d8f6b184-80f2-4f2b-897e-cbbf557022e7",
+              "title": "[QA hist] rome_jews 1782804152049",
+              "subject": "history",
+              "topic": "rome_jews",
+              "subtopic": null,
+              "skillKey": null,
+              "difficultyLevel": "easy",
+              "questionCount": 10,
+              "mode": "guided_practice",
+              "dueAt": null,
+              "status": "active",
+              "activatedAt": "2026-06-30T07:22:33.242+00:00",
+              "closedAt": null,
+              "archivedAt": null,
+              "createdAt": "2026-06-30T07:22:32.921286+00:00",
+              "updatedAt": "2026-06-30T07:22:32.921286+00:00",
+              "snapshotStatus": "frozen",
+              "snapshotFrozenAt": "2026-06-30T07:22:33.243+00:00",
+              "studentStatus": "submitted",
+              "answersCount": 10,
+              "correctCount": 10,
+              "scorePct": 100,
+              "startedAt": "2026-06-30T07:22:42.047+00:00",
+              "submittedAt": "2026-06-30T07:23:52.068+00:00"
+            }
+          },
+          "report": {
+            "historyAnswers": 201,
+            "topicAnswers": 100
+          }
         },
         {
           "leo": "AAA11",
           "topic": "rome_jews",
-          "pass": false,
+          "pass": true,
           "studentId": "5f3df0a3-4527-4f8b-97cf-6e8ec5624920",
-          "activityId": "f09643ec-d3c1-4859-a5be-0440d5250636",
+          "activityId": "125d879e-109b-4512-8d66-420bfffa94dc",
           "questionCount": 10,
-          "error": "page.waitForSelector: Timeout 90000ms exceeded.\nCall log:\n  - waiting for locator('[data-testid=\"activity-answer-choices\"]') to be visible\n"
+          "play": {
+            "answered": 10,
+            "uiVerified": true,
+            "viaBrowser": true
+          },
+          "db": {
+            "status": "submitted",
+            "answersCount": 10,
+            "correctCount": 10,
+            "attempts": 10,
+            "withParams": 10,
+            "topicMatch": 10,
+            "parentAssignedEvidence": true,
+            "pass": true,
+            "sample": [
+              {
+                "subtopicKey": "hist_sub_yavne_bar_kokhba_babylon",
+                "evidenceCategory": "diagnostic_guided"
+              },
+              {
+                "subtopicKey": "hist_sub_herod_building",
+                "evidenceCategory": "diagnostic_guided"
+              }
+            ]
+          },
+          "parentApi": {
+            "listOk": true,
+            "detailOk": true,
+            "studentStatus": "submitted",
+            "answersCount": 10,
+            "listRow": {
+              "activityId": "125d879e-109b-4512-8d66-420bfffa94dc",
+              "scope": "parent",
+              "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+              "studentId": "5f3df0a3-4527-4f8b-97cf-6e8ec5624920",
+              "title": "[QA hist] rome_jews 1782804279057",
+              "subject": "history",
+              "topic": "rome_jews",
+              "subtopic": null,
+              "skillKey": null,
+              "difficultyLevel": "easy",
+              "questionCount": 10,
+              "mode": "guided_practice",
+              "dueAt": null,
+              "status": "active",
+              "activatedAt": "2026-06-30T07:24:40.249+00:00",
+              "closedAt": null,
+              "archivedAt": null,
+              "createdAt": "2026-06-30T07:24:39.925034+00:00",
+              "updatedAt": "2026-06-30T07:24:39.925034+00:00",
+              "snapshotStatus": "frozen",
+              "snapshotFrozenAt": "2026-06-30T07:24:40.249+00:00",
+              "studentStatus": "submitted",
+              "answersCount": 10,
+              "correctCount": 10,
+              "scorePct": 100,
+              "startedAt": "2026-06-30T07:24:49.603+00:00",
+              "submittedAt": "2026-06-30T07:25:59.412+00:00"
+            }
+          },
+          "report": {
+            "historyAnswers": 173,
+            "topicAnswers": 155
+          }
         }
       ]
     },
@@ -48,7 +239,7 @@
             "answered": [
               {
                 "questionIndex": 1,
-                "pickedIndex": 2,
+                "pickedIndex": 1,
                 "countable": true,
                 "evidenceCategory": "diagnostic_independent"
               },
@@ -60,31 +251,31 @@
               },
               {
                 "questionIndex": 3,
-                "pickedIndex": 0,
-                "countable": true,
-                "evidenceCategory": "diagnostic_independent"
-              },
-              {
-                "questionIndex": 4,
-                "pickedIndex": 0,
-                "countable": true,
-                "evidenceCategory": "diagnostic_independent"
-              },
-              {
-                "questionIndex": 5,
                 "pickedIndex": 2,
                 "countable": true,
                 "evidenceCategory": "diagnostic_independent"
               },
               {
-                "questionIndex": 6,
+                "questionIndex": 4,
                 "pickedIndex": 1,
                 "countable": true,
                 "evidenceCategory": "diagnostic_independent"
               },
               {
+                "questionIndex": 5,
+                "pickedIndex": 1,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 6,
+                "pickedIndex": 3,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
                 "questionIndex": 7,
-                "pickedIndex": 0,
+                "pickedIndex": 1,
                 "countable": true,
                 "evidenceCategory": "diagnostic_independent"
               },
@@ -102,7 +293,7 @@
               },
               {
                 "questionIndex": 10,
-                "pickedIndex": 0,
+                "pickedIndex": 3,
                 "countable": true,
                 "evidenceCategory": "diagnostic_independent"
               }
@@ -117,25 +308,25 @@
             "withParams": 10,
             "sampleParams": [
               {
-                "skillId": "hist_concepts",
+                "skillId": "hist_simple_source",
                 "topicKey": "what_is_history",
                 "subskillId": "hist_sub_intro_sources_timeline",
                 "subtopicKey": "hist_sub_intro_sources_timeline",
-                "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_archaeologist_role"
+                "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_primary_example"
               },
               {
                 "skillId": "hist_simple_source",
                 "topicKey": "what_is_history",
                 "subskillId": "hist_sub_intro_sources_timeline",
                 "subtopicKey": "hist_sub_intro_sources_timeline",
-                "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_historical_evidence"
+                "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_primary_source"
               },
               {
                 "skillId": "hist_concepts",
                 "topicKey": "what_is_history",
                 "subskillId": "hist_sub_intro_sources_timeline",
                 "subtopicKey": "hist_sub_intro_sources_timeline",
-                "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_chronology"
+                "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_history_definition"
               }
             ],
             "sampleEvidence": [
@@ -155,12 +346,6 @@
                 "topicKey": "what_is_history"
               }
             ]
-          },
-          "report": {
-            "historyTotal": 114,
-            "subtopicWithQ": 5,
-            "from": "2026-06-01",
-            "to": "2026-06-30"
           }
         },
         {
@@ -178,19 +363,19 @@
               },
               {
                 "questionIndex": 2,
-                "pickedIndex": 1,
+                "pickedIndex": 2,
                 "countable": true,
                 "evidenceCategory": "diagnostic_independent"
               },
               {
                 "questionIndex": 3,
-                "pickedIndex": 0,
+                "pickedIndex": 3,
                 "countable": true,
                 "evidenceCategory": "diagnostic_independent"
               },
               {
                 "questionIndex": 4,
-                "pickedIndex": 0,
+                "pickedIndex": 1,
                 "countable": true,
                 "evidenceCategory": "diagnostic_independent"
               },
@@ -208,13 +393,13 @@
               },
               {
                 "questionIndex": 7,
-                "pickedIndex": 3,
+                "pickedIndex": 0,
                 "countable": true,
                 "evidenceCategory": "diagnostic_independent"
               },
               {
                 "questionIndex": 8,
-                "pickedIndex": 3,
+                "pickedIndex": 1,
                 "countable": true,
                 "evidenceCategory": "diagnostic_independent"
               },
@@ -226,7 +411,7 @@
               },
               {
                 "questionIndex": 10,
-                "pickedIndex": 1,
+                "pickedIndex": 3,
                 "countable": true,
                 "evidenceCategory": "diagnostic_independent"
               }
@@ -241,25 +426,25 @@
             "withParams": 10,
             "sampleParams": [
               {
+                "skillId": "hist_governance_institutions",
+                "topicKey": "classical_greece",
+                "subskillId": "hist_sub_athens_democracy",
+                "subtopicKey": "hist_sub_athens_democracy",
+                "patternFamily": "hist_g6_hist_sub_athens_democracy_athens_democracy_city"
+              },
+              {
                 "skillId": "hist_culture_heritage",
                 "topicKey": "classical_greece",
                 "subskillId": "hist_sub_greek_culture_legacy",
                 "subtopicKey": "hist_sub_greek_culture_legacy",
-                "patternFamily": "hist_g6_hist_sub_greek_culture_legacy_olympus"
+                "patternFamily": "hist_g6_hist_sub_greek_culture_legacy_socrates"
               },
               {
                 "skillId": "hist_governance_institutions",
                 "topicKey": "classical_greece",
                 "subskillId": "hist_sub_sparta",
                 "subtopicKey": "hist_sub_sparta",
-                "patternFamily": "hist_g6_hist_sub_sparta_sparta_values"
-              },
-              {
-                "skillId": "hist_comparison",
-                "topicKey": "classical_greece",
-                "subskillId": "hist_sub_athens_sparta_compare",
-                "subtopicKey": "hist_sub_athens_sparta_compare",
-                "patternFamily": "hist_g6_hist_sub_athens_sparta_compare_compare_culture"
+                "patternFamily": "hist_g6_hist_sub_sparta_sparta_government"
               }
             ],
             "sampleEvidence": [
@@ -279,12 +464,6 @@
                 "topicKey": "classical_greece"
               }
             ]
-          },
-          "report": {
-            "historyTotal": 101,
-            "subtopicWithQ": 12,
-            "from": "2026-06-01",
-            "to": "2026-06-30"
           }
         },
         {
@@ -296,31 +475,31 @@
             "answered": [
               {
                 "questionIndex": 1,
-                "pickedIndex": 3,
+                "pickedIndex": 2,
                 "countable": true,
                 "evidenceCategory": "diagnostic_independent"
               },
               {
                 "questionIndex": 2,
-                "pickedIndex": 0,
-                "countable": true,
-                "evidenceCategory": "diagnostic_independent"
-              },
-              {
-                "questionIndex": 3,
                 "pickedIndex": 3,
                 "countable": true,
                 "evidenceCategory": "diagnostic_independent"
               },
               {
-                "questionIndex": 4,
+                "questionIndex": 3,
                 "pickedIndex": 1,
                 "countable": true,
                 "evidenceCategory": "diagnostic_independent"
               },
               {
-                "questionIndex": 5,
+                "questionIndex": 4,
                 "pickedIndex": 0,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 5,
+                "pickedIndex": 3,
                 "countable": true,
                 "evidenceCategory": "diagnostic_independent"
               },
@@ -332,25 +511,25 @@
               },
               {
                 "questionIndex": 7,
-                "pickedIndex": 3,
-                "countable": true,
-                "evidenceCategory": "diagnostic_independent"
-              },
-              {
-                "questionIndex": 8,
-                "pickedIndex": 2,
-                "countable": true,
-                "evidenceCategory": "diagnostic_independent"
-              },
-              {
-                "questionIndex": 9,
                 "pickedIndex": 1,
                 "countable": true,
                 "evidenceCategory": "diagnostic_independent"
               },
               {
-                "questionIndex": 10,
+                "questionIndex": 8,
+                "pickedIndex": 3,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 9,
                 "pickedIndex": 2,
+                "countable": true,
+                "evidenceCategory": "diagnostic_independent"
+              },
+              {
+                "questionIndex": 10,
+                "pickedIndex": 0,
                 "countable": true,
                 "evidenceCategory": "diagnostic_independent"
               }
@@ -365,25 +544,25 @@
             "withParams": 10,
             "sampleParams": [
               {
+                "skillId": "hist_timeline_sequence",
+                "topicKey": "rome_jews",
+                "subskillId": "hist_sub_rise_of_rome",
+                "subtopicKey": "hist_sub_rise_of_rome",
+                "patternFamily": "hist_g6_hist_sub_rise_of_rome_early_rome"
+              },
+              {
                 "skillId": "hist_figures_roles",
                 "topicKey": "rome_jews",
                 "subskillId": "hist_sub_herod_building",
                 "subtopicKey": "hist_sub_herod_building",
-                "patternFamily": "hist_g6_hist_sub_herod_building_herod_builder"
+                "patternFamily": "hist_g6_hist_sub_herod_building_herodium"
               },
               {
-                "skillId": "hist_past_present_link",
+                "skillId": "hist_timeline_sequence",
                 "topicKey": "rome_jews",
-                "subskillId": "hist_sub_yavne_bar_kokhba_babylon",
-                "subtopicKey": "hist_sub_yavne_bar_kokhba_babylon",
-                "patternFamily": "hist_g6_hist_sub_yavne_bar_kokhba_babylon_yavne_academy"
-              },
-              {
-                "skillId": "hist_culture_heritage",
-                "topicKey": "rome_jews",
-                "subskillId": "hist_sub_roman_culture_law",
-                "subtopicKey": "hist_sub_roman_culture_law",
-                "patternFamily": "hist_g6_hist_sub_roman_culture_law_roman_culture"
+                "subskillId": "hist_sub_rise_of_rome",
+                "subtopicKey": "hist_sub_rise_of_rome",
+                "patternFamily": "hist_g6_hist_sub_rise_of_rome_julius_caesar"
               }
             ],
             "sampleEvidence": [
@@ -403,12 +582,6 @@
                 "topicKey": "rome_jews"
               }
             ]
-          },
-          "report": {
-            "historyTotal": 73,
-            "subtopicWithQ": 8,
-            "from": "2026-06-01",
-            "to": "2026-06-30"
           }
         }
       ]
@@ -427,11 +600,9 @@
       "pass": true
     }
   },
-  "openIssues": [
-    "parent-activity-browser-e2e"
-  ],
+  "openIssues": [],
   "envFlakes": [],
-  "finishedAt": "2026-06-30T05:29:38.276Z",
-  "allPass": false,
-  "launchApproved": false
+  "finishedAt": "2026-06-30T07:36:35.070Z",
+  "allPass": true,
+  "launchApproved": true
 }

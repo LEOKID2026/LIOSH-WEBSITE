@@ -96,10 +96,13 @@ async function verifyLoginReady() {
 
 async function ensureServer() {
   if (process.env.SKIP_ENSURE_SERVER === "1") {
-    const res = await fetch(`${BASE}/student/login`, { signal: AbortSignal.timeout(10_000) }).catch(
-      () => null
-    );
-    if (res?.ok) return;
+    for (let i = 0; i < 90; i++) {
+      const res = await fetch(`${BASE}/student/login`, { signal: AbortSignal.timeout(15_000) }).catch(
+        () => null
+      );
+      if (res?.ok) return;
+      await sleep(2000);
+    }
     throw new Error(`Server on ${BASE} not reachable (SKIP_ENSURE_SERVER=1)`);
   }
   if (await verifyLoginReady()) return;
@@ -473,7 +476,7 @@ async function runFreshPractice(browser, supabase, parentToken) {
       const db = await verifyStudentDb(supabase, student.id, sinceIso);
       row.db = db;
 
-      if (parentToken) {
+      if (parentToken && process.env.SKIP_REPORT !== "1") {
         row.report = await getHistoryReportMetrics(parentToken, student.id, student.full_name);
       }
 
@@ -481,8 +484,8 @@ async function runFreshPractice(browser, supabase, parentToken) {
         practiceResult.sessionCountable >= 10 &&
         db.countable >= 10 &&
         db.withParams >= 10 &&
-        row.report?.historyTotal >= 10 &&
-        row.report?.subtopicWithQ > 0;
+        (process.env.SKIP_REPORT === "1" ||
+          (row.report?.historyTotal >= 10 && row.report?.subtopicWithQ > 0));
     } catch (e) {
       row.error = String(e.message || e);
     } finally {

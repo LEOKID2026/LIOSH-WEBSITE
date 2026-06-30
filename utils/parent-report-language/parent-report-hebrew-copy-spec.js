@@ -48,6 +48,12 @@ const MEANING_BY_ROOT_CAUSE_INSIGHT = Object.freeze({
   careless_execution: "נראה שהחומר מוכר בחלקו, אבל יש טעויות ביצוע שחוזרות כשממהרים.",
   weak_independence: "הילד מצליח יותר כשיש ליווי, ועדיין כדאי לחזק פתרון עצמאי.",
   insufficient_evidence: "עדיין מעט תשובות — כדאי עוד תרגול קצר לפני מסקנה ברורה.",
+  preliminary_direction: "יש כיוון ראשוני, אבל כדאי עוד קצת תרגול לפני מסקנה ברורה.",
+  recurring_pattern:
+    "כבר מופיע דפוס שחוזר בנושא הזה, ולכן כדאי להתייחס אליו ולחזק אותו. עדיין מומלץ להמשיך לתרגל כדי לוודא שהדפוס יציב לאורך זמן.",
+  recurring_pattern_supported:
+    "כבר מופיע דפוס שחוזר בנושא הזה בכמה מפגשים, ולכן כדאי להתייחס אליו ולחזק אותו. מומלץ להמשיך לתרגל כדי לוודא שהדפוס יציב לאורך זמן.",
+  no_consistent_pattern: "יש כבר תרגול בנושא, אבל עדיין לא מופיע דפוס עקבי מספיק.",
   mixed_signal: "יש כמה כיוונים אפשריים — כדאי לבדוק שוב אחרי עוד תרגול קצר.",
   early_stage_instability: "עדיין מעט תשובות — כדאי עוד תרגול קצר לפני מסקנה ברורה.",
   mixed: "יש כמה כיוונים אפשריים — כדאי לבדוק שוב אחרי עוד תרגול קצר.",
@@ -98,6 +104,13 @@ const ACTION_BY_ROOT_CAUSE = Object.freeze({
     "לשמר את הנושא בתרגול קצר, ואפשר לשלב בהדרגה שאלות מעט מאתגרות יותר אם הדיוק נשמר.",
   insufficient_evidence:
     "עדיין מעט תשובות — כדאי עוד תרגול קצר באותו נושא, ואז לבדוק שוב את הדוח.",
+  preliminary_direction: "לבצע עוד כמה שאלות באותו נושא, ואז לבדוק שוב את הדוח.",
+  recurring_pattern:
+    "לחזור על שאלות דומות באותו נושא, לחזק את הנקודה שחוזרת, ולבדוק שוב אחרי עוד תרגול.",
+  recurring_pattern_supported:
+    "להמשיך בתרגול ממוקד באותו נושא, לחזק את הנקודה שחוזרת, ולבדוק שהשיפור נשמר גם בהמשך.",
+  no_consistent_pattern:
+    "להמשיך בתרגול קצר באותו נושא כדי לראות אם יתגבש דפוס עקבי.",
   mixed_signal:
     "להמשיך בתרגול קצר באותו נושא — כדאי לבדוק שוב אחרי עוד כמה שאלות.",
   early_stage_instability:
@@ -107,6 +120,9 @@ const ACTION_BY_ROOT_CAUSE = Object.freeze({
 /** Spec §3 — mistake pattern parent text by engine id */
 export const MISTAKE_PATTERN_PARENT_HE = Object.freeze({
   insufficient_mistake_evidence: "",
+  recurring_weakness: "חלק מהטעויות חוזרות באותו סוג פעילות.",
+  insufficient_recurrence: "",
+  early_signal: "",
   speed_driven_error: "חלק מהטעויות הופיעו בזמן עבודה מהיר.",
   instruction_misread: "חלק מהטעויות נראות קשורות להבנת ההוראה.",
   support_dependent_success: "הצלחה בעיקר כשיש ליווי או רמזים.",
@@ -430,6 +446,11 @@ export function insufficientDataInsightHe() {
   );
 }
 
+/** Spec §6.1 — recent inactivity (not thin-data wording) */
+export function recentInactivityInsightHe() {
+  return "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.";
+}
+
 /** Spec §2.1 */
 export function explainIdentifiedHe(stepLabel, topic) {
   const step = clean(stepLabel);
@@ -529,6 +550,10 @@ export const ROOT_CAUSE_PARENT_HE = Object.freeze({
   careless_execution: MEANING_BY_ROOT_CAUSE_INSIGHT.careless_execution,
   weak_independence: MEANING_BY_ROOT_CAUSE_INSIGHT.weak_independence,
   insufficient_evidence: MEANING_BY_ROOT_CAUSE_INSIGHT.insufficient_evidence,
+  preliminary_direction: MEANING_BY_ROOT_CAUSE_INSIGHT.preliminary_direction,
+  recurring_pattern: MEANING_BY_ROOT_CAUSE_INSIGHT.recurring_pattern,
+  recurring_pattern_supported: MEANING_BY_ROOT_CAUSE_INSIGHT.recurring_pattern_supported,
+  no_consistent_pattern: MEANING_BY_ROOT_CAUSE_INSIGHT.no_consistent_pattern,
   mixed_signal: MEANING_BY_ROOT_CAUSE_INSIGHT.mixed_signal,
   early_stage_instability: MEANING_BY_ROOT_CAUSE_INSIGHT.insufficient_evidence,
   retention_fragility: MEANING_BY_ROOT_CAUSE_INSIGHT.insufficient_evidence,

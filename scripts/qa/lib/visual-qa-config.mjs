@@ -6,6 +6,7 @@ import { GRADES as GEOMETRY_GRADES, TOPICS as GEOMETRY_TOPICS } from "../../../u
 import { SCIENCE_GRADES } from "../../../data/science-curriculum.js";
 import { GRADES as MOLEDET_GRADES, TOPICS as MOLEDET_TOPICS } from "../../../utils/moledet-geography-constants.js";
 import { MOLEDET_GEOGRAPHY_MIN_TEACH_GRADE } from "../../../utils/moledet-geography-curriculum-gates.js";
+import { HISTORY_TOPIC_ORDER, HISTORY_TOPIC_LABEL_HE } from "../../../data/history-curriculum.js";
 
 export const GRADE_HE = {
   1: "כיתה א׳",
@@ -44,7 +45,7 @@ export const GRADE_STUDENTS = {
   ],
 };
 
-export const PHASE1_SUBJECTS = new Set(["math", "geometry", "hebrew", "english", "science", "moledet"]);
+export const PHASE1_SUBJECTS = new Set(["math", "geometry", "hebrew", "english", "science", "moledet", "history"]);
 export const FUTURE_SUBJECTS = new Set([]);
 
 /** Visual QA harness key `moledet` → product subject `moledet-geography` (activities use moledet_geography). */
@@ -103,16 +104,30 @@ function moledetTopicsByGradeFromProduct() {
   return out;
 }
 
+function historyTopicsByGradeFromProduct() {
+  const topics = HISTORY_TOPIC_ORDER.filter((k) => k !== "mixed").map((value) => ({
+    value,
+    label: HISTORY_TOPIC_LABEL_HE[value] || value,
+  }));
+  return { 6: topics };
+}
+
 /** Grades included in Visual QA for moledet-geography (G1 excluded — enrichment only). */
 export function visualQaGradeNumbersForSubject(subject, gradeFilter = null) {
   if (gradeFilter != null) {
     if (subject === "moledet" && gradeFilter < MOLEDET_GEOGRAPHY_MIN_TEACH_GRADE) {
       return [];
     }
+    if (subject === "history" && gradeFilter !== 6) {
+      return [];
+    }
     return [gradeFilter];
   }
   if (subject === "moledet") {
     return [2, 3, 4, 5, 6];
+  }
+  if (subject === "history") {
+    return [6];
   }
   return [1, 2, 3, 4, 5, 6];
 }
@@ -198,6 +213,16 @@ export const SUBJECT_PLANS = {
     startTestId: "moledet-start-game",
     topicsByGrade: moledetTopicsByGradeFromProduct(),
   },
+  history: {
+    path: "/learning/history-master",
+    playerTestId: "science-player-name",
+    gradeSelectAfterPlayer: true,
+    gradeValueKind: "g-key",
+    topicSelectTestId: "science-topic-select",
+    startTestId: "science-start-game",
+    surfaceSubject: "science",
+    topicsByGrade: historyTopicsByGradeFromProduct(),
+  },
 };
 
 /** Deterministic small offset from a seed string (topic rotation / round variation). */
@@ -261,19 +286,20 @@ export function resolveSubject(subject) {
   if (!subject) {
     return {
       ok: false,
-      error: "VISUAL_QA_SUBJECT is required (math | geometry | hebrew | english | science | moledet)",
+      error:
+        "VISUAL_QA_SUBJECT is required (math | geometry | hebrew | english | science | moledet | history)",
     };
   }
   if (FUTURE_SUBJECTS.has(subject)) {
     return {
       ok: false,
-      error: `Subject "${subject}" is not implemented in harness phase 1. Supported: math, geometry, hebrew, english, science, moledet.`,
+      error: `Subject "${subject}" is not implemented in harness phase 1. Supported: math, geometry, hebrew, english, science, moledet, history.`,
     };
   }
   if (!PHASE1_SUBJECTS.has(subject)) {
     return {
       ok: false,
-      error: `Unknown VISUAL_QA_SUBJECT="${subject}". Supported: math, geometry, hebrew, english, science, moledet.`,
+      error: `Unknown VISUAL_QA_SUBJECT="${subject}". Supported: math, geometry, hebrew, english, science, moledet, history.`,
     };
   }
   return { ok: true, plan: SUBJECT_PLANS[subject], subject };

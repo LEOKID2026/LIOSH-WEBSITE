@@ -30,9 +30,10 @@ export function cleanTopicLabelHe(displayName) {
  */
 export function gradeRelationSublineFromRelation(gradeRelation) {
   const rel = String(gradeRelation || "").trim();
-  if (rel === "higher") return "מעל הכיתה הרשומה";
-  if (rel === "lower") return "מתחת לכיתה הרשומה";
-  if (rel === "same") return "ברמת הכיתה הרשומה";
+  if (rel === "higher" || rel === "above_registered_grade") return "מעל הכיתה הרשומה";
+  if (rel === "lower" || rel === "below_registered_grade") return "מתחת לכיתה הרשומה";
+  if (rel === "same" || rel === "at_registered_grade") return "ברמת הכיתה הרשומה";
+  if (rel === "outside_regular_grade_band") return "מחוץ לשכבת הכיתה הרשומה";
   return "";
 }
 

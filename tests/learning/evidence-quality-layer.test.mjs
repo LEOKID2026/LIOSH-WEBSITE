@@ -36,6 +36,13 @@ import {
 } from "../../lib/parent-server/parent-report-parent-facing.server.js";
 
 import {
+  insightsContainThinDataContradiction,
+  insightsContainCautiousTopicSignal,
+  insightsContainStrongDiagnosisLeak,
+  insightsContainTechnicalLeak,
+} from "../../lib/learning/evidence-quality-insight-copy.js";
+
+import {
   applyServerParentFacingAuthorityToClientReport,
 } from "../../lib/parent-server/parent-facing-report-authority.js";
 
@@ -205,11 +212,13 @@ describe("Phase Q1 — parent-facing gating (suppression only)", () => {
     assert.equal(allowsStrongParentDiagnosisAtStudent(payload), false);
     assert.equal(allowsHedgedParentInsightAtStudent(payload), true);
     const insights = buildParentInsightsHe(payload);
-    assert.ok(!insights.some((t) => t.includes("נראה שיש קושי")));
-    assert.ok(insights.some((t) => t.includes("קושי יחסי") || t.includes("כדאי לשים לב")));
+    assert.ok(!insightsContainStrongDiagnosisLeak(insights));
+    assert.ok(!insightsContainThinDataContradiction(insights));
+    assert.ok(insightsContainCautiousTopicSignal(insights));
+    assert.ok(!insightsContainTechnicalLeak(insights));
   });
 
-  test("supported tier allows strong Hebrew weakness lines", () => {
+  test("supported tier (12+ recurrence) avoids thin-data contradiction and gives cautious insight", () => {
     const mistakes = [];
     for (let i = 0; i < 12; i++) {
       mistakes.push({
@@ -236,7 +245,10 @@ describe("Phase Q1 — parent-facing gating (suppression only)", () => {
 
     assert.equal(allowsStrongParentDiagnosisAtStudent(payload), true);
     const insights = buildParentInsightsHe(payload);
-    assert.ok(insights.some((t) => t.includes("קושי") || t.includes("כדאי לשים לב")));
+    assert.ok(!insightsContainThinDataContradiction(insights));
+    assert.ok(insights.some((t) => /דפוס שחוזר/u.test(t)));
+    assert.ok(insightsContainCautiousTopicSignal(insights));
+    assert.ok(!insightsContainTechnicalLeak(insights));
   });
 
   test("client pattern diagnostics suppressed when insufficient", () => {

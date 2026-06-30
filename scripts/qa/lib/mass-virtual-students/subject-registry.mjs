@@ -21,8 +21,12 @@ import { LAUNCH_SUBJECTS } from "./constants.mjs";
 
 export const MOLEDET_GEOGRAPHY_SUBJECT = MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID;
 
-/** All launch subjects including moledet-geography (8 logical subjects). */
+/** Final launch roster: LAUNCH_SUBJECTS (incl. history) + moledet-geography. */
 export const ALL_LAUNCH_SUBJECTS = [...LAUNCH_SUBJECTS, MOLEDET_GEOGRAPHY_SUBJECT];
+
+/** CLI order for final MASS 1000 launch (matches START-MASS-1000-FINAL-LAUNCH-SUBJECTS.bat). */
+export const FINAL_LAUNCH_SUBJECTS_CLI =
+  "math,geometry,hebrew,english,science,moledet-geography,history";
 
 const CLI_SUBJECT_ALIASES = Object.freeze({
   moledet: MOLEDET_GEOGRAPHY_SUBJECT,

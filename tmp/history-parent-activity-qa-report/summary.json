@@ -1,35 +1,224 @@
 {
-  "startedAt": "2026-06-30T05:54:30.429Z",
+  "startedAt": "2026-06-30T07:20:19.933Z",
   "sections": {
     "parent-activity-e2e": {
-      "pass": false,
+      "pass": true,
       "results": [
         {
           "leo": "AAA1",
           "topic": "classical_greece",
-          "pass": false,
+          "pass": true,
           "studentId": "fd3901da-66ce-46c7-a24c-b33df2141c04",
-          "activityId": "869547be-1348-47cf-9048-613a691758df",
+          "activityId": "b65711aa-ee2d-4d77-8a02-451be721e1f0",
           "questionCount": 10,
-          "error": "page.waitForFunction: Timeout 30000ms exceeded."
+          "play": {
+            "answered": 10,
+            "uiVerified": true,
+            "viaBrowser": true
+          },
+          "db": {
+            "status": "submitted",
+            "answersCount": 10,
+            "correctCount": 10,
+            "attempts": 10,
+            "withParams": 10,
+            "topicMatch": 10,
+            "parentAssignedEvidence": true,
+            "pass": true,
+            "sample": [
+              {
+                "subtopicKey": "hist_sub_athens_sparta_compare",
+                "evidenceCategory": "diagnostic_guided"
+              },
+              {
+                "subtopicKey": "hist_sub_athens_democracy",
+                "evidenceCategory": "diagnostic_guided"
+              }
+            ]
+          },
+          "parentApi": {
+            "listOk": true,
+            "detailOk": true,
+            "studentStatus": "submitted",
+            "answersCount": 10,
+            "listRow": {
+              "activityId": "b65711aa-ee2d-4d77-8a02-451be721e1f0",
+              "scope": "parent",
+              "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+              "studentId": "fd3901da-66ce-46c7-a24c-b33df2141c04",
+              "title": "[QA hist] classical_greece 1782804021229",
+              "subject": "history",
+              "topic": "classical_greece",
+              "subtopic": null,
+              "skillKey": null,
+              "difficultyLevel": "easy",
+              "questionCount": 10,
+              "mode": "guided_practice",
+              "dueAt": null,
+              "status": "active",
+              "activatedAt": "2026-06-30T07:20:22.633+00:00",
+              "closedAt": null,
+              "archivedAt": null,
+              "createdAt": "2026-06-30T07:20:22.324601+00:00",
+              "updatedAt": "2026-06-30T07:20:22.324601+00:00",
+              "snapshotStatus": "frozen",
+              "snapshotFrozenAt": "2026-06-30T07:20:22.634+00:00",
+              "studentStatus": "submitted",
+              "answersCount": 10,
+              "correctCount": 10,
+              "scorePct": 100,
+              "startedAt": "2026-06-30T07:20:32.572+00:00",
+              "submittedAt": "2026-06-30T07:21:41.771+00:00"
+            }
+          },
+          "report": {
+            "historyAnswers": 214,
+            "topicAnswers": 138
+          }
         },
         {
           "leo": "AAA7",
           "topic": "rome_jews",
-          "pass": false,
+          "pass": true,
           "studentId": "d8f6b184-80f2-4f2b-897e-cbbf557022e7",
-          "activityId": "51842b1f-b267-4bf5-bfe8-821eeb984564",
+          "activityId": "29c06aed-f1e8-4c07-963b-323e99b8e21c",
           "questionCount": 10,
-          "error": "page.waitForFunction: Timeout 30000ms exceeded."
+          "play": {
+            "answered": 10,
+            "uiVerified": true,
+            "viaBrowser": true
+          },
+          "db": {
+            "status": "submitted",
+            "answersCount": 10,
+            "correctCount": 10,
+            "attempts": 10,
+            "withParams": 10,
+            "topicMatch": 10,
+            "parentAssignedEvidence": true,
+            "pass": true,
+            "sample": [
+              {
+                "subtopicKey": "hist_sub_great_revolt_destruction",
+                "evidenceCategory": "diagnostic_guided"
+              },
+              {
+                "subtopicKey": "hist_sub_roman_culture_law",
+                "evidenceCategory": "diagnostic_guided"
+              }
+            ]
+          },
+          "parentApi": {
+            "listOk": true,
+            "detailOk": true,
+            "studentStatus": "submitted",
+            "answersCount": 10,
+            "listRow": {
+              "activityId": "29c06aed-f1e8-4c07-963b-323e99b8e21c",
+              "scope": "parent",
+              "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+              "studentId": "d8f6b184-80f2-4f2b-897e-cbbf557022e7",
+              "title": "[QA hist] rome_jews 1782804152049",
+              "subject": "history",
+              "topic": "rome_jews",
+              "subtopic": null,
+              "skillKey": null,
+              "difficultyLevel": "easy",
+              "questionCount": 10,
+              "mode": "guided_practice",
+              "dueAt": null,
+              "status": "active",
+              "activatedAt": "2026-06-30T07:22:33.242+00:00",
+              "closedAt": null,
+              "archivedAt": null,
+              "createdAt": "2026-06-30T07:22:32.921286+00:00",
+              "updatedAt": "2026-06-30T07:22:32.921286+00:00",
+              "snapshotStatus": "frozen",
+              "snapshotFrozenAt": "2026-06-30T07:22:33.243+00:00",
+              "studentStatus": "submitted",
+              "answersCount": 10,
+              "correctCount": 10,
+              "scorePct": 100,
+              "startedAt": "2026-06-30T07:22:42.047+00:00",
+              "submittedAt": "2026-06-30T07:23:52.068+00:00"
+            }
+          },
+          "report": {
+            "historyAnswers": 201,
+            "topicAnswers": 100
+          }
         },
         {
           "leo": "AAA11",
           "topic": "rome_jews",
-          "pass": false,
+          "pass": true,
           "studentId": "5f3df0a3-4527-4f8b-97cf-6e8ec5624920",
-          "activityId": "6d48d29c-af0e-44cc-8c51-a913abca2042",
+          "activityId": "125d879e-109b-4512-8d66-420bfffa94dc",
           "questionCount": 10,
-          "error": "page.waitForFunction: Timeout 30000ms exceeded."
+          "play": {
+            "answered": 10,
+            "uiVerified": true,
+            "viaBrowser": true
+          },
+          "db": {
+            "status": "submitted",
+            "answersCount": 10,
+            "correctCount": 10,
+            "attempts": 10,
+            "withParams": 10,
+            "topicMatch": 10,
+            "parentAssignedEvidence": true,
+            "pass": true,
+            "sample": [
+              {
+                "subtopicKey": "hist_sub_yavne_bar_kokhba_babylon",
+                "evidenceCategory": "diagnostic_guided"
+              },
+              {
+                "subtopicKey": "hist_sub_herod_building",
+                "evidenceCategory": "diagnostic_guided"
+              }
+            ]
+          },
+          "parentApi": {
+            "listOk": true,
+            "detailOk": true,
+            "studentStatus": "submitted",
+            "answersCount": 10,
+            "listRow": {
+              "activityId": "125d879e-109b-4512-8d66-420bfffa94dc",
+              "scope": "parent",
+              "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+              "studentId": "5f3df0a3-4527-4f8b-97cf-6e8ec5624920",
+              "title": "[QA hist] rome_jews 1782804279057",
+              "subject": "history",
+              "topic": "rome_jews",
+              "subtopic": null,
+              "skillKey": null,
+              "difficultyLevel": "easy",
+              "questionCount": 10,
+              "mode": "guided_practice",
+              "dueAt": null,
+              "status": "active",
+              "activatedAt": "2026-06-30T07:24:40.249+00:00",
+              "closedAt": null,
+              "archivedAt": null,
+              "createdAt": "2026-06-30T07:24:39.925034+00:00",
+              "updatedAt": "2026-06-30T07:24:39.925034+00:00",
+              "snapshotStatus": "frozen",
+              "snapshotFrozenAt": "2026-06-30T07:24:40.249+00:00",
+              "studentStatus": "submitted",
+              "answersCount": 10,
+              "correctCount": 10,
+              "scorePct": 100,
+              "startedAt": "2026-06-30T07:24:49.603+00:00",
+              "submittedAt": "2026-06-30T07:25:59.412+00:00"
+            }
+          },
+          "report": {
+            "historyAnswers": 173,
+            "topicAnswers": 155
+          }
         }
       ]
     },
@@ -44,9 +233,7 @@
       "note": "build ran before QA"
     }
   },
-  "openIssues": [
-    "parent-activity-e2e"
-  ],
-  "finishedAt": "2026-06-30T05:59:33.821Z",
-  "allPass": false
+  "openIssues": [],
+  "finishedAt": "2026-06-30T07:26:45.340Z",
+  "allPass": true
 }

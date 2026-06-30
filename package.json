@@ -291,6 +291,8 @@
     "qa:product-simulation:launch-rehearsal-summary": "tsx scripts/product-simulation/build-full-product-launch-rehearsal-summary.mjs",
     "qa:parent-ai:re-audit-mass-output": "tsx scripts/parent-ai-mass-simulation/re-audit-mass-simulation-output.mjs",
     "test:diagnostic-engine-v2-harness": "tsx scripts/diagnostic-engine-v2-harness.mjs",
+    "test:diagnostic-cert": "node scripts/tmp/tests/diagnostic-cert/run-diagnostic-cert.mjs",
+    "test:diagnostic-cert:dump-insights": "node scripts/tmp/tests/diagnostic-cert/dump-evidence-quality-insights.mjs",
     "test:english-grammar-diagnostic-e2e": "node scripts/certify-english-grammar-diagnostic-e2e.mjs",
     "test:english-nongrammar-diagnostic-audit": "node scripts/certify-english-nongrammar-diagnostic-audit.mjs",
     "test:moledet-diagnostic-probe-e2e": "node scripts/certify-moledet-diagnostic-probe-e2e.mjs",

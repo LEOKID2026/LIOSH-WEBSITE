@@ -116,6 +116,10 @@ import {
 import { resolveNarrativeDisplayLabels } from "./parent-report-output-integrity/row-display-label-context.js";
 import { parseCanonicalTopicFromRowKey } from "./parent-report-output-integrity/row-identity-v1.js";
 import { buildGradeEvidenceFields } from "../lib/learning-supabase/practice-grade-resolution.js";
+import {
+  splitMoledetGeographyReportForDisplay,
+  VISUAL_STRAND_LABEL_HE,
+} from "../lib/learning-shared/moledet-geography-display.js";
 
 const SUBJECT_IDS = [
   "math",
@@ -1575,24 +1579,53 @@ function buildExecutiveSummary(subjects, summary, subjectCoverage, dataIntegrity
   };
 }
 
+function buildVisualMoledetGeographyCoverageRows(baseReport) {
+  const split = splitMoledetGeographyReportForDisplay(baseReport);
+  return [
+    {
+      subject: "moledet-visual",
+      subjectLabelHe: VISUAL_STRAND_LABEL_HE.moledet,
+      questionCount: split.moledetStats.questions,
+      correctCount: split.moledetStats.correct,
+      accuracy: split.moledetStats.accuracy,
+      timeMinutes: split.moledetStats.minutes,
+    },
+    {
+      subject: "geography-visual",
+      subjectLabelHe: VISUAL_STRAND_LABEL_HE.geography,
+      questionCount: split.geographyStats.questions,
+      correctCount: split.geographyStats.correct,
+      accuracy: split.geographyStats.accuracy,
+      timeMinutes: split.geographyStats.minutes,
+    },
+  ];
+}
+
 function buildSubjectCoverage(baseReport) {
   const sum = baseReport?.summary || {};
-  return SUBJECT_IDS.map((sid) => {
+  /** @type {Array<{ subject: string; subjectLabelHe: string; questionCount: number; correctCount: number; accuracy: number; timeMinutes: number }>} */
+  const rows = [];
+  for (const sid of SUBJECT_IDS) {
+    if (sid === "moledet-geography") {
+      rows.push(...buildVisualMoledetGeographyCoverageRows(baseReport));
+      continue;
+    }
     const [qk, ck, ak] = SUMMARY_Q[sid];
     const questions = Number(sum[qk]) || 0;
     const correct = Number(sum[ck]) || 0;
     const accuracy = Number(sum[ak]) || 0;
     const mapKey = REPORT_MAP_KEY[sid];
     const timeMinutes = sumTopicMapMinutes(baseReport?.[mapKey]);
-    return {
+    rows.push({
       subject: sid,
       subjectLabelHe: SUBJECT_LABEL_HE[sid],
       questionCount: questions,
       correctCount: correct,
       accuracy,
       timeMinutes,
-    };
-  });
+    });
+  }
+  return rows;
 }
 
 function buildOverallSnapshot(baseReport, subjectCoverage) {
@@ -2272,25 +2305,34 @@ const CROSS_SUBJECT_WEAK_RANK_MIN_Q = 10;
 /** Minimum accuracy gap (percentage points) vs the next subject to call out one weakest area */
 const CROSS_SUBJECT_WEAK_MIN_GAP = 3;
 
-function collectPerSubjectAggregateRowsFromSummary(summary) {
+function collectPerSubjectAggregateRowsFromSummary(summary, baseReport = null) {
   const s = summary && typeof summary === "object" ? summary : {};
-  return [
+  const rows = [
     { q: Number(s.mathQuestions) || 0, acc: Number(s.mathAccuracy) || 0, labelHe: SUBJECT_LABEL_HE.math },
     { q: Number(s.geometryQuestions) || 0, acc: Number(s.geometryAccuracy) || 0, labelHe: SUBJECT_LABEL_HE.geometry },
     { q: Number(s.englishQuestions) || 0, acc: Number(s.englishAccuracy) || 0, labelHe: SUBJECT_LABEL_HE.english },
     { q: Number(s.scienceQuestions) || 0, acc: Number(s.scienceAccuracy) || 0, labelHe: SUBJECT_LABEL_HE.science },
     { q: Number(s.historyQuestions) || 0, acc: Number(s.historyAccuracy) || 0, labelHe: SUBJECT_LABEL_HE.history },
     { q: Number(s.hebrewQuestions) || 0, acc: Number(s.hebrewAccuracy) || 0, labelHe: SUBJECT_LABEL_HE.hebrew },
-    {
+  ];
+  if (baseReport) {
+    const mg = buildVisualMoledetGeographyCoverageRows(baseReport);
+    rows.push(
+      { q: mg[0].questionCount, acc: mg[0].accuracy, labelHe: mg[0].subjectLabelHe },
+      { q: mg[1].questionCount, acc: mg[1].accuracy, labelHe: mg[1].subjectLabelHe },
+    );
+  } else {
+    rows.push({
       q: Number(s.moledetGeographyQuestions) || 0,
       acc: Number(s.moledetGeographyAccuracy) || 0,
       labelHe: SUBJECT_LABEL_HE["moledet-geography"],
-    },
-  ];
+    });
+  }
+  return rows;
 }
 
-function pickClearWeakestSubjectFromSummaryAggregates(summary) {
-  const ranked = collectPerSubjectAggregateRowsFromSummary(summary)
+function pickClearWeakestSubjectFromSummaryAggregates(summary, baseReport = null) {
+  const ranked = collectPerSubjectAggregateRowsFromSummary(summary, baseReport)
     .filter((r) => r.q >= CROSS_SUBJECT_WEAK_RANK_MIN_Q)
     .sort((a, b) => a.acc - b.acc || b.q - a.q);
   if (ranked.length < 2) return null;
@@ -2308,13 +2350,13 @@ function crossSubjectWeakFocusLineHe(worst) {
  * When topic-level diagnosis does not surface a clear מיקוד בית, still give parents a Hebrew subject label
  * from cross-subject accuracy aggregates (same numbers shown elsewhere in the report).
  */
-function augmentExecutiveSummaryWithCrossSubjectAccuracyWeakSignal(executiveSummary, summary) {
+function augmentExecutiveSummaryWithCrossSubjectAccuracyWeakSignal(executiveSummary, summary, baseReport = null) {
   const es = executiveSummary && typeof executiveSummary === "object" ? { ...executiveSummary } : {};
   const totalQ = Number(summary?.totalQuestions) || 0;
   /** Sparse windows (e.g. thin practice): rank-across-subjects headlines are misleading — keep topic/engine copy only */
   if (totalQ > 0 && totalQ < 120) return es;
 
-  const worst = pickClearWeakestSubjectFromSummaryAggregates(summary);
+  const worst = pickClearWeakestSubjectFromSummaryAggregates(summary, baseReport);
   if (!worst) return es;
 
   const line = crossSubjectWeakFocusLineHe(worst);
@@ -2927,6 +2969,7 @@ export function buildDetailedParentReportFromBaseReport(baseReport, meta = {}) {
   executiveSummary = augmentExecutiveSummaryWithCrossSubjectAccuracyWeakSignal(
     executiveSummary,
     baseReport.summary || {},
+    baseReport,
   );
   const parentProductContractV1 = buildParentProductContractV1({
     executiveSummary,

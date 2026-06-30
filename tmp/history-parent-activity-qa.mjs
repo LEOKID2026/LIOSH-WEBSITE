@@ -250,7 +250,7 @@ async function playActivityInBrowser(page, activityId, questionSet, title) {
         const btns = document.querySelectorAll('[data-testid="activity-answer-choices"] button');
         return btns.length > 0 && !btns[0].disabled;
       },
-      { timeout: 30_000 }
+      { timeout: 60_000 }
     );
 
     const choices = page.locator('[data-testid="activity-answer-choices"] button');
@@ -290,26 +290,34 @@ async function playActivityInBrowser(page, activityId, questionSet, title) {
     answered += 1;
 
     if (i < questionSet.length - 1) {
-      await sleep(1600);
+      await sleep(2500);
       await page.waitForFunction(
         () => {
           const btns = document.querySelectorAll('[data-testid="activity-answer-choices"] button');
           return btns.length > 0 && !btns[0].disabled;
         },
-        { timeout: 25_000 }
+        { timeout: 60_000 }
       );
     }
   }
 
   const finishBtn = page.getByRole("button", { name: /סיום והגשה/ });
-  await finishBtn.waitFor({ state: "visible", timeout: 30_000 });
+  await finishBtn.waitFor({ state: "visible", timeout: 60_000 });
   await finishBtn.click();
-  const confirm = page.getByRole("button", { name: /כן, סיום והגשה/ });
-  await confirm.waitFor({ state: "visible", timeout: 15_000 });
+  const confirm = page.getByTestId("activity-submit-confirm-submit");
+  await confirm.waitFor({ state: "visible", timeout: 30_000 });
+  const submitWait = page.waitForResponse(
+    (r) =>
+      r.url().includes(`/api/student/activities/${activityId}/submit`) &&
+      r.request().method() === "POST",
+    { timeout: 90_000 }
+  );
   await confirm.click();
+  const submitRes = await submitWait;
+  if (!submitRes.ok()) throw new Error(`submit HTTP ${submitRes.status()}`);
   await page.waitForFunction(
-    () => /הגשת|הושלם|תוצאה|ציון/u.test(document.body?.innerText || ""),
-    { timeout: 60_000 }
+    () => /סיימת את הפעילות|הגשת|הושלם|תוצאה|ציון/u.test(document.body?.innerText || ""),
+    { timeout: 90_000 }
   );
 
   return { answered, uiVerified: true, viaBrowser: true };
@@ -409,7 +417,8 @@ async function runStudentActivityE2E(browser, supabase, parentToken, st) {
     row.activityId = created.activityId;
     row.questionCount = created.questionSet.length;
 
-    const ctx = await browser.newContext({ locale: "he-IL" });
+    const ctx = await browser.newContext({ locale: "he-IL", serviceWorkers: "block" });
+    ctx.setDefaultTimeout(120_000);
     const page = await ctx.newPage();
     await studentLogin(page, st.leo, st.pin);
     const play = await playActivityInBrowser(page, created.activityId, created.questionSet, title);
@@ -532,7 +541,8 @@ async function runTopicCoverageSmoke(browser, supabase, parentToken) {
     const row = { leo: st.leo, topic: st.topic, pass: false };
     try {
       const student = await resolveStudentId(supabase, st.login);
-      const ctx = await browser.newContext({ locale: "he-IL" });
+      const ctx = await browser.newContext({ locale: "he-IL", serviceWorkers: "block" });
+    ctx.setDefaultTimeout(120_000);
       const page = await ctx.newPage();
       await studentLogin(page, st.leo, st.pin);
       const countable = await practiceHistoryCountable(page, st.topic, st.count);

@@ -19,6 +19,7 @@
  *       strong | average | weak | targeted
  */
 import { SCIENCE_GRADES } from "../../../data/science-curriculum.js";
+import { HISTORY_GRADES } from "../../../data/history-curriculum.js";
 import { GRADES as GEOMETRY_GRADES } from "../../../utils/geometry-constants.js";
 
 /** Ordered list of subject keys the simulator may schedule. */
@@ -240,6 +241,11 @@ export function defaultTopicForSubject(subject, grade) {
     }
     case "moledet-geography":
       return "geography";
+    case "history": {
+      const g = Math.min(6, Math.max(1, Number(grade) || 6));
+      const topics = HISTORY_GRADES[`g${g}`]?.topics || [];
+      return topics.includes("what_is_history") ? "what_is_history" : topics[0] || "what_is_history";
+    }
     default:
       return "general";
   }

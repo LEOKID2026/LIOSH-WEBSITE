@@ -12,6 +12,7 @@ const MCQ_PREFIX_BY_SUBJECT = {
   english: "english-mcq-",
   science: "science-mcq-",
   moledet: "moledet-mcq-",
+  history: "science-mcq-",
 };
 
 export async function waitForQuestionSurface(page, subject, timeoutMs = 60_000) {
@@ -46,6 +47,8 @@ export async function waitForQuestionSurface(page, subject, timeoutMs = 60_000) 
         geometry: "geometry-mcq-",
         hebrew: "hebrew-mcq-",
         english: "english-mcq-",
+        science: "science-mcq-",
+        history: "science-mcq-",
       };
       const prefix = prefixes[subject];
       if (prefix) {

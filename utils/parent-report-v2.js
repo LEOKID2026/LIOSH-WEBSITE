@@ -46,7 +46,6 @@ import {
   summarizeEvidenceSources,
 } from "../lib/learning-supabase/evidence-source.js";
 import { normalizeGradeLevelToKey } from "../lib/learning-student-defaults.js";
-import { isMoledetGeographyGradeAllowed } from "./moledet-geography-curriculum-gates.js";
 import {
   buildHistorySubtopicReportMap,
   historyMistakeSubtopicKey,
@@ -72,6 +71,7 @@ import { runDiagnosticEngineV2 } from "./diagnostic-engine-v2/index.js";
 import { enrichDiagnosticEngineV2WithProfessionalFrameworkV1 } from "./learning-diagnostics/diagnostic-framework-v1.js";
 import { enrichDiagnosticEngineV2WithProfessionalEngineV1 } from "./learning-diagnostics/professional-engine-output-v1.js";
 import { attachFastDiagnosisToDiagnosticEngineV2 } from "./fast-diagnostic-engine/index.js";
+import { runDiagnosticEngineV3 } from "./diagnostic-engine-v3/index.js";
 import { safeBuildHybridRuntimeForReport } from "./ai-hybrid-diagnostic/safe-build-hybrid-runtime.js";
 import { getActiveDiagnosisSessionSummaryForReport } from "./active-diagnosis-session-summary.js";
 import {
@@ -1998,13 +1998,8 @@ export function generateParentReportV2(
   let moledetGeographyTotalQuestions = 0;
   let moledetGeographyTotalCorrect = 0;
 
-  const registeredGradeKeyEarly = resolveRegisteredGradeKeyFromTrackingBuckets();
-  const includeMoledetGeographyReport = isMoledetGeographyGradeAllowed(registeredGradeKeyEarly);
-  const includeHistoryReport = true;
 
   SUBJECTS.forEach((def) => {
-    if (def.id === "moledet-geography" && !includeMoledetGeographyReport) return;
-    if (def.id === "history" && !includeHistoryReport) return;
     const saved = loadTracking(def.trackingKey);
     const progress = loadProgress(def.progressStorage());
     const progressData = progress.progress || {};
@@ -2074,13 +2069,9 @@ export function generateParentReportV2(
   const geometryProgress = loadProgress("mleo_geometry_master_progress");
   const englishProgress = loadProgress("mleo_english_master_progress");
   const scienceProgress = loadProgress("mleo_science_master_progress");
-  const historyProgress = includeHistoryReport
-    ? loadProgress("mleo_history_master_progress")
-    : {};
+  const historyProgress = loadProgress("mleo_history_master_progress");
   const hebrewProgress = loadProgress("mleo_hebrew_master_progress");
-  const moledetGeographyProgress = includeMoledetGeographyReport
-    ? loadProgress("mleo_moledet_geography_master_progress")
-    : {};
+  const moledetGeographyProgress = loadProgress("mleo_moledet_geography_master_progress");
 
   const stars =
     (mathProgress.stars || 0) +
@@ -2129,13 +2120,9 @@ export function generateParentReportV2(
   const geometryMistakesRaw = safeGetJsonArray("mleo_geometry_mistakes");
   const englishMistakesRaw = safeGetJsonArray("mleo_english_mistakes");
   const scienceMistakesRaw = safeGetJsonArray("mleo_science_mistakes");
-  const historyMistakesRaw = includeHistoryReport
-    ? safeGetJsonArray("mleo_history_mistakes")
-    : [];
+  const historyMistakesRaw = safeGetJsonArray("mleo_history_mistakes");
   const hebrewMistakesRaw = safeGetJsonArray("mleo_hebrew_mistakes");
-  const moledetGeographyMistakesRaw = includeMoledetGeographyReport
-    ? safeGetJsonArray("mleo_moledet_geography_mistakes")
-    : [];
+  const moledetGeographyMistakesRaw = safeGetJsonArray("mleo_moledet_geography_mistakes");
 
   const mathMistakesByOperation = buildMathMistakesScopedCounts(mathMistakesRaw, startMs, endMs);
   const geometryMistakesByTopic = filterMistakes(
@@ -2500,6 +2487,15 @@ export function generateParentReportV2(
     endMs,
   });
 
+  const diagnosticEngineV3 = runDiagnosticEngineV3({
+    maps,
+    rawMistakesBySubject,
+    startMs,
+    endMs,
+    probeEvidence: null,
+    diagnosticEngineV2,
+  });
+
   /** Best-effort only: failures must not break the parent report (V2 remains primary). */
   const hybridRuntime = safeBuildHybridRuntimeForReport({
     diagnosticEngineV2,
@@ -2787,6 +2783,8 @@ export function generateParentReportV2(
     dataIntegrityReport,
     /** מנוע אבחון V2 — פלט מובנה לפי stage1 blueprint (שכבות נפרדות, שערים, טקסונומיה) */
     diagnosticEngineV2: sanitizeDiagnosticEngineV2ForParentFacing(diagnosticEngineV2),
+    /** DE3 — internal subskill/error/probe layer; does not override DE2 parent copy. */
+    diagnosticEngineV3,
     /** AI-hybrid layer (V2 remains hard authority; ranking/probe/explanation bounded). */
     hybridRuntime,
     /** Phase 1 additive trace metadata only (no decisioning/wording behavior change). */
@@ -2802,5 +2800,9 @@ export function generateParentReportV2(
     },
     /** Session-local active diagnosis snapshot when available (additive; no UI). */
     activeDiagnosisSessionSummary: getActiveDiagnosisSessionSummaryForReport(),
+    /** Internal — DE3 re-run / server probe merge (not parent-facing). */
+    _internalRawMistakesBySubject: rawMistakesBySubject,
+    _reportStartMs: startMs,
+    _reportEndMs: endMs,
   };
 }

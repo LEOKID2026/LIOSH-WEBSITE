@@ -58,11 +58,11 @@ async function killPort() {
   } catch {
     /* ignore */
   }
-  await sleep(4000);
+  await sleep(8000);
 }
 
 async function waitServer() {
-  for (let i = 0; i < 90; i++) {
+  for (let i = 0; i < 120; i++) {
     const res = await fetch(`${BASE}/student/login`, { signal: AbortSignal.timeout(15_000) }).catch(
       () => null
     );
@@ -72,20 +72,41 @@ async function waitServer() {
   return false;
 }
 
+async function warmServer() {
+  for (let i = 0; i < 8; i++) {
+    await fetch(`${BASE}/student/login`, { signal: AbortSignal.timeout(15_000) }).catch(() => null);
+    await sleep(2000);
+  }
+  await sleep(8000);
+}
+
+function assertBuildManifestReady() {
+  const manifestPath = join(ROOT, ".next", "build-manifest.json");
+  if (!existsSync(manifestPath)) return false;
+  const text = readFileSync(manifestPath, "utf8");
+  return text.includes('"/student/activity/[activityId]"');
+}
+
 async function startServer(label) {
   if (!existsSync(BUILD_ID)) {
     throw new Error(`.next/BUILD_ID missing before ${label} — run build first`);
   }
+  if (!assertBuildManifestReady()) {
+    throw new Error(
+      `.next/build-manifest.json missing /student/activity/[activityId] before ${label} — rebuild required`
+    );
+  }
   console.log(`\n[server] ${label}`);
   await killPort();
-  spawn("npx", ["next", "start", "-p", String(PORT)], {
+  const nextBin = join(ROOT, "node_modules", "next", "dist", "bin", "next");
+  spawn(process.execPath, [nextBin, "start", "-p", String(PORT)], {
     cwd: ROOT,
-    shell: true,
     detached: true,
     stdio: "ignore",
     env: { ...process.env },
   }).unref();
   if (!(await waitServer())) throw new Error(`server not ready (${label})`);
+  await warmServer();
 }
 
 function readJson(p) {
@@ -107,6 +128,12 @@ async function main() {
       : runStatic("npm run build");
   section("build", build.pass, build);
   if (!build.pass) process.exit(1);
+  if (!assertBuildManifestReady()) {
+    section("build", false, {
+      err: "build-manifest.json missing /student/activity/[activityId] — rebuild .next",
+    });
+    process.exit(1);
+  }
 
   console.log("\nStep 2: parent activity (browser MCQ + activity-submit-answer)");
   await startServer("parent-activity");

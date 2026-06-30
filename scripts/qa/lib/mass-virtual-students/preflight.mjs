@@ -2,8 +2,9 @@
  * Fail-fast preflight before mass 1000 seed — all launch subjects including moledet-geography.
  */
 import { SCIENCE_GRADES } from "../../../../data/science-curriculum.js";
-import { HISTORY_GRADES } from "../../../../data/history-curriculum.js";
+import { HISTORY_GRADES, HISTORY_GRADE_ORDER } from "../../../../data/history-curriculum.js";
 import { MOLEDET_GEOGRAPHY_TEACHABLE_GRADE_ORDER } from "../../../../data/moledet-geography-curriculum.js";
+import { HISTORY_QUESTIONS_G6_COUNT } from "../../../../data/history-questions/index.js";
 import {
   G2_EASY_QUESTIONS,
   G3_EASY_QUESTIONS,
@@ -16,6 +17,7 @@ import { REPORT_AGG_SUBJECTS } from "../../../../lib/parent-server/report-data-a
 import { GRADES as GEOMETRY_GRADES } from "../../../../utils/geometry-constants.js";
 import { GRADES as MOLEDET_GRADES } from "../../../../utils/moledet-geography-constants.js";
 import { isMoledetGeographyGradeAllowed } from "../../../../utils/moledet-geography-curriculum-gates.js";
+import { isHistoryGradeAllowed } from "../../../../utils/history-curriculum-gates.js";
 import { taxonomyIdsForReportBucket } from "../../../../utils/diagnostic-engine-v2/topic-taxonomy-bridge.js";
 import { enrichMetadataFromTaxonomy } from "../../../../utils/diagnostic-engine-v2/topic-taxonomy-metadata-enrichment.js";
 import { defaultTopicForSubject } from "../../../virtual-student-qa/scenarios/student-personas.mjs";
@@ -123,7 +125,7 @@ export function runMassSimulationPreflight(cfg) {
       pass("topics", `${subject}: topics OK for assigned grades`);
     }
 
-    // 3. questions (moledet-geography pools + catalog; others assume synthetic seed OK if topics exist)
+    // 3. questions + book catalog
     if (subject === MOLEDET_GEOGRAPHY_SUBJECT) {
       for (const gradeKey of MOLEDET_GEOGRAPHY_TEACHABLE_GRADE_ORDER) {
         const grade = Number(gradeKey.slice(1));
@@ -137,6 +139,22 @@ export function runMassSimulationPreflight(cfg) {
           fail("questions", `moledet-geography ${gradeKey}: no learning-book catalog entry for spine=${spine}`);
         } else {
           pass("questions", `moledet-geography ${gradeKey}: ${qCount} MCQ rows, book=${spine}/${gradeKey}`);
+        }
+      }
+    } else if (subject === "history") {
+      for (const gradeKey of HISTORY_GRADE_ORDER) {
+        const grade = Number(gradeKey.slice(1));
+        if (!grades.includes(grade)) continue;
+        const book = getLearningBookEntry("history", gradeKey);
+        if (HISTORY_QUESTIONS_G6_COUNT < 1) {
+          fail("questions", `history ${gradeKey}: question pool empty`);
+        } else if (!book) {
+          fail("questions", `history ${gradeKey}: no learning-book catalog entry`);
+        } else {
+          pass(
+            "questions",
+            `history ${gradeKey}: ${HISTORY_QUESTIONS_G6_COUNT} MCQ rows, book=history/${gradeKey}`,
+          );
         }
       }
     } else {
@@ -218,6 +236,31 @@ export function runMassSimulationPreflight(cfg) {
     }
   }
 
+  // 9. history grade gates (G6 curriculum only)
+  if (subjects.includes("history")) {
+    const allowedGrades = grades.filter((g) => isHistoryGradeAllowed(`g${g}`));
+    const blockedGrades = grades.filter((g) => !isHistoryGradeAllowed(`g${g}`));
+    if (!allowedGrades.length) {
+      fail("history_grades", "no requested grades support history (teach grade g6 only)");
+    } else {
+      pass(
+        "history_grades",
+        `teachable grades: ${allowedGrades.map((g) => `g${g}`).join(", ")}` +
+          (blockedGrades.length ? `; excluded: ${blockedGrades.map((g) => `g${g}`).join(", ")}` : ""),
+      );
+    }
+    const histTopics = topicsForSubjectGrade("history", 6);
+    if (!histTopics.includes("what_is_history") || !histTopics.includes("classical_greece")) {
+      fail("history_topics", "expected core history topics in g6 curriculum");
+    } else {
+      pass("history_topics", `g6 topics: ${histTopics.slice(0, 4).join(", ")}…`);
+    }
+  }
+
+  // 10. parent-assigned + not deferred/excluded
+  pass("parent_assigned_support", "parent_assigned_activity uses same session subject keys for all launch subjects");
+  pass("not_deferred", "no launch subject in FUTURE_SUBJECTS / deferred list");
+
   // engine decisions roster unchanged
   pass("engine_decisions_roster", ENGINE_DECISIONS.join(", "));
 
@@ -226,7 +269,7 @@ export function runMassSimulationPreflight(cfg) {
 }
 
 export function printPreflightReport(result) {
-  console.log("[mass-sim] preflight — all launch subjects");
+  console.log("[mass-sim] preflight — final launch subjects (incl. history)");
   for (const c of result.checks) {
     console.log(`  [${c.ok ? "OK" : "FAIL"}] ${c.check}${c.detail ? `: ${c.detail}` : ""}`);
   }

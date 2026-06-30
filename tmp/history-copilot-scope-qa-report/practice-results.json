@@ -8,7 +8,7 @@
       "answered": [
         {
           "questionIndex": 1,
-          "pickedIndex": 2,
+          "pickedIndex": 1,
           "countable": true,
           "evidenceCategory": "diagnostic_independent"
         },
@@ -20,31 +20,31 @@
         },
         {
           "questionIndex": 3,
-          "pickedIndex": 0,
-          "countable": true,
-          "evidenceCategory": "diagnostic_independent"
-        },
-        {
-          "questionIndex": 4,
-          "pickedIndex": 0,
-          "countable": true,
-          "evidenceCategory": "diagnostic_independent"
-        },
-        {
-          "questionIndex": 5,
           "pickedIndex": 2,
           "countable": true,
           "evidenceCategory": "diagnostic_independent"
         },
         {
-          "questionIndex": 6,
+          "questionIndex": 4,
           "pickedIndex": 1,
           "countable": true,
           "evidenceCategory": "diagnostic_independent"
         },
         {
+          "questionIndex": 5,
+          "pickedIndex": 1,
+          "countable": true,
+          "evidenceCategory": "diagnostic_independent"
+        },
+        {
+          "questionIndex": 6,
+          "pickedIndex": 3,
+          "countable": true,
+          "evidenceCategory": "diagnostic_independent"
+        },
+        {
           "questionIndex": 7,
-          "pickedIndex": 0,
+          "pickedIndex": 1,
           "countable": true,
           "evidenceCategory": "diagnostic_independent"
         },
@@ -62,7 +62,7 @@
         },
         {
           "questionIndex": 10,
-          "pickedIndex": 0,
+          "pickedIndex": 3,
           "countable": true,
           "evidenceCategory": "diagnostic_independent"
         }
@@ -77,25 +77,25 @@
       "withParams": 10,
       "sampleParams": [
         {
-          "skillId": "hist_concepts",
+          "skillId": "hist_simple_source",
           "topicKey": "what_is_history",
           "subskillId": "hist_sub_intro_sources_timeline",
           "subtopicKey": "hist_sub_intro_sources_timeline",
-          "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_archaeologist_role"
+          "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_primary_example"
         },
         {
           "skillId": "hist_simple_source",
           "topicKey": "what_is_history",
           "subskillId": "hist_sub_intro_sources_timeline",
           "subtopicKey": "hist_sub_intro_sources_timeline",
-          "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_historical_evidence"
+          "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_primary_source"
         },
         {
           "skillId": "hist_concepts",
           "topicKey": "what_is_history",
           "subskillId": "hist_sub_intro_sources_timeline",
           "subtopicKey": "hist_sub_intro_sources_timeline",
-          "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_chronology"
+          "patternFamily": "hist_g6_hist_sub_intro_sources_timeline_history_definition"
         }
       ],
       "sampleEvidence": [
@@ -115,12 +115,6 @@
           "topicKey": "what_is_history"
         }
       ]
-    },
-    "report": {
-      "historyTotal": 114,
-      "subtopicWithQ": 5,
-      "from": "2026-06-01",
-      "to": "2026-06-30"
     }
   },
   {
@@ -138,19 +132,19 @@
         },
         {
           "questionIndex": 2,
-          "pickedIndex": 1,
+          "pickedIndex": 2,
           "countable": true,
           "evidenceCategory": "diagnostic_independent"
         },
         {
           "questionIndex": 3,
-          "pickedIndex": 0,
+          "pickedIndex": 3,
           "countable": true,
           "evidenceCategory": "diagnostic_independent"
         },
         {
           "questionIndex": 4,
-          "pickedIndex": 0,
+          "pickedIndex": 1,
           "countable": true,
           "evidenceCategory": "diagnostic_independent"
         },
@@ -168,13 +162,13 @@
         },
         {
           "questionIndex": 7,
-          "pickedIndex": 3,
+          "pickedIndex": 0,
           "countable": true,
           "evidenceCategory": "diagnostic_independent"
         },
         {
           "questionIndex": 8,
-          "pickedIndex": 3,
+          "pickedIndex": 1,
           "countable": true,
           "evidenceCategory": "diagnostic_independent"
         },
@@ -186,7 +180,7 @@
         },
         {
           "questionIndex": 10,
-          "pickedIndex": 1,
+          "pickedIndex": 3,
           "countable": true,
           "evidenceCategory": "diagnostic_independent"
         }
@@ -201,25 +195,25 @@
       "withParams": 10,
       "sampleParams": [
         {
+          "skillId": "hist_governance_institutions",
+          "topicKey": "classical_greece",
+          "subskillId": "hist_sub_athens_democracy",
+          "subtopicKey": "hist_sub_athens_democracy",
+          "patternFamily": "hist_g6_hist_sub_athens_democracy_athens_democracy_city"
+        },
+        {
           "skillId": "hist_culture_heritage",
           "topicKey": "classical_greece",
           "subskillId": "hist_sub_greek_culture_legacy",
           "subtopicKey": "hist_sub_greek_culture_legacy",
-          "patternFamily": "hist_g6_hist_sub_greek_culture_legacy_olympus"
+          "patternFamily": "hist_g6_hist_sub_greek_culture_legacy_socrates"
         },
         {
           "skillId": "hist_governance_institutions",
           "topicKey": "classical_greece",
           "subskillId": "hist_sub_sparta",
           "subtopicKey": "hist_sub_sparta",
-          "patternFamily": "hist_g6_hist_sub_sparta_sparta_values"
-        },
-        {
-          "skillId": "hist_comparison",
-          "topicKey": "classical_greece",
-          "subskillId": "hist_sub_athens_sparta_compare",
-          "subtopicKey": "hist_sub_athens_sparta_compare",
-          "patternFamily": "hist_g6_hist_sub_athens_sparta_compare_compare_culture"
+          "patternFamily": "hist_g6_hist_sub_sparta_sparta_government"
         }
       ],
       "sampleEvidence": [
@@ -239,12 +233,6 @@
           "topicKey": "classical_greece"
         }
       ]
-    },
-    "report": {
-      "historyTotal": 101,
-      "subtopicWithQ": 12,
-      "from": "2026-06-01",
-      "to": "2026-06-30"
     }
   },
   {
@@ -256,31 +244,31 @@
       "answered": [
         {
           "questionIndex": 1,
-          "pickedIndex": 3,
+          "pickedIndex": 2,
           "countable": true,
           "evidenceCategory": "diagnostic_independent"
         },
         {
           "questionIndex": 2,
-          "pickedIndex": 0,
-          "countable": true,
-          "evidenceCategory": "diagnostic_independent"
-        },
-        {
-          "questionIndex": 3,
           "pickedIndex": 3,
           "countable": true,
           "evidenceCategory": "diagnostic_independent"
         },
         {
-          "questionIndex": 4,
+          "questionIndex": 3,
           "pickedIndex": 1,
           "countable": true,
           "evidenceCategory": "diagnostic_independent"
         },
         {
-          "questionIndex": 5,
+          "questionIndex": 4,
           "pickedIndex": 0,
+          "countable": true,
+          "evidenceCategory": "diagnostic_independent"
+        },
+        {
+          "questionIndex": 5,
+          "pickedIndex": 3,
           "countable": true,
           "evidenceCategory": "diagnostic_independent"
         },
@@ -292,25 +280,25 @@
         },
         {
           "questionIndex": 7,
-          "pickedIndex": 3,
-          "countable": true,
-          "evidenceCategory": "diagnostic_independent"
-        },
-        {
-          "questionIndex": 8,
-          "pickedIndex": 2,
-          "countable": true,
-          "evidenceCategory": "diagnostic_independent"
-        },
-        {
-          "questionIndex": 9,
           "pickedIndex": 1,
           "countable": true,
           "evidenceCategory": "diagnostic_independent"
         },
         {
-          "questionIndex": 10,
+          "questionIndex": 8,
+          "pickedIndex": 3,
+          "countable": true,
+          "evidenceCategory": "diagnostic_independent"
+        },
+        {
+          "questionIndex": 9,
           "pickedIndex": 2,
+          "countable": true,
+          "evidenceCategory": "diagnostic_independent"
+        },
+        {
+          "questionIndex": 10,
+          "pickedIndex": 0,
           "countable": true,
           "evidenceCategory": "diagnostic_independent"
         }
@@ -325,25 +313,25 @@
       "withParams": 10,
       "sampleParams": [
         {
+          "skillId": "hist_timeline_sequence",
+          "topicKey": "rome_jews",
+          "subskillId": "hist_sub_rise_of_rome",
+          "subtopicKey": "hist_sub_rise_of_rome",
+          "patternFamily": "hist_g6_hist_sub_rise_of_rome_early_rome"
+        },
+        {
           "skillId": "hist_figures_roles",
           "topicKey": "rome_jews",
           "subskillId": "hist_sub_herod_building",
           "subtopicKey": "hist_sub_herod_building",
-          "patternFamily": "hist_g6_hist_sub_herod_building_herod_builder"
+          "patternFamily": "hist_g6_hist_sub_herod_building_herodium"
         },
         {
-          "skillId": "hist_past_present_link",
+          "skillId": "hist_timeline_sequence",
           "topicKey": "rome_jews",
-          "subskillId": "hist_sub_yavne_bar_kokhba_babylon",
-          "subtopicKey": "hist_sub_yavne_bar_kokhba_babylon",
-          "patternFamily": "hist_g6_hist_sub_yavne_bar_kokhba_babylon_yavne_academy"
-        },
-        {
-          "skillId": "hist_culture_heritage",
-          "topicKey": "rome_jews",
-          "subskillId": "hist_sub_roman_culture_law",
-          "subtopicKey": "hist_sub_roman_culture_law",
-          "patternFamily": "hist_g6_hist_sub_roman_culture_law_roman_culture"
+          "subskillId": "hist_sub_rise_of_rome",
+          "subtopicKey": "hist_sub_rise_of_rome",
+          "patternFamily": "hist_g6_hist_sub_rise_of_rome_julius_caesar"
         }
       ],
       "sampleEvidence": [
@@ -363,12 +351,6 @@
           "topicKey": "rome_jews"
         }
       ]
-    },
-    "report": {
-      "historyTotal": 73,
-      "subtopicWithQ": 8,
-      "from": "2026-06-01",
-      "to": "2026-06-30"
     }
   }
 ]
