@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { isLearningBookAudioEnabledClient } from "../../lib/learning-book/audio/learning-book-audio-feature-flags";
 import { resolveLearningBookAudio } from "../../lib/learning-book/audio/resolve-learning-book-audio";
+import { useBookGradeTheme } from "./BookGradeThemeContext";
 
 /**
  * Section-level pre-generated audio player for learning books.
@@ -21,6 +22,7 @@ export default function LearningBookAudioPlayer({
   sectionNumber,
   sectionIndex = 0,
 }) {
+  const { classes: theme } = useBookGradeTheme();
   const enabled = isLearningBookAudioEnabledClient();
   const audioMeta = useMemo(
     () =>
@@ -140,7 +142,7 @@ export default function LearningBookAudioPlayer({
         type="button"
         onClick={handlePlayPause}
         disabled={isLoading}
-        className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-2xl border border-white/25 bg-white/12 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-white/18 disabled:cursor-wait disabled:opacity-60"
+        className={`inline-flex min-h-[44px] items-center justify-center gap-2 rounded-2xl border px-4 py-2.5 text-sm font-bold shadow-sm transition disabled:cursor-wait disabled:opacity-100 ${theme.audioPlayerButton}`}
         aria-label={buttonLabel}
         title={buttonLabel}
       >
@@ -148,7 +150,7 @@ export default function LearningBookAudioPlayer({
         <span>{buttonLabel}</span>
       </button>
       {hasError && errorMsg ? (
-        <p className="text-center text-xs text-amber-200/90" role="status" aria-live="polite">
+        <p className="text-center text-xs text-[color:var(--book-text-muted)]" role="status" aria-live="polite">
           {errorMsg}
         </p>
       ) : null}

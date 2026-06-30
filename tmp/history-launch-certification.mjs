@@ -1,29 +1,22 @@
 #!/usr/bin/env node
 /**
- * History technical launch certification — single clean run, no retries.
- * Phases use a fresh production server each to avoid Windows/.next long-run corruption.
- * Usage: node --env-file=.env.local --env-file=.env.e2e.local tmp/history-launch-certification.mjs [port]
+ * History launch certification — build once, fresh server per phase.
+ * Order: build → parent activity (browser) → practice → report/copilot → audits
  */
 import { spawn, execSync } from "node:child_process";
-import net from "node:net";
-import { readFileSync, mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, mkdirSync, writeFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
-const PORT = Number(process.argv[2] || process.env.HISTORY_QA_PORT || 3012);
+const PORT = Number(process.argv[2] || 3012);
 const BASE = `http://127.0.0.1:${PORT}`;
+const BUILD_ID = join(ROOT, ".next", "BUILD_ID");
 const OUT = join(ROOT, "tmp", "history-launch-certification-report");
 mkdirSync(OUT, { recursive: true });
 
-const report = {
-  startedAt: new Date().toISOString(),
-  port: PORT,
-  sections: {},
-  openIssues: [],
-  envFlakes: [],
-};
+const report = { startedAt: new Date().toISOString(), sections: {}, openIssues: [], envFlakes: [] };
 
 function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
@@ -34,7 +27,7 @@ function section(name, pass, detail = {}) {
   if (!pass) report.openIssues.push(name);
 }
 
-function runStatic(name, cmd) {
+function runStatic(cmd) {
   try {
     execSync(cmd, { cwd: ROOT, encoding: "utf8", stdio: ["pipe", "pipe", "pipe"] });
     return { pass: true };
@@ -43,34 +36,33 @@ function runStatic(name, cmd) {
   }
 }
 
-function runNodeScript(relPath, extraEnv = {}) {
-  const env = { ...process.env, ...extraEnv };
+function runNode(relPath, env = {}) {
   try {
-    execSync(
-      `node --env-file=.env.local --env-file=.env.e2e.local ${relPath} ${PORT}`,
-      { cwd: ROOT, env, stdio: "inherit" }
-    );
-    return { pass: true };
-  } catch (e) {
-    return { pass: false, code: e.status ?? 1 };
+    execSync(`node --env-file=.env.local --env-file=.env.e2e.local ${relPath} ${PORT}`, {
+      cwd: ROOT,
+      env: { ...process.env, ...env },
+      stdio: "inherit",
+    });
+    return true;
+  } catch {
+    return false;
   }
 }
 
-async function killPort(port) {
-  if (process.platform !== "win32") return;
+async function killPort() {
   try {
     execSync(
-      `powershell -NoProfile -Command "Get-NetTCPConnection -LocalPort ${port} -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }"`,
+      `powershell -NoProfile -Command "Get-NetTCPConnection -LocalPort ${PORT} -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }"`,
       { stdio: "ignore" }
     );
   } catch {
     /* ignore */
   }
-  await sleep(2500);
+  await sleep(4000);
 }
 
-async function waitForServer(maxAttempts = 90) {
-  for (let i = 0; i < maxAttempts; i++) {
+async function waitServer() {
+  for (let i = 0; i < 90; i++) {
     const res = await fetch(`${BASE}/student/login`, { signal: AbortSignal.timeout(15_000) }).catch(
       () => null
     );
@@ -80,26 +72,25 @@ async function waitForServer(maxAttempts = 90) {
   return false;
 }
 
-async function startProductionServer(label) {
-  console.log(`\n[server] ${label}: restart on ${BASE}...`);
-  await killPort(PORT);
-  const child = spawn("npx", ["next", "start", "-p", String(PORT)], {
+async function startServer(label) {
+  if (!existsSync(BUILD_ID)) {
+    throw new Error(`.next/BUILD_ID missing before ${label} — run build first`);
+  }
+  console.log(`\n[server] ${label}`);
+  await killPort();
+  spawn("npx", ["next", "start", "-p", String(PORT)], {
     cwd: ROOT,
     shell: true,
     detached: true,
     stdio: "ignore",
     env: { ...process.env },
-  });
-  child.unref();
-  if (!(await waitForServer())) {
-    throw new Error(`Production server not ready on ${BASE} (${label})`);
-  }
-  console.log(`[server] ${label}: ready`);
+  }).unref();
+  if (!(await waitServer())) throw new Error(`server not ready (${label})`);
 }
 
-function readJsonSafe(path) {
+function readJson(p) {
   try {
-    return JSON.parse(readFileSync(path, "utf8"));
+    return JSON.parse(readFileSync(p, "utf8"));
   } catch {
     return null;
   }
@@ -108,96 +99,73 @@ function readJsonSafe(path) {
 async function main() {
   console.log("=== History Launch Certification ===\n");
 
-  console.log("Step 1/6: production build...");
-  const build = runStatic("build", "npm run build");
+  await killPort();
+  console.log("Step 1: build");
+  const build =
+    existsSync(BUILD_ID) && process.env.FORCE_CERT_BUILD !== "1"
+      ? { pass: true, skipped: true, note: "BUILD_ID present" }
+      : runStatic("npm run build");
   section("build", build.pass, build);
-  if (!build.pass) throw new Error("build failed — aborting certification");
+  if (!build.pass) process.exit(1);
 
-  console.log("\nStep 2/6: countable practice + DB (AAA1/7/11)...");
-  await startProductionServer("practice");
-  const practiceRun = runNodeScript("tmp/history-copilot-scope-qa.mjs", {
-    SKIP_BUILD: "1",
-    SKIP_ENSURE_SERVER: "1",
-    SKIP_POST_AUDITS: "1",
-    SKIP_REPORT: "1",
-  });
-  const practiceSummary = readJsonSafe(
-    join(ROOT, "tmp", "history-copilot-scope-qa-report", "summary.json")
-  );
-  const practicePass =
-    practiceRun.pass &&
-    practiceSummary?.sections?.["fresh-practice-db-report"]?.pass === true;
-  section("practice-db", practicePass, {
-    exitCode: practiceRun.pass ? 0 : practiceRun.code,
-    practiceSummary: practiceSummary?.sections?.["fresh-practice-db-report"],
-  });
-
-  console.log("\nStep 3/6: parent report UI + Copilot (7 prompts)...");
-  await startProductionServer("report-copilot");
-  const reportRun = runNodeScript("tmp/history-copilot-scope-qa.mjs", {
-    SKIP_BUILD: "1",
-    SKIP_ENSURE_SERVER: "1",
-    SKIP_POST_AUDITS: "1",
-    SKIP_PRACTICE: "1",
-  });
-  const reportSummary = readJsonSafe(
-    join(ROOT, "tmp", "history-copilot-scope-qa-report", "summary.json")
-  );
-  const reportPass =
-    reportRun.pass && reportSummary?.sections?.["report-ui-copilot"]?.pass === true;
-  section("report-ui-copilot", reportPass, {
-    exitCode: reportRun.pass ? 0 : reportRun.code,
-    reportSummary: reportSummary?.sections?.["report-ui-copilot"],
-  });
-
-  console.log("\nStep 4/6: parent-assigned activity (browser MCQ + activity-submit-answer)...");
-  await startProductionServer("parent-activity");
-  const parentRun = runNodeScript("tmp/history-parent-activity-qa.mjs", {
+  console.log("\nStep 2: parent activity (browser MCQ + activity-submit-answer)");
+  await startServer("parent-activity");
+  const parentOk = runNode("tmp/history-parent-activity-qa.mjs", {
     SKIP_FINAL_BUILD: "1",
     SKIP_QA_AUDITS: "1",
     SKIP_REPORT_UI: "1",
     SKIP_TOPIC_SMOKE: "1",
   });
-  const parentSummary = readJsonSafe(
-    join(ROOT, "tmp", "history-parent-activity-qa-report", "summary.json")
-  );
-  const parentPass =
-    parentRun.pass && parentSummary?.sections?.["parent-activity-e2e"]?.pass === true;
-  section("parent-activity-browser-e2e", parentPass, {
-    exitCode: parentRun.pass ? 0 : parentRun.code,
-    parentSummary: parentSummary?.sections?.["parent-activity-e2e"],
+  const parentSum = readJson(join(ROOT, "tmp/history-parent-activity-qa-report/summary.json"));
+  section("parent-activity-browser-e2e", parentOk && parentSum?.sections?.["parent-activity-e2e"]?.pass, {
+    results: parentSum?.sections?.["parent-activity-e2e"]?.results,
   });
 
-  console.log("\nStep 5/6: static audits...");
-  section(
-    "audit-history-child-text",
-    runStatic("audit", "node scripts/audit-history-child-text.mjs").pass
-  );
-  section("verify-history-g6-book", runStatic("book", "npm run verify:history-g6-book").pass);
+  console.log("\nStep 3: practice + DB (AAA1/7/11)");
+  await startServer("practice");
+  const practiceOk = runNode("tmp/history-copilot-scope-qa.mjs", {
+    SKIP_BUILD: "1",
+    SKIP_ENSURE_SERVER: "1",
+    SKIP_POST_AUDITS: "1",
+    SKIP_REPORT: "1",
+  });
+  const practiceSum = readJson(join(ROOT, "tmp/history-copilot-scope-qa-report/summary.json"));
+  section("practice-db", practiceOk && practiceSum?.sections?.["fresh-practice-db-report"]?.pass, {
+    results: readJson(join(ROOT, "tmp/history-copilot-scope-qa-report/practice-results.json")),
+  });
+
+  console.log("\nStep 4: parent report UI + Copilot");
+  await startServer("report-copilot");
+  const reportOk = runNode("tmp/history-copilot-scope-qa.mjs", {
+    SKIP_BUILD: "1",
+    SKIP_ENSURE_SERVER: "1",
+    SKIP_POST_AUDITS: "1",
+    SKIP_PRACTICE: "1",
+  });
+  const reportSum = readJson(join(ROOT, "tmp/history-copilot-scope-qa-report/summary.json"));
+  section("report-ui-copilot", reportOk && reportSum?.sections?.["report-ui-copilot"]?.pass, {
+    copilotPass: reportSum?.sections?.["report-ui-copilot"]?.copilotPass,
+  });
+
+  await killPort();
+  console.log("\nStep 5: audits");
+  section("audit-history-child-text", runStatic("node scripts/audit-history-child-text.mjs").pass);
+  section("verify-history-g6-book", runStatic("npm run verify:history-g6-book").pass);
   section(
     "test-history-diagnostic-probe-e2e",
-    runStatic("diag", "npm run test:history-diagnostic-probe-e2e").pass
+    runStatic("npm run test:history-diagnostic-probe-e2e").pass
   );
-
-  console.log("\nStep 6/6: finalize...");
-  await killPort(PORT);
 
   report.finishedAt = new Date().toISOString();
   report.allPass = Object.values(report.sections).every((s) => s.pass);
-  report.launchApproved = report.allPass && report.openIssues.length === 0;
+  report.launchApproved = report.allPass;
   writeFileSync(join(OUT, "summary.json"), JSON.stringify(report, null, 2));
 
   console.log("\n=== LAUNCH CERTIFICATION ===");
   for (const [k, v] of Object.entries(report.sections)) {
     console.log(`${v.pass ? "PASS" : "FAIL"}  ${k}`);
   }
-  console.log(
-    `\nOverall: ${report.allPass ? "PASS — technically launch-ready" : "FAIL"}`
-  );
-  if (report.envFlakes.length) {
-    console.log(`Env flakes (not code): ${report.envFlakes.join(", ")}`);
-  }
-  console.log(`Artifacts: ${OUT}`);
+  console.log(`\nOverall: ${report.allPass ? "PASS" : "FAIL"}`);
   process.exit(report.allPass ? 0 : 1);
 }
 

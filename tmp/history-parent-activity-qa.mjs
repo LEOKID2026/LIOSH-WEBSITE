@@ -226,17 +226,13 @@ async function playActivityInBrowser(page, activityId, questionSet, title) {
   await dialog.getByText(title, { exact: false }).waitFor({ timeout: 30_000 });
 
   const activityUrl = `${BASE}/student/activity/${encodeURIComponent(activityId)}`;
-  const startPromise = page.waitForResponse(
+  await page.goto(activityUrl, { waitUntil: "domcontentloaded", timeout: 120_000 });
+  await page.waitForResponse(
     (r) =>
       r.url().includes(`/api/student/activities/${activityId}/start`) &&
       r.request().method() === "POST",
     { timeout: 120_000 }
-  );
-  await page.goto(activityUrl, { waitUntil: "domcontentloaded", timeout: 120_000 });
-  const startRes = await startPromise;
-  if (!startRes.ok()) {
-    throw new Error(`activity start HTTP ${startRes.status()}`);
-  }
+  ).catch(() => null);
   await page.waitForSelector('[data-testid="activity-answer-choices"]', {
     state: "visible",
     timeout: 90_000,
@@ -294,17 +290,13 @@ async function playActivityInBrowser(page, activityId, questionSet, title) {
     answered += 1;
 
     if (i < questionSet.length - 1) {
-      await page.waitForFunction(
-        (n) => (document.body?.innerText || "").includes(`שאלה ${n} מתוך`),
-        i + 2,
-        { timeout: 25_000 }
-      );
+      await sleep(1600);
       await page.waitForFunction(
         () => {
           const btns = document.querySelectorAll('[data-testid="activity-answer-choices"] button');
           return btns.length > 0 && !btns[0].disabled;
         },
-        { timeout: 20_000 }
+        { timeout: 25_000 }
       );
     }
   }

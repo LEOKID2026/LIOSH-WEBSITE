@@ -585,7 +585,7 @@ export default function LearningPageBody({
               type="button"
               disabled={atFirst}
               onClick={goPrev}
-              className={`min-h-[48px] flex-1 rounded-2xl border px-4 py-3 text-base font-bold transition disabled:cursor-not-allowed disabled:opacity-35 ${theme.navPrevButton}`}
+              className={`min-h-[48px] flex-1 rounded-2xl border px-4 py-3 text-base font-bold transition disabled:cursor-not-allowed disabled:opacity-100 ${theme.navPrevButton}`}
             >
               עמוד קודם
             </button>
@@ -593,7 +593,7 @@ export default function LearningPageBody({
               type="button"
               disabled={atLast}
               onClick={goNext}
-              className={`min-h-[48px] flex-1 rounded-2xl border px-4 py-3 text-base font-bold transition disabled:cursor-not-allowed disabled:opacity-35 ${theme.navNextButton}`}
+              className={`min-h-[48px] flex-1 rounded-2xl border px-4 py-3 text-base font-bold transition disabled:cursor-not-allowed disabled:opacity-100 ${theme.navNextButton}`}
             >
               עמוד הבא
             </button>

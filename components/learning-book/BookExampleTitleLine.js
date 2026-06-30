@@ -15,7 +15,7 @@ export default function BookExampleTitleLine({ text }) {
 
   return (
     <p
-      className="text-right text-base font-bold leading-relaxed sm:text-lg"
+      className="text-right text-base font-bold leading-relaxed text-[color:var(--book-text)] sm:text-lg"
       dir="rtl"
       data-book-example-title="true"
     >

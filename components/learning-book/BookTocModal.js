@@ -40,7 +40,7 @@ export default function BookTocModal({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-full border border-[color:var(--book-divider)] bg-white/70 px-3 py-1 text-sm font-semibold text-[color:var(--book-text)] hover:bg-white/90"
+            className={`rounded-full px-3 py-1 text-sm font-semibold ${theme.tocCloseButton}`}
           >
             ✕ סגור
           </button>

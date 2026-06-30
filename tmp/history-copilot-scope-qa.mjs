@@ -445,10 +445,15 @@ function reportWindow() {
 
 async function runFreshPractice(browser, supabase, parentToken) {
   const sinceIso = new Date().toISOString();
-  const { from, to } = reportWindow();
+  const studentsToRun = process.env.PRACTICE_ONE
+    ? STUDENTS.filter((s) => s.login === String(process.env.PRACTICE_ONE).toLowerCase())
+    : STUDENTS;
+  if (studentsToRun.length === 0) {
+    throw new Error(`PRACTICE_ONE=${process.env.PRACTICE_ONE} not in STUDENTS`);
+  }
   const results = [];
 
-  for (const st of STUDENTS) {
+  for (const st of studentsToRun) {
     const row = { leo: st.leo, topic: st.topic, pass: false };
     const ctx = await browser.newContext({ locale: "he-IL" });
     const page = await ctx.newPage();
