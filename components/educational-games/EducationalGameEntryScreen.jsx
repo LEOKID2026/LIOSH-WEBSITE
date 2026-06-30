@@ -1,4 +1,8 @@
-import { EDUCATIONAL_DIFFICULTIES, difficultyLabelHe } from "../../lib/educational-games/educational-game-registry.js";
+import {
+  EDUCATIONAL_DIFFICULTIES,
+  difficultyLabelHe,
+} from "../../lib/educational-games/educational-game-registry.js";
+import EducationalDifficultyGradeHint from "./EducationalDifficultyGradeHint.jsx";
 import { useSoloGameShellUi } from "../../hooks/solo-games/useSoloGameShellUi.js";
 import SoloGameNavButtons from "../solo-games/SoloGameNavButtons.jsx";
 import SoloGameHelpButton from "../solo-games/SoloGameHelpButton.jsx";
@@ -65,6 +69,7 @@ export default function EducationalGameEntryScreen({
                 );
               })}
             </div>
+            <EducationalDifficultyGradeHint className={`${SG.diffLabel} text-[0.72rem] font-normal opacity-70`} />
           </div>
         ) : null}
 

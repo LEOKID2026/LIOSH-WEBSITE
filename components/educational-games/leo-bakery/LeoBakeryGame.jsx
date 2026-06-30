@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import EducationalDifficultyGradeHint from "../EducationalDifficultyGradeHint.jsx";
 import EducationalGameHudFullscreenButton from "../EducationalGameHudFullscreenButton.jsx";
 import {
   calcTimeBonus,
@@ -340,7 +341,7 @@ export default function LeoBakeryGame({
         <div className={styles.screenCenter}>
           <p className={styles.introHero}>🥐🦁</p>
           <h1 className={styles.introTitle}>המאפייה של ליאו</h1>
-          <p className={styles.introText}>בנו תבניות עם כמות שווה של מאפים — כפל וקבוצות שוות!</p>
+          <p className={styles.introText}>בנו מגשים עם כמות שווה של מאפים — כפל וקבוצות שוות!</p>
           <div className={styles.difficultyRow}>
             {(/** @type {DifficultyId[]} */ (["easy", "medium", "hard"])).map((id) => (
               <button
@@ -353,6 +354,7 @@ export default function LeoBakeryGame({
               </button>
             ))}
           </div>
+          <EducationalDifficultyGradeHint className={`${styles.introText} opacity-70`} style={{ fontSize: "0.72rem" }} />
           <button type="button" className={styles.startBtn} onClick={startGame}>
             התחל משחק
           </button>
@@ -374,13 +376,13 @@ export default function LeoBakeryGame({
 
           <div className={s.playArea}>
             <div className={`${s.panel} ${gameUi.traysPanel} ${styles.traysPanelFull}`}>
-              <p className={s.panelTitle}>🧁 התבניות שלכם</p>
+              <p className={s.panelTitle}>🧁 המגשים שלכם</p>
               <div className={`${gameUi.trayGrid} ${styles.trayGridFull}`}>
                 {trayPreview.map((tr) => {
                   const disp = trayItemDisplay(tr.count, task.itemEmoji);
                   return (
                     <div key={tr.id} className={gameUi.trayCard}>
-                      <span className={gameUi.trayLabel}>תבנית {tr.id + 1}</span>
+                      <span className={gameUi.trayLabel}>מגש {tr.id + 1}</span>
                       <span className={gameUi.trayItems}>{disp.text}</span>
                     </div>
                   );
@@ -390,7 +392,7 @@ export default function LeoBakeryGame({
 
             <div className={`${s.panel} ${gameUi.controlsPanel}`}>
               <div className={gameUi.controlCol}>
-                <span className={gameUi.controlLabel}>תבניות</span>
+                <span className={gameUi.controlLabel}>מגשים</span>
                 <div className={s.stepperRow}>
                   <button
                     type="button"
@@ -418,7 +420,7 @@ export default function LeoBakeryGame({
                 </div>
               </div>
               <div className={gameUi.controlCol}>
-                <span className={gameUi.controlLabel}>בכל תבנית</span>
+                <span className={gameUi.controlLabel}>בכל מגש</span>
                 <div className={s.stepperRow}>
                   <button
                     type="button"
@@ -463,7 +465,7 @@ export default function LeoBakeryGame({
               }`}
             >
               <p className={s.feedbackText}>
-                {feedback || "הגדירו תבניות וכמות בכל תבנית, ואז לחצו בדיקה"}
+                {feedback || "הגדירו מגשים וכמות בכל מגש, ואז לחצו בדיקה"}
               </p>
             </div>
 

@@ -161,13 +161,13 @@ export function bakeryTaskKey(task) {
 /** @param {BakeryTask} task */
 export function bakeryPrompt(task) {
   if (task.mode === "build") {
-    return `הכינו ${task.trays} תבניות. בכל תבנית ${task.perTray} ${task.itemLabel}. כמה ${task.itemLabel} צריך?`;
+    return `הכינו ${task.trays} מגשים. בכל מגש ${task.perTray} ${task.itemLabel}. כמה ${task.itemLabel} צריך?`;
   }
   if (task.mode === "findTrays") {
-    return `יש ${task.total} ${task.itemLabel}. בכל תבנית ${task.perTray}. כמה תבניות צריך?`;
+    return `יש ${task.total} ${task.itemLabel}. בכל מגש ${task.perTray}. כמה מגשים צריך?`;
   }
   if (task.mode === "findPerTray") {
-    return `יש ${task.total} ${task.itemLabel} ל-${task.trays} תבניות. כמה בכל תבנית?`;
+    return `יש ${task.total} ${task.itemLabel} ל-${task.trays} מגשים. כמה בכל מגש?`;
   }
   return `יש ${task.trays} מגשים, בכל מגש ${task.perTray} ${task.itemLabel}. כמה סך הכול?`;
 }
@@ -175,15 +175,15 @@ export function bakeryPrompt(task) {
 /** @param {BakeryTask} task */
 export function bakeryInfoBar(task) {
   if (task.mode === "findTrays") {
-    return `${task.total} ${task.itemLabel} · בכל תבנית ${task.perTray}`;
+    return `${task.total} ${task.itemLabel} · בכל מגש ${task.perTray}`;
   }
   if (task.mode === "findPerTray") {
-    return `${task.total} ${task.itemLabel} · ${task.trays} תבניות`;
+    return `${task.total} ${task.itemLabel} · ${task.trays} מגשים`;
   }
   if (task.mode === "findTotal") {
-    return `${task.trays} תבניות · בכל תבנית ${task.perTray} ${task.itemLabel}`;
+    return `${task.trays} מגשים · בכל מגש ${task.perTray} ${task.itemLabel}`;
   }
-  return `${task.trays} תבניות · בכל תבנית ${task.perTray} ${task.itemLabel}`;
+  return `${task.trays} מגשים · בכל מגש ${task.perTray} ${task.itemLabel}`;
 }
 
 /** @param {BakeryTask} task */
@@ -220,7 +220,7 @@ export function validateBakery(task, answer) {
 
 /** @param {boolean} ok */
 export function bakeryFeedback(ok) {
-  return ok ? "מעולה! הכנתם בדיוק את ההזמנה." : "כמעט! בדקו כמה תבניות יש וכמה יש בכל תבנית.";
+  return ok ? "מעולה! הכנתם בדיוק את ההזמנה." : "כמעט! בדקו כמה מגשים יש וכמה יש בכל מגש.";
 }
 
 /** @param {number} count @param {string} emoji */

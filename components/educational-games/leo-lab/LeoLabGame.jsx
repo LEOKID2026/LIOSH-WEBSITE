@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import EducationalDifficultyGradeHint from "../EducationalDifficultyGradeHint.jsx";
 import EducationalGameHudFullscreenButton from "../EducationalGameHudFullscreenButton.jsx";
 import LabItemVisual from "./LabItemVisual.jsx";
 import {
@@ -469,6 +470,7 @@ export default function LeoLabGame({
               </button>
             ))}
           </div>
+          <EducationalDifficultyGradeHint className={`${styles.introText} opacity-70`} style={{ fontSize: "0.72rem" }} />
           <p className={styles.introText} style={{ fontSize: "0.78rem" }}>
             {EXPERIMENTS_PER_LEVEL} ניסויים · גרירה או לחיצה על חפצים
           </p>

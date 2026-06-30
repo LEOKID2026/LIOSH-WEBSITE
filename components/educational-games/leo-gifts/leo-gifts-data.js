@@ -44,7 +44,7 @@ function levelForStage(difficulty, stage) {
     childrenMin: base.childrenMin,
     childrenMax: Math.min(base.childrenMax + boost, difficulty === "hard" ? 12 : 10),
     maxTotal: Math.min(base.maxTotal + boost * 12, difficulty === "hard" ? 120 : difficulty === "medium" ? 80 : 40),
-    allowRemainder: base.allowRemainder || (difficulty === "easy" && stage >= 3),
+    allowRemainder: base.allowRemainder,
   };
 }
 
@@ -148,6 +148,10 @@ export function validateGiftsDivision(task, perChild, remainder) {
 
 /** @param {GiftsTask} task */
 export function giftsPrompt(task) {
+  const remainder = task.total % task.children;
+  if (remainder > 0) {
+    return `לליאו יש ${task.total} ${task.itemLabel}. הגיעו ${task.children} ילדים. כמה כל ילד מקבל וכמה נשאר לליאו?`;
+  }
   return `לליאו יש ${task.total} ${task.itemLabel}. הגיעו ${task.children} ילדים. כמה יקבל כל ילד?`;
 }
 

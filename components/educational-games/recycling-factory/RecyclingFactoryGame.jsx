@@ -4,11 +4,13 @@ import {
   BINS,
   DIFFICULTIES,
   SCORE,
+  beltDurationMs,
   pickFactForBin,
   pickRandomItem,
 } from "./recycling-factory-data.js";
 import { buildRecyclingFactoryMetrics } from "./recycling-factory-metrics.js";
 import RecyclingItemVisual from "./RecyclingItemVisual.jsx";
+import EducationalDifficultyGradeHint from "../EducationalDifficultyGradeHint.jsx";
 import EducationalGameHudFullscreenButton from "../EducationalGameHudFullscreenButton.jsx";
 import styles from "./RecyclingFactoryGame.module.css";
 
@@ -397,7 +399,7 @@ export default function RecyclingFactoryGame({
     const tick = (now) => {
       const dt = now - last;
       last = now;
-      const duration = DIFFICULTIES[difficultyRef.current].beltDurationMs;
+      const duration = beltDurationMs(difficultyRef.current, sortedCountRef.current);
 
       setBeltItems((prev) => {
         const missedUids = [];
@@ -654,6 +656,7 @@ export default function RecyclingFactoryGame({
               </button>
             ))}
           </div>
+          <EducationalDifficultyGradeHint className={`${styles.introText} opacity-70`} style={{ fontSize: "0.72rem" }} />
           <p className={styles.introText} style={{ fontSize: "0.78rem" }}>
             {diffConfig.itemsTarget} פריטים · עד {diffConfig.maxMistakes} טעויות · {activeBins.length}{" "}
             פחים

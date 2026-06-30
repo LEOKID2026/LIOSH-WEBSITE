@@ -93,7 +93,7 @@ export const ITEMS = [
     imageSrc: "/images/recycling-items/plastic-bag.svg",
   },
   { id: "yogurt", emoji: "🥛", name: "גביע יוגורט", bin: "plastic" },
-  { id: "plastic-box", emoji: "📦", name: "קופסת פלסטיק", bin: "plastic" },
+  { id: "plastic-box", emoji: "🥡", name: "קופסה מפלסטיק", bin: "plastic" },
   { id: "bottle-glass", emoji: "🍾", name: "בקבוק זכוכית", bin: "glass" },
   {
     id: "jar",
@@ -106,11 +106,11 @@ export const ITEMS = [
   {
     id: "can",
     emoji: "🥫",
-    name: "פחית",
+    name: "פחית שתייה",
     bin: "metal",
     imageSrc: "/images/recycling-items/metal-can.svg",
   },
-  { id: "tin", emoji: "🥫", name: "קופסת שימורים", bin: "metal" },
+  { id: "tin", emoji: "🍲", name: "קופסת שימורים", bin: "metal" },
   { id: "lid", emoji: "⭕", name: "מכסה מתכת", bin: "metal" },
   {
     id: "banana",
@@ -193,3 +193,19 @@ export const SCORE = {
   mistake: -5,
   miss: -5,
 };
+
+/** @type {Record<DifficultyId, { rampEvery: number, decreaseMs: number, minDurationMs: number }>} */
+export const BELT_RAMP = {
+  easy: { rampEvery: 0, decreaseMs: 0, minDurationMs: 9000 },
+  medium: { rampEvery: 7, decreaseMs: 350, minDurationMs: 4800 },
+  hard: { rampEvery: 5, decreaseMs: 450, minDurationMs: 3300 },
+};
+
+/** @param {DifficultyId} difficulty @param {number} sortedCount */
+export function beltDurationMs(difficulty, sortedCount) {
+  const base = DIFFICULTIES[difficulty].beltDurationMs;
+  const ramp = BELT_RAMP[difficulty];
+  if (!ramp.rampEvery) return base;
+  const steps = Math.floor(Math.max(0, sortedCount) / ramp.rampEvery);
+  return Math.max(ramp.minDurationMs, base - steps * ramp.decreaseMs);
+}

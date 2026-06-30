@@ -16,6 +16,7 @@ import {
 } from "./leo-supermarket-data.js";
 import { buildLeoSupermarketMetrics } from "./leo-supermarket-metrics.js";
 import GroceryItemVisual from "./GroceryItemVisual.jsx";
+import EducationalDifficultyGradeHint from "../EducationalDifficultyGradeHint.jsx";
 import EducationalGameHudFullscreenButton from "../EducationalGameHudFullscreenButton.jsx";
 import styles from "./LeoSupermarketGame.module.css";
 
@@ -658,6 +659,7 @@ export default function LeoSupermarketGame({
               </button>
             ))}
           </div>
+          <EducationalDifficultyGradeHint className={`${styles.introText} opacity-70`} style={{ fontSize: "0.72rem" }} />
           <p className={styles.introText} style={{ fontSize: "0.78rem" }}>
             {CUSTOMERS_PER_LEVEL} לקוחות · עד {diffConfig.maxMistakes} פסילות · הקושי עולה כל 10 לקוחות
           </p>

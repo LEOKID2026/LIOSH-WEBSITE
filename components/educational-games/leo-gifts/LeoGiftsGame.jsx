@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import EducationalDifficultyGradeHint from "../EducationalDifficultyGradeHint.jsx";
 import EducationalGameHudFullscreenButton from "../EducationalGameHudFullscreenButton.jsx";
 import {
   calcTimeBonus,
@@ -322,6 +323,7 @@ export default function LeoGiftsGame({
               </button>
             ))}
           </div>
+          <EducationalDifficultyGradeHint className={`${styles.introText} opacity-70`} style={{ fontSize: "0.72rem" }} />
           <button type="button" className={styles.startBtn} onClick={startGame}>
             התחל משחק
           </button>

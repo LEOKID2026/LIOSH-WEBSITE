@@ -1,14 +1,13 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import EducationalDifficultyGradeHint from "../EducationalDifficultyGradeHint.jsx";
 import EducationalGameHudFullscreenButton from "../EducationalGameHudFullscreenButton.jsx";
-import { pickSessionTasks } from "../../../lib/educational-games/educational-task-picker.js";
 import {
   DIFFICULTIES,
+  buildOrderedSessionRun,
   formatSelectedPath,
-  generatePathPool,
   isNumberPathWin,
   pathFeedback,
-  pathTaskKey,
   SCORE,
   TASKS_PER_SESSION,
   validatePath,
@@ -81,13 +80,7 @@ export default function LeoNumberPathGame({
   }, []);
 
   const startGame = useCallback(() => {
-    const run = pickSessionTasks(
-      generatePathPool,
-      difficulty,
-      {},
-      TASKS_PER_SESSION,
-      pathTaskKey,
-    );
+    const run = buildOrderedSessionRun(difficulty, TASKS_PER_SESSION);
     setTasks(run);
     setTaskIndex(0);
     setScore(0);
@@ -292,6 +285,7 @@ export default function LeoNumberPathGame({
               </button>
             ))}
           </div>
+          <EducationalDifficultyGradeHint className={`${styles.introText} opacity-70`} style={{ fontSize: "0.72rem" }} />
           <p className={styles.introText} style={{ fontSize: "0.78rem" }}>
             {TASKS_PER_SESSION} משימות · עד {MAX_ATTEMPTS_PER_TASK} ניסיונות לכל משימה
           </p>
