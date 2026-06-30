@@ -1,5 +1,5 @@
 {
-  "startedAt": "2026-06-30T00:11:18.928Z",
+  "startedAt": "2026-06-30T05:54:30.429Z",
   "sections": {
     "parent-activity-e2e": {
       "pass": false,
@@ -9,7 +9,7 @@
           "topic": "classical_greece",
           "pass": false,
           "studentId": "fd3901da-66ce-46c7-a24c-b33df2141c04",
-          "activityId": "041183ba-e490-4530-8bb9-c28654d21e04",
+          "activityId": "869547be-1348-47cf-9048-613a691758df",
           "questionCount": 10,
           "error": "page.waitForFunction: Timeout 30000ms exceeded."
         },
@@ -18,16 +18,18 @@
           "topic": "rome_jews",
           "pass": false,
           "studentId": "d8f6b184-80f2-4f2b-897e-cbbf557022e7",
-          "error": "fetch failed"
+          "activityId": "51842b1f-b267-4bf5-bfe8-821eeb984564",
+          "questionCount": 10,
+          "error": "page.waitForFunction: Timeout 30000ms exceeded."
         },
         {
           "leo": "AAA11",
           "topic": "rome_jews",
           "pass": false,
           "studentId": "5f3df0a3-4527-4f8b-97cf-6e8ec5624920",
-          "activityId": "42f88e02-2bad-4ca3-bf55-2e6f7f20e7e9",
+          "activityId": "6d48d29c-af0e-44cc-8c51-a913abca2042",
           "questionCount": 10,
-          "error": "locator.fill: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByTestId('student-login-username')\n"
+          "error": "page.waitForFunction: Timeout 30000ms exceeded."
         }
       ]
     },
@@ -45,6 +47,6 @@
   "openIssues": [
     "parent-activity-e2e"
   ],
-  "finishedAt": "2026-06-30T00:13:27.771Z",
+  "finishedAt": "2026-06-30T05:59:33.821Z",
   "allPass": false
 }

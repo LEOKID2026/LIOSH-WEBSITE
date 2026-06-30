@@ -1,0 +1,16 @@
+{
+  "activityId": "52a396a9-5e1f-4078-9046-4eb7ac261e6b",
+  "startBody": null,
+  "dom": {
+    "hasChoices": 0,
+    "hasSubmit": 0,
+    "hasLoading": 1
+  },
+  "bodyText": "LEO KIDS\nביתעולם הילדיםמשחקיםלימודיםאודותגלריהצור קשרמרכז העזרה\n🌞🌙\n☰\n\nטוען פעילות…\n\nשמור לפרסומת\n\n© 2026 LEO K · משחקים ולמידה לילדים",
+  "logs": [
+    "[error] Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "[log] [SW student] Registered: http://127.0.0.1:3012/student/",
+    "[log] [SW student] Registered: http://127.0.0.1:3012/student/",
+    "[pageerror] Evaluating a string as JavaScript violates the following Content Security Policy directive because 'unsafe-eval' is not an allowed source of script: script-src 'self' 'unsafe-inline'\".\n"
+  ]
+}
