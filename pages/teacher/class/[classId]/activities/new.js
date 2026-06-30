@@ -26,6 +26,8 @@ import {
   scienceTopicOptionsForGrade,
 } from "../../../../../lib/teacher-portal/teacher-class-topic-options.js";
 import AssignedActivityQuestionDisplay from "../../../../../components/classroom-activities/AssignedActivityQuestionDisplay.jsx";
+import ActivityDisplayLevelSelector from "../../../../../components/classroom-activities/ActivityDisplayLevelSelector.jsx";
+import { writeActivityDifficultyFromDisplayLevel } from "../../../../../lib/learning/activity-display-level.js";
 
 export async function getServerSideProps(context) {
   const classId = String(context.params?.classId || "").trim();
@@ -41,7 +43,7 @@ export default function TeacherNewActivityPage({ classId }) {
   const [topic, setTopic] = useState(() => defaultTopicForAssignedActivity("math", "g3"));
   const [subtopic, setSubtopic] = useState("");
   const [mode, setMode] = useState("guided_practice");
-  const [difficulty, setDifficulty] = useState("medium");
+  const [displayLevel, setDisplayLevel] = useState("regular");
   const [questionCount, setQuestionCount] = useState(5);
   const [timeLimitSeconds, setTimeLimitSeconds] = useState("");
   const [dueAt, setDueAt] = useState("");
@@ -147,7 +149,7 @@ export default function TeacherNewActivityPage({ classId }) {
         subject,
         gradeLevel,
         topic,
-        difficulty,
+        difficulty: displayLevel,
         count: questionCount,
       });
       setPreview(qs);
@@ -157,7 +159,7 @@ export default function TeacherNewActivityPage({ classId }) {
     } finally {
       setBusy(false);
     }
-  }, [subject, gradeLevel, topic, difficulty, questionCount]);
+  }, [subject, gradeLevel, topic, displayLevel, questionCount]);
 
   const createDraft = useCallback(async () => {
     if (!title.trim()) {
@@ -185,7 +187,7 @@ export default function TeacherNewActivityPage({ classId }) {
         subtopic: subtopic.trim() || null,
         mode,
         questionSelection: "same_exact",
-        difficultyLevel: difficulty,
+        difficultyLevel: writeActivityDifficultyFromDisplayLevel(displayLevel, subject),
         questionCount: Number(questionCount),
         questionSet: preview,
         gradeLevel: resolveCanonicalGradeKey(gradeLevel) || gradeLevel,
@@ -225,7 +227,7 @@ export default function TeacherNewActivityPage({ classId }) {
     topic,
     subtopic,
     mode,
-    difficulty,
+    displayLevel,
     questionCount,
     preview,
     timeLimitSeconds,
@@ -401,19 +403,18 @@ export default function TeacherNewActivityPage({ classId }) {
               ))}
             </select>
           </label>
-          <label className="block text-sm">
-            <span className="text-white/70">רמת קושי</span>
-            <select
-              className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
-              value={difficulty}
-              onChange={(e) => setDifficulty(e.target.value)}
-            >
-              <option value="easy">קל</option>
-              <option value="medium">בינוני</option>
-              <option value="hard">קשה</option>
-              <option value="mixed">מעורב</option>
-            </select>
-          </label>
+          <ActivityDisplayLevelSelector
+            subjectId={subject}
+            value={displayLevel}
+            onChange={(dl) => {
+              setDisplayLevel(dl);
+              setPreview([]);
+            }}
+            variant="select"
+            label="רמה"
+            className=""
+            inputClassName="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
+          />
           <label className="block text-sm">
             <span className="text-white/70">מספר שאלות</span>
             <input

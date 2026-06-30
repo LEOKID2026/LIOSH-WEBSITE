@@ -1,4 +1,4 @@
-import { LEVELS, GRADES, GRADE_LEVELS, TOPICS, STORAGE_KEY } from './hebrew-constants';
+import { LEVELS, GRADES, GRADE_LEVELS, TOPICS, STORAGE_KEY } from './hebrew-constants.js';
 
 // מחזיר את ההגדרות האקטואליות לפי כיתה + רמת קושי
 export function getLevelConfig(grade, levelKey) {

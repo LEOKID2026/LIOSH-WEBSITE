@@ -5,6 +5,10 @@ import { GRADES as GEOMETRY_GRADES } from "../../../../utils/geometry-constants.
 import { defaultTopicForSubject } from "../../../virtual-student-qa/scenarios/student-personas.mjs";
 import { BEHAVIOR_PROFILES } from "./constants.mjs";
 import { studentDisplayName } from "./config.mjs";
+import {
+  assignPrimaryDisplayLevel,
+  buildLevelCoverageMatrix,
+} from "./display-level-cohort.mjs";
 import { MOLEDET_GEOGRAPHY_SUBJECT, isMassSimSubjectGradeAllowed } from "./subject-registry.mjs";
 
 const TOPIC_POOL = {
@@ -79,6 +83,7 @@ export function buildPlannedCohort({ students, parents, subjects, grades, runId,
   }
 
   let seq = 0;
+  const primaryCountBySubject = {};
   for (let i = 0; i < students; i += 1) {
     seq += 1;
     const parentIndex = Math.floor(i / studentsPerParent) + 1;
@@ -86,6 +91,9 @@ export function buildPlannedCohort({ students, parents, subjects, grades, runId,
 
     const grade = grades[i % grades.length];
     const primarySubject = pickPrimarySubject(subjects, grade, i);
+    const subjectPrimaryIndex = primaryCountBySubject[primarySubject] || 0;
+    primaryCountBySubject[primarySubject] = subjectPrimaryIndex + 1;
+    const displayLevel = assignPrimaryDisplayLevel(primarySubject, subjectPrimaryIndex);
     const profile = focusedProfile || BEHAVIOR_PROFILES[i % profileIds.length];
     const secondarySubjects = subjects.filter((s) => s !== primarySubject);
     const topicPool = topicsForSubjectGrade(primarySubject, grade);
@@ -109,6 +117,7 @@ export function buildPlannedCohort({ students, parents, subjects, grades, runId,
       }),
       grade,
       primarySubject,
+      displayLevel,
       secondarySubjects,
       profile,
       topics: {
@@ -129,6 +138,7 @@ export function buildPlannedCohort({ students, parents, subjects, grades, runId,
     cohort,
     studentsPerParent,
     coverageMatrix: buildCoverageMatrix(cohort, subjects, grades),
+    levelCoverageMatrix: buildLevelCoverageMatrix(cohort, subjects, grades),
   };
 }
 

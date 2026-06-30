@@ -34,20 +34,22 @@ for (const [raw, he] of modeCases) {
   assert.equal(findParentReportEnglishEnumLeaks(formatParentReportModeHe(raw)).length, 0);
 }
 
-assert.equal(formatParentReportSubjectHe("math"), "חשבון");
+assert.equal(formatParentReportSubjectHe("math"), "מתמטיקה");
 assert.equal(formatParentReportSubjectHe("geometry"), "גאומטריה");
 assert.equal(formatParentReportSubjectHe("english"), "אנגלית");
 assert.equal(formatParentReportSubjectHe("science"), "מדעים");
 assert.equal(formatParentReportSubjectHe("hebrew"), "עברית");
-assert.equal(formatParentReportSubjectHe("moledet_geography"), "מולדת וגיאוגרפיה");
+assert.equal(formatParentReportSubjectHe("moledet_geography"), "מולדת וגאוגרפיה");
 
 assert.equal(formatParentReportSourceHe("self_practice"), "תרגול עצמי");
 assert.equal(formatParentReportSourceHe("parent_assigned_activity"), "פעילות אישית");
 assert.equal(formatParentReportSourceHe("learning_book"), "ספר לימוד");
 
-assert.equal(formatParentReportLevelHe("easy"), "קל");
-assert.equal(formatParentReportLevelHe("medium"), "בינוני");
-assert.equal(formatParentReportLevelHe("hard"), "קשה");
+assert.equal(formatParentReportLevelHe("easy"), "רגיל");
+assert.equal(formatParentReportLevelHe("medium"), "רגיל");
+assert.equal(formatParentReportLevelHe("mixed"), "רגיל");
+assert.equal(formatParentReportLevelHe("hard"), "מתקדם");
+assert.equal(formatParentReportLevelHe("hard", "science"), "רגיל");
 
 assert.equal(formatParentReportStatusHe("completed"), "הושלם");
 assert.equal(formatParentReportStatusHe("partial"), "חלקי");

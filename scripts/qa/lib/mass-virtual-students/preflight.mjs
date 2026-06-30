@@ -20,8 +20,20 @@ import { isMoledetGeographyGradeAllowed } from "../../../../utils/moledet-geogra
 import { isHistoryGradeAllowed } from "../../../../utils/history-curriculum-gates.js";
 import { taxonomyIdsForReportBucket } from "../../../../utils/diagnostic-engine-v2/topic-taxonomy-bridge.js";
 import { enrichMetadataFromTaxonomy } from "../../../../utils/diagnostic-engine-v2/topic-taxonomy-metadata-enrichment.js";
+import { resolveActivityGenerationPlan } from "../../../../lib/learning/activity-question-selection.js";
+import { isScienceSubjectId } from "../../../../lib/learning/display-level.js";
 import { defaultTopicForSubject } from "../../../virtual-student-qa/scenarios/student-personas.mjs";
+import { buildPlannedCohort } from "./cohort.mjs";
 import { ENGINE_DECISIONS } from "./constants.mjs";
+import {
+  assertNonScienceHasBothLevels,
+  assertScienceNeverAdvanced,
+  buildLevelCoverageMatrix,
+  displayLevelsForSubject,
+  resolveMassSimAnswerLevelFields,
+  resolvePracticeDisplayLevel,
+  summarizeCohortLevelDistribution,
+} from "./display-level-cohort.mjs";
 import {
   ALL_LAUNCH_SUBJECTS,
   MOLEDET_GEOGRAPHY_SUBJECT,
@@ -261,15 +273,149 @@ export function runMassSimulationPreflight(cfg) {
   pass("parent_assigned_support", "parent_assigned_activity uses same session subject keys for all launch subjects");
   pass("not_deferred", "no launch subject in FUTURE_SUBJECTS / deferred list");
 
+  // 11. displayLevel product model — subject × grade × level
+  for (const subject of subjects) {
+    const bothLevels = assertNonScienceHasBothLevels(subject);
+    if (!bothLevels.skip && !bothLevels.ok) {
+      fail("level_product_model", `${subject}: ${bothLevels.detail}`);
+    } else if (isScienceSubjectId(subject)) {
+      const sci = assertScienceNeverAdvanced(subject);
+      if (!sci.ok) fail("level_product_model", `${subject}: ${sci.detail}`);
+      else pass("level_product_model", `${subject}: regular only OK`);
+    } else if (!bothLevels.skip) {
+      pass("level_product_model", `${subject}: regular + advanced OK`);
+    }
+  }
+
+  for (const subject of subjects) {
+    for (const grade of grades) {
+      if (!isMassSimSubjectGradeAllowed(subject, grade)) continue;
+      for (const displayLevel of displayLevelsForSubject(subject)) {
+        const fields = resolveMassSimAnswerLevelFields(subject, displayLevel, 0);
+        if (fields.displayLevel === "advanced" && isScienceSubjectId(subject)) {
+          fail(
+            "level_matrix",
+            `${subject} g${grade} ${displayLevel}: advanced must not be generated for science`,
+          );
+          continue;
+        }
+        if (!["mixed", "hard"].includes(fields.activityDbEnum)) {
+          fail(
+            "level_matrix",
+            `${subject} g${grade} ${displayLevel}: activityDbEnum must be mixed|hard, got ${fields.activityDbEnum}`,
+          );
+          continue;
+        }
+        const plan = resolveActivityGenerationPlan(fields.activityDbEnum, subject);
+        if (plan.displayLevel !== fields.displayLevel) {
+          fail(
+            "level_engine",
+            `${subject} g${grade} ${displayLevel}: engine plan displayLevel=${plan.displayLevel} != ${fields.displayLevel}`,
+          );
+          continue;
+        }
+        const sampleTopic = defaultTopicForSubject(subject, grade);
+        const taxIds = taxonomyIdsForReportBucket(
+          subject === MOLEDET_GEOGRAPHY_SUBJECT ? MOLEDET_GEOGRAPHY_SUBJECT : subject,
+          sampleTopic,
+        );
+        if (!taxIds.length && subject !== "english") {
+          fail(
+            "level_engine_coverage",
+            `${subject} g${grade} ${displayLevel}/${sampleTopic}: taxonomy bridge empty`,
+          );
+        } else {
+          pass(
+            "level_engine_coverage",
+            `${subject} g${grade} ${displayLevel}: engine=${fields.activityDbEnum} taxonomy OK`,
+          );
+        }
+      }
+    }
+  }
+
+  // 12. cohort level distribution — regular + advanced for non-science primaries
+  const sampleCohort = buildPlannedCohort({
+    students: 120,
+    parents: 6,
+    subjects,
+    grades,
+    runId: "preflight-level-check",
+  });
+  const levelDist = summarizeCohortLevelDistribution(sampleCohort.cohort, subjects);
+  let scienceAdvancedInCohort = false;
+  for (const s of sampleCohort.cohort) {
+    if (
+      s.primarySubject === "science" &&
+      resolvePracticeDisplayLevel("science", s.displayLevel) === "advanced"
+    ) {
+      scienceAdvancedInCohort = true;
+    }
+  }
+  if (scienceAdvancedInCohort) {
+    fail("cohort_level_distribution", "science cohort must not include advanced displayLevel");
+  } else {
+    pass("cohort_level_distribution", "no advanced science in planned cohort");
+  }
+
+  for (const subject of subjects) {
+    if (isScienceSubjectId(subject)) {
+      const regCount = levelDist[subject]?.regular ?? 0;
+      if (regCount < 1) {
+        fail("cohort_level_distribution", `${subject}: no regular-primary students in sample cohort`);
+      } else {
+        pass("cohort_level_distribution", `${subject}: regular=${regCount} (advanced N/A)`);
+      }
+      continue;
+    }
+    const regCount = levelDist[subject]?.regular ?? 0;
+    const advCount = levelDist[subject]?.advanced ?? 0;
+    const totalPrimaries = regCount + advCount;
+    if (totalPrimaries >= 2 && (regCount < 1 || advCount < 1)) {
+      fail(
+        "cohort_level_distribution",
+        `${subject}: need both regular (${regCount}) and advanced (${advCount}) in sample cohort`,
+      );
+    } else if (totalPrimaries < 2 && totalPrimaries >= 1) {
+      pass(
+        "cohort_level_distribution",
+        `${subject}: ${totalPrimaries} primary (regular=${regCount} advanced=${advCount}) — sparse subject OK`,
+      );
+    } else if (totalPrimaries === 0) {
+      pass(
+        "cohort_level_distribution",
+        `${subject}: no primaries in 120-student sample (grade-gated rotation) — level matrix checked separately`,
+      );
+    } else {
+      pass(
+        "cohort_level_distribution",
+        `${subject}: regular=${regCount} advanced=${advCount}`,
+      );
+    }
+  }
+
+  const levelMatrix = buildLevelCoverageMatrix(sampleCohort.cohort, subjects, grades);
+  pass("level_coverage_matrix", `sample 120-student matrix built (${Object.keys(levelMatrix).length} subjects)`);
+
   // engine decisions roster unchanged
   pass("engine_decisions_roster", ENGINE_DECISIONS.join(", "));
 
+  const levelSummary = {
+    nonScienceRegularAdvancedOk: subjects
+      .filter((s) => !isScienceSubjectId(s))
+      .every((s) => assertNonScienceHasBothLevels(s).ok),
+    scienceRegularOnlyOk: !subjects.includes("science") || assertScienceNeverAdvanced("science").ok,
+    noAdvancedScienceGenerated: !scienceAdvancedInCohort,
+    historyIncluded: subjects.includes("history"),
+    moledetGeographyIncluded: subjects.includes(MOLEDET_GEOGRAPHY_SUBJECT),
+  };
+
   const ok = failures.length === 0;
-  return { ok, failures, checks, subjects, grades };
+  return { ok, failures, checks, subjects, grades, levelSummary, levelDist, levelMatrix };
 }
 
 export function printPreflightReport(result) {
-  console.log("[mass-sim] preflight — final launch subjects (incl. history)");
+  console.log("[mass-sim] preflight — 2-level model (regular | advanced), science regular-only");
   for (const c of result.checks) {
     console.log(`  [${c.ok ? "OK" : "FAIL"}] ${c.check}${c.detail ? `: ${c.detail}` : ""}`);
   }
@@ -278,5 +424,21 @@ export function printPreflightReport(result) {
     for (const f of result.failures) console.error(`  - ${f}`);
   } else {
     console.log("\n[mass-sim] PREFLIGHT PASS — safe to start full run");
+    const ls = result.levelSummary || {};
+    if (ls.nonScienceRegularAdvancedOk) {
+      console.log("  ✓ all non-science subjects: regular + advanced OK");
+    }
+    if (ls.scienceRegularOnlyOk) {
+      console.log("  ✓ science: regular only OK");
+    }
+    if (ls.noAdvancedScienceGenerated) {
+      console.log("  ✓ no advanced science generated");
+    }
+    if (ls.historyIncluded) {
+      console.log("  ✓ history included");
+    }
+    if (ls.moledetGeographyIncluded) {
+      console.log("  ✓ moledet-geography included");
+    }
   }
 }

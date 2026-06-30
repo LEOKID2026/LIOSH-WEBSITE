@@ -119,7 +119,7 @@ function applyMathLevelPresentation(question, ctx) {
     if (mathLevelKey === "easy") {
       const opts = [
         `השוו בין שני המספרים והשלימו סימן (<, =, >): ${raw}`,
-        `סימן השוואה (קל) בין המספרים: ${raw}`,
+        `סימן השוואה בין המספרים: ${raw}`,
         `בחרו < , = או > — השוו: ${raw}`,
         `השוו את שני הערכים והשלימו סימן: ${raw}`,
       ];
@@ -136,7 +136,7 @@ function applyMathLevelPresentation(question, ctx) {
     }
     const opts = [
       `השלימו סימן השוואה — בדקו לפני שבוחרים: ${raw}`,
-      `אתגר השוואה — ודאו סדר גודל לפני בחירה: ${raw}`,
+      `השוואה — ודאו סדר גודל לפני בחירה: ${raw}`,
       `השוו בזהירות ובחרו סימן: ${raw}`,
       `ניתוח מהיר: איזה סימן מתאים? ${raw}`,
     ];
@@ -150,7 +150,7 @@ function applyMathLevelPresentation(question, ctx) {
     if (num != null && div != null) {
       if (mathLevelKey === "easy") {
         return pv === 0
-          ? `התחלקות (קל): האם ${num} מתחלק ב-${div} בלי שארית?`
+          ? `התחלקות: האם ${num} מתחלק ב-${div} בלי שארית?`
           : `בדיקת יחס: האם ${num} כפולה של ${div} (בלי שארית)?`;
       }
       if (mathLevelKey === "medium") {
@@ -159,7 +159,7 @@ function applyMathLevelPresentation(question, ctx) {
           : `חלוקה שלמה: ${num} ÷ ${div} — האם יוצא שלם?`;
       }
       return pv === 0
-        ? `בדיקת התחלקות (אתגר): האם ${num} יתחלק ב-${div}?`
+        ? `בדיקת התחלקות: האם ${num} יתחלק ב-${div}?`
         : `ניתוח מחלקים: האם ${div} מחלק את ${num} בדיוק?`;
     }
   }
@@ -170,36 +170,36 @@ function applyMathLevelPresentation(question, ctx) {
     const pv = Math.abs(Number(params?.presentationVariant) || 0) % 2;
     if (subKind === "pc_factor_count" && num != null) {
       if (mathLevelKey === "easy") {
-        return `מספרים ראשוניים (קל): כמה מחלקים יש למספר ${num}?`;
+        return `מספרים ראשוניים: כמה מחלקים יש למספר ${num}?`;
       }
       if (mathLevelKey === "medium") {
         return `ספירת מחלקים: כמה מחלקים טבעיים יש ל-${num} (כולל 1 והמספר עצמו)?`;
       }
-      return `אתגר מחלקים: כמה מחלקים שונים יש למספר ${num}?`;
+      return `מחלקים: כמה מחלקים שונים יש למספר ${num}?`;
     }
     if (subKind === "pc_smallest_prime" && num != null) {
       if (mathLevelKey === "easy") {
-        return `גורם ראשוני (קל): מה הגורם הראשוני הקטן ביותר של ${num}?`;
+        return `גורם ראשוני: מה הגורם הראשוני הקטן ביותר של ${num}?`;
       }
       if (mathLevelKey === "medium") {
         return `מצאו את הגורם הראשוני הקטן ביותר של המספר ${num}.`;
       }
-      return `אתגר גורמים: מה הגורם הראשוני הקטן ביותר של ${num}?`;
+      return `גורמים: מה הגורם הראשוני הקטן ביותר של ${num}?`;
     }
     if (subKind === "pc_divisor_pick" && num != null && params?.divisorCandidate != null) {
       const d = params.divisorCandidate;
       if (mathLevelKey === "easy") {
-        return `בדיקת מחלק (קל): האם ${d} מחלק את ${num} בלי שארית?`;
+        return `בדיקת מחלק: האם ${d} מחלק את ${num} בלי שארית?`;
       }
       if (mathLevelKey === "medium") {
         return `מחלקים: האם ${num} מתחלק ב-${d}?`;
       }
-      return `אתגר מחלקים: האם ${d} מחלק את ${num} בדיוק?`;
+      return `מחלקים: האם ${d} מחלק את ${num} בדיוק?`;
     }
     if (num != null) {
       if (mathLevelKey === "easy") {
         return pv === 0
-          ? `מספרים ראשוניים (קל): האם ${num} ראשוני או פריק?`
+          ? `מספרים ראשוניים: האם ${num} ראשוני או פריק?`
           : `סיווג בסיסי: ${num} — ראשוני או פריק?`;
       }
       if (mathLevelKey === "medium") {
@@ -208,42 +208,42 @@ function applyMathLevelPresentation(question, ctx) {
           : `זיהוי סוג: האם ל-${num} יש בדיוק שני מחלקים טבעיים שונים?`;
       }
       return pv === 0
-        ? `אתגר — האם ${num} הוא מספר ראשוני או פריק? הסבירו לעצמכם לפני שבוחרים.`
+        ? `האם ${num} הוא מספר ראשוני או פריק? הסבירו לעצמכם לפני שבוחרים.`
         : `הוכחה קצרה בראש: האם ${num} מתפרק לשני גורמים גדולים מ-1?`;
     }
   }
 
   if (selectedOp === "powers" && (kind === "power_base" || kind === "power_calc")) {
     if (kind === "power_calc") {
-      if (mathLevelKey === "easy") return `חזקות (קל): ${q0}`;
+      if (mathLevelKey === "easy") return `חזקות: ${q0}`;
       if (mathLevelKey === "medium") return `חישוב חזקה — ${q0}`;
-      return `חזקות (אתגר): ${q0}`;
+      return `חזקות: ${q0}`;
     }
     if (kind === "power_base") {
-      if (mathLevelKey === "easy") return `מצאו בסיס בחזקה (קל): ${q0}`;
+      if (mathLevelKey === "easy") return `מצאו בסיס בחזקה: ${q0}`;
       if (mathLevelKey === "medium") return `חידת חזקה — ${q0}`;
-      return `בסיס חסר בחזקה (אתגר): ${q0}`;
+      return `בסיס חסר בחזקה: ${q0}`;
     }
   }
 
   if (selectedOp === "estimation") {
     if (kind === "est_add") {
-      if (mathLevelKey === "easy") return q0.replace(/^אמד/, "אומדן קירוב (קל): אמדו");
+      if (mathLevelKey === "easy") return q0.replace(/^אמד/, "אומדן קירוב: אמדו");
       if (mathLevelKey === "medium")
         return q0.replace(/^אמד/, "אומדן חיבור — אמדו");
-      return q0.replace(/^אמד/, "אומדן מדויק (אתגר): אמדו ובדקו סדר גודל");
+      return q0.replace(/^אמד/, "אומדן מדויק: אמדו ובדקו סדר גודל");
     }
     if (kind === "est_mul") {
-      if (mathLevelKey === "easy") return q0.replace(/^אמד/, "אומדן כפל (קל): אמדו");
+      if (mathLevelKey === "easy") return q0.replace(/^אמד/, "אומדן כפל: אמדו");
       if (mathLevelKey === "medium")
         return q0.replace(/^אמד/, "אומדן מכפלה — אמדו");
-      return q0.replace(/^אמד/, "אומדן כפל (אתגר): אמדו לפי עיגול חכם");
+      return q0.replace(/^אמד/, "אומדן כפל: אמדו לפי עיגול חכם");
     }
     if (kind === "est_quantity") {
-      if (mathLevelKey === "easy") return q0.replace(/^אמד/, "כמות משוערת (קל): אמדו");
+      if (mathLevelKey === "easy") return q0.replace(/^אמד/, "כמות משוערת: אמדו");
       if (mathLevelKey === "medium")
         return q0.replace(/^אמד/, "אומדן כמות — עגלו לעשרות");
-      return q0.replace(/^אמד/, "אומדן כמות (אתגר): הסבירו את העיגול");
+      return q0.replace(/^אמד/, "אומדן כמות: הסבירו את העיגול");
     }
   }
 
@@ -262,20 +262,20 @@ function applyMathLevelPresentation(question, ctx) {
     kind === "frac_quarter" ||
     kind === "frac_quarter_reverse"
   ) {
-    if (mathLevelKey === "easy") return `שברים (קל): ${q0}`;
+    if (mathLevelKey === "easy") return `שברים: ${q0}`;
     if (mathLevelKey === "medium") return `חשיבה על שבר כחלק משלם: ${q0}`;
-    return `שבר חלקי (אתגר): ${q0}`;
+    return `שבר חלקי: ${q0}`;
   }
 
   if (kind === "fm_factor") {
-    if (mathLevelKey === "easy") return `גורמים (קל): ${q0}`;
+    if (mathLevelKey === "easy") return `גורמים: ${q0}`;
     if (mathLevelKey === "medium") return `זיהוי מחלק: ${q0}`;
-    return `מחלקים וגורמים (אתגר): ${q0}`;
+    return `מחלקים וגורמים: ${q0}`;
   }
   if (kind === "fm_multiple") {
-    if (mathLevelKey === "easy") return `כפולות (קל): ${q0}`;
+    if (mathLevelKey === "easy") return `כפולות: ${q0}`;
     if (mathLevelKey === "medium") return `בדקו כפולה: ${q0}`;
-    return `כפולות (אתגר): ${q0}`;
+    return `כפולות: ${q0}`;
   }
 
   if (selectedOp === "percentages") {
@@ -284,12 +284,12 @@ function applyMathLevelPresentation(question, ctx) {
     const gSuf = gradeBandSuffix;
     if (kind === "perc_part_of" && p != null && base != null) {
       if (mathLevelKey === "easy") {
-        return `אחוזים (קל): כמה זה ${p}% מתוך ${base}? = ${BLANK}${gSuf}`;
+        return `אחוזים: כמה זה ${p}% מתוך ${base}? = ${BLANK}${gSuf}`;
       }
       if (mathLevelKey === "medium") {
         return `חישוב חלק מהשלם: ${p}% × ${base} (תוצאה שלמה) = ${BLANK}${gSuf}`;
       }
-      return `אתגר אחוזים: חישוב מדויק של ${p}% ממספר ${base} (תוצאה שלמה) = ${BLANK}${gSuf}`;
+      return `אחוזים: חישוב מדויק של ${p}% ממספר ${base} (תוצאה שלמה) = ${BLANK}${gSuf}`;
     }
     if (kind === "perc_discount" && p != null && base != null) {
       if (mathLevelKey === "easy") {
@@ -306,12 +306,12 @@ function applyMathLevelPresentation(question, ctx) {
     const { a, b } = params;
     const gSuf = gradeBandSuffix;
     if (mathLevelKey === "easy") {
-      return `מ.א.ח (קל): מה המחלק המשותף הגדול ביותר של ${a} ו-${b}? = ${BLANK}${gSuf}`;
+      return `מ.א.ח: מה המחלק המשותף הגדול ביותר של ${a} ו-${b}? = ${BLANK}${gSuf}`;
     }
     if (mathLevelKey === "medium") {
       return `גורם משותף מקסימלי (GCD) לזוג ${a}, ${b} — מהו? = ${BLANK}${gSuf}`;
     }
-    return `אתגר מ.א.ח: הוכיחו בראש לפני בחירה — GCD(${a}, ${b}) = ${BLANK}${gSuf}`;
+    return `מ.א.ח: הוכיחו בראש לפני בחירה — GCD(${a}, ${b}) = ${BLANK}${gSuf}`;
   }
 
   if (kind === "round" && params?.n != null && params?.toWhat != null) {
@@ -321,7 +321,7 @@ function applyMathLevelPresentation(question, ctx) {
     if (toWhat === 10) {
       if (mathLevelKey === "easy") {
         return pv === 0
-          ? `עיגול לעשרות (קל): למה מתעגלים את ${n}? = ${BLANK}${gSuf}`
+          ? `עיגול לעשרות: למה מתעגלים את ${n}? = ${BLANK}${gSuf}`
           : `קירוב לעשרתיות קרובה: ${n} → ? = ${BLANK}${gSuf}`;
       }
       if (mathLevelKey === "medium") {
@@ -330,12 +330,12 @@ function applyMathLevelPresentation(question, ctx) {
           : `עיגול לפי כלל עשרות: ${n} = ${BLANK}${gSuf}`;
       }
       return pv === 0
-        ? `אתגר עיגול לעשרות: בחרו את המספר המתאים אחרי עיגול ${n} = ${BLANK}${gSuf}`
+        ? `עיגול לעשרות: בחרו את המספר המתאים אחרי עיגול ${n} = ${BLANK}${gSuf}`
         : `בחירה נכונה אחרי עיגול ${n} לעשרות — ? = ${BLANK}${gSuf}`;
     }
     if (mathLevelKey === "easy") {
       return pv === 0
-        ? `עיגול למאות (קל): למה מתעגלים את ${n}? = ${BLANK}${gSuf}`
+        ? `עיגול למאות: למה מתעגלים את ${n}? = ${BLANK}${gSuf}`
         : `קירוב למאה הקרובה: ${n} = ${BLANK}${gSuf}`;
     }
     if (mathLevelKey === "medium") {
@@ -344,7 +344,7 @@ function applyMathLevelPresentation(question, ctx) {
         : `עיגול למאות לפי כלל: ${n} → ? = ${BLANK}${gSuf}`;
     }
     return pv === 0
-      ? `אתגר עיגול למאות: ${n} → ? = ${BLANK}${gSuf}`
+      ? `עיגול למאות: ${n} → ? = ${BLANK}${gSuf}`
       : `מספר מתאים אחרי עיגול ${n} למאות = ${BLANK}${gSuf}`;
   }
 
@@ -357,40 +357,34 @@ function applyMathLevelPresentation(question, ctx) {
     if (a != null && b != null) {
       const af = Number(a).toFixed(pl);
       const bf = Number(b).toFixed(pl);
-      const lev =
-        mathLevelKey === "easy"
-          ? "קל"
-          : mathLevelKey === "medium"
-            ? "בינוני"
-            : "אתגר";
       if (kind === "dec_add") {
         if (mathLevelKey === "easy") {
           return pv === 0
-            ? `חיבור עשרוניים (${lev}): ${af} + ${bf} = ${BLANK}${gSuf}`
-            : `סכום ישר (${lev}): ${af} + ${bf} = ${BLANK}${gSuf}`;
+            ? `חיבור עשרוניים: ${af} + ${bf} = ${BLANK}${gSuf}`
+            : `סכום ישר: ${af} + ${bf} = ${BLANK}${gSuf}`;
         }
         if (mathLevelKey === "medium") {
           return pv === 0
-            ? `חיבור מיושר נקודה (${lev}): ${af} + ${bf} = ${BLANK}${gSuf}`
-            : `השלימו סכום (${lev}): ${af} + ${bf} = ${BLANK}${gSuf}`;
+            ? `חיבור מיושר נקודה: ${af} + ${bf} = ${BLANK}${gSuf}`
+            : `השלימו סכום: ${af} + ${bf} = ${BLANK}${gSuf}`;
         }
         return pv === 0
-          ? `חיבור עשרוניים (${lev}) — בדקו ספרות: ${af} + ${bf} = ${BLANK}${gSuf}`
-          : `ניתוח סכום (${lev}): ${af} + ${bf} = ${BLANK}${gSuf}`;
+          ? `חיבור עשרוניים — בדקו ספרות: ${af} + ${bf} = ${BLANK}${gSuf}`
+          : `ניתוח סכום: ${af} + ${bf} = ${BLANK}${gSuf}`;
       }
       if (mathLevelKey === "easy") {
         return pv === 0
-          ? `חיסור עשרוניים (${lev}): ${af} − ${bf} = ${BLANK}${gSuf}`
-          : `הפרש ישר (${lev}): ${af} − ${bf} = ${BLANK}${gSuf}`;
+          ? `חיסור עשרוניים: ${af} − ${bf} = ${BLANK}${gSuf}`
+          : `הפרש ישר: ${af} − ${bf} = ${BLANK}${gSuf}`;
       }
       if (mathLevelKey === "medium") {
         return pv === 0
-          ? `חיסור מיושר (${lev}): ${af} − ${bf} = ${BLANK}${gSuf}`
-          : `השלימו הפרש (${lev}): ${af} − ${bf} = ${BLANK}${gSuf}`;
+          ? `חיסור מיושר: ${af} − ${bf} = ${BLANK}${gSuf}`
+          : `השלימו הפרש: ${af} − ${bf} = ${BLANK}${gSuf}`;
       }
       return pv === 0
-        ? `חיסור עשרוניים (${lev}) — בדקו לפני בחירה: ${af} − ${bf} = ${BLANK}${gSuf}`
-        : `ניתוח הפרש (${lev}): ${af} − ${bf} = ${BLANK}${gSuf}`;
+        ? `חיסור עשרוניים — בדקו לפני בחירה: ${af} − ${bf} = ${BLANK}${gSuf}`
+        : `ניתוח הפרש: ${af} − ${bf} = ${BLANK}${gSuf}`;
     }
   }
 
@@ -409,7 +403,7 @@ function applyMathLevelPresentation(question, ctx) {
     return (
       q0.replace(
         /^השלם את הסדרה\b/,
-        "בשלב אתגר — השלימו את הסדרה (דרוש ניתוח דפוס)"
+        "השלימו את הסדרה (דרוש ניתוח דפוס)"
       ) + gSuf
     );
   }
@@ -446,17 +440,17 @@ function applyMathLevelPresentation(question, ctx) {
 
   if (selectedOp === "ratio" && gNum >= 4) {
     const rSuf = gradeBandSuffix;
-    if (mathLevelKey === "easy" && !/^יחס \(קל\)|^אתגר יחסים/.test(q0)) {
-      return `יחס (קל): ${q0}${rSuf}`;
+    if (mathLevelKey === "easy" && !/^יחס \(קל\)|^יחסים —/.test(q0)) {
+      return `יחס: ${q0}${rSuf}`;
     }
     if (
       mathLevelKey === "medium" &&
-      !/^יחס \(קל\)|^אתגר יחסים|^בעיית יחסים/.test(q0)
+      !/^יחס \(קל\)|^יחסים —|^בעיית יחסים/.test(q0)
     ) {
       return `בעיית יחסים: ${q0}${rSuf}`;
     }
-    if (mathLevelKey === "hard" && !/^אתגר יחסים/.test(q0)) {
-      return `אתגר יחסים — ${q0}${rSuf}`;
+    if (mathLevelKey === "hard" && !/^יחסים —/.test(q0)) {
+      return `יחסים — ${q0}${rSuf}`;
     }
   }
 

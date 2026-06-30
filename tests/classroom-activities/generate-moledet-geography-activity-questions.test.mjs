@@ -77,10 +77,11 @@ test("moledet_geography throws when N exceeds available unique items (no fallbac
     subject: "moledet_geography",
     gradeLevel: "g3",
     topic: "homeland",
-    difficulty: "easy",
+    difficulty: "hard",
     count: 5,
   });
   assert.equal(small.length, 5);
+  assert.ok(small.every((q) => q.sourceDifficulty === "hard"));
 
   await assert.rejects(
     () =>
@@ -88,7 +89,7 @@ test("moledet_geography throws when N exceeds available unique items (no fallbac
         subject: "moledet_geography",
         gradeLevel: "g3",
         topic: "homeland",
-        difficulty: "easy",
+        difficulty: "hard",
         count: 500,
       }),
     (err) => {

@@ -56,6 +56,11 @@ import { buildEvidenceTargetsPhase13 } from "./parent-report-evidence-targets.js
 import { buildFoundationDependencyPhase14 } from "./parent-report-foundation-dependency.js";
 import { buildPhase14RecommendationOverlay } from "./parent-report-foundation-ordering.js";
 import { glossTopicRecommendationHeFields } from "./parent-report-language/index.js";
+import { isScienceSubjectId } from "../lib/learning/display-level.js";
+import {
+  hasRegularMediumEvidence,
+  resolveRowDisplayLevelKey,
+} from "../lib/learning/parent-report-display-level.js";
 import { assertContractMatchesStep } from "./contracts/assert-contract-step-consistency.js";
 import { normalizeRecommendationContract } from "./contracts/recommendation-contract-normalizer.js";
 import {
@@ -77,14 +82,16 @@ import {
   validateEvidenceContractV1,
 } from "./contracts/parent-report-contracts-v1.js";
 
-/** @typedef {'advance_level'|'advance_grade_topic_only'|'maintain_and_strengthen'|'remediate_same_level'|'drop_one_level_topic_only'|'drop_one_grade_topic_only'} RecommendedNextStep */
+/** @typedef {'advance_level'|'advance_grade_topic_only'|'maintain_and_strengthen'|'maintain_regular_strengthen_medium'|'remediate_same_level'|'drop_one_level_topic_only'|'drop_one_grade_topic_only'|'suggest_return_to_regular'} RecommendedNextStep */
 
 export const RECOMMENDED_STEP_LABEL_HE = {
-  advance_level: "העלאת רמת קושי — באותו נושא בלבד",
+  advance_level: "מעבר לרמת מתקדם — באותו נושא בלבד",
   advance_grade_topic_only: "העלאת כיתה — באותו נושא בלבד",
   maintain_and_strengthen: "לבסס באותה רמה",
+  maintain_regular_strengthen_medium: "לבסס ברמה רגילה",
   remediate_same_level: "חיזוק באותה רמה",
-  drop_one_level_topic_only: "הורדת רמת קושי — באותו נושא בלבד",
+  suggest_return_to_regular: "חזרה לתרגול רגיל",
+  drop_one_level_topic_only: "חיזוק באותה רמה",
   drop_one_grade_topic_only: "הורדת רמת קושי — באותו נושא בלבד",
 };
 
@@ -200,12 +207,12 @@ function buildHebrewCopy(step, ctx, cfg) {
   /** @type {Record<RecommendedNextStep, { reasonHe: string, parentHe: string, studentHe: string }>} */
   const table = {
     advance_level: {
-      reasonHe: `ב«${displayName}» הופיעו ${q} שאלות עם דיוק של כ-${acc}%${mPart}. התמונה מספיק יציבה כדי לנסות דרגת קושי גבוהה יותר — רק בנושא הזה, בלי לשנות את שאר המקצוע.`,
-      parentHe: `הנושא «${displayName}» נראה מבוסס: ${q} שאלות ודיוק ${acc}%. מומלץ לעלות רמת קושי אחת רק בנושא הזה בתרגול, ולבדוק שההצלחה נשמרת גם בכמה שאלות קצרות נוספות, בלי להפוך את התרגול לארוך מדי.`,
-      studentHe: `אתה מוכן לאתגר הבא ב«${displayName}» — ננסה רמה אחת מעלה רק שם.`,
+      reasonHe: "נפתרו מספיק שאלות ברמה רגילה עם דיוק יציב. אפשר לנסות מעבר למתקדם באותו נושא.",
+      parentHe: "מומלץ לנסות מתקדם באותו נושא.",
+      studentHe: "אפשר לנסות מתקדם באותו נושא.",
     },
     advance_grade_topic_only: {
-      reasonHe: `ב«${displayName}» כבר עובדים ברמה קשה יחסית (${levelLabel}) עם דיוק טוב (${acc}%) וכמות שאלות מספיקה (${q} שאלות). אפשר לנסות כיתה גבוהה יותר דווקא בנושא הזה — לא לכל המקצוע.`,
+      reasonHe: `ב«${displayName}» כבר עובדים בתרגול הנוכחי (${levelLabel}) עם דיוק טוב (${acc}%) וכמות שאלות מספיקה (${q} שאלות). אפשר לנסות כיתה גבוהה יותר דווקא בנושא הזה — לא לכל המקצוע.`,
       parentHe: `אם ניתן לבחור כיתה לפי נושא — ב«${displayName}» אפשר לנסות כיתה אחת מעלה. זה רק לנושא הזה; בשאר הנושאים נשארים כרגיל עד שיהיו נתונים דומים.`,
       studentHe: `ב«${displayName}» אפשר לנסות כיתה קצת יותר גבוהה — רק שם, צעד אחר צעד.`,
     },
@@ -220,10 +227,20 @@ function buildHebrewCopy(step, ctx, cfg) {
         "כדאי להמשיך על אותה רמת קושי ולהתמקד בהבנת הטעויות: לתרגל ביחד עם הילד, ואחרי תשובה שגויה לעצור ולברר ביחד איפה זה הסתבך. עדיף לא לעלות רמה לפני שיש תחושה של התקדמות ועקביות.",
       studentHe: `נחזק קודם את הבסיס ב«${displayName}» באותה רמה — ואז נתקדם.`,
     },
+    maintain_regular_strengthen_medium: {
+      reasonHe: "כדאי לצבור עוד תרגול יציב ברמה רגילה לפני מעבר למתקדם.",
+      parentHe: "מומלץ להמשיך ברמה רגילה ולחזק דיוק וביטחון לפני מעבר למתקדם.",
+      studentHe: "נמשיך עוד קצת ברמה רגילה, נתחזק, ואז ננסה להתקדם.",
+    },
+    suggest_return_to_regular: {
+      reasonHe: "האתגר במתקדם היה גבוה כרגע. מומלץ לחזור לתרגול רגיל באותו נושא.",
+      parentHe: "האתגר במתקדם היה גבוה כרגע. מומלץ לחזור לתרגול רגיל, לחזק דיוק וביטחון, ואז לנסות שוב בהמשך.",
+      studentHe: "נחזור רגע לתרגול רגיל, נתחזק, ואז ננסה שוב.",
+    },
     drop_one_level_topic_only: {
-      reasonHe: `ב«${displayName}» הדיוק נמוך (${acc}%) והטעויות מהוות חלק משמעותי מהתרגול${mPart}. כנראה שהקושי יושב על בסיס חסר — עדיף לרדת רמה אחת רק בנושא הזה.`,
-      parentHe: "מומלץ לנסות רמה או כיתה יותר נמוכה ואז להתקדם בהדרגה.",
-      studentHe: `נוריד רגע רמת קושי ב«${displayName}» כדי שיהיה יותר ברור — ואז יהיה קל יותר להצליח.`,
+      reasonHe: "כדאי לחזק את אותו נושא בתרגול רגיל בקצב נוח.",
+      parentHe: "מומלץ להמשיך בתרגול רגיל בקצב נוח, עם כמה שאלות קצרות לחיזוק.",
+      studentHe: "נחזק קודם בתרגול רגיל, ואז נמשיך הלאה.",
     },
     drop_one_grade_topic_only: {
       reasonHe: `ב«${displayName}» עובדים כבר ברמה הקלה ביותר (${levelLabel}) אבל הדיוק עדיין נמוך (${acc}%)${mPart}. סביר שהפער הוא כיתתי — כדאי לרדת כיתה אחת רק בנושא הזה.`,
@@ -287,6 +304,9 @@ function runLegacyTopicNextStep(row, mistakeEventCount, cfg) {
   const gradeKey = normGradeKey(row);
   const li = levelIndex(levelKey);
   const gi = gradeIndex(gradeKey);
+  const subjectId = row?.subjectId || row?.subject || null;
+  const displayLevel = resolveRowDisplayLevelKey(subjectId, row);
+  const isScience = isScienceSubjectId(subjectId);
   const displayName = String(row?.displayName || row?.bucketKey || "נושא").trim();
 
   const stability = computeStability(row, mistakeEventCount, cfg);
@@ -300,7 +320,7 @@ function runLegacyTopicNextStep(row, mistakeEventCount, cfg) {
     questions: q,
     accuracy: acc,
     mistakeEventCount,
-    levelLabel: row?.level || levelKey || "לא זמין",
+    levelLabel: row?.level || (displayLevel === "advanced" ? "מתקדם" : "רגיל"),
     gradeLabel: row?.grade || gradeKey || "לא זמין",
     wrongRatio,
   };
@@ -316,6 +336,7 @@ function runLegacyTopicNextStep(row, mistakeEventCount, cfg) {
       wrongRatio: Math.round(wrongRatio * 1000) / 1000,
       levelKey,
       gradeKey,
+      displayLevel,
       levelIndex: li,
       gradeIndex: gi,
       mistakeEventCount,
@@ -360,6 +381,40 @@ function runLegacyTopicNextStep(row, mistakeEventCount, cfg) {
         studentHe: `נמשיך עוד קצת באותה רמה ב«${displayName}» — ואז נדע טוב יותר מה הלאה.`,
         recommendationDecisionTrace: trace,
       },
+      row,
+      ctx,
+      cfg
+    );
+  }
+
+  if (repeatedStruggle && displayLevel === "advanced") {
+    const step = "suggest_return_to_regular";
+    const copy = buildHebrewCopy(step, ctx, cfg);
+    trace.push({
+      source: "recommendation",
+      phase: "decision",
+      ruleId: "repeated_struggle_advanced_return_regular",
+      data: { repeatedStruggle, displayLevel, step },
+    });
+    return applyAggressiveEvidenceCap(
+      { step, ...copy, currentMastery: acc, stability, confidence, recommendationDecisionTrace: trace },
+      row,
+      ctx,
+      cfg
+    );
+  }
+
+  if (repeatedStruggle && displayLevel === "regular") {
+    const step = "remediate_same_level";
+    const copy = buildHebrewCopy(step, ctx, cfg);
+    trace.push({
+      source: "recommendation",
+      phase: "decision",
+      ruleId: "repeated_struggle_regular_remediate",
+      data: { repeatedStruggle, displayLevel, step },
+    });
+    return applyAggressiveEvidenceCap(
+      { step, ...copy, currentMastery: acc, stability, confidence, recommendationDecisionTrace: trace },
       row,
       ctx,
       cfg
@@ -424,7 +479,8 @@ function runLegacyTopicNextStep(row, mistakeEventCount, cfg) {
 
   if (
     q >= cfg.minQuestionsAdvanceGrade &&
-    levelKey === "hard" &&
+    displayLevel === "advanced" &&
+    !isScience &&
     gi >= 0 &&
     gi < GRADE_ORDER.length - 1 &&
     acc >= cfg.advanceGradeAccMin &&
@@ -449,20 +505,84 @@ function runLegacyTopicNextStep(row, mistakeEventCount, cfg) {
     );
   }
 
-  if (
-    highVolumeStrong &&
-    levelKey &&
-    li >= 0 &&
-    li < LEVEL_ORDER.length - 1 &&
-    !mistakeDrag
-  ) {
+  const mediumEvidenceOk = hasRegularMediumEvidence(row, cfg.advanceToAdvancedMediumShareMin ?? 0.6);
+  const canAdvanceToAdvanced =
+    !isScience &&
+    displayLevel === "regular" &&
+    q >= (cfg.minQuestionsAdvanceToAdvanced ?? 20) &&
+    acc >= (cfg.advanceToAdvancedAccMin ?? 75) &&
+    mediumEvidenceOk &&
+    stability >= cfg.advanceLevelStabilityMin &&
+    confidence >= cfg.advanceLevelConfidenceMin &&
+    recencyScore >= 36 &&
+    !mistakeDrag;
+
+  if (canAdvanceToAdvanced) {
     const step = "advance_level";
     const copy = buildHebrewCopy(step, ctx, cfg);
     trace.push({
       source: "recommendation",
       phase: "decision",
-      ruleId: "high_volume_advance_level",
-      data: { q, acc, stability, confidence, mistakeDrag, step },
+      ruleId: "regular_to_advanced_with_medium_evidence",
+      data: { q, acc, stability, confidence, mediumEvidenceOk, mistakeDrag, step },
+    });
+    return applyAggressiveEvidenceCap(
+      { step, ...copy, currentMastery: acc, stability, confidence, recommendationDecisionTrace: trace },
+      row,
+      ctx,
+      cfg
+    );
+  }
+
+  if (
+    !isScience &&
+    displayLevel === "regular" &&
+    q >= cfg.minQuestionsAdvanceLevel &&
+    acc >= (cfg.advanceToAdvancedAccMin ?? 75) &&
+    !mediumEvidenceOk &&
+    !mistakeDrag
+  ) {
+    const step = "maintain_regular_strengthen_medium";
+    const copy = buildHebrewCopy(step, ctx, cfg);
+    trace.push({
+      source: "recommendation",
+      phase: "decision",
+      ruleId: "regular_easy_only_strengthen_medium",
+      data: { q, acc, mediumEvidenceOk, step },
+    });
+    return applyAggressiveEvidenceCap(
+      { step, ...copy, currentMastery: acc, stability, confidence, recommendationDecisionTrace: trace },
+      row,
+      ctx,
+      cfg
+    );
+  }
+
+  if (q >= cfg.minQuestionsStepChange && acc < cfg.dropLevelAccMax && displayLevel === "advanced") {
+    const step = "suggest_return_to_regular";
+    const copy = buildHebrewCopy(step, ctx, cfg);
+    trace.push({
+      source: "recommendation",
+      phase: "decision",
+      ruleId: "advanced_struggle_return_regular",
+      data: { q, acc, displayLevel, step },
+    });
+    return applyAggressiveEvidenceCap(
+      { step, ...copy, currentMastery: acc, stability, confidence, recommendationDecisionTrace: trace },
+      row,
+      ctx,
+      cfg
+    );
+  }
+
+  if (q >= cfg.minQuestionsStepChange && acc < cfg.dropLevelAccMax && displayLevel === "regular" && li >= 1) {
+    const step = "remediate_same_level";
+    const copy = buildHebrewCopy(step, ctx, cfg);
+    trace.push({
+      source: "recommendation",
+      phase: "decision",
+      ruleId: "low_accuracy_regular_remediate",
+      data: { q, acc, displayLevel, step },
     });
     return applyAggressiveEvidenceCap(
       { step, ...copy, currentMastery: acc, stability, confidence, recommendationDecisionTrace: trace },
@@ -1233,7 +1353,7 @@ export function buildTopicRecommendationRecord(
       endMs,
     });
   }
-  const rowAug = { ...row, ...signals, engineConfidenceTier, accuracyBand, taxonomyMatch };
+  const rowAug = { ...row, ...signals, engineConfidenceTier, accuracyBand, taxonomyMatch, subjectId: String(subjectId) };
   const decision = decideTopicNextStep(rowAug, mC, cfg);
   const q = Number(row?.questions) || 0;
 

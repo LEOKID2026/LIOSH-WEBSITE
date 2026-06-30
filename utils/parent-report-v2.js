@@ -99,6 +99,8 @@ import {
   formatParentReportLevelHe,
   formatParentReportSubjectHe,
 } from "./parent-report-language/parent-report-display-labels.he.js";
+import { resolvePracticeDisplayLevelKey } from "../lib/learning/parent-report-display-level.js";
+import { isScienceSubjectId } from "../lib/learning/display-level.js";
 import { withholdSummaryCopyHe } from "./parent-report-language/subject-withhold-summary-he.js";
 import { hardenBaseReportWithRowIdentity } from "./parent-report-output-integrity/harden-report-rows.js";
 import {
@@ -430,6 +432,9 @@ export function collapseTopicRowsToCanonicalTopicEntity(subjectId, rowsByKey) {
     const modeCounts = {};
     const gradeCounts = {};
     const levelCounts = {};
+    const displayLevelCounts = { regular: 0, advanced: 0 };
+    /** @type {{ easy: number, medium: number, hard: number, unknown: number }} */
+    const mergedSourceBreakdown = { easy: 0, medium: 0, hard: 0, unknown: 0 };
     let mergedEvidenceSourceCounts = {};
     let representative = rows[0];
     for (const r of rows) {
@@ -457,6 +462,14 @@ export function collapseTopicRowsToCanonicalTopicEntity(subjectId, rowsByKey) {
       if (gKey) gradeCounts[gKey] = (gradeCounts[gKey] || 0) + q;
       const lKey = String(r?.levelKey || "").trim();
       if (lKey) levelCounts[lKey] = (levelCounts[lKey] || 0) + q;
+      const dlKey = r?.displayLevelKey || resolvePracticeDisplayLevelKey(lKey, subjectId);
+      if (dlKey) displayLevelCounts[dlKey] = (displayLevelCounts[dlKey] || 0) + q;
+      if (r?._sourceDifficultyBreakdown && typeof r._sourceDifficultyBreakdown === "object") {
+        for (const [sk, sv] of Object.entries(r._sourceDifficultyBreakdown)) {
+          const n = Math.max(0, Math.floor(Number(sv) || 0));
+          if (mergedSourceBreakdown[sk] != null) mergedSourceBreakdown[sk] += n;
+        }
+      }
       if (r?.evidenceSourceCounts) {
         mergedEvidenceSourceCounts = mergeEvidenceSourceCounts(
           mergedEvidenceSourceCounts,
@@ -482,7 +495,13 @@ export function collapseTopicRowsToCanonicalTopicEntity(subjectId, rowsByKey) {
     }
     const modeKey = dominantKey(modeCounts) || String(representative?.modeKey || "").trim() || "learning";
     const gradeKey = dominantKey(gradeCounts) || String(representative?.gradeKey || "").trim() || null;
-    const levelKey = dominantKey(levelCounts) || String(representative?.levelKey || "").trim() || null;
+    const levelKey =
+      displayLevelCounts.advanced > displayLevelCounts.regular
+        ? "advanced"
+        : dominantKey(displayLevelCounts) ||
+          resolvePracticeDisplayLevelKey(dominantKey(levelCounts) || representative?.levelKey, subjectId) ||
+          "regular";
+    const displayLevelKey = isScienceSubjectId(subjectId) ? "regular" : levelKey;
     const accuracy = questions > 0 ? Math.round((correct / questions) * 100) : 0;
     const registeredGradeKey =
       normalizeGradeLevelToKey(representative?.registeredGradeKey) ||
@@ -515,8 +534,13 @@ export function collapseTopicRowsToCanonicalTopicEntity(subjectId, rowsByKey) {
       mode: modeLabel(modeKey),
       gradeKey: gradeKey || null,
       grade: formatParentReportGradeLabel(gradeKey),
-      levelKey: levelKey || null,
-      level: levelKey ? formatParentReportLevelHe(levelKey) : "לא זמין",
+      levelKey: displayLevelKey || null,
+      displayLevelKey: displayLevelKey || null,
+      level: displayLevelKey ? formatParentReportLevelHe(displayLevelKey, subjectId) : "לא זמין",
+      _sourceDifficultyBreakdown:
+        mergedSourceBreakdown.easy + mergedSourceBreakdown.medium + mergedSourceBreakdown.hard > 0
+          ? { ...mergedSourceBreakdown }
+          : representative?._sourceDifficultyBreakdown || null,
       displayName: String(representative?.displayName || "").trim() || String(representative?.bucketKey || bucketKey),
       lastSessionMs: Number.isFinite(Number(lastSessionMs)) ? Number(lastSessionMs) : null,
       lastSessionAt: lastSessionAt || representative?.lastSessionAt || "לא זמין",
@@ -654,6 +678,8 @@ function buildRowSummary({
         ? modeFromKey
         : dominantKey(modeDist) || "learning";
   }
+  const displayLevelKey = resolvePracticeDisplayLevelKey(levelKey, subject);
+  levelKey = displayLevelKey;
   if (aggregateModeCounts && typeof aggregateModeCounts === "object") {
     const aggregateDominant = dominantKey(aggregateModeCounts);
     if (aggregateDominant) modeKey = aggregateDominant;
@@ -714,8 +740,9 @@ function buildRowSummary({
     actualGradeKey: gradeEvidence.contentGradeLevel,
     gradeRelation: gradeEvidence.gradeRelation,
     gradeDelta: gradeEvidence.gradeDelta,
-    level: levelKey ? formatParentReportLevelHe(levelKey) : "לא זמין",
+    level: levelKey ? formatParentReportLevelHe(levelKey, subject) : "לא זמין",
     levelKey,
+    displayLevelKey,
     mode: modeStr,
     modeKey,
     ...(aggregateModeCounts ? { aggregateModeCounts } : {}),

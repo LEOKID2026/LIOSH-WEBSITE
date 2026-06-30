@@ -8,6 +8,9 @@ import { normalizeGradeLevelToKey } from "../lib/learning-student-defaults.js";
 import { parseActivityTimestampMs } from "../lib/learning-supabase/parent-report-activity-time.js";
 import { taxonomyIdsForReportBucket } from "./diagnostic-engine-v2/topic-taxonomy-bridge.js";
 import { normalizeMistakeEvent } from "./mistake-event.js";
+import {
+  resolveAnswerLevelFromPayload,
+} from "../lib/learning/session-evidence-levels.js";
 
 /** Evidence sources allowed for parent-report diagnostic engine. */
 export const DIAGNOSTIC_EVIDENCE_SOURCES = Object.freeze({
@@ -173,6 +176,23 @@ export function buildDiagnosticEvidenceRow(p) {
       ? diagnosticMeta.taxonomyIds
       : taxonomyIdsForReportBucket(sid, normalizedTopicKey);
 
+  const levelEvidence = resolveAnswerLevelFromPayload(
+    {
+      displayLevel: p?.displayLevel,
+      sourceDifficulty: p?.sourceDifficulty,
+      level: p?.level,
+      regularInternalState: p?.regularInternalState,
+      scienceInternalState: p?.scienceInternalState,
+      clientMeta: p?.clientMeta,
+      questionEngine: p?.questionEngine,
+      params: p?.params,
+    },
+    {},
+    sid
+  );
+  const sourceDifficulty = levelEvidence.sourceDifficulty;
+  const displayLevel = levelEvidence.displayLevel;
+
   return {
     studentId: p?.studentId ?? null,
     subject,
@@ -190,7 +210,9 @@ export function buildDiagnosticEvidenceRow(p) {
     evidenceSource: p?.evidenceSource ?? null,
     evidenceCategory: p?.evidenceCategory ?? null,
     mode: p?.mode ?? null,
-    level: p?.level ?? null,
+    level: sourceDifficulty,
+    displayLevel,
+    sourceDifficulty,
     answeredAt: p?.answeredAt ?? null,
     isCorrect: false,
     selectedAnswer: p?.userAnswer ?? null,
@@ -202,7 +224,7 @@ export function buildDiagnosticEvidenceRow(p) {
     retryCount: p?.retryCount ?? null,
     firstTryMiss: p?.firstTryMiss ?? null,
     changedAnswer: p?.changedAnswer ?? null,
-    questionLevel: p?.level ?? null,
+    questionLevel: sourceDifficulty,
     skillId: metadata.skillId ?? metadata.diagnosticSkillId ?? null,
     subskillId: metadata.subskillId ?? metadata.subSkill ?? null,
     taxonomyCandidateIds,
@@ -240,7 +262,9 @@ export function diagnosticEvidenceToStorageMistake(evidence, aggregateSubjectId)
     registeredGrade: normalizeGradeLevelToKey(ev.registeredGrade) || undefined,
     contentGrade: contentGrade || undefined,
     gradeRelation: ev.gradeRelation || undefined,
-    level: ev.level || undefined,
+    level: ev.level || ev.sourceDifficulty || undefined,
+    displayLevel: ev.displayLevel || undefined,
+    sourceDifficulty: ev.sourceDifficulty || undefined,
     mode: ev.mode || undefined,
     exerciseText: ev.prompt || undefined,
     questionLabel: ev.questionId || undefined,

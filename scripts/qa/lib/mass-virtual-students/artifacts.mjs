@@ -82,6 +82,7 @@ export function buildSummaryMarkdown(summary) {
     `6. ימי פעילות מדומים: ${summary.simulatedDays}`,
     `7. תשובות שנוצרו: ${summary.totalAnswers}`,
     `8. כיסוי מקצוע×כיתה: coverage.csv`,
+    `8a. כיסוי מקצוע×כיתה×רמה: coverage-level.csv`,
     `8b. כיסוי topic-level: topic-coverage.csv (${summary.topicCoverage?.rows?.length ?? "—"} cells)`,
     `8c. subskill: ${summary.topicCoverage?.subskillNote || "—"}`,
     `9. נושאים עם כיסוי נמוך: ${summary.lowCoverageTopics?.join(", ") || "—"}`,
@@ -143,6 +144,14 @@ export function buildParentReportSamplesMarkdown(reportResults, limit = 5) {
 export function coverageToCsv(rows) {
   const header = "subject,grade,studentsPlanned,studentsSeeded";
   const body = rows.map((r) => `${r.subject},${r.grade},${r.studentsPlanned},${r.studentsSeeded}`).join("\n");
+  return `${header}\n${body}\n`;
+}
+
+export function coverageLevelToCsv(rows) {
+  const header = "subject,grade,displayLevel,studentsPlanned,studentsSeeded";
+  const body = rows
+    .map((r) => `${r.subject},${r.grade},${r.displayLevel},${r.studentsPlanned},${r.studentsSeeded}`)
+    .join("\n");
   return `${header}\n${body}\n`;
 }
 
@@ -234,6 +243,13 @@ export async function writeAllArtifacts(reportDir, bundle) {
     "utf8",
   );
   await writeFile(join(reportDir, "coverage.csv"), coverageToCsv(bundle.coverageRows), "utf8");
+  if (bundle.coverageLevelRows?.length) {
+    await writeFile(
+      join(reportDir, "coverage-level.csv"),
+      coverageLevelToCsv(bundle.coverageLevelRows),
+      "utf8",
+    );
+  }
   await writeFile(join(reportDir, "engine-findings.csv"), engineFindingsToCsv(bundle.engineFindings), "utf8");
   await writeFile(
     join(reportDir, "parent-report-samples.md"),

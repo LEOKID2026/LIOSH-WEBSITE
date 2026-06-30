@@ -93,7 +93,7 @@ const EN_SNIPPET_HE = {
   borrow: "השאלה",
   once: "פעם אחת",
   easy: "רמה בסיסית",
-  medium: "רמה בינונית",
+  medium: "רגיל",
   hard: "רמה מתקדמת",
   grade: "כיתה",
   context: "הקשר",

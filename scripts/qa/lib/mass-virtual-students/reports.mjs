@@ -22,6 +22,7 @@ import {
   buildSpeedPressureTopicAlignmentDebug,
 } from "./speed-pressure-topic-alignment-debug.mjs";
 import { buildParentReportV2FromAggregate } from "./report-v2-bridge.mjs";
+import { buildLevelCoverageRows } from "./display-level-cohort.mjs";
 import { createServiceClient } from "./supabase.mjs";
 
 function parseReportDate(value) {
@@ -247,6 +248,8 @@ export function buildCoverageRows({ cohort, seededStats, subjects, grades }) {
   return rows;
 }
 
+export { buildLevelCoverageRows };
+
 export function computePassVerdict(summary) {
   const infraBlockers = [];
   if (summary.apiErrors > 0) infraBlockers.push("api_errors");
@@ -255,6 +258,7 @@ export function computePassVerdict(summary) {
   if (summary.technicalIssues > 0) infraBlockers.push("technical_text_in_reports");
   if (summary.subjectCoverageGaps?.length) infraBlockers.push("subject_coverage_gaps");
   if (summary.gradeCoverageGaps?.length) infraBlockers.push("grade_coverage_gaps");
+  if (summary.levelCoverageGaps?.length) infraBlockers.push("level_coverage_gaps");
 
   const engineBlockers = [];
   const missingDecisions = summary.missingDecisions || [];

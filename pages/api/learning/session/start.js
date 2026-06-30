@@ -24,6 +24,7 @@ import { guardCookieMutationOrigin } from "../../../../lib/security/api-guards.j
 import { assertGuestTopicPlayable } from "../../../../lib/guest/guest-topic-access.server.js";
 import { isGuestStudent } from "../../../../lib/guest/guest-display.js";
 import { trackServerAnalyticsEvent } from "../../../../lib/analytics/track-event.server.js";
+import { buildSessionStartLevelMetadata } from "../../../../lib/learning/session-evidence-levels.js";
 
 async function insertLearningSession(supabase, row) {
   const fullInsert = await supabase
@@ -91,15 +92,26 @@ export default async function handler(req, res) {
 
     const clientGradeHint = normalizeOptionalString(body.gradeLevel, 40);
     const level = normalizeOptionalString(body.level, 40);
+    const displayLevel = normalizeOptionalString(body.displayLevel, 40);
+    const regularInternalState = normalizeOptionalString(body.regularInternalState, 40);
+    const scienceInternalState = normalizeOptionalString(body.scienceInternalState, 40);
     const clientMeta = normalizeClientMeta(body.clientMeta);
     const startedAt = new Date().toISOString();
 
     const registeredGradeKey = canonicalGradeLevelKeyFromAuth(auth);
     const contentGradeKey = resolveContentGradeForSessionWrite(clientGradeHint, registeredGradeKey);
     const gradeEvidence = buildGradeEvidenceFields(registeredGradeKey, contentGradeKey);
+    const sessionLevelFields = buildSessionStartLevelMetadata({
+      subjectId: subject,
+      level,
+      displayLevel,
+      regularInternalState,
+      scienceInternalState,
+      clientMeta,
+    });
     const metadata = mergeJsonObjects(clientMeta, {
       mode: clientMode,
-      level,
+      ...sessionLevelFields,
       registeredGradeLevel: gradeEvidence.registeredGradeLevel,
       contentGradeLevel: gradeEvidence.contentGradeLevel,
       gradeRelation: gradeEvidence.gradeRelation,

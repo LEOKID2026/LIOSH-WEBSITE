@@ -93,7 +93,7 @@ export function buildInterventionPlanPhase8(ctx) {
     interventionSuccessSignalHe = "כשהילד מסיים שלב ב׳ לבד ברובו — אפשר להרחיב מעט.";
     interventionStopSignalHe = "אם העצמאות יורדת והטעויות עולות — לחזור ליחס הכוונה גבוה יותר לשבוע.";
     doNowHe = "להפריד בבירור בין «ניסיון לבד» לבין «בדיקה יחד בסוף».";
-    avoidNowHe = "לא לקפוץ לרמה קשה יותר לפני שני מפגשים עקביים עם עצמאות סבירה.";
+    avoidNowHe = "לא לעבור למתקדם לפני שני מפגשים עקביים עם עצמאות סבירה.";
   } else if (rootCause === "knowledge_gap" && !capAggressivePlan) {
     interventionDurationBand = sparse ? "short" : "moderate";
     interventionIntensity = sparse ? "focused" : "targeted";

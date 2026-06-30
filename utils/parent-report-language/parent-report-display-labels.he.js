@@ -6,6 +6,10 @@
 import { subjectLabelHe as platformSubjectLabelHe } from "../../lib/platform-ui/hebrew-display-labels.js";
 import { formatParentReportGradeLabel } from "../math-report-generator.js";
 import { normalizeParentFacingHe } from "./parent-facing-normalize-he.js";
+import {
+  formatPracticeLevelLabelForParent,
+  resolvePracticeDisplayLevelKey,
+} from "../../lib/learning/parent-report-display-level.js";
 
 /** @type {Record<string, string>} */
 export const PARENT_REPORT_SUBJECT_LABELS_HE = {
@@ -88,11 +92,14 @@ export const PARENT_REPORT_STATUS_LABELS_HE = {
   false: "לא",
 };
 
-/** @type {Record<string, string>} */
+/** @type {Record<string, string>} — parent practice levels: רגיל / מתקדם only */
 export const PARENT_REPORT_LEVEL_LABELS_HE = {
-  easy: "קל",
-  medium: "בינוני",
-  hard: "קשה",
+  regular: "רגיל",
+  advanced: "מתקדם",
+  easy: "רגיל",
+  medium: "רגיל",
+  mixed: "רגיל",
+  hard: "מתקדם",
   low: "נמוך",
   high: "גבוה",
   moderate: "בינוני",
@@ -174,7 +181,11 @@ export function formatParentReportStatusHe(status) {
 }
 
 /** @param {string|null|undefined} level */
-export function formatParentReportLevelHe(level) {
+/** @param {string|null|undefined} [subjectId] */
+export function formatParentReportLevelHe(level, subjectId) {
+  if (level == null || level === "") return "לא זמין";
+  const label = formatPracticeLevelLabelForParent(level, subjectId);
+  if (label && label !== "לא זמין") return label;
   return mapFromTable(level, PARENT_REPORT_LEVEL_LABELS_HE, "לא זמין");
 }
 

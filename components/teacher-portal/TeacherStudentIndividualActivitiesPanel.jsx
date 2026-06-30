@@ -8,6 +8,8 @@ import {
   activityStatusLabelHe,
   studentActivityStatusLabelHe,
 } from "../../lib/classroom-activities/classroom-activities-labels.client.js";
+import ActivityDisplayLevelSelector from "../classroom-activities/ActivityDisplayLevelSelector.jsx";
+import { writeActivityDifficultyFromDisplayLevel } from "../../lib/learning/activity-display-level.js";
 
 const MODES = ["guided_practice", "quiz", "homework"];
 
@@ -19,7 +21,7 @@ export default function TeacherStudentIndividualActivitiesPanel({ accessToken, s
   const [subject, setSubject] = useState("math");
   const [topic, setTopic] = useState("חיבור");
   const [mode, setMode] = useState("homework");
-  const [difficulty, setDifficulty] = useState("medium");
+  const [displayLevel, setDisplayLevel] = useState("regular");
   const [questionCount, setQuestionCount] = useState(5);
   const [timeLimitSeconds, setTimeLimitSeconds] = useState("");
   const [preview, setPreview] = useState([]);
@@ -56,7 +58,7 @@ export default function TeacherStudentIndividualActivitiesPanel({ accessToken, s
         subject,
         gradeLevel: gradeLevel || "g3",
         topic,
-        difficulty,
+        difficulty: displayLevel,
         count: questionCount,
       });
       setPreview(qs);
@@ -91,7 +93,7 @@ export default function TeacherStudentIndividualActivitiesPanel({ accessToken, s
         topic: topic.trim(),
         mode,
         questionSelection: "same_exact",
-        difficultyLevel: difficulty,
+        difficultyLevel: writeActivityDifficultyFromDisplayLevel(displayLevel, subject),
         questionCount: Number(questionCount),
         questionSet: preview,
         gradeLevel: gradeLevel || "g3",
@@ -219,6 +221,17 @@ export default function TeacherStudentIndividualActivitiesPanel({ accessToken, s
               ))}
             </select>
           </label>
+          <ActivityDisplayLevelSelector
+            subjectId={subject}
+            value={displayLevel}
+            onChange={(dl) => {
+              setDisplayLevel(dl);
+              setPreview([]);
+            }}
+            variant="select"
+            label="רמה"
+            inputClassName="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
+          />
           <label className="block">
             <span className="text-white/70">מספר שאלות</span>
             <input

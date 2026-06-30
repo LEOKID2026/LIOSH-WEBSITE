@@ -2,6 +2,7 @@ import { classifyActivityEvidence } from "../../../../lib/learning/activity-clas
 import { enrichMetadataFromTaxonomy } from "../../../../utils/diagnostic-engine-v2/topic-taxonomy-metadata-enrichment.js";
 import { normalizeDiagnosticSubjectId } from "../../../../utils/diagnostic-evidence.js";
 import { SEED_META_KEY } from "./constants.mjs";
+import { resolveMassSimAnswerLevelFields } from "./display-level-cohort.mjs";
 
 /** @deprecated use per-subject taxonomy via enrichMetadataFromTaxonomy */
 const MATH_ADDITION_TAXONOMY = {
@@ -37,7 +38,10 @@ export function buildRichAnswerPayload({
   isCorrect,
   timeSpentMs,
   speedPressure = false,
+  displayLevel = "regular",
+  answerIndex = 0,
 }) {
+  const levelFields = resolveMassSimAnswerLevelFields(subject, displayLevel, answerIndex);
   const classification = classifyActivityEvidence(
     mode,
     mode === "homework" ? "assigned_parent" : "free_practice",
@@ -63,7 +67,15 @@ export function buildRichAnswerPayload({
     topic,
     gameMode: mode,
     mode,
-    level: "medium",
+    level: levelFields.activityDbEnum,
+    displayLevel: levelFields.displayLevel,
+    sourceDifficulty: levelFields.sourceDifficulty,
+    ...(levelFields.regularInternalState
+      ? { regularInternalState: levelFields.regularInternalState }
+      : {}),
+    ...(levelFields.scienceInternalState
+      ? { scienceInternalState: levelFields.scienceInternalState }
+      : {}),
     gradeLevel: grade,
     ...(speedPressure ? { contentGradeLevel: `g${grade}` } : {}),
     prompt: `Mass sim ${subject}/${topic}`,

@@ -129,6 +129,12 @@ export const PARENT_READABILITY_LEAK_SUBSTRINGS = [
   /* parent_report_hebrew_copy_spec.md §9 */
   "פער יסוד",
   "קושי בבסיס",
+  "חוסר בסיס",
+  "חוסר הבנה בסיסית",
+  "פער יסודי",
+  "ירידה בכיתה",
+  "drop_one_level",
+  "drop level",
   "הצלחה שבירה",
   "נראה שיש קושי ב",
   "יש טעויות חוזרות ב",
@@ -228,6 +234,10 @@ export const PARENT_COPY_FORBIDDEN_FRAGMENTS = Object.freeze([
   /* parent_report_hebrew_copy_spec.md §9 */
   "פער יסוד",
   "קושי בבסיס",
+  "חוסר בסיס",
+  "חוסר הבנה בסיסית",
+  "פער יסודי",
+  "ירידה בכיתה",
   "הצלחה שבירה",
   "נראה שיש קושי ב",
   "יש טעויות חוזרות ב",

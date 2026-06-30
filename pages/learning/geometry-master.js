@@ -3,7 +3,6 @@ import Layout from "../../components/Layout";
 import { useRouter } from "next/router";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
 import {
-  LEVELS,
   TOPICS,
   GRADES,
   getShapesForTopic,
@@ -188,6 +187,19 @@ import { buildDailyMissionsView } from "../../lib/learning-client/dailyMissionsV
 import { fetchStudentHomeProfile } from "../../lib/learning-client/fetchStudentHomeProfile";
 import { buildSubjectMonthlyPersistenceViewFromProfile } from "../../lib/learning-client/subjectMonthlyPersistenceView";
 import { navigateToStudentHome } from "../../lib/learning-client/navigateToStudentHome";
+import { useStudentDisplayLevelPractice } from "../../hooks/useStudentDisplayLevelPractice.js";
+import { StudentDisplayLevelSelect } from "../../components/learning/StudentDisplayLevelSelect.js";
+import {
+  studentDisplayLevelKeys,
+  studentDisplayLevelLabel,
+} from "../../lib/learning-client/student-display-level-practice.js";
+
+function loadLeaderboardTop10ByDisplayLevel(saved, displayLevel) {
+  const sourceKeys = displayLevel === "advanced" ? ["hard"] : ["easy", "medium"];
+  const merged = sourceKeys.flatMap((sk) => buildTop10ByScore(saved, sk));
+  merged.sort((a, b) => (b.score || 0) - (a.score || 0));
+  return merged.slice(0, 10);
+}
 
 /** Passed into compareGeometryLearnerAnswer — not defaulted inside answer-compare. */
 const GEOMETRY_NUMERIC_SCALE_FLOOR = 1e-6;
@@ -293,13 +305,32 @@ export default function GeometryMaster() {
   }, [safeGrade, visibleGeometryTopics]);
   const guestTopics = useGuestPlayableTopics("geometry", visibleGeometryTopics);
   const [mode, setMode] = useState("practice");
-  const [level, setLevel] = useState("easy");
   const [topic, setTopic] = useState("area");
   const bookTopicHref = useMemo(() => {
     if (!GEOMETRY_BOOK_GRADES.has(grade)) return null;
     return getGeometryBookHref({ grade, topic, kind: null });
   }, [grade, topic]);
   const [gameActive, setGameActive] = useState(false);
+  const {
+    displayLevel,
+    sourceDifficulty: level,
+    handleDisplayLevelChange: onDisplayLevelChange,
+    buildSessionStartLevelFields,
+    buildAnswerLevelFields,
+    tagQuestion,
+    applyAnswerAdaptive,
+    hydrateFromResumeSnapshot,
+    applyPlannerLevelKey,
+    resetAdaptiveForSessionStart,
+    label: displayLevelLabel,
+  } = useStudentDisplayLevelPractice("geometry");
+  const handleDisplayLevelChange = useCallback(
+    (nextDisplayLevel) => {
+      onDisplayLevelChange(nextDisplayLevel);
+      setGameActive(false);
+    },
+    [onDisplayLevelChange]
+  );
   const [adaptivePlannerRecommendationView, setAdaptivePlannerRecommendationView] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const questionBookHref = useMemo(() => {
@@ -429,7 +460,7 @@ export default function GeometryMaster() {
     pythagoras: false,
   });
   const [showLeaderboard, setShowLeaderboard] = useState(false);
-  const [leaderboardLevel, setLeaderboardLevel] = useState("easy");
+  const [leaderboardLevel, setLeaderboardLevel] = useState("regular");
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [showReferenceModal, setShowReferenceModal] = useState(false);
   const [showDiagramModal, setShowDiagramModal] = useState(false);
@@ -550,7 +581,7 @@ export default function GeometryMaster() {
     setMode(typeof snap.mode === "string" ? snap.mode : "practice");
     if (typeof snap.grade === "string") setGrade(snap.grade);
     if (typeof snap.gradeNumber === "number") setGradeNumber(snap.gradeNumber);
-    if (typeof snap.level === "string") setLevel(snap.level);
+    hydrateFromResumeSnapshot(snap);
     if (typeof snap.topic === "string") setTopic(snap.topic);
     setGameActive(true);
     if (snap.currentQuestion) setCurrentQuestion(snap.currentQuestion);
@@ -819,7 +850,7 @@ export default function GeometryMaster() {
           fromRef && typeof fromRef === "object" && Object.keys(fromRef).length > 0
             ? fromRef
             : safeGetJsonObject(STORAGE_KEY);
-        const topScores = buildTop10ByScore(saved, leaderboardLevel);
+        const topScores = loadLeaderboardTop10ByDisplayLevel(saved, leaderboardLevel);
         setLeaderboardData(topScores);
       } catch (e) {
         console.error("Error loading leaderboard:", e);
@@ -992,7 +1023,7 @@ export default function GeometryMaster() {
         if (currentQuestion && currentQuestion.params?.kind !== "no_question") {
           setPreviousExplanationQuestion(currentQuestion);
         }
-        setCurrentQuestion(replayQ);
+        setCurrentQuestion(tagQuestion(replayQ));
         setSelectedAnswer(null);
         setTextAnswer("");
         setFeedback(null);
@@ -1257,7 +1288,7 @@ export default function GeometryMaster() {
 
     decrementPendingProbeExpiry(geometryPendingDiagnosticProbeRef);
 
-    const displayQuestion = sanitizeQuestionForStudentDisplay(question);
+    const displayQuestion = tagQuestion(sanitizeQuestionForStudentDisplay(question));
     setCurrentQuestion(displayQuestion);
     setSelectedAnswer(null);
     setTextAnswer("");
@@ -1362,7 +1393,7 @@ export default function GeometryMaster() {
   function buildGeometrySessionStartPayload() {
     const baseMeta = {
       source: "geometry-master",
-      version: "phase-2d-b3",
+      version: "phase-4-display-level",
     };
     const plannerExtra = plannerNextSessionClientMetaRef.current;
     return {
@@ -1370,7 +1401,7 @@ export default function GeometryMaster() {
       topic: resolveGeometrySessionTopic(currentQuestion?.topic || topic),
       mode: reportModeFromGameState(mode, focusedPracticeMode),
       gradeLevel: String(grade || ""),
-      level: String(level || ""),
+      ...buildSessionStartLevelFields(),
       clientMeta:
         plannerExtra && typeof plannerExtra === "object"
           ? mergePlannerSessionClientMeta(baseMeta, plannerExtra)
@@ -1422,6 +1453,13 @@ export default function GeometryMaster() {
           afterStepByStep: stepByStepViewedRef.current,
         })
       : null;
+    if (questionEngine) {
+      questionEngine.difficulty =
+        question?.sourceDifficulty || question?.difficulty || level || questionEngine.difficulty;
+    }
+    const answerLevelFields = buildAnswerLevelFields(
+      question?.sourceDifficulty || level
+    );
     ensureLearningSessionId()
       .then((learningSessionId) => {
         if (!learningSessionId) return;
@@ -1444,11 +1482,14 @@ export default function GeometryMaster() {
           creditedTimeMs,
           timingStatus,
           gradeLevel: String(grade || ""),
+          ...answerLevelFields,
           clientMeta: {
             source: "geometry-master",
-            version: "phase-3",
+            version: "phase-4-display-level",
             gradeKey: String(grade || ""),
             afterStepByStep: stepByStepViewedRef.current,
+            displayLevel: answerLevelFields.displayLevel,
+            sourceDifficulty: answerLevelFields.sourceDifficulty,
             ...buildBookContextClientMetaExtras(mode, {
               bookContextRef,
               bookContextConsumedRef,
@@ -1598,6 +1639,7 @@ export default function GeometryMaster() {
       total: 1,
       mode: reportModeFromGameState(mode, focusedPracticeMode),
     };
+    applyAnswerAdaptive(isCorrect, { mode: focusedPracticeModeRef.current });
     saveGeometryAnswerInParallel({
       question: questionForSave,
       userAnswer: answer,
@@ -2094,7 +2136,7 @@ export default function GeometryMaster() {
       setBestScore(maxScore);
       setBestStreak(maxStreak);
       if (showLeaderboard) {
-        const topScores = buildTop10ByScore(saved, leaderboardLevel);
+        const topScores = loadLeaderboardTop10ByDisplayLevel(saved, leaderboardLevel);
         setLeaderboardData(topScores);
       }
       if (learningProfileStudentIdRef.current && learningProfileHydratedRef.current) {
@@ -2157,11 +2199,10 @@ export default function GeometryMaster() {
     }
     if (opts.fromAdaptivePlannerRecommendedPractice && opts.plannerSessionMeta && typeof opts.plannerSessionMeta === "object") {
       plannerNextSessionClientMetaRef.current = opts.plannerSessionMeta;
-      if (opts.appliedLevelKey === "easy" || opts.appliedLevelKey === "medium" || opts.appliedLevelKey === "hard") {
-        setLevel(opts.appliedLevelKey);
-      }
+      applyPlannerLevelKey(opts.appliedLevelKey);
     } else {
       plannerNextSessionClientMetaRef.current = null;
+      resetAdaptiveForSessionStart();
     }
     recordSessionProgress({ includePlannerRecommendation: false });
     setAdaptivePlannerRecommendationView(null);
@@ -2549,7 +2590,7 @@ export default function GeometryMaster() {
           MB={MB}
           desktopHeaderRef={desktopHeaderRef}
           title="📐 גאומטריה"
-          subtitle={`${playerName || "שחקן"} • ${GRADES[grade]?.name || ""} • ${LEVELS[level].name} • ${getTopicName(topic)} • ${MODES[mode].name}`}
+          subtitle={`${playerName || "שחקן"} • ${GRADES[grade]?.name || ""} • ${displayLevelLabel()} • ${getTopicName(topic)} • ${MODES[mode].name}`}
           onBack={backSafe}
           onCurriculumClick={() => router.push("/learning/geometry-curriculum")}
           sound={sound}
@@ -2591,7 +2632,7 @@ export default function GeometryMaster() {
               </button>
             </div>
             <p className={MB.pageSub}>
-              {playerName || "שחקן"} • {GRADES[grade]?.name || ""} • {LEVELS[level].name} • {getTopicName(topic)} • {MODES[mode].name}
+              {playerName || "שחקן"} • {GRADES[grade]?.name || ""} • {displayLevelLabel()} • {getTopicName(topic)} • {MODES[mode].name}
             </p>
           </div>
 
@@ -2744,21 +2785,13 @@ export default function GeometryMaster() {
                     </option>
                   ))}
                 </select>
-                <select
-                  value={level}
-                  title={LEVELS[level]?.name}
-                  onChange={(e) => {
-                    setLevel(e.target.value);
-                    setGameActive(false);
-                  }}
+                <StudentDisplayLevelSelect
+                  subjectId="geometry"
+                  value={displayLevel}
+                  title={displayLevelLabel()}
+                  onChange={handleDisplayLevelChange}
                   className={`${MB.selectControl} shrink-0 min-w-0 w-[5rem] max-w-[5.5rem] md:w-[5.75rem] md:max-w-[6.25rem]`}
-                >
-                  {Object.keys(LEVELS).map((lvl) => (
-                    <option key={lvl} value={lvl}>
-                      {LEVELS[lvl].name}
-                    </option>
-                  ))}
-                </select>
+                />
                 <div className="flex flex-1 min-w-0 md:flex-none md:max-w-[min(22rem,42vw)] items-center gap-1.5 md:gap-2 shrink">
                   {topic === "mixed" && (
                     <button
@@ -3469,15 +3502,15 @@ export default function GeometryMaster() {
                 </div>
 
                 <div className="flex gap-2 mb-4 justify-center" dir="rtl">
-                  {Object.keys(LEVELS).map((lvl) => (
+                  {studentDisplayLevelKeys("geometry").slice().reverse().map((dl) => (
                     <button
-                      key={lvl}
+                      key={dl}
                       onClick={() => {
-                        setLeaderboardLevel(lvl);
+                        setLeaderboardLevel(dl);
                         if (typeof window !== "undefined") {
                           try {
                             const saved = safeGetJsonObject(STORAGE_KEY);
-                            const topScores = buildTop10ByScore(saved, lvl);
+                            const topScores = loadLeaderboardTop10ByDisplayLevel(saved, dl);
                             setLeaderboardData(topScores);
                           } catch (e) {
                             console.error("שגיאה בטעינת לוח התוצאות:", e);
@@ -3485,12 +3518,12 @@ export default function GeometryMaster() {
                         }
                       }}
                       className={`px-3 py-2 rounded-lg font-bold text-sm transition-all ${
-                        leaderboardLevel === lvl
+                        leaderboardLevel === dl
                           ? "bg-amber-500/80 text-white"
                           : "bg-white/10 text-white/70 hover:bg-white/20"
                       }`}
                     >
-                      {LEVELS[lvl].name}
+                      {studentDisplayLevelLabel(dl)}
                     </button>
                   ))}
                 </div>
@@ -3520,7 +3553,7 @@ export default function GeometryMaster() {
                             colSpan={4}
                             className="text-white/60 p-4 text-sm"
                           >
-                            עדיין אין תוצאות ברמה {LEVELS[leaderboardLevel].name}
+                            עדיין אין תוצאות ברמה {studentDisplayLevelLabel(leaderboardLevel)}
                           </td>
                         </tr>
                       ) : (
@@ -3995,7 +4028,7 @@ export default function GeometryMaster() {
                       📈 תרגול מדורג
                     </div>
                     <div className="text-sm text-white/70">
-                      התחל קל והתקדם לקשה יותר
+                      תרגול מדורג — מתחיל ברמה נמוכה ומתקדם לרמה שבחרת
                     </div>
                   </button>
                   

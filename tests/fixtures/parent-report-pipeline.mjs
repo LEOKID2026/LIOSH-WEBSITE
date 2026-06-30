@@ -40,6 +40,9 @@ function defaultSummary(over = {}) {
     moledetGeographyQuestions: 0,
     moledetGeographyCorrect: 0,
     moledetGeographyAccuracy: 0,
+    historyQuestions: 0,
+    historyCorrect: 0,
+    historyAccuracy: 0,
     ...over,
   };
 }

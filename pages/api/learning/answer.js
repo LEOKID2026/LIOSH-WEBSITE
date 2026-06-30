@@ -27,6 +27,7 @@ import { classifyActivityEvidence } from "../../../lib/learning/activity-classif
 import { normalizeQuestionEnginePayload } from "../../../lib/learning/question-engine-metadata.js";
 import { buildDiagnosticCanonicalMetadata } from "../../../lib/learning/diagnostic-canonical-metadata.js";
 import { trackServerAnalyticsEvent } from "../../../lib/analytics/track-event.server.js";
+import { buildAnswerLevelFields } from "../../../lib/learning/session-evidence-levels.js";
 
 async function verifyLearningSessionOwnership(supabase, learningSessionId, studentId) {
   const { data, error } = await supabase
@@ -152,11 +153,35 @@ export default async function handler(req, res) {
       { afterStepByStep, contextAfterBookReading, hintsUsed }
     );
 
-    const questionEngine = normalizeQuestionEnginePayload(body.questionEngine);
+    let questionEngine = normalizeQuestionEnginePayload(body.questionEngine);
+    const bodyLevel = normalizeOptionalString(body.level, 40);
+    const levelFields = buildAnswerLevelFields({
+      subjectId: subject,
+      bodyLevel,
+      bodyDisplayLevel: normalizeOptionalString(body.displayLevel, 40),
+      bodySourceDifficulty: normalizeOptionalString(body.sourceDifficulty, 40),
+      bodyRegularInternalState: normalizeOptionalString(body.regularInternalState, 40),
+      bodyScienceInternalState: normalizeOptionalString(body.scienceInternalState, 40),
+      clientMeta,
+      sessionMeta,
+      questionEngine,
+    });
+    if (questionEngine && levelFields.questionEngineDifficulty) {
+      questionEngine = { ...questionEngine, difficulty: levelFields.questionEngineDifficulty };
+    }
 
     const answerPayload = {
       subject,
       topic: normalizeOptionalString(body.topic, 120),
+      displayLevel: levelFields.displayLevel,
+      sourceDifficulty: levelFields.sourceDifficulty,
+      level: levelFields.level,
+      ...(levelFields.regularInternalState
+        ? { regularInternalState: levelFields.regularInternalState }
+        : {}),
+      ...(levelFields.scienceInternalState
+        ? { scienceInternalState: levelFields.scienceInternalState }
+        : {}),
       questionFingerprint: normalizeOptionalString(body.questionFingerprint, 300),
       prompt: normalizeOptionalString(body.prompt, 5000),
       expectedAnswer: normalizeOptionalString(body.expectedAnswer, 1000),
@@ -167,7 +192,7 @@ export default async function handler(req, res) {
       rawTimeSpentMs,
       creditedTimeMs,
       timingStatus,
-      clientMeta,
+      clientMeta: levelFields.clientMeta,
       registeredGradeLevel: gradeEvidence.registeredGradeLevel,
       contentGradeLevel: gradeEvidence.contentGradeLevel,
       gradeRelation: gradeEvidence.gradeRelation,

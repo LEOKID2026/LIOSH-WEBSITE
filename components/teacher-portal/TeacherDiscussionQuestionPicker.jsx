@@ -13,6 +13,8 @@ import {
   scienceTopicOptionsForGrade,
   topicOptionsForSubject,
 } from "../../lib/teacher-portal/teacher-class-topic-options.js";
+import ActivityDisplayLevelSelector from "../classroom-activities/ActivityDisplayLevelSelector.jsx";
+import { writeActivityDifficultyFromDisplayLevel } from "../../lib/learning/activity-display-level.js";
 
 function questionPrompt(q) {
   return String(q?.question || q?.prompt || q?.stem || "").trim();
@@ -64,7 +66,7 @@ export default function TeacherDiscussionQuestionPicker({
   const [title, setTitle] = useState("");
   const [subject, setSubject] = useState("math");
   const [topic, setTopic] = useState(() => defaultTopicForSubject("math", gradeLevel || "g3"));
-  const [difficulty, setDifficulty] = useState("medium");
+  const [displayLevel, setDisplayLevel] = useState("regular");
   const [preview, setPreview] = useState([]);
   const [selectedIndices, setSelectedIndices] = useState(() => new Set());
   const [answerRequired, setAnswerRequired] = useState(true);
@@ -168,7 +170,7 @@ export default function TeacherDiscussionQuestionPicker({
           subject,
           gradeLevel: gradeKey,
           topic,
-          difficulty,
+          difficulty: displayLevel,
           count: 5,
         }),
       });
@@ -185,7 +187,7 @@ export default function TeacherDiscussionQuestionPicker({
     } finally {
       setBusy(false);
     }
-  }, [accessToken, subject, gradeKey, topic, difficulty]);
+  }, [accessToken, subject, gradeKey, topic, displayLevel]);
 
   const createDiscussion = useCallback(async () => {
     if (selectedIndices.size === 0) {
@@ -213,7 +215,7 @@ export default function TeacherDiscussionQuestionPicker({
         topic: topic.trim(),
         mode: "discussion",
         questionSelection: "same_exact",
-        difficultyLevel: difficulty,
+        difficultyLevel: writeActivityDifficultyFromDisplayLevel(displayLevel, subject),
         questionCount: selectedQuestions.length,
         questionSet: selectedQuestions,
         gradeLevel: gradeKey,
@@ -266,7 +268,7 @@ export default function TeacherDiscussionQuestionPicker({
     title,
     subject,
     topic,
-    difficulty,
+    displayLevel,
     gradeKey,
     classId,
     studentId,
@@ -454,19 +456,18 @@ export default function TeacherDiscussionQuestionPicker({
             />
           )}
         </label>
-        <label className="block text-sm">
-          <span className="text-white/70">רמת קושי</span>
-          <select
-            className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
-            value={difficulty}
-            onChange={(e) => setDifficulty(e.target.value)}
-          >
-            <option value="easy">קל</option>
-            <option value="medium">בינוני</option>
-            <option value="hard">קשה</option>
-            <option value="mixed">מעורב</option>
-          </select>
-        </label>
+        <ActivityDisplayLevelSelector
+          subjectId={subject}
+          value={displayLevel}
+          onChange={(dl) => {
+            setDisplayLevel(dl);
+            setPreview([]);
+            setSelectedIndices(new Set());
+          }}
+          variant="select"
+          label="רמה"
+          inputClassName="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
+        />
         <label className="block text-sm">
           <span className="text-white/70">כיתה</span>
           <input

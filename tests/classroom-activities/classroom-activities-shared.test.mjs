@@ -92,23 +92,23 @@ test("Science preview returns exactly N items for valid grade/topic/difficulty",
   assert.equal(qs.length, n);
 });
 
-test("Science preview items match requested grade and difficulty", async () => {
+test("Science preview items match requested grade and difficulty band", async () => {
   const { SCIENCE_QUESTIONS } = await import("../../data/science-questions.js");
   const gradeKey = "g3";
-  const levelKey = "easy";
   const topicKey = "body";
   const qs = await generateActivityQuestionSetClient({
     subject: "science",
     gradeLevel: gradeKey,
     topic: topicKey,
-    difficulty: levelKey,
+    difficulty: "easy",
     count: 5,
   });
 
   for (const item of qs) {
     assert.equal(item.gradeLevel, gradeKey);
     assert.equal(item.topic, topicKey);
-    assert.equal(item.difficulty, levelKey);
+    assert.equal(item.displayLevel, "regular");
+    assert.ok(["easy", "medium", "hard"].includes(item.sourceDifficulty || item.difficulty));
     const fp = `${item.question}|${item.correctAnswer}`;
     const bankMatch = SCIENCE_QUESTIONS.find((q) => {
       const prompt = String(q.stem || q.question || q.prompt || "").trim();
@@ -120,7 +120,9 @@ test("Science preview items match requested grade and difficulty", async () => {
     });
     assert.ok(bankMatch, `bank row for fingerprint ${fp}`);
     assert.ok(bankMatch.grades.includes(gradeKey));
-    assert.ok(scienceLevelAllowed(bankMatch, levelKey));
+    assert.ok(
+      ["easy", "medium", "hard"].some((sd) => scienceLevelAllowed(bankMatch, sd))
+    );
     assert.equal(String(bankMatch.topic).toLowerCase(), topicKey);
   }
 });

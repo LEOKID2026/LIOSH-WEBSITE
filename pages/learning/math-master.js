@@ -191,6 +191,21 @@ import {
   mergePlannerSessionClientMeta,
 } from "../../lib/learning-client/adaptive-planner-recommended-practice";
 import {
+  applyStudentAdaptiveAnswer,
+  buildStudentAnswerLevelFields,
+  buildStudentSessionStartLevelFields,
+  createStudentAdaptiveState,
+  isStudentAdaptiveActive,
+  mapPlannerTargetToDisplayLevel,
+  mapPlannerTargetToSourceDifficulty,
+  migratePracticeResumeSnapshot,
+  resolveSourceDifficultyForPractice,
+  studentDisplayLevelKeys,
+  studentDisplayLevelLabel,
+  tagQuestionWithLevelFields,
+} from "../../lib/learning-client/student-display-level-practice.js";
+import { StudentDisplayLevelSelect } from "../../components/learning/StudentDisplayLevelSelect.js";
+import {
   gradeKeyToNumber,
 } from "../../lib/learning-student-defaults";
 import { isStudentIdentityDiagnosticsEnabled } from "../../lib/dev-student-identity-client";
@@ -388,6 +403,13 @@ function consumeMathBookPracticePreset() {
   );
 }
 
+function loadLeaderboardTop10ByDisplayLevel(saved, displayLevel) {
+  const sourceKeys = displayLevel === "advanced" ? ["hard"] : ["easy", "medium"];
+  const merged = sourceKeys.flatMap((sk) => buildTop10ByScore(saved, sk));
+  merged.sort((a, b) => (b.score || 0) - (a.score || 0));
+  return merged.slice(0, 10);
+}
+
 export default function MathMaster() {
   useIOSViewportFix();
   const { MB, ui, shellClass, shellBgStyle } = useLearningMasterUi();
@@ -451,7 +473,23 @@ export default function MathMaster() {
 
   const [mode, setMode] = useState("practice");
 
+  const [displayLevel, setDisplayLevel] = useState("regular");
   const [level, setLevel] = useState("easy");
+  const displayLevelRef = useRef("regular");
+  const regularAdaptiveRef = useRef(createStudentAdaptiveState("math"));
+  const syncPracticeSourceDifficulty = useCallback((nextDisplayLevel = displayLevelRef.current) => {
+    const sd = resolveSourceDifficultyForPractice("math", nextDisplayLevel, regularAdaptiveRef.current);
+    setLevel(sd);
+  }, []);
+  const handleDisplayLevelChange = useCallback(
+    (nextDisplayLevel) => {
+      displayLevelRef.current = nextDisplayLevel;
+      setDisplayLevel(nextDisplayLevel);
+      setGameActive(false);
+      syncPracticeSourceDifficulty(nextDisplayLevel);
+    },
+    [syncPracticeSourceDifficulty]
+  );
   const [operation, setOperation] = useState("addition"); // לא mixed כברירת מחדל כדי שה-modal לא יפתח אוטומטית
   const {
     grade,
@@ -1059,7 +1097,7 @@ export default function MathMaster() {
   const [practiceQuestion, setPracticeQuestion] = useState(null); // שאלת תרגול
   const [practiceAnswer, setPracticeAnswer] = useState(""); // תשובת התרגול
   const [showLeaderboard, setShowLeaderboard] = useState(false);
-  const [leaderboardLevel, setLeaderboardLevel] = useState("easy");
+  const [leaderboardLevel, setLeaderboardLevel] = useState("regular");
   const [leaderboardData, setLeaderboardData] = useState([]);
   useEffect(() => {
     if (!grade) return;
@@ -1080,12 +1118,22 @@ export default function MathMaster() {
   });
 
   useEffect(() => {
+    displayLevelRef.current = displayLevel;
+  }, [displayLevel]);
+
+  useEffect(() => {
     const snap = consumeMathBookLearningSnapshot();
     if (!snap || snap.gameActive !== true) return;
-    setMode(typeof snap.mode === "string" ? snap.mode : "practice");
-    if (typeof snap.grade === "string") setGrade(snap.grade);
-    if (typeof snap.gradeNumber === "number") setGradeNumber(snap.gradeNumber);
-    if (typeof snap.level === "string") setLevel(snap.level);
+    const migrated = migratePracticeResumeSnapshot(snap, "math");
+    setMode(typeof migrated.mode === "string" ? migrated.mode : "practice");
+    if (typeof migrated.grade === "string") setGrade(migrated.grade);
+    if (typeof migrated.gradeNumber === "number") setGradeNumber(migrated.gradeNumber);
+    if (typeof migrated.displayLevel === "string") {
+      displayLevelRef.current = migrated.displayLevel;
+      setDisplayLevel(migrated.displayLevel);
+    }
+    if (migrated.adaptiveState) regularAdaptiveRef.current = migrated.adaptiveState;
+    if (typeof migrated.level === "string") setLevel(migrated.level);
     if (typeof snap.operation === "string") setOperation(snap.operation);
     setGameActive(true);
     if (snap.currentQuestion) setCurrentQuestion(snap.currentQuestion);
@@ -1433,7 +1481,7 @@ export default function MathMaster() {
     if (showLeaderboard && typeof window !== "undefined") {
       try {
         const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-        const topScores = buildTop10ByScore(saved, leaderboardLevel);
+        const topScores = loadLeaderboardTop10ByDisplayLevel(saved, leaderboardLevel);
         setLeaderboardData(topScores);
       } catch (e) {
         console.error("Error loading leaderboard:", e);
@@ -1547,7 +1595,7 @@ export default function MathMaster() {
       setBestStreak(maxStreak);
 
       if (showLeaderboard) {
-        const topScores = buildTop10ByScore(saved, leaderboardLevel);
+        const topScores = loadLeaderboardTop10ByDisplayLevel(saved, leaderboardLevel);
         setLeaderboardData(topScores);
       }
 
@@ -1985,7 +2033,11 @@ export default function MathMaster() {
 
     mathTrackingOperationKeyRef.current = question.operation;
     if (currentQuestion) setPreviousExplanationQuestion(currentQuestion);
-    const displayQuestion = sanitizeQuestionForStudentDisplay(question);
+    const displayQuestion = tagQuestionWithLevelFields(
+      sanitizeQuestionForStudentDisplay(question),
+      displayLevelRef.current,
+      level
+    );
     setCurrentQuestion(displayQuestion);
     setSelectedAnswer(null);
     setTextAnswer("");
@@ -2091,15 +2143,20 @@ export default function MathMaster() {
   function buildMathSessionStartPayload() {
     const baseMeta = {
       source: "math-master",
-      version: "phase-2d-b2",
+      version: "phase-4-display-level",
     };
     const plannerExtra = plannerNextSessionClientMetaRef.current;
+    const levelFields = buildStudentSessionStartLevelFields(
+      "math",
+      displayLevelRef.current,
+      regularAdaptiveRef.current
+    );
     return {
       subject: "math",
       topic: resolveMathSessionTopic(mathTrackingOperationKeyRef.current || operation),
       mode: reportModeFromGameState(mode, focusedPracticeMode),
       gradeLevel: String(grade || ""),
-      level: String(level || ""),
+      ...levelFields,
       clientMeta:
         plannerExtra && typeof plannerExtra === "object"
           ? mergePlannerSessionClientMeta(baseMeta, plannerExtra)
@@ -2155,6 +2212,16 @@ export default function MathMaster() {
           afterStepByStep: stepByStepViewedRef.current,
         })
       : null;
+    if (questionEngine) {
+      questionEngine.difficulty =
+        question?.sourceDifficulty || question?.difficulty || level || questionEngine.difficulty;
+    }
+    const answerLevelFields = buildStudentAnswerLevelFields(
+      "math",
+      displayLevelRef.current,
+      question?.sourceDifficulty || level,
+      regularAdaptiveRef.current
+    );
     ensureLearningSessionId()
       .then((learningSessionId) => {
         if (!learningSessionId) return;
@@ -2176,11 +2243,14 @@ export default function MathMaster() {
           creditedTimeMs,
           timingStatus,
           gradeLevel: String(grade || ""),
+          ...answerLevelFields,
           clientMeta: {
             source: "math-master",
-            version: "phase-3",
+            version: "phase-4-display-level",
             gradeKey: String(grade || ""),
             afterStepByStep: stepByStepViewedRef.current,
+            displayLevel: answerLevelFields.displayLevel,
+            sourceDifficulty: answerLevelFields.sourceDifficulty,
             ...buildBookContextClientMetaExtras(mode, {
               bookContextRef,
               bookContextConsumedRef,
@@ -2205,11 +2275,26 @@ export default function MathMaster() {
     }
     if (opts.fromAdaptivePlannerRecommendedPractice && opts.plannerSessionMeta && typeof opts.plannerSessionMeta === "object") {
       plannerNextSessionClientMetaRef.current = opts.plannerSessionMeta;
-      if (opts.appliedLevelKey === "easy" || opts.appliedLevelKey === "medium" || opts.appliedLevelKey === "hard") {
-        setLevel(opts.appliedLevelKey);
+      const plannerDisplay = mapPlannerTargetToDisplayLevel(opts.appliedLevelKey, "math");
+      const plannerSource = mapPlannerTargetToSourceDifficulty(opts.appliedLevelKey);
+      if (plannerDisplay) {
+        displayLevelRef.current = plannerDisplay;
+        setDisplayLevel(plannerDisplay);
+      }
+      if (plannerSource === "easy" || plannerSource === "medium") {
+        regularAdaptiveRef.current = createStudentAdaptiveState("math", { internalState: plannerSource });
+      }
+      if (plannerDisplay === "advanced") {
+        setLevel("hard");
+      } else if (plannerSource) {
+        setLevel(plannerSource);
       }
     } else {
       plannerNextSessionClientMetaRef.current = null;
+      if (displayLevelRef.current === "regular") {
+        regularAdaptiveRef.current = createStudentAdaptiveState("math");
+        setLevel("easy");
+      }
     }
     recordSessionProgress({ includePlannerRecommendation: false });
     setAdaptivePlannerRecommendationView(null);
@@ -2280,10 +2365,12 @@ export default function MathMaster() {
       const out = buildRecommendedPracticeFromViewModel(vm);
       if (!out.ok) return;
       setAdaptivePlannerRecommendationView(null);
-      const appliedLevelKey = mapPlannerTargetDifficultyToTriLevel(out.startOptions.targetDifficulty);
+      const appliedLevelKey =
+        mapPlannerTargetToDisplayLevel(out.startOptions.targetDifficulty, "math") ||
+        mapPlannerTargetDifficultyToTriLevel(out.startOptions.targetDifficulty);
       startGame({
         fromAdaptivePlannerRecommendedPractice: true,
-        appliedLevelKey: appliedLevelKey || undefined,
+        appliedLevelKey: appliedLevelKey || out.startOptions.targetDifficulty,
         plannerSessionMeta: {
           plannerRecommended: true,
           plannerNextAction: out.startOptions.nextAction,
@@ -2522,6 +2609,22 @@ export default function MathMaster() {
     const questionId = currentQuestion.id
       ? String(currentQuestion.id)
       : questionFingerprint || `math-${Date.now()}`;
+    if (
+      isStudentAdaptiveActive("math", {
+        displayLevel: displayLevelRef.current,
+        mode: focusedPracticeModeRef.current,
+      })
+    ) {
+      regularAdaptiveRef.current = applyStudentAdaptiveAnswer(
+        "math",
+        regularAdaptiveRef.current,
+        isCorrect,
+        { displayLevel: displayLevelRef.current, mode: focusedPracticeModeRef.current }
+      );
+      if (displayLevelRef.current === "regular") {
+        setLevel(regularAdaptiveRef.current.internalState);
+      }
+    }
     saveAnswerInParallel({
       question: currentQuestion,
       userAnswer: numericAnswer,
@@ -3365,7 +3468,7 @@ export default function MathMaster() {
           desktopHeaderRef={desktopHeaderRef}
           titleAnchorRef={desktopScratchpadAnchorRef}
           title="🧮 מתמטיקה"
-          subtitle={`${playerName || "שחקן"} • ${GRADES[grade].name} • ${LEVELS[level].name} • ${getOperationName(operation)} • ${MODES[mode].name}`}
+          subtitle={`${playerName || "שחקן"} • ${GRADES[grade].name} • ${studentDisplayLevelLabel(displayLevel)} • ${getOperationName(operation)} • ${MODES[mode].name}`}
           onBack={backSafe}
           onCurriculumClick={() => router.push("/learning/curriculum?subject=math")}
           sound={sound}
@@ -3408,7 +3511,7 @@ export default function MathMaster() {
             </div>
             <p className={MB.pageSub}>
               {playerName || "שחקן"} • {GRADES[grade].name} •{" "}
-              {LEVELS[level].name} • {getOperationName(operation)} •{" "}
+              {studentDisplayLevelLabel(displayLevel)} • {getOperationName(operation)} •{" "}
               {MODES[mode].name}
             </p>
           </div>
@@ -3782,7 +3885,7 @@ export default function MathMaster() {
                       📈 תרגול מדורג
                     </div>
                     <div className="text-sm text-white/70">
-                      התחל קל והתקדם לקשה יותר
+                      תרגול מדורג — מתחיל ברמה נמוכה ומתקדם לרמה שבחרת
                     </div>
                   </button>
                   
@@ -3880,21 +3983,13 @@ export default function MathMaster() {
                     </option>
                   ))}
                 </select>
-                <select
-                  value={level}
-                  title={LEVELS[level]?.name}
-                  onChange={(e) => {
-                    setLevel(e.target.value);
-                    setGameActive(false);
-                  }}
+                <StudentDisplayLevelSelect
+                  subjectId="math"
+                  value={displayLevel}
+                  title={studentDisplayLevelLabel(displayLevel)}
+                  onChange={handleDisplayLevelChange}
                   className={`${MB.selectControl} shrink-0 min-w-0 w-[5rem] max-w-[5.5rem] md:w-[5.75rem] md:max-w-[6.25rem]`}
-                >
-                  {Object.keys(LEVELS).map((lvl) => (
-                    <option key={lvl} value={lvl}>
-                      {LEVELS[lvl].name}
-                    </option>
-                  ))}
-                </select>
+                />
                 <div className="flex flex-1 min-w-0 md:flex-none md:max-w-[min(22rem,42vw)] items-center gap-1.5 md:gap-2 shrink">
                   <select
                     ref={operationSelectRef}
@@ -5702,18 +5797,20 @@ export default function MathMaster() {
 
                 {/* Level Selection */}
                 <div className="flex gap-2 mb-4 justify-center" dir="rtl">
-                  {Object.keys(LEVELS).reverse().map((lvl) => (
+                  {studentDisplayLevelKeys("math").slice().reverse().map((dl) => (
                     <button
-                      key={lvl}
+                      key={dl}
                       onClick={() => {
-                        setLeaderboardLevel(lvl);
+                        setLeaderboardLevel(dl);
                         if (typeof window !== "undefined") {
                           try {
                             const saved = JSON.parse(
                               localStorage.getItem(STORAGE_KEY) || "{}"
                             );
-                            const topScores = buildTop10ByScore(saved, lvl);
-                            setLeaderboardData(topScores);
+                            const sourceKeys = dl === "advanced" ? ["hard"] : ["easy", "medium"];
+                            const merged = sourceKeys.flatMap((sk) => buildTop10ByScore(saved, sk));
+                            merged.sort((a, b) => (b.score || 0) - (a.score || 0));
+                            setLeaderboardData(merged.slice(0, 10));
                           } catch (e) {
                             console.error(
                               "שגיאה בטעינת לוח התוצאות:",
@@ -5723,12 +5820,12 @@ export default function MathMaster() {
                         }
                       }}
                       className={`px-3 py-2 rounded-lg font-bold text-sm transition-all ${
-                        leaderboardLevel === lvl
+                        leaderboardLevel === dl
                           ? "bg-amber-500/80 text-white"
                           : "bg-white/10 text-white/70 hover:bg-white/20"
                       }`}
                     >
-                      {LEVELS[lvl].name}
+                      {studentDisplayLevelLabel(dl)}
                     </button>
                   ))}
                 </div>
@@ -5760,7 +5857,7 @@ export default function MathMaster() {
                             className="text-white/60 p-4 text-sm"
                           >
                             עדיין אין תוצאות ברמה{" "}
-                            {LEVELS[leaderboardLevel].name}
+                            {studentDisplayLevelLabel(leaderboardLevel)}
                           </td>
                         </tr>
                       ) : (

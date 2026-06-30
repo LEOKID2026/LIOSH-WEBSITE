@@ -8,7 +8,8 @@ set "SUBJECTS=math,geometry,hebrew,english,science,moledet-geography,history"
 
 echo.
 echo ============================================================
-echo   MASS 1000 PREFLIGHT — final launch subjects + history
+echo   MASS 1000 PREFLIGHT — 2-level model (regular + advanced), science regular-only
+echo   final launch subjects + history
 echo   subjects: %SUBJECTS%
 echo   Closed PASS runs (do not touch):
 echo     mass-2026-06-28T06-22-20

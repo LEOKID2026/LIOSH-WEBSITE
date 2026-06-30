@@ -184,6 +184,7 @@ export async function provisionMassAccounts({
         grade: student.grade,
         profile: student.profile.id,
         primarySubject: student.primarySubject,
+        displayLevel: student.displayLevel,
       });
     }
 

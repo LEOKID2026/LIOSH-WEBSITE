@@ -8,6 +8,8 @@ import {
 } from "../../lib/classroom-activities/assigned-activity-topic-options.js";
 import { activitySubjectsForGrade, subjectLabelHe } from "../../lib/teacher-portal/teacher-ui.he.js";
 import AssignedActivityQuestionDisplay from "../classroom-activities/AssignedActivityQuestionDisplay.jsx";
+import ActivityDisplayLevelSelector from "../classroom-activities/ActivityDisplayLevelSelector.jsx";
+import { writeActivityDifficultyFromDisplayLevel } from "../../lib/learning/activity-display-level.js";
 import ParentSentActivitiesPanel from "./ParentSentActivitiesPanel.jsx";
 import { trackProductEvent } from "../../lib/analytics/track-event.client.js";
 import { getParentPortalTheme } from "../../lib/parent-ui/parent-portal-theme.client.js";
@@ -64,7 +66,7 @@ export default function AssignActivityModal({
   const [topic, setTopic] = useState(() =>
     defaultTopicForAssignedActivity("math", profileGradeKey || FALLBACK_ACTIVITY_GRADE)
   );
-  const [difficulty, setDifficulty] = useState("easy");
+  const [displayLevel, setDisplayLevel] = useState("regular");
   const [questionCountInput, setQuestionCountInput] = useState("");
   const [preview, setPreview] = useState([]);
   const [busy, setBusy] = useState(false);
@@ -111,7 +113,7 @@ export default function AssignActivityModal({
         subject,
         gradeLevel: activityGradeKey,
         topic,
-        difficulty,
+        difficulty: displayLevel,
         count,
       });
       setPreview(qs || []);
@@ -120,7 +122,7 @@ export default function AssignActivityModal({
     } finally {
       setBusy(false);
     }
-  }, [subject, activityGradeKey, topic, difficulty, questionCountInput]);
+  }, [subject, activityGradeKey, topic, displayLevel, questionCountInput]);
 
   const sendActivity = useCallback(async () => {
     if (!activityGradeKey) {
@@ -157,7 +159,7 @@ export default function AssignActivityModal({
           topic,
           mode: PARENT_ACTIVITY_MODE,
           gradeLevel: activityGradeKey,
-          difficultyLevel: difficulty,
+          difficultyLevel: writeActivityDifficultyFromDisplayLevel(displayLevel, subject),
           questionCount: count,
           questionSet: preview,
         }),
@@ -197,7 +199,7 @@ export default function AssignActivityModal({
     student.id,
     subject,
     topic,
-    difficulty,
+    displayLevel,
     questionCountInput,
     activityGradeKey,
     onSuccess,
@@ -329,27 +331,19 @@ export default function AssignActivityModal({
             ) : null}
           </label>
 
-          <fieldset className="block text-sm">
-            <legend className={`${T.label} mb-1`}>רמת קושי</legend>
-            <div className="flex flex-wrap gap-3">
-              {["easy", "medium", "hard"].map((level) => (
-                <label key={level} className="flex items-center gap-1">
-                  <input
-                    type="radio"
-                    name="difficulty"
-                    value={level}
-                    checked={difficulty === level}
-                    onChange={() => {
-                      setDifficulty(level);
-                      setPreview([]);
-                    }}
-                    disabled={busy}
-                  />
-                  {level === "easy" ? "קל" : level === "medium" ? "בינוני" : "קשה"}
-                </label>
-              ))}
-            </div>
-          </fieldset>
+          <ActivityDisplayLevelSelector
+            subjectId={subject}
+            value={displayLevel}
+            onChange={(dl) => {
+              setDisplayLevel(dl);
+              setPreview([]);
+            }}
+            disabled={busy}
+            variant="radio"
+            label="רמה"
+            className="block text-sm"
+            name="parent-activity-display-level"
+          />
         </div>
 
         <div className="flex flex-wrap gap-2 items-center">

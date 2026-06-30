@@ -971,7 +971,7 @@ export const SCIENCE_QUESTIONS_PHASE3 = [
     "explanation": "שחזור (replication) מחזק אמון: אם דפוס חוזר, הסיכוי שהוא 'קולע במקרה' קטן. זה חלק מתרבות האימות במדע.",
     "theoryLines": [
       "אמינות נבנית מנתונים חוזרים ומאיזון שגיאות.",
-      "מדע מתקדם דרך בדיקה חוצת מעבדות."
+      "מדע מתבסס על בדיקה חוצת מעבדות."
     ],
     "params": {
       "patternFamily": "sci_experiments_scientific_method",
@@ -1670,7 +1670,7 @@ export const SCIENCE_QUESTIONS_PHASE3 = [
     "correctIndex": 0,
     "explanation": "שקיפות מתודולוגית היא חלק מאחריות: בלי פרוטוקול ברור, קשה להפריד בין תגלית לבין טעות או מזל.",
     "theoryLines": [
-      "מדע מתקדם דרך ביקורת חוזרת.",
+      "מדע מתבסס על ביקורת חוזרת.",
       "תיעוד מלא מגן גם על חוקרים — פחות אי הבנות."
     ],
     "params": {

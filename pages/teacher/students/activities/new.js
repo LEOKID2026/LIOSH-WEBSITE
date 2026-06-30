@@ -14,6 +14,8 @@ import {
 } from "../../../../lib/classroom-activities/assigned-activity-topic-options.js";
 import { formatGradeLevelHe } from "../../../../lib/learning-student-defaults.js";
 import AssignedActivityQuestionDisplay from "../../../../components/classroom-activities/AssignedActivityQuestionDisplay.jsx";
+import ActivityDisplayLevelSelector from "../../../../components/classroom-activities/ActivityDisplayLevelSelector.jsx";
+import { writeActivityDifficultyFromDisplayLevel } from "../../../../lib/learning/activity-display-level.js";
 import AssignedActivityBidiText from "../../../../components/classroom-activities/AssignedActivityBidiText.jsx";
 
 const MODES = ["guided_practice", "quiz", "homework", "discussion"];
@@ -34,7 +36,7 @@ export default function TeacherPrivateStudentsNewActivityPage() {
   const [gradeKey, setGradeKey] = useState("g3");
   const [topic, setTopic] = useState(() => defaultTopicForAssignedActivity("math", "g3"));
   const [mode, setMode] = useState("guided_practice");
-  const [difficulty, setDifficulty] = useState("medium");
+  const [displayLevel, setDisplayLevel] = useState("regular");
   const [questionCount, setQuestionCount] = useState(5);
   const [timeLimitSeconds, setTimeLimitSeconds] = useState("");
   const [dueAt, setDueAt] = useState("");
@@ -136,7 +138,7 @@ export default function TeacherPrivateStudentsNewActivityPage() {
         subject,
         gradeLevel: gradeKey,
         topic,
-        difficulty,
+        difficulty: displayLevel,
         count: mode === "discussion" ? 1 : questionCount,
       });
       setPreview(qs || []);
@@ -145,7 +147,7 @@ export default function TeacherPrivateStudentsNewActivityPage() {
     } finally {
       setBusy(false);
     }
-  }, [subject, gradeKey, topic, difficulty, mode, questionCount]);
+  }, [subject, gradeKey, topic, displayLevel, mode, questionCount]);
 
   const createActivity = useCallback(async () => {
     if (selectedIds.size === 0) { setError("נא לבחור לפחות ילד/ה אחד"); return; }
@@ -163,7 +165,7 @@ export default function TeacherPrivateStudentsNewActivityPage() {
         topic,
         mode,
         questionSelection: "same_exact",
-        difficultyLevel: difficulty,
+        difficultyLevel: writeActivityDifficultyFromDisplayLevel(displayLevel, subject),
         questionCount: mode === "discussion" ? 1 : questionCount,
         questionSet: mode === "discussion" ? preview.slice(0, 1) : preview,
       };
@@ -202,7 +204,7 @@ export default function TeacherPrivateStudentsNewActivityPage() {
       setBusy(false);
     }
   }, [
-    selectedIds, title, subject, topic, mode, difficulty, questionCount,
+    selectedIds, title, subject, topic, mode, displayLevel, questionCount,
     timeLimitSeconds, dueAt, preview, accessToken, router,
   ]);
 
@@ -407,19 +409,17 @@ export default function TeacherPrivateStudentsNewActivityPage() {
               </select>
             </label>
 
-            <label className="block text-sm">
-              <span className="text-white/70">רמת קושי</span>
-              <select
-                className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
-                value={difficulty}
-                onChange={(e) => { setDifficulty(e.target.value); setPreview([]); }}
-              >
-                <option value="easy">קל</option>
-                <option value="medium">בינוני</option>
-                <option value="hard">קשה</option>
-                <option value="mixed">מעורב</option>
-              </select>
-            </label>
+            <ActivityDisplayLevelSelector
+              subjectId={subject}
+              value={displayLevel}
+              onChange={(dl) => {
+                setDisplayLevel(dl);
+                setPreview([]);
+              }}
+              variant="select"
+              label="רמה"
+              inputClassName="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
+            />
 
             {mode !== "discussion" ? (
               <label className="block text-sm">

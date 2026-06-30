@@ -83,6 +83,16 @@ export const STUDENT_STEM_METADATA_LEAK_CHECKS = [
     label: "school inquiry framing prefix",
   },
   {
+    id: "topic_question_frame",
+    re: /^שאלה בנושא:\s*/u,
+    label: "שאלה בנושא metadata prefix",
+  },
+  {
+    id: "bkita_leading_prefix",
+    re: /^בכיתה\s+[^:]+:\s*/u,
+    label: "בכיתה leading metadata prefix",
+  },
+  {
     id: "level_en_token",
     re: /(?:^|[·•—(])\s*(easy|medium|hard)\s*(?:[):·•—]|$)/iu,
     label: "English level token as metadata",
@@ -100,6 +110,11 @@ export function sanitizeStudentQuestionStem(text) {
   // Debug / bank batch markers
   t = t.replace(/סימון\s+ייחודי\s*[\u0590-\u05FFa-zA-Z0-9]*\s*/gu, "");
   t = t.replace(/(?:במסגרת\s+)?חקר\s+בית[\s -]?ספרי\s*:\s*/gu, "");
+  t = t.replace(/^שאלה בנושא:\s*/u, "");
+
+  // Science / batch opener: "בכיתה … : …" (grade/topic metadata — not in-question classroom context)
+  t = t.replace(new RegExp(`^בכיתה\\s+${GRADE_HEB}\\s*:\\s*`, "u"), "");
+  t = t.replace(/^בכיתה\s+[^:]+:\s*/u, "");
 
   // Science / batch opener: "בכיתה ה׳ — רמה בינונית: …" (metadata header only — not in-question grade mentions)
   t = t.replace(

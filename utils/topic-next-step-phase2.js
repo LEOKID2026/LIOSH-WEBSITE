@@ -18,6 +18,8 @@ import {
   meaningExplainSentenceHe,
   preliminarySignalHe,
 } from "./parent-report-language/parent-report-hebrew-copy-spec.js";
+import { isScienceSubjectId } from "../lib/learning/display-level.js";
+import { resolveRowDisplayLevelKey } from "../lib/learning/parent-report-display-level.js";
 
 const VAGUE_FOUNDATION_PHRASE = /חלקים פשוטים יותר|יסוד שעליו הוא נשען/i;
 
@@ -234,6 +236,8 @@ export function applyPhase2GuardsToStep(proposed, ctx) {
   const blockers = [];
   const traceAdds = [];
   let phase2RuleId = "phase2_pass_through";
+  const subjectId = row?.subjectId || row?.subject || null;
+  const displayLevel = resolveRowDisplayLevelKey(subjectId, row);
 
   const pushTrace = (id, detailHe, fromStep, toStep) => {
     traceAdds.push({
@@ -255,6 +259,22 @@ export function applyPhase2GuardsToStep(proposed, ctx) {
 
   const isDrop = step === "drop_one_level_topic_only" || step === "drop_one_grade_topic_only";
   const isAdvance = step === "advance_level" || step === "advance_grade_topic_only";
+
+  if (isScienceSubjectId(subjectId) && isAdvance) {
+    apply(
+      "science_regular_only_block_advance",
+      "במדעים נשארים בתרגול רגיל בלבד.",
+      "maintain_and_strengthen"
+    );
+  }
+
+  if (displayLevel === "advanced" && isDrop) {
+    apply(
+      "advanced_failure_not_fundamental",
+      "האתגר במתקדם היה גבוה כרגע. מומלץ לחזור לתרגול רגיל.",
+      "suggest_return_to_regular"
+    );
+  }
 
   if (hintDependenceRiskActive(riskFlags) && isAdvance) {
     apply(
@@ -666,7 +686,7 @@ export function buildPhase9RecommendationOverlay(p) {
   } else if ((mp === "concept_confusion" || mp === "procedure_break") && tr !== "ready") {
     reviewBeforeAdvanceHe = "לסגור מעגל טעויות דומות באותה רמה לפני קפיצה קדימה.";
   } else if (hint && tr !== "ready") {
-    reviewBeforeAdvanceHe = "לצמצם הילד עדיין נעזר ברמזים לפני שמנסים רמה קשה יותר.";
+    reviewBeforeAdvanceHe = "הילד עדיין נעזר ברמזים, לכן כדאי להמשיך בתרגול רגיל לפני מעבר למתקדם.";
   }
 
   let mistakeFocusedActionHe = "";

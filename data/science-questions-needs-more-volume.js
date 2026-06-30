@@ -1419,7 +1419,7 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
     "minLevel": "easy",
     "maxLevel": "easy",
     "type": "mcq",
-    "stem": "מה עושה צמח ליונק herbivore?",
+    "stem": "מה עושה צמח ליונק אוכל עשב?",
     "options": [
       "משמש מזון",
       "צד טרף",
@@ -2389,7 +2389,7 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
       "מדלגים"
     ],
     "correctIndex": 0,
-    "explanation": "מדע מתקדם מהפרכה.",
+    "explanation": "מדע מתפתח מהפרכה.",
     "params": {
       "patternFamily": "sci_vol_experiments_g5_medium_hypothesis_reject",
       "subtype": "sci_experiments_general",
@@ -2603,7 +2603,7 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
     "minLevel": "medium",
     "maxLevel": "medium",
     "type": "mcq",
-    "stem": "למה חשוב לשמור על בית גידול? (הקשר g5 medium)",
+    "stem": "למה חשוב לשמור על בית גידול?",
     "options": [
       "מספק מזון ומחסה",
       "מונע גידול",
@@ -2640,7 +2640,7 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
     "minLevel": "medium",
     "maxLevel": "medium",
     "type": "mcq",
-    "stem": "מה מחזור חיים של פרפר? (הקשר g5 medium)",
+    "stem": "מה מחזור חיים של פרפר?",
     "options": [
       "ביצה, זחל, גולם, בוגר",
       "רק בוגר",
@@ -2677,7 +2677,7 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
     "minLevel": "hard",
     "maxLevel": "hard",
     "type": "mcq",
-    "stem": "למה לדג יש סנפירים? (הקשר g5 hard)",
+    "stem": "למה לדג יש סנפירים?",
     "options": [
       "לשחייה ושיווי משקל",
       "לתעופה",
@@ -2714,7 +2714,7 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
     "minLevel": "hard",
     "maxLevel": "hard",
     "type": "mcq",
-    "stem": "מה מאפיין עוף לעומת דג? (הקשר g5 hard)",
+    "stem": "מה מאפיין עוף לעומת דג?",
     "options": [
       "נושם באוויר בנוסף",
       "חי רק במים",
@@ -2751,7 +2751,7 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
     "minLevel": "medium",
     "maxLevel": "medium",
     "type": "mcq",
-    "stem": "למה חשובה היגיינת פה יומית? (הקשר g6 medium)",
+    "stem": "למה חשובה היגיינת פה יומית?",
     "options": [
       "למניעת עששת",
       "כדי לעצור נשימה",
@@ -2788,7 +2788,7 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
     "minLevel": "medium",
     "maxLevel": "medium",
     "type": "mcq",
-    "stem": "מה קורה בעת שינה מספקת? (הקשר g6 medium)",
+    "stem": "מה קורה בעת שינה מספקת?",
     "options": [
       "הגוף נח ומתאושש",
       "העיכול נעצר לחלוטין",
@@ -2825,7 +2825,7 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
     "minLevel": "hard",
     "maxLevel": "hard",
     "type": "mcq",
-    "stem": "למה חשוב לאכול ארוחה מאוזנת? (הקשר g6 hard)",
+    "stem": "למה חשוב לאכול ארוחה מאוזנת?",
     "options": [
       "לספק חומרי מזון שונים",
       "כדי לבטל עיכול",
@@ -2862,7 +2862,7 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
     "minLevel": "hard",
     "maxLevel": "hard",
     "type": "mcq",
-    "stem": "מה תפקיד השיניים בפה? (הקשר g6 hard)",
+    "stem": "מה תפקיד השיניים בפה?",
     "options": [
       "לקטום ולהתחיל עיכול",
       "לייצר חמצן",
@@ -2899,7 +2899,7 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
     "minLevel": "medium",
     "maxLevel": "medium",
     "type": "mcq",
-    "stem": "מה קורה כשמדידה חריגה אחת? (הקשר g6 medium)",
+    "stem": "מה קורה כשמדידה חריגה אחת?",
     "options": [
       "בודקים אם טעות",
       "מוחקים הכל",
@@ -2936,7 +2936,7 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
     "minLevel": "medium",
     "maxLevel": "medium",
     "type": "mcq",
-    "stem": "למה חשוב יחידות מידה? (הקשר g6 medium)",
+    "stem": "למה חשוב יחידות מידה?",
     "options": [
       "להבין גודל אמיתי",
       "לציור בלבד",
@@ -2973,7 +2973,7 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
     "minLevel": "medium",
     "maxLevel": "medium",
     "type": "mcq",
-    "stem": "מה עושה תצפית מדויקת? (הקשר g6 medium)",
+    "stem": "מה עושה תצפית מדויקת?",
     "options": [
       "אוספת מידע בלי הטיה",
       "מוחקת נתונים",
@@ -3010,7 +3010,7 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
     "minLevel": "easy",
     "maxLevel": "easy",
     "type": "mcq",
-    "stem": "מה מאפיין זוחל? (הקשר g6 easy)",
+    "stem": "מה מאפיין זוחל?",
     "options": [
       "עור יבש ושיניים",
       "זימים במים",
@@ -3047,7 +3047,7 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
     "minLevel": "easy",
     "maxLevel": "easy",
     "type": "mcq",
-    "stem": "מה עושה צמח ליונק herbivore? (הקשר g6 easy)",
+    "stem": "מה עושה צמח ליונק אוכל עשב?",
     "options": [
       "משמש מזון",
       "צד טרף",
@@ -3084,7 +3084,7 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
     "minLevel": "easy",
     "maxLevel": "easy",
     "type": "mcq",
-    "stem": "למה לדג יש סנפירים? (הקשר g6 easy)",
+    "stem": "למה לדג יש סנפירים?",
     "options": [
       "לשחייה ושיווי משקל",
       "לתעופה",
@@ -3121,7 +3121,7 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
     "minLevel": "easy",
     "maxLevel": "easy",
     "type": "mcq",
-    "stem": "מה מאפיין עוף לעומת דג? (הקשר g6 easy)",
+    "stem": "מה מאפיין עוף לעומת דג?",
     "options": [
       "נושם באוויר בנוסף",
       "חי רק במים",
@@ -3158,7 +3158,7 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
     "minLevel": "hard",
     "maxLevel": "hard",
     "type": "mcq",
-    "stem": "מה תפקיד האבקה לצמח? (הקשר g6 hard)",
+    "stem": "מה תפקיד האבקה לצמח?",
     "options": [
       "מאבקת פרחים",
       "שוחה",
@@ -3195,7 +3195,7 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
     "minLevel": "hard",
     "maxLevel": "hard",
     "type": "mcq",
-    "stem": "למה חשוב מגוון בעלי חיים? (הקשר g6 hard)",
+    "stem": "למה חשוב מגוון בעלי חיים?",
     "options": [
       "מייצב מערכת אקולוגית",
       "מונע גשם",

@@ -3,6 +3,7 @@ import crypto from "node:crypto";
 import { classifyActivityEvidence } from "../../../../lib/learning/activity-classification.js";
 import { estimatePracticeDurationSeconds } from "../../../../lib/parent-server/report-duration-sanity.js";
 import { insertParentAssignedActivity } from "./parent-activity-seeder.mjs";
+import { resolvePracticeDisplayLevel } from "./display-level-cohort.mjs";
 import { buildRichAnswerPayload, SEED_META_KEY } from "./seed-metadata.mjs";
 import { resolveSessionSubject } from "./subject-registry.mjs";
 
@@ -30,7 +31,12 @@ function isoDayOffset(startDay, offset) {
 }
 
 function answerPayload(opts) {
-  return buildRichAnswerPayload({ ...opts, speedPressure: opts.mode === "speed" && !opts.isCorrect });
+  return buildRichAnswerPayload({
+    ...opts,
+    speedPressure: opts.mode === "speed" && !opts.isCorrect,
+    displayLevel: opts.displayLevel,
+    answerIndex: opts.answerIndex ?? 0,
+  });
 }
 
 /**
@@ -96,11 +102,13 @@ export function buildStudentActivityPlan(student, { days, minutesPerDay, startDa
       }
 
       if (answers.length) {
+        const sessionDisplayLevel = resolvePracticeDisplayLevel(subject, student.displayLevel);
         sessions.push({
           type: "self_practice",
           subject,
           topic,
           grade: student.grade,
+          displayLevel: sessionDisplayLevel,
           mode: "practice",
           answers,
         });
@@ -117,6 +125,7 @@ export function buildStudentActivityPlan(student, { days, minutesPerDay, startDa
         subject,
         topic,
         grade: student.grade,
+        displayLevel: resolvePracticeDisplayLevel(subject, student.displayLevel),
         count: parentQuestions,
         wrongCount,
         day,
@@ -142,6 +151,7 @@ export async function insertSelfPracticeSession(supabase, studentId, runId, sess
     mode: session.mode || "practice",
     gameMode: session.mode || "practice",
     gradeLevel: session.grade,
+    displayLevel: session.displayLevel || "regular",
     [SEED_META_KEY]: runId,
     summary: {
       totalQuestions: session.answers.length,
@@ -182,6 +192,8 @@ export async function insertSelfPracticeSession(supabase, studentId, runId, sess
       topic: session.topic,
       mode: session.mode,
       grade: session.grade,
+      displayLevel: session.displayLevel || "regular",
+      answerIndex: i,
       isCorrect: a.isCorrect,
       timeSpentMs: a.timeSpentMs ?? 5000,
       speedPressure: session.speedPressure === true,

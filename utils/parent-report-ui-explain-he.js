@@ -504,7 +504,7 @@ export function transferReadinessLineHe(rowOrRec) {
   const tr = String(src.transferReadiness || "").trim();
   if (!tr || tr === "unknown") return "";
   const map = {
-    not_ready: "מעבר לרמה קשה יותר: לא עכשיו — קודם חיזוק באותה רמה.",
+    not_ready: "מעבר למתקדם: לא עכשיו — קודם חיזוק בתרגול רגיל.",
     limited: "מעבר: רק ניסיונות קטנים באותו נושא.",
     emerging: "מעבר: אפשר צעד קטן בתוך הנושא בלבד.",
     ready: "מעבר: נראה מוכנות זהירה לצעד הבא.",

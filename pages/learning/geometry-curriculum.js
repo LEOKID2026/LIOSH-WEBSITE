@@ -103,8 +103,8 @@ export default function GeometryCurriculum() {
                     <strong>6 כיתות</strong>: א׳, ב׳, ג׳, ד׳, ה׳, ו׳
                   </li>
                   <li>
-                    <strong>{LEVELS.easy.name}, {LEVELS.medium.name}, {LEVELS.hard.name}</strong> (
-                    {Object.keys(LEVELS).length} רמות קושי) לכל כיתה
+                    <strong>רגיל, מתקדם</strong> (
+                    {2} רמות תרגול) לכל כיתה
                   </li>
                   <li>
                     <strong>{topicCountLabel} נושאי גאומטריה</strong> במפת הנושאים של המוצר (לא כולל &quot;ערבוב&quot; כנושא נפרד בספירה זו)

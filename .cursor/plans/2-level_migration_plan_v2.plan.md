@@ -9,22 +9,22 @@ todos:
     status: completed
   - id: phase1-ssot
     content: "Phase 1: display-level.js + regular-internal-adaptive.js + science-internal-adaptive.js + unit tests"
-    status: pending
+    status: completed
   - id: phase2-generators
     content: "Phase 2: עדכון כל נתיבי בחירת השאלות / generators עבור 8 מקצועות ההשקה, כולל מיפוי רגיל/מתקדם, sourceDifficulty, adaptive פנימי, ותיקון mixed→mapping החדש"
-    status: pending
+    status: completed
   - id: phase3-evidence
     content: "Phase 3: session/answer API + diagnostic-evidence + aggregate + resume compat"
-    status: pending
+    status: completed
   - id: phase4-student-ui
     content: "Phase 4: 8 masters + curriculum — רגיל/מתקדם בכל מקצוע חוץ ממדעים (regular-only)"
-    status: pending
+    status: completed
   - id: phase5-activities
     content: "Phase 5: parent/teacher activities + backward compat mapper"
-    status: pending
+    status: completed
   - id: phase6-reports
     content: "Phase 6: parent report + topic-next-step (עדכון מנוע קיים) + copy guards + truth regen"
-    status: pending
+    status: completed
   - id: phase7-qa
     content: "Phase 7: tests + visual QA + eight-subject smoke + inventory matrix"
     status: pending

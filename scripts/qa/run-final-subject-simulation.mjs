@@ -27,7 +27,7 @@ import {
   resolveSimulationPort,
   waitForServerReady,
 } from "./lib/final-subject-simulation/port-resolver.mjs";
-import { printConsoleSummary, writeSimulationReports } from "./lib/final-subject-simulation/reports.mjs";
+import { printConsoleSummary, writeSimulationReports, collectFailures } from "./lib/final-subject-simulation/reports.mjs";
 import { runSubjectSimulation, smokeParentReport } from "./lib/final-subject-simulation/subject-runner.mjs";
 
 const REPO_ROOT = getRepoRoot();
@@ -131,7 +131,6 @@ async function main() {
 
   const browser = await chromium.launch({ headless: true });
   const subjects = {};
-  const failures = [];
 
   for (const subjectKey of FINAL_SIMULATION_SUBJECT_KEYS) {
     const label = FINAL_SIMULATION_SUBJECT_LABELS_HE[subjectKey] || subjectKey;
@@ -143,21 +142,12 @@ async function main() {
     });
     subjects[subjectKey] = result;
     tee.write(`${label}: ${result.pass ? "PASS" : "FAIL"}\n`);
-    if (!result.pass) {
-      failures.push({
-        subject: subjectKey,
-        subjectLabel: label,
-        grade: result.grade,
-        topic: result.topic,
-        step: Object.entries(result.steps).find(([, v]) => !v.pass)?.[0] || "unknown",
-        error: result.error || "check failed",
-        logFile: rawLogPath,
-      });
-    }
   }
 
   const parentReport = await smokeParentReport(browser, baseUrl);
   await browser.close();
+
+  const failures = collectFailures(subjects, rawLogPath);
 
   const allPass =
     FINAL_SIMULATION_SUBJECT_KEYS.every((k) => subjects[k]?.pass) &&

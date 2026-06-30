@@ -20,6 +20,8 @@ echo ============================================================
 
 echo   FINAL SUBJECT SIMULATION (7 subjects incl. history)
 
+echo   Display levels: regular/advanced (science regular-only)
+
 echo   Port range: 3200-3210 (default %PREFERRED_PORT%)
 
 echo   Does NOT use dev ports 3000-3003

@@ -33,10 +33,16 @@ import { backfillParentActivityAttempts } from "./lib/mass-virtual-students/pare
 import { printPreflightReport, runMassSimulationPreflight } from "./lib/mass-virtual-students/preflight.mjs";
 import {
   buildCoverageRows,
+  buildLevelCoverageRows,
   computePassVerdict,
   syncMassStudentDisplayNames,
   verifyParentReports,
 } from "./lib/mass-virtual-students/reports.mjs";
+import {
+  displayLevelsForSubject,
+  resolvePracticeDisplayLevel,
+  summarizeCohortLevelDistribution,
+} from "./lib/mass-virtual-students/display-level-cohort.mjs";
 import { createServiceClient } from "./lib/mass-virtual-students/supabase.mjs";
 
 function isoTodayMinusDays(days) {
@@ -297,7 +303,7 @@ async function main() {
 
   console.log(`[mass-sim] runId=${cfg.runId} students=${cfg.students} parents=${cfg.parents} days=${cfg.days}${cfg.focusProfile ? ` focus=${cfg.focusProfile}` : ""}`);
 
-  const { cohort, studentsPerParent, coverageMatrix } = buildPlannedCohort({
+  const { cohort, studentsPerParent, coverageMatrix, levelCoverageMatrix } = buildPlannedCohort({
     students: cfg.students,
     parents: cfg.parents,
     subjects: cfg.subjects,
@@ -339,6 +345,7 @@ async function main() {
         students: provisioned.students,
         createdAt: new Date().toISOString(),
         coverageMatrix,
+        levelCoverageMatrix,
       });
       simLog(`[mass-sim] manifest written → ${cfg.reportDir}/manifest.json`);
     }
@@ -354,13 +361,14 @@ async function main() {
         password: cfg.password,
         childrenCount: p.children?.length ?? 0,
       })),
-      manifest: { runId: cfg.runId, dryRun: true, cohort, coverageMatrix },
+      manifest: { runId: cfg.runId, dryRun: true, cohort, coverageMatrix, levelCoverageMatrix },
       coverageRows: buildCoverageRows({
         cohort,
         seededStats: { bySubjectGrade: {} },
         subjects: cfg.subjects,
         grades: cfg.grades,
       }),
+      coverageLevelRows: buildLevelCoverageRows(cohort, cfg.subjects, cfg.grades, {}),
       engineFindings: [],
       reportResults: [],
       errors: [],
@@ -386,6 +394,7 @@ async function main() {
   let totalParentActivities = 0;
   const seedErrors = [];
   const bySubjectGrade = {};
+  const bySubjectGradeLevel = {};
   const seededStudentIds = new Set();
 
   const priorCheckpoint = cfg.resume ? await loadResumeCheckpoint(cfg.reportDir) : null;
@@ -436,6 +445,11 @@ async function main() {
 
     const key = `${student.primarySubject}:${student.grade}`;
     bySubjectGrade[key] = (bySubjectGrade[key] || 0) + 1;
+
+    const cohortLevel = cohortStudent?.displayLevel || "regular";
+    const resolvedLevel = resolvePracticeDisplayLevel(student.primarySubject, cohortLevel);
+    const levelKey = `${student.primarySubject}:${student.grade}:${resolvedLevel}`;
+    bySubjectGradeLevel[levelKey] = (bySubjectGradeLevel[levelKey] || 0) + 1;
 
     heartbeatStats.studentsSeeded = seededCount;
     heartbeatStats.totalAnswers = totalAnswers;
@@ -531,6 +545,20 @@ async function main() {
     cfg.subjects.every((sub) => (bySubjectGrade[`${sub}:${g}`] || 0) === 0),
   );
 
+  const levelCoverageGaps = [];
+  for (const subject of cfg.subjects) {
+    for (const grade of cfg.grades) {
+      for (const displayLevel of displayLevelsForSubject(subject)) {
+        const levelKey = `${subject}:${grade}:${displayLevel}`;
+        if ((bySubjectGradeLevel[levelKey] || 0) === 0) {
+          levelCoverageGaps.push(levelKey);
+        }
+      }
+    }
+  }
+
+  const studentsByDisplayLevel = summarizeCohortLevelDistribution(cohort, cfg.subjects);
+
   const summaryBase = {
     runId: cfg.runId,
     parentsCreated: provisioned.parents.length,
@@ -564,6 +592,8 @@ async function main() {
     focusProfile: cfg.focusProfile || null,
     subjectCoverageGaps,
     gradeCoverageGaps,
+    levelCoverageGaps,
+    studentsByDisplayLevel,
     lowCoverageTopics: subjectCoverageGaps.map((s) => SUBJECT_LABELS_HE[s] || s),
     lowCoverageSubskills: [],
     profilesAvailable: BEHAVIOR_PROFILES.map((p) => p.id),
@@ -576,6 +606,7 @@ async function main() {
     ...summaryBase,
     subjectCoverageGaps,
     gradeCoverageGaps,
+    levelCoverageGaps,
   });
 
   await writeAllArtifacts(cfg.reportDir, {
@@ -594,6 +625,9 @@ async function main() {
       seededStats: { bySubjectGrade },
       subjects: cfg.subjects,
       grades: cfg.grades,
+    }),
+    coverageLevelRows: buildLevelCoverageRows(cohort, cfg.subjects, cfg.grades, {
+      bySubjectGradeLevel,
     }),
     engineFindings: reportVerification.engineFindings,
     reportResults: reportVerification.results,

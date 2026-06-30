@@ -164,6 +164,19 @@ import LearningMasterAdSlot from "../../components/learning/LearningMasterAdSlot
 import LearningMasterMobileQuestionActionDock from "../../components/learning/LearningMasterMobileQuestionActionDock.jsx";
 import { StepExerciseUiProvider } from "../../contexts/StepExerciseUiContext.jsx";
 import { formatMathHudNumber } from "../../utils/math-master-hud-number.client.js";
+import { useStudentDisplayLevelPractice } from "../../hooks/useStudentDisplayLevelPractice.js";
+import { StudentDisplayLevelSelect } from "../../components/learning/StudentDisplayLevelSelect.js";
+import {
+  studentDisplayLevelKeys,
+  studentDisplayLevelLabel,
+} from "../../lib/learning-client/student-display-level-practice.js";
+
+function loadLeaderboardTop10ByDisplayLevel(saved, displayLevel) {
+  const sourceKeys = displayLevel === "advanced" ? ["hard"] : ["easy", "medium"];
+  const merged = sourceKeys.flatMap((sk) => buildTop10ByScore(saved, sk));
+  merged.sort((a, b) => (b.score || 0) - (a.score || 0));
+  return merged.slice(0, 10);
+}
 
 const AVATAR_OPTIONS = [
   "👤",
@@ -292,7 +305,26 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
       : null;
   const [mode, setMode] = useState("practice");
 
-  const [level, setLevel] = useState("easy");
+  const {
+    displayLevel,
+    sourceDifficulty: level,
+    handleDisplayLevelChange: onDisplayLevelChange,
+    buildSessionStartLevelFields,
+    buildAnswerLevelFields,
+    tagQuestion,
+    applyAnswerAdaptive,
+    hydrateFromResumeSnapshot,
+    applyPlannerLevelKey,
+    resetAdaptiveForSessionStart,
+    label: displayLevelLabel,
+  } = useStudentDisplayLevelPractice(MG_SUBJECT);
+  const handleDisplayLevelChange = useCallback(
+    (nextDisplayLevel) => {
+      onDisplayLevelChange(nextDisplayLevel);
+      setGameActive(false);
+    },
+    [onDisplayLevelChange]
+  );
   const [operation, setOperation] = useState(() => defaultTopicForVisualStrand(visualStrand));
   const strandTopicsForGrade = useMemo(
     () => filterTopicsForVisualStrand(GRADES[grade]?.topics ?? [], visualStrand),
@@ -347,6 +379,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
         mode,
         grade,
         gradeNumber,
+        displayLevel,
         level,
         operation,
         currentQuestion,
@@ -365,6 +398,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
       mode,
       grade,
       gradeNumber,
+      displayLevel,
       level,
       operation,
       currentQuestion,
@@ -503,6 +537,11 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
   // תרגול ממוקד - שמירת שגיאות ותרגול מדורג
   const [mistakes, setMistakes] = useState([]);
   const [focusedPracticeMode, setFocusedPracticeMode] = useState("normal"); // "normal", "mistakes", "graded"
+  const focusedPracticeModeRef = useRef("normal");
+
+  useEffect(() => {
+    focusedPracticeModeRef.current = focusedPracticeMode;
+  }, [focusedPracticeMode]);
 
   const applyMoledetTopicCreditFromClosed = useCallback(
     (closed, questionForTrack, metaHint) => {
@@ -763,7 +802,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
   const [practiceQuestion, setPracticeQuestion] = useState(null); // שאלת תרגול
   const [practiceAnswer, setPracticeAnswer] = useState(""); // תשובת התרגול
   const [showLeaderboard, setShowLeaderboard] = useState(false);
-  const [leaderboardLevel, setLeaderboardLevel] = useState("easy");
+  const [leaderboardLevel, setLeaderboardLevel] = useState("regular");
   const [leaderboardData, setLeaderboardData] = useState([]);
   // No word problems for Moledet & Geography - all topics are text-based
   useEffect(() => {
@@ -796,7 +835,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
     setMode(typeof snap.mode === "string" ? snap.mode : "practice");
     if (typeof snap.grade === "string") setGrade(snap.grade);
     if (typeof snap.gradeNumber === "number") setGradeNumber(snap.gradeNumber);
-    if (typeof snap.level === "string") setLevel(snap.level);
+    hydrateFromResumeSnapshot(snap);
     if (typeof snap.operation === "string") setOperation(snap.operation);
     setGameActive(true);
     if (snap.currentQuestion) setCurrentQuestion(snap.currentQuestion);
@@ -1109,7 +1148,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
           fromRef && typeof fromRef === "object" && Object.keys(fromRef).length > 0
             ? fromRef
             : JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-        const topScores = buildTop10ByScore(saved, leaderboardLevel);
+        const topScores = loadLeaderboardTop10ByDisplayLevel(saved, leaderboardLevel);
         setLeaderboardData(topScores);
       } catch (e) {
         console.error("Error loading leaderboard:", e);
@@ -1204,7 +1243,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
       setBestStreak(maxStreak);
 
       if (showLeaderboard) {
-        const topScores = buildTop10ByScore(saved, leaderboardLevel);
+        const topScores = loadLeaderboardTop10ByDisplayLevel(saved, leaderboardLevel);
         setLeaderboardData(topScores);
       }
 
@@ -1419,7 +1458,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
     }
     moledetTrackingTopicKeyRef.current =
       question.topic || question.operation || "mixed";
-    const displayQuestion = sanitizeQuestionForStudentDisplay(question);
+    const displayQuestion = tagQuestion(sanitizeQuestionForStudentDisplay(question));
     setCurrentQuestion(displayQuestion);
     setSelectedAnswer(null);
     setFeedback(null);
@@ -1530,7 +1569,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
   function buildMoledetSessionStartPayload() {
     const baseMeta = {
       source: "moledet-geography-master",
-      version: "phase-2d-b7",
+      version: "phase-4-display-level",
     };
     const plannerExtra = plannerNextSessionClientMetaRef.current;
     return {
@@ -1544,7 +1583,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
       ),
       mode: reportModeFromGameState(mode, focusedPracticeMode),
       gradeLevel: String(grade || ""),
-      level: String(level || ""),
+      ...buildSessionStartLevelFields(),
       clientMeta:
         plannerExtra && typeof plannerExtra === "object"
           ? mergePlannerSessionClientMeta(baseMeta, plannerExtra)
@@ -1597,6 +1636,13 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
           afterStepByStep: stepByStepViewedRef.current,
         })
       : null;
+    if (questionEngine) {
+      questionEngine.difficulty =
+        question?.sourceDifficulty || question?.difficulty || level || questionEngine.difficulty;
+    }
+    const answerLevelFields = buildAnswerLevelFields(
+      question?.sourceDifficulty || level
+    );
     ensureLearningSessionId()
       .then((learningSessionId) => {
         if (!learningSessionId) return;
@@ -1618,11 +1664,14 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
           creditedTimeMs,
           timingStatus,
           gradeLevel: String(grade || ""),
+          ...answerLevelFields,
           clientMeta: {
             source: "moledet-geography-master",
-            version: "phase-3",
+            version: "phase-4-display-level",
             gradeKey: String(grade || ""),
             afterStepByStep: stepByStepViewedRef.current,
+            displayLevel: answerLevelFields.displayLevel,
+            sourceDifficulty: answerLevelFields.sourceDifficulty,
             ...buildBookContextClientMetaExtras(mode, {
               bookContextRef,
               bookContextConsumedRef,
@@ -1642,11 +1691,10 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
     }
     if (opts.fromAdaptivePlannerRecommendedPractice && opts.plannerSessionMeta && typeof opts.plannerSessionMeta === "object") {
       plannerNextSessionClientMetaRef.current = opts.plannerSessionMeta;
-      if (opts.appliedLevelKey === "easy" || opts.appliedLevelKey === "medium" || opts.appliedLevelKey === "hard") {
-        setLevel(opts.appliedLevelKey);
-      }
+      applyPlannerLevelKey(opts.appliedLevelKey);
     } else {
       plannerNextSessionClientMetaRef.current = null;
+      resetAdaptiveForSessionStart();
     }
     recordSessionProgress({ includePlannerRecommendation: false });
     setAdaptivePlannerRecommendationView(null);
@@ -1848,6 +1896,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
       expected: currentQuestion.correctAnswer,
       acceptedList: [currentQuestion.correctAnswer],
     });
+    applyAnswerAdaptive(isCorrect, { mode: focusedPracticeModeRef.current });
     saveMoledetAnswerInParallel({
       question: questionForSave,
       userAnswer: answer,
@@ -2475,7 +2524,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
           MB={MB}
           desktopHeaderRef={desktopHeaderRef}
           title={pageTitleHe}
-          subtitle={`${playerName || "שחקן"} • ${GRADES[grade].name} • ${LEVELS[level].name} • ${getOperationName(operation)} • ${MODES[mode].name}`}
+          subtitle={`${playerName || "שחקן"} • ${GRADES[grade].name} • ${displayLevelLabel()} • ${getOperationName(operation)} • ${MODES[mode].name}`}
           onBack={backSafe}
           onCurriculumClick={() => router.push(curriculumHref)}
           sound={sound}
@@ -2518,7 +2567,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
             </div>
             <p className={MB.pageSub}>
               {playerName || "שחקן"} • {GRADES[grade].name} •{" "}
-              {LEVELS[level].name} • {getOperationName(operation)} •{" "}
+              {displayLevelLabel()} • {getOperationName(operation)} •{" "}
               {MODES[mode].name}
             </p>
           </div>
@@ -2888,7 +2937,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
                       📈 תרגול מדורג
                     </div>
                     <div className="text-sm text-white/70">
-                      התחל קל והתקדם לקשה יותר
+                      תרגול מדורג — מתחיל ברמה נמוכה ומתקדם לרמה שבחרת
                     </div>
                   </button>
                   
@@ -2989,21 +3038,13 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
                       </option>
                     ))}
                   </select>
-                  <select
-                    value={level}
-                    title={LEVELS[level]?.name}
-                    onChange={(e) => {
-                      setLevel(e.target.value);
-                      setGameActive(false);
-                    }}
+                  <StudentDisplayLevelSelect
+                    subjectId={MG_SUBJECT}
+                    value={displayLevel}
+                    title={displayLevelLabel()}
+                    onChange={handleDisplayLevelChange}
                     className={`${MB.selectControl} shrink-0 min-w-0 w-[5rem] max-w-[5.5rem] md:w-[5.75rem] md:max-w-[6.25rem]`}
-                  >
-                    {Object.keys(LEVELS).map((lvl) => (
-                      <option key={lvl} value={lvl}>
-                        {LEVELS[lvl].name}
-                      </option>
-                    ))}
-                  </select>
+                  />
                   <div className="flex flex-1 min-w-0 md:flex-none md:max-w-[min(22rem,42vw)] items-center gap-1.5 md:gap-2 shrink">
                     <select
                       ref={operationSelectRef}
@@ -3734,33 +3775,18 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
 
                 {/* Level Selection */}
                 <div className="flex gap-2 mb-4 justify-center" dir="rtl">
-                  {Object.keys(LEVELS).reverse().map((lvl) => (
+                  {studentDisplayLevelKeys(MG_SUBJECT).slice().reverse().map((dl) => (
                     <button
-                      key={lvl}
-                      onClick={() => {
-                        setLeaderboardLevel(lvl);
-                        if (typeof window !== "undefined") {
-                          try {
-                            const saved = JSON.parse(
-                              localStorage.getItem(STORAGE_KEY) || "{}"
-                            );
-                            const topScores = buildTop10ByScore(saved, lvl);
-                            setLeaderboardData(topScores);
-                          } catch (e) {
-                            console.error(
-                              "שגיאה בטעינת לוח התוצאות:",
-                              e
-                            );
-                          }
-                        }
-                      }}
+                      key={dl}
+                      type="button"
+                      onClick={() => setLeaderboardLevel(dl)}
                       className={`px-3 py-2 rounded-lg font-bold text-sm transition-all ${
-                        leaderboardLevel === lvl
+                        leaderboardLevel === dl
                           ? "bg-amber-500/80 text-white"
                           : "bg-white/10 text-white/70 hover:bg-white/20"
                       }`}
                     >
-                      {LEVELS[lvl].name}
+                      {studentDisplayLevelLabel(dl)}
                     </button>
                   ))}
                 </div>
@@ -3792,7 +3818,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
                             className="text-white/60 p-4 text-sm"
                           >
                             עדיין אין תוצאות ברמה{" "}
-                            {LEVELS[leaderboardLevel].name}
+                            {studentDisplayLevelLabel(leaderboardLevel)}
                           </td>
                         </tr>
                       ) : (

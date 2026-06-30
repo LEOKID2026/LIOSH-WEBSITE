@@ -1,7 +1,9 @@
 import crypto from "node:crypto";
 
 import { classifyActivityEvidence } from "../../../../lib/learning/activity-classification.js";
+import { displayLevelToActivityDbEnum } from "../../../../lib/learning/display-level.js";
 import { createServiceClient } from "./supabase.mjs";
+import { resolvePracticeDisplayLevel } from "./display-level-cohort.mjs";
 import { buildRichAnswerPayload, SEED_META_KEY } from "./seed-metadata.mjs";
 import { resolveSessionSubject } from "./subject-registry.mjs";
 
@@ -15,6 +17,8 @@ export async function insertParentAssignedActivity(supabase, parentId, studentId
   const title = `[${runId}] parent ${activityMode} ${session.topic}`;
 
   const sessionSubject = resolveSessionSubject(session.subject);
+  const sessionDisplayLevel = resolvePracticeDisplayLevel(session.subject, session.displayLevel || "regular");
+  const difficultyLevel = displayLevelToActivityDbEnum(sessionDisplayLevel) || "mixed";
 
   const { error: actErr } = await supabase.from("parent_assigned_activities").insert({
     id: activityId,
@@ -25,7 +29,7 @@ export async function insertParentAssignedActivity(supabase, parentId, studentId
     topic: session.topic,
     question_count: session.count,
     mode: activityMode,
-    difficulty_level: "medium",
+    difficulty_level: difficultyLevel,
     question_set: [{ prompt: "1+1", correctAnswer: "2", type: "numeric" }],
     status: "active",
   });
@@ -116,6 +120,8 @@ async function insertAttemptsForActivity(supabase, { activityId, studentId, runI
       topic: session.topic,
       grade: session.grade,
       mode: session.mode || "homework",
+      displayLevel: resolvePracticeDisplayLevel(session.subject, session.displayLevel || "regular"),
+      answerIndex: i,
       isCorrect: !isWrong,
       timeSpentMs,
     });
@@ -136,6 +142,7 @@ async function insertAttemptsForActivity(supabase, { activityId, studentId, runI
         topic: session.topic,
         grade: session.grade,
         gradeLevel: session.grade,
+        displayLevel: payload.displayLevel,
         evidenceCategory: classification.evidenceCategory,
         isDiagnosticEligible: classification.isDiagnosticEligible,
         patternFamily: payload.patternFamily,

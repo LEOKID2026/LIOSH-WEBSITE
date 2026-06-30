@@ -44,6 +44,11 @@ export const DEFAULT_TOPIC_NEXT_STEP_CONFIG = {
   advanceLevelStabilityMin: 0.52,
   advanceLevelConfidenceMin: 0.48,
 
+  /** העלאת רמה → מתקדם (Phase 6) */
+  minQuestionsAdvanceToAdvanced: 20,
+  advanceToAdvancedAccMin: 75,
+  advanceToAdvancedMediumShareMin: 0.6,
+
   /** "משיכה" בגלל הרבה טעויות — חוסם העלאות */
   mistakeDragMistakesMin: 4,
   mistakeDragAccMax: 90,

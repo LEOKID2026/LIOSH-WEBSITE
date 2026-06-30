@@ -11,7 +11,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ד׳: מה תפקיד העיכול במערכת הגוף?",
+  "stem": "מה תפקיד העיכול במערכת הגוף?",
   "options": [
     "לפרק מזון ולסייע בספיגה",
     "לייצר חמצן ישירות",
@@ -52,7 +52,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ד׳: איזה איבר מסייע לחילוף גזים עם האוויר?",
+  "stem": "איזה איבר מסייע לחילוף גזים עם האוויר?",
   "options": [
     "ריאות",
     "קיבה",
@@ -93,7 +93,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ד׳: למה חשוב לשמור על שיניים נקיות?",
+  "stem": "למה חשוב לשמור על שיניים נקיות?",
   "options": [
     "למנוע עששת ומחלות בפה",
     "כדי שלא נצטרך לישון",
@@ -134,7 +134,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ד׳: מה עושה הלב בגוף?",
+  "stem": "מה עושה הלב בגוף?",
   "options": [
     "מזרים דם לרקמות",
     "מעכל מזון",
@@ -175,7 +175,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "בכיתה ד׳ — אתגר: מה קורה לדופק בזמן ריצה קצרה?",
+  "stem": "מה קורה לדופק בזמן ריצה קצרה?",
   "options": [
     "לרוב עולה ואז יורד בהדרגה",
     "נעצר לחלוטין",
@@ -216,7 +216,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "בכיתה ד׳ — אתגר: מה תפקיד הדם במערכת הנשימה?",
+  "stem": "מה תפקיד הדם במערכת הנשימה?",
   "options": [
     "מוביל חמצן לרקמות",
     "מייצר אור",
@@ -257,7 +257,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "בכיתה ד׳ — אתגר: למה שרירים זקוקים לחמצן?",
+  "stem": "למה שרירים זקוקים לחמצן?",
   "options": [
     "לשחרור אנרגיה בפעילות",
     "לעיכול עצמות",
@@ -298,7 +298,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "בכיתה ד׳ — אתגר: מה קשר בין מערכת העצבים לחושים?",
+  "stem": "מה קשר בין מערכת העצבים לחושים?",
   "options": [
     "מעבירה מידע מהחושים למוח",
     "מעכלת מזון",
@@ -339,7 +339,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "בכיתה ד׳ — אתגר: מה תפקיד הכליות?",
+  "stem": "מה תפקיד הכליות?",
   "options": [
     "מסננות דם ומווסתות נוזלים",
     "מייצרות חמצן",
@@ -380,7 +380,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "בכיתה ד׳ — אתגר: למה חשוב חימום לפני פעילות?",
+  "stem": "למה חשוב חימום לפני פעילות?",
   "options": [
     "מכין שרירים ומפרקים",
     "מבטל נשימה",
@@ -421,7 +421,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ד׳ — ניסוי: מהי השערה?",
+  "stem": "מהי השערה?",
   "options": [
     "חיזוי שניתן לבדוק",
     "תוצאה סופית",
@@ -462,7 +462,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ד׳ — ניסוי: למה רושמים תוצאות בטבלה?",
+  "stem": "למה רושמים תוצאות בטבלה?",
   "options": [
     "להשוות ולזהות דפוסים",
     "למחוק",
@@ -503,7 +503,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ד׳ — ניסוי: מה כלי מדידה למדידת אורך?",
+  "stem": "מה כלי מדידה למדידת אורך?",
   "options": [
     "סרגל",
     "מדחום",
@@ -544,7 +544,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ד׳ — ניסוי: מה משתנה מבוקר?",
+  "stem": "מה משתנה מבוקר?",
   "options": [
     "משתנה אחד",
     "הכל יחד",
@@ -585,7 +585,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ד׳ — ניסוי: למה לא טועמים חומר לא ידוע?",
+  "stem": "למה לא טועמים חומר לא ידוע?",
   "options": [
     "עלול להיות מסוכן",
     "חובה",
@@ -626,7 +626,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ד׳ — ניסוי: מה תפקיד קבוצת ביקורת?",
+  "stem": "מה תפקיד קבוצת ביקורת?",
   "options": [
     "השוואה ללא שינוי",
     "מחיקה",
@@ -667,7 +667,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "בכיתה ד׳ — אתגר ניסוי: למה חוזרים על מדידה?",
+  "stem": "למה חוזרים על מדידה?",
   "options": [
     "לזהות טעויות ופיזור",
     "מיותר תמיד",
@@ -708,7 +708,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "בכיתה ד׳ — אתגר ניסוי: מה טעות מדידה?",
+  "stem": "מה טעות מדידה?",
   "options": [
     "הבדל בין מדידה לערך אמיתי",
     "תמיד אפס",
@@ -749,7 +749,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "בכיתה ד׳ — אתגר ניסוי: למה יחידות חשובות?",
+  "stem": "למה יחידות חשובות?",
   "options": [
     "להשוואה נכונה",
     "לא חשוב",
@@ -790,7 +790,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "בכיתה ד׳ — אתגר ניסוי: מה מסקנה מבוססת נתונים?",
+  "stem": "מה מסקנה מבוססת נתונים?",
   "options": [
     "נתמכת בתוצאות",
     "לפי רגש",
@@ -831,7 +831,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "בכיתה ד׳ — אתגר ניסוי: מה הבדל תצפית לניסוי?",
+  "stem": "מה הבדל תצפית לניסוי?",
   "options": [
     "ניסוי בודק משתנה מבוקר",
     "אין הבדל",
@@ -872,7 +872,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ד׳ — בעלי חיים: מה מאפיין דג?",
+  "stem": "מה מאפיין דג?",
   "options": [
     "חי במים ונושם בזימים",
     "עף באוויר עם נוצות",
@@ -913,7 +913,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ד׳ — בעלי חיים: מה מחזור חיים של פרפר?",
+  "stem": "מה מחזור חיים של פרפר?",
   "options": [
     "ביצה, זחל, גולם, בוגר",
     "רק בוגר",
@@ -954,7 +954,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ד׳ — בעלי חיים: מה עושה דבורה לצמחים?",
+  "stem": "מה עושה דבורה לצמחים?",
   "options": [
     "מאבקת",
     "אוכלת עצים",
@@ -995,7 +995,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ד׳ — בעלי חיים: מה מאפיין יונק?",
+  "stem": "מה מאפיין יונק?",
   "options": [
     "מינק ופרווה לרוב",
     "זימים",
@@ -1036,7 +1036,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ד׳ — בעלי חיים: מה אוכלת פרה?",
+  "stem": "מה אוכלת פרה?",
   "options": [
     "עשב",
     "בשר",
@@ -1077,7 +1077,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ד׳ — בעלי חיים: למה לציפור יש מקור?",
+  "stem": "למה לציפור יש מקור?",
   "options": [
     "לאכילה ובניית קן",
     "לשחייה",
@@ -1118,7 +1118,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "בכיתה ד׳ — אתגר אקולוגיה: מה קורה כשמצמצמים טורף פסגה?",
+  "stem": "מה קורה כשמצמצמים טורף פסגה?",
   "options": [
     "אוכלוסיית טרף עלולה לגדול",
     "אין השפעה",
@@ -1159,7 +1159,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "בכיתה ד׳ — אתגר אקולוגיה: מה התאמת גמל למדבר?",
+  "stem": "מה התאמת גמל למדבר?",
   "options": [
     "שומר מים וסובל חום",
     "חי במים מתוקים",
@@ -1200,7 +1200,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "בכיתה ד׳ — אתגר אקולוגיה: למה הסוואה עוזרת?",
+  "stem": "למה הסוואה עוזרת?",
   "options": [
     "מקטינה זיהוי",
     "מייצרת אור",
@@ -1241,7 +1241,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "בכיתה ד׳ — אתגר אקולוגיה: מה מחזור חיים של צפרדע?",
+  "stem": "מה מחזור חיים של צפרדע?",
   "options": [
     "ביצה במים, בגרות ביבשה",
     "רק בוגר ביבשה",
@@ -1282,7 +1282,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "בכיתה ד׳ — אתגר אקולוגיה: למה חשוב לשמור על בית גידול?",
+  "stem": "למה חשוב לשמור על בית גידול?",
   "options": [
     "מאפשר מזון ומחסה",
     "מונע גידול",
@@ -1323,7 +1323,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ה׳: מה תפקיד הכליות?",
+  "stem": "מה תפקיד הכליות?",
   "options": [
     "מסננות דם ומווסתות נוזלים",
     "מייצרות חמצן",
@@ -1364,7 +1364,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ה׳: מה קורה לדופק במאמץ מתון?",
+  "stem": "מה קורה לדופק במאמץ מתון?",
   "options": [
     "לרוב עולה",
     "נעצר",
@@ -1405,7 +1405,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ה׳: מה תפקיד מערכת העצבים?",
+  "stem": "מה תפקיד מערכת העצבים?",
   "options": [
     "מעבירה הודעות",
     "מעכלת",
@@ -1446,7 +1446,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ה׳: למה חשוב תזונה מאוזנת?",
+  "stem": "למה חשוב תזונה מאוזנת?",
   "options": [
     "תומכת באנרגיה ובריאות",
     "מחליפה שינה",
@@ -1487,7 +1487,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ה׳: מה עושות הריאות?",
+  "stem": "מה עושות הריאות?",
   "options": [
     "מחליפות גזים",
     "מעכלות",
@@ -1528,7 +1528,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ה׳: מה תפקיד העור?",
+  "stem": "מה תפקיד העור?",
   "options": [
     "הגנה וחוש מישוש",
     "הפקת אור",
@@ -1569,7 +1569,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — רמה בינונית: מה קשר בין דם לריאות?",
+  "stem": "מה קשר בין דם לריאות?",
   "options": [
     "ריאות מעשירות דם בחמצן",
     "דם מייצר אור",
@@ -1610,7 +1610,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — רמה בינונית: למה שרירים מתעייפים במאמץ?",
+  "stem": "למה שרירים מתעייפים במאמץ?",
   "options": [
     "צריכים חמצן ואנרגיה",
     "אין חמצן",
@@ -1651,7 +1651,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — רמה בינונית: מה תפקיד הכבד?",
+  "stem": "מה תפקיד הכבד?",
   "options": [
     "עוזר בעיכול וניקוי חומרים",
     "מזרים דם",
@@ -1692,7 +1692,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — רמה בינונית: למה חשוב שתייה בפעילות?",
+  "stem": "למה חשוב שתייה בפעילות?",
   "options": [
     "מונעת התייבשות",
     "מבטלת לב",
@@ -1733,7 +1733,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — רמה בינונית: מה עושה מערכת העיכול?",
+  "stem": "מה עושה מערכת העיכול?",
   "options": [
     "מפרקת וסופגת מזון",
     "מייצרת חמצן",
@@ -1774,7 +1774,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — רמה בינונית: מה משמעות דופק?",
+  "stem": "מה משמעות דופק?",
   "options": [
     "קצב פעימות הלב",
     "מהירות ריצה",
@@ -1815,7 +1815,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — אתגר: מה קורה לספיקת דם במאמץ?",
+  "stem": "מה קורה לספיקת דם במאמץ?",
   "options": [
     "עלולה לעלות לענות על חמצן",
     "יורדת לאפס",
@@ -1856,7 +1856,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — אתגר: למה חימום לפני ספורט?",
+  "stem": "למה חימום לפני ספורט?",
   "options": [
     "מכין שרירים",
     "מבטל נשימה",
@@ -1897,7 +1897,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — אתגר: מה תפקיד כלי דם?",
+  "stem": "מה תפקיד כלי דם?",
   "options": [
     "הובלת דם לרקמות",
     "עיכול",
@@ -1938,7 +1938,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — ניסוי: מה השערה?",
+  "stem": "מה השערה?",
   "options": [
     "חיזוי לבדיקה",
     "תוצאה סופית",
@@ -1979,7 +1979,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — ניסוי: למה משתנה מבוקר?",
+  "stem": "למה משתנה מבוקר?",
   "options": [
     "משתנה אחד",
     "הכל",
@@ -2020,7 +2020,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — ניסוי: מה תיעוד ניסוי?",
+  "stem": "מה תיעוד ניסוי?",
   "options": [
     "רישום ברור של תוצאות",
     "מחיקה",
@@ -2061,7 +2061,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — ניסוי: למה חזרה על מדידה?",
+  "stem": "למה חזרה על מדידה?",
   "options": [
     "לאמת תוצאות",
     "מיותר",
@@ -2102,7 +2102,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — ניסוי: מה כלי למדידת מסה?",
+  "stem": "מה כלי למדידת מסה?",
   "options": [
     "משקל",
     "סרגל",
@@ -2143,7 +2143,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — ניסוי: מה בטיחות בניסוי?",
+  "stem": "מה בטיחות בניסוי?",
   "options": [
     "פיקוח והוראות",
     "טעימת חומר",
@@ -2184,7 +2184,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — ניסוי: מה קבוצת ביקורת?",
+  "stem": "מה קבוצת ביקורת?",
   "options": [
     "השוואה ללא שינוי",
     "מחיקה",
@@ -2225,7 +2225,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — טבע: מה מאפיין טורף?",
+  "stem": "מה מאפיין טורף?",
   "options": [
     "צד טרף",
     "אוכל עלים",
@@ -2266,7 +2266,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — טבע: מה מחזור חיים של חרק?",
+  "stem": "מה מחזור חיים של חרק?",
   "options": [
     "ביצה, זחל, גולם, בוגר",
     "רק בוגר",
@@ -2307,7 +2307,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — טבע: למה דבורים חשובות?",
+  "stem": "למה דבורים חשובות?",
   "options": [
     "מאבקות",
     "אוכלות עצים",
@@ -2348,7 +2348,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — טבע: מה אוכלת ארנבת?",
+  "stem": "מה אוכלת ארנבת?",
   "options": [
     "עשב",
     "בשר",
@@ -2389,7 +2389,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — טבע: מה מאפיין זוחל?",
+  "stem": "מה מאפיין זוחל?",
   "options": [
     "מתחמם מסביבה",
     "מחמל",
@@ -2430,7 +2430,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — טבע: למה לדג יש זימים?",
+  "stem": "למה לדג יש זימים?",
   "options": [
     "נשימה במים",
     "עוף",
@@ -2471,7 +2471,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — טבע: מה תפקיד יצרן ברשת מזון?",
+  "stem": "מה תפקיד יצרן ברשת מזון?",
   "options": [
     "צמח מייצר מזון",
     "נמר",
@@ -2512,7 +2512,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — רמה בינונית: מה קורה כשמצמצמים מזון לטורף?",
+  "stem": "מה קורה כשמצמצמים מזון לטורף?",
   "options": [
     "רשת המזון משתנה",
     "אין השפעה",
@@ -2553,7 +2553,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — רמה בינונית: מה התאמה לסביבה קרה?",
+  "stem": "מה התאמה לסביבה קרה?",
   "options": [
     "פרווה או שומן",
     "זימים",
@@ -2594,7 +2594,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — רמה בינונית: למה הסוואה עוזרת?",
+  "stem": "למה הסוואה עוזרת?",
   "options": [
     "מקטינה זיהוי",
     "מייצרת אור",
@@ -2635,7 +2635,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — רמה בינונית: מה מחזור חיים של יונק?",
+  "stem": "מה מחזור חיים של יונק?",
   "options": [
     "ילוד וגדילה",
     "רק ביצה",
@@ -2676,7 +2676,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — רמה בינונית: למה חשוב לשמור על קן?",
+  "stem": "למה חשוב לשמור על קן?",
   "options": [
     "הפרעה לקן עלולה לפגוע בגוזלים",
     "הורים יכולים להשאיר לבד",
@@ -2717,7 +2717,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — רמה בינונית: מה מאפיין ציפור?",
+  "stem": "מה מאפיין ציפור?",
   "options": [
     "נוצות ומקור",
     "זימים",
@@ -2758,7 +2758,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — אתגר אקולוגיה: מה השפעת אובדן בית גידול?",
+  "stem": "מה השפעת אובדן בית גידול?",
   "options": [
     "בעלי חיים עלולים לעזוב",
     "תמיד משפר",
@@ -2799,7 +2799,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — אתגר אקולוגיה: מה קורה לרשת מזון?",
+  "stem": "מה קורה לרשת מזון?",
   "options": [
     "שינוי בטורף משפיע על טרף",
     "אין שינוי",
@@ -2840,7 +2840,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "בכיתה ה׳ — אתגר אקולוגיה: למה עטלף פעיל בלילה?",
+  "stem": "למה עטלף פעיל בלילה?",
   "options": [
     "פחות טורפים וחום",
     "אין אוזניים",
@@ -2881,7 +2881,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ו׳: מה תפקיד מערכת העיכול?",
+  "stem": "מה תפקיד מערכת העיכול?",
   "options": [
     "מפרקת וסופגת מזון",
     "מייצרת חמצן",
@@ -2922,7 +2922,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ו׳: מה עושה הלב?",
+  "stem": "מה עושה הלב?",
   "options": [
     "מזרים דם",
     "מעכל",
@@ -2963,7 +2963,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ו׳: למה חשוב שתייה?",
+  "stem": "למה חשוב שתייה?",
   "options": [
     "שומרת איזון נוזלים",
     "מבטלת נשימה",
@@ -3004,7 +3004,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ו׳: מה תפקיד הריאות?",
+  "stem": "מה תפקיד הריאות?",
   "options": [
     "חילוף גזים",
     "עיכול",
@@ -3045,7 +3045,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ו׳: מה קשר תזונה לאנרגיה?",
+  "stem": "מה קשר תזונה לאנרגיה?",
   "options": [
     "מזון מספק אנרגיה",
     "מחליף שינה",
@@ -3086,7 +3086,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — רמה בינונית: מה קשר דם לחמצן?",
+  "stem": "מה קשר דם לחמצן?",
   "options": [
     "דם מוביל חמצן",
     "דם מייצר אור",
@@ -3127,7 +3127,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — רמה בינונית: למה שרירים זקוקים לחמצן?",
+  "stem": "למה שרירים זקוקים לחמצן?",
   "options": [
     "לאנרגיה בפעילות",
     "לעיכול עצם",
@@ -3168,7 +3168,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — רמה בינונית: מה תפקיד הכליות?",
+  "stem": "מה תפקיד הכליות?",
   "options": [
     "סינון ואיזון נוזלים",
     "חמצן",
@@ -3209,7 +3209,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — רמה בינונית: מה מערכת העצבים?",
+  "stem": "מה מערכת העצבים?",
   "options": [
     "מעבירה הודעות",
     "מעכלת",
@@ -3250,7 +3250,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — רמה בינונית: למה חימום לפני מאמץ?",
+  "stem": "למה חימום לפני מאמץ?",
   "options": [
     "מכין שרירים",
     "מבטל נשימה",
@@ -3291,7 +3291,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — רמה בינונית: מה תפקיד העור?",
+  "stem": "מה תפקיד העור?",
   "options": [
     "הגנה ומישוש",
     "אור",
@@ -3332,7 +3332,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — אתגר: מה קורה לדופק במאמץ ארוך?",
+  "stem": "מה קורה לדופק במאמץ ארוך?",
   "options": [
     "עולה ואז יורד בהדרגה",
     "נעצר",
@@ -3373,7 +3373,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — אתגר: מה תפקיד כלי דם?",
+  "stem": "מה תפקיד כלי דם?",
   "options": [
     "הובלת דם",
     "עיכול",
@@ -3414,7 +3414,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — אתגר: למה חמצן חיוני לתאים?",
+  "stem": "למה חמצן חיוני לתאים?",
   "options": [
     "לשחרור אנרגיה",
     "לעיכול עצם",
@@ -3455,7 +3455,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — ניסוי: מה השערה?",
+  "stem": "מה השערה?",
   "options": [
     "חיזוי לבדיקה",
     "תוצאה סופית",
@@ -3496,7 +3496,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — ניסוי: למה משתנה מבוקר?",
+  "stem": "למה משתנה מבוקר?",
   "options": [
     "משתנה אחד",
     "הכל",
@@ -3537,7 +3537,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — ניסוי: מה תיעוד?",
+  "stem": "מה תיעוד?",
   "options": [
     "רישום תוצאות",
     "מחיקה",
@@ -3578,7 +3578,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — ניסוי: למה חזרה?",
+  "stem": "למה חזרה?",
   "options": [
     "לאמת",
     "מיותר",
@@ -3619,7 +3619,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — ניסוי: מה יחידות?",
+  "stem": "מה יחידות?",
   "options": [
         "לרשום תוצאות בטבלה",
         "לשנות את כל המשתנים",
@@ -3660,7 +3660,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — ניסוי: מה ביקורת?",
+  "stem": "מה ביקורת?",
   "options": [
       "קבוצה שנשארת ללא שינוי להשוואה",
       "מחיקת כל הנתונים מהיומן",
@@ -3701,7 +3701,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — ניסוי: מה בטיחות?",
+  "stem": "מה בטיחות?",
   "options": [
     "פיקוח",
     "טעימה",
@@ -3742,7 +3742,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — טבע: מה מאפיין יונק?",
+  "stem": "מה מאפיין יונק?",
   "options": [
     "מינק ופרווה",
     "זימים",
@@ -3783,7 +3783,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — טבע: מה אוכלת פרה?",
+  "stem": "מה אוכלת פרה?",
   "options": [
     "עשב",
     "בשר",
@@ -3824,7 +3824,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — טבע: מה דג?",
+  "stem": "מה דג?",
   "options": [
     "חי במים",
     "עוף",
@@ -3865,7 +3865,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — טבע: מה דבורה?",
+  "stem": "מה דבורה?",
   "options": [
     "מאבקת",
     "אוכלת עץ",
@@ -3906,7 +3906,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — טבע: מה ציפור?",
+  "stem": "מה ציפור?",
   "options": [
     "נוצות ומקור",
     "זימים",
@@ -3947,7 +3947,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — טבע: מה זוחל?",
+  "stem": "מה זוחל?",
   "options": [
     "מתחמם מסביבה",
     "מחמל",
@@ -3988,7 +3988,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — טבע: מה טורף?",
+  "stem": "מה טורף?",
   "options": [
     "צד טרף",
     "עלים",
@@ -4029,7 +4029,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — רמה בינונית: מה רשת מזון?",
+  "stem": "מה רשת מזון?",
   "options": [
     "קשרי אכילה בין יצורים",
     "אין קשר",
@@ -4070,7 +4070,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — רמה בינונית: מה התאמה לקור?",
+  "stem": "מה התאמה לקור?",
   "options": [
     "פרווה או שומן",
     "זימים",
@@ -4111,7 +4111,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — רמה בינונית: מה הסוואה?",
+  "stem": "מה הסוואה?",
   "options": [
     "התמזגות עם סביבה",
     "אור",
@@ -4152,7 +4152,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — רמה בינונית: מה מחזור יונק?",
+  "stem": "מה מחזור יונק?",
   "options": [
     "ילוד וגדילה",
     "ביצה",
@@ -4193,7 +4193,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — רמה בינונית: למה לשמור על קן?",
+  "stem": "למה לשמור על קן?",
   "options": [
     "הפרעה לקן עלולה לפגוע בגוזלים",
     "הורים יכולים להשאיר לבד",
@@ -4234,7 +4234,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — רמה בינונית: מה בית גידול?",
+  "stem": "מה בית גידול?",
   "options": [
     "מקום לחיות ולמצוא מזון",
     "אבן",
@@ -4275,7 +4275,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — רמה בינונית: מה פיזור זרעים?",
+  "stem": "מה פיזור זרעים?",
   "options": [
     "העברת זרעים",
     "אכילה",
@@ -4316,7 +4316,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — אתגר אקולוגיה: מה השפעת טורף על טרף?",
+  "stem": "מה השפעת טורף על טרף?",
   "options": [
     "מאזנת אוכלוסיות",
     "אין",
@@ -4357,7 +4357,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — אתגר אקולוגיה: מה אובדן בית גידול?",
+  "stem": "מה אובדן בית גידול?",
   "options": [
     "בעלי חיים נפגעים",
     "משפר",
@@ -4398,7 +4398,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — אתגר אקולוגיה: למה עטלף בלילה?",
+  "stem": "למה עטלף בלילה?",
   "options": [
     "התאמה",
     "אין אוזן",
@@ -4439,7 +4439,7 @@ export const SCIENCE_QUESTIONS_P1_G456_FILL = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "בכיתה ו׳ — אתגר אקולוגיה: מה מחזור דו-חיים?",
+  "stem": "מה מחזור דו-חיים?",
   "options": [
     "מים ויבשה",
     "רק יבשה",

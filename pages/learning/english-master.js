@@ -151,20 +151,16 @@ import {
   buildBookContextClientMetaExtras,
   tryConsumeBookContextOnPracticeEntry,
 } from "../../lib/learning-book/book-context-master-helper";
+import { useStudentDisplayLevelPractice } from "../../hooks/useStudentDisplayLevelPractice.js";
+import { StudentDisplayLevelSelect } from "../../components/learning/StudentDisplayLevelSelect.js";
+import {
+  isStudentAdaptiveActive,
+  studentDisplayLevelKeys,
+  studentDisplayLevelLabel,
+  migrateLegacyPracticeKeyToDisplayLevel,
+} from "../../lib/learning-client/student-display-level-practice.js";
 
 const ENGLISH_BOOK_GRADE_SET = new Set(ENGLISH_BOOK_GRADES);
-
-/** Grades 1–2: hard band excluded from default practice UI (owner policy). */
-function englishLevelKeysForGradeKey(gradeKey) {
-  const gNum = parseInt(String(gradeKey).replace(/\D/g, ""), 10) || 3;
-  if (gNum <= 2) return ["easy", "medium"];
-  return Object.keys(LEVELS);
-}
-
-function clampEnglishLevelForGrade(gradeKey, levelKey) {
-  const allowed = englishLevelKeysForGradeKey(gradeKey);
-  return allowed.includes(levelKey) ? levelKey : allowed[allowed.length - 1];
-}
 
 const MODES = {
   learning: { name: "למידה", description: "ללא סיום משחק, תרגול בקצב שלך" },
@@ -269,6 +265,17 @@ function buildTop10ByScore(saved, level) {
     });
   }
   return sorted;
+}
+
+function loadLeaderboardTop10ByDisplayLevel(saved, displayLevel) {
+  const sourceKeys = displayLevel === "advanced" ? ["hard"] : ["easy", "medium"];
+  const merged = sourceKeys.flatMap((sk) => buildTop10ByScore(saved, sk));
+  merged.sort((a, b) => {
+    if (b.bestScore !== a.bestScore) return b.bestScore - a.bestScore;
+    if (b.bestStreak !== a.bestStreak) return b.bestStreak - a.bestStreak;
+    return (b.timestamp || 0) - (a.timestamp || 0);
+  });
+  return merged.filter((e) => !e.placeholder).slice(0, 10);
 }
 
 function saveScoreEntry(saved, key, entry) {
@@ -558,7 +565,23 @@ export default function EnglishMaster() {
   const [focusedPracticeMode, setFocusedPracticeMode] = useState("normal");
   const [useStoryQuestions, setUseStoryQuestions] = useState(false);
   const [storyOnly, setStoryOnly] = useState(false);
-  const [level, setLevel] = useState("easy");
+  const {
+    displayLevel,
+    displayLevelRef,
+    sourceDifficulty: level,
+    handleDisplayLevelChange: onDisplayLevelChange,
+    resetAdaptiveForSessionStart,
+    applyAnswerAdaptive,
+    applyPlannerLevelKey,
+    hydrateFromResumeSnapshot,
+    buildSessionStartLevelFields,
+    buildAnswerLevelFields,
+    tagQuestion,
+  } = useStudentDisplayLevelPractice("english");
+  const handleDisplayLevelChange = useCallback((nextDisplayLevel) => {
+    onDisplayLevelChange(nextDisplayLevel);
+    setGameActive(false);
+  }, [onDisplayLevelChange]);
   const [topic, setTopic] = useState("vocabulary");
   const [gameActive, setGameActive] = useState(false);
   const [adaptivePlannerRecommendationView, setAdaptivePlannerRecommendationView] = useState(null);
@@ -654,7 +677,7 @@ export default function EnglishMaster() {
     writing: false,
   });
   const [showLeaderboard, setShowLeaderboard] = useState(false);
-  const [leaderboardLevel, setLeaderboardLevel] = useState("easy");
+  const [leaderboardLevel, setLeaderboardLevel] = useState("regular");
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [showHowTo, setShowHowTo] = useState(false);
   const [mistakes, setMistakes] = useState([]);
@@ -721,6 +744,7 @@ export default function EnglishMaster() {
         mode,
         grade,
         gradeNumber,
+        displayLevel: displayLevelRef.current,
         level,
         topic,
         currentQuestion,
@@ -787,10 +811,10 @@ export default function EnglishMaster() {
   useEffect(() => {
     const snap = consumeAnyEnglishBookLearningSnapshot();
     if (!snap || snap.gameActive !== true) return;
-    setMode(typeof snap.mode === "string" ? snap.mode : "practice");
-    if (typeof snap.grade === "string") setGrade(snap.grade);
-    if (typeof snap.gradeNumber === "number") setGradeNumber(snap.gradeNumber);
-    if (typeof snap.level === "string") setLevel(snap.level);
+    const migrated = hydrateFromResumeSnapshot(snap);
+    setMode(typeof migrated.mode === "string" ? migrated.mode : "practice");
+    if (typeof migrated.grade === "string") setGrade(migrated.grade);
+    if (typeof migrated.gradeNumber === "number") setGradeNumber(migrated.gradeNumber);
     if (typeof snap.topic === "string") setTopic(snap.topic);
     setGameActive(true);
     if (snap.currentQuestion) setCurrentQuestion(snap.currentQuestion);
@@ -824,17 +848,6 @@ export default function EnglishMaster() {
       { bookContextRef, bookContextConsumedRef }
     );
   }, [router.isReady, router.query, grade]);
-
-  useEffect(() => {
-    setLevel((prev) => clampEnglishLevelForGrade(grade, prev));
-  }, [grade]);
-
-  useEffect(() => {
-    const allowed = englishLevelKeysForGradeKey(grade);
-    if (!allowed.includes(leaderboardLevel)) {
-      setLeaderboardLevel(allowed[0]);
-    }
-  }, [grade, leaderboardLevel]);
 
   const [playerAvatar, setPlayerAvatar] = useState(() => {
     if (typeof window !== "undefined") {
@@ -1052,7 +1065,6 @@ export default function EnglishMaster() {
     bookPracticeSemanticTopicRef.current = null;
     setGradeNumber(numeric);
     setGrade(nextGradeKey);
-    setLevel((prev) => clampEnglishLevelForGrade(nextGradeKey, prev));
     setGameActive(false);
   };
 
@@ -1096,7 +1108,7 @@ export default function EnglishMaster() {
       setGradeNumber(gradeIdx + 1);
     }
     setGrade(gradeKey);
-    setLevel(clampEnglishLevelForGrade(gradeKey, levelKey));
+    if (levelKey) applyPlannerLevelKey(levelKey);
     setTopic(topicKey);
     setMode("learning");
     setGameActive(false);
@@ -1277,7 +1289,7 @@ export default function EnglishMaster() {
       topic: String(englishTrackingTopicKeyRef.current || currentQuestion?.topic || topic || "english"),
       mode: reportModeFromGameState(mode, focusedPracticeMode),
       gradeLevel: String(grade || ""),
-      level: String(level || ""),
+      ...buildSessionStartLevelFields(),
       clientMeta:
         plannerExtra && typeof plannerExtra === "object"
           ? mergePlannerSessionClientMeta(baseMeta, plannerExtra)
@@ -1335,6 +1347,9 @@ export default function EnglishMaster() {
           afterStepByStep: stepByStepViewedRef.current,
         })
       : null;
+    const answerLevelFields = buildAnswerLevelFields(
+      question?.sourceDifficulty || question?.levelKey || level
+    );
     ensureLearningSessionId()
       .then((learningSessionId) => {
         if (!learningSessionId) return;
@@ -1356,11 +1371,14 @@ export default function EnglishMaster() {
           creditedTimeMs,
           timingStatus,
           gradeLevel: String(grade || ""),
+          ...answerLevelFields,
           clientMeta: {
             source: "english-master",
-            version: "phase-3",
+            version: "phase-4-display-level",
             gradeKey: String(grade || ""),
             afterStepByStep: stepByStepViewedRef.current,
+            displayLevel: answerLevelFields.displayLevel,
+            sourceDifficulty: answerLevelFields.sourceDifficulty,
             ...buildBookContextClientMetaExtras(mode, {
               bookContextRef,
               bookContextConsumedRef,
@@ -1465,7 +1483,7 @@ export default function EnglishMaster() {
           fromRef && typeof fromRef === "object" && Object.keys(fromRef).length > 0
             ? fromRef
             : JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-        const topScores = buildTop10ByScore(saved, leaderboardLevel);
+        const topScores = loadLeaderboardTop10ByDisplayLevel(saved, leaderboardLevel);
         setLeaderboardData(topScores);
       } catch (e) {
         console.error("Error loading leaderboard:", e);
@@ -1551,7 +1569,7 @@ export default function EnglishMaster() {
       setBestScore(maxScore);
       setBestStreak(maxStreak);
       if (showLeaderboard) {
-        const topScores = buildTop10ByScore(saved, leaderboardLevel);
+        const topScores = loadLeaderboardTop10ByDisplayLevel(saved, leaderboardLevel);
         setLeaderboardData(topScores);
       }
 
@@ -1649,8 +1667,6 @@ export default function EnglishMaster() {
         correct < 5 ? "easy" : correct < 15 ? "medium" : level;
     }
 
-    levelForQuestion = clampEnglishLevelForGrade(gradeForQuestion, levelForQuestion);
-
     const translationVisible = visibleEnglishTopics.includes("translation");
 
     if (mode === "practice") {
@@ -1744,7 +1760,7 @@ export default function EnglishMaster() {
     if (currentQuestion) {
       setPreviousExplanationQuestion(currentQuestion);
     }
-    const displayQuestion = sanitizeQuestionForStudentDisplay(question);
+    const displayQuestion = tagQuestion(sanitizeQuestionForStudentDisplay(question));
     setCurrentQuestion(displayQuestion);
     setSelectedAnswer(null);
     setTypedAnswer("");
@@ -1764,11 +1780,12 @@ export default function EnglishMaster() {
     }
     if (opts.fromAdaptivePlannerRecommendedPractice && opts.plannerSessionMeta && typeof opts.plannerSessionMeta === "object") {
       plannerNextSessionClientMetaRef.current = opts.plannerSessionMeta;
-      if (opts.appliedLevelKey === "easy" || opts.appliedLevelKey === "medium" || opts.appliedLevelKey === "hard") {
-        setLevel(clampEnglishLevelForGrade(grade, opts.appliedLevelKey));
+      if (opts.appliedLevelKey) {
+        applyPlannerLevelKey(opts.appliedLevelKey);
       }
     } else {
       plannerNextSessionClientMetaRef.current = null;
+      resetAdaptiveForSessionStart();
     }
     recordSessionProgress({ includePlannerRecommendation: false });
     setAdaptivePlannerRecommendationView(null);
@@ -2045,6 +2062,17 @@ export default function EnglishMaster() {
       total: 1,
       mode: reportModeFromGameState(mode, focusedPracticeMode),
     };
+    if (
+      isStudentAdaptiveActive("english", {
+        displayLevel: displayLevelRef.current,
+        mode: focusedPracticeMode,
+      })
+    ) {
+      applyAnswerAdaptive(isCorrect, {
+        displayLevel: displayLevelRef.current,
+        mode: focusedPracticeMode,
+      });
+    }
     saveEnglishAnswerInParallel({
       question: questionForSave,
       userAnswer: answer,
@@ -2532,7 +2560,7 @@ export default function EnglishMaster() {
           MB={MB}
           desktopHeaderRef={desktopHeaderRef}
           title="🇬🇧 אנגלית"
-          subtitle={`${playerName || "שחקן"} • ${gradeInfo.name} • ${LEVELS[level].name} • ${getTopicName(topic)} • ${MODES[mode].name}`}
+          subtitle={`${playerName || "שחקן"} • ${gradeInfo.name} • ${studentDisplayLevelLabel(displayLevel)} • ${getTopicName(topic)} • ${MODES[mode].name}`}
           onBack={backSafe}
           onCurriculumClick={() => router.push("/learning/curriculum?subject=english")}
           sound={sound}
@@ -2575,7 +2603,7 @@ export default function EnglishMaster() {
             </div>
             <p className={MB.pageSub}>
               {playerName || "שחקן"} • {gradeInfo.name} •{" "}
-              {LEVELS[level].name} • {getTopicName(topic)} • {MODES[mode].name}
+              {studentDisplayLevelLabel(displayLevel)} • {getTopicName(topic)} • {MODES[mode].name}
             </p>
           </div>
 
@@ -2689,21 +2717,13 @@ export default function EnglishMaster() {
                     </option>
                   ))}
                 </select>
-                <select
-                  value={level}
-                  title={LEVELS[level]?.name}
-                  onChange={(e) => {
-                    setLevel(e.target.value);
-                    setGameActive(false);
-                  }}
+                <StudentDisplayLevelSelect
+                  subjectId="english"
+                  value={displayLevel}
+                  title={studentDisplayLevelLabel(displayLevel)}
+                  onChange={handleDisplayLevelChange}
                   className={`${MB.selectControl} shrink-0 min-w-0 w-[5rem] max-w-[5.5rem] md:w-[5.75rem] md:max-w-[6.25rem]`}
-                >
-                  {englishLevelKeysForGradeKey(grade).map((lvl) => (
-                    <option key={lvl} value={lvl}>
-                      {LEVELS[lvl].name}
-                    </option>
-                  ))}
-                </select>
+                />
                 <div className="flex flex-1 min-w-0 md:flex-none md:max-w-[min(22rem,42vw)] items-center gap-1.5 md:gap-2 shrink">
                   <select
                     ref={topicSelectRef}
@@ -3155,17 +3175,17 @@ export default function EnglishMaster() {
                 </div>
 
                 <div className="flex gap-2 mb-4 justify-center">
-                  {englishLevelKeysForGradeKey(grade).map((lvl) => (
+                  {studentDisplayLevelKeys("english").slice().reverse().map((dl) => (
                     <button
-                      key={lvl}
+                      key={dl}
                       onClick={() => {
-                        setLeaderboardLevel(lvl);
+                        setLeaderboardLevel(dl);
                         if (typeof window !== "undefined") {
                           try {
                             const saved = JSON.parse(
                               localStorage.getItem(STORAGE_KEY) || "{}"
                             );
-                            const topScores = buildTop10ByScore(saved, lvl);
+                            const topScores = loadLeaderboardTop10ByDisplayLevel(saved, dl);
                             setLeaderboardData(topScores);
                           } catch (e) {
                             console.error("Error loading leaderboard:", e);
@@ -3173,12 +3193,12 @@ export default function EnglishMaster() {
                         }
                       }}
                       className={`px-3 py-2 rounded-lg font-bold text-sm transition-all ${
-                        leaderboardLevel === lvl
+                        leaderboardLevel === dl
                           ? "bg-amber-500/80 text-white"
                           : "bg-white/10 text-white/70 hover:bg-white/20"
                       }`}
                     >
-                      {LEVELS[lvl].name}
+                      {studentDisplayLevelLabel(dl)}
                     </button>
                   ))}
                 </div>
@@ -3208,7 +3228,7 @@ export default function EnglishMaster() {
                             colSpan={4}
                             className="text-white/60 p-4 text-sm"
                           >
-                            עדיין אין תוצאות עבור רמה {LEVELS[leaderboardLevel].name}
+                            עדיין אין תוצאות עבור רמה {studentDisplayLevelLabel(leaderboardLevel)}
                           </td>
                         </tr>
                       ) : (
@@ -3399,7 +3419,9 @@ export default function EnglishMaster() {
                           <span>{getTopicName(mistake.topic || "vocabulary")}</span>
                           <span className="text-white/70 text-xs">
                             {getGradeLabel(mistake.grade) || "כיתה נוכחית"} ·{" "}
-                            {LEVELS[mistake.level || level]?.name || LEVELS[level].name}
+                            {studentDisplayLevelLabel(
+                              migrateLegacyPracticeKeyToDisplayLevel(mistake.level || level, "english")
+                            )}
                           </span>
                         </div>
                         {mistake.question && (
@@ -3530,7 +3552,7 @@ export default function EnglishMaster() {
                   {[
                     { value: "normal", label: "ברירת מחדל" },
                     { value: "mistakes", label: "חזרה על טעויות אחרונות" },
-                    { value: "graded", label: "תרגול מדורג (קל → בינוני → רמתך)" },
+                    { value: "graded", label: "תרגול מדורג (התחלה נמוכה → הרמה שבחרת)" },
                   ].map((opt) => (
                     <label key={opt.value} className="flex items-center gap-2 text-sm">
                       <input

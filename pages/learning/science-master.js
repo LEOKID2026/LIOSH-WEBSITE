@@ -120,6 +120,12 @@ import {
   buildBookContextClientMetaExtras,
   tryConsumeBookContextOnPracticeEntry,
 } from "../../lib/learning-book/book-context-master-helper";
+import { useStudentDisplayLevelPractice } from "../../hooks/useStudentDisplayLevelPractice.js";
+import { StudentDisplayLevelRegularOnly } from "../../components/learning/StudentDisplayLevelSelect.js";
+import { studentDisplayLevelLabel } from "../../lib/learning-client/student-display-level-practice.js";
+import {
+  isStudentAdaptiveActive,
+} from "../../lib/learning-client/student-display-level-practice.js";
 import { useLearningMasterUi } from "../../hooks/useLearningMasterUi.js";
 import StudentLoadingPanel from "../../components/ui/StudentLoadingPanel.jsx";
 import { useGuestPlayableTopics } from "../../hooks/useGuestPlayableTopics.js";
@@ -142,18 +148,6 @@ const LEVELS = {
   medium: { name: "בינוני", difficulty: 2 },
   hard: { name: "קשה", difficulty: 3 },
 };
-
-/** Grades 1–2: only easy in default UI (owner policy — medium/hard stretch blocked). */
-function scienceLevelKeysForGradeKey(gradeKey) {
-  const gNum = parseInt(String(gradeKey).replace(/\D/g, ""), 10) || 3;
-  if (gNum <= 2) return ["easy"];
-  return Object.keys(LEVELS);
-}
-
-function clampScienceLevelForGrade(gradeKey, levelKey) {
-  const allowed = scienceLevelKeysForGradeKey(gradeKey);
-  return allowed.includes(levelKey) ? levelKey : allowed[0];
-}
 
 const MODES = {
   learning: { name: "למידה", description: "ללא סיום משחק, תרגול בקצב שלך" },
@@ -224,7 +218,6 @@ const INTEL_RECENT_MAX = 28;
 const RETRY_QUEUE_MAX = 28;
 /** Max extra weight from mistake rate (1 + this). Lower = less topic lock-in. */
 const TOPIC_WEIGHT_MAX_BOOST = 0.72;
-const ADAPTIVE_LEVEL_ORDER = ["easy", "medium", "hard"];
 
 const REFERENCE_SECTIONS = {
   life_science: {
@@ -430,13 +423,6 @@ function dequeueEligibleRetry(queue, pool, askCounter) {
     }
   }
   return null;
-}
-
-function stepAdaptiveLevel(curKey, delta) {
-  const idx = ADAPTIVE_LEVEL_ORDER.indexOf(curKey);
-  const base = idx >= 0 ? idx : 0;
-  const next = Math.max(0, Math.min(ADAPTIVE_LEVEL_ORDER.length - 1, base + delta));
-  return ADAPTIVE_LEVEL_ORDER[next];
 }
 
 function computeScienceProgressInsights(topicStats, answerTail) {
@@ -721,7 +707,18 @@ export default function ScienceMaster() {
     coinBalance: sessionCoinBalance,
   } = useSubjectSessionDefaults({ requireGradeNumber: false });
   const [mode, setMode] = useState("practice");
-  const [level, setLevel] = useState("easy");
+  const {
+    displayLevelRef,
+    sourceDifficulty: level,
+    resetAdaptiveForSessionStart,
+    applyAnswerAdaptive,
+    applyPlannerLevelKey,
+    hydrateFromResumeSnapshot,
+    buildSessionStartLevelFields,
+    buildAnswerLevelFields,
+    tagQuestion,
+    adaptiveRef,
+  } = useStudentDisplayLevelPractice("science");
   const [topic, setTopic] = useState("body");
   const scienceTopicsForGuest = useMemo(
     () => (GRADES[grade]?.topics || Object.keys(TOPICS)).filter((t) => t !== "mixed"),
@@ -790,9 +787,6 @@ export default function ScienceMaster() {
     answerTail: [],
     topicAnswerTails: {},
   });
-  const adaptiveLevelRef = useRef("easy");
-  const correctAdaptiveStreakRef = useRef(0);
-  const wrongAdaptiveStreakRef = useRef(0);
   const askCounterRef = useRef(0);
   /** @type {React.MutableRefObject<{ id: string; dueAt: number }[]>} */
   const retryQueueRef = useRef([]);
@@ -836,6 +830,7 @@ export default function ScienceMaster() {
         gameActive: true,
         mode,
         grade,
+        displayLevel: displayLevelRef.current,
         level,
         topic,
         currentQuestion,
@@ -891,9 +886,9 @@ export default function ScienceMaster() {
   useEffect(() => {
     const snap = consumeAnyScienceBookLearningSnapshot();
     if (!snap || snap.gameActive !== true) return;
-    setMode(typeof snap.mode === "string" ? snap.mode : "practice");
-    if (typeof snap.grade === "string") setGrade(snap.grade);
-    if (typeof snap.level === "string") setLevel(snap.level);
+    const migrated = hydrateFromResumeSnapshot(snap);
+    setMode(typeof migrated.mode === "string" ? migrated.mode : "practice");
+    if (typeof migrated.grade === "string") setGrade(migrated.grade);
     if (typeof snap.topic === "string") setTopic(snap.topic);
     setGameActive(true);
     if (snap.currentQuestion) setCurrentQuestion(snap.currentQuestion);
@@ -926,14 +921,6 @@ export default function ScienceMaster() {
       { bookContextRef, bookContextConsumedRef }
     );
   }, [router.isReady, router.query, grade]);
-
-  useEffect(() => {
-    setLevel((prev) => {
-      const capped = clampScienceLevelForGrade(grade, prev);
-      adaptiveLevelRef.current = capped;
-      return capped;
-    });
-  }, [grade]);
 
   const [playerAvatar, setPlayerAvatar] = useState(() => {
     if (typeof window === "undefined") return "👤";
@@ -1260,9 +1247,8 @@ export default function ScienceMaster() {
       return undefined;
     }
     window.__SCIENCE_INTEL_DEBUG = () => ({
-      adaptiveLevel: adaptiveLevelRef.current,
-      correctStreak: correctAdaptiveStreakRef.current,
-      wrongStreak: wrongAdaptiveStreakRef.current,
+      internalLevel: level,
+      adaptiveState: adaptiveRef.current,
       retryQueueLength: retryQueueRef.current.length,
       retryQueue: retryQueueRef.current.map((r) => ({ ...r })),
       recentIdsLength: scienceIntelRef.current.recentIds.length,
@@ -1406,7 +1392,7 @@ export default function ScienceMaster() {
           ? "medium"
           : level
         : baseLevel;
-    const levelForFilter = clampScienceLevelForGrade(gradeKey, levelForFilterRaw);
+    const levelForFilter = levelForFilterRaw;
 
     if (focusedPracticeMode === "mistakes" && mistakes.length > 0) {
       const ids = new Set(mistakes.map((m) => m.id));
@@ -1455,18 +1441,11 @@ export default function ScienceMaster() {
     ) {
       return undefined;
     }
-    return adaptiveLevelRef.current;
+    return level;
   }
 
   function getAssignedLevelForQuestion() {
-    if (
-      gameActive &&
-      focusedPracticeMode !== "mistakes" &&
-      focusedPracticeMode !== "graded"
-    ) {
-      return clampScienceLevelForGrade(grade, adaptiveLevelRef.current);
-    }
-    return clampScienceLevelForGrade(grade, level);
+    return level;
   }
 
   function bumpTopicIntel(topicKey, isWrong) {
@@ -1524,7 +1503,7 @@ export default function ScienceMaster() {
       return {
         base: null,
         feedback: [],
-        currentLevelLabel: LEVELS[level]?.name ?? level,
+        currentLevelLabel: studentDisplayLevelLabel("regular"),
         mistakeLogCount: 0,
       };
     }
@@ -1537,46 +1516,13 @@ export default function ScienceMaster() {
     return {
       base,
       feedback,
-      currentLevelLabel: LEVELS[level]?.name ?? level,
+      currentLevelLabel: studentDisplayLevelLabel("regular"),
       mistakeLogCount: mistakes.length,
     };
   }, [mounted, level, mistakes.length, insightRevision]);
 
-  function applyAdaptiveDifficulty(isCorrect, questionId) {
+  function applyScienceRetryQueue(isCorrect, questionId) {
     if (!gameActive) return;
-
-    const canShiftLevel =
-      focusedPracticeMode !== "mistakes" &&
-      focusedPracticeMode !== "graded";
-
-    if (canShiftLevel) {
-      if (isCorrect) {
-        wrongAdaptiveStreakRef.current = 0;
-        correctAdaptiveStreakRef.current += 1;
-        if (correctAdaptiveStreakRef.current >= 3) {
-          correctAdaptiveStreakRef.current = 0;
-          const cur = adaptiveLevelRef.current;
-          const next = clampScienceLevelForGrade(grade, stepAdaptiveLevel(cur, 1));
-          if (next !== cur) {
-            adaptiveLevelRef.current = next;
-            setLevel(next);
-          }
-        }
-      } else {
-        correctAdaptiveStreakRef.current = 0;
-        wrongAdaptiveStreakRef.current += 1;
-        if (wrongAdaptiveStreakRef.current >= 2) {
-          wrongAdaptiveStreakRef.current = 0;
-          const cur = adaptiveLevelRef.current;
-          const next = clampScienceLevelForGrade(grade, stepAdaptiveLevel(cur, -1));
-          if (next !== cur) {
-            adaptiveLevelRef.current = next;
-            setLevel(next);
-          }
-        }
-      }
-    }
-
     if (!isCorrect && questionId) {
       const delay = 3 + Math.floor(Math.random() * 3);
       retryQueueRef.current.push({
@@ -1749,7 +1695,7 @@ function buildScienceSessionStartPayload() {
     topic: String(scienceTrackingTopicKeyRef.current || currentQuestion?.topic || topic || "science"),
     mode: reportModeFromGameState(mode, focusedPracticeMode),
     gradeLevel: String(grade || ""),
-    level: String(level || ""),
+    ...buildSessionStartLevelFields(),
     clientMeta:
       plannerExtra && typeof plannerExtra === "object"
         ? mergePlannerSessionClientMeta(baseMeta, plannerExtra)
@@ -1815,6 +1761,9 @@ function saveScienceAnswerInParallel({
         }
       )
     : null;
+  const answerLevelFields = buildAnswerLevelFields(
+    question?.sourceDifficulty || question?.assignedLevel || question?.levelKey || level
+  );
   ensureLearningSessionId()
     .then((learningSessionId) => {
       if (!learningSessionId) return;
@@ -1841,11 +1790,15 @@ function saveScienceAnswerInParallel({
         creditedTimeMs,
         timingStatus,
         gradeLevel: String(grade || ""),
+        ...answerLevelFields,
         clientMeta: {
           source: "science-master",
-          version: "phase-3",
+          version: "phase-4-display-level",
           gradeKey: String(grade || ""),
           afterStepByStep: stepByStepViewedRef.current,
+          displayLevel: answerLevelFields.displayLevel,
+          sourceDifficulty: answerLevelFields.sourceDifficulty,
+          scienceInternalState: answerLevelFields.scienceInternalState,
           ...buildBookContextClientMetaExtras(mode, {
             bookContextRef,
             bookContextConsumedRef,
@@ -1982,7 +1935,7 @@ function saveScienceAnswerInParallel({
     const targetLevel = entry.level || level;
     const targetTopic = entry.topic || topic;
     setGrade(targetGrade);
-    setLevel(targetLevel);
+    if (targetLevel) applyPlannerLevelKey(targetLevel);
     setTopic(targetTopic);
     setMode("learning");
     setGameActive(false);
@@ -2132,7 +2085,7 @@ function saveScienceAnswerInParallel({
     if (probeAttachOpts && !usedRetryDequeue) {
       nextQuestionPayload = attachProbeMetaToQuestion(nextQuestionPayload, probeAttachOpts);
     }
-    const displayQuestion = sanitizeQuestionForStudentDisplay(nextQuestionPayload);
+    const displayQuestion = tagQuestion(sanitizeQuestionForStudentDisplay(nextQuestionPayload));
     setCurrentQuestion(displayQuestion);
     if (currentQuestion) {
       setPreviousExplanationQuestion(currentQuestion);
@@ -2239,15 +2192,14 @@ function saveScienceAnswerInParallel({
       alert(GUEST_TOPIC_LOCK_MESSAGE_HE);
       return;
     }
-    let plannerResolvedLevel = null;
     if (opts.fromAdaptivePlannerRecommendedPractice && opts.plannerSessionMeta && typeof opts.plannerSessionMeta === "object") {
       plannerNextSessionClientMetaRef.current = opts.plannerSessionMeta;
-      if (opts.appliedLevelKey === "easy" || opts.appliedLevelKey === "medium" || opts.appliedLevelKey === "hard") {
-        plannerResolvedLevel = clampScienceLevelForGrade(grade, opts.appliedLevelKey);
-        setLevel(plannerResolvedLevel);
+      if (opts.appliedLevelKey) {
+        applyPlannerLevelKey(opts.appliedLevelKey);
       }
     } else {
       plannerNextSessionClientMetaRef.current = null;
+      resetAdaptiveForSessionStart();
     }
     recordSessionProgress({ includePlannerRecommendation: false });
     setAdaptivePlannerRecommendationView(null);
@@ -2255,14 +2207,6 @@ function saveScienceAnswerInParallel({
     solvedCountRef.current = 0;
     sessionSecondsRef.current = 0;
     questionTimeLedgerRef.current = null;
-    adaptiveLevelRef.current = clampScienceLevelForGrade(
-      grade,
-      plannerResolvedLevel != null
-        ? plannerResolvedLevel
-        : level
-    );
-    correctAdaptiveStreakRef.current = 0;
-    wrongAdaptiveStreakRef.current = 0;
     setGameActive(true);
     setScore(0);
     setStreak(0);
@@ -2434,6 +2378,10 @@ function saveScienceAnswerInParallel({
       });
     }
 
+    if (isStudentAdaptiveActive("science", { mode: focusedPracticeMode })) {
+      applyAnswerAdaptive(isCorrect, { mode: focusedPracticeMode });
+    }
+
     saveScienceAnswerInParallel({
       question: questionForSave,
       answerIndex: idx,
@@ -2453,7 +2401,7 @@ function saveScienceAnswerInParallel({
     };
     trackCurrentQuestionTime();
     bumpTopicIntel(currentQuestion.topic, !isCorrect);
-    applyAdaptiveDifficulty(isCorrect, isCorrect ? null : currentQuestion.id);
+    applyScienceRetryQueue(isCorrect, isCorrect ? null : currentQuestion.id);
     if (isCorrect) {
       let points = 10 + streak;
       if (mode === "speed" && timeLeft != null) {
@@ -2951,7 +2899,7 @@ function saveScienceAnswerInParallel({
           MB={MB}
           desktopHeaderRef={desktopHeaderRef}
           title="🔬 מדעים"
-          subtitle={`${playerName || "שחקן"} • ${GRADES[grade].name} • ${LEVELS[level].name} • ${getTopicLabel(topic)} • ${MODES[mode].name}`}
+          subtitle={`${playerName || "שחקן"} • ${GRADES[grade].name} • ${studentDisplayLevelLabel("regular")} • ${getTopicLabel(topic)} • ${MODES[mode].name}`}
           onBack={backSafe}
           onCurriculumClick={() => router.push("/learning/curriculum?subject=science")}
           sound={sound}
@@ -2994,7 +2942,7 @@ function saveScienceAnswerInParallel({
               </button>
             </div>
             <p className={MB.pageSub}>
-              {playerName || "שחקן"} • {GRADES[grade].name} • {LEVELS[level].name} •{" "}
+              {playerName || "שחקן"} • {GRADES[grade].name} • {studentDisplayLevelLabel("regular")} •{" "}
               {getTopicLabel(topic)} • {MODES[mode].name}
             </p>
           </div>
@@ -3103,26 +3051,9 @@ function saveScienceAnswerInParallel({
                     </option>
                   ))}
                 </select>
-                <select
-                  value={level}
-                  disabled={gameActive}
-                  title={
-                    gameActive
-                      ? "רמת קושי מתעדכנת אוטומטית במהלך המשחק"
-                      : LEVELS[level]?.name
-                  }
-                  onChange={(e) => {
-                    setLevel(e.target.value);
-                    setGameActive(false);
-                  }}
-                  className={`${MB.selectControl} shrink-0 min-w-0 w-[5rem] max-w-[5.5rem] md:w-[5.75rem] md:max-w-[6.25rem]`}
-                >
-                  {scienceLevelKeysForGradeKey(grade).map((l) => (
-                    <option key={l} value={l}>
-                      {LEVELS[l].name}
-                    </option>
-                  ))}
-                </select>
+                <StudentDisplayLevelRegularOnly
+                  className={`${MB.selectControl} shrink-0 min-w-0 w-[5rem] max-w-[5.5rem] md:w-[5.75rem] md:max-w-[6.25rem] inline-flex items-center justify-center`}
+                />
                 <div className="flex flex-1 min-w-0 md:flex-none md:max-w-[min(22rem,42vw)] items-center gap-1.5 md:gap-2 shrink">
                   <select
                     data-testid="science-topic-select"
@@ -3783,7 +3714,7 @@ function saveScienceAnswerInParallel({
                         <div className="flex items-center justify-between text-xs text-white/60 mb-1">
                           <span>{getTopicLabel(item.topic)}</span>
                           <span>
-                            {GRADES[item.grade]?.name || "כיתה"} • {LEVELS[item.level]?.name || ""}
+                            {GRADES[item.grade]?.name || "כיתה"} • {studentDisplayLevelLabel("regular")}
                           </span>
                         </div>
                         <p className="text-sm font-semibold text-white mb-1">
@@ -3845,7 +3776,7 @@ function saveScienceAnswerInParallel({
                   </button>
                 </div>
                 <p className="text-sm text-white/70 mb-3">
-                  שלוט באימון שלך: חזרה על שגיאות אחרונות, תרגול מדורג (קל ואז מתקדם לרמה שבחרת), או בחירת קטגוריה מדעית.
+                  שלוט באימון שלך: חזרה על שגיאות אחרונות, תרגול מדורג (התחלה נמוכה ומתקדמות לרמה שבחרת), או בחירת קטגוריה מדעית.
                 </p>
                 <div className="space-y-2 mb-4">
                   <p className="text-xs text-white/60 font-semibold">מצב תרגול</p>
