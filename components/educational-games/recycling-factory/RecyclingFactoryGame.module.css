@@ -7,7 +7,7 @@
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
-  background: linear-gradient(165deg, #dbeafe 0%, #ecfccb 35%, #fef9c3 70%, #bae6fd 100%);
+  background: linear-gradient(180deg, #fff7ed 0%, #fef3c7 40%, #ecfccb 100%);
   color: #0f172a;
   position: relative;
 }
@@ -117,17 +117,15 @@
   box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
 }
 
-.backBtn {
-  min-height: 40px;
-  min-width: 40px;
-  padding: 0.35rem 0.65rem;
-  border-radius: 999px;
-  border: 2px solid #86efac;
-  background: #fff;
-  font-size: 0.75rem;
-  font-weight: 800;
-  color: #166534;
-  box-shadow: 0 2px 0 #4ade80;
+a.hudChip,
+button.hudChip {
+  text-decoration: none;
+  color: #1e293b;
+  cursor: pointer;
+  font-family: inherit;
+  line-height: 1.2;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
 .hud {
@@ -1014,5 +1012,195 @@
     font-size: clamp(0.62rem, 2.4vw, 0.78rem);
     line-height: 1.25;
     -webkit-line-clamp: 2;
+  }
+}
+
+.recyclingWorkCol {
+  min-height: 0;
+  grid-column: 1 !important;
+  grid-row: 2 !important;
+}
+
+.recyclingShopGrid {
+  grid-template-columns: 1fr !important;
+  grid-template-rows: auto minmax(155px, 0.92fr) minmax(215px, 1.08fr) auto;
+}
+
+.recyclingCustomerCol {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+}
+
+.recyclingSideCol {
+  grid-column: 1 !important;
+  grid-row: 3 !important;
+}
+
+.recyclingBottomBar {
+  grid-column: 1 !important;
+  grid-row: 4 !important;
+}
+
+.recyclingWorkCol .conveyorWrap {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+}
+
+.recyclingWorkCol .conveyorFrame {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.recyclingWorkCol .beltTrack {
+  flex: 1;
+  min-height: clamp(88px, 16dvh, 120px);
+  max-height: 100%;
+}
+
+.recyclingBinsPanel {
+  flex: 1;
+  min-height: 0;
+}
+
+.recyclingBinsPanel .binsArea {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.recyclingBinsPanel .binsGrid {
+  flex: 1;
+  min-height: 0;
+  align-content: stretch;
+}
+
+@media (max-width: 720px) {
+  .recyclingShopGrid {
+    grid-template-rows: auto minmax(155px, 0.92fr) minmax(215px, 1.08fr) auto;
+  }
+
+  .recyclingWorkCol {
+    max-height: clamp(150px, 28dvh, 190px);
+  }
+}
+
+@media (min-width: 721px) {
+  .recyclingShopGrid {
+    grid-template-rows: auto minmax(165px, 0.94fr) minmax(230px, 1.06fr) auto;
+  }
+
+  .recyclingCustomerCol {
+    flex-shrink: 0;
+    align-self: stretch;
+  }
+
+  .recyclingMissionCard {
+    flex: none !important;
+    height: auto !important;
+    min-height: 0;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: right;
+    gap: 0.55rem;
+    padding: 0.52rem 0.65rem;
+  }
+
+  .recyclingMissionSpeech {
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0.18rem;
+  }
+
+  .recyclingMissionAvatar {
+    font-size: clamp(2.85rem, 4.2vw, 3.55rem) !important;
+  }
+
+  .recyclingMissionTitle {
+    font-size: clamp(1.22rem, 1.9vw, 1.48rem) !important;
+  }
+
+  .recyclingMissionText {
+    font-size: clamp(1.12rem, 1.7vw, 1.32rem) !important;
+  }
+
+  .recyclingMissionHint {
+    font-size: clamp(1.02rem, 1.55vw, 1.2rem) !important;
+    margin-top: 0.22rem;
+  }
+
+  .recyclingWorkCol {
+    max-height: clamp(155px, 22vh, 195px);
+    align-self: stretch;
+  }
+
+  .recyclingSideCol {
+    max-height: none;
+  }
+
+  .recyclingWorkCol .conveyorWrap {
+    height: auto;
+    justify-content: center;
+  }
+
+  .recyclingWorkCol .conveyorFrame {
+    width: 100%;
+    max-width: none;
+    height: auto;
+    margin: 0;
+    padding: 0.5rem 0.45rem 0.75rem;
+  }
+
+  .recyclingWorkCol .beltTrack {
+    height: clamp(96px, 12vh, 118px);
+    flex: none;
+    max-height: 118px;
+  }
+
+  .recyclingBinsPanel {
+    padding: 0.45rem 0.5rem !important;
+  }
+
+  .recyclingBinsPanel .binsArea {
+    justify-content: center;
+  }
+
+  .recyclingBinsPanel .binsGrid {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    align-content: center;
+    justify-items: stretch;
+    --bin-gap: clamp(0.35rem, 1.2vw, 0.55rem);
+  }
+
+  .recyclingBinsPanel .binBtn {
+    min-height: clamp(78px, 11vh, 96px);
+    padding: 0.35rem 0.22rem 0.45rem;
+  }
+
+  .recyclingBinsPanel .binBody {
+    max-width: none;
+    width: 100%;
+  }
+
+  .recyclingBinsPanel .binCan {
+    min-height: clamp(74px, 10vh, 92px);
+    padding: 0.38rem 0.22rem;
+  }
+
+  .recyclingBinsPanel .binEmoji {
+    font-size: clamp(1.85rem, 2.8vw, 2.35rem);
+  }
+
+  .recyclingBinsPanel .binLabel {
+    font-size: clamp(0.72rem, 1.2vw, 0.86rem);
   }
 }

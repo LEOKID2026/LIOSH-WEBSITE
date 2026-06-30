@@ -1,0 +1,116 @@
+[
+  {
+    "label": "pizzeria-desktop",
+    "viewport": {
+      "w": 1280,
+      "h": 800
+    },
+    "scroll": {
+      "document": false,
+      "body": false,
+      "shell": false,
+      "grid": false,
+      "toolsGrid": false,
+      "any": false
+    },
+    "buttons": {
+      "checkVisible": true,
+      "clearVisible": true
+    }
+  },
+  {
+    "label": "pizzeria-mobile-portrait",
+    "viewport": {
+      "w": 412,
+      "h": 839
+    },
+    "scroll": {
+      "document": false,
+      "body": false,
+      "shell": false,
+      "grid": false,
+      "toolsGrid": false,
+      "any": false
+    },
+    "buttons": {
+      "checkVisible": true,
+      "clearVisible": true
+    }
+  },
+  {
+    "label": "pizzeria-mobile-landscape",
+    "viewport": {
+      "w": 844,
+      "h": 390
+    },
+    "scroll": {
+      "document": false,
+      "body": false,
+      "shell": false,
+      "grid": false,
+      "toolsGrid": false,
+      "any": false
+    },
+    "buttons": {
+      "checkVisible": true,
+      "clearVisible": true
+    }
+  },
+  {
+    "label": "lab-desktop",
+    "viewport": {
+      "w": 1280,
+      "h": 800
+    },
+    "scroll": {
+      "document": false,
+      "body": false,
+      "shell": false,
+      "grid": false,
+      "toolsGrid": false,
+      "any": false
+    },
+    "buttons": {
+      "checkVisible": true,
+      "clearVisible": true
+    }
+  },
+  {
+    "label": "lab-mobile-portrait",
+    "viewport": {
+      "w": 412,
+      "h": 839
+    },
+    "scroll": {
+      "document": false,
+      "body": false,
+      "shell": false,
+      "grid": false,
+      "toolsGrid": false,
+      "any": false
+    },
+    "buttons": {
+      "checkVisible": true,
+      "clearVisible": true
+    }
+  },
+  {
+    "label": "lab-mobile-landscape",
+    "viewport": {
+      "w": 844,
+      "h": 390
+    },
+    "scroll": {
+      "document": false,
+      "body": false,
+      "shell": false,
+      "grid": false,
+      "toolsGrid": false,
+      "any": false
+    },
+    "buttons": {
+      "checkVisible": true,
+      "clearVisible": true
+    }
+  }
+]

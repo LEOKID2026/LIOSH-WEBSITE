@@ -12,6 +12,7 @@ import { buildRecyclingFactoryMetrics } from "./recycling-factory-metrics.js";
 import RecyclingItemVisual from "./RecyclingItemVisual.jsx";
 import EducationalDifficultyGradeHint from "../EducationalDifficultyGradeHint.jsx";
 import EducationalGameHudFullscreenButton from "../EducationalGameHudFullscreenButton.jsx";
+import shop from "../shared/educational-game-shop-layout.module.css";
 import styles from "./RecyclingFactoryGame.module.css";
 
 /** @typedef {import('./recycling-factory-data.js').DifficultyId} DifficultyId */
@@ -111,7 +112,7 @@ export default function RecyclingFactoryGame({
   initialDifficulty = "easy",
   productionMode = false,
   onSessionEnd,
-  backHref = "/dev/learning-game-prototypes",
+  backHref = "/student/educational-games",
   showFullscreenButton = false,
   isFullscreen = false,
   onFullscreenToggle,
@@ -588,6 +589,15 @@ export default function RecyclingFactoryGame({
     </div>
   );
 
+  const feedbackBarClass = [
+    shop.feedbackBar,
+    feedback.type === "ok"
+      ? shop.feedbackOk
+      : feedback.type === "bad"
+        ? shop.feedbackBad
+        : shop.feedbackNeutral,
+  ].join(" ");
+
   return (
     <div className={`${styles.shell} ${productionMode ? styles.shellEmbedded : ""}`} dir="rtl">
       <span className={`${styles.deco} ${styles.gear1}`} aria-hidden>
@@ -607,13 +617,9 @@ export default function RecyclingFactoryGame({
       </span>
 
       <header className={styles.header}>
-        {!productionMode ? (
-          <Link href={backHref} className={styles.backBtn}>
-            ← חזרה
-          </Link>
-        ) : (
-          <div style={{ minWidth: 40 }} aria-hidden />
-        )}
+        <Link href={backHref} className={styles.hudChip}>
+          חזרה
+        </Link>
         {phase === "play" ? (
           <div className={styles.hud}>
             <span className={`${styles.hudChip} ${styles.hudChipScore}`}>⭐ {score}</span>
@@ -624,19 +630,19 @@ export default function RecyclingFactoryGame({
               ❌ {mistakes}/{diffConfig.maxMistakes}
             </span>
             <span className={`${styles.hudChip} ${styles.hudChipGood}`}>🔥 {streak}</span>
-            {showFullscreenButton && onFullscreenToggle ? (
-              <EducationalGameHudFullscreenButton
-                isFullscreen={isFullscreen}
-                onToggle={onFullscreenToggle}
-              />
-            ) : null}
           </div>
         ) : (
           <div className={styles.hud}>
             <span className={styles.hudChip}>{productionMode ? "♻️" : "🧪 אבטיפוס"}</span>
           </div>
         )}
-        <div style={{ minWidth: 40 }} aria-hidden />
+        {showFullscreenButton && onFullscreenToggle ? (
+          <EducationalGameHudFullscreenButton
+            className={styles.hudChip}
+            isFullscreen={isFullscreen}
+            onToggle={onFullscreenToggle}
+          />
+        ) : null}
       </header>
 
       {phase === "intro" && !autoStart ? (
@@ -668,55 +674,80 @@ export default function RecyclingFactoryGame({
       ) : null}
 
       {phase === "play" ? (
-        <div className={styles.main}>
-          <div className={styles.factorySign}>
-            <h2 className={styles.factoryTitle}>מפעל המיחזור של ליאו</h2>
-            <p className={styles.factorySub}>רמה: {diffConfig.label}</p>
-          </div>
+        <div className={shop.shopMain}>
+          <p className={shop.counterLabel}>
+            ♻️ מפעל המיחזור · {sortedCount}/{diffConfig.itemsTarget} · {diffConfig.label}
+          </p>
 
-          <div className={styles.playArea}>
-            <div className={styles.conveyorWrap}>
-              <div className={styles.conveyorFrame}>
-                <span className={styles.conveyorLabel}>🏭 מסוע</span>
-                <div className={styles.beltTrack}>
-                  <div className={styles.beltSurface} aria-hidden />
-                  <div className={styles.beltRollLeft} aria-hidden />
-                  <div className={styles.beltRollRight} aria-hidden />
-                  <div className={styles.beltItemsLayer}>
-                    {beltItems.map((bi) => (
-                      <BeltItemView
-                        key={bi.uid}
-                        item={bi}
-                        selected={selectedUid === bi.uid}
-                        dragging={draggingUid === bi.uid}
-                        onPointerDown={(e) => onItemPointerDown(e, bi.uid)}
-                        onClick={() => onItemClick(bi.uid)}
-                      />
-                    ))}
+          <div className={`${shop.shopGrid} ${styles.recyclingShopGrid}`} data-educational-workplace-grid="">
+            <aside className={`${shop.customerCol} ${styles.recyclingCustomerCol}`}>
+              <div className={`${shop.customerCard} ${styles.recyclingMissionCard}`}>
+                <span className={`${shop.customerAvatar} ${styles.recyclingMissionAvatar}`} aria-hidden>
+                  🦁♻️
+                </span>
+                <div className={`${shop.customerSpeechWrap} ${styles.recyclingMissionSpeech}`}>
+                  <p className={`${shop.customerName} ${styles.recyclingMissionTitle}`}>משימה</p>
+                  <p className={`${shop.missionText} ${styles.recyclingMissionText}`}>
+                    מיינו כל פריט לפח הנכון — שמרו על הסביבה!
+                    <span className={`${shop.missionTicket} ${styles.recyclingMissionHint}`}>
+                      🏭 גררו או לחצו פריט ← פח
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </aside>
+
+            <section className={`${shop.workCol} ${styles.recyclingWorkCol}`}>
+              <div className={shop.workFrame}>
+                <div className={styles.conveyorWrap}>
+                  <div className={styles.conveyorFrame}>
+                    <span className={styles.conveyorLabel}>🏭 מסוע</span>
+                    <div className={styles.beltTrack}>
+                      <div className={styles.beltSurface} aria-hidden />
+                      <div className={styles.beltRollLeft} aria-hidden />
+                      <div className={styles.beltRollRight} aria-hidden />
+                      <div className={styles.beltItemsLayer}>
+                        {beltItems.map((bi) => (
+                          <BeltItemView
+                            key={bi.uid}
+                            item={bi}
+                            selected={selectedUid === bi.uid}
+                            dragging={draggingUid === bi.uid}
+                            onPointerDown={(e) => onItemPointerDown(e, bi.uid)}
+                            onClick={() => onItemClick(bi.uid)}
+                          />
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </section>
 
-            <div
-              className={`${styles.feedbackBar} ${
-                feedback.type === "ok" ? styles.feedbackOk : feedback.type === "bad" ? styles.feedbackBad : ""
-              }`}
-            >
-              {feedback.text ? (
-                <p className={styles.feedbackText}>
-                  {feedback.text}
-                  {feedback.fact ? <span className={styles.feedbackFact}>{feedback.fact}</span> : null}
-                </p>
-              ) : (
-                <p className={styles.feedbackText} style={{ opacity: 0.55 }}>
-                  גררו לפח או לחצו פריט ← פח
-                </p>
-              )}
-            </div>
+            <aside className={`${shop.sideCol} ${styles.recyclingSideCol}`}>
+              <div className={`${shop.toolsPanel} ${styles.recyclingBinsPanel}`}>
+                <p className={shop.toolsTitle}>🗑️ פחי מיחזור</p>
+                <div className={styles.binsArea} data-bin-count={activeBins.length}>
+                  {renderBins(`${styles.binsGrid} ${binsGridClass}`)}
+                </div>
+              </div>
+            </aside>
 
-            <div className={styles.binsArea} data-bin-count={activeBins.length}>
-              {renderBins(`${styles.binsGrid} ${binsGridClass}`)}
+            <div className={`${shop.bottomBar} ${styles.recyclingBottomBar}`}>
+              <div className={feedbackBarClass}>
+                {feedback.text ? (
+                  <p className={shop.feedbackText}>
+                    {feedback.text}
+                    {feedback.fact ? (
+                      <span className={styles.feedbackFact}>{feedback.fact}</span>
+                    ) : null}
+                  </p>
+                ) : (
+                  <p className={shop.feedbackText} style={{ opacity: 0.55 }}>
+                    גררו לפח או לחצו פריט ← פח
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </div>

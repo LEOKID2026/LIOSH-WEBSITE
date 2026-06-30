@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { sharedStyles as frame } from "../../prototypes/dev/learning/shared/LearningPrototypeFrame.jsx";
 import EducationalDifficultyGradeHint from "../EducationalDifficultyGradeHint.jsx";
 import EducationalGameHudFullscreenButton from "../EducationalGameHudFullscreenButton.jsx";
+import shop from "../shared/educational-game-shop-layout.module.css";
 import LabItemVisual from "./LabItemVisual.jsx";
 import {
   DIFFICULTIES,
@@ -11,7 +13,7 @@ import {
   feedbackMessageForReason,
   isLabWin,
   pickExperimentsForRun,
-  shelfItemsForDifficulty,
+  shelfItemsForExperiment,
   successFeedbackMessage,
   validateExperimentSelection,
 } from "./leo-lab-data.js";
@@ -105,10 +107,17 @@ export default function LeoLabGame({
   const currentExperiment = experiments[experimentIndex] ?? null;
   const maxPick = currentExperiment?.pickCount ?? 2;
 
-  const shelfItems = useMemo(() => shelfItemsForDifficulty(difficulty), [difficulty]);
+  const shelfItems = useMemo(
+    () => (currentExperiment ? shelfItemsForExperiment(currentExperiment) : []),
+    [currentExperiment],
+  );
 
   const shelfGridClass =
-    diffConfig.shelfCount === 8 ? styles.shelfGridEasy : styles.shelfGridTwelve;
+    diffConfig.shelfCount === 8
+      ? styles.shelfGridEasy
+      : diffConfig.shelfCount === 10
+        ? styles.shelfGridTen
+        : styles.shelfGridTwelve;
 
   const addScore = useCallback((delta) => {
     setScore((s) => Math.max(0, s + delta));
@@ -146,12 +155,9 @@ export default function LeoLabGame({
     startGame();
   }, [autoStart, phase, experiments.length, startGame]);
 
-  const endRun = useCallback(
-    (nextPhase) => {
-      setPhase(nextPhase);
-    },
-    [],
-  );
+  const endRun = useCallback((nextPhase) => {
+    setPhase(nextPhase);
+  }, []);
 
   const advanceExperiment = useCallback(() => {
     const nextIdx = experimentIndex + 1;
@@ -408,236 +414,220 @@ export default function LeoLabGame({
     .filter(Boolean)
     .join(" ");
 
-  return (
-    <div className={`${styles.shell} ${productionMode ? styles.shellEmbedded : ""}`} dir="rtl">
-      <span className={`${styles.deco} ${styles.flaskDeco}`} aria-hidden>
-        🧪
-      </span>
-      <span className={`${styles.deco} ${styles.atomDeco}`} aria-hidden>
-        ⚛️
-      </span>
+  const feedbackBarClass = [
+    shop.feedbackBar,
+    checkState === "ok"
+      ? shop.feedbackOk
+      : checkState === "bad"
+        ? shop.feedbackBad
+        : shop.feedbackNeutral,
+  ]    .join(" ");
 
-      <header className={styles.header}>
-        {!productionMode ? (
-          <Link href={backHref} className={styles.backBtn}>
-            ← חזרה
-          </Link>
-        ) : (
-          <div style={{ minWidth: 40 }} aria-hidden />
-        )}
+  return (
+    <div
+      className={`${frame.shell} ${frame.shellWarm} ${productionMode ? styles.shellEmbedded : ""}`}
+      dir="rtl"
+    >
+      <header className={frame.header}>
+        <Link href={backHref} className={frame.hudChip}>
+          חזרה
+        </Link>
         {phase === "play" ? (
-          <div className={styles.hud}>
-            <span className={`${styles.hudChip} ${styles.hudScore}`}>⭐ {score}</span>
-            <span className={`${styles.hudChip} ${styles.hudProgress}`}>
-              🧪 {experimentIndex + 1}/{EXPERIMENTS_PER_LEVEL}
+          <div className={frame.hud}>
+            <span className={`${frame.hudChip} ${frame.hudScore}`}>⭐ {score}</span>
+            <span className={`${frame.hudChip} ${frame.hudProgress}`}>
+              🎯 {experimentIndex + 1}/{EXPERIMENTS_PER_LEVEL}
             </span>
-            <span className={`${styles.hudChip} ${styles.hudBad}`}>
+            <span className={`${frame.hudChip} ${frame.hudBad}`}>
               ❌ {mistakes}/{diffConfig.maxMistakes}
             </span>
-            <span className={styles.hudChip}>{diffConfig.label}</span>
-            {showFullscreenButton && onFullscreenToggle ? (
-              <EducationalGameHudFullscreenButton
-                isFullscreen={isFullscreen}
-                onToggle={onFullscreenToggle}
-              />
-            ) : null}
+            <span className={frame.hudChip}>{diffConfig.label}</span>
           </div>
         ) : (
-          <div className={styles.hud}>
-            <span className={styles.hudChip}>{productionMode ? "🔬" : "🔬 אבטיפוס"}</span>
+          <div className={frame.hud}>
+            <span className={frame.hudChip}>{productionMode ? "🔬" : "🔬 אבטיפוס"}</span>
           </div>
         )}
-        <div style={{ minWidth: 40 }} aria-hidden />
+        {showFullscreenButton && onFullscreenToggle ? (
+          <EducationalGameHudFullscreenButton
+            className={frame.hudChip}
+            isFullscreen={isFullscreen}
+            onToggle={onFullscreenToggle}
+          />
+        ) : null}
       </header>
 
       {!productionMode && phase === "intro" ? (
-        <div className={styles.screenCenter}>
-          <p className={styles.introHero}>🔬🧪</p>
-          <h1 className={styles.introTitle}>מעבדת הניסויים של ליאו</h1>
-          <p className={styles.introText}>
-            בחרו חפצים מהמדף, שימו על שולחן הניסוי ולחצו &quot;בדוק ניסוי&quot; — גלו איך
-            העולם עובד!
+        <div className={frame.screenCenter}>
+          <p className={frame.introHero}>🔬🧪</p>
+          <h1 className={frame.introTitle}>מעבדת הניסויים של ליאו</h1>
+          <p className={frame.introText}>
+            בחרו חפצים מהמדף, שימו על שולחן הניסוי ולחצו &quot;בדוק ניסוי&quot; — גלו איך העולם
+            עובד!
           </p>
-          <div className={styles.difficultyRow}>
+          <div className={frame.difficultyRow}>
             {(/** @type {DifficultyId[]} */ (["easy", "medium", "hard"])).map((id) => (
               <button
                 key={id}
                 type="button"
-                className={`${styles.diffBtn} ${difficulty === id ? styles.diffBtnSelected : ""}`}
+                className={`${frame.diffBtn} ${difficulty === id ? frame.diffBtnSelected : ""}`}
                 onClick={() => setDifficulty(id)}
               >
                 {DIFFICULTIES[id].label} · {DIFFICULTIES[id].itemHint}
               </button>
             ))}
           </div>
-          <EducationalDifficultyGradeHint className={`${styles.introText} opacity-70`} style={{ fontSize: "0.72rem" }} />
-          <p className={styles.introText} style={{ fontSize: "0.78rem" }}>
+          <EducationalDifficultyGradeHint
+            className={`${frame.introText} opacity-70`}
+            style={{ fontSize: "0.72rem" }}
+          />
+          <p className={frame.introText} style={{ fontSize: "0.78rem" }}>
             {EXPERIMENTS_PER_LEVEL} ניסויים · גרירה או לחיצה על חפצים
           </p>
-          <button type="button" className={styles.startBtn} onClick={startGame}>
+          <button type="button" className={frame.startBtn} onClick={startGame}>
             כניסה למעבדה
           </button>
         </div>
       ) : null}
 
       {phase === "play" && currentExperiment ? (
-        <div className={styles.main}>
-          <div className={styles.missionCard}>
-            <span className={styles.missionIcon} aria-hidden>
-              {currentExperiment.missionIcon ?? "🔬"}
-            </span>
-            <div className={styles.missionBody}>
-              <p className={styles.missionLabel}>משימה</p>
-              <h2 className={styles.missionTitle}>{currentExperiment.title}</h2>
-              <p className={styles.missionPrompt}>{currentExperiment.prompt}</p>
-            </div>
-          </div>
+        <div className={shop.shopMain}>
+          <p className={shop.counterLabel}>
+            🔬 שולחן ניסוי · ניסוי {experimentIndex + 1} מתוך {EXPERIMENTS_PER_LEVEL}
+          </p>
 
-          <div className={styles.leoRow}>
-            <span className={styles.leoBadge} aria-hidden>
-              🦁👨‍🔬
-            </span>
-            <span className={styles.leoCaption}>ליאו המדען עוזר לכם!</span>
-          </div>
-
-          <div className={styles.playStack}>
-            <div className={styles.benchSection}>
-              <p className={styles.benchLabel}>🧫 שולחן הניסוי</p>
-              <div data-drop-zone="bench" className={benchClassName}>
-                {showResult ? (
-                  <div className={styles.resultDisplay}>
-                    <span className={styles.resultIcon}>{resultIcon}</span>
-                    <p className={styles.resultText}>{resultText}</p>
-                  </div>
-                ) : selectedIds.length > 0 ? (
-                  <div className={styles.benchItems}>
-                    {selectedIds.map((id) => {
-                      const item = LAB_ITEMS[id];
-                      if (!item) return null;
-                      const isDragging = draggingItemId === id;
-                      return (
-                        <button
-                          key={id}
-                          type="button"
-                          className={styles.benchItemBtn}
-                          onClick={() => toggleItem(id)}
-                          aria-label={`הסר ${item.name}`}
-                        >
-                          {!isDragging ? (
-                            <LabItemVisual item={item} size="bench" showName />
-                          ) : null}
-                        </button>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <p className={styles.benchEmptyHint}>
-                    גררו או לחצו על חפצים · בחרו {maxPick}
+          <div className={`${shop.shopGrid} ${styles.labShopGrid}`} data-educational-workplace-grid="">
+            <aside className={shop.customerCol}>
+              <div className={shop.customerCard}>
+                <span className={shop.customerAvatar} aria-hidden>
+                  {currentExperiment.missionIcon ?? "🦁👨‍🔬"}
+                </span>
+                <div className={shop.customerSpeechWrap}>
+                  <p className={shop.customerName}>{currentExperiment.title}</p>
+                  <p className={shop.missionText}>
+                    {currentExperiment.prompt}
+                    <span className={shop.missionTicket}>🧾 בחרו {maxPick} חפצים</span>
                   </p>
-                )}
+                </div>
+              </div>
+            </aside>
+
+            <section className={`${shop.workCol} ${styles.labWorkCol}`}>
+              <div className={shop.workFrame}>
+                <div data-drop-zone="bench" className={benchClassName}>
+                  {showResult ? (
+                    <div className={styles.resultDisplay}>
+                      <span className={styles.resultIcon}>{resultIcon}</span>
+                      <p className={styles.resultText}>{resultText}</p>
+                    </div>
+                  ) : selectedIds.length > 0 ? (
+                    <div className={styles.benchItems}>
+                      {selectedIds.map((id) => {
+                        const item = LAB_ITEMS[id];
+                        if (!item) return null;
+                        const isDragging = draggingItemId === id;
+                        return (
+                          <button
+                            key={id}
+                            type="button"
+                            className={styles.benchItemBtn}
+                            onClick={() => toggleItem(id)}
+                            aria-label={`הסר ${item.name}`}
+                          >
+                            {!isDragging ? (
+                              <LabItemVisual item={item} size="bench" showName />
+                            ) : null}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <p className={styles.benchEmptyHint}>
+                      גררו או לחצו על חפצים · בחרו {maxPick}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </section>
+
+            <aside className={shop.sideCol}>
+              <div className={`${frame.panel} ${shop.toolsPanel}`}>
+                <p className={shop.toolsTitle}>🗄️ מדף החפצים</p>
+                <div className={`${shop.toolsGrid} ${shelfGridClass}`}>
+                  {shelfItems.map((item) => {
+                    const onBench = selectedIds.includes(item.id);
+                    const isDragging = draggingItemId === item.id;
+                    const shelfFull = selectedIds.length >= maxPick && !onBench;
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        disabled={showResult || shelfFull}
+                        className={`${shop.toolBtn} ${onBench ? shop.toolBtnActive : ""}`}
+                        onPointerDown={(e) => onShelfPointerDown(e, item.id)}
+                        onClick={() => onShelfClick(item.id)}
+                        aria-label={item.name}
+                        aria-pressed={onBench}
+                      >
+                        {!isDragging ? <LabItemVisual item={item} size="shelf" /> : null}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
 
-              <div
-                className={`${styles.feedbackBar} ${
-                  checkState === "ok"
-                    ? styles.feedbackOk
-                    : checkState === "bad"
-                      ? styles.feedbackBad
-                      : styles.feedbackNeutral
-                }`}
-              >
-                {feedback.text ? (
-                  <p className={styles.feedbackText}>
+              {feedback.text ? (
+                <div className={feedbackBarClass}>
+                  <p className={shop.feedbackText}>
                     {feedback.text}
                     {feedback.fact ? (
                       <span className={styles.feedbackFact}>{feedback.fact}</span>
                     ) : null}
                   </p>
-                ) : (
-                  <p className={styles.feedbackText} style={{ opacity: 0.55 }}>
-                    בחרו חפצים ולחצו &quot;בדוק ניסוי&quot;
-                  </p>
-                )}
-              </div>
-            </div>
+                </div>
+              ) : null}
+            </aside>
 
-            <section className={styles.shelfSection}>
-              <p className={styles.shelfTitle}>🗄️ מדף החפצים</p>
-              <div className={`${styles.shelfGrid} ${shelfGridClass}`}>
-                {shelfItems.map((item) => {
-                  const onBench = selectedIds.includes(item.id);
-                  const isDragging = draggingItemId === item.id;
-                  const shelfFull = selectedIds.length >= maxPick && !onBench;
-                  return (
-                    <button
-                      key={item.id}
-                      type="button"
-                      disabled={showResult || shelfFull}
-                      className={`${styles.shelfItemBtn} ${onBench ? styles.shelfItemOnBench : ""}`}
-                      onPointerDown={(e) => onShelfPointerDown(e, item.id)}
-                      onClick={() => onShelfClick(item.id)}
-                      aria-label={item.name}
-                    >
-                      {!isDragging ? <LabItemVisual item={item} size="shelf" /> : null}
-                    </button>
-                  );
-                })}
+            <div className={shop.bottomBar}>
+              <div className={shop.actionRow}>
+                <button
+                  type="button"
+                  className={shop.primaryBtn}
+                  disabled={showResult || selectedIds.length !== maxPick}
+                  onClick={runCheck}
+                >
+                  בדוק ניסוי 🧪
+                </button>
+                <button
+                  type="button"
+                  className={shop.secondaryBtn}
+                  disabled={showResult || selectedIds.length === 0}
+                  onClick={clearSelection}
+                >
+                  נקה בחירה
+                </button>
               </div>
-            </section>
-
-            <div className={styles.actionRow}>
-              <button
-                type="button"
-                className={styles.primaryBtn}
-                disabled={showResult || selectedIds.length !== maxPick}
-                onClick={runCheck}
-              >
-                בדוק ניסוי 🧪
-              </button>
-              <button
-                type="button"
-                className={styles.secondaryBtn}
-                disabled={showResult || selectedIds.length === 0}
-                onClick={clearSelection}
-              >
-                נקה בחירה
-              </button>
             </div>
           </div>
         </div>
       ) : null}
 
       {phase === "won" && !productionMode ? (
-        <div className={styles.screenCenter}>
-          <div className={styles.endCard}>
-            <h2 className={styles.endTitle}>🎉 סיימתם את המעבדה!</h2>
-            <div className={styles.endStats}>
-              <div className={styles.endStat}>
-                ניקוד
-                <span className={styles.endStatValue}>{score}</span>
-              </div>
-              <div className={styles.endStat}>
-                הצלחות
-                <span className={styles.endStatValue}>
-                  {successCount}/{experiments.length}
-                </span>
-              </div>
-              <div className={styles.endStat}>
-                טעויות
-                <span className={styles.endStatValue}>{mistakes}</span>
-              </div>
-              <div className={styles.endStat}>
-                דיוק
-                <span className={styles.endStatValue}>{accuracyPct}%</span>
-              </div>
-              <div className={styles.endStat} style={{ gridColumn: "1 / -1" }}>
-                רמה
-                <span className={styles.endStatValue}>{diffConfig.label}</span>
-              </div>
+        <div className={frame.screenCenter}>
+          <div className={frame.endCard}>
+            <h2 className={frame.endTitle}>🎉 סיימתם את המעבדה!</h2>
+            <p className={frame.endStat}>⭐ ניקוד: {score}</p>
+            <p className={frame.endStat}>
+              ✅ הצלחות: {successCount}/{experiments.length}
+            </p>
+            <p className={frame.endStat}>❌ טעויות: {mistakes}</p>
+            <p className={frame.endStat}>📊 דיוק: {accuracyPct}%</p>
+            <p className={frame.endStat}>📊 רמה: {diffConfig.label}</p>
+            <div className={frame.endActions}>
+              <button type="button" className={frame.startBtn} onClick={() => setPhase("intro")}>
+                משחק חדש
+              </button>
             </div>
-            <button type="button" className={styles.startBtn} onClick={() => setPhase("intro")}>
-              משחק חדש
-            </button>
           </div>
         </div>
       ) : null}

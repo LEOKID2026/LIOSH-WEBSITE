@@ -117,11 +117,10 @@ function emptyLevelSteps() {
 }
 
 /**
- * Run question flow for one display level (regular or advanced).
+ * Run question flow for one display level on an already-authenticated page.
  */
-async function runDisplayLevelFlow(ctx, {
+async function runDisplayLevelFlow(page, {
   baseUrl,
-  subjectKey,
   profile,
   plan,
   harnessKey,
@@ -133,14 +132,13 @@ async function runDisplayLevelFlow(ctx, {
   logFile,
 }) {
   const steps = emptyLevelSteps();
-  const page = await ctx.newPage();
   const diag = attachPageDiagnostics(page);
   page.setDefaultTimeout(90_000);
 
   let sessionStartJson = null;
   let finishObserved = false;
 
-  page.on("response", async (response) => {
+  const onResponse = async (response) => {
     const url = response.url();
     if (response.request().method() !== "POST") return;
     if (url.includes("/api/learning/session/start")) {
@@ -153,12 +151,13 @@ async function runDisplayLevelFlow(ctx, {
     if (url.includes("/api/learning/session/finish") && response.status() === 200) {
       finishObserved = true;
     }
-  });
+  };
+  page.on("response", onResponse);
 
   const levelLabel = DISPLAY_LEVEL_HE[displayLevel] || displayLevel;
 
   try {
-    await authenticateStudent({ context: ctx, page, account: student, baseUrl, log: () => {} });
+    await stopActiveGameIfAny(page).catch(() => {});
     await navigateToPlayerShell(page, plan, baseUrl);
     await dismissBlockingUi(page);
 
@@ -245,8 +244,8 @@ async function runDisplayLevelFlow(ctx, {
       steps.no_crash.detail += `; console=${diag.consoleErrors.slice(0, 2).join(" | ")}`;
     }
   } finally {
+    page.off("response", onResponse);
     await stopActiveGameIfAny(page).catch(() => {});
-    await page.close();
   }
 
   const pass = LEVEL_CHECK_STEPS.every((s) => steps[s]?.pass);
@@ -294,23 +293,23 @@ export async function runSubjectSimulation(browser, { baseUrl, subjectKey, logFi
   }
 
   const context = await browser.newContext({ baseURL: baseUrl, locale: "he-IL" });
-  const probePage = await context.newPage();
-  probePage.setDefaultTimeout(90_000);
+  const page = await context.newPage();
+  page.setDefaultTimeout(90_000);
 
   let advancedAbsent = null;
 
   try {
-    await authenticateStudent({ context, page: probePage, account: student, baseUrl, log: () => {} });
-    await navigateToPlayerShell(probePage, plan, baseUrl);
-    await dismissBlockingUi(probePage);
+    await authenticateStudent({ context, page, account: student, baseUrl, log: () => {} });
+    await navigateToPlayerShell(page, plan, baseUrl);
+    await dismissBlockingUi(page);
     setup.subject_loads = { pass: true, detail: plan.path };
 
     topic = topicsForGrade(plan, grade)[0];
-    const picked = await selectTopicIfAvailable(probePage, plan.topicSelectTestId, topic, () => {});
+    const picked = await selectTopicIfAvailable(page, plan.topicSelectTestId, topic, () => {});
     topic = picked;
     setup.grade_topic_selection = { pass: true, detail: `${grade} / ${picked.value}` };
 
-    const { options } = await readDisplayLevelOptions(probePage, plan);
+    const { options } = await readDisplayLevelOptions(page, plan);
     const validation = validateDisplayLevelOptions(options, { regularOnly });
     advancedAbsent = {
       pass: validation.ok,
@@ -329,18 +328,14 @@ export async function runSubjectSimulation(browser, { baseUrl, subjectKey, logFi
     const msg = error?.message || String(error);
     setup.subject_loads = { pass: false, detail: msg };
     advancedAbsent = { pass: false, detail: msg, options: [] };
-  } finally {
-    await stopActiveGameIfAny(probePage).catch(() => {});
-    await probePage.close();
   }
 
   const levels = {};
   const setupOk = setup.subject_loads.pass && setup.grade_topic_selection.pass && advancedAbsent?.pass;
 
   if (setupOk) {
-    levels.regular = await runDisplayLevelFlow(context, {
+    levels.regular = await runDisplayLevelFlow(page, {
       baseUrl,
-      subjectKey,
       profile,
       plan,
       harnessKey,
@@ -353,9 +348,8 @@ export async function runSubjectSimulation(browser, { baseUrl, subjectKey, logFi
     });
 
     if (!regularOnly) {
-      levels.advanced = await runDisplayLevelFlow(context, {
+      levels.advanced = await runDisplayLevelFlow(page, {
         baseUrl,
-        subjectKey,
         profile,
         plan,
         harnessKey,
@@ -390,24 +384,21 @@ export async function runSubjectSimulation(browser, { baseUrl, subjectKey, logFi
     }
   }
 
-  await context.close();
-
   const activityPlans = verifyActivityLevelPlans(subjectKey);
   let activitiesApi = { pass: true, detail: "not scanned" };
   try {
-    const apiCtx = await browser.newContext({ baseURL: baseUrl, locale: "he-IL" });
-    const apiPage = await apiCtx.newPage();
-    await authenticateStudent({ context: apiCtx, page: apiPage, account: student, baseUrl, log: () => {} });
-    const actRes = await apiPage.request.get("/api/student/activities");
+    const actRes = await page.request.get("/api/student/activities");
     if (actRes.ok()) {
       activitiesApi = scanActivitiesForDisplayLevels(await actRes.json().catch(() => ({})), subjectKey);
     } else {
       activitiesApi = { pass: false, detail: `activities status=${actRes.status()}` };
     }
-    await apiCtx.close();
   } catch (e) {
     activitiesApi = { pass: false, detail: e?.message || String(e) };
   }
+
+  await page.close();
+  await context.close();
 
   const activities = {
     regular: {

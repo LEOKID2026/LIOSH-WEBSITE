@@ -212,7 +212,7 @@ export function isChangeAmountCorrect(customer, changeDenoms) {
 
 /** @param {number} value */
 export function formatShekel(value) {
-  return `${value}₪`;
+  return `${value} ₪`;
 }
 
 export const LEO_CASHIER_IMAGE = "/images/leo-supermarket/leo-cashier.png";

@@ -16,6 +16,7 @@ export default function LabItemVisual({ item, size = "shelf", showName = true })
   }, [item.id, item.imageSrc]);
 
   const canTryImage = Boolean(item.imageSrc) && !imageFailed;
+  const isPaintItem = typeof item.id === "string" && item.id.startsWith("paint_");
   const sizeClass =
     size === "bench" ? styles.benchItemVisual : size === "ghost" ? styles.ghostItemVisual : styles.shelfItemVisual;
 
@@ -30,6 +31,8 @@ export default function LabItemVisual({ item, size = "shelf", showName = true })
             draggable={false}
             onError={() => setImageFailed(true)}
           />
+        ) : isPaintItem ? (
+          <span className={styles.paintSwatch} data-paint={item.id} aria-hidden />
         ) : (
           <span className={styles.itemIcon} aria-hidden>
             {item.icon}

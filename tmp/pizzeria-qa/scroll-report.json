@@ -1,0 +1,107 @@
+[
+  {
+    "label": "desktop",
+    "viewport": {
+      "w": 1280,
+      "h": 800
+    },
+    "scroll": {
+      "document": false,
+      "body": false,
+      "shell": false,
+      "shopGrid": false,
+      "any": false
+    },
+    "serveButtonVisible": true,
+    "shellRect": {
+      "x": 0,
+      "y": 0,
+      "width": 1280,
+      "height": 800,
+      "top": 0,
+      "right": 1280,
+      "bottom": 800,
+      "left": 0
+    },
+    "shopRect": {
+      "x": 5.59375,
+      "y": 81.265625,
+      "width": 1268.8125,
+      "height": 713.140625,
+      "top": 81.265625,
+      "right": 1274.40625,
+      "bottom": 794.40625,
+      "left": 5.59375
+    }
+  },
+  {
+    "label": "mobile-portrait",
+    "viewport": {
+      "w": 412,
+      "h": 839
+    },
+    "scroll": {
+      "document": false,
+      "body": false,
+      "shell": false,
+      "shopGrid": false,
+      "any": false
+    },
+    "serveButtonVisible": true,
+    "shellRect": {
+      "x": 0,
+      "y": 0,
+      "width": 412,
+      "height": 839,
+      "top": 0,
+      "right": 412,
+      "bottom": 839,
+      "left": 0
+    },
+    "shopRect": {
+      "x": 5.59375,
+      "y": 78.84375,
+      "width": 400.8125,
+      "height": 754.5625,
+      "top": 78.84375,
+      "right": 406.40625,
+      "bottom": 833.40625,
+      "left": 5.59375
+    }
+  },
+  {
+    "label": "mobile-landscape",
+    "viewport": {
+      "w": 844,
+      "h": 390
+    },
+    "scroll": {
+      "document": false,
+      "body": false,
+      "shell": false,
+      "shopGrid": false,
+      "any": false
+    },
+    "serveButtonVisible": true,
+    "shellRect": {
+      "x": 0,
+      "y": 0,
+      "width": 844,
+      "height": 390,
+      "top": 0,
+      "right": 844,
+      "bottom": 390,
+      "left": 0
+    },
+    "shopRect": {
+      "x": 5.59375,
+      "y": 81.265625,
+      "width": 832.8125,
+      "height": 303.140625,
+      "top": 81.265625,
+      "right": 838.40625,
+      "bottom": 384.40625,
+      "left": 5.59375
+    }
+  }
+]

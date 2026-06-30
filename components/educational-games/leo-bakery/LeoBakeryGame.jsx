@@ -14,7 +14,6 @@ import {
 import { pickNextTask } from "../../../lib/educational-games/educational-task-picker.js";
 import {
   bakeryFeedback,
-  bakeryInfoBar,
   bakeryPrompt,
   bakeryTaskKey,
   DIFFICULTIES,
@@ -24,6 +23,7 @@ import {
 } from "./leo-bakery-data.js";
 import { buildLeoBakeryMetrics } from "./leo-bakery-metrics.js";
 import { sharedStyles as s } from "../../prototypes/dev/learning/shared/LearningPrototypeFrame.jsx";
+import shop from "../shared/educational-game-shop-layout.module.css";
 import gameUi from "../../prototypes/dev/learning/leo-bakery/LeoBakeryGame.module.css";
 import styles from "./LeoBakeryGame.module.css";
 
@@ -297,21 +297,29 @@ export default function LeoBakeryGame({
     onSessionEndRef.current(endMetrics);
   }, [phase, productionMode, endMetrics]);
 
+  const trayGridSizeClass =
+    trays <= 4 ? styles.trayGridFew : trays <= 8 ? styles.trayGridMedium : styles.trayGridMany;
+
   const avgDisplay =
     answerTimesRef.current.length > 0
       ? (answerTimesRef.current.reduce((a, b) => a + b, 0) / answerTimesRef.current.length).toFixed(1)
       : "—";
 
+  const feedbackBarClass = [
+    shop.feedbackBar,
+    checkState === "ok"
+      ? shop.feedbackOk
+      : checkState === "bad"
+        ? shop.feedbackBad
+        : shop.feedbackNeutral,
+  ].join(" ");
+
   return (
     <div className={`${s.shell} ${s.shellWarm} ${productionMode ? styles.shellEmbedded : ""}`} dir="rtl">
       <header className={s.header}>
-        {!productionMode ? (
-          <Link href={backHref} className={s.backBtn}>
-            ← חזרה
-          </Link>
-        ) : (
-          <div style={{ minWidth: 40 }} aria-hidden />
-        )}
+        <Link href={backHref} className={s.hudChip}>
+          חזרה
+        </Link>
         {phase === "play" ? (
           <div className={s.hud}>
             <span className={`${s.hudChip} ${s.hudScore}`}>⭐ {score}</span>
@@ -322,19 +330,19 @@ export default function LeoBakeryGame({
             <span className={`${s.hudChip} ${s.hudBad}`}>
               ❌ {mistakes}/{diffConfig.maxMistakes}
             </span>
-            {showFullscreenButton && onFullscreenToggle ? (
-              <EducationalGameHudFullscreenButton
-                isFullscreen={isFullscreen}
-                onToggle={onFullscreenToggle}
-              />
-            ) : null}
           </div>
         ) : (
           <div className={s.hud}>
             <span className={s.hudChip}>{productionMode ? "🥐" : "🥐 אבטיפוס"}</span>
           </div>
         )}
-        <div style={{ minWidth: 40 }} aria-hidden />
+        {showFullscreenButton && onFullscreenToggle ? (
+          <EducationalGameHudFullscreenButton
+            className={s.hudChip}
+            isFullscreen={isFullscreen}
+            onToggle={onFullscreenToggle}
+          />
+        ) : null}
       </header>
 
       {!productionMode && phase === "intro" ? (
@@ -362,120 +370,132 @@ export default function LeoBakeryGame({
       ) : null}
 
       {phase === "play" && task ? (
-        <div className={s.main}>
-          <div className={s.missionCard}>
-            <span className={s.missionIcon}>{task.itemEmoji}</span>
-            <div className={s.missionBody}>
-              <p className={s.missionLabel}>הזמנה</p>
-              <h2 className={s.missionTitle}>מאפיית ליאו</h2>
-              <p className={s.missionPrompt}>{bakeryPrompt(task)}</p>
-            </div>
-          </div>
+        <div className={shop.shopMain}>
+          <p className={shop.counterLabel}>
+            🥐 מאפיית ליאו · שלב {internalStage}
+          </p>
 
-          <div className={gameUi.formulaBar}>{bakeryInfoBar(task)}</div>
+          <div className={`${shop.shopGrid} ${styles.bakeryShopGrid}`} data-educational-workplace-grid="">
+            <aside className={shop.customerCol}>
+              <div className={shop.customerCard}>
+                <span className={shop.customerAvatar} aria-hidden>
+                  {task.itemEmoji}
+                </span>
+                <div className={shop.customerSpeechWrap}>
+                  <p className={shop.customerName}>הזמנה</p>
+                  <p className={shop.missionText}>{bakeryPrompt(task)}</p>
+                </div>
+              </div>
+            </aside>
 
-          <div className={s.playArea}>
-            <div className={`${s.panel} ${gameUi.traysPanel} ${styles.traysPanelFull}`}>
-              <p className={s.panelTitle}>🧁 המגשים שלכם</p>
-              <div className={`${gameUi.trayGrid} ${styles.trayGridFull}`}>
-                {trayPreview.map((tr) => {
-                  const disp = trayItemDisplay(tr.count, task.itemEmoji);
-                  return (
-                    <div key={tr.id} className={gameUi.trayCard}>
-                      <span className={gameUi.trayLabel}>מגש {tr.id + 1}</span>
-                      <span className={gameUi.trayItems}>{disp.text}</span>
+            <section className={`${shop.workCol} ${styles.bakeryWorkCol}`}>
+              <div className={shop.workFrame}>
+                <div className={shop.workSurface}>
+                  <p className={shop.workSurfaceTitle}>🧁 המגשים שלכם</p>
+                  <div className={`${shop.workSurfaceBody} ${styles.trayGridFit}`}>
+                    <div
+                      className={`${gameUi.trayGrid} ${styles.trayGridInner} ${trayGridSizeClass}`}
+                    >
+                      {trayPreview.map((tr) => {
+                        const disp = trayItemDisplay(tr.count, task.itemEmoji);
+                        return (
+                          <div key={tr.id} className={gameUi.trayCard}>
+                            <span className={gameUi.trayLabel}>מגש {tr.id + 1}</span>
+                            <span className={`${gameUi.trayItems} ${styles.bakeryTrayItems}`}>{disp.text}</span>
+                          </div>
+                        );
+                      })}
                     </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className={`${s.panel} ${gameUi.controlsPanel}`}>
-              <div className={gameUi.controlCol}>
-                <span className={gameUi.controlLabel}>מגשים</span>
-                <div className={s.stepperRow}>
-                  <button
-                    type="button"
-                    className={s.stepperBtn}
-                    disabled={lockTrays}
-                    onClick={() => {
-                      setTrays((v) => Math.max(1, v - 1));
-                      clearFeedback();
-                    }}
-                  >
-                    −
-                  </button>
-                  <span className={s.stepperValue}>{trays}</span>
-                  <button
-                    type="button"
-                    className={s.stepperBtn}
-                    disabled={lockTrays}
-                    onClick={() => {
-                      setTrays((v) => Math.min(12, v + 1));
-                      clearFeedback();
-                    }}
-                  >
-                    +
-                  </button>
+                  </div>
                 </div>
               </div>
-              <div className={gameUi.controlCol}>
-                <span className={gameUi.controlLabel}>בכל מגש</span>
-                <div className={s.stepperRow}>
-                  <button
-                    type="button"
-                    className={s.stepperBtn}
-                    disabled={lockPerTray}
-                    onClick={() => {
-                      setPerTray((v) => Math.max(1, v - 1));
-                      clearFeedback();
-                    }}
-                  >
-                    −
-                  </button>
-                  <span className={s.stepperValue}>{displayPerTray}</span>
-                  <button
-                    type="button"
-                    className={s.stepperBtn}
-                    disabled={lockPerTray}
-                    onClick={() => {
-                      setPerTray((v) => Math.min(12, v + 1));
-                      clearFeedback();
-                    }}
-                  >
-                    +
-                  </button>
+            </section>
+
+            <aside className={shop.sideCol}>
+              <div className={`${s.panel} ${shop.toolsPanel} ${shop.toolsPanelLarge}`}>
+                <p className={shop.toolsTitle}>🎛️ הגדרות</p>
+                <div className={shop.controlsStackInline}>
+                  <div className={shop.controlRow}>
+                    <span className={shop.controlLabel}>מגשים</span>
+                    <div className={shop.stepperRow}>
+                      <button
+                        type="button"
+                        className={shop.stepperBtn}
+                        disabled={lockTrays}
+                        onClick={() => {
+                          setTrays((v) => Math.min(12, v + 1));
+                          clearFeedback();
+                        }}
+                      >
+                        +
+                      </button>
+                      <span className={shop.stepperValue}>{trays}</span>
+                      <button
+                        type="button"
+                        className={shop.stepperBtn}
+                        disabled={lockTrays}
+                        onClick={() => {
+                          setTrays((v) => Math.max(1, v - 1));
+                          clearFeedback();
+                        }}
+                      >
+                        −
+                      </button>
+                    </div>
+                  </div>
+                  <div className={shop.controlRow}>
+                    <span className={shop.controlLabel}>בכל מגש</span>
+                    <div className={shop.stepperRow}>
+                      <button
+                        type="button"
+                        className={shop.stepperBtn}
+                        disabled={lockPerTray}
+                        onClick={() => {
+                          setPerTray((v) => Math.min(12, v + 1));
+                          clearFeedback();
+                        }}
+                      >
+                        +
+                      </button>
+                      <span className={shop.stepperValue}>{displayPerTray}</span>
+                      <button
+                        type="button"
+                        className={shop.stepperBtn}
+                        disabled={lockPerTray}
+                        onClick={() => {
+                          setPerTray((v) => Math.max(1, v - 1));
+                          clearFeedback();
+                        }}
+                      >
+                        −
+                      </button>
+                    </div>
+                  </div>
                 </div>
+                {!lockTotal ? (
+                  <div className={shop.controlRow}>
+                    <span className={shop.controlLabel}>סך הכול</span>
+                    <span className={shop.totalBadge}>{total}</span>
+                  </div>
+                ) : null}
               </div>
-              {!lockTotal ? (
-                <div className={`${gameUi.controlCol} ${gameUi.totalCol}`}>
-                  <span className={gameUi.controlLabel}>סך הכול</span>
-                  <span className={gameUi.totalValue}>{total}</span>
-                </div>
-              ) : null}
-            </div>
 
-            <div
-              className={`${s.feedbackBar} ${
-                checkState === "ok"
-                  ? s.feedbackOk
-                  : checkState === "bad"
-                    ? s.feedbackBad
-                    : s.feedbackNeutral
-              }`}
-            >
-              <p className={s.feedbackText}>
-                {feedback || "הגדירו מגשים וכמות בכל מגש, ואז לחצו בדיקה"}
-              </p>
-            </div>
+              <div className={feedbackBarClass}>
+                <p className={shop.feedbackText}>
+                  {feedback || "הגדירו מגשים וכמות בכל מגש, ואז לחצו בדיקה"}
+                </p>
+              </div>
+            </aside>
 
-            <div className={s.actionRow}>
-              <button type="button" className={s.primaryBtn} onClick={runCheck}>
-                בדוק הזמנה
-              </button>
-              <button type="button" className={s.secondaryBtn} onClick={resetTaskUi}>
-                איפוס
-              </button>
+            <div className={shop.bottomBar}>
+              <div className={shop.actionRow}>
+                <button type="button" className={shop.primaryBtn} onClick={runCheck}>
+                  בדוק הזמנה
+                </button>
+                <button type="button" className={shop.secondaryBtn} onClick={resetTaskUi}>
+                  איפוס
+                </button>
+              </div>
             </div>
           </div>
         </div>

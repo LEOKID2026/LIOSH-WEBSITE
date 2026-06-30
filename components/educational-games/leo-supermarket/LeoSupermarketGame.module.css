@@ -64,16 +64,15 @@
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
 }
 
-.backBtn {
-  min-height: 34px;
-  padding: 0.25rem 0.5rem;
-  border-radius: 999px;
-  border: 2px solid #fdba74;
-  background: #fff;
-  font-size: 0.72rem;
-  font-weight: 800;
-  color: #c2410c;
+a.hudChip,
+button.hudChip {
   text-decoration: none;
+  color: #1e293b;
+  cursor: pointer;
+  font-family: inherit;
+  line-height: 1.2;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
 .hud {
@@ -110,6 +109,28 @@
   border-color: #fca5a5;
   background: #fef2f2;
   color: #b91c1c;
+}
+
+.hudPlaySingle {
+  flex-wrap: nowrap;
+  gap: 0.22rem;
+  overflow: hidden;
+}
+
+.hudPlaySingle .hudChip {
+  flex-shrink: 1;
+  min-width: 0;
+  padding: 0.2rem 0.38rem;
+  min-height: 30px;
+  font-size: clamp(0.6rem, 2.5vw, 0.76rem);
+}
+
+.headerPlayCompact .hudChip {
+  flex-shrink: 0;
+  min-width: 0;
+  padding: 0.2rem 0.38rem;
+  min-height: 30px;
+  font-size: clamp(0.6rem, 2.5vw, 0.76rem);
 }
 
 .hudTime {
@@ -362,11 +383,45 @@
 
 .checkoutFooterStack {
   display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: 0.22rem;
+  width: 100%;
+}
+
+.checkoutTotalsPair {
+  display: flex;
   flex-direction: row;
   align-items: stretch;
   justify-content: center;
   gap: 0.28rem;
   width: 100%;
+}
+
+.checkoutTotalsPair .checkoutAmountLine,
+.checkoutTotalsPair .checkoutAmountLinePaid {
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.16rem;
+  padding: 0.34rem 0.48rem;
+  white-space: normal;
+  line-height: 1.15;
+}
+
+.checkoutFooterStack .checkoutAmountLabel {
+  font-size: clamp(0.92rem, 4.2vw, 1.1rem);
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.checkoutFooterStack .checkoutAmountValue {
+  font-size: clamp(1.1rem, 5.2vw, 1.38rem);
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  line-height: 1.1;
 }
 
 .checkoutAmountLinePaid,
@@ -443,8 +498,10 @@
   background: #dcfce7;
   border-color: #86efac;
   color: #166534;
-  flex: 1 1 auto;
+  flex: none;
   width: 100%;
+  padding: 0.34rem 0.52rem;
+  gap: 0.45rem;
 }
 
 .zoneFeedback {
@@ -632,6 +689,40 @@
   white-space: nowrap;
 }
 
+.shelfItemIconPrice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.12rem;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 0.12rem 0.08rem;
+}
+
+.shelfItemIconPrice .shelfItemCenter {
+  flex: 1;
+  min-height: 0;
+}
+
+.shelfItemIconPrice .shelfItemIcon {
+  font-size: clamp(1.35rem, 5.5vw, 1.85rem);
+}
+
+.shelfItemPriceOnly {
+  padding: 0.1rem 0.32rem;
+  border-radius: 999px;
+  background: #fef3c7;
+  border: 2px solid #fcd34d;
+  font-size: clamp(0.68rem, 2.8vw, 0.82rem);
+  font-weight: 900;
+  color: #c2410c;
+  line-height: 1.1;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 .registerProductWrap {
   flex-shrink: 0;
 }
@@ -788,7 +879,25 @@
   .checkoutFooterStack {
     flex-direction: column;
     align-items: stretch;
-    gap: 0.16rem;
+    gap: 0.18rem;
+  }
+
+  .checkoutTotalsPair {
+    flex-direction: row;
+    gap: 0.22rem;
+  }
+
+  .checkoutTotalsPair .checkoutAmountLine,
+  .checkoutTotalsPair .checkoutAmountLinePaid {
+    flex: 1 1 0;
+    width: auto;
+    padding: 0.36rem 0.4rem;
+    gap: 0.14rem;
+  }
+
+  .checkoutAmountChange {
+    padding: 0.36rem 0.52rem;
+    gap: 0.45rem;
   }
 
   .checkoutAmountLinePaid {
@@ -817,6 +926,14 @@
 
   .checkoutAmountLinePaid .checkoutAmountValue {
     font-size: clamp(0.78rem, 4vw, 0.98rem);
+  }
+
+  .checkoutFooterStack .checkoutAmountLabel {
+    font-size: clamp(0.96rem, 4.4vw, 1.14rem);
+  }
+
+  .checkoutFooterStack .checkoutAmountValue {
+    font-size: clamp(1.14rem, 5.4vw, 1.42rem);
   }
 }
 
@@ -876,6 +993,14 @@
   .checkoutAmountLinePaid,
   .checkoutAmountChange {
     padding: 0.18rem 0.38rem;
+  }
+
+  .checkoutFooterStack .checkoutAmountLabel {
+    font-size: clamp(0.96rem, 4.4vw, 1.14rem);
+  }
+
+  .checkoutFooterStack .checkoutAmountValue {
+    font-size: clamp(1.14rem, 5.4vw, 1.42rem);
   }
 
   .zoneItems {
@@ -1036,5 +1161,229 @@
   .checkoutAmountLinePaid .checkoutAmountValue,
   .checkoutAmountChange .checkoutAmountValue {
     font-size: 1.02rem;
+  }
+
+  .checkoutTotalsPair .checkoutAmountLine,
+  .checkoutTotalsPair .checkoutAmountLinePaid {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    padding: 0.24rem 0.52rem;
+    gap: 0.4rem;
+  }
+
+  .checkoutFooterStack .checkoutAmountLabel {
+    font-size: clamp(0.92rem, 4.2vw, 1.1rem);
+  }
+
+  .checkoutFooterStack .checkoutAmountValue {
+    font-size: clamp(1.1rem, 5.2vw, 1.38rem);
+  }
+}
+
+.customerCardEnter {
+  animation: customerIn 0.45s ease-out;
+}
+
+/* Vertical store flow — customer → shelf → checkout → money → actions */
+.supermarketFlow {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1.2fr) minmax(0, 0.95fr) auto auto;
+  gap: 0.32rem;
+  padding: 0.15rem 0.35rem 0.3rem;
+  overflow: hidden;
+}
+
+.supermarketFlow .customerRow {
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  padding: 0.35rem 0.5rem;
+  min-height: 0;
+}
+
+.supermarketFlow .customerAvatar {
+  font-size: clamp(1.45rem, 5vw, 1.85rem);
+}
+
+.supermarketFlow .speechBubble {
+  font-size: clamp(0.82rem, 3vw, 1rem);
+  min-height: 2rem;
+  padding: 0.38rem 0.55rem;
+}
+
+.supermarketFlow .shelfSection {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.supermarketFlow .shelfTitle {
+  font-size: clamp(0.72rem, 2.6vw, 0.88rem);
+  margin-bottom: 0.2rem;
+}
+
+.supermarketFlow .shelfGrid {
+  flex: 1;
+  min-height: 0;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: minmax(0, 1fr);
+  align-content: stretch;
+  row-gap: 0.35rem;
+  column-gap: 0.35rem;
+  overflow: hidden;
+}
+
+.supermarketFlow .productBtn {
+  height: 100%;
+  min-height: clamp(54px, 10dvh, 72px);
+}
+
+.supermarketFlow .checkoutRow {
+  max-height: none;
+  min-height: 0;
+  flex: 1;
+}
+
+.supermarketFlow .registerZone,
+.supermarketFlow .changeZone {
+  max-height: none;
+  min-height: 0;
+  justify-content: flex-start;
+}
+
+.supermarketFlow .zoneItems {
+  min-height: 0;
+  max-height: none;
+  flex: 1 1 auto;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.12rem;
+}
+
+.supermarketFlow .zoneTitle {
+  font-size: clamp(0.74rem, 2.8vw, 0.92rem);
+}
+
+.supermarketFlow .moneySection {
+  flex-shrink: 0;
+}
+
+.supermarketFlow .moneyTitle {
+  font-size: clamp(0.72rem, 2.6vw, 0.88rem);
+  margin-bottom: 0.22rem;
+}
+
+.supermarketFlow .moneyGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(52px, 1fr));
+  gap: 0.35rem;
+  justify-content: center;
+}
+
+.supermarketFlow .moneyBtn {
+  min-width: 0;
+  min-height: clamp(44px, 8dvh, 52px);
+  font-size: clamp(0.78rem, 2.8vw, 0.95rem);
+}
+
+.supermarketBottom {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+}
+
+@media (min-width: 721px) {
+  .supermarketFlow {
+    max-width: 920px;
+    margin: 0 auto;
+    width: 100%;
+    grid-template-rows: auto minmax(0, 1.15fr) minmax(0, 0.88fr) auto auto;
+    gap: 0.4rem;
+  }
+
+  .supermarketFlow .shelfGrid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .supermarketFlow .productBtn {
+    min-height: clamp(62px, 9vh, 78px);
+  }
+
+  .supermarketFlow .checkoutRow {
+    max-height: clamp(150px, 22vh, 180px);
+  }
+
+  .supermarketFlow .registerZone,
+  .supermarketFlow .changeZone {
+    min-height: 0;
+    max-height: none;
+  }
+
+  .supermarketFlow .moneyGrid {
+    grid-template-columns: repeat(8, minmax(56px, 1fr));
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .supermarketFlow .moneyBtn {
+    min-height: 48px;
+  }
+
+  .checkoutTotalsPair .checkoutAmountLine,
+  .checkoutTotalsPair .checkoutAmountLinePaid {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    padding: 0.24rem 0.52rem;
+    gap: 0.4rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .supermarketFlow {
+    grid-template-rows: auto minmax(0, 1.05fr) minmax(0, 0.92fr) auto auto;
+    gap: 0.26rem;
+  }
+
+  .supermarketFlow .checkoutRow {
+    max-height: none;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  .supermarketFlow {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) auto auto auto;
+  }
+
+  .supermarketFlow .customerRow {
+    grid-column: 1 / -1;
+  }
+
+  .supermarketFlow .shelfSection {
+    grid-column: 1;
+    grid-row: 2 / span 2;
+  }
+
+  .supermarketFlow .checkoutRow {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .supermarketFlow .moneySection {
+    grid-column: 2;
+    grid-row: 3;
+  }
+
+  .supermarketFlow .supermarketBottom {
+    grid-column: 1 / -1;
+    grid-row: 4;
   }
 }

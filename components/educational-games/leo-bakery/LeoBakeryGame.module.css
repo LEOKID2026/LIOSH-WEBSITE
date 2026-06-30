@@ -1,4 +1,4 @@
-/* Production-only overrides. Play layout uses prototype shared + leo-bakery CSS. */
+/* Production-only overrides. Play layout uses shared shop grid + warm theme. */
 
 .shellEmbedded {
   height: 100%;
@@ -128,20 +128,75 @@
   font-weight: 900;
 }
 
-.traysPanelFull {
+.trayGridFit {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.trayGridFull {
+.trayGridInner {
   flex: 1;
   min-height: 0;
   max-height: none !important;
   overflow: hidden !important;
+  align-content: center;
+  justify-content: center;
+  grid-auto-rows: auto;
+}
+
+.trayGridFew {
+  grid-template-columns: repeat(2, minmax(82px, 112px));
+  gap: 0.4rem;
+}
+
+.trayGridMedium {
+  grid-template-columns: repeat(4, minmax(72px, 96px));
+  gap: 0.32rem;
+}
+
+.trayGridMany {
+  grid-template-columns: repeat(4, minmax(64px, 84px));
+  gap: 0.28rem;
+}
+
+.bakeryTrayItems {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(1rem, 4.6vw, 1.28rem) !important;
+  line-height: 1;
+}
+
+.bakeryWorkCol {
+  min-height: 0;
+}
+
+@media (min-width: 721px) {
+  .bakeryTrayItems {
+    font-size: clamp(1.05rem, 1.45vw, 1.32rem) !important;
+  }
+
+  .trayGridMany {
+    grid-template-columns: repeat(6, minmax(64px, 84px));
+  }
+}
+
+@media (max-width: 720px) {
+  .bakeryShopGrid {
+    grid-template-rows: auto minmax(250px, 1.3fr) minmax(100px, 0.7fr) auto;
+  }
+
+  .bakeryWorkCol {
+    max-height: clamp(250px, 42dvh, 310px);
+  }
 }
 
 @media (orientation: landscape) and (max-height: 520px) {
-  .trayGridFull {
-    max-height: none !important;
+  .trayGridMany {
+    grid-template-columns: repeat(6, minmax(56px, 72px));
   }
 }

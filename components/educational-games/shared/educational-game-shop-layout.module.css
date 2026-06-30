@@ -1,0 +1,741 @@
+/* Shared shop play layout — 1:1 for pizzeria prototype + leo-lab pilot */
+
+.shopMain {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0.2rem 0.35rem 0.35rem !important;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.shopGrid {
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(168px, 24%) minmax(0, 1fr) minmax(138px, 21%);
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 0.4rem;
+  overflow: hidden;
+}
+
+.customerCol {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.workCol {
+  grid-column: 2;
+  grid-row: 1;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.sideCol {
+  grid-column: 3;
+  grid-row: 1 / span 2;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  overflow: hidden;
+}
+
+.bottomBar {
+  grid-column: 2;
+  grid-row: 2;
+  min-height: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.counterLabel {
+  margin: 0 0 0.15rem;
+  flex-shrink: 0;
+  font-size: clamp(0.78rem, 2.6vw, 0.92rem);
+  font-weight: 900;
+  color: #c2410c;
+  text-align: center;
+}
+
+.customerCard {
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  padding: 0.65rem 0.55rem;
+  border-radius: 1rem;
+  border: 3px solid #fdba74;
+  background: linear-gradient(180deg, #fff 0%, #fff7ed 100%);
+  box-shadow: 0 4px 0 #fdba74;
+  text-align: center;
+  overflow: hidden;
+}
+
+.customerAvatar {
+  font-size: clamp(2.5rem, 7vw, 3.4rem);
+  line-height: 1;
+  flex-shrink: 0;
+  animation: customerPop 0.45s ease;
+}
+
+@keyframes customerPop {
+  from {
+    transform: scale(0.85);
+    opacity: 0.5;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.customerSpeechWrap {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  overflow: hidden;
+}
+
+.customerName {
+  margin: 0;
+  font-size: clamp(1.05rem, 3.6vw, 1.32rem);
+  font-weight: 900;
+  color: #9a3412;
+  line-height: 1.28;
+}
+
+.missionText {
+  margin: 0;
+  font-size: clamp(0.96rem, 3.2vw, 1.2rem);
+  font-weight: 800;
+  color: #1e293b;
+  line-height: 1.42;
+}
+
+.missionTicket {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: clamp(0.9rem, 2.9vw, 1.08rem);
+  font-weight: 900;
+  color: #ea580c;
+  line-height: 1.38;
+}
+
+.workFrame {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  max-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+}
+
+.toolsPanel {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0.45rem !important;
+  overflow: hidden;
+}
+
+.toolsTitle {
+  margin: 0 0 0.35rem;
+  flex-shrink: 0;
+  text-align: center;
+  font-size: clamp(0.92rem, 3vw, 1.08rem);
+  font-weight: 900;
+  color: #c2410c;
+}
+
+.toolsGrid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: minmax(0, 1fr);
+  gap: 0.45rem;
+  align-content: stretch;
+  overflow: hidden;
+}
+
+.toolBtn {
+  container-type: size;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.12rem;
+  min-height: 0;
+  height: 100%;
+  padding: 0.32rem 0.24rem;
+  border-radius: 1rem;
+  border: 3px solid #fdba74;
+  background: linear-gradient(180deg, #fffbeb 0%, #ffedd5 100%);
+  font-size: clamp(0.82rem, 2.8vw, 0.96rem);
+  font-weight: 900;
+  color: #9a3412;
+  touch-action: manipulation;
+  box-shadow: 0 4px 0 #fdba74;
+  overflow: hidden;
+}
+
+.toolBtn:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #fdba74;
+}
+
+.toolBtn:disabled {
+  opacity: 0.42;
+}
+
+.toolBtnActive {
+  border-color: #ea580c;
+  background: linear-gradient(180deg, #ffedd5 0%, #fed7aa 100%);
+  box-shadow: 0 4px 0 #c2410c, 0 0 0 3px rgba(251, 146, 60, 0.35);
+}
+
+.toolEmoji {
+  flex: 1 1 0;
+  min-height: 0;
+  width: 100%;
+  container-type: size;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: min(88cqh, 92cqw);
+  line-height: 1;
+}
+
+.toolBtn > span:not(.toolEmoji) {
+  flex-shrink: 0;
+  max-width: 100%;
+  font-size: clamp(0.58rem, 2.1vw, 0.8rem);
+  line-height: 1.05;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.feedbackBar {
+  flex-shrink: 0;
+  min-height: 2.65rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.feedbackNeutral {
+  background: rgba(255, 255, 255, 0.92);
+  border: 2px dashed #cbd5e1;
+}
+
+.feedbackOk {
+  background: #ecfdf5;
+  border: 2px solid #86efac;
+}
+
+.feedbackBad {
+  background: #fef2f2;
+  border: 2px solid #fca5a5;
+}
+
+.feedbackText {
+  margin: 0;
+  font-size: clamp(0.86rem, 3vw, 1rem);
+  font-weight: 800;
+  line-height: 1.35;
+  color: #1e293b;
+}
+
+.actionRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+  width: 100%;
+}
+
+.primaryBtn {
+  min-height: 50px;
+  border-radius: 1rem;
+  border: none;
+  background: linear-gradient(180deg, #fb923c, #ea580c);
+  color: #fff;
+  font-size: clamp(0.92rem, 3.2vw, 1.05rem);
+  font-weight: 900;
+  box-shadow: 0 4px 0 #c2410c;
+}
+
+.primaryBtn:disabled {
+  opacity: 0.45;
+  box-shadow: none;
+}
+
+.secondaryBtn {
+  min-height: 50px;
+  border-radius: 1rem;
+  border: 3px solid #94a3b8;
+  background: #fff;
+  font-size: clamp(0.84rem, 3vw, 0.96rem);
+  font-weight: 900;
+  color: #475569;
+}
+
+.secondaryBtn:disabled {
+  opacity: 0.45;
+}
+
+@media (min-width: 721px) {
+  .customerCard {
+    padding: 0.85rem 0.7rem;
+    gap: 0.6rem;
+  }
+
+  .customerAvatar {
+    font-size: clamp(3.2rem, 4.8vw, 4.1rem);
+  }
+
+  .customerName {
+    font-size: clamp(1.38rem, 2.15vw, 1.72rem);
+    line-height: 1.3;
+  }
+
+  .missionText {
+    font-size: clamp(1.26rem, 1.95vw, 1.55rem);
+    line-height: 1.45;
+  }
+
+  .missionTicket {
+    font-size: clamp(1.14rem, 1.65vw, 1.38rem);
+    line-height: 1.4;
+  }
+
+  .toolsTitle {
+    font-size: clamp(0.92rem, 1.05vw, 1.02rem);
+  }
+
+  .toolsPanelLarge {
+    align-items: center;
+    justify-content: center;
+    padding-top: clamp(1rem, 6vh, 2rem) !important;
+    padding-bottom: clamp(0.35rem, 2vh, 0.75rem) !important;
+  }
+
+  .toolsPanelLarge .toolsTitle {
+    width: 100%;
+    margin-bottom: 0.45rem;
+  }
+
+  .toolsPanelLarge .controlLabel,
+  .toolsPanelLarge .controlsStackInline .controlLabel {
+    font-size: clamp(1.18rem, 1.55vw, 1.58rem);
+    line-height: 1.15;
+  }
+
+  .toolsPanelLarge .controlsStackInline {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    align-items: center;
+    gap: 0.45rem;
+    width: 100%;
+  }
+
+  .toolsPanelLarge > .controlRow {
+    align-items: center;
+    width: 100%;
+  }
+
+  .toolsPanelLarge .stepperBtn,
+  .toolsPanelLarge .controlsStackInline .stepperBtn {
+    min-width: 58px;
+    min-height: 58px;
+    font-size: 1.75rem;
+    line-height: 1;
+    padding: 0;
+  }
+
+  .toolsPanelLarge .stepperValue,
+  .toolsPanelLarge .controlsStackInline .stepperValue {
+    font-size: 2.1rem;
+  }
+
+  .toolBtn {
+    font-size: clamp(0.82rem, 0.95vw, 0.92rem);
+  }
+}
+
+@media (max-width: 720px) {
+  .shopGrid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(240px, 1.08fr) minmax(180px, 0.92fr) auto;
+  }
+
+  .customerCol {
+    grid-column: 1;
+    grid-row: 1;
+    flex-shrink: 0;
+  }
+
+  .customerCard {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: right;
+    padding: 0.52rem 0.62rem;
+    gap: 0.58rem;
+    min-height: clamp(96px, 15vh, 124px);
+    max-height: none;
+  }
+
+  .customerAvatar {
+    font-size: clamp(2.35rem, 10vw, 3rem);
+  }
+
+  .customerSpeechWrap {
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0.24rem;
+  }
+
+  .customerName {
+    font-size: clamp(1.02rem, 4.5vw, 1.22rem);
+    line-height: 1.28;
+  }
+
+  .missionText {
+    font-size: clamp(0.96rem, 4.2vw, 1.14rem);
+    line-height: 1.38;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .missionTicket {
+    margin-top: 0.16rem;
+    font-size: clamp(0.9rem, 3.9vw, 1.05rem);
+    display: inline;
+  }
+
+  .workCol {
+    grid-column: 1;
+    grid-row: 2;
+    flex: 1;
+    min-height: 0;
+    max-height: none;
+  }
+
+  .workFrame {
+    flex: 1;
+    min-height: 0;
+    max-height: none;
+    width: 100%;
+  }
+
+  .sideCol {
+    grid-column: 1;
+    grid-row: 3;
+    flex: 1;
+    min-height: 0;
+    max-height: none;
+  }
+
+  .toolsPanel {
+    flex: 1;
+    min-height: 0;
+    padding: 0.4rem 0.38rem !important;
+  }
+
+  .toolsTitle {
+    margin-bottom: 0.28rem;
+    font-size: clamp(0.84rem, 3.4vw, 0.96rem);
+  }
+
+  .toolsGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: 0.38rem;
+  }
+
+  .toolBtn {
+    min-height: clamp(66px, 11.5dvh, 84px);
+    padding: 0.28rem 0.2rem;
+    font-size: clamp(0.74rem, 3.1vw, 0.86rem);
+  }
+
+  .toolBtn > span:not(.toolEmoji) {
+    font-size: clamp(0.56rem, 2.4vw, 0.72rem);
+  }
+
+  .feedbackBar {
+    min-height: 2.35rem;
+    padding: 0.32rem 0.5rem;
+  }
+
+  .feedbackText {
+    font-size: clamp(0.78rem, 3vw, 0.88rem);
+  }
+
+  .bottomBar {
+    grid-column: 1;
+    grid-row: 4;
+    flex-shrink: 0;
+  }
+
+  .primaryBtn,
+  .secondaryBtn {
+    min-height: 46px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  .shopGrid {
+    grid-template-columns: 17% minmax(0, 1fr) 24%;
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+
+  .customerCol {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+
+  .customerCard {
+    flex-direction: column;
+    text-align: center;
+    padding: 0.35rem 0.4rem;
+    max-height: none;
+  }
+
+  .customerSpeechWrap {
+    align-items: center;
+  }
+
+  .customerName {
+    font-size: clamp(0.92rem, 2.8vw, 1.02rem);
+  }
+
+  .missionText {
+    -webkit-line-clamp: 3;
+    font-size: clamp(0.88rem, 2.7vw, 1rem);
+  }
+
+  .missionTicket {
+    font-size: clamp(0.82rem, 2.5vw, 0.94rem);
+  }
+
+  .workCol {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .sideCol {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    max-height: none;
+  }
+
+  .bottomBar {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .toolsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .toolBtn {
+    padding: 0.18rem 0.12rem;
+    font-size: clamp(0.62rem, 1.9vw, 0.72rem);
+    border-width: 2px;
+    box-shadow: 0 2px 0 #fdba74;
+  }
+
+  .toolBtn > span:not(.toolEmoji) {
+    font-size: clamp(0.5rem, 1.6vw, 0.62rem);
+  }
+
+  .feedbackBar {
+    min-height: 2rem;
+    padding: 0.28rem 0.4rem;
+  }
+
+  .primaryBtn,
+  .secondaryBtn {
+    min-height: 40px;
+    font-size: clamp(0.72rem, 2.3vw, 0.82rem);
+  }
+}
+
+/* Quantity controls — bakery, gifts, etc. */
+.controlsStack {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.45rem;
+  overflow: hidden;
+}
+
+.controlRow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.18rem;
+}
+
+.controlLabel {
+  font-size: clamp(0.72rem, 2.8vw, 0.88rem);
+  font-weight: 900;
+  color: #9a3412;
+  text-align: center;
+}
+
+.stepperRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.stepperBtn {
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: 0.65rem;
+  border: 2px solid #fdba74;
+  background: #fffbeb;
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: #c2410c;
+  touch-action: manipulation;
+}
+
+.stepperBtn:disabled {
+  opacity: 0.42;
+}
+
+.stepperValue {
+  min-width: 2.5rem;
+  text-align: center;
+  font-size: clamp(1.05rem, 3.6vw, 1.25rem);
+  font-weight: 900;
+  color: #1e293b;
+}
+
+.totalBadge {
+  font-size: clamp(1.05rem, 3.6vw, 1.3rem);
+  font-weight: 900;
+  color: #c2410c;
+}
+
+.controlsStackInline {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.32rem;
+  align-items: end;
+}
+
+.controlsStackSingle {
+  grid-template-columns: 1fr;
+  justify-items: center;
+}
+
+.controlsStackInline .controlRow {
+  min-width: 0;
+}
+
+.controlsStackInline .controlLabel {
+  font-size: clamp(0.64rem, 2.5vw, 0.78rem);
+}
+
+.controlsStackInline .stepperBtn {
+  min-width: 36px;
+  min-height: 36px;
+}
+
+.controlsStackInline .stepperValue {
+  font-size: clamp(0.95rem, 3.2vw, 1.12rem);
+}
+
+.toolsPanelLarge .controlLabel,
+.toolsPanelLarge .controlsStackInline .controlLabel {
+  font-size: clamp(1.08rem, 4.4vw, 1.48rem);
+  line-height: 1.15;
+}
+
+.toolsPanelLarge .stepperBtn,
+.toolsPanelLarge .controlsStackInline .stepperBtn {
+  min-width: clamp(50px, 13vw, 62px);
+  min-height: clamp(50px, 13vw, 62px);
+  font-size: clamp(1.45rem, 5vw, 1.85rem);
+  line-height: 1;
+  padding: 0;
+}
+
+.toolsPanelLarge .stepperValue,
+.toolsPanelLarge .controlsStackInline .stepperValue {
+  min-width: 2.5rem;
+  font-size: clamp(1.55rem, 5.8vw, 2.05rem);
+}
+
+.workSurface {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.35rem;
+  padding: 0.45rem 0.5rem;
+  border-radius: 1rem;
+  border: 3px dashed #fdba74;
+  background: linear-gradient(180deg, #fffbeb 0%, #ffedd5 100%);
+  box-shadow:
+    inset 0 2px 8px rgba(251, 146, 60, 0.08),
+    0 4px 0 #fdba74;
+  overflow: hidden;
+}
+
+.workSurfaceTitle {
+  margin: 0;
+  flex-shrink: 0;
+  text-align: center;
+  font-size: clamp(0.86rem, 3vw, 1rem);
+  font-weight: 900;
+  color: #c2410c;
+}
+
+.workSurfaceBody {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}

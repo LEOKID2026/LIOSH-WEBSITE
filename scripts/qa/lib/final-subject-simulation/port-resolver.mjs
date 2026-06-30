@@ -78,17 +78,84 @@ export async function resolveSimulationPort(preferredPort = DEFAULT_SIMULATION_P
   );
 }
 
-export async function waitForServerReady(baseUrl, { timeoutMs = 180_000, intervalMs = 2000 } = {}) {
+function loginPageShellReady(html) {
+  const text = String(html || "");
+  return (
+    text.includes('data-testid="student-login-username"') ||
+    text.includes("student-login-username") ||
+    text.includes("כניסת ילד/ה") ||
+    text.includes("בודקים חיבור") ||
+    text.includes('"page":"/student/login"') ||
+    text.includes('"/student/login"')
+  );
+}
+
+async function probeStudentApi(baseUrl) {
+  const url = `${String(baseUrl).replace(/\/$/, "")}/api/student/me`;
+  try {
+    const res = await fetch(url, { signal: AbortSignal.timeout(15_000) });
+    return res.status === 401 || res.status === 200;
+  } catch {
+    return false;
+  }
+}
+
+export async function waitForServerReady(
+  baseUrl,
+  { timeoutMs = 300_000, intervalMs = 2000, onRetry } = {}
+) {
   const url = `${String(baseUrl).replace(/\/$/, "")}/student/login`;
   const started = Date.now();
+  let lastStatus = 0;
+  let lastError = "";
+  let attempt = 0;
+
   while (Date.now() - started < timeoutMs) {
+    attempt += 1;
     try {
-      const res = await fetch(url, { signal: AbortSignal.timeout(15_000) });
-      if (res.ok) return true;
-    } catch {
-      /* still booting */
+      const [pageRes, apiOk] = await Promise.all([
+        fetch(url, { signal: AbortSignal.timeout(20_000) }),
+        probeStudentApi(baseUrl),
+      ]);
+      lastStatus = pageRes.status;
+      if (pageRes.ok && apiOk) {
+        const html = await pageRes.text();
+        if (loginPageShellReady(html)) {
+          return true;
+        }
+        lastError = "login shell HTML not recognized (production SSR — expected כניסת ילד/ה or login route)";
+      } else if (!pageRes.ok) {
+        lastError = `HTTP ${pageRes.status}`;
+      } else if (!apiOk) {
+        lastError = "/api/student/me not responding (expected 401 or 200)";
+      }
+    } catch (error) {
+      lastError = error?.message || String(error);
+    }
+    if (typeof onRetry === "function") {
+      onRetry(attempt, lastError || `HTTP ${lastStatus || "?"}`);
     }
     await new Promise((r) => setTimeout(r, intervalMs));
   }
-  return false;
+
+  throw new Error(
+    `Server not ready at ${url} after ${Math.round(timeoutMs / 1000)}s` +
+      (lastStatus ? ` (last HTTP ${lastStatus})` : "") +
+      (lastError ? ` — ${lastError}` : "")
+  );
+}
+
+export async function probeServerHealth(baseUrl) {
+  try {
+    const url = `${String(baseUrl).replace(/\/$/, "")}/student/login`;
+    const [pageRes, apiOk] = await Promise.all([
+      fetch(url, { signal: AbortSignal.timeout(10_000) }),
+      probeStudentApi(baseUrl),
+    ]);
+    if (!pageRes.ok || !apiOk) return false;
+    const html = await pageRes.text();
+    return loginPageShellReady(html);
+  } catch {
+    return false;
+  }
 }

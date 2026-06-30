@@ -21,7 +21,7 @@ export default function EducationalGameHudFullscreenButton({
       data-solo-fullscreen-toggle=""
       onClick={onToggle}
       onPointerDown={(e) => e.stopPropagation()}
-      className={`${styles.btn} ${className}`.trim()}
+      className={className ? className : styles.btn}
       style={{ touchAction: "manipulation" }}
       aria-label={isFullscreen ? "יציאה ממסך מלא" : "מסך מלא"}
     >

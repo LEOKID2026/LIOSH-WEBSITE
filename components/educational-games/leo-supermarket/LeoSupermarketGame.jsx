@@ -12,12 +12,12 @@ import {
   isChangeAmountCorrect,
   isSupermarketWin,
   sumChangeDenoms,
-  LEO_CASHIER_IMAGE,
 } from "./leo-supermarket-data.js";
 import { buildLeoSupermarketMetrics } from "./leo-supermarket-metrics.js";
 import GroceryItemVisual from "./GroceryItemVisual.jsx";
 import EducationalDifficultyGradeHint from "../EducationalDifficultyGradeHint.jsx";
 import EducationalGameHudFullscreenButton from "../EducationalGameHudFullscreenButton.jsx";
+import shop from "../shared/educational-game-shop-layout.module.css";
 import styles from "./LeoSupermarketGame.module.css";
 
 /** @typedef {import('./leo-supermarket-data.js').DifficultyId} DifficultyId */
@@ -115,7 +115,7 @@ export default function LeoSupermarketGame({
   initialDifficulty = "easy",
   productionMode = false,
   onSessionEnd,
-  backHref = "/dev/learning-game-prototypes",
+  backHref = "/student/educational-games",
   showFullscreenButton = false,
   isFullscreen = false,
   onFullscreenToggle,
@@ -604,20 +604,15 @@ export default function LeoSupermarketGame({
         🛒
       </span>
 
-      <header className={styles.header}>
-        {!productionMode ? (
-          <Link href={backHref} className={styles.backBtn}>
-            ← חזרה
-          </Link>
-        ) : (
-          <div style={{ minWidth: 40 }} aria-hidden />
-        )}
+      <header className={`${styles.header} ${phase === "play" ? styles.headerPlayCompact : ""}`}>
+        <Link href={backHref} className={styles.hudChip}>
+          חזרה
+        </Link>
         {phase === "play" ? (
-          <div className={styles.hud}>
+          <div className={`${styles.hud} ${styles.hudPlaySingle}`}>
             <span className={`${styles.hudChip} ${styles.hudTime} ${timeLeft <= 8 ? styles.hudTimeWarn : ""}`}>
               ⏱ {timeLeft}s
             </span>
-            <span className={styles.hudChip}>{DIFFICULTIES[difficulty].label}</span>
             <span className={styles.hudChip}>
               👤 {customerIndex + 1}/{CUSTOMERS_PER_LEVEL}
             </span>
@@ -625,19 +620,19 @@ export default function LeoSupermarketGame({
               ❌ {mistakes}/{diffConfig.maxMistakes}
             </span>
             <span className={`${styles.hudChip} ${styles.hudScore}`}>⭐ {score}</span>
-            {showFullscreenButton && onFullscreenToggle ? (
-              <EducationalGameHudFullscreenButton
-                isFullscreen={isFullscreen}
-                onToggle={onFullscreenToggle}
-              />
-            ) : null}
           </div>
         ) : (
           <div className={styles.hud}>
             <span className={styles.hudChip}>{productionMode ? "🏪" : "🧪 אבטיפוס"}</span>
           </div>
         )}
-        <div style={{ minWidth: 40 }} aria-hidden />
+        {showFullscreenButton && onFullscreenToggle ? (
+          <EducationalGameHudFullscreenButton
+            className={styles.hudChip}
+            isFullscreen={isFullscreen}
+            onToggle={onFullscreenToggle}
+          />
+        ) : null}
       </header>
 
       {phase === "intro" ? (
@@ -670,166 +665,170 @@ export default function LeoSupermarketGame({
       ) : null}
 
       {phase === "play" && customer ? (
-        <div className={styles.playArea}>
-          <div key={customerEnterKey} className={`${styles.customerRow} ${styles.customerRowEnter}`}>
-            <span className={styles.customerAvatar} aria-hidden>
-              {customer.avatar}
-            </span>
-            <div className={styles.customerMain}>
-              <CustomerRequestBubble customer={customer} />
-              <ZoneFeedbackLine fb={zoneFeedback.customer} />
-            </div>
-            <div className={styles.leoCashier}>
-              <img
-                src={LEO_CASHIER_IMAGE}
-                alt="ליאו"
-                className={styles.leoAvatar}
-                draggable={false}
-              />
-            </div>
-          </div>
+        <div className={shop.shopMain}>
+          <p className={shop.counterLabel}>
+            🏪 המכולת · לקוח {customerIndex + 1}/{CUSTOMERS_PER_LEVEL}
+          </p>
 
-          <section className={styles.shelfSection}>
-            <p className={styles.shelfTitle}>🗄️ מדף המוצרים</p>
-            <div className={styles.shelfGrid}>
-              {PRODUCTS.map((product) => {
-                const onRegister = selectedProductIds.includes(product.id);
-                const isDragging = draggingKey === `p-${product.id}`;
-                return (
-                  <button
-                    key={product.id}
-                    type="button"
-                    disabled={step !== "product" || onRegister}
-                    className={`${styles.productBtn} ${onRegister ? styles.productBtnOnRegister : ""}`}
-                    onPointerDown={(e) => onProductPointerDown(e, product.id)}
-                    aria-label={product.name}
-                  >
-                    {!isDragging ? <GroceryItemVisual product={product} variant="shelf" /> : null}
-                  </button>
-                );
-              })}
-            </div>
-          </section>
-
-          <div className={styles.checkoutRow}>
+          <div className={styles.supermarketFlow} data-educational-workplace-grid="">
             <div
-              data-drop-zone="register"
-              className={`${styles.registerZone} ${step === "product" ? styles.registerZoneActive : ""}`}
-              role="region"
-              aria-label="קופה"
+              key={customerEnterKey}
+              className={`${styles.customerRow} ${styles.customerRowEnter}`}
             >
-              <p className={styles.zoneTitle}>🧾 הקופה</p>
-              <div className={styles.zoneItems}>
-                {selectedProductIds.length === 0 ? (
-                  <span className={styles.zoneEmpty}>בחרו את המוצר שהלקוח ביקש</span>
-                ) : (
-                  selectedProductIds.map((id) => {
-                    const p = PRODUCTS.find((x) => x.id === id);
-                    if (!p) return null;
-                    return (
-                      <div key={id} className={styles.registerProductWrap}>
-                        <GroceryItemVisual product={p} variant="register-chip" showPrice={false} />
-                      </div>
-                    );
-                  })
-                )}
+              <span className={styles.customerAvatar} aria-hidden>
+                {customer.avatar}
+              </span>
+              <div className={styles.customerMain}>
+                <CustomerRequestBubble customer={customer} />
+                <ZoneFeedbackLine fb={zoneFeedback.customer} />
               </div>
-              <ZoneFeedbackLine fb={zoneFeedback.register} />
-              <div className={styles.checkoutFooter}>
-                <div className={styles.checkoutFooterStack}>
-                  <span className={styles.checkoutAmountLine}>
-                    <span className={styles.checkoutAmountLabel}>סכום הקנייה:</span>
-                    <span className={styles.checkoutAmountValue}>
-                      {step === "change" ? formatShekel(customer.total) : "—"}
+            </div>
+
+            <section className={styles.shelfSection}>
+              <p className={styles.shelfTitle}>🗄️ מדף המוצרים — בחרו מה שהלקוח ביקש</p>
+              <div className={styles.shelfGrid}>
+                {PRODUCTS.map((product) => {
+                  const onRegister = selectedProductIds.includes(product.id);
+                  const isDragging = draggingKey === `p-${product.id}`;
+                  return (
+                    <button
+                      key={product.id}
+                      type="button"
+                      disabled={step !== "product" || onRegister}
+                      className={`${styles.productBtn} ${onRegister ? styles.productBtnOnRegister : ""}`}
+                      onPointerDown={(e) => onProductPointerDown(e, product.id)}
+                      aria-label={product.name}
+                    >
+                      {!isDragging ? (
+                        <GroceryItemVisual product={product} variant="shelf" nameOnShelf={false} />
+                      ) : null}
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+
+            <div className={styles.checkoutRow}>
+              <div
+                data-drop-zone="register"
+                className={`${styles.registerZone} ${step === "product" ? styles.registerZoneActive : ""}`}
+                role="region"
+                aria-label="קופה"
+              >
+                <p className={styles.zoneTitle}>🧾 הקופה</p>
+                <div className={styles.zoneItems}>
+                  {selectedProductIds.length === 0 ? (
+                    <span className={styles.zoneEmpty}>בחרו את המוצר שהלקוח ביקש</span>
+                  ) : (
+                    selectedProductIds.map((id) => {
+                      const p = PRODUCTS.find((x) => x.id === id);
+                      if (!p) return null;
+                      return (
+                        <div key={id} className={styles.registerProductWrap}>
+                          <GroceryItemVisual product={p} variant="register-chip" showPrice={false} />
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+                <ZoneFeedbackLine fb={zoneFeedback.register} />
+              </div>
+
+              <div
+                data-drop-zone="change"
+                className={`${styles.changeZone} ${step === "change" ? styles.changeZoneActive : ""}`}
+              >
+                <p className={styles.zoneTitle}>💵 העודף שאני מחזיר</p>
+                <div className={styles.zoneItems}>
+                  {changeDenoms.length === 0 ? (
+                    <span className={styles.zoneEmpty}>
+                      {step === "change"
+                        ? expectedChangeForCustomer === 0
+                          ? "אין עודף — לחצו מסור עודף"
+                          : "בחרו מטבעות"
+                        : "—"}
                     </span>
-                  </span>
-                  <span className={styles.checkoutAmountLinePaid}>
-                    <span className={styles.checkoutAmountLabel}>הלקוח שילם:</span>
-                    <span className={styles.checkoutAmountValue}>
-                      {step === "change" ? formatShekel(customer.paid) : "—"}
-                    </span>
-                  </span>
+                  ) : (
+                    groupedChangeDenoms.map(({ value, count, lastIndex }) => (
+                      <MoneyChip
+                        key={`${value}-${count}-${lastIndex}`}
+                        value={value}
+                        count={count}
+                        dragging={draggingKey === `m-${value}`}
+                        onRemove={() => removeChangeAt(lastIndex)}
+                      />
+                    ))
+                  )}
+                </div>
+                <ZoneFeedbackLine fb={{ text: "", type: "" }} />
+                <div className={styles.checkoutFooter}>
+                  <div className={styles.checkoutFooterStack}>
+                    <div className={styles.checkoutTotalsPair}>
+                      <span className={styles.checkoutAmountLine}>
+                        <span className={styles.checkoutAmountLabel}>סכום הקנייה:</span>
+                        <span className={styles.checkoutAmountValue}>
+                          {step === "change" ? formatShekel(customer.total) : "—"}
+                        </span>
+                      </span>
+                      <span className={styles.checkoutAmountLinePaid}>
+                        <span className={styles.checkoutAmountLabel}>הלקוח שילם:</span>
+                        <span className={styles.checkoutAmountValue}>
+                          {step === "change" ? formatShekel(customer.paid) : "—"}
+                        </span>
+                      </span>
+                    </div>
+                    <p className={styles.checkoutAmountChange}>
+                      <span className={styles.checkoutAmountLabel}>סכום שהחזרת:</span>
+                      <span className={styles.checkoutAmountValue}>{formatShekel(changeSum)}</span>
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div
-              data-drop-zone="change"
-              className={`${styles.changeZone} ${step === "change" ? styles.changeZoneActive : ""}`}
-            >
-              <p className={styles.zoneTitle}>💵 העודף שאני מחזיר</p>
-              <div className={styles.zoneItems}>
-                {changeDenoms.length === 0 ? (
-                  <span className={styles.zoneEmpty}>
-                    {step === "change"
-                      ? expectedChangeForCustomer === 0
-                        ? "אין עודף — לחצו מסור עודף"
-                        : "בחרו מטבעות"
-                      : "—"}
-                  </span>
-                ) : (
-                  groupedChangeDenoms.map(({ value, count, lastIndex }) => (
-                    <MoneyChip
-                      key={`${value}-${count}-${lastIndex}`}
-                      value={value}
-                      count={count}
-                      dragging={draggingKey === `m-${value}`}
-                      onRemove={() => removeChangeAt(lastIndex)}
-                    />
-                  ))
-                )}
+            <section className={styles.moneySection}>
+              <p className={styles.moneyTitle}>💰 מגירת הקופה — בחרו מטבעות לעודף</p>
+              <div className={styles.moneyGrid}>
+                {diffConfig.denoms.map((value) => {
+                  const style = DENOM_STYLES[value];
+                  return (
+                    <button
+                      key={value}
+                      type="button"
+                      disabled={step !== "change"}
+                      className={styles.moneyBtn}
+                      style={{ background: style?.color, color: style?.text }}
+                      onPointerDown={(e) => onMoneyPointerDown(e, value)}
+                    >
+                      {style?.label || `${value}₪`}
+                    </button>
+                  );
+                })}
               </div>
-              <ZoneFeedbackLine fb={{ text: "", type: "" }} />
-              <div className={styles.checkoutFooter}>
-                <p className={styles.checkoutAmountChange}>
-                  <span className={styles.checkoutAmountLabel}>סכום שהחזרת:</span>
-                  <span className={styles.checkoutAmountValue}>{formatShekel(changeSum)}</span>
-                </p>
+            </section>
+
+            <div className={styles.supermarketBottom}>
+              <ZoneFeedbackLine fb={zoneFeedback.global} />
+              <div className={shop.actionRow}>
+                <button
+                  type="button"
+                  className={shop.secondaryBtn}
+                  disabled={step !== "change" || changeDenoms.length === 0}
+                  onClick={clearChange}
+                >
+                  נקה עודף
+                </button>
+                <button
+                  type="button"
+                  className={shop.primaryBtn}
+                  disabled={step !== "change"}
+                  onClick={submitChange}
+                >
+                  מסור עודף ✓
+                </button>
               </div>
             </div>
           </div>
-
-          <section className={styles.moneySection}>
-            <p className={styles.moneyTitle}>💰 מגירת הקופה</p>
-            <div className={styles.moneyGrid}>
-              {diffConfig.denoms.map((value) => {
-                const style = DENOM_STYLES[value];
-                return (
-                  <button
-                    key={value}
-                    type="button"
-                    disabled={step !== "change"}
-                    className={styles.moneyBtn}
-                    style={{ background: style?.color, color: style?.text }}
-                    onPointerDown={(e) => onMoneyPointerDown(e, value)}
-                  >
-                    {style?.label || `${value}₪`}
-                  </button>
-                );
-              })}
-            </div>
-          </section>
-
-          <div className={styles.actionRow}>
-            <button
-              type="button"
-              className={styles.clearBtn}
-              disabled={step !== "change" || changeDenoms.length === 0}
-              onClick={clearChange}
-            >
-              נקה עודף
-            </button>
-            <button
-              type="button"
-              className={styles.submitBtn}
-              disabled={step !== "change"}
-              onClick={submitChange}
-            >
-              מסור עודף ✓
-            </button>
-          </div>
-
-          <ZoneFeedbackLine fb={zoneFeedback.global} />
         </div>
       ) : null}
 

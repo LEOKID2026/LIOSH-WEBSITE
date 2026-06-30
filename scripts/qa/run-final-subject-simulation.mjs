@@ -2,20 +2,17 @@
 /**
  * Final subject simulation — all 7 launch subjects incl. history.
  *
- * Starts isolated Next dev on PORT 3200–3210 (default 3200), waits for readiness,
- * runs browser checks per subject, writes reports/simulations/final-subjects-<timestamp>/.
+ * Starts isolated Next **production** server on PORT 3200–3210 (no HMR).
+ * Uses NEXT_DIST_DIR=.next-final-subject-sim (separate from dev .next).
  *
  * Usage:
  *   node --env-file=.env.local scripts/qa/run-final-subject-simulation.mjs
  *   node --env-file=.env.local scripts/qa/run-final-subject-simulation.mjs --skip-server --port=3200
- *   node --env-file=.env.local scripts/qa/run-final-subject-simulation.mjs --resolve-port-only
+ *   node --env-file=.env.local scripts/qa/run-final-subject-simulation.mjs --force-build
  */
-import { spawn } from "node:child_process";
-import { createWriteStream } from "node:fs";
-import { mkdir } from "node:fs/promises";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
 import { chromium } from "@playwright/test";
+import { mkdir } from "node:fs/promises";
+import { join } from "node:path";
 import { getRepoRoot } from "../virtual-student-qa/lib/config.mjs";
 import {
   buildRunId,
@@ -24,19 +21,27 @@ import {
   FINAL_SIMULATION_SUBJECT_LABELS_HE,
 } from "./lib/final-subject-simulation/constants.mjs";
 import {
+  probeServerHealth,
   resolveSimulationPort,
   waitForServerReady,
 } from "./lib/final-subject-simulation/port-resolver.mjs";
 import { printConsoleSummary, writeSimulationReports, collectFailures } from "./lib/final-subject-simulation/reports.mjs";
 import { runSubjectSimulation, smokeParentReport } from "./lib/final-subject-simulation/subject-runner.mjs";
+import {
+  ensureSimulationBuild,
+  runSimulationBuild,
+  startSimulationServer,
+} from "./lib/final-subject-simulation/simulation-server.mjs";
 
 const REPO_ROOT = getRepoRoot();
 const DEV_HOST = "127.0.0.1";
+const SUBJECT_COOLDOWN_MS = 1500;
 
 function parseArgs(argv) {
   const out = {
     skipServer: false,
     resolvePortOnly: false,
+    forceBuild: false,
     port: null,
     runId: null,
     outputDir: null,
@@ -44,6 +49,7 @@ function parseArgs(argv) {
   for (const arg of argv) {
     if (arg === "--skip-server") out.skipServer = true;
     if (arg === "--resolve-port-only") out.resolvePortOnly = true;
+    if (arg === "--force-build") out.forceBuild = true;
     if (arg.startsWith("--port=")) out.port = Number(arg.slice("--port=".length));
     if (arg.startsWith("--runId=")) out.runId = arg.slice("--runId=".length).trim();
     if (arg.startsWith("--outputDir=")) out.outputDir = arg.slice("--outputDir=".length).trim();
@@ -51,39 +57,21 @@ function parseArgs(argv) {
   return out;
 }
 
-function teeLog(logPath) {
-  const chunks = [];
-  const stream = createWriteStream(logPath, { flags: "a" });
-  const write = (chunk) => {
-    const text = String(chunk);
-    chunks.push(text);
-    stream.write(text);
-    process.stdout.write(text);
-  };
-  const end = () =>
-    new Promise((resolve) => {
-      stream.end(resolve);
-    });
-  return { write, end, getText: () => chunks.join("") };
+function sleep(ms) {
+  return new Promise((r) => setTimeout(r, ms));
 }
 
-async function startDevServer(port, serverLogPath) {
-  await mkdir(dirname(serverLogPath), { recursive: true });
-  const logStream = createWriteStream(serverLogPath, { flags: "a" });
-  logStream.write(`[${new Date().toISOString()}] starting npx next dev -p ${port} -H ${DEV_HOST}\n`);
-
-  const child = spawn("npx", ["next", "dev", "-p", String(port), "-H", DEV_HOST], {
-    cwd: REPO_ROOT,
-    shell: true,
-    detached: true,
-    stdio: ["ignore", "pipe", "pipe"],
-    env: { ...process.env, PORT: String(port) },
-  });
-
-  child.stdout?.on("data", (d) => logStream.write(d));
-  child.stderr?.on("data", (d) => logStream.write(d));
-
-  return { pid: child.pid, logStream };
+/** Log to stdout only during run — raw-log.txt written once at end (avoids watch churn). */
+function makeRunLog() {
+  const chunks = [];
+  return {
+    write(text) {
+      const s = String(text);
+      chunks.push(s);
+      process.stdout.write(s);
+    },
+    getText: () => chunks.join(""),
+  };
 }
 
 async function main() {
@@ -99,31 +87,60 @@ async function main() {
   const outputDir = join(REPO_ROOT, args.outputDir || defaultOutputDir(runId));
   await mkdir(outputDir, { recursive: true });
   const rawLogPath = join(outputDir, "raw-log.txt");
-  const tee = teeLog(rawLogPath);
+  const log = makeRunLog();
 
-  tee.write(`\n=== final-subject-simulation runId=${runId} ===\n`);
-  tee.write(`Port: ${port}${autoSelected ? " (auto-selected)" : ""}\n`);
-  tee.write(`Output: ${outputDir}\n\n`);
+  log.write(`\n=== final-subject-simulation runId=${runId} ===\n`);
+  log.write(`Port: ${port}${autoSelected ? " (auto-selected)" : ""}\n`);
+  log.write(`Output: ${outputDir}\n`);
+  log.write(`Server mode: production (next start, .next-final-subject-sim)\n\n`);
 
   const baseUrl = `http://${DEV_HOST}:${port}`;
   let serverMeta = null;
 
   if (!args.skipServer) {
-    tee.write(`Starting dev server on ${baseUrl} …\n`);
-    serverMeta = await startDevServer(port, rawLogPath);
-    tee.write(`Server pid=${serverMeta.pid}\n`);
+    if (args.forceBuild) {
+      await runSimulationBuild(REPO_ROOT, log.write.bind(log));
+    } else {
+      await ensureSimulationBuild(REPO_ROOT, log.write.bind(log));
+    }
+    serverMeta = await startSimulationServer({
+      repoRoot: REPO_ROOT,
+      port,
+      logPath: rawLogPath,
+      log: log.write.bind(log),
+    });
+    log.write(`Server pid=${serverMeta.pid}\n`);
   } else {
-    tee.write(`--skip-server: expecting server already at ${baseUrl}\n`);
+    log.write(`--skip-server: expecting server already at ${baseUrl}\n`);
   }
 
-  tee.write("Waiting for /student/login …\n");
-  const ready = await waitForServerReady(baseUrl);
-  if (!ready) {
-    tee.write(`ERROR: server not ready at ${baseUrl}\n`);
-    await tee.end();
+  log.write("Waiting for /student/login (production, no HMR) …\n");
+  try {
+    await waitForServerReady(baseUrl, {
+      timeoutMs: 300_000,
+      onRetry: (attempt, detail) => {
+        if (attempt === 1 || attempt % 5 === 0) {
+          log.write(`  … still waiting (${attempt * 2}s): ${detail}\n`);
+        }
+      },
+    });
+  } catch (error) {
+    log.write(`ERROR: ${error?.message || error}\n`);
+    await writeSimulationReports(outputDir, {
+      runId,
+      generatedAt: new Date().toISOString(),
+      baseUrl,
+      port,
+      autoPort: autoSelected,
+      allPass: false,
+      subjects: {},
+      globalChecks: {},
+      failures: [{ step: "server_ready", error: error?.message || String(error), logFile: rawLogPath }],
+      rawLog: log.getText(),
+    });
     process.exit(2);
   }
-  tee.write("Server ready.\n\n");
+  log.write("Server ready.\n\n");
 
   process.env.PLAYWRIGHT_BASE_URL = baseUrl;
   process.env.VIRTUAL_STUDENT_BASE_URL = baseUrl;
@@ -133,22 +150,36 @@ async function main() {
   const subjects = {};
 
   for (const subjectKey of FINAL_SIMULATION_SUBJECT_KEYS) {
+    if (!(await probeServerHealth(baseUrl))) {
+      log.write(`\n[ABORT] Server unhealthy before ${subjectKey} — stopping remaining subjects.\n`);
+      break;
+    }
+
     const label = FINAL_SIMULATION_SUBJECT_LABELS_HE[subjectKey] || subjectKey;
-    tee.write(`--- ${label} (${subjectKey}) ---\n`);
+    log.write(`--- ${label} (${subjectKey}) ---\n`);
     const result = await runSubjectSimulation(browser, {
       baseUrl,
       subjectKey,
       logFile: rawLogPath,
     });
     subjects[subjectKey] = result;
-    tee.write(`${label}: ${result.pass ? "PASS" : "FAIL"}\n`);
+    log.write(`${label}: ${result.pass ? "PASS" : "FAIL"}\n`);
+    if (result.advancedAbsent?.options?.length) {
+      log.write(`  level options: ${result.advancedAbsent.options.join(", ")}\n`);
+    }
+    await sleep(SUBJECT_COOLDOWN_MS);
   }
 
-  const parentReport = await smokeParentReport(browser, baseUrl);
+  const parentReport = await (async () => {
+    if (!(await probeServerHealth(baseUrl))) {
+      return { pass: false, detail: "server unhealthy — parent report skipped", notRun: true };
+    }
+    return smokeParentReport(browser, baseUrl);
+  })();
+
   await browser.close();
 
   const failures = collectFailures(subjects, rawLogPath);
-
   const allPass =
     FINAL_SIMULATION_SUBJECT_KEYS.every((k) => subjects[k]?.pass) &&
     (parentReport.notRun || parentReport.pass);
@@ -159,15 +190,15 @@ async function main() {
     baseUrl,
     port,
     autoPort: autoSelected,
+    serverMode: serverMeta?.mode || (args.skipServer ? "external" : "unknown"),
     allPass,
     subjects,
     globalChecks: { parent_report: parentReport },
     failures,
-    rawLog: tee.getText(),
+    rawLog: log.getText(),
   };
 
   await writeSimulationReports(outputDir, payload);
-  await tee.end();
 
   printConsoleSummary({
     subjects,
@@ -179,7 +210,7 @@ async function main() {
   });
 
   if (serverMeta?.pid) {
-    console.log(`Dev server still running (pid=${serverMeta.pid}) on ${baseUrl}`);
+    console.log(`Production server still running (pid=${serverMeta.pid}) on ${baseUrl}`);
     console.log("Stop it manually when done reviewing results.");
   }
 

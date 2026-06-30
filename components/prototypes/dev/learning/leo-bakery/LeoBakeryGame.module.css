@@ -18,11 +18,9 @@
 
 .trayGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(68px, 1fr));
   gap: 0.28rem;
-  max-height: clamp(110px, 26vh, 170px);
-  overflow: auto;
-  align-content: start;
+  align-content: center;
+  justify-content: center;
 }
 
 .trayCard {
@@ -30,21 +28,26 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0.22rem;
+  padding: 0.28rem 0.18rem;
   border-radius: 0.65rem;
   border: 2px solid #fdba74;
   background: #fffbeb;
-  min-height: 54px;
+  width: 100%;
+  max-width: 112px;
+  max-height: 96px;
+  min-height: 72px;
+  height: auto;
+  box-sizing: border-box;
 }
 
 .trayLabel {
-  font-size: 0.56rem;
+  font-size: clamp(0.56rem, 2.2vw, 0.64rem);
   font-weight: 800;
   color: #9a3412;
 }
 
 .trayItems {
-  font-size: clamp(0.75rem, 2.8vw, 0.95rem);
+  font-size: clamp(0.82rem, 3vw, 1rem);
   font-weight: 800;
   line-height: 1.15;
   text-align: center;

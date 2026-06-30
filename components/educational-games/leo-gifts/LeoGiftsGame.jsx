@@ -24,6 +24,7 @@ import {
 } from "./leo-gifts-data.js";
 import { buildLeoGiftsMetrics } from "./leo-gifts-metrics.js";
 import { sharedStyles as s } from "../../prototypes/dev/learning/shared/LearningPrototypeFrame.jsx";
+import shop from "../shared/educational-game-shop-layout.module.css";
 import gameUi from "../../prototypes/dev/learning/leo-gifts/LeoGiftsGame.module.css";
 import styles from "./LeoGiftsGame.module.css";
 
@@ -74,6 +75,7 @@ export default function LeoGiftsGame({
 
   const diffConfig = getContinuousDifficulty(difficulty);
   const gridClass = task ? gameUi[childrenGridClass(task.children)] : "";
+  const showRemainder = difficulty !== "easy";
 
   const resetTaskUi = useCallback(() => {
     setPerChild(0);
@@ -271,16 +273,25 @@ export default function LeoGiftsGame({
       ? (answerTimesRef.current.reduce((a, b) => a + b, 0) / answerTimesRef.current.length).toFixed(1)
       : "—";
 
+  const feedbackBarClass = [
+    shop.feedbackBar,
+    checkState === "ok"
+      ? shop.feedbackOk
+      : checkState === "bad"
+        ? shop.feedbackBad
+        : shop.feedbackNeutral,
+  ].join(" ");
+
+  const idleFeedback = showRemainder
+    ? "בחרו כמה כל ילד מקבל וכמה נשאר לליאו"
+    : "בחרו כמה ממתקים כל ילד מקבל";
+
   return (
-    <div className={`${s.shell} ${s.shellPink} ${productionMode ? styles.shellEmbedded : ""}`} dir="rtl">
+    <div className={`${s.shell} ${s.shellWarm} ${productionMode ? styles.shellEmbedded : ""}`} dir="rtl">
       <header className={s.header}>
-        {!productionMode ? (
-          <Link href={backHref} className={s.backBtn}>
-            ← חזרה
-          </Link>
-        ) : (
-          <div style={{ minWidth: 40 }} aria-hidden />
-        )}
+        <Link href={backHref} className={s.hudChip}>
+          חזרה
+        </Link>
         {phase === "play" ? (
           <div className={s.hud}>
             <span className={`${s.hudChip} ${s.hudScore}`}>⭐ {score}</span>
@@ -291,26 +302,26 @@ export default function LeoGiftsGame({
             <span className={`${s.hudChip} ${s.hudBad}`}>
               ❌ {mistakes}/{diffConfig.maxMistakes}
             </span>
-            {showFullscreenButton && onFullscreenToggle ? (
-              <EducationalGameHudFullscreenButton
-                isFullscreen={isFullscreen}
-                onToggle={onFullscreenToggle}
-              />
-            ) : null}
           </div>
         ) : (
           <div className={s.hud}>
-            <span className={s.hudChip}>{productionMode ? "🎁" : "🎁 אבטיפוס"}</span>
+            <span className={s.hudChip}>{productionMode ? "🍬" : "🍬 אבטיפוס"}</span>
           </div>
         )}
-        <div style={{ minWidth: 40 }} aria-hidden />
+        {showFullscreenButton && onFullscreenToggle ? (
+          <EducationalGameHudFullscreenButton
+            className={s.hudChip}
+            isFullscreen={isFullscreen}
+            onToggle={onFullscreenToggle}
+          />
+        ) : null}
       </header>
 
       {!productionMode && phase === "intro" ? (
         <div className={styles.screenCenter}>
-          <p className={styles.introHero}>🎁🦁</p>
-          <h1 className={styles.introTitle}>המתנות של ליאו</h1>
-          <p className={styles.introText}>עזרו לליאו לחלק מתנות וסוכריות בין הילדים בצורה שווה!</p>
+          <p className={styles.introHero}>🍬🦁</p>
+          <h1 className={styles.introTitle}>חנות הממתקים של ליאו</h1>
+          <p className={styles.introText}>עזרו לליאו לחלק ממתקים בין הילדים בצורה שווה!</p>
           <div className={styles.difficultyRow}>
             {(/** @type {DifficultyId[]} */ (["easy", "medium", "hard"])).map((id) => (
               <button
@@ -331,111 +342,125 @@ export default function LeoGiftsGame({
       ) : null}
 
       {phase === "play" && task ? (
-        <div className={s.main}>
-          <div className={s.missionCard}>
-            <span className={s.missionIcon}>{task.itemEmoji}</span>
-            <div className={s.missionBody}>
-              <p className={s.missionLabel}>משימה</p>
-              <h2 className={s.missionTitle}>חלוקה שווה</h2>
-              <p className={s.missionPrompt}>{giftsPrompt(task)}</p>
-            </div>
-          </div>
+        <div className={shop.shopMain}>
+          <p className={shop.counterLabel}>
+            🍬 חנות הממתקים · שלב {internalStage}
+          </p>
 
-          <div className={gameUi.infoBar}>
-            {task.total} {task.itemLabel} · {task.children} ילדים
-          </div>
+          <div className={`${shop.shopGrid} ${styles.giftsShopGrid}`} data-educational-workplace-grid="">
+            <aside className={shop.customerCol}>
+              <div className={shop.customerCard}>
+                <span className={shop.customerAvatar} aria-hidden>
+                  {task.itemEmoji}
+                </span>
+                <div className={shop.customerSpeechWrap}>
+                  <p className={shop.customerName}>משימה</p>
+                  <p className={shop.missionText}>{giftsPrompt(task)}</p>
+                </div>
+              </div>
+            </aside>
 
-          <div className={s.playArea}>
-            <div className={`${s.panel} ${gameUi.childrenPanel} ${styles.childrenPanelFull}`}>
-              <p className={s.panelTitle}>👧👦 הילדים</p>
-              <div className={`${gameUi.childrenGrid} ${gridClass} ${styles.childrenGridFull}`}>
-                {Array.from({ length: task.children }, (_, i) => (
-                  <div key={i} className={gameUi.childCard}>
-                    <span className={gameUi.childLabel}>ילד {i + 1}</span>
-                    <span className={gameUi.childEmoji}>{childEmojiAt(i)}</span>
-                    <span className={gameUi.childGift}>{task.itemEmoji}</span>
-                    <span className={gameUi.childCount}>{perChild}</span>
+            <section className={`${shop.workCol} ${styles.giftsWorkCol}`}>
+              <div className={shop.workFrame}>
+                <div className={shop.workSurface}>
+                  <p className={shop.workSurfaceTitle}>👧👦 הילדים</p>
+                  <div className={`${shop.workSurfaceBody} ${styles.childrenGridFit}`}>
+                    <div className={`${gameUi.childrenGrid} ${gridClass} ${styles.childrenGridInner}`}>
+                      {Array.from({ length: task.children }, (_, i) => (
+                        <div key={i} className={gameUi.childCard}>
+                          <span className={gameUi.childLabel}>ילד {i + 1}</span>
+                          <span className={gameUi.childEmoji}>{childEmojiAt(i)}</span>
+                          <span className={gameUi.childGift}>{task.itemEmoji}</span>
+                          <span className={gameUi.childCount}>{perChild}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                ))}
-              </div>
-            </div>
-
-            <div className={`${s.panel} ${gameUi.controlsPanel}`}>
-              <div className={gameUi.controlCol}>
-                <span className={gameUi.controlLabel}>לכל ילד</span>
-                <div className={s.stepperRow}>
-                  <button
-                    type="button"
-                    className={s.stepperBtn}
-                    onClick={() => {
-                      setPerChild((v) => Math.max(0, v - 1));
-                      setCheckState("idle");
-                      setFeedback("");
-                    }}
-                  >
-                    −
-                  </button>
-                  <span className={s.stepperValue}>{perChild}</span>
-                  <button
-                    type="button"
-                    className={s.stepperBtn}
-                    onClick={() => {
-                      setPerChild((v) => Math.min(task.total, v + 1));
-                      setCheckState("idle");
-                      setFeedback("");
-                    }}
-                  >
-                    +
-                  </button>
                 </div>
               </div>
-              <div className={gameUi.controlCol}>
-                <span className={gameUi.controlLabel}>נשאר לליאו 🧺</span>
-                <div className={s.stepperRow}>
-                  <button
-                    type="button"
-                    className={s.stepperBtn}
-                    onClick={() => {
-                      setRemainder((v) => Math.max(0, v - 1));
-                      setCheckState("idle");
-                      setFeedback("");
-                    }}
-                  >
-                    −
-                  </button>
-                  <span className={s.stepperValue}>{remainder}</span>
-                  <button
-                    type="button"
-                    className={s.stepperBtn}
-                    onClick={() => {
-                      setRemainder((v) => Math.min(task.total, v + 1));
-                      setCheckState("idle");
-                      setFeedback("");
-                    }}
-                  >
-                    +
-                  </button>
+            </section>
+
+            <aside className={shop.sideCol}>
+              <div className={`${s.panel} ${shop.toolsPanel} ${shop.toolsPanelLarge}`}>
+                <p className={shop.toolsTitle}>🎛️ חלוקה</p>
+                <div
+                  className={`${shop.controlsStackInline} ${!showRemainder ? shop.controlsStackSingle : ""}`}
+                >
+                  <div className={shop.controlRow}>
+                    <span className={shop.controlLabel}>לכל ילד</span>
+                    <div className={shop.stepperRow}>
+                      <button
+                        type="button"
+                        className={shop.stepperBtn}
+                        onClick={() => {
+                          setPerChild((v) => Math.min(task.total, v + 1));
+                          setCheckState("idle");
+                          setFeedback("");
+                        }}
+                      >
+                        +
+                      </button>
+                      <span className={shop.stepperValue}>{perChild}</span>
+                      <button
+                        type="button"
+                        className={shop.stepperBtn}
+                        onClick={() => {
+                          setPerChild((v) => Math.max(0, v - 1));
+                          setCheckState("idle");
+                          setFeedback("");
+                        }}
+                      >
+                        −
+                      </button>
+                    </div>
+                  </div>
+                  {showRemainder ? (
+                    <div className={shop.controlRow}>
+                      <span className={shop.controlLabel}>נשאר לליאו 🧺</span>
+                      <div className={shop.stepperRow}>
+                        <button
+                          type="button"
+                          className={shop.stepperBtn}
+                          onClick={() => {
+                            setRemainder((v) => Math.min(task.total, v + 1));
+                            setCheckState("idle");
+                            setFeedback("");
+                          }}
+                        >
+                          +
+                        </button>
+                        <span className={shop.stepperValue}>{remainder}</span>
+                        <button
+                          type="button"
+                          className={shop.stepperBtn}
+                          onClick={() => {
+                            setRemainder((v) => Math.max(0, v - 1));
+                            setCheckState("idle");
+                            setFeedback("");
+                          }}
+                        >
+                          −
+                        </button>
+                      </div>
+                    </div>
+                  ) : null}
                 </div>
               </div>
-            </div>
 
-            <div
-              className={`${s.feedbackBar} ${
-                checkState === "ok" ? s.feedbackOk : checkState === "bad" ? s.feedbackBad : s.feedbackNeutral
-              }`}
-            >
-              <p className={s.feedbackText}>
-                {feedback || "בחרו כמה כל ילד מקבל וכמה נשאר לליאו"}
-              </p>
-            </div>
+              <div className={feedbackBarClass}>
+                <p className={shop.feedbackText}>{feedback || idleFeedback}</p>
+              </div>
+            </aside>
 
-            <div className={s.actionRow}>
-              <button type="button" className={s.primaryBtn} onClick={runCheck}>
-                בדוק חלוקה
-              </button>
-              <button type="button" className={s.secondaryBtn} onClick={resetTaskUi}>
-                איפוס
-              </button>
+            <div className={shop.bottomBar}>
+              <div className={shop.actionRow}>
+                <button type="button" className={shop.primaryBtn} onClick={runCheck}>
+                  בדוק חלוקה
+                </button>
+                <button type="button" className={shop.secondaryBtn} onClick={resetTaskUi}>
+                  איפוס
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -444,7 +469,7 @@ export default function LeoGiftsGame({
       {phase === "lost" ? (
         <div className={styles.screenCenter}>
           <div className={styles.endCard}>
-            <h2 className={styles.endTitle}>🎁 סיום משחק</h2>
+            <h2 className={styles.endTitle}>🍬 סיום משחק</h2>
             <p className={styles.endStat}>⭐ ניקוד: {score}</p>
             <p className={styles.endStat}>✅ תשובות נכונות: {successCount}</p>
             <p className={styles.endStat}>❌ טעויות: {mistakes}</p>

@@ -56,9 +56,15 @@ function ShelfVisual({ product, imageClassName, iconClassName, centerClassName }
  *   }
  *   variant?: 'shelf' | 'register-chip'
  *   showPrice?: boolean
+ *   nameOnShelf?: boolean
  * }} props
  */
-export default function GroceryItemVisual({ product, variant = "shelf", showPrice = true }) {
+export default function GroceryItemVisual({
+  product,
+  variant = "shelf",
+  showPrice = true,
+  nameOnShelf = true,
+}) {
   const visual = (
     <ShelfVisual
       product={product}
@@ -73,6 +79,15 @@ export default function GroceryItemVisual({ product, variant = "shelf", showPric
       <div className={styles.registerProductChip}>
         {visual}
         <span className={styles.registerChipName}>{product.name}</span>
+      </div>
+    );
+  }
+
+  if (!nameOnShelf) {
+    return (
+      <div className={styles.shelfItemIconPrice}>
+        {visual}
+        {showPrice ? <span className={styles.shelfItemPriceOnly}>{product.price}₪</span> : null}
       </div>
     );
   }

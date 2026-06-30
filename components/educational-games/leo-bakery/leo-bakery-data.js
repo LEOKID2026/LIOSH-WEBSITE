@@ -161,7 +161,7 @@ export function bakeryTaskKey(task) {
 /** @param {BakeryTask} task */
 export function bakeryPrompt(task) {
   if (task.mode === "build") {
-    return `הכינו ${task.trays} מגשים. בכל מגש ${task.perTray} ${task.itemLabel}. כמה ${task.itemLabel} צריך?`;
+    return `הגדירו ${task.trays} מגשים עם ${task.perTray} ${task.itemLabel} בכל מגש`;
   }
   if (task.mode === "findTrays") {
     return `יש ${task.total} ${task.itemLabel}. בכל מגש ${task.perTray}. כמה מגשים צריך?`;

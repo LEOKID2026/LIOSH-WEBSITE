@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { sharedStyles as frame } from "../../prototypes/dev/learning/shared/LearningPrototypeFrame.jsx";
 import EducationalDifficultyGradeHint from "../EducationalDifficultyGradeHint.jsx";
 import EducationalGameHudFullscreenButton from "../EducationalGameHudFullscreenButton.jsx";
+import shop from "../shared/educational-game-shop-layout.module.css";
 import {
   DIFFICULTIES,
   buildOrderedSessionRun,
@@ -65,8 +67,13 @@ export default function LeoNumberPathGame({
   const diffConfig = DIFFICULTIES[difficulty];
   const currentTask = tasks[taskIndex] ?? null;
   const orderMatters = currentTask?.orderMatters ?? false;
-  const stoneCols =
-    currentTask && currentTask.numbers.length > 14 ? styles.stonesDense : styles.stonesNormal;
+  const stoneGridSizeClass = currentTask
+    ? currentTask.numbers.length <= 12
+      ? styles.stonesGridFew
+      : currentTask.numbers.length <= 18
+        ? styles.stonesGridMedium
+        : styles.stonesGridMany
+    : "";
 
   const addScore = useCallback((delta) => {
     setScore((s) => Math.max(0, s + delta));
@@ -232,161 +239,186 @@ export default function LeoNumberPathGame({
   }, [phase, productionMode, endMetrics]);
 
   return (
-    <div className={`${styles.shell} ${productionMode ? styles.shellEmbedded : ""}`} dir="rtl">
-      <header className={styles.header}>
-        {!productionMode ? (
-          <Link href={backHref} className={styles.backBtn}>
-            ← חזרה
-          </Link>
-        ) : (
-          <div style={{ minWidth: 40 }} aria-hidden />
-        )}
+    <div className={`${frame.shell} ${frame.shellWarm} ${productionMode ? styles.shellEmbedded : ""}`} dir="rtl">
+      <header className={frame.header}>
+        <Link href={backHref} className={frame.hudChip}>
+          חזרה
+        </Link>
         {phase === "play" ? (
-          <div className={styles.hud}>
-            <span className={`${styles.hudChip} ${styles.hudScore}`}>⭐ {score}</span>
-            <span className={`${styles.hudChip} ${styles.hudProgress}`}>
+          <div className={frame.hud}>
+            <span className={`${frame.hudChip} ${frame.hudScore}`}>⭐ {score}</span>
+            <span className={`${frame.hudChip} ${frame.hudProgress}`}>
               🪨 {taskIndex + 1}/{TASKS_PER_SESSION}
             </span>
-            <span className={`${styles.hudChip} ${styles.hudBad}`}>
+            <span className={`${frame.hudChip} ${frame.hudBad}`}>
               ❌ {mistakes}/{diffConfig.maxMistakes}
             </span>
-            <span className={styles.hudChip}>{diffConfig.label}</span>
-            {showFullscreenButton && onFullscreenToggle ? (
-              <EducationalGameHudFullscreenButton
-                isFullscreen={isFullscreen}
-                onToggle={onFullscreenToggle}
-              />
-            ) : null}
+            <span className={frame.hudChip}>{diffConfig.label}</span>
           </div>
         ) : (
-          <div className={styles.hud}>
-            <span className={styles.hudChip}>{productionMode ? "🔢" : "🔢 אבטיפוס"}</span>
+          <div className={frame.hud}>
+            <span className={frame.hudChip}>{productionMode ? "🔢" : "🔢 אבטיפוס"}</span>
           </div>
         )}
-        <div style={{ minWidth: 40 }} aria-hidden />
+        {showFullscreenButton && onFullscreenToggle ? (
+          <EducationalGameHudFullscreenButton
+            className={frame.hudChip}
+            isFullscreen={isFullscreen}
+            onToggle={onFullscreenToggle}
+          />
+        ) : null}
       </header>
 
       {!productionMode && phase === "intro" ? (
-        <div className={styles.screenCenter}>
-          <p className={styles.introHero}>🔢🦁</p>
-          <h1 className={styles.introTitle}>מסלול המספרים של ליאו</h1>
-          <p className={styles.introText}>
+        <div className={frame.screenCenter}>
+          <p className={frame.introHero}>🔢🦁</p>
+          <h1 className={frame.introTitle}>מסלול המספרים של ליאו</h1>
+          <p className={frame.introText}>
             בחרו מספרים במסלול לפי הכלל — קפיצות, זוגי/אי־זוגי וכפולות!
           </p>
-          <div className={styles.difficultyRow}>
+          <div className={frame.difficultyRow}>
             {(/** @type {DifficultyId[]} */ (["easy", "medium", "hard"])).map((id) => (
               <button
                 key={id}
                 type="button"
-                className={`${styles.diffBtn} ${difficulty === id ? styles.diffBtnSelected : ""}`}
+                className={`${frame.diffBtn} ${difficulty === id ? frame.diffBtnSelected : ""}`}
                 onClick={() => setDifficulty(id)}
               >
                 {DIFFICULTIES[id].label}
               </button>
             ))}
           </div>
-          <EducationalDifficultyGradeHint className={`${styles.introText} opacity-70`} style={{ fontSize: "0.72rem" }} />
-          <p className={styles.introText} style={{ fontSize: "0.78rem" }}>
+          <EducationalDifficultyGradeHint className={`${frame.introText} opacity-70`} style={{ fontSize: "0.72rem" }} />
+          <p className={frame.introText} style={{ fontSize: "0.78rem" }}>
             {TASKS_PER_SESSION} משימות · עד {MAX_ATTEMPTS_PER_TASK} ניסיונות לכל משימה
           </p>
-          <button type="button" className={styles.startBtn} onClick={startGame}>
+          <button type="button" className={frame.startBtn} onClick={startGame}>
             התחל משחק
           </button>
         </div>
       ) : null}
 
       {phase === "play" && currentTask ? (
-        <div className={styles.main}>
-          <div className={styles.missionCard}>
-            <span className={styles.missionIcon}>🪨</span>
-            <div className={styles.missionBody}>
-              <p className={styles.missionLabel}>מסלול</p>
-              <h2 className={styles.missionTitle}>משימת מספרים</h2>
-              <p className={styles.missionPrompt}>{currentTask.promptHe}</p>
-            </div>
-          </div>
+        <div className={shop.shopMain}>
+          <p className={shop.counterLabel}>
+            🔢 מסלול המספרים · משימה {taskIndex + 1}/{TASKS_PER_SESSION}
+          </p>
 
-          <div className={styles.selectedBar}>
-            <span className={styles.selectedLabel}>בחרנו:</span>
-            <span className={styles.selectedPath} dir="ltr">
-              {formatSelectedPath(selected, orderMatters)}
-            </span>
-          </div>
-
-          <div className={styles.playStack}>
-            <div className={styles.pathPanel}>
-              <div className={`${styles.stonePath} ${stoneCols}`}>
-                {currentTask.numbers.map((n) => {
-                  const selIdx = selected.indexOf(n);
-                  const isSel = selIdx >= 0;
-                  return (
-                    <button
-                      key={`${n}-${currentTask.id}`}
-                      type="button"
-                      className={`${styles.stone} ${isSel ? styles.stoneSelected : ""}`}
-                      onClick={() => tapNumber(n)}
-                    >
-                      {isSel && orderMatters ? (
-                        <span className={styles.stoneOrder}>{selIdx + 1}</span>
-                      ) : null}
-                      {n}
-                    </button>
-                  );
-                })}
+          <div className={`${shop.shopGrid} ${styles.pathShopGrid}`} data-educational-workplace-grid="">
+            <aside className={shop.customerCol}>
+              <div className={shop.customerCard}>
+                <span className={shop.customerAvatar} aria-hidden>
+                  🪨
+                </span>
+                <div className={shop.customerSpeechWrap}>
+                  <p className={shop.customerName}>משימת מספרים</p>
+                  <p className={shop.missionText}>
+                    {currentTask.promptHe}
+                    <span className={shop.missionTicket}>
+                      🧾 ניסיון {Math.max(1, attemptsOnTask || 1)}/{MAX_ATTEMPTS_PER_TASK}
+                    </span>
+                  </p>
+                </div>
               </div>
-            </div>
+            </aside>
 
-            <div
-              className={`${styles.feedbackBar} ${
-                checkState === "ok"
-                  ? styles.feedbackOk
-                  : checkState === "bad"
-                    ? styles.feedbackBad
-                    : styles.feedbackNeutral
-              }`}
-            >
-              <p className={styles.feedbackText}>
-                {feedback ||
-                  (attemptsOnTask > 0
-                    ? `ניסיון ${attemptsOnTask}/${MAX_ATTEMPTS_PER_TASK} — לחצו על המספרים ואז בדקו`
-                    : "לחצו על המספרים ואז בדקו מסלול")}
-              </p>
-            </div>
+            <section className={`${shop.workCol} ${styles.pathWorkCol}`}>
+              <div className={shop.workFrame}>
+                <div className={shop.workSurface}>
+                  <p className={shop.workSurfaceTitle}>🪨 בחרו מספרים</p>
+                  <div className={`${shop.workSurfaceBody} ${styles.pathPanel}`}>
+                    <div
+                      className={`${styles.stonePath} ${stoneGridSizeClass} ${styles.stonePathFit}`}
+                    >
+                      {currentTask.numbers.map((n) => {
+                        const selIdx = selected.indexOf(n);
+                        const isSel = selIdx >= 0;
+                        return (
+                          <button
+                            key={`${n}-${currentTask.id}`}
+                            type="button"
+                            className={`${styles.stone} ${isSel ? styles.stoneSelected : ""}`}
+                            onClick={() => tapNumber(n)}
+                          >
+                            {isSel && orderMatters ? (
+                              <span className={styles.stoneOrder}>{selIdx + 1}</span>
+                            ) : null}
+                            {n}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
 
-            <div className={styles.actionRow}>
-              <button
-                type="button"
-                className={styles.primaryBtn}
-                disabled={checkState === "ok"}
-                onClick={runCheck}
+            <aside className={shop.sideCol}>
+              <div className={`${frame.panel} ${shop.toolsPanel}`}>
+                <p className={shop.toolsTitle}>📍 המסלול שלכם</p>
+                <div className={styles.selectedBar}>
+                  <span className={styles.selectedLabel}>בחרנו:</span>
+                  <span className={styles.selectedPath} dir="ltr">
+                    {formatSelectedPath(selected, orderMatters)}
+                  </span>
+                </div>
+              </div>
+
+              <div
+                className={[
+                  shop.feedbackBar,
+                  checkState === "ok"
+                    ? shop.feedbackOk
+                    : checkState === "bad"
+                      ? shop.feedbackBad
+                      : shop.feedbackNeutral,
+                ].join(" ")}
               >
-                בדוק מסלול
-              </button>
-              <button
-                type="button"
-                className={styles.secondaryBtn}
-                disabled={checkState === "ok" || selected.length === 0}
-                onClick={clearSelection}
-              >
-                נקה בחירה
-              </button>
+                <p className={shop.feedbackText}>
+                  {feedback ||
+                    (attemptsOnTask > 0
+                      ? `ניסיון ${attemptsOnTask}/${MAX_ATTEMPTS_PER_TASK} — לחצו על המספרים ואז בדקו`
+                      : "לחצו על המספרים ואז בדקו מסלול")}
+                </p>
+              </div>
+            </aside>
+
+            <div className={shop.bottomBar}>
+              <div className={shop.actionRow}>
+                <button
+                  type="button"
+                  className={shop.primaryBtn}
+                  disabled={checkState === "ok"}
+                  onClick={runCheck}
+                >
+                  בדוק מסלול
+                </button>
+                <button
+                  type="button"
+                  className={shop.secondaryBtn}
+                  disabled={checkState === "ok" || selected.length === 0}
+                  onClick={clearSelection}
+                >
+                  נקה בחירה
+                </button>
+              </div>
             </div>
           </div>
         </div>
       ) : null}
 
       {phase === "won" && !productionMode ? (
-        <div className={styles.screenCenter}>
-          <div className={styles.endCard}>
-            <h2 className={styles.endTitle}>🎉 סיימתם את המסלול!</h2>
-            <p className={styles.endStat}>⭐ ניקוד: {score}</p>
-            <p className={styles.endStat}>
+        <div className={frame.screenCenter}>
+          <div className={frame.endCard}>
+            <h2 className={frame.endTitle}>🎉 סיימתם את המסלול!</h2>
+            <p className={frame.endStat}>⭐ ניקוד: {score}</p>
+            <p className={frame.endStat}>
               ✅ הצלחות: {successCount}/{tasks.length || TASKS_PER_SESSION}
             </p>
-            <p className={styles.endStat}>❌ טעויות: {mistakes}</p>
-            <p className={styles.endStat}>📊 רמה: {diffConfig.label}</p>
-            <div className={styles.endActions}>
-              <button type="button" className={styles.startBtn} onClick={() => setPhase("intro")}>
+            <p className={frame.endStat}>❌ טעויות: {mistakes}</p>
+            <p className={frame.endStat}>📊 רמה: {diffConfig.label}</p>
+            <div className={frame.endActions}>
+              <button type="button" className={frame.startBtn} onClick={() => setPhase("intro")}>
                 משחק חדש
               </button>
             </div>

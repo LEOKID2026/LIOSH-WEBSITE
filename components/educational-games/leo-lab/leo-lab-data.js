@@ -1,10 +1,11 @@
 /** @typedef {'easy' | 'medium' | 'hard'} DifficultyId */
 
 import {
-  EASY_EXPERIMENTS_EXTRA,
-  MEDIUM_EXPERIMENTS_EXTRA,
-  HARD_EXPERIMENTS_EXTRA,
-} from "./leo-lab-experiments-extra.js";
+  EASY_EXPERIMENTS,
+  MEDIUM_EXPERIMENTS,
+  HARD_EXPERIMENTS,
+} from "./leo-lab-experiments-clean.js";
+import { SHELF_SIZE_BY_DIFFICULTY } from "./leo-lab-shelf-presets.js";
 
 /** @typedef {{
  *   id: string
@@ -22,6 +23,7 @@ import {
  *   missionIcon?: string
  *   pickCount: number
  *   validItems: string[]
+ *   shelfItems: string[]
  *   exactMatch?: boolean
  *   resultText: string
  *   fact: string
@@ -29,6 +31,14 @@ import {
  * }} LabExperiment */
 
 export const EXPERIMENTS_PER_LEVEL = 20;
+
+export const EASY_LEVEL_CONTENT_GUIDELINES = {
+  audience: "כיתות א׳–ב׳",
+  minColorExperimentsInEasyPool: 6,
+};
+
+const EASY_BANNED_PROMPT_RE =
+  /חוסמ(?:ים|)\s*אור|עציר(?:ה|)\s*של\s*אור|מתאימ(?:ים|)\s*ליצירת\s*צל|מאפשר(?:ים|)\s*לאור\s*לעבור|שקוף\s*לאור|אור\s*וצל|ניסוי\s*אור/i;
 
 export const DIFFICULTIES = {
   easy: {
@@ -78,825 +88,65 @@ export const LAB_ITEMS = {
   paper: { id: "paper", name: "נייר", icon: "📄", category: "חומר" },
   can: { id: "can", name: "פחית", icon: "🥫", category: "מתכת" },
   key: { id: "key", name: "מפתח", icon: "🔑", category: "מתכת" },
+  paint_red: { id: "paint_red", name: "אדום", icon: "🟥", category: "צבע" },
+  paint_yellow: { id: "paint_yellow", name: "צהוב", icon: "🟨", category: "צבע" },
+  paint_blue: { id: "paint_blue", name: "כחול", icon: "🟦", category: "צבע" },
+  paint_green: { id: "paint_green", name: "ירוק", icon: "🟩", category: "צבע" },
+  paint_orange: { id: "paint_orange", name: "כתום", icon: "🟧", category: "צבע" },
+  paint_purple: { id: "paint_purple", name: "סגול", icon: "🟪", category: "צבע" },
+  paint_pink: { id: "paint_pink", name: "ורוד", icon: "🩷", category: "צבע" },
+  paint_white: { id: "paint_white", name: "לבן", icon: "⬜", category: "צבע" },
 };
-
-/** @type {Record<DifficultyId, string[]>} */
-export const SHELF_BY_DIFFICULTY = {
-  easy: ["magnet", "nail", "metal_spoon", "can", "plant", "water", "sun", "wood"],
-  medium: [
-    "battery",
-    "bulb",
-    "wire",
-    "magnet",
-    "nail",
-    "plant",
-    "water",
-    "sun",
-    "ice",
-    "bowl",
-  ],
-  hard: [
-    "battery",
-    "bulb",
-    "wire",
-    "switch",
-    "magnet",
-    "nail",
-    "metal_spoon",
-    "plant",
-    "water",
-    "sun",
-    "soil",
-    "stone",
-  ],
-};
-
-/** @type {LabExperiment[]} */
-export const EASY_EXPERIMENTS = [
-  {
-    id: "easy-magnet-metals",
-    difficulty: "easy",
-    title: "מצאו חפצים שנמשכים למגנט",
-    prompt: "בחרו 2 חפצים מתכתיים שהמגנט ימשוך",
-    missionIcon: "🧲",
-    pickCount: 2,
-    validItems: ["nail", "metal_spoon", "can"],
-    resultText: "מעולה! המגנט מושך מתכות.",
-    fact: "מגנט מושך חלק מהמתכות.",
-    resultIcon: "✨",
-  },
-  {
-    id: "easy-plant-drink",
-    difficulty: "easy",
-    title: "עזרו לצמח לשתות",
-    prompt: "בחרו 2 דברים שיעזרו לצמח",
-    missionIcon: "🌱",
-    pickCount: 2,
-    validItems: ["plant", "water", "sun"],
-    resultText: "מעולה! הצמח שותה וגדל.",
-    fact: "לצמחים צריך מים כדי לגדול.",
-    resultIcon: "💧",
-  },
-  {
-    id: "easy-warm-water",
-    difficulty: "easy",
-    title: "המיסו את הקרח",
-    prompt: "בחרו 2 דברים שיעזרו לקרח להימס",
-    missionIcon: "🧊",
-    pickCount: 2,
-    validItems: ["sun", "water"],
-    resultText: "מעולה! חום ומים עוזרים לקרח להימס.",
-    fact: "חום גורם לקרח להפוך למים.",
-    resultIcon: "💦",
-  },
-  {
-    id: "easy-shadow",
-    difficulty: "easy",
-    title: "צרו צל",
-    prompt: "בחרו 2 חפצים שיוצרים צל",
-    missionIcon: "🌓",
-    pickCount: 2,
-    validItems: ["sun", "wood"],
-    resultText: "מעולה! נוצר צל.",
-    fact: "גוף אטום חוסם אור ויוצר צל.",
-    resultIcon: "🌑",
-  },
-  {
-    id: "easy-float",
-    difficulty: "easy",
-    title: "בדקו מה צף במים",
-    prompt: "בחרו 2 חפצים לבדיקת ציפה במים",
-    missionIcon: "💧",
-    pickCount: 2,
-    validItems: ["water", "wood", "plant"],
-    resultText: "מעולה! העץ צף על המים.",
-    fact: "חומרים קלים יותר מהמים עלולים לצוף.",
-    resultIcon: "🪵",
-  },
-  {
-    id: "easy-sink",
-    difficulty: "easy",
-    title: "בדקו מה שוקע במים",
-    prompt: "בחרו 2 חפצים כבדים לבדיקה במים",
-    missionIcon: "💧",
-    pickCount: 2,
-    validItems: ["water", "nail", "metal_spoon", "can"],
-    resultText: "מעולה! המתכת שוקעת.",
-    fact: "חומרים כבדים יותר מהמים עלולים לשקוע.",
-    resultIcon: "🪨",
-  },
-  {
-    id: "easy-reflect",
-    difficulty: "easy",
-    title: "החזירו אור",
-    prompt: "בחרו 2 חפצים שקשורים לאור",
-    missionIcon: "🔦",
-    pickCount: 2,
-    validItems: ["sun", "water"],
-    resultText: "מעולה! השמש מאירה.",
-    fact: "מקור אור מאיר את הסביבה.",
-    resultIcon: "🌟",
-  },
-  {
-    id: "easy-water-fit",
-    difficulty: "easy",
-    title: "בחרו חפצים שמתאימים למים",
-    prompt: "בחרו 2 חפצים לניסוי עם מים",
-    missionIcon: "💧",
-    pickCount: 2,
-    validItems: ["water", "wood", "plant", "can"],
-    resultText: "מעולה! אפשר לבדוק במים.",
-    fact: "במים בודקים אם חומר צף או שוקע.",
-    resultIcon: "🧪",
-  },
-  {
-    id: "easy-plant-three",
-    difficulty: "easy",
-    title: "הזינו צמח",
-    prompt: "בחרו 3 דברים שהצמח צריך",
-    missionIcon: "🌱",
-    pickCount: 3,
-    validItems: ["plant", "water", "sun"],
-    exactMatch: true,
-    resultText: "מעולה! לצמח יש מים ואור.",
-    fact: "צמח צריך מים, אור ואוויר.",
-    resultIcon: "🌿",
-  },
-  {
-    id: "easy-light-three",
-    difficulty: "easy",
-    title: "האירו את החדר",
-    prompt: "בחרו 3 חפצים שקשורים לאור",
-    missionIcon: "☀️",
-    pickCount: 3,
-    validItems: ["sun", "water", "plant"],
-    exactMatch: true,
-    resultText: "מעולה! האור מאיר.",
-    fact: "מקור אור מאיר את הסביבה.",
-    resultIcon: "🌟",
-  },
-  {
-    id: "easy-metal-three",
-    difficulty: "easy",
-    title: "אספו מתכות",
-    prompt: "בחרו 3 חפצים מתכתיים",
-    missionIcon: "🧲",
-    pickCount: 3,
-    validItems: ["nail", "metal_spoon", "can"],
-    resultText: "מעולה! אלה חפצים מתכתיים.",
-    fact: "מגנט מושך חלק מהמתכות.",
-    resultIcon: "🔩",
-  },
-  {
-    id: "easy-sun-for-plant",
-    difficulty: "easy",
-    title: "אור לצמח",
-    prompt: "בחרו 2 דברים שהצמח צריך לאור",
-    missionIcon: "☀️",
-    pickCount: 2,
-    validItems: ["plant", "sun"],
-    resultText: "מעולה! לצמח יש אור.",
-    fact: "צמחים צריכים אור כדי לגדול.",
-    resultIcon: "🌞",
-  },
-  {
-    id: "easy-water-the-plant",
-    difficulty: "easy",
-    title: "השקיית צמח",
-    prompt: "בחרו 2 דברים להשקיית הצמח",
-    missionIcon: "💧",
-    pickCount: 2,
-    validItems: ["plant", "water"],
-    resultText: "מעולה! הצמח קיבל מים.",
-    fact: "מים עוזרים לשורשים לספוג חומרים.",
-    resultIcon: "🌱",
-  },
-  {
-    id: "easy-can-in-water",
-    difficulty: "easy",
-    title: "פחית במים",
-    prompt: "בחרו 2 חפצים לבדיקת פחית במים",
-    missionIcon: "🥫",
-    pickCount: 2,
-    validItems: ["water", "can"],
-    resultText: "מעולה! הפחית שקעה במים.",
-    fact: "פחית מתכתית כבדה ולרוב שוקעת.",
-    resultIcon: "💧",
-  },
-  {
-    id: "easy-wood-float-test",
-    difficulty: "easy",
-    title: "עץ על המים",
-    prompt: "בחרו 2 חפצים לניסוי עם עץ ומים",
-    missionIcon: "🪵",
-    pickCount: 2,
-    validItems: ["wood", "water"],
-    resultText: "מעולה! העץ צף על פני המים.",
-    fact: "עץ קל יחסית ולכן עלול לצוף.",
-    resultIcon: "🌊",
-  },
-  {
-    id: "easy-nail-magnet-pair",
-    difficulty: "easy",
-    title: "מסמר ומגנט",
-    prompt: "בחרו 2 חפצים לבדיקת מסמר ומגנט",
-    missionIcon: "🔩",
-    pickCount: 2,
-    validItems: ["magnet", "nail"],
-    exactMatch: true,
-    resultText: "מעולה! המסמר נמשך למגנט.",
-    fact: "מסמר ממתכת נמשך למגנט.",
-    resultIcon: "🧲",
-  },
-  {
-    id: "easy-spoon-in-water",
-    difficulty: "easy",
-    title: "כפית במים",
-    prompt: "בחרו 2 חפצים לבדיקת כפית מתכת במים",
-    missionIcon: "🥄",
-    pickCount: 2,
-    validItems: ["metal_spoon", "water"],
-    resultText: "מעולה! הכפית שקעה במים.",
-    fact: "כפית מתכתית כבדה ולרוב שוקעת.",
-    resultIcon: "💧",
-  },
-  {
-    id: "easy-sun-and-water",
-    difficulty: "easy",
-    title: "שמש ומים",
-    prompt: "בחרו 2 דברים שמשפיעים על גידול הצמח",
-    missionIcon: "🌤️",
-    pickCount: 2,
-    validItems: ["sun", "water", "plant"],
-    resultText: "מעולה! שמש ומים עוזרים לצמח.",
-    fact: "שמש ומים חשובים לגידול צמחים.",
-    resultIcon: "🌿",
-  },
-  {
-    id: "easy-can-magnet-pull",
-    difficulty: "easy",
-    title: "פחית נמשכת",
-    prompt: "בחרו 2 חפצים עם פחית ומגנט",
-    missionIcon: "🥫",
-    pickCount: 2,
-    validItems: ["magnet", "can"],
-    exactMatch: true,
-    resultText: "מעולה! הפחית נמשכה למגנט.",
-    fact: "פחית ממתכת נמשכת למגנט.",
-    resultIcon: "🧲",
-  },
-  {
-    id: "easy-heavy-things",
-    difficulty: "easy",
-    title: "חפצים כבדים",
-    prompt: "בחרו 2 חפצים כבדים מהמדף",
-    missionIcon: "⚖️",
-    pickCount: 2,
-    validItems: ["nail", "can", "metal_spoon"],
-    resultText: "מעולה! אלה חפצים כבדים.",
-    fact: "מתכות לרוב כבדות יותר מעץ.",
-    resultIcon: "🪨",
-  },
-  {
-    id: "easy-light-things",
-    difficulty: "easy",
-    title: "חפצים קלים",
-    prompt: "בחרו 2 חפצים קלים מהמדף",
-    missionIcon: "🪶",
-    pickCount: 2,
-    validItems: ["wood", "plant"],
-    resultText: "מעולה! אלה חפצים קלים יותר.",
-    fact: "עץ וצמח קלים יותר ממתכת.",
-    resultIcon: "🍃",
-  },
-  {
-    id: "easy-morning-garden",
-    difficulty: "easy",
-    title: "גינה בבוקר",
-    prompt: "בחרו 3 דברים לטיפול בגינה",
-    missionIcon: "🌻",
-    pickCount: 3,
-    validItems: ["plant", "water", "sun"],
-    exactMatch: true,
-    resultText: "מעולה! הגינה מקבלת טיפול.",
-    fact: "גינה צריכה מים, אור וטיפול.",
-    resultIcon: "🌻",
-  },
-];
-
-/** @type {LabExperiment[]} */
-export const MEDIUM_EXPERIMENTS = [
-  {
-    id: "medium-light-bulb",
-    difficulty: "medium",
-    title: "הדליקו את הנורה",
-    prompt: "בחרו 3 חפצים שיסגרו מעגל וידליקו נורה",
-    missionIcon: "💡",
-    pickCount: 3,
-    validItems: ["battery", "bulb", "wire"],
-    exactMatch: true,
-    resultText: "מעולה! המעגל נסגר והנורה נדלקה.",
-    fact: "כדי שנורה תידלק צריך מקור חשמל ומעגל סגור.",
-    resultIcon: "💡",
-  },
-  {
-    id: "medium-plant-grow",
-    difficulty: "medium",
-    title: "עזרו לצמח לגדול",
-    prompt: "בחרו 3 דברים שהצמח צריך",
-    missionIcon: "🌱",
-    pickCount: 3,
-    validItems: ["plant", "water", "sun"],
-    exactMatch: true,
-    resultText: "מעולה! הצמח מקבל מים ואור.",
-    fact: "צמחים צריכים מים, אור ואוויר.",
-    resultIcon: "🌿",
-  },
-  {
-    id: "medium-melt-bowl",
-    difficulty: "medium",
-    title: "המיסו קרח בקערה",
-    prompt: "בחרו 3 חפצים להמסת קרח",
-    missionIcon: "🧊",
-    pickCount: 3,
-    validItems: ["ice", "bowl", "sun"],
-    resultText: "מעולה! הקרח נמס בקערה.",
-    fact: "חום מעביר קרח ממצב מוצק למים.",
-    resultIcon: "💦",
-  },
-  {
-    id: "medium-magnet-pick2",
-    difficulty: "medium",
-    title: "בדקו אילו חפצים נמשכים למגנט",
-    prompt: "בחרו 2 חפצים — מגנט ומסמר",
-    missionIcon: "🧲",
-    pickCount: 2,
-    validItems: ["magnet", "nail"],
-    exactMatch: true,
-    resultText: "מעולה! המגנט מושך את המסמר.",
-    fact: "מגנט מושך חלק מהמתכות.",
-    resultIcon: "🔩",
-  },
-  {
-    id: "medium-simple-circuit",
-    difficulty: "medium",
-    title: "בנו מעגל פשוט",
-    prompt: "בחרו 3 חפצים למעגל חשמלי",
-    missionIcon: "🔋",
-    pickCount: 3,
-    validItems: ["battery", "wire", "bulb"],
-    exactMatch: true,
-    resultText: "מעולה! המעגל סגור והנורה דולקת.",
-    fact: "זרם חשמלי זורם במעגל סגור.",
-    resultIcon: "⚡",
-  },
-  {
-    id: "medium-clear-shadow",
-    difficulty: "medium",
-    title: "צרו צל ברור",
-    prompt: "בחרו 3 חפצים שייצרו צל",
-    missionIcon: "🌓",
-    pickCount: 3,
-    validItems: ["sun", "plant", "bowl"],
-    exactMatch: true,
-    resultText: "מעולה! צל ברור נוצר.",
-    fact: "צל נוצר כשגוף חוסם את האור.",
-    resultIcon: "🌑",
-  },
-  {
-    id: "medium-plant-place",
-    difficulty: "medium",
-    title: "השקו צמח במקום מתאים",
-    prompt: "בחרו 3 דברים לגידול צמח",
-    missionIcon: "🌱",
-    pickCount: 3,
-    validItems: ["plant", "water", "sun"],
-    exactMatch: true,
-    resultText: "מעולה! לצמח יש מה שהוא צריך.",
-    fact: "רוב הצמחים גדלים טוב עם מים ואור.",
-    resultIcon: "🟫",
-  },
-  {
-    id: "medium-mirror-sun",
-    difficulty: "medium",
-    title: "אור על המים",
-    prompt: "בחרו 2 חפצים — שמש ומים",
-    missionIcon: "☀️",
-    pickCount: 2,
-    validItems: ["sun", "water"],
-    exactMatch: true,
-    resultText: "מעולה! השמש מאירה על המים.",
-    fact: "אור השמש מואר על פני המים.",
-    resultIcon: "✨",
-  },
-  {
-    id: "medium-float-two",
-    difficulty: "medium",
-    title: "מה יצוף במים?",
-    prompt: "בחרו 2 חפצים לבדיקת ציפה",
-    missionIcon: "💧",
-    pickCount: 2,
-    validItems: ["water", "ice"],
-    resultText: "מעולה! אפשר לבדוק במים.",
-    fact: "במים בודקים אם חומר צף או שוקע.",
-    resultIcon: "🪵",
-  },
-  {
-    id: "medium-battery-bulb-pair",
-    difficulty: "medium",
-    title: "סוללה ונורה",
-    prompt: "בחרו 2 חפצים לחיבור חשמלי",
-    missionIcon: "🔋",
-    pickCount: 2,
-    validItems: ["battery", "bulb"],
-    resultText: "מעולה! סוללה ונורה מתחברים.",
-    fact: "נורה צריכה מקור חשמל.",
-    resultIcon: "💡",
-  },
-  {
-    id: "medium-ice-melt-two",
-    difficulty: "medium",
-    title: "המסת קרח",
-    prompt: "בחרו 2 חפצים להמסת קרח",
-    missionIcon: "🧊",
-    pickCount: 2,
-    validItems: ["ice", "sun", "bowl"],
-    resultText: "מעולה! הקרח מתחיל להימס.",
-    fact: "חום גורם לקרח להפוך למים.",
-    resultIcon: "💦",
-  },
-  {
-    id: "medium-bowl-water-two",
-    difficulty: "medium",
-    title: "קערה עם מים",
-    prompt: "בחרו 2 חפצים לניסוי בקערה",
-    missionIcon: "🥣",
-    pickCount: 2,
-    validItems: ["bowl", "water", "ice"],
-    resultText: "מעולה! הקערה מוכנה לניסוי.",
-    fact: "קערה יכולה להחזיק מים לניסוי.",
-    resultIcon: "🧪",
-  },
-  {
-    id: "medium-wire-bulb-two",
-    difficulty: "medium",
-    title: "חוט ונורה",
-    prompt: "בחרו 2 חפצים להעברת חשמל",
-    missionIcon: "🧵",
-    pickCount: 2,
-    validItems: ["wire", "battery"],
-    resultText: "מעולה! חוט מחבר את הנורה.",
-    fact: "חוט מוליך חשמל במעגל.",
-    resultIcon: "⚡",
-  },
-  {
-    id: "medium-plant-sun-two",
-    difficulty: "medium",
-    title: "צמח באור",
-    prompt: "בחרו 2 דברים לצמיחה באור",
-    missionIcon: "🌱",
-    pickCount: 2,
-    validItems: ["plant", "sun", "water"],
-    resultText: "מעולה! לצמח יש אור.",
-    fact: "צמחים גדלים טוב עם אור.",
-    resultIcon: "🌿",
-  },
-  {
-    id: "medium-reflect-three",
-    difficulty: "medium",
-    title: "מים באור השמש",
-    prompt: "בחרו 3 חפצים — שמש, מים וקערה",
-    missionIcon: "☀️",
-    pickCount: 3,
-    validItems: ["sun", "water", "bowl"],
-    exactMatch: true,
-    resultText: "מעולה! המים בקערה מוארים.",
-    fact: "אור השמש מאיר מים בקערה.",
-    resultIcon: "✨",
-  },
-  {
-    id: "medium-ice-bowl-three",
-    difficulty: "medium",
-    title: "קרח בקערה",
-    prompt: "בחרו 3 חפצים להמסת קרח בקערה",
-    missionIcon: "🧊",
-    pickCount: 3,
-    validItems: ["ice", "bowl", "sun"],
-    exactMatch: true,
-    resultText: "מעולה! הקרח נמס בקערה.",
-    fact: "חום מעביר קרח ממצב מוצק למים.",
-    resultIcon: "💦",
-  },
-  {
-    id: "medium-circuit-three",
-    difficulty: "medium",
-    title: "מעגל עם נורה",
-    prompt: "בחרו 3 חפצים להדלקת נורה",
-    missionIcon: "💡",
-    pickCount: 3,
-    validItems: ["battery", "bulb", "wire"],
-    exactMatch: true,
-    resultText: "מעולה! הנורה נדלקה.",
-    fact: "מעגל סגור מעביר זרם חשמלי.",
-    resultIcon: "⚡",
-  },
-  {
-    id: "medium-shadow-three",
-    difficulty: "medium",
-    title: "צל על הקיר",
-    prompt: "בחרו 3 חפצים ליצירת צל",
-    missionIcon: "🌓",
-    pickCount: 3,
-    validItems: ["sun", "plant", "bowl"],
-    exactMatch: true,
-    resultText: "מעולה! נוצר צל ברור.",
-    fact: "גוף אטום חוסם אור ויוצר צל.",
-    resultIcon: "🌑",
-  },
-  {
-    id: "medium-water-plant-three",
-    difficulty: "medium",
-    title: "השקיית צמח בקערה",
-    prompt: "בחרו 3 דברים להשקיית צמח",
-    missionIcon: "🌱",
-    pickCount: 3,
-    validItems: ["plant", "water", "bowl"],
-    exactMatch: true,
-    resultText: "מעולה! הצמח הושקה.",
-    fact: "צמחים צריכים מים באופן קבוע.",
-    resultIcon: "💧",
-  },
-  {
-    id: "medium-magnet-key-two",
-    difficulty: "medium",
-    title: "מגנט ומסמר",
-    prompt: "בחרו 2 חפצים — מגנט ומסמר",
-    missionIcon: "🔩",
-    pickCount: 2,
-    validItems: ["magnet", "nail"],
-    exactMatch: true,
-    resultText: "מעולה! המסמר נמשך למגנט.",
-    fact: "מסמר ממתכת נמשך למגנט.",
-    resultIcon: "🥄",
-  },
-  {
-    id: "medium-sun-ice-two",
-    difficulty: "medium",
-    title: "שמש ממיסה",
-    prompt: "בחרו 2 חפצים להמסה באור שמש",
-    missionIcon: "☀️",
-    pickCount: 2,
-    validItems: ["sun", "ice", "bowl"],
-    resultText: "מעולה! השמש מחממת.",
-    fact: "אור השמש מספק חום.",
-    resultIcon: "🌡️",
-  },
-];
-
-/** @type {LabExperiment[]} */
-export const HARD_EXPERIMENTS = [
-  {
-    id: "hard-bulb-clean",
-    difficulty: "hard",
-    title: "הדליקו נורה בלי לבחור חפץ שלא עוזר",
-    prompt: "בחרו בדיוק 3 חפצים למעגל חשמלי",
-    missionIcon: "💡",
-    pickCount: 3,
-    validItems: ["battery", "wire", "bulb"],
-    exactMatch: true,
-    resultText: "מעולה! מעגל נקי ונורה דולקת.",
-    fact: "חשמל זורם במתכות ובחומרים מוליכים.",
-    resultIcon: "💡",
-  },
-  {
-    id: "hard-plant-full",
-    difficulty: "hard",
-    title: "הכינו צמח לגדילה טובה",
-    prompt: "בחרו בדיוק 4 דברים שהצמח צריך",
-    missionIcon: "🌱",
-    pickCount: 4,
-    validItems: ["plant", "soil", "water", "sun"],
-    exactMatch: true,
-    resultText: "מעולה! לצמח יש הכל לגדילה.",
-    fact: "צמח צריך אדמה, מים, אור ואוויר.",
-    resultIcon: "🌿",
-  },
-  {
-    id: "hard-magnet-exact2",
-    difficulty: "hard",
-    title: "בדקו מה מגנט מושך ומה לא",
-    prompt: "בחרו בדיוק 2 מתכות שהמגנט מושך",
-    missionIcon: "🧲",
-    pickCount: 2,
-    validItems: ["nail", "metal_spoon"],
-    exactMatch: true,
-    resultText: "מעולה! שתי המתכות נמשכות.",
-    fact: "מגנט לא מושך אבן או צמח.",
-    resultIcon: "🔩",
-  },
-  {
-    id: "hard-full-circuit",
-    difficulty: "hard",
-    title: "בנו מעגל חשמלי מלא",
-    prompt: "בחרו בדיוק 4 חפצים למעגל עם מתג",
-    missionIcon: "⚡",
-    pickCount: 4,
-    validItems: ["battery", "wire", "bulb", "switch"],
-    exactMatch: true,
-    resultText: "מעולה! מעגל מלא עם מתג.",
-    fact: "מתג שולט בזרימת החשמל במעגל.",
-    resultIcon: "🎛️",
-  },
-  {
-    id: "hard-shadow-exact",
-    difficulty: "hard",
-    title: "צרו צל בעזרת חפץ מתאים",
-    prompt: "בחרו בדיוק 3 חפצים ליצירת צל",
-    missionIcon: "🌓",
-    pickCount: 3,
-    validItems: ["sun", "plant", "stone"],
-    exactMatch: true,
-    resultText: "מעולה! צל ברור נוצר.",
-    fact: "רק גוף אטום יוצר צל.",
-    resultIcon: "🌑",
-  },
-  {
-    id: "hard-water-exact",
-    difficulty: "hard",
-    title: "בחרו רק חומרים שמתאימים לניסוי במים",
-    prompt: "בחרו בדיוק 3 חפצים לניסוי במים",
-    missionIcon: "💧",
-    pickCount: 3,
-    validItems: ["water", "plant", "stone"],
-    exactMatch: true,
-    resultText: "מעולה! אפשר לבדוק צף ושוקע.",
-    fact: "במים בודקים אם חומר צף או שוקע.",
-    resultIcon: "🪵",
-  },
-  {
-    id: "hard-soil-plant-exact",
-    difficulty: "hard",
-    title: "שתילה באדמה",
-    prompt: "בחרו בדיוק 2 חפצים לשתילה",
-    missionIcon: "🟫",
-    pickCount: 2,
-    validItems: ["plant", "soil"],
-    exactMatch: true,
-    resultText: "מעולה! הצמח שתול באדמה.",
-    fact: "שורשים גדלים טוב באדמה.",
-    resultIcon: "🌱",
-  },
-  {
-    id: "hard-stone-sinks-exact",
-    difficulty: "hard",
-    title: "אבן שוקעת",
-    prompt: "בחרו בדיוק 2 חפצים לבדיקת שקיעה",
-    missionIcon: "🪨",
-    pickCount: 2,
-    validItems: ["water", "stone"],
-    exactMatch: true,
-    resultText: "מעולה! האבן שוקעת במים.",
-    fact: "אבן כבדה ולרוב שוקעת במים.",
-    resultIcon: "💧",
-  },
-  {
-    id: "hard-sun-plant-exact",
-    difficulty: "hard",
-    title: "אנרגיית שמש",
-    prompt: "בחרו בדיוק 2 חפצים לגידול באור",
-    missionIcon: "☀️",
-    pickCount: 2,
-    validItems: ["sun", "plant"],
-    exactMatch: true,
-    resultText: "מעולה! השמש מאירה על הצמח.",
-    fact: "צמחים משתמשים באור השמש.",
-    resultIcon: "🌞",
-  },
-  {
-    id: "hard-spoon-nail-exact",
-    difficulty: "hard",
-    title: "שתי מתכות",
-    prompt: "בחרו בדיוק 2 מתכות מהמדף",
-    missionIcon: "🔩",
-    pickCount: 2,
-    validItems: ["metal_spoon", "nail"],
-    exactMatch: true,
-    resultText: "מעולה! שתי המתכות נבחרו.",
-    fact: "מסמר וכפית הם חפצים מתכתיים.",
-    resultIcon: "🥄",
-  },
-  {
-    id: "hard-plant-needs-exact",
-    difficulty: "hard",
-    title: "צמח זקוק ל",
-    prompt: "בחרו בדיוק 3 דברים שהצמח צריך",
-    missionIcon: "🌱",
-    pickCount: 3,
-    validItems: ["plant", "water", "sun"],
-    exactMatch: true,
-    resultText: "מעולה! לצמח יש מה שהוא צריך.",
-    fact: "צמח צריך מים ואור לגדול.",
-    resultIcon: "🌿",
-  },
-  {
-    id: "hard-switch-path-exact",
-    difficulty: "hard",
-    title: "מעגל חשמלי בסיסי",
-    prompt: "בחרו בדיוק 3 חפצים למעגל חשמלי עם נורה",
-    missionIcon: "💡",
-    pickCount: 3,
-    validItems: ["battery", "wire", "bulb"],
-    exactMatch: true,
-    resultText: "מעולה! המעגל סגור והנורה דולקת.",
-    fact: "סוללה, חוט ונורה יוצרים מעגל חשמלי.",
-    resultIcon: "⚡",
-  },
-  {
-    id: "hard-natural-four-exact",
-    difficulty: "hard",
-    title: "חומרים בטבע",
-    prompt: "בחרו בדיוק 4 חפצים מעולם הטבע",
-    missionIcon: "🌍",
-    pickCount: 4,
-    validItems: ["stone", "soil", "water", "sun"],
-    exactMatch: true,
-    resultText: "מעולה! אלה חומרים טבעיים.",
-    fact: "בטבע מוצאים אבן, אדמה, מים ואור.",
-    resultIcon: "🌿",
-  },
-  {
-    id: "hard-metals-water-exact",
-    difficulty: "hard",
-    title: "מתכות במים",
-    prompt: "בחרו בדיוק 4 חפצים לניסוי מתכות במים",
-    missionIcon: "🧲",
-    pickCount: 4,
-    validItems: ["water", "nail", "metal_spoon", "magnet"],
-    exactMatch: true,
-    resultText: "מעולה! בודקים מתכות במים.",
-    fact: "מתכות מתנהגות אחרת מעץ במים.",
-    resultIcon: "💧",
-  },
-  {
-    id: "hard-garden-day-exact",
-    difficulty: "hard",
-    title: "יום בגינה",
-    prompt: "בחרו בדיוק 4 חפצים ליום גינה",
-    missionIcon: "🌻",
-    pickCount: 4,
-    validItems: ["sun", "plant", "water", "soil"],
-    exactMatch: true,
-    resultText: "מעולה! הגינה מוכנה לגדול.",
-    fact: "גינה צריכה אור, מים, אדמה וצמח.",
-    resultIcon: "🌻",
-  },
-  {
-    id: "hard-wire-bulb-exact",
-    difficulty: "hard",
-    title: "חיבור נורה",
-    prompt: "בחרו בדיוק 3 חפצים לחיבור נורה",
-    missionIcon: "💡",
-    pickCount: 3,
-    validItems: ["wire", "bulb", "battery"],
-    exactMatch: true,
-    resultText: "מעולה! הנורה מחוברת.",
-    fact: "נורה דולקת כשזורם בה חשמל.",
-    resultIcon: "⚡",
-  },
-  {
-    id: "hard-magnet-stone-exact",
-    difficulty: "hard",
-    title: "מה לא נמשך",
-    prompt: "בחרו בדיוק 3 חפצים לבדיקת מגנט",
-    missionIcon: "🧲",
-    pickCount: 3,
-    validItems: ["magnet", "nail", "stone"],
-    exactMatch: true,
-    resultText: "מעולה! רואים מה נמשך ומה לא.",
-    fact: "מגנט לא מושך אבן.",
-    resultIcon: "🪨",
-  },
-  {
-    id: "hard-soil-water-exact",
-    difficulty: "hard",
-    title: "אדמה ומים",
-    prompt: "בחרו בדיוק 3 חפצים לניסוי עם אדמה",
-    missionIcon: "🟫",
-    pickCount: 3,
-    validItems: ["soil", "water", "plant"],
-    exactMatch: true,
-    resultText: "מעולה! האדמה לחה ומוכנה.",
-    fact: "אדמה לחה עוזרת לצמחים לגדול.",
-    resultIcon: "💧",
-  },
-];
 
 /** @type {Record<DifficultyId, LabExperiment[]>} */
 export const EXPERIMENTS_BY_DIFFICULTY = {
-  easy: [...EASY_EXPERIMENTS, ...EASY_EXPERIMENTS_EXTRA],
-  medium: [...MEDIUM_EXPERIMENTS, ...MEDIUM_EXPERIMENTS_EXTRA],
-  hard: [...HARD_EXPERIMENTS, ...HARD_EXPERIMENTS_EXTRA],
+  easy: EASY_EXPERIMENTS,
+  medium: MEDIUM_EXPERIMENTS,
+  hard: HARD_EXPERIMENTS,
 };
+
+const EASY_COLOR_TOPIC_RE =
+  /צבע|ערבב|כתום|ירוק|סגול|אדום|צהוב|כחול|paint_/i;
+const ELECTRICITY_ITEM_IDS = new Set(["battery", "bulb", "wire", "switch"]);
+
+/** @returns {{ easyTotal: number, colorExperimentCount: number, electricityOnEasyCount: number, gaps: string[] }} */
+export function auditEasyLevelContent() {
+  const easy = EXPERIMENTS_BY_DIFFICULTY.easy;
+  const colorExperimentCount = easy.filter(
+    (exp) =>
+      EASY_COLOR_TOPIC_RE.test(`${exp.title} ${exp.prompt}`) ||
+      exp.validItems.some((id) => String(id).startsWith("paint_")),
+  ).length;
+  const electricityOnEasyCount = easy.filter((exp) =>
+    exp.validItems.some((id) => ELECTRICITY_ITEM_IDS.has(id)),
+  ).length;
+  const gaps = [];
+  if (colorExperimentCount < EASY_LEVEL_CONTENT_GUIDELINES.minColorExperimentsInEasyPool) {
+    gaps.push(
+      `רמת קל: חסרים ניסויי צבעים (${colorExperimentCount}/${EASY_LEVEL_CONTENT_GUIDELINES.minColorExperimentsInEasyPool}).`,
+    );
+  }
+  if (electricityOnEasyCount > 0) {
+    gaps.push(
+      `רמת קל: ${electricityOnEasyCount} ניסוי(ים) עם חשמל — להעביר לבינוני/קשה או להסיר.`,
+    );
+  }
+  const abstractLightExperiments = easy.filter((exp) =>
+    EASY_BANNED_PROMPT_RE.test(`${exp.title} ${exp.prompt}`),
+  );
+  if (abstractLightExperiments.length > 0) {
+    gaps.push(
+      `רמת קל: ניסויי אור/צל מופשטים: ${abstractLightExperiments.map((e) => e.id).join(", ")}`,
+    );
+  }
+  return {
+    easyTotal: easy.length,
+    colorExperimentCount,
+    electricityOnEasyCount,
+    abstractLightExperiments: abstractLightExperiments.map((e) => e.id),
+    gaps,
+  };
+}
 
 export const SCORE = {
   correct: 30,
@@ -907,16 +157,10 @@ export const SCORE = {
 
 /** @param {DifficultyId} difficulty @param {number} index 0-based run index */
 export function pickCountForRunIndex(difficulty, index) {
-  if (difficulty === "easy") {
-    if (index < 10) return 2;
-    if (index < 18) return 2;
-    return 3;
-  }
-  if (difficulty === "medium") {
-    return index < 10 ? 2 : 3;
-  }
-  if (index < 5) return 2;
-  if (index < 15) return 3;
+  if (difficulty === "easy") return 2;
+  if (difficulty === "medium") return index < 13 ? 2 : 3;
+  if (index < 3) return 2;
+  if (index < 13) return 3;
   return 4;
 }
 
@@ -1015,12 +259,31 @@ export function isLabWin(successfulExperiments, experimentsTotal, mistakes, maxM
 }
 
 /**
+ * @param {LabExperiment} experiment
+ * @returns {LabItem[]}
+ */
+export function shelfItemsForExperiment(experiment) {
+  if (!experiment?.shelfItems?.length) return [];
+  return experiment.shelfItems.map((id) => LAB_ITEMS[id]).filter(Boolean);
+}
+
+/**
+ * @param {DifficultyId} difficulty
+ * @returns {number}
+ */
+export function shelfCountForDifficulty(difficulty) {
+  return SHELF_SIZE_BY_DIFFICULTY[difficulty] ?? DIFFICULTIES.easy.shelfCount;
+}
+
+/**
+ * @deprecated Use shelfItemsForExperiment(currentExperiment)
  * @param {DifficultyId} difficulty
  * @returns {LabItem[]}
  */
 export function shelfItemsForDifficulty(difficulty) {
-  const ids = SHELF_BY_DIFFICULTY[difficulty] ?? SHELF_BY_DIFFICULTY.easy;
-  return ids.map((id) => LAB_ITEMS[id]).filter(Boolean);
+  const pool = EXPERIMENTS_BY_DIFFICULTY[difficulty] ?? [];
+  const first = pool[0];
+  return first ? shelfItemsForExperiment(first) : [];
 }
 
 /**

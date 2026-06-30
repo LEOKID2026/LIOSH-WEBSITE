@@ -18,6 +18,15 @@ import MleoLeoGiftsEngine from "./engines/MleoLeoGiftsEngine.jsx";
 import MleoLeoBakeryEngine from "./engines/MleoLeoBakeryEngine.jsx";
 import MleoLeoNumberPathEngine from "./engines/MleoLeoNumberPathEngine.jsx";
 
+const SHOP_LAYOUT_GAME_KEYS = new Set([
+  "leo-lab",
+  "leo-bakery",
+  "leo-gifts",
+  "leo-supermarket",
+  "recycling-factory",
+  "leo-number-path",
+]);
+
 const ENGINE_MAP = {
   "recycling-factory": MleoRecyclingFactoryEngine,
   "leo-supermarket": MleoLeoSupermarketEngine,
@@ -79,6 +88,7 @@ export default function EducationalGameShell({ gameKey }) {
   }, [resetSession]);
 
   const themedShell = phase === "entry" || phase === "finish" || phase === "settling";
+  const warmShopPlay = phase === "playing" && SHOP_LAYOUT_GAME_KEYS.has(gameKey);
 
   if (!game || !Engine) {
     return (
@@ -95,11 +105,18 @@ export default function EducationalGameShell({ gameKey }) {
           <title>{game.titleHe} — משחקים חינוכיים</title>
         </Head>
         <div
-          className={themedShell ? SG.shell : PLAY_SHELL}
-          style={themedShell ? pageBgStyle : undefined}
+          className={
+            warmShopPlay
+              ? "flex h-dvh max-h-dvh min-h-0 flex-col overflow-hidden bg-transparent"
+              : themedShell
+                ? SG.shell
+                : PLAY_SHELL
+          }
+          style={themedShell && !warmShopPlay ? pageBgStyle : undefined}
           dir="rtl"
           data-educational-game-shell=""
         >
+          {!warmShopPlay ? (
           <header
             className={
               themedShell
@@ -129,6 +146,7 @@ export default function EducationalGameShell({ gameKey }) {
               בית
             </Link>
           </header>
+          ) : null}
 
           <main className="relative flex min-h-0 flex-1 flex-col overflow-hidden">
             {phase === "entry" ? (
