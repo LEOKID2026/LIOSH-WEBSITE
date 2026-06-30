@@ -125,8 +125,16 @@ export function isSupermarketWin(customersCompleted, customersTotal, mistakes, m
 /** @param {number} total @param {number[]} options */
 export function pickPayment(total, options) {
   const valid = options.filter((o) => o >= total);
-  if (valid.length) return valid[0];
+  if (valid.length) {
+    return valid[Math.floor(Math.random() * valid.length)];
+  }
   return options[options.length - 1];
+}
+
+/** @param {SupermarketCustomer} customer */
+export function supermarketCustomerKey(customer) {
+  const ids = [...customer.requestedIds].sort().join("+");
+  return `${ids}|${customer.total}|${customer.paid}`;
 }
 
 /** @param {GroceryProduct[]} catalog @param {number} count */
@@ -135,18 +143,18 @@ function pickRandomDistinct(catalog, count) {
   return shuffled.slice(0, count);
 }
 
-/** @param {typeof DIFFICULTIES.easy} diffConfig @param {number} index @param {DifficultyId} difficultyId */
-export function generateCustomer(diffConfig, index, difficultyId) {
+/** @param {typeof DIFFICULTIES.easy} diffConfig @param {number} index @param {DifficultyId} difficultyId @param {Set<string>} [usedKeys] */
+export function generateCustomer(diffConfig, index, difficultyId, usedKeys) {
   const catalog = PRODUCTS.filter((p) => p.price <= diffConfig.maxPrice);
   const { itemCount, timeLimitSec } = getCustomerBandConfig(difficultyId, index);
   const avatar = CUSTOMER_AVATARS[index % CUSTOMER_AVATARS.length];
 
-  for (let attempt = 0; attempt < 80; attempt += 1) {
+  for (let attempt = 0; attempt < 200; attempt += 1) {
     const items = pickRandomDistinct(catalog, itemCount);
     const total = items.reduce((s, p) => s + p.price, 0);
     const paid = pickPayment(total, diffConfig.paymentOptions);
     if (total > 0 && paid >= total && paid - total <= 80) {
-      return {
+      const candidate = {
         id: `c-${index}`,
         avatar,
         items,
@@ -156,6 +164,9 @@ export function generateCustomer(diffConfig, index, difficultyId) {
         correctChange: paid - total,
         timeLimitSec,
       };
+      if (!usedKeys || !usedKeys.has(supermarketCustomerKey(candidate))) {
+        return candidate;
+      }
     }
   }
 
@@ -176,9 +187,21 @@ export function generateCustomer(diffConfig, index, difficultyId) {
 /** @param {DifficultyId} difficulty */
 export function generateCustomers(difficulty) {
   const diffConfig = DIFFICULTIES[difficulty];
-  return Array.from({ length: diffConfig.customerCount }, (_, i) =>
-    generateCustomer(diffConfig, i, difficulty),
-  );
+  const usedKeys = new Set();
+  /** @type {SupermarketCustomer[]} */
+  const customers = [];
+
+  for (let i = 0; i < diffConfig.customerCount; i += 1) {
+    let customer = generateCustomer(diffConfig, i, difficulty, usedKeys);
+    if (usedKeys.has(supermarketCustomerKey(customer))) {
+      usedKeys.clear();
+      customer = generateCustomer(diffConfig, i, difficulty, usedKeys);
+    }
+    usedKeys.add(supermarketCustomerKey(customer));
+    customers.push(customer);
+  }
+
+  return customers;
 }
 
 /** @param {SupermarketCustomer} customer */

@@ -171,6 +171,29 @@ export function pickRandomItem(activeBins) {
   return allowed[Math.floor(Math.random() * allowed.length)];
 }
 
+/**
+ * Shuffled item queue for one session — each allowed item appears once before repeat.
+ * @param {BinId[]} activeBins
+ */
+export function buildRecyclingItemQueue(activeBins) {
+  const allowed = ITEMS.filter((item) => activeBins.includes(item.bin));
+  const queue = [...allowed];
+  for (let i = queue.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [queue[i], queue[j]] = [queue[j], queue[i]];
+  }
+  return queue;
+}
+
+/** @param {RecyclingItem[]} queue @param {Set<string>} usedIds */
+export function pickNextRecyclingItem(queue, usedIds) {
+  const remaining = queue.filter((item) => !usedIds.has(item.id));
+  if (!remaining.length) return null;
+  const item = remaining[Math.floor(Math.random() * remaining.length)];
+  usedIds.add(item.id);
+  return item;
+}
+
 /** @param {BinId} binId */
 export function pickFactForBin(binId) {
   const binFacts = {

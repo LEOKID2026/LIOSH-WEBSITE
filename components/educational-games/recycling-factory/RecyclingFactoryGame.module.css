@@ -1093,52 +1093,91 @@ button.hudChip {
 
 @media (min-width: 721px) {
   .recyclingShopGrid {
-    grid-template-rows: auto minmax(165px, 0.94fr) minmax(230px, 1.06fr) auto;
+    grid-template-rows: minmax(0, auto) minmax(240px, 1.38fr) minmax(200px, 0.88fr) auto;
+    gap: 0 !important;
+    row-gap: 0 !important;
   }
 
   .recyclingCustomerCol {
     flex-shrink: 0;
     align-self: stretch;
+    min-height: 0;
   }
 
   .recyclingMissionCard {
+    display: grid !important;
+    grid-template-columns: auto 1fr;
+    direction: rtl;
+    align-items: center;
+    width: 100%;
+    max-width: none;
     flex: none !important;
     height: auto !important;
-    min-height: 0;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
+    min-height: clamp(104px, 12vh, 124px);
+    max-height: none;
+    overflow: visible;
+    column-gap: 0.45rem;
+    row-gap: 0;
+    padding: 0.34rem 0.55rem !important;
     text-align: right;
-    gap: 0.55rem;
-    padding: 0.52rem 0.65rem;
-  }
-
-  .recyclingMissionSpeech {
-    align-items: flex-start;
-    justify-content: center;
-    gap: 0.18rem;
   }
 
   .recyclingMissionAvatar {
+    grid-column: 1;
+    grid-row: 1;
+    flex-shrink: 0;
+    line-height: 1;
+    align-self: center;
     font-size: clamp(2.85rem, 4.2vw, 3.55rem) !important;
+  }
+
+  .recyclingMissionSpeech {
+    grid-column: 2;
+    grid-row: 1;
+    flex: none;
+    min-width: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0.08rem;
   }
 
   .recyclingMissionTitle {
     font-size: clamp(1.22rem, 1.9vw, 1.48rem) !important;
+    line-height: 1.1;
+    margin: 0;
   }
 
   .recyclingMissionText {
     font-size: clamp(1.12rem, 1.7vw, 1.32rem) !important;
+    line-height: 1.22;
+    margin: 0;
   }
 
   .recyclingMissionHint {
     font-size: clamp(1.02rem, 1.55vw, 1.2rem) !important;
-    margin-top: 0.22rem;
+    display: inline;
+    margin-top: 0;
+    margin-inline-start: 0.35rem;
   }
 
   .recyclingWorkCol {
-    max-height: clamp(155px, 22vh, 195px);
-    align-self: stretch;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    align-self: start;
+    max-height: clamp(240px, 34vh, 320px);
+    min-height: 240px;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .recyclingWorkFrame {
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
 
   .recyclingSideCol {
@@ -1146,22 +1185,27 @@ button.hudChip {
   }
 
   .recyclingWorkCol .conveyorWrap {
+    width: 100%;
     height: auto;
-    justify-content: center;
+    flex: 1;
+    min-height: 0;
+    justify-content: flex-start !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
 
   .recyclingWorkCol .conveyorFrame {
     width: 100%;
     max-width: none;
     height: auto;
-    margin: 0;
-    padding: 0.5rem 0.45rem 0.75rem;
+    margin: 0 !important;
+    padding: 0.45rem 0.45rem 0.65rem;
   }
 
   .recyclingWorkCol .beltTrack {
-    height: clamp(96px, 12vh, 118px);
+    height: clamp(132px, 18vh, 172px);
     flex: none;
-    max-height: 118px;
+    max-height: 172px;
   }
 
   .recyclingBinsPanel {

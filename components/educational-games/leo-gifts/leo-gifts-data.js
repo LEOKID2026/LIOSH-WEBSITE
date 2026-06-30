@@ -1,6 +1,6 @@
 /** @typedef {'easy' | 'medium' | 'hard'} DifficultyId */
 
-import { PRODUCTION_MIN_POOL } from "../../../lib/educational-games/educational-task-picker.js";
+import { PRODUCTION_MIN_POOL, shuffle } from "../../../lib/educational-games/educational-task-picker.js";
 
 /** @typedef {{
  *   id: string
@@ -67,7 +67,7 @@ export function generateGiftsPool(difficulty, opts = {}) {
       if (totalEven <= cfg.maxTotal) {
         for (let itemIdx = 0; itemIdx < ITEM_TYPES.length; itemIdx += 1) {
           const item = ITEM_TYPES[(itemIdx + salt) % ITEM_TYPES.length];
-          const key = `${totalEven}x${children}`;
+          const key = `${totalEven}x${children}-${item.itemLabel}`;
           if (seen.has(key)) continue;
           seen.add(key);
           pool.push({
@@ -83,17 +83,19 @@ export function generateGiftsPool(difficulty, opts = {}) {
         for (let rem = 1; rem < children; rem += 1) {
           const total = per * children + rem;
           if (total > cfg.maxTotal || total < children * 2) continue;
-          const key = `${total}x${children}`;
-          if (seen.has(key)) continue;
-          seen.add(key);
-          const item = ITEM_TYPES[(pool.length + salt) % ITEM_TYPES.length];
-          pool.push({
-            id: `g-${difficulty}-${pool.length}-${key}`,
-            total,
-            children,
-            itemLabel: item.itemLabel,
-            itemEmoji: item.itemEmoji,
-          });
+          for (let itemIdx = 0; itemIdx < ITEM_TYPES.length; itemIdx += 1) {
+            const item = ITEM_TYPES[(itemIdx + salt) % ITEM_TYPES.length];
+            const key = `${total}x${children}-${item.itemLabel}`;
+            if (seen.has(key)) continue;
+            seen.add(key);
+            pool.push({
+              id: `g-${difficulty}-${pool.length}-${key}`,
+              total,
+              children,
+              itemLabel: item.itemLabel,
+              itemEmoji: item.itemEmoji,
+            });
+          }
         }
       }
     }
@@ -113,7 +115,7 @@ export function generateGiftsPool(difficulty, opts = {}) {
     }
 
     if (total > cfg.maxTotal || total < children * 2) continue;
-    const key = `${total}x${children}`;
+    const key = `${total}x${children}-${item.itemLabel}`;
     if (seen.has(key)) continue;
     seen.add(key);
 
@@ -126,12 +128,12 @@ export function generateGiftsPool(difficulty, opts = {}) {
     });
   }
 
-  return pool;
+  return shuffle(pool);
 }
 
 /** @param {GiftsTask} task */
 export function giftsTaskKey(task) {
-  return `${task.total}x${task.children}`;
+  return `${task.total}x${task.children}-${task.itemLabel}`;
 }
 
 /** @param {GiftsTask} task @param {number} perChild @param {number} remainder */

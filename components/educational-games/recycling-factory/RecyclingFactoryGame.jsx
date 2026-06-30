@@ -5,8 +5,9 @@ import {
   DIFFICULTIES,
   SCORE,
   beltDurationMs,
+  buildRecyclingItemQueue,
   pickFactForBin,
-  pickRandomItem,
+  pickNextRecyclingItem,
 } from "./recycling-factory-data.js";
 import { buildRecyclingFactoryMetrics } from "./recycling-factory-metrics.js";
 import RecyclingItemVisual from "./RecyclingItemVisual.jsx";
@@ -160,6 +161,8 @@ export default function RecyclingFactoryGame({
   const beltItemsRef = useRef(beltItems);
   const sortedCountRef = useRef(sortedCount);
   const mistakesRef = useRef(mistakes);
+  const itemQueueRef = useRef(/** @type {RecyclingItem[]} */ ([]));
+  const usedItemIdsRef = useRef(/** @type {Set<string>} */ (new Set()));
 
   phaseRef.current = phase;
   difficultyRef.current = difficulty;
@@ -196,13 +199,29 @@ export default function RecyclingFactoryGame({
       const spawnCount = diff.dualChance > 0 && moving.length === 0 && Math.random() < diff.dualChance ? 2 : 1;
       const toAdd = Math.min(slots, spawnCount);
       const kept = prev.filter((b) => b.status !== "success");
-      const additions = Array.from({ length: toAdd }, (_, i) => ({
-        uid: nextUid(),
-        item: pickRandomItem(diff.bins),
-        progress: i * 0.32,
-        status: /** @type {'moving'} */ ("moving"),
-        spawnTime: Date.now(),
-      }));
+
+      /** @type {BeltItem[]} */
+      const additions = [];
+      for (let i = 0; i < toAdd; i += 1) {
+        if (!itemQueueRef.current.length) {
+          itemQueueRef.current = buildRecyclingItemQueue(diff.bins);
+          usedItemIdsRef.current.clear();
+        }
+        let item = pickNextRecyclingItem(itemQueueRef.current, usedItemIdsRef.current);
+        if (!item) {
+          itemQueueRef.current = buildRecyclingItemQueue(diff.bins);
+          usedItemIdsRef.current.clear();
+          item = pickNextRecyclingItem(itemQueueRef.current, usedItemIdsRef.current);
+        }
+        if (!item) break;
+        additions.push({
+          uid: nextUid(),
+          item,
+          progress: i * 0.32,
+          status: /** @type {'moving'} */ ("moving"),
+          spawnTime: Date.now(),
+        });
+      }
       return [...kept, ...additions];
     });
   }, []);
@@ -375,6 +394,8 @@ export default function RecyclingFactoryGame({
 
   const startGame = useCallback(() => {
     processingRef.current.clear();
+    itemQueueRef.current = buildRecyclingItemQueue(DIFFICULTIES[difficultyRef.current].bins);
+    usedItemIdsRef.current.clear();
     setPhase("play");
     setScore(0);
     setSortedCount(0);
@@ -698,7 +719,7 @@ export default function RecyclingFactoryGame({
             </aside>
 
             <section className={`${shop.workCol} ${styles.recyclingWorkCol}`}>
-              <div className={shop.workFrame}>
+              <div className={`${shop.workFrame} ${styles.recyclingWorkFrame}`}>
                 <div className={styles.conveyorWrap}>
                   <div className={styles.conveyorFrame}>
                     <span className={styles.conveyorLabel}>🏭 מסוע</span>

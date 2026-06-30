@@ -155,7 +155,7 @@ export function generateBakeryPool(difficulty, opts = {}) {
 /** @param {BakeryTask} task */
 export function bakeryTaskKey(task) {
   const e = bakeryExpected(task);
-  return `${task.mode}-${e.trays}-${e.perTray}-${e.total}`;
+  return `${task.mode}-${e.trays}-${e.perTray}-${e.total}-${task.itemLabel}`;
 }
 
 /** @param {BakeryTask} task */
