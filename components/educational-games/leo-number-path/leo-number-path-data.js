@@ -65,6 +65,143 @@ export function matchingNumbersOnBoard(task) {
   return [...task.correctPath];
 }
 
+/** @param {DifficultyId} difficulty @param {number} guard @param {number} salt */
+function ruleKindForGuard(difficulty, guard, salt) {
+  const roll = (guard + salt) % 12;
+  if (difficulty === "easy") {
+    if (roll < 5) return "parity";
+    if (roll < 9) return "skip";
+    return "multiples";
+  }
+  if (difficulty === "medium") {
+    if (roll < 3) return "parity";
+    if (roll < 5) return "skip";
+    return "multiples";
+  }
+  if (roll < 2) return "parity";
+  if (roll < 5) return "skip";
+  if (roll < 7) return "sequence";
+  return "multiples";
+}
+
+/** @param {DifficultyId} difficulty @param {ReturnType<typeof LEVEL.easy>} cfg @param {number} guard */
+function buildParityTask(difficulty, cfg, guard) {
+  const isEven = guard % 2 === 0;
+  const max = cfg.maxNum;
+  const span = randInt(10, 16);
+  const start = randInt(1, Math.max(1, max - span));
+  const nums = [];
+  for (let i = 0; i < span; i += 1) nums.push(start + i);
+  const wrongParity = (n) => (isEven ? n % 2 !== 0 : n % 2 === 0);
+  const inSpan = new Set(nums);
+  const extra = distractorsWhere(nums, randInt(2, 4), max, (n) => wrongParity(n) || inSpan.has(n));
+  const numbers = shuffle([...nums, ...extra]).slice(0, 16);
+  const correct = numbers.filter((n) => !wrongParity(n));
+  if (correct.length < 3) return null;
+  return {
+    id: `p-${difficulty}-parity-${guard}`,
+    rule: isEven ? "even" : "odd",
+    numbers: shuffle(numbers),
+    correctPath: correct.sort((a, b) => a - b),
+    orderMatters: false,
+    promptHe: isEven
+      ? "בחרו את כל המספרים הזוגיים על המסלול"
+      : "בחרו את כל המספרים האי־זוגיים על המסלול",
+  };
+}
+
+/** @param {DifficultyId} difficulty @param {ReturnType<typeof LEVEL.easy>} cfg @param {number} guard */
+function buildSkipTask(difficulty, cfg, guard) {
+  const step = cfg.skipSteps[guard % cfg.skipSteps.length];
+  const start = randInt(1, step);
+  const len = randInt(4, 6);
+  const correct = [];
+  for (let i = 0; i < len; i += 1) correct.push(start + i * step);
+  if (correct[correct.length - 1] > cfg.maxNum) return null;
+  const correctSet = new Set(correct);
+  const isSeqLike = (n) => {
+    if (correctSet.has(n)) return true;
+    if (correct.includes(n - step) || correct.includes(n + step)) return true;
+    if (correct.some((c) => c !== n && Math.abs(c - n) === step)) return true;
+    return false;
+  };
+  const numbers = shuffle([
+    ...correct,
+    ...distractorsWhere(correct, randInt(4, 7), cfg.maxNum, isSeqLike),
+  ]).slice(0, 18);
+  return {
+    id: `p-${difficulty}-skip-${guard}`,
+    rule: "skip",
+    step,
+    numbers,
+    correctPath: correct,
+    orderMatters: true,
+    promptHe: `בחרו לפי הסדר: ${correct.slice(0, 4).join(" → ")}${correct.length > 4 ? "…" : ""}`,
+  };
+}
+
+/** @param {DifficultyId} difficulty @param {ReturnType<typeof LEVEL.easy>} cfg @param {number} guard */
+function buildMultiplesTask(difficulty, cfg, guard) {
+  const mults = cfg.multiples.length ? cfg.multiples : [2, 3, 5];
+  const multiple = mults[guard % mults.length];
+  const max = cfg.maxNum;
+  /** @type {number[]} */
+  const allMultiples = [];
+  for (let n = multiple; n <= max; n += multiple) allMultiples.push(n);
+  if (allMultiples.length < 3) return null;
+
+  const onBoardCount = randInt(3, Math.min(7, allMultiples.length));
+  const startIdx = randInt(0, Math.max(0, allMultiples.length - onBoardCount));
+  const seedMultiples = allMultiples.slice(startIdx, startIdx + onBoardCount);
+  const isMultiple = (n) => n % multiple === 0;
+  const numbers = shuffle([
+    ...seedMultiples,
+    ...distractorsWhere(seedMultiples, randInt(5, 9), max, isMultiple),
+  ]).slice(0, 18);
+  const correctOnBoard = numbers.filter(isMultiple).sort((a, b) => a - b);
+  if (correctOnBoard.length < 3) return null;
+
+  return {
+    id: `p-${difficulty}-mult-${guard}`,
+    rule: "multiples",
+    multiple,
+    numbers,
+    correctPath: correctOnBoard,
+    orderMatters: false,
+    promptHe: `בחרו את כל הכפולות של ${multiple} על המסלול`,
+  };
+}
+
+/** @param {DifficultyId} difficulty @param {ReturnType<typeof LEVEL.easy>} cfg @param {number} guard */
+function buildSequenceTask(difficulty, cfg, guard) {
+  const ratio = randInt(2, 4);
+  const start = randInt(2, 6);
+  const correctSeq = [start];
+  for (let i = 1; i < 5; i += 1) correctSeq.push(correctSeq[i - 1] * ratio);
+  if (correctSeq[correctSeq.length - 1] > cfg.maxNum) return null;
+  const seqSet = new Set(correctSeq);
+  const fitsRatio = (n) => {
+    if (seqSet.has(n)) return true;
+    for (const c of correctSeq) {
+      if (Number.isInteger(c * ratio) && c * ratio === n) return true;
+      if (Number.isInteger(n * ratio) && n * ratio === c) return true;
+    }
+    return false;
+  };
+  const numbersSeq = shuffle([
+    ...correctSeq,
+    ...distractorsWhere(correctSeq, randInt(4, 6), cfg.maxNum, fitsRatio),
+  ]);
+  return {
+    id: `p-${difficulty}-seq-${guard}`,
+    rule: "sequence",
+    numbers: numbersSeq,
+    correctPath: correctSeq,
+    orderMatters: true,
+    promptHe: `המשיכו לפי הסדר: ${correctSeq.slice(0, 3).join(" → ")} → ?`,
+  };
+}
+
 /**
  * @param {DifficultyId} difficulty
  * @param {{ salt?: number }} [opts]
@@ -77,130 +214,23 @@ export function generatePathPool(difficulty, opts = {}) {
   const pool = [];
   let guard = 0;
 
-  while (pool.length < PRODUCTION_MIN_POOL + 10 && guard < 1200) {
+  while (pool.length < PRODUCTION_MIN_POOL + 10 && guard < 2000) {
     guard += 1;
-    const kindRoll = (guard + salt) % 6;
+    const kind = ruleKindForGuard(difficulty, guard, salt);
+    /** @type {PathTask|null} */
+    let task = null;
 
-    if (difficulty === "easy" || (difficulty === "medium" && kindRoll < 2)) {
-      const isEven = kindRoll % 2 === 0;
-      const max = cfg.maxNum;
-      const span = randInt(10, 16);
-      const start = randInt(1, Math.max(1, max - span));
-      const nums = [];
-      for (let i = 0; i < span; i += 1) nums.push(start + i);
-      const wrongParity = (n) => (isEven ? n % 2 !== 0 : n % 2 === 0);
-      const inSpan = new Set(nums);
-      const extra = distractorsWhere(nums, randInt(2, 4), max, (n) => wrongParity(n) || inSpan.has(n));
-      const numbers = shuffle([...nums, ...extra]).slice(0, 16);
-      const correct = numbers.filter((n) => !wrongParity(n));
-      const key = `eo-${isEven ? "e" : "o"}-${numbers.join(",")}`;
-      if (seen.has(key) || correct.length < 3) continue;
-      seen.add(key);
-      pool.push({
-        id: `p-${difficulty}-${pool.length}`,
-        rule: isEven ? "even" : "odd",
-        numbers: shuffle(numbers),
-        correctPath: correct.sort((a, b) => a - b),
-        orderMatters: false,
-        promptHe: isEven ? "בחרו את כל המספרים הזוגיים על המסלול" : "בחרו את כל המספרים האי־זוגיים על המסלול",
-      });
-      continue;
-    }
+    if (kind === "parity") task = buildParityTask(difficulty, cfg, guard);
+    else if (kind === "skip") task = buildSkipTask(difficulty, cfg, guard);
+    else if (kind === "sequence") task = buildSequenceTask(difficulty, cfg, guard);
+    else task = buildMultiplesTask(difficulty, cfg, guard);
 
-    if (difficulty === "easy" || (difficulty === "medium" && kindRoll === 2)) {
-      const step = cfg.skipSteps[guard % cfg.skipSteps.length];
-      const start = randInt(1, step);
-      const len = randInt(4, 6);
-      const correct = [];
-      for (let i = 0; i < len; i += 1) correct.push(start + i * step);
-      if (correct[correct.length - 1] > cfg.maxNum) continue;
-      const correctSet = new Set(correct);
-      const isSeqLike = (n) => {
-        if (correctSet.has(n)) return true;
-        if (correct.includes(n - step) || correct.includes(n + step)) return true;
-        if (correct.some((c) => c !== n && Math.abs(c - n) === step)) return true;
-        return false;
-      };
-      const numbers = shuffle([
-        ...correct,
-        ...distractorsWhere(correct, randInt(4, 7), cfg.maxNum, isSeqLike),
-      ]).slice(0, 18);
-      const key = `sk-${step}-${start}-${len}`;
-      if (seen.has(key)) continue;
-      seen.add(key);
-      pool.push({
-        id: `p-${difficulty}-${pool.length}`,
-        rule: "skip",
-        step,
-        numbers,
-        correctPath: correct,
-        orderMatters: true,
-        promptHe: `בחרו לפי הסדר: ${correct.slice(0, 4).join(" → ")}${correct.length > 4 ? "…" : ""}`,
-      });
-      continue;
-    }
-
-    const mults = cfg.multiples.length ? cfg.multiples : [2, 3];
-    const multiple = mults[guard % mults.length];
-    const max = cfg.maxNum;
-    const targetLen = randInt(4, 8);
-    /** @type {number[]} */
-    const correct = [];
-    for (let n = multiple; n <= max && correct.length < targetLen; n += multiple) {
-      correct.push(n);
-    }
-    if (correct.length < 3) continue;
-    const isMultiple = (n) => n % multiple === 0;
-    const numbers = shuffle([
-      ...correct,
-      ...distractorsWhere(correct, randInt(5, 9), max, isMultiple),
-    ]).slice(0, 18);
-    const correctOnBoard = numbers.filter(isMultiple);
-    const key = `m-${multiple}-${numbers.join(",")}`;
+    if (!task) continue;
+    const key = pathTaskKey(task);
     if (seen.has(key)) continue;
     seen.add(key);
-    pool.push({
-      id: `p-${difficulty}-${pool.length}`,
-      rule: "multiples",
-      multiple,
-      numbers,
-      correctPath: correctOnBoard.sort((a, b) => a - b),
-      orderMatters: false,
-      promptHe: `בחרו את כל הכפולות של ${multiple} על המסלול`,
-    });
-
-    if (difficulty === "hard" && guard % 4 === 0) {
-      const ratio = randInt(2, 4);
-      const start = randInt(2, 6);
-      const correctSeq = [start];
-      for (let i = 1; i < 5; i += 1) correctSeq.push(correctSeq[i - 1] * ratio);
-      if (correctSeq[correctSeq.length - 1] > cfg.maxNum) continue;
-      const seqSet = new Set(correctSeq);
-      const fitsRatio = (n) => {
-        if (seqSet.has(n)) return true;
-        for (const c of correctSeq) {
-          if (Number.isInteger(c * ratio) && c * ratio === n) return true;
-          if (Number.isInteger(n * ratio) && n * ratio === c) return true;
-        }
-        return false;
-      };
-      const numbersSeq = shuffle([
-        ...correctSeq,
-        ...distractorsWhere(correctSeq, randInt(4, 6), cfg.maxNum, fitsRatio),
-      ]);
-      const keySeq = `sq-${correctSeq.join("-")}`;
-      if (!seen.has(keySeq)) {
-        seen.add(keySeq);
-        pool.push({
-          id: `p-${difficulty}-seq-${pool.length}`,
-          rule: "sequence",
-          numbers: numbersSeq,
-          correctPath: correctSeq,
-          orderMatters: true,
-          promptHe: `המשיכו לפי הסדר: ${correctSeq.slice(0, 3).join(" → ")} → ?`,
-        });
-      }
-    }
+    task.id = `p-${difficulty}-${pool.length}`;
+    pool.push(task);
   }
 
   return shuffle(pool);
@@ -208,7 +238,9 @@ export function generatePathPool(difficulty, opts = {}) {
 
 /** @param {PathTask} task */
 export function pathTaskKey(task) {
-  return `${task.rule}-${task.promptHe}-${task.correctPath.join(",")}`;
+  const board = [...task.numbers].sort((a, b) => a - b).join(",");
+  const meta = task.step ?? task.multiple ?? "";
+  return `${task.rule}-${meta}-${task.correctPath.join(",")}-${board}`;
 }
 
 /** @param {PathTask} task @param {number[]} selected */
@@ -276,7 +308,8 @@ export function taskDifficultyScore(task) {
  * @param {number} [count]
  */
 export function buildOrderedSessionRun(difficulty, count = TASKS_PER_SESSION) {
-  const pool = generatePathPool(difficulty, { salt: 0 });
+  const salt = Math.floor(Math.random() * 10000);
+  const pool = generatePathPool(difficulty, { salt });
   const sorted = [...pool].sort((a, b) => taskDifficultyScore(a) - taskDifficultyScore(b));
   const bandSize = Math.max(1, Math.floor(count / 3));
   const third = Math.max(bandSize, Math.floor(sorted.length / 3));
