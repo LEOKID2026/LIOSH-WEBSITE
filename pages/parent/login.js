@@ -3,11 +3,12 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Layout from "../../components/Layout";
 import PortalLoginHeading from "../../components/auth/PortalLoginHeading";
-import { ParentPolicyAcceptanceCheckboxField } from "../../components/parent/ParentCompactPolicyAcceptance";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
 import { mapParentAuthError } from "../../lib/parent-client/parent-auth-errors.he";
-import { postPolicyAcceptance } from "../../lib/parent-client/policy-acceptance-api";
-import { PRIVACY_VERSION, TERMS_VERSION } from "../../data/legal/sitePolicies.he";
+import {
+  postParentSessionReady,
+  startParentGoogleSignIn,
+} from "../../lib/auth/parent-google-oauth.client.js";
 import GuardianChildSelectForm from "../../components/parent/GuardianChildSelectForm";
 import {
   mapParentTeacherCodeLoginError,
@@ -25,14 +26,22 @@ import ParentPromoVideo from "../../components/parent/ParentPromoVideo";
 import { PARENT_PROMO_MOBILE_SRC } from "../../components/parent/ParentPromoVideo";
 import PromoMobileCompareVideo from "../../components/promo/PromoMobileCompareVideo";
 
-async function storeSignupPolicyAcceptance(accessToken) {
-  return postPolicyAcceptance(accessToken, {
-    termsVersion: TERMS_VERSION,
-    privacyVersion: PRIVACY_VERSION,
-    source: "parent_signup",
-  });
+function ParentPassivePolicyNotice({ bright, className = "" }) {
+  const T = getParentPortalTheme(bright);
+  return (
+    <p className={`text-xs leading-relaxed ${T.faint} ${className}`}>
+      בהמשך השימוש ב־Leo Kids, אתם מאשרים את{" "}
+      <Link href="/terms" className={T.linkInline}>
+        תנאי השימוש
+      </Link>{" "}
+      ו
+      <Link href="/privacy" className={T.linkInline}>
+        מדיניות הפרטיות
+      </Link>
+      .
+    </p>
+  );
 }
-
 function isEmailIdentifier(value) {
   return String(value || "").includes("@");
 }
@@ -43,11 +52,11 @@ export default function ParentLoginPage() {
   const T = getParentPortalTheme(isBright);
   const layoutProps = { studentTheme: theme, studentShell: "home" };
   const supabaseRef = useRef(null);
+  const oauthErrorShownRef = useRef(false);
 
   const [mode, setMode] = useState("login");
   const [identifier, setIdentifier] = useState("");
   const [secret, setSecret] = useState("");
-  const [signupPolicyChecked, setSignupPolicyChecked] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [messageKind, setMessageKind] = useState("account");
@@ -82,7 +91,7 @@ export default function ParentLoginPage() {
         setSessionCheckPending(false);
         return;
       }
-      router.replace("/parent/dashboard");
+      router.replace("/parent/home");
     });
     return () => {
       mounted = false;
@@ -90,10 +99,17 @@ export default function ParentLoginPage() {
   }, [clientReady, router]);
 
   useEffect(() => {
-    if (mode === "login") {
-      setSignupPolicyChecked(false);
-    }
-  }, [mode]);
+    if (!router.isReady || oauthErrorShownRef.current) return;
+    if (router.query.oauth_error !== "1") return;
+    oauthErrorShownRef.current = true;
+    const custom =
+      typeof router.query.oauth_message === "string" ? router.query.oauth_message.trim() : "";
+    setMessage(
+      custom || "לא הצלחנו להשלים התחברות עם Google. נסו שוב או התחברו עם אימייל וסיסמה."
+    );
+    setMessageKind("account");
+    router.replace("/parent/login");
+  }, [router]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -125,10 +141,6 @@ export default function ParentLoginPage() {
         setMessage("המערכת עדיין נטענת. נסו שוב בעוד רגע.");
         return;
       }
-      if (mode === "signup" && !signupPolicyChecked) {
-        setMessage("יש לסמן את תיבת האישור לפני יצירת החשבון.");
-        return;
-      }
 
       const supabase = supabaseRef.current;
 
@@ -140,31 +152,36 @@ export default function ParentLoginPage() {
         if (error) {
           setMessage(mapParentAuthError(error, "signup"));
         } else if (data?.session?.access_token) {
-          const acceptRes = await storeSignupPolicyAcceptance(data.session.access_token);
-          if (!acceptRes.ok) {
-            setMessage("החשבון נוצר. אישור המדיניות יתבקש בכניסה הראשונה לדשבורד.");
+          const ready = await postParentSessionReady(data.session.access_token, "signup");
+          if (!ready.ok) {
+            setMessage(ready.messageHe || "החשבון נוצר אך לא הצלחנו להשלים את ההגדרה. נסו להתחבר.");
+            setMode("login");
+            return;
           }
-          router.push("/parent/dashboard");
+          router.push("/parent/home");
         } else {
-          setMessage(
-            "ההרשמה הושלמה. לאחר אימות האימייל — התחברו; אישור המדיניות יתבקש בדשבורד."
-          );
+          setMessage("ההרשמה הושלמה. לאחר אימות האימייל — התחברו.");
           setMode("login");
         }
       } else {
-        const { error } = await supabase.auth.signInWithPassword({
+        const { data, error } = await supabase.auth.signInWithPassword({
           email: identifier.trim(),
           password: secret,
         });
         if (error) {
           setMessage(mapParentAuthError(error, "login"));
-        } else {
+        } else if (data?.session?.access_token) {
+          const ready = await postParentSessionReady(data.session.access_token, "login");
+          if (!ready.ok) {
+            setMessage(ready.messageHe || "ההתחברות הצליחה אך לא הצלחנו להשלים את ההגדרה. נסו שוב.");
+            return;
+          }
           void trackProductEvent({
             eventName: "parent_login",
             actorType: "parent",
             idempotencyKey: `parent_login:${Date.now()}`,
           });
-          router.push("/parent/dashboard");
+          router.push("/parent/home");
         }
       }
     } finally {
@@ -189,7 +206,20 @@ export default function ParentLoginPage() {
     }
   };
 
-  const signupSubmitDisabled = busy || sessionCheckPending || (mode === "signup" && !signupPolicyChecked);
+  const onGoogleSignIn = async () => {
+    if (busy || sessionCheckPending || !supabaseRef.current) return;
+    setBusy(true);
+    setMessage("");
+    setMessageKind("account");
+    try {
+      await startParentGoogleSignIn(supabaseRef.current);
+    } catch (error) {
+      setMessage(mapParentAuthError(error, "login"));
+      setBusy(false);
+    }
+  };
+
+  const formSubmitDisabled = busy || sessionCheckPending;
   const tabsDisabled = busy || sessionCheckPending;
 
   if (sessionCheckPending) {
@@ -252,7 +282,6 @@ export default function ParentLoginPage() {
               if (tabsDisabled) return;
               setMode("signup");
               setMessage("");
-              setSignupPolicyChecked(false);
             }}
             className={`flex-1 rounded px-3 py-2 text-sm font-semibold ${
               mode === "signup" ? T.tabActive : T.tabIdle
@@ -260,6 +289,29 @@ export default function ParentLoginPage() {
           >
             הרשמה
           </button>
+        </div>
+
+        <button
+          type="button"
+          data-testid="parent-google-sign-in"
+          disabled={formSubmitDisabled}
+          onClick={() => void onGoogleSignIn()}
+          className={`w-full rounded-xl border font-semibold py-2.5 disabled:opacity-60 flex items-center justify-center gap-2 ${
+            isBright
+              ? "border-slate-300 bg-white text-slate-800 hover:bg-slate-50 shadow-sm"
+              : "border-white/20 bg-white/10 text-white hover:bg-white/15"
+          }`}
+        >
+          <span aria-hidden="true" className="text-base leading-none">
+            G
+          </span>
+          התחברות עם Google
+        </button>
+
+        <div className="flex items-center gap-3 my-1">
+          <div className={`flex-1 h-px ${isBright ? "bg-slate-200" : "bg-white/15"}`} />
+          <span className={`text-xs ${T.faint}`}>או</span>
+          <div className={`flex-1 h-px ${isBright ? "bg-slate-200" : "bg-white/15"}`} />
         </div>
 
         <form onSubmit={onSubmit} className="space-y-3">
@@ -314,23 +366,10 @@ export default function ParentLoginPage() {
                 testId="parent-signup-password"
                 disabled={busy}
               />
-              <div
-                data-policy-acceptance-root
-                data-policy-scroll-mode="compact"
-                className={`rounded-lg border p-3 ${isBright ? "border-sky-200 bg-sky-50/80" : "border-white/15 bg-white/[0.04]"}`}
-              >
-                <ParentPolicyAcceptanceCheckboxField
-                  checked={signupPolicyChecked}
-                  onChange={setSignupPolicyChecked}
-                  bright={isBright}
-                  disabled={busy}
-                  id="parent-signup-policy-acceptance"
-                />
-              </div>
             </>
           )}
 
-          <button className={T.submit} disabled={signupSubmitDisabled} type="submit">
+          <button className={T.submit} disabled={formSubmitDisabled} type="submit">
             {busy ? "מבצע פעולה..." : mode === "signup" ? "יצירת חשבון הורה" : "כניסה"}
           </button>
           {mode === "login" ? (
@@ -345,6 +384,8 @@ export default function ParentLoginPage() {
             </p>
           ) : null}
         </form>
+
+        <ParentPassivePolicyNotice bright={isBright} className="mt-4" />
 
         {multiStudents?.length ? (
           <div className="mt-4">
@@ -363,20 +404,6 @@ export default function ParentLoginPage() {
             role="alert"
           >
             {message}
-          </p>
-        ) : null}
-
-        {mode === "login" ? (
-          <p className={`mt-4 text-xs leading-relaxed ${T.faint}`}>
-            ביצירת חשבון או בשימוש באתר, מומלץ לעיין ב
-            <Link href="/terms" className={T.linkInline}>
-              תנאי שימוש
-            </Link>
-            וב
-            <Link href="/privacy" className={T.linkInline}>
-              מדיניות פרטיות
-            </Link>
-            .
           </p>
         ) : null}
 

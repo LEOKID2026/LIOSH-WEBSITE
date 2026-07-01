@@ -1,8 +1,5 @@
 import { test, expect } from "@playwright/test";
 
-const POLICY_PANEL = "[data-policy-acceptance-root]";
-const APPROVE_BTN = 'button:has-text("אישור והמשך")';
-
 test.describe("Phase D.2B — parent policy acceptance", () => {
   test("A: wrong credentials show Hebrew error, not English", async ({ page }) => {
     await page.goto("/parent/login");
@@ -16,17 +13,26 @@ test.describe("Phase D.2B — parent policy acceptance", () => {
     await expect(alert).not.toContainText(/Invalid login credentials/i);
   });
 
-  test("D: signup shows compact checkbox gate on the same form", async ({ page }) => {
+  test("D: signup no longer requires policy checkbox", async ({ page }) => {
     await page.goto("/parent/login");
     await page.getByRole("button", { name: "הרשמה" }).click();
 
     await expect(page.getByPlaceholder("אימייל הורה")).toBeVisible({ timeout: 10_000 });
-    await expect(page.locator(POLICY_PANEL)).toBeVisible();
-    await expect(page.locator(`${POLICY_PANEL} input[type="checkbox"]`)).not.toBeChecked();
-    await expect(page.getByRole("button", { name: "יצירת חשבון הורה" })).toBeDisabled();
-
-    await page.locator(`${POLICY_PANEL} input[type="checkbox"]`).check();
+    await expect(page.getByTestId("parent-policy-acceptance-checkbox")).toHaveCount(0);
     await expect(page.getByRole("button", { name: "יצירת חשבון הורה" })).toBeEnabled();
+    await expect(page.getByText("בהמשך השימוש ב־Leo Kids")).toBeVisible();
+  });
+
+  test("E: Google sign-in button appears on parent login only", async ({ page }) => {
+    await page.goto("/parent/login");
+    await expect(page.getByTestId("parent-google-sign-in")).toBeVisible();
+    await expect(page.getByTestId("parent-google-sign-in")).toContainText("התחברות עם Google");
+
+    await page.goto("/student/login");
+    await expect(page.getByTestId("parent-google-sign-in")).toHaveCount(0);
+
+    await page.goto("/teacher/login");
+    await expect(page.getByTestId("parent-google-sign-in")).toHaveCount(0);
   });
 });
 
@@ -36,38 +42,16 @@ test.describe("Phase D.2B — parent policy acceptance (authenticated)", () => {
 
   test.skip(!email || !password, "Set E2E_PARENT_EMAIL + E2E_PARENT_PASSWORD for authenticated flows");
 
-  test("B: unaccepted parent sees compact policy gate on dashboard, not teaser", async ({ page }) => {
+  test("B: parent dashboard opens without policy gate", async ({ page }) => {
     await page.goto("/parent/login");
     await page.getByPlaceholder("אימייל הורה").fill(email);
     await page.getByPlaceholder("סיסמה").fill(password);
     await page.locator("form").getByRole("button", { name: "כניסה" }).click();
 
-    await page.waitForURL("**/parent/dashboard", { timeout: 20_000 });
-    await expect(page.locator(POLICY_PANEL)).toBeVisible({ timeout: 15_000 });
-    await expect(page.getByRole("heading", { name: "דשבורד הורים" })).toHaveCount(0);
-    await expect(page.locator(APPROVE_BTN)).toBeDisabled();
-  });
-
-  test("B cont: checkbox enables approve and unlocks dashboard", async ({ page }) => {
-    await page.goto("/parent/login");
-    await page.getByPlaceholder("אימייל הורה").fill(email);
-    await page.getByPlaceholder("סיסמה").fill(password);
-    await page.locator("form").getByRole("button", { name: "כניסה" }).click();
-    await page.waitForURL("**/parent/dashboard", { timeout: 20_000 });
-    await expect(page.locator(POLICY_PANEL)).toBeVisible({ timeout: 15_000 });
-
-    await expect(page.locator(POLICY_PANEL)).toHaveAttribute("data-policy-scroll-mode", "compact");
-    await page.locator(`${POLICY_PANEL} input[type="checkbox"]`).check();
-    await expect(page.locator(APPROVE_BTN)).toBeEnabled();
-    await page.locator(APPROVE_BTN).click();
-
+    await page.waitForURL("**/parent/**", { timeout: 20_000 });
     await expect(page.getByRole("heading", { name: "דשבורד הורים" })).toBeVisible({
       timeout: 15_000,
     });
-    await page.reload();
-    await expect(page.locator(POLICY_PANEL)).toHaveCount(0);
-    await expect(page.getByRole("heading", { name: "דשבורד הורים" })).toBeVisible({
-      timeout: 15_000,
-    });
+    await expect(page.locator('[data-policy-acceptance-root]')).toHaveCount(0);
   });
 });

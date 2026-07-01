@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Layout from "../../components/Layout";
-import ParentPolicyAcceptanceGate from "../../components/parent/ParentPolicyAcceptanceGate";
 import AssignActivityModal from "../../components/parent/AssignActivityModal";
 import ParentDashboardModal from "../../components/parent/ParentDashboardModal";
 import ChildGamePermissionsPanel from "../../components/parent/ChildGamePermissionsPanel";
@@ -831,12 +830,6 @@ export default function ParentDashboardPage() {
 
   return (
     <Layout {...layoutProps}>
-      <ParentPolicyAcceptanceGate
-        bright={isBright}
-        accessToken={session.access_token}
-        onLogout={logout}
-        onReady={() => fetchStudents(session)}
-      >
       <div className="max-w-6xl mx-auto w-full px-3 py-3 md:px-8 md:py-8 space-y-4 md:space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 md:gap-y-3">
           <div className="min-w-0">
@@ -1004,7 +997,6 @@ export default function ParentDashboardPage() {
           </div>
         ) : null}
       </div>
-      </ParentPolicyAcceptanceGate>
     </Layout>
   );
 }
