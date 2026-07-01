@@ -217,6 +217,35 @@ async function runVerifyOnly(cfg) {
     patchAudit: cfg._speedPressurePatchAudit || prior.speedPressureSeedAudit || null,
   });
 
+  const bySubjectGrade = {};
+  const bySubjectGradeLevel = {};
+  for (const s of manifest.students) {
+    const key = `${s.primarySubject}:${s.grade}`;
+    bySubjectGrade[key] = (bySubjectGrade[key] || 0) + 1;
+    const resolvedLevel = resolvePracticeDisplayLevel(s.primarySubject, s.displayLevel || "regular");
+    const levelKey = `${s.primarySubject}:${s.grade}:${resolvedLevel}`;
+    bySubjectGradeLevel[levelKey] = (bySubjectGradeLevel[levelKey] || 0) + 1;
+  }
+
+  const subjectCoverageGaps = cfg.subjects.filter((sub) =>
+    cfg.grades.every((g) => (bySubjectGrade[`${sub}:${g}`] || 0) === 0),
+  );
+  const gradeCoverageGaps = cfg.grades.filter((g) =>
+    cfg.subjects.every((sub) => (bySubjectGrade[`${sub}:${g}`] || 0) === 0),
+  );
+  const levelCoverageGaps = [];
+  for (const subject of cfg.subjects) {
+    for (const grade of cfg.grades) {
+      for (const displayLevel of displayLevelsForSubject(subject)) {
+        const levelKey = `${subject}:${grade}:${displayLevel}`;
+        if ((bySubjectGradeLevel[levelKey] || 0) === 0) {
+          levelCoverageGaps.push(levelKey);
+        }
+      }
+    }
+  }
+  const studentsByDisplayLevel = summarizeCohortLevelDistribution(manifest.students, cfg.subjects);
+
   const englishIssues = reportVerification.results.filter((r) => r.englishHits?.length).length;
   const technicalIssues = reportVerification.results.filter((r) => r.technicalHits?.length).length;
   const hebrewIssues = reportVerification.results.filter((r) => r.hebrewIssues?.length).length;
@@ -257,9 +286,18 @@ async function runVerifyOnly(cfg) {
     parentAssignedBackfilled: cfg.patchParentAssigned || false,
     verifyOnly: true,
     verifiedAt: new Date().toISOString(),
+    subjectCoverageGaps,
+    gradeCoverageGaps,
+    levelCoverageGaps,
+    studentsByDisplayLevel,
   };
 
-  const summary = applyVerdict(summaryBase);
+  const summary = applyVerdict({
+    ...summaryBase,
+    subjectCoverageGaps,
+    gradeCoverageGaps,
+    levelCoverageGaps,
+  });
 
   await writeAllArtifacts(cfg.reportDir, {
     runId: cfg.runId,
@@ -268,9 +306,12 @@ async function runVerifyOnly(cfg) {
     manifest,
     coverageRows: buildCoverageRows({
       cohort: manifest.students,
-      seededStats: { bySubjectGrade: {} },
+      seededStats: { bySubjectGrade },
       subjects: cfg.subjects,
       grades: cfg.grades,
+    }),
+    coverageLevelRows: buildLevelCoverageRows(manifest.students, cfg.subjects, cfg.grades, {
+      bySubjectGradeLevel,
     }),
     engineFindings: reportVerification.engineFindings,
     reportResults: reportVerification.results,

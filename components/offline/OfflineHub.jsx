@@ -72,8 +72,8 @@ export default function OfflineHub() {
                 <OfflineHubTileCard
                   href={OFFLINE_EDUCATIONAL_HUB_ROUTE}
                   emoji="📚"
-                  title="6 משחקים חינוכיים"
-                  blurb="מיחזור, מכולת, מעבדה ועוד — הכל מקומי."
+                  title={`${OFFLINE_EDUCATIONAL_GAMES.length} משחקים חינוכיים`}
+                  blurb="מיחזור, מכולת, מעבדה, פיצרייה, רכבת המילים ועוד — הכל מקומי."
                   GH={GH}
                 />
               </section>

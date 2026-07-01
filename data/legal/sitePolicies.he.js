@@ -29,8 +29,13 @@ export const PARENT_REPORT_DISCLAIMER_PARAGRAPHS_HE = [
   "הדוח אינו אבחון רפואי, אינו אבחון פסיכולוגי, אינו אבחון דידקטי ואינו מחליף מורה, יועץ, מאבחן או איש מקצוע. אם עולה חשש לגבי קושי לימודי מתמשך, פער לימודי או צורך בבירור נוסף, מומלץ לפנות למורה או לאיש מקצוע מתאים.",
 ];
 
-/** Footer + contact legal navigation. */
+/** Global site chrome footer — single legal hub link only. */
 export const LEGAL_FOOTER_LINKS = [
+  { href: "/legal", label: "תנאים, פרטיות ונגישות" },
+];
+
+/** Policy hub links on /contact and cross-links at bottom of policy pages. */
+export const LEGAL_CONTACT_PAGE_LINKS = [
   { href: "/legal", label: "תנאים, פרטיות ונגישות" },
   { href: "/privacy", label: "מדיניות פרטיות" },
   { href: "/terms", label: "תנאי שימוש" },
@@ -38,10 +43,7 @@ export const LEGAL_FOOTER_LINKS = [
   { href: "/ai-disclosure", label: "שימוש ב־AI" },
   { href: "/data-deletion", label: "מחיקת נתונים" },
   { href: "/security", label: "אבטחת מידע" },
-  { href: "/contact", label: "צור קשר" },
 ];
-
-export const LEGAL_CONTACT_PAGE_LINKS = LEGAL_FOOTER_LINKS.filter((l) => l.href !== "/contact");
 
 export const LEGAL_CROSS_LINKS = LEGAL_CONTACT_PAGE_LINKS;
 

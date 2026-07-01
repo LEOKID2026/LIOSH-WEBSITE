@@ -54,9 +54,7 @@ export default async function handler(req, res) {
     return res.status(200).json(payload);
   } catch (e) {
     const msg = e && typeof e === "object" && "message" in e ? String(e.message) : String(e);
-    if (shouldLogStudentHomeDebug()) {
-      console.error("[LIOSH student-home-profile] error", msg);
-    }
-    return res.status(500).json({ ok: false, error: "Server error", detail: msg.slice(0, 500) });
+    console.error("[student-home-profile] unexpected error", msg.slice(0, 200));
+    return res.status(500).json({ ok: false, error: "אירעה שגיאה זמנית. נסו שוב מאוחר יותר." });
   }
 }
