@@ -103,16 +103,24 @@ function testSmokeLevels() {
 function testCustomerTimers() {
   for (const diff of ["easy", "medium", "hard"]) {
     assert(getCustomerTimeLimit(diff, 0) === DIFFICULTIES[diff].timeLimitsByBand[0], `${diff} band0`);
-    assert(getCustomerTimeLimit(diff, 9) === DIFFICULTIES[diff].timeLimitsByBand[0], `${diff} band0 late`);
-    assert(getCustomerTimeLimit(diff, 10) === DIFFICULTIES[diff].timeLimitsByBand[1], `${diff} band1`);
-    assert(getCustomerTimeLimit(diff, 19) === DIFFICULTIES[diff].timeLimitsByBand[1], `${diff} band1 late`);
+    assert(getCustomerTimeLimit(diff, 4) === DIFFICULTIES[diff].timeLimitsByBand[0], `${diff} band0 late`);
+    assert(getCustomerTimeLimit(diff, 5) === DIFFICULTIES[diff].timeLimitsByBand[1], `${diff} band1`);
+    assert(getCustomerTimeLimit(diff, 14) === DIFFICULTIES[diff].timeLimitsByBand[1], `${diff} band1 late`);
+    assert(getCustomerTimeLimit(diff, 15) === DIFFICULTIES[diff].timeLimitsByBand[2], `${diff} band2`);
+    assert(getCustomerTimeLimit(diff, 19) === DIFFICULTIES[diff].timeLimitsByBand[2], `${diff} band2 late`);
   }
 
   const run = pickCustomersForRun("easy");
   assert(run.length === CUSTOMERS_PER_LEVEL, "pickCustomersForRun length");
+  assert(run[0].id === "easy-01", "easy run starts with easy-01");
   for (let i = 0; i < run.length; i += 1) {
     assert(run[i].timeLimitSec === getCustomerTimeLimit("easy", i), `run timer ${i}`);
   }
+
+  const hardRun = pickCustomersForRun("hard");
+  assert(hardRun[0].id === "hard-01", "hard run starts with hard-01 not hard-05");
+  assert(hardRun[0].id !== "hard-05", "hard-05 is not first");
+  assert(hardRun[0].id !== "hard-14", "hard-14 is not first");
 }
 
 function main() {

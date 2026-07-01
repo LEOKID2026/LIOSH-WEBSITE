@@ -567,7 +567,7 @@ const HARD_ORDERS = [
     id: "hard-18",
     customerName: "גל",
     customerEmoji: "👧",
-    greeting: "ארbaעה שמיניות בזיליקום וארבעה שמיניות גבינה.",
+    greeting: "ארבעה שמיניות בזיליקום וארבעה שמיניות גבינה.",
     ticketLine: "4 בזיליקום 🌿 + 4 גבינה 🧀",
     spec: spec({ basil: 4, cheese: 4 }, 8, true),
   }),
@@ -680,14 +680,26 @@ export function validateCustomerOrder(order, sliceMap) {
 /** @param {DifficultyId} difficultyId @param {number} index 0-based */
 export function getCustomerTimeLimit(difficultyId, index) {
   const diff = DIFFICULTIES[difficultyId] ?? DIFFICULTIES.easy;
-  const band = Math.min(1, Math.floor(index / 10));
+  const band = index < 5 ? 0 : index < 15 ? 1 : 2;
   return diff.timeLimitsByBand[band];
+}
+
+/** Difficulty weight for ordering validation (lower = opening). */
+export function pizzeriaOrderDifficultyScore(order) {
+  const reqSum = Object.values(order.spec.requirements).reduce((a, b) => a + b, 0);
+  const toppingCount = Object.keys(order.spec.requirements).length;
+  let score = reqSum + toppingCount * 2;
+  if (order.spec.allowEmpty && reqSum < order.sliceCount) score -= 1;
+  const text = `${order.greeting} ${order.ticketLine}`;
+  if (/שלא קיבלו|השאר|שלושה|חמישה|שישה|שבעה/.test(text)) score += 8;
+  if (/שמינית|5 מתוך|6 מתוך|7 מתוך/.test(text)) score += 4;
+  return score;
 }
 
 /** @param {DifficultyId} difficulty */
 export function pickCustomersForRun(difficulty) {
   const pool = CUSTOMERS_BY_DIFFICULTY[difficulty] ?? CUSTOMERS_BY_DIFFICULTY.easy;
-  return shuffle([...pool]).slice(0, CUSTOMERS_PER_LEVEL).map((order, index) => ({
+  return pool.slice(0, CUSTOMERS_PER_LEVEL).map((order, index) => ({
     ...order,
     timeLimitSec: getCustomerTimeLimit(difficulty, index),
   }));
@@ -727,15 +739,6 @@ export function wedgeCenter(index, total, radius, cx, cy) {
   const rad = (mid * Math.PI) / 180;
   const dist = radius * 0.68;
   return { x: cx + dist * Math.cos(rad), y: cy + dist * Math.sin(rad) };
-}
-
-/** @param {unknown[]} arr */
-function shuffle(arr) {
-  for (let i = arr.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
 }
 
 /** @returns {{ ok: boolean, issues: string[] }} */

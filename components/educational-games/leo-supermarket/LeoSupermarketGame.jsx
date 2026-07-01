@@ -656,7 +656,7 @@ export default function LeoSupermarketGame({
           </div>
           <EducationalDifficultyGradeHint className={`${styles.introText} opacity-70`} style={{ fontSize: "0.72rem" }} />
           <p className={styles.introText} style={{ fontSize: "0.78rem" }}>
-            {CUSTOMERS_PER_LEVEL} לקוחות · עד {diffConfig.maxMistakes} פסילות · הקושי עולה כל 10 לקוחות
+            {CUSTOMERS_PER_LEVEL} לקוחות · עד {diffConfig.maxMistakes} פסילות · הקושי עולה בהדרגה
           </p>
           <button type="button" className={styles.startBtn} onClick={startGame}>
             התחל משחק

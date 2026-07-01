@@ -2,6 +2,13 @@
 /** @typedef {'even' | 'odd' | 'multiples' | 'skip' | 'sequence'} PathRule */
 
 import { PRODUCTION_MIN_POOL, shuffle } from "../../../lib/educational-games/educational-task-picker.js";
+import {
+  MAX_MISTAKES_BY_DIFFICULTY,
+  SESSION_FINAL_COUNT,
+  SESSION_MID_COUNT,
+  SESSION_OPEN_COUNT,
+  TASKS_PER_SESSION,
+} from "../../../lib/educational-games/educational-session-standard.js";
 
 /** @typedef {{
  *   id: string
@@ -14,12 +21,12 @@ import { PRODUCTION_MIN_POOL, shuffle } from "../../../lib/educational-games/edu
  *   promptHe: string
  * }} PathTask */
 
-export const TASKS_PER_SESSION = 12;
+export { TASKS_PER_SESSION };
 
 export const DIFFICULTIES = {
-  easy: { id: "easy", label: "קל", maxMistakes: 6 },
-  medium: { id: "medium", label: "בינוני", maxMistakes: 5 },
-  hard: { id: "hard", label: "קשה", maxMistakes: 4 },
+  easy: { id: "easy", label: "קל", maxMistakes: MAX_MISTAKES_BY_DIFFICULTY.easy },
+  medium: { id: "medium", label: "בינוני", maxMistakes: MAX_MISTAKES_BY_DIFFICULTY.medium },
+  hard: { id: "hard", label: "קשה", maxMistakes: MAX_MISTAKES_BY_DIFFICULTY.hard },
 };
 
 export const SCORE = {
@@ -30,7 +37,7 @@ export const SCORE = {
 
 /** @type {Record<DifficultyId, { maxNum: number, multiples: number[], skipSteps: number[] }>} */
 const LEVEL = {
-  easy: { maxNum: 40, multiples: [], skipSteps: [2, 5, 10] },
+  easy: { maxNum: 40, multiples: [2], skipSteps: [2, 10] },
   medium: { maxNum: 80, multiples: [3, 4, 5, 6, 7], skipSteps: [7, 8] },
   hard: { maxNum: 120, multiples: [8, 9, 10, 11, 12], skipSteps: [9, 11] },
 };
@@ -69,8 +76,8 @@ export function matchingNumbersOnBoard(task) {
 function ruleKindForGuard(difficulty, guard, salt) {
   const roll = (guard + salt) % 12;
   if (difficulty === "easy") {
-    if (roll < 5) return "parity";
-    if (roll < 9) return "skip";
+    if (roll < 6) return "parity";
+    if (roll < 10) return "skip";
     return "multiples";
   }
   if (difficulty === "medium") {
@@ -142,7 +149,8 @@ function buildSkipTask(difficulty, cfg, guard) {
 
 /** @param {DifficultyId} difficulty @param {ReturnType<typeof LEVEL.easy>} cfg @param {number} guard */
 function buildMultiplesTask(difficulty, cfg, guard) {
-  const mults = cfg.multiples.length ? cfg.multiples : [2, 3, 5];
+  const mults =
+    difficulty === "easy" ? [2] : cfg.multiples.length ? cfg.multiples : [2, 3, 5];
   const multiple = mults[guard % mults.length];
   const max = cfg.maxNum;
   /** @type {number[]} */
@@ -311,13 +319,14 @@ export function buildOrderedSessionRun(difficulty, count = TASKS_PER_SESSION) {
   const salt = Math.floor(Math.random() * 10000);
   const pool = generatePathPool(difficulty, { salt });
   const sorted = [...pool].sort((a, b) => taskDifficultyScore(a) - taskDifficultyScore(b));
-  const bandSize = Math.max(1, Math.floor(count / 3));
-  const third = Math.max(bandSize, Math.floor(sorted.length / 3));
-  const easyBand = sorted.slice(0, third);
-  const midBand = sorted.slice(third, third * 2);
-  const hardBand = sorted.slice(third * 2);
+  const third = Math.max(1, Math.floor(sorted.length / 3));
+  const openingPool = sorted.slice(0, third);
+  const midPool = sorted.slice(third, third * 2);
+  const finalPool = sorted.slice(third * 2);
   const used = new Set();
   let lastKey = null;
+  let lastRule = null;
+  let ruleStreak = 0;
 
   /** @param {PathTask[]} band @param {number} n */
   function pickFrom(band, n) {
@@ -327,17 +336,27 @@ export function buildOrderedSessionRun(difficulty, count = TASKS_PER_SESSION) {
       if (out.length >= n) break;
       const key = pathTaskKey(task);
       if (used.has(key) || key === lastKey) continue;
+      if (lastRule === task.rule && ruleStreak >= 2) continue;
       used.add(key);
       lastKey = key;
+      if (lastRule === task.rule) ruleStreak += 1;
+      else {
+        lastRule = task.rule;
+        ruleStreak = 1;
+      }
       out.push(task);
     }
     return out;
   }
 
+  const openN = SESSION_OPEN_COUNT;
+  const midN = SESSION_MID_COUNT;
+  const finalN = count - openN - midN;
+
   const run = [
-    ...pickFrom(easyBand, bandSize),
-    ...pickFrom(midBand, bandSize),
-    ...pickFrom(hardBand, count - bandSize * 2),
+    ...pickFrom(openingPool, openN),
+    ...pickFrom(midPool, midN),
+    ...pickFrom(finalPool, finalN),
   ];
 
   while (run.length < count) {
@@ -351,25 +370,17 @@ export function buildOrderedSessionRun(difficulty, count = TASKS_PER_SESSION) {
     break;
   }
 
-  return run.slice(0, count);
+  return run.slice(0, count).map((task, i) => ({ ...task, id: `p-${difficulty}-run-${i}` }));
 }
 
 /** @param {PathTask[]} run */
 export function sessionRunIsAscending(run) {
-  if (run.length < 2) return true;
+  if (run.length < 6) return true;
   const scores = run.map(taskDifficultyScore);
-  for (let band = 0; band < 3; band += 1) {
-    const start = band * 4;
-    const end = Math.min(start + 4, scores.length);
-    if (end <= start) continue;
-    const slice = scores.slice(start, end);
-    const nextStart = start + 4;
-    const nextEnd = Math.min(nextStart + 4, scores.length);
-    if (nextEnd <= nextStart) continue;
-    const nextSlice = scores.slice(nextStart, nextEnd);
-    const avg = slice.reduce((s, v) => s + v, 0) / slice.length;
-    const nextAvg = nextSlice.reduce((s, v) => s + v, 0) / nextSlice.length;
-    if (avg > nextAvg + 0.01) return false;
-  }
-  return true;
+  const openSlice = scores.slice(0, SESSION_OPEN_COUNT);
+  const finalSlice = scores.slice(SESSION_OPEN_COUNT + SESSION_MID_COUNT);
+  if (!openSlice.length || !finalSlice.length) return true;
+  const openAvg = openSlice.reduce((s, v) => s + v, 0) / openSlice.length;
+  const finalAvg = finalSlice.reduce((s, v) => s + v, 0) / finalSlice.length;
+  return openAvg <= finalAvg + 0.01;
 }

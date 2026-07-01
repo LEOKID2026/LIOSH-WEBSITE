@@ -2,7 +2,7 @@
  * @param {object} state
  */
 export function buildLeoNumberPathMetrics(state) {
-  const tasksTotal = Math.floor(Number(state.tasksTotal) || 12);
+  const tasksTotal = Math.floor(Number(state.tasksTotal) || 20);
   const tasksReached = Math.max(
     0,
     Math.min(tasksTotal, Math.floor(Number(state.tasksReached) || 0)),

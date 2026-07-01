@@ -65,10 +65,121 @@ const DIFFICULTY_WEIGHT = {
   image_sentence: 90,
 };
 
+/** @param {string[]} letters */
+function letterCounts(letters) {
+  /** @type {Record<string, number>} */
+  const counts = {};
+  for (const ch of letters) {
+    const key = ch.toLowerCase();
+    counts[key] = (counts[key] ?? 0) + 1;
+  }
+  return counts;
+}
+
+/** @param {TrainTask} task */
+function trainRequiredLetterCounts(task) {
+  return letterCounts(Object.values(task.solution));
+}
+
+/** @param {TrainTask} task */
+function trainPieceLetterCounts(task) {
+  return letterCounts(task.pieces.map((p) => p.label));
+}
+
+/** @param {TrainTask} task */
+function trainEasySlotCount(task) {
+  return task.carriages.filter((c) => c.kind === "slot").length;
+}
+
+/** @param {TrainTask} task */
+function trainCanCopy(task) {
+  const type = task.taskType;
+  const prompt = task.missionHe || task.prompt || "";
+  const answer = task.correctAnswer || "";
+
+  if (type === "build_word") {
+    const word = Object.values(task.solution).join("");
+    return prompt.toLowerCase().includes(word.toLowerCase());
+  }
+  if (type === "dual_phrase") {
+    const parts = answer.split("|");
+    return parts.every((p) => prompt.toLowerCase().includes(p.toLowerCase()));
+  }
+  if (type === "fill_gaps") {
+    const word = answer.replace(/\|/g, "");
+    return prompt.toLowerCase().includes(word.toLowerCase());
+  }
+  if (type === "word_order") {
+    if (prompt.includes(" / ")) return true;
+    const words = answer.split("|");
+    return words.filter((w) => prompt.toLowerCase().includes(w.toLowerCase())).length >= words.length - 1;
+  }
+  if (type === "image_word") {
+    return (
+      task.pieces.some((p) => p.label.toLowerCase() === answer.toLowerCase()) && !task.emoji
+    );
+  }
+  return false;
+}
+
+/** @param {TrainTask} task */
+function trainAnswerInPrompt(task) {
+  const type = task.taskType;
+  const prompt = task.missionHe.toLowerCase();
+
+  if (type === "build_word") {
+    const word = Object.values(task.solution).join("");
+    return prompt.includes(word.toLowerCase());
+  }
+  if (type === "dual_phrase") {
+    return Object.values(task.solution).every((v) => prompt.includes(v.toLowerCase()));
+  }
+  if (type === "fill_gaps") {
+    const word = Object.values(task.solution).join("");
+    return prompt.includes(word.toLowerCase());
+  }
+  if (type === "word_order") {
+    if (task.missionHe.includes(" / ")) return true;
+    const words = task.correctAnswer.split("|");
+    return words.filter((w) => prompt.includes(w.toLowerCase())).length >= words.length - 1;
+  }
+
+  const parts = task.correctAnswer
+    .split("|")
+    .map((s) => s.trim().toLowerCase())
+    .filter((p) => p.length > 1);
+  return parts.some((part) => prompt.includes(part));
+}
+
+/** @param {TrainTask} task */
+function trainSolutionInPieces(task) {
+  const required = trainRequiredLetterCounts(task);
+  const pieces = trainPieceLetterCounts(task);
+  return Object.entries(required).every(([ch, n]) => (pieces[ch] ?? 0) >= n);
+}
+
+/** @param {TrainTask} task */
+function trainGapHasSingleBlank(task) {
+  if (task.taskType !== "fill_gaps" && task.taskType !== "one_gap") return true;
+  return trainEasySlotCount(task) === 1;
+}
+
+/** @param {TrainTask} task */
+function trainSolutionMatchesSlots(task) {
+  const slotIds = task.carriages.filter((c) => c.kind === "slot").map((c) => c.id);
+  const solutionIds = Object.keys(task.solution);
+  if (slotIds.length !== solutionIds.length) return false;
+  return (
+    slotIds.every((id) => solutionIds.includes(id)) &&
+    solutionIds.every((id) => slotIds.includes(id))
+  );
+}
+
 /** @param {string[]} labels @param {number} extra */
 function letterPieces(labels, extra = 3) {
   const pool = "abcdefghijklmnopqrstuvwxyz".split("");
-  const distractors = shuffleLanguageTasks(pool.filter((c) => !labels.includes(c))).slice(0, extra);
+  const requiredSet = new Set(labels);
+  const distractors = shuffleLanguageTasks(pool.filter((c) => !requiredSet.has(c))).slice(0, extra);
   return shuffleLanguageTasks([...labels, ...distractors]).map((label, i) => ({
     id: `p${i}-${label}`,
     label,
@@ -221,13 +332,13 @@ function fillWordTask(id, stationLabel, missionHe, word, blankIdx, emoji) {
   });
 }
 
-/** @param {{ color: string, noun: string, emoji?: string }} pair */
+/** @param {{ color: string, noun: string, emoji?: string, missionHe?: string }} pair */
 function dualPhraseTask(id, stationLabel, pair) {
-  const { color, noun, emoji } = pair;
+  const { color, noun, emoji, missionHe } = pair;
   return wrapTrainTask("medium", "dual_phrase", {
     id,
     stationLabel,
-    missionHe: `העמיסו שני קרונות: ${color} + ${noun}`,
+    missionHe: missionHe ?? `העמיסו שני קרונות: ${color} + ${noun}`,
     emoji,
     carriages: [
       { id: "c1", kind: "slot", hint: "צבע" },
@@ -376,44 +487,44 @@ function buildEasyTrainTasks() {
 /** @returns {TrainTask[]} */
 function buildMediumTrainTasks() {
   const buildWords = [
-    ["🥛", "milk"],
-    ["📚", "book"],
-    ["🪑", "chair"],
-    ["📝", "desk"],
-    ["💧", "water"],
-    ["🏫", "school"],
-    ["🟢", "green"],
-    ["🍎", "apple"],
+    ["🥛", "milk", "חלב"],
+    ["📚", "book", "ספר"],
+    ["🪑", "chair", "כיסא"],
+    ["📝", "desk", "שולחן"],
+    ["💧", "water", "מים"],
+    ["🏫", "school", "בית ספר"],
+    ["🟢", "green", "ירוק"],
+    ["🍎", "apple", "תפוח"],
   ];
   /** @type {TrainTask[]} */
-  const tasks = buildWords.map(([emoji, word], i) =>
-    buildWordTask(`wt-m-bw-${i + 1}`, `תחנה ${i + 1}`, `בנו את המילה ${word}`, emoji, word),
+  const tasks = buildWords.map(([emoji, word, hebrew], i) =>
+    buildWordTask(`wt-m-bw-${i + 1}`, `תחנה ${i + 1}`, `בנו את המילה: ${hebrew}`, emoji, word),
   );
 
   const fillWords = [
-    ["👕", "shirt", [2]],
-    ["🪑", "table", [1]],
-    ["⬛", "black", [2]],
-    ["🚂", "train", [2]],
-    ["☁️", "cloud", [2]],
-    ["🍇", "grape", [2]],
-    ["🏠", "house", [2]],
-    ["💡", "light", [2]],
+    ["👕", "shirt", "חולצה", [2]],
+    ["🪑", "table", "שולחן", [1]],
+    ["⬛", "black", "שחור", [2]],
+    ["🚂", "train", "רכבת", [3]],
+    ["☁️", "cloud", "ענן", [2]],
+    ["🍇", "grape", "ענב", [2]],
+    ["🏠", "house", "בית", [2]],
+    ["💡", "light", "אור", [2]],
   ];
-  fillWords.forEach(([emoji, word, blanks], i) => {
+  fillWords.forEach(([emoji, word, hebrew, blanks], i) => {
     tasks.push(
-      fillWordTask(`wt-m-fg-${i + 1}`, `תחנה ${i + 9}`, `השלימו ${word} — אות חסרה`, word, blanks, emoji),
+      fillWordTask(`wt-m-fg-${i + 1}`, `תחנה ${i + 9}`, `השלימו את המילה: ${hebrew}`, word, blanks, emoji),
     );
   });
 
   const dualPairs = [
-    { color: "red", noun: "hat", emoji: "🎩" },
-    { color: "blue", noun: "bag", emoji: "👜" },
-    { color: "green", noun: "tree", emoji: "🌳" },
-    { color: "yellow", noun: "sun", emoji: "☀️" },
-    { color: "black", noun: "cat", emoji: "🐈" },
-    { color: "white", noun: "snow", emoji: "❄️" },
-    { color: "brown", noun: "bear", emoji: "🐻" },
+    { color: "red", noun: "hat", emoji: "🎩", missionHe: "העמיסו שני קרונות: אדום + כובע" },
+    { color: "blue", noun: "bag", emoji: "👜", missionHe: "העמיסו שני קרונות: כחול + תיק" },
+    { color: "green", noun: "tree", emoji: "🌳", missionHe: "העמיסו שני קרונות: ירוק + עץ" },
+    { color: "yellow", noun: "sun", emoji: "☀️", missionHe: "העמיסו שני קרונות: צהוב + שמש" },
+    { color: "black", noun: "cat", emoji: "🐈", missionHe: "העמיסו שני קרונות: שחור + חתול" },
+    { color: "white", noun: "snow", emoji: "❄️", missionHe: "העמיסו שני קרונות: לבן + שלג" },
+    { color: "brown", noun: "bear", emoji: "🐻", missionHe: "העמיסו שני קרונות: חום + דוב" },
   ];
   dualPairs.forEach((pair, i) => {
     tasks.push(dualPhraseTask(`wt-m-dp-${i + 1}`, `תחנה ${i + 17}`, pair));
@@ -441,17 +552,17 @@ function buildHardTrainTasks() {
   const tasks = [];
 
   const orders = [
-    ["I / like / pizza", ["I", "like", "pizza"], "milk"],
-    ["The / dog / runs", ["The", "dog", "runs"], "cat"],
-    ["We / go / to / school", ["We", "go", "to", "school"], "home"],
-    ["She / likes / red", ["She", "likes", "red"], "blue"],
-    ["I / read / a / book", ["I", "read", "a", "book"], "milk"],
-    ["He / eats / an / apple", ["He", "eats", "an", "apple"], "chair"],
-    ["They / play / in / park", ["They", "play", "in", "park"], "desk"],
-    ["My / cat / is / small", ["My", "cat", "is", "small"], "big"],
+    { missionHe: "סדרו משפט: אני אוהב פיצה", words: ["I", "like", "pizza"], distractor: "milk" },
+    { missionHe: "סדרו משפט: הכלב רץ", words: ["The", "dog", "runs"], distractor: "cat" },
+    { missionHe: "סדרו משפט: אנחנו הולכים לבית ספר", words: ["We", "go", "to", "school"], distractor: "home" },
+    { missionHe: "סדרו משפט: היא אוהבת אדום", words: ["She", "likes", "red"], distractor: "blue" },
+    { missionHe: "סדרו משפט: אני קורא ספר", words: ["I", "read", "a", "book"], distractor: "milk" },
+    { missionHe: "סדרו משפט: הוא אוכל תפוח", words: ["He", "eats", "an", "apple"], distractor: "chair" },
+    { missionHe: "סדרו משפט: הם משחקים בפארק", words: ["They", "play", "in", "park"], distractor: "desk" },
+    { missionHe: "סדרו משפט: החתול שלי קטן", words: ["My", "cat", "is", "small"], distractor: "big" },
   ];
-  orders.forEach(([label, words, dist], i) => {
-    tasks.push(wordOrderTask(`wt-h-wo-${i + 1}`, `תחנה ${i + 1}`, `סדרו מילים — ${label}`, words, dist));
+  orders.forEach(({ missionHe, words, distractor }, i) => {
+    tasks.push(wordOrderTask(`wt-h-wo-${i + 1}`, `תחנה ${i + 1}`, missionHe, words, distractor));
   });
 
   const gaps = [
@@ -555,6 +666,8 @@ export function auditWordTrainContent() {
   const totals = { easy: 0, medium: 0, hard: 0 };
   /** @type {Record<DifficultyId, Record<string, number>>} */
   const byType = { easy: {}, medium: {}, hard: {} };
+  /** @type {Set<string>} */
+  const seenIds = new Set();
 
   for (const level of /** @type {DifficultyId[]} */ (["easy", "medium", "hard"])) {
     const tasks = WORD_TRAIN_TASKS[level];
@@ -566,6 +679,9 @@ export function auditWordTrainContent() {
     }
 
     for (const task of tasks) {
+      if (seenIds.has(task.id)) gaps.push(`${task.id}: id כפול`);
+      else seenIds.add(task.id);
+
       if (task.level !== level) gaps.push(`${task.id}: level לא תואם`);
       if (task.taskType !== task.type) gaps.push(`${task.id}: taskType/type לא תואמים`);
       if (task.prompt !== task.missionHe) gaps.push(`${task.id}: prompt/missionHe לא תואמים`);
@@ -578,12 +694,27 @@ export function auditWordTrainContent() {
       if (level === "easy") {
         if (!EASY_TYPES.has(type)) gaps.push(`${task.id}: סוג ${type} לא מותר ברמה קלה`);
         if (EASY_BANNED.has(type)) gaps.push(`${task.id}: סוג ${type} אסור ברמה קלה`);
+        if (trainEasySlotCount(task) !== 1) {
+          gaps.push(`${task.id}: קל — צריך בדיוק קרון ריק אחד`);
+        }
       }
       if (level === "medium" && !MEDIUM_TYPES.has(type)) {
         gaps.push(`${task.id}: סוג ${type} לא מותר ברמה בינונית`);
       }
       if (level === "hard" && !HARD_TYPES.has(type)) {
         gaps.push(`${task.id}: סוג ${type} לא מותר ברמה קשה`);
+      }
+
+      if (trainCanCopy(task)) gaps.push(`${task.id}: העתקה מהשאלה`);
+      if (trainAnswerInPrompt(task)) gaps.push(`${task.id}: התשובה מופיעה ב-prompt`);
+      if (type === "fill_gaps" && !trainGapHasSingleBlank(task)) {
+        gaps.push(`${task.id}: fill_gaps — צריך בדיוק חלל אחד`);
+      }
+      if (!trainSolutionInPieces(task)) {
+        gaps.push(`${task.id}: אין מספיק קלפים לפתרון (multiset)`);
+      }
+      if (!trainSolutionMatchesSlots(task)) {
+        gaps.push(`${task.id}: solution לא תואם ל-slots`);
       }
     }
   }

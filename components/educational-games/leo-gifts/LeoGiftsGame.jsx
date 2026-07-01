@@ -4,22 +4,21 @@ import EducationalDifficultyGradeHint from "../EducationalDifficultyGradeHint.js
 import EducationalGameHudFullscreenButton from "../EducationalGameHudFullscreenButton.jsx";
 import {
   calcTimeBonus,
-  getContinuousDifficulty,
-  internalStageFromSuccesses,
   SCORE_CORRECT,
   SCORE_STREAK_BONUS,
   STREAK_BONUS_EVERY,
-  timeLimitForStage,
 } from "../../../lib/educational-games/continuous-play.js";
-import { pickNextTask } from "../../../lib/educational-games/educational-task-picker.js";
+import { maxMistakesForDifficulty } from "../../../lib/educational-games/educational-session-standard.js";
 import {
   childEmojiAt,
   childrenGridClass,
+  buildGiftsSessionRun,
   DIFFICULTIES,
-  generateGiftsPool,
   giftsFeedback,
   giftsPrompt,
-  giftsTaskKey,
+  giftsTimeLimitForTask,
+  isGiftsWin,
+  TASKS_PER_SESSION,
   validateGiftsDivision,
 } from "./leo-gifts-data.js";
 import { buildLeoGiftsMetrics } from "./leo-gifts-metrics.js";
@@ -44,19 +43,19 @@ export default function LeoGiftsGame({
   onSessionEndRef.current = onSessionEnd;
   const sessionEndFiredRef = useRef(false);
   const startTimeRef = useRef(Date.now());
-  const usedKeysRef = useRef(/** @type {Set<string>} */ (new Set()));
-  const lastKeyRef = useRef(/** @type {string|null} */ (null));
+  const sessionTasksRef = useRef(/** @type {import('./leo-gifts-data.js').GiftsTask[]} */ ([]));
   const questionStartRef = useRef(Date.now());
   const answerTimesRef = useRef(/** @type {number[]} */ ([]));
   const timerPausedRef = useRef(false);
   const timeoutHandledRef = useRef(false);
 
-  const [phase, setPhase] = useState(/** @type {'intro'|'play'|'lost'} */ (
+  const [phase, setPhase] = useState(/** @type {'intro'|'play'|'won'|'lost'} */ (
     productionMode && autoStart ? "play" : "intro",
   ));
   const [difficulty, setDifficulty] = useState(/** @type {DifficultyId} */ (
     productionMode && autoStart ? /** @type {DifficultyId} */ (initialDifficulty) : "easy",
   ));
+  const [taskIndex, setTaskIndex] = useState(0);
   const [task, setTask] = useState(/** @type {import('./leo-gifts-data.js').GiftsTask|null} */ (null));
   const [perChild, setPerChild] = useState(0);
   const [remainder, setRemainder] = useState(0);
@@ -73,7 +72,8 @@ export default function LeoGiftsGame({
   const [checkState, setCheckState] = useState(/** @type {'idle'|'ok'|'bad'} */ ("idle"));
   const [feedback, setFeedback] = useState("");
 
-  const diffConfig = getContinuousDifficulty(difficulty);
+  const maxMistakes = maxMistakesForDifficulty(difficulty);
+  const diffConfig = { label: DIFFICULTIES[difficulty].label, maxMistakes };
   const gridClass = task ? gameUi[childrenGridClass(task.children)] : "";
   const showRemainder = difficulty !== "easy";
 
@@ -85,63 +85,44 @@ export default function LeoGiftsGame({
     timeoutHandledRef.current = false;
   }, []);
 
-  const loadNextTask = useCallback(
-    (stage) => {
-      let next = pickNextTask(
-        generateGiftsPool,
-        difficulty,
-        { stage },
-        usedKeysRef.current,
-        lastKeyRef.current,
-        giftsTaskKey,
-      );
-      if (!next) {
-        usedKeysRef.current.clear();
-        next = pickNextTask(
-          generateGiftsPool,
-          difficulty,
-          { stage },
-          usedKeysRef.current,
-          null,
-          giftsTaskKey,
-        );
-      }
+  const loadTaskAtIndex = useCallback(
+    (index) => {
+      const next = sessionTasksRef.current[index];
       if (!next) return false;
-      const key = giftsTaskKey(next);
-      usedKeysRef.current.add(key);
-      lastKeyRef.current = key;
+      setTaskIndex(index);
       setTask(next);
+      setInternalStage(index + 1);
+      setHighestStage((h) => Math.max(h, index + 1));
       resetTaskUi();
-      const limit = timeLimitForStage(diffConfig.startTimeSec, stage);
+      const limit = giftsTimeLimitForTask(difficulty, index);
       setTimeLimitSec(limit);
       setTimeLeft(limit);
       questionStartRef.current = Date.now();
       timerPausedRef.current = false;
       return true;
     },
-    [difficulty, diffConfig.startTimeSec, resetTaskUi],
+    [difficulty, resetTaskUi],
   );
 
-  const endRun = useCallback(() => {
+  const endRun = useCallback((result) => {
     timerPausedRef.current = true;
-    setPhase("lost");
+    setPhase(result);
   }, []);
 
   const registerMistake = useCallback(() => {
     setMistakes((m) => {
       const next = m + 1;
-      if (next >= diffConfig.maxMistakes) {
-        window.setTimeout(endRun, 1200);
+      if (next >= maxMistakes) {
+        window.setTimeout(() => endRun("lost"), 1200);
       }
       return next;
     });
     setFailedAttempts((f) => f + 1);
     setCurrentStreak(0);
-  }, [diffConfig.maxMistakes, endRun]);
+  }, [maxMistakes, endRun]);
 
   const startGame = useCallback(() => {
-    usedKeysRef.current.clear();
-    lastKeyRef.current = null;
+    sessionTasksRef.current = buildGiftsSessionRun(difficulty);
     answerTimesRef.current = [];
     setScore(0);
     setMistakes(0);
@@ -151,12 +132,12 @@ export default function LeoGiftsGame({
     setBestStreak(0);
     setHighestStage(1);
     setInternalStage(1);
+    setTaskIndex(0);
     startTimeRef.current = Date.now();
     sessionEndFiredRef.current = false;
-    const stage = 1;
-    if (!loadNextTask(stage)) return;
+    if (!loadTaskAtIndex(0)) return;
     setPhase("play");
-  }, [loadNextTask]);
+  }, [difficulty, loadTaskAtIndex]);
 
   useEffect(() => {
     if (!autoStart || phase !== "play" || task) return;
@@ -165,14 +146,13 @@ export default function LeoGiftsGame({
 
   const advanceAfterSuccess = useCallback(() => {
     const nextSuccess = successCount + 1;
-    const stage = internalStageFromSuccesses(nextSuccess);
-    setInternalStage(stage);
-    setHighestStage((h) => Math.max(h, stage));
     setSuccessCount(nextSuccess);
-    if (!loadNextTask(stage)) {
-      endRun();
+    if (nextSuccess >= TASKS_PER_SESSION) {
+      window.setTimeout(() => endRun("won"), 1200);
+      return;
     }
-  }, [successCount, loadNextTask, endRun]);
+    loadTaskAtIndex(nextSuccess);
+  }, [successCount, loadTaskAtIndex, endRun]);
 
   const handleTimeout = useCallback(() => {
     if (timeoutHandledRef.current || timerPausedRef.current) return;
@@ -181,12 +161,11 @@ export default function LeoGiftsGame({
     setCheckState("bad");
     setFeedback("הזמן נגמר! ננסה שאלה חדשה.");
     registerMistake();
-    const stage = internalStage;
     window.setTimeout(() => {
-      if (mistakes + 1 >= diffConfig.maxMistakes) return;
-      loadNextTask(stage);
+      if (mistakes + 1 >= maxMistakes) return;
+      loadTaskAtIndex(taskIndex);
     }, 1400);
-  }, [registerMistake, internalStage, loadNextTask, mistakes, diffConfig.maxMistakes]);
+  }, [registerMistake, loadTaskAtIndex, taskIndex, mistakes, maxMistakes]);
 
   useEffect(() => {
     if (phase !== "play" || !task || timerPausedRef.current) return undefined;
@@ -242,16 +221,17 @@ export default function LeoGiftsGame({
   ]);
 
   const endMetrics = useMemo(() => {
-    if (phase !== "lost") return null;
+    if (phase !== "won" && phase !== "lost") return null;
     const times = answerTimesRef.current;
     const avgAnswerSec =
       times.length > 0 ? times.reduce((a, b) => a + b, 0) / times.length : 0;
+    const didWin = isGiftsWin(successCount, TASKS_PER_SESSION, mistakes, maxMistakes);
     return buildLeoGiftsMetrics({
       score,
-      didWin: successCount >= 25,
+      didWin,
       difficulty,
       successfulQuestions: successCount,
-      questionsReached: successCount + (task ? 1 : 0),
+      questionsReached: Math.min(TASKS_PER_SESSION, successCount + (phase === "play" && task ? 1 : 0)),
       failedAttempts,
       mistakes,
       bestStreak,
@@ -259,10 +239,10 @@ export default function LeoGiftsGame({
       durationSec: Math.max(1, Math.round((Date.now() - startTimeRef.current) / 1000)),
       avgAnswerSec,
     });
-  }, [phase, score, successCount, failedAttempts, mistakes, bestStreak, highestStage, difficulty, task]);
+  }, [phase, score, successCount, failedAttempts, mistakes, bestStreak, highestStage, difficulty, task, maxMistakes]);
 
   useEffect(() => {
-    if (phase !== "lost") return;
+    if (phase !== "won" && phase !== "lost") return;
     if (!productionMode || !onSessionEndRef.current || sessionEndFiredRef.current || !endMetrics) return;
     sessionEndFiredRef.current = true;
     onSessionEndRef.current(endMetrics);
@@ -466,12 +446,16 @@ export default function LeoGiftsGame({
         </div>
       ) : null}
 
-      {phase === "lost" ? (
+      {phase === "won" || phase === "lost" ? (
         <div className={styles.screenCenter}>
           <div className={styles.endCard}>
-            <h2 className={styles.endTitle}>🍬 סיום משחק</h2>
+            <h2 className={styles.endTitle}>
+              {phase === "won" ? "🎉 סיימתם את חנות הממתקים!" : "🍬 סיום משחק"}
+            </h2>
             <p className={styles.endStat}>⭐ ניקוד: {score}</p>
-            <p className={styles.endStat}>✅ תשובות נכונות: {successCount}</p>
+            <p className={styles.endStat}>
+              ✅ תשובות נכונות: {successCount}/{TASKS_PER_SESSION}
+            </p>
             <p className={styles.endStat}>❌ טעויות: {mistakes}</p>
             <p className={styles.endStat}>📈 שלב הכי גבוה: {highestStage}</p>
             <p className={styles.endStat}>📊 התחלתם ב: {diffConfig.label}</p>

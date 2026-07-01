@@ -47,7 +47,7 @@ export const PRODUCTS = [
 
 export const CUSTOMER_AVATARS = ["👧", "👦", "🧒", "👨", "👩", "🧑", "👴", "👵"];
 
-export const CUSTOMERS_PER_LEVEL = 30;
+export const CUSTOMERS_PER_LEVEL = 20;
 
 /** @type {Record<DifficultyId, object>} */
 export const DIFFICULTIES = {
@@ -106,7 +106,7 @@ export const SCORE = {
 /** @param {DifficultyId} difficultyId @param {number} index 0-based */
 export function getCustomerBandConfig(difficultyId, index) {
   const diff = DIFFICULTIES[difficultyId];
-  const band = Math.min(2, Math.floor(index / 10));
+  const band = index < 5 ? 0 : index < 15 ? 1 : 2;
   const extraChance = band === 0 ? 0 : band === 1 ? diff.extraProductChanceMid : diff.extraProductChanceLate;
   const itemCount =
     extraChance > 0 && Math.random() < extraChance ? diff.baseProductCount + 1 : diff.baseProductCount;

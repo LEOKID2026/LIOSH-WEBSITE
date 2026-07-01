@@ -2,6 +2,11 @@
 /** @typedef {'build' | 'findTrays' | 'findPerTray' | 'findTotal'} BakeryMode */
 
 import { PRODUCTION_MIN_POOL } from "../../../lib/educational-games/educational-task-picker.js";
+import {
+  pickSessionFromBands,
+  TASKS_PER_SESSION,
+  timeLimitForSessionIndex,
+} from "../../../lib/educational-games/educational-session-standard.js";
 
 /** @typedef {{
  *   id: string
@@ -13,10 +18,19 @@ import { PRODUCTION_MIN_POOL } from "../../../lib/educational-games/educational-
  *   itemEmoji: string
  * }} BakeryTask */
 
+export { TASKS_PER_SESSION };
+
 export const DIFFICULTIES = {
   easy: { id: "easy", label: "קל" },
   medium: { id: "medium", label: "בינוני" },
   hard: { id: "hard", label: "קשה" },
+};
+
+/** @type {Record<DifficultyId, [number, number, number]>} */
+export const BAKERY_TIME_LIMITS_BY_BAND = {
+  easy: [45, 40, 35],
+  medium: [40, 35, 30],
+  hard: [35, 30, 25],
 };
 
 const ITEM_TYPES = [
@@ -27,19 +41,7 @@ const ITEM_TYPES = [
   { itemLabel: "קרואסונים", itemEmoji: "🥐" },
 ];
 
-/** @type {Record<DifficultyId, { traysMin: number, traysMax: number, perMin: number, perMax: number, maxTotal: number, inverseRatio: number }>} */
-const BASE_LEVEL = {
-  easy: { traysMin: 2, traysMax: 6, perMin: 2, perMax: 6, maxTotal: 36, inverseRatio: 0 },
-  medium: { traysMin: 2, traysMax: 10, perMin: 2, perMax: 10, maxTotal: 100, inverseRatio: 0 },
-  hard: { traysMin: 3, traysMax: 12, perMin: 3, perMax: 12, maxTotal: 144, inverseRatio: 0.55 },
-};
-
-/** @param {number} min @param {number} max */
-function randInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-/** @param {DifficultyId} difficulty @param {number} stage */
+/** @param {unknown[]} arr */
 function shuffle(arr) {
   const out = [...arr];
   for (let i = out.length - 1; i > 0; i -= 1) {
@@ -49,28 +51,50 @@ function shuffle(arr) {
   return out;
 }
 
-/** @param {DifficultyId} difficulty @param {number} stage */
-function levelForStage(difficulty, stage) {
-  const base = BASE_LEVEL[difficulty];
-  const boost = Math.floor(Math.max(0, stage - 1) / 2);
+/** @param {number} min @param {number} max */
+function randInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+/** @typedef {0 | 1 | 2} BakerySessionBand */
+
+/**
+ * @param {DifficultyId} difficulty
+ * @param {BakerySessionBand} band
+ */
+function bakeryBandConfig(difficulty, band) {
+  if (difficulty === "easy") {
+    return { traysMin: 2, traysMax: band === 0 ? 4 : band === 1 ? 5 : 6, perMin: 2, perMax: band === 0 ? 4 : band === 1 ? 5 : 6, maxTotal: band === 0 ? 16 : band === 1 ? 25 : 36, allowFindTotal: false, allowInverse: false };
+  }
+  if (difficulty === "medium") {
+    return {
+      traysMin: 2,
+      traysMax: band === 0 ? 5 : band === 1 ? 8 : 10,
+      perMin: 2,
+      perMax: band === 0 ? 6 : band === 1 ? 8 : 10,
+      maxTotal: band === 0 ? 30 : band === 1 ? 64 : 100,
+      allowFindTotal: band >= 1,
+      allowInverse: false,
+    };
+  }
   return {
-    traysMin: base.traysMin,
-    traysMax: Math.min(base.traysMax + boost, 12),
-    perMin: base.perMin,
-    perMax: Math.min(base.perMax + boost, 12),
-    maxTotal: Math.min(base.maxTotal + boost * 12, difficulty === "hard" ? 144 : difficulty === "medium" ? 100 : 36),
-    inverseRatio: base.inverseRatio + (stage >= 3 && difficulty !== "easy" ? 0.1 : 0),
+    traysMin: band === 0 ? 3 : 4,
+    traysMax: band === 0 ? 6 : band === 1 ? 9 : 10,
+    perMin: 3,
+    perMax: band === 0 ? 6 : band === 1 ? 8 : 10,
+    maxTotal: band === 0 ? 36 : band === 1 ? 72 : 100,
+    allowFindTotal: band >= 1,
+    allowInverse: band >= 2,
   };
 }
 
 /**
  * @param {DifficultyId} difficulty
- * @param {{ salt?: number, stage?: number }} [opts]
+ * @param {BakerySessionBand} band
+ * @param {number} [salt]
  */
-export function generateBakeryPool(difficulty, opts = {}) {
-  const stage = opts.stage ?? 1;
-  const cfg = levelForStage(difficulty, stage);
-  const salt = opts.salt ?? 0;
+function generateBakeryPoolForBand(difficulty, band, salt = 0) {
+  const cfg = bakeryBandConfig(difficulty, band);
   const seen = new Set();
   /** @type {BakeryTask[]} */
   const pool = [];
@@ -85,7 +109,7 @@ export function generateBakeryPool(difficulty, opts = {}) {
         if (seen.has(key)) continue;
         seen.add(key);
         pool.push({
-          id: `b-${difficulty}-${pool.length}`,
+          id: `b-${difficulty}-b${band}-${pool.length}`,
           mode: "build",
           trays,
           perTray,
@@ -96,57 +120,135 @@ export function generateBakeryPool(difficulty, opts = {}) {
     }
   }
 
+  if (cfg.allowFindTotal) {
+    for (let trays = cfg.traysMin; trays <= cfg.traysMax; trays += 1) {
+      for (let perTray = cfg.perMin; perTray <= cfg.perMax; perTray += 1) {
+        const total = trays * perTray;
+        if (total > cfg.maxTotal || total < 4) continue;
+        for (let itemIdx = 0; itemIdx < ITEM_TYPES.length; itemIdx += 1) {
+          const item = ITEM_TYPES[(itemIdx + salt + 1) % ITEM_TYPES.length];
+          const key = `fx-${trays}-${perTray}-${item.itemLabel}`;
+          if (seen.has(key)) continue;
+          seen.add(key);
+          pool.push({
+            id: `b-${difficulty}-b${band}-ft-${pool.length}`,
+            mode: "findTotal",
+            trays,
+            perTray,
+            itemLabel: item.itemLabel,
+            itemEmoji: item.itemEmoji,
+          });
+        }
+      }
+    }
+  }
+
+  if (cfg.allowInverse) {
+    let guard = 0;
+    while (pool.filter((t) => t.mode !== "build" && t.mode !== "findTotal").length < 40 && guard < 400) {
+      guard += 1;
+      const item = ITEM_TYPES[(pool.length + salt + guard) % ITEM_TYPES.length];
+      const modeRoll = guard % 2;
+      const mode = modeRoll === 0 ? /** @type {BakeryMode} */ ("findTrays") : "findPerTray";
+      let trays = randInt(cfg.traysMin, cfg.traysMax);
+      let perTray = randInt(cfg.perMin, cfg.perMax);
+      let total = trays * perTray;
+      if (total > cfg.maxTotal) {
+        perTray = Math.max(cfg.perMin, Math.floor(cfg.maxTotal / trays));
+        total = trays * perTray;
+      }
+      if (total < 4) continue;
+
+      let key;
+      /** @type {BakeryTask} */
+      let task;
+      if (mode === "findTrays") {
+        key = `ft-${total}-${perTray}-${item.itemLabel}`;
+        if (seen.has(key)) continue;
+        task = { id: `b-${difficulty}-b${band}-inv-${pool.length}`, mode, total, perTray, itemLabel: item.itemLabel, itemEmoji: item.itemEmoji };
+      } else {
+        trays = randInt(cfg.traysMin, cfg.traysMax);
+        total = trays * perTray;
+        if (total > cfg.maxTotal) continue;
+        key = `fp-${total}-${trays}-${item.itemLabel}`;
+        if (seen.has(key)) continue;
+        task = { id: `b-${difficulty}-b${band}-inv-${pool.length}`, mode, trays, total, itemLabel: item.itemLabel, itemEmoji: item.itemEmoji };
+      }
+      seen.add(key);
+      pool.push(task);
+    }
+  }
+
+  return shuffle(pool);
+}
+
+/** @param {BakeryTask} task */
+export function bakeryTaskDifficultyScore(task) {
+  const e = bakeryExpected(task);
+  let score = e.total + e.trays * 2;
+  if (task.mode === "findTotal") score += 10;
+  if (task.mode === "findTrays" || task.mode === "findPerTray") score += 25;
+  return score;
+}
+
+/** @param {DifficultyId} difficulty */
+export function buildBakerySessionRun(difficulty) {
+  const salt = Math.floor(Math.random() * 10000);
+  const opening = generateBakeryPoolForBand(difficulty, 0, salt)
+    .sort((a, b) => bakeryTaskDifficultyScore(a) - bakeryTaskDifficultyScore(b));
+  const mid = generateBakeryPoolForBand(difficulty, 1, salt + 1)
+    .sort((a, b) => bakeryTaskDifficultyScore(a) - bakeryTaskDifficultyScore(b));
+  const final = generateBakeryPoolForBand(difficulty, 2, salt + 2)
+    .sort((a, b) => bakeryTaskDifficultyScore(a) - bakeryTaskDifficultyScore(b));
+
+  const run = pickSessionFromBands(opening, mid, final, bakeryTaskKey, TASKS_PER_SESSION);
+  return run.map((task, i) => ({
+    ...task,
+    id: `b-${difficulty}-run-${i}`,
+  }));
+}
+
+/** @param {DifficultyId} difficulty @param {number} taskIndex0 */
+export function bakeryTimeLimitForTask(difficulty, taskIndex0) {
+  const limits = BAKERY_TIME_LIMITS_BY_BAND[difficulty] ?? BAKERY_TIME_LIMITS_BY_BAND.easy;
+  return timeLimitForSessionIndex(taskIndex0, limits);
+}
+
+/** @param {number} successful @param {number} total @param {number} mistakes @param {number} maxMistakes */
+export function isBakeryWin(successful, total, mistakes, maxMistakes) {
+  if (mistakes >= maxMistakes) return false;
+  return successful >= total;
+}
+
+/**
+ * @param {DifficultyId} difficulty
+ * @param {{ salt?: number, band?: BakerySessionBand }} [opts]
+ */
+export function generateBakeryPool(difficulty, opts = {}) {
+  const salt = opts.salt ?? 0;
+  /** @type {BakeryTask[]} */
+  let pool = [];
+  const seen = new Set();
+  for (const band of /** @type {BakerySessionBand[]} */ ([0, 1, 2])) {
+    for (const task of generateBakeryPoolForBand(difficulty, band, salt + band)) {
+      const key = bakeryTaskKey(task);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      pool.push(task);
+    }
+  }
+
   let guard = 0;
   while (pool.length < PRODUCTION_MIN_POOL + 10 && guard < 1200) {
     guard += 1;
-    const item = ITEM_TYPES[(pool.length + salt + guard) % ITEM_TYPES.length];
-    const roll = (guard + salt) % 100;
-    let mode = /** @type {BakeryMode} */ ("build");
-    if (difficulty !== "easy" && stage >= 2 && roll < 15) mode = "findTotal";
-    if (difficulty === "hard" && roll < cfg.inverseRatio * 100) {
-      mode = roll % 3 === 0 ? "findTrays" : roll % 3 === 1 ? "findTotal" : "findPerTray";
-    } else if (difficulty === "hard" && roll < cfg.inverseRatio * 100 + 15) {
-      mode = "findTrays";
+    const band = /** @type {BakerySessionBand} */ (guard % 3);
+    for (const task of generateBakeryPoolForBand(difficulty, band, salt + guard)) {
+      const key = bakeryTaskKey(task);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      pool.push(task);
+      if (pool.length >= PRODUCTION_MIN_POOL + 10) break;
     }
-
-    let trays = randInt(cfg.traysMin, cfg.traysMax);
-    let perTray = randInt(cfg.perMin, cfg.perMax);
-    let total = trays * perTray;
-    if (total > cfg.maxTotal) {
-      perTray = Math.max(cfg.perMin, Math.floor(cfg.maxTotal / trays));
-      total = trays * perTray;
-    }
-    if (total < 4) continue;
-
-    let key;
-    /** @type {BakeryTask} */
-    let task;
-
-    if (mode === "findTrays") {
-      key = `ft-${total}-${perTray}`;
-      if (seen.has(key)) continue;
-      task = { id: `b-${difficulty}-${pool.length}`, mode, total, perTray, itemLabel: item.itemLabel, itemEmoji: item.itemEmoji };
-    } else if (mode === "findTotal") {
-      key = `fx-${trays}-${perTray}`;
-      if (seen.has(key)) continue;
-      task = { id: `b-${difficulty}-${pool.length}`, mode, trays, perTray, itemLabel: item.itemLabel, itemEmoji: item.itemEmoji };
-    } else if (mode === "findPerTray") {
-      trays = randInt(cfg.traysMin, Math.min(10, cfg.traysMax));
-      total = randInt(trays * cfg.perMin, Math.min(cfg.maxTotal, trays * cfg.perMax));
-      if (total % trays !== 0) total -= total % trays;
-      perTray = total / trays;
-      if (perTray < cfg.perMin || perTray > cfg.perMax) continue;
-      key = `fp-${total}-${trays}`;
-      if (seen.has(key)) continue;
-      task = { id: `b-${difficulty}-${pool.length}`, mode, trays, total, itemLabel: item.itemLabel, itemEmoji: item.itemEmoji };
-    } else {
-      key = `bd-${trays}-${perTray}`;
-      if (seen.has(key)) continue;
-      task = { id: `b-${difficulty}-${pool.length}`, mode, trays, perTray, itemLabel: item.itemLabel, itemEmoji: item.itemEmoji };
-    }
-
-    seen.add(key);
-    pool.push(task);
   }
 
   return shuffle(pool);

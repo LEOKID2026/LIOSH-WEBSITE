@@ -4,20 +4,19 @@ import EducationalDifficultyGradeHint from "../EducationalDifficultyGradeHint.js
 import EducationalGameHudFullscreenButton from "../EducationalGameHudFullscreenButton.jsx";
 import {
   calcTimeBonus,
-  getContinuousDifficulty,
-  internalStageFromSuccesses,
   SCORE_CORRECT,
   SCORE_STREAK_BONUS,
   STREAK_BONUS_EVERY,
-  timeLimitForStage,
 } from "../../../lib/educational-games/continuous-play.js";
-import { pickNextTask } from "../../../lib/educational-games/educational-task-picker.js";
+import { maxMistakesForDifficulty } from "../../../lib/educational-games/educational-session-standard.js";
 import {
   bakeryFeedback,
   bakeryPrompt,
-  bakeryTaskKey,
+  bakeryTimeLimitForTask,
+  buildBakerySessionRun,
   DIFFICULTIES,
-  generateBakeryPool,
+  isBakeryWin,
+  TASKS_PER_SESSION,
   trayItemDisplay,
   validateBakery,
 } from "./leo-bakery-data.js";
@@ -43,19 +42,19 @@ export default function LeoBakeryGame({
   onSessionEndRef.current = onSessionEnd;
   const sessionEndFiredRef = useRef(false);
   const startTimeRef = useRef(Date.now());
-  const usedKeysRef = useRef(/** @type {Set<string>} */ (new Set()));
-  const lastKeyRef = useRef(/** @type {string|null} */ (null));
+  const sessionTasksRef = useRef(/** @type {import('./leo-bakery-data.js').BakeryTask[]} */ ([]));
   const questionStartRef = useRef(Date.now());
   const answerTimesRef = useRef(/** @type {number[]} */ ([]));
   const timerPausedRef = useRef(false);
   const timeoutHandledRef = useRef(false);
 
-  const [phase, setPhase] = useState(/** @type {'intro'|'play'|'lost'} */ (
+  const [phase, setPhase] = useState(/** @type {'intro'|'play'|'won'|'lost'} */ (
     productionMode && autoStart ? "play" : "intro",
   ));
   const [difficulty, setDifficulty] = useState(/** @type {DifficultyId} */ (
     productionMode && autoStart ? /** @type {DifficultyId} */ (initialDifficulty) : "easy",
   ));
+  const [taskIndex, setTaskIndex] = useState(0);
   const [task, setTask] = useState(/** @type {import('./leo-bakery-data.js').BakeryTask|null} */ (null));
   const [trays, setTrays] = useState(1);
   const [perTray, setPerTray] = useState(1);
@@ -72,7 +71,8 @@ export default function LeoBakeryGame({
   const [checkState, setCheckState] = useState(/** @type {'idle'|'ok'|'bad'} */ ("idle"));
   const [feedback, setFeedback] = useState("");
 
-  const diffConfig = getContinuousDifficulty(difficulty);
+  const maxMistakes = maxMistakesForDifficulty(difficulty);
+  const diffConfig = { label: DIFFICULTIES[difficulty].label, maxMistakes };
   const total = trays * perTray;
 
   const lockTrays = task?.mode === "findTotal" || task?.mode === "findPerTray";
@@ -105,63 +105,44 @@ export default function LeoBakeryGame({
     setFeedback("");
   }, [task]);
 
-  const loadNextTask = useCallback(
-    (stage) => {
-      let next = pickNextTask(
-        generateBakeryPool,
-        difficulty,
-        { stage },
-        usedKeysRef.current,
-        lastKeyRef.current,
-        bakeryTaskKey,
-      );
-      if (!next) {
-        usedKeysRef.current.clear();
-        next = pickNextTask(
-          generateBakeryPool,
-          difficulty,
-          { stage },
-          usedKeysRef.current,
-          null,
-          bakeryTaskKey,
-        );
-      }
+  const loadTaskAtIndex = useCallback(
+    (index) => {
+      const next = sessionTasksRef.current[index];
       if (!next) return false;
-      const key = bakeryTaskKey(next);
-      usedKeysRef.current.add(key);
-      lastKeyRef.current = key;
+      setTaskIndex(index);
       setTask(next);
+      setInternalStage(index + 1);
+      setHighestStage((h) => Math.max(h, index + 1));
       resetTaskUi();
-      const limit = timeLimitForStage(diffConfig.startTimeSec, stage);
+      const limit = bakeryTimeLimitForTask(difficulty, index);
       setTimeLimitSec(limit);
       setTimeLeft(limit);
       questionStartRef.current = Date.now();
       timerPausedRef.current = false;
       return true;
     },
-    [difficulty, diffConfig.startTimeSec, resetTaskUi],
+    [difficulty, resetTaskUi],
   );
 
-  const endRun = useCallback(() => {
+  const endRun = useCallback((result) => {
     timerPausedRef.current = true;
-    setPhase("lost");
+    setPhase(result);
   }, []);
 
   const registerMistake = useCallback(() => {
     setMistakes((m) => {
       const next = m + 1;
-      if (next >= diffConfig.maxMistakes) {
-        window.setTimeout(endRun, 1200);
+      if (next >= maxMistakes) {
+        window.setTimeout(() => endRun("lost"), 1200);
       }
       return next;
     });
     setFailedAttempts((f) => f + 1);
     setCurrentStreak(0);
-  }, [diffConfig.maxMistakes, endRun]);
+  }, [maxMistakes, endRun]);
 
   const startGame = useCallback(() => {
-    usedKeysRef.current.clear();
-    lastKeyRef.current = null;
+    sessionTasksRef.current = buildBakerySessionRun(difficulty);
     answerTimesRef.current = [];
     setScore(0);
     setMistakes(0);
@@ -171,12 +152,12 @@ export default function LeoBakeryGame({
     setBestStreak(0);
     setHighestStage(1);
     setInternalStage(1);
+    setTaskIndex(0);
     startTimeRef.current = Date.now();
     sessionEndFiredRef.current = false;
-    const stage = 1;
-    if (!loadNextTask(stage)) return;
+    if (!loadTaskAtIndex(0)) return;
     setPhase("play");
-  }, [loadNextTask]);
+  }, [difficulty, loadTaskAtIndex]);
 
   useEffect(() => {
     if (!autoStart || phase !== "play" || task) return;
@@ -185,14 +166,13 @@ export default function LeoBakeryGame({
 
   const advanceAfterSuccess = useCallback(() => {
     const nextSuccess = successCount + 1;
-    const stage = internalStageFromSuccesses(nextSuccess);
-    setInternalStage(stage);
-    setHighestStage((h) => Math.max(h, stage));
     setSuccessCount(nextSuccess);
-    if (!loadNextTask(stage)) {
-      endRun();
+    if (nextSuccess >= TASKS_PER_SESSION) {
+      window.setTimeout(() => endRun("won"), 1200);
+      return;
     }
-  }, [successCount, loadNextTask, endRun]);
+    loadTaskAtIndex(nextSuccess);
+  }, [successCount, loadTaskAtIndex, endRun]);
 
   const handleTimeout = useCallback(() => {
     if (timeoutHandledRef.current || timerPausedRef.current) return;
@@ -201,12 +181,11 @@ export default function LeoBakeryGame({
     setCheckState("bad");
     setFeedback("הזמן נגמר! ננסה שאלה חדשה.");
     registerMistake();
-    const stage = internalStage;
     window.setTimeout(() => {
-      if (mistakes + 1 >= diffConfig.maxMistakes) return;
-      loadNextTask(stage);
+      if (mistakes + 1 >= maxMistakes) return;
+      loadTaskAtIndex(taskIndex);
     }, 1400);
-  }, [registerMistake, internalStage, loadNextTask, mistakes, diffConfig.maxMistakes]);
+  }, [registerMistake, loadTaskAtIndex, taskIndex, mistakes, maxMistakes]);
 
   useEffect(() => {
     if (phase !== "play" || !task || timerPausedRef.current) return undefined;
@@ -271,16 +250,17 @@ export default function LeoBakeryGame({
   ]);
 
   const endMetrics = useMemo(() => {
-    if (phase !== "lost") return null;
+    if (phase !== "won" && phase !== "lost") return null;
     const times = answerTimesRef.current;
     const avgAnswerSec =
       times.length > 0 ? times.reduce((a, b) => a + b, 0) / times.length : 0;
+    const didWin = isBakeryWin(successCount, TASKS_PER_SESSION, mistakes, maxMistakes);
     return buildLeoBakeryMetrics({
       score,
-      didWin: successCount >= 25,
+      didWin,
       difficulty,
       successfulQuestions: successCount,
-      questionsReached: successCount + (task ? 1 : 0),
+      questionsReached: Math.min(TASKS_PER_SESSION, successCount + (phase === "play" && task ? 1 : 0)),
       failedAttempts,
       mistakes,
       bestStreak,
@@ -288,10 +268,10 @@ export default function LeoBakeryGame({
       durationSec: Math.max(1, Math.round((Date.now() - startTimeRef.current) / 1000)),
       avgAnswerSec,
     });
-  }, [phase, score, successCount, failedAttempts, mistakes, bestStreak, highestStage, difficulty, task]);
+  }, [phase, score, successCount, failedAttempts, mistakes, bestStreak, highestStage, difficulty, task, maxMistakes]);
 
   useEffect(() => {
-    if (phase !== "lost") return;
+    if (phase !== "won" && phase !== "lost") return;
     if (!productionMode || !onSessionEndRef.current || sessionEndFiredRef.current || !endMetrics) return;
     sessionEndFiredRef.current = true;
     onSessionEndRef.current(endMetrics);
@@ -501,12 +481,16 @@ export default function LeoBakeryGame({
         </div>
       ) : null}
 
-      {phase === "lost" ? (
+      {phase === "won" || phase === "lost" ? (
         <div className={styles.screenCenter}>
           <div className={styles.endCard}>
-            <h2 className={styles.endTitle}>🥐 סיום משחק</h2>
+            <h2 className={styles.endTitle}>
+              {phase === "won" ? "🎉 סיימתם את המאפייה!" : "🥐 סיום משחק"}
+            </h2>
             <p className={styles.endStat}>⭐ ניקוד: {score}</p>
-            <p className={styles.endStat}>✅ תשובות נכונות: {successCount}</p>
+            <p className={styles.endStat}>
+              ✅ תשובות נכונות: {successCount}/{TASKS_PER_SESSION}
+            </p>
             <p className={styles.endStat}>❌ טעויות: {mistakes}</p>
             <p className={styles.endStat}>📈 שלב הכי גבוה: {highestStage}</p>
             <p className={styles.endStat}>📊 התחלתם ב: {diffConfig.label}</p>

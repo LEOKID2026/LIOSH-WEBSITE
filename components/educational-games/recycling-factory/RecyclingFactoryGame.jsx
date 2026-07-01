@@ -4,10 +4,11 @@ import {
   BINS,
   DIFFICULTIES,
   SCORE,
+  allowDualItemsAt,
   beltDurationMs,
-  buildRecyclingItemQueue,
+  buildRecyclingSessionPlan,
+  nextPlannedRecyclingItem,
   pickFactForBin,
-  pickNextRecyclingItem,
 } from "./recycling-factory-data.js";
 import { buildRecyclingFactoryMetrics } from "./recycling-factory-metrics.js";
 import RecyclingItemVisual from "./RecyclingItemVisual.jsx";
@@ -161,8 +162,8 @@ export default function RecyclingFactoryGame({
   const beltItemsRef = useRef(beltItems);
   const sortedCountRef = useRef(sortedCount);
   const mistakesRef = useRef(mistakes);
-  const itemQueueRef = useRef(/** @type {RecyclingItem[]} */ ([]));
-  const usedItemIdsRef = useRef(/** @type {Set<string>} */ (new Set()));
+  const sessionPlanRef = useRef(/** @type {RecyclingItem[]} */ ([]));
+  const planIndexRef = useRef(0);
 
   phaseRef.current = phase;
   difficultyRef.current = difficulty;
@@ -192,28 +193,21 @@ export default function RecyclingFactoryGame({
     const diff = DIFFICULTIES[difficultyRef.current];
     setBeltItems((prev) => {
       const moving = prev.filter((b) => b.status === "moving");
-      const maxOnBelt = diff.dualChance > 0 && Math.random() < diff.dualChance ? 2 : 1;
+      const dualAllowed = allowDualItemsAt(sortedCountRef.current, difficultyRef.current);
+      const maxOnBelt = dualAllowed && Math.random() < diff.dualChance ? 2 : 1;
       const slots = maxOnBelt - moving.length;
       if (slots <= 0) return prev;
 
-      const spawnCount = diff.dualChance > 0 && moving.length === 0 && Math.random() < diff.dualChance ? 2 : 1;
+      const spawnCount = dualAllowed && moving.length === 0 && Math.random() < diff.dualChance ? 2 : 1;
       const toAdd = Math.min(slots, spawnCount);
       const kept = prev.filter((b) => b.status !== "success");
 
       /** @type {BeltItem[]} */
       const additions = [];
       for (let i = 0; i < toAdd; i += 1) {
-        if (!itemQueueRef.current.length) {
-          itemQueueRef.current = buildRecyclingItemQueue(diff.bins);
-          usedItemIdsRef.current.clear();
-        }
-        let item = pickNextRecyclingItem(itemQueueRef.current, usedItemIdsRef.current);
-        if (!item) {
-          itemQueueRef.current = buildRecyclingItemQueue(diff.bins);
-          usedItemIdsRef.current.clear();
-          item = pickNextRecyclingItem(itemQueueRef.current, usedItemIdsRef.current);
-        }
+        const item = nextPlannedRecyclingItem(sessionPlanRef.current, planIndexRef.current);
         if (!item) break;
+        planIndexRef.current += 1;
         additions.push({
           uid: nextUid(),
           item,
@@ -394,8 +388,8 @@ export default function RecyclingFactoryGame({
 
   const startGame = useCallback(() => {
     processingRef.current.clear();
-    itemQueueRef.current = buildRecyclingItemQueue(DIFFICULTIES[difficultyRef.current].bins);
-    usedItemIdsRef.current.clear();
+    sessionPlanRef.current = buildRecyclingSessionPlan(DIFFICULTIES[difficultyRef.current].bins);
+    planIndexRef.current = 0;
     setPhase("play");
     setScore(0);
     setSortedCount(0);

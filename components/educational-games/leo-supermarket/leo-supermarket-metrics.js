@@ -2,7 +2,7 @@
  * @param {object} state
  */
 export function buildLeoSupermarketMetrics(state) {
-  const customersTotal = Math.floor(Number(state.customersTotal) || 30);
+  const customersTotal = Math.floor(Number(state.customersTotal) || 20);
   const customersReached = Math.max(0, Math.min(customersTotal, Math.floor(Number(state.customersReached) || 0)));
   const customersCompleted = Math.max(
     0,

@@ -1,3 +1,12 @@
+import {
+  SESSION_FINAL_COUNT,
+  SESSION_MID_COUNT,
+  SESSION_OPEN_COUNT,
+  TASKS_PER_SESSION,
+} from "../../../lib/educational-games/educational-session-standard.js";
+
+export { TASKS_PER_SESSION as ITEMS_PER_SESSION };
+
 /** @typedef {'paper'|'plastic'|'glass'|'metal'|'trash'} BinId */
 /** @typedef {'easy'|'medium'|'hard'} DifficultyId */
 
@@ -130,7 +139,7 @@ export const DIFFICULTIES = {
     id: "easy",
     label: "קל",
     bins: ["paper", "plastic", "trash"],
-    itemsTarget: 20,
+    itemsTarget: TASKS_PER_SESSION,
     maxMistakes: 5,
     beltDurationMs: 9000,
     dualChance: 0,
@@ -139,7 +148,7 @@ export const DIFFICULTIES = {
     id: "medium",
     label: "בינוני",
     bins: ["paper", "plastic", "glass", "trash"],
-    itemsTarget: 30,
+    itemsTarget: TASKS_PER_SESSION,
     maxMistakes: 4,
     beltDurationMs: 6500,
     dualChance: 0,
@@ -148,7 +157,7 @@ export const DIFFICULTIES = {
     id: "hard",
     label: "קשה",
     bins: ["paper", "plastic", "glass", "metal", "trash"],
-    itemsTarget: 40,
+    itemsTarget: TASKS_PER_SESSION,
     maxMistakes: 3,
     beltDurationMs: 4800,
     dualChance: 0.35,
@@ -183,6 +192,76 @@ export function buildRecyclingItemQueue(activeBins) {
     [queue[i], queue[j]] = [queue[j], queue[i]];
   }
   return queue;
+}
+
+/** Item difficulty within a level (1 = clearest, 5 = trickiest). */
+const ITEM_DIFFICULTY = {
+  newspaper: 1,
+  page: 1,
+  box: 1,
+  banana: 1,
+  "bottle-plastic": 1,
+  bag: 1,
+  notebook: 2,
+  "bottle-glass": 2,
+  jar: 2,
+  can: 2,
+  yogurt: 3,
+  "plastic-box": 3,
+  cup: 3,
+  tissue: 3,
+  tin: 3,
+  lid: 4,
+  food: 4,
+  toy: 5,
+};
+
+/** @param {RecyclingItem} item */
+function itemDifficultyScore(item) {
+  return ITEM_DIFFICULTY[item.id] ?? 3;
+}
+
+/**
+ * Planned 20-item session: opening (clear) → mid → final (trickier).
+ * @param {BinId[]} activeBins
+ */
+export function buildRecyclingSessionPlan(activeBins) {
+  const allowed = ITEMS.filter((item) => activeBins.includes(item.bin));
+  const sorted = [...allowed].sort((a, b) => itemDifficultyScore(a) - itemDifficultyScore(b));
+  const third = Math.max(1, Math.floor(sorted.length / 3));
+  const openingPool = sorted.slice(0, third);
+  const midPool = sorted.slice(third, third * 2);
+  const finalPool = sorted.slice(third * 2);
+
+  /** @param {RecyclingItem[]} pool @param {number} count */
+  function pickFrom(pool, count) {
+    /** @type {RecyclingItem[]} */
+    const out = [];
+    let idx = 0;
+    while (out.length < count && pool.length) {
+      out.push(pool[idx % pool.length]);
+      idx += 1;
+    }
+    return out;
+  }
+
+  return [
+    ...pickFrom(openingPool, SESSION_OPEN_COUNT),
+    ...pickFrom(midPool, SESSION_MID_COUNT),
+    ...pickFrom(finalPool, SESSION_FINAL_COUNT),
+  ].slice(0, TASKS_PER_SESSION);
+}
+
+/** @param {number} sortedCount @param {DifficultyId} difficulty */
+export function allowDualItemsAt(sortedCount, difficulty) {
+  const diff = DIFFICULTIES[difficulty];
+  if (!diff.dualChance) return false;
+  return sortedCount >= SESSION_OPEN_COUNT + SESSION_MID_COUNT;
+}
+
+/** @param {RecyclingItem[]} plan @param {number} index */
+export function nextPlannedRecyclingItem(plan, index) {
+  return plan[index] ?? null;
 }
 
 /** @param {RecyclingItem[]} queue @param {Set<string>} usedIds */

@@ -37,8 +37,18 @@ const GRADE_BANDS = {
 };
 
 const EASY_TYPES = new Set(["letter_drop", "fill_gap", "image_word", "sort_letter"]);
-const MEDIUM_TYPES = new Set(["fill_sentence", "sort_plural", "sort_gender", "word_family", "meaning_word"]);
+const MEDIUM_TYPES = new Set(["fill_sentence", "sort_plural", "sort_gender", "meaning_word"]);
 const HARD_TYPES = new Set(["event_order", "title_stamp", "conclusion", "meaning"]);
+
+const MEANING_WORD_LEXICON = {
+  שמח: "מרגיש טוב",
+  עייף: "צריך מנוחה",
+  רעב: "רוצה לאכול",
+  אמיץ: "לא מפחד",
+  נדיב: "נותן לאחרים",
+  זהיר: "שומר על עצמו",
+  לח: "רטוב",
+};
 
 const DIFFICULTY_WEIGHT = {
   letter_drop: 15,
@@ -426,16 +436,52 @@ function buildMediumDetectiveTasks() {
     tasks.push(sortGenderTask(`wd-m-sg-${i + 1}`, `תיק #${i + 13}`, spec));
   });
 
-  const families = [
-    { root: "כתב", answer: "כתיבה", options: ["כתיבה", "שולחן", "ריצה", "מכתב"] },
-    { root: "למד", answer: "לימוד", options: ["לימוד", "ענן", "רכב", "שולחן"] },
-    { root: "שחק", answer: "משחק", options: ["משחק", "שחקן", "שחקנית", "שחק"] },
-    { root: "רקד", answer: "ריקוד", options: ["ריקוד", "רקדן", "רוקד", "רקד"] },
-    { root: "שיר", answer: "שירה", options: ["שירה", "שיר", "שירים", "שירון"] },
-    { root: "צייר", answer: "ציור", options: ["ציור", "צייר", "ציירת", "צבע"] },
+  const mediumReplacements = [
+    {
+      taskType: "fill_sentence",
+      sentence: "הילד ___ מים",
+      answer: "שותה",
+      options: ["שותה", "רץ", "כחול", "שולחן"],
+    },
+    {
+      taskType: "fill_sentence",
+      sentence: "הכלב ___ על הרצפה",
+      answer: "ישן",
+      options: ["ישן", "רץ", "ירוק", "שולחן"],
+    },
+    {
+      taskType: "sort_plural",
+      base: "תפוח",
+      answer: "תפוחים",
+      options: ["תפוחים", "תפוח", "תפוחה", "תפוחות"],
+    },
+    {
+      taskType: "sort_plural",
+      base: "שולחן",
+      answer: "שולחנות",
+      options: ["שולחנות", "שולחן", "שולחנה", "שולחנים"],
+    },
+    {
+      taskType: "sort_gender",
+      base: "חדש",
+      answer: "חדשה",
+      options: ["חדשה", "חדשים", "חדש", "חדשות"],
+    },
+    {
+      taskType: "meaning_word",
+      word: "לח",
+      answer: "רטוב",
+      options: ["רטוב", "יבש", "חם מאוד", "קר מדי"],
+    },
   ];
-  families.forEach((spec, i) => {
-    tasks.push(wordFamilyTask(`wd-m-wf-${i + 1}`, `תיק #${i + 19}`, spec));
+  mediumReplacements.forEach((entry, i) => {
+    const id = `wd-m-wf-${i + 1}`;
+    const caseLabel = `תיק #${i + 19}`;
+    const { taskType, ...spec } = entry;
+    if (taskType === "fill_sentence") tasks.push(fillSentenceTask(id, caseLabel, spec));
+    else if (taskType === "sort_plural") tasks.push(sortPluralTask(id, caseLabel, spec));
+    else if (taskType === "sort_gender") tasks.push(sortGenderTask(id, caseLabel, spec));
+    else if (taskType === "meaning_word") tasks.push(meaningWordTask(id, caseLabel, spec));
   });
 
   const meanings = [
@@ -694,6 +740,8 @@ export function auditWordDetectiveContent() {
   const totals = { easy: 0, medium: 0, hard: 0 };
   /** @type {Record<DifficultyId, Record<string, number>>} */
   const byType = { easy: {}, medium: {}, hard: {} };
+  /** @type {Set<string>} */
+  const seenIds = new Set();
 
   for (const level of /** @type {DifficultyId[]} */ (["easy", "medium", "hard"])) {
     const tasks = WORD_DETECTIVE_TASKS[level];
@@ -705,6 +753,9 @@ export function auditWordDetectiveContent() {
     }
 
     for (const task of tasks) {
+      if (seenIds.has(task.id)) gaps.push(`${task.id}: id כפול`);
+      seenIds.add(task.id);
+
       if (task.level !== level) gaps.push(`${task.id}: level לא תואם`);
       if (task.taskType !== task.type) gaps.push(`${task.id}: taskType/type לא תואמים`);
       if (task.prompt !== task.missionHe) gaps.push(`${task.id}: prompt/missionHe לא תואמים`);
@@ -723,7 +774,20 @@ export function auditWordDetectiveContent() {
       }
       if (level === "medium") {
         if (!MEDIUM_TYPES.has(type)) gaps.push(`${task.id}: סוג ${type} לא מותר ברמה בינונית`);
+        if (type === "word_family") gaps.push(`${task.id}: word_family אסור ברמה בינונית`);
         if (task.passage) gaps.push(`${task.id}: passage אסור ברמה בינונית`);
+        if (type === "meaning_word") {
+          const match = task.missionHe.match(/מה הפירוש של «(.+?)»\?/);
+          if (match) {
+            const word = match[1];
+            const lexiconAnswer = MEANING_WORD_LEXICON[word];
+            if (lexiconAnswer === undefined) {
+              gaps.push(`${task.id}: «${word}» חסר ב-MEANING_WORD_LEXICON`);
+            } else if (task.correctAnswer !== lexiconAnswer) {
+              gaps.push(`${task.id}: פירוש «${word}» (${task.correctAnswer}) לא תואם ללקסיקון (${lexiconAnswer})`);
+            }
+          }
+        }
       }
       if (level === "hard") {
         if (!HARD_TYPES.has(type)) gaps.push(`${task.id}: סוג ${type} לא מותר ברמה קשה`);
