@@ -15,7 +15,7 @@ const SW_FILES = [
   "/student/offline-precache-generated.js",
 ];
 
-const CACHE_NAME = "student-offline-v7-full";
+const CACHE_NAME = "student-offline-v8-full";
 
 const SOLO_ROUTES = [
   "/student/offline/solo/catcher",
@@ -40,6 +40,8 @@ const EDUCATIONAL_ROUTES = [
   "/student/offline/educational/leo-bakery",
   "/student/offline/educational/leo-number-path",
   "/student/offline/educational/leo-pizzeria",
+  "/student/offline/educational/leo-word-train",
+  "/student/offline/educational/leo-word-detective",
 ];
 
 const BASE_NAV_ROUTES = [

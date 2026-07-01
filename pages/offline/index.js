@@ -1,8 +1,7 @@
-import Layout from "../../components/Layout";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
-import { useOfflineHubUi, OFFLINE_HUB_LAYOUT_THEME } from "../../hooks/useOfflineHubUi.js";
-import GameAccessGuard from "../../components/games/GameAccessGuard.jsx";
-import GamesHubNavBar from "../../components/games/GamesHubNavBar.jsx";
+import { useOfflineHubUi } from "../../hooks/useOfflineHubUi.js";
+import OfflineHubPageShell from "../../components/offline/OfflineHubPageShell.jsx";
+import GameAccessGuard from "../../components/games/GameAccessGuard.jsx";import GamesHubNavBar from "../../components/games/GamesHubNavBar.jsx";
 import GamesHubHeader from "../../components/games/GamesHubHeader.jsx";
 import OfflineHubGameCard from "../../components/games/OfflineHubGameCard.jsx";
 import { useStudentGameAccess } from "../../hooks/useStudentGameAccess.js";
@@ -59,36 +58,33 @@ export default function OfflineHub() {
 
   return (
     <GameAccessGuard category="offline">
-      <Layout studentTheme={OFFLINE_HUB_LAYOUT_THEME} studentShell="home">
-        <main className={GH.pageWrap} dir="rtl">
-          <div className={`${GH.container} space-y-4`}>
-            <GamesHubNavBar
-              backHref="/games"
-              backLabel="משחקים"
-              badge="🔌כל הזמן עם ליאו"
-              backBtnClass={GH.backBtn}
-              badgeClass={GH.badge}
-            />
+      <OfflineHubPageShell>
+        <div className={`${GH.container} space-y-4`}>
+          <GamesHubNavBar
+            backHref="/games"
+            backLabel="משחקים"
+            badge="🔌כל הזמן עם ליאו"
+            backBtnClass={GH.backBtn}
+            badgeClass={GH.badge}
+          />
 
-            <GamesHubHeader
-              title="משחקים כל הזמן עם ליאו"
-              subtitle="משחקים על אותו מכשיר — גם בלי אינטרנט."
-              titleClass={GH.hubTitle}
-              subtitleClass={GH.hubSub}
-            />
+          <GamesHubHeader
+            title="משחקים כל הזמן עם ליאו"
+            subtitle="משחקים על אותו מכשיר — גם בלי אינטרנט."
+            titleClass={GH.hubTitle}
+            subtitleClass={GH.hubSub}
+          />
 
-            {state === "loading" ? (
-              <StudentLoadingPanel message="טוען..." hubGrid />
-            ) : (
-              <section className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4">
-                {visibleGames.map((game) => (
-                  <OfflineHubGameCard key={game.slug} game={game} GH={GH} locked={game.locked} />
-                ))}
-              </section>
-            )}
-          </div>
-        </main>
-      </Layout>
+          {state === "loading" ? (
+            <StudentLoadingPanel message="טוען..." hubGrid />
+          ) : (
+            <section className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4">
+              {visibleGames.map((game) => (
+                <OfflineHubGameCard key={game.slug} game={game} GH={GH} locked={game.locked} />
+              ))}
+            </section>
+          )}
+        </div>
+      </OfflineHubPageShell>
     </GameAccessGuard>
-  );
-}
+  );}

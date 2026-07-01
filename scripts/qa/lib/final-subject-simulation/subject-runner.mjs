@@ -78,6 +78,24 @@ function isAcceptableMcqAnswerCount(answers) {
   return labels.length >= 2 && labels.length <= 4;
 }
 
+const TYPING_PLACEHOLDER = "כתוב את התשובה שלך כאן...";
+
+async function trySubmitTypingAnswer(page) {
+  const input = page.locator(`input[placeholder="${TYPING_PLACEHOLDER}"]`);
+  if (!(await input.isVisible().catch(() => false))) return null;
+  if (!(await input.isEnabled().catch(() => false))) return null;
+  await input.fill("hello");
+  const checkBtn = page.getByRole("button", { name: /בדוק תשובה/ });
+  if (await checkBtn.isVisible().catch(() => false) && (await checkBtn.isEnabled().catch(() => false))) {
+    await checkBtn.click();
+    await page.waitForTimeout(1000);
+    return "typing";
+  }
+  await page.keyboard.press("Enter");
+  await page.waitForTimeout(1000);
+  return "typing-enter";
+}
+
 async function trySubmitAnswer(page, harnessKey, profile) {
   const prefix = profile.mcqPrefix || MCQ_PREFIX[harnessKey];
   if (prefix) {
@@ -109,6 +127,12 @@ async function trySubmitAnswer(page, harnessKey, profile) {
       return "numeric";
     }
   }
+
+  if (harnessKey === "english" || harnessKey === "hebrew") {
+    const typingMode = await trySubmitTypingAnswer(page);
+    if (typingMode) return typingMode;
+  }
+
   return "none";
 }
 
@@ -286,7 +310,7 @@ export async function runSubjectSimulation(browser, { baseUrl, subjectKey, logFi
   const harnessKey = profile.harnessKey;
   const plan = SUBJECT_PLANS[harnessKey];
   const grade = profile.grade;
-  const student = studentForGrade(grade, false);
+  const student = studentForGrade(grade, Boolean(profile.useSecondStudent));
   const subjectLabel = FINAL_SIMULATION_SUBJECT_LABELS_HE[subjectKey] || subjectKey;
   const surfaceSubject = profile.surfaceSubject || harnessKey;
   const regularOnly = isRegularOnlySubject(subjectKey);

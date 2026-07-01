@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { OFFLINE_HUB_ROUTE } from "../../lib/offline/offline-game-catalog.js";
 import { shouldBlockOfflineFullGamesRoute } from "../../lib/offline/offline-route-guard.js";
-import StudentLoadingPanel from "../ui/StudentLoadingPanel.jsx";
+import PortalLoadingPanel from "../ui/PortalLoadingPanel.jsx";
 
 /**
  * Redirects to offline hub when STUDENT_OFFLINE_FULL_GAMES_ENABLED is false.
@@ -19,7 +19,7 @@ export default function OfflineFullGamesRouteGuard({ children }) {
   }, [blocked, router]);
 
   if (blocked) {
-    return <StudentLoadingPanel message="טוען..." fullPage />;
+    return <PortalLoadingPanel isBright message="טוען..." fullPage />;
   }
 
   return children;

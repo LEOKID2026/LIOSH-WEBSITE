@@ -175,6 +175,9 @@ async function main() {
       log.write(`  level options: ${result.advancedAbsent.options.join(", ")}\n`);
     }
     await sleep(SUBJECT_COOLDOWN_MS);
+    if (subjectKey === "history") {
+      await sleep(4000);
+    }
   }
 
   const parentReport = await (async () => {

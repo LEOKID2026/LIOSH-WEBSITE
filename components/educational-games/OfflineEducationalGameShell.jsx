@@ -20,6 +20,8 @@ import MleoLeoGiftsEngine from "./engines/MleoLeoGiftsEngine.jsx";
 import MleoLeoBakeryEngine from "./engines/MleoLeoBakeryEngine.jsx";
 import MleoLeoNumberPathEngine from "./engines/MleoLeoNumberPathEngine.jsx";
 import MleoLeoPizzeriaEngine from "./engines/MleoLeoPizzeriaEngine.jsx";
+import MleoLeoWordTrainEngine from "./engines/MleoLeoWordTrainEngine.jsx";
+import MleoLeoWordDetectiveEngine from "./engines/MleoLeoWordDetectiveEngine.jsx";
 
 const ENGINE_MAP = {
   "recycling-factory": MleoRecyclingFactoryEngine,
@@ -29,6 +31,8 @@ const ENGINE_MAP = {
   "leo-bakery": MleoLeoBakeryEngine,
   "leo-number-path": MleoLeoNumberPathEngine,
   "leo-pizzeria": MleoLeoPizzeriaEngine,
+  "leo-word-train": MleoLeoWordTrainEngine,
+  "leo-word-detective": MleoLeoWordDetectiveEngine,
 };
 
 const OFFLINE_FINISH_SUBTITLE = "משחק מקומי — ללא שמירה וללא פרסים";

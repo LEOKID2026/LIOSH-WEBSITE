@@ -740,6 +740,8 @@ export default function HistoryMaster() {
     adaptiveRef,
     label: displayLevelLabel,
   } = useStudentDisplayLevelPractice("history");
+  const [topic, setTopic] = useState("what_is_history");
+  const [gameActive, setGameActive] = useState(false);
   const handleDisplayLevelChange = useCallback(
     (nextDisplayLevel) => {
       onDisplayLevelChange(nextDisplayLevel);
@@ -747,7 +749,6 @@ export default function HistoryMaster() {
     },
     [onDisplayLevelChange]
   );
-  const [topic, setTopic] = useState("what_is_history");
   const historyTopicsForGuest = useMemo(
     () => (GRADES[grade]?.topics || Object.keys(TOPICS)).filter((t) => t !== "mixed"),
     [grade]
@@ -758,7 +759,6 @@ export default function HistoryMaster() {
     if (!HISTORY_BOOK_GRADE_SET.has(grade)) return null;
     return getHistoryBookHref({ grade, topic, kind: null });
   }, [grade, topic]);
-  const [gameActive, setGameActive] = useState(false);
   const [adaptivePlannerRecommendationView, setAdaptivePlannerRecommendationView] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const questionBookHref = useMemo(() => {
@@ -962,6 +962,8 @@ export default function HistoryMaster() {
   const [playerAvatarImage, setPlayerAvatarImage] = useState(null); // תמונת אווטר מותאמת אישית
   const [showPlayerProfile, setShowPlayerProfile] = useState(false);
   const [practiceFocus, setPracticeFocus] = useState("balanced");
+  const [focusedPracticeMode, setFocusedPracticeMode] = useState("normal");
+  const focusedPracticeModeRef = useRef("normal");
 
   useEffect(() => {
     pendingDiagnosticProbeRef.current = null;
@@ -972,8 +974,6 @@ export default function HistoryMaster() {
     focusedPracticeModeRef.current = focusedPracticeMode;
   }, [focusedPracticeMode]);
 
-  const [focusedPracticeMode, setFocusedPracticeMode] = useState("normal");
-  const focusedPracticeModeRef = useRef("normal");
   const [mistakes, setMistakes] = useState([]);
   const [insightRevision, setInsightRevision] = useState(0);
   const [showPracticeModal, setShowPracticeModal] = useState(false);

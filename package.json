@@ -134,6 +134,8 @@
     "verify:student-account-sync": "node scripts/verify-student-account-sync.mjs",
     "verify:student-dashboard-view": "node scripts/verify-student-dashboard-view.mjs",
     "verify:pwa-manifest-orientation": "node scripts/verify-pwa-manifest-orientation.mjs",
+    "verify:offline-language-games-precache": "node scripts/verify-offline-language-games-precache.mjs",
+    "smoke:offline-language-games": "node scripts/offline-language-games-smoke.mjs",
     "audit:hebrew-subtopics": "tsx scripts/hebrew-subtopic-coverage-audit.mjs",
     "audit:questions": "tsx scripts/generator-deterministic-harness.mjs && tsx scripts/audit-question-banks.mjs",
     "qa:student-question-stem-metadata": "tsx scripts/qa-student-question-stem-metadata.mjs",

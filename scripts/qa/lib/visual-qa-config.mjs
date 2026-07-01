@@ -221,6 +221,8 @@ export const SUBJECT_PLANS = {
     gradeValueKind: "g-key",
     levelSelectTestId: "student-display-level-select",
     loadingMessageHe: "טוען היסטוריה",
+    shellGotoWaitUntil: "load",
+    playerShellTimeoutMs: 180_000,
     topicSelectTestId: "science-topic-select",
     startTestId: "science-start-game",
     surfaceSubject: "science",

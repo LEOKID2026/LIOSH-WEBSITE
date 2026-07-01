@@ -189,6 +189,12 @@
   }
 }
 
+@media (max-width: 899px) {
+  .cardsDesktopRow {
+    display: none !important;
+  }
+}
+
 @media (max-width: 720px) {
   .protoShopGrid {
     grid-template-rows: auto minmax(0, 0.95fr) minmax(0, 1.15fr) auto auto !important;

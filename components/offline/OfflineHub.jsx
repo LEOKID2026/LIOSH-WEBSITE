@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { useOfflineHubUi, OFFLINE_HUB_LAYOUT_THEME } from "../../hooks/useOfflineHubUi.js";
-import Layout from "../Layout";
+import { useOfflineHubUi } from "../../hooks/useOfflineHubUi.js";
 import OfflineHubGameCard from "../games/OfflineHubGameCard.jsx";
 import OfflineHubTileCard from "../games/OfflineHubTileCard.jsx";
+import OfflineHubPageShell from "./OfflineHubPageShell.jsx";
 import {
   OFFLINE_EDUCATIONAL_GAMES,
   OFFLINE_EDUCATIONAL_HUB_ROUTE,
@@ -28,9 +28,9 @@ export default function OfflineHub() {
   const fullGames = STUDENT_OFFLINE_FULL_GAMES_ENABLED;
 
   return (
-    <Layout studentTheme={OFFLINE_HUB_LAYOUT_THEME} studentShell="home">
+    <>
       <OfflinePrecacheWarmup />
-      <main className={GH.pageWrap} dir="rtl">
+      <OfflineHubPageShell>
         <div className={`${GH.container} space-y-5`}>
           <header className="space-y-2 text-center sm:text-right">
             <p className={GH.badge}>🔌 משחקים ללא אינטרנט</p>
@@ -80,8 +80,8 @@ export default function OfflineHub() {
             </>
           ) : null}
         </div>
-      </main>
-    </Layout>
+      </OfflineHubPageShell>
+    </>
   );
 }
 
@@ -90,26 +90,24 @@ export function OfflineSoloGamesHub() {
   const { GH } = useOfflineHubUi();
 
   return (
-    <Layout studentTheme={OFFLINE_HUB_LAYOUT_THEME} studentShell="home">
-      <main className={GH.pageWrap} dir="rtl">
-        <div className={`${GH.container} space-y-4`}>
-          <GamesHubNav offlineHubRoute={OFFLINE_HUB_ROUTE} title="משחקי ליאו — אופליין" GH={GH} />
-          <OfflineReconnectBanner />
-          <section className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4">
-            {OFFLINE_SOLO_GAMES.map((game) => (
-              <OfflineHubTileCard
-                key={game.id}
-                href={game.route}
-                emoji={game.emoji}
-                title={game.titleHe}
-                blurb={game.blurbHe}
-                GH={GH}
-              />
-            ))}
-          </section>
-        </div>
-      </main>
-    </Layout>
+    <OfflineHubPageShell>
+      <div className={`${GH.container} space-y-4`}>
+        <GamesHubNav offlineHubRoute={OFFLINE_HUB_ROUTE} title="משחקי ליאו — אופליין" GH={GH} />
+        <OfflineReconnectBanner />
+        <section className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4">
+          {OFFLINE_SOLO_GAMES.map((game) => (
+            <OfflineHubTileCard
+              key={game.id}
+              href={game.route}
+              emoji={game.emoji}
+              title={game.titleHe}
+              blurb={game.blurbHe}
+              GH={GH}
+            />
+          ))}
+        </section>
+      </div>
+    </OfflineHubPageShell>
   );
 }
 
@@ -118,26 +116,24 @@ export function OfflineEducationalGamesHub() {
   const { GH } = useOfflineHubUi();
 
   return (
-    <Layout studentTheme={OFFLINE_HUB_LAYOUT_THEME} studentShell="home">
-      <main className={GH.pageWrap} dir="rtl">
-        <div className={`${GH.container} space-y-4`}>
-          <GamesHubNav offlineHubRoute={OFFLINE_HUB_ROUTE} title="משחקים חינוכיים — אופליין" GH={GH} />
-          <OfflineReconnectBanner />
-          <section className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4">
-            {OFFLINE_EDUCATIONAL_GAMES.map((game) => (
-              <OfflineHubTileCard
-                key={game.id}
-                href={game.route}
-                emoji={game.emoji}
-                title={game.titleHe}
-                blurb={game.blurbHe}
-                GH={GH}
-              />
-            ))}
-          </section>
-        </div>
-      </main>
-    </Layout>
+    <OfflineHubPageShell>
+      <div className={`${GH.container} space-y-4`}>
+        <GamesHubNav offlineHubRoute={OFFLINE_HUB_ROUTE} title="משחקים חינוכיים — אופליין" GH={GH} />
+        <OfflineReconnectBanner />
+        <section className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4">
+          {OFFLINE_EDUCATIONAL_GAMES.map((game) => (
+            <OfflineHubTileCard
+              key={game.id}
+              href={game.route}
+              emoji={game.emoji}
+              title={game.titleHe}
+              blurb={game.blurbHe}
+              GH={GH}
+            />
+          ))}
+        </section>
+      </div>
+    </OfflineHubPageShell>
   );
 }
 

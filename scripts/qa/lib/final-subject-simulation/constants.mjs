@@ -38,6 +38,7 @@ export const FINAL_SIMULATION_PROFILES = {
     mcqPrefix: "science-mcq-",
     checkAnswerTestId: null,
     regularOnly: false,
+    useSecondStudent: false,
   },
 };
 

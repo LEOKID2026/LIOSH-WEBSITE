@@ -83,7 +83,9 @@ export async function dismissBlockingUi(page, { stopActiveGame = false } = {}) {
   }
 }
 
-function playerShellTimeoutMs() {
+function playerShellTimeoutMs(plan) {
+  const planMs = Number(plan?.playerShellTimeoutMs);
+  if (Number.isFinite(planMs) && planMs > 0) return planMs;
   const raw = Number(process.env.VISUAL_QA_PLAYER_SHELL_TIMEOUT_MS || 120_000);
   return Number.isFinite(raw) && raw > 0 ? raw : 120_000;
 }
@@ -96,10 +98,17 @@ function subjectRouteTimeoutMs() {
 /** Navigate to subject master and wait for player shell — retries reload on cold dev. */
 export async function navigateToPlayerShell(page, plan, baseUrl, { log = () => {}, artifactDir = null, repoRoot = null } = {}) {
   const routeTimeout = subjectRouteTimeoutMs();
-  const shellTimeout = playerShellTimeoutMs();
+  const shellTimeout = playerShellTimeoutMs(plan);
   const targetUrl = `${String(baseUrl).replace(/\/$/, "")}${plan.path}`;
   const player = page.getByTestId(plan.playerTestId);
   const maxAttempts = Math.max(2, Number(process.env.VISUAL_QA_PLAYER_SHELL_ATTEMPTS || 3) || 3);
+  const gotoWaitUntil = plan.shellGotoWaitUntil || "domcontentloaded";
+  const shellTestIds = [
+    plan.playerTestId,
+    "student-display-level-select",
+    "student-display-level-regular-only",
+    plan.topicSelectTestId,
+  ].filter(Boolean);
   let lastError = null;
 
   for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
@@ -107,27 +116,34 @@ export async function navigateToPlayerShell(page, plan, baseUrl, { log = () => {
       if (attempt > 1) {
         log(`player-shell: retry ${attempt}/${maxAttempts} for ${plan.playerTestId}`);
       }
-      await page.goto(targetUrl, { waitUntil: "domcontentloaded", timeout: routeTimeout });
+      await page.goto(targetUrl, { waitUntil: gotoWaitUntil, timeout: routeTimeout });
       await stopActiveGameIfAny(page);
       await dismissBlockingUi(page);
       if (plan.loadingMessageHe) {
         await page
           .getByText(plan.loadingMessageHe, { exact: false })
-          .waitFor({ state: "detached", timeout: shellTimeout })
+          .waitFor({ state: "detached", timeout: Math.min(shellTimeout, 90_000) })
           .catch(() => {});
       }
       await page.waitForTimeout(800);
-      const shellReady = player
-        .or(page.getByTestId("student-display-level-select"))
-        .or(page.getByTestId("student-display-level-regular-only"));
-      await shellReady.first().waitFor({ state: "visible", timeout: shellTimeout });
+      await page.waitForFunction(
+        (testIds) =>
+          testIds.some((id) => {
+            const el = document.querySelector(`[data-testid="${id}"]`);
+            if (!el) return false;
+            const rect = el.getBoundingClientRect();
+            return rect.width > 0 && rect.height > 0;
+          }),
+        shellTestIds,
+        { timeout: shellTimeout }
+      );
       return;
     } catch (error) {
       lastError = error;
       if (attempt < maxAttempts) {
         await stopActiveGameIfAny(page).catch(() => {});
-        await page.goto(targetUrl, { waitUntil: "domcontentloaded", timeout: routeTimeout }).catch(() =>
-          page.reload({ waitUntil: "domcontentloaded", timeout: routeTimeout })
+        await page.goto(targetUrl, { waitUntil: gotoWaitUntil, timeout: routeTimeout }).catch(() =>
+          page.reload({ waitUntil: gotoWaitUntil, timeout: routeTimeout })
         );
         await page.waitForTimeout(1500);
       }

@@ -91,6 +91,8 @@ const LEO_NUMBER_PATH_METRIC_KEYS = Object.freeze([
   "completedAllTasks",
 ]);
 
+const LEO_LANGUAGE_TASK_METRIC_KEYS = LEO_NUMBER_PATH_METRIC_KEYS;
+
 function clampMetricNumber(value, min, max) {
   const n = Number(value);
   if (!Number.isFinite(n)) return null;
@@ -310,6 +312,48 @@ function normalizeLeoNumberPathMetrics(raw) {
   return base;
 }
 
+function normalizeLeoLanguageTaskMetrics(raw, gameKey) {
+  const base = normalizeBaseMetrics(raw, gameKey);
+  if (!base) return null;
+
+  for (const key of LEO_LANGUAGE_TASK_METRIC_KEYS) {
+    if (key === "completedAllTasks") {
+      base.completedAllTasks = raw.completedAllTasks === true;
+      continue;
+    }
+    if (raw[key] != null) {
+      const val = clampMetricNumber(raw[key], 0, key === "accuracy" ? 1 : 10000);
+      if (val == null) return null;
+      base[key] = key === "accuracy" ? val : Math.floor(val);
+    }
+  }
+
+  if (base.tasksTotal == null) base.tasksTotal = 20;
+  if (base.mistakes == null && base.failedAttempts != null) {
+    base.mistakes = base.failedAttempts;
+  }
+
+  if (base.accuracy == null && base.successfulTasks != null) {
+    base.accuracy = (base.successfulTasks ?? 0) / Math.max(1, base.tasksReached ?? 1);
+  }
+
+  if (base.completedAllTasks == null && base.successfulTasks != null && base.tasksTotal != null) {
+    base.completedAllTasks = base.successfulTasks >= base.tasksTotal;
+  }
+
+  base.positiveProgress = base.successfulTasks ?? 0;
+
+  return base;
+}
+
+function normalizeLeoWordTrainMetrics(raw) {
+  return normalizeLeoLanguageTaskMetrics(raw, "leo-word-train");
+}
+
+function normalizeLeoWordDetectiveMetrics(raw) {
+  return normalizeLeoLanguageTaskMetrics(raw, "leo-word-detective");
+}
+
 function normalizeMetrics(raw, gameKey) {
   if (!raw || typeof raw !== "object") return null;
   const key = String(gameKey || raw.gameKey || "").trim().toLowerCase();
@@ -319,6 +363,8 @@ function normalizeMetrics(raw, gameKey) {
   if (key === "leo-gifts") return normalizeLeoGiftsMetrics(raw);
   if (key === "leo-bakery") return normalizeLeoBakeryMetrics(raw);
   if (key === "leo-number-path") return normalizeLeoNumberPathMetrics(raw);
+  if (key === "leo-word-train") return normalizeLeoWordTrainMetrics(raw);
+  if (key === "leo-word-detective") return normalizeLeoWordDetectiveMetrics(raw);
   if (key === "recycling-factory") return normalizeRecyclingFactoryMetrics(raw);
   return null;
 }
