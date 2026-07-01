@@ -1,104 +1,179 @@
 /** @typedef {'easy' | 'medium' | 'hard'} DifficultyId */
 
 /**
- * @typedef {Object} WordDetectiveTask
- * @property {string} id
- * @property {'first_letter'|'fill_blank'|'image_word'|'starts_with'|'fill_sentence'|'plural'|'feminine'|'word_family'|'context'|'passage_q'|'title_pick'|'meaning'} type
- * @property {string} caseLabel
- * @property {string} prompt
- * @property {string} [emoji]
- * @property {string[]} [options]
- * @property {number} [correctIndex]
- * @property {string} [passage]
+ * @typedef {{ id: string, label: string, sub?: string, icon?: string }} DetectiveZone
+ * @typedef {{ id: string, label: string }} DetectivePiece
+ * @typedef {{
+ *   id: string,
+ *   type: string,
+ *   caseLabel: string,
+ *   missionHe: string,
+ *   passage?: string,
+ *   emoji?: string,
+ *   zones: DetectiveZone[],
+ *   pieces: DetectivePiece[],
+ *   solution: Record<string, string>,
+ * }} DetectiveTask
  */
 
 import { LANGUAGE_PROTOTYPE_TASKS, shuffleTasks } from "../shared/language-prototype-config.js";
 
-/** @type {Record<DifficultyId, WordDetectiveTask[]>} */
+/** @param {DetectivePiece[]} pieces */
+function shufflePieces(pieces) {
+  return shuffleTasks(pieces);
+}
+
+/** @type {Record<DifficultyId, DetectiveTask[]>} */
 export const WORD_DETECTIVE_TASKS = {
   easy: [
     {
       id: "e1",
-      type: "first_letter",
+      type: "letter_drop",
       caseLabel: "תיק #1",
-      prompt: "איזו אות מתחילה את המילה כלב?",
-      options: ["כ", "ל", "ב", "ח"],
-      correctIndex: 0,
+      missionHe: "גררו אות פותחת ללוח החקירה",
+      emoji: "🐕",
+      zones: [{ id: "z1", label: "אות פותחת", icon: "🔤" }],
+      pieces: shufflePieces([
+        { id: "p1", label: "כ" },
+        { id: "p2", label: "ל" },
+        { id: "p3", label: "ב" },
+        { id: "p4", label: "ח" },
+      ]),
+      solution: { z1: "p1" },
     },
     {
       id: "e2",
-      type: "fill_blank",
+      type: "fill_gap",
       caseLabel: "תיק #2",
-      prompt: "השלימו: שו_חן",
-      options: ["ל", "ר", "מ", "נ"],
-      correctIndex: 0,
+      missionHe: "השלימו: שו_חן — גררו אות לחלל",
+      zones: [{ id: "z1", label: "אות חסרה", icon: "🧩" }],
+      pieces: shufflePieces([
+        { id: "p1", label: "ל" },
+        { id: "p2", label: "ר" },
+        { id: "p3", label: "מ" },
+        { id: "p4", label: "נ" },
+      ]),
+      solution: { z1: "p1" },
     },
     {
       id: "e3",
       type: "image_word",
       caseLabel: "תיק #3",
-      prompt: "בחרו את המילה שמתאימה לתמונה",
+      missionHe: "גררו את המילה המתאימה לתמונה",
       emoji: "🏠",
-      options: ["בית", "כיסא", "ענן"],
-      correctIndex: 0,
+      zones: [{ id: "z1", label: "ראיה", icon: "📌" }],
+      pieces: shufflePieces([
+        { id: "p1", label: "בית" },
+        { id: "p2", label: "כיסא" },
+        { id: "p3", label: "ענן" },
+        { id: "p4", label: "רכב" },
+      ]),
+      solution: { z1: "p1" },
     },
     {
       id: "e4",
-      type: "starts_with",
+      type: "sort_letter",
       caseLabel: "תיק #4",
-      prompt: "איזו מילה מתחילה באות מ׳?",
-      options: ["מים", "שולחן", "כלב", "ספר"],
-      correctIndex: 0,
+      missionHe: "גררו מילה שמתחילה ב־מ׳ לתיקייה",
+      zones: [
+        { id: "zM", label: "מתחיל ב־מ׳", icon: "📁" },
+        { id: "zX", label: "לא מתאים", icon: "🗑️" },
+      ],
+      pieces: shufflePieces([
+        { id: "p1", label: "מים" },
+        { id: "p2", label: "כלב" },
+        { id: "p3", label: "מלך" },
+        { id: "p4", label: "ספר" },
+      ]),
+      solution: { zM: "p1" },
     },
     {
       id: "e5",
-      type: "image_word",
+      type: "letter_drop",
       caseLabel: "תיק #5",
-      prompt: "בחרו את המילה שמתאימה לתמונה",
+      missionHe: "גררו אות פותחת — חתול",
       emoji: "🐱",
-      options: ["חתול", "עץ", "רכב"],
-      correctIndex: 0,
+      zones: [{ id: "z1", label: "אות פותחת", icon: "🔤" }],
+      pieces: shufflePieces([
+        { id: "p1", label: "ח" },
+        { id: "p2", label: "ת" },
+        { id: "p3", label: "ל" },
+        { id: "p4", label: "ב" },
+      ]),
+      solution: { z1: "p1" },
     },
     {
       id: "e6",
-      type: "first_letter",
+      type: "image_word",
       caseLabel: "תיק #6",
-      prompt: "איזו אות מתחילה את המילה בית?",
-      options: ["ב", "י", "ת", "ש"],
-      correctIndex: 0,
+      missionHe: "גררו מילה לתמונה",
+      emoji: "🍎",
+      zones: [{ id: "z1", label: "ראיה", icon: "📌" }],
+      pieces: shufflePieces([
+        { id: "p1", label: "תפוח" },
+        { id: "p2", label: "שולחן" },
+        { id: "p3", label: "גשם" },
+        { id: "p4", label: "עץ" },
+      ]),
+      solution: { z1: "p1" },
     },
     {
       id: "e7",
-      type: "fill_blank",
+      type: "fill_gap",
       caseLabel: "תיק #7",
-      prompt: "הילד שתה ___",
-      options: ["מים", "שולחן", "רץ"],
-      correctIndex: 0,
+      missionHe: "הילד שתה ___ — גררו מילה",
+      zones: [{ id: "z1", label: "ראיה", icon: "📌" }],
+      pieces: shufflePieces([
+        { id: "p1", label: "מים" },
+        { id: "p2", label: "שולחן" },
+        { id: "p3", label: "רץ" },
+        { id: "p4", label: "כחול" },
+      ]),
+      solution: { z1: "p1" },
     },
     {
       id: "e8",
-      type: "image_word",
+      type: "letter_drop",
       caseLabel: "תיק #8",
-      prompt: "בחרו את המילה שמתאימה לתמונה",
-      emoji: "🍎",
-      options: ["תפוח", "כיסא", "גשם"],
-      correctIndex: 0,
+      missionHe: "גררו אות פותחת — בית",
+      emoji: "🏠",
+      zones: [{ id: "z1", label: "אות פותחת", icon: "🔤" }],
+      pieces: shufflePieces([
+        { id: "p1", label: "ב" },
+        { id: "p2", label: "י" },
+        { id: "p3", label: "ת" },
+        { id: "p4", label: "ש" },
+      ]),
+      solution: { z1: "p1" },
     },
     {
       id: "e9",
-      type: "starts_with",
+      type: "sort_letter",
       caseLabel: "תיק #9",
-      prompt: "איזו מילה מתחילה באות ס׳?",
-      options: ["ספר", "כלב", "מים", "ענן"],
-      correctIndex: 0,
+      missionHe: "גררו מילה שמתחילה ב־ס׳",
+      zones: [{ id: "zS", label: "מתחיל ב־ס׳", icon: "📁" }],
+      pieces: shufflePieces([
+        { id: "p1", label: "ספר" },
+        { id: "p2", label: "כלב" },
+        { id: "p3", label: "מים" },
+        { id: "p4", label: "ענן" },
+      ]),
+      solution: { zS: "p1" },
     },
     {
       id: "e10",
-      type: "fill_blank",
+      type: "image_word",
       caseLabel: "תיק #10",
-      prompt: "הכלב רץ ב___",
-      options: ["גן", "אכל", "כחול"],
-      correctIndex: 0,
+      missionHe: "גררו מילה — עיפרון לכתיבה",
+      emoji: "✏️",
+      zones: [{ id: "z1", label: "ראיה", icon: "📌" }],
+      pieces: shufflePieces([
+        { id: "p1", label: "עיפרון" },
+        { id: "p2", label: "כדור" },
+        { id: "p3", label: "מים" },
+        { id: "p4", label: "ענן" },
+      ]),
+      solution: { z1: "p1" },
     },
   ],
   medium: [
@@ -106,193 +181,330 @@ export const WORD_DETECTIVE_TASKS = {
       id: "m1",
       type: "fill_sentence",
       caseLabel: "תיק #1",
-      prompt: "השלימו: הילדה ___ ספר.",
-      options: ["קוראת", "רצה", "כחול"],
-      correctIndex: 0,
+      missionHe: "גררו מילה חסרה: הילדה ___ ספר",
+      zones: [{ id: "z1", label: "חלל במשפט", icon: "📝" }],
+      pieces: shufflePieces([
+        { id: "p1", label: "קוראת" },
+        { id: "p2", label: "רצה" },
+        { id: "p3", label: "כחול" },
+        { id: "p4", label: "שולחן" },
+      ]),
+      solution: { z1: "p1" },
     },
     {
       id: "m2",
-      type: "plural",
+      type: "sort_plural",
       caseLabel: "תיק #2",
-      prompt: "מה הרבים של ילד?",
-      options: ["ילדים", "ילדה", "ילדות"],
-      correctIndex: 0,
+      missionHe: "גררו את הרבים של «ילד» לתיקייה",
+      zones: [
+        { id: "zPlural", label: "רבים", icon: "📁" },
+        { id: "zSing", label: "יחיד", icon: "📂" },
+      ],
+      pieces: shufflePieces([
+        { id: "p1", label: "ילדים" },
+        { id: "p2", label: "ילדה" },
+        { id: "p3", label: "ילדות" },
+        { id: "p4", label: "ילד" },
+      ]),
+      solution: { zPlural: "p1" },
     },
     {
       id: "m3",
-      type: "feminine",
+      type: "sort_gender",
       caseLabel: "תיק #3",
-      prompt: "מה הנקבה של גדול?",
-      options: ["גדולה", "גדולים", "גדל"],
-      correctIndex: 0,
+      missionHe: "גררו נקבה של «גדול»",
+      zones: [
+        { id: "zFem", label: "נקבה", icon: "📁" },
+        { id: "zMasc", label: "זכר", icon: "📂" },
+      ],
+      pieces: shufflePieces([
+        { id: "p1", label: "גדולה" },
+        { id: "p2", label: "גדולים" },
+        { id: "p3", label: "גדל" },
+        { id: "p4", label: "גדול" },
+      ]),
+      solution: { zFem: "p1" },
     },
     {
       id: "m4",
       type: "word_family",
       caseLabel: "תיק #4",
-      prompt: 'איזו מילה שייכת למשפחה של "כתב"?',
-      options: ["כתיבה", "שולחן", "ריצה"],
-      correctIndex: 0,
+      missionHe: "גררו מילה ממשפחת «כתב»",
+      zones: [{ id: "zFam", label: "משפחת כתב", icon: "🧬" }],
+      pieces: shufflePieces([
+        { id: "p1", label: "כתיבה" },
+        { id: "p2", label: "שולחן" },
+        { id: "p3", label: "ריצה" },
+        { id: "p4", label: "מכתב" },
+      ]),
+      solution: { zFam: "p1" },
     },
     {
       id: "m5",
-      type: "context",
+      type: "fill_sentence",
       caseLabel: "תיק #5",
-      prompt: "בחרו מילה שמתאימה למשפט: הגשם ירד ולכן לקחתי ___",
-      options: ["מטרייה", "גלידה", "כדור"],
-      correctIndex: 0,
+      missionHe: "גררו מילה: הגשם ירד — לקחתי ___",
+      zones: [{ id: "z1", label: "ראיה", icon: "📌" }],
+      pieces: shufflePieces([
+        { id: "p1", label: "מטרייה" },
+        { id: "p2", label: "גלידה" },
+        { id: "p3", label: "כדור" },
+        { id: "p4", label: "ספר" },
+      ]),
+      solution: { z1: "p1" },
     },
     {
       id: "m6",
-      type: "fill_sentence",
+      type: "sort_plural",
       caseLabel: "תיק #6",
-      prompt: "השלימו: אמא ___ אוכל.",
-      options: ["מבשלת", "רצה", "כחול"],
-      correctIndex: 0,
+      missionHe: "מה הרבים של «ספר»?",
+      zones: [{ id: "zPlural", label: "רבים", icon: "📁" }],
+      pieces: shufflePieces([
+        { id: "p1", label: "ספרים" },
+        { id: "p2", label: "ספרה" },
+        { id: "p3", label: "ספרות" },
+        { id: "p4", label: "ספר" },
+      ]),
+      solution: { zPlural: "p1" },
     },
     {
       id: "m7",
-      type: "plural",
+      type: "word_family",
       caseLabel: "תיק #7",
-      prompt: "מה הרבים של ספר?",
-      options: ["ספרים", "ספרה", "ספרות"],
-      correctIndex: 0,
+      missionHe: "משפחת «למד» — גררו מילה",
+      zones: [{ id: "zFam", label: "משפחת למד", icon: "🧬" }],
+      pieces: shufflePieces([
+        { id: "p1", label: "לימוד" },
+        { id: "p2", label: "ענן" },
+        { id: "p3", label: "רכב" },
+        { id: "p4", label: "שולחן" },
+      ]),
+      solution: { zFam: "p1" },
     },
     {
       id: "m8",
-      type: "word_family",
+      type: "sort_gender",
       caseLabel: "תיק #8",
-      prompt: 'איזו מילה שייכת למשפחה של "למד"?',
-      options: ["לימוד", "ענן", "רכב"],
-      correctIndex: 0,
+      missionHe: "נקבה של «חכם»",
+      zones: [{ id: "zFem", label: "נקבה", icon: "📁" }],
+      pieces: shufflePieces([
+        { id: "p1", label: "חכמה" },
+        { id: "p2", label: "חכמים" },
+        { id: "p3", label: "חכמו" },
+        { id: "p4", label: "חכם" },
+      ]),
+      solution: { zFem: "p1" },
     },
     {
       id: "m9",
-      type: "context",
+      type: "fill_sentence",
       caseLabel: "תיק #9",
-      prompt: "היה קר ולכן לבשתי ___",
-      options: ["מעיל", "בגד ים", "כובע קיץ"],
-      correctIndex: 0,
+      missionHe: "היה קר — לבשתי ___",
+      zones: [{ id: "z1", label: "ראיה", icon: "📌" }],
+      pieces: shufflePieces([
+        { id: "p1", label: "מעיל" },
+        { id: "p2", label: "בגד ים" },
+        { id: "p3", label: "כובע קיץ" },
+        { id: "p4", label: "גלידה" },
+      ]),
+      solution: { z1: "p1" },
     },
     {
       id: "m10",
-      type: "feminine",
+      type: "fill_sentence",
       caseLabel: "תיק #10",
-      prompt: "מה הנקבה של חכם?",
-      options: ["חכמה", "חכמים", "חכמו"],
-      correctIndex: 0,
+      missionHe: "אמא ___ אוכל",
+      zones: [{ id: "z1", label: "חלל במשפט", icon: "📝" }],
+      pieces: shufflePieces([
+        { id: "p1", label: "מבשלת" },
+        { id: "p2", label: "רצה" },
+        { id: "p3", label: "כחול" },
+        { id: "p4", label: "גשם" },
+      ]),
+      solution: { z1: "p1" },
     },
   ],
   hard: [
     {
       id: "h1",
-      type: "passage_q",
+      type: "event_order",
       caseLabel: "תיק #1",
-      prompt: "מה קרה קודם?",
-      passage:
-        "דני יצא מהבית עם תיק. הוא הלך לגן ושיחק עם חברים. אחר כך חזר הביתה לארוחת צהריים.",
-      options: ["דני יצא מהבית", "דני חזר הביתה", "דני אכל ארוחת ערב"],
-      correctIndex: 0,
+      missionHe: "סדרו אירועים — גררו ללוח",
+      passage: "דני יצא מהבית. הלך לגן ושיחק. אחר כך חזר לארוחת צהריים.",
+      zones: [
+        { id: "z0", label: "קודם", icon: "1️⃣" },
+        { id: "z1", label: "אחר כך", icon: "2️⃣" },
+        { id: "z2", label: "בסוף", icon: "3️⃣" },
+      ],
+      pieces: shufflePieces([
+        { id: "p1", label: "יצא מהבית" },
+        { id: "p2", label: "שיחק בגן" },
+        { id: "p3", label: "חזר לארוחה" },
+        { id: "p4", label: "הלך לישון" },
+      ]),
+      solution: { z0: "p1", z1: "p2", z2: "p3" },
     },
     {
       id: "h2",
-      type: "passage_q",
+      type: "title_stamp",
       caseLabel: "תיק #2",
-      prompt: "למה הילד חזר הביתה?",
-      passage:
-        "דני יצא מהבית עם תיק. הוא הלך לגן ושיחק עם חברים. אחר כך חזר הביתה לארוחת צהריים.",
-      options: ["לארוחת צהריים", "לישון", "לקנות נעליים"],
-      correctIndex: 0,
+      missionHe: "גררו כותרת מתאימה לראש התיק",
+      passage: "מיה אהבה לקרוא ספרים. כל ערב ישבה בפינה עם ספר חדש.",
+      zones: [{ id: "zTitle", label: "כותרת התיק", icon: "📋" }],
+      pieces: shufflePieces([
+        { id: "p1", label: "מיה אוהבת לקרוא" },
+        { id: "p2", label: "מיה הולכת לים" },
+        { id: "p3", label: "מיה קונה נעליים" },
+        { id: "p4", label: "יום גשום" },
+      ]),
+      solution: { zTitle: "p1" },
     },
     {
       id: "h3",
-      type: "title_pick",
+      type: "conclusion",
       caseLabel: "תיק #3",
-      prompt: "איזו כותרת מתאימה לקטע?",
-      passage:
-        "מיה אהבה לקרוא ספרים. כל ערב היא ישבה בפינה עם ספר חדש. הספרים לימדו אותה דברים חדשים.",
-      options: ["מיה אוהבת לקרוא", "מיה הולכת לים", "מיה קונה נעליים"],
-      correctIndex: 0,
+      missionHe: "למה דני חזר הביתה?",
+      passage: "דני יצא מהבית עם תיק. הלך לגן ושיחק עם חברים. אחר כך חזר הביתה לארוחת צהריים.",
+      zones: [{ id: "z1", label: "מסקנה", icon: "🎯" }],
+      pieces: shufflePieces([
+        { id: "p1", label: "לארוחת צהריים" },
+        { id: "p2", label: "לישון" },
+        { id: "p3", label: "לקנות נעליים" },
+        { id: "p4", label: "לשחות בים" },
+      ]),
+      solution: { z1: "p1" },
     },
     {
       id: "h4",
-      type: "meaning",
+      type: "conclusion",
       caseLabel: "תיק #4",
-      prompt: "מה אפשר להבין מהקטע?",
-      passage:
-        "הגשם ירד חזק. הילדים נשארו בבית ושיחקו במשחקי קופסה. אחרי הגשם יצא קשת בענן.",
-      options: ["הילדים נשארו בבית בגלל הגשם", "הילדים שחו בים", "הילדים טסו לחו״ל"],
-      correctIndex: 0,
+      missionHe: "מה אפשר להבין מהקטע?",
+      passage: "הגשם ירד חזק. הילדים נשארו בבית ושיחקו במשחקי קופסה.",
+      zones: [{ id: "z1", label: "מסקנה", icon: "🎯" }],
+      pieces: shufflePieces([
+        { id: "p1", label: "נשארו בבית בגלל הגשם" },
+        { id: "p2", label: "שחו בים" },
+        { id: "p3", label: "טסו לחו״ל" },
+        { id: "p4", label: "קנו אופניים" },
+      ]),
+      solution: { z1: "p1" },
     },
     {
       id: "h5",
-      type: "passage_q",
+      type: "event_order",
       caseLabel: "תיק #5",
-      prompt: "מה עשו הילדים כשירד גשם?",
-      passage:
-        "הגשם ירד חזק. הילדים נשארו בבית ושיחקו במשחקי קופסה. אחרי הגשם יצא קשת בענן.",
-      options: ["שיחקו במשחקי קופסה", "שחו בים", "רכבו על אופניים"],
-      correctIndex: 0,
+      missionHe: "סדרו מה קרה בגשם",
+      passage: "הגשם ירד. הילדים שיחקו בבית. אחרי הגשם יצאה קשת.",
+      zones: [
+        { id: "z0", label: "קודם", icon: "1️⃣" },
+        { id: "z1", label: "אחר כך", icon: "2️⃣" },
+        { id: "z2", label: "בסוף", icon: "3️⃣" },
+      ],
+      pieces: shufflePieces([
+        { id: "p1", label: "ירד גשם" },
+        { id: "p2", label: "שיחקו בבית" },
+        { id: "p3", label: "יצאה קשת" },
+        { id: "p4", label: "הלכו לים" },
+      ]),
+      solution: { z0: "p1", z1: "p2", z2: "p3" },
     },
     {
       id: "h6",
-      type: "title_pick",
+      type: "title_stamp",
       caseLabel: "תיק #6",
-      prompt: "איזו כותרת מתאימה לקטע?",
-      passage:
-        "יואב למד לרכוב על אופניים. בהתחלה נפל, אבל המשיך להתאמן. בסוף רכב לבד בכביש.",
-      options: ["יואב לומד לרכוב", "יואב קונה בגדים", "יואב אוכל ארוחת צהריים"],
-      correctIndex: 0,
+      missionHe: "בחרו כותרת לקטע",
+      passage: "יואב למד לרכוב על אופניים. בהתחלה נפל, אבל המשיך. בסוף רכב לבד.",
+      zones: [{ id: "zTitle", label: "כותרת", icon: "📋" }],
+      pieces: shufflePieces([
+        { id: "p1", label: "יואב לומד לרכוב" },
+        { id: "p2", label: "יואב קונה בגדים" },
+        { id: "p3", label: "יואב אוכל צהריים" },
+        { id: "p4", label: "טיול ביער" },
+      ]),
+      solution: { zTitle: "p1" },
     },
     {
       id: "h7",
       type: "meaning",
       caseLabel: "תיק #7",
-      prompt: "מה פירוש המילה «התאמן» לפי המשפט?",
-      passage:
-        "יואב למד לרכוב על אופניים. בהתחלה נפל, אבל המשיך להתאמן. בסוף רכב לבד בכביש.",
-      options: ["תרגל שוב ושוב", "ישן", "אכל"],
-      correctIndex: 0,
+      missionHe: "פירוש «התאמן» לפי הקטע",
+      passage: "יואב למד לרכוב. נפל, אבל המשיך להתאמן. בסוף רכב לבד.",
+      zones: [{ id: "z1", label: "פירוש", icon: "📖" }],
+      pieces: shufflePieces([
+        { id: "p1", label: "תרגל שוב ושוב" },
+        { id: "p2", label: "ישן" },
+        { id: "p3", label: "אכל" },
+        { id: "p4", label: "רקד" },
+      ]),
+      solution: { z1: "p1" },
     },
     {
       id: "h8",
-      type: "passage_q",
+      type: "conclusion",
       caseLabel: "תיק #8",
-      prompt: "מי עזר לסבתא?",
-      passage:
-        "סבתא ביקשה עזרה בשוק. נועה ליוותה אותה וסייעה לשאת את השקיות. סבתא חיבקה אותה בחום.",
-      options: ["נועה", "הכלב", "השכן"],
-      correctIndex: 0,
+      missionHe: "מי עזר לסבתא?",
+      passage: "סבתא ביקשה עזרה בשוק. נועה ליוותה אותה וסייעה לשאת שקיות.",
+      zones: [{ id: "z1", label: "מסקנה", icon: "🎯" }],
+      pieces: shufflePieces([
+        { id: "p1", label: "נועה" },
+        { id: "p2", label: "הכלב" },
+        { id: "p3", label: "השכן" },
+        { id: "p4", label: "אף אחד" },
+      ]),
+      solution: { z1: "p1" },
     },
     {
       id: "h9",
-      type: "passage_q",
+      type: "conclusion",
       caseLabel: "תיק #9",
-      prompt: "מה קרה אחר כך?",
-      passage:
-        "סבתא ביקשה עזרה בשוק. נועה ליוותה אותה וסייעה לשאת את השקיות. סבתא חיבקה אותה בחום.",
-      options: ["סבתא חיבקה את נועה", "נועה הלכה לישון", "סבתא קנתה רכב"],
-      correctIndex: 0,
+      missionHe: "מה למדנו על יואב?",
+      passage: "יואב נפל מהאופניים אבל המשיך להתאמן עד שרכב לבד.",
+      zones: [{ id: "z1", label: "מסקנה", icon: "🎯" }],
+      pieces: shufflePieces([
+        { id: "p1", label: "הוא לא ויתר" },
+        { id: "p2", label: "הוא מכר את האופניים" },
+        { id: "p3", label: "הוא נשאר בבית" },
+        { id: "p4", label: "הוא פחד ממים" },
+      ]),
+      solution: { z1: "p1" },
     },
     {
       id: "h10",
-      type: "title_pick",
+      type: "title_stamp",
       caseLabel: "תיק #10",
-      prompt: "איזו כותרת מתאימה לקטע?",
-      passage:
-        "הגשם ירד חזק. הילדים נשארו בבית ושיחקו במשחקי קופסה. אחרי הגשם יצא קשת בענן.",
-      options: ["יום גשום ומשחקים", "טיול ביער", "קנייה בחנות"],
-      correctIndex: 0,
+      missionHe: "כותרת לקטע הגשם",
+      passage: "הגשם ירד חזק. הילדים שיחקו במשחקי קופסה. אחרי הגשם יצאה קשת.",
+      zones: [{ id: "zTitle", label: "כותרת", icon: "📋" }],
+      pieces: shufflePieces([
+        { id: "p1", label: "יום גשום ומשחקים" },
+        { id: "p2", label: "טיול ביער" },
+        { id: "p3", label: "קנייה בחנות" },
+        { id: "p4", label: "שיעור שחייה" },
+      ]),
+      solution: { zTitle: "p1" },
     },
   ],
 };
 
+/** @param {DetectiveTask} task @param {Record<string, string>} zoneFills zoneId -> pieceId */
+export function validateDetectiveTask(task, zoneFills) {
+  for (const [zoneId, pieceId] of Object.entries(task.solution)) {
+    if (zoneFills[zoneId] !== pieceId) return false;
+  }
+  return Object.keys(task.solution).every((z) => zoneFills[z]);
+}
+
 export function detectiveFeedback(ok) {
-  return ok ? "כל הכבוד! מצאתם את הרמז הנכון 🕵️" : "כמעט — נסו לחשוב על הרמז שוב";
+  return ok ? "🔖 התיק נפתר!" : "הראיה לא מתאימה — נסו שוב";
 }
 
 /** @param {DifficultyId} difficulty */
 export function pickWordDetectiveTasks(difficulty) {
   const pool = WORD_DETECTIVE_TASKS[difficulty] ?? WORD_DETECTIVE_TASKS.easy;
   return shuffleTasks(pool).slice(0, LANGUAGE_PROTOTYPE_TASKS);
+}
+
+/** @param {DetectiveTask} task @param {Record<string, string>} zoneFills */
+export function usedPieceIds(task, zoneFills) {
+  return new Set(Object.values(zoneFills));
 }

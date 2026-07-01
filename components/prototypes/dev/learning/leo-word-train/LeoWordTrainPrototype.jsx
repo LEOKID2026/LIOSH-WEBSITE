@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import EducationalDifficultyGradeHint from "../../../../educational-games/EducationalDifficultyGradeHint.jsx";
 import shop from "../../../../educational-games/shared/educational-game-shop-layout.module.css";
 import { calcTimeBonus } from "../../../../../lib/educational-games/continuous-play.js";
@@ -9,28 +9,10 @@ import {
   LANGUAGE_PROTOTYPE_SCORE,
   LANGUAGE_PROTOTYPE_TASKS,
 } from "../shared/language-prototype-config.js";
-import {
-  letterBankForTask,
-  pickWordTrainTasks,
-  trainFeedback,
-  trainSlotsCount,
-  validateTrainTask,
-} from "./leo-word-train-data.js";
+import { pickWordTrainTasks, trainFeedback, validateTrainTask } from "./leo-word-train-data.js";
 import styles from "./LeoWordTrainPrototype.module.css";
 
 /** @typedef {import('../shared/language-prototype-config.js').DifficultyId} DifficultyId */
-
-const OPTION_TYPES = new Set([
-  "case_match",
-  "first_letter",
-  "hebrew_match",
-  "fill_sentence",
-  "sentence_image",
-  "phrase_pick",
-  "context_pick",
-]);
-
-const TRAIN_TYPES = new Set(["image_word", "build_word", "fill_letter", "sentence_order"]);
 
 export default function LeoWordTrainPrototype({ backHref = "/dev/learning-game-prototypes" }) {
   const timerPausedRef = useRef(false);
@@ -39,12 +21,11 @@ export default function LeoWordTrainPrototype({ backHref = "/dev/learning-game-p
 
   const [phase, setPhase] = useState(/** @type {'intro'|'play'|'won'|'lost'} */ ("intro"));
   const [difficulty, setDifficulty] = useState(/** @type {DifficultyId} */ ("easy"));
-  const [tasks, setTasks] = useState(/** @type {import('./leo-word-train-data.js').WordTrainTask[]} */ ([]));
+  const [tasks, setTasks] = useState(/** @type {import('./leo-word-train-data.js').TrainTask[]} */ ([]));
   const [taskIndex, setTaskIndex] = useState(0);
-  const [slots, setSlots] = useState(/** @type {string[]} */ ([]));
-  const [bank, setBank] = useState(/** @type {string[]} */ ([]));
-  const [usedBank, setUsedBank] = useState(/** @type {Set<number>} */ (new Set()));
-  const [selected, setSelected] = useState(/** @type {number|null} */ (null));
+  const [fills, setFills] = useState(/** @type {Record<string, string>} */ ({}));
+  const [pieceToCarriage, setPieceToCarriage] = useState(/** @type {Record<string, string>} */ ({}));
+  const [selectedPiece, setSelectedPiece] = useState(/** @type {string | null} */ (null));
   const [score, setScore] = useState(0);
   const [mistakes, setMistakes] = useState(0);
   const [successCount, setSuccessCount] = useState(0);
@@ -54,42 +35,34 @@ export default function LeoWordTrainPrototype({ backHref = "/dev/learning-game-p
   const [timeLimitSec, setTimeLimitSec] = useState(45);
   const [timeLeft, setTimeLeft] = useState(45);
   const [taskKey, setTaskKey] = useState(0);
+  const [trainAnim, setTrainAnim] = useState(/** @type {'idle'|'depart'|'shake'} */ ("idle"));
 
   const diffConfig = LANGUAGE_PROTOTYPE_DIFFICULTIES[difficulty];
   const task = tasks[taskIndex] ?? null;
-  const needsTrain = task && TRAIN_TYPES.has(task.type);
-  const needsOptions = task && OPTION_TYPES.has(task.type);
-  const slotCount = task ? trainSlotsCount(task) : 0;
 
   mistakesRef.current = mistakes;
 
-  const built = useMemo(() => {
-    if (task?.type === "sentence_order") return slots.join(" ");
-    return slots.join("");
-  }, [slots, task]);
-
   const resetTaskUi = useCallback(() => {
-    setSlots([]);
-    setUsedBank(new Set());
-    setSelected(null);
+    setFills({});
+    setPieceToCarriage({});
+    setSelectedPiece(null);
     setCheckState("idle");
     setFeedback("");
+    setTrainAnim("idle");
     timeoutHandledRef.current = false;
     timerPausedRef.current = false;
   }, []);
 
   const loadTaskTimer = useCallback(() => {
-    const limit = diffConfig.timeSec;
-    setTimeLimitSec(limit);
-    setTimeLeft(limit);
+    setTimeLimitSec(diffConfig.timeSec);
+    setTimeLeft(diffConfig.timeSec);
   }, [diffConfig.timeSec]);
 
   useEffect(() => {
     if (!task) return;
-    if (needsTrain) setBank(letterBankForTask(task));
     resetTaskUi();
     loadTaskTimer();
-  }, [task, needsTrain, resetTaskUi, loadTaskTimer, taskKey]);
+  }, [task, resetTaskUi, loadTaskTimer, taskKey]);
 
   const endRun = useCallback((won) => {
     timerPausedRef.current = true;
@@ -122,12 +95,13 @@ export default function LeoWordTrainPrototype({ backHref = "/dev/learning-game-p
     timeoutHandledRef.current = true;
     timerPausedRef.current = true;
     setCheckState("bad");
-    setFeedback("הזמן נגמר! ננסה תחנה חדשה.");
+    setTrainAnim("shake");
+    setFeedback("הזמן נגמר! הרכבת נשארה בתחנה.");
     registerMistake();
     window.setTimeout(() => {
       if (mistakesRef.current >= diffConfig.maxMistakes) return;
       advanceTask();
-    }, 1400);
+    }, 1600);
   }, [phase, registerMistake, advanceTask, diffConfig.maxMistakes]);
 
   useEffect(() => {
@@ -139,9 +113,7 @@ export default function LeoWordTrainPrototype({ backHref = "/dev/learning-game-p
 
   useEffect(() => {
     if (phase !== "play" || !task || timerPausedRef.current) return undefined;
-    const t = window.setInterval(() => {
-      setTimeLeft((sec) => Math.max(0, sec - 1));
-    }, 1000);
+    const t = window.setInterval(() => setTimeLeft((s) => Math.max(0, s - 1)), 1000);
     return () => window.clearInterval(t);
   }, [phase, task, timeLimitSec, taskKey]);
 
@@ -157,49 +129,80 @@ export default function LeoWordTrainPrototype({ backHref = "/dev/learning-game-p
     setPhase("play");
   }, [difficulty]);
 
-  const tapBank = useCallback(
-    (item, index) => {
-      if (!task || usedBank.has(index) || slots.length >= slotCount) return;
-      setSlots((prev) => [...prev, item]);
-      setUsedBank((u) => new Set(u).add(index));
+  const exitToIntro = useCallback(() => {
+    timerPausedRef.current = true;
+    setTasks([]);
+    setTaskIndex(0);
+    setPhase("intro");
+  }, []);
+
+  const usedPieceIds = new Set(Object.values(pieceToCarriage));
+
+  const placePiece = useCallback(
+    (carriageId) => {
+      if (!task || !selectedPiece || timerPausedRef.current) return;
+      const car = task.carriages.find((c) => c.id === carriageId);
+      if (!car || car.kind !== "slot" || fills[carriageId]) return;
+      const piece = task.pieces.find((p) => p.id === selectedPiece);
+      if (!piece || usedPieceIds.has(piece.id)) return;
+
+      setFills((f) => ({ ...f, [carriageId]: piece.label }));
+      setPieceToCarriage((m) => ({ ...m, [piece.id]: carriageId }));
+      setSelectedPiece(null);
       setCheckState("idle");
       setFeedback("");
     },
-    [task, usedBank, slots.length, slotCount],
+    [task, selectedPiece, fills, usedPieceIds],
   );
 
-  const removeSlot = useCallback(
-    (slotIdx) => {
-      setSlots((prev) => {
-        const next = [...prev];
-        next.splice(slotIdx, 1);
+  const clearCarriage = useCallback(
+    (carriageId) => {
+      if (timerPausedRef.current) return;
+      const label = fills[carriageId];
+      if (!label) return;
+      const pieceEntry = Object.entries(pieceToCarriage).find(([, cid]) => cid === carriageId);
+      setFills((f) => {
+        const next = { ...f };
+        delete next[carriageId];
         return next;
       });
-      if (task?.type !== "sentence_order") setUsedBank(new Set());
+      if (pieceEntry) {
+        const [pid] = pieceEntry;
+        setPieceToCarriage((m) => {
+          const next = { ...m };
+          delete next[pid];
+          return next;
+        });
+      }
       setCheckState("idle");
+      setFeedback("");
     },
-    [task],
+    [fills, pieceToCarriage],
   );
 
-  const clearTrain = useCallback(() => {
-    setSlots([]);
-    setUsedBank(new Set());
-    setSelected(null);
+  const clearAllCarriages = useCallback(() => {
+    if (timerPausedRef.current) return;
+    setFills({});
+    setPieceToCarriage({});
+    setSelectedPiece(null);
     setCheckState("idle");
     setFeedback("");
-    if (task && needsTrain) setBank(letterBankForTask(task));
-  }, [task, needsTrain]);
+    setTrainAnim("idle");
+  }, []);
 
-  const runCheck = useCallback(() => {
+  const runDepart = useCallback(() => {
     if (!task || timerPausedRef.current) return;
-    if (needsOptions && selected == null) return;
-    if (needsTrain && slots.length < slotCount) return;
+    const slotIds = task.carriages.filter((c) => c.kind === "slot").map((c) => c.id);
+    if (slotIds.some((id) => !fills[id])) {
+      setFeedback("מלאו את כל הקרונות הריקים לפני יציאה");
+      return;
+    }
 
-    const ok = validateTrainTask(task, built, selected);
-    if (ok) {
+    if (validateTrainTask(task, fills)) {
       timerPausedRef.current = true;
       const bonus = calcTimeBonus(timeLeft, timeLimitSec);
       setCheckState("ok");
+      setTrainAnim("depart");
       setFeedback(trainFeedback(true));
       setSuccessCount((c) => c + 1);
       setScore((s) => {
@@ -209,33 +212,42 @@ export default function LeoWordTrainPrototype({ backHref = "/dev/learning-game-p
         if (streak === 5) next += LANGUAGE_PROTOTYPE_SCORE.streak5;
         return next;
       });
-      setCurrentStreak((prev) => prev + 1);
-      window.setTimeout(advanceTask, 1400);
+      setCurrentStreak((p) => p + 1);
+      window.setTimeout(advanceTask, 1800);
       return;
     }
 
     setCheckState("bad");
+    setTrainAnim("shake");
     setFeedback(trainFeedback(false));
     registerMistake();
-  }, [
-    task,
-    needsOptions,
-    needsTrain,
-    selected,
-    slots.length,
-    slotCount,
-    built,
-    timeLeft,
-    timeLimitSec,
-    currentStreak,
-    advanceTask,
-    registerMistake,
-  ]);
+    window.setTimeout(() => setTrainAnim("idle"), 700);
+  }, [task, fills, timeLeft, timeLimitSec, currentStreak, advanceTask, registerMistake]);
 
   const feedbackBarClass = [
     shop.feedbackBar,
     checkState === "ok" ? shop.feedbackOk : checkState === "bad" ? shop.feedbackBad : shop.feedbackNeutral,
   ].join(" ");
+
+  const cardButtons =
+    task?.pieces.map((piece) => {
+      const used = usedPieceIds.has(piece.id);
+      return (
+        <button
+          key={piece.id}
+          type="button"
+          className={`${styles.card} ${selectedPiece === piece.id ? styles.cardSelected : ""} ${used ? styles.cardUsed : ""}`}
+          disabled={used || timerPausedRef.current}
+          onClick={() => {
+            if (used) return;
+            setSelectedPiece((cur) => (cur === piece.id ? null : piece.id));
+            setCheckState("idle");
+          }}
+        >
+          {piece.label}
+        </button>
+      );
+    }) ?? null;
 
   return (
     <div className={`${frame.shell} ${frame.shellSky}`} dir="rtl">
@@ -255,21 +267,28 @@ export default function LeoWordTrainPrototype({ backHref = "/dev/learning-game-p
             <span className={`${frame.hudChip} ${styles.hudTime} ${timeLeft <= 8 ? styles.hudTimeWarn : ""}`}>
               ⏱ {timeLeft}s
             </span>
-            <span className={frame.hudChip}>{diffConfig.label}</span>
           </div>
         ) : (
           <div className={frame.hud}>
             <span className={frame.hudChip}>🚂 אבטיפוס</span>
           </div>
         )}
-        <div style={{ minWidth: 40 }} aria-hidden />
+        {phase === "play" ? (
+          <button type="button" className={frame.hudChip} onClick={exitToIntro}>
+            יציאה
+          </button>
+        ) : (
+          <div style={{ minWidth: 40 }} aria-hidden />
+        )}
       </header>
 
       {phase === "intro" ? (
         <div className={frame.screenCenter}>
           <p className={frame.introHero}>🚂🔤</p>
           <h1 className={frame.introTitle}>רכבת המילים של ליאו</h1>
-          <p className={frame.introText}>אנגלית — מלאו קרונות, בחרו אותיות ומילים, והרכבת יוצאת מהתחנה!</p>
+          <p className={frame.introText}>
+            העמיסו קלפים על קרונות הרכבת — אותיות, מילים ומשפטים. כשהרכבת מלאה, היא יוצאת מהתחנה!
+          </p>
           <div className={frame.difficultyRow}>
             {(/** @type {DifficultyId[]} */ (["easy", "medium", "hard"])).map((id) => (
               <button
@@ -284,7 +303,7 @@ export default function LeoWordTrainPrototype({ backHref = "/dev/learning-game-p
           </div>
           <EducationalDifficultyGradeHint className={`${frame.introText} opacity-70`} style={{ fontSize: "0.72rem" }} />
           <p className={frame.introText} style={{ fontSize: "0.78rem" }}>
-            {LANGUAGE_PROTOTYPE_TASKS} תחנות · טיימר לכל משימה · בלי הקלדה
+            {LANGUAGE_PROTOTYPE_TASKS} תחנות · גרירה ולחיצה על קלפים · בלי הקלדה
           </p>
           <button type="button" className={frame.startBtn} onClick={startGame}>
             הרכבת יוצאת 🚂
@@ -294,7 +313,9 @@ export default function LeoWordTrainPrototype({ backHref = "/dev/learning-game-p
 
       {phase === "play" && task ? (
         <div className={shop.shopMain}>
-          <p className={shop.counterLabel}>🚉 תחנה {taskIndex + 1} מתוך {LANGUAGE_PROTOTYPE_TASKS}</p>
+          <p className={shop.counterLabel}>
+            🚉 {task.stationLabel} · יעד {taskIndex + 1}/{LANGUAGE_PROTOTYPE_TASKS}
+          </p>
           <div className={shop.shopGrid} data-educational-workplace-grid="">
             <aside className={shop.customerCol}>
               <div key={taskKey} className={shop.customerCard}>
@@ -304,107 +325,91 @@ export default function LeoWordTrainPrototype({ backHref = "/dev/learning-game-p
                 <div className={shop.customerSpeechWrap}>
                   <p className={shop.customerName}>תחנת המילים</p>
                   <p className={shop.missionText}>
-                    {task.promptHe}
-                    {task.hebrewHint ? (
-                      <span className={shop.missionTicket}>🇮🇱 {task.hebrewHint}</span>
-                    ) : null}
-                    {task.sentenceTemplate ? (
-                      <span className={`${shop.missionTicket} ${styles.templateLine}`} dir="ltr">
-                        {task.sentenceTemplate}
-                      </span>
-                    ) : null}
-                    {task.template ? (
-                      <span className={`${shop.missionTicket} ${styles.templateLine}`} dir="ltr">
-                        {task.template}
-                      </span>
-                    ) : null}
+                    {task.missionHe}
+                    {task.emoji ? <span className={shop.missionTicket}>{task.emoji}</span> : null}
                   </p>
                 </div>
               </div>
             </aside>
 
             <section className={shop.workCol}>
-              {task.emoji ? <span className={styles.emojiHero}>{task.emoji}</span> : null}
-              {needsTrain ? (
-                <>
-                  <div className={styles.trainTrack} dir="ltr">
+              <div className={styles.workWrap}>
+                {trainAnim === "depart" ? <div className={styles.departBanner}>🚂 יוצאים!</div> : null}
+                <div className={styles.trainWorld}>
+                  <span className={styles.steam} aria-hidden>
+                    💨
+                  </span>
+                  <div
+                    className={`${styles.trainRow} ${trainAnim === "depart" ? styles.trainDepart : ""} ${trainAnim === "shake" ? styles.trainShake : ""}`}
+                    dir="ltr"
+                  >
                     <span className={styles.engine}>🚂</span>
-                    {Array.from({ length: slotCount }).map((_, i) => (
-                      <button
-                        key={`slot-${i}`}
-                        type="button"
-                        className={`${styles.carriage} ${!slots[i] ? styles.carriageEmpty : ""}`}
-                        onClick={() => (slots[i] ? removeSlot(i) : undefined)}
-                      >
-                        {slots[i] ?? "?"}
-                      </button>
-                    ))}
+                    {task.carriages.map((car) => {
+                      if (car.kind === "fixed") {
+                        return (
+                          <div key={car.id} className={`${styles.carriage} ${styles.carriageFixed}`}>
+                            <span className={styles.carriageLabel}>{car.content}</span>
+                          </div>
+                        );
+                      }
+                      const filled = fills[car.id];
+                      return (
+                        <button
+                          key={car.id}
+                          type="button"
+                          data-train-slot={car.id}
+                          className={`${styles.carriage} ${styles.carriageSlot} ${filled ? styles.carriageSlotFilled : ""}`}
+                          onClick={() => (filled ? clearCarriage(car.id) : placePiece(car.id))}
+                        >
+                          {filled ? (
+                            <span className={styles.carriageLabel}>{filled}</span>
+                          ) : (
+                            <span className={styles.carriageEmptyMark} aria-hidden />
+                          )}
+                        </button>
+                      );
+                    })}
                   </div>
-                  <div className={styles.wheels} dir="ltr" aria-hidden>
+                  <div className={styles.wheelsRow} dir="ltr" aria-hidden>
                     <span className={styles.wheel} />
                     <span className={styles.wheel} />
+                    <span className={styles.wheel} />
                   </div>
-                </>
-              ) : needsOptions ? (
-                <div className={styles.optionGrid}>
-                  {(task.options ?? []).map((opt, i) => (
-                    <button
-                      key={`${task.id}-${i}`}
-                      type="button"
-                      className={`${styles.optionBtn} ${selected === i ? styles.optionBtnActive : ""}`}
-                      onClick={() => {
-                        setSelected(i);
-                        setCheckState("idle");
-                        setFeedback("");
-                      }}
-                    >
-                      <span className={styles.optionEn}>{opt}</span>
-                    </button>
-                  ))}
+                  <div className={styles.track} aria-hidden />
                 </div>
-              ) : null}
+                <div className={styles.cardsInWork}>
+                  <p className={styles.cardsInWorkTitle}>🎴 קלפים לעמיסה</p>
+                  <div className={styles.cardGrid} dir="ltr">
+                    {cardButtons}
+                  </div>
+                </div>
+              </div>
             </section>
 
             <aside className={shop.sideCol}>
-              {needsTrain ? (
-                <div className={`${frame.panel} ${shop.toolsPanel}`}>
-                  <p className={shop.toolsTitle}>🎴 קלפי אותיות</p>
-                  <div className={styles.letterGrid} dir="ltr">
-                    {bank.map((item, i) => (
-                      <button
-                        key={`${item}-${i}`}
-                        type="button"
-                        className={`${styles.letterBtn} ${usedBank.has(i) ? styles.letterUsed : ""}`}
-                        disabled={usedBank.has(i)}
-                        onClick={() => tapBank(item, i)}
-                      >
-                        {item}
-                      </button>
-                    ))}
-                  </div>
+              <div className={`${frame.panel} ${shop.toolsPanel} ${styles.cardsInSide}`}>
+                <p className={shop.toolsTitle}>🎴 קלפים לעמיסה</p>
+                <p className={shop.feedbackText} style={{ margin: "0 0 0.25rem", fontSize: "0.72rem" }}>
+                  לחצו קלף ואז קרון · לחיצה על קרון מלא מרוקנת
+                </p>
+                <div className={styles.cardGrid} dir="ltr">
+                  {cardButtons}
                 </div>
-              ) : null}
-
-              {feedback || checkState !== "idle" ? (
-                <div className={feedbackBarClass}>
-                  <p className={shop.feedbackText}>{feedback}</p>
-                </div>
-              ) : (
-                <div className={`${shop.feedbackBar} ${shop.feedbackNeutral}`}>
-                  <p className={shop.feedbackText}>
-                    {needsTrain ? "מלאו קרונות ולחצו «בדוק רכבת»" : "בחרו תשובה ולחצו «בדוק רכבת»"}
-                  </p>
-                </div>
-              )}
+              </div>
+              <div className={feedbackBarClass}>
+                <p className={shop.feedbackText}>
+                  {feedback || "העמיסו קלפים על הקרונות ולחצו הוציאו רכבת"}
+                </p>
+              </div>
             </aside>
 
             <div className={shop.bottomBar}>
               <div className={shop.actionRow}>
-                <button type="button" className={shop.primaryBtn} onClick={runCheck}>
-                  בדוק רכבת 🚂
+                <button type="button" className={shop.primaryBtn} disabled={trainAnim === "depart"} onClick={runDepart}>
+                  הוציאו רכבת 🚂
                 </button>
-                <button type="button" className={shop.secondaryBtn} onClick={clearTrain}>
-                  נקה רכבת
+                <button type="button" className={shop.secondaryBtn} disabled={trainAnim === "depart"} onClick={clearAllCarriages}>
+                  נקה קרונות
                 </button>
               </div>
             </div>
@@ -415,7 +420,7 @@ export default function LeoWordTrainPrototype({ backHref = "/dev/learning-game-p
       {phase === "won" ? (
         <div className={frame.screenCenter}>
           <div className={frame.endCard}>
-            <h2 className={frame.endTitle}>🎉 הרכבת הגיעה ליעד!</h2>
+            <h2 className={frame.endTitle}>🎉 כל התחנות הושלמו!</h2>
             <p className={frame.endStat}>⭐ ניקוד: {score}</p>
             <p className={frame.endStat}>✅ הצלחות: {successCount}/{LANGUAGE_PROTOTYPE_TASKS}</p>
             <p className={frame.endStat}>❌ טעויות: {mistakes}</p>
@@ -431,7 +436,7 @@ export default function LeoWordTrainPrototype({ backHref = "/dev/learning-game-p
       {phase === "lost" ? (
         <div className={frame.screenCenter}>
           <div className={frame.endCard}>
-            <h2 className={frame.endTitle}>🚂 סיום משמרת</h2>
+            <h2 className={frame.endTitle}>🚂 הרכבת נעצרה</h2>
             <p className={frame.endStat}>⭐ ניקוד: {score}</p>
             <p className={frame.endStat}>✅ הצלחות: {successCount}</p>
             <p className={frame.endStat}>❌ טעויות: {mistakes}</p>

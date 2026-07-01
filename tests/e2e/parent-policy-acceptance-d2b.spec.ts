@@ -3,9 +3,9 @@ import { test, expect } from "@playwright/test";
 test.describe("Phase D.2B — parent policy acceptance", () => {
   test("A: wrong credentials show Hebrew error, not English", async ({ page }) => {
     await page.goto("/parent/login");
-    await page.getByPlaceholder("אימייל הורה").fill("wrong-parent@example.com");
-    await page.getByPlaceholder("סיסמה").fill("wrong-password-123");
-    await page.locator("form").getByRole("button", { name: "כניסה" }).click();
+    await page.getByTestId("parent-login-identifier").fill("wrong-parent@example.com");
+    await page.getByTestId("parent-login-secret").fill("wrong-password-123");
+    await page.getByTestId("parent-login-submit").click();
 
     const alert = page.locator('[role="alert"]');
     await expect(alert).toBeVisible({ timeout: 15_000 });
@@ -15,11 +15,10 @@ test.describe("Phase D.2B — parent policy acceptance", () => {
 
   test("D: signup no longer requires policy checkbox", async ({ page }) => {
     await page.goto("/parent/login");
-    await page.getByRole("button", { name: "הרשמה" }).click();
 
-    await expect(page.getByPlaceholder("אימייל הורה")).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByTestId("parent-login-identifier")).toBeVisible({ timeout: 10_000 });
     await expect(page.getByTestId("parent-policy-acceptance-checkbox")).toHaveCount(0);
-    await expect(page.getByRole("button", { name: "יצירת חשבון הורה" })).toBeEnabled();
+    await expect(page.getByTestId("parent-signup-submit")).toBeEnabled();
     await expect(page.getByText("בהמשך השימוש ב־Leo Kids")).toBeVisible();
   });
 
@@ -34,6 +33,14 @@ test.describe("Phase D.2B — parent policy acceptance", () => {
     await page.goto("/teacher/login");
     await expect(page.getByTestId("parent-google-sign-in")).toHaveCount(0);
   });
+
+  test("F: single login action row — no duplicate login tabs", async ({ page }) => {
+    await page.goto("/parent/login");
+    await expect(page.getByTestId("parent-google-sign-in")).toBeVisible();
+    await expect(page.getByTestId("parent-login-submit")).toHaveCount(1);
+    await expect(page.getByTestId("parent-signup-submit")).toHaveCount(1);
+    await expect(page.getByRole("tab")).toHaveCount(0);
+  });
 });
 
 test.describe("Phase D.2B — parent policy acceptance (authenticated)", () => {
@@ -44,9 +51,9 @@ test.describe("Phase D.2B — parent policy acceptance (authenticated)", () => {
 
   test("B: parent dashboard opens without policy gate", async ({ page }) => {
     await page.goto("/parent/login");
-    await page.getByPlaceholder("אימייל הורה").fill(email);
-    await page.getByPlaceholder("סיסמה").fill(password);
-    await page.locator("form").getByRole("button", { name: "כניסה" }).click();
+    await page.getByTestId("parent-login-identifier").fill(email);
+    await page.getByTestId("parent-login-secret").fill(password);
+    await page.getByTestId("parent-login-submit").click();
 
     await page.waitForURL("**/parent/**", { timeout: 20_000 });
     await expect(page.getByRole("heading", { name: "דשבורד הורים" })).toBeVisible({

@@ -9,7 +9,11 @@ import {
   LANGUAGE_PROTOTYPE_SCORE,
   LANGUAGE_PROTOTYPE_TASKS,
 } from "../shared/language-prototype-config.js";
-import { detectiveFeedback, pickWordDetectiveTasks } from "./leo-word-detective-data.js";
+import {
+  detectiveFeedback,
+  pickWordDetectiveTasks,
+  validateDetectiveTask,
+} from "./leo-word-detective-data.js";
 import styles from "./LeoWordDetectivePrototype.module.css";
 
 /** @typedef {import('../shared/language-prototype-config.js').DifficultyId} DifficultyId */
@@ -21,9 +25,10 @@ export default function LeoWordDetectivePrototype({ backHref = "/dev/learning-ga
 
   const [phase, setPhase] = useState(/** @type {'intro'|'play'|'won'|'lost'} */ ("intro"));
   const [difficulty, setDifficulty] = useState(/** @type {DifficultyId} */ ("easy"));
-  const [tasks, setTasks] = useState(/** @type {import('./leo-word-detective-data.js').WordDetectiveTask[]} */ ([]));
+  const [tasks, setTasks] = useState(/** @type {import('./leo-word-detective-data.js').DetectiveTask[]} */ ([]));
   const [taskIndex, setTaskIndex] = useState(0);
-  const [selected, setSelected] = useState(/** @type {number|null} */ (null));
+  const [zoneFills, setZoneFills] = useState(/** @type {Record<string, string>} */ ({}));
+  const [selectedPiece, setSelectedPiece] = useState(/** @type {string | null} */ (null));
   const [score, setScore] = useState(0);
   const [mistakes, setMistakes] = useState(0);
   const [successCount, setSuccessCount] = useState(0);
@@ -33,24 +38,27 @@ export default function LeoWordDetectivePrototype({ backHref = "/dev/learning-ga
   const [timeLimitSec, setTimeLimitSec] = useState(45);
   const [timeLeft, setTimeLeft] = useState(45);
   const [taskKey, setTaskKey] = useState(0);
+  const [boardAnim, setBoardAnim] = useState(/** @type {'idle'|'shake'|'stamp'} */ ("idle"));
 
   const diffConfig = LANGUAGE_PROTOTYPE_DIFFICULTIES[difficulty];
   const task = tasks[taskIndex] ?? null;
 
   mistakesRef.current = mistakes;
+  const usedPieceIds = new Set(Object.values(zoneFills));
 
   const resetTaskUi = useCallback(() => {
-    setSelected(null);
+    setZoneFills({});
+    setSelectedPiece(null);
     setCheckState("idle");
     setFeedback("");
+    setBoardAnim("idle");
     timeoutHandledRef.current = false;
     timerPausedRef.current = false;
   }, []);
 
   const loadTaskTimer = useCallback(() => {
-    const limit = diffConfig.timeSec;
-    setTimeLimitSec(limit);
-    setTimeLeft(limit);
+    setTimeLimitSec(diffConfig.timeSec);
+    setTimeLeft(diffConfig.timeSec);
   }, [diffConfig.timeSec]);
 
   useEffect(() => {
@@ -90,12 +98,13 @@ export default function LeoWordDetectivePrototype({ backHref = "/dev/learning-ga
     timeoutHandledRef.current = true;
     timerPausedRef.current = true;
     setCheckState("bad");
-    setFeedback("הזמן נגמר! נפתח תיק חדש.");
+    setBoardAnim("shake");
+    setFeedback("הזמן נגמר! התיק נשאר פתוח.");
     registerMistake();
     window.setTimeout(() => {
       if (mistakesRef.current >= diffConfig.maxMistakes) return;
       advanceTask();
-    }, 1400);
+    }, 1600);
   }, [phase, registerMistake, advanceTask, diffConfig.maxMistakes]);
 
   useEffect(() => {
@@ -107,9 +116,7 @@ export default function LeoWordDetectivePrototype({ backHref = "/dev/learning-ga
 
   useEffect(() => {
     if (phase !== "play" || !task || timerPausedRef.current) return undefined;
-    const t = window.setInterval(() => {
-      setTimeLeft((sec) => Math.max(0, sec - 1));
-    }, 1000);
+    const t = window.setInterval(() => setTimeLeft((s) => Math.max(0, s - 1)), 1000);
     return () => window.clearInterval(t);
   }, [phase, task, timeLimitSec, taskKey]);
 
@@ -125,20 +132,63 @@ export default function LeoWordDetectivePrototype({ backHref = "/dev/learning-ga
     setPhase("play");
   }, [difficulty]);
 
-  const clearSelection = useCallback(() => {
-    setSelected(null);
-    setCheckState("idle");
-    setFeedback("");
+  const exitToIntro = useCallback(() => {
+    timerPausedRef.current = true;
+    setTasks([]);
+    setTaskIndex(0);
+    setPhase("intro");
   }, []);
 
-  const runCheck = useCallback(() => {
-    if (!task || selected == null || timerPausedRef.current) return;
+  const placeOnZone = useCallback(
+    (zoneId) => {
+      if (!task || !selectedPiece || timerPausedRef.current) return;
+      if (usedPieceIds.has(selectedPiece)) return;
+      if (zoneFills[zoneId]) return;
 
-    const ok = selected === task.correctIndex;
-    if (ok) {
+      setZoneFills((z) => ({ ...z, [zoneId]: selectedPiece }));
+      setSelectedPiece(null);
+      setCheckState("idle");
+      setFeedback("");
+    },
+    [task, selectedPiece, usedPieceIds, zoneFills],
+  );
+
+  const clearZone = useCallback(
+    (zoneId) => {
+      if (timerPausedRef.current) return;
+      setZoneFills((z) => {
+        const next = { ...z };
+        delete next[zoneId];
+        return next;
+      });
+      setCheckState("idle");
+      setFeedback("");
+    },
+    [],
+  );
+
+  const clearBoard = useCallback(() => {
+    if (timerPausedRef.current) return;
+    setZoneFills({});
+    setSelectedPiece(null);
+    setCheckState("idle");
+    setFeedback("");
+    setBoardAnim("idle");
+  }, []);
+
+  const solveCase = useCallback(() => {
+    if (!task || timerPausedRef.current) return;
+    const required = Object.keys(task.solution);
+    if (required.some((z) => !zoneFills[z])) {
+      setFeedback("מלאו את כל מקומות הראיות בלוח");
+      return;
+    }
+
+    if (validateDetectiveTask(task, zoneFills)) {
       timerPausedRef.current = true;
       const bonus = calcTimeBonus(timeLeft, timeLimitSec);
       setCheckState("ok");
+      setBoardAnim("stamp");
       setFeedback(detectiveFeedback(true));
       setSuccessCount((c) => c + 1);
       setScore((s) => {
@@ -148,20 +198,24 @@ export default function LeoWordDetectivePrototype({ backHref = "/dev/learning-ga
         if (streak === 5) next += LANGUAGE_PROTOTYPE_SCORE.streak5;
         return next;
       });
-      setCurrentStreak((prev) => prev + 1);
-      window.setTimeout(advanceTask, 1400);
+      setCurrentStreak((p) => p + 1);
+      window.setTimeout(advanceTask, 1800);
       return;
     }
 
     setCheckState("bad");
+    setBoardAnim("shake");
     setFeedback(detectiveFeedback(false));
     registerMistake();
-  }, [task, selected, timeLeft, timeLimitSec, currentStreak, advanceTask, registerMistake]);
+    window.setTimeout(() => setBoardAnim("idle"), 700);
+  }, [task, zoneFills, timeLeft, timeLimitSec, currentStreak, advanceTask, registerMistake]);
 
   const feedbackBarClass = [
     shop.feedbackBar,
     checkState === "ok" ? shop.feedbackOk : checkState === "bad" ? shop.feedbackBad : shop.feedbackNeutral,
   ].join(" ");
+
+  const pieceLabel = (pieceId) => task?.pieces.find((p) => p.id === pieceId)?.label ?? "";
 
   return (
     <div className={`${frame.shell} ${frame.shellLavender}`} dir="rtl">
@@ -181,21 +235,28 @@ export default function LeoWordDetectivePrototype({ backHref = "/dev/learning-ga
             <span className={`${frame.hudChip} ${styles.hudTime} ${timeLeft <= 8 ? styles.hudTimeWarn : ""}`}>
               ⏱ {timeLeft}s
             </span>
-            <span className={frame.hudChip}>{diffConfig.label}</span>
           </div>
         ) : (
           <div className={frame.hud}>
             <span className={frame.hudChip}>🕵️ אבטיפוס</span>
           </div>
         )}
-        <div style={{ minWidth: 40 }} aria-hidden />
+        {phase === "play" ? (
+          <button type="button" className={frame.hudChip} onClick={exitToIntro}>
+            יציאה
+          </button>
+        ) : (
+          <div style={{ minWidth: 40 }} aria-hidden />
+        )}
       </header>
 
       {phase === "intro" ? (
         <div className={frame.screenCenter}>
           <p className={frame.introHero}>🕵️🔍</p>
           <h1 className={frame.introTitle}>בלש המילים של ליאו</h1>
-          <p className={frame.introText}>עברית — פתחו תיקי חקירה, מצאו את הרמז הנכון ובחרו תשובה!</p>
+          <p className={frame.introText}>
+            גררו ראיות ללוח החקירה — אותיות, מילים וכרטיסי אירועים. כשהתיק מוכן, חותמים «נפתר»!
+          </p>
           <div className={frame.difficultyRow}>
             {(/** @type {DifficultyId[]} */ (["easy", "medium", "hard"])).map((id) => (
               <button
@@ -210,7 +271,7 @@ export default function LeoWordDetectivePrototype({ backHref = "/dev/learning-ga
           </div>
           <EducationalDifficultyGradeHint className={`${frame.introText} opacity-70`} style={{ fontSize: "0.72rem" }} />
           <p className={frame.introText} style={{ fontSize: "0.78rem" }}>
-            {LANGUAGE_PROTOTYPE_TASKS} תיקים · טיימר לכל משימה · בלי הקלדה
+            {LANGUAGE_PROTOTYPE_TASKS} תיקים · לוח חקירה · בלי הקלדה
           </p>
           <button type="button" className={frame.startBtn} onClick={startGame}>
             פתח תיק חקירה 🕵️
@@ -220,7 +281,9 @@ export default function LeoWordDetectivePrototype({ backHref = "/dev/learning-ga
 
       {phase === "play" && task ? (
         <div className={shop.shopMain}>
-          <p className={shop.counterLabel}>🔍 {task.caseLabel} · תיק {taskIndex + 1} מתוך {LANGUAGE_PROTOTYPE_TASKS}</p>
+          <p className={shop.counterLabel}>
+            🔍 {task.caseLabel} · תיק {taskIndex + 1}/{LANGUAGE_PROTOTYPE_TASKS}
+          </p>
           <div className={shop.shopGrid} data-educational-workplace-grid="">
             <aside className={shop.customerCol}>
               <div key={taskKey} className={shop.customerCard}>
@@ -229,60 +292,86 @@ export default function LeoWordDetectivePrototype({ backHref = "/dev/learning-ga
                 </span>
                 <div className={shop.customerSpeechWrap}>
                   <p className={shop.customerName}>תיק חקירה</p>
-                  <p className={shop.missionText}>
-                    {task.prompt}
-                    {task.passage ? <span className={styles.passage}>{task.passage}</span> : null}
-                  </p>
+                  <p className={shop.missionText}>{task.missionHe}</p>
                 </div>
               </div>
             </aside>
 
             <section className={shop.workCol}>
-              {task.emoji ? <span className={styles.boardEmoji}>{task.emoji}</span> : <span className={styles.boardEmoji}>🔎</span>}
-              <div className={styles.optionGrid}>
-                {(task.options ?? []).map((opt, i) => (
-                  <button
-                    key={`${task.id}-${i}`}
-                    type="button"
-                    className={`${styles.optionBtn} ${selected === i ? styles.optionBtnActive : ""}`}
-                    onClick={() => {
-                      setSelected(i);
-                      setCheckState("idle");
-                      setFeedback("");
-                    }}
-                  >
-                    {opt}
-                  </button>
-                ))}
+              <div className={styles.boardWrap}>
+                {task.emoji ? <span className={styles.emojiCenter}>{task.emoji}</span> : null}
+                {task.passage ? <p className={styles.passageOnBoard}>{task.passage}</p> : null}
+                <div
+                  className={`${styles.corkBoard} ${boardAnim === "shake" ? styles.boardShake : ""}`}
+                  style={{ position: "relative" }}
+                >
+                  {boardAnim === "stamp" ? (
+                    <div className={styles.stampOverlay}>
+                      <span className={styles.stamp}>התיק נפתר ✓</span>
+                    </div>
+                  ) : null}
+                  {task.zones.map((zone) => {
+                    const pid = zoneFills[zone.id];
+                    return (
+                      <button
+                        key={zone.id}
+                        type="button"
+                        data-detective-zone={zone.id}
+                        className={`${styles.zone} ${pid ? styles.zoneFilled : ""} ${selectedPiece && !pid ? styles.zoneHighlight : ""}`}
+                        onClick={() => (pid ? clearZone(zone.id) : placeOnZone(zone.id))}
+                      >
+                        <span className={styles.stringLine} aria-hidden />
+                        <span className={styles.zoneIcon}>{zone.icon ?? "📌"}</span>
+                        <span className={styles.zoneLabel}>{zone.label}</span>
+                        {pid ? <span className={styles.zonePiece}>{pieceLabel(pid)}</span> : null}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </section>
 
             <aside className={shop.sideCol}>
               <div className={`${frame.panel} ${shop.toolsPanel}`}>
-                <p className={shop.toolsTitle}>🧾 רמזים</p>
-                <p className={shop.feedbackText} style={{ margin: 0, fontSize: "0.78rem" }}>
-                  {task.passage ? "קראו את הקטע בתיק ואז בחרו תשובה." : "קראו את השאלה ובחרו את התשובה הנכונה."}
+                <p className={shop.toolsTitle}>🧾 כרטיסי ראיות</p>
+                <p className={shop.feedbackText} style={{ margin: "0 0 0.25rem", fontSize: "0.72rem" }}>
+                  לחצו ראיה ואז מקום בלוח · לחיצה על ראיה בלוח מסירה
+                </p>
+                <div className={styles.evidenceTray}>
+                  {task.pieces.map((piece) => {
+                    const used = usedPieceIds.has(piece.id);
+                    return (
+                      <button
+                        key={piece.id}
+                        type="button"
+                        className={`${styles.evidenceCard} ${selectedPiece === piece.id ? styles.evidenceSelected : ""} ${used ? styles.evidenceUsed : ""}`}
+                        disabled={used || timerPausedRef.current}
+                        onClick={() => {
+                          if (used) return;
+                          setSelectedPiece((cur) => (cur === piece.id ? null : piece.id));
+                          setCheckState("idle");
+                        }}
+                      >
+                        {piece.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+              <div className={feedbackBarClass}>
+                <p className={shop.feedbackText}>
+                  {feedback || "גררו ראיות ללוח ולחצו «פתור תיק»"}
                 </p>
               </div>
-
-              {feedback || checkState !== "idle" ? (
-                <div className={feedbackBarClass}>
-                  <p className={shop.feedbackText}>{feedback}</p>
-                </div>
-              ) : (
-                <div className={`${shop.feedbackBar} ${shop.feedbackNeutral}`}>
-                  <p className={shop.feedbackText}>בחרו תשובה ולחצו «בדוק תשובה»</p>
-                </div>
-              )}
             </aside>
 
             <div className={shop.bottomBar}>
               <div className={shop.actionRow}>
-                <button type="button" className={shop.primaryBtn} disabled={selected == null} onClick={runCheck}>
-                  בדוק תשובה 🕵️
+                <button type="button" className={shop.primaryBtn} disabled={boardAnim === "stamp"} onClick={solveCase}>
+                  פתור תיק 🕵️
                 </button>
-                <button type="button" className={shop.secondaryBtn} onClick={clearSelection}>
-                  נקה בחירה
+                <button type="button" className={shop.secondaryBtn} disabled={boardAnim === "stamp"} onClick={clearBoard}>
+                  נקה לוח
                 </button>
               </div>
             </div>
@@ -309,7 +398,7 @@ export default function LeoWordDetectivePrototype({ backHref = "/dev/learning-ga
       {phase === "lost" ? (
         <div className={frame.screenCenter}>
           <div className={frame.endCard}>
-            <h2 className={frame.endTitle}>🕵️ סיום חקירה</h2>
+            <h2 className={frame.endTitle}>🕵️ החקירה נעצרה</h2>
             <p className={frame.endStat}>⭐ ניקוד: {score}</p>
             <p className={frame.endStat}>✅ הצלחות: {successCount}</p>
             <p className={frame.endStat}>❌ טעויות: {mistakes}</p>

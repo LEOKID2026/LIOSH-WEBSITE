@@ -1,119 +1,238 @@
-.trainTrack {
+.trainWorld {
+  width: 100%;
+  max-width: min(100%, 640px);
   display: flex;
+  flex-direction: column;
   align-items: center;
+  gap: 0.35rem;
+  min-height: 0;
+}
+
+.track {
+  width: 100%;
+  height: 8px;
+  background: linear-gradient(90deg, #57534e, #78716c, #57534e);
+  border-radius: 4px;
+  position: relative;
+}
+
+.track::before,
+.track::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  width: 100%;
+  height: 3px;
+  background: repeating-linear-gradient(90deg, #a8a29e 0 12px, transparent 12px 22px);
+}
+
+.stationSign {
+  font-size: clamp(2rem, 8vw, 3.2rem);
+  line-height: 1;
+}
+
+.trainRow {
+  display: flex;
+  align-items: flex-end;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 0.35rem;
+  gap: 0.25rem;
   width: 100%;
-  max-width: min(100%, 520px);
-  padding: 0.35rem;
+  padding: 0.25rem;
+  transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.trainDepart {
+  transform: translateX(-120%);
+  opacity: 0.35;
+}
+
+.trainShake {
+  animation: trainShake 0.55s ease-in-out;
+}
+
+@keyframes trainShake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-8px);
+  }
+  40% {
+    transform: translateX(8px);
+  }
+  60% {
+    transform: translateX(-6px);
+  }
+  80% {
+    transform: translateX(6px);
+  }
 }
 
 .engine {
-  font-size: clamp(2rem, 8vw, 3rem);
-  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.15));
+  font-size: clamp(2.4rem, 10vw, 3.6rem);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+  line-height: 1;
 }
 
 .carriage {
-  min-width: clamp(2.4rem, 9vw, 3.2rem);
-  min-height: clamp(2.4rem, 9vw, 3.2rem);
-  border-radius: 0.65rem;
-  border: 3px solid #2563eb;
-  background: linear-gradient(180deg, #dbeafe, #bfdbfe);
-  font-size: clamp(1.1rem, 4.5vw, 1.5rem);
+  min-width: clamp(2.6rem, 10vw, 3.6rem);
+  min-height: clamp(2.8rem, 11vw, 3.8rem);
+  border-radius: 0.55rem 0.55rem 0.2rem 0.2rem;
+  border: 3px solid #1d4ed8;
+  background: linear-gradient(180deg, #dbeafe 0%, #93c5fd 100%);
+  box-shadow: 0 4px 0 #1e40af, inset 0 2px 0 rgba(255, 255, 255, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  padding: 0.15rem;
+}
+
+.carriageFixed {
+  background: linear-gradient(180deg, #fef3c7, #fde68a);
+  border-color: #b45309;
+  box-shadow: 0 4px 0 #92400e;
+}
+
+.carriageSlot {
+  background: linear-gradient(180deg, #f8fafc, #e2e8f0);
+  border-style: dashed;
+  border-color: #64748b;
+}
+
+.carriageSlotFilled {
+  background: linear-gradient(180deg, #bbf7d0, #86efac);
+  border-color: #15803d;
+  border-style: solid;
+}
+
+.carriageHint {
+  font-size: 0.55rem;
+  font-weight: 800;
+  color: #64748b;
+  line-height: 1;
+}
+
+.carriageLabel {
+  font-size: clamp(0.95rem, 4vw, 1.35rem);
   font-weight: 900;
   color: #1e3a8a;
-  cursor: pointer;
-  box-shadow: 0 3px 0 #1d4ed8;
+  direction: ltr;
+  unicode-bidi: isolate;
 }
 
-.carriageEmpty {
-  background: #f8fafc;
-  color: #94a3b8;
-  border-style: dashed;
+.carriageEmptyMark {
+  display: block;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: #94a3b8;
 }
 
-.wheels {
+.wheelsRow {
   display: flex;
   justify-content: center;
-  gap: 2.5rem;
-  margin-top: -0.15rem;
+  gap: clamp(1.5rem, 8vw, 3rem);
+  margin-top: -0.1rem;
 }
 
 .wheel {
-  width: 1.1rem;
-  height: 1.1rem;
+  width: 1rem;
+  height: 1rem;
   border-radius: 50%;
   background: #334155;
   border: 3px solid #64748b;
 }
 
-.letterGrid {
+.cardGrid {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
   justify-content: center;
+  align-items: center;
+  max-height: 100%;
+  overflow: hidden;
 }
 
-.letterBtn {
-  min-width: 2.5rem;
-  min-height: 2.5rem;
+.cardsInWork {
+  display: none;
+  width: 100%;
+  flex-shrink: 0;
+  margin-top: 0.35rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 0.55rem;
+  background: rgba(255, 255, 255, 0.72);
+  border: 2px solid #bfdbfe;
+}
+
+.cardsInWorkTitle {
+  margin: 0 0 0.3rem;
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #1d4ed8;
+}
+
+.cardsInSide {
+  display: block;
+}
+
+@media (min-width: 900px) {
+  .cardsInWork {
+    display: block;
+  }
+
+  .cardsInSide {
+    display: none;
+  }
+}
+
+.card {
+  min-width: 2.6rem;
+  min-height: 2.6rem;
   padding: 0.35rem 0.55rem;
   border-radius: 0.55rem;
   border: 2px solid #93c5fd;
-  background: #eff6ff;
-  font-size: clamp(1rem, 4vw, 1.25rem);
+  background: #fff;
+  font-size: clamp(0.95rem, 3.8vw, 1.15rem);
   font-weight: 900;
   color: #1d4ed8;
-  cursor: pointer;
+  cursor: grab;
+  touch-action: none;
+  box-shadow: 0 2px 0 #bfdbfe;
+  direction: ltr;
+  unicode-bidi: isolate;
 }
 
-.letterUsed {
-  opacity: 0.35;
+.cardSelected {
+  border-color: #2563eb;
+  background: #dbeafe;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35);
+}
+
+.cardUsed {
+  opacity: 0.28;
   pointer-events: none;
 }
 
-.optionGrid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.4rem;
-  width: 100%;
+.cardDragging {
+  opacity: 0.5;
 }
 
-.optionBtn {
-  min-height: 3rem;
-  padding: 0.45rem;
-  border-radius: 0.65rem;
-  border: 2px solid #bfdbfe;
-  background: #fff;
-  font-weight: 800;
-  font-size: clamp(0.85rem, 3.2vw, 1rem);
-  cursor: pointer;
+.steam {
+  font-size: 1.4rem;
+  animation: steamPuff 1.2s ease-in-out infinite;
 }
 
-.optionBtnActive {
-  border-color: #2563eb;
-  background: #dbeafe;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
-}
-
-.optionEn {
-  direction: ltr;
-  unicode-bidi: isolate;
-}
-
-.emojiHero {
-  font-size: clamp(3rem, 14vw, 5rem);
-  line-height: 1;
-}
-
-.templateLine {
-  margin: 0.25rem 0 0;
-  font-size: clamp(1.1rem, 4.5vw, 1.45rem);
-  font-weight: 900;
-  color: #1e40af;
-  direction: ltr;
-  unicode-bidi: isolate;
+@keyframes steamPuff {
+  50% {
+    opacity: 0.5;
+    transform: translateY(-4px);
+  }
 }
 
 .hudTime {
@@ -137,4 +256,36 @@
 
 .stationEmoji {
   font-size: clamp(2.5rem, 10vw, 4rem);
+}
+
+.departBanner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(34, 197, 94, 0.15);
+  font-size: clamp(1.2rem, 5vw, 1.8rem);
+  font-weight: 900;
+  color: #15803d;
+  pointer-events: none;
+  z-index: 2;
+  animation: fadeBanner 1s ease forwards;
+}
+
+@keyframes fadeBanner {
+  to {
+    opacity: 0;
+  }
+}
+
+.workWrap {
+  position: relative;
+  width: 100%;
+  min-height: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
