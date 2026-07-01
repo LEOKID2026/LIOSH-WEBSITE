@@ -1,6 +1,5 @@
-import SitePolicyPage from "../components/legal/SitePolicyPage";
-import { SITE_POLICIES } from "../data/legal/sitePolicies.he";
+import UnifiedLegalPolicyPage from "../components/legal/UnifiedLegalPolicyPage";
 
 export default function AccessibilityPage() {
-  return <SitePolicyPage policy={SITE_POLICIES.accessibility} />;
+  return <UnifiedLegalPolicyPage pageKey="accessibility" />;
 }

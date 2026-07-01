@@ -144,8 +144,8 @@ export function ParentReportInsight({ explanation, className = "" }) {
   const isStructuredAi = structured && (explanation.structuredSource === "ai" || explanation.source === "ai");
   const sourceLabel = structured
     ? isStructuredAi
-      ? "סיכום נכתב על ידי מודל AI על בסיס נתוני הדוח, ועבר אימות בטיחות לפני הצגה."
-      : "סיכום זה נבנה אוטומטית מנתוני הדוח (גרסה דטרמיניסטית) ועבר אימות בטיחות לפני הצגה."
+      ? "הסיכום נכתב בעזרת AI על בסיס נתוני הדוח, ונועד לשמש כלי עזר לימודי בלבד."
+      : "הסיכום נבנה אוטומטית מנתוני הדוח, ונועד לשמש כלי עזר לימודי בלבד."
     : "";
 
   return (

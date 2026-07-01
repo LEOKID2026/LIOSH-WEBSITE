@@ -262,9 +262,13 @@ export const privacyAndData = baseArticle({
     paragraph(
       "המערכת שומרת נתוני תרגול כדי להציג התקדמות ודוחות. אין לשתף קודי כניסה של ילדים עם אחרים."
     ),
-    callout("info", "לשאלות או בקשות בנושא פרטיות — השתמשו בעמוד צור קשר."),
+    callout("info", "לשאלות או בקשות בנושא פרטיות — ראו מדיניות פרטיות או פנו אלינו בצור קשר."),
     videoBlock(S, "privacy-and-data"),
-    relatedLinks([{ href: "/contact", label: "צור קשר" }]),
+    relatedLinks([
+      { href: "/privacy", label: "מדיניות פרטיות" },
+      { href: "/legal", label: "תנאים, פרטיות ונגישות" },
+      { href: "/contact", label: "צור קשר" },
+    ]),
   ],
 });
 

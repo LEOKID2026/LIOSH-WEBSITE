@@ -38,8 +38,8 @@ function ParentPassivePolicyNotice({ bright, className = "" }) {
       ו
       <Link href="/privacy" className={T.linkInline}>
         מדיניות הפרטיות
-      </Link>
-      .
+      </Link>{" "}
+      שלנו.
     </p>
   );
 }

@@ -1,13 +1,22 @@
+import Link from "next/link";
+
 /**
- * Compact site chrome footer — copyright only (legal links live on /contact).
+ * Compact site chrome footer — copyright + single legal hub link.
  */
 export default function SiteLegalFooterBar({ isStudentBright = false }) {
   const textClass = isStudentBright ? "text-slate-500" : "text-white/55";
+  const linkClass = isStudentBright
+    ? "text-slate-600 hover:text-slate-800 underline underline-offset-2"
+    : "text-white/70 hover:text-white underline underline-offset-2";
 
   return (
-    <div className={`max-w-6xl mx-auto px-3 py-1 sm:py-1.5 text-center ${textClass}`}>
-      <p className="text-[10px] sm:text-xs leading-tight">
+    <div className={`max-w-6xl mx-auto px-3 py-1.5 sm:py-2 text-center ${textClass}`}>
+      <p className="text-[10px] sm:text-xs leading-relaxed">
         © {new Date().getFullYear()} LEO K · משחקים ולמידה לילדים
+        {" · "}
+        <Link href="/legal" className={linkClass}>
+          תנאים, פרטיות ונגישות
+        </Link>
       </p>
     </div>
   );
