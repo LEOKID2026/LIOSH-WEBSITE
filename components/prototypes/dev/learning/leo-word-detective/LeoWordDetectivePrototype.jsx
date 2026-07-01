@@ -14,6 +14,7 @@ import {
   pickWordDetectiveTasks,
   validateDetectiveTask,
 } from "./leo-word-detective-data.js";
+import proto from "../shared/language-prototype-shop.module.css";
 import styles from "./LeoWordDetectivePrototype.module.css";
 
 /** @typedef {import('../shared/language-prototype-config.js').DifficultyId} DifficultyId */
@@ -217,6 +218,37 @@ export default function LeoWordDetectivePrototype({ backHref = "/dev/learning-ga
 
   const pieceLabel = (pieceId) => task?.pieces.find((p) => p.id === pieceId)?.label ?? "";
 
+  const evidenceButtons =
+    task?.pieces.map((piece) => {
+      const used = usedPieceIds.has(piece.id);
+      return (
+        <button
+          key={piece.id}
+          type="button"
+          className={`${proto.pieceCard} ${selectedPiece === piece.id ? proto.pieceCardSelected : ""} ${used ? proto.pieceCardUsed : ""}`}
+          disabled={used || timerPausedRef.current}
+          onClick={() => {
+            if (used) return;
+            setSelectedPiece((cur) => (cur === piece.id ? null : piece.id));
+            setCheckState("idle");
+          }}
+        >
+          {piece.label}
+        </button>
+      );
+    }) ?? null;
+
+  const cardsPanel = (
+    <>
+      <p className={proto.cardsPanelTitle}>🧾 כרטיסי ראיות</p>
+      <div className={proto.cardGrid}>{evidenceButtons}</div>
+    </>
+  );
+
+  const feedbackBar = (
+    <p className={shop.feedbackText}>{feedback || "גררו ראיות ללוח ולחצו פתור תיק"}</p>
+  );
+
   return (
     <div className={`${frame.shell} ${frame.shellLavender}`} dir="rtl">
       <header className={frame.header}>
@@ -255,7 +287,7 @@ export default function LeoWordDetectivePrototype({ backHref = "/dev/learning-ga
           <p className={frame.introHero}>🕵️🔍</p>
           <h1 className={frame.introTitle}>בלש המילים של ליאו</h1>
           <p className={frame.introText}>
-            גררו ראיות ללוח החקירה — אותיות, מילים וכרטיסי אירועים. כשהתיק מוכן, חותמים «נפתר»!
+            גררו ראיות ללוח החקירה — אותיות, מילים וכרטיסי אירועים. כשהתיק מוכן, חותמים נפתר!
           </p>
           <div className={frame.difficultyRow}>
             {(/** @type {DifficultyId[]} */ (["easy", "medium", "hard"])).map((id) => (
@@ -284,8 +316,8 @@ export default function LeoWordDetectivePrototype({ backHref = "/dev/learning-ga
           <p className={shop.counterLabel}>
             🔍 {task.caseLabel} · תיק {taskIndex + 1}/{LANGUAGE_PROTOTYPE_TASKS}
           </p>
-          <div className={shop.shopGrid} data-educational-workplace-grid="">
-            <aside className={shop.customerCol}>
+          <div className={`${shop.shopGrid} ${proto.protoShopGrid}`} data-educational-workplace-grid="">
+            <aside className={`${shop.customerCol} ${proto.missionMobile}`}>
               <div key={taskKey} className={shop.customerCard}>
                 <span className={styles.caseBadge} aria-hidden>
                   📁
@@ -297,7 +329,12 @@ export default function LeoWordDetectivePrototype({ backHref = "/dev/learning-ga
               </div>
             </aside>
 
-            <section className={shop.workCol}>
+            <div key={`desk-${taskKey}`} className={proto.missionDesktop}>
+              <p className={proto.missionDesktopTitle}>תיק חקירה</p>
+              <p className={proto.missionDesktopText}>{task.missionHe}</p>
+            </div>
+
+            <section className={`${shop.workCol} ${proto.protoWorkCol}`}>
               <div className={styles.boardWrap}>
                 {task.emoji ? <span className={styles.emojiCenter}>{task.emoji}</span> : null}
                 {task.passage ? <p className={styles.passageOnBoard}>{task.passage}</p> : null}
@@ -331,41 +368,17 @@ export default function LeoWordDetectivePrototype({ backHref = "/dev/learning-ga
               </div>
             </section>
 
-            <aside className={shop.sideCol}>
-              <div className={`${frame.panel} ${shop.toolsPanel}`}>
-                <p className={shop.toolsTitle}>🧾 כרטיסי ראיות</p>
-                <p className={shop.feedbackText} style={{ margin: "0 0 0.25rem", fontSize: "0.72rem" }}>
-                  לחצו ראיה ואז מקום בלוח · לחיצה על ראיה בלוח מסירה
-                </p>
-                <div className={styles.evidenceTray}>
-                  {task.pieces.map((piece) => {
-                    const used = usedPieceIds.has(piece.id);
-                    return (
-                      <button
-                        key={piece.id}
-                        type="button"
-                        className={`${styles.evidenceCard} ${selectedPiece === piece.id ? styles.evidenceSelected : ""} ${used ? styles.evidenceUsed : ""}`}
-                        disabled={used || timerPausedRef.current}
-                        onClick={() => {
-                          if (used) return;
-                          setSelectedPiece((cur) => (cur === piece.id ? null : piece.id));
-                          setCheckState("idle");
-                        }}
-                      >
-                        {piece.label}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-              <div className={feedbackBarClass}>
-                <p className={shop.feedbackText}>
-                  {feedback || "גררו ראיות ללוח ולחצו «פתור תיק»"}
-                </p>
-              </div>
+            <aside className={`${shop.sideCol} ${proto.toolsMobile} ${proto.detective}`}>
+              <div className={`${frame.panel} ${shop.toolsPanel} ${proto.cardsPanel}`}>{cardsPanel}</div>
             </aside>
 
-            <div className={shop.bottomBar}>
+            <div className={`${proto.cardsDesktopRow} ${proto.cardsPanel} ${proto.detective}`}>{cardsPanel}</div>
+
+            <div className={`${proto.feedbackDesktopRow} ${feedbackBarClass}`}>{feedbackBar}</div>
+
+            <div className={`${proto.feedbackMobile} ${feedbackBarClass}`}>{feedbackBar}</div>
+
+            <div className={`${shop.bottomBar} ${proto.protoBottomBar}`}>
               <div className={shop.actionRow}>
                 <button type="button" className={shop.primaryBtn} disabled={boardAnim === "stamp"} onClick={solveCase}>
                   פתור תיק 🕵️

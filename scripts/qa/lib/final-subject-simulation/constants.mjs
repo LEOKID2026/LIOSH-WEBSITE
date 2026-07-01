@@ -86,6 +86,9 @@ export function defaultOutputDir(runId) {
 
 export function formatLevelSummaryLine(subjectKey, result) {
   const label = FINAL_SIMULATION_SUBJECT_LABELS_HE[subjectKey] || subjectKey;
+  if (result?.notRun) {
+    return `${label} — SKIPPED (${result.notRunReason || "not run"})`;
+  }
   const reg = result.levels?.regular?.pass ? "PASS" : "FAIL";
   if (isRegularOnlySubject(subjectKey)) {
     const adv = result.advancedAbsent?.pass ? "N/A תקין" : "FAIL";
@@ -93,4 +96,17 @@ export function formatLevelSummaryLine(subjectKey, result) {
   }
   const adv = result.levels?.advanced?.pass ? "PASS" : "FAIL";
   return `${label} — רגיל ${reg} / מתקדם ${adv}`;
+}
+
+export function buildSkippedSubjectResult(subjectKey, reason) {
+  return {
+    subject: subjectKey,
+    subjectLabel: FINAL_SIMULATION_SUBJECT_LABELS_HE[subjectKey] || subjectKey,
+    pass: false,
+    notRun: true,
+    notRunReason: reason,
+    levels: {},
+    setup: {},
+    activities: {},
+  };
 }

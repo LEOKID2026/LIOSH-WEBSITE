@@ -14,12 +14,30 @@ const LEGACY_UI_VALUES = new Set(["easy", "medium", "hard"]);
 
 /**
  * @param {import("@playwright/test").Page} page
+ */
+export async function findRegularOnlyDisplayBadge(page) {
+  return page.getByTestId("student-display-level-regular-only");
+}
+
+/**
+ * @param {import("@playwright/test").Page} page
  * @param {object} plan
  */
 export async function findLevelSelect(page, plan) {
   if (plan.levelSelectTestId) {
     return page.getByTestId(plan.levelSelectTestId);
   }
+
+  const displaySelect = page.getByTestId("student-display-level-select");
+  if (await displaySelect.isVisible().catch(() => false)) {
+    return displaySelect;
+  }
+
+  const regularOnlyBadge = await findRegularOnlyDisplayBadge(page);
+  if (await regularOnlyBadge.isVisible().catch(() => false)) {
+    return null;
+  }
+
   if (plan.gradeSelectTestId) {
     return page.getByTestId(plan.gradeSelectTestId).locator("xpath=following-sibling::select[1]");
   }
@@ -97,7 +115,16 @@ export async function selectDisplayLevel(page, plan, displayLevel) {
   const heLabel = DISPLAY_LEVEL_HE[displayLevel];
   if (!heLabel) throw new Error(`unknown displayLevel "${displayLevel}"`);
 
+  const regularOnlyBadge = await findRegularOnlyDisplayBadge(page);
+  if (await regularOnlyBadge.isVisible().catch(() => false)) {
+    if (displayLevel !== "regular") {
+      throw new Error(`regular-only subject; cannot select "${heLabel}"`);
+    }
+    return { value: "regular", label: DISPLAY_LEVEL_HE.regular, displayLevel: "regular", heLabel };
+  }
+
   const select = await findLevelSelect(page, plan);
+  if (!select) throw new Error("cannot locate level select for plan");
   const options = await readLevelSelectOptions(select);
   const legacy = detectLegacyUiLevels(options);
   if (legacy.length) {
@@ -119,9 +146,22 @@ export async function selectDisplayLevel(page, plan, displayLevel) {
 
 /**
  * Read level options without selecting — for science advanced-absence check.
+ * @param {{ regularOnly?: boolean }} [cfg]
  */
-export async function readDisplayLevelOptions(page, plan) {
+export async function readDisplayLevelOptions(page, plan, { regularOnly = false } = {}) {
+  const regularOnlyBadge = await findRegularOnlyDisplayBadge(page);
+  if (regularOnly || (await regularOnlyBadge.isVisible().catch(() => false))) {
+    await regularOnlyBadge.waitFor({ state: "visible", timeout: 30_000 });
+    const label = (await regularOnlyBadge.innerText()).trim() || DISPLAY_LEVEL_HE.regular;
+    return {
+      select: regularOnlyBadge,
+      options: [{ value: "regular", label }],
+      regularOnlyUi: true,
+    };
+  }
+
   const select = await findLevelSelect(page, plan);
+  if (!select) throw new Error("cannot locate level select for plan");
   const options = await readLevelSelectOptions(select);
-  return { select, options };
+  return { select, options, regularOnlyUi: false };
 }

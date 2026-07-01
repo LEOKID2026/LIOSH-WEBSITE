@@ -1,14 +1,12 @@
 import Layout from "../../components/Layout";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
-import { useGamesHubUi } from "../../hooks/useGamesHubUi.js";
-import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
+import { useOfflineHubUi, OFFLINE_HUB_LAYOUT_THEME } from "../../hooks/useOfflineHubUi.js";
 import GameAccessGuard from "../../components/games/GameAccessGuard.jsx";
 import GamesHubNavBar from "../../components/games/GamesHubNavBar.jsx";
 import GamesHubHeader from "../../components/games/GamesHubHeader.jsx";
 import OfflineHubGameCard from "../../components/games/OfflineHubGameCard.jsx";
 import { useStudentGameAccess } from "../../hooks/useStudentGameAccess.js";
 import StudentLoadingPanel from "../../components/ui/StudentLoadingPanel.jsx";
-
 const OFFLINE_GAMES = [
   {
     slug: "tic-tac-toe",
@@ -47,10 +45,8 @@ const OFFLINE_GAMES = [
 
 export default function OfflineHub() {
   useIOSViewportFix();
-  const { theme } = useStudentTheme();
-  const { GH } = useGamesHubUi();
+  const { GH } = useOfflineHubUi();
   const { state, gamesByKey, isGuest } = useStudentGameAccess();
-
   const visibleGames = OFFLINE_GAMES.filter((g) => {
     const row = gamesByKey[g.gameKey];
     if (!row?.isEnabled) return false;
@@ -63,7 +59,7 @@ export default function OfflineHub() {
 
   return (
     <GameAccessGuard category="offline">
-      <Layout studentTheme={theme} studentShell="home">
+      <Layout studentTheme={OFFLINE_HUB_LAYOUT_THEME} studentShell="home">
         <main className={GH.pageWrap} dir="rtl">
           <div className={`${GH.container} space-y-4`}>
             <GamesHubNavBar

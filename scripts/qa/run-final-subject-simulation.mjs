@@ -16,12 +16,13 @@ import { join } from "node:path";
 import { getRepoRoot } from "../virtual-student-qa/lib/config.mjs";
 import {
   buildRunId,
+  buildSkippedSubjectResult,
   defaultOutputDir,
   FINAL_SIMULATION_SUBJECT_KEYS,
   FINAL_SIMULATION_SUBJECT_LABELS_HE,
 } from "./lib/final-subject-simulation/constants.mjs";
 import {
-  probeServerHealth,
+  probeServerHealthWithRetry,
   resolveSimulationPort,
   waitForServerReady,
 } from "./lib/final-subject-simulation/port-resolver.mjs";
@@ -150,8 +151,14 @@ async function main() {
   const subjects = {};
 
   for (const subjectKey of FINAL_SIMULATION_SUBJECT_KEYS) {
-    if (!(await probeServerHealth(baseUrl))) {
+    if (!(await probeServerHealthWithRetry(baseUrl))) {
       log.write(`\n[ABORT] Server unhealthy before ${subjectKey} — stopping remaining subjects.\n`);
+      const startIdx = FINAL_SIMULATION_SUBJECT_KEYS.indexOf(subjectKey);
+      for (const remaining of FINAL_SIMULATION_SUBJECT_KEYS.slice(startIdx)) {
+        if (!subjects[remaining]) {
+          subjects[remaining] = buildSkippedSubjectResult(remaining, "server_unhealthy_abort");
+        }
+      }
       break;
     }
 
@@ -171,7 +178,7 @@ async function main() {
   }
 
   const parentReport = await (async () => {
-    if (!(await probeServerHealth(baseUrl))) {
+    if (!(await probeServerHealthWithRetry(baseUrl))) {
       return { pass: false, detail: "server unhealthy — parent report skipped", notRun: true };
     }
     return smokeParentReport(browser, baseUrl);

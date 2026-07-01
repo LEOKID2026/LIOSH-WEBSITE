@@ -5,7 +5,9 @@
  */
 import fs from "node:fs";
 import path from "node:path";
+import vm from "node:vm";
 import { fileURLToPath } from "node:url";
+import { EDUCATIONAL_GAME_KEYS } from "../lib/educational-games/educational-game-registry.js";
 import {
   OFFLINE_FULL_PRECACHE_ASSET_URLS,
   OFFLINE_FULL_PRECACHE_NAV_URLS,
@@ -26,6 +28,7 @@ const OFFLINE_BUILD_PAGES = [
   "/student/offline/educational",
   "/student/offline/solo/[gameKey]",
   "/student/offline/educational/[gameKey]",
+  ...EDUCATIONAL_GAME_KEYS.map((key) => `/student/educational-games/${key}`),
 ];
 
 /** @param {string} pagePath @param {Record<string, string[]>} pages */
@@ -42,6 +45,27 @@ function readBuildId(buildManifest) {
   if (!manifestFile) return null;
   const match = manifestFile.match(/static\/([^/]+)\/_buildManifest\.js/);
   return match ? match[1] : null;
+}
+
+/** Load Next production page→chunks map (includes shared async chunks). */
+function loadProductionPageManifest(buildId) {
+  if (!buildId) return null;
+  const manifestPath = path.join(ROOT, ".next", "static", buildId, "_buildManifest.js");
+  if (!fs.existsSync(manifestPath)) return null;
+
+  const sandbox = { self: {} };
+  const code = fs.readFileSync(manifestPath, "utf8");
+  vm.runInNewContext(code, sandbox);
+  const manifest = sandbox.self.__BUILD_MANIFEST;
+  if (!manifest || typeof manifest !== "object") return null;
+
+  /** @type {Record<string, string[]>} */
+  const pages = {};
+  for (const [pagePath, files] of Object.entries(manifest)) {
+    if (!Array.isArray(files)) continue;
+    pages[pagePath] = files;
+  }
+  return pages;
 }
 
 /** @param {string} navUrl @param {string} buildId */
@@ -68,8 +92,17 @@ function main() {
   }
 
   const buildManifest = JSON.parse(fs.readFileSync(BUILD_MANIFEST_PATH, "utf8"));
-  const pages = buildManifest.pages || {};
+  const rootPages = buildManifest.pages || {};
   const buildId = readBuildId(buildManifest);
+  const productionPages = loadProductionPageManifest(buildId);
+  const pages = productionPages || rootPages;
+
+  if (!productionPages) {
+    console.warn(
+      "[generate-student-offline-precache] Production _buildManifest.js missing — " +
+        "using .next/build-manifest.json (may omit shared chunks).",
+    );
+  }
 
   const chunkSet = new Set();
   const toChunkUrl = (file) => (file.startsWith("static/") ? `/_next/${file}` : `/_next/static/${file}`);
@@ -86,6 +119,9 @@ function main() {
     }
   }
   for (const file of chunksForPage("/_app", pages)) {
+    chunkSet.add(toChunkUrl(file));
+  }
+  for (const file of chunksForPage("/_app", rootPages)) {
     chunkSet.add(toChunkUrl(file));
   }
 

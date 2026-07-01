@@ -159,3 +159,16 @@ export async function probeServerHealth(baseUrl) {
     return false;
   }
 }
+
+export async function probeServerHealthWithRetry(
+  baseUrl,
+  { attempts = 6, intervalMs = 2000 } = {}
+) {
+  for (let i = 0; i < attempts; i += 1) {
+    if (await probeServerHealth(baseUrl)) return true;
+    if (i < attempts - 1) {
+      await new Promise((r) => setTimeout(r, intervalMs));
+    }
+  }
+  return false;
+}

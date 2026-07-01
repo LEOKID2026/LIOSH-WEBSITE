@@ -17,7 +17,7 @@ const GENERATED = self.__STUDENT_OFFLINE_PRECACHE__ || {
 };
 
 const CACHE_NAME = STUDENT_OFFLINE_FULL_SW_ENABLED
-  ? "student-offline-v6-full"
+  ? "student-offline-v7-full"
   : "student-offline-v1";
 const CACHE_PREFIX = "student-";
 

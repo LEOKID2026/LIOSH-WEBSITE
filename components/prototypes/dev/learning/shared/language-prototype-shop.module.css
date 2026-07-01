@@ -1,0 +1,222 @@
+/* Shared play layout — word train + word detective prototypes */
+
+.protoShopGrid {
+  flex: 1;
+  min-height: 0;
+}
+
+.missionMobile {
+  display: flex;
+}
+
+.missionDesktop {
+  display: none;
+  grid-column: 1 / -1;
+  padding: 0.55rem 0.75rem;
+  border-radius: 0.85rem;
+  border: 3px solid #fed7aa;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 251, 235, 0.92));
+  box-shadow: 0 3px 0 #fdba74;
+  text-align: center;
+}
+
+.missionDesktopTitle {
+  margin: 0;
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+  font-weight: 900;
+  color: #9a3412;
+}
+
+.missionDesktopText {
+  margin: 0.25rem 0 0;
+  font-size: clamp(0.95rem, 1.6vw, 1.2rem);
+  font-weight: 800;
+  line-height: 1.4;
+  color: #1e293b;
+}
+
+.toolsMobile {
+  display: flex;
+}
+
+.cardsDesktopRow {
+  display: none;
+}
+
+.feedbackDesktopRow {
+  display: none;
+}
+
+.feedbackMobile {
+  display: block;
+}
+
+.cardsPanel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.cardsPanelTitle {
+  margin: 0 0 0.35rem;
+  text-align: center;
+  font-size: clamp(0.88rem, 3.2vw, 1.05rem);
+  font-weight: 900;
+  color: #1d4ed8;
+}
+
+.cardGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  overflow: hidden;
+}
+
+.pieceCard {
+  min-width: clamp(3.2rem, 13vw, 4rem);
+  min-height: clamp(3.2rem, 13vw, 4rem);
+  padding: 0.4rem 0.65rem;
+  border-radius: 0.6rem;
+  border: 2px solid #93c5fd;
+  background: #fff;
+  font-size: clamp(1.05rem, 4.8vw, 1.35rem);
+  font-weight: 900;
+  color: #1d4ed8;
+  cursor: pointer;
+  touch-action: manipulation;
+  box-shadow: 0 2px 0 #bfdbfe;
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+.pieceCardSelected {
+  border-color: #2563eb;
+  background: #dbeafe;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35);
+}
+
+.pieceCardUsed {
+  opacity: 0.28;
+  pointer-events: none;
+}
+
+.detective .pieceCard {
+  border-color: #c4b5fd;
+  color: #5b21b6;
+  box-shadow: 0 2px 0 #ddd6fe;
+  direction: rtl;
+  unicode-bidi: normal;
+}
+
+.detective .pieceCardSelected {
+  border-color: #7c3aed;
+  background: #f5f3ff;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.3);
+}
+
+.detective .cardsPanelTitle {
+  color: #5b21b6;
+}
+
+@media (min-width: 900px) {
+  .protoShopGrid {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto minmax(0, 1fr) auto auto auto !important;
+  }
+
+  .missionMobile {
+    display: none !important;
+  }
+
+  .missionDesktop {
+    display: block;
+    grid-row: 1;
+  }
+
+  .protoWorkCol {
+    grid-column: 1 !important;
+    grid-row: 2 !important;
+  }
+
+  .toolsMobile {
+    display: none !important;
+  }
+
+  .cardsDesktopRow {
+    display: block;
+    grid-column: 1;
+    grid-row: 3;
+    padding: 0.65rem 0.85rem;
+    border-radius: 0.85rem;
+    border: 3px solid #bfdbfe;
+    background: rgba(255, 255, 255, 0.92);
+    min-height: clamp(6rem, 16vh, 8.5rem);
+  }
+
+  .cardsDesktopRow.detective {
+    border-color: #ddd6fe;
+    background: rgba(255, 255, 255, 0.94);
+  }
+
+  .cardsDesktopRow .cardGrid {
+    min-height: clamp(5rem, 12vh, 7rem);
+  }
+
+  .cardsDesktopRow .pieceCard {
+    min-width: 4rem;
+    min-height: 4rem;
+    font-size: 1.5rem;
+    padding: 0.45rem 0.75rem;
+  }
+
+  .feedbackDesktopRow {
+    display: block;
+    grid-column: 1;
+    grid-row: 4;
+  }
+
+  .feedbackMobile {
+    display: none !important;
+  }
+
+  .protoBottomBar {
+    grid-column: 1 !important;
+    grid-row: 5 !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .protoShopGrid {
+    grid-template-rows: auto minmax(0, 0.95fr) minmax(0, 1.15fr) auto auto !important;
+  }
+
+  .toolsMobile {
+    grid-row: 3 !important;
+  }
+
+  .toolsMobile .cardsPanel {
+    flex: 1;
+    min-height: 0;
+    padding: 0.35rem 0.25rem;
+  }
+
+  .feedbackMobile {
+    grid-column: 1;
+    grid-row: 4;
+  }
+
+  .protoBottomBar {
+    grid-row: 5 !important;
+  }
+
+  .pieceCard {
+    min-width: clamp(3.8rem, 16vw, 4.8rem);
+    min-height: clamp(3.8rem, 16vw, 4.8rem);
+    font-size: clamp(1.2rem, 5.5vw, 1.45rem);
+    padding: 0.45rem 0.7rem;
+  }
+}

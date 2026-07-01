@@ -123,34 +123,6 @@ export default function LeoPizzeriaGame({
     setPhase("play");
   }, [difficulty, resetPizza, diffConfig.timeLimitsByBand]);
 
-  useEffect(() => {
-    if (phase !== "play" || !customer) return undefined;
-    if (timeLeft > 0) return undefined;
-    if (timeoutHandledForCustomerRef.current === customerIndex) return undefined;
-    timeoutHandledForCustomerRef.current = customerIndex;
-    handleTimeout();
-    return undefined;
-  }, [phase, customer, timeLeft, customerIndex, handleTimeout]);
-
-  useEffect(() => {
-    if (phase !== "play" || !customer) return undefined;
-    const t = window.setInterval(() => {
-      setTimeLeft((sec) => Math.max(0, sec - 1));
-    }, 1000);
-    return () => window.clearInterval(t);
-  }, [phase, customer, customerIndex]);
-
-  useEffect(() => {
-    return () => {
-      if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!autoStart || phase !== "play" || customers.length > 0) return;
-    startGame();
-  }, [autoStart, phase, customers.length, startGame]);
-
   const endRun = useCallback((nextPhase) => {
     setPhase(nextPhase);
   }, []);
@@ -199,6 +171,34 @@ export default function LeoPizzeriaGame({
 
     advanceAfterCustomer(customerIndex);
   }, [phase, customer, addScore, diffConfig.maxMistakes, endRun, advanceAfterCustomer, customerIndex]);
+
+  useEffect(() => {
+    if (phase !== "play" || !customer) return undefined;
+    if (timeLeft > 0) return undefined;
+    if (timeoutHandledForCustomerRef.current === customerIndex) return undefined;
+    timeoutHandledForCustomerRef.current = customerIndex;
+    handleTimeout();
+    return undefined;
+  }, [phase, customer, timeLeft, customerIndex, handleTimeout]);
+
+  useEffect(() => {
+    if (phase !== "play" || !customer) return undefined;
+    const t = window.setInterval(() => {
+      setTimeLeft((sec) => Math.max(0, sec - 1));
+    }, 1000);
+    return () => window.clearInterval(t);
+  }, [phase, customer, customerIndex]);
+
+  useEffect(() => {
+    return () => {
+      if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!autoStart || phase !== "play" || customers.length > 0) return;
+    startGame();
+  }, [autoStart, phase, customers.length, startGame]);
 
   const applyToppingToSlice = useCallback((sliceIndex, toppingId) => {
     setSliceMap((prev) => ({ ...prev, [sliceIndex]: toppingId }));

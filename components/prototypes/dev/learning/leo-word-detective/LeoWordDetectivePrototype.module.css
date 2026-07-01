@@ -107,42 +107,6 @@
   align-self: center;
 }
 
-.evidenceTray {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  justify-content: center;
-  max-height: 100%;
-  overflow: hidden;
-}
-
-.evidenceCard {
-  min-height: 2.5rem;
-  padding: 0.35rem 0.55rem;
-  border-radius: 0.5rem;
-  border: 2px solid #c4b5fd;
-  background: #fff;
-  font-size: clamp(0.78rem, 3vw, 0.92rem);
-  font-weight: 800;
-  color: #5b21b6;
-  cursor: grab;
-  touch-action: none;
-  box-shadow: 0 2px 0 #ddd6fe;
-  max-width: 100%;
-  text-align: center;
-}
-
-.evidenceSelected {
-  border-color: #7c3aed;
-  background: #f5f3ff;
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.3);
-}
-
-.evidenceUsed {
-  opacity: 0.28;
-  pointer-events: none;
-}
-
 .stampOverlay {
   position: absolute;
   inset: 0;

@@ -18,11 +18,11 @@ export default function OfflineReconnectBanner() {
   if (online) {
     return (
       <div
-        className="rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-center text-sm text-emerald-100"
+        className="rounded-xl border border-emerald-300 bg-emerald-50 px-3 py-2 text-center text-sm text-emerald-900"
         dir="rtl"
       >
         חזר חיבור —{" "}
-        <Link href="/student/login" className="font-bold underline underline-offset-2">
+        <Link href="/student/login" className="font-bold text-emerald-800 underline underline-offset-2">
           חזרה לאפליקציה
         </Link>
       </div>

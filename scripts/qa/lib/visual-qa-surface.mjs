@@ -110,8 +110,17 @@ export async function navigateToPlayerShell(page, plan, baseUrl, { log = () => {
       await page.goto(targetUrl, { waitUntil: "domcontentloaded", timeout: routeTimeout });
       await stopActiveGameIfAny(page);
       await dismissBlockingUi(page);
+      if (plan.loadingMessageHe) {
+        await page
+          .getByText(plan.loadingMessageHe, { exact: false })
+          .waitFor({ state: "detached", timeout: shellTimeout })
+          .catch(() => {});
+      }
       await page.waitForTimeout(800);
-      await player.waitFor({ state: "visible", timeout: shellTimeout });
+      const shellReady = player
+        .or(page.getByTestId("student-display-level-select"))
+        .or(page.getByTestId("student-display-level-regular-only"));
+      await shellReady.first().waitFor({ state: "visible", timeout: shellTimeout });
       return;
     } catch (error) {
       lastError = error;

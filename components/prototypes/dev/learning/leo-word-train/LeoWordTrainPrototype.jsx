@@ -10,6 +10,7 @@ import {
   LANGUAGE_PROTOTYPE_TASKS,
 } from "../shared/language-prototype-config.js";
 import { pickWordTrainTasks, trainFeedback, validateTrainTask } from "./leo-word-train-data.js";
+import proto from "../shared/language-prototype-shop.module.css";
 import styles from "./LeoWordTrainPrototype.module.css";
 
 /** @typedef {import('../shared/language-prototype-config.js').DifficultyId} DifficultyId */
@@ -236,7 +237,7 @@ export default function LeoWordTrainPrototype({ backHref = "/dev/learning-game-p
         <button
           key={piece.id}
           type="button"
-          className={`${styles.card} ${selectedPiece === piece.id ? styles.cardSelected : ""} ${used ? styles.cardUsed : ""}`}
+          className={`${proto.pieceCard} ${selectedPiece === piece.id ? proto.pieceCardSelected : ""} ${used ? proto.pieceCardUsed : ""}`}
           disabled={used || timerPausedRef.current}
           onClick={() => {
             if (used) return;
@@ -248,6 +249,21 @@ export default function LeoWordTrainPrototype({ backHref = "/dev/learning-game-p
         </button>
       );
     }) ?? null;
+
+  const cardsPanel = (
+    <>
+      <p className={proto.cardsPanelTitle}>🎴 קלפים לעמיסה</p>
+      <div className={proto.cardGrid} dir="ltr">
+        {cardButtons}
+      </div>
+    </>
+  );
+
+  const feedbackBar = (
+    <p className={shop.feedbackText}>
+      {feedback || "העמיסו קלפים על הקרונות ולחצו הוציאו רכבת"}
+    </p>
+  );
 
   return (
     <div className={`${frame.shell} ${frame.shellSky}`} dir="rtl">
@@ -316,8 +332,8 @@ export default function LeoWordTrainPrototype({ backHref = "/dev/learning-game-p
           <p className={shop.counterLabel}>
             🚉 {task.stationLabel} · יעד {taskIndex + 1}/{LANGUAGE_PROTOTYPE_TASKS}
           </p>
-          <div className={shop.shopGrid} data-educational-workplace-grid="">
-            <aside className={shop.customerCol}>
+          <div className={`${shop.shopGrid} ${proto.protoShopGrid}`} data-educational-workplace-grid="">
+            <aside className={`${shop.customerCol} ${proto.missionMobile}`}>
               <div key={taskKey} className={shop.customerCard}>
                 <span className={styles.stationEmoji} aria-hidden>
                   🚉
@@ -332,7 +348,15 @@ export default function LeoWordTrainPrototype({ backHref = "/dev/learning-game-p
               </div>
             </aside>
 
-            <section className={shop.workCol}>
+            <div key={`desk-${taskKey}`} className={proto.missionDesktop}>
+              <p className={proto.missionDesktopTitle}>תחנת המילים</p>
+              <p className={proto.missionDesktopText}>
+                {task.missionHe}
+                {task.emoji ? ` ${task.emoji}` : null}
+              </p>
+            </div>
+
+            <section className={`${shop.workCol} ${proto.protoWorkCol}`}>
               <div className={styles.workWrap}>
                 {trainAnim === "depart" ? <div className={styles.departBanner}>🚂 יוצאים!</div> : null}
                 <div className={styles.trainWorld}>
@@ -377,33 +401,20 @@ export default function LeoWordTrainPrototype({ backHref = "/dev/learning-game-p
                   </div>
                   <div className={styles.track} aria-hidden />
                 </div>
-                <div className={styles.cardsInWork}>
-                  <p className={styles.cardsInWorkTitle}>🎴 קלפים לעמיסה</p>
-                  <div className={styles.cardGrid} dir="ltr">
-                    {cardButtons}
-                  </div>
-                </div>
               </div>
             </section>
 
-            <aside className={shop.sideCol}>
-              <div className={`${frame.panel} ${shop.toolsPanel} ${styles.cardsInSide}`}>
-                <p className={shop.toolsTitle}>🎴 קלפים לעמיסה</p>
-                <p className={shop.feedbackText} style={{ margin: "0 0 0.25rem", fontSize: "0.72rem" }}>
-                  לחצו קלף ואז קרון · לחיצה על קרון מלא מרוקנת
-                </p>
-                <div className={styles.cardGrid} dir="ltr">
-                  {cardButtons}
-                </div>
-              </div>
-              <div className={feedbackBarClass}>
-                <p className={shop.feedbackText}>
-                  {feedback || "העמיסו קלפים על הקרונות ולחצו הוציאו רכבת"}
-                </p>
-              </div>
+            <aside className={`${shop.sideCol} ${proto.toolsMobile}`}>
+              <div className={`${frame.panel} ${shop.toolsPanel} ${proto.cardsPanel}`}>{cardsPanel}</div>
             </aside>
 
-            <div className={shop.bottomBar}>
+            <div className={`${proto.cardsDesktopRow} ${proto.cardsPanel}`}>{cardsPanel}</div>
+
+            <div className={`${proto.feedbackDesktopRow} ${feedbackBarClass}`}>{feedbackBar}</div>
+
+            <div className={`${proto.feedbackMobile} ${feedbackBarClass}`}>{feedbackBar}</div>
+
+            <div className={`${shop.bottomBar} ${proto.protoBottomBar}`}>
               <div className={shop.actionRow}>
                 <button type="button" className={shop.primaryBtn} disabled={trainAnim === "depart"} onClick={runDepart}>
                   הוציאו רכבת 🚂

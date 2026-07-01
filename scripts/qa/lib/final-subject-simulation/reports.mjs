@@ -115,7 +115,7 @@ export function printConsoleSummary({ subjects, failures, allPass, port, autoPor
 export function collectFailures(subjects, logFile) {
   const failures = [];
   for (const [subjectKey, result] of Object.entries(subjects)) {
-    if (result.pass) continue;
+    if (result.pass || result.notRun) continue;
     const label = result.subjectLabel || subjectKey;
 
     if (!result.setup?.subject_loads?.pass) {

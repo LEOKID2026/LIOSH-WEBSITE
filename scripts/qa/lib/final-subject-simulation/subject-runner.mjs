@@ -66,6 +66,18 @@ function fail(steps, step, message) {
   return message;
 }
 
+function isAcceptableMcqAnswerCount(answers) {
+  const labels = answers.map((a) => String(a || "").trim()).filter(Boolean);
+  if (labels.length === 4) return true;
+  if (
+    labels.length === 2 &&
+    labels.every((a) => /^(נכון|לא נכון)$/i.test(a))
+  ) {
+    return true;
+  }
+  return labels.length >= 2 && labels.length <= 4;
+}
+
 async function trySubmitAnswer(page, harnessKey, profile) {
   const prefix = profile.mcqPrefix || MCQ_PREFIX[harnessKey];
   if (prefix) {
@@ -184,7 +196,7 @@ async function runDisplayLevelFlow(page, {
     const prefix = profile.mcqPrefix || MCQ_PREFIX[harnessKey];
     const answers = prefix ? await readMcqAnswers(page, prefix) : sample.answersDisplayed;
     const isMcq = sample.inputType === "mcq";
-    const mcqOk = !isMcq || answers.length === 4;
+    const mcqOk = !isMcq || isAcceptableMcqAnswerCount(answers);
 
     if (sampleHasIssues(sample) || !sample.questionText?.trim()) {
       fail(
@@ -195,7 +207,12 @@ async function runDisplayLevelFlow(page, {
     } else if (isMcq && !mcqOk) {
       fail(steps, "question_load", `mcq_count=${answers.length}`);
     } else {
-      stepResult(steps, "question_load", true, `${isMcq ? "mcq×4" : sample.inputType}`);
+      stepResult(
+        steps,
+        "question_load",
+        true,
+        `${isMcq ? `mcq×${answers.length}` : sample.inputType}`
+      );
     }
 
     const rawFlags = sample.issues?.flags || {};
@@ -309,7 +326,7 @@ export async function runSubjectSimulation(browser, { baseUrl, subjectKey, logFi
     topic = picked;
     setup.grade_topic_selection = { pass: true, detail: `${grade} / ${picked.value}` };
 
-    const { options } = await readDisplayLevelOptions(page, plan);
+    const { options } = await readDisplayLevelOptions(page, plan, { regularOnly });
     const validation = validateDisplayLevelOptions(options, { regularOnly });
     advancedAbsent = {
       pass: validation.ok,
