@@ -3,6 +3,8 @@ import {
   CUSTOMERS_PER_LEVEL,
   DIFFICULTIES,
   auditPizzeriaContent,
+  getCustomerTimeLimit,
+  pickCustomersForRun,
   sampleOrdersByDifficulty,
   validateOrderSpec,
 } from "./leo-pizzeria-data.js";
@@ -98,6 +100,21 @@ function testSmokeLevels() {
   }
 }
 
+function testCustomerTimers() {
+  for (const diff of ["easy", "medium", "hard"]) {
+    assert(getCustomerTimeLimit(diff, 0) === DIFFICULTIES[diff].timeLimitsByBand[0], `${diff} band0`);
+    assert(getCustomerTimeLimit(diff, 9) === DIFFICULTIES[diff].timeLimitsByBand[0], `${diff} band0 late`);
+    assert(getCustomerTimeLimit(diff, 10) === DIFFICULTIES[diff].timeLimitsByBand[1], `${diff} band1`);
+    assert(getCustomerTimeLimit(diff, 19) === DIFFICULTIES[diff].timeLimitsByBand[1], `${diff} band1 late`);
+  }
+
+  const run = pickCustomersForRun("easy");
+  assert(run.length === CUSTOMERS_PER_LEVEL, "pickCustomersForRun length");
+  for (let i = 0; i < run.length; i += 1) {
+    assert(run[i].timeLimitSec === getCustomerTimeLimit("easy", i), `run timer ${i}`);
+  }
+}
+
 function main() {
   const audit = auditPizzeriaContent();
   assert(audit.ok, `audit failed: ${audit.issues.join("; ")}`);
@@ -105,6 +122,7 @@ function main() {
   testFractionValidation();
   testAllOrdersValid();
   testSmokeLevels();
+  testCustomerTimers();
 
   const samples = sampleOrdersByDifficulty();
   console.log("leo-pizzeria selftest OK");

@@ -21,11 +21,11 @@ for (const [label, re] of [
   ["fetch", /fetch\s*\(/],
   ["supabase", /supabase/i],
   ["api route", /pages\/api\//],
-  ["setInterval", /setInterval\s*\(/],
-  ["timeLeft", /timeLeft/],
 ]) {
   if (re.test(gameSrc)) issues.push(`LeoPizzeriaGame forbidden: ${label}`);
 }
+if (!/timeLeft/.test(gameSrc)) issues.push("LeoPizzeriaGame missing timer (timeLeft)");
+if (!/setInterval\s*\(/.test(gameSrc)) issues.push("LeoPizzeriaGame missing countdown interval");
 
 const audit = auditPizzeriaContent();
 if (!audit.ok) issues.push(...audit.issues);

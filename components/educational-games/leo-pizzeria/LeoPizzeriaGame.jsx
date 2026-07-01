@@ -53,6 +53,10 @@ export default function LeoPizzeriaGame({
   onSessionEndRef.current = onSessionEnd;
   const sessionEndFiredRef = useRef(false);
   const startTimeRef = useRef(Date.now());
+  const mistakesRef = useRef(0);
+  const timeoutHandledForCustomerRef = useRef(-1);
+  const timeLeftRef = useRef(0);
+  const advanceTimerRef = useRef(/** @type {ReturnType<typeof setTimeout> | null} */ (null));
 
   const [phase, setPhase] = useState(/** @type {'intro'|'play'|'won'|'lost'} */ (
     productionMode && autoStart ? "play" : "intro",
@@ -74,6 +78,7 @@ export default function LeoPizzeriaGame({
   const [checkState, setCheckState] = useState(/** @type {'idle'|'ok'|'bad'} */ ("idle"));
   const [feedback, setFeedback] = useState("");
   const [customerKey, setCustomerKey] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(0);
 
   const dragRef = useRef(/** @type {{ toppingId: string } | null} */ (null));
   const [dragGhost, setDragGhost] = useState(
@@ -83,6 +88,9 @@ export default function LeoPizzeriaGame({
   const diffConfig = DIFFICULTIES[difficulty];
   const customer = customers[customerIndex] ?? null;
   const sliceCount = customer?.sliceCount ?? diffConfig.sliceCount;
+
+  mistakesRef.current = mistakes;
+  timeLeftRef.current = timeLeft;
 
   const addScore = useCallback((delta) => {
     setScore((s) => Math.max(0, s + delta));
@@ -96,20 +104,47 @@ export default function LeoPizzeriaGame({
   }, []);
 
   const startGame = useCallback(() => {
-    setCustomers(pickCustomersForRun(difficulty));
+    const list = pickCustomersForRun(difficulty);
+    setCustomers(list);
     setCustomerIndex(0);
     setScore(0);
     setMistakes(0);
+    mistakesRef.current = 0;
     setSuccessCount(0);
     setFailedAttempts(0);
     setCurrentStreak(0);
     setBestStreak(0);
     setCustomerKey(0);
+    timeoutHandledForCustomerRef.current = -1;
     startTimeRef.current = Date.now();
     sessionEndFiredRef.current = false;
     resetPizza();
+    setTimeLeft(list[0]?.timeLimitSec ?? diffConfig.timeLimitsByBand[0]);
     setPhase("play");
-  }, [difficulty, resetPizza]);
+  }, [difficulty, resetPizza, diffConfig.timeLimitsByBand]);
+
+  useEffect(() => {
+    if (phase !== "play" || !customer) return undefined;
+    if (timeLeft > 0) return undefined;
+    if (timeoutHandledForCustomerRef.current === customerIndex) return undefined;
+    timeoutHandledForCustomerRef.current = customerIndex;
+    handleTimeout();
+    return undefined;
+  }, [phase, customer, timeLeft, customerIndex, handleTimeout]);
+
+  useEffect(() => {
+    if (phase !== "play" || !customer) return undefined;
+    const t = window.setInterval(() => {
+      setTimeLeft((sec) => Math.max(0, sec - 1));
+    }, 1000);
+    return () => window.clearInterval(t);
+  }, [phase, customer, customerIndex]);
+
+  useEffect(() => {
+    return () => {
+      if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     if (!autoStart || phase !== "play" || customers.length > 0) return;
@@ -120,16 +155,50 @@ export default function LeoPizzeriaGame({
     setPhase(nextPhase);
   }, []);
 
-  const nextCustomer = useCallback(() => {
-    const next = customerIndex + 1;
-    if (next >= customers.length) {
-      endRun("won");
+  const nextCustomer = useCallback(
+    (nextIndex) => {
+      if (nextIndex >= customers.length) {
+        endRun("won");
+        return;
+      }
+      setCustomerIndex(nextIndex);
+      setCustomerKey((k) => k + 1);
+      resetPizza();
+      timeoutHandledForCustomerRef.current = -1;
+      setTimeLeft(customers[nextIndex]?.timeLimitSec ?? diffConfig.timeLimitsByBand[0]);
+    },
+    [customers, resetPizza, endRun, diffConfig.timeLimitsByBand],
+  );
+
+  const advanceAfterCustomer = useCallback(
+    (idx) => {
+      if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current);
+      advanceTimerRef.current = window.setTimeout(() => {
+        nextCustomer(idx + 1);
+      }, 900);
+    },
+    [nextCustomer],
+  );
+
+  const handleTimeout = useCallback(() => {
+    if (phase !== "play" || !customer) return;
+
+    const nextMistakes = mistakesRef.current + 1;
+    mistakesRef.current = nextMistakes;
+    setMistakes(nextMistakes);
+    setFailedAttempts((f) => f + 1);
+    setCurrentStreak(0);
+    addScore(SCORE.timeout);
+    setCheckState("bad");
+    setFeedback("הלקוח חיכה יותר מדי");
+
+    if (nextMistakes >= diffConfig.maxMistakes) {
+      window.setTimeout(() => endRun("lost"), 1200);
       return;
     }
-    setCustomerIndex(next);
-    setCustomerKey((k) => k + 1);
-    resetPizza();
-  }, [customerIndex, customers.length, resetPizza, endRun]);
+
+    advanceAfterCustomer(customerIndex);
+  }, [phase, customer, addScore, diffConfig.maxMistakes, endRun, advanceAfterCustomer, customerIndex]);
 
   const applyToppingToSlice = useCallback((sliceIndex, toppingId) => {
     setSliceMap((prev) => ({ ...prev, [sliceIndex]: toppingId }));
@@ -200,6 +269,8 @@ export default function LeoPizzeriaGame({
       setFeedback(result.message);
       setSuccessCount((c) => c + 1);
       addScore(SCORE.correct);
+      const wasFast = timeLeftRef.current > Math.floor(customer.timeLimitSec * 0.35);
+      if (wasFast) addScore(SCORE.fastService);
       setCurrentStreak((prev) => {
         const next = prev + 1;
         setBestStreak((best) => Math.max(best, next));
@@ -207,7 +278,7 @@ export default function LeoPizzeriaGame({
         if (next === 5) addScore(SCORE.streak5);
         return next;
       });
-      window.setTimeout(nextCustomer, 1600);
+      advanceAfterCustomer(customerIndex);
       return;
     }
 
@@ -220,7 +291,17 @@ export default function LeoPizzeriaGame({
     if (nextMistakes >= diffConfig.maxMistakes) {
       window.setTimeout(() => endRun("lost"), 1800);
     }
-  }, [customer, sliceMap, checkState, nextCustomer, addScore, mistakes, diffConfig.maxMistakes, endRun]);
+  }, [
+    customer,
+    sliceMap,
+    checkState,
+    customerIndex,
+    advanceAfterCustomer,
+    addScore,
+    mistakes,
+    diffConfig.maxMistakes,
+    endRun,
+  ]);
 
   const pizzaSlices = useMemo(() => {
     if (!customer) return null;
@@ -324,6 +405,9 @@ export default function LeoPizzeriaGame({
             <span className={`${frame.hudChip} ${frame.hudBad}`}>
               ❌ {mistakes}/{diffConfig.maxMistakes}
             </span>
+            <span className={`${frame.hudChip} ${styles.hudTime} ${timeLeft <= 8 ? styles.hudTimeWarn : ""}`}>
+              ⏱ {timeLeft}s
+            </span>
             <span className={frame.hudChip}>{diffConfig.label}</span>
           </div>
         ) : (
@@ -364,7 +448,7 @@ export default function LeoPizzeriaGame({
             style={{ fontSize: "0.72rem" }}
           />
           <p className={frame.introText} style={{ fontSize: "0.78rem" }}>
-            {CUSTOMERS_PER_LEVEL} לקוחות · גרירה או לחיצה על תוספות
+            {CUSTOMERS_PER_LEVEL} לקוחות · טיימר לכל לקוח · גרירה או לחיצה על תוספות
           </p>
           <button type="button" className={frame.startBtn} onClick={startGame}>
             פתיחת משמרת 🍕

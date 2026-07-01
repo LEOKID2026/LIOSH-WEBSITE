@@ -19,6 +19,7 @@
  *   ticketLine: string
  *   sliceCount: number
  *   spec: OrderSpec
+ *   timeLimitSec: number
  * }} PizzeriaCustomerOrder
  */
 
@@ -41,6 +42,7 @@ export const DIFFICULTIES = {
     sliceCount: 4,
     hint: "שלם, חצי ורבע על פיצה ב-4 חלקים",
     maxMistakes: 5,
+    timeLimitsByBand: [45, 40, 35],
   },
   medium: {
     id: "medium",
@@ -48,6 +50,7 @@ export const DIFFICULTIES = {
     sliceCount: 8,
     hint: "חצי, רבע, שלושה רבעים על 8 חלקים",
     maxMistakes: 4,
+    timeLimitsByBand: [35, 30, 25],
   },
   hard: {
     id: "hard",
@@ -55,6 +58,7 @@ export const DIFFICULTIES = {
     sliceCount: 8,
     hint: "שמיניות, שילובים והשלמה לשלם",
     maxMistakes: 3,
+    timeLimitsByBand: [30, 25, 20],
   },
 };
 
@@ -62,6 +66,8 @@ export const SCORE = {
   correct: 30,
   streak3: 15,
   streak5: 30,
+  fastService: 5,
+  timeout: -5,
 };
 
 const SUCCESS_MESSAGES = [
@@ -671,10 +677,20 @@ export function validateCustomerOrder(order, sliceMap) {
   return validateOrderSpec(order.spec, order.sliceCount, sliceMap);
 }
 
+/** @param {DifficultyId} difficultyId @param {number} index 0-based */
+export function getCustomerTimeLimit(difficultyId, index) {
+  const diff = DIFFICULTIES[difficultyId] ?? DIFFICULTIES.easy;
+  const band = Math.min(1, Math.floor(index / 10));
+  return diff.timeLimitsByBand[band];
+}
+
 /** @param {DifficultyId} difficulty */
 export function pickCustomersForRun(difficulty) {
   const pool = CUSTOMERS_BY_DIFFICULTY[difficulty] ?? CUSTOMERS_BY_DIFFICULTY.easy;
-  return shuffle([...pool]).slice(0, CUSTOMERS_PER_LEVEL);
+  return shuffle([...pool]).slice(0, CUSTOMERS_PER_LEVEL).map((order, index) => ({
+    ...order,
+    timeLimitSec: getCustomerTimeLimit(difficulty, index),
+  }));
 }
 
 /**
