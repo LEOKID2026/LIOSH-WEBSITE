@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Layout from "../../components/Layout";
 import PortalLoginHeading from "../../components/auth/PortalLoginHeading";
+import ParentGoogleSignInButton from "../../components/auth/ParentGoogleSignInButton";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
 import { mapParentAuthError } from "../../lib/parent-client/parent-auth-errors.he";
 import {
@@ -291,22 +292,7 @@ export default function ParentLoginPage() {
           </button>
         </div>
 
-        <button
-          type="button"
-          data-testid="parent-google-sign-in"
-          disabled={formSubmitDisabled}
-          onClick={() => void onGoogleSignIn()}
-          className={`w-full rounded-xl border font-semibold py-2.5 disabled:opacity-60 flex items-center justify-center gap-2 ${
-            isBright
-              ? "border-slate-300 bg-white text-slate-800 hover:bg-slate-50 shadow-sm"
-              : "border-white/20 bg-white/10 text-white hover:bg-white/15"
-          }`}
-        >
-          <span aria-hidden="true" className="text-base leading-none">
-            G
-          </span>
-          התחברות עם Google
-        </button>
+        <ParentGoogleSignInButton disabled={formSubmitDisabled} onClick={() => void onGoogleSignIn()} />
 
         <div className="flex items-center gap-3 my-1">
           <div className={`flex-1 h-px ${isBright ? "bg-slate-200" : "bg-white/15"}`} />

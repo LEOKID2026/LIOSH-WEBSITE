@@ -1,0 +1,140 @@
+.trainTrack {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  width: 100%;
+  max-width: min(100%, 520px);
+  padding: 0.35rem;
+}
+
+.engine {
+  font-size: clamp(2rem, 8vw, 3rem);
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.15));
+}
+
+.carriage {
+  min-width: clamp(2.4rem, 9vw, 3.2rem);
+  min-height: clamp(2.4rem, 9vw, 3.2rem);
+  border-radius: 0.65rem;
+  border: 3px solid #2563eb;
+  background: linear-gradient(180deg, #dbeafe, #bfdbfe);
+  font-size: clamp(1.1rem, 4.5vw, 1.5rem);
+  font-weight: 900;
+  color: #1e3a8a;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #1d4ed8;
+}
+
+.carriageEmpty {
+  background: #f8fafc;
+  color: #94a3b8;
+  border-style: dashed;
+}
+
+.wheels {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  margin-top: -0.15rem;
+}
+
+.wheel {
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  background: #334155;
+  border: 3px solid #64748b;
+}
+
+.letterGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  justify-content: center;
+}
+
+.letterBtn {
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  padding: 0.35rem 0.55rem;
+  border-radius: 0.55rem;
+  border: 2px solid #93c5fd;
+  background: #eff6ff;
+  font-size: clamp(1rem, 4vw, 1.25rem);
+  font-weight: 900;
+  color: #1d4ed8;
+  cursor: pointer;
+}
+
+.letterUsed {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.optionGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem;
+  width: 100%;
+}
+
+.optionBtn {
+  min-height: 3rem;
+  padding: 0.45rem;
+  border-radius: 0.65rem;
+  border: 2px solid #bfdbfe;
+  background: #fff;
+  font-weight: 800;
+  font-size: clamp(0.85rem, 3.2vw, 1rem);
+  cursor: pointer;
+}
+
+.optionBtnActive {
+  border-color: #2563eb;
+  background: #dbeafe;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+}
+
+.optionEn {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+.emojiHero {
+  font-size: clamp(3rem, 14vw, 5rem);
+  line-height: 1;
+}
+
+.templateLine {
+  margin: 0.25rem 0 0;
+  font-size: clamp(1.1rem, 4.5vw, 1.45rem);
+  font-weight: 900;
+  color: #1e40af;
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+.hudTime {
+  border-color: #93c5fd;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.hudTimeWarn {
+  border-color: #f87171;
+  background: #fef2f2;
+  color: #b91c1c;
+  animation: pulseTime 0.8s ease-in-out infinite;
+}
+
+@keyframes pulseTime {
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.stationEmoji {
+  font-size: clamp(2.5rem, 10vw, 4rem);
+}

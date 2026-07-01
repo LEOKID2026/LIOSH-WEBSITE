@@ -1,0 +1,64 @@
+.optionGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem;
+  width: 100%;
+}
+
+.optionBtn {
+  min-height: 3rem;
+  padding: 0.5rem;
+  border-radius: 0.65rem;
+  border: 2px solid #c4b5fd;
+  background: #fff;
+  font-weight: 800;
+  font-size: clamp(0.85rem, 3.2vw, 1rem);
+  cursor: pointer;
+  text-align: center;
+}
+
+.optionBtnActive {
+  border-color: #7c3aed;
+  background: #ede9fe;
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.25);
+}
+
+.passage {
+  margin: 0.35rem 0 0;
+  padding: 0.45rem 0.55rem;
+  border-radius: 0.55rem;
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid #ddd6fe;
+  font-size: clamp(0.78rem, 2.8vw, 0.92rem);
+  line-height: 1.45;
+  max-height: 8rem;
+  overflow: hidden;
+}
+
+.caseBadge {
+  font-size: clamp(2.5rem, 10vw, 4rem);
+  line-height: 1;
+}
+
+.boardEmoji {
+  font-size: clamp(3rem, 14vw, 5rem);
+}
+
+.hudTime {
+  border-color: #93c5fd;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.hudTimeWarn {
+  border-color: #f87171;
+  background: #fef2f2;
+  color: #b91c1c;
+  animation: pulseTime 0.8s ease-in-out infinite;
+}
+
+@keyframes pulseTime {
+  50% {
+    transform: scale(1.05);
+  }
+}
