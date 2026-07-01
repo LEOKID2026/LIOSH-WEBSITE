@@ -2,8 +2,11 @@
  * Maps static history bank rows → diagnostic contract fields on question.params.
  */
 
-import { HISTORY_G6_CONTENT_MAP } from "../data/history-g6-content-map.js";
-import { HISTORY_SKILL_LABEL_HE } from "../data/history-curriculum.js";
+import { HISTORY_G6_CONTENT_MAP as HISTORY_G6_CONTENT_MAP_SOURCE } from "../data/history-g6-content-map.js";
+import { HISTORY_SKILL_LABEL_HE as HISTORY_CURRICULUM_SKILL_LABEL_HE } from "../data/history-curriculum.js";
+
+const HISTORY_G6_CONTENT_MAP = HISTORY_G6_CONTENT_MAP_SOURCE || {};
+const HISTORY_SKILL_LABEL_HE = HISTORY_CURRICULUM_SKILL_LABEL_HE || {};
 
 /** @type {Record<string, string>} */
 const HISTORY_TAXONOMY_TO_SKILL = {

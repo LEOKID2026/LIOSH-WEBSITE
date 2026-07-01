@@ -166,6 +166,11 @@ const ENGINE_PROFESSIONALIZATION_STEPS = [
     label: "Adaptive planner artifacts (metadata-backed non-live safety gate)",
   },
   {
+    id: "adaptivePlannerMetadataIndex",
+    script: "build:adaptive-planner:metadata-index",
+    label: "Adaptive planner metadata index snapshot",
+  },
+  {
     id: "adaptivePlannerRuntimeBridge",
     script: "test:adaptive-planner:runtime",
     label: "Adaptive planner runtime bridge (practice snapshot → recommendation)",

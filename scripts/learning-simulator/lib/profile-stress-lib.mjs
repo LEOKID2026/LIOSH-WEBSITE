@@ -234,21 +234,49 @@ export function pickCellForSlot(pool, grade, subject, preferredTopic) {
   return pool[0] || null;
 }
 
+function pickCellForGradeSubject(pool, grade, subject, preferredTopics = []) {
+  for (const topic of preferredTopics) {
+    if (!topic) continue;
+    const exact = pool.find((r) => r.grade === grade && r.subject === subject && r.topic === topic);
+    if (exact) return exact;
+  }
+  const sameGradeSubject = pool.filter((r) => r.grade === grade && r.subject === subject);
+  if (sameGradeSubject.length) return sameGradeSubject[Math.floor(sameGradeSubject.length / 2)];
+  return null;
+}
+
+function pickMixedStrengthsGrade(pool, preferredGrade) {
+  const grades = [...new Set(pool.map((r) => r.grade))];
+  const eligible = grades.filter(
+    (g) => pool.some((r) => r.grade === g && r.subject === "math") && pool.some((r) => r.grade === g && r.subject === "hebrew")
+  );
+  if (!eligible.length) return null;
+  if (eligible.includes(preferredGrade)) return preferredGrade;
+  return eligible.sort()[0];
+}
+
 /**
  * Compact matrix refs (easy/medium/hard when possible). `mixed_strengths` uses math+hebrew.
  * @returns {{ matrixCoverageRefs: object[], rows: object[], stressSubject: string, stressTopic: string|null }}
  */
 export function collectMatrixRefsForStress(pool, profileStressType, grade, subject) {
   if (profileStressType === "mixed_strengths") {
-    let mathRow =
-      pickCellForSlot(pool, grade, "math", "word_problems") ||
-      pickCellForSlot(pool, grade, "math", SUBJECT_DEFAULT_WEAK_TOPIC.math);
-    let hebrewRow =
-      pickCellForSlot(pool, grade, "hebrew", "comprehension") ||
-      pickCellForSlot(pool, grade, "hebrew", SUBJECT_DEFAULT_WEAK_TOPIC.hebrew);
-    if (!mathRow) mathRow = pool.find((r) => r.subject === "math") || null;
-    if (!hebrewRow) hebrewRow = pool.find((r) => r.subject === "hebrew") || null;
+    const mixedGrade = pickMixedStrengthsGrade(pool, grade);
+    if (!mixedGrade) {
+      return { matrixCoverageRefs: [], rows: [], stressSubject: "mixed", stressTopic: null };
+    }
+    const mathRow = pickCellForGradeSubject(pool, mixedGrade, "math", [
+      "word_problems",
+      SUBJECT_DEFAULT_WEAK_TOPIC.math,
+    ]);
+    const hebrewRow = pickCellForGradeSubject(pool, mixedGrade, "hebrew", [
+      "comprehension",
+      SUBJECT_DEFAULT_WEAK_TOPIC.hebrew,
+    ]);
     const rows = [mathRow, hebrewRow].filter(Boolean);
+    if (rows.length < 2) {
+      return { matrixCoverageRefs: [], rows: [], stressSubject: "mixed", stressTopic: null };
+    }
     const uniq = [...new Map(rows.map((r) => [r.cellKey, r])).values()];
     return {
       matrixCoverageRefs: uniq.map((r) => ({

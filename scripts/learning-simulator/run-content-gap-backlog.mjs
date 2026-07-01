@@ -62,6 +62,19 @@ function cellToBacklogItem(cell) {
       notes:
         "Phase 4 requires MCQ-shaped rows (isEnglishMcqLike); translation flashcards alone do not satisfy. Confirm product wants MCQ here vs curriculum/matrix adjustment.",
     };
+  } else if (
+    subject === "english" &&
+    topic === "phonics" &&
+    (grade === "g1" || grade === "g2") &&
+    cat === "needs_content_addition"
+  ) {
+    mapped = {
+      targetFile: "data/english-questions/grammar-pools.js",
+      suggestedContentType: "future_decision_non_mcq_phonics",
+      releaseRisk: "low",
+      notes:
+        "Launch scope: treat as advisory backlog only. g1/g2 phonics is currently non-MCQ in this QA path (expected skip/not-applicable). If product later requires MCQ phonics, handle as a dedicated future content track.",
+    };
   }
 
   if (!mapped) return null;

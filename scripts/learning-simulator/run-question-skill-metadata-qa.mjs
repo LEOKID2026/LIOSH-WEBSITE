@@ -23,6 +23,38 @@ function cellKey(c) {
   return `${c.grade}|${c.subjectCanonical}|${c.topic}|${c.level}`;
 }
 
+function classifyExpectedUnsupported(cell, reason) {
+  const r = String(reason || "");
+  if (cell.topic === "mixed" || r.includes("intentionally multi-topic")) {
+    return {
+      expected: true,
+      code: "expected_skip",
+      detail: "expected skip: topic `mixed` is a multi-topic runtime/UI selector (not a single integrity cell)",
+      skipKind: "mixed_topic_not_single_cell",
+    };
+  }
+  if (
+    cell.subjectCanonical === "english" &&
+    cell.topic === "phonics" &&
+    (cell.grade === "g1" || cell.grade === "g2") &&
+    r.includes("no MCQ-shaped english pool rows")
+  ) {
+    return {
+      expected: true,
+      code: "expected_skip",
+      detail:
+        "expected skip: english phonics g1/g2 is not represented as MCQ pool rows for this QA path (adapter not applicable)",
+      skipKind: "english_phonics_non_mcq_pool",
+    };
+  }
+  return {
+    expected: false,
+    code: "no_question",
+    detail: r || "unsupported",
+    skipKind: null,
+  };
+}
+
 async function main() {
   const qsm = await import(pathToFileURL(join(ROOT, "utils/learning-diagnostics/question-skill-metadata-v1.js")).href);
   const buildQuestionSkillMetadataV1 = qsm.buildQuestionSkillMetadataV1;
@@ -66,13 +98,15 @@ async function main() {
     for (let i = 0; i < N; i += 1) {
       const gen = await generateForMatrixCell(cell, i);
       if (gen.unsupported || !gen.ok || !gen.raw) {
+        const unsupported = classifyExpectedUnsupported(cell, gen.reason || gen.error || "unsupported");
         issues.push({
           cellKey: cellKey(cell),
           sampleIndex: i,
-          code: "no_question",
-          detail: gen.reason || gen.error || "unsupported",
+          code: unsupported.code,
+          detail: unsupported.detail,
+          ...(unsupported.skipKind ? { skipKind: unsupported.skipKind } : {}),
         });
-        cellPass = false;
+        if (!unsupported.expected) cellPass = false;
         continue;
       }
 

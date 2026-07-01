@@ -13,7 +13,10 @@ import {
   normalizeSubjectIdForDisplayLevel,
   resolveSessionLevels,
 } from "../../../../lib/learning/display-level.js";
-import { MOLEDET_GEOGRAPHY_SUBJECT } from "./subject-registry.mjs";
+import {
+  MOLEDET_GEOGRAPHY_SUBJECT,
+  isMassSimSubjectGradeAllowed,
+} from "./subject-registry.mjs";
 
 export { DISPLAY_LEVELS };
 
@@ -176,4 +179,90 @@ export function summarizeCohortLevelDistribution(cohort, subjects) {
     }
   }
   return out;
+}
+
+/**
+ * Level coverage gaps — respects grade gates + product level model + cohort rotation.
+ * Does NOT require every subject×grade×level primary cell to be non-zero.
+ *
+ * @param {{
+ *   subjects: string[],
+ *   grades: number[],
+ *   bySubjectGrade: Record<string, number>,
+ *   bySubjectGradeLevel: Record<string, number>,
+ *   studentsByDisplayLevel: Record<string, Record<string, number>>,
+ * }} params
+ * @returns {string[]}
+ */
+export function computeLevelCoverageGaps({
+  subjects,
+  grades,
+  bySubjectGrade,
+  bySubjectGradeLevel,
+  studentsByDisplayLevel,
+}) {
+  /** @type {string[]} */
+  const gaps = [];
+
+  for (const subject of subjects) {
+    const dist = studentsByDisplayLevel[subject] || {};
+    const levels = displayLevelsForSubject(subject);
+
+    if (isScienceSubjectId(subject)) {
+      if ((dist.regular || 0) < 1) gaps.push(`${subject}:subject:regular`);
+      if ((dist.advanced || 0) > 0) gaps.push(`${subject}:subject:advanced_forbidden`);
+      for (const grade of grades) {
+        if (!isMassSimSubjectGradeAllowed(subject, grade)) continue;
+        if ((bySubjectGrade[`${subject}:${grade}`] || 0) === 0) {
+          gaps.push(`${subject}:${grade}:all`);
+        }
+        if ((bySubjectGradeLevel[`${subject}:${grade}:advanced`] || 0) > 0) {
+          gaps.push(`${subject}:${grade}:advanced_forbidden`);
+        }
+      }
+      continue;
+    }
+
+    if ((dist.regular || 0) < 1) gaps.push(`${subject}:subject:regular`);
+    if ((dist.advanced || 0) < 1) gaps.push(`${subject}:subject:advanced`);
+
+    if (subject === "history") {
+      const g6 = 6;
+      if ((bySubjectGrade[`${subject}:${g6}`] || 0) === 0) {
+        gaps.push(`${subject}:${g6}:all`);
+      }
+      if ((bySubjectGradeLevel[`${subject}:${g6}:regular`] || 0) < 1) {
+        gaps.push(`${subject}:${g6}:regular`);
+      }
+      if ((bySubjectGradeLevel[`${subject}:${g6}:advanced`] || 0) < 1) {
+        gaps.push(`${subject}:${g6}:advanced`);
+      }
+      continue;
+    }
+
+    if (subject === MOLEDET_GEOGRAPHY_SUBJECT) {
+      for (const grade of grades) {
+        if (!isMassSimSubjectGradeAllowed(subject, grade)) continue;
+        if ((bySubjectGrade[`${subject}:${grade}`] || 0) === 0) {
+          gaps.push(`${subject}:${grade}:all`);
+          continue;
+        }
+        for (const displayLevel of levels) {
+          if ((bySubjectGradeLevel[`${subject}:${grade}:${displayLevel}`] || 0) < 1) {
+            gaps.push(`${subject}:${grade}:${displayLevel}`);
+          }
+        }
+      }
+      continue;
+    }
+
+    for (const grade of grades) {
+      if (!isMassSimSubjectGradeAllowed(subject, grade)) continue;
+      if ((bySubjectGrade[`${subject}:${grade}`] || 0) === 0) {
+        gaps.push(`${subject}:${grade}:all`);
+      }
+    }
+  }
+
+  return gaps;
 }

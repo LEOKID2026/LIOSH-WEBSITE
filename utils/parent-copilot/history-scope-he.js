@@ -2,9 +2,16 @@
  * History-only Copilot scope lock — prevents cross-subject fallback when parents ask about history.
  */
 
-import { historyG6TopicForSubtopic } from "../../data/history-g6-content-map.js";
-import { historySubtopicLabelHe, historyTopicLabelHe } from "../../data/history-curriculum.js";
+import { historyG6TopicForSubtopic as historyG6ContentMapTopicForSubtopic } from "../../data/history-g6-content-map.js";
+import {
+  historySubtopicLabelHe as historyCurriculumSubtopicLabelHe,
+  historyTopicLabelHe as historyCurriculumTopicLabelHe,
+} from "../../data/history-curriculum.js";
 import { foldUtteranceForHeMatch } from "./utterance-normalize-he.js";
+
+const historyG6TopicForSubtopic = historyG6ContentMapTopicForSubtopic || (() => null);
+const historySubtopicLabelHe = historyCurriculumSubtopicLabelHe || ((k) => String(k || ""));
+const historyTopicLabelHe = historyCurriculumTopicLabelHe || ((k) => String(k || ""));
 
 export const ZERO_DATA_HISTORY_TOPIC_HE = "אין עדיין מספיק נתונים בנושא הזה";
 

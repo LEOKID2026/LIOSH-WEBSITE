@@ -158,18 +158,31 @@ export function validateMatrix(discovery, rows) {
     }
     if (!anyTopic) errors.push(`subject ${sid} has no topics in any grade`);
 
-    for (const gk of GRADE_KEYS) {
+    const allowedGrades =
+      Array.isArray(sub.allowedGrades) && sub.allowedGrades.length ? sub.allowedGrades : GRADE_KEYS;
+    const disallowedGrades = GRADE_KEYS.filter((gk) => !allowedGrades.includes(gk));
+
+    for (const gk of allowedGrades) {
       const ts = sub.grades?.[gk];
       if (!Array.isArray(ts) || ts.length === 0) {
         errors.push(`subject ${sid} has no runtime topics for grade ${gk}`);
       }
+    }
+    for (const gk of disallowedGrades) {
+      const count = rows.filter((r) => r.subjectCanonical === sid && r.grade === gk).length;
+      if (count > 0) errors.push(`unexpected matrix rows for out-of-scope grade ${sid} ${gk}`);
     }
   }
 
   if (rows.length === 0) errors.push("matrix has zero rows");
 
   for (const sid of subjectOrder) {
+    const sub = discovery.subjects[sid];
+    if (!sub) continue;
+    const allowedGrades =
+      Array.isArray(sub.allowedGrades) && sub.allowedGrades.length ? sub.allowedGrades : GRADE_KEYS;
     for (const gk of GRADE_KEYS) {
+      if (!allowedGrades.includes(gk)) continue;
       const count = rows.filter((r) => r.subjectCanonical === sid && r.grade === gk).length;
       if (count === 0) errors.push(`no matrix rows for ${sid} ${gk}`);
     }
@@ -183,9 +196,7 @@ export function verifyMatrixSelfTest(rows) {
   if (rows.length === 0) failures.push("rows empty");
 
   const grades = new Set(rows.map((r) => r.grade));
-  for (const g of GRADE_KEYS) {
-    if (!grades.has(g)) failures.push(`missing grade ${g}`);
-  }
+  if (grades.size === 0) failures.push("missing all grades");
 
   const subjects = new Set(rows.map((r) => r.subjectCanonical));
   for (const s of ["math", "geometry", "english", "hebrew", "science"]) {

@@ -39,7 +39,7 @@ import {
   verifyParentReports,
 } from "./lib/mass-virtual-students/reports.mjs";
 import {
-  displayLevelsForSubject,
+  computeLevelCoverageGaps,
   resolvePracticeDisplayLevel,
   summarizeCohortLevelDistribution,
 } from "./lib/mass-virtual-students/display-level-cohort.mjs";
@@ -233,18 +233,14 @@ async function runVerifyOnly(cfg) {
   const gradeCoverageGaps = cfg.grades.filter((g) =>
     cfg.subjects.every((sub) => (bySubjectGrade[`${sub}:${g}`] || 0) === 0),
   );
-  const levelCoverageGaps = [];
-  for (const subject of cfg.subjects) {
-    for (const grade of cfg.grades) {
-      for (const displayLevel of displayLevelsForSubject(subject)) {
-        const levelKey = `${subject}:${grade}:${displayLevel}`;
-        if ((bySubjectGradeLevel[levelKey] || 0) === 0) {
-          levelCoverageGaps.push(levelKey);
-        }
-      }
-    }
-  }
   const studentsByDisplayLevel = summarizeCohortLevelDistribution(manifest.students, cfg.subjects);
+  const levelCoverageGaps = computeLevelCoverageGaps({
+    subjects: cfg.subjects,
+    grades: cfg.grades,
+    bySubjectGrade,
+    bySubjectGradeLevel,
+    studentsByDisplayLevel,
+  });
 
   const englishIssues = reportVerification.results.filter((r) => r.englishHits?.length).length;
   const technicalIssues = reportVerification.results.filter((r) => r.technicalHits?.length).length;
@@ -586,19 +582,14 @@ async function main() {
     cfg.subjects.every((sub) => (bySubjectGrade[`${sub}:${g}`] || 0) === 0),
   );
 
-  const levelCoverageGaps = [];
-  for (const subject of cfg.subjects) {
-    for (const grade of cfg.grades) {
-      for (const displayLevel of displayLevelsForSubject(subject)) {
-        const levelKey = `${subject}:${grade}:${displayLevel}`;
-        if ((bySubjectGradeLevel[levelKey] || 0) === 0) {
-          levelCoverageGaps.push(levelKey);
-        }
-      }
-    }
-  }
-
   const studentsByDisplayLevel = summarizeCohortLevelDistribution(cohort, cfg.subjects);
+  const levelCoverageGaps = computeLevelCoverageGaps({
+    subjects: cfg.subjects,
+    grades: cfg.grades,
+    bySubjectGrade,
+    bySubjectGradeLevel,
+    studentsByDisplayLevel,
+  });
 
   const summaryBase = {
     runId: cfg.runId,

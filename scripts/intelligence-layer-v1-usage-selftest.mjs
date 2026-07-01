@@ -31,6 +31,9 @@ const { summarizeV2UnitsForSubjectForTests, v2PositiveStrengthBodyFromUnitForTes
 const { getIntelligencePriority } = await import(
   pathToFileURL(join(ROOT, "utils", "intelligence-layer-v1", "signal-priority.js")).href
 );
+const { pickUncertaintyReasonScript } = await import(
+  pathToFileURL(join(ROOT, "utils", "parent-copilot", "parent-coaching-packs.js")).href
+);
 const { applyIntelligenceDecisionGuards } = await import(
   pathToFileURL(join(ROOT, "utils", "intelligence-layer-v1", "intelligence-decision-guards.js")).href
 );
@@ -249,9 +252,15 @@ const { computeGlobalScore } = await import(
   const draft = composeAnswerDraft(plan, truthPacket, { intent: "explain_report" });
   const u = draft.answerBlocks.find((b) => b.type === "uncertainty_reason");
   assert.ok(u, "uncertainty_reason block expected");
+  // Verify the route directly: the composed reason must contain one of the actual
+  // approved low-confidence script variants (rotation-safe — avoids hardcoding a
+  // narrow keyword subset that only some of the approved variants happen to use).
+  const approvedLowConfidenceScripts = [0, 1, 2, 3].map((ix) =>
+    pickUncertaintyReasonScript({ confidenceBand: "low" }, "explain_report", ix)
+  );
   assert.ok(
-    String(u.textHe || "").includes("ביטחון") || String(u.textHe || "").includes("נמוכה"),
-    "iv1 low confidence must steer to existing low-confidence uncertainty scripts"
+    approvedLowConfidenceScripts.some((script) => String(u.textHe || "").includes(script)),
+    "iv1 low confidence must steer to one of the approved low-confidence uncertainty scripts"
   );
   assert.ok(draft.debug && typeof draft.debug.intelligenceV1 === "object");
 }

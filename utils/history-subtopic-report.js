@@ -1,12 +1,21 @@
 /**
  * History parent-report helpers — 16 subtopic rows derived from mistakes + parent topic sessions.
  */
-import { HISTORY_G6_SUBTOPIC_IDS, historyG6TopicForSubtopic } from "../data/history-g6-content-map.js";
 import {
-  historySubtopicLabelHe,
-  historyTopicLabelHe,
-  historySubtopicsForTopic,
+  HISTORY_G6_SUBTOPIC_IDS as HISTORY_G6_CONTENT_MAP_SUBTOPIC_IDS,
+  historyG6TopicForSubtopic as historyG6ContentMapTopicForSubtopic,
+} from "../data/history-g6-content-map.js";
+import {
+  historySubtopicLabelHe as historyCurriculumSubtopicLabelHe,
+  historyTopicLabelHe as historyCurriculumTopicLabelHe,
+  historySubtopicsForTopic as historyCurriculumSubtopicsForTopic,
 } from "../data/history-curriculum.js";
+
+const HISTORY_G6_SUBTOPIC_IDS = HISTORY_G6_CONTENT_MAP_SUBTOPIC_IDS || [];
+const historyG6TopicForSubtopic = historyG6ContentMapTopicForSubtopic || (() => null);
+const historySubtopicLabelHe = historyCurriculumSubtopicLabelHe || ((k) => String(k || ""));
+const historyTopicLabelHe = historyCurriculumTopicLabelHe || ((k) => String(k || ""));
+const historySubtopicsForTopic = historyCurriculumSubtopicsForTopic || (() => []);
 
 /**
  * @param {Record<string, unknown>} m

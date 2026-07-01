@@ -18,9 +18,16 @@ import {
   MOLEDET_GEOGRAPHY_SKILL_IDS,
   MOLEDET_GEOGRAPHY_SUBSKILL_ALLOWLIST_BY_SKILL,
 } from "./question-metadata-taxonomy-geography.js";
-import { HISTORY_SKILL_IDS, HISTORY_TOPIC_ORDER } from "../../data/history-curriculum.js";
-import { HISTORY_G6_SUBTOPIC_IDS } from "../../data/history-g6-content-map.js";
+import {
+  HISTORY_SKILL_IDS as HISTORY_CURRICULUM_SKILL_IDS,
+  HISTORY_TOPIC_ORDER as HISTORY_CURRICULUM_TOPIC_ORDER,
+} from "../../data/history-curriculum.js";
+import { HISTORY_G6_SUBTOPIC_IDS as HISTORY_G6_CONTENT_MAP_SUBTOPIC_IDS } from "../../data/history-g6-content-map.js";
 import { BANK_ENRICHED_EXPECTED_ERROR_TYPES } from "./bank-enriched-expected-error-types.js";
+
+const HISTORY_SKILL_IDS = HISTORY_CURRICULUM_SKILL_IDS || [];
+const HISTORY_TOPIC_ORDER = HISTORY_CURRICULUM_TOPIC_ORDER || [];
+const HISTORY_G6_SUBTOPIC_IDS = HISTORY_G6_CONTENT_MAP_SUBTOPIC_IDS || [];
 
 export { ENGLISH_SKILL_IDS, ENGLISH_SUBSKILL_ALLOWLIST_BY_SKILL };
 export {
@@ -244,26 +251,41 @@ function buildGeometrySubskillAllowlist() {
   m["para_parallel_late"] = new Set(["parallelogram_late"]);
   m["parallel_never_meet"] = new Set(["parallel_def"]);
   m["parallel_never_meet_late"] = new Set(["parallel_def_late"]);
+  m["parallel_symbol"] = new Set(["parallel_symbol"]);
+  m["parallel_symbol_late"] = new Set(["parallel_symbol_late"]);
+  m["parallel_vs_perp"] = new Set(["compare_relation"]);
+  m["parallel_vs_perp_mid"] = new Set(["compare_relation_mid"]);
   m["perim_to_side"] = new Set(["square_from_perimeter"]);
+  m["perp_angle_mid"] = new Set(["perp_angle_mid"]);
   m["perp_meeting"] = new Set(["definition"]);
   m["perp_meeting_late"] = new Set(["definition_late"]);
+  m["perp_symbol"] = new Set(["symbol_recognition"]);
+  m["perp_symbol_mid"] = new Set(["perp_symbol_mid"]);
+  m["perp_def_late"] = new Set(["perp_def_late"]);
   m["perpendicular_to_base"] = new Set(["triangle"]);
   m["quarter_90"] = new Set(["degrees"]);
   m["rect_all_90"] = new Set(["rectangle_angles"]);
   m["rect_all_90_mid"] = new Set(["rectangle_angles_mid"]);
   m["slide"] = new Set(["translation"]);
+  m["slide_only"] = new Set(["translation_hard"]);
   m["square_4_equal"] = new Set(["square_count"]);
   m["square_4_equal_mid"] = new Set(["square_count_mid"]);
   m["square_special"] = new Set(["square_rectangle"]);
   m["square_special_late"] = new Set(["square_rectangle_late"]);
+  m["square_tile_90"] = new Set(["square_tile_angle"]);
+  m["triangle_tile_60"] = new Set(["triangle_tile_angle"]);
   m["tri_sum_180"] = new Set(["inference"]);
   m["tri_sum_180_late"] = new Set(["inference_reasoning"]);
+  m["turn"] = new Set(["rotation"]);
+  m["turn_center"] = new Set(["rotation_hard"]);
   m["unit_squares"] = new Set(["square_units"]);
   m["vol_box"] = new Set(["order_ops"]);
   m["volume_3d"] = new Set(["definition"]);
   m["volume_3d_late"] = new Set(["definition_capacity"]);
   m["wheel_rotation"] = new Set(["interpret"]);
   m["when_pyth"] = new Set(["first_step"]);
+  m["no_motion"] = new Set(["identity"]);
+  m["mirror_axis"] = new Set(["reflection_hard"]);
   return m;
 }
 

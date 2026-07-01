@@ -106,6 +106,70 @@ async function loadMoledet() {
   return moledetCache;
 }
 
+let moledetBankCache = null;
+async function loadMoledetBank() {
+  if (!moledetBankCache) {
+    const mod = await import(modUrl("data/geography-questions/index.js"));
+    const src = mod && typeof mod === "object" ? mod : {};
+    const base = src.default && typeof src.default === "object" ? src.default : {};
+    const pick = (name) => src[name] ?? base[name] ?? null;
+    moledetBankCache = {
+      G2_EASY_QUESTIONS: pick("G2_EASY_QUESTIONS"),
+      G2_MEDIUM_QUESTIONS: pick("G2_MEDIUM_QUESTIONS"),
+      G2_HARD_QUESTIONS: pick("G2_HARD_QUESTIONS"),
+      G3_EASY_QUESTIONS: pick("G3_EASY_QUESTIONS"),
+      G3_MEDIUM_QUESTIONS: pick("G3_MEDIUM_QUESTIONS"),
+      G3_HARD_QUESTIONS: pick("G3_HARD_QUESTIONS"),
+      G4_EASY_QUESTIONS: pick("G4_EASY_QUESTIONS"),
+      G4_MEDIUM_QUESTIONS: pick("G4_MEDIUM_QUESTIONS"),
+      G4_HARD_QUESTIONS: pick("G4_HARD_QUESTIONS"),
+      G5_EASY_QUESTIONS: pick("G5_EASY_QUESTIONS"),
+      G5_MEDIUM_QUESTIONS: pick("G5_MEDIUM_QUESTIONS"),
+      G5_HARD_QUESTIONS: pick("G5_HARD_QUESTIONS"),
+      G6_EASY_QUESTIONS: pick("G6_EASY_QUESTIONS"),
+      G6_MEDIUM_QUESTIONS: pick("G6_MEDIUM_QUESTIONS"),
+      G6_HARD_QUESTIONS: pick("G6_HARD_QUESTIONS"),
+    };
+  }
+  return moledetBankCache;
+}
+
+function pickMoledetBankRows(bank, grade, level, topic) {
+  const key = `${String(grade).toUpperCase()}_${String(level).toUpperCase()}_QUESTIONS`;
+  const gradeLevel = bank[key];
+  if (!gradeLevel || typeof gradeLevel !== "object") return [];
+  const rows = gradeLevel[topic];
+  return Array.isArray(rows) ? rows : [];
+}
+
+function normalizeMoledetBankRow(row, topic) {
+  if (!row || typeof row !== "object") return null;
+  const answers = Array.isArray(row.answers)
+    ? [...row.answers]
+    : Array.isArray(row.options)
+      ? [...row.options]
+      : null;
+  if (!answers || answers.length < 2) return null;
+  const ciRaw =
+    Number.isFinite(Number(row.correctIndex)) && Number(row.correctIndex) >= 0
+      ? Number(row.correctIndex)
+      : Number.isFinite(Number(row.correct)) && Number(row.correct) >= 0
+        ? Number(row.correct)
+        : 0;
+  const ci = ciRaw >= 0 && ciRaw < answers.length ? ciRaw : 0;
+  const correctAnswer = answers[ci];
+  return {
+    question: String(row.question || row.stem || row.exerciseText || ""),
+    exerciseText: String(row.exerciseText || row.question || row.stem || ""),
+    answers,
+    correctAnswer,
+    correctIndex: ci,
+    topic,
+    operation: topic,
+    params: row.params && typeof row.params === "object" ? row.params : {},
+  };
+}
+
 let scienceBankCache = null;
 async function loadScienceBank() {
   if (!scienceBankCache) {
@@ -304,6 +368,7 @@ export async function generateForMatrixCell(cell, sampleIndex = 0) {
       };
     }
     const mg = await loadMoledet();
+    const moledetBank = await loadMoledetBank();
     const topics = mg.GRADES[grade]?.topics || [];
     if (!topics.includes(topic)) {
       return {
@@ -318,6 +383,29 @@ export async function generateForMatrixCell(cell, sampleIndex = 0) {
     return withSeededRandom(seed, () => {
       try {
         const q = mg.generateQuestion(lc, topic, grade, null);
+        if (q?.emptyPool && q?.params?.poolFallbackCode === "empty_pool") {
+          const bank = moledetBank;
+          if (bank) {
+            const rows = pickMoledetBankRows(bank, grade, level, topic);
+            if (rows.length) {
+              const picked = rows[seed % rows.length];
+              const normalized = normalizeMoledetBankRow(picked, topic);
+              if (normalized) {
+                return {
+                  ok: true,
+                  mode: "bank",
+                  unsupported: false,
+                  raw: normalized,
+                  seed,
+                  meta: {
+                    poolCount: rows.length,
+                    levelNote: "moledet bank fallback used when generator returned empty_pool under QA runtime",
+                  },
+                };
+              }
+            }
+          }
+        }
         return {
           ok: true,
           mode: "generator",

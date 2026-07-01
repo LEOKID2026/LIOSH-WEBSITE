@@ -6,6 +6,7 @@ import {
   collectSessionsFromStorageSnapshot,
   accuracyTrendDirectionFromSessions,
 } from "./report-runner.mjs";
+import { parentFacingPatternLabelHe } from "../../../utils/parent-report-language/parent-facing-pattern-label-he.js";
 const MAP_KEYS = [
   "mathOperations",
   "geometryTopics",
@@ -308,7 +309,16 @@ export function assertEngineReportSubjectSync(baseReport, detailedReport) {
     const sid = String(sp?.subject || "");
     const units = unitsAll.filter((u) => String(u.subjectId || "") === sid);
     const diagnosed = units.filter((u) => u?.diagnosis?.allowed && String(u?.taxonomy?.patternHe || "").trim());
-    const patternSet = new Set(diagnosed.map((u) => normHe(u.taxonomy.patternHe)));
+    const patternSet = new Set();
+    const taxonomyIdSet = new Set();
+    for (const u of diagnosed) {
+      const rawPattern = normHe(u?.taxonomy?.patternHe);
+      if (rawPattern) patternSet.add(rawPattern);
+      const parentPattern = normHe(parentFacingPatternLabelHe(u));
+      if (parentPattern) patternSet.add(parentPattern);
+      const tid = String(u?.taxonomy?.id || u?.diagnosis?.taxonomyId || "").trim();
+      if (tid) taxonomyIdSet.add(tid);
+    }
     const strengthNames = new Set();
     for (const u of units) {
       const a = u?.canonicalState?.actionState || "";
@@ -321,7 +331,12 @@ export function assertEngineReportSubjectSync(baseReport, detailedReport) {
       const label = normHe(w?.labelHe);
       if (!label) continue;
       let hit = false;
+      const weaknessTaxonomyId = String(w?.taxonomyId || "").trim();
+      if (weaknessTaxonomyId && taxonomyIdSet.has(weaknessTaxonomyId)) {
+        hit = true;
+      }
       for (const p of patternSet) {
+        if (hit) break;
         if (!p) continue;
         if (p.includes(label) || label.includes(p)) {
           hit = true;

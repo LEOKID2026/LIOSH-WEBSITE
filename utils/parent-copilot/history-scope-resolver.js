@@ -3,7 +3,7 @@
  */
 
 import { subjectLabelHe } from "./contract-reader.js";
-import { historySubtopicLabelHe } from "../../data/history-curriculum.js";
+import { historySubtopicLabelHe as historyCurriculumSubtopicLabelHe } from "../../data/history-curriculum.js";
 import {
   detectHistoryCopilotLock,
   findHistoryTopicRowKey,
@@ -12,6 +12,8 @@ import {
   historySubjectQuestionsFromPayload,
   historyTopicQuestionsFromPayload,
 } from "./history-scope-he.js";
+
+const historySubtopicLabelHe = historyCurriculumSubtopicLabelHe || ((k) => String(k || ""));
 
 /**
  * @param {object} params

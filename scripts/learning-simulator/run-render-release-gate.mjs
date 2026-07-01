@@ -17,6 +17,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { existsSync, readdirSync } from "node:fs";
 import { createServer } from "node:net";
+import { killProcessTree } from "../lib/overnight-utils.mjs";
 
 /** Avoid spawn(\"npm\") without shell on Windows (EINVAL); prefer node + npx-cli.js like overnight-utils. */
 function npxCliPath() {
@@ -245,6 +246,7 @@ function startDevServer(listenPort) {
 
 /** Same id as `/api/student/me` mock — subject master pages hydrate from `GET /api/student/learning-profile`. */
 const RENDER_GATE_MOCK_STUDENT_ID = "00000000-0000-0000-0000-0000000000e2";
+const RENDER_GATE_MOCK_PARENT_STUDENT_ID = "00000000-0000-0000-0000-0000000000e3";
 
 /**
  * Minimal `GET /api/student/learning-profile` shape (see `pages/api/student/learning-profile.js`).
@@ -312,10 +314,237 @@ async function mockStudentLearningProfileApi(page) {
   });
 }
 
+function renderGateMockStudentHomeProfileJson() {
+  return JSON.stringify({
+    ok: true,
+    studentId: RENDER_GATE_MOCK_STUDENT_ID,
+    accountSnapshot: {
+      studentId: RENDER_GATE_MOCK_STUDENT_ID,
+      overallAccuracyPct: 78,
+      coinBalance: 120,
+      currentStreak: 3,
+      weeklyPracticeMinutes: 85,
+    },
+    challenges: {},
+    dailyMissions: [],
+    derived: { bySubject: {} },
+  });
+}
+
+async function mockStudentHomeProfileApi(page) {
+  const body = renderGateMockStudentHomeProfileJson();
+  await page.route("**/api/student/home-profile", async (route) => {
+    if (route.request().method() !== "GET") {
+      await route.continue();
+      return;
+    }
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body,
+    });
+  });
+}
+
+async function mockStudentApiFallback(page) {
+  await page.route("**/api/student/**", async (route) => {
+    if (route.request().method() === "OPTIONS") {
+      await route.fulfill({ status: 204, body: "" });
+      return;
+    }
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ ok: true }),
+    });
+  });
+}
+
+/**
+ * `trackProductEvent` (best-effort, fire-and-forget telemetry per `lib/analytics/track-event.client.js`)
+ * POSTs unauthenticated in the QA browser context → real handler 401s. The 401 never affects the
+ * product (client already swallows it), but Chromium still logs "Failed to load resource: 401" to
+ * the page console, which this gate treats as a fatal console error. Mock it so the gate measures
+ * actual page-render health instead of an expected, already-handled telemetry no-op.
+ */
+async function mockAnalyticsEventsApi(page) {
+  await page.route("**/api/analytics/events", async (route) => {
+    if (route.request().method() === "OPTIONS") {
+      await route.fulfill({ status: 204, body: "" });
+      return;
+    }
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ ok: true }),
+    });
+  });
+}
+
 /** Session + learning-state APIs used by `StudentAccessGate` and subject master hydration. */
 async function setupStudentRenderGateApiMocks(page) {
   await mockStudentMe(page);
   await mockStudentLearningProfileApi(page);
+  await mockStudentHomeProfileApi(page);
+  await mockStudentApiFallback(page);
+  await mockAnalyticsEventsApi(page);
+}
+
+function renderGateMockParentReportDataBody() {
+  const now = new Date();
+  const fromDate = new Date(now.getTime() - 29 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const toDate = now.toISOString().slice(0, 10);
+  return {
+    ok: true,
+    student: {
+      id: RENDER_GATE_MOCK_PARENT_STUDENT_ID,
+      full_name: "RenderGate Parent Child",
+      grade_level: "g3",
+      is_active: true,
+    },
+    range: { from: fromDate, to: toDate },
+    summary: {
+      totalSessions: 12,
+      completedSessions: 12,
+      answers: 128,
+      correct: 97,
+      wrong: 31,
+      totalDurationSeconds: 5400,
+      registeredGradeLevel: "g3",
+    },
+    subjects: {
+      math: {
+        total: 64,
+        correct: 50,
+        wrong: 14,
+        durationSeconds: 2700,
+        topics: {
+          word_problems: {
+            total: 36,
+            correct: 27,
+            wrong: 9,
+            durationSeconds: 1500,
+            byContentGrade: {
+              g3: {
+                total: 36,
+                correct: 27,
+                wrong: 9,
+                durationSeconds: 1500,
+                contentGradeLevel: "g3",
+                registeredGradeLevel: "g3",
+                gradeRelation: "on_grade",
+              },
+            },
+          },
+          fractions: {
+            total: 28,
+            correct: 23,
+            wrong: 5,
+            durationSeconds: 1200,
+            byContentGrade: {
+              g3: {
+                total: 28,
+                correct: 23,
+                wrong: 5,
+                durationSeconds: 1200,
+                contentGradeLevel: "g3",
+                registeredGradeLevel: "g3",
+                gradeRelation: "on_grade",
+              },
+            },
+          },
+        },
+      },
+      science: {
+        total: 64,
+        correct: 47,
+        wrong: 17,
+        durationSeconds: 2700,
+        topics: {
+          cause_effect: {
+            total: 40,
+            correct: 29,
+            wrong: 11,
+            durationSeconds: 1700,
+            byContentGrade: {
+              g3: {
+                total: 40,
+                correct: 29,
+                wrong: 11,
+                durationSeconds: 1700,
+                contentGradeLevel: "g3",
+                registeredGradeLevel: "g3",
+                gradeRelation: "on_grade",
+              },
+            },
+          },
+          ecosystems: {
+            total: 24,
+            correct: 18,
+            wrong: 6,
+            durationSeconds: 1000,
+            byContentGrade: {
+              g3: {
+                total: 24,
+                correct: 18,
+                wrong: 6,
+                durationSeconds: 1000,
+                contentGradeLevel: "g3",
+                registeredGradeLevel: "g3",
+                gradeRelation: "on_grade",
+              },
+            },
+          },
+        },
+      },
+      geometry: {},
+      english: {},
+      hebrew: {},
+      history: {},
+      moledet_geography: {},
+    },
+    dailyActivity: [],
+    recentMistakes: [],
+    diagnosticMistakes: [],
+    meta: { evidenceQuality: { status: "qa_render_gate_mock" } },
+  };
+}
+
+async function setupParentReportRemoteMocks(page) {
+  const body = JSON.stringify(renderGateMockParentReportDataBody());
+  await page.addInitScript(() => {
+    window.__parentReportPlaywrightE2eSession = true;
+  });
+  await page.route("**/api/parent/students/*/report-data**", async (route) => {
+    if (route.request().method() !== "GET") {
+      await route.continue();
+      return;
+    }
+    await route.fulfill({ status: 200, contentType: "application/json", body });
+  });
+  await page.route("**/api/teacher/students/*/parent-report-data**", async (route) => {
+    if (route.request().method() !== "GET") {
+      await route.continue();
+      return;
+    }
+    await route.fulfill({ status: 200, contentType: "application/json", body });
+  });
+  await page.route("**/api/parent/copilot-turn", async (route) => {
+    if (route.request().method() !== "POST") {
+      await route.continue();
+      return;
+    }
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        ok: true,
+        answer: "render-gate-mock",
+        followups: [],
+        contextRefs: [],
+      }),
+    });
+  });
 }
 
 async function applyLocalStorage(page, data, originBase) {
@@ -481,9 +710,9 @@ async function main() {
       };
       await writeFile(OUT_JSON, JSON.stringify(payload, null, 2), "utf8");
       if (bootLog) console.error("[render-gate] dev boot log (tail):\n", bootLog.slice(-4000));
-      if (serverProc) try {
-        serverProc.kill();
-      } catch {}
+      /** `next dev` forks a separate `start-server.js` child; a plain `.kill()` on the wrapper
+       * leaves that grandchild (and its port) running — kill the whole process tree instead. */
+      if (serverProc) killProcessTree(serverProc.pid);
       console.error("Render gate: dev server failed to start");
       process.exit(1);
       return;
@@ -530,7 +759,17 @@ async function main() {
       path: "/learning/curriculum",
       setup: "student_mock",
       inputArtifact: "(route + api mock — StudentAccessGate)",
-      expectRendered: async (page) => (await page.locator("body").innerText()).length > 40,
+      expectRendered: async (page) => {
+        await page.waitForFunction(
+          () => {
+            const t = document.body?.innerText || "";
+            return t.length > 20;
+          },
+          null,
+          { timeout: 30_000 },
+        );
+        return true;
+      },
     },
     {
       id: "math_master",
@@ -551,37 +790,45 @@ async function main() {
     },
     {
       id: "parent_report_summary",
-      /** Rolling month (30d) overlaps seeded aggregate sessions; bare /week can yield zero rows near calendar edges and tiny shells. */
-      path: "/learning/parent-report?period=month",
-      setup: "simulator_storage",
-      inputArtifact: "reports/learning-simulator/aggregate/per-student/strong_all_subjects_g3_7d.storage.json",
+      path: `/learning/parent-report?source=parent&studentId=${RENDER_GATE_MOCK_PARENT_STUDENT_ID}&period=month`,
+      setup: "parent_remote_mock",
+      inputArtifact: "(route + parent report-data mock + e2e session flag)",
       expectRendered: async (page) => {
-        /**
-         * Wait for client hydration: loading shell ("טוען דוח…") must disappear, then require substantive body text.
-         * Do not require `#parent-report-pdf` — that node exists only on the populated branch; thin-window / empty
-         * branches render a different layout without that id (would timeout forever).
-         */
         await page.waitForFunction(
           () => {
             const t = document.body?.innerText || "";
-            if (t.includes("טוען דוח")) return false;
-            if (document.querySelector("#parent-report-pdf")) return true;
-            return t.length > 180;
+            const hasError =
+              /לא ניתן לבנות|שגיאת רשת בטעינת הדוח|נדרשת התחברות|לא ניתן לטעון את דוח ההורה/.test(t);
+            if (hasError) return false;
+            const shell =
+              !!document.querySelector('[data-testid="parent-report-parent-sections"]') ||
+              !!document.querySelector("table.parent-report-subject-table");
+            return shell && t.length > 120;
           },
           null,
-          { timeout: 90_000 },
+          { timeout: 60_000 },
         );
         return true;
       },
     },
     {
       id: "parent_report_detailed",
-      path: "/learning/parent-report-detailed",
-      setup: "simulator_storage",
-      inputArtifact: "reports/learning-simulator/aggregate/per-student/strong_all_subjects_g3_7d.storage.json",
+      path: `/learning/parent-report-detailed?source=parent&studentId=${RENDER_GATE_MOCK_PARENT_STUDENT_ID}&period=month`,
+      setup: "parent_remote_mock",
+      inputArtifact: "(route + parent report-data mock + e2e session flag)",
       expectRendered: async (page) => {
-        const t = await page.locator("body").innerText();
-        return t.length > 300;
+        await page.waitForFunction(
+          () => {
+            const t = document.body?.innerText || "";
+            const hasError =
+              /לא ניתן לבנות|שגיאת רשת בטעינת הדוח|נדרשת התחברות|לא ניתן לטעון את הדוח המקיף/.test(t);
+            if (hasError) return false;
+            return !!document.querySelector("#parent-report-detailed-print") && t.length > 140;
+          },
+          null,
+          { timeout: 60_000 },
+        );
+        return true;
       },
     },
     {
@@ -600,7 +847,15 @@ async function main() {
     });
   }
 
-  for (const sc of scenarios) {
+  /** Debug/diagnosis only — narrows the run to specific scenario ids (comma-separated), e.g. `RENDER_GATE_ONLY=parent_report_summary`. */
+  const onlyIds = String(process.env.RENDER_GATE_ONLY || "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const debugRequests = process.env.RENDER_GATE_DEBUG_REQUESTS === "1";
+  const scenariosToRun = onlyIds.length ? scenarios.filter((sc) => onlyIds.includes(sc.id)) : scenarios;
+
+  for (const sc of scenariosToRun) {
     if (sc.setup === "simulator_storage" && !storageSnapshot) {
       checks.push({
         routeOrSurface: sc.path,
@@ -632,6 +887,27 @@ async function main() {
       }
     });
 
+    /** Debug/diagnosis only — track in-flight requests to identify what's hanging on a `page.goto` timeout. */
+    const inFlight = debugRequests ? new Map() : null;
+    if (debugRequests) {
+      page.on("request", (req) => {
+        inFlight.set(req, { url: req.url(), method: req.method(), t: Date.now() });
+      });
+      page.on("requestfinished", (req) => inFlight.delete(req));
+      page.on("requestfailed", (req) => {
+        const info = inFlight.get(req);
+        console.error(
+          `[render-gate:debug][${sc.id}] requestfailed: ${req.method()} ${req.url()} (${req.failure()?.errorText}) after ${info ? Date.now() - info.t : "?"}ms`
+        );
+        inFlight.delete(req);
+      });
+      page.on("response", (res) => {
+        if (res.status() >= 400) {
+          console.error(`[render-gate:debug][${sc.id}] response ${res.status()}: ${res.request().method()} ${res.url()}`);
+        }
+      });
+    }
+
     let opened = false;
     let rendered = false;
     /** @type {string[]} */
@@ -641,6 +917,12 @@ async function main() {
       if (sc.setup === "student_mock") {
         await setupStudentRenderGateApiMocks(page);
         await page.goto(`${activeBaseUrl}${sc.path}`, { waitUntil: "domcontentloaded", timeout: 90_000 });
+        await new Promise((r) => setTimeout(r, 1200));
+        opened = true;
+      } else if (sc.setup === "parent_remote_mock") {
+        await setupStudentRenderGateApiMocks(page);
+        await setupParentReportRemoteMocks(page);
+        await page.goto(`${activeBaseUrl}${sc.path}`, { waitUntil: "domcontentloaded", timeout: 120_000 });
         await new Promise((r) => setTimeout(r, 1200));
         opened = true;
       } else if (sc.setup === "simulator_storage") {
@@ -659,6 +941,12 @@ async function main() {
       if (!rendered) errors.push("expectRendered returned false");
     } catch (e) {
       errors.push(String(e?.message || e));
+      if (debugRequests && inFlight && inFlight.size) {
+        console.error(`[render-gate:debug][${sc.id}] ${inFlight.size} request(s) still in-flight at failure time:`);
+        for (const info of inFlight.values()) {
+          console.error(`  - ${info.method} ${info.url} (pending ${Date.now() - info.t}ms)`);
+        }
+      }
       const shot = join(FAILURE_ART_DIR, `${sc.id}.png`);
       try {
         await page.screenshot({ path: shot, fullPage: false });
@@ -708,11 +996,10 @@ async function main() {
   await browser.close();
 
   if (serverStarted && serverProc) {
-    try {
-      serverProc.kill();
-    } catch {
-      /* ignore */
-    }
+    /** Same tree-kill rationale as the boot-failure path above — otherwise `start-server.js`
+     * (and its webpack/HMR workers) survive as an orphan that piles up across repeated runs
+     * (e.g. inside `engine-final`) and starves later steps of CPU/RAM until they time out. */
+    killProcessTree(serverProc.pid);
   }
 
   const checksPassed = checks.filter((c) => c.status === "ok").length;

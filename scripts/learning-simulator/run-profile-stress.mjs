@@ -252,6 +252,27 @@ async function main() {
         continue;
       }
 
+      if (profileStressType === "mixed_strengths") {
+        const mathRow = rows.find((r) => r.subject === "math");
+        const hebrewRow = rows.find((r) => r.subject === "hebrew");
+        if (mathRow?.topic) {
+          const prev = profile.topicStrengths && typeof profile.topicStrengths === "object" ? profile.topicStrengths : {};
+          const mathStrengths = prev.math && typeof prev.math === "object" ? prev.math : {};
+          profile.topicStrengths = { ...prev, math: { ...mathStrengths, [mathRow.topic]: 0.82 } };
+        }
+        if (hebrewRow?.topic) {
+          const prev = profile.topicWeaknesses && typeof profile.topicWeaknesses === "object" ? profile.topicWeaknesses : {};
+          const hebWeak = prev.hebrew && typeof prev.hebrew === "object" ? prev.hebrew : {};
+          profile.topicWeaknesses = { ...prev, hebrew: { ...hebWeak, [hebrewRow.topic]: 0.72 } };
+          if (profile.accuracyPolicy?.kind === "byTopic") {
+            const low = profile.accuracyPolicy.lowTopics && typeof profile.accuracyPolicy.lowTopics === "object"
+              ? profile.accuracyPolicy.lowTopics
+              : {};
+            profile.accuracyPolicy = { ...profile.accuracyPolicy, lowTopics: { ...low, [hebrewRow.topic]: 0.45 } };
+          }
+        }
+      }
+
       const built = await buildStorageForScenario(scenario, profile, matrixRows);
       const deepVal = validateDeepHorizonEvidence(scenario, built.stats || {});
 

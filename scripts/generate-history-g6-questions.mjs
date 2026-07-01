@@ -6,8 +6,10 @@
 import { writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { HISTORY_G6_CONTENT_MAP } from "../data/history-g6-content-map.js";
+import { HISTORY_G6_CONTENT_MAP as HISTORY_G6_CONTENT_MAP_SOURCE } from "../data/history-g6-content-map.js";
 import { HISTORY_G6_QUESTION_SEEDS } from "../data/history-g6-question-seeds-he.js";
+
+const HISTORY_G6_CONTENT_MAP = HISTORY_G6_CONTENT_MAP_SOURCE || {};
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const OUT_DIR = join(__dirname, "..", "data", "history-questions");

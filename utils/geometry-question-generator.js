@@ -1701,6 +1701,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
       const types = ["ריבוע", "מלבן", "מקבילית", "טרפז"];
       const selectedType = types[Math.floor(Math.random() * types.length)];
       const quadW = Math.floor(Math.random() * 10); // 10 stem variants
+      const pickQuad = (variants) => variants[quadW % variants.length];
       
       params = { 
         type: selectedType, 
@@ -1712,7 +1713,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
       if (formulaBand === "mid") {
         question =
           levelKey === "easy"
-            ? [
+            ? pickQuad([
                 `התבוננו במרובע שבשרטוט. איזה סוג מרובע זה?`,
                 `זיהוי מרובע לפי השרטוט: איזה שם מתאים?`,
                 `בחרו את סוג המרובע לפי השרטוט.`,
@@ -1723,9 +1724,9 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
                 `בחרו שם מתאים לסוג המרובע שבשרטוט.`,
                 `זיהוי נוסף: מה סוג המרובע לפי הצורה?`,
                 `בדקו את המרובע בשרטוט ובחרו את סוגו.`,
-              ][quadW % 10]
+              ])
             : levelKey === "medium"
-              ? [
+              ? pickQuad([
                   `סווגו את המרובע לפי התכונות שרואים בשרטוט.`,
                   `לפי השרטוט, איזה סוג מרובע זה?`,
                   `חקר תכונות: בחרו את סוג המרובע המוצג.`,
@@ -1734,8 +1735,8 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
                   `ניתוח תכונות: לאיזו קטגוריה שייך המרובע?`,
                   `זיהוי סוג: בחרו את המרובע המתאים לשרטוט.`,
                   `סיווג מתמטי: מה סוג המרובע בשרטוט?`,
-                ][quadW]
-              : [
+                ])
+              : pickQuad([
                   `אתגר סיווג: קבעו את סוג המרובע לפי השרטוט.`,
                   `ניתוח מעמיק: מהי ההגדרה המתאימה למרובע המוצג?`,
                   `הוכיחו בראש לפי הצלעות ואז בחרו את סוג המרובע.`,
@@ -1744,11 +1745,11 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
                   `סיווג: לאיזה סוג שייך המרובע?`,
                   `הבנת מונחים: איזה מונח מתאר את המרובע בשרטוט?`,
                   `אתגר הגדרה: בחרו את סוג המרובע לפי הצורה.`,
-                ][quadW];
+                ]);
       } else {
         question =
           levelKey === "easy"
-            ? [
+            ? pickQuad([
                 `סיווג מרובעים: איזה סוג מופיע בשרטוט?`,
                 `זיהוי: בחרו סוג מרובע מתאים לשרטוט.`,
                 `מהו סוג המרובע המוצג?`,
@@ -1759,9 +1760,9 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
                 `הגדרה לפי צורה: איזה סוג מרובע זה?`,
                 `זיהוי נוסף: בחרו סוג מרובע לפי השרטוט.`,
                 `מה סוג המרובע לפי הצלעות שבשרטוט?`,
-              ][quadW % 10]
+              ])
             : levelKey === "medium"
-              ? [
+              ? pickQuad([
                   `התאמת מונח: איזה סוג מרובע רואים בשרטוט?`,
                   `סווגו את המרובע לפי תכונות הצלעות.`,
                   `הגדרה וסיווג: איזה סוג מתאים לשרטוט?`,
@@ -1770,8 +1771,8 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
                   `מונח גיאומטרי: מהו סוג המרובע המוצג?`,
                   `סיווג לפי צורה: איזה סוג מרובע זה?`,
                   `הבנת מונח: בחרו את הסיווג לפי הצלעות.`,
-                ][quadW]
-              : [
+                ])
+              : pickQuad([
                   `ניסוח מדויק: איזה סוג מרובע מוצג?`,
                   `הגדרה מדויקת: איזה סיווג מתאים למרובע?`,
                   `ניתוח מונחי: איזה מונח מתאר את המרובע?`,
@@ -1780,7 +1781,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
                   `זיהוי מדויק: איזה סיווג מתאים לשרטוט?`,
                   `הגדרה: מה שם סוג המרובע?`,
                   `ניסוח מתמטי: בחרו את הקטגוריה הנכונה.`,
-                ][quadW];
+                ]);
       }
       break;
     }

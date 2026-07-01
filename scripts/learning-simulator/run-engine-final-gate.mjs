@@ -28,6 +28,7 @@ const STEPS = [
   ["qa:learning-simulator:professional-engine-output", "Professional engine output"],
   ["qa:learning-simulator:professional-engine", "Professional engine validation"],
   ["qa:learning-simulator:engine", "Engine truth audit"],
+  ["qa:learning-simulator:coverage", "Coverage catalog"],
   ["qa:learning-simulator:framework-real-scenarios", "Framework real scenarios"],
   ["qa:learning-simulator:engine-completion-summary", "Engine completion summary"],
   ["qa:learning-simulator:release", "Full learning-simulator release (orchestrator full → includes production build)"],

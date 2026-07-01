@@ -5,6 +5,7 @@
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { pathToFileURL } from "node:url";
+import { isMoledetGeographyGradeAllowed } from "../../../utils/moledet-geography-curriculum-gates.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 /** Repo root: scripts/learning-simulator/lib -> ../../../ */
@@ -74,6 +75,7 @@ export async function discoverMath() {
     levels: levels.length ? levels : LEVEL_KEYS,
     topicLabels: {},
     grades: byGrade,
+    allowedGrades: [...GRADE_KEYS],
     generatorBacked: { procedural: true, module: "utils/math-question-generator.js" },
     warnings,
   };
@@ -106,6 +108,7 @@ export async function discoverGeometry() {
       Object.entries(TOPICS).map(([k, v]) => [k, typeof v?.name === "string" ? v.name : null])
     ),
     grades: byGrade,
+    allowedGrades: [...GRADE_KEYS],
     generatorBacked: { procedural: true, module: "utils/geometry-question-generator.js" },
     warnings,
   };
@@ -151,6 +154,7 @@ export async function discoverScience() {
     levels: LEVEL_KEYS,
     topicLabels: { ...SCIENCE_TOPIC_LABELS_HE },
     grades: byGrade,
+    allowedGrades: [...GRADE_KEYS],
     generatorBacked: { procedural: false, bank: "data/science-questions.js" },
     warnings,
   };
@@ -184,6 +188,7 @@ export async function discoverEnglish() {
     levels: LEVEL_KEYS,
     topicLabels: { ...ENGLISH_TOPIC_LABELS_HE },
     grades: byGrade,
+    allowedGrades: [...GRADE_KEYS],
     generatorBacked: { procedural: false, inlineGenerator: "pages/learning/english-master.js" },
     warnings,
   };
@@ -233,6 +238,7 @@ export async function discoverHebrew() {
       Object.entries(TOPICS).map(([k, v]) => [k, typeof v?.name === "string" ? v.name : null])
     ),
     grades: byGrade,
+    allowedGrades: [...GRADE_KEYS],
     generatorBacked: { procedural: true, module: "utils/hebrew-question-generator.js", bank: "utils/hebrew-rich-question-bank.js" },
     warnings,
   };
@@ -275,6 +281,7 @@ export async function discoverMoledetGeography() {
   warnings.push(
     "naming aliases — storage/API often `moledet_geography`; routes/diagnostics often `moledet-geography`; spine may use `geography`"
   );
+  const allowedGrades = GRADE_KEYS.filter((gk) => isMoledetGeographyGradeAllowed(gk));
 
   return {
     subjectCanonical: "moledet_geography",
@@ -287,6 +294,7 @@ export async function discoverMoledetGeography() {
       Object.entries(TOPICS).map(([k, v]) => [k, typeof v?.name === "string" ? v.name : null])
     ),
     grades: byGrade,
+    allowedGrades,
     generatorBacked: { procedural: true, module: "utils/moledet-geography-question-generator.js", banks: "data/geography-questions/" },
     warnings,
   };

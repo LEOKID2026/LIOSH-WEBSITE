@@ -8,11 +8,8 @@ import { ISSUE_CODES } from "./question-metadata-contract.js";
 export const BLOCKING_ISSUE_CODES = new Set([
   ISSUE_CODES.missing_subject,
   ISSUE_CODES.missing_correct_answer,
-  ISSUE_CODES.missing_difficulty,
   ISSUE_CODES.invalid_difficulty,
-  ISSUE_CODES.missing_cognitiveLevel,
   ISSUE_CODES.invalid_cognitive_level,
-  ISSUE_CODES.missing_expected_error_types,
   ISSUE_CODES.expected_error_types_empty,
   ISSUE_CODES.taxonomy_unknown_skillId,
   ISSUE_CODES.taxonomy_unknown_subskillId,
@@ -23,6 +20,9 @@ export const BLOCKING_ISSUE_CODES = new Set([
 /** Explicit advisory-only codes (curriculum / documentation debt). */
 export const ADVISORY_ISSUE_CODES = new Set([
   ISSUE_CODES.implicit_id_only,
+  ISSUE_CODES.missing_difficulty,
+  ISSUE_CODES.missing_cognitiveLevel,
+  ISSUE_CODES.missing_expected_error_types,
   ISSUE_CODES.missing_prerequisite_skill_ids,
   ISSUE_CODES.prerequisite_skill_ids_empty,
   ISSUE_CODES.missing_explanation,
@@ -30,6 +30,36 @@ export const ADVISORY_ISSUE_CODES = new Set([
   ISSUE_CODES.prerequisite_diagnosis_unsupported,
   ISSUE_CODES.skill_low_volume,
 ]);
+
+const TAXONOMY_ISSUE_CODES = new Set([
+  ISSUE_CODES.taxonomy_unknown_skillId,
+  ISSUE_CODES.taxonomy_unknown_subskillId,
+  ISSUE_CODES.taxonomy_unknown_expected_error_type,
+  ISSUE_CODES.taxonomy_unknown_prerequisite_skillId,
+]);
+
+const LAUNCH_SCOPE_SUBJECTS = new Set([
+  "math",
+  "geometry",
+  "science",
+  "english",
+  "hebrew",
+  "moledet-geography",
+  "history",
+]);
+
+/**
+ * Launch gate should block taxonomy mismatches only for active launch-scope banks.
+ * Archive/debug sources stay advisory until promoted.
+ * @param {object} record
+ */
+export function isLaunchScopeRecord(record) {
+  const sub = String(record?.subject || "").toLowerCase();
+  if (!LAUNCH_SCOPE_SUBJECTS.has(sub)) return false;
+  const source = String(record?.sourceFile || "").toLowerCase();
+  if (source.includes("hebrew-questions/")) return false; // archived parallel bank
+  return true;
+}
 
 /**
  * Documented exemptions — promoted to blocking later by shrinking this list.
@@ -66,6 +96,7 @@ export function isEnglishSkillGapExempt(record, issueCode) {
 export function classifyIssueOnRecord(issueCode, record) {
   if (ADVISORY_ISSUE_CODES.has(issueCode)) return "advisory";
   if (isEnglishSkillGapExempt(record, issueCode)) return "exempt";
+  if (TAXONOMY_ISSUE_CODES.has(issueCode) && !isLaunchScopeRecord(record)) return "advisory";
   if (BLOCKING_ISSUE_CODES.has(issueCode)) return "blocking";
   if (issueCode === ISSUE_CODES.missing_skillId || issueCode === ISSUE_CODES.missing_subskillId) return "blocking";
   return "advisory";

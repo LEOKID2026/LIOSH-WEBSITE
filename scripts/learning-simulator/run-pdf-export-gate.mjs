@@ -14,7 +14,12 @@
  */
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { PDFParse } from "pdf-parse";
-import { pdfTextContainsParentAiInsightFingerprint } from "../lib/parent-report-pdf-insight-fingerprint.mjs";
+import {
+  domInsightCardShowsParentAiHeading,
+  pdfTextContainsParentAiInsightFingerprint,
+} from "../lib/parent-report-pdf-insight-fingerprint.mjs";
+import { killProcessTree } from "../lib/overnight-utils.mjs";
+import { PARENT_REPORT_PORTAL_GATE } from "../../lib/parent-report-server-truth.js";
 
 async function extractPdfText(buf) {
   const parser = new PDFParse({ data: buf });
@@ -118,12 +123,12 @@ async function buildPdfExportAudit() {
     requiresLocalStorage: true,
     requiresReportData: true,
     canTestDownloadWithPlaywright:
-      "Yes when navigating to /learning/parent-report?qa_pdf=file with seeded aggregate storage + mocked /api/student/me; canvas path emits a browser download.",
+      "Yes when navigating to /learning/parent-report?qa_pdf=file&source=parent&studentId=... with mocked /api/parent/students/:id/report-data (+ /api/student/me); canvas path emits a browser download.",
     blockingIssues: [
       "Without ?qa_pdf=file, default UI uses print dialog — not capturable as Playwright download.",
     ],
     recommendedMinimalGate:
-      "Playwright: open parent-report with ?qa_pdf=file, seed storage, click export, assert download + %PDF header + min size.",
+      "Playwright: open parent-report with ?qa_pdf=file&source=parent&studentId=..., mock report-data, click export, assert download + %PDF header + min size.",
     recommendedFutureImprovement:
       "Optional dedicated /api PDF route if product moves generation server-side; keep client path tested via canvas.",
     evidenceFiles: [
@@ -190,17 +195,6 @@ async function writeAuditFiles(audit) {
   await writeFile(AUDIT_MD, md, "utf8");
 }
 
-async function loadSimulatorStorageSnapshot() {
-  const p = join(ROOT, "reports", "learning-simulator", "aggregate", "per-student", "strong_all_subjects_g3_7d.storage.json");
-  if (!existsSync(p)) return null;
-  const raw = JSON.parse(await readFile(p, "utf8"));
-  const flat = {};
-  for (const [k, v] of Object.entries(raw)) {
-    flat[k] = typeof v === "string" ? v : JSON.stringify(v);
-  }
-  return flat;
-}
-
 async function waitForHttpOk(url, timeoutMs) {
   const t0 = Date.now();
   while (Date.now() - t0 < timeoutMs) {
@@ -253,6 +247,9 @@ function startDevServer(listenPort) {
   });
 }
 
+/** Same official parent-report id already used by this gate's `mockStudentMe`. */
+const PDF_GATE_MOCK_PARENT_STUDENT_ID = "00000000-0000-0000-0000-0000000000e3";
+
 async function mockStudentMe(page) {
   await page.route("**/api/student/me", async (route) => {
     await route.fulfill({
@@ -272,12 +269,173 @@ async function mockStudentMe(page) {
   });
 }
 
-async function applyLocalStorage(page, data, base) {
-  await page.goto(`${base}/`, { waitUntil: "domcontentloaded", timeout: 60_000 });
-  await page.evaluate((d) => {
-    localStorage.clear();
-    for (const [k, v] of Object.entries(d || {})) localStorage.setItem(k, String(v));
-  }, data);
+/**
+ * The product now blocks the legacy localStorage-built report entirely (see
+ * `lib/parent-report-server-truth.js` → `PARENT_REPORT_PORTAL_GATE`: "דוח הורים רשמי זמין רק דרך
+ * פורטל ההורה ... אין לבנות דוח מנתוני הדפדפן המקומיים"). The official route requires
+ * `?source=parent&studentId=...` and fetches from `/api/parent/students/:id/report-data`.
+ * This mirrors the same officially-supported QA bypass already used by
+ * `tests/e2e/parent-report-real-ui-load.spec.ts` and `run-render-release-gate.mjs`'s
+ * `parent_remote_mock` scenario (both already green) — `window.__parentReportPlaywrightE2eSession`
+ * is a server-gated, non-production-only flag (see `lib/parent-client/copilot-turn-api.js`).
+ */
+function pdfGateMockParentReportDataBody() {
+  const now = new Date();
+  const fromDate = new Date(now.getTime() - 29 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const toDate = now.toISOString().slice(0, 10);
+  return {
+    ok: true,
+    student: {
+      id: PDF_GATE_MOCK_PARENT_STUDENT_ID,
+      full_name: "PdfGate Parent Child",
+      grade_level: "g3",
+      is_active: true,
+    },
+    range: { from: fromDate, to: toDate },
+    summary: {
+      totalSessions: 12,
+      completedSessions: 12,
+      answers: 128,
+      correct: 97,
+      wrong: 31,
+      totalDurationSeconds: 5400,
+      registeredGradeLevel: "g3",
+    },
+    subjects: {
+      math: {
+        total: 64,
+        correct: 50,
+        wrong: 14,
+        durationSeconds: 2700,
+        topics: {
+          word_problems: {
+            total: 36,
+            correct: 27,
+            wrong: 9,
+            durationSeconds: 1500,
+            byContentGrade: {
+              g3: {
+                total: 36,
+                correct: 27,
+                wrong: 9,
+                durationSeconds: 1500,
+                contentGradeLevel: "g3",
+                registeredGradeLevel: "g3",
+                gradeRelation: "on_grade",
+              },
+            },
+          },
+          fractions: {
+            total: 28,
+            correct: 23,
+            wrong: 5,
+            durationSeconds: 1200,
+            byContentGrade: {
+              g3: {
+                total: 28,
+                correct: 23,
+                wrong: 5,
+                durationSeconds: 1200,
+                contentGradeLevel: "g3",
+                registeredGradeLevel: "g3",
+                gradeRelation: "on_grade",
+              },
+            },
+          },
+        },
+      },
+      science: {
+        total: 64,
+        correct: 47,
+        wrong: 17,
+        durationSeconds: 2700,
+        topics: {
+          cause_effect: {
+            total: 40,
+            correct: 29,
+            wrong: 11,
+            durationSeconds: 1700,
+            byContentGrade: {
+              g3: {
+                total: 40,
+                correct: 29,
+                wrong: 11,
+                durationSeconds: 1700,
+                contentGradeLevel: "g3",
+                registeredGradeLevel: "g3",
+                gradeRelation: "on_grade",
+              },
+            },
+          },
+          ecosystems: {
+            total: 24,
+            correct: 18,
+            wrong: 6,
+            durationSeconds: 1000,
+            byContentGrade: {
+              g3: {
+                total: 24,
+                correct: 18,
+                wrong: 6,
+                durationSeconds: 1000,
+                contentGradeLevel: "g3",
+                registeredGradeLevel: "g3",
+                gradeRelation: "on_grade",
+              },
+            },
+          },
+        },
+      },
+      geometry: {},
+      english: {},
+      hebrew: {},
+      history: {},
+      moledet_geography: {},
+    },
+    dailyActivity: [],
+    recentMistakes: [],
+    diagnosticMistakes: [],
+    meta: { evidenceQuality: { status: "qa_pdf_export_gate_mock" } },
+  };
+}
+
+async function setupParentReportRemoteMocks(page) {
+  const body = JSON.stringify(pdfGateMockParentReportDataBody());
+  await page.addInitScript(() => {
+    window.__parentReportPlaywrightE2eSession = true;
+  });
+  await page.route("**/api/parent/students/*/report-data**", async (route) => {
+    if (route.request().method() !== "GET") {
+      await route.continue();
+      return;
+    }
+    await route.fulfill({ status: 200, contentType: "application/json", body });
+  });
+  await page.route("**/api/teacher/students/*/parent-report-data**", async (route) => {
+    if (route.request().method() !== "GET") {
+      await route.continue();
+      return;
+    }
+    await route.fulfill({ status: 200, contentType: "application/json", body });
+  });
+  await page.route("**/api/parent/copilot-turn", async (route) => {
+    if (route.request().method() !== "POST") {
+      await route.continue();
+      return;
+    }
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ ok: true, answer: "pdf-gate-mock", followups: [], contextRefs: [] }),
+    });
+  });
+  await page.route("**/api/analytics/events", async (route) => {
+    if (route.request().method() === "OPTIONS") {
+      await route.fulfill({ status: 204, body: "" });
+      return;
+    }
+    await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ ok: true }) });
+  });
 }
 
 function mdEscape(s) {
@@ -302,7 +460,7 @@ async function main() {
     runId,
     generatedAt,
     browserMode: false,
-    checkedRoute: "/learning/parent-report?qa_pdf=file&period=month",
+    checkedRoute: "/learning/parent-report?qa_pdf=file&source=parent&studentId=<mock>&period=month",
     pdfLibraryDetected: audit.pdfLibraryDetected,
     exportMechanism: "client html2pdf canvas when qa_pdf=file",
     downloadAttempted: false,
@@ -332,25 +490,6 @@ async function main() {
       "utf8"
     );
     console.log(JSON.stringify({ ok: true, status: "deferred", browserMode: false, outJson: OUT_JSON }, null, 2));
-    process.exit(0);
-    return;
-  }
-
-  const storage = await loadSimulatorStorageSnapshot();
-  if (!storage) {
-    const deferPayload = {
-      ...basePayload,
-      status: "deferred",
-      deferredReason:
-        "Missing aggregate artifact strong_all_subjects_g3_7d.storage.json — cannot render parent-report for export.",
-    };
-    await writeFile(OUT_JSON, JSON.stringify(deferPayload, null, 2), "utf8");
-    await writeFile(
-      OUT_MD,
-      `# PDF export gate\n\nStatus: deferred — missing aggregate storage artifact.\n`,
-      "utf8"
-    );
-    console.log(JSON.stringify({ ok: true, status: "deferred", reason: basePayload.deferredReason }, null, 2));
     process.exit(0);
     return;
   }
@@ -388,10 +527,9 @@ async function main() {
       basePayload.failures.push(`Dev server did not respond at ${activeBaseUrl} within ${SERVER_BOOT_WAIT_MS}ms`);
       await writeFile(OUT_JSON, JSON.stringify(basePayload, null, 2), "utf8");
       if (bootLog) console.error("[pdf-export-gate] dev boot log (tail):\n", bootLog.slice(-4000));
-      if (serverProc)
-        try {
-          serverProc.kill();
-        } catch {}
+      /** `next dev` forks a separate `start-server.js` child; a plain `.kill()` on the wrapper
+       * leaves that grandchild (and its port) running — kill the whole process tree instead. */
+      if (serverProc) killProcessTree(serverProc.pid);
       console.error("PDF export gate: server failed to start");
       process.exit(1);
       return;
@@ -414,11 +552,21 @@ async function main() {
 
   const fatal = [];
   const consoleBad = [];
+  const debugPdfGate = process.env.PDF_GATE_DEBUG === "1";
   page.on("pageerror", (e) => fatal.push(String(e?.message || e)));
   page.on("console", (msg) => {
     const t = msg.text();
+    if (debugPdfGate) console.error(`[pdf-gate:debug] console.${msg.type()}: ${t}`);
     if (msg.type() === "error" && !consoleAllowed(t)) consoleBad.push(t);
   });
+  if (debugPdfGate) {
+    page.on("response", (res) => {
+      if (res.status() >= 400) console.error(`[pdf-gate:debug] response ${res.status()}: ${res.request().method()} ${res.url()}`);
+    });
+    page.on("requestfailed", (req) => {
+      console.error(`[pdf-gate:debug] requestfailed: ${req.method()} ${req.url()} (${req.failure()?.errorText})`);
+    });
+  }
 
   /** @type {string[]} */
   const failures = [];
@@ -430,15 +578,50 @@ async function main() {
 
   try {
     await mockStudentMe(page);
-    await applyLocalStorage(page, storage, activeBaseUrl);
+    await setupParentReportRemoteMocks(page);
 
-    /** month window keeps aggregate fixture sessions in-range across calendar edges (Phase C.1). */
-    const url = `${activeBaseUrl}/learning/parent-report?qa_pdf=file&period=month`;
+    /**
+     * Month window keeps mock report data in-range across calendar edges (Phase C.1).
+     * `source=parent&studentId=...` is required — the product blocks the legacy localStorage-built
+     * report entirely (see `pdfGateMockParentReportDataBody` doc comment above).
+     */
+    const url = `${activeBaseUrl}/learning/parent-report?qa_pdf=file&source=parent&studentId=${PDF_GATE_MOCK_PARENT_STUDENT_ID}&period=month`;
     await page.goto(url, { waitUntil: "domcontentloaded", timeout: 90_000 });
     await new Promise((r) => setTimeout(r, 2000));
 
-    /** Phase C.1 — Parent AI insight must be in DOM before canvas export (avoid empty PDF slice). */
-    await page.waitForSelector(".parent-report-parent-ai-insight", { timeout: 90_000 });
+    if (debugPdfGate) {
+      const bodyPreview = (await page.locator("body").innerText()).slice(0, 800);
+      console.error(`[pdf-gate:debug] body text (first 800 chars) before waitForSelector:\n${bodyPreview}`);
+    }
+
+    /**
+     * The Parent AI insight (`ParentReportInsight` / "סיכום חכם להורה") is part of the official
+     * report and MUST render on-screen — product decision (launch call, 2026-07-01, superseding the
+     * earlier 2026-07-01 no-pdf call): "סיכום חכם להורה" is part of the official report and must be
+     * present in the exported/printed PDF too. Only the live Copilot chat / buttons / overlays /
+     * interactive controls stay `no-pdf`. The PDF-presence check happens further below, on the
+     * Playwright print-PDF text proof (`pdfTextContainsParentAiInsightFingerprint`).
+     */
+    try {
+      await page.waitForSelector(".parent-report-parent-ai-insight", { timeout: 90_000 });
+      const insightCardText = await page.locator(".parent-report-parent-ai-insight").innerText();
+      if (!domInsightCardShowsParentAiHeading(insightCardText)) {
+        failures.push("Parent AI insight card rendered on-screen but missing expected heading text.");
+      }
+      if (debugPdfGate) {
+        await writeFile(
+          join(PDF_DIR, "debug-insight-card-dom-text.txt"),
+          `domInsightCardShowsParentAiHeading = ${domInsightCardShowsParentAiHeading(insightCardText)}\n\n---\n\n${insightCardText}`,
+          "utf8",
+        );
+      }
+    } catch (e) {
+      if (debugPdfGate) {
+        const bodyPreview = (await page.locator("body").innerText()).slice(0, 2000);
+        console.error(`[pdf-gate:debug] AI insight waitForSelector failed. body text (first 2000 chars):\n${bodyPreview}`);
+      }
+      throw e;
+    }
 
     const bodyLen = (await page.locator("body").innerText()).length;
     if (bodyLen < 150) failures.push("Report body text too short — report may not have hydrated.");
@@ -446,6 +629,11 @@ async function main() {
     /**
      * Text proof via Playwright print PDF — html2pdf canvas downloads are often image-only, so pdf-parse
      * cannot recover Hebrew from the file bytes. Same DOM state as export; `.no-pdf` respected in print.
+     *
+     * Validates the *official remote report* actually printed (not the `PARENT_REPORT_PORTAL_GATE`
+     * blocking screen, not an empty/error shell) AND that the Parent AI insight ("סיכום חכם להורה")
+     * is present in the printed PDF text — product decision (launch call, 2026-07-01): the insight is
+     * part of the official report and must appear in the PDF, unlike the live Copilot chat/buttons.
      */
     await page.emulateMedia({ media: "print" });
     try {
@@ -456,16 +644,39 @@ async function main() {
         preferCSSPageSize: true,
       });
       const proofTxt = (await extractPdfText(Buffer.from(proofBuf))).replace(/\s+/g, " ");
+      if (debugPdfGate) {
+        await writeFile(join(PDF_DIR, "debug-proof-pdf-text.txt"), proofTxt, "utf8");
+      }
+
+      if (proofTxt.includes(PARENT_REPORT_PORTAL_GATE.messageHe)) {
+        failures.push("PDF shows the PARENT_REPORT_PORTAL_GATE blocking screen, not the official report.");
+      }
       if (!pdfTextContainsParentAiInsightFingerprint(proofTxt)) {
         failures.push(
-          "Phase C.1: Playwright print PDF missing Parent AI insight fingerprint (heading or structured provenance — see scripts/lib/parent-report-pdf-insight-fingerprint.mjs).",
+          "PDF missing Parent AI insight (\"סיכום חכם להורה\") — this is part of the official report and must print (product decision 2026-07-01)."
         );
       }
+      const mockChildName = pdfGateMockParentReportDataBody().student.full_name;
+      if (!proofTxt.includes(mockChildName)) {
+        failures.push(`PDF missing real report content marker (expected mock student name "${mockChildName}").`);
+      }
+      if (!proofTxt.includes("התקדמות במתמטיקה") && !proofTxt.includes("דוח להורים")) {
+        failures.push("PDF missing expected report structure/heading (subject progress or report title).");
+      }
+      if (/\bundefined\b/.test(proofTxt)) {
+        failures.push("PDF contains literal 'undefined' — likely unhandled missing data.");
+      }
+      if (/\bNaN\b/.test(proofTxt)) {
+        failures.push("PDF contains literal 'NaN' — likely a bad numeric computation.");
+      }
+      if (proofTxt.includes(PDF_GATE_MOCK_PARENT_STUDENT_ID)) {
+        failures.push("PDF leaks the raw student UUID into visible report text.");
+      }
       if (proofTxt.includes("שאלה על הדוח")) {
-        failures.push("Phase C.1: Parent Copilot placeholder leaked into Playwright print PDF.");
+        failures.push("Parent Copilot placeholder leaked into Playwright print PDF.");
       }
     } catch (e) {
-      failures.push(`Phase C.1: print-PDF text proof failed: ${String(e?.message || e)}`);
+      failures.push(`print-PDF text proof failed: ${String(e?.message || e)}`);
     }
     await page.emulateMedia({ media: "screen" });
 
@@ -511,9 +722,9 @@ async function main() {
   await browser.close();
 
   if (serverStarted && serverProc) {
-    try {
-      serverProc.kill();
-    } catch {}
+    /** Same tree-kill rationale as the boot-failure path above — otherwise `start-server.js`
+     * survives as an orphan that piles up across repeated runs and starves later steps. */
+    killProcessTree(serverProc.pid);
   }
 
   const blocking =

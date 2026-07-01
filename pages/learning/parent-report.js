@@ -2280,9 +2280,7 @@ export default function ParentReport() {
             </div>
           </div>
 
-          <div className="no-pdf">
-            <ParentReportInsight explanation={report.parentAiExplanation} />
-          </div>
+          <ParentReportInsight explanation={report.parentAiExplanation} />
 
           {enableParentCopilotOnShortEffective && copilotDetailedPayload ? (
             <div className="no-pdf mb-4 rounded-lg border border-cyan-500/20 bg-cyan-950/15 px-3 py-2">
