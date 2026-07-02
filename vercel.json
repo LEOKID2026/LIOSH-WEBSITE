@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/monthly-persistence-award",
+      "schedule": "0 21 * * *"
+    }
+  ]
+}

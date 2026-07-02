@@ -3,22 +3,18 @@
  */
 
 import { STUDENT_TRUTH_LABELS_HE } from "../../lib/learning-shared/student-display-truth.js";
-import { SUBJECT_MONTHLY_TIER_DISPLAY_LABELS } from "../../lib/learning-client/subjectMonthlyPersistenceView.js";
 
-function tierCoinLabel(tier, idx) {
-  return (
-    tier.label ||
-    tier.labelHe ||
-    SUBJECT_MONTHLY_TIER_DISPLAY_LABELS[idx] ||
-    (Number.isFinite(Number(tier.coins))
-      ? `${Number(tier.coins).toLocaleString("he-IL")} מטבעות`
-      : "")
-  );
+function tierCoinLabel(tier) {
+  const coins = Number(tier.coins);
+  if (Number.isFinite(coins) && coins > 0) {
+    return `${coins.toLocaleString("he-IL")} מטבעות`;
+  }
+  return "";
 }
 
 function TierMilestone({ tier, tierIndex, currentMinutes }) {
   const done = typeof currentMinutes === "number" && currentMinutes >= tier.minutes;
-  const label = tierCoinLabel(tier, tierIndex);
+  const label = tierCoinLabel(tier);
 
   return (
     <div className="flex flex-col items-center min-w-0 flex-1">
@@ -105,7 +101,7 @@ export default function StudentMonthlyPersistencePanel({ monthlyPersistence }) {
       <div className="sm:hidden space-y-2 mb-5">
         {tiers.map((tier, tierIndex) => {
           const done = typeof currentMinutes === "number" && currentMinutes >= tier.minutes;
-          const label = tierCoinLabel(tier, tierIndex);
+          const label = tierCoinLabel(tier);
           return (
             <div
               key={tier.minutes}
@@ -143,7 +139,7 @@ export default function StudentMonthlyPersistencePanel({ monthlyPersistence }) {
             {nextTierEncouragementHe || `עוד ${Math.ceil(nextTier.minutes - currentMinutes)} דקות לפרס הבא`}
           </p>
           <p className="text-slate-500 text-xs text-right">
-            היעד הבא: {nextTier.minutes} דקות → {tierCoinLabel(nextTier, tiers.findIndex((t) => t.minutes === nextTier.minutes))}
+            היעד הבא: {nextTier.minutes} דקות → {tierCoinLabel(nextTier)}
           </p>
           <div className="h-3 rounded-full bg-slate-200 overflow-hidden border border-slate-100">
             <div

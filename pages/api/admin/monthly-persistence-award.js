@@ -4,10 +4,13 @@
  * POST body:
  *   { dryRun?: boolean, yearMonthIsrael?: "YYYY-MM", studentIds?: string[] }
  *
+ * When yearMonthIsrael is omitted, defaults to the previous Israel calendar month.
+ *
  * Auth: ENABLE_MONTHLY_PERSISTENCE_REWARD_ADMIN=true
  *       x-admin-token header must match ENGINE_REVIEW_ADMIN_TOKEN
  */
 import { getLearningSupabaseServiceRoleClient } from "../../../lib/learning-supabase/server";
+import { getPreviousIsraelYearMonth } from "../../../lib/learning-supabase/israel-calendar.server";
 import { runMonthlyPersistenceAwardJob } from "../../../lib/learning-supabase/monthly-persistence-reward.server";
 import { timingSafeCompareStrings } from "../../../lib/security/timing-safe-equal.js";
 
@@ -55,7 +58,7 @@ export default async function handler(req, res) {
   const yearMonthIsrael =
     typeof body.yearMonthIsrael === "string" && body.yearMonthIsrael.trim()
       ? body.yearMonthIsrael.trim()
-      : undefined;
+      : getPreviousIsraelYearMonth();
   const studentIds = Array.isArray(body.studentIds)
     ? body.studentIds.map(String).filter(Boolean)
     : undefined;
