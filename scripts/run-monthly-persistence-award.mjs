@@ -70,13 +70,16 @@ console.log(JSON.stringify({
   awardedCount: result.awardedCount,
   skippedCount: result.skippedCount,
   eligibleSample: (result.results || [])
-    .filter((r) => r.eligible || r.awarded)
+    .filter((r) => r.eligible || r.awarded || (r.totalWouldAward ?? 0) > 0)
     .slice(0, 5)
     .map((r) => ({
       studentId: r.studentId,
       activeMinutes: r.activeMinutes,
       tierMinutes: r.tierMinutes,
-      wouldAward: r.wouldAward ?? r.coinsAwarded,
+      alreadyPaid: r.alreadyPaid,
+      alreadyAwarded: r.alreadyAwarded,
+      deltas: r.deltas,
+      totalWouldAward: r.totalWouldAward ?? r.wouldAward ?? r.coinsAwarded,
       eligible: r.eligible,
       awarded: r.awarded,
       skippedReason: r.skippedReason ?? r.reason,

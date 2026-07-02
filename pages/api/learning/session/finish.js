@@ -22,6 +22,7 @@ import { updateDailyMissionProgress } from "../../../../lib/learning-supabase/mi
 import { guardCookieMutationOrigin } from "../../../../lib/security/api-guards.js";
 import { trackServerAnalyticsEvent } from "../../../../lib/analytics/track-event.server.js";
 import { evaluateAndGrantAchievementCards } from "../../../../lib/rewards/server/achievement-evaluator.server.js";
+import { syncIncrementalMonthlyPersistenceRewards } from "../../../../lib/learning-supabase/monthly-persistence-reward.server";
 
 async function loadLearningSession(supabase, learningSessionId) {
   const { data, error } = await supabase
@@ -204,6 +205,15 @@ export default async function handler(req, res) {
       logLearningPipelineDebug("session-finish-achievement-cards-error", {
         learningSessionId,
         error: achievementErr?.message || String(achievementErr),
+      });
+    }
+
+    try {
+      await syncIncrementalMonthlyPersistenceRewards(supabase, auth.studentId);
+    } catch (monthlyPersistenceErr) {
+      logLearningPipelineDebug("session-finish-monthly-persistence-error", {
+        learningSessionId,
+        error: monthlyPersistenceErr?.message || String(monthlyPersistenceErr),
       });
     }
 

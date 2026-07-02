@@ -36,9 +36,10 @@ const { createClient } = await import("@supabase/supabase-js");
 const {
   resolveMonthlyPersistenceTier,
   evaluateMonthlyPersistenceReward,
-  awardMonthlyPersistenceReward,
+  syncIncrementalMonthlyPersistenceRewards,
   runMonthlyPersistenceAwardJob,
   buildMonthlyPersistenceIdempotencyKey,
+  buildMonthlyPersistenceTierIdempotencyKey,
   MONTHLY_PERSISTENCE_REASON,
   MONTHLY_PERSISTENCE_SOURCE_TYPE,
 } = await import(
@@ -93,12 +94,22 @@ async function resolveTestStudent() {
 }
 
 const TEST_YM = "2099-06";
+const DEFAULT_TIERS = [
+  { minutes: 100, coins: 10_000 },
+  { minutes: 250, coins: 30_000 },
+  { minutes: 400, coins: 60_000 },
+  { minutes: 600, coins: 100_000 },
+];
 const testMonth = getIsraelMonthBoundsForYearMonth(TEST_YM);
 const testStartedAt = new Date(new Date(testMonth.startIso).getTime() + 3600_000).toISOString();
 
 async function cleanupTestArtifacts(studentId) {
-  const idempotencyKey = buildMonthlyPersistenceIdempotencyKey(studentId, TEST_YM);
-  await supabase.from("coin_transactions").delete().eq("idempotency_key", idempotencyKey);
+  await supabase
+    .from("coin_transactions")
+    .delete()
+    .eq("student_id", studentId)
+    .eq("reason", MONTHLY_PERSISTENCE_REASON)
+    .eq("source_id", TEST_YM);
   await supabase
     .from("learning_sessions")
     .delete()
@@ -134,12 +145,12 @@ console.log("══════════════════════�
 
 // ── Section 1: Pure tier resolution ───────────────────────────────────────
 console.log("── Section 1: Tier resolution (pure function) ──");
-assertEq("87 min → no tier", resolveMonthlyPersistenceTier(87), null);
-assertEq("105 min → 10,000 tier", resolveMonthlyPersistenceTier(105)?.coins, 10_000);
-assertEq("260 min → 30,000 tier", resolveMonthlyPersistenceTier(260)?.coins, 30_000);
-assertEq("420 min → 60,000 tier", resolveMonthlyPersistenceTier(420)?.coins, 60_000);
-assertEq("650 min → 100,000 tier", resolveMonthlyPersistenceTier(650)?.coins, 100_000);
-assertEq("600 min → 100,000 (not cumulative)", resolveMonthlyPersistenceTier(600)?.coins, 100_000);
+assertEq("87 min → no tier", resolveMonthlyPersistenceTier(87, DEFAULT_TIERS), null);
+assertEq("105 min → 10,000 tier", resolveMonthlyPersistenceTier(105, DEFAULT_TIERS)?.coins, 10_000);
+assertEq("260 min → 30,000 tier", resolveMonthlyPersistenceTier(260, DEFAULT_TIERS)?.coins, 30_000);
+assertEq("420 min → 60,000 tier", resolveMonthlyPersistenceTier(420, DEFAULT_TIERS)?.coins, 60_000);
+assertEq("650 min → 100,000 tier", resolveMonthlyPersistenceTier(650, DEFAULT_TIERS)?.coins, 100_000);
+assertEq("600 min → 100,000 (cumulative target)", resolveMonthlyPersistenceTier(600, DEFAULT_TIERS)?.coins, 100_000);
 console.log();
 
 // ── Section 2: Israel month boundaries ────────────────────────────────────
@@ -162,22 +173,24 @@ if (!studentId) {
     assertEq("87 min dry-run eligible", r87.eligible, false);
 
     const r105 = await dryRunForMinutes(studentId, 105);
-    assertEq("105 min dry-run wouldAward", r105.wouldAward, 10_000);
+    assertEq("105 min dry-run totalWouldAward", r105.totalWouldAward ?? r105.wouldAward, 10_000);
     assertEq("105 min dry-run tierMinutes", r105.tierMinutes, 100);
 
     const r260 = await dryRunForMinutes(studentId, 260);
-    assertEq("260 min dry-run wouldAward", r260.wouldAward, 30_000);
+    assertEq("260 min dry-run totalWouldAward", r260.totalWouldAward ?? r260.wouldAward, 30_000);
 
     const r420 = await dryRunForMinutes(studentId, 420);
-    assertEq("420 min dry-run wouldAward", r420.wouldAward, 60_000);
+    assertEq("420 min dry-run totalWouldAward", r420.totalWouldAward ?? r420.wouldAward, 60_000);
 
     const r650 = await dryRunForMinutes(studentId, 650);
-    assertEq("650 min dry-run wouldAward", r650.wouldAward, 100_000);
+    assertEq("650 min dry-run totalWouldAward", r650.totalWouldAward ?? r650.wouldAward, 100_000);
 
   const txBefore = await supabase
     .from("coin_transactions")
     .select("id")
-    .eq("idempotency_key", buildMonthlyPersistenceIdempotencyKey(studentId, TEST_YM))
+    .eq("student_id", studentId)
+    .eq("reason", MONTHLY_PERSISTENCE_REASON)
+    .eq("source_id", TEST_YM)
     .maybeSingle();
   assertEq("dry-run wrote no coin_transactions", txBefore.data?.id ?? null, null);
 
@@ -196,11 +209,11 @@ if (!studentId) {
     await cleanupTestArtifacts(studentId);
     await insertCompletedMinutes(studentId, 105);
 
-    const idemKey = buildMonthlyPersistenceIdempotencyKey(studentId, TEST_YM);
+    const tierKey = buildMonthlyPersistenceTierIdempotencyKey(studentId, TEST_YM, 100);
     const before = await getBalance(studentId);
-    const first = await awardMonthlyPersistenceReward(supabase, {
-      studentId,
+    const first = await syncIncrementalMonthlyPersistenceRewards(supabase, studentId, {
       yearMonthIsrael: TEST_YM,
+      skipProductionFilter: true,
     });
     const after = await getBalance(studentId);
 
@@ -210,7 +223,7 @@ if (!studentId) {
     const { data: tx } = await supabase
       .from("coin_transactions")
       .select("*")
-      .eq("idempotency_key", idemKey)
+      .eq("idempotency_key", tierKey)
       .maybeSingle();
 
     assertScopedCoinAward(hooks, {
@@ -239,21 +252,46 @@ if (!studentId) {
     );
     console.log(`  Balance before=${before.balance} after=${after.balance}`);
 
-    const second = await awardMonthlyPersistenceReward(supabase, {
-      studentId,
+    const second = await syncIncrementalMonthlyPersistenceRewards(supabase, studentId, {
       yearMonthIsrael: TEST_YM,
+      skipProductionFilter: true,
     });
     const afterSecond = await getBalance(studentId);
 
     assertEq("second run duplicate", second.duplicate, true);
     assertEq("second run skipped", second.skipped, true);
+    assertEq("second run coins", second.coinsAwarded, 0);
     assertEq("balance unchanged on duplicate", afterSecond.balance, after.balance);
 
     const { count } = await supabase
       .from("coin_transactions")
       .select("id", { count: "exact", head: true })
-      .eq("idempotency_key", buildMonthlyPersistenceIdempotencyKey(studentId, TEST_YM));
-    assertEq("only one transaction row", count, 1);
+      .eq("student_id", studentId)
+      .eq("reason", MONTHLY_PERSISTENCE_REASON)
+      .eq("source_id", TEST_YM);
+    assertEq("only one transaction row for first tier", count, 1);
+
+    // Incremental: 260 min after 10K already paid → +20K only
+    await insertCompletedMinutes(studentId, 155);
+    const third = await syncIncrementalMonthlyPersistenceRewards(supabase, studentId, {
+      yearMonthIsrael: TEST_YM,
+      skipProductionFilter: true,
+    });
+    assertEq("third run after more minutes awards 20K", third.coinsAwarded, 20_000);
+
+    const fourth = await syncIncrementalMonthlyPersistenceRewards(supabase, studentId, {
+      yearMonthIsrael: TEST_YM,
+      skipProductionFilter: true,
+    });
+    assertEq("fourth run no extra coins", fourth.coinsAwarded ?? 0, 0);
+
+    const cronDry = await runMonthlyPersistenceAwardJob(supabase, {
+      yearMonthIsrael: TEST_YM,
+      studentIds: [studentId],
+      dryRun: true,
+    });
+    const cronResult = cronDry.results?.[0];
+    assertEq("cron dry-run after immediate awards → 0", cronResult?.totalWouldAward ?? 0, 0);
   } catch (err) {
     fail("real run section", err?.message || String(err));
   } finally {

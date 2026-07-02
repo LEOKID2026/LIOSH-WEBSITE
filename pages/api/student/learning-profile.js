@@ -14,7 +14,7 @@ import {
   sanitizeProfileForStorage,
 } from "../../../lib/learning-supabase/student-learning-profile.server";
 import { ensureDailyMissionsInDb } from "../../../lib/learning-supabase/mission-progress.server";
-import { evaluateMonthlyPersistenceReward } from "../../../lib/learning-supabase/monthly-persistence-reward.server";
+import { evaluateMonthlyPersistenceReward, buildMonthlyPersistenceStatusPayload } from "../../../lib/learning-supabase/monthly-persistence-reward.server";
 import { buildStudentEconomyConfigPayload } from "../../../lib/rewards/server/economy-config.server.js";
 import { guardCookieMutationOrigin } from "../../../lib/security/api-guards.js";
 import { assertNotGuestForReports } from "../../../lib/guest/guest-access-policy.server.js";
@@ -89,14 +89,7 @@ export default async function handler(req, res) {
       try {
         const evalResult = await evaluateMonthlyPersistenceReward(supabase, { studentId });
         if (evalResult.ok) {
-          monthlyPersistenceStatus = {
-            yearMonthIsrael: evalResult.yearMonthIsrael,
-            activeMinutes: evalResult.activeMinutes,
-            tierMinutes: evalResult.tierMinutes,
-            wouldAward: evalResult.wouldAward,
-            alreadyAwarded: evalResult.alreadyAwarded,
-            eligible: evalResult.eligible,
-          };
+          monthlyPersistenceStatus = buildMonthlyPersistenceStatusPayload(evalResult);
         } else {
           monthlyPersistenceLoadError = true;
         }
@@ -187,14 +180,7 @@ export default async function handler(req, res) {
       try {
         const evalResult = await evaluateMonthlyPersistenceReward(supabase, { studentId });
         if (evalResult.ok) {
-          monthlyPersistenceStatus = {
-            yearMonthIsrael: evalResult.yearMonthIsrael,
-            activeMinutes: evalResult.activeMinutes,
-            tierMinutes: evalResult.tierMinutes,
-            wouldAward: evalResult.wouldAward,
-            alreadyAwarded: evalResult.alreadyAwarded,
-            eligible: evalResult.eligible,
-          };
+          monthlyPersistenceStatus = buildMonthlyPersistenceStatusPayload(evalResult);
         } else {
           monthlyPersistenceLoadError = true;
         }

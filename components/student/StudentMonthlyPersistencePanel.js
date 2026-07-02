@@ -13,7 +13,9 @@ function tierCoinLabel(tier) {
 }
 
 function TierMilestone({ tier, tierIndex, currentMinutes }) {
-  const done = typeof currentMinutes === "number" && currentMinutes >= tier.minutes;
+  const reached = typeof currentMinutes === "number" && currentMinutes >= tier.minutes;
+  const awarded = tier.awarded === true;
+  const done = reached || awarded;
   const label = tierCoinLabel(tier);
 
   return (
@@ -21,9 +23,11 @@ function TierMilestone({ tier, tierIndex, currentMinutes }) {
       <div
         className={[
           "relative z-10 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full border-2 text-xs sm:text-sm font-bold transition-all duration-500",
-          done
-            ? "border-amber-400 bg-amber-100 text-amber-800 shadow-md"
-            : "border-slate-200 bg-white text-slate-400",
+          awarded
+            ? "border-amber-500 bg-amber-200 text-amber-900 shadow-lg"
+            : done
+              ? "border-amber-400 bg-amber-100 text-amber-800 shadow-md"
+              : "border-slate-200 bg-white text-slate-400",
         ].join(" ")}
         aria-hidden
       >
@@ -100,16 +104,20 @@ export default function StudentMonthlyPersistencePanel({ monthlyPersistence }) {
 
       <div className="sm:hidden space-y-2 mb-5">
         {tiers.map((tier, tierIndex) => {
-          const done = typeof currentMinutes === "number" && currentMinutes >= tier.minutes;
+          const reached = typeof currentMinutes === "number" && currentMinutes >= tier.minutes;
+          const awarded = tier.awarded === true;
+          const done = reached || awarded;
           const label = tierCoinLabel(tier);
           return (
             <div
               key={tier.minutes}
               className={[
                 "flex items-center justify-between rounded-xl px-3 py-2.5 text-sm border min-w-0",
-                done
-                  ? "border-amber-300 bg-amber-50"
-                  : "border-slate-200 bg-white",
+                awarded
+                  ? "border-amber-400 bg-amber-100"
+                  : done
+                    ? "border-amber-300 bg-amber-50"
+                    : "border-slate-200 bg-white",
               ].join(" ")}
             >
               <span className={`flex items-center gap-2 ${done ? "text-amber-800 font-semibold" : "text-slate-600"}`}>
