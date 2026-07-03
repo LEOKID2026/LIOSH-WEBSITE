@@ -240,11 +240,25 @@ const { buildGradeSplitBaseReport } = await import(
   assert.ok(mathP, "grade-split math profile exists");
   const keys = Object.keys(base.mathOperations);
   assert.equal(keys.length, 2, "two grade-scoped map rows");
+  const k5 = keys.find((k) => k.includes("g5"));
+  assert.ok(k5, "g5 map row exists");
+
   const recs = mathP.topicRecommendations || [];
-  const weakRec = recs.find((t) => (t.questions || 0) < 100);
-  assert.ok(weakRec, "weak row in topic recommendations");
-  assert.equal(weakRec.thinEvidenceDowngraded, false);
-  assert.notEqual(weakRec.recommendedStepLabelHe, "לאסוף עוד מידע לפני החלטה");
+  assert.ok(
+    !recs.some((t) => t.topicRowKey === k5),
+    "higher-grade weak row excluded from core topicRecommendations",
+  );
+
+  const g5Unit = base.diagnosticEngineV2.units.find((u) => u.topicRowKey === k5);
+  assert.ok(g5Unit, "g5 v2 unit exists");
+  const weakRecDirect = recFromUnit(g5Unit, "g5");
+  assert.equal(weakRecDirect.thinEvidenceDowngraded, false, "g5 weak: sufficient volume at unit level");
+  assert.notEqual(
+    weakRecDirect.recommendedStepLabelHe,
+    "לאסוף עוד מידע לפני החלטה",
+    "g5 weak: 66 Q must not get collect-more-data label at unit level",
+  );
+  assert.equal(classifyTopicEvidenceBand(weakRecDirect.questions), "strong", "g5 weak: 66 Q evidence band");
 }
 
 // ─── Insights: strong topic not flagged thin in focus metadata ───────────────

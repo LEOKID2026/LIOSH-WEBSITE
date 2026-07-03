@@ -27,7 +27,9 @@ const {
   CONTEXT_LABELING_SUBJECT_IDS,
   matrixRowKeysForSubject,
 } = await import(pathToFileURL(join(ROOT, "fixtures", "parent-report-context-labeling-matrix.mjs")).href);
-const { buildDetailedParentReportFromBaseReport } = await load("utils/detailed-parent-report.js");
+const { buildDetailedParentReportFromBaseReport, buildTopicRecommendationFromV2UnitForPhaseTests } = await load(
+  "utils/detailed-parent-report.js",
+);
 const {
   assertDistinctSourceIds,
   classifyRowSectionPlacement,
@@ -358,11 +360,12 @@ for (const msg of matrixFailures) {
 }
 for (const sid of CONTEXT_LABELING_SUBJECT_IDS) {
   const sp = matrixDetailed.subjectProfiles.find((s) => s.subject === sid);
-  if ((sp?.topicOverviewRows?.length || 0) !== 3) {
-    fail(`${sid}: topicOverviewRows expected 3, got ${sp?.topicOverviewRows?.length || 0}`);
+  const keys = matrixRowKeysForSubject(sid);
+  if ((sp?.topicOverviewRows?.length || 0) !== 2) {
+    fail(`${sid}: topicOverviewRows expected 2 core rows, got ${sp?.topicOverviewRows?.length || 0}`);
   }
-  if ((sp?.topicRecommendations?.length || 0) !== 1) {
-    fail(`${sid}: topicRecommendations expected 1 focus row`);
+  if ((sp?.topicRecommendations || []).some((r) => r.topicRowKey === keys.splitG5)) {
+    fail(`${sid}: higher-grade split must not appear in core topicRecommendations`);
   }
 }
 
@@ -452,11 +455,22 @@ for (const msg of [
   fail(msg);
 }
 const mathSignoff = detailed.subjectProfiles.find((s) => s.subject === "math");
-if ((mathSignoff?.topicOverviewRows?.length || 0) < 3) {
-  fail("math topicOverviewRows must list all practiced topic rows (expected 3)");
+const kFrac5 = "fractions::grade:g5";
+if ((mathSignoff?.topicOverviewRows?.length || 0) < 2) {
+  fail("math topicOverviewRows must list core practiced topic rows (expected 2 same-grade rows)");
 }
-if ((mathSignoff?.topicRecommendations?.length || 0) !== 1) {
-  fail("math topicRecommendations must contain only focus/support rows (expected 1 weak fractions g5)");
+if ((mathSignoff?.topicRecommendations || []).some((r) => r.topicRowKey === kFrac5)) {
+  fail("math topicRecommendations must not include higher-grade fractions g5 in core focus");
+}
+const g5Unit = base.diagnosticEngineV2?.units?.find((u) => u.topicRowKey === kFrac5);
+if (g5Unit) {
+  const g5Rec = buildTopicRecommendationFromV2UnitForPhaseTests(g5Unit, base, "math");
+  if (g5Rec.thinEvidenceDowngraded) {
+    fail("fractions g5 weak row must not be thin-downgraded at unit level (66 Q)");
+  }
+  if (g5Rec.recommendedStepLabelHe === "לאסוף עוד מידע לפני החלטה") {
+    fail("fractions g5 weak row must not get collect-more-data label at unit level");
+  }
 }
 runHardChecks(traces, detailed, printBundle);
 
