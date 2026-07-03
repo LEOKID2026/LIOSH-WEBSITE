@@ -11,6 +11,7 @@ import {
 } from "../../utils/detailed-report-parent-letter-he";
 import {
   Bullets,
+  OutOfGradePracticeSection,
   ParentAssignedActivitiesSection,
   SubjectPhase3Insights,
   SubjectPrimaryActionBlock,
@@ -1658,7 +1659,10 @@ export default function ParentReportDetailedPage() {
                 </SectionCard>
 
                 {displayMode === "full" ? (
-                  <ParentAssignedActivitiesSection rows={payload?.parentAssignedActivitiesInPeriod} />
+                  <>
+                    <ParentAssignedActivitiesSection rows={payload?.parentAssignedActivitiesInPeriod} />
+                    <OutOfGradePracticeSection transparency={payload?.outOfGradePracticeTransparency} />
+                  </>
                 ) : null}
 
                 <ParentReportDataHealthNote

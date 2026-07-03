@@ -637,6 +637,87 @@ export function ParentAssignedActivitiesSection({ rows }) {
   );
 }
 
+function OutOfGradePracticeTable({ rows }) {
+  const list = Array.isArray(rows) ? rows : [];
+  if (!list.length) return null;
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-sm text-right">
+        <thead>
+          <tr className="border-b border-white/15 bg-white/5">
+            <th className="p-2 font-semibold">מקצוע</th>
+            <th className="p-2 font-semibold">נושא</th>
+            <th className="p-2 font-semibold">כיתה</th>
+            <th className="p-2 font-semibold">שאלות</th>
+            <th className="p-2 font-semibold">דיוק</th>
+            <th className="p-2 font-semibold">זמן (דק׳)</th>
+            <th className="p-2 font-semibold">תאריך אחרון</th>
+            <th className="p-2 font-semibold">מקור</th>
+          </tr>
+        </thead>
+        <tbody>
+          {list.map((row, idx) => (
+            <tr
+              key={row.topicRowKey || `${row.subjectId}-${row.topicLabelHe}-${idx}`}
+              className="border-b border-white/10"
+            >
+              <td className="p-2">{row.subjectLabelHe || "—"}</td>
+              <td className="p-2">{row.topicLabelHe || "—"}</td>
+              <td className="p-2">{row.gradeLabelHe || "—"}</td>
+              <td className="p-2">{row.questions ?? 0}</td>
+              <td className="p-2">{row.accuracy ?? 0}%</td>
+              <td className="p-2">{row.timeMinutes ?? 0}</td>
+              <td className="p-2">{row.lastActivityAtHe || "לא זמין"}</td>
+              <td className="p-2">{row.sourceLabelHe || "תרגול"}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/**
+ * Out-of-registered-grade practice — transparency only (detailed report, screen-only).
+ * @param {{ transparency?: object|null|undefined }} props
+ */
+export function OutOfGradePracticeSection({ transparency }) {
+  const block =
+    transparency && typeof transparency === "object" ? transparency : null;
+  if (!block) return null;
+
+  const advanced = Array.isArray(block.advancedPractice) ? block.advancedPractice : [];
+  const foundation = Array.isArray(block.foundationPractice) ? block.foundationPractice : [];
+  if (!advanced.length && !foundation.length) return null;
+
+  const total = advanced.length + foundation.length;
+
+  return (
+    <details className="pr-detailed-out-of-grade no-pdf no-print mb-5 md:mb-6 min-w-0 rounded-lg border border-white/10 bg-black/10">
+      <summary
+        id="pr-detailed-out-of-grade-heading"
+        className="pr-detailed-section-title cursor-pointer select-none list-none text-base md:text-lg font-extrabold tracking-tight text-white m-0 px-3 py-3 md:px-4 md:py-3.5 border-b border-white/10 [&::-webkit-details-marker]:hidden"
+      >
+        {block.titleHe || "תרגול מחוץ לכיתה הרשומה"} ({total})
+      </summary>
+      <div className="px-3 py-3 md:px-4 md:py-4 space-y-4">
+        {advanced.length > 0 ? (
+          <div>
+            <p className="pr-detailed-topic-rec-head m-0 mb-2">תרגול מתקדם</p>
+            <OutOfGradePracticeTable rows={advanced} />
+          </div>
+        ) : null}
+        {foundation.length > 0 ? (
+          <div>
+            <p className="pr-detailed-topic-rec-head m-0 mb-2">יסודות קודמים</p>
+            <OutOfGradePracticeTable rows={foundation} />
+          </div>
+        ) : null}
+      </div>
+    </details>
+  );
+}
+
 /**
  * Parent-facing topic rows grouped by unified tier.
  * @param {{ sp: object, hideTopicRowKeysForTiers?: Set<string> }} props

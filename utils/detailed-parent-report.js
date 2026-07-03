@@ -11,6 +11,7 @@ import { applyMathScopedParentDisplayNames } from "./math-topic-parent-display.j
 import { buildTopicRecommendationsForSubject } from "./topic-next-step-engine.js";
 import { rewriteParentRecommendationForDetailedHe } from "./detailed-report-parent-letter-he.js";
 import { buildParentAssignedActivitiesInPeriod } from "./parent-report-parent-assigned-activities.js";
+import { buildOutOfGradePracticeTransparency } from "./parent-report-out-of-grade-transparency.js";
 import {
   filterCoreV2Units,
   isCoreV2UnitForReport,
@@ -2809,7 +2810,13 @@ function buildExecutiveSummaryFromV2(baseReport, subjectCoverage) {
       const topicLabel = executiveLineFromV2Unit(baseReport, u);
       return `${parentFacingPatternLabelHe(u)} — ${topicLabel}`;
     });
-  const gradeSplitTopicNoticesHe = detectGradeSplitContradictions(allUnits, baseReport);
+  const registeredGradeKey =
+    baseReport?.registeredGradeKey != null && String(baseReport.registeredGradeKey).trim()
+      ? String(baseReport.registeredGradeKey).trim()
+      : null;
+  const gradeSplitTopicNoticesHe = registeredGradeKey
+    ? []
+    : detectGradeSplitContradictions(allUnits, baseReport);
 
   return {
     version: 2,
@@ -2929,9 +2936,7 @@ function buildHomePlanFromV2(baseReport) {
       homePlanLineFromV2Unit(baseReport, u, rewriteParentRecommendationForDetailedHe(String(action))),
     );
   }
-  const splitNotices = detectGradeSplitContradictions(allUnits, baseReport);
-  const merged = [...splitNotices.slice(0, 2), ...itemsHe];
-  return { itemsHe: merged.length ? merged : [homePlanV2EmptyFallbackHe()] };
+  return { itemsHe: itemsHe.length ? itemsHe : [homePlanV2EmptyFallbackHe()] };
 }
 
 function buildNextPeriodGoalsFromV2(baseReport) {
@@ -3064,6 +3069,7 @@ export function buildDetailedParentReportFromBaseReport(baseReport, meta = {}) {
     nextPeriodGoals,
     parentProductContractV1,
     parentAssignedActivitiesInPeriod: buildParentAssignedActivitiesInPeriod(baseReport),
+    outOfGradePracticeTransparency: buildOutOfGradePracticeTransparency(baseReport),
     dataIntegrityReport: baseReport.dataIntegrityReport ?? null,
     contractsV1: {
       ...(baseReport?.contractsV1 && typeof baseReport.contractsV1 === "object" ? baseReport.contractsV1 : {}),

@@ -188,11 +188,16 @@ function assertNoCollapsedGradeSplitNarrative(detailed, base) {
   if (mathKeys.length < 2) return;
   const hasFractionsDup = mathKeys.filter((k) => k.startsWith("fractions::")).length >= 2;
   if (!hasFractionsDup) return;
-  if (/שברים[^.\n]{0,30}דורש חיזוק/u.test(bundle) && !(es.gradeSplitTopicNoticesHe || []).length) {
+  const transparencyRows =
+    (detailed?.outOfGradePracticeTransparency?.advancedPractice?.length || 0) +
+    (detailed?.outOfGradePracticeTransparency?.foundationPractice?.length || 0);
+  const hasSplitExplanation =
+    (es.gradeSplitTopicNoticesHe || []).length > 0 || transparencyRows > 0;
+  if (/שברים[^.\n]{0,30}דורש חיזוק/u.test(bundle) && !hasSplitExplanation) {
     fail("aggregate narrative collapses grade-split שברים into single weakness without split notice");
   }
-  if ((es.gradeSplitTopicNoticesHe || []).length === 0) {
-    fail("grade-split שברים rows present but executiveSummary.gradeSplitTopicNoticesHe is empty");
+  if (!hasSplitExplanation && !base?.registeredGradeKey) {
+    fail("grade-split שברים rows present but no split explanation (notice or transparency)");
   }
 }
 

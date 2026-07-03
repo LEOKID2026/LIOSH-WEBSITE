@@ -115,6 +115,9 @@ export function collectParentFacingTextBundle(detailed) {
     ]) {
       if (es[k]) parts.push(String(es[k]));
     }
+    for (const k of ["topStrengthsAcrossHe", "topFocusAreasHe"]) {
+      if (Array.isArray(es[k])) parts.push(...es[k].map(String));
+    }
   }
   for (const sp of detailed?.subjectProfiles || []) {
     for (const row of sp?.topicOverviewRows || []) {

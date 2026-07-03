@@ -151,9 +151,13 @@ function assertSubjectContextLabelingMatrix(subjectId, baseReport, detailedRepor
     "u",
   );
   const notices = detailedReport?.executiveSummary?.gradeSplitTopicNoticesHe || [];
+  const transparency = detailedReport?.outOfGradePracticeTransparency;
+  const transparencyRowCount =
+    (transparency?.advancedPractice?.length || 0) + (transparency?.foundationPractice?.length || 0);
   const hasNotice =
     notices.some((n) => String(n).includes(splitLabel)) ||
-    notices.some((n) => String(n).includes(SUBJECT_LABEL_HE[subjectId] || subjectId));
+    notices.some((n) => String(n).includes(SUBJECT_LABEL_HE[subjectId] || subjectId)) ||
+    transparencyRowCount > 0;
   if (collapsed.test(bundle) && !hasNotice) {
     failures.push(
       `${subjectId}: aggregate collapses grade-split "${splitLabel}" without gradeSplit notice`,
@@ -242,12 +246,15 @@ export function assertAggregateExplainsAllGradeSplits(detailedReport, baseReport
     }
   }
   if (findGradeSplitTopicLabelsInBaseReport(baseReport).length > 0 && notices.length === 0) {
+    const transparency = detailedReport?.outOfGradePracticeTransparency;
+    const transparencyRowCount =
+      (transparency?.advancedPractice?.length || 0) + (transparency?.foundationPractice?.length || 0);
     const mixedNote = String(
       detailedReport?.gradePracticeMeta?.mixedGradePracticeNoteHe ||
         baseReport?.gradePracticeMeta?.mixedGradePracticeNoteHe ||
         "",
     ).trim();
-    if (!mixedNote) {
+    if (!mixedNote && transparencyRowCount === 0 && !baseReport?.registeredGradeKey) {
       failures.push("executiveSummary.gradeSplitTopicNoticesHe empty despite grade-split topics");
     }
   }

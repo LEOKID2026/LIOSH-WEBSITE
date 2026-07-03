@@ -8,6 +8,11 @@
 
 import { subjectLabelHe } from "../lib/teacher-portal/teacher-ui.he.js";
 import {
+  filterCoreParentReportRows,
+  resolveRegisteredGradeKeyFromReport,
+} from "./parent-report-core-grade-filter.js";
+import { parseCanonicalTopicFromRowKey } from "./parent-report-output-integrity/row-identity-v1.js";
+import {
   buildEngineDecisionInsightLineHe,
 } from "./parent-report-language/engine-decision-parent-copy-he.js";
 import { buildTopicDiagnosticExplainSectionsHe } from "./parent-report-ui-explain-he.js";
@@ -137,6 +142,12 @@ export function collectTopicEngineRowsFromReport(report) {
 
           : null;
 
+      const parsed = parseCanonicalTopicFromRowKey(topicKey);
+      const contentGradeKey =
+        data.contentGradeKey ??
+        data.gradeKey ??
+        parsed.contentGradeKey ??
+        null;
       const label =
 
         String(data.narrativeTopicLabelHe || data.displayName || "").trim() ||
@@ -167,12 +178,24 @@ export function collectTopicEngineRowsFromReport(report) {
 
         excellent: !!data.excellent,
 
+        gradeRelation: data.gradeRelation ?? data.rowIdentityV1?.gradeRelation ?? null,
+
+        contentGradeKey,
+
+        gradeKey: data.gradeKey ?? contentGradeKey,
+
+        registeredGradeKey: data.registeredGradeKey ?? report.registeredGradeKey ?? null,
+
+        rowIdentityV1: data.rowIdentityV1,
+
       });
 
     }
 
   }
 
+  const registeredGradeKey = resolveRegisteredGradeKeyFromReport(report);
+  if (registeredGradeKey) return filterCoreParentReportRows(rows, registeredGradeKey);
   return rows;
 
 }

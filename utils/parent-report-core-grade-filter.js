@@ -148,3 +148,37 @@ export function filterCoreV2Units(units, topicMap, registeredGradeKey) {
 export function filterCoreParentReportRows(rows, registeredGradeKey) {
   return (Array.isArray(rows) ? rows : []).filter((row) => isCoreParentReportRow(row, registeredGradeKey));
 }
+
+const REPORT_TOPIC_MAP_KEYS = [
+  "mathOperations",
+  "geometryTopics",
+  "englishTopics",
+  "scienceTopics",
+  "historyTopics",
+  "hebrewTopics",
+  "moledetGeographyTopics",
+];
+
+/**
+ * Resolve registered grade from a V2/base report object.
+ * @param {unknown} report
+ */
+export function resolveRegisteredGradeKeyFromReport(report) {
+  if (!report || typeof report !== "object") return null;
+  const r = /** @type {Record<string, unknown>} */ (report);
+  const direct = normalizeGradeLevelToKey(r.registeredGradeKey);
+  if (direct) return direct;
+
+  const fromAggregate = resolveRegisteredGradeKeyFromAggregate(r, r);
+  if (fromAggregate) return fromAggregate;
+
+  const maps = {};
+  for (const mk of REPORT_TOPIC_MAP_KEYS) {
+    if (r[mk] && typeof r[mk] === "object") maps[mk] = r[mk];
+  }
+  const fromMaps = registeredGradeKeyFromReportMaps(maps);
+  if (fromMaps) return normalizeGradeLevelToKey(fromMaps);
+
+  const summary = r.summary && typeof r.summary === "object" ? r.summary : null;
+  return normalizeGradeLevelToKey(summary?.registeredGradeLevel ?? summary?.gradeLevel ?? summary?.normalizedGradeLevel);
+}

@@ -14,6 +14,8 @@ import {
 import { formatParentReportActivityDisplayLabelHe } from "../../utils/parent-report-language/parent-report-display-labels.he.js";
 import { buildInsightPacketFromV2Snapshot } from "../../utils/parent-report-insights/build-packet-from-v2-snapshot.js";
 import { buildDeterministicFallbackNarrative } from "../../utils/parent-report-ai-narrative/deterministic-fallback.js";
+import { applyTopicEngineParentFacingInsights } from "../../utils/parent-report-engine-insights-he.js";
+import { buildParentSurfaceWhatToNoticeHe } from "../../utils/parent-report-surface/parent-surface-insights.js";
 
 const STUDENT_ID = "2352e8c7-ac0b-4daa-afbf-cb7d130062b3";
 const FROM = "2025-09-01";
@@ -69,6 +71,15 @@ function collectCoreText(detailed) {
   return parts.filter(Boolean).join("\n");
 }
 
+function collectWhatToNoticeText(base, detailed) {
+  applyTopicEngineParentFacingInsights(base);
+  const payload = {
+    ...detailed,
+    _parentReportUi: { parentFacing: base?.parentFacing ?? null },
+  };
+  return buildParentSurfaceWhatToNoticeHe(payload).join("\n");
+}
+
 function gradeMentionLeak(text, registeredGradeKey) {
   if (registeredGradeKey !== "g1") return [];
   const leaks = [];
@@ -120,8 +131,10 @@ async function main() {
   const labels = mapRows.map(({ row }) => formatParentReportActivityDisplayLabelHe(row));
   const bareTargil = labels.filter((l) => l === "תרגול");
   const coreText = collectCoreText(detailed);
+  const whatToNoticeText = collectWhatToNoticeText(base, detailed);
   const aiInsightText = collectAiInsightText(base);
   const leaks = gradeMentionLeak(coreText, registeredGradeKey);
+  const whatToNoticeLeaks = gradeMentionLeak(whatToNoticeText, registeredGradeKey);
   const aiLeaks = gradeMentionLeak(aiInsightText, registeredGradeKey);
   const combinedTargilTopic = labels.filter((l) => /^תרגול — /u.test(l));
 
@@ -148,6 +161,11 @@ async function main() {
     sampleLabels: labels.slice(0, 15),
     nonCoreInTopicOverview: nonCoreInOverview,
     coreTextGradeLeaks: leaks,
+    whatToNoticeGradeLeaks: whatToNoticeLeaks,
+    whatToNoticeSample: whatToNoticeText.slice(0, 500),
+    outOfGradeTransparencyCount:
+      (detailed?.outOfGradePracticeTransparency?.advancedPractice?.length || 0) +
+      (detailed?.outOfGradePracticeTransparency?.foundationPractice?.length || 0),
     aiInsightGradeLeaks: aiLeaks,
     aiInsightSample: aiInsightText.slice(0, 500),
     topicRecommendationCount: (detailed?.subjectProfiles || []).reduce(

@@ -28,6 +28,15 @@ const { buildInsightPacketFromV2Snapshot } = await import(
 const { buildDeterministicFallbackNarrative } = await import(
   u("utils/parent-report-ai-narrative/deterministic-fallback.js")
 );
+const { buildParentInsightsFromTopicEngineHe } = await import(
+  u("utils/parent-report-engine-insights-he.js")
+);
+const { buildParentSurfaceWhatToNoticeHe } = await import(
+  u("utils/parent-report-surface/parent-surface-insights.js")
+);
+const { applyTopicEngineParentFacingInsights } = await import(
+  u("utils/parent-report-engine-insights-he.js")
+);
 
 assert.equal(isCoreParentReportRow({ gradeRelation: "same", questions: 5 }, "g1"), true);
 assert.equal(isCoreParentReportRow({ gradeRelation: "higher", questions: 10 }, "g1"), false);
@@ -110,5 +119,65 @@ assert.doesNotMatch(aiText, /כפל.*כיתה/u, "AI insight must not cite highe
 for (const s of aiNarr.strengths || []) {
   assert.doesNotMatch(String(s.textHe || ""), /כפל/u, "higher-grade multiplication must not appear in strengths");
 }
+
+const mixedEngineReport = {
+  registeredGradeKey: "g1",
+  summary: { gradeLevel: "g1", totalQuestions: 55 },
+  mathOperations: {
+    "mult_g1::grade:g1": {
+      questions: 10,
+      accuracy: 92,
+      gradeRelation: "same",
+      contentGradeKey: "g1",
+      displayName: "כפל",
+      topicEngineRowSignals: { diagnosticType: "stable_mastery", recommendedNextStep: "maintain" },
+    },
+    "targil_g1::grade:g1": {
+      questions: 8,
+      accuracy: 48,
+      gradeRelation: "same",
+      contentGradeKey: "g1",
+      displayName: "תרגול",
+      topicEngineRowSignals: { diagnosticType: "knowledge_gap", recommendedNextStep: "remediate_same_level" },
+    },
+    "mult_g5::grade:g5": {
+      questions: 25,
+      accuracy: 95,
+      gradeRelation: "higher",
+      contentGradeKey: "g5",
+      displayName: "כפל - כיתה ה׳",
+      topicEngineRowSignals: { diagnosticType: "stable_mastery", recommendedNextStep: "maintain" },
+    },
+    "targil_g2::grade:g2": {
+      questions: 20,
+      accuracy: 42,
+      gradeRelation: "higher",
+      contentGradeKey: "g2",
+      displayName: "תרגול - כיתה ב׳",
+      topicEngineRowSignals: { diagnosticType: "knowledge_gap", recommendedNextStep: "remediate_same_level" },
+    },
+  },
+};
+applyTopicEngineParentFacingInsights(mixedEngineReport);
+const engineInsights = buildParentInsightsFromTopicEngineHe(mixedEngineReport);
+const insightText = [...engineInsights, ...(mixedEngineReport.parentFacing?.insights || [])].join("\n");
+assert.doesNotMatch(insightText, /כיתה\s*ב/u, "what-to-know insights must not mention grade ב");
+assert.doesNotMatch(insightText, /כיתה\s*ה/u, "what-to-know insights must not mention grade ה");
+assert.doesNotMatch(insightText, /כפל - כיתה/u, "must not cite higher-grade multiplication label");
+assert.doesNotMatch(insightText, /תרגול - כיתה/u, "must not cite higher-grade practice label");
+assert.match(insightText, /תמונה מעורבת/u, "same-grade mixed insight may still appear");
+
+const mixedDetailed = buildDetailedParentReportFromBaseReport(mixedEngineReport);
+const whatToNotice = buildParentSurfaceWhatToNoticeHe({
+  ...mixedDetailed,
+  _parentReportUi: { parentFacing: mixedEngineReport.parentFacing },
+});
+const whatToNoticeText = whatToNotice.join("\n");
+assert.doesNotMatch(whatToNoticeText, /כיתה\s*ב/u, "מה חשוב לדעת must not mention grade ב");
+assert.doesNotMatch(whatToNoticeText, /כיתה\s*ה/u, "מה חשוב לדעת must not mention grade ה");
+assert.ok(
+  (mixedDetailed.outOfGradePracticeTransparency?.advancedPractice || []).length >= 2,
+  "higher-grade rows appear in transparency section",
+);
 
 console.log("OK parent-report-core-grade-filter-selftest");

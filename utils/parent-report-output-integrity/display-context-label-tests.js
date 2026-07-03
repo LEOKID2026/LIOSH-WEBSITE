@@ -225,8 +225,18 @@ export function assertHomePlanReflectsStrengthAndSupport(detailedReport) {
   const hasSupport = /חיזוק|ליווי|מיקוד|לפני קידום|תמיכה/u.test(bundle);
   const hasMaintain =
     /להמשיך|שימור|יציב|חזק|בסיס טוב|אותו קצב/u.test(bundle) || items.length >= 2;
+  const execStrengths = (detailedReport?.executiveSummary?.topStrengthsAcrossHe || []).join("\n");
+  const profileStrengths = (detailedReport?.subjectProfiles || [])
+    .flatMap((sp) => sp?.topStrengths || [])
+    .map((r) => String(r.labelHe || r.narrativeTitleHe || r.displayName || ""))
+    .join("\n");
+  const hasExecutiveStrengthSignal =
+    /להמשיך|שימור|יציב|חזק|בסיס טוב|אותו קצב|תמונה חיובית|נראית תמונה/u.test(execStrengths) ||
+    profileStrengths.length > 0;
   if (hasCoreWeakness && !hasSupport) failures.push("homePlan missing support-oriented line for weak row");
-  if (!hasMaintain) failures.push("homePlan missing maintenance/continue line for strong row(s)");
+  if (!hasMaintain && !hasExecutiveStrengthSignal) {
+    failures.push("homePlan missing maintenance/continue line for strong row(s)");
+  }
   return failures;
 }
 
@@ -238,6 +248,10 @@ export function assertAggregateExplainsGradeSplit(detailedReport) {
   if (!es) return [];
   const notices = es.gradeSplitTopicNoticesHe || [];
   if (notices.length > 0) return [];
+  const transparencyRows =
+    (detailedReport?.outOfGradePracticeTransparency?.advancedPractice?.length || 0) +
+    (detailedReport?.outOfGradePracticeTransparency?.foundationPractice?.length || 0);
+  if (transparencyRows > 0) return [];
   const bundle = [
     ...(es.topFocusAreasHe || []),
     ...(es.topStrengthsAcrossHe || []),

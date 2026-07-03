@@ -423,7 +423,7 @@ for (const t of TRACE_TABLE.slice(0, 4)) {
   for (const msg of assertAggregateExplainsGradeSplit(realDetailed)) {
     assert.fail(`I-aggregate: ${msg}`);
   }
-  assert.ok((realDetailed.executiveSummary?.gradeSplitTopicNoticesHe || []).length >= 1, "I: grade split notice");
+  assert.ok((realDetailed.outOfGradePracticeTransparency?.advancedPractice || []).length >= 1, "I: out-of-grade transparency rows");
 }
 
 // ─── J: Six-subject context-labeling matrix (all subjects) ───────────────────
