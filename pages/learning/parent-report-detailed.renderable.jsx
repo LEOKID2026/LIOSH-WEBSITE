@@ -1224,15 +1224,17 @@ export default function ParentReportDetailedPage() {
                   </table>
                 </div>
                 <div className="mt-3 grid md:grid-cols-2 gap-3 text-sm">
-                  <div>
-                    <p className="pr-detailed-mini-heading font-semibold text-white/82 mb-1">
-                      מקצועות שלא תורגלו בתקופה
-                    </p>
-                    <Bullets
-                      items={payload.overallSnapshot.lowExposureSubjectsHe}
-                      volumeQuestionsTotal={Number(payload.overallSnapshot?.totalQuestions) || 0}
-                    />
-                  </div>
+                  {payload.overallSnapshot.sparseSubjectsHe?.length ? (
+                    <div>
+                      <p className="pr-detailed-mini-heading font-semibold text-white/82 mb-1">
+                        מקצועות עם מעט נתונים בתקופה
+                      </p>
+                      <Bullets
+                        items={payload.overallSnapshot.sparseSubjectsHe}
+                        volumeQuestionsTotal={Number(payload.overallSnapshot?.totalQuestions) || 0}
+                      />
+                    </div>
+                  ) : null}
                   <div>
                     <p className="pr-detailed-mini-heading font-semibold text-white/82 mb-1">מקצועות בולטים</p>
                     <Bullets
@@ -1391,7 +1393,9 @@ export default function ParentReportDetailedPage() {
                 {/* cross insights — part of structure; placed after subjects for flow */}
                 <SectionCard title="מה שחוזר בכמה מקצועות" compact={displayMode === "summary"}>
                 <Bullets
-                  items={payload.crossSubjectInsights.bulletsHe}
+                  items={(payload.crossSubjectInsights.bulletsHe || []).filter(
+                    (line) => !/^מקצועות שלא תורגלו/u.test(String(line || "")),
+                  )}
                   volumeQuestionsTotal={Number(payload.overallSnapshot?.totalQuestions) || 0}
                 />
                 {payload.crossSubjectInsights.dataQualityNoteHe ? (

@@ -16,10 +16,8 @@ export default function ParentReportDataHealthNote({
   const thinEvidenceSubjectsHe = Array.isArray(diagnosticOverviewHe?.thinEvidenceSubjectsHe)
     ? diagnosticOverviewHe.thinEvidenceSubjectsHe.filter(Boolean)
     : [];
-  const notPracticedSubjectsSummaryHe = diagnosticOverviewHe?.notPracticedSubjectsSummaryHe || null;
   const hasContent =
     thinEvidenceSubjectsHe.length > 0 ||
-    !!notPracticedSubjectsSummaryHe ||
     !!dataQualityNoteHe ||
     !!mixedGradePracticeNoteHe;
 
@@ -33,9 +31,6 @@ export default function ParentReportDataHealthNote({
       lang="he"
     >
       <p className="font-bold text-sky-100/95 m-0 text-sm md:text-base">מצב הנתונים בדוח</p>
-      {notPracticedSubjectsSummaryHe ? (
-        <p className="m-0 leading-relaxed text-white/50 text-xs md:text-sm">{notPracticedSubjectsSummaryHe}</p>
-      ) : null}
       {thinEvidenceSubjectsHe.length > 0 ? (
         <p className="m-0 leading-relaxed text-white/50 text-xs md:text-sm">
           נתונים מצומצמים במקצועות: {thinEvidenceSubjectsHe.join(" · ")}

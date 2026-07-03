@@ -204,7 +204,7 @@ function sortPluralTask(id, caseLabel, spec) {
   return wrapDetectiveTask("medium", "sort_plural", {
     id,
     caseLabel,
-    missionHe: `גררו את הרבים של «${base}»`,
+    missionHe: `גררו את הרבים של "${base}"`,
     zones: [{ id: "zPlural", label: "רבים", icon: "📁" }],
     pieces,
     solution: { zPlural: correctId },
@@ -220,7 +220,7 @@ function sortGenderTask(id, caseLabel, spec) {
   return wrapDetectiveTask("medium", "sort_gender", {
     id,
     caseLabel,
-    missionHe: `גררו נקבה של «${base}»`,
+    missionHe: `גררו נקבה של "${base}"`,
     zones: [{ id: "zFem", label: "נקבה", icon: "📁" }],
     pieces,
     solution: { zFem: correctId },
@@ -236,7 +236,7 @@ function wordFamilyTask(id, caseLabel, spec) {
   return wrapDetectiveTask("medium", "word_family", {
     id,
     caseLabel,
-    missionHe: `גררו מילה ממשפחת «${root}»`,
+    missionHe: `גררו מילה ממשפחת "${root}"`,
     zones: [{ id: "zFam", label: `משפחת ${root}`, icon: "🧬" }],
     pieces,
     solution: { zFam: correctId },
@@ -252,7 +252,7 @@ function meaningWordTask(id, caseLabel, spec) {
   return wrapDetectiveTask("medium", "meaning_word", {
     id,
     caseLabel,
-    missionHe: `מה הפירוש של «${word}»?`,
+    missionHe: `מה הפירוש של "${word}"?`,
     zones: [{ id: "z1", label: "פירוש", icon: "📖" }],
     pieces,
     solution: { z1: correctId },
@@ -324,7 +324,7 @@ function meaningPassageTask(id, caseLabel, spec) {
   return wrapDetectiveTask("hard", "meaning", {
     id,
     caseLabel,
-    missionHe: `פירוש «${word}» לפי הקטע`,
+    missionHe: `פירוש "${word}" לפי הקטע`,
     passage,
     zones: [{ id: "z1", label: "פירוש", icon: "📖" }],
     pieces,
@@ -777,14 +777,14 @@ export function auditWordDetectiveContent() {
         if (type === "word_family") gaps.push(`${task.id}: word_family אסור ברמה בינונית`);
         if (task.passage) gaps.push(`${task.id}: passage אסור ברמה בינונית`);
         if (type === "meaning_word") {
-          const match = task.missionHe.match(/מה הפירוש של «(.+?)»\?/);
+          const match = task.missionHe.match(/מה הפירוש של "(.+?)"\?/);
           if (match) {
             const word = match[1];
             const lexiconAnswer = MEANING_WORD_LEXICON[word];
             if (lexiconAnswer === undefined) {
-              gaps.push(`${task.id}: «${word}» חסר ב-MEANING_WORD_LEXICON`);
+              gaps.push(`${task.id}: "${word}" חסר ב-MEANING_WORD_LEXICON`);
             } else if (task.correctAnswer !== lexiconAnswer) {
-              gaps.push(`${task.id}: פירוש «${word}» (${task.correctAnswer}) לא תואם ללקסיקון (${lexiconAnswer})`);
+              gaps.push(`${task.id}: פירוש "${word}" (${task.correctAnswer}) לא תואם ללקסיקון (${lexiconAnswer})`);
             }
           }
         }

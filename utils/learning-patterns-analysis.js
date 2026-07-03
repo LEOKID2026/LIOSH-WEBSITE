@@ -848,7 +848,7 @@ function buildDiagnosticSectionsHe({
   }
   const insufficientDataNoteHe =
     insufficientData.length > 8
-      ? "יש עוד אזורים עם טעויות מפוזרות שלא הגיעו לסף דפוס שחוזר מספיק — האבחון בהם נשאר חלקי."
+      ? "יש עוד אזורים עם טעויות מפוזרות שלא הגיעו לסף דפוס שחוזר מספיק — התמונה בהם עדיין חלקית."
       : null;
   if (insufficientDataNoteHe) insufficientDataHe.push(insufficientDataNoteHe);
 
@@ -1442,7 +1442,7 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
   const modeTop = Object.entries(modeDist).sort((a, b) => b[1] - a[1])[0];
   let modeConcentrationNoteHe = null;
   if (modeTop && modeKeys.length >= 4 && modeTop[1] / modeKeys.length >= 0.62) {
-    modeConcentrationNoteHe = `רוב התרגול בתקופה שנבחרה במצב «${modeTop[0]}» — לא מכלילים אוטומטית לכל המקצוע.`;
+    modeConcentrationNoteHe = `רוב התרגול בתקופה שנבחרה במצב "${modeTop[0]}" — לא מכלילים אוטומטית לכל המקצוע.`;
   }
 
   const strongRows = rows.filter((r) => r.row.dataSufficiencyLevel === "strong" && r.row.evidenceStrength === "strong");
@@ -2102,7 +2102,7 @@ export function analyzeLearningPatterns(report, rawMistakesBySubject = {}) {
       const rs = recStrength(w.mistakeCount);
       studentRecommendationsImprove.push({
         id: `stu-imp:${w.id}`,
-        textHe: `כדאי לתרגל עוד קצת ${parentCopyTopicPhraseForFocusHe(w.labelHe)} — נרשמו ${w.mistakeCount} טעויות דומות בתקופה שנבחרה. נשארים עם תרגול ממוקד ולא עם «לנסות לתקן הכול בבת אחת».`,
+        textHe: `כדאי לתרגל עוד קצת ${parentCopyTopicPhraseForFocusHe(w.labelHe)} — נרשמו ${w.mistakeCount} טעויות דומות בתקופה שנבחרה. נשארים עם תרגול ממוקד ולא עם "לנסות לתקן הכול בבת אחת".`,
         strength: rs,
       });
     }
@@ -2354,7 +2354,7 @@ export const EXAMPLE_PATTERN_DIAGNOSTICS_PAYLOAD = {
         {
           id: "stu-imp:math:w:0",
           textHe:
-            "כדאי לתרגל עוד קצת בנושא: בהשוואת כמויות או מספרים — נרשמו 7 טעויות דומות בתקופה שנבחרה. נשארים עם תרגול ממוקד ולא עם «לנסות לתקן הכול בבת אחת».",
+            "כדאי לתרגל עוד קצת בנושא: בהשוואת כמויות או מספרים — נרשמו 7 טעויות דומות בתקופה שנבחרה. נשארים עם תרגול ממוקד ולא עם \"לנסות לתקן הכול בבת אחת\".",
           strength: "moderate",
         },
       ],
@@ -2453,7 +2453,7 @@ export const EXAMPLE_PATTERN_DIAGNOSTICS_PAYLOAD = {
         {
           id: "stu-imp:geometry:w:0",
           textHe:
-            "כדאי לתרגל עוד קצת בנושא: בלבול חוזר בין היקף לשטח — נרשמו 6 טעויות דומות בתקופה שנבחרה. נשארים עם תרגול ממוקד ולא עם «לנסות לתקן הכול בבת אחת».",
+            "כדאי לתרגל עוד קצת בנושא: בלבול חוזר בין היקף לשטח — נרשמו 6 טעויות דומות בתקופה שנבחרה. נשארים עם תרגול ממוקד ולא עם \"לנסות לתקן הכול בבת אחת\".",
           strength: "moderate",
         },
       ],
@@ -2582,7 +2582,7 @@ export const EXAMPLE_PATTERN_DIAGNOSTICS_PAYLOAD = {
         {
           id: "stu-imp:hebrew:w:0",
           textHe:
-            "כדאי לתרגל עוד קצת בנושא: במילות יחס ובמבנה משפט — נרשמו 6 טעויות דומות בתקופה שנבחרה. נשארים עם תרגול ממוקד ולא עם «לנסות לתקן הכול בבת אחת».",
+            "כדאי לתרגל עוד קצת בנושא: במילות יחס ובמבנה משפט — נרשמו 6 טעויות דומות בתקופה שנבחרה. נשארים עם תרגול ממוקד ולא עם \"לנסות לתקן הכול בבת אחת\".",
           strength: "moderate",
         },
       ],

@@ -12,7 +12,7 @@ const mod = await import(
   pathToFileURL(path.join(root, "lib/parent-server/parent-report-parent-facing.server.js")).href
 );
 
-const { buildParentInsightsHe, buildHomeRecommendationsHe, buildParentFacingBlocks } = mod;
+const { buildParentInsightsHe, buildParentFacingBlocks } = mod;
 
 function assertHebrewOnly(lines) {
   for (const line of lines) {
@@ -29,23 +29,29 @@ function assertHebrewOnly(lines) {
   assertHebrewOnly(insights);
 }
 
-// Weak math
+// Weak math — range.to aligned with last activity (avoids false inactivity vs wall clock)
 {
   const payload = {
-    summary: { totalAnswers: 40, totalSessions: 8, accuracy: 52 },
+    range: { from: "2026-05-01", to: "2026-05-25" },
+    summary: { totalAnswers: 40, totalSessions: 8, accuracy: 52, diagnosticAnswers: 35 },
     subjects: {
-      math: { answers: 20, accuracy: 45, topics: { addition: { answers: 10, accuracy: 40 } } },
-      hebrew: { answers: 20, accuracy: 78, topics: {} },
+      math: {
+        answers: 20,
+        accuracy: 45,
+        diagnosticAnswers: 18,
+        topics: { addition: { answers: 10, accuracy: 40, diagnosticAnswers: 10 } },
+      },
+      hebrew: { answers: 20, accuracy: 78, diagnosticAnswers: 17, topics: {} },
     },
-    dailyActivity: [{ date: "2026-05-20", answers: 5, correct: 2 }],
+    dailyActivity: [{ date: "2026-05-25", answers: 5, correct: 2 }],
   };
   const { insights, homeRecommendations } = buildParentFacingBlocks(payload);
   assert(insights.some((t) => t.includes("מתמטיקה") || t.includes("חשבון") || t.includes("קושי")));
-  assert(homeRecommendations.some((t) => t.includes("10 דקות") || t.includes("תרגול")));
+  assert(homeRecommendations.some((t) => t.includes("בבית") && t.includes("שאלות")));
   assertHebrewOnly([...insights, ...homeRecommendations]);
 }
 
-// Improvement trend
+// Improvement trend — range.to aligned; evidence quality via buildParentFacingBlocks
 {
   const daily = [
     { date: "2026-05-01", answers: 10, correct: 4 },
@@ -54,10 +60,15 @@ function assertHebrewOnly(lines) {
     { date: "2026-05-15", answers: 10, correct: 9 },
     { date: "2026-05-20", answers: 10, correct: 9 },
   ];
-  const insights = buildParentInsightsHe({
-    summary: { totalAnswers: 50, totalSessions: 10, accuracy: 64 },
-    subjects: { math: { answers: 25, accuracy: 70, topics: {} } },
+  const { insights } = buildParentFacingBlocks({
+    range: { from: "2026-05-01", to: "2026-05-20" },
+    summary: { totalAnswers: 50, totalSessions: 10, accuracy: 64, diagnosticAnswers: 50 },
+    subjects: { math: { answers: 25, accuracy: 70, diagnosticAnswers: 25, topics: {} } },
     dailyActivity: daily,
+    recentMistakes: [
+      { isCorrect: false, subject: "math", answeredAt: "2026-05-01T10:00:00.000Z" },
+      { isCorrect: false, subject: "math", answeredAt: "2026-05-15T10:00:00.000Z" },
+    ],
   });
   assert(insights.some((t) => t.includes("שיפור")));
   assertHebrewOnly(insights);

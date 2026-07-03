@@ -894,7 +894,7 @@ export default function AdminAnalyticsPage() {
               isOpen={isPanelOpen("reports-truth-check")}
             >
               <p className="text-xs text-white/55">
-                המדדים בבלוק «פתיחת דוחות וייצוא PDF» כוללים השוואה מול מקורות מאגר הנתונים.
+                המדדים בבלוק "פתיחת דוחות וייצוא PDF" כוללים השוואה מול מקורות מאגר הנתונים.
               </p>
             </Panel>
             <Panel
@@ -1259,7 +1259,7 @@ export default function AdminAnalyticsPage() {
             <>
               {sourceErrors.length ? (
                 <div className="rounded-xl border border-amber-400/25 bg-amber-400/10 p-2 text-xs text-amber-100">
-                  יש {sourceErrors.length} מקורות נתונים חסרים — פרטים בטאב «בדיקות אמת».
+                  יש {sourceErrors.length} מקורות נתונים חסרים — פרטים בטאב "בדיקות אמת".
                 </div>
               ) : null}
 

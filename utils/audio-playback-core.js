@@ -308,7 +308,7 @@ export function createStemPlaybackController(stem, opts = {}) {
             code === "not-allowed"
               ? "ההשמעה נחסמה (הרשאות / מדיניות דפדפן)."
               : code === "synthesis-failed"
-                ? "מנוע הדיבור נכשל. נסו שוב או בדקו שפת ממשק עברית במערכת."
+                ? "ההקראה נכשלה. נסו שוב או בדקו שפת ממשק עברית במערכת."
                 : code === "canceled"
                   ? "ההשמעה בוטלה."
                   : `שגיאת TTS: ${code}`;

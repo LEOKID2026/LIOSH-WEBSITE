@@ -39,7 +39,7 @@ export default function TeacherStudentWorksheetsPanel({ accessToken, studentId }
   return (
     <section className="rounded-2xl border border-violet-500/30 bg-violet-950/15 p-5 mb-6 text-right">
       <h2 className="text-lg font-bold text-white mb-3">דפי עבודה (פעילות מורה)</h2>
-      <p className="text-xs text-white/50 mb-3">לא משולב במנוע האבחון — דוח נפרד מפעילויות אוטומטיות.</p>
+      <p className="text-xs text-white/50 mb-3">פעילויות מורה מוצגות בדוח נפרד ואינן מתערבבות עם התרגול האוטומטי.</p>
       <ul className="space-y-2">
         {worksheets.map((w) => {
           const st = w.studentStatus?.gradingStatus || "not_submitted";

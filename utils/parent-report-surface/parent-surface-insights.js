@@ -10,6 +10,8 @@ import {
 } from "./parent-topic-tier.js";
 import { parentFacingPatternLabelHe } from "../parent-report-language/index.js";
 
+const UNPRACTICED_SUBJECTS_BULLET_RE = /^מקצועות שלא תורגלו/u;
+
 /**
  * @param {object} payload — detailed parent report payload
  */
@@ -23,7 +25,10 @@ export function buildParentSurfaceWhatToNoticeHe(payload) {
   const crossRaw = Array.isArray(payload?.crossSubjectInsights?.bulletsHe)
     ? payload.crossSubjectInsights.bulletsHe
     : [];
-  const cross = crossRaw.map((x) => sanitizeParentSurfaceTextHe(x)).filter(Boolean);
+  const cross = crossRaw
+    .map((x) => sanitizeParentSurfaceTextHe(x))
+    .filter(Boolean)
+    .filter((line) => !UNPRACTICED_SUBJECTS_BULLET_RE.test(String(line)));
 
   const tierLines = [];
   for (const sp of payload?.subjectProfiles || []) {

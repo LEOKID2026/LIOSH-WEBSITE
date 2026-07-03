@@ -200,24 +200,6 @@ function contractNeedsTopicFocus(contract) {
 }
 
 /**
- * @param {unknown} payload
- */
-function unpracticedSubjectLabels(payload) {
-  const profiles = Array.isArray(payload?.subjectProfiles) ? payload.subjectProfiles : [];
-  /** @type {string[]} */
-  const out = [];
-  for (const sid of SUBJECT_ORDER) {
-    const sp = profiles.find((p) => normalizeSubjectId(p?.subject) === sid);
-    if (!sp) continue;
-    const q = subjectQuestionCountFromPayload(payload, sid);
-    if (classifySubjectEvidenceTier(q) === SUBJECT_EVIDENCE_TIER.none) {
-      out.push(subjectLabelHe(sid));
-    }
-  }
-  return out;
-}
-
-/**
  * @param {object} params
  */
 function gatherTopicRowMetrics(params) {
@@ -319,7 +301,6 @@ function composeReportExplanation(params) {
     .sort((a, b) => a.acc - b.acc || b.q - a.q)
     .slice(0, 2);
   const allThin = metas.length > 0 && metas.every((m) => m.q < STRONG_Q_MIN);
-  const unpracticed = unpracticedSubjectLabels(payload);
 
   const practicedPhrase =
     subjectLabels.length > 0
@@ -343,9 +324,6 @@ function composeReportExplanation(params) {
     meaningParts.push(`${lead}.`);
   } else if (!strong.length && metas.length) {
     meaningParts.push("אין עדיין קו חזק מאוד בולט — כדאי להמשיך תרגול קצר ולעקוב אחרי יציבות.");
-  }
-  if (unpracticed.length) {
-    meaningParts.push(`מקצועות שלא תורגלו בתקופה: ${unpracticed.join(", ")}.`);
   }
 
   let action =
@@ -645,7 +623,7 @@ function composeStrength(params) {
           type: "meaning",
           textHe: best
             ? `לפי מה שיש בדוח, ${subjectLabelHe(sid)} הוא המקצוע היחיד עם תרגול — ${best.displayName} בכ ${best.acc}% על ${best.q} שאלות.`
-            : `${subjectLabelHe(sid)} הוא המקצוע היחיד עם תרגול בטווח — אי אפשר לדרג «חזק/חלש» בין מקצועות.`,
+            : `${subjectLabelHe(sid)} הוא המקצוע היחיד עם תרגול בטווח — אי אפשר לדרג "חזק/חלש" בין מקצועות.`,
           source: "intent_composer",
         },
       ],
@@ -659,7 +637,7 @@ function composeStrength(params) {
       answerBlocks: [
         {
           type: "observation",
-          textHe: "לפי מה שמופיע בדוח, אין עדיין נושא עם מספיק תרגול ודיוק גבוה כדי לקרוא לו «חזק» בביטחון.",
+          textHe: "לפי מה שמופיע בדוח, אין עדיין נושא עם מספיק תרגול ודיוק גבוה כדי לקרוא לו \"חזק\" בביטחון.",
           source: "intent_composer",
         },
         {

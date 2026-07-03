@@ -209,6 +209,68 @@ for (const req of requiredInScan) {
   assert.ok(files.includes(req), `guard must scan ${req}`);
 }
 
+const GUILLEMET_UI_FILES = [
+  "utils/parent-report-language/parent-report-hebrew-copy-spec.js",
+  "utils/parent-report-language/engine-decision-parent-copy-he.js",
+  "utils/topic-next-step-engine.js",
+  "utils/topic-next-step-phase2.js",
+  "utils/learning-patterns-analysis.js",
+  "utils/parent-report-intervention-plan.js",
+  "utils/parent-report-mistake-intelligence.js",
+  "utils/history-subtopic-report.js",
+  "utils/parent-report-ui-explain-he.js",
+  "utils/parent-report-language/grade-aware-recommendation-templates.js",
+  "utils/parent-report-language/v2-parent-copy.js",
+  "utils/parent-copilot/intent-answer-composers.js",
+  "utils/parent-copilot/semantic-aggregate-answers.js",
+  "utils/parent-copilot/parent-coaching-packs.js",
+  "utils/parent-copilot/short-followup-composer.js",
+  "utils/parent-copilot/truth-packet-v1.js",
+  "utils/parent-copilot/direct-answer-openers.js",
+  "utils/parent-copilot/followup-engine.js",
+  "pages/student/home.js",
+  "pages/student/cards.js",
+  "components/student/StudentClassroomActivitiesPanel.jsx",
+  "lib/educational-games/educational-game-registry.js",
+  "components/educational-games/leo-word-detective/leo-word-detective-data.js",
+  "components/pwa/PwaInstallPageShell.jsx",
+  "data/help-center/content/parents.js",
+];
+
+const guillemetUiViolations = [];
+for (const rel of GUILLEMET_UI_FILES) {
+  const abs = join(ROOT, rel);
+  let text;
+  try {
+    text = readFileSync(abs, "utf8");
+  } catch {
+    assert.fail(`guillemet UI guard missing file: ${rel}`);
+  }
+  const lines = text.split("\n");
+  for (const guil of ["«", "»"]) {
+    let idx = 0;
+    while (idx < text.length) {
+      const at = text.indexOf(guil, idx);
+      if (at < 0) break;
+      const lineNo = text.slice(0, at).split("\n").length;
+      const lineText = lines[lineNo - 1] || "";
+      if (!isGuardExemptSourceLine(lineText)) {
+        guillemetUiViolations.push({ file: rel, line: lineNo, fragment: guil });
+      }
+      idx = at + 1;
+    }
+  }
+}
+
+assert.equal(
+  guillemetUiViolations.length,
+  0,
+  `guillemets in child/help UI sources:\n${guillemetUiViolations
+    .slice(0, 20)
+    .map((v) => `  ${v.file}:${v.line} — ${v.fragment}`)
+    .join("\n")}${guillemetUiViolations.length > 20 ? `\n  …and ${guillemetUiViolations.length - 20} more` : ""}`
+);
+
 console.log(
   "parent-report-hebrew-copy-guard: OK",
   files.length,

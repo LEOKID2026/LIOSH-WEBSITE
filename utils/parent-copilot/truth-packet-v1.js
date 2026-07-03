@@ -672,7 +672,7 @@ function buildExecutiveIntentNarrativeSlots(x) {
       const m = metas[0];
       if (!m) return { observation: defaultObs, interpretation: defaultInterp };
       const core = `אפשר לבחור משפט קצר שמתחיל ממה שממש מופיע בדוח ב${labelPair(m)}: ${
-        m.obs ? `«${clipHe(m.obs, 150)}»` : "יש כאן ניסוח שאפשר לשקף לילד בשפה רכה."
+        m.obs ? `"${clipHe(m.obs, 150)}"` : "יש כאן ניסוח שאפשר לשקף לילד בשפה רכה."
       }`;
       const trendBack = trends[0] && !looksLikeNumericOrCountLead(trends[0]) ? `אם צריך הקשר רך: ${trends[0]}` : "";
       const obs = appendDistinctSentence(core, trendBack);
@@ -686,7 +686,7 @@ function buildExecutiveIntentNarrativeSlots(x) {
       const obs =
         ask.length > 0
           ? `לפגישה או הודעה למורה, כדאי לשאול סביב המוקדים האלה מהדוח: ${ask.map(labelPair).join(" · ")}.`
-          : `מהדוח כרגע אין מוקד שמחייב ניסוח «שאלה למורה» יוצא דופן — אפשר עדיין לשתף את ${namedBits || "הניסוחים המעוגנים"}.`;
+          : `מהדוח כרגע אין מוקד שמחייב ניסוח "שאלה למורה" יוצא דופן — אפשר עדיין לשתף את ${namedBits || "הניסוחים המעוגנים"}.`;
       let interp = ask[0]?.unc || ask[0]?.interp ? clipHe(ask[0].unc || ask[0].interp, 200) : defaultInterpBase;
       interp = appendDistinctSentence(interp, supportingNumericTail(x, intent));
       if (!interp.trim()) interp = defaultInterp;

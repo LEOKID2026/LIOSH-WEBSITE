@@ -287,7 +287,7 @@ export function activityGapNonDiagnosticOnlyHe() {
 /** Spec §1.3 */
 export function noUrgentTopicInsightHe() {
   return (
-    "בתקופה שנבחרה יש תרגול, אבל המנוע לא זיהה נושא אחד שדורש התערבות דחופה. " +
+    "בתקופה שנבחרה יש תרגול, אבל המערכת עדיין לא זיהתה נושא אחד בולט שצריך חיזוק מיוחד. " +
     "כדאי להמשיך בתרגול קצר וקבוע ולבדוק שהיציבות נשמרת גם בהמשך."
   );
 }
@@ -299,7 +299,7 @@ export function mixedSubjectStrongWeakHe(subject, strongTopic, weakTopic) {
   const weak = clean(weakTopic);
   if (!subj || !strong || !weak || strong === weak) return "";
   return (
-    `ב${subj} יש תמונה מעורבת: ב«${strong}» נראית נקודת חוזק, אבל ב«${weak}» עדיין יש נקודה שדורשת חיזוק. ` +
+    `ב${subj} יש תמונה מעורבת: בנושא ${strong} נראית נקודת חוזק, אבל בנושא ${weak} עדיין יש נקודה שדורשת חיזוק. ` +
     "לכן הדוח מציג את המקצוע לפי נושאים ולא כמסקנה כללית אחת."
   );
 }
@@ -348,7 +348,7 @@ export function topicAttentionInsightHe(p) {
   );
 
   const base =
-    `ב${subj} — «${topic}»: נפתרו ${q} שאלות, הדיוק היה ${acc}%, ושיעור הטעויות היה ${wr}%. ` +
+    `ב${subj} — בנושא ${topic}: נפתרו ${q} שאלות, הדיוק היה ${acc}%, ושיעור הטעויות היה ${wr}%. ` +
     `${patternSentence ? `${patternSentence} ` : ""}${meaningSentence}`;
 
   return `${base} מה כדאי לעשות: ${action}`;
@@ -364,7 +364,7 @@ export function stableMasteryInsightHe(p) {
   if (wr == null || !Number.isFinite(Number(wr))) wr = Math.max(0, Math.min(100, 100 - acc));
   else wr = Math.round(Number(wr));
   return (
-    `ב${subj} — «${topic}»: נפתרו ${q} שאלות, והדיוק היה ${acc}%. ` +
+    `ב${subj} — בנושא ${topic}: נפתרו ${q} שאלות, והדיוק היה ${acc}%. ` +
     "נראית שליטה טובה בנושא. " +
     "מה כדאי לעשות: לשמר את הנושא בתרגול קצר מדי פעם, ולבדוק שהדיוק נשמר גם בשאלות חדשות."
   );
@@ -375,7 +375,7 @@ export function advanceLevelInsightHe(p) {
   const subj = subjectLabel(p.subject, p.subjectId);
   const topic = clean(p.topic);
   return (
-    `ב${subj} — «${topic}»: הנתונים מצביעים על שליטה טובה מספיק כדי לשקול עלייה ברמת הקושי בנושא הזה בלבד. ` +
+    `ב${subj} — בנושא ${topic}: הנתונים מצביעים על שליטה טובה מספיק כדי לשקול עלייה ברמת הקושי בנושא הזה בלבד. ` +
     "מומלץ להתקדם בהדרגה ולבדוק שהדיוק נשמר גם בשאלות קשות יותר."
   );
 }
@@ -385,7 +385,7 @@ export function advanceGradeInsightHe(p) {
   const subj = subjectLabel(p.subject, p.subjectId);
   const topic = clean(p.topic);
   return (
-    `ב${subj} — «${topic}»: הנתונים מצביעים על מוכנות להתקדמות בנושא הזה בלבד. ` +
+    `ב${subj} — בנושא ${topic}: הנתונים מצביעים על מוכנות להתקדמות בנושא הזה בלבד. ` +
     "העלייה לא אומרת שכל המקצוע מוכן לקפיצה, אלא רק שהנושא המסוים הזה נראה יציב יותר."
   );
 }
@@ -397,7 +397,7 @@ export function strengthOverviewLineHe(p) {
   const q = Math.round(Number(p.q) || 0);
   const acc = Math.round(Number(p.acc) || 0);
   return (
-    `נקודת חוזק: ב${subj} — «${topic}» נפתרו ${q} שאלות והדיוק היה ${acc}%. ` +
+    `נקודת חוזק: ב${subj} — בנושא ${topic} נפתרו ${q} שאלות והדיוק היה ${acc}%. ` +
     "זה נושא שכדאי לשמר, ובמידה שהדיוק נשמר אפשר לשקול התקדמות הדרגתית."
   );
 }
@@ -441,8 +441,8 @@ export function strengthNotStableEnoughHe() {
 /** Spec §6 insufficient_data (student level) */
 export function insufficientDataInsightHe() {
   return (
-    "יש מעט מדי תשובות אבחוניות כדי להסיק מסקנה אמינה. " +
-    "כדאי להוסיף תרגול קצר רגיל כדי לקבל תמונה מדויקת יותר."
+    "יש עדיין מעט מדי נתוני תרגול כדי להציג תמונה לימודית אמינה. " +
+    "כדאי להוסיף תרגול קצר כדי לקבל תמונה מדויקת יותר."
   );
 }
 
@@ -455,8 +455,8 @@ export function recentInactivityInsightHe() {
 export function explainIdentifiedHe(stepLabel, topic) {
   const step = clean(stepLabel);
   const t = clean(topic);
-  if (step && t) return `מה זוהה: ${step} ב«${t}».`;
-  if (t) return `מה זוהה: מיקוד ב«${t}».`;
+  if (step && t) return `מה זוהה: ${step} בנושא ${t}.`;
+  if (t) return `מה זוהה: מיקוד בנושא ${t}.`;
   return "";
 }
 

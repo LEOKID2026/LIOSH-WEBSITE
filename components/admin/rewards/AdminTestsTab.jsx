@@ -23,9 +23,9 @@ export default function AdminTestsTab({ accessToken }) {
         ok: json?.ok,
         preview: JSON.stringify(json, null, 2).slice(0, 1200),
       });
-      if (!res.ok) setError(`בדיקת «${label}» החזירה קוד ${res.status}`);
+      if (!res.ok) setError(`בדיקת "${label}" החזירה קוד ${res.status}`);
     } catch {
-      setError(`שגיאת רשת בבדיקת «${label}»`);
+      setError(`שגיאת רשת בבדיקת "${label}"`);
     } finally {
       setBusy("");
     }

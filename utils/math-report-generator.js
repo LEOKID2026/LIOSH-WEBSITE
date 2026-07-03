@@ -34,6 +34,7 @@ const OPERATION_NAMES = {
   number_sense: "חוש מספרים",
   factors_multiples: "גורמים וכפולות",
   word_problems: "בעיות מילוליות",
+  multiplication_table: "לוח הכפל",
   place_value: "ערך מקום",
   comparison: "השוואה",
   patterns: "דפוסים וסדרות",
@@ -65,8 +66,33 @@ const TOPIC_NAMES = {
   mixed: "ערבוב"
 };
 
+/** Fallback when no Hebrew topic label can be resolved for parent-facing math rows. */
+export const MATH_PARENT_TOPIC_FALLBACK_HE = "תרגול";
+
+const MATH_TOPIC_PLACEHOLDER_KEYS = new Set(["general", "unknown"]);
+
+/** @param {string|null|undefined} label */
+export function isGenericParentTopicLabelHe(label) {
+  const t = String(label || "").trim();
+  return !t || t === "נושא" || t === "נושא זה" || t === "general" || t === "unknown";
+}
+
+/**
+ * @param {string|null|undefined} baseKey
+ * @returns {string}
+ */
+function resolveMathOperationLabelHe(baseKey) {
+  const base = String(baseKey || "").trim();
+  if (!base) return "";
+  if (MATH_TOPIC_PLACEHOLDER_KEYS.has(base.toLowerCase())) return "";
+  if (OPERATION_NAMES[base]) return OPERATION_NAMES[base];
+  if (base.startsWith("wp_")) return OPERATION_NAMES.word_problems;
+  return "";
+}
+
 export function getOperationName(op) {
-  return OPERATION_NAMES[op] || "נושא";
+  const label = resolveMathOperationLabelHe(mathReportBaseOperationKey(String(op || "")));
+  return label || MATH_PARENT_TOPIC_FALLBACK_HE;
 }
 
 /** מפתח טעויות/התקדמות: חלק לפני :: במפתח דוח מורכב (addition::kind → addition) */
@@ -82,8 +108,15 @@ export function mathReportBaseOperationKey(bucketKey) {
  */
 export function getMathReportBucketDisplayName(bucketKey) {
   if (bucketKey == null || bucketKey === "") return "";
-  const base = mathReportBaseOperationKey(String(bucketKey));
-  return getOperationName(base);
+  const raw = String(bucketKey).trim();
+  const base = mathReportBaseOperationKey(raw);
+  const fromBase = resolveMathOperationLabelHe(base);
+  if (fromBase) return fromBase;
+  if (base !== raw) {
+    const fromRaw = resolveMathOperationLabelHe(raw);
+    if (fromRaw) return fromRaw;
+  }
+  return MATH_PARENT_TOPIC_FALLBACK_HE;
 }
 
 export function getTopicName(topic) {

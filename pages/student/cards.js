@@ -315,7 +315,7 @@ export default function StudentCardsPage() {
         setMessageHe(json?.code === "insufficient_coins" ? "אין מספיק מטבעות לרכישה." : "הרכישה לא הצליחה — נסו שוב.");
         return;
       }
-      setMessageHe(`קניתם את «${json.card?.name_he || json.card?.nameHe || "הקלף"}»!`);
+      setMessageHe(`קניתם את ${json.card?.name_he || json.card?.nameHe || "הקלף"}!`);
       if (json.balanceAfter != null) {
         setStudent((prev) => (prev ? { ...prev, coin_balance: json.balanceAfter } : prev));
       }
@@ -331,7 +331,7 @@ export default function StudentCardsPage() {
     if (!card?.canSellDuplicate || card?.sellbackCoins <= 0) return;
 
     const confirmed = window.confirm(
-      `למכור עותק כפול של «${card.nameHe}» ולקבל ${formatCoinAmountHe(card.sellbackCoins)}?\n` +
+      `למכור עותק כפול של ${card.nameHe} ולקבל ${formatCoinAmountHe(card.sellbackCoins)}?\n` +
         "יישאר לך עותק אחד באוסף."
     );
     if (!confirmed) return;
@@ -359,7 +359,7 @@ export default function StudentCardsPage() {
         return;
       }
       setMessageHe(
-        `מכרתם עותק כפול של «${json.card?.name_he || json.card?.nameHe || card.nameHe}» וקיבלתם ${formatCoinAmountHe(json.sellbackCoins || 0)}!`
+        `מכרתם עותק כפול של ${json.card?.name_he || json.card?.nameHe || card.nameHe} וקיבלתם ${formatCoinAmountHe(json.sellbackCoins || 0)}!`
       );
       if (json.balanceAfter != null) {
         setStudent((prev) => (prev ? { ...prev, coin_balance: json.balanceAfter } : prev));

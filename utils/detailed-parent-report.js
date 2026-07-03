@@ -1669,10 +1669,6 @@ function buildOverallSnapshot(baseReport, subjectCoverage) {
 function buildCrossSubjectInsights(baseReport, subjects) {
   const bulletsHe = [];
   const coverage = buildSubjectCoverage(baseReport);
-  const zeroSubjects = coverage.filter((c) => c.questionCount === 0).map((c) => c.subjectLabelHe);
-  if (zeroSubjects.length) {
-    bulletsHe.push(`מקצועות שלא תורגלו בתקופה: ${zeroSubjects.join(", ")}.`);
-  }
   const sparse = coverage.filter((c) => c.questionCount > 0 && c.questionCount < 10);
   if (sparse.length) {
     bulletsHe.push(

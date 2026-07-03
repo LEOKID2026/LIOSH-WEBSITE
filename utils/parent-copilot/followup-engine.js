@@ -90,7 +90,7 @@ function followUpTextForSurface(family, intent, scopeLabelHe, scopeType = "") {
   if (!lab || lab.length < 2 || internalLabels.has(lab)) return base;
   const short = lab.length > 22 ? `${lab.slice(0, 20)}…` : lab;
   if (family === "action_today" || family === "action_week") {
-    return base.replace(/\?$/, ` — סביב «${short}»?`);
+    return base.replace(/\?$/, ` — סביב ${short}?`);
   }
   if (family === "uncertainty_boundary" || family === "advance_or_hold") {
     return base.replace(/\?$/, ` (${short})?`);

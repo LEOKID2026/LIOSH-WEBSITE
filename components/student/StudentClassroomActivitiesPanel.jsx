@@ -118,7 +118,7 @@ export default function StudentClassroomActivitiesPanel({
   return (
     <>
       <p className={T.panelIntro}>
-        משימות מהמורה, מההורה או מהכיתה — לחצו «התחל» או «המשך» כדי לפתוח.
+        משימות מהמורה, מההורה או מהכיתה — לחצו "התחל" או "המשך" כדי לפתוח.
       </p>
       {classActivities.length > 0 ? (
         <section className={T.activitySection}>

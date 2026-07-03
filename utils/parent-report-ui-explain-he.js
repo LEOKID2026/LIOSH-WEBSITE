@@ -601,7 +601,7 @@ export const STRATEGY_REPETITION_RISK_LABEL_HE = {
 
 export const STRATEGY_FATIGUE_RISK_LABEL_HE = {
   low: "עומס נמוך כרגע",
-  moderate: "לשים לב שלא «נשחקים» על אותו ניסוח",
+  moderate: "לשים לב שלא \"נשחקים\" על אותו ניסוח",
   high: "נראית עייפות מאותו סוג תמיכה — לרענן",
   unknown: "לא ברור לגבי עייפות מהגישה",
 };

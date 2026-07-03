@@ -159,7 +159,7 @@ export function buildMistakeIntelligencePhase9(ctx) {
       }
     } else if (q < 12 && (td.unclearTrend !== false || !td.trendConfOk)) {
       dominantMistakePattern = "early_learning_noise";
-      evidence.push("טווח מוקדם או מגמה לא חדה — הטעויות עדיין «רעש למידה».");
+      evidence.push("טווח מוקדם או מגמה לא חדה — הטעויות עדיין \"רעש למידה\".");
       mistakePatternConfidence = 0.4;
     } else if (accuracyBand === "needs_strengthening" && q >= 10) {
       dominantMistakePattern = "procedure_break";
@@ -194,7 +194,7 @@ export function buildMistakeIntelligencePhase9(ctx) {
   const dominantMistakePatternLabelHe =
     MISTAKE_PATTERN_LABEL_HE[dominantMistakePattern] || MISTAKE_PATTERN_LABEL_HE.insufficient_mistake_evidence;
 
-  const mistakePatternNarrativeHe = `ב«${displayName}» הדפוס הבולט: ${dominantMistakePatternLabelHe}${
+  const mistakePatternNarrativeHe = `בנושא ${displayName} הדפוס הבולט: ${dominantMistakePatternLabelHe}${
     mistakeRecurrenceLevel === "persistent" ? " — חוזר לאורך הטווח." : mistakeRecurrenceLevel === "repeating" ? " — חוזר בינונית." : ""
   }`.trim();
 

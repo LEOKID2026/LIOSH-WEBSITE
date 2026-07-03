@@ -3,7 +3,18 @@ import Layout from "../../components/Layout";
 import { ParentReportExitNav, ParentReportThemeIcons } from "../../components/parent/ParentReportExitNav.jsx";
 import { ParentReportImportantDisclaimer } from "../../components/ParentReportImportantDisclaimer";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
-import { getMathReportBucketDisplayName, getTopicName, getEnglishTopicName, getScienceTopicName, getHistoryTopicName, getHebrewTopicName, getMoledetGeographyTopicName, exportReportToPDF } from "../../utils/math-report-generator";
+import {
+  getMathReportBucketDisplayName,
+  getTopicName,
+  getEnglishTopicName,
+  getScienceTopicName,
+  getHistoryTopicName,
+  getHebrewTopicName,
+  getMoledetGeographyTopicName,
+  exportReportToPDF,
+  isGenericParentTopicLabelHe,
+  MATH_PARENT_TOPIC_FALLBACK_HE,
+} from "../../utils/math-report-generator";
 import {
   enrichParentReportWithParentAi,
   getDeterministicParentAiExplanationFromParentReportV2,
@@ -179,26 +190,42 @@ function parentReportChartLabelFromAllItemKey(key, data) {
 
 function subjectTopicLabelForParentHe(subjectId, data, fallbackTopic) {
   const cleanFromRow = String(data?.cleanTopicLabelHe || data?.rowIdentityV1?.cleanTopicLabelHe || "").trim();
-  if (cleanFromRow) return normalizeParentFacingHe(cleanFromRow);
+  if (cleanFromRow && !isGenericParentTopicLabelHe(cleanFromRow)) {
+    return normalizeParentFacingHe(cleanFromRow);
+  }
   const displayName = String(data?.displayName || "").trim();
   const bucket = String(data?.bucketKey ?? fallbackTopic ?? "").trim();
+  const bucketForLookup =
+    subjectId === "math" && bucket.includes("\u0001")
+      ? String(bucket.split("\u0001")[0] || "").trim() || bucket
+      : bucket;
   const raw =
     subjectId === "math"
-      ? getMathReportBucketDisplayName(bucket || displayName)
+      ? getMathReportBucketDisplayName(bucketForLookup || displayName)
       : subjectId === "geometry"
-        ? getTopicName(bucket || displayName)
+        ? getTopicName(bucketForLookup || displayName)
         : subjectId === "english"
-          ? getEnglishTopicName(bucket || displayName)
+          ? getEnglishTopicName(bucketForLookup || displayName)
           : subjectId === "science"
-            ? getScienceTopicName(bucket || displayName)
+            ? getScienceTopicName(bucketForLookup || displayName)
             : subjectId === "history"
-              ? getHistoryTopicName(bucket || displayName)
+              ? getHistoryTopicName(bucketForLookup || displayName)
             : subjectId === "hebrew"
-              ? getHebrewTopicName(bucket || displayName)
+              ? getHebrewTopicName(bucketForLookup || displayName)
               : subjectId === MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID
-                ? getMoledetGeographyTopicName(bucket || displayName)
-                : displayName || bucket;
-  return normalizeParentFacingHe(String(raw || displayName || bucket || "").trim());
+                ? getMoledetGeographyTopicName(bucketForLookup || displayName)
+                : displayName || bucketForLookup;
+  const resolved = String(raw || "").trim();
+  if (resolved && !isGenericParentTopicLabelHe(resolved)) {
+    return normalizeParentFacingHe(resolved);
+  }
+  if (!isGenericParentTopicLabelHe(displayName)) {
+    return normalizeParentFacingHe(displayName);
+  }
+  if (subjectId === "math") {
+    return normalizeParentFacingHe(MATH_PARENT_TOPIC_FALLBACK_HE);
+  }
+  return normalizeParentFacingHe(resolved || displayName || bucketForLookup || MATH_PARENT_TOPIC_FALLBACK_HE);
 }
 
 /** צבעי מקצוע עקביים בגרפים */

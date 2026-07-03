@@ -126,7 +126,7 @@ export default function AdminShopTab({ accessToken }) {
       setMessage(apiErrorMessageHe(body?.error, "שמירה נכשלה"));
       return;
     }
-    setMessage(`מחיר «${card.name_he}» נשמר.`);
+    setMessage(`מחיר ${card.name_he} נשמר.`);
     closePriceEdit();
     void load();
   };

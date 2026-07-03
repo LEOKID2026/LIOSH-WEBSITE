@@ -130,12 +130,12 @@ export function historyParentRecommendationHe(topicKey, row) {
     return `ב${name}: עדיין מעט תרגול — כדאי לפתוח את הספר בנושא ולתרגל 10–15 דקות.`;
   }
   if (acc < 65) {
-    return `ב${name}: כדאי לחזור על הספר, לסדר אירועים על ציר זמן, ולשאול «למה קרה?» אחרי כל אירוע.`;
+    return `ב${name}: כדאי לחזור על הספר, לסדר אירועים על ציר זמן, ולשאול "למה קרה?" אחרי כל אירוע.`;
   }
   if (acc < 85) {
     return `ב${name}: התקדמות טובה — חזרו על נקודות שבהן היו טעויות ונסו להסביר בקול רם.`;
   }
-  return `ב${name}: ביצועים חזקים — אפשר לשלב תרגול «תערובת» או לעבור לנושא הבא בספר.`;
+  return `ב${name}: ביצועים חזקים — אפשר לשלב תרגול "תערובת" או לעבור לנושא הבא בספר.`;
 }
 
 /**
@@ -151,7 +151,7 @@ export function historySubtopicParentActionHe(subtopicKey) {
     return `ב${label}: ציירו טבלה של שני עמודות — דמיון והבדל.`;
   }
   if (subtopicKey.includes("cause") || subtopicKey.includes("antiochus") || subtopicKey.includes("loss")) {
-    return `ב${label}: שאלו «מה הייתה הסיבה?» ו«מה התוצאה?» אחרי כל אירוע.`;
+    return `ב${label}: שאלו "מה הייתה הסיבה?" ו"מה התוצאה?" אחרי כל אירוע.`;
   }
   if (subtopicKey.includes("timeline") || subtopicKey.includes("revolt") || subtopicKey.includes("rise")) {
     return `ב${label}: סדרו 4–5 אירועים על ציר זמן (נייר או מחברת).`;

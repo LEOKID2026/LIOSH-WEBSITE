@@ -46,7 +46,7 @@ export const PARENT_REPORT_MODE_LABELS_HE = {
   discussion: "דיון",
   worksheet: "דף עבודה",
   learning_book: "ספר לימוד",
-  diagnostic: "אבחון",
+  diagnostic: "תרגול",
   independent: "תרגול עצמאי",
   self_practice: "תרגול עצמאי",
   parent_assigned_activity: "פעילות אישית",

@@ -26,6 +26,7 @@ const modeCases = [
   ["worksheet", "דף עבודה"],
   ["quiz", "בוחן"],
   ["marathon", "תרגול ארוך"],
+  ["diagnostic", "תרגול"],
   ["unknown", "לא ידוע"],
 ];
 

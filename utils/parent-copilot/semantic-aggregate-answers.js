@@ -363,7 +363,7 @@ function buildAdvanceOrHoldDraft(input) {
   let meaning = "";
 
   if (holdStrong) {
-    obs = `${lead}כרגע עדיף להמתין ולא לדחוף התקדמות גדולה: בדוח עדיין אין בסיס מספיק יציב כדי לומר שכדאי «ללחוץ על הגז».`;
+    obs = `${lead}כרגע עדיף להמתין ולא לדחוף התקדמות גדולה: בדוח עדיין אין בסיס מספיק יציב כדי לומר שכדאי "ללחוץ על הגז".`;
     meaning = norm(
       uncertainty ||
         interpretation ||
@@ -553,7 +553,7 @@ export function buildSemanticAggregateDraft(input) {
       meaning = "הדירוג מבוסס על ממוצעים על פני נושאים עם תרגול בכל מקצוע, לא על ניסוח נושא בודד.";
       aggregateContinuity = { questionClass: qc, subjectId: top[0]?.sid || "", role: "period_numeric" };
     } else {
-      obs = `אין כרגע בדוח מספיק תרגול מספרי על פני מקצועות כדי לתאר «מה הכי בולט» בביטחון.`;
+      obs = `אין כרגע בדוח מספיק תרגול מספרי על פני מקצועות כדי לתאר "מה הכי בולט" בביטחון.`;
       meaning = "כשמופיעים נתוני תרגול לפחות בנושא אחד עם שאלות, אפשר לחזור לשאלה ולקבל תמונה ברורה יותר.";
     }
   } else if (qc === "comparison") {
@@ -619,7 +619,7 @@ export function buildSemanticAggregateDraft(input) {
           "מגמת שיפור מפורשת לא תמיד מופיעה כשורה נפרדת בדוח — עדיין אפשר לעגן לנפח ולדיוק במקצוע מתוך הנתונים שמוצגים.";
       } else {
         obs = `${lead}בדוח הנוכחי אין שורת מגמה מפורשת שמסמנת שיפור לאורך זמן.`;
-        meaning = "כדי לענות על «מה השתפר» באופן חד יותר צריך או מגמות מפורשות בסיכום התקופה או השוואת תקופות.";
+        meaning = "כדי לענות על \"מה השתפר\" באופן חד יותר צריך או מגמות מפורשות בסיכום התקופה או השוואת תקופות.";
       }
     }
   } else if (qc === "needs_attention") {
@@ -652,7 +652,7 @@ export function buildSemanticAggregateDraft(input) {
   } else if (qc === "most_stable") {
     if (roll.length < 2) {
       obs = `${lead}בדוח מופיע כרגע מקצוע אחד בלבד, ולכן אי אפשר להשוות יציבות בין מקצועות.`;
-      meaning = "אפשר עדיין לתאר את המצב במקצוע היחיד, אבל לא לקבוע מי «הכי יציב» בהשוואה.";
+      meaning = "אפשר עדיין לתאר את המצב במקצוע היחיד, אבל לא לקבוע מי \"הכי יציב\" בהשוואה.";
     } else {
       const stable = mostStableSubject(roll);
       if (!stable || stable.totalQ <= 0) {
@@ -674,15 +674,15 @@ export function buildSemanticAggregateDraft(input) {
       obs = `יש כרגע בעיקר מקצוע אחד עם מספיק תרגול מספרי בדוח — ${only.label}, ${pct}.`;
       if (qc === "strongest_subject") {
         meaning =
-          "כשיש מקצוע אחד עם נתונים, «הכי חזק» פשוט מתאר את מה שמופיע בפועל במקצוע הזה, בלי השוואה לאחרים. כדי לדרג בין מקצועות צריך שיופיעו לפחות שני מקצועות עם תרגול בדוח.";
+          "כשיש מקצוע אחד עם נתונים, \"הכי חזק\" פשוט מתאר את מה שמופיע בפועל במקצוע הזה, בלי השוואה לאחרים. כדי לדרג בין מקצועות צריך שיופיעו לפחות שני מקצועות עם תרגול בדוח.";
         aggregateContinuity = { questionClass: qc, subjectId: only.sid, role: "strongest" };
       } else if (qc === "weakest_subject") {
         meaning =
-          "כשיש מקצוע אחד עם נתונים, «הכי חלש» לא אומר השוואה בין מקצועות — רק את הרף במקצוע היחיד שמופיע. להשוואה אמיתית צריך שני מקצועות ומעלה עם תרגול.";
+          "כשיש מקצוע אחד עם נתונים, \"הכי חלש\" לא אומר השוואה בין מקצועות — רק את הרף במקצוע היחיד שמופיע. להשוואה אמיתית צריך שני מקצועות ומעלה עם תרגול.";
         aggregateContinuity = { questionClass: qc, subjectId: only.sid, role: "weakest" };
       } else {
         meaning =
-          "כשיש רק מקצוע אחד עם נתונים, «הכי קשה» מתייחס למצב בתוך המקצוע הזה מהדוח, לא למי נוח יותר לעומת מקצוע אחר.";
+          "כשיש רק מקצוע אחד עם נתונים, \"הכי קשה\" מתייחס למצב בתוך המקצוע הזה מהדוח, לא למי נוח יותר לעומת מקצוע אחר.";
         aggregateContinuity = { questionClass: qc, subjectId: only.sid, role: "hardest" };
       }
     } else if (withAvg.length < 2) {
@@ -702,8 +702,8 @@ export function buildSemanticAggregateDraft(input) {
         meaning = "זה תיאור ברמת מקצוע מהדוח; לפרטים מדויקים לפי נושא צריך לפתוח את המקצוע בדוח.";
         aggregateContinuity = { questionClass: qc, subjectId: weakest.sid, role: "weakest" };
       } else {
-        obs = `המקצוע שבו הכי «קשה» כרגע מבחינת התוצאות הוא ${weakest.label} — לפי ממוצע הדיוק הכללי בדוח (בערך ${weakest.avg}%).`;
-        meaning = "כאן «קשה» מתורגם לפי הדיוק הממוצע בנושאים עם תרגול בדוח, לא לפי רושם בלי נתונים.";
+        obs = `המקצוע שבו הכי "קשה" כרגע מבחינת התוצאות הוא ${weakest.label} — לפי ממוצע הדיוק הכללי בדוח (בערך ${weakest.avg}%).`;
+        meaning = "כאן \"קשה\" מתורגם לפי הדיוק הממוצע בנושאים עם תרגול בדוח, לא לפי רושם בלי נתונים.";
         aggregateContinuity = { questionClass: qc, subjectId: weakest.sid, role: "hardest" };
       }
     }

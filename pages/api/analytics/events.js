@@ -4,6 +4,7 @@ import { readJsonBody } from "../../../lib/learning-supabase/learning-activity";
 import { guardCookieMutationOrigin } from "../../../lib/security/api-guards.js";
 import { safeApiLog } from "../../../lib/security/safe-log.js";
 import { ANALYTICS_EVENT_NAMES, analyticsEventDefaults } from "../../../lib/analytics/event-catalog.js";
+import { assertTeacherCanManageStudentAccess } from "../../../lib/teacher-server/teacher-student-access.server.js";
 
 const ALLOWED_ACTOR_TYPES = new Set(["parent", "student", "teacher", "admin", "system"]);
 const ALLOWED_EVENTS = new Set(ANALYTICS_EVENT_NAMES);
@@ -73,6 +74,53 @@ async function resolveBearerActor(authHeader) {
   return { actorType: "parent", actorId: data.user.id, parentId: data.user.id };
 }
 
+/**
+ * Resolve student_id for analytics — never trust body.studentId without ownership.
+ * @param {{
+ *   studentAuth: { studentId?: string } | null,
+ *   bearerActor: { actorType?: string, actorId?: string, parentId?: string | null } | null,
+ *   bodyStudentId: unknown,
+ *   serviceRole: import("@supabase/supabase-js").SupabaseClient,
+ * }} input
+ * @returns {Promise<string | null>}
+ */
+async function resolveAuthorizedStudentIdForEvent({ studentAuth, bearerActor, bodyStudentId, serviceRole }) {
+  if (studentAuth?.studentId) {
+    return safeUuid(studentAuth.studentId);
+  }
+
+  const requested = safeUuid(bodyStudentId);
+  if (!requested || !bearerActor?.actorType) return null;
+
+  if (bearerActor.actorType === "parent" && bearerActor.parentId) {
+    const { data, error } = await serviceRole
+      .from("students")
+      .select("id")
+      .eq("id", requested)
+      .eq("parent_id", bearerActor.parentId)
+      .maybeSingle();
+    if (error) return null;
+    return data?.id || null;
+  }
+
+  if (bearerActor.actorType === "teacher" && bearerActor.actorId) {
+    const linked = await assertTeacherCanManageStudentAccess(serviceRole, bearerActor.actorId, requested);
+    return linked.ok ? requested : null;
+  }
+
+  if (bearerActor.actorType === "admin" && bearerActor.actorId) {
+    const { data, error } = await serviceRole
+      .from("students")
+      .select("id")
+      .eq("id", requested)
+      .maybeSingle();
+    if (error) return null;
+    return data?.id || null;
+  }
+
+  return null;
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ ok: false, error: "Method not allowed" });
@@ -96,12 +144,20 @@ export default async function handler(req, res) {
       return res.status(401).json({ ok: false, error: "not_authenticated" });
     }
 
+    const serviceRole = getLearningSupabaseServiceRoleClient();
+    const authorizedStudentId = await resolveAuthorizedStudentIdForEvent({
+      studentAuth,
+      bearerActor,
+      bodyStudentId: body.studentId,
+      serviceRole,
+    });
+
     const row = {
       event_version: 1,
       actor_type: actorType,
       actor_id: studentAuth ? studentAuth.studentId : bearerActor?.actorId || safeUuid(body.actorId),
       parent_id: studentAuth ? null : bearerActor?.parentId || safeUuid(body.parentId),
-      student_id: studentAuth ? studentAuth.studentId : safeUuid(body.studentId),
+      student_id: authorizedStudentId,
       session_id: safeUuid(body.sessionId),
       event_name: eventName,
       event_family: safeString(body.eventFamily || body.event_family, 80) || analyticsEventDefaults(eventName).family,
@@ -118,7 +174,6 @@ export default async function handler(req, res) {
       metadata: sanitizeMetadata(body.metadata),
     };
 
-    const serviceRole = getLearningSupabaseServiceRoleClient();
     const { error } = await serviceRole.from("analytics_events").insert(row);
     if (error) {
       safeApiLog("analytics_event_insert_error", { eventName });

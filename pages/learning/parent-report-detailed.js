@@ -1615,17 +1615,6 @@ export default function ParentReportDetailedPage() {
                   </table>
                 </div>
                 <div className="mt-3 grid md:grid-cols-2 gap-3 text-sm parent-surface-only">
-                  {payload.overallSnapshot.unpracticedSubjectsHe?.length ? (
-                    <div>
-                      <p className="pr-detailed-mini-heading font-semibold text-white/82 mb-1">
-                        מקצועות שלא תורגלו בתקופה
-                      </p>
-                      <Bullets
-                        items={payload.overallSnapshot.unpracticedSubjectsHe}
-                        volumeQuestionsTotal={Number(payload.overallSnapshot?.totalQuestions) || 0}
-                      />
-                    </div>
-                  ) : null}
                   {payload.overallSnapshot.sparseSubjectsHe?.length ? (
                     <div>
                       <p className="pr-detailed-mini-heading font-semibold text-white/82 mb-1">

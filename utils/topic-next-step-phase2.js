@@ -602,7 +602,7 @@ export function buildPhase7RecommendationFields(p) {
   const nar = String(rootCause?.rootCauseNarrativeHe || "").trim();
   const stepLab = stepLabelHe(finalStep);
   const reasoningParts = [];
-  reasoningParts.push(`לגבי «${displayName}»: ${nar || "לפי התרגול האחרון, זה הכיוון שעולה כרגע."}`);
+  reasoningParts.push(`לגבי ${displayName}: ${nar || "לפי התרגול האחרון, זה הכיוון שעולה כרגע."}`);
   reasoningParts.push(`הצעד שנבחר: ${stepLab}.`);
   reasoningParts.push(`מה מומלץ לעשות עכשיו: ${interventionLabelHe}.`);
   if (legacyRuleId) reasoningParts.push(preliminarySignalHe());
@@ -1230,7 +1230,7 @@ export function buildWhyThisRecommendationHe(p) {
     whyFoundationFirstHe,
   } = p;
   const parts = [];
-  parts.push(`המלצה לגבי «${displayName}»: ${stepLabelHe(finalStep)}.`);
+  parts.push(`המלצה לגבי ${displayName}: ${stepLabelHe(finalStep)}.`);
 
   const accPct = typeof acc === "number" && !isNaN(acc) ? Math.round(acc) : null;
   const qNum = typeof q === "number" && !isNaN(q) ? Math.round(q) : null;

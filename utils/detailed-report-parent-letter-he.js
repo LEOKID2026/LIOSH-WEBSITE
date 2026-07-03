@@ -133,7 +133,7 @@ function buildSubjectOpeningLineHe(sp, lab) {
   if (pri === "immediate" && priReason) {
     const t = [
       stripGuillemetsHe(`${priReason} כדאי לבחור משימה אחת השבוע ולדבוק בה.`),
-      stripGuillemetsHe(`${priReason} עדיף צעד קטן וחוזר מאשר לנסות «לנסות לתקן הכול בבת אחת».`),
+      stripGuillemetsHe(`${priReason} עדיף צעד קטן וחוזר מאשר לנסות "לנסות לתקן הכול בבת אחת".`),
     ];
     return t[Math.abs(priReason.length + lab.length) % t.length];
   }

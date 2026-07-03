@@ -223,7 +223,7 @@ function SubjectsSection({ subjects }) {
   return (
     <>
       <p className={T.panelIntro}>
-        התקדמות לפי מקצוע — דיוק, שאלות, רמה וכוכבים. לחצו על «כניסה לנושא» כדי להתחיל לתרגל.
+        התקדמות לפי מקצוע — דיוק, שאלות, רמה וכוכבים. לחצו על "כניסה לנושא" כדי להתחיל לתרגל.
       </p>
       <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-4">
         {subjects.map((s) => (

@@ -187,7 +187,7 @@ export default function AdminVideoProjectSettings({
           />
         </>
       ) : (
-        <p className="text-xs text-white/40">{VB_PROJECT_AUDIO} — בטאב «מדיה»</p>
+        <p className="text-xs text-white/40">{VB_PROJECT_AUDIO} — בטאב "מדיה"</p>
       )}
     </div>
   );

@@ -262,8 +262,8 @@ export function tryBuildParentShortFollowupDraft(ctx) {
           type: "observation",
           textHe:
             dl.cannotConcludeYet || dl.confidenceBand === "low"
-              ? "זה לא בהכרח «לא טוב» — זה בעיקר סימן שהדוח עדיין לא סוגר מספיק כדי לתייג מצב בצורה חדה."
-              : "לפי מה שמופיע בדוח, אין כאן אות ל«לא טוב» גורף — עדיין מדובר בתמונה בתוך התקופה.",
+              ? "זה לא בהכרח \"לא טוב\" — זה בעיקר סימן שהדוח עדיין לא סוגר מספיק כדי לתייג מצב בצורה חדה."
+              : "לפי מה שמופיע בדוח, אין כאן אות ל\"לא טוב\" גורף — עדיין מדובר בתמונה בתוך התקופה.",
           source: "composed",
         },
         { type: "meaning", textHe: interp ? interp.slice(0, 420) : obs.slice(0, 420), source: "composed" },
@@ -285,7 +285,7 @@ export function tryBuildParentShortFollowupDraft(ctx) {
     case "clarify_previous": {
       plannerIntent = "clarify_term";
       const digest = String(conv.lastAssistantAnswerDigestHe || "").trim();
-      const scopeBit = scopeLabel ? `בהקשר של «${scopeLabel}»` : "באותו הקשר";
+      const scopeBit = scopeLabel ? `בהקשר של ${scopeLabel}` : "באותו הקשר";
       const tail = digest ? ` סיכום קצר של מה שהוצג: ${digest.slice(0, 220)}${digest.length > 220 ? "…" : ""}` : "";
       answerBlocks = [
         {

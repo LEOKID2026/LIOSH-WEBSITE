@@ -165,7 +165,7 @@ export const parentCopilot = baseArticle({
   ],
   blocks: [
     heading(2, "how-to-ask", "איך שואלים?"),
-    paragraph("בתוך הדוח פתחו את אזור «שאלו על הדוח» והקלידו שאלה בעברית על הביצועים, הנושאים או ההמלצות."),
+    paragraph("בתוך הדוח פתחו את אזור \"שאלו על הדוח\" והקלידו שאלה בעברית על הביצועים, הנושאים או ההמלצות."),
     videoBlock(S, "parent-copilot"),
     screenshotBlock(S, "parent-copilot", "copilot-panel", "פאנל שאלות על הדוח"),
     heading(2, "limits", "מגבלות"),
@@ -202,7 +202,7 @@ export const installAsApp = baseArticle({
   toc: [{ id: "install", title: "התקנה" }],
   blocks: [
     heading(2, "install", "התקנה"),
-    paragraph("בדף הבית או בדפדפן תופיע אפשרות «התקן כאפליקציה» — לחצו ואשרו. כך תוכלו לפתוח את ליאו כמו אפליקציה."),
+    paragraph("בדף הבית או בדפדפן תופיע אפשרות \"התקן כאפליקציה\" — לחצו ואשרו. כך תוכלו לפתוח את ליאו כמו אפליקציה."),
     screenshotBlock(S, "install-as-app", "install-prompt", "הודעת התקנת אפליקציה"),
     videoBlock(S, "install-as-app"),
     callout("tip", "באייפון: שתפו → הוסף למסך הבית."),
@@ -223,7 +223,7 @@ export const mobileAndOffline = baseArticle({
     heading(2, "mobile", "שימוש בנייד"),
     paragraph("האתר מותאם למסכים קטנים. התחברות ילד/ה והורה עובדת גם מהטלפון."),
     heading(2, "offline", "לא מקוון"),
-    paragraph("באזור «לא מקוון» יש משחקים שעובדים על אותו מכשיר בלי חיבור לאינטרנט."),
+    paragraph("באזור \"לא מקוון\" יש משחקים שעובדים על אותו מכשיר בלי חיבור לאינטרנט."),
     screenshotBlock(S, "mobile-and-offline", "offline-hub", "עמוד משחקים לא מקוונים"),
     videoBlock(S, "mobile-and-offline"),
     relatedLinks([{ href: "/offline", label: "משחקים לא מקוונים" }]),

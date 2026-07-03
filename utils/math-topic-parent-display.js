@@ -9,6 +9,7 @@
 
 import {
   getMathReportBucketDisplayName,
+  MATH_PARENT_TOPIC_FALLBACK_HE,
   canonicalParentReportGradeKey,
 } from "./math-report-generator.js";
 import { splitTopicRowKey, MATH_SCOPE_UNKNOWN } from "./parent-report-row-diagnostics.js";
@@ -50,7 +51,7 @@ function modeSuffixLabel(m) {
 function mathOperationTopicLabel(row) {
   if (!row || typeof row !== "object") return "";
   const bk = row.bucketKey != null && row.bucketKey !== "" ? String(row.bucketKey) : "";
-  return String(getMathReportBucketDisplayName(bk)).trim() || bk || "נושא";
+  return String(getMathReportBucketDisplayName(bk)).trim() || MATH_PARENT_TOPIC_FALLBACK_HE;
 }
 
 /**

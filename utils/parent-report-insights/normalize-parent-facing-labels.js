@@ -140,6 +140,7 @@ export function getTopicDisplayNameHe(subjectKey, topicKey) {
   switch (sk) {
     case "math": {
       const base = stripMathKindSuffix(tk);
+      if (base.startsWith("wp_")) return MATH_OPERATION_NAMES_HE.word_problems;
       return MATH_OPERATION_NAMES_HE[base] || "";
     }
     case "geometry":

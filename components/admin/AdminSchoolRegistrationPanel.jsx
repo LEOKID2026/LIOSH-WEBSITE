@@ -202,7 +202,7 @@ export default function AdminSchoolRegistrationPanel({
       >
         {confirmAction === "approve" ? (
           <p className="text-sm text-white/80">
-            לאשר את בקשת הרישום של «{school?.name || "בית הספר"}»?
+            לאשר את בקשת הרישום של {school?.name || "בית הספר"}?
           </p>
         ) : (
           <label className="block text-sm">

@@ -12,6 +12,7 @@ const load = (rel) => import(pathToFileURL(join(ROOT, rel)).href);
 const { applyMathScopedParentDisplayNames, mathTopicParentDisplayCoreFromRow } = await load(
   "utils/math-topic-parent-display.js"
 );
+const { getMathReportBucketDisplayName } = await load("utils/math-report-generator.js");
 
 function rowStub({ bk, gk, lk, mode }) {
   return {
@@ -64,9 +65,17 @@ function at5_coreSingleTopicNoFakeUnknown() {
   assert.equal(mathTopicParentDisplayCoreFromRow(r, "addition"), "חיבור");
 }
 
+function at6_wpKindMapsToWordProblems() {
+  assert.equal(getMathReportBucketDisplayName("wp_shop_discount"), "בעיות מילוליות");
+  assert.equal(getMathReportBucketDisplayName("multiplication_table"), "לוח הכפל");
+  assert.notEqual(getMathReportBucketDisplayName("general"), "נושא");
+  assert.equal(getMathReportBucketDisplayName("general"), "תרגול");
+}
+
 at1();
 at2();
 at3();
 at4();
 at5_coreSingleTopicNoFakeUnknown();
-console.log("math-topic-parent-display-at: AT1–AT5 OK");
+at6_wpKindMapsToWordProblems();
+console.log("math-topic-parent-display-at: AT1–AT6 OK");

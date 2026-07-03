@@ -194,7 +194,7 @@ export default function AdminVideoVoiceoverPanel({
                 </option>
               ))}
           </select>
-          <p className="text-xs text-white/40">העלאת קבצים חדשים — בטאב «מדיה»</p>
+          <p className="text-xs text-white/40">העלאת קבצים חדשים — בטאב "מדיה"</p>
         </>
       )}
 
