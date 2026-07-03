@@ -9,7 +9,10 @@ import GamesHubHeader from "../components/games/GamesHubHeader.jsx";
 import { useStudentGameAccess } from "../hooks/useStudentGameAccess.js";
 import { resetSoloGameDocumentShell } from "../lib/solo-games/solo-game-document-cleanup.client.js";
 import { SOLO_GAME_LIST } from "../lib/solo-games/solo-game-registry.js";
-import { SOLO_DEV_PROTOTYPES_HUB } from "../lib/solo-games/dev-prototype-hub-list.js";
+import {
+  SHOW_PUBLIC_PROTOTYPE_HUB_ENTRY,
+  SOLO_DEV_PROTOTYPES_HUB,
+} from "../lib/solo-games/dev-prototype-hub-list.js";
 import SoloGameHelpButton from "../components/solo-games/SoloGameHelpButton.jsx";
 import SoloGameHelpModal from "../components/solo-games/SoloGameHelpModal.jsx";
 import GamesHubLockFooter from "../components/games/GamesHubLockFooter.jsx";
@@ -96,17 +99,19 @@ export default function Games() {
                     );
                   })
                 )}
-                <Link href={SOLO_DEV_PROTOTYPES_HUB.route} className={GH.card}>
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className={GH.cardEmoji}>{SOLO_DEV_PROTOTYPES_HUB.emoji}</div>
-                    <div>
-                      <h2 className={GH.cardTitle}>{SOLO_DEV_PROTOTYPES_HUB.titleHe}</h2>
-                      <p className={GH.cardMeta}>פיתוח · בדיקות פנימיות</p>
+                {SHOW_PUBLIC_PROTOTYPE_HUB_ENTRY ? (
+                  <Link href={SOLO_DEV_PROTOTYPES_HUB.route} className={GH.card}>
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className={GH.cardEmoji}>{SOLO_DEV_PROTOTYPES_HUB.emoji}</div>
+                      <div>
+                        <h2 className={GH.cardTitle}>{SOLO_DEV_PROTOTYPES_HUB.titleHe}</h2>
+                        <p className={GH.cardMeta}>פיתוח · בדיקות פנימיות</p>
+                      </div>
                     </div>
-                  </div>
-                  <p className={`${GH.cardBlurb} flex-1`}>{SOLO_DEV_PROTOTYPES_HUB.blurbHe}</p>
-                  <span className={GH.cardCta}>{SOLO_DEV_PROTOTYPES_HUB.ctaHe}</span>
-                </Link>
+                    <p className={`${GH.cardBlurb} flex-1`}>{SOLO_DEV_PROTOTYPES_HUB.blurbHe}</p>
+                    <span className={GH.cardCta}>{SOLO_DEV_PROTOTYPES_HUB.ctaHe}</span>
+                  </Link>
+                ) : null}
               </div>
             </section>
           </div>

@@ -41,34 +41,12 @@ export async function getServerSideProps() {
     return { notFound: true };
   }
 
-  const { readFile } = await import("node:fs/promises");
-  const { join } = await import("node:path");
+  const { emptyEngineReviewPageProps } = await import(
+    "../../../lib/admin-server/admin-page-auth.server.js"
+  );
 
-  const readJson = async (p) => {
-    try {
-      return JSON.parse(await readFile(p, "utf8"));
-    } catch {
-      return null;
-    }
-  };
-
-  const base = join(process.cwd(), "reports/learning-simulator/engine-professionalization");
-  const manifest = await readJson(join(base, "expert-review-pack/manifest.json"));
-  const engineFinal = await readJson(join(base, "engine-final-summary.json"));
-  const profVal = await readJson(join(base, "professional-engine-validation.json"));
-
-  return {
-    props: {
-      packMeta: manifest,
-      engineFinal,
-      profVal,
-      hasPack: Boolean(manifest?.generatedAt),
-      ssrDeployment: {
-        nodeEnv: process.env.NODE_ENV || null,
-        vercel: Boolean(process.env.VERCEL || process.env.VERCEL_ENV),
-      },
-    },
-  };
+  // No report JSON in page props — data loads via token-authenticated API after client admin gate.
+  return { props: emptyEngineReviewPageProps() };
 }
 
 const card = {
@@ -159,22 +137,28 @@ export default function EngineExpertReviewAdminPage({ packMeta: initialPack, eng
   }, []);
 
   const fetchStatus = useCallback(async () => {
+    if (!token) return;
     setRefreshBusy(true);
     try {
-      const res = await fetch("/api/learning-simulator/engine-review-pack-status");
+      const res = await fetch("/api/learning-simulator/engine-review-pack-status", {
+        headers: {
+          "x-engine-review-token": token,
+        },
+      });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) return;
       applyStatusPayload(data);
     } catch {
-      /* keep existing SSR/client state */
+      /* keep existing client state */
     } finally {
       setRefreshBusy(false);
     }
-  }, [applyStatusPayload]);
+  }, [applyStatusPayload, token]);
 
   useEffect(() => {
+    if (!token) return;
     fetchStatus();
-  }, [fetchStatus]);
+  }, [token, fetchStatus]);
 
   const downloadTextFile = (filename, content, mime = "text/plain;charset=utf-8") => {
     if (typeof window === "undefined") return;

@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import OfflineIndicator from "../components/OfflineIndicator";
 import StudentAccessGate from "../components/student/StudentAccessGate";
 import DevServiceWorkerCleanup from "../components/dev/DevServiceWorkerCleanup";
+import DevPrototypeAdminGate from "../components/admin/DevPrototypeAdminGate";
 import { useIOSViewportFix } from "../hooks/useIOSViewportFix";
 import { initPwaInstallPromptCapture } from "../lib/pwa/pwa-install-prompt";
 import { initParentPwaInstallPromptCapture } from "../lib/pwa/pwa-parent-install-prompt";
@@ -91,6 +92,17 @@ const STUDENT_PROTECTED_ROUTES = new Set([
   "/student/learning/book/[subject]/[grade]/[pageId]",
   "/learning/dev-student-simulator",
 ]);
+
+/** Internal dev tools — admin-only via DevPrototypeAdminGate in render. */
+function pathnameIsInternalDevRoute(pathname) {
+  const p = pathname || "";
+  return (
+    p.startsWith("/dev/") ||
+    p.startsWith("/learning/dev/") ||
+    p === "/learning/dev-student-simulator" ||
+    p === "/learning/dev-db-report-preview"
+  );
+}
 
 export default function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -250,6 +262,7 @@ export default function MyApp({ Component, pageProps }) {
 
   const pathname = router.pathname || "";
   const shouldGate = STUDENT_PROTECTED_ROUTES.has(pathname);
+  const isInternalDevRoute = pathnameIsInternalDevRoute(pathname);
   const pwaPortal = resolvePwaPortal(pathname);
   const manifestHref = resolvePwaManifestHref(pathname);
   const isStudentPwaInstallMode = pwaPortal === "student";
@@ -351,7 +364,11 @@ export default function MyApp({ Component, pageProps }) {
       <OfflineIndicator />
       <StudentThemeProvider>
         <BrowserThemeColorSync />
-        {shouldGate ? (
+        {isInternalDevRoute ? (
+          <DevPrototypeAdminGate>
+            <Component {...pageProps} />
+          </DevPrototypeAdminGate>
+        ) : shouldGate ? (
           <StudentAccessGate>
             <Component {...pageProps} />
           </StudentAccessGate>

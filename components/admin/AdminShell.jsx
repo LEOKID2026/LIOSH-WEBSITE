@@ -13,8 +13,11 @@ import {
   ADMIN_NAV_GAMES,
   ADMIN_NAV_GUEST,
   ADMIN_NAV_VIDEO_BUILDER,
+  ADMIN_NAV_PROTOTYPES,
+  ADMIN_NAV_ENGINE_REVIEW,
   ADMIN_PLATFORM_LABEL,
 } from "../../lib/admin-portal/admin-ui.he.js";
+import { SOLO_DEV_PROTOTYPES_HUB } from "../../lib/solo-games/dev-prototype-hub-list.js";
 
 /** Wide centered admin console column — not full bleed, not article-narrow. */
 export const ADMIN_PAGE_CONTAINER =
@@ -27,6 +30,8 @@ const NAV_ITEMS = [
   { href: "/admin/guest", label: ADMIN_NAV_GUEST },
   { href: "/admin/rewards", label: ADMIN_NAV_REWARDS },
   { href: "/admin/video-builder", label: ADMIN_NAV_VIDEO_BUILDER },
+  { href: SOLO_DEV_PROTOTYPES_HUB.route, label: ADMIN_NAV_PROTOTYPES },
+  { href: "/learning/dev/engine-review", label: ADMIN_NAV_ENGINE_REVIEW },
   { href: "/admin/teachers", label: ADMIN_NAV_TEACHERS },
   { href: "/admin/schools", label: ADMIN_NAV_SCHOOLS },
   { href: "/admin/parents", label: ADMIN_NAV_PARENTS },
