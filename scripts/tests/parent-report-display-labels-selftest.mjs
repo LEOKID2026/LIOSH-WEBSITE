@@ -69,7 +69,7 @@ assert.equal(
     displayName: "חיבור",
     subject: "math",
   }),
-  "תרגול — חיבור"
+  "תרגול"
 );
 assert.match(
   formatParentReportActivityDisplayLabelHe({

@@ -12,6 +12,8 @@ import {
   resolveParentReportRowGradeRelation,
 } from "../../utils/parent-report-core-grade-filter.js";
 import { formatParentReportActivityDisplayLabelHe } from "../../utils/parent-report-language/parent-report-display-labels.he.js";
+import { buildInsightPacketFromV2Snapshot } from "../../utils/parent-report-insights/build-packet-from-v2-snapshot.js";
+import { buildDeterministicFallbackNarrative } from "../../utils/parent-report-ai-narrative/deterministic-fallback.js";
 
 const STUDENT_ID = "2352e8c7-ac0b-4daa-afbf-cb7d130062b3";
 const FROM = "2025-09-01";
@@ -77,6 +79,19 @@ function gradeMentionLeak(text, registeredGradeKey) {
   return leaks;
 }
 
+function collectAiInsightText(base) {
+  const packet = buildInsightPacketFromV2Snapshot(base);
+  const narr = buildDeterministicFallbackNarrative(packet);
+  return [
+    narr.summary,
+    ...(narr.strengths || []).map((s) => s.textHe),
+    ...(narr.focusAreas || []).map((f) => f.textHe),
+    ...(narr.homeTips || []),
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
 async function main() {
   const supabase = createServiceClient();
   const { data: profile } = await supabase
@@ -105,7 +120,10 @@ async function main() {
   const labels = mapRows.map(({ row }) => formatParentReportActivityDisplayLabelHe(row));
   const bareTargil = labels.filter((l) => l === "תרגול");
   const coreText = collectCoreText(detailed);
+  const aiInsightText = collectAiInsightText(base);
   const leaks = gradeMentionLeak(coreText, registeredGradeKey);
+  const aiLeaks = gradeMentionLeak(aiInsightText, registeredGradeKey);
+  const combinedTargilTopic = labels.filter((l) => /^תרגול — /u.test(l));
 
   const nonCoreInOverview = [];
   for (const sp of detailed?.subjectProfiles || []) {
@@ -126,9 +144,12 @@ async function main() {
     mapRowCount: mapRows.length,
     gradeRelationCounts: counts,
     bareTargilLabelCount: bareTargil.length,
+    combinedTargilTopicLabelCount: combinedTargilTopic.length,
     sampleLabels: labels.slice(0, 15),
     nonCoreInTopicOverview: nonCoreInOverview,
     coreTextGradeLeaks: leaks,
+    aiInsightGradeLeaks: aiLeaks,
+    aiInsightSample: aiInsightText.slice(0, 500),
     topicRecommendationCount: (detailed?.subjectProfiles || []).reduce(
       (n, sp) => n + (sp.topicRecommendations?.length || 0),
       0,

@@ -17,6 +17,8 @@
  */
 
 import { buildParentReportInsightPacket } from "./index.js";
+import { buildGradeEvidenceFields } from "../../lib/learning-supabase/practice-grade-resolution.js";
+import { normalizeGradeLevelToKey } from "../../lib/learning-student-defaults.js";
 
 const SUBJECT_KEYS = ["math", "geometry", "english", "hebrew", "science", "moledet_geography"];
 
@@ -113,8 +115,12 @@ function emptySubject() {
   };
 }
 
-function fillTopicsFromMap(subjectAgg, topicMap) {
+function fillTopicsFromMap(subjectAgg, topicMap, registeredGradeKey) {
   if (!topicMap || typeof topicMap !== "object") return;
+  const regKey =
+    registeredGradeKey != null && String(registeredGradeKey).trim()
+      ? normalizeGradeLevelToKey(registeredGradeKey) || String(registeredGradeKey).trim().toLowerCase()
+      : null;
   for (const [rawKey, row] of Object.entries(topicMap)) {
     if (!row || typeof row !== "object") continue;
     const key = String(rawKey || "").trim();
@@ -141,6 +147,10 @@ function fillTopicsFromMap(subjectAgg, topicMap) {
     }
     if (typeof row.gradeRelation === "string" && row.gradeRelation.trim()) {
       t.gradeRelation = row.gradeRelation.trim();
+    } else if (regKey && t.contentGradeLevel) {
+      const ge = buildGradeEvidenceFields(regKey, t.contentGradeLevel);
+      t.gradeRelation = ge.gradeRelation || "unknown";
+      t.registeredGradeLevel = ge.registeredGradeLevel ?? regKey;
     }
     if (row.gradeDelta != null && Number.isFinite(Number(row.gradeDelta))) {
       t.gradeDelta = Number(row.gradeDelta);
@@ -165,6 +175,21 @@ export function synthesizeAggregateFromV2Snapshot(report) {
   let totalAnswers = 0;
   let totalCorrect = 0;
   let totalWrong = 0;
+
+  const gradeFragment =
+    typeof report?.gradeFragment === "string"
+      ? report.gradeFragment
+      : typeof s.gradeLevel === "string"
+      ? s.gradeLevel
+      : "";
+  const registeredGradeKey =
+    typeof report?.registeredGradeKey === "string" && String(report.registeredGradeKey).trim()
+      ? normalizeGradeLevelToKey(report.registeredGradeKey) ||
+        String(report.registeredGradeKey).trim().toLowerCase()
+      : gradeLevelToNormalized(gradeFragment);
+  const registeredForAggregate =
+    registeredGradeKey && registeredGradeKey !== "unknown" ? registeredGradeKey : null;
+
   for (const subjectKey of SUBJECT_KEYS) {
     const sub = emptySubject();
     const answers = Math.max(0, Math.round(safeNumber(s[SUMMARY_Q_KEYS[subjectKey]])));
@@ -179,7 +204,7 @@ export function synthesizeAggregateFromV2Snapshot(report) {
     sub.wrong = wrong;
     sub.accuracy = Number(accuracy.toFixed(2));
     sub.sessions = answers > 0 ? 1 : 0;
-    fillTopicsFromMap(sub, report?.[TOPIC_FIELD_KEYS[subjectKey]]);
+    fillTopicsFromMap(sub, report?.[TOPIC_FIELD_KEYS[subjectKey]], registeredForAggregate);
     subjects[subjectKey] = sub;
     totalAnswers += answers;
     totalCorrect += correct;
@@ -209,19 +234,13 @@ export function synthesizeAggregateFromV2Snapshot(report) {
       }
     : { from: "", to: "" };
 
-  const gradeFragment =
-    typeof report?.gradeFragment === "string"
-      ? report.gradeFragment
-      : typeof s.gradeLevel === "string"
-      ? s.gradeLevel
-      : "";
-
   return {
     ok: true,
     student: {
       id: "",
       full_name: studentName || null,
-      grade_level: gradeFragment || null,
+      grade_level: gradeFragment || registeredForAggregate || null,
+      registeredGradeLevel: registeredForAggregate,
       is_active: true,
     },
     range,
@@ -237,7 +256,8 @@ export function synthesizeAggregateFromV2Snapshot(report) {
       avgTimePerQuestionSec: null,
       modeCounts: emptyEnumCounts(),
       levelCounts: emptyLevelCounts(),
-      normalizedGradeLevel: gradeLevelToNormalized(gradeFragment),
+      normalizedGradeLevel: gradeLevelToNormalized(gradeFragment || registeredForAggregate || ""),
+      registeredGradeLevel: registeredForAggregate,
     },
     subjects,
     dailyActivity: [],

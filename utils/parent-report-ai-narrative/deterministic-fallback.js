@@ -35,9 +35,15 @@ function buildSummary(packet) {
     .filter(Boolean)
     .slice(0, 3)
     .join(", ");
+  const strengths = Array.isArray(packet?.strengths) ? packet.strengths : [];
+  const focusAreas = Array.isArray(packet?.focusAreas) ? packet.focusAreas : [];
+  const mixedGrade = packet?.mixedGradePractice === true;
 
   if (total === 0) {
     return "בתקופה זו לא נאסף תרגול במערכת. כדאי להמשיך לעקוב לאחר תרגול נוסף לפני הסקת מסקנות.";
+  }
+  if (mixedGrade && strengths.length === 0 && focusAreas.length === 0) {
+    return "יש מעט תרגול בחומר של הכיתה הרשומה, ולכן כדאי להמשיך לתרגל עוד לפני הסקת מסקנות רחבות.";
   }
   if (dc === "thin" || dc === "low") {
     const opening = studentName ? `מהתרגול של ${studentName} בתקופה זו` : "מהתרגול בתקופה זו";

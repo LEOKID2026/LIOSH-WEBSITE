@@ -22,6 +22,12 @@ const { buildSixSubjectContextLabelingMatrixBaseReport, matrixRowKeysForSubject 
 const { buildDetailedParentReportFromBaseReport } = await import(
   u("utils/detailed-parent-report.js")
 );
+const { buildInsightPacketFromV2Snapshot } = await import(
+  u("utils/parent-report-insights/build-packet-from-v2-snapshot.js")
+);
+const { buildDeterministicFallbackNarrative } = await import(
+  u("utils/parent-report-ai-narrative/deterministic-fallback.js")
+);
 
 assert.equal(isCoreParentReportRow({ gradeRelation: "same", questions: 5 }, "g1"), true);
 assert.equal(isCoreParentReportRow({ gradeRelation: "higher", questions: 10 }, "g1"), false);
@@ -50,19 +56,19 @@ assert.match(
   }),
   /פעילות|תרגול בית/
 );
-assert.match(
-  formatParentReportActivityDisplayLabelHe({
-    primaryEvidenceSource: "self_practice",
-    displayName: "חיבור",
-  }),
-  /תרגול — חיבור/
-);
 assert.equal(
   formatParentReportActivityDisplayLabelHe({
     primaryEvidenceSource: "self_practice",
     displayName: "חיבור",
   }),
-  "תרגול — חיבור"
+  "תרגול"
+);
+assert.doesNotMatch(
+  formatParentReportActivityDisplayLabelHe({
+    primaryEvidenceSource: "self_practice",
+    displayName: "חיבור",
+  }),
+  /תרגול —/
 );
 
 const baseReport = buildSixSubjectContextLabelingMatrixBaseReport();
@@ -78,6 +84,31 @@ for (const sp of detailed.subjectProfiles || []) {
   for (const tr of sp.topicRecommendations || []) {
     assert.notEqual(tr.gradeRelation, "higher", `${sp.subject}: no higher in recommendations`);
   }
+}
+
+const g1MixedReport = {
+  registeredGradeKey: "g1",
+  gradeFragment: "g1",
+  playerName: "Test",
+  summary: { gradeLevel: "g1", totalQuestions: 50, overallAccuracy: 85 },
+  mathOperations: {
+    "addition::grade:g1": { questions: 5, accuracy: 90, gradeRelation: "same", contentGradeKey: "g1", displayName: "חיבור" },
+    "multiplication::grade:g2": { questions: 20, accuracy: 88, gradeRelation: "higher", contentGradeKey: "g2", displayName: "כפל" },
+  },
+  gradePracticeMeta: { mixedGradePractice: true },
+};
+const aiPacket = buildInsightPacketFromV2Snapshot(g1MixedReport);
+const aiNarr = buildDeterministicFallbackNarrative(aiPacket);
+const aiText = [
+  aiNarr.summary,
+  ...(aiNarr.strengths || []).map((s) => s.textHe),
+  ...(aiNarr.focusAreas || []).map((f) => f.textHe),
+  ...(aiNarr.homeTips || []),
+].join("\n");
+assert.doesNotMatch(aiText, /כיתה\s*ב/u, "AI insight must not mention grade ב for g1 student");
+assert.doesNotMatch(aiText, /כפל.*כיתה/u, "AI insight must not cite higher-grade topic as strength");
+for (const s of aiNarr.strengths || []) {
+  assert.doesNotMatch(String(s.textHe || ""), /כפל/u, "higher-grade multiplication must not appear in strengths");
 }
 
 console.log("OK parent-report-core-grade-filter-selftest");

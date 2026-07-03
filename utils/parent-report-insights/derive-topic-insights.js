@@ -24,7 +24,7 @@ import {
   narrativeTopicRowLabelHe,
 } from "../parent-report-output-integrity/row-display-label-context.js";
 import { parseCanonicalTopicFromRowKey } from "../parent-report-output-integrity/row-identity-v1.js";
-import { isCoreParentReportRow } from "../parent-report-core-grade-filter.js";
+import { isCoreParentReportRow, resolveRegisteredGradeKeyFromAggregate } from "../parent-report-core-grade-filter.js";
 
 const STRENGTH_ACC_THRESHOLD = 80;
 const FOCUS_ACC_THRESHOLD = 55;
@@ -85,8 +85,34 @@ function buildDuplicateCanonicalKeysFromAggregate(subjectsObj) {
   return dup;
 }
 
+function coreSubjectStatsFromTopics(s, registeredGradeKey) {
+  const topics = s?.topics && typeof s.topics === "object" ? s.topics : {};
+  let answers = 0;
+  let correct = 0;
+  for (const t of Object.values(topics)) {
+    if (!t) continue;
+    const totalQ = Math.max(0, Math.round(safeNumber(t.answers)));
+    if (totalQ === 0) continue;
+    const isCore = isCoreParentReportRow(
+      {
+        gradeRelation: t.gradeRelation,
+        contentGradeKey: t.contentGradeLevel,
+        registeredGradeKey: t.registeredGradeLevel || registeredGradeKey,
+        questions: totalQ,
+      },
+      registeredGradeKey,
+    );
+    if (!isCore) continue;
+    answers += totalQ;
+    correct += Math.round((safeNumber(t.accuracy) / 100) * totalQ);
+  }
+  const accuracy = answers > 0 ? Number(((correct / answers) * 100).toFixed(2)) : 0;
+  return { answers, correct, accuracy };
+}
+
 export function deriveTopicInsights(aggregate) {
   const subjectsObj = aggregate?.subjects && typeof aggregate.subjects === "object" ? aggregate.subjects : {};
+  const registeredGradeKey = resolveRegisteredGradeKeyFromAggregate(aggregate);
   const duplicateCanonicalKeys = buildDuplicateCanonicalKeysFromAggregate(subjectsObj);
   const out = [];
   for (const subjectKey of Object.keys(subjectsObj).sort()) {
@@ -131,13 +157,10 @@ export function deriveTopicInsights(aggregate) {
           registeredGradeKey:
             typeof t.registeredGradeLevel === "string" && t.registeredGradeLevel.trim()
               ? t.registeredGradeLevel.trim().toLowerCase()
-              : null,
+              : registeredGradeKey,
           questions: totalQ,
         },
-        aggregate?.summary?.registeredGradeLevel ||
-          aggregate?.student?.registeredGradeLevel ||
-          aggregate?.student?.gradeLevelKey ||
-          null,
+        registeredGradeKey,
       );
       const isStrength = isCore && totalQ >= STRENGTH_MIN_Q && acc >= STRENGTH_ACC_THRESHOLD;
       const isFocusArea = isCore && totalQ >= FOCUS_MIN_Q && acc < FOCUS_ACC_THRESHOLD;
@@ -179,6 +202,7 @@ export function deriveTopicInsights(aggregate) {
 
 export function deriveSubjectInsights(aggregate, subjectTrends) {
   const subjectsObj = aggregate?.subjects && typeof aggregate.subjects === "object" ? aggregate.subjects : {};
+  const registeredGradeKey = resolveRegisteredGradeKeyFromAggregate(aggregate);
   const trendMap = new Map();
   for (const t of Array.isArray(subjectTrends) ? subjectTrends : []) {
     if (t && t.subjectKey && t.trend) trendMap.set(t.subjectKey, t.trend);
@@ -187,9 +211,19 @@ export function deriveSubjectInsights(aggregate, subjectTrends) {
   for (const subjectKey of Object.keys(subjectsObj).sort()) {
     const s = subjectsObj[subjectKey];
     if (!s) continue;
-    const totalQ = Math.max(0, Math.round(safeNumber(s.answers)));
+    const coreStats = registeredGradeKey ? coreSubjectStatsFromTopics(s, registeredGradeKey) : null;
+    if (registeredGradeKey) {
+      if (!coreStats || coreStats.answers <= 0) continue;
+    }
+    const totalQ =
+      coreStats && coreStats.answers > 0
+        ? coreStats.answers
+        : Math.max(0, Math.round(safeNumber(s.answers)));
     if (totalQ === 0) continue;
-    const acc = Math.max(0, Math.min(100, safeNumber(s.accuracy)));
+    const acc =
+      coreStats && coreStats.answers > 0
+        ? coreStats.accuracy
+        : Math.max(0, Math.min(100, safeNumber(s.accuracy)));
     const dataConfidence = classifyDataConfidence(totalQ);
     const isStrength = totalQ >= STRENGTH_MIN_Q && acc >= STRENGTH_ACC_THRESHOLD;
     const isFocusArea = totalQ >= FOCUS_MIN_Q && acc < FOCUS_ACC_THRESHOLD;
@@ -214,7 +248,7 @@ export function deriveSubjectInsights(aggregate, subjectTrends) {
       dataConfidence,
       isStrength,
       isFocusArea,
-      evidenceHe: subjectEvidenceHe(s),
+      evidenceHe: subjectEvidenceHe({ answers: totalQ, accuracy: acc }),
       modeCounts: { ...(s.modeCounts || {}) },
       levelCounts: { ...(s.levelCounts || {}) },
     });

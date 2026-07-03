@@ -4,6 +4,7 @@
  */
 
 import { buildGradeEvidenceFields } from "../lib/learning-supabase/practice-grade-resolution.js";
+import { normalizeGradeLevelToKey } from "../lib/learning-student-defaults.js";
 
 /**
  * @param {Record<string, Record<string, unknown>>|null|undefined} maps
@@ -15,6 +16,27 @@ export function registeredGradeKeyFromReportMaps(maps) {
       const g = row?.registeredGradeKey ?? row?.registeredGradeLevel;
       if (g != null && String(g).trim()) return String(g).trim();
     }
+  }
+  return null;
+}
+
+/**
+ * Resolve registered grade from aggregate / optional V2 snapshot fields.
+ * @param {unknown} aggregate
+ * @param {unknown} [v2Report]
+ */
+export function resolveRegisteredGradeKeyFromAggregate(aggregate, v2Report) {
+  const candidates = [
+    v2Report?.registeredGradeKey,
+    aggregate?.summary?.registeredGradeLevel,
+    aggregate?.student?.registeredGradeLevel,
+    aggregate?.student?.gradeLevelKey,
+    aggregate?.summary?.normalizedGradeLevel,
+    aggregate?.student?.grade_level,
+  ];
+  for (const c of candidates) {
+    const key = normalizeGradeLevelToKey(c);
+    if (key) return key;
   }
   return null;
 }

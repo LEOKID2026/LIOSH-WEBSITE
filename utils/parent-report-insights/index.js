@@ -18,6 +18,7 @@
  */
 
 import { classifyDataConfidence, INSIGHT_DATA_CONFIDENCE_THRESHOLDS } from "./derive-data-confidence.js";
+import { resolveRegisteredGradeKeyFromAggregate } from "../parent-report-core-grade-filter.js";
 import { deriveFluencySignals } from "./derive-fluency-signals.js";
 import { deriveMistakePatterns } from "./derive-mistake-patterns.js";
 import { deriveTrendSignals } from "./derive-trend-signals.js";
@@ -181,12 +182,14 @@ function buildStudentSection(aggregate, options) {
       ? options.studentDisplayName.trim()
       : "";
   const aggName = typeof studentAgg.full_name === "string" ? studentAgg.full_name.trim() : "";
+  const registeredGradeLevel = resolveRegisteredGradeKeyFromAggregate(aggregate);
   return {
     displayName: explicitName || aggName || "",
     gradeLevel:
       typeof summary.normalizedGradeLevel === "string" && summary.normalizedGradeLevel
         ? summary.normalizedGradeLevel
-        : "unknown",
+        : registeredGradeLevel || "unknown",
+    registeredGradeLevel: registeredGradeLevel || null,
   };
 }
 

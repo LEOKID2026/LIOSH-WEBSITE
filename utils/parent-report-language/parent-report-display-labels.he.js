@@ -145,7 +145,8 @@ export function isTechnicalParentActivityTitleHe(title) {
 }
 
 /**
- * Parent-facing combined activity label for table source/mode columns (never bare "תרגול" when topic exists).
+ * Parent-facing combined activity label for table source/mode columns.
+ * Parent-assigned activities include topic; self practice stays plain "תרגול".
  * @param {Record<string, unknown>|string|null|undefined} input
  * @param {{ subjectId?: string, topicKey?: string, topicLabelHe?: string }} [options]
  */
@@ -174,17 +175,10 @@ export function formatParentReportActivityDisplayLabelHe(input, options = {}) {
   }
 
   if (sourceKind === "self_practice") {
-    if (topicLabel) return `תרגול — ${topicLabel}`;
-    return activityLabelWithSubjectGradeFallback("תרגול עצמי", row, options.subjectId);
+    return "תרגול";
   }
 
-  if (topicLabel) return `תרגול — ${topicLabel}`;
-  const generic = formatParentReportActivitySourceHe(row);
-  if (generic !== "תרגול") {
-    if (topicLabel) return `${generic} — ${topicLabel}`;
-    return activityLabelWithSubjectGradeFallback(generic, row, options.subjectId);
-  }
-  return activityLabelWithSubjectGradeFallback("תרגול", row, options.subjectId);
+  return formatParentReportActivitySourceHe(row);
 }
 
 /** @type {Record<string, string>} */
