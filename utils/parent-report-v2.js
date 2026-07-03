@@ -189,7 +189,7 @@ function latestSessionMs(sessions) {
   if (!Array.isArray(sessions)) return max;
   for (const s of sessions) {
     const t = parseSessionTime(s);
-    if (!Number.isFinite(t)) continue;
+    if (!Number.isFinite(t) || t <= 0) continue;
     if (max === null || t > max) max = t;
   }
   return max;
@@ -197,7 +197,12 @@ function latestSessionMs(sessions) {
 
 /** DD/MM/YYYY HH:mm in Asia/Jerusalem (never raw UTC / browser local). */
 function formatLastSessionAt(ms) {
+  if (!Number.isFinite(ms) || ms <= 0) return null;
   return formatParentReportActivityIsrael(ms);
+}
+
+function validActivityMs(ms) {
+  return Number.isFinite(ms) && ms > 0 ? ms : null;
 }
 
 /** Ensure sessions is always an array (never drop keys due to wrong shape). */
@@ -542,12 +547,14 @@ export function collapseTopicRowsToCanonicalTopicEntity(subjectId, rowsByKey) {
           ? { ...mergedSourceBreakdown }
           : representative?._sourceDifficultyBreakdown || null,
       displayName: String(representative?.displayName || "").trim() || String(representative?.bucketKey || bucketKey),
-      lastSessionMs: Number.isFinite(Number(lastSessionMs)) ? Number(lastSessionMs) : null,
+      lastSessionMs: validActivityMs(Number(lastSessionMs)),
       lastSessionAt: lastSessionAt || representative?.lastSessionAt || "לא זמין",
       latestActivityAt:
-        Number.isFinite(Number(lastSessionMs)) ? formatParentReportActivityIsrael(lastSessionMs) : "לא זמין",
-      latestActivityMs: Number.isFinite(Number(lastSessionMs)) ? Number(lastSessionMs) : null,
-      lastAnswerMs: Number.isFinite(Number(lastAnswerMs)) ? Number(lastAnswerMs) : null,
+        validActivityMs(Number(lastSessionMs)) != null
+          ? formatParentReportActivityIsrael(Number(lastSessionMs))
+          : "לא זמין",
+      latestActivityMs: validActivityMs(Number(lastSessionMs)),
+      lastAnswerMs: validActivityMs(Number(lastAnswerMs)),
       lastAnswerAt: lastAnswerAt || representative?.lastAnswerAt || null,
       latestActivitySource:
         latestActivitySource || representative?.latestActivitySource || null,
@@ -692,7 +699,7 @@ function buildRowSummary({
   const topicOpLabel = displayNameFn(bucketKey);
   const modeStr = modeLabel(modeKey);
   const lastMs = latestSessionMs(sessions);
-  const lastSessionAt = formatLastSessionAt(lastMs);
+  const lastSessionAt = formatLastSessionAt(lastMs) || "לא זמין";
   const lastAnswerMsFromSessions = (() => {
     let max = null;
     for (const s of sessions) {
@@ -714,9 +721,9 @@ function buildRowSummary({
     subject,
     bucketKey,
     lastSessionAt,
-    lastSessionMs: Number.isFinite(lastMs) ? lastMs : null,
+    lastSessionMs: validActivityMs(lastMs),
     latestActivityAt: lastSessionAt,
-    latestActivityMs: Number.isFinite(lastMs) ? lastMs : null,
+    latestActivityMs: validActivityMs(lastMs),
     lastAnswerMs: Number.isFinite(lastAnswerMsFromSessions) ? lastAnswerMsFromSessions : null,
     lastAnswerAt: Number.isFinite(lastAnswerMsFromSessions)
       ? formatParentReportActivityIsrael(lastAnswerMsFromSessions)

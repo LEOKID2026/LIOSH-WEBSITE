@@ -11,6 +11,7 @@ const u = (rel) => new URL(`file:///${path.join(root, rel).replace(/\\/g, "/")}`
 
 const {
   formatParentReportModeHe,
+  formatParentReportActivitySourceHe,
   formatParentReportSubjectHe,
   formatParentReportSourceHe,
   formatParentReportLevelHe,
@@ -21,7 +22,7 @@ const {
 
 const modeCases = [
   ["practice", "תרגול"],
-  ["guided_practice", "תרגול מודרך"],
+  ["guided_practice", "תרגול"],
   ["learning_book", "ספר לימוד"],
   ["worksheet", "דף עבודה"],
   ["quiz", "בוחן"],
@@ -43,8 +44,19 @@ assert.equal(formatParentReportSubjectHe("hebrew"), "עברית");
 assert.equal(formatParentReportSubjectHe("moledet_geography"), "מולדת וגאוגרפיה");
 
 assert.equal(formatParentReportSourceHe("self_practice"), "תרגול עצמי");
-assert.equal(formatParentReportSourceHe("parent_assigned_activity"), "פעילות אישית");
+assert.equal(formatParentReportSourceHe("parent_assigned_activity"), "פעילות אישית מהורה");
 assert.equal(formatParentReportSourceHe("learning_book"), "ספר לימוד");
+
+assert.equal(
+  formatParentReportActivitySourceHe({ primaryEvidenceSource: "parent_assigned_activity", mode: "guided_practice" }),
+  "פעילות אישית מהורה"
+);
+assert.equal(
+  formatParentReportActivitySourceHe({ primaryEvidenceSource: "self_practice", mode: "guided_practice" }),
+  "תרגול עצמי"
+);
+assert.equal(formatParentReportActivitySourceHe({ mode: "guided_practice" }), "תרגול");
+assert.equal(formatParentReportActivitySourceHe(null), "תרגול");
 
 assert.equal(formatParentReportLevelHe("easy"), "רגיל");
 assert.equal(formatParentReportLevelHe("medium"), "רגיל");
@@ -60,7 +72,7 @@ assert.equal(formatParentReportEvidenceHe("insufficient"), "לא מספיק");
 assert.equal(formatParentReportEvidenceHe("high"), "גבוה");
 
 const page = readFileSync(path.join(root, "pages/learning/parent-report.js"), "utf8");
-assert.match(page, /formatParentReportModeHe/, "parent-report page must use formatParentReportModeHe");
+assert.match(page, /formatParentReportActivitySourceHe/, "parent-report page must use formatParentReportActivitySourceHe");
 assert.doesNotMatch(
   page,
   /return mode\.toLowerCase\(\) === "marathon"/,

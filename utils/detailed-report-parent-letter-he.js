@@ -13,6 +13,13 @@ import {
   buildNarrativeContractV1,
   narrativeSectionTextHe,
 } from "./contracts/narrative-contract-v1.js";
+import {
+  gradeContextActionHe,
+  gradeContextExplanationHe,
+  gradeContextIsStrength,
+  gradeContextNeedsSupport,
+  suppressRegisteredGradeStrengthenCopy,
+} from "./parent-report-language/grade-context-parent-he.js";
 
 /** הסרת מירכאות צרפתיות / גוילמטים */
 export function stripGuillemetsHe(s) {
@@ -383,6 +390,7 @@ export function buildSubjectParentLetter(sp, opts = {}) {
 }
 
 export function buildTopicRecommendationNarrative(tr) {
+  const gradeRelation = String(tr?.gradeRelation || tr?.rowIdentityV1?.gradeRelation || "").trim();
   const hasCanonicalNarrative = !!(tr?.contractsV1?.narrative && typeof tr.contractsV1.narrative === "object");
   const canonicalNarrative = hasCanonicalNarrative
     ? tr.contractsV1.narrative
@@ -406,7 +414,7 @@ export function buildTopicRecommendationNarrative(tr) {
       ? `היו ${q} שאלות, עם דיוק של כ ${acc}%${m > 0 ? ` ו ${m} טעויות מצטברות` : ""}.`
       : "בתקופה שנבחרה עדיין אין מספיק שאלות כדי לראות אם יש מגמה ברורה.";
   let snap = q > 0 ? `ב${core} ${statsLine}` : `ב${core} ${statsLine}`;
-  if (q > 0) {
+  if (q > 0 && !suppressRegisteredGradeStrengthenCopy(gradeRelation)) {
     const stepOpeners =
       step === "remediate_same_level"
         ? [
@@ -452,10 +460,21 @@ export function buildTopicRecommendationNarrative(tr) {
       ? `${homeLine} ${takeFirstSentence(reasoning)}`
       : homeLine;
   const snapshotFromContract = [summarySlot, findingSlot].filter(Boolean).join(" ");
-  const homeFromContract = hasCanonicalNarrative ? recommendationSlot || "" : recommendationSlot || homeAug;
+  let homeFromContract = hasCanonicalNarrative ? recommendationSlot || "" : recommendationSlot || homeAug;
+  let snapshotOut = snapshotFromContract || snap;
+
+  if (suppressRegisteredGradeStrengthenCopy(gradeRelation)) {
+    const needsSupport = gradeContextNeedsSupport(gradeRelation, acc);
+    const isStrength = gradeContextIsStrength(gradeRelation, acc, q);
+    const expl = gradeContextExplanationHe({ gradeRelation, isStrength, needsSupport });
+    const action = gradeContextActionHe({ gradeRelation, isStrength, needsSupport });
+    if (expl) snapshotOut = q > 0 ? `ב${core} ${expl}` : expl;
+    if (action) homeFromContract = action;
+  }
+
   const cautionFromContract = limitationsSlot || (whyHold ? stripGuillemetsHe(takeFirstSentence(whyHold)) : "");
   return {
-    snapshot: normalizeParentFacingHe(stripGuillemetsHe(snapshotFromContract || snap)),
+    snapshot: normalizeParentFacingHe(stripGuillemetsHe(snapshotOut)),
     homeLine: normalizeParentFacingHe(stripGuillemetsHe(homeFromContract)),
     cautionLineHe: cautionFromContract ? normalizeParentFacingHe(stripGuillemetsHe(cautionFromContract)) : "",
   };

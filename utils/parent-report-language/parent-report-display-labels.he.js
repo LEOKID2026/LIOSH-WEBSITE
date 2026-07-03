@@ -40,8 +40,8 @@ export const PARENT_REPORT_MODE_LABELS_HE = {
   practice_mistakes: "חזרה על טעויות",
   quiz: "בוחן",
   homework: "שיעורי בית",
-  guided_practice: "תרגול מודרך",
-  guided: "תרגול מודרך",
+  guided_practice: "תרגול",
+  guided: "תרגול",
   live_lesson: "שיעור חי",
   discussion: "דיון",
   worksheet: "דף עבודה",
@@ -54,10 +54,43 @@ export const PARENT_REPORT_MODE_LABELS_HE = {
   unknown: "לא ידוע",
 };
 
+/** Parent-visible activity source — never show technical mode like guided_practice. */
+const PARENT_ACTIVITY_SOURCE_RESOLVE_ORDER = Object.freeze([
+  "primaryEvidenceSource",
+  "latestActivitySource",
+  "evidenceSource",
+  "sourceType",
+]);
+
+/**
+ * Parent-facing source label for a practice row (not mode).
+ * @param {Record<string, unknown>|string|null|undefined} input
+ */
+export function formatParentReportActivitySourceHe(input) {
+  if (input == null) return "תרגול";
+  if (typeof input === "string") {
+    const key = normalizeKey(input);
+    if (key === "parent_assigned_activity") return "פעילות אישית מהורה";
+    if (key === "self_practice") return "תרגול עצמי";
+    if (key === "guided_practice" || key === "guided") return "תרגול";
+    if (PARENT_REPORT_SOURCE_LABELS_HE[key]) return PARENT_REPORT_SOURCE_LABELS_HE[key];
+    return "תרגול";
+  }
+  const row = input && typeof input === "object" ? input : {};
+  for (const field of PARENT_ACTIVITY_SOURCE_RESOLVE_ORDER) {
+    const resolved = formatParentReportActivitySourceHe(row[field]);
+    if (resolved !== "תרגול") return resolved;
+  }
+  const modeKey = normalizeKey(row.modeKey ?? row.mode);
+  if (modeKey === "self_practice" || modeKey === "independent") return "תרגול עצמי";
+  if (modeKey === "parent_assigned_activity") return "פעילות אישית מהורה";
+  return "תרגול";
+}
+
 /** @type {Record<string, string>} */
 export const PARENT_REPORT_SOURCE_LABELS_HE = {
   self_practice: "תרגול עצמי",
-  parent_assigned_activity: "פעילות אישית",
+  parent_assigned_activity: "פעילות אישית מהורה",
   learning_book: "ספר לימוד",
   worksheet: "דף עבודה",
   classroom_assigned_activity: "פעילות מהכיתה",

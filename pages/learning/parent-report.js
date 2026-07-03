@@ -65,15 +65,19 @@ import {
   diagnosticPrimarySourceParentLabelHe,
 } from "../../utils/parent-report-language/index.js";
 import {
+  formatParentReportActivitySourceHe,
   formatParentReportGradeHe,
   formatParentReportLevelHe,
-  formatParentReportModeHe,
   formatParentReportSubjectHe,
 } from "../../utils/parent-report-language/parent-report-display-labels.he.js";
 import {
   deriveParentDataPresenceForDiagnosticsView,
   PARENT_THIN_DATA_EXPLAINER_HE,
 } from "../../utils/parent-data-presence.js";
+import {
+  filterSubjectOverviewRowsWithEvidence,
+  PARENT_REPORT_PERIOD_EMPTY_STATE_HE,
+} from "../../utils/parent-report-subject-visibility.js";
 import { isDuplicateParentReportText } from "../../utils/parent-report-text-dedupe.js";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
@@ -318,6 +322,17 @@ function diagnosticCardConfidenceLabelHe(raw) {
   return diagnosticParentVisibleTextHe(raw || "");
 }
 
+const SUBJECT_OVERVIEW_CARD_UI = {
+  math: { emoji: "🧮", cardClass: "bg-blue-500/20 border border-blue-400/50", statClass: "text-blue-400" },
+  geometry: { emoji: "📐", cardClass: "bg-emerald-500/20 border border-emerald-400/50", statClass: "text-emerald-400" },
+  english: { emoji: "📘", cardClass: "bg-purple-500/20 border border-purple-400/50", statClass: "text-purple-200" },
+  science: { emoji: "🔬", cardClass: "bg-green-500/20 border border-green-400/50", statClass: "text-green-200" },
+  history: { emoji: "🏛️", cardClass: "bg-amber-700/25 border border-amber-500/50", statClass: "text-amber-200" },
+  hebrew: { emoji: "📚", cardClass: "bg-orange-500/20 border border-orange-400/50", statClass: "text-orange-300" },
+  moledet: { emoji: "🏠", cardClass: "bg-cyan-500/20 border border-cyan-400/50", statClass: "text-cyan-300" },
+  geography: { emoji: "🗺️", cardClass: "bg-teal-500/20 border border-teal-400/50", statClass: "text-teal-300" },
+};
+
 function buildSubjectOverviewRows(report) {
   if (!report?.summary) return [];
   const s = report.summary;
@@ -328,6 +343,7 @@ function buildSubjectOverviewRows(report) {
       name: "מתמטיקה",
       minutes: sumTopicMapMinutes(report.mathOperations),
       questions: Number(s.mathQuestions) || 0,
+      correct: Number(s.mathCorrect) || 0,
       accuracy: Math.round(Number(s.mathAccuracy) || 0),
       fill: SUBJECT_CHART_COLORS.math,
     },
@@ -336,6 +352,7 @@ function buildSubjectOverviewRows(report) {
       name: "גאומטריה",
       minutes: sumTopicMapMinutes(report.geometryTopics),
       questions: Number(s.geometryQuestions) || 0,
+      correct: Number(s.geometryCorrect) || 0,
       accuracy: Math.round(Number(s.geometryAccuracy) || 0),
       fill: SUBJECT_CHART_COLORS.geometry,
     },
@@ -344,6 +361,7 @@ function buildSubjectOverviewRows(report) {
       name: "אנגלית",
       minutes: sumTopicMapMinutes(report.englishTopics),
       questions: Number(s.englishQuestions) || 0,
+      correct: Number(s.englishCorrect) || 0,
       accuracy: Math.round(Number(s.englishAccuracy) || 0),
       fill: SUBJECT_CHART_COLORS.english,
     },
@@ -352,6 +370,7 @@ function buildSubjectOverviewRows(report) {
       name: "מדעים",
       minutes: sumTopicMapMinutes(report.scienceTopics),
       questions: Number(s.scienceQuestions) || 0,
+      correct: Number(s.scienceCorrect) || 0,
       accuracy: Math.round(Number(s.scienceAccuracy) || 0),
       fill: SUBJECT_CHART_COLORS.science,
     },
@@ -360,6 +379,7 @@ function buildSubjectOverviewRows(report) {
       name: "היסטוריה",
       minutes: sumTopicMapMinutes(report.historyTopics),
       questions: Number(s.historyQuestions) || 0,
+      correct: Number(s.historyCorrect) || 0,
       accuracy: Math.round(Number(s.historyAccuracy) || 0),
       fill: SUBJECT_CHART_COLORS.history,
     },
@@ -368,6 +388,7 @@ function buildSubjectOverviewRows(report) {
       name: "עברית",
       minutes: sumTopicMapMinutes(report.hebrewTopics),
       questions: Number(s.hebrewQuestions) || 0,
+      correct: Number(s.hebrewCorrect) || 0,
       accuracy: Math.round(Number(s.hebrewAccuracy) || 0),
       fill: SUBJECT_CHART_COLORS.hebrew,
     },
@@ -376,6 +397,7 @@ function buildSubjectOverviewRows(report) {
       name: VISUAL_STRAND_LABEL_HE.moledet,
       minutes: mgVisual.moledetStats.minutes,
       questions: mgVisual.moledetStats.questions,
+      correct: mgVisual.moledetStats.correct,
       accuracy: mgVisual.moledetStats.accuracy,
       fill: SUBJECT_CHART_COLORS.moledet,
     },
@@ -384,6 +406,7 @@ function buildSubjectOverviewRows(report) {
       name: VISUAL_STRAND_LABEL_HE.geography,
       minutes: mgVisual.geographyStats.minutes,
       questions: mgVisual.geographyStats.questions,
+      correct: mgVisual.geographyStats.correct,
       accuracy: mgVisual.geographyStats.accuracy,
       fill: SUBJECT_CHART_COLORS.geography,
     },
@@ -790,7 +813,7 @@ function computeMasterBarChartGeometry(report, view) {
     : G.plotRailWidthMobilePx;
   const tickFontPx = useDesktopPlot ? G.tickDesktopPx : G.tickMobilePx;
 
-  const summaryNames = buildSubjectOverviewRows(report).map((r) => r.name);
+  const summaryNames = filterSubjectOverviewRowsWithEvidence(buildSubjectOverviewRows(report)).map((r) => r.name);
   const summaryLabelMeasured = measureMaxLabelWidthPx(
     summaryNames,
     G.labelMeasureFontPx,
@@ -889,10 +912,12 @@ const chartTooltipStyleLight = {
 /** Below this inclusive total-question count, omit charts (thin global evidence). */
 const PARENT_REPORT_THIN_VOLUME_QUESTIONS_MAX = 14;
 
-function subjectPracticeSecondaryLineHe(questions, correct, accuracy) {
+function subjectPracticeSecondaryLineHe(questions, correct, accuracy, timeMinutes) {
   const q = Number(questions) || 0;
-  if (q <= 0) return "לא תורגל בתקופה שנבחרה";
-  return `${Number(correct) || 0} נכון • ${Number(accuracy) || 0}% דיוק`;
+  const tm = Number(timeMinutes) || 0;
+  if (q > 0) return `${Number(correct) || 0} נכון • ${Number(accuracy) || 0}% דיוק`;
+  if (tm > 0) return `${tm} דק׳ תרגול`;
+  return null;
 }
 
 function hasMeaningfulExampleAnswer(v) {
@@ -1034,7 +1059,7 @@ export default function ParentReport() {
     return dateStr;
   };
 
-  const formatMode = (mode) => formatParentReportModeHe(mode);
+  const formatActivitySource = (row) => formatParentReportActivitySourceHe(row);
 
   // בדיקת גודל מסך
   useEffect(() => {
@@ -1588,9 +1613,7 @@ export default function ParentReport() {
             <div className="text-4xl mb-4">📊</div>
             <h1 className="text-2xl font-bold mb-2">דוח להורים</h1>
             <p className={`mb-4 ${isBright ? "text-slate-600" : "text-white/70"}`}>
-              עדיין אין מספיק תרגול כדי להציג דוח ברור.
-              <br />
-              אחרי כמה ימי תרגול נוכל להראות לך תמונה מדויקת יותר.
+              {PARENT_REPORT_PERIOD_EMPTY_STATE_HE}
             </p>
             
             {/* בחירת תקופה גם במסך "אין נתונים" */}
@@ -2201,135 +2224,33 @@ export default function ParentReport() {
             </div>
           ) : null}
 
-          {/* סיכום לפי מקצוע */}
+          {/* סיכום לפי מקצוע — רק מקצועות עם evidence בתקופה */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3 mb-3 md:mb-6 avoid-break">
-            <div className="parent-report-print-summary-card bg-blue-500/20 border border-blue-400/50 rounded-lg p-2 md:p-4 text-center">
-              <div className="parent-report-print-summary-label text-xs md:text-sm text-white/60 mb-1">
-                🧮 מתמטיקה
-              </div>
-              <div className="parent-report-print-summary-stat text-base md:text-lg font-bold text-blue-400">
-                {report.summary.mathQuestions || 0} שאלות
-              </div>
-              <div className="parent-report-print-muted-text text-xs text-white/80">
-                {subjectPracticeSecondaryLineHe(
-                  report.summary.mathQuestions,
-                  report.summary.mathCorrect,
-                  report.summary.mathAccuracy
-                )}
-              </div>
-            </div>
-            
-            <div className="parent-report-print-summary-card bg-emerald-500/20 border border-emerald-400/50 rounded-lg p-2 md:p-4 text-center">
-              <div className="parent-report-print-summary-label text-xs md:text-sm text-white/60 mb-1">
-                📐 גאומטריה
-              </div>
-              <div className="parent-report-print-summary-stat text-base md:text-lg font-bold text-emerald-400">
-                {report.summary.geometryQuestions || 0} שאלות
-              </div>
-              <div className="parent-report-print-muted-text text-xs text-white/80">
-                {subjectPracticeSecondaryLineHe(
-                  report.summary.geometryQuestions,
-                  report.summary.geometryCorrect,
-                  report.summary.geometryAccuracy
-                )}
-              </div>
-            </div>
-            
-            <div className="parent-report-print-summary-card bg-purple-500/20 border border-purple-400/50 rounded-lg p-2 md:p-4 text-center">
-              <div className="parent-report-print-summary-label text-xs md:text-sm text-white/60 mb-1">
-                📘 אנגלית
-              </div>
-              <div className="parent-report-print-summary-stat text-base md:text-lg font-bold text-purple-200">
-                {report.summary.englishQuestions || 0} שאלות
-              </div>
-              <div className="parent-report-print-muted-text text-xs text-white/80">
-                {subjectPracticeSecondaryLineHe(
-                  report.summary.englishQuestions,
-                  report.summary.englishCorrect,
-                  report.summary.englishAccuracy
-                )}
-              </div>
-            </div>
-            
-            <div className="parent-report-print-summary-card bg-green-500/20 border border-green-400/50 rounded-lg p-2 md:p-4 text-center">
-              <div className="parent-report-print-summary-label text-xs md:text-sm text-white/60 mb-1">
-                🔬 מדעים
-              </div>
-              <div className="parent-report-print-summary-stat text-base md:text-lg font-bold text-green-200">
-                {report.summary.scienceQuestions || 0} שאלות
-              </div>
-              <div className="parent-report-print-muted-text text-xs text-white/80">
-                {subjectPracticeSecondaryLineHe(
-                  report.summary.scienceQuestions,
-                  report.summary.scienceCorrect,
-                  report.summary.scienceAccuracy
-                )}
-              </div>
-            </div>
-            
-            <div className="parent-report-print-summary-card bg-amber-700/25 border border-amber-500/50 rounded-lg p-2 md:p-4 text-center">
-              <div className="parent-report-print-summary-label text-xs md:text-sm text-white/60 mb-1">
-                🏛️ היסטוריה
-              </div>
-              <div className="parent-report-print-summary-stat text-base md:text-lg font-bold text-amber-200">
-                {report.summary.historyQuestions || 0} שאלות
-              </div>
-              <div className="parent-report-print-muted-text text-xs text-white/80">
-                {subjectPracticeSecondaryLineHe(
-                  report.summary.historyQuestions,
-                  report.summary.historyCorrect,
-                  report.summary.historyAccuracy
-                )}
-              </div>
-            </div>
-            
-            <div className="parent-report-print-summary-card bg-orange-500/20 border border-orange-400/50 rounded-lg p-2 md:p-4 text-center">
-              <div className="parent-report-print-summary-label text-xs md:text-sm text-white/60 mb-1">
-                📚 עברית
-              </div>
-              <div className="parent-report-print-summary-stat text-base md:text-lg font-bold text-orange-300">
-                {report.summary.hebrewQuestions || 0} שאלות
-              </div>
-              <div className="parent-report-print-muted-text text-xs text-white/80">
-                {subjectPracticeSecondaryLineHe(
-                  report.summary.hebrewQuestions,
-                  report.summary.hebrewCorrect,
-                  report.summary.hebrewAccuracy
-                )}
-              </div>
-            </div>
-            
-            <div className="parent-report-print-summary-card bg-cyan-500/20 border border-cyan-400/50 rounded-lg p-2 md:p-4 text-center">
-              <div className="parent-report-print-summary-label text-xs md:text-sm text-white/60 mb-1">
-                🏠 {VISUAL_STRAND_LABEL_HE.moledet}
-              </div>
-              <div className="parent-report-print-summary-stat text-base md:text-lg font-bold text-cyan-300">
-                {mgVisualSplit?.moledetStats.questions || 0} שאלות
-              </div>
-              <div className="parent-report-print-muted-text text-xs text-white/80">
-                {subjectPracticeSecondaryLineHe(
-                  mgVisualSplit?.moledetStats.questions,
-                  mgVisualSplit?.moledetStats.correct,
-                  mgVisualSplit?.moledetStats.accuracy
-                )}
-              </div>
-            </div>
-
-            <div className="parent-report-print-summary-card bg-teal-500/20 border border-teal-400/50 rounded-lg p-2 md:p-4 text-center">
-              <div className="parent-report-print-summary-label text-xs md:text-sm text-white/60 mb-1">
-                🗺️ {VISUAL_STRAND_LABEL_HE.geography}
-              </div>
-              <div className="parent-report-print-summary-stat text-base md:text-lg font-bold text-teal-300">
-                {mgVisualSplit?.geographyStats.questions || 0} שאלות
-              </div>
-              <div className="parent-report-print-muted-text text-xs text-white/80">
-                {subjectPracticeSecondaryLineHe(
-                  mgVisualSplit?.geographyStats.questions,
-                  mgVisualSplit?.geographyStats.correct,
-                  mgVisualSplit?.geographyStats.accuracy
-                )}
-              </div>
-            </div>
+            {filterSubjectOverviewRowsWithEvidence(buildSubjectOverviewRows(report)).map((row) => {
+              const ui = SUBJECT_OVERVIEW_CARD_UI[row.key] || SUBJECT_OVERVIEW_CARD_UI.math;
+              const secondary = subjectPracticeSecondaryLineHe(
+                row.questions,
+                row.correct,
+                row.accuracy,
+                row.minutes
+              );
+              return (
+                <div
+                  key={row.key}
+                  className={`parent-report-print-summary-card ${ui.cardClass} rounded-lg p-2 md:p-4 text-center`}
+                >
+                  <div className="parent-report-print-summary-label text-xs md:text-sm text-white/60 mb-1">
+                    {ui.emoji} {row.name}
+                  </div>
+                  <div className={`parent-report-print-summary-stat text-base md:text-lg font-bold ${ui.statClass}`}>
+                    {row.questions > 0 ? `${row.questions} שאלות` : `${row.minutes} דק׳`}
+                  </div>
+                  {secondary ? (
+                    <div className="parent-report-print-muted-text text-xs text-white/80">{secondary}</div>
+                  ) : null}
+                </div>
+              );
+            })}
           </div>
 
           <ParentReportInsight
@@ -2370,7 +2291,7 @@ export default function ParentReport() {
                       <th className="text-right py-1.5 px-0.5 whitespace-nowrap">פעולה</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">רמה</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">כיתה</th>
-                      <th className="text-center py-1.5 px-0.5 whitespace-nowrap">מצב</th>
+                      <th className="text-center py-1.5 px-0.5 whitespace-nowrap">מקור</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">תאריך אחרון</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">זמן</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">שאלות</th>
@@ -2396,7 +2317,7 @@ export default function ParentReport() {
                             {formatParentReportGradeHe(data.gradeKey || data.grade)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {formatMode(data.mode)}
+                            {formatActivitySource(data)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap tabular-nums">
                             {data.lastSessionAt ?? "לא זמין"}
@@ -2449,7 +2370,7 @@ export default function ParentReport() {
                           <span className="text-white/60">כיתה:</span> <span className="text-white/90">{formatParentReportGradeHe(data.gradeKey || data.grade)}</span>
                         </div>
                         <div>
-                          <span className="text-white/60">מצב:</span> <span className="text-white/90">{formatMode(data.mode)}</span>
+                          <span className="text-white/60">מקור:</span> <span className="text-white/90">{formatActivitySource(data)}</span>
                         </div>
                         <div>
                           <span className="text-white/60">תאריך אחרון:</span>{" "}
@@ -2511,7 +2432,7 @@ export default function ParentReport() {
                       <th className="text-right py-1.5 px-0.5 whitespace-nowrap">נושא</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">רמה</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">כיתה</th>
-                      <th className="text-center py-1.5 px-0.5 whitespace-nowrap">מצב</th>
+                      <th className="text-center py-1.5 px-0.5 whitespace-nowrap">מקור</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">תאריך אחרון</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">זמן</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">שאלות</th>
@@ -2537,7 +2458,7 @@ export default function ParentReport() {
                             {formatParentReportGradeHe(data.gradeKey || data.grade)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {formatMode(data.mode)}
+                            {formatActivitySource(data)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap tabular-nums">
                             {data.lastSessionAt ?? "לא זמין"}
@@ -2590,7 +2511,7 @@ export default function ParentReport() {
                           <span className="text-white/60">כיתה:</span> <span className="text-white/90">{formatParentReportGradeHe(data.gradeKey || data.grade)}</span>
                         </div>
                         <div>
-                          <span className="text-white/60">מצב:</span> <span className="text-white/90">{formatMode(data.mode)}</span>
+                          <span className="text-white/60">מקור:</span> <span className="text-white/90">{formatActivitySource(data)}</span>
                         </div>
                         <div>
                           <span className="text-white/60">תאריך אחרון:</span>{" "}
@@ -2653,7 +2574,7 @@ export default function ParentReport() {
                       <th className="text-right py-1.5 px-0.5 whitespace-nowrap">נושא</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">רמה</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">כיתה</th>
-                      <th className="text-center py-1.5 px-0.5 whitespace-nowrap">מצב</th>
+                      <th className="text-center py-1.5 px-0.5 whitespace-nowrap">מקור</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">תאריך אחרון</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">זמן</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">שאלות</th>
@@ -2679,7 +2600,7 @@ export default function ParentReport() {
                             {formatParentReportGradeHe(data.gradeKey || data.grade)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {formatMode(data.mode)}
+                            {formatActivitySource(data)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap tabular-nums">
                             {data.lastSessionAt ?? "לא זמין"}
@@ -2732,7 +2653,7 @@ export default function ParentReport() {
                           <span className="text-white/60">כיתה:</span> <span className="text-white/90">{formatParentReportGradeHe(data.gradeKey || data.grade)}</span>
                         </div>
                         <div>
-                          <span className="text-white/60">מצב:</span> <span className="text-white/90">{formatMode(data.mode)}</span>
+                          <span className="text-white/60">מקור:</span> <span className="text-white/90">{formatActivitySource(data)}</span>
                         </div>
                         <div>
                           <span className="text-white/60">תאריך אחרון:</span>{" "}
@@ -2795,7 +2716,7 @@ export default function ParentReport() {
                       <th className="text-right py-1.5 px-0.5 whitespace-nowrap">נושא</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">רמה</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">כיתה</th>
-                      <th className="text-center py-1.5 px-0.5 whitespace-nowrap">מצב</th>
+                      <th className="text-center py-1.5 px-0.5 whitespace-nowrap">מקור</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">תאריך אחרון</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">זמן</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">שאלות</th>
@@ -2821,7 +2742,7 @@ export default function ParentReport() {
                             {formatParentReportGradeHe(data.gradeKey || data.grade)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {formatMode(data.mode)}
+                            {formatActivitySource(data)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap tabular-nums">
                             {data.lastSessionAt ?? "לא זמין"}
@@ -2878,7 +2799,7 @@ export default function ParentReport() {
                           <span className="text-white/60">כיתה:</span> <span className="text-white/90">{formatParentReportGradeHe(data.gradeKey || data.grade)}</span>
                         </div>
                         <div>
-                          <span className="text-white/60">מצב:</span> <span className="text-white/90">{formatMode(data.mode)}</span>
+                          <span className="text-white/60">מקור:</span> <span className="text-white/90">{formatActivitySource(data)}</span>
                         </div>
                         <div>
                           <span className="text-white/60">תאריך אחרון:</span>{" "}
@@ -2941,7 +2862,7 @@ export default function ParentReport() {
                       <th className="text-right py-1.5 px-0.5 whitespace-nowrap">נושא</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">רמה</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">כיתה</th>
-                      <th className="text-center py-1.5 px-0.5 whitespace-nowrap">מצב</th>
+                      <th className="text-center py-1.5 px-0.5 whitespace-nowrap">מקור</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">תאריך אחרון</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">זמן</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">שאלות</th>
@@ -2967,7 +2888,7 @@ export default function ParentReport() {
                             {formatParentReportGradeHe(data.gradeKey || data.grade)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {formatMode(data.mode)}
+                            {formatActivitySource(data)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap tabular-nums">
                             {data.lastSessionAt ?? "לא זמין"}
@@ -3024,7 +2945,7 @@ export default function ParentReport() {
                           <span className="text-white/60">כיתה:</span> <span className="text-white/90">{formatParentReportGradeHe(data.gradeKey || data.grade)}</span>
                         </div>
                         <div>
-                          <span className="text-white/60">מצב:</span> <span className="text-white/90">{formatMode(data.mode)}</span>
+                          <span className="text-white/60">מקור:</span> <span className="text-white/90">{formatActivitySource(data)}</span>
                         </div>
                         <div>
                           <span className="text-white/60">תאריך אחרון:</span>{" "}
@@ -3087,7 +3008,7 @@ export default function ParentReport() {
                       <th className="text-right py-1.5 px-0.5 whitespace-nowrap">נושא</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">רמה</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">כיתה</th>
-                      <th className="text-center py-1.5 px-0.5 whitespace-nowrap">מצב</th>
+                      <th className="text-center py-1.5 px-0.5 whitespace-nowrap">מקור</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">תאריך אחרון</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">זמן</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">שאלות</th>
@@ -3113,7 +3034,7 @@ export default function ParentReport() {
                             {formatParentReportGradeHe(data.gradeKey || data.grade)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {formatMode(data.mode)}
+                            {formatActivitySource(data)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap tabular-nums">
                             {data.lastSessionAt ?? "לא זמין"}
@@ -3170,7 +3091,7 @@ export default function ParentReport() {
                           <span className="text-white/60">כיתה:</span> <span className="text-white/90">{formatParentReportGradeHe(data.gradeKey || data.grade)}</span>
                         </div>
                         <div>
-                          <span className="text-white/60">מצב:</span> <span className="text-white/90">{formatMode(data.mode)}</span>
+                          <span className="text-white/60">מקור:</span> <span className="text-white/90">{formatActivitySource(data)}</span>
                         </div>
                         <div>
                           <span className="text-white/60">תאריך אחרון:</span>{" "}
@@ -3232,7 +3153,7 @@ export default function ParentReport() {
                       <th className="text-right py-1.5 px-0.5 whitespace-nowrap">נושא</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">רמה</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">כיתה</th>
-                      <th className="text-center py-1.5 px-0.5 whitespace-nowrap">מצב</th>
+                      <th className="text-center py-1.5 px-0.5 whitespace-nowrap">מקור</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">תאריך אחרון</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">זמן</th>
                       <th className="text-center py-1.5 px-0.5 whitespace-nowrap">שאלות</th>
@@ -3258,7 +3179,7 @@ export default function ParentReport() {
                             {formatParentReportGradeHe(data.gradeKey || data.grade)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {formatMode(data.mode)}
+                            {formatActivitySource(data)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap tabular-nums">
                             {data.lastSessionAt ?? "לא זמין"}
@@ -3314,7 +3235,7 @@ export default function ParentReport() {
                           <span className="text-white/60">כיתה:</span> <span className="text-white/90">{formatParentReportGradeHe(data.gradeKey || data.grade)}</span>
                         </div>
                         <div>
-                          <span className="text-white/60">מצב:</span> <span className="text-white/90">{formatMode(data.mode)}</span>
+                          <span className="text-white/60">מקור:</span> <span className="text-white/90">{formatActivitySource(data)}</span>
                         </div>
                         <div>
                           <span className="text-white/60">תאריך אחרון:</span>{" "}
@@ -4105,7 +4026,7 @@ export default function ParentReport() {
 
             {masterBarChartGeometry &&
               (() => {
-                const overviewRows = buildSubjectOverviewRows(report);
+                const overviewRows = filterSubjectOverviewRowsWithEvidence(buildSubjectOverviewRows(report));
                 const maxMin = Math.max(
                   1,
                   ...overviewRows.map((r) => r.minutes || 0)

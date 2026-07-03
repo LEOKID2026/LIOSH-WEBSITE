@@ -2,7 +2,9 @@
  * Parent report surface — unified topic tier (display/placement only; no engine changes).
  */
 
-/** @typedef {'strong'|'monitor'|'strengthen'|'needs_guidance'|'clear_gap'|'low_evidence'} ParentTopicTier */
+import { resolveGradeAwareParentTopicTier } from "../parent-report-language/grade-context-parent-he.js";
+
+/** @typedef {'strong'|'monitor'|'strengthen'|'needs_guidance'|'clear_gap'|'low_evidence'|'advanced_practice'|'foundation_practice'} ParentTopicTier */
 
 export const PARENT_TOPIC_TIER = Object.freeze({
   STRONG: "strong",
@@ -11,6 +13,8 @@ export const PARENT_TOPIC_TIER = Object.freeze({
   NEEDS_GUIDANCE: "needs_guidance",
   CLEAR_GAP: "clear_gap",
   LOW_EVIDENCE: "low_evidence",
+  ADVANCED_PRACTICE: "advanced_practice",
+  FOUNDATION_PRACTICE: "foundation_practice",
 });
 
 const TIER_LABEL_HE = Object.freeze({
@@ -20,6 +24,8 @@ const TIER_LABEL_HE = Object.freeze({
   needs_guidance: "כדאי ללוות",
   clear_gap: "כדאי לחזק",
   low_evidence: "מעט דוגמאות",
+  advanced_practice: "תרגול מתקדם",
+  foundation_practice: "יסודות קודמים",
 });
 
 const TIER_SECTION_TITLE_HE = Object.freeze({
@@ -29,6 +35,8 @@ const TIER_SECTION_TITLE_HE = Object.freeze({
   needs_guidance: "נושאים שכדאי ללוות",
   clear_gap: "נושאים שכדאי לחזק",
   low_evidence: "נושאים עם מעט נתונים",
+  advanced_practice: "תרגול מתקדם מעל הכיתה הרשומה",
+  foundation_practice: "יסודות קודמים",
 });
 
 const TIER_PLACEMENT_KIND = Object.freeze({
@@ -38,6 +46,8 @@ const TIER_PLACEMENT_KIND = Object.freeze({
   needs_guidance: "focus",
   clear_gap: "focus",
   low_evidence: "neutral",
+  advanced_practice: "neutral",
+  foundation_practice: "neutral",
 });
 
 function clean(s) {
@@ -61,6 +71,13 @@ export function inferSurfaceEngineDecision(p) {
     d = acc < 55 ? "clear_topic_gap" : acc < 72 ? "topic_needs_strengthening" : "partial_stable";
   }
   return d;
+}
+
+function gradeRelationFromMapRow(mapRow) {
+  if (!mapRow || typeof mapRow !== "object") return "unknown";
+  return String(
+    mapRow.gradeRelation || mapRow.rowIdentityV1?.gradeRelation || "unknown"
+  ).trim();
 }
 
 /**
@@ -94,28 +111,36 @@ export function parentTopicTierFromUnit(u, mapRow) {
     engineDecisionFromSig: ed?.engineDecision,
   });
 
-  if (q < 12) return PARENT_TOPIC_TIER.LOW_EVIDENCE;
-
-  if (acc >= 90 && q >= 10) return PARENT_TOPIC_TIER.STRONG;
-  if (acc >= 78 && q >= 20) return PARENT_TOPIC_TIER.MONITOR;
-  if (acc >= 60 && acc < 78) return PARENT_TOPIC_TIER.STRENGTHEN;
-  if (acc < 55 && q >= 12) return PARENT_TOPIC_TIER.CLEAR_GAP;
-
-  switch (engineDecision) {
-    case "mastery_stable":
-      return PARENT_TOPIC_TIER.STRONG;
-    case "partial_stable":
-      return acc >= 72 ? PARENT_TOPIC_TIER.MONITOR : PARENT_TOPIC_TIER.STRENGTHEN;
-    case "topic_needs_strengthening":
-      return PARENT_TOPIC_TIER.STRENGTHEN;
-    case "clear_topic_gap":
-      return PARENT_TOPIC_TIER.CLEAR_GAP;
-    case "early_direction_only":
-    case "insufficient_data":
-      return PARENT_TOPIC_TIER.LOW_EVIDENCE;
-    default:
-      return acc >= 72 ? PARENT_TOPIC_TIER.MONITOR : PARENT_TOPIC_TIER.STRENGTHEN;
+  let baseTier;
+  if (q < 12) baseTier = PARENT_TOPIC_TIER.LOW_EVIDENCE;
+  else if (acc >= 90 && q >= 10) baseTier = PARENT_TOPIC_TIER.STRONG;
+  else if (acc >= 78 && q >= 20) baseTier = PARENT_TOPIC_TIER.MONITOR;
+  else if (acc >= 60 && acc < 78) baseTier = PARENT_TOPIC_TIER.STRENGTHEN;
+  else if (acc < 55 && q >= 12) baseTier = PARENT_TOPIC_TIER.CLEAR_GAP;
+  else {
+    switch (engineDecision) {
+      case "mastery_stable":
+        baseTier = PARENT_TOPIC_TIER.STRONG;
+        break;
+      case "partial_stable":
+        baseTier = acc >= 72 ? PARENT_TOPIC_TIER.MONITOR : PARENT_TOPIC_TIER.STRENGTHEN;
+        break;
+      case "topic_needs_strengthening":
+        baseTier = PARENT_TOPIC_TIER.STRENGTHEN;
+        break;
+      case "clear_topic_gap":
+        baseTier = PARENT_TOPIC_TIER.CLEAR_GAP;
+        break;
+      case "early_direction_only":
+      case "insufficient_data":
+        baseTier = PARENT_TOPIC_TIER.LOW_EVIDENCE;
+        break;
+      default:
+        baseTier = acc >= 72 ? PARENT_TOPIC_TIER.MONITOR : PARENT_TOPIC_TIER.STRENGTHEN;
+    }
   }
+
+  return resolveGradeAwareParentTopicTier(baseTier, gradeRelationFromMapRow(mapRow), q);
 }
 
 /** @param {ParentTopicTier} tier */
@@ -141,7 +166,9 @@ export function parentTopicTierShowsRecommendationCard(tier) {
   return (
     tier === PARENT_TOPIC_TIER.STRENGTHEN ||
     tier === PARENT_TOPIC_TIER.NEEDS_GUIDANCE ||
-    tier === PARENT_TOPIC_TIER.CLEAR_GAP
+    tier === PARENT_TOPIC_TIER.CLEAR_GAP ||
+    tier === PARENT_TOPIC_TIER.ADVANCED_PRACTICE ||
+    tier === PARENT_TOPIC_TIER.FOUNDATION_PRACTICE
   );
 }
 
@@ -165,6 +192,8 @@ export function groupTopicRowsByParentTier(rows) {
     needs_guidance: [],
     clear_gap: [],
     low_evidence: [],
+    advanced_practice: [],
+    foundation_practice: [],
   };
   for (const row of Array.isArray(rows) ? rows : []) {
     const t = String(row?.parentTier || "");

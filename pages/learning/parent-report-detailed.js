@@ -11,6 +11,7 @@ import {
 } from "../../utils/detailed-report-parent-letter-he";
 import {
   Bullets,
+  ParentAssignedActivitiesSection,
   SubjectPhase3Insights,
   SubjectPrimaryActionBlock,
   SubjectSummaryBlock,
@@ -38,6 +39,10 @@ import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import { ParentDiagnosticExplanationBlock } from "../../components/parent-diagnostic-explanation-block.jsx";
 import { normalizeParentFacing } from "../../components/parent/ParentReportParentSections.jsx";
 import { PARENT_BULLETS_EMPTY_WITH_VOLUME_HE } from "../../utils/parent-data-presence.js";
+import {
+  PARENT_REPORT_PERIOD_EMPTY_STATE_HE,
+  subjectProfileHasPracticeEvidence,
+} from "../../utils/parent-report-subject-visibility.js";
 import { isDuplicateParentReportText } from "../../utils/parent-report-text-dedupe.js";
 import ParentCopilotShell from "../../components/parent-copilot/parent-copilot-shell.jsx";
 import { ParentReportInsight } from "../../components/ParentReportInsight.jsx";
@@ -690,9 +695,10 @@ export default function ParentReportDetailedPage() {
 
   const pi = payload?.periodInfo;
   const allSubjectProfiles = Array.isArray(payload?.subjectProfiles) ? payload.subjectProfiles : [];
-  const visibleSubjectProfiles = allSubjectProfiles.filter(
-    (sp) => (Number(sp?.subjectQuestionCount) || 0) > 0
-  );
+  const visibleSubjectProfiles = allSubjectProfiles.filter(subjectProfileHasPracticeEvidence);
+  const periodHasPracticeEvidence =
+    (Number(payload?.overallSnapshot?.totalQuestions) || 0) > 0 ||
+    (Number(payload?.overallSnapshot?.totalTime) || 0) > 0;
   const topContract = payload?.parentProductContractV1?.top || null;
   const topKeepLines = [
     topContract?.mainPriorityHe || "",
@@ -1545,6 +1551,11 @@ export default function ParentReportDetailedPage() {
 
           {!payload ? (
             <p className="text-center text-white/80">לא ניתן לטעון את הדוח המקיף.</p>
+          ) : !periodHasPracticeEvidence ? (
+            <div className={`text-center max-w-md mx-auto ${isBright ? "text-slate-600" : "text-white/70"}`}>
+              <div className="text-4xl mb-4">📊</div>
+              <p>{PARENT_REPORT_PERIOD_EMPTY_STATE_HE}</p>
+            </div>
           ) : (
             <>
               <div
@@ -1641,6 +1652,8 @@ export default function ParentReportDetailedPage() {
                   </div>
                 </div>
                 </SectionCard>
+
+                <ParentAssignedActivitiesSection rows={payload?.parentAssignedActivitiesInPeriod} />
 
                 <ParentReportDataHealthNote
                   className="pr-detailed-data-health"

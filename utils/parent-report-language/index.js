@@ -43,6 +43,7 @@ export {
   formatParentReportStatusHe,
   formatParentReportSourceHe,
   formatParentReportModeHe,
+  formatParentReportActivitySourceHe,
   formatParentReportEvidenceHe,
   formatParentReportLevelHe,
   formatParentReportGradeHe,

@@ -83,7 +83,14 @@ export function resolveSubjectPrimaryParentActionHe(sp, baseReport) {
 
   const groups = sp?.topicGroupsByTier;
   if (groups && typeof groups === "object") {
-    for (const tier of ["clear_gap", "needs_guidance", "strengthen", "monitor"]) {
+    for (const tier of [
+      "advanced_practice",
+      "foundation_practice",
+      "clear_gap",
+      "needs_guidance",
+      "strengthen",
+      "monitor",
+    ]) {
       const rows = Array.isArray(groups[tier]) ? groups[tier] : [];
       for (const row of rows) {
         if (row?.parentActionHe) {
@@ -93,6 +100,8 @@ export function resolveSubjectPrimaryParentActionHe(sp, baseReport) {
       }
     }
     const focus =
+      groups[PARENT_TOPIC_TIER.ADVANCED_PRACTICE]?.[0] ||
+      groups[PARENT_TOPIC_TIER.FOUNDATION_PRACTICE]?.[0] ||
       groups[PARENT_TOPIC_TIER.CLEAR_GAP]?.[0] ||
       groups[PARENT_TOPIC_TIER.STRENGTHEN]?.[0] ||
       groups[PARENT_TOPIC_TIER.MONITOR]?.[0];

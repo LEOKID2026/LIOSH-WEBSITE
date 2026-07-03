@@ -13,12 +13,17 @@ import {
 import {
   Bullets,
   ExecutiveSummarySection,
+  ParentAssignedActivitiesSection,
   SubjectPhase3Insights,
   SubjectSummaryBlock,
   TopicRecommendationExplainStrip,
 } from "../../components/parent-report-detailed-surface.jsx";
 import { normalizeExecutiveSummary } from "../../utils/parent-report-payload-normalize";
 import { PARENT_BULLETS_EMPTY_WITH_VOLUME_HE } from "../../utils/parent-data-presence.js";
+import {
+  PARENT_REPORT_PERIOD_EMPTY_STATE_HE,
+  subjectProfileHasPracticeEvidence,
+} from "../../utils/parent-report-subject-visibility.js";
 import ParentCopilotShell from "../../components/parent-copilot/parent-copilot-shell.jsx";
 import { ParentReportInsight } from "../../components/ParentReportInsight.jsx";
 import { ParentDiagnosticExplanationBlock } from "../../components/parent-diagnostic-explanation-block.jsx";
@@ -320,9 +325,10 @@ export default function ParentReportDetailedPage() {
   const noPlayer =
     typeof window !== "undefined" && !loading && !localStorage.getItem("mleo_player_name");
   const allSubjectProfiles = Array.isArray(payload?.subjectProfiles) ? payload.subjectProfiles : [];
-  const visibleSubjectProfiles = allSubjectProfiles.filter(
-    (sp) => (Number(sp?.subjectQuestionCount) || 0) > 0
-  );
+  const visibleSubjectProfiles = allSubjectProfiles.filter(subjectProfileHasPracticeEvidence);
+  const periodHasPracticeEvidence =
+    (Number(payload?.overallSnapshot?.totalQuestions) || 0) > 0 ||
+    (Number(payload?.overallSnapshot?.totalTime) || 0) > 0;
 
   return (
     <Layout>
@@ -1144,6 +1150,11 @@ export default function ParentReportDetailedPage() {
             </p>
           ) : !payload ? (
             <p className="text-center text-white/80">לא ניתן לטעון את הדוח המקיף.</p>
+          ) : !periodHasPracticeEvidence ? (
+            <div className="text-center max-w-md mx-auto text-white/70">
+              <div className="text-4xl mb-4">📊</div>
+              <p>{PARENT_REPORT_PERIOD_EMPTY_STATE_HE}</p>
+            </div>
           ) : (
             <>
               <div
@@ -1244,6 +1255,8 @@ export default function ParentReportDetailedPage() {
                   </div>
                 </div>
                 </SectionCard>
+
+                <ParentAssignedActivitiesSection rows={payload?.parentAssignedActivitiesInPeriod} />
 
                 {/* D — אותו payload; מלא/מקוצר; כותרת אזור + לכל מקצוע כותרת + כרטיסים פנימיים בלבד */}
                 {displayMode === "summary" ? (

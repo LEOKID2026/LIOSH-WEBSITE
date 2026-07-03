@@ -10,6 +10,11 @@ import { buildParentProductContractV1 } from "./contracts/parent-product-contrac
 import { applyMathScopedParentDisplayNames } from "./math-topic-parent-display.js";
 import { buildTopicRecommendationsForSubject } from "./topic-next-step-engine.js";
 import { rewriteParentRecommendationForDetailedHe } from "./detailed-report-parent-letter-he.js";
+import { buildParentAssignedActivitiesInPeriod } from "./parent-report-parent-assigned-activities.js";
+import {
+  resolveGradeAwareRecommendationStepLabelHe,
+  suppressRegisteredGradeStrengthenCopy,
+} from "./parent-report-language/grade-context-parent-he.js";
 import { PARENT_DIAGNOSTIC_TYPE_LABEL_HE } from "./parent-report-language/parent-report-hebrew-copy-spec.js";
 import {
   EXPECTED_VS_OBSERVED_MATCH_LABEL_HE,
@@ -84,6 +89,7 @@ import {
   subjectAccuracyFromReportSummary,
   subjectQuestionCountFromReportSummary,
 } from "./parent-data-presence.js";
+import { filterSubjectCoverageWithEvidence } from "./parent-report-subject-visibility.js";
 import {
   executiveRowDedupeKey,
   parentFacingTopicRowLabelHe,
@@ -1630,13 +1636,11 @@ function buildSubjectCoverage(baseReport) {
 
 function buildOverallSnapshot(baseReport, subjectCoverage) {
   const sum = baseReport?.summary || {};
-  const unpracticedSubjectsHe = [];
+  const practicedCoverage = filterSubjectCoverageWithEvidence(subjectCoverage);
   const sparseSubjectsHe = [];
   const notableSubjectsHe = [];
-  for (const row of subjectCoverage) {
-    if (row.questionCount === 0) {
-      unpracticedSubjectsHe.push(`${row.subjectLabelHe} — לא נאספו שאלות בתקופה שנבחרה`);
-    } else if (row.questionCount < 15) {
+  for (const row of practicedCoverage) {
+    if (row.questionCount > 0 && row.questionCount < 15) {
       sparseSubjectsHe.push(
         `${row.subjectLabelHe} — מספר שאלות נמוך (${row.questionCount} שאלות)`
       );
@@ -1657,10 +1661,10 @@ function buildOverallSnapshot(baseReport, subjectCoverage) {
     totalTime: Number(sum.totalTimeMinutes) || 0,
     totalQuestions: Number(sum.totalQuestions) || 0,
     overallAccuracy: Number(sum.overallAccuracy) || 0,
-    subjectCoverage,
+    subjectCoverage: practicedCoverage,
     /** @deprecated use unpracticedSubjectsHe / sparseSubjectsHe */
-    lowExposureSubjectsHe: [...unpracticedSubjectsHe, ...sparseSubjectsHe],
-    unpracticedSubjectsHe,
+    lowExposureSubjectsHe: [...sparseSubjectsHe],
+    unpracticedSubjectsHe: [],
     sparseSubjectsHe,
     notableSubjectsHe,
   };
@@ -2111,15 +2115,23 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
   }
 
   const finalStep = thinEvidenceDowngraded ? "maintain_and_strengthen" : step;
-  const finalLabelRaw =
+  const gradeRelation = geForIdentity.gradeRelation;
+  let finalLabelRaw =
     finalStep === "remediate_same_level"
       ? label
       : outQuestions >= TOPIC_REC_MIN_ACTIONABLE_QUESTIONS
         ? "חיזוק ממוקד לפי הדוח"
         : "לאסוף עוד מידע לפני החלטה";
+  if (suppressRegisteredGradeStrengthenCopy(gradeRelation)) {
+    finalLabelRaw = resolveGradeAwareRecommendationStepLabelHe(gradeRelation, finalLabelRaw);
+  }
   const finalLabel =
     sanitizeParentSurfaceTextHe(finalLabelRaw, { subjectId }) ||
-    (finalStep === "remediate_same_level" ? "חיזוק ממוקד לפני קידום" : "חיזוק ממוקד לפי הדוח");
+    (suppressRegisteredGradeStrengthenCopy(gradeRelation)
+      ? resolveGradeAwareRecommendationStepLabelHe(gradeRelation, "")
+      : finalStep === "remediate_same_level"
+        ? "חיזוק ממוקד לפני קידום"
+        : "חיזוק ממוקד לפי הדוח");
   const conclusionStrength = cannotConcludeYet
     ? "withheld"
     : canonicalDecisionTier >= 3
@@ -2148,6 +2160,7 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
     gradeRelationSublineHe: reportMeta?.baseReport
       ? parentFacingDisplayLabelsForV2Unit(reportMeta.baseReport, u).gradeRelationSublineHe
       : null,
+    gradeRelation,
     topicStateId: cs?.topicStateId || null,
     stateHash: cs?.stateHash || null,
     recommendedNextStep: finalStep,
@@ -2954,6 +2967,7 @@ export function buildDetailedParentReportFromBaseReport(baseReport, meta = {}) {
     const enriched = {
       ...sp,
       subjectQuestionCount: Number(cov?.questionCount) || 0,
+      subjectTimeMinutes: Number(cov?.timeMinutes) || 0,
       subjectAccuracy: Number(cov?.accuracy) || 0,
     };
     return {
@@ -3007,6 +3021,7 @@ export function buildDetailedParentReportFromBaseReport(baseReport, meta = {}) {
     homePlan,
     nextPeriodGoals,
     parentProductContractV1,
+    parentAssignedActivitiesInPeriod: buildParentAssignedActivitiesInPeriod(baseReport),
     dataIntegrityReport: baseReport.dataIntegrityReport ?? null,
     contractsV1: {
       ...(baseReport?.contractsV1 && typeof baseReport.contractsV1 === "object" ? baseReport.contractsV1 : {}),

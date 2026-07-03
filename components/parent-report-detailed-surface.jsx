@@ -582,6 +582,64 @@ export function SubjectPhase3Insights({ sp, compact }) {
 }
 
 /**
+ * Parent-assigned activities in the selected period (detailed report transparency table).
+ * @param {{ rows?: object[]|null|undefined }} props
+ */
+export function ParentAssignedActivitiesSection({ rows }) {
+  const list = Array.isArray(rows) ? rows : [];
+  if (!list.length) return null;
+
+  return (
+    <section
+      className="pr-detailed-parent-activities mb-5 md:mb-6 min-w-0"
+      aria-labelledby="pr-detailed-parent-activities-heading"
+    >
+      <h2
+        id="pr-detailed-parent-activities-heading"
+        className="pr-detailed-section-title text-base md:text-lg font-extrabold tracking-tight text-white m-0 mb-3 md:mb-4 pb-2 border-b border-white/10"
+      >
+        פעילויות אישיות מהורה
+      </h2>
+      <div className="overflow-x-auto rounded-lg border border-white/10">
+        <table className="w-full text-sm text-right">
+          <thead>
+            <tr className="border-b border-white/15 bg-white/5">
+              <th className="p-2 font-semibold">פעילות</th>
+              <th className="p-2 font-semibold">מקצוע</th>
+              <th className="p-2 font-semibold">נושא</th>
+              <th className="p-2 font-semibold">כיתה</th>
+              <th className="p-2 font-semibold">תאריך</th>
+              <th className="p-2 font-semibold">שאלות</th>
+              <th className="p-2 font-semibold">דיוק</th>
+              <th className="p-2 font-semibold">זמן (דק׳)</th>
+              <th className="p-2 font-semibold">סטטוס</th>
+            </tr>
+          </thead>
+          <tbody>
+            {list.map((row, idx) => (
+              <tr
+                key={row.activityId || `${row.subjectId}-${row.topicKey}-${idx}`}
+                className="border-b border-white/10"
+              >
+                <td className="p-2">{row.activityLabelHe || "פעילות אישית מהורה"}</td>
+                <td className="p-2">{row.subjectLabelHe || "—"}</td>
+                <td className="p-2">{row.topicLabelHe || "—"}</td>
+                <td className="p-2">{row.gradeLabelHe || "—"}</td>
+                <td className="p-2">{row.lastActivityAtHe || "לא זמין"}</td>
+                <td className="p-2">{row.questionCount ?? 0}</td>
+                <td className="p-2">{row.accuracy ?? 0}%</td>
+                <td className="p-2">{row.timeMinutes ?? 0}</td>
+                <td className="p-2">{row.statusLabelHe || "—"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
+/**
  * Parent-facing topic rows grouped by unified tier.
  * @param {{ sp: object, hideTopicRowKeysForTiers?: Set<string> }} props
  */
@@ -591,6 +649,8 @@ export function SubjectTopicTierGroups({ sp, hideTopicRowKeysForTiers }) {
   const order = [
     PARENT_TOPIC_TIER.STRONG,
     PARENT_TOPIC_TIER.MONITOR,
+    PARENT_TOPIC_TIER.ADVANCED_PRACTICE,
+    PARENT_TOPIC_TIER.FOUNDATION_PRACTICE,
     PARENT_TOPIC_TIER.STRENGTHEN,
     PARENT_TOPIC_TIER.CLEAR_GAP,
     PARENT_TOPIC_TIER.NEEDS_GUIDANCE,
@@ -600,7 +660,12 @@ export function SubjectTopicTierGroups({ sp, hideTopicRowKeysForTiers }) {
   // (full mode only) should not repeat those same topics here.
   const tiersDedupedAgainstCards =
     hideTopicRowKeysForTiers && hideTopicRowKeysForTiers.size > 0
-      ? new Set([PARENT_TOPIC_TIER.STRENGTHEN, PARENT_TOPIC_TIER.CLEAR_GAP])
+      ? new Set([
+          PARENT_TOPIC_TIER.STRENGTHEN,
+          PARENT_TOPIC_TIER.CLEAR_GAP,
+          PARENT_TOPIC_TIER.ADVANCED_PRACTICE,
+          PARENT_TOPIC_TIER.FOUNDATION_PRACTICE,
+        ])
       : null;
   const sections = order
     .map((tier) => {
