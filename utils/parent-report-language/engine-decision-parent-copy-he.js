@@ -239,7 +239,7 @@ function buildDiagnosticBodyByDecision(p) {
 
   if (decision === "clear_topic_gap") {
     let body =
-      `ב${subj} בנושא ${topic} מופיע פער ברור בתרגול. ` +
+      `ב${subj} בנושא ${topic} נראה שיש כאן נושא שכדאי לחזק. ` +
       `הילד פתר ${q} שאלות בדיוק של ${acc}%, ולכן כדאי לעצור ולחזק את הבסיס לפני שמתקדמים.`;
     if (subskill) body += ` הנקודה המרכזית לחיזוק היא ${subskill}.`;
     return body;
@@ -405,7 +405,7 @@ export function buildExplainIdentifiedLineHe(engineCopy, label) {
     case "partial_stable":
       return `מה זוהה: שליטה חלקית בנושא ${t}.`;
     case "clear_topic_gap":
-      return `מה זוהה: פער ברור בתרגול בנושא ${t}.`;
+      return "מה כדאי לחזק: נראה שיש כאן נושא שכדאי לתרגל עוד.";
     case "topic_needs_strengthening":
       return `מה זוהה: נקודת חיזוק בנושא ${t}.`;
     case "early_direction_only":

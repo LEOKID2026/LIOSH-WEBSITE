@@ -211,6 +211,19 @@ export const PARENT_REPORT_SCENARIOS = {
           excellent: true,
           gradeKey: "g4",
           levelKey: "medium",
+          // Without an explicit behaviorProfile the engine falls back to
+          // dominantType "undetermined" (no behavior signal to classify), which
+          // produces "not enough data" copy that contradicts this scenario's own
+          // 24-question/93%-accuracy evidence. `computeRowBehaviorProfile` would
+          // classify this exact statistical shape (q>=8, acc>=88, wrongRatio<=0.14,
+          // few wrong events) as "stable_mastery" in production — set it explicitly
+          // here so the fixture matches real classifier behavior for this profile.
+          behaviorProfile: {
+            version: 1,
+            dominantType: "stable_mastery",
+            signals: { hintRate: 0, avgRetryOnWrong: null, changedAnswerRateOnWrong: null },
+            decisionTrace: [],
+          },
         }),
       },
       mistakes: {},

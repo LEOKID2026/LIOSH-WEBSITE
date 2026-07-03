@@ -51,8 +51,11 @@ export function patternDiagnosticsHasGlobalSignal(report) {
   return false;
 }
 
+/** Unified parent-facing copy when the window has practice but not enough for a clear picture. */
+export const PARENT_THIN_DATA_EXPLAINER_HE =
+  "יש תרגול בתקופה שנבחרה, אבל עדיין אין מספיק בסיס לתובנה ברורה. כדאי להמשיך עוד כמה ימים ולבדוק שוב.";
+
 /**
- * @param {{ mode: string, rows?: unknown[], legacyRecommendations?: unknown[] }} diagnosticsView
  * @param {Record<string, unknown>} report
  * @returns {{ state: string, recommendationsExplainerHe: string|null, lowConfidenceExplainerHe: string|null }}
  */
@@ -93,10 +96,8 @@ export function deriveParentDataPresenceForDiagnosticsView(report, diagnosticsVi
     if (gated >= Math.ceil(units.length * 0.65)) {
       return {
         state: ParentDataPresence.hasEvidenceLowConfidence,
-        recommendationsExplainerHe:
-          "יש נתוני תרגול בתקופה שנבחרה, אך עדיין אין מספיק בסיס ברור מהתרגולים — כדאי להמשיך בתרגול ולעקוב שוב לאחר מכן.",
-        lowConfidenceExplainerHe:
-          "קיימים נתונים, אך דרוש עוד תרגול כדי לחזק את הכיוון שנראה מהתרגולים.",
+        recommendationsExplainerHe: PARENT_THIN_DATA_EXPLAINER_HE,
+        lowConfidenceExplainerHe: PARENT_THIN_DATA_EXPLAINER_HE,
       };
     }
   }
@@ -106,15 +107,13 @@ export function deriveParentDataPresenceForDiagnosticsView(report, diagnosticsVi
     if (practicedSubjects >= 2 && mode === "new" && rowCount === 0 && totalQ > 0) {
       return {
         state: ParentDataPresence.hasEvidenceLowConfidence,
-        recommendationsExplainerHe:
-          "יש פעילות בנושאים, אך עדיין לא ניתן לסגור תמונה ברורה מהתרגולים — כדאי להמשיך בתרגול ולעקוב שוב לאחר מכן.",
-        lowConfidenceExplainerHe: "יש נתונים, אך דרוש עוד תרגול כדי לחזק את הכיוון.",
+        recommendationsExplainerHe: PARENT_THIN_DATA_EXPLAINER_HE,
+        lowConfidenceExplainerHe: PARENT_THIN_DATA_EXPLAINER_HE,
       };
     }
     return {
       state: ParentDataPresence.hasVolumeNoPattern,
-      recommendationsExplainerHe:
-        "יש נתוני תרגול בתקופה שנבחרה, אבל עדיין אין מספיק בסיס ברור מהתרגולים על פני המקצועות — כדאי להמשיך בתרגול ולעקוב שוב לאחר מכן.",
+      recommendationsExplainerHe: PARENT_THIN_DATA_EXPLAINER_HE,
       lowConfidenceExplainerHe: null,
     };
   }
@@ -122,16 +121,14 @@ export function deriveParentDataPresenceForDiagnosticsView(report, diagnosticsVi
   if (mode === "new" && rowCount === 0 && totalQ > 0) {
     return {
       state: ParentDataPresence.hasEvidenceLowConfidence,
-      recommendationsExplainerHe:
-        "יש פעילות בנושאים, אך עדיין לא ניתן לסגור תמונה ברורה מהתרגולים — כדאי להמשיך בתרגול ולעקוב שוב לאחר מכן.",
-      lowConfidenceExplainerHe: "יש נתונים, אך דרוש עוד תרגול כדי לחזק את הכיוון.",
+      recommendationsExplainerHe: PARENT_THIN_DATA_EXPLAINER_HE,
+      lowConfidenceExplainerHe: PARENT_THIN_DATA_EXPLAINER_HE,
     };
   }
 
   return {
     state: ParentDataPresence.hasVolumeNoPattern,
-    recommendationsExplainerHe:
-      "יש נתוני תרגול בתקופה שנבחרה, אבל עדיין אין מספיק בסיס ברור מהתרגולים על פני המקצועות — כדאי להמשיך בתרגול ולעקוב שוב לאחר מכן.",
+    recommendationsExplainerHe: PARENT_THIN_DATA_EXPLAINER_HE,
     lowConfidenceExplainerHe: null,
   };
 }
@@ -219,8 +216,7 @@ export const PARENT_REPORT_STANDALONE_ZERO_LEAK_RE = /(?<![#0-9])00000(?![0-9])/
  * When PR1 sanitization removed all bullet lines but the time window has practice volume —
  * do not tell parents “אין נתונים” (contradicts tables).
  */
-export const PARENT_BULLETS_EMPTY_WITH_VOLUME_HE =
-  "יש נתוני תרגול בתקופה שנבחרה, אך כרגע אין מספיק נקודות ברורות להצגה — המשך התרגול יעזור להבהיר את התמונה.";
+export const PARENT_BULLETS_EMPTY_WITH_VOLUME_HE = PARENT_THIN_DATA_EXPLAINER_HE;
 
 /**
  * Remove known internal/demo leakage from a string (defense in depth).

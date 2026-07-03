@@ -70,7 +70,11 @@ import {
   formatParentReportModeHe,
   formatParentReportSubjectHe,
 } from "../../utils/parent-report-language/parent-report-display-labels.he.js";
-import { deriveParentDataPresenceForDiagnosticsView } from "../../utils/parent-data-presence.js";
+import {
+  deriveParentDataPresenceForDiagnosticsView,
+  PARENT_THIN_DATA_EXPLAINER_HE,
+} from "../../utils/parent-data-presence.js";
+import { isDuplicateParentReportText } from "../../utils/parent-report-text-dedupe.js";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -1428,6 +1432,13 @@ export default function ParentReport() {
     const recs = report?.parentFacing?.homeRecommendations;
     return Array.isArray(recs) && recs.filter(Boolean).length > 0;
   }, [report]);
+  // Wave 2 Fix 1.2: "חוזקות שבלטו בתרגול" already covers subject-level strengths in
+  // detail, so the shorter Overview headline is only needed as a fallback when that
+  // block has nothing to show.
+  const hasRawMetricStrengthsHe = useMemo(() => {
+    const lines = report?.rawMetricStrengthsHe || report?.summary?.rawMetricStrengthsHe;
+    return Array.isArray(lines) && lines.filter(Boolean).length > 0;
+  }, [report]);
   const weeklyHomeActionHe = useMemo(
     () =>
       report
@@ -1440,9 +1451,23 @@ export default function ParentReport() {
     [shortContractTop, report, diagnosticsView]
   );
   const showWeeklyInShortContract = !hasServerHomeRecommendations;
+  const serverHomeRecommendationsListHe = useMemo(() => {
+    const recs = report?.parentFacing?.homeRecommendations;
+    return Array.isArray(recs) ? recs.map((x) => String(x || "").trim()).filter(Boolean) : [];
+  }, [report]);
+  const firstServerHomeRecommendationHe = serverHomeRecommendationsListHe[0] || null;
+  // Wave 2 Fix 1.1: the weekly action line already renders inside
+  // ParentReportShortContractPreview whenever server home recs are absent, and its
+  // content matches the first parentFacing.homeRecommendations item whenever server
+  // recs exist and there's no distinct shortContractTop.doNowHe override. Only show it
+  // again in the Overview block when it's genuinely not shown anywhere else already.
+  const weeklyHomeActionAlreadyShownElsewhere = useMemo(() => {
+    if (!weeklyHomeActionHe) return false;
+    if (!hasServerHomeRecommendations) return true; // shown via ParentReportShortContractPreview
+    return isDuplicateParentReportText(weeklyHomeActionHe, firstServerHomeRecommendationHe);
+  }, [weeklyHomeActionHe, hasServerHomeRecommendations, firstServerHomeRecommendationHe]);
   const showWeeklyInDiagnosticOverview =
-    Boolean(report?.summary?.diagnosticOverviewHe) &&
-    (hasServerHomeRecommendations || !shortContractTop);
+    Boolean(report?.summary?.diagnosticOverviewHe) && !weeklyHomeActionAlreadyShownElsewhere;
   const suppressChartsForThinEvidenceWindow = useMemo(() => {
     if (!report?.summary) return false;
     const q = Number(report.summary.totalQuestions) || 0;
@@ -2087,7 +2112,7 @@ export default function ParentReport() {
                 רמה
               </div>
               <div className="parent-report-print-summary-stat text-lg md:text-2xl font-bold text-purple-400">
-                Lv.{report.summary.playerLevel}
+                רמה {report.summary.playerLevel}
               </div>
               <div className="parent-report-print-summary-label text-[10px] md:text-xs text-white/60">
                 ⭐ {report.summary.stars} • 🏆 {report.summary.achievements}
@@ -2128,7 +2153,7 @@ export default function ParentReport() {
                   <span className="text-white/55">
                     {report.summary.diagnosticOverviewHe.mainFocusAreaIsHighAccuracy
                       ? "למעקב: "
-                      : "דורש תשומת לב כעת: "}
+                      : "כדאי לשים לב עכשיו: "}
                   </span>
                   {report.summary.diagnosticOverviewHe.mainFocusAreaLineHe}
                 </p>
@@ -2136,11 +2161,11 @@ export default function ParentReport() {
                 <p className="m-0 text-white/55 text-xs">
                   {Number(report.summary?.totalQuestions) > 0 &&
                   diagnosticsView?.presence?.state === "hasVolumeNoPattern"
-                    ? "יש נתוני תרגול בתקופה שנבחרה, אך עדיין אין מספיק בסיס ברור מהתרגולים כדי לזהות נושא דחוף אחד — כדאי להמשיך בתרגול ולעקוב שוב לאחר מכן."
-                    : "אין עדיין תחום שזוהה כדורש תשומת לב מיידית בתקופה שנבחרה."}
+                    ? "יש נתוני תרגול בתקופה שנבחרה, אך עדיין אין מספיק בסיס ברור מהתרגולים כדי לראות לאיזה נושא כדאי להתמקד — כדאי להמשיך בתרגול ולעקוב שוב לאחר מכן."
+                    : "אין עדיין תחום שכדאי לשים לב עכשיו בתקופה שנבחרה."}
                 </p>
               ) : null}
-              {report.summary.diagnosticOverviewHe.strongestAreaLineHe ? (
+              {report.summary.diagnosticOverviewHe.strongestAreaLineHe && !hasRawMetricStrengthsHe ? (
                 <p className="m-0 leading-relaxed">
                   <span className="text-white/55">תוצאות טובות — כדאי להמשיך לחזק: </span>
                   {report.summary.diagnosticOverviewHe.strongestAreaLineHe}
@@ -2307,7 +2332,10 @@ export default function ParentReport() {
             </div>
           </div>
 
-          <ParentReportInsight explanation={report.parentAiExplanation} />
+          <ParentReportInsight
+            explanation={report.parentAiExplanation}
+            excludeHomeTipTextsHe={serverHomeRecommendationsListHe}
+          />
 
           {enableParentCopilotOnShortEffective && copilotDetailedPayload ? (
             <div className="no-pdf mb-4 rounded-lg border border-cyan-500/20 bg-cyan-950/15 px-3 py-2">
@@ -2448,7 +2476,7 @@ export default function ParentReport() {
                         {data.excellent ? (
                           <span className="text-emerald-400 text-xs">✅ מצוין</span>
                         ) : data.needsPractice ? (
-                          <span className="text-red-400 text-xs">⚠️ דורש תרגול</span>
+                          <span className="text-red-400 text-xs">⚠️ כדאי לתרגל עוד</span>
                         ) : (
                           <span className="text-yellow-400 text-xs">👍 טוב</span>
                         )}
@@ -2589,7 +2617,7 @@ export default function ParentReport() {
                         {data.excellent ? (
                           <span className="text-emerald-400 text-xs">✅ מצוין</span>
                         ) : data.needsPractice ? (
-                          <span className="text-red-400 text-xs">⚠️ דורש תרגול</span>
+                          <span className="text-red-400 text-xs">⚠️ כדאי לתרגל עוד</span>
                         ) : (
                           <span className="text-yellow-400 text-xs">👍 טוב</span>
                         )}
@@ -2731,7 +2759,7 @@ export default function ParentReport() {
                         {data.excellent ? (
                           <span className="text-emerald-400 text-xs">✅ מצוין</span>
                         ) : data.needsPractice ? (
-                          <span className="text-red-400 text-xs">⚠️ דורש תרגול</span>
+                          <span className="text-red-400 text-xs">⚠️ כדאי לתרגל עוד</span>
                         ) : (
                           <span className="text-yellow-400 text-xs">👍 טוב</span>
                         )}
@@ -2877,7 +2905,7 @@ export default function ParentReport() {
                         {data.excellent ? (
                           <span className="text-emerald-400 text-xs">✅ מצוין</span>
                         ) : data.needsPractice ? (
-                          <span className="text-red-400 text-xs">⚠️ דורש תרגול</span>
+                          <span className="text-red-400 text-xs">⚠️ כדאי לתרגל עוד</span>
                         ) : (
                           <span className="text-yellow-400 text-xs">👍 טוב</span>
                         )}
@@ -3023,7 +3051,7 @@ export default function ParentReport() {
                         {data.excellent ? (
                           <span className="text-emerald-400 text-xs">✅ מצוין</span>
                         ) : data.needsPractice ? (
-                          <span className="text-red-400 text-xs">⚠️ דורש תרגול</span>
+                          <span className="text-red-400 text-xs">⚠️ כדאי לתרגל עוד</span>
                         ) : (
                           <span className="text-yellow-400 text-xs">👍 טוב</span>
                         )}
@@ -3169,7 +3197,7 @@ export default function ParentReport() {
                         {data.excellent ? (
                           <span className="text-emerald-400 text-xs">✅ מצוין</span>
                         ) : data.needsPractice ? (
-                          <span className="text-red-400 text-xs">⚠️ דורש תרגול</span>
+                          <span className="text-red-400 text-xs">⚠️ כדאי לתרגל עוד</span>
                         ) : (
                           <span className="text-yellow-400 text-xs">👍 טוב</span>
                         )}
@@ -3314,7 +3342,7 @@ export default function ParentReport() {
                         {data.excellent ? (
                           <span className="text-emerald-400 text-xs">✅ מצוין</span>
                         ) : data.needsPractice ? (
-                          <span className="text-red-400 text-xs">⚠️ דורש תרגול</span>
+                          <span className="text-red-400 text-xs">⚠️ כדאי לתרגל עוד</span>
                         ) : (
                           <span className="text-yellow-400 text-xs">👍 טוב</span>
                         )}
@@ -3385,7 +3413,7 @@ export default function ParentReport() {
                   <p className="parent-report-print-muted-text text-center text-sm md:text-base text-white/75 px-2 py-3">
                     {diagnosticsView.presence?.recommendationsExplainerHe ||
                       (Number(report.summary?.totalQuestions) > 0
-                        ? "יש נתוני תרגול בתקופה שנבחרה, אבל עדיין אין מספיק בסיס ברור מהתרגולים ברמת ההמלצות — כדאי להמשיך בתרגול ולעקוב שוב לאחר מכן."
+                        ? PARENT_THIN_DATA_EXPLAINER_HE
                         : "עדיין אין מספיק נתונים לתמונה ברורה מהתרגולים")}
                   </p>
                 )}
@@ -3667,7 +3695,10 @@ export default function ParentReport() {
                                 </div>
                               </div>
                             ))}
-                            {parentHomeActionHe ? (
+                            {parentHomeActionHe &&
+                            !serverHomeRecommendationsListHe.some((rec) =>
+                              isDuplicateParentReportText(parentHomeActionHe, rec)
+                            ) ? (
                               <div className="parent-report-rec-item p-2 md:p-3 rounded-lg border bg-yellow-500/15 border-yellow-400/45">
                                 <div className="flex items-start gap-2">
                                   <span className="text-lg shrink-0">👪</span>

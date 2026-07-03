@@ -153,7 +153,7 @@ export function subjectV2RecalibrationNeedYesHe() {
 }
 
 /** Canonical “no recalibration” — keep in sync with `SubjectPhase3Insights` visibility filter */
-export const SUBJECT_V2_RECALIBRATION_NEED_NO_HE = "אין צורך לשנות כיוון דחוף כרגע.";
+export const SUBJECT_V2_RECALIBRATION_NEED_NO_HE = "אין צורך לשנות כיוון שכדאי להתמקד בו כרגע.";
 
 export function subjectV2RecalibrationNeedNoHe() {
   return SUBJECT_V2_RECALIBRATION_NEED_NO_HE;

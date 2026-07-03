@@ -195,7 +195,7 @@ export function detectGradeSplitContradictions(units, baseReport) {
       .map((u) => {
         const { questions, accuracy } = unitMetrics(u);
         const label = parentFacingLabelForV2Unit(baseReport, u);
-        const band = questions >= 40 && accuracy >= 78 ? "יציב" : accuracy < 55 ? "דורש חיזוק" : "ביניים";
+        const band = questions >= 40 && accuracy >= 78 ? "יציב" : accuracy < 55 ? "כדאי לחזק" : "ביניים";
         return `${label}: ${questions} שאלות, דיוק ${accuracy}% (${band})`;
       })
       .join("; ");

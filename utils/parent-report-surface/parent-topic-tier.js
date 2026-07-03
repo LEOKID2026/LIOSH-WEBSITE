@@ -17,8 +17,8 @@ const TIER_LABEL_HE = Object.freeze({
   strong: "חזק",
   monitor: "במעקב",
   strengthen: "לחיזוק",
-  needs_guidance: "דורש ליווי",
-  clear_gap: "פער ברור",
+  needs_guidance: "כדאי ללוות",
+  clear_gap: "כדאי לחזק",
   low_evidence: "מעט דוגמאות",
 });
 
@@ -26,8 +26,8 @@ const TIER_SECTION_TITLE_HE = Object.freeze({
   strong: "נושאים חזקים",
   monitor: "נושאים במעקב",
   strengthen: "נושאים לחיזוק",
-  needs_guidance: "נושאים שדורשים ליווי",
-  clear_gap: "נושאים עם פער ברור",
+  needs_guidance: "נושאים שכדאי ללוות",
+  clear_gap: "נושאים שכדאי לחזק",
   low_evidence: "נושאים עם מעט נתונים",
 });
 

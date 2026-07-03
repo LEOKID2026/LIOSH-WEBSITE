@@ -30,26 +30,12 @@ export function buildParentSurfaceWhatToNoticeHe(payload) {
     .filter(Boolean)
     .filter((line) => !UNPRACTICED_SUBJECTS_BULLET_RE.test(String(line)));
 
-  const tierLines = [];
-  for (const sp of payload?.subjectProfiles || []) {
-    for (const row of sp?.topicOverviewRows || []) {
-      const tier = String(row?.parentTier || "");
-      if (tier === PARENT_TOPIC_TIER.CLEAR_GAP) {
-        tierLines.push(
-          `${sp.subjectLabelHe}: ${row.narrativeTitleHe} — פער ברור (${row.accuracy}% ב-${row.questions} שאלות).`
-        );
-      } else if (tier === PARENT_TOPIC_TIER.STRENGTHEN) {
-        tierLines.push(`${sp.subjectLabelHe}: ${row.narrativeTitleHe} — כדאי חיזוק (${row.accuracy}%).`);
-      } else if (tier === PARENT_TOPIC_TIER.STRONG) {
-        tierLines.push(`${sp.subjectLabelHe}: ${row.narrativeTitleHe} — חזק (${row.accuracy}%).`);
-      }
-    }
-  }
-
-  const merged = capAndDedupeParentSurfaceLines(
-    [...insights, ...cross, ...tierLines],
-    { max: 3 }
-  );
+  // Wave 2 Fix 2.3: this global "מה חשוב לדעת" section used to auto-generate one
+  // line per topic tier (tierLines), but each of those topics is already shown
+  // inside its own subject card (tier groups + topic recommendation cards), so
+  // repeating them here only doubled up the same idea. Keep only real cross-cutting
+  // insights here.
+  const merged = capAndDedupeParentSurfaceLines([...insights, ...cross], { max: 3 });
   return merged;
 }
 
@@ -66,15 +52,12 @@ export function buildParentSurfaceHomeActionsHe(payload) {
     ? payload.homePlan.itemsHe.map((x) => sanitizeParentSurfaceTextHe(x)).filter(Boolean)
     : [];
 
-  const fromTopics = [];
-  for (const sp of payload?.subjectProfiles || []) {
-    const primary = sp?.primaryParentActionHe;
-    if (primary) {
-      fromTopics.push(sanitizeParentSurfaceTextHe(primary, { subjectId: sp.subject }));
-    }
-  }
-
-  const source = server.length ? server : plan.length ? plan : fromTopics;
+  // Wave 2 Fix 2.6: `fromTopics` is only a fallback built from the very same
+  // per-subject primary actions that already render inside each subject card
+  // (SubjectPrimaryActionBlock). Showing it globally would just repeat those same
+  // lines a second time, so the global "מה מומלץ לעשות בבית" section is shown only
+  // when there's a real, independent source (server home recs or an explicit home plan).
+  const source = server.length ? server : plan.length ? plan : [];
   return capAndDedupeParentSurfaceLines(source, { max: 3 });
 }
 

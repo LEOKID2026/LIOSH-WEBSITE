@@ -147,7 +147,7 @@ function buildLimitations(overall, subjectInsights) {
 function buildDeterministicRecommendationsHe(strengths, focusAreas, mistakePatterns, overall) {
   const out = [];
   if (focusAreas.length > 0) {
-    out.push(`מומלץ לתרגל בעדינות בבית את התחומים שדורשים חיזוק: ${focusAreas.map((f) => f.displayNameHe).join(", ")}.`);
+    out.push(`מומלץ לתרגל בעדינות בבית את התחומים שכדאי לחזק: ${focusAreas.map((f) => f.displayNameHe).join(", ")}.`);
   }
   if (strengths.length > 0) {
     out.push(`כדאי להמשיך לעודד את התחומים שבהם התרגול נראה יציב: ${strengths.map((s) => s.displayNameHe).join(", ")}.`);

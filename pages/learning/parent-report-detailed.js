@@ -19,7 +19,6 @@ import {
 import {
   buildParentSurfaceHomeActionsHe,
   buildParentSurfaceWhatToNoticeHe,
-  PARENT_TOPIC_TIER,
   scrubRepeatedBoilerplateFromSnapshotHe,
 } from "../../utils/parent-report-surface/index.js";
 import ParentReportDataHealthNote from "../../components/parent/ParentReportDataHealthNote.jsx";
@@ -39,6 +38,7 @@ import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import { ParentDiagnosticExplanationBlock } from "../../components/parent-diagnostic-explanation-block.jsx";
 import { normalizeParentFacing } from "../../components/parent/ParentReportParentSections.jsx";
 import { PARENT_BULLETS_EMPTY_WITH_VOLUME_HE } from "../../utils/parent-data-presence.js";
+import { isDuplicateParentReportText } from "../../utils/parent-report-text-dedupe.js";
 import ParentCopilotShell from "../../components/parent-copilot/parent-copilot-shell.jsx";
 import { ParentReportInsight } from "../../components/ParentReportInsight.jsx";
 import {
@@ -145,6 +145,12 @@ function GoalItemCards({ items, windowTotalQuestions = 0 }) {
 function SubjectParentLetter({ sp }) {
   const letter = useMemo(() => buildSubjectParentLetter(sp), [sp]);
   const primaryWeaknessExplanation = sp?.topWeaknesses?.[0]?.parentDiagnosticExplanationV1 || null;
+  // Wave 2 Fix 2.1: `SubjectPrimaryActionBlock` ("מה כדאי לעשות במקצוע הזה") is the
+  // single canonical home-action callout per subject. Only keep the letter's own
+  // "איך כדאי לעבוד על זה" line when it says something meaningfully different.
+  const showLetterHomeAction =
+    Boolean(letter.homeAction) &&
+    !isDuplicateParentReportText(letter.homeAction, sp?.primaryParentActionHe);
   return (
     <div className="pr-detailed-subject-letter space-y-3 rounded-xl border border-white/12 bg-gradient-to-br from-white/[0.06] to-white/[0.02] p-3 md:p-4">
       {letter.opening ? (
@@ -163,7 +169,7 @@ function SubjectParentLetter({ sp }) {
           />
         </div>
       ) : null}
-      {letter.homeAction ? (
+      {showLetterHomeAction ? (
         <div className="parent-surface-only rounded-lg border border-amber-400/28 bg-amber-950/14 px-3 py-2.5">
           <p className="pr-detailed-mini-heading font-bold text-amber-100/95 mb-1 text-sm">
             איך כדאי לעבוד על זה
@@ -445,7 +451,7 @@ export default function ParentReportDetailedPage() {
               /failed to fetch|networkerror|load failed|network request failed/i.test(errMsg);
             setParentReportError(
               networkLike
-                ? "שגיאת רשת בטעינת הדוח — ודאו שהשרת פועל (npm run dev, פורט 3001) ונסו לרענן."
+                ? "שגיאת רשת בטעינת הדוח — נסו לרענן. אם זה חוזר, פנו אלינו."
                 : "לא ניתן לטעון את הדוח המקיף כרגע."
             );
             setPayload(null);
@@ -712,7 +718,7 @@ export default function ParentReportDetailedPage() {
   return (
     <Layout {...layoutProps}>
       <Head>
-        <title>דוח מקיף לתקופה — LIOSH</title>
+        <title>דוח מקיף לתקופה — Leo Kids</title>
         <style>{`
           .pr-detailed-page {
             --pr-h1: 1.35rem;
@@ -1729,7 +1735,12 @@ export default function ParentReportDetailedPage() {
                           <div className="pr-detailed-subject-inner space-y-4 pt-3">
                             <SubjectPhase3Insights sp={sp} compact={false} />
                             <SubjectParentLetter sp={sp} />
-                            <SubjectTopicTierGroups sp={sp} />
+                            <SubjectTopicTierGroups
+                              sp={sp}
+                              hideTopicRowKeysForTiers={
+                                new Set((sp.topicRecommendations || []).map((tr) => tr.topicRowKey))
+                              }
+                            />
                             <SubjectPrimaryActionBlock actionHe={sp.primaryParentActionHe} />
                             {sp.evidenceExamples?.length ? (
                               <div className="pr-detailed-tier-examples">
@@ -1751,18 +1762,7 @@ export default function ParentReportDetailedPage() {
 
                             {sp.topicRecommendations?.length ? (
                               <div className="pr-detailed-topic-rec-block parent-surface-only">
-                                <p className="pr-detailed-topic-rec-head">
-                                  {(() => {
-                                    const tiers = sp.topicGroupsByTier || {};
-                                    if ((tiers[PARENT_TOPIC_TIER.CLEAR_GAP] || []).length) {
-                                      return "נושאים עם פער ברור";
-                                    }
-                                    if ((tiers[PARENT_TOPIC_TIER.STRENGTHEN] || []).length) {
-                                      return "נושאים לחיזוק";
-                                    }
-                                    return "נושאים שדורשים ליווי";
-                                  })()}
-                                </p>
+                                <p className="pr-detailed-topic-rec-head">המלצות מפורטות לפי נושא</p>
                                 <div className="space-y-2.5">
                                   {(() => {
                                     const seenStepLabels = new Set();

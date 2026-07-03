@@ -33,6 +33,7 @@ import {
   PARENT_BULLETS_EMPTY_WITH_VOLUME_HE,
   stripKnownParentReportLeakageHe,
 } from "../utils/parent-data-presence.js";
+import { isDuplicateParentReportText } from "../utils/parent-report-text-dedupe.js";
 
 const PR1_RETENTION_LABEL_HE = {
   low: "נמוך",
@@ -182,7 +183,7 @@ export function ExecutiveSummarySection({ es, compact }) {
                 {pr1ParentVisibleTextHe(es.topImmediateParentActionHe)}
               </p>
             ) : (
-              <p className="m-0 text-white/55">אין נושא דחוף השבוע — שגרת תרגול קצרה מספיקה.</p>
+              <p className="m-0 text-white/55">אין נושא שכדאי להתמקד בו השבוע — שגרת תרגול קצרה מספיקה.</p>
             )}
             {es.secondPriorityActionHe ? (
               <p className="m-0">
@@ -200,7 +201,7 @@ export function ExecutiveSummarySection({ es, compact }) {
             ) : null}
             {es.deferForNowAreasHe?.length ? (
               <div className="m-0">
-                <span className="text-white/45 font-bold">לא דחוף עכשיו — אפשר להמתין: </span>
+                <span className="text-white/45 font-bold">לא צריך להתמקד בזה עכשיו — אפשר להמתין: </span>
                 <span className="text-white/[0.82]">{es.deferForNowAreasHe.map(pr1ParentVisibleTextHe).join(" · ")}</span>
               </div>
             ) : null}
@@ -580,8 +581,11 @@ export function SubjectPhase3Insights({ sp, compact }) {
   );
 }
 
-/** Parent-facing topic rows grouped by unified tier. */
-export function SubjectTopicTierGroups({ sp }) {
+/**
+ * Parent-facing topic rows grouped by unified tier.
+ * @param {{ sp: object, hideTopicRowKeysForTiers?: Set<string> }} props
+ */
+export function SubjectTopicTierGroups({ sp, hideTopicRowKeysForTiers }) {
   const groups = sp?.topicGroupsByTier;
   if (!groups || typeof groups !== "object") return null;
   const order = [
@@ -592,9 +596,19 @@ export function SubjectTopicTierGroups({ sp }) {
     PARENT_TOPIC_TIER.NEEDS_GUIDANCE,
     PARENT_TOPIC_TIER.LOW_EVIDENCE,
   ];
+  // Wave 2 Fix 2.4: tiers that already get a dedicated topic recommendation card
+  // (full mode only) should not repeat those same topics here.
+  const tiersDedupedAgainstCards =
+    hideTopicRowKeysForTiers && hideTopicRowKeysForTiers.size > 0
+      ? new Set([PARENT_TOPIC_TIER.STRENGTHEN, PARENT_TOPIC_TIER.CLEAR_GAP])
+      : null;
   const sections = order
     .map((tier) => {
-      const rows = Array.isArray(groups[tier]) ? groups[tier] : [];
+      const allRows = Array.isArray(groups[tier]) ? groups[tier] : [];
+      const rows =
+        tiersDedupedAgainstCards && tiersDedupedAgainstCards.has(tier)
+          ? allRows.filter((row) => !hideTopicRowKeysForTiers.has(row?.topicRowKey))
+          : allRows;
       if (!rows.length) return null;
       return (
         <div key={tier} className="parent-surface-only pr-detailed-topic-tier-group mb-3">
@@ -646,6 +660,10 @@ export function SubjectSummaryBlock({ sp }) {
   const riskChips = useMemo(() => subjectMajorRiskLabelsHe(sp?.majorRiskFlagsAcrossRows, 4), [sp]);
   const q = Number(sp?.subjectQuestionCount) || 0;
   const a = Number(sp?.subjectAccuracy) || 0;
+  // Wave 2 Fix 2.2: keep a single home-action callout per subject in the summary
+  // report too — `SubjectPrimaryActionBlock` is the canonical one.
+  const showLetterHomeAction =
+    Boolean(L.homeAction) && !isDuplicateParentReportText(L.homeAction, sp?.primaryParentActionHe);
   return (
     <div className="pr-detailed-summary-subject pr-detailed-subject-stack min-w-0">
       <div className="pr-detailed-subject-heading">
@@ -662,7 +680,7 @@ export function SubjectSummaryBlock({ sp }) {
         {L.middle ? (
           <p className="pr-detailed-body-text text-sm leading-relaxed m-0 text-white/[0.86]">{L.middle}</p>
         ) : null}
-        {L.homeAction ? (
+        {showLetterHomeAction ? (
           <div className="parent-surface-only rounded-lg border border-amber-400/28 bg-amber-950/14 px-3 py-2.5">
             <p className="pr-detailed-mini-heading font-bold text-amber-100/95 mb-1 text-sm">איך כדאי לעבוד על זה</p>
             <p className="pr-detailed-body-text text-sm leading-relaxed m-0">{L.homeAction}</p>

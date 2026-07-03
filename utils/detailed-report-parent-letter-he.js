@@ -191,7 +191,7 @@ function buildSubjectOpeningLineHe(sp, lab) {
   }
   if (w0) {
     const coreW = displayTopicCoreHe(w0.labelHe) || displayTopicPhraseHe(w0.labelHe);
-    const pre = sparse ? "עדיין מוקדם לקבוע בביטחון, אבל " : "";
+    const pre = sparse ? "עדיין מוקדם לקבוע בוודאות, אבל " : "";
     return stripGuillemetsHe(`${pre}הנושא הבולט כרגע ב${lab} הוא ${coreW}.`);
   }
   if (ex0) {

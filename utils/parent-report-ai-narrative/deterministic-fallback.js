@@ -20,7 +20,7 @@ function bandToCopy(band) {
     case "mixed":
       return "תרגול מעורב, חלק מהתחומים יציבים יותר";
     default:
-      return "תרגול שעדיין דורש זהירות בפרשנות";
+      return "תרגול שעדיין כדאי להתייחס אליו בזהירות";
   }
 }
 

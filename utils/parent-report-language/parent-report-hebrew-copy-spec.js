@@ -299,7 +299,7 @@ export function mixedSubjectStrongWeakHe(subject, strongTopic, weakTopic) {
   const weak = clean(weakTopic);
   if (!subj || !strong || !weak || strong === weak) return "";
   return (
-    `ב${subj} יש תמונה מעורבת: בנושא ${strong} נראית נקודת חוזק, אבל בנושא ${weak} עדיין יש נקודה שדורשת חיזוק. ` +
+    `ב${subj} יש תמונה מעורבת: בנושא ${strong} נראית נקודת חוזק, אבל בנושא ${weak} עדיין יש נקודה שכדאי לחזק. ` +
     "לכן הדוח מציג את המקצוע לפי נושאים ולא כמסקנה כללית אחת."
   );
 }
@@ -417,7 +417,7 @@ export function rawMetricStrengthPositiveHe(subject, q, acc) {
 export function rawMetricStrengthMixedSubjectHe(subject) {
   const subj = clean(subject);
   return (
-    `ב${subj} יש גם נקודות טובות, אבל הדוח מצא נושא מסוים שדורש חיזוק. ` +
+    `ב${subj} יש גם נקודות טובות, אבל הדוח מצא נושא מסוים שכדאי לחזק. ` +
     "לכן חשוב להסתכל על הפירוט לפי נושאים ולא להסיק מסקנה כללית על כל המקצוע."
   );
 }

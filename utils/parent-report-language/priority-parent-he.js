@@ -14,7 +14,7 @@ export function priorityLevelParentLabelHe(level) {
     case "P2":
       return "אין צורך בפעולה מיוחדת השבוע — תרגול קצר ורגיל מספיק.";
     case "P1":
-      return "אין כרגע נושא דחוף — שגרת תרגול קצרה מספיקה.";
+      return "אין כרגע נושא שכדאי להתמקד בו — שגרת תרגול קצרה מספיקה.";
     default:
       return null;
   }

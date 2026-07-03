@@ -12,6 +12,7 @@
 
 import React from "react";
 import { normalizeParentFacingHe } from "../utils/parent-report-language/parent-facing-normalize-he.js";
+import { filterOutParentReportDuplicates } from "../utils/parent-report-text-dedupe.js";
 
 function isObject(value) {
   return value != null && typeof value === "object" && !Array.isArray(value);
@@ -131,12 +132,33 @@ function StructuredBlock({ structured, sourceLabel }) {
  * @param {{
  *   explanation: { ok?: boolean; text?: string; source?: string; structured?: object | null; structuredSource?: string | null } | null | undefined;
  *   className?: string;
+ *   excludeHomeTipTextsHe?: string[];
  * }} props
  */
-export function ParentReportInsight({ explanation, className = "" }) {
+export function ParentReportInsight({ explanation, className = "", excludeHomeTipTextsHe = [] }) {
   if (!explanation?.ok) return null;
-  const structured = readStructured(explanation);
+  const structuredRaw = readStructured(explanation);
   const fallbackText = typeof explanation?.text === "string" ? normalizeParentFacingHe(explanation.text) : "";
+
+  // Wave 2 Fix 1.3: avoid repeating a home tip that already appeared verbatim (or
+  // near-verbatim) in "מה מומלץ לעשות בבית" (ParentReportParentSections).
+  let structured =
+    structuredRaw && Array.isArray(excludeHomeTipTextsHe) && excludeHomeTipTextsHe.length > 0
+      ? {
+          ...structuredRaw,
+          homeTips: filterOutParentReportDuplicates(structuredRaw.homeTips, excludeHomeTipTextsHe),
+        }
+      : structuredRaw;
+  if (
+    structured &&
+    !structured.summary &&
+    structured.strengths.length === 0 &&
+    structured.focusAreas.length === 0 &&
+    structured.homeTips.length === 0 &&
+    !structured.cautionNote
+  ) {
+    structured = null;
+  }
 
   if (!structured && !fallbackText.trim()) return null;
 

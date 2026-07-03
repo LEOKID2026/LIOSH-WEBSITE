@@ -68,7 +68,7 @@ export const PARENT_REPORT_SOURCE_LABELS_HE = {
   partial: "חלקי",
   available: "זמין",
   not_tracked: "לא נמדד",
-  requires_events: "דורש איסוף נתונים",
+  requires_events: "צריך עוד נתונים",
 };
 
 /** @type {Record<string, string>} */
@@ -86,7 +86,7 @@ export const PARENT_REPORT_STATUS_LABELS_HE = {
   empty: "אין נתונים",
   unknown: "לא ידוע",
   not_tracked: "לא נמדד",
-  requires_events: "דורש איסוף נתונים",
+  requires_events: "צריך עוד נתונים",
   available: "זמין",
   true: "כן",
   false: "לא",
