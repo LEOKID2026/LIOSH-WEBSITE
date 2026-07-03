@@ -307,7 +307,7 @@ async function main() {
     const childPin = "4321";
     await addModal.getByPlaceholder("שם הילד").fill(childName);
     await addModal.locator("select").first().selectOption({ index: 1 });
-    await addModal.getByPlaceholder("6 ספרות").fill(linkLeo);
+    await addModal.getByPlaceholder(/8 ספרות/).fill(linkLeo);
     await addModal.getByPlaceholder("לדוגמה: noam123").fill(childUser);
     await addModal.getByPlaceholder("4 ספרות").fill(childPin);
     await addModal.getByRole("button", { name: "הוסף ילד" }).click();

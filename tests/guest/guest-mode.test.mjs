@@ -27,23 +27,25 @@ import {
 import { GAME_ACCESS_STATES } from "../../lib/games/game-catalog.constants.js";
 
 describe("guest leo number", () => {
-  test("normalize accepts 6 digits", () => {
-    assert.equal(normalizeLeoNumber("482913"), "482913");
-    assert.equal(normalizeLeoNumber("48-29-13"), "482913");
+  test("normalize accepts 8 digits", () => {
+    assert.equal(normalizeLeoNumber("48291301"), "48291301");
+    assert.equal(normalizeLeoNumber("4829-1301"), "48291301");
   });
 
-  test("normalize rejects wrong length", () => {
-    assert.equal(normalizeLeoNumber("12345"), null);
+  test("normalize rejects wrong length and leading zero", () => {
     assert.equal(normalizeLeoNumber("1234567"), null);
+    assert.equal(normalizeLeoNumber("123456789"), null);
+    assert.equal(normalizeLeoNumber("01234567"), null);
+    assert.equal(normalizeLeoNumber("482913"), null);
   });
 });
 
 describe("guest display", () => {
   test("formats guest greeting", () => {
-    const student = { account_kind: "guest", leo_number: "482913" };
+    const student = { account_kind: "guest", leo_number: "48291301" };
     assert.equal(isGuestStudent(student), true);
-    assert.equal(formatGuestDisplayNameHe(student), "אורח 482913");
-    assert.equal(formatStudentGreetingHe(student), "שלום אורח 482913");
+    assert.equal(formatGuestDisplayNameHe(student), "אורח 48291301");
+    assert.equal(formatStudentGreetingHe(student), "שלום אורח 48291301");
   });
 
   test("registered student keeps name greeting", () => {

@@ -211,9 +211,9 @@ export default function ParentDashboardPage() {
     } else {
       const createdStudentId = payload?.student?.id;
       let credentialMessage = "";
-      const leoDigits = String(newGuestLeoNumber || "").replace(/\D/g, "").slice(0, 6);
+      const leoDigits = String(newGuestLeoNumber || "").replace(/\D/g, "").slice(0, 8);
 
-      if (leoDigits.length === 6 && createdStudentId) {
+      if (leoDigits.length === 8 && createdStudentId) {
         const linkRes = await fetch("/api/parent/guest/link", {
           method: "POST",
           headers: {
@@ -557,8 +557,8 @@ export default function ParentDashboardPage() {
         <input
           className={T.inputMt}
           value={newGuestLeoNumber}
-          onChange={(e) => setNewGuestLeoNumber(e.target.value.replace(/\D/g, "").slice(0, 6))}
-          placeholder="6 ספרות"
+          onChange={(e) => setNewGuestLeoNumber(e.target.value.replace(/\D/g, "").slice(0, 8))}
+          placeholder="מספר ליאו — 8 ספרות"
           inputMode="numeric"
           autoComplete="off"
           disabled={busy || students.length >= studentLimit}

@@ -358,8 +358,8 @@ async function main() {
     leo1 = start1.json.leoNumber;
     resumeToken1 = start1.json.resumeToken;
     guestId1 = start1.json.student?.id;
-    if (/^\d{6}$/.test(leo1)) pass("guest-leo-6-digits", leo1);
-    else fail("guest-leo-6-digits", leo1);
+    if (/^\d{8}$/.test(leo1) && /^[1-9]/.test(leo1)) pass("guest-leo-8-digits", leo1);
+    else fail("guest-leo-8-digits", leo1);
   } else {
     fail("guest-start", JSON.stringify(start1.json).slice(0, 150));
   }

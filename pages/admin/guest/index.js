@@ -199,9 +199,9 @@ export default function AdminGuestPage() {
               <div className="flex gap-2 justify-end">
                 <input
                   className="rounded bg-black/30 border border-white/20 px-3 py-1"
-                  placeholder="חיפוש לפי 6 ספרות"
+                  placeholder="חיפוש לפי מספר ליאו (8 ספרות)"
                   value={searchLeo}
-                  onChange={(e) => setSearchLeo(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                  onChange={(e) => setSearchLeo(e.target.value.replace(/\D/g, "").slice(0, 8))}
                 />
                 <button
                   type="button"

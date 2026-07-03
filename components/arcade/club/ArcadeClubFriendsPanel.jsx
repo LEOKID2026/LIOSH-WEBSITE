@@ -186,7 +186,8 @@ export default function ArcadeClubFriendsPanel({ gh, leoNumber = null, leoNumber
         <div className="flex flex-wrap gap-2 justify-end">
           <input
             className={gh.input}
-            placeholder="מספר ליאו או שם תצוגה"
+            placeholder="מספר ליאו (8 ספרות) או שם תצוגה"
+            maxLength={32}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
