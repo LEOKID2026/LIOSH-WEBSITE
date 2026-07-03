@@ -87,6 +87,21 @@ export default function ArcadeClubFriendsPanel({ gh, leoNumber = null, leoNumber
         body: JSON.stringify({ action: "send", toStudentId, gameKey: "fourline" }),
       });
       const json = await res.json().catch(() => ({}));
+      if (json.ok && json.room?.id) {
+        const gk = json.room.game_key || json.invite?.game_key || "fourline";
+        const routes = {
+          fourline: "/student/games/fourline",
+          ludo: "/student/games/ludo",
+          "snakes-and-ladders": "/student/games/snakes-and-ladders",
+          checkers: "/student/games/checkers",
+          chess: "/student/games/chess",
+          dominoes: "/student/games/dominoes",
+          bingo: "/student/games/bingo",
+        };
+        const base = routes[gk] || routes.fourline;
+        window.location.href = `${base}?roomId=${encodeURIComponent(String(json.room.id))}`;
+        return;
+      }
       setMessage(json.ok ? "הזמנה נשלחה" : json.message || json.error || "שגיאה");
     } finally {
       setBusy(false);

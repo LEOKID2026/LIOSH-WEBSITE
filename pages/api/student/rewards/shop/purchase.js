@@ -5,6 +5,7 @@ import {
 } from "../../../../../lib/learning-supabase/student-auth";
 import { guardCookieMutationOrigin } from "../../../../../lib/security/api-guards.js";
 import { guardCardRewardsApi } from "../../../../../lib/rewards/guards.server.js";
+import { isCardRewardsSystemEnabledInDb } from "../../../../../lib/rewards/server/reward-settings.server.js";
 import { purchaseShopCard } from "../../../../../lib/rewards/server/reward-shop.server.js";
 import { assertGuestShopAllowed } from "../../../../../lib/guest/guest-economy-guard.server.js";
 
