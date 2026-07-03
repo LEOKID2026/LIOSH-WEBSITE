@@ -11,7 +11,12 @@ import { PARENT_REPORT_PORTAL_GATE } from "../../../lib/parent-report-server-tru
 const pages = ["pages/learning/parent-report.js", "pages/learning/parent-report-detailed.js"];
 
 try {
-  assert.ok(PARENT_REPORT_PORTAL_GATE.hintHe.includes("localStorage"));
+  // Parent-facing copy no longer uses the technical term "localStorage" — verify
+  // the hint still forbids building reports from browser-local device data.
+  assert.match(
+    PARENT_REPORT_PORTAL_GATE.hintHe,
+    /דפדפן|מכשיר|מקומי|נתונים שמורים/
+  );
   for (const rel of pages) {
     const src = readFileSync(join(TRUTH_GATES_ROOT, rel), "utf8");
     assert.ok(src.includes("PARENT_REPORT_PORTAL_GATE"), `${rel} renders portal gate`);
