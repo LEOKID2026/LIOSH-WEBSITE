@@ -1,5 +1,6 @@
 import { requireArcadeStudent } from "../../../lib/arcade/server/arcade-auth";
 import { ARCADE_GAME_REGISTRY } from "../../../lib/arcade/game-registry";
+import { effectiveRoomPlayerCap } from "../../../lib/arcade/server/arcade-game-policy";
 import { getEntryCostOptions } from "../../../lib/rewards/server/economy-config.server.js";
 import { buildStudentGameAccessPayload } from "../../../lib/games/server/game-access.server.js";
 
@@ -53,7 +54,7 @@ export default async function handler(req, res) {
       enabled: r.enabled,
       foundationOnly: r.foundation_only,
       minPlayers: r.min_players,
-      maxPlayers: r.max_players,
+      maxPlayers: effectiveRoomPlayerCap(r.game_key, r.max_players),
       supportsQuickMatch: r.supports_quick_match,
       supportsPublicRooms: r.supports_public_rooms,
       supportsPrivateRooms: r.supports_private_rooms,
