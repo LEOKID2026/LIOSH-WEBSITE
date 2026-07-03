@@ -7,15 +7,16 @@ import GamesHubNavBar from "../../../components/games/GamesHubNavBar.jsx";
 import GamesHubHeader from "../../../components/games/GamesHubHeader.jsx";
 import {
   LEARNING_DEV_PROTOTYPES_HUB,
+  LEO_DOG_PROTOTYPE,
   SOLO_DEV_PROTOTYPES_PLAY_HUB,
 } from "../../../lib/solo-games/dev-prototype-hub-list.js";
 
-/** Dev hub — two entry points: solo play prototypes + learning prototypes */
+/** Dev hub — pet prototype + solo play + learning prototypes */
 export default function SoloGamePrototypesHubPage() {
   const { theme } = useStudentTheme();
   const { GH } = useGamesHubUi();
 
-  const sections = [SOLO_DEV_PROTOTYPES_PLAY_HUB, LEARNING_DEV_PROTOTYPES_HUB];
+  const sections = [LEO_DOG_PROTOTYPE, SOLO_DEV_PROTOTYPES_PLAY_HUB, LEARNING_DEV_PROTOTYPES_HUB];
 
   return (
     <>

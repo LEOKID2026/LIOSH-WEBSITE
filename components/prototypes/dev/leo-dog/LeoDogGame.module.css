@@ -1,0 +1,1100 @@
+/* Leo Dog prototype — animated CSS/SVG pet */
+
+.scene {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: linear-gradient(180deg, #87ceeb 0%, #b8e6ff 35%, #90d26d 35%, #6bbf59 100%);
+  border-radius: 1rem;
+  touch-action: manipulation;
+}
+
+.roomDecor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.cloud {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 999px;
+  opacity: 0.7;
+  animation: cloudDrift 18s ease-in-out infinite;
+}
+
+.cloud1 {
+  width: 72px;
+  height: 28px;
+  top: 8%;
+  left: 12%;
+  animation-delay: 0s;
+}
+
+.cloud2 {
+  width: 56px;
+  height: 22px;
+  top: 14%;
+  right: 18%;
+  animation-delay: -6s;
+}
+
+.fence {
+  position: absolute;
+  bottom: 28%;
+  left: 5%;
+  right: 5%;
+  height: 36px;
+  background: repeating-linear-gradient(
+    90deg,
+    #c4956a 0 8px,
+    transparent 8px 16px
+  );
+  opacity: 0.35;
+  border-top: 3px solid #a67c52;
+}
+
+.grassPatch {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 32%;
+  background: linear-gradient(180deg, transparent, rgba(74, 140, 58, 0.25));
+  pointer-events: none;
+}
+
+.speechBubble {
+  position: absolute;
+  top: 6%;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: min(92%, 320px);
+  padding: 0.55rem 0.85rem;
+  background: #fff;
+  border: 2px solid #fbbf24;
+  border-radius: 1rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1e293b;
+  text-align: center;
+  line-height: 1.35;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  z-index: 20;
+  animation: bubblePop 0.35s ease-out;
+}
+
+.speechBubble::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 8px solid transparent;
+  border-top-color: #fbbf24;
+}
+
+.dogWrap {
+  position: relative;
+  width: min(72vw, 280px);
+  height: min(58vw, 240px);
+  z-index: 10;
+  animation: breathe 3.2s ease-in-out infinite;
+}
+
+.dogWrap[data-anim="petHead"] {
+  animation: headWiggle 0.55s ease-in-out;
+}
+
+.dogWrap[data-anim="noseTap"] {
+  animation: sneeze 0.7s ease-in-out;
+}
+
+.dogWrap[data-anim="bellyTap"] {
+  animation: bellyRoll 0.85s ease-in-out;
+}
+
+.dogWrap[data-anim="pawTap"] {
+  animation: highFive 0.5s ease-in-out;
+}
+
+.dogWrap[data-anim="bodyTap"],
+.dogWrap[data-anim="shake"] {
+  animation: bodyShake 0.55s ease-in-out;
+}
+
+.dogWrap[data-anim="eat"] {
+  animation: eatBob 0.9s ease-in-out;
+}
+
+.dogWrap[data-anim="bath"] {
+  animation: breathe 1.2s ease-in-out infinite;
+}
+
+.dogWrap[data-anim="playBall"] {
+  animation: playJump 0.7s ease-in-out;
+}
+
+.dogWrap[data-anim="sleep"] {
+  animation: sleepBreath 2.8s ease-in-out infinite;
+}
+
+.dogWrap[data-anim="missing"] {
+  animation: waitingSway 2.5s ease-in-out infinite;
+}
+
+.dogWrap[data-mood="tired"],
+.dogWrap[data-mood="missing"],
+.dogWrap[data-mood="veryDirtyAndMissing"] {
+  filter: none;
+}
+
+.dogSvg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.tail {
+  transform-origin: 28px 118px;
+  animation: tailWag 0.45s ease-in-out infinite;
+}
+
+.dogWrap[data-anim="playBall"] .tail,
+.dogWrap[data-anim="petHead"] .tail,
+.dogWrap[data-mood="superHappy"] .tail {
+  animation: tailWagFast 0.28s ease-in-out infinite;
+}
+
+.earLeft {
+  transform-origin: 88px 52px;
+  animation: earTwitchL 4.5s ease-in-out infinite;
+}
+
+.earRight {
+  transform-origin: 152px 52px;
+  animation: earTwitchR 5.2s ease-in-out infinite;
+}
+
+.eyeGroup {
+  animation: lookAround 8s ease-in-out infinite;
+}
+
+.pupil {
+  transition: transform 0.2s ease;
+}
+
+.lid {
+  transform-origin: center;
+  animation: blink 4.8s ease-in-out infinite;
+}
+
+.mouth {
+  transition: d 0.2s ease;
+}
+
+.dirtOverlay {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.dirtOverlay[data-level="1"] {
+  opacity: 0.35;
+}
+
+.dirtOverlay[data-level="2"] {
+  opacity: 0.6;
+}
+
+.dirtOverlay[data-level="3"] {
+  opacity: 0.85;
+}
+
+.zzz {
+  opacity: 0;
+  font-size: 1.1rem;
+  font-weight: 800;
+  fill: #6366f1;
+}
+
+.dogWrap[data-anim="sleep"] .zzz,
+.dogWrap[data-mood="tired"] .zzz {
+  opacity: 1;
+  animation: zzzFloat 1.8s ease-in-out infinite;
+}
+
+.hitZone {
+  position: absolute;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  z-index: 15;
+  touch-action: manipulation;
+}
+
+.hitZone:focus-visible {
+  outline: 2px dashed rgba(251, 191, 36, 0.8);
+  outline-offset: 2px;
+  border-radius: 50%;
+}
+
+.hitHead {
+  top: 2%;
+  left: 28%;
+  width: 44%;
+  height: 38%;
+  border-radius: 50%;
+}
+
+.hitNose {
+  top: 28%;
+  left: 42%;
+  width: 16%;
+  height: 14%;
+  border-radius: 50%;
+}
+
+.hitBelly {
+  top: 42%;
+  left: 30%;
+  width: 40%;
+  height: 28%;
+  border-radius: 50%;
+}
+
+.hitPaw {
+  bottom: 2%;
+  left: 18%;
+  width: 22%;
+  height: 22%;
+  border-radius: 50%;
+}
+
+.hitBody {
+  top: 32%;
+  left: 22%;
+  width: 56%;
+  height: 36%;
+  border-radius: 40%;
+}
+
+.effectsLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 25;
+  overflow: hidden;
+}
+
+.heart {
+  position: absolute;
+  font-size: 1.4rem;
+  animation: heartFloat 1.2s ease-out forwards;
+}
+
+.bubble {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff, rgba(147, 197, 253, 0.6));
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  animation: bubbleRise 1.4s ease-out forwards;
+}
+
+.star {
+  position: absolute;
+  font-size: 1rem;
+  animation: starPop 0.8s ease-out forwards;
+}
+
+.ball {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #f87171, #dc2626);
+  border: 2px solid #991b1b;
+  animation: ballBounce 0.75s ease-in-out;
+  z-index: 12;
+}
+
+.ballLong {
+  animation: ballBounceLong 4s ease-in-out;
+}
+
+.foodBowl {
+  position: absolute;
+  bottom: 8%;
+  left: 50%;
+  transform: translateX(-50%) scale(0);
+  font-size: 2rem;
+  animation: bowlAppear 0.9s ease-out forwards;
+  z-index: 12;
+}
+
+.foodSteak {
+  position: absolute;
+  bottom: 10%;
+  left: 22%;
+  width: clamp(64px, 16vw, 86px);
+  max-height: 90px;
+  height: auto;
+  object-fit: contain;
+  z-index: 11;
+  pointer-events: none;
+  animation: steakPopIn 0.5s ease-out forwards, steakNudge 1.8s ease-in-out 0.5s infinite alternate;
+}
+
+@keyframes steakPopIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.35) translateY(18px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes steakNudge {
+  0% {
+    transform: translate(0, 0) rotate(-4deg);
+  }
+  100% {
+    transform: translate(10px, -6px) rotate(2deg);
+  }
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    transform: scale(1.02) translateY(-3px);
+  }
+}
+
+@keyframes sleepBreath {
+  0%,
+  100% {
+    transform: scale(0.98) translateY(2px) rotate(-2deg);
+  }
+  50% {
+    transform: scale(1) translateY(0) rotate(-2deg);
+  }
+}
+
+@keyframes tailWag {
+  0%,
+  100% {
+    transform: rotate(-12deg);
+  }
+  50% {
+    transform: rotate(18deg);
+  }
+}
+
+@keyframes tailWagFast {
+  0%,
+  100% {
+    transform: rotate(-20deg);
+  }
+  50% {
+    transform: rotate(28deg);
+  }
+}
+
+@keyframes blink {
+  0%,
+  42%,
+  44%,
+  100% {
+    transform: scaleY(1);
+  }
+  43% {
+    transform: scaleY(0.08);
+  }
+}
+
+@keyframes earTwitchL {
+  0%,
+  88%,
+  100% {
+    transform: rotate(0deg);
+  }
+  90% {
+    transform: rotate(-8deg);
+  }
+  94% {
+    transform: rotate(4deg);
+  }
+}
+
+@keyframes earTwitchR {
+  0%,
+  82%,
+  100% {
+    transform: rotate(0deg);
+  }
+  84% {
+    transform: rotate(8deg);
+  }
+  88% {
+    transform: rotate(-4deg);
+  }
+}
+
+@keyframes lookAround {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-2px);
+  }
+  50% {
+    transform: translateX(0);
+  }
+  75% {
+    transform: translateX(2px);
+  }
+}
+
+@keyframes headWiggle {
+  0%,
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    transform: rotate(-4deg) scale(1.03);
+  }
+  75% {
+    transform: rotate(4deg) scale(1.03);
+  }
+}
+
+@keyframes sneeze {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  30% {
+    transform: translateY(-4px) scale(1.04);
+  }
+  50% {
+    transform: translateY(6px) scale(0.98);
+  }
+  70% {
+    transform: translateY(-2px) scale(1.02);
+  }
+}
+
+@keyframes bellyRoll {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  40% {
+    transform: rotate(18deg) translateY(8px);
+  }
+  70% {
+    transform: rotate(-8deg) translateY(4px);
+  }
+}
+
+@keyframes highFive {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-12px) scale(1.05);
+  }
+}
+
+@keyframes bodyShake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-6px) rotate(-2deg);
+  }
+  40% {
+    transform: translateX(6px) rotate(2deg);
+  }
+  60% {
+    transform: translateX(-4px);
+  }
+  80% {
+    transform: translateX(4px);
+  }
+}
+
+@keyframes eatBob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  30%,
+  70% {
+    transform: translateY(8px) scale(0.98);
+  }
+}
+
+@keyframes playJump {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  35% {
+    transform: translateY(-18px) scale(1.04);
+  }
+  55% {
+    transform: translateY(-8px) scale(1.02);
+  }
+}
+
+@keyframes waitingSway {
+  0%,
+  100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  50% {
+    transform: translateX(-4px) rotate(-1.5deg);
+  }
+}
+
+@keyframes cloudDrift {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(12px);
+  }
+}
+
+@keyframes bubblePop {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+@keyframes heartFloat {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(0.6);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-60px) scale(1.2);
+  }
+}
+
+@keyframes bubbleRise {
+  from {
+    opacity: 0.9;
+    transform: translateY(0) scale(0.5);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-80px) scale(1.1);
+  }
+}
+
+@keyframes starPop {
+  from {
+    opacity: 1;
+    transform: scale(0.3) rotate(0deg);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.4) rotate(180deg);
+  }
+}
+
+@keyframes ballBounce {
+  0% {
+    left: 20%;
+    bottom: 20%;
+    transform: scale(0.5);
+  }
+  40% {
+    left: 55%;
+    bottom: 55%;
+    transform: scale(1);
+  }
+  70% {
+    left: 70%;
+    bottom: 25%;
+  }
+  100% {
+    left: 75%;
+    bottom: 15%;
+    opacity: 0;
+  }
+}
+
+@keyframes ballBounceLong {
+  0% {
+    left: 18%;
+    bottom: 18%;
+    transform: scale(0.5);
+    opacity: 1;
+  }
+  15% {
+    left: 42%;
+    bottom: 52%;
+    transform: scale(1);
+  }
+  30% {
+    left: 58%;
+    bottom: 22%;
+  }
+  45% {
+    left: 48%;
+    bottom: 48%;
+    transform: scale(0.95);
+  }
+  60% {
+    left: 68%;
+    bottom: 28%;
+  }
+  75% {
+    left: 62%;
+    bottom: 50%;
+    transform: scale(0.9);
+  }
+  90% {
+    left: 78%;
+    bottom: 20%;
+    opacity: 0.8;
+  }
+  100% {
+    left: 82%;
+    bottom: 12%;
+    opacity: 0;
+    transform: scale(0.7);
+  }
+}
+
+@keyframes bowlAppear {
+  0% {
+    transform: translateX(-50%) scale(0);
+    opacity: 0;
+  }
+  30% {
+    transform: translateX(-50%) scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-50%) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes zzzFloat {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-6px);
+  }
+}
+
+/* Main game layout */
+.root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  background: linear-gradient(165deg, #1e3a5f 0%, #0f172a 100%);
+}
+
+.main {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  overflow: hidden;
+}
+
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.statChip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  padding: 0.25rem 0.15rem;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.statLabel {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.65);
+  white-space: nowrap;
+}
+
+.statBarTrack {
+  width: 100%;
+  height: 5px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.statBarFill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.statBarHappiness {
+  background: linear-gradient(90deg, #fbbf24, #f59e0b);
+}
+
+.statBarClean {
+  background: linear-gradient(90deg, #38bdf8, #0ea5e9);
+}
+
+.statBarFood {
+  background: linear-gradient(90deg, #fb923c, #ea580c);
+}
+
+.statBarEnergy {
+  background: linear-gradient(90deg, #a78bfa, #7c3aed);
+}
+
+.statBarMissing {
+  background: linear-gradient(90deg, #f472b6, #db2777);
+}
+
+.actionsRow {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.35rem;
+  flex-shrink: 0;
+  padding-bottom: 0.25rem;
+}
+
+.actionBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  min-height: 52px;
+  padding: 0.35rem 0.2rem;
+  border: none;
+  border-radius: 0.75rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.06));
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform 0.12s ease, background 0.12s ease;
+}
+
+.actionBtn:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.actionBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.actionEmoji {
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.debugPanel {
+  flex-shrink: 0;
+  padding: 0.4rem 0.5rem 0.5rem;
+  background: rgba(0, 0, 0, 0.35);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.65rem;
+}
+
+.debugTitle {
+  font-weight: 800;
+  color: rgba(251, 191, 36, 0.9);
+  margin-bottom: 0.3rem;
+}
+
+.debugBtns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-bottom: 0.35rem;
+}
+
+.debugBtn {
+  padding: 0.25rem 0.45rem;
+  border-radius: 0.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.62rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.debugBtn:active {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.debugRaw {
+  font-family: ui-monospace, monospace;
+  font-size: 0.58rem;
+  color: rgba(255, 255, 255, 0.5);
+  word-break: break-all;
+  line-height: 1.3;
+  max-height: 2.6em;
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .main {
+    padding: 0.75rem 1rem;
+    gap: 0.65rem;
+  }
+
+  .statLabel {
+    font-size: 0.68rem;
+  }
+
+  .actionBtn {
+    min-height: 58px;
+    font-size: 0.72rem;
+  }
+
+  .actionEmoji {
+    font-size: 1.5rem;
+  }
+
+  .dogWrap {
+    width: min(340px, 42vw);
+    height: min(280px, 36vw);
+  }
+}
+
+@media (min-width: 900px) {
+  .main {
+    max-width: 720px;
+    margin: 0 auto;
+    width: 100%;
+  }
+}
+
+.debugBtnActive {
+  background: rgba(251, 191, 36, 0.22);
+  border-color: rgba(251, 191, 36, 0.45);
+  color: #fde68a;
+}
+
+.galleryPanel {
+  margin-bottom: 0.35rem;
+  padding: 0.35rem;
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  max-height: 140px;
+  overflow-y: auto;
+}
+
+.galleryTitle {
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.82);
+  margin-bottom: 0.2rem;
+}
+
+.galleryNote {
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.35;
+  margin-bottom: 0.25rem;
+}
+
+.galleryWarn {
+  color: rgba(251, 191, 36, 0.75);
+  line-height: 1.35;
+  font-size: 0.58rem;
+}
+
+.galleryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 0.35rem;
+}
+
+.galleryItem {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.galleryThumb {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 0.35rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.galleryCaption {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+}
+
+.galleryLabel {
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.55rem;
+}
+
+.galleryMeta {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.52rem;
+  line-height: 1.2;
+}
+
+/* Transparent PNG sprite — reuses dogWrap action animations */
+.dogWrapSprite {
+  width: min(84vw, 340px);
+  height: min(68vw, 300px);
+}
+
+.spriteStage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.spriteShadow {
+  position: absolute;
+  bottom: 2%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 62%;
+  height: 12px;
+  background: rgba(0, 0, 0, 0.14);
+  border-radius: 999px;
+  filter: blur(1px);
+}
+
+.leoSpriteImg {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15));
+}
+
+.imageDirtOverlay {
+  position: absolute;
+  inset: 6% 8% 10%;
+  z-index: 4;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 30% 55%, rgba(107, 79, 18, 0.55) 0 8%, transparent 9%),
+    radial-gradient(circle at 62% 48%, rgba(139, 105, 20, 0.5) 0 7%, transparent 8%),
+    radial-gradient(circle at 48% 68%, rgba(92, 69, 16, 0.45) 0 9%, transparent 10%);
+  opacity: 0.55;
+}
+
+.imageDirtOverlay[data-level="2"] {
+  opacity: 0.72;
+}
+
+.imageDirtOverlay[data-level="3"] {
+  opacity: 0.9;
+}
+
+.imageBubbleOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 22% 70%, rgba(255, 255, 255, 0.85) 0 4%, transparent 5%),
+    radial-gradient(circle at 38% 58%, rgba(186, 230, 253, 0.75) 0 5%, transparent 6%),
+    radial-gradient(circle at 55% 72%, rgba(255, 255, 255, 0.8) 0 4%, transparent 5%),
+    radial-gradient(circle at 68% 52%, rgba(186, 230, 253, 0.7) 0 6%, transparent 7%);
+  animation: bubbleShimmer 1.6s ease-in-out infinite;
+}
+
+.imageZzz {
+  position: absolute;
+  top: 4%;
+  right: 6%;
+  z-index: 6;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #6366f1;
+  animation: zzzFloat 1.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes bubbleShimmer {
+  0%,
+  100% {
+    opacity: 0.75;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (min-width: 640px) {
+  .dogWrapSprite {
+    width: min(380px, 48vw);
+    height: min(340px, 42vw);
+  }
+}
+
