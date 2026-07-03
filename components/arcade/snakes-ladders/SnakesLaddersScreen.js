@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSnakesLaddersSession } from "../../../hooks/arcade/useSnakesLaddersSession";
 import { useArcadeRoomExit } from "../../../hooks/arcade/useArcadeRoomExit";
+import ArcadeGameSocialDock from "../club/ArcadeGameSocialDock.jsx";
 import { LADDERS, SNAKES } from "../../../lib/arcade/snakes-ladders/snakesLaddersEngine";
 import { Ov2ArcadeSnakesPlayfield } from "./ov2ArcadeSnakesBoardView";
 import StudentAdSlot from "../../student/StudentAdSlot.jsx";
@@ -310,7 +311,12 @@ export default function SnakesLaddersScreen({ roomId }) {
         ) : null}
       </div>
 
-      {room ? <SnakesLeaveRow onLeave={onLeaveRoom} busy={leaveBusy} disabled={!String(roomId || "").trim()} /> : null}
+      {room ? (
+        <>
+          <ArcadeGameSocialDock roomId={roomId} gameSession={gameSession} />
+          <SnakesLeaveRow onLeave={onLeaveRoom} busy={leaveBusy} disabled={!String(roomId || "").trim()} />
+        </>
+      ) : null}
       <StudentAdSlot variant="dvh" dataAdSlot="arcade-ad-reserved" />
     </div>
   );

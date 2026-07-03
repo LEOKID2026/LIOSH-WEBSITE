@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import Layout from "../../../components/Layout";
 import AdminShell from "../../../components/admin/AdminShell";
+import GuestArcadeGameToggles from "../../../components/admin/guest/GuestArcadeGameToggles.jsx";
+import GuestFeaturePermissionsPanel from "../../../components/admin/guest/GuestFeaturePermissionsPanel.jsx";
 import { useAdminSession } from "../../../lib/admin-portal/use-admin-session";
 import { ADMIN_LOADING } from "../../../lib/admin-portal/admin-ui.he.js";
 
@@ -183,6 +185,13 @@ export default function AdminGuestPage() {
                   שמור הגדרות
                 </button>
               </section>
+            ) : null}
+
+            {accessToken ? (
+              <>
+                <GuestArcadeGameToggles accessToken={accessToken} onMessage={setMessage} />
+                <GuestFeaturePermissionsPanel accessToken={accessToken} onMessage={setMessage} />
+              </>
             ) : null}
 
             <section className="rounded-xl border border-white/15 bg-white/5 p-4 space-y-3">

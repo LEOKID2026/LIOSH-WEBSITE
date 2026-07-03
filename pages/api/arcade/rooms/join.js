@@ -1,6 +1,6 @@
 import { requireArcadeStudent } from "../../../../lib/arcade/server/arcade-auth";
 import { joinArcadeRoomById } from "../../../../lib/arcade/server/arcade-rooms";
-import { assertStudentCanPlayGame } from "../../../../lib/games/server/game-access.server.js";
+import { assertArcadePlayAccess } from "../../../../lib/arcade/club/arcade-access.server.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -23,10 +23,11 @@ export default async function handler(req, res) {
     .maybeSingle();
 
   if (roomPreview?.game_key) {
-    const access = await assertStudentCanPlayGame(
+    const access = await assertArcadePlayAccess(
       auth.supabase,
       auth.studentId,
-      roomPreview.game_key
+      roomPreview.game_key,
+      { featureKey: "room_public_create" }
     );
     if (!access.ok) {
       return res.status(access.status || 403).json({

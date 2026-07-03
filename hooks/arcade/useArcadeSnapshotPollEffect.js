@@ -9,6 +9,7 @@ import {
   pollArcadeRoomSnapshot,
   useArcadePollRouteStop,
 } from "./arcadeRoomSnapshotPoll";
+import { useArcadeSessionRealtime } from "./useArcadeSessionRealtime.js";
 
 /**
  * Standard snapshot poll loop for arcade game session hooks.
@@ -21,9 +22,16 @@ import {
  *     ctx: { ok: boolean, stopped: boolean, bundleLoadedOnceRef: { current: boolean } },
  *   ) => void,
  *   pollMs?: number,
+ *   enableRealtime?: boolean,
  * }} options
  */
-export function useArcadeSnapshotPollEffect({ roomId, fetchBundle, onBundle, pollMs = 1500 }) {
+export function useArcadeSnapshotPollEffect({
+  roomId,
+  fetchBundle,
+  onBundle,
+  pollMs = 1500,
+  enableRealtime = true,
+}) {
   const joinRecoveryAttemptedRef = useRef(false);
   const pollStoppedRef = useRef(false);
   const pollIntervalRef = useRef(/** @type {ReturnType<typeof setInterval> | null} */ (null));
@@ -46,11 +54,13 @@ export function useArcadeSnapshotPollEffect({ roomId, fetchBundle, onBundle, pol
   useArcadePollRouteStop(stopPolling);
 
   const activeRoomIdRef = useRef(/** @type {string | null} */ (null));
+  const tickRef = useRef(/** @type {(() => Promise<void>) | null} */ (null));
 
   useEffect(() => {
     if (!roomId) {
       activeRoomIdRef.current = null;
       haltArcadeRoomPolling(pollRefs, pollIntervalRef);
+      tickRef.current = null;
       return undefined;
     }
     let cancelled = false;
@@ -83,16 +93,24 @@ export function useArcadeSnapshotPollEffect({ roomId, fetchBundle, onBundle, pol
       }
     };
 
+    tickRef.current = tick;
     void tick();
     pollIntervalRef.current = window.setInterval(() => void tick(), pollMs);
     return () => {
       cancelled = true;
+      tickRef.current = null;
       if (pollIntervalRef.current != null) {
         clearInterval(pollIntervalRef.current);
         pollIntervalRef.current = null;
       }
     };
   }, [roomId, fetchBundle, onBundle, pollMs]);
+
+  const onRealtimeChange = useCallback(() => {
+    if (tickRef.current) void tickRef.current();
+  }, []);
+
+  useArcadeSessionRealtime(enableRealtime ? roomId : null, onRealtimeChange);
 
   return { stopPolling, bundleLoadedOnceRef };
 }

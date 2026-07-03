@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useChessSession } from "../../../hooks/arcade/useChessSession";
 import { useArcadeRoomExit } from "../../../hooks/arcade/useArcadeRoomExit";
+import ArcadeGameSocialDock from "../club/ArcadeGameSocialDock.jsx";
 import { squareFromRowCol } from "../../../lib/arcade/chess/buildChessSnapshot";
 import {
   boardSideLabels,
@@ -309,7 +310,12 @@ export default function ChessScreen({ roomId }) {
         ) : null}
       </div>
 
-      {room ? <LeaveRow onLeave={onLeaveRoom} busy={leaveBusy} disabled={!String(roomId || "").trim()} /> : null}
+      {room ? (
+        <>
+          <ArcadeGameSocialDock roomId={roomId} gameSession={gameSession} />
+          <LeaveRow onLeave={onLeaveRoom} busy={leaveBusy} disabled={!String(roomId || "").trim()} />
+        </>
+      ) : null}
       <StudentAdSlot variant="dvh" dataAdSlot="arcade-ad-reserved" />
     </div>
   );

@@ -1,5 +1,6 @@
 import { requireArcadeStudent } from "../../../lib/arcade/server/arcade-auth";
 import { quickMatchArcadeRoom } from "../../../lib/arcade/server/arcade-rooms";
+import { assertArcadePlayAccess } from "../../../lib/arcade/club/arcade-access.server.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -15,6 +16,18 @@ export default async function handler(req, res) {
 
   if (!gameKey) {
     return res.status(400).json({ ok: false, error: "חסר משחק", code: "bad_request" });
+  }
+
+  const access = await assertArcadePlayAccess(auth.supabase, auth.studentId, gameKey, {
+    roomAction: "quick",
+  });
+  if (!access.ok) {
+    return res.status(access.status || 403).json({
+      ok: false,
+      error: access.message,
+      code: access.code,
+      category: access.category,
+    });
   }
 
   const result = await quickMatchArcadeRoom(auth.supabase, {

@@ -7,6 +7,7 @@ import { getOv2BingoSeatStyle } from "../../../lib/arcade/bingo/ov2BingoSeatColo
 import { OV2_BINGO_PLAY_MODE, OV2_BINGO_PRODUCT_GAME_ID } from "../../../lib/arcade/bingo/ov2BingoSessionAdapter";
 import { useArcadeBingoSession } from "../../../hooks/useArcadeBingoSession";
 import { useArcadeRoomExit } from "../../../hooks/arcade/useArcadeRoomExit";
+import ArcadeGameSocialDock from "../club/ArcadeGameSocialDock.jsx";
 import Ov2BingoCard from "./Ov2BingoCard";
 import Ov2BingoFinishModal from "./Ov2BingoFinishModal";
 import Ov2GameStatusStrip from "./Ov2GameStatusStrip";
@@ -314,6 +315,15 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
   return (
     <div className="flex h-full min-h-0 min-w-0 w-full flex-col gap-0.5 overflow-hidden overscroll-y-contain px-0.5 sm:gap-1 sm:px-1">
       <Ov2GameStatusStrip title={stripTitle} subtitle={vm.phaseLine} tone={stripTone} compact={Boolean(vm.isLive)} />
+
+      {vm.isLive ? (
+        <ArcadeGameSocialDock
+          roomId={roomId}
+          gameSession={
+            bundle?.gameSession && typeof bundle.gameSession === "object" ? bundle.gameSession : null
+          }
+        />
+      ) : null}
 
       {vm.isLive && onLeaveToLobby ? (
         <div className="flex shrink-0 justify-end px-0.5 pt-0.5">

@@ -10,6 +10,7 @@ import {
 } from "../../../lib/arcade/fourline/fourlineClientLegality";
 import { useFourlineSession } from "../../../hooks/arcade/useFourlineSession";
 import { useArcadeRoomExit } from "../../../hooks/arcade/useArcadeRoomExit";
+import ArcadeGameSocialDock from "../club/ArcadeGameSocialDock.jsx";
 import StudentAdSlot from "../../student/StudentAdSlot.jsx";
 
 const DROP_MS = 155;
@@ -770,6 +771,7 @@ export default function FourlineScreen({ roomId }) {
                   </div>
                 </div>
 
+                <ArcadeGameSocialDock roomId={roomId} gameSession={gameSession} />
                 <FourlineLeaveRow onLeave={onLeaveRoom} busy={leaveBusy} disabled={!String(roomId || "").trim()} />
 
                 {finished ? (
@@ -812,7 +814,10 @@ export default function FourlineScreen({ roomId }) {
           )}
 
           {!showGameBoardUi ? (
-            <FourlineLeaveRow onLeave={onLeaveRoom} busy={leaveBusy} disabled={!String(roomId || "").trim()} />
+            <>
+              <ArcadeGameSocialDock roomId={roomId} gameSession={gameSession} />
+              <FourlineLeaveRow onLeave={onLeaveRoom} busy={leaveBusy} disabled={!String(roomId || "").trim()} />
+            </>
           ) : null}
         </div>
 

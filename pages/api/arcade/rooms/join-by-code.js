@@ -1,5 +1,6 @@
 import { requireArcadeStudent } from "../../../../lib/arcade/server/arcade-auth";
 import { joinArcadeRoomByCode } from "../../../../lib/arcade/server/arcade-rooms";
+import { assertArcadePlayAccess } from "../../../../lib/arcade/club/arcade-access.server.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -11,6 +12,29 @@ export default async function handler(req, res) {
 
   const body = typeof req.body === "object" && req.body ? req.body : {};
   const joinCode = body.joinCode;
+
+  const { data: roomPreview } = await auth.supabase
+    .from("arcade_rooms")
+    .select("game_key")
+    .eq("join_code", String(joinCode || "").toUpperCase().replace(/[^A-Z0-9]/g, "").trim())
+    .maybeSingle();
+
+  if (roomPreview?.game_key) {
+    const access = await assertArcadePlayAccess(
+      auth.supabase,
+      auth.studentId,
+      roomPreview.game_key,
+      { roomAction: "join_by_code" }
+    );
+    if (!access.ok) {
+      return res.status(access.status || 403).json({
+        ok: false,
+        error: access.message,
+        code: access.code,
+        category: access.category,
+      });
+    }
+  }
 
   const result = await joinArcadeRoomByCode(auth.supabase, auth.studentId, joinCode);
 

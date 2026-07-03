@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLudoSession } from "../../../hooks/arcade/useLudoSession";
 import { useArcadeRoomExit } from "../../../hooks/arcade/useArcadeRoomExit";
+import ArcadeGameSocialDock from "../club/ArcadeGameSocialDock.jsx";
 import LudoBoardView from "../../../lib/arcade/ludo/LudoBoardView";
 import LudoSeatStrip from "./LudoSeatStrip";
 import StudentAdSlot from "../../student/StudentAdSlot.jsx";
@@ -314,7 +315,12 @@ export default function LudoScreen({ roomId }) {
           )}
         </div>
 
-        {room ? <LudoLeaveRow onLeave={onLeaveRoom} busy={leaveBusy} disabled={!String(roomId || "").trim()} /> : null}
+        {room ? (
+          <>
+            <ArcadeGameSocialDock roomId={roomId} gameSession={gameSession} />
+            <LudoLeaveRow onLeave={onLeaveRoom} busy={leaveBusy} disabled={!String(roomId || "").trim()} />
+          </>
+        ) : null}
 
         <StudentAdSlot variant="dvh" dataAdSlot="arcade-ad-reserved" />
       </div>

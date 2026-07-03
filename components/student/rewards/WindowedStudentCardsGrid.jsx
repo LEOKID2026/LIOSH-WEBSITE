@@ -46,6 +46,7 @@ export default function WindowedStudentCardsGrid({
   studentFullName = "",
   getPreviewAllowDownload,
   renderCardProps,
+  gridClassName,
 }) {
   const [previewIndex, setPreviewIndex] = useState(null);
   const navigableCards = previewCards ?? items;
@@ -64,7 +65,7 @@ export default function WindowedStudentCardsGrid({
 
   return (
     <>
-      <div className={STUDENT_CARDS_GRID_CLASS} data-testid="windowed-student-cards-grid">
+      <div className={gridClassName || STUDENT_CARDS_GRID_CLASS} data-testid="windowed-student-cards-grid">
         {items.map((card, index) => (
           <LazyMountGridCell key={card.id}>
             <StudentRewardCard

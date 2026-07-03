@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useCheckersSession } from "../../../hooks/arcade/useCheckersSession";
 import { useArcadeRoomExit } from "../../../hooks/arcade/useArcadeRoomExit";
+import ArcadeGameSocialDock from "../club/ArcadeGameSocialDock.jsx";
 import { EMPTY, isKing, pieceSeat } from "../../../lib/arcade/checkers/checkersEngine";
 import {
   boardSideLabels,
@@ -294,7 +295,12 @@ export default function CheckersScreen({ roomId }) {
         ) : null}
       </div>
 
-      {room ? <LeaveRow onLeave={onLeaveRoom} busy={leaveBusy} disabled={!String(roomId || "").trim()} /> : null}
+      {room ? (
+        <>
+          <ArcadeGameSocialDock roomId={roomId} gameSession={gameSession} />
+          <LeaveRow onLeave={onLeaveRoom} busy={leaveBusy} disabled={!String(roomId || "").trim()} />
+        </>
+      ) : null}
       <StudentAdSlot variant="dvh" dataAdSlot="arcade-ad-reserved" />
     </div>
   );

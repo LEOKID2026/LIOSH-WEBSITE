@@ -6,11 +6,26 @@ import { useGamesHubUi } from "../../hooks/useGamesHubUi.js";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import GameAccessGuard from "../../components/games/GameAccessGuard.jsx";
 import GamesHubNavBar from "../../components/games/GamesHubNavBar.jsx";
-import GamesHubHeader from "../../components/games/GamesHubHeader.jsx";
 import GamesHubLockFooter from "../../components/games/GamesHubLockFooter.jsx";
+import ArcadeLobbyHeader from "../../components/arcade/club/ArcadeLobbyHeader.jsx";
+import ArcadeTabNav from "../../components/arcade/club/ArcadeTabNav.jsx";
+import ArcadeGuestUpgradeBanner from "../../components/arcade/club/ArcadeGuestUpgradeBanner.jsx";
+import ArcadeInviteBanner from "../../components/arcade/club/ArcadeInviteBanner.jsx";
+import ArcadeClubFriendsPanel from "../../components/arcade/club/ArcadeClubFriendsPanel.jsx";
+import ArcadeClubProfilePanel from "../../components/arcade/club/ArcadeClubProfilePanel.jsx";
+import ArcadeClubShopPanel from "../../components/arcade/club/ArcadeClubShopPanel.jsx";
+import ArcadeClubMissionsPanel from "../../components/arcade/club/ArcadeClubMissionsPanel.jsx";
+import ArcadeClubEventsPanel from "../../components/arcade/club/ArcadeClubEventsPanel.jsx";
+import { useArcadeClubPresence, useArcadeClubInvites } from "../../hooks/arcade/useArcadeClubPresence.js";
 import { GUEST_GAME_LOCK_LABEL_HE } from "../../lib/guest/constants.js";
 import { mapEntryCostOptionsForUi } from "../../lib/learning-client/economyConfigClient.js";
+import { studentAvatarFromHomeSummary } from "../../lib/learning-client/studentHomeAvatarFromSummary.js";
 import { clearArcadeActiveRoom } from "../../lib/arcade/client/arcadeRoomLifecycle.client.js";
+import {
+  arcadeGameTileTheme,
+  ARCADE_TILE_BADGE_ACTIVE,
+  ARCADE_TILE_BADGE_INACTIVE,
+} from "../../components/arcade/club/arcadeGameTileThemes.js";
 
 const POLL_MS = 5000;
 
@@ -33,7 +48,19 @@ const OPEN_ROOM_POLL_KEYS = [
   "bingo",
 ];
 
-const MORE_ARCADE_LOBBY_ROWS = [
+const LOBBY_GAME_ROWS = [
+  {
+    gameKey: "fourline",
+    title: "ארבע בשורה",
+    blurb: "ארבע בשורה · שניים נגד שניים",
+    playersLine: "שחקנים: 2",
+  },
+  {
+    gameKey: "ludo",
+    title: "לודו",
+    blurb: "לודו · משחק משפחתי",
+    playersLine: "שחקנים: 2–4",
+  },
   {
     gameKey: "snakes-and-ladders",
     title: "נחשים וסולמות",
@@ -43,28 +70,31 @@ const MORE_ARCADE_LOBBY_ROWS = [
   {
     gameKey: "checkers",
     title: "דמקה",
-    blurb: "דמקה קלאסית · אכילות חובה כשקיימות",
+    blurb: "דמקה קלאסית · אכילות חובה",
     playersLine: "שחקנים: 2",
   },
   {
     gameKey: "chess",
     title: "שחמט",
-    blurb: "מצב חדר פעיל — משחק מלא יגיע בהמשך",
+    blurb: "שחמט קלאסי · מלך, מט, ושח-מט",
     playersLine: "שחקנים: 2",
   },
   {
     gameKey: "dominoes",
     title: "דומינו",
-    blurb: "דומינו חסימה · זוג 6 · סיום ביציאה או חסימה",
+    blurb: "דומינו חסימה · סיום ביציאה",
     playersLine: "שחקנים: 2",
   },
   {
     gameKey: "bingo",
     title: "בינגו",
-    blurb: "מצב חדר פעיל — משחק מלא יגיע בהמשך",
+    blurb: "בינגו · קו מלא מנצח",
     playersLine: "שחקנים: עד 8",
   },
 ];
+
+const ARCADE_GAME_GRID_CLASS =
+  "grid grid-cols-2 gap-2 sm:grid-cols-2 md:grid-cols-3 md:gap-2 lg:grid-cols-4 lg:gap-2.5 xl:grid-cols-5";
 
 function playHrefForArcadeRoom(gameKey, roomId) {
   const q = encodeURIComponent(roomId);
@@ -119,15 +149,16 @@ function EntryCostSelector({
   setEntryCost,
   costDisabledReason,
   busy,
-  className = "mt-3",
+  className = "mt-1.5",
   entryLabel,
   entryBtnSelected,
   entryBtnDefault,
   entryBtnDisabled,
+  label = "עלות כניסה",
 }) {
   return (
     <div className={className}>
-      <span className={`mb-1.5 block ${entryLabel}`}>עלות כניסה</span>
+      <span className={`mb-1.5 block ${entryLabel}`}>{label}</span>
       <div className="flex flex-wrap gap-1.5">
         {(entryOptions || []).map((opt) => {
           const needMsg = costDisabledReason(opt.value);
@@ -154,147 +185,181 @@ function EntryCostSelector({
 
 /**
  * @param {object} props
- * @param {string} props.title
- * @param {string} props.blurb
- * @param {string[]} props.bullets
- * @param {string} props.gameKey
- * @param {boolean} props.active
- * @param {string | null} props.idleReason
- * @param {Array<{ label: string, value: number }>} props.entryOptions
- * @param {number} props.entryCost
- * @param {(n: number) => void} props.setEntryCost
- * @param {(cost: number) => string | null} props.costDisabledReason
- * @param {boolean} props.busy
- * @param {boolean} props.guestLocked
- * @param {() => void} props.onQuickGame
- * @param {(roomType: string, gk?: string) => void} props.onCreateRoom
- * @param {string} props.cardShell
- * @param {string} props.cardTitle
- * @param {string} props.cardBlurb
- * @param {string} props.cardCta
- * @param {string} props.badgeActive
- * @param {string} props.badgeInactive
- * @param {string} props.cardDivider
- * @param {string} props.bulletList
- * @param {string} props.bulletDot
- * @param {string} props.idleBox
- * @param {string} props.entryLabel
- * @param {string} props.entryBtnSelected
- * @param {string} props.entryBtnDefault
- * @param {string} props.entryBtnDisabled
- * @param {string} props.btnSecondary
- * @param {string} props.btnSecondaryOutline
+ */
+function ArcadeGameActionPanel({
+  selectedTitle,
+  entryCostLabel,
+  canAct,
+  costBlocked,
+  costBlockedMessage,
+  busy,
+  onQuickGame,
+  onCreatePublic,
+  onCreatePrivate,
+  cardCta,
+  btnSecondary,
+  btnSecondaryOutline,
+  actionDivider,
+  actionTitle,
+  actionMeta,
+}) {
+  return (
+    <div className={actionDivider}>
+      <div className="flex flex-wrap items-end justify-between gap-2">
+        <div className="text-right">
+          <p className={actionTitle}>
+            משחק נבחר: <span className="font-bold">{selectedTitle || "—"}</span>
+          </p>
+          <p className={`mt-0.5 ${actionMeta}`}>סכום כניסה: {entryCostLabel} מטבעות</p>
+        </div>
+      </div>
+      <div className="mt-2 flex flex-col gap-1.5 sm:flex-row sm:flex-wrap">
+        <button
+          type="button"
+          disabled={busy || !canAct || costBlocked}
+          title={costBlocked ? costBlockedMessage : !canAct ? "בחרו משחק פעיל" : undefined}
+          onClick={onQuickGame}
+          className={`w-full sm:flex-1 ${cardCta} py-2 text-sm disabled:cursor-not-allowed disabled:opacity-45`}
+        >
+          משחק מהיר
+        </button>
+        <button
+          type="button"
+          disabled={busy || !canAct || costBlocked}
+          onClick={onCreatePublic}
+          className={`w-full sm:w-auto sm:min-w-[7.5rem] ${btnSecondary} py-2 text-xs`}
+        >
+          צור חדר ציבורי
+        </button>
+        <button
+          type="button"
+          disabled={busy || !canAct || costBlocked}
+          onClick={onCreatePrivate}
+          className={`w-full sm:w-auto sm:min-w-[7.5rem] ${btnSecondaryOutline} py-2 text-xs`}
+        >
+          צור חדר פרטי
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * @param {object} props
  */
 function ArcadeGameCard({
   title,
   blurb,
-  bullets,
+  playersLine,
   gameKey,
   active,
   idleReason,
-  entryOptions,
-  entryCost,
-  setEntryCost,
-  costDisabledReason,
-  busy,
-  onQuickGame,
-  onCreateRoom,
-  cardShell,
-  cardTitle,
-  cardBlurb,
-  cardCta,
-  badgeActive,
-  badgeInactive,
-  cardDivider,
-  bulletList,
-  bulletDot,
-  idleBox,
-  entryLabel,
-  entryBtnSelected,
-  entryBtnDefault,
-  entryBtnDisabled,
-  btnSecondary,
-  btnSecondaryOutline,
   guestLocked = false,
+  selected = false,
+  openRoomCount = 0,
+  onSelect,
+  cardCta,
+  idleBox,
 }) {
-  const quickLabel =
-    gameKey === "fourline" ? "משחק מהיר" : gameKey === "ludo" ? "משחק מהיר (לודו)" : `משחק מהיר (${title})`;
-  const showActions = active && !guestLocked;
+  const selectable = active && !guestLocked;
+  const tile = arcadeGameTileTheme(gameKey);
+
+  const handleSelect = () => {
+    if (selectable) onSelect(gameKey);
+  };
+
+  const statusLabel = guestLocked
+    ? GUEST_GAME_LOCK_LABEL_HE
+    : active
+      ? "פעיל"
+      : "לא זמין";
+
+  const shellClasses = selected
+    ? tile.selected
+    : `${tile.bg} ${tile.border}`;
 
   return (
-    <div className={cardShell}>
-      <div className={`flex flex-wrap items-start justify-between gap-2 border-b pb-2 ${cardDivider}`}>
-        <h2 className={cardTitle}>{title}</h2>
-        <span
-          className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold sm:text-xs ${
-            guestLocked ? badgeInactive : active ? badgeActive : badgeInactive
-          }`}
-        >
-          {guestLocked ? GUEST_GAME_LOCK_LABEL_HE : active ? "פעיל" : "לא זמין"}
-        </span>
+    <div
+      role={selectable ? "button" : undefined}
+      tabIndex={selectable ? 0 : undefined}
+      onClick={selectable ? handleSelect : undefined}
+      onKeyDown={
+        selectable
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleSelect();
+              }
+            }
+          : undefined
+      }
+      className={`relative flex h-[132px] min-w-0 flex-col overflow-hidden rounded-lg border p-2 shadow-sm ${shellClasses} ${
+        selectable ? "cursor-pointer transition hover:shadow-md" : ""
+      } text-right`}
+    >
+      <div className={`absolute inset-x-0 top-0 h-1 ${tile.bar}`} aria-hidden="true" />
+
+      <div className="min-w-0 shrink-0 overflow-hidden">
+        <div className="flex min-w-0 items-center justify-end gap-1.5 overflow-hidden">
+          <h2
+            className={`min-w-0 flex-1 truncate whitespace-nowrap text-sm font-extrabold leading-tight sm:text-base ${tile.title}`}
+            title={title}
+          >
+            {title}
+          </h2>
+          <span
+            className={`shrink-0 rounded px-1.5 py-px text-[9px] font-bold leading-none ${
+              guestLocked || !active ? ARCADE_TILE_BADGE_INACTIVE : ARCADE_TILE_BADGE_ACTIVE
+            }`}
+          >
+            {statusLabel}
+          </span>
+        </div>
       </div>
-      <p className={`mt-2 text-xs leading-snug sm:text-sm ${cardBlurb}`}>{blurb}</p>
-      <ul className={`mt-2 space-y-0.5 ${bulletList}`}>
-        {bullets.map((line) => (
-          <li key={line} className="flex gap-1.5">
-            <span className={bulletDot}>·</span>
-            <span>{line}</span>
-          </li>
-        ))}
-      </ul>
-      {idleReason && !active ? (
-        <p className={`mt-2 rounded-md border px-2 py-1.5 text-[11px] ${idleBox}`}>{idleReason}</p>
-      ) : null}
+
+      <div className="mt-1.5 min-h-0 flex-1 overflow-hidden">
+        {blurb ? (
+          <p className={`line-clamp-2 text-[11px] leading-snug ${tile.blurb}`} title={blurb}>
+            {blurb}
+          </p>
+        ) : null}
+        {playersLine ? (
+          <p className={`mt-0.5 truncate text-xs leading-tight ${tile.meta}`} title={playersLine}>
+            {playersLine}
+          </p>
+        ) : null}
+        {openRoomCount > 0 ? (
+          <p className={`truncate text-xs leading-tight ${tile.meta}`}>חדרים פתוחים: {openRoomCount}</p>
+        ) : null}
+        {idleReason && !active ? (
+          <p
+            className={`mt-0.5 line-clamp-1 rounded border px-1 py-px text-[9px] leading-tight ${idleBox}`}
+            title={idleReason}
+          >
+            {idleReason}
+          </p>
+        ) : null}
+      </div>
 
       {guestLocked ? (
-        <div className="mt-auto pt-3">
+        <div className="mt-auto shrink-0 overflow-hidden pt-0.5" onClick={(e) => e.stopPropagation()}>
           <GamesHubLockFooter ctaClass={cardCta} />
         </div>
-      ) : (
-        <>
-      <EntryCostSelector
-        entryOptions={entryOptions}
-        entryCost={entryCost}
-        setEntryCost={setEntryCost}
-        costDisabledReason={costDisabledReason}
-        busy={busy}
-        className="mt-3"
-        entryLabel={entryLabel}
-        entryBtnSelected={entryBtnSelected}
-        entryBtnDefault={entryBtnDefault}
-        entryBtnDisabled={entryBtnDisabled}
-      />
-
-      <div className="mt-auto flex flex-col gap-2 pt-3">
+      ) : selectable ? (
         <button
           type="button"
-          disabled={busy || !showActions || Boolean(costDisabledReason(entryCost))}
-          title={costDisabledReason(entryCost) || (!showActions ? idleReason || undefined : undefined)}
-          onClick={onQuickGame}
-          className={`w-full ${cardCta} disabled:cursor-not-allowed disabled:opacity-45`}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleSelect();
+          }}
+          className={`mt-auto w-full shrink-0 rounded border px-1.5 py-0.5 text-[11px] font-bold leading-tight transition ${
+            selected ? tile.btnSelected : tile.btn
+          }`}
         >
-          {quickLabel}
+          {selected ? "נבחר" : "בחר"}
         </button>
-        <div className="grid grid-cols-2 gap-1.5">
-          <button
-            type="button"
-            disabled={busy || !showActions || Boolean(costDisabledReason(entryCost))}
-            onClick={() => onCreateRoom("public", gameKey)}
-            className={`w-full ${btnSecondary}`}
-          >
-            צור חדר ציבורי
-          </button>
-          <button
-            type="button"
-            disabled={busy || !showActions || Boolean(costDisabledReason(entryCost))}
-            onClick={() => onCreateRoom("private", gameKey)}
-            className={`w-full ${btnSecondaryOutline}`}
-          >
-            צור חדר פרטי
-          </button>
-        </div>
-      </div>
-        </>
+      ) : (
+        <span className="mt-auto block h-[22px] shrink-0" aria-hidden="true" />
       )}
     </div>
   );
@@ -304,25 +369,60 @@ export default function StudentArcadePage() {
   const { theme } = useStudentTheme();
   const { GH } = useGamesHubUi();
   const [balance, setBalance] = useState(null);
+  const [diamondBalance, setDiamondBalance] = useState(null);
   const [games, setGames] = useState([]);
   const [entryOptions, setEntryOptions] = useState([]);
   const [entryCost, setEntryCost] = useState(10);
+  const [selectedGameKey, setSelectedGameKey] = useState("fourline");
   const [userMessage, setUserMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const [joinCode, setJoinCode] = useState("");
   const [openRooms, setOpenRooms] = useState([]);
   const [initialSyncDone, setInitialSyncDone] = useState(false);
+  const [activeTab, setActiveTab] = useState("games");
+  const [clubProfile, setClubProfile] = useState(null);
+  const [homeAvatarEmoji, setHomeAvatarEmoji] = useState("👤");
+  const [homeAvatarCustomDataUrl, setHomeAvatarCustomDataUrl] = useState("");
+  const [pendingInvite, setPendingInvite] = useState(null);
   /** @type {{ kind: string; room: Record<string, unknown> } | null} */
   const [roomHighlight, setRoomHighlight] = useState(null);
 
+  useArcadeClubPresence();
+
+  const onInvite = useCallback((invite) => {
+    setPendingInvite(invite);
+  }, []);
+  useArcadeClubInvites({ onInvite });
+
+  const refreshProfile = useCallback(async () => {
+    const [arcadeRes, homeRes] = await Promise.all([
+      fetch("/api/arcade/profile/me"),
+      fetch("/api/student/home-profile/summary"),
+    ]);
+    const arcadeJson = await arcadeRes.json().catch(() => ({}));
+    const homeJson = await homeRes.json().catch(() => ({}));
+    if (arcadeJson?.ok && arcadeJson.profile) {
+      const leoRaw = arcadeJson.profile.leoNumber ?? null;
+      const leoNumber =
+        leoRaw != null && String(leoRaw).trim() !== "" ? String(leoRaw).trim() : null;
+      setClubProfile({ ...arcadeJson.profile, leoNumber });
+    }
+    const avatar = studentAvatarFromHomeSummary(homeJson);
+    setHomeAvatarEmoji(avatar.avatarEmoji);
+    setHomeAvatarCustomDataUrl(avatar.avatarCustomDataUrl);
+  }, []);
+
   const refresh = useCallback(async () => {
-    const [balRes, gamesRes] = await Promise.all([
+    const [balRes, gamesRes, diamondRes] = await Promise.all([
       fetch("/api/arcade/balance"),
       fetch("/api/arcade/games"),
+      fetch("/api/student/diamonds/balance"),
     ]);
     const balJson = await balRes.json().catch(() => ({}));
     const gamesJson = await gamesRes.json().catch(() => ({}));
+    const diamondJson = await diamondRes.json().catch(() => ({}));
     if (balJson?.ok) setBalance(balJson.balance);
+    if (diamondJson?.ok) setDiamondBalance(diamondJson.balance);
     if (gamesJson?.ok && Array.isArray(gamesJson.games)) {
       setGames(gamesJson.games);
     }
@@ -333,7 +433,8 @@ export default function StudentArcadePage() {
         setEntryCost(opts[0].value);
       }
     }
-  }, [entryCost]);
+    await refreshProfile();
+  }, [entryCost, refreshProfile]);
 
   const refreshOpenRooms = useCallback(async () => {
     const results = await Promise.all(
@@ -361,45 +462,8 @@ export default function StudentArcadePage() {
     };
   }, [refresh]);
 
-  const fourlineMeta = useMemo(() => games.find((g) => g.gameKey === "fourline") || null, [games]);
-  const fourlineGuestLocked = Boolean(fourlineMeta?.guestLocked);
-
-  const fourlineActive = Boolean(fourlineMeta?.enabled === true && fourlineMeta?.foundationOnly === false);
-
-  const idleReason = !fourlineMeta
-    ? "טוען משחקים…"
-    : fourlineGuestLocked
-      ? null
-    : !fourlineMeta.enabled
-      ? "המשחק כבוי בשרת"
-      : fourlineMeta.foundationOnly
-        ? "עדיין לא פעיל (ממתין להפעלה)"
-        : null;
-
-  const ludoMeta = useMemo(() => games.find((g) => g.gameKey === "ludo") || null, [games]);
-  const ludoGuestLocked = Boolean(ludoMeta?.guestLocked);
-
-  const ludoActive = Boolean(ludoMeta?.enabled === true && ludoMeta?.foundationOnly === false);
-
-  const idleReasonLudo = !ludoMeta
-    ? "טוען משחקים…"
-    : ludoGuestLocked
-      ? null
-    : !ludoMeta.enabled
-      ? "המשחק כבוי בשרת"
-      : ludoMeta.foundationOnly
-        ? "עדיין לא פעיל (ממתין להפעלה)"
-        : null;
-
-  const anyLobbyGameActive = useMemo(() => {
-    return OPEN_ROOM_POLL_KEYS.some((k) => {
-      const m = games.find((g) => g.gameKey === k);
-      return Boolean(m?.enabled === true && m?.foundationOnly === false && !m?.guestLocked);
-    });
-  }, [games]);
-
-  const moreArcadeLobbyVm = useMemo(() => {
-    return MORE_ARCADE_LOBBY_ROWS.map((row) => {
+  const lobbyGameVm = useMemo(() => {
+    return LOBBY_GAME_ROWS.map((row) => {
       const meta = games.find((g) => g.gameKey === row.gameKey) || null;
       const guestLocked = Boolean(meta?.guestLocked);
       const active = Boolean(meta?.enabled === true && meta?.foundationOnly === false);
@@ -415,6 +479,35 @@ export default function StudentArcadePage() {
       return { ...row, active, guestLocked, idleReason: idleReasonRow };
     });
   }, [games]);
+
+  const openRoomsCountByGame = useMemo(() => {
+    /** @type {Record<string, number>} */
+    const counts = {};
+    for (const row of openRooms) {
+      const key = String(row.gameKey || "");
+      if (key) counts[key] = (counts[key] || 0) + 1;
+    }
+    return counts;
+  }, [openRooms]);
+
+  const selectedGame = useMemo(
+    () => lobbyGameVm.find((g) => g.gameKey === selectedGameKey) || null,
+    [lobbyGameVm, selectedGameKey],
+  );
+
+  const anyLobbyGameActive = useMemo(() => {
+    return lobbyGameVm.some((g) => g.active && !g.guestLocked);
+  }, [lobbyGameVm]);
+
+  useEffect(() => {
+    if (!initialSyncDone) return;
+    setSelectedGameKey((prev) => {
+      const current = lobbyGameVm.find((g) => g.gameKey === prev);
+      if (current?.active && !current.guestLocked) return prev;
+      const firstActive = lobbyGameVm.find((g) => g.active && !g.guestLocked);
+      return firstActive?.gameKey || prev || lobbyGameVm[0]?.gameKey || "fourline";
+    });
+  }, [initialSyncDone, lobbyGameVm]);
 
   const openRoomsPollActive = anyLobbyGameActive;
 
@@ -467,7 +560,7 @@ export default function StudentArcadePage() {
     }
   };
 
-  const onQuickGame = (gameKey = "fourline") =>
+  const onQuickGame = (gameKey = selectedGameKey) =>
     runQuick(
       (async () => {
         const res = await fetch("/api/arcade/quick-game", {
@@ -482,7 +575,7 @@ export default function StudentArcadePage() {
       })(),
     );
 
-  const onCreateRoom = (roomType, gameKey = "fourline") =>
+  const onCreateRoom = (roomType, gameKey = selectedGameKey) =>
     run(
       (async () => {
         const res = await fetch("/api/arcade/rooms/create", {
@@ -554,6 +647,13 @@ export default function StudentArcadePage() {
         : "טוען…"
       : String(balance);
 
+  const diamondDisplay =
+    diamondBalance === null || diamondBalance === undefined
+      ? initialSyncDone
+        ? "לא זמין"
+        : "טוען…"
+      : String(diamondBalance);
+
   const hlRoom = roomHighlight?.room;
   const hlRoomId = hlRoom?.id != null ? String(hlRoom.id) : "";
   const hlStatus = hlRoom?.status != null ? String(hlRoom.status) : "—";
@@ -571,119 +671,168 @@ export default function StudentArcadePage() {
   const waitingCopy =
     hlStatus === "waiting" ? "ממתין לשחקן נוסף" : hlStatus === "active" ? "המשחק פעיל" : hlStatus;
 
+  const entryCostLabel =
+    entryOptions.find((o) => o.value === entryCost)?.label || String(entryCost);
+  const canPlaySelected = Boolean(selectedGame?.active && !selectedGame?.guestLocked);
+  const costBlockedForSelected = Boolean(costDisabledReason(entryCost));
+
   const arcadeCardProps = {
-    entryOptions,
-    cardShell: GH.card,
-    cardTitle: GH.cardTitle,
-    cardBlurb: GH.cardBlurb,
     cardCta: GH.cardCta,
-    badgeActive: GH.badgeActive,
-    badgeInactive: GH.badgeInactive,
-    cardDivider: GH.cardDivider,
-    bulletList: GH.bulletList,
-    bulletDot: GH.bulletDot,
     idleBox: GH.idleBox,
-    entryLabel: GH.entryLabel,
-    entryBtnSelected: GH.entryBtnSelected,
-    entryBtnDefault: GH.entryBtnDefault,
-    entryBtnDisabled: GH.entryBtnDisabled,
-    btnSecondary: GH.btnSecondary,
-    btnSecondaryOutline: GH.btnSecondaryOutline,
   };
+
+  const openProfileTab = useCallback(() => {
+    setActiveTab((tab) => (tab === "profile" ? tab : "profile"));
+  }, []);
 
   return (
     <GameAccessGuard category="online">
     <Layout studentTheme={theme} studentShell="home">
       <Head>
-        <title>משחקים — LEO K</title>
+        <title>מועדון המשחקים של ליאו — LEO K</title>
       </Head>
       <div className={GH.pageWrap} dir="rtl">
-        <div className={`${GH.container} max-w-7xl space-y-4`}>
+        <div className="w-full max-w-[1400px] mx-auto px-3 sm:px-4 md:px-6 py-4 md:py-8 pb-6 overflow-x-hidden space-y-4">
           <GamesHubNavBar
             backHref="/student/games"
             backLabel="משחקים"
-            badge={`🪙 ${balanceDisplay} מטבעות`}
+            badge="מועדון המשחקים של ליאו"
             backBtnClass={GH.backBtn}
-            badgeClass={GH.badge}
+            badgeClass={GH.arcadeNavTitle || GH.arcadeNavBadge || GH.badge}
           />
 
-          <GamesHubHeader
-            title="משחקים עם חברים"
-            subtitle="בחר משחק, עלות כניסה והצטרף לחדר"
-            titleClass={GH.hubTitle}
-            subtitleClass={GH.hubSub}
+          <ArcadeLobbyHeader
+            displayName={clubProfile?.displayName || "שחקן"}
+            coinBalance={balanceDisplay}
+            diamondBalance={diamondDisplay}
+            isGuest={Boolean(clubProfile?.isGuest)}
+            leoNumber={clubProfile?.leoNumber || null}
+            avatarEmoji={homeAvatarEmoji}
+            avatarCustomDataUrl={homeAvatarCustomDataUrl}
+            gh={GH}
+            onAvatarClick={openProfileTab}
           />
+
+          {clubProfile?.isGuest ? <ArcadeGuestUpgradeBanner /> : null}
+
+          <ArcadeInviteBanner invite={pendingInvite} onDismiss={() => setPendingInvite(null)} />
+
+          <ArcadeClubEventsPanel gh={GH} />
+
+          <ArcadeTabNav activeTab={activeTab} onChange={setActiveTab} gh={GH} className="lg:hidden" />
+
+          {activeTab !== "games" ? (
+            <div className={`hidden lg:block ${GH.arcadeEntryBar} py-2`}>
+              <ArcadeTabNav activeTab={activeTab} onChange={setActiveTab} gh={GH} compact />
+            </div>
+          ) : null}
 
           {!initialSyncDone ? (
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className={GH.skeleton} aria-hidden />
+            <div className={ARCADE_GAME_GRID_CLASS}>
+              {[1, 2, 3, 4, 5, 6, 7].map((i) => (
+                <div
+                  key={i}
+                  className="flex h-[132px] min-w-0 animate-pulse rounded-lg border border-sky-200 bg-sky-100 opacity-60"
+                  aria-hidden
+                />
               ))}
+            </div>
+          ) : activeTab === "friends" ? (
+            <ArcadeClubFriendsPanel
+              gh={GH}
+              leoNumber={clubProfile?.leoNumber ?? null}
+              leoNumberLoading={clubProfile == null}
+            />
+          ) : activeTab === "shop" ? (
+            <ArcadeClubShopPanel
+              gh={GH}
+              coinBalance={balanceNum}
+              onCoinBalanceChange={(bal) => setBalance(bal)}
+              studentFullName={clubProfile?.fullName || ""}
+            />
+          ) : activeTab === "profile" ? (
+            <div className="space-y-4">
+              <ArcadeClubProfilePanel gh={GH} />
+              <ArcadeClubMissionsPanel gh={GH} />
+              <div className={`${GH.arcadePanelMyRoom || GH.card} text-right`}>
+                <h3 className={GH.arcadeSectionTitle || GH.sectionTitle}>חדר אישי</h3>
+                <p className={`mt-1 text-sm ${GH.arcadePanelBlurb || GH.cardBlurb}`}>מרחב אישי עם גביעים וקישוטים</p>
+                <Link href="/student/arcade/my-room" className={`mt-3 inline-block ${GH.btnJoinCode}`}>
+                  לחדר שלי
+                </Link>
+              </div>
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4 xl:grid-cols-3 xl:gap-4">
-                <ArcadeGameCard
-                  {...arcadeCardProps}
-                  title="ארבע בשורה"
-                  blurb="ארבע בשורה · שניים נגד שניים"
-                  bullets={["שחקנים: 2", "בחר עלות כניסה לפני משחק מהיר או יצירת חדר"]}
-                  gameKey="fourline"
-                  active={fourlineActive}
-                  guestLocked={fourlineGuestLocked}
-                  idleReason={idleReason}
-                  entryCost={entryCost}
-                  setEntryCost={setEntryCost}
-                  costDisabledReason={costDisabledReason}
+              <div className={GH.arcadeEntryBar}>
+                <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between lg:gap-4">
+                  <EntryCostSelector
+                    entryOptions={entryOptions}
+                    entryCost={entryCost}
+                    setEntryCost={setEntryCost}
+                    costDisabledReason={costDisabledReason}
+                    busy={busy}
+                    className="mt-0 min-w-0"
+                    label="בחר סכום כניסה"
+                    entryLabel={GH.arcadeEntryLabel || GH.entryLabel}
+                    entryBtnSelected={GH.entryBtnSelected}
+                    entryBtnDefault={GH.entryBtnDefault}
+                    entryBtnDisabled={GH.entryBtnDisabled}
+                  />
+                  <ArcadeTabNav
+                    activeTab={activeTab}
+                    onChange={setActiveTab}
+                    gh={GH}
+                    compact
+                    className="hidden shrink-0 lg:flex"
+                  />
+                </div>
+                <ArcadeGameActionPanel
+                  selectedTitle={selectedGame?.title || "—"}
+                  entryCostLabel={entryCostLabel}
+                  canAct={canPlaySelected}
+                  costBlocked={costBlockedForSelected}
+                  costBlockedMessage={costDisabledReason(entryCost) || undefined}
                   busy={busy}
-                  onQuickGame={() => void onQuickGame()}
-                  onCreateRoom={(rt, gk) => void onCreateRoom(rt, gk)}
+                  onQuickGame={() => void onQuickGame(selectedGameKey)}
+                  onCreatePublic={() => void onCreateRoom("public", selectedGameKey)}
+                  onCreatePrivate={() => void onCreateRoom("private", selectedGameKey)}
+                  cardCta={GH.cardCta}
+                  btnSecondary={GH.btnSecondary}
+                  btnSecondaryOutline={GH.btnSecondaryOutline}
+                  actionDivider={GH.arcadeActionDivider}
+                  actionTitle={GH.arcadeActionTitle}
+                  actionMeta={GH.arcadeActionMeta}
                 />
-                <ArcadeGameCard
-                  {...arcadeCardProps}
-                  title="לודו"
-                  blurb="לודו · 2–4 שחקנים"
-                  bullets={["שחקנים: עד 4", "בחר עלות כניסה לפני משחק מהיר או יצירת חדר"]}
-                  gameKey="ludo"
-                  active={ludoActive}
-                  guestLocked={ludoGuestLocked}
-                  idleReason={idleReasonLudo}
-                  entryCost={entryCost}
-                  setEntryCost={setEntryCost}
-                  costDisabledReason={costDisabledReason}
-                  busy={busy}
-                  onQuickGame={() => void onQuickGame("ludo")}
-                  onCreateRoom={(rt, gk) => void onCreateRoom(rt, gk)}
-                />
-                {moreArcadeLobbyVm.map((row) => (
+              </div>
+
+              <div className={ARCADE_GAME_GRID_CLASS}>
+                {lobbyGameVm.map((row) => (
                   <ArcadeGameCard
                     {...arcadeCardProps}
                     key={row.gameKey}
                     title={row.title}
                     blurb={row.blurb}
-                    bullets={[row.playersLine, "בחר עלות כניסה לפני משחק מהיר או יצירת חדר"]}
+                    playersLine={row.playersLine}
                     gameKey={row.gameKey}
                     active={row.active}
                     guestLocked={row.guestLocked}
                     idleReason={row.idleReason}
-                    entryCost={entryCost}
-                    setEntryCost={setEntryCost}
-                    costDisabledReason={costDisabledReason}
-                    busy={busy}
-                    onQuickGame={() => void onQuickGame(row.gameKey)}
-                    onCreateRoom={(rt, gk) => void onCreateRoom(rt, gk)}
+                    selected={selectedGameKey === row.gameKey}
+                    openRoomCount={openRoomsCountByGame[row.gameKey] || 0}
+                    onSelect={setSelectedGameKey}
                   />
                 ))}
               </div>
 
               <div className="mt-5 grid gap-3 lg:mt-6 lg:grid-cols-3 lg:gap-4">
-                <div className={`${GH.card} lg:col-span-2`}>
-                  <h3 className={GH.sectionTitle}>חדרים פתוחים</h3>
-                  <p className={`mt-1 text-[11px] sm:text-xs ${GH.cardBlurb}`}>חדרים ציבוריים ומשחק מהיר שמחכים לשחקן</p>
+                <div className={`${GH.arcadePanelOpenRooms || GH.card} lg:col-span-2`}>
+                  <h3 className={GH.arcadeSectionTitle || GH.sectionTitle}>חדרים פתוחים</h3>
+                  <p className={`mt-1 text-[11px] sm:text-xs ${GH.arcadePanelBlurb || GH.cardBlurb}`}>חדרים ציבוריים ומשחק מהיר שמחכים לשחקן</p>
                   {!openRoomsPollActive ? (
-                    <p className={`mt-3 ${GH.emptyText}`}>אין רשימה — המשחק לא פעיל</p>
+                    <p className={`mt-3 ${GH.arcadeEmptyText || GH.emptyText}`}>אין רשימה — המשחק לא פעיל</p>
                   ) : openRooms.length === 0 ? (
-                    <p className={`mt-3 ${GH.emptyText}`}>אין חדרים פתוחים כרגע</p>
+                    <p className={`mt-3 ${GH.arcadeEmptyText || GH.emptyText}`}>אין חדרים פתוחים כרגע</p>
                   ) : (
                     <ul className="mt-3 max-h-64 space-y-2 overflow-y-auto pr-0.5 sm:max-h-72">
                       {openRooms.map((row) => {
@@ -694,10 +843,10 @@ export default function StudentArcadePage() {
                         return (
                           <li
                             key={row.roomId}
-                            className={`flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between ${GH.roomItem}`}
+                            className={`flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between ${GH.arcadeRoomItem || GH.roomItem}`}
                           >
-                            <div className={`min-w-0 text-right ${GH.roomItemMeta}`}>
-                              <p className={GH.roomItemTitle}>
+                            <div className={`min-w-0 text-right ${GH.arcadePanelMeta || GH.roomItemMeta}`}>
+                              <p className={GH.arcadeRoomItemTitle || GH.arcadePanelTitle || GH.roomItemTitle}>
                                 {displayArcadeGameTitle(row.gameKey, row.gameTitle)}
                               </p>
                               <p>
@@ -721,9 +870,9 @@ export default function StudentArcadePage() {
                   )}
                 </div>
 
-                <div className={GH.card}>
-                  <h3 className={GH.sectionTitle}>חדר פרטי — הצטרפות בקוד</h3>
-                  <p className={`mt-1 text-[11px] sm:text-xs ${GH.cardBlurb}`}>הזן את הקוד שקיבלת מחבר</p>
+                <div className={GH.arcadePanelJoinCode || GH.card}>
+                  <h3 className={GH.arcadeSectionTitle || GH.sectionTitle}>חדר פרטי — הצטרפות בקוד</h3>
+                  <p className={`mt-1 text-[11px] sm:text-xs ${GH.arcadePanelBlurb || GH.cardBlurb}`}>הזן את הקוד שקיבלת מחבר</p>
                   <div className="mt-3 flex flex-col gap-2">
                     <input
                       type="text"
@@ -747,7 +896,7 @@ export default function StudentArcadePage() {
             </>
           )}
 
-          {roomHighlight && hlRoomId ? (
+          {activeTab === "games" && roomHighlight && hlRoomId ? (
             <div className={`mt-5 ${GH.roomReadyPanel}`}>
               <h3 className={GH.roomReadyTitle}>חדר מוכן</h3>
               <p className={`mt-1 ${GH.roomReadySub}`}>{waitingCopy}</p>

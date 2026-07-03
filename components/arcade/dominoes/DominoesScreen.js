@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDominoesSession } from "../../../hooks/arcade/useDominoesSession";
 import { useArcadeRoomExit } from "../../../hooks/arcade/useArcadeRoomExit";
+import ArcadeGameSocialDock from "../club/ArcadeGameSocialDock.jsx";
 import StudentAdSlot from "../../student/StudentAdSlot.jsx";
 
 const GAME_TITLE = "דומינו";
@@ -341,7 +342,12 @@ export default function DominoesScreen({ roomId }) {
         ) : null}
       </div>
 
-      {room ? <LeaveRow onLeave={onLeaveRoom} busy={leaveBusy} disabled={!String(roomId || "").trim()} /> : null}
+      {room ? (
+        <>
+          <ArcadeGameSocialDock roomId={roomId} gameSession={gameSession} />
+          <LeaveRow onLeave={onLeaveRoom} busy={leaveBusy} disabled={!String(roomId || "").trim()} />
+        </>
+      ) : null}
       <StudentAdSlot variant="dvh" dataAdSlot="arcade-ad-reserved" />
     </div>
   );
