@@ -2,18 +2,25 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "MLEO: dev server (port 3002, run.bat)",
+      "label": "START LOCAL",
       "type": "shell",
       "command": "npm run dev:run-button",
       "options": {
-        "cwd": "${workspaceFolder}",
-        "env": {}
+        "cwd": "${workspaceFolder}"
       },
       "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
       "presentation": {
         "reveal": "always",
         "panel": "dedicated",
         "focus": true
+      },
+      "isBackground": true,
+      "runOptions": {
+        "instanceLimit": 1
       }
     }
   ]

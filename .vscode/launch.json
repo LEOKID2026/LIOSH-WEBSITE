@@ -1,0 +1,12 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "START LOCAL",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run dev:run-button",
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}

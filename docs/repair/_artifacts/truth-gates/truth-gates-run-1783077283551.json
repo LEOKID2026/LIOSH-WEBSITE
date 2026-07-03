@@ -1,0 +1,19 @@
+{
+  "startedAt": "2026-07-03T11:14:42.347Z",
+  "gates": [
+    {
+      "gate": "NO_LOCALSTORAGE_REPORT_PASS",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "launchRequired": true,
+      "stdoutTail": "OK parent-report-server-truth-phase1-selftest\nNO_LOCALSTORAGE_REPORT_PASS: PASS — product parent-report pages blocked from mleo_* localStorage; API bridge only\n{\n  \"gate\": \"NO_LOCALSTORAGE_REPORT_PASS\",\n  \"verdict\": \"PASS\",\n  \"layer\": \"source-guard\",\n  \"usesMock\": false,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": false,\n  \"usesLiveApi\": false,\n  \"usesLiveUi\": false,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"product parent-report pages blocked from mleo_* localStorage; API bridge only\",\n  \"details\": {},\n  \"at\": \"2026-07-03T11:14:43.544Z\"\n}\n",
+      "stderrTail": ""
+    }
+  ],
+  "summary": {
+    "pass": 1,
+    "fail": 0,
+    "skip": 0
+  },
+  "finishedAt": "2026-07-03T11:14:43.551Z"
+}

@@ -1,0 +1,19 @@
+{
+  "startedAt": "2026-07-03T12:57:14.456Z",
+  "gates": [
+    {
+      "gate": "EVIDENCE_THRESHOLD_PASS",
+      "verdict": "FAIL",
+      "exitCode": 1,
+      "launchRequired": true,
+      "stdoutTail": "OK parent-report-zero-evidence-policy\nEVIDENCE_THRESHOLD_PASS: FAIL — scripts/parent-report-diagnostic-evidence.mjs failed\n{\n  \"gate\": \"EVIDENCE_THRESHOLD_PASS\",\n  \"verdict\": \"FAIL\",\n  \"layer\": \"contract\",\n  \"usesMock\": false,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": false,\n  \"usesLiveApi\": false,\n  \"usesLiveUi\": false,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"scripts/parent-report-diagnostic-evidence.mjs failed\",\n  \"details\": {},\n  \"at\": \"2026-07-03T12:57:17.486Z\"\n}\n",
+      "stderrTail": "node:internal/modules/run_main:123\r\n    triggerUncaughtException(\r\n    ^\r\n\r\nAssertionError [ERR_ASSERTION]: weak row in topic recommendations\r\n    at <anonymous> (C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LEO-KIDS-FINAL\\LEO-KIDS-WEB-TRY\\scripts\\parent-report-diagnostic-evidence.mjs:245:10) {\r\n  generatedMessage: false,\r\n  code: 'ERR_ASSERTION',\r\n  actual: undefined,\r\n  expected: true,\r\n  operator: '=='\r\n}\r\n\r\nNode.js v22.17.1\r\n"
+    }
+  ],
+  "summary": {
+    "pass": 0,
+    "fail": 1,
+    "skip": 0
+  },
+  "finishedAt": "2026-07-03T12:57:17.496Z"
+}

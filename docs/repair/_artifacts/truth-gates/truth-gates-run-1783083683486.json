@@ -1,0 +1,19 @@
+{
+  "startedAt": "2026-07-03T13:01:21.149Z",
+  "gates": [
+    {
+      "gate": "EVIDENCE_THRESHOLD_PASS",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "launchRequired": true,
+      "stdoutTail": "OK parent-report-zero-evidence-policy\nOK parent-report-diagnostic-evidence\nEVIDENCE_THRESHOLD_PASS: PASS — zero-evidence + diagnostic evidence threshold suites passed\n{\n  \"gate\": \"EVIDENCE_THRESHOLD_PASS\",\n  \"verdict\": \"PASS\",\n  \"layer\": \"contract\",\n  \"usesMock\": true,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": false,\n  \"usesLiveApi\": false,\n  \"usesLiveUi\": false,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"zero-evidence + diagnostic evidence threshold suites passed\",\n  \"details\": {},\n  \"at\": \"2026-07-03T13:01:23.478Z\"\n}\n",
+      "stderrTail": ""
+    }
+  ],
+  "summary": {
+    "pass": 1,
+    "fail": 0,
+    "skip": 0
+  },
+  "finishedAt": "2026-07-03T13:01:23.486Z"
+}

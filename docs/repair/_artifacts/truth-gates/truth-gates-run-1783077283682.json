@@ -1,0 +1,19 @@
+{
+  "startedAt": "2026-07-03T11:14:43.603Z",
+  "gates": [
+    {
+      "gate": "PRODUCTION_GUARD_PASS",
+      "verdict": "FAIL",
+      "exitCode": 1,
+      "launchRequired": true,
+      "stdoutTail": "PRODUCTION_GUARD_PASS: FAIL — The expression evaluated to a falsy value:\n\n  assert.ok(PARENT_REPORT_PORTAL_GATE.hintHe.includes(\"localStorage\"))\n\n{\n  \"gate\": \"PRODUCTION_GUARD_PASS\",\n  \"verdict\": \"FAIL\",\n  \"layer\": \"source-and-script-guard\",\n  \"usesMock\": false,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": false,\n  \"usesLiveApi\": false,\n  \"usesLiveUi\": false,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"The expression evaluated to a falsy value:\\n\\n  assert.ok(PARENT_REPORT_PORTAL_GATE.hintHe.includes(\\\"localStorage\\\"))\\n\",\n  \"details\": {},\n  \"at\": \"2026-07-03T11:14:43.674Z\"\n}\n",
+      "stderrTail": ""
+    }
+  ],
+  "summary": {
+    "pass": 0,
+    "fail": 1,
+    "skip": 0
+  },
+  "finishedAt": "2026-07-03T11:14:43.682Z"
+}
