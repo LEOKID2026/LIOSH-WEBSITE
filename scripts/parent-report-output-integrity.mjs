@@ -20,6 +20,7 @@ import {
   CONTEXT_LABELING_SUBJECT_IDS,
   matrixRowKeysForSubject,
 } from "./fixtures/parent-report-context-labeling-matrix.mjs";
+import { isCoreParentReportRow } from "../utils/parent-report-core-grade-filter.js";
 import {
   collectParentFacingTextBundle,
   verifyPdfOrPrintOutput,
@@ -156,7 +157,11 @@ function aggregateFromBase(base) {
   assert.ok(weakTr, "A: weak row traced");
   assert.ok(strengthKeys.has(strongTr.topicRowKey), "A: high volume in strengths not weaknesses");
   assert.ok(!weakKeys.has(strongTr.topicRowKey), "A: strong row not in weaknesses");
-  assert.ok(weakKeys.has(weakTr.topicRowKey) || (mathP?.topicRecommendations || []).some((tr) => tr.topicRowKey === weakTr.topicRowKey), "A: weak row surfaced");
+  assert.ok(!weakKeys.has(weakTr.topicRowKey), "A: higher-grade weak row excluded from core weaknesses");
+  assert.ok(
+    !(mathP?.topicRecommendations || []).some((tr) => tr.topicRowKey === weakTr.topicRowKey),
+    "A: higher-grade weak row excluded from core recommendations",
+  );
 
   for (const t of traces) {
     assert.ok(t.stages.mapRow?.timeMinutes > 0, "A: time preserved on map row");
@@ -195,7 +200,10 @@ function aggregateFromBase(base) {
 
   assert.equal(classifyRowSectionPlacement(trWeak.identity), "focus");
   assert.equal(trWeak.identity.thinEvidenceDowngraded, false);
-  assert.ok(sectionPlacementConsistent(trWeak.identity, "focus") || trWeak.stages.detailedWeakness, "C: weak placement");
+  assert.ok(
+    !trWeak.stages.detailedWeakness && !trWeak.stages.detailedTopicRec,
+    "C: higher-grade weak excluded from core detailed focus",
+  );
 
   assert.notEqual(trStrong.identity.accuracy, trWeak.identity.accuracy, "D: no average contamination in identities");
 }
@@ -204,7 +212,9 @@ function aggregateFromBase(base) {
 {
   const base = buildMultiSubjectMatrixBaseReport();
   const detailed = buildDetailedParentReportFromBaseReport(base, { period: "week" });
-  const withPattern = base.diagnosticEngineV2.units.find((u) => u.taxonomy?.patternHe);
+  const withPattern = base.diagnosticEngineV2.units.find(
+    (u) => u.taxonomy?.patternHe && u.topicRowKey.includes("g4"),
+  );
   assert.ok(withPattern, "E: fixture has pattern row");
   const tr = traceRowThroughPipeline({
     baseReport: base,
@@ -273,25 +283,41 @@ for (const sid of OUTPUT_INTEGRITY_SUBJECT_IDS) {
   const realKeys = listTopicRowKeysFromBaseReport(realBase).filter((k) => k.subjectId === "math");
   assert.equal(realKeys.length, 3, "H: three math topic rows in real regression");
   const mathProfile = realDetailed.subjectProfiles.find((s) => s.subject === "math");
-  assert.equal(mathProfile?.topicOverviewRows?.length, 3, "H: topic overview lists all practiced rows");
-  assert.equal(mathProfile?.topicRecommendations?.length, 1, "H: focus section only weak row");
+  assert.equal(mathProfile?.topicOverviewRows?.length, 2, "H: topic overview lists core practiced rows only");
+  assert.equal(mathProfile?.topicRecommendations?.length, 0, "H: no core focus for higher-grade weak row");
   for (const k of realKeys) {
     const tr = traceRowThroughPipeline({
       baseReport: realBase,
       detailedReport: realDetailed,
       ...k,
     });
+    const mapRow = realBase.mathOperations?.[k.topicRowKey];
+    const isCore = isCoreParentReportRow(
+      {
+        gradeRelation: mapRow?.gradeRelation,
+        contentGradeKey: mapRow?.gradeKey ?? mapRow?.contentGradeKey,
+        registeredGradeKey: realBase?.registeredGradeKey ?? mapRow?.registeredGradeKey,
+        questions: mapRow?.questions,
+      },
+      realBase?.registeredGradeKey,
+    );
     const overviewRow = (mathProfile?.topicOverviewRows || []).find(
       (r) => r.topicRowKey === k.topicRowKey,
     );
-    assert.ok(overviewRow?.narrativeTitleHe, `H: overview title for ${k.topicRowKey}`);
-    assert.ok(!/תרגול ב|מעל הכיתה הרשומה/u.test(String(overviewRow?.narrativeTitleHe || "")), "H: short overview title");
+    if (isCore) {
+      assert.ok(overviewRow?.narrativeTitleHe, `H: overview title for core row ${k.topicRowKey}`);
+      assert.ok(!/תרגול ב|מעל הכיתה הרשומה/u.test(String(overviewRow?.narrativeTitleHe || "")), "H: short overview title");
+    } else {
+      assert.ok(!overviewRow, `H: out-of-grade row ${k.topicRowKey} excluded from core overview`);
+    }
     const surfacedIdentity =
       tr.stages.detailedTopicRec?.rowIdentityV1 ||
       tr.stages.detailedStrength?.rowIdentityV1 ||
       tr.stages.detailedWeakness?.rowIdentityV1 ||
       overviewRow?.rowIdentityV1;
-    assert.ok(surfacedIdentity?.sourceId, `H: rowIdentity on surfaced row ${k.topicRowKey}`);
+    if (isCore) {
+      assert.ok(surfacedIdentity?.sourceId, `H: rowIdentity on surfaced core row ${k.topicRowKey}`);
+    }
     assert.ok(tr.identity.timeSpentMinutes > 0, `H: time preserved ${k.topicRowKey}`);
   }
 }
@@ -328,8 +354,8 @@ if (pdfIntegrityNote && !pdfPaths.some(({ path: p }) => existsSync(p))) {
   const detailed = buildDetailedParentReportFromBaseReport(base, { period: "week" });
   const contract = buildParentProductContractV1(detailed);
   assert.ok(contract && typeof contract === "object", "contract object built");
-  const weakTr = (detailed.subjectProfiles.find((s) => s.subject === "math")?.topicRecommendations || [])[0];
-  assert.ok(weakTr?.rowIdentityV1?.timeSpentMinutes > 0, "contract path: time on rowIdentityV1");
+  const strongTr = (detailed.subjectProfiles.find((s) => s.subject === "math")?.topStrengths || [])[0];
+  assert.ok(strongTr?.rowIdentityV1?.timeSpentMinutes > 0, "contract path: time on rowIdentityV1");
 }
 
 // Print deliverables
@@ -380,12 +406,8 @@ for (const t of TRACE_TABLE.slice(0, 4)) {
   );
   assert.notEqual(frac[0][1].narrativeTopicLabelHe, frac[1][1].narrativeTopicLabelHe, "I: distinct narrative labels");
   const mathP = realDetailed.subjectProfiles.find((s) => s.subject === "math");
-  assert.equal(mathP?.topicOverviewRows?.length, 3, "I: topic overview shows all 3 practiced rows");
-  assert.equal(mathP?.topicRecommendations?.length, 1, "I: focus section only weak row");
-  assert.ok(
-    String(mathP?.topicRecommendations?.[0]?.narrativeTitleHe || "").includes("ה׳"),
-    "I: focus row is grade ה׳ fractions",
-  );
+  assert.equal(mathP?.topicOverviewRows?.length, 2, "I: topic overview shows core rows only");
+  assert.equal(mathP?.topicRecommendations?.length, 0, "I: no core focus for higher-grade weak row");
   for (const msg of assertNarrativeSurfacesDisambiguateDuplicates(realDetailed)) {
     assert.fail(`I-narrative: ${msg}`);
   }
@@ -420,18 +442,13 @@ for (const t of TRACE_TABLE.slice(0, 4)) {
   }
   for (const sid of CONTEXT_LABELING_SUBJECT_IDS) {
     const sp = matrixDetailed.subjectProfiles.find((s) => s.subject === sid);
-    assert.equal(sp?.topicOverviewRows?.length, 3, `J: ${sid} overview has 3 rows`);
-    assert.equal(sp?.topicRecommendations?.length, 1, `J: ${sid} focus has 1 row`);
     const keys = matrixRowKeysForSubject(sid);
+    assert.equal(sp?.topicOverviewRows?.length, 2, `J: ${sid} core overview has 2 rows`);
     assert.ok(
-      sp?.topicRecommendations?.some((r) => r.topicRowKey === keys.splitG5),
-      `J: ${sid} focus is higher-grade weak split`,
+      !(sp?.topicRecommendations || []).some((r) => r.topicRowKey === keys.splitG5),
+      `J: ${sid} must not focus higher-grade split`,
     );
   }
-  assert.ok(
-    (matrixDetailed.executiveSummary?.gradeSplitTopicNoticesHe || []).length >= CONTEXT_LABELING_SUBJECT_IDS.length,
-    "J: grade-split notices for all subjects with split topics",
-  );
 }
 
 // ─── K: Zero-evidence policy (math only, others 0) ───────────────────────────

@@ -66,6 +66,7 @@ import {
 } from "../../utils/parent-report-language/index.js";
 import {
   formatParentReportActivitySourceHe,
+  formatParentReportActivityDisplayLabelHe,
   formatParentReportGradeHe,
   formatParentReportLevelHe,
   formatParentReportSubjectHe,
@@ -1059,7 +1060,10 @@ export default function ParentReport() {
     return dateStr;
   };
 
-  const formatActivitySource = (row) => formatParentReportActivitySourceHe(row);
+  const formatActivitySource = (row) =>
+    formatParentReportActivityDisplayLabelHe(row, {
+      subjectId: row?.subject || row?.subjectId,
+    });
 
   // בדיקת גודל מסך
   useEffect(() => {

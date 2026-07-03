@@ -601,6 +601,10 @@ export default function ParentReportDetailedPage() {
             .no-pdf {
               display: none !important;
             }
+            .pr-detailed-parent-activities,
+            .no-pdf.pr-detailed-parent-activities {
+              display: none !important;
+            }
             .pr-detailed-page {
               background: #ffffff !important;
               color: #111827 !important;
@@ -1256,7 +1260,9 @@ export default function ParentReportDetailedPage() {
                 </div>
                 </SectionCard>
 
-                <ParentAssignedActivitiesSection rows={payload?.parentAssignedActivitiesInPeriod} />
+                {displayMode === "full" ? (
+                  <ParentAssignedActivitiesSection rows={payload?.parentAssignedActivitiesInPeriod} />
+                ) : null}
 
                 {/* D — אותו payload; מלא/מקוצר; כותרת אזור + לכל מקצוע כותרת + כרטיסים פנימיים בלבד */}
                 {displayMode === "summary" ? (

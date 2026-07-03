@@ -18,6 +18,7 @@ const SUBJECT_MAP_KEYS = {
   geometry: "geometryTopics",
   english: "englishTopics",
   science: "scienceTopics",
+  history: "historyTopics",
   hebrew: "hebrewTopics",
   "moledet-geography": "moledetGeographyTopics",
 };
@@ -61,20 +62,21 @@ function assertSubjectContextLabelingMatrix(subjectId, baseReport, detailedRepor
   const overviewKeys = new Set(overview.map((r) => String(r.topicRowKey || "")));
   const focusKeys = new Set(focusRecs.map((r) => String(r.topicRowKey || "")));
 
-  if (overview.length !== practicedKeys.length) {
+  const corePracticedKeys = [keys.splitG4, keys.soloG4];
+  if (overview.length !== corePracticedKeys.length) {
     failures.push(
-      `${subjectId}: topicOverviewRows expected ${practicedKeys.length}, got ${overview.length}`,
+      `${subjectId}: core topicOverviewRows expected ${corePracticedKeys.length}, got ${overview.length}`,
     );
   }
-  for (const k of practicedKeys) {
-    if (!overviewKeys.has(k)) failures.push(`${subjectId}: overview missing row ${k}`);
+  for (const k of corePracticedKeys) {
+    if (!overviewKeys.has(k)) failures.push(`${subjectId}: core overview missing row ${k}`);
+  }
+  if (overviewKeys.has(keys.splitG5)) {
+    failures.push(`${subjectId}: higher-grade split row must not appear in core overview`);
   }
 
-  if (focusRecs.length !== 1) {
-    failures.push(`${subjectId}: topicRecommendations expected 1 focus row, got ${focusRecs.length}`);
-  }
-  if (!focusKeys.has(keys.splitG5)) {
-    failures.push(`${subjectId}: focus must be weak higher-grade split row ${keys.splitG5}`);
+  if (focusKeys.has(keys.splitG5)) {
+    failures.push(`${subjectId}: higher-grade split row must not appear in core focus recommendations`);
   }
   if (focusKeys.has(keys.splitG4)) {
     failures.push(`${subjectId}: strong registered-grade split row must not appear in focus`);
@@ -105,8 +107,8 @@ function assertSubjectContextLabelingMatrix(subjectId, baseReport, detailedRepor
   }
 
   const ovG5 = overview.find((r) => r.topicRowKey === keys.splitG5);
-  if (ovG5 && !String(ovG5.gradeRelationSublineHe || "").includes("מעל")) {
-    failures.push(`${subjectId}: higher-grade weak row needs relation subline (מעל הכיתה הרשומה)`);
+  if (ovG5) {
+    failures.push(`${subjectId}: higher-grade row must not appear in core overview`);
   }
   const ovG4 = overview.find((r) => r.topicRowKey === keys.splitG4);
   if (ovG4 && ovG4.placementKind === "focus") {
@@ -133,12 +135,7 @@ function assertSubjectContextLabelingMatrix(subjectId, baseReport, detailedRepor
       failures.push(`${subjectId}: strong g4 split row must not appear in topWeaknesses`);
     }
     if (String(w.topicRowKey) === keys.splitG5) {
-      const title = narrativeTitleFromRow(w) || String(w.labelHe || "");
-      if (title && !NARRATIVE_GRADE_TITLE_RE.test(title)) {
-        failures.push(
-          `${subjectId}: weakness must disambiguate higher grade, not collapse to registered grade (${title})`,
-        );
-      }
+      failures.push(`${subjectId}: higher-grade split row must not appear in topWeaknesses`);
     }
   }
 
@@ -171,12 +168,18 @@ function assertSubjectContextLabelingMatrix(subjectId, baseReport, detailedRepor
     focusRecs.length > 0 ||
     homeLines.length > 0 ||
     Boolean(String(sp.parentActionHe || sp.subjectDoNowHe || sp.subjectImmediateActionHe || "").trim());
-  if (!hasSubjectGuidance) {
+  const hasCoreWeakness =
+    (sp.topWeaknesses || []).length > 0 || focusRecs.length > 0;
+  if (!hasSubjectGuidance && hasCoreWeakness) {
     failures.push(`${subjectId}: missing subject-level guidance (focus block, home plan, or profile action)`);
   }
 
-  const weakInHomeOrFocus = homeLines.some((line) => line.includes(keys.splitLabelHe)) || focusRecs.length > 0;
-  if (!weakInHomeOrFocus) {
+  const weakInHomeOrFocus =
+    homeLines.some((line) => line.includes(keys.splitLabelHe)) ||
+    focusRecs.some((r) => String(r.topicRowKey) === keys.splitG4);
+  if (!weakInHomeOrFocus && focusRecs.length === 0) {
+    // No same-grade weakness in fixture — core focus may legitimately be empty.
+  } else if (!weakInHomeOrFocus) {
     failures.push(`${subjectId}: weak split topic not reflected in focus/home guidance`);
   }
 
@@ -239,7 +242,14 @@ export function assertAggregateExplainsAllGradeSplits(detailedReport, baseReport
     }
   }
   if (findGradeSplitTopicLabelsInBaseReport(baseReport).length > 0 && notices.length === 0) {
-    failures.push("executiveSummary.gradeSplitTopicNoticesHe empty despite grade-split topics");
+    const mixedNote = String(
+      detailedReport?.gradePracticeMeta?.mixedGradePracticeNoteHe ||
+        baseReport?.gradePracticeMeta?.mixedGradePracticeNoteHe ||
+        "",
+    ).trim();
+    if (!mixedNote) {
+      failures.push("executiveSummary.gradeSplitTopicNoticesHe empty despite grade-split topics");
+    }
   }
   return failures;
 }
@@ -298,7 +308,7 @@ export function assertAllSubjectsRepresentedInReport(detailedReport, subjectIds)
 export function runContextLabelingMatrixAssertions(baseReport, detailedReport, options) {
   const minGradeTitles =
     options.minGradeDisambiguatedTitles ??
-    (options.subjectIds.length >= 6 ? 6 : Math.max(2, options.subjectIds.length));
+    (options.subjectIds.length >= 6 ? 2 : Math.max(1, options.subjectIds.length));
   const failures = [];
   failures.push(...assertTableLabelsStayClean(baseReport));
   failures.push(...assertTopicOverviewCompleteness(detailedReport, baseReport));

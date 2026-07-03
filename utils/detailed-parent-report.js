@@ -12,6 +12,10 @@ import { buildTopicRecommendationsForSubject } from "./topic-next-step-engine.js
 import { rewriteParentRecommendationForDetailedHe } from "./detailed-report-parent-letter-he.js";
 import { buildParentAssignedActivitiesInPeriod } from "./parent-report-parent-assigned-activities.js";
 import {
+  filterCoreV2Units,
+  isCoreV2UnitForReport,
+} from "./parent-report-core-grade-filter.js";
+import {
   resolveGradeAwareRecommendationStepLabelHe,
   suppressRegisteredGradeStrengthenCopy,
 } from "./parent-report-language/grade-context-parent-he.js";
@@ -2400,6 +2404,23 @@ function subjectTrendNarrativeHeFromMapRow(mapRow, highPriority) {
   return highPriority > 0 ? subjectV2TrendNarrativeHighPriorityHe() : subjectV2TrendNarrativeStableHe();
 }
 
+function topicMapRowForV2Unit(baseReport, sid, u) {
+  const mapKey = REPORT_MAP_KEY[sid];
+  const topicMapForSid =
+    mapKey && baseReport?.[mapKey] && typeof baseReport[mapKey] === "object" ? baseReport[mapKey] : {};
+  const trk = String(u?.topicRowKey || "");
+  return trk && topicMapForSid[trk] && typeof topicMapForSid[trk] === "object"
+    ? topicMapForSid[trk]
+    : null;
+}
+
+function filterCoreUnitsFromBaseReport(baseReport, units, sid) {
+  const mapKey = REPORT_MAP_KEY[sid];
+  const topicMapForSid =
+    mapKey && baseReport?.[mapKey] && typeof baseReport[mapKey] === "object" ? baseReport[mapKey] : {};
+  return filterCoreV2Units(units, topicMapForSid, baseReport?.registeredGradeKey);
+}
+
 function buildSubjectProfilesFromV2(baseReport) {
   const diag = baseReport?.diagnosticEngineV2;
   const grouped = groupV2UnitsBySubject(diag);
@@ -2436,17 +2457,18 @@ function buildSubjectProfilesFromV2(baseReport) {
     }
     const csOf = (u) => u?.canonicalState;
     const actionOf = (u) => csOf(u)?.actionState || "withhold";
-    const highPriority = units.filter((u) => String(u?.priority?.level || "") === "P4").length;
-    const strengthUnits = units.filter((u) => actionOf(u) === "maintain" || actionOf(u) === "expand_cautiously");
+    const coreUnits = filterCoreUnitsFromBaseReport(baseReport, units, sid);
+    const highPriority = coreUnits.filter((u) => String(u?.priority?.level || "") === "P4").length;
+    const strengthUnits = coreUnits.filter((u) => actionOf(u) === "maintain" || actionOf(u) === "expand_cautiously");
     const stable = strengthUnits.length;
-    const fragile = units.filter((u) => Array.isArray(u?.strengthProfile?.tags) && u.strengthProfile.tags.includes("fragile_success")).length;
-    const diagnosed = units.filter((u) => !!u?.diagnosis?.allowed);
+    const fragile = coreUnits.filter((u) => Array.isArray(u?.strengthProfile?.tags) && u.strengthProfile.tags.includes("fragile_success")).length;
+    const diagnosed = coreUnits.filter((u) => !!u?.diagnosis?.allowed);
     const diagnosticLeadSource =
       diagnosed.find((u) => String(u?.priority?.level || "") === "P4") ||
       diagnosed.find((u) => String(u?.priority?.level || "") === "P3") ||
       diagnosed[0] ||
       null;
-    const subjectAnchorUnit = selectSubjectAnchorUnitForV2Profile(units, csOf);
+    const subjectAnchorUnit = selectSubjectAnchorUnitForV2Profile(coreUnits, csOf);
 
     const mapKey = REPORT_MAP_KEY[sid];
     const topicMapForSid =
@@ -2466,7 +2488,7 @@ function buildSubjectProfilesFromV2(baseReport) {
     const topicRecommendationsBase = attachNarrativeContractsToTopicRecommendations(
       sid,
       applyGateToTextClampToTopicRecommendations(
-        units
+        coreUnits
           .filter((u) => {
             const trk = String(u?.topicRowKey || "");
             const mapR =
@@ -2485,7 +2507,7 @@ function buildSubjectProfilesFromV2(baseReport) {
           .slice(0, 8)
       )
     );
-    const topicOverviewRows = buildTopicOverviewRowsFromUnits(baseReport, sid, units, topicMapForSid);
+    const topicOverviewRows = buildTopicOverviewRowsFromUnits(baseReport, sid, coreUnits, topicMapForSid);
     const topicGroupsByTier = groupTopicRowsByParentTier(topicOverviewRows);
 
     const topicRecommendations = [...topicRecommendationsBase]
@@ -2754,7 +2776,12 @@ function buildSubjectProfilesFromV2(baseReport) {
 
 function buildExecutiveSummaryFromV2(baseReport, subjectCoverage) {
   const diag = baseReport?.diagnosticEngineV2;
-  const units = Array.isArray(diag?.units) ? diag.units : [];
+  const allUnits = Array.isArray(diag?.units) ? diag.units : [];
+  const units = allUnits.filter((u) => {
+    const sid = String(u?.subjectId || "");
+    const mapR = topicMapRowForV2Unit(baseReport, sid, u);
+    return isCoreV2UnitForReport(u, mapR, baseReport?.registeredGradeKey);
+  });
   const gk = (u) => (u ? gradeKeyForV2UnitFromReport(baseReport, u) : null);
   const csOf = (u) => u?.canonicalState;
   const actionOf = (u) => csOf(u)?.actionState || "withhold";
@@ -2782,7 +2809,7 @@ function buildExecutiveSummaryFromV2(baseReport, subjectCoverage) {
       const topicLabel = executiveLineFromV2Unit(baseReport, u);
       return `${parentFacingPatternLabelHe(u)} — ${topicLabel}`;
     });
-  const gradeSplitTopicNoticesHe = detectGradeSplitContradictions(units, baseReport);
+  const gradeSplitTopicNoticesHe = detectGradeSplitContradictions(allUnits, baseReport);
 
   return {
     version: 2,
@@ -2837,7 +2864,12 @@ function buildExecutiveSummaryFromV2(baseReport, subjectCoverage) {
 }
 
 function buildCrossSubjectInsightsFromV2(baseReport) {
-  const units = Array.isArray(baseReport?.diagnosticEngineV2?.units) ? baseReport.diagnosticEngineV2.units : [];
+  const allUnits = Array.isArray(baseReport?.diagnosticEngineV2?.units) ? baseReport.diagnosticEngineV2.units : [];
+  const units = allUnits.filter((u) => {
+    const sid = String(u?.subjectId || "");
+    const mapR = topicMapRowForV2Unit(baseReport, sid, u);
+    return isCoreV2UnitForReport(u, mapR, baseReport?.registeredGradeKey);
+  });
   const contradictory = units.filter((u) => String(u?.confidence?.level || "") === "contradictory").length;
   const p4 = units.filter((u) => String(u?.priority?.level || "") === "P4").length;
   const strengthenTopicCount = units.filter((u) => {
@@ -2861,7 +2893,12 @@ function buildCrossSubjectInsightsFromV2(baseReport) {
 }
 
 function buildHomePlanFromV2(baseReport) {
-  const units = Array.isArray(baseReport?.diagnosticEngineV2?.units) ? baseReport.diagnosticEngineV2.units : [];
+  const allUnits = Array.isArray(baseReport?.diagnosticEngineV2?.units) ? baseReport.diagnosticEngineV2.units : [];
+  const units = allUnits.filter((u) => {
+    const sid = String(u?.subjectId || "");
+    const mapR = topicMapRowForV2Unit(baseReport, sid, u);
+    return isCoreV2UnitForReport(u, mapR, baseReport?.registeredGradeKey);
+  });
   const actionOf = (u) => u?.canonicalState?.actionState || "withhold";
   const subjectHasPractice = (u) =>
     subjectQuestionCountFromReportSummary(baseReport, String(u?.subjectId || "")) > 0;
@@ -2892,13 +2929,18 @@ function buildHomePlanFromV2(baseReport) {
       homePlanLineFromV2Unit(baseReport, u, rewriteParentRecommendationForDetailedHe(String(action))),
     );
   }
-  const splitNotices = detectGradeSplitContradictions(units, baseReport);
+  const splitNotices = detectGradeSplitContradictions(allUnits, baseReport);
   const merged = [...splitNotices.slice(0, 2), ...itemsHe];
   return { itemsHe: merged.length ? merged : [homePlanV2EmptyFallbackHe()] };
 }
 
 function buildNextPeriodGoalsFromV2(baseReport) {
-  const units = Array.isArray(baseReport?.diagnosticEngineV2?.units) ? baseReport.diagnosticEngineV2.units : [];
+  const allUnits = Array.isArray(baseReport?.diagnosticEngineV2?.units) ? baseReport.diagnosticEngineV2.units : [];
+  const units = allUnits.filter((u) => {
+    const sid = String(u?.subjectId || "");
+    const mapR = topicMapRowForV2Unit(baseReport, sid, u);
+    return isCoreV2UnitForReport(u, mapR, baseReport?.registeredGradeKey);
+  });
   const itemsHe = units
     .filter((u) => resolveUnitNextGoalHe(u, gradeKeyForV2UnitFromReport(baseReport, u)))
     .slice(0, 6)

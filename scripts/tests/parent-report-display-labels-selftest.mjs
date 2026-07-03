@@ -12,13 +12,18 @@ const u = (rel) => new URL(`file:///${path.join(root, rel).replace(/\\/g, "/")}`
 const {
   formatParentReportModeHe,
   formatParentReportActivitySourceHe,
+  formatParentReportActivityDisplayLabelHe,
   formatParentReportSubjectHe,
   formatParentReportSourceHe,
   formatParentReportLevelHe,
   formatParentReportStatusHe,
   formatParentReportEvidenceHe,
   findParentReportEnglishEnumLeaks,
+  isTechnicalParentActivityTitleHe,
 } = await import(u("utils/parent-report-language/parent-report-display-labels.he.js"));
+const { buildParentActivityDisplayLabelHe } = await import(
+  u("utils/parent-report-parent-assigned-activities.js")
+);
 
 const modeCases = [
   ["practice", "תרגול"],
@@ -58,6 +63,44 @@ assert.equal(
 assert.equal(formatParentReportActivitySourceHe({ mode: "guided_practice" }), "תרגול");
 assert.equal(formatParentReportActivitySourceHe(null), "תרגול");
 
+assert.equal(
+  formatParentReportActivityDisplayLabelHe({
+    primaryEvidenceSource: "self_practice",
+    displayName: "חיבור",
+    subject: "math",
+  }),
+  "תרגול — חיבור"
+);
+assert.match(
+  formatParentReportActivityDisplayLabelHe({
+    primaryEvidenceSource: "parent_assigned_activity",
+    displayName: "חיבור",
+    parentActivityTitle: "שיעורי בית",
+  }),
+  /שיעורי בית — חיבור/
+);
+
+assert.ok(
+  isTechnicalParentActivityTitleHe("[Phase9 live dashboard] 2026-06-15T11:44:18.332Z"),
+  "Phase9 timestamp title is technical"
+);
+assert.equal(
+  buildParentActivityDisplayLabelHe({
+    titleRaw: "[Phase9 live dashboard] 2026-06-15T11:44:18.332Z",
+    subjectId: "math",
+    topicKey: "addition",
+  }),
+  "פעילות אישית מהורה — חיבור"
+);
+assert.equal(
+  formatParentReportActivityDisplayLabelHe({
+    primaryEvidenceSource: "parent_assigned_activity",
+    displayName: "חיבור",
+    parentActivityTitle: "[Phase9 live dashboard] 2026-06-15T11:44:18.332Z",
+  }),
+  "פעילות אישית מהורה — חיבור"
+);
+
 assert.equal(formatParentReportLevelHe("easy"), "רגיל");
 assert.equal(formatParentReportLevelHe("medium"), "רגיל");
 assert.equal(formatParentReportLevelHe("mixed"), "רגיל");
@@ -72,11 +115,23 @@ assert.equal(formatParentReportEvidenceHe("insufficient"), "לא מספיק");
 assert.equal(formatParentReportEvidenceHe("high"), "גבוה");
 
 const page = readFileSync(path.join(root, "pages/learning/parent-report.js"), "utf8");
-assert.match(page, /formatParentReportActivitySourceHe/, "parent-report page must use formatParentReportActivitySourceHe");
+assert.match(page, /formatParentReportActivityDisplayLabelHe|formatParentReportActivitySourceHe/, "parent-report page must use activity display labels");
 assert.doesNotMatch(
   page,
   /return mode\.toLowerCase\(\) === "marathon"/,
   "parent-report must not return raw English modes"
+);
+
+const detailedPage = readFileSync(path.join(root, "pages/learning/parent-report-detailed.js"), "utf8");
+assert.match(
+  detailedPage,
+  /displayMode === "full"\s*\?\s*\(\s*\n?\s*<ParentAssignedActivitiesSection/,
+  "parent activities only in full detailed mode"
+);
+assert.doesNotMatch(
+  readFileSync(path.join(root, "pages/learning/parent-report.js"), "utf8"),
+  /ParentAssignedActivitiesSection/,
+  "short parent report must not include parent activities section"
 );
 
 const v2 = readFileSync(path.join(root, "utils/parent-report-v2.js"), "utf8");

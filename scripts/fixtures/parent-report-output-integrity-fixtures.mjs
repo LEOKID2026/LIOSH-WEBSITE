@@ -173,6 +173,7 @@ export function buildMultiSubjectMatrixBaseReport() {
         questions: 120,
         accuracy: 88,
         actionState: "maintain",
+        patternHe: subjectId === "math" ? `דפוס ${subjectId}` : undefined,
       }),
       v2Unit({
         subjectId,

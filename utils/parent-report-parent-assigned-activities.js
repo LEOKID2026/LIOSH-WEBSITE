@@ -7,6 +7,7 @@ import {
   formatParentReportGradeHe,
   formatParentReportStatusHe,
   formatParentReportSubjectHe,
+  isTechnicalParentActivityTitleHe,
 } from "./parent-report-language/parent-report-display-labels.he.js";
 import {
   getEnglishTopicName,
@@ -61,6 +62,34 @@ function formatActivityDateHe(isoOrMs) {
 }
 
 /**
+ * @param {{ titleRaw?: string, subjectId?: string, topicKey?: string, contentGradeKey?: unknown, gradeKey?: unknown }} p
+ */
+export function buildParentActivityDisplayLabelHe(p) {
+  const subjectId = String(p?.subjectId || "").trim();
+  const topicKey = String(p?.topicKey || "").trim();
+  const topic = topicLabelHe(subjectId, topicKey);
+  const subjectLabel = formatParentReportSubjectHe(subjectId);
+  const gradeLabel = formatParentReportGradeHe(p?.contentGradeKey ?? p?.gradeKey);
+  const titleRaw = String(p?.titleRaw || "").trim();
+  const topicSuffix = topic && topic !== "נושא" ? topic : "";
+  const subjectGradeFallback =
+    subjectLabel && gradeLabel && gradeLabel !== "לא זמין"
+      ? `${subjectLabel} כיתה ${gradeLabel}`
+      : subjectLabel || "";
+
+  if (!isTechnicalParentActivityTitleHe(titleRaw)) {
+    const base = titleRaw || "פעילות אישית מהורה";
+    if (topicSuffix) return `${base} — ${topicSuffix}`;
+    if (subjectGradeFallback) return `${base} — ${subjectGradeFallback}`;
+    return base;
+  }
+
+  if (topicSuffix) return `פעילות אישית מהורה — ${topicSuffix}`;
+  if (subjectGradeFallback) return `פעילות אישית מהורה — ${subjectGradeFallback}`;
+  return "פעילות אישית מהורה";
+}
+
+/**
  * @param {Record<string, unknown>} raw
  */
 function normalizeAggregateParentActivityRow(raw) {
@@ -72,7 +101,13 @@ function normalizeAggregateParentActivityRow(raw) {
   const titleRaw = String(raw?.titleHe ?? raw?.title ?? "").trim();
   return {
     activityId: raw?.activityId ? String(raw.activityId) : null,
-    activityLabelHe: titleRaw || "פעילות אישית מהורה",
+    activityLabelHe: buildParentActivityDisplayLabelHe({
+      titleRaw,
+      subjectId,
+      topicKey,
+      contentGradeKey: raw?.contentGradeKey ?? raw?.gradeKey,
+      gradeKey: raw?.gradeKey,
+    }),
     subjectId,
     subjectLabelHe: formatParentReportSubjectHe(subjectId),
     topicKey,
@@ -120,7 +155,7 @@ function buildFallbackFromTopicMaps(baseReport) {
         continue;
       }
       byKey.set(dedupeKey, {
-        activityLabelHe: "פעילות אישית מהורה",
+        titleHe: "",
         subjectId,
         topicKey: topicBase,
         contentGradeKey: gradeKey,

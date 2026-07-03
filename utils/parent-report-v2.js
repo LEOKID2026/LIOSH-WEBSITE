@@ -42,6 +42,12 @@ import {
   practiceGradeRelation,
 } from "../lib/learning-supabase/practice-grade-resolution.js";
 import {
+  filterCoreV2Units,
+  isCoreParentReportRow,
+  isCoreV2UnitForReport,
+  registeredGradeKeyFromReportMaps,
+} from "./parent-report-core-grade-filter.js";
+import {
   mergeEvidenceSourceCounts,
   summarizeEvidenceSources,
 } from "../lib/learning-supabase/evidence-source.js";
@@ -710,6 +716,7 @@ function buildRowSummary({
     return max;
   })();
   const latestActivitySourceFromSessions = latestSessionFieldValue(sessions, "latestActivitySource");
+  const parentActivityTitleFromSessions = latestSessionFieldValue(sessions, "parentActivityTitle");
   let evidenceSourceCountsAcc = {};
   for (const s of sessions) {
     if (s && s.evidenceSourceCounts) {
@@ -732,6 +739,7 @@ function buildRowSummary({
     evidenceSourceCounts: evidenceSourceSummary.evidenceSourceCounts,
     evidenceSources: evidenceSourceSummary.evidenceSources,
     primaryEvidenceSource: evidenceSourceSummary.primaryEvidenceSource,
+    parentActivityTitle: parentActivityTitleFromSessions || null,
     questions,
     correct,
     wrong: questions - correct,
@@ -1171,9 +1179,10 @@ function diagnosticCardConfidence(unit) {
  * @param {unknown[]} subjectUnits
  * @param {Record<string, unknown>|null|undefined} topicMap
  */
-function buildDiagnosticCardsForSubject(subjectId, subjectUnits, topicMap) {
+function buildDiagnosticCardsForSubject(subjectId, subjectUnits, topicMap, registeredGradeKey = null) {
   const map = topicMap && typeof topicMap === "object" ? topicMap : {};
-  const list = Array.isArray(subjectUnits) ? [...subjectUnits] : [];
+  const coreUnits = filterCoreV2Units(subjectUnits, map, registeredGradeKey);
+  const list = Array.isArray(coreUnits) ? [...coreUnits] : [];
   if (list.length === 0) return [];
   list.sort((a, b) => diagnosticCardRankScore(b) - diagnosticCardRankScore(a));
   const out = [];
@@ -1345,13 +1354,21 @@ function overviewShortLineWithSubject(subjectId, unit, kind) {
  */
 function buildDiagnosticOverviewHeV2(p) {
   void p?.patternDiagnostics;
-  void p?.maps;
+  const maps = p?.maps && typeof p.maps === "object" ? p.maps : {};
+  const registeredGradeKey =
+    p?.registeredGradeKey != null && String(p.registeredGradeKey).trim()
+      ? String(p.registeredGradeKey).trim()
+      : registeredGradeKeyFromReportMaps(maps);
   const allUnits = Array.isArray(p?.diagnosticEngineV2?.units) ? p.diagnosticEngineV2.units : [];
   const subjectQuestionCounts =
     p?.subjectQuestionCounts && typeof p.subjectQuestionCounts === "object" ? p.subjectQuestionCounts : {};
   const units = allUnits.filter((u) => {
     const sid = String(u?.subjectId || "");
-    return (Number(subjectQuestionCounts[sid]) || 0) > 0;
+    if ((Number(subjectQuestionCounts[sid]) || 0) <= 0) return false;
+    const topicMap = maps[sid] && typeof maps[sid] === "object" ? maps[sid] : {};
+    const trk = String(u?.topicRowKey || "");
+    const mapR = trk && topicMap[trk] ? topicMap[trk] : null;
+    return isCoreV2UnitForReport(u, mapR, registeredGradeKey);
   });
   const fallback = p?.fallbackOverview && typeof p.fallbackOverview === "object" ? p.fallbackOverview : {};
   const insufficientDataSubjectsHe = Array.isArray(p?.insufficientDataSubjectsHe)
@@ -1528,7 +1545,12 @@ function intelligenceSummaryFromV2Units(list) {
  * }} [opts]
  */
 function summarizeV2UnitsForSubject(units, opts = {}) {
-  const list = Array.isArray(units) ? units : [];
+  const topicMap = opts.topicMap && typeof opts.topicMap === "object" ? opts.topicMap : {};
+  const registeredGradeKey =
+    opts.registeredGradeKey != null && String(opts.registeredGradeKey).trim()
+      ? String(opts.registeredGradeKey).trim()
+      : registeredGradeKeyFromReportMaps({ topicMap });
+  const list = filterCoreV2Units(units, topicMap, registeredGradeKey);
   const subjectReportQuestions = Math.max(0, Number(opts.subjectReportQuestions) || 0);
   const reportTotalQuestions = Math.max(0, Number(opts.reportTotalQuestions) || 0);
   const subjectLabelHe = String(opts.subjectLabelHe || "").trim();
@@ -1565,7 +1587,6 @@ function summarizeV2UnitsForSubject(units, opts = {}) {
     return list[0] || null;
   })();
 
-  const topicMap = opts.topicMap && typeof opts.topicMap === "object" ? opts.topicMap : {};
   const anchorTrk = actionAnchor ? String(actionAnchor.topicRowKey || "") : "";
   const anchorRow =
     anchorTrk && topicMap[anchorTrk] && typeof topicMap[anchorTrk] === "object"
@@ -1817,8 +1838,13 @@ function buildPatternDiagnosticsFromV2(
   subjectQuestionCounts,
   subjectAccuracyById,
   reportTotalQuestions,
+  registeredGradeKey = null,
 ) {
   const units = Array.isArray(diagnosticEngineV2?.units) ? diagnosticEngineV2.units : [];
+  const regKey =
+    registeredGradeKey != null && String(registeredGradeKey).trim()
+      ? String(registeredGradeKey).trim()
+      : registeredGradeKeyFromReportMaps(maps);
   const counts =
     subjectQuestionCounts && typeof subjectQuestionCounts === "object" ? subjectQuestionCounts : {};
   const accMap =
@@ -1841,8 +1867,9 @@ function buildPatternDiagnosticsFromV2(
         reportSubjectAccuracy: reportAcc,
         reportTotalQuestions: rtq,
         topicMap,
+        registeredGradeKey: regKey,
       }),
-      diagnosticCards: buildDiagnosticCardsForSubject(sid, subjectUnits, topicMap),
+      diagnosticCards: buildDiagnosticCardsForSubject(sid, subjectUnits, topicMap, regKey),
     };
   }
   return { version: 2, subjects };
@@ -2580,6 +2607,7 @@ export function generateParentReportV2(
     hebrew: hebrewAccuracy,
     "moledet-geography": moledetGeographyAccuracy,
   };
+  const registeredGradeKey = registeredGradeKeyFromReportMaps(maps);
   const patternDiagnostics = hasV2Units
     ? buildPatternDiagnosticsFromV2(
         diagnosticEngineV2,
@@ -2587,6 +2615,7 @@ export function generateParentReportV2(
         subjectQuestionCounts,
         subjectAccuracyById,
         totalQuestions,
+        registeredGradeKey,
       )
     : legacyPatternDiagnostics;
 
@@ -2633,6 +2662,7 @@ export function generateParentReportV2(
         diagnosticEngineV2,
         patternDiagnostics,
         maps,
+        registeredGradeKey,
         subjectQuestionCounts,
         fallbackOverview: fallbackDiagnosticOverviewHe,
         insufficientDataSubjectsHe: evidenceCoverage.thinEvidenceSubjectsHe,
@@ -2642,15 +2672,6 @@ export function generateParentReportV2(
       })
     : fallbackDiagnosticOverviewHe;
 
-  const registeredGradeKey = (() => {
-    for (const map of Object.values(maps)) {
-      for (const row of Object.values(map || {})) {
-        const g = normalizeGradeLevelToKey(row?.registeredGradeKey);
-        if (g) return g;
-      }
-    }
-    return null;
-  })();
   let mixedGradePractice = false;
   const gradeRelationsSeen = new Set();
   for (const map of Object.values(maps)) {
@@ -2675,6 +2696,7 @@ export function generateParentReportV2(
     hebrewTopics: maps.hebrewTopics,
     moledetGeographyTopics: maps.moledetGeographyTopics,
   })) {
+    if (!isCoreParentReportRow(row, registeredGradeKey)) continue;
     const acc = Number(row.accuracy) || 0;
     const q = Number(row.questions) || 0;
     if (q >= 3 && acc < 60) weakSubjectIds.add(String(row.subjectId || ""));

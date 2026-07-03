@@ -3,6 +3,7 @@
  */
 
 import { parseCanonicalTopicFromRowKey } from "./row-identity-v1.js";
+import { isCoreParentReportRow } from "../parent-report-core-grade-filter.js";
 import {
   cleanTopicLabelHe,
   LONG_NARRATIVE_TITLE_RE,
@@ -162,6 +163,17 @@ export function assertTopicOverviewCompleteness(detailedReport, baseReport) {
     if (!tm || typeof tm !== "object") continue;
     const expectedKeys = Object.entries(tm)
       .filter(([, row]) => (Number(row?.questions) || 0) > 0)
+      .filter(([, row]) =>
+        isCoreParentReportRow(
+          {
+            gradeRelation: row?.gradeRelation,
+            contentGradeKey: row?.gradeKey ?? row?.contentGradeKey,
+            registeredGradeKey: baseReport?.registeredGradeKey ?? row?.registeredGradeKey,
+            questions: row?.questions,
+          },
+          baseReport?.registeredGradeKey,
+        ),
+      )
       .map(([k]) => k);
     const overview = Array.isArray(sp.topicOverviewRows) ? sp.topicOverviewRows : [];
     const overviewKeys = new Set(overview.map((r) => String(r.topicRowKey || "")));
@@ -205,10 +217,15 @@ export function assertHomePlanReflectsStrengthAndSupport(detailedReport) {
   if (!items.length) return ["homePlan.itemsHe empty"];
   const bundle = items.join("\n");
   const failures = [];
+  const hasCoreWeakness = (detailedReport?.subjectProfiles || []).some(
+    (sp) =>
+      (Array.isArray(sp?.topWeaknesses) && sp.topWeaknesses.length > 0) ||
+      (Array.isArray(sp?.topicRecommendations) && sp.topicRecommendations.length > 0),
+  );
   const hasSupport = /חיזוק|ליווי|מיקוד|לפני קידום|תמיכה/u.test(bundle);
   const hasMaintain =
     /להמשיך|שימור|יציב|חזק|בסיס טוב|אותו קצב/u.test(bundle) || items.length >= 2;
-  if (!hasSupport) failures.push("homePlan missing support-oriented line for weak row");
+  if (hasCoreWeakness && !hasSupport) failures.push("homePlan missing support-oriented line for weak row");
   if (!hasMaintain) failures.push("homePlan missing maintenance/continue line for strong row(s)");
   return failures;
 }

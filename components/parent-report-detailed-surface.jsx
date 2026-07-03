@@ -583,6 +583,7 @@ export function SubjectPhase3Insights({ sp, compact }) {
 
 /**
  * Parent-assigned activities in the selected period (detailed report transparency table).
+ * Screen-only, collapsed by default — not part of the official print/PDF report.
  * @param {{ rows?: object[]|null|undefined }} props
  */
 export function ParentAssignedActivitiesSection({ rows }) {
@@ -590,17 +591,14 @@ export function ParentAssignedActivitiesSection({ rows }) {
   if (!list.length) return null;
 
   return (
-    <section
-      className="pr-detailed-parent-activities mb-5 md:mb-6 min-w-0"
-      aria-labelledby="pr-detailed-parent-activities-heading"
-    >
-      <h2
+    <details className="pr-detailed-parent-activities no-pdf no-print mb-5 md:mb-6 min-w-0 rounded-lg border border-white/10 bg-black/10">
+      <summary
         id="pr-detailed-parent-activities-heading"
-        className="pr-detailed-section-title text-base md:text-lg font-extrabold tracking-tight text-white m-0 mb-3 md:mb-4 pb-2 border-b border-white/10"
+        className="pr-detailed-section-title cursor-pointer select-none list-none text-base md:text-lg font-extrabold tracking-tight text-white m-0 px-3 py-3 md:px-4 md:py-3.5 border-b border-white/10 [&::-webkit-details-marker]:hidden"
       >
-        פעילויות אישיות מהורה
-      </h2>
-      <div className="overflow-x-auto rounded-lg border border-white/10">
+        פעילויות אישיות מהורה ({list.length})
+      </summary>
+      <div className="overflow-x-auto">
         <table className="w-full text-sm text-right">
           <thead>
             <tr className="border-b border-white/15 bg-white/5">
@@ -635,7 +633,7 @@ export function ParentAssignedActivitiesSection({ rows }) {
           </tbody>
         </table>
       </div>
-    </section>
+    </details>
   );
 }
 

@@ -203,6 +203,11 @@ export function buildSixSubjectContextLabelingMatrixBaseReport() {
 
   return {
     registeredGradeKey,
+    gradePracticeMeta: {
+      mixedGradePractice: true,
+      mixedGradePracticeNoteHe:
+        "חלק מהתרגול בוצע בכיתה שונה מהכיתה הרשומה, ולכן הוא מוצג בנפרד.",
+    },
     summary: { totalQuestions: totalQ, overallAccuracy: 72 },
     mathOperations: topicMaps.mathOperations,
     geometryTopics: topicMaps.geometryTopics,

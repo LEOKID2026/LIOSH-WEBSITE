@@ -87,6 +87,106 @@ export function formatParentReportActivitySourceHe(input) {
   return "תרגול";
 }
 
+function resolveActivitySourceKind(row) {
+  const r = row && typeof row === "object" ? row : {};
+  for (const field of PARENT_ACTIVITY_SOURCE_RESOLVE_ORDER) {
+    const key = normalizeKey(r[field]);
+    if (key === "parent_assigned_activity") return "parent_assigned_activity";
+    if (key === "self_practice") return "self_practice";
+  }
+  const modeKey = normalizeKey(r.modeKey ?? r.mode);
+  if (modeKey === "parent_assigned_activity") return "parent_assigned_activity";
+  if (modeKey === "self_practice" || modeKey === "independent") return "self_practice";
+  return "practice";
+}
+
+function resolveActivityTopicLabelHe(row, options = {}) {
+  const r = row && typeof row === "object" ? row : {};
+  const clean = String(r.cleanTopicLabelHe || r.rowIdentityV1?.cleanTopicLabelHe || "").trim();
+  if (clean && clean !== "נושא" && clean !== "תרגול") return normalizeParentFacingHe(clean);
+  const displayName = String(r.displayName || options.topicLabelHe || "").trim();
+  if (displayName && displayName !== "נושא" && displayName !== "תרגול") {
+    return normalizeParentFacingHe(displayName);
+  }
+  const bucket = String(r.bucketKey ?? r.topicKey ?? options.topicKey ?? "").trim();
+  if (bucket && !bucket.includes("\u0001")) {
+    const short = bucket.split("::grade:")[0] || bucket;
+    if (short && short !== "general") return normalizeParentFacingHe(short.replace(/_/g, " "));
+  }
+  return "";
+}
+
+function activityLabelWithSubjectGradeFallback(baseLabel, row, subjectId) {
+  const sid = String(subjectId || row?.subject || row?.subjectId || "").trim();
+  const subjectLabel = sid ? formatParentReportSubjectHe(sid) : "";
+  const gradeLabel = formatParentReportGradeHe(
+    row?.contentGradeKey ?? row?.gradeKey ?? row?.contentGradeLevel ?? row?.grade
+  );
+  if (subjectLabel && gradeLabel && gradeLabel !== "לא זמין") {
+    return `${baseLabel} — ${subjectLabel} כיתה ${gradeLabel}`;
+  }
+  if (subjectLabel) return `${baseLabel} — ${subjectLabel}`;
+  return baseLabel;
+}
+
+/**
+ * Parent-facing titles must not expose debug/QA strings (Phase9, ISO timestamps, etc.).
+ * @param {unknown} title
+ */
+export function isTechnicalParentActivityTitleHe(title) {
+  const t = String(title || "").trim();
+  if (!t) return false;
+  if (/\[\s*phase\s*\d+/i.test(t)) return true;
+  if (/\bphase\s*\d+\b/i.test(t) && /live|dashboard|debug|test|fixture|qa/i.test(t)) return true;
+  if (/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(t)) return true;
+  if (/^\d{4}-\d{2}-\d{2}/.test(t) && /\[[^\]]+\]/.test(t)) return true;
+  if (/^\[[^\]]{4,}\]/.test(t) && /[a-zA-Z][a-zA-Z0-9_-]{3,}/.test(t)) return true;
+  return false;
+}
+
+/**
+ * Parent-facing combined activity label for table source/mode columns (never bare "תרגול" when topic exists).
+ * @param {Record<string, unknown>|string|null|undefined} input
+ * @param {{ subjectId?: string, topicKey?: string, topicLabelHe?: string }} [options]
+ */
+export function formatParentReportActivityDisplayLabelHe(input, options = {}) {
+  if (input == null) return "תרגול";
+  if (typeof input === "string") return formatParentReportActivitySourceHe(input);
+
+  const row = input && typeof input === "object" ? input : {};
+  const topicLabel = resolveActivityTopicLabelHe(row, options);
+  const sourceKind = resolveActivitySourceKind(row);
+
+  if (sourceKind === "parent_assigned_activity") {
+    const titleRaw = String(
+      row.parentActivityTitleHe ??
+        row.parentActivityTitle ??
+        row.activityTitleHe ??
+        row.titleHe ??
+        row.title ??
+        ""
+    ).trim();
+    const base = !isTechnicalParentActivityTitleHe(titleRaw)
+      ? titleRaw || "פעילות אישית מהורה"
+      : "פעילות אישית מהורה";
+    if (topicLabel) return `${base} — ${topicLabel}`;
+    return activityLabelWithSubjectGradeFallback(base, row, options.subjectId);
+  }
+
+  if (sourceKind === "self_practice") {
+    if (topicLabel) return `תרגול — ${topicLabel}`;
+    return activityLabelWithSubjectGradeFallback("תרגול עצמי", row, options.subjectId);
+  }
+
+  if (topicLabel) return `תרגול — ${topicLabel}`;
+  const generic = formatParentReportActivitySourceHe(row);
+  if (generic !== "תרגול") {
+    if (topicLabel) return `${generic} — ${topicLabel}`;
+    return activityLabelWithSubjectGradeFallback(generic, row, options.subjectId);
+  }
+  return activityLabelWithSubjectGradeFallback("תרגול", row, options.subjectId);
+}
+
 /** @type {Record<string, string>} */
 export const PARENT_REPORT_SOURCE_LABELS_HE = {
   self_practice: "תרגול עצמי",

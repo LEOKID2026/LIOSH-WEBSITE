@@ -24,6 +24,7 @@ import {
   narrativeTopicRowLabelHe,
 } from "../parent-report-output-integrity/row-display-label-context.js";
 import { parseCanonicalTopicFromRowKey } from "../parent-report-output-integrity/row-identity-v1.js";
+import { isCoreParentReportRow } from "../parent-report-core-grade-filter.js";
 
 const STRENGTH_ACC_THRESHOLD = 80;
 const FOCUS_ACC_THRESHOLD = 55;
@@ -123,8 +124,23 @@ export function deriveTopicInsights(aggregate) {
         topicRowKey: topicKey,
         requiresGradeContext,
       });
-      const isStrength = totalQ >= STRENGTH_MIN_Q && acc >= STRENGTH_ACC_THRESHOLD;
-      const isFocusArea = totalQ >= FOCUS_MIN_Q && acc < FOCUS_ACC_THRESHOLD;
+      const isCore = isCoreParentReportRow(
+        {
+          gradeRelation: t.gradeRelation,
+          contentGradeKey: contentGradeLevel,
+          registeredGradeKey:
+            typeof t.registeredGradeLevel === "string" && t.registeredGradeLevel.trim()
+              ? t.registeredGradeLevel.trim().toLowerCase()
+              : null,
+          questions: totalQ,
+        },
+        aggregate?.summary?.registeredGradeLevel ||
+          aggregate?.student?.registeredGradeLevel ||
+          aggregate?.student?.gradeLevelKey ||
+          null,
+      );
+      const isStrength = isCore && totalQ >= STRENGTH_MIN_Q && acc >= STRENGTH_ACC_THRESHOLD;
+      const isFocusArea = isCore && totalQ >= FOCUS_MIN_Q && acc < FOCUS_ACC_THRESHOLD;
       out.push({
         key: String(topicKey),
         subjectKey: String(subjectKey),

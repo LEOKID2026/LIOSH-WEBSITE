@@ -3,6 +3,7 @@
  */
 
 import { buildRowIdentityV1, buildRowSourceId } from "./row-identity-v1.js";
+import { resolveHasSubskillMetadataFromRowSources } from "../parent-report-topic-evidence.js";
 import { SUBJECT_ORDER } from "../parent-copilot/contract-reader.js";
 
 const REPORT_MAP_KEY = {
@@ -96,6 +97,11 @@ export function traceRowThroughPipeline(args) {
   const unit = base ? v2UnitFromBase(base, subjectId, topicRowKey) : null;
   const tr = detailed ? detailedTopicRec(detailed, subjectId, topicRowKey) : null;
   const { strength, weakness } = detailed ? detailedStrengthWeak(detailed, subjectId, topicRowKey) : { strength: null, weakness: null };
+  const overviewRow = detailed
+    ? (detailed?.subjectProfiles || [])
+        .find((s) => String(s?.subject) === subjectId)
+        ?.topicOverviewRows?.find((r) => String(r?.topicRowKey || "") === topicRowKey) || null
+    : null;
   const cop = copilot ? copilotTopicRow(copilot, subjectId, topicRowKey) : null;
 
   const registeredGradeKey = base?.registeredGradeKey ?? detailed?.registeredGradeKey ?? null;
@@ -113,7 +119,7 @@ export function traceRowThroughPipeline(args) {
     latestActivityAt: mapRow?.latestActivityAt || mapRow?.lastAnswerAt,
     dataSufficiencyLevel: tr?.dataSufficiencyLevel,
     thinEvidenceDowngraded: tr?.thinEvidenceDowngraded,
-    hasSubskillMetadata: tr?.hasSubskillMetadata,
+    hasSubskillMetadata: resolveHasSubskillMetadataFromRowSources(unit, mapRow),
     recommendedStepLabelHe: tr?.recommendedStepLabelHe,
     diagnosticPatternHe: unit?.taxonomy?.patternHe,
   });

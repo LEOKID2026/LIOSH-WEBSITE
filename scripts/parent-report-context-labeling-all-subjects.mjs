@@ -49,12 +49,11 @@ const matrixDetailed = assertMatrix(matrixBase, "seven-subject");
 
 for (const sid of CONTEXT_LABELING_SUBJECT_IDS) {
   const sp = matrixDetailed.subjectProfiles.find((s) => s.subject === sid);
-  assert.equal(sp?.topicOverviewRows?.length, 3, `${sid}: three overview rows`);
-  assert.equal(sp?.topicRecommendations?.length, 1, `${sid}: one focus row`);
   const keys = matrixRowKeysForSubject(sid);
+  assert.equal(sp?.topicOverviewRows?.length, 2, `${sid}: two core overview rows`);
   assert.ok(
-    sp.topicRecommendations.some((r) => r.topicRowKey === keys.splitG5),
-    `${sid}: focus is weak higher-grade split`,
+    !(sp?.topicRecommendations || []).some((r) => r.topicRowKey === keys.splitG5),
+    `${sid}: higher-grade split must not be core focus`,
   );
 }
 
@@ -78,8 +77,11 @@ if (mathFailures.length) {
   assert.fail(`math regression matrix failures:\n- ${mathFailures.join("\n- ")}`);
 }
 const mathP = mathDetailed.subjectProfiles.find((s) => s.subject === "math");
-assert.equal(mathP?.topicOverviewRows?.length, 3, "math: three overview rows");
-assert.equal(mathP?.topicRecommendations?.length, 1, "math: one focus row");
+assert.equal(mathP?.topicOverviewRows?.length, 2, "math: two core overview rows");
+assert.ok(
+  !(mathP?.topicRecommendations || []).some((r) => r.topicRowKey === "fractions::grade:g5"),
+  "math: no higher-grade focus",
+);
 
 // ─── Print bundle (UI/PDF parity proxy) ──────────────────────────────────────
 const printBundle = collectParentFacingTextBundle(matrixDetailed);

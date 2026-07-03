@@ -31,6 +31,7 @@ const {
   SubjectPhase3Insights,
   SubjectSummaryBlock,
   TopicRecommendationExplainStrip,
+  ParentAssignedActivitiesSection,
 } = detailedMod;
 const contractUiMod = await import(pathToFileURL(join(ROOT, "components/parent-report-contract-ui-blocks.jsx")).href);
 const { ParentTopContractSummaryBlock, ParentSubjectContractSummaryBlock } = contractUiMod;
@@ -519,11 +520,40 @@ function runParentReportInsightChunk() {
   assert.ok(html.includes("טקסט בדיקה"), "insight body should render");
 }
 
+function runParentAssignedActivitiesSectionChunk() {
+  const rows = [
+    {
+      activityLabelHe: "פעילות אישית מהורה — חיבור",
+      subjectLabelHe: "מתמטיקה",
+      topicLabelHe: "חיבור",
+      gradeLabelHe: "א׳",
+      lastActivityAtHe: "01/03/2026",
+      questionCount: 10,
+      accuracy: 80,
+      timeMinutes: 5,
+      statusLabelHe: "הושלם",
+    },
+  ];
+  const html = render(
+    "parent-assigned-activities:collapsed",
+    h(ParentAssignedActivitiesSection, { rows }),
+  );
+  assert.ok(html.includes("<details"), "parent activities must use details");
+  assert.ok(!/\bdetails[^>]*\sopen[\s=>]/i.test(html), "parent activities must be collapsed by default");
+  assert.ok(html.includes("no-pdf"), "parent activities must be no-pdf");
+  assert.ok(html.includes("no-print"), "parent activities must be no-print");
+  assert.ok(html.includes("פעילויות אישיות מהורה (1)"), "parent activities summary shows count");
+
+  const emptyHtml = renderToStaticMarkup(h(ParentAssignedActivitiesSection, { rows: [] }));
+  assert.equal(emptyHtml, "", "empty parent activities render nothing");
+}
+
 function main() {
   runDetailedPageChunks();
   runContractBindingChunks();
   runParentReportPageChunks();
   runParentReportInsightChunk();
+  runParentAssignedActivitiesSectionChunk();
   console.log("parent-report pages SSR smoke: OK");
 }
 

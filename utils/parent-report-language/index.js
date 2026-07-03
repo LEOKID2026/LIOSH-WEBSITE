@@ -44,6 +44,7 @@ export {
   formatParentReportSourceHe,
   formatParentReportModeHe,
   formatParentReportActivitySourceHe,
+  formatParentReportActivityDisplayLabelHe,
   formatParentReportEvidenceHe,
   formatParentReportLevelHe,
   formatParentReportGradeHe,
