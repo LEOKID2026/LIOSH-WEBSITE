@@ -358,6 +358,30 @@ async function main() {
           .join(" | ")
       : "";
 
+    const subjectEngineDecisionContract = mathSp?.subjectEngineDecisionContract || null;
+    const topicEngineContracts = (mathSp?.topicRecommendations || [])
+      .map((t) => ({
+        topicKey: t?.topicRowKey || t?.topicKey,
+        engineDecision: t?.engineDecisionContract?.engineDecision,
+        detectedPattern: t?.engineDecisionContract?.detectedPattern,
+        recommendedAction: t?.engineDecisionContract?.recommendedAction,
+        parentSafeFinding: t?.engineDecisionContract?.parentSafeFinding,
+      }))
+      .filter((t) => t.topicKey);
+
+    const subjectContractTrace = subjectEngineDecisionContract
+      ? {
+          subjectDecision: subjectEngineDecisionContract.subjectDecision,
+          recommendedSubjectAction: subjectEngineDecisionContract.recommendedSubjectAction,
+          blockedLegacySummary: subjectEngineDecisionContract.blockedLegacySummary,
+          priorityTopicKeys: subjectEngineDecisionContract.priorityTopics?.map((t) => t.topicKey),
+          strongestDetectedPatterns: subjectEngineDecisionContract.strongestDetectedPatterns,
+          traceReason: subjectEngineDecisionContract.traceReason,
+          summarySlots: subjectEngineDecisionContract.summarySlots,
+          renderSource: subjectLetter?.renderSource || null,
+        }
+      : null;
+
     const metricsVsLpdMismatch =
       lpd &&
       (Number(lpd.practicedQuestions) !== metrics.questions ||
@@ -412,6 +436,8 @@ async function main() {
           }
         : null,
       pipelineStages: pipeline?.stages || null,
+      topicEngineContracts,
+      subjectEngineDecisionContract: subjectContractTrace,
       renderedText: {
         shortReport: renderedShort,
         detailedReport: renderedDetailed,
@@ -456,6 +482,8 @@ async function main() {
     mdLines.push(`| LPD input | ${mdEscape(JSON.stringify(row.lpdInput))} |`);
     mdLines.push(`| LPD output | ${mdEscape(JSON.stringify(row.lpdOutput))} |`);
     mdLines.push(`| Recommendation | ${mdEscape(JSON.stringify(row.recommendation))} |`);
+    mdLines.push(`| Topic engine contracts | ${mdEscape(JSON.stringify(row.topicEngineContracts))} |`);
+    mdLines.push(`| Subject engine contract | ${mdEscape(JSON.stringify(row.subjectEngineDecisionContract))} |`);
     mdLines.push(`| Short report text | ${mdEscape(row.renderedText.shortReport)} |`);
     mdLines.push(`| Detailed report text | ${mdEscape(row.renderedText.detailedReport)} |`);
     mdLines.push(`| Subject summary text | ${mdEscape(row.renderedText.subjectSummary)} |`);

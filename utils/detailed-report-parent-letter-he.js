@@ -23,6 +23,12 @@ import {
   buildSubjectEngineSummaryOpeningHe,
   findStrongestEngineDecisionInSubject,
 } from "./learning-pattern-decision/build-parent-report-engine-decision-contract.js";
+import { findTopicRecommendationForPriority } from "./learning-pattern-decision/build-subject-engine-decision-contract.js";
+import {
+  RENDER_SOURCE_SUBJECT_ENGINE,
+  SP_SUBJECT_ENGINE_CONTRACT,
+  readSubjectEngineContract,
+} from "./learning-pattern-decision/engine-decision-codes.js";
 import {
   gradeContextActionHe,
   gradeContextExplanationHe,
@@ -135,10 +141,24 @@ function majorRiskAny(sp) {
 
 /** משפט פתיחה אחד */
 function buildSubjectOpeningLineHe(sp, lab) {
+  const contract = readSubjectEngineContract(sp);
+  if (contract?.blockedLegacySummary && contract.priorityTopics?.length) {
+    const finding = String(contract.priorityTopics[0].parentSafeFinding || "").trim();
+    if (finding) {
+      return stripGuillemetsHe(
+        buildSubjectEngineSummaryOpeningHe(lab, { contract: contract.priorityTopics[0] }),
+      );
+    }
+  }
+
   const engineStrongest = findStrongestEngineDecisionInSubject(sp);
   const engineOpening = buildSubjectEngineSummaryOpeningHe(lab, engineStrongest);
   if (engineOpening) {
     return stripGuillemetsHe(engineOpening);
+  }
+
+  if (contract?.blockedLegacySummary) {
+    return "";
   }
 
   const clearWeak = findClearWeakTopicInSubject(sp);
@@ -243,6 +263,15 @@ function buildSubjectOpeningLineHe(sp, lab) {
 
 /** משפט אבחנה אחד — ממזג חוזק/חולשה בלי בלוקים נפרדים */
 function buildSubjectDiagnosisLineHe(sp, lab) {
+  const contract = readSubjectEngineContract(sp);
+  if (contract?.blockedLegacySummary) {
+    const p1 = contract.priorityTopics?.[1];
+    const p0 = contract.priorityTopics?.[0];
+    const finding = String(p1?.parentSafeFinding || p0?.parentSafeFinding || "").trim();
+    if (finding) return stripGuillemetsHe(finding);
+    return "";
+  }
+
   const w0 = sp?.topWeaknesses?.[0];
   const domRc = String(sp?.dominantRootCauseLabelHe || "").trim();
   const restraintLine = String(sp?.subjectDiagnosticRestraintHe || "").trim();
@@ -311,6 +340,20 @@ function buildSubjectDiagnosisLineHe(sp, lab) {
 }
 
 function buildSubjectHomeLineHe(sp, lab) {
+  const contract = readSubjectEngineContract(sp);
+  if (contract?.blockedLegacySummary && contract.priorityTopics?.[0]) {
+    const tr = findTopicRecommendationForPriority(sp, contract.priorityTopics[0].topicKey);
+    if (tr?.recommendedNextStep) {
+      return stripGuillemetsHe(rewriteParentRecommendationForDetailedHe(String(tr.recommendedNextStep)));
+    }
+    if (tr?.doNowHe) {
+      return stripGuillemetsHe(rewriteParentRecommendationForDetailedHe(String(tr.doNowHe)));
+    }
+    if (tr?.recommendedStepLabelHe) {
+      return stripGuillemetsHe(rewriteParentRecommendationForDetailedHe(String(tr.recommendedStepLabelHe)));
+    }
+  }
+
   const homeDiag = sp?.recommendedHomeMethodHe && String(sp.recommendedHomeMethodHe).trim();
   if (homeDiag) return stripGuillemetsHe(rewriteParentRecommendationForDetailedHe(homeDiag));
   const imm = sp?.subjectImmediateActionHe && String(sp.subjectImmediateActionHe).trim();
@@ -321,6 +364,15 @@ function buildSubjectHomeLineHe(sp, lab) {
 }
 
 function buildSubjectClosingLineHe(sp, lab) {
+  const contract = readSubjectEngineContract(sp);
+  if (contract?.blockedLegacySummary) {
+    const g = sp?.nextWeekGoalHe && String(sp.nextWeekGoalHe).trim();
+    const parts = [];
+    if (g) parts.push(takeFirstSentence(rewriteParentRecommendationForDetailedHe(g)));
+    if (parts.length) return stripGuillemetsHe(parts.join(" "));
+    return "";
+  }
+
   const conf = String(sp?.confidenceSummaryHe || "").trim();
   const wnt = String(sp?.whatNotToDoHe || "").trim();
   const g = sp?.nextWeekGoalHe && String(sp.nextWeekGoalHe).trim();
@@ -367,6 +419,10 @@ function collectTopicNarrativeContracts(sp) {
 }
 
 function applySubjectNarrativeGuardrails(sp, letter) {
+  if (readSubjectEngineContract(sp)?.blockedLegacySummary) {
+    return letter;
+  }
+
   const clearWeak = findClearWeakTopicInSubject(sp);
   if (clearWeak) {
     const lab = sp?.subjectLabelHe || "המקצוע";
@@ -425,6 +481,12 @@ export function buildSubjectParentLetter(sp, opts = {}) {
     fragile: "",
     reliabilityNoteHe: null,
   };
+  const contract = readSubjectEngineContract(sp);
+  if (contract && typeof contract === "object") {
+    base[SP_SUBJECT_ENGINE_CONTRACT] = contract;
+    base.renderSource = contract.summarySlots?.renderSource || RENDER_SOURCE_SUBJECT_ENGINE;
+    base.summarySlots = contract.summarySlots || null;
+  }
   return normalizeSubjectParentLetterHe(applySubjectNarrativeGuardrails(sp, base));
 }
 

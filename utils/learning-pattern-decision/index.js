@@ -29,6 +29,39 @@ export {
   findStrongestEngineDecisionInSubject,
   buildSubjectEngineSummaryOpeningHe,
 } from "./build-parent-report-engine-decision-contract.js";
+export {
+  buildSubjectEngineDecisionContract,
+  resolveSubjectSummaryTextFromEngineContract,
+  findTopicRecommendationForPriority,
+} from "./build-subject-engine-decision-contract.js";
+export {
+  EDC_CONTRACT_KEY,
+  EDC_DECISION_FIELD,
+  SP_SUBJECT_ENGINE_CONTRACT,
+  RENDER_SOURCE_SUBJECT_ENGINE,
+  ED_CLEAR_TOPIC_GAP,
+  ED_TOPIC_NEEDS_STRENGTHENING,
+  ED_PARTIAL_STABLE,
+  ED_EARLY_DIRECTION_ONLY,
+  ED_INSUFFICIENT_DATA,
+  ED_NONE,
+  ED_MASTERY_STABLE,
+  RA_REMEDIATE_SAME_LEVEL,
+  RA_REMEDIATE_STEP_DOWN,
+  RA_WATCH,
+  RA_MAINTAIN_AND_STRENGTHEN,
+  RA_MAINTAIN,
+  RA_INTERVENE,
+  ES_STRONG,
+  ES_SUPPORTED,
+  ES_EMERGING,
+  ES_NONE,
+  ENGINE_DECISION_RANK,
+  REMEDIATE_ACTION_CODES,
+  readTopicEngineContract,
+  readEngineDecisionCode,
+  readSubjectEngineContract,
+} from "./engine-decision-codes.js";
 export { restoreLearningPatternDecisionsFromUnits } from "./restore-learning-pattern-on-topic-maps.js";
 export {
   applyLearningPatternDecisionToUnitsAndRows,

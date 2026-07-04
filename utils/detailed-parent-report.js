@@ -133,6 +133,20 @@ import {
 } from "../lib/learning-shared/moledet-geography-display.js";
 import { normalizeParentVisibleMetrics } from "./learning-pattern-decision/normalize-parent-practice-metrics.js";
 import { buildParentReportEngineDecisionContract } from "./learning-pattern-decision/build-parent-report-engine-decision-contract.js";
+import {
+  buildSubjectEngineDecisionContract,
+  resolveSubjectSummaryTextFromEngineContract,
+} from "./learning-pattern-decision/build-subject-engine-decision-contract.js";
+import {
+  EDC_CONTRACT_KEY,
+  EDC_DECISION_FIELD,
+  ED_CLEAR_TOPIC_GAP,
+  ED_TOPIC_NEEDS_STRENGTHENING,
+  RA_REMEDIATE_SAME_LEVEL,
+  RA_WATCH,
+  RA_MAINTAIN_AND_STRENGTHEN,
+  SP_SUBJECT_ENGINE_CONTRACT,
+} from "./learning-pattern-decision/engine-decision-codes.js";
 
 const SUBJECT_IDS = [
   "math",
@@ -2148,10 +2162,10 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
     },
     mapRow && typeof mapRow === "object" ? mapRow : null,
   );
-  const engineDecisionContract =
-    lpd?.engineDecisionContract ||
-    mapRow?.engineDecisionContract ||
-    u?.engineDecisionContract ||
+  const topicEngineContract =
+    lpd?.[EDC_CONTRACT_KEY] ||
+    mapRow?.[EDC_CONTRACT_KEY] ||
+    u?.[EDC_CONTRACT_KEY] ||
     buildParentReportEngineDecisionContract({
       subjectId,
       topicRowKey: topicKey,
@@ -2160,15 +2174,15 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
       unit: u,
     });
   const contractRequiresRemediate =
-    engineDecisionContract.recommendedAction === "remediate_same_level";
+    topicEngineContract.recommendedAction === RA_REMEDIATE_SAME_LEVEL;
   const finalStep = contractRequiresRemediate
-    ? "remediate_same_level"
+    ? RA_REMEDIATE_SAME_LEVEL
     : thinEvidenceDowngraded &&
-        engineDecisionContract.engineDecision !== "clear_topic_gap" &&
-        engineDecisionContract.engineDecision !== "topic_needs_strengthening"
-      ? "maintain_and_strengthen"
-      : engineDecisionContract.recommendedAction === "watch"
-        ? "maintain_and_strengthen"
+        topicEngineContract[EDC_DECISION_FIELD] !== ED_CLEAR_TOPIC_GAP &&
+        topicEngineContract[EDC_DECISION_FIELD] !== ED_TOPIC_NEEDS_STRENGTHENING
+      ? RA_MAINTAIN_AND_STRENGTHEN
+      : topicEngineContract.recommendedAction === RA_WATCH
+        ? RA_MAINTAIN_AND_STRENGTHEN
         : step;
   const gradeRelation = geForIdentity.gradeRelation;
   let finalLabelRaw =
@@ -2210,9 +2224,9 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
     subjectId,
     displayName: String(u?.displayName || "").trim(),
     learningPatternDecision: lpd,
-    engineDecisionContract,
+    [EDC_CONTRACT_KEY]: topicEngineContract,
     parentVisibleFinding:
-      engineDecisionContract.parentSafeFinding || lpd?.parentVisibleFinding || "",
+      topicEngineContract.parentSafeFinding || lpd?.parentVisibleFinding || "",
     parentWordingLevel: lpd?.parentWordingLevel || "no_parent_text",
     topicStatus: lpd?.topicStatus || null,
     findingType: lpd?.findingType || null,
@@ -2737,10 +2751,19 @@ function buildSubjectProfilesFromV2(baseReport) {
       });
     })();
 
+    const subjectEngineContract = buildSubjectEngineDecisionContract(sid, topicRecommendations, {
+      subjectLabelKey: sid,
+    });
+    const summaryHeFromEngineContract = resolveSubjectSummaryTextFromEngineContract(
+      subjectEngineContract,
+    );
+    const finalSummaryHe = summaryHeFromEngineContract || summaryHe;
+    const blockedSubjectLegacy = !!subjectEngineContract.blockedLegacySummary;
+
     out.push({
       subject: sid,
       subjectLabelHe: SUBJECT_LABEL_HE[sid],
-      summaryHe,
+      summaryHe: finalSummaryHe,
       topStrengths,
       topWeaknesses,
       maintain,
@@ -2760,10 +2783,13 @@ function buildSubjectProfilesFromV2(baseReport) {
       topicOverviewRows,
       topicGroupsByTier,
       topicRecommendations,
+      [SP_SUBJECT_ENGINE_CONTRACT]: subjectEngineContract,
       dominantLearningRisk: subjectAnchorUnit?.competingHypotheses?.hypotheses?.[0]?.hypothesisId || null,
       dominantSuccessPattern: stable > 0 ? "stable_mastery" : null,
       trendNarrativeHe: subjectTrendNarrativeHeFromMapRow(anchorMapRow, highPriority),
-        confidenceSummaryHe: subjectAnchorUnit
+        confidenceSummaryHe: blockedSubjectLegacy
+          ? null
+          : subjectAnchorUnit
         ? subjectV2ConfidenceSummaryHe(
             csOf(subjectAnchorUnit)?.assessment?.confidenceLevel || subjectAnchorUnit?.confidence?.level
           )
@@ -2804,9 +2830,11 @@ function buildSubjectProfilesFromV2(baseReport) {
       dominantRootCauseLabelHe: subjectAnchorUnit?.taxonomy?.rootsHe?.[0] || null,
       secondaryRootCause: subjectAnchorUnit?.taxonomy?.competitorsHe?.[0] || null,
       rootCauseDistribution: {},
-      subjectDiagnosticRestraintHe: units.some((u) => csOf(u)?.assessment?.cannotConcludeYet ?? u?.outputGating?.cannotConcludeYet)
-        ? "בחלק מהשורות מה שרואים עדיין לא מספיק כדי לסגור תמונה ברורה."
-        : null,
+      subjectDiagnosticRestraintHe: blockedSubjectLegacy
+        ? null
+        : units.some((u) => csOf(u)?.assessment?.cannotConcludeYet ?? u?.outputGating?.cannotConcludeYet)
+          ? "בחלק מהשורות מה שרואים עדיין לא מספיק כדי לסגור תמונה ברורה."
+          : null,
       subjectConclusionReadiness: mergeSubjectConclusionReadinessContract({
         internalReadiness: units.some((u) => csOf(u)?.assessment?.cannotConcludeYet ?? u?.outputGating?.cannotConcludeYet) ? "partial" : "ready",
         rows: v2UnitsToContractRows(units),

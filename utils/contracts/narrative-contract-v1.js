@@ -12,6 +12,13 @@ import {
 import {
   resolveEngineDecisionUncertaintyText,
 } from "../learning-pattern-decision/build-parent-report-engine-decision-contract.js";
+import {
+  EDC_DECISION_FIELD,
+  ED_CLEAR_TOPIC_GAP,
+  ES_STRONG,
+  readEngineDecisionCode,
+  readTopicEngineContract,
+} from "../learning-pattern-decision/engine-decision-codes.js";
 
 export const NARRATIVE_CONTRACT_VERSION = "v1";
 
@@ -288,18 +295,25 @@ export function buildNarrativeContractV1(input) {
     input?.contractsV1?.evidence?.skillBreakdownAvailable
   );
   let uncertainty = buildUncertaintySlot(hedgeLevel, `${baseSeed}:unc`, q);
-  const engineDecision = String(input?.engineDecision || input?.engineDecisionContract?.engineDecision || "");
-  const evidenceStrength = String(input?.evidenceStrength || input?.engineDecisionContract?.evidenceStrength || "");
-  if (q >= 20 || evidenceStrength === "strong" || engineDecision === "clear_topic_gap") {
-    uncertainty = resolveEngineDecisionUncertaintyText(q, evidenceStrength, engineDecision);
-  } else if (hasTopicLevelEvidence(q) && !hasSubskillMetadata) {
+  const topicEngineContract = readTopicEngineContract(input);
+  const decisionCode =
+    readEngineDecisionCode(topicEngineContract) ||
+    (input && typeof input === "object" ? String(input[EDC_DECISION_FIELD] || "") : "");
+  const evidenceStrength = String(
+    input?.evidenceStrength || topicEngineContract?.evidenceStrength || "",
+  );
+  if (q >= 20 || evidenceStrength === ES_STRONG || decisionCode === ED_CLEAR_TOPIC_GAP) {
+    const resolved = resolveEngineDecisionUncertaintyText(q, evidenceStrength, decisionCode);
+    if (resolved) uncertainty = resolved;
+  }
+  if (!String(uncertainty || "").trim() && hasTopicLevelEvidence(q) && !hasSubskillMetadata) {
     const skillDetailNote = buildSkillDetailLimitationUncertaintyHe(false);
     if (skillDetailNote) {
       uncertainty = uncertainty && hedgeLevel !== "mandatory" ? `${uncertainty} ${skillDetailNote}` : skillDetailNote;
     }
   }
   if (q >= 50 && uncertainty && /עדיין מוקדם|כדאי לעקוב|מעט נתונים/u.test(uncertainty)) {
-    uncertainty = resolveEngineDecisionUncertaintyText(q, evidenceStrength, engineDecision);
+    uncertainty = resolveEngineDecisionUncertaintyText(q, evidenceStrength, decisionCode);
   }
 
   return {
