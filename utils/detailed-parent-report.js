@@ -131,6 +131,7 @@ import {
   splitMoledetGeographyReportForDisplay,
   VISUAL_STRAND_LABEL_HE,
 } from "../lib/learning-shared/moledet-geography-display.js";
+import { normalizeParentVisibleMetrics } from "./learning-pattern-decision/normalize-parent-practice-metrics.js";
 
 const SUBJECT_IDS = [
   "math",
@@ -1925,14 +1926,27 @@ function buildTopicOverviewRowsFromUnits(baseReport, sid, units, topicMapForSid)
       const mapR = topicMapForSid[trk];
       const place = topicOverviewPlacementFromUnit(u, mapR);
       const lpd = mapR?.learningPatternDecision || u?.learningPatternDecision || null;
+      const metrics = normalizeParentVisibleMetrics(
+        {
+          questions: Number(u?.evidenceTrace?.[0]?.value?.questions) || 0,
+          accuracy: Number(u?.evidenceTrace?.[0]?.value?.accuracy) || 0,
+          correct: mapR?.correct,
+          wrong: mapR?.wrong,
+          parentVisibleMetrics: mapR?.parentVisibleMetrics,
+        },
+        mapR && typeof mapR === "object" ? mapR : null,
+      );
       return {
         topicRowKey: trk,
         subjectId: sid,
         displayName: String(u?.displayName || "").trim(),
         narrativeTitleHe: labels.titleHe,
         gradeRelationSublineHe: labels.gradeRelationSublineHe,
-        questions: Number(u?.evidenceTrace?.[0]?.value?.questions) || 0,
-        accuracy: Number(u?.evidenceTrace?.[0]?.value?.accuracy) || 0,
+        questions: metrics.questions,
+        correct: metrics.correct,
+        wrong: metrics.wrong,
+        accuracy: metrics.accuracy,
+        parentVisibleMetrics: metrics,
         timeMinutes: Number(mapR?.timeMinutes) || 0,
         parentTier: place.parentTier,
         overviewStatusHe: place.overviewStatusHe,
@@ -2158,6 +2172,16 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
       ? String(mapRow.gradeKey).trim()
       : rowGkFromTopicKey;
   const lpd = mapRow?.learningPatternDecision || u?.learningPatternDecision || null;
+  const parentVisibleMetrics = normalizeParentVisibleMetrics(
+    {
+      questions: outQuestions,
+      accuracy: outAccuracy,
+      correct: mapRow?.correct,
+      wrong: mapRow?.wrong,
+      parentVisibleMetrics: mapRow?.parentVisibleMetrics,
+    },
+    mapRow && typeof mapRow === "object" ? mapRow : null,
+  );
   return {
     topicRowKey: topicKey,
     topicKey,
@@ -2179,8 +2203,12 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
     stateHash: cs?.stateHash || null,
     recommendedNextStep: finalStep,
     recommendedStepLabelHe: finalLabel,
-    questions: outQuestions,
-    accuracy: outAccuracy,
+    questions: parentVisibleMetrics.questions,
+    correct: parentVisibleMetrics.correct,
+    wrong: parentVisibleMetrics.wrong,
+    accuracy: parentVisibleMetrics.accuracy,
+    parentVisibleMetrics,
+    mapRow: mapRow && typeof mapRow === "object" ? mapRow : null,
     mistakeEventCount,
     dataSufficiencyLevel,
     isEarlySignalOnly: Boolean(u?.confidence?.rowSignals?.isEarlySignalOnly),
@@ -2225,9 +2253,9 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
       contentGradeKey: rowGkForIdentity,
       registeredGradeKey: reportMeta?.registeredGradeKey ?? null,
       gradeRelation: geForIdentity.gradeRelation,
-      questions: outQuestions,
-      accuracy: outAccuracy,
-      correct: mapRow?.correct,
+      questions: parentVisibleMetrics.questions,
+      accuracy: parentVisibleMetrics.accuracy,
+      correct: parentVisibleMetrics.correct,
       timeSpentMinutes: mapRow?.timeMinutes,
       latestActivityAt: mapRow?.latestActivityAt || mapRow?.lastAnswerAt || null,
       dataSufficiencyLevel,

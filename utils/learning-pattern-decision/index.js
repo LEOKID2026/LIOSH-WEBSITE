@@ -1,3 +1,11 @@
+export {
+  normalizeParentVisibleMetrics,
+  normalizeParentPracticeMetrics,
+  buildParentMetricsDataLineHe,
+  parentVisibleMetricsContradiction,
+  isForbiddenZeroCorrectAllWrongCopy,
+  lpdFindingNeedsRebuild,
+} from "./normalize-parent-practice-metrics.js";
 export { emptyLearningPatternDecision, BLOCKED_CLAIM_KEYS } from "./schema.js";
 export { resolveEvidenceStrength, evidenceStrengthRank } from "./resolve-evidence-strength.js";
 export {

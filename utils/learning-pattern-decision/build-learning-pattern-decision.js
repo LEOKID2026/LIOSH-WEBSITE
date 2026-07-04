@@ -8,7 +8,7 @@ import { resolveTopicFinding } from "./resolve-topic-finding.js";
 import { resolveBlockedClaims } from "./resolve-blocked-claims.js";
 import { buildParentVisibleFinding } from "./build-parent-visible-finding.js";
 import { partitionPatternEligibleMistakes } from "./resolve-excluded-evidence.js";
-import { normalizeParentPracticeMetrics } from "./normalize-parent-practice-metrics.js";
+import { normalizeParentVisibleMetrics } from "./normalize-parent-practice-metrics.js";
 
 /**
  * @param {object} p
@@ -37,7 +37,7 @@ export function buildLearningPatternDecision({
   const trk = String(topicRowKey || "");
   const topicKey = String(row?.bucketKey || unit?.topicKey || trk.split("\u0001")[0] || trk);
 
-  const metrics = normalizeParentPracticeMetrics(row, unit);
+  const metrics = normalizeParentVisibleMetrics(row, unit);
   const q = metrics.questions;
   const c = metrics.correct;
   const w = metrics.wrong;

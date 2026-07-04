@@ -7,7 +7,8 @@ import { findForbiddenParentWords } from "./build-parent-visible-finding.js";
 import { rowNeedsPracticeFromLpd } from "./apply-learning-pattern-decision.js";
 import {
   lpdFindingNeedsRebuild,
-  normalizeParentPracticeMetrics,
+  normalizeParentVisibleMetrics,
+  buildParentMetricsDataLineHe,
 } from "./normalize-parent-practice-metrics.js";
 
 /** @typedef {{ identified: string, data: string, pattern: string, meaning: string, action: string }} LpdExplainSections */
@@ -93,7 +94,7 @@ export function guardParentFacingText(text) {
  * @param {unknown[]} [rawMistakes]
  */
 export function resolveOrBuildLpdOnRow(row, rawMistakes = []) {
-  const metrics = normalizeParentPracticeMetrics(row);
+  const metrics = normalizeParentVisibleMetrics(row, row?.mapRow || null);
   const q = metrics.questions;
   if (q <= 0) return null;
 
@@ -351,39 +352,27 @@ function lpdHomeActionLineHe(lpd, topicName) {
  * @returns {LpdExplainSections|null}
  */
 export function buildLpdSafeTopicExplainSectionsHe(row) {
-  const lpd = resolveOrBuildLpdOnRow(row);
-  const metrics = normalizeParentPracticeMetrics(row, null);
-  const q = metrics.questions || Number(lpd?.practicedQuestions) || 0;
+  const metrics = normalizeParentVisibleMetrics(row, row?.mapRow || null);
+  const lpd = resolveOrBuildLpdOnRow({ ...row, parentVisibleMetrics: metrics });
+  const q = metrics.questions;
   if (q <= 0 || !lpd || lpd.topicStatus === "not_practiced") return null;
 
   const topicName =
     String(row?.label || row?.displayName || lpd.recommendedFocus || "").trim() || "הנושא";
-  const acc = Math.round(Number(row?.accuracy ?? lpd.accuracy ?? metrics.accuracy) || 0);
-  const cResolved = metrics.correct;
+  const acc = metrics.accuracy;
   const w = metrics.wrong;
-  const wr = q > 0 && w > 0 ? Math.round((w / q) * 100) : null;
 
   const finding = guardParentFacingText(lpd.parentVisibleFinding);
   const isInitial = q <= 2;
 
-  let data =
-    q >= 5
-      ? w > 0
-        ? `הנתונים: הילד/ה פתר/ה ${q} שאלות בנושא ${topicName}, מתוכן ${cResolved} נכונות ו-${w} שגויות.`
-        : `הנתונים: הילד/ה פתר/ה ${q} שאלות בנושא ${topicName}, מתוכן ${cResolved} נכונות.`
-      : q <= 4
-        ? `הנתונים: בנושא ${topicName} נפתרו ${q} שאלות${acc > 0 ? `, דיוק ${acc}%` : ""}.`
-        : wr != null
-          ? `הנתונים: ${q} שאלות, דיוק ${acc}%, ${wr}% טעויות.`
-          : `הנתונים: ${q} שאלות, דיוק ${acc}%.`;
-  data = guardParentFacingText(data);
+  let data = guardParentFacingText(buildParentMetricsDataLineHe(metrics, topicName));
 
   if (isInitial) {
     const topicShort = topicName.replace(/\s*-\s*כיתה\s*[א-ט״']+\s*$/u, "").trim() || topicName;
     return {
       identified: guardParentFacingText(`מה זוהה: נתונים ראשוניים בלבד בנושא ${topicShort}.`),
       data: guardParentFacingText(
-        `הנתונים: נפתרו ${q} שאלות בנושא ${topicShort}${acc > 0 ? `, דיוק ${acc}%` : ""}.`,
+        buildParentMetricsDataLineHe({ ...metrics, questions: q, accuracy: acc }, topicShort),
       ),
       pattern: "",
       meaning: guardParentFacingText("משמעות: עדיין מוקדם לזהות דפוס ברור בנושא."),
@@ -431,8 +420,9 @@ export function buildLpdSafeTopicExplainSectionsHe(row) {
  * @param {Record<string, unknown>|null|undefined} row
  */
 export function resolveParentExplainRowCopy(row) {
-  const lpd = resolveOrBuildLpdOnRow(row);
-  const q = Number(row?.questions ?? lpd?.practicedQuestions) || 0;
+  const metrics = normalizeParentVisibleMetrics(row, row?.mapRow || null);
+  const lpd = resolveOrBuildLpdOnRow({ ...row, parentVisibleMetrics: metrics });
+  const q = metrics.questions;
 
   if (q <= 0) {
     return {
@@ -445,7 +435,7 @@ export function resolveParentExplainRowCopy(row) {
     };
   }
 
-  const explainSections = buildLpdSafeTopicExplainSectionsHe(row);
+  const explainSections = buildLpdSafeTopicExplainSectionsHe({ ...row, parentVisibleMetrics: metrics });
 
   if (!lpd || lpd.topicStatus === "not_practiced") {
     return {

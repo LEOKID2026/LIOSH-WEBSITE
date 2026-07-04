@@ -76,6 +76,7 @@ import {
   PARENT_THIN_DATA_EXPLAINER_HE,
 } from "../../utils/parent-data-presence.js";
 import { topicUiFromLearningPatternDecision } from "../../utils/learning-pattern-decision/parent-report-ui-helpers.js";
+import { normalizeParentVisibleMetrics } from "../../utils/learning-pattern-decision/normalize-parent-practice-metrics.js";
 import {
   filterSubjectOverviewRowsWithEvidence,
   PARENT_REPORT_PERIOD_EMPTY_STATE_HE,
@@ -339,79 +340,99 @@ function buildSubjectOverviewRows(report) {
   if (!report?.summary) return [];
   const s = report.summary;
   const mgVisual = splitMoledetGeographyReportForDisplay(report);
+
+  function subjectRow(key, name, minutes, q, correct, acc, fill) {
+    const metrics = normalizeParentVisibleMetrics({
+      questions: Number(q) || 0,
+      correct: correct != null ? Number(correct) : undefined,
+      accuracy: Math.round(Number(acc) || 0),
+    });
+    return {
+      key,
+      name,
+      minutes,
+      questions: metrics.questions,
+      correct: metrics.correct,
+      accuracy: metrics.accuracy,
+      wrong: metrics.wrong,
+      parentVisibleMetrics: metrics,
+      fill,
+    };
+  }
+
   return [
-    {
-      key: "math",
-      name: "מתמטיקה",
-      minutes: sumTopicMapMinutes(report.mathOperations),
-      questions: Number(s.mathQuestions) || 0,
-      correct: Number(s.mathCorrect) || 0,
-      accuracy: Math.round(Number(s.mathAccuracy) || 0),
-      fill: SUBJECT_CHART_COLORS.math,
-    },
-    {
-      key: "geometry",
-      name: "גאומטריה",
-      minutes: sumTopicMapMinutes(report.geometryTopics),
-      questions: Number(s.geometryQuestions) || 0,
-      correct: Number(s.geometryCorrect) || 0,
-      accuracy: Math.round(Number(s.geometryAccuracy) || 0),
-      fill: SUBJECT_CHART_COLORS.geometry,
-    },
-    {
-      key: "english",
-      name: "אנגלית",
-      minutes: sumTopicMapMinutes(report.englishTopics),
-      questions: Number(s.englishQuestions) || 0,
-      correct: Number(s.englishCorrect) || 0,
-      accuracy: Math.round(Number(s.englishAccuracy) || 0),
-      fill: SUBJECT_CHART_COLORS.english,
-    },
-    {
-      key: "science",
-      name: "מדעים",
-      minutes: sumTopicMapMinutes(report.scienceTopics),
-      questions: Number(s.scienceQuestions) || 0,
-      correct: Number(s.scienceCorrect) || 0,
-      accuracy: Math.round(Number(s.scienceAccuracy) || 0),
-      fill: SUBJECT_CHART_COLORS.science,
-    },
-    {
-      key: "history",
-      name: "היסטוריה",
-      minutes: sumTopicMapMinutes(report.historyTopics),
-      questions: Number(s.historyQuestions) || 0,
-      correct: Number(s.historyCorrect) || 0,
-      accuracy: Math.round(Number(s.historyAccuracy) || 0),
-      fill: SUBJECT_CHART_COLORS.history,
-    },
-    {
-      key: "hebrew",
-      name: "עברית",
-      minutes: sumTopicMapMinutes(report.hebrewTopics),
-      questions: Number(s.hebrewQuestions) || 0,
-      correct: Number(s.hebrewCorrect) || 0,
-      accuracy: Math.round(Number(s.hebrewAccuracy) || 0),
-      fill: SUBJECT_CHART_COLORS.hebrew,
-    },
-    {
-      key: "moledet",
-      name: VISUAL_STRAND_LABEL_HE.moledet,
-      minutes: mgVisual.moledetStats.minutes,
-      questions: mgVisual.moledetStats.questions,
-      correct: mgVisual.moledetStats.correct,
-      accuracy: mgVisual.moledetStats.accuracy,
-      fill: SUBJECT_CHART_COLORS.moledet,
-    },
-    {
-      key: "geography",
-      name: VISUAL_STRAND_LABEL_HE.geography,
-      minutes: mgVisual.geographyStats.minutes,
-      questions: mgVisual.geographyStats.questions,
-      correct: mgVisual.geographyStats.correct,
-      accuracy: mgVisual.geographyStats.accuracy,
-      fill: SUBJECT_CHART_COLORS.geography,
-    },
+    subjectRow(
+      "math",
+      "מתמטיקה",
+      sumTopicMapMinutes(report.mathOperations),
+      s.mathQuestions,
+      s.mathCorrect,
+      s.mathAccuracy,
+      SUBJECT_CHART_COLORS.math,
+    ),
+    subjectRow(
+      "geometry",
+      "גאומטריה",
+      sumTopicMapMinutes(report.geometryTopics),
+      s.geometryQuestions,
+      s.geometryCorrect,
+      s.geometryAccuracy,
+      SUBJECT_CHART_COLORS.geometry,
+    ),
+    subjectRow(
+      "english",
+      "אנגלית",
+      sumTopicMapMinutes(report.englishTopics),
+      s.englishQuestions,
+      s.englishCorrect,
+      s.englishAccuracy,
+      SUBJECT_CHART_COLORS.english,
+    ),
+    subjectRow(
+      "science",
+      "מדעים",
+      sumTopicMapMinutes(report.scienceTopics),
+      s.scienceQuestions,
+      s.scienceCorrect,
+      s.scienceAccuracy,
+      SUBJECT_CHART_COLORS.science,
+    ),
+    subjectRow(
+      "history",
+      "היסטוריה",
+      sumTopicMapMinutes(report.historyTopics),
+      s.historyQuestions,
+      s.historyCorrect,
+      s.historyAccuracy,
+      SUBJECT_CHART_COLORS.history,
+    ),
+    subjectRow(
+      "hebrew",
+      "עברית",
+      sumTopicMapMinutes(report.hebrewTopics),
+      s.hebrewQuestions,
+      s.hebrewCorrect,
+      s.hebrewAccuracy,
+      SUBJECT_CHART_COLORS.hebrew,
+    ),
+    subjectRow(
+      "moledet",
+      VISUAL_STRAND_LABEL_HE.moledet,
+      mgVisual.moledetStats.minutes,
+      mgVisual.moledetStats.questions,
+      mgVisual.moledetStats.correct,
+      mgVisual.moledetStats.accuracy,
+      SUBJECT_CHART_COLORS.moledet,
+    ),
+    subjectRow(
+      "geography",
+      VISUAL_STRAND_LABEL_HE.geography,
+      mgVisual.geographyStats.minutes,
+      mgVisual.geographyStats.questions,
+      mgVisual.geographyStats.correct,
+      mgVisual.geographyStats.accuracy,
+      SUBJECT_CHART_COLORS.geography,
+    ),
   ];
 }
 
@@ -434,6 +455,10 @@ function buildTopicRowsForChart(map, keyPrefix) {
     const label =
       String(data?.narrativeTopicLabelHe || data?.rowIdentityV1?.narrativeTopicLabelHe || "").trim() ||
       parentReportChartLabelFromAllItemKey(`${keyPrefix}_${k}`, data);
+    const metrics =
+      data?.parentVisibleMetrics && typeof data.parentVisibleMetrics === "object"
+        ? data.parentVisibleMetrics
+        : normalizeParentVisibleMetrics(data || {});
     return {
       rowKey: `${keyPrefix}_${k}`,
       rowSourceId: data?.rowSourceId || data?.rowIdentityV1?.sourceId || null,
@@ -442,11 +467,12 @@ function buildTopicRowsForChart(map, keyPrefix) {
       bucketKey,
       displayName: displayName || label,
       label,
-      accuracy: Math.round(Number(data?.accuracy) || 0),
+      accuracy: metrics.accuracy,
       timeMinutes: Math.round(Number(data?.timeMinutes) || 0),
-      questions: Number(data?.questions) || 0,
-      correct: Number(data?.correct) || 0,
-      wrong: Number(data?.wrong) || 0,
+      questions: metrics.questions,
+      correct: metrics.correct,
+      wrong: metrics.wrong,
+      parentVisibleMetrics: metrics,
       learningPatternDecision:
         data?.learningPatternDecision && typeof data.learningPatternDecision === "object"
           ? data.learningPatternDecision
@@ -956,9 +982,10 @@ const chartTooltipStyleLight = {
 const PARENT_REPORT_THIN_VOLUME_QUESTIONS_MAX = 14;
 
 function subjectPracticeSecondaryLineHe(questions, correct, accuracy, timeMinutes) {
-  const q = Number(questions) || 0;
+  const metrics = normalizeParentVisibleMetrics({ questions, correct, accuracy });
+  const q = metrics.questions;
   const tm = Number(timeMinutes) || 0;
-  if (q > 0) return `${Number(correct) || 0} נכון • ${Number(accuracy) || 0}% דיוק`;
+  if (q > 0) return `${metrics.correct} נכון • ${metrics.accuracy}% דיוק`;
   if (tm > 0) return `${tm} דק׳ תרגול`;
   return null;
 }

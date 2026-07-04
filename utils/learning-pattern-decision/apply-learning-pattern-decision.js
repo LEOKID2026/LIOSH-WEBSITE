@@ -3,6 +3,7 @@
  */
 import { SUBJECT_IDS } from "../diagnostic-engine-v2/subject-ids.js";
 import { buildLearningPatternDecision } from "./build-learning-pattern-decision.js";
+import { normalizeParentVisibleMetrics } from "./normalize-parent-practice-metrics.js";
 import { projectHistorySubtopicLearningPatternDecisions } from "./project-history-subtopic-lpd.js";
 
 /**
@@ -67,6 +68,13 @@ export function applyLearningPatternDecisionToUnitsAndRows({
       if (!row || typeof row !== "object") continue;
       const q = Number(row.questions) || 0;
       if (q <= 0) continue;
+
+      const metrics = normalizeParentVisibleMetrics(row);
+      row.parentVisibleMetrics = metrics;
+      row.questions = metrics.questions;
+      row.correct = metrics.correct;
+      row.wrong = metrics.wrong;
+      row.accuracy = metrics.accuracy;
 
       const unit =
         units.find(

@@ -1,13 +1,13 @@
 /**
  * Subject/topic rows with enough parent-visible volume to conclude clear weakness.
  */
-import { normalizeParentPracticeMetrics } from "./normalize-parent-practice-metrics.js";
+import { normalizeParentVisibleMetrics } from "./normalize-parent-practice-metrics.js";
 
 /**
  * @param {{ questions?: number, correct?: number, wrong?: number, accuracy?: number }} metrics
  */
 export function isClearWeakTopicMetrics(metrics) {
-  const m = normalizeParentPracticeMetrics(metrics || {});
+  const m = normalizeParentVisibleMetrics(metrics || {});
   return m.questions >= 5 && m.wrong >= 2 && m.accuracy < 70;
 }
 
@@ -15,12 +15,10 @@ export function isClearWeakTopicMetrics(metrics) {
  * @param {Record<string, unknown>|null|undefined} row
  */
 export function extractMetricsFromTopicRow(row) {
-  return normalizeParentPracticeMetrics({
-    questions: row?.questions ?? row?.answers ?? row?.questionCount,
-    correct: row?.correct ?? row?.correctCount,
-    wrong: row?.wrong ?? row?.wrongCount,
-    accuracy: row?.accuracy,
-  });
+  if (row?.parentVisibleMetrics && typeof row.parentVisibleMetrics === "object") {
+    return normalizeParentVisibleMetrics(row.parentVisibleMetrics);
+  }
+  return normalizeParentVisibleMetrics(row || {}, row?.mapRow || null);
 }
 
 /**

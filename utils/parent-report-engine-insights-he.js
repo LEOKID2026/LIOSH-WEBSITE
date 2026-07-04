@@ -22,6 +22,7 @@ import {
   getLpdFromRow,
   rowIsPositiveFromLpd,
 } from "./learning-pattern-decision/index.js";
+import { normalizeParentVisibleMetrics } from "./learning-pattern-decision/normalize-parent-practice-metrics.js";
 import {
 
   activityGapNonDiagnosticOnlyHe,
@@ -160,6 +161,11 @@ export function collectTopicEngineRowsFromReport(report) {
 
         String(topicKey).replace(/^[^_]+_/, "");
 
+      const metrics =
+        data.parentVisibleMetrics && typeof data.parentVisibleMetrics === "object"
+          ? data.parentVisibleMetrics
+          : normalizeParentVisibleMetrics(data);
+
       rows.push({
 
         rowKey: `${prefix}${topicKey}`,
@@ -172,11 +178,15 @@ export function collectTopicEngineRowsFromReport(report) {
 
         label,
 
-        questions: q,
+        questions: metrics.questions,
 
-        wrong: Number(data.wrong) || 0,
+        correct: metrics.correct,
 
-        accuracy: Math.round(Number(data.accuracy) || 0),
+        wrong: metrics.wrong,
+
+        parentVisibleMetrics: metrics,
+
+        accuracy: metrics.accuracy,
 
         modeKey: typeof data.modeKey === "string" ? data.modeKey : null,
 
