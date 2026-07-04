@@ -9,6 +9,9 @@ import {
   hasTopicLevelEvidence,
   TOPIC_EVIDENCE_THRESHOLDS,
 } from "../parent-report-topic-evidence.js";
+import {
+  resolveEngineDecisionUncertaintyText,
+} from "../learning-pattern-decision/build-parent-report-engine-decision-contract.js";
 
 export const NARRATIVE_CONTRACT_VERSION = "v1";
 
@@ -229,7 +232,10 @@ function buildActionSlot(capIntensity, eligible, seed) {
   ]);
 }
 
-function buildUncertaintySlot(hedgeLevel, seed) {
+function buildUncertaintySlot(hedgeLevel, seed, questionCount = 0) {
+  const q = Math.max(0, Math.floor(Number(questionCount) || 0));
+  if (q >= 50) return null;
+  if (q >= 20 && hedgeLevel === "mandatory") return null;
   if (hedgeLevel === "mandatory") {
     return pickVariant(seed, [
       "עדיין מוקדם לקבוע כאן דבר סופי; ממשיכים עם תרגול קצר ורגיל ובודקים שוב בהמשך.",
@@ -281,12 +287,19 @@ export function buildNarrativeContractV1(input) {
     input?.skillDetailAvailable ||
     input?.contractsV1?.evidence?.skillBreakdownAvailable
   );
-  let uncertainty = buildUncertaintySlot(hedgeLevel, `${baseSeed}:unc`);
-  if (hasTopicLevelEvidence(q) && !hasSubskillMetadata) {
+  let uncertainty = buildUncertaintySlot(hedgeLevel, `${baseSeed}:unc`, q);
+  const engineDecision = String(input?.engineDecision || input?.engineDecisionContract?.engineDecision || "");
+  const evidenceStrength = String(input?.evidenceStrength || input?.engineDecisionContract?.evidenceStrength || "");
+  if (q >= 20 || evidenceStrength === "strong" || engineDecision === "clear_topic_gap") {
+    uncertainty = resolveEngineDecisionUncertaintyText(q, evidenceStrength, engineDecision);
+  } else if (hasTopicLevelEvidence(q) && !hasSubskillMetadata) {
     const skillDetailNote = buildSkillDetailLimitationUncertaintyHe(false);
     if (skillDetailNote) {
       uncertainty = uncertainty && hedgeLevel !== "mandatory" ? `${uncertainty} ${skillDetailNote}` : skillDetailNote;
     }
+  }
+  if (q >= 50 && uncertainty && /עדיין מוקדם|כדאי לעקוב|מעט נתונים/u.test(uncertainty)) {
+    uncertainty = resolveEngineDecisionUncertaintyText(q, evidenceStrength, engineDecision);
   }
 
   return {

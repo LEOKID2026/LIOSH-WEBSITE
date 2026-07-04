@@ -1,6 +1,7 @@
 /**
  * blockedClaims from canonicalState + topic finding — overclaim protection.
  */
+import { isUsableParentPatternLabel } from "./parent-pattern-label.js";
 
 /**
  * @param {object} p
@@ -10,6 +11,7 @@
  * @param {boolean} p.canUseRepeatedWording
  * @param {object|null} [p.canonicalState]
  * @param {boolean} [p.competitiveBucketOnly]
+ * @param {string|null} [p.engineDetectedPattern]
  */
 export function resolveBlockedClaims({
   topicStatus,
@@ -18,6 +20,7 @@ export function resolveBlockedClaims({
   canUseRepeatedWording,
   canonicalState = null,
   competitiveBucketOnly = false,
+  engineDetectedPattern = null,
 }) {
   /** @type {Set<string>} */
   const blocked = new Set();
@@ -35,9 +38,10 @@ export function resolveBlockedClaims({
   }
 
   if (
-    topicStatus === "difficulty_observed" ||
-    topicStatus === "practice_focus" ||
-    findingType === "practice_focus"
+    (topicStatus === "difficulty_observed" ||
+      topicStatus === "practice_focus" ||
+      findingType === "practice_focus") &&
+    !isUsableParentPatternLabel(String(engineDetectedPattern || ""))
   ) {
     blocked.add("no_specific_pattern_claim");
   }

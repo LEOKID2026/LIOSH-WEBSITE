@@ -164,7 +164,7 @@ function lpdRow({ q, c, w, acc, name, bucket = "addition", subjectId = "math", m
   assert.match(sections.data, /הנתונים:/);
   assert.match(sections.meaning, /משמעות:/);
   assert.match(sections.action, /מה כדאי לעשות בבית:/);
-  assert.match(sections.identified, /דפוס חוזר/);
+  assert.match(sections.identified, /דפוס חוזר|קושי ברור|שגויות/u);
   assert.equal(findForbiddenParentWords(JSON.stringify(sections)).length, 0);
   assert.ok(!JSON.stringify(sections).includes("הילד פתר"));
 }

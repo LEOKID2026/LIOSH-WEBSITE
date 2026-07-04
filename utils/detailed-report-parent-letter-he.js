@@ -20,6 +20,10 @@ import {
   subjectClearWeakOpeningHe,
 } from "./learning-pattern-decision/subject-clear-weak-topic.js";
 import {
+  buildSubjectEngineSummaryOpeningHe,
+  findStrongestEngineDecisionInSubject,
+} from "./learning-pattern-decision/build-parent-report-engine-decision-contract.js";
+import {
   gradeContextActionHe,
   gradeContextExplanationHe,
   gradeContextIsStrength,
@@ -131,6 +135,12 @@ function majorRiskAny(sp) {
 
 /** משפט פתיחה אחד */
 function buildSubjectOpeningLineHe(sp, lab) {
+  const engineStrongest = findStrongestEngineDecisionInSubject(sp);
+  const engineOpening = buildSubjectEngineSummaryOpeningHe(lab, engineStrongest);
+  if (engineOpening) {
+    return stripGuillemetsHe(engineOpening);
+  }
+
   const clearWeak = findClearWeakTopicInSubject(sp);
   if (clearWeak) {
     const topicCore = displayTopicCoreHe(clearWeak.label) || clearWeak.label;

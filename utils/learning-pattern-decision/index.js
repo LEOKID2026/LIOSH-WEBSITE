@@ -22,6 +22,15 @@ export {
 export { partitionPatternEligibleMistakes } from "./resolve-excluded-evidence.js";
 export { buildLearningPatternDecision } from "./build-learning-pattern-decision.js";
 export {
+  buildParentReportEngineDecisionContract,
+  mapEngineRecommendedAction,
+  resolveEngineDecisionUncertaintyText,
+  injectEnginePatternIntoRepeatedMistakes,
+  findStrongestEngineDecisionInSubject,
+  buildSubjectEngineSummaryOpeningHe,
+} from "./build-parent-report-engine-decision-contract.js";
+export { restoreLearningPatternDecisionsFromUnits } from "./restore-learning-pattern-on-topic-maps.js";
+export {
   applyLearningPatternDecisionToUnitsAndRows,
   isPracticedTopicWithParentFinding,
   rowNeedsPracticeFromLpd,

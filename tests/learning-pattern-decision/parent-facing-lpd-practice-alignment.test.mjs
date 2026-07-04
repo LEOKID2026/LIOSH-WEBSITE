@@ -47,7 +47,7 @@ describe("parent-facing LPD practice alignment", () => {
     assert.notEqual(lpd.topicStatus, "initial_data");
     assert.notEqual(lpd.findingType, "initial_topic_data");
     assert.notEqual(lpd.topicStatus, "positive_observed");
-    assert.ok(String(lpd.parentVisibleFinding).includes("טעויות"));
+    assert.ok(/טעויות|שגויות/u.test(String(lpd.parentVisibleFinding)));
     assert.ok(!String(lpd.parentVisibleFinding).toLowerCase().includes("unknown"));
     assert.equal(findForbiddenParentWords(lpd.parentVisibleFinding).length, 0);
 
@@ -94,7 +94,7 @@ describe("parent-facing LPD practice alignment", () => {
 
     assert.ok(!String(lpd.parentVisibleFinding).includes("unknown"));
     assert.ok(!String(lpd.parentVisibleFinding).includes("דפוס חוזר"));
-    assert.match(lpd.parentVisibleFinding, /טעויות/);
+    assert.match(lpd.parentVisibleFinding, /טעויות|שגויות/u);
   });
 
   test("C — activity gap diagnostic mismatch suppressed from parent insights", () => {
@@ -294,7 +294,7 @@ describe("parent-facing LPD practice alignment", () => {
     });
     assert.ok(!String(lpd.parentVisibleFinding).includes("unknown"));
     assert.ok(!String(lpd.parentVisibleFinding).includes("pf:"));
-    assert.match(lpd.parentVisibleFinding, /טעויות/);
+    assert.match(lpd.parentVisibleFinding, /טעויות|שגויות/u);
     assert.notEqual(lpd.topicStatus, "no_clear_pattern");
   });
 });

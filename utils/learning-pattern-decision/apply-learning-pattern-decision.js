@@ -107,10 +107,12 @@ export function applyLearningPatternDecisionToUnitsAndRows({
       });
 
       row.learningPatternDecision = lpd;
+      row.engineDecisionContract = lpd.engineDecisionContract || null;
       bySubject[subjectId][topicRowKey] = lpd;
 
       if (unit) {
         unit.learningPatternDecision = lpd;
+        unit.engineDecisionContract = lpd.engineDecisionContract || null;
       }
     }
   }

@@ -362,6 +362,41 @@ export function buildLpdSafeTopicExplainSectionsHe(row) {
   const acc = metrics.accuracy;
   const w = metrics.wrong;
 
+  const contract =
+    lpd.engineDecisionContract ||
+    row?.engineDecisionContract ||
+    null;
+
+  if (contract?.parentSafeFinding && q >= 3) {
+    const pattern =
+      contract.detectedPattern && q >= 5
+        ? guardParentFacingText(`דפוס: ${contract.detectedPattern}.`)
+        : "";
+    const meaning =
+      contract.engineDecision === "clear_topic_gap" ||
+      contract.engineDecision === "topic_needs_strengthening"
+        ? guardParentFacingText(
+            `משמעות: נראה שכדאי לחזק את ${topicName} לפני שממשיכים לנושאים מתקדמים יותר.`,
+          )
+        : guardParentFacingText(lpdMeaningLineHe(lpd, topicName));
+    const action =
+      contract.recommendedAction === "remediate_same_level"
+        ? guardParentFacingText(
+            `מה כדאי לעשות בבית: תרגול קצר וממוקד ב${topicName}, עם בדיקה שהילד/ה מסביר/ה את שלבי הפתרון.`,
+          )
+        : guardParentFacingText(lpdHomeActionLineHe(lpd, topicName));
+
+    return {
+      identified: guardParentFacingText(`מה זוהה: ${contract.parentSafeFinding}`),
+      data: guardParentFacingText(
+        contract.dataText || buildParentMetricsDataLineHe(metrics, topicName),
+      ),
+      pattern,
+      meaning,
+      action,
+    };
+  }
+
   const finding = guardParentFacingText(lpd.parentVisibleFinding);
   const isInitial = q <= 2;
 

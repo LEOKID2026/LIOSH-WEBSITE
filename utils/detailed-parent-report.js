@@ -132,6 +132,7 @@ import {
   VISUAL_STRAND_LABEL_HE,
 } from "../lib/learning-shared/moledet-geography-display.js";
 import { normalizeParentVisibleMetrics } from "./learning-pattern-decision/normalize-parent-practice-metrics.js";
+import { buildParentReportEngineDecisionContract } from "./learning-pattern-decision/build-parent-report-engine-decision-contract.js";
 
 const SUBJECT_IDS = [
   "math",
@@ -2136,11 +2137,43 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
     contractsV1.evidence = { skillBreakdownAvailable: true };
   }
 
-  const finalStep = thinEvidenceDowngraded ? "maintain_and_strengthen" : step;
+  const lpd = mapRow?.learningPatternDecision || u?.learningPatternDecision || null;
+  const parentVisibleMetrics = normalizeParentVisibleMetrics(
+    {
+      questions: outQuestions,
+      accuracy: outAccuracy,
+      correct: mapRow?.correct,
+      wrong: mapRow?.wrong,
+      parentVisibleMetrics: mapRow?.parentVisibleMetrics,
+    },
+    mapRow && typeof mapRow === "object" ? mapRow : null,
+  );
+  const engineDecisionContract =
+    lpd?.engineDecisionContract ||
+    mapRow?.engineDecisionContract ||
+    u?.engineDecisionContract ||
+    buildParentReportEngineDecisionContract({
+      subjectId,
+      topicRowKey: topicKey,
+      topicName: String(u?.displayName || mapRow?.displayName || ""),
+      row: mapRow && typeof mapRow === "object" ? mapRow : {},
+      unit: u,
+    });
+  const contractRequiresRemediate =
+    engineDecisionContract.recommendedAction === "remediate_same_level";
+  const finalStep = contractRequiresRemediate
+    ? "remediate_same_level"
+    : thinEvidenceDowngraded &&
+        engineDecisionContract.engineDecision !== "clear_topic_gap" &&
+        engineDecisionContract.engineDecision !== "topic_needs_strengthening"
+      ? "maintain_and_strengthen"
+      : engineDecisionContract.recommendedAction === "watch"
+        ? "maintain_and_strengthen"
+        : step;
   const gradeRelation = geForIdentity.gradeRelation;
   let finalLabelRaw =
     finalStep === "remediate_same_level"
-      ? label
+      ? "חיזוק ממוקד לפני קידום"
       : outQuestions >= TOPIC_REC_MIN_ACTIONABLE_QUESTIONS
         ? "חיזוק ממוקד לפי הדוח"
         : "לאסוף עוד מידע לפני החלטה";
@@ -2171,24 +2204,15 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
     mapRow && typeof mapRow === "object" && mapRow.gradeKey != null && String(mapRow.gradeKey).trim()
       ? String(mapRow.gradeKey).trim()
       : rowGkFromTopicKey;
-  const lpd = mapRow?.learningPatternDecision || u?.learningPatternDecision || null;
-  const parentVisibleMetrics = normalizeParentVisibleMetrics(
-    {
-      questions: outQuestions,
-      accuracy: outAccuracy,
-      correct: mapRow?.correct,
-      wrong: mapRow?.wrong,
-      parentVisibleMetrics: mapRow?.parentVisibleMetrics,
-    },
-    mapRow && typeof mapRow === "object" ? mapRow : null,
-  );
   return {
     topicRowKey: topicKey,
     topicKey,
     subjectId,
     displayName: String(u?.displayName || "").trim(),
     learningPatternDecision: lpd,
-    parentVisibleFinding: lpd?.parentVisibleFinding || "",
+    engineDecisionContract,
+    parentVisibleFinding:
+      engineDecisionContract.parentSafeFinding || lpd?.parentVisibleFinding || "",
     parentWordingLevel: lpd?.parentWordingLevel || "no_parent_text",
     topicStatus: lpd?.topicStatus || null,
     findingType: lpd?.findingType || null,

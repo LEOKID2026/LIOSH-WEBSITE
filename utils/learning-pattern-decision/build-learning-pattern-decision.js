@@ -7,8 +7,14 @@ import { resolveObservedPatternLevel } from "./resolve-observed-pattern-level.js
 import { resolveTopicFinding } from "./resolve-topic-finding.js";
 import { resolveBlockedClaims } from "./resolve-blocked-claims.js";
 import { buildParentVisibleFinding } from "./build-parent-visible-finding.js";
+import {
+  buildParentReportEngineDecisionContract,
+  injectEnginePatternIntoRepeatedMistakes,
+} from "./build-parent-report-engine-decision-contract.js";
 import { partitionPatternEligibleMistakes } from "./resolve-excluded-evidence.js";
 import { normalizeParentVisibleMetrics } from "./normalize-parent-practice-metrics.js";
+import { isUsableParentPatternLabel } from "./parent-pattern-label.js";
+import { evidenceStrengthRank } from "./resolve-evidence-strength.js";
 
 /**
  * @param {object} p
@@ -90,6 +96,21 @@ export function buildLearningPatternDecision({
     !!row?.recommendedFocus ||
     (unit?.diagnosis?.allowed === true && w >= 2);
 
+  const topicName =
+    String(row?.displayName || unit?.displayName || row?.topicLabel || topicKey).trim() ||
+    topicKey;
+
+  const engineDecisionContract = buildParentReportEngineDecisionContract({
+    subjectId: sid,
+    topicRowKey: trk,
+    topicName,
+    row,
+    unit,
+    v3Enrichment,
+    professionalSlice,
+  });
+  trace.push(...engineDecisionContract.traceReason.map((t) => `edc:${t}`));
+
   const finding = resolveTopicFinding({
     questionCount: performanceQ,
     correctCount: performanceC,
@@ -102,15 +123,6 @@ export function buildLearningPatternDecision({
   let { topicStatus, findingType, repeatedMistakePatterns, canUseRepeatedWording, hasMixed } =
     finding;
 
-  if (v3Enrichment?.v3Rollup?.dominantErrorType && repeatedMistakePatterns.length) {
-    repeatedMistakePatterns = repeatedMistakePatterns.map((p, i) =>
-      i === 0
-        ? { ...p, label: String(v3Enrichment.v3Rollup.dominantErrorType || p.label) }
-        : p,
-    );
-    trace.push("v3:refined_pattern_label");
-  }
-
   if (professionalSlice?.reliabilitySoftened) {
     trace.push("professional:reliability_softened_wording");
   }
@@ -121,6 +133,34 @@ export function buildLearningPatternDecision({
     evidenceStrength = "supported";
     trace.push("professional:reliability_softened_evidenceStrength");
   }
+
+  if (
+    engineDecisionContract.detectedPattern &&
+    isUsableParentPatternLabel(engineDecisionContract.detectedPattern)
+  ) {
+    repeatedMistakePatterns = injectEnginePatternIntoRepeatedMistakes(
+      repeatedMistakePatterns,
+      engineDecisionContract.detectedPattern,
+      performanceW,
+    );
+    if (performanceW >= 2 && performanceQ >= 3) {
+      topicStatus = "difficulty_repeated";
+      findingType = "difficulty_pattern";
+      canUseRepeatedWording =
+        performanceQ >= 5 || evidenceStrengthRank(evidenceStrength) >= evidenceStrengthRank("emerging");
+      trace.push(`engine:pattern_promoted:${engineDecisionContract.detectedPattern}`);
+    }
+  }
+
+  if (v3Enrichment?.v3Rollup?.dominantErrorType && repeatedMistakePatterns.length) {
+    repeatedMistakePatterns = repeatedMistakePatterns.map((p, i) =>
+      i === 0
+        ? { ...p, label: String(v3Enrichment.v3Rollup.dominantErrorType || p.label) }
+        : p,
+    );
+    trace.push("v3:refined_pattern_label");
+  }
+
   const observedPatternLevel = resolveObservedPatternLevel({
     questionCount: performanceQ,
     wrongCount: performanceW,
@@ -135,26 +175,49 @@ export function buildLearningPatternDecision({
     canUseRepeatedWording,
     canonicalState,
     competitiveBucketOnly,
+    engineDetectedPattern: engineDecisionContract.detectedPattern,
   });
 
-  const topicName =
-    String(row?.displayName || unit?.displayName || row?.topicLabel || topicKey).trim() ||
-    topicKey;
+  const { parentVisibleFinding: fallbackFinding, parentWordingLevel, templateId } =
+    buildParentVisibleFinding({
+      topicName,
+      questionCount: performanceQ,
+      topicStatus,
+      findingType,
+      evidenceStrength,
+      canUseRepeatedWording,
+      repeatedMistakePatterns,
+      competitiveBucketOnly,
+      hasMixed,
+      wrongCount: performanceW,
+      accuracy,
+    });
 
-  const { parentVisibleFinding, parentWordingLevel, templateId } = buildParentVisibleFinding({
-    topicName,
-    questionCount: performanceQ,
-    topicStatus,
-    findingType,
-    evidenceStrength,
-    canUseRepeatedWording,
-    repeatedMistakePatterns,
-    competitiveBucketOnly,
-    hasMixed,
-    wrongCount: performanceW,
-    accuracy,
-  });
+  const engineFindingWins =
+    !!engineDecisionContract.parentSafeFinding &&
+    !["insufficient_data", "early_direction_only", "none"].includes(
+      String(engineDecisionContract.engineDecision || ""),
+    );
 
+  const fallbackHasRepeatedPattern =
+    !!fallbackFinding && /מופיע דפוס חוזר/u.test(String(fallbackFinding));
+
+  const parentVisibleFindingFinal = engineDecisionContract.detectedPattern
+    ? engineDecisionContract.parentSafeFinding
+    : fallbackHasRepeatedPattern
+      ? fallbackFinding
+      : engineFindingWins
+        ? engineDecisionContract.parentSafeFinding
+        : fallbackFinding || engineDecisionContract.parentSafeFinding;
+  if (engineDecisionContract.detectedPattern && engineDecisionContract.parentSafeFinding) {
+    trace.push("parentVisibleFinding:engine_pattern");
+  } else if (fallbackHasRepeatedPattern) {
+    trace.push("parentVisibleFinding:aggregation_pattern");
+  } else if (engineFindingWins) {
+    trace.push("parentVisibleFinding:engine_decision");
+  } else if (fallbackFinding) {
+    trace.push("parentVisibleFinding:lpd_fallback");
+  }
   if (enrichmentMissing.length) {
     trace.push(`fallback:topic_performance_only missing=[${enrichmentMissing.join(",")}]`);
   }
@@ -192,8 +255,9 @@ export function buildLearningPatternDecision({
         : [],
     repeatedMistakePatterns,
     recommendedFocus: recommendedFocus && performanceQ > 2 ? topicName : null,
-    parentVisibleFinding,
-    parentWordingLevel,
+    parentVisibleFinding: parentVisibleFindingFinal,
+    parentWordingLevel: engineDecisionContract.detectedPattern ? "repeated_pattern" : parentWordingLevel,
+    engineDecisionContract,
     blockedClaims,
     excludedEvidence,
     sourceEngines: [...new Set(sourceEngines)],

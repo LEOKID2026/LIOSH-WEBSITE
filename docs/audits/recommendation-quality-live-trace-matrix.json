@@ -1,0 +1,1522 @@
+{
+  "generatedAt": "2026-07-04T21:32:54.532Z",
+  "matrix": [
+    {
+      "topic": "חיבור",
+      "topicRowKey": "addition::grade:g5",
+      "expected": {
+        "q": 10,
+        "c": 2,
+        "w": 8,
+        "acc": 20
+      },
+      "student": {
+        "id": "74c30e48-895b-4f4c-a65a-888f656f54f6",
+        "username": "omer",
+        "grade": "grade_5"
+      },
+      "range": {
+        "from": "2025-09-01",
+        "to": "2026-07-04"
+      },
+      "answerTrace": {
+        "rawAnswerRows": 2,
+        "includedParentVisible": 2,
+        "includedCorrect": 0,
+        "includedWrong": 2,
+        "excludedByReason": {},
+        "excludedTotal": 0
+      },
+      "normalizeParentVisibleMetrics": {
+        "questions": 8,
+        "correct": 6,
+        "wrong": 2,
+        "accuracy": 75,
+        "source": "aggregate",
+        "canShowCorrectWrongBreakdown": true,
+        "trace": [
+          "embedded"
+        ]
+      },
+      "lpdInput": {
+        "questions": 8,
+        "correct": 6,
+        "wrong": 2,
+        "accuracy": 75,
+        "rawMistakesCount": null
+      },
+      "lpdOutput": {
+        "topicStatus": "positive_observed",
+        "findingType": "success_pattern",
+        "evidenceStrength": "supported",
+        "parentWordingLevel": "pattern_observed",
+        "parentVisibleFinding": "בנושא חיבור נראית הצלחה טובה בשאלות שנפתרו. מבוסס על 8 שאלות שנפתרו בנושא.",
+        "practicedQuestions": 8,
+        "correctCount": 6,
+        "wrongCount": 2,
+        "blockedClaims": [
+          "no_root_cause_claim",
+          "no_long_term_claim",
+          "no_final_claim",
+          "no_long_term_mastery_claim"
+        ],
+        "repeatedMistakePatterns": [],
+        "recommendedFocus": null
+      },
+      "recommendation": {
+        "questions": 8,
+        "correct": 6,
+        "wrong": 2,
+        "accuracy": 75,
+        "parentVisibleMetrics": {
+          "questions": 8,
+          "correct": 6,
+          "wrong": 2,
+          "accuracy": 75,
+          "source": "aggregate",
+          "canShowCorrectWrongBreakdown": true,
+          "trace": [
+            "embedded"
+          ]
+        },
+        "recommendedStepLabelHe": "חיזוק ממוקד לפי הדוח",
+        "recommendedNextStep": "maintain_and_strengthen",
+        "thinEvidenceDowngraded": false,
+        "dataSufficiencyLevel": "medium",
+        "evidenceStrength": "low",
+        "conclusionStrength": "withheld",
+        "gateReadiness": "insufficient"
+      },
+      "pipelineStages": {
+        "mapRow": {
+          "questions": 8,
+          "accuracy": 75,
+          "timeMinutes": 8,
+          "gradeKey": "g5",
+          "learningPatternDecision": {
+            "subjectId": "math",
+            "topicKey": "addition::grade:g5",
+            "practicedQuestions": 8,
+            "correctCount": 6,
+            "wrongCount": 2,
+            "accuracy": 75,
+            "observedPatternLevel": "observed",
+            "evidenceStrength": "supported",
+            "topicStatus": "positive_observed",
+            "findingType": "success_pattern",
+            "detectedPatterns": [],
+            "positivePatterns": [
+              {
+                "type": "topic_success",
+                "accuracy": 75,
+                "questionCount": 8
+              }
+            ],
+            "repeatedMistakePatterns": [],
+            "recommendedFocus": null,
+            "parentVisibleFinding": "בנושא חיבור נראית הצלחה טובה בשאלות שנפתרו. מבוסס על 8 שאלות שנפתרו בנושא.",
+            "parentWordingLevel": "pattern_observed",
+            "blockedClaims": [
+              "no_root_cause_claim",
+              "no_long_term_claim",
+              "no_final_claim",
+              "no_long_term_mastery_claim"
+            ],
+            "excludedEvidence": [],
+            "sourceEngines": [
+              "topic_aggregation",
+              "de2",
+              "canonicalState",
+              "v3"
+            ],
+            "competitiveBucketOnly": false,
+            "enrichmentMissing": [
+              "professional_slice"
+            ],
+            "trace": [
+              "edc:raw:received",
+              "edc:metrics:q=8,c=6,w=2,acc=75",
+              "edc:de2:unit_present",
+              "edc:v3:enrichment_present",
+              "edc:engineDecision:early_direction_only",
+              "edc:recommendedAction:maintain_and_strengthen",
+              "edc:parentSafeFinding:empty",
+              "parentVisibleFinding:lpd_fallback",
+              "fallback:topic_performance_only missing=[professional_slice]",
+              "aggregation:row_modeKey=learning pattern_events_from_eligible_mistakes_only",
+              "template:positive_observed",
+              "wording:pattern_observed"
+            ],
+            "engineDecisionContract": {
+              "subject": "math",
+              "topic": "addition::grade:g5",
+              "topicName": "חיבור",
+              "questions": 8,
+              "correct": 6,
+              "wrong": 2,
+              "accuracy": 75,
+              "metrics": {
+                "questions": 8,
+                "correct": 6,
+                "wrong": 2,
+                "accuracy": 75,
+                "source": "aggregate",
+                "canShowCorrectWrongBreakdown": true,
+                "trace": [
+                  "embedded"
+                ]
+              },
+              "engineDecision": "early_direction_only",
+              "sourceEngine": "topic_aggregation",
+              "detectedPattern": null,
+              "misconceptionLabel": null,
+              "affectedSubskill": null,
+              "severity": "none",
+              "evidenceStrength": "supported",
+              "recommendedAction": "maintain_and_strengthen",
+              "parentSafeFinding": "",
+              "uncertaintyText": null,
+              "blockPatternClaim": true,
+              "actionState": "withhold",
+              "traceReason": [
+                "raw:received",
+                "metrics:q=8,c=6,w=2,acc=75",
+                "de2:unit_present",
+                "v3:enrichment_present",
+                "engineDecision:early_direction_only",
+                "recommendedAction:maintain_and_strengthen",
+                "parentSafeFinding:empty"
+              ],
+              "engineDiagnosticDecision": {
+                "version": 1,
+                "engineConfidenceTier": "T1",
+                "accuracyBand": "partial_good",
+                "engineDecision": "early_direction_only",
+                "topicWeaknessLevel": "emerging",
+                "rootCause": "",
+                "behaviorType": "",
+                "dominantMistakePattern": "",
+                "taxonomyMatchId": null,
+                "taxonomyMatchStrength": "none",
+                "taxonomyMatch": false,
+                "taxonomyClassificationReasonCode": null,
+                "rawBucketKey": null,
+                "normalizedBucketKey": null,
+                "gradeScope": null,
+                "taxonomyCandidateIds": [],
+                "evidenceFlags": null,
+                "subskillCandidate": null,
+                "subskillCandidateTechnical": null,
+                "subskillSafety": null,
+                "safeSubskillToShow": false,
+                "patternCandidate": null,
+                "actionCandidate": null,
+                "guardrailsApplied": [
+                  "subskill_requires_taxonomy_match"
+                ],
+                "why": [
+                  "accuracy_band_partial_good"
+                ]
+              },
+              "dataText": "הנתונים: הילד/ה פתר/ה 8 שאלות בנושא חיבור, מתוכן 6 נכונות ו-2 שגויות."
+            },
+            "evidenceBuckets": {
+              "independentCount": 0,
+              "competitiveCount": 0,
+              "guidedCount": 0
+            },
+            "templateId": "positive_observed"
+          }
+        },
+        "v2Unit": {
+          "questions": 8,
+          "accuracy": 75,
+          "patternHe": null,
+          "actionState": "withhold",
+          "learningPatternDecision": {
+            "subjectId": "math",
+            "topicKey": "addition::grade:g5",
+            "practicedQuestions": 8,
+            "correctCount": 6,
+            "wrongCount": 2,
+            "accuracy": 75,
+            "observedPatternLevel": "observed",
+            "evidenceStrength": "supported",
+            "topicStatus": "positive_observed",
+            "findingType": "success_pattern",
+            "detectedPatterns": [],
+            "positivePatterns": [
+              {
+                "type": "topic_success",
+                "accuracy": 75,
+                "questionCount": 8
+              }
+            ],
+            "repeatedMistakePatterns": [],
+            "recommendedFocus": null,
+            "parentVisibleFinding": "בנושא חיבור נראית הצלחה טובה בשאלות שנפתרו. מבוסס על 8 שאלות שנפתרו בנושא.",
+            "parentWordingLevel": "pattern_observed",
+            "blockedClaims": [
+              "no_root_cause_claim",
+              "no_long_term_claim",
+              "no_final_claim",
+              "no_long_term_mastery_claim"
+            ],
+            "excludedEvidence": [],
+            "sourceEngines": [
+              "topic_aggregation",
+              "de2",
+              "canonicalState",
+              "v3"
+            ],
+            "competitiveBucketOnly": false,
+            "enrichmentMissing": [
+              "professional_slice"
+            ],
+            "trace": [
+              "edc:raw:received",
+              "edc:metrics:q=8,c=6,w=2,acc=75",
+              "edc:de2:unit_present",
+              "edc:v3:enrichment_present",
+              "edc:engineDecision:early_direction_only",
+              "edc:recommendedAction:maintain_and_strengthen",
+              "edc:parentSafeFinding:empty",
+              "parentVisibleFinding:lpd_fallback",
+              "fallback:topic_performance_only missing=[professional_slice]",
+              "aggregation:row_modeKey=learning pattern_events_from_eligible_mistakes_only",
+              "template:positive_observed",
+              "wording:pattern_observed"
+            ],
+            "engineDecisionContract": {
+              "subject": "math",
+              "topic": "addition::grade:g5",
+              "topicName": "חיבור",
+              "questions": 8,
+              "correct": 6,
+              "wrong": 2,
+              "accuracy": 75,
+              "metrics": {
+                "questions": 8,
+                "correct": 6,
+                "wrong": 2,
+                "accuracy": 75,
+                "source": "aggregate",
+                "canShowCorrectWrongBreakdown": true,
+                "trace": [
+                  "embedded"
+                ]
+              },
+              "engineDecision": "early_direction_only",
+              "sourceEngine": "topic_aggregation",
+              "detectedPattern": null,
+              "misconceptionLabel": null,
+              "affectedSubskill": null,
+              "severity": "none",
+              "evidenceStrength": "supported",
+              "recommendedAction": "maintain_and_strengthen",
+              "parentSafeFinding": "",
+              "uncertaintyText": null,
+              "blockPatternClaim": true,
+              "actionState": "withhold",
+              "traceReason": [
+                "raw:received",
+                "metrics:q=8,c=6,w=2,acc=75",
+                "de2:unit_present",
+                "v3:enrichment_present",
+                "engineDecision:early_direction_only",
+                "recommendedAction:maintain_and_strengthen",
+                "parentSafeFinding:empty"
+              ],
+              "engineDiagnosticDecision": {
+                "version": 1,
+                "engineConfidenceTier": "T1",
+                "accuracyBand": "partial_good",
+                "engineDecision": "early_direction_only",
+                "topicWeaknessLevel": "emerging",
+                "rootCause": "",
+                "behaviorType": "",
+                "dominantMistakePattern": "",
+                "taxonomyMatchId": null,
+                "taxonomyMatchStrength": "none",
+                "taxonomyMatch": false,
+                "taxonomyClassificationReasonCode": null,
+                "rawBucketKey": null,
+                "normalizedBucketKey": null,
+                "gradeScope": null,
+                "taxonomyCandidateIds": [],
+                "evidenceFlags": null,
+                "subskillCandidate": null,
+                "subskillCandidateTechnical": null,
+                "subskillSafety": null,
+                "safeSubskillToShow": false,
+                "patternCandidate": null,
+                "actionCandidate": null,
+                "guardrailsApplied": [
+                  "subskill_requires_taxonomy_match"
+                ],
+                "why": [
+                  "accuracy_band_partial_good"
+                ]
+              },
+              "dataText": "הנתונים: הילד/ה פתר/ה 8 שאלות בנושא חיבור, מתוכן 6 נכונות ו-2 שגויות."
+            },
+            "evidenceBuckets": {
+              "independentCount": 0,
+              "competitiveCount": 0,
+              "guidedCount": 0
+            },
+            "templateId": "positive_observed"
+          }
+        },
+        "v3Enrichment": {
+          "v3DiagnosisStage": "enough_for_initial_signal",
+          "v3RecommendedNextStep": "practice_more"
+        },
+        "learningPatternDecision": {
+          "topicStatus": "positive_observed",
+          "findingType": "success_pattern",
+          "evidenceStrength": "supported",
+          "parentWordingLevel": "pattern_observed",
+          "parentVisibleFinding": "בנושא חיבור נראית הצלחה טובה בשאלות שנפתרו. מבוסס על 8 שאלות שנפתרו בנושא.",
+          "blockedClaims": [
+            "no_root_cause_claim",
+            "no_long_term_claim",
+            "no_final_claim",
+            "no_long_term_mastery_claim"
+          ],
+          "excludedEvidence": [],
+          "enrichmentMissing": [
+            "professional_slice"
+          ],
+          "projectedFrom": null,
+          "subtopicBreakdown": false,
+          "trace": [
+            "edc:raw:received",
+            "edc:metrics:q=8,c=6,w=2,acc=75",
+            "edc:de2:unit_present",
+            "edc:v3:enrichment_present",
+            "edc:engineDecision:early_direction_only",
+            "edc:recommendedAction:maintain_and_strengthen",
+            "edc:parentSafeFinding:empty",
+            "parentVisibleFinding:lpd_fallback",
+            "fallback:topic_performance_only missing=[professional_slice]",
+            "aggregation:row_modeKey=learning pattern_events_from_eligible_mistakes_only",
+            "template:positive_observed",
+            "wording:pattern_observed"
+          ]
+        },
+        "detailedTopicRec": {
+          "questions": 8,
+          "accuracy": 75,
+          "thinEvidenceDowngraded": false,
+          "recommendedStepLabelHe": "חיזוק ממוקד לפי הדוח",
+          "rowIdentityV1": {
+            "contractVersion": "v1",
+            "sourceId": "topic:math:addition:grade:g5",
+            "subjectId": "math",
+            "topicRowKey": "addition::grade:g5",
+            "canonicalTopicKey": "addition",
+            "contentGradeKey": "g5",
+            "registeredGradeKey": "g5",
+            "gradeRelation": "same",
+            "displayName": "חיבור",
+            "questions": 8,
+            "correct": 6,
+            "accuracy": 75,
+            "timeSpentMinutes": 8,
+            "latestActivityAt": "14/06/2026 16:58",
+            "evidenceBand": "low",
+            "hasTopicLevelEvidence": true,
+            "dataSufficiencyLevel": "medium",
+            "thinEvidenceDowngraded": false,
+            "hasSubskillMetadata": false,
+            "recommendedStepLabelHe": "חיזוק ממוקד לפי הדוח",
+            "diagnosticPatternHe": null,
+            "evidenceSources": [],
+            "primaryEvidenceSource": null,
+            "evidenceSourceCounts": {}
+          }
+        },
+        "detailedStrength": null,
+        "detailedWeakness": null,
+        "narrativeUncertainty": "יש מספיק מידע על מצב הנושא, אבל אין מספיק פירוט כדי לזהות את תת המיומנות המדויקת.",
+        "copilotAnchored": {
+          "questions": 8,
+          "accuracy": 75,
+          "observation": "בחיבור נאספו 8 שאלות בתקופה, עם דיוק ממוצע של כ 75%."
+        }
+      },
+      "renderedText": {
+        "shortReport": "מתמטיקה — «חיבור - כיתה ה׳»: בנושא חיבור נראית הצלחה טובה בשאלות שנפתרו. מבוסס על 8 שאלות שנפתרו בנושא. | בנושא חיבור נראית הצלחה טובה בשאלות שנפתרו. מבוסס על 8 שאלות שנפתרו בנושא. | מה זוהה: בנושא חיבור נראית הצלחה טובה בשאלות שנפתרו. מבוסס על 8 שאלות שנפתרו בנושא. | הנתונים: הילד/ה פתר/ה 8 שאלות בנושא חיבור, מתוכן 6 נכונות ו-2 שגויות. | משמעות: נראית הצלחה טובה בנושא — כדאי לשמר את מה שכבר עובד. | מה כדאי לעשות בבית: לתרגל כמה שאלות קצרות בנושא חיבור, בקצב רגוע, ולבקש מהילד/ה להסביר את שלבי הפתרון.",
+        "detailedReport": "חיזוק ממוקד לפי הדוח | בנושא חיבור נראית הצלחה טובה בשאלות שנפתרו. מבוסס על 8 שאלות שנפתרו בנושא. | מה זוהה: בנושא חיבור נראית הצלחה טובה בשאלות שנפתרו. מבוסס על 8 שאלות שנפתרו בנושא. | הנתונים: הילד/ה פתר/ה 8 שאלות בנושא חיבור, מתוכן 6 נכונות ו-2 שגויות. | משמעות: נראית הצלחה טובה בנושא — כדאי לשמר את מה שכבר עובד. | מה כדאי לעשות בבית: לתרגל כמה שאלות קצרות בנושא חיבור, בקצב רגוע, ולבקש מהילד/ה להסביר את שלבי הפתרון.",
+        "subjectSummary": "במתמטיקה נראית נקודת חיזוק ברורה בנושא שברים — כדאי לחזק אותו בתרגול קצר ורגוע. | מה שבולט כרגע: פער מושג שבר. בחלק מהשורות מה שרואים עדיין לא מספיק כדי לסגור תמונה ברורה. | בשבוע הקרוב התמקדו בהשוואת שברים בעזרת שברים שקולים, מכנה משותף ואומדן, עם נימוק ברור לכל השוואה."
+      },
+      "renderedTextCombined": "מתמטיקה — «חיבור - כיתה ה׳»: בנושא חיבור נראית הצלחה טובה בשאלות שנפתרו. מבוסס על 8 שאלות שנפתרו בנושא. | בנושא חיבור נראית הצלחה טובה בשאלות שנפתרו. מבוסס על 8 שאלות שנפתרו בנושא. | מה זוהה: בנושא חיבור נראית הצלחה טובה בשאלות שנפתרו. מבוסס על 8 שאלות שנפתרו בנושא. | הנתונים: הילד/ה פתר/ה 8 שאלות בנושא חיבור, מתוכן 6 נכונות ו-2 שגויות. | משמעות: נראית הצלחה טובה בנושא — כדאי לשמר את מה שכבר עובד. | מה כדאי לעשות בבית: לתרגל כמה שאלות קצרות בנושא חיבור, בקצב רגוע, ולבקש מהילד/ה להסביר את שלבי הפתרון. חיזוק ממוקד לפי הדוח | בנושא חיבור נראית הצלחה טובה בשאלות שנפתרו. מבוסס על 8 שאלות שנפתרו בנושא. | מה זוהה: בנושא חיבור נראית הצלחה טובה בשאלות שנפתרו. מבוסס על 8 שאלות שנפתרו בנושא. | הנתונים: הילד/ה פתר/ה 8 שאלות בנושא חיבור, מתוכן 6 נכונות ו-2 שגויות. | משמעות: נראית הצלחה טובה בנושא — כדאי לשמר את מה שכבר עובד. | מה כדאי לעשות בבית: לתרגל כמה שאלות קצרות בנושא חיבור, בקצב רגוע, ולבקש מהילד/ה להסביר את שלבי הפתרון. במתמטיקה נראית נקודת חיזוק ברורה בנושא שברים — כדאי לחזק אותו בתרגול קצר ורגוע. | מה שבולט כרגע: פער מושג שבר. בחלק מהשורות מה שרואים עדיין לא מספיק כדי לסגור תמונה ברורה. | בשבוע הקרוב התמקדו בהשוואת שברים בעזרת שברים שקולים, מכנה משותף ואומדן, עם נימוק ברור לכל השוואה.",
+      "metricsVsLpdMismatch": false,
+      "headerDetailContradiction": false,
+      "diagnosis": [
+        "metrics:drift_from_expected"
+      ]
+    },
+    {
+      "topic": "שברים",
+      "topicRowKey": "fractions::grade:g5",
+      "expected": {
+        "q": 206,
+        "c": 107,
+        "w": 99,
+        "acc": 52
+      },
+      "student": {
+        "id": "74c30e48-895b-4f4c-a65a-888f656f54f6",
+        "username": "omer",
+        "grade": "grade_5"
+      },
+      "range": {
+        "from": "2025-09-01",
+        "to": "2026-07-04"
+      },
+      "answerTrace": {
+        "rawAnswerRows": 667,
+        "includedParentVisible": 660,
+        "includedCorrect": 510,
+        "includedWrong": 150,
+        "excludedByReason": {
+          "competitive_mode": 7
+        },
+        "excludedTotal": 7
+      },
+      "normalizeParentVisibleMetrics": {
+        "questions": 206,
+        "correct": 108,
+        "wrong": 98,
+        "accuracy": 52,
+        "source": "aggregate",
+        "canShowCorrectWrongBreakdown": true,
+        "trace": [
+          "embedded"
+        ]
+      },
+      "lpdInput": {
+        "questions": 206,
+        "correct": 108,
+        "wrong": 98,
+        "accuracy": 52,
+        "rawMistakesCount": null
+      },
+      "lpdOutput": {
+        "topicStatus": "difficulty_repeated",
+        "findingType": "difficulty_pattern",
+        "evidenceStrength": "strong",
+        "parentWordingLevel": "repeated_pattern",
+        "parentVisibleFinding": "בנושא שברים מופיע דפוס חוזר של טעויות (השוואה לפי מונה בלבד). כדאי לחזק את הנושא. מבוסס על 206 שאלות שנפתרו בנושא.",
+        "practicedQuestions": 206,
+        "correctCount": 108,
+        "wrongCount": 98,
+        "blockedClaims": [
+          "no_root_cause_claim",
+          "no_long_term_claim"
+        ],
+        "repeatedMistakePatterns": [
+          {
+            "key": "engine:השוואה לפי מונה בלבד",
+            "label": "unknown",
+            "count": 98,
+            "ratio": 1
+          },
+          {
+            "key": "pf:procedure_break",
+            "count": 93,
+            "ratio": 1,
+            "label": "procedure_break"
+          }
+        ],
+        "recommendedFocus": "שברים"
+      },
+      "recommendation": {
+        "questions": 206,
+        "correct": 108,
+        "wrong": 98,
+        "accuracy": 52,
+        "parentVisibleMetrics": {
+          "questions": 206,
+          "correct": 108,
+          "wrong": 98,
+          "accuracy": 52,
+          "source": "aggregate",
+          "canShowCorrectWrongBreakdown": true,
+          "trace": [
+            "embedded"
+          ]
+        },
+        "recommendedStepLabelHe": "חיזוק ממוקד לפני שמעלים רמה",
+        "recommendedNextStep": "remediate_same_level",
+        "thinEvidenceDowngraded": false,
+        "dataSufficiencyLevel": "strong",
+        "evidenceStrength": "strong",
+        "conclusionStrength": "strong",
+        "gateReadiness": "ready"
+      },
+      "pipelineStages": {
+        "mapRow": {
+          "questions": 206,
+          "accuracy": 52,
+          "timeMinutes": 0,
+          "gradeKey": "g5",
+          "learningPatternDecision": {
+            "subjectId": "math",
+            "topicKey": "fractions::grade:g5",
+            "practicedQuestions": 206,
+            "correctCount": 108,
+            "wrongCount": 98,
+            "accuracy": 52,
+            "observedPatternLevel": "strong",
+            "evidenceStrength": "strong",
+            "topicStatus": "difficulty_repeated",
+            "findingType": "difficulty_pattern",
+            "detectedPatterns": [
+              {
+                "key": "engine:השוואה לפי מונה בלבד",
+                "count": 98,
+                "ratio": 1,
+                "label": "unknown"
+              },
+              {
+                "key": "pf:procedure_break",
+                "count": 93,
+                "ratio": 1,
+                "label": "procedure_break"
+              }
+            ],
+            "positivePatterns": [],
+            "repeatedMistakePatterns": [
+              {
+                "key": "engine:השוואה לפי מונה בלבד",
+                "label": "unknown",
+                "count": 98,
+                "ratio": 1
+              },
+              {
+                "key": "pf:procedure_break",
+                "count": 93,
+                "ratio": 1,
+                "label": "procedure_break"
+              }
+            ],
+            "recommendedFocus": "שברים",
+            "parentVisibleFinding": "בנושא שברים מופיע דפוס חוזר של טעויות (השוואה לפי מונה בלבד). כדאי לחזק את הנושא. מבוסס על 206 שאלות שנפתרו בנושא.",
+            "parentWordingLevel": "repeated_pattern",
+            "blockedClaims": [
+              "no_root_cause_claim",
+              "no_long_term_claim"
+            ],
+            "excludedEvidence": [],
+            "sourceEngines": [
+              "topic_aggregation",
+              "de2",
+              "canonicalState",
+              "v3"
+            ],
+            "competitiveBucketOnly": false,
+            "enrichmentMissing": [
+              "professional_slice"
+            ],
+            "trace": [
+              "edc:raw:received",
+              "edc:metrics:q=206,c=108,w=98,acc=52",
+              "edc:de2:unit_present",
+              "edc:de2:pattern=השוואה לפי מונה בלבד",
+              "edc:v3:enrichment_present",
+              "edc:engineDecision:topic_needs_strengthening",
+              "edc:recommendedAction:remediate_same_level",
+              "edc:parentSafeFinding:engine",
+              "engine:pattern_promoted:השוואה לפי מונה בלבד",
+              "v3:refined_pattern_label",
+              "parentVisibleFinding:engine_pattern",
+              "fallback:topic_performance_only missing=[professional_slice]",
+              "template:difficulty_observed",
+              "wording:pattern_observed"
+            ],
+            "engineDecisionContract": {
+              "subject": "math",
+              "topic": "fractions::grade:g5",
+              "topicName": "שברים",
+              "questions": 206,
+              "correct": 108,
+              "wrong": 98,
+              "accuracy": 52,
+              "metrics": {
+                "questions": 206,
+                "correct": 108,
+                "wrong": 98,
+                "accuracy": 52,
+                "source": "aggregate",
+                "canShowCorrectWrongBreakdown": true,
+                "trace": [
+                  "embedded"
+                ]
+              },
+              "engineDecision": "topic_needs_strengthening",
+              "sourceEngine": "de2",
+              "detectedPattern": "השוואה לפי מונה בלבד",
+              "misconceptionLabel": "מצביע על דפוס: השוואה לפי מונה בלבד (נקודת מיקוד: חלק כלל) בשברים.",
+              "affectedSubskill": "חלק כלל",
+              "severity": "moderate",
+              "evidenceStrength": "strong",
+              "recommendedAction": "remediate_same_level",
+              "parentSafeFinding": "בנושא שברים מופיע דפוס חוזר של טעויות (השוואה לפי מונה בלבד). כדאי לחזק את הנושא. מבוסס על 206 שאלות שנפתרו בנושא.",
+              "uncertaintyText": null,
+              "blockPatternClaim": false,
+              "actionState": "intervene",
+              "traceReason": [
+                "raw:received",
+                "metrics:q=206,c=108,w=98,acc=52",
+                "de2:unit_present",
+                "de2:pattern=השוואה לפי מונה בלבד",
+                "v3:enrichment_present",
+                "engineDecision:topic_needs_strengthening",
+                "recommendedAction:remediate_same_level",
+                "parentSafeFinding:engine"
+              ],
+              "engineDiagnosticDecision": {
+                "version": 1,
+                "engineConfidenceTier": "T4",
+                "accuracyBand": "needs_strengthening",
+                "engineDecision": "topic_needs_strengthening",
+                "topicWeaknessLevel": "moderate",
+                "rootCause": "",
+                "behaviorType": "",
+                "dominantMistakePattern": "השוואה לפי מונה בלבד",
+                "taxonomyMatchId": null,
+                "taxonomyMatchStrength": "none",
+                "taxonomyMatch": false,
+                "taxonomyClassificationReasonCode": null,
+                "rawBucketKey": null,
+                "normalizedBucketKey": null,
+                "gradeScope": null,
+                "taxonomyCandidateIds": [],
+                "evidenceFlags": null,
+                "subskillCandidate": null,
+                "subskillCandidateTechnical": null,
+                "subskillSafety": null,
+                "safeSubskillToShow": false,
+                "patternCandidate": {
+                  "patternKey": "השוואה לפי מונה בלבד",
+                  "confidence": 0.48
+                },
+                "actionCandidate": null,
+                "guardrailsApplied": [
+                  "subskill_requires_taxonomy_match"
+                ],
+                "why": [
+                  "accuracy_band_needs_strengthening"
+                ]
+              },
+              "dataText": "הנתונים: הילד/ה פתר/ה 206 שאלות בנושא שברים, מתוכן 108 נכונות ו-98 שגויות."
+            },
+            "evidenceBuckets": {
+              "independentCount": 93,
+              "competitiveCount": 0,
+              "guidedCount": 0
+            },
+            "templateId": "difficulty_observed"
+          }
+        },
+        "v2Unit": {
+          "questions": 206,
+          "accuracy": 52,
+          "patternHe": "השוואה לפי מונה בלבד",
+          "actionState": "intervene",
+          "learningPatternDecision": {
+            "subjectId": "math",
+            "topicKey": "fractions::grade:g5",
+            "practicedQuestions": 206,
+            "correctCount": 108,
+            "wrongCount": 98,
+            "accuracy": 52,
+            "observedPatternLevel": "strong",
+            "evidenceStrength": "strong",
+            "topicStatus": "difficulty_repeated",
+            "findingType": "difficulty_pattern",
+            "detectedPatterns": [
+              {
+                "key": "engine:השוואה לפי מונה בלבד",
+                "count": 98,
+                "ratio": 1,
+                "label": "unknown"
+              },
+              {
+                "key": "pf:procedure_break",
+                "count": 93,
+                "ratio": 1,
+                "label": "procedure_break"
+              }
+            ],
+            "positivePatterns": [],
+            "repeatedMistakePatterns": [
+              {
+                "key": "engine:השוואה לפי מונה בלבד",
+                "label": "unknown",
+                "count": 98,
+                "ratio": 1
+              },
+              {
+                "key": "pf:procedure_break",
+                "count": 93,
+                "ratio": 1,
+                "label": "procedure_break"
+              }
+            ],
+            "recommendedFocus": "שברים",
+            "parentVisibleFinding": "בנושא שברים מופיע דפוס חוזר של טעויות (השוואה לפי מונה בלבד). כדאי לחזק את הנושא. מבוסס על 206 שאלות שנפתרו בנושא.",
+            "parentWordingLevel": "repeated_pattern",
+            "blockedClaims": [
+              "no_root_cause_claim",
+              "no_long_term_claim"
+            ],
+            "excludedEvidence": [],
+            "sourceEngines": [
+              "topic_aggregation",
+              "de2",
+              "canonicalState",
+              "v3"
+            ],
+            "competitiveBucketOnly": false,
+            "enrichmentMissing": [
+              "professional_slice"
+            ],
+            "trace": [
+              "edc:raw:received",
+              "edc:metrics:q=206,c=108,w=98,acc=52",
+              "edc:de2:unit_present",
+              "edc:de2:pattern=השוואה לפי מונה בלבד",
+              "edc:v3:enrichment_present",
+              "edc:engineDecision:topic_needs_strengthening",
+              "edc:recommendedAction:remediate_same_level",
+              "edc:parentSafeFinding:engine",
+              "engine:pattern_promoted:השוואה לפי מונה בלבד",
+              "v3:refined_pattern_label",
+              "parentVisibleFinding:engine_pattern",
+              "fallback:topic_performance_only missing=[professional_slice]",
+              "template:difficulty_observed",
+              "wording:pattern_observed"
+            ],
+            "engineDecisionContract": {
+              "subject": "math",
+              "topic": "fractions::grade:g5",
+              "topicName": "שברים",
+              "questions": 206,
+              "correct": 108,
+              "wrong": 98,
+              "accuracy": 52,
+              "metrics": {
+                "questions": 206,
+                "correct": 108,
+                "wrong": 98,
+                "accuracy": 52,
+                "source": "aggregate",
+                "canShowCorrectWrongBreakdown": true,
+                "trace": [
+                  "embedded"
+                ]
+              },
+              "engineDecision": "topic_needs_strengthening",
+              "sourceEngine": "de2",
+              "detectedPattern": "השוואה לפי מונה בלבד",
+              "misconceptionLabel": "מצביע על דפוס: השוואה לפי מונה בלבד (נקודת מיקוד: חלק כלל) בשברים.",
+              "affectedSubskill": "חלק כלל",
+              "severity": "moderate",
+              "evidenceStrength": "strong",
+              "recommendedAction": "remediate_same_level",
+              "parentSafeFinding": "בנושא שברים מופיע דפוס חוזר של טעויות (השוואה לפי מונה בלבד). כדאי לחזק את הנושא. מבוסס על 206 שאלות שנפתרו בנושא.",
+              "uncertaintyText": null,
+              "blockPatternClaim": false,
+              "actionState": "intervene",
+              "traceReason": [
+                "raw:received",
+                "metrics:q=206,c=108,w=98,acc=52",
+                "de2:unit_present",
+                "de2:pattern=השוואה לפי מונה בלבד",
+                "v3:enrichment_present",
+                "engineDecision:topic_needs_strengthening",
+                "recommendedAction:remediate_same_level",
+                "parentSafeFinding:engine"
+              ],
+              "engineDiagnosticDecision": {
+                "version": 1,
+                "engineConfidenceTier": "T4",
+                "accuracyBand": "needs_strengthening",
+                "engineDecision": "topic_needs_strengthening",
+                "topicWeaknessLevel": "moderate",
+                "rootCause": "",
+                "behaviorType": "",
+                "dominantMistakePattern": "השוואה לפי מונה בלבד",
+                "taxonomyMatchId": null,
+                "taxonomyMatchStrength": "none",
+                "taxonomyMatch": false,
+                "taxonomyClassificationReasonCode": null,
+                "rawBucketKey": null,
+                "normalizedBucketKey": null,
+                "gradeScope": null,
+                "taxonomyCandidateIds": [],
+                "evidenceFlags": null,
+                "subskillCandidate": null,
+                "subskillCandidateTechnical": null,
+                "subskillSafety": null,
+                "safeSubskillToShow": false,
+                "patternCandidate": {
+                  "patternKey": "השוואה לפי מונה בלבד",
+                  "confidence": 0.48
+                },
+                "actionCandidate": null,
+                "guardrailsApplied": [
+                  "subskill_requires_taxonomy_match"
+                ],
+                "why": [
+                  "accuracy_band_needs_strengthening"
+                ]
+              },
+              "dataText": "הנתונים: הילד/ה פתר/ה 206 שאלות בנושא שברים, מתוכן 108 נכונות ו-98 שגויות."
+            },
+            "evidenceBuckets": {
+              "independentCount": 93,
+              "competitiveCount": 0,
+              "guidedCount": 0
+            },
+            "templateId": "difficulty_observed"
+          }
+        },
+        "v3Enrichment": {
+          "v3DiagnosisStage": "enough_for_initial_signal",
+          "v3RecommendedNextStep": "practice_more"
+        },
+        "learningPatternDecision": {
+          "topicStatus": "difficulty_repeated",
+          "findingType": "difficulty_pattern",
+          "evidenceStrength": "strong",
+          "parentWordingLevel": "repeated_pattern",
+          "parentVisibleFinding": "בנושא שברים מופיע דפוס חוזר של טעויות (השוואה לפי מונה בלבד). כדאי לחזק את הנושא. מבוסס על 206 שאלות שנפתרו בנושא.",
+          "blockedClaims": [
+            "no_root_cause_claim",
+            "no_long_term_claim"
+          ],
+          "excludedEvidence": [],
+          "enrichmentMissing": [
+            "professional_slice"
+          ],
+          "projectedFrom": null,
+          "subtopicBreakdown": false,
+          "trace": [
+            "edc:raw:received",
+            "edc:metrics:q=206,c=108,w=98,acc=52",
+            "edc:de2:unit_present",
+            "edc:de2:pattern=השוואה לפי מונה בלבד",
+            "edc:v3:enrichment_present",
+            "edc:engineDecision:topic_needs_strengthening",
+            "edc:recommendedAction:remediate_same_level",
+            "edc:parentSafeFinding:engine",
+            "engine:pattern_promoted:השוואה לפי מונה בלבד",
+            "v3:refined_pattern_label",
+            "parentVisibleFinding:engine_pattern",
+            "fallback:topic_performance_only missing=[professional_slice]",
+            "template:difficulty_observed",
+            "wording:pattern_observed"
+          ]
+        },
+        "detailedTopicRec": {
+          "questions": 206,
+          "accuracy": 52,
+          "thinEvidenceDowngraded": false,
+          "recommendedStepLabelHe": "חיזוק ממוקד לפני שמעלים רמה",
+          "rowIdentityV1": {
+            "contractVersion": "v1",
+            "sourceId": "topic:math:fractions:grade:g5",
+            "subjectId": "math",
+            "topicRowKey": "fractions::grade:g5",
+            "canonicalTopicKey": "fractions",
+            "contentGradeKey": "g5",
+            "registeredGradeKey": "g5",
+            "gradeRelation": "same",
+            "displayName": "שברים",
+            "questions": 206,
+            "correct": 108,
+            "accuracy": 52,
+            "timeSpentMinutes": 0,
+            "latestActivityAt": "02/06/2026 14:11",
+            "evidenceBand": "strong",
+            "hasTopicLevelEvidence": true,
+            "dataSufficiencyLevel": "strong",
+            "thinEvidenceDowngraded": false,
+            "hasSubskillMetadata": true,
+            "recommendedStepLabelHe": "חיזוק ממוקד לפני שמעלים רמה",
+            "diagnosticPatternHe": "השוואה לפי מונה בלבד",
+            "evidenceSources": [],
+            "primaryEvidenceSource": null,
+            "evidenceSourceCounts": {}
+          }
+        },
+        "detailedStrength": null,
+        "detailedWeakness": null,
+        "narrativeUncertainty": null,
+        "copilotAnchored": {
+          "questions": 206,
+          "accuracy": 52,
+          "observation": "בשברים נאספו 206 שאלות בתקופה, ורמת הדיוק סביב 52%."
+        }
+      },
+      "renderedText": {
+        "shortReport": "מתמטיקה — «שברים - כיתה ה׳»: בנושא שברים מופיע דפוס חוזר של טעויות (השוואה לפי מונה בלבד). כדאי לחזק את הנושא. מבוסס על 206 שאלות שנפתרו בנושא. | בנושא שברים מופיע דפוס חוזר של טעויות (השוואה לפי מונה בלבד). כדאי לחזק את הנושא. מבוסס על 206 שאלות שנפתרו בנושא. | מה זוהה: בנושא שברים מופיע דפוס חוזר של טעויות (השוואה לפי מונה בלבד). כדאי לחזק את הנושא. מבוסס על 206 שאלות שנפתרו בנושא. | הנתונים: הילד/ה פתר/ה 206 שאלות בנושא שברים, מתוכן 108 נכונות ו-98 שגויות. | משמעות: נראה שכדאי לחזק את שברים לפני שממשיכים לנושאים מתקדמים יותר. | מה כדאי לעשות בבית: תרגול קצר וממוקד בשברים, עם בדיקה שהילד/ה מסביר/ה את שלבי הפתרון.",
+        "detailedReport": "חיזוק ממוקד לפני שמעלים רמה | בשבוע הקרוב התמקדו בהשוואת שברים בעזרת שברים שקולים, מכנה משותף ואומדן, עם נימוק ברור לכל השוואה. | כדאי לתרגל השוואת שברים בעזרת שברים שקולים, מכנה משותף או אומדן ביחס אל 0, חצי ו 1. בקשו מהילד להסביר מדוע שבר אחד גדול מאחר, ולא להסתמך רק על גודל המונה או המכנה. | בנושא שברים מופיע דפוס חוזר של טעויות (השוואה לפי מונה בלבד). כדאי לחזק את הנושא. מבוסס על 206 שאלות שנפתרו בנושא. | מה זוהה: בנושא שברים מופיע דפוס חוזר של טעויות (השוואה לפי מונה בלבד). כדאי לחזק את הנושא. מבוסס על 206 שאלות שנפתרו בנושא. | הנתונים: הילד/ה פתר/ה 206 שאלות בנושא שברים, מתוכן 108 נכונות ו-98 שגויות. | משמעות: נראה שכדאי לחזק את שברים לפני שממשיכים לנושאים מתקדמים יותר. | מה כדאי לעשות בבית: תרגול קצר וממוקד בשברים, עם בדיקה שהילד/ה מסביר/ה את שלבי הפתרון.",
+        "subjectSummary": "במתמטיקה נראית נקודת חיזוק ברורה בנושא שברים — כדאי לחזק אותו בתרגול קצר ורגוע. | מה שבולט כרגע: פער מושג שבר. בחלק מהשורות מה שרואים עדיין לא מספיק כדי לסגור תמונה ברורה. | בשבוע הקרוב התמקדו בהשוואת שברים בעזרת שברים שקולים, מכנה משותף ואומדן, עם נימוק ברור לכל השוואה."
+      },
+      "renderedTextCombined": "מתמטיקה — «שברים - כיתה ה׳»: בנושא שברים מופיע דפוס חוזר של טעויות (השוואה לפי מונה בלבד). כדאי לחזק את הנושא. מבוסס על 206 שאלות שנפתרו בנושא. | בנושא שברים מופיע דפוס חוזר של טעויות (השוואה לפי מונה בלבד). כדאי לחזק את הנושא. מבוסס על 206 שאלות שנפתרו בנושא. | מה זוהה: בנושא שברים מופיע דפוס חוזר של טעויות (השוואה לפי מונה בלבד). כדאי לחזק את הנושא. מבוסס על 206 שאלות שנפתרו בנושא. | הנתונים: הילד/ה פתר/ה 206 שאלות בנושא שברים, מתוכן 108 נכונות ו-98 שגויות. | משמעות: נראה שכדאי לחזק את שברים לפני שממשיכים לנושאים מתקדמים יותר. | מה כדאי לעשות בבית: תרגול קצר וממוקד בשברים, עם בדיקה שהילד/ה מסביר/ה את שלבי הפתרון. חיזוק ממוקד לפני שמעלים רמה | בשבוע הקרוב התמקדו בהשוואת שברים בעזרת שברים שקולים, מכנה משותף ואומדן, עם נימוק ברור לכל השוואה. | כדאי לתרגל השוואת שברים בעזרת שברים שקולים, מכנה משותף או אומדן ביחס אל 0, חצי ו 1. בקשו מהילד להסביר מדוע שבר אחד גדול מאחר, ולא להסתמך רק על גודל המונה או המכנה. | בנושא שברים מופיע דפוס חוזר של טעויות (השוואה לפי מונה בלבד). כדאי לחזק את הנושא. מבוסס על 206 שאלות שנפתרו בנושא. | מה זוהה: בנושא שברים מופיע דפוס חוזר של טעויות (השוואה לפי מונה בלבד). כדאי לחזק את הנושא. מבוסס על 206 שאלות שנפתרו בנושא. | הנתונים: הילד/ה פתר/ה 206 שאלות בנושא שברים, מתוכן 108 נכונות ו-98 שגויות. | משמעות: נראה שכדאי לחזק את שברים לפני שממשיכים לנושאים מתקדמים יותר. | מה כדאי לעשות בבית: תרגול קצר וממוקד בשברים, עם בדיקה שהילד/ה מסביר/ה את שלבי הפתרון. במתמטיקה נראית נקודת חיזוק ברורה בנושא שברים — כדאי לחזק אותו בתרגול קצר ורגוע. | מה שבולט כרגע: פער מושג שבר. בחלק מהשורות מה שרואים עדיין לא מספיק כדי לסגור תמונה ברורה. | בשבוע הקרוב התמקדו בהשוואת שברים בעזרת שברים שקולים, מכנה משותף ואומדן, עם נימוק ברור לכל השוואה.",
+      "metricsVsLpdMismatch": false,
+      "headerDetailContradiction": false,
+      "diagnosis": []
+    },
+    {
+      "topic": "כפל",
+      "topicRowKey": "multiplication::grade:g5",
+      "expected": {
+        "q": 32,
+        "c": 22,
+        "w": 10,
+        "acc": 69
+      },
+      "student": {
+        "id": "74c30e48-895b-4f4c-a65a-888f656f54f6",
+        "username": "omer",
+        "grade": "grade_5"
+      },
+      "range": {
+        "from": "2025-09-01",
+        "to": "2026-07-04"
+      },
+      "answerTrace": {
+        "rawAnswerRows": 29,
+        "includedParentVisible": 29,
+        "includedCorrect": 20,
+        "includedWrong": 9,
+        "excludedByReason": {},
+        "excludedTotal": 0
+      },
+      "normalizeParentVisibleMetrics": {
+        "questions": 32,
+        "correct": 22,
+        "wrong": 10,
+        "accuracy": 69,
+        "source": "aggregate",
+        "canShowCorrectWrongBreakdown": true,
+        "trace": [
+          "embedded"
+        ]
+      },
+      "lpdInput": {
+        "questions": 32,
+        "correct": 22,
+        "wrong": 10,
+        "accuracy": 69,
+        "rawMistakesCount": null
+      },
+      "lpdOutput": {
+        "topicStatus": "difficulty_repeated",
+        "findingType": "difficulty_pattern",
+        "evidenceStrength": "strong",
+        "parentWordingLevel": "repeated_pattern",
+        "parentVisibleFinding": "בנושא כפל מופיע דפוס חוזר של טעויות (אותם זוגות שגויים). כדאי לחזק את הנושא. מבוסס על 32 שאלות שנפתרו בנושא.",
+        "practicedQuestions": 32,
+        "correctCount": 22,
+        "wrongCount": 10,
+        "blockedClaims": [
+          "no_root_cause_claim",
+          "no_long_term_claim"
+        ],
+        "repeatedMistakePatterns": [
+          {
+            "key": "engine:אותם זוגות שגויים",
+            "label": "unknown",
+            "count": 10,
+            "ratio": 1
+          },
+          {
+            "key": "pf:procedure_break",
+            "count": 8,
+            "ratio": 0.8888888888888888,
+            "label": "procedure_break"
+          }
+        ],
+        "recommendedFocus": "כפל"
+      },
+      "recommendation": {
+        "questions": 32,
+        "correct": 22,
+        "wrong": 10,
+        "accuracy": 69,
+        "parentVisibleMetrics": {
+          "questions": 32,
+          "correct": 22,
+          "wrong": 10,
+          "accuracy": 69,
+          "source": "aggregate",
+          "canShowCorrectWrongBreakdown": true,
+          "trace": [
+            "embedded"
+          ]
+        },
+        "recommendedStepLabelHe": "חיזוק ממוקד לפני שמעלים רמה",
+        "recommendedNextStep": "remediate_same_level",
+        "thinEvidenceDowngraded": false,
+        "dataSufficiencyLevel": "strong",
+        "evidenceStrength": "medium",
+        "conclusionStrength": "strong",
+        "gateReadiness": "moderate"
+      },
+      "pipelineStages": {
+        "mapRow": {
+          "questions": 32,
+          "accuracy": 69,
+          "timeMinutes": 41,
+          "gradeKey": "g5",
+          "learningPatternDecision": {
+            "subjectId": "math",
+            "topicKey": "multiplication::grade:g5",
+            "practicedQuestions": 32,
+            "correctCount": 22,
+            "wrongCount": 10,
+            "accuracy": 69,
+            "observedPatternLevel": "consistent",
+            "evidenceStrength": "strong",
+            "topicStatus": "difficulty_repeated",
+            "findingType": "difficulty_pattern",
+            "detectedPatterns": [
+              {
+                "key": "engine:אותם זוגות שגויים",
+                "count": 10,
+                "ratio": 1,
+                "label": "unknown"
+              },
+              {
+                "key": "pf:procedure_break",
+                "count": 8,
+                "ratio": 0.8888888888888888,
+                "label": "procedure_break"
+              }
+            ],
+            "positivePatterns": [],
+            "repeatedMistakePatterns": [
+              {
+                "key": "engine:אותם זוגות שגויים",
+                "label": "unknown",
+                "count": 10,
+                "ratio": 1
+              },
+              {
+                "key": "pf:procedure_break",
+                "count": 8,
+                "ratio": 0.8888888888888888,
+                "label": "procedure_break"
+              }
+            ],
+            "recommendedFocus": "כפל",
+            "parentVisibleFinding": "בנושא כפל מופיע דפוס חוזר של טעויות (אותם זוגות שגויים). כדאי לחזק את הנושא. מבוסס על 32 שאלות שנפתרו בנושא.",
+            "parentWordingLevel": "repeated_pattern",
+            "blockedClaims": [
+              "no_root_cause_claim",
+              "no_long_term_claim"
+            ],
+            "excludedEvidence": [],
+            "sourceEngines": [
+              "topic_aggregation",
+              "de2",
+              "canonicalState",
+              "v3"
+            ],
+            "competitiveBucketOnly": false,
+            "enrichmentMissing": [
+              "professional_slice"
+            ],
+            "trace": [
+              "edc:raw:received",
+              "edc:metrics:q=32,c=22,w=10,acc=69",
+              "edc:de2:unit_present",
+              "edc:de2:pattern=אותם זוגות שגויים",
+              "edc:v3:enrichment_present",
+              "edc:engineDecision:topic_needs_strengthening",
+              "edc:recommendedAction:remediate_same_level",
+              "edc:parentSafeFinding:engine",
+              "engine:pattern_promoted:אותם זוגות שגויים",
+              "v3:refined_pattern_label",
+              "parentVisibleFinding:engine_pattern",
+              "fallback:topic_performance_only missing=[professional_slice]",
+              "template:difficulty_observed",
+              "wording:pattern_observed"
+            ],
+            "engineDecisionContract": {
+              "subject": "math",
+              "topic": "multiplication::grade:g5",
+              "topicName": "כפל",
+              "questions": 32,
+              "correct": 22,
+              "wrong": 10,
+              "accuracy": 69,
+              "metrics": {
+                "questions": 32,
+                "correct": 22,
+                "wrong": 10,
+                "accuracy": 69,
+                "source": "aggregate",
+                "canShowCorrectWrongBreakdown": true,
+                "trace": [
+                  "embedded"
+                ]
+              },
+              "engineDecision": "topic_needs_strengthening",
+              "sourceEngine": "de2",
+              "detectedPattern": "אותם זוגות שגויים",
+              "misconceptionLabel": "מצביע על דפוס: אותם זוגות שגויים (נקודת מיקוד: עובדת כפל) בכפל.",
+              "affectedSubskill": "עובדת כפל",
+              "severity": "moderate",
+              "evidenceStrength": "strong",
+              "recommendedAction": "remediate_same_level",
+              "parentSafeFinding": "בנושא כפל מופיע דפוס חוזר של טעויות (אותם זוגות שגויים). כדאי לחזק את הנושא. מבוסס על 32 שאלות שנפתרו בנושא.",
+              "uncertaintyText": null,
+              "blockPatternClaim": false,
+              "actionState": "intervene",
+              "traceReason": [
+                "raw:received",
+                "metrics:q=32,c=22,w=10,acc=69",
+                "de2:unit_present",
+                "de2:pattern=אותם זוגות שגויים",
+                "v3:enrichment_present",
+                "engineDecision:topic_needs_strengthening",
+                "recommendedAction:remediate_same_level",
+                "parentSafeFinding:engine"
+              ],
+              "engineDiagnosticDecision": {
+                "version": 1,
+                "engineConfidenceTier": "T3",
+                "accuracyBand": "needs_strengthening",
+                "engineDecision": "topic_needs_strengthening",
+                "topicWeaknessLevel": "moderate",
+                "rootCause": "",
+                "behaviorType": "",
+                "dominantMistakePattern": "אותם זוגות שגויים",
+                "taxonomyMatchId": null,
+                "taxonomyMatchStrength": "none",
+                "taxonomyMatch": false,
+                "taxonomyClassificationReasonCode": null,
+                "rawBucketKey": null,
+                "normalizedBucketKey": null,
+                "gradeScope": null,
+                "taxonomyCandidateIds": [],
+                "evidenceFlags": null,
+                "subskillCandidate": null,
+                "subskillCandidateTechnical": null,
+                "subskillSafety": null,
+                "safeSubskillToShow": false,
+                "patternCandidate": {
+                  "patternKey": "אותם זוגות שגויים",
+                  "confidence": 0.48
+                },
+                "actionCandidate": null,
+                "guardrailsApplied": [
+                  "subskill_requires_taxonomy_match"
+                ],
+                "why": [
+                  "accuracy_band_needs_strengthening"
+                ]
+              },
+              "dataText": "הנתונים: הילד/ה פתר/ה 32 שאלות בנושא כפל, מתוכן 22 נכונות ו-10 שגויות."
+            },
+            "evidenceBuckets": {
+              "independentCount": 8,
+              "competitiveCount": 0,
+              "guidedCount": 1
+            },
+            "templateId": "difficulty_observed"
+          }
+        },
+        "v2Unit": {
+          "questions": 32,
+          "accuracy": 69,
+          "patternHe": "אותם זוגות שגויים",
+          "actionState": "intervene",
+          "learningPatternDecision": {
+            "subjectId": "math",
+            "topicKey": "multiplication::grade:g5",
+            "practicedQuestions": 32,
+            "correctCount": 22,
+            "wrongCount": 10,
+            "accuracy": 69,
+            "observedPatternLevel": "consistent",
+            "evidenceStrength": "strong",
+            "topicStatus": "difficulty_repeated",
+            "findingType": "difficulty_pattern",
+            "detectedPatterns": [
+              {
+                "key": "engine:אותם זוגות שגויים",
+                "count": 10,
+                "ratio": 1,
+                "label": "unknown"
+              },
+              {
+                "key": "pf:procedure_break",
+                "count": 8,
+                "ratio": 0.8888888888888888,
+                "label": "procedure_break"
+              }
+            ],
+            "positivePatterns": [],
+            "repeatedMistakePatterns": [
+              {
+                "key": "engine:אותם זוגות שגויים",
+                "label": "unknown",
+                "count": 10,
+                "ratio": 1
+              },
+              {
+                "key": "pf:procedure_break",
+                "count": 8,
+                "ratio": 0.8888888888888888,
+                "label": "procedure_break"
+              }
+            ],
+            "recommendedFocus": "כפל",
+            "parentVisibleFinding": "בנושא כפל מופיע דפוס חוזר של טעויות (אותם זוגות שגויים). כדאי לחזק את הנושא. מבוסס על 32 שאלות שנפתרו בנושא.",
+            "parentWordingLevel": "repeated_pattern",
+            "blockedClaims": [
+              "no_root_cause_claim",
+              "no_long_term_claim"
+            ],
+            "excludedEvidence": [],
+            "sourceEngines": [
+              "topic_aggregation",
+              "de2",
+              "canonicalState",
+              "v3"
+            ],
+            "competitiveBucketOnly": false,
+            "enrichmentMissing": [
+              "professional_slice"
+            ],
+            "trace": [
+              "edc:raw:received",
+              "edc:metrics:q=32,c=22,w=10,acc=69",
+              "edc:de2:unit_present",
+              "edc:de2:pattern=אותם זוגות שגויים",
+              "edc:v3:enrichment_present",
+              "edc:engineDecision:topic_needs_strengthening",
+              "edc:recommendedAction:remediate_same_level",
+              "edc:parentSafeFinding:engine",
+              "engine:pattern_promoted:אותם זוגות שגויים",
+              "v3:refined_pattern_label",
+              "parentVisibleFinding:engine_pattern",
+              "fallback:topic_performance_only missing=[professional_slice]",
+              "template:difficulty_observed",
+              "wording:pattern_observed"
+            ],
+            "engineDecisionContract": {
+              "subject": "math",
+              "topic": "multiplication::grade:g5",
+              "topicName": "כפל",
+              "questions": 32,
+              "correct": 22,
+              "wrong": 10,
+              "accuracy": 69,
+              "metrics": {
+                "questions": 32,
+                "correct": 22,
+                "wrong": 10,
+                "accuracy": 69,
+                "source": "aggregate",
+                "canShowCorrectWrongBreakdown": true,
+                "trace": [
+                  "embedded"
+                ]
+              },
+              "engineDecision": "topic_needs_strengthening",
+              "sourceEngine": "de2",
+              "detectedPattern": "אותם זוגות שגויים",
+              "misconceptionLabel": "מצביע על דפוס: אותם זוגות שגויים (נקודת מיקוד: עובדת כפל) בכפל.",
+              "affectedSubskill": "עובדת כפל",
+              "severity": "moderate",
+              "evidenceStrength": "strong",
+              "recommendedAction": "remediate_same_level",
+              "parentSafeFinding": "בנושא כפל מופיע דפוס חוזר של טעויות (אותם זוגות שגויים). כדאי לחזק את הנושא. מבוסס על 32 שאלות שנפתרו בנושא.",
+              "uncertaintyText": null,
+              "blockPatternClaim": false,
+              "actionState": "intervene",
+              "traceReason": [
+                "raw:received",
+                "metrics:q=32,c=22,w=10,acc=69",
+                "de2:unit_present",
+                "de2:pattern=אותם זוגות שגויים",
+                "v3:enrichment_present",
+                "engineDecision:topic_needs_strengthening",
+                "recommendedAction:remediate_same_level",
+                "parentSafeFinding:engine"
+              ],
+              "engineDiagnosticDecision": {
+                "version": 1,
+                "engineConfidenceTier": "T3",
+                "accuracyBand": "needs_strengthening",
+                "engineDecision": "topic_needs_strengthening",
+                "topicWeaknessLevel": "moderate",
+                "rootCause": "",
+                "behaviorType": "",
+                "dominantMistakePattern": "אותם זוגות שגויים",
+                "taxonomyMatchId": null,
+                "taxonomyMatchStrength": "none",
+                "taxonomyMatch": false,
+                "taxonomyClassificationReasonCode": null,
+                "rawBucketKey": null,
+                "normalizedBucketKey": null,
+                "gradeScope": null,
+                "taxonomyCandidateIds": [],
+                "evidenceFlags": null,
+                "subskillCandidate": null,
+                "subskillCandidateTechnical": null,
+                "subskillSafety": null,
+                "safeSubskillToShow": false,
+                "patternCandidate": {
+                  "patternKey": "אותם זוגות שגויים",
+                  "confidence": 0.48
+                },
+                "actionCandidate": null,
+                "guardrailsApplied": [
+                  "subskill_requires_taxonomy_match"
+                ],
+                "why": [
+                  "accuracy_band_needs_strengthening"
+                ]
+              },
+              "dataText": "הנתונים: הילד/ה פתר/ה 32 שאלות בנושא כפל, מתוכן 22 נכונות ו-10 שגויות."
+            },
+            "evidenceBuckets": {
+              "independentCount": 8,
+              "competitiveCount": 0,
+              "guidedCount": 1
+            },
+            "templateId": "difficulty_observed"
+          }
+        },
+        "v3Enrichment": {
+          "v3DiagnosisStage": "enough_for_initial_signal",
+          "v3RecommendedNextStep": "practice_more"
+        },
+        "learningPatternDecision": {
+          "topicStatus": "difficulty_repeated",
+          "findingType": "difficulty_pattern",
+          "evidenceStrength": "strong",
+          "parentWordingLevel": "repeated_pattern",
+          "parentVisibleFinding": "בנושא כפל מופיע דפוס חוזר של טעויות (אותם זוגות שגויים). כדאי לחזק את הנושא. מבוסס על 32 שאלות שנפתרו בנושא.",
+          "blockedClaims": [
+            "no_root_cause_claim",
+            "no_long_term_claim"
+          ],
+          "excludedEvidence": [],
+          "enrichmentMissing": [
+            "professional_slice"
+          ],
+          "projectedFrom": null,
+          "subtopicBreakdown": false,
+          "trace": [
+            "edc:raw:received",
+            "edc:metrics:q=32,c=22,w=10,acc=69",
+            "edc:de2:unit_present",
+            "edc:de2:pattern=אותם זוגות שגויים",
+            "edc:v3:enrichment_present",
+            "edc:engineDecision:topic_needs_strengthening",
+            "edc:recommendedAction:remediate_same_level",
+            "edc:parentSafeFinding:engine",
+            "engine:pattern_promoted:אותם זוגות שגויים",
+            "v3:refined_pattern_label",
+            "parentVisibleFinding:engine_pattern",
+            "fallback:topic_performance_only missing=[professional_slice]",
+            "template:difficulty_observed",
+            "wording:pattern_observed"
+          ]
+        },
+        "detailedTopicRec": {
+          "questions": 32,
+          "accuracy": 69,
+          "thinEvidenceDowngraded": false,
+          "recommendedStepLabelHe": "חיזוק ממוקד לפני שמעלים רמה",
+          "rowIdentityV1": {
+            "contractVersion": "v1",
+            "sourceId": "topic:math:multiplication:grade:g5",
+            "subjectId": "math",
+            "topicRowKey": "multiplication::grade:g5",
+            "canonicalTopicKey": "multiplication",
+            "contentGradeKey": "g5",
+            "registeredGradeKey": "g5",
+            "gradeRelation": "same",
+            "displayName": "כפל",
+            "questions": 32,
+            "correct": 22,
+            "accuracy": 69,
+            "timeSpentMinutes": 41,
+            "latestActivityAt": "25/06/2026 19:14",
+            "evidenceBand": "moderate",
+            "hasTopicLevelEvidence": true,
+            "dataSufficiencyLevel": "strong",
+            "thinEvidenceDowngraded": false,
+            "hasSubskillMetadata": true,
+            "recommendedStepLabelHe": "חיזוק ממוקד לפני שמעלים רמה",
+            "diagnosticPatternHe": "אותם זוגות שגויים",
+            "evidenceSources": [],
+            "primaryEvidenceSource": null,
+            "evidenceSourceCounts": {}
+          }
+        },
+        "detailedStrength": null,
+        "detailedWeakness": {
+          "questions": 32,
+          "accuracy": 69,
+          "labelHe": "כפל - כיתה ה׳ — אותם זוגות שגויים",
+          "rowIdentityV1": {
+            "contractVersion": "v1",
+            "sourceId": "topic:math:multiplication:grade:g5",
+            "subjectId": "math",
+            "topicRowKey": "multiplication::grade:g5",
+            "canonicalTopicKey": "multiplication",
+            "contentGradeKey": "g5",
+            "registeredGradeKey": "g5",
+            "gradeRelation": "same",
+            "displayName": "כפל",
+            "questions": 32,
+            "correct": 22,
+            "accuracy": 69,
+            "timeSpentMinutes": 41,
+            "latestActivityAt": null,
+            "evidenceBand": "moderate",
+            "hasTopicLevelEvidence": true,
+            "dataSufficiencyLevel": null,
+            "thinEvidenceDowngraded": false,
+            "hasSubskillMetadata": true,
+            "recommendedStepLabelHe": null,
+            "diagnosticPatternHe": "אותם זוגות שגויים",
+            "evidenceSources": [],
+            "primaryEvidenceSource": null,
+            "evidenceSourceCounts": {}
+          }
+        },
+        "narrativeUncertainty": null,
+        "copilotAnchored": {
+          "questions": 32,
+          "accuracy": 69,
+          "observation": "בכפל בתקופה שנבחרה יש 32 שאלות, עם דיוק של כ 69%."
+        }
+      },
+      "renderedText": {
+        "shortReport": "מתמטיקה — «כפל - כיתה ה׳»: בנושא כפל מופיע דפוס חוזר של טעויות (אותם זוגות שגויים). כדאי לחזק את הנושא. מבוסס על 32 שאלות שנפתרו בנושא. | בנושא כפל מופיע דפוס חוזר של טעויות (אותם זוגות שגויים). כדאי לחזק את הנושא. מבוסס על 32 שאלות שנפתרו בנושא. | מה זוהה: בנושא כפל מופיע דפוס חוזר של טעויות (אותם זוגות שגויים). כדאי לחזק את הנושא. מבוסס על 32 שאלות שנפתרו בנושא. | הנתונים: הילד/ה פתר/ה 32 שאלות בנושא כפל, מתוכן 22 נכונות ו-10 שגויות. | משמעות: נראה שכדאי לחזק את כפל לפני שממשיכים לנושאים מתקדמים יותר. | מה כדאי לעשות בבית: תרגול קצר וממוקד בכפל, עם בדיקה שהילד/ה מסביר/ה את שלבי הפתרון.",
+        "detailedReport": "חיזוק ממוקד לפני שמעלים רמה | בשבוע הקרוב התמקדו בכפל עם פירוק מספרים, אומדן ובדיקת סבירות של התוצאה. | כדאי לתרגל כפל במספרים גדולים יותר בעזרת פירוק מספרים, אומדן ובדיקת סבירות. בקשו מהילד להסביר את שלבי החישוב ולבדוק אם התוצאה מתאימה לגודל המספרים. | בנושא כפל מופיע דפוס חוזר של טעויות (אותם זוגות שגויים). כדאי לחזק את הנושא. מבוסס על 32 שאלות שנפתרו בנושא. | מה זוהה: בנושא כפל מופיע דפוס חוזר של טעויות (אותם זוגות שגויים). כדאי לחזק את הנושא. מבוסס על 32 שאלות שנפתרו בנושא. | הנתונים: הילד/ה פתר/ה 32 שאלות בנושא כפל, מתוכן 22 נכונות ו-10 שגויות. | משמעות: נראה שכדאי לחזק את כפל לפני שממשיכים לנושאים מתקדמים יותר. | מה כדאי לעשות בבית: תרגול קצר וממוקד בכפל, עם בדיקה שהילד/ה מסביר/ה את שלבי הפתרון.",
+        "subjectSummary": "במתמטיקה נראית נקודת חיזוק ברורה בנושא שברים — כדאי לחזק אותו בתרגול קצר ורגוע. | מה שבולט כרגע: פער מושג שבר. בחלק מהשורות מה שרואים עדיין לא מספיק כדי לסגור תמונה ברורה. | בשבוע הקרוב התמקדו בהשוואת שברים בעזרת שברים שקולים, מכנה משותף ואומדן, עם נימוק ברור לכל השוואה."
+      },
+      "renderedTextCombined": "מתמטיקה — «כפל - כיתה ה׳»: בנושא כפל מופיע דפוס חוזר של טעויות (אותם זוגות שגויים). כדאי לחזק את הנושא. מבוסס על 32 שאלות שנפתרו בנושא. | בנושא כפל מופיע דפוס חוזר של טעויות (אותם זוגות שגויים). כדאי לחזק את הנושא. מבוסס על 32 שאלות שנפתרו בנושא. | מה זוהה: בנושא כפל מופיע דפוס חוזר של טעויות (אותם זוגות שגויים). כדאי לחזק את הנושא. מבוסס על 32 שאלות שנפתרו בנושא. | הנתונים: הילד/ה פתר/ה 32 שאלות בנושא כפל, מתוכן 22 נכונות ו-10 שגויות. | משמעות: נראה שכדאי לחזק את כפל לפני שממשיכים לנושאים מתקדמים יותר. | מה כדאי לעשות בבית: תרגול קצר וממוקד בכפל, עם בדיקה שהילד/ה מסביר/ה את שלבי הפתרון. חיזוק ממוקד לפני שמעלים רמה | בשבוע הקרוב התמקדו בכפל עם פירוק מספרים, אומדן ובדיקת סבירות של התוצאה. | כדאי לתרגל כפל במספרים גדולים יותר בעזרת פירוק מספרים, אומדן ובדיקת סבירות. בקשו מהילד להסביר את שלבי החישוב ולבדוק אם התוצאה מתאימה לגודל המספרים. | בנושא כפל מופיע דפוס חוזר של טעויות (אותם זוגות שגויים). כדאי לחזק את הנושא. מבוסס על 32 שאלות שנפתרו בנושא. | מה זוהה: בנושא כפל מופיע דפוס חוזר של טעויות (אותם זוגות שגויים). כדאי לחזק את הנושא. מבוסס על 32 שאלות שנפתרו בנושא. | הנתונים: הילד/ה פתר/ה 32 שאלות בנושא כפל, מתוכן 22 נכונות ו-10 שגויות. | משמעות: נראה שכדאי לחזק את כפל לפני שממשיכים לנושאים מתקדמים יותר. | מה כדאי לעשות בבית: תרגול קצר וממוקד בכפל, עם בדיקה שהילד/ה מסביר/ה את שלבי הפתרון. במתמטיקה נראית נקודת חיזוק ברורה בנושא שברים — כדאי לחזק אותו בתרגול קצר ורגוע. | מה שבולט כרגע: פער מושג שבר. בחלק מהשורות מה שרואים עדיין לא מספיק כדי לסגור תמונה ברורה. | בשבוע הקרוב התמקדו בהשוואת שברים בעזרת שברים שקולים, מכנה משותף ואומדן, עם נימוק ברור לכל השוואה.",
+      "metricsVsLpdMismatch": false,
+      "headerDetailContradiction": false,
+      "diagnosis": []
+    }
+  ]
+}
