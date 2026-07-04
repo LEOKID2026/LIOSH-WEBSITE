@@ -407,6 +407,22 @@ function runParentReportPageChunks() {
   };
   render("parent-report:explain-row-minimal", h(ParentReportTopicExplainRow, { row: rowMinimal }));
 
+  const rowChartLive = {
+    rowKey: "geometry_area\u0001g4",
+    label: "שטח - כיתה ד׳",
+    questions: 12,
+    accuracy: 45,
+    wrong: 6,
+    correct: 6,
+  };
+  const chartLiveHtml = renderToStaticMarkup(h(ParentReportTopicExplainRow, { row: rowChartLive }));
+  assert.match(chartLiveHtml, /מה זוהה/u, "chart live row should render מה זוהה");
+  assert.match(chartLiveHtml, /הנתונים/u, "chart live row should render הנתונים");
+  assert.match(chartLiveHtml, /משמעות/u, "chart live row should render משמעות");
+  assert.match(chartLiveHtml, /מה כדאי לעשות בבית/u, "chart live row should render home action");
+  assert.match(chartLiveHtml, /parent-report-topic-diagnostic-explain/u);
+  render("parent-report:explain-row-chart-live", h(ParentReportTopicExplainRow, { row: rowChartLive }));
+
   const rowPhase8 = {
     rowKey: "p8-row",
     label: "חיבור",

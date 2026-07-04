@@ -428,25 +428,40 @@ function chartSubjectIdFromKeyPrefix(keyPrefix) {
 
 function buildTopicRowsForChart(map, keyPrefix) {
   const subjectId = chartSubjectIdFromKeyPrefix(keyPrefix);
-  const rows = Object.entries(map || {}).map(([k, data]) => ({
-    rowKey: `${keyPrefix}_${k}`,
-    rowSourceId: data?.rowSourceId || data?.rowIdentityV1?.sourceId || null,
-    label:
+  const rows = Object.entries(map || {}).map(([k, data]) => {
+    const bucketKey = String(data?.bucketKey || k).trim();
+    const displayName = String(data?.displayName || "").trim();
+    const label =
       String(data?.narrativeTopicLabelHe || data?.rowIdentityV1?.narrativeTopicLabelHe || "").trim() ||
-      parentReportChartLabelFromAllItemKey(`${keyPrefix}_${k}`, data),
-    accuracy: Math.round(Number(data?.accuracy) || 0),
-    timeMinutes: Math.round(Number(data?.timeMinutes) || 0),
-    questions: Number(data?.questions) || 0,
-    topicEngineRowSignals: data?.topicEngineRowSignals && typeof data.topicEngineRowSignals === "object" ? data.topicEngineRowSignals : null,
-    trend: data?.trend && typeof data.trend === "object" ? data.trend : null,
-    behaviorProfile: data?.behaviorProfile && typeof data.behaviorProfile === "object" ? data.behaviorProfile : null,
-    decisionTrace: Array.isArray(data?.decisionTrace) ? data.decisionTrace : null,
-    recommendationDecisionTrace: Array.isArray(data?.recommendationDecisionTrace)
-      ? data.recommendationDecisionTrace
-      : null,
-    patternStabilityHe: data?.patternStabilityHe ? String(data.patternStabilityHe) : "",
-    dataSufficiencyLabelHe: data?.dataSufficiencyLabelHe ? String(data.dataSufficiencyLabelHe) : "",
-  }));
+      parentReportChartLabelFromAllItemKey(`${keyPrefix}_${k}`, data);
+    return {
+      rowKey: `${keyPrefix}_${k}`,
+      rowSourceId: data?.rowSourceId || data?.rowIdentityV1?.sourceId || null,
+      subjectId,
+      topicKey: bucketKey,
+      bucketKey,
+      displayName: displayName || label,
+      label,
+      accuracy: Math.round(Number(data?.accuracy) || 0),
+      timeMinutes: Math.round(Number(data?.timeMinutes) || 0),
+      questions: Number(data?.questions) || 0,
+      correct: Number(data?.correct) || 0,
+      wrong: Number(data?.wrong) || 0,
+      learningPatternDecision:
+        data?.learningPatternDecision && typeof data.learningPatternDecision === "object"
+          ? data.learningPatternDecision
+          : null,
+      topicEngineRowSignals: data?.topicEngineRowSignals && typeof data.topicEngineRowSignals === "object" ? data.topicEngineRowSignals : null,
+      trend: data?.trend && typeof data.trend === "object" ? data.trend : null,
+      behaviorProfile: data?.behaviorProfile && typeof data.behaviorProfile === "object" ? data.behaviorProfile : null,
+      decisionTrace: Array.isArray(data?.decisionTrace) ? data.decisionTrace : null,
+      recommendationDecisionTrace: Array.isArray(data?.recommendationDecisionTrace)
+        ? data.recommendationDecisionTrace
+        : null,
+      patternStabilityHe: data?.patternStabilityHe ? String(data.patternStabilityHe) : "",
+      dataSufficiencyLabelHe: data?.dataSufficiencyLabelHe ? String(data.dataSufficiencyLabelHe) : "",
+    };
+  });
   rows.sort(
     (a, b) =>
       b.timeMinutes - a.timeMinutes ||

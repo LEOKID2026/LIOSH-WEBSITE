@@ -17,6 +17,7 @@ import {
   SubjectPrimaryActionBlock,
   SubjectSummaryBlock,
   SubjectTopicTierGroups,
+  TopicRecommendationExplainStrip,
 } from "../../components/parent-report-detailed-surface.jsx";
 import {
   buildParentSurfaceHomeActionsHe,
@@ -1831,6 +1832,7 @@ export default function ParentReportDetailedPage() {
                                               {nar.homeLine}
                                             </p>
                                           ) : null}
+                                          <TopicRecommendationExplainStrip tr={tr} />
                                         </div>
                                       </div>
                                     );

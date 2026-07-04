@@ -119,7 +119,12 @@ export function ParentReportTopicExplainRow({ row }) {
             <ExplainSectionLine label="מה ראינו:" text={primaryFinding} />
           </div>
         ) : null}
-        {sections ? (
+        {sections &&
+        (sections.identified ||
+          sections.data ||
+          sections.pattern ||
+          sections.meaning ||
+          sections.action) ? (
           <div
             className="parent-report-topic-diagnostic-explain space-y-1 rounded border border-white/10 bg-black/20 px-1.5 py-1.5"
             data-testid="parent-report-topic-diagnostic-explain"

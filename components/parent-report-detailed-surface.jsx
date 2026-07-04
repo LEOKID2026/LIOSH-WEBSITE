@@ -887,26 +887,10 @@ function topicStripNorm(s) {
 
 /** פס על המלצת נושא — עד 3 שכבות הוריות: מה ראינו / מה זה אומר / כיוון עבודה */
 export function TopicRecommendationExplainStrip({ tr, suppressedLines = [] }) {
-  const lpd = getLpdFromRow(tr);
   const suppressLegacy = shouldSuppressLegacyEngineParentCopy(tr);
 
-  const explainRow =
-    tr && typeof tr === "object"
-      ? {
-          label: String(tr.displayName || tr.topicLabelHe || tr.label || "").trim(),
-          questions: Number(tr.questions ?? tr.q) || 0,
-          accuracy: Number(tr.accuracy ?? tr.acc) || 0,
-          wrong: Number(tr.wrong) || 0,
-          topicEngineRowSignals:
-            tr?.topicEngineRowSignals && typeof tr.topicEngineRowSignals === "object"
-              ? tr.topicEngineRowSignals
-              : null,
-          learningPatternDecision: lpd,
-        }
-      : null;
-
-  const lpdSections = suppressLegacy ? buildLpdSafeTopicExplainSectionsHe(explainRow || tr) : null;
-  const legacySections = suppressLegacy ? null : buildTopicDiagnosticExplainSectionsHe(explainRow);
+  const lpdSections = suppressLegacy ? buildLpdSafeTopicExplainSectionsHe(tr) : null;
+  const legacySections = suppressLegacy ? null : buildTopicDiagnosticExplainSectionsHe(tr);
   const explainSections = lpdSections || legacySections;
 
   if (explainSections) {

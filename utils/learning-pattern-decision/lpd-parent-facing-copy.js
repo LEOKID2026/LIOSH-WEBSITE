@@ -7,6 +7,62 @@ import { rowNeedsPracticeFromLpd } from "./apply-learning-pattern-decision.js";
 
 /** @typedef {{ identified: string, data: string, pattern: string, meaning: string, action: string }} LpdExplainSections */
 
+/** @type {readonly [string, string][]} */
+const ROW_KEY_SUBJECT_PREFIXES = [
+  ["moledet_", "moledet-geography"],
+  ["math_", "math"],
+  ["geometry_", "geometry"],
+  ["english_", "english"],
+  ["science_", "science"],
+  ["history_", "history"],
+  ["hebrew_", "hebrew"],
+];
+
+/**
+ * @param {Record<string, unknown>|null|undefined} row
+ */
+function inferSubjectIdFromRow(row) {
+  const direct = String(row?.subjectId || row?.subject || "").trim();
+  if (direct) return direct.replace(/_/g, "-");
+  const rk = String(row?.rowKey || "");
+  for (const [prefix, sid] of ROW_KEY_SUBJECT_PREFIXES) {
+    if (rk.startsWith(prefix)) return sid;
+  }
+  return "";
+}
+
+/**
+ * @param {Record<string, unknown>|null|undefined} row
+ */
+function inferTopicKeyFromRow(row) {
+  const direct = String(row?.topicKey || row?.bucketKey || "").trim();
+  if (direct) return direct.split("\u0001")[0];
+  const trk = String(row?.topicRowKey || "").trim();
+  if (trk) return trk.split("\u0001")[0];
+  const rk = String(row?.rowKey || "");
+  for (const [prefix] of ROW_KEY_SUBJECT_PREFIXES) {
+    if (rk.startsWith(prefix)) {
+      return rk.slice(prefix.length).split("\u0001")[0];
+    }
+  }
+  return "";
+}
+
+/**
+ * @param {Record<string, unknown>|null|undefined} row
+ */
+function inferTopicRowKeyFromRow(row) {
+  const explicit = String(row?.topicRowKey || "").trim();
+  if (explicit) return explicit;
+  const rk = String(row?.rowKey || "");
+  for (const [prefix] of ROW_KEY_SUBJECT_PREFIXES) {
+    if (rk.startsWith(prefix)) return rk.slice(prefix.length);
+  }
+  const topicKey = inferTopicKeyFromRow(row);
+  const subjectId = inferSubjectIdFromRow(row);
+  return topicKey || subjectId ? `${subjectId}:${topicKey}` : "";
+}
+
 /**
  * @param {Record<string, unknown>|null|undefined} row
  */
@@ -35,10 +91,11 @@ export function resolveOrBuildLpdOnRow(row, rawMistakes = []) {
   const existing = getLpdFromRow(row);
   if (existing) return existing;
 
-  const subjectId = String(row.subjectId || row.subject || "").trim();
-  const topicKey = String(row.topicKey || row.bucketKey || row.label || "").trim();
+  const subjectId = inferSubjectIdFromRow(row);
+  const topicKey = inferTopicKeyFromRow(row);
+  const topicRowKey = inferTopicRowKeyFromRow(row) || topicKey;
   const q = Math.max(0, Number(row.questions) || 0);
-  if (!subjectId || q <= 0) return null;
+  if (!subjectId || !topicKey || q <= 0) return null;
 
   const accRaw = Number(row.accuracy);
   const cExplicit = Number(row.correct);
@@ -54,7 +111,7 @@ export function resolveOrBuildLpdOnRow(row, rawMistakes = []) {
 
   return buildLearningPatternDecision({
     subjectId,
-    topicRowKey: topicKey,
+    topicRowKey,
     row: {
       bucketKey: topicKey,
       displayName: name,
@@ -310,17 +367,17 @@ export function buildLpdSafeTopicExplainSectionsHe(row) {
   data = guardParentFacingText(data);
 
   if (isInitial) {
-    const identified = finding
-      ? `מה זוהה: ${finding}`
-      : q === 1
-        ? `מה זוהה: נתונים ראשוניים בלבד בנושא ${topicName}.`
-        : `מה זוהה: בנושא ${topicName} נפתרו ${q} שאלות — עדיין מוקדם לזהות דפוס ברור.`;
+    const topicShort = topicName.replace(/\s*-\s*כיתה\s*[א-ט״']+\s*$/u, "").trim() || topicName;
     return {
-      identified: guardParentFacingText(identified),
-      data,
+      identified: guardParentFacingText(`מה זוהה: נתונים ראשוניים בלבד בנושא ${topicShort}.`),
+      data: guardParentFacingText(
+        `הנתונים: נפתרו ${q} שאלות בנושא ${topicShort}${acc > 0 ? `, דיוק ${acc}%` : ""}.`,
+      ),
       pattern: "",
-      meaning: "",
-      action: "",
+      meaning: guardParentFacingText("משמעות: עדיין מוקדם לזהות דפוס ברור בנושא."),
+      action: guardParentFacingText(
+        "מה כדאי לעשות בבית: אפשר להמשיך לתרגל מעט, בלי מסקנת קושי.",
+      ),
     };
   }
 
@@ -359,16 +416,20 @@ export function resolveParentExplainRowCopy(row) {
     return {
       hasLpd: !!lpd,
       primaryFinding: "",
+      explainSections: null,
       suppressEngineCopy: true,
       parentWordingLevel: "no_parent_text",
       showTrend: false,
     };
   }
 
+  const explainSections = buildLpdSafeTopicExplainSectionsHe(row);
+
   if (!lpd || lpd.topicStatus === "not_practiced") {
     return {
       hasLpd: false,
       primaryFinding: "",
+      explainSections,
       suppressEngineCopy: true,
       parentWordingLevel: "no_parent_text",
       showTrend: false,
@@ -378,7 +439,6 @@ export function resolveParentExplainRowCopy(row) {
   const primaryFinding = guardParentFacingText(lpd.parentVisibleFinding);
   const isInitial =
     lpd.topicStatus === "initial_data" || lpd.findingType === "initial_topic_data";
-  const explainSections = buildLpdSafeTopicExplainSectionsHe(row);
 
   return {
     hasLpd: true,

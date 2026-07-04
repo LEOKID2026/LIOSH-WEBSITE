@@ -69,8 +69,9 @@ function lpdRow({ q, c, w, acc, name, bucket = "addition", subjectId = "math", m
   assert.ok(copy.explainSections);
   assert.match(copy.explainSections.identified, /מה זוהה:/);
   assert.match(copy.explainSections.data, /הנתונים:/);
-  assert.equal(copy.explainSections.action, "");
-  assert.ok(!copy.explainSections.meaning.includes("כדאי לחזק"));
+  assert.match(copy.explainSections.meaning, /משמעות:/);
+  assert.match(copy.explainSections.action, /מה כדאי לעשות בבית:/);
+  assert.ok(!copy.explainSections.identified.includes("כדאי לחזק"));
 }
 
 /** C — short insight ≡ LPD finding text (no engine contradiction) */
@@ -186,6 +187,26 @@ function lpdRow({ q, c, w, acc, name, bucket = "addition", subjectId = "math", m
   assert.ok(sections);
   assert.equal(sections.pattern, "");
   assert.ok(!sections.identified.includes("דפוס חוזר"));
+}
+
+/** I — live chart row shape (rowKey only): must still render all section labels */
+{
+  const row = {
+    rowKey: "geometry_area\u0001g4",
+    label: "שטח - כיתה ד׳",
+    questions: 12,
+    accuracy: 45,
+    wrong: 6,
+    correct: 6,
+  };
+  const sections = buildLpdSafeTopicExplainSectionsHe(row);
+  assert.ok(sections, "chart row should produce LPD sections from rowKey prefix");
+  assert.match(sections.identified, /מה זוהה:/);
+  assert.match(sections.data, /הנתונים:/);
+  assert.match(sections.meaning, /משמעות:/);
+  assert.match(sections.action, /מה כדאי לעשות בבית:/);
+  assert.equal(findForbiddenParentWords(JSON.stringify(sections)).length, 0);
+  assert.ok(!JSON.stringify(sections).includes("הילד פתר"));
 }
 
 console.log("parent-report-insights-lpd.test.mjs — all passed");
