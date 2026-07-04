@@ -71,6 +71,10 @@ import {
   formatParentReportLevelHe,
   formatParentReportSubjectHe,
 } from "../../utils/parent-report-language/parent-report-display-labels.he.js";
+import {
+  deriveParentDataPresenceForDiagnosticsView,
+  PARENT_THIN_DATA_EXPLAINER_HE,
+} from "../../utils/parent-data-presence.js";
 import { topicUiFromLearningPatternDecision } from "../../utils/learning-pattern-decision/parent-report-ui-helpers.js";
 import {
   filterSubjectOverviewRowsWithEvidence,
