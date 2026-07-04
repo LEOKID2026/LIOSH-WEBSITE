@@ -1650,6 +1650,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
           learningSessionId,
           subject: MG_SUBJECT,
           topic: String(question?.topic || question?.operation || operation || "homeland"),
+          gameMode: reportModeFromGameState(mode, focusedPracticeMode),
           questionId,
           questionFingerprint,
           prompt: String(question?.exerciseText || question?.question || ""),

@@ -1771,6 +1771,7 @@ function saveScienceAnswerInParallel({
         learningSessionId,
         subject: "science",
         topic: String(question?.topic || topic || "science"),
+        gameMode: reportModeFromGameState(mode, focusedPracticeMode),
         questionId,
         questionFingerprint,
         prompt: String(question?.stem || ""),

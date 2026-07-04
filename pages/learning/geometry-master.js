@@ -1467,6 +1467,7 @@ export default function GeometryMaster() {
           learningSessionId,
           subject: "geometry",
           topic: resolveGeometrySessionTopic(question?.topic || topic),
+          gameMode: reportModeFromGameState(mode, focusedPracticeMode),
           questionId,
           questionFingerprint,
           prompt: String(question?.question || ""),

@@ -1357,6 +1357,7 @@ export default function EnglishMaster() {
           learningSessionId,
           subject: "english",
           topic: String(question?.topic || topic || "english"),
+          gameMode: reportModeFromGameState(mode, focusedPracticeMode),
           questionId,
           questionFingerprint,
           prompt: String(question?.question || ""),

@@ -2229,6 +2229,7 @@ export default function MathMaster() {
           learningSessionId,
           subject: "math",
           topic,
+          gameMode: reportModeFromGameState(mode, focusedPracticeMode),
           questionId,
           questionFingerprint,
           prompt,

@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import {
   isCountableSelfPracticeAnswer,
   isCountableSelfPracticeSessionMode,
+  isParentReportPracticeAnswer,
 } from "../../lib/learning/parent-report-evidence-gate.js";
 import { EVIDENCE_CATEGORIES } from "../../lib/learning/activity-classification.js";
 
@@ -19,7 +20,17 @@ describe("parent-report-evidence-gate", () => {
     );
   });
 
-  test("excludes learning, games, step-by-step, book follow-up", () => {
+  test("includes learning-mode attempts for parent totals", () => {
+    assert.equal(
+      isParentReportPracticeAnswer({
+        evidenceCategory: EVIDENCE_CATEGORIES.LEARNING_GUIDED,
+        resolvedMode: "learning",
+      }),
+      true
+    );
+  });
+
+  test("excludes learning, games, step-by-step, book follow-up from diagnostic gate", () => {
     assert.equal(
       isCountableSelfPracticeAnswer({
         evidenceCategory: EVIDENCE_CATEGORIES.LEARNING_GUIDED,

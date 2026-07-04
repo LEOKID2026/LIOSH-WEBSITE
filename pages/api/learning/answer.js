@@ -117,9 +117,15 @@ export default async function handler(req, res) {
     const sessionMeta = ownership.metadata || {};
     const sessionMode =
       normalizeLearningGameMode(sessionMeta.mode) || "learning";
+    const clientGameMode =
+      normalizeLearningGameMode(body.gameMode) || normalizeLearningGameMode(body.mode);
+    const answerMode = clientGameMode || sessionMode;
     const registeredGradeKey = canonicalGradeLevelKeyFromAuth(auth);
     const clientGradeHint = normalizeOptionalString(body.gradeLevel, 40);
-    const clientMeta = normalizeClientMeta(body.clientMeta);
+    const clientMeta = {
+      ...normalizeClientMeta(body.clientMeta),
+      gameMode: answerMode,
+    };
     const answerParams =
       body.params && typeof body.params === "object" && !Array.isArray(body.params)
         ? body.params
@@ -148,7 +154,7 @@ export default async function handler(req, res) {
       typeof body.timingStatus === "string" ? body.timingStatus.slice(0, 40) : null;
 
     const classification = classifyActivityEvidence(
-      sessionMode,
+      answerMode,
       "free_practice",
       { afterStepByStep, contextAfterBookReading, hintsUsed }
     );
@@ -197,7 +203,7 @@ export default async function handler(req, res) {
       contentGradeLevel: gradeEvidence.contentGradeLevel,
       gradeRelation: gradeEvidence.gradeRelation,
       gradeLevel: gradeEvidence.contentGradeLevel || gradeEvidence.registeredGradeLevel,
-      gameMode: sessionMode,
+      gameMode: answerMode,
       // Phase 1: activity classification
       evidenceCategory: classification.evidenceCategory,
       isDiagnosticEligible: classification.isDiagnosticEligible,
@@ -238,7 +244,8 @@ export default async function handler(req, res) {
       finalPersistedContentGradeLevelKey: gradeEvidence.contentGradeLevel,
       finalPersistedRegisteredGradeLevelKey: gradeEvidence.registeredGradeLevel,
       sessionGameMode: sessionMode,
-      finalPersistedGameMode: sessionMode,
+      answerGameMode: answerMode,
+      finalPersistedGameMode: answerMode,
       learningSessionId,
       subject,
     });
@@ -269,7 +276,7 @@ export default async function handler(req, res) {
       idempotencyKey: `question_answered:${data.id}`,
       metadata: {
         isCorrect: body.isCorrect,
-        gameMode: sessionMode,
+        gameMode: answerMode,
         evidenceCategory: classification.evidenceCategory,
       },
     });

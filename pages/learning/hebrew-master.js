@@ -1959,6 +1959,7 @@ export default function HebrewMaster() {
           learningSessionId,
           subject: "hebrew",
           topic: String(question?.topic || question?.operation || operation || "reading"),
+          gameMode: reportModeFromGameState(mode, focusedPracticeMode),
           questionId,
           questionFingerprint,
           prompt: String(question?.exerciseText || question?.question || ""),

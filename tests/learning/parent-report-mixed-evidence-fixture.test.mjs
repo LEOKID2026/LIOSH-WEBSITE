@@ -168,18 +168,20 @@ describe("P0 mixed evidence fixture", () => {
     const math = result.subjects.math;
     const summary = result.summary;
 
-    assert.equal(summary.totalAnswers, 5, "totalAnswers = 3 self + 2 parent only");
-    assert.equal(math.answers, 5, "subject answers match countable evidence");
-    assert.equal(summary.diagnosticAnswers, 5, "all countable rows are diagnostic-eligible");
-    assert.equal(summary.learningAnswers, 0, "learning bucket empty in report");
+    assert.equal(summary.totalAnswers, 9, "totalAnswers = 3 practice + 2 learning + 2 step-by-step + 2 parent");
+    assert.equal(math.answers, 9, "subject answers include learning attempts for parent visibility");
+    assert.equal(summary.diagnosticAnswers, 5, "diagnostic bucket = 3 self + 2 parent only");
+    assert.equal(math.correct, 6, "2+2+1 self/practice/learning/step + 1 parent");
+    assert.equal(math.wrong, 3, "1 self + 1 step-by-step + 1 parent");
+    assert.equal(summary.learningAnswers, 4, "learning + step-by-step in learning bucket");
     assert.equal(summary.competitiveAnswers, 0, "game modes excluded");
-    assert.equal(summary.stepByStepCount, 0, "step-by-step excluded");
+    assert.equal(summary.stepByStepCount, 2, "step-by-step attempts tracked in learning bucket");
 
     // Passive session duration must not inflate practice session count/duration
     assert.equal(summary.totalSessions, 1, "only practice session counts toward sessions");
     assert.equal(summary.totalDurationSeconds, 616, "practice session 600s + parent credited 16s");
 
-    assert.equal(math.correct, 3, "2 self correct + 1 parent correct");
-    assert.equal(math.wrong, 2, "1 self wrong + 1 parent wrong");
+    assert.equal(math.correct, 6);
+    assert.equal(math.wrong, 3);
   });
 });
