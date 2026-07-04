@@ -359,7 +359,7 @@ export default function MyApp({ Component, pageProps }) {
           <link key="app-manifest" rel="manifest" href={manifestHref} />
         ) : null}
         
-        <title>LEO K - Kids Games & Learning</title>
+        <title>LEO KIDS - Kids Games & Learning</title>
       </Head>
       <OfflineIndicator />
       <StudentThemeProvider>
