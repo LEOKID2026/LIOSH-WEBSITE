@@ -31,6 +31,7 @@ export {
 } from "./build-parent-report-engine-decision-contract.js";
 export {
   buildSubjectEngineDecisionContract,
+  buildSubjectEngineDecisionContractFromTopicMap,
   resolveSubjectSummaryTextFromEngineContract,
   findTopicRecommendationForPriority,
 } from "./build-subject-engine-decision-contract.js";

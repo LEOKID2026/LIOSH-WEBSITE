@@ -2,9 +2,12 @@ import assert from "node:assert/strict";
 import { buildParentReportEngineDecisionContract } from "../../utils/learning-pattern-decision/build-parent-report-engine-decision-contract.js";
 import {
   buildSubjectEngineDecisionContract,
+  buildSubjectEngineDecisionContractFromTopicMap,
   resolveSubjectSummaryTextFromEngineContract,
 } from "../../utils/learning-pattern-decision/build-subject-engine-decision-contract.js";
 import { buildSubjectParentLetter } from "../../utils/detailed-report-parent-letter-he.js";
+import { summarizeV2UnitsForSubjectForTests } from "../../utils/parent-report-v2.js";
+import { RENDER_SOURCE_SUBJECT_ENGINE } from "../../utils/learning-pattern-decision/engine-decision-codes.js";
 
 function topicRowFromContract(input) {
   const contract = buildParentReportEngineDecisionContract(input);
@@ -124,6 +127,103 @@ function topicRowFromContract(input) {
   assert.equal(contract.priorityTopics.length, 1);
   assert.equal(contract.priorityTopics[0].engineDecision, "clear_topic_gap");
   assert.equal(contract.recommendedSubjectAction, "remediate_priority_topics_same_level");
+}
+
+// short report subject summary — contract wiring from topic map
+{
+  const fractions = topicRowFromContract({
+    subjectId: "math",
+    topicRowKey: "fractions::grade:g5",
+    topicName: "שברים",
+    row: { questions: 206, correct: 108, wrong: 98, accuracy: 52, displayName: "שברים" },
+    unit: {
+      subjectId: "math",
+      topicRowKey: "fractions::grade:g5",
+      displayName: "שברים",
+      taxonomy: { patternHe: "השוואה לפי מונה בלבד", subskillHe: "השוואת שברים" },
+      diagnosis: { allowed: true, lineHe: "השוואה לפי מונה בלבד" },
+      canonicalState: { actionState: "intervene" },
+      evidenceTrace: [{ type: "volume", value: { questions: 206, correct: 108, wrong: 98, accuracy: 52 } }],
+      priority: { level: "P4" },
+    },
+  });
+
+  const multiplication = topicRowFromContract({
+    subjectId: "math",
+    topicRowKey: "multiplication::grade:g5",
+    topicName: "כפל",
+    row: { questions: 32, correct: 22, wrong: 10, accuracy: 69, displayName: "כפל" },
+    unit: {
+      subjectId: "math",
+      topicRowKey: "multiplication::grade:g5",
+      displayName: "כפל",
+      taxonomy: { patternHe: "אותם זוגות שגויים", subskillHe: "טבלת כפל" },
+      diagnosis: { allowed: true, lineHe: "אותם זוגות שגויים" },
+      canonicalState: { actionState: "intervene" },
+      evidenceTrace: [{ type: "volume", value: { questions: 32, correct: 22, wrong: 10, accuracy: 69 } }],
+      priority: { level: "P3" },
+    },
+  });
+
+  const topicMap = {
+    "fractions::grade:g5": {
+      questions: 206,
+      correct: 108,
+      wrong: 98,
+      accuracy: 52,
+      displayName: "שברים",
+      engineDecisionContract: fractions.engineDecisionContract,
+      learningPatternDecision: fractions.learningPatternDecision,
+    },
+    "multiplication::grade:g5": {
+      questions: 32,
+      correct: 22,
+      wrong: 10,
+      accuracy: 69,
+      displayName: "כפל",
+      engineDecisionContract: multiplication.engineDecisionContract,
+      learningPatternDecision: multiplication.learningPatternDecision,
+    },
+  };
+
+  const contract = buildSubjectEngineDecisionContractFromTopicMap("math", topicMap, {
+    subjectLabelKey: "math",
+  });
+  assert.equal(contract.subjectDecision, "multiple_topic_gaps");
+  assert.equal(contract.recommendedSubjectAction, "remediate_priority_topics_same_level");
+
+  const shortSubject = summarizeV2UnitsForSubjectForTests(
+    [
+      {
+        subjectId: "math",
+        topicRowKey: "fractions::grade:g5",
+        displayName: "שברים",
+        diagnosis: { allowed: true },
+        canonicalState: { actionState: "intervene" },
+        evidenceTrace: [{ type: "volume", value: { questions: 206, correct: 108, wrong: 98, accuracy: 52 } }],
+        priority: { level: "P4" },
+      },
+      {
+        subjectId: "math",
+        topicRowKey: "multiplication::grade:g5",
+        displayName: "כפל",
+        diagnosis: { allowed: true },
+        canonicalState: { actionState: "intervene" },
+        evidenceTrace: [{ type: "volume", value: { questions: 32, correct: 22, wrong: 10, accuracy: 69 } }],
+        priority: { level: "P3" },
+      },
+    ],
+    {
+      subjectId: "math",
+      topicMap,
+      subjectReportQuestions: 238,
+    },
+  );
+
+  assert.equal(shortSubject.subjectSummaryRenderSource, RENDER_SOURCE_SUBJECT_ENGINE);
+  assert.equal(shortSubject.subjectSummaryDecisionCode, "multiple_topic_gaps");
+  assert.equal(shortSubject.summaryHe, resolveSubjectSummaryTextFromEngineContract(contract));
+  assert.equal(shortSubject.summaryHe, fractions.engineDecisionContract.parentSafeFinding);
 }
 
 // insufficient subject data — decision code only, no legacy block

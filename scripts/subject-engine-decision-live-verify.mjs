@@ -34,6 +34,7 @@ const { seedLocalStorageFromDbReportInput } = await load("lib/learning-supabase/
 const {
   EDC_CONTRACT_KEY,
   SP_SUBJECT_ENGINE_CONTRACT,
+  RENDER_SOURCE_SUBJECT_ENGINE,
   ED_CLEAR_TOPIC_GAP,
   RA_REMEDIATE_SAME_LEVEL,
 } = await load("utils/learning-pattern-decision/engine-decision-codes.js");
@@ -127,11 +128,15 @@ async function verifyCase(supabase, { label, username, from, to, assertFn }) {
 
   const reports = await buildReports(reportApiBody);
   assert.ok(reports?.detailed, `${label}: failed to build detailed report`);
-  const { detailed } = reports;
+  const { base, detailed } = reports;
   const mathSp = (detailed.subjectProfiles || []).find((s) => String(s?.subject) === "math") || null;
   assert.ok(mathSp, `${label}: math subject profile missing`);
 
+  const shortMath = base?.patternDiagnostics?.subjects?.math || null;
+  assert.ok(shortMath?.summaryHe, `${label}: short report math subject summary missing`);
+
   const subjectContract = mathSp[SP_SUBJECT_ENGINE_CONTRACT] || null;
+  const shortContract = shortMath?.[SP_SUBJECT_ENGINE_CONTRACT] || null;
   const letter = buildSubjectParentLetter(mathSp);
   const rollupText = [
     mathSp.summaryHe,
@@ -148,6 +153,13 @@ async function verifyCase(supabase, { label, username, from, to, assertFn }) {
     range: { from, to },
     topicContracts: topicContractsFromSp(mathSp),
     subjectEngineDecisionContract: subjectContract,
+    shortReportSubjectSummary: {
+      summaryHe: shortMath.summaryHe || null,
+      renderSource: shortMath.subjectSummaryRenderSource || null,
+      templateId: shortMath.subjectSummaryTemplateId || null,
+      decisionCode: shortMath.subjectSummaryDecisionCode || null,
+      subjectEngineDecisionContract: shortContract,
+    },
     renderSource: letter.renderSource || null,
     summarySlots: letter.summarySlots || subjectContract?.summarySlots || null,
     subjectRollup: {
@@ -167,7 +179,7 @@ async function verifyCase(supabase, { label, username, from, to, assertFn }) {
   console.log(`\n========== ${label} (${username} ${from} → ${to}) ==========\n`);
   console.log(JSON.stringify(trace, null, 2));
 
-  assertFn({ mathSp, subjectContract, letter, rollupText, trace });
+  assertFn({ mathSp, subjectContract, shortMath, shortContract, letter, rollupText, trace });
   console.log(`\n✓ ${label} acceptance passed\n`);
   return trace;
 }
@@ -184,7 +196,7 @@ async function main() {
     username: "omer",
     from: "2025-09-01",
     to: "2026-07-04",
-    assertFn: ({ subjectContract, letter, rollupText }) => {
+    assertFn: ({ subjectContract, shortMath, shortContract, letter, rollupText, mathSp }) => {
       assert.ok(subjectContract, "subjectEngineDecisionContract missing");
       assert.equal(subjectContract.subjectDecision, "multiple_topic_gaps");
       assert.equal(subjectContract.priorityTopics?.[0]?.topicKey, "fractions::grade:g5");
@@ -192,6 +204,9 @@ async function main() {
       assert.equal(subjectContract.recommendedSubjectAction, "remediate_priority_topics_same_level");
       assert.equal(subjectContract.blockedLegacySummary, true);
       assert.equal(letter.renderSource, "subjectEngineDecisionContract");
+      assert.equal(shortMath.subjectSummaryRenderSource, RENDER_SOURCE_SUBJECT_ENGINE);
+      assert.equal(shortContract?.subjectDecision, "multiple_topic_gaps");
+      assert.equal(shortMath.summaryHe, mathSp.summaryHe);
       assert.ok(
         subjectContract.strongestDetectedPatterns?.includes("השוואה לפי מונה בלבד"),
         "missing fractions pattern",
@@ -202,6 +217,7 @@ async function main() {
       );
       assert.ok(String(rollupText || "").trim().length > 0, "subject summary/letter must not be empty");
       assertNoLegacy(rollupText, "OMER rollup");
+      assertNoLegacy(shortMath.summaryHe, "OMER short subject summary");
     },
   });
 
@@ -210,7 +226,7 @@ async function main() {
     username: "aaa7",
     from: "2026-07-04",
     to: "2026-07-04",
-    assertFn: ({ subjectContract, letter, trace }) => {
+    assertFn: ({ subjectContract, shortMath, shortContract, letter, trace }) => {
       assert.ok(subjectContract, "subjectEngineDecisionContract missing");
       const additionTopic = trace.topicContracts.find((t) =>
         String(t.topicKey || "").includes("addition"),
@@ -226,6 +242,8 @@ async function main() {
       );
       assert.notEqual(additionTopic?.recommendedAction, "maintain");
       assert.equal(letter.renderSource, "subjectEngineDecisionContract");
+      assert.equal(shortMath.subjectSummaryRenderSource, RENDER_SOURCE_SUBJECT_ENGINE);
+      assert.equal(shortContract?.subjectDecision, "focused_strengthening_needed");
     },
   });
 

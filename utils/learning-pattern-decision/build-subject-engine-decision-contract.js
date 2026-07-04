@@ -281,6 +281,39 @@ export function buildSubjectEngineDecisionContract(subjectId, topicRows = [], op
 }
 
 /**
+ * Build subject contract from topic map rows (same engineDecisionContract source as detailed rollup).
+ *
+ * @param {string} subjectId
+ * @param {Record<string, unknown>|null|undefined} topicMap
+ * @param {{ subjectLabelKey?: string }} [opts]
+ */
+export function buildSubjectEngineDecisionContractFromTopicMap(subjectId, topicMap, opts = {}) {
+  /** @type {Record<string, unknown>[]} */
+  const rows = [];
+  if (topicMap && typeof topicMap === "object") {
+    for (const [topicKey, row] of Object.entries(topicMap)) {
+      if (!row || typeof row !== "object") continue;
+      if ((Number(row.questions) || 0) <= 0) continue;
+      rows.push({
+        topicRowKey: topicKey,
+        topicKey,
+        displayName: String(row.displayName || row.narrativeTopicLabelHe || "").trim(),
+        label: row.displayName,
+        questions: row.questions,
+        correct: row.correct,
+        wrong: row.wrong,
+        accuracy: row.accuracy,
+        engineDecisionContract: row.engineDecisionContract,
+        learningPatternDecision: row.learningPatternDecision,
+        parentVisibleFinding: row.parentVisibleFinding,
+        templateId: row.learningPatternDecision?.templateId,
+      });
+    }
+  }
+  return buildSubjectEngineDecisionContract(subjectId, rows, opts);
+}
+
+/**
  * @param {Record<string, unknown>|null|undefined} contract
  * @returns {string|null}
  */

@@ -78,7 +78,15 @@ import { enrichDiagnosticEngineV2WithProfessionalFrameworkV1 } from "./learning-
 import { enrichDiagnosticEngineV2WithProfessionalEngineV1 } from "./learning-diagnostics/professional-engine-output-v1.js";
 import { attachFastDiagnosisToDiagnosticEngineV2 } from "./fast-diagnostic-engine/index.js";
 import { runDiagnosticEngineV3 } from "./diagnostic-engine-v3/index.js";
-import { applyLearningPatternDecisionToUnitsAndRows } from "./learning-pattern-decision/index.js";
+import {
+  applyLearningPatternDecisionToUnitsAndRows,
+  buildSubjectEngineDecisionContractFromTopicMap,
+  resolveSubjectSummaryTextFromEngineContract,
+} from "./learning-pattern-decision/index.js";
+import {
+  SP_SUBJECT_ENGINE_CONTRACT,
+  RENDER_SOURCE_SUBJECT_ENGINE,
+} from "./learning-pattern-decision/engine-decision-codes.js";
 import {
   buildTopicRollupsFromLearningPatternDecision,
   syncRowFlagsFromLearningPatternDecision,
@@ -1542,6 +1550,7 @@ function intelligenceSummaryFromV2Units(list) {
 /**
  * @param {unknown[]} units
  * @param {{
+ *   subjectId?: string,
  *   subjectReportQuestions?: number,
  *   subjectLabelHe?: string,
  *   reportSubjectAccuracy?: number|null,
@@ -1706,7 +1715,7 @@ function summarizeV2UnitsForSubject(units, opts = {}) {
   const isStrengthLead = leadAction === "maintain" || leadAction === "expand_cautiously";
   const additiveOnLead = !!leadPositive?.outputGating?.additiveCautionAllowed;
 
-  const summaryHe = (() => {
+  let summaryHe = (() => {
     if (p4Unit) {
       return normalizeParentFacingHe(
         `בנושא ${String(p4Unit?.displayName || evidenceExampleTitleFallbackHe())}: ${String(
@@ -1779,10 +1788,33 @@ function summarizeV2UnitsForSubject(units, opts = {}) {
 
   const intelligenceSummary = intelligenceSummaryFromV2Units(list);
 
+  const subjectId = String(opts.subjectId || "").trim();
+  let subjectEngineContract = null;
+  let subjectSummaryRenderSource = "legacy";
+  let subjectSummaryTemplateId = "legacy_short_subject_summary";
+
+  if (subjectId && topicMap && typeof topicMap === "object" && Object.keys(topicMap).length > 0) {
+    subjectEngineContract = buildSubjectEngineDecisionContractFromTopicMap(subjectId, topicMap, {
+      subjectLabelKey: subjectId,
+    });
+    const contractSummary = resolveSubjectSummaryTextFromEngineContract(subjectEngineContract);
+    if (contractSummary) {
+      summaryHe = contractSummary;
+      subjectSummaryRenderSource = RENDER_SOURCE_SUBJECT_ENGINE;
+      subjectSummaryTemplateId =
+        String(subjectEngineContract.summarySlots?.openingTemplateId || "").trim() ||
+        "SUBJECT_OPENING_PRIORITY_TOPIC_0";
+    }
+  }
+
   return {
     hasAnySignal: list.length > 0,
     intelligenceSummary,
     summaryHe,
+    subjectSummaryRenderSource,
+    subjectSummaryTemplateId,
+    subjectSummaryDecisionCode: subjectEngineContract?.subjectDecision || null,
+    [SP_SUBJECT_ENGINE_CONTRACT]: subjectEngineContract,
     topStrengths,
     topWeaknesses,
     strengths: [],
@@ -1874,6 +1906,7 @@ function buildPatternDiagnosticsFromV2(
     subjects[sid] = {
       subjectLabelHe: labelHe,
       ...summarizeV2UnitsForSubject(subjectUnits, {
+        subjectId: sid,
         subjectReportQuestions: srQ,
         subjectLabelHe: labelHe,
         reportSubjectAccuracy: reportAcc,
