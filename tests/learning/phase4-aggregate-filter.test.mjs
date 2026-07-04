@@ -180,9 +180,9 @@ describe("Phase 4 — diagnostic bucket separation", () => {
 
     const mathSubj = result.subjects.math;
     assert.equal(mathSubj.diagnosticAnswers, 1, "only 1 diagnostic answer (normal practice)");
-    assert.equal(mathSubj.answers, 1, "step-by-step excluded from parent totals");
-    assert.equal(mathSubj.learningAnswers, 0, "step-by-step answers are excluded from report evidence");
-    assert.equal(mathSubj.stepByStepCount, 0, "stepByStepCount should be 0 when excluded");
+    assert.equal(mathSubj.answers, 2, "step-by-step retries count in parent totals");
+    assert.equal(mathSubj.learningAnswers, 1, "step-by-step in learning bucket, not diagnostic");
+    assert.equal(mathSubj.stepByStepCount, 1, "stepByStepCount tracks guided retries");
     assert.equal(mathSubj.diagnosticAccuracy, 100, "diagnosticAccuracy should be 100% (normal practice only)");
   });
 

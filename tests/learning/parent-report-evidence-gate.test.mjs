@@ -30,6 +30,16 @@ describe("parent-report-evidence-gate", () => {
     );
   });
 
+  test("includes afterStepByStep retries in parent totals but not diagnostic gate", () => {
+    const input = {
+      evidenceCategory: EVIDENCE_CATEGORIES.LEARNING_GUIDED,
+      resolvedMode: "practice",
+      contextFlags: { afterStepByStep: true },
+    };
+    assert.equal(isParentReportPracticeAnswer(input), true);
+    assert.equal(isCountableSelfPracticeAnswer(input), false);
+  });
+
   test("excludes learning, games, step-by-step, book follow-up from diagnostic gate", () => {
     assert.equal(
       isCountableSelfPracticeAnswer({
