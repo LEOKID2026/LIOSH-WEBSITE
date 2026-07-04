@@ -39,6 +39,10 @@ export function resolveTopicFinding({
   }
 
   const repeatedMistakePatterns = resolveRepeatedMistakePatterns(wrongEvents);
+  const patternsCoverWrongAttempts =
+    wrongEvents.length >= 2 &&
+    w > 0 &&
+    (wrongEvents.length >= w || wrongEvents.length >= Math.ceil(w * 0.5));
   const canUseRepeatedWording =
     q >= 5 || evidenceStrengthRank(strength) >= evidenceStrengthRank("emerging");
 
@@ -53,7 +57,7 @@ export function resolveTopicFinding({
     };
   }
 
-  const hasRepeated = repeatedMistakePatterns.length > 0;
+  const hasRepeated = repeatedMistakePatterns.length > 0 && patternsCoverWrongAttempts;
 
   const hasPositiveDominance = q >= 5 && acc >= 80 && c >= Math.ceil(q * 0.8);
   const hasPositiveObserved = q >= 5 && w === 0 && acc >= 95;

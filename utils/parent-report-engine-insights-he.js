@@ -394,91 +394,9 @@ export function buildTopicEngineInsightLineHe(row) {
  */
 
 export function buildActivityGapParentInsightHe(apiPayload) {
-
-  const summary = apiPayload?.summary;
-
-  if (!summary || typeof summary !== "object") return null;
-
-
-
-  const totalAnswers = Number(summary.totalAnswers) || 0;
-
-  const totalSessions = Number(summary.totalSessions) || 0;
-
-  const diagnosticAnswersRaw = summary.diagnosticAnswers;
-
-  const diagnosticAnswers = Number.isFinite(Number(diagnosticAnswersRaw))
-
-    ? Number(diagnosticAnswersRaw)
-
-    : null;
-
-  const learningActivity = apiPayload?.learningActivity;
-
-  const learningMinutes = Number(learningActivity?.learningMinutes ?? learningActivity?.totalLearningMinutes ?? 0);
-
-  const bookMinutes = Number(learningActivity?.bookReadingMinutes ?? 0);
-
-  const hasNonDiagnosticActivity =
-
-    learningMinutes > 0 || bookMinutes > 0 || totalSessions > 0;
-
-
-
-  if (totalAnswers === 0 && totalSessions === 0 && !hasNonDiagnosticActivity) return null;
-
-
-
-  if (diagnosticAnswers === 0 && (totalAnswers > 0 || hasNonDiagnosticActivity)) {
-
-    if (totalAnswers > 0) return activityGapZeroDiagnosticHe(totalAnswers);
-
-    return activityGapNonDiagnosticOnlyHe();
-
-  }
-
-
-
-  if (
-
-    diagnosticAnswers != null &&
-
-    totalAnswers > 0 &&
-
-    diagnosticAnswers > 0 &&
-
-    diagnosticAnswers < Math.min(8, Math.floor(totalAnswers * 0.35)) &&
-
-    totalAnswers >= diagnosticAnswers * 2
-
-  ) {
-
-    return activityGapPartialDiagnosticHe(totalAnswers, diagnosticAnswers);
-
-  }
-
-
-
-  if (
-
-    hasNonDiagnosticActivity &&
-
-    diagnosticAnswers != null &&
-
-    diagnosticAnswers < 5 &&
-
-    totalAnswers <= diagnosticAnswers
-
-  ) {
-
-    return activityGapNonDiagnosticOnlyHe();
-
-  }
-
-
-
+  // Parent report uses unified practice totals — diagnostic-vs-raw mismatch is internal trace only.
+  void apiPayload;
   return null;
-
 }
 
 

@@ -1,6 +1,7 @@
 /**
  * LPD-safe parent-facing copy helpers — subject-agnostic.
  */
+import { sanitizeParentPatternLabel } from "./parent-pattern-label.js";
 import { buildLearningPatternDecision } from "./build-learning-pattern-decision.js";
 import { findForbiddenParentWords } from "./build-parent-visible-finding.js";
 import { rowNeedsPracticeFromLpd } from "./apply-learning-pattern-decision.js";
@@ -88,18 +89,12 @@ export function guardParentFacingText(text) {
  * @param {unknown[]} [rawMistakes]
  */
 export function resolveOrBuildLpdOnRow(row, rawMistakes = []) {
-  const existing = getLpdFromRow(row);
-  if (existing) return existing;
+  const q = Math.max(0, Number(row?.questions) || 0);
+  if (q <= 0) return null;
 
-  const subjectId = inferSubjectIdFromRow(row);
-  const topicKey = inferTopicKeyFromRow(row);
-  const topicRowKey = inferTopicRowKeyFromRow(row) || topicKey;
-  const q = Math.max(0, Number(row.questions) || 0);
-  if (!subjectId || !topicKey || q <= 0) return null;
-
-  const accRaw = Number(row.accuracy);
-  const cExplicit = Number(row.correct);
-  const wExplicit = Number(row.wrong);
+  const accRaw = Number(row?.accuracy);
+  const cExplicit = Number(row?.correct);
+  const wExplicit = Number(row?.wrong);
   const c = Number.isFinite(cExplicit)
     ? Math.max(0, cExplicit)
     : Number.isFinite(accRaw)
@@ -107,6 +102,21 @@ export function resolveOrBuildLpdOnRow(row, rawMistakes = []) {
       : 0;
   const w = Number.isFinite(wExplicit) ? Math.max(0, wExplicit) : Math.max(0, q - c);
   const accuracy = Number.isFinite(accRaw) ? accRaw : q > 0 ? (c / q) * 100 : 0;
+
+  const existing = getLpdFromRow(row);
+  const metricsMatch =
+    existing &&
+    Number(existing.practicedQuestions) === q &&
+    Number(existing.correctCount) === c &&
+    Number(existing.wrongCount) === w;
+
+  if (existing && metricsMatch) return existing;
+
+  const subjectId = inferSubjectIdFromRow(row);
+  const topicKey = inferTopicKeyFromRow(row);
+  const topicRowKey = inferTopicRowKeyFromRow(row) || topicKey;
+  if (!subjectId || !topicKey) return existing || null;
+
   const name = String(row.label || row.displayName || topicKey).trim() || topicKey;
 
   return buildLearningPatternDecision({
@@ -301,7 +311,7 @@ function lpdPatternLineHe(lpd) {
   const patterns = Array.isArray(lpd.repeatedMistakePatterns) ? lpd.repeatedMistakePatterns : [];
   if (!patterns.length) return "";
 
-  const label = String(patterns[0]?.label || "").trim();
+  const label = sanitizeParentPatternLabel(String(patterns[0]?.label || "").trim());
   if (label) return `דפוס: ${label}.`;
   return "";
 }
@@ -355,15 +365,20 @@ export function buildLpdSafeTopicExplainSectionsHe(row) {
   const wr = q > 0 && w > 0 ? Math.round((w / q) * 100) : null;
 
   const finding = guardParentFacingText(lpd.parentVisibleFinding);
-  const isInitial =
-    q <= 2 || lpd.topicStatus === "initial_data" || lpd.findingType === "initial_topic_data";
+  const isInitial = q <= 2;
+
+  const cResolved = Number.isFinite(c)
+    ? Math.max(0, c)
+    : Math.max(0, q - w);
 
   let data =
-    q <= 4
-      ? `הנתונים: בנושא ${topicName} נפתרו ${q} שאלות${acc > 0 ? `, דיוק ${acc}%` : ""}.`
-      : wr != null
-        ? `הנתונים: ${q} שאלות, דיוק ${acc}%, ${wr}% טעויות.`
-        : `הנתונים: ${q} שאלות, דיוק ${acc}%.`;
+    q >= 5
+      ? `הנתונים: הילד/ה פתר/ה ${q} שאלות בנושא ${topicName}, מתוכן ${cResolved} נכונות.`
+      : q <= 4
+        ? `הנתונים: בנושא ${topicName} נפתרו ${q} שאלות${acc > 0 ? `, דיוק ${acc}%` : ""}.`
+        : wr != null
+          ? `הנתונים: ${q} שאלות, דיוק ${acc}%, ${wr}% טעויות.`
+          : `הנתונים: ${q} שאלות, דיוק ${acc}%.`;
   data = guardParentFacingText(data);
 
   if (isInitial) {
@@ -386,9 +401,19 @@ export function buildLpdSafeTopicExplainSectionsHe(row) {
     : `מה זוהה: מיקוד בנושא ${topicName}.`;
 
   const pattern = q >= 5 ? guardParentFacingText(lpdPatternLineHe(lpd)) : "";
-  const meaning = guardParentFacingText(lpdMeaningLineHe(lpd, topicName));
-  const action =
+  let meaning = guardParentFacingText(lpdMeaningLineHe(lpd, topicName));
+  if (!meaning && !isInitial && w > 0 && q >= 3) {
+    meaning = guardParentFacingText(
+      "משמעות: נראה שכדאי לחזק את הנושא לפני שממשיכים לנושאים מתקדמים יותר.",
+    );
+  }
+  let action =
     q >= 3 ? guardParentFacingText(lpdHomeActionLineHe(lpd, topicName)) : "";
+  if (!action && !isInitial && w > 0 && q >= 3) {
+    action = guardParentFacingText(
+      `מה כדאי לעשות בבית: לתרגל כמה שאלות קצרות בנושא ${topicName}, בקצב רגוע, ולבקש מהילד/ה להסביר את שלבי הפתרון.`,
+    );
+  }
 
   const sections = {
     identified: guardParentFacingText(identified),
@@ -437,8 +462,7 @@ export function resolveParentExplainRowCopy(row) {
   }
 
   const primaryFinding = guardParentFacingText(lpd.parentVisibleFinding);
-  const isInitial =
-    lpd.topicStatus === "initial_data" || lpd.findingType === "initial_topic_data";
+  const isInitial = q <= 2;
 
   return {
     hasLpd: true,

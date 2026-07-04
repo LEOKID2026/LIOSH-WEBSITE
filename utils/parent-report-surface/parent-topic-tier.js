@@ -112,12 +112,17 @@ export function parentTopicTierFromUnit(u, mapRow) {
   });
 
   let baseTier;
-  if (q < 12) baseTier = PARENT_TOPIC_TIER.LOW_EVIDENCE;
-  else if (acc >= 90 && q >= 10) baseTier = PARENT_TOPIC_TIER.STRONG;
-  else if (acc >= 78 && q >= 20) baseTier = PARENT_TOPIC_TIER.MONITOR;
-  else if (acc >= 60 && acc < 78) baseTier = PARENT_TOPIC_TIER.STRENGTHEN;
-  else if (acc < 55 && q >= 12) baseTier = PARENT_TOPIC_TIER.CLEAR_GAP;
-  else {
+  if (q < 5) {
+    baseTier = PARENT_TOPIC_TIER.LOW_EVIDENCE;
+  } else if (acc < 55) {
+    baseTier = PARENT_TOPIC_TIER.CLEAR_GAP;
+  } else if (acc >= 90 && q >= 10) {
+    baseTier = PARENT_TOPIC_TIER.STRONG;
+  } else if (acc >= 78 && q >= 20) {
+    baseTier = PARENT_TOPIC_TIER.MONITOR;
+  } else if (acc >= 60 && acc < 78) {
+    baseTier = PARENT_TOPIC_TIER.STRENGTHEN;
+  } else {
     switch (engineDecision) {
       case "mastery_stable":
         baseTier = PARENT_TOPIC_TIER.STRONG;

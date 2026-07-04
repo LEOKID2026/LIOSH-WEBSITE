@@ -106,9 +106,11 @@ export function ParentReportTopicExplainRow({ row }) {
             {row.label}
           </span>
           {confLab || suffLab ? (
+            !lpdCopy.hasLpd || q <= 2 ? (
             <span className="text-[9px] md:text-[10px] text-white/50 leading-tight">
               {[confLab, suffLab].filter(Boolean).join(" · ")}
             </span>
+            ) : null
           ) : null}
         </div>
         {trendFacing ? (

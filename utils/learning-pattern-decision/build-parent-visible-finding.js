@@ -2,6 +2,7 @@
  * Parent Visible Finding Templates — Base Contract (section 8.1).
  * Subject-agnostic: {topicName} from row metadata, never hardcoded subject topics.
  */
+import { isUsableParentPatternLabel, isBlockedParentPatternLabel, sanitizeParentPatternLabel } from "./parent-pattern-label.js";
 
 /** @type {readonly string[]} */
 export const FORBIDDEN_PARENT_WORDS = Object.freeze([
@@ -19,6 +20,12 @@ export const FORBIDDEN_PARENT_WORDS = Object.freeze([
   "urgent",
   "critical",
   "diagnosis",
+  "diagnostic",
+  "cold probe",
+  "unknown",
+  "נספרו לדוח",
+  "דוח הלימודי",
+  "internal",
 ]);
 
 /**
@@ -60,9 +67,8 @@ export function buildParentVisibleFinding({
 }) {
   const q = Math.max(0, Number(questionCount) || 0);
   const name = String(topicName || "הנושא").trim() || "הנושא";
-  const patternLabel = repeatedMistakePatterns[0]?.label
-    ? String(repeatedMistakePatterns[0].label)
-    : "";
+  const rawPatternLabel = String(repeatedMistakePatterns[0]?.label || "").trim();
+  const patternLabel = sanitizeParentPatternLabel(repeatedMistakePatterns[0]?.label);
   const contextSuffix =
     q > 0 ? ` מבוסס על ${q} שאלות שנפתרו בנושא.` : "";
 
@@ -121,12 +127,32 @@ export function buildParentVisibleFinding({
   }
 
   if (topicStatus === "difficulty_repeated" && canUseRepeatedWording) {
-    templateId = "difficulty_repeated";
-    parentWordingLevel =
-      evidenceStrength === "strong" ? "strong_pattern" : "repeated_pattern";
-    const patternPart = patternLabel ? ` (${patternLabel})` : "";
+    if (isBlockedParentPatternLabel(rawPatternLabel)) {
+      // Fall through to difficulty_observed — no "דפוס חוזר" for unknown/missing labels.
+    } else if (isUsableParentPatternLabel(patternLabel)) {
+      templateId = "difficulty_repeated";
+      parentWordingLevel =
+        evidenceStrength === "strong" ? "strong_pattern" : "repeated_pattern";
+      parentVisibleFinding =
+        `בנושא ${name} מופיע דפוס חוזר של טעויות (${patternLabel}). כדאי לחזק את הנושא.${contextSuffix}`;
+      return { parentVisibleFinding, parentWordingLevel, templateId };
+    } else {
+      templateId = "difficulty_repeated_generic";
+      parentWordingLevel = "repeated_pattern";
+      parentVisibleFinding =
+        `בנושא ${name} מופיע דפוס חוזר של טעויות. כדאי לחזק את הנושא.${contextSuffix}`;
+      return { parentVisibleFinding, parentWordingLevel, templateId };
+    }
+  }
+
+  if (
+    topicStatus === "difficulty_observed" ||
+    findingType === "difficulty_pattern"
+  ) {
+    templateId = "difficulty_observed";
+    parentWordingLevel = canUseRepeatedWording ? "pattern_observed" : "factual_observation";
     parentVisibleFinding =
-      `בנושא ${name} מופיע דפוס חוזר של טעויות${patternPart}. כדאי לחזק את הנושא.${contextSuffix}`;
+      `בנושא ${name} היו כמה טעויות בשאלות שנפתרו. כדאי לחזור ולתרגל את הנושא.${contextSuffix}`;
     return { parentVisibleFinding, parentWordingLevel, templateId };
   }
 
@@ -134,14 +160,6 @@ export function buildParentVisibleFinding({
     templateId = "practice_focus";
     parentWordingLevel = "pattern_observed";
     parentVisibleFinding = `בנושא ${name} כדאי לשים דגש ולחזק את הנושא.${contextSuffix}`;
-    return { parentVisibleFinding, parentWordingLevel, templateId };
-  }
-
-  if (topicStatus === "difficulty_observed" || findingType === "difficulty_pattern") {
-    templateId = "difficulty_observed";
-    parentWordingLevel = canUseRepeatedWording ? "pattern_observed" : "factual_observation";
-    parentVisibleFinding =
-      `בנושא ${name} היו כמה טעויות בשאלות שנפתרו. כדאי לחזור ולתרגל את הנושא.${contextSuffix}`;
     return { parentVisibleFinding, parentWordingLevel, templateId };
   }
 
