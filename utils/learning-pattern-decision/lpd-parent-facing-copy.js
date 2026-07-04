@@ -1,10 +1,14 @@
 /**
  * LPD-safe parent-facing copy helpers — subject-agnostic.
  */
-import { sanitizeParentPatternLabel } from "./parent-pattern-label.js";
+import { sanitizeParentPatternLabel, isBlockedParentPatternLabel } from "./parent-pattern-label.js";
 import { buildLearningPatternDecision } from "./build-learning-pattern-decision.js";
 import { findForbiddenParentWords } from "./build-parent-visible-finding.js";
 import { rowNeedsPracticeFromLpd } from "./apply-learning-pattern-decision.js";
+import {
+  lpdFindingNeedsRebuild,
+  normalizeParentPracticeMetrics,
+} from "./normalize-parent-practice-metrics.js";
 
 /** @typedef {{ identified: string, data: string, pattern: string, meaning: string, action: string }} LpdExplainSections */
 
@@ -89,28 +93,14 @@ export function guardParentFacingText(text) {
  * @param {unknown[]} [rawMistakes]
  */
 export function resolveOrBuildLpdOnRow(row, rawMistakes = []) {
-  const q = Math.max(0, Number(row?.questions) || 0);
+  const metrics = normalizeParentPracticeMetrics(row);
+  const q = metrics.questions;
   if (q <= 0) return null;
 
-  const accRaw = Number(row?.accuracy);
-  const cExplicit = Number(row?.correct);
-  const wExplicit = Number(row?.wrong);
-  const c = Number.isFinite(cExplicit)
-    ? Math.max(0, cExplicit)
-    : Number.isFinite(accRaw)
-      ? Math.round((q * accRaw) / 100)
-      : 0;
-  const w = Number.isFinite(wExplicit) ? Math.max(0, wExplicit) : Math.max(0, q - c);
-  const accuracy = Number.isFinite(accRaw) ? accRaw : q > 0 ? (c / q) * 100 : 0;
+  const { correct: c, wrong: w, accuracy } = metrics;
 
   const existing = getLpdFromRow(row);
-  const metricsMatch =
-    existing &&
-    Number(existing.practicedQuestions) === q &&
-    Number(existing.correctCount) === c &&
-    Number(existing.wrongCount) === w;
-
-  if (existing && metricsMatch) return existing;
+  if (existing && !lpdFindingNeedsRebuild(existing, metrics)) return existing;
 
   const subjectId = inferSubjectIdFromRow(row);
   const topicKey = inferTopicKeyFromRow(row);
@@ -276,6 +266,7 @@ function lpdMeaningLineHe(lpd, topicName) {
 
   const ts = String(lpd.topicStatus || "");
   const ft = String(lpd.findingType || "");
+  const templateId = String(lpd.templateId || "");
 
   if (ts === "mixed" || ft === "mixed_pattern") {
     return `משמעות: ב${topicName} יש גם הצלחות וגם נקודות שכדאי לחזק — כדאי לפנות לשניהם.`;
@@ -283,11 +274,21 @@ function lpdMeaningLineHe(lpd, topicName) {
   if (ts.startsWith("positive") || ft === "success_pattern") {
     return "משמעות: נראית הצלחה טובה בנושא — כדאי לשמר את מה שכבר עובד.";
   }
-  if (ts === "difficulty_repeated") {
+  if (
+    (ts === "difficulty_repeated" || templateId.startsWith("difficulty_repeated")) &&
+    !isBlockedParentPatternLabel(String(lpd.repeatedMistakePatterns?.[0]?.label || ""))
+  ) {
     return "משמעות: מופיע דפוס שחוזר בטעויות — כדאי לטפל בו בצורה ממוקדת.";
   }
-  if (ts === "difficulty_observed" || ts === "practice_focus" || ft === "practice_focus") {
-    return "משמעות: יש נקודות שכדאי לחזק לפני שמתקדמים.";
+  if (
+    ts === "difficulty_observed" ||
+    ts === "practice_focus" ||
+    ft === "practice_focus" ||
+    ft === "difficulty_pattern" ||
+    templateId.includes("difficulty") ||
+    templateId.includes("practice_focus")
+  ) {
+    return `משמעות: נראה שכדאי לחזק את נושא ${topicName} לפני שממשיכים לנושאים מתקדמים יותר.`;
   }
 
   const finding = guardParentFacingText(lpd.parentVisibleFinding);
@@ -351,29 +352,25 @@ function lpdHomeActionLineHe(lpd, topicName) {
  */
 export function buildLpdSafeTopicExplainSectionsHe(row) {
   const lpd = resolveOrBuildLpdOnRow(row);
-  const q = Number(row?.questions ?? lpd?.practicedQuestions) || 0;
+  const metrics = normalizeParentPracticeMetrics(row, null);
+  const q = metrics.questions || Number(lpd?.practicedQuestions) || 0;
   if (q <= 0 || !lpd || lpd.topicStatus === "not_practiced") return null;
 
   const topicName =
     String(row?.label || row?.displayName || lpd.recommendedFocus || "").trim() || "הנושא";
-  const acc = Math.round(Number(row?.accuracy ?? lpd.accuracy) || 0);
-  const c = Number(row?.correct ?? lpd.correctCount);
-  const wExplicit = Number(row?.wrong ?? lpd.wrongCount);
-  const w = Number.isFinite(wExplicit)
-    ? Math.max(0, wExplicit)
-    : Math.max(0, q - (Number.isFinite(c) ? c : Math.round((q * acc) / 100)));
+  const acc = Math.round(Number(row?.accuracy ?? lpd.accuracy ?? metrics.accuracy) || 0);
+  const cResolved = metrics.correct;
+  const w = metrics.wrong;
   const wr = q > 0 && w > 0 ? Math.round((w / q) * 100) : null;
 
   const finding = guardParentFacingText(lpd.parentVisibleFinding);
   const isInitial = q <= 2;
 
-  const cResolved = Number.isFinite(c)
-    ? Math.max(0, c)
-    : Math.max(0, q - w);
-
   let data =
     q >= 5
-      ? `הנתונים: הילד/ה פתר/ה ${q} שאלות בנושא ${topicName}, מתוכן ${cResolved} נכונות.`
+      ? w > 0
+        ? `הנתונים: הילד/ה פתר/ה ${q} שאלות בנושא ${topicName}, מתוכן ${cResolved} נכונות ו-${w} שגויות.`
+        : `הנתונים: הילד/ה פתר/ה ${q} שאלות בנושא ${topicName}, מתוכן ${cResolved} נכונות.`
       : q <= 4
         ? `הנתונים: בנושא ${topicName} נפתרו ${q} שאלות${acc > 0 ? `, דיוק ${acc}%` : ""}.`
         : wr != null

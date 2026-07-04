@@ -8,6 +8,7 @@ import { resolveTopicFinding } from "./resolve-topic-finding.js";
 import { resolveBlockedClaims } from "./resolve-blocked-claims.js";
 import { buildParentVisibleFinding } from "./build-parent-visible-finding.js";
 import { partitionPatternEligibleMistakes } from "./resolve-excluded-evidence.js";
+import { normalizeParentPracticeMetrics } from "./normalize-parent-practice-metrics.js";
 
 /**
  * @param {object} p
@@ -36,11 +37,11 @@ export function buildLearningPatternDecision({
   const trk = String(topicRowKey || "");
   const topicKey = String(row?.bucketKey || unit?.topicKey || trk.split("\u0001")[0] || trk);
 
-  const q = Math.max(0, Number(row?.questions ?? unit?.questions) || 0);
-  const c = Math.max(0, Number(row?.correct ?? unit?.correct) || 0);
-  const w = Math.max(0, Number(row?.wrong ?? unit?.wrong) || 0);
-  const accRaw = Number(row?.accuracy ?? unit?.accuracy);
-  const accuracy = Number.isFinite(accRaw) ? accRaw : q > 0 ? (c / q) * 100 : 0;
+  const metrics = normalizeParentPracticeMetrics(row, unit);
+  const q = metrics.questions;
+  const c = metrics.correct;
+  const w = metrics.wrong;
+  const accuracy = metrics.accuracy;
 
   const base = emptyLearningPatternDecision(sid, topicKey);
   /** @type {string[]} */
@@ -150,6 +151,8 @@ export function buildLearningPatternDecision({
     repeatedMistakePatterns,
     competitiveBucketOnly,
     hasMixed,
+    wrongCount: performanceW,
+    accuracy,
   });
 
   if (enrichmentMissing.length) {

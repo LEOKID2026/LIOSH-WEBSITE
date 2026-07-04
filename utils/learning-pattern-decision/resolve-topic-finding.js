@@ -143,6 +143,28 @@ export function resolveTopicFinding({
     };
   }
 
+  if (q >= 5 && w >= 2 && acc < 70) {
+    return {
+      topicStatus: acc < 55 || w >= Math.ceil(q * 0.4) ? "practice_focus" : "difficulty_observed",
+      findingType: "practice_focus",
+      repeatedMistakePatterns,
+      hasMixed: false,
+      hasPositiveDominance: false,
+      canUseRepeatedWording,
+    };
+  }
+
+  if (q >= 3 && q <= 4 && w >= 1 && acc < 70) {
+    return {
+      topicStatus: "difficulty_observed",
+      findingType: "practice_focus",
+      repeatedMistakePatterns,
+      hasMixed: false,
+      hasPositiveDominance: false,
+      canUseRepeatedWording: false,
+    };
+  }
+
   return {
     topicStatus: "no_clear_pattern",
     findingType: "none",

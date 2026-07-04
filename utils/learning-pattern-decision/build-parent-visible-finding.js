@@ -26,6 +26,8 @@ export const FORBIDDEN_PARENT_WORDS = Object.freeze([
   "נספרו לדוח",
   "דוח הלימודי",
   "internal",
+  "אין תמונה מספיק",
+  "מעט נתונים",
 ]);
 
 /**
@@ -40,6 +42,33 @@ export function findForbiddenParentWords(text) {
   }
   if (/בתרגול האחרון/i.test(text)) hits.push("בתרגול האחרון");
   return hits;
+}
+
+/**
+ * @param {number} wrongCount
+ * @param {number} questionCount
+ * @param {number} accuracy
+ */
+function difficultyVolumePhrase(wrongCount, questionCount, accuracy) {
+  const w = Math.max(0, Number(wrongCount) || 0);
+  const q = Math.max(0, Number(questionCount) || 0);
+  const acc = Number(accuracy) || 0;
+  const ratio = q > 0 ? w / q : 0;
+  if (ratio >= 0.5 || acc <= 40) return "הרבה טעויות";
+  return "כמה טעויות";
+}
+
+/**
+ * @param {number} wrongCount
+ * @param {number} questionCount
+ * @param {number} accuracy
+ */
+function difficultyActionPhrase(wrongCount, questionCount, accuracy) {
+  const w = Math.max(0, Number(wrongCount) || 0);
+  const q = Math.max(0, Number(questionCount) || 0);
+  const acc = Number(accuracy) || 0;
+  if (q >= 5 && (acc < 55 || w >= Math.ceil(q * 0.4))) return "לחזור ולחזק";
+  return "לחזור ולתרגל";
 }
 
 /**
@@ -64,8 +93,12 @@ export function buildParentVisibleFinding({
   repeatedMistakePatterns = [],
   competitiveBucketOnly = false,
   hasMixed = false,
+  wrongCount = 0,
+  accuracy = 0,
 }) {
   const q = Math.max(0, Number(questionCount) || 0);
+  const w = Math.max(0, Number(wrongCount) || 0);
+  const acc = Number(accuracy) || 0;
   const name = String(topicName || "הנושא").trim() || "הנושא";
   const rawPatternLabel = String(repeatedMistakePatterns[0]?.label || "").trim();
   const patternLabel = sanitizeParentPatternLabel(repeatedMistakePatterns[0]?.label);
@@ -147,19 +180,18 @@ export function buildParentVisibleFinding({
 
   if (
     topicStatus === "difficulty_observed" ||
-    findingType === "difficulty_pattern"
+    findingType === "difficulty_pattern" ||
+    topicStatus === "practice_focus" ||
+    findingType === "practice_focus"
   ) {
-    templateId = "difficulty_observed";
-    parentWordingLevel = canUseRepeatedWording ? "pattern_observed" : "factual_observation";
+    const volume = difficultyVolumePhrase(w, q, acc);
+    const action = difficultyActionPhrase(w, q, acc);
+    templateId = topicStatus === "practice_focus" || findingType === "practice_focus"
+      ? "practice_focus"
+      : "difficulty_observed";
+    parentWordingLevel = q >= 5 ? "pattern_observed" : "factual_observation";
     parentVisibleFinding =
-      `בנושא ${name} היו כמה טעויות בשאלות שנפתרו. כדאי לחזור ולתרגל את הנושא.${contextSuffix}`;
-    return { parentVisibleFinding, parentWordingLevel, templateId };
-  }
-
-  if (topicStatus === "practice_focus" || findingType === "practice_focus") {
-    templateId = "practice_focus";
-    parentWordingLevel = "pattern_observed";
-    parentVisibleFinding = `בנושא ${name} כדאי לשים דגש ולחזק את הנושא.${contextSuffix}`;
+      `בנושא ${name} ${volume === "הרבה טעויות" ? "היו הרבה טעויות" : "היו כמה טעויות"} בשאלות שנפתרו. כדאי ${action} את הנושא.${contextSuffix}`;
     return { parentVisibleFinding, parentWordingLevel, templateId };
   }
 
@@ -182,9 +214,28 @@ export function buildParentVisibleFinding({
   }
 
   if (topicStatus === "no_clear_pattern") {
+    if (q >= 5 && w >= 2 && acc < 70) {
+      const volume = difficultyVolumePhrase(w, q, acc);
+      const action = difficultyActionPhrase(w, q, acc);
+      templateId = "no_clear_pattern_difficulty_fallback";
+      parentWordingLevel = "pattern_observed";
+      parentVisibleFinding =
+        `בנושא ${name} ${volume === "הרבה טעויות" ? "היו הרבה טעויות" : "היו כמה טעויות"} בשאלות שנפתרו. כדאי ${action} את הנושא.${contextSuffix}`;
+      return { parentVisibleFinding, parentWordingLevel, templateId };
+    }
     templateId = "no_clear_pattern";
     parentWordingLevel = "no_parent_text";
     parentVisibleFinding = "";
+    return { parentVisibleFinding, parentWordingLevel, templateId };
+  }
+
+  if (q >= 5 && w >= 2 && acc < 70) {
+    const volume = difficultyVolumePhrase(w, q, acc);
+    const action = difficultyActionPhrase(w, q, acc);
+    templateId = "difficulty_observed_fallback";
+    parentWordingLevel = "pattern_observed";
+    parentVisibleFinding =
+      `בנושא ${name} ${volume === "הרבה טעויות" ? "היו הרבה טעויות" : "היו כמה טעויות"} בשאלות שנפתרו. כדאי ${action} את הנושא.${contextSuffix}`;
     return { parentVisibleFinding, parentWordingLevel, templateId };
   }
 

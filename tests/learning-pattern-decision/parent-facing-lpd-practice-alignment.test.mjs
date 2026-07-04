@@ -217,4 +217,84 @@ describe("parent-facing LPD practice alignment", () => {
     assert.match(copy.explainSections.meaning, /מוקדם/);
     assert.equal(guardParentFacingText(copy.primaryFinding).length > 0, true);
   });
+
+  test("G — q=10 acc=20% with wrong=0 on row still yields clear difficulty finding", () => {
+    const row = {
+      subjectId: "math",
+      topicKey: "addition",
+      label: "חיבור",
+      displayName: "חיבור",
+      questions: 10,
+      correct: 2,
+      wrong: 0,
+      accuracy: 20,
+      learningPatternDecision: {
+        practicedQuestions: 10,
+        correctCount: 2,
+        wrongCount: 8,
+        accuracy: 20,
+        topicStatus: "no_clear_pattern",
+        findingType: "none",
+        parentVisibleFinding: "",
+        parentWordingLevel: "no_parent_text",
+      },
+    };
+    const rebuilt = resolveOrBuildLpdOnRow(row);
+    assert.notEqual(rebuilt.topicStatus, "initial_data");
+    assert.notEqual(rebuilt.topicStatus, "no_clear_pattern");
+    assert.notEqual(rebuilt.topicStatus, "positive_observed");
+    assert.match(rebuilt.parentVisibleFinding, /חזק|טעויות/);
+    assert.ok(!rebuilt.parentVisibleFinding.includes("unknown"));
+
+    const copy = resolveParentExplainRowCopy({ ...row, learningPatternDecision: rebuilt });
+    const allText = [
+      copy.primaryFinding,
+      copy.explainSections?.identified,
+      copy.explainSections?.data,
+      copy.explainSections?.meaning,
+      copy.explainSections?.action,
+    ]
+      .filter(Boolean)
+      .join(" ");
+    assert.ok(!/אין תמונה מספיק|מעט נתונים|עדיין מוקדם/u.test(allText));
+    assert.match(allText, /חיבור/);
+    assert.match(allText, /10/);
+    assert.match(copy.explainSections.data, /8 שגויות/);
+  });
+
+  test("H — q=10 wrong=8 with real pattern label shows specific pattern", () => {
+    const lpd = buildLearningPatternDecision({
+      subjectId: "math",
+      topicRowKey: "addition",
+      row: { bucketKey: "addition", displayName: "חיבור", questions: 10, correct: 2, wrong: 8, accuracy: 20 },
+      rawMistakes: Array.from({ length: 8 }, (_, i) => ({
+        ...mistake("carry_error", i),
+        patternFamily: "carry_error",
+      })),
+      startMs: START,
+      endMs: END,
+    });
+    assert.match(lpd.parentVisibleFinding, /דפוס חוזר/);
+    assert.match(lpd.parentVisibleFinding, /carry_error/);
+    assert.ok(!String(lpd.parentVisibleFinding).includes("unknown"));
+  });
+
+  test("I — q=10 wrong=8 mixed patterns without usable label → general difficulty only", () => {
+    const rawMistakes = [
+      ...Array.from({ length: 4 }, (_, i) => mistake("unknown", i)),
+      ...Array.from({ length: 4 }, (_, i) => mistake("pf:other", i + 4)),
+    ];
+    const lpd = buildLearningPatternDecision({
+      subjectId: "math",
+      topicRowKey: "addition",
+      row: { bucketKey: "addition", displayName: "חיבור", questions: 10, correct: 2, wrong: 8, accuracy: 20 },
+      rawMistakes,
+      startMs: START,
+      endMs: END,
+    });
+    assert.ok(!String(lpd.parentVisibleFinding).includes("unknown"));
+    assert.ok(!String(lpd.parentVisibleFinding).includes("pf:"));
+    assert.match(lpd.parentVisibleFinding, /טעויות/);
+    assert.notEqual(lpd.topicStatus, "no_clear_pattern");
+  });
 });
