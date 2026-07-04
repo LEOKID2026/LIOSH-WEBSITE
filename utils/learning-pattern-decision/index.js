@@ -44,4 +44,5 @@ export {
   lpdHasParentTopicInsight,
   LEGACY_TOPIC_ATTENTION_INSIGHT_DISABLED,
   resolveParentExplainRowCopy,
+  buildLpdSafeTopicExplainSectionsHe,
 } from "./lpd-parent-facing-copy.js";

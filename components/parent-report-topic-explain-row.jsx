@@ -65,7 +65,9 @@ export function ParentReportTopicExplainRow({ row }) {
   const lpdCopy = resolveParentExplainRowCopy(row);
   const sig = row.topicEngineRowSignals;
   const trend = row.trend;
-  const sections = lpdCopy.suppressEngineCopy ? null : buildTopicDiagnosticExplainSectionsHe(row);
+  const sections =
+    lpdCopy.explainSections ||
+    (lpdCopy.suppressEngineCopy ? null : buildTopicDiagnosticExplainSectionsHe(row));
   const trendLine = trendCompactLineHe(trend);
   const trendFacing =
     lpdCopy.showTrend && trendLine ? parentFacingEngineLine(trendLine) : "";
@@ -93,7 +95,8 @@ export function ParentReportTopicExplainRow({ row }) {
     : sig?.avoidNowHe
       ? parentFacingEngineLine(String(sig.avoidNowHe))
       : "";
-  const primaryFinding = lpdCopy.primaryFinding || "";
+  const primaryFinding =
+    lpdCopy.primaryFinding && !sections?.identified ? lpdCopy.primaryFinding : "";
 
   return (
     <div className="parent-report-topic-explain-row border-b border-white/[0.07] last:border-b-0 py-2 px-1 md:px-2 avoid-break">

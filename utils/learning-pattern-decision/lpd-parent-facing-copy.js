@@ -5,6 +5,8 @@ import { buildLearningPatternDecision } from "./build-learning-pattern-decision.
 import { findForbiddenParentWords } from "./build-parent-visible-finding.js";
 import { rowNeedsPracticeFromLpd } from "./apply-learning-pattern-decision.js";
 
+/** @typedef {{ identified: string, data: string, pattern: string, meaning: string, action: string }} LpdExplainSections */
+
 /**
  * @param {Record<string, unknown>|null|undefined} row
  */
@@ -198,6 +200,155 @@ export function rawMistakesForTopicFromPayload(payload, subjectId, topicKey) {
 }
 
 /**
+ * @param {import("./schema.js").LearningPatternDecisionShape} lpd
+ * @param {string} topicName
+ */
+function lpdMeaningLineHe(lpd, topicName) {
+  const q = Number(lpd.practicedQuestions) || 0;
+  if (q <= 2) return "";
+
+  const ts = String(lpd.topicStatus || "");
+  const ft = String(lpd.findingType || "");
+
+  if (ts === "mixed" || ft === "mixed_pattern") {
+    return `משמעות: ב${topicName} יש גם הצלחות וגם נקודות שכדאי לחזק — כדאי לפנות לשניהם.`;
+  }
+  if (ts.startsWith("positive") || ft === "success_pattern") {
+    return "משמעות: נראית הצלחה טובה בנושא — כדאי לשמר את מה שכבר עובד.";
+  }
+  if (ts === "difficulty_repeated") {
+    return "משמעות: מופיע דפוס שחוזר בטעויות — כדאי לטפל בו בצורה ממוקדת.";
+  }
+  if (ts === "difficulty_observed" || ts === "practice_focus" || ft === "practice_focus") {
+    return "משמעות: יש נקודות שכדאי לחזק לפני שמתקדמים.";
+  }
+
+  const finding = guardParentFacingText(lpd.parentVisibleFinding);
+  if (finding && q >= 3 && q <= 4) {
+    const core = finding.replace(/\s*מבוסס על \d+ שאלות שנפתרו בנושא\.?\s*$/u, "").trim();
+    if (core) return `משמעות: ${core}.`;
+  }
+  return "";
+}
+
+/**
+ * @param {import("./schema.js").LearningPatternDecisionShape} lpd
+ */
+function lpdPatternLineHe(lpd) {
+  const q = Number(lpd.practicedQuestions) || 0;
+  if (q < 5) return "";
+
+  const blocked = new Set(Array.isArray(lpd.blockedClaims) ? lpd.blockedClaims : []);
+  if (blocked.has("no_repeated_wording") || blocked.has("no_specific_pattern_claim")) return "";
+
+  const patterns = Array.isArray(lpd.repeatedMistakePatterns) ? lpd.repeatedMistakePatterns : [];
+  if (!patterns.length) return "";
+
+  const label = String(patterns[0]?.label || "").trim();
+  if (label) return `דפוס: ${label}.`;
+  return "";
+}
+
+/**
+ * @param {import("./schema.js").LearningPatternDecisionShape} lpd
+ * @param {string} topicName
+ */
+function lpdHomeActionLineHe(lpd, topicName) {
+  const q = Number(lpd.practicedQuestions) || 0;
+  if (q <= 2) return "";
+
+  const blocked = new Set(Array.isArray(lpd.blockedClaims) ? lpd.blockedClaims : []);
+  if (blocked.has("no_final_claim")) return "";
+
+  const needsPractice = rowNeedsPracticeFromLpd({ learningPatternDecision: lpd });
+  const hasFocus = !!String(lpd.recommendedFocus || "").trim();
+  const ts = String(lpd.topicStatus || "");
+  const ft = String(lpd.findingType || "");
+
+  if (ts === "mixed" || ft === "mixed_pattern") {
+    return `מה כדאי לעשות בבית: לחזק חלקים שדורשים תשומת לב, ובמקביל להמשיך לחזק את מה שכבר עובד ב${topicName}.`;
+  }
+  if (ts.startsWith("positive") || ft === "success_pattern") {
+    return `מה כדאי לעשות בבית: להמשיך בשגרת תרגול קצרה ב${topicName} כדי לשמור על מה שעובד.`;
+  }
+  if (needsPractice || hasFocus) {
+    return `מה כדאי לעשות בבית: תרגול קצר וממוקד ב${topicName}, עם בדיקה שהילד מסביר את שלבי הפתרון.`;
+  }
+  return "";
+}
+
+/**
+ * Per-topic explain sections — LPD-only (no legacy engine bypass).
+ * @param {Record<string, unknown>|null|undefined} row
+ * @returns {LpdExplainSections|null}
+ */
+export function buildLpdSafeTopicExplainSectionsHe(row) {
+  const lpd = resolveOrBuildLpdOnRow(row);
+  const q = Number(row?.questions ?? lpd?.practicedQuestions) || 0;
+  if (q <= 0 || !lpd || lpd.topicStatus === "not_practiced") return null;
+
+  const topicName =
+    String(row?.label || row?.displayName || lpd.recommendedFocus || "").trim() || "הנושא";
+  const acc = Math.round(Number(row?.accuracy ?? lpd.accuracy) || 0);
+  const c = Number(row?.correct ?? lpd.correctCount);
+  const wExplicit = Number(row?.wrong ?? lpd.wrongCount);
+  const w = Number.isFinite(wExplicit)
+    ? Math.max(0, wExplicit)
+    : Math.max(0, q - (Number.isFinite(c) ? c : Math.round((q * acc) / 100)));
+  const wr = q > 0 && w > 0 ? Math.round((w / q) * 100) : null;
+
+  const finding = guardParentFacingText(lpd.parentVisibleFinding);
+  const isInitial =
+    q <= 2 || lpd.topicStatus === "initial_data" || lpd.findingType === "initial_topic_data";
+
+  let data =
+    q <= 4
+      ? `הנתונים: בנושא ${topicName} נפתרו ${q} שאלות${acc > 0 ? `, דיוק ${acc}%` : ""}.`
+      : wr != null
+        ? `הנתונים: ${q} שאלות, דיוק ${acc}%, ${wr}% טעויות.`
+        : `הנתונים: ${q} שאלות, דיוק ${acc}%.`;
+  data = guardParentFacingText(data);
+
+  if (isInitial) {
+    const identified = finding
+      ? `מה זוהה: ${finding}`
+      : q === 1
+        ? `מה זוהה: נתונים ראשוניים בלבד בנושא ${topicName}.`
+        : `מה זוהה: בנושא ${topicName} נפתרו ${q} שאלות — עדיין מוקדם לזהות דפוס ברור.`;
+    return {
+      identified: guardParentFacingText(identified),
+      data,
+      pattern: "",
+      meaning: "",
+      action: "",
+    };
+  }
+
+  const identified = finding
+    ? `מה זוהה: ${finding}`
+    : `מה זוהה: מיקוד בנושא ${topicName}.`;
+
+  const pattern = q >= 5 ? guardParentFacingText(lpdPatternLineHe(lpd)) : "";
+  const meaning = guardParentFacingText(lpdMeaningLineHe(lpd, topicName));
+  const action =
+    q >= 3 ? guardParentFacingText(lpdHomeActionLineHe(lpd, topicName)) : "";
+
+  const sections = {
+    identified: guardParentFacingText(identified),
+    data,
+    pattern,
+    meaning,
+    action,
+  };
+
+  if (!sections.identified && !sections.data && !sections.meaning && !sections.action) {
+    return sections.data ? { identified: "", data: sections.data, pattern: "", meaning: "", action: "" } : null;
+  }
+
+  return sections;
+}
+
+/**
  * @param {Record<string, unknown>|null|undefined} row
  */
 export function resolveParentExplainRowCopy(row) {
@@ -227,10 +378,12 @@ export function resolveParentExplainRowCopy(row) {
   const primaryFinding = guardParentFacingText(lpd.parentVisibleFinding);
   const isInitial =
     lpd.topicStatus === "initial_data" || lpd.findingType === "initial_topic_data";
+  const explainSections = buildLpdSafeTopicExplainSectionsHe(row);
 
   return {
     hasLpd: true,
     primaryFinding,
+    explainSections,
     suppressEngineCopy: true,
     parentWordingLevel: String(lpd.parentWordingLevel || "factual_observation"),
     showTrend: !isInitial && q >= 5 && !rowNeedsPracticeFromLpd({ learningPatternDecision: lpd }),

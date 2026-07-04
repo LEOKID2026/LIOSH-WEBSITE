@@ -5,6 +5,7 @@ import assert from "node:assert/strict";
 import {
   buildLearningPatternDecision,
   buildLpdParentInsightLineHe,
+  buildLpdSafeTopicExplainSectionsHe,
   findForbiddenParentWords,
   guardParentFacingText,
   lpdParentVisibleFindingFromRow,
@@ -57,7 +58,7 @@ function lpdRow({ q, c, w, acc, name, bucket = "addition", subjectId = "math", m
   assert.equal(findForbiddenParentWords(line).length, 0);
 }
 
-/** B — explain row copy guarded */
+/** B — explain row copy guarded + per-topic sections restored */
 {
   const row = lpdRow({ q: 2, c: 0, w: 2, acc: 0, name: "חיבור" });
   const copy = resolveParentExplainRowCopy(row);
@@ -65,6 +66,11 @@ function lpdRow({ q, c, w, acc, name, bucket = "addition", subjectId = "math", m
   assert.ok(copy.primaryFinding.length > 0);
   assert.equal(findForbiddenParentWords(copy.primaryFinding).length, 0);
   assert.ok(!copy.primaryFinding.includes("דפוס חוזר"));
+  assert.ok(copy.explainSections);
+  assert.match(copy.explainSections.identified, /מה זוהה:/);
+  assert.match(copy.explainSections.data, /הנתונים:/);
+  assert.equal(copy.explainSections.action, "");
+  assert.ok(!copy.explainSections.meaning.includes("כדאי לחזק"));
 }
 
 /** C — short insight ≡ LPD finding text (no engine contradiction) */
@@ -139,6 +145,47 @@ function lpdRow({ q, c, w, acc, name, bucket = "addition", subjectId = "math", m
 {
   const row = lpdRow({ q: 2, c: 0, w: 2, acc: 0, name: "חיבור" });
   assert.equal(rowNeedsPracticeFromLpd(row), false);
+}
+
+/** G — q>=5 detailed per-topic sections (LPD-safe) */
+{
+  const mistakes = Array.from({ length: 8 }, (_, i) => ({
+    bucketKey: "addition",
+    mode: "practice",
+    isCorrect: false,
+    patternFamily: "pf:same",
+    timestamp: START + i * 86_400_000,
+  }));
+  const row = lpdRow({ q: 12, c: 2, w: 10, acc: 17, name: "חיבור", mistakes });
+  const sections = buildLpdSafeTopicExplainSectionsHe(row);
+  assert.ok(sections);
+  assert.match(sections.identified, /מה זוהה:/);
+  assert.match(sections.data, /הנתונים:/);
+  assert.match(sections.meaning, /משמעות:/);
+  assert.match(sections.action, /מה כדאי לעשות בבית:/);
+  assert.match(sections.identified, /דפוס חוזר/);
+  assert.equal(findForbiddenParentWords(JSON.stringify(sections)).length, 0);
+  assert.ok(!JSON.stringify(sections).includes("הילד פתר"));
+}
+
+/** H — q=3-4 factual only: no repeated-pattern line, no home action unless allowed */
+{
+  const row = lpdRow({ q: 3, c: 1, w: 2, acc: 33, name: "שטח" });
+  row.learningPatternDecision = buildLearningPatternDecision({
+    subjectId: "geometry",
+    topicRowKey: "area",
+    row: { bucketKey: "area", displayName: "שטח", questions: 3, correct: 1, wrong: 2, accuracy: 33 },
+    rawMistakes: [
+      { bucketKey: "area", mode: "practice", isCorrect: false, patternFamily: "pf:a", timestamp: START },
+      { bucketKey: "area", mode: "practice", isCorrect: false, patternFamily: "pf:b", timestamp: START + 1 },
+    ],
+    startMs: START,
+    endMs: END,
+  });
+  const sections = buildLpdSafeTopicExplainSectionsHe(row);
+  assert.ok(sections);
+  assert.equal(sections.pattern, "");
+  assert.ok(!sections.identified.includes("דפוס חוזר"));
 }
 
 console.log("parent-report-insights-lpd.test.mjs — all passed");

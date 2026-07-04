@@ -28,6 +28,7 @@ import {
   lpdParentVisibleFindingFromRow,
   shouldSuppressLegacyEngineParentCopy,
   guardParentFacingText,
+  buildLpdSafeTopicExplainSectionsHe,
 } from "../utils/learning-pattern-decision/index.js";
 import {
   SUBJECT_PHASE3_ROW_LABEL_HE,
@@ -887,27 +888,7 @@ function topicStripNorm(s) {
 /** פס על המלצת נושא — עד 3 שכבות הוריות: מה ראינו / מה זה אומר / כיוון עבודה */
 export function TopicRecommendationExplainStrip({ tr, suppressedLines = [] }) {
   const lpd = getLpdFromRow(tr);
-  const lpdFinding = lpdParentVisibleFindingFromRow(tr);
   const suppressLegacy = shouldSuppressLegacyEngineParentCopy(tr);
-
-  const sig = tr?.topicEngineRowSignals && typeof tr.topicEngineRowSignals === "object" ? tr.topicEngineRowSignals : null;
-  const narrative =
-    tr?.contractsV1?.narrative && typeof tr.contractsV1.narrative === "object" ? tr.contractsV1.narrative : null;
-  const recommendation =
-    tr?.contractsV1?.recommendation && typeof tr.contractsV1.recommendation === "object"
-      ? tr.contractsV1.recommendation
-      : null;
-  const decision =
-    tr?.contractsV1?.decision && typeof tr.contractsV1.decision === "object" ? tr.contractsV1.decision : null;
-  const explicitContradictoryContractEvidence =
-    decision?.cannotConcludeYet === true ||
-    (Array.isArray(recommendation?.forbiddenBecause) &&
-      recommendation.forbiddenBecause.includes("cannot_conclude_yet"));
-
-  const mp = suppressLegacy ? "" : topicStripParentClean(mistakePatternLineHe(tr || sig) || "");
-  const lm = suppressLegacy ? "" : topicStripParentClean(learningMemoryLineHe(tr || sig) || "");
-  const seenRaw = suppressLegacy && lpdFinding ? lpdFinding : [mp, lm].filter(Boolean).join(" · ");
-  let seen = truncateHe(seenRaw, 224);
 
   const explainRow =
     tr && typeof tr === "object"
@@ -916,78 +897,58 @@ export function TopicRecommendationExplainStrip({ tr, suppressedLines = [] }) {
           questions: Number(tr.questions ?? tr.q) || 0,
           accuracy: Number(tr.accuracy ?? tr.acc) || 0,
           wrong: Number(tr.wrong) || 0,
-          topicEngineRowSignals: sig,
+          topicEngineRowSignals:
+            tr?.topicEngineRowSignals && typeof tr.topicEngineRowSignals === "object"
+              ? tr.topicEngineRowSignals
+              : null,
           learningPatternDecision: lpd,
         }
       : null;
-  const explainSections = suppressLegacy ? null : buildTopicDiagnosticExplainSectionsHe(explainRow);
 
-  const whyRaw = suppressLegacy ? "" : String(tr?.whyThisRecommendationHe || sig?.whyThisRecommendationHe || "").trim();
-  const meaningFromExplain = explainSections?.meaning
-    ? String(explainSections.meaning).replace(/^משמעות:\s*/, "").trim()
-    : "";
-  let meaning = suppressLegacy ? "" : truncateHe(
-    topicStripParentClean(meaningFromExplain || whyRaw),
-    224,
-  );
+  const lpdSections = suppressLegacy ? buildLpdSafeTopicExplainSectionsHe(explainRow || tr) : null;
+  const legacySections = suppressLegacy ? null : buildTopicDiagnosticExplainSectionsHe(explainRow);
+  const explainSections = lpdSections || legacySections;
 
-  if (seen && meaning && topicStripNorm(seen) === topicStripNorm(meaning)) {
-    meaning = "";
+  if (explainSections) {
+    const suppressed = new Set(
+      (Array.isArray(suppressedLines) ? suppressedLines : [])
+        .map((x) => topicStripNorm(x))
+        .filter(Boolean),
+    );
+    const seenRowNorm = new Set();
+    const sectionRows = [
+      explainSections.identified,
+      explainSections.data,
+      explainSections.pattern,
+      explainSections.meaning,
+      explainSections.action,
+    ].filter((body) => {
+      const n = topicStripNorm(body);
+      if (!n) return false;
+      if (suppressed.has(n)) return false;
+      if (seenRowNorm.has(n)) return false;
+      seenRowNorm.add(n);
+      return true;
+    });
+
+    if (!sectionRows.length) return null;
+
+    return (
+      <div
+        className="pr-detailed-topic-phase2 mt-2 space-y-1.5 border-t border-white/10 pt-2"
+        data-testid="parent-report-lpd-topic-explain"
+      >
+        {sectionRows.map((body) => (
+          <p
+            key={topicStripNorm(body)}
+            className="pr-detailed-body-text text-[11px] md:text-xs m-0 text-white/80 leading-snug"
+          >
+            {body}
+          </p>
+        ))}
+      </div>
+    );
   }
 
-  const canonicalAction = suppressLegacy
-    ? ""
-    : topicStripParentClean(
-        narrative ? narrativeSectionTextHe("recommendation", narrative) || narrative?.textSlots?.action || "" : ""
-      );
-  const actionBlockedByContract =
-    !explicitContradictoryContractEvidence &&
-    (recommendation?.eligible === false || String(narrative?.recommendationIntensityCap || "") === "RI0");
-  let direction = suppressLegacy || actionBlockedByContract ? "" : truncateHe(canonicalAction, 238);
-  const caut = suppressLegacy
-    ? ""
-    : topicStripParentClean(
-        narrative ? narrativeSectionTextHe("limitations", narrative) || tr?.cautionLineHe || sig?.cautionLineHe || "" : tr?.cautionLineHe || sig?.cautionLineHe || ""
-      );
-  if (caut) {
-    direction = direction ? `${direction} שימו לב: ${truncateHe(caut, 148)}` : `שימו לב: ${truncateHe(caut, 168)}`;
-  }
-
-  if (!seen && !meaning && !direction) return null;
-
-  const suppressed = new Set(
-    (Array.isArray(suppressedLines) ? suppressedLines : [])
-      .map((x) => topicStripNorm(x))
-      .filter(Boolean)
-  );
-  const row = (label, body) =>
-    body ? (
-      <p className="pr-detailed-body-text text-[11px] md:text-xs m-0 text-white/80 leading-snug">
-        <span className="text-white/45 font-bold">{label}</span>
-        {body}
-      </p>
-    ) : null;
-
-  const seenRowNorm = new Set();
-  const rows = [
-    { label: "מה ראינו: ", body: seen },
-    { label: "מה זה אומר: ", body: meaning },
-    { label: "כיוון עבודה: ", body: direction },
-  ].filter((r) => {
-    const n = topicStripNorm(r.body);
-    if (!n) return false;
-    if (suppressed.has(n)) return false;
-    if (seenRowNorm.has(n)) return false;
-    seenRowNorm.add(n);
-    return true;
-  });
-  if (!rows.length) return null;
-
-  return (
-    <div className="pr-detailed-topic-phase2 mt-2 space-y-1.5 border-t border-white/10 pt-2">
-      {rows.map((r) => (
-        <React.Fragment key={`${r.label}-${topicStripNorm(r.body)}`}>{row(r.label, r.body)}</React.Fragment>
-      ))}
-    </div>
-  );
+  return null;
 }
