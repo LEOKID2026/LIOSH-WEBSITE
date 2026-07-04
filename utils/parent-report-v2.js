@@ -78,6 +78,11 @@ import { enrichDiagnosticEngineV2WithProfessionalFrameworkV1 } from "./learning-
 import { enrichDiagnosticEngineV2WithProfessionalEngineV1 } from "./learning-diagnostics/professional-engine-output-v1.js";
 import { attachFastDiagnosisToDiagnosticEngineV2 } from "./fast-diagnostic-engine/index.js";
 import { runDiagnosticEngineV3 } from "./diagnostic-engine-v3/index.js";
+import { applyLearningPatternDecisionToUnitsAndRows } from "./learning-pattern-decision/index.js";
+import {
+  buildTopicRollupsFromLearningPatternDecision,
+  syncRowFlagsFromLearningPatternDecision,
+} from "./learning-pattern-decision/parent-report-ui-helpers.js";
 import { safeBuildHybridRuntimeForReport } from "./ai-hybrid-diagnostic/safe-build-hybrid-runtime.js";
 import { getActiveDiagnosisSessionSummaryForReport } from "./active-diagnosis-session-summary.js";
 import {
@@ -2556,6 +2561,46 @@ export function generateParentReportV2(
     probeEvidence: null,
     diagnosticEngineV2,
   });
+
+  applyLearningPatternDecisionToUnitsAndRows({
+    diagnosticEngineV2,
+    maps,
+    diagnosticEngineV3,
+    rawMistakesBySubject,
+    startMs,
+    endMs,
+  });
+  syncRowFlagsFromLearningPatternDecision(maps);
+
+  const lpdRollups = buildTopicRollupsFromLearningPatternDecision(
+    maps,
+    V2_SUBJECT_LABEL_HE,
+    (subjectId, row) => {
+      const bk = String(row?.bucketKey || "");
+      switch (subjectId) {
+        case "math":
+          return String(row.displayName || getMathReportBucketDisplayName(bk));
+        case "geometry":
+          return String(row.displayName || getTopicName(bk));
+        case "english":
+          return String(row.displayName || getEnglishTopicName(bk));
+        case "science":
+          return String(row.displayName || getScienceTopicName(bk));
+        case "history":
+          return String(row.displayName || getHistoryTopicName(bk));
+        case "hebrew":
+          return String(row.displayName || getHebrewTopicName(bk));
+        case "moledet-geography":
+          return String(row.displayName || getMoledetGeographyTopicName(bk));
+        default:
+          return String(row.displayName || bk || "נושא");
+      }
+    },
+  );
+  needsPractice.length = 0;
+  needsPractice.push(...lpdRollups.needsPractice);
+  excellent.length = 0;
+  excellent.push(...lpdRollups.excellent);
 
   /** Best-effort only: failures must not break the parent report (V2 remains primary). */
   const hybridRuntime = safeBuildHybridRuntimeForReport({

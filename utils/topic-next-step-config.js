@@ -6,7 +6,7 @@
 import { PARENT_EVIDENCE_VOLUME } from "./parent-report-language/parent-evidence-matrix.js";
 
 export const DEFAULT_TOPIC_NEXT_STEP_CONFIG = {
-  /** מקסימום נושאים עם המלצה למקצוע בדוח מקיף */
+  /** מקסימום נושאים עם המלצה למקצוע בדוח מקיף — לא מסתיר נושאים מ-topicOverviewRows / טבלת הדוח */
   maxTopicRecommendationsPerSubject: 15,
 
   /** מתחת לכך — לא משנים כיתה/רמת קושי; רק "לבסס באותה רמה" + הסבר דגימה */

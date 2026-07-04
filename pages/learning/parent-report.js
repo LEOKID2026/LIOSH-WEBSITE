@@ -71,10 +71,7 @@ import {
   formatParentReportLevelHe,
   formatParentReportSubjectHe,
 } from "../../utils/parent-report-language/parent-report-display-labels.he.js";
-import {
-  deriveParentDataPresenceForDiagnosticsView,
-  PARENT_THIN_DATA_EXPLAINER_HE,
-} from "../../utils/parent-data-presence.js";
+import { topicUiFromLearningPatternDecision } from "../../utils/learning-pattern-decision/parent-report-ui-helpers.js";
 import {
   filterSubjectOverviewRowsWithEvidence,
   PARENT_REPORT_PERIOD_EMPTY_STATE_HE,
@@ -458,6 +455,32 @@ function topicBarColor(accuracy) {
   if (accuracy >= 90) return "#10b981";
   if (accuracy >= 70) return "#f59e0b";
   return "#ef4444";
+}
+
+function topicBarColorFromRow(row) {
+  const ui = topicUiFromLearningPatternDecision(row);
+  if (ui.hasLpd) {
+    if (ui.excellent || ui.findingType === "success_pattern") return "#10b981";
+    if (ui.needsPractice) return "#f59e0b";
+    return "#94a3b8";
+  }
+  return topicBarColor(Number(row?.accuracy) || 0);
+}
+
+function topicAccuracyTextClass(row) {
+  return topicUiFromLearningPatternDecision(row).accuracyClass;
+}
+
+function topicStatusEmoji(row) {
+  return topicUiFromLearningPatternDecision(row).statusEmoji;
+}
+
+function topicShowsNeedsPractice(row) {
+  return topicUiFromLearningPatternDecision(row).needsPractice;
+}
+
+function topicShowsExcellent(row) {
+  return topicUiFromLearningPatternDecision(row).excellent;
 }
 
 /** סדר תצוגת אבחון מקצועי — תואם `patternDiagnostics.subjects` (הצטיינות עקבית → תוצאות טובות יחסית → מומלץ לשמר → נקודות לשיפור → תחומים דורשים תשומת לב) */
@@ -2336,17 +2359,15 @@ export default function ParentReport() {
                             {data.correct}
                           </td>
                           <td className={`py-1.5 px-0.5 text-center font-bold text-[11px] md:text-sm whitespace-nowrap ${
-                            data.accuracy >= 90 ? "text-emerald-400" :
-                            data.accuracy >= 70 ? "text-yellow-400" :
-                            "text-red-400"
+                            topicAccuracyTextClass(data)
                           }`}>
                             {data.accuracy}%
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-[10px] md:text-sm whitespace-nowrap align-top">
                             <div className="flex flex-col items-center">
-                              {data.excellent ? (
+                              {topicShowsExcellent(data) ? (
                                 <span className="text-emerald-400">✅</span>
-                              ) : data.needsPractice ? (
+                              ) : topicShowsNeedsPractice(data) ? (
                                 <span className="text-red-400">⚠️</span>
                               ) : (
                                 <span className="text-yellow-400">👍</span>
@@ -2391,16 +2412,14 @@ export default function ParentReport() {
                         </div>
                         <div>
                           <span className="text-white/60">דיוק:</span> <span className={`font-bold ${
-                            data.accuracy >= 90 ? "text-emerald-400" :
-                            data.accuracy >= 70 ? "text-yellow-400" :
-                            "text-red-400"
+                            topicAccuracyTextClass(data)
                           }`}>{data.accuracy}%</span>
                         </div>
                       </div>
                       <div className="mt-2 text-center">
-                        {data.excellent ? (
+                        {topicShowsExcellent(data) ? (
                           <span className="text-emerald-400 text-xs">✅ מצוין</span>
-                        ) : data.needsPractice ? (
+                        ) : topicShowsNeedsPractice(data) ? (
                           <span className="text-red-400 text-xs">⚠️ כדאי לתרגל עוד</span>
                         ) : (
                           <span className="text-yellow-400 text-xs">👍 טוב</span>
@@ -2477,17 +2496,15 @@ export default function ParentReport() {
                             {data.correct}
                           </td>
                           <td className={`py-1.5 px-0.5 text-center font-bold text-[11px] md:text-sm whitespace-nowrap ${
-                            data.accuracy >= 90 ? "text-emerald-400" :
-                            data.accuracy >= 70 ? "text-yellow-400" :
-                            "text-red-400"
+                            topicAccuracyTextClass(data)
                           }`}>
                             {data.accuracy}%
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-[10px] md:text-sm whitespace-nowrap align-top">
                             <div className="flex flex-col items-center">
-                              {data.excellent ? (
+                              {topicShowsExcellent(data) ? (
                                 <span className="text-emerald-400">✅</span>
-                              ) : data.needsPractice ? (
+                              ) : topicShowsNeedsPractice(data) ? (
                                 <span className="text-red-400">⚠️</span>
                               ) : (
                                 <span className="text-yellow-400">👍</span>
@@ -2532,16 +2549,14 @@ export default function ParentReport() {
                         </div>
                         <div>
                           <span className="text-white/60">דיוק:</span> <span className={`font-bold ${
-                            data.accuracy >= 90 ? "text-emerald-400" :
-                            data.accuracy >= 70 ? "text-yellow-400" :
-                            "text-red-400"
+                            topicAccuracyTextClass(data)
                           }`}>{data.accuracy}%</span>
                         </div>
                       </div>
                       <div className="mt-2 text-center">
-                        {data.excellent ? (
+                        {topicShowsExcellent(data) ? (
                           <span className="text-emerald-400 text-xs">✅ מצוין</span>
-                        ) : data.needsPractice ? (
+                        ) : topicShowsNeedsPractice(data) ? (
                           <span className="text-red-400 text-xs">⚠️ כדאי לתרגל עוד</span>
                         ) : (
                           <span className="text-yellow-400 text-xs">👍 טוב</span>
@@ -2619,17 +2634,15 @@ export default function ParentReport() {
                             {data.correct}
                           </td>
                           <td className={`py-1.5 px-0.5 text-center font-bold text-[11px] md:text-sm whitespace-nowrap ${
-                            data.accuracy >= 90 ? "text-emerald-400" :
-                            data.accuracy >= 70 ? "text-yellow-400" :
-                            "text-red-400"
+                            topicAccuracyTextClass(data)
                           }`}>
                             {data.accuracy}%
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-[10px] md:text-sm whitespace-nowrap align-top">
                             <div className="flex flex-col items-center">
-                              {data.excellent ? (
+                              {topicShowsExcellent(data) ? (
                                 <span className="text-emerald-400">✅</span>
-                              ) : data.needsPractice ? (
+                              ) : topicShowsNeedsPractice(data) ? (
                                 <span className="text-red-400">⚠️</span>
                               ) : (
                                 <span className="text-yellow-400">👍</span>
@@ -2674,16 +2687,14 @@ export default function ParentReport() {
                         </div>
                         <div>
                           <span className="text-white/60">דיוק:</span> <span className={`font-bold ${
-                            data.accuracy >= 90 ? "text-emerald-400" :
-                            data.accuracy >= 70 ? "text-yellow-400" :
-                            "text-red-400"
+                            topicAccuracyTextClass(data)
                           }`}>{data.accuracy}%</span>
                         </div>
                       </div>
                       <div className="mt-2 text-center">
-                        {data.excellent ? (
+                        {topicShowsExcellent(data) ? (
                           <span className="text-emerald-400 text-xs">✅ מצוין</span>
-                        ) : data.needsPractice ? (
+                        ) : topicShowsNeedsPractice(data) ? (
                           <span className="text-red-400 text-xs">⚠️ כדאי לתרגל עוד</span>
                         ) : (
                           <span className="text-yellow-400 text-xs">👍 טוב</span>
@@ -2761,21 +2772,15 @@ export default function ParentReport() {
                             {data.correct}
                           </td>
                           <td
-                            className={`py-1.5 px-0.5 text-center font-bold text-[11px] md:text-sm whitespace-nowrap ${
-                              data.accuracy >= 90
-                                ? "text-emerald-400"
-                                : data.accuracy >= 70
-                                ? "text-yellow-400"
-                                : "text-red-400"
-                            }`}
+                            className={`py-1.5 px-0.5 text-center font-bold text-[11px] md:text-sm whitespace-nowrap ${topicAccuracyTextClass(data)}`}
                           >
                             {data.accuracy}%
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-[10px] md:text-sm whitespace-nowrap align-top">
                             <div className="flex flex-col items-center">
-                              {data.excellent ? (
+                              {topicShowsExcellent(data) ? (
                                 <span className="text-emerald-400">✅</span>
-                              ) : data.needsPractice ? (
+                              ) : topicShowsNeedsPractice(data) ? (
                                 <span className="text-red-400">⚠️</span>
                               ) : (
                                 <span className="text-yellow-400">👍</span>
@@ -2820,16 +2825,14 @@ export default function ParentReport() {
                         </div>
                         <div>
                           <span className="text-white/60">דיוק:</span> <span className={`font-bold ${
-                            data.accuracy >= 90 ? "text-emerald-400" :
-                            data.accuracy >= 70 ? "text-yellow-400" :
-                            "text-red-400"
+                            topicAccuracyTextClass(data)
                           }`}>{data.accuracy}%</span>
                         </div>
                       </div>
                       <div className="mt-2 text-center">
-                        {data.excellent ? (
+                        {topicShowsExcellent(data) ? (
                           <span className="text-emerald-400 text-xs">✅ מצוין</span>
-                        ) : data.needsPractice ? (
+                        ) : topicShowsNeedsPractice(data) ? (
                           <span className="text-red-400 text-xs">⚠️ כדאי לתרגל עוד</span>
                         ) : (
                           <span className="text-yellow-400 text-xs">👍 טוב</span>
@@ -2907,21 +2910,15 @@ export default function ParentReport() {
                             {data.correct}
                           </td>
                           <td
-                            className={`py-1.5 px-0.5 text-center font-bold text-[11px] md:text-sm whitespace-nowrap ${
-                              data.accuracy >= 90
-                                ? "text-emerald-400"
-                                : data.accuracy >= 70
-                                ? "text-yellow-400"
-                                : "text-red-400"
-                            }`}
+                            className={`py-1.5 px-0.5 text-center font-bold text-[11px] md:text-sm whitespace-nowrap ${topicAccuracyTextClass(data)}`}
                           >
                             {data.accuracy}%
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-[10px] md:text-sm whitespace-nowrap align-top">
                             <div className="flex flex-col items-center">
-                              {data.excellent ? (
+                              {topicShowsExcellent(data) ? (
                                 <span className="text-emerald-400">✅</span>
-                              ) : data.needsPractice ? (
+                              ) : topicShowsNeedsPractice(data) ? (
                                 <span className="text-red-400">⚠️</span>
                               ) : (
                                 <span className="text-yellow-400">👍</span>
@@ -2966,16 +2963,14 @@ export default function ParentReport() {
                         </div>
                         <div>
                           <span className="text-white/60">דיוק:</span> <span className={`font-bold ${
-                            data.accuracy >= 90 ? "text-emerald-400" :
-                            data.accuracy >= 70 ? "text-yellow-400" :
-                            "text-red-400"
+                            topicAccuracyTextClass(data)
                           }`}>{data.accuracy}%</span>
                         </div>
                       </div>
                       <div className="mt-2 text-center">
-                        {data.excellent ? (
+                        {topicShowsExcellent(data) ? (
                           <span className="text-emerald-400 text-xs">✅ מצוין</span>
-                        ) : data.needsPractice ? (
+                        ) : topicShowsNeedsPractice(data) ? (
                           <span className="text-red-400 text-xs">⚠️ כדאי לתרגל עוד</span>
                         ) : (
                           <span className="text-yellow-400 text-xs">👍 טוב</span>
@@ -3053,21 +3048,15 @@ export default function ParentReport() {
                             {data.correct}
                           </td>
                           <td
-                            className={`py-1.5 px-0.5 text-center font-bold text-[11px] md:text-sm whitespace-nowrap ${
-                              data.accuracy >= 90
-                                ? "text-emerald-400"
-                                : data.accuracy >= 70
-                                ? "text-yellow-400"
-                                : "text-red-400"
-                            }`}
+                            className={`py-1.5 px-0.5 text-center font-bold text-[11px] md:text-sm whitespace-nowrap ${topicAccuracyTextClass(data)}`}
                           >
                             {data.accuracy}%
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-[10px] md:text-sm whitespace-nowrap align-top">
                             <div className="flex flex-col items-center">
-                              {data.excellent ? (
+                              {topicShowsExcellent(data) ? (
                                 <span className="text-emerald-400">✅</span>
-                              ) : data.needsPractice ? (
+                              ) : topicShowsNeedsPractice(data) ? (
                                 <span className="text-red-400">⚠️</span>
                               ) : (
                                 <span className="text-yellow-400">👍</span>
@@ -3112,16 +3101,14 @@ export default function ParentReport() {
                         </div>
                         <div>
                           <span className="text-white/60">דיוק:</span> <span className={`font-bold ${
-                            data.accuracy >= 90 ? "text-emerald-400" :
-                            data.accuracy >= 70 ? "text-yellow-400" :
-                            "text-red-400"
+                            topicAccuracyTextClass(data)
                           }`}>{data.accuracy}%</span>
                         </div>
                       </div>
                       <div className="mt-2 text-center">
-                        {data.excellent ? (
+                        {topicShowsExcellent(data) ? (
                           <span className="text-emerald-400 text-xs">✅ מצוין</span>
-                        ) : data.needsPractice ? (
+                        ) : topicShowsNeedsPractice(data) ? (
                           <span className="text-red-400 text-xs">⚠️ כדאי לתרגל עוד</span>
                         ) : (
                           <span className="text-yellow-400 text-xs">👍 טוב</span>
@@ -3198,21 +3185,15 @@ export default function ParentReport() {
                             {data.correct}
                           </td>
                           <td
-                            className={`py-1.5 px-0.5 text-center font-bold text-[11px] md:text-sm whitespace-nowrap ${
-                              data.accuracy >= 90
-                                ? "text-emerald-400"
-                                : data.accuracy >= 70
-                                ? "text-yellow-400"
-                                : "text-red-400"
-                            }`}
+                            className={`py-1.5 px-0.5 text-center font-bold text-[11px] md:text-sm whitespace-nowrap ${topicAccuracyTextClass(data)}`}
                           >
                             {data.accuracy}%
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-[10px] md:text-sm whitespace-nowrap align-top">
                             <div className="flex flex-col items-center">
-                              {data.excellent ? (
+                              {topicShowsExcellent(data) ? (
                                 <span className="text-emerald-400">✅</span>
-                              ) : data.needsPractice ? (
+                              ) : topicShowsNeedsPractice(data) ? (
                                 <span className="text-red-400">⚠️</span>
                               ) : (
                                 <span className="text-yellow-400">👍</span>
@@ -3257,16 +3238,14 @@ export default function ParentReport() {
                         <div>
                           <span className="text-white/60">דיוק:</span>{" "}
                           <span className={`font-bold ${
-                            data.accuracy >= 90 ? "text-emerald-400" :
-                            data.accuracy >= 70 ? "text-yellow-400" :
-                            "text-red-400"
+                            topicAccuracyTextClass(data)
                           }`}>{data.accuracy}%</span>
                         </div>
                       </div>
                       <div className="mt-2 text-center">
-                        {data.excellent ? (
+                        {topicShowsExcellent(data) ? (
                           <span className="text-emerald-400 text-xs">✅ מצוין</span>
-                        ) : data.needsPractice ? (
+                        ) : topicShowsNeedsPractice(data) ? (
                           <span className="text-red-400 text-xs">⚠️ כדאי לתרגל עוד</span>
                         ) : (
                           <span className="text-yellow-400 text-xs">👍 טוב</span>

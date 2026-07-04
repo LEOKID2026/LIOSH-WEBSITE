@@ -11,8 +11,14 @@ const REPORT_MAP_KEY = {
   geometry: "geometryTopics",
   english: "englishTopics",
   science: "scienceTopics",
+  history: "historyTopics",
   hebrew: "hebrewTopics",
   "moledet-geography": "moledetGeographyTopics",
+};
+
+/** Parent-facing breakdown rows (history subtopics only). */
+const REPORT_AUX_MAP_KEY = {
+  history: "historySubtopics",
 };
 
 /**
@@ -22,9 +28,16 @@ const REPORT_MAP_KEY = {
  */
 function mapRowFromBase(baseReport, subjectId, topicRowKey) {
   const mk = REPORT_MAP_KEY[subjectId];
-  if (!mk || !baseReport?.[mk]) return null;
-  const row = baseReport[mk][topicRowKey];
-  return row && typeof row === "object" ? row : null;
+  if (mk && baseReport?.[mk]) {
+    const row = baseReport[mk][topicRowKey];
+    if (row && typeof row === "object") return row;
+  }
+  const aux = REPORT_AUX_MAP_KEY[subjectId];
+  if (aux && baseReport?.[aux]) {
+    const row = baseReport[aux][topicRowKey];
+    if (row && typeof row === "object") return row;
+  }
+  return null;
 }
 
 /**
@@ -125,6 +138,11 @@ export function traceRowThroughPipeline(args) {
   });
 
   const narrativeUnc = String(tr?.contractsV1?.narrative?.textSlots?.uncertainty || "");
+  const lpd = mapRow?.learningPatternDecision || unit?.learningPatternDecision || tr?.learningPatternDecision || null;
+  const v3Enrichment =
+    base?.diagnosticEngineV3?.unitEnrichments?.find(
+      (e) => String(e?.subjectId || "") === subjectId && String(e?.topicRowKey || "") === topicRowKey,
+    ) || null;
 
   return {
     topicRowKey,
@@ -137,6 +155,7 @@ export function traceRowThroughPipeline(args) {
             accuracy: mapRow.accuracy,
             timeMinutes: mapRow.timeMinutes,
             gradeKey: mapRow.gradeKey,
+            learningPatternDecision: mapRow.learningPatternDecision || null,
           }
         : null,
       v2Unit: unit
@@ -145,6 +164,28 @@ export function traceRowThroughPipeline(args) {
             accuracy: unit.evidenceTrace?.[0]?.value?.accuracy,
             patternHe: unit.taxonomy?.patternHe || null,
             actionState: unit.canonicalState?.actionState,
+            learningPatternDecision: unit.learningPatternDecision || null,
+          }
+        : null,
+      v3Enrichment: v3Enrichment
+        ? {
+            v3DiagnosisStage: v3Enrichment.v3DiagnosisStage,
+            v3RecommendedNextStep: v3Enrichment.v3RecommendedNextStep,
+          }
+        : null,
+      learningPatternDecision: lpd
+        ? {
+            topicStatus: lpd.topicStatus,
+            findingType: lpd.findingType,
+            evidenceStrength: lpd.evidenceStrength,
+            parentWordingLevel: lpd.parentWordingLevel,
+            parentVisibleFinding: lpd.parentVisibleFinding,
+            blockedClaims: lpd.blockedClaims,
+            excludedEvidence: lpd.excludedEvidence,
+            enrichmentMissing: lpd.enrichmentMissing,
+            projectedFrom: lpd.projectedFrom || null,
+            subtopicBreakdown: lpd.subtopicBreakdown === true,
+            trace: lpd.trace,
           }
         : null,
       detailedTopicRec: tr
@@ -194,9 +235,20 @@ export function listTopicRowKeysFromBaseReport(baseReport) {
   for (const sid of SUBJECT_ORDER) {
     const mk = REPORT_MAP_KEY[sid];
     const tm = baseReport?.[mk];
-    if (!tm || typeof tm !== "object") continue;
-    for (const topicRowKey of Object.keys(tm)) {
-      out.push({ subjectId: sid, topicRowKey });
+    if (tm && typeof tm === "object") {
+      for (const topicRowKey of Object.keys(tm)) {
+        out.push({ subjectId: sid, topicRowKey, rowKind: "topic" });
+      }
+    }
+    const aux = REPORT_AUX_MAP_KEY[sid];
+    const auxMap = aux && baseReport?.[aux];
+    if (auxMap && typeof auxMap === "object") {
+      for (const topicRowKey of Object.keys(auxMap)) {
+        const row = auxMap[topicRowKey];
+        if (!row || typeof row !== "object") continue;
+        if ((Number(row.questions) || 0) <= 0) continue;
+        out.push({ subjectId: sid, topicRowKey, rowKind: "history_subtopic" });
+      }
     }
   }
   return out;

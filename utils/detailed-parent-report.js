@@ -1924,6 +1924,7 @@ function buildTopicOverviewRowsFromUnits(baseReport, sid, units, topicMapForSid)
       const labels = parentFacingDisplayLabelsForV2Unit(baseReport, u);
       const mapR = topicMapForSid[trk];
       const place = topicOverviewPlacementFromUnit(u, mapR);
+      const lpd = mapR?.learningPatternDecision || u?.learningPatternDecision || null;
       return {
         topicRowKey: trk,
         subjectId: sid,
@@ -1936,6 +1937,8 @@ function buildTopicOverviewRowsFromUnits(baseReport, sid, units, topicMapForSid)
         parentTier: place.parentTier,
         overviewStatusHe: place.overviewStatusHe,
         placementKind: place.placementKind,
+        learningPatternDecision: lpd,
+        parentVisibleFinding: lpd?.parentVisibleFinding || "",
         rowIdentityV1: buildRowIdentityV1({
           subjectId: sid,
           topicRowKey: trk,
@@ -2154,11 +2157,17 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
     mapRow && typeof mapRow === "object" && mapRow.gradeKey != null && String(mapRow.gradeKey).trim()
       ? String(mapRow.gradeKey).trim()
       : rowGkFromTopicKey;
+  const lpd = mapRow?.learningPatternDecision || u?.learningPatternDecision || null;
   return {
     topicRowKey: topicKey,
     topicKey,
     subjectId,
     displayName: String(u?.displayName || "").trim(),
+    learningPatternDecision: lpd,
+    parentVisibleFinding: lpd?.parentVisibleFinding || "",
+    parentWordingLevel: lpd?.parentWordingLevel || "no_parent_text",
+    topicStatus: lpd?.topicStatus || null,
+    findingType: lpd?.findingType || null,
     narrativeTitleHe: reportMeta?.baseReport
       ? parentFacingDisplayLabelsForV2Unit(reportMeta.baseReport, u).titleHe
       : String(u?.displayName || "").trim(),

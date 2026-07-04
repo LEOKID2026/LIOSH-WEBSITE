@@ -1,7 +1,9 @@
 /**
  * שערי פלט — stage1 §11 (מימוש כללי לפי ביטחון + עדיפות + ראיות).
+ * Volume strengthens evidenceStrength labels — never silences pattern visibility (LPD layer).
  */
 import { buildDecisionReadinessContractsBundleV1 } from "../contracts/decision-readiness-contract-v1.js";
+import { resolveEvidenceStrength } from "../evidence-strength-policy.js";
 
 /**
  * @param {object} p
@@ -114,13 +116,20 @@ export function applyOutputGating(p) {
     positiveAuthorityReasonCodes,
   });
 
-  const buildContractsBundle = (cannotConcludeFlag) =>
-    buildDecisionReadinessContractsBundleV1({
+  const buildContractsBundle = (cannotConcludeFlag) => {
+    const lpdStrength = resolveEvidenceStrength(q);
+    const contractStrength =
+      lpdStrength === "strong"
+        ? "strong"
+        : lpdStrength === "supported" || lpdStrength === "emerging"
+          ? "medium"
+          : "low";
+    return buildDecisionReadinessContractsBundleV1({
       contractsV1,
       subjectId,
       topicKey,
       q,
-      evidenceStrength: weakEvidence ? "low" : confidence === "high" ? "strong" : "medium",
+      evidenceStrength: weakEvidence ? "low" : contractStrength,
       dataSufficiencyLevel:
         confidence === "insufficient_data" || q < 4 ? "low" : q < 12 ? "medium" : "strong",
       conclusionStrength: cannotConcludeFlag
@@ -138,6 +147,7 @@ export function applyOutputGating(p) {
       dev2ConfidenceLevel: confidence,
       confidence,
     });
+  };
 
   if (hardDeny) {
     const out = base();

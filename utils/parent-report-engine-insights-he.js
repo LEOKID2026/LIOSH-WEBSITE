@@ -17,6 +17,12 @@ import {
 } from "./parent-report-language/engine-decision-parent-copy-he.js";
 import { buildTopicDiagnosticExplainSectionsHe } from "./parent-report-ui-explain-he.js";
 import {
+  buildLpdParentInsightLineHe,
+  buildLpdSafeTopicInsightLineHe,
+  getLpdFromRow,
+  rowIsPositiveFromLpd,
+} from "./learning-pattern-decision/index.js";
+import {
 
   activityGapNonDiagnosticOnlyHe,
 
@@ -188,6 +194,11 @@ export function collectTopicEngineRowsFromReport(report) {
 
         rowIdentityV1: data.rowIdentityV1,
 
+        learningPatternDecision:
+          data.learningPatternDecision && typeof data.learningPatternDecision === "object"
+            ? data.learningPatternDecision
+            : null,
+
       });
 
     }
@@ -236,6 +247,40 @@ export function topicWrongRatioPct(row) {
 
 function rowNeedsAttention(row) {
 
+  const lpd = getLpdFromRow(row);
+
+  if (lpd) {
+
+    if (lpd.topicStatus === "not_practiced" || (lpd.practicedQuestions || 0) <= 0) return false;
+
+    if (lpd.topicStatus === "initial_data" || lpd.findingType === "initial_topic_data") return false;
+
+    if ((lpd.practicedQuestions || 0) <= 2) return false;
+
+    const ft = String(lpd.findingType || "");
+
+    const ts = String(lpd.topicStatus || "");
+
+    return (
+
+      ft === "difficulty_pattern" ||
+
+      ft === "practice_focus" ||
+
+      ft === "mixed_pattern" ||
+
+      ts === "difficulty_observed" ||
+
+      ts === "difficulty_repeated" ||
+
+      ts === "practice_focus" ||
+
+      ts === "mixed"
+
+    );
+
+  }
+
   const sig = row.topicEngineRowSignals;
 
   const acc = Number(row.accuracy) || 0;
@@ -270,11 +315,21 @@ function rowNeedsAttention(row) {
 
 function rowIsStableStrength(row) {
 
-  const sig = row.topicEngineRowSignals;
+  const lpd = getLpdFromRow(row);
 
   const acc = Number(row.accuracy) || 0;
 
   const q = Number(row.questions) || 0;
+
+  if (lpd) {
+
+    if ((lpd.practicedQuestions || 0) < 5) return false;
+
+    return rowIsPositiveFromLpd(row) && q >= 5 && acc >= 80;
+
+  }
+
+  const sig = row.topicEngineRowSignals;
 
   if (q < 5 || acc < 80) return false;
 
@@ -320,103 +375,13 @@ function engineActionFromRow(row) {
 
 export function buildTopicEngineInsightLineHe(row) {
 
-  const sig = row.topicEngineRowSignals;
-
   const label = String(row.label || "").trim();
 
   const q = Number(row.questions) || 0;
 
-  const acc = Number(row.accuracy) || 0;
-
   if (!label || q <= 0) return "";
 
-
-
-  if (sig?.engineDiagnosticDecision) {
-
-    const engineLine = buildEngineDecisionInsightLineHe(row);
-
-    if (engineLine) return engineLine;
-
-  }
-
-
-
-  const step = String(sig?.recommendedNextStep || "");
-
-  if (step === "advance_grade_topic_only") {
-
-    return advanceGradeInsightHe({
-
-      subject: row.subjectLabelHe,
-
-      subjectId: row.subjectId,
-
-      topic: label,
-
-    });
-
-  }
-
-  if (step === "advance_level") {
-
-    return advanceLevelInsightHe({
-
-      subject: row.subjectLabelHe,
-
-      subjectId: row.subjectId,
-
-      topic: label,
-
-    });
-
-  }
-
-  if (String(sig?.diagnosticType || "") === "stable_mastery" && acc >= 80) {
-
-    return stableMasteryInsightHe({
-
-      subject: row.subjectLabelHe,
-
-      subjectId: row.subjectId,
-
-      topic: label,
-
-      q,
-
-      acc,
-
-      wrongRatio: topicWrongRatioPct(row),
-
-    });
-
-  }
-
-
-
-  return topicAttentionInsightHe({
-
-    subject: row.subjectLabelHe,
-
-    subjectId: row.subjectId,
-
-    topic: label,
-
-    q,
-
-    acc,
-
-    wrongRatio: topicWrongRatioPct(row),
-
-    rootCause: String(sig?.rootCause || ""),
-
-    diagnosticType: String(sig?.diagnosticType || ""),
-
-    patternId: String(sig?.dominantMistakePattern || ""),
-
-    engineAction: engineActionFromRow(row),
-
-  });
+  return buildLpdSafeTopicInsightLineHe(row);
 
 }
 
@@ -696,39 +661,7 @@ export function buildParentInsightsFromTopicEngineHe(report, apiPayload = null) 
 
     if (usedMixedSubjects.has(sid)) continue;
 
-    const sig = row.topicEngineRowSignals;
-
-    const step = String(sig?.recommendedNextStep || "");
-
-    let line = "";
-
-    if (step === "advance_grade_topic_only") {
-
-      line = advanceGradeInsightHe({ subject: row.subjectLabelHe, subjectId: row.subjectId, topic: row.label });
-
-    } else if (step === "advance_level" || ADVANCE_STEPS.has(step)) {
-
-      line = advanceLevelInsightHe({ subject: row.subjectLabelHe, subjectId: row.subjectId, topic: row.label });
-
-    } else {
-
-      line = stableMasteryInsightHe({
-
-        subject: row.subjectLabelHe,
-
-        subjectId: row.subjectId,
-
-        topic: row.label,
-
-        q: row.questions,
-
-        acc: row.accuracy,
-
-        wrongRatio: topicWrongRatioPct(row),
-
-      });
-
-    }
+    const line = buildLpdSafeTopicInsightLineHe(row);
 
     if (line) strengthLines.push(line);
 

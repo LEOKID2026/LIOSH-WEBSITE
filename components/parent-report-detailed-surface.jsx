@@ -24,6 +24,12 @@ import {
   parentTopicTierSectionTitleHe,
 } from "../utils/parent-report-surface/index.js";
 import {
+  getLpdFromRow,
+  lpdParentVisibleFindingFromRow,
+  shouldSuppressLegacyEngineParentCopy,
+  guardParentFacingText,
+} from "../utils/learning-pattern-decision/index.js";
+import {
   SUBJECT_PHASE3_ROW_LABEL_HE,
   SUBJECT_V2_RECALIBRATION_NEED_NO_HE,
   normalizeParentFacingHe,
@@ -93,7 +99,7 @@ function pr1ParentVisibleTextHe(s) {
   const numericOnly = /^[\d\s.,/%\-–—]+$/u.test(t);
   if (numericOnly) return "";
   if (/^0{2,}$/u.test(t)) return "";
-  return t;
+  return guardParentFacingText(t);
 }
 
 export function Bullets({ items, className = "", volumeQuestionsTotal = 0 }) {
@@ -880,6 +886,10 @@ function topicStripNorm(s) {
 
 /** פס על המלצת נושא — עד 3 שכבות הוריות: מה ראינו / מה זה אומר / כיוון עבודה */
 export function TopicRecommendationExplainStrip({ tr, suppressedLines = [] }) {
+  const lpd = getLpdFromRow(tr);
+  const lpdFinding = lpdParentVisibleFindingFromRow(tr);
+  const suppressLegacy = shouldSuppressLegacyEngineParentCopy(tr);
+
   const sig = tr?.topicEngineRowSignals && typeof tr.topicEngineRowSignals === "object" ? tr.topicEngineRowSignals : null;
   const narrative =
     tr?.contractsV1?.narrative && typeof tr.contractsV1.narrative === "object" ? tr.contractsV1.narrative : null;
@@ -894,9 +904,9 @@ export function TopicRecommendationExplainStrip({ tr, suppressedLines = [] }) {
     (Array.isArray(recommendation?.forbiddenBecause) &&
       recommendation.forbiddenBecause.includes("cannot_conclude_yet"));
 
-  const mp = topicStripParentClean(mistakePatternLineHe(tr || sig) || "");
-  const lm = topicStripParentClean(learningMemoryLineHe(tr || sig) || "");
-  const seenRaw = [mp, lm].filter(Boolean).join(" · ");
+  const mp = suppressLegacy ? "" : topicStripParentClean(mistakePatternLineHe(tr || sig) || "");
+  const lm = suppressLegacy ? "" : topicStripParentClean(learningMemoryLineHe(tr || sig) || "");
+  const seenRaw = suppressLegacy && lpdFinding ? lpdFinding : [mp, lm].filter(Boolean).join(" · ");
   let seen = truncateHe(seenRaw, 224);
 
   const explainRow =
@@ -907,15 +917,16 @@ export function TopicRecommendationExplainStrip({ tr, suppressedLines = [] }) {
           accuracy: Number(tr.accuracy ?? tr.acc) || 0,
           wrong: Number(tr.wrong) || 0,
           topicEngineRowSignals: sig,
+          learningPatternDecision: lpd,
         }
       : null;
-  const explainSections = buildTopicDiagnosticExplainSectionsHe(explainRow);
+  const explainSections = suppressLegacy ? null : buildTopicDiagnosticExplainSectionsHe(explainRow);
 
-  const whyRaw = String(tr?.whyThisRecommendationHe || sig?.whyThisRecommendationHe || "").trim();
+  const whyRaw = suppressLegacy ? "" : String(tr?.whyThisRecommendationHe || sig?.whyThisRecommendationHe || "").trim();
   const meaningFromExplain = explainSections?.meaning
     ? String(explainSections.meaning).replace(/^משמעות:\s*/, "").trim()
     : "";
-  let meaning = truncateHe(
+  let meaning = suppressLegacy ? "" : truncateHe(
     topicStripParentClean(meaningFromExplain || whyRaw),
     224,
   );
@@ -924,16 +935,20 @@ export function TopicRecommendationExplainStrip({ tr, suppressedLines = [] }) {
     meaning = "";
   }
 
-  const canonicalAction = topicStripParentClean(
-    narrative ? narrativeSectionTextHe("recommendation", narrative) || narrative?.textSlots?.action || "" : ""
-  );
+  const canonicalAction = suppressLegacy
+    ? ""
+    : topicStripParentClean(
+        narrative ? narrativeSectionTextHe("recommendation", narrative) || narrative?.textSlots?.action || "" : ""
+      );
   const actionBlockedByContract =
     !explicitContradictoryContractEvidence &&
     (recommendation?.eligible === false || String(narrative?.recommendationIntensityCap || "") === "RI0");
-  let direction = actionBlockedByContract ? "" : truncateHe(canonicalAction, 238);
-  const caut = topicStripParentClean(
-    narrative ? narrativeSectionTextHe("limitations", narrative) || tr?.cautionLineHe || sig?.cautionLineHe || "" : tr?.cautionLineHe || sig?.cautionLineHe || ""
-  );
+  let direction = suppressLegacy || actionBlockedByContract ? "" : truncateHe(canonicalAction, 238);
+  const caut = suppressLegacy
+    ? ""
+    : topicStripParentClean(
+        narrative ? narrativeSectionTextHe("limitations", narrative) || tr?.cautionLineHe || sig?.cautionLineHe || "" : tr?.cautionLineHe || sig?.cautionLineHe || ""
+      );
   if (caut) {
     direction = direction ? `${direction} שימו לב: ${truncateHe(caut, 148)}` : `שימו לב: ${truncateHe(caut, 168)}`;
   }

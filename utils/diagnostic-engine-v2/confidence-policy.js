@@ -21,11 +21,14 @@ export function resolveConfidenceLevel({ events, wrongs, row, recurrenceFull, hi
   if (needsPractice && dom === "stable_mastery") return "contradictory";
 
   if (q >= 40) return "high";
-  if (q >= 12 && w >= 2) return "moderate";
+  if (q >= 12 && w >= 2 && recurrenceFull) return "moderate";
   if (q < 2 && w === 0) return "insufficient_data";
   if (q < 4 && w < 2) return "insufficient_data";
 
   if (hintInvalidates) return "early_signal_only";
+
+  // Overclaim guard: small samples must not reach moderate (q=3/w=2 fix)
+  if (q < 5 && w >= 2) return "early_signal_only";
 
   const earlyOnly = row?.isEarlySignalOnly === true;
   const suff = row?.dataSufficiencyLevel != null ? String(row.dataSufficiencyLevel) : "";
@@ -34,7 +37,8 @@ export function resolveConfidenceLevel({ events, wrongs, row, recurrenceFull, hi
   }
 
   if (!recurrenceFull) {
-    if (w >= 2) return "moderate";
+    if (w >= 2 && q >= 5) return "moderate";
+    if (w >= 2) return "early_signal_only";
     return "low";
   }
 

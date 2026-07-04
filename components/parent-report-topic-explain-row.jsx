@@ -14,6 +14,7 @@ import {
   trendCompactLineHe,
 } from "../utils/parent-report-ui-explain-he";
 import { normalizeParentFacingHe } from "../utils/parent-report-language/index.js";
+import { resolveParentExplainRowCopy } from "../utils/learning-pattern-decision/index.js";
 
 /**
  * @param {string} raw
@@ -61,23 +62,38 @@ export function ParentReportTopicExplainRow({ row }) {
   const q = Number(row?.questions) || 0;
   if (q <= 0) return null;
 
+  const lpdCopy = resolveParentExplainRowCopy(row);
   const sig = row.topicEngineRowSignals;
   const trend = row.trend;
-  const sections = buildTopicDiagnosticExplainSectionsHe(row);
+  const sections = lpdCopy.suppressEngineCopy ? null : buildTopicDiagnosticExplainSectionsHe(row);
   const trendLine = trendCompactLineHe(trend);
-  const trendFacing = trendLine ? parentFacingEngineLine(trendLine) : "";
+  const trendFacing =
+    lpdCopy.showTrend && trendLine ? parentFacingEngineLine(trendLine) : "";
   const confLab = sig?.confidenceBadge != null ? confidenceBadgeLabelHe(sig.confidenceBadge) : "";
   const suffLab = sig?.sufficiencyBadge != null ? sufficiencyBadgeLabelHe(sig.sufficiencyBadge) : "";
-  const risks = activeRiskFlagLabelsHe(sig?.riskFlags, 4);
-  const mp = mistakePatternLineHe(row);
+  const risks = lpdCopy.suppressEngineCopy ? [] : activeRiskFlagLabelsHe(sig?.riskFlags, 4);
+  const mp = lpdCopy.suppressEngineCopy ? "" : mistakePatternLineHe(row);
   const mpFacing = mp ? parentFacingEngineLine(mp) : "";
-  const lm = learningMemoryLineHe(row);
+  const lm = lpdCopy.suppressEngineCopy ? "" : learningMemoryLineHe(row);
   const lmFacing = lm ? parentFacingEngineLine(lm) : "";
-  const fdRaw = topicFoundationDependencyCompactLineHe(row);
+  const fdRaw = lpdCopy.suppressEngineCopy ? "" : topicFoundationDependencyCompactLineHe(row);
   const fdFacing = fdRaw ? parentFacingEngineLine(fdRaw) : "";
-  const caut = sig?.cautionLineHe ? parentFacingEngineLine(String(sig.cautionLineHe)) : "";
-  const dn = sig?.doNowHe ? parentFacingEngineLine(String(sig.doNowHe)) : "";
-  const av = sig?.avoidNowHe ? parentFacingEngineLine(String(sig.avoidNowHe)) : "";
+  const caut = lpdCopy.suppressEngineCopy
+    ? ""
+    : sig?.cautionLineHe
+      ? parentFacingEngineLine(String(sig.cautionLineHe))
+      : "";
+  const dn = lpdCopy.suppressEngineCopy
+    ? ""
+    : sig?.doNowHe
+      ? parentFacingEngineLine(String(sig.doNowHe))
+      : "";
+  const av = lpdCopy.suppressEngineCopy
+    ? ""
+    : sig?.avoidNowHe
+      ? parentFacingEngineLine(String(sig.avoidNowHe))
+      : "";
+  const primaryFinding = lpdCopy.primaryFinding || "";
 
   return (
     <div className="parent-report-topic-explain-row border-b border-white/[0.07] last:border-b-0 py-2 px-1 md:px-2 avoid-break">
@@ -94,6 +110,11 @@ export function ParentReportTopicExplainRow({ row }) {
         </div>
         {trendFacing ? (
           <ExplainSectionLine label="בתקופה האחרונה:" text={trendFacing} />
+        ) : null}
+        {primaryFinding ? (
+          <div data-testid="parent-report-lpd-finding">
+            <ExplainSectionLine label="מה ראינו:" text={primaryFinding} />
+          </div>
         ) : null}
         {sections ? (
           <div
