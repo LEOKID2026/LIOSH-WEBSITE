@@ -14,6 +14,12 @@ import {
   narrativeSectionTextHe,
 } from "./contracts/narrative-contract-v1.js";
 import {
+  findClearWeakTopicInSubject,
+  isClearWeakSubjectVolume,
+  subjectClearWeakClosingHe,
+  subjectClearWeakOpeningHe,
+} from "./learning-pattern-decision/subject-clear-weak-topic.js";
+import {
   gradeContextActionHe,
   gradeContextExplanationHe,
   gradeContextIsStrength,
@@ -125,6 +131,12 @@ function majorRiskAny(sp) {
 
 /** משפט פתיחה אחד */
 function buildSubjectOpeningLineHe(sp, lab) {
+  const clearWeak = findClearWeakTopicInSubject(sp);
+  if (clearWeak) {
+    const topicCore = displayTopicCoreHe(clearWeak.label) || clearWeak.label;
+    return stripGuillemetsHe(subjectClearWeakOpeningHe(lab, topicCore));
+  }
+
   const w0 = sp?.topWeaknesses?.[0];
   const ex0 = sp?.excellence?.[0] || sp?.topStrengths?.[0];
   const imp0 = sp?.improving?.[0];
@@ -160,6 +172,12 @@ function buildSubjectOpeningLineHe(sp, lab) {
   }
 
   if (readiness === "not_ready" && domRc) {
+    if (w0 && isClearWeakSubjectVolume(w0.questions, w0.accuracy)) {
+      const coreW = displayTopicCoreHe(w0.labelHe) || displayTopicPhraseHe(w0.labelHe);
+      return stripGuillemetsHe(
+        `ב${lab} נראית נקודת חיזוק ברורה ב${displayTopicPhraseHe(w0.labelHe) || coreW} — כדאי לחזק את הנושא בתרגול קצר.`,
+      );
+    }
     const templates = [
       `ב${lab} עדיין מוקדם לדעת בבירור מה קורה לפי התרגול — מה שכן בולט: ${domRc}. כדאי להמשיך עם תרגול קצר לפני שינוי מהותי.`,
       `ב${lab} המידע שנאסף בתקופה שנבחרה עדיין חלקי; הכיוון הסביר ביותר כרגע הוא ${domRc} — בלי לנעול תוכנית ארוכה.`,
@@ -339,6 +357,17 @@ function collectTopicNarrativeContracts(sp) {
 }
 
 function applySubjectNarrativeGuardrails(sp, letter) {
+  const clearWeak = findClearWeakTopicInSubject(sp);
+  if (clearWeak) {
+    const lab = sp?.subjectLabelHe || "המקצוע";
+    const topicCore = displayTopicCoreHe(clearWeak.label) || clearWeak.label;
+    return {
+      ...letter,
+      opening: stripGuillemetsHe(subjectClearWeakOpeningHe(lab, topicCore)),
+      closing: stripGuillemetsHe(subjectClearWeakClosingHe(lab, topicCore)),
+    };
+  }
+
   const contracts = collectTopicNarrativeContracts(sp);
   if (!contracts.length) return letter;
   const hasStrictRestraint = contracts.some((c) => String(c.wordingEnvelope) === "WE0" || String(c.wordingEnvelope) === "WE1");

@@ -66,6 +66,9 @@ export function unitsSuggestInstability(units) {
  *   subjectLabelHe?: string,
  *   reportSubjectAccuracy?: number | null,
  *   reportTotalQuestions?: number,
+ *   clearWeakTopicLabelHe?: string,
+ *   clearWeakTopicQuestions?: number,
+ *   clearWeakTopicAccuracy?: number,
  * }} ctx
  */
 export function withholdSummaryCopyHe(mode, ctx) {
@@ -95,6 +98,26 @@ export function withholdSummaryCopyHe(mode, ctx) {
   const globalVolumeSupportsRichCopy = reportTotalQuestions >= 80;
 
   const thinLine = m === "subject" ? GENERIC_CAUTIOUS_SUBJECT_LINE_HE : GENERIC_CAUTIOUS_TOPIC_LINE_HE;
+  const weakLabel = String(ctx.clearWeakTopicLabelHe || "").trim();
+  const weakQ = Math.max(0, Number(ctx.clearWeakTopicQuestions) || 0);
+  const weakAcc = Number(ctx.clearWeakTopicAccuracy);
+
+  if (
+    volume >= 5 &&
+    reportAcc != null &&
+    reportAcc <= 55 &&
+    (weakQ >= 5 || volume >= 5)
+  ) {
+    if (m === "subject" && subjectLabelHe) {
+      if (weakLabel) {
+        return `ב${subjectLabelHe} נראית נקודת חיזוק ברורה בנושא ${weakLabel} — כדאי לחזק אותו בתרגול קצר וממוקד.`;
+      }
+      return `ב${subjectLabelHe} נראית נקודת חיזוק ברורה לפי התרגול — כדאי להתמקד בנושאים שדורשים חיזוק.`;
+    }
+    if (m === "topic" && weakLabel) {
+      return `נראית נקודת חיזוק ברורה בנושא ${weakLabel} — כדאי לחזק אותו בתרגול קצר וממוקד.`;
+    }
+  }
 
   if (volume > 0 && volume < 35) {
     if (globalVolumeSupportsRichCopy) {
@@ -147,6 +170,14 @@ export function withholdSummaryCopyHe(mode, ctx) {
   }
 
   if (volume >= 10) {
+    if (reportAcc != null && reportAcc <= 55) {
+      if (m === "subject" && subjectLabelHe) {
+        if (weakLabel) {
+          return `ב${subjectLabelHe} נראית נקודת חיזוק ברורה בנושא ${weakLabel} — כדאי לחזק אותו בתרגול קצר וממוקד.`;
+        }
+        return `ב${subjectLabelHe} נראית נקודת חיזוק ברורה לפי התרגול — כדאי להתמקד בנושאים שדורשים חיזוק.`;
+      }
+    }
     if (globalVolumeSupportsRichCopy) {
       return m === "subject" ? mediumSubjectAware : C.medium;
     }

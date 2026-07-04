@@ -1729,6 +1729,13 @@ function summarizeV2UnitsForSubject(units, opts = {}) {
       return normalizeParentFacingHe(base);
     }
     if (topWeak) {
+      const weakQ = Number(topWeak?.evidenceTrace?.[0]?.value?.questions) || 0;
+      const weakAcc = Number(topWeak?.evidenceTrace?.[0]?.value?.accuracy) || 0;
+      if (weakQ >= 5 && weakAcc < 70) {
+        return normalizeParentFacingHe(
+          `בנושא ${String(topWeak?.displayName || evidenceExampleTitleFallbackHe())}: כדאי לחזק את הנושא בתרגול קצר — לפי ${weakQ} שאלות ודיוק של ${Math.round(weakAcc)}%.`,
+        );
+      }
       return normalizeParentFacingHe(
         `בנושא ${String(topWeak?.displayName || evidenceExampleTitleFallbackHe())}: ${String(
           parentFacingPatternLabelHe(topWeak) || "עדיף עוד קצת תרגול לפני שקובעים כיוון סופי."

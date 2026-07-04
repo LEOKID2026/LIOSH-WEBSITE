@@ -118,12 +118,14 @@ describe("Phase 4 — diagnostic bucket separation", () => {
     assert.equal(mathSubj.diagnosticAnswers, 5, "diagnosticAnswers should be 5 (only practice)");
     assert.equal(mathSubj.diagnosticCorrect, 2, "diagnosticCorrect should be 2");
     assert.equal(mathSubj.diagnosticAccuracy, 40, "diagnosticAccuracy should be 40%");
-    assert.equal(mathSubj.learningAnswers, 0, "learning-mode answers are excluded from report evidence");
+    assert.equal(mathSubj.answers, 15, "parent totals include learning_guided + practice");
+    assert.equal(mathSubj.learningAnswers, 10, "learning bucket tracks non-diagnostic attempts");
 
     const summary = result.summary;
     assert.equal(summary.diagnosticAnswers, 5, "summary.diagnosticAnswers should be 5");
     assert.equal(summary.diagnosticAccuracy, 40, "summary.diagnosticAccuracy should be 40%");
-    assert.equal(summary.learningAnswers, 0, "summary.learningAnswers should be 0");
+    assert.equal(summary.totalAnswers, 15, "summary parent practice totals");
+    assert.equal(summary.learningAnswers, 10, "summary learning bucket");
   });
 
   test("5 challenge answers at 40% (2/5 correct) → competitiveAccuracy=40%, diagnosticAnswers unaffected", () => {
@@ -178,6 +180,7 @@ describe("Phase 4 — diagnostic bucket separation", () => {
 
     const mathSubj = result.subjects.math;
     assert.equal(mathSubj.diagnosticAnswers, 1, "only 1 diagnostic answer (normal practice)");
+    assert.equal(mathSubj.answers, 1, "step-by-step excluded from parent totals");
     assert.equal(mathSubj.learningAnswers, 0, "step-by-step answers are excluded from report evidence");
     assert.equal(mathSubj.stepByStepCount, 0, "stepByStepCount should be 0 when excluded");
     assert.equal(mathSubj.diagnosticAccuracy, 100, "diagnosticAccuracy should be 100% (normal practice only)");
@@ -237,8 +240,8 @@ describe("Phase 4 — diagnostic bucket separation", () => {
 
     const mathSubj = result.subjects.math;
     assert.equal(mathSubj.diagnosticAnswers, 0, "learning mode → not diagnostic");
-    assert.equal(mathSubj.learningAnswers, 0, "learning mode answers excluded from report evidence");
-    assert.equal(mathSubj.answers, 0, "learning mode answers not counted");
+    assert.equal(mathSubj.learningAnswers, 1, "learning mode bucket");
+    assert.equal(mathSubj.answers, 1, "classified learning_guided counts in parent totals");
   });
 });
 
@@ -451,14 +454,14 @@ describe("Phase 4 — per-topic diagnosticAccuracy", () => {
 
     const algebraTopic = result.subjects.math.topics.algebra;
     assert.ok(algebraTopic, "algebra topic should exist");
-    assert.equal(algebraTopic.answers, 3, "only countable self-practice answers");
+    assert.equal(algebraTopic.answers, 5, "parent totals include learning_guided + diagnostic");
     assert.equal(algebraTopic.diagnosticAnswers, 3, "3 diagnostic answers");
     assert.equal(algebraTopic.diagnosticCorrect, 1, "1 correct diagnostic");
     assert.ok(
       Math.abs(algebraTopic.diagnosticAccuracy - (1/3)*100) < 0.1,
       "topic diagnosticAccuracy ≈ 33.33%"
     );
-    assert.equal(algebraTopic.learningAnswers, 0, "learning answers excluded from report evidence");
+    assert.equal(algebraTopic.learningAnswers, 2, "learning bucket for guided attempts");
   });
 });
 

@@ -2663,6 +2663,12 @@ function buildSubjectProfilesFromV2(baseReport) {
       const sumQ = units.reduce((acc, u) => acc + (Number(u?.evidenceTrace?.[0]?.value?.questions) || 0), 0);
       const reportQ = subjectQuestionCountFromReportSummary(baseReport, sid);
       const totalReportQ = Math.max(0, Number(baseReport?.summary?.totalQuestions) || 0);
+      const w0 = topWeaknesses[0];
+      const w0Label = w0
+        ? String(w0.labelHe || "")
+            .replace(/^[^—]+—\s*/, "")
+            .trim()
+        : "";
       return withholdSummaryCopyHe("subject", {
         subjectReportQuestions: reportQ,
         sumUnitQuestions: sumQ,
@@ -2673,6 +2679,9 @@ function buildSubjectProfilesFromV2(baseReport) {
         subjectLabelHe: SUBJECT_LABEL_HE[sid],
         reportSubjectAccuracy: subjectAccuracyFromReportSummary(baseReport, sid),
         reportTotalQuestions: totalReportQ,
+        clearWeakTopicLabelHe: w0Label,
+        clearWeakTopicQuestions: w0?.questions,
+        clearWeakTopicAccuracy: w0?.accuracy,
       });
     })();
 
