@@ -15,6 +15,7 @@ import {
 } from "../utils/parent-report-ui-explain-he";
 import { normalizeParentFacingHe } from "../utils/parent-report-language/index.js";
 import { resolveParentExplainRowCopy } from "../utils/learning-pattern-decision/index.js";
+import { buildRegularReportTopicExplainCardHe } from "../lib/parent-ui/parent-report-regular-display.js";
 
 /**
  * @param {string} raw
@@ -56,11 +57,39 @@ function ExplainSectionLine({ label, text }) {
 }
 
 /**
- * @param {{ row: Record<string, unknown> }} props
+ * @param {{ row: Record<string, unknown>, compact?: boolean, registeredGradeKey?: string|null }} props
  */
-export function ParentReportTopicExplainRow({ row }) {
+export function ParentReportTopicExplainRow({ row, compact = false, registeredGradeKey = null }) {
   const q = Number(row?.questions) || 0;
   if (q <= 0) return null;
+
+  const parentCard = compact
+    ? buildRegularReportTopicExplainCardHe(row, registeredGradeKey)
+    : null;
+
+  if (compact && parentCard) {
+    return (
+      <div className="parent-report-topic-explain-row border-b border-white/[0.07] last:border-b-0 py-2 px-1 md:px-2 avoid-break">
+        <div className="flex flex-col gap-1 min-w-0">
+          <span className="text-[10px] md:text-xs font-semibold text-white/88">{parentCard.title}</span>
+          <div
+            className="parent-report-topic-diagnostic-explain space-y-1 rounded border border-white/10 bg-black/20 px-1.5 py-1.5"
+            data-testid="parent-report-topic-diagnostic-explain"
+          >
+            {parentCard.whatWeSee ? (
+              <ExplainSectionLine label="מה רואים?" text={parentCard.whatWeSee} />
+            ) : null}
+            {parentCard.whatItMeans ? (
+              <ExplainSectionLine label="מה זה אומר?" text={parentCard.whatItMeans} />
+            ) : null}
+            {parentCard.homeAction ? (
+              <ExplainSectionLine label="מה כדאי לעשות ביחד?" text={parentCard.homeAction} />
+            ) : null}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const lpdCopy = resolveParentExplainRowCopy(row);
   const sig = row.topicEngineRowSignals;
@@ -166,7 +195,10 @@ export function ParentReportTopicExplainRow({ row }) {
   );
 }
 
-export function ParentReportTopicExplainBlock({ rows }) {
+/**
+ * @param {{ rows: Record<string, unknown>[], compact?: boolean, registeredGradeKey?: string|null }} props
+ */
+export function ParentReportTopicExplainBlock({ rows, compact = false, registeredGradeKey = null }) {
   const withQ = (rows || []).filter((r) => Number(r?.questions) > 0);
   if (!withQ.length) return null;
   return (
@@ -176,7 +208,12 @@ export function ParentReportTopicExplainBlock({ rows }) {
       </div>
       <div className="max-h-none overflow-visible">
         {withQ.map((r) => (
-          <ParentReportTopicExplainRow key={r.rowKey} row={r} />
+          <ParentReportTopicExplainRow
+            key={r.rowKey}
+            row={r}
+            compact={compact}
+            registeredGradeKey={registeredGradeKey}
+          />
         ))}
       </div>
     </div>

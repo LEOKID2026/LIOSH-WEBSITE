@@ -370,7 +370,7 @@ export function buildEngineDecisionParentTopicCopyHe(p) {
 
   const diagnosticBody = buildDiagnosticBodyByDecision(copyCtx);
   const homeActionText = buildHomeActionTextHe(copyCtx);
-  const actionHe = homeActionText ? `מה כדאי לעשות בבית: ${homeActionText}` : "";
+  const actionHe = homeActionText ? `מה כדאי לעשות ביחד: ${homeActionText}` : "";
 
   const modeContextHe = competitiveModeContextHe(sig);
   const dataHe = `הילד פתר ${q} שאלות בדיוק של ${acc}%.`;

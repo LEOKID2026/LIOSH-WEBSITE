@@ -340,13 +340,13 @@ function lpdHomeActionLineHe(lpd, topicName) {
   const ft = String(lpd.findingType || "");
 
   if (ts === "mixed" || ft === "mixed_pattern") {
-    return `מה כדאי לעשות בבית: לחזק חלקים שדורשים תשומת לב, ובמקביל להמשיך לחזק את מה שכבר עובד ב${topicName}.`;
+    return `מה כדאי לעשות ביחד: לחזק חלקים שדורשים תשומת לב, ובמקביל להמשיך לחזק את מה שכבר עובד ב${topicName}.`;
   }
   if (ts.startsWith("positive") || ft === "success_pattern") {
-    return `מה כדאי לעשות בבית: להמשיך בשגרת תרגול קצרה ב${topicName} כדי לשמור על מה שעובד.`;
+    return `מה כדאי לעשות ביחד: להמשיך בשגרת תרגול קצרה ב${topicName} כדי לשמור על מה שעובד.`;
   }
   if (needsPractice || hasFocus) {
-    return `מה כדאי לעשות בבית: תרגול קצר וממוקד ב${topicName}, עם בדיקה שהילד מסביר את שלבי הפתרון.`;
+    return `מה כדאי לעשות ביחד: תרגול קצר וממוקד ב${topicName}, עם בדיקה שהילד מסביר את שלבי הפתרון.`;
   }
   return "";
 }
@@ -402,7 +402,7 @@ export function buildLpdSafeTopicExplainSectionsHe(row) {
     const action =
       contract.recommendedAction === "remediate_same_level"
         ? guardParentFacingText(
-            `מה כדאי לעשות בבית: תרגול קצר וממוקד ב${topicName}, עם בדיקה שהילד/ה מסביר/ה את שלבי הפתרון.`,
+            `מה כדאי לעשות ביחד: תרגול קצר וממוקד ב${topicName}, עם בדיקה שהילד/ה מסביר/ה את שלבי הפתרון.`,
           )
         : guardParentFacingText(lpdHomeActionLineHe(lpd, topicName));
 
@@ -432,7 +432,7 @@ export function buildLpdSafeTopicExplainSectionsHe(row) {
       pattern: "",
       meaning: guardParentFacingText("משמעות: עדיין מוקדם לזהות דפוס ברור בנושא."),
       action: guardParentFacingText(
-        "מה כדאי לעשות בבית: אפשר להמשיך לתרגל מעט, בלי מסקנת קושי.",
+        "מה כדאי לעשות ביחד: אפשר להמשיך לתרגל מעט, בלי מסקנת קושי.",
       ),
     };
   }
@@ -452,7 +452,7 @@ export function buildLpdSafeTopicExplainSectionsHe(row) {
     q >= 3 ? guardParentFacingText(lpdHomeActionLineHe(lpd, topicName)) : "";
   if (!action && !isInitial && w > 0 && q >= 3) {
     action = guardParentFacingText(
-      `מה כדאי לעשות בבית: לתרגל כמה שאלות קצרות בנושא ${topicName}, בקצב רגוע, ולבקש מהילד/ה להסביר את שלבי הפתרון.`,
+      `מה כדאי לעשות ביחד: לתרגל כמה שאלות קצרות בנושא ${topicName}, בקצב רגוע, ולבקש מהילד/ה להסביר את שלבי הפתרון.`,
     );
   }
 

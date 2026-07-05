@@ -82,9 +82,9 @@ function renderDifficultyObservedMeaning(s) {
 /** @param {TopicOwnerCopySlots} s */
 function renderDifficultyObservedHomeAction(s) {
   if (hasPattern(s)) {
-    return `מה כדאי לעשות בבית: לתרגל 5–8 שאלות קצרות בנושא ${s.topicName}, להתמקד בדפוס שזוהה (${s.detectedPattern}), ולבקש מהילד להסביר בקול את דרך הפתרון.`;
+    return `מה כדאי לעשות ביחד: לתרגל 5–8 שאלות קצרות בנושא ${s.topicName}, להתמקד בדפוס שזוהה (${s.detectedPattern}), ולבקש מהילד להסביר בקול את דרך הפתרון.`;
   }
-  return `מה כדאי לעשות בבית: לתרגל 5–8 שאלות קצרות בנושא ${s.topicName}, לעצור אחרי כל טעות, ולבקש מהילד להסביר בקול איך הגיע לתשובה.`;
+  return `מה כדאי לעשות ביחד: לתרגל 5–8 שאלות קצרות בנושא ${s.topicName}, לעצור אחרי כל טעות, ולבקש מהילד להסביר בקול איך הגיע לתשובה.`;
 }
 
 /** @param {TopicOwnerCopySlots} s */
@@ -131,7 +131,7 @@ function renderPositiveObservedMeaning(s) {
 
 /** @param {TopicOwnerCopySlots} s */
 function renderPositiveObservedHomeAction(s) {
-  return `מה כדאי לעשות בבית: לפתור כמה שאלות קצרות בנושא ${s.topicName}, בעיקר כדי לשמור על רצף וביטחון.`;
+  return `מה כדאי לעשות ביחד: לפתור כמה שאלות קצרות בנושא ${s.topicName}, בעיקר כדי לשמור על רצף וביטחון.`;
 }
 
 /** @param {TopicOwnerCopySlots} _s */
@@ -166,7 +166,7 @@ function renderInitialTopicDataMeaning(_s) {
 
 /** @param {TopicOwnerCopySlots} s */
 function renderInitialTopicDataHomeAction(s) {
-  return `מה כדאי לעשות בבית: לפתור עוד כמה שאלות קצרות בנושא ${s.topicName}, בלי לחץ, כדי לקבל תמונה ברורה יותר.`;
+  return `מה כדאי לעשות ביחד: לפתור עוד כמה שאלות קצרות בנושא ${s.topicName}, בלי לחץ, כדי לקבל תמונה ברורה יותר.`;
 }
 
 /** @param {TopicOwnerCopySlots} s */
@@ -226,7 +226,7 @@ function renderMixedMeaning(_s) {
 
 /** @param {TopicOwnerCopySlots} s */
 function renderMixedHomeAction(s) {
-  return `מה כדאי לעשות בבית: לבחור 5–8 שאלות בנושא ${s.topicName}, לערבב שאלות קלות ובינוניות, ולבקש מהילד להסביר את הדרך בכל טעות.`;
+  return `מה כדאי לעשות ביחד: לבחור 5–8 שאלות בנושא ${s.topicName}, לערבב שאלות קלות ובינוניות, ולבקש מהילד להסביר את הדרך בכל טעות.`;
 }
 
 /** @param {TopicOwnerCopySlots} s */

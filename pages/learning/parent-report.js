@@ -106,6 +106,15 @@ import {
   resolveParentReportWeeklyHomeActionHe,
   mergeParentReportHomeActionHe,
 } from "../../lib/parent-ui/parent-report-parent-copy.js";
+import {
+  buildRegularReportViewModel,
+  cleanTopicLabelForRegularReportHe,
+  filterTopicMapForRegularReport,
+  formatRegularReportTopicLabelHe,
+  formatRegularReportTopicTimeCellHe,
+  resolveRegisteredGradeKeyFromReport,
+  sumTopicMapMinutes,
+} from "../../lib/parent-ui/parent-report-regular-display.js";
 import ReportDateRangeControl from "../../components/reporting/ReportDateRangeControl.jsx";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
 import { postParentCopilotTurn } from "../../lib/parent-client/copilot-turn-api.js";
@@ -239,6 +248,32 @@ function subjectTopicLabelForParentHe(subjectId, data, fallbackTopic) {
   return normalizeParentFacingHe(resolved || displayName || bucketForLookup || MATH_PARENT_TOPIC_FALLBACK_HE);
 }
 
+function regularReportTopicTableEntries(displayReport, mapKey, regularDisplay) {
+  const map = displayReport?.[mapKey];
+  if (!map || typeof map !== "object") return [];
+  if (regularDisplay) return regularDisplay.mapEntries(map);
+  return Object.entries(map);
+}
+
+function regularReportTopicLabel(subjectId, data, fallbackTopic, regularDisplay) {
+  const base = subjectTopicLabelForParentHe(subjectId, data, fallbackTopic);
+  const cleaned = regularDisplay
+    ? cleanTopicLabelForRegularReportHe(base, data, regularDisplay.registeredGradeKey)
+    : base;
+  return regularDisplay ? regularDisplay.formatTopicLabel(cleaned, data) : cleaned;
+}
+
+function regularReportGradeCell(data) {
+  return formatParentReportGradeHe(data.gradeKey || data.grade || data.contentGradeKey);
+}
+
+function regularReportTopicMapHasRows(displayReport, mapKey, regularDisplay) {
+  const map = displayReport?.[mapKey];
+  if (!map || typeof map !== "object") return false;
+  if (regularDisplay) return regularDisplay.mapEntries(map).length > 0;
+  return Object.keys(map).length > 0;
+}
+
 /** צבעי מקצוע עקביים בגרפים */
 const SUBJECT_CHART_COLORS = {
   math: "#3b82f6",
@@ -250,10 +285,6 @@ const SUBJECT_CHART_COLORS = {
   moledet: "#06b6d4",
   geography: "#14b8a6",
 };
-
-function sumTopicMapMinutes(map) {
-  return Object.values(map || {}).reduce((a, r) => a + (Number(r?.timeMinutes) || 0), 0);
-}
 
 const INSUFFICIENT_TREND_SESSIONS_RE = /אין\s+מספיק\s+מפגש/;
 
@@ -418,7 +449,7 @@ function buildSubjectOverviewRows(report) {
     subjectRow(
       "moledet",
       VISUAL_STRAND_LABEL_HE.moledet,
-      mgVisual.moledetStats.minutes,
+      sumTopicMapMinutes(mgVisual.moledetTopics),
       mgVisual.moledetStats.questions,
       mgVisual.moledetStats.correct,
       mgVisual.moledetStats.accuracy,
@@ -427,7 +458,7 @@ function buildSubjectOverviewRows(report) {
     subjectRow(
       "geography",
       VISUAL_STRAND_LABEL_HE.geography,
-      mgVisual.geographyStats.minutes,
+      sumTopicMapMinutes(mgVisual.geographyTopics),
       mgVisual.geographyStats.questions,
       mgVisual.geographyStats.correct,
       mgVisual.geographyStats.accuracy,
@@ -447,14 +478,20 @@ function chartSubjectIdFromKeyPrefix(keyPrefix) {
   return "math";
 }
 
-function buildTopicRowsForChart(map, keyPrefix) {
+function buildTopicRowsForChart(map, keyPrefix, regularDisplay = null) {
   const subjectId = chartSubjectIdFromKeyPrefix(keyPrefix);
   const rows = Object.entries(map || {}).map(([k, data]) => {
     const bucketKey = String(data?.bucketKey || k).trim();
     const displayName = String(data?.displayName || "").trim();
-    const label =
+    const labelRaw =
       String(data?.narrativeTopicLabelHe || data?.rowIdentityV1?.narrativeTopicLabelHe || "").trim() ||
       parentReportChartLabelFromAllItemKey(`${keyPrefix}_${k}`, data);
+    const cleanedRaw = regularDisplay
+      ? cleanTopicLabelForRegularReportHe(labelRaw, data, regularDisplay.registeredGradeKey)
+      : labelRaw;
+    const label = regularDisplay
+      ? regularDisplay.formatTopicLabel(cleanedRaw, { ...data, label: cleanedRaw })
+      : cleanedRaw;
     const metrics =
       data?.parentVisibleMetrics && typeof data.parentVisibleMetrics === "object"
         ? data.parentVisibleMetrics
@@ -842,12 +879,16 @@ function augmentReportWithVisualMgSplit(report) {
 function collectAllTopicChartLabels(report) {
   if (!report) return [];
   const augmented = augmentReportWithVisualMgSplit(report);
+  const registeredGradeKey = resolveRegisteredGradeKeyFromReport(report);
   const out = [];
   for (const cfg of TOPIC_BAR_SUBJECT_CARDS) {
-    const map = augmented[cfg.mapKey];
+    const map = filterTopicMapForRegularReport(augmented[cfg.mapKey], registeredGradeKey);
     if (!map || typeof map !== "object") continue;
     for (const [k, data] of Object.entries(map)) {
-      const label = parentReportChartLabelFromAllItemKey(`${cfg.prefix}${k}`, data);
+      const labelRaw = parentReportChartLabelFromAllItemKey(`${cfg.prefix}${k}`, data);
+      const label = registeredGradeKey
+        ? formatRegularReportTopicLabelHe(labelRaw, data, registeredGradeKey)
+        : labelRaw;
       if (label) out.push(String(label));
     }
   }
@@ -1027,22 +1068,31 @@ export default function ParentReport() {
     enableParentCopilotOnShort && !isTeacherSource;
 
   const [report, setReport] = useState(null);
-  const mgVisualSplit = useMemo(
-    () => (report ? splitMoledetGeographyReportForDisplay(report) : null),
+  const regularView = useMemo(
+    () => (report ? buildRegularReportViewModel(report) : null),
     [report]
   );
+  const displayReport = regularView?.report ?? report;
+  const regularReportDisplay = regularView?.display ?? null;
+  const mgVisualSplit = useMemo(
+    () => (displayReport ? splitMoledetGeographyReportForDisplay(displayReport) : null),
+    [displayReport]
+  );
   const reportWithVisualMg = useMemo(() => {
-    if (!report) return null;
-    const split = splitMoledetGeographyReportForDisplay(report);
+    if (!displayReport) return null;
+    const split = splitMoledetGeographyReportForDisplay(displayReport);
     return {
-      ...report,
+      ...displayReport,
       _visualMoledetTopics: split.moledetTopics,
       _visualGeographyTopics: split.geographyTopics,
     };
-  }, [report]);
+  }, [displayReport]);
   const dailyActivityVisual = useMemo(
-    () => (report ? enrichDailyActivityWithVisualStrands(report.dailyActivity, report) : []),
-    [report]
+    () =>
+      displayReport
+        ? enrichDailyActivityWithVisualStrands(displayReport.dailyActivity, displayReport)
+        : [],
+    [displayReport]
   );
   const [shortContractTop, setShortContractTop] = useState(null);
   /** Same shape as detailed report — required by ParentCopilotShell / truth packet builders. */
@@ -1514,17 +1564,25 @@ export default function ParentReport() {
   }, [report]);
 
   const masterBarChartGeometry = useMemo(() => {
-    if (!report) return null;
-    return computeMasterBarChartGeometry(report, {
+    if (!displayReport) return null;
+    return computeMasterBarChartGeometry(displayReport, {
       isMobileViewport: isMobile,
       forceDesktopLayout: isPrintLayout,
       chartHostInnerWidthPx,
     });
-  }, [report, isMobile, isPrintLayout, chartHostInnerWidthPx]);
+  }, [displayReport, isMobile, isPrintLayout, chartHostInnerWidthPx]);
 
   const diagnosticsView = useMemo(
     () => (report ? buildParentReportDiagnosticsView(report) : null),
     [report]
+  );
+  const regularReportAiExplanation = useMemo(
+    () =>
+      report && report.parentAiExplanation
+        ? regularReportDisplay?.transformAiExplanation(report.parentAiExplanation) ??
+          report.parentAiExplanation
+        : report?.parentAiExplanation ?? null,
+    [report, regularReportDisplay]
   );
   const hasServerHomeRecommendations = useMemo(() => {
     const recs = report?.parentFacing?.homeRecommendations;
@@ -1567,10 +1625,10 @@ export default function ParentReport() {
   const showWeeklyInDiagnosticOverview =
     Boolean(report?.summary?.diagnosticOverviewHe) && !weeklyHomeActionAlreadyShownElsewhere;
   const suppressChartsForThinEvidenceWindow = useMemo(() => {
-    if (!report?.summary) return false;
-    const q = Number(report.summary.totalQuestions) || 0;
+    if (!displayReport?.summary) return false;
+    const q = Number(displayReport.summary.totalQuestions) || 0;
     return q > 0 && q <= PARENT_REPORT_THIN_VOLUME_QUESTIONS_MAX;
-  }, [report]);
+  }, [displayReport]);
   const diagnosticSourceLabelHe = useMemo(
     () => diagnosticPrimarySourceParentLabelHe(String(report?.diagnosticPrimarySource || "")),
     [report]
@@ -1672,7 +1730,11 @@ export default function ParentReport() {
     );
   }
 
-  if (!report || !report.summary || (report.summary.totalQuestions === 0 && report.summary.totalTimeMinutes === 0)) {
+  if (
+    !report ||
+    !displayReport?.summary ||
+    (displayReport.summary.totalQuestions === 0 && displayReport.summary.totalTimeMinutes === 0)
+  ) {
     return (
       <Layout {...layoutProps}>
         <div
@@ -2175,10 +2237,10 @@ export default function ParentReport() {
                 זמן כולל
               </div>
               <div className="parent-report-print-summary-stat text-lg md:text-2xl font-bold text-blue-400">
-                {report.summary.totalTimeMinutes} דק'
+                {displayReport.summary.totalTimeMinutes} דק'
               </div>
               <div className="parent-report-print-summary-label text-[10px] md:text-xs text-white/60">
-                ({report.summary.totalTimeHours} שעות)
+                ({displayReport.summary.totalTimeHours} שעות)
               </div>
             </div>
             
@@ -2187,10 +2249,10 @@ export default function ParentReport() {
                 שאלות
               </div>
               <div className="parent-report-print-summary-stat text-lg md:text-2xl font-bold text-emerald-400">
-                {report.summary.totalQuestions}
+                {displayReport.summary.totalQuestions}
               </div>
               <div className="parent-report-print-summary-label text-[10px] md:text-xs text-white/60">
-                {report.summary.totalCorrect} נכון
+                {displayReport.summary.totalCorrect} נכון
               </div>
             </div>
             
@@ -2199,7 +2261,7 @@ export default function ParentReport() {
                 דיוק כללי
               </div>
               <div className="parent-report-print-summary-stat text-lg md:text-2xl font-bold text-yellow-400">
-                {report.summary.overallAccuracy}%
+                {displayReport.summary.overallAccuracy}%
               </div>
             </div>
             
@@ -2208,10 +2270,10 @@ export default function ParentReport() {
                 רמה
               </div>
               <div className="parent-report-print-summary-stat text-lg md:text-2xl font-bold text-purple-400">
-                רמה {report.summary.playerLevel}
+                רמה {displayReport.summary.playerLevel}
               </div>
               <div className="parent-report-print-summary-label text-[10px] md:text-xs text-white/60">
-                ⭐ {report.summary.stars} • 🏆 {report.summary.achievements}
+                ⭐ {displayReport.summary.stars} • 🏆 {displayReport.summary.achievements}
               </div>
             </div>
           </div>
@@ -2233,62 +2295,46 @@ export default function ParentReport() {
           {report.summary?.diagnosticOverviewHe ? (
             <div className="mb-3 md:mb-5 avoid-break rounded-lg border border-amber-400/25 bg-amber-950/15 p-3 md:p-4 text-sm text-white/90 space-y-2">
               <p className="font-bold text-amber-100/95 m-0 text-sm md:text-base">מה הכי בולט עכשיו</p>
-              {showWeeklyInDiagnosticOverview ? (
-                <ParentReportWeeklyHomeActionLine
-                  actionHe={weeklyHomeActionHe}
-                  visibleTextFn={diagnosticParentVisibleTextHe}
-                />
-              ) : null}
-              {report.summary.diagnosticOverviewHe.practicedSubjectsSummaryHe ? (
-                <p className="m-0 leading-relaxed text-white/70 text-xs md:text-sm">
-                  {report.summary.diagnosticOverviewHe.practicedSubjectsSummaryHe}
-                </p>
-              ) : null}
-              {!shortContractTop && report.summary.diagnosticOverviewHe.mainFocusAreaLineHe ? (
-                <p className="m-0 leading-relaxed">
-                  <span className="text-white/55">
-                    {report.summary.diagnosticOverviewHe.mainFocusAreaIsHighAccuracy
-                      ? "למעקב: "
-                      : "כדאי לשים לב עכשיו: "}
-                  </span>
-                  {report.summary.diagnosticOverviewHe.mainFocusAreaLineHe}
-                </p>
-              ) : !shortContractTop ? (
-                <p className="m-0 text-white/55 text-xs">
-                  {Number(report.summary?.totalQuestions) > 0 &&
-                  diagnosticsView?.presence?.state === "hasVolumeNoPattern"
-                    ? "יש נתוני תרגול בתקופה שנבחרה, אך עדיין אין מספיק בסיס ברור מהתרגולים כדי לראות לאיזה נושא כדאי להתמקד — כדאי להמשיך בתרגול ולעקוב שוב לאחר מכן."
-                    : "אין עדיין תחום שכדאי לשים לב עכשיו בתקופה שנבחרה."}
-                </p>
-              ) : null}
-              {report.summary.diagnosticOverviewHe.strongestAreaLineHe && !hasRawMetricStrengthsHe ? (
-                <p className="m-0 leading-relaxed">
-                  <span className="text-white/55">תוצאות טובות — כדאי להמשיך לחזק: </span>
-                  {report.summary.diagnosticOverviewHe.strongestAreaLineHe}
-                </p>
-              ) : null}
-              {report.summary.diagnosticOverviewHe.readyForProgressPreviewHe?.length ? (
-                <p className="m-0 leading-relaxed text-emerald-200/90 text-xs md:text-sm">
-                  <span className="text-white/55">אפשר לחזק שלב נוסף: </span>
-                  {report.summary.diagnosticOverviewHe.readyForProgressPreviewHe.join(" · ")}
-                </p>
-              ) : null}
-              {report.summary.diagnosticOverviewHe.requiresAttentionPreviewHe?.length ? (
-                <p className="m-0 leading-relaxed text-white/70 text-xs md:text-sm">
-                  <span className="text-white/55">עוד נושאים למעקב: </span>
-                  {report.summary.diagnosticOverviewHe.requiresAttentionPreviewHe.join(" · ")}
-                </p>
-              ) : null}
+              {regularReportDisplay?.prominentFindingLinesHe?.length ? (
+                <ul className="m-0 pr-4 list-disc text-xs md:text-sm text-white/88 space-y-1.5">
+                  {regularReportDisplay.prominentFindingLinesHe.map((line, i) => (
+                    <li key={`prominent-${i}`} className="leading-relaxed">
+                      {line}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <>
+                  {report.summary.diagnosticOverviewHe.practicedSubjectsSummaryHe ? (
+                    <p className="m-0 leading-relaxed text-white/70 text-xs md:text-sm">
+                      {report.summary.diagnosticOverviewHe.practicedSubjectsSummaryHe}
+                    </p>
+                  ) : null}
+                  {!shortContractTop && report.summary.diagnosticOverviewHe.mainFocusAreaLineHe ? (
+                    <p className="m-0 leading-relaxed">
+                      <span className="text-white/55">כדאי לשים לב: </span>
+                      {report.summary.diagnosticOverviewHe.mainFocusAreaLineHe}
+                    </p>
+                  ) : !shortContractTop ? (
+                    <p className="m-0 text-white/55 text-xs">
+                      {Number(displayReport.summary?.totalQuestions) > 0 &&
+                      diagnosticsView?.presence?.state === "hasVolumeNoPattern"
+                        ? "יש נתוני תרגול בתקופה שנבחרה, אך עדיין אין מספיק בסיס ברור מהתרגולים כדי לראות לאיזה נושא כדאי להתמקד — כדאי להמשיך בתרגול ולעקוב שוב לאחר מכן."
+                        : "אין עדיין תחום שכדאי לשים לב עכשיו בתקופה שנבחרה."}
+                    </p>
+                  ) : null}
+                </>
+              )}
             </div>
           ) : null}
 
-          <ParentReportParentSections report={report} />
+          <ParentReportParentSections report={displayReport} visibleSections={["insights", "teacher"]} />
 
-          {(report.rawMetricStrengthsHe?.length || report.summary?.rawMetricStrengthsHe?.length) ? (
+          {regularReportDisplay?.topicStrengthLinesHe?.length ? (
             <div className="mb-3 md:mb-5 avoid-break rounded-lg border border-emerald-400/25 bg-emerald-950/15 p-3 md:p-4 text-sm text-white/90 space-y-1">
               <p className="font-bold text-emerald-100/95 m-0 text-sm md:text-base">חוזקות שבלטו בתרגול</p>
               <ul className="m-0 pr-4 list-disc text-xs md:text-sm text-white/85 space-y-1">
-                {(report.rawMetricStrengthsHe || report.summary?.rawMetricStrengthsHe || []).map((line, i) => (
+                {regularReportDisplay.topicStrengthLinesHe.map((line, i) => (
                   <li key={`rms-${i}`} className="leading-relaxed">
                     {line}
                   </li>
@@ -2299,7 +2345,7 @@ export default function ParentReport() {
 
           {/* סיכום לפי מקצוע — רק מקצועות עם evidence בתקופה */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3 mb-3 md:mb-6 avoid-break">
-            {filterSubjectOverviewRowsWithEvidence(buildSubjectOverviewRows(report)).map((row) => {
+            {filterSubjectOverviewRowsWithEvidence(buildSubjectOverviewRows(displayReport)).map((row) => {
               const ui = SUBJECT_OVERVIEW_CARD_UI[row.key] || SUBJECT_OVERVIEW_CARD_UI.math;
               const secondary = subjectPracticeSecondaryLineHe(
                 row.questions,
@@ -2327,7 +2373,7 @@ export default function ParentReport() {
           </div>
 
           <ParentReportInsight
-            explanation={report.parentAiExplanation}
+            explanation={regularReportAiExplanation}
             excludeHomeTipTextsHe={serverHomeRecommendationsListHe}
           />
 
@@ -2341,7 +2387,7 @@ export default function ParentReport() {
           ) : null}
 
           {/* טבלת פעולות מתמטיקה */}
-          {Object.keys(report.mathOperations || {}).length > 0 && (
+          {regularReportTopicMapHasRows(displayReport, "mathOperations", regularReportDisplay) && (
             <div className="bg-black/30 border border-white/10 rounded-lg p-2 md:p-4 mb-3 md:mb-6 avoid-break">
               <h2 className="parent-report-math-progress-title text-base md:text-xl font-bold mb-2 md:mb-3 text-center">🧮 התקדמות במתמטיקה</h2>
               {/* Desktop Table */}
@@ -2374,20 +2420,20 @@ export default function ParentReport() {
                     </tr>
                   </thead>
                   <tbody>
-                    {Object.entries(report.mathOperations)
+                    {regularReportTopicTableEntries(displayReport, "mathOperations", regularReportDisplay)
                       .sort(([_, a], [__, b]) => b.questions - a.questions)
                       .map(([op, data]) => (
                         <tr key={op} className="border-b border-white/10">
                           <td className="text-right align-top py-1.5 px-1 min-w-0">
                             <span className="text-right break-words">
-                              {subjectTopicLabelForParentHe("math", data, op)}
+                              {regularReportTopicLabel("math", data, op, regularReportDisplay)}
                             </span>
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
                             {formatParentReportLevelHe(data.levelKey || data.level)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {formatParentReportGradeHe(data.gradeKey || data.grade)}
+                            {regularReportGradeCell(data)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
                             {formatActivitySource(data)}
@@ -2396,7 +2442,7 @@ export default function ParentReport() {
                             {data.lastSessionAt ?? "לא זמין"}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {data.timeMinutes} דק'
+                            {formatRegularReportTopicTimeCellHe(data)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
                             {data.questions}
@@ -2428,17 +2474,17 @@ export default function ParentReport() {
               </div>
               {/* Mobile Cards */}
               <div className="parent-report-mobile-only md:hidden space-y-3">
-                {Object.entries(report.mathOperations)
+                {regularReportTopicTableEntries(displayReport, "mathOperations", regularReportDisplay)
                   .sort(([_, a], [__, b]) => b.questions - a.questions)
                   .map(([op, data]) => (
                     <div key={op} className="bg-black/40 border border-white/20 rounded-lg p-3">
-                      <div className="font-semibold text-sm mb-2 text-blue-400">{subjectTopicLabelForParentHe("math", data, op)}</div>
+                      <div className="font-semibold text-sm mb-2 text-blue-400">{regularReportTopicLabel("math", data, op, regularReportDisplay)}</div>
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <div>
                           <span className="text-white/60">רמה:</span> <span className="text-white/90">{formatParentReportLevelHe(data.levelKey || data.level)}</span>
                         </div>
                         <div>
-                          <span className="text-white/60">כיתה:</span> <span className="text-white/90">{formatParentReportGradeHe(data.gradeKey || data.grade)}</span>
+                          <span className="text-white/60">כיתה:</span> <span className="text-white/90">{regularReportGradeCell(data)}</span>
                         </div>
                         <div>
                           <span className="text-white/60">מקור:</span> <span className="text-white/90">{formatActivitySource(data)}</span>
@@ -2448,7 +2494,7 @@ export default function ParentReport() {
                           <span className="text-white/90">{data.lastSessionAt ?? "לא זמין"}</span>
                         </div>
                         <div>
-                          <span className="text-white/60">זמן:</span> <span className="text-white/90">{data.timeMinutes} דק'</span>
+                          <span className="text-white/60">זמן:</span> <span className="text-white/90">{formatRegularReportTopicTimeCellHe(data)}</span>
                         </div>
                         <div>
                           <span className="text-white/60">שאלות:</span> <span className="text-white/90">{data.questions}</span>
@@ -2479,7 +2525,7 @@ export default function ParentReport() {
           )}
 
           {/* טבלת נושאים גאומטריה */}
-          {Object.keys(report.geometryTopics || {}).length > 0 && (
+          {regularReportTopicMapHasRows(displayReport, "geometryTopics", regularReportDisplay) && (
             <div className="bg-black/30 border border-white/10 rounded-lg p-2 md:p-4 mb-3 md:mb-6 avoid-break">
               <h2 className="text-base md:text-xl font-bold mb-2 md:mb-3 text-center">📐 התקדמות בגאומטריה</h2>
               <div className="parent-report-desktop-only hidden md:block mt-2">
@@ -2511,20 +2557,20 @@ export default function ParentReport() {
                     </tr>
                   </thead>
                   <tbody>
-                    {Object.entries(report.geometryTopics)
+                    {regularReportTopicTableEntries(displayReport, "geometryTopics", regularReportDisplay)
                       .sort(([_, a], [__, b]) => b.questions - a.questions)
                       .map(([topic, data]) => (
                         <tr key={topic} className="border-b border-white/10">
                           <td className="text-right align-top py-1.5 px-1 min-w-0">
                             <span className="text-right break-words">
-                              {subjectTopicLabelForParentHe("geometry", data, topic)}
+                              {regularReportTopicLabel("geometry", data, topic, regularReportDisplay)}
                             </span>
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
                             {formatParentReportLevelHe(data.levelKey || data.level)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {formatParentReportGradeHe(data.gradeKey || data.grade)}
+                            {regularReportGradeCell(data)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
                             {formatActivitySource(data)}
@@ -2533,7 +2579,7 @@ export default function ParentReport() {
                             {data.lastSessionAt ?? "לא זמין"}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {data.timeMinutes} דק'
+                            {formatRegularReportTopicTimeCellHe(data)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
                             {data.questions}
@@ -2565,17 +2611,17 @@ export default function ParentReport() {
               </div>
               {/* Mobile Cards */}
               <div className="parent-report-mobile-only md:hidden space-y-3">
-                {Object.entries(report.geometryTopics)
+                {regularReportTopicTableEntries(displayReport, "geometryTopics", regularReportDisplay)
                   .sort(([_, a], [__, b]) => b.questions - a.questions)
                   .map(([topic, data]) => (
                     <div key={topic} className="bg-black/40 border border-white/20 rounded-lg p-3">
-                      <div className="font-semibold text-sm mb-2 text-emerald-400">{subjectTopicLabelForParentHe("geometry", data, topic)}</div>
+                      <div className="font-semibold text-sm mb-2 text-emerald-400">{regularReportTopicLabel("geometry", data, topic, regularReportDisplay)}</div>
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <div>
                           <span className="text-white/60">רמה:</span> <span className="text-white/90">{formatParentReportLevelHe(data.levelKey || data.level)}</span>
                         </div>
                         <div>
-                          <span className="text-white/60">כיתה:</span> <span className="text-white/90">{formatParentReportGradeHe(data.gradeKey || data.grade)}</span>
+                          <span className="text-white/60">כיתה:</span> <span className="text-white/90">{regularReportGradeCell(data)}</span>
                         </div>
                         <div>
                           <span className="text-white/60">מקור:</span> <span className="text-white/90">{formatActivitySource(data)}</span>
@@ -2585,7 +2631,7 @@ export default function ParentReport() {
                           <span className="text-white/90">{data.lastSessionAt ?? "לא זמין"}</span>
                         </div>
                         <div>
-                          <span className="text-white/60">זמן:</span> <span className="text-white/90">{data.timeMinutes} דק'</span>
+                          <span className="text-white/60">זמן:</span> <span className="text-white/90">{formatRegularReportTopicTimeCellHe(data)}</span>
                         </div>
                         <div>
                           <span className="text-white/60">שאלות:</span> <span className="text-white/90">{data.questions}</span>
@@ -2616,7 +2662,7 @@ export default function ParentReport() {
           )}
           
           {/* טבלת נושאים אנגלית */}
-          {Object.keys(report.englishTopics || {}).length > 0 && (
+          {regularReportTopicMapHasRows(displayReport, "englishTopics", regularReportDisplay) && (
             <div className="bg-black/30 border border-white/10 rounded-lg p-2 md:p-4 mb-3 md:mb-6 avoid-break">
               <h2 className="text-base md:text-xl font-bold mb-2 md:mb-3 text-center">📘 התקדמות באנגלית</h2>
               {/* Desktop Table */}
@@ -2649,20 +2695,20 @@ export default function ParentReport() {
                     </tr>
                   </thead>
                   <tbody>
-                    {Object.entries(report.englishTopics)
+                    {regularReportTopicTableEntries(displayReport, "englishTopics", regularReportDisplay)
                       .sort(([_, a], [__, b]) => b.questions - a.questions)
                       .map(([topic, data]) => (
                         <tr key={topic} className="border-b border-white/10">
                           <td className="text-right align-top py-1.5 px-1 min-w-0">
                             <span className="text-right break-words">
-                              {subjectTopicLabelForParentHe("english", data, topic)}
+                              {regularReportTopicLabel("english", data, topic, regularReportDisplay)}
                             </span>
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
                             {formatParentReportLevelHe(data.levelKey || data.level)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {formatParentReportGradeHe(data.gradeKey || data.grade)}
+                            {regularReportGradeCell(data)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
                             {formatActivitySource(data)}
@@ -2671,7 +2717,7 @@ export default function ParentReport() {
                             {data.lastSessionAt ?? "לא זמין"}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {data.timeMinutes} דק'
+                            {formatRegularReportTopicTimeCellHe(data)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
                             {data.questions}
@@ -2703,17 +2749,17 @@ export default function ParentReport() {
               </div>
               {/* Mobile Cards */}
               <div className="parent-report-mobile-only md:hidden space-y-3">
-                {Object.entries(report.englishTopics)
+                {regularReportTopicTableEntries(displayReport, "englishTopics", regularReportDisplay)
                   .sort(([_, a], [__, b]) => b.questions - a.questions)
                   .map(([topic, data]) => (
                     <div key={topic} className="bg-black/40 border border-white/20 rounded-lg p-3">
-                      <div className="font-semibold text-sm mb-2 text-purple-400">{subjectTopicLabelForParentHe("english", data, topic)}</div>
+                      <div className="font-semibold text-sm mb-2 text-purple-400">{regularReportTopicLabel("english", data, topic, regularReportDisplay)}</div>
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <div>
                           <span className="text-white/60">רמה:</span> <span className="text-white/90">{formatParentReportLevelHe(data.levelKey || data.level)}</span>
                         </div>
                         <div>
-                          <span className="text-white/60">כיתה:</span> <span className="text-white/90">{formatParentReportGradeHe(data.gradeKey || data.grade)}</span>
+                          <span className="text-white/60">כיתה:</span> <span className="text-white/90">{regularReportGradeCell(data)}</span>
                         </div>
                         <div>
                           <span className="text-white/60">מקור:</span> <span className="text-white/90">{formatActivitySource(data)}</span>
@@ -2723,7 +2769,7 @@ export default function ParentReport() {
                           <span className="text-white/90">{data.lastSessionAt ?? "לא זמין"}</span>
                         </div>
                         <div>
-                          <span className="text-white/60">זמן:</span> <span className="text-white/90">{data.timeMinutes} דק'</span>
+                          <span className="text-white/60">זמן:</span> <span className="text-white/90">{formatRegularReportTopicTimeCellHe(data)}</span>
                         </div>
                         <div>
                           <span className="text-white/60">שאלות:</span> <span className="text-white/90">{data.questions}</span>
@@ -2754,7 +2800,7 @@ export default function ParentReport() {
           )}
 
           {/* טבלת נושאים מדעים */}
-          {Object.keys(report.scienceTopics || {}).length > 0 && (
+          {regularReportTopicMapHasRows(displayReport, "scienceTopics", regularReportDisplay) && (
             <div className="bg-black/30 border border-white/10 rounded-lg p-2 md:p-4 mb-3 md:mb-6 avoid-break">
               <h2 className="text-base md:text-xl font-bold mb-2 md:mb-3 text-center">🔬 התקדמות במדעים</h2>
               {/* Desktop Table */}
@@ -2787,20 +2833,20 @@ export default function ParentReport() {
                     </tr>
                   </thead>
                   <tbody>
-                    {Object.entries(report.scienceTopics)
+                    {regularReportTopicTableEntries(displayReport, "scienceTopics", regularReportDisplay)
                       .sort(([_, a], [__, b]) => b.questions - a.questions)
                       .map(([topic, data]) => (
                         <tr key={topic} className="border-b border-white/10">
                           <td className="text-right align-top py-1.5 px-1 min-w-0">
                             <span className="text-right break-words">
-                              {subjectTopicLabelForParentHe("science", data, topic)}
+                              {regularReportTopicLabel("science", data, topic, regularReportDisplay)}
                             </span>
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
                             {formatParentReportLevelHe(data.levelKey || data.level)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {formatParentReportGradeHe(data.gradeKey || data.grade)}
+                            {regularReportGradeCell(data)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
                             {formatActivitySource(data)}
@@ -2809,7 +2855,7 @@ export default function ParentReport() {
                             {data.lastSessionAt ?? "לא זמין"}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {data.timeMinutes} דק'
+                            {formatRegularReportTopicTimeCellHe(data)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
                             {data.questions}
@@ -2841,17 +2887,17 @@ export default function ParentReport() {
               </div>
               {/* Mobile Cards */}
               <div className="parent-report-mobile-only md:hidden space-y-3">
-                {Object.entries(report.scienceTopics)
+                {regularReportTopicTableEntries(displayReport, "scienceTopics", regularReportDisplay)
                   .sort(([_, a], [__, b]) => b.questions - a.questions)
                   .map(([topic, data]) => (
                     <div key={topic} className="bg-black/40 border border-white/20 rounded-lg p-3">
-                      <div className="font-semibold text-sm mb-2 text-green-400">{subjectTopicLabelForParentHe("science", data, topic)}</div>
+                      <div className="font-semibold text-sm mb-2 text-green-400">{regularReportTopicLabel("science", data, topic, regularReportDisplay)}</div>
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <div>
                           <span className="text-white/60">רמה:</span> <span className="text-white/90">{formatParentReportLevelHe(data.levelKey || data.level)}</span>
                         </div>
                         <div>
-                          <span className="text-white/60">כיתה:</span> <span className="text-white/90">{formatParentReportGradeHe(data.gradeKey || data.grade)}</span>
+                          <span className="text-white/60">כיתה:</span> <span className="text-white/90">{regularReportGradeCell(data)}</span>
                         </div>
                         <div>
                           <span className="text-white/60">מקור:</span> <span className="text-white/90">{formatActivitySource(data)}</span>
@@ -2861,7 +2907,7 @@ export default function ParentReport() {
                           <span className="text-white/90">{data.lastSessionAt ?? "לא זמין"}</span>
                         </div>
                         <div>
-                          <span className="text-white/60">זמן:</span> <span className="text-white/90">{data.timeMinutes} דק'</span>
+                          <span className="text-white/60">זמן:</span> <span className="text-white/90">{formatRegularReportTopicTimeCellHe(data)}</span>
                         </div>
                         <div>
                           <span className="text-white/60">שאלות:</span> <span className="text-white/90">{data.questions}</span>
@@ -2892,7 +2938,7 @@ export default function ParentReport() {
           )}
 
           {/* טבלת נושאים עברית */}
-          {Object.keys(report.hebrewTopics || {}).length > 0 && (
+          {regularReportTopicMapHasRows(displayReport, "hebrewTopics", regularReportDisplay) && (
             <div className="bg-black/30 border border-white/10 rounded-lg p-2 md:p-4 mb-3 md:mb-6 avoid-break">
               <h2 className="text-base md:text-xl font-bold mb-2 md:mb-3 text-center">📚 התקדמות בעברית</h2>
               {/* Desktop Table */}
@@ -2925,20 +2971,20 @@ export default function ParentReport() {
                     </tr>
                   </thead>
                   <tbody>
-                    {Object.entries(report.hebrewTopics)
+                    {regularReportTopicTableEntries(displayReport, "hebrewTopics", regularReportDisplay)
                       .sort(([_, a], [__, b]) => b.questions - a.questions)
                       .map(([topic, data]) => (
                         <tr key={topic} className="border-b border-white/10">
                           <td className="text-right align-top py-1.5 px-1 min-w-0">
                             <span className="text-right break-words">
-                              {subjectTopicLabelForParentHe("hebrew", data, topic)}
+                              {regularReportTopicLabel("hebrew", data, topic, regularReportDisplay)}
                             </span>
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
                             {formatParentReportLevelHe(data.levelKey || data.level)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {formatParentReportGradeHe(data.gradeKey || data.grade)}
+                            {regularReportGradeCell(data)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
                             {formatActivitySource(data)}
@@ -2947,7 +2993,7 @@ export default function ParentReport() {
                             {data.lastSessionAt ?? "לא זמין"}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {data.timeMinutes} דק'
+                            {formatRegularReportTopicTimeCellHe(data)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
                             {data.questions}
@@ -2979,17 +3025,17 @@ export default function ParentReport() {
               </div>
               {/* Mobile Cards */}
               <div className="parent-report-mobile-only md:hidden space-y-3">
-                {Object.entries(report.hebrewTopics)
+                {regularReportTopicTableEntries(displayReport, "hebrewTopics", regularReportDisplay)
                   .sort(([_, a], [__, b]) => b.questions - a.questions)
                   .map(([topic, data]) => (
                     <div key={topic} className="bg-black/40 border border-white/20 rounded-lg p-3">
-                      <div className="font-semibold text-sm mb-2 text-orange-400">{subjectTopicLabelForParentHe("hebrew", data, topic)}</div>
+                      <div className="font-semibold text-sm mb-2 text-orange-400">{regularReportTopicLabel("hebrew", data, topic, regularReportDisplay)}</div>
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <div>
                           <span className="text-white/60">רמה:</span> <span className="text-white/90">{formatParentReportLevelHe(data.levelKey || data.level)}</span>
                         </div>
                         <div>
-                          <span className="text-white/60">כיתה:</span> <span className="text-white/90">{formatParentReportGradeHe(data.gradeKey || data.grade)}</span>
+                          <span className="text-white/60">כיתה:</span> <span className="text-white/90">{regularReportGradeCell(data)}</span>
                         </div>
                         <div>
                           <span className="text-white/60">מקור:</span> <span className="text-white/90">{formatActivitySource(data)}</span>
@@ -2999,7 +3045,7 @@ export default function ParentReport() {
                           <span className="text-white/90">{data.lastSessionAt ?? "לא זמין"}</span>
                         </div>
                         <div>
-                          <span className="text-white/60">זמן:</span> <span className="text-white/90">{data.timeMinutes} דק'</span>
+                          <span className="text-white/60">זמן:</span> <span className="text-white/90">{formatRegularReportTopicTimeCellHe(data)}</span>
                         </div>
                         <div>
                           <span className="text-white/60">שאלות:</span> <span className="text-white/90">{data.questions}</span>
@@ -3030,7 +3076,7 @@ export default function ParentReport() {
           )}
 
           {/* טבלת נושאים מולדת */}
-          {Object.keys(mgVisualSplit?.moledetTopics || {}).length > 0 && (
+          {regularReportTopicMapHasRows({ moledetTopics: mgVisualSplit?.moledetTopics }, "moledetTopics", regularReportDisplay) && (
             <div className="bg-black/30 border border-white/10 rounded-lg p-2 md:p-4 mb-3 md:mb-6 avoid-break">
               <h2 className="text-base md:text-xl font-bold mb-2 md:mb-3 text-center">🏠 התקדמות ב{VISUAL_STRAND_LABEL_HE.moledet}</h2>
               {/* Desktop Table */}
@@ -3063,20 +3109,29 @@ export default function ParentReport() {
                     </tr>
                   </thead>
                   <tbody>
-                    {Object.entries((mgVisualSplit?.moledetTopics || {}))
+                    {regularReportTopicTableEntries(
+                      { moledetTopics: mgVisualSplit?.moledetTopics },
+                      "moledetTopics",
+                      regularReportDisplay,
+                    )
                       .sort(([_, a], [__, b]) => b.questions - a.questions)
                       .map(([topic, data]) => (
                         <tr key={topic} className="border-b border-white/10">
                           <td className="text-right align-top py-1.5 px-1 min-w-0">
                             <span className="text-right break-words">
-                              {subjectTopicLabelForParentHe(MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID, data, topic)}
+                              {regularReportTopicLabel(
+                                MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID,
+                                data,
+                                topic,
+                                regularReportDisplay,
+                              )}
                             </span>
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
                             {formatParentReportLevelHe(data.levelKey || data.level)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {formatParentReportGradeHe(data.gradeKey || data.grade)}
+                            {regularReportGradeCell(data)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
                             {formatActivitySource(data)}
@@ -3085,7 +3140,7 @@ export default function ParentReport() {
                             {data.lastSessionAt ?? "לא זמין"}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {data.timeMinutes} דק'
+                            {formatRegularReportTopicTimeCellHe(data)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
                             {data.questions}
@@ -3117,7 +3172,11 @@ export default function ParentReport() {
               </div>
               {/* Mobile Cards */}
               <div className="parent-report-mobile-only md:hidden space-y-3">
-                {Object.entries((mgVisualSplit?.moledetTopics || {}))
+                {regularReportTopicTableEntries(
+                      { moledetTopics: mgVisualSplit?.moledetTopics },
+                      "moledetTopics",
+                      regularReportDisplay,
+                    )
                   .sort(([_, a], [__, b]) => b.questions - a.questions)
                   .map(([topic, data]) => (
                     <div key={topic} className="bg-black/40 border border-white/20 rounded-lg p-3">
@@ -3127,7 +3186,7 @@ export default function ParentReport() {
                           <span className="text-white/60">רמה:</span> <span className="text-white/90">{formatParentReportLevelHe(data.levelKey || data.level)}</span>
                         </div>
                         <div>
-                          <span className="text-white/60">כיתה:</span> <span className="text-white/90">{formatParentReportGradeHe(data.gradeKey || data.grade)}</span>
+                          <span className="text-white/60">כיתה:</span> <span className="text-white/90">{regularReportGradeCell(data)}</span>
                         </div>
                         <div>
                           <span className="text-white/60">מקור:</span> <span className="text-white/90">{formatActivitySource(data)}</span>
@@ -3137,7 +3196,7 @@ export default function ParentReport() {
                           <span className="text-white/90">{data.lastSessionAt ?? "לא זמין"}</span>
                         </div>
                         <div>
-                          <span className="text-white/60">זמן:</span> <span className="text-white/90">{data.timeMinutes} דק'</span>
+                          <span className="text-white/60">זמן:</span> <span className="text-white/90">{formatRegularReportTopicTimeCellHe(data)}</span>
                         </div>
                         <div>
                           <span className="text-white/60">שאלות:</span> <span className="text-white/90">{data.questions}</span>
@@ -3168,7 +3227,7 @@ export default function ParentReport() {
           )}
 
           {/* טבלת נושאים גאוגרפיה */}
-          {Object.keys(mgVisualSplit?.geographyTopics || {}).length > 0 && (
+          {regularReportTopicMapHasRows({ geographyTopics: mgVisualSplit?.geographyTopics }, "geographyTopics", regularReportDisplay) && (
             <div className="bg-black/30 border border-white/10 rounded-lg p-2 md:p-4 mb-3 md:mb-6 avoid-break">
               <h2 className="text-base md:text-xl font-bold mb-2 md:mb-3 text-center">🗺️ התקדמות ב{VISUAL_STRAND_LABEL_HE.geography}</h2>
               <div className="parent-report-desktop-only hidden md:block mt-2">
@@ -3200,20 +3259,29 @@ export default function ParentReport() {
                     </tr>
                   </thead>
                   <tbody>
-                    {Object.entries(mgVisualSplit?.geographyTopics || {})
+                    {regularReportTopicTableEntries(
+                      { geographyTopics: mgVisualSplit?.geographyTopics },
+                      "geographyTopics",
+                      regularReportDisplay,
+                    )
                       .sort(([_, a], [__, b]) => b.questions - a.questions)
                       .map(([topic, data]) => (
                         <tr key={topic} className="border-b border-white/10">
                           <td className="text-right align-top py-1.5 px-1 min-w-0">
                             <span className="text-right break-words">
-                              {subjectTopicLabelForParentHe(MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID, data, topic)}
+                              {regularReportTopicLabel(
+                                MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID,
+                                data,
+                                topic,
+                                regularReportDisplay,
+                              )}
                             </span>
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
                             {formatParentReportLevelHe(data.levelKey || data.level)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {formatParentReportGradeHe(data.gradeKey || data.grade)}
+                            {regularReportGradeCell(data)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
                             {formatActivitySource(data)}
@@ -3222,7 +3290,7 @@ export default function ParentReport() {
                             {data.lastSessionAt ?? "לא זמין"}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {data.timeMinutes} דק'
+                            {formatRegularReportTopicTimeCellHe(data)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
                             {data.questions}
@@ -3253,7 +3321,11 @@ export default function ParentReport() {
                 </table>
               </div>
               <div className="parent-report-mobile-only md:hidden space-y-3">
-                {Object.entries(mgVisualSplit?.geographyTopics || {})
+                {regularReportTopicTableEntries(
+                      { geographyTopics: mgVisualSplit?.geographyTopics },
+                      "geographyTopics",
+                      regularReportDisplay,
+                    )
                   .sort(([_, a], [__, b]) => b.questions - a.questions)
                   .map(([topic, data]) => (
                     <div key={topic} className="bg-black/40 border border-white/20 rounded-lg p-3">
@@ -3263,7 +3335,7 @@ export default function ParentReport() {
                           <span className="text-white/60">רמה:</span> <span className="text-white/90">{formatParentReportLevelHe(data.levelKey || data.level)}</span>
                         </div>
                         <div>
-                          <span className="text-white/60">כיתה:</span> <span className="text-white/90">{formatParentReportGradeHe(data.gradeKey || data.grade)}</span>
+                          <span className="text-white/60">כיתה:</span> <span className="text-white/90">{regularReportGradeCell(data)}</span>
                         </div>
                         <div>
                           <span className="text-white/60">מקור:</span> <span className="text-white/90">{formatActivitySource(data)}</span>
@@ -3273,7 +3345,7 @@ export default function ParentReport() {
                           <span className="text-white/90">{data.lastSessionAt ?? "לא זמין"}</span>
                         </div>
                         <div>
-                          <span className="text-white/60">זמן:</span> <span className="text-white/90">{data.timeMinutes} דק'</span>
+                          <span className="text-white/60">זמן:</span> <span className="text-white/90">{formatRegularReportTopicTimeCellHe(data)}</span>
                         </div>
                         <div>
                           <span className="text-white/60">שאלות:</span> <span className="text-white/90">{data.questions}</span>
@@ -3362,7 +3434,7 @@ export default function ParentReport() {
                     diagnosticsView.rows.length === 0)) && (
                   <p className="parent-report-print-muted-text text-center text-sm md:text-base text-white/75 px-2 py-3">
                     {diagnosticsView.presence?.recommendationsExplainerHe ||
-                      (Number(report.summary?.totalQuestions) > 0
+                      (Number(displayReport.summary?.totalQuestions) > 0
                         ? PARENT_THIN_DATA_EXPLAINER_HE
                         : "עדיין אין מספיק נתונים לתמונה ברורה מהתרגולים")}
                   </p>
@@ -4055,7 +4127,7 @@ export default function ParentReport() {
 
             {masterBarChartGeometry &&
               (() => {
-                const overviewRows = filterSubjectOverviewRowsWithEvidence(buildSubjectOverviewRows(report));
+                const overviewRows = filterSubjectOverviewRowsWithEvidence(buildSubjectOverviewRows(displayReport));
                 const maxMin = Math.max(
                   1,
                   ...overviewRows.map((r) => r.minutes || 0)
@@ -4190,9 +4262,13 @@ export default function ParentReport() {
 
             {masterBarChartGeometry &&
               TOPIC_BAR_SUBJECT_CARDS.map((cfg) => {
-                const map = (reportWithVisualMg || report)[cfg.mapKey];
+                const rawMap = (reportWithVisualMg || displayReport)[cfg.mapKey];
+                if (!rawMap || Object.keys(rawMap).length === 0) return null;
+                const map = regularReportDisplay
+                  ? regularReportDisplay.filterMap(rawMap)
+                  : rawMap;
                 if (!map || Object.keys(map).length === 0) return null;
-                const rows = buildTopicRowsForChart(map, cfg.prefix);
+                const rows = buildTopicRowsForChart(map, cfg.prefix, regularReportDisplay);
                 const M = masterBarChartGeometry;
                 const innerH = Math.max(
                   M.chartBodyMinHeightPx,
@@ -4305,10 +4381,12 @@ export default function ParentReport() {
                                 if (q <= 0) {
                                   return ["לא תורגל באותו נושא בתקופה שנבחרה", ""];
                                 }
-                                return [
-                                  `דיוק ${p.accuracy}% · ${q} שאלות · ${p.timeMinutes} דק׳`,
-                                  "",
-                                ];
+                                const timeLabel = formatRegularReportTopicTimeCellHe({
+                                  questions: q,
+                                  timeMinutes: p.timeMinutes,
+                                });
+                                const timePart = timeLabel === "—" ? "" : ` · ${timeLabel}`;
+                                return [`דיוק ${p.accuracy}% · ${q} שאלות${timePart}`, ""];
                               }}
                             />
                             <Bar
@@ -4325,7 +4403,11 @@ export default function ParentReport() {
                         </ResponsiveContainer>
                       </div>
                     </div>
-                    <ParentReportTopicExplainBlock rows={rows} />
+                    <ParentReportTopicExplainBlock
+                      rows={rows}
+                      compact
+                      registeredGradeKey={regularReportDisplay?.registeredGradeKey}
+                    />
                   </div>
                 );
               })}
