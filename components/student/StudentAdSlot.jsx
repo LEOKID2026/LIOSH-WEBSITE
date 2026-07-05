@@ -1,11 +1,15 @@
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
-import {
-  getStudentAdSlotClasses,
-  STUDENT_AD_LABEL,
-} from "../../lib/student-ui/student-ad-slot.client.js";
+import { resolveStudentAdRenderMode } from "../../lib/student-ui/student-ad-config.client.js";
+import { sanitizeStudentAdProps } from "../../lib/student-ui/student-ad-props.client.js";
+import StudentAdPlaceholder from "./StudentAdPlaceholder.jsx";
+import StudentExternalAdHost from "./StudentExternalAdHost.jsx";
 
 /**
- * Reserved ad placement — small centered placeholder box only.
+ * Reserved ad placement wrapper for child-facing pages.
+ *
+ * Accepts only layout/theme/slot identifiers — never student or learning data.
+ * Renders a placeholder in development; external host is wired but inactive until
+ * a child-safe provider is enabled in student-ad-config.
  *
  * @param {{
  *   variant?: "inline"|"layout"|"dvh"|"immersive-fixed",
@@ -17,15 +21,18 @@ import {
  *   dataAdSlot?: string,
  * }} props
  */
-export default function StudentAdSlot({
-  variant = "inline",
-  theme: themeProp,
-  slotClassName,
-  labelClassName,
-  wrapClassName,
-  className = "",
-  dataAdSlot = "student-ad-reserved",
-}) {
+export default function StudentAdSlot(rawProps) {
+  const safeProps = sanitizeStudentAdProps(rawProps);
+  const {
+    variant = "inline",
+    theme: themeProp,
+    slotClassName,
+    labelClassName,
+    wrapClassName,
+    className = "",
+    dataAdSlot = "student-ad-reserved",
+  } = safeProps;
+
   let ctxTheme = null;
   const ctx = useStudentTheme();
   ctxTheme = ctx?.theme;
@@ -34,22 +41,25 @@ export default function StudentAdSlot({
     themeProp ||
     (variant === "dvh" ? "arcade" : ctxTheme === "bright" ? "bright" : "classic");
 
-  const resolvedVariant = variant === "immersive-fixed" ? "inline" : variant;
-  const styles = getStudentAdSlotClasses(resolvedVariant, palette);
-  const wrapCls = [styles.wrap, wrapClassName, className].filter(Boolean).join(" ");
-  const slotCls = [styles.slot, slotClassName].filter(Boolean).join(" ");
-  const labelCls = [styles.label, labelClassName].filter(Boolean).join(" ");
+  const shared = {
+    variant,
+    theme: palette,
+    wrapClassName,
+    className,
+    dataAdSlot,
+  };
+
+  const mode = resolveStudentAdRenderMode();
+
+  if (mode === "external") {
+    return <StudentExternalAdHost {...shared} />;
+  }
 
   return (
-    <aside
-      role="complementary"
-      aria-label={STUDENT_AD_LABEL}
-      data-ad-slot={dataAdSlot}
-      className={wrapCls}
-    >
-      <div className={slotCls}>
-        <span className={labelCls}>{STUDENT_AD_LABEL}</span>
-      </div>
-    </aside>
+    <StudentAdPlaceholder
+      {...shared}
+      slotClassName={slotClassName}
+      labelClassName={labelClassName}
+    />
   );
 }
