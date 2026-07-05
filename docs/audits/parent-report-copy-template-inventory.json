@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-04T23:03:30.561Z",
+  "generatedAt": "2026-07-05T08:00:22.191Z",
   "purpose": "copy_template_inventory",
   "constraints": [
     "no_hebrew_copy_changes",
@@ -38,11 +38,11 @@
   ],
   "knownLegacyGaps": [],
   "totals": {
-    "totalEntries": 141,
+    "totalEntries": 143,
     "entriesWithoutTemplateId": 0,
     "entriesWithoutSource": 0,
     "legacySourceCount": 0,
-    "contractSourceCount": 141
+    "contractSourceCount": 143
   },
   "students": [
     {
@@ -147,7 +147,7 @@
             "severity": "none",
             "evidenceStrength": "supported",
             "recommendedAction": "maintain_and_strengthen",
-            "parentSafeFinding": "בנושא חיבור נראית הצלחה טובה בשאלות שנפתרו. מבוסס על 8 שאלות שנפתרו בנושא.",
+            "parentSafeFinding": "בנושא חיבור נראית הצלחה טובה. נפתרו 8 שאלות, מתוכן 6 נכונות, והדיוק עומד על 75%.",
             "templateId": "positive_observed"
           }
         ],
@@ -224,7 +224,7 @@
             ],
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "בנושא שברים מופיע דפוס חוזר של טעויות (השוואה לפי מונה בלבד). כדאי לחזק את הנושא. מבוסס על 206 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "במתמטיקה בולטים כמה נושאים שדורשים חיזוק. הנושא הראשון הוא שברים: נפתרו 206 שאלות, הדיוק עומד על 52%, וזוהה דפוס שחוזר בטעויות: השוואה לפי מונה בלבד. לכן כדאי להתחיל ממנו.",
           "renderFunction": "utils/parent-report-v2.js → summarizeV2UnitsForSubject → resolveSubjectSummaryTextFromEngineContract",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -248,7 +248,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "מתמטיקה — «חיבור - כיתה ה׳»: בנושא חיבור נראית הצלחה טובה בשאלות שנפתרו. מבוסס על 8 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "מתמטיקה — «חיבור - כיתה ה׳»: בנושא חיבור - כיתה ה׳ נראית הצלחה טובה. נפתרו 8 שאלות, מתוכן 6 נכונות, והדיוק עומד על 75%.",
           "renderFunction": "utils/parent-report-engine-insights-he.js → buildTopicEngineInsightLineHe → buildLpdSafeTopicInsightLineHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -275,7 +275,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "מתמטיקה — «חיסור - כיתה ה׳»: בנושא חיסור מופיע דפוס חוזר של טעויות (כיוון הפוך / הוספה במקום חיסור). כדאי לחזק את הנושא. מבוסס על 12 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "מתמטיקה — «חיסור - כיתה ה׳»: בנושא חיסור - כיתה ה׳ יש צורך בחיזוק ממוקד. נפתרו 12 שאלות, הדיוק עומד על 67%, וזוהה דפוס שחוזר בטעויות: כיוון הפוך / הוספה במקום חיסור.",
           "renderFunction": "utils/parent-report-engine-insights-he.js → buildTopicEngineInsightLineHe → buildLpdSafeTopicInsightLineHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -302,7 +302,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "מתמטיקה — «כפל - כיתה ה׳»: בנושא כפל מופיע דפוס חוזר של טעויות (אותם זוגות שגויים). כדאי לחזק את הנושא. מבוסס על 32 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "מתמטיקה — «כפל - כיתה ה׳»: בנושא כפל - כיתה ה׳ יש צורך בחיזוק ממוקד. נפתרו 32 שאלות, הדיוק עומד על 69%, וזוהה דפוס שחוזר בטעויות: אותם זוגות שגויים.",
           "renderFunction": "utils/parent-report-engine-insights-he.js → buildTopicEngineInsightLineHe → buildLpdSafeTopicInsightLineHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -326,7 +326,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "emerging"
           },
-          "currentRenderedText": "מתמטיקה — «חילוק - כיתה ה׳»: בנושא חילוק נראית הצלחה טובה בשאלות שנפתרו. מבוסס על 7 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "מתמטיקה — «חילוק - כיתה ה׳»: בנושא חילוק - כיתה ה׳ נראית הצלחה טובה. נפתרו 7 שאלות, מתוכן 6 נכונות, והדיוק עומד על 86%.",
           "renderFunction": "utils/parent-report-engine-insights-he.js → buildTopicEngineInsightLineHe → buildLpdSafeTopicInsightLineHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -353,7 +353,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "מתמטיקה — «עשרוניים - כיתה ה׳»: בנושא עשרוניים מופיע דפוס חוזר של טעויות (בלבול בכיוון העיגול). כדאי לחזק את הנושא. מבוסס על 17 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "מתמטיקה — «עשרוניים - כיתה ה׳»: בנושא עשרוניים - כיתה ה׳ יש צורך בחיזוק ממוקד. נפתרו 17 שאלות, הדיוק עומד על 65%, וזוהה דפוס שחוזר בטעויות: בלבול בכיוון העיגול.",
           "renderFunction": "utils/parent-report-engine-insights-he.js → buildTopicEngineInsightLineHe → buildLpdSafeTopicInsightLineHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -380,7 +380,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "מתמטיקה — «שברים - כיתה ה׳»: בנושא שברים מופיע דפוס חוזר של טעויות (השוואה לפי מונה בלבד). כדאי לחזק את הנושא. מבוסס על 206 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "מתמטיקה — «שברים - כיתה ה׳»: בנושא שברים - כיתה ה׳ יש צורך בחיזוק ממוקד. נפתרו 206 שאלות, הדיוק עומד על 52%, וזוהה דפוס שחוזר בטעויות: השוואה לפי מונה בלבד.",
           "renderFunction": "utils/parent-report-engine-insights-he.js → buildTopicEngineInsightLineHe → buildLpdSafeTopicInsightLineHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -404,7 +404,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "small_sample"
           },
-          "currentRenderedText": "מתמטיקה — «סדרות - כיתה ה׳»: בנושא סדרות היו כמה טעויות בשאלות שנפתרו. כדאי לחזור ולתרגל את הנושא. מבוסס על 3 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "מתמטיקה — «סדרות - כיתה ה׳»: בנושא סדרות - כיתה ה׳ יש כמה טעויות, אבל כמות השאלות עדיין קטנה. כדאי לתרגל מעט יותר כדי להבין אם זה דפוס חוזר.",
           "renderFunction": "utils/parent-report-engine-insights-he.js → buildTopicEngineInsightLineHe → buildLpdSafeTopicInsightLineHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -428,7 +428,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "small_sample"
           },
-          "currentRenderedText": "מתמטיקה — «חילוק עם שארית - כיתה ה׳»: בנושא חילוק עם שארית נפתרו 2 שאלות. עדיין מוקדם לזהות דפוס ברור בנושא.",
+          "currentRenderedText": "מתמטיקה — «חילוק עם שארית - כיתה ה׳»: בנושא חילוק עם שארית - כיתה ה׳ נפתרו 2 שאלות בלבד. זה מידע ראשוני, ועדיין לא מספיק כדי לזהות דפוס ברור.",
           "renderFunction": "utils/parent-report-engine-insights-he.js → buildTopicEngineInsightLineHe → buildLpdSafeTopicInsightLineHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -452,7 +452,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "בנושא חיבור נראית הצלחה טובה בשאלות שנפתרו. מבוסס על 8 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "בנושא חיבור נראית הצלחה טובה. נפתרו 8 שאלות, מתוכן 6 נכונות, והדיוק עומד על 75%.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → resolveParentExplainRowCopy",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -476,7 +476,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "מה זוהה: בנושא חיבור נראית הצלחה טובה בשאלות שנפתרו. מבוסס על 8 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "מה זוהה: בנושא חיבור נראית הצלחה טובה בשאלות שנפתרו.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -500,7 +500,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "הנתונים: הילד/ה פתר/ה 8 שאלות בנושא חיבור, מתוכן 6 נכונות ו-2 שגויות.",
+          "currentRenderedText": "הנתונים: נפתרו 8 שאלות בנושא חיבור, מתוכן 6 נכונות ו-2 שגויות. הדיוק עומד על 75%.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -524,7 +524,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "משמעות: נראית הצלחה טובה בנושא — כדאי לשמר את מה שכבר עובד.",
+          "currentRenderedText": "משמעות: הנושא נראה יציב יחסית כרגע. כדאי לשמר את ההצלחה עם תרגול קצר מדי פעם.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -548,7 +548,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "מה כדאי לעשות בבית: לתרגל כמה שאלות קצרות בנושא חיבור, בקצב רגוע, ולבקש מהילד/ה להסביר את שלבי הפתרון.",
+          "currentRenderedText": "מה כדאי לעשות בבית: לפתור כמה שאלות קצרות בנושא חיבור, בעיקר כדי לשמור על רצף וביטחון.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -572,7 +572,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "חיזוק ממוקד לפי הדוח",
+          "currentRenderedText": "שימור וחיזוק קל",
           "renderFunction": "utils/detailed-parent-report.js → recommendationFromV2Unit",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -596,7 +596,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "בנושא חיבור נראית הצלחה טובה בשאלות שנפתרו. מבוסס על 8 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "בנושא חיבור נראית הצלחה טובה. נפתרו 8 שאלות, מתוכן 6 נכונות, והדיוק עומד על 75%.",
           "renderFunction": "utils/detailed-parent-report.js → recommendationFromV2Unit",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -620,7 +620,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "בנושא הזה עדיין לא קובעים כיוון חזק — קודם עוד תרגול ממוקד באותו נושא.",
+          "currentRenderedText": "גם כשנראית הצלחה, כדאי לשמור על תרגול קצר מדי פעם כדי לוודא שהנושא נשאר יציב.",
           "renderFunction": "utils/detailed-parent-report.js → recommendationFromV2Unit",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -644,7 +644,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "בחיבור נאספו 8 שאלות בתקופה, עם דיוק ממוצע של כ 75%. עדיין מוקדם לקבוע כאן כיוון ברור — נמשיך לעקוב אחרי התרגול.",
+          "currentRenderedText": "בחיבור נאספו 8 שאלות, עם דיוק של 75%. זה כיוון ראשוני בלבד, ולכן כדאי להמשיך לתרגל מעט לפני שמסיקים כיוון ברור.",
           "renderFunction": "utils/detailed-report-parent-letter-he.js → buildTopicRecommendationNarrative",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -668,7 +668,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "עדיין מוקדם לקבוע כיוון — כדאי לאסוף עוד נתוני תרגול ואז לבדוק שוב.",
+          "currentRenderedText": "זה עדיין מידע ראשוני — כדאי להוסיף עוד כמה שאלות ולבדוק אם הכיוון נשמר.",
           "renderFunction": "utils/detailed-report-parent-letter-he.js → buildTopicRecommendationNarrative",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -692,7 +692,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "בנושא חיבור נראית הצלחה טובה בשאלות שנפתרו. מבוסס על 8 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "בנושא חיבור נראית הצלחה טובה. נפתרו 8 שאלות, מתוכן 6 נכונות, והדיוק עומד על 75%.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → resolveParentExplainRowCopy",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -716,7 +716,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "מה זוהה: בנושא חיבור נראית הצלחה טובה בשאלות שנפתרו. מבוסס על 8 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "מה זוהה: בנושא חיבור נראית הצלחה טובה בשאלות שנפתרו.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -740,7 +740,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "הנתונים: הילד/ה פתר/ה 8 שאלות בנושא חיבור, מתוכן 6 נכונות ו-2 שגויות.",
+          "currentRenderedText": "הנתונים: נפתרו 8 שאלות בנושא חיבור, מתוכן 6 נכונות ו-2 שגויות. הדיוק עומד על 75%.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -764,7 +764,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "משמעות: נראית הצלחה טובה בנושא — כדאי לשמר את מה שכבר עובד.",
+          "currentRenderedText": "משמעות: הנושא נראה יציב יחסית כרגע. כדאי לשמר את ההצלחה עם תרגול קצר מדי פעם.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -788,7 +788,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "מה כדאי לעשות בבית: לתרגל כמה שאלות קצרות בנושא חיבור, בקצב רגוע, ולבקש מהילד/ה להסביר את שלבי הפתרון.",
+          "currentRenderedText": "מה כדאי לעשות בבית: לפתור כמה שאלות קצרות בנושא חיבור, בעיקר כדי לשמור על רצף וביטחון.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -815,7 +815,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "בנושא חיסור מופיע דפוס חוזר של טעויות (כיוון הפוך / הוספה במקום חיסור). כדאי לחזק את הנושא. מבוסס על 12 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "בנושא חיסור יש צורך בחיזוק ממוקד. נפתרו 12 שאלות, הדיוק עומד על 67%, וזוהה דפוס שחוזר בטעויות: כיוון הפוך / הוספה במקום חיסור.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → resolveParentExplainRowCopy",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -842,7 +842,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "מה זוהה: בנושא חיסור מופיע דפוס חוזר של טעויות (כיוון הפוך / הוספה במקום חיסור). כדאי לחזק את הנושא. מבוסס על 12 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "מה זוהה: בנושא חיסור זוהה דפוס שחוזר בטעויות: כיוון הפוך / הוספה במקום חיסור.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -869,7 +869,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "הנתונים: הילד/ה פתר/ה 12 שאלות בנושא חיסור, מתוכן 8 נכונות ו-4 שגויות.",
+          "currentRenderedText": "הנתונים: נפתרו 12 שאלות בנושא חיסור, מתוכן 8 נכונות ו-4 שגויות. הדיוק עומד על 67%.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -896,7 +896,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "דפוס: כיוון הפוך / הוספה במקום חיסור.",
+          "currentRenderedText": "דפוס הטעות: כיוון הפוך / הוספה במקום חיסור. נקודת המיקוד היא השלמה לעשר.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -923,7 +923,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "משמעות: נראה שכדאי לחזק את חיסור לפני שממשיכים לנושאים מתקדמים יותר.",
+          "currentRenderedText": "משמעות: יש הבנה חלקית בנושא, אבל הדיוק עדיין לא יציב מספיק. כדאי לחזק את חיסור בצורה ממוקדת לפני שמעלים רמת קושי.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -950,7 +950,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "מה כדאי לעשות בבית: תרגול קצר וממוקד בחיסור, עם בדיקה שהילד/ה מסביר/ה את שלבי הפתרון.",
+          "currentRenderedText": "מה כדאי לעשות בבית: לתרגל 5–8 שאלות קצרות בנושא חיסור, להתמקד בדפוס שזוהה (כיוון הפוך / הוספה במקום חיסור), ולבקש מהילד להסביר בקול את דרך הפתרון.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -977,7 +977,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "חיזוק ממוקד לפני שמעלים רמה",
+          "currentRenderedText": "חיזוק ממוקד באותה רמה",
           "renderFunction": "utils/detailed-parent-report.js → recommendationFromV2Unit",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1004,7 +1004,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "בנושא חיסור מופיע דפוס חוזר של טעויות (כיוון הפוך / הוספה במקום חיסור). כדאי לחזק את הנושא. מבוסס על 12 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "בנושא חיסור יש צורך בחיזוק ממוקד. נפתרו 12 שאלות, הדיוק עומד על 67%, וזוהה דפוס שחוזר בטעויות: כיוון הפוך / הוספה במקום חיסור.",
           "renderFunction": "utils/detailed-parent-report.js → recommendationFromV2Unit",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1031,7 +1031,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "בשבוע הקרוב התמקדו בחיסור כחלק מפתרון בעיות, כולל אומדן, בדיקת סבירות והסבר קצר של דרך הפתרון.",
+          "currentRenderedText": "בשבוע הקרוב מומלץ להתמקד בחיסור באותה רמת קושי. התחילו בשאלות קצרות, בדקו במיוחד את הדפוס שחוזר בטעויות (כיוון הפוך / הוספה במקום חיסור), ורק אחרי שיפור בדיוק עברו לשאלות מורכבות יותר.",
           "renderFunction": "utils/detailed-parent-report.js → recommendationFromV2Unit",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1058,7 +1058,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "כדאי לתרגל חיסור במספרים גדולים או בהקשר רב שלבי, עם אומדן לפני הפתרון ובדיקת סבירות בסיום. בקשו מהילד להסביר את דרך החישוב ולא רק לכתוב תשובה.",
+          "currentRenderedText": "היום כדאי לפתור יחד 5 שאלות בנושא חיסור. אחרי כל שאלה בקשו מהילד להסביר את הדרך, ושימו לב במיוחד לדפוס: כיוון הפוך / הוספה במקום חיסור.",
           "renderFunction": "utils/detailed-parent-report.js → recommendationFromV2Unit",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1085,7 +1085,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "בחיסור בתקופה שנבחרה יש 12 שאלות, עם דיוק של כ 67%. הכיוון חיובי יחסית; נשארים עם חיזוק קצר וברור לפני שקובעים שהנושא יציב.",
+          "currentRenderedText": "בחיסור יש מספיק תרגול כדי לראות כיוון ברור. נפתרו 12 שאלות, הדיוק עומד על 67%, וזוהה דפוס שחוזר בטעויות: כיוון הפוך / הוספה במקום חיסור.",
           "renderFunction": "utils/detailed-report-parent-letter-he.js → buildTopicRecommendationNarrative",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1112,7 +1112,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "כדאי לבדוק שוב אחרי עוד תרגול קצר, כדי לוודא שהכיוון נשמר לפני שמחמירים בקביעת כיוון.",
+          "currentRenderedText": "כדאי לבדוק אחרי עוד תרגול קצר אם הדפוס (כיוון הפוך / הוספה במקום חיסור) ממשיך להופיע או מתחיל להיעלם.",
           "renderFunction": "utils/detailed-report-parent-letter-he.js → buildTopicRecommendationNarrative",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1139,7 +1139,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "בנושא חיסור מופיע דפוס חוזר של טעויות (כיוון הפוך / הוספה במקום חיסור). כדאי לחזק את הנושא. מבוסס על 67 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "בנושא חיסור יש תמונה מעורבת. מצד אחד יש לא מעט תשובות נכונות, ומצד שני חוזר דפוס טעות: כיוון הפוך / הוספה במקום חיסור.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → resolveParentExplainRowCopy",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1166,7 +1166,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "מה זוהה: בנושא חיסור מופיע דפוס חוזר של טעויות (כיוון הפוך / הוספה במקום חיסור). כדאי לחזק את הנושא. מבוסס על 67 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "מה זוהה: בנושא חיסור יש הצלחות לצד דפוס טעות שחוזר: כיוון הפוך / הוספה במקום חיסור.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1193,7 +1193,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "הנתונים: הילד/ה פתר/ה 67 שאלות בנושא חיסור, מתוכן 56 נכונות ו-11 שגויות.",
+          "currentRenderedText": "הנתונים: נפתרו 67 שאלות בנושא חיסור, מתוכן 56 נכונות ו-11 שגויות. הדיוק עומד על 84%.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1220,7 +1220,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "דפוס: כיוון הפוך / הוספה במקום חיסור.",
+          "currentRenderedText": "דפוס הטעות: כיוון הפוך / הוספה במקום חיסור. נקודת המיקוד היא השלמה לעשר.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1247,7 +1247,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "משמעות: נראה שכדאי לחזק את נושא חיסור לפני שממשיכים לנושאים מתקדמים יותר.",
+          "currentRenderedText": "משמעות: יש בסיס טוב, אבל הנושא עדיין לא יציב לגמרי. כדאי לחזק נקודתית את המקומות שבהם חוזרות טעויות.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1274,7 +1274,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "מה כדאי לעשות בבית: תרגול קצר וממוקד בחיסור, עם בדיקה שהילד/ה מסביר/ה את שלבי הפתרון.",
+          "currentRenderedText": "מה כדאי לעשות בבית: לבחור 5–8 שאלות בנושא חיסור, לערבב שאלות קלות ובינוניות, ולבקש מהילד להסביר את הדרך בכל טעות.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1301,7 +1301,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "בנושא כפל מופיע דפוס חוזר של טעויות (אותם זוגות שגויים). כדאי לחזק את הנושא. מבוסס על 32 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "בנושא כפל יש צורך בחיזוק ממוקד. נפתרו 32 שאלות, הדיוק עומד על 69%, וזוהה דפוס שחוזר בטעויות: אותם זוגות שגויים.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → resolveParentExplainRowCopy",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1328,7 +1328,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "מה זוהה: בנושא כפל מופיע דפוס חוזר של טעויות (אותם זוגות שגויים). כדאי לחזק את הנושא. מבוסס על 32 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "מה זוהה: בנושא כפל זוהה דפוס שחוזר בטעויות: אותם זוגות שגויים.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1355,7 +1355,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "הנתונים: הילד/ה פתר/ה 32 שאלות בנושא כפל, מתוכן 22 נכונות ו-10 שגויות.",
+          "currentRenderedText": "הנתונים: נפתרו 32 שאלות בנושא כפל, מתוכן 22 נכונות ו-10 שגויות. הדיוק עומד על 69%.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1382,7 +1382,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "דפוס: אותם זוגות שגויים.",
+          "currentRenderedText": "דפוס הטעות: אותם זוגות שגויים. נקודת המיקוד היא עובדת כפל.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1409,7 +1409,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "משמעות: נראה שכדאי לחזק את כפל לפני שממשיכים לנושאים מתקדמים יותר.",
+          "currentRenderedText": "משמעות: יש הבנה חלקית בנושא, אבל הדיוק עדיין לא יציב מספיק. כדאי לחזק את כפל בצורה ממוקדת לפני שמעלים רמת קושי.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1436,7 +1436,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "מה כדאי לעשות בבית: תרגול קצר וממוקד בכפל, עם בדיקה שהילד/ה מסביר/ה את שלבי הפתרון.",
+          "currentRenderedText": "מה כדאי לעשות בבית: לתרגל 5–8 שאלות קצרות בנושא כפל, להתמקד בדפוס שזוהה (אותם זוגות שגויים), ולבקש מהילד להסביר בקול את דרך הפתרון.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1463,7 +1463,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "חיזוק ממוקד לפני שמעלים רמה",
+          "currentRenderedText": "חיזוק ממוקד באותה רמה",
           "renderFunction": "utils/detailed-parent-report.js → recommendationFromV2Unit",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1490,7 +1490,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "בנושא כפל מופיע דפוס חוזר של טעויות (אותם זוגות שגויים). כדאי לחזק את הנושא. מבוסס על 32 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "בנושא כפל יש צורך בחיזוק ממוקד. נפתרו 32 שאלות, הדיוק עומד על 69%, וזוהה דפוס שחוזר בטעויות: אותם זוגות שגויים.",
           "renderFunction": "utils/detailed-parent-report.js → recommendationFromV2Unit",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1517,7 +1517,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "בשבוע הקרוב התמקדו בכפל עם פירוק מספרים, אומדן ובדיקת סבירות של התוצאה.",
+          "currentRenderedText": "בשבוע הקרוב מומלץ להתמקד בכפל באותה רמת קושי. התחילו בשאלות קצרות, בדקו במיוחד את הדפוס שחוזר בטעויות (אותם זוגות שגויים), ורק אחרי שיפור בדיוק עברו לשאלות מורכבות יותר.",
           "renderFunction": "utils/detailed-parent-report.js → recommendationFromV2Unit",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1544,7 +1544,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "כדאי לתרגל כפל במספרים גדולים יותר בעזרת פירוק מספרים, אומדן ובדיקת סבירות. בקשו מהילד להסביר את שלבי החישוב ולבדוק אם התוצאה מתאימה לגודל המספרים.",
+          "currentRenderedText": "היום כדאי לפתור יחד 5 שאלות בנושא כפל. אחרי כל שאלה בקשו מהילד להסביר את הדרך, ושימו לב במיוחד לדפוס: אותם זוגות שגויים.",
           "renderFunction": "utils/detailed-parent-report.js → recommendationFromV2Unit",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1571,7 +1571,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "בכפל בתקופה שנבחרה יש 32 שאלות, עם דיוק של כ 69%. הכיוון חיובי יחסית; נשארים עם חיזוק קצר וברור לפני שקובעים שהנושא יציב.",
+          "currentRenderedText": "בכפל יש מספיק תרגול כדי לראות כיוון ברור. נפתרו 32 שאלות, הדיוק עומד על 69%, וזוהה דפוס שחוזר בטעויות: אותם זוגות שגויים.",
           "renderFunction": "utils/detailed-report-parent-letter-he.js → buildTopicRecommendationNarrative",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1598,7 +1598,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "כדאי לבדוק שוב אחרי עוד תרגול קצר, כדי לוודא שהכיוון נשמר לפני שמחמירים בקביעת כיוון.",
+          "currentRenderedText": "כדאי לבדוק אחרי עוד תרגול קצר אם הדפוס (אותם זוגות שגויים) ממשיך להופיע או מתחיל להיעלם.",
           "renderFunction": "utils/detailed-report-parent-letter-he.js → buildTopicRecommendationNarrative",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1625,7 +1625,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "בנושא כפל מופיע דפוס חוזר של טעויות (אותם זוגות שגויים). כדאי לחזק את הנושא. מבוסס על 32 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "בנושא כפל יש צורך בחיזוק ממוקד. נפתרו 32 שאלות, הדיוק עומד על 69%, וזוהה דפוס שחוזר בטעויות: אותם זוגות שגויים.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → resolveParentExplainRowCopy",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1652,7 +1652,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "מה זוהה: בנושא כפל מופיע דפוס חוזר של טעויות (אותם זוגות שגויים). כדאי לחזק את הנושא. מבוסס על 32 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "מה זוהה: בנושא כפל זוהה דפוס שחוזר בטעויות: אותם זוגות שגויים.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1679,7 +1679,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "הנתונים: הילד/ה פתר/ה 32 שאלות בנושא כפל, מתוכן 22 נכונות ו-10 שגויות.",
+          "currentRenderedText": "הנתונים: נפתרו 32 שאלות בנושא כפל, מתוכן 22 נכונות ו-10 שגויות. הדיוק עומד על 69%.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1706,7 +1706,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "דפוס: אותם זוגות שגויים.",
+          "currentRenderedText": "דפוס הטעות: אותם זוגות שגויים. נקודת המיקוד היא עובדת כפל.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1733,7 +1733,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "משמעות: נראה שכדאי לחזק את כפל לפני שממשיכים לנושאים מתקדמים יותר.",
+          "currentRenderedText": "משמעות: יש הבנה חלקית בנושא, אבל הדיוק עדיין לא יציב מספיק. כדאי לחזק את כפל בצורה ממוקדת לפני שמעלים רמת קושי.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1760,7 +1760,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "מה כדאי לעשות בבית: תרגול קצר וממוקד בכפל, עם בדיקה שהילד/ה מסביר/ה את שלבי הפתרון.",
+          "currentRenderedText": "מה כדאי לעשות בבית: לתרגל 5–8 שאלות קצרות בנושא כפל, להתמקד בדפוס שזוהה (אותם זוגות שגויים), ולבקש מהילד להסביר בקול את דרך הפתרון.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1787,7 +1787,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "בנושא כפל מופיע דפוס חוזר של טעויות (אותם זוגות שגויים). כדאי לחזק את הנושא. מבוסס על 32 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "בנושא כפל יש צורך בחיזוק ממוקד. נפתרו 32 שאלות, הדיוק עומד על 69%, וזוהה דפוס שחוזר בטעויות: אותם זוגות שגויים.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → resolveParentExplainRowCopy",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1814,7 +1814,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "מה זוהה: בנושא כפל מופיע דפוס חוזר של טעויות (אותם זוגות שגויים). כדאי לחזק את הנושא. מבוסס על 32 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "מה זוהה: בנושא כפל זוהה דפוס שחוזר בטעויות: אותם זוגות שגויים.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1841,7 +1841,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "הנתונים: הילד/ה פתר/ה 32 שאלות בנושא כפל, מתוכן 22 נכונות ו-10 שגויות.",
+          "currentRenderedText": "הנתונים: נפתרו 32 שאלות בנושא כפל, מתוכן 22 נכונות ו-10 שגויות. הדיוק עומד על 69%.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1868,7 +1868,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "דפוס: אותם זוגות שגויים.",
+          "currentRenderedText": "דפוס הטעות: אותם זוגות שגויים. נקודת המיקוד היא עובדת כפל.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1895,7 +1895,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "משמעות: נראה שכדאי לחזק את כפל לפני שממשיכים לנושאים מתקדמים יותר.",
+          "currentRenderedText": "משמעות: יש הבנה חלקית בנושא, אבל הדיוק עדיין לא יציב מספיק. כדאי לחזק את כפל בצורה ממוקדת לפני שמעלים רמת קושי.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1922,7 +1922,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "מה כדאי לעשות בבית: תרגול קצר וממוקד בכפל, עם בדיקה שהילד/ה מסביר/ה את שלבי הפתרון.",
+          "currentRenderedText": "מה כדאי לעשות בבית: לתרגל 5–8 שאלות קצרות בנושא כפל, להתמקד בדפוס שזוהה (אותם זוגות שגויים), ולבקש מהילד להסביר בקול את דרך הפתרון.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1946,7 +1946,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "emerging"
           },
-          "currentRenderedText": "בנושא חילוק נראית הצלחה טובה בשאלות שנפתרו. מבוסס על 7 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "בנושא חילוק נראית הצלחה טובה. נפתרו 7 שאלות, מתוכן 6 נכונות, והדיוק עומד על 86%.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → resolveParentExplainRowCopy",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1970,7 +1970,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "emerging"
           },
-          "currentRenderedText": "מה זוהה: בנושא חילוק נראית הצלחה טובה בשאלות שנפתרו. מבוסס על 7 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "מה זוהה: בנושא חילוק נראית הצלחה טובה בשאלות שנפתרו.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -1994,7 +1994,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "emerging"
           },
-          "currentRenderedText": "הנתונים: הילד/ה פתר/ה 7 שאלות בנושא חילוק, מתוכן 6 נכונות ו-1 שגויות.",
+          "currentRenderedText": "הנתונים: נפתרו 7 שאלות בנושא חילוק, מתוכן 6 נכונות ו-1 שגויות. הדיוק עומד על 86%.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2018,7 +2018,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "emerging"
           },
-          "currentRenderedText": "משמעות: נראית הצלחה טובה בנושא — כדאי לשמר את מה שכבר עובד.",
+          "currentRenderedText": "משמעות: הנושא נראה יציב יחסית כרגע. כדאי לשמר את ההצלחה עם תרגול קצר מדי פעם.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2042,7 +2042,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "emerging"
           },
-          "currentRenderedText": "מה כדאי לעשות בבית: לתרגל כמה שאלות קצרות בנושא חילוק, בקצב רגוע, ולבקש מהילד/ה להסביר את שלבי הפתרון.",
+          "currentRenderedText": "מה כדאי לעשות בבית: לפתור כמה שאלות קצרות בנושא חילוק, בעיקר כדי לשמור על רצף וביטחון.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2066,7 +2066,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "emerging"
           },
-          "currentRenderedText": "בנושא חילוק נראית הצלחה טובה בשאלות שנפתרו. מבוסס על 7 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "בנושא חילוק נראית הצלחה טובה. נפתרו 7 שאלות, מתוכן 6 נכונות, והדיוק עומד על 86%.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → resolveParentExplainRowCopy",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2090,7 +2090,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "emerging"
           },
-          "currentRenderedText": "מה זוהה: בנושא חילוק נראית הצלחה טובה בשאלות שנפתרו. מבוסס על 7 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "מה זוהה: בנושא חילוק נראית הצלחה טובה בשאלות שנפתרו.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2114,7 +2114,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "emerging"
           },
-          "currentRenderedText": "הנתונים: הילד/ה פתר/ה 7 שאלות בנושא חילוק, מתוכן 6 נכונות ו-1 שגויות.",
+          "currentRenderedText": "הנתונים: נפתרו 7 שאלות בנושא חילוק, מתוכן 6 נכונות ו-1 שגויות. הדיוק עומד על 86%.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2138,7 +2138,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "emerging"
           },
-          "currentRenderedText": "משמעות: נראית הצלחה טובה בנושא — כדאי לשמר את מה שכבר עובד.",
+          "currentRenderedText": "משמעות: הנושא נראה יציב יחסית כרגע. כדאי לשמר את ההצלחה עם תרגול קצר מדי פעם.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2162,7 +2162,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "emerging"
           },
-          "currentRenderedText": "מה כדאי לעשות בבית: לתרגל כמה שאלות קצרות בנושא חילוק, בקצב רגוע, ולבקש מהילד/ה להסביר את שלבי הפתרון.",
+          "currentRenderedText": "מה כדאי לעשות בבית: לפתור כמה שאלות קצרות בנושא חילוק, בעיקר כדי לשמור על רצף וביטחון.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2189,7 +2189,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "בנושא עשרוניים מופיע דפוס חוזר של טעויות (בלבול בכיוון העיגול). כדאי לחזק את הנושא. מבוסס על 17 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "בנושא עשרוניים יש צורך בחיזוק ממוקד. נפתרו 17 שאלות, הדיוק עומד על 65%, וזוהה דפוס שחוזר בטעויות: בלבול בכיוון העיגול.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → resolveParentExplainRowCopy",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2216,7 +2216,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "מה זוהה: בנושא עשרוניים מופיע דפוס חוזר של טעויות (בלבול בכיוון העיגול). כדאי לחזק את הנושא. מבוסס על 17 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "מה זוהה: בנושא עשרוניים זוהה דפוס שחוזר בטעויות: בלבול בכיוון העיגול.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2243,7 +2243,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "הנתונים: הילד/ה פתר/ה 17 שאלות בנושא עשרוניים, מתוכן 11 נכונות ו-6 שגויות.",
+          "currentRenderedText": "הנתונים: נפתרו 17 שאלות בנושא עשרוניים, מתוכן 11 נכונות ו-6 שגויות. הדיוק עומד על 65%.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2270,7 +2270,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "דפוס: בלבול בכיוון העיגול.",
+          "currentRenderedText": "דפוס הטעות: בלבול בכיוון העיגול. נקודת המיקוד היא עיגול/השוואה.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2297,7 +2297,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "משמעות: נראה שכדאי לחזק את עשרוניים לפני שממשיכים לנושאים מתקדמים יותר.",
+          "currentRenderedText": "משמעות: יש הבנה חלקית בנושא, אבל הדיוק עדיין לא יציב מספיק. כדאי לחזק את עשרוניים בצורה ממוקדת לפני שמעלים רמת קושי.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2324,7 +2324,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "מה כדאי לעשות בבית: תרגול קצר וממוקד בעשרוניים, עם בדיקה שהילד/ה מסביר/ה את שלבי הפתרון.",
+          "currentRenderedText": "מה כדאי לעשות בבית: לתרגל 5–8 שאלות קצרות בנושא עשרוניים, להתמקד בדפוס שזוהה (בלבול בכיוון העיגול), ולבקש מהילד להסביר בקול את דרך הפתרון.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2351,7 +2351,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "חיזוק ממוקד לפני שמעלים רמה",
+          "currentRenderedText": "חיזוק ממוקד באותה רמה",
           "renderFunction": "utils/detailed-parent-report.js → recommendationFromV2Unit",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2378,7 +2378,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "בנושא עשרוניים מופיע דפוס חוזר של טעויות (בלבול בכיוון העיגול). כדאי לחזק את הנושא. מבוסס על 17 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "בנושא עשרוניים יש צורך בחיזוק ממוקד. נפתרו 17 שאלות, הדיוק עומד על 65%, וזוהה דפוס שחוזר בטעויות: בלבול בכיוון העיגול.",
           "renderFunction": "utils/detailed-parent-report.js → recommendationFromV2Unit",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2405,7 +2405,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "בשבוע הקרוב התמקדו בעיגול, השוואה ואומדן במספרים עשרוניים או באחוזים, עם בדיקת סבירות בסיום.",
+          "currentRenderedText": "בשבוע הקרוב מומלץ להתמקד בעשרוניים באותה רמת קושי. התחילו בשאלות קצרות, בדקו במיוחד את הדפוס שחוזר בטעויות (בלבול בכיוון העיגול), ורק אחרי שיפור בדיוק עברו לשאלות מורכבות יותר.",
           "renderFunction": "utils/detailed-parent-report.js → recommendationFromV2Unit",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2432,7 +2432,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "כדאי לתרגל עיגול והשוואה במספרים עשרוניים, אחוזים או תרגילים עם אומדן. בקשו מהילד להסביר לפי איזו ספרה הוא מעגל, ואז לבדוק אם התוצאה הסופית סבירה.",
+          "currentRenderedText": "היום כדאי לפתור יחד 5 שאלות בנושא עשרוניים. אחרי כל שאלה בקשו מהילד להסביר את הדרך, ושימו לב במיוחד לדפוס: בלבול בכיוון העיגול.",
           "renderFunction": "utils/detailed-parent-report.js → recommendationFromV2Unit",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2459,7 +2459,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "בעשרוניים נאספו 17 שאלות בתקופה, ורמת הדיוק סביב 65%. יש כאן כיוון עבודה הגיוני, ונעדיף לראות את זה חוזר עוד פעם לפני שמחמירים בקביעת כיוון.",
+          "currentRenderedText": "בעשרוניים יש מספיק תרגול כדי לראות כיוון ברור. נפתרו 17 שאלות, הדיוק עומד על 65%, וזוהה דפוס שחוזר בטעויות: בלבול בכיוון העיגול.",
           "renderFunction": "utils/detailed-report-parent-letter-he.js → buildTopicRecommendationNarrative",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2486,7 +2486,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "נעשה עוד תרגול קצר ואז נחזור לזה — בעיניים פתוחות ובלי למהר.",
+          "currentRenderedText": "כדאי לבדוק אחרי עוד תרגול קצר אם הדפוס (בלבול בכיוון העיגול) ממשיך להופיע או מתחיל להיעלם.",
           "renderFunction": "utils/detailed-report-parent-letter-he.js → buildTopicRecommendationNarrative",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2513,7 +2513,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "בנושא עשרוניים מופיע דפוס חוזר של טעויות (בלבול בכיוון העיגול). כדאי לחזק את הנושא. מבוסס על 17 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "בנושא עשרוניים יש צורך בחיזוק ממוקד. נפתרו 17 שאלות, הדיוק עומד על 65%, וזוהה דפוס שחוזר בטעויות: בלבול בכיוון העיגול.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → resolveParentExplainRowCopy",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2540,7 +2540,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "מה זוהה: בנושא עשרוניים מופיע דפוס חוזר של טעויות (בלבול בכיוון העיגול). כדאי לחזק את הנושא. מבוסס על 17 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "מה זוהה: בנושא עשרוניים זוהה דפוס שחוזר בטעויות: בלבול בכיוון העיגול.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2567,7 +2567,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "הנתונים: הילד/ה פתר/ה 17 שאלות בנושא עשרוניים, מתוכן 11 נכונות ו-6 שגויות.",
+          "currentRenderedText": "הנתונים: נפתרו 17 שאלות בנושא עשרוניים, מתוכן 11 נכונות ו-6 שגויות. הדיוק עומד על 65%.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2594,7 +2594,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "דפוס: בלבול בכיוון העיגול.",
+          "currentRenderedText": "דפוס הטעות: בלבול בכיוון העיגול. נקודת המיקוד היא עיגול/השוואה.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2621,7 +2621,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "משמעות: נראה שכדאי לחזק את עשרוניים לפני שממשיכים לנושאים מתקדמים יותר.",
+          "currentRenderedText": "משמעות: יש הבנה חלקית בנושא, אבל הדיוק עדיין לא יציב מספיק. כדאי לחזק את עשרוניים בצורה ממוקדת לפני שמעלים רמת קושי.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2648,7 +2648,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "מה כדאי לעשות בבית: תרגול קצר וממוקד בעשרוניים, עם בדיקה שהילד/ה מסביר/ה את שלבי הפתרון.",
+          "currentRenderedText": "מה כדאי לעשות בבית: לתרגל 5–8 שאלות קצרות בנושא עשרוניים, להתמקד בדפוס שזוהה (בלבול בכיוון העיגול), ולבקש מהילד להסביר בקול את דרך הפתרון.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2675,7 +2675,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "בנושא שברים מופיע דפוס חוזר של טעויות (השוואה לפי מונה בלבד). כדאי לחזק את הנושא. מבוסס על 206 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "בנושא שברים יש צורך בחיזוק ממוקד. נפתרו 206 שאלות, הדיוק עומד על 52%, וזוהה דפוס שחוזר בטעויות: השוואה לפי מונה בלבד.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → resolveParentExplainRowCopy",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2702,7 +2702,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "מה זוהה: בנושא שברים מופיע דפוס חוזר של טעויות (השוואה לפי מונה בלבד). כדאי לחזק את הנושא. מבוסס על 206 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "מה זוהה: בנושא שברים זוהה דפוס שחוזר בטעויות: השוואה לפי מונה בלבד.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2729,7 +2729,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "הנתונים: הילד/ה פתר/ה 206 שאלות בנושא שברים, מתוכן 108 נכונות ו-98 שגויות.",
+          "currentRenderedText": "הנתונים: נפתרו 206 שאלות בנושא שברים, מתוכן 108 נכונות ו-98 שגויות. הדיוק עומד על 52%.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2756,7 +2756,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "דפוס: השוואה לפי מונה בלבד.",
+          "currentRenderedText": "דפוס הטעות: השוואה לפי מונה בלבד. נקודת המיקוד היא חלק כלל.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2783,7 +2783,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "משמעות: נראה שכדאי לחזק את שברים לפני שממשיכים לנושאים מתקדמים יותר.",
+          "currentRenderedText": "משמעות: יש הבנה חלקית בנושא, אבל הדיוק עדיין לא יציב מספיק. כדאי לחזק את שברים בצורה ממוקדת לפני שמעלים רמת קושי.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2810,7 +2810,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "מה כדאי לעשות בבית: תרגול קצר וממוקד בשברים, עם בדיקה שהילד/ה מסביר/ה את שלבי הפתרון.",
+          "currentRenderedText": "מה כדאי לעשות בבית: לתרגל 5–8 שאלות קצרות בנושא שברים, להתמקד בדפוס שזוהה (השוואה לפי מונה בלבד), ולבקש מהילד להסביר בקול את דרך הפתרון.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2837,7 +2837,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "חיזוק ממוקד לפני שמעלים רמה",
+          "currentRenderedText": "חיזוק ממוקד באותה רמה",
           "renderFunction": "utils/detailed-parent-report.js → recommendationFromV2Unit",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2864,7 +2864,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "בנושא שברים מופיע דפוס חוזר של טעויות (השוואה לפי מונה בלבד). כדאי לחזק את הנושא. מבוסס על 206 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "בנושא שברים יש צורך בחיזוק ממוקד. נפתרו 206 שאלות, הדיוק עומד על 52%, וזוהה דפוס שחוזר בטעויות: השוואה לפי מונה בלבד.",
           "renderFunction": "utils/detailed-parent-report.js → recommendationFromV2Unit",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2891,7 +2891,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "בשבוע הקרוב התמקדו בהשוואת שברים בעזרת שברים שקולים, מכנה משותף ואומדן, עם נימוק ברור לכל השוואה.",
+          "currentRenderedText": "בשבוע הקרוב מומלץ להתמקד בשברים באותה רמת קושי. התחילו בשאלות קצרות, בדקו במיוחד את הדפוס שחוזר בטעויות (השוואה לפי מונה בלבד), ורק אחרי שיפור בדיוק עברו לשאלות מורכבות יותר.",
           "renderFunction": "utils/detailed-parent-report.js → recommendationFromV2Unit",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2918,7 +2918,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "כדאי לתרגל השוואת שברים בעזרת שברים שקולים, מכנה משותף או אומדן ביחס אל 0, חצי ו 1. בקשו מהילד להסביר מדוע שבר אחד גדול מאחר, ולא להסתמך רק על גודל המונה או המכנה.",
+          "currentRenderedText": "היום כדאי לפתור יחד 5 שאלות בנושא שברים. אחרי כל שאלה בקשו מהילד להסביר את הדרך, ושימו לב במיוחד לדפוס: השוואה לפי מונה בלבד.",
           "renderFunction": "utils/detailed-parent-report.js → recommendationFromV2Unit",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2945,7 +2945,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "בשברים נאספו 206 שאלות בתקופה, ורמת הדיוק סביב 52%. יש כאן מספיק תרגול כדי לראות דפוס, אבל הדיוק עדיין נמוך יחסית — זה מצב שדורש חיזוק ממוקד.",
+          "currentRenderedText": "בשברים נאספו 206 שאלות, עם דיוק של 52%. זוהה דפוס שחוזר בטעויות: השוואה לפי מונה בלבד, ולכן כדאי לחזק את הנושא בצורה ממוקדת.",
           "renderFunction": "utils/detailed-report-parent-letter-he.js → buildTopicRecommendationNarrative",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2972,7 +2972,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "בנושא שברים מופיע דפוס חוזר של טעויות (השוואה לפי מונה בלבד). כדאי לחזק את הנושא. מבוסס על 454 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "בנושא שברים יש תמונה מעורבת. מצד אחד יש לא מעט תשובות נכונות, ומצד שני חוזר דפוס טעות: השוואה לפי מונה בלבד.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → resolveParentExplainRowCopy",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -2999,7 +2999,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "מה זוהה: בנושא שברים מופיע דפוס חוזר של טעויות (השוואה לפי מונה בלבד). כדאי לחזק את הנושא. מבוסס על 454 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "מה זוהה: בנושא שברים יש הצלחות לצד דפוס טעות שחוזר: השוואה לפי מונה בלבד.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3026,7 +3026,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "הנתונים: הילד/ה פתר/ה 454 שאלות בנושא שברים, מתוכן 402 נכונות ו-52 שגויות.",
+          "currentRenderedText": "הנתונים: נפתרו 454 שאלות בנושא שברים, מתוכן 402 נכונות ו-52 שגויות. הדיוק עומד על 89%.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3053,7 +3053,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "דפוס: השוואה לפי מונה בלבד.",
+          "currentRenderedText": "דפוס הטעות: השוואה לפי מונה בלבד. נקודת המיקוד היא חלק כלל.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3080,7 +3080,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "משמעות: נראה שכדאי לחזק את נושא שברים לפני שממשיכים לנושאים מתקדמים יותר.",
+          "currentRenderedText": "משמעות: יש בסיס טוב, אבל הנושא עדיין לא יציב לגמרי. כדאי לחזק נקודתית את המקומות שבהם חוזרות טעויות.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3107,7 +3107,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "מה כדאי לעשות בבית: תרגול קצר וממוקד בשברים, עם בדיקה שהילד מסביר את שלבי הפתרון.",
+          "currentRenderedText": "מה כדאי לעשות בבית: לבחור 5–8 שאלות בנושא שברים, לערבב שאלות קלות ובינוניות, ולבקש מהילד להסביר את הדרך בכל טעות.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3131,7 +3131,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "small_sample"
           },
-          "currentRenderedText": "בנושא סדרות היו כמה טעויות בשאלות שנפתרו. כדאי לחזור ולתרגל את הנושא. מבוסס על 3 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "בנושא סדרות יש כמה טעויות, אבל כמות השאלות עדיין קטנה. כדאי לתרגל מעט יותר כדי להבין אם זה דפוס חוזר.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → resolveParentExplainRowCopy",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3155,7 +3155,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "small_sample"
           },
-          "currentRenderedText": "מה זוהה: בנושא סדרות נראית תצפית זהירה בלבד — 3 שאלות, עדיין מוקדם לקבוע דפוס חד.",
+          "currentRenderedText": "מה זוהה: היו כמה טעויות בנושא סדרות, אך עדיין אין מספיק מידע לדפוס ברור.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3179,7 +3179,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "small_sample"
           },
-          "currentRenderedText": "הנתונים: בנושא סדרות נפתרו 3 שאלות, דיוק 67%.",
+          "currentRenderedText": "הנתונים: נפתרו 3 שאלות בנושא סדרות, מתוכן 2 נכונות ו-1 שגויות. הדיוק עומד על 67%.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3203,7 +3203,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "small_sample"
           },
-          "currentRenderedText": "משמעות: נראה שכדאי לחזק את נושא סדרות לפני שממשיכים לנושאים מתקדמים יותר.",
+          "currentRenderedText": "משמעות: כדאי להוסיף תרגול קצר ולבדוק אם הטעויות חוזרות באותו סוג שאלות.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3227,7 +3227,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "small_sample"
           },
-          "currentRenderedText": "בנושא חילוק עם שארית נפתרו 2 שאלות. עדיין מוקדם לזהות דפוס ברור בנושא.",
+          "currentRenderedText": "בנושא חילוק עם שארית נפתרו 2 שאלות בלבד. זה מידע ראשוני, ועדיין לא מספיק כדי לזהות דפוס ברור.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → resolveParentExplainRowCopy",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3251,7 +3251,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "small_sample"
           },
-          "currentRenderedText": "מה זוהה: נתונים ראשוניים בלבד בנושא חילוק עם שארית.",
+          "currentRenderedText": "מה זוהה: יש כרגע מידע ראשוני בלבד בנושא חילוק עם שארית.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3275,7 +3275,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "small_sample"
           },
-          "currentRenderedText": "הנתונים: נפתרו 2 שאלות בנושא חילוק עם שארית, דיוק 50%.",
+          "currentRenderedText": "הנתונים: נפתרו 2 שאלות בנושא חילוק עם שארית, מתוכן 1 נכונות ו-1 שגויות.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3299,7 +3299,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "small_sample"
           },
-          "currentRenderedText": "משמעות: עדיין מוקדם לזהות דפוס ברור בנושא.",
+          "currentRenderedText": "משמעות: עדיין מוקדם להסיק מסקנה ברורה. כדאי לאסוף עוד כמה שאלות לפני שמחליטים אם צריך חיזוק.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3323,7 +3323,7 @@
             "recommendedAction": "maintain_and_strengthen",
             "evidenceStrength": "small_sample"
           },
-          "currentRenderedText": "מה כדאי לעשות בבית: אפשר להמשיך לתרגל מעט, בלי מסקנת קושי.",
+          "currentRenderedText": "מה כדאי לעשות בבית: לפתור עוד כמה שאלות קצרות בנושא חילוק עם שארית, בלי לחץ, כדי לקבל תמונה ברורה יותר.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3355,7 +3355,7 @@
             ],
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "בנושא שברים מופיע דפוס חוזר של טעויות (השוואה לפי מונה בלבד). כדאי לחזק את הנושא. מבוסס על 206 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "במתמטיקה בולטים כמה נושאים שדורשים חיזוק. הנושא הראשון הוא שברים: נפתרו 206 שאלות, הדיוק עומד על 52%, וזוהה דפוס שחוזר בטעויות: השוואה לפי מונה בלבד. לכן כדאי להתחיל ממנו.",
           "renderFunction": "utils/detailed-parent-report.js → resolveSubjectSummaryTextFromEngineContract / buildSubjectProfilesFromV2",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3387,7 +3387,7 @@
             ],
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "במתמטיקה: בנושא שברים מופיע דפוס חוזר של טעויות (השוואה לפי מונה בלבד). כדאי לחזק את הנושא. מבוסס על 206 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "במתמטיקה בולטים כמה נושאים שדורשים חיזוק. הנושא הראשון הוא שברים: נפתרו 206 שאלות, הדיוק עומד על 52%, וזוהה דפוס שחוזר בטעויות: השוואה לפי מונה בלבד. לכן כדאי להתחיל ממנו.",
           "renderFunction": "utils/detailed-report-parent-letter-he.js → buildSubjectParentLetter",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3419,7 +3419,7 @@
             ],
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "בנושא כפל מופיע דפוס חוזר של טעויות (אותם זוגות שגויים). כדאי לחזק את הנושא. מבוסס על 32 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "נושא נוסף שחשוב לחזק הוא כפל. נפתרו 32 שאלות בדיוק של 69%, וזוהה דפוס שחוזר בטעויות: אותם זוגות שגויים.",
           "renderFunction": "utils/detailed-report-parent-letter-he.js → buildSubjectParentLetter",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3451,7 +3451,7 @@
             ],
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "remediate same level",
+          "currentRenderedText": "בשבוע הקרוב מומלץ לתרגל באותה רמה, בלי להעלות רמת קושי בינתיים. התחילו בשברים, ולאחר מכן עברו לכפל. בכל פעם תרגלו מספר קטן של שאלות ובדקו שהילד מסביר את דרך הפתרון.",
           "renderFunction": "utils/detailed-report-parent-letter-he.js → buildSubjectParentLetter",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3483,7 +3483,7 @@
             ],
             "evidenceStrength": "strong"
           },
-          "currentRenderedText": "בשבוע הקרוב התמקדו בהשוואת שברים בעזרת שברים שקולים, מכנה משותף ואומדן, עם נימוק ברור לכל השוואה.",
+          "currentRenderedText": "עדיף לעבוד קצר וממוקד: לבחור נושא אחד בכל פעם, לפתור 5–8 שאלות, ואז לבקש מהילד להסביר איך הגיע לתשובה. אחרי כמה תרגולים אפשר לבדוק אם הדיוק והיציבות משתפרים.",
           "renderFunction": "utils/detailed-report-parent-letter-he.js → buildSubjectParentLetter",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3557,7 +3557,7 @@
           "renderSource": "subjectEngineDecisionContract"
         }
       },
-      "entryCount": 16,
+      "entryCount": 18,
       "entries": [
         {
           "id": "aaa7:shortReport:subjectSummary:math",
@@ -3579,7 +3579,7 @@
             ],
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "בנושא חיבור נראה קושי ברור — 8 שגויות מתוך 10 שאלות (20% דיוק). כדאי לחזור ולחזק את חיבור לפני שממשיכים. מבוסס על 10 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "במתמטיקה בולט כרגע נושא אחד שדורש חיזוק: חיבור. נפתרו 10 שאלות, והדיוק עומד על 20%. מומלץ לחזק את הנושא לפני שממשיכים.",
           "renderFunction": "utils/parent-report-v2.js → summarizeV2UnitsForSubject → resolveSubjectSummaryTextFromEngineContract",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3603,7 +3603,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "מתמטיקה — «חיבור - כיתה ד׳»: בנושא חיבור נראה קושי ברור — 8 שגויות מתוך 10 שאלות (20% דיוק). כדאי לחזור ולחזק את חיבור לפני שממשיכים. מבוסס על 10 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "מתמטיקה — «חיבור - כיתה ד׳»: בנושא חיבור - כיתה ד׳ נראה קושי ברור. נפתרו 10 שאלות, מתוכן 2 נכונות ו-8 שגויות, והדיוק עומד על 20%. כדאי לחזק את הנושא לפני שממשיכים.",
           "renderFunction": "utils/parent-report-engine-insights-he.js → buildTopicEngineInsightLineHe → buildLpdSafeTopicInsightLineHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3627,7 +3627,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "בנושא חיבור נראה קושי ברור — 8 שגויות מתוך 10 שאלות (20% דיוק). כדאי לחזור ולחזק את חיבור לפני שממשיכים. מבוסס על 10 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "בנושא חיבור נראה קושי ברור. נפתרו 10 שאלות, מתוכן 2 נכונות ו-8 שגויות, והדיוק עומד על 20%. כדאי לחזק את הנושא לפני שממשיכים.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → resolveParentExplainRowCopy",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3651,7 +3651,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "מה זוהה: בנושא חיבור נראה קושי ברור — 8 שגויות מתוך 10 שאלות (20% דיוק). כדאי לחזור ולחזק את חיבור לפני שממשיכים. מבוסס על 10 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "מה זוהה: בנושא חיבור יש קושי ברור לפי מספר השאלות והדיוק.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3675,7 +3675,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "הנתונים: הילד/ה פתר/ה 10 שאלות בנושא חיבור, מתוכן 2 נכונות ו-8 שגויות.",
+          "currentRenderedText": "הנתונים: נפתרו 10 שאלות בנושא חיבור, מתוכן 2 נכונות ו-8 שגויות. הדיוק עומד על 20%.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3699,7 +3699,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "משמעות: נראה שכדאי לחזק את חיבור לפני שממשיכים לנושאים מתקדמים יותר.",
+          "currentRenderedText": "משמעות: זה לא נראה כמו טעות חד־פעמית. כדאי לחזור לבסיס של חיבור, לוודא שהדרך מובנת, ורק אחר כך להמשיך הלאה.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3723,7 +3723,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "מה כדאי לעשות בבית: תרגול קצר וממוקד בחיבור, עם בדיקה שהילד/ה מסביר/ה את שלבי הפתרון.",
+          "currentRenderedText": "מה כדאי לעשות בבית: לתרגל 5–8 שאלות קצרות בנושא חיבור, לעצור אחרי כל טעות, ולבקש מהילד להסביר בקול איך הגיע לתשובה.",
           "renderFunction": "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3747,7 +3747,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "חיזוק ממוקד לפני שמעלים רמה",
+          "currentRenderedText": "חזרה לבסיס וחיזוק ממוקד",
           "renderFunction": "utils/detailed-parent-report.js → recommendationFromV2Unit",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3771,7 +3771,55 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "בנושא חיבור נראה קושי ברור — 8 שגויות מתוך 10 שאלות (20% דיוק). כדאי לחזור ולחזק את חיבור לפני שממשיכים. מבוסס על 10 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "בנושא חיבור נראה קושי ברור. נפתרו 10 שאלות, מתוכן 2 נכונות ו-8 שגויות, והדיוק עומד על 20%. כדאי לחזק את הנושא לפני שממשיכים.",
+          "renderFunction": "utils/detailed-parent-report.js → recommendationFromV2Unit",
+          "safeToReplaceWithOwnerCopy": true,
+          "missingMetadata": []
+        },
+        {
+          "id": "aaa7:recommendationCard:interventionPlanHe:addition::grade:g4",
+          "student": "aaa7",
+          "surface": "recommendationCard",
+          "section": "interventionPlanHe",
+          "topicKey": "addition::grade:g4",
+          "templateId": "difficulty_observed:RECOMMENDATION_INTERVENTION_PLAN",
+          "decisionCode": "clear_topic_gap",
+          "source": "engineDecisionContract",
+          "slotsAvailable": {
+            "topicName": "חיבור",
+            "subjectName": "מתמטיקה",
+            "questions": 10,
+            "correct": 2,
+            "wrong": 8,
+            "accuracy": 20,
+            "recommendedAction": "remediate_same_level",
+            "evidenceStrength": "supported"
+          },
+          "currentRenderedText": "בשבוע הקרוב מומלץ להתמקד בחיבור באותה רמת קושי. התחילו בשאלות קצרות, בדקו את דרך הפתרון, ורק אחרי שיפור בדיוק עברו לשאלות מורכבות יותר.",
+          "renderFunction": "utils/detailed-parent-report.js → recommendationFromV2Unit",
+          "safeToReplaceWithOwnerCopy": true,
+          "missingMetadata": []
+        },
+        {
+          "id": "aaa7:recommendationCard:doNowHe:addition::grade:g4",
+          "student": "aaa7",
+          "surface": "recommendationCard",
+          "section": "doNowHe",
+          "topicKey": "addition::grade:g4",
+          "templateId": "difficulty_observed:RECOMMENDATION_DO_NOW",
+          "decisionCode": "clear_topic_gap",
+          "source": "engineDecisionContract",
+          "slotsAvailable": {
+            "topicName": "חיבור",
+            "subjectName": "מתמטיקה",
+            "questions": 10,
+            "correct": 2,
+            "wrong": 8,
+            "accuracy": 20,
+            "recommendedAction": "remediate_same_level",
+            "evidenceStrength": "supported"
+          },
+          "currentRenderedText": "היום כדאי לפתור יחד 5 שאלות בנושא חיבור. אחרי כל שאלה בקשו מהילד להסביר את הדרך, ולא רק לסמן תשובה.",
           "renderFunction": "utils/detailed-parent-report.js → recommendationFromV2Unit",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3795,7 +3843,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "בחיבור נאספו 10 שאלות בתקופה, ורמת הדיוק סביב 20%. עדיין מוקדם לקבוע כאן כיוון ברור — נמשיך לעקוב אחרי התרגול.",
+          "currentRenderedText": "בחיבור נאספו 10 שאלות, עם דיוק של 20%. לפי הנתונים נראה שיש קושי ברור בנושא, ולכן כדאי לחזק אותו לפני שממשיכים.",
           "renderFunction": "utils/detailed-report-parent-letter-he.js → buildTopicRecommendationNarrative",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3819,7 +3867,7 @@
             "recommendedAction": "remediate_same_level",
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "בשלב הזה עדיין מוקדם לקבוע כיוון סופי; נמשיך לאסוף עוד נתוני תרגול לפני שמחליטים.",
+          "currentRenderedText": "כאן כבר לא מדובר רק במידע ראשוני; כדאי לחזור ולחזק את הנושא בצורה ממוקדת.",
           "renderFunction": "utils/detailed-report-parent-letter-he.js → buildTopicRecommendationNarrative",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3844,7 +3892,7 @@
             ],
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "בנושא חיבור נראה קושי ברור — 8 שגויות מתוך 10 שאלות (20% דיוק). כדאי לחזור ולחזק את חיבור לפני שממשיכים. מבוסס על 10 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "במתמטיקה בולט כרגע נושא אחד שדורש חיזוק: חיבור. נפתרו 10 שאלות, והדיוק עומד על 20%. מומלץ לחזק את הנושא לפני שממשיכים.",
           "renderFunction": "utils/detailed-parent-report.js → resolveSubjectSummaryTextFromEngineContract / buildSubjectProfilesFromV2",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3869,7 +3917,7 @@
             ],
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "במתמטיקה: בנושא חיבור נראה קושי ברור — 8 שגויות מתוך 10 שאלות (20% דיוק). כדאי לחזור ולחזק את חיבור לפני שממשיכים. מבוסס על 10 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "במתמטיקה בולט כרגע נושא אחד שדורש חיזוק: חיבור. נפתרו 10 שאלות, והדיוק עומד על 20%. מומלץ לחזק את הנושא לפני שממשיכים.",
           "renderFunction": "utils/detailed-report-parent-letter-he.js → buildSubjectParentLetter",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3894,7 +3942,7 @@
             ],
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "בנושא חיבור נראה קושי ברור — 8 שגויות מתוך 10 שאלות (20% דיוק). כדאי לחזור ולחזק את חיבור לפני שממשיכים. מבוסס על 10 שאלות שנפתרו בנושא.",
+          "currentRenderedText": "עיקר הקושי כרגע נמצא בחיבור. נפתרו 10 שאלות בדיוק של 20%. זה מספיק כדי להמליץ על חיזוק ממוקד באותו נושא, ולא רק על המשך תרגול כללי.",
           "renderFunction": "utils/detailed-report-parent-letter-he.js → buildSubjectParentLetter",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3919,7 +3967,7 @@
             ],
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "remediate same level",
+          "currentRenderedText": "בשבוע הקרוב מומלץ לתרגל באותה רמה, בלי להעלות רמת קושי בינתיים. התמקדו בחיבור, עם מספר קטן של שאלות בכל פעם, ובדקו שהילד מסביר את דרך הפתרון.",
           "renderFunction": "utils/detailed-report-parent-letter-he.js → buildSubjectParentLetter",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3944,7 +3992,7 @@
             ],
             "evidenceStrength": "supported"
           },
-          "currentRenderedText": "הפרדה בין פער יסוד לבעיית נושא",
+          "currentRenderedText": "עדיף לעבוד קצר וממוקד: לבחור נושא אחד בכל פעם, לפתור 5–8 שאלות, ואז לבקש מהילד להסביר איך הגיע לתשובה. אחרי כמה תרגולים אפשר לבדוק אם הדיוק והיציבות משתפרים.",
           "renderFunction": "utils/detailed-report-parent-letter-he.js → buildSubjectParentLetter",
           "safeToReplaceWithOwnerCopy": true,
           "missingMetadata": []
@@ -3955,7 +4003,7 @@
         "entriesWithoutSource": 0,
         "entriesEmptyText": 0,
         "legacySourceCount": 0,
-        "contractSourceCount": 16
+        "contractSourceCount": 18
       }
     }
   ]

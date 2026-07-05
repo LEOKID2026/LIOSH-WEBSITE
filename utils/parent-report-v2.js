@@ -1797,7 +1797,9 @@ function summarizeV2UnitsForSubject(units, opts = {}) {
     subjectEngineContract = buildSubjectEngineDecisionContractFromTopicMap(subjectId, topicMap, {
       subjectLabelKey: subjectId,
     });
-    const contractSummary = resolveSubjectSummaryTextFromEngineContract(subjectEngineContract);
+    const contractSummary = resolveSubjectSummaryTextFromEngineContract(subjectEngineContract, {
+      subjectLabelHe: String(opts.subjectLabelHe || "").trim(),
+    });
     if (contractSummary) {
       summaryHe = contractSummary;
       subjectSummaryRenderSource = RENDER_SOURCE_SUBJECT_ENGINE;

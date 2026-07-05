@@ -33,8 +33,25 @@ export {
   buildSubjectEngineDecisionContract,
   buildSubjectEngineDecisionContractFromTopicMap,
   resolveSubjectSummaryTextFromEngineContract,
+  resolveSubjectLetterOwnerCopyHe,
   findTopicRecommendationForPriority,
 } from "./build-subject-engine-decision-contract.js";
+export {
+  resolveSubjectOwnerCopyFromContract,
+  buildSubjectOwnerCopySlots,
+  renderOwnerSubjectCopyTemplateHe,
+  parentReportOwnerCopyTemplatesHe,
+  SUBJECT_OWNER_COPY_TEMPLATE_IDS,
+} from "../parent-report-language/parent-report-owner-copy-templates-he.js";
+export {
+  buildTopicOwnerCopySlots,
+  resolveTopicOwnerBaseTemplateId,
+  resolveTopicOwnerCopyHe,
+  resolveTopicExplainOwnerSectionsHe,
+  resolveTopicRecommendationOwnerCopyHe,
+  resolveNarrativeOwnerCopyHe,
+  resolveTopicPrimaryFindingOwnerCopyHe,
+} from "./resolve-topic-owner-copy.js";
 export {
   EDC_CONTRACT_KEY,
   EDC_DECISION_FIELD,

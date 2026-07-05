@@ -316,13 +316,19 @@ export function buildSubjectEngineDecisionContractFromTopicMap(subjectId, topicM
 /**
  * @param {Record<string, unknown>|null|undefined} contract
  * @returns {string|null}
+ * @deprecated Prefer resolveSubjectSummaryTextFromEngineContract from resolve-subject-owner-copy.js with subjectLabelHe.
  */
-export function resolveSubjectSummaryTextFromEngineContract(contract) {
+export function resolveSubjectSummaryTextFromEngineContractLegacyFinding(contract) {
   if (!contract?.blockedLegacySummary) return null;
   const p0 = contract.priorityTopics?.[0];
   const finding = String(p0?.parentSafeFinding || "").trim();
   return finding || null;
 }
+
+export {
+  resolveSubjectSummaryTextFromEngineContract,
+  resolveSubjectLetterOwnerCopyHe,
+} from "./resolve-subject-owner-copy.js";
 
 /**
  * @param {Record<string, unknown>|null|undefined} sp

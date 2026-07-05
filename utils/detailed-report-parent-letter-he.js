@@ -24,6 +24,9 @@ import {
   findStrongestEngineDecisionInSubject,
 } from "./learning-pattern-decision/build-parent-report-engine-decision-contract.js";
 import { findTopicRecommendationForPriority } from "./learning-pattern-decision/build-subject-engine-decision-contract.js";
+import { resolveSubjectLetterOwnerCopyHe } from "./learning-pattern-decision/resolve-subject-owner-copy.js";
+import { resolveNarrativeOwnerCopyHe } from "./learning-pattern-decision/resolve-topic-owner-copy.js";
+import { SUBJECT_OWNER_COPY_TEMPLATE_IDS } from "./parent-report-language/parent-report-owner-copy-templates-he.js";
 import {
   RENDER_SOURCE_SUBJECT_ENGINE,
   SP_SUBJECT_ENGINE_CONTRACT,
@@ -142,6 +145,15 @@ function majorRiskAny(sp) {
 /** משפט פתיחה אחד */
 function buildSubjectOpeningLineHe(sp, lab) {
   const contract = readSubjectEngineContract(sp);
+  if (contract?.blockedLegacySummary) {
+    const ownerOpening = resolveSubjectLetterOwnerCopyHe(
+      contract,
+      String(contract.summarySlots?.openingTemplateId || SUBJECT_OWNER_COPY_TEMPLATE_IDS.OPENING),
+      lab,
+    );
+    if (ownerOpening) return stripGuillemetsHe(ownerOpening);
+  }
+
   if (contract?.blockedLegacySummary && contract.priorityTopics?.length) {
     const finding = String(contract.priorityTopics[0].parentSafeFinding || "").trim();
     if (finding) {
@@ -265,10 +277,14 @@ function buildSubjectOpeningLineHe(sp, lab) {
 function buildSubjectDiagnosisLineHe(sp, lab) {
   const contract = readSubjectEngineContract(sp);
   if (contract?.blockedLegacySummary) {
-    const p1 = contract.priorityTopics?.[1];
-    const p0 = contract.priorityTopics?.[0];
-    const finding = String(p1?.parentSafeFinding || p0?.parentSafeFinding || "").trim();
-    if (finding) return stripGuillemetsHe(finding);
+    const diagnosisTemplateId = String(
+      contract.summarySlots?.diagnosisTemplateId ||
+        (contract.priorityTopics?.length > 1
+          ? SUBJECT_OWNER_COPY_TEMPLATE_IDS.DIAGNOSIS_1
+          : SUBJECT_OWNER_COPY_TEMPLATE_IDS.DIAGNOSIS_0),
+    ).trim();
+    const ownerDiagnosis = resolveSubjectLetterOwnerCopyHe(contract, diagnosisTemplateId, lab);
+    if (ownerDiagnosis) return stripGuillemetsHe(ownerDiagnosis);
     return "";
   }
 
@@ -341,6 +357,14 @@ function buildSubjectDiagnosisLineHe(sp, lab) {
 
 function buildSubjectHomeLineHe(sp, lab) {
   const contract = readSubjectEngineContract(sp);
+  if (contract?.blockedLegacySummary) {
+    const homeTemplateId = String(
+      contract.summarySlots?.homeActionTemplateId || SUBJECT_OWNER_COPY_TEMPLATE_IDS.HOME_ACTION,
+    ).trim();
+    const ownerHome = resolveSubjectLetterOwnerCopyHe(contract, homeTemplateId, lab);
+    if (ownerHome) return stripGuillemetsHe(ownerHome);
+  }
+
   if (contract?.blockedLegacySummary && contract.priorityTopics?.[0]) {
     const tr = findTopicRecommendationForPriority(sp, contract.priorityTopics[0].topicKey);
     if (tr?.recommendedNextStep) {
@@ -366,10 +390,11 @@ function buildSubjectHomeLineHe(sp, lab) {
 function buildSubjectClosingLineHe(sp, lab) {
   const contract = readSubjectEngineContract(sp);
   if (contract?.blockedLegacySummary) {
-    const g = sp?.nextWeekGoalHe && String(sp.nextWeekGoalHe).trim();
-    const parts = [];
-    if (g) parts.push(takeFirstSentence(rewriteParentRecommendationForDetailedHe(g)));
-    if (parts.length) return stripGuillemetsHe(parts.join(" "));
+    const closingTemplateId = String(
+      contract.summarySlots?.closingTemplateId || SUBJECT_OWNER_COPY_TEMPLATE_IDS.CLOSING,
+    ).trim();
+    const ownerClosing = resolveSubjectLetterOwnerCopyHe(contract, closingTemplateId, lab);
+    if (ownerClosing) return stripGuillemetsHe(ownerClosing);
     return "";
   }
 
@@ -562,7 +587,9 @@ export function buildTopicRecommendationNarrative(tr) {
       : homeLine;
   const snapshotFromContract = [summarySlot, findingSlot].filter(Boolean).join(" ");
   let homeFromContract = hasCanonicalNarrative ? recommendationSlot || "" : recommendationSlot || homeAug;
-  let snapshotOut = snapshotFromContract || snap;
+  const ownerSnapshot = resolveNarrativeOwnerCopyHe(tr, "snapshot");
+  const ownerCaution = resolveNarrativeOwnerCopyHe(tr, "cautionLineHe");
+  let snapshotOut = ownerSnapshot || snapshotFromContract || snap;
 
   if (suppressRegisteredGradeStrengthenCopy(gradeRelation)) {
     const needsSupport = gradeContextNeedsSupport(gradeRelation, acc);
@@ -573,7 +600,8 @@ export function buildTopicRecommendationNarrative(tr) {
     if (action) homeFromContract = action;
   }
 
-  const cautionFromContract = limitationsSlot || (whyHold ? stripGuillemetsHe(takeFirstSentence(whyHold)) : "");
+  const cautionFromContract =
+    ownerCaution || limitationsSlot || (whyHold ? stripGuillemetsHe(takeFirstSentence(whyHold)) : "");
   return {
     snapshot: normalizeParentFacingHe(stripGuillemetsHe(snapshotOut)),
     homeLine: normalizeParentFacingHe(stripGuillemetsHe(homeFromContract)),

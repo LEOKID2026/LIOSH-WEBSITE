@@ -27,12 +27,34 @@ const {
   zeroEvidenceSubjectLineHe,
   thinEvidenceSubjectLineHe,
 } = await import(u("utils/parent-report-language/subject-evidence-policy.js"));
+const {
+  buildSubjectOwnerCopySlots,
+  renderOwnerSubjectCopyTemplateHe,
+  SUBJECT_OWNER_COPY_TEMPLATE_IDS,
+} = await import(u("utils/parent-report-language/parent-report-owner-copy-templates-he.js"));
+const {
+  buildTopicOwnerCopySlots,
+  resolveTopicOwnerCopyHe,
+  resolveTopicExplainOwnerSectionsHe,
+  resolveTopicRecommendationOwnerCopyHe,
+  resolveNarrativeOwnerCopyHe,
+  resolveTopicOwnerBaseTemplateId,
+} = await import(u("utils/learning-pattern-decision/resolve-topic-owner-copy.js"));
+const { parentReportOwnerTopicCopyTemplatesHe } = await import(
+  u("utils/parent-report-language/parent-report-owner-topic-copy-templates-he.js")
+);
+const { EDC_CONTRACT_KEY } = await import(u("utils/learning-pattern-decision/engine-decision-codes.js"));
 
 const SKIP_FILES = new Set([
+  // Normalization / guard infrastructure — not parent-visible copy.
   "utils/parent-report-language/forbidden-terms.js",
   "utils/parent-report-language/parent-facing-normalize-he.js",
   "utils/parent-report-language/parent-report-hebrew-copy-spec.js",
+  // Owner-authored editorial packs: skip static source literal scan only.
+  // Rendered output from these packs is validated in ownerCopyRenderedSamples below.
   "utils/parent-report-language/engine-decision-parent-copy-he.js",
+  "utils/parent-report-language/parent-report-owner-copy-templates-he.js",
+  "utils/parent-report-language/parent-report-owner-topic-copy-templates-he.js",
 ]);
 
 /**
@@ -57,6 +79,8 @@ const INTERNAL_ONLY_SOURCE_SNIPPETS = Object.freeze({
 
 const SCAN_ROOTS = [
   "utils/parent-report-language",
+  "utils/learning-pattern-decision/resolve-subject-owner-copy.js",
+  "utils/learning-pattern-decision/resolve-topic-owner-copy.js",
   "utils/parent-data-presence.js",
   "utils/detailed-parent-report.js",
   "utils/detailed-report-parent-letter-he.js",
@@ -177,11 +201,215 @@ for (const q of [0, 3, 12, 40]) {
   }
 }
 
+const ownerCopyRenderedSamples = (() => {
+  /** @type {string[]} */
+  const out = [];
+  const fixtures = [
+    {
+      subjectLabelHe: "מתמטיקה",
+      contract: {
+        subjectDecision: "multiple_topic_gaps",
+        recommendedSubjectAction: "remediate_priority_topics_same_level",
+        blockedLegacySummary: true,
+        priorityTopics: [
+          {
+            topicLabelKey: "שברים",
+            questions: 206,
+            correct: 108,
+            wrong: 98,
+            accuracy: 52,
+            detectedPattern: "השוואה לפי מונה בלבד",
+            evidenceStrength: "strong",
+          },
+          {
+            topicLabelKey: "כפל",
+            questions: 32,
+            correct: 22,
+            wrong: 10,
+            accuracy: 69,
+            detectedPattern: "אותם זוגות שגויים",
+            evidenceStrength: "strong",
+          },
+        ],
+      },
+    },
+    {
+      subjectLabelHe: "מתמטיקה",
+      contract: {
+        subjectDecision: "focused_strengthening_needed",
+        recommendedSubjectAction: "remediate_priority_topics_same_level",
+        blockedLegacySummary: true,
+        priorityTopics: [
+          {
+            topicLabelKey: "חיבור",
+            questions: 10,
+            correct: 2,
+            wrong: 8,
+            accuracy: 20,
+            detectedPattern: null,
+            evidenceStrength: "supported",
+          },
+        ],
+      },
+    },
+  ];
+  for (const fx of fixtures) {
+    const slots = buildSubjectOwnerCopySlots(fx.contract, fx.subjectLabelHe);
+    if (!slots) continue;
+    for (const templateId of Object.values(SUBJECT_OWNER_COPY_TEMPLATE_IDS)) {
+      const rendered = renderOwnerSubjectCopyTemplateHe(templateId, slots);
+      if (rendered) out.push(rendered);
+    }
+  }
+  return out;
+})();
+
+const topicOwnerCopyRenderedSamples = (() => {
+  /** @type {string[]} */
+  const out = [];
+  /** @param {Record<string, unknown>} body @param {Record<string, unknown>} contract */
+  const lpdWithContract = (body, contract) => ({ ...body, [EDC_CONTRACT_KEY]: contract });
+  const fixtures = [
+    {
+      label: "שברים",
+      subjectLabelHe: "מתמטיקה",
+      questions: 206,
+      correct: 108,
+      wrong: 98,
+      accuracy: 52,
+      learningPatternDecision: lpdWithContract(
+        {
+          templateId: "difficulty_observed",
+          topicStatus: "difficulty_observed",
+          findingType: "difficulty_pattern",
+          evidenceStrength: "strong",
+          practicedQuestions: 206,
+        },
+        {
+          engineDecision: "clear_topic_gap",
+          detectedPattern: "השוואה לפי מונה בלבד",
+          recommendedAction: "remediate_same_level",
+          evidenceStrength: "strong",
+        },
+      ),
+      contractsV1: { narrative: { wordingEnvelope: "WE2" } },
+    },
+    {
+      label: "חיבור",
+      subjectLabelHe: "מתמטיקה",
+      questions: 10,
+      correct: 2,
+      wrong: 8,
+      accuracy: 20,
+      learningPatternDecision: lpdWithContract(
+        {
+          templateId: "difficulty_observed",
+          topicStatus: "difficulty_observed",
+          findingType: "difficulty_pattern",
+          evidenceStrength: "supported",
+          practicedQuestions: 10,
+        },
+        {
+          engineDecision: "clear_topic_gap",
+          detectedPattern: null,
+          recommendedAction: "remediate_same_level",
+          evidenceStrength: "supported",
+        },
+      ),
+      contractsV1: { narrative: { wordingEnvelope: "WE1" } },
+    },
+    {
+      label: "חיבור חיובי",
+      subjectLabelHe: "מתמטיקה",
+      questions: 8,
+      correct: 6,
+      wrong: 2,
+      accuracy: 75,
+      learningPatternDecision: lpdWithContract(
+        {
+          templateId: "positive_observed",
+          topicStatus: "positive_observed",
+          findingType: "success_pattern",
+          evidenceStrength: "supported",
+          practicedQuestions: 8,
+        },
+        {
+          engineDecision: "maintain_and_strengthen",
+          detectedPattern: null,
+          recommendedAction: "maintain_and_strengthen",
+        },
+      ),
+      contractsV1: { narrative: { wordingEnvelope: "WE2" } },
+    },
+    {
+      label: "חילוק עם שארית",
+      subjectLabelHe: "מתמטיקה",
+      questions: 2,
+      correct: 1,
+      wrong: 1,
+      accuracy: 50,
+      learningPatternDecision: lpdWithContract(
+        {
+          templateId: "initial_topic_data",
+          topicStatus: "initial_data",
+          findingType: "initial_topic_data",
+          evidenceStrength: "low",
+          practicedQuestions: 2,
+        },
+        {
+          engineDecision: "early_direction_only",
+          detectedPattern: null,
+        },
+      ),
+      contractsV1: { narrative: { wordingEnvelope: "WE0" } },
+    },
+  ];
+  for (const fx of fixtures) {
+    const base = resolveTopicOwnerBaseTemplateId(fx.learningPatternDecision);
+    const we = String(fx.contractsV1?.narrative?.wordingEnvelope || "").toUpperCase();
+    const templateIds = Object.keys(parentReportOwnerTopicCopyTemplatesHe).filter((id) => {
+      if (id.startsWith("NARRATIVE_")) return we && id.startsWith(`NARRATIVE_${we}_`);
+      return id === base || id.startsWith(`${base}:`);
+    });
+    for (const templateId of templateIds) {
+      const rendered = resolveTopicOwnerCopyHe(fx, templateId);
+      if (rendered) out.push(rendered);
+    }
+    const explain = resolveTopicExplainOwnerSectionsHe(fx);
+    if (explain) out.push(...Object.values(explain).filter(Boolean));
+    for (const field of ["stepLabel", "finding", "interventionPlan", "doNow", "caution"]) {
+      const rec = resolveTopicRecommendationOwnerCopyHe(fx, field);
+      if (rec) out.push(rec);
+    }
+    for (const section of ["snapshot", "cautionLineHe"]) {
+      const narr = resolveNarrativeOwnerCopyHe(fx, section);
+      if (narr) out.push(narr);
+    }
+  }
+  return out;
+})();
+
+const TOPIC_OWNER_INTERNAL_LEAK_TERMS = [
+  "clear_topic_gap",
+  "topic_needs_strengthening",
+  "early_direction_only",
+  "engineDecision",
+  "parentSafeFinding",
+  "recommendedAction",
+  "undefined",
+  "unknown",
+];
+
 const renderedSamples = [
   zeroEvidenceSubjectLineHe("חשבון"),
   thinEvidenceSubjectLineHe("עברית", 5),
   ...narrativeSamples,
+  ...ownerCopyRenderedSamples,
 ].map((s) => normalizeParentFacingHe(String(s || "")));
+
+const topicOwnerRenderedSamples = topicOwnerCopyRenderedSamples.map((s) =>
+  normalizeParentFacingHe(String(s || "")),
+);
 
 for (const [i, sample] of renderedSamples.entries()) {
   const copyHits = findParentCopyForbiddenFragmentsInString(sample);
@@ -192,6 +420,16 @@ for (const [i, sample] of renderedSamples.entries()) {
   assert.equal(leakHits.length, 0, `rendered sample[${i}] readability leak: [${leakHits.join(", ")}]\n${sample.slice(0, 200)}`);
   const enumHits = findParentReportEnglishEnumLeaks(sample);
   assert.equal(enumHits.length, 0, `rendered sample[${i}] english enum leak: [${enumHits.join(", ")}]\n${sample.slice(0, 200)}`);
+}
+
+for (const [i, sample] of topicOwnerRenderedSamples.entries()) {
+  for (const term of TOPIC_OWNER_INTERNAL_LEAK_TERMS) {
+    assert.doesNotMatch(String(sample), new RegExp(term, "i"), `topic owner sample[${i}] internal leak: ${term}\n${sample.slice(0, 200)}`);
+  }
+  const dupHits = findDuplicateWordPairsInString(sample);
+  assert.equal(dupHits.length, 0, `topic owner sample[${i}] duplicate pair: [${dupHits.join(", ")}]\n${sample.slice(0, 200)}`);
+  const enumHits = findParentReportEnglishEnumLeaks(sample);
+  assert.equal(enumHits.length, 0, `topic owner sample[${i}] english enum leak: [${enumHits.join(", ")}]\n${sample.slice(0, 200)}`);
 }
 
 for (const rawMode of ["practice", "guided_practice", "learning_book", "worksheet", "self_practice"]) {
@@ -208,6 +446,30 @@ const requiredInScan = [
 for (const req of requiredInScan) {
   assert.ok(files.includes(req), `guard must scan ${req}`);
 }
+
+// Wiring paths stay in static scan; only owner editorial packs are source-scan exempt.
+assert.ok(
+  SKIP_FILES.has("utils/parent-report-language/parent-report-owner-copy-templates-he.js"),
+  "owner copy pack must remain source-scan exempt (rendered samples checked separately)",
+);
+assert.ok(
+  files.includes("utils/detailed-report-parent-letter-he.js"),
+  "guard must scan parent letter wiring for forbidden source fragments",
+);
+assert.ok(
+  files.includes("utils/learning-pattern-decision/resolve-subject-owner-copy.js"),
+  "guard must scan subject owner-copy resolver wiring",
+);
+assert.ok(
+  SKIP_FILES.has("utils/parent-report-language/parent-report-owner-topic-copy-templates-he.js"),
+  "topic owner copy pack must remain source-scan exempt (rendered samples checked separately)",
+);
+assert.ok(
+  files.includes("utils/learning-pattern-decision/resolve-topic-owner-copy.js"),
+  "guard must scan topic owner-copy resolver wiring",
+);
+assert.ok(ownerCopyRenderedSamples.length >= 5, "owner copy rendered samples must cover Phase A templates");
+assert.ok(topicOwnerCopyRenderedSamples.length >= 20, "topic owner copy rendered samples must cover Phase B+C+D");
 
 const GUILLEMET_UI_FILES = [
   "utils/parent-report-language/parent-report-hebrew-copy-spec.js",
@@ -276,5 +538,7 @@ console.log(
   files.length,
   "files scanned,",
   renderedSamples.length,
-  "rendered samples checked"
+  "rendered samples checked (incl.",
+  ownerCopyRenderedSamples.length,
+  "owner subject templates)",
 );

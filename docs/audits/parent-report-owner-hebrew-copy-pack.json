@@ -1,0 +1,4832 @@
+{
+  "generatedAt": "2026-07-04T23:23:28.347Z",
+  "purpose": "owner_hebrew_copy_pack",
+  "sourceInventory": "docs/audits/parent-report-copy-template-inventory.json",
+  "sourceInventoryGeneratedAt": "2026-07-04T23:03:30.561Z",
+  "constraints": [
+    "no_hebrew_copy_changes_by_agent",
+    "no_engine_decision_changes",
+    "no_metrics_changes",
+    "no_template_behavior_changes",
+    "grouped_by_unique_templateId"
+  ],
+  "slotKeys": [
+    "subjectName",
+    "topicName",
+    "questions",
+    "correct",
+    "wrong",
+    "accuracy",
+    "detectedPattern",
+    "affectedSubskill",
+    "misconceptionLabel",
+    "recommendedAction",
+    "priorityTopics",
+    "evidenceStrength"
+  ],
+  "totals": {
+    "inventoryEntries": 141,
+    "uniqueTemplates": 43,
+    "subjectLevelTemplates": 5,
+    "topicLevelTemplates": 38,
+    "multiSurfaceTemplates": 5
+  },
+  "templates": [
+    {
+      "templateId": "remediate_priority_topics_same_level",
+      "baseLpdTemplateId": "remediate_priority_topics_same_level",
+      "level": "subject",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 2,
+      "studentsWithLiveExample": [
+        "aaa7",
+        "omer"
+      ],
+      "decisionCodes": [
+        "focused_strengthening_needed",
+        "multiple_topic_gaps"
+      ],
+      "subjectDecisions": [
+        "focused_strengthening_needed",
+        "multiple_topic_gaps"
+      ],
+      "topicDecisions": [],
+      "surfaces": [
+        {
+          "surface": "homeAction",
+          "sections": [
+            "homeAction"
+          ]
+        }
+      ],
+      "sources": [
+        "subjectEngineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "homeAction",
+        "section": "homeAction",
+        "topicKey": null,
+        "decisionCode": "multiple_topic_gaps",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "שברים",
+          "questions": 275,
+          "accuracy": 56,
+          "detectedPattern": "השוואה לפי מונה בלבד",
+          "affectedSubskill": "חלק כלל",
+          "misconceptionLabel": "מצביע על דפוס: השוואה לפי מונה בלבד (נקודת מיקוד: חלק כלל) בשברים.",
+          "recommendedAction": "remediate_priority_topics_same_level",
+          "priorityTopics": [
+            "fractions::grade:g5",
+            "multiplication::grade:g5",
+            "decimals::grade:g5",
+            "subtraction::grade:g5",
+            "addition::grade:g5"
+          ],
+          "evidenceStrength": "strong"
+        },
+        "currentRenderedText": "remediate same level"
+      },
+      "renderFunctions": [
+        "utils/detailed-report-parent-letter-he.js → buildSubjectParentLetter"
+      ],
+      "technicalConstraints": [
+        "homeAction surface may render recommendedSubjectAction code; owner copy should replace action label while preserving decision code.",
+        "Subject contract aggregation only; do not change engineDecision codes when replacing copy."
+      ],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "SUBJECT_CLOSING_ENGINE_CONTRACT",
+      "baseLpdTemplateId": "SUBJECT_CLOSING_ENGINE_CONTRACT",
+      "level": "subject",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 2,
+      "studentsWithLiveExample": [
+        "aaa7",
+        "omer"
+      ],
+      "decisionCodes": [
+        "focused_strengthening_needed",
+        "multiple_topic_gaps"
+      ],
+      "subjectDecisions": [
+        "focused_strengthening_needed",
+        "multiple_topic_gaps"
+      ],
+      "topicDecisions": [],
+      "surfaces": [
+        {
+          "surface": "parentLetter",
+          "sections": [
+            "closing"
+          ]
+        }
+      ],
+      "sources": [
+        "subjectEngineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "parentLetter",
+        "section": "closing",
+        "topicKey": null,
+        "decisionCode": "multiple_topic_gaps",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "שברים",
+          "questions": 275,
+          "accuracy": 56,
+          "detectedPattern": "השוואה לפי מונה בלבד",
+          "affectedSubskill": "חלק כלל",
+          "misconceptionLabel": "מצביע על דפוס: השוואה לפי מונה בלבד (נקודת מיקוד: חלק כלל) בשברים.",
+          "recommendedAction": "remediate_priority_topics_same_level",
+          "priorityTopics": [
+            "fractions::grade:g5",
+            "multiplication::grade:g5",
+            "decimals::grade:g5",
+            "subtraction::grade:g5",
+            "addition::grade:g5"
+          ],
+          "evidenceStrength": "strong"
+        },
+        "currentRenderedText": "בשבוע הקרוב התמקדו בהשוואת שברים בעזרת שברים שקולים, מכנה משותף ואומדן, עם נימוק ברור לכל השוואה."
+      },
+      "renderFunctions": [
+        "utils/detailed-report-parent-letter-he.js → buildSubjectParentLetter"
+      ],
+      "technicalConstraints": [
+        "Closing slot may include topic-specific home guidance derived from priority topic metadata.",
+        "Subject contract aggregation only; do not change engineDecision codes when replacing copy."
+      ],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "SUBJECT_DIAGNOSIS_PRIORITY_TOPIC_0",
+      "baseLpdTemplateId": "SUBJECT_DIAGNOSIS_PRIORITY_TOPIC_0",
+      "level": "subject",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 1,
+      "studentsWithLiveExample": [
+        "aaa7"
+      ],
+      "decisionCodes": [
+        "focused_strengthening_needed"
+      ],
+      "subjectDecisions": [
+        "focused_strengthening_needed"
+      ],
+      "topicDecisions": [],
+      "surfaces": [
+        {
+          "surface": "parentLetter",
+          "sections": [
+            "diagnosisHe"
+          ]
+        }
+      ],
+      "sources": [
+        "subjectEngineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "aaa7",
+        "studentLabel": "Aaa7 math",
+        "range": {
+          "from": "2026-07-04",
+          "to": "2026-07-04"
+        },
+        "surface": "parentLetter",
+        "section": "diagnosisHe",
+        "topicKey": null,
+        "decisionCode": "focused_strengthening_needed",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חיבור",
+          "questions": 10,
+          "accuracy": 20,
+          "recommendedAction": "remediate_priority_topics_same_level",
+          "priorityTopics": [
+            "addition::grade:g4"
+          ],
+          "evidenceStrength": "supported"
+        },
+        "currentRenderedText": "בנושא חיבור נראה קושי ברור — 8 שגויות מתוך 10 שאלות (20% דיוק). כדאי לחזור ולחזק את חיבור לפני שממשיכים. מבוסס על 10 שאלות שנפתרו בנושא."
+      },
+      "renderFunctions": [
+        "utils/detailed-report-parent-letter-he.js → buildSubjectParentLetter"
+      ],
+      "technicalConstraints": [
+        "Diagnosis line selects priorityTopics[1] when multiple gaps (TOPIC_1) else priorityTopics[0] (TOPIC_0).",
+        "Subject contract aggregation only; do not change engineDecision codes when replacing copy."
+      ],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "SUBJECT_DIAGNOSIS_PRIORITY_TOPIC_1",
+      "baseLpdTemplateId": "SUBJECT_DIAGNOSIS_PRIORITY_TOPIC_1",
+      "level": "subject",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 1,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "multiple_topic_gaps"
+      ],
+      "subjectDecisions": [
+        "multiple_topic_gaps"
+      ],
+      "topicDecisions": [],
+      "surfaces": [
+        {
+          "surface": "parentLetter",
+          "sections": [
+            "diagnosisHe"
+          ]
+        }
+      ],
+      "sources": [
+        "subjectEngineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "parentLetter",
+        "section": "diagnosisHe",
+        "topicKey": null,
+        "decisionCode": "multiple_topic_gaps",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "שברים",
+          "questions": 275,
+          "accuracy": 56,
+          "detectedPattern": "השוואה לפי מונה בלבד",
+          "affectedSubskill": "חלק כלל",
+          "misconceptionLabel": "מצביע על דפוס: השוואה לפי מונה בלבד (נקודת מיקוד: חלק כלל) בשברים.",
+          "recommendedAction": "remediate_priority_topics_same_level",
+          "priorityTopics": [
+            "fractions::grade:g5",
+            "multiplication::grade:g5",
+            "decimals::grade:g5",
+            "subtraction::grade:g5",
+            "addition::grade:g5"
+          ],
+          "evidenceStrength": "strong"
+        },
+        "currentRenderedText": "בנושא כפל מופיע דפוס חוזר של טעויות (אותם זוגות שגויים). כדאי לחזק את הנושא. מבוסס על 32 שאלות שנפתרו בנושא."
+      },
+      "renderFunctions": [
+        "utils/detailed-report-parent-letter-he.js → buildSubjectParentLetter"
+      ],
+      "technicalConstraints": [
+        "Diagnosis line selects priorityTopics[1] when multiple gaps (TOPIC_1) else priorityTopics[0] (TOPIC_0).",
+        "Subject contract aggregation only; do not change engineDecision codes when replacing copy."
+      ],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "SUBJECT_OPENING_PRIORITY_TOPIC_0",
+      "baseLpdTemplateId": "SUBJECT_OPENING_PRIORITY_TOPIC_0",
+      "level": "subject",
+      "appearsOnMultipleSurfaces": true,
+      "inventoryEntryCount": 6,
+      "studentsWithLiveExample": [
+        "aaa7",
+        "omer"
+      ],
+      "decisionCodes": [
+        "focused_strengthening_needed",
+        "multiple_topic_gaps"
+      ],
+      "subjectDecisions": [
+        "focused_strengthening_needed",
+        "multiple_topic_gaps"
+      ],
+      "topicDecisions": [],
+      "surfaces": [
+        {
+          "surface": "parentLetter",
+          "sections": [
+            "opening"
+          ]
+        },
+        {
+          "surface": "shortReport",
+          "sections": [
+            "subjectSummary"
+          ]
+        },
+        {
+          "surface": "subjectRollup",
+          "sections": [
+            "summaryHe"
+          ]
+        }
+      ],
+      "sources": [
+        "subjectEngineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "shortReport",
+        "section": "subjectSummary",
+        "topicKey": null,
+        "decisionCode": "multiple_topic_gaps",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "שברים",
+          "questions": 904,
+          "accuracy": 76,
+          "detectedPattern": "השוואה לפי מונה בלבד",
+          "affectedSubskill": "חלק כלל",
+          "misconceptionLabel": "מצביע על דפוס: השוואה לפי מונה בלבד (נקודת מיקוד: חלק כלל) בשברים.",
+          "recommendedAction": "remediate_priority_topics_same_level",
+          "priorityTopics": [
+            "fractions::grade:g5",
+            "multiplication::grade:g5",
+            "multiplication::grade:g1",
+            "multiplication::grade:g4",
+            "decimals::grade:g5"
+          ],
+          "evidenceStrength": "strong"
+        },
+        "currentRenderedText": "בנושא שברים מופיע דפוס חוזר של טעויות (השוואה לפי מונה בלבד). כדאי לחזק את הנושא. מבוסס על 206 שאלות שנפתרו בנושא."
+      },
+      "renderFunctions": [
+        "utils/detailed-parent-report.js → resolveSubjectSummaryTextFromEngineContract / buildSubjectProfilesFromV2",
+        "utils/detailed-report-parent-letter-he.js → buildSubjectParentLetter",
+        "utils/parent-report-v2.js → summarizeV2UnitsForSubject → resolveSubjectSummaryTextFromEngineContract"
+      ],
+      "technicalConstraints": [
+        "Interim render uses priorityTopics[0].parentSafeFinding until owner copy is wired; subjectDecision drives slot selection.",
+        "Subject contract aggregation only; do not change engineDecision codes when replacing copy."
+      ],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "difficulty_observed",
+      "baseLpdTemplateId": "difficulty_observed",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": true,
+      "inventoryEntryCount": 13,
+      "studentsWithLiveExample": [
+        "aaa7",
+        "omer"
+      ],
+      "decisionCodes": [
+        "clear_topic_gap",
+        "topic_needs_strengthening"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "clear_topic_gap",
+        "topic_needs_strengthening"
+      ],
+      "surfaces": [
+        {
+          "surface": "shortReport",
+          "sections": [
+            "topicInsightLine"
+          ]
+        },
+        {
+          "surface": "topicExplain",
+          "sections": [
+            "primaryFinding"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "shortReport",
+        "section": "topicInsightLine",
+        "topicKey": "subtraction::grade:g5",
+        "decisionCode": "topic_needs_strengthening",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חיסור",
+          "questions": 12,
+          "correct": 8,
+          "wrong": 4,
+          "accuracy": 67,
+          "detectedPattern": "כיוון הפוך / הוספה במקום חיסור",
+          "affectedSubskill": "השלמה לעשר",
+          "misconceptionLabel": "מצביע על דפוס: כיוון הפוך / הוספה במקום חיסור (נקודת מיקוד: השלמה לעשר) בחיסור.",
+          "recommendedAction": "remediate_same_level",
+          "evidenceStrength": "strong"
+        },
+        "currentRenderedText": "מתמטיקה — «חיסור - כיתה ה׳»: בנושא חיסור מופיע דפוס חוזר של טעויות (כיוון הפוך / הוספה במקום חיסור). כדאי לחזק את הנושא. מבוסס על 12 שאלות שנפתרו בנושא."
+      },
+      "renderFunctions": [
+        "utils/learning-pattern-decision/lpd-parent-facing-copy.js → resolveParentExplainRowCopy",
+        "utils/parent-report-engine-insights-he.js → buildTopicEngineInsightLineHe → buildLpdSafeTopicInsightLineHe"
+      ],
+      "technicalConstraints": [],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "difficulty_observed:RECOMMENDATION_DO_NOW",
+      "baseLpdTemplateId": "difficulty_observed",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 4,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "topic_needs_strengthening"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "topic_needs_strengthening"
+      ],
+      "surfaces": [
+        {
+          "surface": "recommendationCard",
+          "sections": [
+            "doNowHe"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "recommendationCard",
+        "section": "doNowHe",
+        "topicKey": "subtraction::grade:g5",
+        "decisionCode": "topic_needs_strengthening",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חיסור",
+          "questions": 12,
+          "correct": 8,
+          "wrong": 4,
+          "accuracy": 67,
+          "detectedPattern": "כיוון הפוך / הוספה במקום חיסור",
+          "affectedSubskill": "השלמה לעשר",
+          "misconceptionLabel": "מצביע על דפוס: כיוון הפוך / הוספה במקום חיסור (נקודת מיקוד: השלמה לעשר) בחיסור.",
+          "recommendedAction": "remediate_same_level",
+          "evidenceStrength": "strong"
+        },
+        "currentRenderedText": "כדאי לתרגל חיסור במספרים גדולים או בהקשר רב שלבי, עם אומדן לפני הפתרון ובדיקת סבירות בסיום. בקשו מהילד להסביר את דרך החישוב ולא רק לכתוב תשובה."
+      },
+      "renderFunctions": [
+        "utils/detailed-parent-report.js → recommendationFromV2Unit"
+      ],
+      "technicalConstraints": [
+        "Recommendation card field; gated by parentTopicTierShowsRecommendationCard on detailed report path."
+      ],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "difficulty_observed:RECOMMENDATION_FINDING",
+      "baseLpdTemplateId": "difficulty_observed",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 5,
+      "studentsWithLiveExample": [
+        "aaa7",
+        "omer"
+      ],
+      "decisionCodes": [
+        "clear_topic_gap",
+        "topic_needs_strengthening"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "clear_topic_gap",
+        "topic_needs_strengthening"
+      ],
+      "surfaces": [
+        {
+          "surface": "recommendationCard",
+          "sections": [
+            "parentVisibleFinding"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "recommendationCard",
+        "section": "parentVisibleFinding",
+        "topicKey": "subtraction::grade:g5",
+        "decisionCode": "topic_needs_strengthening",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חיסור",
+          "questions": 12,
+          "correct": 8,
+          "wrong": 4,
+          "accuracy": 67,
+          "detectedPattern": "כיוון הפוך / הוספה במקום חיסור",
+          "affectedSubskill": "השלמה לעשר",
+          "misconceptionLabel": "מצביע על דפוס: כיוון הפוך / הוספה במקום חיסור (נקודת מיקוד: השלמה לעשר) בחיסור.",
+          "recommendedAction": "remediate_same_level",
+          "evidenceStrength": "strong"
+        },
+        "currentRenderedText": "בנושא חיסור מופיע דפוס חוזר של טעויות (כיוון הפוך / הוספה במקום חיסור). כדאי לחזק את הנושא. מבוסס על 12 שאלות שנפתרו בנושא."
+      },
+      "renderFunctions": [
+        "utils/detailed-parent-report.js → recommendationFromV2Unit"
+      ],
+      "technicalConstraints": [
+        "Recommendation card field; gated by parentTopicTierShowsRecommendationCard on detailed report path."
+      ],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "difficulty_observed:RECOMMENDATION_INTERVENTION_PLAN",
+      "baseLpdTemplateId": "difficulty_observed",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 4,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "topic_needs_strengthening"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "topic_needs_strengthening"
+      ],
+      "surfaces": [
+        {
+          "surface": "recommendationCard",
+          "sections": [
+            "interventionPlanHe"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "recommendationCard",
+        "section": "interventionPlanHe",
+        "topicKey": "subtraction::grade:g5",
+        "decisionCode": "topic_needs_strengthening",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חיסור",
+          "questions": 12,
+          "correct": 8,
+          "wrong": 4,
+          "accuracy": 67,
+          "detectedPattern": "כיוון הפוך / הוספה במקום חיסור",
+          "affectedSubskill": "השלמה לעשר",
+          "misconceptionLabel": "מצביע על דפוס: כיוון הפוך / הוספה במקום חיסור (נקודת מיקוד: השלמה לעשר) בחיסור.",
+          "recommendedAction": "remediate_same_level",
+          "evidenceStrength": "strong"
+        },
+        "currentRenderedText": "בשבוע הקרוב התמקדו בחיסור כחלק מפתרון בעיות, כולל אומדן, בדיקת סבירות והסבר קצר של דרך הפתרון."
+      },
+      "renderFunctions": [
+        "utils/detailed-parent-report.js → recommendationFromV2Unit"
+      ],
+      "technicalConstraints": [
+        "Recommendation card field; gated by parentTopicTierShowsRecommendationCard on detailed report path."
+      ],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "difficulty_observed:RECOMMENDATION_STEP_LABEL",
+      "baseLpdTemplateId": "difficulty_observed",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 5,
+      "studentsWithLiveExample": [
+        "aaa7",
+        "omer"
+      ],
+      "decisionCodes": [
+        "clear_topic_gap",
+        "topic_needs_strengthening"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "clear_topic_gap",
+        "topic_needs_strengthening"
+      ],
+      "surfaces": [
+        {
+          "surface": "recommendationCard",
+          "sections": [
+            "recommendedStepLabelHe"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "recommendationCard",
+        "section": "recommendedStepLabelHe",
+        "topicKey": "subtraction::grade:g5",
+        "decisionCode": "topic_needs_strengthening",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חיסור",
+          "questions": 12,
+          "correct": 8,
+          "wrong": 4,
+          "accuracy": 67,
+          "detectedPattern": "כיוון הפוך / הוספה במקום חיסור",
+          "affectedSubskill": "השלמה לעשר",
+          "misconceptionLabel": "מצביע על דפוס: כיוון הפוך / הוספה במקום חיסור (נקודת מיקוד: השלמה לעשר) בחיסור.",
+          "recommendedAction": "remediate_same_level",
+          "evidenceStrength": "strong"
+        },
+        "currentRenderedText": "חיזוק ממוקד לפני שמעלים רמה"
+      },
+      "renderFunctions": [
+        "utils/detailed-parent-report.js → recommendationFromV2Unit"
+      ],
+      "technicalConstraints": [
+        "Recommendation card field; gated by parentTopicTierShowsRecommendationCard on detailed report path."
+      ],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "difficulty_observed:TOPIC_EXPLAIN_DATA",
+      "baseLpdTemplateId": "difficulty_observed",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 8,
+      "studentsWithLiveExample": [
+        "aaa7",
+        "omer"
+      ],
+      "decisionCodes": [
+        "clear_topic_gap",
+        "topic_needs_strengthening"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "clear_topic_gap",
+        "topic_needs_strengthening"
+      ],
+      "surfaces": [
+        {
+          "surface": "topicExplain",
+          "sections": [
+            "data"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "topicExplain",
+        "section": "data",
+        "topicKey": "subtraction::grade:g5",
+        "decisionCode": "topic_needs_strengthening",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חיסור",
+          "questions": 12,
+          "correct": 8,
+          "wrong": 4,
+          "accuracy": 67,
+          "detectedPattern": "כיוון הפוך / הוספה במקום חיסור",
+          "affectedSubskill": "השלמה לעשר",
+          "misconceptionLabel": "מצביע על דפוס: כיוון הפוך / הוספה במקום חיסור (נקודת מיקוד: השלמה לעשר) בחיסור.",
+          "recommendedAction": "remediate_same_level",
+          "evidenceStrength": "strong"
+        },
+        "currentRenderedText": "הנתונים: הילד/ה פתר/ה 12 שאלות בנושא חיסור, מתוכן 8 נכונות ו-4 שגויות."
+      },
+      "renderFunctions": [
+        "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe"
+      ],
+      "technicalConstraints": [],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "difficulty_observed:TOPIC_EXPLAIN_HOME_ACTION",
+      "baseLpdTemplateId": "difficulty_observed",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 8,
+      "studentsWithLiveExample": [
+        "aaa7",
+        "omer"
+      ],
+      "decisionCodes": [
+        "clear_topic_gap",
+        "topic_needs_strengthening"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "clear_topic_gap",
+        "topic_needs_strengthening"
+      ],
+      "surfaces": [
+        {
+          "surface": "topicExplain",
+          "sections": [
+            "action"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "topicExplain",
+        "section": "action",
+        "topicKey": "subtraction::grade:g5",
+        "decisionCode": "topic_needs_strengthening",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חיסור",
+          "questions": 12,
+          "correct": 8,
+          "wrong": 4,
+          "accuracy": 67,
+          "detectedPattern": "כיוון הפוך / הוספה במקום חיסור",
+          "affectedSubskill": "השלמה לעשר",
+          "misconceptionLabel": "מצביע על דפוס: כיוון הפוך / הוספה במקום חיסור (נקודת מיקוד: השלמה לעשר) בחיסור.",
+          "recommendedAction": "remediate_same_level",
+          "evidenceStrength": "strong"
+        },
+        "currentRenderedText": "מה כדאי לעשות בבית: תרגול קצר וממוקד בחיסור, עם בדיקה שהילד/ה מסביר/ה את שלבי הפתרון."
+      },
+      "renderFunctions": [
+        "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe"
+      ],
+      "technicalConstraints": [],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "difficulty_observed:TOPIC_EXPLAIN_IDENTIFIED",
+      "baseLpdTemplateId": "difficulty_observed",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 8,
+      "studentsWithLiveExample": [
+        "aaa7",
+        "omer"
+      ],
+      "decisionCodes": [
+        "clear_topic_gap",
+        "topic_needs_strengthening"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "clear_topic_gap",
+        "topic_needs_strengthening"
+      ],
+      "surfaces": [
+        {
+          "surface": "topicExplain",
+          "sections": [
+            "identified"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "topicExplain",
+        "section": "identified",
+        "topicKey": "subtraction::grade:g5",
+        "decisionCode": "topic_needs_strengthening",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חיסור",
+          "questions": 12,
+          "correct": 8,
+          "wrong": 4,
+          "accuracy": 67,
+          "detectedPattern": "כיוון הפוך / הוספה במקום חיסור",
+          "affectedSubskill": "השלמה לעשר",
+          "misconceptionLabel": "מצביע על דפוס: כיוון הפוך / הוספה במקום חיסור (נקודת מיקוד: השלמה לעשר) בחיסור.",
+          "recommendedAction": "remediate_same_level",
+          "evidenceStrength": "strong"
+        },
+        "currentRenderedText": "מה זוהה: בנושא חיסור מופיע דפוס חוזר של טעויות (כיוון הפוך / הוספה במקום חיסור). כדאי לחזק את הנושא. מבוסס על 12 שאלות שנפתרו בנושא."
+      },
+      "renderFunctions": [
+        "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe"
+      ],
+      "technicalConstraints": [],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "difficulty_observed:TOPIC_EXPLAIN_MEANING",
+      "baseLpdTemplateId": "difficulty_observed",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 8,
+      "studentsWithLiveExample": [
+        "aaa7",
+        "omer"
+      ],
+      "decisionCodes": [
+        "clear_topic_gap",
+        "topic_needs_strengthening"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "clear_topic_gap",
+        "topic_needs_strengthening"
+      ],
+      "surfaces": [
+        {
+          "surface": "topicExplain",
+          "sections": [
+            "meaning"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "topicExplain",
+        "section": "meaning",
+        "topicKey": "subtraction::grade:g5",
+        "decisionCode": "topic_needs_strengthening",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חיסור",
+          "questions": 12,
+          "correct": 8,
+          "wrong": 4,
+          "accuracy": 67,
+          "detectedPattern": "כיוון הפוך / הוספה במקום חיסור",
+          "affectedSubskill": "השלמה לעשר",
+          "misconceptionLabel": "מצביע על דפוס: כיוון הפוך / הוספה במקום חיסור (נקודת מיקוד: השלמה לעשר) בחיסור.",
+          "recommendedAction": "remediate_same_level",
+          "evidenceStrength": "strong"
+        },
+        "currentRenderedText": "משמעות: נראה שכדאי לחזק את חיסור לפני שממשיכים לנושאים מתקדמים יותר."
+      },
+      "renderFunctions": [
+        "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe"
+      ],
+      "technicalConstraints": [],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "difficulty_observed:TOPIC_EXPLAIN_PATTERN",
+      "baseLpdTemplateId": "difficulty_observed",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 7,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "topic_needs_strengthening"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "topic_needs_strengthening"
+      ],
+      "surfaces": [
+        {
+          "surface": "topicExplain",
+          "sections": [
+            "pattern"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "topicExplain",
+        "section": "pattern",
+        "topicKey": "subtraction::grade:g5",
+        "decisionCode": "topic_needs_strengthening",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חיסור",
+          "questions": 12,
+          "correct": 8,
+          "wrong": 4,
+          "accuracy": 67,
+          "detectedPattern": "כיוון הפוך / הוספה במקום חיסור",
+          "affectedSubskill": "השלמה לעשר",
+          "misconceptionLabel": "מצביע על דפוס: כיוון הפוך / הוספה במקום חיסור (נקודת מיקוד: השלמה לעשר) בחיסור.",
+          "recommendedAction": "remediate_same_level",
+          "evidenceStrength": "strong"
+        },
+        "currentRenderedText": "דפוס: כיוון הפוך / הוספה במקום חיסור."
+      },
+      "renderFunctions": [
+        "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe"
+      ],
+      "technicalConstraints": [
+        "Section renders only when detectedPattern is present on engineDecisionContract."
+      ],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "initial_topic_data",
+      "baseLpdTemplateId": "initial_topic_data",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": true,
+      "inventoryEntryCount": 2,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "insufficient_data"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "insufficient_data"
+      ],
+      "surfaces": [
+        {
+          "surface": "shortReport",
+          "sections": [
+            "topicInsightLine"
+          ]
+        },
+        {
+          "surface": "topicExplain",
+          "sections": [
+            "primaryFinding"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "shortReport",
+        "section": "topicInsightLine",
+        "topicKey": "division_with_remainder::grade:g5",
+        "decisionCode": "insufficient_data",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חילוק עם שארית",
+          "questions": 2,
+          "correct": 1,
+          "wrong": 1,
+          "accuracy": 50,
+          "recommendedAction": "maintain_and_strengthen",
+          "evidenceStrength": "small_sample"
+        },
+        "currentRenderedText": "מתמטיקה — «חילוק עם שארית - כיתה ה׳»: בנושא חילוק עם שארית נפתרו 2 שאלות. עדיין מוקדם לזהות דפוס ברור בנושא."
+      },
+      "renderFunctions": [
+        "utils/learning-pattern-decision/lpd-parent-facing-copy.js → resolveParentExplainRowCopy",
+        "utils/parent-report-engine-insights-he.js → buildTopicEngineInsightLineHe → buildLpdSafeTopicInsightLineHe"
+      ],
+      "technicalConstraints": [
+        "Insufficient-data template; slots for pattern/misconception typically empty.",
+        "insufficient_data decision: copy must remain cautious / non-diagnostic."
+      ],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "initial_topic_data:TOPIC_EXPLAIN_DATA",
+      "baseLpdTemplateId": "initial_topic_data",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 1,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "insufficient_data"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "insufficient_data"
+      ],
+      "surfaces": [
+        {
+          "surface": "topicExplain",
+          "sections": [
+            "data"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "topicExplain",
+        "section": "data",
+        "topicKey": "division_with_remainder::grade:g5",
+        "decisionCode": "insufficient_data",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חילוק עם שארית",
+          "questions": 2,
+          "correct": 1,
+          "wrong": 1,
+          "accuracy": 50,
+          "recommendedAction": "maintain_and_strengthen",
+          "evidenceStrength": "small_sample"
+        },
+        "currentRenderedText": "הנתונים: נפתרו 2 שאלות בנושא חילוק עם שארית, דיוק 50%."
+      },
+      "renderFunctions": [
+        "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe"
+      ],
+      "technicalConstraints": [
+        "Insufficient-data template; slots for pattern/misconception typically empty.",
+        "insufficient_data decision: copy must remain cautious / non-diagnostic."
+      ],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "initial_topic_data:TOPIC_EXPLAIN_HOME_ACTION",
+      "baseLpdTemplateId": "initial_topic_data",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 1,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "insufficient_data"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "insufficient_data"
+      ],
+      "surfaces": [
+        {
+          "surface": "topicExplain",
+          "sections": [
+            "action"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "topicExplain",
+        "section": "action",
+        "topicKey": "division_with_remainder::grade:g5",
+        "decisionCode": "insufficient_data",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חילוק עם שארית",
+          "questions": 2,
+          "correct": 1,
+          "wrong": 1,
+          "accuracy": 50,
+          "recommendedAction": "maintain_and_strengthen",
+          "evidenceStrength": "small_sample"
+        },
+        "currentRenderedText": "מה כדאי לעשות בבית: אפשר להמשיך לתרגל מעט, בלי מסקנת קושי."
+      },
+      "renderFunctions": [
+        "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe"
+      ],
+      "technicalConstraints": [
+        "Insufficient-data template; slots for pattern/misconception typically empty.",
+        "insufficient_data decision: copy must remain cautious / non-diagnostic."
+      ],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "initial_topic_data:TOPIC_EXPLAIN_IDENTIFIED",
+      "baseLpdTemplateId": "initial_topic_data",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 1,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "insufficient_data"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "insufficient_data"
+      ],
+      "surfaces": [
+        {
+          "surface": "topicExplain",
+          "sections": [
+            "identified"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "topicExplain",
+        "section": "identified",
+        "topicKey": "division_with_remainder::grade:g5",
+        "decisionCode": "insufficient_data",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חילוק עם שארית",
+          "questions": 2,
+          "correct": 1,
+          "wrong": 1,
+          "accuracy": 50,
+          "recommendedAction": "maintain_and_strengthen",
+          "evidenceStrength": "small_sample"
+        },
+        "currentRenderedText": "מה זוהה: נתונים ראשוניים בלבד בנושא חילוק עם שארית."
+      },
+      "renderFunctions": [
+        "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe"
+      ],
+      "technicalConstraints": [
+        "Insufficient-data template; slots for pattern/misconception typically empty.",
+        "insufficient_data decision: copy must remain cautious / non-diagnostic."
+      ],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "initial_topic_data:TOPIC_EXPLAIN_MEANING",
+      "baseLpdTemplateId": "initial_topic_data",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 1,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "insufficient_data"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "insufficient_data"
+      ],
+      "surfaces": [
+        {
+          "surface": "topicExplain",
+          "sections": [
+            "meaning"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "topicExplain",
+        "section": "meaning",
+        "topicKey": "division_with_remainder::grade:g5",
+        "decisionCode": "insufficient_data",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חילוק עם שארית",
+          "questions": 2,
+          "correct": 1,
+          "wrong": 1,
+          "accuracy": 50,
+          "recommendedAction": "maintain_and_strengthen",
+          "evidenceStrength": "small_sample"
+        },
+        "currentRenderedText": "משמעות: עדיין מוקדם לזהות דפוס ברור בנושא."
+      },
+      "renderFunctions": [
+        "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe"
+      ],
+      "technicalConstraints": [
+        "Insufficient-data template; slots for pattern/misconception typically empty.",
+        "insufficient_data decision: copy must remain cautious / non-diagnostic."
+      ],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "mixed",
+      "baseLpdTemplateId": "mixed",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 2,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "partial_stable"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "partial_stable"
+      ],
+      "surfaces": [
+        {
+          "surface": "topicExplain",
+          "sections": [
+            "primaryFinding"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "topicExplain",
+        "section": "primaryFinding",
+        "topicKey": "subtraction::grade:g4",
+        "decisionCode": "partial_stable",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חיסור",
+          "questions": 67,
+          "correct": 56,
+          "wrong": 11,
+          "accuracy": 84,
+          "detectedPattern": "כיוון הפוך / הוספה במקום חיסור",
+          "affectedSubskill": "השלמה לעשר",
+          "misconceptionLabel": "מצביע על דפוס: כיוון הפוך / הוספה במקום חיסור (נקודת מיקוד: השלמה לעשר) בחיסור.",
+          "recommendedAction": "remediate_same_level",
+          "evidenceStrength": "strong"
+        },
+        "currentRenderedText": "בנושא חיסור מופיע דפוס חוזר של טעויות (כיוון הפוך / הוספה במקום חיסור). כדאי לחזק את הנושא. מבוסס על 67 שאלות שנפתרו בנושא."
+      },
+      "renderFunctions": [
+        "utils/learning-pattern-decision/lpd-parent-facing-copy.js → resolveParentExplainRowCopy"
+      ],
+      "technicalConstraints": [],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "mixed:TOPIC_EXPLAIN_DATA",
+      "baseLpdTemplateId": "mixed",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 2,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "partial_stable"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "partial_stable"
+      ],
+      "surfaces": [
+        {
+          "surface": "topicExplain",
+          "sections": [
+            "data"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "topicExplain",
+        "section": "data",
+        "topicKey": "subtraction::grade:g4",
+        "decisionCode": "partial_stable",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חיסור",
+          "questions": 67,
+          "correct": 56,
+          "wrong": 11,
+          "accuracy": 84,
+          "detectedPattern": "כיוון הפוך / הוספה במקום חיסור",
+          "affectedSubskill": "השלמה לעשר",
+          "misconceptionLabel": "מצביע על דפוס: כיוון הפוך / הוספה במקום חיסור (נקודת מיקוד: השלמה לעשר) בחיסור.",
+          "recommendedAction": "remediate_same_level",
+          "evidenceStrength": "strong"
+        },
+        "currentRenderedText": "הנתונים: הילד/ה פתר/ה 67 שאלות בנושא חיסור, מתוכן 56 נכונות ו-11 שגויות."
+      },
+      "renderFunctions": [
+        "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe"
+      ],
+      "technicalConstraints": [],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "mixed:TOPIC_EXPLAIN_HOME_ACTION",
+      "baseLpdTemplateId": "mixed",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 2,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "partial_stable"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "partial_stable"
+      ],
+      "surfaces": [
+        {
+          "surface": "topicExplain",
+          "sections": [
+            "action"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "topicExplain",
+        "section": "action",
+        "topicKey": "subtraction::grade:g4",
+        "decisionCode": "partial_stable",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חיסור",
+          "questions": 67,
+          "correct": 56,
+          "wrong": 11,
+          "accuracy": 84,
+          "detectedPattern": "כיוון הפוך / הוספה במקום חיסור",
+          "affectedSubskill": "השלמה לעשר",
+          "misconceptionLabel": "מצביע על דפוס: כיוון הפוך / הוספה במקום חיסור (נקודת מיקוד: השלמה לעשר) בחיסור.",
+          "recommendedAction": "remediate_same_level",
+          "evidenceStrength": "strong"
+        },
+        "currentRenderedText": "מה כדאי לעשות בבית: תרגול קצר וממוקד בחיסור, עם בדיקה שהילד/ה מסביר/ה את שלבי הפתרון."
+      },
+      "renderFunctions": [
+        "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe"
+      ],
+      "technicalConstraints": [],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "mixed:TOPIC_EXPLAIN_IDENTIFIED",
+      "baseLpdTemplateId": "mixed",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 2,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "partial_stable"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "partial_stable"
+      ],
+      "surfaces": [
+        {
+          "surface": "topicExplain",
+          "sections": [
+            "identified"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "topicExplain",
+        "section": "identified",
+        "topicKey": "subtraction::grade:g4",
+        "decisionCode": "partial_stable",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חיסור",
+          "questions": 67,
+          "correct": 56,
+          "wrong": 11,
+          "accuracy": 84,
+          "detectedPattern": "כיוון הפוך / הוספה במקום חיסור",
+          "affectedSubskill": "השלמה לעשר",
+          "misconceptionLabel": "מצביע על דפוס: כיוון הפוך / הוספה במקום חיסור (נקודת מיקוד: השלמה לעשר) בחיסור.",
+          "recommendedAction": "remediate_same_level",
+          "evidenceStrength": "strong"
+        },
+        "currentRenderedText": "מה זוהה: בנושא חיסור מופיע דפוס חוזר של טעויות (כיוון הפוך / הוספה במקום חיסור). כדאי לחזק את הנושא. מבוסס על 67 שאלות שנפתרו בנושא."
+      },
+      "renderFunctions": [
+        "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe"
+      ],
+      "technicalConstraints": [],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "mixed:TOPIC_EXPLAIN_MEANING",
+      "baseLpdTemplateId": "mixed",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 2,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "partial_stable"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "partial_stable"
+      ],
+      "surfaces": [
+        {
+          "surface": "topicExplain",
+          "sections": [
+            "meaning"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "topicExplain",
+        "section": "meaning",
+        "topicKey": "subtraction::grade:g4",
+        "decisionCode": "partial_stable",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חיסור",
+          "questions": 67,
+          "correct": 56,
+          "wrong": 11,
+          "accuracy": 84,
+          "detectedPattern": "כיוון הפוך / הוספה במקום חיסור",
+          "affectedSubskill": "השלמה לעשר",
+          "misconceptionLabel": "מצביע על דפוס: כיוון הפוך / הוספה במקום חיסור (נקודת מיקוד: השלמה לעשר) בחיסור.",
+          "recommendedAction": "remediate_same_level",
+          "evidenceStrength": "strong"
+        },
+        "currentRenderedText": "משמעות: נראה שכדאי לחזק את נושא חיסור לפני שממשיכים לנושאים מתקדמים יותר."
+      },
+      "renderFunctions": [
+        "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe"
+      ],
+      "technicalConstraints": [],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "mixed:TOPIC_EXPLAIN_PATTERN",
+      "baseLpdTemplateId": "mixed",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 2,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "partial_stable"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "partial_stable"
+      ],
+      "surfaces": [
+        {
+          "surface": "topicExplain",
+          "sections": [
+            "pattern"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "topicExplain",
+        "section": "pattern",
+        "topicKey": "subtraction::grade:g4",
+        "decisionCode": "partial_stable",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חיסור",
+          "questions": 67,
+          "correct": 56,
+          "wrong": 11,
+          "accuracy": 84,
+          "detectedPattern": "כיוון הפוך / הוספה במקום חיסור",
+          "affectedSubskill": "השלמה לעשר",
+          "misconceptionLabel": "מצביע על דפוס: כיוון הפוך / הוספה במקום חיסור (נקודת מיקוד: השלמה לעשר) בחיסור.",
+          "recommendedAction": "remediate_same_level",
+          "evidenceStrength": "strong"
+        },
+        "currentRenderedText": "דפוס: כיוון הפוך / הוספה במקום חיסור."
+      },
+      "renderFunctions": [
+        "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe"
+      ],
+      "technicalConstraints": [
+        "Section renders only when detectedPattern is present on engineDecisionContract."
+      ],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "NARRATIVE_WE0_cautionLineHe",
+      "baseLpdTemplateId": "NARRATIVE_WE0_cautionLineHe",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 2,
+      "studentsWithLiveExample": [
+        "aaa7",
+        "omer"
+      ],
+      "decisionCodes": [
+        "clear_topic_gap",
+        "early_direction_only"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "clear_topic_gap",
+        "early_direction_only"
+      ],
+      "surfaces": [
+        {
+          "surface": "detailedReport",
+          "sections": [
+            "narrative_cautionLineHe"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "detailedReport",
+        "section": "narrative_cautionLineHe",
+        "topicKey": "addition::grade:g5",
+        "decisionCode": "early_direction_only",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חיבור",
+          "questions": 8,
+          "correct": 6,
+          "wrong": 2,
+          "accuracy": 75,
+          "recommendedAction": "maintain_and_strengthen",
+          "evidenceStrength": "supported"
+        },
+        "currentRenderedText": "עדיין מוקדם לקבוע כיוון — כדאי לאסוף עוד נתוני תרגול ואז לבדוק שוב."
+      },
+      "renderFunctions": [
+        "utils/detailed-report-parent-letter-he.js → buildTopicRecommendationNarrative"
+      ],
+      "technicalConstraints": [
+        "Narrative tier (WE0/WE1/WE2) follows topic engineDecision + evidence weighting, not standalone copy."
+      ],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "NARRATIVE_WE0_snapshot",
+      "baseLpdTemplateId": "NARRATIVE_WE0_snapshot",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 2,
+      "studentsWithLiveExample": [
+        "aaa7",
+        "omer"
+      ],
+      "decisionCodes": [
+        "clear_topic_gap",
+        "early_direction_only"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "clear_topic_gap",
+        "early_direction_only"
+      ],
+      "surfaces": [
+        {
+          "surface": "detailedReport",
+          "sections": [
+            "narrative_snapshot"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "detailedReport",
+        "section": "narrative_snapshot",
+        "topicKey": "addition::grade:g5",
+        "decisionCode": "early_direction_only",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חיבור",
+          "questions": 8,
+          "correct": 6,
+          "wrong": 2,
+          "accuracy": 75,
+          "recommendedAction": "maintain_and_strengthen",
+          "evidenceStrength": "supported"
+        },
+        "currentRenderedText": "בחיבור נאספו 8 שאלות בתקופה, עם דיוק ממוצע של כ 75%. עדיין מוקדם לקבוע כאן כיוון ברור — נמשיך לעקוב אחרי התרגול."
+      },
+      "renderFunctions": [
+        "utils/detailed-report-parent-letter-he.js → buildTopicRecommendationNarrative"
+      ],
+      "technicalConstraints": [
+        "Narrative tier (WE0/WE1/WE2) follows topic engineDecision + evidence weighting, not standalone copy."
+      ],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "NARRATIVE_WE1_snapshot",
+      "baseLpdTemplateId": "NARRATIVE_WE1_snapshot",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 1,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "topic_needs_strengthening"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "topic_needs_strengthening"
+      ],
+      "surfaces": [
+        {
+          "surface": "detailedReport",
+          "sections": [
+            "narrative_snapshot"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "detailedReport",
+        "section": "narrative_snapshot",
+        "topicKey": "fractions::grade:g5",
+        "decisionCode": "topic_needs_strengthening",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "שברים",
+          "questions": 206,
+          "correct": 108,
+          "wrong": 98,
+          "accuracy": 52,
+          "detectedPattern": "השוואה לפי מונה בלבד",
+          "affectedSubskill": "חלק כלל",
+          "misconceptionLabel": "מצביע על דפוס: השוואה לפי מונה בלבד (נקודת מיקוד: חלק כלל) בשברים.",
+          "recommendedAction": "remediate_same_level",
+          "evidenceStrength": "strong"
+        },
+        "currentRenderedText": "בשברים נאספו 206 שאלות בתקופה, ורמת הדיוק סביב 52%. יש כאן מספיק תרגול כדי לראות דפוס, אבל הדיוק עדיין נמוך יחסית — זה מצב שדורש חיזוק ממוקד."
+      },
+      "renderFunctions": [
+        "utils/detailed-report-parent-letter-he.js → buildTopicRecommendationNarrative"
+      ],
+      "technicalConstraints": [
+        "Narrative tier (WE0/WE1/WE2) follows topic engineDecision + evidence weighting, not standalone copy."
+      ],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "NARRATIVE_WE2_cautionLineHe",
+      "baseLpdTemplateId": "NARRATIVE_WE2_cautionLineHe",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 3,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "topic_needs_strengthening"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "topic_needs_strengthening"
+      ],
+      "surfaces": [
+        {
+          "surface": "detailedReport",
+          "sections": [
+            "narrative_cautionLineHe"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "detailedReport",
+        "section": "narrative_cautionLineHe",
+        "topicKey": "subtraction::grade:g5",
+        "decisionCode": "topic_needs_strengthening",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חיסור",
+          "questions": 12,
+          "correct": 8,
+          "wrong": 4,
+          "accuracy": 67,
+          "detectedPattern": "כיוון הפוך / הוספה במקום חיסור",
+          "affectedSubskill": "השלמה לעשר",
+          "misconceptionLabel": "מצביע על דפוס: כיוון הפוך / הוספה במקום חיסור (נקודת מיקוד: השלמה לעשר) בחיסור.",
+          "recommendedAction": "remediate_same_level",
+          "evidenceStrength": "strong"
+        },
+        "currentRenderedText": "כדאי לבדוק שוב אחרי עוד תרגול קצר, כדי לוודא שהכיוון נשמר לפני שמחמירים בקביעת כיוון."
+      },
+      "renderFunctions": [
+        "utils/detailed-report-parent-letter-he.js → buildTopicRecommendationNarrative"
+      ],
+      "technicalConstraints": [
+        "Narrative tier (WE0/WE1/WE2) follows topic engineDecision + evidence weighting, not standalone copy."
+      ],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "NARRATIVE_WE2_snapshot",
+      "baseLpdTemplateId": "NARRATIVE_WE2_snapshot",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 3,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "topic_needs_strengthening"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "topic_needs_strengthening"
+      ],
+      "surfaces": [
+        {
+          "surface": "detailedReport",
+          "sections": [
+            "narrative_snapshot"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "detailedReport",
+        "section": "narrative_snapshot",
+        "topicKey": "subtraction::grade:g5",
+        "decisionCode": "topic_needs_strengthening",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חיסור",
+          "questions": 12,
+          "correct": 8,
+          "wrong": 4,
+          "accuracy": 67,
+          "detectedPattern": "כיוון הפוך / הוספה במקום חיסור",
+          "affectedSubskill": "השלמה לעשר",
+          "misconceptionLabel": "מצביע על דפוס: כיוון הפוך / הוספה במקום חיסור (נקודת מיקוד: השלמה לעשר) בחיסור.",
+          "recommendedAction": "remediate_same_level",
+          "evidenceStrength": "strong"
+        },
+        "currentRenderedText": "בחיסור בתקופה שנבחרה יש 12 שאלות, עם דיוק של כ 67%. הכיוון חיובי יחסית; נשארים עם חיזוק קצר וברור לפני שקובעים שהנושא יציב."
+      },
+      "renderFunctions": [
+        "utils/detailed-report-parent-letter-he.js → buildTopicRecommendationNarrative"
+      ],
+      "technicalConstraints": [
+        "Narrative tier (WE0/WE1/WE2) follows topic engineDecision + evidence weighting, not standalone copy."
+      ],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "positive_observed",
+      "baseLpdTemplateId": "positive_observed",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": true,
+      "inventoryEntryCount": 6,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "early_direction_only"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "early_direction_only"
+      ],
+      "surfaces": [
+        {
+          "surface": "shortReport",
+          "sections": [
+            "topicInsightLine"
+          ]
+        },
+        {
+          "surface": "topicExplain",
+          "sections": [
+            "primaryFinding"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "shortReport",
+        "section": "topicInsightLine",
+        "topicKey": "addition::grade:g5",
+        "decisionCode": "early_direction_only",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חיבור",
+          "questions": 8,
+          "correct": 6,
+          "wrong": 2,
+          "accuracy": 75,
+          "recommendedAction": "maintain_and_strengthen",
+          "evidenceStrength": "supported"
+        },
+        "currentRenderedText": "מתמטיקה — «חיבור - כיתה ה׳»: בנושא חיבור נראית הצלחה טובה בשאלות שנפתרו. מבוסס על 8 שאלות שנפתרו בנושא."
+      },
+      "renderFunctions": [
+        "utils/learning-pattern-decision/lpd-parent-facing-copy.js → resolveParentExplainRowCopy",
+        "utils/parent-report-engine-insights-he.js → buildTopicEngineInsightLineHe → buildLpdSafeTopicInsightLineHe"
+      ],
+      "technicalConstraints": [],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "positive_observed:RECOMMENDATION_CAUTION",
+      "baseLpdTemplateId": "positive_observed",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 1,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "early_direction_only"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "early_direction_only"
+      ],
+      "surfaces": [
+        {
+          "surface": "recommendationCard",
+          "sections": [
+            "cautionLineHe"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "recommendationCard",
+        "section": "cautionLineHe",
+        "topicKey": "addition::grade:g5",
+        "decisionCode": "early_direction_only",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חיבור",
+          "questions": 8,
+          "correct": 6,
+          "wrong": 2,
+          "accuracy": 75,
+          "recommendedAction": "maintain_and_strengthen",
+          "evidenceStrength": "supported"
+        },
+        "currentRenderedText": "בנושא הזה עדיין לא קובעים כיוון חזק — קודם עוד תרגול ממוקד באותו נושא."
+      },
+      "renderFunctions": [
+        "utils/detailed-parent-report.js → recommendationFromV2Unit"
+      ],
+      "technicalConstraints": [
+        "Recommendation card field; gated by parentTopicTierShowsRecommendationCard on detailed report path."
+      ],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "positive_observed:RECOMMENDATION_FINDING",
+      "baseLpdTemplateId": "positive_observed",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 1,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "early_direction_only"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "early_direction_only"
+      ],
+      "surfaces": [
+        {
+          "surface": "recommendationCard",
+          "sections": [
+            "parentVisibleFinding"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "recommendationCard",
+        "section": "parentVisibleFinding",
+        "topicKey": "addition::grade:g5",
+        "decisionCode": "early_direction_only",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חיבור",
+          "questions": 8,
+          "correct": 6,
+          "wrong": 2,
+          "accuracy": 75,
+          "recommendedAction": "maintain_and_strengthen",
+          "evidenceStrength": "supported"
+        },
+        "currentRenderedText": "בנושא חיבור נראית הצלחה טובה בשאלות שנפתרו. מבוסס על 8 שאלות שנפתרו בנושא."
+      },
+      "renderFunctions": [
+        "utils/detailed-parent-report.js → recommendationFromV2Unit"
+      ],
+      "technicalConstraints": [
+        "Recommendation card field; gated by parentTopicTierShowsRecommendationCard on detailed report path."
+      ],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "positive_observed:RECOMMENDATION_STEP_LABEL",
+      "baseLpdTemplateId": "positive_observed",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 1,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "early_direction_only"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "early_direction_only"
+      ],
+      "surfaces": [
+        {
+          "surface": "recommendationCard",
+          "sections": [
+            "recommendedStepLabelHe"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "recommendationCard",
+        "section": "recommendedStepLabelHe",
+        "topicKey": "addition::grade:g5",
+        "decisionCode": "early_direction_only",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חיבור",
+          "questions": 8,
+          "correct": 6,
+          "wrong": 2,
+          "accuracy": 75,
+          "recommendedAction": "maintain_and_strengthen",
+          "evidenceStrength": "supported"
+        },
+        "currentRenderedText": "חיזוק ממוקד לפי הדוח"
+      },
+      "renderFunctions": [
+        "utils/detailed-parent-report.js → recommendationFromV2Unit"
+      ],
+      "technicalConstraints": [
+        "Recommendation card field; gated by parentTopicTierShowsRecommendationCard on detailed report path."
+      ],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "positive_observed:TOPIC_EXPLAIN_DATA",
+      "baseLpdTemplateId": "positive_observed",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 4,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "early_direction_only"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "early_direction_only"
+      ],
+      "surfaces": [
+        {
+          "surface": "topicExplain",
+          "sections": [
+            "data"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "topicExplain",
+        "section": "data",
+        "topicKey": "addition::grade:g5",
+        "decisionCode": "early_direction_only",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חיבור",
+          "questions": 8,
+          "correct": 6,
+          "wrong": 2,
+          "accuracy": 75,
+          "recommendedAction": "maintain_and_strengthen",
+          "evidenceStrength": "supported"
+        },
+        "currentRenderedText": "הנתונים: הילד/ה פתר/ה 8 שאלות בנושא חיבור, מתוכן 6 נכונות ו-2 שגויות."
+      },
+      "renderFunctions": [
+        "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe"
+      ],
+      "technicalConstraints": [],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "positive_observed:TOPIC_EXPLAIN_HOME_ACTION",
+      "baseLpdTemplateId": "positive_observed",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 4,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "early_direction_only"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "early_direction_only"
+      ],
+      "surfaces": [
+        {
+          "surface": "topicExplain",
+          "sections": [
+            "action"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "topicExplain",
+        "section": "action",
+        "topicKey": "addition::grade:g5",
+        "decisionCode": "early_direction_only",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חיבור",
+          "questions": 8,
+          "correct": 6,
+          "wrong": 2,
+          "accuracy": 75,
+          "recommendedAction": "maintain_and_strengthen",
+          "evidenceStrength": "supported"
+        },
+        "currentRenderedText": "מה כדאי לעשות בבית: לתרגל כמה שאלות קצרות בנושא חיבור, בקצב רגוע, ולבקש מהילד/ה להסביר את שלבי הפתרון."
+      },
+      "renderFunctions": [
+        "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe"
+      ],
+      "technicalConstraints": [],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "positive_observed:TOPIC_EXPLAIN_IDENTIFIED",
+      "baseLpdTemplateId": "positive_observed",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 4,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "early_direction_only"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "early_direction_only"
+      ],
+      "surfaces": [
+        {
+          "surface": "topicExplain",
+          "sections": [
+            "identified"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "topicExplain",
+        "section": "identified",
+        "topicKey": "addition::grade:g5",
+        "decisionCode": "early_direction_only",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חיבור",
+          "questions": 8,
+          "correct": 6,
+          "wrong": 2,
+          "accuracy": 75,
+          "recommendedAction": "maintain_and_strengthen",
+          "evidenceStrength": "supported"
+        },
+        "currentRenderedText": "מה זוהה: בנושא חיבור נראית הצלחה טובה בשאלות שנפתרו. מבוסס על 8 שאלות שנפתרו בנושא."
+      },
+      "renderFunctions": [
+        "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe"
+      ],
+      "technicalConstraints": [],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "positive_observed:TOPIC_EXPLAIN_MEANING",
+      "baseLpdTemplateId": "positive_observed",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 4,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "early_direction_only"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "early_direction_only"
+      ],
+      "surfaces": [
+        {
+          "surface": "topicExplain",
+          "sections": [
+            "meaning"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "topicExplain",
+        "section": "meaning",
+        "topicKey": "addition::grade:g5",
+        "decisionCode": "early_direction_only",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "חיבור",
+          "questions": 8,
+          "correct": 6,
+          "wrong": 2,
+          "accuracy": 75,
+          "recommendedAction": "maintain_and_strengthen",
+          "evidenceStrength": "supported"
+        },
+        "currentRenderedText": "משמעות: נראית הצלחה טובה בנושא — כדאי לשמר את מה שכבר עובד."
+      },
+      "renderFunctions": [
+        "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe"
+      ],
+      "technicalConstraints": [],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "practice_focus",
+      "baseLpdTemplateId": "practice_focus",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": true,
+      "inventoryEntryCount": 2,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "insufficient_data"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "insufficient_data"
+      ],
+      "surfaces": [
+        {
+          "surface": "shortReport",
+          "sections": [
+            "topicInsightLine"
+          ]
+        },
+        {
+          "surface": "topicExplain",
+          "sections": [
+            "primaryFinding"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "shortReport",
+        "section": "topicInsightLine",
+        "topicKey": "sequences::grade:g5",
+        "decisionCode": "insufficient_data",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "סדרות",
+          "questions": 3,
+          "correct": 2,
+          "wrong": 1,
+          "accuracy": 67,
+          "recommendedAction": "maintain_and_strengthen",
+          "evidenceStrength": "small_sample"
+        },
+        "currentRenderedText": "מתמטיקה — «סדרות - כיתה ה׳»: בנושא סדרות היו כמה טעויות בשאלות שנפתרו. כדאי לחזור ולתרגל את הנושא. מבוסס על 3 שאלות שנפתרו בנושא."
+      },
+      "renderFunctions": [
+        "utils/learning-pattern-decision/lpd-parent-facing-copy.js → resolveParentExplainRowCopy",
+        "utils/parent-report-engine-insights-he.js → buildTopicEngineInsightLineHe → buildLpdSafeTopicInsightLineHe"
+      ],
+      "technicalConstraints": [
+        "Insufficient-data template; slots for pattern/misconception typically empty.",
+        "insufficient_data decision: copy must remain cautious / non-diagnostic."
+      ],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "practice_focus:TOPIC_EXPLAIN_DATA",
+      "baseLpdTemplateId": "practice_focus",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 1,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "insufficient_data"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "insufficient_data"
+      ],
+      "surfaces": [
+        {
+          "surface": "topicExplain",
+          "sections": [
+            "data"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "topicExplain",
+        "section": "data",
+        "topicKey": "sequences::grade:g5",
+        "decisionCode": "insufficient_data",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "סדרות",
+          "questions": 3,
+          "correct": 2,
+          "wrong": 1,
+          "accuracy": 67,
+          "recommendedAction": "maintain_and_strengthen",
+          "evidenceStrength": "small_sample"
+        },
+        "currentRenderedText": "הנתונים: בנושא סדרות נפתרו 3 שאלות, דיוק 67%."
+      },
+      "renderFunctions": [
+        "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe"
+      ],
+      "technicalConstraints": [
+        "Insufficient-data template; slots for pattern/misconception typically empty.",
+        "insufficient_data decision: copy must remain cautious / non-diagnostic."
+      ],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "practice_focus:TOPIC_EXPLAIN_IDENTIFIED",
+      "baseLpdTemplateId": "practice_focus",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 1,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "insufficient_data"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "insufficient_data"
+      ],
+      "surfaces": [
+        {
+          "surface": "topicExplain",
+          "sections": [
+            "identified"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "topicExplain",
+        "section": "identified",
+        "topicKey": "sequences::grade:g5",
+        "decisionCode": "insufficient_data",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "סדרות",
+          "questions": 3,
+          "correct": 2,
+          "wrong": 1,
+          "accuracy": 67,
+          "recommendedAction": "maintain_and_strengthen",
+          "evidenceStrength": "small_sample"
+        },
+        "currentRenderedText": "מה זוהה: בנושא סדרות נראית תצפית זהירה בלבד — 3 שאלות, עדיין מוקדם לקבוע דפוס חד."
+      },
+      "renderFunctions": [
+        "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe"
+      ],
+      "technicalConstraints": [
+        "Insufficient-data template; slots for pattern/misconception typically empty.",
+        "insufficient_data decision: copy must remain cautious / non-diagnostic."
+      ],
+      "ownerCopyPlaceholder": null
+    },
+    {
+      "templateId": "practice_focus:TOPIC_EXPLAIN_MEANING",
+      "baseLpdTemplateId": "practice_focus",
+      "level": "topic",
+      "appearsOnMultipleSurfaces": false,
+      "inventoryEntryCount": 1,
+      "studentsWithLiveExample": [
+        "omer"
+      ],
+      "decisionCodes": [
+        "insufficient_data"
+      ],
+      "subjectDecisions": [],
+      "topicDecisions": [
+        "insufficient_data"
+      ],
+      "surfaces": [
+        {
+          "surface": "topicExplain",
+          "sections": [
+            "meaning"
+          ]
+        }
+      ],
+      "sources": [
+        "engineDecisionContract"
+      ],
+      "slotsAvailable": {
+        "subjectName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "topicName": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "questions": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "correct": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "wrong": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "accuracy": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "detectedPattern": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "affectedSubskill": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "misconceptionLabel": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "recommendedAction": {
+          "available": true,
+          "populatedInInventory": true
+        },
+        "priorityTopics": {
+          "available": true,
+          "populatedInInventory": false
+        },
+        "evidenceStrength": {
+          "available": true,
+          "populatedInInventory": true
+        }
+      },
+      "exampleLive": {
+        "student": "omer",
+        "studentLabel": "OMER math",
+        "range": {
+          "from": "2025-09-01",
+          "to": "2026-07-04"
+        },
+        "surface": "topicExplain",
+        "section": "meaning",
+        "topicKey": "sequences::grade:g5",
+        "decisionCode": "insufficient_data",
+        "slots": {
+          "subjectName": "מתמטיקה",
+          "topicName": "סדרות",
+          "questions": 3,
+          "correct": 2,
+          "wrong": 1,
+          "accuracy": 67,
+          "recommendedAction": "maintain_and_strengthen",
+          "evidenceStrength": "small_sample"
+        },
+        "currentRenderedText": "משמעות: נראה שכדאי לחזק את נושא סדרות לפני שממשיכים לנושאים מתקדמים יותר."
+      },
+      "renderFunctions": [
+        "utils/learning-pattern-decision/lpd-parent-facing-copy.js → buildLpdSafeTopicExplainSectionsHe"
+      ],
+      "technicalConstraints": [
+        "Insufficient-data template; slots for pattern/misconception typically empty.",
+        "insufficient_data decision: copy must remain cautious / non-diagnostic."
+      ],
+      "ownerCopyPlaceholder": null
+    }
+  ]
+}

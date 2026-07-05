@@ -10,6 +10,10 @@ import {
   normalizeParentVisibleMetrics,
   buildParentMetricsDataLineHe,
 } from "./normalize-parent-practice-metrics.js";
+import {
+  resolveTopicExplainOwnerSectionsHe,
+  resolveTopicPrimaryFindingOwnerCopyHe,
+} from "./resolve-topic-owner-copy.js";
 
 /** @typedef {{ identified: string, data: string, pattern: string, meaning: string, action: string }} LpdExplainSections */
 
@@ -165,10 +169,11 @@ export function shouldSuppressLegacyEngineParentCopy(row) {
 export function buildLpdSafeTopicInsightLineHe(row, rawMistakes = []) {
   const lpd = resolveOrBuildLpdOnRow(row, rawMistakes);
   if (!lpd || !lpdHasParentTopicInsight(lpd)) return "";
-  const finding = guardParentFacingText(lpd.parentVisibleFinding);
+  const ownerFinding = resolveTopicPrimaryFindingOwnerCopyHe({ ...row, learningPatternDecision: lpd });
+  const finding = guardParentFacingText(ownerFinding || lpd.parentVisibleFinding);
   if (!finding) return "";
   const enriched = { ...row, learningPatternDecision: lpd };
-  return buildLpdParentInsightLineHe(enriched);
+  return buildLpdParentInsightLineHe({ ...enriched, learningPatternDecision: { ...lpd, parentVisibleFinding: finding } });
 }
 
 /**
@@ -357,6 +362,21 @@ export function buildLpdSafeTopicExplainSectionsHe(row) {
   const q = metrics.questions;
   if (q <= 0 || !lpd || lpd.topicStatus === "not_practiced") return null;
 
+  const ownerSections = resolveTopicExplainOwnerSectionsHe({
+    ...row,
+    parentVisibleMetrics: metrics,
+    learningPatternDecision: lpd,
+  });
+  if (ownerSections) {
+    return {
+      identified: guardParentFacingText(ownerSections.identified),
+      data: guardParentFacingText(ownerSections.data),
+      pattern: guardParentFacingText(ownerSections.pattern),
+      meaning: guardParentFacingText(ownerSections.meaning),
+      action: guardParentFacingText(ownerSections.action),
+    };
+  }
+
   const topicName =
     String(row?.label || row?.displayName || lpd.recommendedFocus || "").trim() || "הנושא";
   const acc = metrics.accuracy;
@@ -483,7 +503,12 @@ export function resolveParentExplainRowCopy(row) {
     };
   }
 
-  const primaryFinding = guardParentFacingText(lpd.parentVisibleFinding);
+  const ownerPrimaryFinding = resolveTopicPrimaryFindingOwnerCopyHe({
+    ...row,
+    parentVisibleMetrics: metrics,
+    learningPatternDecision: lpd,
+  });
+  const primaryFinding = guardParentFacingText(ownerPrimaryFinding || lpd.parentVisibleFinding);
   const isInitial = q <= 2;
 
   return {

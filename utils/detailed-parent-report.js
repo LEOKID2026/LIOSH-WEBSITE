@@ -147,6 +147,8 @@ import {
   RA_MAINTAIN_AND_STRENGTHEN,
   SP_SUBJECT_ENGINE_CONTRACT,
 } from "./learning-pattern-decision/engine-decision-codes.js";
+import { guardParentFacingText } from "./learning-pattern-decision/lpd-parent-facing-copy.js";
+import { resolveTopicRecommendationOwnerCopyHe } from "./learning-pattern-decision/resolve-topic-owner-copy.js";
 
 const SUBJECT_IDS = [
   "math",
@@ -1984,6 +1986,33 @@ function buildTopicOverviewRowsFromUnits(baseReport, sid, units, topicMapForSid)
     .sort((a, b) => (Number(b.questions) || 0) - (Number(a.questions) || 0));
 }
 
+/**
+ * @param {Record<string, unknown>} rec
+ * @param {string} subjectLabelHe
+ */
+function applyTopicOwnerCopyToRecommendation(rec, subjectLabelHe = "") {
+  const row = {
+    ...rec,
+    subjectLabelHe,
+    label: rec.displayName || rec.narrativeTitleHe,
+  };
+  const ownerFinding = resolveTopicRecommendationOwnerCopyHe(row, "finding");
+  const ownerStep = resolveTopicRecommendationOwnerCopyHe(row, "stepLabel");
+  const ownerPlan = resolveTopicRecommendationOwnerCopyHe(row, "interventionPlan");
+  const ownerDoNow = resolveTopicRecommendationOwnerCopyHe(row, "doNow");
+  const ownerCaution = resolveTopicRecommendationOwnerCopyHe(row, "caution");
+
+  if (ownerFinding) rec.parentVisibleFinding = guardParentFacingText(ownerFinding);
+  if (ownerStep) rec.recommendedStepLabelHe = guardParentFacingText(ownerStep);
+  if (ownerPlan) rec.interventionPlanHe = guardParentFacingText(ownerPlan);
+  if (ownerDoNow) rec.doNowHe = guardParentFacingText(ownerDoNow);
+  // Owner RECOMMENDATION_CAUTION replaces legacy gated caution when caution is shown.
+  if (ownerCaution && rec.cautionLineHe) {
+    rec.cautionLineHe = guardParentFacingText(ownerCaution);
+  }
+  return rec;
+}
+
 function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
   const traces = Array.isArray(u?.evidenceTrace) ? u.evidenceTrace : [];
   const volume = traces.find((t) => String(t?.type || "") === "volume")?.value || {};
@@ -2218,10 +2247,11 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
     mapRow && typeof mapRow === "object" && mapRow.gradeKey != null && String(mapRow.gradeKey).trim()
       ? String(mapRow.gradeKey).trim()
       : rowGkFromTopicKey;
-  return {
+  const rec = {
     topicRowKey: topicKey,
     topicKey,
     subjectId,
+    subjectLabelHe: SUBJECT_LABEL_HE[subjectId] || "",
     displayName: String(u?.displayName || "").trim(),
     learningPatternDecision: lpd,
     [EDC_CONTRACT_KEY]: topicEngineContract,
@@ -2312,6 +2342,7 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
     threshold_policy_used: `topic_recommendation_questions>=${TOPIC_REC_MIN_ACTIONABLE_QUESTIONS}`,
     contractsV1,
   };
+  return applyTopicOwnerCopyToRecommendation(rec, SUBJECT_LABEL_HE[subjectId] || "");
 }
 
 /**
@@ -2756,6 +2787,7 @@ function buildSubjectProfilesFromV2(baseReport) {
     });
     const summaryHeFromEngineContract = resolveSubjectSummaryTextFromEngineContract(
       subjectEngineContract,
+      { subjectLabelHe: SUBJECT_LABEL_HE[sid] },
     );
     const finalSummaryHe = summaryHeFromEngineContract || summaryHe;
     const blockedSubjectLegacy = !!subjectEngineContract.blockedLegacySummary;

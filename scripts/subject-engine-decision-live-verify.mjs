@@ -29,7 +29,11 @@ const { applyBridgeProvenanceToGeneratedReport } = await load("lib/learning-supa
 const { syncReportVisiblePracticeFromServer } = await load("lib/learning/report-visible-practice-sync.js");
 const { generateParentReportV2 } = await load("utils/parent-report-v2.js");
 const { buildDetailedParentReportFromBaseReport } = await load("utils/detailed-parent-report.js");
-const { buildSubjectParentLetter } = await load("utils/detailed-report-parent-letter-he.js");
+const { buildSubjectParentLetter, buildTopicRecommendationNarrative } = await load("utils/detailed-report-parent-letter-he.js");
+const {
+  buildLpdSafeTopicInsightLineHe,
+  resolveParentExplainRowCopy,
+} = await load("utils/learning-pattern-decision/lpd-parent-facing-copy.js");
 const { seedLocalStorageFromDbReportInput } = await load("lib/learning-supabase/seed-db-report-local-storage.js");
 const {
   EDC_CONTRACT_KEY,
@@ -45,6 +49,71 @@ const LEGACY_FORBIDDEN = [
   "אין תמונה מספיק ברורה",
   "עדיין לא מספיק",
 ];
+
+const INTERNAL_FORBIDDEN = [
+  "remediate same level",
+  "undefined",
+  "null",
+  "unknown",
+  "engineDecision",
+  "clear_topic_gap",
+  "topic_needs_strengthening",
+  "recommendedAction",
+  "parentSafeFinding",
+];
+
+function collectTopicOwnerCopySurfaces(mathSp, base) {
+  const topicRows = Array.isArray(mathSp?.topicRecommendations) ? mathSp.topicRecommendations : [];
+  const shortRows = Array.isArray(base?.patternDiagnostics?.subjects?.math?.rows)
+    ? base.patternDiagnostics.subjects.math.rows
+    : [];
+  const shortByKey = new Map(shortRows.map((r) => [String(r.topicRowKey || r.topicKey || ""), r]));
+
+  return topicRows
+    .filter((tr) => (Number(tr?.questions) || 0) > 0)
+    .map((tr) => {
+      const topicKey = String(tr?.topicRowKey || tr?.topicKey || "");
+      const shortRow = shortByKey.get(topicKey) || tr;
+      const row = {
+        ...shortRow,
+        ...tr,
+        subjectLabelHe: "מתמטיקה",
+        label: tr.displayName || shortRow.label,
+        displayName: tr.displayName || shortRow.displayName,
+        learningPatternDecision: tr.learningPatternDecision,
+        engineDecisionContract: tr.engineDecisionContract || tr.learningPatternDecision?.engineDecisionContract,
+      };
+      const explain = resolveParentExplainRowCopy(row);
+      const narrative = buildTopicRecommendationNarrative(tr);
+      return {
+        topicKey,
+        displayName: tr.displayName,
+        questions: tr.questions,
+        accuracy: tr.accuracy,
+        engineDecision: tr.engineDecisionContract?.engineDecision || tr.learningPatternDecision?.engineDecisionContract?.engineDecision,
+        detectedPattern: tr.engineDecisionContract?.detectedPattern || tr.learningPatternDecision?.engineDecisionContract?.detectedPattern,
+        templateId: tr.learningPatternDecision?.templateId,
+        shortReport: buildLpdSafeTopicInsightLineHe(row) || null,
+        topicExplain: explain.explainSections,
+        primaryFinding: explain.primaryFinding || null,
+        recommendationCard: {
+          recommendedStepLabelHe: tr.recommendedStepLabelHe || null,
+          parentVisibleFinding: tr.parentVisibleFinding || null,
+          interventionPlanHe: tr.interventionPlanHe || null,
+          doNowHe: tr.doNowHe || null,
+          cautionLineHe: tr.cautionLineHe || null,
+        },
+        detailedReport: narrative,
+        parentLetterTopicNarrative: narrative,
+      };
+    });
+}
+
+function assertNoInternalTerms(text, label) {
+  for (const frag of INTERNAL_FORBIDDEN) {
+    assert.doesNotMatch(String(text || ""), new RegExp(frag, "i"), `${label} must not contain internal term: ${frag}`);
+  }
+}
 
 /** @param {object} reportApiBody */
 async function buildReports(reportApiBody) {
@@ -152,6 +221,7 @@ async function verifyCase(supabase, { label, username, from, to, assertFn }) {
     student: username,
     range: { from, to },
     topicContracts: topicContractsFromSp(mathSp),
+    topicOwnerCopySurfaces: collectTopicOwnerCopySurfaces(mathSp, base),
     subjectEngineDecisionContract: subjectContract,
     shortReportSubjectSummary: {
       summaryHe: shortMath.summaryHe || null,
@@ -179,7 +249,29 @@ async function verifyCase(supabase, { label, username, from, to, assertFn }) {
   console.log(`\n========== ${label} (${username} ${from} → ${to}) ==========\n`);
   console.log(JSON.stringify(trace, null, 2));
 
-  assertFn({ mathSp, subjectContract, shortMath, shortContract, letter, rollupText, trace });
+  assertFn({ mathSp, subjectContract, shortMath, shortContract, letter, rollupText, trace, base });
+  for (const surf of trace.topicOwnerCopySurfaces || []) {
+    const texts = [
+      surf.shortReport,
+      surf.primaryFinding,
+      ...(surf.topicExplain ? Object.values(surf.topicExplain) : []),
+      ...(surf.recommendationCard ? Object.values(surf.recommendationCard) : []),
+      ...(surf.detailedReport ? Object.values(surf.detailedReport) : []),
+    ].filter(Boolean);
+    for (const text of texts) {
+      assertNoInternalTerms(text, `${label} topic ${surf.topicKey}`);
+      const allowEarly =
+        surf.templateId === "initial_topic_data" ||
+        surf.engineDecision === "early_direction_only" ||
+        (Number(surf.questions) || 0) <= 2;
+      if (!allowEarly) assertNoLegacy(text, `${label} topic ${surf.topicKey}`);
+      else {
+        for (const frag of LEGACY_FORBIDDEN.filter((f) => f !== "עדיין מוקדם")) {
+          assert.doesNotMatch(String(text || ""), new RegExp(frag), `${label} topic ${surf.topicKey} legacy: ${frag}`);
+        }
+      }
+    }
+  }
   console.log(`\n✓ ${label} acceptance passed\n`);
   return trace;
 }
@@ -196,7 +288,7 @@ async function main() {
     username: "omer",
     from: "2025-09-01",
     to: "2026-07-04",
-    assertFn: ({ subjectContract, shortMath, shortContract, letter, rollupText, mathSp }) => {
+    assertFn: ({ subjectContract, shortMath, shortContract, letter, rollupText, mathSp, trace }) => {
       assert.ok(subjectContract, "subjectEngineDecisionContract missing");
       assert.equal(subjectContract.subjectDecision, "multiple_topic_gaps");
       assert.equal(subjectContract.priorityTopics?.[0]?.topicKey, "fractions::grade:g5");
@@ -207,6 +299,14 @@ async function main() {
       assert.equal(shortMath.subjectSummaryRenderSource, RENDER_SOURCE_SUBJECT_ENGINE);
       assert.equal(shortContract?.subjectDecision, "multiple_topic_gaps");
       assert.equal(shortMath.summaryHe, mathSp.summaryHe);
+      assert.match(String(shortMath.summaryHe || ""), /בולטים כמה נושאים שדורשים חיזוק/);
+      assert.match(String(shortMath.summaryHe || ""), /שברים/);
+      assert.match(String(shortMath.summaryHe || ""), /השוואה לפי מונה בלבד/);
+      assert.match(String(letter.diagnosisHe || ""), /כפל/);
+      assert.match(String(letter.diagnosisHe || ""), /אותם זוגות שגויים/);
+      assert.match(String(letter.homeAction || ""), /בשבוע הקרוב מומלץ לתרגל/);
+      assert.doesNotMatch(String(letter.homeAction || ""), /remediate/i);
+      assert.doesNotMatch(String(rollupText || ""), /כדאי לחזק את הנושא\. מבוסס/);
       assert.ok(
         subjectContract.strongestDetectedPatterns?.includes("השוואה לפי מונה בלבד"),
         "missing fractions pattern",
@@ -218,6 +318,21 @@ async function main() {
       assert.ok(String(rollupText || "").trim().length > 0, "subject summary/letter must not be empty");
       assertNoLegacy(rollupText, "OMER rollup");
       assertNoLegacy(shortMath.summaryHe, "OMER short subject summary");
+      const positiveAddition = (trace.topicOwnerCopySurfaces || []).find(
+        (s) => String(s.topicKey || "").includes("addition") && s.templateId === "positive_observed",
+      );
+      if (positiveAddition?.recommendationCard?.cautionLineHe) {
+        assert.match(
+          String(positiveAddition.recommendationCard.cautionLineHe),
+          /גם כשנראית הצלחה/u,
+          "positive caution must use owner RECOMMENDATION_CAUTION",
+        );
+        assert.doesNotMatch(
+          String(positiveAddition.recommendationCard.cautionLineHe),
+          /עדיין לא קובעים כיוון חזק/u,
+          "positive caution must not use legacy gated text",
+        );
+      }
     },
   });
 
@@ -244,6 +359,13 @@ async function main() {
       assert.equal(letter.renderSource, "subjectEngineDecisionContract");
       assert.equal(shortMath.subjectSummaryRenderSource, RENDER_SOURCE_SUBJECT_ENGINE);
       assert.equal(shortContract?.subjectDecision, "focused_strengthening_needed");
+      assert.match(String(shortMath.summaryHe || ""), /בולט כרגע נושא אחד שדורש חיזוק/);
+      assert.match(String(shortMath.summaryHe || ""), /חיבור/);
+      assert.match(String(shortMath.summaryHe || ""), /20%/);
+      assert.match(String(shortMath.summaryHe || ""), /מומלץ לחזק את הנושא לפני שממשיכים/u);
+      assert.match(String(letter.homeAction || ""), /בשבוע הקרוב מומלץ לתרגל/);
+      assert.doesNotMatch(String(letter.homeAction || ""), /remediate/i);
+      assert.doesNotMatch(String(letter.homeAction || ""), /maintain/i);
     },
   });
 

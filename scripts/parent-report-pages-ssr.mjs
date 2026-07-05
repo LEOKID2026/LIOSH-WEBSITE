@@ -419,7 +419,11 @@ function runParentReportPageChunks() {
   assert.match(chartLiveHtml, /מה זוהה/u, "chart live row should render מה זוהה");
   assert.match(chartLiveHtml, /הנתונים/u, "chart live row should render הנתונים");
   assert.match(chartLiveHtml, /משמעות/u, "chart live row should render משמעות");
-  assert.match(chartLiveHtml, /מה כדאי לעשות בבית/u, "chart live row should render home action");
+  assert.ok(
+    /מה כדאי לעשות בבית/u.test(chartLiveHtml) ||
+      /כדאי להוסיף תרגול קצר/u.test(chartLiveHtml),
+    "chart live row should render home action or practice_focus meaning-only explain",
+  );
   assert.match(chartLiveHtml, /parent-report-topic-diagnostic-explain/u);
   render("parent-report:explain-row-chart-live", h(ParentReportTopicExplainRow, { row: rowChartLive }));
 

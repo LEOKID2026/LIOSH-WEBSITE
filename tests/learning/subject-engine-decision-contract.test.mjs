@@ -84,8 +84,11 @@ function topicRowFromContract(input) {
   assert.equal(contract.totalQuestions, 238);
   assert.ok(contract.weightedAccuracy > 0 && contract.weightedAccuracy < 100);
 
-  const summary = resolveSubjectSummaryTextFromEngineContract(contract);
+  const summary = resolveSubjectSummaryTextFromEngineContract(contract, { subjectLabelHe: "מתמטיקה" });
   assert.ok(summary && summary.length > 0);
+  assert.match(summary, /בולטים כמה נושאים שדורשים חיזוק/);
+  assert.match(summary, /שברים/);
+  assert.match(summary, /השוואה לפי מונה בלבד/);
   assert.doesNotMatch(summary, /בחלק מהשורות/);
   assert.doesNotMatch(summary, /עדיין לא מספיק/);
   assert.doesNotMatch(summary, /עדיין מוקדם/);
@@ -217,13 +220,14 @@ function topicRowFromContract(input) {
       subjectId: "math",
       topicMap,
       subjectReportQuestions: 238,
+      subjectLabelHe: "מתמטיקה",
     },
   );
 
   assert.equal(shortSubject.subjectSummaryRenderSource, RENDER_SOURCE_SUBJECT_ENGINE);
   assert.equal(shortSubject.subjectSummaryDecisionCode, "multiple_topic_gaps");
-  assert.equal(shortSubject.summaryHe, resolveSubjectSummaryTextFromEngineContract(contract));
-  assert.equal(shortSubject.summaryHe, fractions.engineDecisionContract.parentSafeFinding);
+  assert.equal(shortSubject.summaryHe, resolveSubjectSummaryTextFromEngineContract(contract, { subjectLabelHe: "מתמטיקה" }));
+  assert.match(shortSubject.summaryHe, /בולטים כמה נושאים שדורשים חיזוק/);
 }
 
 // insufficient subject data — decision code only, no legacy block
