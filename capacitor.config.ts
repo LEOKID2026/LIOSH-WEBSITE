@@ -5,9 +5,9 @@ const config: CapacitorConfig = {
   appName: 'LEO KIDS',
   webDir: 'out',
   server: {
-    url: 'https://liosh-website.vercel.app',
+    url: 'https://www.leokids.co.il',
     cleartext: false,
-    allowNavigation: ['liosh-website.vercel.app', '*.supabase.co'],
+    allowNavigation: ['www.leokids.co.il', 'leokids.co.il', '*.supabase.co'],
   },
   android: {
     allowMixedContent: false,
