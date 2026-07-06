@@ -247,12 +247,12 @@ function buildDiagnosticBodyByDecision(p) {
 
   if (decision === "early_direction_only") {
     if (q <= 5) return `עדיין מעט נתונים בנושא ${topic} — עוד קצת תרגול יעזור לנו להבין טוב יותר.`;
-    return `יש כיוון ראשוני בנושא ${topic}, אבל כדאי עוד קצת תרגול לפני מסקנה ברורה.`;
+    return `זו תמונה ראשונית בלבד בנושא ${topic}, אבל כדאי עוד קצת תרגול לפני מסקנה ברורה.`;
   }
 
   if (decision === "insufficient_data" || q < 5) {
     if (q <= 5) return `עדיין מעט נתונים בנושא ${topic} — עוד קצת תרגול יעזור לנו להבין טוב יותר.`;
-    if (q <= 15) return `יש כיוון ראשוני בנושא ${topic}, אבל כדאי עוד קצת תרגול לפני מסקנה ברורה.`;
+    if (q <= 15) return `זו תמונה ראשונית בלבד בנושא ${topic}, אבל כדאי עוד קצת תרגול לפני מסקנה ברורה.`;
     return `נראה שיש בנושא ${topic} נושא שכדאי לחזק בתרגול הקרוב.`;
   }
 
@@ -409,7 +409,7 @@ export function buildExplainIdentifiedLineHe(engineCopy, label) {
     case "topic_needs_strengthening":
       return `מה רואים: נקודת חיזוק בנושא ${t}.`;
     case "early_direction_only":
-      return `מה רואים: כיוון ראשוני בלבד בנושא ${t}.`;
+      return `מה רואים: זו תמונה ראשונית בלבד בנושא ${t}.`;
     case "insufficient_data":
       return `מה רואים: נושא לסקירה בנושא ${t}.`;
     case "deferred_topic_only":

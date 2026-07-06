@@ -55,6 +55,18 @@ export function mapEngineRecommendedAction(actionState, engineDecision, metrics)
 }
 
 /**
+ * @param {string|null|undefined} raw
+ */
+function cleanParentFindingPattern(raw) {
+  let t = sanitizeParentPatternLabel(String(raw || ""));
+  t = t.replace(/\(נקודת מיקוד:[^)]*\)/gi, "");
+  t = t.replace(/נקודת המיקוד היא[^.]*\.?\s*/gi, "");
+  t = t.replace(/מצביע על דפוס:\s*/gi, "");
+  t = t.replace(/\s{2,}/g, " ").trim();
+  return t;
+}
+
+/**
  * @param {object} p
  */
 function buildParentSafeFindingFromEngine(p) {
@@ -62,7 +74,7 @@ function buildParentSafeFindingFromEngine(p) {
   const q = p.metrics.questions;
   const acc = p.metrics.accuracy;
   const w = p.metrics.wrong;
-  const pattern = sanitizeParentPatternLabel(p.detectedPattern);
+  const pattern = cleanParentFindingPattern(p.detectedPattern);
   const hasPattern = isUsableParentPatternLabel(p.detectedPattern) && !!pattern;
   const suffix = q > 0 ? ` מבוסס על ${q} שאלות שנפתרו בנושא.` : "";
   const engineDecision = String(p.engineDecision || "");
@@ -80,7 +92,8 @@ function buildParentSafeFindingFromEngine(p) {
   }
 
   if (p.misconceptionLabel && isUsableParentPatternLabel(p.misconceptionLabel)) {
-    const misc = sanitizeParentPatternLabel(p.misconceptionLabel);
+    const misc = cleanParentFindingPattern(p.misconceptionLabel);
+    if (!misc) return "";
     return `בנושא ${name} זוהתה טעות חוזרת: ${misc}. כדאי לחזק את הנושא.${suffix}`;
   }
 
@@ -102,7 +115,7 @@ function buildParentSafeFindingFromEngine(p) {
 
   if (engineDecision === "early_direction_only" || engineDecision === "insufficient_data") {
     if (q <= 4) {
-      return `בנושא ${name} נראית תצפית זהירה בלבד — ${q} שאלות, עדיין מוקדם לקבוע דפוס חד.`;
+      return `בנושא ${name} יש ${q} שאלות. עדיין מוקדם להסיק מסקנה ברורה.`;
     }
     return "";
   }

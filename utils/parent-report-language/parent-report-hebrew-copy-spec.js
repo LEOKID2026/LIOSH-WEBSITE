@@ -465,7 +465,7 @@ export function explainDataHe(q, acc, wrongRatio) {
   const nq = Math.round(Number(q) || 0);
   const nacc = Math.round(Number(acc) || 0);
   if (nq > 0 && nq < 5) {
-    return `הנתונים: יש ${nq} שאלות בנושא — כיוון ראשוני בלבד.`;
+    return `הנתונים: יש ${nq} שאלות בנושא — זו תמונה ראשונית בלבד.`;
   }
   const wr = wrongRatio != null && Number.isFinite(Number(wrongRatio)) ? Math.round(Number(wrongRatio)) : null;
   if (wr != null) return `הנתונים: ${nq} שאלות, דיוק ${nacc}%, ${wr}% טעויות.`;
@@ -490,7 +490,7 @@ export function explainMeaningHe(rootCause, diagnosticType, foundationLine) {
 /** Spec §2.5 */
 export function explainActionHe(rootCause, diagnosticType, engineAction) {
   const action = actionTextHe(rootCause, diagnosticType, engineAction);
-  return `מה לתרגל: ${action}`;
+  return `מה כדאי לעשות בבית: ${action}`;
 }
 
 /** Spec §7 home with engine action */
