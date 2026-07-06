@@ -11,6 +11,8 @@ import {
   checkLeoMinersDbReady,
   loadMinersStateView,
   sumDailyAccruedPoints,
+  sumDailyClaimedCoins,
+  sumTotalClaimedCoins,
 } from "../../../../lib/leo-miners/server/leo-miners-state.server.js";
 
 export default async function handler(req, res) {
@@ -43,18 +45,37 @@ export default async function handler(req, res) {
 
     const config = await loadLeoMinersConfig(supabase);
     const view = await loadMinersStateView(supabase, auth.studentId);
-    const dailyUsed = await sumDailyAccruedPoints(supabase, auth.studentId);
+    const [dailyUsed, claimedTodayCoins, claimedTotalCoins] = await Promise.all([
+      sumDailyAccruedPoints(supabase, auth.studentId),
+      sumDailyClaimedCoins(supabase, auth.studentId),
+      sumTotalClaimedCoins(supabase, auth.studentId),
+    ]);
+
+    const catalogEnabled = access.catalogRow?.is_enabled === true;
+    const gameEnabled =
+      config.isActive === true && config.enabled === true && catalogEnabled;
+    const economyEnabled =
+      gameEnabled &&
+      config.economy_enabled === true &&
+      (config.claim_enabled === true || config.accrue_enabled === true);
 
     return res.status(200).json({
       ...view,
+      ok: true,
       dbReady: true,
-      rewardsEnabled: config.enabled === true && config.isActive === true,
+      catalogEnabled,
+      gameEnabled,
+      economyEnabled,
+      rewardsEnabled: economyEnabled,
       config: {
         dailyCap: Number(config.dailyCap ?? config.daily_cap ?? 2500),
         offlineCapHours: Number(config.offlineCapHours ?? config.offline_cap_hours ?? 12),
         gameplayTuning: extractGameplayTuningForClient(config),
       },
       dailyUsed,
+      minedTodayPoints: dailyUsed,
+      claimedTodayCoins,
+      claimedTotalCoins,
     });
   } catch (e) {
     console.error("[leo-miners/state]", e);

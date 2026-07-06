@@ -189,11 +189,11 @@ function currentGiftIntervalSec(s, now = Date.now()) {
 
 // פרסים
 const DIAMOND_PRIZES = [
-  { key: "coins_x10",   label: "מטבעות ×10 (×10 gift)" },
+  { key: "coins_x10",   label: "מטבעות ×10" },
   { key: "dog+3",       label: "ליאו +3 רמות" },
-  { key: "coins_x100",  label: "מטבעות ×100 (×100 gift)" },
+  { key: "coins_x100",  label: "מטבעות ×100" },
   { key: "dog+5",       label: "ליאו +5 רמות" },
-  { key: "coins_x1000", label: "מטבעות ×1000 (×1000 gift)" },
+  { key: "coins_x1000", label: "מטבעות ×1000" },
   { key: "dog+7",       label: "ליאו +7 רמות" },
 ];
 function rollDiamondPrize() {
@@ -393,6 +393,7 @@ export default function LeoMinersGame({
   dbReady = false,
   rewardsEnabled = false,
   serverPendingPoints = 0,
+  economyStats = null,
   gameplayConfig = null,
   studentLabel = "",
   backHref = "/game",
@@ -426,7 +427,6 @@ export default function LeoMinersGame({
   const [showFullHistory, setShowFullHistory] = useState(false);
 
   const [showHowTo, setShowHowTo] = useState(false);
-  const [showMiningInfo, setShowMiningInfo] = useState(false);
 
   const [showCollect, setShowCollect] = useState(false);
 
@@ -465,12 +465,11 @@ export default function LeoMinersGame({
   const mining = useMemo(
     () => ({
       balance: pendingPoints,
-      minedToday: 0,
-      vault: 0,
-      minersVault: pendingPoints,
-      claimedTotal: 0,
+      minedToday: Number(economyStats?.minedTodayPoints ?? 0),
+      claimedToday: Number(economyStats?.claimedTodayCoins ?? 0),
+      claimedTotal: Number(economyStats?.claimedTotalCoins ?? 0),
     }),
-    [pendingPoints]
+    [pendingPoints, economyStats]
   );
 
   const [sfxMuted, setSfxMuted] = useState(() => {
@@ -632,10 +631,10 @@ export default function LeoMinersGame({
       setCenterPopup({ text: `🎁 +${formatShort(gain)} מטבעות`, id: Math.random() });
     } else if (type === "dps") {
       s.dpsMult = +((s.dpsMult || 1) * gp().dps_upgrade_multiplier).toFixed(2);
-      setCenterPopup({ text: `🎁 DPS +10% (×${(s.dpsMult || 1).toFixed(2)})`, id: Math.random() });
+      setCenterPopup({ text: `🎁 כוח שבירה +10% (×${(s.dpsMult || 1).toFixed(2)})`, id: Math.random() });
     } else if (type === "gold") {
       s.goldMult = +((s.goldMult || 1) * gp().gold_upgrade_multiplier).toFixed(2);
-      setCenterPopup({ text: `🎁 GOLD +10% (×${(s.goldMult || 1).toFixed(2)})`, id: Math.random() });
+      setCenterPopup({ text: `🎁 זהב +10% (×${(s.goldMult || 1).toFixed(2)})`, id: Math.random() });
     } else if (type === "diamond") {
       s.diamonds = (s.diamonds || 0) + 1;
       setCenterPopup({ text: `🎁 +1 💎 (יהלומים: ${s.diamonds})`, id: Math.random() });
@@ -651,6 +650,39 @@ export default function LeoMinersGame({
     try { play(S_GIFT); } catch {}
     save?.();
   }
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+    if (!isDevBgPickerEnabled()) return;
+    try {
+      const raw = localStorage.getItem(DEV_BG_LS_KEY);
+      if (raw != null && raw !== "") {
+        const n = parseInt(raw, 10);
+        if (Number.isFinite(n) && n >= 0 && n <= DEV_BG_VARIANT_COUNT) {
+          setDevBgIndex(n);
+          const path = n === 0 ? IMG_BG : `/images/leo-miners/bg-cave${n}.png`;
+          boardBgSrcRef.current = path;
+          getImg(path);
+        }
+      }
+    } catch {}
+    try {
+      const rawR = localStorage.getItem(DEV_ROCK_LS_KEY);
+      if (rawR != null && rawR !== "") {
+        const r = parseInt(rawR, 10);
+        if (Number.isFinite(r) && r >= 0 && r <= DEV_ROCK_VARIANT_COUNT) {
+          setDevRockIndex(r);
+          const path = r === 0 ? IMG_ROCK : `/images/leo-miners/rock${r}.png`;
+          rockImgSrcRef.current = path;
+          getImg(path);
+        }
+      }
+    } catch {}
+  }, [mounted]);
 
   useEffect(() => {
     activateLeoMinersGameplayConfig(gameplayConfig);
@@ -726,8 +758,6 @@ export default function LeoMinersGame({
   }
 
   } catch {}
-
-  setMounted(true);
 
   const updateFlags = () => {
     const w = window.innerWidth, h = window.innerHeight;
@@ -1267,7 +1297,7 @@ function drawRock(ctx, rect, rock){
   ctx.strokeRect(BAR_X, BAR_Y, BAR_W, BAR_H);
 
   // === טקסט בתוך הבר ===
-  const TXT = `ROCK ${rock.idx + 1}`;
+  const TXT = `סלע ${rock.idx + 1}`;
   ctx.font         = "bold 12px system-ui";
   ctx.textAlign    = "center";
   ctx.textBaseline = "middle";
@@ -1355,7 +1385,7 @@ function draw(){
       if (!cell) {
         const pr = pillRect(l,k);
         const canAfford = (s.gold ?? 0) >= (s.spawnCost ?? 0) && countMiners(s) < MAX_MINERS;
-        drawPill(ctx, pr.x, pr.y, pr.w, pr.h, "ADD", canAfford);
+        drawPill(ctx, pr.x, pr.y, pr.w, pr.h, "הוסף", canAfford);
       }
     }
     drawRock(ctx, rockRect(l), s.lanes[l].rock);
@@ -1458,7 +1488,7 @@ if (eff > 0) {
 // ה-POP מציג את הזכייה - המשתמש כבר קיבל אותה ב-local state
 // השרת יסתנכרן ויתקן אם יש סתירות
 const pointsTxt = formatPointsShort(eff || 0);
-setCenterPopup({ text: `⛏️ +${formatShort(coinsGain)} coins • +${pointsTxt} נקודות`, id: Math.random() });
+setCenterPopup({ text: `⛏️ +${formatShort(coinsGain)} מטבעות • +${pointsTxt} נקודות`, id: Math.random() });
 
 
       s.lanes[l].rockCount += 1;
@@ -1481,7 +1511,7 @@ setCenterPopup({ text: `⛏️ +${formatShort(coinsGain)} coins • +${pointsTxt
       s.pendingDiamondDogLevel = null;
       s.giftReady  = false;
       s.giftNextAt = now + currentGiftIntervalSec(s) * 1000;
-      setGiftToastWithTTL(`💎 Dog (LV ${placedLvl}) placed`);
+      setGiftToastWithTTL(`💎 כלב (רמה ${placedLvl}) הוצב`);
       save?.();
     }
   }
@@ -1765,7 +1795,7 @@ function afterPurchaseBump(s) {
 }
 function trySpawnAtSlot(lane, slot) {
   const s = stateRef.current; if (!s) return;
-  if (countMiners(s) >= MAX_MINERS) { try{play?.(S_CLICK);}catch{}; alert(`Maximum ${MAX_MINERS} miners on the board.`); return; }
+  if (countMiners(s) >= MAX_MINERS) { try{play?.(S_CLICK);}catch{}; alert(`מקסימום ${MAX_MINERS} כלבים על הלוח.`); return; }
   if (s.spawnCost == null || s.gold < s.spawnCost) { try{play?.(S_CLICK);}catch{}; return; }
   const ok = spawnMinerAt(s, lane, slot, s.spawnLevel);
   if (!ok) return;
@@ -1780,7 +1810,7 @@ function trySpawnAtSlot(lane, slot) {
 }
 function addMiner() {
   const s = stateRef.current; if (!s) return;
-  if (countMiners(s) >= MAX_MINERS) { try{play?.(S_CLICK);}catch{}; alert(`Maximum ${MAX_MINERS} miners on the board.`); return; }
+  if (countMiners(s) >= MAX_MINERS) { try{play?.(S_CLICK);}catch{}; alert(`מקסימום ${MAX_MINERS} כלבים על הלוח.`); return; }
   if (s.spawnCost == null || s.gold < s.spawnCost) return;
   const ok = spawnMiner(s, s.spawnLevel);
   if (!ok) return;
@@ -1930,7 +1960,7 @@ function tryDistributeBankDog(s) {
   const ok = spawnMiner(s, lvl);
   if (ok) {
     s.autoDogBank = Math.max(0, (s.autoDogBank || 0) - 1);
-    setCenterPopup?.({ text: `🦊 Auto Dog (LV ${lvl})`, id: Math.random() });
+    setCenterPopup?.({ text: `🦊 כלב אוטומטי (רמה ${lvl})`, id: Math.random() });
     save?.();
   }
 }
@@ -2093,22 +2123,22 @@ async function resetGame() {
 // ===== Diamonds chest (3×💎 to claim when you choose) =====
 function grantDiamondPrize(s, key) {
   const base = Math.max(20, expectedGiftCoinReward(s));
-  if (key === "coins_x10")   { const g = base * 10;   s.gold += Math.round(g); setGiftToastWithTTL(`💎 +${formatShort(g)} coins`); }
-  else if (key === "coins_x100") { const g = base * 100; s.gold += Math.round(g); setGiftToastWithTTL(`💎 +${formatShort(g)} coins`); }
-  else if (key === "coins_x1000"){ const g = base * 1000; s.gold += Math.round(g); setGiftToastWithTTL(`💎 +${formatShort(g)} coins`); }
+  if (key === "coins_x10")   { const g = base * 10;   s.gold += Math.round(g); setGiftToastWithTTL(`💎 +${formatShort(g)} מטבעות`); }
+  else if (key === "coins_x100") { const g = base * 100; s.gold += Math.round(g); setGiftToastWithTTL(`💎 +${formatShort(g)} מטבעות`); }
+  else if (key === "coins_x1000"){ const g = base * 1000; s.gold += Math.round(g); setGiftToastWithTTL(`💎 +${formatShort(g)} מטבעות`); }
   else if (key.startsWith("dog+")) {
     const delta = parseInt(key.split("+")[1] || "3", 10);
     const lvl = Math.max(1, (stateRef.current?.spawnLevel || 1) + delta);
     if (countMiners(s) < MAX_MINERS) {
       const placed = spawnMiner(s, lvl);
       if (placed) {
-        setGiftToastWithTTL(`💎 Dog (LV ${lvl})`);
+        setGiftToastWithTTL(`💎 כלב (רמה ${lvl})`);
         s.giftReady  = false;
         s.giftNextAt = Date.now() + currentGiftIntervalSec(s) * 1000;
       }
     } else {
       s.pendingDiamondDogLevel = lvl;
-      setGiftToastWithTTL(`💎 Dog (LV ${lvl}) pending — free a slot`);
+      setGiftToastWithTTL(`💎 כלב (רמה ${lvl}) ממתין — פנו מקום בלוח`);
     }
   }
   setUi(u => ({ ...u, gold: s.gold }));
@@ -2142,7 +2172,7 @@ const onlineMode = (() => {
   return "online";
 })();
 const isOnline = onlineMode === "online";
-const onlineDotTitle = isOnline ? "Online" : (stateRef.current?.isIdleOffline ? "Idle (reduced)" : "Offline");
+const onlineDotTitle = isOnline ? "מחובר" : (stateRef.current?.isIdleOffline ? "ממתין (יעילות מופחתת)" : "לא מחובר");
 
 
 function ringBg(progress){
@@ -2165,7 +2195,7 @@ const addRemainMs=mounted?Math.max(0,cooldownUntil-nowMs):Number.POSITIVE_INFINI
 const addProgress=mounted?1-Math.min(1,addRemainMs/(10*60*1000)):0;
 const addRemainLabel=(()=>{ 
   if(!mounted) return "…"; 
-  if(addRemainMs<=0) return "READY"; 
+  if(addRemainMs<=0) return "מוכן"; 
   const m=Math.floor(addRemainMs/60000); 
   const s=Math.floor((addRemainMs%60000)/1000); 
   return `${m}:${String(s).padStart(2,"0")}`;
@@ -2181,7 +2211,7 @@ function onAdd(){
     const m=Math.floor(remain/60),sec=String(remain%60).padStart(2,"0"); 
     if(typeof setGiftToast==="function"){ 
       const id=Math.random().toString(36).slice(2); 
-      setGiftToast({text:`Ad bonus in ${m}:${sec}`,id}); 
+      setGiftToast({text:`בונוס פרסומת בעוד ${m}:${sec}`,id}); 
       setTimeout(()=>{setGiftToast(cur=>(cur&&cur.id===id?null:cur));},2000);
     } 
     return; 
@@ -2199,43 +2229,43 @@ function previewPointsFromCoins() { return 0; }
 
 function claimCoinsToMining() {
   try { play?.(S_CLICK); } catch {}
-  setGiftToastWithTTL("Coins no longer convert locally. נקודות is earned from server-tracked mining only.");
+  setGiftToastWithTTL("נקודות כרייה נצברות רק דרך השרת — לא ניתן להמיר מטבעות מקומית.");
 }
 
 // ===== HUD Info modal state & content =====
 const [hudModal, setHudModal] = useState(null);
 function getHudModalTitle(k){
   switch(k){
-    case 'coins': return 'Coins';
-    case 'dps': return 'DPS Multiplier';
-    case 'gold': return 'Gold Multiplier';
-    case 'spawn': return 'Dog Spawn Level';
-    case 'lvCounter': return 'Spawn LV Counter';
-    case 'gifts': return 'Gift Phases';
-    case 'giftRing': return 'Gift Timer';
-    case 'dogRing': return 'Auto-Dog';
-    default: return 'Info';
+    case 'coins': return 'מטבעות';
+    case 'dps': return 'מכפיל כוח שבירה';
+    case 'gold': return 'מכפיל זהב';
+    case 'spawn': return 'רמת כלב חדש';
+    case 'lvCounter': return 'מונה רמת כלב חדש';
+    case 'gifts': return 'שלבי מתנות';
+    case 'giftRing': return 'טיימר מתנה';
+    case 'dogRing': return 'כלב אוטומטי';
+    default: return 'מידע';
   }
 }
 function getHudModalText(k){
   switch(k){
     case 'coins':
-      return 'Your total coins. Breaking rocks adds coins; bonuses: 🎁 regular gift (10%), video ad (50%), and diamonds grant large multipliers.';
+      return 'סך המטבעות שלך. שבירת סלעים מוסיפה מטבעות; בונוסים: 🎁 מתנה רגילה (10%), פרסומת (50%), ויהלומים עם מכפילים גדולים.';
     case 'dps':
-      return '🪓 DPS xN increases the rate rocks lose HP by 10% per upgrade.';
+      return '🪓 מכפיל כוח שבירה מגדיל את קצב איבוד ה-HP של הסלע ב-10% בכל שדרוג.';
     case 'gold':
-      return '🟡 GOLD xN increases the coins gained from each rock by 10% per upgrade.';
+      return '🟡 מכפיל זהב מגדיל את המטבעות שמתקבלים מכל סלע ב-10% בכל שדרוג.';
     case 'spawn':
-      return `🦊 LV shows the dog level that appears on purchase/bonus. 
-Increases automatically after 30 purchases.
+      return `🦊 רמה מציגה את רמת הכלב בקנייה/בונוס.
+עולה אוטומטית אחרי 30 קניות.
 
-Purchases left to the next level: ${toNextLv}.`;
+קניות עד לרמה הבאה: ${toNextLv}.`;
     case 'gifts':
-      return '⏳ Interval between gifts. Each time the timer ends you get a gift: coins/dog/boosts/diamond.';
+      return '⏳ המרווח בין מתנות. כשהטיימר נגמר מקבלים מתנה: מטבעות/כלב/בוסטים/יהלום.';
     case 'giftRing':
-      return 'The ring around 🎁 shows progress to the next gift, based on the displayed timings.';
+      return 'הטבע סביב 🎁 מראה התקדמות למתנה הבאה לפי הזמנים המוצגים.';
     case 'dogRing':
-      return 'The ring around 🦊 shows progress toward an auto-dog. When the bank is full (up to 6), it will deploy when a slot is free.';
+      return 'הטבע סביב 🦊 מראה התקדמות לכלב אוטומטי. כשהבנק מלא (עד 6), הוא יוצא כשיש מקום פנוי.';
     default:
       return '';
   }
@@ -2344,19 +2374,19 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
                     document.exitFullscreen?.().catch(()=>{});
                   }
                 }}
-                aria-label="Fullscreen"
+                aria-label="מסך מלא"
                 className="h-10 px-3 rounded-xl bg-black/40 hover:bg-black/60 text-white flex items-center gap-2 shadow"
-                title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
+                title={isFullscreen ? "יציאה ממסך מלא" : "מסך מלא"}
               >
                 <span className="text-base">⤢</span>
-                <span className="text-xs opacity-80">{isFullscreen ? "Exit" : "Full"}</span>
+                <span className="text-xs opacity-80">{isFullscreen ? "יציאה" : "מלא"}</span>
               </button>
 
               <button
                 onClick={() => { try { playSfx(S_CLICK); } catch {}; setMenuOpen(true); }}
-                aria-label="Menu"
+                aria-label="תפריט"
                 className="h-10 w-10 rounded-xl bg-black/40 hover:bg-black/60 text-white grid place-items-center shadow"
-                title="Menu"
+                title="תפריט"
               >
                 ≡
               </button>
@@ -2386,7 +2416,7 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
         <button
           onClick={() => setMenuOpen(false)}
           className="h-9 w-9 rounded-lg bg-white/10 hover:bg-white/20 grid place-items-center"
-          title="Close"
+          title="סגור"
         >
           ✕
         </button>
@@ -2420,8 +2450,8 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
 </div>
 
 
-      <div className="mt-4 text-xs opacity-70">
-        <p>HUD Overlay v1.0</p>
+      <div className="mt-4 text-xs opacity-70" dir="rtl">
+        <p>ליאו הכורה — גרסת HUD</p>
       </div>
     </div>
   </div>
@@ -2433,8 +2463,8 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
         {isMobileLandscape && (
           <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black text-white text-center p-6">
             <div>
-              <h2 className="text-2xl font-extrabold mb-3">Please rotate your device to portrait.</h2>
-              <p className="opacity-80">Landscape is not supported.</p>
+              <h2 className="text-2xl font-extrabold mb-3">סובבו את המכשיר לאורך (לא לרוחב).</h2>
+              <p className="opacity-80">מצב לרוחב לא נתמך.</p>
             </div>
           </div>
         )}
@@ -2467,7 +2497,7 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
                 onClick={() => { setShowAdModal(false); setAdVideoEnded(false); }}
                 className="px-4 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-900"
               >
-                Close
+                סגור
               </button>
 
               <button
@@ -2487,7 +2517,7 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
                     localStorage.setItem(LS_KEY, JSON.stringify(data));
                   } catch {}
 
-                  setCenterPopup({ text: `🎬 +${formatShort(gain)} coins`, id: Math.random() });
+                  setCenterPopup({ text: `🎬 +${formatShort(gain)} מטבעות`, id: Math.random() });
                   save();
                   setShowAdModal(false);
                   setAdVideoEnded(false);
@@ -2496,9 +2526,9 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
                 className={`px-4 py-2 rounded-lg font-bold ${
                   adVideoEnded ? "bg-yellow-400 hover:bg-yellow-300 text-black" : "bg-slate-300 text-slate-500 cursor-not-allowed"
                 }`}
-                title={adVideoEnded ? "Collect your reward" : "Watch until the end to unlock"}
+                title={adVideoEnded ? "איסוף הפרס" : "צפו עד הסוף כדי לפתוח"}
               >
-                COLLECT
+                אסוף
               </button>
             </div>
           </div>
@@ -2533,9 +2563,9 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
     <button
       onClick={() => setShowResetConfirm(true)}
       className="px-3 py-2 rounded-xl bg-rose-500 hover:bg-rose-400 ring-2 ring-rose-300 text-white font-extrabold text-xs shadow-md active:scale-95"
-      title="Reset all progress"
+      title="איפוס כל ההתקדמות"
     >
-      RESET
+      איפוס
     </button>
   </div>
 )}
@@ -2547,10 +2577,10 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
   >
     <div className="flex flex-col items-end gap-0.5">
       <span className="text-[9px] font-bold text-white/90 drop-shadow-md bg-black/45 px-1.5 py-0.5 rounded">
-        DEV BG
+        רקע (פיתוח)
       </span>
       <select
-        aria-label={`Dev background 1–${DEV_BG_VARIANT_COUNT}`}
+        aria-label={`בחירת רקע 1–${DEV_BG_VARIANT_COUNT}`}
         value={devBgIndex}
         onChange={(e) => {
           const n = parseInt(e.target.value, 10);
@@ -2568,20 +2598,20 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
         }}
         className="max-w-[140px] text-[11px] font-bold rounded-lg border border-slate-500 bg-slate-900/90 text-amber-200 px-2 py-1 shadow-md"
       >
-        <option value={0}>Default (bg-cave)</option>
+        <option value={0}>ברירת מחדל</option>
         {Array.from({ length: DEV_BG_VARIANT_COUNT }, (_, i) => i + 1).map((i) => (
           <option key={i} value={i}>
-            bg-cave{i}
+            רקע {i}
           </option>
         ))}
       </select>
     </div>
     <div className="flex flex-col items-end gap-0.5">
       <span className="text-[9px] font-bold text-white/90 drop-shadow-md bg-black/45 px-1.5 py-0.5 rounded">
-        ROCK
+        סלע (פיתוח)
       </span>
       <select
-        aria-label={`Dev rock rock1–rock${DEV_ROCK_VARIANT_COUNT}`}
+        aria-label={`בחירת סלע 1–${DEV_ROCK_VARIANT_COUNT}`}
         value={devRockIndex}
         onChange={(e) => {
           const n = parseInt(e.target.value, 10);
@@ -2599,10 +2629,10 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
         }}
         className="max-w-[120px] text-[11px] font-bold rounded-lg border border-slate-500 bg-slate-900/90 text-emerald-200 px-2 py-1 shadow-md"
       >
-        <option value={0}>Default (rock)</option>
+        <option value={0}>ברירת מחדל</option>
         {Array.from({ length: DEV_ROCK_VARIANT_COUNT }, (_, i) => i + 1).map((i) => (
           <option key={i} value={i}>
-            rock{i}
+            סלע {i}
           </option>
         ))}
       </select>
@@ -2618,7 +2648,7 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
            style={{ top: hudTop }}
          >
           <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-center mb-2">
-            נקודות — MINERS
+            ליאו — כורים
           </h1>
 
           {/* keep glow keyframes for diamonds + global UI pulses */}
@@ -2651,7 +2681,7 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
             <button
               onClick={()=>setHudModal('coins')}
               className="px-2 py-1 rounded-lg flex items-center gap-2 hover:bg-white/10"
-              aria-label="Coins info"
+              aria-label="מידע על מטבעות"
             >
 
 {/* ONLINE/OFFLINE dot — placed to the LEFT of the coin */}
@@ -2660,9 +2690,9 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
                 title={onlineDotTitle}
                 style={{ backgroundColor: isOnline ? "#22c55e" : (stateRef.current?.isIdleOffline ? "#f59e0b" : "#94a3b8") }}
               />
-              <div className="relative w-8 h-8 rounded-full grid place-items-center" title={addRemainMs > 0 ? `Next ad in ${addRemainLabel}` : "Ad bonus ready"}>
+              <div className="relative w-8 h-8 rounded-full grid place-items-center" title={addRemainMs > 0 ? `פרסומת בעוד ${addRemainLabel}` : "בונוס פרסומת מוכן"}>
                 <div className="absolute inset-0 rounded-full" style={ringBg(addProgress)} />
-                <img src={IMG_COIN} alt="coin" className="w-7 h-7" />
+                <img src={IMG_COIN} alt="מטבע" className="w-7 h-7" />
               </div>
               <b>{formatShort1(stateRef.current?.gold ?? 0)}</b>
             </button>
@@ -2681,10 +2711,10 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
             <button
               onClick={()=>setHudModal('spawn')}
               className="px-2 py-1 rounded-lg hover:bg-white/10"
-              title={`Next Spawn Level in ${toNextLv} purchases`}
+              title={`רמת כלב הבאה בעוד ${toNextLv} קניות`}
             >
               <span className="inline-flex items-baseline gap-1 leading-none">
-                <span>🦊 LV</span>
+                <span>🦊 רמה</span>
                 <b className="leading-none">{stateRef.current?.spawnLevel || 1}</b>
                 <span className="text-[11px] leading-none opacity-80 relative -top-[1px]">
                   ({toNextLv})
@@ -2696,8 +2726,8 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
             <button
               onClick={() => setShowDiamondInfo(true)}
               className="relative px-2 py-1 rounded-lg flex items-center gap-1 active:scale-95 transition hover:bg-white/10"
-              aria-label="Diamond rewards info"
-              title="Tap to open Diamond chest"
+              aria-label="מידע על יהלומים"
+              title="לחצו לפתיחת ארגז יהלומים"
             >
               {diamondsReady && (
                 <>
@@ -2725,7 +2755,7 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
             {/* Phase label — avoid Date.now() before mount (hydration mismatch vs SSR) */}
             <button onClick={()=>setHudModal('gifts')} className="px-2 py-1 rounded-lg hover:bg-white/10">
               {mounted
-                ? `⏳ ${(_getPhaseInfo(stateRef.current, Date.now()).intervalSec)}s `
+                ? `⏳ ${(_getPhaseInfo(stateRef.current, Date.now()).intervalSec)} שנ׳ `
                 : "⏳ — "}
             </button>
 
@@ -2736,10 +2766,10 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
                 className="relative w-8 h-8 rounded-full grid place-items-center hover:opacity-90 active:scale-95 transition"
                 title={
                   mounted
-                    ? `⏳ ${(_getPhaseInfo(stateRef.current, Date.now()).intervalSec)}s gifts`
-                    : "Gift timer"
+                    ? `⏳ מתנות כל ${(_getPhaseInfo(stateRef.current, Date.now()).intervalSec)} שניות`
+                    : "טיימר מתנות"
                 }
-                aria-label="Gift timer info"
+                aria-label="מידע על טיימר מתנות"
               >
                 <div className="absolute inset-0 rounded-full" style={ringBg(giftProgress)} />
                 <div className="text-[22px] font-extrabold leading-none">🎁</div>
@@ -2749,8 +2779,8 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
               <button
                 onClick={()=>setHudModal('dogRing')}
                 className="relative w-8 h-8 rounded-full grid place-items-center hover:opacity-90 active:scale-95 transition"
-                title={`Auto-dog every ${Math.round(DOG_INTERVAL_SEC/60)}m (bank up to ${DOG_BANK_CAP})`}
-                aria-label="Auto-dog info"
+                title={`כלב אוטומטי כל ${Math.round(DOG_INTERVAL_SEC/60)} דקות (בנק עד ${DOG_BANK_CAP})`}
+                aria-label="מידע על כלב אוטומטי"
               >
                 <div className="absolute inset-0 rounded-full" style={ringBg(dogProgress)} />
                 <div className="text-[22px] font-extrabold leading-none">🦊</div>
@@ -2760,8 +2790,8 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
 <button
   onClick={() => setShowGainModal(true)}
   className="relative w-8 h-8 rounded-full grid place-items-center hover:opacity-90 active:scale-95 transition"
-  title={`GAIN ${addRemainMs > 0 ? `in ${addRemainLabel}` : "ready"}`}
-  aria-label="GAIN info"
+  title={`בונוס צפייה ${addRemainMs > 0 ? `בעוד ${addRemainLabel}` : "מוכן"}`}
+  aria-label="מידע על בונוס צפייה"
 >
   {/* טבעת ספירה בדיוק כמו 🎁/🦊 */}
   <div className="absolute inset-0 rounded-full" style={ringBg(addProgress)} />
@@ -2803,7 +2833,7 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
 
       <img
         src={IMG_SPAWN_ICON}
-        alt="dog"
+        alt="כלב"
         className="pointer-events-none object-cover block"
         style={{
           width: "100%",
@@ -2817,7 +2847,7 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
     {/* ואז סימן הפלוס */}
     <span className="font-extrabold">+</span>
 
-    <b className="tracking-tight">(LV {stateRef.current?.spawnLevel || 1})</b>
+    <b className="tracking-tight">(רמה {stateRef.current?.spawnLevel || 1})</b>
   </div>
 
 {/* שורה שנייה – רק המחיר, ממוקם בקצה הימני */}
@@ -2883,8 +2913,8 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
   onClick={() => setShowPointsModal(true)}
   className={`relative inline-flex items-center gap-2 px-2 py-1 rounded-md transition
     ${(Number(mining?.balance || 0) > 0) ? "hover:bg-white/10 active:scale-95 cursor-pointer" : "opacity-90"}`}
-  aria-label="Open נקודות details"
-  title="Open נקודות details"
+  aria-label="פרטי נקודות"
+  title="פרטי נקודות כרייה"
 >
   <div className="relative w-6 h-6 rounded-full grid place-items-center">
     {(Number(mining?.balance || 0) >= 1) && (
@@ -2921,7 +2951,7 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
       ? "bg-yellow-400 hover:bg-yellow-300 text-black cursor-pointer"
       : "bg-slate-500 text-white/70 cursor-not-allowed"
     }`}
-  title={Number(mining?.balance || 0) >= 1 ? "Move whole נקודות to VAULT" : "Need at least 1.00 נקודות to claim"}
+  title={Number(mining?.balance || 0) >= 1 ? "מימוש כל הנקודות" : "צריך לפחות נקודה אחת למימוש"}
 >
   {Number(mining?.balance || 0) >= 1 && (
     <span
@@ -2930,20 +2960,9 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
       style={{ animation: "btnPulse 1.8s ease-in-out infinite" }}
     />
   )}
-  CLAIM
+  {claiming ? "מממש…" : "מימוש"}
 </button>
 
-
-              {/* VAULT */}
-              <button
-                onClick={() => setShowMiningInfo(true)}
-                className="ml-2 text-gray-300 hover:text-white underline-offset-2 hover:underline"
-                title="Open Mining"
-              >
-Vault: <b className="text-cyan-300 tabular-nums">{formatPointsShort1(mining?.vault || 0)}</b> נקודות
-
-
-              </button>
             </div>
           </div>
 
@@ -2995,34 +3014,34 @@ Vault: <b className="text-cyan-300 tabular-nums">{formatPointsShort1(mining?.vau
               onClick={grantGift}
               className="pointer-events-auto px-5 py-3 rounded-2xl font-extrabold text-black shadow-2xl bg-gradient-to-br from-yellow-300 to-amber-400 border border-yellow-200 hover:from-yellow-200 hover:to-amber-300 active:scale-95 relative"
             >
-              🎁 Claim Gift
+              🎁 אסוף מתנה
               <span className="absolute -inset-2 rounded-3xl blur-3xl bg-yellow-400/30 -z-10" />
             </button>
           </div>
         )}
       </div>
 
-      {/* Offline COLLECT overlay */}
+      {/* איסוף אופליין */}
       {showCollect && (
         <div className="fixed inset-0 z-[9998] flex items-center justify-center bg-black/85 px-6 text-center">
-          <div className="bg-white/10 backdrop-blur rounded-2xl p-6 border border-white/20 shadow-2xl max-w-sm w-full">
+          <div className="bg-white/10 backdrop-blur rounded-2xl p-6 border border-white/20 shadow-2xl max-w-sm w-full" dir="rtl">
             <div className="flex items-center justify-center gap-2 mb-3">
-              <img src={IMG_COIN} alt="coin" className="w-6 h-6" />
-              <h3 className="text-xl font-extrabold text-white">While you were away…</h3>
+              <img src={IMG_COIN} alt="מטבע" className="w-6 h-6" />
+              <h3 className="text-xl font-extrabold text-white">בזמן שלא הייתם כאן…</h3>
             </div>
             <p className="text-gray-200 mb-4">
-              Estimated offline earnings:{" "}
+              הערכת רווחים מחוץ למשחק:{" "}
               <b className="text-yellow-300">
                 {formatShort(stateRef.current?.pendingOfflineGold || 0)}
               </b>{" "}
-              coins and{" "}
+              מטבעות ו־
              <b className="text-yellow-300">
   {formatPointsShort(stateRef.current?.pendingOfflinePoints || 0)}
 
 </b>{" "}
 נקודות
               <span className="block text-[11px] text-gray-400 mt-2">
-                Final נקודות is confirmed by the server after collect.
+                הנקודות הסופיות מאושרות בשרת אחרי האיסוף.
               </span>
 
             </p>
@@ -3031,7 +3050,7 @@ Vault: <b className="text-cyan-300 tabular-nums">{formatPointsShort1(mining?.vau
               onClick={onOfflineCollect}
               className="mx-auto px-6 py-3 rounded-xl bg-yellow-400 text-black font-extrabold text-lg shadow active:scale-95"
             >
-              COLLECT
+              אסוף
             </button>
           </div>
         </div>
@@ -3041,9 +3060,9 @@ Vault: <b className="text-cyan-300 tabular-nums">{formatPointsShort1(mining?.vau
       {showResetConfirm && (
         <div className="fixed inset-0 z-[10000] bg-black/80 flex items-center justify-center p-4">
           <div className="bg-white text-slate-900 max-w-md w-full rounded-2xl p-6 shadow-2xl">
-            <h2 className="text-2xl font-extrabold mb-2">Reset Progress?</h2>
+            <h2 className="text-2xl font-extrabold mb-2">לאפס את ההתקדמות?</h2>
             <p className="text-sm text-slate-700 mb-4">
-              This will permanently delete your save and send you back to the start.
+              פעולה זו תמחק את השמירה ותחזיר אתכם להתחלה.
             </p>
 
             <div className="flex items-center justify-end gap-2">
@@ -3051,13 +3070,13 @@ Vault: <b className="text-cyan-300 tabular-nums">{formatPointsShort1(mining?.vau
                 onClick={() => setShowResetConfirm(false)}
                 className="px-4 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-900 font-semibold"
               >
-                Cancel
+                ביטול
               </button>
               <button
                 onClick={resetGame}
                 className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-extrabold"
               >
-                Yes, reset
+                כן, לאפס
               </button>
             </div>
           </div>
@@ -3068,55 +3087,53 @@ Vault: <b className="text-cyan-300 tabular-nums">{formatPointsShort1(mining?.vau
       {showHowTo && (
         <div className="fixed inset-0 z-[10000] bg-black/80 flex items-center justify-center p-4">
           <div className="bg-white text-slate-900 max-w-md w-full rounded-2xl p-6 shadow-2xl overflow-auto max-h-[85vh]">
-            <h2 className="text-2xl font-extrabold mb-3">How to Play</h2>
+            <h2 className="text-2xl font-extrabold mb-3">איך משחקים?</h2>
 
-            <div className="space-y-4 text-sm text-slate-700">
+            <div className="space-y-4 text-sm text-slate-700" dir="rtl">
               <section>
-                <h3 className="font-bold text-slate-900 mb-1">Goal</h3>
+                <h3 className="font-bold text-slate-900 mb-1">המטרה</h3>
                 <p>
-                  Merge dogs (miners), break rocks, and earn <b>Coins</b>. Coins are an in-game
-                  resource used for upgrades and buying more miners. Some activity in the
-                  game can also accrue <b>נקודות</b> (see “Mining &amp; Tokens” below).
+                  למזג כלבי כורים, לשבור סלעים ולצבור <b>מטבעות</b>. המטבעות משמשים לשדרוגים ולקניית כלבים נוספים.
+                  חלק מהפעילות גם צוברת <b>נקודות כרייה</b> (ראו למטה).
                 </p>
               </section>
 
               <section>
-                <h3 className="font-bold text-slate-900 mb-1">Board &amp; Merging</h3>
-                <ol className="list-decimal ml-5 space-y-1">
-                  <li>Tap <b>ADD</b> on an empty slot to place a dog. Cost rises over time.</li>
-                  <li>Drag two dogs of the same level together to merge into a higher level.</li>
-                  <li>The board has 3 lanes with 4 dogs each (12 dogs max).</li>
-                  <li>Each dog adds damage per second (DPS) to its lane. When a rock breaks you receive Coins.</li>
+                <h3 className="font-bold text-slate-900 mb-1">לוח ומיזוג</h3>
+                <ol className="list-decimal mr-5 space-y-1">
+                  <li>לחצו <b>הוסף</b> על משבצת ריקה כדי להוסיף כלב. המחיר עולה עם הזמן.</li>
+                  <li>גררו שני כלבים באותה רמה כדי למזג לרמה גבוהה יותר.</li>
+                  <li>3 נתיבים, 4 כלבים בכל נתיב (מקסימום 12 כלבים).</li>
+                  <li>כל כלב מוסיף נזק לשנייה לנתיב שלו. כשסלע נשבר מקבלים מטבעות.</li>
                 </ol>
               </section>
 
               <section>
-                <h3 className="font-bold text-slate-900 mb-1">Upgrades &amp; Bonuses</h3>
-                <ul className="list-disc ml-5 space-y-1">
-                  <li><b>DPS</b> upgrades make rocks break faster.</li>
-                  <li><b>GOLD</b> upgrades increase the Coins you receive from each rock by 10% per upgrade.</li>
-                  <li>Gifts, auto-dogs and other bonuses may appear from time to time. Exact timings, drop types and balance values are dynamic and may change without notice.</li>
-                  <li>Diamonds can be collected and spent for special rewards. Availability and rewards are not guaranteed.</li>
+                <h3 className="font-bold text-slate-900 mb-1">שדרוגים ובונוסים</h3>
+                <ul className="list-disc mr-5 space-y-1">
+                  <li><b>כוח שבירה</b> — שוברים סלעים מהר יותר.</li>
+                  <li><b>זהב</b> — יותר מטבעות מכל סלע (+10% לשדרוג).</li>
+                  <li>מתנות, כלבים אוטומטיים ובונוסים נוספים מופיעים מעת לעת.</li>
+                  <li>אפשר לאסוף יהלומים ולפתוח ארגזים מיוחדים.</li>
                 </ul>
               </section>
 
               <section>
-                <h3 className="font-bold text-slate-900 mb-1">Mining &amp; Tokens (נקודות)</h3>
-                <ul className="list-disc ml-5 space-y-1">
-                  <li><b>How נקודות is accrued:</b> Only breaking rocks can generate נקודות. A portion of the Coins you earn from rock breaks may convert into נקודות at a variable rate that is subject to in-game balancing, daily limits and anti-abuse protections.</li>
-                  <li><b>Daily limits &amp; tapering:</b> To keep things fair, daily accrual may taper as you approach your personal limit for the day. Limits and calculations are internal and can change.</li>
-                  <li><b>Offline progress:</b> Limited offline progress is simulated at a reduced efficiency compared to active play. Exact values are internal and may change.</li>
-                  <li><b>CLAIM:</b> Your accrued נקודות appears as a balance. Claiming moves it into your in-game <b>Vault</b>. If/when מימוש הנקודות מתבצע דרך שרת ליאו בלבד.</li>
-                  <li><b>No value promise:</b> נקודות in this game is a <u>נקודות משחק לצורכי בידור בלבד.</u>. It has no intrinsic or guaranteed monetary value. Nothing here is an offer, solicitation, or promise of future value.</li>
+                <h3 className="font-bold text-slate-900 mb-1">נקודות כרייה</h3>
+                <ul className="list-disc mr-5 space-y-1">
+                  <li>רק שבירת סלעים יכולה לצבור נקודות כרייה.</li>
+                  <li>יש תקרה יומית והאטה הדרגתית ככל שמתקרבים אליה.</li>
+                  <li>התקדמות offline מוגבלת וביעילות מופחתת.</li>
+                  <li><b>מימוש:</b> הנקודות שנצברו מומשות למטבעות ליאו דרך השרת.</li>
+                  <li>נקודות הן לבידור בלבד — אין להן ערך כספי מובטח.</li>
                 </ul>
               </section>
 
               <section>
-                <h3 className="font-bold text-slate-900 mb-1">Good to Know</h3>
-                <ul className="list-disc ml-5 space-y-1">
-                  <li>Game balance, drop rates, limits and schedules are dynamic and may be changed, paused or reset at any time for stability, fairness or maintenance.</li>
-                  <li>Progress may be adjusted to address bugs, exploits or abuse.</li>
-                  <li>This is a casual game for fun. It is not financial advice and not an investment product.</li>
+                <h3 className="font-bold text-slate-900 mb-1">חשוב לדעת</h3>
+                <ul className="list-disc mr-5 space-y-1">
+                  <li>איזון המשחק, מתנות ומגבלות יומיות עשויים להשתנות לצורך הוגנות ותחזוקה.</li>
+                  <li>זה משחק כיף לילדים — לא ייעוץ פיננסי.</li>
                 </ul>
               </section>
             </div>
@@ -3126,7 +3143,7 @@ Vault: <b className="text-cyan-300 tabular-nums">{formatPointsShort1(mining?.vau
                 onClick={() => setShowHowTo(false)}
                 className="px-4 py-2 rounded-lg bg-slate-900 text-white hover:bg-slate-800"
               >
-                Close
+                סגור
               </button>
             </div>
           </div>
@@ -3147,7 +3164,7 @@ Vault: <b className="text-cyan-300 tabular-nums">{formatPointsShort1(mining?.vau
                 onClick={() => setHudModal(null)}
                 className="px-4 py-2 rounded-lg bg-slate-900 text-white hover:bg-slate-800 font-extrabold"
               >
-                Close
+                סגור
               </button>
             </div>
           </div>
@@ -3159,44 +3176,42 @@ Vault: <b className="text-cyan-300 tabular-nums">{formatPointsShort1(mining?.vau
   <div className="fixed inset-0 z-[10060] bg-black/60 backdrop-blur-sm grid place-items-center p-4">
     <div className="w-full max-w-md rounded-2xl bg-zinc-900 text-white border border-white/10 shadow-lg">
       <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
-        <h3 className="text-lg font-semibold">GAIN — How it works</h3>
+        <h3 className="text-lg font-semibold">בונוס צפייה — איך זה עובד?</h3>
         <button
           onClick={() => setShowGainModal(false)}
           className="px-2 py-1 rounded hover:bg-white/10"
-          aria-label="Close"
-          title="Close"
+          aria-label="סגור"
+          title="סגור"
         >
           ✕
         </button>
       </div>
 
-      <div className="px-4 py-4 space-y-3 text-sm leading-6">
+      <div className="px-4 py-4 space-y-3 text-sm leading-6" dir="rtl">
         <p>
-          GAIN is a special reward. Follow the steps to enable it and receive the bonus.
+          בונוס הצפייה הוא בונוס מיוחד. עקבו אחרי השלבים כדי להפעיל אותו ולקבל את הפרס.
         </p>
 
-        {/* Dynamic status bar */}
         <div className="rounded-lg bg-black/40 border border-white/10 p-3">
           <div className="flex items-center justify-between">
-            <span className="font-medium">Status</span>
+            <span className="font-medium">סטטוס</span>
             <span className={`px-2 py-0.5 rounded text-xs ${!addDisabled ? "bg-green-500 text-black" : "bg-zinc-700 text-white/80"}`}>
-  {!addDisabled ? "Available" : "Not available"}
+  {!addDisabled ? "זמין" : "לא זמין"}
 </span>
 
           </div>
           <p className="mt-2 text-white/80">
             {!addDisabled
-  ? "Your GAIN is ready. Press WATCH to proceed and claim it."
-  : `GAIN will become available in ${addRemainLabel}.`}
+  ? "הבונוס מוכן! לחצו צפייה כדי להמשיך ולקבל אותו."
+  : `הבונוס יהיה זמין בעוד ${addRemainLabel}.`}
 
           </p>
         </div>
 
-        {/* Instructions — replace copy with your exact flow */}
         <ul className="list-disc list-inside space-y-1 text-white/80">
-          <li>Complete the required action to enable GAIN.</li>
-          <li>When ready, press WATCH to activate it and receive the reward.</li>
-          <li>If disabled, please wait until conditions are met.</li>
+          <li>השלימו את הפעולה הנדרשת כדי להפעיל את הבונוס.</li>
+          <li>כשמוכן, לחצו צפייה כדי לקבל את הפרס.</li>
+          <li>אם כבוי — המתינו עד שהתנאים יתמלאו.</li>
         </ul>
       </div>
 
@@ -3205,14 +3220,14 @@ Vault: <b className="text-cyan-300 tabular-nums">{formatPointsShort1(mining?.vau
           onClick={() => setShowGainModal(false)}
           className="px-4 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-white/10"
         >
-          Close
+          סגור
         </button>
 
 <button
   onClick={() => {
-    if (addDisabled) return;   // עדיין בהמתנה
-    setShowGainModal(false);   // סגור את מודאל ההסבר
-    onAdd();                   // 👈 אותו אקשן שהיה על כפתור GAIN הישן
+    if (addDisabled) return;
+    setShowGainModal(false);
+    onAdd();
   }}
   disabled={addDisabled}
   className={`px-4 py-2 rounded-lg font-semibold border ${
@@ -3220,9 +3235,9 @@ Vault: <b className="text-cyan-300 tabular-nums">{formatPointsShort1(mining?.vau
       ? "bg-emerald-500 text-black border-emerald-400"
       : "bg-zinc-700 text-white/50 border-white/10 cursor-not-allowed"
   }`}
-  title={!addDisabled ? "Watch and claim" : "Not available yet"}
+  title={!addDisabled ? "צפייה וקבלת בונוס" : "עדיין לא זמין"}
 >
-  {!addDisabled ? "WATCH" : "WATCH (disabled)"}
+  {!addDisabled ? "צפייה" : "צפייה (לא זמין)"}
 </button>
 
 
@@ -3234,18 +3249,79 @@ Vault: <b className="text-cyan-300 tabular-nums">{formatPointsShort1(mining?.vau
 
 
          {/* Diamonds modal */}
+      {showPointsModal && (
+        <div className="fixed inset-0 z-[10000] bg-black/80 flex items-center justify-center p-4">
+          <div className="bg-white text-slate-900 max-w-sm w-full rounded-2xl p-6 shadow-2xl overflow-auto max-h-[85vh]" dir="rtl">
+            <h2 className="text-xl font-extrabold mb-3">נקודות כרייה</h2>
+
+            <div className="grid grid-cols-2 gap-2 text-sm mb-3">
+              <div className="p-3 rounded-xl bg-slate-100">
+                <div className="text-slate-500 text-xs">יתרה למימוש</div>
+                <div className="font-extrabold text-slate-900 tabular-nums">
+                  {formatPointsShort1(Number(mining?.balance || 0))} נקודות
+                </div>
+              </div>
+              <div className="p-3 rounded-xl bg-slate-100">
+                <div className="text-slate-500 text-xs">נצברו היום</div>
+                <div className="font-extrabold text-slate-900 tabular-nums">
+                  {formatPointsShort1(Number(mining?.minedToday || 0))} נקודות
+                </div>
+              </div>
+              <div className="p-3 rounded-xl bg-slate-100">
+                <div className="text-slate-500 text-xs">מומשו היום</div>
+                <div className="font-extrabold text-slate-900 tabular-nums">
+                  {formatShort(Number(mining?.claimedToday || 0))} מטבעות
+                </div>
+              </div>
+              <div className="p-3 rounded-xl bg-slate-100">
+                <div className="text-slate-500 text-xs">מומשו (סה״כ)</div>
+                <div className="font-extrabold text-slate-900 tabular-nums">
+                  {formatShort(Number(mining?.claimedTotal || 0))} מטבעות
+                </div>
+              </div>
+            </div>
+
+            <p className="text-xs text-slate-600 mb-3">
+              נקודות נצברות רק משבירת סלעים. לחצו <b>מימוש</b> כדי להמיר אותן למטבעות ליאו דרך השרת.
+            </p>
+
+            <div className="flex justify-between gap-2">
+              <button
+                onClick={() => setShowPointsModal(false)}
+                className="px-4 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-900 font-extrabold"
+              >
+                סגור
+              </button>
+              <button
+                onClick={() => { setShowPointsModal(false); claimBalanceToVaultDemo(); }}
+                disabled={claiming || (Number(mining?.balance || 0) < 1)}
+                className={`px-4 py-2 rounded-lg font-extrabold ${
+                  (Number(mining?.balance || 0) >= 1) && !claiming
+                    ? "bg-yellow-400 hover:bg-yellow-300 text-black"
+                    : "bg-slate-300 text-slate-500 cursor-not-allowed"
+                }`}
+                title={(Number(mining?.balance || 0) >= 1) ? "מימוש כל הנקודות" : "צריך לפחות נקודה אחת"}
+              >
+                {claiming ? "מממש…" : "מימוש"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+         {/* Diamonds modal */}
       {showDiamondInfo && (() => {
         const s = stateRef.current || {};
         const diamonds = Number(s.diamonds || 0);
 
         const prizeLabel = (() => {
           switch (s.nextDiamondPrize) {
-            case "coins_x10":   return "10x gift";
-            case "coins_x100":  return "100x gift";
-            case "coins_x1000": return "1000x gift";
-            case "dog+3":       return "Dog +3 levels";
-            case "dog+5":       return "Dog +5 levels";
-            case "dog+7":       return "Dog +7 levels";
+            case "coins_x10":   return "מתנה ×10";
+            case "coins_x100":  return "מתנה ×100";
+            case "coins_x1000": return "מתנה ×1000";
+            case "dog+3":       return "כלב +3 רמות";
+            case "dog+5":       return "כלב +5 רמות";
+            case "dog+7":       return "כלב +7 רמות";
             default:            return s.nextDiamondPrize || "";
           }
         })();
@@ -3255,20 +3331,20 @@ Vault: <b className="text-cyan-300 tabular-nums">{formatPointsShort1(mining?.vau
         return (
           <div className="fixed inset-0 z-[10000] bg-black/80 flex items-center justify-center p-4">
             <div className="bg-white text-slate-900 max-w-sm w-full rounded-2xl p-6 shadow-2xl overflow-auto max-h-[85vh]">
-              <h2 className="text-xl font-extrabold mb-1">Diamonds</h2>
+              <h2 className="text-xl font-extrabold mb-1">יהלומים</h2>
 
-              <p className="text-xs text-slate-600 mb-3">
-                Collect <b>3</b> diamonds to open a chest. You can hold more than 3 and open rewards whenever you choose.
-                Possible rewards: <b>10x</b>/<b>100x</b>/<b>1000x</b> coin gifts or a <b>Dog</b> boost (+3/+5/+7 levels).
+              <p className="text-xs text-slate-600 mb-3" dir="rtl">
+                אספו <b>3</b> יהלומים כדי לפתוח ארגז. אפשר להחזיק יותר מ-3 ולפתוח מתי שרוצים.
+                פרסים אפשריים: מתנות מטבעות <b>×10/×100/×1000</b> או בוסט כלב (+3/+5/+7 רמות).
               </p>
 
-              <div className="grid grid-cols-2 gap-2 text-sm mb-3">
+              <div className="grid grid-cols-2 gap-2 text-sm mb-3" dir="rtl">
                 <div className="p-3 rounded-xl bg-slate-100">
-                  <div className="text-slate-500 text-xs">Diamonds</div>
+                  <div className="text-slate-500 text-xs">יהלומים</div>
                   <div className="font-extrabold text-slate-900">{diamonds} / 3</div>
                 </div>
                 <div className="p-3 rounded-xl bg-slate-100">
-                  <div className="text-slate-500 text-xs">Next Prize</div>
+                  <div className="text-slate-500 text-xs">הפרס הבא</div>
                   <div className="font-extrabold text-slate-900">{prizeLabel}</div>
                 </div>
               </div>
@@ -3278,15 +3354,15 @@ Vault: <b className="text-cyan-300 tabular-nums">{formatPointsShort1(mining?.vau
                   onClick={() => setShowDiamondInfo(false)}
                   className="px-4 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-900 font-extrabold"
                 >
-                  Close
+                  סגור
                 </button>
                 <button
                   onClick={() => { openDiamondChestIfReady(); }}
                   disabled={!ready}
                   className={`px-4 py-2 rounded-lg font-extrabold ${ready ? "bg-yellow-400 hover:bg-yellow-300 text-black" : "bg-slate-300 text-slate-500 cursor-not-allowed"}`}
-                  title={ready ? "Open chest" : "Need 3 diamonds"}
+                  title={ready ? "פתיחת ארגז" : "צריך 3 יהלומים"}
                 >
-                  OPEN CHEST
+                  פתח ארגז
                 </button>
               </div>
             </div>
