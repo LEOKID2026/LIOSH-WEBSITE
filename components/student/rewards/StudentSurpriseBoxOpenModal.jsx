@@ -39,7 +39,7 @@ function SurpriseBoxCardPrizeRow({ card, T }) {
   );
 }
 
-export default function StudentSurpriseBoxOpenModal({ open, onClose, onOpened }) {
+export default function StudentSurpriseBoxOpenModal({ open, onClose, onOpened, onError }) {
   const { homeModalShell, tokens: T, isBright } = useStudentTheme();
   const titleId = useId();
   const closeRef = useRef(null);
@@ -83,6 +83,7 @@ export default function StudentSurpriseBoxOpenModal({ open, onClose, onOpened })
             setErrorHe("לא הצלחנו לפתוח את הקופסה. נסו שוב.");
           }
           setPhase("error");
+          onError?.();
           return;
         }
         setResult(json);
@@ -93,13 +94,14 @@ export default function StudentSurpriseBoxOpenModal({ open, onClose, onOpened })
         openingRef.current = false;
         setErrorHe("שגיאת רשת בפתיחת הקופסה.");
         setPhase("error");
+        onError?.();
       }
     })();
 
     return () => {
       cancelled = true;
     };
-  }, [open, onOpened]);
+  }, [open, onOpened, onError]);
 
   useEffect(() => {
     if (!open) return undefined;

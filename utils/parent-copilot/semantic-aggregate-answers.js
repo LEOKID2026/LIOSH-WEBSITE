@@ -4,6 +4,7 @@
  */
 
 import { SUBJECT_ORDER, normalizeSubjectId, subjectLabelHe } from "./contract-reader.js";
+import { normalizeExecutiveTrendLinesHe } from "../parent-report-language/parent-facing-normalize-he.js";
 
 /**
  * @param {string} s
@@ -539,11 +540,9 @@ export function buildSemanticAggregateDraft(input) {
     }
   } else if (qc === "period_highlight") {
     const es = payload?.executiveSummary && typeof payload.executiveSummary === "object" ? payload.executiveSummary : {};
-    const trends = Array.isArray(es.majorTrendsHe)
-      ? es.majorTrendsHe.map((x) => String(x || "").trim()).filter(Boolean)
-      : [];
+    const trends = normalizeExecutiveTrendLinesHe(es.majorTrendsHe);
     if (trends.length) {
-      obs = `מה שבולט ביותר בתקופה: ${trends.slice(0, 4).join(" · ")}.`;
+      obs = `מה שמסתמן בתקופה: ${trends.slice(0, 4).join(" · ")}.`;
       meaning = "אלה ניסוחי הסיכום לתקופה כפי שהם מופיעים בדוח; לפרטים לפי מקצוע אפשר לעבור למסך המקצועות.";
       aggregateContinuity = { questionClass: qc, subjectId: "", role: "period_highlight" };
     } else if (withAvg.length) {
@@ -602,9 +601,7 @@ export function buildSemanticAggregateDraft(input) {
     }
   } else if (qc === "improved") {
     const es = payload?.executiveSummary && typeof payload.executiveSummary === "object" ? payload.executiveSummary : {};
-    const trends = Array.isArray(es.majorTrendsHe)
-      ? es.majorTrendsHe.map((x) => String(x || "").trim()).filter(Boolean)
-      : [];
+    const trends = normalizeExecutiveTrendLinesHe(es.majorTrendsHe);
     const improvementLines = trends.filter((t) => /שיפור|התקדמות|עלייה|התחזק|משתפר/.test(t));
     if (improvementLines.length) {
       obs = `סימני שיפור שמופיעים בניסוח הסיכום לתקופה: ${improvementLines.slice(0, 3).join(" · ")}.`;

@@ -33,6 +33,8 @@ export { diagnosticPrimarySourceParentLabelHe } from "./short-report-source-labe
 export { normalizePedagogyForParentReportHe } from "./pedagogy-glossary-he.js";
 export {
   normalizeParentFacingHe,
+  normalizeExecutiveTrendLineHe,
+  normalizeExecutiveTrendLinesHe,
   normalizeSubjectParentLetterHe,
   glossTopicRecommendationHeFields,
 } from "./parent-facing-normalize-he.js";

@@ -502,7 +502,9 @@ const rPeriod = parentCopilot.runParentCopilotTurn({
   utterance: "מה הכי בולט בתקופה?",
   sessionId: "semantic-period",
 });
-assert.ok(rPeriod.answerBlocks[0].textHe.includes("קו מגמה ראשון"));
+assert.ok(rPeriod.answerBlocks[0].textHe.includes("כיוון ראשון"));
+assert.ok(!rPeriod.answerBlocks[0].textHe.includes("קו מגמה"));
+assert.ok(rPeriod.answerBlocks[0].textHe.includes("מה שמסתמן בתקופה"));
 assert.equal(rPeriod.suggestedFollowUp, null);
 
 console.log("parent-copilot-phaseA-suite: OK");

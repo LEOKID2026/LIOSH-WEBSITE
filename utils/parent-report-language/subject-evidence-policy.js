@@ -47,11 +47,11 @@ export const SUBJECT_EVIDENCE_TIER = Object.freeze({
 
 /** Subject-specific insight wording forbidden when visible questions = 0. */
 export const ZERO_EVIDENCE_SUBJECT_INSIGHT_RE =
-  /(?:יש\s+(?:עדיין\s+)?מעט\s+(?:נתונ|מידע|תרגול)|טעויות\s+חוזרות|נראה\s+שיש\s+קושי|כדאי\s+לשים\s+לב|נושא\s+לחיזוק|מוקד\s+לתרגול|התקדמות\s+יחסית)/u;
+  /(?:יש\s+(?:עדיין\s+)?מעט\s+(?:נתונ|מידע|תרגול)|טעויות\s+חוזרות|נראה\s+שיש\s+קושי|כדאי\s+לשים\s+לב|נושא\s+לחיזוק|מוקד\s+לתרגול|התקדמות\s+יחסית|מגמת\s|יש\s+מגמה|מגמה\s+(?:חיובית|שלילית|ברורה|כללית))/u;
 
-/** Wording that must never accompany zero-question subjects. */
+/** Wording that must never accompany zero-question subjects (not bare «מגמה» — executive trend lines may quote it). */
 export const ZERO_EVIDENCE_FORBIDDEN_RE =
-  /כיוון ראשוני|אפשר לקבל כיוון|תחום לחיזוק|נושא למעקב|מגמה|כדאי לתרגל עוד כדי לחזק|דורש חיזוק|דורש תשומת לב|מעט מדי לסיכום עשיר/u;
+  /כיוון ראשוני|אפשר לקבל כיוון|תחום לחיזוק|נושא למעקב|כדאי לתרגל עוד כדי לחזק|דורש חיזוק|דורש תשומת לב|מעט מדי לסיכום עשיר/u;
 
 /**
  * @param {number} questionCount

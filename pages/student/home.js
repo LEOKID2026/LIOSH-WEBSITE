@@ -1070,8 +1070,12 @@ export default function StudentHomePage() {
       </StudentHomeModal>
       <StudentSurpriseBoxOpenModal
         open={boxModalOpen}
-        onClose={() => setBoxModalOpen(false)}
+        onClose={() => {
+          setBoxModalOpen(false);
+          setBoxRefreshToken((token) => token + 1);
+        }}
         onOpened={() => setBoxRefreshToken((token) => token + 1)}
+        onError={() => setBoxRefreshToken((token) => token + 1)}
       />
       <StudentAvatarPickerModal
         open={showAvatarModal}

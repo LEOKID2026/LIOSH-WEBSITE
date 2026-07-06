@@ -11,6 +11,37 @@ import {
 } from "../diagnostic-labels-he.js";
 
 /**
+ * Replace internal executive-summary trend labels (e.g. «קו מגמה») with parent-facing Hebrew.
+ * @param {string|null|undefined} raw
+ * @returns {string}
+ */
+export function normalizeExecutiveTrendLineHe(raw) {
+  let s = String(raw ?? "").trim();
+  if (!s) return "";
+  if (/^קו\s*מגמה\s*ראשון/u.test(s)) return "כיוון ראשון בתרגול";
+  if (/^קו\s*מגמה/u.test(s)) return "כיוון ראשון בתקופה";
+  if (/^קו\s*ראשון/u.test(s)) return "כיוון ראשון בתקופה";
+  if (/^קו\s*שני/u.test(s)) return "כיוון נוסף שכדאי לעקוב אחריו";
+  return s
+    .replace(/קו\s*מגמה\s*ראשון\s*לתקופה/giu, "כיוון ראשון בתרגול")
+    .replace(/קו\s*מגמה\s*ראשון/giu, "כיוון ראשון בתרגול")
+    .replace(/קו\s*מגמה/giu, "כיוון ראשון בתקופה")
+    .replace(/^קו\s*שני\s*לתקופה/giu, "כיוון נוסף שכדאי לעקוב אחריו")
+    .replace(/^קו\s*ראשון\s*(?:בתקופה|לתקופה)/giu, "כיוון ראשון בתקופה")
+    .trim();
+}
+
+/**
+ * @param {unknown[]} lines
+ * @returns {string[]}
+ */
+export function normalizeExecutiveTrendLinesHe(lines) {
+  return (Array.isArray(lines) ? lines : [])
+    .map((line) => normalizeExecutiveTrendLineHe(String(line || "")))
+    .filter(Boolean);
+}
+
+/**
  * @param {string|null|undefined} raw
  * @returns {string}
  */
@@ -81,6 +112,11 @@ export function normalizeParentFacingHe(raw) {
 
   // ביטויים שמבלבלים הורים (מתמטיקה / מונחי מערכת)
   const phrasePairs = [
+    [/קו\s*מגמה\s*ראשון\s*לתקופה/giu, "כיוון ראשון בתרגול"],
+    [/קו\s*מגמה\s*ראשון/giu, "כיוון ראשון בתרגול"],
+    [/קו\s*מגמה/giu, "כיוון ראשון בתקופה"],
+    [/קו\s*שני\s*לתקופה/giu, "כיוון נוסף שכדאי לעקוב אחריו"],
+    [/קו\s*ראשון\s*(?:בתקופה|לתקופה)/giu, "כיוון ראשון בתקופה"],
     // Phase 4-B6 — narrow E-06 raw pattern/intervention Hebrew (no English token here)
     [/עובדה במקום הסקה/giu, "קושי בהבנת משמעות מהמשפט"],
     [/מילות סימן להסקה/giu, "מילות עזר מהטקסט"],
