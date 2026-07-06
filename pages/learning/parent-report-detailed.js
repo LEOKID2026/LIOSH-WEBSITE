@@ -14,7 +14,6 @@ import {
   OutOfGradePracticeSection,
   ParentAssignedActivitiesSection,
   SubjectPhase3Insights,
-  SubjectSummaryBlock,
   SubjectTopicTierGroups,
   TopicRecommendationExplainStrip,
 } from "../../components/parent-report-detailed-surface.jsx";
@@ -22,6 +21,7 @@ import {
   buildParentSurfaceWhatToNoticeHe,
   scrubRepeatedBoilerplateFromSnapshotHe,
 } from "../../utils/parent-report-surface/index.js";
+import { PARENT_TOPIC_TIER } from "../../utils/parent-report-surface/parent-topic-tier.js";
 import { buildRegularReportViewModel } from "../../lib/parent-ui/parent-report-regular-display.js";
 import ParentReportDataHealthNote from "../../components/parent/ParentReportDataHealthNote.jsx";
 import PortalLoadingPanel from "../../components/ui/PortalLoadingPanel.jsx";
@@ -714,6 +714,67 @@ export default function ParentReportDetailedPage() {
     .sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")));
   const showCollapsedHomePlan = hasServerHomeRecommendations && homePlanItemsForUi.length > 0;
   const showCollapsedNextGoals = nextGoalsItemsForUi.length > 0;
+  const SUBJECTS_TIER_ALLOWLIST = [PARENT_TOPIC_TIER.MONITOR, PARENT_TOPIC_TIER.LOW_EVIDENCE];
+
+  function renderSubjectTopicRecommendations(sp) {
+    if (!Array.isArray(sp?.topicRecommendations) || sp.topicRecommendations.length < 1) return null;
+    return (
+      <div className="pr-detailed-topic-rec-block parent-surface-only">
+        <p className="pr-detailed-topic-rec-head">המלצות מפורטות לפי נושא</p>
+        <div className="space-y-2.5">
+          {(() => {
+            const seenStepLabels = new Set();
+            return sp.topicRecommendations.map((tr, idx) => {
+              const tv = topicNextStepVisualVariant(tr.recommendedNextStep);
+              const nar =
+                topicRecommendationNarratives.get(tr.topicRowKey) || buildTopicRecommendationNarrative(tr);
+              const snapshotNorm = normalizeLineForDedupe(nar.snapshot);
+              const homeNorm = normalizeLineForDedupe(nar.homeLine);
+              const showHomeLine = !!nar.homeLine && homeNorm !== snapshotNorm;
+              const stepLabel = String(tr.recommendedStepLabelHe || "").trim();
+              const stepNorm = normalizeLineForDedupe(stepLabel);
+              const showStepBadge = !!stepLabel && !seenStepLabels.has(stepNorm);
+              if (showStepBadge) seenStepLabels.add(stepNorm);
+              return (
+                <div key={tr.topicRowKey} className={idx === 0 ? "pr-detailed-topic-first-card-wrap" : ""}>
+                  <div
+                    className={`pr-detailed-topic-nextstep-card pr-detailed-topic-rec-item pr-detailed-topic-nextstep--${tv}`}
+                  >
+                    <div className="flex flex-wrap items-start justify-between gap-2 mb-1">
+                      <div className="min-w-0 flex-1">
+                        <span className="pr-detailed-body-text font-bold text-white/95 leading-snug block">
+                          {tr.narrativeTitleHe || tr.labelHe || tr.displayName}
+                        </span>
+                        {tr.gradeRelationSublineHe ? (
+                          <p className="pr-detailed-muted text-xs m-0 mt-0.5 text-white/60">
+                            {tr.gradeRelationSublineHe}
+                          </p>
+                        ) : null}
+                      </div>
+                      {showStepBadge ? (
+                        <span className={`pr-detailed-topic-badge shrink-0 pr-detailed-topic-badge--${tv}`}>
+                          {stepLabel}
+                        </span>
+                      ) : null}
+                    </div>
+                    <p className="pr-detailed-body-text text-sm leading-relaxed m-0 mt-2 text-white/[0.9]">
+                      {nar.snapshot}
+                    </p>
+                    {showHomeLine ? (
+                      <p className="pr-detailed-body-text text-sm leading-relaxed m-0 mt-2.5 text-amber-100/95">
+                        {nar.homeLine}
+                      </p>
+                    ) : null}
+                    <TopicRecommendationExplainStrip tr={tr} />
+                  </div>
+                </div>
+              );
+            });
+          })()}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Layout {...layoutProps}>
@@ -1536,7 +1597,7 @@ export default function ParentReportDetailedPage() {
             <ParentReportExitNav isBright={isBright} />
             <ModeToggle />
           </div>
-          {payload ? (
+          {payload && displayMode === "full" ? (
             <>
               <div className="no-pdf mb-4 rounded-lg border border-cyan-500/20 bg-cyan-950/15 px-3 py-2">
                 <ParentCopilotShell payload={payload} asyncTurnRunner={detailedCopilotTurnRunner} />
@@ -1584,6 +1645,7 @@ export default function ParentReportDetailedPage() {
 
                 {/* C — מה עשינו בתקופה הזאת */}
                 <SectionCard title="מה עשינו בתקופה הזאת" compact={displayMode === "summary"}>
+                {displayMode === "full" ? (
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
                   <div className="rounded-lg bg-white/5 border border-white/10 p-3 text-center">
                     <div className="text-xs text-white/55 mb-1">זמן כולל</div>
@@ -1604,6 +1666,7 @@ export default function ParentReportDetailedPage() {
                     </div>
                   </div>
                 </div>
+                ) : null}
                 <p className="pr-detailed-mini-heading font-bold text-white/90 mb-2 text-sm mt-1">כיסוי לפי מקצוע</p>
                 <div className="overflow-x-auto rounded-lg border border-white/10">
                   <table className="w-full text-sm text-right">
@@ -1627,6 +1690,7 @@ export default function ParentReportDetailedPage() {
                     </tbody>
                   </table>
                 </div>
+                {displayMode === "full" ? (
                 <div className="mt-3 grid md:grid-cols-2 gap-3 text-sm parent-surface-only">
                   {payload.overallSnapshot.sparseSubjectsHe?.length ? (
                     <div>
@@ -1647,6 +1711,7 @@ export default function ParentReportDetailedPage() {
                     />
                   </div>
                 </div>
+                ) : null}
                 </SectionCard>
 
                 {displayMode === "full" ? (
@@ -1656,15 +1721,17 @@ export default function ParentReportDetailedPage() {
                   </>
                 ) : null}
 
-                <ParentReportDataHealthNote
-                  className="pr-detailed-data-health"
-                  diagnosticOverviewHe={uiAuthority.diagnosticOverviewHe}
-                  dataQualityNoteHe={payload?.crossSubjectInsights?.dataQualityNoteHe}
-                  mixedGradePracticeNoteHe={payload?.gradePracticeMeta?.mixedGradePracticeNoteHe}
-                />
+                {displayMode === "full" ? (
+                  <ParentReportDataHealthNote
+                    className="pr-detailed-data-health"
+                    diagnosticOverviewHe={uiAuthority.diagnosticOverviewHe}
+                    dataQualityNoteHe={payload?.crossSubjectInsights?.dataQualityNoteHe}
+                    mixedGradePracticeNoteHe={payload?.gradePracticeMeta?.mixedGradePracticeNoteHe}
+                  />
+                ) : null}
 
-                {whatToNoticeItems.length > 0 ? (
-                  <SectionCard title="מה חשוב לדעת" compact={displayMode === "summary"}>
+                {displayMode === "full" && whatToNoticeItems.length > 0 ? (
+                  <SectionCard title="מה חשוב לדעת" compact={false}>
                     <Bullets
                       items={whatToNoticeItems}
                       volumeQuestionsTotal={Number(payload.overallSnapshot?.totalQuestions) || 0}
@@ -1672,8 +1739,8 @@ export default function ParentReportDetailedPage() {
                   </SectionCard>
                 ) : null}
 
-                {activeTeacherMessages.length > 0 ? (
-                  <SectionCard title="הודעות מהמורה" compact={displayMode === "summary"}>
+                {displayMode === "full" && activeTeacherMessages.length > 0 ? (
+                  <SectionCard title="הודעות מהמורה" compact={false}>
                     <ul className="space-y-3 m-0 p-0 list-none">
                       {activeTeacherMessages.map((msg) => (
                         <li
@@ -1700,13 +1767,29 @@ export default function ParentReportDetailedPage() {
                       id="pr-detailed-subjects-heading-summary"
                       className="pr-detailed-subjects-region-title pr-detailed-section-title text-base md:text-lg font-extrabold tracking-tight text-white m-0 mb-3 md:mb-4 pb-2 border-b border-white/10"
                     >
-                      מקוצר: מילה לכל מקצוע
+                      מקצועות הלימוד
                     </h2>
-                    <div className="space-y-4">
+                    <div className="space-y-6">
                       {visibleSubjectProfiles.map((sp) => (
-                        <div key={sp.subject} className="space-y-2">
-                          <SubjectSummaryBlock sp={sp} />
-                          <SubjectTopicTierGroups sp={sp} />
+                        <div key={sp.subject} className="pr-detailed-subject-block pr-detailed-subject-stack min-w-0">
+                          <div className="pr-detailed-subject-heading">
+                            <h3 className="pr-detailed-subject-title text-lg font-bold text-white m-0 tracking-tight pb-2 border-b border-white/12">
+                              {sp.subjectLabelHe}
+                            </h3>
+                            <p className="pr-detailed-subject-metrics text-xs md:text-sm m-0 mt-1 text-white/75">
+                              שאלות: {Number(sp?.subjectQuestionCount) || 0} | דיוק: {Number(sp?.subjectAccuracy) || 0}%
+                            </p>
+                          </div>
+                          <div className="pr-detailed-subject-inner space-y-4 pt-3">
+                            {renderSubjectTopicRecommendations(sp)}
+                            <SubjectTopicTierGroups
+                              sp={sp}
+                              tierAllowlist={SUBJECTS_TIER_ALLOWLIST}
+                              hideTopicRowKeysForTiers={
+                                new Set((sp.topicRecommendations || []).map((tr) => tr.topicRowKey))
+                              }
+                            />
+                          </div>
                         </div>
                       ))}
                       {!visibleSubjectProfiles.length ? (
@@ -1739,6 +1822,7 @@ export default function ParentReportDetailedPage() {
                           <div className="pr-detailed-subject-inner space-y-4 pt-3">
                             <SubjectPhase3Insights sp={sp} compact={false} />
                             <SubjectParentLetter sp={sp} />
+                            {renderSubjectTopicRecommendations(sp)}
                             <SubjectTopicTierGroups
                               sp={sp}
                               hideTopicRowKeysForTiers={
@@ -1760,64 +1844,6 @@ export default function ParentReportDetailedPage() {
                                     </li>
                                   ))}
                                 </ul>
-                              </div>
-                            ) : null}
-
-                            {sp.topicRecommendations?.length ? (
-                              <div className="pr-detailed-topic-rec-block parent-surface-only">
-                                <p className="pr-detailed-topic-rec-head">המלצות מפורטות לפי נושא</p>
-                                <div className="space-y-2.5">
-                                  {(() => {
-                                    const seenStepLabels = new Set();
-                                    return sp.topicRecommendations.map((tr, idx) => {
-                                    const tv = topicNextStepVisualVariant(tr.recommendedNextStep);
-                                    const nar = topicRecommendationNarratives.get(tr.topicRowKey) || buildTopicRecommendationNarrative(tr);
-                                    const snapshotNorm = normalizeLineForDedupe(nar.snapshot);
-                                    const homeNorm = normalizeLineForDedupe(nar.homeLine);
-                                    const showHomeLine = !!nar.homeLine && homeNorm !== snapshotNorm;
-                                    const stepLabel = String(tr.recommendedStepLabelHe || "").trim();
-                                    const stepNorm = normalizeLineForDedupe(stepLabel);
-                                    const showStepBadge = !!stepLabel && !seenStepLabels.has(stepNorm);
-                                    if (showStepBadge) seenStepLabels.add(stepNorm);
-                                    return (
-                                      <div key={tr.topicRowKey} className={idx === 0 ? "pr-detailed-topic-first-card-wrap" : ""}>
-                                        <div
-                                          className={`pr-detailed-topic-nextstep-card pr-detailed-topic-rec-item pr-detailed-topic-nextstep--${tv}`}
-                                        >
-                                          <div className="flex flex-wrap items-start justify-between gap-2 mb-1">
-                                            <div className="min-w-0 flex-1">
-                                              <span className="pr-detailed-body-text font-bold text-white/95 leading-snug block">
-                                                {tr.narrativeTitleHe || tr.labelHe || tr.displayName}
-                                              </span>
-                                              {tr.gradeRelationSublineHe ? (
-                                                <p className="pr-detailed-muted text-xs m-0 mt-0.5 text-white/60">
-                                                  {tr.gradeRelationSublineHe}
-                                                </p>
-                                              ) : null}
-                                            </div>
-                                            {showStepBadge ? (
-                                              <span
-                                                className={`pr-detailed-topic-badge shrink-0 pr-detailed-topic-badge--${tv}`}
-                                              >
-                                                {stepLabel}
-                                              </span>
-                                            ) : null}
-                                          </div>
-                                          <p className="pr-detailed-body-text text-sm leading-relaxed m-0 mt-2 text-white/[0.9]">
-                                            {nar.snapshot}
-                                          </p>
-                                          {showHomeLine ? (
-                                            <p className="pr-detailed-body-text text-sm leading-relaxed m-0 mt-2.5 text-amber-100/95">
-                                              {nar.homeLine}
-                                            </p>
-                                          ) : null}
-                                          <TopicRecommendationExplainStrip tr={tr} />
-                                        </div>
-                                      </div>
-                                    );
-                                  });
-                                  })()}
-                                </div>
                               </div>
                             ) : null}
                           </div>

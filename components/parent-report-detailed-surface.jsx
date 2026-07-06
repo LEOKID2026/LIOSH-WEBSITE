@@ -747,12 +747,12 @@ export function OutOfGradePracticeSection({ transparency }) {
 
 /**
  * Parent-facing topic rows grouped by unified tier.
- * @param {{ sp: object, hideTopicRowKeysForTiers?: Set<string> }} props
+ * @param {{ sp: object, hideTopicRowKeysForTiers?: Set<string>, tierAllowlist?: string[]|null }} props
  */
-export function SubjectTopicTierGroups({ sp, hideTopicRowKeysForTiers }) {
+export function SubjectTopicTierGroups({ sp, hideTopicRowKeysForTiers, tierAllowlist = null }) {
   const groups = sp?.topicGroupsByTier;
   if (!groups || typeof groups !== "object") return null;
-  const order = [
+  const defaultOrder = [
     PARENT_TOPIC_TIER.STRONG,
     PARENT_TOPIC_TIER.MONITOR,
     PARENT_TOPIC_TIER.ADVANCED_PRACTICE,
@@ -762,6 +762,8 @@ export function SubjectTopicTierGroups({ sp, hideTopicRowKeysForTiers }) {
     PARENT_TOPIC_TIER.NEEDS_GUIDANCE,
     PARENT_TOPIC_TIER.LOW_EVIDENCE,
   ];
+  const order =
+    Array.isArray(tierAllowlist) && tierAllowlist.length ? tierAllowlist : defaultOrder;
   // Wave 2 Fix 2.4: tiers that already get a dedicated topic recommendation card
   // (full mode only) should not repeat those same topics here.
   const tiersDedupedAgainstCards =
