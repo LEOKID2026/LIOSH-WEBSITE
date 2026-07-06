@@ -123,6 +123,9 @@ function topic(answers, correct, opts = {}) {
     correct,
     wrong: Math.max(0, answers - correct),
     accuracy: answers > 0 ? Number(((correct / answers) * 100).toFixed(2)) : 0,
+    contentGradeLevel: opts.contentGradeLevel || "g4",
+    registeredGradeLevel: opts.registeredGradeLevel || "g4",
+    gradeRelation: opts.gradeRelation || "same",
     durationSeconds: opts.durationSeconds || 0,
     hintsSum: opts.hintsSum || 0,
     hintsCount: opts.hintsCount || 0,
@@ -282,6 +285,20 @@ function testStrengthsFocusSourceIds() {
   }
 }
 
+function testTopicRowsIncludeGradeWhenStudentRegistered() {
+  const pkt = buildParentReportInsightPacket({ aggregate: strongStudent() }, { now: FIXED_NOW });
+  check("grade guard :: student registered with g4", pkt.student.gradeLevel === "g4");
+  const practicedTopics = pkt.topics.filter((t) => (t.totalQuestions || 0) > 0);
+  check("grade guard :: practiced topics present", practicedTopics.length > 0);
+  for (const t of practicedTopics) {
+    check(
+      `grade guard :: ${t.key} has contentGradeLevel`,
+      typeof t.contentGradeLevel === "string" && t.contentGradeLevel.trim().length > 0,
+      `got ${JSON.stringify(t.contentGradeLevel)}`,
+    );
+  }
+}
+
 function testHebrewLabelResolution() {
   const pkt = buildParentReportInsightPacket({ aggregate: strongStudent() }, { now: FIXED_NOW });
   for (const t of pkt.topics) {
@@ -351,6 +368,7 @@ function testStrongVsWeakDifferentiation() {
 function run() {
   testDeterminism();
   testStrengthsFocusSourceIds();
+  testTopicRowsIncludeGradeWhenStudentRegistered();
   testHebrewLabelResolution();
   testThinDataWarnings();
   testFluencyAndMistakes();

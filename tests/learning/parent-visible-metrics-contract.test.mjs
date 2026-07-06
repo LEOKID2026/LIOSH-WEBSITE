@@ -74,9 +74,9 @@ function assertSurfacesParity(raw, expected, opts = {}) {
   assert.ok(sections?.data, `${label}: explain data line`);
   assert.ok(!sections.data.includes("0 נכונות"), `${label}: no fake zero correct`);
   if (canonical.questions > 4 && canonical.canShowCorrectWrongBreakdown) {
-    assert.match(sections.data, new RegExp(`${canonical.correct} נכונות`), `${label}: correct in data`);
+    assert.match(sections.data, new RegExp(`${canonical.correct} תשובות נכונות`), `${label}: correct in data`);
     if (canonical.wrong > 0) {
-      assert.match(sections.data, new RegExp(`${canonical.wrong} שגויות`), `${label}: wrong in data`);
+      assert.match(sections.data, new RegExp(`${canonical.wrong} תשובות שגויות`), `${label}: wrong in data`);
     }
   }
 
@@ -116,8 +116,8 @@ describe("parent visible metrics contract", () => {
     const dataLine = buildParentMetricsDataLineHe(metrics, "שברים");
     assert.ok(!dataLine.includes("0 נכונות"));
     assert.ok(!dataLine.includes("206 שגויות"));
-    assert.match(dataLine, /107 נכונות/);
-    assert.match(dataLine, /99 שגויות/);
+    assert.match(dataLine, /107 תשובות נכונות/);
+    assert.match(dataLine, /99 תשובות שגויות/);
   });
 
   test("B — q=206 correct=107 wrong=99 accuracy=52: consistent aggregate path", () => {

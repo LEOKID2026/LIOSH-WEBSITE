@@ -4233,7 +4233,11 @@ export default function ParentReport() {
                                   const p = props?.payload;
                                   if (!p) return ["", ""];
                                   const q = Number(p.questions) || 0;
+                                  const minutes = Number(p.minutes) || 0;
                                   if (q <= 0) {
+                                    if (minutes > 0) {
+                                      return ["אין שאלות שנענו בתקופה זו", ""];
+                                    }
                                     return ["לא תורגל במקצוע זה בתקופה שנבחרה", ""];
                                   }
                                   return [

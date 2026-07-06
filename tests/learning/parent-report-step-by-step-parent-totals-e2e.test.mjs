@@ -153,7 +153,8 @@ describe("parent report step-by-step parent totals e2e (Aaa7 regression)", () =>
     assert.notEqual(lpd.topicStatus, "initial_data");
     assert.notEqual(lpd.findingType, "initial_topic_data");
     assert.notEqual(lpd.findingType, "no_clear_pattern");
-    assert.ok(String(lpd.parentVisibleFinding).includes("טעויות"));
+    assert.match(String(lpd.parentVisibleFinding), /שגויות/);
+    assert.match(String(lpd.parentVisibleFinding), /8 שגויות מתוך 10 שאלות/);
 
     const subjectLine = withholdSummaryCopyHe("subject", {
       subjectReportQuestions: 10,
