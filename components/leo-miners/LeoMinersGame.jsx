@@ -371,15 +371,82 @@ function takeFromOfflineSession(s, elapsedMs) {
 
 
 
-// ===== Simple image cache =====
+// ===== Image cache + load-failure tracking (one bad asset must not blank the board) =====
 const IMG_CACHE = {};
+const IMG_FAILED = new Set();
+const CANVAS_DPR_CAP = 2;
+
+function attachImgErrorHandler(img, src) {
+  if (img.__lmErrBound) return;
+  img.__lmErrBound = true;
+  img.addEventListener("error", () => {
+    IMG_FAILED.add(src);
+  });
+}
+
 function getImg(src) {
+  if (!src) return getImg(IMG_BG);
   if (!IMG_CACHE[src]) {
     const img = new Image();
+    img.decoding = "async";
+    attachImgErrorHandler(img, src);
     img.src = src;
     IMG_CACHE[src] = img;
   }
   return IMG_CACHE[src];
+}
+
+function resolveBgSrc(preferred) {
+  const src = preferred || IMG_BG;
+  return IMG_FAILED.has(src) ? IMG_BG : src;
+}
+
+function resolveRockSrc(preferred) {
+  const src = preferred || IMG_ROCK;
+  return IMG_FAILED.has(src) ? IMG_ROCK : src;
+}
+
+function bgPathForIndex(index) {
+  const n = Number(index);
+  if (!Number.isFinite(n) || n < 0 || n > DEV_BG_VARIANT_COUNT) return IMG_BG;
+  return n === 0 ? IMG_BG : `/images/leo-miners/bg-cave${n}.png`;
+}
+
+function rockPathForIndex(index) {
+  const n = Number(index);
+  if (!Number.isFinite(n) || n < 0 || n > DEV_ROCK_VARIANT_COUNT) return IMG_ROCK;
+  return n === 0 ? IMG_ROCK : `/images/leo-miners/rock${n}.png`;
+}
+
+/** Single source of truth for canvas sizing — skips 0×0 layouts that blank the board. */
+function fitCanvasToWrapper(canvas) {
+  const wrap = canvas?.parentElement;
+  if (!canvas || !wrap) return false;
+
+  const rect = wrap.getBoundingClientRect();
+  const cssW = Math.max(1, Math.floor(rect.width || wrap.clientWidth || 0));
+  const cssH = Math.max(1, Math.floor(rect.height || wrap.clientHeight || 0));
+  if (cssW < 8 || cssH < 8) return false;
+
+  const dpr = Math.min(window.devicePixelRatio || 1, CANVAS_DPR_CAP);
+  const bufW = Math.round(cssW * dpr);
+  const bufH = Math.round(cssH * dpr);
+
+  if (canvas.__lmCssW === cssW && canvas.__lmCssH === cssH && canvas.__lmDpr === dpr) {
+    return true;
+  }
+  canvas.__lmCssW = cssW;
+  canvas.__lmCssH = cssH;
+  canvas.__lmDpr = dpr;
+
+  canvas.width = bufW;
+  canvas.height = bufH;
+  canvas.style.width = `${cssW}px`;
+  canvas.style.height = `${cssH}px`;
+
+  const ctx = canvas.getContext("2d");
+  if (ctx) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return true;
 }
 
 // === END PART 1 ===
@@ -404,6 +471,7 @@ export default function LeoMinersGame({
   const wrapRef   = useRef(null);
   const canvasRef = useRef(null);
   const rafRef    = useRef(0);
+  const engineCleanupRef = useRef(null);
   const dragRef   = useRef({ active:false });
   const stateRef  = useRef(null);
   /** Dev background override; read in drawBg (ref so RAF loop always sees latest). */
@@ -657,16 +725,35 @@ export default function LeoMinersGame({
 
   useEffect(() => {
     if (!mounted) return;
-    if (!isDevBgPickerEnabled()) return;
+
+    getImg(IMG_BG);
+    getImg(IMG_ROCK);
+    getImg(IMG_MINER);
+
+    boardBgSrcRef.current = IMG_BG;
+    rockImgSrcRef.current = IMG_ROCK;
+
+    if (!isDevBgPickerEnabled()) {
+      try {
+        localStorage.removeItem(DEV_BG_LS_KEY);
+        localStorage.removeItem(DEV_ROCK_LS_KEY);
+      } catch {}
+      setDevBgIndex(0);
+      setDevRockIndex(0);
+      return;
+    }
+
     try {
       const raw = localStorage.getItem(DEV_BG_LS_KEY);
       if (raw != null && raw !== "") {
         const n = parseInt(raw, 10);
         if (Number.isFinite(n) && n >= 0 && n <= DEV_BG_VARIANT_COUNT) {
           setDevBgIndex(n);
-          const path = n === 0 ? IMG_BG : `/images/leo-miners/bg-cave${n}.png`;
+          const path = bgPathForIndex(n);
           boardBgSrcRef.current = path;
           getImg(path);
+        } else {
+          localStorage.removeItem(DEV_BG_LS_KEY);
         }
       }
     } catch {}
@@ -676,9 +763,11 @@ export default function LeoMinersGame({
         const r = parseInt(rawR, 10);
         if (Number.isFinite(r) && r >= 0 && r <= DEV_ROCK_VARIANT_COUNT) {
           setDevRockIndex(r);
-          const path = r === 0 ? IMG_ROCK : `/images/leo-miners/rock${r}.png`;
+          const path = rockPathForIndex(r);
           rockImgSrcRef.current = path;
           getImg(path);
+        } else {
+          localStorage.removeItem(DEV_ROCK_LS_KEY);
         }
       }
     } catch {}
@@ -774,18 +863,29 @@ export default function LeoMinersGame({
   const preventTouchScroll = (e) => { if (e.target.closest?.("#miners-canvas")) e.preventDefault(); };
   document.addEventListener("touchmove", preventTouchScroll, { passive:false });
 
+  const startEngine = (cnv) => {
+    engineCleanupRef.current?.();
+    engineCleanupRef.current = setupCanvasAndLoop(cnv);
+  };
+
   const c0 = canvasRef.current;
   if (!c0) {
-    const id = requestAnimationFrame(() => canvasRef.current && setupCanvasAndLoop(canvasRef.current));
+    let rafId = 0;
+    rafId = requestAnimationFrame(() => {
+      const c = canvasRef.current;
+      if (c) startEngine(c);
+    });
     return () => {
-      cancelAnimationFrame(id);
+      cancelAnimationFrame(rafId);
+      engineCleanupRef.current?.();
+      engineCleanupRef.current = null;
       window.removeEventListener("resize", updateFlags);
       window.removeEventListener("orientationchange", updateFlags);
       document.removeEventListener("fullscreenchange", updateFlags);
       document.removeEventListener("touchmove", preventTouchScroll);
     };
   }
-  const cleanup = setupCanvasAndLoop(c0);
+  startEngine(c0);
 
   const onVisibility = () => {
     const s = stateRef.current; if (!s) return;
@@ -814,7 +914,8 @@ export default function LeoMinersGame({
   window.addEventListener("beforeunload", onHide);
 
   return () => {
-    cleanup && cleanup();
+    engineCleanupRef.current?.();
+    engineCleanupRef.current = null;
     window.removeEventListener("resize", updateFlags);
     window.removeEventListener("orientationchange", updateFlags);
     document.removeEventListener("fullscreenchange", updateFlags);
@@ -823,37 +924,7 @@ export default function LeoMinersGame({
     window.removeEventListener("pagehide", onHide);
     window.removeEventListener("beforeunload", onHide);
   };
-}, [showIntro]);
-
-useEffect(() => {
-  const canvas = canvasRef.current;
-  if (!canvas) return;
-
-  // התאמת קאנבס מידית לפי ה-wrapper
-  fitCanvasToWrapper(canvas);
-
-  // רענון על שינוי גודל/אוריינטציה/visualViewport (iOS)
-  const vv = window.visualViewport;
-  let t;
-  const onResize = () => {
-    clearTimeout(t);
-    t = setTimeout(() => fitCanvasToWrapper(canvas), 60);
-  };
-
-  window.addEventListener("resize", onResize);
-  window.addEventListener("orientationchange", onResize);
-  vv && vv.addEventListener("resize", onResize);
-
-  // אם יש לך לולאת ציור/engine שמחשב מחדש מטריקות — שמור
-  // ההוספה כאן רק מבטיחה שהקאנבס עצמו תמיד תפור לגובה העטיפה.
-
-  return () => {
-    clearTimeout(t);
-    window.removeEventListener("resize", onResize);
-    window.removeEventListener("orientationchange", onResize);
-    vv && vv.removeEventListener("resize", onResize);
-  };
-}, []);
+}, [gameplayConfig]);
 
 
 // רנדר/סנכרון מתנות — 500ms heartbeat
@@ -884,12 +955,12 @@ useEffect(() => {
 }, []);
 
 
-// פולס UI כל 200ms
+// פולס UI לטבעות מתנה/כלב — 500ms (לא בכל frame; מונע עומס React במובייל)
 useEffect(() => {
   const id = setInterval(() => {
-    uiPulseAccumRef.current += 0.2;
+    uiPulseAccumRef.current += 0.5;
     forceUiPulse(v => (v + 1) % 100);
-   }, 200);
+   }, 500);
   return () => clearInterval(id);
 }, []);
 
@@ -982,42 +1053,35 @@ function safeSave(){ try { save?.(); } catch {} }
 // ---------- קנבס/ציור ----------
 function setupCanvasAndLoop(cnv){
   const ctx = cnv.getContext("2d"); if (!ctx) return () => {};
-  const DPR = window.devicePixelRatio || 1;
 
+  let resizeTimer = 0;
   const resize = () => {
     const isFS = !!document.fullscreenElement;
-
-    let targetW, targetH;
+    const wrap = cnv.parentElement;
     if (isFS) {
-      targetW = Math.min(window.innerWidth || 360, 1024);
-      targetH = Math.max(420, (window.innerHeight || 600) - 1);
-      const wrap = cnv.parentElement;
       if (wrap) wrap.style.height = `${window.innerHeight}px`;
-    } else {
-      const wrap = cnv.parentElement;
-      if (wrap) wrap.style.height = "";
-      const rect = wrap?.getBoundingClientRect();
-      const innerW = Math.max(320, Math.floor(wrap?.clientWidth  ?? rect?.width  ?? 360));
-      const innerH = Math.max(420, Math.floor(wrap?.clientHeight ?? rect?.height ?? 600));
-      targetW = Math.min(innerW, 1024);
-      targetH = innerH;
+    } else if (wrap) {
+      wrap.style.height = "";
     }
-
-    cnv.style.width  = `${targetW}px`;
-    cnv.style.height = `${targetH}px`;
-    cnv.width  = Math.floor(targetW * DPR);
-    cnv.height = Math.floor(targetH * DPR);
-    ctx.setTransform(DPR,0,0,DPR,0,0);
+    if (!fitCanvasToWrapper(cnv)) return;
     draw();
+  };
+
+  const scheduleResize = () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(resize, 80);
   };
 
   const onFSResize = () => {
     resize();
-    setTimeout(resize, 60);
+    setTimeout(resize, 80);
   };
 
-  window.addEventListener("resize", resize);
+  const vv = window.visualViewport;
+  window.addEventListener("resize", scheduleResize);
+  window.addEventListener("orientationchange", scheduleResize);
   document.addEventListener("fullscreenchange", onFSResize);
+  vv?.addEventListener("resize", scheduleResize);
   resize();
 
   const onDown = (e) => {
@@ -1102,8 +1166,11 @@ function setupCanvasAndLoop(cnv){
 
   return () => {
     cancelAnimationFrame(rafRef.current);
-    window.removeEventListener("resize", resize);
+    clearTimeout(resizeTimer);
+    window.removeEventListener("resize", scheduleResize);
+    window.removeEventListener("orientationchange", scheduleResize);
     document.removeEventListener("fullscreenchange", onFSResize);
+    vv?.removeEventListener("resize", scheduleResize);
     cnv.removeEventListener("mousedown", onDown);
     cnv.removeEventListener("mousemove", onMove);
     window.removeEventListener("mouseup", onUp);
@@ -1147,29 +1214,6 @@ function pos(e){
   const r = canvasRef.current?.getBoundingClientRect();
   return { x: e.clientX - (r?.left||0), y: e.clientY - (r?.top||0) };
 }
-
-// Fit canvas to its wrapper with DPR (no lanes changes)
-function fitCanvasToWrapper(canvas) {
-  const wrap = canvas?.parentElement;
-  if (!canvas || !wrap) return;
-  const rect = wrap.getBoundingClientRect();
-
-  // DPI scaling for sharp rendering (cap to 2 for performance)
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-
-  // Set internal buffer size
-  canvas.width  = Math.round(rect.width  * dpr);
-  canvas.height = Math.round(rect.height * dpr);
-
-  // CSS size to match wrapper
-  canvas.style.width  = `${Math.round(rect.width)}px`;
-  canvas.style.height = `${Math.round(rect.height)}px`;
-
-  // Scale context so all existing drawing uses CSS pixels
-  const ctx = canvas.getContext("2d");
-  if (ctx) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-}
-
 
 function pointInRect(x,y,r){ return x>=r.x && x<=r.x+r.w && y>=r.y && y<=r.y+r.h; }
 function pillRect(lane,slot){
@@ -1223,8 +1267,14 @@ function pickMiner(x,y){
 
 // ----- ציור -----
 function drawBg(ctx,b){
-  const src = boardBgSrcRef.current || IMG_BG;
-  const img = getImg(src);
+  let src = resolveBgSrc(boardBgSrcRef.current);
+  let img = getImg(src);
+  if (!img.complete || img.naturalWidth <= 0) {
+    if (src !== IMG_BG) {
+      src = IMG_BG;
+      img = getImg(IMG_BG);
+    }
+  }
   if (img.complete && img.naturalWidth>0) {
     const iw=img.naturalWidth, ih=img.naturalHeight;
     const ir=iw/ih, br=b.w/b.h;
@@ -1250,7 +1300,7 @@ function drawRock(ctx, rect, rock){
   const scale = 0.35 + 0.65 * pct;
 
   // מסגרות ומידות
-  const rockSrc = rockImgSrcRef.current || IMG_ROCK;
+  const rockSrc = resolveRockSrc(rockImgSrcRef.current);
   const img   = getImg(rockSrc);
   const pad   = 6;
   const fullW = rect.w - pad*2;
@@ -1265,8 +1315,16 @@ function drawRock(ctx, rect, rock){
   const dy = cy - rh / 2;
 
   // ציור הסלע
-  if (img.complete && img.naturalWidth > 0) {
-    ctx.drawImage(img, dx, dy, rw, rh);
+  let drawSrc = rockSrc;
+  let drawImg = img;
+  if (!drawImg.complete || drawImg.naturalWidth <= 0) {
+    if (drawSrc !== IMG_ROCK) {
+      drawSrc = IMG_ROCK;
+      drawImg = getImg(IMG_ROCK);
+    }
+  }
+  if (drawImg.complete && drawImg.naturalWidth > 0) {
+    ctx.drawImage(drawImg, dx, dy, rw, rh);
   } else {
     ctx.fillStyle = "#6b7280";
     ctx.fillRect(dx, dy, rw, rh);
@@ -2542,10 +2600,12 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
 
   style={{
     maxWidth: isDesktop ? "1024px" : "680px",
-    // שמירה על גובה מלא-מסך גם ב-iOS (עם פולבאקים בטוחים)
-    height: "calc(var(--app-100vh, 100svh) - var(--header-h, 0px))",
-    minHeight: "min(100vh, var(--app-100vh, 100svh))",
-    // בדסקטופ יחס קלאסי; במובייל מחזירים 9/16 כמו בגרסה היציבה
+    width: "100%",
+    flex: isDesktop ? undefined : "1 1 auto",
+    minHeight: isDesktop ? "min(100vh, var(--app-100vh, 100svh))" : "240px",
+    maxHeight: isDesktop
+      ? undefined
+      : "calc(var(--app-100vh, 100svh) - 180px)",
     aspectRatio: isDesktop ? "4 / 3" : "9 / 16",
   }}
 >
@@ -2587,7 +2647,7 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
           const next =
             Number.isFinite(n) && n >= 0 && n <= DEV_BG_VARIANT_COUNT ? n : 0;
           setDevBgIndex(next);
-          const path = next === 0 ? IMG_BG : `/images/leo-miners/bg-cave${next}.png`;
+          const path = bgPathForIndex(next);
           boardBgSrcRef.current = path;
           try {
             localStorage.setItem(DEV_BG_LS_KEY, String(next));
@@ -2618,7 +2678,7 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
           const next =
             Number.isFinite(n) && n >= 0 && n <= DEV_ROCK_VARIANT_COUNT ? n : 0;
           setDevRockIndex(next);
-          const path = next === 0 ? IMG_ROCK : `/images/leo-miners/rock${next}.png`;
+          const path = rockPathForIndex(next);
           rockImgSrcRef.current = path;
           try {
             localStorage.setItem(DEV_ROCK_LS_KEY, String(next));
