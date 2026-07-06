@@ -89,6 +89,7 @@ export default function StudentNumericAnswerField({
             onInputFocus?.();
           }}
           placeholder={placeholder}
+          aria-label={placeholder === "תשובה" ? "תשובה לשאלה" : placeholder}
           disabled={disabled}
           readOnly={inputReadOnly}
           autoFocus={autoFocus && !inputReadOnly}

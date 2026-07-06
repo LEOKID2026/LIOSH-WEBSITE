@@ -29,6 +29,10 @@ import {
   shouldClearGuestResumeTokenOnLogout,
   shouldClearGuestResumeTokenOnResumeFailure,
 } from "../../lib/guest/guest-resume-token.client.js";
+import {
+  guestResumeFailureBannerFromPayload,
+  shouldBlockGuestStartAfterResumeFailure,
+} from "../../lib/guest/guest-resume-ui.client.js";
 
 describe("guest leo number", () => {
   test("normalize accepts 8 digits", () => {
@@ -127,10 +131,22 @@ describe("guest resume token client", () => {
     assert.equal(shouldClearGuestResumeTokenOnLogout(guest, true), true);
   });
 
-  test("resume failure clears invalid or linked tokens", () => {
-    assert.equal(shouldClearGuestResumeTokenOnResumeFailure("guest_resume_invalid"), true);
+  test("resume failure clears linked tokens only", () => {
+    assert.equal(shouldClearGuestResumeTokenOnResumeFailure("guest_resume_invalid"), false);
     assert.equal(shouldClearGuestResumeTokenOnResumeFailure("guest_already_linked"), true);
     assert.equal(shouldClearGuestResumeTokenOnResumeFailure("guest_mode_disabled"), false);
+  });
+});
+
+describe("guest resume ui helpers", () => {
+  test("linked resume failure shows parent login guidance", () => {
+    const banner = guestResumeFailureBannerFromPayload({
+      code: "guest_already_linked",
+      message: "המספר כבר שויך להורה — התחבר/י עם שם משתמש ו-PIN",
+    });
+    assert.equal(banner?.code, "guest_already_linked");
+    assert.match(banner?.messageHe || "", /התחבר/);
+    assert.equal(shouldBlockGuestStartAfterResumeFailure("guest_already_linked"), true);
   });
 });
 

@@ -123,6 +123,12 @@ import {
   gradeKeyToNumber,
 } from "../../lib/learning-student-defaults";
 import { useSubjectSessionDefaults } from "../../hooks/useSubjectSessionDefaults";
+import { notifyLearningSessionSaveFailure } from "../../lib/learning-client/learning-session-save-feedback.client.js";
+import {
+  STUDENT_GRADE_REQUIRED_MESSAGE_HE,
+  STUDENT_SUBJECT_LOADING_MESSAGE_HE,
+} from "../../lib/learning-client/student-subject-practice-gate.he.js";
+import { useEscapeCloseModals } from "../../hooks/useEscapeCloseModals.js";
 import {
   debounceStudentLearningProfilePatch,
   fetchStudentLearningProfile,
@@ -291,6 +297,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
   );
 
   const {
+    session,
     grade,
     setGrade,
     gradeNumber,
@@ -802,6 +809,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
   const [practiceQuestion, setPracticeQuestion] = useState(null); // שאלת תרגול
   const [practiceAnswer, setPracticeAnswer] = useState(""); // תשובת התרגול
   const [showLeaderboard, setShowLeaderboard] = useState(false);
+
   const [leaderboardLevel, setLeaderboardLevel] = useState("regular");
   const [leaderboardData, setLeaderboardData] = useState([]);
   // No word problems for Moledet & Geography - all topics are text-based
@@ -822,8 +830,10 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
   useEffect(() => {
     if (sessionFullName) {
       setPlayerName(sessionFullName);
+    } else if (session?.sessionResolved) {
+      setPlayerName("ילד/ה");
     }
-  }, [sessionFullName]);
+  }, [sessionFullName, session?.sessionResolved]);
 
   useEffect(() => {
     setChildCoinBalance(sessionCoinBalance);
@@ -1525,8 +1535,8 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
           source: "moledet-geography-master",
           version: "phase-2d-b7",
         },
-      }).catch((error) => {
-        console.warn("[moledet-geography-master] finish session save failed", error);
+      }).catch(() => {
+        notifyLearningSessionSaveFailure(setFeedback, "moledet-geography-master");
       });
       if (includePlannerRecommendation) {
         const cid = (plannerResponseSeqRef.current += 1);
@@ -2440,9 +2450,22 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
       hydrationComplete: !!learningProfileHydratedRef.current,
     });
   }, [subjectView, learningProfileHydrationTick]);
+  useEscapeCloseModals([
+    { open: showPlayerProfile, close: () => setShowPlayerProfile(false) },
+    { open: showPracticeOptions, close: () => setShowPracticeOptions(false) },
+    { open: showReferenceModal, close: () => setShowReferenceModal(false) },
+    { open: showHowTo, close: () => setShowHowTo(false) },
+    { open: showMultiplicationTable, close: () => setShowMultiplicationTable(false) },
+    { open: showLeaderboard, close: () => setShowLeaderboard(false) },
+    { open: showMixedSelector, close: () => setShowMixedSelector(false) },
+  ]);
 
-  if (!mounted || !gradeReady)
-    return <StudentLoadingPanel message="טוען..." fullPage />;
+
+
+  if (!mounted || session.sessionLoading)
+    return <StudentLoadingPanel message={STUDENT_SUBJECT_LOADING_MESSAGE_HE} fullPage />;
+  if (!gradeReady)
+    return <StudentLoadingPanel message={STUDENT_GRADE_REQUIRED_MESSAGE_HE} fullPage />;
 
   const accuracy =
     totalQuestions > 0 ? Math.round((correct / totalQuestions) * 100) : 0;
@@ -2648,7 +2671,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
           {/* פרופיל שחקן */}
           {showPlayerProfile && (
             <div
-              className="fixed inset-0 bg-black/80 flex items-center justify-center z-[200] p-4"
+              role="dialog" aria-modal="true" className="fixed inset-0 bg-black/80 flex items-center justify-center z-[200] p-4"
               onClick={() => setShowPlayerProfile(false)}
               dir="rtl"
             >
@@ -2886,7 +2909,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
           {/* מודל תרגול ממוקד */}
           {showPracticeOptions && (
             <div
-              className="fixed inset-0 bg-black/80 flex items-center justify-center z-[200] p-4"
+              role="dialog" aria-modal="true" className="fixed inset-0 bg-black/80 flex items-center justify-center z-[200] p-4"
               onClick={() => setShowPracticeOptions(false)}
               dir="rtl"
             >
@@ -3256,7 +3279,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
                   className="relative w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-4xl flex flex-col flex-1 min-h-0 items-stretch mb-2 mx-auto overflow-hidden max-md:h-[var(--game-h,400px)] max-md:min-h-[300px] md:min-h-[280px]"
                 >
                   {(feedback || errorExplanation) && (
-                    <div className="absolute top-0 left-0 right-0 z-[5] px-2 pt-1 pointer-events-none">
+                    <div className="absolute top-0 left-0 right-0 z-[5] px-2 pt-1 pointer-events-none" role="status" aria-live="assertive" aria-atomic="true">
                       <div className="flex flex-col gap-2">
                         {feedback && (
                           <div
@@ -3759,7 +3782,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
           {/* Leaderboard Modal */}
           {showLeaderboard && (
             <div
-              className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
+              role="dialog" aria-modal="true" className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
               onClick={() => setShowLeaderboard(false)}
               dir="rtl"
             >
@@ -3880,7 +3903,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
           {/* Mixed Operations Selector Modal */}
           {showMixedSelector && (
             <div
-              className="fixed inset-0 bg-black/80 flex items-center justify-center z-[200] p-4"
+              role="dialog" aria-modal="true" className="fixed inset-0 bg-black/80 flex items-center justify-center z-[200] p-4"
               onClick={() => {
                 setShowMixedSelector(false);
                 // אם לא נבחרו פעולות, חזור לפעולה הקודמת
@@ -3997,7 +4020,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
 
           {showHowTo && (
             <div
-              className="fixed inset-0 bg-black/80 flex items-center justify-center z-[180] p-4"
+              role="dialog" aria-modal="true" className="fixed inset-0 bg-black/80 flex items-center justify-center z-[180] p-4"
               onClick={() => setShowHowTo(false)}
             >
               <div
@@ -4040,7 +4063,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
           {/* Reference Modal - לוח עזרה */}
           {showReferenceModal && (
             <div
-              className="fixed inset-0 bg-black/80 flex items-center justify-center z-[185] p-4"
+              role="dialog" aria-modal="true" className="fixed inset-0 bg-black/80 flex items-center justify-center z-[185] p-4"
               onClick={() => setShowReferenceModal(false)}
             >
               <div

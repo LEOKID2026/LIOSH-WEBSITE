@@ -38,7 +38,7 @@ import {
 import { useParentReportBrightPageBackground } from "../../lib/parent-ui/use-parent-report-bright-page-bg.js";
 import { mapParentReportLoadError } from "../../lib/parent-server/parent-api-errors.he.js";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
-import { normalizeParentFacing } from "../../components/parent/ParentReportParentSections.jsx";
+import { resolveDetailedParentReportPathname } from "../../lib/parent-report/detailed-report-pathname.client.js";
 import { PARENT_BULLETS_EMPTY_WITH_VOLUME_HE } from "../../utils/parent-data-presence.js";
 import {
   PARENT_REPORT_PERIOD_EMPTY_STATE_HE,
@@ -534,7 +534,7 @@ export default function ParentReportDetailedPage() {
     (mode) => {
       const next = normalizeDisplayMode(mode);
       const q = buildDetailedReportQueryFromQueryObject(router.query, next);
-      router.replace({ pathname: "/learning/parent-report-detailed", query: q }, undefined, {
+      router.replace({ pathname: resolveDetailedParentReportPathname(router.query), query: q }, undefined, {
         shallow: true,
       });
       setDisplayMode(next);
@@ -547,7 +547,7 @@ export default function ParentReportDetailedPage() {
       const next = normalizeDisplayMode(mode);
       setDisplayMode(next);
       const q = buildDetailedReportQueryFromQueryObject(router.query, next);
-      router.replace({ pathname: "/learning/parent-report-detailed", query: q }, undefined, {
+      router.replace({ pathname: resolveDetailedParentReportPathname(router.query), query: q }, undefined, {
         shallow: true,
       });
       window.setTimeout(() => window.print(), 120);

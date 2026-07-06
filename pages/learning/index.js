@@ -138,7 +138,7 @@ export default function LearningHub({ showDevStudentSimulator }) {
             return (
               <Link
                 key={g.slug}
-                href={`/learning/${g.slug}`}
+                href={`/student/learning/${g.slug}`}
                 className={`${T.hubCardBase} ${subject.card}`}
               >
                 <span className={`${T.hubCardBar} ${subject.bar}`} aria-hidden />

@@ -28,6 +28,13 @@ export default async function handler(req, res) {
     }
   }
   const gradeLevel = trimString(req.body?.gradeLevel);
+  if (!gradeLevel) {
+    return res.status(400).json({
+      ok: false,
+      code: "grade_required",
+      error: "יש לבחור כיתה",
+    });
+  }
 
   try {
     const ctx = await requireParentApiContext(res, req.headers.authorization || "");
@@ -60,10 +67,8 @@ export default async function handler(req, res) {
     const payload = {
       parent_id: ctx.parentUserId,
       full_name: fullName,
+      grade_level: gradeLevel,
     };
-    if (gradeLevel) {
-      payload.grade_level = gradeLevel;
-    }
 
     const { data, error } = await ctx.bearerSupabase
       .from("students")

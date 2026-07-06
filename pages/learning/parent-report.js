@@ -2206,7 +2206,7 @@ export default function ParentReport() {
             <div className="flex flex-wrap justify-center gap-2 mt-2 no-pdf">
               <Link
                 href={{
-                  pathname: "/learning/parent-report-detailed",
+                  pathname: "/parent/parent-report-detailed",
                   query: detailedReportQuery,
                 }}
                 prefetch={false}

@@ -210,6 +210,12 @@ import {
 } from "../../lib/learning-student-defaults";
 import { isStudentIdentityDiagnosticsEnabled } from "../../lib/dev-student-identity-client";
 import { useSubjectSessionDefaults } from "../../hooks/useSubjectSessionDefaults";
+import { notifyLearningSessionSaveFailure } from "../../lib/learning-client/learning-session-save-feedback.client.js";
+import {
+  STUDENT_GRADE_REQUIRED_MESSAGE_HE,
+  STUDENT_SUBJECT_LOADING_MESSAGE_HE,
+} from "../../lib/learning-client/student-subject-practice-gate.he.js";
+import { useEscapeCloseModals } from "../../hooks/useEscapeCloseModals.js";
 import { normalizeMistakeEvent } from "../../utils/mistake-event.js";
 import { inferNormalizedTags } from "../../utils/fast-diagnostic-engine/infer-tags.js";
 import {
@@ -492,6 +498,7 @@ export default function MathMaster() {
   );
   const [operation, setOperation] = useState("addition"); // לא mixed כברירת מחדל כדי שה-modal לא יפתח אוטומטית
   const {
+    session,
     grade,
     setGrade,
     gradeNumber,
@@ -1097,6 +1104,7 @@ export default function MathMaster() {
   const [practiceQuestion, setPracticeQuestion] = useState(null); // שאלת תרגול
   const [practiceAnswer, setPracticeAnswer] = useState(""); // תשובת התרגול
   const [showLeaderboard, setShowLeaderboard] = useState(false);
+
   const [leaderboardLevel, setLeaderboardLevel] = useState("regular");
   const [leaderboardData, setLeaderboardData] = useState([]);
   useEffect(() => {
@@ -1174,8 +1182,10 @@ export default function MathMaster() {
   useEffect(() => {
     if (sessionFullName) {
       setPlayerName(sessionFullName);
+    } else if (session?.sessionResolved) {
+      setPlayerName("ילד/ה");
     }
-  }, [sessionFullName]);
+  }, [sessionFullName, session?.sessionResolved]);
 
   useEffect(() => {
     setChildCoinBalance(sessionCoinBalance);
@@ -2103,8 +2113,8 @@ export default function MathMaster() {
           source: "math-master",
           version: "phase-2d-b2",
         },
-      }).catch((error) => {
-        console.warn("[math-master] finish session save failed", error);
+      }).catch(() => {
+        notifyLearningSessionSaveFailure(setFeedback, "math-master");
       });
       if (includePlannerRecommendation) {
         const cid = (plannerResponseSeqRef.current += 1);
@@ -3252,9 +3262,22 @@ export default function MathMaster() {
       hydrationComplete: !!learningProfileHydratedRef.current,
     });
   }, [subjectView, learningProfileHydrationTick]);
+  useEscapeCloseModals([
+    { open: showPlayerProfile, close: () => setShowPlayerProfile(false) },
+    { open: showPracticeOptions, close: () => setShowPracticeOptions(false) },
+    { open: showReferenceModal, close: () => setShowReferenceModal(false) },
+    { open: showHowTo, close: () => setShowHowTo(false) },
+    { open: showMultiplicationTable, close: () => setShowMultiplicationTable(false) },
+    { open: showLeaderboard, close: () => setShowLeaderboard(false) },
+    { open: showMixedSelector, close: () => setShowMixedSelector(false) },
+  ]);
 
-  if (!mounted || !gradeReady)
-    return <StudentLoadingPanel message="טוען..." fullPage />;
+
+
+  if (!mounted || session.sessionLoading)
+    return <StudentLoadingPanel message={STUDENT_SUBJECT_LOADING_MESSAGE_HE} fullPage />;
+  if (!gradeReady)
+    return <StudentLoadingPanel message={STUDENT_GRADE_REQUIRED_MESSAGE_HE} fullPage />;
 
   const accuracy =
     totalQuestions > 0 ? Math.round((correct / totalQuestions) * 100) : 0;
@@ -3594,7 +3617,7 @@ export default function MathMaster() {
           {/* פרופיל שחקן */}
           {showPlayerProfile && (
             <div
-              className="fixed inset-0 bg-black/80 flex items-center justify-center z-[200] p-4"
+              role="dialog" aria-modal="true" className="fixed inset-0 bg-black/80 flex items-center justify-center z-[200] p-4"
               onClick={() => setShowPlayerProfile(false)}
               dir="rtl"
             >
@@ -3838,7 +3861,7 @@ export default function MathMaster() {
           {/* מודל תרגול ממוקד */}
           {showPracticeOptions && (
             <div
-              className="fixed inset-0 bg-black/80 flex items-center justify-center z-[200] p-4"
+              role="dialog" aria-modal="true" className="fixed inset-0 bg-black/80 flex items-center justify-center z-[200] p-4"
               onClick={() => setShowPracticeOptions(false)}
               dir="rtl"
             >
@@ -4210,7 +4233,7 @@ export default function MathMaster() {
                 >
                   {/* שכבת הודעות שלא משנה פריסה (אין מקום שמור / אין מיקרו-סק롤) */}
                   {(feedback || errorExplanation) && (
-                    <div className="absolute top-0 left-0 right-0 z-[5] px-2 pt-1 pointer-events-none">
+                    <div className="absolute top-0 left-0 right-0 z-[5] px-2 pt-1 pointer-events-none" role="status" aria-live="assertive" aria-atomic="true">
                       <div className="flex flex-col gap-2 items-stretch">
                         {feedback && (
                           <div
@@ -5781,7 +5804,7 @@ export default function MathMaster() {
           {/* Leaderboard Modal */}
           {showLeaderboard && (
             <div
-              className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
+              role="dialog" aria-modal="true" className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
               onClick={() => setShowLeaderboard(false)}
               dir="rtl"
             >
@@ -5919,7 +5942,7 @@ export default function MathMaster() {
           {/* Mixed Operations Selector Modal */}
           {showMixedSelector && (
             <div
-              className="fixed inset-0 bg-black/80 flex items-center justify-center z-[200] p-4"
+              role="dialog" aria-modal="true" className="fixed inset-0 bg-black/80 flex items-center justify-center z-[200] p-4"
               onClick={() => {
                 setShowMixedSelector(false);
                 // אם לא נבחרו פעולות, חזור לפעולה הקודמת
@@ -6034,7 +6057,7 @@ export default function MathMaster() {
 
           {showHowTo && (
             <div
-              className="fixed inset-0 bg-black/80 flex items-center justify-center z-[180] p-4"
+              role="dialog" aria-modal="true" className="fixed inset-0 bg-black/80 flex items-center justify-center z-[180] p-4"
               onClick={() => setShowHowTo(false)}
             >
               <div
@@ -6071,7 +6094,7 @@ export default function MathMaster() {
           {/* Reference Modal - לוח עזרה */}
           {showReferenceModal && (
             <div
-              className="fixed inset-0 bg-black/80 flex items-center justify-center z-[185] p-4"
+              role="dialog" aria-modal="true" className="fixed inset-0 bg-black/80 flex items-center justify-center z-[185] p-4"
               onClick={() => setShowReferenceModal(false)}
             >
               <div

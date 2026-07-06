@@ -87,6 +87,8 @@ export default function ParentDashboardPage() {
   const [addChildModalOpen, setAddChildModalOpen] = useState(false);
   const [detailsModalStudent, setDetailsModalStudent] = useState(null);
   const [sentActivitiesRefresh, setSentActivitiesRefresh] = useState(0);
+  const [guestLeoByStudentId, setGuestLeoByStudentId] = useState({});
+  const [guestLinkMessageByStudentId, setGuestLinkMessageByStudentId] = useState({});
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -322,6 +324,55 @@ export default function ParentDashboardPage() {
       setMessage(parentDashboardUpdateSuccessHe());
     }
     setBusy(false);
+  };
+
+  const linkGuestToStudent = async (studentId) => {
+    if (!session?.access_token) return;
+    const leoDigits = String(guestLeoByStudentId[studentId] || "").replace(/\D/g, "").slice(0, 8);
+    if (leoDigits.length !== 8) {
+      setGuestLinkMessageByStudentId((prev) => ({
+        ...prev,
+        [studentId]: "יש להזין מספר ליאו בן 8 ספרות.",
+      }));
+      return;
+    }
+
+    setBusy(true);
+    setGuestLinkMessageByStudentId((prev) => ({ ...prev, [studentId]: "" }));
+    try {
+      const linkRes = await fetch("/api/parent/guest/link", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          targetStudentId: studentId,
+          leoNumber: leoDigits,
+        }),
+      });
+      const linkPayload = await linkRes.json();
+      if (!linkRes.ok) {
+        setGuestLinkMessageByStudentId((prev) => ({
+          ...prev,
+          [studentId]: linkPayload.error || "שיוך מספר האורח נכשל.",
+        }));
+        return;
+      }
+      setGuestLinkMessageByStudentId((prev) => ({
+        ...prev,
+        [studentId]: linkPayload.message || "המטבעות והקלפים נשמרו לילד.",
+      }));
+      setGuestLeoByStudentId((prev) => ({ ...prev, [studentId]: "" }));
+      await fetchStudents(session);
+    } catch {
+      setGuestLinkMessageByStudentId((prev) => ({
+        ...prev,
+        [studentId]: "שגיאת רשת בשיוך האורח.",
+      }));
+    } finally {
+      setBusy(false);
+    }
   };
 
   const saveStudentCredentials = async (studentId, childFullName) => {
@@ -644,6 +695,36 @@ export default function ParentDashboardPage() {
             </option>
           ))}
         </select>
+        <div>
+          <label className={`text-sm ${T.label}`}>מספר ליאו של אורח (לשיוך)</label>
+          <input
+            className={T.inputMt}
+            value={guestLeoByStudentId[student.id] || ""}
+            onChange={(e) =>
+              setGuestLeoByStudentId((prev) => ({
+                ...prev,
+                [student.id]: e.target.value.replace(/\D/g, "").slice(0, 8),
+              }))
+            }
+            placeholder="מספר ליאו — 8 ספרות"
+            inputMode="numeric"
+            autoComplete="off"
+            disabled={busy}
+          />
+          <button
+            type="button"
+            className={`mt-2 ${T.skyBtn}`}
+            disabled={busy}
+            onClick={() => void linkGuestToStudent(student.id)}
+          >
+            שיוך אורח
+          </button>
+          {guestLinkMessageByStudentId[student.id] ? (
+            <p className={`mt-2 text-sm ${T.muted}`} role="status">
+              {guestLinkMessageByStudentId[student.id]}
+            </p>
+          ) : null}
+        </div>
         <label className={`flex items-center gap-2 text-sm ${T.label}`}>
           <input
             type="checkbox"

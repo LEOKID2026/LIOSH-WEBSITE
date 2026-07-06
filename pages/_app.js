@@ -93,6 +93,16 @@ const STUDENT_PROTECTED_ROUTES = new Set([
   "/learning/book/[subject]/[grade]/[pageId]",
   "/student/learning/book/[subject]/[grade]",
   "/student/learning/book/[subject]/[grade]/[pageId]",
+  "/student/learning",
+  "/student/learning/math-master",
+  "/student/learning/geometry-master",
+  "/student/learning/english-master",
+  "/student/learning/hebrew-master",
+  "/student/learning/science-master",
+  "/student/learning/moledet-master",
+  "/student/learning/geography-master",
+  "/student/learning/history-master",
+  "/student/learning/moledet-geography-master",
   "/learning/dev-student-simulator",
 ]);
 

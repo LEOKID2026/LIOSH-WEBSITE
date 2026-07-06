@@ -177,6 +177,7 @@ export default function StudentCardsPage() {
   const loadedTabsRef = useRef(new Set());
   const [actionBusy, setActionBusy] = useState("");
   const [messageHe, setMessageHe] = useState("");
+  const [messageIsError, setMessageIsError] = useState(false);
 
   const rewardsEnabled = isCardRewardsEnabledClient();
 
@@ -303,6 +304,7 @@ export default function StudentCardsPage() {
 
     setActionBusy(cardId);
     setMessageHe("");
+    setMessageIsError(false);
     try {
       const res = await fetch(PURCHASE_PATH, {
         method: "POST",
@@ -312,15 +314,18 @@ export default function StudentCardsPage() {
       });
       const json = await res.json().catch(() => ({}));
       if (!res.ok || json?.ok !== true) {
+        setMessageIsError(true);
         setMessageHe(json?.code === "insufficient_coins" ? "אין מספיק מטבעות לרכישה." : "הרכישה לא הצליחה — נסו שוב.");
         return;
       }
+      setMessageIsError(false);
       setMessageHe(`קניתם את ${json.card?.name_he || json.card?.nameHe || "הקלף"}!`);
       if (json.balanceAfter != null) {
         setStudent((prev) => (prev ? { ...prev, coin_balance: json.balanceAfter } : prev));
       }
       await refreshAfterCardAction();
     } catch {
+      setMessageIsError(true);
       setMessageHe("שגיאת רשת ברכישה.");
     } finally {
       setActionBusy("");
@@ -339,6 +344,7 @@ export default function StudentCardsPage() {
     const busyKey = `sell:${card.id}`;
     setActionBusy(busyKey);
     setMessageHe("");
+    setMessageIsError(false);
     try {
       const res = await fetch(SELL_DUPLICATE_PATH, {
         method: "POST",
@@ -351,6 +357,7 @@ export default function StudentCardsPage() {
       });
       const json = await res.json().catch(() => ({}));
       if (!res.ok || json?.ok !== true) {
+        setMessageIsError(true);
         setMessageHe(
           json?.code === "no_duplicate"
             ? "אין עותק כפול למכירה."
@@ -358,6 +365,7 @@ export default function StudentCardsPage() {
         );
         return;
       }
+      setMessageIsError(false);
       setMessageHe(
         `מכרתם עותק כפול של ${json.card?.name_he || json.card?.nameHe || card.nameHe} וקיבלתם ${formatCoinAmountHe(json.sellbackCoins || 0)}!`
       );
@@ -366,6 +374,7 @@ export default function StudentCardsPage() {
       }
       await refreshAfterCardAction();
     } catch {
+      setMessageIsError(true);
       setMessageHe("שגיאת רשת במכירה.");
     } finally {
       setActionBusy("");
@@ -576,7 +585,16 @@ export default function StudentCardsPage() {
         </header>
 
         {messageHe ? (
-          <p className="mb-3 text-sm text-emerald-700 dark:text-emerald-300 text-right">{messageHe}</p>
+          <p
+            className={`mb-3 text-sm text-right ${
+              messageIsError
+                ? "text-rose-700 dark:text-rose-300"
+                : "text-emerald-700 dark:text-emerald-300"
+            }`}
+            role={messageIsError ? "alert" : "status"}
+          >
+            {messageHe}
+          </p>
         ) : null}
 
         <nav

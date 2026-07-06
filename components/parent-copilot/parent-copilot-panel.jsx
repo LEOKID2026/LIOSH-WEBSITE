@@ -247,6 +247,9 @@ export function ParentCopilotPanel({ payload, selectedContextRef = null, asyncTu
           מידע על שימוש בבינה מלאכותית
         </Link>
       </div>
+      <p className="text-[11px] leading-snug text-white/45 shrink-0 mb-1 pr-0.5" role="note">
+        המידע מבוסס על נתוני התרגול באתר ואינו אבחון או ייעוץ מקצועי.
+      </p>
       <p className="text-[11px] leading-snug text-white/45 shrink-0 mb-2 pr-0.5">
         אפשר לשאול כאן בחופשיות על הדוח, למשל: מה הכי חשוב כרגע, במה להתמקד השבוע, מה הולך טוב, או איך להסביר את זה לילד.
       </p>

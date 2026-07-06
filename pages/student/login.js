@@ -18,6 +18,12 @@ import { syncStudentLocalStorageIdentity } from "../../lib/learning-student-loca
 import { isStudentIdentityDiagnosticsEnabled } from "../../lib/dev-student-identity-client";
 import { LIOSH_GUEST_RESUME_TOKEN_KEY } from "../../lib/guest/constants.js";
 import { shouldClearGuestResumeTokenOnResumeFailure } from "../../lib/guest/guest-resume-token.client.js";
+import {
+  GUEST_NEW_AFTER_FAILED_RESUME_CONFIRM_HE,
+  guestResumeFailureBannerFromPayload,
+  shouldBlockGuestStartAfterResumeFailure,
+  shouldConfirmNewGuestAfterResumeFailure,
+} from "../../lib/guest/guest-resume-ui.client.js";
 
 function resolveNextTarget(router) {
   const raw = router.query?.next;
@@ -63,6 +69,7 @@ export default function StudentLoginPage() {
   const [copyPopupMessage, setCopyPopupMessage] = useState("");
   const [copyPopupIsError, setCopyPopupIsError] = useState(false);
   const [guestBusy, setGuestBusy] = useState(false);
+  const [guestResumeBanner, setGuestResumeBanner] = useState(null);
 
   const layoutProps = { studentTheme: theme, studentShell: "home" };
   const labelClass = isBright ? "text-slate-700" : "text-white/80";
@@ -111,6 +118,10 @@ export default function StudentLoginPage() {
             redirectAfterStudentLogin(router);
             return;
           }
+          const resumeFailure = guestResumeFailureBannerFromPayload(resumePayload);
+          if (resumeFailure) {
+            setGuestResumeBanner(resumeFailure);
+          }
           if (shouldClearGuestResumeTokenOnResumeFailure(resumePayload?.code)) {
             localStorage.removeItem(LIOSH_GUEST_RESUME_TOKEN_KEY);
           }
@@ -144,8 +155,26 @@ export default function StudentLoginPage() {
     setGuestBusy(true);
     setMessage("");
     try {
-      const resumeToken =
+      if (shouldBlockGuestStartAfterResumeFailure(guestResumeBanner?.code)) {
+        setMessage(guestResumeBanner?.messageHe || "המספר כבר שויך להורה — התחבר/י עם שם משתמש וקוד.");
+        return;
+      }
+
+      let resumeToken =
         typeof window !== "undefined" ? localStorage.getItem(LIOSH_GUEST_RESUME_TOKEN_KEY) : null;
+
+      if (
+        resumeToken &&
+        (shouldConfirmNewGuestAfterResumeFailure(guestResumeBanner?.code) ||
+          guestResumeBanner?.code === "guest_resume_invalid")
+      ) {
+        const confirmed = window.confirm(GUEST_NEW_AFTER_FAILED_RESUME_CONFIRM_HE);
+        if (!confirmed) return;
+        localStorage.removeItem(LIOSH_GUEST_RESUME_TOKEN_KEY);
+        setGuestResumeBanner(null);
+        resumeToken = null;
+      }
+
       const res = await fetch("/api/student/guest/start", {
         method: "POST",
         credentials: "same-origin",
@@ -224,6 +253,23 @@ export default function StudentLoginPage() {
 
         <StudentPromoVideo isBright={isBright} compact className="mb-4" />
 
+        {guestResumeBanner ? (
+          <div
+            className={`mb-4 rounded-xl border px-3 py-3 text-sm leading-relaxed ${
+              guestResumeBanner.code === "guest_already_linked"
+                ? isBright
+                  ? "border-amber-300 bg-amber-50 text-amber-950"
+                  : "border-amber-300/40 bg-amber-400/10 text-amber-100"
+                : isBright
+                  ? "border-sky-300 bg-sky-50 text-sky-950"
+                  : "border-sky-300/35 bg-sky-400/10 text-sky-100"
+            }`}
+            role="alert"
+          >
+            {guestResumeBanner.messageHe}
+          </div>
+        ) : null}
+
         <form onSubmit={submitLogin} className="space-y-3">
           <label className="block text-sm">
             <span className={labelClass}>שם משתמש</span>
@@ -266,7 +312,11 @@ export default function StudentLoginPage() {
                 ? "border-violet-400 bg-violet-50 text-violet-900 hover:bg-violet-100"
                 : "border-violet-300/40 bg-violet-400/10 text-violet-100 hover:bg-violet-400/20"
             }`}
-            disabled={busy || guestBusy}
+            disabled={
+              busy ||
+              guestBusy ||
+              shouldBlockGuestStartAfterResumeFailure(guestResumeBanner?.code)
+            }
             onClick={() => void startGuest()}
           >
             {guestBusy ? "נכנסים…" : "כניסה כאורח"}
