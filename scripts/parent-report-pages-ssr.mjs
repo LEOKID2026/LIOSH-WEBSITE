@@ -416,9 +416,9 @@ function runParentReportPageChunks() {
     correct: 6,
   };
   const chartLiveHtml = renderToStaticMarkup(h(ParentReportTopicExplainRow, { row: rowChartLive }));
-  assert.match(chartLiveHtml, /מה זוהה/u, "chart live row should render מה זוהה");
+  assert.match(chartLiveHtml, /מה רואים/u, "chart live row should render מה רואים");
   assert.match(chartLiveHtml, /הנתונים/u, "chart live row should render הנתונים");
-  assert.match(chartLiveHtml, /משמעות/u, "chart live row should render משמעות");
+  assert.match(chartLiveHtml, /מה זה אומר/u, "chart live row should render מה זה אומר");
   assert.ok(
     /מה כדאי לעשות בבית/u.test(chartLiveHtml) ||
       /כדאי להוסיף תרגול קצר/u.test(chartLiveHtml),
