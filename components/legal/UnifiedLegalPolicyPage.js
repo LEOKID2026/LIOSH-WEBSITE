@@ -67,7 +67,7 @@ export default function UnifiedLegalPolicyPage({ pageKey = "legal", scrollToSect
             <p className="text-sm text-white/60">
               מסמך מלא:{" "}
               <Link href="/legal" className="text-amber-300 hover:text-amber-200 underline">
-                תנאים, פרטיות, נגישות ושימוש ב־AI
+                תנאים, פרטיות, נגישות ושימוש בבינה מלאכותית
               </Link>
             </p>
           )}

@@ -9,6 +9,7 @@ import {
   textViolatesZeroEvidencePolicy,
   zeroEvidenceSubjectLineHe,
 } from "../parent-report-language/subject-evidence-policy.js";
+import { stripZeroEvidenceFromPublicReportPayload } from "../../lib/parent-server/report-payload-public-sanitize.js";
 
 const ALL_SUBJECTS = ["math", "geometry", "english", "science", "hebrew", "moledet-geography"];
 
@@ -68,8 +69,8 @@ export function assertZeroEvidencePolicyOnReports(baseReport, detailedReport) {
       if ((ov.thinEvidenceSubjectsHe || []).some((line) => String(line).startsWith(`${label}:`))) {
         failures.push(`${sid}: zero-q subject wrongly in thinEvidenceSubjectsHe`);
       }
-      if (!String(ov.notPracticedSubjectsSummaryHe || "").includes(label)) {
-        failures.push(`${sid}: zero-q subject missing from compact not-practiced summary`);
+      if (ov.notPracticedSubjectsSummaryHe != null && String(ov.notPracticedSubjectsSummaryHe).includes(label)) {
+        failures.push(`${sid}: zero-q subject must not appear in notPracticedSubjectsSummaryHe`);
       }
       if ((ov.notPracticedSubjectsHe || []).some((l) => String(l).includes(label))) {
         failures.push(`${sid}: per-subject zero line must not appear in diagnosticOverviewHe`);
@@ -93,8 +94,11 @@ export function assertZeroEvidencePolicyOnReports(baseReport, detailedReport) {
     }
   }
 
+  if (ov.notPracticedSubjectsSummaryHe != null) {
+    failures.push("diagnosticOverviewHe must not expose notPracticedSubjectsSummaryHe");
+  }
   if ((ov.notPracticedSubjectsHe || []).length > 0) {
-    failures.push("diagnosticOverviewHe must not repeat per-subject notPracticed lines (use summary only)");
+    failures.push("diagnosticOverviewHe must not repeat per-subject notPracticed lines");
   }
   const insightWithPerSubjectZero = (ov.notPracticedSubjectsHe || [])
     .concat(ov.thinEvidenceSubjectsHe || [], ov.insufficientDataSubjectsHe || [])
@@ -161,6 +165,25 @@ export function assertEvidenceTierClassification() {
   return failures;
 }
 
+export function assertPublicReportPayloadStripsZeroEvidenceFields() {
+  const failures = [];
+  const cleaned = stripZeroEvidenceFromPublicReportPayload({
+    summary: {
+      diagnosticOverviewHe: {
+        notPracticedSubjectsSummaryHe: "מקצועות שלא תורגלו בתקופה: גאומטריה.",
+        practicedSubjectsSummaryHe: "מקצועות שתורגלו: חשבון.",
+      },
+    },
+  });
+  const text = JSON.stringify(cleaned);
+  if (text.includes("לא תורגל")) failures.push("public payload still contains לא תורגל");
+  if (text.includes("מקצועות שלא תורגל")) failures.push("public payload still contains summary line");
+  if (cleaned?.summary?.diagnosticOverviewHe?.notPracticedSubjectsSummaryHe != null) {
+    failures.push("notPracticedSubjectsSummaryHe should be stripped");
+  }
+  return failures;
+}
+
 export default {
   ALL_SUBJECTS,
   SUBJECT_LABEL_HE,
@@ -168,4 +191,5 @@ export default {
   assertZeroEvidencePolicyOnReports,
   assertCopilotZeroEvidenceClarification,
   assertEvidenceTierClassification,
+  assertPublicReportPayloadStripsZeroEvidenceFields,
 };

@@ -6,33 +6,18 @@
  *
  * When yearMonthIsrael is omitted, defaults to the previous Israel calendar month.
  *
- * Auth: ENABLE_MONTHLY_PERSISTENCE_REWARD_ADMIN=true
- *       x-admin-token header must match ENGINE_REVIEW_ADMIN_TOKEN
+ * Auth: ENABLE_MONTHLY_PERSISTENCE_REWARD_ADMIN=true + requireAdminApiContext JWT
  */
 import { getLearningSupabaseServiceRoleClient } from "../../../lib/learning-supabase/server";
 import { getPreviousIsraelYearMonth } from "../../../lib/learning-supabase/israel-calendar.server";
 import { runMonthlyPersistenceAwardJob } from "../../../lib/learning-supabase/monthly-persistence-reward.server";
-import { timingSafeCompareStrings } from "../../../lib/security/timing-safe-equal.js";
+import {
+  requireAdminApiContext,
+  sendAdminApiError,
+} from "../../../lib/admin-server/admin-request.server.js";
 
 function isAdminEnabled() {
   return process.env.ENABLE_MONTHLY_PERSISTENCE_REWARD_ADMIN === "true";
-}
-
-function validateAdminToken(req) {
-  const expected = process.env.ENGINE_REVIEW_ADMIN_TOKEN;
-  const headerToken = req.headers["x-admin-token"] || req.headers["x-engine-review-token"];
-  const sent = typeof headerToken === "string" ? headerToken.trim() : "";
-
-  if (!expected || String(expected).trim() === "") {
-    return { ok: false, status: 503, code: "missing_token", error: "ENGINE_REVIEW_ADMIN_TOKEN is not configured" };
-  }
-  if (!sent) {
-    return { ok: false, status: 401, code: "missing_token", error: "Missing x-admin-token header" };
-  }
-  if (!timingSafeCompareStrings(sent, String(expected).trim())) {
-    return { ok: false, status: 401, code: "invalid_token", error: "Admin token does not match server configuration" };
-  }
-  return { ok: true };
 }
 
 export default async function handler(req, res) {
@@ -48,22 +33,20 @@ export default async function handler(req, res) {
     });
   }
 
-  const auth = validateAdminToken(req);
-  if (!auth.ok) {
-    return res.status(auth.status).json({ code: auth.code, error: auth.error });
-  }
-
-  const body = req.body && typeof req.body === "object" ? req.body : {};
-  const dryRun = body.dryRun === true;
-  const yearMonthIsrael =
-    typeof body.yearMonthIsrael === "string" && body.yearMonthIsrael.trim()
-      ? body.yearMonthIsrael.trim()
-      : getPreviousIsraelYearMonth();
-  const studentIds = Array.isArray(body.studentIds)
-    ? body.studentIds.map(String).filter(Boolean)
-    : undefined;
-
   try {
+    const ctx = await requireAdminApiContext(res, req.headers.authorization || "");
+    if (ctx.stopped) return undefined;
+
+    const body = req.body && typeof req.body === "object" ? req.body : {};
+    const dryRun = body.dryRun === true;
+    const yearMonthIsrael =
+      typeof body.yearMonthIsrael === "string" && body.yearMonthIsrael.trim()
+        ? body.yearMonthIsrael.trim()
+        : getPreviousIsraelYearMonth();
+    const studentIds = Array.isArray(body.studentIds)
+      ? body.studentIds.map(String).filter(Boolean)
+      : undefined;
+
     const supabase = getLearningSupabaseServiceRoleClient();
     const result = await runMonthlyPersistenceAwardJob(supabase, {
       yearMonthIsrael,
@@ -74,6 +57,7 @@ export default async function handler(req, res) {
     return res.status(200).json({
       ok: true,
       dryRun,
+      adminUserId: ctx.adminUserId,
       yearMonthIsrael: result.yearMonthIsrael,
       monthBounds: result.monthBounds,
       studentCount: result.studentCount,
@@ -85,9 +69,9 @@ export default async function handler(req, res) {
   } catch (err) {
     const message = err?.message || String(err);
     if (message.includes("invalid_year_month")) {
-      return res.status(400).json({ code: "invalid_year_month", error: "yearMonthIsrael must be YYYY-MM" });
+      return sendAdminApiError(res, 400, "invalid_year_month", "yearMonthIsrael must be YYYY-MM");
     }
     console.error("[monthly-persistence-award]", message);
-    return res.status(500).json({ code: "internal_error", error: "Monthly persistence job failed" });
+    return sendAdminApiError(res, 500, "internal_error", "Monthly persistence job failed");
   }
 }

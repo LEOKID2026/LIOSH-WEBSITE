@@ -75,6 +75,19 @@ describe("guest settings parsers", () => {
     assert.equal(e.shopEnabled, true);
     assert.equal(e.cardsEnabled, true);
   });
+
+  test("economy respects cards_enabled false", () => {
+    const e = parseGuestEconomy({ cards_enabled: false });
+    assert.equal(e.cardsEnabled, false);
+  });
+});
+
+describe("guest economy guard", () => {
+  test("assertGuestCardsAllowed skips registered students", async () => {
+    const { assertGuestCardsAllowed } = await import("../../lib/guest/guest-economy-guard.server.js");
+    const r = await assertGuestCardsAllowed(null, { account_kind: "registered" });
+    assert.equal(r.ok, true);
+  });
 });
 
 describe("guest game access policy", () => {

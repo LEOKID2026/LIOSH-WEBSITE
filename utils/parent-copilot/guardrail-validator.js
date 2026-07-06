@@ -18,6 +18,12 @@ import {
 } from "./answer-composer.js";
 import { textViolatesPolarityForEvidence } from "./evidence-polarity.js";
 import { STRONG_GLOBAL_QUESTION_FLOOR } from "./report-volume-context.js";
+import {
+  subjectQuestionCountsFromPayload,
+  textViolatesZeroEvidencePolicy,
+  lineMentionsZeroEvidenceSubjectHe,
+  lineViolatesZeroEvidenceInsightPolicy,
+} from "../parent-report-language/subject-evidence-policy.js";
 
 /** Deterministic clinical / diagnostic labeling (joined parent copy + contract slots). Not the fixed boundary fingerprint. */
 const CLINICAL_DIAGNOSIS_SURFACE_RES = [
@@ -451,6 +457,32 @@ export function validateAnswerDraft(draft, truthPacket, hints = null) {
 
   for (const q of collectParentFacingOutputQualityIssues(joined, intent)) {
     failCodes.push(q);
+  }
+
+  const subjectQuestionCounts =
+    truthPacket?.subjectQuestionCounts && typeof truthPacket.subjectQuestionCounts === "object"
+      ? truthPacket.subjectQuestionCounts
+      : null;
+  if (
+    subjectQuestionCounts &&
+    intent !== "off_topic_redirect" &&
+    intent !== "clinical_boundary" &&
+    intent !== "sensitive_education_choice" &&
+    intent !== "parent_policy_refusal"
+  ) {
+    if (textViolatesZeroEvidencePolicy(joined) || textViolatesZeroEvidencePolicy(composedJoined)) {
+      failCodes.push("zero_evidence_forbidden_phrasing");
+    }
+    for (const seg of [joined, composedJoined]) {
+      if (
+        lineViolatesZeroEvidenceInsightPolicy(seg, subjectQuestionCounts) ||
+        (lineMentionsZeroEvidenceSubjectHe(seg, subjectQuestionCounts) &&
+          textViolatesZeroEvidencePolicy(seg))
+      ) {
+        failCodes.push("zero_evidence_subject_mention");
+        break;
+      }
+    }
   }
 
   return {

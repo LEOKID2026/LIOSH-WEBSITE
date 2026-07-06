@@ -19,7 +19,7 @@ export default function StudentBookPage({
 }) {
   useIOSViewportFix();
   const bookNav = useMemo(
-    () => createLearningBookNav(subject, grade, getLearningBookMasterPath(subject)),
+    () => createLearningBookNav(subject, grade, getLearningBookMasterPath(subject, { studentScoped: true })),
     [subject, grade]
   );
 

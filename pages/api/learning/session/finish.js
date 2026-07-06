@@ -23,11 +23,15 @@ import { guardCookieMutationOrigin } from "../../../../lib/security/api-guards.j
 import { trackServerAnalyticsEvent } from "../../../../lib/analytics/track-event.server.js";
 import { evaluateAndGrantAchievementCards } from "../../../../lib/rewards/server/achievement-evaluator.server.js";
 import { syncIncrementalMonthlyPersistenceRewards } from "../../../../lib/learning-supabase/monthly-persistence-reward.server";
+import {
+  computeLearningSessionDurationSeconds,
+  deriveSessionSummaryFromAnswers,
+} from "../../../../lib/learning-supabase/learning-session-finish.server";
 
 async function loadLearningSession(supabase, learningSessionId) {
   const { data, error } = await supabase
     .from("learning_sessions")
-    .select("id,student_id,subject,metadata")
+    .select("id,student_id,subject,metadata,status,started_at,ended_at,duration_seconds")
     .eq("id", learningSessionId)
     .maybeSingle();
   if (error || !data?.id) return null;
@@ -76,14 +80,36 @@ export default async function handler(req, res) {
       return res.status(403).json({ ok: false, error: "Session does not belong to student" });
     }
 
-    const summary = {
+    if (sessionRow.status === "completed") {
+      return res.status(200).json({ ok: true, duplicate: true });
+    }
+    if (sessionRow.status && sessionRow.status !== "active") {
+      return res.status(400).json({ ok: false, error: "Session is not active" });
+    }
+
+    const endedAt = new Date().toISOString();
+    const serverDurationSeconds = computeLearningSessionDurationSeconds(
+      sessionRow.started_at,
+      endedAt
+    );
+
+    const derived = await deriveSessionSummaryFromAnswers(supabase, learningSessionId, {
       totalQuestions: normalizeOptionalInteger(body.totalQuestions, 0, 1000000),
       correctAnswers: normalizeOptionalInteger(body.correctAnswers, 0, 1000000),
       wrongAnswers: normalizeOptionalInteger(body.wrongAnswers, 0, 1000000),
       score: normalizeOptionalNumber(body.score, 0, 1000000000),
       accuracy: normalizeOptionalNumber(body.accuracy, 0, 100),
+    });
+
+    const summary = {
+      totalQuestions: derived.totalQuestions,
+      correctAnswers: derived.correctAnswers,
+      wrongAnswers: derived.wrongAnswers,
+      score: derived.score,
+      accuracy: derived.accuracy,
       clientMeta: normalizeClientMeta(body.clientMeta),
       canonicalGradeLevelKey: canonicalGradeLevelKeyFromAuth(auth),
+      summaryDerivedFromAnswers: derived.derivedFromAnswers === true,
     };
 
     const finishMode = normalizeLearningGameMode(body.mode);
@@ -106,8 +132,8 @@ export default async function handler(req, res) {
     });
 
     const patch = {
-      ended_at: new Date().toISOString(),
-      duration_seconds: normalizeOptionalInteger(body.durationSeconds, 0, 8640000) ?? 0,
+      ended_at: endedAt,
+      duration_seconds: serverDurationSeconds,
       status: "completed",
       metadata,
     };
@@ -116,14 +142,29 @@ export default async function handler(req, res) {
       duration_seconds: patch.duration_seconds,
     };
 
-    const { error } = await updateLearningSessionWithFallback(
-      supabase,
-      learningSessionId,
-      patch,
-      fallbackPatch
-    );
+    const { data: updatedRow, error } = await supabase
+      .from("learning_sessions")
+      .update(patch)
+      .eq("id", learningSessionId)
+      .eq("status", "active")
+      .select("id")
+      .maybeSingle();
+
     if (error) {
-      return res.status(500).json({ ok: false, error: "Failed to finish learning session" });
+      if (!isMissingColumnError(error)) {
+        return res.status(500).json({ ok: false, error: "Failed to finish learning session" });
+      }
+      const fallback = await updateLearningSessionWithFallback(
+        supabase,
+        learningSessionId,
+        patch,
+        fallbackPatch
+      );
+      if (fallback.error) {
+        return res.status(500).json({ ok: false, error: "Failed to finish learning session" });
+      }
+    } else if (!updatedRow?.id) {
+      return res.status(200).json({ ok: true, duplicate: true });
     }
 
     void trackServerAnalyticsEvent(supabase, {

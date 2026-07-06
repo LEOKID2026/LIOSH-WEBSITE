@@ -41,6 +41,7 @@ const {
   assertZeroEvidencePolicyOnReports,
   assertCopilotZeroEvidenceClarification,
   assertEvidenceTierClassification,
+  assertPublicReportPayloadStripsZeroEvidenceFields,
   subjectQuestionCountsFromBase,
   SUBJECT_LABEL_HE,
 } = zeroTestsMod.default || zeroTestsMod;
@@ -84,7 +85,6 @@ function attachDiagnosticOverviewHe(baseReport) {
     insufficientDataSubjectsHe: evidenceCoverage.thinEvidenceSubjectsHe,
     thinEvidenceSubjectsHe: evidenceCoverage.thinEvidenceSubjectsHe,
     practicedSubjectsSummaryHe,
-    notPracticedSubjectsSummaryHe,
   });
   baseReport.summary = {
     ...(baseReport.summary || {}),
@@ -103,9 +103,14 @@ for (const msg of assertZeroEvidencePolicyOnReports(mathOnlyBase, mathOnlyDetail
 
 const ov = mathOnlyBase.summary.diagnosticOverviewHe;
 assert.ok(String(ov.practicedSubjectsSummaryHe || "").includes("מתמטיקה"), "practiced summary mentions math");
+assert.equal(ov.notPracticedSubjectsSummaryHe, undefined, "public overview omits notPracticedSubjectsSummaryHe");
 assert.ok(
-  String(ov.notPracticedSubjectsSummaryHe || "").includes("גאומטריה"),
-  "not-practiced summary lists inactive subjects",
+  !JSON.stringify(ov).includes("לא תורגל"),
+  "overview JSON must not include לא תורגל",
+);
+assert.ok(
+  !JSON.stringify(ov).includes("מקצועות שלא תורגל"),
+  "overview JSON must not include מקצועות שלא תורגל",
 );
 assert.equal(
   (ov.insufficientDataSubjectsHe || []).filter((l) => /כיוון ראשוני|0 שאלות/u.test(l)).length,
@@ -144,6 +149,10 @@ const matrixBase = buildSixSubjectContextLabelingMatrixBaseReport();
 const matrixDetailed = buildDetailedParentReportFromBaseReport(matrixBase, { period: "week" });
 for (const sp of matrixDetailed.subjectProfiles) {
   assert.ok((sp.topicOverviewRows?.length || 0) >= 1, `${sp.subject} has overview when practiced`);
+}
+
+for (const msg of assertPublicReportPayloadStripsZeroEvidenceFields()) {
+  assert.fail(msg);
 }
 
 process.stdout.write("OK parent-report-zero-evidence-policy\n");

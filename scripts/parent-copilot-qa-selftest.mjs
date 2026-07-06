@@ -735,6 +735,33 @@ check(
 );
 check("[J8] STRONG_GLOBAL_QUESTION_FLOOR sane", STRONG_GLOBAL_QUESTION_FLOOR === 120, String(STRONG_GLOBAL_QUESTION_FLOOR));
 
+const zeroEvidenceTruth = {
+  ...minimalTruthPacket(),
+  subjectQuestionCounts: {
+    math: 40,
+    geometry: 0,
+    english: 0,
+    science: 0,
+    hebrew: 0,
+    history: 0,
+    "moledet-geography": 0,
+  },
+};
+const badZeroEvidenceDraft = {
+  answerBlocks: [
+    { type: "observation", textHe: "גאומטריה דורשת חיזוק השבוע לפי מה שרואים בדוח.", source: "composed" },
+    { type: "meaning", textHe: "כדאי לתרגל עוד כדי לחזק את הכיוון.", source: "composed" },
+  ],
+};
+const vZero = validateAnswerDraft(badZeroEvidenceDraft, zeroEvidenceTruth, { intent: "explain_report" });
+check(
+  "[J9] zero-evidence subject mention rejected",
+  !vZero.ok &&
+    (vZero.failCodes.includes("zero_evidence_subject_mention") ||
+      vZero.failCodes.includes("zero_evidence_forbidden_phrasing")),
+  vZero.failCodes?.join(","),
+);
+
 // ─── Summary ──────────────────────────────────────────────────────────────────
 
 process.stdout.write(`\nparent-copilot-qa selftest :: ${runs - failures}/${runs} passed\n`);

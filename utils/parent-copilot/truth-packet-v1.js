@@ -29,6 +29,7 @@ import {
   rewriteEngineTaxonomySnippetForParentHe,
 } from "../diagnostic-labels-he.js";
 import { maxGlobalReportQuestionCount, STRONG_GLOBAL_QUESTION_FLOOR } from "./report-volume-context.js";
+import { subjectQuestionCountsFromPayload } from "../parent-report-language/subject-evidence-policy.js";
 
 /**
  * @param {unknown} payload
@@ -1446,6 +1447,7 @@ export function buildTruthPacketV1(payload, scope) {
     scopeType: scope.scopeType,
     scopeId: scope.scopeId,
     scopeLabel: scope.scopeLabel,
+    subjectQuestionCounts: subjectQuestionCountsFromPayload(payload),
     gradeSplitTopicRowKeys,
     interpretationScope,
     topicStateId,

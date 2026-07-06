@@ -1,5 +1,6 @@
 /**
  * Parent-report visibility: subjects with zero practice in the selected period must not render.
+ * Practice evidence = answered questions only (time-only sessions do not count).
  */
 
 export const PARENT_REPORT_PERIOD_EMPTY_STATE_HE =
@@ -10,7 +11,8 @@ export const PARENT_REPORT_PERIOD_EMPTY_STATE_HE =
  * @param {number|string|null|undefined} timeMinutes
  */
 export function subjectHasParentReportPracticeEvidence(questions, timeMinutes) {
-  return (Number(questions) || 0) > 0 || (Number(timeMinutes) || 0) > 0;
+  void timeMinutes;
+  return (Number(questions) || 0) > 0;
 }
 
 /**

@@ -11,6 +11,11 @@ import { getParentPortalTheme } from "../../lib/parent-ui/parent-portal-theme.cl
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
 import { shouldDisplayStudentAccessCode } from "../../lib/teacher-portal/student-access-display.js";
 import { trackProductEvent } from "../../lib/analytics/track-event.client.js";
+import {
+  mapParentDashboardApiError,
+  parentDashboardCreateSuccessHe,
+  parentDashboardUpdateSuccessHe,
+} from "../../lib/parent-server/parent-api-errors.he.js";
 
 const GRADE_OPTIONS = [
   { value: "grade_1", label: "כיתה א׳" },
@@ -108,7 +113,7 @@ export default function ParentDashboardPage() {
           // Session is valid; policy gate / entitlement heal handles provisioning.
           return;
         }
-        setMessage(payload.error || "Failed to load students");
+        setMessage(mapParentDashboardApiError(res.status, code, payload.error, "load_students"));
         return;
       }
       setStudents(payload.students || []);
@@ -124,7 +129,7 @@ export default function ParentDashboardPage() {
       );
       setMessage("");
     } catch (_err) {
-      setMessage("Network error while loading students");
+      setMessage(mapParentDashboardApiError(0, null, null, "load_students"));
     }
   }, [router]);
 
@@ -207,7 +212,7 @@ export default function ParentDashboardPage() {
     const payload = await res.json();
 
     if (!res.ok) {
-      setMessage(payload.error || "Failed to create student");
+      setMessage(mapParentDashboardApiError(res.status, payload?.code, payload.error, "create_student"));
     } else {
       const createdStudentId = payload?.student?.id;
       let credentialMessage = "";
@@ -282,7 +287,7 @@ export default function ParentDashboardPage() {
         grade: payload?.student?.grade_level || newGrade,
       });
       await fetchStudents(session);
-      setMessage(credentialMessage || "Student created.");
+      setMessage(credentialMessage || parentDashboardCreateSuccessHe());
     }
     setBusy(false);
   };
@@ -311,10 +316,10 @@ export default function ParentDashboardPage() {
     const payload = await res.json();
 
     if (!res.ok) {
-      setMessage(payload.error || "Failed to update student");
+      setMessage(mapParentDashboardApiError(res.status, payload?.code, payload.error, "update_student"));
     } else {
       await fetchStudents(session);
-      setMessage("Student updated.");
+      setMessage(parentDashboardUpdateSuccessHe());
     }
     setBusy(false);
   };

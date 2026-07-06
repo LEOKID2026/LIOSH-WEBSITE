@@ -43,17 +43,22 @@ export default function StudentSurpriseBoxOpenModal({ open, onClose, onOpened })
   const { homeModalShell, tokens: T, isBright } = useStudentTheme();
   const titleId = useId();
   const closeRef = useRef(null);
+  const openingRef = useRef(false);
   const [phase, setPhase] = useState("idle");
   const [result, setResult] = useState(null);
   const [errorHe, setErrorHe] = useState("");
 
   useEffect(() => {
     if (!open) {
+      openingRef.current = false;
       setPhase("idle");
       setResult(null);
       setErrorHe("");
       return undefined;
     }
+
+    if (openingRef.current) return undefined;
+    openingRef.current = true;
 
     let cancelled = false;
     setPhase("opening");
@@ -71,6 +76,7 @@ export default function StudentSurpriseBoxOpenModal({ open, onClose, onOpened })
         const json = await res.json().catch(() => ({}));
         if (cancelled) return;
         if (!res.ok || json?.ok !== true) {
+          openingRef.current = false;
           if (json?.code === "no_pending_box") {
             setErrorHe("אין קופסה מוכנה כרגע — נסו שוב מאוחר יותר.");
           } else {
@@ -84,6 +90,7 @@ export default function StudentSurpriseBoxOpenModal({ open, onClose, onOpened })
         onOpened?.(json);
       } catch {
         if (cancelled) return;
+        openingRef.current = false;
         setErrorHe("שגיאת רשת בפתיחת הקופסה.");
         setPhase("error");
       }

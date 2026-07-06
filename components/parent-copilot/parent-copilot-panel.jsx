@@ -244,7 +244,7 @@ export function ParentCopilotPanel({ payload, selectedContextRef = null, asyncTu
           href="/ai-disclosure"
           className="text-[10px] text-sky-300/80 hover:text-sky-200 underline whitespace-nowrap shrink-0"
         >
-          מידע על שימוש ב-AI
+          מידע על שימוש בבינה מלאכותית
         </Link>
       </div>
       <p className="text-[11px] leading-snug text-white/45 shrink-0 mb-2 pr-0.5">

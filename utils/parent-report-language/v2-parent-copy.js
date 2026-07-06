@@ -87,7 +87,7 @@ export function executiveV2EvidenceBalanceHe(stable, diagnosed) {
 export function executiveV2CautionNoteHe(p) {
   const p4 = Math.max(0, Number(p.p4Length) || 0);
   const u = Math.max(0, Number(p.uncertainLength) || 0);
-  if (p4 > 0) return "יש נושאים שכדאי לשים עליהם לב השבוע — אפשר לתאם עם המורה או עם מטפל אם זה רלוונטי.";
+  if (p4 > 0) return "יש נושאים שכדאי לשים עליהם לב השבוע — אפשר לשתף את המורה במה שמופיע בדוח ולבחור יחד צעד לימודי קצר לשבוע הקרוב.";
   if (u > 0) return "בחלק מהנושאים עדיין אין כיוון ברור — עוד קצת תרגול יבהיר את התמונה.";
   return "";
 }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getParentPortalTheme } from "../../lib/parent-ui/parent-portal-theme.client.js";
+import { mapParentPanelApiError } from "../../lib/parent-server/parent-api-errors.he.js";
 
 const CATEGORY_LABELS = {
   online: "משחקים מקוונים",
@@ -30,10 +31,10 @@ export default function ChildGamePermissionsPanel({ studentId, accessToken, brig
         });
         const data = await res.json();
         if (cancelled) return;
-        if (!res.ok || !data.ok) throw new Error(data.error || "שגיאה בטעינה");
+        if (!res.ok || !data.ok) throw new Error(mapParentPanelApiError(data.error, "load"));
         setPermissions(data.permissions);
       } catch (err) {
-        if (!cancelled) setError(err.message);
+        if (!cancelled) setError(mapParentPanelApiError(err.message, "load"));
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -60,10 +61,10 @@ export default function ChildGamePermissionsPanel({ studentId, accessToken, brig
         body: JSON.stringify({ [field]: nextValue }),
       });
       const data = await res.json();
-      if (!res.ok || !data.ok) throw new Error(data.error || "שגיאה בשמירה");
+      if (!res.ok || !data.ok) throw new Error(mapParentPanelApiError(data.error, "save"));
       setPermissions(data.permissions);
     } catch (err) {
-      setError(err.message);
+      setError(mapParentPanelApiError(err.message, "save"));
     } finally {
       setSaving(null);
     }

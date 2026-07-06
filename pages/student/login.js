@@ -30,12 +30,17 @@ function resolveNextTarget(router) {
   ) {
     return decoded;
   }
-  if (
-    decoded.startsWith("/learning") &&
-    !decoded.startsWith("//") &&
-    !decoded.includes("://")
-  ) {
-    return decoded;
+  if (decoded.startsWith("//") || decoded.includes("://")) {
+    return "/student/home";
+  }
+  if (decoded.startsWith("/learning/book")) {
+    return decoded.replace(/^\/learning\/book/, "/student/learning/book");
+  }
+  if (decoded.startsWith("/learning")) {
+    return "/student/learning";
+  }
+  if (decoded.startsWith("/offline")) {
+    return decoded.replace(/^\/offline/, "/student/offline");
   }
   return "/student/home";
 }

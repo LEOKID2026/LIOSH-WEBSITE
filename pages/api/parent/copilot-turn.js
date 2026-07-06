@@ -20,6 +20,7 @@
  */
 
 import { runParentCopilotTurnAsync } from "../../../utils/parent-copilot/index.js";
+import { stripParentCopilotResponseForClient } from "../../../lib/parent-copilot/strip-copilot-client-response.server.js";
 import { requireParentApiContext, sendPersonaApiError } from "../../../lib/auth/persona-guard.server.js";
 import {
   assertParentCopilotMonthlyLimit,
@@ -315,7 +316,11 @@ export default async function handler(req, res) {
       await recordParentCopilotUsage(auth.serviceRole, auth.parentUserId);
     }
 
-    return res.status(200).json({ ok: true, result, authMode: auth.mode });
+    return res.status(200).json({
+      ok: true,
+      result: stripParentCopilotResponseForClient(result),
+      authMode: auth.mode,
+    });
   } catch (_e) {
     return res.status(500).json({ ok: false, error: "Unexpected server error" });
   }

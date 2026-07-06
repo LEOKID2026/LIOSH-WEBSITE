@@ -7,7 +7,7 @@ import { formatCountdownHe } from "../../../lib/rewards/rewards-ui.he.js";
 
 const STATUS_PATH = "/api/student/rewards/surprise-box/status";
 
-export default function StudentSurpriseBoxWidget({ onOpen }) {
+export default function StudentSurpriseBoxWidget({ onOpen, openingLocked = false, refreshToken = 0 }) {
   const { tokens: T, isBright } = useStudentTheme();
   const [phase, setPhase] = useState("idle");
   const [ready, setReady] = useState(false);
@@ -45,7 +45,7 @@ export default function StudentSurpriseBoxWidget({ onOpen }) {
   useEffect(() => {
     if (!isCardRewardsEnabledClient()) return undefined;
     void loadStatus();
-  }, [loadStatus]);
+  }, [loadStatus, refreshToken]);
 
   useEffect(() => {
     if (!ready && secondsRemaining != null && secondsRemaining > 0) {
@@ -65,7 +65,7 @@ export default function StudentSurpriseBoxWidget({ onOpen }) {
 
   if (!isCardRewardsEnabledClient()) return null;
 
-  const canOpen = phase === "ok" && ready;
+  const canOpen = phase === "ok" && ready && !openingLocked;
 
   const compactBtn =
     "flex-1 md:flex-none !min-h-[2.75rem] !px-3 !py-2 !text-sm text-center whitespace-nowrap disabled:opacity-50 disabled:pointer-events-none";

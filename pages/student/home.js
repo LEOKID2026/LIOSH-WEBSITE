@@ -57,6 +57,7 @@ function mapApiErrorToHebrew(raw) {
   if (!s) return "טעינת נתוני הלמידה מהשרת נכשלה.";
   if (s === "Student session expired") return "פג תוקף החיבור — התחברו שוב.";
   if (s === "Server error") return "שגיאת שרת בטעינת נתוני הלמידה.";
+  if (/[A-Za-z]{4,}/.test(s)) return "טעינת נתוני הלמידה מהשרת נכשלה.";
   return s;
 }
 
@@ -354,6 +355,7 @@ export default function StudentHomePage() {
   const [heroAvatarImage, setHeroAvatarImage] = useState(null);
   const [heroAvatarEmoji, setHeroAvatarEmoji] = useState("👤");
   const [boxModalOpen, setBoxModalOpen] = useState(false);
+  const [boxRefreshToken, setBoxRefreshToken] = useState(0);
   const [guestPolicy, setGuestPolicy] = useState(null);
   const cardRewardsEnabled = isCardRewardsEnabledClient();
   const isGuestHome = Boolean(guestPolicy || student?.account_kind === "guest" || student?.accountKind === "guest");
@@ -972,7 +974,11 @@ export default function StudentHomePage() {
         </section>
 
         {cardRewardsEnabled ? (
-          <StudentSurpriseBoxWidget onOpen={() => setBoxModalOpen(true)} />
+          <StudentSurpriseBoxWidget
+            onOpen={() => setBoxModalOpen(true)}
+            openingLocked={boxModalOpen}
+            refreshToken={boxRefreshToken}
+          />
         ) : null}
 
         {profilePending ? (
@@ -1065,6 +1071,7 @@ export default function StudentHomePage() {
       <StudentSurpriseBoxOpenModal
         open={boxModalOpen}
         onClose={() => setBoxModalOpen(false)}
+        onOpened={() => setBoxRefreshToken((token) => token + 1)}
       />
       <StudentAvatarPickerModal
         open={showAvatarModal}

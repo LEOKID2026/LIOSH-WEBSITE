@@ -1061,7 +1061,7 @@ function runDeterministicCore(input, options) {
       conv,
       utteranceStr,
       continuityPattern,
-      { intentConfidence: stageA?.canonicalIntentScore || 0.85 },
+      { ...classifierMetaForResolved, intentConfidence: stageA?.canonicalIntentScore || 0.85 },
     );
     if (packaged) return packaged;
   }
@@ -1079,7 +1079,7 @@ function runDeterministicCore(input, options) {
       conv,
       utteranceStr,
       earlyPattern,
-      { intentConfidence: stageA?.canonicalIntentScore || 0.88 },
+      { ...classifierMetaForResolved, intentConfidence: stageA?.canonicalIntentScore || 0.88 },
     );
     if (packaged) return packaged;
   }
@@ -1097,7 +1097,7 @@ function runDeterministicCore(input, options) {
       conv,
       utteranceStr,
       simpleExplainDraft,
-      { intentConfidence: stageA?.canonicalIntentScore || 0.9 },
+      { ...classifierMetaForResolved, intentConfidence: stageA?.canonicalIntentScore || 0.9 },
     );
     if (packaged) return packaged;
   }
@@ -1140,7 +1140,7 @@ function runDeterministicCore(input, options) {
     return packageParentResolvedEarlyTurn(scopedInput, sessionId, priorRepeated, conv, utteranceStr, {
       truthPacket: shortFb.truthPacket,
       plannerIntent: shortFb.plannerIntent,
-      scopeMeta: shortFb.scopeMeta,
+      scopeMeta: { ...classifierMetaForResolved, ...shortFb.scopeMeta },
       answerBlocks: shortFb.answerBlocks,
     });
   }
@@ -1155,7 +1155,7 @@ function runDeterministicCore(input, options) {
     return packageParentResolvedEarlyTurn(scopedInput, sessionId, priorRepeated, conv, utteranceStr, {
       truthPacket: practicalFb.truthPacket,
       plannerIntent: practicalFb.plannerIntent,
-      scopeMeta: practicalFb.scopeMeta,
+      scopeMeta: { ...classifierMetaForResolved, ...practicalFb.scopeMeta },
       answerBlocks: practicalFb.answerBlocks,
     });
   }

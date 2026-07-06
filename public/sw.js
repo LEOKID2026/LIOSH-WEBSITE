@@ -264,7 +264,7 @@ self.addEventListener('fetch', (event) => {
                 
                 // Final fallback - generate basic HTML response inline
                 return new Response(
-                  '<!DOCTYPE html><html dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Offline - LEO K</title><style>body{font-family:system-ui;text-align:center;padding:50px;background:#0a0f1d;color:#fff;margin:0}h1{font-size:2rem;margin-bottom:1rem}p{font-size:1.1rem;margin-bottom:2rem;color:#aaa}button{padding:12px 24px;margin-top:20px;background:#10b981;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:1rem}button:hover{background:#059669}</style></head><body><h1>🔌 אתה במצב Offline</h1><p>אנא התחבר לאינטרנט כדי להמשיך.</p><button onclick="location.reload()">נסה שוב</button></body></html>',
+                  '<!DOCTYPE html><html dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>אופליין - LEO KIDS</title><style>body{font-family:system-ui;text-align:center;padding:50px;background:#0a0f1d;color:#fff;margin:0}h1{font-size:2rem;margin-bottom:1rem}p{font-size:1.1rem;margin-bottom:2rem;color:#aaa}button{padding:12px 24px;margin-top:20px;background:#10b981;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:1rem}button:hover{background:#059669}</style></head><body><h1>🔌 אתה במצב אופליין</h1><p>אנא התחבר לאינטרנט כדי להמשיך.</p><button onclick="location.reload()">נסה שוב</button></body></html>',
                   { 
                     status: 503,
                     headers: { 

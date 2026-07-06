@@ -7,7 +7,7 @@ import { guardCookieMutationOrigin } from "../../../../../lib/security/api-guard
 import { guardCardRewardsApi } from "../../../../../lib/rewards/guards.server.js";
 import { isCardRewardsSystemEnabledInDb } from "../../../../../lib/rewards/server/reward-settings.server.js";
 import { purchaseShopCard } from "../../../../../lib/rewards/server/reward-shop.server.js";
-import { assertGuestShopAllowed } from "../../../../../lib/guest/guest-economy-guard.server.js";
+import { assertGuestShopAllowed, assertGuestCardsAllowed } from "../../../../../lib/guest/guest-economy-guard.server.js";
 
 export default async function handler(req, res) {
   res.setHeader("Cache-Control", "private, no-store, no-cache, must-revalidate");
@@ -38,6 +38,11 @@ export default async function handler(req, res) {
   const shopGuard = await assertGuestShopAllowed(supabase, auth.student);
   if (!shopGuard.ok) {
     return res.status(shopGuard.status || 403).json({ ok: false, error: shopGuard.message, code: shopGuard.code });
+  }
+
+  const cardsGuard = await assertGuestCardsAllowed(supabase, auth.student);
+  if (!cardsGuard.ok) {
+    return res.status(cardsGuard.status || 403).json({ ok: false, error: cardsGuard.message, code: cardsGuard.code });
   }
 
   const result = await purchaseShopCard(supabase, auth.studentId, cardId);

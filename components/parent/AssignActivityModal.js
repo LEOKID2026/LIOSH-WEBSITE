@@ -13,6 +13,7 @@ import { writeActivityDifficultyFromDisplayLevel } from "../../lib/learning/acti
 import ParentSentActivitiesPanel from "./ParentSentActivitiesPanel.jsx";
 import { trackProductEvent } from "../../lib/analytics/track-event.client.js";
 import { getParentPortalTheme } from "../../lib/parent-ui/parent-portal-theme.client.js";
+import { mapParentPanelApiError } from "../../lib/parent-server/parent-api-errors.he.js";
 
 const PARENT_ACTIVITY_MODE = "guided_practice";
 const MAX_QUESTION_COUNT = 30;
@@ -169,7 +170,7 @@ export default function AssignActivityModal({
         if (res.status === 403) {
           setError("לא ניתן לשלוח פעילות לילד זה");
         } else {
-          setError(json?.error || "שליחה נכשלה");
+          setError(mapParentPanelApiError(json?.error, "save"));
         }
         return;
       }

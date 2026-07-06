@@ -1403,7 +1403,6 @@ function buildDiagnosticOverviewHeV2(p) {
       notPracticedSubjectsHe: [],
       thinEvidenceSubjectsHe,
       practicedSubjectsSummaryHe: p?.practicedSubjectsSummaryHe ?? null,
-      notPracticedSubjectsSummaryHe: p?.notPracticedSubjectsSummaryHe ?? null,
     };
   }
 
@@ -1524,7 +1523,6 @@ function buildDiagnosticOverviewHeV2(p) {
     notPracticedSubjectsHe: [],
     thinEvidenceSubjectsHe,
     practicedSubjectsSummaryHe: p?.practicedSubjectsSummaryHe ?? null,
-    notPracticedSubjectsSummaryHe: p?.notPracticedSubjectsSummaryHe ?? null,
   };
 }
 
@@ -2711,10 +2709,6 @@ export function generateParentReportV2(
     subjectQuestionCounts,
     V2_SUBJECT_LABEL_HE,
   );
-  const notPracticedSubjectsSummaryHe = notPracticedSubjectsSummaryLineHe(
-    subjectQuestionCounts,
-    V2_SUBJECT_LABEL_HE,
-  );
 
   const fallbackDiagnosticOverviewHe = {
     strongestAreaLineHe: filterInsightLinesForUnpracticedSubjects(
@@ -2741,7 +2735,6 @@ export function generateParentReportV2(
     notPracticedSubjectsHe: [],
     thinEvidenceSubjectsHe: evidenceCoverage.thinEvidenceSubjectsHe,
     practicedSubjectsSummaryHe,
-    notPracticedSubjectsSummaryHe,
   };
 
   const diagnosticOverviewHe = hasV2Units
@@ -2755,7 +2748,6 @@ export function generateParentReportV2(
         insufficientDataSubjectsHe: evidenceCoverage.thinEvidenceSubjectsHe,
         thinEvidenceSubjectsHe: evidenceCoverage.thinEvidenceSubjectsHe,
         practicedSubjectsSummaryHe,
-        notPracticedSubjectsSummaryHe,
       })
     : fallbackDiagnosticOverviewHe;
 

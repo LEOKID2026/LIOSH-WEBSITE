@@ -9,7 +9,7 @@ import { useMemo } from "react";
 export default function StudentBookIndex({ batches, subject, grade, bookMeta }) {
   useIOSViewportFix();
   const bookNav = useMemo(
-    () => createLearningBookNav(subject, grade, getLearningBookMasterPath(subject)),
+    () => createLearningBookNav(subject, grade, getLearningBookMasterPath(subject, { studentScoped: true })),
     [subject, grade]
   );
 

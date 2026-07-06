@@ -65,7 +65,7 @@ export default async function handler(req, res) {
       return res.status(404).json({ ok: false, error: "Student not found for this parent" });
     }
     if (student.account_kind === "guest") {
-      return res.status(403).json({ ok: false, error: "לא זמין לאורch", code: "guest_not_eligible" });
+      return res.status(403).json({ ok: false, error: "לא זמין לאורח", code: "guest_not_eligible" });
     }
 
     const serviceClient = getLearningSupabaseServiceRoleClient();

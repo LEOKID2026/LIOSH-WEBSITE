@@ -6,6 +6,10 @@ import {
 } from "../../../../lib/learning-supabase/student-auth";
 import { startGuestStudent } from "../../../../lib/guest/guest-student.server.js";
 import { LIOSH_GUEST_RESUME_TOKEN_KEY } from "../../../../lib/guest/constants.js";
+import {
+  rejectIfGuestStartRateLimited,
+  rejectIfGuestStartDeviceRateLimited,
+} from "../../../../lib/guest/guest-start-rate-limit.server.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -21,6 +25,10 @@ export default async function handler(req, res) {
   try {
     const supabase = getLearningSupabaseServiceRoleClient();
     const resumeToken = String(req.body?.resumeToken || "").trim() || null;
+
+    if (rejectIfGuestStartRateLimited(req, res, resumeToken)) return;
+    if (rejectIfGuestStartDeviceRateLimited(req, res, resumeToken)) return;
+
     const result = await startGuestStudent(supabase, { resumeToken });
 
     if (!result.ok) {

@@ -36,6 +36,7 @@ import {
   getParentReportErrorTextClass,
 } from "../../lib/parent-ui/parent-report-site-bright-theme.css.js";
 import { useParentReportBrightPageBackground } from "../../lib/parent-ui/use-parent-report-bright-page-bg.js";
+import { mapParentReportLoadError } from "../../lib/parent-server/parent-api-errors.he.js";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import {
   MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID,
@@ -1404,16 +1405,12 @@ export default function ParentReport() {
         const body = await res.json().catch(() => ({}));
         if (!res.ok || body?.ok === false) {
           if (!cancelled) {
-            const msg =
-              res.status === 401
-                ? isTeacherSource
-                  ? "נדרשת התחברות מחדש כמורה."
-                  : "נדרשת התחברות מחדש כהורה."
-                : res.status === 403 || res.status === 404
-                  ? "אין גישה לדוח של ילד/ה זה."
-                  : typeof body?.error === "string"
-                    ? body.error
-                    : "לא ניתן לטעון את דוח ההורה.";
+            const msg = mapParentReportLoadError(
+              res.status,
+              body?.code,
+              typeof body?.error === "string" ? body.error : null,
+              { isTeacher: isTeacherSource },
+            );
             setParentReportError(msg);
             setReport(null);
             setCopilotDetailedPayload(null);

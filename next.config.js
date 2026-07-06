@@ -148,7 +148,6 @@ const nextConfig = {
     }
     return config;
   },
-  // PWA support
   async headers() {
     return [
       {
@@ -258,6 +257,20 @@ const nextConfig = {
             value: 'public, max-age=0, must-revalidate',
           },
         ],
+      },
+    ];
+  },
+  async redirects() {
+    return [
+      {
+        source: "/learning/book/:path*",
+        destination: "/student/learning/book/:path*",
+        permanent: false,
+      },
+      {
+        source: "/offline/:path*",
+        destination: "/student/offline/:path*",
+        permanent: false,
       },
     ];
   },

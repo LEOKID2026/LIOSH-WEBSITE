@@ -166,7 +166,7 @@ export function ParentReportInsight({ explanation, className = "", excludeHomeTi
   const isStructuredAi = structured && (explanation.structuredSource === "ai" || explanation.source === "ai");
   const sourceLabel = structured
     ? isStructuredAi
-      ? "הסיכום נכתב בעזרת AI על בסיס נתוני הדוח, ונועד לשמש כלי עזר לימודי בלבד."
+      ? "הסיכום נכתב בעזרת בינה מלאכותית על בסיס נתוני הדוח, ונועד לשמש כלי עזר לימודי בלבד."
       : "הסיכום נבנה אוטומטית מנתוני הדוח, ונועד לשמש כלי עזר לימודי בלבד."
     : "";
 

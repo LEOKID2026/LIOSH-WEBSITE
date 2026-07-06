@@ -49,18 +49,21 @@ async function main() {
     assert.equal(r.ok, false);
     assert.equal(r.code, "SERVER_SNAPSHOT_UNAVAILABLE");
 
-    // --- Emergency production override (operator escape): accepts client payload for engine input
+    // --- Production emergency override is fail-closed (operator flag ignored)
     process.env.PARENT_COPILOT_ALLOW_CLIENT_PAYLOAD_IN_PRODUCTION = "true";
     ({ resolveCopilotTurnPayloadForApi, isStrictProductionCopilotPayloadMode } = await loadPayloadModule());
-    assert.equal(isStrictProductionCopilotPayloadMode(), false);
+    assert.equal(isStrictProductionCopilotPayloadMode(), true);
 
     r = await resolveCopilotTurnPayloadForApi({
-      body: { payload: fakePayload },
+      body: {
+        studentId: sampleUuid,
+        reportPeriod: "week",
+        payload: fakePayload,
+      },
       auth: { ok: true, mode: "student_session" },
     });
-    assert.equal(r.ok, true);
-    assert.equal(r.payload, fakePayload);
-    assert.equal(r.grounding, "client_payload_emergency_production");
+    assert.equal(r.ok, false);
+    assert.equal(r.code, "SERVER_SNAPSHOT_UNAVAILABLE");
 
     // --- Development: uses client payload
     process.env.NODE_ENV = "development";
