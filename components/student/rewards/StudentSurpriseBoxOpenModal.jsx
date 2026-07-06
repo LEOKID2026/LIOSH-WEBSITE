@@ -5,6 +5,7 @@ import { formatCoinAmountHe } from "../../../lib/rewards/rewards-ui.he.js";
 import RewardCardImage from "./RewardCardImage.jsx";
 
 const OPEN_PATH = "/api/student/rewards/surprise-box/open";
+const OPEN_TIMEOUT_MS = 12000;
 
 const CARD_THUMB_PLACEHOLDER = "/rewards/cards/placeholders/regular/default.svg";
 
@@ -43,65 +44,88 @@ export default function StudentSurpriseBoxOpenModal({ open, onClose, onOpened, o
   const { homeModalShell, tokens: T, isBright } = useStudentTheme();
   const titleId = useId();
   const closeRef = useRef(null);
-  const openingRef = useRef(false);
+  const openSessionRef = useRef(0);
+  const onOpenedRef = useRef(onOpened);
+  const onErrorRef = useRef(onError);
+
   const [phase, setPhase] = useState("idle");
   const [result, setResult] = useState(null);
   const [errorHe, setErrorHe] = useState("");
 
   useEffect(() => {
+    onOpenedRef.current = onOpened;
+    onErrorRef.current = onError;
+  }, [onOpened, onError]);
+
+  useEffect(() => {
     if (!open) {
-      openingRef.current = false;
       setPhase("idle");
       setResult(null);
       setErrorHe("");
       return undefined;
     }
 
-    if (openingRef.current) return undefined;
-    openingRef.current = true;
+    const session = openSessionRef.current + 1;
+    openSessionRef.current = session;
 
-    let cancelled = false;
+    const abortController = new AbortController();
+    let timedOut = false;
+
     setPhase("opening");
     setErrorHe("");
     setResult(null);
+
+    const timeoutId = window.setTimeout(() => {
+      timedOut = true;
+      abortController.abort();
+      if (openSessionRef.current !== session) return;
+      setErrorHe("לא הצלחנו לפתוח את הקופסה בזמן. נסו שוב.");
+      setPhase("error");
+      onErrorRef.current?.();
+    }, OPEN_TIMEOUT_MS);
 
     (async () => {
       try {
         const res = await fetch(OPEN_PATH, {
           method: "POST",
           credentials: "include",
+          signal: abortController.signal,
           headers: { Accept: "application/json", "Content-Type": "application/json" },
-          body: JSON.stringify({ idempotencyKey: `box:${Date.now()}` }),
+          body: JSON.stringify({ idempotencyKey: `box:${Date.now()}:${session}` }),
         });
         const json = await res.json().catch(() => ({}));
-        if (cancelled) return;
+        if (openSessionRef.current !== session || timedOut) return;
+
         if (!res.ok || json?.ok !== true) {
-          openingRef.current = false;
           if (json?.code === "no_pending_box") {
-            setErrorHe("אין קופסה מוכנה כרגע — נסו שוב מאוחר יותר.");
+            setErrorHe("אין קופסה זמינה כרגע.");
           } else {
             setErrorHe("לא הצלחנו לפתוח את הקופסה. נסו שוב.");
           }
           setPhase("error");
-          onError?.();
+          onErrorRef.current?.();
           return;
         }
+
         setResult(json);
         setPhase("done");
-        onOpened?.(json);
-      } catch {
-        if (cancelled) return;
-        openingRef.current = false;
+        onOpenedRef.current?.(json);
+      } catch (err) {
+        if (openSessionRef.current !== session || timedOut) return;
+        if (err?.name === "AbortError") return;
         setErrorHe("שגיאת רשת בפתיחת הקופסה.");
         setPhase("error");
-        onError?.();
+        onErrorRef.current?.();
+      } finally {
+        window.clearTimeout(timeoutId);
       }
     })();
 
     return () => {
-      cancelled = true;
+      abortController.abort();
+      window.clearTimeout(timeoutId);
     };
-  }, [open, onOpened, onError]);
+  }, [open]);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -200,7 +224,9 @@ export default function StudentSurpriseBoxOpenModal({ open, onClose, onOpened, o
                           ? `קיבלתם יהלומים ו-${cards.length} קלפים:`
                           : diamondsReward > 0
                             ? "קיבלתם יהלומים!"
-                            : `קיבלתם ${cards.length} קלפים:`}
+                            : cards.length > 0
+                              ? `קיבלתם ${cards.length} קלפים:`
+                              : "קיבלתם פרס!"}
               </p>
 
               {diamondsReward > 0 ? (
@@ -238,9 +264,11 @@ export default function StudentSurpriseBoxOpenModal({ open, onClose, onOpened, o
               ) : null}
 
               <div className="flex flex-col sm:flex-row gap-2 pt-2">
-                <Link href="/student/cards" className={`${T.ctaPrimary} text-center flex-1`}>
-                  לאוסף שלי
-                </Link>
+                {cards.length > 0 ? (
+                  <Link href="/student/cards" className={`${T.ctaPrimary} text-center flex-1`}>
+                    לאוסף שלי
+                  </Link>
+                ) : null}
                 <button type="button" onClick={onClose} className={`${T.ctaGames} flex-1`}>
                   המשך לעולם הילד
                 </button>

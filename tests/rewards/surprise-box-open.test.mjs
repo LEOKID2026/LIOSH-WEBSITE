@@ -142,16 +142,25 @@ describe("openSurpriseBox server contracts", () => {
     assert.match(src, /cardsGranted/);
   });
 
+  test("uses safe card mapping that cannot throw", () => {
+    assert.match(src, /function safeFormatCardReward/);
+    assert.match(src, /safeFormatCardReward\(card, grants\[i\]\)/);
+  });
+
   test("guest cards guard zeroes cardsWanted before pick", () => {
     assert.match(src, /const cardsWanted = guestCardsGuard\.ok \? general\.cards_per_open : 0/);
   });
 
-  test("all post-claim failure paths roll back pending_box_count", () => {
-    assert.match(src, /failOpenAfterClaim\(supabase, studentId, claim, coinResult\.code/);
-    assert.match(src, /failOpenAfterClaim\(supabase, studentId, claim, diamondResult\.code/);
-    assert.match(src, /failOpenAfterClaim\(supabase, studentId, claim, grant\.code/);
-    assert.match(src, /failOpenAfterClaim\(supabase, studentId, claim, "opening_log_failed"/);
-    assert.match(src, /failOpenAfterClaim\(supabase, studentId, claim, "no_rewards_available"/);
+  test("only coin grant failure rolls back after claim", () => {
+    assert.match(src, /failOpenAfterClaim\(supabase, studentId, claim, "coin_failed"\)/);
+    assert.doesNotMatch(src, /failOpenAfterClaim\(supabase, studentId, claim, diamondResult/);
+    assert.doesNotMatch(src, /failOpenAfterClaim\(supabase, studentId, claim, grant/);
+    assert.doesNotMatch(src, /failOpenAfterClaim\(supabase, studentId, claim, "opening_log_failed"/);
+    assert.doesNotMatch(src, /failOpenAfterClaim\(supabase, studentId, claim, "no_rewards_available"/);
+  });
+
+  test("always grants at least one coin slot after claim", () => {
+    assert.match(src, /const coinSlots = Math\.max\(1,/);
   });
 
   test("claim uses CAS on pending_box_count", () => {
@@ -176,8 +185,11 @@ describe("surprise box client contracts", () => {
       join(ROOT, "components/student/rewards/StudentSurpriseBoxOpenModal.jsx"),
       "utf8"
     );
-    assert.match(modal, /onError\?\.\(\)/);
-    assert.match(modal, /onOpened\?\.\(json\)/);
+    assert.match(modal, /onErrorRef\.current\?\.\(\)/);
+    assert.match(modal, /onOpenedRef\.current\?\.\(json\)/);
+    assert.match(modal, /OPEN_TIMEOUT_MS/);
+    assert.match(modal, /openSessionRef/);
+    assert.doesNotMatch(modal, /openingRef/);
   });
 
   test("home wires refresh token on error and close", () => {
