@@ -1,4 +1,6 @@
 import Layout from "../components/Layout";
+import PageSeo from "../components/seo/PageSeo";
+import { getPublicPageSeo } from "../lib/site/public-page-seo.he";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -40,9 +42,16 @@ const siteFeatures = [
   { phase: "משחקים וחוויה חברתית", text: "משחקים אישיים ומשחקי חברה שנועדו להוסיף כיף, התמדה ומוטיבציה ללמידה." },
 ];
 
+const aboutSeo = getPublicPageSeo("about");
+
 export default function About() {
   return (
     <Layout page="about">
+      <PageSeo
+        title={aboutSeo.title}
+        description={aboutSeo.description}
+        canonicalPath={aboutSeo.canonicalPath}
+      />
       <video
         autoPlay
         muted

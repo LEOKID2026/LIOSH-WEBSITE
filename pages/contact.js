@@ -1,4 +1,6 @@
 import Layout from "../components/Layout";
+import PageSeo from "../components/seo/PageSeo";
+import { getPublicPageSeo } from "../lib/site/public-page-seo.he";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useState } from "react";
@@ -6,13 +8,41 @@ import {
   CONTACT_EMAIL,
   LEGAL_CONTACT_PAGE_LINKS,
 } from "../data/legal/sitePolicies.he";
+import {
+  CONTACT_FORM_DELIVERY_PENDING,
+  CONTACT_FORM_EMAIL_LABEL,
+  CONTACT_FORM_ERR_EMAIL,
+  CONTACT_FORM_ERR_EMAIL_INVALID,
+  CONTACT_FORM_ERR_GENERIC,
+  CONTACT_FORM_ERR_MESSAGE,
+  CONTACT_FORM_ERR_NAME,
+  CONTACT_FORM_ERR_NETWORK,
+  CONTACT_FORM_ERR_RATE_LIMIT,
+  CONTACT_FORM_HINT,
+  CONTACT_FORM_MESSAGE_LABEL,
+  CONTACT_FORM_NAME_LABEL,
+  CONTACT_FORM_SUBJECT_LABEL,
+  CONTACT_FORM_SUBMIT,
+  CONTACT_FORM_SUBMITTING,
+  CONTACT_FORM_SUCCESS,
+} from "../lib/contact/contact-form.he";
+
 const INSTAGRAM_URL = "https://www.instagram.com/leotheshiba21";
 /** כשיש קישור — ממלאים כאן */
 const FACEBOOK_URL = "";
-const X_URL = "";
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const btnBase =
   "px-5 py-2.5 rounded-xl transition hover:scale-105 text-center shadow-md text-sm sm:text-base font-semibold";
+
+const contactSeo = getPublicPageSeo("contact");
+
+/** טופס יצירת קשר — מוסתר עד שמערכת הדואר תוגדר לסביבת הפרודקשן */
+const CONTACT_FORM_VISIBLE = false;
+
+const inputClass =
+  "mt-1 w-full rounded-xl bg-black/50 border border-white/20 px-3 py-2 text-sm sm:text-base text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400/50";
 
 const faqs = [
   {
@@ -37,17 +67,132 @@ const faqs = [
   },
   {
     q: "איך אפשר לדווח על תקלה או לשלוח רעיון?",
-    a: "אפשר לפנות אלינו דרך אפשרויות יצירת הקשר בעמוד הזה. נשמח לקבל הערות, רעיונות ודיווחים שיעזרו לשפר את האתר.",
+    a: "אפשר לפנות אלינו דרך כפתור האימייל בעמוד הזה. נשמח לקבל הערות, רעיונות ודיווחים שיעזרו לשפר את האתר.",
   },
 ];
 
+function validateContactForm({ name, email, message }) {
+  const errors = {};
+  if (!name.trim()) errors.name = CONTACT_FORM_ERR_NAME;
+  if (!email.trim()) {
+    errors.email = CONTACT_FORM_ERR_EMAIL;
+  } else if (!EMAIL_RE.test(email.trim())) {
+    errors.email = CONTACT_FORM_ERR_EMAIL_INVALID;
+  }
+  if (!message.trim()) errors.message = CONTACT_FORM_ERR_MESSAGE;
+  return errors;
+}
+
 export default function Contact() {
   const [activeAnswer, setActiveAnswer] = useState(null);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [formError, setFormError] = useState("");
+  const [formSuccess, setFormSuccess] = useState("");
+  const [formPendingNotice, setFormPendingNotice] = useState("");
+  const [busy, setBusy] = useState(false);
 
   const handleClose = () => setActiveAnswer(null);
 
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    setFormError("");
+    setFormSuccess("");
+    setFormPendingNotice("");
+
+    const errors = validateContactForm({ name, email, message });
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) return;
+
+    setBusy(true);
+    try {
+      const res = await fetch("/api/contact/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          subject: subject.trim() || null,
+          message: message.trim(),
+        }),
+      });
+      const body = await res.json().catch(() => ({}));
+
+      if (res.status === 429 || body?.code === "rate_limited") {
+        setFormError(CONTACT_FORM_ERR_RATE_LIMIT);
+        return;
+      }
+      if (res.status === 503 && body?.code === "delivery_not_configured") {
+        setFormPendingNotice(CONTACT_FORM_DELIVERY_PENDING);
+        return;
+      }
+      if (res.ok && body?.ok && body?.delivered) {
+        setFormSuccess(CONTACT_FORM_SUCCESS);
+        setName("");
+        setEmail("");
+        setSubject("");
+        setMessage("");
+        setFieldErrors({});
+        return;
+      }
+      if (body?.code === "invalid_email") {
+        setFieldErrors((prev) => ({ ...prev, email: CONTACT_FORM_ERR_EMAIL_INVALID }));
+        return;
+      }
+      if (body?.code === "validation_failed") {
+        setFormError(CONTACT_FORM_ERR_GENERIC);
+        return;
+      }
+      setFormError(CONTACT_FORM_ERR_GENERIC);
+    } catch {
+      setFormError(CONTACT_FORM_ERR_NETWORK);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const socialLinks = [
+    {
+      key: "email",
+      href: `mailto:${CONTACT_EMAIL}`,
+      label: "📧 אימייל",
+      ariaLabel: `שליחת אימייל לכתובת ${CONTACT_EMAIL}`,
+      className: `${btnBase} bg-amber-500/90 hover:bg-amber-400 border border-amber-300/40 text-black`,
+      external: false,
+    },
+    {
+      key: "instagram",
+      href: INSTAGRAM_URL,
+      label: "📷 אינסטגרם",
+      ariaLabel: "פתיחת עמוד האינסטגרם בחלון חדש",
+      className: `${btnBase} bg-pink-600/90 hover:bg-pink-500 border border-pink-400/30 text-white`,
+      external: true,
+    },
+    ...(FACEBOOK_URL
+      ? [
+          {
+            key: "facebook",
+            href: FACEBOOK_URL,
+            label: "📘 פייסבוק",
+            ariaLabel: "פתיחת עמוד הפייסבוק בחלון חדש",
+            className: `${btnBase} bg-blue-600/90 hover:bg-blue-500 border border-blue-400/30 text-white`,
+            external: true,
+          },
+        ]
+      : []),
+  ];
+
   return (
     <Layout page="contact">
+      <PageSeo
+        title={contactSeo.title}
+        description={contactSeo.description}
+        canonicalPath={contactSeo.canonicalPath}
+      />
       <video
         autoPlay
         muted
@@ -89,88 +234,134 @@ export default function Contact() {
           יש לכם שאלה, רעיון, הערה או תקלה? נשמח לשמוע מכם ולעזור. אפשר לפנות אלינו בנושאים שקשורים ללמידה, לחשבון הילד/ה, לדוחות ההורים, למשחקים או לחוויית השימוש באתר.
         </motion.p>
 
+        {CONTACT_FORM_VISIBLE && <motion.section
+          className="w-full max-w-2xl mb-10 rounded-2xl border border-white/15 bg-black/50 backdrop-blur-sm p-4 sm:p-6"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          aria-label="טופס יצירת קשר"
+        >
+          {formSuccess ? (
+            <p className="text-emerald-300 text-sm sm:text-base leading-relaxed" role="status">
+              {formSuccess}
+            </p>
+          ) : (
+            <form onSubmit={(ev) => void onSubmit(ev)} className="space-y-4" noValidate>
+              {formPendingNotice ? (
+                <p className="text-amber-200 text-sm sm:text-base leading-relaxed rounded-xl border border-amber-400/30 bg-amber-500/10 px-3 py-2" role="status">
+                  {formPendingNotice}
+                </p>
+              ) : null}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <label className="block text-sm sm:text-base">
+                  <span className="text-white/85">{CONTACT_FORM_NAME_LABEL}</span>
+                  <input
+                    type="text"
+                    name="name"
+                    value={name}
+                    onChange={(ev) => setName(ev.target.value)}
+                    maxLength={80}
+                    autoComplete="name"
+                    className={inputClass}
+                    aria-invalid={Boolean(fieldErrors.name)}
+                    aria-describedby={fieldErrors.name ? "contact-name-error" : undefined}
+                  />
+                  {fieldErrors.name ? (
+                    <p id="contact-name-error" className="mt-1 text-sm text-rose-300" role="alert">
+                      {fieldErrors.name}
+                    </p>
+                  ) : null}
+                </label>
+
+                <label className="block text-sm sm:text-base">
+                  <span className="text-white/85">{CONTACT_FORM_EMAIL_LABEL}</span>
+                  <input
+                    type="email"
+                    name="email"
+                    value={email}
+                    onChange={(ev) => setEmail(ev.target.value)}
+                    maxLength={254}
+                    autoComplete="email"
+                    className={inputClass}
+                    aria-invalid={Boolean(fieldErrors.email)}
+                    aria-describedby={fieldErrors.email ? "contact-email-error" : undefined}
+                  />
+                  {fieldErrors.email ? (
+                    <p id="contact-email-error" className="mt-1 text-sm text-rose-300" role="alert">
+                      {fieldErrors.email}
+                    </p>
+                  ) : null}
+                </label>
+              </div>
+
+              <label className="block text-sm sm:text-base">
+                <span className="text-white/85">{CONTACT_FORM_SUBJECT_LABEL}</span>
+                <input
+                  type="text"
+                  name="subject"
+                  value={subject}
+                  onChange={(ev) => setSubject(ev.target.value)}
+                  maxLength={120}
+                  className={inputClass}
+                />
+              </label>
+
+              <label className="block text-sm sm:text-base">
+                <span className="text-white/85">{CONTACT_FORM_MESSAGE_LABEL}</span>
+                <textarea
+                  name="message"
+                  value={message}
+                  onChange={(ev) => setMessage(ev.target.value)}
+                  rows={5}
+                  maxLength={4000}
+                  className={`${inputClass} resize-y min-h-[120px]`}
+                  aria-invalid={Boolean(fieldErrors.message)}
+                  aria-describedby={fieldErrors.message ? "contact-message-error" : undefined}
+                />
+                {fieldErrors.message ? (
+                  <p id="contact-message-error" className="mt-1 text-sm text-rose-300" role="alert">
+                    {fieldErrors.message}
+                  </p>
+                ) : null}
+              </label>
+
+              <p className="text-xs text-white/55 leading-relaxed">{CONTACT_FORM_HINT}</p>
+
+              {formError ? (
+                <p className="text-sm text-rose-300" role="alert">
+                  {formError}
+                </p>
+              ) : null}
+
+              <button
+                type="submit"
+                disabled={busy}
+                className={`${btnBase} w-full sm:w-auto bg-teal-600/90 hover:bg-teal-500 border border-teal-400/30 text-white disabled:opacity-60 disabled:hover:scale-100`}
+              >
+                {busy ? CONTACT_FORM_SUBMITTING : CONTACT_FORM_SUBMIT}
+              </button>
+            </form>
+          )}
+        </motion.section>}
+
         <div className="flex flex-wrap justify-center gap-3 mb-10 w-full">
-          <motion.a
-            href={`mailto:${CONTACT_EMAIL}`}
-            aria-label={`שליחת אימייל לכתובת ${CONTACT_EMAIL}`}
-            className={`${btnBase} bg-amber-500/90 hover:bg-amber-400 border border-amber-300/40 text-black`}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4 }}
-            whileHover={{ scale: 1.05 }}
-          >
-            📧 אימייל
-          </motion.a>
-
-          <motion.a
-            href={INSTAGRAM_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="פתיחת עמוד האינסטגרם בחלון חדש"
-            className={`${btnBase} bg-pink-600/90 hover:bg-pink-500 border border-pink-400/30 text-white`}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4, delay: 0.05 }}
-            whileHover={{ scale: 1.05 }}
-          >
-            📷 אינסטגרם
-          </motion.a>
-
-          {FACEBOOK_URL ? (
+          {socialLinks.map((link, i) => (
             <motion.a
-              href={FACEBOOK_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="פתיחת עמוד הפייסבוק בחלון חדש"
-              className={`${btnBase} bg-blue-600/90 hover:bg-blue-500 border border-blue-400/30 text-white`}
+              key={link.key}
+              href={link.href}
+              {...(link.external
+                ? { target: "_blank", rel: "noopener noreferrer" }
+                : {})}
+              aria-label={link.ariaLabel}
+              className={link.className}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4, delay: 0.1 }}
+              transition={{ duration: 0.4, delay: 0.05 * i }}
               whileHover={{ scale: 1.05 }}
             >
-              📘 פייסבוק
+              {link.label}
             </motion.a>
-          ) : (
-            <motion.button
-              type="button"
-              aria-label="פייסבוק"
-              className={`${btnBase} bg-blue-600/90 hover:bg-blue-500 border border-blue-400/30 text-white`}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4, delay: 0.1 }}
-              whileHover={{ scale: 1.05 }}
-            >
-              📘 פייסבוק
-            </motion.button>
-          )}
-
-          {X_URL ? (
-            <motion.a
-              href={X_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="פתיחת עמוד X בחלון חדש"
-              className={`${btnBase} bg-neutral-800/90 hover:bg-neutral-700 border border-white/25 text-white`}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4, delay: 0.15 }}
-              whileHover={{ scale: 1.05 }}
-            >
-              🐦 X
-            </motion.a>
-          ) : (
-            <motion.button
-              type="button"
-              aria-label="X"
-              className={`${btnBase} bg-neutral-800/90 hover:bg-neutral-700 border border-white/25 text-white`}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4, delay: 0.15 }}
-              whileHover={{ scale: 1.05 }}
-            >
-              🐦 X
-            </motion.button>
-          )}
+          ))}
         </div>
 
         <motion.h2

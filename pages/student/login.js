@@ -17,6 +17,7 @@ import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import { syncStudentLocalStorageIdentity } from "../../lib/learning-student-local-sync";
 import { isStudentIdentityDiagnosticsEnabled } from "../../lib/dev-student-identity-client";
 import { LIOSH_GUEST_RESUME_TOKEN_KEY } from "../../lib/guest/constants.js";
+import { shouldClearGuestResumeTokenOnResumeFailure } from "../../lib/guest/guest-resume-token.client.js";
 
 function resolveNextTarget(router) {
   const raw = router.query?.next;
@@ -104,6 +105,9 @@ export default function StudentLoginPage() {
             }
             redirectAfterStudentLogin(router);
             return;
+          }
+          if (shouldClearGuestResumeTokenOnResumeFailure(resumePayload?.code)) {
+            localStorage.removeItem(LIOSH_GUEST_RESUME_TOKEN_KEY);
           }
         }
         setSessionCheck("none");

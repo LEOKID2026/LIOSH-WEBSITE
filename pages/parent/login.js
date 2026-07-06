@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Layout from "../../components/Layout";
+import PageSeo from "../../components/seo/PageSeo";
+import { getPublicPageSeo } from "../../lib/site/public-page-seo.he";
 import PortalLoginHeading from "../../components/auth/PortalLoginHeading";
 import ParentGoogleSignInButton from "../../components/auth/ParentGoogleSignInButton";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
@@ -26,6 +28,8 @@ import { trackProductEvent } from "../../lib/analytics/track-event.client.js";
 import ParentPromoVideo from "../../components/parent/ParentPromoVideo";
 import { PARENT_PROMO_MOBILE_SRC } from "../../components/parent/ParentPromoVideo";
 import PromoMobileCompareVideo from "../../components/promo/PromoMobileCompareVideo";
+
+const parentLoginSeo = getPublicPageSeo("parent-login");
 
 function ParentPassivePolicyNotice({ bright, className = "" }) {
   const T = getParentPortalTheme(bright);
@@ -236,6 +240,12 @@ export default function ParentLoginPage() {
   if (sessionCheckPending) {
     return (
       <Layout {...layoutProps}>
+        <PageSeo
+          title={parentLoginSeo.title}
+          description={parentLoginSeo.description}
+          canonicalPath={parentLoginSeo.canonicalPath}
+          noindex={parentLoginSeo.noindex}
+        />
         <div className="max-w-md mx-auto px-4 py-3 md:py-10" dir="rtl" lang="he">
           <PortalLoginHeading
             title="כניסת הורים"
@@ -250,6 +260,12 @@ export default function ParentLoginPage() {
 
   return (
     <Layout {...layoutProps}>
+      <PageSeo
+        title={parentLoginSeo.title}
+        description={parentLoginSeo.description}
+        canonicalPath={parentLoginSeo.canonicalPath}
+        noindex={parentLoginSeo.noindex}
+      />
       <div className="max-w-md mx-auto px-4 py-3 md:py-10" dir="rtl" lang="he">
         <PortalLoginHeading
           title="כניסת הורים"

@@ -9,6 +9,7 @@ import { fileURLToPath } from "node:url";
 import {
   resolveStudentAdRenderMode,
   resolveStudentAdRenderModeFromEnv,
+  resolveStudentAdRenderModeWithConsent,
   STUDENT_AD_ENV,
   STUDENT_AD_POLICY,
 } from "../../lib/student-ui/student-ad-config.client.js";
@@ -61,6 +62,16 @@ function testProductionRequiresExplicitEnvForExternal() {
       NEXT_PUBLIC_STUDENT_AD_EXTERNAL_ENABLED: "true",
     }),
     "external",
+  );
+  assert.equal(
+    resolveStudentAdRenderModeWithConsent(
+      {
+        NODE_ENV: "production",
+        NEXT_PUBLIC_STUDENT_AD_EXTERNAL_ENABLED: "true",
+      },
+      { adsConsentGranted: false },
+    ),
+    "placeholder",
   );
   assert.equal(
     resolveStudentAdRenderModeFromEnv({

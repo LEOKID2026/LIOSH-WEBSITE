@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import Head from "next/head";
 import Link from "next/link";
 import Layout from "../Layout";
+import PageSeo from "../seo/PageSeo";
 import {
   CONTACT_EMAIL,
   LEGACY_POLICY_PAGES,
@@ -17,6 +17,7 @@ import {
 export default function UnifiedLegalPolicyPage({ pageKey = "legal", scrollToSectionId }) {
   const meta = LEGACY_POLICY_PAGES[pageKey] || LEGACY_POLICY_PAGES.legal;
   const { pageTitle, metaDescription, intro, route } = meta;
+  const seoTitle = `${pageTitle} · LEO KIDS`;
   const targetSectionId = scrollToSectionId || meta.scrollToSectionId || null;
 
   useEffect(() => {
@@ -33,10 +34,11 @@ export default function UnifiedLegalPolicyPage({ pageKey = "legal", scrollToSect
 
   return (
     <Layout>
-      <Head>
-        <title>{`${pageTitle} · LEO KIDS`}</title>
-        <meta name="description" content={metaDescription} />
-      </Head>
+      <PageSeo
+        title={seoTitle}
+        description={metaDescription}
+        canonicalPath={route}
+      />
       <article dir="rtl" lang="he" className="max-w-3xl mx-auto px-4 py-10 sm:py-12 text-right">
         <header className="mb-8 space-y-3">
           <p className="text-xs text-white/50">עודכן לאחרונה: {POLICY_LAST_UPDATED_DISPLAY}</p>

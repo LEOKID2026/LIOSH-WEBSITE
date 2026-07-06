@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Layout from "../../components/Layout";
+import PageSeo from "../../components/seo/PageSeo";
+import { getPublicPageSeo } from "../../lib/site/public-page-seo.he";
 import PortalLoginHeading from "../../components/auth/PortalLoginHeading";
 import TeacherRegistrationRequestForm from "../../components/auth/TeacherRegistrationRequestForm";
 import PortalLoadingPanel from "../../components/ui/PortalLoadingPanel.jsx";
@@ -25,6 +27,8 @@ import {
   REG_TEACHER_TAB,
 } from "../../lib/auth/auth-registration.he";
 import { resolveTeacherAccessToken } from "../../lib/teacher-portal/use-teacher-portal-session";
+
+const teacherLoginSeo = getPublicPageSeo("teacher-login");
 
 function portalTabBtnClass(T, active, disabled) {
   return `flex-1 min-w-0 rounded px-3 py-2 text-sm font-semibold text-center transition ${
@@ -292,6 +296,12 @@ export default function TeacherLoginPage({ inviteOnly }) {
 
   return (
     <Layout {...layoutProps}>
+      <PageSeo
+        title={teacherLoginSeo.title}
+        description={teacherLoginSeo.description}
+        canonicalPath={teacherLoginSeo.canonicalPath}
+        noindex={teacherLoginSeo.noindex}
+      />
       <div
         className={`mx-auto px-3 md:px-4 py-3 md:py-8 ${
           mode === "request" ? "max-w-4xl" : "max-w-md"

@@ -2,6 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Layout from "../../components/Layout";
+import PageSeo from "../../components/seo/PageSeo";
+import { getPublicPageSeo } from "../../lib/site/public-page-seo.he";
 import {
   clearAllStudentScopedBrowserStorage,
   syncStudentLocalStorageIdentity,
@@ -39,6 +41,7 @@ import StudentSurpriseBoxOpenModal from "../../components/student/rewards/Studen
 import StudentShareFriendsButton from "../../components/student/StudentShareFriendsButton";
 import { isCardRewardsEnabledClient } from "../../lib/rewards/reward-feature-flags.client.js";
 import { GUEST_LOCK_MESSAGE_HE, GUEST_LOCKED_HOME_PANELS, LIOSH_GUEST_RESUME_TOKEN_KEY } from "../../lib/guest/constants.js";
+import { shouldClearGuestResumeTokenOnLogout } from "../../lib/guest/guest-resume-token.client.js";
 import StudentLoadingPanel from "../../components/ui/StudentLoadingPanel.jsx";
 
 import { syncMonthlyProgressCacheFromServer } from "../../utils/progress-storage.js";
@@ -46,6 +49,8 @@ import { syncMonthlyProgressCacheFromServer } from "../../utils/progress-storage
 const HOME_SUMMARY_PATH = "/api/student/home-profile/summary";
 const HOME_ANALYTICS_PATH = "/api/student/home-profile/analytics";
 const HOME_ACHIEVEMENT_GRANTS_PATH = "/api/student/home-profile/achievement-grants";
+
+const studentHomeSeo = getPublicPageSeo("student-home");
 
 function mapApiErrorToHebrew(raw) {
   const s = String(raw || "").trim();
@@ -59,6 +64,12 @@ function LoadingScreen({ message }) {
   const { theme } = useStudentTheme();
   return (
     <Layout studentTheme={theme} studentShell="home">
+      <PageSeo
+        title={studentHomeSeo.title}
+        description={studentHomeSeo.description}
+        canonicalPath={studentHomeSeo.canonicalPath}
+        noindex={studentHomeSeo.noindex}
+      />
       <StudentLoadingPanel message={message} reportPage />
     </Layout>
   );
@@ -778,7 +789,7 @@ export default function StudentHomePage() {
     setLogoutBusy(true);
     try {
       await fetch("/api/student/logout", { method: "POST", credentials: "include" });
-      if (typeof window !== "undefined") {
+      if (typeof window !== "undefined" && shouldClearGuestResumeTokenOnLogout(student, isGuestHome)) {
         localStorage.removeItem(LIOSH_GUEST_RESUME_TOKEN_KEY);
       }
       clearAllStudentScopedBrowserStorage(sid);
@@ -874,6 +885,12 @@ export default function StudentHomePage() {
 
   return (
     <Layout studentTheme={theme} studentShell="home">
+      <PageSeo
+        title={studentHomeSeo.title}
+        description={studentHomeSeo.description}
+        canonicalPath={studentHomeSeo.canonicalPath}
+        noindex={studentHomeSeo.noindex}
+      />
       <div key={student.id} className={`max-w-6xl mx-auto px-3 sm:px-4 py-4 md:py-8 pb-6 overflow-x-hidden ${T.pageWrap}`}>
         <section className={T.hero}>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">

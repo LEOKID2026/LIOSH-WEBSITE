@@ -2,9 +2,13 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Layout from "../components/Layout";
+import PageSeo from "../components/seo/PageSeo";
+import { getPublicPageSeo } from "../lib/site/public-page-seo.he";
 import { useStudentTheme } from "../contexts/StudentThemeContext.jsx";
 import { useGalleryUi } from "../hooks/useGalleryUi.js";
 import StudentLoadingPanel from "../components/ui/StudentLoadingPanel.jsx";
+
+const gallerySeo = getPublicPageSeo("gallery");
 
 export default function Gallery() {
   const { theme, tokens: T } = useStudentTheme();
@@ -32,6 +36,11 @@ export default function Gallery() {
 
   return (
     <Layout studentTheme={theme} studentShell="home">
+      <PageSeo
+        title={gallerySeo.title}
+        description={gallerySeo.description}
+        canonicalPath={gallerySeo.canonicalPath}
+      />
       {GL.showVideoBg ? (
         <>
           <video

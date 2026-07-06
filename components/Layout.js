@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import DevCoinTopupNav from "./layout/DevCoinTopupNav";
 import SiteLegalFooterBar from "./layout/SiteLegalFooterBar.jsx";
 import StudentAdSlot from "./student/StudentAdSlot.jsx";
 import StudentThemePicker from "./student/StudentThemePicker.jsx";
@@ -38,7 +37,7 @@ export default function Layout({
     pathname.startsWith("/auth/") && typeof router.query?.portal === "string"
       ? router.query.portal
       : undefined;
-  const { links: menuLinks, showDevCoinTopup } = getContextNav(pathname, { authPortal });
+  const { links: menuLinks } = getContextNav(pathname, { authPortal });
   const layoutRtlHebrew = shouldLayoutUseRtl(pathname);
   const showThemePicker = layoutShowThemePicker || shouldShowLayoutThemePicker(pathname);
 
@@ -110,6 +109,8 @@ export default function Layout({
             <img
               src="/images/coin.png"
               alt="לוגו LEO KIDS"
+              width={32}
+              height={32}
               className="w-8 h-8 object-contain"
               style={{ transform: "scale(1.9)" }}
             />
@@ -126,7 +127,6 @@ export default function Layout({
                 {link.label}
               </Link>
             ))}
-            {showDevCoinTopup ? <DevCoinTopupNav variant="desktop" /> : null}
           </div>
 
           <div className="ms-auto flex items-center gap-1.5 shrink-0">
@@ -180,7 +180,6 @@ export default function Layout({
                 <StudentThemePicker variant="icon" iconSize="nav" />
               </div>
             ) : null}
-            {showDevCoinTopup ? <DevCoinTopupNav variant="mobile" /> : null}
           </div>
         </div>
       )}

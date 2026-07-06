@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { LEGAL_FOOTER_LINKS } from "../../data/legal/sitePolicies.he";
+import ConsentPreferencesLink from "../consent/ConsentPreferencesLink.jsx";
 
 /**
  * Compact site chrome footer — copyright + single legal hub link from LEGAL_FOOTER_LINKS.
@@ -22,8 +23,15 @@ export default function SiteLegalFooterBar({ isStudentBright = false }) {
             <Link href={legalLink.href} className={linkClass}>
               {legalLink.label}
             </Link>
+            {" · "}
+            <ConsentPreferencesLink isStudentBright={isStudentBright} />
           </>
-        ) : null}
+        ) : (
+          <>
+            {" · "}
+            <ConsentPreferencesLink isStudentBright={isStudentBright} />
+          </>
+        )}
       </p>
     </div>
   );

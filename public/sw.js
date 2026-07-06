@@ -1,68 +1,19 @@
 // Service Worker for LEO K PWA - Full Offline Support
-const CACHE_NAME = 'leo-k-v6';
-const STATIC_CACHE = 'leo-k-static-v6';
-const DYNAMIC_CACHE = 'leo-k-dynamic-v6';
+const CACHE_NAME = 'leo-k-v7';
+const STATIC_CACHE = 'leo-k-static-v7';
+const DYNAMIC_CACHE = 'leo-k-dynamic-v7';
 const REWARD_CARD_PATH_PREFIX = '/rewards/cards/';
 
-// רק קבצים סטטיים אמיתיים (לא דפי Next.js שנוצרים דינמית)
+// Install-time precache: public chrome only. Game/solo assets cache on first request
+// (see fetch handler) or via /student/sw.js offline precache — not every site visitor.
 const STATIC_ASSETS = [
   '/manifest.json',
   '/manifest-student.webmanifest',
-  '/offline',
-  '/styles/globals.css',
-  // Essential images
-  '/images/leo-intro.png',
   '/icons/child/pwa-192x192.png',
   '/icons/child/pwa-512x512.png',
   '/icons/child/maskable-192x192.png',
   '/icons/child/maskable-512x512.png',
-  // Game images
-  '/images/dog.png',
-  '/images/leo2.png',
-  '/images/leo.png',
   '/images/coin.png',
-  '/images/leo-logo.png',
-  '/images/diamond.png',
-  '/images/magnet.png',
-  '/images/coin2.png',
-  '/images/obstacle.png',
-  '/images/obstacle1.png',
-  '/images/ball.png',
-  '/images/leo-keeper.png',
-  '/images/penalty-bg.png',
-  '/images/game-day.png',
-  '/images/game-evening.png',
-  '/images/game-night.png',
-  '/images/game-space.png',
-  '/images/game-park.png',
-  '/images/game1.png',
-  '/images/game2.png',
-  '/images/game3.png',
-  '/images/game4.png',
-  '/images/game10.png',
-  // Card images for memory game (first 10, rest will be cached dynamically)
-  '/images/card/shiba1.png',
-  '/images/card/shiba2.png',
-  '/images/card/shiba3.png',
-  '/images/card/shiba4.png',
-  '/images/card/shiba5.png',
-  // Candy images for puzzle
-  '/images/candy/heart.png',
-  '/images/candy/circle.png',
-  '/images/candy/square.png',
-  '/images/candy/drop.png',
-  '/images/candy/diamond.png',
-  '/images/candy/star.png',
-  // Essential sounds
-  '/sounds/bg-music.mp3',
-  '/sounds/jump.mp3',
-  '/sounds/coin.mp3',
-  '/sounds/game-over.mp3',
-  '/sounds/flap2.mp3',
-  '/sounds/win.mp3',
-  '/sounds/lose.mp3',
-  '/sounds/bomb.mp3',
-  '/sounds/flap.mp3',
 ];
 
 // Patterns for dynamic caching

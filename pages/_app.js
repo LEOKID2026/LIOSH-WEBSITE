@@ -13,6 +13,8 @@ import { initTeacherPwaInstallPromptCapture } from "../lib/pwa/pwa-teacher-insta
 import { resolvePwaManifestHref, resolvePwaPortal } from "../lib/pwa/resolve-pwa-manifest";
 import { StudentThemeProvider } from "../contexts/StudentThemeContext.jsx";
 import BrowserThemeColorSync from "../components/BrowserThemeColorSync.jsx";
+import CookieConsentManager from "../components/consent/CookieConsentManager.jsx";
+import { GOOGLE_CONSENT_BOOTSTRAP_SCRIPT } from "../lib/consent/google-consent-mode.client.js";
 import {
   BROWSER_THEME_COLOR_BRIGHT,
   BROWSER_THEME_COLOR_BOOTSTRAP_SCRIPT,
@@ -279,7 +281,7 @@ export default function MyApp({ Component, pageProps }) {
           name="viewport"
           content="width=device-width, initial-scale=1, viewport-fit=cover"
         />
-        <meta name="description" content="LEO K - Fun games and learning activities for kids. Play arcade games, solve puzzles, and practice math, geometry and English." />
+        <meta name="description" content="LEO KIDS — לימוד ומשחקים לילדים, תרגול במקצועות ודוחות להורים." />
         {isStudentPwaInstallMode ? (
           <>
             <meta name="theme-color" content={BROWSER_THEME_COLOR_BRIGHT} />
@@ -312,6 +314,7 @@ export default function MyApp({ Component, pageProps }) {
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="mobile-web-app-capable" content="yes" />
         <script dangerouslySetInnerHTML={{ __html: BROWSER_THEME_COLOR_BOOTSTRAP_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: GOOGLE_CONSENT_BOOTSTRAP_SCRIPT }} />
         <meta name="msapplication-config" content="/browserconfig.xml" />
 
         {isStudentPwaInstallMode ? (
@@ -360,9 +363,10 @@ export default function MyApp({ Component, pageProps }) {
           <link key="app-manifest" rel="manifest" href={manifestHref} />
         ) : null}
         
-        <title>LEO KIDS - Kids Games & Learning</title>
+        <title>LEO KIDS · לימוד ומשחקים לילדים</title>
       </Head>
       <OfflineIndicator />
+      <CookieConsentManager />
       <StudentThemeProvider>
         <BrowserThemeColorSync />
         {isInternalDevRoute ? (

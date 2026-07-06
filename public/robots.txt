@@ -1,0 +1,25 @@
+User-agent: *
+Allow: /
+
+Disallow: /api/
+Disallow: /admin/
+Disallow: /dev/
+Disallow: /school/
+Disallow: /guardian/
+Disallow: /auth/
+Disallow: /student/
+Disallow: /parent/
+Allow: /parent/login
+Allow: /parent/install-app
+Disallow: /teacher/
+Allow: /teacher/login
+Allow: /teacher/install-app
+Disallow: /learning/parent-report
+Disallow: /learning/parent-report-detailed
+Disallow: /learning/dev/
+Disallow: /learning/dev-student-simulator
+Disallow: /offline/
+Allow: /games
+Disallow: /game
+
+Sitemap: https://www.leokids.co.il/sitemap.xml

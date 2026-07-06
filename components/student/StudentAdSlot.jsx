@@ -1,5 +1,8 @@
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
-import { resolveStudentAdRenderMode } from "../../lib/student-ui/student-ad-config.client.js";
+import {
+  resolveStudentAdRenderModeWithConsent,
+} from "../../lib/student-ui/student-ad-config.client.js";
+import { useConsentState } from "../../hooks/useConsentState.js";
 import { sanitizeStudentAdProps } from "../../lib/student-ui/student-ad-props.client.js";
 import StudentAdPlaceholder from "./StudentAdPlaceholder.jsx";
 import StudentExternalAdHost from "./StudentExternalAdHost.jsx";
@@ -49,7 +52,14 @@ export default function StudentAdSlot(rawProps) {
     dataAdSlot,
   };
 
-  const mode = resolveStudentAdRenderMode();
+  const { ready: consentReady, adsGranted } = useConsentState();
+
+  const mode =
+    consentReady
+      ? resolveStudentAdRenderModeWithConsent(process.env, {
+          adsConsentGranted: adsGranted,
+        })
+      : "placeholder";
 
   if (mode === "external") {
     return <StudentExternalAdHost {...shared} />;

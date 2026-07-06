@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import Layout from "../../components/Layout";
+import PageSeo from "../../components/seo/PageSeo";
+import { getPublicPageSeo } from "../../lib/site/public-page-seo.he";
 import Link from "next/link";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
 import { isStudentIdentityDiagnosticsEnabled } from "../../lib/dev-student-identity-client";
@@ -62,6 +64,8 @@ const DEFAULT_SUBJECT_CARD = {
   emoji: "bg-slate-50 border-slate-100",
 };
 
+const learningSeo = getPublicPageSeo("learning");
+
 export async function getServerSideProps() {
   return {
     props: {
@@ -104,6 +108,11 @@ export default function LearningHub({ showDevStudentSimulator }) {
 
   return (
     <Layout studentTheme={theme} studentShell="learning">
+      <PageSeo
+        title={learningSeo.title}
+        description={learningSeo.description}
+        canonicalPath={learningSeo.canonicalPath}
+      />
       <div className={`max-w-5xl mx-auto px-3 sm:px-4 py-3 md:py-6 pb-4 overflow-x-hidden ${T.learningPageWrap}`} dir="rtl">
         <div className={T.hubTopBar}>
           <div className={T.hubTopBarBack}>

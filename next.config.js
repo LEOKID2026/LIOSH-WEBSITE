@@ -9,6 +9,11 @@ function buildContentSecurityPolicy() {
     "'self'",
     "https://*.supabase.co",
     "wss://*.supabase.co",
+    // Google Tag / AdSense — measurement + ad request beacons (only loaded after consent + env)
+    "https://www.google-analytics.com",
+    "https://analytics.google.com",
+    "https://pagead2.googlesyndication.com",
+    "https://googleads.g.doubleclick.net",
   ];
   if (!isProdBuild) {
     connectSrc.push(
@@ -19,15 +24,41 @@ function buildContentSecurityPolicy() {
     );
   }
 
+  const scriptSrc = [
+    "'self'",
+    "'unsafe-inline'",
+    // gtag.js loader (Consent Mode + optional analytics)
+    "https://www.googletagmanager.com",
+    // AdSense publisher script
+    "https://pagead2.googlesyndication.com",
+  ];
+  if (!isProdBuild) {
+    scriptSrc.push("'unsafe-eval'");
+  }
+
+  const imgSrc = [
+    "'self'",
+    "data:",
+    "blob:",
+    "https://*.supabase.co",
+    // Ad impression pixels / Google ad images
+    "https://pagead2.googlesyndication.com",
+    "https://www.googletagmanager.com",
+    "https://www.google.com",
+    "https://googleads.g.doubleclick.net",
+  ];
+
   return [
     "default-src 'self'",
-    `script-src 'self' 'unsafe-inline'${isProdBuild ? "" : " 'unsafe-eval'"}`,
+    `script-src ${scriptSrc.join(" ")}`,
     "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data: blob: https://*.supabase.co",
+    `img-src ${imgSrc.join(" ")}`,
     "font-src 'self' data:",
     "media-src 'self' blob: data:",
     `connect-src ${connectSrc.join(" ")}`,
     "worker-src 'self' blob:",
+    // Ad iframes (AdSense / DoubleClick) — no broad third-party frames
+    "frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com",
     "frame-ancestors 'none'",
     "base-uri 'self'",
     "form-action 'self'",

@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Head from "next/head";
 import Link from "next/link";
 import Layout from "../Layout";
+import PageSeo from "../seo/PageSeo";
 import MarketingFeatureCard from "./MarketingFeatureCard";
 import PortalPwaInstallButton from "../pwa/PortalPwaInstallButton";
 import ParentPromoVideo from "../parent/ParentPromoVideo";
@@ -17,6 +17,12 @@ const AUDIENCE_PORTAL = {
   kids: "student",
   parents: "parent",
   teachers: "teacher",
+};
+
+const AUDIENCE_CANONICAL_PATH = {
+  kids: "/kids",
+  parents: "/parents",
+  teachers: "/teachers",
 };
 
 const ACCENT = {
@@ -226,12 +232,11 @@ export default function MarketingLandingPage({ audience, content }) {
 
   return (
     <>
-      <Head>
-        <title>{content.pageTitle}</title>
-        {content.metaDescription ? (
-          <meta name="description" content={content.metaDescription} />
-        ) : null}
-      </Head>
+      <PageSeo
+        title={content.pageTitle}
+        description={content.metaDescription || content.hero.subtitle}
+        canonicalPath={AUDIENCE_CANONICAL_PATH[audience] || "/"}
+      />
       <Layout {...layoutProps}>
         <div dir="rtl" lang="he" className="mx-auto w-full max-w-5xl px-4 py-8 md:py-12 space-y-12 md:space-y-16">
           {/* Hero */}

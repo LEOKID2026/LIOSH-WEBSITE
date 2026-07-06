@@ -1,4 +1,6 @@
 import Layout from "../components/Layout";
+import PageSeo from "../components/seo/PageSeo";
+import { getPublicPageSeo } from "../lib/site/public-page-seo.he";
 import { useIOSViewportFix } from "../hooks/useIOSViewportFix";
 import { useGamesHubUi } from "../hooks/useGamesHubUi.js";
 import { useStudentTheme } from "../contexts/StudentThemeContext.jsx";
@@ -39,6 +41,8 @@ const GAME_HUB_CARDS = [
   },
 ];
 
+const gamesSeo = getPublicPageSeo("games");
+
 export default function GamesHubPage() {
   useIOSViewportFix();
   const { theme } = useStudentTheme();
@@ -47,6 +51,11 @@ export default function GamesHubPage() {
 
   return (
     <Layout studentTheme={theme} studentShell="home">
+      <PageSeo
+        title={gamesSeo.title}
+        description={gamesSeo.description}
+        canonicalPath={gamesSeo.canonicalPath}
+      />
       <main className={GH.pageWrap} dir="rtl">
         <div className={`${GH.container} space-y-4`}>
           <GamesHubNavBar

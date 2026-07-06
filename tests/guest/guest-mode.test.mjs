@@ -25,6 +25,10 @@ import {
   parseGuestEconomy,
 } from "../../lib/guest/guest-settings.server.js";
 import { GAME_ACCESS_STATES } from "../../lib/games/game-catalog.constants.js";
+import {
+  shouldClearGuestResumeTokenOnLogout,
+  shouldClearGuestResumeTokenOnResumeFailure,
+} from "../../lib/guest/guest-resume-token.client.js";
 
 describe("guest leo number", () => {
   test("normalize accepts 8 digits", () => {
@@ -92,6 +96,28 @@ describe("guest game access policy", () => {
     const playable = new Map([["a", true], ["b", true]]);
     const locked = applyGuestLockToGameAccess(base, row, playable);
     assert.equal(locked.state, GAME_ACCESS_STATES.GUEST_LOCKED);
+  });
+});
+
+describe("guest resume token client", () => {
+  test("logout keeps token for active unlinked guest", () => {
+    const guest = { account_kind: "guest", guest_status: "active" };
+    assert.equal(shouldClearGuestResumeTokenOnLogout(guest, true), false);
+  });
+
+  test("logout clears token for registered student", () => {
+    assert.equal(shouldClearGuestResumeTokenOnLogout({ account_kind: "registered" }, false), true);
+  });
+
+  test("logout clears token for linked guest", () => {
+    const guest = { account_kind: "guest", guest_status: "linked" };
+    assert.equal(shouldClearGuestResumeTokenOnLogout(guest, true), true);
+  });
+
+  test("resume failure clears invalid or linked tokens", () => {
+    assert.equal(shouldClearGuestResumeTokenOnResumeFailure("guest_resume_invalid"), true);
+    assert.equal(shouldClearGuestResumeTokenOnResumeFailure("guest_already_linked"), true);
+    assert.equal(shouldClearGuestResumeTokenOnResumeFailure("guest_mode_disabled"), false);
   });
 });
 

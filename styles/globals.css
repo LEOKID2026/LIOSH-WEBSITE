@@ -23,6 +23,11 @@ body {
   height: 100%;
 }
 
+/* Cookie consent bottom banner — shifts content up instead of covering controls */
+body.leokids-consent-banner-open {
+  padding-bottom: max(10rem, calc(env(safe-area-inset-bottom, 0px) + 9rem));
+}
+
 * {
   box-sizing: border-box;
 }
