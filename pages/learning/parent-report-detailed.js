@@ -1645,7 +1645,6 @@ export default function ParentReportDetailedPage() {
 
                 {/* C — מה עשינו בתקופה הזאת */}
                 <SectionCard title="מה עשינו בתקופה הזאת" compact={displayMode === "summary"}>
-                {displayMode === "full" ? (
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
                   <div className="rounded-lg bg-white/5 border border-white/10 p-3 text-center">
                     <div className="text-xs text-white/55 mb-1">זמן כולל</div>
@@ -1666,7 +1665,6 @@ export default function ParentReportDetailedPage() {
                     </div>
                   </div>
                 </div>
-                ) : null}
                 <p className="pr-detailed-mini-heading font-bold text-white/90 mb-2 text-sm mt-1">כיסוי לפי מקצוע</p>
                 <div className="overflow-x-auto rounded-lg border border-white/10">
                   <table className="w-full text-sm text-right">
@@ -1690,7 +1688,6 @@ export default function ParentReportDetailedPage() {
                     </tbody>
                   </table>
                 </div>
-                {displayMode === "full" ? (
                 <div className="mt-3 grid md:grid-cols-2 gap-3 text-sm parent-surface-only">
                   {payload.overallSnapshot.sparseSubjectsHe?.length ? (
                     <div>
@@ -1711,7 +1708,6 @@ export default function ParentReportDetailedPage() {
                     />
                   </div>
                 </div>
-                ) : null}
                 </SectionCard>
 
                 {displayMode === "full" ? (
