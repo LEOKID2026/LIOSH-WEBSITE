@@ -605,7 +605,7 @@ export function buildSemanticAggregateDraft(input) {
     const improvementLines = trends.filter((t) => /שיפור|התקדמות|עלייה|התחזק|משתפר/.test(t));
     if (improvementLines.length) {
       obs = `סימני שיפור שמופיעים בניסוח הסיכום לתקופה: ${improvementLines.slice(0, 3).join(" · ")}.`;
-      meaning = "זו תשובה על בסיס שורות הסיכום בדוח בלבד, בלי להמציא מגמת זמן שלא הופיעה במפורש.";
+      meaning = "זו תשובה על בסיס שורות הסיכום בדוח בלבד, בלי להמציא כיוון לאורך זמן שלא הופיע במפורש.";
       aggregateContinuity = { questionClass: qc, subjectId: "", role: "improved" };
     } else {
       const uImp = norm(utterance).toLowerCase();
@@ -613,10 +613,10 @@ export function buildSemanticAggregateDraft(input) {
       if (/מתמטיקה|חשבון/.test(uImp) && mathRow && mathRow.avg != null && mathRow.totalQ > 0) {
         obs = `${lead}במתמטיקה נספרו בטווח כ ${mathRow.totalQ} שאלות, עם דיוק ממוצע של כ ${mathRow.avg}% לפי הדוח.`;
         meaning =
-          "מגמת שיפור מפורשת לא תמיד מופיעה כשורה נפרדת בדוח — עדיין אפשר לעגן לנפח ולדיוק במקצוע מתוך הנתונים שמוצגים.";
+          "סימן שיפור מפורש לא תמיד מופיע כשורה נפרדת בדוח — עדיין אפשר לעגן לנפח ולדיוק במקצוע מתוך הנתונים שמוצגים.";
       } else {
-        obs = `${lead}בדוח הנוכחי אין שורת מגמה מפורשת שמסמנת שיפור לאורך זמן.`;
-        meaning = "כדי לענות על \"מה השתפר\" באופן חד יותר צריך או מגמות מפורשות בסיכום התקופה או השוואת תקופות.";
+        obs = `${lead}בדוח הנוכחי אין שורת סיכום מפורשת שמסמנת שיפור לאורך זמן.`;
+        meaning = "כדי לענות על \"מה השתפר\" באופן חד יותר צריך או שורות סיכום מפורשות בתקופה או השוואת תקופות.";
       }
     }
   } else if (qc === "needs_attention") {
