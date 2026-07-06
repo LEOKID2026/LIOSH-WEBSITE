@@ -1,5 +1,7 @@
-docs/qa/_artifacts/**
+docs/**
 review-packages/**
+reports/**
+android/**
 _handoff/**
 tmp/**
 .cursor/**
