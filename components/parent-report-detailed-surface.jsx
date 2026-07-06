@@ -90,7 +90,7 @@ function pr1CrossSubjectTransferDisplayHe(raw) {
     .trim()
     .toLowerCase()
     .replace(/-/g, "_");
-  return PR1_TRANSFER_LABEL_HE[k] || "עדיין אין מספיק מידע כדי לקבוע.";
+  return PR1_TRANSFER_LABEL_HE[k] || "עדיין צריך עוד תרגול כדי לקבוע.";
 }
 
 /**
@@ -587,7 +587,7 @@ export function SubjectPhase3Insights({ sp, compact }) {
   }
   const trLine = String(transferReadinessLineHe(sp) || "").trim();
   const trMapped = pr1CrossSubjectTransferDisplayHe(String(sp?.subjectTransferReadiness || "").trim());
-  const trCombined = pr1ParentVisibleTextHe(trLine || (trMapped !== "עדיין אין מספיק מידע כדי לקבוע." ? trMapped : ""));
+  const trCombined = pr1ParentVisibleTextHe(trLine || (trMapped !== "עדיין צריך עוד תרגול כדי לקבוע." ? trMapped : ""));
   if (trCombined) {
     rows.push({ k: "האם אפשר להתקדם", v: truncateHe(trCombined, 160) });
   }
