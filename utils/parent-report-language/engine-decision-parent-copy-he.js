@@ -370,7 +370,7 @@ export function buildEngineDecisionParentTopicCopyHe(p) {
 
   const diagnosticBody = buildDiagnosticBodyByDecision(copyCtx);
   const homeActionText = buildHomeActionTextHe(copyCtx);
-  const actionHe = homeActionText ? `מה כדאי לעשות ביחד: ${homeActionText}` : "";
+  const actionHe = homeActionText ? `מה כדאי לעשות בבית: ${homeActionText}` : "";
 
   const modeContextHe = competitiveModeContextHe(sig);
   const dataHe = `הילד פתר ${q} שאלות בדיוק של ${acc}%.`;
@@ -401,23 +401,23 @@ export function buildExplainIdentifiedLineHe(engineCopy, label) {
   if (!engineCopy || !t) return "";
   switch (engineCopy.engineDecision) {
     case "mastery_stable":
-      return `מה זוהה: שליטה טובה בנושא ${t}.`;
+      return `מה רואים: שליטה טובה בנושא ${t}.`;
     case "partial_stable":
-      return `מה זוהה: שליטה חלקית בנושא ${t}.`;
+      return `מה רואים: שליטה חלקית בנושא ${t}.`;
     case "clear_topic_gap":
       return "מה כדאי לחזק: נראה שיש כאן נושא שכדאי לתרגל עוד.";
     case "topic_needs_strengthening":
-      return `מה זוהה: נקודת חיזוק בנושא ${t}.`;
+      return `מה רואים: נקודת חיזוק בנושא ${t}.`;
     case "early_direction_only":
-      return `מה זוהה: כיוון ראשוני בלבד בנושא ${t}.`;
+      return `מה רואים: כיוון ראשוני בלבד בנושא ${t}.`;
     case "insufficient_data":
-      return `מה זוהה: נושא לסקירה בנושא ${t}.`;
+      return `מה רואים: נושא לסקירה בנושא ${t}.`;
     case "deferred_topic_only":
-      return `מה זוהה: תמונה כללית בנושא ${t}.`;
+      return `מה רואים: תמונה כללית בנושא ${t}.`;
     case "speed_pressure_pattern":
-      return `מה זוהה: חלק מהטעויות קשורות למהירות בנושא ${t}.`;
+      return `מה רואים: חלק מהטעויות קשורות למהירות בנושא ${t}.`;
     default:
-      return `מה זוהה: מיקוד בנושא ${t}.`;
+      return `מה רואים: מיקוד בנושא ${t}.`;
   }
 }
 

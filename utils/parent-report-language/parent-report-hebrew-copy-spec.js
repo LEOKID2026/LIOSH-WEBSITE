@@ -455,8 +455,8 @@ export function recentInactivityInsightHe() {
 export function explainIdentifiedHe(stepLabel, topic) {
   const step = clean(stepLabel);
   const t = clean(topic);
-  if (step && t) return `מה זוהה: ${step} בנושא ${t}.`;
-  if (t) return `מה זוהה: מיקוד בנושא ${t}.`;
+  if (step && t) return `מה רואים: ${step} בנושא ${t}.`;
+  if (t) return `מה רואים: מיקוד בנושא ${t}.`;
   return "";
 }
 
@@ -475,7 +475,7 @@ export function explainDataHe(q, acc, wrongRatio) {
 /** Spec §2.3 */
 export function explainPatternHe(patternText) {
   const p = clean(patternText);
-  if (p) return `דפוס: ${p.replace(/^דפוס:\s*/, "").replace(/^דפוס הטעות הבולט:\s*/, "")}.`.replace(/\.\.$/, ".");
+  if (p) return `הטעות שחוזרת: ${p.replace(/^הטעות שחוזרת:\s*/, "").replace(/^דפוס:\s*/, "").replace(/^דפוס הטעות הבולט:\s*/, "")}.`.replace(/\.\.$/, ".");
   return "";
 }
 
@@ -483,8 +483,8 @@ export function explainPatternHe(patternText) {
 export function explainMeaningHe(rootCause, diagnosticType, foundationLine) {
   const core = meaningExplainSentenceHe(rootCause, diagnosticType);
   const foundation = clean(foundationLine);
-  if (foundation) return `משמעות: ${core} ${foundation}`;
-  return `משמעות: ${core}`;
+  if (foundation) return `מה זה אומר: ${core} ${foundation}`;
+  return `מה זה אומר: ${core}`;
 }
 
 /** Spec §2.5 */

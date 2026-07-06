@@ -2037,8 +2037,8 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
       : "maintain_and_strengthen";
   const label =
     step === "remediate_same_level"
-      ? "חיזוק ממוקד לפני קידום"
-      : "לאסוף עוד מידע לפני החלטה";
+      ? "לחזק לפני שמתקדמים"
+      : "צריך עוד שאלות";
   const confLev = String(u?.confidence?.level || "");
   let evidenceStrength = "low";
   if (confLev === "moderate") evidenceStrength = "medium";
@@ -2216,10 +2216,10 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
   const gradeRelation = geForIdentity.gradeRelation;
   let finalLabelRaw =
     finalStep === "remediate_same_level"
-      ? "חיזוק ממוקד לפני קידום"
+      ? "לחזק לפני שמתקדמים"
       : outQuestions >= TOPIC_REC_MIN_ACTIONABLE_QUESTIONS
-        ? "חיזוק ממוקד לפי הדוח"
-        : "לאסוף עוד מידע לפני החלטה";
+        ? "לחזק לפי מה שחוזר"
+        : "צריך עוד שאלות";
   if (suppressRegisteredGradeStrengthenCopy(gradeRelation)) {
     finalLabelRaw = resolveGradeAwareRecommendationStepLabelHe(gradeRelation, finalLabelRaw);
   }
@@ -2228,8 +2228,8 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
     (suppressRegisteredGradeStrengthenCopy(gradeRelation)
       ? resolveGradeAwareRecommendationStepLabelHe(gradeRelation, "")
       : finalStep === "remediate_same_level"
-        ? "חיזוק ממוקד לפני קידום"
-        : "חיזוק ממוקד לפי הדוח");
+        ? "לחזק לפני שמתקדמים"
+        : "לחזק לפי מה שחוזר");
   const conclusionStrength = cannotConcludeYet
     ? "withheld"
     : canonicalDecisionTier >= 3
@@ -3084,6 +3084,19 @@ function buildNextPeriodGoalsFromV2(baseReport) {
       return `ב${SUBJECT_LABEL_HE[u.subjectId] || u.subjectId}: ${rewriteParentRecommendationForDetailedHe(String(goal))}`;
     });
   return { itemsHe: itemsHe.length ? itemsHe : [nextPeriodGoalsV2EmptyFallbackHe()] };
+}
+
+/**
+ * Transparency window only — built from unfiltered base while central report uses filtered base.
+ * @param {Record<string, unknown>|null|undefined} detailed
+ * @param {Record<string, unknown>|null|undefined} rawBaseReport
+ */
+export function attachOutOfGradeTransparencyFromRawBase(detailed, rawBaseReport) {
+  if (!detailed || typeof detailed !== "object") return detailed;
+  return {
+    ...detailed,
+    outOfGradePracticeTransparency: buildOutOfGradePracticeTransparency(rawBaseReport),
+  };
 }
 
 /**

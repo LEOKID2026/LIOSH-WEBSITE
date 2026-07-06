@@ -5,8 +5,7 @@
 export const PARENT_COPILOT_PHASE_A_SURFACE_TAG = "phaseA-no-layout-change";
 import React, { useMemo } from "react";
 import {
-  buildSubjectParentLetter,
-  buildSubjectParentLetterCompact,
+  buildSubjectParentLetterDetailedPhase1,
   rewriteParentRecommendationForDetailedHe,
 } from "../utils/detailed-report-parent-letter-he";
 import {
@@ -40,8 +39,6 @@ import {
   PARENT_BULLETS_EMPTY_WITH_VOLUME_HE,
   stripKnownParentReportLeakageHe,
 } from "../utils/parent-data-presence.js";
-import { isDuplicateParentReportText } from "../utils/parent-report-text-dedupe.js";
-
 const PR1_RETENTION_LABEL_HE = {
   low: "נמוך",
   moderate: "בינוני",
@@ -50,11 +47,33 @@ const PR1_RETENTION_LABEL_HE = {
 };
 
 const PR1_TRANSFER_LABEL_HE = {
-  not_ready: "לא עכשיו",
-  limited: "מוגבלת",
-  emerging: "מתחילה",
-  ready: "מוכנים לשלב הבא",
+  not_ready: "עדיף לחזק קודם את הנושא הנוכחי.",
+  limited: "אפשר לנסות מעט, רק באותו נושא.",
+  emerging: "אפשר להתחיל בצעד קטן, אבל לא לקפוץ רמה.",
+  ready: "אפשר לנסות צעד מתקדם קטן.",
 };
+
+const PHASE1_WHAT_NOT_TO_DO_EXACT = Object.freeze({
+  "עלייה מהירה מדי ברמה; ערבוב נושאים; משוב כללי בלי דוגמה נגדית":
+    "לא לקפוץ רמה מהר מדי, לא לערבב כמה נושאים יחד, ולא להסתפק במשוב כללי בלי דוגמה.",
+  "קפיצה לרמה גבוהה; ערבוב נושאים; משוב כללי בלי דוגמה נגדית":
+    "לא לקפוץ לרמה גבוהה מדי, לא לערבב כמה נושאים יחד, ולא להסתפק במשוב כללי בלי דוגמה.",
+  "עלייה מהירה מדי ברמה; ערבוב נושאים":
+    "לא לקפוץ לרמה גבוהה מדי ולא לערבב כמה נושאים יחד.",
+  "קפיצה לרמה גבוהה; ערבוב נושאים":
+    "לא לקפוץ לרמה גבוהה מדי ולא לערבב כמה נושאים יחד.",
+});
+
+function phase1WhatNotToDoDisplayHe(raw) {
+  const t = String(raw || "").trim();
+  return PHASE1_WHAT_NOT_TO_DO_EXACT[t] || t;
+}
+
+function formatTopicQuestionCountHe(count) {
+  const n = Math.max(0, Math.round(Number(count) || 0));
+  if (n === 1) return "1 שאלה";
+  return `${n} שאלות`;
+}
 
 /** PR1 — טקסט הורה גלוי בלבד; לא משנה payload. */
 function pr1CrossSubjectRetentionDisplayHe(raw) {
@@ -71,7 +90,7 @@ function pr1CrossSubjectTransferDisplayHe(raw) {
     .trim()
     .toLowerCase()
     .replace(/-/g, "_");
-  return PR1_TRANSFER_LABEL_HE[k] || "לא ברור";
+  return PR1_TRANSFER_LABEL_HE[k] || "עדיין אין מספיק מידע כדי לקבוע.";
 }
 
 /**
@@ -555,21 +574,22 @@ function trendOverlapsDiagnosis(diagnosisHe, trendNarrativeHe) {
 /** Parent-facing extras only — inline, no accordion. */
 export function SubjectPhase3Insights({ sp, compact }) {
   void compact;
-  const letter = useMemo(() => buildSubjectParentLetter(sp), [sp]);
+  const letter = useMemo(() => buildSubjectParentLetterDetailedPhase1(sp), [sp]);
   const rows = [];
   const dr = String(sp?.dominantLearningRiskLabelHe || "").trim();
-  if (dr) rows.push({ k: "מה חוזר בטעויות", v: pr1ParentVisibleTextHe(dr) });
+  if (dr) rows.push({ k: "מה כדאי לשים לב אליו", v: pr1ParentVisibleTextHe(dr) });
   const ds = String(sp?.dominantSuccessPatternLabelHe || "").trim();
   if (ds) rows.push({ k: "מה עובד טוב", v: pr1ParentVisibleTextHe(ds) });
-  const wnt = String(sp?.whatNotToDoHe || "").trim();
+  const wntRaw = String(sp?.whatNotToDoHe || "").trim();
+  const wnt = phase1WhatNotToDoDisplayHe(wntRaw);
   if (wnt && (!letter?.closing || !String(letter.closing).includes(wnt.slice(0, 24)))) {
-    rows.push({ k: "מה לא לעשות", v: truncateHe(pr1ParentVisibleTextHe(wnt), 200) });
+    rows.push({ k: "ממה כדאי להימנע עכשיו", v: truncateHe(pr1ParentVisibleTextHe(wnt), 200) });
   }
   const trLine = String(transferReadinessLineHe(sp) || "").trim();
   const trMapped = pr1CrossSubjectTransferDisplayHe(String(sp?.subjectTransferReadiness || "").trim());
-  const trCombined = pr1ParentVisibleTextHe(trLine || (trMapped !== "לא ברור" ? trMapped : ""));
+  const trCombined = pr1ParentVisibleTextHe(trLine || (trMapped !== "עדיין אין מספיק מידע כדי לקבוע." ? trMapped : ""));
   if (trCombined) {
-    rows.push({ k: "האם זה נשמר בשאלה חדשה", v: truncateHe(trCombined, 160) });
+    rows.push({ k: "האם אפשר להתקדם", v: truncateHe(trCombined, 160) });
   }
 
   if (!rows.length) return null;
@@ -779,7 +799,7 @@ export function SubjectTopicTierGroups({ sp, hideTopicRowKeysForTiers }) {
                   </p>
                 ) : null}
                 <p className="pr-detailed-body-text text-sm m-0 mt-1.5 text-white/[0.88]">
-                  {row.overviewStatusHe} · {row.questions} שאלות · דיוק {row.accuracy}%
+                  {row.overviewStatusHe} · {formatTopicQuestionCountHe(row.questions)} · דיוק {row.accuracy}%
                 </p>
               </div>
             ))}
@@ -807,14 +827,10 @@ export function SubjectPrimaryActionBlock({ actionHe }) {
 
 /** פירוט מקוצר למקצוע — רק שדות מה payload הקיים (ללא מנוע נפרד) */
 export function SubjectSummaryBlock({ sp }) {
-  const L = useMemo(() => buildSubjectParentLetterCompact(sp), [sp]);
+  const L = useMemo(() => buildSubjectParentLetterDetailedPhase1(sp), [sp]);
   const riskChips = useMemo(() => subjectMajorRiskLabelsHe(sp?.majorRiskFlagsAcrossRows, 4), [sp]);
   const q = Number(sp?.subjectQuestionCount) || 0;
   const a = Number(sp?.subjectAccuracy) || 0;
-  // Wave 2 Fix 2.2: keep a single home-action callout per subject in the summary
-  // report too — `SubjectPrimaryActionBlock` is the canonical one.
-  const showLetterHomeAction =
-    Boolean(L.homeAction) && !isDuplicateParentReportText(L.homeAction, sp?.primaryParentActionHe);
   return (
     <div className="pr-detailed-summary-subject pr-detailed-subject-stack min-w-0">
       <div className="pr-detailed-subject-heading">
@@ -827,15 +843,8 @@ export function SubjectSummaryBlock({ sp }) {
       </div>
       <div className="pr-detailed-subject-inner space-y-2.5 pt-3">
         <SubjectPhase3Insights sp={sp} compact />
-        <p className="pr-detailed-body-text text-sm leading-relaxed m-0">{L.opening}</p>
-        {L.middle ? (
-          <p className="pr-detailed-body-text text-sm leading-relaxed m-0 text-white/[0.86]">{L.middle}</p>
-        ) : null}
-        {showLetterHomeAction ? (
-          <div className="parent-surface-only rounded-lg border border-amber-400/28 bg-amber-950/14 px-3 py-2.5">
-            <p className="pr-detailed-mini-heading font-bold text-amber-100/95 mb-1 text-sm">איך כדאי לעבוד על זה</p>
-            <p className="pr-detailed-body-text text-sm leading-relaxed m-0">{L.homeAction}</p>
-          </div>
+        {L.opening ? (
+          <p className="pr-detailed-body-text text-sm leading-relaxed m-0">{L.opening}</p>
         ) : null}
         {riskChips.length ? (
           <div className="flex flex-wrap gap-1">
@@ -849,7 +858,6 @@ export function SubjectSummaryBlock({ sp }) {
             ))}
           </div>
         ) : null}
-        <p className="pr-detailed-body-text text-sm leading-relaxed m-0 text-white/82">{L.closing}</p>
       </div>
     </div>
   );

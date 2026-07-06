@@ -6,7 +6,7 @@ import Layout from "../../components/Layout";
 import { ParentReportImportantDisclaimer } from "../../components/ParentReportImportantDisclaimer";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
 import {
-  buildSubjectParentLetter,
+  buildSubjectParentLetterDetailedPhase1,
   buildTopicRecommendationNarrative,
 } from "../../utils/detailed-report-parent-letter-he";
 import {
@@ -14,16 +14,15 @@ import {
   OutOfGradePracticeSection,
   ParentAssignedActivitiesSection,
   SubjectPhase3Insights,
-  SubjectPrimaryActionBlock,
   SubjectSummaryBlock,
   SubjectTopicTierGroups,
   TopicRecommendationExplainStrip,
 } from "../../components/parent-report-detailed-surface.jsx";
 import {
-  buildParentSurfaceHomeActionsHe,
   buildParentSurfaceWhatToNoticeHe,
   scrubRepeatedBoilerplateFromSnapshotHe,
 } from "../../utils/parent-report-surface/index.js";
+import { buildRegularReportViewModel } from "../../lib/parent-ui/parent-report-regular-display.js";
 import ParentReportDataHealthNote from "../../components/parent/ParentReportDataHealthNote.jsx";
 import PortalLoadingPanel from "../../components/ui/PortalLoadingPanel.jsx";
 import {
@@ -38,19 +37,17 @@ import {
 } from "../../lib/parent-ui/parent-report-site-bright-theme.css.js";
 import { useParentReportBrightPageBackground } from "../../lib/parent-ui/use-parent-report-bright-page-bg.js";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
-import { ParentDiagnosticExplanationBlock } from "../../components/parent-diagnostic-explanation-block.jsx";
 import { normalizeParentFacing } from "../../components/parent/ParentReportParentSections.jsx";
 import { PARENT_BULLETS_EMPTY_WITH_VOLUME_HE } from "../../utils/parent-data-presence.js";
 import {
   PARENT_REPORT_PERIOD_EMPTY_STATE_HE,
   subjectProfileHasPracticeEvidence,
 } from "../../utils/parent-report-subject-visibility.js";
-import { isDuplicateParentReportText } from "../../utils/parent-report-text-dedupe.js";
 import ParentCopilotShell from "../../components/parent-copilot/parent-copilot-shell.jsx";
 import { ParentReportInsight } from "../../components/ParentReportInsight.jsx";
 import {
-  enrichDetailedParentReportWithParentAi,
-  getDeterministicDetailedParentAiExplanation,
+  enrichParentReportWithParentAi,
+  getDeterministicParentAiExplanationFromParentReportV2,
 } from "../../utils/parent-report-ai/parent-report-ai-adapter";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
 import { postParentCopilotTurn } from "../../lib/parent-client/copilot-turn-api.js";
@@ -148,49 +145,15 @@ function GoalItemCards({ items, windowTotalQuestions = 0 }) {
   );
 }
 
-/** מכתב מקצועי להורה — מפרש את אותו payload בלי כותרות מערכת */
+/** מכתב מקצועי להורה — שלב ביצוע 1: ניסוח קצר בלבד */
 function SubjectParentLetter({ sp }) {
-  const letter = useMemo(() => buildSubjectParentLetter(sp), [sp]);
-  const primaryWeaknessExplanation = sp?.topWeaknesses?.[0]?.parentDiagnosticExplanationV1 || null;
-  // Wave 2 Fix 2.1: `SubjectPrimaryActionBlock` ("מה כדאי לעשות במקצוע הזה") is the
-  // single canonical home-action callout per subject. Only keep the letter's own
-  // "איך כדאי לעבוד על זה" line when it says something meaningfully different.
-  const showLetterHomeAction =
-    Boolean(letter.homeAction) &&
-    !isDuplicateParentReportText(letter.homeAction, sp?.primaryParentActionHe);
+  const letter = useMemo(() => buildSubjectParentLetterDetailedPhase1(sp), [sp]);
+  if (!letter.opening) return null;
   return (
     <div className="pr-detailed-subject-letter space-y-3 rounded-xl border border-white/12 bg-gradient-to-br from-white/[0.06] to-white/[0.02] p-3 md:p-4">
-      {letter.opening ? (
-        <p className="pr-detailed-body-text text-sm md:text-[0.95rem] leading-relaxed m-0 text-white/[0.91]">
-          {letter.opening}
-        </p>
-      ) : null}
-      {letter.diagnosisHe ? (
-        <div className="space-y-0">
-          <p className="pr-detailed-body-text text-sm md:text-[0.95rem] leading-relaxed m-0 text-white/[0.91]">
-            {letter.diagnosisHe}
-          </p>
-          <ParentDiagnosticExplanationBlock
-            explanationV1={primaryWeaknessExplanation}
-            className="pr-detailed-diagnostic-explanation"
-          />
-        </div>
-      ) : null}
-      {showLetterHomeAction ? (
-        <div className="parent-surface-only rounded-lg border border-amber-400/28 bg-amber-950/14 px-3 py-2.5">
-          <p className="pr-detailed-mini-heading font-bold text-amber-100/95 mb-1 text-sm">
-            איך כדאי לעבוד על זה
-          </p>
-          <p className="pr-detailed-body-text text-sm md:text-[0.95rem] leading-relaxed m-0 text-white/[0.91]">
-            {letter.homeAction}
-          </p>
-        </div>
-      ) : null}
-      {letter.closing ? (
-        <p className="pr-detailed-body-text text-sm md:text-[0.95rem] leading-relaxed m-0 text-white/[0.91]">
-          {letter.closing}
-        </p>
-      ) : null}
+      <p className="pr-detailed-body-text text-sm md:text-[0.95rem] leading-relaxed m-0 text-white/[0.91]">
+        {letter.opening}
+      </p>
     </div>
   );
 }
@@ -268,6 +231,8 @@ export default function ParentReportDetailedPage() {
   const parentStudentId = remoteReportSource.studentId;
 
   const [payload, setPayload] = useState(null);
+  /** Same V2 base report as regular parent report — drives ParentReportInsight 1:1. */
+  const [baseReport, setBaseReport] = useState(/** @type {Record<string, unknown> | null} */ (null));
   const [loading, setLoading] = useState(true);
   const [displayMode, setDisplayMode] = useState("full");
   /** Same shape as short report `report.parentAiExplanation` — populated asynchronously. */
@@ -391,6 +356,7 @@ export default function ParentReportDetailedPage() {
                   : "נדרשת התחברות כהורה — השתמשו בכניסת הורה ונסו שוב."
               );
               setPayload(null);
+              setBaseReport(null);
               setLoading(false);
             }
             return;
@@ -425,6 +391,7 @@ export default function ParentReportDetailedPage() {
                       : "לא ניתן לטעון את דוח ההורה.";
               setParentReportError(msg);
               setPayload(null);
+              setBaseReport(null);
               setLoading(false);
             }
             return;
@@ -436,11 +403,13 @@ export default function ParentReportDetailedPage() {
             if (!cancelled) {
               setParentReportError("לא ניתן לבנות את הדוח המקיף מהנתונים שהתקבלו.");
               setPayload(null);
+              setBaseReport(null);
               setLoading(false);
             }
             return;
           }
           if (!cancelled) {
+            setBaseReport(out.base);
             setPayload(enrichDetailedPayloadWithUiAuthority(out.detailed, out.base));
             setParentReportError("");
             setLoading(false);
@@ -462,6 +431,7 @@ export default function ParentReportDetailedPage() {
                 : "לא ניתן לטעון את הדוח המקיף כרגע."
             );
             setPayload(null);
+            setBaseReport(null);
             setLoading(false);
           }
         }
@@ -475,6 +445,7 @@ export default function ParentReportDetailedPage() {
     }
 
     setPayload(null);
+    setBaseReport(null);
     setParentReportError("");
     setLoading(false);
     return undefined;
@@ -482,39 +453,60 @@ export default function ParentReportDetailedPage() {
 
   useEffect(() => {
     if (typeof window === "undefined") return undefined;
-    if (!payload || typeof payload !== "object") {
+    if (!baseReport || typeof baseReport !== "object") {
       setParentAiExplanation(null);
       return undefined;
     }
-    const tq = Number(payload.overallSnapshot?.totalQuestions) || 0;
-    const tm = Number(payload.overallSnapshot?.totalTime) || 0;
+    const tq = Number(baseReport.summary?.totalQuestions) || 0;
+    const tm = Number(baseReport.summary?.totalTimeMinutes) || 0;
     if (tq === 0 && tm === 0) {
       setParentAiExplanation(null);
       return undefined;
     }
-    /** PDF / print-safe baseline before async enrich resolves (Phase C.1). */
-    setParentAiExplanation(getDeterministicDetailedParentAiExplanation(payload));
+    const snapshotAt = baseReport.generatedAt;
+    const syncInsight = getDeterministicParentAiExplanationFromParentReportV2(baseReport);
+    if (syncInsight) {
+      setParentAiExplanation(syncInsight);
+    }
     let cancelled = false;
     void (async () => {
       try {
-        const { parentAiExplanation: next } = await enrichDetailedParentReportWithParentAi(payload, {});
+        const { parentAiExplanation: next } = await enrichParentReportWithParentAi(baseReport, {});
         if (cancelled) return;
-        if (next?.ok && next.text) setParentAiExplanation(next);
+        setParentAiExplanation((prev) => {
+          if (baseReport.generatedAt !== snapshotAt) return prev;
+          return next?.ok ? next : syncInsight ?? prev;
+        });
       } catch {
-        if (!cancelled) setParentAiExplanation(getDeterministicDetailedParentAiExplanation(payload));
+        if (!cancelled) {
+          setParentAiExplanation((prev) => syncInsight ?? prev);
+        }
       }
     })();
     return () => {
       cancelled = true;
     };
-  }, [payload]);
+  }, [baseReport]);
+
+  const regularView = useMemo(
+    () => (baseReport ? buildRegularReportViewModel(baseReport) : null),
+    [baseReport]
+  );
+  const regularReportDisplay = regularView?.display ?? null;
+  const regularReportAiExplanation = useMemo(
+    () =>
+      baseReport && parentAiExplanation
+        ? regularReportDisplay?.transformAiExplanation(parentAiExplanation) ?? parentAiExplanation
+        : parentAiExplanation ?? null,
+    [baseReport, parentAiExplanation, regularReportDisplay]
+  );
+  const serverHomeRecommendationsListHe = useMemo(() => {
+    const recs = baseReport?.parentFacing?.homeRecommendations;
+    return Array.isArray(recs) ? recs.map((x) => String(x || "").trim()).filter(Boolean) : [];
+  }, [baseReport]);
 
   const whatToNoticeItems = useMemo(
     () => (payload ? buildParentSurfaceWhatToNoticeHe(payload) : []),
-    [payload]
-  );
-  const defaultHomeItems = useMemo(
-    () => (payload ? buildParentSurfaceHomeActionsHe(payload) : []),
     [payload]
   );
   const topicRecommendationNarratives = useMemo(() => {
@@ -1504,10 +1496,7 @@ export default function ParentReportDetailedPage() {
               font-weight: 700 !important;
             }
 
-            /* Parent AI insight — screen only, never print/PDF */
-            .parent-report-parent-ai-insight {
-              display: none !important;
-            }
+            /* Parent AI insight — same visibility as regular parent report print */
 
             .internal-only {
               display: none !important;
@@ -1588,9 +1577,10 @@ export default function ParentReportDetailedPage() {
                   </p>
                 </header>
 
-                <div className="no-pdf">
-                  <ParentReportInsight explanation={parentAiExplanation} />
-                </div>
+                <ParentReportInsight
+                  explanation={regularReportAiExplanation}
+                  excludeHomeTipTextsHe={serverHomeRecommendationsListHe}
+                />
 
                 {/* C — מה עשינו בתקופה הזאת */}
                 <SectionCard title="מה עשינו בתקופה הזאת" compact={displayMode === "summary"}>
@@ -1700,15 +1690,6 @@ export default function ParentReportDetailedPage() {
                   </SectionCard>
                 ) : null}
 
-                {defaultHomeItems.length > 0 ? (
-                  <SectionCard title="מה מומלץ לעשות בבית" compact={displayMode === "summary"}>
-                    <PlanItemCards
-                      items={defaultHomeItems}
-                      windowTotalQuestions={Number(payload.overallSnapshot?.totalQuestions) || 0}
-                    />
-                  </SectionCard>
-                ) : null}
-
                 {/* D — אותו payload; מלא/מקוצר; כותרת אזור + לכל מקצוע כותרת + כרטיסים פנימיים בלבד */}
                 {displayMode === "summary" ? (
                   <section
@@ -1726,7 +1707,6 @@ export default function ParentReportDetailedPage() {
                         <div key={sp.subject} className="space-y-2">
                           <SubjectSummaryBlock sp={sp} />
                           <SubjectTopicTierGroups sp={sp} />
-                          <SubjectPrimaryActionBlock actionHe={sp.primaryParentActionHe} />
                         </div>
                       ))}
                       {!visibleSubjectProfiles.length ? (
@@ -1765,7 +1745,6 @@ export default function ParentReportDetailedPage() {
                                 new Set((sp.topicRecommendations || []).map((tr) => tr.topicRowKey))
                               }
                             />
-                            <SubjectPrimaryActionBlock actionHe={sp.primaryParentActionHe} />
                             {sp.evidenceExamples?.length ? (
                               <div className="pr-detailed-tier-examples">
                                 <p className="pr-detailed-body-text text-sm m-0 mb-2 text-white/[0.82]">

@@ -18,25 +18,25 @@ export const PARENT_TOPIC_TIER = Object.freeze({
 });
 
 const TIER_LABEL_HE = Object.freeze({
-  strong: "חזק",
-  monitor: "במעקב",
-  strengthen: "לחיזוק",
+  strong: "נראה חזק",
+  monitor: "כדאי לעקוב",
+  strengthen: "כדאי לחזק",
   needs_guidance: "כדאי ללוות",
-  clear_gap: "כדאי לחזק",
-  low_evidence: "מעט דוגמאות",
-  advanced_practice: "תרגול מתקדם",
+  clear_gap: "דורש חיזוק",
+  low_evidence: "מעט שאלות",
+  advanced_practice: "מעל רמת הכיתה",
   foundation_practice: "יסודות קודמים",
 });
 
 const TIER_SECTION_TITLE_HE = Object.freeze({
   strong: "נושאים חזקים",
-  monitor: "נושאים במעקב",
-  strengthen: "נושאים לחיזוק",
-  needs_guidance: "נושאים שכדאי ללוות",
+  monitor: "נושאים שכדאי לעקוב אחריהם",
+  strengthen: "נושאים שכדאי לחזק",
+  needs_guidance: "נושאים שכדאי ללוות בתרגול",
   clear_gap: "נושאים שכדאי לחזק",
-  low_evidence: "נושאים עם מעט נתונים",
-  advanced_practice: "תרגול מתקדם מעל הכיתה הרשומה",
-  foundation_practice: "יסודות קודמים",
+  low_evidence: "נושאים עם מעט שאלות",
+  advanced_practice: "תרגול מעל רמת הכיתה",
+  foundation_practice: "תרגול יסודות קודמים",
 });
 
 const TIER_PLACEMENT_KIND = Object.freeze({

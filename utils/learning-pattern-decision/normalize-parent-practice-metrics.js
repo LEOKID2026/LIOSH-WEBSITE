@@ -216,6 +216,34 @@ export function normalizeParentVisibleMetrics(raw = {}, unit = null) {
  * @param {ParentVisibleMetrics} metrics
  * @param {string} topicName
  */
+function formatQuestionsTextHe(n) {
+  const q = Math.max(0, Math.round(Number(n) || 0));
+  if (q === 1) return "שאלה אחת";
+  return `${q} שאלות`;
+}
+
+function formatCorrectTextHe(n) {
+  const c = Math.max(0, Math.round(Number(n) || 0));
+  if (c === 1) return "תשובה אחת נכונה";
+  return `${c} תשובות נכונות`;
+}
+
+function formatWrongTextHe(n) {
+  const w = Math.max(0, Math.round(Number(n) || 0));
+  if (w === 1) return "תשובה אחת שגויה";
+  return `${w} תשובות שגויות`;
+}
+
+function hasReliableAccuracyHe(metrics) {
+  const q = Math.max(0, Math.round(Number(metrics?.questions) || 0));
+  if (q <= 0) return false;
+  const acc = Math.round(Number(metrics?.accuracy) || 0);
+  const c = Math.max(0, Math.round(Number(metrics?.correct) || 0));
+  const w = Math.max(0, Math.round(Number(metrics?.wrong) || 0));
+  if (acc <= 0 && c === 0 && w === q) return false;
+  return Number.isFinite(acc);
+}
+
 export function buildParentMetricsDataLineHe(metrics, topicName) {
   const q = metrics.questions;
   const topic = String(topicName || "הנושא").trim() || "הנושא";
@@ -223,23 +251,21 @@ export function buildParentMetricsDataLineHe(metrics, topicName) {
 
   if (q <= 0) return "";
 
-  if (q <= 2) {
-    return `הנתונים: נפתרו ${q} שאלות בנושא ${topic}${acc > 0 ? `, דיוק ${acc}%` : ""}.`;
+  const qText = formatQuestionsTextHe(q);
+
+  if (metrics.canShowCorrectWrongBreakdown) {
+    const { correct: c, wrong: w } = metrics;
+    let line = `הנתונים: נפתרו ${qText} בנושא ${topic}, מתוכן ${formatCorrectTextHe(c)} ו־${formatWrongTextHe(w)}.`;
+    if (hasReliableAccuracyHe(metrics) && acc > 0) {
+      line += ` הדיוק הוא ${acc}%.`;
+    }
+    return line;
   }
 
-  if (q <= 4) {
-    return `הנתונים: בנושא ${topic} נפתרו ${q} שאלות${acc > 0 ? `, דיוק ${acc}%` : ""}.`;
+  if (hasReliableAccuracyHe(metrics) && acc > 0) {
+    return `הנתונים: נפתרו ${qText} בנושא ${topic}, והדיוק הוא ${acc}%.`;
   }
-
-  if (!metrics.canShowCorrectWrongBreakdown) {
-    return `הנתונים: הילד/ה פתר/ה ${q} שאלות בנושא ${topic}, ברמת דיוק של ${acc}%.`;
-  }
-
-  const { correct: c, wrong: w } = metrics;
-  if (w > 0) {
-    return `הנתונים: הילד/ה פתר/ה ${q} שאלות בנושא ${topic}, מתוכן ${c} נכונות ו-${w} שגויות.`;
-  }
-  return `הנתונים: הילד/ה פתר/ה ${q} שאלות בנושא ${topic}, מתוכן ${c} נכונות.`;
+  return `הנתונים: נפתרו ${qText} בנושא ${topic}.`;
 }
 
 /**

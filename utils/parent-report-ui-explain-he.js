@@ -427,7 +427,7 @@ export function buildTopicDiagnosticExplainSectionsHe(row) {
       identified: shortReportDiagnosticsParentVisibleHe(identified),
       data: shortReportDiagnosticsParentVisibleHe(`הנתונים: ${engineCopy.dataHe}`),
       pattern: "",
-      meaning: shortReportDiagnosticsParentVisibleHe(`משמעות: ${engineCopy.whyHe}`),
+      meaning: shortReportDiagnosticsParentVisibleHe(`מה זה אומר: ${engineCopy.whyHe}`),
       action: shortReportDiagnosticsParentVisibleHe(engineCopy.actionHe),
     };
   }
@@ -504,10 +504,10 @@ export function transferReadinessLineHe(rowOrRec) {
   const tr = String(src.transferReadiness || "").trim();
   if (!tr || tr === "unknown") return "";
   const map = {
-    not_ready: "מעבר למתקדם: לא עכשיו — קודם חיזוק בתרגול רגיל.",
-    limited: "מעבר: רק ניסיונות קטנים באותו נושא.",
-    emerging: "מעבר: אפשר צעד קטן בתוך הנושא בלבד.",
-    ready: "מעבר: נראה מוכנות זהירה לצעד הבא.",
+    not_ready: "עדיף לחזק קודם את הנושא הנוכחי לפני שמעלים קושי.",
+    limited: "אפשר לנסות מעט, אבל רק באותו נושא ולא בכמה נושאים יחד.",
+    emerging: "אפשר להתחיל בצעד קטן בתוך אותו נושא.",
+    ready: "אפשר לנסות צעד מתקדם קטן, בזהירות.",
   };
   return truncateHe(map[tr] || "", 130);
 }

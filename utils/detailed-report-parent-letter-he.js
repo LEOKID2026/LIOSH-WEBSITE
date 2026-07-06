@@ -473,6 +473,111 @@ function applySubjectNarrativeGuardrails(sp, letter) {
   };
 }
 
+/** @param {Record<string, unknown>|null|undefined} topic */
+function topicLetterSlotFromPriorityTopic(topic) {
+  if (!topic || typeof topic !== "object") return null;
+  const raw = String(topic.topicLabelKey || topic.displayName || topic.topicName || "").trim();
+  const core = displayTopicCoreHe(raw) || raw.replace(/^[^—]+—\s*/, "").trim();
+  if (!core) return null;
+  const patternRaw = topic.detectedPattern ? String(topic.detectedPattern).trim() : "";
+  return {
+    topic: core,
+    questions: Number(topic.questions) || 0,
+    accuracy: Math.round(Number(topic.accuracy) || 0),
+    pattern: patternRaw || null,
+  };
+}
+
+/** @param {Record<string, unknown>|null|undefined} sp */
+function collectSubjectLetterTopicSlots(sp) {
+  const contract = readSubjectEngineContract(sp);
+  if (contract?.priorityTopics?.length) {
+    return contract.priorityTopics
+      .map((t) => topicLetterSlotFromPriorityTopic(t))
+      .filter(Boolean);
+  }
+
+  /** @type {{ topic: string, questions: number, accuracy: number, pattern: string|null }[]} */
+  const out = [];
+  const seen = new Set();
+  const pushRow = (row) => {
+    if (!row?.topic || seen.has(row.topic)) return;
+    seen.add(row.topic);
+    out.push(row);
+  };
+
+  for (const tr of Array.isArray(sp?.topicRecommendations) ? sp.topicRecommendations : []) {
+    const name = String(tr?.narrativeTitleHe || tr?.displayName || "").trim();
+    const q = Number(tr?.questions) || 0;
+    if (!name || q <= 0) continue;
+    const pattern =
+      tr?.detectedPattern != null
+        ? String(tr.detectedPattern).trim()
+        : tr?.taxonomy?.patternHe
+          ? String(tr.taxonomy.patternHe).trim()
+          : null;
+    pushRow({
+      topic: displayTopicCoreHe(name) || name.replace(/^[^—]+—\s*/, "").trim(),
+      questions: q,
+      accuracy: Math.round(Number(tr?.accuracy) || 0),
+      pattern: pattern || null,
+    });
+  }
+
+  for (const w of Array.isArray(sp?.topWeaknesses) ? sp.topWeaknesses : []) {
+    const name = String(w?.labelHe || w?.displayName || "").trim();
+    const q = Number(w?.questions) || 0;
+    if (!name || q <= 0) continue;
+    pushRow({
+      topic: displayTopicCoreHe(name) || name.replace(/^[^—]+—\s*/, "").trim(),
+      questions: q,
+      accuracy: Math.round(Number(w?.accuracy) || 0),
+      pattern: null,
+    });
+  }
+
+  return out;
+}
+
+/**
+ * מכתב מקצוע קצר — שלב ביצוע 1 (דוח מקיף בלבד, תצוגה).
+ * @param {Record<string, unknown>|null|undefined} sp
+ */
+export function buildSubjectParentLetterDetailedPhase1(sp) {
+  const lab = String(sp?.subjectLabelHe || "המקצוע").trim();
+  const subjQ = Number(sp?.subjectQuestionCount) || 0;
+  const emptyTail = { diagnosisHe: "", homeAction: "", closing: "", goingWell: "", fragile: "", reliabilityNoteHe: null };
+
+  if (subjQ < 5) {
+    return {
+      ...emptyTail,
+      opening: `יש מעט תרגול ב${lab} בתקופה הזאת, ולכן עדיין אי אפשר להסיק מסקנה רחבה. אפשר להמשיך בתרגול קצר ולבדוק אם הכיוון נשמר אחרי עוד שאלות.`,
+    };
+  }
+
+  const slots = collectSubjectLetterTopicSlots(sp);
+  if (!slots.length) {
+    return {
+      ...emptyTail,
+      opening: `יש תרגול ב${lab}, אבל עדיין אין מספיק פירוט לפי נושא כדי להציג מסקנה מדויקת. כדאי להמשיך בתרגול קצר, ובדוח הבא יהיה קל יותר לראות מה חוזר.`,
+    };
+  }
+
+  if (slots.length >= 2) {
+    const t0 = slots[0];
+    const t1 = slots[1];
+    let opening = `ב${lab} כדאי להתמקד קודם ב${t0.topic}. נפתרו ${t0.questions} שאלות, והדיוק הוא ${t0.accuracy}%.`;
+    opening += ` נושא נוסף שכדאי לשים לב אליו הוא ${t1.topic}, עם ${t1.questions} שאלות ודיוק של ${t1.accuracy}%.`;
+    if (t0.pattern) opening += ` הדפוס המרכזי שנראה: ${t0.pattern}.`;
+    return { ...emptyTail, opening };
+  }
+
+  const t0 = slots[0];
+  let opening = `ב${lab} כדאי להתמקד כרגע ב${t0.topic}. נפתרו ${t0.questions} שאלות, והדיוק הוא ${t0.accuracy}%.`;
+  if (t0.pattern) opening += ` הדפוס המרכזי שנראה: ${t0.pattern}.`;
+  return { ...emptyTail, opening };
+}
+
 export function buildSubjectParentLetterCompact(sp) {
   const full = buildSubjectParentLetter(sp, { compact: true });
   const lead = [full.opening, full.diagnosisHe].filter(Boolean).join(" ").replace(/\s+/g, " ").trim();
