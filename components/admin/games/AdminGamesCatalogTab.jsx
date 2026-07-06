@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
 import { adminAuthFetch } from "../../../lib/admin-portal/use-admin-session.js";
 
 const CATEGORY_LABELS = {
@@ -81,6 +82,11 @@ export default function AdminGamesCatalogTab({ accessToken }) {
         <h2 className="text-lg font-bold text-white">ניהול משחקים (21)</h2>
         <p className="text-sm text-white/60 mt-1">
           כיבוי משחק בודד — מסתיר רק אותו. כיבוי כל המשחקים בקטגוריה — מסתיר את כרטיס הקטגוריה.
+        </p>
+        <p className="text-sm mt-2">
+          <Link href="/admin/games/leo-miners" className="text-amber-200 hover:text-amber-100 underline">
+            Leo Miners — הגדרות משחק מלאות (כלכלה, caps, הפעלה)
+          </Link>
         </p>
       </div>
 
