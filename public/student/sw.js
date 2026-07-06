@@ -17,8 +17,23 @@ const GENERATED = self.__STUDENT_OFFLINE_PRECACHE__ || {
 };
 
 const CACHE_NAME = STUDENT_OFFLINE_FULL_SW_ENABLED
-  ? "student-offline-v8-full"
+  ? "student-offline-v9-full"
   : "student-offline-v1";
+
+/** Cache API only supports full 200 responses — not 206 Partial Content (audio/video range). */
+function isCacheableResponse(response) {
+  if (!response) return false;
+  if (response.status !== 200) return false;
+  if (response.type !== "basic" && response.type !== "cors") return false;
+  return true;
+}
+
+function safeCachePut(cache, request, response) {
+  if (!isCacheableResponse(response)) return Promise.resolve();
+  return cache.put(request, response).catch((err) => {
+    console.warn("[SW student] cache.put skipped:", request?.url || request, err?.message || err);
+  });
+}
 const CACHE_PREFIX = "student-";
 
 const OFFLINE_HTML = "/student/offline.html";
@@ -156,9 +171,9 @@ async function cacheFirstAllowlisted(request, allowRuntimeCache) {
   } catch (_) {}
 
   const response = await fetch(request);
-  if (response.ok && allowRuntimeCache) {
+  if (allowRuntimeCache && isCacheableResponse(response)) {
     const clone = response.clone();
-    caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+    caches.open(CACHE_NAME).then((cache) => safeCachePut(cache, request, clone));
   }
   return response;
 }
@@ -205,9 +220,9 @@ async function handleStudentNavigation(request) {
 
   try {
     const response = await fetch(request);
-    if (response.ok) {
+    if (isCacheableResponse(response)) {
       const clone = response.clone();
-      caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+      caches.open(CACHE_NAME).then((cache) => safeCachePut(cache, request, clone));
     }
     return response;
   } catch (_err) {
@@ -268,8 +283,8 @@ async function precacheUrls(urls, batchSize = 6) {
         if (existing) return;
         try {
           const response = await fetch(request);
-          if (response.ok) {
-            await cache.put(request, response);
+          if (isCacheableResponse(response)) {
+            await safeCachePut(cache, request, response);
           }
         } catch (_) {}
       }),
@@ -332,8 +347,8 @@ self.addEventListener("install", (event) => {
               });
               try {
                 const response = await fetch(request);
-                if (response.ok) {
-                  await cache.put(request, response);
+                if (isCacheableResponse(response)) {
+                  await safeCachePut(cache, request, response);
                 }
               } catch (_err) {
                 // Hub warmup fills gaps when online.

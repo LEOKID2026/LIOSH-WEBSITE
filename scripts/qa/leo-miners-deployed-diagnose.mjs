@@ -24,7 +24,7 @@ const ASSETS = [
   "/images/leo-miners/spawn-icon.png",
 ];
 
-const report = { base: BASE, assets: {}, canvas: null, consoleErrors: [], failedRequests: [] };
+const report = { base: BASE, assets: {}, canvas: null, consoleErrors: [], swErrors: [], failedRequests: [] };
 
 const browser = await chromium.launch({ headless: true });
 const ctx = await browser.newContext({ ...devices["iPhone 13"], locale: "he-IL" });
@@ -37,7 +37,12 @@ for (const path of ASSETS) {
 
 const page = await ctx.newPage();
 page.on("console", (msg) => {
-  if (msg.type() === "error") report.consoleErrors.push(msg.text());
+  const text = msg.text();
+  if (msg.type() === "error") report.consoleErrors.push(text);
+  if (/206|cache\.put|Partial response/i.test(text)) {
+    report.swErrors = report.swErrors || [];
+    report.swErrors.push(text);
+  }
 });
 page.on("requestfailed", (req) => {
   report.failedRequests.push({ url: req.url(), failure: req.failure()?.errorText });
@@ -67,6 +72,7 @@ report.canvas = await page.evaluate(() => {
     }
   }
   const wrapRect = wrap?.getBoundingClientRect();
+  const vh = window.innerHeight;
   return {
     bufferW: w,
     bufferH: h,
@@ -74,9 +80,12 @@ report.canvas = await page.evaluate(() => {
     cssH: canvas.clientHeight,
     wrapW: wrapRect?.width ?? 0,
     wrapH: wrapRect?.height ?? 0,
+    viewportH: vh,
+    wrapFillRatio: vh > 0 ? (wrapRect?.height ?? 0) / vh : 0,
     samples,
     nonEmpty,
     fillRatio: samples ? nonEmpty / samples : 0,
+    swErrors: window.__lmDiagSwErrors || [],
   };
 });
 
@@ -92,4 +101,17 @@ const badCanvas =
   report.canvas.bufferH < 10 ||
   (report.canvas.fillRatio ?? 0) < 0.05;
 
-process.exit(asset404.length || badCanvas || report.consoleErrors.length ? 1 : 0);
+const shrunkLayout =
+  report.canvas &&
+  report.canvas.viewportH > 600 &&
+  (report.canvas.wrapFillRatio ?? 0) < 0.55;
+
+process.exit(
+  asset404.length ||
+  badCanvas ||
+  shrunkLayout ||
+  (report.swErrors?.length ?? 0) ||
+  report.consoleErrors.length
+    ? 1
+    : 0
+);

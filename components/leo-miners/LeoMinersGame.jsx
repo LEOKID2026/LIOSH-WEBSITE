@@ -307,6 +307,8 @@ function formatPoints2(n) {
 // === OFFLINE SESSION CLOCK (12h per session) ===
 const OFFLINE_SESSION_MAX_HOURS = 12;
 const OFFLINE_SESSION_MAX_MS = OFFLINE_SESSION_MAX_HOURS * 3600000;
+/** Gift ready but unclaimed this long → idle-offline efficiency (matches MLEO source). */
+const IDLE_OFFLINE_MS = 5 * 60 * 1000;
 
 // Tiers (per session cumulated time)
 const OFFLINE_EFF_TIERS_SESSION = [
@@ -525,7 +527,30 @@ export default function LeoMinersGame({
   const [showGainModal, setShowGainModal] = useState(false);
   const uiPulseAccumRef = useRef(0);
   const rockSfxCooldownRef = useRef(0);
+  const giftReadyUiRef = useRef(false);
+  const goldUiRafRef = useRef(0);
+  const pendingCenterPopupRef = useRef(null);
+  const centerPopupFlushRef = useRef(false);
   const [, forceUiPulse] = useState(0);
+
+  function scheduleCenterPopup(text) {
+    if (!text) return;
+    pendingCenterPopupRef.current = text;
+    if (centerPopupFlushRef.current) return;
+    centerPopupFlushRef.current = true;
+    queueMicrotask(() => {
+      centerPopupFlushRef.current = false;
+      const msg = pendingCenterPopupRef.current;
+      pendingCenterPopupRef.current = null;
+      if (msg) setCenterPopup({ text: msg, id: Math.random() });
+    });
+  }
+
+  useEffect(() => {
+    if (!centerPopup) return;
+    const id = setTimeout(() => setCenterPopup(null), 1800);
+    return () => clearTimeout(id);
+  }, [centerPopup]);
 
   const [pendingPoints, setPendingPoints] = useState(serverPendingPoints);
   useEffect(() => { setPendingPoints(serverPendingPoints); }, [serverPendingPoints]);
@@ -715,6 +740,7 @@ export default function LeoMinersGame({
     s.isIdleOffline = false;
     resetOfflineSession(s);
     setGiftReadyFlag(false);
+    giftReadyUiRef.current = false;
     try { play(S_GIFT); } catch {}
     save?.();
   }
@@ -780,6 +806,7 @@ export default function LeoMinersGame({
     const loaded = loadSafe();
     const init = loaded ? { ...freshState(), ...loaded } : freshState();
     normalizeSavedLanesToLaneCount(init);
+    sanitizeBoardMiners(init);
 
     if (loaded && loaded.minerScale == null) init.minerScale = 1.90;
     if (loaded && loaded.minerWidth == null) init.minerWidth = 0.8;
@@ -800,6 +827,7 @@ export default function LeoMinersGame({
       goldMult: init.goldMult,
     }));
     setGiftReadyFlag(!!init.giftReady);
+    giftReadyUiRef.current = !!init.giftReady;
 
     if (!init.onceSpawned) {
       spawnMiner(init, 1);
@@ -817,6 +845,7 @@ export default function LeoMinersGame({
         init.giftReady = true;
         init.giftFirstReadyAt = init.giftFirstReadyAt || init.giftNextAt;
         setGiftReadyFlag(true);
+        giftReadyUiRef.current = true;
       }
     } catch {}
 
@@ -946,7 +975,10 @@ useEffect(() => {
       s.giftReady = true;
       // חשוב: לא מאבדים את זמן ה־ready האמיתי
       s.giftFirstReadyAt = s.giftFirstReadyAt || s.giftNextAt;
-      setGiftReadyFlag(true);
+      if (!giftReadyUiRef.current) {
+        giftReadyUiRef.current = true;
+        setGiftReadyFlag(true);
+      }
       save();
     }
   }, 500);
@@ -955,12 +987,12 @@ useEffect(() => {
 }, []);
 
 
-// פולס UI לטבעות מתנה/כלב — 500ms (לא בכל frame; מונע עומס React במובייל)
+// פולס UI לטבעות מתנה/כלב — 1000ms (מונע re-render כבד במובייל)
 useEffect(() => {
   const id = setInterval(() => {
-    uiPulseAccumRef.current += 0.5;
+    uiPulseAccumRef.current += 1;
     forceUiPulse(v => (v + 1) % 100);
-   }, 500);
+   }, 1000);
   return () => clearInterval(id);
 }, []);
 
@@ -1044,6 +1076,16 @@ function loadSafe(){
   try { const raw = localStorage.getItem(LS_KEY); return raw ? JSON.parse(raw) : null; } catch { return null; }
 }
 function safeSave(){ try { save?.(); } catch {} }
+
+function scheduleGoldUiSync() {
+  if (goldUiRafRef.current) return;
+  goldUiRafRef.current = requestAnimationFrame(() => {
+    goldUiRafRef.current = 0;
+    const s = stateRef.current;
+    if (!s) return;
+    setUi((u) => (u.gold === s.gold ? u : { ...u, gold: s.gold }));
+  });
+}
  
 // === END PART 3 ===
 
@@ -1216,6 +1258,61 @@ function pos(e){
 }
 
 function pointInRect(x,y,r){ return x>=r.x && x<=r.x+r.w && y>=r.y && y<=r.y+r.h; }
+
+const ROCK_FX_LIFE_SEC = 1.35;
+
+function pushRockBreakFx(lane, coinsGain, pointsGain) {
+  const s = stateRef.current;
+  if (!s?.anim) return;
+  const rr = rockRect(lane);
+  if (!Array.isArray(s.anim.fx)) s.anim.fx = [];
+  s.anim.fx.push({
+    x: rr.x + rr.w * 0.5,
+    y: rr.y + rr.h * 0.38,
+    line1: `+${formatShort(coinsGain)}`,
+    line2: pointsGain > 0 ? `+${formatPointsShort(pointsGain)} נק׳` : "",
+    age: 0,
+    life: ROCK_FX_LIFE_SEC,
+  });
+  if (s.anim.fx.length > 14) s.anim.fx.splice(0, s.anim.fx.length - 14);
+}
+
+function tickRockFx(dt) {
+  const s = stateRef.current;
+  if (!s?.anim?.fx?.length) return;
+  s.anim.fx = s.anim.fx.filter((fx) => {
+    fx.age += dt;
+    fx.y -= dt * 46;
+    return fx.age < fx.life;
+  });
+}
+
+function drawRockFx(ctx) {
+  const s = stateRef.current;
+  if (!s?.anim?.fx?.length) return;
+  for (const fx of s.anim.fx) {
+    const t = fx.age / fx.life;
+    const alpha = t < 0.12 ? t / 0.12 : t > 0.72 ? Math.max(0, (1 - t) / 0.28) : 1;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = "bold 15px system-ui";
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "rgba(0,0,0,.6)";
+    ctx.strokeText(fx.line1, fx.x, fx.y);
+    ctx.fillStyle = "#fde047";
+    ctx.fillText(fx.line1, fx.x, fx.y);
+    if (fx.line2) {
+      const y2 = fx.y + 18;
+      ctx.font = "bold 12px system-ui";
+      ctx.strokeText(fx.line2, fx.x, y2);
+      ctx.fillStyle = "#86efac";
+      ctx.fillText(fx.line2, fx.x, y2);
+    }
+    ctx.restore();
+  }
+}
 function pillRect(lane,slot){
   const r = slotRect(lane,slot);
   const pw = r.w * 0.36;
@@ -1486,12 +1583,15 @@ function draw(){
       ctx.restore();
     }
   }
+
+  drawRockFx(ctx);
 }
 
 // ----- לוגיקת tick בסיסית -----
 function tick(dt){
   const s = stateRef.current; if (!s) return;
   s.anim.t += dt;
+  tickRockFx(dt);
   s.paused = !!(flagsRef.current && flagsRef.current.paused);
   const now = Date.now();
   if (s.paused){ s.lastSeen = now; return; }
@@ -1527,7 +1627,7 @@ if (s.giftReady && (s.giftFirstReadyAt || s.giftNextAt)) {
 // נשמור מצב לפני – כדי לוודא POP לפי תוצאה אמיתית
 // GOLD כרגיל
 s.gold += coinsGain;
-setUi(u => ({ ...u, gold: s.gold }));
+scheduleGoldUiSync();
 
 // מעניקים נקודות לפי שלב הסלע עצמו (בלתי תלוי בסלעים אחרים)
 const stageNow = rockStageNow(rock);
@@ -1546,7 +1646,8 @@ if (eff > 0) {
 // ה-POP מציג את הזכייה - המשתמש כבר קיבל אותה ב-local state
 // השרת יסתנכרן ויתקן אם יש סתירות
 const pointsTxt = formatPointsShort(eff || 0);
-setCenterPopup({ text: `⛏️ +${formatShort(coinsGain)} מטבעות • +${pointsTxt} נקודות`, id: Math.random() });
+pushRockBreakFx(l, coinsGain, eff || 0);
+scheduleCenterPopup(`⛏️ +${formatShort(coinsGain)} מטבעות • +${pointsTxt} נקודות`);
 
 
       s.lanes[l].rockCount += 1;
@@ -1558,7 +1659,10 @@ setCenterPopup({ text: `⛏️ +${formatShort(coinsGain)} מטבעות • +${po
   // עדכון טיימר מתנות
   if (!s.giftReady && (s.giftNextAt || 0) <= now) {
     s.giftReady = true;
-    setGiftReadyFlag(true);
+    if (!giftReadyUiRef.current) {
+      giftReadyUiRef.current = true;
+      setGiftReadyFlag(true);
+    }
   }
 
   // הנחת כלב יהלום ממתין
@@ -1721,6 +1825,57 @@ function normalizeSavedLanesToLaneCount(s) {
       };
     }
     lane.rockCount = rockCount;
+  }
+}
+
+/** Remove duplicate slot refs, orphan miners, and cap board to MAX_MINERS. */
+function sanitizeBoardMiners(s) {
+  if (!s) return;
+  if (!s.miners || typeof s.miners !== "object") s.miners = {};
+  const seenIds = new Set();
+
+  for (let l = 0; l < LANES; l++) {
+    const lane = s.lanes?.[l];
+    if (!lane) continue;
+    if (!Array.isArray(lane.slots)) lane.slots = Array(SLOTS_PER_LANE).fill(null);
+
+    for (let k = 0; k < SLOTS_PER_LANE; k++) {
+      const cell = lane.slots[k];
+      if (!cell?.id) {
+        lane.slots[k] = null;
+        continue;
+      }
+      const id = Number(cell.id);
+      const m = s.miners[id] ?? s.miners[cell.id];
+      if (!m || seenIds.has(id)) {
+        lane.slots[k] = null;
+        continue;
+      }
+      seenIds.add(id);
+      m.lane = l;
+      m.slot = k;
+      lane.slots[k] = { id: m.id };
+    }
+  }
+
+  for (const key of Object.keys(s.miners)) {
+    const id = Number(key);
+    if (!seenIds.has(id)) delete s.miners[key];
+  }
+
+  if (countMiners(s) > MAX_MINERS) {
+    const ids = Object.keys(s.miners)
+      .map((k) => Number(k))
+      .filter((id) => Number.isFinite(id))
+      .sort((a, b) => b - a);
+    while (countMiners(s) > MAX_MINERS && ids.length) {
+      const dropId = ids.shift();
+      const m = s.miners[dropId];
+      if (m && s.lanes[m.lane]?.slots[m.slot]?.id === dropId) {
+        s.lanes[m.lane].slots[m.slot] = null;
+      }
+      delete s.miners[dropId];
+    }
   }
 }
 
@@ -2161,6 +2316,7 @@ async function resetGame() {
 
   setAdCooldownUntil(0);
   setGiftReadyFlag(false);
+  giftReadyUiRef.current = false;
   setShowCollect(false);
   setShowAdModal(false);
   setShowDiamondInfo(false);
@@ -2600,12 +2756,10 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
 
   style={{
     maxWidth: isDesktop ? "1024px" : "680px",
-    width: "100%",
-    flex: isDesktop ? undefined : "1 1 auto",
-    minHeight: isDesktop ? "min(100vh, var(--app-100vh, 100svh))" : "240px",
-    maxHeight: isDesktop
-      ? undefined
-      : "calc(var(--app-100vh, 100svh) - 180px)",
+    // שמירה על גובה מלא-מסך גם ב-iOS (עם פולבאקים בטוחים)
+    height: "calc(var(--app-100vh, 100svh) - var(--header-h, 0px))",
+    minHeight: "min(100vh, var(--app-100vh, 100svh))",
+    // בדסקטופ יחס קלאסי; במובייל מחזירים 9/16 כמו בגרסה היציבה
     aspectRatio: isDesktop ? "4 / 3" : "9 / 16",
   }}
 >
@@ -2704,7 +2858,7 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
          {/* ==== TOP HUD ==== */}
          {!showIntro && (
          <div
-         className="absolute left-1/2 -translate-x-1/2 z-[3000] w-[calc(100%-16px)] max-w-[980px]"
+         className="absolute left-1/2 -translate-x-1/2 z-[3000] w-[calc(100%-16px)] max-w-[980px] pointer-events-none [&_button]:pointer-events-auto"
            style={{ top: hudTop }}
          >
           <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-center mb-2">
@@ -3053,7 +3207,10 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
         {/* פופאפ מרכזי – בלי OK, נעלם אוטומטית */}
         {centerPopup && (
           <div className="absolute inset-0 z-[10001] flex items-center justify-center pointer-events-none">
-            <div className="pointer-events-auto px-6 py-4 rounded-2xl font-extrabold text-black shadow-2xl bg-gradient-to-br from-yellow-300 to-amber-400 border border-yellow-200 text-center animate-[popfade_1.8s_ease-out_forwards]">
+            <div
+              key={centerPopup.id}
+              className="pointer-events-none px-6 py-4 rounded-2xl font-extrabold text-black shadow-2xl bg-gradient-to-br from-yellow-300 to-amber-400 border border-yellow-200 text-center animate-[popfade_1.8s_ease-out_forwards]"
+            >
               <div className="text-lg">{centerPopup.text}</div>
             </div>
             <style jsx global>{`
@@ -3068,14 +3225,16 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
         )}
 
         {/* Center Gift Button */}
-        {!showIntro && !gamePaused && !showCollect && (stateRef.current?.giftReady) && (
-          <div className="absolute inset-0 z-[8] flex items-center justify-center pointer-events-none">
+        {!showIntro && !gamePaused && !showCollect && giftReadyFlag && (
+          <div className="absolute inset-0 z-[10050] flex items-center justify-center pointer-events-none">
             <button
+              type="button"
               onClick={grantGift}
-              className="pointer-events-auto px-5 py-3 rounded-2xl font-extrabold text-black shadow-2xl bg-gradient-to-br from-yellow-300 to-amber-400 border border-yellow-200 hover:from-yellow-200 hover:to-amber-300 active:scale-95 relative"
+              className="pointer-events-auto touch-manipulation min-w-[11rem] min-h-[3rem] px-6 py-3 rounded-2xl font-extrabold text-black shadow-2xl bg-gradient-to-br from-yellow-300 to-amber-400 border border-yellow-200 hover:from-yellow-200 hover:to-amber-300 active:scale-95 relative"
+              aria-label="אסוף מתנה"
             >
               🎁 אסוף מתנה
-              <span className="absolute -inset-2 rounded-3xl blur-3xl bg-yellow-400/30 -z-10" />
+              <span aria-hidden className="pointer-events-none absolute -inset-3 rounded-3xl blur-3xl bg-yellow-400/30" />
             </button>
           </div>
         )}

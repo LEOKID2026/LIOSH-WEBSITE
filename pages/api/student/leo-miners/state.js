@@ -7,6 +7,7 @@ import { assertStudentCanPlayGame } from "../../../../lib/games/server/game-acce
 import { LEO_MINERS_GAME_KEY } from "../../../../lib/leo-miners/leo-miners-constants.js";
 import { loadLeoMinersConfig, extractGameplayTuningForClient } from "../../../../lib/leo-miners/server/leo-miners-config.server.js";
 import { minersDbNotReadyResult } from "../../../../lib/leo-miners/server/leo-miners-errors.server.js";
+import { isDbSchemaNotReadyError } from "../../../../lib/teacher-server/teacher-audit.server.js";
 import {
   checkLeoMinersDbReady,
   loadMinersStateView,
@@ -79,6 +80,14 @@ export default async function handler(req, res) {
     });
   } catch (e) {
     console.error("[leo-miners/state]", e);
-    return res.status(500).json({ ok: false, error: "Server error" });
+    if (isDbSchemaNotReadyError(e)) {
+      return res.status(503).json(minersDbNotReadyResult());
+    }
+    return res.status(500).json({
+      ok: false,
+      error: "Server error",
+      code: "server_error",
+      message: "שגיאת שרת — נסו לרענן את הדף.",
+    });
   }
 }

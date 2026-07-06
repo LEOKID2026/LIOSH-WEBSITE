@@ -10,7 +10,7 @@ import { createLeoMinersEconomyClient } from "../../lib/leo-miners/leo-miners-ec
 
 import { getDefaultGameplayTuning } from "../../lib/leo-miners/leo-miners-gameplay-config.client.js";
 
-import { LEO_MINERS_DB_NOT_READY_MESSAGE_HE, LEO_MINERS_GAME_KEY } from "../../lib/leo-miners/leo-miners-constants.js";
+import { LEO_MINERS_DB_NOT_READY_MESSAGE_HE, LEO_MINERS_ERROR_CODES, LEO_MINERS_GAME_KEY } from "../../lib/leo-miners/leo-miners-constants.js";
 
 
 
@@ -106,9 +106,13 @@ export default function LeoMinersShell({ skipAccessGuard = false }) {
 
 
 
-        if (!ready) {
+        if (code === LEO_MINERS_ERROR_CODES.miners_db_not_ready) {
 
           setStatusMessage(message || LEO_MINERS_DB_NOT_READY_MESSAGE_HE);
+
+        } else if (!ready) {
+
+          setStatusMessage(message || "שגיאת שרת — נסו לרענן את הדף.");
 
         } else if (!gameOn) {
 
@@ -121,14 +125,6 @@ export default function LeoMinersShell({ skipAccessGuard = false }) {
         } else {
 
           setStatusMessage("");
-
-        }
-
-
-
-        if (code && !ready) {
-
-          setStatusMessage(message || LEO_MINERS_DB_NOT_READY_MESSAGE_HE);
 
         }
 
@@ -160,7 +156,7 @@ export default function LeoMinersShell({ skipAccessGuard = false }) {
 
       .catch(() => {
 
-        setStatusMessage(LEO_MINERS_DB_NOT_READY_MESSAGE_HE);
+        setStatusMessage("שגיאת רשת — נסו לרענן את הדף.");
 
         setGameplayConfig(getDefaultGameplayTuning());
 
