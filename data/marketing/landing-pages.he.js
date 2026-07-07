@@ -39,7 +39,7 @@ export const KIDS_LANDING = {
     title: "לומדים, משחקים ומתקדמים עם ליאו",
     subtitle:
       "תרגול במתמטיקה, עברית, אנגלית וגאומטריה — עם משחקים, מטבעות, קלפים והפתעות בדרך.",
-    primaryCta: { label: "יש לי קוד כניסה", href: "/student/login" },
+    primaryCta: { label: "לעולם הילדים של ליאו", href: "/student/login" },
     secondaryCta: { label: "בקשו מההורה להצטרף", action: "parentInvite" },
   },
   benefits: {

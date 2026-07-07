@@ -13,6 +13,7 @@ export const PARENT_PROMO_MOBILE_SRC = "/videos/promo/leo-kids-parent-mobile.mp4
  *   description?: string,
  *   isBright?: boolean,
  *   compact?: boolean,
+ *   compactHome?: boolean,
  *   className?: string,
  * }} props
  */
@@ -23,15 +24,44 @@ export default function ParentPromoVideo({
   description = "צפו בסרטון קצר שמציג את הכלים להורים ואת חוויית הלמידה לילדים.",
   isBright = false,
   compact = false,
+  compactHome = false,
   className = "",
 }) {
   const desktopVideoRef = usePromoVideoInlineRef();
   const mobileVideoRef = usePromoVideoInlineRef();
+  const compactHomeVideoRef = usePromoVideoInlineRef();
   const titleClass = isBright ? "text-slate-900" : "text-white";
   const textClass = isBright ? "text-slate-600" : "text-white/75";
   const frameClass = isBright
     ? "border-slate-200/80 bg-slate-900/5 shadow-sm"
     : "border-white/15 bg-black/30 shadow-lg shadow-black/20";
+
+  if (compactHome) {
+    return (
+      <section
+        className={`shrink min-w-0 ${className}`}
+        aria-label={title}
+        data-testid="parent-promo-video"
+      >
+        <div
+          className={`w-[min(46vw,180px)] md:w-[clamp(280px,22vw,360px)] aspect-video overflow-hidden rounded-xl border ${frameClass}`}
+        >
+          <video
+            ref={compactHomeVideoRef}
+            className="h-full w-full bg-black object-contain"
+            controls
+            playsInline
+            disableRemotePlayback
+            preload="metadata"
+            aria-label={title}
+            data-testid="parent-promo-video-compact-home"
+          >
+            <source src={desktopSrc} type="video/mp4" />
+          </video>
+        </div>
+      </section>
+    );
+  }
 
   const desktopWrapClass = compact
     ? "hidden md:block w-full overflow-hidden rounded-xl border"

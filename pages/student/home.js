@@ -41,6 +41,7 @@ import StudentSurpriseBoxOpenModal from "../../components/student/rewards/Studen
 import StudentShareFriendsButton from "../../components/student/StudentShareFriendsButton";
 import { isCardRewardsEnabledClient } from "../../lib/rewards/reward-feature-flags.client.js";
 import { GUEST_LOCK_MESSAGE_HE, GUEST_LOCKED_HOME_PANELS, LIOSH_GUEST_RESUME_TOKEN_KEY } from "../../lib/guest/constants.js";
+import { isGuestStudent } from "../../lib/guest/guest-display.js";
 import { shouldClearGuestResumeTokenOnLogout } from "../../lib/guest/guest-resume-token.client.js";
 import StudentLoadingPanel from "../../components/ui/StudentLoadingPanel.jsx";
 
@@ -791,7 +792,10 @@ export default function StudentHomePage() {
     setLogoutBusy(true);
     try {
       await fetch("/api/student/logout", { method: "POST", credentials: "include" });
-      if (typeof window !== "undefined" && shouldClearGuestResumeTokenOnLogout(student, isGuestHome)) {
+      if (
+        typeof window !== "undefined" &&
+        shouldClearGuestResumeTokenOnLogout(student, isGuestStudent(student))
+      ) {
         localStorage.removeItem(LIOSH_GUEST_RESUME_TOKEN_KEY);
       }
       clearAllStudentScopedBrowserStorage(sid);

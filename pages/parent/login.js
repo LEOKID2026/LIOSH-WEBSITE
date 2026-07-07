@@ -25,9 +25,6 @@ import PortalLoadingPanel from "../../components/ui/PortalLoadingPanel.jsx";
 import { getParentPortalTheme } from "../../lib/parent-ui/parent-portal-theme.client.js";
 import { AUTH_FORGOT_PASSWORD_LINK } from "../../lib/auth/auth-reset.he";
 import { trackProductEvent } from "../../lib/analytics/track-event.client.js";
-import ParentPromoVideo from "../../components/parent/ParentPromoVideo";
-import { PARENT_PROMO_MOBILE_SRC } from "../../components/parent/ParentPromoVideo";
-import PromoMobileCompareVideo from "../../components/promo/PromoMobileCompareVideo";
 
 const parentLoginSeo = getPublicPageSeo("parent-login");
 
@@ -273,8 +270,6 @@ export default function ParentLoginPage() {
           bright={isBright}
         />
 
-        <ParentPromoVideo isBright={isBright} compact className="mb-4" />
-
         <section className={T.infoBox} aria-label="מידע לפתיחת חשבון הורה">
           <h2 className={T.infoTitle}>ברוכים הבאים הורים 👋</h2>
           <p className={T.infoText}>
@@ -368,12 +363,6 @@ export default function ParentLoginPage() {
             {message}
           </p>
         ) : null}
-
-        <PromoMobileCompareVideo
-          mobileSrc={PARENT_PROMO_MOBILE_SRC}
-          isBright={isBright}
-          testId="parent-promo-mobile-compare"
-        />
       </div>
     </Layout>
   );

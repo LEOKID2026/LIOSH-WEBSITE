@@ -28,8 +28,8 @@ import {
 } from "../lib/contact/contact-form.he";
 
 const INSTAGRAM_URL = "https://www.instagram.com/leotheshiba21";
-/** כשיש קישור — ממלאים כאן */
-const FACEBOOK_URL = "";
+const YOUTUBE_URL = "https://www.youtube.com/@LEO-KIDS-2026";
+const FACEBOOK_URL = "https://www.facebook.com/profile.php?id=61590778462277";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -172,18 +172,22 @@ export default function Contact() {
       className: `${btnBase} bg-pink-600/90 hover:bg-pink-500 border border-pink-400/30 text-white`,
       external: true,
     },
-    ...(FACEBOOK_URL
-      ? [
-          {
-            key: "facebook",
-            href: FACEBOOK_URL,
-            label: "📘 פייסבוק",
-            ariaLabel: "פתיחת עמוד הפייסבוק בחלון חדש",
-            className: `${btnBase} bg-blue-600/90 hover:bg-blue-500 border border-blue-400/30 text-white`,
-            external: true,
-          },
-        ]
-      : []),
+    {
+      key: "youtube",
+      href: YOUTUBE_URL,
+      label: "ערוץ היוטיוב של LEO KIDS",
+      ariaLabel: "פתיחת ערוץ היוטיוב של LEO KIDS בחלון חדש",
+      className: `${btnBase} bg-red-600/90 hover:bg-red-500 border border-red-400/30 text-white`,
+      external: true,
+    },
+    {
+      key: "facebook",
+      href: FACEBOOK_URL,
+      label: "עמוד הפייסבוק של LEO KIDS",
+      ariaLabel: "פתיחת עמוד הפייסבוק של LEO KIDS בחלון חדש",
+      className: `${btnBase} bg-blue-600/90 hover:bg-blue-500 border border-blue-400/30 text-white`,
+      external: true,
+    },
   ];
 
   return (

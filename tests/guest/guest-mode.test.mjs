@@ -3,6 +3,9 @@
  * Run: node --test tests/guest/*.test.mjs
  */
 
+import { readFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
 import { describe, test } from "node:test";
 import assert from "node:assert/strict";
 
@@ -33,6 +36,9 @@ import {
   guestResumeFailureBannerFromPayload,
   shouldBlockGuestStartAfterResumeFailure,
 } from "../../lib/guest/guest-resume-ui.client.js";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const repoRoot = join(__dirname, "..", "..");
 
 describe("guest leo number", () => {
   test("normalize accepts 8 digits", () => {
@@ -147,6 +153,13 @@ describe("guest resume ui helpers", () => {
     assert.equal(banner?.code, "guest_already_linked");
     assert.match(banner?.messageHe || "", /התחבר/);
     assert.equal(shouldBlockGuestStartAfterResumeFailure("guest_already_linked"), true);
+  });
+});
+
+describe("guest login resume behavior", () => {
+  test("login page does not auto-resume guest on mount", async () => {
+    const src = await readFile(join(repoRoot, "pages", "student", "login.js"), "utf8");
+    assert.doesNotMatch(src, /\/api\/student\/guest\/resume/);
   });
 });
 

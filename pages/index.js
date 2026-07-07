@@ -2,6 +2,8 @@ import Layout from "../components/Layout";
 import Link from "next/link";
 import InstallAppChoiceButton from "../components/InstallAppChoiceButton";
 import PageSeo from "../components/seo/PageSeo";
+import StudentPromoVideo from "../components/student/StudentPromoVideo";
+import ParentPromoVideo from "../components/parent/ParentPromoVideo";
 import { getPublicPageSeo } from "../lib/site/public-page-seo.he";
 import { useStudentTheme } from "../contexts/StudentThemeContext.jsx";
 
@@ -60,10 +62,10 @@ export default function HomePage() {
         canonicalPath={homeSeo.canonicalPath}
       />
       <div
-        className="mx-auto flex h-full min-h-0 w-full max-w-5xl flex-1 flex-col items-stretch justify-start gap-4 overflow-hidden px-3 pb-3 pt-2.5 md:min-h-[calc(100vh-9.5rem)] md:justify-center md:gap-7 md:px-4 md:py-6 md:flex-initial"
+        className="mx-auto flex h-full min-h-0 w-full max-w-5xl flex-1 flex-col items-stretch justify-start gap-3 overflow-hidden px-3 pb-3 pt-2 md:min-h-[calc(100vh-9.5rem)] md:justify-center md:gap-5 md:px-4 md:py-4 md:flex-initial"
         dir="rtl"
       >
-        <section className="shrink-0 space-y-2 text-center md:space-y-4">
+        <section className="shrink-0 space-y-1.5 text-center md:space-y-3">
           <p
             className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] md:tracking-[0.25em] ${
               isBright
@@ -91,7 +93,7 @@ export default function HomePage() {
           </p>
         </section>
 
-        <section className="flex w-full shrink-0 flex-col items-center gap-6 md:gap-0">
+        <section className="flex w-full shrink-0 flex-col items-center gap-3 md:gap-4">
           <div className="grid w-full shrink-0 grid-cols-2 gap-x-2.5 gap-y-3.5 md:gap-5 lg:grid-cols-3">
           {PORTAL_CARDS.map((card) => {
             const gridClass = cardGridClass(card.key);
@@ -133,7 +135,24 @@ export default function HomePage() {
           })}
           </div>
 
-          <InstallAppChoiceButton className="mt-6 md:mt-6" />
+          <div
+            className="grid w-full max-w-6xl shrink-0 grid-cols-2 items-center gap-x-2 gap-y-2 md:grid-cols-[1fr_auto_1fr] md:gap-x-4 lg:gap-x-6"
+            data-testid="home-promo-videos-row"
+          >
+            <div className="col-start-1 row-start-2 justify-self-center md:row-start-1 md:justify-self-end">
+              <StudentPromoVideo
+                compactHome
+                isBright={isBright}
+                title="עולם הילדים של ליאו"
+              />
+            </div>
+            <div className="col-span-2 row-start-1 flex justify-center md:col-span-1 md:col-start-2 md:row-start-1">
+              <InstallAppChoiceButton className="mt-0 shrink-0" />
+            </div>
+            <div className="col-start-2 row-start-2 justify-self-center md:col-start-3 md:row-start-1 md:justify-self-start">
+              <ParentPromoVideo compactHome isBright={isBright} title="פורטל הורים" />
+            </div>
+          </div>
         </section>
       </div>
     </Layout>

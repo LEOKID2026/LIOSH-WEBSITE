@@ -2,9 +2,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 import PortalLoginHeading from "../../components/auth/PortalLoginHeading";
-import StudentPromoVideo from "../../components/student/StudentPromoVideo";
-import { STUDENT_PROMO_MOBILE_SRC } from "../../components/student/StudentPromoVideo";
-import PromoMobileCompareVideo from "../../components/promo/PromoMobileCompareVideo";
 import StudentParentInviteModal from "../../components/student/StudentParentInviteModal";
 import CopyConfirmPopup from "../../components/ui/CopyConfirmPopup.jsx";
 import { buildParentInviteMessageHe } from "../../lib/site/public-site-origin.client.js";
@@ -92,40 +89,13 @@ export default function StudentLoginPage() {
     if (!router.isReady) return undefined;
     let mounted = true;
     fetch("/api/student/me", { credentials: "same-origin", cache: "no-store" })
-      .then(async (res) => {
+      .then((res) => {
         if (!mounted) return;
         if (res.ok) {
           redirectAfterStudentLogin(router);
           return;
         }
-        const resumeToken =
-          typeof window !== "undefined" ? localStorage.getItem(LIOSH_GUEST_RESUME_TOKEN_KEY) : null;
-        if (resumeToken) {
-          const resumeRes = await fetch("/api/student/guest/resume", {
-            method: "POST",
-            credentials: "same-origin",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ resumeToken }),
-          });
-          const resumePayload = await resumeRes.json().catch(() => ({}));
-          if (resumeRes.ok && resumePayload?.ok) {
-            if (resumePayload.resumeToken) {
-              localStorage.setItem(LIOSH_GUEST_RESUME_TOKEN_KEY, resumePayload.resumeToken);
-            }
-            if (resumePayload.student?.id) {
-              syncStudentLocalStorageIdentity(resumePayload.student, "student-login guest resume");
-            }
-            redirectAfterStudentLogin(router);
-            return;
-          }
-          const resumeFailure = guestResumeFailureBannerFromPayload(resumePayload);
-          if (resumeFailure) {
-            setGuestResumeBanner(resumeFailure);
-          }
-          if (shouldClearGuestResumeTokenOnResumeFailure(resumePayload?.code)) {
-            localStorage.removeItem(LIOSH_GUEST_RESUME_TOKEN_KEY);
-          }
-        }
+        // אורח אחרי logout: לא מחדשים session אוטומטית — רק בלחיצה מפורשת על "כניסה כאורח".
         setSessionCheck("none");
       })
       .catch(() => {
@@ -183,7 +153,16 @@ export default function StudentLoginPage() {
       });
       const payload = await res.json().catch(() => ({}));
       if (!res.ok || !payload?.ok) {
-        setMessage(payload?.error || "לא ניתן להיכנס כאורח כרגע");
+        const resumeFailure = guestResumeFailureBannerFromPayload(payload);
+        if (resumeFailure) {
+          setGuestResumeBanner(resumeFailure);
+          setMessage(resumeFailure.messageHe);
+        } else {
+          setMessage(payload?.error || "לא ניתן להיכנס כאורח כרגע");
+        }
+        if (shouldClearGuestResumeTokenOnResumeFailure(payload?.code)) {
+          localStorage.removeItem(LIOSH_GUEST_RESUME_TOKEN_KEY);
+        }
         return;
       }
       if (payload.resumeToken && typeof window !== "undefined") {
@@ -250,8 +229,6 @@ export default function StudentLoginPage() {
     <Layout {...layoutProps}>
       <div className="max-w-md mx-auto px-4 py-3 md:py-10" dir="rtl" lang="he">
         <PortalLoginHeading title="כניסת ילד/ה" bright={isBright} />
-
-        <StudentPromoVideo isBright={isBright} compact className="mb-4" />
 
         {guestResumeBanner ? (
           <div
@@ -366,12 +343,6 @@ export default function StudentLoginPage() {
             {message}
           </p>
         ) : null}
-
-        <PromoMobileCompareVideo
-          mobileSrc={STUDENT_PROMO_MOBILE_SRC}
-          isBright={isBright}
-          testId="student-promo-mobile-compare"
-        />
 
       </div>
     </Layout>

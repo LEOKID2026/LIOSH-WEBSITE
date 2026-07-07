@@ -29,7 +29,6 @@ export default function StudentAdPlaceholder({
   const styles = getStudentAdSlotClasses(resolvedVariant, theme);
   const wrapCls = [styles.wrap, wrapClassName, className].filter(Boolean).join(" ");
   const slotCls = [styles.slot, slotClassName].filter(Boolean).join(" ");
-  const labelCls = [styles.label, labelClassName].filter(Boolean).join(" ");
 
   return (
     <aside
@@ -39,9 +38,7 @@ export default function StudentAdPlaceholder({
       data-ad-render="placeholder"
       className={wrapCls}
     >
-      <div className={slotCls}>
-        <span className={labelCls}>{STUDENT_AD_LABEL}</span>
-      </div>
+      <div className={slotCls} />
     </aside>
   );
 }
