@@ -1,4 +1,4 @@
-import { usePromoVideoInlineRef } from "../../lib/promo/promo-video-inline-playback.client.js";
+import PromoVideoClickablePreview from "../promo/PromoVideoClickablePreview.jsx";
 
 export const STUDENT_PROMO_DESKTOP_SRC = "/videos/promo/leo-kids-children-desktop.mp4";
 export const STUDENT_PROMO_MOBILE_SRC = "/videos/promo/leo-kids-children-mobile.mp4";
@@ -26,9 +26,6 @@ export default function StudentPromoVideo({
   compactHome = false,
   className = "",
 }) {
-  const desktopVideoRef = usePromoVideoInlineRef();
-  const mobileVideoRef = usePromoVideoInlineRef();
-  const compactHomeVideoRef = usePromoVideoInlineRef();
   const titleClass = isBright ? "text-slate-900" : "text-white";
   const textClass = isBright ? "text-slate-600" : "text-white/75";
   const frameClass = isBright
@@ -42,22 +39,13 @@ export default function StudentPromoVideo({
         aria-label={title}
         data-testid="student-promo-video"
       >
-        <div
-          className={`w-[min(46vw,180px)] md:w-[clamp(280px,22vw,360px)] aspect-video overflow-hidden rounded-xl border ${frameClass}`}
-        >
-          <video
-            ref={compactHomeVideoRef}
-            className="h-full w-full bg-black object-contain"
-            controls
-            playsInline
-            disableRemotePlayback
-            preload="metadata"
-            aria-label={title}
-            data-testid="student-promo-video-compact-home"
-          >
-            <source src={desktopSrc} type="video/mp4" />
-          </video>
-        </div>
+        <PromoVideoClickablePreview
+          src={desktopSrc}
+          wrapClassName={`w-[min(46vw,180px)] md:w-[clamp(280px,22vw,360px)] aspect-video overflow-hidden rounded-xl border ${frameClass}`}
+          videoClassName="h-full w-full bg-black object-contain"
+          ariaLabel={title}
+          testId="student-promo-video-compact-home"
+        />
       </section>
     );
   }
@@ -81,35 +69,21 @@ export default function StudentPromoVideo({
         <p className={`mx-auto max-w-xl text-sm leading-relaxed ${textClass}`}>{description}</p>
       ) : null}
 
-      <div className={`${desktopWrapClass} ${frameClass}`}>
-        <video
-          ref={desktopVideoRef}
-          className="block h-auto w-full aspect-video bg-black object-contain"
-          controls
-          playsInline
-          disableRemotePlayback
-          preload="metadata"
-          aria-label="סרטון ילדים — גרסת מחשב"
-          data-testid="student-promo-video-desktop"
-        >
-          <source src={desktopSrc} type="video/mp4" />
-        </video>
-      </div>
+      <PromoVideoClickablePreview
+        src={desktopSrc}
+        wrapClassName={`${desktopWrapClass} ${frameClass}`}
+        videoClassName="block h-auto w-full aspect-video bg-black object-contain"
+        ariaLabel="סרטון ילדים — גרסת מחשב"
+        testId="student-promo-video-desktop"
+      />
 
-      <div className={`${mobileWrapClass} ${frameClass}`}>
-        <video
-          ref={mobileVideoRef}
-          className="block h-auto w-full aspect-video bg-black object-contain"
-          controls
-          playsInline
-          disableRemotePlayback
-          preload="metadata"
-          aria-label="סרטון ילדים — גרסת מחשב (מובייל)"
-          data-testid="student-promo-video-mobile"
-        >
-          <source src={desktopSrc} type="video/mp4" />
-        </video>
-      </div>
+      <PromoVideoClickablePreview
+        src={desktopSrc}
+        wrapClassName={`${mobileWrapClass} ${frameClass}`}
+        videoClassName="block h-auto w-full aspect-video bg-black object-contain"
+        ariaLabel="סרטון ילדים — גרסת מחשב (מובייל)"
+        testId="student-promo-video-mobile"
+      />
     </section>
   );
 }
