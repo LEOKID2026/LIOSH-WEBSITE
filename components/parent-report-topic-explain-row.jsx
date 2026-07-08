@@ -16,6 +16,7 @@ import {
 import { normalizeParentFacingHe } from "../utils/parent-report-language/index.js";
 import { resolveParentExplainRowCopy } from "../utils/learning-pattern-decision/index.js";
 import { buildRegularReportTopicExplainCardHe } from "../lib/parent-ui/parent-report-regular-display.js";
+import { trendV1DisplayLineHe } from "../utils/parent-report-topic-trend-v1.js";
 
 /**
  * @param {string} raw
@@ -46,10 +47,13 @@ export function PrMiniBadge({ children, tone = "neutral" }) {
   );
 }
 
-function ExplainSectionLine({ label, text }) {
+function ExplainSectionLine({ label, text, dataTestId = null }) {
   if (!text) return null;
   return (
-    <p className="text-[10px] md:text-[11px] text-white/72 leading-relaxed m-0 pr-0.5 break-words">
+    <p
+      className="text-[10px] md:text-[11px] text-white/72 leading-relaxed m-0 pr-0.5 break-words"
+      {...(dataTestId ? { "data-testid": dataTestId } : {})}
+    >
       {label ? <span className="text-white/45 font-semibold">{label} </span> : null}
       {text}
     </p>
@@ -66,6 +70,8 @@ export function ParentReportTopicExplainRow({ row, compact = false, registeredGr
   const parentCard = compact
     ? buildRegularReportTopicExplainCardHe(row, registeredGradeKey)
     : null;
+  const trendV1Line = trendV1DisplayLineHe(row?.trendV1);
+  const trendV1Facing = trendV1Line ? parentFacingEngineLine(trendV1Line) : "";
 
   if (compact && parentCard) {
     return (
@@ -78,6 +84,9 @@ export function ParentReportTopicExplainRow({ row, compact = false, registeredGr
           >
             {parentCard.whatWeSee ? (
               <ExplainSectionLine label="מה רואים?" text={parentCard.whatWeSee} />
+            ) : null}
+            {trendV1Facing ? (
+              <ExplainSectionLine text={trendV1Facing} dataTestId="parent-report-topic-trend-v1" />
             ) : null}
             {parentCard.whatItMeans ? (
               <ExplainSectionLine label="מה זה אומר?" text={parentCard.whatItMeans} />
@@ -162,6 +171,9 @@ export function ParentReportTopicExplainRow({ row, compact = false, registeredGr
           >
             <ExplainSectionLine text={sections.identified} />
             <ExplainSectionLine text={sections.data} />
+            {trendV1Facing ? (
+              <ExplainSectionLine text={trendV1Facing} dataTestId="parent-report-topic-trend-v1" />
+            ) : null}
             <ExplainSectionLine text={sections.pattern} />
             <ExplainSectionLine text={sections.meaning} />
             <ExplainSectionLine text={sections.action} />

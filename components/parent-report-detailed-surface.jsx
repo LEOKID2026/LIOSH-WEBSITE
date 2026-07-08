@@ -29,6 +29,7 @@ import {
   guardParentFacingText,
   buildLpdSafeTopicExplainSectionsHe,
 } from "../utils/learning-pattern-decision/index.js";
+import { trendV1DisplayLineHe } from "../utils/parent-report-topic-trend-v1.js";
 import {
   SUBJECT_PHASE3_ROW_LABEL_HE,
   SUBJECT_V2_RECALIBRATION_NEED_NO_HE,
@@ -910,9 +911,11 @@ export function TopicRecommendationExplainStrip({ tr, suppressedLines = [] }) {
         .filter(Boolean),
     );
     const seenRowNorm = new Set();
+    const trendLine = trendV1DisplayLineHe(tr?.trendV1 || tr?.mapRow?.trendV1);
     const sectionRows = [
       explainSections.identified,
       explainSections.data,
+      trendLine || null,
       explainSections.pattern,
       explainSections.meaning,
       explainSections.action,
@@ -936,6 +939,9 @@ export function TopicRecommendationExplainStrip({ tr, suppressedLines = [] }) {
           <p
             key={topicStripNorm(body)}
             className="pr-detailed-body-text text-[11px] md:text-xs m-0 text-white/80 leading-snug"
+            {...(topicStripNorm(body) === topicStripNorm(trendLine)
+              ? { "data-testid": "parent-report-topic-trend-v1" }
+              : {})}
           >
             {body}
           </p>

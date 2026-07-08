@@ -2277,6 +2277,10 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
     accuracy: parentVisibleMetrics.accuracy,
     parentVisibleMetrics,
     mapRow: mapRow && typeof mapRow === "object" ? mapRow : null,
+    trendV1:
+      mapRow && typeof mapRow === "object" && mapRow.trendV1 && typeof mapRow.trendV1 === "object"
+        ? mapRow.trendV1
+        : null,
     mistakeEventCount,
     dataSufficiencyLevel,
     isEarlySignalOnly: Boolean(u?.confidence?.rowSignals?.isEarlySignalOnly),

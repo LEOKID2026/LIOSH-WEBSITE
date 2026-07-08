@@ -15,6 +15,10 @@ import {
 } from "../../utils/learning-pattern-decision/index.js";
 import { buildTopicRecommendationFromV2UnitForPhaseTests } from "../../utils/detailed-parent-report.js";
 import { collectTopicEngineRowsFromReport } from "../../utils/parent-report-engine-insights-he.js";
+import {
+  shouldShowTrendV1Line,
+  TREND_V1_PARENT_LINE_HE,
+} from "../../utils/parent-report-topic-trend-v1.js";
 
 const START = Date.UTC(2026, 6, 4);
 const END = Date.UTC(2026, 6, 4, 23, 59, 59);
@@ -270,5 +274,48 @@ describe("parent visible metrics contract", () => {
     assert.ok(sections?.data);
     assert.ok(!sections.data.includes("0 נכונות ו-206 שגויות"));
     assert.ok(!sections.data.includes("0 נכונות"));
+  });
+
+  test("H — trendV1 only on practiced topics with displayable direction", () => {
+    const improving = {
+      ok: true,
+      direction: "improving",
+      parentLineHe: TREND_V1_PARENT_LINE_HE.improving,
+    };
+    const insufficient = {
+      ok: true,
+      direction: "insufficient_data",
+      parentLineHe: TREND_V1_PARENT_LINE_HE.insufficient_data,
+    };
+
+    assert.equal(shouldShowTrendV1Line(improving), true);
+    assert.equal(shouldShowTrendV1Line(insufficient), false);
+
+    const report = {
+      mathOperations: {
+        addition: {
+          questions: 12,
+          correct: 9,
+          wrong: 3,
+          accuracy: 75,
+          displayName: "חיבור",
+          trendV1: improving,
+        },
+        subtraction: {
+          questions: 0,
+          correct: 0,
+          wrong: 0,
+          accuracy: 0,
+          displayName: "חיסור",
+          trendV1: insufficient,
+        },
+      },
+    };
+
+    const rows = collectTopicEngineRowsFromReport(report);
+    assert.equal(rows.length, 1);
+    assert.equal(rows[0].topicKey, "addition");
+    assert.equal(shouldShowTrendV1Line(rows[0].trendV1), true);
+    assert.equal(rows[0].trendV1?.direction, "improving");
   });
 });

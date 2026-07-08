@@ -58,6 +58,10 @@ import {
   enrichHistoryRecommendations,
 } from "./history-subtopic-report.js";
 import { enrichTopicMapsWithRowTrends, filterMistakesForRow } from "./parent-report-row-trend.js";
+import {
+  enrichTopicMapsWithTrendV1,
+  loadTopicAnswerEventsFromReportStorage,
+} from "./parent-report-topic-trend-v1.js";
 import { buildWeaknessConfidencePatternsV1 } from "./intelligence-layer-v1/weakness-confidence-patterns.js";
 import { enrichTopicMapsWithRowBehaviorProfiles } from "./parent-report-row-behavior.js";
 import { validateParentReportDataIntegrity } from "./parent-report-data-integrity.js";
@@ -2487,6 +2491,7 @@ export function generateParentReportV2(
 
   enrichTopicMapsWithRowDiagnostics(maps, mistakesBySubjectMaps, endMs);
   enrichTopicMapsWithRowTrends(maps, trackingSnapshots, rawMistakesBySubject, startMs, endMs);
+  enrichTopicMapsWithTrendV1(maps, loadTopicAnswerEventsFromReportStorage());
   enrichTopicMapsWithRowBehaviorProfiles(maps, rawMistakesBySubject, startMs, endMs);
   const contractsV1TraceEnabled = evidenceContractsV1Enabled();
   if (contractsV1TraceEnabled) {

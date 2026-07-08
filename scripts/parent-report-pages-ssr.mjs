@@ -158,6 +158,18 @@ function runDetailedPageChunks() {
   );
   render("topic-strip:golden", h(TopicRecommendationExplainStrip, { tr }));
 
+  const trTrendV1 = {
+    ...tr,
+    trendV1: {
+      ok: true,
+      direction: "improving",
+      parentLineHe: "מגמה בתקופה: משתפר — בחלק המאוחר של התקופה הדיוק גבוה יותר מאשר בתחילתה.",
+    },
+  };
+  const trendStripHtml = render("topic-strip:trend-v1", h(TopicRecommendationExplainStrip, { tr: trTrendV1 }));
+  assert.match(trendStripHtml, /parent-report-topic-trend-v1/u);
+  assert.match(trendStripHtml, /מגמה בתקופה: משתפר/u);
+
   const trSparseSignals = {
     ...tr,
     whyThisRecommendationHe: longWhy,
@@ -406,6 +418,24 @@ function runParentReportPageChunks() {
     behaviorProfile: null,
   };
   render("parent-report:explain-row-minimal", h(ParentReportTopicExplainRow, { row: rowMinimal }));
+
+  const rowTrendV1 = {
+    rowKey: "k2b",
+    label: "חיבור",
+    questions: 12,
+    topicEngineRowSignals: null,
+    trend: null,
+    trendV1: {
+      ok: true,
+      direction: "stable",
+      parentLineHe:
+        "מגמה בתקופה: ללא שינוי משמעותי — עדיין כדאי לחזק את הנושא בתרגול קצר.",
+    },
+  };
+  const trendRowHtml = renderToStaticMarkup(h(ParentReportTopicExplainRow, { row: rowTrendV1, compact: true }));
+  assert.match(trendRowHtml, /parent-report-topic-trend-v1/u);
+  assert.match(trendRowHtml, /מגמה בתקופה: ללא שינוי משמעותי/u);
+  render("parent-report:explain-row-trend-v1", h(ParentReportTopicExplainRow, { row: rowTrendV1, compact: true }));
 
   const rowChartLive = {
     rowKey: "geometry_area\u0001g4",

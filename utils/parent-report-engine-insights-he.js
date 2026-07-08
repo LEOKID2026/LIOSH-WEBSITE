@@ -209,6 +209,10 @@ export function collectTopicEngineRowsFromReport(report) {
             ? data.learningPatternDecision
             : null,
 
+        trend: data.trend && typeof data.trend === "object" ? data.trend : null,
+
+        trendV1: data.trendV1 && typeof data.trendV1 === "object" ? data.trendV1 : null,
+
       });
 
     }
