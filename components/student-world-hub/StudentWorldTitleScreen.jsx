@@ -19,6 +19,10 @@ const chipLogout = `${chipBase} border-rose-200/60 bg-rose-100/75 hover:bg-rose-
 const leoRowBottomClass =
   "bottom-[calc(2.75rem+1.75rem+0.625rem+env(safe-area-inset-bottom,0px))]";
 
+const heroGreetingText = "font-extrabold text-[#F97316] drop-shadow-[0_1px_3px_rgba(255,255,255,0.9)]";
+const heroPromptText =
+  "font-semibold text-[#0F766E] drop-shadow-[0_1px_2px_rgba(255,255,255,0.85)] md:font-bold";
+
 /**
  * @param {{
  *   greetingHe: string,
@@ -95,7 +99,7 @@ export default function StudentWorldTitleScreen({
         ariaLabel="פתח את הפרופיל שלי"
       />
       <span className="pointer-events-none absolute -bottom-1 -left-2 text-3xl" aria-hidden>
-        🦁
+        🦊
       </span>
     </div>
   );
@@ -111,7 +115,7 @@ export default function StudentWorldTitleScreen({
         ariaLabel="פתח את הפרופיל שלי"
       />
       <span className="pointer-events-none absolute -bottom-1 -left-2 text-3xl lg:text-4xl" aria-hidden>
-        🦁
+        🦊
       </span>
     </div>
   );
@@ -134,10 +138,10 @@ export default function StudentWorldTitleScreen({
           <div className="relative">
             {desktopAvatarNode}
             <div className="absolute left-1/2 top-full mt-4 w-max max-w-[90vw] -translate-x-1/2 text-center">
-              <p className="text-lg font-extrabold text-slate-900 drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)] lg:text-xl">
+              <p className={`text-lg lg:text-xl ${heroGreetingText}`}>
                 {greetingHe}
               </p>
-              <p className="mt-1 text-base font-bold text-slate-900 drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)] lg:text-lg">
+              <p className={`mt-1 text-base lg:text-lg ${heroPromptText}`}>
                 {promptHe}
               </p>
             </div>
@@ -145,12 +149,12 @@ export default function StudentWorldTitleScreen({
         </div>
 
         <div className="flex min-h-0 flex-1 flex-col">
-          <div className="flex flex-col items-center gap-1.5 px-3 pt-[min(14vh,6rem)] text-center md:hidden">
+          <div className="flex flex-col items-center gap-1.5 px-3 pt-[min(14vh,6rem)] text-center -translate-y-10 md:hidden">
             {mobileAvatarNode}
-            <p className="text-xl font-extrabold text-slate-900 drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)] sm:text-2xl">
+            <p className={`text-xl sm:text-2xl ${heroGreetingText}`}>
               {greetingHe}
             </p>
-            <p className="text-lg font-semibold text-slate-800 drop-shadow-[0_1px_2px_rgba(255,255,255,0.85)] sm:text-xl">
+            <p className={`text-lg sm:text-xl ${heroPromptText}`}>
               {promptHe}
             </p>
           </div>
