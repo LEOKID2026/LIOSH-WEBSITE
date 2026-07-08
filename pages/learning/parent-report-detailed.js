@@ -24,6 +24,7 @@ import {
 import { PARENT_TOPIC_TIER } from "../../utils/parent-report-surface/parent-topic-tier.js";
 import { buildRegularReportViewModel } from "../../lib/parent-ui/parent-report-regular-display.js";
 import ParentReportDataHealthNote from "../../components/parent/ParentReportDataHealthNote.jsx";
+import { normalizeParentFacing } from "../../components/parent/ParentReportParentSections.jsx";
 import PortalLoadingPanel from "../../components/ui/PortalLoadingPanel.jsx";
 import {
   PARENT_REPORT_SITE_BRIGHT_CSS,
