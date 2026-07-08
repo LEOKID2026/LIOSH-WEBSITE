@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -63,6 +63,8 @@ import {
 } from "../../lib/teacher-portal/parent-report-remote-source.js";
 import { ParentReportExitNav, ParentReportThemeIcons } from "../../components/parent/ParentReportExitNav.jsx";
 import { PARENT_REPORT_PORTAL_GATE } from "../../lib/parent-report-server-truth.js";
+
+const PARENT_REPORT_DETAILED_PRINTING_CLASS = "parent-report-detailed-printing";
 
 /**
  * מיפוי ויזואלי בלבד לפי recommendedNextStep מה payload — לא משנה מנוע או תוכן.
@@ -245,6 +247,47 @@ export default function ParentReportDetailedPage() {
   const { theme, isBright } = useStudentTheme();
   const layoutProps = getParentReportLayoutProps(theme);
   useParentReportBrightPageBackground(isBright);
+  const printScrollYRef = useRef(null);
+  const printCleanupTimerRef = useRef(null);
+
+  const releasePrintIsolation = useCallback(() => {
+    if (typeof document === "undefined") return;
+    document.body.classList.remove(PARENT_REPORT_DETAILED_PRINTING_CLASS);
+    document.documentElement.style.removeProperty("overflow");
+    document.body.style.removeProperty("overflow");
+    document.body.style.removeProperty("height");
+    document.documentElement.style.removeProperty("height");
+    if (printCleanupTimerRef.current != null) {
+      window.clearTimeout(printCleanupTimerRef.current);
+      printCleanupTimerRef.current = null;
+    }
+    const y = printScrollYRef.current;
+    if (typeof y === "number") {
+      window.requestAnimationFrame(() => {
+        window.scrollTo(0, y);
+        printScrollYRef.current = null;
+      });
+    }
+  }, []);
+
+  const armPrintIsolation = useCallback(() => {
+    if (typeof document === "undefined") return;
+    printScrollYRef.current = window.scrollY;
+    document.body.classList.add(PARENT_REPORT_DETAILED_PRINTING_CLASS);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+    const onBefore = () => armPrintIsolation();
+    const onAfter = () => releasePrintIsolation();
+    window.addEventListener("beforeprint", onBefore);
+    window.addEventListener("afterprint", onAfter);
+    return () => {
+      window.removeEventListener("beforeprint", onBefore);
+      window.removeEventListener("afterprint", onAfter);
+      releasePrintIsolation();
+    };
+  }, [armPrintIsolation, releasePrintIsolation]);
 
   const queryPeriod = typeof router.query.period === "string" ? router.query.period : "week";
   const queryStart = typeof router.query.start === "string" ? router.query.start : null;
@@ -551,9 +594,18 @@ export default function ParentReportDetailedPage() {
       router.replace({ pathname: resolveDetailedParentReportPathname(router.query), query: q }, undefined, {
         shallow: true,
       });
-      window.setTimeout(() => window.print(), 120);
+      armPrintIsolation();
+      window.setTimeout(() => {
+        window.print();
+        if (printCleanupTimerRef.current != null) {
+          window.clearTimeout(printCleanupTimerRef.current);
+        }
+        printCleanupTimerRef.current = window.setTimeout(() => {
+          releasePrintIsolation();
+        }, 30000);
+      }, 120);
     },
-    [router.replace, queryPeriod, queryStart, queryEnd, queryModeRaw]
+    [router.replace, queryPeriod, queryStart, queryEnd, queryModeRaw, armPrintIsolation, releasePrintIsolation]
   );
 
   const ModeToggle = ({ className = "" }) => (
@@ -1027,6 +1079,42 @@ export default function ParentReportDetailedPage() {
               size: A4;
               margin: 10mm 8mm;
             }
+
+            /* Scoped print isolation — only #parent-report-detailed-print (matches regular parent report). */
+            body.parent-report-detailed-printing,
+            body.parent-report-detailed-printing #__next {
+              background: #ffffff !important;
+              background-image: none !important;
+              height: auto !important;
+              min-height: 0 !important;
+              overflow: visible !important;
+            }
+            body.parent-report-detailed-printing > div {
+              background: #ffffff !important;
+              background-image: none !important;
+              min-height: 0 !important;
+            }
+            body.parent-report-detailed-printing * {
+              visibility: hidden !important;
+            }
+            body.parent-report-detailed-printing #parent-report-detailed-print,
+            body.parent-report-detailed-printing #parent-report-detailed-print * {
+              visibility: visible !important;
+            }
+            body.parent-report-detailed-printing > div > header,
+            body.parent-report-detailed-printing > div > footer,
+            body.parent-report-detailed-printing > div > .fixed,
+            body.parent-report-detailed-printing .no-pdf,
+            body.parent-report-detailed-printing [data-pdf-overlay="1"],
+            body.parent-report-detailed-printing button {
+              display: none !important;
+            }
+            body.parent-report-detailed-printing #parent-report-detailed-print {
+              position: static !important;
+              left: auto !important;
+              top: auto !important;
+            }
+
             .pr-detailed-avoid-split {
               break-inside: auto !important;
               page-break-inside: auto !important;
