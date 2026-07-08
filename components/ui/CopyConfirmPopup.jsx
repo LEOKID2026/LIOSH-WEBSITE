@@ -1,7 +1,9 @@
-import { useCallback, useEffect, useId, useRef } from "react";
+import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 /**
  * Centered copy confirmation popup — close button, backdrop, Escape, auto-close.
+ * Portaled to document.body so fixed centering is not clipped by transformed ancestors.
  */
 export default function CopyConfirmPopup({
   open,
@@ -16,6 +18,11 @@ export default function CopyConfirmPopup({
 }) {
   const titleId = useId();
   const closeRef = useRef(null);
+  const [portalTarget, setPortalTarget] = useState(null);
+
+  useLayoutEffect(() => {
+    setPortalTarget(document.body);
+  }, []);
 
   const handleClose = useCallback(() => {
     onClose?.();
@@ -50,7 +57,7 @@ export default function CopyConfirmPopup({
     };
   }, [open, handleClose, autoCloseMs, lockBodyScroll]);
 
-  if (!open) return null;
+  if (!open || !portalTarget) return null;
 
   const popupOverlay = bright
     ? `fixed inset-0 ${zIndexClass} flex items-center justify-center bg-slate-900/45 p-4 backdrop-blur-[2px]`
@@ -76,7 +83,7 @@ export default function CopyConfirmPopup({
     ? "rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-lg font-bold text-slate-600 hover:bg-slate-50 transition"
     : "rounded-lg border border-white/15 bg-white/5 px-2.5 py-1 text-lg font-bold text-white/80 hover:text-white hover:bg-white/10 transition";
 
-  return (
+  return createPortal(
     <div
       className={popupOverlay}
       role="presentation"
@@ -110,6 +117,7 @@ export default function CopyConfirmPopup({
           {message}
         </p>
       </div>
-    </div>
+    </div>,
+    portalTarget
   );
 }

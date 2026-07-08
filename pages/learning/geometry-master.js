@@ -88,6 +88,10 @@ import { useLearningMasterUi } from "../../hooks/useLearningMasterUi.js";
 import StudentLoadingPanel from "../../components/ui/StudentLoadingPanel.jsx";
 import { useGuestPlayableTopics } from "../../hooks/useGuestPlayableTopics.js";
 import { GUEST_TOPIC_LOCK_MESSAGE_HE } from "../../lib/guest/constants.js";
+import StudentLearningAvatar from "../../components/arcade/club/StudentLearningAvatar.jsx";
+import ProfileBackgroundPickerGrid from "../../components/student/ProfileBackgroundPickerGrid.jsx";
+import { DEFAULT_PROFILE_BACKGROUND_KEY } from "../../lib/student-ui/profile-background-options.js";
+import { readProfileBackgroundFromLocalStorage } from "../../lib/student-ui/profile-background.client.js";
 import LearningMasterHud from "../../components/learning/LearningMasterHud.jsx";
 import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar.jsx";
 import LearningMasterDesktopHeader from "../../components/learning/LearningMasterDesktopHeader.jsx";
@@ -175,6 +179,7 @@ import {
   compressImageFileToJpegDataUrl,
   patchLearningProfileAvatarCustomImage,
   patchLearningProfileClearAvatarCustom,
+  selectProfileBackgroundKey,
 } from "../../lib/learning-client/student-avatar-profile-sync";
 import {
   accountAccuracyDisplayFromDerived,
@@ -387,6 +392,7 @@ export default function GeometryMaster() {
   const [showCorrectAnimation, setShowCorrectAnimation] = useState(false);
   const [showWrongAnimation, setShowWrongAnimation] = useState(false);
   const [celebrationEmoji, setCelebrationEmoji] = useState("🎉");
+  const [playerAvatarBackground, setPlayerAvatarBackground] = useState(DEFAULT_PROFILE_BACKGROUND_KEY);
   const [showPlayerProfile, setShowPlayerProfile] = useState(false);
   const [playerAvatar, setPlayerAvatar] = useState("👤"); // אווטר ברירת מחדל
   const [playerAvatarImage, setPlayerAvatarImage] = useState(null); // תמונת אווטר מותאמת אישית
@@ -673,7 +679,12 @@ export default function GeometryMaster() {
         setServerAccountSubjectAccuracyPct(accountAccuracyDisplayFromDerived(profile.derived, "geometry"));
         const st = profile.row.streaks?.geometry;
         if (st && typeof st === "object") setDailyStreak(st);
-        applyLearningProfileAvatarRowToPlayerState(profile.row.profile, setPlayerAvatar, setPlayerAvatarImage);
+        applyLearningProfileAvatarRowToPlayerState(
+          profile.row.profile,
+          setPlayerAvatar,
+          setPlayerAvatarImage,
+          setPlayerAvatarBackground,
+        );
         learningProfileHydratedRef.current = true;
         progressLoadedRef.current = true;
         setLearningProfileHydrationTick((n) => n + 1);
@@ -707,6 +718,7 @@ export default function GeometryMaster() {
         setPlayerAvatarImage(null);
       }
     }
+      setPlayerAvatarBackground(readProfileBackgroundFromLocalStorage());
   }, []);
 
   // טיפול בהעלאת תמונת אווטר (דחיסה + שמירה בפרופיל — סנכרון בין מכשירים)
@@ -757,6 +769,10 @@ export default function GeometryMaster() {
         /* ignore */
       }
     })();
+  };
+
+  const handleSelectProfileBackground = (key) => {
+    void selectProfileBackgroundKey(key, setPlayerAvatarBackground).catch(() => {});
   };
 
   useEffect(() => {
@@ -2672,6 +2688,7 @@ export default function GeometryMaster() {
             onAvatarClick={() => setShowPlayerProfile(true)}
             playerAvatar={playerAvatar}
             playerAvatarImage={playerAvatarImage}
+            playerAvatarBackground={playerAvatarBackground}
           />
 
           {/* בחירת מצב (תרגול / למידה / מהירות / מרתון / אתגר) */}
@@ -3843,6 +3860,13 @@ export default function GeometryMaster() {
                         {avatar}
                       </button>
                     ))}
+                  </div>
+                  <div className="mt-3 mb-4">
+                    <ProfileBackgroundPickerGrid
+                      variant="dark"
+                      selectedKey={playerAvatarBackground}
+                      onSelect={handleSelectProfileBackground}
+                    />
                   </div>
                 </div>
 

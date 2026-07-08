@@ -52,6 +52,10 @@ import { useLearningMasterUi } from "../../hooks/useLearningMasterUi";
 import StudentLoadingPanel from "../../components/ui/StudentLoadingPanel.jsx";
 import { useGuestPlayableTopics } from "../../hooks/useGuestPlayableTopics.js";
 import { GUEST_TOPIC_LOCK_MESSAGE_HE } from "../../lib/guest/constants.js";
+import StudentLearningAvatar from "../../components/arcade/club/StudentLearningAvatar.jsx";
+import ProfileBackgroundPickerGrid from "../../components/student/ProfileBackgroundPickerGrid.jsx";
+import { DEFAULT_PROFILE_BACKGROUND_KEY } from "../../lib/student-ui/profile-background-options.js";
+import { readProfileBackgroundFromLocalStorage } from "../../lib/student-ui/profile-background.client.js";
 import LearningMasterHud from "../../components/learning/LearningMasterHud";
 import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar";
 import LearningMasterDesktopHeader from "../../components/learning/LearningMasterDesktopHeader.jsx";
@@ -124,6 +128,7 @@ import {
   compressImageFileToJpegDataUrl,
   patchLearningProfileAvatarCustomImage,
   patchLearningProfileClearAvatarCustom,
+  selectProfileBackgroundKey,
 } from "../../lib/learning-client/student-avatar-profile-sync";
 import {
   accountAccuracyDisplayFromDerived,
@@ -870,6 +875,7 @@ export default function EnglishMaster() {
     return "👤";
   });
   const [playerAvatarImage, setPlayerAvatarImage] = useState(null); // תמונת אווטר מותאמת אישית
+  const [playerAvatarBackground, setPlayerAvatarBackground] = useState(DEFAULT_PROFILE_BACKGROUND_KEY);
   const [showPlayerProfile, setShowPlayerProfile] = useState(false);
   const gradeLabels = ["א", "ב", "ג", "ד", "ה", "ו"];
 
@@ -919,7 +925,12 @@ export default function EnglishMaster() {
         setServerAccountSubjectAccuracyPct(accountAccuracyDisplayFromDerived(profile.derived, "english"));
         const st = profile.row.streaks?.english;
         if (st && typeof st === "object") setDailyStreak(st);
-        applyLearningProfileAvatarRowToPlayerState(profile.row.profile, setPlayerAvatar, setPlayerAvatarImage);
+        applyLearningProfileAvatarRowToPlayerState(
+          profile.row.profile,
+          setPlayerAvatar,
+          setPlayerAvatarImage,
+          setPlayerAvatarBackground,
+        );
         learningProfileHydratedRef.current = true;
         try {
           const pr = profile.row.subjects?.english?.progressStore?.progress;
@@ -1065,6 +1076,10 @@ export default function EnglishMaster() {
     })();
   };
 
+
+  const handleSelectProfileBackground = (key) => {
+    void selectProfileBackgroundKey(key, setPlayerAvatarBackground).catch(() => {});
+  };
 
   const handleGradeNumberChange = (value) => {
     const numeric = Number(value);
@@ -2643,6 +2658,7 @@ export default function EnglishMaster() {
             onAvatarClick={() => setShowPlayerProfile(true)}
             playerAvatar={playerAvatar}
             playerAvatarImage={playerAvatarImage}
+            playerAvatarBackground={playerAvatarBackground}
           />
 
           {/* בחירת מצב (תרגול / למידה / מהירות / מרתון / אתגר) */}
@@ -3742,6 +3758,13 @@ export default function EnglishMaster() {
                         {avatar}
                       </button>
                     ))}
+                  </div>
+                  <div className="mt-3 mb-4">
+                    <ProfileBackgroundPickerGrid
+                      variant="dark"
+                      selectedKey={playerAvatarBackground}
+                      onSelect={handleSelectProfileBackground}
+                    />
                   </div>
                 </div>
 

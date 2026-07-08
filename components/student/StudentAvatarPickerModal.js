@@ -4,7 +4,15 @@ import {
   compressImageFileToJpegDataUrl,
   patchLearningProfileAvatarCustomImage,
   patchLearningProfileClearAvatarCustom,
+  patchLearningProfileAvatarBackground,
 } from "../../lib/learning-client/student-avatar-profile-sync";
+import StudentLearningAvatar from "../arcade/club/StudentLearningAvatar.jsx";
+import ProfileBackgroundPickerGrid from "./ProfileBackgroundPickerGrid.jsx";
+import {
+  readProfileBackgroundFromLocalStorage,
+  resolveProfileBackgroundKey,
+  writeProfileBackgroundToLocalStorage,
+} from "../../lib/student-ui/profile-background.client.js";
 
 /** Same palette as learning master pages (math / hebrew / …). */
 export const STUDENT_AVATAR_EMOJI_OPTIONS = [
@@ -36,8 +44,10 @@ export const STUDENT_AVATAR_EMOJI_OPTIONS = [
  * @param {() => void} props.onClose
  * @param {string} [props.playerName]
  * @param {string | null | undefined} props.serverAvatarEmoji from learning profile (e.g. home-profile `profile.avatarEmoji`)
+ * @param {string | null | undefined} [props.serverAvatarBackgroundKey] from learning profile
  * @param {(emoji: string | null) => void} [props.onAvatarEmojiPersisted] parent may merge into dashboard payload
  * @param {(url: string | null) => void} [props.onAvatarCustomDataUrlPersisted] parent merges `profile.avatarCustomDataUrl`
+ * @param {(key: string) => void} [props.onAvatarBackgroundPersisted]
  * @param {() => void} [props.onAvatarChanged] called after any local avatar change (e.g. refresh hero from localStorage)
  */
 export default function StudentAvatarPickerModal({
@@ -45,13 +55,16 @@ export default function StudentAvatarPickerModal({
   onClose,
   playerName = "",
   serverAvatarEmoji = null,
+  serverAvatarBackgroundKey = null,
   onAvatarEmojiPersisted,
   onAvatarCustomDataUrlPersisted,
+  onAvatarBackgroundPersisted,
   onAvatarChanged,
 }) {
   const fileInputRef = useRef(null);
   const [playerAvatar, setPlayerAvatar] = useState("👤");
   const [playerAvatarImage, setPlayerAvatarImage] = useState(null);
+  const [playerAvatarBackground, setPlayerAvatarBackground] = useState("sky");
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
 
@@ -75,7 +88,13 @@ export default function StudentAvatarPickerModal({
       return;
     }
     setPlayerAvatar(server || "👤");
-  }, [serverAvatarEmoji]);
+
+    const serverBg =
+      serverAvatarBackgroundKey != null && String(serverAvatarBackgroundKey).trim() !== ""
+        ? resolveProfileBackgroundKey(serverAvatarBackgroundKey)
+        : null;
+    setPlayerAvatarBackground(serverBg || readProfileBackgroundFromLocalStorage());
+  }, [serverAvatarEmoji, serverAvatarBackgroundKey]);
 
   useEffect(() => {
     if (!open) return;
@@ -175,6 +194,25 @@ export default function StudentAvatarPickerModal({
     void persistEmojiToServer(avatar);
   };
 
+  const selectBackground = (backgroundKey) => {
+    const key = resolveProfileBackgroundKey(backgroundKey);
+    setPlayerAvatarBackground(key);
+    writeProfileBackgroundToLocalStorage(key);
+    onAvatarChanged?.();
+    void (async () => {
+      setSaving(true);
+      setSaveError("");
+      try {
+        await patchLearningProfileAvatarBackground(key);
+        onAvatarBackgroundPersisted?.(key);
+      } catch (e) {
+        setSaveError(e && typeof e === "object" && "message" in e ? String(e.message) : "שמירה נכשלה");
+      } finally {
+        setSaving(false);
+      }
+    })();
+  };
+
   if (!open) return null;
 
   return (
@@ -207,15 +245,12 @@ export default function StudentAvatarPickerModal({
 
         <div className="rounded-xl border border-slate-200 bg-sky-50/50 p-3">
           <div className="mb-3 flex items-center gap-3">
-            <div className="text-4xl">
-              {playerAvatarImage ? (
-                <img src={playerAvatarImage} alt="אווטר" className="h-16 w-16 rounded-full object-cover border-2 border-sky-200" />
-              ) : (
-                <span className="inline-flex h-16 w-16 items-center justify-center text-5xl leading-none bg-white rounded-full border-2 border-sky-200" aria-hidden>
-                  {playerAvatar}
-                </span>
-              )}
-            </div>
+            <StudentLearningAvatar
+              avatarEmoji={playerAvatar}
+              avatarCustomDataUrl={playerAvatarImage || ""}
+              avatarBackgroundKey={playerAvatarBackground}
+              sizeClass="h-16 w-16 text-5xl"
+            />
             <div className="min-w-0 flex-1 text-right">
               <div className="mb-1 text-xs text-slate-500">שם שחקן</div>
               <div className="truncate text-lg font-bold text-slate-800">{playerName || "שחקן"}</div>
@@ -274,6 +309,14 @@ export default function StudentAvatarPickerModal({
                 {avatar}
               </button>
             ))}
+          </div>
+
+          <div className="mt-3">
+            <ProfileBackgroundPickerGrid
+              selectedKey={playerAvatarBackground}
+              disabled={saving}
+              onSelect={selectBackground}
+            />
           </div>
 
           {saveError ? <p className="mt-3 text-center text-sm text-rose-600">{saveError}</p> : null}

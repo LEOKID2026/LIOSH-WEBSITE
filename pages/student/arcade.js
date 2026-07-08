@@ -383,6 +383,7 @@ export default function StudentArcadePage() {
   const [clubProfile, setClubProfile] = useState(null);
   const [homeAvatarEmoji, setHomeAvatarEmoji] = useState("👤");
   const [homeAvatarCustomDataUrl, setHomeAvatarCustomDataUrl] = useState("");
+  const [homeAvatarBackground, setHomeAvatarBackground] = useState("sky");
   const [pendingInvite, setPendingInvite] = useState(null);
   /** @type {{ kind: string; room: Record<string, unknown> } | null} */
   const [roomHighlight, setRoomHighlight] = useState(null);
@@ -410,6 +411,7 @@ export default function StudentArcadePage() {
     const avatar = studentAvatarFromHomeSummary(homeJson);
     setHomeAvatarEmoji(avatar.avatarEmoji);
     setHomeAvatarCustomDataUrl(avatar.avatarCustomDataUrl);
+    setHomeAvatarBackground(avatar.avatarBackgroundKey);
   }, []);
 
   const refresh = useCallback(async () => {
@@ -709,6 +711,7 @@ export default function StudentArcadePage() {
             leoNumber={clubProfile?.leoNumber || null}
             avatarEmoji={homeAvatarEmoji}
             avatarCustomDataUrl={homeAvatarCustomDataUrl}
+            avatarBackgroundKey={homeAvatarBackground}
             gh={GH}
             onAvatarClick={openProfileTab}
           />

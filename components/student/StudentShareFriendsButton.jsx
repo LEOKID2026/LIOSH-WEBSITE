@@ -17,8 +17,18 @@ const MOBILE_BTN_CLASSIC =
 const SURPRISE_DESKTOP_BTN =
   "hidden md:inline-flex flex-none !min-h-[2.75rem] !px-3 !py-2 !text-sm text-center whitespace-nowrap items-center justify-center";
 
+const CHIP_BTN_BRIGHT =
+  "inline-flex items-center justify-center whitespace-nowrap rounded-lg border border-teal-200/55 bg-teal-50/80 px-2.5 py-1.5 text-xs font-semibold text-teal-900 shadow-sm backdrop-blur-[6px] transition hover:bg-teal-100/85";
+
+const CHIP_BTN_CLASSIC =
+  "inline-flex items-center justify-center whitespace-nowrap rounded-lg border border-cyan-400/40 bg-cyan-500/20 px-2.5 py-1.5 text-xs font-semibold text-cyan-50 shadow-sm backdrop-blur-[6px] transition hover:bg-cyan-500/30";
+
 /** Student home — copy share message for friends + centered popup. */
-export default function StudentShareFriendsButton({ className = "", variant = "mobile" }) {
+export default function StudentShareFriendsButton({
+  className = "",
+  variant = "mobile",
+  label = "שתף עם חברים",
+}) {
   const { tokens: T, isBright } = useStudentTheme();
   const [popupOpen, setPopupOpen] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
@@ -37,17 +47,29 @@ export default function StudentShareFriendsButton({ className = "", variant = "m
   };
 
   const btnClass =
-    variant === "desktop-surprise"
-      ? `${T.ctaShareFriends} ${SURPRISE_DESKTOP_BTN}`
-      : isBright
-        ? MOBILE_BTN_BRIGHT
-        : MOBILE_BTN_CLASSIC;
+    variant === "chip"
+      ? isBright
+        ? CHIP_BTN_BRIGHT
+        : CHIP_BTN_CLASSIC
+      : variant === "desktop-surprise"
+        ? `${T.ctaShareFriends} ${SURPRISE_DESKTOP_BTN}`
+        : isBright
+          ? MOBILE_BTN_BRIGHT
+          : MOBILE_BTN_CLASSIC;
 
   const testId =
-    variant === "desktop-surprise" ? "student-share-friends-btn-desktop" : "student-share-friends-btn";
+    variant === "desktop-surprise"
+      ? "student-share-friends-btn-desktop"
+      : variant === "chip"
+        ? "student-share-friends-btn-chip"
+        : "student-share-friends-btn";
 
   const popupTestId =
-    variant === "desktop-surprise" ? "student-share-friends-popup-desktop" : "student-share-friends-popup";
+    variant === "desktop-surprise"
+      ? "student-share-friends-popup-desktop"
+      : variant === "chip"
+        ? "student-share-friends-popup-chip"
+        : "student-share-friends-popup";
 
   return (
     <>
@@ -57,7 +79,7 @@ export default function StudentShareFriendsButton({ className = "", variant = "m
         className={`${btnClass} ${className}`.trim()}
         data-testid={testId}
       >
-        שתף עם חברים
+        {label}
       </button>
 
       <CopyConfirmPopup

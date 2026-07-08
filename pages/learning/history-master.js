@@ -95,6 +95,7 @@ import {
   compressImageFileToJpegDataUrl,
   patchLearningProfileAvatarCustomImage,
   patchLearningProfileClearAvatarCustom,
+  selectProfileBackgroundKey,
 } from "../../lib/learning-client/student-avatar-profile-sync";
 import {
   accountAccuracyDisplayFromDerived,
@@ -132,6 +133,10 @@ import { useLearningMasterUi } from "../../hooks/useLearningMasterUi.js";
 import StudentLoadingPanel from "../../components/ui/StudentLoadingPanel.jsx";
 import { useGuestPlayableTopics } from "../../hooks/useGuestPlayableTopics.js";
 import { GUEST_TOPIC_LOCK_MESSAGE_HE } from "../../lib/guest/constants.js";
+import StudentLearningAvatar from "../../components/arcade/club/StudentLearningAvatar.jsx";
+import ProfileBackgroundPickerGrid from "../../components/student/ProfileBackgroundPickerGrid.jsx";
+import { DEFAULT_PROFILE_BACKGROUND_KEY } from "../../lib/student-ui/profile-background-options.js";
+import { readProfileBackgroundFromLocalStorage } from "../../lib/student-ui/profile-background.client.js";
 import LearningMasterHud from "../../components/learning/LearningMasterHud.jsx";
 import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar.jsx";
 import LearningMasterDesktopHeader from "../../components/learning/LearningMasterDesktopHeader.jsx";
@@ -969,6 +974,7 @@ export default function HistoryMaster() {
     }
   });
   const [playerAvatarImage, setPlayerAvatarImage] = useState(null); // תמונת אווטר מותאמת אישית
+  const [playerAvatarBackground, setPlayerAvatarBackground] = useState(DEFAULT_PROFILE_BACKGROUND_KEY);
   const [showPlayerProfile, setShowPlayerProfile] = useState(false);
   const [practiceFocus, setPracticeFocus] = useState("balanced");
   const [focusedPracticeMode, setFocusedPracticeMode] = useState("normal");
@@ -1169,6 +1175,11 @@ export default function HistoryMaster() {
     })();
   };
 
+  const handleSelectProfileBackground = (key) => {
+    void selectProfileBackgroundKey(key, setPlayerAvatarBackground).catch(() => {});
+  };
+
+
   useEffect(() => {
     let cancelled = false;
     fetchStudentLearningProfile()
@@ -1217,7 +1228,12 @@ export default function HistoryMaster() {
         setServerAccountSubjectAccuracyPct(accountAccuracyDisplayFromDerived(profile.derived, "history"));
         const st = profile.row.streaks?.history;
         if (st && typeof st === "object") setDailyStreak(st);
-        applyLearningProfileAvatarRowToPlayerState(profile.row.profile, setPlayerAvatar, setPlayerAvatarImage);
+        applyLearningProfileAvatarRowToPlayerState(
+          profile.row.profile,
+          setPlayerAvatar,
+          setPlayerAvatarImage,
+          setPlayerAvatarBackground,
+        );
         learningProfileHydratedRef.current = true;
         try {
           const pr = profile.row.subjects?.history?.progressStore?.progress;
@@ -3024,6 +3040,8 @@ function saveScienceAnswerInParallel({
             onAvatarClick={() => setShowPlayerProfile(true)}
             playerAvatar={playerAvatar}
             playerAvatarImage={playerAvatarImage}
+            playerAvatarBackground={playerAvatarBackground}
+            playerAvatarBackground={playerAvatarBackground}
           />
 
           {/* בחירת מצב (תרגול / למידה / מהירות / מרתון / אתגר) */}
@@ -3951,16 +3969,13 @@ function saveScienceAnswerInParallel({
                 </div>
 
                 <div className="text-center mb-4">
-                  <div className="text-6xl mb-3">
-                    {playerAvatarImage ? (
-                      <img 
-                        src={playerAvatarImage} 
-                        alt="אווטר" 
-                        className="w-24 h-24 rounded-full object-cover mx-auto"
-                      />
-                    ) : (
-                      playerAvatar
-                    )}
+                  <div className="mb-3 flex justify-center">
+                    <StudentLearningAvatar
+                      avatarEmoji={playerAvatar || "👤"}
+                      avatarCustomDataUrl={playerAvatarImage || ""}
+                      avatarBackgroundKey={playerAvatarBackground}
+                      sizeClass="h-24 w-24 text-6xl"
+                    />
                   </div>
                   <div className="text-sm text-white/60 mb-3">בחר אווטר:</div>
                   
@@ -4023,6 +4038,13 @@ function saveScienceAnswerInParallel({
                         {avatar}
                       </button>
                     ))}
+                  </div>
+                  <div className="mt-3 mb-4">
+                    <ProfileBackgroundPickerGrid
+                      variant="dark"
+                      selectedKey={playerAvatarBackground}
+                      onSelect={handleSelectProfileBackground}
+                    />
                   </div>
                 </div>
 

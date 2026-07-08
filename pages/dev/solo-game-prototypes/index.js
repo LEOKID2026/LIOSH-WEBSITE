@@ -9,6 +9,7 @@ import {
   LEARNING_DEV_PROTOTYPES_HUB,
   LEO_DOG_PROTOTYPE,
   SOLO_DEV_PROTOTYPES_PLAY_HUB,
+  STUDENT_WORLD_HOME_PROTOTYPE,
 } from "../../../lib/solo-games/dev-prototype-hub-list.js";
 
 /** Dev hub — pet prototype + solo play + learning prototypes */
@@ -16,7 +17,12 @@ export default function SoloGamePrototypesHubPage() {
   const { theme } = useStudentTheme();
   const { GH } = useGamesHubUi();
 
-  const sections = [LEO_DOG_PROTOTYPE, SOLO_DEV_PROTOTYPES_PLAY_HUB, LEARNING_DEV_PROTOTYPES_HUB];
+  const sections = [
+    STUDENT_WORLD_HOME_PROTOTYPE,
+    LEO_DOG_PROTOTYPE,
+    SOLO_DEV_PROTOTYPES_PLAY_HUB,
+    LEARNING_DEV_PROTOTYPES_HUB,
+  ];
 
   return (
     <>

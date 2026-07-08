@@ -1,6 +1,6 @@
 import StudentLearningAvatar from "./StudentLearningAvatar.jsx";
 
-/** @param {{ displayName: string, coinBalance: string|number, diamondBalance?: string|number, isGuest?: boolean, leoNumber?: string|null, avatarEmoji?: string, avatarCustomDataUrl?: string, className?: string, gh?: Record<string, string>, onAvatarClick?: () => void }} props */
+/** @param {{ displayName: string, coinBalance: string|number, diamondBalance?: string|number, isGuest?: boolean, leoNumber?: string|null, avatarEmoji?: string, avatarCustomDataUrl?: string, avatarBackgroundKey?: string, className?: string, gh?: Record<string, string>, onAvatarClick?: () => void }} props */
 export default function ArcadeLobbyHeader({
   displayName,
   coinBalance,
@@ -9,6 +9,7 @@ export default function ArcadeLobbyHeader({
   leoNumber = null,
   avatarEmoji = "👤",
   avatarCustomDataUrl = "",
+  avatarBackgroundKey = "sky",
   className = "",
   gh = {},
   onAvatarClick,
@@ -30,6 +31,7 @@ export default function ArcadeLobbyHeader({
           <StudentLearningAvatar
             avatarEmoji={avatarEmoji}
             avatarCustomDataUrl={avatarCustomDataUrl}
+            avatarBackgroundKey={avatarBackgroundKey}
             onClick={onAvatarClick}
           />
           <div className="min-w-0 text-right">

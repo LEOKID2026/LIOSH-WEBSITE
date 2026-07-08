@@ -10,6 +10,7 @@ export default function ArcadeClubProfilePanel({ gh }) {
   const [displayName, setDisplayName] = useState("");
   const [avatarEmoji, setAvatarEmoji] = useState("👤");
   const [avatarCustomDataUrl, setAvatarCustomDataUrl] = useState("");
+  const [avatarBackgroundKey, setAvatarBackgroundKey] = useState("sky");
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -31,6 +32,7 @@ export default function ArcadeClubProfilePanel({ gh }) {
       const avatar = studentAvatarFromHomeSummary(homeJson);
       setAvatarEmoji(avatar.avatarEmoji);
       setAvatarCustomDataUrl(avatar.avatarCustomDataUrl);
+      setAvatarBackgroundKey(avatar.avatarBackgroundKey);
     }
   }, []);
   useEffect(() => {
@@ -67,6 +69,7 @@ export default function ArcadeClubProfilePanel({ gh }) {
           <StudentLearningAvatar
             avatarEmoji={avatarEmoji}
             avatarCustomDataUrl={avatarCustomDataUrl}
+            avatarBackgroundKey={avatarBackgroundKey}
             sizeClass="h-14 w-14 text-2xl"
           />
           <Link href="/student/home" className={`text-[11px] font-semibold underline ${gh.arcadePanelBlurb || gh.cardBlurb}`}>

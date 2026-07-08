@@ -3,6 +3,8 @@ import { formatMathHudNumber } from "../../utils/math-master-hud-number.client.j
 const HUD_GRID =
   "mx-auto grid grid-cols-8 gap-0.5 md:gap-1 lg:gap-1.5 mb-3 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl";
 
+import StudentLearningAvatar from "../arcade/club/StudentLearningAvatar.jsx";
+
 function HudCell({ MB, label, valueClass, children }) {
   return (
     <div className={MB.hudCell}>
@@ -33,6 +35,7 @@ export default function LearningMasterHud({
   onAvatarClick,
   playerAvatar,
   playerAvatarImage,
+  playerAvatarBackground = "sky",
   formatValue = formatMathHudNumber,
   className = "",
 }) {
@@ -92,17 +95,13 @@ export default function LearningMasterHud({
           <div className={MB.hudLabel}>אווטר</div>
         </div>
         <div className="flex flex-1 items-center justify-center min-h-0">
-          <div className="text-lg md:text-2xl lg:text-3xl font-bold leading-tight">
-            {playerAvatarImage ? (
-              <img
-                src={playerAvatarImage}
-                alt="אווטר"
-                className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 rounded-full object-cover mx-auto"
-              />
-            ) : (
-              playerAvatar
-            )}
-          </div>
+          <StudentLearningAvatar
+            avatarEmoji={playerAvatar}
+            avatarCustomDataUrl={playerAvatarImage || ""}
+            avatarBackgroundKey={playerAvatarBackground}
+            sizeClass="h-6 w-6 text-sm md:h-7 md:w-7 md:text-base lg:h-8 lg:w-8 lg:text-lg"
+            className="mx-auto"
+          />
         </div>
       </button>
     </div>

@@ -83,7 +83,10 @@ import { useLearningMasterUi } from "../../hooks/useLearningMasterUi.js";
 import StudentLoadingPanel from "../../components/ui/StudentLoadingPanel.jsx";
 import { useGuestPlayableTopics } from "../../hooks/useGuestPlayableTopics.js";
 import { GUEST_TOPIC_LOCK_MESSAGE_HE } from "../../lib/guest/constants.js";
-import LearningMasterHud from "../../components/learning/LearningMasterHud.jsx";
+import StudentLearningAvatar from "../../components/arcade/club/StudentLearningAvatar.jsx";
+import ProfileBackgroundPickerGrid from "../../components/student/ProfileBackgroundPickerGrid.jsx";
+import { DEFAULT_PROFILE_BACKGROUND_KEY } from "../../lib/student-ui/profile-background-options.js";
+import { readProfileBackgroundFromLocalStorage } from "../../lib/student-ui/profile-background.client.js";
 import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar.jsx";
 import LearningMasterDesktopHeader from "../../components/learning/LearningMasterDesktopHeader.jsx";
 import LearningMasterAdSlot from "../../components/learning/LearningMasterAdSlot.jsx";
@@ -243,6 +246,7 @@ import {
   compressImageFileToJpegDataUrl,
   patchLearningProfileAvatarCustomImage,
   patchLearningProfileClearAvatarCustom,
+  selectProfileBackgroundKey,
 } from "../../lib/learning-client/student-avatar-profile-sync";
 import {
   accountAccuracyDisplayFromDerived,
@@ -629,6 +633,7 @@ export default function MathMaster() {
   const [showPlayerProfile, setShowPlayerProfile] = useState(false);
   const [playerAvatar, setPlayerAvatar] = useState("👤"); // אווטר ברירת מחדל
   const [playerAvatarImage, setPlayerAvatarImage] = useState(null); // תמונת אווטר מותאמת אישית
+  const [playerAvatarBackground, setPlayerAvatarBackground] = useState(DEFAULT_PROFILE_BACKGROUND_KEY);
   const [monthlyPersistenceView, setMonthlyPersistenceView] = useState(null);
   /** Display-only: `payload.student.coin_balance` from GET /api/student/me (same source as student defaults). */
   const [childCoinBalance, setChildCoinBalance] = useState(0);
@@ -1025,7 +1030,12 @@ export default function MathMaster() {
         setServerAccountSubjectAccuracyPct(accountAccuracyDisplayFromDerived(profile.derived, "math"));
         const st = profile.row.streaks?.math;
         if (st && typeof st === "object") setDailyStreak(st);
-        applyLearningProfileAvatarRowToPlayerState(profile.row.profile, setPlayerAvatar, setPlayerAvatarImage);
+        applyLearningProfileAvatarRowToPlayerState(
+          profile.row.profile,
+          setPlayerAvatar,
+          setPlayerAvatarImage,
+          setPlayerAvatarBackground,
+        );
         learningProfileHydratedRef.current = true;
         try {
           const pr = profile.row.subjects?.math?.progressStore?.progress;
@@ -1223,6 +1233,7 @@ export default function MathMaster() {
         setPlayerAvatar(saved);
         setPlayerAvatarImage(null);
       }
+      setPlayerAvatarBackground(readProfileBackgroundFromLocalStorage());
     }
   }, []);
 
@@ -1274,6 +1285,10 @@ export default function MathMaster() {
         /* ignore */
       }
     })();
+  };
+
+  const handleSelectProfileBackground = (key) => {
+    void selectProfileBackgroundKey(key, setPlayerAvatarBackground).catch(() => {});
   };
 
   useEffect(() => {
@@ -3552,6 +3567,7 @@ export default function MathMaster() {
             onAvatarClick={() => setShowPlayerProfile(true)}
             playerAvatar={playerAvatar}
             playerAvatarImage={playerAvatarImage}
+            playerAvatarBackground={playerAvatarBackground}
           />
 
           {/* בחירת מצב (תרגול / למידה / מהירות / מרתון / אתגר) */}
@@ -3646,17 +3662,12 @@ export default function MathMaster() {
                 {/* אווטר ונתונים בשורה */}
                 <div className="bg-black/30 border border-white/10 rounded-lg p-3">
                     <div className="flex items-center gap-3 mb-3">
-                      <div className="text-4xl">
-                        {playerAvatarImage ? (
-                          <img 
-                            src={playerAvatarImage} 
-                            alt="אווטר" 
-                            className="w-16 h-16 rounded-full object-cover"
-                          />
-                        ) : (
-                          playerAvatar
-                        )}
-                      </div>
+                      <StudentLearningAvatar
+                        avatarEmoji={playerAvatar || "👤"}
+                        avatarCustomDataUrl={playerAvatarImage || ""}
+                        avatarBackgroundKey={playerAvatarBackground}
+                        sizeClass="h-16 w-16 text-5xl"
+                      />
                       <div className="flex-1">
                         <div className="text-sm text-white/60 mb-1">שם שחקן</div>
                         <div className="text-lg font-bold text-white">{playerName || "שחקן"}</div>
@@ -3752,6 +3763,14 @@ export default function MathMaster() {
                             {avatar}
                           </button>
                         ))}
+                      </div>
+
+                      <div className="mt-3">
+                        <ProfileBackgroundPickerGrid
+                          variant="dark"
+                          selectedKey={playerAvatarBackground}
+                          onSelect={handleSelectProfileBackground}
+                        />
                       </div>
                     </div>
                   </div>
