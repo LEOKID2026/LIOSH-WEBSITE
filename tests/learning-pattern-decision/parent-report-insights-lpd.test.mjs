@@ -4,6 +4,7 @@
 import assert from "node:assert/strict";
 import {
   buildLearningPatternDecision,
+  buildLpdSafeTopicInsightLineHe,
   buildLpdParentInsightLineHe,
   buildLpdSafeTopicExplainSectionsHe,
   findForbiddenParentWords,
@@ -46,16 +47,23 @@ function lpdRow({ q, c, w, acc, name, bucket = "addition", subjectId = "math", m
   };
 }
 
-/** A — insight line uses LPD, not raw engine */
+/** A — insight line uses LPD owner copy, not raw engine */
 {
   const row = lpdRow({ q: 2, c: 0, w: 2, acc: 0, name: "חיבור" });
   const line = buildTopicEngineInsightLineHe(row);
   const finding = lpdParentVisibleFindingFromRow(row);
+  const lpdLine = buildLpdSafeTopicInsightLineHe(row);
+  assert.equal(line, lpdLine);
   assert.ok(line.includes("חיבור"));
-  assert.ok(line.includes(finding));
+  assert.match(line, /מעט שאלות: 2/u);
+  assert.match(line, /תמונה ראשונית בלבד/u);
+  assert.ok(finding.includes("חיבור"));
+  assert.match(finding, /נפתרו 2 שאלות/u);
+  assert.ok(!line.includes(finding), "insight line uses owner LPD copy, not raw parentVisibleFinding");
   assert.ok(!line.includes("כדאי לחזק"));
   assert.ok(!line.includes("בדחיפות"));
   assert.equal(findForbiddenParentWords(line).length, 0);
+  assert.equal(findForbiddenParentWords(finding).length, 0);
 }
 
 /** B — explain row copy guarded + per-topic sections restored */
@@ -67,10 +75,10 @@ function lpdRow({ q, c, w, acc, name, bucket = "addition", subjectId = "math", m
   assert.equal(findForbiddenParentWords(copy.primaryFinding).length, 0);
   assert.ok(!copy.primaryFinding.includes("דפוס חוזר"));
   assert.ok(copy.explainSections);
-  assert.match(copy.explainSections.identified, /מה זוהה:/);
+  assert.match(copy.explainSections.identified, /מה רואים:/);
   assert.match(copy.explainSections.data, /הנתונים:/);
-  assert.match(copy.explainSections.meaning, /משמעות:/);
-  assert.match(copy.explainSections.action, /מה כדאי לעשות בבית:/);
+  assert.match(copy.explainSections.meaning, /מה זה אומר:/);
+  assert.match(copy.explainSections.action, /מה כדאי לעשות ביחד:/);
   assert.ok(!copy.explainSections.identified.includes("כדאי לחזק"));
 }
 
@@ -160,11 +168,11 @@ function lpdRow({ q, c, w, acc, name, bucket = "addition", subjectId = "math", m
   const row = lpdRow({ q: 12, c: 2, w: 10, acc: 17, name: "חיבור", mistakes });
   const sections = buildLpdSafeTopicExplainSectionsHe(row);
   assert.ok(sections);
-  assert.match(sections.identified, /מה זוהה:/);
+  assert.match(sections.identified, /מה רואים:/);
   assert.match(sections.data, /הנתונים:/);
-  assert.match(sections.meaning, /משמעות:/);
-  assert.match(sections.action, /מה כדאי לעשות בבית:/);
-  assert.match(sections.identified, /דפוס חוזר|קושי ברור|שגויות/u);
+  assert.match(sections.meaning, /מה זה אומר:/);
+  assert.match(sections.action, /מה כדאי לעשות ביחד:/);
+  assert.match(sections.identified, /קושי|שגויות|דפוס חוזר/u);
   assert.equal(findForbiddenParentWords(JSON.stringify(sections)).length, 0);
   assert.ok(!JSON.stringify(sections).includes("הילד פתר"));
 }
@@ -201,10 +209,10 @@ function lpdRow({ q, c, w, acc, name, bucket = "addition", subjectId = "math", m
   };
   const sections = buildLpdSafeTopicExplainSectionsHe(row);
   assert.ok(sections, "chart row should produce LPD sections from rowKey prefix");
-  assert.match(sections.identified, /מה זוהה:/);
+  assert.match(sections.identified, /מה רואים:/);
   assert.match(sections.data, /הנתונים:/);
-  assert.match(sections.meaning, /משמעות:/);
-  assert.match(sections.action, /מה כדאי לעשות בבית:/);
+  assert.match(sections.meaning, /מה זה אומר:/);
+  assert.match(sections.action, /מה כדאי לעשות ביחד:/);
   assert.equal(findForbiddenParentWords(JSON.stringify(sections)).length, 0);
   assert.ok(!JSON.stringify(sections).includes("הילד פתר"));
 }

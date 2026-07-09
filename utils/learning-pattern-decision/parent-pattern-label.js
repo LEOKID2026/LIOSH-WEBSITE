@@ -2,6 +2,12 @@
  * Parent-safe pattern labels — never expose raw engine ids or "unknown" to parents.
  */
 
+import {
+  isTechnicalEnglishPatternKey,
+  parentFacingErrorPatternLabelHe,
+  resolveParentFacingPatternLabelHe,
+} from "./parent-facing-error-pattern-he.js";
+
 const BLOCKED_LABELS = new Set([
   "unknown",
   "unspecified",
@@ -38,6 +44,7 @@ export function isUsableParentPatternLabel(label) {
   if (/^pf:[a-z0-9_:.-]+$/i.test(raw) && !/[\u0590-\u05FF]/.test(raw)) return false;
   if (/^k:[a-z0-9_|.-]+$/i.test(raw) && !/[\u0590-\u05FF]/.test(raw)) return false;
   if (/^default_[a-z0-9_]+$/i.test(raw)) return false;
+  if (isTechnicalEnglishPatternKey(raw)) return false;
   return true;
 }
 
@@ -46,5 +53,6 @@ export function isUsableParentPatternLabel(label) {
  * @returns {string}
  */
 export function sanitizeParentPatternLabel(label) {
-  return isUsableParentPatternLabel(label) ? String(label).trim() : "";
+  const mapped = resolveParentFacingPatternLabelHe(label);
+  return mapped && isUsableParentPatternLabel(mapped) ? mapped : "";
 }

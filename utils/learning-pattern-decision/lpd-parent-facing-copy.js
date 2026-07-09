@@ -2,6 +2,7 @@
  * LPD-safe parent-facing copy helpers — subject-agnostic.
  */
 import { sanitizeParentPatternLabel, isBlockedParentPatternLabel } from "./parent-pattern-label.js";
+import { resolveParentFacingPatternLabelHe, parentFacingErrorPatternMeaningHe } from "./parent-facing-error-pattern-he.js";
 import { buildLearningPatternDecision } from "./build-learning-pattern-decision.js";
 import { findForbiddenParentWords } from "./build-parent-visible-finding.js";
 import { rowNeedsPracticeFromLpd } from "./apply-learning-pattern-decision.js";
@@ -284,6 +285,9 @@ function lpdMeaningLineHe(lpd, topicName) {
     (ts === "difficulty_repeated" || templateId.startsWith("difficulty_repeated")) &&
     !isBlockedParentPatternLabel(String(lpd.repeatedMistakePatterns?.[0]?.label || ""))
   ) {
+    const rawPattern = String(lpd.repeatedMistakePatterns?.[0]?.label || "");
+    const specific = parentFacingErrorPatternMeaningHe(rawPattern);
+    if (specific) return `מה זה אומר: ${specific}`;
     return "מה זה אומר: אותה טעות חוזרת כמה פעמים, ולכן כדאי לעצור ולתרגל אותה בנפרד.";
   }
   if (
@@ -340,13 +344,13 @@ function lpdHomeActionLineHe(lpd, topicName) {
   const ft = String(lpd.findingType || "");
 
   if (ts === "mixed" || ft === "mixed_pattern") {
-    return `מה כדאי לעשות בבית: לבחור 5–8 שאלות בנושא ${topicName}, לשלב שאלות קלות ובינוניות, ולעצור בכל טעות כדי להבין מה קרה.`;
+    return `מה כדאי לעשות ביחד: לבחור 5–8 שאלות בנושא ${topicName}, לשלב שאלות קלות ובינוניות, ולעצור בכל טעות כדי להבין מה קרה.`;
   }
   if (ts.startsWith("positive") || ft === "success_pattern") {
-    return `מה כדאי לעשות בבית: להמשיך מדי פעם בתרגול קצר ב${topicName}, כדי לשמור על מה שכבר עובד.`;
+    return `מה כדאי לעשות ביחד: להמשיך מדי פעם בתרגול קצר ב${topicName}, כדי לשמור על מה שכבר עובד.`;
   }
   if (needsPractice || hasFocus) {
-    return `מה כדאי לעשות בבית: לתרגל כמה שאלות קצרות ב${topicName}, ולבקש מהילד להסביר את הדרך בקול.`;
+    return `מה כדאי לעשות ביחד: לתרגל כמה שאלות קצרות ב${topicName}, ולבקש מהילד להסביר את הדרך בקול.`;
   }
   return "";
 }
@@ -388,9 +392,10 @@ export function buildLpdSafeTopicExplainSectionsHe(row) {
     null;
 
   if (contract?.parentSafeFinding && q >= 3) {
+    const patternLabel = resolveParentFacingPatternLabelHe(contract.detectedPattern);
     const pattern =
-      contract.detectedPattern && q >= 5
-        ? guardParentFacingText(`הטעות שחוזרת: ${contract.detectedPattern}.`)
+      patternLabel && q >= 5
+        ? guardParentFacingText(`הטעות שחוזרת: ${patternLabel}.`)
         : "";
     const meaning =
       contract.engineDecision === "clear_topic_gap" ||
@@ -402,7 +407,7 @@ export function buildLpdSafeTopicExplainSectionsHe(row) {
     const action =
       contract.recommendedAction === "remediate_same_level"
         ? guardParentFacingText(
-            `מה כדאי לעשות בבית: לתרגל כמה שאלות קצרות ב${topicName}, ולבקש מהילד להסביר את הדרך בקול.`,
+            `מה כדאי לעשות ביחד: לתרגל כמה שאלות קצרות ב${topicName}, ולבקש מהילד להסביר את הדרך בקול.`,
           )
         : guardParentFacingText(lpdHomeActionLineHe(lpd, topicName));
 
@@ -432,7 +437,7 @@ export function buildLpdSafeTopicExplainSectionsHe(row) {
       pattern: "",
       meaning: guardParentFacingText("מה זה אומר: עדיין מוקדם להסיק מסקנה ברורה. צריך עוד כמה שאלות בנושא."),
       action: guardParentFacingText(
-        "מה כדאי לעשות בבית: להמשיך לתרגל מעט, בלי להסיק עדיין שיש קושי קבוע.",
+        "מה כדאי לעשות ביחד: להמשיך לתרגל מעט, בלי להסיק עדיין שיש קושי קבוע.",
       ),
     };
   }
@@ -452,7 +457,7 @@ export function buildLpdSafeTopicExplainSectionsHe(row) {
     q >= 3 ? guardParentFacingText(lpdHomeActionLineHe(lpd, topicName)) : "";
   if (!action && !isInitial && w > 0 && q >= 3) {
     action = guardParentFacingText(
-      `מה כדאי לעשות בבית: לפתור כמה שאלות קצרות בנושא ${topicName}, בקצב רגוע, ולבקש מהילד להסביר את שלבי הפתרון.`,
+      `מה כדאי לעשות ביחד: לפתור כמה שאלות קצרות בנושא ${topicName}, בקצב רגוע, ולבקש מהילד להסביר את שלבי הפתרון.`,
     );
   }
 

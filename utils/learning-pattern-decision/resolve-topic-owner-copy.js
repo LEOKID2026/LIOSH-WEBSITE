@@ -2,7 +2,8 @@
  * Topic-level owner-copy resolver — bridge from row/LPD/EDC to owner templates (Phase B+C+D).
  */
 
-import { sanitizeParentPatternLabel, isUsableParentPatternLabel } from "./parent-pattern-label.js";
+import { sanitizeParentPatternLabel } from "./parent-pattern-label.js";
+import { resolveParentFacingPatternLabelHe } from "./parent-facing-error-pattern-he.js";
 import {
   EDC_CONTRACT_KEY,
   readEngineDecisionCode,
@@ -61,12 +62,13 @@ export function resolveTopicOwnerBaseTemplateId(lpd) {
  */
 function resolveDetectedPattern(contract, lpd) {
   const fromContract = str(contract?.detectedPattern);
-  if (fromContract && isUsableParentPatternLabel(fromContract)) {
-    return sanitizeParentPatternLabel(fromContract) || fromContract;
+  if (fromContract) {
+    const mapped = resolveParentFacingPatternLabelHe(fromContract);
+    if (mapped) return mapped;
   }
   const patterns = Array.isArray(lpd?.repeatedMistakePatterns) ? lpd.repeatedMistakePatterns : [];
   const label = sanitizeParentPatternLabel(String(patterns[0]?.label || ""));
-  if (label && isUsableParentPatternLabel(label)) return label;
+  if (label) return label;
   return null;
 }
 

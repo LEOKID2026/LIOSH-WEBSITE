@@ -435,6 +435,7 @@ function runParentReportPageChunks() {
   const trendRowHtml = renderToStaticMarkup(h(ParentReportTopicExplainRow, { row: rowTrendV1, compact: true }));
   assert.match(trendRowHtml, /parent-report-topic-trend-v1/u);
   assert.match(trendRowHtml, /מגמה בתקופה: ללא שינוי משמעותי/u);
+  assert.match(trendRowHtml, /מה כדאי לעשות ביחד/u);
   render("parent-report:explain-row-trend-v1", h(ParentReportTopicExplainRow, { row: rowTrendV1, compact: true }));
 
   const rowChartLive = {
@@ -450,7 +451,7 @@ function runParentReportPageChunks() {
   assert.match(chartLiveHtml, /הנתונים/u, "chart live row should render הנתונים");
   assert.match(chartLiveHtml, /מה זה אומר/u, "chart live row should render מה זה אומר");
   assert.ok(
-    /מה כדאי לעשות בבית/u.test(chartLiveHtml) ||
+    /מה כדאי לעשות ביחד/u.test(chartLiveHtml) ||
       /כדאי להוסיף תרגול קצר/u.test(chartLiveHtml),
     "chart live row should render home action or practice_focus meaning-only explain",
   );

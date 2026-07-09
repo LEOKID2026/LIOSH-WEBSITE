@@ -3,6 +3,11 @@
  * Do not invent wording here; add new strings only when the spec is updated.
  */
 
+import {
+  PARENT_TOPIC_HOME_ACTION_HEADING_HE,
+  resolveParentFacingPatternLabelHe,
+} from "../learning-pattern-decision/parent-facing-error-pattern-he.js";
+
 /** @typedef {{ subject?: string, topic?: string, q?: number, acc?: number, wrongRatio?: number|null, pattern?: string, action?: string, rootCause?: string, strongTopic?: string, weakTopic?: string, totalAnswers?: number, diagnosticAnswers?: number }} CopyVars */
 
 /** Spec §9 — forbidden verbatim phrases in parent-facing output */
@@ -474,7 +479,9 @@ export function explainDataHe(q, acc, wrongRatio) {
 
 /** Spec §2.3 */
 export function explainPatternHe(patternText) {
-  const p = clean(patternText);
+  const mapped = resolveParentFacingPatternLabelHe(patternText);
+  const p = clean(mapped || patternText);
+  if (!p || /^[a-z][a-z0-9_]*$/i.test(p)) return "";
   if (p) return `הטעות שחוזרת: ${p.replace(/^הטעות שחוזרת:\s*/, "").replace(/^דפוס:\s*/, "").replace(/^דפוס הטעות הבולט:\s*/, "")}.`.replace(/\.\.$/, ".");
   return "";
 }
@@ -490,7 +497,7 @@ export function explainMeaningHe(rootCause, diagnosticType, foundationLine) {
 /** Spec §2.5 */
 export function explainActionHe(rootCause, diagnosticType, engineAction) {
   const action = actionTextHe(rootCause, diagnosticType, engineAction);
-  return `מה כדאי לעשות בבית: ${action}`;
+  return `${PARENT_TOPIC_HOME_ACTION_HEADING_HE}: ${action}`;
 }
 
 /** Spec §7 home with engine action */

@@ -66,6 +66,22 @@ const TOPIC_NAMES = {
   mixed: "ערבוב"
 };
 
+/**
+ * Strip grade/kind suffixes from stored topic bucket keys (e.g. area::grade:g4, area\u0001g4).
+ * @param {string|null|undefined} bucketKey
+ */
+export function normalizeReportTopicBucketKey(bucketKey) {
+  let t = String(bucketKey ?? "").trim();
+  if (!t) return "";
+  const sep = t.indexOf("\u0001");
+  if (sep !== -1) t = t.slice(0, sep);
+  const gradeIdx = t.indexOf("::grade:");
+  if (gradeIdx !== -1) t = t.slice(0, gradeIdx);
+  const kindIdx = t.indexOf("::");
+  if (kindIdx !== -1) t = t.slice(0, kindIdx);
+  return t.trim();
+}
+
 /** Fallback when no Hebrew topic label can be resolved for parent-facing math rows. */
 export const MATH_PARENT_TOPIC_FALLBACK_HE = "תרגול";
 
@@ -120,7 +136,9 @@ export function getMathReportBucketDisplayName(bucketKey) {
 }
 
 export function getTopicName(topic) {
-  return TOPIC_NAMES[topic] || "נושא";
+  const key = normalizeReportTopicBucketKey(topic);
+  if (!key || MATH_TOPIC_PLACEHOLDER_KEYS.has(key.toLowerCase())) return "";
+  return TOPIC_NAMES[key] || "";
 }
 
 const ENGLISH_TOPIC_NAMES = {
@@ -141,7 +159,9 @@ const ENGLISH_TOPIC_NAMES = {
 };
 
 export function getEnglishTopicName(topic) {
-  return ENGLISH_TOPIC_NAMES[topic] || "נושא";
+  const key = normalizeReportTopicBucketKey(topic);
+  if (!key) return "";
+  return ENGLISH_TOPIC_NAMES[key] || "";
 }
 
 const SCIENCE_TOPIC_NAMES = {
@@ -161,11 +181,15 @@ const SCIENCE_TOPIC_NAMES = {
 };
 
 export function getScienceTopicName(topic) {
-  return SCIENCE_TOPIC_NAMES[topic] || "נושא";
+  const key = normalizeReportTopicBucketKey(topic);
+  if (!key) return "";
+  return SCIENCE_TOPIC_NAMES[key] || "";
 }
 
 export function getHistoryTopicName(topic) {
-  return historyTopicLabelHe(topic) || "נושא";
+  const key = normalizeReportTopicBucketKey(topic);
+  if (!key) return "";
+  return historyTopicLabelHe(key) || "";
 }
 
 export function getHistorySubtopicName(subtopicKey) {
@@ -192,7 +216,9 @@ const HEBREW_TOPIC_NAMES = {
 };
 
 export function getHebrewTopicName(topic) {
-  return HEBREW_TOPIC_NAMES[topic] || "נושא";
+  const key = normalizeReportTopicBucketKey(topic);
+  if (!key) return "";
+  return HEBREW_TOPIC_NAMES[key] || "";
 }
 
 const MOLEDET_GEOGRAPHY_TOPIC_NAMES = {
@@ -213,7 +239,9 @@ const MOLEDET_GEOGRAPHY_TOPIC_NAMES = {
 };
 
 export function getMoledetGeographyTopicName(topic) {
-  return MOLEDET_GEOGRAPHY_TOPIC_NAMES[topic] || "נושא";
+  const key = normalizeReportTopicBucketKey(topic);
+  if (!key) return "";
+  return MOLEDET_GEOGRAPHY_TOPIC_NAMES[key] || "";
 }
 
 /** תווית כיתה בעברית לפי מפתח g1…g6 (דוח הורים / המלצות) */

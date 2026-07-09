@@ -14,7 +14,9 @@ import {
   exportReportToPDF,
   isGenericParentTopicLabelHe,
   MATH_PARENT_TOPIC_FALLBACK_HE,
+  normalizeReportTopicBucketKey,
 } from "../../utils/math-report-generator";
+import { topicBucketLabelHe } from "../../utils/diagnostic-labels-he.js";
 import {
   enrichParentReportWithParentAi,
   getDeterministicParentAiExplanationFromParentReportV2,
@@ -214,12 +216,13 @@ function subjectTopicLabelForParentHe(subjectId, data, fallbackTopic) {
   if (cleanFromRow && !isGenericParentTopicLabelHe(cleanFromRow)) {
     return normalizeParentFacingHe(cleanFromRow);
   }
-  const displayName = String(data?.displayName || "").trim();
+  const displayName = String(data?.displayName || data?.narrativeTopicLabelHe || "").trim();
   const bucket = String(data?.bucketKey ?? fallbackTopic ?? "").trim();
-  const bucketForLookup =
-    subjectId === "math" && bucket.includes("\u0001")
-      ? String(bucket.split("\u0001")[0] || "").trim() || bucket
-      : bucket;
+  const bucketForLookup = normalizeReportTopicBucketKey(bucket);
+  const fromCatalog = topicBucketLabelHe(subjectId, bucketForLookup || displayName);
+  if (fromCatalog && !isGenericParentTopicLabelHe(fromCatalog)) {
+    return normalizeParentFacingHe(fromCatalog);
+  }
   const raw =
     subjectId === "math"
       ? getMathReportBucketDisplayName(bucketForLookup || displayName)
@@ -246,7 +249,10 @@ function subjectTopicLabelForParentHe(subjectId, data, fallbackTopic) {
   if (subjectId === "math") {
     return normalizeParentFacingHe(MATH_PARENT_TOPIC_FALLBACK_HE);
   }
-  return normalizeParentFacingHe(resolved || displayName || bucketForLookup || MATH_PARENT_TOPIC_FALLBACK_HE);
+  if (subjectId === "geometry") {
+    return normalizeParentFacingHe("גאומטריה");
+  }
+  return normalizeParentFacingHe(displayName || bucketForLookup || MATH_PARENT_TOPIC_FALLBACK_HE);
 }
 
 function regularReportTopicTableEntries(displayReport, mapKey, regularDisplay) {
@@ -517,6 +523,7 @@ function buildTopicRowsForChart(map, keyPrefix, regularDisplay = null) {
           : null,
       topicEngineRowSignals: data?.topicEngineRowSignals && typeof data.topicEngineRowSignals === "object" ? data.topicEngineRowSignals : null,
       trend: data?.trend && typeof data.trend === "object" ? data.trend : null,
+      trendV1: data?.trendV1 && typeof data.trendV1 === "object" ? data.trendV1 : null,
       behaviorProfile: data?.behaviorProfile && typeof data.behaviorProfile === "object" ? data.behaviorProfile : null,
       decisionTrace: Array.isArray(data?.decisionTrace) ? data.decisionTrace : null,
       recommendationDecisionTrace: Array.isArray(data?.recommendationDecisionTrace)

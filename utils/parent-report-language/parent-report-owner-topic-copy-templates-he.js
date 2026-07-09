@@ -135,9 +135,9 @@ function renderDifficultyObservedMeaning(s) {
 /** @param {TopicOwnerCopySlots} s */
 function renderDifficultyObservedHomeAction(s) {
   if (hasPattern(s)) {
-    return `מה כדאי לעשות בבית: לפתור 5–8 שאלות קצרות בנושא ${s.topicName}. אחרי כל טעות לעצור, לבקש מהילד להסביר איך פתר, ולשים לב במיוחד ל־${s.detectedPattern}.`;
+    return `מה כדאי לעשות ביחד: לפתור 5–8 שאלות קצרות בנושא ${s.topicName}. אחרי כל טעות לעצור, לבקש מהילד להסביר איך פתר, ולשים לב במיוחד ל־${s.detectedPattern}.`;
   }
-  return `מה כדאי לעשות בבית: לפתור 5–8 שאלות קצרות בנושא ${s.topicName}. אחרי כל טעות לעצור ולבקש מהילד להסביר איך פתר.`;
+  return `מה כדאי לעשות ביחד: לפתור 5–8 שאלות קצרות בנושא ${s.topicName}. אחרי כל טעות לעצור ולבקש מהילד להסביר איך פתר.`;
 }
 
 /** @param {TopicOwnerCopySlots} s */
@@ -185,7 +185,7 @@ function renderPositiveObservedMeaning(_s) {
 
 /** @param {TopicOwnerCopySlots} s */
 function renderPositiveObservedHomeAction(s) {
-  return `מה כדאי לעשות בבית: לפתור מדי פעם כמה שאלות קצרות בנושא ${s.topicName}, כדי לשמור על רצף וביטחון.`;
+  return `מה כדאי לעשות ביחד: לפתור מדי פעם כמה שאלות קצרות בנושא ${s.topicName}, כדי לשמור על רצף וביטחון.`;
 }
 
 /** @param {TopicOwnerCopySlots} _s */
@@ -224,7 +224,7 @@ function renderInitialTopicDataMeaning(_s) {
 
 /** @param {TopicOwnerCopySlots} s */
 function renderInitialTopicDataHomeAction(s) {
-  return `מה כדאי לעשות בבית: לפתור עוד כמה שאלות קצרות בנושא ${s.topicName}, בלי לחץ, כדי לקבל תמונה ברורה יותר.`;
+  return `מה כדאי לעשות ביחד: לפתור עוד כמה שאלות קצרות בנושא ${s.topicName}, בלי לחץ, כדי לקבל תמונה ברורה יותר.`;
 }
 
 /** @param {TopicOwnerCopySlots} s */
@@ -249,7 +249,7 @@ function renderPracticeFocusMeaning(_s) {
 
 /** @param {TopicOwnerCopySlots} s */
 function renderPracticeFocusHomeAction(s) {
-  return `מה כדאי לעשות בבית: לתרגל כמה שאלות קצרות ב${s.topicName}, ולבקש מהילד להסביר את הדרך בקול.`;
+  return `מה כדאי לעשות ביחד: לתרגל כמה שאלות קצרות ב${s.topicName}, ולבקש מהילד להסביר את הדרך בקול.`;
 }
 
 /** @param {TopicOwnerCopySlots} s */
@@ -283,7 +283,7 @@ function renderMixedMeaning(s) {
 
 /** @param {TopicOwnerCopySlots} s */
 function renderMixedHomeAction(s) {
-  return `מה כדאי לעשות בבית: לבחור 5–8 שאלות בנושא ${s.topicName}, לשלב שאלות קלות ובינוניות, ולעצור בכל טעות כדי להבין מה קרה.`;
+  return `מה כדאי לעשות ביחד: לבחור 5–8 שאלות בנושא ${s.topicName}, לשלב שאלות קלות ובינוניות, ולעצור בכל טעות כדי להבין מה קרה.`;
 }
 
 /** @param {TopicOwnerCopySlots} s */
