@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import Link from "next/link";
 import { useStudentTheme } from "../../../contexts/StudentThemeContext.jsx";
 import { formatCoinAmountHe } from "../../../lib/rewards/rewards-ui.he.js";
@@ -7,6 +8,29 @@ import RewardCardImage from "./RewardCardImage.jsx";
 const OPEN_PATH = "/api/student/rewards/surprise-box/open";
 const OPEN_TIMEOUT_MS = 30_000;
 const OPEN_ERROR_HE = "לא הצלחנו לפתוח את הקופסה כרגע. נסו שוב עוד רגע.";
+
+/** Notify parent after prizes paint — avoids blocking the modal on inventory refresh. */
+function deferSurpriseBoxOpenedNotify(fn) {
+  if (typeof requestAnimationFrame === "function") {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        try {
+          fn();
+        } catch {
+          /* parent refresh must not affect prize reveal */
+        }
+      });
+    });
+    return;
+  }
+  setTimeout(() => {
+    try {
+      fn();
+    } catch {
+      /* parent refresh must not affect prize reveal */
+    }
+  }, 0);
+}
 
 const CARD_THUMB_PLACEHOLDER = "/rewards/cards/placeholders/regular/default.svg";
 
@@ -33,6 +57,7 @@ function SurpriseBoxCardPrizeRow({ card, T }) {
             preBaked={card.imageVariantsReady === true}
             size="thumb"
             fit="cover"
+            loading="eager"
             wrapperClassName="w-full h-full"
           />
         </div>
@@ -93,13 +118,11 @@ export default function StudentSurpriseBoxOpenModal({ open, onClose, onOpened })
           setPhase("error");
           return;
         }
-        setResult(json);
-        setPhase("done");
-        try {
-          onOpenedRef.current?.(json);
-        } catch {
-          /* parent callback must not block prize display */
-        }
+        flushSync(() => {
+          setResult(json);
+          setPhase("done");
+        });
+        deferSurpriseBoxOpenedNotify(() => onOpenedRef.current?.(json));
       } catch {
         if (cancelled) return;
         setErrorHe(OPEN_ERROR_HE);
