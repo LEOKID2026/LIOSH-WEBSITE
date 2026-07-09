@@ -5,6 +5,8 @@ import { formatCoinAmountHe } from "../../../lib/rewards/rewards-ui.he.js";
 import RewardCardImage from "./RewardCardImage.jsx";
 
 const OPEN_PATH = "/api/student/rewards/surprise-box/open";
+const OPEN_TIMEOUT_MS = 30_000;
+const OPEN_ERROR_HE = "לא הצלחנו לפתוח את הקופסה כרגע. נסו שוב עוד רגע.";
 
 const CARD_THUMB_PLACEHOLDER = "/rewards/cards/placeholders/regular/default.svg";
 
@@ -43,63 +45,75 @@ export default function StudentSurpriseBoxOpenModal({ open, onClose, onOpened })
   const { homeModalShell, tokens: T, isBright } = useStudentTheme();
   const titleId = useId();
   const closeRef = useRef(null);
-  const openingRef = useRef(false);
+  const onOpenedRef = useRef(onOpened);
+  onOpenedRef.current = onOpened;
+  const openIdempotencyKeyRef = useRef(null);
   const [phase, setPhase] = useState("idle");
   const [result, setResult] = useState(null);
   const [errorHe, setErrorHe] = useState("");
 
   useEffect(() => {
     if (!open) {
-      openingRef.current = false;
+      openIdempotencyKeyRef.current = null;
       setPhase("idle");
       setResult(null);
       setErrorHe("");
       return undefined;
     }
 
-    if (openingRef.current) return undefined;
-    openingRef.current = true;
+    if (!openIdempotencyKeyRef.current) {
+      openIdempotencyKeyRef.current = `box:${Date.now()}`;
+    }
 
+    const controller = new AbortController();
     let cancelled = false;
+
     setPhase("opening");
     setErrorHe("");
     setResult(null);
 
     (async () => {
+      const timeoutId = setTimeout(() => controller.abort(), OPEN_TIMEOUT_MS);
       try {
         const res = await fetch(OPEN_PATH, {
           method: "POST",
           credentials: "include",
           headers: { Accept: "application/json", "Content-Type": "application/json" },
-          body: JSON.stringify({ idempotencyKey: `box:${Date.now()}` }),
+          body: JSON.stringify({ idempotencyKey: openIdempotencyKeyRef.current }),
+          signal: controller.signal,
         });
         const json = await res.json().catch(() => ({}));
         if (cancelled) return;
         if (!res.ok || json?.ok !== true) {
-          openingRef.current = false;
           if (json?.code === "no_pending_box") {
             setErrorHe("אין קופסה מוכנה כרגע — נסו שוב מאוחר יותר.");
           } else {
-            setErrorHe("לא הצלחנו לפתוח את הקופסה. נסו שוב.");
+            setErrorHe(OPEN_ERROR_HE);
           }
           setPhase("error");
           return;
         }
         setResult(json);
         setPhase("done");
-        onOpened?.(json);
+        try {
+          onOpenedRef.current?.(json);
+        } catch {
+          /* parent callback must not block prize display */
+        }
       } catch {
         if (cancelled) return;
-        openingRef.current = false;
-        setErrorHe("שגיאת רשת בפתיחת הקופסה.");
+        setErrorHe(OPEN_ERROR_HE);
         setPhase("error");
+      } finally {
+        clearTimeout(timeoutId);
       }
     })();
 
     return () => {
       cancelled = true;
+      controller.abort();
     };
-  }, [open, onOpened]);
+  }, [open]);
 
   useEffect(() => {
     if (!open) return undefined;

@@ -159,6 +159,10 @@ describe("surprise-box runtime uses admin settings (no hardcoded 2+1)", () => {
     );
     assert.doesNotMatch(src, /שני קלפים/);
     assert.match(src, /coinAmounts/);
+    assert.doesNotMatch(src, /\[open,\s*onOpened\]/);
+    assert.match(src, /onOpenedRef/);
+    assert.match(src, /OPEN_TIMEOUT_MS/);
+    assert.match(src, /OPEN_ERROR_HE/);
   });
 
   test("admin card grant uses parent email search component", () => {
