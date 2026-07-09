@@ -43,6 +43,7 @@ const heroPromptText =
  *   onSurpriseOpen?: () => void,
  *   surpriseOpeningLocked?: boolean,
  *   surpriseRefreshToken?: number,
+ *   surpriseStatusOverride?: { ready?: boolean, pendingBoxCount?: number } | null,
  * }} props
  */
 export default function StudentWorldTitleScreen({
@@ -64,6 +65,7 @@ export default function StudentWorldTitleScreen({
   onSurpriseOpen,
   surpriseOpeningLocked = false,
   surpriseRefreshToken = 0,
+  surpriseStatusOverride = null,
 }) {
   const [parentInviteOpen, setParentInviteOpen] = useState(false);
 
@@ -170,6 +172,7 @@ export default function StudentWorldTitleScreen({
               onSurpriseOpen={onSurpriseOpen}
               surpriseOpeningLocked={surpriseOpeningLocked}
               surpriseRefreshToken={surpriseRefreshToken}
+              surpriseStatusOverride={surpriseStatusOverride}
             />
           </div>
         </div>

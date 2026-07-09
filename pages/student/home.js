@@ -45,6 +45,7 @@ import StudentSurpriseBoxWidget from "../../components/student/rewards/StudentSu
 import StudentSurpriseBoxOpenModal from "../../components/student/rewards/StudentSurpriseBoxOpenModal";
 import StudentShareFriendsButton from "../../components/student/StudentShareFriendsButton";
 import { isCardRewardsEnabledClient } from "../../lib/rewards/reward-feature-flags.client.js";
+import { patchSurpriseBoxStatusFromOpenResult } from "../../lib/rewards/surprise-box-status-patch.client.js";
 import { GUEST_LOCK_MESSAGE_HE, GUEST_LOCKED_HOME_PANELS, LIOSH_GUEST_RESUME_TOKEN_KEY } from "../../lib/guest/constants.js";
 import { isGuestStudent } from "../../lib/guest/guest-display.js";
 import { shouldClearGuestResumeTokenOnLogout } from "../../lib/guest/guest-resume-token.client.js";
@@ -363,7 +364,13 @@ export default function StudentHomePage() {
   const [heroAvatarBackground, setHeroAvatarBackground] = useState("sky");
   const [boxModalOpen, setBoxModalOpen] = useState(false);
   const [boxRefreshToken, setBoxRefreshToken] = useState(0);
+  const [surpriseBoxStatus, setSurpriseBoxStatus] = useState(null);
   const [guestPolicy, setGuestPolicy] = useState(null);
+  const handleSurpriseBoxOpened = useCallback((json) => {
+    const patch = patchSurpriseBoxStatusFromOpenResult(json);
+    if (patch) setSurpriseBoxStatus(patch);
+    setBoxRefreshToken((token) => token + 1);
+  }, []);
   const cardRewardsEnabled = isCardRewardsEnabledClient();
   const isGuestHome = Boolean(guestPolicy || student?.account_kind === "guest" || student?.accountKind === "guest");
   const guestLockedPanelSet = useMemo(() => {
@@ -1009,6 +1016,7 @@ export default function StudentHomePage() {
             onOpen={() => setBoxModalOpen(true)}
             openingLocked={boxModalOpen}
             refreshToken={boxRefreshToken}
+            statusOverride={surpriseBoxStatus}
           />
         ) : null}
 
@@ -1102,7 +1110,7 @@ export default function StudentHomePage() {
       <StudentSurpriseBoxOpenModal
         open={boxModalOpen}
         onClose={() => setBoxModalOpen(false)}
-        onOpened={() => setBoxRefreshToken((token) => token + 1)}
+        onOpened={handleSurpriseBoxOpened}
       />
       <StudentAvatarPickerModal
         open={showAvatarModal}

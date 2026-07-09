@@ -7,7 +7,20 @@ import { formatCountdownHe } from "../../../lib/rewards/rewards-ui.he.js";
 
 const STATUS_PATH = "/api/student/rewards/surprise-box/status";
 
-export default function StudentSurpriseBoxWidget({ onOpen, openingLocked = false, refreshToken = 0 }) {
+/**
+ * @param {{
+ *   onOpen?: () => void,
+ *   openingLocked?: boolean,
+ *   refreshToken?: number,
+ *   statusOverride?: { ready?: boolean, pendingBoxCount?: number } | null,
+ * }} props
+ */
+export default function StudentSurpriseBoxWidget({
+  onOpen,
+  openingLocked = false,
+  refreshToken = 0,
+  statusOverride = null,
+}) {
   const { tokens: T, isBright } = useStudentTheme();
   const [phase, setPhase] = useState("idle");
   const [ready, setReady] = useState(false);
@@ -46,6 +59,18 @@ export default function StudentSurpriseBoxWidget({ onOpen, openingLocked = false
     if (!isCardRewardsEnabledClient()) return undefined;
     void loadStatus();
   }, [loadStatus, refreshToken]);
+
+  useEffect(() => {
+    if (!statusOverride) return;
+    if (statusOverride.pendingBoxCount != null) {
+      const count = Math.max(0, Number(statusOverride.pendingBoxCount) || 0);
+      setPendingBoxCount(count);
+      setReady(count > 0);
+      if (count <= 0) setSecondsRemaining(null);
+    } else if (typeof statusOverride.ready === "boolean") {
+      setReady(statusOverride.ready);
+    }
+  }, [statusOverride]);
 
   useEffect(() => {
     if (!ready && secondsRemaining != null && secondsRemaining > 0) {

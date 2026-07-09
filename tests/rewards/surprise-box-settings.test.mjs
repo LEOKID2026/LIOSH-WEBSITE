@@ -14,6 +14,7 @@ import {
   validateSurpriseBoxGeneralSettings,
   tickSurpriseBoxAccumulation,
 } from "../../lib/rewards/server/surprise-box-settings.server.js";
+import { patchSurpriseBoxStatusFromOpenResult } from "../../lib/rewards/surprise-box-status-patch.client.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "../..");
@@ -161,11 +162,30 @@ describe("surprise-box runtime uses admin settings (no hardcoded 2+1)", () => {
     assert.match(src, /coinAmounts/);
     assert.doesNotMatch(src, /\[open,\s*onOpened\]/);
     assert.match(src, /onOpenedRef/);
-    assert.match(src, /deferSurpriseBoxOpenedNotify/);
     assert.match(src, /flushSync/);
     assert.match(src, /loading="eager"/);
     assert.match(src, /OPEN_TIMEOUT_MS/);
     assert.match(src, /OPEN_ERROR_HE/);
+    assert.match(src, /pendingBoxCountAfter/);
+    assert.match(src, /פתח קופסה נוספת/);
+    assert.match(src, /NO_MORE_BOX_HE/);
+    assert.match(src, /openAttempt/);
+  });
+
+  test("surprise box status patch uses open API pendingBoxCountAfter", () => {
+    assert.deepEqual(patchSurpriseBoxStatusFromOpenResult({ ok: true, pendingBoxCountAfter: 2 }), {
+      ready: true,
+      pendingBoxCount: 2,
+    });
+    assert.deepEqual(patchSurpriseBoxStatusFromOpenResult({ ok: true, pendingBoxCountAfter: 0 }), {
+      ready: false,
+      pendingBoxCount: 0,
+    });
+    assert.deepEqual(patchSurpriseBoxStatusFromOpenResult({ code: "no_pending_box" }), {
+      ready: false,
+      pendingBoxCount: 0,
+    });
+    assert.equal(patchSurpriseBoxStatusFromOpenResult({ code: "coin_failed" }), null);
   });
 
   test("admin card grant uses parent email search component", () => {

@@ -29,6 +29,7 @@ const dockIconClass = "text-base leading-none md:text-2xl";
  *   onSurpriseOpen?: () => void,
  *   surpriseOpeningLocked?: boolean,
  *   surpriseRefreshToken?: number,
+ *   surpriseStatusOverride?: { ready?: boolean, pendingBoxCount?: number } | null,
  * }} props
  */
 export default function StudentWorldDock({
@@ -40,6 +41,7 @@ export default function StudentWorldDock({
   onSurpriseOpen,
   surpriseOpeningLocked = false,
   surpriseRefreshToken = 0,
+  surpriseStatusOverride = null,
 }) {
   const [surprisePending, setSurprisePending] = useState(0);
   const [surpriseReady, setSurpriseReady] = useState(false);
@@ -66,6 +68,17 @@ export default function StudentWorldDock({
   useEffect(() => {
     void loadSurpriseStatus();
   }, [loadSurpriseStatus, surpriseRefreshToken]);
+
+  useEffect(() => {
+    if (!surpriseStatusOverride) return;
+    if (surpriseStatusOverride.pendingBoxCount != null) {
+      const count = Math.max(0, Number(surpriseStatusOverride.pendingBoxCount) || 0);
+      setSurprisePending(count);
+      setSurpriseReady(count > 0);
+    } else if (typeof surpriseStatusOverride.ready === "boolean") {
+      setSurpriseReady(surpriseStatusOverride.ready);
+    }
+  }, [surpriseStatusOverride]);
 
   const tryPanel = (panelId) => {
     const locked = isWorldHubPanelLocked(panelId, guestLockedPanelSet);

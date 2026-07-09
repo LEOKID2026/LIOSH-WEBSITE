@@ -40,6 +40,7 @@ import { normalizeStudentActivityScope } from "../../lib/classroom-activities/st
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import StudentSurpriseBoxOpenModal from "../../components/student/rewards/StudentSurpriseBoxOpenModal";
 import { isCardRewardsEnabledClient } from "../../lib/rewards/reward-feature-flags.client.js";
+import { patchSurpriseBoxStatusFromOpenResult } from "../../lib/rewards/surprise-box-status-patch.client.js";
 import StudentWorldTitleScreen from "../../components/student-world-hub/StudentWorldTitleScreen.jsx";
 import { GUEST_LOCK_MESSAGE_HE, GUEST_LOCKED_HOME_PANELS, LIOSH_GUEST_RESUME_TOKEN_KEY } from "../../lib/guest/constants.js";
 import { isGuestStudent } from "../../lib/guest/guest-display.js";
@@ -295,11 +296,17 @@ export default function WorldHomePrototypePage() {
   const [heroAvatarBackground, setHeroAvatarBackground] = useState("sky");
   const [boxModalOpen, setBoxModalOpen] = useState(false);
   const [boxRefreshToken, setBoxRefreshToken] = useState(0);
+  const [surpriseBoxStatus, setSurpriseBoxStatus] = useState(null);
   const [diamondBalance, setDiamondBalance] = useState(null);
   const [guestPolicy, setGuestPolicy] = useState(null);
   const [lockToast, setLockToast] = useState("");
   const lockToastTimerRef = useRef(null);
   const cardRewardsEnabled = isCardRewardsEnabledClient();
+  const handleSurpriseBoxOpened = useCallback((json) => {
+    const patch = patchSurpriseBoxStatusFromOpenResult(json);
+    if (patch) setSurpriseBoxStatus(patch);
+    setBoxRefreshToken((token) => token + 1);
+  }, []);
   const isGuestHome = Boolean(guestPolicy || student?.account_kind === "guest" || student?.accountKind === "guest");
 
   const guestLockedPanelSet = useMemo(() => {
@@ -915,6 +922,7 @@ export default function WorldHomePrototypePage() {
           onSurpriseOpen={cardRewardsEnabled ? () => setBoxModalOpen(true) : undefined}
           surpriseOpeningLocked={boxModalOpen}
           surpriseRefreshToken={boxRefreshToken}
+          surpriseStatusOverride={surpriseBoxStatus}
         />
 
         {profilePhase === "error" && !profilePending ? (
@@ -949,7 +957,7 @@ export default function WorldHomePrototypePage() {
       <StudentSurpriseBoxOpenModal
         open={boxModalOpen}
         onClose={() => setBoxModalOpen(false)}
-        onOpened={() => setBoxRefreshToken((token) => token + 1)}
+        onOpened={handleSurpriseBoxOpened}
       />
       <StudentAvatarPickerModal
         open={showAvatarModal}
