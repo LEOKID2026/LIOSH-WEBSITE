@@ -33,7 +33,6 @@ import StudentAssignedActivityShell from "../../../components/student/StudentAss
 import StudentAssignedActivityQuestionStage from "../../../components/student/StudentAssignedActivityQuestionStage";
 import StudentActivitySubmitConfirmModal from "../../../components/student/StudentActivitySubmitConfirmModal";
 import AssignedActivityBidiText from "../../../components/classroom-activities/AssignedActivityBidiText.jsx";
-import StudentLoadingPanel from "../../../components/ui/StudentLoadingPanel.jsx";
 
 function buildSavedAttemptsMap(attempts) {
   /** @type {Record<number, { questionIndex: number, selectedAnswer: string|null, isCorrect: boolean|null }>} */
@@ -493,7 +492,7 @@ export default function StudentActivityPage({ activityId }) {
   if (phase === "loading") {
     return (
       <Layout {...layoutProps}>
-        <StudentLoadingPanel message="טוען פעילות…" reportPage />
+        <div className={`min-h-[60vh] ${L.pageWrap}`} aria-busy="true" />
       </Layout>
     );
   }

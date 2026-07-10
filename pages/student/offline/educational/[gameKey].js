@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import OfflineFullGamesRouteGuard from "../../../../components/offline/OfflineFullGamesRouteGuard.jsx";
 import OfflineEducationalGameShell from "../../../../components/educational-games/OfflineEducationalGameShell.jsx";
 import OfflineGameErrorBoundary from "../../../../components/offline/OfflineGameErrorBoundary.jsx";
+import OfflineGameHoldShell from "../../../../components/offline/OfflineGameHoldShell.jsx";
 import {
   isValidOfflineEducationalGameKey,
   offlineEducationalRoute,
@@ -12,7 +13,7 @@ export default function StudentOfflineEducationalGamePage() {
   const gameKey = String(router.query.gameKey || "").trim().toLowerCase();
 
   if (!router.isReady) {
-    return null;
+    return <OfflineGameHoldShell />;
   }
 
   if (!isValidOfflineEducationalGameKey(gameKey)) {

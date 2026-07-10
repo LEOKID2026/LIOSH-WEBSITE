@@ -50,8 +50,8 @@ export default function ArcadeMyRoomPage() {
   };
 
   return (
-    <GameAccessGuard category="online">
-      <Layout studentTheme={theme} studentShell="home">
+    <Layout studentTheme={theme} studentShell="home">
+      <GameAccessGuard category="online">
         <Head>
           <title>החדר שלי — מועדון ליאו</title>
         </Head>
@@ -94,7 +94,7 @@ export default function ArcadeMyRoomPage() {
             )}
           </div>
         </div>
-      </Layout>
-    </GameAccessGuard>
+      </GameAccessGuard>
+    </Layout>
   );
 }

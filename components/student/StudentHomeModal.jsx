@@ -82,6 +82,8 @@ export default function StudentHomeModal({
       role="dialog"
       aria-modal="true"
       aria-labelledby={titleId}
+      data-testid="student-home-modal"
+      data-panel={variant}
     >
       <div
         className={`${homeModalShell.panel} ${sizeClass}`}

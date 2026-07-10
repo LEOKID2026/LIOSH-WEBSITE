@@ -3,7 +3,7 @@ import Layout from "../../components/Layout";
 import MaybeGameAccessGuard from "../../components/offline/MaybeGameAccessGuard.jsx";
 import StudentAdSlot from "../../components/student/StudentAdSlot.jsx";
 import { useRouter } from "next/router";
-import StudentLoadingPanel from "../../components/ui/StudentLoadingPanel.jsx";
+import OfflineGameHoldShell from "../../components/offline/OfflineGameHoldShell.jsx";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
 
 const SIZES = [3, 5, 7];
@@ -187,7 +187,7 @@ export default function TicTacToeXL() {
     }
   };
 
-  if (!mounted) return <StudentLoadingPanel message="טוען..." fullPage />;
+  if (!mounted) return <OfflineGameHoldShell />;
 
   return (
     <MaybeGameAccessGuard gameKey="tic-tac-toe">

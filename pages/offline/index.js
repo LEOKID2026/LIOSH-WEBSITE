@@ -1,11 +1,11 @@
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
 import { useOfflineHubUi } from "../../hooks/useOfflineHubUi.js";
 import OfflineHubPageShell from "../../components/offline/OfflineHubPageShell.jsx";
-import GameAccessGuard from "../../components/games/GameAccessGuard.jsx";import GamesHubNavBar from "../../components/games/GamesHubNavBar.jsx";
+import GameAccessGuard from "../../components/games/GameAccessGuard.jsx";
+import GamesHubNavBar from "../../components/games/GamesHubNavBar.jsx";
 import GamesHubHeader from "../../components/games/GamesHubHeader.jsx";
 import OfflineHubGameCard from "../../components/games/OfflineHubGameCard.jsx";
 import { useStudentGameAccess } from "../../hooks/useStudentGameAccess.js";
-import StudentLoadingPanel from "../../components/ui/StudentLoadingPanel.jsx";
 const OFFLINE_GAMES = [
   {
     slug: "tic-tac-toe",
@@ -57,8 +57,8 @@ export default function OfflineHub() {
   }));
 
   return (
-    <GameAccessGuard category="offline">
-      <OfflineHubPageShell>
+    <OfflineHubPageShell>
+      <GameAccessGuard category="offline">
         <div className={`${GH.container} space-y-4`}>
           <GamesHubNavBar
             backHref="/games"
@@ -75,16 +75,15 @@ export default function OfflineHub() {
             subtitleClass={GH.hubSub}
           />
 
-          {state === "loading" ? (
-            <StudentLoadingPanel message="טוען..." hubGrid />
-          ) : (
-            <section className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4">
-              {visibleGames.map((game) => (
+          <section className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4">
+            {state === "loading"
+              ? null
+              : visibleGames.map((game) => (
                 <OfflineHubGameCard key={game.slug} game={game} GH={GH} locked={game.locked} />
               ))}
-            </section>
-          )}
+          </section>
         </div>
-      </OfflineHubPageShell>
-    </GameAccessGuard>
-  );}
+      </GameAccessGuard>
+    </OfflineHubPageShell>
+  );
+}

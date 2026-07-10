@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import OfflineFullGamesRouteGuard from "../../../../components/offline/OfflineFullGamesRouteGuard.jsx";
 import OfflineSoloGameShell from "../../../../components/solo-games/OfflineSoloGameShell.jsx";
 import OfflineGameErrorBoundary from "../../../../components/offline/OfflineGameErrorBoundary.jsx";
+import OfflineGameHoldShell from "../../../../components/offline/OfflineGameHoldShell.jsx";
 import {
   isValidOfflineSoloGameKey,
   offlineSoloRoute,
@@ -12,7 +13,7 @@ export default function StudentOfflineSoloGamePage() {
   const gameKey = String(router.query.gameKey || "").trim().toLowerCase();
 
   if (!router.isReady) {
-    return null;
+    return <OfflineGameHoldShell />;
   }
 
   if (!isValidOfflineSoloGameKey(gameKey)) {

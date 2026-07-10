@@ -393,22 +393,30 @@ export default function MleoSortShapesEngine({
   return (
     <div
       id="game-wrapper"
-      className="relative isolate flex h-full min-h-0 flex-1 flex-col items-center gap-2 overflow-hidden px-2 py-2 text-white w-full solo-game-mobile-fullscreen-shell"
+      className="relative isolate flex h-full min-h-0 flex-1 flex-col overflow-hidden bg-gray-900 text-white w-full select-none solo-game-mobile-fullscreen-shell"
       dir="rtl"
     >
-      <SoloV2Goal text="גררו את הצורה לקבוצה הנכונה! +50 על כל מיון נכון." />
-      {!showIntro ? (
-        <SoloV2Hud
-          rows={[
-            { label: "ניקוד", value: score, accent: "text-amber-300" },
-            { label: "ממוין", value: `${sortedCount}/${settings.itemCount}` },
-            { label: "חיים", value: "❤️".repeat(Math.max(0, lives)) },
-            { label: "זמן", value: `${timeLeft}s` },
-          ]}
-        />
-      ) : null}
+      <div className="flex min-h-0 w-full flex-1 flex-col gap-2 px-2 py-2 max-lg:gap-1 max-lg:px-0 max-lg:py-0">
+        <div className="w-full shrink-0 max-lg:[&>p]:mx-0 max-lg:[&>p]:mb-1 max-lg:[&>p]:w-full max-lg:[&>p]:max-w-none max-lg:[&>p]:rounded-none max-lg:[&>p]:border-x-0">
+          <SoloV2Goal text="גררו את הצורה לקבוצה הנכונה! +50 על כל מיון נכון." />
+        </div>
+        {!showIntro ? (
+          <div className="w-full shrink-0 max-lg:[&>div]:w-full max-lg:[&>div]:max-w-none max-lg:[&>div]:rounded-none max-lg:[&>div]:border-x-0">
+            <SoloV2Hud
+              rows={[
+                { label: "ניקוד", value: score, accent: "text-amber-300" },
+                { label: "ממוין", value: `${sortedCount}/${settings.itemCount}` },
+                { label: "חיים", value: "❤️".repeat(Math.max(0, lives)) },
+                { label: "זמן", value: `${timeLeft}s` },
+              ]}
+            />
+          </div>
+        ) : null}
 
-      <SoloV2Playfield bg={SOLO_V2_ASSETS.bgPark} className="max-w-lg">
+        <SoloV2Playfield
+          bg={SOLO_V2_ASSETS.bgPark}
+          className="max-w-lg max-lg:max-w-none max-lg:w-full max-lg:flex-1 max-lg:min-h-0 max-lg:rounded-none max-lg:border-x-0 max-lg:border-b-0 max-lg:shadow-none"
+        >
         {showIntro ? (
           <SoloV2Intro
             title="מיון צורות"
@@ -421,7 +429,7 @@ export default function MleoSortShapesEngine({
             onStart={startGame}
           />
         ) : (
-          <div className="relative flex h-full min-h-0 flex-col gap-3 p-3">
+          <div className="relative flex h-full min-h-0 flex-col gap-3 p-3 max-lg:gap-2 max-lg:p-2">
             {showFullscreenButton ? (
               <div className="pointer-events-auto absolute right-2 top-2 z-[70]">
                 <SoloGameMobileFullscreenButton
@@ -483,7 +491,8 @@ export default function MleoSortShapesEngine({
             ) : null}
           </div>
         )}
-      </SoloV2Playfield>
+        </SoloV2Playfield>
+      </div>
       <SoloGamePortraitRecommendationModal
         show={showPortraitPrompt}
         onDismissRotate={() => {

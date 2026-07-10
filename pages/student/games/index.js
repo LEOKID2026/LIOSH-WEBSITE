@@ -7,33 +7,25 @@ import GamesHubNavBar from "../../../components/games/GamesHubNavBar.jsx";
 import GamesHubHeader from "../../../components/games/GamesHubHeader.jsx";
 import { useStudentGameAccess } from "../../../hooks/useStudentGameAccess.js";
 import { hubCardKeyToCategory, GAME_ACCESS_STATES } from "../../../lib/games/game-catalog.constants.js";
-import StudentLoadingPanel from "../../../components/ui/StudentLoadingPanel.jsx";
 
 const GAME_HUB_CARDS = [
   {
     key: "regular",
     title: "המשחקים של ליאו",
     emoji: "🎮",
-    blurb: "משחקי ליאו הקלאסיים — ריצה, טיסה, חידות ועוד.",
+    blurb: "משחקי ליאו - משחק הזכרון, פאזלים, קליע למטרה ועוד.",
     href: "/student/game",
   },
   {
-    key: "online",
-    title: "משחקים עם חברים",
-    emoji: "🌐",
-    blurb: "חדרי משחק מרובי משתתפים עם חברים ושחקנים אחרים.",
-    href: "/student/arcade",
-  },
-  {
     key: "offline",
-    title: "משחקים כל הזמן עם ליאו",
+    title: "כל הזמן עם ליאו",
     emoji: "🔌",
-    blurb: "משחקים על אותו מכשיר — גם בלי אינטרנט.",
+    blurb: "כל המשחקים גם שאין אינטרנט",
     href: "/student/offline",
   },
   {
     key: "educational",
-    title: "המשחקים החינוכיים של ליאו",
+    title: "העבודות של ליאו",
     emoji: "📚",
     blurb: "משחקי העשרה, חשיבה וידע כללי",
     href: "/student/educational-games",
@@ -60,16 +52,15 @@ export default function StudentGamesHubPage() {
 
           <GamesHubHeader
             title=""
-            subtitle="בחרו את סוג החוויה שמתאימה לכם — משחקי ליאו, משחקים ללא אינטרנט, או משחקים עם חברים."
+            subtitle="בחרו את סוג החוויה שמתאימה לכם — משחקי ליאו, משחקים ללא אינטרנט."
             titleClass={GH.hubTitle}
             subtitleClass={GH.hubSub}
           />
 
-          {state === "loading" ? (
-            <StudentLoadingPanel message="טוען..." hubGrid />
-          ) : (
-            <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5">
-              {GAME_HUB_CARDS.map((card) => {
+          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5">
+            {state === "loading"
+              ? null
+              : GAME_HUB_CARDS.map((card) => {
                 const category = hubCardKeyToCategory(card.key);
                 const catState = category ? categoryState(category) : null;
                 const guestBrowseOnly =
@@ -92,8 +83,7 @@ export default function StudentGamesHubPage() {
                   />
                 );
               })}
-            </section>
-          )}
+          </section>
         </div>
       </main>
     </Layout>

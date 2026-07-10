@@ -49,6 +49,7 @@ import {
 import { mergeDiagnosticContractIntoParams } from "../../utils/diagnostic-question-contract";
 import { mcqCellValue } from "../../utils/mcq-option-cell";
 import { useLearningMasterUi } from "../../hooks/useLearningMasterUi";
+import SubjectMasterSessionShell from "../../components/learning/SubjectMasterSessionShell.jsx";
 import StudentLoadingPanel from "../../components/ui/StudentLoadingPanel.jsx";
 import { useGuestPlayableTopics } from "../../hooks/useGuestPlayableTopics.js";
 import { GUEST_TOPIC_LOCK_MESSAGE_HE } from "../../lib/guest/constants.js";
@@ -2525,7 +2526,7 @@ export default function EnglishMaster() {
 
 
   if (!mounted || session.sessionLoading)
-    return <StudentLoadingPanel message={STUDENT_SUBJECT_LOADING_MESSAGE_HE} fullPage />;
+    return <SubjectMasterSessionShell shellClass={shellClass} shellBgStyle={shellBgStyle} />;
   if (!gradeReady)
     return <StudentLoadingPanel message={STUDENT_GRADE_REQUIRED_MESSAGE_HE} fullPage />;
 

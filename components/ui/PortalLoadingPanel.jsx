@@ -21,12 +21,12 @@ export default function PortalLoadingPanel({
       : fullPage
         ? L.fullShell
         : L.inlineShell;
-  const useBrightBg = isBright && fullPage && L.fullShellStyle;
+  const shellStyle = isBright ? L.pageBackgroundStyle : undefined;
 
   return (
     <div
       className={`${shell} ${className}`.trim()}
-      style={useBrightBg ? L.fullShellStyle : undefined}
+      style={shellStyle}
       dir="rtl"
       lang="he"
       role="status"

@@ -329,12 +329,26 @@ export default function MleoMemoryEngine({
   }
 
   const totalCards = cards.length;
-  const isMobile = boardSize.w > 0 ? boardSize.w < 640 : typeof window !== "undefined" && window.innerWidth < 640;
+  const isMobileViewport =
+    typeof window !== "undefined" && window.matchMedia("(max-width: 1023px)").matches;
+  const isMobile = boardSize.w > 0 ? boardSize.w < 640 : isMobileViewport;
+  const fallbackBoardW =
+    typeof window !== "undefined"
+      ? isMobileViewport
+        ? window.innerWidth
+        : window.innerWidth * 0.92
+      : 360;
+  const fallbackBoardH =
+    typeof window !== "undefined"
+      ? isMobileViewport
+        ? Math.max(280, window.innerHeight * 0.62)
+        : window.innerHeight * 0.5
+      : 400;
   const layout = computeMemoryGridLayout({
     totalCards,
     difficulty,
-    boardW: boardSize.w || (typeof window !== "undefined" ? window.innerWidth * 0.92 : 360),
-    boardH: boardSize.h || (typeof window !== "undefined" ? window.innerHeight * 0.5 : 400),
+    boardW: boardSize.w || fallbackBoardW,
+    boardH: boardSize.h || fallbackBoardH,
     isMobile,
   });
   const { columns, cardWidth, cardHeight, gap: gapSize } = layout;
@@ -366,7 +380,7 @@ export default function MleoMemoryEngine({
   });
 
   const playWrap =
-    "relative flex h-full min-h-0 w-full flex-1 flex-col items-center justify-start overflow-hidden bg-gray-900 text-white solo-game-mobile-fullscreen-shell";
+    "relative isolate flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden bg-gray-900 text-white select-none solo-game-mobile-fullscreen-shell";
 
   return (
     <div
@@ -375,9 +389,9 @@ export default function MleoMemoryEngine({
       style={isPreGame ? pageBgStyle : undefined}
     >
       {!showIntro && (
-        <>
+        <div className="flex min-h-0 w-full flex-1 flex-col">
           {!deckError ? (
-            <div className="flex shrink-0 items-center justify-center gap-3 py-2">
+            <div className="flex w-full shrink-0 items-center justify-center gap-3 py-2 max-lg:gap-2 max-lg:py-1">
               <div className="h-3 w-24 overflow-hidden rounded-full bg-gray-700 sm:w-32">
                 <div
                   className={`h-full ${
@@ -397,7 +411,7 @@ export default function MleoMemoryEngine({
 
           <div
             ref={boardRef}
-            className="relative flex min-h-0 w-full flex-1 items-center justify-center overflow-hidden px-2 pb-2"
+            className="relative flex min-h-0 w-full flex-1 items-center justify-center overflow-hidden px-2 pb-2 max-lg:px-0 max-lg:pb-1"
           >
             {showFullscreenButton ? (
               <div className="pointer-events-auto absolute right-2 top-2 z-[70]">
@@ -478,7 +492,7 @@ export default function MleoMemoryEngine({
               </div>
             )}
           </div>
-        </>
+        </div>
       )}
 
       {gameOver && !showIntro ? (

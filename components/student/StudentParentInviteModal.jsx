@@ -83,7 +83,7 @@ export default function StudentParentInviteModal({ open, onClose }) {
         data-testid="student-parent-invite-modal"
       >
         <div
-          className={`${homeModalShell.panel} md:max-w-md w-full max-h-[90vh] overflow-y-auto overflow-x-hidden`}
+          className={`${homeModalShell.panel} w-full max-h-[90vh] overflow-y-auto overflow-x-hidden md:max-w-2xl md:max-h-none md:overflow-hidden`}
           role="dialog"
           aria-modal="true"
           aria-labelledby={titleId}
@@ -111,14 +111,16 @@ export default function StudentParentInviteModal({ open, onClose }) {
             </h2>
           </header>
 
-          <div className={`${homeModalShell.body} space-y-4 text-center`}>
-            <p className={`text-sm leading-relaxed ${bodyText}`}>
+          <div
+            className={`${homeModalShell.body} space-y-4 text-center md:grid md:grid-cols-2 md:items-start md:gap-x-8 md:gap-y-4 md:overflow-visible md:flex-none md:space-y-0 md:text-right`}
+          >
+            <p className={`text-sm leading-relaxed ${bodyText} md:col-start-1 md:row-start-1 md:text-right`}>
               כדי לפתוח חשבון לילד/ה,
               <br />
               סרקו את הקוד עם הטלפון:
             </p>
 
-            <div className="flex justify-center">
+            <div className="flex justify-center md:col-start-2 md:row-start-1 md:row-span-4 md:self-center">
               <div
                 className={`rounded-xl p-3 ${
                   isBright ? "bg-white border border-slate-200 shadow-sm" : "bg-white"
@@ -134,7 +136,7 @@ export default function StudentParentInviteModal({ open, onClose }) {
               </div>
             </div>
 
-            <div className="space-y-1 text-sm">
+            <div className="space-y-1 text-sm md:col-start-1 md:row-start-2 md:text-right">
               <p className={mutedText}>או היכנסו ל:</p>
               <a
                 href={parentUrl}
@@ -147,7 +149,7 @@ export default function StudentParentInviteModal({ open, onClose }) {
               </a>
             </div>
 
-            <div className="space-y-2 pt-1">
+            <div className="space-y-2 pt-1 md:col-start-1 md:row-start-3 md:pt-0">
               <button
                 type="button"
                 className={actionBtn}
@@ -171,7 +173,7 @@ export default function StudentParentInviteModal({ open, onClose }) {
 
             {copyFeedback ? (
               <p
-                className={`text-sm font-medium ${isBright ? "text-emerald-700" : "text-emerald-300"}`}
+                className={`text-sm font-medium md:col-start-1 md:row-start-4 ${isBright ? "text-emerald-700" : "text-emerald-300"}`}
                 role="status"
                 aria-live="polite"
               >

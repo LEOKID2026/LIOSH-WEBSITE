@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Layout from "../../components/Layout";
+import { STUDENT_LAYOUT_CHROME_BOTTOM_CSS } from "../../lib/student-ui/student-ad-slot.client.js";
 import PageSeo from "../../components/seo/PageSeo";
 import { getPublicPageSeo } from "../../lib/site/public-page-seo.he";
 import {
@@ -25,10 +26,8 @@ import {
   clearClientAchievementGrantsInFlight,
 } from "../../lib/learning-client/studentHomeProfileClient";
 import { invalidateStudentMeClientCache, getCachedStudentMe, setCachedStudentMe } from "../../lib/learning-client/studentMeClient";
-import { formatGradeLevelHe } from "../../lib/learning-student-defaults";
 import { STUDENT_TRUTH_LABELS_HE } from "../../lib/learning-shared/student-display-truth.js";
 import StudentAvatarPickerModal from "../../components/student/StudentAvatarPickerModal";
-import StudentLearningAvatar from "../../components/arcade/club/StudentLearningAvatar.jsx";
 import {
   readProfileBackgroundFromLocalStorage,
   resolveProfileBackgroundKey,
@@ -41,9 +40,8 @@ import StudentWorksheetsPanel from "../../components/worksheet-activities/Studen
 import { isClassroomActivitiesEnabled } from "../../lib/classroom-activities/classroom-activities-labels.client.js";
 import { normalizeStudentActivityScope } from "../../lib/classroom-activities/student-activity-scope-labels.client.js";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
-import StudentSurpriseBoxWidget from "../../components/student/rewards/StudentSurpriseBoxWidget";
 import StudentSurpriseBoxOpenModal from "../../components/student/rewards/StudentSurpriseBoxOpenModal";
-import StudentShareFriendsButton from "../../components/student/StudentShareFriendsButton";
+import StudentWorldTitleScreen from "../../components/student-world-hub/StudentWorldTitleScreen.jsx";
 import { isCardRewardsEnabledClient } from "../../lib/rewards/reward-feature-flags.client.js";
 import { patchSurpriseBoxStatusFromOpenResult } from "../../lib/rewards/surprise-box-status-patch.client.js";
 import { GUEST_LOCK_MESSAGE_HE, GUEST_LOCKED_HOME_PANELS, LIOSH_GUEST_RESUME_TOKEN_KEY } from "../../lib/guest/constants.js";
@@ -104,51 +102,6 @@ const HOME_PANELS = {
   badges: { title: "תגים והישגים", emoji: "🏅", size: "2xl", variant: "badges" },
   recommendations: { title: "המלצות להמשך", emoji: "💡", size: "4xl", variant: "recommendations" },
 };
-
-function getTileVariant(T) {
-  return {
-    stats: { accent: T.tileAccentStats, iconWrap: T.tileIconWrapStats, hover: T.tileHoverStats },
-    progress: { accent: T.tileAccentProgress, iconWrap: T.tileIconWrapProgress, hover: T.tileHoverProgress },
-    missions: { accent: T.tileAccentMissions, iconWrap: T.tileIconWrapMissions, hover: T.tileHoverMissions },
-    subjects: { accent: T.tileAccentSubjects, iconWrap: T.tileIconWrapSubjects, hover: T.tileHoverSubjects },
-    classroom: { accent: T.tileAccentClassroom, iconWrap: T.tileIconWrapClassroom, hover: T.tileHoverClassroom },
-    worksheets: { accent: T.tileAccentWorksheets, iconWrap: T.tileIconWrapWorksheets, hover: T.tileHoverWorksheets },
-    badges: { accent: T.tileAccentBadges, iconWrap: T.tileIconWrapBadges, hover: T.tileHoverBadges },
-    recommendations: {
-      accent: T.tileAccentRecommendations,
-      iconWrap: T.tileIconWrapRecommendations,
-      hover: T.tileHoverRecommendations,
-    },
-    default: { accent: T.tileAccentDefault, iconWrap: T.tileIconWrapDefault, hover: T.tileHoverDefault },
-  };
-}
-
-function DashboardTile({ id, emoji, title, subtitle, onClick, variant = "default", locked = false, lockMessage = GUEST_LOCK_MESSAGE_HE }) {
-  const { tokens: T } = useStudentTheme();
-  const tileVariant = getTileVariant(T);
-  const v = tileVariant[variant] || tileVariant.default;
-  return (
-    <button
-      type="button"
-      data-testid={id ? `student-home-tile-${id}` : undefined}
-      onClick={locked ? undefined : onClick}
-      disabled={locked}
-      aria-disabled={locked || undefined}
-      className={`${T.tile} ${locked ? "opacity-75 cursor-not-allowed" : v.hover}`}
-    >
-      <span className={v.accent} aria-hidden />
-      <div className="flex items-start gap-3 md:gap-3.5">
-        <span className={v.iconWrap} aria-hidden>
-          {locked ? "🔒" : emoji}
-        </span>
-        <div className={T.tileBody}>
-          <p className={T.tileTitle}>{title}</p>
-          <p className={T.tileSub}>{locked ? lockMessage : (subtitle ?? "0")}</p>
-        </div>
-      </div>
-    </button>
-  );
-}
 
 function StatsSection({ dashboardView, accLabel }) {
   const { tokens: T } = useStudentTheme();
@@ -365,7 +318,10 @@ export default function StudentHomePage() {
   const [boxModalOpen, setBoxModalOpen] = useState(false);
   const [boxRefreshToken, setBoxRefreshToken] = useState(0);
   const [surpriseBoxStatus, setSurpriseBoxStatus] = useState(null);
+  const [diamondBalance, setDiamondBalance] = useState(null);
   const [guestPolicy, setGuestPolicy] = useState(null);
+  const [lockToast, setLockToast] = useState("");
+  const lockToastTimerRef = useRef(null);
   const handleSurpriseBoxOpened = useCallback((json) => {
     const patch = patchSurpriseBoxStatusFromOpenResult(json);
     if (patch) setSurpriseBoxStatus(patch);
@@ -374,9 +330,26 @@ export default function StudentHomePage() {
   const cardRewardsEnabled = isCardRewardsEnabledClient();
   const isGuestHome = Boolean(guestPolicy || student?.account_kind === "guest" || student?.accountKind === "guest");
   const guestLockedPanelSet = useMemo(() => {
+    if (!isGuestHome) return new Set();
     const ids = guestPolicy?.lockedHomePanels || GUEST_LOCKED_HOME_PANELS;
     return new Set(ids);
-  }, [guestPolicy]);
+  }, [guestPolicy, isGuestHome]);
+
+  const loadDiamondBalance = useCallback(async () => {
+    try {
+      const res = await fetch("/api/student/diamonds/balance", {
+        credentials: "include",
+        cache: "no-store",
+        headers: { Accept: "application/json" },
+      });
+      const json = await res.json().catch(() => ({}));
+      if (res.ok && json?.ok === true) {
+        setDiamondBalance(json.balance);
+      }
+    } catch {
+      /* non-fatal */
+    }
+  }, []);
 
   const loadHomeAchievementGrants = useCallback(async (studentId) => {
     const sid = String(studentId || "").trim();
@@ -700,6 +673,14 @@ export default function StudentHomePage() {
     };
   }, [authPhase, student?.id]);
 
+  useEffect(() => {
+    if (authPhase !== "authed" || !student?.id) {
+      setDiamondBalance(null);
+      return undefined;
+    }
+    void loadDiamondBalance();
+  }, [authPhase, student?.id, boxRefreshToken, loadDiamondBalance]);
+
   const refreshHeroAvatarFromBrowser = useCallback(() => {
     if (typeof window === "undefined") return;
     const rowProf =
@@ -796,31 +777,23 @@ export default function StudentHomePage() {
 
   const accLabel = (pct) => (pct == null ? "עדיין אין נתונים" : `${pct}%`);
 
-  const dashboardSubtitles = useMemo(() => {
-    if (!dashboardView) return {};
-    const missions = dashboardView.dailyMissions;
-    const missionTotal = missions?.missions?.length ?? 0;
-    const missionCompleted = missions?.totalCompleted ?? 0;
+  const openHomePanel = useCallback(
+    (panelId) => {
+      if (!panelId) return;
+      if (isGuestHome && guestLockedPanelSet.has(panelId)) return;
+      setActivePanel(panelId);
+    },
+    [isGuestHome, guestLockedPanelSet]
+  );
 
-    return {
-      stats: `רמה ${dashboardView.accountStats.summaryLevel}`,
-      progress: `${
-        dashboardView.monthlyPersistence?.currentMinutesDisplayHe ??
-        dashboardView.monthlyJourney.minutesDisplayHe ??
-        dashboardView.monthlyJourney.minutesThisMonth ??
-        STUDENT_TRUTH_LABELS_HE.noData
-      } דק׳ החודש`,
-      missions:
-        missionTotal > 0
-          ? `${missionCompleted}/${missionTotal} הושלמו`
-          : STUDENT_TRUTH_LABELS_HE.noData,
-      classroom: `${personalActivityCount} פעילויות`,
-      worksheets: "0 דפי עבודה",
-      subjects: `${dashboardView.subjects.length} נושאים`,
-      badges: `${dashboardView.badges.length} תגים`,
-      recommendations: `${dashboardView.recommendations.length} המלצות`,
-    };
-  }, [dashboardView, personalActivityCount]);
+  const showLockToast = useCallback((message) => {
+    const text = message || GUEST_LOCK_MESSAGE_HE;
+    setLockToast(text);
+    if (typeof window !== "undefined") {
+      if (lockToastTimerRef.current) window.clearTimeout(lockToastTimerRef.current);
+      lockToastTimerRef.current = window.setTimeout(() => setLockToast(""), 2200);
+    }
+  }, []);
 
   const closeHomePanel = useCallback(() => setActivePanel(null), []);
 
@@ -863,15 +836,16 @@ export default function StudentHomePage() {
 
   const heroName = String(student.displayNameHe || student.full_name || "").trim() || "ילד/ה";
   const heroGreeting = String(student.greetingHe || "").trim() || `שלום ${heroName}`;
+  const heroLeoNumber = String(student.leoNumber ?? student.leo_number ?? "").trim();
   const heroLeoLabel = String(student.leoNumberLabelHe || "").trim();
-  const heroGrade =
-    student.grade_level != null && student.grade_level !== "" ? formatGradeLevelHe(student.grade_level) : "";
   const heroCoinsDisplay =
     student.coin_balance != null
       ? String(Number(student.coin_balance) || 0)
       : dashboardView?.identity?.coinBalanceDisplayHe ?? STUDENT_TRUTH_LABELS_HE.unavailable;
-  const heroTagline =
-    dashboardView?.identity?.friendlyLineHe ?? "כאן מוצגים הנתונים מהשרת אחרי התחברות.";
+  const heroDiamondsDisplay =
+    diamondBalance === null || diamondBalance === undefined
+      ? STUDENT_TRUTH_LABELS_HE.unavailable
+      : String(Number(diamondBalance) || 0);
 
   const renderActivePanelContent = () => {
     if (!dashboardView || !activePanel) return null;
@@ -935,166 +909,92 @@ export default function StudentHomePage() {
         canonicalPath={studentHomeSeo.canonicalPath}
         noindex={studentHomeSeo.noindex}
       />
-      <div key={student.id} className={`max-w-6xl mx-auto px-3 sm:px-4 py-4 md:py-8 pb-6 overflow-x-hidden ${T.pageWrap}`}>
-        <section className={T.hero}>
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
-            <div className="flex items-start justify-between gap-2 w-full md:flex-1 md:min-w-0 md:justify-start">
-              <div className="flex items-start gap-4 min-w-0 flex-1">
-                <button
-                  type="button"
-                  onClick={() => setShowAvatarModal(true)}
-                  className={`${T.heroAvatarBtn} !p-0 !bg-transparent !border-0 !shadow-none`}
-                  title="בחירת אווטר"
-                  aria-label="פתח בחירת אווטר"
-                >
-                  <StudentLearningAvatar
-                    avatarEmoji={heroAvatarEmoji}
-                    avatarCustomDataUrl={heroAvatarImage || ""}
-                    avatarBackgroundKey={heroAvatarBackground}
-                    sizeClass="h-full w-full text-5xl"
-                    className="h-full w-full"
-                  />
-                </button>
-                <div className="min-w-0 text-right">
-                  <h1 className={T.heroTitle}>{isGuestHome ? heroGreeting : `שלום ${heroName}`}</h1>
-                  {isGuestHome && heroLeoLabel ? (
-                    <p className={`text-sm mt-1 ${isBright ? "text-slate-600" : "text-white/70"}`}>{heroLeoLabel}</p>
-                  ) : null}
-                  <p className={T.heroSub}>
-                    {heroGrade ? heroGrade : "עדיין אין נתונים"}
-                  </p>
-                  <p className={T.heroCoins}>מטבעות: {heroCoinsDisplay}</p>
-                  <p className={T.heroTagline}>{heroTagline}</p>
-                </div>
-              </div>
-              <div className="flex flex-col items-stretch gap-1 shrink-0 md:hidden">
-                <button
-                  type="button"
-                  disabled={logoutBusy}
-                  onClick={() => void onLogout()}
-                  className={`${T.ctaLogout} !inline-flex shrink-0 !min-h-[2.75rem] !px-3 !py-2 !text-sm`}
-                >
-                  {logoutBusy ? "יוצאים..." : "התנתקות"}
-                </button>
-                <StudentShareFriendsButton />
-              </div>
-            </div>
-            <div className="flex flex-col gap-2 md:gap-3 shrink-0 w-full md:w-auto">
-              <div className="grid grid-cols-2 gap-2 md:flex md:flex-row md:gap-3">
-                <Link
-                  href="/student/learning"
-                  className={`${T.ctaPrimary} w-full !px-2 !py-2.5 !text-sm md:!px-5 md:!py-3 md:!text-lg md:w-auto`}
-                >
-                  התחל ללמוד
-                </Link>
-                <Link
-                  href="/student/games"
-                  className={`${T.ctaGames} w-full !px-2 !py-2.5 !text-sm md:!px-5 md:!py-3 md:!text-lg md:w-auto`}
-                >
-                  משחקים
-                </Link>
-                <button
-                  type="button"
-                  disabled={logoutBusy}
-                  onClick={() => void onLogout()}
-                  className={`${T.ctaLogout} !hidden md:!inline-flex`}
-                >
-                  {logoutBusy ? "יוצאים..." : "התנתקות"}
-                </button>
-              </div>
-            </div>
-          </div>
-          {logoutMessage ? (
-            <p className={`text-sm mt-4 text-right ${isBright ? "text-rose-600" : "text-rose-200"}`}>
-              {logoutMessage}
-            </p>
-          ) : null}
-        </section>
-
-        {cardRewardsEnabled ? (
-          <StudentSurpriseBoxWidget
-            onOpen={() => setBoxModalOpen(true)}
-            openingLocked={boxModalOpen}
-            refreshToken={boxRefreshToken}
-            statusOverride={surpriseBoxStatus}
-          />
+      <div
+        key={student.id}
+        className="relative flex h-full min-h-0 w-full flex-1 flex-col"
+        style={{
+          marginBottom: `calc(-1 * (${STUDENT_LAYOUT_CHROME_BOTTOM_CSS}))`,
+          minHeight: `calc(100% + (${STUDENT_LAYOUT_CHROME_BOTTOM_CSS}))`,
+        }}
+      >
+        {lockToast ? (
+          <p
+            className="absolute left-1/2 top-2 z-30 -translate-x-1/2 rounded-lg bg-slate-800/90 px-3 py-1.5 text-center text-xs font-semibold text-white"
+            role="status"
+            data-testid="student-world-home-lock-toast"
+          >
+            {lockToast}
+          </p>
         ) : null}
 
-        {profilePending ? (
-          <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 animate-pulse">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-              <div key={i} className={T.skeleton} />
-            ))}
-          </div>
-        ) : null}
+        <StudentWorldTitleScreen
+          greetingHe={
+            (isGuestHome ? heroGreeting : `שלום ${heroName}`).replace(/!+\s*$/, "")
+          }
+          coinsDisplay={heroCoinsDisplay}
+          diamondsDisplay={heroDiamondsDisplay}
+          leoNumber={heroLeoNumber}
+          leoNumberLabelHe={heroLeoLabel}
+          avatarEmoji={heroAvatarEmoji}
+          avatarImage={heroAvatarImage}
+          avatarBackgroundKey={heroAvatarBackground}
+          guestLockedPanelSet={guestLockedPanelSet}
+          lockMessage={guestPolicy?.lockMessageHe || GUEST_LOCK_MESSAGE_HE}
+          logoutBusy={logoutBusy}
+          onOpenPanel={openHomePanel}
+          onOpenAvatar={() => setShowAvatarModal(true)}
+          onLogout={() => void onLogout()}
+          onLockedTap={showLockToast}
+          onSurpriseOpen={cardRewardsEnabled ? () => setBoxModalOpen(true) : undefined}
+          surpriseOpeningLocked={boxModalOpen}
+          surpriseRefreshToken={boxRefreshToken}
+          surpriseStatusOverride={surpriseBoxStatus}
+          showParentInvite={isGuestHome}
+        />
 
         {profilePhase === "error" && !profilePending ? (
-          <div className={T.errorBox}>
-            <p className={T.errorTitle}>לא הצלחנו לטעון את נתוני ההתקדמות מהשרת</p>
-            <p className={T.errorBody}>
-              פרטי החשבון (שם, כיתה, מטבעות) עדיין מההתחברות. נתוני רמה, כוכבים, שאלות ודקות למידה לא הוצגו כדי
-              שלא יופיעו אפסים מטעים.
-            </p>
-            <p className={T.errorBody}>{profileError}</p>
-            <button
-              type="button"
-              onClick={() => student && void loadHomeDashboard(student)}
-              className={T.errorBtn}
-            >
+          <p
+            className={`absolute bottom-2 left-1/2 z-30 max-w-[20rem] -translate-x-1/2 rounded-lg bg-white/80 px-3 py-1 text-center text-xs backdrop-blur-sm ${isBright ? "text-rose-600" : "text-rose-200"}`}
+          >
+            {profileError || "לא הצלחנו לטעון נתוני התקדמות."}{" "}
+            <button type="button" className="underline" onClick={() => student && void loadHomeDashboard(student)}>
               נסו שוב
             </button>
-          </div>
+          </p>
         ) : null}
 
         {buildFailed ? (
-          <div className={T.buildErrorBox}>
-            <p className={T.buildErrorTitle}>שגיאה בעיבוד הנתונים</p>
-            <p className={T.buildErrorBody}>השרת החזיר תשובה תקינה אבל לא ניתן היה לבנות את לוח הבקרה.</p>
-            <button
-              type="button"
-              onClick={() => student && void loadHomeDashboard(student)}
-              className={T.buildErrorBtn}
-            >
+          <p
+            className={`absolute bottom-2 left-1/2 z-30 max-w-[20rem] -translate-x-1/2 rounded-lg bg-white/80 px-3 py-1 text-center text-xs backdrop-blur-sm ${isBright ? "text-rose-600" : "text-rose-200"}`}
+          >
+            שגיאה בעיבוד הנתונים.{" "}
+            <button type="button" className="underline" onClick={() => student && void loadHomeDashboard(student)}>
               נסו שוב
             </button>
-          </div>
-        ) : null}
-
-        {dashboardView ? (
-          <section className="mt-4 md:mt-5" aria-label="לוח בקרה">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-              {Object.entries(HOME_PANELS).map(([id, panel]) => (
-                <DashboardTile
-                  key={id}
-                  id={id}
-                  emoji={panel.emoji}
-                  title={panel.title}
-                  subtitle={dashboardSubtitles[id] || null}
-                  variant={panel.variant}
-                  locked={isGuestHome && guestLockedPanelSet.has(id)}
-                  lockMessage={guestPolicy?.lockMessageHe || GUEST_LOCK_MESSAGE_HE}
-                  onClick={() => setActivePanel(id)}
-                />
-              ))}
-            </div>
-          </section>
+          </p>
         ) : null}
 
         {analyticsPhase === "error" && dashboardView && profilePhase === "ok" ? (
-          <div className={`mt-4 ${T.errorBox}`}>
-            <p className={T.errorTitle}>עדכון נתונים מתקדמים נכשל</p>
-            <p className={T.errorBody}>
-              הנתונים הבסיסיים (רמה, משימות, מטבעות וכו׳) כבר מוצגים. רק דיוק מדויק, דקות חודשיות מחושבות ופרסי
-              התמדה לא התעדכנו.
-            </p>
+          <p
+            className={`absolute bottom-8 left-1/2 z-30 max-w-[20rem] -translate-x-1/2 rounded-lg bg-white/80 px-3 py-1 text-center text-xs backdrop-blur-sm ${isBright ? "text-amber-700" : "text-amber-200"}`}
+          >
+            עדכון נתונים מתקדמים נכשל.{" "}
             <button
               type="button"
+              className="underline"
               onClick={() => homePayload && student?.id && void loadHomeAnalytics(student.id, homePayload)}
-              className={T.errorBtn}
             >
-              נסו שוב לטעון נתונים
+              נסו שוב
             </button>
-          </div>
+          </p>
+        ) : null}
+
+        {logoutMessage ? (
+          <p
+            className={`absolute bottom-2 left-1/2 z-30 -translate-x-1/2 rounded-lg bg-white/80 px-3 py-1 text-center text-xs backdrop-blur-sm ${isBright ? "text-rose-600" : "text-rose-200"}`}
+          >
+            {logoutMessage}
+          </p>
         ) : null}
       </div>
       <StudentHomeModal

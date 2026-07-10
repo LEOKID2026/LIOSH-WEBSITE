@@ -1,5 +1,6 @@
 import { useState } from "react";
 import StudentLearningAvatar from "../arcade/club/StudentLearningAvatar.jsx";
+import StudentCopyLeoNumberChip from "../student/StudentCopyLeoNumberChip.jsx";
 import StudentShareFriendsButton from "../student/StudentShareFriendsButton.jsx";
 import StudentParentInviteModal from "../student/StudentParentInviteModal.jsx";
 import StudentWorldScene from "./StudentWorldScene.jsx";
@@ -29,6 +30,7 @@ const heroPromptText =
  *   promptHe?: string,
  *   coinsDisplay: string,
  *   diamondsDisplay?: string,
+ *   leoNumber?: string,
  *   leoNumberLabelHe?: string,
  *   avatarEmoji: string,
  *   avatarImage?: string | null,
@@ -44,6 +46,7 @@ const heroPromptText =
  *   surpriseOpeningLocked?: boolean,
  *   surpriseRefreshToken?: number,
  *   surpriseStatusOverride?: { ready?: boolean, pendingBoxCount?: number } | null,
+ *   showParentInvite?: boolean,
  * }} props
  */
 export default function StudentWorldTitleScreen({
@@ -51,6 +54,7 @@ export default function StudentWorldTitleScreen({
   promptHe = "מה עושים היום?",
   coinsDisplay,
   diamondsDisplay = "—",
+  leoNumber = "",
   leoNumberLabelHe = "",
   avatarEmoji,
   avatarImage = null,
@@ -66,16 +70,23 @@ export default function StudentWorldTitleScreen({
   surpriseOpeningLocked = false,
   surpriseRefreshToken = 0,
   surpriseStatusOverride = null,
+  showParentInvite = false,
 }) {
   const [parentInviteOpen, setParentInviteOpen] = useState(false);
 
   const coinsLogout = (
     <div className="flex items-center gap-1.5">
-      <div className={`${chipCoins} flex items-center gap-1 text-xs font-bold text-amber-900`}>
+      <div
+        className={`${chipCoins} flex items-center gap-1 text-xs font-bold text-amber-900`}
+        data-testid="student-world-home-coins"
+      >
         <span aria-hidden>🪙</span>
         <span>{coinsDisplay}</span>
       </div>
-      <div className={`${chipDiamonds} flex items-center gap-1 text-xs font-bold text-sky-900`}>
+      <div
+        className={`${chipDiamonds} flex items-center gap-1 text-xs font-bold text-sky-900`}
+        data-testid="student-world-home-diamonds"
+      >
         <span aria-hidden>💎</span>
         <span>{diamondsDisplay}</span>
       </div>
@@ -84,6 +95,7 @@ export default function StudentWorldTitleScreen({
         disabled={logoutBusy}
         onClick={() => onLogout?.()}
         className={`${chipLogout} text-[11px] font-semibold text-rose-800`}
+        data-testid="student-world-home-logout"
       >
         {logoutBusy ? "יוצאים…" : "התנתקות"}
       </button>
@@ -91,7 +103,7 @@ export default function StudentWorldTitleScreen({
   );
 
   const mobileAvatarNode = (
-    <div className="relative shrink-0">
+    <div className="relative shrink-0" data-testid="student-world-home-avatar">
       <StudentLearningAvatar
         avatarEmoji={avatarEmoji}
         avatarCustomDataUrl={avatarImage || ""}
@@ -107,7 +119,7 @@ export default function StudentWorldTitleScreen({
   );
 
   const desktopAvatarNode = (
-    <div className="relative shrink-0">
+    <div className="relative shrink-0" data-testid="student-world-home-avatar">
       <StudentLearningAvatar
         avatarEmoji={avatarEmoji}
         avatarCustomDataUrl={avatarImage || ""}
@@ -123,15 +135,30 @@ export default function StudentWorldTitleScreen({
   );
 
   return (
-    <StudentWorldScene>
-      <div className="relative flex min-h-0 flex-1 flex-col" dir="rtl" data-testid="student-world-title-screen">
+    <div className="flex h-full min-h-0 w-full flex-1 flex-col">
+      <StudentWorldScene>
+        <div
+          className="relative flex h-full min-h-0 flex-1 flex-col"
+          dir="rtl"
+          data-testid="student-world-title-screen"
+        >
         <header className="absolute inset-x-0 top-0 z-20 hidden items-start justify-between gap-2 p-3 md:flex md:p-4">
-          <h1 className={`${chipGreeting} max-w-[14rem] text-sm font-extrabold text-violet-900`}>{greetingHe}</h1>
+          <h1
+            className={`${chipGreeting} max-w-[14rem] text-sm font-extrabold text-violet-900`}
+            data-testid="student-world-home-greeting"
+          >
+            {greetingHe}
+          </h1>
           {coinsLogout}
         </header>
 
         <header className="absolute inset-x-0 top-0 z-20 flex items-start justify-between gap-2 p-3 md:hidden">
-          <span className={`${chipGreeting} max-w-[10rem] truncate text-xs font-extrabold text-violet-900`}>{greetingHe}</span>
+          <span
+            className={`${chipGreeting} max-w-[10rem] truncate text-xs font-extrabold text-violet-900`}
+            data-testid="student-world-home-greeting"
+          >
+            {greetingHe}
+          </span>
           {coinsLogout}
         </header>
 
@@ -182,20 +209,27 @@ export default function StudentWorldTitleScreen({
             className={`absolute left-1/2 z-20 flex max-w-[calc(100vw-1.5rem)] -translate-x-1/2 items-center justify-center gap-2 ${leoRowBottomClass}`}
           >
             <StudentShareFriendsButton variant="chip" label="שתף" />
-            <p className={`${chipLeoId} whitespace-nowrap text-xs font-semibold`}>{leoNumberLabelHe}</p>
-            <button
-              type="button"
-              className={`${chipParentInvite} whitespace-nowrap text-xs font-semibold`}
-              onClick={() => setParentInviteOpen(true)}
-              data-testid="student-parent-invite-open"
-            >
-              הודעה להורה
-            </button>
+            <StudentCopyLeoNumberChip
+              leoNumber={leoNumber}
+              label={leoNumberLabelHe}
+              className={`${chipLeoId} whitespace-nowrap text-xs font-semibold transition hover:bg-violet-100/85`}
+            />
+            {showParentInvite ? (
+              <button
+                type="button"
+                className={`${chipParentInvite} whitespace-nowrap text-xs font-semibold`}
+                onClick={() => setParentInviteOpen(true)}
+                data-testid="student-parent-invite-open"
+              >
+                הודעה להורה
+              </button>
+            ) : null}
           </div>
         ) : null}
 
         <StudentParentInviteModal open={parentInviteOpen} onClose={() => setParentInviteOpen(false)} />
       </div>
     </StudentWorldScene>
+    </div>
   );
 }

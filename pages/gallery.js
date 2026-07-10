@@ -6,7 +6,6 @@ import PageSeo from "../components/seo/PageSeo";
 import { getPublicPageSeo } from "../lib/site/public-page-seo.he";
 import { useStudentTheme } from "../contexts/StudentThemeContext.jsx";
 import { useGalleryUi } from "../hooks/useGalleryUi.js";
-import StudentLoadingPanel from "../components/ui/StudentLoadingPanel.jsx";
 
 const gallerySeo = getPublicPageSeo("gallery");
 
@@ -86,7 +85,7 @@ export default function Gallery() {
           </motion.p>
 
           {loading ? (
-            <StudentLoadingPanel message="טוען גלריה..." reportPage />
+            <div className="min-h-[40vh]" aria-busy="true" />
           ) : items.length === 0 ? (
             <p className={GL.empty}>עדיין לא נוספו תמונות או סרטונים לגלריה.</p>
           ) : (

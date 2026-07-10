@@ -15,6 +15,7 @@ import { StudentThemeProvider } from "../contexts/StudentThemeContext.jsx";
 import BrowserThemeColorSync from "../components/BrowserThemeColorSync.jsx";
 import CookieConsentManager from "../components/consent/CookieConsentManager.jsx";
 import { GOOGLE_CONSENT_BOOTSTRAP_SCRIPT } from "../lib/consent/google-consent-mode.client.js";
+import { isStudentProtectedRoute } from "../lib/student-ui/student-protected-routes.client.js";
 import {
   BROWSER_THEME_COLOR_BRIGHT,
   BROWSER_THEME_COLOR_BOOTSTRAP_SCRIPT,
@@ -30,81 +31,6 @@ if (typeof window !== "undefined") {
   // One-time cleanup of temporary PWA diagnosis keys written during debugging.
   try { localStorage.removeItem("offline_game_err_log"); } catch {}
 }
-
-const STUDENT_PROTECTED_ROUTES = new Set([
-  "/games",
-  "/game",
-  "/offline",
-  "/offline/tic-tac-toe",
-  "/offline/rock-paper-scissors",
-  "/offline/tap-battle",
-  "/offline/memory-match",
-  "/student/arcade",
-  "/student/games/fourline",
-  "/student/games/ludo",
-  "/student/games/snakes-and-ladders",
-  "/student/games/checkers",
-  "/student/games/chess",
-  "/student/games/dominoes",
-  "/student/games/bingo",
-  "/student/solo-games",
-  "/student/solo-games/catcher",
-  "/student/solo-games/puzzle",
-  "/student/solo-games/memory",
-  "/student/solo-games/flyer",
-  "/student/solo-games/leo-jump",
-  "/student/solo-games/balloons",
-  "/student/solo-games/maze",
-  "/student/solo-games/picture-puzzle",
-  "/student/solo-games/target-tap",
-  "/student/solo-games/sort-shapes",
-  "/student/solo-games/smart-blocks",
-  "/student/solo-games/fruit-slice",
-  "/student/solo-games/leo-miners",
-  "/student/educational-games",
-  "/student/educational-games/recycling-factory",
-  "/student/educational-games/leo-supermarket",
-  "/student/educational-games/leo-lab",
-  "/student/educational-games/leo-gifts",
-  "/student/educational-games/leo-bakery",
-  "/student/educational-games/leo-number-path",
-  "/student/educational-games/leo-pizzeria",
-  "/student/educational-games/leo-word-train",
-  "/student/educational-games/leo-word-detective",
-  "/learning",
-  "/learning/math-master",
-  "/learning/geometry-master",
-  "/learning/english-master",
-  "/learning/hebrew-master",
-  "/learning/science-master",
-  "/learning/moledet-master",
-  "/learning/geography-master",
-  "/learning/history-master",
-  "/learning/moledet-geography-master",
-  "/learning/curriculum",
-  "/learning/geometry-curriculum",
-  "/learning/book/math/g1",
-  "/learning/book/math/g1/[pageId]",
-  "/learning/book/geometry/g1",
-  "/learning/book/geometry/g1/[pageId]",
-  "/learning/book/geometry/g3",
-  "/learning/book/geometry/g3/[pageId]",
-  "/learning/book/[subject]/[grade]",
-  "/learning/book/[subject]/[grade]/[pageId]",
-  "/student/learning/book/[subject]/[grade]",
-  "/student/learning/book/[subject]/[grade]/[pageId]",
-  "/student/learning",
-  "/student/learning/math-master",
-  "/student/learning/geometry-master",
-  "/student/learning/english-master",
-  "/student/learning/hebrew-master",
-  "/student/learning/science-master",
-  "/student/learning/moledet-master",
-  "/student/learning/geography-master",
-  "/student/learning/history-master",
-  "/student/learning/moledet-geography-master",
-  "/learning/dev-student-simulator",
-]);
 
 /** Internal dev tools — admin-only via DevPrototypeAdminGate in render. */
 function pathnameIsInternalDevRoute(pathname) {
@@ -274,7 +200,7 @@ export default function MyApp({ Component, pageProps }) {
   }, [router.pathname]);
 
   const pathname = router.pathname || "";
-  const shouldGate = STUDENT_PROTECTED_ROUTES.has(pathname);
+  const shouldGate = isStudentProtectedRoute(pathname);
   const isInternalDevRoute = pathnameIsInternalDevRoute(pathname);
   const pwaPortal = resolvePwaPortal(pathname);
   const manifestHref = resolvePwaManifestHref(pathname);

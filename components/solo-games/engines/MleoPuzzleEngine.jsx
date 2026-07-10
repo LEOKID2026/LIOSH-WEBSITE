@@ -310,34 +310,29 @@ export default function MleoPuzzleEngine({
   return (
       <div
         id="game-wrapper"
-        className="relative isolate flex h-full min-h-0 flex-1 flex-col items-center justify-start overflow-hidden bg-gray-900 text-white w-full solo-game-mobile-fullscreen-shell"
+        className="relative isolate flex h-full min-h-0 flex-1 flex-col overflow-hidden bg-gray-900 text-white w-full select-none solo-game-mobile-fullscreen-shell"
         dir="rtl"
       >
-        {showFullscreenButton ? (
-          <div className="pointer-events-auto absolute right-2 top-2 z-[70]">
-            <SoloGameMobileFullscreenButton
-              isFullscreen={isFullscreen}
-              onToggle={toggleFromUserGesture}
-            />
-          </div>
-        ) : null}
+        {!showIntro ? (
+          <div className="flex min-h-0 w-full flex-1 flex-col">
+            {showFullscreenButton ? (
+              <div className="pointer-events-auto absolute right-2 top-2 z-[70]">
+                <SoloGameMobileFullscreenButton
+                  isFullscreen={isFullscreen}
+                  onToggle={toggleFromUserGesture}
+                />
+              </div>
+            ) : null}
 
-        {!showIntro && (
-          <>
-            <div className="flex shrink-0 gap-4 py-2 text-base font-bold z-10 sm:text-lg">
+            <div className="z-10 flex shrink-0 items-center justify-center gap-3 py-2 text-base font-bold max-lg:gap-2 max-lg:py-1 sm:text-lg">
               <div className="rounded bg-black/60 px-3 py-1">⏳ {time}s</div>
               <div className="rounded bg-black/60 px-3 py-1">⭐ {score}</div>
             </div>
-          </>
-        )}
 
-        {!showIntro && (
-          <>
             <div
-              className="grid flex-1 touch-none gap-1 content-center justify-center overflow-hidden px-2 pb-2"
+              className="grid min-h-0 w-full flex-1 touch-none gap-1 content-center justify-center overflow-hidden px-2 pb-2 max-lg:px-1 max-lg:pb-1 lg:mx-auto lg:w-[min(95vw,640px)]"
               style={{
                 gridTemplateColumns: `repeat(${size}, minmax(0, 1fr))`,
-                width: "min(95vw, 640px)",
                 maxHeight: "100%",
               }}
             >
@@ -360,8 +355,8 @@ export default function MleoPuzzleEngine({
                 </div>
               ))}
             </div>
-          </>
-        )}
+          </div>
+        ) : null}
 
         {gameOver ? (
           <SoloGameEndInterstitialOverlay

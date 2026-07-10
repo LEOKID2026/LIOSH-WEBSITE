@@ -1,40 +1,17 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
+import { StudentGameAccessContext } from "../contexts/StudentGameAccessContext.jsx";
 
-/**
- * Loads /api/student/game-access for the logged-in student.
- */
-export function useStudentGameAccess() {
-  const [state, setState] = useState("loading");
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
+const EMPTY_GAME_ACCESS = {
+  gamesByKey: {},
+  categoryState: () => null,
+  playableGames: () => [],
+  enabledGames: () => [],
+  permissions: null,
+  isGuest: false,
+};
 
-  const reload = useCallback(async () => {
-    setState("loading");
-    setError(null);
-    try {
-      const res = await fetch("/api/student/game-access", { credentials: "include" });
-      const json = await res.json().catch(() => ({}));
-      if (!res.ok || !json.ok) {
-        setState("error");
-        setError(json.error || "load_failed");
-        setData(null);
-        return null;
-      }
-      setData(json);
-      setState("ready");
-      return json;
-    } catch {
-      setState("error");
-      setError("network_error");
-      setData(null);
-      return null;
-    }
-  }, []);
-
-  useEffect(() => {
-    reload();
-  }, [reload]);
-
+/** @param {object | null} data */
+export function buildStudentGameAccessView(data) {
   const gamesByKey = data?.games
     ? Object.fromEntries(data.games.map((g) => [g.gameKey, g]))
     : {};
@@ -48,10 +25,10 @@ export function useStudentGameAccess() {
     (data?.games || []).filter((g) => g.category === category && g.isEnabled);
 
   return {
-    state,
+    state: "ready",
     data,
-    error,
-    reload,
+    error: null,
+    reload: async () => data,
     gamesByKey,
     categoryState,
     playableGames,
@@ -59,4 +36,67 @@ export function useStudentGameAccess() {
     permissions: data?.permissions || null,
     isGuest: data?.isGuest === true,
   };
+}
+
+/** @returns {Promise<{ ok: boolean, data: object | null, error: string | null }>} */
+export async function fetchStudentGameAccessClient() {
+  try {
+    const res = await fetch("/api/student/game-access", { credentials: "include" });
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok || !json.ok) {
+      return { ok: false, data: null, error: json.error || "load_failed" };
+    }
+    return { ok: true, data: json, error: null };
+  } catch {
+    return { ok: false, data: null, error: "network_error" };
+  }
+}
+
+function useStudentGameAccessFetch({ enabled = true } = {}) {
+  const [state, setState] = useState(() => (enabled ? "loading" : "ready"));
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+
+  const reload = useCallback(async () => {
+    if (!enabled) return null;
+    setState("loading");
+    setError(null);
+    const result = await fetchStudentGameAccessClient();
+    if (!result.ok) {
+      setState("error");
+      setError(result.error);
+      setData(null);
+      return null;
+    }
+    setData(result.data);
+    setState("ready");
+    return result.data;
+  }, [enabled]);
+
+  useEffect(() => {
+    if (!enabled) return undefined;
+    void reload();
+  }, [enabled, reload]);
+
+  if (state === "ready" && data) {
+    return { ...buildStudentGameAccessView(data), reload };
+  }
+
+  return {
+    state,
+    data: null,
+    error,
+    reload,
+    ...EMPTY_GAME_ACCESS,
+  };
+}
+
+/**
+ * Loads /api/student/game-access for the logged-in student.
+ * Uses gate-prefetched context when available.
+ */
+export function useStudentGameAccess() {
+  const ctx = useContext(StudentGameAccessContext);
+  const local = useStudentGameAccessFetch({ enabled: !ctx });
+  return ctx || local;
 }

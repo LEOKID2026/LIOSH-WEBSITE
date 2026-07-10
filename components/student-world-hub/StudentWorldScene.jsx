@@ -3,33 +3,29 @@ export const STUDENT_WORLD_BG = {
   desktop: "/images/student-world/world-home-desktop.png",
 };
 
-const SCENE_STYLE = {
-  "--header-height": "3.75rem",
-  minHeight: "calc(100dvh - var(--header-height))",
-};
-
 /**
  * Full-page illustrated background — mobile portrait / desktop landscape.
+ * Height comes from the Layout → main flex chain (flex-1 / min-h-0), not viewport units,
+ * so header + footer + ad chrome stay visible without page scroll.
  */
 export default function StudentWorldScene({ children }) {
   return (
     <section
-      className="relative flex min-h-0 w-full flex-1 flex-col"
-      style={SCENE_STYLE}
+      className="relative flex h-full min-h-0 w-full flex-1 flex-col self-stretch"
       data-testid="student-world-scene"
     >
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat md:hidden"
+        className="pointer-events-none absolute inset-0 min-h-full bg-cover bg-center bg-no-repeat md:hidden"
         style={{ backgroundImage: `url('${STUDENT_WORLD_BG.mobile}')` }}
         aria-hidden
       />
       <div
-        className="absolute inset-0 hidden bg-cover bg-center bg-no-repeat md:block"
+        className="pointer-events-none absolute inset-0 hidden min-h-full bg-cover bg-center bg-no-repeat md:block"
         style={{ backgroundImage: `url('${STUDENT_WORLD_BG.desktop}')` }}
         aria-hidden
       />
 
-      <div className="relative z-10 flex min-h-0 flex-1 flex-col">{children}</div>
+      <div className="relative z-10 flex h-full min-h-0 flex-1 flex-col">{children}</div>
     </section>
   );
 }

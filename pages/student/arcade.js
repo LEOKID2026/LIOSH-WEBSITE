@@ -688,8 +688,8 @@ export default function StudentArcadePage() {
   }, []);
 
   return (
-    <GameAccessGuard category="online">
     <Layout studentTheme={theme} studentShell="home">
+    <GameAccessGuard category="online">
       <Head>
         <title>מועדון המשחקים של ליאו — LEO K</title>
       </Head>
@@ -932,7 +932,7 @@ export default function StudentArcadePage() {
           ) : null}
         </div>
       </div>
-    </Layout>
     </GameAccessGuard>
+    </Layout>
   );
 }

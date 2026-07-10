@@ -253,7 +253,7 @@ describe("Phase 3 — student dashboard display truth", () => {
     assert.equal(view.accountStats.overallAccuracyDisplayHe, STUDENT_TRUTH_LABELS_HE.noData);
     assert.equal(view.subjects[0].progressIndicatorPct, null);
     assert.equal(view.identity.coinBalanceState, StudentDisplayTruthState.unavailable);
-    assert.match(view.recommendations[0].hintHe, /לא אבחון/);
+    assert.ok(!view.recommendations[0].hintHe);
   });
 
   test("buildStudentSubjectDashboardView null accuracy uses displayHe not 0%", () => {

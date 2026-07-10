@@ -4,7 +4,7 @@ import MaybeGameAccessGuard from "../../components/offline/MaybeGameAccessGuard.
 import StudentAdSlot from "../../components/student/StudentAdSlot.jsx";
 import { useRouter } from "next/router";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
-import StudentLoadingPanel from "../../components/ui/StudentLoadingPanel.jsx";
+import OfflineGameHoldShell from "../../components/offline/OfflineGameHoldShell.jsx";
 
 const DURATIONS = [5, 10, 15];
 
@@ -153,7 +153,7 @@ export default function TapBattle() {
     }
   };
 
-  if (!mounted) return <StudentLoadingPanel message="טוען..." fullPage />;
+  if (!mounted) return <OfflineGameHoldShell />;
 
   return (
     <MaybeGameAccessGuard gameKey="tap-battle">

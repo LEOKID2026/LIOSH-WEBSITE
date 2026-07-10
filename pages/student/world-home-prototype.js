@@ -813,6 +813,7 @@ export default function WorldHomePrototypePage() {
 
   const heroName = String(student.displayNameHe || student.full_name || "").trim() || "ילד/ה";
   const heroGreeting = String(student.greetingHe || "").trim() || `שלום ${heroName}`;
+  const heroLeoNumber = String(student.leoNumber ?? student.leo_number ?? "").trim();
   const heroLeoLabel = String(student.leoNumberLabelHe || "").trim();
   const heroCoinsDisplay =
     student.coin_balance != null
@@ -908,6 +909,7 @@ export default function WorldHomePrototypePage() {
           }
           coinsDisplay={heroCoinsDisplay}
           diamondsDisplay={heroDiamondsDisplay}
+          leoNumber={heroLeoNumber}
           leoNumberLabelHe={heroLeoLabel}
           avatarEmoji={heroAvatarEmoji}
           avatarImage={heroAvatarImage}

@@ -384,7 +384,7 @@ export default function StudentCardsPage() {
   if (authPhase === "checking" || authPhase === "anon") {
     return (
       <Layout studentTheme={theme} studentShell="home">
-        <StudentLoadingPanel message="טוען..." reportPage />
+        <div className={`min-h-[60vh] ${T.pageWrap}`} aria-busy="true" />
       </Layout>
     );
   }

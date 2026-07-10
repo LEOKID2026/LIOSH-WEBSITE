@@ -183,6 +183,7 @@ import {
   shouldShowHebrewG1BookFirstSoftGate,
 } from "../../lib/learning-book/hebrew-g1-literacy-progress";
 import { useLearningMasterUi } from "../../hooks/useLearningMasterUi.js";
+import SubjectMasterSessionShell from "../../components/learning/SubjectMasterSessionShell.jsx";
 import StudentLoadingPanel from "../../components/ui/StudentLoadingPanel.jsx";
 import { useGuestPlayableTopics } from "../../hooks/useGuestPlayableTopics.js";
 import { GUEST_TOPIC_LOCK_MESSAGE_HE } from "../../lib/guest/constants.js";
@@ -2981,7 +2982,7 @@ export default function HebrewMaster() {
 
 
   if (!mounted || session.sessionLoading)
-    return <StudentLoadingPanel message={STUDENT_SUBJECT_LOADING_MESSAGE_HE} fullPage />;
+    return <SubjectMasterSessionShell shellClass={shellClass} shellBgStyle={shellBgStyle} />;
   if (!gradeReady)
     return <StudentLoadingPanel message={STUDENT_GRADE_REQUIRED_MESSAGE_HE} fullPage />;
 

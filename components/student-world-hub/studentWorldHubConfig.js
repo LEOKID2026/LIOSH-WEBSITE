@@ -13,7 +13,7 @@
 export const STUDENT_WORLD_GATES = [
   {
     id: "learning",
-    labelHe: "למידה",
+    labelHe: "משחקי האתגר",
     emoji: "📚",
     href: "/student/learning",
     bgClass: "from-emerald-500 to-emerald-600 border-emerald-300",
@@ -46,7 +46,6 @@ export const STUDENT_WORLD_GATES = [
 
 /** @type {StudentWorldDockItem[]} */
 export const STUDENT_WORLD_DOCK_PRIMARY = [
-  { id: "shop", labelHe: "חנות", emoji: "🛒", kind: "link", href: "/student/cards" },
   { id: "collection", labelHe: "אוסף", emoji: "🃏", kind: "link", href: "/student/cards" },
   { id: "friends", labelHe: "חברים", emoji: "👫", kind: "link", href: "/student/arcade" },
   { id: "profile", labelHe: "פרופיל", emoji: "😊", kind: "avatar" },

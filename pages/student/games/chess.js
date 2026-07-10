@@ -4,14 +4,15 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import ChessScreen from "../../../components/arcade/chess/ChessScreen";
-import ArcadeGameRouteLoading from "../../../components/arcade/ArcadeGameRouteLoading.jsx";
+
+import ArcadeRouteHoldShell from "../../../components/arcade/ArcadeRouteHoldShell.jsx";
 
 export default function StudentChessPage() {
   const router = useRouter();
   const roomId = router.isReady ? String(router.query.roomId || "").trim() : "";
 
   if (!router.isReady) {
-    return <ArcadeGameRouteLoading title="שחמט — ארקייד" />;
+    return <ArcadeRouteHoldShell />;
   }
 
   if (!roomId) {

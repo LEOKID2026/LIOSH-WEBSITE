@@ -4,14 +4,15 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import DominoesScreen from "../../../components/arcade/dominoes/DominoesScreen";
-import ArcadeGameRouteLoading from "../../../components/arcade/ArcadeGameRouteLoading.jsx";
+
+import ArcadeRouteHoldShell from "../../../components/arcade/ArcadeRouteHoldShell.jsx";
 
 export default function StudentDominoesPage() {
   const router = useRouter();
   const roomId = router.isReady ? String(router.query.roomId || "").trim() : "";
 
   if (!router.isReady) {
-    return <ArcadeGameRouteLoading title="דומינו — ארקייד" />;
+    return <ArcadeRouteHoldShell />;
   }
 
   if (!roomId) {

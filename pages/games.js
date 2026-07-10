@@ -9,7 +9,6 @@ import GamesHubNavBar from "../components/games/GamesHubNavBar.jsx";
 import GamesHubHeader from "../components/games/GamesHubHeader.jsx";
 import { useStudentGameAccess } from "../hooks/useStudentGameAccess.js";
 import { hubCardKeyToCategory, GAME_ACCESS_STATES } from "../lib/games/game-catalog.constants.js";
-import StudentLoadingPanel from "../components/ui/StudentLoadingPanel.jsx";
 const GAME_HUB_CARDS = [
   {
     key: "regular",
@@ -73,11 +72,10 @@ export default function GamesHubPage() {
             subtitleClass={GH.hubSub}
           />
 
-          {state === "loading" ? (
-            <StudentLoadingPanel message="טוען..." hubGrid />
-          ) : (
-            <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5">
-              {GAME_HUB_CARDS.map((card) => {
+          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5">
+            {state === "loading"
+              ? null
+              : GAME_HUB_CARDS.map((card) => {
                 const category = hubCardKeyToCategory(card.key);
                 const catState = category ? categoryState(category) : null;
                 const guestBrowseOnly =
@@ -100,8 +98,7 @@ export default function GamesHubPage() {
                   />
                 );
               })}
-            </section>
-          )}
+          </section>
         </div>
       </main>
     </Layout>

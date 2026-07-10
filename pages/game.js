@@ -1,6 +1,6 @@
 import Layout from "../components/Layout";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 import { useGamesHubUi } from "../hooks/useGamesHubUi.js";
 import { useStudentTheme } from "../contexts/StudentThemeContext.jsx";
 import GameAccessGuard from "../components/games/GameAccessGuard.jsx";
@@ -17,7 +17,6 @@ import SoloGameHelpButton from "../components/solo-games/SoloGameHelpButton.jsx"
 import SoloGameHelpModal from "../components/solo-games/SoloGameHelpModal.jsx";
 import GamesHubLockFooter from "../components/games/GamesHubLockFooter.jsx";
 import { useSoloGameHelp } from "../hooks/solo-games/useSoloGameHelp.js";
-import StudentLoadingPanel from "../components/ui/StudentLoadingPanel.jsx";
 
 export default function Games() {
   const { theme } = useStudentTheme();
@@ -26,13 +25,13 @@ export default function Games() {
   const accessRows = isGuest ? enabledGames("solo") : playableGames("solo");
   const { helpGame, openSoloGameHelp, closeSoloGameHelp } = useSoloGameHelp();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     resetSoloGameDocumentShell();
   }, []);
 
   return (
-    <GameAccessGuard category="solo">
-      <Layout studentTheme={theme} studentShell="home">
+    <Layout studentTheme={theme} studentShell="home">
+      <GameAccessGuard category="solo">
         <main className={GH.pageWrap} dir="rtl">
           <div className={`${GH.container} space-y-4`}>
             <GamesHubNavBar
@@ -52,10 +51,9 @@ export default function Games() {
 
             <section className="space-y-3">
               <div className="grid sm:grid-cols-2 gap-3 md:gap-4">
-                {state === "loading" ? (
-                  <StudentLoadingPanel message="טוען..." hubGrid />
-                ) : (
-                  accessRows.map((row) => {
+                {state === "loading"
+                  ? null
+                  : accessRows.map((row) => {
                     const game = SOLO_GAME_LIST.find((g) => g.id === row.gameKey);
                     if (!game) return null;
                     const locked = isGuest && !row.playable;
@@ -98,8 +96,8 @@ export default function Games() {
                       </Link>
                     );
                   })
-                )}
-                {SHOW_PUBLIC_PROTOTYPE_HUB_ENTRY ? (
+                }
+                {SHOW_PUBLIC_PROTOTYPE_HUB_ENTRY && state !== "loading" ? (
                   <Link href={SOLO_DEV_PROTOTYPES_HUB.route} className={GH.card}>
                     <div className="flex items-center gap-3 mb-2">
                       <div className={GH.cardEmoji}>{SOLO_DEV_PROTOTYPES_HUB.emoji}</div>
@@ -117,8 +115,8 @@ export default function Games() {
           </div>
           <SoloGameHelpModal game={helpGame} onClose={closeSoloGameHelp} />
         </main>
-      </Layout>
-    </GameAccessGuard>
+      </GameAccessGuard>
+    </Layout>
   );
 }
 
