@@ -69,22 +69,27 @@ describe("Phase 9 — coin formula from Admin/DB", () => {
   });
 });
 
-describe("Phase 9 — monthly minutes from learning_sessions + parent activity", () => {
-  test("monthly persistence sums sessions + parent activity; tiers from Admin/DB", () => {
+describe("Phase 9 — monthly minutes from unified learning-time aggregate", () => {
+  test("monthly persistence and derived profile use single aggregate; tiers from Admin/DB", () => {
     const persistenceSrc = readFileSync(
       join(ROOT, "lib/learning-supabase/monthly-persistence-reward.server.js"),
+      "utf8"
+    );
+    const aggregateSrc = readFileSync(
+      join(ROOT, "lib/learning-supabase/learning-time-monthly-aggregate.server.js"),
       "utf8"
     );
     const derivedSrc = readFileSync(
       join(ROOT, "lib/learning-supabase/student-learning-profile.server.js"),
       "utf8"
     );
-    assert.match(persistenceSrc, /\.from\("learning_sessions"\)/);
-    assert.match(persistenceSrc, /sumParentActivityCreditedMinutesInRange/);
+    assert.match(persistenceSrc, /sumStudentLearningCreditedMinutesInIsraelMonth/);
+    assert.match(aggregateSrc, /\.from\("learning_sessions"\)/);
+    assert.match(aggregateSrc, /sumParentActivityCreditedMinutesInRange/);
     assert.doesNotMatch(persistenceSrc, /book_reading_sessions/);
-    assert.match(derivedSrc, /\.from\("learning_sessions"\)/);
+    assert.match(derivedSrc, /sumStudentLearningCreditedMinutesInIsraelMonth/);
+    assert.match(derivedSrc, /sumParentActivityVisitMsBySubjectInRange/);
     assert.match(derivedSrc, /parent_activity_attempts/);
-    assert.match(derivedSrc, /sumParentActivityCreditedMinutesInRange/);
     assert.doesNotMatch(derivedSrc, /book_reading/);
     assert.match(persistenceSrc, /getMonthlyPersistenceTiersFromSettings/);
     assert.doesNotMatch(persistenceSrc, /legacy-economy/);
@@ -139,7 +144,7 @@ describe("Phase 9 — student home uses server derived minutes", () => {
     assert.equal(view.monthlyPersistence.currentMinutes, 123.5);
   });
 
-  test("buildStudentHomeView with persistence status prefers completed-session minutes", () => {
+  test("buildStudentHomeView with persistence status uses active persistence minutes as canonical", () => {
     const view = buildStudentHomeView({
       student: { id: "stu-9", full_name: "Phase 9", grade_level: "grade_3", coin_balance: 50 },
       homePayload: {
@@ -161,7 +166,7 @@ describe("Phase 9 — student home uses server derived minutes", () => {
     });
     assert.ok(view);
     assert.equal(view.monthlyPersistence.currentMinutes, 150.5);
-    assert.equal(view.meta.minutesFilterMismatch, true);
+    assert.equal(view.meta.minutesFilterMismatch, false);
   });
 });
 

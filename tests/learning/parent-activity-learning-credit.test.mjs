@@ -4,6 +4,7 @@ import {
   resolveParentAttemptCreditedTimeMs,
   summarizeParentActivityAttempts,
 } from "../../lib/learning-supabase/parent-activity-learning-credit.server.js";
+import { LEARNING_UNIT_CREDIT_CAP_MS } from "../../lib/learning/learning-time-credit-policy.js";
 import {
   classifyActivityEvidence,
   EVIDENCE_CATEGORIES,
@@ -23,8 +24,8 @@ test("resolveParentAttemptCreditedTimeMs prefers snapshot creditedTimeMs", () =>
 });
 
 test("resolveParentAttemptCreditedTimeMs caps raw time when credited missing", () => {
-  const ms = resolveParentAttemptCreditedTimeMs({ time_spent_ms: 400_000 });
-  assert.equal(ms, 300_000);
+  const ms = resolveParentAttemptCreditedTimeMs({ time_spent_ms: 800_000 });
+  assert.equal(ms, LEARNING_UNIT_CREDIT_CAP_MS);
 });
 
 test("summarizeParentActivityAttempts counts only graded answers", () => {
