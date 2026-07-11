@@ -315,6 +315,7 @@ export default function HebrewMaster() {
     gradeNumber,
     setGradeNumber,
     gradeReady,
+    canPickGrade,
     fullName: sessionFullName,
     coinBalance: sessionCoinBalance,
   } = useSubjectSessionDefaults({ permissionKey: "hebrew" });
@@ -3699,6 +3700,8 @@ export default function HebrewMaster() {
                 <select
                   value={gradeNumber}
                   title={`כיתה ${["א", "ב", "ג", "ד", "ה", "ו"][gradeNumber - 1]}`}
+                  disabled={!canPickGrade}
+                  aria-disabled={!canPickGrade || undefined}
                   onChange={(e) => {
                     const newGradeNum = Number(e.target.value);
                     setGradeNumber(newGradeNum);

@@ -310,6 +310,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
     gradeNumber,
     setGradeNumber,
     gradeReady,
+    canPickGrade,
     fullName: sessionFullName,
     coinBalance: sessionCoinBalance,
   } = useSubjectSessionDefaults({
@@ -3074,6 +3075,8 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
                     data-testid="moledet-grade-select"
                     value={gradeNumber}
                     title={`כיתה ${["א", "ב", "ג", "ד", "ה", "ו"][gradeNumber - 1]}`}
+                    disabled={!canPickGrade}
+                    aria-disabled={!canPickGrade || undefined}
                     onChange={(e) => {
                       const newGradeNum = Number(e.target.value);
                       practiceForceKindRef.current = null;

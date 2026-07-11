@@ -511,6 +511,7 @@ export default function MathMaster() {
     gradeNumber,
     setGradeNumber,
     gradeReady,
+    canPickGrade,
     fullName: sessionFullName,
     coinBalance: sessionCoinBalance,
   } = useSubjectSessionDefaults({ permissionKey: "math" });
@@ -4016,6 +4017,8 @@ export default function MathMaster() {
                   data-testid="math-grade-select"
                   value={gradeNumber}
                   title={`כיתה ${["א", "ב", "ג", "ד", "ה", "ו"][gradeNumber - 1]}`}
+                  disabled={!canPickGrade}
+                  aria-disabled={!canPickGrade || undefined}
                   onChange={(e) => {
                     const newGradeNum = Number(e.target.value);
                     setGradeNumber(newGradeNum);

@@ -560,6 +560,7 @@ export default function EnglishMaster() {
     gradeNumber,
     setGradeNumber,
     gradeReady,
+    canPickGrade,
     fullName: sessionFullName,
     coinBalance: sessionCoinBalance,
   } = useSubjectSessionDefaults({ permissionKey: "english" });
@@ -2750,6 +2751,8 @@ export default function EnglishMaster() {
                 <select
                   value={gradeNumber}
                   title={`כיתה ${gradeLabels[gradeNumber - 1]}`}
+                  disabled={!canPickGrade}
+                  aria-disabled={!canPickGrade || undefined}
                   onChange={(e) => handleGradeNumberChange(e.target.value)}
                   className={`${MB.selectControl} shrink-0 min-w-0 w-[5.75rem] max-w-[6.25rem] md:w-[6.5rem] md:max-w-[7rem]`}
                 >

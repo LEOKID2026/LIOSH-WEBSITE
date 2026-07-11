@@ -717,6 +717,7 @@ export default function ScienceMaster() {
     grade,
     setGrade,
     gradeReady,
+    canPickGrade,
     fullName: sessionFullName,
     coinBalance: sessionCoinBalance,
   } = useSubjectSessionDefaults({ permissionKey: "science", requireGradeNumber: false });
@@ -3080,6 +3081,8 @@ function saveScienceAnswerInParallel({
                 <select
                   value={grade}
                   title={GRADES[grade]?.name || grade}
+                  disabled={!canPickGrade}
+                  aria-disabled={!canPickGrade || undefined}
                   onChange={(e) => {
                     setGrade(e.target.value);
                     setGameActive(false);

@@ -14,7 +14,7 @@ export function useStudentSubjectAccess(permissionKey) {
     enforced,
     /** @deprecated use `enforced` — kept for callers that already destructure this name */
     subjectAccessEnforced: enforced,
-    canPickGrade: ctx?.allowStudentGradePicker === true,
+    canPickGrade: ctx?.enforced !== true || ctx?.allowStudentGradePicker === true,
     isSubjectLocked: enforced && row?.isEnabled === false,
     isGradeSuitable: row?.isGradeSuitable === true,
     effectiveGrade: row?.effectiveGrade || null,

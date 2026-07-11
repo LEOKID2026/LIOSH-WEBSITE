@@ -304,6 +304,7 @@ export default function GeometryMaster() {
     gradeNumber,
     setGradeNumber,
     gradeReady,
+    canPickGrade,
     fullName: sessionFullName,
     coinBalance: sessionCoinBalance,
   } = useSubjectSessionDefaults({ permissionKey: "geometry" });
@@ -2781,6 +2782,8 @@ export default function GeometryMaster() {
                 <select
                   value={grade}
                   title={GRADES[grade]?.name}
+                  disabled={!canPickGrade}
+                  aria-disabled={!canPickGrade || undefined}
                   onChange={(e) => {
                     const newGrade = e.target.value;
 

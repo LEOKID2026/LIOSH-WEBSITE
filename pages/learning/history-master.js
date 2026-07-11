@@ -729,6 +729,7 @@ export default function HistoryMaster() {
     grade: sessionGrade,
     setGrade,
     gradeReady: sessionGradeReady,
+    canPickGrade,
     fullName: sessionFullName,
     coinBalance: sessionCoinBalance,
   } = useSubjectSessionDefaults({
@@ -3124,6 +3125,8 @@ function saveScienceAnswerInParallel({
                 <select
                   value={grade}
                   title={GRADES[grade]?.name || grade}
+                  disabled={!canPickGrade}
+                  aria-disabled={!canPickGrade || undefined}
                   onChange={(e) => {
                     setGrade(e.target.value);
                     setGameActive(false);
