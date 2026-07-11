@@ -75,6 +75,7 @@ import {
   mergePlannerSessionClientMeta,
 } from "../../lib/learning-client/adaptive-planner-recommended-practice";
 import { useSubjectSessionDefaults } from "../../hooks/useSubjectSessionDefaults";
+import MasterSubjectAccessScreen from "../../components/learning/MasterSubjectAccessScreen.jsx";
 import { notifyLearningSessionSaveFailure } from "../../lib/learning-client/learning-session-save-feedback.client.js";
 import {
   STUDENT_GRADE_REQUIRED_MESSAGE_HE,
@@ -718,7 +719,7 @@ export default function ScienceMaster() {
     gradeReady,
     fullName: sessionFullName,
     coinBalance: sessionCoinBalance,
-  } = useSubjectSessionDefaults({ requireGradeNumber: false });
+  } = useSubjectSessionDefaults({ permissionKey: "science", requireGradeNumber: false });
   const [mode, setMode] = useState("practice");
   const {
     displayLevelRef,
@@ -2909,6 +2910,7 @@ function saveScienceAnswerInParallel({
     : null;
 
   return (
+    <MasterSubjectAccessScreen permissionKey="science" titleHe="מדעים">
     <Layout>
       <div className={shellClass} style={shellBgStyle} dir="rtl">
         <div
@@ -4183,5 +4185,6 @@ function saveScienceAnswerInParallel({
       trackingRef={scienceTrackingTopicKeyRef}
     />
     </Layout>
+    </MasterSubjectAccessScreen>
   );
 }

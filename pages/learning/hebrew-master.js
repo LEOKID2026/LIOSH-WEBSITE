@@ -104,6 +104,7 @@ import {
   gradeKeyToNumber,
 } from "../../lib/learning-student-defaults";
 import { useSubjectSessionDefaults } from "../../hooks/useSubjectSessionDefaults";
+import MasterSubjectAccessScreen from "../../components/learning/MasterSubjectAccessScreen.jsx";
 import { notifyLearningSessionSaveFailure } from "../../lib/learning-client/learning-session-save-feedback.client.js";
 import {
   STUDENT_GRADE_REQUIRED_MESSAGE_HE,
@@ -316,7 +317,7 @@ export default function HebrewMaster() {
     gradeReady,
     fullName: sessionFullName,
     coinBalance: sessionCoinBalance,
-  } = useSubjectSessionDefaults();
+  } = useSubjectSessionDefaults({ permissionKey: "hebrew" });
   const bookIndexHref = grade ? getLearningBookIndexHref("hebrew", grade) : null;
   const [mode, setMode] = useState("practice");
 
@@ -3134,6 +3135,7 @@ export default function HebrewMaster() {
   const typingPanelNarrowClass = "max-[420px]:p-2 max-[420px]:mb-2";
 
   return (
+    <MasterSubjectAccessScreen permissionKey="hebrew" titleHe="עברית">
     <Layout>
       <style jsx>{`
         @keyframes shake {
@@ -4927,6 +4929,7 @@ export default function HebrewMaster() {
       trackingRef={hebrewTrackingTopicKeyRef}
     />
     </Layout>
+    </MasterSubjectAccessScreen>
   );
 }
 

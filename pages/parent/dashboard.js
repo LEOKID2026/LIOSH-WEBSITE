@@ -6,6 +6,7 @@ import AssignActivityModal from "../../components/parent/AssignActivityModal";
 import ParentCurriculumModal from "../../components/parent/ParentCurriculumModal";
 import ParentDashboardModal from "../../components/parent/ParentDashboardModal";
 import ChildGamePermissionsPanel from "../../components/parent/ChildGamePermissionsPanel";
+import ChildSubjectPermissionsPanel from "../../components/parent/ChildSubjectPermissionsPanel";
 import ParentInviteOthersButton from "../../components/parent/ParentInviteOthersButton";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import { getParentPortalTheme } from "../../lib/parent-ui/parent-portal-theme.client.js";
@@ -17,6 +18,10 @@ import {
   parentDashboardCreateSuccessHe,
   parentDashboardUpdateSuccessHe,
 } from "../../lib/parent-server/parent-api-errors.he.js";
+import {
+  clearParentBearerSessionAndRedirect,
+  resolveParentBearerSession,
+} from "../../lib/parent-client/parent-bearer-session.client.js";
 
 const GRADE_OPTIONS = [
   { value: "grade_1", label: "כיתה א׳" },
@@ -100,7 +105,7 @@ export default function ParentDashboardPage() {
     setClientReady(true);
   }, []);
 
-  const fetchStudents = useCallback(async (activeSession) => {
+  const fetchStudents = useCallback(async (activeSession, allowSessionRetry = true) => {
     if (!activeSession?.access_token) return;
 
     try {
@@ -113,6 +118,19 @@ export default function ParentDashboardPage() {
       const payload = await res.json();
       if (!res.ok) {
         const code = payload?.error || payload?.errorCode;
+        if (res.status === 401) {
+          if (allowSessionRetry && supabaseRef.current) {
+            const refreshed = await resolveParentBearerSession(supabaseRef.current);
+            if (refreshed?.access_token) {
+              setSession(refreshed);
+              return fetchStudents(refreshed, false);
+            }
+          }
+          if (supabaseRef.current) {
+            await clearParentBearerSessionAndRedirect(supabaseRef.current, router);
+          }
+          return;
+        }
         if (res.status === 403 && code === "not_a_parent") {
           // Session is valid; policy gate / entitlement heal handles provisioning.
           return;
@@ -141,9 +159,8 @@ export default function ParentDashboardPage() {
     if (!clientReady || !supabaseRef.current) return;
     const supabase = supabaseRef.current;
     let mounted = true;
-    supabase.auth.getSession().then(({ data }) => {
+    resolveParentBearerSession(supabase).then((s) => {
       if (!mounted) return;
-      const s = data?.session || null;
       setSession(s);
       if (!s) {
         router.replace("/parent/login");
@@ -152,10 +169,14 @@ export default function ParentDashboardPage() {
       fetchStudents(s);
     });
 
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, newSession) => {
+    const { data: sub } = supabase.auth.onAuthStateChange((event, newSession) => {
       setSession(newSession || null);
       if (!newSession) {
         router.replace("/parent/login");
+        return;
+      }
+      if (event === "TOKEN_REFRESHED" || event === "SIGNED_IN") {
+        fetchStudents(newSession);
       }
     });
 
@@ -163,7 +184,7 @@ export default function ParentDashboardPage() {
       mounted = false;
       sub.subscription.unsubscribe();
     };
-  }, [clientReady, router]);
+  }, [clientReady, fetchStudents, router]);
 
   useEffect(() => {
     if (!session?.access_token || trackedDashboardOpenRef.current) return;
@@ -870,6 +891,13 @@ export default function ParentDashboardPage() {
 
         {session?.access_token ? (
           <ChildGamePermissionsPanel
+            bright={isBright}
+            studentId={student.id}
+            accessToken={session.access_token}
+          />
+        ) : null}
+        {session?.access_token ? (
+          <ChildSubjectPermissionsPanel
             bright={isBright}
             studentId={student.id}
             accessToken={session.access_token}

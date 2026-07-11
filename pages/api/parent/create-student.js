@@ -6,6 +6,11 @@ import {
   parseBoundedTrimmedString,
   trimString,
 } from "../../../lib/security/api-input.server.js";
+import { getLearningSupabaseServiceRoleClient } from "../../../lib/learning-supabase/server";
+import {
+  callCreateParentStudentWithDefaultsRpc,
+  isSchemaNotReadyError,
+} from "../../../lib/learning/subject-permissions/subject-access.server.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -64,20 +69,47 @@ export default async function handler(req, res) {
       });
     }
 
-    const payload = {
-      parent_id: ctx.parentUserId,
-      full_name: fullName,
-      grade_level: gradeLevel,
-    };
+    const supabase = getLearningSupabaseServiceRoleClient();
+    const rpcResult = await callCreateParentStudentWithDefaultsRpc(supabase, {
+      parentId: ctx.parentUserId,
+      changedBy: ctx.parentUserId,
+      fullName,
+      gradeLevel,
+    });
+
+    if (rpcResult.error) {
+      if (isSchemaNotReadyError(rpcResult.error)) {
+        const payload = {
+          parent_id: ctx.parentUserId,
+          full_name: fullName,
+          grade_level: gradeLevel,
+        };
+        const { data, error } = await ctx.bearerSupabase
+          .from("students")
+          .insert(payload)
+          .select("id,full_name,grade_level,is_active,created_at")
+          .single();
+        if (error) {
+          return res.status(403).json({ ok: false, error: "Could not create student" });
+        }
+        return res.status(200).json({ ok: true, student: data });
+      }
+      return res.status(403).json({ ok: false, error: "Could not create student" });
+    }
+
+    const studentId = rpcResult.data?.student?.id || rpcResult.data?.student_id || rpcResult.data?.studentId;
+    if (!studentId) {
+      return res.status(500).json({ ok: false, error: "Could not create student" });
+    }
 
     const { data, error } = await ctx.bearerSupabase
       .from("students")
-      .insert(payload)
       .select("id,full_name,grade_level,is_active,created_at")
+      .eq("id", studentId)
       .single();
 
-    if (error) {
-      return res.status(403).json({ ok: false, error: "Could not create student" });
+    if (error || !data) {
+      return res.status(500).json({ ok: false, error: "Could not load created student" });
     }
 
     return res.status(200).json({ ok: true, student: data });

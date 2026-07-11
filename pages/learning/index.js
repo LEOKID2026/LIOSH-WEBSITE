@@ -6,52 +6,61 @@ import Link from "next/link";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
 import { isStudentIdentityDiagnosticsEnabled } from "../../lib/dev-student-identity-client";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
+import LearningHubSubjectCard from "../../components/learning/LearningHubSubjectCard.jsx";
 
 const LEARNING_GAMES = [
   {
     slug: "math-master",
+    permissionKey: "math",
     title: "מתמטיקה",
     emoji: "🧮",
     blurb: "תרגול חיבור, חיסור, כפל, חילוק ועוד.",
   },
   {
     slug: "geometry-master",
+    permissionKey: "geometry",
     title: "גאומטריה",
     emoji: "📐",
     blurb: "שטחים, היקפים, נפח, זוויות, פיתגורס וצורות ועוד.",
   },
   {
     slug: "english-master",
+    permissionKey: "english",
     title: "אנגלית",
     emoji: "🇬🇧",
     blurb: "אוצר מילים, דקדוק, תרגום ובניית משפטים ועוד.",
   },
   {
     slug: "science-master",
+    permissionKey: "science",
     title: "מדעים",
     emoji: "🔬",
     blurb: "גוף, בעלי חיים, צמחים, חלל, חומר, מזג אוויר, כוחות ועוד.",
   },
   {
     slug: "hebrew-master",
+    permissionKey: "hebrew",
     title: "עברית",
     emoji: "📚",
     blurb: "תרגול שפה, אוצר מילים, דקדוק, הבנת הנקרא ועוד.",
   },
   {
     slug: "moledet-master",
+    permissionKey: "moledet",
     title: "מולדת",
     emoji: "🏠",
     blurb: "מולדת, חברה, אזרחות וערכים.",
   },
   {
     slug: "geography-master",
+    permissionKey: "geography",
     title: "גאוגרפיה",
     emoji: "🗺️",
     blurb: "גאוגרפיה, מפות, נוף ויישובים.",
   },
   {
     slug: "history-master",
+    permissionKey: "history",
     title: "היסטוריה",
     emoji: "📜",
     blurb: "יוון, הלניזם, החשמונאים, רומא והיהודים.",
@@ -136,20 +145,16 @@ export default function LearningHub({ showDevStudentSimulator }) {
           {LEARNING_GAMES.map((g) => {
             const subject = subjectHubCard[g.slug] || DEFAULT_SUBJECT_CARD;
             return (
-              <Link
+              <LearningHubSubjectCard
                 key={g.slug}
-                href={`/student/learning/${g.slug}`}
-                className={`${T.hubCardBase} ${subject.card}`}
-              >
-                <span className={`${T.hubCardBar} ${subject.bar}`} aria-hidden />
-                <div className={T.hubCardHeadRow}>
-                  <span className={`${T.hubCardEmoji} ${subject.emoji}`} aria-hidden>
-                    {g.emoji}
-                  </span>
-                  <h2 className={T.hubCardTitle}>{g.title}</h2>
-                </div>
-                <p className={T.hubCardBlurb}>{g.blurb}</p>
-              </Link>
+                slug={g.slug}
+                permissionKey={g.permissionKey}
+                title={g.title}
+                emoji={g.emoji}
+                blurb={g.blurb}
+                subjectCard={subject}
+                hubCardTokens={T}
+              />
             );
           })}
         </section>

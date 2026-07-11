@@ -110,6 +110,7 @@ import {
   gradeKeyToNumber,
 } from "../../lib/learning-student-defaults";
 import { useSubjectSessionDefaults } from "../../hooks/useSubjectSessionDefaults";
+import MasterSubjectAccessScreen from "../../components/learning/MasterSubjectAccessScreen.jsx";
 import { notifyLearningSessionSaveFailure } from "../../lib/learning-client/learning-session-save-feedback.client.js";
 import {
   STUDENT_GRADE_REQUIRED_MESSAGE_HE,
@@ -561,7 +562,7 @@ export default function EnglishMaster() {
     gradeReady,
     fullName: sessionFullName,
     coinBalance: sessionCoinBalance,
-  } = useSubjectSessionDefaults();
+  } = useSubjectSessionDefaults({ permissionKey: "english" });
   const safeGrade = grade || "g1";
   const visibleEnglishTopics = useMemo(
     () => listVisibleTopicsForSelfPractice("english", safeGrade, GRADES[safeGrade]?.topics ?? []),
@@ -2572,6 +2573,7 @@ export default function EnglishMaster() {
     : null;
 
   return (
+    <MasterSubjectAccessScreen permissionKey="english" titleHe="אנגלית">
     <Layout>
       <div className={shellClass} style={shellBgStyle} dir="rtl">
         <div
@@ -4054,6 +4056,7 @@ export default function EnglishMaster() {
       trackingRef={englishTrackingTopicKeyRef}
     />
     </Layout>
+    </MasterSubjectAccessScreen>
   );
 }
 

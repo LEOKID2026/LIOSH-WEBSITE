@@ -7,6 +7,8 @@ import { processBookEventsRequest } from "../../../lib/learning-supabase/book-ev
 import { readJsonBody } from "../../../lib/learning-supabase/learning-activity";
 import { guardCookieMutationOrigin } from "../../../lib/security/api-guards.js";
 import { isLearningBookTrackingEnabledServer } from "../../../lib/learning/book-dwell-policy.js";
+import { assertLearningSubjectSessionAllowed } from "../../../lib/learning/subject-permissions/session-asserts.server.js";
+import { normalizePracticeGradeKey } from "../../../lib/learning-supabase/practice-grade-resolution.js";
 import { trackServerAnalyticsEvent } from "../../../lib/analytics/track-event.server.js";
 
 export const config = {
@@ -37,12 +39,31 @@ export default async function handler(req, res) {
 
     const body = readJsonBody(req);
     const supabase = getLearningSupabaseServiceRoleClient();
+    const events = Array.isArray(body?.events) ? body.events : [body];
+    for (const event of events) {
+      const subject = String(event?.subject || "").trim();
+      const grade = normalizePracticeGradeKey(event?.grade);
+      if (!subject || !grade) continue;
+      const accessGate = await assertLearningSubjectSessionAllowed(supabase, {
+        studentId: auth.studentId,
+        studentRow: auth.student,
+        subject,
+        requestedGrade: grade,
+      });
+      if (!accessGate.ok) {
+        return res.status(accessGate.status || 403).json({
+          ok: false,
+          error: accessGate.message,
+          code: accessGate.code,
+        });
+      }
+    }
+
     const result = await processBookEventsRequest(supabase, auth.studentId, body);
 
     if (!result.ok) {
       return res.status(result.status || 400).json(result);
     }
-    const events = Array.isArray(body?.events) ? body.events : [body];
     events.forEach((event, idx) => {
       const type = String(event?.event || "");
       if (type === "book_reading_session_start") {

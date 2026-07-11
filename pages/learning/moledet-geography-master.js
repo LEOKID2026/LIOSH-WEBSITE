@@ -123,6 +123,7 @@ import {
   gradeKeyToNumber,
 } from "../../lib/learning-student-defaults";
 import { useSubjectSessionDefaults } from "../../hooks/useSubjectSessionDefaults";
+import MasterSubjectAccessScreen from "../../components/learning/MasterSubjectAccessScreen.jsx";
 import { notifyLearningSessionSaveFailure } from "../../lib/learning-client/learning-session-save-feedback.client.js";
 import {
   STUDENT_GRADE_REQUIRED_MESSAGE_HE,
@@ -311,7 +312,10 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
     gradeReady,
     fullName: sessionFullName,
     coinBalance: sessionCoinBalance,
-  } = useSubjectSessionDefaults({ transformGradeKey: transformMoledetGradeKey });
+  } = useSubjectSessionDefaults({
+    transformGradeKey: transformMoledetGradeKey,
+    permissionKey: curriculumSubject,
+  });
   const bookIndexHref =
     grade && strandBookGradeSet.has(grade)
       ? getLearningBookIndexHref(strandCatalogSubject, grade)
@@ -2509,6 +2513,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
     : null;
 
   return (
+    <MasterSubjectAccessScreen permissionKey={curriculumSubject} titleHe={pageTitleHe}>
     <Layout>
       <style jsx>{`
         @keyframes shake {
@@ -4207,6 +4212,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
       trackingRef={moledetTrackingTopicKeyRef}
     />
     </Layout>
+    </MasterSubjectAccessScreen>
   );
 }
 

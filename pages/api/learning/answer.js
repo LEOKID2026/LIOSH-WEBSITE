@@ -23,6 +23,7 @@ import {
   normalizePracticeGradeKey,
 } from "../../../lib/learning-supabase/practice-grade-resolution.js";
 import { guardCookieMutationOrigin } from "../../../lib/security/api-guards.js";
+import { assertLearningSubjectSessionAllowed } from "../../../lib/learning/subject-permissions/session-asserts.server.js";
 import { classifyActivityEvidence } from "../../../lib/learning/activity-classification.js";
 import { normalizeQuestionEnginePayload } from "../../../lib/learning/question-engine-metadata.js";
 import { buildDiagnosticCanonicalMetadata } from "../../../lib/learning/diagnostic-canonical-metadata.js";
@@ -142,6 +143,20 @@ export default async function handler(req, res) {
         registeredGradeKey
       ) ||
       resolveContentGradeFromSessionMetadata(sessionMeta, registeredGradeKey);
+
+    const accessGate = await assertLearningSubjectSessionAllowed(supabase, {
+      studentId: auth.studentId,
+      studentRow: auth.student,
+      subject,
+      requestedGrade: contentGradeKey || clientGradeHint || registeredGradeKey,
+    });
+    if (!accessGate.ok) {
+      return res.status(accessGate.status || 403).json({
+        ok: false,
+        error: accessGate.message,
+        code: accessGate.code,
+      });
+    }
     const gradeEvidence = buildGradeEvidenceFields(registeredGradeKey, contentGradeKey);
 
     const hintsUsed = normalizeOptionalInteger(body.hintsUsed, 0, 1000) ?? 0;

@@ -161,6 +161,7 @@ import {
   gradeKeyToNumber,
 } from "../../lib/learning-student-defaults";
 import { useSubjectSessionDefaults } from "../../hooks/useSubjectSessionDefaults";
+import MasterSubjectAccessScreen from "../../components/learning/MasterSubjectAccessScreen.jsx";
 import { notifyLearningSessionSaveFailure } from "../../lib/learning-client/learning-session-save-feedback.client.js";
 import {
   STUDENT_GRADE_REQUIRED_MESSAGE_HE,
@@ -305,7 +306,7 @@ export default function GeometryMaster() {
     gradeReady,
     fullName: sessionFullName,
     coinBalance: sessionCoinBalance,
-  } = useSubjectSessionDefaults();
+  } = useSubjectSessionDefaults({ permissionKey: "geometry" });
   const safeGrade = grade || "g1";
   const visibleGeometryTopics = useMemo(
     () => listVisibleTopicsForSelfPractice("geometry", safeGrade, GRADES[safeGrade]?.topics ?? []),
@@ -2574,6 +2575,7 @@ export default function GeometryMaster() {
     : null;
 
   return (
+    <MasterSubjectAccessScreen permissionKey="geometry" titleHe="גאומטריה">
     <Layout>
       <style jsx>{`
         @keyframes shake {
@@ -4389,6 +4391,7 @@ export default function GeometryMaster() {
       trackingRef={null}
     />
     </Layout>
+    </MasterSubjectAccessScreen>
   );
 }
 

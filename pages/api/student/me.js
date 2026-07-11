@@ -15,6 +15,13 @@ import {
   formatLeoNumberLabelHe,
   isGuestStudent,
 } from "../../../lib/guest/guest-display.js";
+import {
+  callEnsureParentStudentLearningPermissionsRpc,
+  computeSubjectPermissionsPayload,
+  isChildUnderParentFromDbRow,
+  isGuestStudentFromDbRow,
+  isSchemaNotReadyError,
+} from "../../../lib/learning/subject-permissions/subject-access.server.js";
 
 export default async function handler(req, res) {
   // Authenticated identity must never be served from a shared or disk cache — otherwise
@@ -70,6 +77,37 @@ export default async function handler(req, res) {
       ? await buildGuestPolicyPayload(supabase, student)
       : null;
 
+    /** @type {Record<string, unknown>} */
+    const accessPayload = {};
+    const { data: studentDbRow } = await supabase
+      .from("students")
+      .select("id, parent_id, grade_level, account_kind")
+      .eq("id", student.id)
+      .maybeSingle();
+
+    if (
+      studentDbRow &&
+      isChildUnderParentFromDbRow(studentDbRow) &&
+      !isGuestStudentFromDbRow(studentDbRow)
+    ) {
+      try {
+        await callEnsureParentStudentLearningPermissionsRpc(supabase, {
+          parentId: studentDbRow.parent_id,
+          changedBy: studentDbRow.parent_id,
+          studentId: student.id,
+        });
+        const permissions = await computeSubjectPermissionsPayload(
+          supabase,
+          student.id,
+          studentDbRow.grade_level
+        );
+        accessPayload.allowStudentGradePicker = permissions.allowStudentGradePicker;
+        accessPayload.subjectPermissions = permissions.subjectPermissions;
+      } catch (error) {
+        if (!isSchemaNotReadyError(error)) throw error;
+      }
+    }
+
     const debugStudentIdentity = devStudentIdentityPayload("student-me-api", student);
     if (isStudentIdentityDebugEnabled() && debugStudentIdentity) {
       safeApiLog("[LIOSH student identity] API", debugStudentIdentity);
@@ -80,6 +118,7 @@ export default async function handler(req, res) {
       student: bodyStudent,
       guestPolicy,
       isGuest: Boolean(guestPolicy),
+      ...accessPayload,
       ...(debugStudentIdentity ? { debugStudentIdentity } : {}),
     });
   } catch (_e) {

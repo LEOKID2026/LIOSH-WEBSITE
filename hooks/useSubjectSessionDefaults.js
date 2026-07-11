@@ -1,17 +1,20 @@
 import { useEffect, useState } from "react";
 import { gradeKeyToNumber } from "../lib/learning-student-defaults";
 import { useResolvedStudentSession } from "./useResolvedStudentSession";
+import { useStudentSubjectAccess } from "./useStudentSubjectAccess";
 
 /**
  * Sync subject-page grade state from shared student session.
  *
  * @param {{
+ *   permissionKey?: string,
  *   transformGradeKey?: (gradeKey: string) => string | null | undefined,
  *   requireGradeNumber?: boolean,
  * }} [options]
  */
 export function useSubjectSessionDefaults(options = {}) {
-  const { transformGradeKey, requireGradeNumber = true } = options;
+  const { permissionKey, transformGradeKey, requireGradeNumber = true } = options;
+  const subjectAccess = useStudentSubjectAccess(permissionKey || "");
 
   const session = useResolvedStudentSession();
   const [grade, setGrade] = useState(null);
@@ -20,6 +23,9 @@ export function useSubjectSessionDefaults(options = {}) {
   useEffect(() => {
     if (!session.gradeResolved || !session.gradeKey) return;
     let nextKey = session.gradeKey;
+    if (subjectAccess.enforced && subjectAccess.effectiveGrade) {
+      nextKey = subjectAccess.effectiveGrade;
+    }
     if (transformGradeKey) {
       const transformed = transformGradeKey(nextKey);
       if (transformed) nextKey = transformed;
@@ -37,6 +43,8 @@ export function useSubjectSessionDefaults(options = {}) {
     session.gradeNumber,
     session.authoritativeGradeKey,
     transformGradeKey,
+    subjectAccess.enforced,
+    subjectAccess.effectiveGrade,
   ]);
 
   const gradeReady = Boolean(
@@ -56,5 +64,8 @@ export function useSubjectSessionDefaults(options = {}) {
     fullName: session.fullName,
     coinBalance: session.coinBalance,
     studentId: session.studentId,
+    canPickGrade: subjectAccess.canPickGrade,
+    isSubjectLocked: subjectAccess.isSubjectLocked,
+    subjectAccessEnforced: subjectAccess.enforced,
   };
 }

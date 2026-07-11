@@ -215,6 +215,7 @@ import {
 } from "../../lib/learning-student-defaults";
 import { isStudentIdentityDiagnosticsEnabled } from "../../lib/dev-student-identity-client";
 import { useSubjectSessionDefaults } from "../../hooks/useSubjectSessionDefaults";
+import MasterSubjectAccessScreen from "../../components/learning/MasterSubjectAccessScreen.jsx";
 import { notifyLearningSessionSaveFailure } from "../../lib/learning-client/learning-session-save-feedback.client.js";
 import {
   STUDENT_GRADE_REQUIRED_MESSAGE_HE,
@@ -512,7 +513,7 @@ export default function MathMaster() {
     gradeReady,
     fullName: sessionFullName,
     coinBalance: sessionCoinBalance,
-  } = useSubjectSessionDefaults();
+  } = useSubjectSessionDefaults({ permissionKey: "math" });
 
   // Policy-filtered topic list for the current grade.
   // Excludes HIDE topics (per launch registry) and always excludes "mixed"
@@ -3456,6 +3457,7 @@ export default function MathMaster() {
     : null;
 
   return (
+    <MasterSubjectAccessScreen permissionKey="math" titleHe="מתמטיקה">
     <Layout>
       <style jsx>{`
         @keyframes shake {
@@ -6273,6 +6275,7 @@ export default function MathMaster() {
       trackingRef={mathTrackingOperationKeyRef}
     />
   </Layout>
+    </MasterSubjectAccessScreen>
 );
 }
 

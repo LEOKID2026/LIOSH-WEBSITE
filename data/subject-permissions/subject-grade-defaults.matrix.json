@@ -1,0 +1,261 @@
+{
+  "generatedAt": "2026-07-11T18:21:55.434Z",
+  "subjects": [
+    {
+      "subject_key": "math",
+      "display_name_he": "מתמטיקה",
+      "sort_order": 1,
+      "is_active": true
+    },
+    {
+      "subject_key": "geometry",
+      "display_name_he": "גאומטריה",
+      "sort_order": 2,
+      "is_active": true
+    },
+    {
+      "subject_key": "hebrew",
+      "display_name_he": "עברית",
+      "sort_order": 3,
+      "is_active": true
+    },
+    {
+      "subject_key": "english",
+      "display_name_he": "אנגלית",
+      "sort_order": 4,
+      "is_active": true
+    },
+    {
+      "subject_key": "science",
+      "display_name_he": "מדעים",
+      "sort_order": 5,
+      "is_active": true
+    },
+    {
+      "subject_key": "history",
+      "display_name_he": "היסטוריה",
+      "sort_order": 6,
+      "is_active": true
+    },
+    {
+      "subject_key": "moledet",
+      "display_name_he": "מולדת",
+      "sort_order": 7,
+      "is_active": true
+    },
+    {
+      "subject_key": "geography",
+      "display_name_he": "גאוגרפיה",
+      "sort_order": 8,
+      "is_active": true
+    }
+  ],
+  "matrix": {
+    "g1": {
+      "math": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "geometry": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "hebrew": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "english": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "science": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "history": {
+        "is_grade_suitable": false,
+        "is_enabled_by_default": false
+      },
+      "moledet": {
+        "is_grade_suitable": false,
+        "is_enabled_by_default": false
+      },
+      "geography": {
+        "is_grade_suitable": false,
+        "is_enabled_by_default": false
+      }
+    },
+    "g2": {
+      "math": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "geometry": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "hebrew": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "english": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "science": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "history": {
+        "is_grade_suitable": false,
+        "is_enabled_by_default": false
+      },
+      "moledet": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "geography": {
+        "is_grade_suitable": false,
+        "is_enabled_by_default": false
+      }
+    },
+    "g3": {
+      "math": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "geometry": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "hebrew": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "english": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "science": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "history": {
+        "is_grade_suitable": false,
+        "is_enabled_by_default": false
+      },
+      "moledet": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "geography": {
+        "is_grade_suitable": false,
+        "is_enabled_by_default": false
+      }
+    },
+    "g4": {
+      "math": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "geometry": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "hebrew": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "english": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "science": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "history": {
+        "is_grade_suitable": false,
+        "is_enabled_by_default": false
+      },
+      "moledet": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "geography": {
+        "is_grade_suitable": false,
+        "is_enabled_by_default": false
+      }
+    },
+    "g5": {
+      "math": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "geometry": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "hebrew": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "english": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "science": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "history": {
+        "is_grade_suitable": false,
+        "is_enabled_by_default": false
+      },
+      "moledet": {
+        "is_grade_suitable": false,
+        "is_enabled_by_default": false
+      },
+      "geography": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      }
+    },
+    "g6": {
+      "math": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "geometry": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "hebrew": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "english": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "science": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "history": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      },
+      "moledet": {
+        "is_grade_suitable": false,
+        "is_enabled_by_default": false
+      },
+      "geography": {
+        "is_grade_suitable": true,
+        "is_enabled_by_default": true
+      }
+    }
+  },
+  "hasUnresolvedConflicts": false,
+  "conflicts": []
+}

@@ -20,6 +20,8 @@ import {
 import { awardLearningSessionCoins } from "../../../../lib/learning-supabase/learning-coin-award.server";
 import { updateDailyMissionProgress } from "../../../../lib/learning-supabase/mission-progress.server";
 import { guardCookieMutationOrigin } from "../../../../lib/security/api-guards.js";
+import { assertLearningSubjectSessionAllowed } from "../../../../lib/learning/subject-permissions/session-asserts.server.js";
+import { resolveContentGradeFromSessionMetadata } from "../../../../lib/learning-supabase/practice-grade-resolution.js";
 import { trackServerAnalyticsEvent } from "../../../../lib/analytics/track-event.server.js";
 import { evaluateAndGrantAchievementCards } from "../../../../lib/rewards/server/achievement-evaluator.server.js";
 import { syncIncrementalMonthlyPersistenceRewards } from "../../../../lib/learning-supabase/monthly-persistence-reward.server";
@@ -83,6 +85,23 @@ export default async function handler(req, res) {
     }
     if (sessionRow.status && sessionRow.status !== "active") {
       return res.status(400).json({ ok: false, error: "Session is not active" });
+    }
+
+    const registeredGradeKey = canonicalGradeLevelKeyFromAuth(auth);
+    const sessionMeta = sessionRow.metadata || {};
+    const contentGradeKey = resolveContentGradeFromSessionMetadata(sessionMeta, registeredGradeKey);
+    const accessGate = await assertLearningSubjectSessionAllowed(supabase, {
+      studentId: auth.studentId,
+      studentRow: auth.student,
+      subject: sessionRow.subject,
+      requestedGrade: contentGradeKey || registeredGradeKey,
+    });
+    if (!accessGate.ok) {
+      return res.status(accessGate.status || 403).json({
+        ok: false,
+        error: accessGate.message,
+        code: accessGate.code,
+      });
     }
 
     const endedAt = new Date().toISOString();

@@ -9,6 +9,8 @@ import {
 } from "../../../../../lib/learning-supabase/learning-activity";
 import { recordStudentActivityAnswer } from "../../../../../lib/teacher-server/teacher-activities.server.js";
 import { guardCookieMutationOrigin } from "../../../../../lib/security/api-guards.js";
+import { assertStudentActivityAccessAllowed } from "../../../../../lib/learning/subject-permissions/activity-asserts.server.js";
+import { normalizeOptionalString } from "../../../../../lib/learning-supabase/learning-activity";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -45,6 +47,21 @@ export default async function handler(req, res) {
       typeof body.timingStatus === "string" ? body.timingStatus.slice(0, 40) : null;
 
     const supabase = getLearningSupabaseServiceRoleClient();
+    const gradeHint = normalizeOptionalString(body.gradeLevel, 40);
+    const accessGate = await assertStudentActivityAccessAllowed(supabase, {
+      studentId: auth.studentId,
+      studentRow: auth.student,
+      activityId,
+      requestedGrade: gradeHint,
+    });
+    if (!accessGate.ok) {
+      return res.status(accessGate.status || 403).json({
+        ok: false,
+        error: accessGate.code,
+        message: accessGate.message,
+      });
+    }
+
     const result = await recordStudentActivityAnswer(supabase, auth.studentId, activityId, {
       questionIndex,
       selectedAnswer,

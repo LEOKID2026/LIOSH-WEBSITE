@@ -9,6 +9,7 @@ import { StudentSessionProvider } from "./StudentSessionContext";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import StudentLoadingPanel from "../ui/StudentLoadingPanel.jsx";
 import { StudentGameAccessProvider } from "../../contexts/StudentGameAccessContext.jsx";
+import { StudentSubjectAccessProvider } from "../../contexts/StudentSubjectAccessContext.jsx";
 import {
   buildStudentGameAccessView,
   fetchStudentGameAccessClient,
@@ -57,8 +58,8 @@ export default function StudentAccessGate({ children }) {
   const pathname = router.pathname || "";
   const needsGameAccess = studentPathNeedsGameAccess(pathname);
 
-  /** @type {[{ status: "loading" | "ok" | "blocked", student: object | null }, function]: any} */
-  const [session, setSession] = useState({ status: "loading", student: null });
+  /** @type {[{ status: "loading" | "ok" | "blocked", student: object | null, subjectAccess?: object|null }, function]: any} */
+  const [session, setSession] = useState({ status: "loading", student: null, subjectAccess: null });
   /** @type {[{ status: "skip" | "loading" | "ready" | "error", data: object | null }, function]: any} */
   const [gameAccess, setGameAccess] = useState(() =>
     needsGameAccess ? { status: "loading", data: null } : { status: "skip", data: null }
@@ -129,7 +130,15 @@ export default function StudentAccessGate({ children }) {
         setGameAccess({ status: "ready", data: gameResult.data });
       }
 
-      setSession({ status: "ok", student: mePayload.student });
+      setSession({
+        status: "ok",
+        student: mePayload.student,
+        subjectAccess: {
+          allowStudentGradePicker: mePayload.allowStudentGradePicker === true,
+          subjectPermissions: mePayload.subjectPermissions || {},
+          enforced: Object.prototype.hasOwnProperty.call(mePayload, "subjectPermissions"),
+        },
+      });
     };
 
     void load().catch(() => {
@@ -160,15 +169,32 @@ export default function StudentAccessGate({ children }) {
   const showLoader =
     session.status === "loading" || (needsGameAccess && gameAccess.status === "loading");
 
+  const subjectAccessValue = useMemo(
+    () => session.subjectAccess || { enforced: false, allowStudentGradePicker: false, subjectPermissions: {} },
+    [session.subjectAccess]
+  );
+
+  const wrapWithSubjectAccess = (node) => (
+    <StudentSubjectAccessProvider
+      enforced={subjectAccessValue.enforced}
+      allowStudentGradePicker={subjectAccessValue.allowStudentGradePicker}
+      subjectPermissions={subjectAccessValue.subjectPermissions}
+    >
+      {node}
+    </StudentSubjectAccessProvider>
+  );
+
   const pageContent =
     session.status !== "ok" ? (
       <StudentGateShell pathname={pathname}>
         <StudentGateBlockedPanel loginHref={loginHref} />
       </StudentGateShell>
     ) : needsGameAccess && gameAccessValue ? (
-      <StudentGameAccessProvider value={gameAccessValue}>{children}</StudentGameAccessProvider>
+      wrapWithSubjectAccess(
+        <StudentGameAccessProvider value={gameAccessValue}>{children}</StudentGameAccessProvider>
+      )
     ) : (
-      children
+      wrapWithSubjectAccess(children)
     );
 
   return (

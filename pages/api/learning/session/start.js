@@ -25,6 +25,7 @@ import { assertGuestTopicPlayable } from "../../../../lib/guest/guest-topic-acce
 import { isGuestStudent } from "../../../../lib/guest/guest-display.js";
 import { trackServerAnalyticsEvent } from "../../../../lib/analytics/track-event.server.js";
 import { buildSessionStartLevelMetadata } from "../../../../lib/learning/session-evidence-levels.js";
+import { assertLearningSubjectSessionAllowed } from "../../../../lib/learning/subject-permissions/session-asserts.server.js";
 
 async function insertLearningSession(supabase, row) {
   const fullInsert = await supabase
@@ -98,8 +99,23 @@ export default async function handler(req, res) {
     const clientMeta = normalizeClientMeta(body.clientMeta);
     const startedAt = new Date().toISOString();
 
+    const supabase = getLearningSupabaseServiceRoleClient();
     const registeredGradeKey = canonicalGradeLevelKeyFromAuth(auth);
     const contentGradeKey = resolveContentGradeForSessionWrite(clientGradeHint, registeredGradeKey);
+
+    const accessGate = await assertLearningSubjectSessionAllowed(supabase, {
+      studentId: auth.studentId,
+      studentRow: auth.student,
+      subject,
+      requestedGrade: contentGradeKey || clientGradeHint || registeredGradeKey,
+    });
+    if (!accessGate.ok) {
+      return res.status(accessGate.status || 403).json({
+        ok: false,
+        error: accessGate.message,
+        code: accessGate.code,
+      });
+    }
     const gradeEvidence = buildGradeEvidenceFields(registeredGradeKey, contentGradeKey);
     const sessionLevelFields = buildSessionStartLevelMetadata({
       subjectId: subject,
@@ -134,7 +150,6 @@ export default async function handler(req, res) {
       topic,
     });
 
-    const supabase = getLearningSupabaseServiceRoleClient();
     const { data, error } = await insertLearningSession(supabase, {
       student_id: auth.studentId,
       subject,

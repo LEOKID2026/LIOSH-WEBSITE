@@ -25,6 +25,7 @@ import PortalLoadingPanel from "../../components/ui/PortalLoadingPanel.jsx";
 import { getParentPortalTheme } from "../../lib/parent-ui/parent-portal-theme.client.js";
 import { AUTH_FORGOT_PASSWORD_LINK } from "../../lib/auth/auth-reset.he";
 import { trackProductEvent } from "../../lib/analytics/track-event.client.js";
+import { resolveParentBearerSession } from "../../lib/parent-client/parent-bearer-session.client.js";
 
 const parentLoginSeo = getPublicPageSeo("parent-login");
 
@@ -77,13 +78,13 @@ export default function ParentLoginPage() {
     if (!clientReady || !supabaseRef.current) return;
     let mounted = true;
     const supabase = supabaseRef.current;
-    supabase.auth.getSession().then(({ data }) => {
+    resolveParentBearerSession(supabase).then((session) => {
       if (!mounted) return;
-      if (!data?.session) {
+      if (!session) {
         setSessionCheckPending(false);
         return;
       }
-      const meta = data.session.user?.app_metadata;
+      const meta = session.user?.app_metadata;
       const role =
         meta && typeof meta === "object" && typeof meta.role === "string"
           ? meta.role.trim().toLowerCase()

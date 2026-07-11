@@ -5,6 +5,7 @@ import {
 } from "../../../../../lib/learning-supabase/student-auth";
 import { submitStudentActivity } from "../../../../../lib/teacher-server/teacher-activities.server.js";
 import { guardCookieMutationOrigin } from "../../../../../lib/security/api-guards.js";
+import { assertStudentActivityAccessAllowed } from "../../../../../lib/learning/subject-permissions/activity-asserts.server.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -23,6 +24,19 @@ export default async function handler(req, res) {
     }
 
     const supabase = getLearningSupabaseServiceRoleClient();
+    const accessGate = await assertStudentActivityAccessAllowed(supabase, {
+      studentId: auth.studentId,
+      studentRow: auth.student,
+      activityId,
+    });
+    if (!accessGate.ok) {
+      return res.status(accessGate.status || 403).json({
+        ok: false,
+        error: accessGate.code,
+        message: accessGate.message,
+      });
+    }
+
     const result = await submitStudentActivity(supabase, auth.studentId, activityId);
 
     if (!result.ok) {

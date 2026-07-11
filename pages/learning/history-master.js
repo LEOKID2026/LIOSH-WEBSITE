@@ -77,6 +77,7 @@ import {
   mergePlannerSessionClientMeta,
 } from "../../lib/learning-client/adaptive-planner-recommended-practice";
 import { useSubjectSessionDefaults } from "../../hooks/useSubjectSessionDefaults";
+import MasterSubjectAccessScreen from "../../components/learning/MasterSubjectAccessScreen.jsx";
 import { notifyLearningSessionSaveFailure } from "../../lib/learning-client/learning-session-save-feedback.client.js";
 import {
   STUDENT_GRADE_REQUIRED_MESSAGE_HE,
@@ -724,12 +725,14 @@ export default function HistoryMaster() {
   const gameRef = useRef(null);
   const [mounted, setMounted] = useState(false);
   const {
+    session,
     grade: sessionGrade,
     setGrade,
     gradeReady: sessionGradeReady,
     fullName: sessionFullName,
     coinBalance: sessionCoinBalance,
   } = useSubjectSessionDefaults({
+    permissionKey: "history",
     requireGradeNumber: false,
     transformGradeKey: () => HISTORY_TEACH_GRADE_KEY,
   });
@@ -777,8 +780,7 @@ export default function HistoryMaster() {
     if (mode !== "learning" || !currentQuestion) return null;
     if (!HISTORY_BOOK_GRADE_SET.has(grade)) return null;
     return getHistoryBookHref({
-      session,
-    grade,
+      grade,
       topic: currentQuestion.topic || topic,
       kind: currentQuestion.pageId || null,
     });
@@ -2951,6 +2953,7 @@ function saveScienceAnswerInParallel({
     : null;
 
   return (
+    <MasterSubjectAccessScreen permissionKey="history" titleHe="היסטוריה">
     <Layout>
       <div className={shellClass} style={shellBgStyle} dir="rtl">
         <div
@@ -4247,5 +4250,6 @@ function saveScienceAnswerInParallel({
       trackingRef={historyTrackingTopicKeyRef}
     />
     </Layout>
+    </MasterSubjectAccessScreen>
   );
 }
