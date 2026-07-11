@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Layout from "../../components/Layout";
 import AssignActivityModal from "../../components/parent/AssignActivityModal";
+import ParentCurriculumModal from "../../components/parent/ParentCurriculumModal";
 import ParentDashboardModal from "../../components/parent/ParentDashboardModal";
 import ChildGamePermissionsPanel from "../../components/parent/ChildGamePermissionsPanel";
 import ParentInviteOthersButton from "../../components/parent/ParentInviteOthersButton";
@@ -85,6 +86,7 @@ export default function ParentDashboardPage() {
   const [deleteError, setDeleteError] = useState("");
   const [activityModalStudent, setActivityModalStudent] = useState(null);
   const [addChildModalOpen, setAddChildModalOpen] = useState(false);
+  const [curriculumModalOpen, setCurriculumModalOpen] = useState(false);
   const [detailsModalStudent, setDetailsModalStudent] = useState(null);
   const [sentActivitiesRefresh, setSentActivitiesRefresh] = useState(0);
   const [guestLeoByStudentId, setGuestLeoByStudentId] = useState({});
@@ -922,7 +924,14 @@ export default function ParentDashboardPage() {
             <h1 className={`text-xl md:text-2xl font-bold leading-tight ${T.heading}`}>דשבורד הורים</h1>
             <p className={`${T.subheading} text-sm truncate mt-1`}>{session.user?.email}</p>
           </div>
-          <div className="flex gap-2 shrink-0">
+          <div className="flex flex-wrap gap-2 shrink-0 justify-end">
+            <button
+              type="button"
+              onClick={() => setCurriculumModalOpen(true)}
+              className={T.secondaryBtn}
+            >
+              תוכניות הלימודים
+            </button>
             <button type="button" onClick={() => setAddChildModalOpen(true)} className={T.amberBtn}>
               הוספת ילד
             </button>
@@ -988,6 +997,12 @@ export default function ParentDashboardPage() {
           )}
           <ParentInviteOthersButton bright={isBright} />
         </section>
+
+        <ParentCurriculumModal
+          bright={isBright}
+          open={curriculumModalOpen}
+          onClose={() => setCurriculumModalOpen(false)}
+        />
 
         <ParentDashboardModal
           bright={isBright}

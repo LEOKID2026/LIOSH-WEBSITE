@@ -19,6 +19,8 @@ export default function ParentDashboardModal({
   children,
   size = "2xl",
   bright = false,
+  toolbar = null,
+  bodyRef = null,
 }) {
   const titleId = useId();
   const closeRef = useRef(null);
@@ -84,8 +86,21 @@ export default function ParentDashboardModal({
             ✖
           </button>
         </div>
+        {toolbar ? (
+          <div
+            className={[
+              "shrink-0 border-b px-3 py-2.5 md:px-5",
+              bright
+                ? "border-slate-200 bg-white"
+                : "border-white/10 bg-white",
+            ].join(" ")}
+          >
+            {toolbar}
+          </div>
+        ) : null}
         <div
-          className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-3 py-4 md:px-5 md:py-5"
+          ref={bodyRef}
+          className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain px-3 py-4 md:px-5 md:py-5"
           style={{ scrollbarGutter: "stable", scrollbarWidth: "thin" }}
         >
           {children}

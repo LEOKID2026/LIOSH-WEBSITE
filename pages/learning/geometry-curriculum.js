@@ -21,15 +21,6 @@ const HEB_GRADE = {
   g6: "ו׳",
 };
 
-/** Pedagogical gloss for curriculum transparency page */
-const GRADE_NOTES = {
-  g1: "מקטע מדידות וגאומטריה — צורות גאומטריות, הכרת מצולעים, זיהוי מלבן וריבוע, והזזה או שיקוף — ברמת היכרות.",
-  g2: "מקטע מדידות וגאומטריה כולל מצולעים וגופים (שיקוף והזזה), מדידות שטח ועוד — בעומק המתאים לכיתה ב׳ במוצר (לא רק נוסחאות פורמליות בדף זה).",
-  g3: "נושאים מרכזיים: זוויות, מאונכות, מקבילות, משולשים, מרובעים, מידות ומדידות, סיבוב — יחד עם מדידות אורך/משקל/נפח/זמן.",
-  g4: "שטח, היקף, נפח תיבות, אלכסון, סימטרייה וצורות בסיסיות עם תכונות.",
-  g5: "שטח, היקף, נפח, זוויות, מקבילות ומאונכות, מרובעים, גבהים, ריצוף, אלכסון וערבוב.",
-  g6: "שטח, היקף, נפח, זוויות, מעגל ועיגול, פיתגורס, גופים וערבוב.",
-};
 
 export default function GeometryCurriculum() {
   useIOSViewportFix();
@@ -90,7 +81,7 @@ export default function GeometryCurriculum() {
               תוכנית הלימודים באתר - גאומטריה
             </h1>
             <p className="text-sm md:text-base text-white/70 max-w-2xl mx-auto" dir="rtl">
-              סיכום של הנושאים, רמות הקושי והכיתות כפי שהוגדרו במערכת — לצורכי שקיפות בלבד
+              מותאם לפי כיתה, נושא ורמת תרגול (רגיל / מתקדם) — כפי שמוצגים בדף הגאומטריה. בהתאם לנושאים המקובלים הנלמדים בבתי הספר היסודיים.
             </p>
           </header>
 
@@ -103,15 +94,14 @@ export default function GeometryCurriculum() {
                     <strong>6 כיתות</strong>: א׳, ב׳, ג׳, ד׳, ה׳, ו׳
                   </li>
                   <li>
-                    <strong>רגיל, מתקדם</strong> (
-                    {2} רמות תרגול) לכל כיתה
+                    <strong>שתי רמות תרגול — רגיל ומתקדם</strong> לכל כיתה
                   </li>
                   <li>
-                    <strong>{topicCountLabel} נושאי גאומטריה</strong> במפת הנושאים של המוצר (לא כולל &quot;ערבוב&quot; כנושא נפרד בספירה זו)
+                    <strong>{topicCountLabel} נושאי גאומטריה</strong> (לא כולל &quot;ערבוב&quot; כנושא נפרד בספירה זו)
                   </li>
                 </ul>
                 <p className="text-sm text-white/75 mt-3">
-                  הרצף כאן משקף את הגדרות המוצר. בהתאם לנושאים המקובלים בלימודי המקצוע בבתי הספר היסודיים.
+                  בהתאם לנושאים המקובלים הנלמדים בבתי הספר היסודיים.
                 </p>
               </div>
 
@@ -123,7 +113,7 @@ export default function GeometryCurriculum() {
                     className="bg-blue-500/20 border-r-4 border-blue-500 p-4 rounded-lg mb-6"
                   >
                     <h2 className="text-2xl font-bold mb-3">כיתה {HEB_GRADE[gradeKey]}</h2>
-                    <h3 className="text-lg font-semibold mb-2">נושאים בממשק לכיתה זו:</h3>
+                    <h3 className="text-lg font-semibold mb-2">נושאים לכיתה זו:</h3>
                     <ol className="list-decimal pr-6 space-y-1 mb-4">
                       {topics.map((tk) => {
                         const desc = topicDescriptionForCurriculumPage(gradeKey, tk);
@@ -138,7 +128,7 @@ export default function GeometryCurriculum() {
                       })}
                     </ol>
                     <div className="bg-white/5 p-3 rounded mb-3">
-                      <h4 className="font-semibold mb-2">צורות ודוגמאות לפי נושא (כפי שהוגדר במוצר):</h4>
+                      <h4 className="font-semibold mb-2">צורות ודוגמאות לפי נושא:</h4>
                       <div className="text-sm space-y-1">
                         {topics.map((tk) => {
                           const shapesLine = getShapesForGradeTopic(gradeKey, tk);
@@ -151,9 +141,6 @@ export default function GeometryCurriculum() {
                         })}
                       </div>
                     </div>
-                    <div className="bg-yellow-500/20 p-3 rounded text-sm">
-                      <strong>הערות:</strong> {GRADE_NOTES[gradeKey]}
-                    </div>
                   </div>
                 );
               })}
@@ -162,10 +149,10 @@ export default function GeometryCurriculum() {
                 <h3 className="text-xl font-bold mb-3 text-center">סיכום כללי</h3>
                 <p className="text-center mb-3">
                   במערכת מוצגים <strong>{topicCountLabel} נושאי גאומטריה</strong> (בנוסף למצב ערבוב היכן שקיים), ב 
-                  <strong> שש כיתות</strong> ובשלוש רמות קושי — בהתאם להגדרות הקוד והתצורה בעמוד התרגול.
+                  <strong> שש כיתות</strong> וב<strong>שתי רמות תרגול — רגיל ומתקדם</strong>.
                 </p>
                 <p className="text-center text-sm text-white/80">
-                  בהתאם לנושאים המקובלים בלימודי המקצוע בבתי הספר היסודיים.
+                  בהתאם לנושאים המקובלים הנלמדים בבתי הספר היסודיים.
                 </p>
               </div>
             </div>

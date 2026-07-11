@@ -1,16 +1,15 @@
 export const ENGLISH_GRADE_ORDER = ["g1", "g2", "g3", "g4", "g5", "g6"];
 
 export const ENGLISH_GENERAL_GOALS = [
-  "תרגול אוצר מילים, דקדוק, תרגום והרכבת משפטים — בהתאם לנושאים המקובלים בלימודי המקצוע בבתי הספר היסודיים.",
-  "התאמת רמת התרגול (רגיל / מתקדם) לכל שחקן לפי כיתה, הצלחות ואתגרים יומיים.",
-  "חיזוק כתיבה באנגלית באמצעות תרגילי typing ממוקדים ומעבר הדרגתי ממשפטים קצרים למשפטים מורחבים.",
-  "מעקב אחר טעויות, שיאים ו XP כדי לייצר דוח הורים וטבלת הישגים עדכנית בכל רגע."
+  "תרגול אוצר מילים, דקדוק, תרגום והרכבת משפטים — בהתאם לנושאים המקובלים הנלמדים בבתי הספר היסודיים.",
+  "התאמת רמת התרגול (רגיל / מתקדם) לכל תלמיד לפי כיתה, הצלחות ואתגרים יומיים.",
+  "חיזוק כתיבה באנגלית באמצעות תרגילי הקלדה ממוקדים ומעבר הדרגתי ממשפטים קצרים למשפטים מורחבים.",
 ];
 
 export const ENGLISH_GRADES = {
   g1: {
     key: "g1",
-    name: "כיתה א׳ · Grade 1",
+    name: "כיתה א׳",
     stage: "שלב חשיפה",
     topics: ["phonics", "vocabulary"],
     wordLists: ["colors", "numbers", "family", "animals", "emotions", "actions", "school"],
@@ -37,7 +36,7 @@ export const ENGLISH_GRADES = {
   },
   g2: {
     key: "g2",
-    name: "כיתה ב׳ · Grade 2",
+    name: "כיתה ב׳",
     stage: "שלב יסוד",
     topics: ["phonics", "vocabulary", "translation", "writing"],
     wordLists: [
@@ -54,7 +53,7 @@ export const ENGLISH_GRADES = {
     curriculum: {
       summary: "מעבר מזיהוי מילים לכתיבה קצרה והרחבת אוצר מילים לפי תחומי חיי היום-יום.",
       focus: [
-        "תרגול כתיבה של מילים באנגלית מתוך מילה בעברית (typing).",
+        "תרגול כתיבה של מילים באנגלית מתוך מילה בעברית (הקלדה).",
         "התחלה של תרגום משפטים קצרים לפי טמפלטים קבועים."
       ],
       skills: [
@@ -77,7 +76,7 @@ export const ENGLISH_GRADES = {
   },
   g3: {
     key: "g3",
-    name: "כיתה ג׳ · Grade 3",
+    name: "כיתה ג׳",
     stage: "שלב ראשית אוריינות",
     topics: ["vocabulary", "grammar", "translation", "sentences", "writing", "mixed"],
     wordLists: [
@@ -101,7 +100,7 @@ export const ENGLISH_GRADES = {
       ],
       skills: [
         "הרכבת משפטים Present Simple מתוך תבניות מוכרות.",
-        "מעקב אחרי רמזים (subject, זמן) כדי לבחור את המילה הנכונה."
+        "מעקב אחרי רמזים (נושא, זמן) כדי לבחור את המילה הנכונה."
       ],
       grammar: [
         "Present Simple בחיובי/שלילי/שאלה.",
@@ -112,14 +111,14 @@ export const ENGLISH_GRADES = {
         "חלקי גוף וחדרי בית מורחבים."
       ],
       benchmark: [
-        "דיוק ‎80%‎ ומעלה במצב Grammar או Sentences.",
+        "דיוק ‎80%‎ ומעלה במצב דקדוק או משפטים.",
         "כתיבת לפחות 5 משפטים קצרים באנגלית במצב כתיבה מורחב."
       ]
     }
   },
   g4: {
     key: "g4",
-    name: "כיתה ד׳ · Grade 4",
+    name: "כיתה ד׳",
     stage: "שלב אוריינות מתפתחת",
     topics: ["vocabulary", "grammar", "translation", "sentences", "writing", "mixed"],
     wordLists: [
@@ -139,7 +138,7 @@ export const ENGLISH_GRADES = {
       summary: "חיזוק הבנת זמנים (Present Simple / Continuous) והרחבת הנושאים לקהילה, טבע ונסיעות.",
       focus: [
         "בחירה בין Present Simple לבין Present Continuous לפי מילת הזמן.",
-        "תרגול כתיבה של פסקה קצרה (3–4 משפטים) במצב typing."
+        "תרגול כתיבה של פסקה קצרה (3–4 משפטים) במצב הקלדה."
       ],
       skills: [
         "תרגול תרגום דו-כיווני למשפטים עם 2 פעולות.",
@@ -154,14 +153,14 @@ export const ENGLISH_GRADES = {
         "רגשות מורחבים, סביבה וטבע."
       ],
       benchmark: [
-        "דיוק דקדוק של ‎85%‎ לפחות במצב Grammar.",
+        "דיוק דקדוק של ‎85%‎ לפחות במצב דקדוק.",
         "עמידה באתגר יומי (20 שאלות) לפחות פעמיים בשבוע."
       ]
     }
   },
   g5: {
     key: "g5",
-    name: "כיתה ה׳ · Grade 5",
+    name: "כיתה ה׳",
     stage: "שלב אוריינות מורחבת",
     topics: ["vocabulary", "grammar", "translation", "sentences", "writing", "mixed"],
     wordLists: [
@@ -195,14 +194,14 @@ export const ENGLISH_GRADES = {
         "סביבה ורגשות מתקדמים."
       ],
       benchmark: [
-        "שמירה על דיוק ‎85%‎ לפחות במצב Mixed.",
-        "עצירת 3 טעויות חוזרות באמצעות תרגול ממוקד (כפתור טעויות)."
+        "שמירה על דיוק ‎85%‎ לפחות במצב מעורב.",
+        "עצירת 3 טעויות חוזרות באמצעות תרגול ממוקד."
       ]
     }
   },
   g6: {
     key: "g6",
-    name: "כיתה ו׳ · Grade 6",
+    name: "כיתה ו׳",
     stage: "שלב מתקדם",
     topics: ["vocabulary", "grammar", "translation", "sentences", "writing", "mixed"],
     wordLists: [
@@ -225,7 +224,7 @@ export const ENGLISH_GRADES = {
       ],
       skills: [
         "תרגום דו-כיווני של משפטים בני 8–10 מילים.",
-        "כתיבת טענות קצרות (opinion) במצב typing עם רמזים."
+        "כתיבת טענות קצרות (דעה) במצב הקלדה עם רמזים."
       ],
       grammar: [
         "Past Continuous לצד Past Simple, היכרות עם Present Perfect.",
@@ -236,8 +235,7 @@ export const ENGLISH_GRADES = {
         "טכנולוגיה, היסטוריה, קהילה ורגשות מורכבים."
       ],
       benchmark: [
-        "דיוק ‎90%‎ ומעלה במצב Grammar או Sentences במשך 3 משחקים ברצף.",
-        "צבירת ‎150‎ XP לפחות והצגת badge חדש בשבוע לימודים."
+        "דיוק ‎90%‎ ומעלה במצב דקדוק או משפטים במשך 3 תרגולים ברצף.",
       ]
     }
   }
