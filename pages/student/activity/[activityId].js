@@ -29,6 +29,12 @@ import { resolveVirtualAnswerKeyboard } from "../../../lib/learning/virtual-answ
 import { activityChoiceGridClassName } from "../../../lib/classroom-activities/student-activity-choice-layout.client.js";
 import { useStudentActivityUi } from "../../../hooks/useStudentActivityUi.js";
 import { computeAssignedActivityTiming } from "../../../lib/learning/timing-policy.js";
+import {
+  makeParentActivityVisitToken,
+  postParentActivityLearningVisit,
+  beaconParentActivityLearningVisit,
+  computeParentVisitTimingFromStart,
+} from "../../../lib/learning-client/parentActivityLearningVisit.client.js";
 import StudentAssignedActivityShell from "../../../components/student/StudentAssignedActivityShell";
 import StudentAssignedActivityQuestionStage from "../../../components/student/StudentAssignedActivityQuestionStage";
 import StudentActivitySubmitConfirmModal from "../../../components/student/StudentActivitySubmitConfirmModal";
@@ -80,9 +86,17 @@ export default function StudentActivityPage({ activityId }) {
   const [liveIdx, setLiveIdx] = useState(null);
   const [error, setError] = useState("");
   const [savedAttempts, setSavedAttempts] = useState({});
+  const [activityScope, setActivityScope] = useState(null);
 
   // Phase 3: real per-question timing
   const questionStartTimeRef = useRef(null);
+  /** @type {import('react').MutableRefObject<{ token: string|null, startedAt: number|null, questionIndex: number|null, flushed: boolean }>} */
+  const parentVisitRef = useRef({
+    token: null,
+    startedAt: null,
+    questionIndex: null,
+    flushed: false,
+  });
   // explanationViewedRef: set true when post-answer explanation is shown (guided_practice/homework);
   // flows into the NEXT question's submit as explanationViewed=true
   const explanationViewedRef = useRef(false);
@@ -118,6 +132,7 @@ export default function StudentActivityPage({ activityId }) {
         return;
       }
       setActivity(json.activity);
+      setActivityScope(json.scope === "parent" ? "parent" : json.scope || null);
       if (json.alreadyCompleted) {
         setFinished({
           scorePct: json.scorePct ?? null,
@@ -272,6 +287,67 @@ export default function StudentActivityPage({ activityId }) {
     setActivityAudioStems(stems);
   }, [questionSet]);
 
+  const isParentActivity = activityScope === "parent";
+
+  const beginParentVisit = useCallback((questionIndex) => {
+    parentVisitRef.current = {
+      token: makeParentActivityVisitToken(),
+      startedAt: Date.now(),
+      questionIndex,
+      flushed: false,
+    };
+  }, []);
+
+  const flushParentVisit = useCallback(
+    async (opts = {}) => {
+      if (!isParentActivity) return;
+      const v = parentVisitRef.current;
+      if (!v.token || v.flushed || v.startedAt == null || v.questionIndex == null) return;
+      const timing = computeParentVisitTimingFromStart(v.startedAt, {
+        visitKind: opts.visitKind,
+      });
+      if (!timing.creditedDwellMs || timing.creditedDwellMs <= 0) {
+        v.flushed = true;
+        return;
+      }
+      v.flushed = true;
+      const payload = {
+        questionIndex: v.questionIndex,
+        clientVisitToken: v.token,
+        rawDwellMs: timing.rawDwellMs,
+        creditedDwellMs: timing.creditedDwellMs,
+        visitKind: opts.visitKind === "answer" ? "answer" : "learning",
+      };
+      if (opts.useBeacon) {
+        beaconParentActivityLearningVisit(activityId, payload);
+        return;
+      }
+      await postParentActivityLearningVisit(activityId, payload);
+    },
+    [activityId, isParentActivity]
+  );
+
+  const goToQuestionIdx = useCallback((nextIdx) => {
+    setCurrentIdx(nextIdx);
+  }, []);
+
+  useEffect(() => {
+    if (!isParentActivity || phase !== "ready") return undefined;
+    beginParentVisit(effectiveIdx);
+    return () => {
+      void flushParentVisit();
+    };
+  }, [effectiveIdx, isParentActivity, phase, beginParentVisit, flushParentVisit]);
+
+  useEffect(() => {
+    if (!isParentActivity || phase !== "ready") return undefined;
+    const onPageHide = () => {
+      void flushParentVisit({ useBeacon: true });
+    };
+    window.addEventListener("pagehide", onPageHide);
+    return () => window.removeEventListener("pagehide", onPageHide);
+  }, [flushParentVisit, isParentActivity, phase]);
+
   const isCurrentQuestionAnswered = Boolean(currentSavedAttempt);
   const answeredQuestionCount = useMemo(
     () =>
@@ -372,15 +448,18 @@ export default function StudentActivityPage({ activityId }) {
 
   const advanceToNextQuestion = useCallback(() => {
     if (effectiveIdx < questionSet.length - 1) {
-      setCurrentIdx((i) => i + 1);
+      void goToQuestionIdx(effectiveIdx + 1);
     }
-  }, [effectiveIdx, questionSet.length]);
+  }, [effectiveIdx, questionSet.length, goToQuestionIdx]);
 
   const submitAnswer = async () => {
     if (!currentQuestion || busy || isCurrentQuestionAnswered) return;
     setBusy(true);
     setFeedback(null);
     try {
+      if (isParentActivity) {
+        await flushParentVisit({ visitKind: "answer" });
+      }
       // Phase 3: compute real elapsed time and credit cap
       const rawMs =
         questionStartTimeRef.current != null
@@ -446,7 +525,7 @@ export default function StudentActivityPage({ activityId }) {
       setScratchpadOpen(false);
       if (activity?.mode !== "live_lesson" && effectiveIdx < questionSet.length - 1) {
         setTimeout(() => {
-          setCurrentIdx((i) => i + 1);
+          void goToQuestionIdx(effectiveIdx + 1);
         }, explanationText ? 1500 : 600);
       }
     } finally {
@@ -457,6 +536,9 @@ export default function StudentActivityPage({ activityId }) {
   const submitActivity = async () => {
     setBusy(true);
     try {
+      if (isParentActivity) {
+        await flushParentVisit();
+      }
       const res = await fetch(`/api/student/activities/${encodeURIComponent(activityId)}/submit`, {
         method: "POST",
         credentials: "include",
@@ -655,11 +737,22 @@ export default function StudentActivityPage({ activityId }) {
     activity?.mode !== "live_lesson" && !isExplanationOnly ? (
       compact ? (
         <div className={L.scratchpadDockFinishRow}>
-          {effectiveIdx < questionSet.length - 1 && !isQuiz && !isDiscussion ? (
+          {showDockPrevQuestion ? (
             <button
               type="button"
               onClick={() => {
-                setCurrentIdx((i) => Math.min(questionSet.length - 1, i + 1));
+                goToQuestionIdx(Math.max(0, effectiveIdx - 1));
+              }}
+              className={L.scratchpadDockSecondaryButton}
+            >
+              שאלה קודמת
+            </button>
+          ) : null}
+          {showDockNextQuestion ? (
+            <button
+              type="button"
+              onClick={() => {
+                goToQuestionIdx(Math.min(questionSet.length - 1, effectiveIdx + 1));
               }}
               className={L.scratchpadDockSecondaryButton}
             >
@@ -683,11 +776,22 @@ export default function StudentActivityPage({ activityId }) {
         </div>
       ) : (
         <>
-          {effectiveIdx < questionSet.length - 1 && !isQuiz && !isDiscussion ? (
+          {showDockPrevQuestion ? (
             <button
               type="button"
               onClick={() => {
-                setCurrentIdx((i) => Math.min(questionSet.length - 1, i + 1));
+                goToQuestionIdx(Math.max(0, effectiveIdx - 1));
+              }}
+              className={L.footerButton}
+            >
+              שאלה קודמת
+            </button>
+          ) : null}
+          {showDockNextQuestion ? (
+            <button
+              type="button"
+              onClick={() => {
+                goToQuestionIdx(Math.min(questionSet.length - 1, effectiveIdx + 1));
               }}
               className={L.footerButton}
             >
@@ -845,6 +949,8 @@ export default function StudentActivityPage({ activityId }) {
     </>
   );
 
+  const showDockPrevQuestion =
+    effectiveIdx > 0 && activity?.mode !== "live_lesson" && !isQuiz && !isDiscussion;
   const showDockNextQuestion =
     effectiveIdx < questionSet.length - 1 && !isQuiz && !isDiscussion;
   const showDockFinishActions = activity?.mode !== "live_lesson" && !isExplanationOnly;
@@ -870,11 +976,22 @@ export default function StudentActivityPage({ activityId }) {
         className={`hidden md:flex ${L.scratchpadDockDesktopButtonRow}`}
         data-testid="activity-scratchpad-desktop-actions"
       >
+        {showDockPrevQuestion ? (
+          <button
+            type="button"
+            onClick={() => {
+              goToQuestionIdx(Math.max(0, effectiveIdx - 1));
+            }}
+            className={L.scratchpadDockDesktopSecondaryButton}
+          >
+            שאלה קודמת
+          </button>
+        ) : null}
         {showDockNextQuestion ? (
           <button
             type="button"
             onClick={() => {
-              setCurrentIdx((i) => Math.min(questionSet.length - 1, i + 1));
+              goToQuestionIdx(Math.min(questionSet.length - 1, effectiveIdx + 1));
             }}
             className={L.scratchpadDockDesktopSecondaryButton}
           >

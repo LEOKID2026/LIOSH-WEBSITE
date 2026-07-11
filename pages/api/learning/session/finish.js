@@ -23,10 +23,8 @@ import { guardCookieMutationOrigin } from "../../../../lib/security/api-guards.j
 import { trackServerAnalyticsEvent } from "../../../../lib/analytics/track-event.server.js";
 import { evaluateAndGrantAchievementCards } from "../../../../lib/rewards/server/achievement-evaluator.server.js";
 import { syncIncrementalMonthlyPersistenceRewards } from "../../../../lib/learning-supabase/monthly-persistence-reward.server";
-import {
-  computeLearningSessionDurationSeconds,
-  deriveSessionSummaryFromAnswers,
-} from "../../../../lib/learning-supabase/learning-session-finish.server";
+import { deriveSessionSummaryFromAnswers } from "../../../../lib/learning-supabase/learning-session-finish.server";
+import { resolveSessionFinishCreditedDuration } from "../../../../lib/learning-supabase/learning-time-monthly-aggregate.server";
 
 async function loadLearningSession(supabase, learningSessionId) {
   const { data, error } = await supabase
@@ -88,10 +86,11 @@ export default async function handler(req, res) {
     }
 
     const endedAt = new Date().toISOString();
-    const serverDurationSeconds = computeLearningSessionDurationSeconds(
-      sessionRow.started_at,
-      endedAt
-    );
+    const clientDurationSeconds = normalizeOptionalInteger(body.durationSeconds, 0, 3600) ?? 0;
+    const creditedFinish = await resolveSessionFinishCreditedDuration(supabase, learningSessionId, {
+      clientAccruedMs: clientDurationSeconds * 1000,
+    });
+    const serverDurationSeconds = creditedFinish.durationSeconds;
 
     const derived = await deriveSessionSummaryFromAnswers(supabase, learningSessionId, {
       totalQuestions: normalizeOptionalInteger(body.totalQuestions, 0, 1000000),
@@ -110,6 +109,9 @@ export default async function handler(req, res) {
       clientMeta: normalizeClientMeta(body.clientMeta),
       canonicalGradeLevelKey: canonicalGradeLevelKeyFromAuth(auth),
       summaryDerivedFromAnswers: derived.derivedFromAnswers === true,
+      creditedMsTotal: creditedFinish.creditedMsTotal,
+      orphanCreditedMs: creditedFinish.orphanCreditedMs,
+      answerCreditedMs: creditedFinish.answerCreditedMs,
     };
 
     const finishMode = normalizeLearningGameMode(body.mode);

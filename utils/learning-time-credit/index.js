@@ -40,3 +40,14 @@ export {
   legacyAccumulateQuestionWallTime,
   resolveMasterSessionDurationSeconds,
 } from "./master-integration.js";
+
+export {
+  LEARNING_UNIT_CREDIT_CAP_MS,
+  LEARNING_UNIT_CREDIT_CAP_SECONDS,
+  LEARNING_UNIT_CREDIT_CAP_MINUTES,
+  CREDITABLE_LEARNING_MODES,
+  NON_CREDITING_PLAY_ACTIVITY_TYPES,
+  creditLearningUnitMs,
+  isLearningModeCreditable,
+  isNonCreditingPlayActivity,
+} from "../../lib/learning/learning-time-credit-policy.js";

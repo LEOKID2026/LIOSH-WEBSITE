@@ -2535,7 +2535,6 @@ export default function GeometryMaster() {
     { open: showPracticeOptions, close: () => setShowPracticeOptions(false) },
     { open: showReferenceModal, close: () => setShowReferenceModal(false) },
     { open: showHowTo, close: () => setShowHowTo(false) },
-    { open: showMultiplicationTable, close: () => setShowMultiplicationTable(false) },
     { open: showLeaderboard, close: () => setShowLeaderboard(false) },
     { open: showMixedSelector, close: () => setShowMixedSelector(false) },
   ]);

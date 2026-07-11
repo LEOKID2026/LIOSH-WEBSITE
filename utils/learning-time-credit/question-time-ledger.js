@@ -1,14 +1,13 @@
 import { resolveQuestionTimeCreditTier } from "./classify-question-tier.js";
 import {
-  creditVisibleSliceMs,
   legacyAccumulateQuestionMs,
   topicCreditSecondsFromQuestionClose,
 } from "./compute-credited-ms.js";
-import { resolveTierCapMs, VISIBILITY_STALE_MS } from "./constants.js";
-import { isLearningTimeFairnessV1Enabled } from "./feature-flag.js";
+import { LEARNING_UNIT_CREDIT_CAP_MS } from "../../lib/learning/learning-time-credit-policy.js";
 
 /**
- * Per-question visibility-aware credited time ledger (browser or test).
+ * Per-question learning unit time ledger — מדיניות נדיבה, תקרה 10 דקות ליחידה.
+ * זמן wall-clock נספר (כולל רמזים, הסברים, השהייה) עד התקרה.
  */
 export class QuestionTimeLedger {
   /**
@@ -26,43 +25,30 @@ export class QuestionTimeLedger {
     gameMode,
     question = null,
     now = Date.now(),
-    fairnessEnabled,
     initiallyVisible = true,
   }) {
     this.subjectId = subjectId;
     this.gameMode = gameMode;
     this.question = question;
-    this.fairnessEnabled =
-      fairnessEnabled !== undefined
-        ? fairnessEnabled
-        : isLearningTimeFairnessV1Enabled();
 
     this.tier = resolveQuestionTimeCreditTier({
       subjectId,
       gameMode,
       question,
     });
-    this.tierCapMs = resolveTierCapMs(this.tier, this.fairnessEnabled);
+    this.tierCapMs = LEARNING_UNIT_CREDIT_CAP_MS;
+    this.fairnessEnabled = false;
 
     this.visibleAccumulatedMs = 0;
-    this.hiddenAccumulatedMs = 0;
-    this.frozenUntilVisible = false;
-    this.hiddenSinceMs = null;
-    this.lastVisibleAtMs = initiallyVisible ? now : null;
     this.questionOpenedAtMs = now;
+    this.lastVisibleAtMs = initiallyVisible ? now : now;
   }
 
   /**
    * @param {number} [now]
    */
   onVisible(now = Date.now()) {
-    if (this.fairnessEnabled) {
-      this.flushVisibleSlice(now);
-      this.frozenUntilVisible = false;
-      this.hiddenSinceMs = null;
-      this.lastVisibleAtMs = now;
-      return;
-    }
+    this._flushWallSlice(now);
     this.lastVisibleAtMs = now;
   }
 
@@ -70,50 +56,21 @@ export class QuestionTimeLedger {
    * @param {number} [now]
    */
   onHidden(now = Date.now()) {
-    if (!this.fairnessEnabled) {
-      this._flushLegacyWallSlice(now);
-      return;
-    }
-    this.flushVisibleSlice(now);
-    this.lastVisibleAtMs = null;
-    if (this.hiddenSinceMs == null) {
-      this.hiddenSinceMs = now;
-    }
-    if (now - this.hiddenSinceMs >= VISIBILITY_STALE_MS) {
-      this.frozenUntilVisible = true;
-    }
+    this._flushWallSlice(now);
+    this.lastVisibleAtMs = now;
   }
 
   /**
    * @param {number} [now]
    */
   flushVisibleSlice(now = Date.now()) {
-    if (!this.fairnessEnabled) {
-      return this._flushLegacyWallSlice(now);
-    }
-
-    if (this.frozenUntilVisible || this.lastVisibleAtMs == null) {
-      return 0;
-    }
-
-    const slice = creditVisibleSliceMs(
-      now - this.lastVisibleAtMs,
-      this.tierCapMs,
-      this.visibleAccumulatedMs
-    );
-    if (slice > 0) {
-      this.visibleAccumulatedMs += slice;
-      this.lastVisibleAtMs = now;
-    }
-    return slice;
+    return this._flushWallSlice(now);
   }
 
   /**
-   * Legacy path: credit wall time regardless of visibility (matches pre-fairness masters).
-   *
    * @param {number} now
    */
-  _flushLegacyWallSlice(now) {
+  _flushWallSlice(now) {
     const anchor = this.lastVisibleAtMs ?? this.questionOpenedAtMs;
     if (anchor == null || now <= anchor) {
       this.lastVisibleAtMs = now;
@@ -133,50 +90,23 @@ export class QuestionTimeLedger {
    * @param {number} [now]
    */
   peekCreditedMs(now = Date.now()) {
-    if (!this.fairnessEnabled) {
-      const elapsed = now - (this.lastVisibleAtMs ?? this.questionOpenedAtMs);
-      return Math.min(
-        this.visibleAccumulatedMs + legacyAccumulateQuestionMs(elapsed),
-        this.tierCapMs
-      );
-    }
-
-    if (this.frozenUntilVisible || this.lastVisibleAtMs == null) {
-      return this.visibleAccumulatedMs;
-    }
-    const pending = creditVisibleSliceMs(
-      now - this.lastVisibleAtMs,
-      this.tierCapMs,
-      this.visibleAccumulatedMs
+    const anchor = this.lastVisibleAtMs ?? this.questionOpenedAtMs;
+    const elapsed = now - anchor;
+    return Math.min(
+      this.visibleAccumulatedMs + legacyAccumulateQuestionMs(elapsed),
+      this.tierCapMs
     );
-    return this.visibleAccumulatedMs + pending;
   }
 
   /**
    * @param {number} [now]
-   * @returns {{
-   *   creditedMs: number,
-   *   creditedSecForTopic: number,
-   *   tier: string,
-   *   tierCapMs: number,
-   *   fairnessEnabled: boolean,
-   *   rawWallMs: number,
-   * }}
    */
   closeQuestion(now = Date.now()) {
-    if (!this.fairnessEnabled) {
-      this._flushLegacyWallSlice(now);
-      const rawWallMs = Math.max(0, now - this.questionOpenedAtMs);
-      const wallCredit = legacyAccumulateQuestionMs(rawWallMs);
-      this.visibleAccumulatedMs = Math.min(wallCredit, this.tierCapMs);
-    } else {
-      this.flushVisibleSlice(now);
-      if (this.hiddenSinceMs != null) {
-        this.hiddenAccumulatedMs += Math.max(0, now - this.hiddenSinceMs);
-      }
-    }
-
+    this._flushWallSlice(now);
     const rawWallMs = Math.max(0, now - this.questionOpenedAtMs);
+    const wallCredit = legacyAccumulateQuestionMs(rawWallMs);
+    this.visibleAccumulatedMs = Math.min(wallCredit, this.tierCapMs);
+
     const creditedMs = this.visibleAccumulatedMs;
     const rawDurationSec = rawWallMs / 1000;
 
@@ -184,12 +114,12 @@ export class QuestionTimeLedger {
       creditedMs,
       creditedSecForTopic: topicCreditSecondsFromQuestionClose(
         creditedMs,
-        this.fairnessEnabled,
+        false,
         rawDurationSec
       ),
       tier: this.tier,
       tierCapMs: this.tierCapMs,
-      fairnessEnabled: this.fairnessEnabled,
+      fairnessEnabled: false,
       rawWallMs,
     };
   }

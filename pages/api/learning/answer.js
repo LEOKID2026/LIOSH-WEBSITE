@@ -28,6 +28,10 @@ import { normalizeQuestionEnginePayload } from "../../../lib/learning/question-e
 import { buildDiagnosticCanonicalMetadata } from "../../../lib/learning/diagnostic-canonical-metadata.js";
 import { trackServerAnalyticsEvent } from "../../../lib/analytics/track-event.server.js";
 import { buildAnswerLevelFields } from "../../../lib/learning/session-evidence-levels.js";
+import {
+  deriveTimingStatus,
+  resolveServerAnswerCreditedMs,
+} from "../../../lib/learning/learning-time-credit-policy.js";
 
 async function verifyLearningSessionOwnership(supabase, learningSessionId, studentId) {
   const { data, error } = await supabase
@@ -148,10 +152,17 @@ export default async function handler(req, res) {
     const rawTimeSpentMs =
       normalizeOptionalInteger(body.rawTimeSpentMs, 0, 36_000_000) ??
       normalizeOptionalInteger(body.timeSpentMs, 0, 36_000_000);
-    const creditedTimeMs =
+    const clientCreditedTimeMs =
       normalizeOptionalInteger(body.creditedTimeMs, 0, 36_000_000) ?? rawTimeSpentMs;
+    const creditedTimeMs = resolveServerAnswerCreditedMs({
+      rawTimeSpentMs,
+      creditedTimeMs: clientCreditedTimeMs,
+      gameMode: answerMode,
+    });
     const timingStatus =
-      typeof body.timingStatus === "string" ? body.timingStatus.slice(0, 40) : null;
+      typeof body.timingStatus === "string"
+        ? body.timingStatus.slice(0, 40)
+        : deriveTimingStatus(rawTimeSpentMs);
 
     const classification = classifyActivityEvidence(
       answerMode,

@@ -1,12 +1,10 @@
+import { LEARNING_UNIT_CREDIT_CAP_MS, creditLearningUnitMs } from "../../lib/learning/learning-time-credit-policy.js";
 import {
   LEGACY_TOPIC_MAX_EXCLUSIVE_SEC,
   resolveTierCapMs,
-  TIER_LEGACY_LEARNING_MS,
 } from "./constants.js";
 
 /**
- * Credit visible elapsed toward a per-question cap, respecting prior credit on same question.
- *
  * @param {number} visibleElapsedMs
  * @param {number} tierCapMs
  * @param {number} alreadyCreditedMs
@@ -23,20 +21,15 @@ export function creditVisibleSliceMs(visibleElapsedMs, tierCapMs, alreadyCredite
 }
 
 /**
- * Legacy: session/question accumulation when fairness flag is off.
- *
+ * צבירת זמן ליחידה — תקרה 10 דקות.
  * @param {number} elapsedMs
  */
 export function legacyAccumulateQuestionMs(elapsedMs) {
-  const n = Number(elapsedMs);
-  if (!Number.isFinite(n) || n <= 0) return 0;
-  return Math.min(Math.floor(n), TIER_LEGACY_LEARNING_MS);
+  return creditLearningUnitMs(elapsedMs);
 }
 
 /**
- * Seconds to pass into track*TopicTime when fairness is off (old duration < 300 rule).
- *
- * @param {number} rawDurationSec — wall-clock seconds for the question span
+ * @param {number} rawDurationSec
  */
 export function legacyTopicCreditSeconds(rawDurationSec) {
   const sec = Number(rawDurationSec);
@@ -46,8 +39,6 @@ export function legacyTopicCreditSeconds(rawDurationSec) {
 }
 
 /**
- * Seconds to pass into track*TopicTime when fairness is on.
- *
  * @param {number} creditedMs
  */
 export function fairnessTopicCreditSeconds(creditedMs) {
@@ -59,7 +50,7 @@ export function fairnessTopicCreditSeconds(creditedMs) {
 /**
  * @param {number} creditedMs
  * @param {boolean} fairnessEnabled
- * @param {number} [rawDurationSec] — for legacy path only
+ * @param {number} [rawDurationSec]
  */
 export function topicCreditSecondsFromQuestionClose(creditedMs, fairnessEnabled, rawDurationSec = 0) {
   if (fairnessEnabled) {
@@ -69,8 +60,6 @@ export function topicCreditSecondsFromQuestionClose(creditedMs, fairnessEnabled,
 }
 
 /**
- * Sum credited ms from visible intervals (pure), each capped by tier and running total.
- *
  * @param {Array<{ startMs: number, endMs: number }>} visibleIntervals
  * @param {number} tierCapMs
  */
@@ -86,4 +75,4 @@ export function sumCreditedFromVisibleIntervals(visibleIntervals, tierCapMs) {
   return total;
 }
 
-export { resolveTierCapMs };
+export { resolveTierCapMs, LEARNING_UNIT_CREDIT_CAP_MS };

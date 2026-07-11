@@ -3,7 +3,6 @@ import {
   capSessionCreditedMs,
   sessionCreditedMsToDurationSeconds,
 } from "./constants.js";
-import { isLearningTimeFairnessV1Enabled } from "./feature-flag.js";
 import { legacyAccumulateQuestionMs } from "./compute-credited-ms.js";
 
 /** @typedef {import('./question-time-ledger.js').QuestionTimeLedger} QuestionTimeLedger */
@@ -16,25 +15,20 @@ export function isLearningOrPracticeMode(mode) {
 }
 
 /**
- * Fairness visibility ledger applies only in learning/practice when flag is on.
- *
- * @param {string} mode
- * @param {boolean} [flagOverride]
+ * מדיניות נדיבה — ledger תמיד wall-clock עד 10 דקות ליחידה.
+ * @param {string} _mode
+ * @param {boolean} [_flagOverride]
  */
-export function isFairnessVisibilityLedgerActive(mode, flagOverride) {
-  const enabled =
-    flagOverride !== undefined ? flagOverride : isLearningTimeFairnessV1Enabled();
-  return enabled && isLearningOrPracticeMode(mode);
+export function isFairnessVisibilityLedgerActive(_mode, _flagOverride) {
+  return false;
 }
 
 /**
- * @param {string} mode
- * @param {boolean} [flagOverride]
+ * @param {string} _mode
+ * @param {boolean} [_flagOverride]
  */
-export function resolveMasterFairnessEnabled(mode, flagOverride) {
-  const flag =
-    flagOverride !== undefined ? flagOverride : isLearningTimeFairnessV1Enabled();
-  return flag && isLearningOrPracticeMode(mode);
+export function resolveMasterFairnessEnabled(_mode, _flagOverride) {
+  return false;
 }
 
 /**
@@ -94,7 +88,7 @@ export function finalizeMasterQuestionLedger(
 }
 
 /**
- * Legacy path when no ledger (fallback): wall-clock ms capped at 120s.
+ * Legacy path when no ledger (fallback): wall-clock ms capped at 10 min per unit.
  *
  * @param {number | null} questionStartTime
  * @param {import('react').MutableRefObject<number>} sessionSecondsRef
