@@ -36,6 +36,10 @@ assert.equal(oauthSrc.includes('"/parent/home"') || oauthSrc.includes("PARENT_GO
 // 3) Official GIS script + click-only (no One Tap / auto / prompt)
 assert.equal(buttonSrc.includes("accounts.google.com/gsi/client") || oauthSrc.includes("accounts.google.com/gsi/client"), true);
 assert.equal(buttonSrc.includes("renderButton"), true);
+assert.equal(buttonSrc.includes('theme: "filled_blue"'), true);
+assert.equal(buttonSrc.includes('shape: "pill"'), true);
+assert.equal(buttonSrc.includes('text: "continue_with"'), true);
+assert.equal(buttonSrc.includes('locale: "he"'), true);
 assert.equal(buttonSrc.includes("auto_select: false"), true);
 assert.equal(/\bgoogle\.accounts\.id\.prompt\s*\(/.test(buttonSrc), false);
 assert.equal(/\bgoogle\.accounts\.id\.prompt\s*\(/.test(oauthSrc), false);

@@ -78,10 +78,10 @@ export default function ParentGoogleSignInButton({
         containerRef.current.innerHTML = "";
         window.google.accounts.id.renderButton(containerRef.current, {
           type: "standard",
-          theme: "outline",
+          theme: "filled_blue",
           size: "large",
-          text: "signin_with",
-          shape: "rectangular",
+          text: "continue_with",
+          shape: "pill",
           logo_alignment: "left",
           width,
           locale: "he",
@@ -129,7 +129,7 @@ export default function ParentGoogleSignInButton({
       <div ref={containerRef} className="w-full flex justify-center [&>div]:w-full" />
       {disabled ? (
         <div
-          className="absolute inset-0 z-10 cursor-not-allowed rounded-[4px] bg-white/50"
+          className="absolute inset-0 z-10 cursor-not-allowed rounded-full bg-white/50"
           aria-hidden="true"
         />
       ) : null}
