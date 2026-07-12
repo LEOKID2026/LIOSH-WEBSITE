@@ -406,7 +406,7 @@ export default function LeoPizzeriaGame({
               ❌ {mistakes}/{diffConfig.maxMistakes}
             </span>
             <span className={`${frame.hudChip} ${styles.hudTime} ${timeLeft <= 8 ? styles.hudTimeWarn : ""}`}>
-              ⏱ {timeLeft}s
+              ⏱ {timeLeft} שנ׳
             </span>
             <span className={frame.hudChip}>{diffConfig.label}</span>
           </div>

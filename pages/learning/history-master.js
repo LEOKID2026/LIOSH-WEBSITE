@@ -2580,7 +2580,7 @@ function saveScienceAnswerInParallel({
       const topicKey = currentQuestion.topic;
       const topicProgress = progress[topicKey] || { total: 0, correct: 0 };
       const newTopicCorrect = topicProgress.correct + 1;
-      const topicName = TOPICS[topicKey]?.name || topicKey;
+      const topicName = TOPICS[topicKey]?.name || "נושא";
       if (newTopicCorrect === 50 && !badges.includes(`🔬 מומחה ${topicName}`)) {
         const newBadge = `🔬 מומחה ${topicName}`;
         setBadges((prev) => [...prev, newBadge]);
@@ -4204,7 +4204,7 @@ function saveScienceAnswerInParallel({
                   <li>בחר כיתה, רמה ונושא (לדוגמה: גוף האדם, צמחים, בעלי חיים ועוד).</li>
                   <li>בחר מצב משחק: למידה, אתגר עם טיימר וחיים, מהירות או מרתון.</li>
                   <li>ענה על שאלות בחירה, נכון/לא נכון ותסריטי ניסוי.</li>
-                  <li>נסה להגיע לרצף תשובות נכון ולקבל כוכבים ו XP.</li>
+                  <li>נסה להגיע לרצף תשובות נכון ולקבל כוכבים ונקודות ניסיון.</li>
                 </ul>
 
                 <div className="mt-4 flex justify-center">

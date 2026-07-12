@@ -212,6 +212,9 @@ function testKnownPlaceholderFilesOnly() {
     "pages/offline/tic-tac-toe.js",
     "pages/offline/tap-battle.js",
     "pages/offline/rock-paper-scissors.js",
+    // Owner-approved parent-report ad placeholder (product decision — see
+    // docs/reports/final-launch-fixes-2026-07-13/fix-report.md, "Product-Approved" section).
+    "components/student/StudentFixedBottomAdChrome.jsx",
   ]);
 
   const usagePattern =
@@ -234,7 +237,7 @@ function testKnownPlaceholderFilesOnly() {
     [],
     `unexpected ad slot usage in: ${offenders.join(", ") || "(none)"}`,
   );
-  assert.equal(allowedFiles.size, 34, "baseline allowlist size");
+  assert.equal(allowedFiles.size, 35, "baseline allowlist size");
 }
 
 function walk(dir, onFile) {

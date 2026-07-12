@@ -210,8 +210,13 @@ export function buildLpdSafeTopicInsightFromWeakTopic(
   const q = Math.max(0, Number(weakTopic.answers) || 0);
   if (q <= 0) return "";
 
+  // topicLabelFn (topicLabelHe) already returns only the Hebrew topic name
+  // (no subject prefix), so no stripping is needed here. If no Hebrew label
+  // can be resolved, never fall back to the raw internal topicKey (English) —
+  // suppress this insight line instead (safe fallback, no technical leak).
   const topicLine = topicLabelFn(weakTopic.subject, topicKey);
-  const topicName = String(topicLine || "").replace(/^[^\s]+\s*/, "").trim() || topicKey;
+  const topicName = String(topicLine || "").trim();
+  if (!topicName) return "";
   const acc = Math.round(Number(weakTopic.accuracy) || 0);
   const c = Math.round((q * acc) / 100);
   const w = Math.max(0, q - c);

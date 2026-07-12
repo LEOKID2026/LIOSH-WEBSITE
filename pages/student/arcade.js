@@ -26,16 +26,9 @@ import {
   ARCADE_TILE_BADGE_ACTIVE,
   ARCADE_TILE_BADGE_INACTIVE,
 } from "../../components/arcade/club/arcadeGameTileThemes.js";
+import { displayArcadeGameTitle } from "../../components/arcade/club/arcadeGameTitles.he.js";
 
 const POLL_MS = 5000;
-
-/** @param {string} [gameKey] @param {string} [fallback] */
-function displayArcadeGameTitle(gameKey, fallback = "") {
-  const key = String(gameKey || "").trim().toLowerCase();
-  if (key === "fourline") return "ארבע בשורה";
-  if (key === "ludo") return "לודו";
-  return fallback || gameKey || "";
-}
 
 /** חדרים ציבוריים לריענון רשימה */
 const OPEN_ROOM_POLL_KEYS = [

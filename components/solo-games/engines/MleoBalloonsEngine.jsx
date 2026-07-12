@@ -423,7 +423,7 @@ export default function MleoBalloonsEngine({ autoStart = false, onSessionEnd }) 
             {" · "}
             <span>פספוסים: {misses}</span>
             {" · "}
-            <span>{timeLeft}s</span>
+            <span>{timeLeft} שנ׳</span>
           </div>
 
           <div

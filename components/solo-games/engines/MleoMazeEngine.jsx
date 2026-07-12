@@ -548,7 +548,7 @@ export default function MleoMazeEngine({
           <div className="pointer-events-none absolute left-1/2 top-1.5 z-[80] w-[98vw] max-w-lg -translate-x-1/2 rounded-xl border border-yellow-400/30 bg-black/70 px-2 py-2 text-center text-xs font-bold leading-relaxed sm:text-sm md:top-0">
             <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5">
               <span className="text-amber-300">ניקוד: {score}</span>
-              <span>⏱ {timeLeft}s</span>
+              <span>⏱ {timeLeft} שנ׳</span>
               <span className="text-emerald-300">מבוכים: {mazesCompleted}</span>
             </div>
             <div className="mt-0.5 flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5 text-[11px] sm:text-xs">

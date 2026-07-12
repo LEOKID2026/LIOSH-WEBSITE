@@ -611,7 +611,7 @@ export default function LeoSupermarketGame({
         {phase === "play" ? (
           <div className={`${styles.hud} ${styles.hudPlaySingle}`}>
             <span className={`${styles.hudChip} ${styles.hudTime} ${timeLeft <= 8 ? styles.hudTimeWarn : ""}`}>
-              ⏱ {timeLeft}s
+              ⏱ {timeLeft} שנ׳
             </span>
             <span className={styles.hudChip}>
               👤 {customerIndex + 1}/{CUSTOMERS_PER_LEVEL}

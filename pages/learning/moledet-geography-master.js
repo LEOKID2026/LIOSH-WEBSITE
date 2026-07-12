@@ -2419,7 +2419,9 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
   };
 
   const getOperationName = (op) => {
-    return TOPICS[op]?.name || op;
+    // Never fall back to the raw internal English key — show a safe generic
+    // Hebrew label instead if the topic has no Hebrew name mapped.
+    return TOPICS[op]?.name || "נושא";
   };
 
   const profileSnap = getCachedStudentLearningProfile();

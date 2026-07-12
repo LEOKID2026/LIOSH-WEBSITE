@@ -99,10 +99,12 @@ function makeClassifiedAnswer(sessionId, subject, topic, isCorrect, isDiagnostic
 
 describe("Phase 5 — dwell policy thresholds", () => {
   test("approved threshold constants", () => {
+    // Policy update: no per-page 10-cap and no per-visit/session cap — only an overall
+    // 3h sanity ceiling remains (see lib/learning/book-dwell-policy.js header comment).
     assert.equal(VIEW_THRESHOLD_MS, 2_000);
     assert.equal(PAGE_READ_THRESHOLD_MS, 10_000);
-    assert.equal(PAGE_CREDIT_CAP_MS, 600_000);
-    assert.equal(SESSION_CREDIT_CAP_MS, 3_600_000);
+    assert.equal(PAGE_CREDIT_CAP_MS, null);
+    assert.equal(SESSION_CREDIT_CAP_MS, 10_800_000);
   });
 
   test("section viewed at 2s, not at 1999ms", () => {
@@ -115,18 +117,21 @@ describe("Phase 5 — dwell policy thresholds", () => {
     assert.equal(isPageRead(10_000), true);
   });
 
-  test("raw preserved when credited capped", () => {
-    const raw = 900_000;
+  test("raw dwell fully credited (no page 10-cap); only the 3h sanity ceiling clamps", () => {
+    const raw = 900_000; // 15 minutes — well under the 3h sanity ceiling
     const hidden = 0;
     const credited = computePageCreditedDwellMs(raw, hidden);
-    assert.equal(credited, PAGE_CREDIT_CAP_MS);
-    assert.equal(raw, 900_000, "raw input unchanged by credit function");
-    assert.ok(credited < raw);
+    assert.equal(credited, raw, "no per-page cap — full dwell credited");
+
+    const rawOverSanityCeiling = 12_000_000; // over 3h
+    const creditedOverSanityCeiling = computePageCreditedDwellMs(rawOverSanityCeiling, 0);
+    assert.equal(creditedOverSanityCeiling, SESSION_CREDIT_CAP_MS, "3h sanity ceiling still applies");
   });
 
-  test("session credit cap applies to summed page credits", () => {
-    assert.equal(applySessionCreditCap(4_000_000), SESSION_CREDIT_CAP_MS);
-    assert.equal(applyPageCreditCap(700_000), PAGE_CREDIT_CAP_MS);
+  test("session credit cap applies only above the 3h sanity ceiling", () => {
+    assert.equal(applySessionCreditCap(4_000_000), 4_000_000, "under 3h ceiling — unchanged");
+    assert.equal(applySessionCreditCap(12_000_000), SESSION_CREDIT_CAP_MS, "over 3h ceiling — clamped");
+    assert.equal(applyPageCreditCap(700_000), 700_000, "no per-page 10-cap");
   });
 
   test("visible dwell subtracts hidden tab time", () => {
@@ -452,10 +457,12 @@ describe("Phase 5 — book-events server", () => {
 // ── coins boundary regression ────────────────────────────────────────────────
 
 describe("Phase 5 — monthly persistence unchanged", () => {
-  test("monthly-persistence-reward queries learning_sessions only", () => {
+  test("monthly-persistence-reward delegates to the unified learning-credit aggregate (now includes books, by design)", () => {
     const path = join(__dirname, "../../lib/learning-supabase/monthly-persistence-reward.server.js");
     const src = readFileSync(path, "utf8");
-    assert.match(src, /learning_sessions/);
-    assert.doesNotMatch(src, /book_reading_sessions|book_page_visits/);
+    // Policy update: monthly persistence now shares the single source of truth used by
+    // parent reports (sumStudentLearningCreditedMinutesInIsraelMonth), which itself already
+    // includes book reading time. This file no longer queries learning_sessions directly.
+    assert.match(src, /sumStudentLearningCreditedMinutesInIsraelMonth/);
   });
 });

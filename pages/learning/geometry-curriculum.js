@@ -31,7 +31,7 @@ export default function GeometryCurriculum() {
   };
 
   const getTopicName = (topicKey) => {
-    return TOPICS[topicKey]?.name || topicKey;
+    return TOPICS[topicKey]?.name || "נושא";
   };
 
   const shapeNames = {

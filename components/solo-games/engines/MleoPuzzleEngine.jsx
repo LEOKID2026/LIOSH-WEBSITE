@@ -325,7 +325,7 @@ export default function MleoPuzzleEngine({
             ) : null}
 
             <div className="z-10 flex shrink-0 items-center justify-center gap-3 py-2 text-base font-bold max-lg:gap-2 max-lg:py-1 sm:text-lg">
-              <div className="rounded bg-black/60 px-3 py-1">⏳ {time}s</div>
+              <div className="rounded bg-black/60 px-3 py-1">⏳ {time} שנ׳</div>
               <div className="rounded bg-black/60 px-3 py-1">⭐ {score}</div>
             </div>
 

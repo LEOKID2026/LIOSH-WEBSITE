@@ -4,6 +4,7 @@ import {
   getAuthenticatedStudentSession,
 } from "../../../../lib/learning-supabase/student-auth";
 import { runStudentHomeAchievementGrants } from "../../../../lib/learning-supabase/student-home-profile-load.server.js";
+import { guardCookieMutationOrigin } from "../../../../lib/security/api-guards.js";
 
 export default async function handler(req, res) {
   res.setHeader("Cache-Control", "private, no-store, no-cache, must-revalidate");
@@ -14,6 +15,8 @@ export default async function handler(req, res) {
   if (req.method !== "GET" && req.method !== "POST") {
     return res.status(405).json({ ok: false, error: "Method not allowed" });
   }
+
+  if (guardCookieMutationOrigin(req, res)) return;
 
   try {
     const auth = await getAuthenticatedStudentSession(req);

@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { displayArcadeGameTitle } from "./arcadeGameTitles.he.js";
 
 /** @param {{ invite: object|null, onDismiss?: () => void, className?: string }} props */
 export default function ArcadeInviteBanner({ invite, onDismiss, className = "" }) {
@@ -42,7 +43,7 @@ export default function ArcadeInviteBanner({ invite, onDismiss, className = "" }
   return (
     <div className={`rounded-xl border border-sky-400/35 bg-sky-500/10 p-3 text-right ${className}`} dir="rtl">
       <p className="text-sm font-semibold text-sky-100">
-        {invite.fromDisplayName || "חבר"} מזמין אותך ל{invite.gameKey ? ` ${invite.gameKey}` : " משחק"}
+        {invite.fromDisplayName || "חבר"} מזמין אותך ל{invite.gameKey ? ` ${displayArcadeGameTitle(invite.gameKey)}` : " משחק"}
       </p>
       <div className="mt-2 flex flex-wrap gap-2 justify-end">
         <button type="button" disabled={busy} onClick={() => void respond(true)} className="rounded-lg bg-emerald-500 px-3 py-1 text-sm font-bold text-black">

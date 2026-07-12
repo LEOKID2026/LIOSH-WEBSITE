@@ -407,7 +407,7 @@ export default function MleoTargetTapEngine({
             {" · "}
             <span>טעויות: {misses}</span>
             {" · "}
-            <span>{timeLeft}s</span>
+            <span>{timeLeft} שנ׳</span>
           </div>
 
           <div

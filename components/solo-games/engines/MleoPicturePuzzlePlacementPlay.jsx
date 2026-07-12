@@ -540,7 +540,7 @@ export default function MleoPicturePuzzlePlacementPlay({
 
         {" · "}
 
-        <span>{timeLeft}s</span>
+        <span>{timeLeft} שנ׳</span>
 
         {" · "}
 

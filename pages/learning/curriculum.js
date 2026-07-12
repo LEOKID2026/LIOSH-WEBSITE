@@ -342,7 +342,7 @@ export default function Curriculum() {
               <div className="bg-white/10 border border-white/15 p-4 rounded-lg mb-6 text-sm text-white/85">
                 <strong>נושאים זמינים בדף המולדת:</strong>{" "}
                 {["homeland", "community", "citizenship", "values", "mixed"]
-                  .map((k) => MOLEDET_GEO_TOPICS[k]?.name || k)
+                  .map((k) => MOLEDET_GEO_TOPICS[k]?.name || "נושא")
                   .join(" · ")}
               </div>
               {moledetGrades.map((grade) => (
@@ -435,7 +435,7 @@ export default function Curriculum() {
               <div className="bg-white/10 border border-white/15 p-4 rounded-lg mb-6 text-sm text-white/85">
                 <strong>נושאים זמינים בדף הגאוגרפיה:</strong>{" "}
                 {["geography", "maps", "mixed"]
-                  .map((k) => MOLEDET_GEO_TOPICS[k]?.name || k)
+                  .map((k) => MOLEDET_GEO_TOPICS[k]?.name || "נושא")
                   .join(" · ")}
               </div>
               {geographySubjectGrades.map((grade) => (
@@ -685,7 +685,7 @@ export default function Curriculum() {
                         return (
                           <li key={tk}>
                             <span className="font-semibold">
-                              {GEOMETRY_TOPIC_META[tk]?.name || tk}
+                              {GEOMETRY_TOPIC_META[tk]?.name || "נושא"}
                             </span>
                             {desc ? (
                               <span className="text-white/85"> — {desc}</span>
@@ -699,12 +699,12 @@ export default function Curriculum() {
                       <div className="text-sm space-y-1">
                         {topics.map((tk) => {
                           const shapes = (TOPIC_SHAPES[tk]?.[gk] || [])
-                            .map((s) => GEOMETRY_SHAPE_NAMES[s] || s)
+                            .map((s) => GEOMETRY_SHAPE_NAMES[s] || "צורה")
                             .join(", ");
                           if (!shapes) return null;
                           return (
                             <div key={`${gk}-${tk}`}>
-                              <strong>{GEOMETRY_TOPIC_META[tk]?.name || tk}:</strong> {shapes}
+                              <strong>{GEOMETRY_TOPIC_META[tk]?.name || "נושא"}:</strong> {shapes}
                             </div>
                           );
                         })}

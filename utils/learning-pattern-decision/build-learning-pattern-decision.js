@@ -202,14 +202,22 @@ export function buildLearningPatternDecision({
   const fallbackHasRepeatedPattern =
     !!fallbackFinding && /מופיע דפוס חוזר/u.test(String(fallbackFinding));
 
-  const parentVisibleFindingFinal = engineDecisionContract.detectedPattern
-    ? engineDecisionContract.parentSafeFinding
-    : fallbackHasRepeatedPattern
+  // competitiveBucketOnly (all mistakes are in a "speed"/competitive context) must keep that
+  // context in the parent-facing text — the engine's own parentSafeFinding is not aware of
+  // this LPD-level signal, so it must not win over the competitive-aware fallback text.
+  const parentVisibleFindingFinal =
+    competitiveBucketOnly && fallbackFinding
       ? fallbackFinding
-      : engineFindingWins
+      : engineDecisionContract.detectedPattern
         ? engineDecisionContract.parentSafeFinding
-        : fallbackFinding || engineDecisionContract.parentSafeFinding;
-  if (engineDecisionContract.detectedPattern && engineDecisionContract.parentSafeFinding) {
+        : fallbackHasRepeatedPattern
+          ? fallbackFinding
+          : engineFindingWins
+            ? engineDecisionContract.parentSafeFinding
+            : fallbackFinding || engineDecisionContract.parentSafeFinding;
+  if (competitiveBucketOnly && fallbackFinding) {
+    trace.push("parentVisibleFinding:competitive_bucket_only");
+  } else if (engineDecisionContract.detectedPattern && engineDecisionContract.parentSafeFinding) {
     trace.push("parentVisibleFinding:engine_pattern");
   } else if (fallbackHasRepeatedPattern) {
     trace.push("parentVisibleFinding:aggregation_pattern");

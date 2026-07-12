@@ -23,11 +23,14 @@ export default async function handler(req, res) {
     .maybeSingle();
 
   if (roomPreview?.game_key) {
+    // Joining an existing room is not "creating" a room — it must only be gated by the
+    // per-game guest access check (assertArcadePlayAccess with no featureKey), not by the
+    // Admin "room_public_create" toggle. Otherwise an Admin disabling public room *creation*
+    // would accidentally also block guests from *joining* rooms others already created.
     const access = await assertArcadePlayAccess(
       auth.supabase,
       auth.studentId,
       roomPreview.game_key,
-      { featureKey: "room_public_create" }
     );
     if (!access.ok) {
       return res.status(access.status || 403).json({

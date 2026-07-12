@@ -2,7 +2,7 @@
   "id": "/pwa-teacher",
   "name": "T LEO KIDS",
   "short_name": "T LEO KIDS",
-  "description": "Teacher portal for LEO KIDS — manage classes, students, and school activities.",
+  "description": "אזור המורים של LEO KIDS — לנהל כיתות, תלמידים ופעילויות בית ספר.",
   "start_url": "/teacher/login",
   "display": "standalone",
   "background_color": "#1e1b4b",

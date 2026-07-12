@@ -107,7 +107,7 @@ export default function MleoPicturePuzzleSlidingPlay({
         {" · "}
         <span>מהלכים: {moves}</span>
         {" · "}
-        <span>{timeLeft}s</span>
+        <span>{timeLeft} שנ׳</span>
         {" · "}
         <span>{gridSize}×{gridSize}</span>
       </div>

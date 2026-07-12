@@ -13,6 +13,7 @@ import {
   LEGACY_TOPIC_ATTENTION_INSIGHT_DISABLED,
 } from "../../utils/learning-pattern-decision/index.js";
 import { topicAttentionInsightHe } from "../../utils/parent-report-language/parent-report-hebrew-copy-spec.js";
+import { subjectLabelHe, topicLabelHe } from "../../lib/teacher-portal/teacher-ui.he.js";
 
 const START = Date.UTC(2026, 3, 1);
 
@@ -145,6 +146,38 @@ function mkMistakes(subject, topic, n, patternFamily = "pf:same") {
     endMs: START + 1,
   });
   assert.equal(lpd.findingType, "initial_topic_data");
+}
+
+/**
+ * F — single-word Hebrew topic labels via the REAL topicLabelHe (not a mock) must never
+ * regress to the raw English topicKey (regression guard for the "fractions" leak bug).
+ */
+{
+  const singleWordTopics = [
+    { topicKey: "fractions", hebrew: "שברים" },
+    { topicKey: "addition", hebrew: "חיבור" },
+    { topicKey: "subtraction", hebrew: "חיסור" },
+    { topicKey: "multiplication", hebrew: "כפל" },
+    { topicKey: "percentages", hebrew: "אחוזים" },
+  ];
+  for (const { topicKey, hebrew } of singleWordTopics) {
+    const payload = hedgedPayload({ subject: "math", topic: topicKey, q: 8, acc: 40 });
+    const line = buildLpdSafeTopicInsightFromWeakTopic(
+      payload,
+      { subject: "math", topicKey, answers: 8, accuracy: 40 },
+      topicLabelHe,
+      subjectLabelHe,
+    );
+    assert.ok(line.length > 0, `expected a non-empty insight line for topic "${topicKey}"`);
+    assert.ok(
+      line.includes(hebrew),
+      `expected Hebrew label "${hebrew}" in line for topic "${topicKey}", got: ${line}`,
+    );
+    assert.ok(
+      !line.includes(topicKey),
+      `raw English topic key "${topicKey}" leaked into parent-facing line: ${line}`,
+    );
+  }
 }
 
 console.log("server-parent-facing-lpd.test.mjs — all passed");

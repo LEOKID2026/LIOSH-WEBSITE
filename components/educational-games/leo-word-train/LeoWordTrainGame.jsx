@@ -387,7 +387,7 @@ export default function LeoWordTrainGame({
               ❌ {mistakes}/{diffConfig.maxMistakes}
             </span>
             <span className={`${frame.hudChip} ${styles.hudTime} ${timeLeft <= 8 ? styles.hudTimeWarn : ""}`}>
-              ⏱ {timeLeft}s
+              ⏱ {timeLeft} שנ׳
             </span>
           </div>
         ) : (

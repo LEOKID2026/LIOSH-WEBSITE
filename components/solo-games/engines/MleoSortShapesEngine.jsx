@@ -407,7 +407,7 @@ export default function MleoSortShapesEngine({
                 { label: "ניקוד", value: score, accent: "text-amber-300" },
                 { label: "ממוין", value: `${sortedCount}/${settings.itemCount}` },
                 { label: "חיים", value: "❤️".repeat(Math.max(0, lives)) },
-                { label: "זמן", value: `${timeLeft}s` },
+                { label: "זמן", value: `${timeLeft} שנ׳` },
               ]}
             />
           </div>

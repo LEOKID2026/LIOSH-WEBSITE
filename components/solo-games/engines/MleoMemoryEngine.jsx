@@ -404,7 +404,7 @@ export default function MleoMemoryEngine({
                   style={{ width: `${(time / difficultySettings[difficulty].time) * 100}%` }}
                 />
               </div>
-              <div className="rounded-lg bg-black/60 px-2 py-1 text-sm font-bold">⏳ {time}s</div>
+              <div className="rounded-lg bg-black/60 px-2 py-1 text-sm font-bold">⏳ {time} שנ׳</div>
               <div className="rounded-lg bg-black/60 px-2 py-1 text-sm font-bold">⭐ {score}</div>
             </div>
           ) : null}
