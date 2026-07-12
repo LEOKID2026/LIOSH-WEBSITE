@@ -7,6 +7,7 @@ import { subjectLabelHe } from "../../lib/teacher-portal/teacher-ui.he.js";
 import { TAXONOMY_BY_ID } from "../diagnostic-engine-v2/taxonomy-registry.js";
 import { resolveGradeAwareParentRecommendationHe } from "./grade-aware-recommendation-resolver.js";
 import { splitTopicRowKey } from "../parent-report-row-diagnostics.js";
+import { buildSpeedPressurePatternFindingHe } from "../learning-pattern-decision/normalize-parent-practice-metrics.js";
 
 /** Home actions by taxonomy id — editorial parent copy, not engine logic. */
 const HOME_ACTION_BY_TAXONOMY_ID = Object.freeze({
@@ -257,11 +258,9 @@ function buildDiagnosticBodyByDecision(p) {
   }
 
   if (decision === "speed_pressure_pattern") {
-    return (
-      `ב${subj} בנושא ${topic} חלק מהטעויות נראות קשורות למהירות. ` +
-      `הילד פתר ${q} שאלות בדיוק של ${acc}%. ` +
-      "כדאי לבדוק אם הילד יודע את החומר גם כשהוא עוצר לרגע ובודק את עצמו."
-    );
+    // Product-owner-approved wording — single source shared with
+    // build-parent-report-engine-decision-contract.js (buildParentSafeFindingFromEngine).
+    return buildSpeedPressurePatternFindingHe({ topicName: topic, wrong: p.wrong, questions: q, accuracy: acc });
   }
 
   return (
@@ -307,6 +306,7 @@ function buildHomeActionTextHe(p) {
  * @param {string} [p.topicKey]
  * @param {number} [p.q]
  * @param {number} [p.acc]
+ * @param {number} [p.wrong]
  * @param {string|null} [p.gradeKey]
  * @param {Record<string, unknown>|null} [p.topicEngineRowSignals]
  */
@@ -363,6 +363,7 @@ export function buildEngineDecisionParentTopicCopyHe(p) {
     topic,
     q,
     acc,
+    wrong: p.wrong,
     engineDecision,
     subskillHe,
     homeAction,
@@ -372,7 +373,10 @@ export function buildEngineDecisionParentTopicCopyHe(p) {
   const homeActionText = buildHomeActionTextHe(copyCtx);
   const actionHe = homeActionText ? `מה כדאי לעשות ביחד: ${homeActionText}` : "";
 
-  const modeContextHe = competitiveModeContextHe(sig);
+  // speed_pressure_pattern's diagnosticBody already IS the single canonical
+  // sentence (incl. the untimed-practice check) — do not append a second,
+  // duplicate speed remark for the same decision on the same surface.
+  const modeContextHe = engineDecision === "speed_pressure_pattern" ? "" : competitiveModeContextHe(sig);
   const dataHe = `הילד פתר ${q} שאלות בדיוק של ${acc}%.`;
 
   let summaryHe = diagnosticBody;
@@ -415,7 +419,13 @@ export function buildExplainIdentifiedLineHe(engineCopy, label) {
     case "deferred_topic_only":
       return `מה רואים: תמונה כללית בנושא ${t}.`;
     case "speed_pressure_pattern":
-      return `מה רואים: חלק מהטעויות קשורות למהירות בנושא ${t}.`;
+      // No second sentence for this decision on the same surface: the canonical
+      // buildSpeedPressurePatternFindingHe text already appears once (via
+      // engineCopy.whyHe/meaning). Also — there is no evidence that the mistakes are
+      // CAUSED BY speed ("קשורות למהירות"); the only proven fact is that they occurred
+      // during fast/timed practice, which the canonical sentence already states without
+      // overclaiming causation. Return empty so this line never renders.
+      return "";
     default:
       return `מה רואים: מיקוד בנושא ${t}.`;
   }
@@ -437,6 +447,7 @@ export function buildEngineDecisionInsightLineHe(row) {
     topicKey: row.topicKey,
     q: row.questions,
     acc: row.accuracy,
+    wrong: row.wrong,
     gradeKey: row.gradeKey,
     topicEngineRowSignals: row.topicEngineRowSignals,
   });

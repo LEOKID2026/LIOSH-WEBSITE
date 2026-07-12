@@ -153,8 +153,12 @@ describe("parent report step-by-step parent totals e2e (Aaa7 regression)", () =>
     assert.notEqual(lpd.topicStatus, "initial_data");
     assert.notEqual(lpd.findingType, "initial_topic_data");
     assert.notEqual(lpd.findingType, "no_clear_pattern");
-    assert.match(String(lpd.parentVisibleFinding), /שגויות/);
-    assert.match(String(lpd.parentVisibleFinding), /8 שגויות מתוך 10 שאלות/);
+    // Wording updated: "שגויות" (a bare adjective with no noun — not standalone-grammatical
+    // Hebrew) was replaced with "שגיאות" (mistakes, a proper noun) in formatWrongOfQuestionsTextHe
+    // per an explicit product-owner-mandated grammar fix. Old expectation asserted the
+    // ungrammatical form; updated to match the corrected, currently-shipped wording.
+    assert.match(String(lpd.parentVisibleFinding), /שגיאות/);
+    assert.match(String(lpd.parentVisibleFinding), /8 שגיאות מתוך 10 שאלות/);
 
     const subjectLine = withholdSummaryCopyHe("subject", {
       subjectReportQuestions: 10,

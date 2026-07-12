@@ -22,6 +22,7 @@ import { parentReportOwnerTopicCopyTemplatesHe } from "./parent-report-owner-top
  *   recommendedSubjectAction: string,
  *   priorityTopic0: OwnerPriorityTopicSlots,
  *   priorityTopic1: OwnerPriorityTopicSlots,
+ *   prioritySpeedTopic0: OwnerPriorityTopicSlots,
  * }} SubjectOwnerCopySlots */
 
 export const SUBJECT_OWNER_COPY_TEMPLATE_IDS = Object.freeze({
@@ -71,12 +72,14 @@ export function buildSubjectOwnerCopySlots(contract, subjectLabelHe = "") {
   if (!contract || typeof contract !== "object") return null;
   const p0 = buildPriorityTopicSlot(contract.priorityTopics?.[0]);
   const p1 = buildPriorityTopicSlot(contract.priorityTopics?.[1]);
+  const speedTopic0 = buildPriorityTopicSlot(contract.prioritySpeedTopic);
   return {
     subjectName: str(subjectLabelHe || contract.subjectLabelKey),
     subjectDecision: str(contract.subjectDecision),
     recommendedSubjectAction: str(contract.recommendedSubjectAction),
     priorityTopic0: p0,
     priorityTopic1: p1,
+    prioritySpeedTopic0: speedTopic0,
   };
 }
 
@@ -84,8 +87,31 @@ export function buildSubjectOwnerCopySlots(contract, subjectLabelHe = "") {
 function renderSubjectOpeningPriorityTopic0(slots) {
   const sn = slots.subjectName;
   const t0 = slots.priorityTopic0;
+
+  // speed_check_only_subject has NO actionable gap topic (t0 is always null for it —
+  // enforced upstream: gaps.length===0 && stable.length===0 && speedCheckTopics.length>=1).
+  // Uses its own dedicated slot (prioritySpeedTopic0) so this branch never depends on t0.
+  // Product-owner-approved wording — must not claim a knowledge gap, must not say "נושא
+  // אחד" (the sentence just names the single highest-priority speed-check topic, per the
+  // existing priority order, without counting them).
+  if (slots.subjectDecision === "speed_check_only_subject") {
+    const speedTopic = slots.prioritySpeedTopic0;
+    if (!speedTopic || !sn) return "";
+    return `ב${sn} עדיין נדרש לבדוק את הביצוע ללא הגבלת זמן. בנושא ${speedTopic.topicName} הטעויות הופיעו בתרגול מהיר, ולכן עדיין מוקדם לקבוע אם נדרש חיזוק בידע.`;
+  }
+
   if (!t0 || !sn) return "";
 
+  // mixed_subject_profile ALWAYS describes exactly one topic needing strengthening
+  // (gaps.length === 1 && stable.length >= 1 — enforced upstream in
+  // build-subject-engine-decision-contract.js). Product-owner-approved wording — must
+  // never say "כמה נושאים" (several topics), since only one topic is a gap here. Also
+  // uses "בחלק מהנושאים" (in some of the topics) rather than "נושאים שבהם" (topics
+  // where...), which was imprecise when stable.length===1 (a single stable topic is
+  // not "topics", plural).
+  if (slots.subjectDecision === "mixed_subject_profile") {
+    return `ב${sn} נראית יציבות בחלק מהנושאים, ולצדה נושא אחד שכדאי לחזק. מומלץ להתחיל ב${t0.topicName}.`;
+  }
   if (slots.subjectDecision === "multiple_topic_gaps") {
     if (hasPattern(t0)) {
       return `ב${sn} בולטים כמה נושאים שדורשים חיזוק. הנושא הראשון הוא ${t0.topicName}: נפתרו ${t0.questions} שאלות, הדיוק עומד על ${t0.accuracy}%, וזוהה דפוס שחוזר בטעויות: ${t0.detectedPattern}. לכן כדאי להתחיל ממנו.`;

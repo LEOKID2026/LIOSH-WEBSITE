@@ -378,6 +378,14 @@ function buildSubjectHomeLineHe(sp, lab) {
     }
   }
 
+  // Same legacy-blocking guard as buildSubjectDiagnosisLineHe/buildSubjectClosingLineHe:
+  // once the engine contract has blocked the legacy summary, an unmatched home-action
+  // template must render empty — never fall through to the engine-unaware legacy fields
+  // below (sp.recommendedHomeMethodHe / subjectImmediateActionHe / parentActionHe), which
+  // have no awareness of decisions like speed_check_only_subject and could reintroduce a
+  // knowledge-gap-flavored recommendation for a topic that was only flagged for speed.
+  if (contract?.blockedLegacySummary) return "";
+
   const homeDiag = sp?.recommendedHomeMethodHe && String(sp.recommendedHomeMethodHe).trim();
   if (homeDiag) return stripGuillemetsHe(rewriteParentRecommendationForDetailedHe(homeDiag));
   const imm = sp?.subjectImmediateActionHe && String(sp.subjectImmediateActionHe).trim();

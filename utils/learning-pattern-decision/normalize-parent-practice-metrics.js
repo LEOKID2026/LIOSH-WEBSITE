@@ -213,25 +213,68 @@ export function normalizeParentVisibleMetrics(raw = {}, unit = null) {
 }
 
 /**
+ * Public Hebrew count-pluralization helpers — single source of truth for
+ * "N שאלות/תשובות" style phrases anywhere in the parent report engine or
+ * renderers. Every surface MUST reuse these instead of inline `${q} שאלות`
+ * interpolation, which breaks Hebrew grammar at q=1 / wrong=1 ("1 שאלות").
  * @param {ParentVisibleMetrics} metrics
  * @param {string} topicName
  */
-function formatQuestionsTextHe(n) {
+export function formatQuestionsTextHe(n) {
   const q = Math.max(0, Math.round(Number(n) || 0));
   if (q === 1) return "שאלה אחת";
   return `${q} שאלות`;
 }
 
-function formatCorrectTextHe(n) {
+export function formatCorrectTextHe(n) {
   const c = Math.max(0, Math.round(Number(n) || 0));
   if (c === 1) return "תשובה אחת נכונה";
   return `${c} תשובות נכונות`;
 }
 
-function formatWrongTextHe(n) {
+export function formatWrongTextHe(n) {
   const w = Math.max(0, Math.round(Number(n) || 0));
   if (w === 1) return "תשובה אחת שגויה";
   return `${w} תשובות שגויות`;
+}
+
+/**
+ * "N שגיאות מתוך M שאלות" style phrase used by engine-decision copy.
+ * Uses "שגיאה/שגיאות" (mistake/mistakes), not "שגויה/שגויות" (wrong-fem.
+ * adjective without a noun, which is not standalone-grammatical in Hebrew).
+ * Does not touch the unrelated, pre-existing `formatWrongTextHe` wording
+ * ("תשובה שגויה" / "תשובות שגויות"), which is untouched by this fix.
+ */
+export function formatWrongOfQuestionsTextHe(w, q) {
+  const wrong = Math.max(0, Math.round(Number(w) || 0));
+  const questions = Math.max(0, Math.round(Number(q) || 0));
+  const wrongText = wrong === 1 ? "שגיאה אחת" : `${wrong} שגיאות`;
+  return `${wrongText} מתוך ${formatQuestionsTextHe(questions)}`;
+}
+
+/** "פתר N שאלות" style phrase (verb-first) used by topic-decision copy. */
+export function formatSolvedQuestionsTextHe(n) {
+  const q = Math.max(0, Math.round(Number(n) || 0));
+  if (q === 1) return "פתר שאלה אחת";
+  return `פתר ${q} שאלות`;
+}
+
+/**
+ * SINGLE canonical parent-facing sentence for the `speed_pressure_pattern` engine
+ * decision. Every surface that renders this decisionKey MUST call this function
+ * instead of writing its own wording (product-owner-approved copy — do not edit
+ * without explicit approval). This decision must never be presented as proof that
+ * the problem is speed, nor as proof of a knowledge gap — it only flags a pattern
+ * worth double-checking without a time limit.
+ * @param {{ topicName: string, wrong: number, questions: number, accuracy: number }} p
+ */
+export function buildSpeedPressurePatternFindingHe({ topicName, wrong, questions, accuracy }) {
+  const name = String(topicName || "הנושא").trim() || "הנושא";
+  const acc = Math.max(0, Math.min(100, Math.round(Number(accuracy) || 0)));
+  return (
+    `בנושא ${name}, בתרגול המהיר נרשמו ${formatWrongOfQuestionsTextHe(wrong, questions)} (${acc}% דיוק). ` +
+    "כדאי לבדוק את הנושא גם בתרגול ללא הגבלת זמן, לפני שמחליטים אם נדרש חיזוק בידע."
+  );
 }
 
 function hasReliableAccuracyHe(metrics) {

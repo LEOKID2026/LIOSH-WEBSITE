@@ -184,7 +184,9 @@ export function withholdSummaryCopyHe(mode, ctx) {
     return thinLine;
   }
 
-  return "אין מספיק מה שרואים בשורות בשלב זה.";
+  // Grammar fix (was: "אין מספיק מה שרואים בשורות בשלב זה." — broken Hebrew syntax).
+  // Meaning preserved exactly: not enough evidence yet to draw a conclusion at this stage.
+  return "עדיין אין מספיק נתונים בשלב זה כדי לקבוע תמונה ברורה.";
 }
 
 /**

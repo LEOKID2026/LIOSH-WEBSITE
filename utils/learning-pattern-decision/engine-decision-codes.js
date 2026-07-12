@@ -23,6 +23,8 @@ export const ED_EARLY_DIRECTION_ONLY = "early_direction_only";
 export const ED_INSUFFICIENT_DATA = "insufficient_data";
 export const ED_NONE = "none";
 export const ED_MASTERY_STABLE = "mastery_stable";
+/** Speed-driven mistakes on otherwise-adequate evidence — distinct from a knowledge gap. */
+export const ED_SPEED_PRESSURE_PATTERN = "speed_pressure_pattern";
 
 /** Recommended action codes */
 export const RA_REMEDIATE_SAME_LEVEL = "remediate_same_level";
@@ -43,6 +45,8 @@ export const ENGINE_DECISION_RANK = Object.freeze({
   [ED_CLEAR_TOPIC_GAP]: 4,
   [ED_TOPIC_NEEDS_STRENGTHENING]: 3,
   [ED_PARTIAL_STABLE]: 2,
+  // Not a knowledge gap — must never rank the same as topic_needs_strengthening.
+  [ED_SPEED_PRESSURE_PATTERN]: 1,
   [ED_EARLY_DIRECTION_ONLY]: 1,
   [ED_INSUFFICIENT_DATA]: 0,
   [ED_NONE]: 0,

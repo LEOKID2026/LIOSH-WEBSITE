@@ -10,6 +10,10 @@ const ENGINE_DECISION_RANK = {
   clear_topic_gap: 4,
   topic_needs_strengthening: 3,
   partial_stable: 2,
+  // speed_pressure_pattern is NOT a knowledge gap — it must never rank the same as
+  // topic_needs_strengthening. It is tracked separately (see speedCheckTopics below)
+  // and excluded from isActionableGapTopic / actionableCandidates entirely.
+  speed_pressure_pattern: 1,
   early_direction_only: 1,
   insufficient_data: 0,
   none: 0,
@@ -80,7 +84,12 @@ function extractTopicEngineContract(row) {
 function isActionableGapTopic(topic) {
   if (!topic?.parentSafeFinding) return false;
   const ed = String(topic.engineDecision || "");
-  if (ed !== "clear_topic_gap" && ed !== "topic_needs_strengthening") return false;
+  // speed_pressure_pattern is intentionally excluded: it is not a knowledge gap and
+  // must never count toward gaps.length or drive multiple_topic_gaps/
+  // focused_strengthening_needed. It is tracked separately as speedCheckTopics.
+  if (ed !== "clear_topic_gap" && ed !== "topic_needs_strengthening") {
+    return false;
+  }
   if (
     evidenceStrengthRank(String(topic.evidenceStrength || "none")) <
       evidenceStrengthRank("emerging") &&
@@ -97,21 +106,32 @@ function isActionableGapTopic(topic) {
 /**
  * @param {Record<string, unknown>[]} priorityTopics
  * @param {Record<string, unknown>[]} allTopics
+ * @param {number} [speedCheckTopicsCount] — count of speed_pressure_pattern-only topics
+ *   (not knowledge gaps — see isActionableGapTopic). Passed in explicitly so this
+ *   function stays a pure decision table over the three counts, per the product-approved
+ *   routing order.
  */
-function deriveSubjectDecision(priorityTopics, allTopics) {
+function deriveSubjectDecision(priorityTopics, allTopics, speedCheckTopicsCount = 0) {
   const gaps = priorityTopics.filter(isActionableGapTopic);
-  if (gaps.length >= 2) return "multiple_topic_gaps";
-  if (gaps.length === 1) return "focused_strengthening_needed";
-
   const stable = allTopics.filter(
     (t) =>
       String(t.engineDecision || "") === "partial_stable" ||
       String(t.recommendedAction || "") === "maintain" ||
       String(t.recommendedAction || "") === "maintain_and_strengthen",
   );
-  if (stable.length && gaps.length) return "mixed_subject_profile";
-  if (stable.length) return "subject_strength_stable";
-  if (!allTopics.length) return "insufficient_subject_data";
+
+  // Product-approved routing order (mixed_subject_profile only ever describes exactly
+  // ONE topic needing strengthening — its approved copy says "נושא אחד שכדאי לחזק" and
+  // must never be used when two or more topics have gaps). speed_check_only_subject is
+  // NOT a gap and NOT a strengthening decision — it only applies when there is nothing
+  // else to report except topic(s) flagged purely for a speed-mode check.
+  if (gaps.length >= 2) return "multiple_topic_gaps";
+  if (gaps.length === 1 && stable.length >= 1) return "mixed_subject_profile";
+  if (gaps.length === 1 && stable.length === 0) return "focused_strengthening_needed";
+  if (gaps.length === 0 && stable.length >= 1) return "subject_strength_stable";
+  if (gaps.length === 0 && stable.length === 0 && speedCheckTopicsCount >= 1) {
+    return "speed_check_only_subject";
+  }
   return "insufficient_subject_data";
 }
 
@@ -130,6 +150,10 @@ function deriveRecommendedSubjectAction(priorityTopics, subjectDecision) {
     return "remediate_priority_topics_same_level";
   }
   if (subjectDecision === "subject_strength_stable") return "maintain_current_level";
+  // Distinct from "insufficient_data_withhold": there IS real, sufficient practice data —
+  // it just isn't evidence of a knowledge gap. No template is registered for this action
+  // id, so home-action text stays empty rather than showing an invented recommendation.
+  if (subjectDecision === "speed_check_only_subject") return "verify_speed_only_before_deciding";
   return "insufficient_data_withhold";
 }
 
@@ -202,7 +226,18 @@ export function buildSubjectEngineDecisionContract(subjectId, topicRows = [], op
   const priorityTopics = priorityTopicsSorted.map(stripInternalRanks).slice(0, 5);
   const allTopicsClean = allExtracted.map(stripInternalRanks);
 
-  const subjectDecision = deriveSubjectDecision(priorityTopics, allTopicsClean);
+  // speed_pressure_pattern topics are NOT knowledge gaps: never merged into mainGaps,
+  // never counted toward gaps.length. Sorted with the same existing priority order as
+  // actionable gaps so that when several exist, the subject-level text names only the
+  // single highest-priority one (never "several topics").
+  const speedCandidates = allExtracted.filter(
+    (t) => t.parentSafeFinding && t.engineDecision === "speed_pressure_pattern",
+  );
+  const speedTopicsSorted = sortPriorityTopics(speedCandidates).map(stripInternalRanks);
+  const speedCheckTopics = speedTopicsSorted.map((t) => t.topicKey).filter(Boolean);
+  const prioritySpeedTopic = speedTopicsSorted[0] || null;
+
+  const subjectDecision = deriveSubjectDecision(priorityTopics, allTopicsClean, speedCheckTopics.length);
   traceReason.push(`subjectDecision:${subjectDecision}`);
 
   let evidenceStrength = "none";
@@ -230,13 +265,25 @@ export function buildSubjectEngineDecisionContract(subjectId, topicRows = [], op
   const recommendedSubjectAction = deriveRecommendedSubjectAction(priorityTopics, subjectDecision);
   traceReason.push(`recommendedSubjectAction:${recommendedSubjectAction}`);
 
-  const blockedLegacySummary = priorityTopics.some((t) => {
-    if (!isActionableGapTopic(t)) return false;
-    return (
-      evidenceStrengthRank(String(t.evidenceStrength || "none")) >=
-        evidenceStrengthRank("supported") || Number(t.questions) >= 20
-    );
-  });
+  const speedCheckEvidenceQualifies =
+    !!prioritySpeedTopic &&
+    (evidenceStrengthRank(String(prioritySpeedTopic.evidenceStrength || "none")) >=
+      evidenceStrengthRank("supported") ||
+      Number(prioritySpeedTopic.questions) >= 20);
+
+  // Blocks the legacy (engine-unaware) subject-summary/parent-letter fallback paths —
+  // e.g. findClearWeakTopicInSubject, which can otherwise declare "נקודת חיזוק ברורה"
+  // (a clear, definite knowledge gap) purely from accuracy/volume, with zero awareness
+  // that the only active decision here is speed_check_only_subject (not a proven gap).
+  const blockedLegacySummary =
+    priorityTopics.some((t) => {
+      if (!isActionableGapTopic(t)) return false;
+      return (
+        evidenceStrengthRank(String(t.evidenceStrength || "none")) >=
+          evidenceStrengthRank("supported") || Number(t.questions) >= 20
+      );
+    }) ||
+    (subjectDecision === "speed_check_only_subject" && speedCheckEvidenceQualifies);
 
   if (blockedLegacySummary) traceReason.push("blockedLegacySummary:true");
 
@@ -273,6 +320,8 @@ export function buildSubjectEngineDecisionContract(subjectId, topicRows = [], op
     strongestDetectedPatterns,
     mainGaps,
     stableStrengths,
+    speedCheckTopics,
+    prioritySpeedTopic,
     recommendedSubjectAction,
     blockedLegacySummary,
     traceReason,

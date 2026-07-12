@@ -209,10 +209,15 @@ function buildInterpretationSlot(envelope, cannotConcludeYet, seed, q = 0, acc =
       "יש כאן יציבות טובה יחסית בתוצאות; נמשיך לעודד ולבדוק מדי פעם שהכול נשמר.",
     ]);
   }
+  // Grammar/claims fix: the two removed variants asserted attention/fatigue/pressure
+  // ("קשב", "עייפות", "לחץ") with zero corresponding evidence input in this contract
+  // (no attention, fatigue, or pressure signal is computed anywhere above). Kept only
+  // the WE4 variant whose claim (stability over time) is actually backed by the q/acc
+  // evidence gate that produced this envelope.
   return pickVariant(seed, [
-    "יש כאן יציבות טובה יחסית, ובלי לאבד קשב לאורך זמן — נמשיך מדי פעם לבדוק שהכול נשאר רגוע גם תחת לחץ.",
-    "הדוח מצביע על ביצוע יציב יחסית בתקופה הזו, ונמשיך לבדוק מדי פעם שזה לא נשבר תחת עייפות או לחץ.",
     "ניכר כאן כיוון חזק יחסית; נמשיך באותו קצב ונוודא שההצלחה חוזרת לאורך זמן.",
+    "יש כאן יציבות טובה יחסית בתוצאות; נמשיך מדי פעם לבדוק שהכול נשמר גם בהמשך.",
+    "הדוח מצביע על ביצוע יציב יחסית בתקופה הזו, ונמשיך לעקוב מדי פעם כדי לוודא שזה נשמר.",
   ]);
 }
 

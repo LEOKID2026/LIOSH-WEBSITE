@@ -8,7 +8,13 @@ import {
   computeAccuracyBand,
   computeEngineConfidenceTier,
 } from "../parent-report-engine-v1-signals.js";
-import { normalizeParentVisibleMetrics, buildParentMetricsDataLineHe } from "./normalize-parent-practice-metrics.js";
+import {
+  normalizeParentVisibleMetrics,
+  buildParentMetricsDataLineHe,
+  formatQuestionsTextHe,
+  formatWrongOfQuestionsTextHe,
+  buildSpeedPressurePatternFindingHe,
+} from "./normalize-parent-practice-metrics.js";
 import { isUsableParentPatternLabel, sanitizeParentPatternLabel } from "./parent-pattern-label.js";
 import { resolveEvidenceStrength } from "./resolve-evidence-strength.js";
 
@@ -76,7 +82,7 @@ function buildParentSafeFindingFromEngine(p) {
   const w = p.metrics.wrong;
   const pattern = cleanParentFindingPattern(p.detectedPattern);
   const hasPattern = isUsableParentPatternLabel(p.detectedPattern) && !!pattern;
-  const suffix = q > 0 ? ` מבוסס על ${q} שאלות שנפתרו בנושא.` : "";
+  const suffix = q > 0 ? ` מבוסס על ${formatQuestionsTextHe(q)} שנפתרו בנושא.` : "";
   const engineDecision = String(p.engineDecision || "");
 
   if (q <= 0) return "";
@@ -84,7 +90,7 @@ function buildParentSafeFindingFromEngine(p) {
   if (q <= 2) {
     return q === 1
       ? `בנושא ${name} יש נתונים ראשוניים בלבד. ככל שיהיו עוד שאלות בנושא, נוכל להציג תמונה מדויקת יותר.`
-      : `בנושא ${name} נפתרו ${q} שאלות. עדיין מוקדם לזהות דפוס ברור בנושא.`;
+      : `בנושא ${name} נפתרו ${formatQuestionsTextHe(q)}. עדיין מוקדם לזהות דפוס ברור בנושא.`;
   }
 
   if (hasPattern && !p.blockPatternClaim) {
@@ -98,11 +104,18 @@ function buildParentSafeFindingFromEngine(p) {
   }
 
   if (engineDecision === "clear_topic_gap") {
-    return `בנושא ${name} נראה קושי ברור — ${w} שגויות מתוך ${q} שאלות (${acc}% דיוק). כדאי לחזור ולחזק את ${name} לפני שממשיכים.${suffix}`;
+    return `בנושא ${name} נראה קושי ברור — ${formatWrongOfQuestionsTextHe(w, q)} (${acc}% דיוק). כדאי לחזור ולחזק את ${name} לפני שממשיכים.${suffix}`;
+  }
+
+  if (engineDecision === "speed_pressure_pattern") {
+    // Product-owner-approved wording — single source shared with
+    // engine-decision-parent-copy-he.js (buildDiagnosticBodyByDecision). Does NOT
+    // claim the problem IS speed, nor that a knowledge gap exists or is ruled out.
+    return buildSpeedPressurePatternFindingHe({ topicName: name, wrong: w, questions: q, accuracy: acc });
   }
 
   if (engineDecision === "topic_needs_strengthening") {
-    return `בנושא ${name} יש נקודת חיזוק שכדאי לעבוד עליה (${q} שאלות, ${acc}% דיוק). כדאי חיזוק ממוקד.${suffix}`;
+    return `בנושא ${name} יש נקודת חיזוק שכדאי לעבוד עליה (${formatQuestionsTextHe(q)}, ${acc}% דיוק). כדאי חיזוק ממוקד.${suffix}`;
   }
 
   if (engineDecision === "partial_stable") {
@@ -110,12 +123,12 @@ function buildParentSafeFindingFromEngine(p) {
   }
 
   if (engineDecision === "mastery_stable") {
-    return `בנושא ${name} נראית הצלחה טובה ויציבה (${q} שאלות, ${acc}% דיוק).${suffix}`;
+    return `בנושא ${name} נראית הצלחה טובה ויציבה (${formatQuestionsTextHe(q)}, ${acc}% דיוק).${suffix}`;
   }
 
   if (engineDecision === "early_direction_only" || engineDecision === "insufficient_data") {
     if (q <= 4) {
-      return `בנושא ${name} יש ${q} שאלות. עדיין מוקדם להסיק מסקנה ברורה.`;
+      return `בנושא ${name} יש ${formatQuestionsTextHe(q)}. עדיין מוקדם להסיק מסקנה ברורה.`;
     }
     return "";
   }

@@ -1778,7 +1778,8 @@ function summarizeV2UnitsForSubject(units, opts = {}) {
         });
         return normalizeParentFacingHe(`בנושא ${name}: ${inner}`);
       }
-      return normalizeParentFacingHe(`בנושא ${name}: עדיין אין מספיק מה שרואים בשורות כדי לסגור תמונה ברורה.`);
+      // Grammar fix (was: "עדיין אין מספיק מה שרואים בשורות כדי לסגור תמונה ברורה." — broken syntax).
+      return normalizeParentFacingHe(`בנושא ${name}: עדיין אין מספיק נתונים כדי לקבוע תמונה ברורה.`);
     }
     if (act === "probe_only") {
       return normalizeParentFacingHe(`בנושא ${name}: עדיף עוד קצת תרגול לפני שקובעים כיוון סופי.`);

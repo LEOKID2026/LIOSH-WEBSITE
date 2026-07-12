@@ -416,6 +416,7 @@ export function buildTopicDiagnosticExplainSectionsHe(row) {
     topicKey: row.topicKey,
     q,
     acc,
+    wrong: row.wrong,
     gradeKey: row.gradeKey,
     topicEngineRowSignals: sig,
   });
