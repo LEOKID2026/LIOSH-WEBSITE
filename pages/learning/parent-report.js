@@ -1134,6 +1134,10 @@ export default function ParentReport() {
   /** רוחב פנימי משוער לכרטיס גרף (עמודת PDF − ריפוד כרטיס) — למגרעת X דינמית */
   const [chartHostInnerWidthPx, setChartHostInnerWidthPx] = useState(0);
   const [parentReportError, setParentReportError] = useState("");
+  const reportRemoteFetchKeyRef = useRef(null);
+  const reportRemoteInflightKeyRef = useRef(null);
+  const remoteRouterSyncedRef = useRef(false);
+  const REPORT_REMOTE_FETCH_TIMEOUT_MS = 45_000;
 
   const parentStudentId = remoteStudentId;
 
@@ -1336,11 +1340,13 @@ export default function ParentReport() {
     setAppliedEndDate(appliedE);
 
     if (fromRemoteDash) {
+      reportRemoteFetchKeyRef.current = null;
       setPlayerName("");
       setReport(null);
       setShortContractTop(null);
       setCopilotDetailedPayload(null);
       setParentReportError("");
+      remoteRouterSyncedRef.current = true;
       return undefined;
     }
 
@@ -1350,6 +1356,7 @@ export default function ParentReport() {
     setCopilotDetailedPayload(null);
     setParentReportError("");
     setLoading(false);
+    remoteRouterSyncedRef.current = true;
     return undefined;
   }, [
     router.isReady,
@@ -1363,10 +1370,13 @@ export default function ParentReport() {
   useEffect(() => {
     if (typeof window === "undefined") return undefined;
     if (!router.isReady || !isRemoteReportSource || !parentStudentId) return undefined;
+    if (!remoteRouterSyncedRef.current) return undefined;
 
     let cancelled = false;
-    setLoading(true);
-    setParentReportError("");
+    const abortController = new AbortController();
+    const timeoutId = window.setTimeout(() => {
+      if (!cancelled) abortController.abort();
+    }, REPORT_REMOTE_FETCH_TIMEOUT_MS);
 
     const run = async () => {
       const { from, to } = computeReportRangeForParentApi(
@@ -1375,6 +1385,18 @@ export default function ParentReport() {
         appliedStartDate,
         appliedEndDate
       );
+      const fetchKey = `${parentStudentId}|${from}|${to}|${isTeacherSource ? "teacher" : "parent"}`;
+      if (reportRemoteFetchKeyRef.current === fetchKey) {
+        setLoading(false);
+        return;
+      }
+      if (reportRemoteInflightKeyRef.current === fetchKey) {
+        return;
+      }
+      reportRemoteInflightKeyRef.current = fetchKey;
+      setLoading(true);
+      setParentReportError("");
+
       let supabase;
       try {
         supabase = getLearningSupabaseBrowserClient();
@@ -1385,6 +1407,7 @@ export default function ParentReport() {
           setCopilotDetailedPayload(null);
           setLoading(false);
         }
+        reportRemoteInflightKeyRef.current = null;
         return;
       }
       const { data: sessData } = await supabase.auth.getSession();
@@ -1407,6 +1430,7 @@ export default function ParentReport() {
           setCopilotDetailedPayload(null);
           setLoading(false);
         }
+        reportRemoteInflightKeyRef.current = null;
         return;
       }
 
@@ -1417,6 +1441,7 @@ export default function ParentReport() {
         const res = await fetch(url, {
           credentials: "include",
           cache: "no-store",
+          signal: abortController.signal,
           headers: { Authorization: `Bearer ${token}` },
         });
         const body = await res.json().catch(() => ({}));
@@ -1433,6 +1458,7 @@ export default function ParentReport() {
             setCopilotDetailedPayload(null);
             setLoading(false);
           }
+          reportRemoteInflightKeyRef.current = null;
           return;
         }
 
@@ -1446,6 +1472,7 @@ export default function ParentReport() {
             setCopilotDetailedPayload(null);
             setLoading(false);
           }
+          reportRemoteInflightKeyRef.current = null;
           return;
         }
         if (!cancelled) {
@@ -1455,6 +1482,8 @@ export default function ParentReport() {
           setCopilotDetailedPayload(out.detailed && typeof out.detailed === "object" ? out.detailed : null);
           setParentReportError("");
           setLoading(false);
+          reportRemoteFetchKeyRef.current = fetchKey;
+          reportRemoteInflightKeyRef.current = null;
           if (isParentSource) {
             void trackProductEvent({
               eventName: "parent_report_opened",
@@ -1469,17 +1498,30 @@ export default function ParentReport() {
           console.error("[parent-report] report load failed:", loadErr);
         }
         if (!cancelled) {
-          setParentReportError("שגיאת רשת בטעינת הדוח.");
+          const aborted =
+            loadErr &&
+            typeof loadErr === "object" &&
+            (loadErr.name === "AbortError" ||
+              /aborted|timeout/i.test(String(loadErr.message || "")));
+          setParentReportError(
+            aborted
+              ? "טעינת הדוח לקחה יותר מדי זמן — נסו טווח קצר יותר או רענון."
+              : "שגיאת רשת בטעינת הדוח."
+          );
           setReport(null);
           setCopilotDetailedPayload(null);
           setLoading(false);
         }
+        reportRemoteInflightKeyRef.current = null;
       }
     };
 
     void run();
     return () => {
       cancelled = true;
+      window.clearTimeout(timeoutId);
+      abortController.abort();
+      reportRemoteInflightKeyRef.current = null;
     };
   }, [
     router.isReady,

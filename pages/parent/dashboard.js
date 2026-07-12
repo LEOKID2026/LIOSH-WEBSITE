@@ -68,6 +68,7 @@ export default function ParentDashboardPage() {
   const layoutProps = { studentTheme: theme, studentShell: "home" };
   const supabaseRef = useRef(null);
   const trackedDashboardOpenRef = useRef(false);
+  const lastStudentsFetchAtRef = useRef(0);
 
   const [session, setSession] = useState(null);
   const [students, setStudents] = useState([]);
@@ -150,6 +151,7 @@ export default function ParentDashboardPage() {
           : MAX_CHILDREN_DEFAULT
       );
       setMessage("");
+      lastStudentsFetchAtRef.current = Date.now();
     } catch (_err) {
       setMessage(mapParentDashboardApiError(0, null, null, "load_students"));
     }
@@ -174,6 +176,11 @@ export default function ParentDashboardPage() {
       if (!newSession) {
         router.replace("/parent/login");
         return;
+      }
+      if (event === "TOKEN_REFRESHED") {
+        if (Date.now() - lastStudentsFetchAtRef.current < 30_000) {
+          return;
+        }
       }
       if (event === "TOKEN_REFRESHED" || event === "SIGNED_IN") {
         fetchStudents(newSession);

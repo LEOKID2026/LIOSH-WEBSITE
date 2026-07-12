@@ -260,6 +260,9 @@ export default function ParentReportDetailedPage() {
   useParentReportBrightPageBackground(isBright);
   const printScrollYRef = useRef(null);
   const printCleanupTimerRef = useRef(null);
+  const reportRemoteFetchKeyRef = useRef(null);
+  const reportRemoteInflightKeyRef = useRef(null);
+  const REPORT_REMOTE_FETCH_TIMEOUT_MS = 45_000;
 
   const releasePrintIsolation = useCallback(() => {
     if (typeof document === "undefined") return;
@@ -371,6 +374,12 @@ export default function ParentReportDetailedPage() {
     if (isRemoteReportSource && parentStudentId) {
       let cancelled = false;
       const abortController = new AbortController();
+      const timeoutId =
+        typeof window !== "undefined"
+          ? window.setTimeout(() => {
+              if (!cancelled) abortController.abort();
+            }, REPORT_REMOTE_FETCH_TIMEOUT_MS)
+          : null;
       setLoading(true);
       setParentReportError("");
 
@@ -392,6 +401,15 @@ export default function ParentReportDetailedPage() {
 
         const customDates = p === "custom" && cs && ce;
         const { from, to } = computeReportRangeForParentApi(p, Boolean(customDates), cs || "", ce || "");
+        const fetchKey = `${parentStudentId}|${from}|${to}|${isTeacherSource ? "teacher" : "parent"}`;
+        if (reportRemoteFetchKeyRef.current === fetchKey) {
+          setLoading(false);
+          return;
+        }
+        if (reportRemoteInflightKeyRef.current === fetchKey) {
+          return;
+        }
+        reportRemoteInflightKeyRef.current = fetchKey;
 
         try {
           const supabase = getLearningSupabaseBrowserClient();
@@ -415,6 +433,7 @@ export default function ParentReportDetailedPage() {
               setBaseReport(null);
               setLoading(false);
             }
+            reportRemoteInflightKeyRef.current = null;
             return;
           }
 
@@ -446,6 +465,7 @@ export default function ParentReportDetailedPage() {
               setBaseReport(null);
               setLoading(false);
             }
+            reportRemoteInflightKeyRef.current = null;
             return;
           }
 
@@ -458,6 +478,7 @@ export default function ParentReportDetailedPage() {
               setBaseReport(null);
               setLoading(false);
             }
+            reportRemoteInflightKeyRef.current = null;
             return;
           }
           if (!cancelled) {
@@ -465,6 +486,8 @@ export default function ParentReportDetailedPage() {
             setPayload(enrichDetailedPayloadWithUiAuthority(out.detailed, out.base));
             setParentReportError("");
             setLoading(false);
+            reportRemoteFetchKeyRef.current = fetchKey;
+            reportRemoteInflightKeyRef.current = null;
           }
         } catch (loadErr) {
           if (abortController.signal.aborted || cancelled) return;
@@ -476,25 +499,32 @@ export default function ParentReportDetailedPage() {
           if (!cancelled) {
             const networkLike =
               errName === "AbortError" ||
-              /failed to fetch|networkerror|load failed|network request failed/i.test(errMsg);
+              /failed to fetch|networkerror|load failed|network request failed|aborted|timeout/i.test(
+                errMsg
+              );
             setParentReportError(
               networkLike
-                ? "שגיאת רשת בטעינת הדוח — נסו לרענן. אם זה חוזר, פנו אלינו."
+                ? "טעינת הדוח לקחה יותר מדי זמן — נסו טווח קצר יותר או רענון."
                 : "לא ניתן לטעון את הדוח המקיף כרגע."
             );
             setPayload(null);
             setBaseReport(null);
             setLoading(false);
           }
+          reportRemoteInflightKeyRef.current = null;
         }
       };
 
       void run();
       return () => {
         cancelled = true;
+        if (timeoutId != null) window.clearTimeout(timeoutId);
         abortController.abort();
+        reportRemoteInflightKeyRef.current = null;
       };
     }
+
+    reportRemoteFetchKeyRef.current = null;
 
     setPayload(null);
     setBaseReport(null);

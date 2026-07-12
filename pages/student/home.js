@@ -529,18 +529,11 @@ export default function StudentHomePage() {
 
     (async () => {
       try {
-        const [meRes, summaryRes] = await Promise.all([
-          fetch("/api/student/me", {
-            credentials: "include",
-            cache: "no-store",
-            headers: { Accept: "application/json" },
-          }),
-          fetch(HOME_SUMMARY_PATH, {
-            credentials: "include",
-            cache: "no-store",
-            headers: { Accept: "application/json" },
-          }),
-        ]);
+        const meRes = await fetch("/api/student/me", {
+          credentials: "include",
+          cache: "no-store",
+          headers: { Accept: "application/json" },
+        });
 
         if (!mounted) return;
 
@@ -563,6 +556,24 @@ export default function StudentHomePage() {
         setGuestPolicy(payload.guestPolicy || null);
         setAuthPhase("authed");
 
+        const cachedHome = getCachedStudentHomePayload(payload.student.id);
+        if (cachedHome?.merged) {
+          setHomePayload(cachedHome.merged);
+          setProfilePhase("ok");
+          setAnalyticsPhase(cachedHome.analytics ? "ok" : "idle");
+          void loadHomeAnalytics(payload.student.id, cachedHome.summary || {});
+          void loadHomeAchievementGrants(payload.student.id);
+          return;
+        }
+
+        setProfilePhase("loading");
+        const summaryRes = await fetch(HOME_SUMMARY_PATH, {
+          credentials: "include",
+          cache: "no-store",
+          headers: { Accept: "application/json" },
+        });
+        if (!mounted) return;
+
         const summaryText = await summaryRes.text();
         let summaryJson = {};
         try {
@@ -580,8 +591,11 @@ export default function StudentHomePage() {
           const cached = getCachedStudentHomePayload(payload.student.id);
           setHomePayload(mergeStudentHomePayloads(summaryJson, cached?.analytics));
           setProfilePhase("ok");
-          void loadHomeAnalytics(payload.student.id, summaryJson);
-          void loadHomeAchievementGrants(payload.student.id);
+          window.setTimeout(() => {
+            if (!mounted) return;
+            void loadHomeAnalytics(payload.student.id, summaryJson);
+            void loadHomeAchievementGrants(payload.student.id);
+          }, 0);
           return;
         }
 
