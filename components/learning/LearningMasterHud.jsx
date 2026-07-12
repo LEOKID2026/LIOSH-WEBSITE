@@ -69,7 +69,7 @@ export default function LearningMasterHud({
         }`}
       >
         <div className="flex shrink-0 items-center justify-center mb-0.5 md:mb-1 md:min-h-[26px] lg:min-h-[28px] px-0.5">
-          <div className={MB.hudLabel}>⏰ טיימר</div>
+          <div className={MB.hudLabel}>טיימר</div>
         </div>
         <div className="flex flex-1 items-center justify-center min-h-0">
           <div

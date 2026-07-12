@@ -1,4 +1,5 @@
 import React from "react";
+import GeometryDiagramFitSvg from "../GeometryDiagramFitSvg";
 
 const ST = {
   stroke: "#6ee7b7",
@@ -105,11 +106,17 @@ export default function IsometricSolidView({
   solidShape = "cube",
   emphasis = "neutral",
   labels = null,
+  fitVariant = "compact",
+  measureKey = "",
 }) {
   const key = String(solidShape || "cube").replace(/-/g, "_");
   const Renderer = SOLID_RENDERERS[key] || CubeSolid;
   return (
-    <svg viewBox="0 0 300 220" className="block w-full h-auto" aria-hidden>
+    <GeometryDiagramFitSvg
+      variant={fitVariant}
+      measureKey={measureKey || key}
+      className="block w-full h-full"
+    >
       <Renderer emphasis={emphasis} />
       {labels?.map((t, i) => (
         <text
@@ -125,6 +132,6 @@ export default function IsometricSolidView({
           {t.text}
         </text>
       ))}
-    </svg>
+    </GeometryDiagramFitSvg>
   );
 }

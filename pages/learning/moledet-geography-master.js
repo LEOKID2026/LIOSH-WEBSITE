@@ -53,10 +53,11 @@ import { getQuestionFingerprintForSubject } from "../../utils/question-fingerpri
 import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-stem-sanitizer";
 import StudentQuestionDisplay from "../../components/learning/StudentQuestionDisplay";
 import {
-  buildLearningMasterQuestionPressureLayout,
-  LEARNING_MASTER_ANSWER_CARD_NARROW_CLASS,
-  LEARNING_MASTER_ANSWER_SURFACE_CLASS,
-} from "../../utils/learning-master-question-pressure.client.js";
+  buildHebrewApprovedVerbalMasterLayout,
+  buildHebrewApprovedVerbalMcqGridClassName,
+  getHebrewApprovedSingleVerbalQuestionStyle,
+  HEBREW_APPROVED_VERBAL_ANSWER_AREA_CLASS,
+} from "../../utils/hebrew-approved-verbal-master-contract.client.js";
 import { resolveStudentQuestionDisplayParts } from "../../utils/student-question-display";
 import {
   getSolutionSteps,
@@ -76,7 +77,16 @@ import {
   resolveMasterSessionDurationSeconds,
 } from "../../utils/learning-time-credit";
 import { computeFreePracticeTiming } from "../../lib/learning/timing-policy.js";
-import { applyLearningShellLayoutVars, learningMasterDesktopLayoutOptions } from "../../utils/learning-shell-layout";
+import {
+  applyLearningMasterMobileShellLayoutVars,
+  LEARNING_MASTER_MOBILE_BOOK_TILE_BOTTOM,
+  LEARNING_MASTER_MOBILE_CONTENT_SCROLL_CLASS as CONTENT_SCROLL_CLASS,
+  LEARNING_MASTER_MOBILE_GAME_CLASS,
+  LEARNING_MASTER_MOBILE_HUD_CLASS as HUD_CLASS,
+  LEARNING_MASTER_MOBILE_MODE_ROW_CLASS as MODE_ROW_CLASS,
+  LEARNING_MASTER_MOBILE_SUBTITLE_ROW_CLASS as SUBTITLE_ROW_CLASS,
+  LEARNING_MASTER_MOBILE_WRAP_CLASS,
+} from "../../utils/learning-master-mobile.client.js";
 import {
   LIVE_PRACTICE_GAME_OVER_HE,
   LIVE_PRACTICE_WRONG_HE,
@@ -91,7 +101,9 @@ import {
   getStreakReward,
 } from "../../utils/daily-streak";
 import { useSound } from "../../hooks/useSound";
-import { getQuestionFontStyle } from "../../utils/learning-question-font";
+import { useMobileViewport } from "../../hooks/useMobileViewport";
+import { getQuestionFontStyle, getVerbalInstructionStyle } from "../../utils/learning-question-font";
+import { resolveLearningMcqChoiceClassName } from "../../utils/learning-mcq-choice-styles.client";
 import { compareAnswers } from "../../utils/answer-compare";
 import {
   computeMcqIndicesForQuestion,
@@ -175,6 +187,7 @@ import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar
 import LearningMasterDesktopHeader from "../../components/learning/LearningMasterDesktopHeader.jsx";
 import LearningMasterAdSlot from "../../components/learning/LearningMasterAdSlot.jsx";
 import LearningMasterMobileQuestionActionDock from "../../components/learning/LearningMasterMobileQuestionActionDock.jsx";
+import LearningMasterMobileNavTitle from "../../components/learning/LearningMasterMobileNavTitle.jsx";
 import { StepExerciseUiProvider } from "../../contexts/StepExerciseUiContext.jsx";
 import { formatMathHudNumber } from "../../utils/math-master-hud-number.client.js";
 import { useStudentDisplayLevelPractice } from "../../hooks/useStudentDisplayLevelPractice.js";
@@ -254,6 +267,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
   );
 
   useIOSViewportFix();
+  const isMobileViewport = useMobileViewport();
   const { MB, ui, shellClass, shellBgStyle } = useLearningMasterUi();
   const learningModalOverlay = ui.learningModalOverlay;
   const learningModalPanel = ui.learningModalPanel;
@@ -1195,14 +1209,12 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
     const calc = () => {
       if (resizeTimer) clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
-        applyLearningShellLayoutVars(
-          learningMasterDesktopLayoutOptions({
-            wrapRef,
-            headerRef,
-            desktopHeaderRef,
-            controlsRef,
-          })
-        );
+        applyLearningMasterMobileShellLayoutVars({
+          wrapRef,
+          headerRef,
+          desktopHeaderRef,
+          controlsRef,
+        });
       }, 150);
     };
     const timer = setTimeout(calc, 100);
@@ -2500,8 +2512,8 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
 
   const showMobileQuestionActions = Boolean(questionBookHref || canDisplayVertically);
 
-  const questionPressureLayout = currentQuestion
-    ? buildLearningMasterQuestionPressureLayout({
+  const verbalVisualLayout = currentQuestion
+    ? buildHebrewApprovedVerbalMasterLayout({
         MB,
         questionParts: [
           currentQuestion.question,
@@ -2509,7 +2521,6 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
           currentQuestion.exerciseText,
         ],
         answers: currentQuestion.answers ?? [],
-        hasFloatButtons: Boolean(questionBookHref || canDisplayVertically),
       })
     : null;
 
@@ -2548,7 +2559,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
       <div className={shellClass} style={shellBgStyle} dir="rtl">
         <div
           ref={wrapRef}
-          className="relative overflow-hidden game-page-mobile learning-master-fill flex flex-col flex-1 min-h-0 w-full max-md:pl-0 max-md:pr-0 md:pl-[clamp(8px,2vw,32px)] md:pr-[clamp(8px,2vw,32px)] pt-[clamp(12px,3vw,32px)] md:pt-1"
+          className={LEARNING_MASTER_MOBILE_WRAP_CLASS}
           style={{
             maxWidth: "1200px",
             width: "min(1200px, 100vw)",
@@ -2583,36 +2594,25 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
             headerRef={headerRef}
             onCurriculumClick={() => router.push(curriculumHref)}
             onBack={backSafe}
+            hideCurriculum
+            compactHeader
+            integratedTopRow
+            centerSlot={
+              <LearningMasterMobileNavTitle MB={MB} title={pageTitleHe} sound={sound} />
+            }
           />
         </div>
 
         <div
-          className="relative flex flex-1 min-h-0 flex-col items-center justify-start px-2 md:px-4 overflow-y-auto overflow-x-hidden [-webkit-overflow-scrolling:touch] max-md:pt-[calc(var(--head-h,56px)+8px)] md:pt-0"
+          className={CONTENT_SCROLL_CLASS}
           style={{
             height: "100%",
             maxHeight: "100%",
             paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 20px)",
           }}
         >
-          <div className="md:hidden text-center mb-3">
-            <div className="flex items-center justify-center gap-2 mb-0.5">
-              <h1 className={MB.pageTitle}>
-                {pageTitleHe}
-              </h1>
-              <button
-                onClick={() => {
-                  sound.toggleSounds();
-                  sound.toggleMusic();
-                }}
-                className={
-                  sound.soundsEnabled && sound.musicEnabled ? MB.btnSoundOn : MB.btnSoundOff
-                }
-                title={sound.soundsEnabled && sound.musicEnabled ? "השתק צלילים" : "הפעל צלילים"}
-              >
-                {sound.soundsEnabled && sound.musicEnabled ? "🔊" : "🔇"}
-              </button>
-            </div>
-            <p className={MB.pageSub}>
+          <div className={SUBTITLE_ROW_CLASS}>
+            <p className={`${MB.pageSub} max-md:leading-none max-md:mb-0`}>
               {playerName || "שחקן"} • {GRADES[grade].name} •{" "}
               {displayLevelLabel()} • {getOperationName(operation)} •{" "}
               {MODES[mode].name}
@@ -2622,7 +2622,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
           <LearningMasterHud
             MB={MB}
             controlsRef={controlsRef}
-            className="md:!mb-1.5"
+            className={HUD_CLASS}
             topHud={subjectView.topHud}
             lives={lives}
             mode={mode}
@@ -2637,7 +2637,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
 
           {/* בחירת מצב (תרגול / למידה / מהירות / מרתון / אתגר) */}
           <div
-            className="mx-auto flex items-center justify-center gap-1.5 md:gap-2 lg:gap-2.5 mb-3 md:mb-1 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl flex-wrap px-1 md:px-2"
+            className={`${MODE_ROW_CLASS} max-md:mb-1`}
             dir="rtl"
           >
             {["practice", "learning", "speed", "marathon", "challenge"].map((m) => (
@@ -3054,6 +3054,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
                   subject={strandCatalogSubject}
                   grade={grade}
                   testId={`moledet-geography-${grade}-book-index-button`}
+                  mobileBottomClass={LEARNING_MASTER_MOBILE_BOOK_TILE_BOTTOM}
                   onClick={() => router.push(bookIndexHref)}
                 />
               ) : null}
@@ -3309,7 +3310,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
               {currentQuestion && (
                 <div
                   ref={gameRef}
-                  className="relative w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-4xl flex flex-col flex-1 min-h-0 items-stretch mb-2 mx-auto overflow-hidden max-md:h-[var(--game-h,400px)] max-md:min-h-[300px] md:min-h-[280px]"
+                  className={LEARNING_MASTER_MOBILE_GAME_CLASS}
                 >
                   {(feedback || errorExplanation) && (
                     <div className="absolute top-0 left-0 right-0 z-[5] px-2 pt-1 pointer-events-none" role="status" aria-live="assertive" aria-atomic="true">
@@ -3365,7 +3366,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
 
                   <div
                     data-testid="moledet-question-stem"
-                    className={`relative ${questionPressureLayout?.questionSlotClassForStem ?? ""} ${questionPressureLayout?.questionStemInsetClass ?? ""} ${showMobileQuestionActions ? "max-md:pb-11" : ""}`.trim()}
+                    className={`${verbalVisualLayout?.questionSlotClassForStem ?? ""} relative ${showMobileQuestionActions ? "max-md:pb-11" : ""}`.trim()}
                   >
                   {/* ויזואליזציה של מספרים (כיתות א'-ג') */}
                   {(grade === "g1" || grade === "g2" || grade === "g3") && (currentQuestion.operation === "addition" || currentQuestion.operation === "subtraction") && (
@@ -3544,7 +3545,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
                         return displayParts.leadText ? (
                           <p
                             className={
-                              questionPressureLayout?.questionLeadClassByPressure ??
+                              verbalVisualLayout?.questionLeadClassName ??
                               MB.questionLead
                             }
                             dir="rtl"
@@ -3553,9 +3554,16 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
                               direction: "rtl",
                               unicodeBidi: "plaintext",
                               lineHeight:
-                                questionPressureLayout?.questionLineHeightByPressure,
+                                verbalVisualLayout?.questionLineHeightByPressure,
                               ...getQuestionFontStyle({
                                 text: displayParts.leadText,
+                              }),
+                              ...getVerbalInstructionStyle({
+                                text: displayParts.leadText,
+                                isMobileViewport,
+                                className:
+                                  verbalVisualLayout?.questionLeadClassName ??
+                                  MB.questionLead,
                               }),
                             }}
                           >
@@ -3570,8 +3578,8 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
                       >
                         <pre
                           className={
-                            questionPressureLayout?.verticalPreClassByPressure ??
-                            "text-3xl text-center text-white font-bold font-mono whitespace-pre"
+                            verbalVisualLayout?.verticalPreClassName ??
+                            "text-2xl md:text-3xl text-center text-white font-bold font-mono whitespace-pre"
                           }
                           style={{ direction: "ltr", unicodeBidi: "isolate" }}
                         >
@@ -3585,13 +3593,12 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
                       questionLabel={currentQuestion.questionLabel}
                       exerciseText={currentQuestion.exerciseText}
                       getQuestionFontStyle={getQuestionFontStyle}
+                      resolveVerbalSingleStyle={getHebrewApprovedSingleVerbalQuestionStyle}
                       leadClassName={
-                        questionPressureLayout?.questionLeadClassByPressure ??
-                        MB.questionLead
+                        verbalVisualLayout?.questionLeadClassName ?? MB.questionLead
                       }
                       bodyClassName={`${
-                        questionPressureLayout?.questionBodyClassByPressure ??
-                        MB.questionBody
+                        verbalVisualLayout?.questionBodyClassName ?? MB.questionBody
                       } ${
                         currentQuestion.operation === "sequences"
                           ? "whitespace-normal break-words overflow-wrap-anywhere"
@@ -3599,12 +3606,10 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
                       }`}
                       formulaClassName={MB.questionFormula}
                       leadStyle={{
-                        lineHeight:
-                          questionPressureLayout?.questionLineHeightByPressure,
+                        lineHeight: verbalVisualLayout?.questionLineHeightByPressure,
                       }}
                       bodyStyle={{
-                        lineHeight:
-                          questionPressureLayout?.questionLineHeightByPressure,
+                        lineHeight: verbalVisualLayout?.questionLineHeightByPressure,
                       }}
                     />
                   )}
@@ -3642,13 +3647,13 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
                   />
                   </div>
 
-                  <div className={LEARNING_MASTER_ANSWER_SURFACE_CLASS}>
+                  <div className={HEBREW_APPROVED_VERBAL_ANSWER_AREA_CLASS}>
                   <div
-                    className={`grid gap-3 w-full mb-3 max-[420px]:gap-2 max-[420px]:mb-2 ${
-                      questionPressureLayout?.useNarrowMobileAnswerFallback
-                        ? "grid-cols-2 max-[420px]:grid-cols-1"
-                        : "grid-cols-2"
-                    }`}
+                    className={buildHebrewApprovedVerbalMcqGridClassName({
+                      useNarrowMobileAnswerFallback:
+                        verbalVisualLayout?.useNarrowMobileAnswerFallback,
+                      isMobileViewport,
+                    })}
                   >
                     {currentQuestion.answers.map((answer, idx) => {
                       const isSelected = selectedAnswer === answer;
@@ -3666,22 +3671,13 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
                           data-testid={`moledet-mcq-${idx}`}
                           onClick={() => handleAnswer(answer)}
                           disabled={!!selectedAnswer}
-                          className={`rounded-xl border-2 font-bold transition-all active:scale-95 disabled:opacity-50 ${
-                            questionPressureLayout?.answerCardTextClass ??
-                            "px-6 py-6 text-2xl max-[420px]:px-3 max-[420px]:py-3 max-[420px]:text-lg"
-                          } ${
-                            questionPressureLayout?.useNarrowMobileAnswerFallback
-                              ? LEARNING_MASTER_ANSWER_CARD_NARROW_CLASS
-                              : ""
-                          } ${
-                            isCorrectChoice && isSelected
-                              ? MB.choiceCorrect
-                              : isWrong
-                              ? MB.choiceWrong
-                              : selectedAnswer && isCorrectChoice
-                              ? MB.choiceCorrect
-                              : MB.choiceDefault
-                          }`}
+                          className={`rounded-xl border-2 transition-all active:scale-95 disabled:opacity-50 ${verbalVisualLayout?.answerCardTextClass ?? ""} ${verbalVisualLayout?.answerCardNarrowClass ?? ""} ${resolveLearningMcqChoiceClassName({
+                            MB,
+                            isSelected,
+                            isCorrectChoice,
+                            isWrong,
+                            revealResults: selectedAnswer != null,
+                          })}`}
                         >
                           {answer}
                         </button>

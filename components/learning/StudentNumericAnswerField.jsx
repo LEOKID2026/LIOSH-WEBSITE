@@ -31,6 +31,15 @@ export default function StudentNumericAnswerField({
   autoFocus = false,
   suppressEmbeddedKeyboard = false,
   onInputFocus,
+  embeddedKeyClassName,
+  embeddedActionKeyClassName,
+  embeddedClearKeyClassName,
+  embeddedSubmitGreenClassName,
+  embeddedSubmitBlueClassName,
+  embeddedSpacerClassName,
+  embeddedRowGapClassName,
+  embeddedColGapClassName,
+  embeddedKeyboardClassName,
 }) {
   const isTouch = useTouchPrimaryDevice();
   const policy = resolveVirtualAnswerKeyboard({
@@ -121,7 +130,21 @@ export default function StudentNumericAnswerField({
           compact={useCompactKeyboard}
           showClose={virtualEnabled && !isTouch}
           onClose={() => setKeyboardOpen(false)}
-          className={useCompactKeyboard ? "mt-0" : "mt-1"}
+          className={
+            embeddedKeyboardClassName ||
+            (useCompactKeyboard ? "mt-0" : "mt-1")
+          }
+          keyClassName={embeddedKeyClassName}
+          actionKeyClassName={embeddedActionKeyClassName || embeddedKeyClassName}
+          clearKeyClassName={embeddedClearKeyClassName}
+          submitClassName={
+            submitTone === "blue"
+              ? embeddedSubmitBlueClassName
+              : embeddedSubmitGreenClassName
+          }
+          spacerClassName={embeddedSpacerClassName}
+          rowGapClassName={embeddedRowGapClassName}
+          colGapClassName={embeddedColGapClassName}
           submitButton={
             embedSubmitInKeyboard
               ? {

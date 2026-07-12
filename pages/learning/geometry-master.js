@@ -26,12 +26,20 @@ import {
 import { SessionAntiRepeatBuffer } from "../../utils/question-session-anti-repeat";
 import { generateQuestion } from "../../utils/geometry-question-generator";
 import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-stem-sanitizer";
+import { resolveStudentQuestionDisplayParts } from "../../utils/student-question-display";
 import StudentQuestionDisplay from "../../components/learning/StudentQuestionDisplay";
 import {
   buildLearningMasterQuestionPressureLayout,
-  LEARNING_MASTER_ANSWER_CARD_NARROW_CLASS,
   LEARNING_MASTER_ANSWER_SURFACE_CLASS,
 } from "../../utils/learning-master-question-pressure.client.js";
+import {
+  buildHebrewApprovedVerbalMcqGridClassName,
+} from "../../utils/hebrew-approved-verbal-master-contract.client.js";
+import {
+  buildApprovedVerbalStemLayout,
+  getHebrewApprovedSingleVerbalQuestionStyle,
+  isApprovedVerbalTextStem,
+} from "../../utils/math-geometry-verbal-visual-adapter.client.js";
 import StudentNumericAnswerField, {
   useMobileEmbeddedNumericSubmit,
 } from "../../components/learning/StudentNumericAnswerField";
@@ -67,7 +75,20 @@ import {
   isFairnessVisibilityLedgerActive,
   resolveMasterSessionDurationSeconds,
 } from "../../utils/learning-time-credit";
-import { applyLearningShellLayoutVars, learningMasterDesktopLayoutOptions } from "../../utils/learning-shell-layout";
+import { useMobileViewport } from "../../hooks/useMobileViewport";
+import {
+  LEARNING_MASTER_MOBILE_WRAP_CLASS,
+  LEARNING_MASTER_MOBILE_CONTENT_SCROLL_CLASS,
+  LEARNING_MASTER_MOBILE_SUBTITLE_ROW_CLASS,
+  LEARNING_MASTER_MOBILE_HUD_CLASS,
+  LEARNING_MASTER_MOBILE_MODE_ROW_CLASS,
+  LEARNING_MASTER_MOBILE_GAME_CLASS,
+  LEARNING_MASTER_MOBILE_ANSWER_SCALE_CLASS,
+  LEARNING_MASTER_MOBILE_BOOK_TILE_BOTTOM,
+  LEARNING_MASTER_MOBILE_NUMERIC_INPUT,
+  applyLearningMasterMobileShellLayoutVars,
+  buildLearningMasterMobileNumericFieldProps,
+} from "../../utils/learning-master-mobile.client.js";
 import {
   LIVE_PRACTICE_CORRECT_HE,
   LIVE_PRACTICE_GAME_OVER_HE,
@@ -97,6 +118,7 @@ import LearningMasterHud from "../../components/learning/LearningMasterHud.jsx";
 import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar.jsx";
 import LearningMasterDesktopHeader from "../../components/learning/LearningMasterDesktopHeader.jsx";
 import LearningMasterAdSlot from "../../components/learning/LearningMasterAdSlot.jsx";
+import LearningMasterMobileNavTitle from "../../components/learning/LearningMasterMobileNavTitle.jsx";
 import LearningMasterMobileQuestionActionDock from "../../components/learning/LearningMasterMobileQuestionActionDock.jsx";
 import { StepExerciseUiProvider } from "../../contexts/StepExerciseUiContext.jsx";
 import { formatMathHudNumber } from "../../utils/math-master-hud-number.client.js";
@@ -107,6 +129,7 @@ import {
 } from "../../utils/daily-streak";
 import { useSound } from "../../hooks/useSound";
 import { getQuestionFontStyle } from "../../utils/learning-question-font";
+import { resolveLearningMcqChoiceClassName } from "../../utils/learning-mcq-choice-styles.client";
 import { compareGeometryLearnerAnswer } from "../../utils/answer-compare";
 import {
   computeMcqIndicesForQuestion,
@@ -262,6 +285,7 @@ export default function GeometryMaster() {
   const learningModalScrollBody = ui.learningModalScrollBody;
   const stepExerciseUi = ui.stepExerciseUi;
   const isTouchDevice = useTouchPrimaryDevice();
+  const isMobileViewport = useMobileViewport();
   const mobileEmbeddedNumericSubmit = useMobileEmbeddedNumericSubmit("geometry");
   const router = useRouter();
   const wrapRef = useRef(null);
@@ -2096,14 +2120,12 @@ export default function GeometryMaster() {
     const calc = () => {
       if (resizeTimer) clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
-        applyLearningShellLayoutVars(
-          learningMasterDesktopLayoutOptions({
-            wrapRef,
-            headerRef,
-            desktopHeaderRef,
-            controlsRef,
-          })
-        );
+        applyLearningMasterMobileShellLayoutVars({
+          wrapRef,
+          headerRef,
+          desktopHeaderRef,
+          controlsRef,
+        });
       }, 150);
     };
     const timer = setTimeout(calc, 100);
@@ -2558,22 +2580,65 @@ export default function GeometryMaster() {
 
   const showMobileQuestionActions = Boolean(questionBookHref || showGeometryTheoryHelp);
 
-  const questionPressureLayout = currentQuestion
-    ? buildLearningMasterQuestionPressureLayout({
-        MB,
-        questionParts: [
-          currentQuestion.question,
-          currentQuestion.questionLabel,
-          currentQuestion.exerciseText,
-        ],
-        answers: currentQuestion.options ?? currentQuestion.answers ?? [],
-        hasFloatButtons: Boolean(
-          questionBookHref ||
-            (mode === "learning" &&
-              currentQuestion.params?.kind !== "no_question")
-        ),
+  const isGeometryVerbalStem = Boolean(
+    currentQuestion &&
+      currentQuestion.params?.kind !== "no_question" &&
+      isApprovedVerbalTextStem({
+        question: currentQuestion.question,
+        questionLabel: currentQuestion.questionLabel,
+        exerciseText: currentQuestion.exerciseText,
+      })
+  );
+
+  const geometryQuestionDisplayParts = currentQuestion
+    ? resolveStudentQuestionDisplayParts({
+        question: currentQuestion.question,
+        questionLabel: currentQuestion.questionLabel,
+        exerciseText: currentQuestion.exerciseText,
       })
     : null;
+
+  const geometryBodyTextColor =
+    currentQuestion &&
+    currentQuestion.params?.kind !== "no_question" &&
+    geometryQuestionDisplayParts?.bodyKind !== "equation"
+      ? "#4338CA"
+      : undefined;
+
+  const verbalVisualLayout = currentQuestion
+    ? buildApprovedVerbalStemLayout({
+        MB,
+        question: currentQuestion.question,
+        questionLabel: currentQuestion.questionLabel,
+        exerciseText: currentQuestion.exerciseText,
+        answers: currentQuestion.options ?? currentQuestion.answers ?? [],
+      })
+    : null;
+
+  const questionPressureLayout =
+    currentQuestion && !isGeometryVerbalStem
+      ? buildLearningMasterQuestionPressureLayout({
+          MB,
+          questionParts: [
+            currentQuestion.question,
+            currentQuestion.questionLabel,
+            currentQuestion.exerciseText,
+          ],
+          answers: currentQuestion.options ?? currentQuestion.answers ?? [],
+          hasFloatButtons: Boolean(
+            questionBookHref ||
+              (mode === "learning" &&
+                currentQuestion.params?.kind !== "no_question")
+          ),
+        })
+      : null;
+
+  const geometryShowsNumericAnswer = Boolean(
+    currentQuestion &&
+      currentQuestion.params?.kind !== "no_question" &&
+      (mode === "learning" || mode === "practice") &&
+      !geometryQuestionUsesChoiceUi(currentQuestion.params)
+  );
 
   return (
     <MasterSubjectAccessScreen permissionKey="geometry" titleHe="גאומטריה">
@@ -2610,7 +2675,7 @@ export default function GeometryMaster() {
       <div className={shellClass} style={shellBgStyle} dir="rtl">
         <div
           ref={wrapRef}
-          className="relative overflow-hidden game-page-mobile learning-master-fill flex flex-col flex-1 min-h-0 w-full max-md:pl-0 max-md:pr-0 md:pl-[clamp(8px,2vw,32px)] md:pr-[clamp(8px,2vw,32px)] pt-[clamp(12px,3vw,32px)] md:pt-1"
+          className={LEARNING_MASTER_MOBILE_WRAP_CLASS}
           style={{
             maxWidth: "1200px",
             width: "min(1200px, 100vw)",
@@ -2645,36 +2710,23 @@ export default function GeometryMaster() {
             headerRef={headerRef}
             onCurriculumClick={() => router.push("/learning/geometry-curriculum")}
             onBack={backSafe}
+            hideCurriculum
+            compactHeader
+            integratedTopRow
+            centerSlot={<LearningMasterMobileNavTitle MB={MB} title="📐 גאומטריה" sound={sound} />}
           />
         </div>
 
         <div
-          className="relative flex flex-1 min-h-0 flex-col items-center justify-start px-2 md:px-4 overflow-y-auto overflow-x-hidden [-webkit-overflow-scrolling:touch] max-md:pt-[calc(var(--head-h,56px)+8px)] md:pt-0"
+          className={LEARNING_MASTER_MOBILE_CONTENT_SCROLL_CLASS}
           style={{
             height: "100%",
             maxHeight: "100%",
             paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 20px)",
           }}
         >
-          <div className="md:hidden text-center mb-3">
-            <div className="flex items-center justify-center gap-2 mb-0.5">
-              <h1 className={MB.pageTitle}>
-                📐 גאומטריה
-              </h1>
-              <button
-                onClick={() => {
-                  sound.toggleSounds();
-                  sound.toggleMusic();
-                }}
-                className={
-                  sound.soundsEnabled && sound.musicEnabled ? MB.btnSoundOn : MB.btnSoundOff
-                }
-                title={sound.soundsEnabled && sound.musicEnabled ? "השתק צלילים" : "הפעל צלילים"}
-              >
-                {sound.soundsEnabled && sound.musicEnabled ? "🔊" : "🔇"}
-              </button>
-            </div>
-            <p className={MB.pageSub}>
+          <div className={LEARNING_MASTER_MOBILE_SUBTITLE_ROW_CLASS}>
+            <p className={`${MB.pageSub} max-md:leading-none max-md:mb-0`}>
               {playerName || "שחקן"} • {GRADES[grade]?.name || ""} • {displayLevelLabel()} • {getTopicName(topic)} • {MODES[mode].name}
             </p>
           </div>
@@ -2682,7 +2734,7 @@ export default function GeometryMaster() {
           <LearningMasterHud
             MB={MB}
             controlsRef={controlsRef}
-            className="md:!mb-1.5"
+            className={LEARNING_MASTER_MOBILE_HUD_CLASS}
             topHud={subjectView.topHud}
             lives={lives}
             mode={mode}
@@ -2696,7 +2748,7 @@ export default function GeometryMaster() {
 
           {/* בחירת מצב (תרגול / למידה / מהירות / מרתון / אתגר) */}
           <div
-            className="mx-auto flex items-center justify-center gap-1.5 md:gap-2 lg:gap-2.5 mb-3 md:mb-1 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl flex-wrap px-1 md:px-2"
+            className={LEARNING_MASTER_MOBILE_MODE_ROW_CLASS}
             dir="rtl"
           >
             {["practice", "learning", "speed", "marathon", "challenge"].map((m) => (
@@ -2760,6 +2812,7 @@ export default function GeometryMaster() {
                   subject="geometry"
                   grade={grade}
                   testId={`geometry-${grade}-book-index-button`}
+                  mobileBottomClass={LEARNING_MASTER_MOBILE_BOOK_TILE_BOTTOM}
                   onClick={() =>
                     router.push(getLearningBookIndexHref("geometry", grade))
                   }
@@ -3019,7 +3072,7 @@ export default function GeometryMaster() {
               </div>
             </div>
           ) : (
-            <div className="flex flex-col flex-1 min-h-0 w-full items-center">
+            <div className={`flex flex-col flex-1 min-h-0 w-full items-center${currentQuestion ? " max-md:-mt-1" : ""}`}>
               {/* אנימציות חזותיות */}
               {showCorrectAnimation && (
                 <div className="fixed inset-0 z-[190] flex items-center justify-center pointer-events-none">
@@ -3040,7 +3093,7 @@ export default function GeometryMaster() {
               {currentQuestion && (
                 <div
                   ref={gameRef}
-                  className="relative w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-4xl flex flex-col flex-1 min-h-0 items-stretch mb-2 mx-auto overflow-y-auto max-md:max-h-[var(--game-h,400px)] max-md:min-h-[300px] md:min-h-[280px]"
+                  className={LEARNING_MASTER_MOBILE_GAME_CLASS}
                 >
                   {/* שכבת הודעות לא דוחפת פריסה */}
                   {(feedback || errorExplanation) && (
@@ -3078,6 +3131,11 @@ export default function GeometryMaster() {
                     </div>
                   )}
 
+                  {/* אזור שאלה יציב למניעת קפיצות בפריסת התשובות — כמו math-master */}
+                  <div
+                    data-testid="geometry-question-surface"
+                    className={`relative w-full flex-1 min-h-0 flex flex-col overflow-hidden px-2 ${showMobileQuestionActions ? "max-md:pb-11" : ""} ${questionPressureLayout?.questionStemInsetClass ?? ""}`.trim()}
+                  >
                   {showGeometryTheoryHelp ? (
                       <button
                         type="button"
@@ -3101,10 +3159,6 @@ export default function GeometryMaster() {
                     </div>
                   ) : null}
 
-                  <div
-                    data-testid="geometry-question-stem"
-                    className={`relative ${questionPressureLayout?.questionSlotClassForStem ?? ""} ${questionPressureLayout?.questionStemInsetClass ?? ""} py-2 gap-2 ${showMobileQuestionActions ? "max-md:pb-11" : ""}`.trim()}
-                  >
                   {/* בדיקה אם יש שאלה תקינה */}
                   {currentQuestion.params?.kind === "no_question" ? (
                     <div
@@ -3116,28 +3170,47 @@ export default function GeometryMaster() {
                   ) : (
                     <>
                       <StudentQuestionDisplay
+                        testId="geometry-question-stem"
                         question={currentQuestion.question}
                         questionLabel={currentQuestion.questionLabel}
                         exerciseText={currentQuestion.exerciseText}
                         getQuestionFontStyle={getQuestionFontStyle}
+                        resolveVerbalSingleStyle={
+                          isGeometryVerbalStem
+                            ? getHebrewApprovedSingleVerbalQuestionStyle
+                            : undefined
+                        }
+                        bodyTextColor={geometryBodyTextColor}
                         leadClassName={
-                          questionPressureLayout?.questionLeadClassByPressure ??
-                          MB.questionLead
+                          isGeometryVerbalStem
+                            ? verbalVisualLayout?.questionLeadClassName ??
+                              MB.questionLead
+                            : questionPressureLayout?.questionLeadClassByPressure ??
+                              MB.questionLead
                         }
                         formulaClassName={MB.questionFormula}
                         bodyClassName={
-                          questionPressureLayout?.questionBodyClassByPressure ??
-                          MB.questionBody
+                          isGeometryVerbalStem
+                            ? verbalVisualLayout?.questionBodyClassName ??
+                              MB.questionBody
+                            : questionPressureLayout?.questionBodyClassByPressure ??
+                              MB.questionBody
                         }
                         leadStyle={{
-                          lineHeight:
-                            questionPressureLayout?.questionLineHeightByPressure,
+                          lineHeight: isGeometryVerbalStem
+                            ? verbalVisualLayout?.questionLineHeightByPressure
+                            : questionPressureLayout?.questionLineHeightByPressure,
                         }}
                         bodyStyle={{
-                          lineHeight:
-                            questionPressureLayout?.questionLineHeightByPressure,
+                          lineHeight: isGeometryVerbalStem
+                            ? verbalVisualLayout?.questionLineHeightByPressure
+                            : questionPressureLayout?.questionLineHeightByPressure,
                         }}
-                        wrapperClassName="w-full flex flex-col items-center justify-center gap-2 max-w-full px-1 pb-1"
+                        wrapperClassName={
+                          isGeometryVerbalStem
+                            ? undefined
+                            : "w-full max-w-full flex flex-col items-center justify-center gap-2 px-1 pb-1"
+                        }
                       />
                     </>
                   )}
@@ -3172,36 +3245,47 @@ export default function GeometryMaster() {
                       ) : null
                     }
                   />
-                  </div>
 
-                  {/* ══ שרטוט בזמן השאלה ══ */}
                   {questionDiagramSpec && (
                     <div
-                      className="w-full px-2 md:px-4 mb-1 md:mb-2 shrink-0"
+                      className="absolute bottom-0 left-1/2 z-[2] w-full max-w-[140px] max-h-[100px] -translate-x-1/2 pointer-events-none px-1 md:left-2 md:right-auto md:translate-x-0 sm:max-w-[180px] sm:max-h-[120px]"
                       data-testid="geometry-question-diagram"
                       dir="ltr"
                     >
-                      <div className="relative">
+                      <div
+                        role="button"
+                        tabIndex={0}
+                        aria-label="הגדל שרטוט"
+                        onClick={() => setShowDiagramModal(true)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            setShowDiagramModal(true);
+                          }
+                        }}
+                        className="relative inline-block w-full max-h-full cursor-pointer rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/70 pointer-events-auto"
+                      >
                         <GeometryExplanationDiagram
                           spec={questionDiagramSpec}
                           mini
                           question={currentQuestion}
                           emphasis="neutral"
                         />
-                        <button
-                          type="button"
-                          onClick={() => setShowDiagramModal(true)}
-                          className="absolute bottom-1.5 left-1.5 text-[11px] leading-none bg-emerald-950/90 hover:bg-emerald-900 border border-emerald-500/40 text-emerald-300 rounded px-2 py-0.5 shadow z-10"
-                          title="הגדל שרטוט"
-                          aria-label="הגדל שרטוט"
+                        <span
+                          className="absolute bottom-0.5 left-0.5 text-[10px] leading-none bg-emerald-950/90 border border-emerald-500/40 text-emerald-300 rounded px-1.5 py-px shadow pointer-events-none select-none"
+                          aria-hidden
                         >
                           ⛶ הגדל
-                        </button>
+                        </span>
                       </div>
                     </div>
                   )}
+                  </div>
 
-                    <div className={LEARNING_MASTER_ANSWER_SURFACE_CLASS}>
+                  <div
+                      data-testid="geometry-answer-surface"
+                      className={`${LEARNING_MASTER_ANSWER_SURFACE_CLASS} relative z-30`}
+                    >
                       {currentQuestion.params?.kind !== "no_question" &&
                         ((mode === "learning" || mode === "practice") && !geometryQuestionUsesChoiceUi(currentQuestion.params) ? (
                           (() => {
@@ -3211,7 +3295,15 @@ export default function GeometryMaster() {
                             });
                             return (
                           <div className={MB.answerWrap}>
-                            <div className={`text-center ${mobileEmbeddedNumericSubmit ? "mb-1 max-[420px]:mb-0.5" : "mb-3 max-[420px]:mb-2"}`}>
+                            <div
+                              className={`text-center ${
+                                mobileEmbeddedNumericSubmit
+                                  ? isMobileViewport
+                                    ? "mb-0"
+                                    : "mb-1 max-[420px]:mb-0.5"
+                                  : "mb-3 max-[420px]:mb-2"
+                              }`}
+                            >
                               <StudentNumericAnswerField
                                 subject="geometry"
                                 value={textAnswer}
@@ -3220,7 +3312,14 @@ export default function GeometryMaster() {
                                 testId="geometry-text-answer"
                                 placeholder="תשובה"
                                 autoFocus
-                                inputClassName={isTouchDevice ? MB.inputMobile : MB.inputDesktop}
+                                inputClassName={
+                                  isMobileViewport
+                                    ? LEARNING_MASTER_MOBILE_NUMERIC_INPUT
+                                    : isTouchDevice
+                                      ? MB.inputMobile
+                                      : MB.inputDesktop
+                                }
+                                {...buildLearningMasterMobileNumericFieldProps(isMobileViewport)}
                                 onEnterSubmit={handleGeometryPrimaryAnswerButtonClick}
                                 onSubmit={handleGeometryPrimaryAnswerButtonClick}
                                 submitDisabled={primaryBtn.disabled}
@@ -3249,96 +3348,86 @@ export default function GeometryMaster() {
                           })()
                         ) : currentQuestion.answers ? (
                           <div
-                            className={`grid gap-2.5 max-[420px]:gap-2 w-full mb-3 max-[420px]:mb-2 ${
-                              questionPressureLayout?.useNarrowMobileAnswerFallback
-                                ? "grid-cols-2 max-[420px]:grid-cols-1"
-                                : "grid-cols-2"
-                            }`}
-                          >
-                            {currentQuestion.answers.map((answer, idx) => {
-                              const isSelected = selectedAnswer === answer;
-                              const isCorrect = compareGeometryLearnerAnswer({
-                                user: answer,
-                                correctAnswer: currentQuestion.correctAnswer,
-                                scaleFloor: GEOMETRY_NUMERIC_SCALE_FLOOR,
-                                relativeFactor: GEOMETRY_NUMERIC_RELATIVE_FACTOR,
-                                minTolerance: GEOMETRY_NUMERIC_MIN_TOLERANCE,
-                              }).isCorrect;
-                              const isWrong = isSelected && !isCorrect;
-
-                              return (
-                                <button
-                                  type="button"
-                                  key={idx}
-                                  data-testid={`geometry-mcq-${idx}`}
-                                  onClick={() => handleAnswer(answer)}
-                                  disabled={!!selectedAnswer}
-                                  className={`rounded-xl border-2 font-bold transition-all active:scale-95 disabled:opacity-50 ${
-                                    questionPressureLayout?.answerCardTextClass ??
-                                    "px-5 py-5 text-xl max-[420px]:px-3 max-[420px]:py-3 max-[420px]:text-base"
-                                  } ${
-                                    questionPressureLayout?.useNarrowMobileAnswerFallback
-                                      ? LEARNING_MASTER_ANSWER_CARD_NARROW_CLASS
-                                      : ""
-                                  } ${
-                                    isCorrect && isSelected
-                                      ? MB.choiceCorrect
-                                      : isWrong
-                                      ? MB.choiceWrong
-                                      : selectedAnswer && isCorrect
-                                      ? MB.choiceCorrect
-                                      : MB.choiceDefault
-                                  }`}
-                                >
-                                  {answer}
-                                </button>
-                              );
+                            className={buildHebrewApprovedVerbalMcqGridClassName({
+                              useNarrowMobileAnswerFallback:
+                                verbalVisualLayout?.useNarrowMobileAnswerFallback,
+                              isMobileViewport,
                             })}
+                          >
+                              {currentQuestion.answers.map((answer, idx) => {
+                                const isSelected = selectedAnswer === answer;
+                                const isCorrect = compareGeometryLearnerAnswer({
+                                  user: answer,
+                                  correctAnswer: currentQuestion.correctAnswer,
+                                  scaleFloor: GEOMETRY_NUMERIC_SCALE_FLOOR,
+                                  relativeFactor: GEOMETRY_NUMERIC_RELATIVE_FACTOR,
+                                  minTolerance: GEOMETRY_NUMERIC_MIN_TOLERANCE,
+                                }).isCorrect;
+                                const isWrong = isSelected && !isCorrect;
+
+                                return (
+                                  <button
+                                    type="button"
+                                    key={idx}
+                                    data-testid={`geometry-mcq-${idx}`}
+                                    onClick={() => handleAnswer(answer)}
+                                    disabled={!!selectedAnswer}
+                                    className={`rounded-xl border-2 transition-all active:scale-95 disabled:opacity-50 ${verbalVisualLayout?.answerCardTextClass ?? ""} ${verbalVisualLayout?.answerCardNarrowClass ?? ""} ${resolveLearningMcqChoiceClassName({
+                                      MB,
+                                      isSelected,
+                                      isCorrectChoice: isCorrect,
+                                      isWrong,
+                                      revealResults: selectedAnswer != null,
+                                    })}`}
+                                  >
+                                    {answer}
+                                  </button>
+                                );
+                              })}
                           </div>
                         ) : null)}
 
-                      {/* שורת כפתורים קבועה (מתחת לאזור התשובות, כמו Math) */}
-                      <div className={MB.answerActionsBar} dir="rtl">
-                        {mode === "learning" &&
-                          currentQuestion &&
-                          currentQuestion.params?.kind !== "no_question" && (
-                            <button
-                              type="button"
-                              onClick={() => {
-                                clearWrongAnswerAdvanceTimer();
-                                stepByStepViewedRef.current = true;
-                                setShowSolution((prev) => !prev);
-                              }}
-                              className={MB.btnStepByStep}
-                            >
-                              📘 צעד-צעד
-                            </button>
-                          )}
+                      {/* כפתורי הסבר / עצירה */}
+                      {currentQuestion && (
+                        <div className="mt-2 flex flex-col gap-2 w-full">
+                          <div className={MB.answerActionsBar} dir="rtl">
+                            {mode === "learning" &&
+                              currentQuestion.params?.kind !== "no_question" && (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    clearWrongAnswerAdvanceTimer();
+                                    stepByStepViewedRef.current = true;
+                                    setShowSolution((prev) => !prev);
+                                  }}
+                                  className={MB.btnStepByStep}
+                                >
+                                  📘 צעד-צעד
+                                </button>
+                              )}
 
-                        <button
-                          type="button"
-                          data-testid="learning-stop-game"
-                          onClick={stopGame}
-                          className={MB.btnStop}
-                        >
-                          ⏹️ עצור
-                        </button>
-                        {(mode === "learning" || mode === "practice") &&
-                          previousExplanationQuestion &&
-                          currentQuestion &&
-                          currentQuestion.params?.kind !== "no_question" && (
                             <button
                               type="button"
-                              onClick={openPreviousExplanation}
-                              className={MB.btnPrevExercise}
+                              data-testid="learning-stop-game"
+                              onClick={stopGame}
+                              className={MB.btnStop}
                             >
-                              🕘 תרגיל קודם
+                              ⏹️ עצור
                             </button>
-                          )}
-                      </div>
+                            {(mode === "learning" || mode === "practice") &&
+                              previousExplanationQuestion &&
+                              currentQuestion.params?.kind !== "no_question" && (
+                                <button
+                                  type="button"
+                                  onClick={openPreviousExplanation}
+                                  className={MB.btnPrevExercise}
+                                >
+                                  🕘 תרגיל קודם
+                                </button>
+                              )}
+                          </div>
 
                       {(mode === "learning" || mode === "practice") &&
-                        currentQuestion &&
                         currentQuestion.params?.kind !== "no_question" && (
                         <>
 
@@ -3487,42 +3576,44 @@ export default function GeometryMaster() {
                         </>
                       )}
 
-                      {showTheoryHelp &&
-                        mode === "learning" &&
-                        currentQuestion.params?.kind !== "no_question" && (
-                          <div
-                            className={learningModalOverlay}
-                            onClick={() => setShowTheoryHelp(false)}
-                            dir="rtl"
-                          >
-                            <div
-                              className="w-full max-w-md rounded-2xl border border-white/20 bg-[#0a1222]/95 shadow-2xl p-4"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <div className="flex items-center justify-between gap-2 mb-2">
-                                <h3 className="text-base font-extrabold text-white">
-                                  מה חשוב לזכור?
-                                </h3>
-                                <button
-                                  type="button"
-                                  onClick={() => setShowTheoryHelp(false)}
-                                  className="px-2 py-1 rounded-md bg-white/10 text-white/80 hover:bg-white/20 text-xs font-bold"
-                                  aria-label="סגור"
-                                >
-                                  ✖
-                                </button>
-                              </div>
+                          {showTheoryHelp &&
+                            mode === "learning" &&
+                            currentQuestion.params?.kind !== "no_question" && (
                               <div
-                                className="text-sm text-white/90 leading-relaxed"
-                                style={learningMixedHebrewMathStyle}
+                                className={learningModalOverlay}
+                                onClick={() => setShowTheoryHelp(false)}
+                                dir="rtl"
                               >
-                                {renderLearningMixedHebrewMathText(
-                                  getTheorySummary(currentQuestion, currentQuestion.topic, grade)
-                                )}
+                                <div
+                                  className="w-full max-w-md rounded-2xl border border-white/20 bg-[#0a1222]/95 shadow-2xl p-4"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <div className="flex items-center justify-between gap-2 mb-2">
+                                    <h3 className="text-base font-extrabold text-white">
+                                      מה חשוב לזכור?
+                                    </h3>
+                                    <button
+                                      type="button"
+                                      onClick={() => setShowTheoryHelp(false)}
+                                      className="px-2 py-1 rounded-md bg-white/10 text-white/80 hover:bg-white/20 text-xs font-bold"
+                                      aria-label="סגור"
+                                    >
+                                      ✖
+                                    </button>
+                                  </div>
+                                  <div
+                                    className="text-sm text-white/90 leading-relaxed"
+                                    style={learningMixedHebrewMathStyle}
+                                  >
+                                    {renderLearningMixedHebrewMathText(
+                                      getTheorySummary(currentQuestion, currentQuestion.topic, grade)
+                                    )}
+                                  </div>
+                                </div>
                               </div>
-                            </div>
-                          </div>
-                        )}
+                            )}
+                        </div>
+                      )}
                     </div>
                   </div>
               )}
@@ -4186,11 +4277,11 @@ export default function GeometryMaster() {
               aria-label="שרטוט מוגדל"
             >
               <div
-                className="w-full max-w-lg bg-gradient-to-br from-[#080c16] to-[#0a0f1d] border-2 border-emerald-500/50 rounded-2xl p-4 shadow-2xl"
+                className="w-full max-w-[min(96vw,720px)] bg-gradient-to-br from-[#080c16] to-[#0a0f1d] border-2 border-emerald-500/50 rounded-2xl p-3 sm:p-4 shadow-2xl"
                 onClick={(e) => e.stopPropagation()}
                 dir="rtl"
               >
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between mb-2">
                   <span className="text-emerald-300 font-bold text-sm">שרטוט</span>
                   <button
                     type="button"
@@ -4206,6 +4297,7 @@ export default function GeometryMaster() {
                     spec={questionDiagramSpec}
                     question={currentQuestion}
                     emphasis="neutral"
+                    expanded
                   />
                 </div>
               </div>

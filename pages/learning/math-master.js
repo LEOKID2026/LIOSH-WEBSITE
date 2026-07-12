@@ -49,11 +49,33 @@ import {
   buildStepExplanation,
 } from "../../utils/math-explanations";
 import { trackOperationTime, buildMathReportStorageKey } from "../../utils/math-time-tracking";
-import { applyLearningShellLayoutVars, learningMasterDesktopLayoutOptions } from "../../utils/learning-shell-layout";
+import { useMobileViewport } from "../../hooks/useMobileViewport";
+import {
+  LEARNING_MASTER_MOBILE_WRAP_CLASS,
+  LEARNING_MASTER_MOBILE_CONTENT_SCROLL_CLASS,
+  LEARNING_MASTER_MOBILE_SUBTITLE_ROW_CLASS,
+  LEARNING_MASTER_MOBILE_HUD_CLASS,
+  LEARNING_MASTER_MOBILE_MODE_ROW_CLASS,
+  LEARNING_MASTER_MOBILE_GAME_CLASS,
+  LEARNING_MASTER_MOBILE_ANSWER_SCALE_CLASS,
+  LEARNING_MASTER_MOBILE_BOOK_TILE_BOTTOM,
+  LEARNING_MASTER_MOBILE_NUMERIC_INPUT,
+  LEARNING_MASTER_MOBILE_VK_KEY,
+  LEARNING_MASTER_MOBILE_VK_SUBMIT_GREEN,
+  LEARNING_MASTER_MOBILE_VK_SUBMIT_BLUE,
+  LEARNING_MASTER_MOBILE_VK_CLEAR,
+  LEARNING_MASTER_MOBILE_VK_SPACER,
+  LEARNING_MASTER_MOBILE_VK_ROW_GAP,
+  LEARNING_MASTER_MOBILE_VK_KEYBOARD_SHELL,
+  applyLearningMasterMobileShellLayoutVars,
+  buildLearningMasterMobileNumericFieldProps,
+} from "../../utils/learning-master-mobile.client.js";
+
 import {
   buildLearningMasterQuestionPressureLayout,
   LEARNING_MASTER_ANSWER_SURFACE_CLASS,
-} from "../../utils/learning-master-question-pressure.client.js";import { STEP_BY_STEP_AUTO_PLAY_DELAY_MS } from "../../utils/learning-step-by-step-config";
+} from "../../utils/learning-master-question-pressure.client.js";
+import { STEP_BY_STEP_AUTO_PLAY_DELAY_MS } from "../../utils/learning-step-by-step-config";
 import TrackingDebugPanel from "../../components/TrackingDebugPanel";
 import LearningPlannerRecommendationBlock from "../../components/LearningPlannerRecommendationBlock";
 import { reportModeFromGameState } from "../../utils/report-track-meta";
@@ -90,6 +112,7 @@ import { DEFAULT_PROFILE_BACKGROUND_KEY } from "../../lib/student-ui/profile-bac
 import { readProfileBackgroundFromLocalStorage } from "../../lib/student-ui/profile-background.client.js";
 import LearningMasterHud from "../../components/learning/LearningMasterHud.jsx";
 import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar.jsx";
+import LearningMasterMobileNavTitle from "../../components/learning/LearningMasterMobileNavTitle.jsx";
 import LearningMasterDesktopHeader from "../../components/learning/LearningMasterDesktopHeader.jsx";
 import LearningMasterAdSlot from "../../components/learning/LearningMasterAdSlot.jsx";
 import { StepExerciseUiProvider } from "../../contexts/StepExerciseUiContext.jsx";
@@ -100,7 +123,16 @@ import {
   getStreakReward,
 } from "../../utils/daily-streak";
 import { useSound } from "../../hooks/useSound";
-import { getQuestionFontStyle } from "../../utils/learning-question-font";
+import { getQuestionFontStyle, getVerbalInstructionStyle } from "../../utils/learning-question-font";
+import { resolveLearningMcqChoiceClassName } from "../../utils/learning-mcq-choice-styles.client";
+import {
+  buildHebrewApprovedVerbalMcqGridClassName,
+} from "../../utils/hebrew-approved-verbal-master-contract.client.js";
+import {
+  buildApprovedVerbalStemLayout,
+  getHebrewApprovedSingleVerbalQuestionStyle,
+  isApprovedVerbalTextStem,
+} from "../../utils/math-geometry-verbal-visual-adapter.client.js";
 import {
   compareAnswers,
   compareMathLearnerAnswer,
@@ -423,6 +455,52 @@ function loadLeaderboardTop10ByDisplayLevel(saved, displayLevel) {
   return merged.slice(0, 10);
 }
 
+/** Horizontal display only — mobile slightly smaller; desktop capped lower. */
+function getMathHorizontalEquationFontStyle(opts = {}, isMobileViewport = true) {
+  if (isMobileViewport) {
+    return getQuestionFontStyle({
+      mobileMinPx: 28,
+      mobileMaxPx: 42,
+      vwScale: 0.92,
+      ...opts,
+    });
+  }
+  return getQuestionFontStyle({
+    mobileMinPx: 22,
+    mobileMaxPx: 32,
+    vwScale: 0.38,
+    maxVw: 4.2,
+    ...opts,
+  });
+}
+
+function getMathHorizontalQuestionFontStyle(opts = {}, isMobileViewport = true) {
+  if (opts.kind === "label") {
+    return getQuestionFontStyle(opts);
+  }
+  return getMathHorizontalEquationFontStyle(opts, isMobileViewport);
+}
+
+/** Same reading-tone body color as geometry verbal stems (e.g. „ריבוע עם צלע 8”). */
+const MATH_NUMERIC_QUESTION_BODY_COLOR = "#163A5F";
+
+function boostHorizontalQuestionBodyClass(className, isMobileViewport = true) {
+  if (isMobileViewport) {
+    return String(className || "")
+      .replace(/\btext-4xl\b/g, "text-5xl")
+      .replace(/\btext-3xl\b/g, "text-4xl")
+      .replace(/\btext-2xl\b/g, "text-3xl")
+      .replace(/\btext-xl\b/g, "text-2xl")
+      .replace(/\btext-lg\b/g, "text-xl");
+  }
+  return String(className || "")
+    .replace(/\btext-4xl\b/g, "text-3xl")
+    .replace(/\btext-3xl\b/g, "text-2xl")
+    .replace(/\btext-2xl\b/g, "text-xl")
+    .replace(/\btext-xl\b/g, "text-lg")
+    .replace(/\btext-lg\b/g, "text-base");
+}
+
 export default function MathMaster() {
   useIOSViewportFix();
   const { MB, ui, shellClass, shellBgStyle } = useLearningMasterUi();
@@ -447,6 +525,7 @@ export default function MathMaster() {
   const learningExplainOpenBtn = ui.learningExplainOpenBtn;
   const mobileEmbeddedNumericSubmit = useMobileEmbeddedNumericSubmit("math");
   const isTouchDevice = useTouchPrimaryDevice();
+  const isMobileViewport = useMobileViewport();
   const mathVkPolicy = resolveVirtualAnswerKeyboard({
     subject: "math",
     hasTextInput: true,
@@ -1527,14 +1606,12 @@ export default function MathMaster() {
     const calc = () => {
       if (resizeTimer) clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
-        applyLearningShellLayoutVars(
-          learningMasterDesktopLayoutOptions({
-            wrapRef,
-            headerRef,
-            desktopHeaderRef,
-            controlsRef,
-          })
-        );
+        applyLearningMasterMobileShellLayoutVars({
+          wrapRef,
+          headerRef,
+          desktopHeaderRef,
+          controlsRef,
+        });
       }, 150);
     };
 
@@ -3325,9 +3402,6 @@ export default function MathMaster() {
     hasLetters(currentQuestion?.exerciseText);
   const QUESTION_TEXT_SCALE = 0.605;
 
-  // חלונות תשובה (כפתורים/קלט) – מקטינים ב-20% רק ויזואלית, בלי להזיז layout
-  const ANSWER_AREA_SCALE = 0.8;
-
   const compareLearnerAnswerForQuestion = (question, user) =>
     compareMathLearnerAnswer({
       user,
@@ -3361,14 +3435,7 @@ export default function MathMaster() {
         (/[0-9]/.test(s) && /[+\-×÷*/=√π²³]/.test(s)));
     if (hasLetters(s)) {
       return (
-        <span
-          style={{
-            display: "inline-block",
-            transform: `scale(${QUESTION_TEXT_SCALE})`,
-            transformOrigin: "center center",
-            ...learningMixedHebrewMathStyle,
-          }}
-        >
+        <span style={{ ...learningMixedHebrewMathStyle }}>
           {s}
         </span>
       );
@@ -3457,6 +3524,27 @@ export default function MathMaster() {
       })
     : null;
 
+  const isMathVerbalHorizontalStem = Boolean(
+    currentQuestion &&
+      isApprovedVerbalTextStem({
+        question: currentQuestion.question,
+        questionLabel: currentQuestion.questionLabel,
+        exerciseText: currentQuestion.exerciseText,
+        isVerticalDisplay,
+        canDisplayVertically,
+      })
+  );
+
+  const verbalVisualLayout = currentQuestion
+    ? buildApprovedVerbalStemLayout({
+        MB,
+        question: currentQuestion.question,
+        questionLabel: currentQuestion.questionLabel,
+        exerciseText: currentQuestion.exerciseText,
+        answers: currentQuestion.answers ?? [],
+      })
+    : null;
+
   return (
     <MasterSubjectAccessScreen permissionKey="math" titleHe="מתמטיקה">
     <Layout>
@@ -3488,7 +3576,7 @@ export default function MathMaster() {
       <div className={shellClass} style={shellBgStyle} dir="rtl">
         <div
           ref={wrapRef}
-          className="relative overflow-hidden game-page-mobile learning-master-fill flex flex-col flex-1 min-h-0 w-full max-md:pl-0 max-md:pr-0 md:pl-[clamp(8px,2vw,32px)] md:pr-[clamp(8px,2vw,32px)] pt-[clamp(12px,3vw,32px)] md:pt-1"
+          className={LEARNING_MASTER_MOBILE_WRAP_CLASS}
           style={{
             maxWidth: "1200px",
             width: "min(1200px, 100vw)",
@@ -3524,36 +3612,25 @@ export default function MathMaster() {
             headerRef={headerRef}
             onCurriculumClick={() => router.push("/learning/curriculum?subject=math")}
             onBack={backSafe}
+            hideCurriculum
+            compactHeader
+            integratedTopRow
+            centerSlot={
+              <LearningMasterMobileNavTitle MB={MB} title="🧮 מתמטיקה" sound={sound} />
+            }
           />
         </div>
 
         <div
-          className="relative flex flex-1 min-h-0 flex-col items-center justify-start px-2 md:px-4 overflow-y-auto overflow-x-hidden [-webkit-overflow-scrolling:touch] max-md:pt-[calc(var(--head-h,56px)+8px)] md:pt-0"
+          className={LEARNING_MASTER_MOBILE_CONTENT_SCROLL_CLASS}
           style={{
             height: "100%",
             maxHeight: "100%",
             paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 20px)",
           }}
         >
-          <div className="md:hidden text-center mb-3" ref={mobileScratchpadAnchorRef}>
-            <div className="flex items-center justify-center gap-2 mb-0.5">
-              <h1 className={MB.pageTitle}>
-                🧮 מתמטיקה
-              </h1>
-              <button
-                onClick={() => {
-                  sound.toggleSounds();
-                  sound.toggleMusic();
-                }}
-                className={
-                  sound.soundsEnabled && sound.musicEnabled ? MB.btnSoundOn : MB.btnSoundOff
-                }
-                title={sound.soundsEnabled && sound.musicEnabled ? "השתק צלילים" : "הפעל צלילים"}
-              >
-                {sound.soundsEnabled && sound.musicEnabled ? "🔊" : "🔇"}
-              </button>
-            </div>
-            <p className={MB.pageSub}>
+          <div className={LEARNING_MASTER_MOBILE_SUBTITLE_ROW_CLASS} ref={mobileScratchpadAnchorRef}>
+            <p className={`${MB.pageSub} max-md:leading-none max-md:mb-0`}>
               {playerName || "שחקן"} • {GRADES[grade].name} •{" "}
               {studentDisplayLevelLabel(displayLevel)} • {getOperationName(operation)} •{" "}
               {MODES[mode].name}
@@ -3563,7 +3640,7 @@ export default function MathMaster() {
           <LearningMasterHud
             MB={MB}
             controlsRef={controlsRef}
-            className="md:!mb-1.5"
+            className={LEARNING_MASTER_MOBILE_HUD_CLASS}
             topHud={subjectView.topHud}
             lives={lives}
             mode={mode}
@@ -3577,7 +3654,7 @@ export default function MathMaster() {
 
           {/* בחירת מצב (תרגול / למידה / מהירות / מרתון / אתגר) */}
           <div
-            className="mx-auto flex items-center justify-center gap-1.5 md:gap-2 lg:gap-2.5 mb-3 md:mb-1 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl flex-wrap px-1 md:px-2"
+            className={LEARNING_MASTER_MOBILE_MODE_ROW_CLASS}
             dir="rtl"
           >
             {["practice", "learning", "speed", "marathon", "challenge"].map((m) => (
@@ -3996,6 +4073,7 @@ export default function MathMaster() {
                   subject="math"
                   grade={grade}
                   testId={`math-${grade}-book-index-button`}
+                  mobileBottomClass={LEARNING_MASTER_MOBILE_BOOK_TILE_BOTTOM}
                   onClick={() => router.push(bookIndexHref)}
                 />
               ) : null}
@@ -4152,7 +4230,7 @@ export default function MathMaster() {
               />
               
 
-              <div className="mt-auto mb-2 w-full pt-3 md:pt-4 flex flex-col items-center gap-2.5 md:gap-3">
+              <div className="mt-auto mb-2 max-[420px]:mb-1 w-full pt-3 max-[420px]:pt-2 md:pt-4 flex flex-col items-center gap-2.5 max-[420px]:gap-2 md:gap-3">
               <div className="flex items-center justify-center gap-1.5 md:gap-2.5 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl flex-wrap px-1 md:px-2 mx-auto">
                 <button
                   type="button"
@@ -4227,7 +4305,7 @@ export default function MathMaster() {
               </div>
             </div>
           ) : (
-            <div className="flex flex-col flex-1 min-h-0 w-full items-center">
+            <div className={`flex flex-col flex-1 min-h-0 w-full items-center${currentQuestion ? " max-md:-mt-1" : ""}`}>
               {/* אנימציה לתשובה נכונה */}
               {showCorrectAnimation && (
                 <div className="fixed inset-0 pointer-events-none z-[300] flex items-center justify-center">
@@ -4255,7 +4333,7 @@ export default function MathMaster() {
                 <ScratchpadVirtualInputProvider onActiveCellChange={setActiveScratchpadCell}>
                 <div
                   ref={gameRef}
-                  className="relative w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-4xl flex flex-col flex-1 min-h-0 items-stretch mb-2 mx-auto overflow-hidden max-md:h-[var(--game-h,400px)] max-md:min-h-[300px] md:min-h-[280px]"
+                  className={LEARNING_MASTER_MOBILE_GAME_CLASS}
                 >
                   {/* שכבת הודעות שלא משנה פריסה (אין מקום שמור / אין מיקרו-סק롤) */}
                   {(feedback || errorExplanation) && (
@@ -4507,6 +4585,13 @@ export default function MathMaster() {
                                   text: displayParts.leadText,
                                   kind: "label",
                                 }),
+                                ...getVerbalInstructionStyle({
+                                  text: displayParts.leadText,
+                                  isMobileViewport,
+                                  className:
+                                    questionPressureLayout?.questionLeadClassByPressure ??
+                                    MB.questionLead,
+                                }),
                               }}
                             >
                               {displayParts.leadText}
@@ -4527,6 +4612,7 @@ export default function MathMaster() {
                             style={{
                               direction: "ltr",
                               unicodeBidi: "isolate",
+                              color: MATH_NUMERIC_QUESTION_BODY_COLOR,
                               lineHeight:
                                 questionPressureLayout?.questionLineHeightByPressure,
                               ...getQuestionFontStyle({
@@ -4545,29 +4631,62 @@ export default function MathMaster() {
                         question={currentQuestion.question}
                         questionLabel={currentQuestion.questionLabel}
                         exerciseText={currentQuestion.exerciseText}
-                        getQuestionFontStyle={getQuestionFontStyle}
-                        wrapperClassName="relative w-full pr-2 pl-2 pt-0 w-full flex flex-col items-center justify-center gap-1"
-                        leadClassName={
-                          questionPressureLayout?.questionLeadClassByPressure ??
-                          MB.questionLead
+                        getQuestionFontStyle={(opts) =>
+                          getMathHorizontalQuestionFontStyle(opts, isMobileViewport)
                         }
-                        bodyClassName={`${
-                          questionPressureLayout?.questionBodyClassByPressure ??
-                          MB.questionBody
-                        } ${
-                          currentQuestion.operation === "sequences"
-                            ? "whitespace-normal break-words overflow-wrap-anywhere"
-                            : ""
-                        }`}
-                        formulaClassName={MB.questionFormula}
+                        getEquationFontStyle={(opts) =>
+                          getMathHorizontalEquationFontStyle(opts, isMobileViewport)
+                        }
+                        resolveVerbalSingleStyle={
+                          isMathVerbalHorizontalStem
+                            ? getHebrewApprovedSingleVerbalQuestionStyle
+                            : undefined
+                        }
+                        wrapperClassName={
+                          isMathVerbalHorizontalStem
+                            ? undefined
+                            : "relative w-full max-w-full pr-2 pl-2 pt-0 flex flex-col items-center justify-center gap-1"
+                        }
+                        leadClassName={
+                          isMathVerbalHorizontalStem
+                            ? verbalVisualLayout?.questionLeadClassName ??
+                              MB.questionLead
+                            : questionPressureLayout?.questionLeadClassByPressure ??
+                              MB.questionLead
+                        }
+                        bodyClassName={
+                          isMathVerbalHorizontalStem
+                            ? `${verbalVisualLayout?.questionBodyClassName ?? MB.questionBody}${
+                                currentQuestion.operation === "sequences"
+                                  ? " whitespace-normal break-words overflow-wrap-anywhere"
+                                  : ""
+                              }`
+                            : `${boostHorizontalQuestionBodyClass(
+                                questionPressureLayout?.questionBodyClassByPressure ??
+                                  MB.questionBody,
+                                isMobileViewport
+                              )} ${
+                                currentQuestion.operation === "sequences"
+                                  ? "whitespace-normal break-words overflow-wrap-anywhere"
+                                  : ""
+                              }`
+                        }
+                        formulaClassName={`${MB.questionFormula} text-4xl md:text-3xl`}
                         leadStyle={{
-                          lineHeight:
-                            questionPressureLayout?.questionLineHeightByPressure,
+                          lineHeight: isMathVerbalHorizontalStem
+                            ? verbalVisualLayout?.questionLineHeightByPressure
+                            : questionPressureLayout?.questionLineHeightByPressure,
                         }}
                         bodyStyle={{
-                          lineHeight:
-                            questionPressureLayout?.questionLineHeightByPressure,
+                          lineHeight: isMathVerbalHorizontalStem
+                            ? verbalVisualLayout?.questionLineHeightByPressure
+                            : questionPressureLayout?.questionLineHeightByPressure,
                         }}
+                        bodyTextColor={
+                          isMathVerbalHorizontalStem
+                            ? undefined
+                            : MATH_NUMERIC_QUESTION_BODY_COLOR
+                        }
                       />
                     )}
                     </MathScratchpadSlot>
@@ -4614,24 +4733,24 @@ export default function MathMaster() {
                       // כפתורי בחירה
                       // בנושא השוואה - 3 עמודות, כפתורים קטנים יותר
                       const isCompare = currentQuestion.operation === "compare";
-                      const gridCols = isCompare ? "grid-cols-3" : "grid-cols-2";
-                      const buttonPadding = isCompare
-                        ? "px-3 py-3 max-[420px]:px-2.5 max-[420px]:py-2.5"
-                        : "px-6 py-6 max-[420px]:px-3 max-[420px]:py-3";
-                      const buttonText = isCompare
-                        ? "text-lg max-[420px]:text-base"
-                        : "text-2xl max-[420px]:text-lg";
-                      
+                      const mcqGridClassName = isCompare
+                        ? `grid grid-cols-3 gap-3 w-full mb-3 max-[420px]:gap-2 max-[420px]:mb-2 ${
+                            isMobileViewport
+                              ? LEARNING_MASTER_MOBILE_ANSWER_SCALE_CLASS
+                              : ""
+                          }`
+                        : buildHebrewApprovedVerbalMcqGridClassName({
+                            useNarrowMobileAnswerFallback:
+                              verbalVisualLayout?.useNarrowMobileAnswerFallback,
+                            isMobileViewport,
+                          });
+                      const mcqCardSizeClass = isCompare
+                        ? "px-3 py-3 max-[420px]:px-2.5 max-[420px]:py-2.5 text-lg max-[420px]:text-base leading-snug"
+                        : `${verbalVisualLayout?.answerCardTextClass ?? ""} ${verbalVisualLayout?.answerCardNarrowClass ?? ""}`.trim();
+
                       return (
-                        <div
-                          className={`w-full mb-3 max-[420px]:mb-2`}
-                          style={{
-                            transform: `scale(${ANSWER_AREA_SCALE})`,
-                            transformOrigin: "top center",
-                          }}
-                        >
                           <div
-                            className={`grid ${gridCols} gap-3 w-full ${MB.answerMcqGridCompact}`}
+                            className={mcqGridClassName}
                             dir={isCompare ? "ltr" : undefined}
                             style={
                               isCompare
@@ -4652,22 +4771,21 @@ export default function MathMaster() {
                                   key={idx}
                                   onClick={() => handleAnswer(answer)}
                                   disabled={!!selectedAnswer}
-                                  className={`rounded-xl border-2 ${buttonPadding} ${buttonText} font-bold transition-all active:scale-95 disabled:opacity-50 ${
-                                    isCorrect && isSelected
-                                      ? MB.choiceCorrect
-                                      : isWrong
-                                      ? MB.choiceWrong
-                                      : selectedAnswer && isCorrect
-                                      ? MB.choiceCorrect
-                                      : MB.choiceDefault
-                                  }`}
+                                  className={`rounded-xl border-2 transition-all active:scale-95 disabled:opacity-50 ${mcqCardSizeClass} ${resolveLearningMcqChoiceClassName(
+                                    {
+                                      MB,
+                                      isSelected,
+                                      isCorrectChoice: isCorrect,
+                                      isWrong,
+                                      revealResults: selectedAnswer != null,
+                                    }
+                                  )}`}
                                 >
                                   {renderAnswerLabel(answer)}
                                 </button>
                               );
                             })}
                           </div>
-                        </div>
                       );
                     } else if ((mode === "learning" || mode === "practice") && !practiceMode) {
                       // שדה קלט טקסט למצבי למידה ותרגול
@@ -4685,7 +4803,15 @@ export default function MathMaster() {
                         : null;
                       return (
                         <div className={MB.answerWrap}>
-                          <div className={`text-center ${mobileEmbeddedNumericSubmit ? "mb-1 max-[420px]:mb-0.5" : "mb-3 max-[420px]:mb-2"}`}>
+                          <div
+                            className={`text-center ${
+                              mobileEmbeddedNumericSubmit
+                                ? isMobileViewport
+                                  ? "mb-0"
+                                  : "mb-1 max-[420px]:mb-0.5"
+                                : "mb-3 max-[420px]:mb-2"
+                            }`}
+                          >
                             <StudentNumericAnswerField
                               subject="math"
                               value={textAnswer}
@@ -4694,8 +4820,15 @@ export default function MathMaster() {
                               testId="math-text-answer"
                               placeholder="תשובה"
                               autoFocus={!scratchpadOpen}
-                              inputClassName={isTouchDevice ? MB.inputMobile : MB.inputDesktop}
+                              inputClassName={
+                                isMobileViewport
+                                  ? LEARNING_MASTER_MOBILE_NUMERIC_INPUT
+                                  : isTouchDevice
+                                    ? MB.inputMobile
+                                    : MB.inputDesktop
+                              }
                               suppressEmbeddedKeyboard={sharedScratchpadKeyboard}
+                              {...buildLearningMasterMobileNumericFieldProps(isMobileViewport)}
                               onInputFocus={() => setActiveScratchpadCell(null)}
                               onEnterSubmit={handleMathPrimaryAnswerButtonClick}
                               onSubmit={handleMathPrimaryAnswerButtonClick}
@@ -4721,12 +4854,47 @@ export default function MathMaster() {
                                 }
                               }}
                               disabled={!!selectedAnswer}
-                              compact={isTouchDevice}
-                              className={MB.vkPad}
-                              keyClassName={isTouchDevice ? MB.vkKeyCompact : MB.vkKey}
-                              actionKeyClassName={isTouchDevice ? `${MB.vkKeyCompact} text-sm` : MB.vkKey}
+                              compact={isMobileViewport || isTouchDevice}
+                              variant="default"
+                              className={
+                                isMobileViewport
+                                  ? LEARNING_MASTER_MOBILE_VK_KEYBOARD_SHELL
+                                  : MB.vkPad
+                              }
+                              keyClassName={
+                                isMobileViewport
+                                  ? LEARNING_MASTER_MOBILE_VK_KEY
+                                  : isTouchDevice
+                                    ? MB.vkKeyCompact
+                                    : MB.vkKey
+                              }
+                              actionKeyClassName={
+                                isMobileViewport
+                                  ? LEARNING_MASTER_MOBILE_VK_KEY
+                                  : isTouchDevice
+                                    ? `${MB.vkKeyCompact} text-sm`
+                                    : MB.vkKey
+                              }
+                              clearKeyClassName={
+                                isMobileViewport ? LEARNING_MASTER_MOBILE_VK_CLEAR : undefined
+                              }
                               submitClassName={
-                                primaryBtn.action === "next" ? MB.vkSubmitBlue : MB.vkSubmitGreen
+                                isMobileViewport
+                                  ? primaryBtn.action === "next"
+                                    ? LEARNING_MASTER_MOBILE_VK_SUBMIT_BLUE
+                                    : LEARNING_MASTER_MOBILE_VK_SUBMIT_GREEN
+                                  : primaryBtn.action === "next"
+                                    ? MB.vkSubmitBlue
+                                    : MB.vkSubmitGreen
+                              }
+                              spacerClassName={
+                                isMobileViewport ? LEARNING_MASTER_MOBILE_VK_SPACER : undefined
+                              }
+                              rowGapClassName={
+                                isMobileViewport ? LEARNING_MASTER_MOBILE_VK_ROW_GAP : undefined
+                              }
+                              colGapClassName={
+                                isMobileViewport ? LEARNING_MASTER_MOBILE_VK_ROW_GAP : undefined
                               }
                               submitButton={embeddedSubmitButton}
                               submitTone={primaryBtn.action === "next" ? "blue" : "green"}
@@ -4753,24 +4921,24 @@ export default function MathMaster() {
                       // ברירת מחדל - כפתורי בחירה
                       // בנושא השוואה - 3 עמודות, כפתורים קטנים יותר
                       const isCompare = currentQuestion.operation === "compare";
-                      const gridCols = isCompare ? "grid-cols-3" : "grid-cols-2";
-                      const buttonPadding = isCompare
-                        ? "px-3 py-3 max-[420px]:px-2.5 max-[420px]:py-2.5"
-                        : "px-6 py-6 max-[420px]:px-3 max-[420px]:py-3";
-                      const buttonText = isCompare
-                        ? "text-lg max-[420px]:text-base"
-                        : "text-2xl max-[420px]:text-lg";
-                      
+                      const mcqGridClassName = isCompare
+                        ? `grid grid-cols-3 gap-3 w-full mb-3 max-[420px]:gap-2 max-[420px]:mb-2 ${
+                            isMobileViewport
+                              ? LEARNING_MASTER_MOBILE_ANSWER_SCALE_CLASS
+                              : ""
+                          }`
+                        : buildHebrewApprovedVerbalMcqGridClassName({
+                            useNarrowMobileAnswerFallback:
+                              verbalVisualLayout?.useNarrowMobileAnswerFallback,
+                            isMobileViewport,
+                          });
+                      const mcqCardSizeClass = isCompare
+                        ? "px-3 py-3 max-[420px]:px-2.5 max-[420px]:py-2.5 text-lg max-[420px]:text-base leading-snug"
+                        : `${verbalVisualLayout?.answerCardTextClass ?? ""} ${verbalVisualLayout?.answerCardNarrowClass ?? ""}`.trim();
+
                       return (
-                        <div
-                          className={`w-full mb-3 max-[420px]:mb-2`}
-                          style={{
-                            transform: `scale(${ANSWER_AREA_SCALE})`,
-                            transformOrigin: "top center",
-                          }}
-                        >
                           <div
-                            className={`grid ${gridCols} gap-3 w-full ${MB.answerMcqGridCompact}`}
+                            className={mcqGridClassName}
                             dir={isCompare ? "ltr" : undefined}
                             style={
                               isCompare
@@ -4791,22 +4959,21 @@ export default function MathMaster() {
                                   key={idx}
                                   onClick={() => handleAnswer(answer)}
                                   disabled={!!selectedAnswer}
-                                  className={`rounded-xl border-2 ${buttonPadding} ${buttonText} font-bold transition-all active:scale-95 disabled:opacity-50 ${
-                                    isCorrect && isSelected
-                                      ? MB.choiceCorrect
-                                      : isWrong
-                                      ? MB.choiceWrong
-                                      : selectedAnswer && isCorrect
-                                      ? MB.choiceCorrect
-                                      : MB.choiceDefault
-                                  }`}
+                                  className={`rounded-xl border-2 transition-all active:scale-95 disabled:opacity-50 ${mcqCardSizeClass} ${resolveLearningMcqChoiceClassName(
+                                    {
+                                      MB,
+                                      isSelected,
+                                      isCorrectChoice: isCorrect,
+                                      isWrong,
+                                      revealResults: selectedAnswer != null,
+                                    }
+                                  )}`}
                                 >
                                   {renderAnswerLabel(answer)}
                                 </button>
                               );
                             })}
                           </div>
-                        </div>
                       );
                     }
                   })()}

@@ -32,7 +32,19 @@ import {
   buildStepExplanation,
 } from "../../utils/hebrew-explanations";
 import { trackHebrewTopicTime } from "../../utils/hebrew-time-tracking";
-import { applyLearningShellLayoutVars, learningMasterDesktopLayoutOptions } from "../../utils/learning-shell-layout";
+import { useMobileViewport } from "../../hooks/useMobileViewport";
+import {
+  applyLearningMasterMobileShellLayoutVars,
+  LEARNING_MASTER_MOBILE_ANSWER_SCALE_CLASS,
+  LEARNING_MASTER_MOBILE_BOOK_TILE_BOTTOM,
+  LEARNING_MASTER_MOBILE_CONTENT_SCROLL_CLASS,
+  LEARNING_MASTER_MOBILE_GAME_CLASS,
+  LEARNING_MASTER_MOBILE_HUD_CLASS,
+  LEARNING_MASTER_MOBILE_MODE_ROW_CLASS,
+  LEARNING_MASTER_MOBILE_SUBTITLE_ROW_CLASS,
+  LEARNING_MASTER_MOBILE_TYPING_INPUT_CLASS,
+  LEARNING_MASTER_MOBILE_WRAP_CLASS,
+} from "../../utils/learning-master-mobile.client";
 import {
   LIVE_PRACTICE_GAME_OVER_HE,
   LIVE_PRACTICE_WRONG_HE,
@@ -47,7 +59,8 @@ import {
   getStreakReward,
 } from "../../utils/daily-streak";
 import { useSound } from "../../hooks/useSound";
-import { getQuestionFontStyle } from "../../utils/learning-question-font";
+import { getQuestionFontStyle, getVerbalInstructionStyle } from "../../utils/learning-question-font";
+import { resolveLearningMcqChoiceClassName } from "../../utils/learning-mcq-choice-styles.client";
 import { compareAnswers } from "../../utils/answer-compare";
 import {
   computeMcqIndicesForQuestion,
@@ -194,6 +207,7 @@ import { DEFAULT_PROFILE_BACKGROUND_KEY } from "../../lib/student-ui/profile-bac
 import { readProfileBackgroundFromLocalStorage } from "../../lib/student-ui/profile-background.client.js";
 import LearningMasterHud from "../../components/learning/LearningMasterHud.jsx";
 import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar.jsx";
+import LearningMasterMobileNavTitle from "../../components/learning/LearningMasterMobileNavTitle.jsx";
 import LearningMasterDesktopHeader from "../../components/learning/LearningMasterDesktopHeader.jsx";
 import LearningMasterAdSlot from "../../components/learning/LearningMasterAdSlot.jsx";
 import LearningMasterMobileQuestionActionDock from "../../components/learning/LearningMasterMobileQuestionActionDock.jsx";
@@ -243,6 +257,7 @@ const HEBREW_MISTAKES_KEY = "mleo_hebrew_mistakes";
 
 export default function HebrewMaster() {
   useIOSViewportFix();
+  const isMobileViewport = useMobileViewport();
   const { MB, ui, shellClass, shellBgStyle } = useLearningMasterUi();
   const learningModalOverlay = ui.learningModalOverlay;
   const learningModalPanel = ui.learningModalPanel;
@@ -1157,14 +1172,12 @@ export default function HebrewMaster() {
     const calc = () => {
       if (resizeTimer) clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
-        applyLearningShellLayoutVars(
-          learningMasterDesktopLayoutOptions({
-            wrapRef,
-            headerRef,
-            desktopHeaderRef,
-            controlsRef,
-          })
-        );
+        applyLearningMasterMobileShellLayoutVars({
+          wrapRef,
+          headerRef,
+          desktopHeaderRef,
+          controlsRef,
+        });
       }, 150);
     };
     const timer = setTimeout(calc, 100);
@@ -3084,7 +3097,7 @@ export default function HebrewMaster() {
       ? "w-full shrink-0 min-h-[210px] max-[420px]:min-h-[120px] md:min-h-[245px] flex flex-col items-center justify-center px-2"
       : "w-full shrink-0 min-h-[230px] max-[420px]:min-h-[130px] md:min-h-[260px] flex flex-col items-center justify-center px-2";
 
-  const questionSlotClassForStem = questionSlotClassByPressure;
+  const questionSlotClassForStem = `${questionSlotClassByPressure} max-md:mb-1.5`.trim();
 
   const questionLineHeightByPressure =
     questionPressureBucket === "veryLong"
@@ -3121,7 +3134,7 @@ export default function HebrewMaster() {
     questionPressureBucket === "veryLong" || questionPressureBucket === "long"
       ? "w-full mb-2.5 p-3 rounded-lg bg-blue-500/20 border border-blue-400/50"
       : "w-full mb-3 p-4 rounded-lg bg-blue-500/20 border border-blue-400/50";
-  const typingInputClass =
+  const typingInputDesktopClass =
     questionPressureBucket === "veryLong"
       ? "w-full max-w-[320px] px-3 py-3 rounded-lg bg-black/40 border border-white/20 text-white text-lg font-bold text-center disabled:opacity-50"
       : questionPressureBucket === "long"
@@ -3170,7 +3183,7 @@ export default function HebrewMaster() {
       <div className={shellClass} style={shellBgStyle} dir="rtl">
         <div
           ref={wrapRef}
-          className="relative overflow-hidden game-page-mobile learning-master-fill flex flex-col flex-1 min-h-0 w-full max-md:pl-0 max-md:pr-0 md:pl-[clamp(8px,2vw,32px)] md:pr-[clamp(8px,2vw,32px)] pt-[clamp(12px,3vw,32px)] md:pt-1"
+          className={LEARNING_MASTER_MOBILE_WRAP_CLASS}
           style={{
             maxWidth: "1200px",
             width: "min(1200px, 100vw)",
@@ -3205,36 +3218,25 @@ export default function HebrewMaster() {
             headerRef={headerRef}
             onCurriculumClick={() => router.push("/learning/curriculum?subject=hebrew")}
             onBack={backSafe}
+            hideCurriculum
+            compactHeader
+            integratedTopRow
+            centerSlot={
+              <LearningMasterMobileNavTitle MB={MB} title="📚 עברית" sound={sound} />
+            }
           />
         </div>
 
         <div
-          className="relative flex flex-1 min-h-0 flex-col items-center justify-start px-2 md:px-4 overflow-y-auto overflow-x-hidden [-webkit-overflow-scrolling:touch] max-md:pt-[calc(var(--head-h,56px)+8px)] md:pt-0"
+          className={LEARNING_MASTER_MOBILE_CONTENT_SCROLL_CLASS}
           style={{
             height: "100%",
             maxHeight: "100%",
             paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 20px)",
           }}
         >
-          <div className="md:hidden text-center mb-3">
-            <div className="flex items-center justify-center gap-2 mb-0.5">
-              <h1 className={MB.pageTitle}>
-                📚 עברית
-              </h1>
-              <button
-                onClick={() => {
-                  sound.toggleSounds();
-                  sound.toggleMusic();
-                }}
-                className={
-                  sound.soundsEnabled && sound.musicEnabled ? MB.btnSoundOn : MB.btnSoundOff
-                }
-                title={sound.soundsEnabled && sound.musicEnabled ? "השתק צלילים" : "הפעל צלילים"}
-              >
-                {sound.soundsEnabled && sound.musicEnabled ? "🔊" : "🔇"}
-              </button>
-            </div>
-            <p className={MB.pageSub}>
+          <div className={LEARNING_MASTER_MOBILE_SUBTITLE_ROW_CLASS}>
+            <p className={`${MB.pageSub} max-md:leading-none max-md:mb-0`}>
               {playerName || "שחקן"} • {GRADES[grade].name} •{" "}
               {displayLevelLabel()} • {getOperationName(operation)} •{" "}
               {MODES[mode].name}
@@ -3244,7 +3246,7 @@ export default function HebrewMaster() {
           <LearningMasterHud
             MB={MB}
             controlsRef={controlsRef}
-            className="md:!mb-1.5"
+            className={LEARNING_MASTER_MOBILE_HUD_CLASS}
             topHud={subjectView.topHud}
             lives={lives}
             mode={mode}
@@ -3257,7 +3259,7 @@ export default function HebrewMaster() {
           />
 
           {/* בחירת מצב (תרגול / למידה / מהירות / מרתון / אתגר) + נגן שמע קומפקטי מתחת */}
-          <div className="mx-auto mb-3 md:mb-1 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl px-1 md:px-2">
+          <div className={LEARNING_MASTER_MOBILE_MODE_ROW_CLASS}>
             <div
               className="flex items-center justify-center gap-1.5 md:gap-2.5 lg:gap-3 flex-wrap"
               dir="rtl"
@@ -3680,6 +3682,7 @@ export default function HebrewMaster() {
                   subject="hebrew"
                   grade={grade}
                   testId={`hebrew-${grade}-book-index-button`}
+                  mobileBottomClass={LEARNING_MASTER_MOBILE_BOOK_TILE_BOTTOM}
                   onClick={() => router.push(bookIndexHref)}
                 />
               ) : null}
@@ -3963,7 +3966,7 @@ export default function HebrewMaster() {
               {currentQuestion && (
                 <div
                   ref={gameRef}
-                  className="relative w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-4xl flex flex-col flex-1 min-h-0 items-stretch mb-2 mx-auto overflow-hidden max-md:h-[var(--game-h,400px)] max-md:min-h-[300px] md:min-h-[280px]"
+                  className={LEARNING_MASTER_MOBILE_GAME_CLASS}
                 >
                   {(feedback || errorExplanation) && (
                     <div className="absolute top-0 left-0 right-0 z-[5] px-2 pt-1 pointer-events-none" role="status" aria-live="assertive" aria-atomic="true">
@@ -4213,7 +4216,7 @@ export default function HebrewMaster() {
                     <>
                       {!suppressAudioOnlyShamaLabel && disQuestionLabel ? (
                         <p
-                          className={`text-xl md:text-2xl text-center text-white ${questionBottomSpacingClass} break-words overflow-wrap-anywhere max-w-full px-2`}
+                          className={`${MB.questionLead} ${questionBottomSpacingClass} break-words overflow-wrap-anywhere max-w-full px-2`}
                           dir="rtl"
                           data-testid="student-question-lead"
                           style={{
@@ -4223,6 +4226,11 @@ export default function HebrewMaster() {
                             overflowWrap: "break-word",
                             lineHeight: questionLineHeightByPressure,
                             ...getQuestionFontStyle({ text: disQuestionLabel || "" }),
+                            ...getVerbalInstructionStyle({
+                              text: disQuestionLabel || "",
+                              isMobileViewport,
+                              className: MB.questionLead,
+                            }),
                           }}
                         >
                           {disQuestionLabel}
@@ -4314,7 +4322,11 @@ export default function HebrewMaster() {
                           }}
                           disabled={!!selectedAnswer || !gameActive}
                           placeholder="כתוב את התשובה שלך כאן..."
-                          className={`${typingInputClass} ${typingInputNarrowClass}`}
+                          className={
+                            isMobileViewport
+                              ? LEARNING_MASTER_MOBILE_TYPING_INPUT_CLASS
+                              : `${typingInputDesktopClass} ${typingInputNarrowClass}`
+                          }
                         />
                       </div>
                       <div className={typingRowClass}>
@@ -4342,7 +4354,7 @@ export default function HebrewMaster() {
                         useNarrowMobileAnswerFallback
                           ? "grid-cols-2 max-[420px]:grid-cols-1"
                           : "grid-cols-2"
-                      }`}
+                      } ${isMobileViewport ? LEARNING_MASTER_MOBILE_ANSWER_SCALE_CLASS : ""}`}
                     >
                       {currentQuestion.answers.map((answer, idx) => {
                         const isSelected = selectedAnswer === answer;
@@ -4371,15 +4383,15 @@ export default function HebrewMaster() {
                             data-testid={`hebrew-mcq-${idx}`}
                             onClick={() => handleAnswer(answer)}
                             disabled={!!selectedAnswer}
-                            className={`rounded-xl border-2 font-bold transition-all active:scale-95 disabled:opacity-50 ${answerCardTextClass} ${answerCardNarrowClass} ${
-                              isCorrect && isSelected
-                                ? MB.choiceCorrect
-                                : isWrong
-                                ? MB.choiceWrong
-                                : selectedAnswer && isCorrect
-                                ? MB.choiceCorrect
-                                : MB.choiceDefault
-                            }`}
+                            className={`rounded-xl border-2 transition-all active:scale-95 disabled:opacity-50 ${answerCardTextClass} ${answerCardNarrowClass} ${resolveLearningMcqChoiceClassName(
+                              {
+                                MB,
+                                isSelected,
+                                isCorrectChoice: isCorrect,
+                                isWrong,
+                                revealResults: selectedAnswer != null,
+                              }
+                            )}`}
                           >
                             {nqx(`answer_${idx}`, answer)}
                           </button>

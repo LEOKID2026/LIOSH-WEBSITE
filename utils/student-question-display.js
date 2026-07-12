@@ -162,6 +162,37 @@ function isKnownInstructionLead(lead) {
   return false;
 }
 
+/** Reading / instruction prefix for verbal question hierarchy (with or without trailing colon). */
+export function isLikelyVerbalInstruction(lead) {
+  const t = String(lead ?? "")
+    .trim()
+    .replace(/:$/, "");
+  if (!t) return false;
+  if (isKnownInstructionLead(t)) return true;
+  if (
+    /^(?:קרא|קראו|קראי)(?:\s+את)?(?:\s+ה(?:טקסט|קטע|משפט|מילה(?:\s+המנוקדת)?))?$/u.test(
+      t
+    )
+  ) {
+    return true;
+  }
+  if (
+    /^(?:האזינ|התבונ|עיינ|הסתכל)(?:ו|י|וּ)?(?:\s+(?:ו|ב))?/u.test(t) ||
+    /^(?:Look|Read|Listen|Watch|Choose|Select|Complete|Fill)\b/iu.test(t)
+  ) {
+    return !isEquationLikeText(t) && !isFormulaLikeText(t);
+  }
+  if (
+    t.length <= 56 &&
+    /^(קרא|קראו|קראי|האזינ|התבונ|עיינ|הסתכל|Look|Read|Listen|Watch|Choose|Select|Complete|Fill)\b/iu.test(
+      t
+    )
+  ) {
+    return !isEquationLikeText(t) && !isFormulaLikeText(t);
+  }
+  return false;
+}
+
 /**
  * Add readable spaces around × ÷ in Hebrew formula strings.
  * @param {string} text

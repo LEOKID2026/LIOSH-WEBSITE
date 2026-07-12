@@ -575,12 +575,11 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
             } else if (levelKey === "medium") {
               const earlyW = Math.floor(Math.random() * 10);
               question = [
-                `נוסחה: שטח ריבוע = צלע × צלע. לריבוע צלע ${side} — מה השטח?`,
-                `ריבוע צלע ${side}: צלע × צלע. מה השטח ביחידות ריבוע?`,
-                `ריבוע עם צלע ${side}. השתמשו בנוסחה למציאת השטח.`,
-                `כפלו את הצלע בעצמה: ריבוע ${side}. מה השטח?`,
-                `שטח ריבוע = צלע². צלע ${side}. כמה?`,
-                `ריבוע בצלע ${side}. שטח = ${side} × ${side}. מה התוצאה?`,
+                `ריבוע צלע ${side}. מה השטח?`,
+                `ריבוע צלע ${side}: מה השטח ביחידות ריבוע?`,
+                `ריבוע עם צלע ${side}. מה השטח?`,
+                `ריבוע ${side}. מה השטח?`,
+                `ריבוע בצלע ${side}. מה השטח?`,
                 `כמה יחידות שטח בריבוע עם צלע ${side}?`,
                 `ריבוע ${side} יחידות. חשבו שטח.`,
                 `מצאו שטח ריבוע בצלע ${side}.`,
@@ -605,11 +604,11 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
             const aw = Math.floor(Math.random() * 8);
             if (levelKey === "easy") {
               question = [
-                `ריבוע עם צלע ${side}: חשבו שטח (כפל צלע בעצמה). מה התוצאה?`,
+                `ריבוע עם צלע ${side}. מה השטח?`,
                 `ריבוע צלע ${side} — מה גודל השטח ביחידות ריבוע?`,
                 `כפל הצלע בעצמה: ריבוע ${side}. מה השטח?`,
                 `ריבוע ${side}×${side}: כמה יחידות שטח?`,
-                `חשבו: ריבוע צלע ${side}. שטח = צלע × צלע.`,
+                `חשבו: ריבוע צלע ${side}. מה השטח?`,
                 `ריבוע עם צלע ${side} — מה השטח?`,
                 `נתון ריבוע צלע ${side}. מה השטח הכולל?`,
                 `כמה שטח יש לריבוע עם צלע ${side} יחידות?`,
@@ -666,11 +665,11 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
             } else if (levelKey === "medium") {
               const earlyRW = Math.floor(Math.random() * 10);
               question = [
-                `שטח מלבן = אורך × רוחב. מלבן ${length}×${width} — מה השטח?`,
+                `שטח מלבן ${length}×${width}. מה השטח?`,
                 `מלבן אורך ${length}, רוחב ${width}. חשבו שטח.`,
-                `כפלו: ${length} × ${width}. מה השטח של המלבן?`,
+                `מלבן ${length}×${width}. מה השטח?`,
                 `מלבן ${length}×${width}. מה שטחו?`,
-                `שטח = אורך × רוחב. ${length}×${width} — כמה?`,
+                `מלבן ${length}×${width}. מה השטח?`,
                 `מלבן: אורך ${length}, רוחב ${width}. מה השטח?`,
                 `חשבו שטח מלבן: ${length}×${width}.`,
                 `${length} שורות ו-${width} עמודות. מה השטח?`,
@@ -697,7 +696,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
             if (levelKey === "easy") {
               question = [
                 `מלבן שאורכו ${length} יחידות ורוחבו ${width} יחידות. מה שטח המלבן?`,
-                `מלבן שאורכו ${length} יחידות ורוחבו ${width} יחידות. שטח = אורך × רוחב. מה השטח?`,
+                `מלבן שאורכו ${length} יחידות ורוחבו ${width} יחידות. מה השטח?`,
                 `נתון מלבן: אורך = ${length} יחידות, רוחב = ${width} יחידות. מה שטחו?`,
                 `חשבו שטח מלבן באורך ${length} וברוחב ${width}.`,
                 `מלבן ${length}×${width} — כמה יחידות שטח?`,
@@ -708,7 +707,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
             } else if (levelKey === "medium") {
               question = [
                 `מה שטח המלבן? אורך ${length} יחידות, רוחב ${width} יחידות.`,
-                `שטח = אורך × רוחב. מלבן באורך ${length} יחידות וברוחב ${width} יחידות — מה השטח?`,
+                `מלבן באורך ${length} יחידות וברוחב ${width} יחידות. מה השטח?`,
                 `מלבן באורך ${length} יחידות וברוחב ${width} יחידות. מה שטחו?`,
                 `מלבן ${length}×${width} יחידות. מה השטח?`,
                 `מלבן מידות ${length} ו-${width} — מה השטח הכולל?`,
@@ -749,10 +748,10 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
           if (useStory) {
             question = `גג של בית הוא משולש עם בסיס ${base} מטר וגובה ${height} מטר. מה שטח הגג בצד אחד?`;
           } else if (formulaBand === "early") {
-            question = `משולש: בסיס ${base}, גובה ${height}. שטח ≈ חצי מ (בסיס × גובה). כמה?`;
+            question = `משולש: בסיס ${base}, גובה ${height}. מה השטח?`;
           } else if (formulaBand === "mid") {
             if (levelKey === "easy") {
-              question = `משולש בסיס ${base}, גובה ${height}: שטח = חצי × בסיס × גובה. מה התוצאה?`;
+              question = `משולש בסיס ${base}, גובה ${height}. מה השטח?`;
             } else if (levelKey === "medium") {
               question = `מה השטח של משולש עם בסיס ${base} וגובה ${height}?`;
             } else {
@@ -772,7 +771,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
           if (formulaBand === "late") {
             question = `מקבילית: בסיס ${base}, גובה לבסיס ${height}. מה השטח?`;
           } else if (levelKey === "easy") {
-            question = `מקבילית: בסיס ${base}, גובה ${height}. שטח = בסיס × גובה. מה התוצאה?`;
+            question = `מקבילית: בסיס ${base}, גובה ${height}. מה השטח?`;
           } else if (levelKey === "medium") {
             question = `מה השטח של מקבילית עם בסיס ${base} וגובה ${height}?`;
           } else {
@@ -789,7 +788,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
           correctAnswer = round(((base1 + base2) * height) / 2);
           question =
             formulaBand === "late"
-              ? `טרפז: בסיסים ${base1} ו-${base2}, גובה ${height}. מה השטח? (ממוצע הבסיסים × גובה)`
+              ? `טרפז: בסיסים ${base1} ו-${base2}, גובה ${height}. מה השטח?`
               : `מה השטח של טרפז עם בסיסים ${base1} ו-${base2} וגובה ${height}?`;
           break;
         }
@@ -824,7 +823,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
           correctAnswer = round(side * side);
           question =
             formulaBand === "early"
-              ? `ריבוע: צלע ${side}. כמה שטח? (צלע × צלע)`
+              ? `ריבוע: צלע ${side}. כמה שטח?`
               : formulaBand === "mid"
                 ? `מה השטח של ריבוע עם צלע ${side}?`
                 : `שטח ריבוע: צלע ${side}. מה התוצאה?`;
@@ -853,8 +852,8 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
             question = storyVariants[Math.floor(Math.random() * storyVariants.length)];
           } else if (formulaBand === "early") {
             const earlyVariants = [
-              `ריבוע: כל צלע ${side}. מה ההיקף? (חברו את ארבע הצלעות)`,
-              `חשבו היקף ריבוע: צלע ${side}. (4×צלע)`,
+              `ריבוע: כל צלע ${side}. מה ההיקף?`,
+              `חשבו היקף ריבוע: צלע ${side}. מה ההיקף?`,
               `ריבוע ${side} יחידות לכל צלע — מה סכום המעטפת?`,
             ];
             question = earlyVariants[Math.floor(Math.random() * earlyVariants.length)];
@@ -904,8 +903,8 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
             question = storyVariants[Math.floor(Math.random() * storyVariants.length)];
           } else if (formulaBand === "early") {
             const earlyVariants = [
-              `מלבן: אורך ${length}, רוחב ${width}. מה ההיקף? (פעמיים אורך+רוחב)`,
-              `חשבו היקף מלבן: ${length} ו-${width}. (2×(א+ר))`,
+              `מלבן: אורך ${length}, רוחב ${width}. מה ההיקף?`,
+              `חשבו היקף מלבן: ${length} ו-${width}. מה ההיקף?`,
               `מלבן ${length}×${width}: חברו את ארבע הצלעות.`,
             ];
             question = earlyVariants[phrasing % earlyVariants.length];
@@ -923,7 +922,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
             question = variants[phrasing];
           } else {
             const lateVariants = [
-              `מלבן שאורכו ${length} יחידות ורוחבו ${width} יחידות. היקף = 2 × (אורך + רוחב). מה היקף המלבן?`,
+              `מלבן שאורכו ${length} יחידות ורוחבו ${width} יחידות. מה היקף המלבן?`,
               `מלבן מידות ${length} ו-${width}. מה ההיקף?`,
               `מלבן מידות ${length} ו-${width}: הוכיחו וחשבו היקף.`,
             ];
@@ -992,10 +991,10 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
           if (useStory) {
             question = `קופסת משחקים בצורת קובייה, אורך הצלע שלה ${side} ס"מ. מה נפח הקופסה בס"מ מעוקב?`;
           } else if (formulaBand === "early") {
-            question = `קובייה: צלע ${side}. נפח = צלע × צלע × צלע. כמה?`;
+            question = `קובייה: צלע ${side}. מה הנפח?`;
           } else if (formulaBand === "mid") {
             if (levelKey === "easy") {
-              question = `קובייה צלע ${side}: נפח = צלע³. מה הנפח?`;
+              question = `קובייה צלע ${side}. מה הנפח?`;
             } else if (levelKey === "medium") {
               question = `מה הנפח של קובייה עם צלע ${side}?`;
             } else {
@@ -1029,7 +1028,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
             question = `ליאו אורז צעצועים בקופסת קרטון בצורת תיבה באורך ${length} ס"מ, רוחב ${width} ס"מ וגובה ${height} ס"מ. מה נפח הקופסה בס"מ מעוקב?`;
           } else if (formulaBand === "late") {
             if (levelKey === "easy") {
-              question = `תיבה ${length}×${width}×${height}: נפח = אורך×רוחב×גובה. מה הנפח?`;
+              question = `תיבה ${length}×${width}×${height}. מה הנפח?`;
             } else if (levelKey === "medium") {
               question = `תיבה מלבנית: ${length} × ${width} × ${height}. מה הנפח?`;
             } else {
@@ -1041,7 +1040,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
             } else if (levelKey === "medium") {
               question = `כיתה ד׳: תיבה מלבנית בממדים ${length} × ${width} × ${height} ס"מ. מה הנפח?`;
             } else {
-              question = `כיתה ד׳ (מאתגר): תיבה ${length}×${width}×${height} ס"מ — ודאו יחידות ואז חשבו נפח.`;
+              question = `כיתה ד׳ (מאתגר): תיבה ${length}×${width}×${height} ס"מ. מה הנפח?`;
             }
           } else if (gradeKey === "g5") {
             question = `תיבה מלבנית במדידה ${length}×${width}×${height}: חשבו נפח (ס"מ מעוקב).`;
@@ -1090,7 +1089,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
             correctAnswer = round((baseArea * height) / 3);
             question =
               gradeKey === "g6"
-                ? `פירמידה: בסיס ריבועי צלע ${baseSide}, גובה ${height}. נפח = ⅓×שטח בסיס×גובה — כמה?`
+                ? `פירמידה: בסיס ריבועי צלע ${baseSide}, גובה ${height}. מה הנפח?`
                 : `מה הנפח של פירמידה עם בסיס ריבועי (צלע ${baseSide}) וגובה ${height}?`;
           } else {
             const baseWidth = Math.floor(Math.random() * (level.maxSide / 2)) + 1;
@@ -1099,7 +1098,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
             correctAnswer = round((baseArea * height) / 3);
             question =
               gradeKey === "g6"
-                ? `פירמידה: בסיס מלבני ${baseSide}×${baseWidth}, גובה ${height}. חשבו נפח (⅓×בסיס×גובה).`
+                ? `פירמידה: בסיס מלבני ${baseSide}×${baseWidth}, גובה ${height}. מה הנפח?`
                 : `מה הנפח של פירמידה עם בסיס מלבני (${baseSide} × ${baseWidth}) וגובה ${height}?`;
           }
           break;
@@ -1113,7 +1112,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
           correctAnswer = round((PI * radius * radius * height) / 3);
           question =
             gradeKey === "g6"
-              ? `חרוט: רדיוס ${radius}, גובה ${height}. נפח = ⅓πr²h (π = 3.14) — כמה?`
+              ? `חרוט: רדיוס ${radius}, גובה ${height}. מה הנפח? (π = 3.14)`
               : `מה הנפח של חרוט עם רדיוס ${radius} וגובה ${height}? (π = 3.14)`;
           break;
         }
@@ -1161,12 +1160,12 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
           if (formulaBand === "late") {
             question =
               levelKey === "easy"
-                ? `תיבה במרחב — מידות ${length}×${width}×${height}. נפח = אורך×רוחב×גובה. מה הנפח?`
+                ? `תיבה במרחב — מידות ${length}×${width}×${height}. מה הנפח?`
                 : levelKey === "medium"
                   ? `נפח גוף תיבתי: ${length} × ${width} × ${height}. מה התוצאה?`
-                  : `אתגר נפח: תיבה ${length}×${width}×${height} — חשבו לפני שבוחרים.`;
+                  : `אתגר נפח: תיבה ${length}×${width}×${height}. מה הנפח?`;
           } else if (levelKey === "easy") {
-            question = `כמה יחידות נפח בתיבה ${length}×${width}×${height}? (כפל שלושת המידות)`;
+            question = `כמה יחידות נפח בתיבה ${length}×${width}×${height}?`;
           } else if (levelKey === "medium") {
             question = `מה הנפח של תיבה עם אורך ${length}, רוחב ${width} וגובה ${height}?`;
           } else {
@@ -2118,7 +2117,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
           } else {
             question = [
               `אתגר אלכסון — ריבוע צלע ${side}, מה אורך האלכסון?`,
-              `בדקו נוסחה — ריבוע ${side}, מה d?`,
+              `ריבוע ${side}. מה d?`,
               `ריבוע עם צלע ${side}. מה אורך האלכסון?`,
             ][diagSqW];
           }
@@ -2150,7 +2149,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
         if (formulaBand === "mid") {
           if (levelKey === "easy") {
             question = [
-              `מלבן ${side}×${width}: השתמשו בפיתגורס (ניצבים ${side} ו-${width}). מה אלכסון?`,
+              `מלבן ${side}×${width}. מה אלכסון?`,
               `אלכסון במלבן ישר זווית: ניצבים ${side}, ${width} — מה d?`,
               `ניצבים במלבן ${side} ו-${width}. חשבו אלכסון (פיתגורס).`,
             ][diagW];
@@ -2163,7 +2162,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
           } else {
             question = [
               `אתגר אלכסון — מלבן ${side}×${width}. מה אורך האלכסון?`,
-              `בדקו נוסחת פיתגורס — מלבן ${side}×${width}, מה d?`,
+              `מלבן ${side}×${width}. מה d?`,
               `מלבן עם צלעות ${side} ו-${width}. מה אורך האלכסון?`,
             ][diagW];
           }
@@ -2207,15 +2206,15 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
           `שטח המשולש הוא ${area} ובסיסו ${base}. מה גובהו?`,
           `משולש: בסיס ${base}, שטח ${area}. מה הגובה?`,
           `נתון משולש עם בסיס ${base} ושטח ${area}. מה אורך הגובה?`,
-          `שטח = ½ × בסיס × גובה. בסיס ${base}, שטח ${area}. מה הגובה?`,
+          `במשולש עם בסיס ${base} ושטח ${area}, מה הגובה?`,
           `גינה משולשת: בסיס ${base} מ׳, שטח ${area} מ"ר. מה הגובה?`,
-          `לשם חישוב גובה משולש: שטח ${area}, בסיס ${base}.`,
+          `משולש: בסיס ${base}, שטח ${area}. מה הגובה?`,
           `השטח הוא ${area} יחידות. הבסיס ${base}. מה הגובה של המשולש?`,
           `משולש שבסיסו ${base} ושטחו ${area}. כמה הגובה?`,
           `בסיס ${base}, שטח ${area} — מצאו את גובה המשולש.`,
           `מחשבים גובה: שטח משולש ${area}, בסיס ${base}.`,
           `פיסת בד משולשת: בסיס ${base} ס"מ, שטח ${area} סמ"ר. מה הגובה?`,
-          `גובה = 2 × שטח ÷ בסיס. שטח ${area}, בסיס ${base}. מה הגובה?`,
+          `משולש: בסיס ${base}, שטח ${area}. מה הגובה?`,
           `משולש עם בסיס ${base} יחידות ושטח ${area}. הגובה הוא?`,
           `כדי לחשב גובה: שטח ${area} ובסיס ${base}. מה התשובה?`,
         ][hTriW];
@@ -2230,11 +2229,11 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
           `במקבילית עם בסיס ${base} ושטח ${area}, מה הגובה?`,
           `מקבילית: בסיס ${base}, שטח ${area}. מצאו גובה.`,
           `שטח מקבילית ${area}, בסיסה ${base}. מה גובהה?`,
-          `שטח = בסיס × גובה. בסיס ${base}, שטח ${area}. מה הגובה?`,
+          `מקבילית: בסיס ${base}, שטח ${area}. מה הגובה?`,
           `נתון מקבילית: בסיס ${base}, שטח ${area}. מה הגובה?`,
           `מקבילית עם בסיס ${base} ושטח ${area}. כמה הגובה?`,
           `בסיס ${base} ושטח ${area} — מה גובה המקבילית?`,
-          `גובה = שטח ÷ בסיס. שטח ${area}, בסיס ${base}. מה הגובה?`,
+          `מקבילית: בסיס ${base}, שטח ${area}. מה הגובה?`,
           `שדה מקבילי: בסיס ${base} מ׳, שטח ${area} מ"ר. מה הגובה?`,
           `מקבילית: ${area} יחידות שטח, בסיס ${base}. כמה הגובה?`,
           `מצאו גובה: מקבילית בסיס ${base}, שטח ${area}.`,
@@ -2252,12 +2251,12 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
           `בטרפז עם בסיסים ${base1} ו-${base2} ושטח ${area}, מה הגובה?`,
           `טרפז: בסיסים ${base1} ו-${base2}, שטח ${area}. מצאו גובה.`,
           `שטח טרפז ${area}, בסיסיו ${base1} ו-${base2}. מה גובהו?`,
-          `שטח = ½ × (בסיס₁ + בסיס₂) × גובה. בסיסים ${base1}, ${base2}; שטח ${area}. מה הגובה?`,
+          `טרפז: בסיסים ${base1} ו-${base2}, שטח ${area}. מה הגובה?`,
           `טרפז: בסיס ראשון ${base1}, בסיס שני ${base2}, שטח ${area}. מה הגובה?`,
           `פיסת קרקע טרפזית: בסיסים ${base1} ו-${base2} מ׳, שטח ${area} מ"ר. מה הגובה?`,
           `מצאו גובה טרפז: שטח ${area}, בסיסים ${base1} ו-${base2}.`,
           `טרפז: שטח ${area}, בסיסים ${base1} ו-${base2}. כמה הגובה?`,
-          `גובה = 2 × שטח ÷ (בסיס₁ + בסיס₂). שטח ${area}, בסיסים ${base1} ו-${base2}.`,
+          `טרפז: בסיסים ${base1} ו-${base2}, שטח ${area}. מה הגובה?`,
           `טרפז עם בסיסים ${base1} ו-${base2} ושטח ${area}. מה אורך הגובה?`,
         ][hTrapW];
       }
@@ -2380,14 +2379,14 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
         } else if (levelKey === "medium") {
           question = `מה שטח העיגול עם רדיוס ${radius}? (π = 3.14)`;
         } else {
-          question = `שטח מעגל — רדיוס ${radius}, בדקו נוסחה לפני החישוב (π = 3.14).`;
+          question = `שטח מעגל — רדיוס ${radius}. מה השטח? (π = 3.14)`;
         }
       } else {
         params = { radius, kind: "circle_perimeter", askArea: false };
         correctAnswer = round(2 * PI * radius);
         if (gradeKey === "g6") {
           if (levelKey === "easy") {
-            question = `מעגל רדיוס ${radius}: היקף = 2πr. מה היקף? (π = 3.14)`;
+            question = `מעגל רדיוס ${radius}. מה היקף? (π = 3.14)`;
           } else if (levelKey === "medium") {
             question = `מעגל: רדיוס ${radius}. מה היקף המעטפת? (π = 3.14)`;
           } else {

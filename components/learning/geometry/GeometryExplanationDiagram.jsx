@@ -20,6 +20,7 @@ import {
 } from "../../../utils/geometry-step-highlight-styles";
 import { GEOMETRY_ANIMATION_PRESETS } from "../../../utils/geometry-step-types";
 import IsometricSolidView from "./solids/IsometricSolidView";
+import GeometryDiagramFitSvg from "./GeometryDiagramFitSvg";
 
 const ST = {
   stroke: "#6ee7b7",
@@ -31,8 +32,6 @@ const ST = {
   textMuted: "rgba(236, 253, 245, 0.82)",
   dash: "#94a3b8",
 };
-
-const VB = "0 0 360 280";
 
 function DiagramAnimationStyles() {
   return <style>{GEOMETRY_DIAGRAM_CSS}</style>;
@@ -189,7 +188,7 @@ function SvgText({ x, y, children, variant = "caption", anchor = "middle" }) {
   );
 }
 
-function DiagramFrame({ children, compact = false, embedded = false, mini = false }) {
+function DiagramFrame({ children, compact = false, embedded = false, mini = false, expanded = false }) {
   if (embedded) {
     return (
       <div
@@ -200,11 +199,20 @@ function DiagramFrame({ children, compact = false, embedded = false, mini = fals
       </div>
     );
   }
-  /* mini — שרטוט קטן inline בזמן השאלה: מוגבל 120px מובייל, 180px sm+ */
+  if (expanded) {
+    return (
+      <div className="w-full mx-auto mb-0 rounded-xl bg-emerald-950/50 border border-emerald-400/25 px-1 py-1 sm:px-1.5 sm:py-1.5 min-h-[min(52svh,420px)] sm:min-h-[min(58svh,480px)] flex items-center justify-center shadow-inner shadow-black/15 ring-1 ring-emerald-500/10 overflow-hidden">
+        <div className="w-full h-[min(50svh,400px)] sm:h-[min(56svh,460px)] flex items-center justify-center [&>svg]:w-full [&>svg]:h-full">
+          {children}
+        </div>
+      </div>
+    );
+  }
+  /* mini — תצוגה מקדימה קומפקטית בזמן השאלה (לא משפיע על פריסת התשובה) */
   if (mini) {
     return (
-      <div className="w-full max-w-[min(100%,300px)] mx-auto mb-0 rounded-xl bg-emerald-950/50 border border-emerald-400/25 px-2 py-1.5 sm:py-2 max-h-[120px] sm:max-h-[180px] flex items-center justify-center shadow-inner shadow-black/15 ring-1 ring-emerald-500/10 overflow-hidden">
-        <div className="w-full flex items-center justify-center [&>svg]:w-full [&>svg]:max-w-full [&>svg]:h-auto [&>svg]:max-h-[108px] sm:[&>svg]:max-h-[164px]">
+      <div className="w-full max-w-[140px] sm:max-w-[180px] mx-auto mb-0 rounded-lg bg-emerald-950/50 border border-emerald-400/25 px-0.5 py-0 flex items-center justify-center shadow-inner shadow-black/10 ring-1 ring-emerald-500/10 overflow-hidden">
+        <div className="w-full h-[min(88px,100px)] sm:h-[min(100px,120px)] max-h-[100px] sm:max-h-[120px] flex items-center justify-center [&>svg]:w-full [&>svg]:h-full [&>svg]:max-h-full [&>svg]:object-contain">
           {children}
         </div>
       </div>
@@ -235,14 +243,17 @@ export default function GeometryExplanationDiagram({
   compact = false,
   embedded = false,
   mini = false,
+  expanded = false,
   reveal = [],
   animationPreset = GEOMETRY_ANIMATION_PRESETS.none,
   stepId = "",
 }) {
   if (!spec?.kind) return null;
 
-  const frameProps = { compact, embedded, mini };
+  const frameProps = { compact, embedded, mini, expanded };
   const preset = animationPreset || GEOMETRY_ANIMATION_PRESETS.none;
+  const fitVariant = expanded ? "expanded" : mini ? "mini" : "compact";
+  const fitMeasureKey = `${spec.kind}|${spec.mode ?? ""}|${stepId}|${fitVariant}|${emphasis}|${preset}`;
   const showGrid = preset === GEOMETRY_ANIMATION_PRESETS.gridFill;
   const showTrace = preset === GEOMETRY_ANIMATION_PRESETS.tracePerimeter;
   const showHeightDraw = preset === GEOMETRY_ANIMATION_PRESETS.drawHeight;
@@ -256,14 +267,14 @@ export default function GeometryExplanationDiagram({
     if (!points) return null;
     return (
       <DiagramFrame {...frameProps}>
-        <svg viewBox={VB} className="block" aria-hidden>
+        <GeometryDiagramFitSvg variant={fitVariant} measureKey={fitMeasureKey} stepId={stepId}>
           <polygon
             points={points}
             fill={ST.fillShape}
             stroke={ST.stroke}
             strokeWidth={2.5}
           />
-        </svg>
+        </GeometryDiagramFitSvg>
       </DiagramFrame>
     );
   }
@@ -273,14 +284,14 @@ export default function GeometryExplanationDiagram({
       const points = shapeTemplatePointsString("square", { x: 180, y: 142 });
       return (
         <DiagramFrame {...frameProps}>
-          <svg viewBox={VB} className="block" aria-hidden>
+          <GeometryDiagramFitSvg variant={fitVariant} measureKey={fitMeasureKey} stepId={stepId}>
             <polygon
               points={points}
               fill={ST.fillShape}
               stroke={ST.stroke}
               strokeWidth={2.5}
             />
-          </svg>
+          </GeometryDiagramFitSvg>
         </DiagramFrame>
       );
     }
@@ -294,7 +305,7 @@ export default function GeometryExplanationDiagram({
     return (
       <DiagramFrame {...frameProps}>
         <DiagramAnimationStyles />
-        <svg viewBox={VB} className="block" aria-hidden data-step-id={stepId}>
+        <GeometryDiagramFitSvg variant={fitVariant} measureKey={fitMeasureKey} stepId={stepId}>
           <rect
             x={cx - half}
             y={cy - half}
@@ -337,7 +348,7 @@ export default function GeometryExplanationDiagram({
               שלושה ממדים שווים (צלע³)
             </SvgText>
           )}
-        </svg>
+        </GeometryDiagramFitSvg>
       </DiagramFrame>
     );
   }
@@ -347,14 +358,14 @@ export default function GeometryExplanationDiagram({
       const points = shapeTemplatePointsString("rectangle", { x: 180, y: 128 });
       return (
         <DiagramFrame {...frameProps}>
-          <svg viewBox={VB} className="block" aria-hidden>
+          <GeometryDiagramFitSvg variant={fitVariant} measureKey={fitMeasureKey} stepId={stepId}>
             <polygon
               points={points}
               fill={ST.fillShape}
               stroke={ST.stroke}
               strokeWidth={2.5}
             />
-          </svg>
+          </GeometryDiagramFitSvg>
         </DiagramFrame>
       );
     }
@@ -376,7 +387,7 @@ export default function GeometryExplanationDiagram({
     return (
       <DiagramFrame {...frameProps}>
         <DiagramAnimationStyles />
-        <svg viewBox={VB} className="block" aria-hidden data-step-id={stepId}>
+        <GeometryDiagramFitSvg variant={fitVariant} measureKey={fitMeasureKey} stepId={stepId}>
           <rect
             x={left}
             y={top}
@@ -422,7 +433,7 @@ export default function GeometryExplanationDiagram({
           <SvgText x={left - 10} y={cy + 22} variant="caption" anchor="end">
             רוחב
           </SvgText>
-        </svg>
+        </GeometryDiagramFitSvg>
       </DiagramFrame>
     );
   }
@@ -448,7 +459,7 @@ export default function GeometryExplanationDiagram({
     return (
       <DiagramFrame {...frameProps}>
         <DiagramAnimationStyles />
-        <svg viewBox={VB} className="block" aria-hidden data-step-id={stepId}>
+        <GeometryDiagramFitSvg variant={fitVariant} measureKey={fitMeasureKey} stepId={stepId}>
           <polygon
             points={`${cx},${apexY} ${xL},${baseY} ${xR},${baseY}`}
             fill={ST.fillShape}
@@ -483,7 +494,7 @@ export default function GeometryExplanationDiagram({
           <SvgText x={cx} y={Math.max(16, apexY - 14)} variant="note">
             הגובה ניצב לבסיס
           </SvgText>
-        </svg>
+        </GeometryDiagramFitSvg>
       </DiagramFrame>
     );
   }
@@ -501,7 +512,7 @@ export default function GeometryExplanationDiagram({
     const heightLabel = spec.hideHeight ? "גובה ?" : `גובה ${fmtLen(h, question)}`;
     return (
       <DiagramFrame {...frameProps}>
-        <svg viewBox={VB} className="block" aria-hidden>
+        <GeometryDiagramFitSvg variant={fitVariant} measureKey={fitMeasureKey} stepId={stepId}>
           <polygon
             points={`${xl},${yb} ${xr},${yb} ${xr + skew},${yt} ${xl + skew},${yt}`}
             fill={ST.fillShape}
@@ -534,7 +545,7 @@ export default function GeometryExplanationDiagram({
           <SvgText x={xr + skew + 18} y={(yt + yb) / 2} variant="note" anchor="start">
             מוסט ≠ גובה
           </SvgText>
-        </svg>
+        </GeometryDiagramFitSvg>
       </DiagramFrame>
     );
   }
@@ -555,7 +566,7 @@ export default function GeometryExplanationDiagram({
     const heightLabel = spec.hideHeight ? "גובה ?" : `גובה ${fmtLen(ht, question)}`;
     return (
       <DiagramFrame {...frameProps}>
-        <svg viewBox={VB} className="block" aria-hidden>
+        <GeometryDiagramFitSvg variant={fitVariant} measureKey={fitMeasureKey} stepId={stepId}>
           <polygon
             points={`${xBl},${yb} ${xBr},${yb} ${xTr},${yt} ${xTl},${yt}`}
             fill={ST.fillShape}
@@ -596,7 +607,7 @@ export default function GeometryExplanationDiagram({
           <SvgText x={xTl - 8} y={(yt + yb) / 2 + 5} variant="label" anchor="end">
             {heightLabel}
           </SvgText>
-        </svg>
+        </GeometryDiagramFitSvg>
       </DiagramFrame>
     );
   }
@@ -605,7 +616,7 @@ export default function GeometryExplanationDiagram({
     const perp = spec.mode === "perpendicular";
     return (
       <DiagramFrame {...frameProps}>
-        <svg viewBox={VB} className="block" aria-hidden>
+        <GeometryDiagramFitSvg variant={fitVariant} measureKey={fitMeasureKey} stepId={stepId}>
           {perp ? (
             <>
               <line x1="72" y1="200" x2="288" y2="200" stroke={ST.stroke} strokeWidth="2.8" />
@@ -629,7 +640,7 @@ export default function GeometryExplanationDiagram({
           <SvgText x="180" y="36" variant="note">
             {perp ? "ישרים מאונכים" : "ישרים מקבילים"}
           </SvgText>
-        </svg>
+        </GeometryDiagramFitSvg>
       </DiagramFrame>
     );
   }
@@ -646,7 +657,7 @@ export default function GeometryExplanationDiagram({
     }
     return (
       <DiagramFrame {...frameProps}>
-        <svg viewBox={VB} className="block" aria-hidden>
+        <GeometryDiagramFitSvg variant={fitVariant} measureKey={fitMeasureKey} stepId={stepId}>
           {points ? (
             <polygon points={points} fill={ST.fillShape} stroke={ST.stroke} strokeWidth="2.5" />
           ) : null}
@@ -662,7 +673,7 @@ export default function GeometryExplanationDiagram({
           <SvgText x={cx} y="28" variant="note">
             ציר סימטרייה
           </SvgText>
-        </svg>
+        </GeometryDiagramFitSvg>
       </DiagramFrame>
     );
   }
@@ -685,7 +696,7 @@ export default function GeometryExplanationDiagram({
           : null;
       return (
         <DiagramFrame {...frameProps}>
-          <svg viewBox={VB} className="block" aria-hidden>
+          <GeometryDiagramFitSvg variant={fitVariant} measureKey={fitMeasureKey} stepId={stepId}>
             {poly ? (
               <polygon points={poly} fill={ST.fillShape} stroke={ST.stroke} strokeWidth="2.4" />
             ) : (
@@ -720,7 +731,7 @@ export default function GeometryExplanationDiagram({
                 {spec.diagonal != null ? fmtLen(spec.diagonal, question) : "אלכסון"}
               </SvgText>
             ) : null}
-          </svg>
+          </GeometryDiagramFitSvg>
         </DiagramFrame>
       );
     }
@@ -729,7 +740,7 @@ export default function GeometryExplanationDiagram({
     const half = sz / 2;
     return (
       <DiagramFrame {...frameProps}>
-        <svg viewBox={VB} className="block" aria-hidden>
+        <GeometryDiagramFitSvg variant={fitVariant} measureKey={fitMeasureKey} stepId={stepId}>
           <rect
             x={cx - half}
             y={cy - half}
@@ -752,7 +763,7 @@ export default function GeometryExplanationDiagram({
           <SvgText x={cx} y={cy + half + 20} variant="label">
             {typeof spec.side === "number" ? fmtLen(spec.side, question) : "צלע"}
           </SvgText>
-        </svg>
+        </GeometryDiagramFitSvg>
       </DiagramFrame>
     );
   }
@@ -775,14 +786,14 @@ export default function GeometryExplanationDiagram({
     }
     return (
       <DiagramFrame {...frameProps}>
-        <svg viewBox={VB} className="block" aria-hidden>
+        <GeometryDiagramFitSvg variant={fitVariant} measureKey={fitMeasureKey} stepId={stepId}>
           {points ? (
             <polygon points={points} fill={ST.fillShape} stroke={ST.stroke} strokeWidth="2.5" />
           ) : null}
           <SvgText x={cx} y="28" variant="note">
             צורה לריצוף
           </SvgText>
-        </svg>
+        </GeometryDiagramFitSvg>
       </DiagramFrame>
     );
   }
@@ -798,7 +809,7 @@ export default function GeometryExplanationDiagram({
     return (
       <DiagramFrame {...frameProps}>
         <DiagramAnimationStyles />
-        <svg viewBox={VB} className="block" aria-hidden data-step-id={stepId}>
+        <GeometryDiagramFitSvg variant={fitVariant} measureKey={fitMeasureKey} stepId={stepId}>
           <circle
             cx={cx}
             cy={cy}
@@ -831,7 +842,7 @@ export default function GeometryExplanationDiagram({
               שטח — הפנים של העיגול (לא הקו החיצוני בלבד)
             </SvgText>
           )}
-        </svg>
+        </GeometryDiagramFitSvg>
       </DiagramFrame>
     );
   }
@@ -868,7 +879,7 @@ export default function GeometryExplanationDiagram({
     const m20y = (y2 + y0) / 2;
     return (
       <DiagramFrame {...frameProps}>
-        <svg viewBox={VB} className="block" aria-hidden>
+        <GeometryDiagramFitSvg variant={fitVariant} measureKey={fitMeasureKey} stepId={stepId}>
           <polygon
             points={`${x0},${y0} ${x1},${y1} ${x2},${y2}`}
             fill={ST.fillShape}
@@ -887,7 +898,7 @@ export default function GeometryExplanationDiagram({
           <SvgText x={180} y={Math.min(y0, y1, y2) - 12} variant="note">
             סכום שלוש הצלעות = היקף
           </SvgText>
-        </svg>
+        </GeometryDiagramFitSvg>
       </DiagramFrame>
     );
   }
@@ -922,7 +933,7 @@ export default function GeometryExplanationDiagram({
 
     return (
       <DiagramFrame {...frameProps}>
-        <svg viewBox={VB} className="block" aria-hidden>
+        <GeometryDiagramFitSvg variant={fitVariant} measureKey={fitMeasureKey} stepId={stepId}>
           <polygon
             points={layout.pointsString}
             fill={third ? ST.fillHi : ST.fillShape}
@@ -953,7 +964,7 @@ export default function GeometryExplanationDiagram({
               סכום זוויות במשולש = 180°
             </SvgText>
           ) : null}
-        </svg>
+        </GeometryDiagramFitSvg>
       </DiagramFrame>
     );
   }
@@ -1031,7 +1042,7 @@ export default function GeometryExplanationDiagram({
     return (
       <DiagramFrame {...frameProps}>
         <DiagramAnimationStyles />
-        <svg viewBox={VB} className="block" aria-hidden data-step-id={stepId}>
+        <GeometryDiagramFitSvg variant={fitVariant} measureKey={fitMeasureKey} stepId={stepId}>
           <polygon
             points={`${x0},${y0} ${x1},${y1} ${x2},${y2}`}
             fill={ST.fillShape}
@@ -1094,7 +1105,7 @@ export default function GeometryExplanationDiagram({
           <SvgText x="180" y="20" variant="note">
             זווית ישרה — היתר נגדה הוא c
           </SvgText>
-        </svg>
+        </GeometryDiagramFitSvg>
       </DiagramFrame>
     );
   }
@@ -1106,7 +1117,12 @@ export default function GeometryExplanationDiagram({
     return (
       <DiagramFrame {...frameProps}>
         <DiagramAnimationStyles />
-        <IsometricSolidView solidShape={solidShape} emphasis={emphasis} />
+        <IsometricSolidView
+          solidShape={solidShape}
+          emphasis={emphasis}
+          fitVariant={fitVariant}
+          measureKey={fitMeasureKey}
+        />
       </DiagramFrame>
     );
   }
@@ -1117,7 +1133,7 @@ export default function GeometryExplanationDiagram({
     return (
       <DiagramFrame {...frameProps}>
         <DiagramAnimationStyles />
-        <svg viewBox={VB} className="block" aria-hidden data-step-id={stepId}>
+        <GeometryDiagramFitSvg variant={fitVariant} measureKey={fitMeasureKey} stepId={stepId}>
           {points ? (
             <polygon points={points} fill={ST.fillShape} stroke={ST.stroke} strokeWidth="2.4" />
           ) : null}
@@ -1140,7 +1156,7 @@ export default function GeometryExplanationDiagram({
           <SvgText x="180" y="28" variant="note">
             הזזה — אותה צורה במיקום חדש
           </SvgText>
-        </svg>
+        </GeometryDiagramFitSvg>
       </DiagramFrame>
     );
   }
@@ -1151,7 +1167,7 @@ export default function GeometryExplanationDiagram({
     return (
       <DiagramFrame {...frameProps}>
         <DiagramAnimationStyles />
-        <svg viewBox={VB} className="block" aria-hidden data-step-id={stepId}>
+        <GeometryDiagramFitSvg variant={fitVariant} measureKey={fitMeasureKey} stepId={stepId}>
           <line x1="180" y1="60" x2="180" y2="220" stroke={ST.strokeHi} strokeWidth="2" strokeDasharray="8 5" />
           {points ? (
             <polygon points={points} fill={ST.fillShape} stroke={ST.stroke} strokeWidth="2.4" />
@@ -1167,7 +1183,7 @@ export default function GeometryExplanationDiagram({
           <SvgText x="180" y="28" variant="note">
             שיקוף — תמונה מול קו המראה
           </SvgText>
-        </svg>
+        </GeometryDiagramFitSvg>
       </DiagramFrame>
     );
   }
@@ -1178,7 +1194,7 @@ export default function GeometryExplanationDiagram({
     return (
       <DiagramFrame {...frameProps}>
         <DiagramAnimationStyles />
-        <svg viewBox={VB} className="block" aria-hidden data-step-id={stepId}>
+        <GeometryDiagramFitSvg variant={fitVariant} measureKey={fitMeasureKey} stepId={stepId}>
           <circle cx="180" cy="150" r="4" fill={ST.strokeHi} />
           <path
             d="M 220 150 A 40 40 0 0 0 180 110"
@@ -1200,7 +1216,7 @@ export default function GeometryExplanationDiagram({
           <SvgText x="180" y="28" variant="note">
             סיבוב {angle}° סביב נקודת מרכז
           </SvgText>
-        </svg>
+        </GeometryDiagramFitSvg>
       </DiagramFrame>
     );
   }

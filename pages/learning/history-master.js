@@ -19,7 +19,17 @@ import {
   resolveMasterSessionDurationSeconds,
 } from "../../utils/learning-time-credit";
 import { computeFreePracticeTiming } from "../../lib/learning/timing-policy.js";
-import { applyLearningShellLayoutVars, learningMasterDesktopLayoutOptions } from "../../utils/learning-shell-layout";
+import {
+  applyLearningMasterMobileShellLayoutVars,
+  LEARNING_MASTER_MOBILE_ANSWER_SCALE_CLASS,
+  LEARNING_MASTER_MOBILE_BOOK_TILE_BOTTOM,
+  LEARNING_MASTER_MOBILE_CONTENT_SCROLL_CLASS as CONTENT_SCROLL_CLASS,
+  LEARNING_MASTER_MOBILE_GAME_CLASS,
+  LEARNING_MASTER_MOBILE_HUD_CLASS as HUD_CLASS,
+  LEARNING_MASTER_MOBILE_MODE_ROW_CLASS as MODE_ROW_CLASS,
+  LEARNING_MASTER_MOBILE_SUBTITLE_ROW_CLASS as SUBTITLE_ROW_CLASS,
+  LEARNING_MASTER_MOBILE_WRAP_CLASS,
+} from "../../utils/learning-master-mobile.client.js";
 import {
   LIVE_PRACTICE_GAME_OVER_HE,
   LIVE_PRACTICE_WRONG_HE,
@@ -33,18 +43,21 @@ import {
   getStreakReward,
 } from "../../utils/daily-streak";
 import { useSound } from "../../hooks/useSound";
+import { useMobileViewport } from "../../hooks/useMobileViewport";
 
 import { learningMixedHebrewMathStyle } from "../../utils/learning-mixed-hebrew-math";
 import { renderLearningMixedHebrewMathText } from "../../components/learning/LearningMixedHebrewMathText";
 import { getQuestionFontStyle } from "../../utils/learning-question-font";
+import { resolveLearningMcqChoiceClassName } from "../../utils/learning-mcq-choice-styles.client";
 import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-stem-sanitizer";
 import { buildQuestionFingerprint } from "../../utils/question-quality";
 import StudentQuestionDisplay from "../../components/learning/StudentQuestionDisplay";
 import {
-  buildLearningMasterQuestionPressureLayout,
-  LEARNING_MASTER_ANSWER_CARD_NARROW_CLASS,
-  LEARNING_MASTER_ANSWER_SURFACE_CLASS,
-} from "../../utils/learning-master-question-pressure.client.js";
+  buildHebrewApprovedVerbalMasterLayout,
+  buildHebrewApprovedVerbalMcqGridClassName,
+  getHebrewApprovedSingleVerbalQuestionStyle,
+  HEBREW_APPROVED_VERBAL_ANSWER_AREA_CLASS,
+} from "../../utils/hebrew-approved-verbal-master-contract.client.js";
 import { warnDuplicateMcqOptionsDevOnly } from "../../utils/answer-compare";
 import {
   distractorFamilyFromOptionCell,
@@ -144,6 +157,7 @@ import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar
 import LearningMasterDesktopHeader from "../../components/learning/LearningMasterDesktopHeader.jsx";
 import LearningMasterAdSlot from "../../components/learning/LearningMasterAdSlot.jsx";
 import LearningMasterMobileQuestionActionDock from "../../components/learning/LearningMasterMobileQuestionActionDock.jsx";
+import LearningMasterMobileNavTitle from "../../components/learning/LearningMasterMobileNavTitle.jsx";
 import { StepExerciseUiProvider } from "../../contexts/StepExerciseUiContext.jsx";
 import { formatMathHudNumber } from "../../utils/math-master-hud-number.client.js";
 import { useStudentDisplayLevelPractice } from "../../hooks/useStudentDisplayLevelPractice.js";
@@ -1009,6 +1023,7 @@ export default function HistoryMaster() {
   
   // Sound system
   const sound = useSound();
+  const isMobileViewport = useMobileViewport();
   
   const [stars, setStars] = useState(0);
   const [badges, setBadges] = useState([]);
@@ -1373,14 +1388,12 @@ export default function HistoryMaster() {
     const calc = () => {
       if (resizeTimer) clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
-        applyLearningShellLayoutVars(
-          learningMasterDesktopLayoutOptions({
-            wrapRef,
-            headerRef,
-            desktopHeaderRef,
-            controlsRef,
-          })
-        );
+        applyLearningMasterMobileShellLayoutVars({
+          wrapRef,
+          headerRef,
+          desktopHeaderRef,
+          controlsRef,
+        });
       }, 150);
     };
     const timer = setTimeout(calc, 100);
@@ -2939,17 +2952,11 @@ function saveScienceAnswerInParallel({
 
   const showMobileQuestionActions = Boolean(questionBookHref || showScienceTheoryHelp);
 
-  const questionPressureLayout = currentQuestion
-    ? buildLearningMasterQuestionPressureLayout({
+  const verbalVisualLayout = currentQuestion
+    ? buildHebrewApprovedVerbalMasterLayout({
         MB,
         questionParts: [currentQuestion.stem],
         answers: currentQuestion.options ?? currentQuestion.answers ?? [],
-        hasFloatButtons: Boolean(
-          questionBookHref ||
-            (mode === "learning" &&
-              Array.isArray(currentQuestion.theoryLines) &&
-              currentQuestion.theoryLines.length > 0)
-        ),
       })
     : null;
 
@@ -2959,7 +2966,7 @@ function saveScienceAnswerInParallel({
       <div className={shellClass} style={shellBgStyle} dir="rtl">
         <div
           ref={wrapRef}
-          className="relative overflow-hidden game-page-mobile learning-master-fill flex flex-col flex-1 min-h-0 w-full max-md:pl-0 max-md:pr-0 md:pl-[clamp(8px,2vw,32px)] md:pr-[clamp(8px,2vw,32px)] pt-[clamp(12px,3vw,32px)] md:pt-1"
+          className={LEARNING_MASTER_MOBILE_WRAP_CLASS}
           style={{
             maxWidth: "1200px",
             width: "min(1200px, 100vw)",
@@ -2982,7 +2989,7 @@ function saveScienceAnswerInParallel({
         <LearningMasterDesktopHeader
           MB={MB}
           desktopHeaderRef={desktopHeaderRef}
-          title="🔬 היסטוריה"
+          title="📜 היסטוריה"
           subtitle={`${playerName || "שחקן"} • ${GRADES[grade].name} • ${displayLevelLabel()} • ${getTopicLabel(topic)} • ${MODES[mode].name}`}
           onBack={backSafe}
           onCurriculumClick={() => router.push("/learning/curriculum?subject=history")}
@@ -2995,37 +3002,26 @@ function saveScienceAnswerInParallel({
             headerRef={headerRef}
             onCurriculumClick={() => router.push("/learning/curriculum?subject=history")}
             onBack={backSafe}
+            hideCurriculum
+            compactHeader
+            integratedTopRow
+            centerSlot={
+              <LearningMasterMobileNavTitle MB={MB} title="📜 היסטוריה" sound={sound} />
+            }
           />
         </div>
 
         {/* CONTENT */}
         <div
-          className="relative flex flex-1 min-h-0 flex-col items-center justify-start px-2 md:px-4 min-w-0 overflow-y-auto overflow-x-hidden [-webkit-overflow-scrolling:touch] max-md:pt-[calc(var(--head-h,56px)+8px)] md:pt-0"
+          className={`${CONTENT_SCROLL_CLASS} min-w-0`}
           style={{
             height: "100%",
             maxHeight: "100%",
             paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 18px)",
           }}
         >
-          <div className="md:hidden text-center mb-3">
-            <div className="flex items-center justify-center gap-2 mb-0.5">
-              <h1 className={MB.pageTitle}>
-                🔬 היסטוריה
-              </h1>
-              <button
-                onClick={() => {
-                  sound.toggleSounds();
-                  sound.toggleMusic();
-                }}
-                className={
-                  sound.soundsEnabled && sound.musicEnabled ? MB.btnSoundOn : MB.btnSoundOff
-                }
-                title={sound.soundsEnabled && sound.musicEnabled ? "השתק צלילים" : "הפעל צלילים"}
-              >
-                {sound.soundsEnabled && sound.musicEnabled ? "🔊" : "🔇"}
-              </button>
-            </div>
-            <p className={MB.pageSub}>
+          <div className={SUBTITLE_ROW_CLASS}>
+            <p className={`${MB.pageSub} max-md:leading-none max-md:mb-0`}>
               {playerName || "שחקן"} • {GRADES[grade].name} • {displayLevelLabel()} •{" "}
               {getTopicLabel(topic)} • {MODES[mode].name}
             </p>
@@ -3034,7 +3030,7 @@ function saveScienceAnswerInParallel({
           <LearningMasterHud
             MB={MB}
             controlsRef={controlsRef}
-            className="md:!mb-1.5"
+            className={HUD_CLASS}
             topHud={subjectView.topHud}
             lives={lives}
             mode={mode}
@@ -3049,7 +3045,7 @@ function saveScienceAnswerInParallel({
 
           {/* בחירת מצב (תרגול / למידה / מהירות / מרתון / אתגר) */}
           <div
-            className="mx-auto flex items-center justify-center gap-1.5 md:gap-2 lg:gap-2.5 mb-3 md:mb-1 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl flex-wrap px-1 md:px-2"
+            className={`${MODE_ROW_CLASS} max-md:mb-1`}
             dir="rtl"
           >
             {["practice", "learning", "speed", "marathon", "challenge"].map((m) => (
@@ -3105,6 +3101,7 @@ function saveScienceAnswerInParallel({
                   subject="history"
                   grade={grade}
                   testId={`science-${grade}-book-index-button`}
+                  mobileBottomClass={LEARNING_MASTER_MOBILE_BOOK_TILE_BOTTOM}
                   onClick={() => router.push(bookIndexHref)}
                 />
               ) : null}
@@ -3309,7 +3306,7 @@ function saveScienceAnswerInParallel({
             <div className="flex flex-col flex-1 min-h-0 w-full items-center">
               <div
                 ref={gameRef}
-                className="relative w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-4xl flex flex-col flex-1 min-h-0 items-stretch mb-2 px-1 mx-auto overflow-hidden max-md:h-[var(--game-h,400px)] max-md:min-h-[300px] md:min-h-[280px]"
+                className={`${LEARNING_MASTER_MOBILE_GAME_CLASS} px-1`}
               >
                 {(feedback || errorExplanation) && (
                   <div className="absolute top-0 left-0 right-0 z-[5] px-2 pt-1 pointer-events-none" role="status" aria-live="assertive" aria-atomic="true">
@@ -3362,7 +3359,7 @@ function saveScienceAnswerInParallel({
                 ) : null}
 
                 <div
-                  className={`relative ${questionPressureLayout?.questionSlotClassForStem ?? ""} ${questionPressureLayout?.questionStemInsetClass ?? ""} ${showMobileQuestionActions ? "max-md:pb-11" : ""}`.trim()}
+                  className={`${verbalVisualLayout?.questionSlotClassForStem ?? ""} relative ${showMobileQuestionActions ? "max-md:pb-11" : ""}`.trim()}
                 >
                   <StudentQuestionDisplay
                     testId="science-question-stem"
@@ -3370,23 +3367,19 @@ function saveScienceAnswerInParallel({
                       currentQuestion?.stem || "אין שאלה זמינה להגדרה זו."
                     }
                     getQuestionFontStyle={getQuestionFontStyle}
+                    resolveVerbalSingleStyle={getHebrewApprovedSingleVerbalQuestionStyle}
                     leadClassName={
-                      questionPressureLayout?.questionLeadClassByPressure ??
-                      MB.questionLead
+                      verbalVisualLayout?.questionLeadClassName ?? MB.questionLead
                     }
                     bodyClassName={
-                      questionPressureLayout?.questionBodyClassByPressure ??
-                      MB.questionBody
+                      verbalVisualLayout?.questionBodyClassName ?? MB.questionBody
                     }
                     leadStyle={{
-                      lineHeight:
-                        questionPressureLayout?.questionLineHeightByPressure,
+                      lineHeight: verbalVisualLayout?.questionLineHeightByPressure,
                     }}
                     bodyStyle={{
-                      lineHeight:
-                        questionPressureLayout?.questionLineHeightByPressure,
+                      lineHeight: verbalVisualLayout?.questionLineHeightByPressure,
                     }}
-                    wrapperClassName="w-full flex flex-col items-center justify-center gap-1 max-w-xl mx-auto"
                   />
 
                 <LearningMasterMobileQuestionActionDock
@@ -3421,14 +3414,14 @@ function saveScienceAnswerInParallel({
                 />
                 </div>
 
-                <div className={LEARNING_MASTER_ANSWER_SURFACE_CLASS}>
+                <div className={HEBREW_APPROVED_VERBAL_ANSWER_AREA_CLASS}>
                   {currentQuestion && (
                     <div
-                      className={`grid gap-2 sm:gap-2.5 max-[420px]:gap-1.5 w-full max-w-xl mb-3 max-[420px]:mb-2 auto-rows-fr ${
-                        questionPressureLayout?.useNarrowMobileAnswerFallback
-                          ? "grid-cols-2 max-[420px]:grid-cols-1"
-                          : "grid-cols-2"
-                      }`}
+                      className={buildHebrewApprovedVerbalMcqGridClassName({
+                        useNarrowMobileAnswerFallback:
+                          verbalVisualLayout?.useNarrowMobileAnswerFallback,
+                        isMobileViewport,
+                      })}
                     >
                       {currentQuestion.options?.map((opt, idx) => {
                         const isSelected = selectedAnswer === idx;
@@ -3443,22 +3436,13 @@ function saveScienceAnswerInParallel({
                             data-testid={`science-mcq-${idx}`}
                             onClick={() => handleAnswer(idx)}
                             disabled={showResult}
-                            className={`rounded-xl border-2 font-semibold leading-snug h-full w-full flex items-center justify-center text-center transition-all duration-150 shadow-sm active:scale-[0.98] disabled:active:scale-100 disabled:cursor-default ${
-                              questionPressureLayout?.answerCardTextClass ??
-                              "text-sm px-2.5 py-2.5 sm:px-3 sm:py-3 min-h-[5.25rem] sm:min-h-[5.5rem]"
-                            } ${
-                              questionPressureLayout?.useNarrowMobileAnswerFallback
-                                ? LEARNING_MASTER_ANSWER_CARD_NARROW_CLASS
-                                : ""
-                            } ${
-                              isCorrect && isSelected
-                                ? MB.choiceCorrect
-                                : isWrong
-                                ? MB.choiceWrong
-                                : showResult && isCorrect
-                                ? MB.choiceCorrect
-                                : MB.choiceDefault
-                            }`}
+                            className={`rounded-xl border-2 transition-all active:scale-95 disabled:opacity-50 ${verbalVisualLayout?.answerCardTextClass ?? ""} ${verbalVisualLayout?.answerCardNarrowClass ?? ""} ${resolveLearningMcqChoiceClassName({
+                              MB,
+                              isSelected,
+                              isCorrectChoice: isCorrect,
+                              isWrong,
+                              revealResults: showResult,
+                            })}`}
                             style={{ direction: "rtl", unicodeBidi: "isolate" }}
                           >
                             {opt}
