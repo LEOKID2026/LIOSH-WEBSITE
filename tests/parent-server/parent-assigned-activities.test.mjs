@@ -240,6 +240,9 @@ test("aggregateParentReportPayload: without includeParentActivities skips parent
       limit() {
         return chain;
       },
+      range() {
+        return chain;
+      },
       maybeSingle() {
         return Promise.resolve({ data: null, error: null });
       },

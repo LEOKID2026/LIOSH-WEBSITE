@@ -141,6 +141,49 @@ import {
 import { PARENT_REPORT_PORTAL_GATE } from "../../lib/parent-report-server-truth.js";
 import { trackProductEvent } from "../../lib/analytics/track-event.client.js";
 
+const REPORT_REMOTE_SESSION_CACHE_PREFIX = "leo-parent-report-remote:v1:";
+const REPORT_REMOTE_SESSION_CACHE_TTL_MS = 90_000;
+
+function readParentReportRemoteSessionCache(fetchKey) {
+  if (typeof window === "undefined" || !fetchKey) return null;
+  try {
+    const raw = window.sessionStorage.getItem(`${REPORT_REMOTE_SESSION_CACHE_PREFIX}${fetchKey}`);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed?.body || typeof parsed.body !== "object") return null;
+    if (Date.now() - Number(parsed.at || 0) > REPORT_REMOTE_SESSION_CACHE_TTL_MS) return null;
+    return parsed.body;
+  } catch {
+    return null;
+  }
+}
+
+function writeParentReportRemoteSessionCache(fetchKey, body) {
+  if (typeof window === "undefined" || !fetchKey || !body) return;
+  try {
+    window.sessionStorage.setItem(
+      `${REPORT_REMOTE_SESSION_CACHE_PREFIX}${fetchKey}`,
+      JSON.stringify({ at: Date.now(), body })
+    );
+  } catch {
+    /* quota / private mode */
+  }
+}
+
+function applyParentReportRemoteApiBody(body, uiPeriod, setters) {
+  const out = runParentReportGenerationFromApiBody(body, uiPeriod);
+  if (!out.ok || !out.base) return false;
+  setters.setReport(out.base);
+  setters.setPlayerName(out.playerName);
+  setters.setShortContractTop(out.detailed?.parentProductContractV1?.top || null);
+  setters.setCopilotDetailedPayload(
+    out.detailed && typeof out.detailed === "object" ? out.detailed : null
+  );
+  setters.setParentReportError("");
+  setters.setLoading(false);
+  return true;
+}
+
 function parentReportPresetDays(period, customDates) {
   if (customDates) return null;
   if (period === "day") return "day";
@@ -1386,6 +1429,8 @@ export default function ParentReport() {
         appliedEndDate
       );
       const fetchKey = `${parentStudentId}|${from}|${to}|${isTeacherSource ? "teacher" : "parent"}`;
+      const uiPeriod =
+        customDates || period === "day" || period === "schoolYear" ? "custom" : period;
       if (reportRemoteFetchKeyRef.current === fetchKey) {
         setLoading(false);
         return;
@@ -1394,8 +1439,23 @@ export default function ParentReport() {
         return;
       }
       reportRemoteInflightKeyRef.current = fetchKey;
-      setLoading(true);
-      setParentReportError("");
+
+      const setters = {
+        setReport,
+        setPlayerName,
+        setShortContractTop,
+        setCopilotDetailedPayload,
+        setParentReportError,
+        setLoading,
+      };
+      const cachedBody = readParentReportRemoteSessionCache(fetchKey);
+      const hasSessionCache =
+        cachedBody &&
+        applyParentReportRemoteApiBody(cachedBody, uiPeriod, setters);
+      if (!hasSessionCache) {
+        setLoading(true);
+        setParentReportError("");
+      }
 
       let supabase;
       try {
@@ -1462,9 +1522,9 @@ export default function ParentReport() {
           return;
         }
 
-        const uiPeriod =
+        const uiPeriodResolved =
           customDates || period === "day" || period === "schoolYear" ? "custom" : period;
-        const out = runParentReportGenerationFromApiBody(body, uiPeriod);
+        const out = runParentReportGenerationFromApiBody(body, uiPeriodResolved);
         if (!out.ok || !out.base) {
           if (!cancelled) {
             setParentReportError("לא ניתן לבנות את הדוח מהנתונים שהתקבלו מהשרת.");
@@ -1476,6 +1536,7 @@ export default function ParentReport() {
           return;
         }
         if (!cancelled) {
+          writeParentReportRemoteSessionCache(fetchKey, body);
           setReport(out.base);
           setPlayerName(out.playerName);
           setShortContractTop(out.detailed?.parentProductContractV1?.top || null);
@@ -1489,7 +1550,7 @@ export default function ParentReport() {
               eventName: "parent_report_opened",
               actorType: "parent",
               studentId: parentStudentId,
-              metadata: { period: uiPeriod, from, to },
+              metadata: { period: uiPeriodResolved, from, to },
             });
           }
         }

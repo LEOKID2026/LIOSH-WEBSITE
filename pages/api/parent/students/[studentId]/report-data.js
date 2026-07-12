@@ -10,6 +10,15 @@ import { attachStudentLearningAccountToParentReportPayload } from "../../../../.
 import { enrichPayloadWithParentFacing } from "../../../../../lib/parent-server/parent-report-parent-facing.server.js";
 
 const DEFAULT_RANGE_DAYS = 30;
+/** Short-lived in-memory cache — same parent/student/range within TTL skips re-aggregation. */
+const REPORT_DATA_CACHE_TTL_MS = 90_000;
+
+/** @type {Map<string, { expiresAt: number, payload: unknown }>} */
+const reportDataResponseCache = new Map();
+
+function reportDataCacheKey(parentUserId, studentId, fromYmd, toYmd) {
+  return `${parentUserId}|${studentId}|${fromYmd}|${toYmd}`;
+}
 
 function buildDefaultRange() {
   const toDate = new Date();
@@ -68,6 +77,16 @@ export default async function handler(req, res) {
       return res.status(403).json({ ok: false, error: "לא זמין לאורח", code: "guest_not_eligible" });
     }
 
+    const fromYmd = fromDate.toISOString().slice(0, 10);
+    const toYmd = toDate.toISOString().slice(0, 10);
+    const cacheKey = reportDataCacheKey(ctx.parentUserId, studentId, fromYmd, toYmd);
+    const cached = reportDataResponseCache.get(cacheKey);
+    if (cached && cached.expiresAt > Date.now()) {
+      res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+      res.setHeader("Pragma", "no-cache");
+      return res.status(200).json(cached.payload);
+    }
+
     const serviceClient = getLearningSupabaseServiceRoleClient();
     const analytics = await aggregateParentReportPayload(serviceClient, student, fromDate, toDate, {
       includeParentActivities: true,
@@ -75,9 +94,14 @@ export default async function handler(req, res) {
     });
     const payload = await attachStudentLearningAccountToParentReportPayload(serviceClient, student, analytics);
     const enriched = await enrichPayloadWithParentFacing(serviceClient, payload, studentId);
+    const responseBody = stripInternalReportPayloadFields(enriched);
+    reportDataResponseCache.set(cacheKey, {
+      expiresAt: Date.now() + REPORT_DATA_CACHE_TTL_MS,
+      payload: responseBody,
+    });
     res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
     res.setHeader("Pragma", "no-cache");
-    return res.status(200).json(stripInternalReportPayloadFields(enriched));
+    return res.status(200).json(responseBody);
   } catch {
     return res.status(500).json({ ok: false, error: "Unexpected server error" });
   }
