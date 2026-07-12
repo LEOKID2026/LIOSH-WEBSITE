@@ -4,6 +4,10 @@ import {
   sessionCreditedMsToDurationSeconds,
 } from "./constants.js";
 import { legacyAccumulateQuestionMs } from "./compute-credited-ms.js";
+import {
+  createLearningTimeLease,
+  resolveActiveLearningStudentId,
+} from "../../lib/learning-client/learning-time-lease.client.js";
 
 /** @typedef {import('./question-time-ledger.js').QuestionTimeLedger} QuestionTimeLedger */
 
@@ -15,12 +19,11 @@ export function isLearningOrPracticeMode(mode) {
 }
 
 /**
- * מדיניות נדיבה — ledger תמיד wall-clock עד 10 דקות ליחידה.
  * @param {string} _mode
  * @param {boolean} [_flagOverride]
  */
 export function isFairnessVisibilityLedgerActive(_mode, _flagOverride) {
-  return false;
+  return true;
 }
 
 /**
@@ -28,7 +31,7 @@ export function isFairnessVisibilityLedgerActive(_mode, _flagOverride) {
  * @param {boolean} [_flagOverride]
  */
 export function resolveMasterFairnessEnabled(_mode, _flagOverride) {
-  return false;
+  return true;
 }
 
 /**
@@ -38,10 +41,11 @@ export function resolveMasterFairnessEnabled(_mode, _flagOverride) {
  *   mode: string,
  *   question?: unknown,
  *   fairnessEnabled?: boolean,
+ *   studentId?: string,
  * }} options
  */
 export function beginMasterQuestionLedger(ledgerRef, options) {
-  const { subjectId, mode, question = null, fairnessEnabled } = options;
+  const { subjectId, mode, question = null, fairnessEnabled, studentId } = options;
   const fairness =
     fairnessEnabled !== undefined
       ? fairnessEnabled
@@ -51,13 +55,58 @@ export function beginMasterQuestionLedger(ledgerRef, options) {
       ? document.visibilityState === "visible"
       : true;
 
-  ledgerRef.current = createQuestionTimeLedger({
+  const sid = resolveActiveLearningStudentId(studentId) || "active-learner";
+  const ownerId = `master:${subjectId}:${mode}:${Date.now()}:${Math.random().toString(36).slice(2, 8)}`;
+  const lease = createLearningTimeLease({
+    studentId: sid,
+    ownerId,
+    source: `master:${subjectId}`,
+  });
+
+  const ledger = createQuestionTimeLedger({
     subjectId,
     gameMode: mode,
     question,
     fairnessEnabled: fairness,
     initiallyVisible,
+    canAccrue: () => lease.isActive(),
+    maxSliceMs: 60_000,
   });
+
+  const onVisibility = () => {
+    if (typeof document === "undefined") return;
+    if (document.visibilityState === "hidden") {
+      ledger.onHidden();
+      lease.release();
+    } else {
+      lease.claim();
+      ledger.onVisible();
+    }
+  };
+
+  if (typeof document !== "undefined") {
+    document.addEventListener("visibilitychange", onVisibility);
+  }
+
+  const heart = setInterval(() => {
+    lease.heartbeat();
+    if (typeof document !== "undefined" && document.visibilityState === "visible") {
+      ledger.flushVisibleSlice();
+    }
+  }, 2000);
+
+  const prevClose = ledger.closeQuestion.bind(ledger);
+  ledger.closeQuestion = (now) => {
+    clearInterval(heart);
+    if (typeof document !== "undefined") {
+      document.removeEventListener("visibilitychange", onVisibility);
+    }
+    const closed = prevClose(now);
+    lease.dispose();
+    return closed;
+  };
+
+  ledgerRef.current = ledger;
 }
 
 /**

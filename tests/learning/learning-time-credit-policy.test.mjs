@@ -47,6 +47,7 @@ test("4. new question resets cap via separate ledger units", () => {
     question: {},
     now: 0,
   });
+  for (let t = 30_000; t <= 900_000; t += 30_000) q1.flushVisibleSlice(t);
   const c1 = q1.closeQuestion(900_000);
   assert.equal(c1.creditedMs, 600_000);
 
@@ -56,6 +57,8 @@ test("4. new question resets cap via separate ledger units", () => {
     question: {},
     now: 0,
   });
+  q2.flushVisibleSlice(60_000);
+  q2.flushVisibleSlice(120_000);
   const c2 = q2.closeQuestion(120_000);
   assert.equal(c2.creditedMs, 120_000);
 });
@@ -65,24 +68,38 @@ test("5. book page 4 minutes → 4 minutes", () => {
   assert.equal(computePageCreditedDwellMs(240_000, 0), 240_000);
 });
 
-test("6. book page open 20 minutes → 10 minutes", () => {
-  assert.equal(applyPageCreditCap(1_200_000), 600_000);
+test("6. book page open 20 minutes active → 20 minutes (no page 10-cap)", () => {
+  assert.equal(applyPageCreditCap(1_200_000), 1_200_000);
 });
 
-test("7. new book page resets cap", () => {
-  assert.equal(applyPageCreditCap(1_200_000), 600_000);
+test("7. book pages accumulate without page unit cap", () => {
+  assert.equal(applyPageCreditCap(1_200_000), 1_200_000);
   assert.equal(applyPageCreditCap(180_000), 180_000);
 });
 
-test("8. hints/explanations count within same unit (wall-clock generous)", () => {
+test("8. hidden tab does not accrue after onHidden", () => {
   const ledger = createQuestionTimeLedger({
     subjectId: "math",
     gameMode: "learning",
     question: {},
     now: 0,
     initiallyVisible: true,
+    maxSliceMs: 600_000,
   });
   ledger.onHidden(300_000);
+  const closed = ledger.closeQuestion(480_000);
+  assert.equal(closed.creditedMs, 300_000);
+});
+
+test("8b. visible continuous unit still credits hints window while visible", () => {
+  const ledger = createQuestionTimeLedger({
+    subjectId: "math",
+    gameMode: "learning",
+    question: {},
+    now: 0,
+    initiallyVisible: true,
+    maxSliceMs: 600_000,
+  });
   const closed = ledger.closeQuestion(480_000);
   assert.equal(closed.creditedMs, 480_000);
 });

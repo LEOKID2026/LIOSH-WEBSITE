@@ -54,6 +54,7 @@ export default async function handler(req, res) {
         clientVisitToken: body.clientVisitToken,
         rawDwellMs: normalizeOptionalInteger(body.rawDwellMs, 0, 36_000_000),
         creditedDwellMs: normalizeOptionalInteger(body.creditedDwellMs, 0, 600_000),
+        startedAtClient: normalizeOptionalInteger(body.startedAtClient, 0, Date.now() + 60_000),
         visitKind: typeof body.visitKind === "string" ? body.visitKind : "learning",
       }
     );

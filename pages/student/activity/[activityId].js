@@ -32,13 +32,18 @@ import { isTextualAssignedActivitySubject } from "../../../lib/classroom-activit
 import { resolveStudentActivityUi } from "../../../lib/student-ui/student-theme-resolver.client.js";
 import { useStudentTheme } from "../../../contexts/StudentThemeContext.jsx";
 import { StudentActivityLayoutVariantProvider } from "../../../contexts/StudentActivityLayoutVariantContext.jsx";
-import { computeAssignedActivityTiming } from "../../../lib/learning/timing-policy.js";
+import { computeAssignedActivityTiming, computeOpenLearningTiming } from "../../../lib/learning/timing-policy.js";
 import {
   makeParentActivityVisitToken,
   postParentActivityLearningVisit,
   beaconParentActivityLearningVisit,
-  computeParentVisitTimingFromStart,
 } from "../../../lib/learning-client/parentActivityLearningVisit.client.js";
+import {
+  createLearningTimeLease,
+  createVisibleLeaseAccrual,
+  rememberActiveLearningStudentId,
+  resolveActiveLearningStudentId,
+} from "../../../lib/learning-client/learning-time-lease.client.js";
 import StudentAssignedActivityShell from "../../../components/student/StudentAssignedActivityShell";
 import StudentAssignedActivityQuestionStage from "../../../components/student/StudentAssignedActivityQuestionStage";
 import StudentActivitySubmitConfirmModal from "../../../components/student/StudentActivitySubmitConfirmModal";
@@ -92,9 +97,13 @@ export default function StudentActivityPage({ activityId }) {
   const [error, setError] = useState("");
   const [savedAttempts, setSavedAttempts] = useState({});
   const [activityScope, setActivityScope] = useState(null);
+  const [leaseStudentId, setLeaseStudentId] = useState(() =>
+    resolveActiveLearningStudentId()
+  );
 
   // Phase 3: real per-question timing
   const questionStartTimeRef = useRef(null);
+  /** One continuous learning visit per activity open — not per question / remount. */
   /** @type {import('react').MutableRefObject<{ token: string|null, startedAt: number|null, questionIndex: number|null, flushed: boolean }>} */
   const parentVisitRef = useRef({
     token: null,
@@ -102,6 +111,10 @@ export default function StudentActivityPage({ activityId }) {
     questionIndex: null,
     flushed: false,
   });
+  const flushParentVisitRef = useRef(async () => {});
+  const learningLeaseRef = useRef(null);
+  const leaseAccrualRef = useRef(null);
+  const leaseHeartbeatRef = useRef(null);
   // explanationViewedRef: set true when post-answer explanation is shown (guided_practice/homework);
   // flows into the NEXT question's submit as explanationViewed=true
   const explanationViewedRef = useRef(false);
@@ -138,6 +151,21 @@ export default function StudentActivityPage({ activityId }) {
       }
       setActivity(json.activity);
       setActivityScope(json.scope === "parent" ? "parent" : json.scope || null);
+      const sidFromStart = String(json.studentId || json.student?.id || "").trim();
+      if (sidFromStart) {
+        rememberActiveLearningStudentId(sidFromStart);
+        setLeaseStudentId(sidFromStart);
+      } else {
+        void fetch("/api/student/me", { credentials: "include", headers: { Accept: "application/json" } })
+          .then((r) => r.json().catch(() => ({})))
+          .then((me) => {
+            const sid = String(me?.student?.id || me?.studentId || "").trim();
+            if (!sid) return;
+            rememberActiveLearningStudentId(sid);
+            setLeaseStudentId(sid);
+          })
+          .catch(() => {});
+      }
       if (json.alreadyCompleted) {
         setFinished({
           scorePct: json.scorePct ?? null,
@@ -304,33 +332,43 @@ export default function StudentActivityPage({ activityId }) {
 
   const isParentActivity = activityScope === "parent";
 
-  const beginParentVisit = useCallback((questionIndex) => {
+  const ensureParentVisit = useCallback(() => {
+    if (!isParentActivity) return;
+    const cur = parentVisitRef.current;
+    if (cur.token && !cur.flushed && cur.startedAt != null) return;
     parentVisitRef.current = {
       token: makeParentActivityVisitToken(),
       startedAt: Date.now(),
-      questionIndex,
+      questionIndex: 0,
       flushed: false,
     };
-  }, []);
+    leaseAccrualRef.current?.reset(0);
+  }, [isParentActivity]);
 
   const flushParentVisit = useCallback(
     async (opts = {}) => {
       if (!isParentActivity) return;
       const v = parentVisitRef.current;
-      if (!v.token || v.flushed || v.startedAt == null || v.questionIndex == null) return;
-      const timing = computeParentVisitTimingFromStart(v.startedAt, {
-        visitKind: opts.visitKind,
-      });
-      if (!timing.creditedDwellMs || timing.creditedDwellMs <= 0) {
+      if (!v.token || v.flushed || v.startedAt == null) return;
+      // Accrue only while this tab held the single-student lease and was visible.
+      leaseAccrualRef.current?.tick();
+      const accrued = Math.max(
+        0,
+        Math.floor(Number(leaseAccrualRef.current?.getAccruedMs?.() || 0))
+      );
+      // Visit covers non-question learning gap — no 10-minute activity cap.
+      const timing = computeOpenLearningTiming(accrued);
+      if (!timing.creditedTimeMs || timing.creditedTimeMs <= 0) {
         v.flushed = true;
         return;
       }
       v.flushed = true;
       const payload = {
-        questionIndex: v.questionIndex,
+        questionIndex: Number.isFinite(v.questionIndex) ? v.questionIndex : 0,
         clientVisitToken: v.token,
-        rawDwellMs: timing.rawDwellMs,
-        creditedDwellMs: timing.creditedDwellMs,
+        rawDwellMs: timing.rawTimeSpentMs,
+        creditedDwellMs: timing.creditedTimeMs,
+        startedAtClient: v.startedAt,
         visitKind: opts.visitKind === "answer" ? "answer" : "learning",
       };
       if (opts.useBeacon) {
@@ -342,26 +380,56 @@ export default function StudentActivityPage({ activityId }) {
     [activityId, isParentActivity]
   );
 
+  flushParentVisitRef.current = flushParentVisit;
+
   const goToQuestionIdx = useCallback((nextIdx) => {
     setCurrentIdx(nextIdx);
   }, []);
 
+  // Single browser lease: only the focused visible tab accrues learning time.
   useEffect(() => {
     if (!isParentActivity || phase !== "ready") return undefined;
-    beginParentVisit(effectiveIdx);
+    const studentId = resolveActiveLearningStudentId(leaseStudentId) || "active-learner";
+    const ownerId = `parent-activity:${activityId}:${makeParentActivityVisitToken()}`;
+    const lease = createLearningTimeLease({
+      studentId,
+      ownerId,
+      source: `parent-activity:${activityId}`,
+    });
+    const accrual = createVisibleLeaseAccrual(lease, { maxSliceMs: 60_000 });
+    learningLeaseRef.current = lease;
+    leaseAccrualRef.current = accrual;
+    lease.claim();
+    const heart = setInterval(() => {
+      lease.heartbeat();
+      accrual.tick();
+    }, 2000);
+    leaseHeartbeatRef.current = heart;
     return () => {
-      void flushParentVisit();
+      clearInterval(heart);
+      lease.dispose();
+      learningLeaseRef.current = null;
+      leaseAccrualRef.current = null;
     };
-  }, [effectiveIdx, isParentActivity, phase, beginParentVisit, flushParentVisit]);
+  }, [activityId, isParentActivity, phase, leaseStudentId]);
+
+  // Start one continuous visit when the activity becomes ready; flush only on leave/unmount.
+  useEffect(() => {
+    if (!isParentActivity || phase !== "ready") return undefined;
+    ensureParentVisit();
+    return () => {
+      void flushParentVisitRef.current();
+    };
+  }, [activityId, isParentActivity, phase, ensureParentVisit]);
 
   useEffect(() => {
     if (!isParentActivity || phase !== "ready") return undefined;
     const onPageHide = () => {
-      void flushParentVisit({ useBeacon: true });
+      void flushParentVisitRef.current({ useBeacon: true });
     };
     window.addEventListener("pagehide", onPageHide);
     return () => window.removeEventListener("pagehide", onPageHide);
-  }, [flushParentVisit, isParentActivity, phase]);
+  }, [isParentActivity, phase, activityId]);
 
   const isCurrentQuestionAnswered = Boolean(currentSavedAttempt);
   const answeredQuestionCount = useMemo(
@@ -416,6 +484,7 @@ export default function StudentActivityPage({ activityId }) {
   useEffect(() => {
     questionStartTimeRef.current = Date.now();
     explanationViewedRef.current = false;
+    leaseAccrualRef.current?.signalActivity?.();
     setScratchpadOpen(false);
     setActiveScratchpadCell(null);
     setVerticalExerciseHeadline(null);
@@ -486,15 +555,17 @@ export default function StudentActivityPage({ activityId }) {
     setFeedback(null);
     try {
       if (isParentActivity) {
-        await flushParentVisit({ visitKind: "answer" });
+        // Keep the continuous activity visit open across answers; only stamp kind for telemetry.
+        // Do not flush here — question change / remount must not mint a new 10-minute unit.
       }
-      // Phase 3: compute real elapsed time and credit cap
+      // Phase 3: per-question timing — max 10 minutes for THIS question only
       const rawMs =
         questionStartTimeRef.current != null
           ? Math.max(0, Date.now() - questionStartTimeRef.current)
           : 0;
       const { rawTimeSpentMs, creditedTimeMs, timingStatus } =
         computeAssignedActivityTiming(rawMs);
+      leaseAccrualRef.current?.signalActivity?.();
       // Capture whether the student saw an explanation from the previous question
       const explanationViewedNow = explanationViewedRef.current;
       // Reset for the upcoming question (will be overwritten by effectiveIdx useEffect on advance)

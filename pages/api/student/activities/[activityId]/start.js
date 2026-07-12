@@ -50,7 +50,7 @@ export default async function handler(req, res) {
       });
     }
 
-    return res.status(200).json({ ok: true, ...result });
+    return res.status(200).json({ ok: true, studentId: auth.studentId, ...result });
   } catch {
     return res.status(500).json({ ok: false, error: "Server error" });
   }

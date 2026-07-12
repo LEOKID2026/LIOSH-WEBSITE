@@ -94,6 +94,11 @@ describe("Phase 9 — monthly minutes from unified learning-time aggregate", () 
     assert.match(persistenceSrc, /getMonthlyPersistenceTiersFromSettings/);
     assert.doesNotMatch(persistenceSrc, /legacy-economy/);
     assert.doesNotMatch(persistenceSrc, /minutes: 600, coins: 100_000/);
+    const reportAggSrc = readFileSync(
+      join(ROOT, "lib/parent-server/report-data-aggregate.server.js"),
+      "utf8"
+    );
+    assert.match(reportAggSrc, /attachUnifiedCreditedLearningTimeToParentReportPayload/);
     const migration = readFileSync(
       join(ROOT, "supabase/migrations/058_card_rewards_system.sql"),
       "utf8"
