@@ -95,9 +95,10 @@ export default function StudentQuestionDisplay({
         resolveQuestionFontStyle?.({ text: parts.bodyText }) ||
         {}
       : {
-          ...(isMobileViewport
-            ? {}
-            : resolveQuestionFontStyle?.({ text: parts.bodyText }) || {}),
+          // Custom activity/practice resolvers may supply desktop+mobile sizes.
+          ...(!isMobileViewport || getQuestionFontStyleProp
+            ? resolveQuestionFontStyle?.({ text: parts.bodyText }) || {}
+            : {}),
         }
     : {};
 
@@ -229,12 +230,13 @@ export default function StudentQuestionDisplay({
             direction: "rtl",
             unicodeBidi: "isolate",
             ...learningProseIsolateStyle,
-            ...bodyStyle,
+            ...(resolveQuestionFontStyle?.({ text: hierarchy.text }) || {}),
             ...resolveVerbalSingleStyle({
               text: hierarchy.text,
               isMobileViewport,
               className: verbalClassName,
             }),
+            ...bodyStyle,
             ...bodyColorOnly,
           }}
         >
@@ -298,7 +300,6 @@ export default function StudentQuestionDisplay({
                   direction: isEquation ? "ltr" : "rtl",
                   unicodeBidi: "isolate",
                   ...fontBody,
-                  ...bodyStyle,
                   ...(isVerbalBody
                     ? verbalInstructionLead
                       ? getVerbalPassageStyle({
@@ -312,6 +313,7 @@ export default function StudentQuestionDisplay({
                           className: bodyClassName,
                         })
                     : {}),
+                  ...bodyStyle,
                   ...bodyColorOnly,
                 }}
               >

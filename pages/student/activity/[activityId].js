@@ -28,7 +28,10 @@ import { renderMaybeStackedFractionOrMixed } from "../../../components/learning/
 import { useTouchPrimaryDevice } from "../../../hooks/useTouchPrimaryDevice.js";
 import { resolveVirtualAnswerKeyboard } from "../../../lib/learning/virtual-answer-keyboard-policy.js";
 import { activityChoiceGridClassName } from "../../../lib/classroom-activities/student-activity-choice-layout.client.js";
-import { useStudentActivityUi } from "../../../hooks/useStudentActivityUi.js";
+import { isTextualAssignedActivitySubject } from "../../../lib/classroom-activities/student-activity-textual-subjects.client.js";
+import { resolveStudentActivityUi } from "../../../lib/student-ui/student-theme-resolver.client.js";
+import { useStudentTheme } from "../../../contexts/StudentThemeContext.jsx";
+import { StudentActivityLayoutVariantProvider } from "../../../contexts/StudentActivityLayoutVariantContext.jsx";
 import { computeAssignedActivityTiming } from "../../../lib/learning/timing-policy.js";
 import {
   makeParentActivityVisitToken,
@@ -40,7 +43,7 @@ import StudentAssignedActivityShell from "../../../components/student/StudentAss
 import StudentAssignedActivityQuestionStage from "../../../components/student/StudentAssignedActivityQuestionStage";
 import StudentActivitySubmitConfirmModal from "../../../components/student/StudentActivitySubmitConfirmModal";
 import AssignedActivityBidiText from "../../../components/classroom-activities/AssignedActivityBidiText.jsx";
-import { promoteAssignedActivityMathMcqChoices } from "../../../lib/classroom-activities/assigned-activity-math-mcq.js";
+import { prepareAssignedActivityQuestionSetForStudentDisplay } from "../../../lib/classroom-activities/prepare-assigned-activity-questions-for-display.client.js";
 
 function buildSavedAttemptsMap(attempts) {
   /** @type {Record<number, { questionIndex: number, selectedAnswer: string|null, isCorrect: boolean|null }>} */
@@ -76,7 +79,7 @@ export async function getServerSideProps(context) {
 
 export default function StudentActivityPage({ activityId }) {
   const router = useRouter();
-  const { L, MB, isBright, theme } = useStudentActivityUi();
+  const { theme } = useStudentTheme();
   const [phase, setPhase] = useState("loading");
   const [activity, setActivity] = useState(null);
   const [questionSet, setQuestionSet] = useState([]);
@@ -146,7 +149,7 @@ export default function StudentActivityPage({ activityId }) {
         return;
       }
       setQuestionSet(
-        (json.questionSet || []).map((q) => promoteAssignedActivityMathMcqChoices(q) || q)
+        prepareAssignedActivityQuestionSetForStudentDisplay(json.questionSet || [])
       );
       const attemptMap = buildSavedAttemptsMap(json.attempts);
       setSavedAttempts(attemptMap);
@@ -211,6 +214,14 @@ export default function StudentActivityPage({ activityId }) {
 
   const currentQuestion = questionSet[effectiveIdx];
   const currentSavedAttempt = savedAttempts[effectiveIdx] ?? null;
+
+  const textualAssigned = isTextualAssignedActivitySubject(
+    currentQuestion?.subject || activity?.subject
+  );
+  const { L, MB, isBright } = useMemo(
+    () => resolveStudentActivityUi(theme, { textualAssigned }),
+    [theme, textualAssigned]
+  );
 
   // ניקוד א׳–ב׳ בפעילות הורה
   const [activityNiqqudMap, setActivityNiqqudMap] = useState({});
@@ -658,7 +669,8 @@ export default function StudentActivityPage({ activityId }) {
   const progressPct =
     questionSet.length > 0 ? Math.round(((effectiveIdx + 1) / questionSet.length) * 100) : 0;
   const choiceGridClass = activityChoiceGridClassName(
-    currentQuestion?.choices ?? currentQuestion?.answers ?? currentQuestion?.options
+    currentQuestion?.choices ?? currentQuestion?.answers ?? currentQuestion?.options,
+    { textualAssigned }
   );
 
   const activitySubtitle = `${activityModeLabelHe(activity?.mode)} · שאלה ${effectiveIdx + 1} מתוך ${questionSet.length}`;
@@ -1102,8 +1114,12 @@ export default function StudentActivityPage({ activityId }) {
                 />
               </MathScratchpadSlot>
             ) : showActivityAudio ? (
-              <div className="flex flex-col gap-1 w-full" dir="rtl">
-                <div className="flex justify-start">
+              <div
+                className="flex flex-col gap-0.5 w-full shrink-0"
+                dir="rtl"
+                data-testid="activity-hebrew-audio-wrap"
+              >
+                <div className="flex justify-start leading-none">
                   <HebrewAudioBuild1Panel
                     stem={currentActivityAudioStem}
                     gameActive={!isCurrentQuestionAnswered}
@@ -1120,8 +1136,12 @@ export default function StudentActivityPage({ activityId }) {
                 />
               </div>
             ) : showEnglishVocabAudio ? (
-              <div className="flex flex-col gap-1 w-full" dir="rtl">
-                <div className="flex justify-start">
+              <div
+                className="flex flex-col gap-0.5 w-full shrink-0"
+                dir="rtl"
+                data-testid="activity-english-audio-wrap"
+              >
+                <div className="flex justify-start leading-none">
                   <EnglishPhonicsAudioPanel
                     stem={currentEnglishVocabAudioStem}
                     gameActive={!isCurrentQuestionAnswered}
@@ -1144,12 +1164,25 @@ export default function StudentActivityPage({ activityId }) {
             )
           }
       actions={
-        usesAnswerDock ? null : renderActions()
+        usesAnswerDock
+          ? null
+          : textualAssigned
+            ? (
+              <>
+                {renderActions({ includePerQuestionSubmit: false })}
+                <div className="flex flex-col gap-2 md:hidden">
+                  {renderDockPerQuestionSubmitButton(L.submitButton)}
+                  {renderActivityFinishRow(true, { includeScratchpadToggle: false })}
+                </div>
+                {renderDesktopDockButtonRow({ includeScratchpadToggle: false })}
+              </>
+            )
+            : renderActions()
       }
       usesScratchpadDock={usesAnswerDock}
       scratchpadDockAnchorRef={scratchpadDockAnchorRef}
       scratchpadDock={usesAnswerDock ? renderAnswerDock() : null}
-      footer={usesAnswerDock ? null : renderActivityFinishRow(false)}
+      footer={usesAnswerDock || textualAssigned ? null : renderActivityFinishRow(false)}
     />
   ) : null;
 
@@ -1163,63 +1196,65 @@ export default function StudentActivityPage({ activityId }) {
     );
 
   return (
-    <Layout {...layoutProps}>
-      {activity?.mode === "live_lesson" && activity?.activityStatus === "paused" ? (
-        <div className={L.page} dir="rtl" lang="he">
-          <p className={`${L.waitText} text-center py-4`}>ממתינים למורה…</p>
-        </div>
-      ) : assignedActivityShell ? (
-        wrapScratchpadVirtualInput(assignedActivityShell)
-      ) : (
-        <div className={L.page} dir="rtl" lang="he" />
-      )}
-      {/* מודל הגדלת שרטוט */}
-      {showDiagramModal && questionDiagramSpec && currentQuestion && (
-        <div
-          className="fixed inset-0 bg-black/80 flex items-center justify-center z-[186] p-4"
-          onClick={() => setShowDiagramModal(false)}
-          role="dialog"
-          aria-modal="true"
-          aria-label="שרטוט מוגדל"
-        >
+    <StudentActivityLayoutVariantProvider textualAssigned={textualAssigned}>
+      <Layout {...layoutProps}>
+        {activity?.mode === "live_lesson" && activity?.activityStatus === "paused" ? (
+          <div className={L.page} dir="rtl" lang="he">
+            <p className={`${L.waitText} text-center py-4`}>ממתינים למורה…</p>
+          </div>
+        ) : assignedActivityShell ? (
+          wrapScratchpadVirtualInput(assignedActivityShell)
+        ) : (
+          <div className={L.page} dir="rtl" lang="he" />
+        )}
+        {/* מודל הגדלת שרטוט */}
+        {showDiagramModal && questionDiagramSpec && currentQuestion && (
           <div
-            className="w-full max-w-lg bg-gradient-to-br from-[#080c16] to-[#0a0f1d] border-2 border-emerald-500/50 rounded-2xl p-4 shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-            dir="rtl"
+            className="fixed inset-0 bg-black/80 flex items-center justify-center z-[186] p-4"
+            onClick={() => setShowDiagramModal(false)}
+            role="dialog"
+            aria-modal="true"
+            aria-label="שרטוט מוגדל"
           >
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-emerald-300 font-bold text-sm">שרטוט</span>
-              <button
-                type="button"
-                onClick={() => setShowDiagramModal(false)}
-                className="text-slate-400 hover:text-white text-lg leading-none px-1"
-                aria-label="סגור שרטוט"
-              >
-                ✕
-              </button>
-            </div>
-            <div dir="ltr">
-              <GeometryExplanationDiagram
-                spec={questionDiagramSpec}
-                question={currentQuestion}
-                emphasis="neutral"
-              />
+            <div
+              className="w-full max-w-lg bg-gradient-to-br from-[#080c16] to-[#0a0f1d] border-2 border-emerald-500/50 rounded-2xl p-4 shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+              dir="rtl"
+            >
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-emerald-300 font-bold text-sm">שרטוט</span>
+                <button
+                  type="button"
+                  onClick={() => setShowDiagramModal(false)}
+                  className="text-slate-400 hover:text-white text-lg leading-none px-1"
+                  aria-label="סגור שרטוט"
+                >
+                  ✕
+                </button>
+              </div>
+              <div dir="ltr">
+                <GeometryExplanationDiagram
+                  spec={questionDiagramSpec}
+                  question={currentQuestion}
+                  emphasis="neutral"
+                />
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      <StudentActivitySubmitConfirmModal
-        open={submitConfirmOpen}
-        busy={busy}
-        activityTitle={activity?.title || ""}
-        answeredCount={answeredQuestionCount}
-        questionCount={questionSet.length}
-        onCancel={() => {
-          if (!busy) setSubmitConfirmOpen(false);
-        }}
-        onConfirm={handleConfirmSubmitActivity}
-      />
-    </Layout>
+        <StudentActivitySubmitConfirmModal
+          open={submitConfirmOpen}
+          busy={busy}
+          activityTitle={activity?.title || ""}
+          answeredCount={answeredQuestionCount}
+          questionCount={questionSet.length}
+          onCancel={() => {
+            if (!busy) setSubmitConfirmOpen(false);
+          }}
+          onConfirm={handleConfirmSubmitActivity}
+        />
+      </Layout>
+    </StudentActivityLayoutVariantProvider>
   );
 }

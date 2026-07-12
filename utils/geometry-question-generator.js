@@ -1038,9 +1038,9 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
             if (levelKey === "easy") {
               question = `תיבה באורך ${length}, רוחב ${width} וגובה ${height} ס"מ. מה הנפח?`;
             } else if (levelKey === "medium") {
-              question = `כיתה ד׳: תיבה מלבנית בממדים ${length} × ${width} × ${height} ס"מ. מה הנפח?`;
+              question = `תיבה מלבנית בממדים ${length} × ${width} × ${height} ס"מ. מה הנפח?`;
             } else {
-              question = `כיתה ד׳ (מאתגר): תיבה ${length}×${width}×${height} ס"מ. מה הנפח?`;
+              question = `תיבה ${length}×${width}×${height} ס"מ. מה הנפח?`;
             }
           } else if (gradeKey === "g5") {
             question = `תיבה מלבנית במדידה ${length}×${width}×${height}: חשבו נפח (ס"מ מעוקב).`;
@@ -1539,17 +1539,6 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
       const types = ["מקבילות", "מאונכות"];
       const selectedType = types[Math.floor(Math.random() * types.length)];
       const isParallel = selectedType === "מקבילות";
-      const gN = parseInt(String(gradeKey || "").replace(/\D/g, ""), 10) || 0;
-      const gradeTag =
-        gN === 3
-          ? "כיתה ג׳"
-          : gN === 4
-            ? "כיתה ד׳"
-            : gN === 5
-              ? "כיתה ה׳"
-              : gN === 6
-                ? "כיתה ו׳"
-                : "";
 
       params = {
         type: selectedType,
@@ -1562,10 +1551,10 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
       if (formulaBand === "mid") {
         question =
           levelKey === "easy"
-            ? `${gradeTag ? `${gradeTag}: ` : ""}התבוננו בשני הישרים בשרטוט. מה היחס ביניהם?`
+            ? `התבוננו בשני הישרים בשרטוט. מה היחס ביניהם?`
             : levelKey === "medium"
-              ? `${gradeTag ? `${gradeTag} — ` : ""}סיווג ישרים לפי השרטוט: מה היחס הנכון?`
-              : `${gradeTag ? `${gradeTag} | ` : ""}לפי השרטוט, איזה יחס מתקיים בין שני הישרים?`;
+              ? `סיווג ישרים לפי השרטוט: מה היחס הנכון?`
+              : `לפי השרטוט, איזה יחס מתקיים בין שני הישרים?`;
       } else {
         question =
           levelKey === "easy"

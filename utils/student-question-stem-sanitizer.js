@@ -97,6 +97,24 @@ export const STUDENT_STEM_METADATA_LEAK_CHECKS = [
     re: /(?:^|[·•—(])\s*(easy|medium|hard)\s*(?:[):·•—]|$)/iu,
     label: "English level token as metadata",
   },
+  {
+    id: "mokad_focus_id",
+    re: /מוקד\s+[a-z][a-z0-9]*(?:_[a-z0-9]+)+/iu,
+    label: "מוקד + technical focus id",
+  },
+  {
+    id: "topic_key_field",
+    re: /(?:^|[·•—(\s])(?:topicKey|topic_key|skillId|skill_id|subskillId|subskill_id|sourceKey|source_key)\b/u,
+    label: "internal key field name in stem",
+  },
+  {
+    id: "grade_level_mokad_frame",
+    re: new RegExp(
+      `^כיתה\\s+${GRADE_HEB}\\s*[·•]\\s*${LEVEL_WORD}\\s+(?:קלה|בינונית|קשה|מאתגרת|רגילה|מתקדמת)`,
+      "u"
+    ),
+    label: "כיתה · רמה framing prefix",
+  },
 ];
 
 /**
@@ -112,6 +130,55 @@ export function sanitizeStudentQuestionStem(text) {
   t = t.replace(/(?:במסגרת\s+)?חקר\s+בית[\s -]?ספרי\s*:\s*/gu, "");
   t = t.replace(/^שאלה בנושא:\s*/u, "");
 
+  const LEVEL_HE_OR_EN =
+    "(?:קלה|בינונית|קשה|מאתגרת|רגילה|מתקדמת|easy|medium|hard|regular|advanced)";
+
+  // Science volume framing (gen-science-needs-more-volume legacy):
+  // "כיתה ה׳ · רמה קלה — CORE · מוקד slot"  OR  "כיתה ה׳ · רמה קלה · CORE · מוקד slot"
+  t = t.replace(
+    new RegExp(
+      `^כיתה\\s+${GRADE_HEB}\\s*[·•]\\s*${LEVEL_WORD}\\s+${LEVEL_HE_OR_EN}\\s*[—–-]\\s*`,
+      "iu"
+    ),
+    ""
+  );
+  t = t.replace(
+    new RegExp(
+      `^כיתה\\s+${GRADE_HEB}\\s*[·•]\\s*${LEVEL_WORD}\\s+${LEVEL_HE_OR_EN}\\s*[·•]\\s*`,
+      "iu"
+    ),
+    ""
+  );
+
+  // Trailing technical focus tags (never child-facing)
+  t = t.replace(
+    new RegExp(`\\s*[·•—–-]\\s*מוקד\\s+[a-z][a-z0-9]*(?:_[a-z0-9]+)+\\s*$`, "iu"),
+    ""
+  );
+  t = t.replace(
+    new RegExp(`^מוקד\\s+[a-z][a-z0-9]*(?:_[a-z0-9]+)+\\s*$`, "iu"),
+    ""
+  );
+  t = t.replace(
+    /\s*[·•—–-]\s*(?:topicKey|topic_key|skillId|skill_id|subskillId|subskill_id|sourceKey|source_key|generator)\s*[:=]?\s*[a-zA-Z0-9_.-]*\s*$/u,
+    ""
+  );
+
+  // Geometry hard-band framing: "כיתה ג׳ | לפי השרטוט..."
+  t = t.replace(
+    new RegExp(`^כיתה\\s+${GRADE_HEB}\\s*[|｜]\\s*`, "u"),
+    ""
+  );
+  // Geometry / volume openers: "כיתה ד׳: ..." / "כיתה ד׳ — ..."
+  t = t.replace(
+    new RegExp(`^כיתה\\s+${GRADE_HEB}\\s*(?:\\(מאתגר\\))?\\s*[:：]\\s*`, "u"),
+    ""
+  );
+  t = t.replace(
+    new RegExp(`^כיתה\\s+${GRADE_HEB}\\s*[—–-]\\s*`, "u"),
+    ""
+  );
+
   // Science / batch opener: "בכיתה … : …" (grade/topic metadata — not in-question classroom context)
   t = t.replace(new RegExp(`^בכיתה\\s+${GRADE_HEB}\\s*:\\s*`, "u"), "");
   t = t.replace(/^בכיתה\s+[^:]+:\s*/u, "");
@@ -119,8 +186,8 @@ export function sanitizeStudentQuestionStem(text) {
   // Science / batch opener: "בכיתה ה׳ — רמה בינונית: …" (metadata header only — not in-question grade mentions)
   t = t.replace(
     new RegExp(
-      `^בכיתה\\s+${GRADE_HEB}\\s*[—–-]\\s*${LEVEL_WORD}\\s*(?:קלה|בינונית|קשה|מאתגרת|easy|medium|hard)\\s*:\\s*`,
-      "u"
+      `^בכיתה\\s+${GRADE_HEB}\\s*[—–-]\\s*${LEVEL_WORD}\\s*${LEVEL_HE_OR_EN}\\s*:\\s*`,
+      "iu"
     ),
     ""
   );
@@ -128,22 +195,52 @@ export function sanitizeStudentQuestionStem(text) {
   // Dot-separated metadata chains (science batch style) — avoid heavy backtracking regex
   if (/[·•]/.test(t)) {
     const parts = t.split(/\s*[·•]\s*/).map((p) => p.trim()).filter(Boolean);
-    const metaSeg = new RegExp(
-      `^(?:\\(?\\s*כיתה|נושא|${LEVEL_WORD}|תחום)${SP}`,
+    const gradeOnly = new RegExp(`^\\(?\\s*כיתה${SP}${GRADE_HEB}\\s*\\)?$`, "u");
+    const levelOnly = new RegExp(
+      `^\\(?\\s*${LEVEL_WORD}${SP}${LEVEL_HE_OR_EN}\\s*\\)?$`,
       "iu"
     );
-    const isMetaPart = (p) =>
-      metaSeg.test(p) ||
-      metaSeg.test(p.replace(/^\(+|\)+$/g, "").trim());
+    const topicOnly = new RegExp(`^\\(?\\s*(?:נושא|תחום)${SP}\\S+\\s*\\)?$`, "iu");
+    const mokadOnly = new RegExp(
+      `^מוקד${SP}[a-z][a-z0-9]*(?:_[a-z0-9]+)+$`,
+      "iu"
+    );
+    const versionedIdOnly = /^[a-z][a-z0-9]*(?:_[a-z0-9]+)+_v\d+$/i;
+    const isMetaPart = (p) => {
+      const bare = String(p || "")
+        .replace(/^\(+|\)+$/g, "")
+        .trim();
+      if (!bare) return true;
+      // "רמה קלה — real question" is NOT pure metadata
+      if (/[—–-]/.test(bare) && bare.split(/[—–-]/).length >= 2) {
+        const after = bare.split(/[—–-]/).slice(1).join("—").trim();
+        if (after.length >= 8) return false;
+      }
+      return (
+        gradeOnly.test(bare) ||
+        levelOnly.test(bare) ||
+        topicOnly.test(bare) ||
+        mokadOnly.test(bare) ||
+        versionedIdOnly.test(bare)
+      );
+    };
     if (parts.length >= 2 && isMetaPart(parts[0])) {
       let i = 0;
       while (i < parts.length && isMetaPart(parts[i])) i += 1;
       if (i > 0 && i < parts.length) {
         t = parts.slice(i).join(" · ");
+      } else if (i === parts.length) {
+        // All segments were metadata — drop rather than show focus ids
+        t = "";
       }
     }
   }
   t = t.replace(new RegExp(`^(?:${SP}[·•]${SP})+`, "u"), "");
+  // Re-strip focus suffix after chain cleanup
+  t = t.replace(
+    new RegExp(`\\s*[·•—–-]\\s*מוקד\\s+[a-z][a-z0-9]*(?:_[a-z0-9]+)+\\s*$`, "iu"),
+    ""
+  );
 
   // Parenthesized metadata blocks: (כיתה ג׳ · נושא body · רמת easy)
   t = t.replace(
@@ -157,14 +254,14 @@ export function sanitizeStudentQuestionStem(text) {
   // Leading metadata segments (repeat until stable)
   let prev;
   const leadChunk = new RegExp(
-    `^(?:${SP}(?:כיתה${SP}[אבגדהו]['׳]?|נושא${SP}\\S+|תחום${SP}\\S+|${LEVEL_WORD}${SP}(?:easy|medium|hard|קלה|בינונית|קשה|מאתגרת)|מושגים${SP}\\([^)]+\\)))${SP}(?::|[·•—|]${SP}|${SP}[-—]${SP})`,
+    `^(?:${SP}(?:כיתה${SP}[אבגדהו]['׳]?|נושא${SP}\\S+|תחום${SP}\\S+|${LEVEL_WORD}${SP}(?:easy|medium|hard|קלה|בינונית|קשה|מאתגרת|רגילה|מתקדמת|regular|advanced)|מושגים${SP}\\([^)]+\\)))${SP}(?::|[·•—|]${SP}|${SP}[-—]${SP})`,
     "iu"
   );
   do {
     prev = t;
     t = t.replace(leadChunk, "");
     t = t.replace(
-      /^\s*רמה\s+(קלה|בינונית|קשה|מאתגרת)\s*[—–-]\s*/iu,
+      /^\s*רמה\s+(קלה|בינונית|קשה|מאתגרת|רגילה|מתקדמת)\s*[—–-]\s*/iu,
       ""
     );
     t = t.replace(/^\s*מושגים\s*\((קל|בינוני|אתגר)\)\s*:\s*/iu, "");
@@ -244,9 +341,38 @@ export function detectStudentStemMetadataLeaks(stem) {
 export function collectStudentFacingStemsFromQuestion(q) {
   if (!q || typeof q !== "object") return [];
   const out = [];
-  for (const key of ["stem", "question", "exerciseText", "questionLabel"]) {
+  const keys = [
+    "stem",
+    "question",
+    "exerciseText",
+    "questionLabel",
+    "prompt",
+    "title",
+    "subtitle",
+    "instruction",
+    "hint",
+    "feedback",
+    "explanation",
+    "caption",
+    "questionText",
+    "text",
+    "body",
+  ];
+  for (const key of keys) {
     const v = q[key];
     if (typeof v === "string" && v.trim()) out.push(v.trim());
+  }
+  for (const key of ["choices", "options", "answers"]) {
+    if (!Array.isArray(q[key])) continue;
+    for (const entry of q[key]) {
+      if (typeof entry === "string" && entry.trim()) out.push(entry.trim());
+      else if (entry && typeof entry === "object") {
+        for (const nested of ["text", "label", "value", "answer", "content"]) {
+          const v = entry[nested];
+          if (typeof v === "string" && v.trim()) out.push(v.trim());
+        }
+      }
+    }
   }
   return out;
 }
@@ -305,7 +431,23 @@ function sanitizeHebrewAnswers(q) {
 export function sanitizeQuestionForStudentDisplay(q) {
   if (!q || typeof q !== "object") return q;
   let next = { ...q };
-  for (const key of ["stem", "question", "exerciseText", "questionLabel"]) {
+  for (const key of [
+    "stem",
+    "question",
+    "exerciseText",
+    "questionLabel",
+    "prompt",
+    "title",
+    "subtitle",
+    "instruction",
+    "hint",
+    "feedback",
+    "explanation",
+    "caption",
+    "questionText",
+    "text",
+    "body",
+  ]) {
     if (typeof next[key] === "string") {
       const cleaned = sanitizeStudentQuestionStem(next[key]);
       next[key] = cleaned;

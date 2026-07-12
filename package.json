@@ -139,6 +139,7 @@
     "audit:hebrew-subtopics": "tsx scripts/hebrew-subtopic-coverage-audit.mjs",
     "audit:questions": "tsx scripts/generator-deterministic-harness.mjs && tsx scripts/audit-question-banks.mjs",
     "qa:student-question-stem-metadata": "tsx scripts/qa-student-question-stem-metadata.mjs",
+    "qa:student-facing-metadata-leak-audit": "node scripts/qa/student-facing-metadata-leak-audit.mjs",
     "test:student-question-metadata-lead": "node tests/student-question-metadata-lead.test.mjs",
     "verify:subject-metadata-label-qa": "node scripts/verify-subject-metadata-label-qa.mjs",
     "qa:question-quality": "tsx scripts/qa-question-quality.mjs",

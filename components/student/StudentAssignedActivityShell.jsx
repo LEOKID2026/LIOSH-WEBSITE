@@ -34,7 +34,7 @@ export default function StudentAssignedActivityShell({
   scratchpadDock = null,
   usesScratchpadDock = false,
 }) {
-  const { L } = useStudentActivityUi();
+  const { L, textualAssigned } = useStudentActivityUi();
   const footerOffset = L.layoutFooterOffsetPx;
 
   return (
@@ -43,6 +43,7 @@ export default function StudentAssignedActivityShell({
       dir="rtl"
       lang="he"
       data-scratchpad-dock={usesScratchpadDock ? "true" : undefined}
+      data-activity-layout={textualAssigned ? "textual-assigned" : "default"}
     >
       <div ref={overlayTopRef}>
         <div className={L.headerRow} dir="ltr">

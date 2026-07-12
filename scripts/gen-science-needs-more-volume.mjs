@@ -143,9 +143,12 @@ function cellHash(key) {
   return parseInt(createHash("sha256").update(key).digest("hex").slice(0, 8), 16);
 }
 
-function framedStem(g, lvl, core, slot) {
-  const tag = `כיתה ${GRADE_HE[g] || g} · רמה ${LEVEL_HE[lvl] || lvl}`;
-  return `${tag} — ${core} · מוקד ${slot}`;
+/**
+ * Student-facing stem must be the natural question only.
+ * Grade / level / focus slot stay in id + params (never concatenated into stem).
+ */
+function framedStem(_g, _lvl, core, _slot) {
+  return String(core || "").trim();
 }
 
 function computeDeficits(questions) {

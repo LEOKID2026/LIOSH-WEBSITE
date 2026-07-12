@@ -8,6 +8,7 @@ import {
   getStudentActivityVerticalExerciseText,
   normalizeStudentActivityMathLayoutQuestion,
 } from "../../lib/classroom-activities/student-activity-question-ui.client.js";
+import { isTextualAssignedActivitySubject } from "../../lib/classroom-activities/student-activity-textual-subjects.client.js";
 import { useStudentActivityUi } from "../../hooks/useStudentActivityUi.js";
 import { hasStackedFractionToken } from "../../utils/math-fraction-expression-parse.js";
 import {
@@ -18,6 +19,11 @@ import {
 } from "../../utils/math-fraction-question-display.js";
 import { assignedActivityQuestionUsesChoiceUi } from "../../utils/geometry-activity-answer-ui.js";
 import { renderMaybeStackedFractionText } from "../learning/MathFractionExpression.jsx";
+import {
+  getHebrewApprovedSingleVerbalQuestionStyle,
+  HEBREW_APPROVED_SINGLE_VERBAL_QUESTION_CLASSNAME,
+} from "../../utils/hebrew-approved-verbal-master-contract.client.js";
+import { useMobileViewport } from "../../hooks/useMobileViewport.js";
 
 /**
  * Question text inside the unified activity question stage — stable footprint for math toggle.
@@ -31,7 +37,8 @@ export default function StudentActivityQuestionSurface({
   onVerticalExerciseHeadlineChange,
 }) {
   const [isVerticalDisplay, setIsVerticalDisplay] = useState(false);
-  const { L } = useStudentActivityUi();
+  const { L, textualAssigned } = useStudentActivityUi();
+  const isMobileViewport = useMobileViewport();
 
   const layoutQuestion = useMemo(
     () => normalizeStudentActivityMathLayoutQuestion(question),
@@ -116,7 +123,32 @@ export default function StudentActivityQuestionSurface({
   const isGeometryActivity =
     String(question?.subject || "").trim().toLowerCase() === "geometry";
 
+  // Prefer page-level textualAssigned: frozen items sometimes omit per-question subject.
+  const isTextualSubject =
+    textualAssigned || isTextualAssignedActivitySubject(question?.subject);
+
+  const textualSubjectForFonts =
+    question?.subject || (isTextualSubject ? "hebrew" : undefined);
+
+  const resolveQuestionFontStyle = (opts = {}) =>
+    getStudentActivityQuestionFontStyle({
+      ...opts,
+      subject: textualSubjectForFonts,
+    });
+
   if (!displayLayoutQuestion) return null;
+
+  const textualQuestionBodyStyle = isTextualSubject
+    ? getHebrewApprovedSingleVerbalQuestionStyle({
+        text:
+          displayParts.bodyText ||
+          displayParts.leadText ||
+          displayLayoutQuestion.question ||
+          displayLayoutQuestion.exerciseText ||
+          "",
+        isMobileViewport,
+      })
+    : undefined;
 
   return (
     <div
@@ -153,7 +185,7 @@ export default function StudentActivityQuestionSurface({
                 style={{
                   direction: "rtl",
                   unicodeBidi: "plaintext",
-                  ...getStudentActivityQuestionFontStyle({
+                  ...resolveQuestionFontStyle({
                     text: displayParts.leadText,
                     kind: "label",
                   }),
@@ -174,7 +206,7 @@ export default function StudentActivityQuestionSurface({
                 style={{
                   direction: "ltr",
                   unicodeBidi: "isolate",
-                  ...getStudentActivityQuestionFontStyle({ text: verticalText }),
+                  ...resolveQuestionFontStyle({ text: verticalText }),
                 }}
               >
                 {stackedFractions
@@ -192,10 +224,29 @@ export default function StudentActivityQuestionSurface({
             }
             stackedFractions={stackedFractions}
             plainVerbalFinalQuestion={isGeometryActivity}
-            getQuestionFontStyle={getStudentActivityQuestionFontStyle}
+            getQuestionFontStyle={resolveQuestionFontStyle}
             getEquationFontStyle={getStudentActivityEquationFontStyle}
-            leadClassName={L.questionLead}
-            bodyClassName={`${L.questionBody}${fractionsStemSizeClass}`}
+            resolveVerbalSingleStyle={
+              isTextualSubject
+                ? getHebrewApprovedSingleVerbalQuestionStyle
+                : undefined
+            }
+            bodyStyle={textualQuestionBodyStyle}
+            bodyTextColor={
+              isTextualSubject
+                ? textualQuestionBodyStyle?.color
+                : undefined
+            }
+            leadClassName={
+              isTextualSubject
+                ? HEBREW_APPROVED_SINGLE_VERBAL_QUESTION_CLASSNAME
+                : L.questionLead
+            }
+            bodyClassName={
+              isTextualSubject
+                ? `${HEBREW_APPROVED_SINGLE_VERBAL_QUESTION_CLASSNAME}${fractionsStemSizeClass}`
+                : `${L.questionBody}${fractionsStemSizeClass}`
+            }
             formulaClassName={`${L.questionFormula}${fractionsStemSizeClass}`}
             wrapperClassName="w-full flex flex-col items-center justify-center gap-1 overflow-visible"
           />

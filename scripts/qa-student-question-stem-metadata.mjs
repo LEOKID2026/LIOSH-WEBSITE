@@ -79,6 +79,13 @@ const BEFORE_AFTER_SEEDS = [
   },
   {
     subject: "science",
+    topic: "animals",
+    before:
+      "כיתה ה׳ · רמה קלה · מה עושה חילזון בלחות? · מוקד snail_moisture_v3",
+    expectedAfter: "מה עושה חילזון בלחות?",
+  },
+  {
+    subject: "science",
     grade: "g5",
     topic: "body",
     level: "medium",
