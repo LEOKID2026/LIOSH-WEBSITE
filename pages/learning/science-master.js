@@ -125,7 +125,6 @@ import SubjectDailyMissionsModal from "../../components/learning/SubjectDailyMis
 import { buildDailyMissionsView } from "../../lib/learning-client/dailyMissionsView";
 import { fetchStudentHomeProfile } from "../../lib/learning-client/fetchStudentHomeProfile";
 import { buildSubjectMonthlyPersistenceViewFromProfile } from "../../lib/learning-client/subjectMonthlyPersistenceView";
-import { navigateToStudentHome } from "../../lib/learning-client/navigateToStudentHome";
 import { getLearningBookIndexHref } from "../../lib/learning-book/learning-book-catalog-meta";
 import LearningBookIndexTile from "../../components/learning-book/LearningBookIndexTile";
 import { getScienceBookHref } from "../../lib/learning-book/resolve-science-book-page";
@@ -2814,7 +2813,7 @@ function saveScienceAnswerInParallel({
   }
 
   const backSafe = () => {
-    navigateToStudentHome(router);
+    router.push("/student/learning");
   };
 
   const profileSnap = getCachedStudentLearningProfile();

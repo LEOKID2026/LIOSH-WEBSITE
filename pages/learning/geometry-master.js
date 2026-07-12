@@ -222,7 +222,6 @@ import SubjectDailyMissionsModal from "../../components/learning/SubjectDailyMis
 import { buildDailyMissionsView } from "../../lib/learning-client/dailyMissionsView";
 import { fetchStudentHomeProfile } from "../../lib/learning-client/fetchStudentHomeProfile";
 import { buildSubjectMonthlyPersistenceViewFromProfile } from "../../lib/learning-client/subjectMonthlyPersistenceView";
-import { navigateToStudentHome } from "../../lib/learning-client/navigateToStudentHome";
 import { useStudentDisplayLevelPractice } from "../../hooks/useStudentDisplayLevelPractice.js";
 import { StudentDisplayLevelSelect } from "../../components/learning/StudentDisplayLevelSelect.js";
 import {
@@ -2388,7 +2387,7 @@ export default function GeometryMaster() {
   }
 
   const backSafe = () => {
-    navigateToStudentHome(router);
+    router.push("/student/learning");
   };
 
   const getTopicName = (t) => {

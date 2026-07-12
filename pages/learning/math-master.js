@@ -299,7 +299,6 @@ import SubjectDailyMissionsModal from "../../components/learning/SubjectDailyMis
 import { buildDailyMissionsView } from "../../lib/learning-client/dailyMissionsView";
 import { fetchStudentHomeProfile } from "../../lib/learning-client/fetchStudentHomeProfile";
 import { buildSubjectMonthlyPersistenceViewFromProfile } from "../../lib/learning-client/subjectMonthlyPersistenceView";
-import { navigateToStudentHome } from "../../lib/learning-client/navigateToStudentHome";
 import {
   MATH_CORRECT_ANSWER_ADVANCE_MS,
   MATH_WRONG_ANSWER_FEEDBACK_MS,
@@ -3286,7 +3285,7 @@ export default function MathMaster() {
   }
 
   const backSafe = () => {
-    navigateToStudentHome(router);
+    router.push("/student/learning");
   };
 
   // Unified operation name resolver — delegates to the canonical report label map.

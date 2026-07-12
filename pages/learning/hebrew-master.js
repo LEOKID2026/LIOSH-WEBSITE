@@ -154,7 +154,6 @@ import SubjectDailyMissionsModal from "../../components/learning/SubjectDailyMis
 import { buildDailyMissionsView } from "../../lib/learning-client/dailyMissionsView";
 import { fetchStudentHomeProfile } from "../../lib/learning-client/fetchStudentHomeProfile";
 import { buildSubjectMonthlyPersistenceViewFromProfile } from "../../lib/learning-client/subjectMonthlyPersistenceView";
-import { navigateToStudentHome } from "../../lib/learning-client/navigateToStudentHome";
 import { useLearningVisibilityClock } from "../../hooks/useLearningVisibilityClock";
 import { useStudentDisplayLevelPractice } from "../../hooks/useStudentDisplayLevelPractice.js";
 import { StudentDisplayLevelSelect } from "../../components/learning/StudentDisplayLevelSelect.js";
@@ -2916,7 +2915,7 @@ export default function HebrewMaster() {
   }
 
   const backSafe = () => {
-    navigateToStudentHome(router);
+    router.push("/student/learning");
   };
 
   const getOperationName = (op) => {

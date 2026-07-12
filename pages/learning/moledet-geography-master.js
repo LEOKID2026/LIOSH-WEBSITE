@@ -172,7 +172,6 @@ import SubjectDailyMissionsModal from "../../components/learning/SubjectDailyMis
 import { buildDailyMissionsView } from "../../lib/learning-client/dailyMissionsView";
 import { fetchStudentHomeProfile } from "../../lib/learning-client/fetchStudentHomeProfile";
 import { buildSubjectMonthlyPersistenceViewFromProfile } from "../../lib/learning-client/subjectMonthlyPersistenceView";
-import { navigateToStudentHome } from "../../lib/learning-client/navigateToStudentHome";
 import { useLearningMasterUi } from "../../hooks/useLearningMasterUi.js";
 import SubjectMasterSessionShell from "../../components/learning/SubjectMasterSessionShell.jsx";
 import StudentLoadingPanel from "../../components/ui/StudentLoadingPanel.jsx";
@@ -2416,7 +2415,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
   }
 
   const backSafe = () => {
-    navigateToStudentHome(router);
+    router.push("/student/learning");
   };
 
   const getOperationName = (op) => {
