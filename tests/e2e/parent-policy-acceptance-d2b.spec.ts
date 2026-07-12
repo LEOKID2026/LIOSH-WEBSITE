@@ -24,8 +24,7 @@ test.describe("Phase D.2B — parent policy acceptance", () => {
 
   test("E: Google sign-in button appears on parent login only", async ({ page }) => {
     await page.goto("/parent/login");
-    await expect(page.getByTestId("parent-google-sign-in")).toBeVisible();
-    await expect(page.getByTestId("parent-google-sign-in")).toContainText("התחברות עם Google");
+    await expect(page.getByTestId("parent-google-sign-in")).toBeVisible({ timeout: 15_000 });
 
     await page.goto("/student/login");
     await expect(page.getByTestId("parent-google-sign-in")).toHaveCount(0);

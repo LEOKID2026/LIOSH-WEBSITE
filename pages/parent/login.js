@@ -9,8 +9,9 @@ import ParentGoogleSignInButton from "../../components/auth/ParentGoogleSignInBu
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
 import { mapParentAuthError } from "../../lib/parent-client/parent-auth-errors.he";
 import {
+  completeParentGoogleSession,
   postParentSessionReady,
-  startParentGoogleSignIn,
+  signInParentWithGoogleIdToken,
 } from "../../lib/auth/parent-google-oauth.client.js";
 import GuardianChildSelectForm from "../../components/parent/GuardianChildSelectForm";
 import {
@@ -60,6 +61,7 @@ export default function ParentLoginPage() {
   const [identifier, setIdentifier] = useState("");
   const [secret, setSecret] = useState("");
   const [busy, setBusy] = useState(false);
+  const [googleBusy, setGoogleBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [messageKind, setMessageKind] = useState("account");
   const [clientReady, setClientReady] = useState(false);
@@ -114,7 +116,7 @@ export default function ParentLoginPage() {
   }, [router]);
 
   const runAccountAction = async (action) => {
-    if (busy) return;
+    if (busy || googleBusy) return;
     setBusy(true);
     setMessage("");
     setMessageKind("account");
@@ -204,7 +206,7 @@ export default function ParentLoginPage() {
   };
 
   const onSelectGuardianChild = async (studentId) => {
-    if (busy) return;
+    if (busy || googleBusy) return;
     setBusy(true);
     setMessage("");
     try {
@@ -220,20 +222,41 @@ export default function ParentLoginPage() {
     }
   };
 
-  const onGoogleSignIn = async () => {
-    if (busy || sessionCheckPending || !supabaseRef.current) return;
-    setBusy(true);
+  const onGoogleCredential = async ({ credential, nonce }) => {
+    if (busy || googleBusy || sessionCheckPending || !supabaseRef.current) return;
+    setGoogleBusy(true);
     setMessage("");
     setMessageKind("account");
     try {
-      await startParentGoogleSignIn(supabaseRef.current);
+      const signedIn = await signInParentWithGoogleIdToken(
+        supabaseRef.current,
+        credential,
+        nonce
+      );
+      if (!signedIn.ok || !signedIn.session?.access_token) {
+        setMessage(mapParentAuthError(signedIn.error, "login"));
+        return;
+      }
+
+      const finished = await completeParentGoogleSession(signedIn.session);
+      if (!finished.ok) {
+        await supabaseRef.current.auth.signOut();
+        setMessage(
+          finished.messageHe ||
+            "לא הצלחנו להשלים התחברות עם Google. נסו שוב או התחברו עם אימייל וסיסמה."
+        );
+        return;
+      }
+
+      router.push(finished.redirectTo || "/parent/home");
     } catch (error) {
       setMessage(mapParentAuthError(error, "login"));
-      setBusy(false);
+    } finally {
+      setGoogleBusy(false);
     }
   };
 
-  const formDisabled = busy || sessionCheckPending;
+  const formDisabled = busy || googleBusy || sessionCheckPending;
 
   if (sessionCheckPending) {
     return (
@@ -283,7 +306,18 @@ export default function ParentLoginPage() {
           </p>
         </section>
 
-        <ParentGoogleSignInButton disabled={formDisabled} onClick={() => void onGoogleSignIn()} />
+        {googleBusy ? (
+          <PortalLoadingPanel isBright={isBright} message="מתחברים עם Google..." />
+        ) : (
+          <ParentGoogleSignInButton
+            disabled={formDisabled}
+            onCredential={(payload) => void onGoogleCredential(payload)}
+            onError={(messageHe) => {
+              setMessageKind("account");
+              setMessage(messageHe);
+            }}
+          />
+        )}
 
         <form onSubmit={onFormSubmit} className="space-y-3 mt-4">
           <label className="block text-sm">

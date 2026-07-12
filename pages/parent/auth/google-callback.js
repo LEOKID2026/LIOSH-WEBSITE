@@ -6,12 +6,11 @@ import PortalLoadingPanel from "../../../components/ui/PortalLoadingPanel.jsx";
 import { getLearningSupabaseBrowserClient } from "../../../lib/learning-supabase/client";
 import {
   clearParentGoogleOAuthFlow,
+  completeParentGoogleSession,
   establishParentGoogleOAuthSession,
-  postParentSessionReady,
 } from "../../../lib/auth/parent-google-oauth.client.js";
 import { useStudentTheme } from "../../../contexts/StudentThemeContext.jsx";
 import { getParentPortalTheme } from "../../../lib/parent-ui/parent-portal-theme.client.js";
-import { trackProductEvent } from "../../../lib/analytics/track-event.client.js";
 
 export default function ParentGoogleOAuthCallbackPage() {
   const router = useRouter();
@@ -47,26 +46,20 @@ export default function ParentGoogleOAuthCallbackPage() {
         return;
       }
 
-      const ready = await postParentSessionReady(result.session.access_token, "google");
+      const finished = await completeParentGoogleSession(result.session);
       clearParentGoogleOAuthFlow();
 
-      if (!ready.ok) {
+      if (!finished.ok) {
         await supabase.auth.signOut();
         const query = new URLSearchParams({
           oauth_error: "1",
-          oauth_message: ready.messageHe || "",
+          oauth_message: finished.messageHe || "",
         });
         router.replace(`/parent/login?${query.toString()}`);
         return;
       }
 
-      void trackProductEvent({
-        eventName: "parent_login",
-        actorType: "parent",
-        idempotencyKey: `parent_google_login:${Date.now()}`,
-      });
-
-      router.replace("/parent/home");
+      router.replace(finished.redirectTo || "/parent/home");
     })().catch(() => {
       clearParentGoogleOAuthFlow();
       setMessage("שגיאה בהתחברות עם Google. נסו שוב.");

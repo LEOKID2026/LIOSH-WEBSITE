@@ -9,6 +9,8 @@ function buildContentSecurityPolicy() {
     "'self'",
     "https://*.supabase.co",
     "wss://*.supabase.co",
+    // Google Identity Services (parent GIS sign-in)
+    "https://accounts.google.com",
     // Google Tag / AdSense — measurement + ad request beacons (only loaded after consent + env)
     "https://www.google-analytics.com",
     "https://analytics.google.com",
@@ -27,6 +29,8 @@ function buildContentSecurityPolicy() {
   const scriptSrc = [
     "'self'",
     "'unsafe-inline'",
+    // Google Identity Services (parent GIS sign-in)
+    "https://accounts.google.com",
     // gtag.js loader (Consent Mode + optional analytics)
     "https://www.googletagmanager.com",
     // AdSense publisher script
@@ -57,8 +61,8 @@ function buildContentSecurityPolicy() {
     "media-src 'self' blob: data:",
     `connect-src ${connectSrc.join(" ")}`,
     "worker-src 'self' blob:",
-    // Ad iframes (AdSense / DoubleClick) — no broad third-party frames
-    "frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com",
+    // Google Identity Services button iframe + AdSense / DoubleClick
+    "frame-src 'self' https://accounts.google.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com",
     "frame-ancestors 'none'",
     "base-uri 'self'",
     "form-action 'self'",
