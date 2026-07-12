@@ -306,7 +306,7 @@ export default function ParentReportDetailedPage() {
             : "bg-white/5 border-white/20 text-white/80 hover:bg-white/10"
         }`}
       >
-        תקציר להדפסה
+        דוח מקוצר
       </button>
     </div>
   );
@@ -1121,7 +1121,7 @@ export default function ParentReportDetailedPage() {
         }`}
         dir="rtl"
         style={{
-          paddingTop: "calc(var(--head-h, 56px) - 6px)",
+          paddingTop: "calc(var(--head-h, 56px) - 28px)",
           paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 24px)",
         }}
       >
@@ -1172,7 +1172,7 @@ export default function ParentReportDetailedPage() {
                     דוח מקיף לתקופה
                   </h1>
                   <p className="pr-detailed-mode-hint text-xs font-semibold text-amber-200/90 mb-1">
-                    {displayMode === "summary" ? "תקציר להדפסה" : "דוח מלא"}
+                    {displayMode === "summary" ? "דוח מקוצר" : "דוח מלא"}
                   </p>
                   <p className="pr-detailed-body-text text-white/85 text-sm md:text-base">
                     דוח הורים מקיף — מבוסס על התאריכים הנבחרים

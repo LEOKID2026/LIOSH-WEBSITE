@@ -23,6 +23,10 @@ import {
   parentTopicTierSectionTitleHe,
 } from "../utils/parent-report-surface/index.js";
 import {
+  formatExclusiveLearningMinutesHe,
+  normalizeLearningTimeExclusiveBreakdown,
+} from "../lib/parent-ui/learning-time-exclusive-breakdown-display.js";
+import {
   getLpdFromRow,
   lpdParentVisibleFindingFromRow,
   shouldSuppressLegacyEngineParentCopy,
@@ -606,6 +610,87 @@ export function SubjectPhase3Insights({ sp, compact }) {
         </div>
       ))}
     </div>
+  );
+}
+
+/**
+ * Exclusive learning-time breakdown — screen-only, collapsed by default.
+ * Add-only; does not replace parent activities / out-of-grade sections.
+ * @param {{ breakdown?: object|null|undefined }} props
+ */
+export function LearningTimeBreakdownDetails({ breakdown }) {
+  const b = normalizeLearningTimeExclusiveBreakdown(breakdown);
+  if (!b) return null;
+
+  const rows = [
+    { label: "סך זמן הלמידה", value: `${formatExclusiveLearningMinutesHe(b.totalMinutes)} דק׳` },
+    {
+      label: "תרגול עם שאלות",
+      value: `${formatExclusiveLearningMinutesHe(b.questionPracticeMinutes)} דק׳`,
+    },
+    { label: "שאלות שנענו", value: String(b.analyzedQuestionCount) },
+    {
+      label: "קריאת ספרים",
+      value: `${formatExclusiveLearningMinutesHe(b.bookReadingMinutes)} דק׳`,
+    },
+    {
+      label: "למידה פעילה נוספת",
+      value: `${formatExclusiveLearningMinutesHe(b.otherActiveLearningMinutes)} דק׳`,
+    },
+  ];
+
+  return (
+    <details className="pr-detailed-learning-time-breakdown no-pdf no-print mb-5 md:mb-6 min-w-0 rounded-lg border border-white/10 bg-black/10">
+      <summary
+        id="pr-detailed-learning-time-breakdown-heading"
+        className="pr-detailed-section-title cursor-pointer select-none list-none text-base md:text-lg font-extrabold tracking-tight text-white m-0 px-3 py-3 md:px-4 md:py-3.5 border-b border-white/10 [&::-webkit-details-marker]:hidden"
+      >
+        פירוט זמן הלמידה
+      </summary>
+      <div className="px-3 py-3 md:px-4 md:py-4 space-y-4">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm text-right">
+            <tbody>
+              {rows.map((row) => (
+                <tr key={row.label} className="border-b border-white/10">
+                  <td className="p-2 font-semibold text-white/85">{row.label}</td>
+                  <td className="p-2 text-white/90">{row.value}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {b.bySubject.length > 0 ? (
+          <div>
+            <p className="pr-detailed-topic-rec-head m-0 mb-2">פירוט לפי מקצוע</p>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm text-right">
+                <thead>
+                  <tr className="border-b border-white/15 bg-white/5">
+                    <th className="p-2 font-semibold">מקצוע</th>
+                    <th className="p-2 font-semibold">תרגול עם שאלות</th>
+                    <th className="p-2 font-semibold">קריאת ספרים</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {b.bySubject.map((row) => (
+                    <tr key={row.subjectKey} className="border-b border-white/10">
+                      <td className="p-2">{row.subjectLabelHe}</td>
+                      <td className="p-2">
+                        {formatExclusiveLearningMinutesHe(row.questionPracticeMinutes)} דק׳
+                      </td>
+                      <td className="p-2">
+                        {formatExclusiveLearningMinutesHe(row.bookReadingMinutes)} דק׳
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ) : null}
+      </div>
+    </details>
   );
 }
 

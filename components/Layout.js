@@ -19,6 +19,8 @@ export default function Layout({
   studentShell = null,
   /** When true, show bright/classic picker even if pathname is not in the default allowlist. */
   layoutShowThemePicker = false,
+  /** Lock shell to one viewport (no document scroll) — parent-report empty/loading under /parent. */
+  layoutLockViewport = false,
 }) {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -57,11 +59,15 @@ export default function Layout({
   const classicShell =
     "min-h-[100svh] md:min-h-screen bg-gradient-to-b from-[#050816] via-[#0b1020] to-[#050816] text-white flex flex-col";
 
-  const shellClass = isLearningBright
+  const showStudentAd = shouldShowLayoutStudentAdSlot(pathname);
+  const shellClassBase = isLearningBright
     ? brightLearningShell
     : isStudentBright
     ? brightHomeShell
     : classicShell;
+  const shellClass = layoutLockViewport
+    ? `${shellClassBase} h-[100svh] max-h-[100svh] overflow-hidden`
+    : shellClassBase;
   const headerClass = isStudentBright
     ? `w-full border-b border-sky-100 ${STUDENT_BRIGHT_SITE_CHROME_BG} backdrop-blur sticky top-0 z-30 shrink-0 shadow-sm`
     : "w-full border-b border-white/10 bg-black/40 backdrop-blur sticky top-0 z-30 shrink-0";
@@ -80,7 +86,6 @@ export default function Layout({
   const mobileMenuItem = isStudentBright
     ? "px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 hover:bg-sky-50 text-slate-800 transition"
     : "px-3 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition";
-  const showStudentAd = shouldShowLayoutStudentAdSlot(pathname);
   const footerClass = isStudentBright
     ? `border-t border-sky-100 ${STUDENT_BRIGHT_SITE_CHROME_BG} shrink-0 ${homepage || showStudentAd ? "" : "mt-10"}`
     : `border-t border-white/10 bg-black/40 shrink-0 ${homepage || showStudentAd ? "" : "mt-10"}`;
@@ -185,7 +190,9 @@ export default function Layout({
       )}
 
       <main
-        className={`flex-1 min-h-0 flex flex-col${homepage ? " overflow-hidden" : ""}`}
+        className={`flex-1 min-h-0 flex flex-col${
+          homepage || layoutLockViewport ? " overflow-hidden" : ""
+        }`}
         style={showStudentAd ? { paddingBottom: STUDENT_LAYOUT_CHROME_BOTTOM_CSS } : undefined}
       >
         {children}

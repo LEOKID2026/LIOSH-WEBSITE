@@ -23,6 +23,9 @@ export default function ReportDateRangeControl({
   compactPresets = false,
   presetRowClassName = "",
   className = "",
+  /** Optional override — clearer idle contrast on parent-report blue shells. */
+  idlePresetClassName = "",
+  activePresetClassName = "",
 }) {
   const today = isoDateLocal();
 
@@ -32,8 +35,11 @@ export default function ReportDateRangeControl({
     onApplyCustom?.();
   };
 
-  const activeClass = "bg-blue-500/80 text-white";
-  const idleClass = "bg-white/10 text-white/70 hover:bg-white/20";
+  const activeClass = activePresetClassName || "bg-blue-500/80 text-white";
+  const idleClass =
+    idlePresetClassName || "bg-white/10 text-white/70 hover:bg-white/20";
+  const focusClass =
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/80";
 
   const presetRowClass = compactPresets
     ? `grid grid-cols-5 gap-2 w-full mb-2 min-w-0 ${presetRowClassName}`.trim()
@@ -41,10 +47,10 @@ export default function ReportDateRangeControl({
 
   const btnClass = (active) =>
     compactPresets
-      ? `w-full min-h-[40px] px-2 sm:px-4 py-2 text-sm sm:text-base font-semibold rounded-xl transition-all disabled:opacity-50 ${
+      ? `w-full min-h-[40px] px-2 sm:px-4 py-2 text-sm sm:text-base font-semibold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed ${focusClass} ${
           active ? activeClass : idleClass
         }`
-      : `px-3 py-1.5 rounded-lg font-bold text-xs transition-all disabled:opacity-50 shrink-0 ${
+      : `px-3 py-1.5 rounded-lg font-bold text-xs transition-all disabled:opacity-50 disabled:cursor-not-allowed shrink-0 ${focusClass} ${
           active ? activeClass : idleClass
         }`;
 

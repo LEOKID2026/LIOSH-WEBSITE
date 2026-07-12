@@ -33,8 +33,13 @@ export default function StudentWorldGates() {
         <WorldGate gate={learning} />
       </div>
 
-      {/* Mobile: 2 עמודות + מועדון full width */}
-      <div className="mx-auto w-full max-w-[16rem] -translate-y-28 space-y-2 sm:max-w-[17rem] md:hidden">
+      {/* Mobile: 2 עמודות + מועדון full width.
+          -translate-y-28 מזיז חזותית בלבד ומשאיר חלל layout מתחת לשערים;
+          ב־viewport נמוך מצמצמים את החלל ב־margin-bottom שלילי (משפיע על הזרימה). */}
+      <div
+        className="mx-auto w-full max-w-[16rem] -translate-y-28 space-y-2 sm:max-w-[17rem] md:hidden -mb-[clamp(0px,calc((800px-100dvh)*1.25),6rem)]"
+        data-testid="student-world-gates-mobile"
+      >
         <div className="grid grid-cols-2 gap-2">
           <WorldGate gate={games} />
           <WorldGate gate={learning} />

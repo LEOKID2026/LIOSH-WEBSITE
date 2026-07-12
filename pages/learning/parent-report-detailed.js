@@ -11,12 +11,17 @@ import {
 } from "../../utils/detailed-report-parent-letter-he";
 import {
   Bullets,
+  LearningTimeBreakdownDetails,
   OutOfGradePracticeSection,
   ParentAssignedActivitiesSection,
   SubjectPhase3Insights,
   SubjectTopicTierGroups,
   TopicRecommendationExplainStrip,
 } from "../../components/parent-report-detailed-surface.jsx";
+import {
+  formatLearningTimeDivisionLineHe,
+  normalizeLearningTimeExclusiveBreakdown,
+} from "../../lib/parent-ui/learning-time-exclusive-breakdown-display.js";
 import {
   buildParentSurfaceWhatToNoticeHe,
   scrubRepeatedBoilerplateFromSnapshotHe,
@@ -30,12 +35,15 @@ import {
   PARENT_REPORT_SITE_BRIGHT_CSS,
   getParentReportDetailedShellClass,
   getParentReportDetailedContentStyle,
+  getParentReportNoScrollDetailedShellClass,
+  getParentReportNoScrollDetailedContentStyle,
   getParentReportLayoutProps,
   getParentReportStateShellClass,
   getParentReportStateShellStyle,
   getParentReportSecondaryLinkClass,
   getParentReportErrorTextClass,
 } from "../../lib/parent-ui/parent-report-site-bright-theme.css.js";
+import { isImmersiveGameLayoutPath } from "../../lib/site-nav";
 import { useParentReportBrightPageBackground } from "../../lib/parent-ui/use-parent-report-bright-page-bg.js";
 import { mapParentReportLoadError } from "../../lib/parent-server/parent-api-errors.he.js";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
@@ -62,6 +70,7 @@ import {
   parseParentReportRemoteSource,
 } from "../../lib/teacher-portal/parent-report-remote-source.js";
 import { ParentReportExitNav, ParentReportThemeIcons } from "../../components/parent/ParentReportExitNav.jsx";
+import StudentFixedBottomAdChrome from "../../components/student/StudentFixedBottomAdChrome.jsx";
 import { PARENT_REPORT_PORTAL_GATE } from "../../lib/parent-report-server-truth.js";
 
 const PARENT_REPORT_DETAILED_PRINTING_CLASS = "parent-report-detailed-printing";
@@ -246,6 +255,8 @@ export default function ParentReportDetailedPage() {
   const [copilotStudentId, setCopilotStudentId] = useState(/** @type {string | null} */ (null));
   const { theme, isBright } = useStudentTheme();
   const layoutProps = getParentReportLayoutProps(theme);
+  const reportImmersive = isImmersiveGameLayoutPath(router.pathname);
+  const reportShellOpts = { immersive: reportImmersive };
   useParentReportBrightPageBackground(isBright);
   const printScrollYRef = useRef(null);
   const printCleanupTimerRef = useRef(null);
@@ -634,18 +645,32 @@ export default function ParentReportDetailedPage() {
             : isBright ? "bg-white border-sky-200 text-slate-700 hover:bg-sky-50 shadow-sm" : "bg-white/5 border-white/20 text-white/80 hover:bg-white/10"
         }`}
       >
-        תקציר להדפסה
+        דוח מקוצר
       </button>
     </div>
   );
 
   if (loading) {
     return (
-      <Layout {...layoutProps}>
-        <div className="relative">
+      <Layout {...layoutProps} layoutLockViewport={!reportImmersive}>
+        <div
+          className={
+            reportImmersive
+              ? "relative h-[100svh] max-h-[100svh] overflow-hidden"
+              : "relative flex-1 min-h-0 h-full max-h-full overflow-hidden"
+          }
+        >
           <ParentReportThemeIcons className="absolute top-4 left-1/2 -translate-x-1/2 z-10" />
-          <PortalLoadingPanel isBright={isBright} fullPage message="טוען דוח מקיף…" />
+          <PortalLoadingPanel
+            isBright={isBright}
+            fullPage={reportImmersive}
+            className="!min-h-0 h-full max-h-full overflow-hidden"
+            message="טוען דוח מקיף…"
+          />
         </div>
+        {reportImmersive ? (
+          <StudentFixedBottomAdChrome theme={isBright ? "bright" : "classic"} />
+        ) : null}
       </Layout>
     );
   }
@@ -827,7 +852,10 @@ export default function ParentReportDetailedPage() {
   }
 
   return (
-    <Layout {...layoutProps}>
+    <Layout
+      {...layoutProps}
+      layoutLockViewport={!reportImmersive && !(payload && periodHasPracticeEvidence)}
+    >
       <Head>
         <title>דוח מקיף לתקופה — Leo Kids</title>
         <style>{`
@@ -1672,11 +1700,17 @@ export default function ParentReportDetailedPage() {
         `}</style>
       </Head>
       <div
-        className={`${getParentReportDetailedShellClass(isBright)} ${
-          payload ? `pr-detailed-layout-${displayMode}` : ""
-        }`}
+        className={`${
+          payload && periodHasPracticeEvidence
+            ? getParentReportDetailedShellClass(isBright, reportShellOpts)
+            : getParentReportNoScrollDetailedShellClass(isBright, reportShellOpts)
+        } ${payload ? `pr-detailed-layout-${displayMode}` : ""}`}
         dir="rtl"
-        style={getParentReportDetailedContentStyle(isBright)}
+        style={
+          payload && periodHasPracticeEvidence
+            ? getParentReportDetailedContentStyle(isBright, reportShellOpts)
+            : getParentReportNoScrollDetailedContentStyle(isBright, reportShellOpts)
+        }
       >
         <div className="max-w-4xl mx-auto w-full min-w-0 overflow-x-hidden">
           <div className="no-pdf flex flex-col gap-3 mb-4">
@@ -1711,7 +1745,7 @@ export default function ParentReportDetailedPage() {
                     דוח מקיף לתקופה
                   </h1>
                   <p className="pr-detailed-mode-hint text-xs font-semibold text-amber-200/90 mb-1">
-                    {displayMode === "summary" ? "תקציר להדפסה" : "דוח מלא"}
+                    {displayMode === "summary" ? "דוח מקוצר" : "דוח מלא"}
                   </p>
                   <p className="pr-detailed-body-text text-white/85 text-sm md:text-base">
                     דוח הורים מקיף — מבוסס על התאריכים הנבחרים
@@ -1751,6 +1785,17 @@ export default function ParentReportDetailedPage() {
                     </div>
                   </div>
                 </div>
+                {(() => {
+                  const exclusive = normalizeLearningTimeExclusiveBreakdown(
+                    payload?.overallSnapshot?.learningTimeExclusiveBreakdown
+                  );
+                  if (!exclusive) return null;
+                  return (
+                    <p className="text-sm text-white/80 mb-4 mt-1 leading-relaxed">
+                      {formatLearningTimeDivisionLineHe(exclusive)}
+                    </p>
+                  );
+                })()}
                 <p className="pr-detailed-mini-heading font-bold text-white/90 mb-2 text-sm mt-1">כיסוי לפי מקצוע</p>
                 <div className="overflow-x-auto rounded-lg border border-white/10">
                   <table className="w-full text-sm text-right">
@@ -1795,6 +1840,12 @@ export default function ParentReportDetailedPage() {
                   </div>
                 </div>
                 </SectionCard>
+
+                {displayMode === "full" ? (
+                  <LearningTimeBreakdownDetails
+                    breakdown={payload?.overallSnapshot?.learningTimeExclusiveBreakdown}
+                  />
+                ) : null}
 
                 {displayMode === "full" ? (
                   <>
@@ -1986,6 +2037,9 @@ export default function ParentReportDetailedPage() {
           )}
         </div>
       </div>
+      {reportImmersive ? (
+        <StudentFixedBottomAdChrome theme={isBright ? "bright" : "classic"} />
+      ) : null}
     </Layout>
   );
 }

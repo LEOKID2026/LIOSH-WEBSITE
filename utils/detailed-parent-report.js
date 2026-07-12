@@ -1684,6 +1684,10 @@ function buildOverallSnapshot(baseReport, subjectCoverage) {
     totalTime: Number(sum.totalTimeMinutes) || 0,
     totalQuestions: Number(sum.totalQuestions) || 0,
     overallAccuracy: Number(sum.overallAccuracy) || 0,
+    learningTimeExclusiveBreakdown:
+      sum.learningTimeExclusiveBreakdown && typeof sum.learningTimeExclusiveBreakdown === "object"
+        ? sum.learningTimeExclusiveBreakdown
+        : null,
     subjectCoverage: practicedCoverage,
     /** @deprecated use unpracticedSubjectsHe / sparseSubjectsHe */
     lowExposureSubjectsHe: [...sparseSubjectsHe],

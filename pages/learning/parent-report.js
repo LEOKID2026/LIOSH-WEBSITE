@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import Layout from "../../components/Layout";
 import { ParentReportExitNav, ParentReportThemeIcons } from "../../components/parent/ParentReportExitNav.jsx";
+import StudentFixedBottomAdChrome from "../../components/student/StudentFixedBottomAdChrome.jsx";
 import { ParentReportImportantDisclaimer } from "../../components/ParentReportImportantDisclaimer";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
 import {
@@ -32,11 +33,14 @@ import {
   getParentReportLayoutProps,
   getParentReportPageShellClass,
   getParentReportPageContentStyle,
+  getParentReportNoScrollPageShellClass,
+  getParentReportNoScrollPageContentStyle,
   getParentReportStateShellClass,
   getParentReportStateShellStyle,
   getParentReportSecondaryLinkClass,
   getParentReportErrorTextClass,
 } from "../../lib/parent-ui/parent-report-site-bright-theme.css.js";
+import { isImmersiveGameLayoutPath } from "../../lib/site-nav";
 import { useParentReportBrightPageBackground } from "../../lib/parent-ui/use-parent-report-bright-page-bg.js";
 import { mapParentReportLoadError } from "../../lib/parent-server/parent-api-errors.he.js";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
@@ -109,6 +113,10 @@ import {
   resolveParentReportWeeklyHomeActionHe,
   mergeParentReportHomeActionHe,
 } from "../../lib/parent-ui/parent-report-parent-copy.js";
+import {
+  formatExclusiveLearningMinutesHe,
+  normalizeLearningTimeExclusiveBreakdown,
+} from "../../lib/parent-ui/learning-time-exclusive-breakdown-display.js";
 import {
   buildRegularReportViewModel,
   cleanTopicLabelForRegularReportHe,
@@ -1119,6 +1127,8 @@ export default function ParentReport() {
   const [isPrintLayout, setIsPrintLayout] = useState(false);
   const { theme, isBright } = useStudentTheme();
   const layoutProps = getParentReportLayoutProps(theme);
+  const reportImmersive = isImmersiveGameLayoutPath(router.pathname);
+  const reportShellOpts = { immersive: reportImmersive };
   useParentReportBrightPageBackground(isBright);
   const parentReportPdfRef = useRef(null);
   /** רוחב פנימי משוער לכרטיס גרף (עמודת PDF − ריפוד כרטיס) — למגרעת X דינמית */
@@ -1523,6 +1533,8 @@ export default function ParentReport() {
       onSchoolYearPreset={() => applyParentReportPeriod("schoolYear")}
       onEnableCustom={enableParentReportCustom}
       onApplyCustom={handleShowReport}
+      idlePresetClassName="bg-white/30 text-white border border-white/40 hover:bg-white/45"
+      activePresetClassName="bg-blue-500/80 text-white border border-blue-400/50"
     />
   );
 
@@ -1640,15 +1652,25 @@ export default function ParentReport() {
 
   if (loading) {
     return (
-      <Layout {...layoutProps}>
-        <div className="relative">
+      <Layout {...layoutProps} layoutLockViewport={!reportImmersive}>
+        <div
+          className={
+            reportImmersive
+              ? "relative h-[100svh] max-h-[100svh] overflow-hidden"
+              : "relative flex-1 min-h-0 h-full max-h-full overflow-hidden"
+          }
+        >
           <ParentReportThemeIcons className="absolute top-4 left-1/2 -translate-x-1/2 z-10" />
           <PortalLoadingPanel
             isBright={isBright}
-            fullPage
+            fullPage={reportImmersive}
+            className="!min-h-0 h-full max-h-full overflow-hidden"
             message="מכין את דוח הביצועים..."
           />
         </div>
+        {reportImmersive ? (
+          <StudentFixedBottomAdChrome theme={isBright ? "bright" : "classic"} />
+        ) : null}
       </Layout>
     );
   }
@@ -1739,29 +1761,43 @@ export default function ParentReport() {
     !displayReport?.summary ||
     (displayReport.summary.totalQuestions === 0 && displayReport.summary.totalTimeMinutes === 0)
   ) {
+    const emptyPlayerName = playerName || report?.playerName || "";
     return (
-      <Layout {...layoutProps}>
+      <Layout {...layoutProps} layoutLockViewport={!reportImmersive}>
+        <Head>
+          <style>{PARENT_REPORT_SITE_BRIGHT_CSS}</style>
+        </Head>
+        {/* Same page shell / top spacing as populated report — no vertical centering. */}
         <div
-          className={`${getParentReportStateShellClass(isBright)} ${isBright ? "" : "items-center"}`}
-          style={getParentReportStateShellStyle(isBright)}
+          className={getParentReportNoScrollPageShellClass(isBright, reportShellOpts)}
           dir="rtl"
+          style={getParentReportNoScrollPageContentStyle(isBright, reportShellOpts)}
+          data-testid="parent-report-empty-period"
         >
-          <div className={`text-center max-w-md w-full ${isBright ? "text-slate-900" : "text-white"}`}>
-            <ParentReportExitNav className="mb-4" isBright={isBright} />
-            
-            <div className="text-4xl mb-4">📊</div>
-            <h1 className="text-2xl font-bold mb-2">דוח להורים</h1>
-            <p className={`mb-4 ${isBright ? "text-slate-600" : "text-white/70"}`}>
+          <div className="max-w-4xl mx-auto w-full min-w-0 overflow-x-hidden">
+            <ParentReportExitNav className="mb-0" isBright={isBright} showShortReportLink={false} />
+
+            <div className="text-center mb-1 md:mb-2">
+              <h1 className="parent-report-print-page-section-heading text-2xl md:text-3xl font-extrabold mb-2">
+                📊 דוח להורים
+              </h1>
+              <p className="text-white/70 text-sm md:text-base">{emptyPlayerName}</p>
+
+              <div className="mt-1 md:mt-2 mb-1 md:mb-2 no-pdf">{parentReportDatePresets}</div>
+            </div>
+
+            <p
+              className={`text-center max-w-md mx-auto mt-2 md:mt-3 ${
+                isBright ? "text-slate-600" : "text-white/70"
+              }`}
+            >
               {PARENT_REPORT_PERIOD_EMPTY_STATE_HE}
             </p>
-            
-            {/* בחירת תקופה גם במסך "אין נתונים" */}
-            <div className="mb-4 space-y-2">
-              <div className={`text-sm mb-2 ${isBright ? "text-slate-500" : "text-white/60"}`}>בחר תקופה:</div>
-              {parentReportDatePresets}
-            </div>
           </div>
         </div>
+        {reportImmersive ? (
+          <StudentFixedBottomAdChrome theme={isBright ? "bright" : "classic"} />
+        ) : null}
       </Layout>
     );
   }
@@ -2187,16 +2223,16 @@ export default function ParentReport() {
         `}</style>
       </Head>
       <div
-        className={getParentReportPageShellClass(isBright)}
+        className={getParentReportPageShellClass(isBright, reportShellOpts)}
         dir="rtl"
-        style={getParentReportPageContentStyle(isBright)}
+        style={getParentReportPageContentStyle(isBright, reportShellOpts)}
       >
         <div
           id="parent-report-pdf"
           ref={parentReportPdfRef}
           className="max-w-4xl mx-auto w-full min-w-0 overflow-x-hidden"
         >
-          <ParentReportExitNav className="mb-0" isBright={isBright} />
+          <ParentReportExitNav className="mb-0" isBright={isBright} showShortReportLink={false} />
           
           {/* כותרת */}
           <div className="text-center mb-1 md:mb-2">
@@ -3380,6 +3416,56 @@ export default function ParentReport() {
             </div>
           )}
 
+          {(() => {
+            const exclusive = normalizeLearningTimeExclusiveBreakdown(
+              displayReport?.summary?.learningTimeExclusiveBreakdown
+            );
+            if (!exclusive) return null;
+            return (
+              <div className="bg-black/30 border border-white/10 rounded-lg p-2 md:p-4 mb-3 md:mb-6 avoid-break">
+                <h2 className="text-base md:text-xl font-bold mb-2 md:mb-3 text-center">
+                  חלוקת זמן הלמידה
+                </h2>
+                <div className="parent-report-desktop-only parent-report-table-wrap-print mt-2 overflow-x-auto">
+                  <table className="w-full text-sm parent-report-subject-table">
+                    <thead>
+                      <tr className="border-b border-white/20">
+                        <th className="text-right py-1.5 px-0.5 whitespace-nowrap">סוג הלמידה</th>
+                        <th className="text-center py-1.5 px-0.5 whitespace-nowrap">זמן</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b border-white/10">
+                        <td className="text-right py-1.5 px-1">תרגול עם שאלות</td>
+                        <td className="py-1.5 px-0.5 text-center text-white/80 whitespace-nowrap">
+                          {formatExclusiveLearningMinutesHe(exclusive.questionPracticeMinutes)} דק׳
+                        </td>
+                      </tr>
+                      <tr className="border-b border-white/10">
+                        <td className="text-right py-1.5 px-1">קריאת ספרים</td>
+                        <td className="py-1.5 px-0.5 text-center text-white/80 whitespace-nowrap">
+                          {formatExclusiveLearningMinutesHe(exclusive.bookReadingMinutes)} דק׳
+                        </td>
+                      </tr>
+                      <tr className="border-b border-white/10">
+                        <td className="text-right py-1.5 px-1">למידה פעילה נוספת</td>
+                        <td className="py-1.5 px-0.5 text-center text-white/80 whitespace-nowrap">
+                          {formatExclusiveLearningMinutesHe(exclusive.otherActiveLearningMinutes)} דק׳
+                        </td>
+                      </tr>
+                      <tr className="border-b border-white/10">
+                        <td className="text-right py-1.5 px-1 font-semibold">סך הכול</td>
+                        <td className="py-1.5 px-0.5 text-center text-white/90 font-semibold whitespace-nowrap">
+                          {formatExclusiveLearningMinutesHe(exclusive.totalMinutes)} דק׳
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            );
+          })()}
+
           {/* המלצות — מקור ראשי: patternDiagnostics; ישן רק אם אין אובייקט אבחון */}
           {diagnosticsView &&
             (diagnosticsView.mode === "insufficient" ||
@@ -3903,6 +3989,104 @@ export default function ParentReport() {
               </div>
             ) : (
               <>
+            {(() => {
+              const exclusive = normalizeLearningTimeExclusiveBreakdown(
+                displayReport?.summary?.learningTimeExclusiveBreakdown
+              );
+              if (!exclusive) return null;
+              const qMin = exclusive.questionPracticeMinutes;
+              const bMin = exclusive.bookReadingMinutes;
+              const oMin = exclusive.otherActiveLearningMinutes;
+              const chartRow = [
+                {
+                  name: "חלוקה",
+                  question: qMin,
+                  book: bMin,
+                  other: oMin,
+                },
+              ];
+              return (
+                <div className="parent-report-chart-card bg-black/30 border border-white/10 rounded-xl p-3 md:p-5 avoid-break shadow-sm shadow-black/20">
+                  <div className="text-center mb-1 md:mb-2">
+                    <h2 className="parent-report-print-chart-title text-base md:text-xl font-bold tracking-tight">
+                      חלוקת זמן הלמידה
+                    </h2>
+                    <p className="parent-report-print-chart-subtitle text-[11px] md:text-xs text-white/55 mt-0.5">
+                      תרגול עם שאלות, קריאת ספרים ולמידה פעילה נוספת
+                    </p>
+                  </div>
+                  <div className="w-full" style={{ minHeight: isMobile ? 160 : 180, direction: "ltr" }}>
+                    <ResponsiveContainer width="100%" height={isMobile ? 160 : 180}>
+                      <BarChart
+                        layout="vertical"
+                        data={chartRow}
+                        margin={{ top: 8, right: 16, left: 8, bottom: 20 }}
+                      >
+                        <XAxis
+                          type="number"
+                          domain={[0, "dataMax"]}
+                          tick={{ fill: "#ffffff85", fontSize: isMobile ? 10 : 11 }}
+                          tickMargin={6}
+                          tickFormatter={(value) =>
+                            `${formatExclusiveLearningMinutesHe(value)} דק׳`
+                          }
+                        />
+                        <YAxis type="category" dataKey="name" hide width={0} />
+                        <Tooltip
+                          contentStyle={activeTooltipStyle}
+                          formatter={(value, name) => [
+                            `${formatExclusiveLearningMinutesHe(value)} דק׳`,
+                            name,
+                          ]}
+                        />
+                        <Legend
+                          verticalAlign="top"
+                          align="center"
+                          wrapperStyle={{
+                            paddingBottom: 10,
+                            fontSize: isMobile ? 11 : 12,
+                            lineHeight: 1.4,
+                          }}
+                          iconSize={11}
+                          formatter={(value) => {
+                            let mins = 0;
+                            if (value === "תרגול עם שאלות") mins = qMin;
+                            else if (value === "קריאת ספרים") mins = bMin;
+                            else if (value === "למידה פעילה נוספת") mins = oMin;
+                            return (
+                              <span className="parent-report-print-legend-label text-white/80">
+                                {value} ({formatExclusiveLearningMinutesHe(mins)} דק׳)
+                              </span>
+                            );
+                          }}
+                        />
+                        <Bar
+                          dataKey="question"
+                          stackId="lt"
+                          name="תרגול עם שאלות"
+                          fill="#34d399"
+                          isAnimationActive={false}
+                        />
+                        <Bar
+                          dataKey="book"
+                          stackId="lt"
+                          name="קריאת ספרים"
+                          fill="#60a5fa"
+                          isAnimationActive={false}
+                        />
+                        <Bar
+                          dataKey="other"
+                          stackId="lt"
+                          name="למידה פעילה נוספת"
+                          fill="#fbbf24"
+                          isAnimationActive={false}
+                        />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              );
+            })()}
             {dailyActivityVisual.length > 0 && (
               <div className="parent-report-chart-card bg-black/30 border border-white/10 rounded-xl p-3 md:p-5 avoid-break shadow-sm shadow-black/20">
                 <div className="text-center mb-1 md:mb-2">
@@ -4507,6 +4691,9 @@ export default function ParentReport() {
           </div>
         </div>
       </div>
+      {reportImmersive ? (
+        <StudentFixedBottomAdChrome theme={isBright ? "bright" : "classic"} />
+      ) : null}
     </Layout>
   );
 }
