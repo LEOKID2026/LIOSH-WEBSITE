@@ -85,7 +85,10 @@ describe("Phase 9 — monthly minutes from unified learning-time aggregate", () 
     );
     assert.match(persistenceSrc, /sumStudentLearningCreditedMinutesInIsraelMonth/);
     assert.match(aggregateSrc, /\.from\("learning_sessions"\)/);
-    assert.match(aggregateSrc, /sumParentActivityCreditedMinutesInRange/);
+    // Unified aggregate folds parent attempts + visits into wall-clock union windows.
+    assert.match(aggregateSrc, /collectParentAttemptTimeWindowsInRange/);
+    assert.match(aggregateSrc, /collectParentVisitTimeWindowsInRange/);
+    assert.match(aggregateSrc, /parent_activity_attempts/);
     assert.doesNotMatch(persistenceSrc, /book_reading_sessions/);
     assert.match(derivedSrc, /sumStudentLearningCreditedMinutesInIsraelMonth/);
     assert.match(derivedSrc, /sumParentActivityVisitMsBySubjectInRange/);

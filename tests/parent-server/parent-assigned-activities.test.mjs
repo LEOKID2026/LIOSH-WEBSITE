@@ -204,49 +204,55 @@ test("stripInternalReportPayloadFields removes parent evidence source labels", (
 });
 
 test("aggregateParentReportPayload: without includeParentActivities skips parent fetch", async () => {
-  let parentFetchCalled = false;
+  let parentReportEvidenceFetchCalled = false;
+
+  function makeThenableChain(table) {
+    const chain = {
+      select(cols) {
+        // Report evidence path joins parent_assigned_activities; unified time path does not.
+        if (
+          table === "parent_activity_attempts" &&
+          typeof cols === "string" &&
+          cols.includes("parent_assigned_activities")
+        ) {
+          parentReportEvidenceFetchCalled = true;
+        }
+        return chain;
+      },
+      eq() {
+        return chain;
+      },
+      gte() {
+        return chain;
+      },
+      lt() {
+        return chain;
+      },
+      not() {
+        return chain;
+      },
+      in() {
+        return chain;
+      },
+      order() {
+        return chain;
+      },
+      limit() {
+        return chain;
+      },
+      maybeSingle() {
+        return Promise.resolve({ data: null, error: null });
+      },
+      then(resolve, reject) {
+        return Promise.resolve({ data: [], error: null }).then(resolve, reject);
+      },
+    };
+    return chain;
+  }
+
   const mockClient = {
     from(table) {
-      if (table === "parent_activity_attempts") {
-        parentFetchCalled = true;
-      }
-      const chain = {
-        select() {
-          return chain;
-        },
-        eq() {
-          return chain;
-        },
-        gte() {
-          return chain;
-        },
-        lt() {
-          return chain;
-        },
-        order() {
-          return Promise.resolve({ data: [], error: null });
-        },
-      };
-      if (table === "learning_sessions" || table === "answers") {
-        return {
-          select() {
-            return this;
-          },
-          eq() {
-            return this;
-          },
-          gte() {
-            return this;
-          },
-          lt() {
-            return this;
-          },
-          order() {
-            return Promise.resolve({ data: [], error: null });
-          },
-        };
-      }
-      return chain;
+      return makeThenableChain(table);
     },
   };
 
@@ -254,13 +260,15 @@ test("aggregateParentReportPayload: without includeParentActivities skips parent
   const fromDate = new Date("2026-05-01T00:00:00.000Z");
   const toDate = new Date("2026-05-30T00:00:00.000Z");
 
+  parentReportEvidenceFetchCalled = false;
   await aggregateParentReportPayload(mockClient, student, fromDate, toDate, {});
-  assert.equal(parentFetchCalled, false);
+  assert.equal(parentReportEvidenceFetchCalled, false);
 
+  parentReportEvidenceFetchCalled = false;
   await aggregateParentReportPayload(mockClient, student, fromDate, toDate, {
     includeParentActivities: true,
   });
-  assert.equal(parentFetchCalled, true);
+  assert.equal(parentReportEvidenceFetchCalled, true);
 });
 
 test("recordParentActivityAnswer does not reference answers table", () => {

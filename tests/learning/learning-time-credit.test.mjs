@@ -60,6 +60,8 @@ test("QuestionTimeLedger — 15 min caps at 10 min", () => {
     question: { operation: "addition" },
     now: 0,
   });
+  // Accrue via visible slices (sleep/wake jumps > maxSliceMs are not credited).
+  for (let t = 30_000; t <= 900_000; t += 30_000) ledger.flushVisibleSlice(t);
   const closed = ledger.closeQuestion(900_000);
   assert.equal(closed.creditedMs, LEARNING_UNIT_CREDIT_CAP_MS);
 });
@@ -72,6 +74,10 @@ test("QuestionTimeLedger — challenge mode credits up to 10 min", () => {
     now: 0,
   });
   assert.equal(ledger.tierCapMs, LEARNING_UNIT_CREDIT_CAP_MS);
+  ledger.flushVisibleSlice(60_000);
+  ledger.flushVisibleSlice(120_000);
+  ledger.flushVisibleSlice(180_000);
+  ledger.flushVisibleSlice(200_000);
   const closed = ledger.closeQuestion(200_000);
   assert.equal(closed.creditedMs, 200_000);
 });
