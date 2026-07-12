@@ -9,6 +9,15 @@ import {
   normalizeStudentActivityMathLayoutQuestion,
 } from "../../lib/classroom-activities/student-activity-question-ui.client.js";
 import { useStudentActivityUi } from "../../hooks/useStudentActivityUi.js";
+import { hasStackedFractionToken } from "../../utils/math-fraction-expression-parse.js";
+import {
+  isMathFractionsQuestionStem,
+  MATH_FRACTIONS_QUESTION_STEM_SIZE_CLASS,
+  shouldHideFractionsMcqTrailingBlank,
+  stripRedundantTrailingAnswerBlank,
+} from "../../utils/math-fraction-question-display.js";
+import { assignedActivityQuestionUsesChoiceUi } from "../../utils/geometry-activity-answer-ui.js";
+import { renderMaybeStackedFractionText } from "../learning/MathFractionExpression.jsx";
 
 /**
  * Question text inside the unified activity question stage — stable footprint for math toggle.
@@ -29,6 +38,29 @@ export default function StudentActivityQuestionSurface({
     [question]
   );
 
+  const isFractionsStem = useMemo(
+    () => isMathFractionsQuestionStem(layoutQuestion || question),
+    [layoutQuestion, question]
+  );
+
+  const hideFractionsMcqBlank = useMemo(
+    () =>
+      shouldHideFractionsMcqTrailingBlank(layoutQuestion || question, {
+        usesChoiceUi: assignedActivityQuestionUsesChoiceUi(question),
+      }),
+    [layoutQuestion, question]
+  );
+
+  const displayLayoutQuestion = useMemo(() => {
+    if (!layoutQuestion) return null;
+    if (!hideFractionsMcqBlank) return layoutQuestion;
+    return {
+      ...layoutQuestion,
+      question: stripRedundantTrailingAnswerBlank(layoutQuestion.question),
+      exerciseText: stripRedundantTrailingAnswerBlank(layoutQuestion.exerciseText),
+    };
+  }, [layoutQuestion, hideFractionsMcqBlank]);
+
   const canDisplayVertically = useMemo(
     () => canStudentActivityQuestionDisplayVertically(layoutQuestion),
     [layoutQuestion]
@@ -42,11 +74,25 @@ export default function StudentActivityQuestionSurface({
   const displayParts = useMemo(
     () =>
       resolveStudentQuestionDisplayParts({
-        question: layoutQuestion?.question,
-        questionLabel: layoutQuestion?.questionLabel,
-        exerciseText: layoutQuestion?.exerciseText || layoutQuestion?.question,
+        question: displayLayoutQuestion?.question,
+        questionLabel: displayLayoutQuestion?.questionLabel,
+        exerciseText:
+          displayLayoutQuestion?.exerciseText || displayLayoutQuestion?.question,
       }),
-    [layoutQuestion]
+    [displayLayoutQuestion]
+  );
+
+  const fractionsStemSizeClass = isFractionsStem
+    ? MATH_FRACTIONS_QUESTION_STEM_SIZE_CLASS
+    : "";
+
+  const stackedFractions = Boolean(
+    isFractionsStem ||
+      hasStackedFractionToken(
+        displayLayoutQuestion?.exerciseText ||
+          displayLayoutQuestion?.question ||
+          ""
+      )
   );
 
   useEffect(() => {
@@ -67,7 +113,10 @@ export default function StudentActivityQuestionSurface({
     onVerticalExerciseHeadlineChange,
   ]);
 
-  if (!layoutQuestion) return null;
+  const isGeometryActivity =
+    String(question?.subject || "").trim().toLowerCase() === "geometry";
+
+  if (!displayLayoutQuestion) return null;
 
   return (
     <div
@@ -110,7 +159,9 @@ export default function StudentActivityQuestionSurface({
                   }),
                 }}
               >
-                {displayParts.leadText}
+                {stackedFractions
+                  ? renderMaybeStackedFractionText(displayParts.leadText)
+                  : displayParts.leadText}
               </p>
             ) : null}
             <div
@@ -119,27 +170,33 @@ export default function StudentActivityQuestionSurface({
               dir="ltr"
             >
               <pre
-                className={`${L.questionFormula} whitespace-pre overflow-visible`}
+                className={`${L.questionFormula} whitespace-pre overflow-visible${fractionsStemSizeClass}`}
                 style={{
                   direction: "ltr",
                   unicodeBidi: "isolate",
                   ...getStudentActivityQuestionFontStyle({ text: verticalText }),
                 }}
               >
-                {verticalText}
+                {stackedFractions
+                  ? renderMaybeStackedFractionText(verticalText)
+                  : verticalText}
               </pre>
             </div>
           </>
         ) : (
           <StudentQuestionDisplay
-            question={layoutQuestion.question}
-            questionLabel={layoutQuestion.questionLabel}
-            exerciseText={layoutQuestion.exerciseText || layoutQuestion.question}
+            question={displayLayoutQuestion.question}
+            questionLabel={displayLayoutQuestion.questionLabel}
+            exerciseText={
+              displayLayoutQuestion.exerciseText || displayLayoutQuestion.question
+            }
+            stackedFractions={stackedFractions}
+            plainVerbalFinalQuestion={isGeometryActivity}
             getQuestionFontStyle={getStudentActivityQuestionFontStyle}
             getEquationFontStyle={getStudentActivityEquationFontStyle}
             leadClassName={L.questionLead}
-            bodyClassName={L.questionBody}
-            formulaClassName={L.questionFormula}
+            bodyClassName={`${L.questionBody}${fractionsStemSizeClass}`}
+            formulaClassName={`${L.questionFormula}${fractionsStemSizeClass}`}
             wrapperClassName="w-full flex flex-col items-center justify-center gap-1 overflow-visible"
           />
         )}

@@ -10,17 +10,26 @@ import {
 
 const SURPRISE_STATUS_PATH = "/api/student/rewards/surprise-box/status";
 
+/** Mobile tighter shell so tiles can grow; md+ keeps prior desktop padding/gaps. */
 const dockShell =
-  "flex flex-col items-center gap-1.5 px-2 py-1.5 md:gap-2.5 md:px-4 md:py-2.5";
+  "flex flex-col items-center gap-1 px-1 py-1 md:gap-2.5 md:px-4 md:py-2.5";
 
-const dockRowClass = "grid grid-cols-6 gap-1.5 md:gap-2.5 justify-items-center";
+/** Mobile: 4×3; md+: 6×2 (unchanged desktop columns). */
+const dockGridClass =
+  "grid w-full max-w-full grid-cols-4 gap-1 md:grid-cols-6 md:gap-2.5 justify-items-center";
 
-const DOCK_ICONS_PER_ROW = 6;
+const DOCK_ICONS_PER_DESKTOP_ROW = 6;
 
+/** Mobile tile: ≥+33% vs prior 36px (floor 48px via min size, up to 56px); md+ restores 56×56. */
 const dockBtnClass =
-  "relative flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/50 bg-white/70 text-center shadow-sm transition hover:bg-white/85 active:scale-95 sm:h-10 sm:w-10 md:h-14 md:w-14 md:rounded-xl";
+  "relative flex aspect-square w-[min(3.5rem,88%)] min-w-12 min-h-12 shrink-0 items-center justify-center rounded-lg border border-white/50 bg-white/70 text-center shadow-sm transition hover:bg-white/85 active:scale-95 md:aspect-auto md:h-14 md:w-14 md:min-h-0 md:min-w-0 md:max-w-none md:rounded-xl";
 
-const dockIconClass = "text-base leading-none md:text-2xl";
+/** Mobile icon +25% vs prior text-base; md+ restores text-2xl. */
+const dockIconClass = "text-xl leading-none md:text-2xl";
+
+/** Mobile badge scales with the larger tile; md+ restores prior size. */
+const dockBadgeClass =
+  "absolute -left-1.5 -top-1.5 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-rose-500 px-1 text-[11px] font-bold text-white md:-left-1 md:-top-1 md:h-4 md:min-w-[1rem] md:px-0.5 md:text-[9px]";
 
 /**
  * @param {{
@@ -121,17 +130,17 @@ export default function StudentWorldDock({
 
   const primaryItems = STUDENT_WORLD_DOCK_PRIMARY.filter((item) => item.kind !== "more");
 
-  const dockRows = useMemo(() => {
+  const dockItems = useMemo(() => {
     /** @type {Array<{ kind: "surprise" } | { kind: "primary", item: typeof STUDENT_WORLD_DOCK_PRIMARY[number] } | { kind: "panel", entry: typeof STUDENT_WORLD_MORE_PANELS[number] }>} */
     const ordered = [];
     if (surpriseEnabled) ordered.push({ kind: "surprise" });
     for (const item of primaryItems) ordered.push({ kind: "primary", item });
     for (const entry of STUDENT_WORLD_MORE_PANELS) ordered.push({ kind: "panel", entry });
-    return {
-      rowOne: ordered.slice(0, DOCK_ICONS_PER_ROW),
-      rowTwo: ordered.slice(DOCK_ICONS_PER_ROW, DOCK_ICONS_PER_ROW * 2),
-    };
+    return ordered;
   }, [primaryItems, surpriseEnabled]);
+
+  const dockItemKey = (entry) =>
+    entry.kind === "surprise" ? "surprise" : entry.kind === "primary" ? entry.item.id : entry.entry.id;
 
   const renderSurpriseButton = () => (
     <button
@@ -162,7 +171,7 @@ export default function StudentWorldDock({
         🎁
       </span>
       {surprisePending > 0 ? (
-        <span className="absolute -left-1 -top-1 flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-rose-500 px-0.5 text-[9px] font-bold text-white">
+        <span className={dockBadgeClass}>
           {surprisePending}
         </span>
       ) : null}
@@ -253,34 +262,44 @@ export default function StudentWorldDock({
     return null;
   };
 
+  const secondaryStart = Math.min(DOCK_ICONS_PER_DESKTOP_ROW, dockItems.length);
+  const showSurpriseCountdown = Boolean(surpriseEnabled && surpriseCountdownHe);
+
   return (
     <div className="flex w-full justify-center -translate-y-5 pt-1 md:translate-y-2 md:pt-2" data-testid="student-world-dock">
       <div className={dockShell}>
-        <div className={dockRowClass}>
-          {dockRows.rowOne.map((entry) => (
-            <span key={entry.kind === "surprise" ? "surprise" : entry.kind === "primary" ? entry.item.id : entry.entry.id} className="contents">
+        <div className={dockGridClass} data-testid="student-world-dock-grid">
+          {dockItems.slice(0, secondaryStart).map((entry) => (
+            <span key={dockItemKey(entry)} className="contents">
               {renderDockEntry(entry)}
             </span>
           ))}
+
+          {showSurpriseCountdown ? (
+            <p
+              className="col-span-full hidden max-w-[18rem] justify-self-center text-center text-[10px] font-semibold text-slate-700 drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)] sm:text-xs md:block"
+              data-testid="student-world-dock-surprise-countdown"
+            >
+              הקופסה הבאה בעוד{" "}
+              <span className="tabular-nums">{surpriseCountdownHe}</span>
+            </p>
+          ) : null}
+
+          <span className="contents" data-testid="student-world-dock-secondary">
+            {dockItems.slice(secondaryStart).map((entry) => (
+              <span key={dockItemKey(entry)} className="contents">
+                {renderDockEntry(entry)}
+              </span>
+            ))}
+          </span>
         </div>
 
-        {surpriseEnabled && surpriseCountdownHe ? (
-          <p
-            className="max-w-[18rem] text-center text-[10px] font-semibold text-slate-700 drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)] sm:text-xs"
-            data-testid="student-world-dock-surprise-countdown"
-          >
+        {showSurpriseCountdown ? (
+          <p className="max-w-[18rem] text-center text-[10px] font-semibold text-slate-700 drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)] sm:text-xs md:hidden">
             הקופסה הבאה בעוד{" "}
             <span className="tabular-nums">{surpriseCountdownHe}</span>
           </p>
         ) : null}
-
-        <div className={dockRowClass} data-testid="student-world-dock-secondary">
-          {dockRows.rowTwo.map((entry) => (
-            <span key={entry.kind === "primary" ? entry.item.id : entry.entry.id} className="contents">
-              {renderDockEntry(entry)}
-            </span>
-          ))}
-        </div>
       </div>
     </div>
   );

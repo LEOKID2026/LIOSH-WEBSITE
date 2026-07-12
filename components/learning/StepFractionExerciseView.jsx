@@ -6,6 +6,10 @@ import {
   highlightFractionLine,
   parseFractionPreLines,
 } from "../../utils/learning-step-fraction-exercise";
+import {
+  hasStackedFractionToken,
+} from "../../utils/math-fraction-expression-parse";
+import { renderStackedFractionFragment } from "./MathFractionExpression";
 
 export default function StepFractionExerciseView({ step, pre, stepIndex = 0, className = "" }) {
   const ex = useStepExerciseUi();
@@ -14,6 +18,9 @@ export default function StepFractionExerciseView({ step, pre, stepIndex = 0, cla
   const stepKey = step?.id ?? `frac-${stepIndex}`;
 
   if (!lines.length) return null;
+
+  const renderSegText = (text) =>
+    hasStackedFractionToken(text) ? renderStackedFractionFragment(text) : text;
 
   return (
     <StepExerciseShell step={step} stepIndex={stepIndex} className={className}>
@@ -28,10 +35,10 @@ export default function StepFractionExerciseView({ step, pre, stepIndex = 0, cla
               {segments.map((seg, si) =>
                 seg.highlighted ? (
                   <ExpressionSpan key={`${stepKey}-${li}-${si}`} highlighted>
-                    {seg.text}
+                    {renderSegText(seg.text)}
                   </ExpressionSpan>
                 ) : (
-                  <span key={`${stepKey}-${li}-${si}`}>{seg.text}</span>
+                  <span key={`${stepKey}-${li}-${si}`}>{renderSegText(seg.text)}</span>
                 )
               )}
             </div>

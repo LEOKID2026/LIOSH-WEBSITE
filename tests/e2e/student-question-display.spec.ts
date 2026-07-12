@@ -86,6 +86,11 @@ test.describe("Student question display — layout (mobile)", () => {
         "מלבן במישור: 2 על 4. מה שטח הפנים?"
       )
     ).toContain("מה שטח המלבן");
+    expect(
+      formatGeometryChildFriendlyQuestion(
+        "בסיסים 1 ו - 8 , גובה 1. מה השטח? ( ממוצע הבסיסים × גובה )"
+      )
+    ).toBe("בסיסים 1 ו - 8 , גובה 1. מה השטח?");
   });
 
   test("math: compact equation without horizontal scroll", async ({ page }) => {

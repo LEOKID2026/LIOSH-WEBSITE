@@ -1,4 +1,10 @@
 import { compareGeometryLearnerAnswer } from "./answer-compare.js";
+import {
+  assignedActivityMathTopicUsesMcq,
+  extractAssignedActivityMathMcqChoiceList,
+} from "../lib/classroom-activities/assigned-activity-math-mcq.js";
+
+export { assignedActivityMathTopicUsesMcq } from "../lib/classroom-activities/assigned-activity-math-mcq.js";
 
 /** Same rules as classroom-activities-shared answersMatch (kept local for client-safe import). */
 function assignedActivityMcqAnswersMatch(a, b) {
@@ -62,8 +68,11 @@ export function geometryQuestionUsesChoiceUi(params) {
  */
 export function assignedActivityQuestionUsesChoiceUi(question) {
   const subject = String(question?.subject || "").trim().toLowerCase();
-  // Math assigned activities use numeric typing + scratchpad — never MCQ from stored choices.
-  if (subject === "math") return false;
+  if (subject === "math") {
+    if (!assignedActivityMathTopicUsesMcq(question)) return false;
+    const choices = extractAssignedActivityMathMcqChoiceList(question);
+    return Array.isArray(choices) && choices.length >= 2;
+  }
   if (subject === "geometry") {
     return geometryQuestionUsesChoiceUi(question?.params);
   }

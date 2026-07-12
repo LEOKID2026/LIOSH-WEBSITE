@@ -3,6 +3,8 @@ import {
   assignedActivityInlineTextProps,
   assignedActivityTextIsMixedHebrewMath,
 } from "../../lib/classroom-activities/assigned-activity-question-display.client.js";
+import { hasStackedFractionToken } from "../../utils/math-fraction-expression-parse.js";
+import { renderMaybeStackedFractionText } from "../learning/MathFractionExpression.jsx";
 
 /**
  * Safe bidi rendering for assigned-activity inline strings (choices, answers, previews).
@@ -16,6 +18,14 @@ export default function AssignedActivityBidiText({
 }) {
   const value = String(text ?? "");
   if (!value) return null;
+
+  if (hasStackedFractionToken(value)) {
+    return (
+      <Tag className={className}>
+        {renderMaybeStackedFractionText(value, className)}
+      </Tag>
+    );
+  }
 
   if (assignedActivityTextIsMixedHebrewMath(value)) {
     return (

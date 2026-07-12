@@ -3,7 +3,6 @@ import Layout from "../../components/Layout";
 import { useRouter } from "next/router";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
 import {
-  BLANK,
   LEVELS,
   GRADE_LEVELS,
   GRADES,
@@ -93,6 +92,17 @@ import {
   formatLearningWrongFeedbackHe,
 } from "../../utils/learning-live-feedback-he";
 import { renderLearningMixedHebrewMathText } from "../../components/learning/LearningMixedHebrewMathText";
+import {
+  MathFractionExpression,
+  renderMaybeStackedFractionText,
+  renderMaybeStackedFractionOrMixed,
+} from "../../components/learning/MathFractionExpression";
+import { hasStackedFractionToken } from "../../utils/math-fraction-expression-parse";
+import {
+  MATH_FRACTIONS_QUESTION_STEM_SIZE_CLASS,
+  shouldHideFractionsMcqTrailingBlank,
+  stripRedundantTrailingAnswerBlank,
+} from "../../utils/math-fraction-question-display";
 import MathLtrIsland from "../../components/learning/MathLtrIsland";
 import StepExerciseViewRouter from "../../components/learning/StepExerciseViewRouter";
 import StepWordProblemExerciseView from "../../components/learning/StepWordProblemExerciseView";
@@ -997,13 +1007,13 @@ export default function MathMaster() {
         {
           id: "fallback-basic-1",
           title: "שלב 1: נבין את השאלה",
-          content: qText ? renderLearningMixedHebrewMathText(qText) : (
+          content: qText ? renderMaybeStackedFractionOrMixed(qText) : (
             <span>נסתכל על התרגיל.</span>
           ),
           text: "",
         },
         { id: "fallback-basic-2", title: "שלב 2: איך ניגשים?", content: <span>נפתור לפי הכללים של הנושא.</span>, text: "" },
-        { id: "fallback-basic-3", title: "שלב 3: התשובה", content: ansText ? <span>התשובה היא: {ansText}</span> : <span>נבדוק את התשובה.</span>, text: "" },
+        { id: "fallback-basic-3", title: "שלב 3: התשובה", content: ansText ? <span>התשובה היא: {renderMaybeStackedFractionText(ansText)}</span> : <span>נבדוק את התשובה.</span>, text: "" },
       ];
     } catch {}
 
@@ -3427,6 +3437,9 @@ export default function MathMaster() {
   // תשובות עם מלל – מקטינים את האותיות בתוך הכפתור כמו בשאלות מילוליות
   const renderAnswerLabel = (ans) => {
     const s = typeof ans === "string" ? ans : String(ans ?? "");
+    if (hasStackedFractionToken(s)) {
+      return <MathFractionExpression text={s} />;
+    }
     const mathyPlain =
       typeof ans === "string" &&
       (/^\d+\s*\/\s*\d+/.test(s) ||
@@ -3543,6 +3556,24 @@ export default function MathMaster() {
         answers: currentQuestion.answers ?? [],
       })
     : null;
+
+  const isFractionsQuestionStem =
+    currentQuestion?.operation === "fractions";
+  /** Fractions MCQ — trailing BLANK is a redundant placeholder (shared helper). */
+  const hideFractionsMcqTrailingBlank = shouldHideFractionsMcqTrailingBlank(
+    currentQuestion,
+    {
+      usesChoiceUi:
+        Array.isArray(currentQuestion?.answers) &&
+        currentQuestion.answers.length >= 2,
+    }
+  );
+  const displayQuestionForStem = hideFractionsMcqTrailingBlank
+    ? stripRedundantTrailingAnswerBlank(currentQuestion.question)
+    : currentQuestion?.question;
+  const displayExerciseTextForStem = hideFractionsMcqTrailingBlank
+    ? stripRedundantTrailingAnswerBlank(currentQuestion.exerciseText)
+    : currentQuestion?.exerciseText;
 
   return (
     <MasterSubjectAccessScreen permissionKey="math" titleHe="מתמטיקה">
@@ -4352,7 +4383,7 @@ export default function MathMaster() {
                                 : MB.feedbackBad
                             }`}
                           >
-                            {renderLearningMixedHebrewMathText(feedback)}
+                            {renderMaybeStackedFractionOrMixed(feedback)}
                           </div>
                         )}
 
@@ -4362,7 +4393,7 @@ export default function MathMaster() {
                               למה הטעות קרתה?
                             </div>
                             <div className={MB.errorBody}>
-                              {renderLearningMixedHebrewMathText(errorExplanation)}
+                              {renderMaybeStackedFractionOrMixed(errorExplanation)}
                             </div>
                           </div>
                         )}
@@ -4627,9 +4658,17 @@ export default function MathMaster() {
                       </div>
                     ) : (
                       <StudentQuestionDisplay
-                        question={currentQuestion.question}
+                        question={displayQuestionForStem}
                         questionLabel={currentQuestion.questionLabel}
-                        exerciseText={currentQuestion.exerciseText}
+                        exerciseText={displayExerciseTextForStem}
+                        stackedFractions={
+                          currentQuestion.operation === "fractions" ||
+                          hasStackedFractionToken(
+                            displayExerciseTextForStem ||
+                              displayQuestionForStem ||
+                              ""
+                          )
+                        }
                         getQuestionFontStyle={(opts) =>
                           getMathHorizontalQuestionFontStyle(opts, isMobileViewport)
                         }
@@ -4659,6 +4698,10 @@ export default function MathMaster() {
                                 currentQuestion.operation === "sequences"
                                   ? " whitespace-normal break-words overflow-wrap-anywhere"
                                   : ""
+                              }${
+                                isFractionsQuestionStem
+                                  ? MATH_FRACTIONS_QUESTION_STEM_SIZE_CLASS
+                                  : ""
                               }`
                             : `${boostHorizontalQuestionBodyClass(
                                 questionPressureLayout?.questionBodyClassByPressure ??
@@ -4668,9 +4711,17 @@ export default function MathMaster() {
                                 currentQuestion.operation === "sequences"
                                   ? "whitespace-normal break-words overflow-wrap-anywhere"
                                   : ""
+                              }${
+                                isFractionsQuestionStem
+                                  ? MATH_FRACTIONS_QUESTION_STEM_SIZE_CLASS
+                                  : ""
                               }`
                         }
-                        formulaClassName={`${MB.questionFormula} text-4xl md:text-3xl`}
+                        formulaClassName={
+                          isFractionsQuestionStem
+                            ? `${MB.questionFormula}${MATH_FRACTIONS_QUESTION_STEM_SIZE_CLASS}`
+                            : `${MB.questionFormula} text-4xl md:text-3xl`
+                        }
                         leadStyle={{
                           lineHeight: isMathVerbalHorizontalStem
                             ? verbalVisualLayout?.questionLineHeightByPressure
@@ -5093,7 +5144,7 @@ export default function MathMaster() {
                                         overflowWrap: "break-word",
                                       }}
                                     >
-                                      {info.exercise || explanationQuestion.exerciseText || explanationQuestion.question}
+                                      {renderMaybeStackedFractionText(info.exercise || explanationQuestion.exerciseText || explanationQuestion.question)}
                                     </div>
                                   </div>
                                   {info.vertical && (
@@ -5243,7 +5294,7 @@ export default function MathMaster() {
                                     {activeStep.content ? (
                                       <div className={learningExplBody}>{activeStep.content}</div>
                                     ) : (
-                                      renderLearningMixedHebrewMathText(
+                                      renderMaybeStackedFractionOrMixed(
                                         activeStep.runs || activeStep.text,
                                         learningExplBody
                                       )
@@ -5326,7 +5377,7 @@ export default function MathMaster() {
                                     className={`${learningQuestionText} mb-0`}
                                     style={{ unicodeBidi: "isolate" }}
                                   >
-                                    {explanationQuestion.exerciseText || explanationQuestion.question}
+                                    {renderMaybeStackedFractionText(explanationQuestion.exerciseText || explanationQuestion.question)}
                                   </div>
                                 </div>
                                 
@@ -5355,7 +5406,7 @@ export default function MathMaster() {
                                   ) : activeStep.content ? (
                                     <div className={learningExplBody}>{activeStep.content}</div>
                                   ) : (
-                                    renderLearningMixedHebrewMathText(
+                                    renderMaybeStackedFractionOrMixed(
                                       activeStep.runs || activeStep.text || "",
                                       learningExplBody
                                     )

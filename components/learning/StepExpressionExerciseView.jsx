@@ -1,6 +1,8 @@
 import React from "react";
 import { useStepExerciseUi } from "../../contexts/StepExerciseUiContext";
 import { learningMathBlockStyle } from "../../utils/learning-mixed-hebrew-math-render";
+import { hasStackedFractionToken } from "../../utils/math-fraction-expression-parse";
+import { renderStackedFractionFragment } from "./MathFractionExpression";
 
 export default function StepExpressionExerciseView({ step, className = "" }) {
   const ex = useStepExerciseUi();
@@ -18,7 +20,7 @@ export default function StepExpressionExerciseView({ step, className = "" }) {
           className={`text-center font-mono text-lg leading-relaxed my-1 ${ex.monoText}`}
           style={{ ...learningMathBlockStyle, fontFamily: "ui-monospace, monospace" }}
         >
-          {line}
+          {hasStackedFractionToken(line) ? renderStackedFractionFragment(line) : line}
         </p>
       ))}
     </div>

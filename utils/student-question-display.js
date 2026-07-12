@@ -126,6 +126,29 @@ export function shouldOmitInstructionLead(lead, body) {
 }
 
 /** Child-friendly geometry question wording (display + generator post-process). */
+/**
+ * Strip trailing geometry formula-help parentheticals from child-facing stems.
+ * Matches the same formula phrases that formatFormulaSpacing / child-friendly
+ * rewrites already treat as presentation (not part of the question task).
+ * Does not strip arbitrary parentheses.
+ * @param {string} text
+ * @returns {string}
+ */
+export function stripGeometryFormulaHelpParenthetical(text) {
+  let t = String(text ?? "");
+  if (!t.trim()) return t;
+  const mul = "[×xX]";
+  const formulas = [
+    `ממוצע\\s+הבסיסים\\s*${mul}\\s*גובה`,
+    `חצי\\s*${mul}\\s*בסיס\\s*${mul}\\s*גובה`,
+    `אורך\\s*${mul}\\s*רוחב`,
+    `בסיס\\s*${mul}\\s*גובה`,
+    `צלע\\s*${mul}\\s*צלע`,
+  ].join("|");
+  t = t.replace(new RegExp(`\\s*\\(\\s*(?:${formulas})\\s*\\)\\s*$`, "u"), "");
+  return t;
+}
+
 export function formatGeometryChildFriendlyQuestion(text) {
   let t = String(text ?? "");
   if (!t.trim()) return t;
@@ -148,6 +171,7 @@ export function formatGeometryChildFriendlyQuestion(text) {
     /מלבן\s+אורך\s+(\d+(?:[.,]\d+)?),\s*רוחב\s+(\d+(?:[.,]\d+)?):\s*שטח\s*=\s*אורך\s*×\s*רוחב\.\s*מה\s+התוצאה\?/gu,
     "מלבן שאורכו $1 יחידות ורוחבו $2 יחידות. מה שטח המלבן?"
   );
+  t = stripGeometryFormulaHelpParenthetical(t);
   return t.replace(/\s{2,}/g, " ").trim();
 }
 

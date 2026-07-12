@@ -177,7 +177,7 @@ export default function MathScratchpadSlot({
     typeof document !== "undefined"
       ? createPortal(
           <div
-            className="fixed z-[45] flex flex-col pointer-events-auto"
+            className="fixed z-[100] flex flex-col pointer-events-auto"
             style={{
               top: overlayRect.top,
               left: overlayRect.left,

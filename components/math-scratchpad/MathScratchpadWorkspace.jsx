@@ -21,6 +21,9 @@ const OPERAND_CELL_CLASS =
   "w-9 h-9 md:w-10 md:h-10 text-center text-base md:text-lg rounded text-white bg-sky-500/25 border border-sky-300/30";
 const CARRY_CELL_CLASS =
   "w-9 h-9 md:w-10 md:h-10 text-center text-base md:text-lg bg-amber-500/15 border border-amber-300/30 rounded text-white";
+/** Long-division structure lines only (not carry cells / fraction bars). */
+const LONG_DIVISION_STRUCTURE_H = "border-t-2 border-red-500";
+const LONG_DIVISION_STRUCTURE_V = "border-l-2 border-l-red-500";
 const DIVISION_SEPARATOR_H = "border-t-2 border-amber-300";
 const DIVISION_SEPARATOR_V = "border-l-2 border-l-amber-300";
 
@@ -60,6 +63,12 @@ function useScratchpadCellTokens() {
     resultSeparator: isBright ? B.resultSeparator : "border-t-2 border-white/35",
     divisionSeparatorH: isBright ? B.divisionSeparatorH : DIVISION_SEPARATOR_H,
     divisionSeparatorV: isBright ? B.divisionSeparatorV : DIVISION_SEPARATOR_V,
+    longDivisionStructureH: isBright
+      ? B.longDivisionStructureH
+      : LONG_DIVISION_STRUCTURE_H,
+    longDivisionStructureV: isBright
+      ? B.longDivisionStructureV
+      : LONG_DIVISION_STRUCTURE_V,
     exerciseText: isBright
       ? B.exerciseText
       : "text-center font-mono text-lg md:text-xl text-white/90 shrink-0",
@@ -808,7 +817,7 @@ function PlaceValueTableWorkspace({ operands, centerOperands = false, fillParent
                   fractionExerciseLayout.lineRow,
                   spec.cols,
                   "frac-line",
-                  C.divisionSeparatorH
+                  C.fracLine
                 )}
               </tr>
               <tr>
@@ -858,7 +867,10 @@ function PlaceValueTableWorkspace({ operands, centerOperands = false, fillParent
                           colSpan={divisionExerciseRow.dividendLen}
                           className="p-0 border-0"
                         >
-                          <div className={C.divisionSeparatorH} />
+                          <div
+                            className={C.longDivisionStructureH}
+                            data-testid="scratchpad-long-division-line-h"
+                          />
                         </td>
                       );
                       ci += divisionExerciseRow.dividendLen;
@@ -878,8 +890,13 @@ function PlaceValueTableWorkspace({ operands, centerOperands = false, fillParent
                     key={ci}
                     className={
                       ci === divisionExerciseRow.dividerCol
-                        ? `border-t border-r border-b p-0.5 ${C.tableCellStrong} ${C.divisionSeparatorV}`
+                        ? `border-t border-r border-b p-0.5 ${C.tableCellStrong} ${C.longDivisionStructureV}`
                         : C.tableCellStrong
+                    }
+                    data-testid={
+                      ci === divisionExerciseRow.dividerCol
+                        ? "scratchpad-long-division-line-v"
+                        : undefined
                     }
                   >
                     <ScratchpadDigitDisplay

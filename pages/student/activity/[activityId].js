@@ -24,6 +24,7 @@ import StudentNumericAnswerField, {
 import VirtualAnswerKeyboard from "../../../components/learning/VirtualAnswerKeyboard.jsx";
 import MathScratchpadSlot from "../../../components/math-scratchpad/MathScratchpadSlot";
 import { ScratchpadVirtualInputProvider } from "../../../components/math-scratchpad/scratchpad-virtual-input";
+import { renderMaybeStackedFractionOrMixed } from "../../../components/learning/MathFractionExpression.jsx";
 import { useTouchPrimaryDevice } from "../../../hooks/useTouchPrimaryDevice.js";
 import { resolveVirtualAnswerKeyboard } from "../../../lib/learning/virtual-answer-keyboard-policy.js";
 import { activityChoiceGridClassName } from "../../../lib/classroom-activities/student-activity-choice-layout.client.js";
@@ -39,6 +40,7 @@ import StudentAssignedActivityShell from "../../../components/student/StudentAss
 import StudentAssignedActivityQuestionStage from "../../../components/student/StudentAssignedActivityQuestionStage";
 import StudentActivitySubmitConfirmModal from "../../../components/student/StudentActivitySubmitConfirmModal";
 import AssignedActivityBidiText from "../../../components/classroom-activities/AssignedActivityBidiText.jsx";
+import { promoteAssignedActivityMathMcqChoices } from "../../../lib/classroom-activities/assigned-activity-math-mcq.js";
 
 function buildSavedAttemptsMap(attempts) {
   /** @type {Record<number, { questionIndex: number, selectedAnswer: string|null, isCorrect: boolean|null }>} */
@@ -143,7 +145,9 @@ export default function StudentActivityPage({ activityId }) {
         setPhase("done");
         return;
       }
-      setQuestionSet(json.questionSet || []);
+      setQuestionSet(
+        (json.questionSet || []).map((q) => promoteAssignedActivityMathMcqChoices(q) || q)
+      );
       const attemptMap = buildSavedAttemptsMap(json.attempts);
       setSavedAttempts(attemptMap);
       if (json.activity?.mode === "live_lesson") {
@@ -407,7 +411,10 @@ export default function StudentActivityPage({ activityId }) {
     setShowDiagramModal(false);
   }, [effectiveIdx]);
 
-  const usesMathScratchpad = assignedActivityUsesMathScratchpad(currentQuestion);
+  const usesMathScratchpad = assignedActivityUsesMathScratchpad(
+    currentQuestion,
+    activity
+  );
   const scratchpadCtx = useMemo(
     () =>
       usesMathScratchpad
@@ -427,12 +434,22 @@ export default function StudentActivityPage({ activityId }) {
     isTouch: isTouchDevice,
   });
   const usesScratchpadDock = Boolean(usesMathScratchpad && scratchpadCtx);
+  /** Geometry uses the same bottom answer dock as math-with-scratchpad (layout only; no scratchpad). */
+  const geometryExplanationOnly =
+    activity?.mode === "discussion" && activity?.answerRequired === false;
+  const usesGeometryAnswerDock =
+    currentQuestion?.subject === "geometry" && !geometryExplanationOnly;
+  const usesAnswerDock = Boolean(usesScratchpadDock || usesGeometryAnswerDock);
   const sharedScratchpadKeyboard =
-    usesScratchpadDock && mathVkPolicy.enabled && isTouchDevice;
+    usesAnswerDock && mathVkPolicy.enabled && isTouchDevice;
 
   const handleScratchpadOpenChange = useCallback((open) => {
     setScratchpadOpen(open);
     if (!open) setActiveScratchpadCell(null);
+  }, []);
+
+  const expandGeometryDiagram = useCallback(() => {
+    setShowDiagramModal(true);
   }, []);
 
   const answerInputProps = useMemo(
@@ -640,7 +657,9 @@ export default function StudentActivityPage({ activityId }) {
   const isQuiz = activity?.mode === "quiz";
   const progressPct =
     questionSet.length > 0 ? Math.round(((effectiveIdx + 1) / questionSet.length) * 100) : 0;
-  const choiceGridClass = activityChoiceGridClassName(currentQuestion?.choices);
+  const choiceGridClass = activityChoiceGridClassName(
+    currentQuestion?.choices ?? currentQuestion?.answers ?? currentQuestion?.options
+  );
 
   const activitySubtitle = `${activityModeLabelHe(activity?.mode)} · שאלה ${effectiveIdx + 1} מתוך ${questionSet.length}`;
 
@@ -660,8 +679,12 @@ export default function StudentActivityPage({ activityId }) {
       ) : null}
       {feedback && feedback.type !== "wait" ? (
         <div className={`${L.feedbackBox} ${feedbackToneClass}`}>
-          <p>{feedback.message}</p>
-          {feedback.explanation ? <p className="mt-1">{feedback.explanation}</p> : null}
+          <p>{renderMaybeStackedFractionOrMixed(feedback.message)}</p>
+          {feedback.explanation ? (
+            <p className="mt-1">
+              {renderMaybeStackedFractionOrMixed(feedback.explanation)}
+            </p>
+          ) : null}
         </div>
       ) : null}
     </>
@@ -682,13 +705,20 @@ export default function StudentActivityPage({ activityId }) {
         disabled={isCurrentQuestionAnswered || busy}
         compact={isTouchDevice}
         submitTone="blue"
-        className={isBright ? MB.vkPad : usesScratchpadDock ? "mt-0" : "mt-1"}
+        className={isBright ? MB.vkPad : usesAnswerDock ? "mt-0" : "mt-1"}
         keyClassName={isBright ? (isTouchDevice ? MB.vkKeyCompact : MB.vkKey) : undefined}
         actionKeyClassName={
           isBright
             ? isTouchDevice
               ? `${MB.vkKeyCompact} text-sm`
               : MB.vkKey
+            : undefined
+        }
+        clearKeyClassName={
+          isBright
+            ? isTouchDevice
+              ? MB.vkClearKeyCompact
+              : `${MB.vkKey} border-red-500 bg-red-600 text-white hover:bg-red-500 hover:border-red-500`
             : undefined
         }
         submitClassName={isBright ? MB.vkSubmitBlue : undefined}
@@ -812,28 +842,6 @@ export default function StudentActivityPage({ activityId }) {
 
   const renderActions = ({ includeInlineKeyboard = true, includePerQuestionSubmit = true } = {}) => (
     <>
-      {/* שרטוט בזמן השאלה — גאומטריה בלבד */}
-      {questionDiagramSpec && !isCurrentQuestionAnswered && (
-        <div className="w-full mb-2" dir="ltr" data-testid="activity-geometry-diagram">
-          <div className="relative">
-            <GeometryExplanationDiagram
-              spec={questionDiagramSpec}
-              mini
-              question={currentQuestion}
-              emphasis="neutral"
-            />
-            <button
-              type="button"
-              onClick={() => setShowDiagramModal(true)}
-              className="absolute bottom-1.5 left-1.5 text-[11px] leading-none bg-emerald-950/90 hover:bg-emerald-900 border border-emerald-500/40 text-emerald-300 rounded px-2 py-0.5 shadow z-10"
-              title="הגדל שרטוט"
-              aria-label="הגדל שרטוט"
-            >
-              ⛶ הגדל
-            </button>
-          </div>
-        </div>
-      )}
       {isExplanationOnly ? (
         <>
           <p className={L.explanationBanner}>
@@ -857,22 +865,35 @@ export default function StudentActivityPage({ activityId }) {
       ) : assignedActivityQuestionUsesChoiceUi(currentQuestion) ? (
         <div className={L.answerWrap}>
           <div className={choiceGridClass} data-testid="activity-answer-choices">
-            {(displayQuestion?.choices ?? currentQuestion.choices).map((displayC, i) => {
-              const originalC = currentQuestion.choices[i];
-              return (
-                <button
-                  key={i}
-                  type="button"
-                  disabled={isCurrentQuestionAnswered || busy}
-                  onClick={() => setAnswerInput(String(originalC))}
-                  className={`${L.choiceButton} ${
-                    answerInput === String(originalC) ? L.choiceButtonSelected : L.choiceButtonDefault
-                  }`}
-                >
-                  <AssignedActivityBidiText text={displayC} className="block w-full" />
-                </button>
-              );
-            })}
+            {(() => {
+              const originalChoices =
+                currentQuestion.choices ??
+                currentQuestion.answers ??
+                currentQuestion.options ??
+                [];
+              const displayChoices =
+                displayQuestion?.choices ??
+                displayQuestion?.answers ??
+                originalChoices;
+              return displayChoices.map((displayC, i) => {
+                const originalC = originalChoices[i] ?? displayC;
+                return (
+                  <button
+                    key={i}
+                    type="button"
+                    disabled={isCurrentQuestionAnswered || busy}
+                    onClick={() => setAnswerInput(String(originalC))}
+                    className={`${L.choiceButton} ${
+                      answerInput === String(originalC)
+                        ? L.choiceButtonSelected
+                        : L.choiceButtonDefault
+                    }`}
+                  >
+                    <AssignedActivityBidiText text={displayC} className="block w-full" />
+                  </button>
+                );
+              });
+            })()}
           </div>
         </div>
       ) : assignedActivityUsesNumericKeyboard(currentQuestion) ? (
@@ -895,6 +916,19 @@ export default function StudentActivityPage({ activityId }) {
               inputClassName={
                 isBright ? (isTouchDevice ? MB.inputMobile : MB.inputDesktop) : undefined
               }
+              embeddedKeyClassName={
+                isBright && isTouchDevice ? MB.vkKeyCompact : undefined
+              }
+              embeddedActionKeyClassName={
+                isBright && isTouchDevice ? `${MB.vkKeyCompact} text-sm` : undefined
+              }
+              embeddedClearKeyClassName={
+                isBright && isTouchDevice ? MB.vkClearKeyCompact : undefined
+              }
+              embeddedSubmitBlueClassName={
+                isBright && isTouchDevice ? MB.vkSubmitBlue : undefined
+              }
+              embeddedKeyboardClassName={isBright && isTouchDevice ? MB.vkPad : undefined}
               onEnterSubmit={() => {
                 if (!busy && !isCurrentQuestionAnswered && String(answerInput).trim() !== "") {
                   void submitAnswer();
@@ -970,7 +1004,7 @@ export default function StudentActivityPage({ activityId }) {
       </button>
     ) : null;
 
-  const renderDesktopDockButtonRow = () =>
+  const renderDesktopDockButtonRow = ({ includeScratchpadToggle = true } = {}) =>
     showDockFinishActions ? (
       <div
         className={`hidden md:flex ${L.scratchpadDockDesktopButtonRow}`}
@@ -998,10 +1032,12 @@ export default function StudentActivityPage({ activityId }) {
             שאלה הבאה
           </button>
         ) : null}
-        {renderDockScratchpadToggleButton(
-          L.scratchpadDockDesktopScratchpadButton,
-          "math-scratchpad-toggle-dock-desktop"
-        )}
+        {includeScratchpadToggle
+          ? renderDockScratchpadToggleButton(
+              L.scratchpadDockDesktopScratchpadButton,
+              "math-scratchpad-toggle-dock-desktop"
+            )
+          : null}
         {renderDockPerQuestionSubmitButton(L.scratchpadDockDesktopSubmitButton)}
         <button
           type="button"
@@ -1014,7 +1050,7 @@ export default function StudentActivityPage({ activityId }) {
       </div>
     ) : null;
 
-  const renderScratchpadDock = () => (
+  const renderAnswerDock = () => (
     <div className={L.scratchpadDockActionsPanel}>
       {renderActions({ includeInlineKeyboard: false, includePerQuestionSubmit: false })}
 
@@ -1023,10 +1059,12 @@ export default function StudentActivityPage({ activityId }) {
           ? renderDockPerQuestionSubmitButton(L.submitButton)
           : null}
         {renderSharedScratchpadKeyboard()}
-        {renderActivityFinishRow(true, { includeScratchpadToggle: true })}
+        {renderActivityFinishRow(true, {
+          includeScratchpadToggle: usesScratchpadDock,
+        })}
       </div>
 
-      {renderDesktopDockButtonRow()}
+      {renderDesktopDockButtonRow({ includeScratchpadToggle: usesScratchpadDock })}
     </div>
   );
 
@@ -1060,6 +1098,7 @@ export default function StudentActivityPage({ activityId }) {
                   questionIndex={effectiveIdx}
                   hideLayoutToggle={scratchpadOpen}
                   onVerticalExerciseHeadlineChange={setVerticalExerciseHeadline}
+                  onExpandDiagram={expandGeometryDiagram}
                 />
               </MathScratchpadSlot>
             ) : showActivityAudio ? (
@@ -1077,6 +1116,7 @@ export default function StudentActivityPage({ activityId }) {
                 <StudentAssignedActivityQuestionStage
                   question={displayQuestion || currentQuestion}
                   questionIndex={effectiveIdx}
+                  onExpandDiagram={expandGeometryDiagram}
                 />
               </div>
             ) : showEnglishVocabAudio ? (
@@ -1092,22 +1132,24 @@ export default function StudentActivityPage({ activityId }) {
                 <StudentAssignedActivityQuestionStage
                   question={displayQuestion || currentQuestion}
                   questionIndex={effectiveIdx}
+                  onExpandDiagram={expandGeometryDiagram}
                 />
               </div>
             ) : (
               <StudentAssignedActivityQuestionStage
                 question={displayQuestion || currentQuestion}
                 questionIndex={effectiveIdx}
+                onExpandDiagram={expandGeometryDiagram}
               />
             )
           }
       actions={
-        usesScratchpadDock ? null : renderActions()
+        usesAnswerDock ? null : renderActions()
       }
-      usesScratchpadDock={usesScratchpadDock}
+      usesScratchpadDock={usesAnswerDock}
       scratchpadDockAnchorRef={scratchpadDockAnchorRef}
-      scratchpadDock={usesScratchpadDock ? renderScratchpadDock() : null}
-      footer={usesScratchpadDock ? null : renderActivityFinishRow(false)}
+      scratchpadDock={usesAnswerDock ? renderAnswerDock() : null}
+      footer={usesAnswerDock ? null : renderActivityFinishRow(false)}
     />
   ) : null;
 

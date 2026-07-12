@@ -3,6 +3,8 @@
  * Applied when freezing new items and when serving stored question sets to students.
  */
 
+import { stripGeometryFormulaHelpParenthetical } from "./student-question-display.js";
+
 /** Patterns that must not appear in student-facing elementary geometry activity stems. */
 export const GEOMETRY_ELEMENTARY_FORBIDDEN_STEM_RE =
   /אלגברה|משווא(?:ה|ת)|ביטוי\s+אלגברי|(?:^|[\s—–-])נעלם(?:[\s,.!?]|$)/u;
@@ -59,6 +61,7 @@ export function sanitizeGeometryActivityQuestionStem(text, context = {}) {
     t = t.replace(/^אתגר\s+זוויות\s+משולש\s*[—–-]\s*/giu, "חישוב זוויות במשולש — ");
   }
 
+  t = stripGeometryFormulaHelpParenthetical(t);
   return t.replace(/\s{2,}/g, " ").trim();
 }
 

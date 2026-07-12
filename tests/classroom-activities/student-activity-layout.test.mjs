@@ -98,10 +98,26 @@ test("Geometry diagram supports embedded mode without svh scroll frame", () => {
   assert.match(src, /overflow-visible/);
 });
 
-test("ClassroomGeometryQuestionDiagram passes embedded to activity stage", () => {
+test("activity geometry diagram: single mini in stage flow with enlarge, no embedded/actions duplicate", () => {
   const stage = readFileSync(
     path.join(repoRoot, "components/student/StudentAssignedActivityQuestionStage.jsx"),
     "utf8"
   );
-  assert.match(stage, /embedded/);
+  const page = readFileSync(
+    path.join(repoRoot, "pages/student/activity/[activityId].js"),
+    "utf8"
+  );
+  assert.match(stage, /GeometryExplanationDiagram/);
+  assert.match(stage, /\bmini\b/);
+  assert.match(stage, /הגדל/);
+  assert.match(stage, /onExpandDiagram/);
+  assert.match(stage, /w-full shrink-0 flex justify-center/);
+  assert.doesNotMatch(stage, /absolute bottom-0 left-1\/2/);
+  assert.doesNotMatch(stage, /-translate-x-1\/2/);
+  assert.doesNotMatch(stage, /ClassroomGeometryQuestionDiagram/);
+  assert.doesNotMatch(page, /activity-geometry-diagram/);
+  assert.match(page, /expandGeometryDiagram/);
+  assert.match(page, /showDiagramModal/);
+  assert.match(page, /usesGeometryAnswerDock/);
+  assert.match(page, /usesAnswerDock/);
 });

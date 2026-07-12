@@ -67,36 +67,44 @@ export default function VirtualAnswerKeyboard({
 
   const rowGapClass =
     rowGapClassName ||
-    (isMathMobile ? "gap-2" : compact ? "gap-1 max-[420px]:gap-0.5" : "gap-1.5");
+    (isMathMobile ? "gap-2" : compact ? "gap-1.5 max-[420px]:gap-1" : "gap-1.5");
   const colGapClass =
     colGapClassName ||
-    (isMathMobile ? "gap-2" : compact ? "gap-1 max-[420px]:gap-0.5" : "gap-1.5");
+    (isMathMobile ? "gap-2" : compact ? "gap-1.5 max-[420px]:gap-1" : "gap-1.5");
   const defaultKeyClass = compact
     ? isMathMobile
       ? "min-h-[52px] h-[52px] rounded-lg border border-white/20 bg-black/35 text-white text-2xl font-bold leading-none active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/10 transition-transform"
-      : "min-h-[40px] h-10 max-[420px]:min-h-7 max-[420px]:h-7 rounded-md border border-white/20 bg-black/35 text-white text-base max-[420px]:text-sm font-semibold leading-none active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/10 transition-transform"
+      : "min-h-[46px] h-[46px] max-[420px]:min-h-[42px] max-[420px]:h-[42px] rounded-md border border-white/20 bg-black/35 text-white text-lg max-[420px]:text-base font-semibold leading-none active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/10 transition-transform"
     : "min-h-[44px] rounded-lg border border-white/20 bg-black/35 text-white text-lg font-bold active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/10 transition-transform";
   const keyClass = keyClassName || defaultKeyClass;
   const actionKeyClass =
     actionKeyClassName ||
-    (compact ? `${keyClass} text-sm${isMathMobile ? "" : " max-[420px]:text-xs"}` : keyClass);
+    (compact ? `${keyClass} text-sm${isMathMobile ? "" : " max-[420px]:text-sm"}` : keyClass);
+  const defaultClearKeyClass = compact
+    ? isMathMobile
+      ? "min-h-[52px] h-[52px] rounded-lg border border-red-400/70 bg-red-600 text-white text-sm font-bold leading-none active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-red-500 transition-transform"
+      : "min-h-[46px] h-[46px] max-[420px]:min-h-[42px] max-[420px]:h-[42px] rounded-md border border-red-400/70 bg-red-600 text-white text-sm font-semibold leading-none active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-red-500 transition-transform"
+    : "min-h-[44px] rounded-lg border border-red-400/70 bg-red-600 text-white text-base font-bold active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-red-500 transition-transform";
+  const clearKeyClass = clearKeyClassName || defaultClearKeyClass;
   const defaultSubmitClass = compact
     ? submitTone === "blue"
       ? isMathMobile
         ? "col-span-3 min-h-[52px] h-[52px] rounded-lg border border-cyan-400/50 bg-cyan-500 text-black text-2xl font-bold leading-none active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-cyan-400 transition-transform"
-        : "col-span-3 min-h-[40px] h-10 max-[420px]:min-h-7 max-[420px]:h-7 rounded-md border border-cyan-400/50 bg-cyan-500 text-black text-base max-[420px]:text-sm font-bold leading-none active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-cyan-400 transition-transform"
+        : "col-span-3 min-h-[46px] h-[46px] max-[420px]:min-h-[42px] max-[420px]:h-[42px] rounded-md border border-cyan-400/50 bg-cyan-500 text-black text-base max-[420px]:text-sm font-bold leading-none active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-cyan-400 transition-transform"
       : isMathMobile
         ? "col-span-3 min-h-[52px] h-[52px] rounded-lg border border-emerald-400/40 bg-emerald-500/80 text-white text-2xl font-bold leading-none active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-emerald-500 transition-transform"
-        : "col-span-3 min-h-[40px] h-10 max-[420px]:min-h-7 max-[420px]:h-7 rounded-md border border-emerald-400/40 bg-emerald-500/80 text-white text-base max-[420px]:text-sm font-bold leading-none active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-emerald-500 transition-transform"
+        : "col-span-3 min-h-[46px] h-[46px] max-[420px]:min-h-[42px] max-[420px]:h-[42px] rounded-md border border-emerald-400/40 bg-emerald-500/80 text-white text-base max-[420px]:text-sm font-bold leading-none active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-emerald-500 transition-transform"
     : "";
   const submitClass = submitClassName || defaultSubmitClass;
   const spacerClass =
     spacerClassName ||
-    (isMathMobile ? "h-[52px]" : compact ? "h-10 max-[420px]:h-7" : "min-h-[44px]");
+    (isMathMobile ? "h-[52px]" : compact ? "h-[46px] max-[420px]:h-[42px]" : "min-h-[44px]");
   const shellMaxWidthClass = isMathMobile
     ? "max-w-[min(100vw-1rem,380px)]"
-    : "max-w-[300px]";
-  const shellPaddingClass = isMathMobile ? "p-3" : compact ? "max-[420px]:p-1" : "";
+    : compact
+      ? "max-w-[320px] max-[420px]:max-w-[300px]"
+      : "max-w-[300px]";
+  const shellPaddingClass = isMathMobile ? "p-3" : compact ? "max-[420px]:p-1.5" : "";
   const closeBtnClass =
     closeButtonClassName ||
     "px-2 py-0.5 rounded-md text-xs font-semibold text-white/70 hover:text-white hover:bg-white/10";
@@ -154,7 +162,7 @@ export default function VirtualAnswerKeyboard({
                   keyDef.action === "backspace" || keyDef.action === "clear";
                 const btnClass =
                   keyDef.action === "clear"
-                    ? clearKeyClassName || actionKeyClass
+                    ? clearKeyClass
                     : isAction
                       ? actionKeyClass
                       : keyClass;
