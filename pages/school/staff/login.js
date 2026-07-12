@@ -83,6 +83,7 @@ export default function SchoolStaffLoginPage() {
           title={SCHOOL_STAFF_LOGIN_TITLE}
           subtitle={SCHOOL_STAFF_LOGIN_SUBTITLE}
           className="!mb-3 md:!mb-4"
+          homeHref="/teachers"
         />
         <div data-testid="school-staff-login-root">
           <form onSubmit={(e) => void onSubmit(e)} className="space-y-3">

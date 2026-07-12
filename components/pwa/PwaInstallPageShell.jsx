@@ -27,6 +27,12 @@ export default function PwaInstallPageShell({
 }) {
   const { theme, isBright } = useStudentTheme();
   const T = getPwaInstallPageTheme(portal, isBright);
+  const portalHomeHref =
+    portal === "parent"
+      ? "/parent/dashboard"
+      : portal === "teacher"
+        ? "/teacher/dashboard"
+        : "/student/home";
 
   return (
     <>
@@ -41,7 +47,7 @@ export default function PwaInstallPageShell({
           <h1 className={T.heading}>{title}</h1>
           <p className={T.body}>לחצו "התקן" למטה כדי להוסיף את האפליקציה למסך הבית.</p>
           <Launcher isBright={isBright} />
-          <Link href="/" className={T.backLink}>
+          <Link href={portalHomeHref} className={T.backLink}>
             חזרה לעמוד הבית
           </Link>
         </div>

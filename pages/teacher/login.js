@@ -309,7 +309,7 @@ export default function TeacherLoginPage({ inviteOnly }) {
         dir="rtl"
         lang="he"
       >
-        <PortalLoginHeading title="כניסה למורים" className="!mb-2 md:!mb-4" bright={isBright} />
+        <PortalLoginHeading title="כניסה למורים" className="!mb-2 md:!mb-4" bright={isBright} homeHref="/teachers" />
 
         {sessionCheckPending ? (
           <div data-testid="teacher-login-root" data-state="loading">

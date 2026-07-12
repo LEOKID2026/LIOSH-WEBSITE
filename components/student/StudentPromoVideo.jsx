@@ -50,13 +50,9 @@ export default function StudentPromoVideo({
     );
   }
 
-  const desktopWrapClass = compact
-    ? "hidden md:block w-full overflow-hidden rounded-xl border"
-    : "hidden md:block mx-auto w-full max-w-3xl overflow-hidden rounded-2xl border";
-
-  const mobileWrapClass = compact
-    ? "md:hidden w-full overflow-hidden rounded-xl border"
-    : "md:hidden mx-auto w-full max-w-3xl overflow-hidden rounded-2xl border";
+  const wrapClass = compact
+    ? "w-full overflow-hidden rounded-xl border"
+    : "mx-auto w-full max-w-3xl overflow-hidden rounded-2xl border";
 
   return (
     <section
@@ -71,18 +67,10 @@ export default function StudentPromoVideo({
 
       <PromoVideoClickablePreview
         src={desktopSrc}
-        wrapClassName={`${desktopWrapClass} ${frameClass}`}
+        wrapClassName={`${wrapClass} ${frameClass}`}
         videoClassName="block h-auto w-full aspect-video bg-black object-contain"
-        ariaLabel="סרטון ילדים — גרסת מחשב"
+        ariaLabel="סרטון ילדים"
         testId="student-promo-video-desktop"
-      />
-
-      <PromoVideoClickablePreview
-        src={desktopSrc}
-        wrapClassName={`${mobileWrapClass} ${frameClass}`}
-        videoClassName="block h-auto w-full aspect-video bg-black object-contain"
-        ariaLabel="סרטון ילדים — גרסת מחשב (מובייל)"
-        testId="student-promo-video-mobile"
       />
     </section>
   );

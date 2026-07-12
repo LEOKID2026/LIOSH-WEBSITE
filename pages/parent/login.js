@@ -272,6 +272,7 @@ export default function ParentLoginPage() {
             title="כניסת הורים"
             subtitle="כניסה והרשמה מהירה להורים."
             bright={isBright}
+            homeHref="/parents"
           />
           <PortalLoadingPanel isBright={isBright} message="בודקים חיבור..." />
         </div>
@@ -292,6 +293,7 @@ export default function ParentLoginPage() {
           title="כניסת הורים"
           subtitle="כניסה והרשמה מהירה להורים."
           bright={isBright}
+          homeHref="/parents"
         />
 
         <section className={T.infoBox} aria-label="מידע לפתיחת חשבון הורה">

@@ -27,13 +27,6 @@ for (const viewport of [
   for (const entry of PAGES_WITH_PROMO) {
     const url = `${BASE}${entry.path}`;
     let previewSelector = entry.preview;
-    if (viewport.name === "mobile") {
-      if (entry.path === "/kids") {
-        previewSelector = "[data-testid='student-promo-video-mobile-preview']";
-      } else if (entry.path === "/parents") {
-        previewSelector = "[data-testid='parent-promo-video-mobile-preview']";
-      }
-    }
 
     await page.goto(url, { waitUntil: "domcontentloaded", timeout: 120_000 });
     const preview = page.locator(previewSelector).first();

@@ -24,10 +24,16 @@ export default function LearningBookAudioPlayer({
 }) {
   const { classes: theme } = useBookGradeTheme();
   const enabled = isLearningBookAudioEnabledClient();
+  const mathAudioDisabled =
+    String(subject || "").trim().toLowerCase() === "math" &&
+    (String(grade || "").trim().toLowerCase() === "g1" ||
+      String(grade || "").trim().toLowerCase() === "g2");
   const audioMeta = useMemo(
     () =>
-      enabled ? resolveLearningBookAudio(subject, grade, pageId, sectionNumber) : null,
-    [enabled, subject, grade, pageId, sectionNumber]
+      enabled && !mathAudioDisabled
+        ? resolveLearningBookAudio(subject, grade, pageId, sectionNumber)
+        : null,
+    [enabled, mathAudioDisabled, subject, grade, pageId, sectionNumber]
   );
 
   const audioRef = useRef(null);

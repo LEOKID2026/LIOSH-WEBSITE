@@ -2,10 +2,10 @@ import Link from "next/link";
 
 export const PORTAL_HOME_BACK_LABEL = "חזרה לדף הבית";
 
-export function PortalHomeBackLink({ className = "", bright = false }) {
+export function PortalHomeBackLink({ className = "", bright = false, homeHref = "/" }) {
   return (
     <Link
-      href="/"
+      href={homeHref}
       className={`text-sm font-semibold hover:underline ${
         bright ? "text-sky-700 hover:text-sky-900" : "text-amber-300"
       } ${className}`}
@@ -16,7 +16,13 @@ export function PortalHomeBackLink({ className = "", bright = false }) {
   );
 }
 
-export default function PortalLoginHeading({ title, subtitle, className = "", bright = false }) {
+export default function PortalLoginHeading({
+  title,
+  subtitle,
+  className = "",
+  bright = false,
+  homeHref = "/",
+}) {
   return (
     <header className={`mb-3 md:mb-6 ${className}`.trim()}>
       <div className="flex items-start justify-between gap-3 md:gap-4">
@@ -38,7 +44,7 @@ export default function PortalLoginHeading({ title, subtitle, className = "", br
             </p>
           ) : null}
         </div>
-        <PortalHomeBackLink bright={bright} className="shrink-0 pt-0.5 md:pt-1 text-xs md:text-sm" />
+        <PortalHomeBackLink bright={bright} homeHref={homeHref} className="shrink-0 pt-0.5 md:pt-1 text-xs md:text-sm" />
       </div>
     </header>
   );

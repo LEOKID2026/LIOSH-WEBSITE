@@ -5,10 +5,7 @@ import PageSeo from "../seo/PageSeo";
 import MarketingFeatureCard from "./MarketingFeatureCard";
 import PortalPwaInstallButton from "../pwa/PortalPwaInstallButton";
 import ParentPromoVideo from "../parent/ParentPromoVideo";
-import { PARENT_PROMO_MOBILE_SRC } from "../parent/ParentPromoVideo";
 import StudentPromoVideo from "../student/StudentPromoVideo";
-import { STUDENT_PROMO_MOBILE_SRC } from "../student/StudentPromoVideo";
-import PromoMobileCompareVideo from "../promo/PromoMobileCompareVideo";
 import StudentParentInviteModal from "../student/StudentParentInviteModal";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import { getPrivateTeacherLayoutProps } from "../../lib/teacher-ui/teacher-portal-theme.client.js";
@@ -395,22 +392,6 @@ export default function MarketingLandingPage({ audience, content }) {
               ) : null}
             </div>
           </section>
-
-          {audience === "parents" ? (
-            <PromoMobileCompareVideo
-              mobileSrc={PARENT_PROMO_MOBILE_SRC}
-              isBright={isBright}
-              testId="parent-landing-promo-mobile-compare"
-            />
-          ) : null}
-
-          {audience === "kids" ? (
-            <PromoMobileCompareVideo
-              mobileSrc={STUDENT_PROMO_MOBILE_SRC}
-              isBright={isBright}
-              testId="kids-landing-promo-mobile-compare"
-            />
-          ) : null}
 
           <p className="pb-4 text-center">
             <Link

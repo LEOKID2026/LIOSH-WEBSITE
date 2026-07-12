@@ -1,10 +1,25 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SiteLegalFooterBar from "./layout/SiteLegalFooterBar.jsx";
 import StudentAdSlot from "./student/StudentAdSlot.jsx";
 import StudentThemePicker from "./student/StudentThemePicker.jsx";
-import { getContextNav, isImmersiveGameLayoutPath, shouldLayoutUseRtl, shouldShowLayoutStudentAdSlot, shouldShowLayoutThemePicker } from "../lib/site-nav";
+import {
+  getAreaHomeHref,
+  getContextNav,
+  isImmersiveGameLayoutPath,
+  isPurePublicMarketingPath,
+  NAV_AREAS,
+  resolveNavArea,
+  shouldLayoutUseRtl,
+  shouldShowLayoutStudentAdSlot,
+  shouldShowLayoutThemePicker,
+} from "../lib/site-nav";
+import {
+  clearSiteNavPortal,
+  persistSiteNavPortal,
+  readSiteNavPortal,
+} from "../lib/site-nav-portal-context.client.js";
 import { STUDENT_BRIGHT_PAGE_BG_STYLE, STUDENT_BRIGHT_SITE_CHROME_BG } from "../lib/student-ui/student-bright-page-background.client.js";
 import { STUDENT_LAYOUT_CHROME_BOTTOM_CSS } from "../lib/student-ui/student-ad-slot.client.js";
 
@@ -21,11 +36,46 @@ export default function Layout({
   layoutShowThemePicker = false,
   /** Lock shell to one viewport (no document scroll) — parent-report empty/loading under /parent. */
   layoutLockViewport = false,
+  /** Optional override for HUD nav area (student | parent | teacher). */
+  layoutNavArea = null,
 }) {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activePortal, setActivePortal] = useState(() =>
+    typeof window !== "undefined" ? readSiteNavPortal() : null
+  );
 
-  const isGamePage = isImmersiveGameLayoutPath(router.pathname);
+  const pathname = router.pathname || "";
+  const authPortal =
+    pathname.startsWith("/auth/") && typeof router.query?.portal === "string"
+      ? router.query.portal
+      : undefined;
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (layoutNavArea) {
+      persistSiteNavPortal(layoutNavArea);
+      setActivePortal(layoutNavArea);
+      return;
+    }
+
+    const pathArea = resolveNavArea(pathname, { authPortal });
+    if (pathArea !== NAV_AREAS.public) {
+      persistSiteNavPortal(pathArea);
+      setActivePortal(pathArea);
+      return;
+    }
+
+    if (isPurePublicMarketingPath(pathname)) {
+      clearSiteNavPortal();
+      setActivePortal(null);
+      return;
+    }
+
+    setActivePortal(readSiteNavPortal());
+  }, [pathname, authPortal, layoutNavArea]);
+
+  const isGamePage = isImmersiveGameLayoutPath(pathname);
 
   if (isGamePage) {
     // For game pages, return only the children without header/footer
@@ -34,12 +84,12 @@ export default function Layout({
 
   const closeMenu = () => setMenuOpen(false);
 
-  const pathname = router.pathname || "";
-  const authPortal =
-    pathname.startsWith("/auth/") && typeof router.query?.portal === "string"
-      ? router.query.portal
-      : undefined;
-  const { links: menuLinks } = getContextNav(pathname, { authPortal });
+  const navOptions = {
+    authPortal,
+    activePortal: layoutNavArea || activePortal || undefined,
+  };
+  const { links: menuLinks } = getContextNav(pathname, navOptions);
+  const areaHomeHref = getAreaHomeHref(pathname, navOptions);
   const layoutRtlHebrew = shouldLayoutUseRtl(pathname);
   const showThemePicker = layoutShowThemePicker || shouldShowLayoutThemePicker(pathname);
 
@@ -106,7 +156,7 @@ export default function Layout({
       <header className={headerClass}>
         <nav className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-2 md:gap-3">
           <Link
-            href="/"
+            href={areaHomeHref}
             className={`flex items-center gap-2 font-extrabold tracking-widest text-lg shrink-0 ${
               isStudentBright ? "text-red-600" : ""
             }`}
