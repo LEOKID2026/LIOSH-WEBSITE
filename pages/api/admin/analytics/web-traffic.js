@@ -1,9 +1,9 @@
-import { safeApiLog } from "../../../lib/security/safe-log.js";
+import { safeApiLog } from "../../../../lib/security/safe-log.js";
 import {
   requireAdminApiContext,
   sendAdminApiError,
-} from "../../../lib/admin-server/admin-request.server.js";
-import { getAdminWebTrafficAnalytics } from "../../../lib/admin-server/admin-web-traffic.server.js";
+} from "../../../../lib/admin-server/admin-request.server.js";
+import { getAdminWebTrafficAnalytics } from "../../../../lib/admin-server/admin-web-traffic.server.js";
 
 export default async function handler(req, res) {
   try {
