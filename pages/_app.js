@@ -2,6 +2,7 @@ import "../styles/globals.css";
 import Head from "next/head";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { Analytics } from "@vercel/analytics/next";
 import OfflineIndicator from "../components/OfflineIndicator";
 import StudentAccessGate from "../components/student/StudentAccessGate";
 import DevServiceWorkerCleanup from "../components/dev/DevServiceWorkerCleanup";
@@ -20,6 +21,58 @@ import {
   BROWSER_THEME_COLOR_BRIGHT,
   BROWSER_THEME_COLOR_BOOTSTRAP_SCRIPT,
 } from "../lib/student-ui/browser-theme-color.client.js";
+
+const UUID_PATH_SEGMENT_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const LEO_NUMBER_PATH_SEGMENT_RE = /^\d{8}$/;
+
+/**
+ * Privacy filter for Vercel Web Analytics pageviews only.
+ * Strips query/hash, drops OAuth/token routes, redacts id-like path segments.
+ * Never attaches custom events or user PII.
+ */
+function vercelAnalyticsBeforeSend(event) {
+  if (!event || typeof event.url !== "string") return null;
+
+  let url;
+  try {
+    url = new URL(event.url);
+  } catch {
+    return null;
+  }
+
+  const pathname = String(url.pathname || "").toLowerCase();
+  const pathSegments = pathname.split("/").filter(Boolean);
+  const isOauthCallbackPath =
+    pathname.includes("google-callback") ||
+    pathname.includes("/oauth") ||
+    pathname.endsWith("/auth/callback") ||
+    pathname.includes("/auth/callback/");
+  const pathHasTokenOrCode = pathSegments.some(
+    (seg) => seg === "token" || seg === "code" || seg.startsWith("token.") || seg.startsWith("code."),
+  );
+  if (isOauthCallbackPath || pathHasTokenOrCode) {
+    return null;
+  }
+
+  url.search = "";
+  url.hash = "";
+  url.pathname = url.pathname
+    .split("/")
+    .map((segment) => {
+      if (!segment) return segment;
+      if (UUID_PATH_SEGMENT_RE.test(segment)) return "[id]";
+      if (LEO_NUMBER_PATH_SEGMENT_RE.test(segment)) return "[leo]";
+      if (segment.includes("@")) return "[redacted]";
+      return segment;
+    })
+    .join("/");
+
+  return {
+    ...event,
+    url: url.toString(),
+  };
+}
 
 if (typeof window !== "undefined") {
   initParentPwaInstallPromptCapture();
@@ -317,6 +370,7 @@ export default function MyApp({ Component, pageProps }) {
           <Component {...pageProps} />
         )}
       </StudentThemeProvider>
+      <Analytics beforeSend={vercelAnalyticsBeforeSend} />
     </>
   );
 }
