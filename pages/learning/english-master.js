@@ -27,7 +27,7 @@ import {
   updateDailyStreak,
   getStreakReward,
 } from "../../utils/daily-streak";
-import { useSound } from "../../hooks/useSound";
+import { useGameAudio } from "../../hooks/useGameAudio";
 import { getQuestionFontStyle } from "../../utils/learning-question-font";
 import { resolveLearningMcqChoiceClassName } from "../../utils/learning-mcq-choice-styles.client";
 import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-stem-sanitizer";
@@ -647,7 +647,7 @@ export default function EnglishMaster() {
   const [showStreakReward, setShowStreakReward] = useState(null);
   
   // Sound system
-  const sound = useSound();
+  const audio = useGameAudio();
   
   const [playerLevel, setPlayerLevel] = useState(1);
   const [xp, setXp] = useState(0);
@@ -1637,7 +1637,7 @@ export default function EnglishMaster() {
     accumulateQuestionTime();
     questionTimeLedgerRef.current = null;
     // Stop background music when game resets
-    sound.stopBackgroundMusic();
+    audio.stopMusic();
     clearActiveDiagnosticState(
       englishPendingDiagnosticProbeRef,
       englishHypothesisLedgerRef
@@ -1863,8 +1863,9 @@ export default function EnglishMaster() {
     learningSessionStartPromiseRef.current = null;
     
     // Start background music and play game start sound
-    sound.playBackgroundMusic();
-    sound.playSound("game-start");
+    audio.primeFromUserGesture();
+    audio.playMusic("bgm-learning-focus");
+    audio.playSfx("sfx-game-start");
     setErrorExplanation("");
     void ensureLearningSessionId();
     if (mode === "challenge") {
@@ -1901,7 +1902,7 @@ export default function EnglishMaster() {
 
   function stopGame() {
     // Stop background music when game stops
-    sound.stopBackgroundMusic();
+    audio.stopMusic();
     clearActiveDiagnosticState(
       englishPendingDiagnosticProbeRef,
       englishHypothesisLedgerRef
@@ -1966,6 +1967,7 @@ export default function EnglishMaster() {
   }
 
   function handleTimeUp() {
+    audio.playSfx("sfx-game-over");
     pendingEnglishTrackMetaRef.current = {
       correct: 0,
       total: 1,
@@ -2161,7 +2163,7 @@ export default function EnglishMaster() {
         const newBadge = "🔥 Hot Streak";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         if (typeof window !== "undefined") {
           try {
@@ -2174,7 +2176,7 @@ export default function EnglishMaster() {
         const newBadge = "⚡ Lightning Fast";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         if (typeof window !== "undefined") {
           try {
@@ -2187,7 +2189,7 @@ export default function EnglishMaster() {
         const newBadge = "🌟 אלוף";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         if (typeof window !== "undefined") {
           try {
@@ -2205,7 +2207,7 @@ export default function EnglishMaster() {
           setPlayerLevel((prevLevel) => {
             const newLevel = prevLevel + 1;
             setShowLevelUp(true);
-            sound.playSound("level-up");
+            audio.playSfx("sfx-level-up");
             setTimeout(() => setShowLevelUp(false), 3000);
             if (typeof window !== "undefined") {
               try {
@@ -2232,9 +2234,9 @@ export default function EnglishMaster() {
       
       // Play sound - different sound for streak milestones
       if ((streak + 1) % 5 === 0 && streak + 1 >= 5) {
-        sound.playSound("streak");
+        audio.playSfx("sfx-streak");
       } else {
-        sound.playSound("correct");
+        audio.playSfx("sfx-correct");
       }
       
       // Update daily streak
@@ -2264,7 +2266,7 @@ export default function EnglishMaster() {
       setStreak(0);
       
       // Play sound for wrong answer
-      sound.playSound("wrong");
+      audio.playSfx("sfx-wrong");
       
       const errExpl = getErrorExplanation(
         currentQuestion,
@@ -2375,7 +2377,7 @@ export default function EnglishMaster() {
             };
             trackCurrentQuestionTime();
             setFeedback(LIVE_PRACTICE_GAME_OVER_HE);
-            sound.playSound("game-over");
+            audio.playSfx("sfx-game-over");
             recordSessionProgress();
             saveRunToStorage();
             setGameActive(false);
@@ -2617,7 +2619,7 @@ export default function EnglishMaster() {
           subtitle={`${playerName || "שחקן"} • ${gradeInfo.name} • ${studentDisplayLevelLabel(displayLevel)} • ${getTopicName(topic)} • ${MODES[mode].name}`}
           onBack={backSafe}
           onCurriculumClick={() => router.push("/learning/curriculum?subject=english")}
-          sound={sound}
+          audio={audio}
         />
 
         <div className="md:hidden">
@@ -2630,7 +2632,7 @@ export default function EnglishMaster() {
             compactHeader
             integratedTopRow
             centerSlot={
-              <LearningMasterMobileNavTitle MB={MB} title="🇬🇧 אנגלית" sound={sound} />
+              <LearningMasterMobileNavTitle MB={MB} title="🇬🇧 אנגלית" audio={audio} />
             }
           />
         </div>

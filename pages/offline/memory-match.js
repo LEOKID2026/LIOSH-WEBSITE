@@ -2,9 +2,11 @@ import { useMemo, useState, useEffect, useRef } from "react";
 import Layout from "../../components/Layout";
 import MaybeGameAccessGuard from "../../components/offline/MaybeGameAccessGuard.jsx";
 import StudentAdSlot from "../../components/student/StudentAdSlot.jsx";
+import GameAudioFullscreenButton from "../../components/game-audio/GameAudioFullscreenButton.jsx";
 import { useRouter } from "next/router";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
 import OfflineGameHoldShell from "../../components/offline/OfflineGameHoldShell.jsx";
+import { useGameAudio } from "../../hooks/useGameAudio";
 
 const CARD_POOL = ["🐶", "🐱", "🪙", "💎", "🦴", "🐾", "🦊", "🌙", "⚡️", "🔥"];
 
@@ -24,6 +26,7 @@ function buildDeck(pairs = 8) {
 export default function MemoryMatch() {
   useIOSViewportFix();
   const router = useRouter();
+  const { playSfx, primeFromUserGesture } = useGameAudio();
   const wrapRef = useRef(null);
   const headerRef = useRef(null);
   const boardRef = useRef(null);
@@ -93,8 +96,9 @@ export default function MemoryMatch() {
   useEffect(() => {
     if (allMatched) {
       setTimerActive(false);
+      playSfx("sfx-victory");
     }
-  }, [allMatched]);
+  }, [allMatched, playSfx]);
 
   const gridColumns = useMemo(() => {
     if (deck.length <= 12) return 3;
@@ -112,6 +116,9 @@ export default function MemoryMatch() {
     if (flipped.includes(idx) || matched.includes(deck[idx].id)) return;
     if (flipped.length === 2) return;
 
+    primeFromUserGesture();
+    playSfx("sfx-flap");
+
     const nextFlipped = [...flipped, idx];
     setFlipped(nextFlipped);
 
@@ -123,6 +130,7 @@ export default function MemoryMatch() {
 
       if (firstCard.emoji === secondCard.emoji) {
         setTimeout(() => {
+          playSfx("sfx-match-ok");
           setMatched((prev) => [...prev, firstCard.id, secondCard.id]);
           setFlipped([]);
           if (twoPlayers) {
@@ -135,6 +143,7 @@ export default function MemoryMatch() {
         }, 400);
       } else {
         setTimeout(() => {
+          playSfx("sfx-match-bad");
           setFlipped([]);
           if (twoPlayers) {
             setCurrentPlayer((prev) => (prev === 0 ? 1 : 0));
@@ -194,13 +203,14 @@ export default function MemoryMatch() {
             className="relative px-2 py-3"
             style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 10px)" }}
           >
-            <div className="absolute left-2 top-2 flex gap-2 pointer-events-auto">
+            <div className="absolute left-2 top-2 flex gap-2 pointer-events-auto items-center">
               <button
                 onClick={backSafe}
                 className="min-w-[60px] px-3 py-1 rounded-lg text-sm font-bold bg-white/5 border border-white/10 hover:bg-white/10"
               >
                 חזרה
               </button>
+              <GameAudioFullscreenButton />
             </div>
             <div className="absolute right-2 top-2 pointer-events-auto">
               <span className="text-xs uppercase tracking-[0.3em] text-white/60">

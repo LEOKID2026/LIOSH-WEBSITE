@@ -127,7 +127,7 @@ import {
   updateDailyStreak,
   getStreakReward,
 } from "../../utils/daily-streak";
-import { useSound } from "../../hooks/useSound";
+import { useGameAudio } from "../../hooks/useGameAudio";
 import { getQuestionFontStyle } from "../../utils/learning-question-font";
 import { resolveLearningMcqChoiceClassName } from "../../utils/learning-mcq-choice-styles.client";
 import { compareGeometryLearnerAnswer } from "../../utils/answer-compare";
@@ -516,7 +516,7 @@ export default function GeometryMaster() {
   const [subjectDailyMissionsLoading, setSubjectDailyMissionsLoading] = useState(false);
   
   // Sound system
-  const sound = useSound();
+  const audio = useGameAudio();
   
   const [playerName, setPlayerName] = useState(() => {
     if (typeof window !== "undefined") {
@@ -1770,7 +1770,7 @@ export default function GeometryMaster() {
         const newBadge = "🔥 Hot Streak";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         if (typeof window !== "undefined") {
           try {
@@ -1783,7 +1783,7 @@ export default function GeometryMaster() {
         const newBadge = "⚡ Lightning Fast";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         if (typeof window !== "undefined") {
           try {
@@ -1796,7 +1796,7 @@ export default function GeometryMaster() {
         const newBadge = "🌟 אלוף";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         if (typeof window !== "undefined") {
           try {
@@ -1817,7 +1817,7 @@ export default function GeometryMaster() {
           setPlayerLevel((prevLevel) => {
             const newLevel = prevLevel + 1;
             setShowLevelUp(true);
-            sound.playSound("level-up");
+            audio.playSfx("sfx-level-up");
             setTimeout(() => setShowLevelUp(false), 3000);
             if (typeof window !== "undefined") {
               try {
@@ -1885,9 +1885,9 @@ export default function GeometryMaster() {
       
       // Play sound - different sound for streak milestones
       if ((streak + 1) % 5 === 0 && streak + 1 >= 5) {
-        sound.playSound("streak");
+        audio.playSfx("sfx-streak");
       } else {
-        sound.playSound("correct");
+        audio.playSfx("sfx-correct");
       }
       
       // Update daily streak
@@ -1916,6 +1916,7 @@ export default function GeometryMaster() {
     } else {
       setWrong((prev) => prev + 1);
       setStreak(0);
+      audio.playSfx("sfx-wrong");
       
       let errExpl = getErrorExplanation(
         currentQuestion,
@@ -2075,7 +2076,7 @@ export default function GeometryMaster() {
 
           if (nextLives <= 0) {
             setFeedback(LIVE_PRACTICE_GAME_OVER_HE);
-            sound.playSound("game-over");
+            audio.playSfx("sfx-game-over");
             recordSessionProgress();
             saveRunToStorage();
             gameActiveRef.current = false;
@@ -2217,7 +2218,7 @@ export default function GeometryMaster() {
       geometryHypothesisLedgerRef
     );
     // Stop background music when game resets
-    sound.stopBackgroundMusic();
+    audio.stopMusic();
     gameActiveRef.current = false;
     setGameActive(false);
     setCurrentQuestion(null);
@@ -2301,8 +2302,9 @@ export default function GeometryMaster() {
     void ensureLearningSessionId();
     
     // Start background music and play game start sound
-    sound.playBackgroundMusic();
-    sound.playSound("game-start");
+    audio.primeFromUserGesture();
+    audio.playMusic("bgm-learning-focus");
+    audio.playSfx("sfx-game-start");
     
     if (mode === "challenge") {
       setTimeLeft(20);
@@ -2342,7 +2344,7 @@ export default function GeometryMaster() {
       geometryHypothesisLedgerRef
     );
     // Stop background music when game stops
-    sound.stopBackgroundMusic();
+    audio.stopMusic();
     recordSessionProgress();
     gameActiveRef.current = false;
     setGameActive(false);
@@ -2358,7 +2360,7 @@ export default function GeometryMaster() {
     setWrong((prev) => prev + 1);
     setStreak(0);
     setFeedback("הזמן נגמר! המשחק נגמר! ⏰");
-    sound.playSound("game-over");
+    audio.playSfx("sfx-game-over");
     gameActiveRef.current = false;
     setGameActive(false);
     setCurrentQuestion(null);
@@ -2700,7 +2702,7 @@ export default function GeometryMaster() {
           subtitle={`${playerName || "שחקן"} • ${GRADES[grade]?.name || ""} • ${displayLevelLabel()} • ${getTopicName(topic)} • ${MODES[mode].name}`}
           onBack={backSafe}
           onCurriculumClick={() => router.push("/learning/geometry-curriculum")}
-          sound={sound}
+          audio={audio}
         />
 
         <div className="md:hidden">
@@ -2712,7 +2714,7 @@ export default function GeometryMaster() {
             hideCurriculum
             compactHeader
             integratedTopRow
-            centerSlot={<LearningMasterMobileNavTitle MB={MB} title="📐 גאומטריה" sound={sound} />}
+            centerSlot={<LearningMasterMobileNavTitle MB={MB} title="📐 גאומטריה" audio={audio} />}
           />
         </div>
 

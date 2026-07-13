@@ -3,6 +3,7 @@ import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.js
 import SoloGameEndInterstitialOverlay from "../SoloGameEndInterstitialOverlay.jsx";
 import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
 import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
+import { useSoloEngineAudio } from "../../../hooks/solo-games/useSoloGameAudio.js";
 import {
   SOLO_V2_ASSETS,
   SoloV2Goal,
@@ -204,6 +205,8 @@ export default function MleoSortShapesEngine({
   initialDifficulty = "medium",
   onSessionEnd,
 }) {
+  const sfx = useSoloEngineAudio();
+
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
   const pendingSessionEndRef = useRef(null);
@@ -314,11 +317,12 @@ export default function MleoSortShapesEngine({
     if (!gameRunning || gameOver || !settings.binShuffleMs) return undefined;
     const id = window.setInterval(() => {
       setShuffleWarning(true);
+      sfx.playWarning();
       window.setTimeout(() => setShuffleWarning(false), 1000);
       setBinOrder((prev) => shuffleBinOrder(prev));
     }, settings.binShuffleMs);
     return () => window.clearInterval(id);
-  }, [gameRunning, gameOver, settings.binShuffleMs]);
+  }, [gameRunning, gameOver, settings.binShuffleMs, sfx]);
 
   useEffect(() => {
     if (autoStart && !gameRunning && !gameOver && !showIntro) startGame();
@@ -345,11 +349,14 @@ export default function MleoSortShapesEngine({
 
   const handleBinTap = (binId) => {
     if (!gameRunning || !currentItem) return;
+    sfx.playDrag();
     if (currentItem.bin !== binId) {
+      sfx.playDropFail();
       mistakesRef.current += 1;
       loseLife(timeLeft);
       return;
     }
+    sfx.playDropOk();
     sortedRef.current += 1;
     scoreRef.current += SCORE_PER_SORT;
     setSortedCount(sortedRef.current);

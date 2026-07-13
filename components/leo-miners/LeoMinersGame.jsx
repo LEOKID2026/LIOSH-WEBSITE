@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import GameAudioFullscreenButton from "../game-audio/GameAudioFullscreenButton.jsx";
+import { useGameAudio } from "../../hooks/useGameAudio";
 import { pointsBaseForStage, OFFLINE_DPS_FACTOR, DAILY_CAP_DISPLAY } from "../../lib/leo-miners/leo-miners-formulas.client.js";
 import {
   activateLeoMinersGameplayConfig,
@@ -71,12 +73,6 @@ const IMG_MINER = "/images/leo-miners/leo-miner-4x.png";
 const IMG_ROCK  = "/images/leo-miners/rock.png";
 const IMG_COIN  = "/images/leo-miners/silver.png";
 const IMG_SPAWN_ICON = "/images/leo-miners/spawn-icon.png";
-
-// SFX
-const S_CLICK = "/sounds/leo-miners/click.mp3";
-const S_MERGE = "/sounds/leo-miners/merge.mp3";
-const S_ROCK  = "/sounds/leo-miners/rock.mp3";
-const S_GIFT  = "/sounds/leo-miners/gift.mp3";
 
 // ===== Debug helpers =====
  const DEBUG_LS = "liosh_miners_debug_ui";
@@ -470,6 +466,7 @@ export default function LeoMinersGame({
   onSaveState = null,
 }) {
   useIOSViewportFix();
+  const audio = useGameAudio();
   const wrapRef   = useRef(null);
   const canvasRef = useRef(null);
   const rafRef    = useRef(0);
@@ -565,40 +562,35 @@ export default function LeoMinersGame({
     [pendingPoints, economyStats]
   );
 
-  const [sfxMuted, setSfxMuted] = useState(() => {
-    try { return localStorage.getItem("leo_miners_sfx_muted") === "1"; } catch { return false; }
-  });
-  const [musicMuted, setMusicMuted] = useState(() => {
-    try { return localStorage.getItem("leo_miners_music_muted") === "1"; } catch { return true; }
-  });
-  const bgMusicRef = useRef(null);
+  const playMinersClick = useCallback(() => {
+    audio.playSfx("sfx-miners-click");
+  }, [audio]);
+
+  const playMinersMerge = useCallback(() => {
+    audio.playSfx("sfx-miners-merge");
+  }, [audio]);
+
+  const playMinersRock = useCallback(() => {
+    audio.playSfx("sfx-miners-rock");
+  }, [audio]);
+
+  const playMinersGift = useCallback(() => {
+    audio.playSfx("sfx-miners-gift");
+  }, [audio]);
+
+  const playMinersCoin = useCallback(() => {
+    audio.playSfx("sfx-coin");
+  }, [audio]);
 
   useEffect(() => {
-    try { localStorage.setItem("leo_miners_sfx_muted", sfxMuted ? "1" : "0"); } catch {}
-  }, [sfxMuted]);
-
-  useEffect(() => {
-    try { localStorage.setItem("leo_miners_music_muted", musicMuted ? "1" : "0"); } catch {}
-    const a = bgMusicRef.current;
-    if (!a) return;
-    a.muted = musicMuted;
-    if (!musicMuted) {
-      a.loop = true;
-      a.play().catch(() => {});
-    } else {
-      try { a.pause(); } catch {}
+    if (gamePaused || showIntro) {
+      audio.stopMusic();
+      return undefined;
     }
-  }, [musicMuted]);
-
-  const playSfx = (s) => {
-    if (!s || sfxMuted) return;
-    try { const a = new Audio(s); a.volume = 0.35; a.play().catch(() => {}); } catch {}
-  };
-
-  const play = (s) => {
-    if (ui.muted || !s) return;
-    try { const a = new Audio(s); a.volume = 0.35; a.play().catch(() => {}); } catch {}
-  };
+    audio.primeFromUserGesture();
+    audio.playMusic("bgm-miners-cave");
+    return () => audio.stopMusic();
+  }, [audio, gamePaused, showIntro]);
 
   useEffect(() => {
     flagsRef.current = {
@@ -615,7 +607,7 @@ export default function LeoMinersGame({
   }, []);
 
   function backSafe() {
-    try { playSfx(S_CLICK); } catch {}
+    try { playMinersClick(); } catch {}
     const go = () => router.push(backHref);
     if (document.fullscreenElement) {
       document.exitFullscreen?.().then(go).catch(go);
@@ -625,7 +617,7 @@ export default function LeoMinersGame({
   }
 
   async function claimBalanceToVaultDemo() {
-    try { play?.(S_CLICK); } catch {}
+    try { playMinersClick(); } catch {}
     if (!dbReady || !rewardsEnabled || !economy) {
       setGiftToastWithTTL(statusMessage || "שמירת פרסים בשרת לא זמינה עדיין.");
       return;
@@ -741,7 +733,7 @@ export default function LeoMinersGame({
     resetOfflineSession(s);
     setGiftReadyFlag(false);
     giftReadyUiRef.current = false;
-    try { play(S_GIFT); } catch {}
+    try { playMinersGift(); } catch {}
     save?.();
   }
 
@@ -1174,7 +1166,7 @@ function setupCanvasAndLoop(cnv){
           const nid = s.nextId++;
           s.miners[nid] = { id:nid, level:m.level+1, lane, slot, pop:1 };
           s.lanes[lane].slots[slot]={ id:nid };
-          try { play?.(S_MERGE); } catch {}
+          try { playMinersMerge(); } catch {}
         } else {
           cur.slots[m.slot] = { id:m.id };
         }
@@ -1621,7 +1613,7 @@ if (s.giftReady && (s.giftFirstReadyAt || s.giftNextAt)) {
       const nowT = Date.now();
       if (nowT - (rockSfxCooldownRef.current || 0) > 200) {
         rockSfxCooldownRef.current = nowT;
-        try { play?.(S_ROCK); } catch {}
+        try { playMinersRock(); playMinersCoin(); } catch {}
       }
       const coinsGain = Math.floor(rock.maxHp * gp().gold_factor * (s.goldMult || 1));
 // נשמור מצב לפני – כדי לוודא POP לפי תוצאה אמיתית
@@ -2008,8 +2000,8 @@ function afterPurchaseBump(s) {
 }
 function trySpawnAtSlot(lane, slot) {
   const s = stateRef.current; if (!s) return;
-  if (countMiners(s) >= MAX_MINERS) { try{play?.(S_CLICK);}catch{}; alert(`מקסימום ${MAX_MINERS} כלבים על הלוח.`); return; }
-  if (s.spawnCost == null || s.gold < s.spawnCost) { try{play?.(S_CLICK);}catch{}; return; }
+  if (countMiners(s) >= MAX_MINERS) { try{playMinersClick();}catch{}; alert(`מקסימום ${MAX_MINERS} כלבים על הלוח.`); return; }
+  if (s.spawnCost == null || s.gold < s.spawnCost) { try{playMinersClick();}catch{}; return; }
   const ok = spawnMinerAt(s, lane, slot, s.spawnLevel);
   if (!ok) return;
   s.gold -= s.spawnCost;
@@ -2018,12 +2010,12 @@ function trySpawnAtSlot(lane, slot) {
   s.pressedPill = { lane, slot, t: 0.15 };
   s.anim && (s.anim.hint = 0);
   setUi(u => ({ ...u, gold: s.gold, spawnCost: s.spawnCost }));
-  try{play?.(S_CLICK);}catch{};
+  try{playMinersClick();}catch{};
   save();
 }
 function addMiner() {
   const s = stateRef.current; if (!s) return;
-  if (countMiners(s) >= MAX_MINERS) { try{play?.(S_CLICK);}catch{}; alert(`מקסימום ${MAX_MINERS} כלבים על הלוח.`); return; }
+  if (countMiners(s) >= MAX_MINERS) { try{playMinersClick();}catch{}; alert(`מקסימום ${MAX_MINERS} כלבים על הלוח.`); return; }
   if (s.spawnCost == null || s.gold < s.spawnCost) return;
   const ok = spawnMiner(s, s.spawnLevel);
   if (!ok) return;
@@ -2032,7 +2024,7 @@ function addMiner() {
   afterPurchaseBump(s);
   s.anim && (s.anim.hint = 0);
   setUi(u => ({ ...u, gold: s.gold, spawnCost: s.spawnCost }));
-  try{play?.(S_CLICK);}catch{};
+  try{playMinersClick();}catch{};
   save();
 }
 function upgradeDps() {
@@ -2296,7 +2288,7 @@ async function enterFullscreenAndLockMobile() { try {
 async function exitFullscreenIfAny() { try { if (document.fullscreenElement) await document.exitFullscreen(); } catch {} }
 
 async function resetGame() {
-  try { play?.(S_CLICK); } catch {}
+  try { playMinersClick(); } catch {}
 
   try {
     localStorage.removeItem(LS_KEY);
@@ -2417,7 +2409,7 @@ const addRemainLabel=(()=>{
 const addDisabled = addRemainMs > 0;
 
 function onAdd(){ 
-  try{play?.(S_CLICK);}catch{} 
+  try{playMinersClick();}catch{} 
   const s=stateRef.current;if(!s) return; 
   const now=Date.now(); 
   if(now<(s.adCooldownUntil||0)){ 
@@ -2442,7 +2434,7 @@ const [showCoinsModal, setShowCoinsModal] = useState(false);
 function previewPointsFromCoins() { return 0; }
 
 function claimCoinsToMining() {
-  try { play?.(S_CLICK); } catch {}
+  try { playMinersClick(); } catch {}
   setGiftToastWithTTL("נקודות כרייה נצברות רק דרך השרת — לא ניתן להמיר מטבעות מקומית.");
 }
 
@@ -2551,11 +2543,7 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
           </div>
         ) : null}
         
-
-        {/* מוזיקת רקע (אופציונלי) – לא מפריעה אם אין קובץ */}
-        <audio ref={bgMusicRef} src="/sounds/leo-miners/bg-music.mp3" muted className="hidden" />
-
-
+        
 
         {/* Top bar (Back / Full / Menu) – תמיד מעל הקנבס */}
          <div
@@ -2577,10 +2565,11 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
             </div>
 
             {/* ימין: Fullscreen + Menu */}
-            <div className="absolute right-2 top-0 flex gap-2 pointer-events-auto">
+            <div className="absolute right-2 top-0 flex gap-2 pointer-events-auto items-center">
+              <GameAudioFullscreenButton />
               <button
                 onClick={() => {
-                  try { playSfx(S_CLICK); } catch {}
+                  try { playMinersClick(); } catch {}
                   const el = wrapRef.current || document.documentElement;
                   if (!document.fullscreenElement) {
                     el.requestFullscreen?.().catch(()=>{});
@@ -2597,7 +2586,7 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
               </button>
 
               <button
-                onClick={() => { try { playSfx(S_CLICK); } catch {}; setMenuOpen(true); }}
+                onClick={() => { try { playMinersClick(); } catch {}; setMenuOpen(true); }}
                 aria-label="תפריט"
                 className="h-10 w-10 rounded-xl bg-black/40 hover:bg-black/60 text-white grid place-items-center shadow"
                 title="תפריט"
@@ -2639,28 +2628,7 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
       {/* Sound */}
       <div className="mb-4 space-y-2">
   <h3 className="text-sm font-semibold opacity-80">צלילים</h3>
-  <div className="flex items-center gap-2">
-    <button
-      onClick={() => setSfxMuted(v => !v)}
-      className={`px-3 py-2 rounded-lg text-sm font-semibold ${
-        sfxMuted
-          ? "bg-rose-500/90 hover:bg-rose-500 text-white"      // OFF = אדום
-          : "bg-emerald-500/90 hover:bg-emerald-500 text-white"// ON = ירוק
-      }`}
-    >
-      סאונד: {sfxMuted ? "כבוי" : "פועל"}
-    </button>
-    <button
-      onClick={() => setMusicMuted(v => !v)}
-      className={`px-3 py-2 rounded-lg text-sm font-semibold ${
-        musicMuted
-          ? "bg-rose-500/90 hover:bg-rose-500 text-white"      // OFF = אדום
-          : "bg-emerald-500/90 hover:bg-emerald-500 text-white"// ON = ירוק
-      }`}
-    >
-      מוזיקה: {musicMuted ? "כבוי" : "פועל"}
-    </button>
-  </div>
+  <p className="text-xs opacity-70">הגדרות השמע הגלובליות זמינות בכפתור 🎚️ בסרגל העליון.</p>
 </div>
 
 

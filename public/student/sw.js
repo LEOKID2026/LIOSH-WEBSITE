@@ -17,7 +17,7 @@ const GENERATED = self.__STUDENT_OFFLINE_PRECACHE__ || {
 };
 
 const CACHE_NAME = STUDENT_OFFLINE_FULL_SW_ENABLED
-  ? "student-offline-v9-full"
+  ? "student-offline-v10-full"
   : "student-offline-v1";
 
 /** Cache API only supports full 200 responses — not 206 Partial Content (audio/video range). */
@@ -106,7 +106,10 @@ const IMAGE_PATTERNS = [
   /^\/images\/leo-supermarket\/.*\.(png|jpg|webp)$/i,
 ];
 
-const SOUND_PATTERNS = [/^\/sounds\/.*\.(mp3|wav|ogg)$/i];
+const SOUND_PATTERNS = [
+  /^\/sounds\/.*\.(mp3|wav|ogg)$/i,
+  /^\/audio\/games\/.*\.mp3$/i,
+];
 const REWARD_CARD_PATH_PREFIX = "/rewards/cards/";
 
 /** Navigation documents allowed offline — only /student/offline/** */

@@ -3,6 +3,7 @@ import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.js
 import SoloGameEndInterstitialOverlay from "../SoloGameEndInterstitialOverlay.jsx";
 import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
 import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
+import { useSoloEngineAudio } from "../../../hooks/solo-games/useSoloGameAudio.js";
 import {
   FRUIT_SLICE_BG,
   FRUIT_SLICE_MAX_STRIKES,
@@ -49,6 +50,8 @@ export default function MleoFruitSliceEngine({
   initialDifficulty = "medium",
   onSessionEnd,
 }) {
+  const sfx = useSoloEngineAudio();
+
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
   const pendingSessionEndRef = useRef(null);
@@ -169,7 +172,10 @@ export default function MleoFruitSliceEngine({
     strikesRef.current += 1;
     setStrikes(strikesRef.current);
     if (reason === "miss") missedFruitsRef.current += 1;
-    if (reason === "bomb") bombHitsRef.current += 1;
+    if (reason === "bomb") {
+      bombHitsRef.current += 1;
+      sfx.playHit();
+    }
     setFlashBad(true);
     window.setTimeout(() => setFlashBad(false), 320);
 
@@ -186,7 +192,7 @@ export default function MleoFruitSliceEngine({
       setWon(didWin);
       pendingSessionEndRef.current = { didWin };
     }
-  }, []);
+  }, [sfx]);
 
   addStrikeRef.current = addStrike;
 
@@ -258,6 +264,8 @@ export default function MleoFruitSliceEngine({
 
       if (goodCount > 0) {
         const { points, comboBonus } = fruitSliceSwipeScore(goodCount);
+        sfx.playSlice();
+        if (comboBonus > 0 || goodCount >= 2) sfx.playCombo();
         scoreRef.current += points;
         setScore(scoreRef.current);
         slicedFruitsRef.current += goodCount;
@@ -270,7 +278,7 @@ export default function MleoFruitSliceEngine({
         }
       }
     },
-    [addStrike],
+    [addStrike, sfx],
   );
 
   const startGame = useCallback(() => {

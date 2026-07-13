@@ -3,6 +3,7 @@ import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.js
 import SoloGameEndInterstitialOverlay from "../SoloGameEndInterstitialOverlay.jsx";
 import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
 import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
+import { useSoloEngineAudio } from "../../../hooks/solo-games/useSoloGameAudio.js";
 
 const DEFAULT_PLAYER_NAME = "שחקן";
 
@@ -10,6 +11,10 @@ const DEFAULT_PLAYER_NAME = "שחקן";
  * @param {{ autoStart?: boolean, onSessionEnd?: (metrics: object) => void }} props
  */
 export default function MleoCatcherEngine({ autoStart = false, onSessionEnd }) {
+  const sfx = useSoloEngineAudio();
+  const sfxRef = useRef(sfx);
+  sfxRef.current = sfx;
+
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
   const pendingSessionEndRef = useRef(null);
@@ -368,9 +373,14 @@ export default function MleoCatcherEngine({ autoStart = false, onSessionEnd }) {
       }
 
       if (leo && checkCollision(leo, item)) {
-        if (item.type === "coin") currentScoreRef.current += 1;
-        else if (item.type === "diamond") currentScoreRef.current += 5;
-        else if (item.type === "bomb") {
+        if (item.type === "coin") {
+          currentScoreRef.current += 1;
+          sfxRef.current.playCoin();
+        } else if (item.type === "diamond") {
+          currentScoreRef.current += 5;
+          sfxRef.current.playDiamond();
+        } else if (item.type === "bomb") {
+          sfxRef.current.playHit();
           resetInputState();
           runningRef.current = false;
           setGameOver(true);

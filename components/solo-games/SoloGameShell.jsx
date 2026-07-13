@@ -6,6 +6,8 @@ import Link from "next/link";
 import { findSoloGame } from "../../lib/solo-games/solo-game-registry.js";
 import { useSoloGameSession } from "../../hooks/solo-games/useSoloGameSession.js";
 import { useSoloGameShellUi } from "../../hooks/solo-games/useSoloGameShellUi.js";
+import { useSoloGameShellAudio } from "../../hooks/solo-games/useSoloGameAudio.js";
+import GameAudioFullscreenButton from "../game-audio/GameAudioFullscreenButton.jsx";
 import SoloGameEntryScreen from "./SoloGameEntryScreen.jsx";
 import SoloGameFinishScreen from "./SoloGameFinishScreen.jsx";
 import SoloGameSettlingOverlay from "./SoloGameSettlingOverlay.jsx";
@@ -66,6 +68,7 @@ export default function SoloGameShell({ gameKey }) {
     resetSession,
   } = useSoloGameSession(gameKey);
   const { helpGame, openSoloGameHelp, closeSoloGameHelp } = useSoloGameHelp();
+  const { onSessionStart, onSessionWon, onSessionLost, onExit } = useSoloGameShellAudio(gameKey);
 
   const handleStart = useCallback(async () => {
     // Preserve the "התחל משחק" click gesture for autoStart engines (landscape mobile only).
@@ -76,11 +79,16 @@ export default function SoloGameShell({ gameKey }) {
     }
     const diff = game?.hasDifficultyPicker ? difficulty : null;
     const id = await startSession(diff);
-    if (id) setPhase("playing");
-  }, [game, difficulty, startSession]);
+    if (id) {
+      onSessionStart();
+      setPhase("playing");
+    }
+  }, [game, difficulty, startSession, onSessionStart]);
 
   const handleSessionEnd = useCallback(
     async (metrics) => {
+      if (metrics?.didWin === true) onSessionWon();
+      else if (metrics?.didWin === false) onSessionLost();
       setPhase("settling");
       const result = await finishSession(metrics);
       if (result) {
@@ -90,7 +98,7 @@ export default function SoloGameShell({ gameKey }) {
         setPhase("entry");
       }
     },
-    [finishSession]
+    [finishSession, onSessionWon, onSessionLost],
   );
 
   const handlePlayAgain = useCallback(() => {
@@ -101,9 +109,10 @@ export default function SoloGameShell({ gameKey }) {
 
   useEffect(() => {
     return () => {
+      onExit();
       resetSoloGameDocumentShell();
     };
-  }, []);
+  }, [onExit]);
 
   const showReservedAd = phase === "entry" || phase === "finish";
   const themedShell =
@@ -129,7 +138,7 @@ export default function SoloGameShell({ gameKey }) {
         dir="rtl"
         data-solo-game-shell=""
       >
-        <header className={themedShell ? SG.header : "flex shrink-0 items-center justify-between gap-2 border-b border-white/10 px-3 py-2 sm:px-4"}>
+        <header className={`${themedShell ? SG.header : "flex shrink-0 items-center justify-between gap-2 border-b border-white/10 px-3 py-2 sm:px-4"} relative`}>
           <Link
             href="/student/game"
             className={themedShell ? SG.navLink : "min-h-[44px] rounded-lg px-3 py-2 text-sm font-bold text-gray-300 hover:bg-white/5 hover:text-white"}
@@ -145,6 +154,11 @@ export default function SoloGameShell({ gameKey }) {
           >
             בית
           </Link>
+          {phase === "playing" ? (
+            <div className="absolute left-3 top-2 z-20 sm:left-4">
+              <GameAudioFullscreenButton />
+            </div>
+          ) : null}
         </header>
 
         <main className="relative flex min-h-0 flex-1 flex-col overflow-hidden">

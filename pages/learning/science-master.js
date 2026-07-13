@@ -40,7 +40,7 @@ import {
   updateDailyStreak,
   getStreakReward,
 } from "../../utils/daily-streak";
-import { useSound } from "../../hooks/useSound";
+import { useGameAudio } from "../../hooks/useGameAudio";
 import { useMobileViewport } from "../../hooks/useMobileViewport";
 
 import { learningMixedHebrewMathStyle } from "../../utils/learning-mixed-hebrew-math";
@@ -987,7 +987,7 @@ export default function ScienceMaster() {
   const [showStreakReward, setShowStreakReward] = useState(null);
   
   // Sound system
-  const sound = useSound();
+  const audio = useGameAudio();
   const isMobileViewport = useMobileViewport();
   
   const [stars, setStars] = useState(0);
@@ -2147,7 +2147,7 @@ function saveScienceAnswerInParallel({
     closeOpenQuestionLedger(false);
     questionTimeLedgerRef.current = null;
     // Stop background music when game resets
-    sound.stopBackgroundMusic();
+    audio.stopMusic();
     setGameActive(false);
     scienceTrackingTopicKeyRef.current = null;
     setCurrentQuestion(null);
@@ -2274,6 +2274,10 @@ function saveScienceAnswerInParallel({
     else setTimeLeft(null);
     void ensureLearningSessionId();
 
+    audio.primeFromUserGesture();
+    audio.playMusic("bgm-learning-focus");
+    audio.playSfx("sfx-game-start");
+
     // מאתחל מאגר שאלות חדש לסשן הזה
     generateNewQuestion(true);
   }
@@ -2302,7 +2306,7 @@ function saveScienceAnswerInParallel({
 
   function stopGame() {
     // Stop background music when game stops
-    sound.stopBackgroundMusic();
+    audio.stopMusic();
     pendingScienceTrackMetaRef.current = {
       correct: undefined,
       total: 1,
@@ -2323,6 +2327,7 @@ function saveScienceAnswerInParallel({
   }
 
   function handleTimeUp() {
+    audio.playSfx("sfx-game-over");
     pendingScienceTrackMetaRef.current = {
       correct: 0,
       total: 1,
@@ -2494,7 +2499,7 @@ function saveScienceAnswerInParallel({
         if (changed) {
           setPlayerLevel(lv);
           setShowLevelUp(true);
-          sound.playSound("level-up");
+          audio.playSfx("sfx-level-up");
           setTimeout(() => setShowLevelUp(false), 2500);
         }
         persistProgress(null, null, lv, newXp);
@@ -2507,28 +2512,28 @@ function saveScienceAnswerInParallel({
         const newBadge = "🔥 רצף חם";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       } else if (newStreak === 25 && !badges.includes("⚡ מהיר כברק")) {
         const newBadge = "⚡ מהיר כברק";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       } else if (newStreak === 50 && !badges.includes("🌟 אלוף מדעים") && !badges.includes("🌟 מאסטר מדעים")) {
         const newBadge = "🌟 אלוף מדעים";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       } else if (newStreak === 100 && !badges.includes("👑 מלך המדעים")) {
         const newBadge = "👑 מלך המדעים";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       }
@@ -2542,14 +2547,14 @@ function saveScienceAnswerInParallel({
         const newBadge = `🔬 מומחה ${topicName}`;
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       } else if (newTopicCorrect === 100 && !badges.includes(`🏆 גאון ${topicName}`)) {
         const newBadge = `🏆 גאון ${topicName}`;
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       }
@@ -2560,14 +2565,14 @@ function saveScienceAnswerInParallel({
         const newBadge = "💎 אלף נקודות";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       } else if (newScore >= 5000 && newScore - points < 5000 && !badges.includes("🎯 חמשת אלפים")) {
         const newBadge = "🎯 חמשת אלפים";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       }
@@ -2577,14 +2582,14 @@ function saveScienceAnswerInParallel({
         const newBadge = "⭐ מאה תשובות נכונות";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       } else if (newCorrect === 500 && correct < 500 && !badges.includes("🌟 חמש מאות תשובות")) {
         const newBadge = "🌟 חמש מאות תשובות";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       }
@@ -2630,9 +2635,9 @@ function saveScienceAnswerInParallel({
       
       // Play sound - different sound for streak milestones
       if ((streak + 1) % 5 === 0 && streak + 1 >= 5) {
-        sound.playSound("streak");
+        audio.playSfx("sfx-streak");
       } else {
-        sound.playSound("correct");
+        audio.playSfx("sfx-correct");
       }
       
       // Update daily streak
@@ -2658,7 +2663,7 @@ function saveScienceAnswerInParallel({
       setStreak(0);
       
       // Play sound for wrong answer
-      sound.playSound("wrong");
+      audio.playSfx("sfx-wrong");
       
       const errExpl = getErrorExplanationScience(currentQuestion, answerText);
       setErrorExplanation(errExpl);
@@ -2700,7 +2705,7 @@ function saveScienceAnswerInParallel({
           const next = prev - 1;
           if (next <= 0) {
             setFeedback(LIVE_PRACTICE_GAME_OVER_HE);
-            sound.playSound("game-over");
+            audio.playSfx("sfx-game-over");
             recordSessionProgress();
             saveRunToStorage();
             setGameActive(false);
@@ -2949,7 +2954,7 @@ function saveScienceAnswerInParallel({
           subtitle={`${playerName || "שחקן"} • ${GRADES[grade].name} • ${studentDisplayLevelLabel("regular")} • ${getTopicLabel(topic)} • ${MODES[mode].name}`}
           onBack={backSafe}
           onCurriculumClick={() => router.push("/learning/curriculum?subject=science")}
-          sound={sound}
+          audio={audio}
         />
 
         <div className="md:hidden">
@@ -2962,7 +2967,7 @@ function saveScienceAnswerInParallel({
             compactHeader
             integratedTopRow
             centerSlot={
-              <LearningMasterMobileNavTitle MB={MB} title="🔬 מדעים" sound={sound} />
+              <LearningMasterMobileNavTitle MB={MB} title="🔬 מדעים" audio={audio} />
             }
           />
         </div>

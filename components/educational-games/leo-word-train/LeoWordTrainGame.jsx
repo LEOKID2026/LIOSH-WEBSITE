@@ -2,6 +2,8 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import EducationalDifficultyGradeHint from "../EducationalDifficultyGradeHint.jsx";
 import EducationalGameHudFullscreenButton from "../EducationalGameHudFullscreenButton.jsx";
+import EducationalGameInstructionReplay from "../shared/EducationalGameInstructionReplay.jsx";
+import { useEducationalEngineAudio } from "../../../hooks/educational-games/useEducationalGameAudio.js";
 import shop from "../shared/educational-game-shop-layout.module.css";
 import { calcTimeBonus } from "../../../lib/educational-games/continuous-play.js";
 import {
@@ -70,6 +72,20 @@ export default function LeoWordTrainGame({
   const diffConfig = LANGUAGE_DIFFICULTIES[difficulty];
   const task = tasks[taskIndex] ?? null;
   const tasksPerSession = tasks.length || LANGUAGE_SESSION_TASKS;
+  const instructionText = phase === "play" && task ? task.missionHe : "";
+
+  const {
+    onCorrect,
+    onWrong,
+    onStreak,
+    onTimeUp,
+    playFeedback,
+    replayInstruction,
+    audio,
+  } = useEducationalEngineAudio({
+    instructionText,
+    autoPlayInstruction: productionMode && phase === "play" && Boolean(task),
+  });
 
   mistakesRef.current = mistakes;
 
@@ -152,13 +168,16 @@ export default function LeoWordTrainGame({
     timerPausedRef.current = true;
     setCheckState("bad");
     setTrainAnim("shake");
-    setFeedback("הזמן נגמר! הרכבת נשארה בתחנה.");
+    const timeoutText = "הזמן נגמר! הרכבת נשארה בתחנה.";
+    setFeedback(timeoutText);
+    onTimeUp();
+    playFeedback(timeoutText);
     registerMistake(task);
     window.setTimeout(() => {
       if (mistakesRef.current >= diffConfig.maxMistakes) return;
       advanceTask();
     }, 1600);
-  }, [phase, registerMistake, advanceTask, diffConfig.maxMistakes]);
+  }, [phase, registerMistake, advanceTask, diffConfig.maxMistakes, onTimeUp, playFeedback, task]);
 
   useEffect(() => {
     if (phase !== "play" || !task || timerPausedRef.current) return undefined;
@@ -217,8 +236,9 @@ export default function LeoWordTrainGame({
       setSelectedPiece(null);
       setCheckState("idle");
       setFeedback("");
+      audio.playSfx("sfx-ui-click");
     },
-    [task, selectedPiece, fills, usedPieceIds],
+    [task, selectedPiece, fills, usedPieceIds, audio],
   );
 
   const clearCarriage = useCallback(
@@ -269,7 +289,11 @@ export default function LeoWordTrainGame({
       const bonus = calcTimeBonus(timeLeft, timeLimitSec);
       setCheckState("ok");
       setTrainAnim("depart");
-      setFeedback(trainFeedback(true));
+      const okText = trainFeedback(true);
+      setFeedback(okText);
+      onCorrect();
+      audio.playSfx("sfx-train-chug");
+      playFeedback(okText);
       setSuccessCount((c) => c + 1);
       setScore((s) => {
         let next = s + LANGUAGE_SCORE.correct + bonus;
@@ -281,6 +305,7 @@ export default function LeoWordTrainGame({
       setCurrentStreak((p) => {
         const next = p + 1;
         setBestStreak((best) => Math.max(best, next));
+        if (next === 3 || next === 5) onStreak();
         return next;
       });
       window.setTimeout(advanceTask, 1800);
@@ -289,10 +314,13 @@ export default function LeoWordTrainGame({
 
     setCheckState("bad");
     setTrainAnim("shake");
-    setFeedback(trainFeedback(false));
+    const badText = trainFeedback(false);
+    setFeedback(badText);
+    onWrong();
+    playFeedback(badText);
     registerMistake(task);
     window.setTimeout(() => setTrainAnim("idle"), 700);
-  }, [task, fills, timeLeft, timeLimitSec, currentStreak, advanceTask, registerMistake]);
+  }, [task, fills, timeLeft, timeLimitSec, currentStreak, advanceTask, registerMistake, onCorrect, onWrong, onStreak, playFeedback, audio]);
 
   const endMetrics = useMemo(() => {
     if (phase !== "won" && phase !== "lost") return null;
@@ -347,6 +375,7 @@ export default function LeoWordTrainGame({
           disabled={used || timerPausedRef.current}
           onClick={() => {
             if (used) return;
+            audio.playSfx("sfx-ui-click");
             setSelectedPiece((cur) => (cur === piece.id ? null : piece.id));
             setCheckState("idle");
           }}
@@ -452,7 +481,13 @@ export default function LeoWordTrainGame({
                   🚉
                 </span>
                 <div className={shop.customerSpeechWrap}>
-                  <p className={shop.customerName}>תחנת המילים</p>
+                  <div className={shop.missionRow}>
+                    <p className={shop.customerName}>תחנת המילים</p>
+                    <EducationalGameInstructionReplay
+                      text={instructionText}
+                      onReplay={replayInstruction}
+                    />
+                  </div>
                   <p className={shop.missionText}>
                     {task.missionHe}
                     {task.emoji ? <span className={shop.missionTicket}>{task.emoji}</span> : null}
@@ -462,7 +497,13 @@ export default function LeoWordTrainGame({
             </aside>
 
             <div key={`desk-${taskKey}`} className={proto.missionDesktop}>
-              <p className={proto.missionDesktopTitle}>תחנת המילים</p>
+              <div className={shop.missionRow}>
+                <p className={proto.missionDesktopTitle}>תחנת המילים</p>
+                <EducationalGameInstructionReplay
+                  text={instructionText}
+                  onReplay={replayInstruction}
+                />
+              </div>
               <p className={proto.missionDesktopText}>
                 {task.missionHe}
                 {task.emoji ? ` ${task.emoji}` : null}

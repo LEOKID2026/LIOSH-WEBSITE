@@ -2,15 +2,18 @@ import { useState, useEffect, useRef } from "react";
 import Layout from "../../components/Layout";
 import MaybeGameAccessGuard from "../../components/offline/MaybeGameAccessGuard.jsx";
 import StudentAdSlot from "../../components/student/StudentAdSlot.jsx";
+import GameAudioFullscreenButton from "../../components/game-audio/GameAudioFullscreenButton.jsx";
 import { useRouter } from "next/router";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
 import OfflineGameHoldShell from "../../components/offline/OfflineGameHoldShell.jsx";
+import { useGameAudio } from "../../hooks/useGameAudio";
 
 const DURATIONS = [5, 10, 15];
 
 export default function TapBattle() {
   useIOSViewportFix();
   const router = useRouter();
+  const { playSfx, primeFromUserGesture } = useGameAudio();
   const wrapRef = useRef(null);
   const headerRef = useRef(null);
   const battleRef = useRef(null);
@@ -77,11 +80,12 @@ export default function TapBattle() {
       setTimeLeft(roundDuration);
       return;
     }
+    playSfx("sfx-countdown");
     const timer = setTimeout(() => {
       setCountdown((prev) => (prev !== null ? prev - 1 : null));
     }, 1000);
     return () => clearTimeout(timer);
-  }, [phase, countdown, roundDuration]);
+  }, [phase, countdown, roundDuration, playSfx]);
 
   useEffect(() => {
     if (phase !== "playing") return;
@@ -97,6 +101,7 @@ export default function TapBattle() {
   }, [phase, timeLeft]);
 
   function startRound() {
+    primeFromUserGesture();
     setCounts({ left: 0, right: 0 });
     setWinnerMessage("");
     setCountdown(3);
@@ -119,10 +124,14 @@ export default function TapBattle() {
     }
     setScore(nextScore);
     setWinnerMessage(message);
+    if (counts.left !== counts.right) {
+      playSfx("sfx-victory");
+    }
   }
 
   function handleTap(side) {
     if (phase !== "playing") return;
+    playSfx("sfx-tap");
     setCounts((prev) => ({ ...prev, [side]: prev[side] + 1 }));
     if ("vibrate" in navigator) {
       navigator.vibrate?.(10);
@@ -182,13 +191,14 @@ export default function TapBattle() {
             className="relative px-2 py-3"
             style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 10px)" }}
           >
-            <div className="absolute left-2 top-2 flex gap-2 pointer-events-auto">
+            <div className="absolute left-2 top-2 flex gap-2 pointer-events-auto items-center">
               <button
                 onClick={backSafe}
                 className="min-w-[60px] px-3 py-1 rounded-lg text-sm font-bold bg-white/5 border border-white/10 hover:bg-white/10"
               >
                 חזרה
               </button>
+              <GameAudioFullscreenButton />
             </div>
             <div className="absolute right-2 top-2 pointer-events-auto">
               <span className="text-xs uppercase tracking-[0.3em] text-white/60">

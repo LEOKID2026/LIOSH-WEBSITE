@@ -3,6 +3,7 @@ import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.js
 import SoloGameEndInterstitialOverlay from "../SoloGameEndInterstitialOverlay.jsx";
 import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
 import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
+import { useSoloEngineAudio } from "../../../hooks/solo-games/useSoloGameAudio.js";
 
 const BG_IMAGES = ["/images/game-day.png", "/images/game1.png", "/images/game2.png", "/images/game-park.png"];
 const IMG_LEO = "/images/leo.png";
@@ -58,6 +59,8 @@ function shrinkHitbox(rect, shrink) {
  * @param {{ autoStart?: boolean, onSessionEnd?: (metrics: object) => void }} props
  */
 export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
+  const sfx = useSoloEngineAudio();
+
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
   const pendingSessionEndRef = useRef(null);
@@ -209,6 +212,7 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
   };
 
   const triggerLevelUp = (newLevel) => {
+    sfx.playLevelUp();
     levelRef.current = newLevel;
     setLevel(newLevel);
     applyDifficulty(newLevel);
@@ -235,6 +239,7 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
       if (comboRef.current > 0 && comboRef.current % SCORE_COMBO_EVERY === 0) {
         scoreRef.current += SCORE_COMBO_BONUS;
         setScore(scoreRef.current);
+        sfx.playCombo();
       }
     }
   };
@@ -289,6 +294,7 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
     }
     addScore(SCORE_COIN, "item");
     setCollected((n) => n + 1);
+    sfx.playCoin();
     coinsCollectedRef.current += 1;
     setCoinsCollected(coinsCollectedRef.current);
     checkLevelFromCoins();
@@ -378,6 +384,7 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
   const jump = () => {
     const s = worldRef.current;
     if (!runningRef.current || !s.grounded) return;
+    sfx.playJump();
     s.leoVy = -11.5 * Math.max(0.9, s.scale);
     s.grounded = false;
   };

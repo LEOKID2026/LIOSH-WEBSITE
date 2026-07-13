@@ -14,8 +14,13 @@ export default function LearningMasterDesktopHeader({
   onBack,
   onCurriculumClick,
   curriculumLabel = "📋 תוכנית לימודים",
-  sound,
+  audio,
 }) {
+  const audioOn =
+    audio?.settings?.masterEnabled &&
+    audio?.settings?.sfxEnabled &&
+    audio?.settings?.musicEnabled;
+
   return (
     <div
       ref={desktopHeaderRef}
@@ -41,25 +46,14 @@ export default function LearningMasterDesktopHeader({
         >
           <div className="flex items-center justify-center gap-2">
             <h1 className={`${MB.pageTitle} md:text-2xl lg:text-3xl`}>{title}</h1>
-            {sound ? (
+            {audio ? (
               <button
                 type="button"
-                onClick={() => {
-                  sound.toggleSounds();
-                  sound.toggleMusic();
-                }}
-                className={
-                  sound.soundsEnabled && sound.musicEnabled
-                    ? MB.btnSoundOn
-                    : MB.btnSoundOff
-                }
-                title={
-                  sound.soundsEnabled && sound.musicEnabled
-                    ? "השתק צלילים"
-                    : "הפעל צלילים"
-                }
+                onClick={() => audio.toggleMaster()}
+                className={audioOn ? MB.btnSoundOn : MB.btnSoundOff}
+                title={audioOn ? "השתק צלילים" : "הפעל צלילים"}
               >
-                {sound.soundsEnabled && sound.musicEnabled ? "🔊" : "🔇"}
+                {audioOn ? "🔊" : "🔇"}
               </button>
             ) : null}
           </div>

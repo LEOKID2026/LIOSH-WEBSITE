@@ -132,7 +132,7 @@ import {
   updateDailyStreak,
   getStreakReward,
 } from "../../utils/daily-streak";
-import { useSound } from "../../hooks/useSound";
+import { useGameAudio } from "../../hooks/useGameAudio";
 import { getQuestionFontStyle, getVerbalInstructionStyle } from "../../utils/learning-question-font";
 import { resolveLearningMcqChoiceClassName } from "../../utils/learning-mcq-choice-styles.client";
 import {
@@ -798,7 +798,7 @@ export default function MathMaster() {
   const [showStreakReward, setShowStreakReward] = useState(null);
   
   // Sound system
-  const sound = useSound();
+  const audio = useGameAudio();
   
   // תרגול ממוקד - שמירת שגיאות ותרגול מדורג
   const [mistakes, setMistakes] = useState([]);
@@ -1740,7 +1740,7 @@ export default function MathMaster() {
     accumulateQuestionTime();
     questionTimeLedgerRef.current = null;
     // Stop background music when game ends
-    sound.stopBackgroundMusic();
+    audio.stopMusic();
     setGameActive(false);
     mathTrackingOperationKeyRef.current = null;
     setCurrentQuestion(null);
@@ -2444,8 +2444,10 @@ export default function MathMaster() {
     stepByStepViewedRef.current = false;
     
     // Start background music and play game start sound
-    sound.playBackgroundMusic();
-    sound.playSound("game-start");
+    audio.primeFromUserGesture();
+
+    audio.playMusic("bgm-learning-focus");
+    audio.playSfx("sfx-game-start");
     closeExplanationModal();
     setErrorExplanation("");
     learningSessionIdRef.current = null;
@@ -2515,7 +2517,7 @@ export default function MathMaster() {
     setIsVerticalDisplay(false);
 
     // Stop background music when game stops
-    sound.stopBackgroundMusic();
+    audio.stopMusic();
     
     saveRunToStorage();
   }
@@ -2526,7 +2528,7 @@ export default function MathMaster() {
     setWrong((prev) => prev + 1);
     setStreak(0);
       setFeedback("הזמן נגמר! המשחק נגמר! ⏰");
-    sound.playSound("game-over");
+    audio.playSfx("sfx-game-over");
     setGameActive(false);
     mathTrackingOperationKeyRef.current = null;
     setCurrentQuestion(null);
@@ -2872,28 +2874,28 @@ export default function MathMaster() {
         const newBadge = "🔥 רצף חם";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       } else if (newStreak === 25 && !badges.includes("⚡ מהיר כברק")) {
         const newBadge = "⚡ מהיר כברק";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       } else if (newStreak === 50 && !badges.includes("🌟 אלוף") && !badges.includes("🌟 מאסטר")) {
         const newBadge = "🌟 אלוף";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       } else if (newStreak === 100 && !badges.includes("👑 מלך החשבון")) {
         const newBadge = "👑 מלך החשבון";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       }
@@ -2904,14 +2906,14 @@ export default function MathMaster() {
         const newBadge = `🧮 מלך ה${opName}`;
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       } else if (newOpCorrect === 100 && !badges.includes(`🏆 גאון ה${opName}`)) {
         const newBadge = `🏆 גאון ה${opName}`;
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       }
@@ -2921,14 +2923,14 @@ export default function MathMaster() {
         const newBadge = "💎 אלף נקודות";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       } else if (newScore >= 5000 && newScore - points < 5000 && !badges.includes("🎯 חמשת אלפים")) {
         const newBadge = "🎯 חמשת אלפים";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       }
@@ -2938,14 +2940,14 @@ export default function MathMaster() {
         const newBadge = "⭐ מאה תשובות נכונות";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       } else if (newCorrect === 500 && correct < 500 && !badges.includes("🌟 חמש מאות תשובות")) {
         const newBadge = "🌟 חמש מאות תשובות";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       }
@@ -2960,7 +2962,7 @@ export default function MathMaster() {
           setPlayerLevel((prevLevel) => {
             const newLevel = prevLevel + 1;
             setShowLevelUp(true);
-            sound.playSound("level-up");
+            audio.playSfx("sfx-level-up");
             setTimeout(() => setShowLevelUp(false), 3000);
             if (typeof window !== "undefined") {
               try {
@@ -3015,9 +3017,9 @@ export default function MathMaster() {
       
       // Play sound - different sound for streak milestones
       if ((streak + 1) % 5 === 0 && streak + 1 >= 5) {
-        sound.playSound("streak");
+        audio.playSfx("sfx-streak");
       } else {
-        sound.playSound("correct");
+        audio.playSfx("sfx-correct");
       }
       
       // Update daily streak
@@ -3211,7 +3213,7 @@ export default function MathMaster() {
       setTimeout(() => setShowWrongAnimation(false), 1000);
       
       // Play sound
-      sound.playSound("wrong");
+      audio.playSfx("sfx-wrong");
       
       if ("vibrate" in navigator) navigator.vibrate?.(200);
 
@@ -3238,7 +3240,7 @@ export default function MathMaster() {
 
           if (nextLives <= 0) {
             setFeedback(LIVE_PRACTICE_GAME_OVER_HE);
-            sound.playSound("game-over");
+            audio.playSfx("sfx-game-over");
             recordSessionProgress();
             saveRunToStorage();
             setGameActive(false);
@@ -3633,7 +3635,7 @@ export default function MathMaster() {
           subtitle={`${playerName || "שחקן"} • ${GRADES[grade].name} • ${studentDisplayLevelLabel(displayLevel)} • ${getOperationName(operation)} • ${MODES[mode].name}`}
           onBack={backSafe}
           onCurriculumClick={() => router.push("/learning/curriculum?subject=math")}
-          sound={sound}
+          audio={audio}
         />
 
         <div className="md:hidden">
@@ -3646,7 +3648,7 @@ export default function MathMaster() {
             compactHeader
             integratedTopRow
             centerSlot={
-              <LearningMasterMobileNavTitle MB={MB} title="🧮 מתמטיקה" sound={sound} />
+              <LearningMasterMobileNavTitle MB={MB} title="🧮 מתמטיקה" audio={audio} />
             }
           />
         </div>

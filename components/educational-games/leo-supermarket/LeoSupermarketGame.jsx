@@ -9,6 +9,7 @@ import {
   formatShekel,
   generateCustomers,
   getExpectedChange,
+  customerRequestText,
   isChangeAmountCorrect,
   isSupermarketWin,
   sumChangeDenoms,
@@ -17,6 +18,8 @@ import { buildLeoSupermarketMetrics } from "./leo-supermarket-metrics.js";
 import GroceryItemVisual from "./GroceryItemVisual.jsx";
 import EducationalDifficultyGradeHint from "../EducationalDifficultyGradeHint.jsx";
 import EducationalGameHudFullscreenButton from "../EducationalGameHudFullscreenButton.jsx";
+import EducationalGameInstructionReplay from "../shared/EducationalGameInstructionReplay.jsx";
+import { useEducationalEngineAudio } from "../../../hooks/educational-games/useEducationalGameAudio.js";
 import shop from "../shared/educational-game-shop-layout.module.css";
 import styles from "./LeoSupermarketGame.module.css";
 
@@ -188,6 +191,24 @@ export default function LeoSupermarketGame({
 
   const diffConfig = DIFFICULTIES[difficulty];
   const customer = customers[customerIndex] || null;
+  const instructionText =
+    phase === "play" && customer ? customerRequestText(customer) : "";
+
+  const {
+    onCorrect,
+    onWrong,
+    onStreak,
+    onTimeUp,
+    onDragLift,
+    onDropOk,
+    onSmallSuccess,
+    playFeedback,
+    replayInstruction,
+    audio,
+  } = useEducationalEngineAudio({
+    instructionText,
+    autoPlayInstruction: productionMode && phase === "play" && Boolean(customer),
+  });
 
   const addScore = useCallback((delta) => {
     setScore((s) => Math.max(0, s + delta));
@@ -195,12 +216,13 @@ export default function LeoSupermarketGame({
 
   const showZoneFeedback = useCallback((zone, text, type) => {
     setZoneFeedback((prev) => ({ ...prev, [zone]: { text, type } }));
+    if (text) playFeedback(text);
     const existing = feedbackTimersRef.current[zone];
     if (existing) clearTimeout(existing);
     feedbackTimersRef.current[zone] = setTimeout(() => {
       setZoneFeedback((prev) => ({ ...prev, [zone]: { text: "", type: "" } }));
     }, 2200);
-  }, []);
+  }, [playFeedback]);
 
   const clearAllZoneFeedback = useCallback(() => {
     setZoneFeedback(EMPTY_ZONE_FEEDBACK);
@@ -244,6 +266,7 @@ export default function LeoSupermarketGame({
       advanceTimerRef.current = setTimeout(() => {
         timeoutHandledForCustomerRef.current = -1;
         const nextIdx = idx + 1;
+        onSmallSuccess();
         setCustomerIndex(nextIdx);
         setCustomerEnterKey((k) => k + 1);
         resetCustomerState();
@@ -251,7 +274,7 @@ export default function LeoSupermarketGame({
         setTimeLeft(nextCustomer?.timeLimitSec ?? diff.timeLimitsByBand[0]);
       }, 900);
     },
-    [difficulty, finishGame, resetCustomerState],
+    [difficulty, finishGame, resetCustomerState, onSmallSuccess],
   );
 
   const completeCustomerSuccess = useCallback(
@@ -262,6 +285,7 @@ export default function LeoSupermarketGame({
       setStreak((s) => {
         const next = s + 1;
         setBestStreak((b) => Math.max(b, next));
+        if (next === 3 || next === 5) onStreak();
         return next;
       });
       addScore(SCORE.customerComplete);
@@ -271,7 +295,7 @@ export default function LeoSupermarketGame({
       const list = customersRef.current;
       advanceAfterCustomer(idx, list);
     },
-    [addScore, advanceAfterCustomer],
+    [addScore, advanceAfterCustomer, onStreak],
   );
 
   const handleTimeout = useCallback(() => {
@@ -283,6 +307,7 @@ export default function LeoSupermarketGame({
     setTimeoutMistakes((t) => t + 1);
     setStreak(0);
     addScore(SCORE.timeout);
+    onTimeUp();
     showZoneFeedback("global", "הלקוח חיכה יותר מדי", "bad");
 
     const idx = customerIndexRef.current;
@@ -295,7 +320,7 @@ export default function LeoSupermarketGame({
     }
 
     advanceAfterCustomer(idx, list);
-  }, [addScore, difficulty, finishGame, advanceAfterCustomer, showZoneFeedback]);
+  }, [addScore, difficulty, finishGame, advanceAfterCustomer, showZoneFeedback, onTimeUp]);
 
   const tryAddProduct = useCallback(
     (productId) => {
@@ -312,12 +337,14 @@ export default function LeoSupermarketGame({
         setWrongProducts((w) => w + 1);
         setStreak(0);
         addScore(SCORE.wrongProduct);
+        onWrong();
         showZoneFeedback("customer", "זה לא המוצר שהלקוח ביקש", "bad");
         if (nextMistakes > DIFFICULTIES[difficulty].maxMistakes) finishGame(false);
         return;
       }
 
       addScore(SCORE.correctProduct);
+      audio.playSfx("sfx-register");
       const nextSelected = [...selectedProductIdsRef.current, productId];
       setSelectedProductIds(nextSelected);
       showZoneFeedback("customer", "מוצר נכון!", "ok");
@@ -327,7 +354,7 @@ export default function LeoSupermarketGame({
         setChangeAttempts(0);
       }
     },
-    [addScore, difficulty, finishGame, showZoneFeedback],
+    [addScore, difficulty, finishGame, showZoneFeedback, onWrong, audio],
   );
 
   const addChangeDenom = useCallback((value) => {
@@ -353,6 +380,8 @@ export default function LeoSupermarketGame({
     if (isChangeAmountCorrect(cust, changeDenomsRef.current)) {
       addScore(SCORE.correctChange);
       if (isFirstTry) addScore(SCORE.firstTryBonus);
+      onCorrect();
+      audio.playSfx("sfx-coin");
       showZoneFeedback("register", "מעולה! החזרת עודף נכון", "ok");
       const wasFast = timeLeftRef.current > Math.floor(cust.timeLimitSec * 0.35);
       completeCustomerSuccess(wasFast);
@@ -366,12 +395,13 @@ export default function LeoSupermarketGame({
     setWrongChange((w) => w + 1);
     setStreak(0);
     addScore(SCORE.wrongChange);
+    onWrong();
     showZoneFeedback("register", "כמעט! נסו לחשב שוב את העודף", "bad");
 
     if (nextMistakes > DIFFICULTIES[difficulty].maxMistakes) {
       finishGame(false);
     }
-  }, [addScore, completeCustomerSuccess, difficulty, finishGame, showZoneFeedback]);
+  }, [addScore, completeCustomerSuccess, difficulty, finishGame, showZoneFeedback, onCorrect, onWrong, audio]);
 
   const startGame = useCallback(() => {
     const list = generateCustomers(difficulty);
@@ -452,7 +482,8 @@ export default function LeoSupermarketGame({
     };
     setDraggingKey(`p-${productId}`);
     setDragGhost({ kind: "product", label: `${product.shelfIcon} ${product.name}`, x: e.clientX, y: e.clientY });
-  }, []);
+    onDragLift();
+  }, [onDragLift]);
 
   const onMoneyPointerDown = useCallback((e, value) => {
     if (phaseRef.current !== "play" || stepRef.current !== "change") return;
@@ -473,7 +504,8 @@ export default function LeoSupermarketGame({
     };
     setDraggingKey(`m-${value}`);
     setDragGhost({ kind: "money", label: style?.label || `${value}₪`, x: e.clientX, y: e.clientY });
-  }, []);
+    onDragLift();
+  }, [onDragLift]);
 
   const finishDrag = useCallback(
     (e) => {
@@ -485,6 +517,12 @@ export default function LeoSupermarketGame({
 
       if (drag.moved) {
         const zone = findDropZoneAtPoint(e.clientX, e.clientY);
+        if (
+          (drag.kind === "product" && zone === "register") ||
+          (drag.kind === "money" && zone === "change")
+        ) {
+          onDropOk();
+        }
         if (drag.kind === "product" && zone === "register") {
           tryAddProduct(/** @type {string} */ (drag.payload));
         } else if (drag.kind === "money" && zone === "change") {
@@ -500,7 +538,7 @@ export default function LeoSupermarketGame({
       setDraggingKey(null);
       setDragGhost(null);
     },
-    [tryAddProduct, addChangeDenom],
+    [tryAddProduct, addChangeDenom, onDropOk],
   );
 
   useEffect(() => {
@@ -679,7 +717,13 @@ export default function LeoSupermarketGame({
                 {customer.avatar}
               </span>
               <div className={styles.customerMain}>
-                <CustomerRequestBubble customer={customer} />
+                <div className={shop.missionRow}>
+                  <CustomerRequestBubble customer={customer} />
+                  <EducationalGameInstructionReplay
+                    text={instructionText}
+                    onReplay={replayInstruction}
+                  />
+                </div>
                 <ZoneFeedbackLine fb={zoneFeedback.customer} />
               </div>
             </div>

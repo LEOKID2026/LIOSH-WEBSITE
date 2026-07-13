@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useGameAudioOptional } from "../hooks/useGameAudio.js";
 import {
   createStemPlaybackController,
   primeSpeechSynthesisVoices,
@@ -32,6 +33,7 @@ export default function HebrewAudioBuild1Panel({
   guidedMode,
   onGuidedNeutralDone,
 }) {
+  const audio = useGameAudioOptional();
   const [replayCount, setReplayCount] = useState(0);
   const [busy, setBusy] = useState(false);
   const [statusMsg, setStatusMsg] = useState("");
@@ -111,8 +113,16 @@ export default function HebrewAudioBuild1Panel({
         ctrlRef.current = createStemPlaybackController(stem, {});
         setStatusMsg("משמיעים…");
       }
-      await ctrlRef.current?.play();
-      const n = ctrlRef.current?.bumpReplay() ?? replayCount + 1;
+      if (audio) {
+        await audio.playVoice("voice-question-hebrew", {
+          stem,
+          text: stem?.narration_plaintext,
+          engine: "edge-tts-server",
+        });
+      } else {
+        await ctrlRef.current?.play();
+      }
+      const n = (ctrlRef.current?.bumpReplay?.() ?? replayCount + 1);
       setReplayCount(n);
       void trackProductEvent({
         eventName: "audio_played",
@@ -141,7 +151,7 @@ export default function HebrewAudioBuild1Panel({
     } finally {
       setBusy(false);
     }
-  }, [busy, gameActive, needsServerNarration, replayCount, stem, ensureServerNarrationMp3]);
+  }, [busy, gameActive, needsServerNarration, replayCount, stem, ensureServerNarrationMp3, audio, grade, topic]);
 
   const runGuidedCapture = useCallback(async () => {
     if (!gameActive || busy || !guidedMode) return;

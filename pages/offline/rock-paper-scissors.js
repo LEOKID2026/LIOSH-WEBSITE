@@ -2,9 +2,11 @@ import { useState, useRef, useEffect } from "react";
 import Layout from "../../components/Layout";
 import MaybeGameAccessGuard from "../../components/offline/MaybeGameAccessGuard.jsx";
 import StudentAdSlot from "../../components/student/StudentAdSlot.jsx";
+import GameAudioFullscreenButton from "../../components/game-audio/GameAudioFullscreenButton.jsx";
 import { useRouter } from "next/router";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
 import OfflineGameHoldShell from "../../components/offline/OfflineGameHoldShell.jsx";
+import { useGameAudio } from "../../hooks/useGameAudio";
 
 const CHOICES = [
   { id: "rock", label: "אבן", emoji: "🪨" },
@@ -25,6 +27,7 @@ function randomChoice() {
 export default function RockPaperScissors() {
   useIOSViewportFix();
   const router = useRouter();
+  const { playSfx, primeFromUserGesture } = useGameAudio();
   const wrapRef = useRef(null);
   const headerRef = useRef(null);
   const gameRef = useRef(null);
@@ -47,6 +50,7 @@ export default function RockPaperScissors() {
   const [showResults, setShowResults] = useState(false);
   const [resultsTimer, setResultsTimer] = useState(null);
   const [finalResult, setFinalResult] = useState(null);
+  const prevResultsTimerRef = useRef(null);
 
   const matchWinner =
     score.p1 >= firstTo
@@ -64,12 +68,24 @@ export default function RockPaperScissors() {
   // Handle results countdown timer
   useEffect(() => {
     if (!showResults || resultsTimer === null || resultsTimer <= 0) return;
+
+    if (prevResultsTimerRef.current !== resultsTimer) {
+      if (resultsTimer > 0) playSfx("sfx-countdown");
+      prevResultsTimerRef.current = resultsTimer;
+    }
     
     const timer = setInterval(() => {
       setResultsTimer((prev) => {
         if (prev <= 1) {
           // After countdown, finalize the round
           if (finalResult) {
+            if (finalResult.winner === "tie") {
+              /* no win/loss sfx */
+            } else if (vsBot && finalResult.winner === "p2") {
+              playSfx("sfx-defeat");
+            } else {
+              playSfx("sfx-victory");
+            }
             setLastResult(finalResult);
             setHistory((prevHistory) => [
               {
@@ -103,7 +119,7 @@ export default function RockPaperScissors() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [showResults, resultsTimer, finalResult, round, vsBot]);
+  }, [showResults, resultsTimer, finalResult, round, vsBot, playSfx]);
 
   // Dynamic layout calculation - stable, no state dependencies
   useEffect(() => {
@@ -143,10 +159,13 @@ export default function RockPaperScissors() {
     setFinalResult(result);
     setShowResults(true);
     setResultsTimer(3);
+    playSfx("sfx-reveal");
   }
 
   function handleBotRound(choice) {
     if (matchWinner || showResults) return;
+    primeFromUserGesture();
+    playSfx("sfx-ui-click");
     
     // Show P1 choice for 1 second
     setP1ChoiceDisplay(choice);
@@ -163,6 +182,8 @@ export default function RockPaperScissors() {
 
   function handleHumanChoice(choice) {
     if (matchWinner || showResults) return;
+    primeFromUserGesture();
+    playSfx("sfx-ui-click");
     
     if (vsBot) {
       handleBotRound(choice);
@@ -189,6 +210,7 @@ export default function RockPaperScissors() {
   }
 
   function resetMatch(fullReset = false) {
+    prevResultsTimerRef.current = null;
     setRound(1);
     setScore({ p1: 0, p2: 0 });
     setHistory([]);
@@ -246,13 +268,14 @@ export default function RockPaperScissors() {
             className="relative px-2 py-3"
             style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 10px)" }}
           >
-            <div className="absolute left-2 top-2 flex gap-2 pointer-events-auto">
+            <div className="absolute left-2 top-2 flex gap-2 pointer-events-auto items-center">
               <button
                 onClick={backSafe}
                 className="min-w-[60px] px-3 py-1 rounded-lg text-sm font-bold bg-white/5 border border-white/10 hover:bg-white/10"
               >
                 חזרה
               </button>
+              <GameAudioFullscreenButton />
             </div>
             <div className="absolute right-2 top-2 pointer-events-auto">
               <span className="text-xs uppercase tracking-[0.3em] text-white/60">

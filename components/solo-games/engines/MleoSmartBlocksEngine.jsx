@@ -3,6 +3,7 @@ import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendati
 import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.jsx";
 import SmartBlocksPlayView from "../SmartBlocksPlayView.jsx";
 import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
+import { useSoloEngineAudio } from "../../../hooks/solo-games/useSoloGameAudio.js";
 import {
   applyShapePlacement,
   createInitialSmartBlocksState,
@@ -21,6 +22,8 @@ export default function MleoSmartBlocksEngine({
   initialDifficulty = "medium",
   onSessionEnd,
 }) {
+  const sfx = useSoloEngineAudio();
+
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
   const pendingSessionEndRef = useRef(null);
@@ -219,6 +222,8 @@ export default function MleoSmartBlocksEngine({
       }
       const cell = pointerToGridCell(boardEl, gridSize, clientX, clientY, drag.shape);
       if (cell) {
+        const beforeLines = clearedLinesTotalRef.current;
+        const beforeCombos = combosRef.current;
         const result = applyShapePlacement(
           gameStateRef.current,
           difficulty,
@@ -228,6 +233,8 @@ export default function MleoSmartBlocksEngine({
           cell.col,
         );
         if (result.ok) {
+          if (result.state.clearedLinesTotal > beforeLines) sfx.playClearLine();
+          if (result.state.combos > beforeCombos) sfx.playCombo();
           syncMetricsFromState(result.state);
           if (result.didWin || result.noMovesLeft) {
             endGame(result.didWin);
@@ -237,7 +244,7 @@ export default function MleoSmartBlocksEngine({
       setDrag(null);
       dragPointerIdRef.current = null;
     },
-    [difficulty, drag, gameOver, gameRunning, gridSize],
+    [difficulty, drag, gameOver, gameRunning, gridSize, sfx],
   );
 
   useEffect(() => {

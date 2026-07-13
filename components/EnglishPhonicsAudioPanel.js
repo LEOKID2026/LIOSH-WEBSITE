@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useGameAudioOptional } from "../hooks/useGameAudio.js";
 import {
   createStemPlaybackController,
   primeSpeechSynthesisVoices,
@@ -16,6 +17,7 @@ import { trackProductEvent } from "../lib/analytics/track-event.client.js";
  * }} props
  */
 export default function EnglishPhonicsAudioPanel({ stem, gameActive, grade = null, topic = null }) {
+  const audio = useGameAudioOptional();
   const [replayCount, setReplayCount] = useState(0);
   const [busy, setBusy] = useState(false);
   const [statusMsg, setStatusMsg] = useState("");
@@ -44,8 +46,16 @@ export default function EnglishPhonicsAudioPanel({ stem, gameActive, grade = nul
     setBusy(true);
     setStatusMsg("משמיעים…");
     try {
-      await ctrlRef.current?.play();
-      const n = ctrlRef.current?.bumpReplay() ?? replayCount + 1;
+      if (audio) {
+        await audio.playVoice("voice-question-english-phonics", {
+          stem,
+          text: stem?.narration_plaintext,
+          engine: "browser-tts",
+        });
+      } else {
+        await ctrlRef.current?.play();
+      }
+      const n = (ctrlRef.current?.bumpReplay?.() ?? replayCount + 1);
       setReplayCount(n);
       void trackProductEvent({
         eventName: "audio_played",
@@ -72,7 +82,7 @@ export default function EnglishPhonicsAudioPanel({ stem, gameActive, grade = nul
     } finally {
       setBusy(false);
     }
-  }, [busy, gameActive, replayCount, stem]);
+  }, [busy, gameActive, replayCount, stem, audio, grade, topic]);
 
   const playTitle =
     statusMsg && statusMsg !== "משמיעים…"

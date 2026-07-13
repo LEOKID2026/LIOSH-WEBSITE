@@ -3,6 +3,7 @@ import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.js
 import SoloGameEndInterstitialOverlay from "../SoloGameEndInterstitialOverlay.jsx";
 import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
 import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
+import { useSoloEngineAudio } from "../../../hooks/solo-games/useSoloGameAudio.js";
 import { buildMazeLevel, findPath } from "../../../lib/solo-games/maze-generator.js";
 
 const IMG_LEO = "/images/leo.png";
@@ -81,6 +82,8 @@ export default function MleoMazeEngine({
   initialDifficulty = "medium",
   onSessionEnd,
 }) {
+  const sfx = useSoloEngineAudio();
+
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
   const pendingSessionEndRef = useRef(null);
@@ -292,6 +295,7 @@ export default function MleoMazeEngine({
   }, [applyLevel, difficulty, settings.cols, settings.diamondChance, settings.diamondSec, settings.rows, settings.starCount]);
 
   const completeMaze = useCallback(() => {
+    sfx.playExit();
     mazesCompletedRef.current += 1;
     const mc = mazesCompletedRef.current;
     const bonus = SCORE_MAZE + streakBonus(mc);
@@ -300,7 +304,7 @@ export default function MleoMazeEngine({
     setMazesCompleted(mc);
     flashMsg("מבוך הושלם! 🎉", 900);
     loadNextMaze();
-  }, [flashMsg, loadNextMaze]);
+  }, [flashMsg, loadNextMaze, sfx]);
 
   const pulseHint = useCallback(
     (nextPlayer) => {
@@ -414,6 +418,7 @@ export default function MleoMazeEngine({
       setHasKey(true);
       scoreRef.current += SCORE_KEY;
       setScore(scoreRef.current);
+      sfx.playKey();
       flashMsg("מצאתם מפתח! 🔑", 1000);
     }
 
@@ -424,6 +429,7 @@ export default function MleoMazeEngine({
       setStarsTaken(starsTakenRef.current);
       scoreRef.current += SCORE_STAR;
       setScore(scoreRef.current);
+      sfx.playStar();
     }
 
     if (
@@ -434,6 +440,7 @@ export default function MleoMazeEngine({
       scoreRef.current += SCORE_DIAMOND;
       setScore(scoreRef.current);
       setBonusDiamond(null);
+      sfx.playDiamond();
       flashMsg("יהלום! +50 💎", 1000);
     }
 

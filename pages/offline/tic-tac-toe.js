@@ -2,9 +2,11 @@ import { useState, useMemo, useEffect, useRef } from "react";
 import Layout from "../../components/Layout";
 import MaybeGameAccessGuard from "../../components/offline/MaybeGameAccessGuard.jsx";
 import StudentAdSlot from "../../components/student/StudentAdSlot.jsx";
+import GameAudioFullscreenButton from "../../components/game-audio/GameAudioFullscreenButton.jsx";
 import { useRouter } from "next/router";
 import OfflineGameHoldShell from "../../components/offline/OfflineGameHoldShell.jsx";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
+import { useGameAudio } from "../../hooks/useGameAudio";
 
 const SIZES = [3, 5, 7];
 
@@ -60,6 +62,7 @@ function checkWinner(board, size) {
 export default function TicTacToeXL() {
   useIOSViewportFix();
   const router = useRouter();
+  const { playSfx, primeFromUserGesture } = useGameAudio();
   const wrapRef = useRef(null);
   const headerRef = useRef(null);
   const boardRef = useRef(null);
@@ -143,6 +146,9 @@ export default function TicTacToeXL() {
     if (winner || board[idx]) return;
     if (!isBot && vsBot && currentPlayer === "O") return;
 
+    primeFromUserGesture();
+    playSfx("sfx-place");
+
     const nextBoard = [...board];
     nextBoard[idx] = currentPlayer;
     const nextPlayer = currentPlayer === "X" ? "O" : "X";
@@ -154,6 +160,11 @@ export default function TicTacToeXL() {
 
     if (potentialWinner) {
       setWinnerMessage(`${playerLabel(potentialWinner)} ניצח!`);
+      if (vsBot && potentialWinner === "O") {
+        playSfx("sfx-defeat");
+      } else {
+        playSfx("sfx-victory");
+      }
       setScore((prev) => ({
         ...prev,
         [potentialWinner]: prev[potentialWinner] + 1,
@@ -216,13 +227,14 @@ export default function TicTacToeXL() {
             className="relative px-2 py-3"
             style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 10px)" }}
           >
-            <div className="absolute left-2 top-2 flex gap-2 pointer-events-auto">
+            <div className="absolute left-2 top-2 flex gap-2 pointer-events-auto items-center">
               <button
                 onClick={backSafe}
                 className="min-w-[60px] px-3 py-1 rounded-lg text-sm font-bold bg-white/5 border border-white/10 hover:bg-white/10"
               >
                 חזרה
               </button>
+              <GameAudioFullscreenButton />
             </div>
             <div className="absolute right-2 top-2 pointer-events-auto">
               <span className="text-xs uppercase tracking-[0.3em] text-white/60">

@@ -3,6 +3,7 @@ import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.js
 import SoloGameEndInterstitialOverlay from "../SoloGameEndInterstitialOverlay.jsx";
 import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
 import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
+import { useSoloEngineAudio } from "../../../hooks/solo-games/useSoloGameAudio.js";
 import { useSoloGameKeyboard } from "./solo-v2-ui.jsx";
 
 const SHAPES = [
@@ -28,6 +29,9 @@ export default function MleoPuzzleEngine({
   initialDifficulty = "easy",
   onSessionEnd,
 }) {
+  const sfx = useSoloEngineAudio();
+  const clearChainRef = useRef(0);
+
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
   const pendingSessionEndRef = useRef(null);
@@ -139,6 +143,7 @@ export default function MleoPuzzleEngine({
     const newGrid = [...grid];
     [newGrid[i1], newGrid[i2]] = [newGrid[i2], newGrid[i1]];
     if (hasMatch(newGrid)) {
+      clearChainRef.current = 0;
       setGrid(newGrid);
       clearMatches(newGrid);
     }
@@ -191,6 +196,9 @@ export default function MleoPuzzleEngine({
       }
     }
     if (cleared > 0) {
+      sfx.playClearLine();
+      if (clearChainRef.current > 0) sfx.playCombo();
+      clearChainRef.current += 1;
       setScore((s) => s + cleared * 10);
       fallDown(g);
     }

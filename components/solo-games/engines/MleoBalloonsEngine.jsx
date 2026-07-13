@@ -3,6 +3,7 @@ import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.js
 import SoloGameEndInterstitialOverlay from "../SoloGameEndInterstitialOverlay.jsx";
 import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
 import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
+import { useSoloEngineAudio } from "../../../hooks/solo-games/useSoloGameAudio.js";
 import { useSoloBoardTap } from "./solo-v2-ui.jsx";
 
 const BG_BALLOONS = "/images/game-balloons-bg.png";
@@ -63,6 +64,8 @@ function rollKind(level) {
  * @param {{ autoStart?: boolean, onSessionEnd?: (metrics: object) => void }} props
  */
 export default function MleoBalloonsEngine({ autoStart = false, onSessionEnd }) {
+  const sfx = useSoloEngineAudio();
+
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
   const pendingSessionEndRef = useRef(null);
@@ -166,6 +169,7 @@ export default function MleoBalloonsEngine({ autoStart = false, onSessionEnd }) 
     if (comboRef.current > 0 && comboRef.current % COMBO_EVERY === 0) {
       scoreRef.current += COMBO_BONUS;
       setScore(scoreRef.current);
+      sfx.playCombo();
       addPopFx(balloon.x, balloon.y - 4, `+${COMBO_BONUS} combo!`);
     }
     if (scoringPopsRef.current > 0 && scoringPopsRef.current % 5 === 0) {
@@ -237,6 +241,7 @@ export default function MleoBalloonsEngine({ autoStart = false, onSessionEnd }) 
 
     if (balloon.kind === "bomb") {
       addPopFx(balloon.x, balloon.y, "💣");
+      sfx.playHit();
       loseLife(remaining);
       return;
     }
@@ -260,11 +265,17 @@ export default function MleoBalloonsEngine({ autoStart = false, onSessionEnd }) 
     }
 
     let pts = SCORE_GOOD;
-    if (balloon.kind === "gold") pts = SCORE_GOLD;
+    if (balloon.kind === "gold") {
+      pts = SCORE_GOLD;
+      sfx.playStar();
+    } else {
+      sfx.playPop();
+    }
     if (balloon.kind === "diamond") pts = SCORE_DIAMOND;
     addScore(pts, balloon);
 
     if (scoringPopsRef.current >= targetRef.current) {
+      sfx.playSuccessSm();
       endGame(true, remaining);
     }
   };

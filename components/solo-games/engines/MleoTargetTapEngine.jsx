@@ -4,6 +4,7 @@ import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.js
 import SoloGameEndInterstitialOverlay from "../SoloGameEndInterstitialOverlay.jsx";
 import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
 import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
+import { useSoloEngineAudio } from "../../../hooks/solo-games/useSoloGameAudio.js";
 const BG_TARGET = "/images/game-day.png";
 const IMG_COIN = "/images/coin.png";
 const IMG_DIAMOND = "/images/diamond.png";
@@ -66,6 +67,8 @@ export default function MleoTargetTapEngine({
   initialDifficulty = "medium",
   onSessionEnd,
 }) {
+  const sfx = useSoloEngineAudio();
+
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
   const pendingSessionEndRef = useRef(null);
@@ -156,6 +159,7 @@ export default function MleoTargetTapEngine({
   };
 
   const levelUp = () => {
+    sfx.playLevelUp();
     levelRef.current += 1;
     const cfg = levelConfig(levelRef.current, difficultyRef.current);
     targetHitsRef.current = cfg.targetHits;
@@ -170,7 +174,12 @@ export default function MleoTargetTapEngine({
   const registerHit = (target, remaining) => {
     let pts = SCORE_COIN;
     if (target.kind === "diamond") pts = SCORE_DIAMOND;
-    if (target.kind === "star") pts = SCORE_STAR;
+    if (target.kind === "star") {
+      pts = SCORE_STAR;
+      sfx.playStar();
+    } else {
+      sfx.playTargetHit();
+    }
 
     scoreRef.current += pts;
     hitsRef.current += 1;
@@ -182,6 +191,7 @@ export default function MleoTargetTapEngine({
     if (comboRef.current > 0 && comboRef.current % COMBO_EVERY === 0) {
       scoreRef.current += COMBO_BONUS;
       setScore(scoreRef.current);
+      sfx.playCombo();
       addPopFx(target.xPct, target.yPct - 3, `+${COMBO_BONUS} combo!`);
     }
 

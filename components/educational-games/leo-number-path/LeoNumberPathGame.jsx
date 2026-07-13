@@ -3,6 +3,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { sharedStyles as frame } from "../../prototypes/dev/learning/shared/LearningPrototypeFrame.jsx";
 import EducationalDifficultyGradeHint from "../EducationalDifficultyGradeHint.jsx";
 import EducationalGameHudFullscreenButton from "../EducationalGameHudFullscreenButton.jsx";
+import EducationalGameInstructionReplay from "../shared/EducationalGameInstructionReplay.jsx";
+import { useEducationalEngineAudio } from "../../../hooks/educational-games/useEducationalGameAudio.js";
 import shop from "../shared/educational-game-shop-layout.module.css";
 import {
   DIFFICULTIES,
@@ -66,6 +68,18 @@ export default function LeoNumberPathGame({
 
   const diffConfig = DIFFICULTIES[difficulty];
   const currentTask = tasks[taskIndex] ?? null;
+  const instructionText = phase === "play" && currentTask ? currentTask.promptHe : "";
+  const {
+    onCorrect,
+    onWrong,
+    onStreak,
+    playFeedback,
+    replayInstruction,
+    audio,
+  } = useEducationalEngineAudio({
+    instructionText,
+    autoPlayInstruction: productionMode && phase === "play" && Boolean(currentTask),
+  });
   const orderMatters = currentTask?.orderMatters ?? false;
   const stoneGridSizeClass = currentTask
     ? currentTask.numbers.length <= 12
@@ -131,8 +145,9 @@ export default function LeoNumberPathGame({
       });
       setCheckState("idle");
       setFeedback("");
+      audio.playSfx("sfx-ui-click");
     },
-    [phase, checkState],
+    [phase, checkState, audio],
   );
 
   const clearSelection = useCallback(() => {
@@ -152,13 +167,17 @@ export default function LeoNumberPathGame({
 
     if (ok) {
       setCheckState("ok");
-      setFeedback(pathFeedback(true));
+      const okText = pathFeedback(true);
+      setFeedback(okText);
+      onCorrect();
+      playFeedback(okText);
       setSuccessCount((c) => c + 1);
       addScore(scoreForAttempt(attemptNum));
 
       setCurrentStreak((prev) => {
         const next = prev + 1;
         setBestStreak((best) => Math.max(best, next));
+        if (next === 3 || next === 5) onStreak();
         return next;
       });
 
@@ -173,7 +192,10 @@ export default function LeoNumberPathGame({
     const nextMistakes = mistakes + 1;
     setMistakes(nextMistakes);
     setFailedAttempts((f) => f + 1);
-    setFeedback(pathFeedback(false));
+    const badText = pathFeedback(false);
+    setFeedback(badText);
+    onWrong();
+    playFeedback(badText);
 
     if (nextMistakes >= diffConfig.maxMistakes) {
       window.setTimeout(() => {
@@ -198,6 +220,10 @@ export default function LeoNumberPathGame({
     mistakes,
     diffConfig.maxMistakes,
     endRun,
+    onCorrect,
+    onWrong,
+    onStreak,
+    playFeedback,
   ]);
 
   const endMetrics = useMemo(() => {
@@ -311,7 +337,13 @@ export default function LeoNumberPathGame({
                   🪨
                 </span>
                 <div className={shop.customerSpeechWrap}>
-                  <p className={shop.customerName}>משימת מספרים</p>
+                  <div className={shop.missionRow}>
+                    <p className={shop.customerName}>משימת מספרים</p>
+                    <EducationalGameInstructionReplay
+                      text={instructionText}
+                      onReplay={replayInstruction}
+                    />
+                  </div>
                   <p className={shop.missionText}>
                     {currentTask.promptHe}
                     <span className={shop.missionTicket}>

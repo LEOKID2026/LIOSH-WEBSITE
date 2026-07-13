@@ -4,6 +4,7 @@ import RewardCardImage from "../../student/rewards/RewardCardImage.jsx";
 import { buildMemoryDeckFromShop } from "../../../lib/solo-games/memory-shop-cards.client.js";
 import { useSoloGameShellUi } from "../../../hooks/solo-games/useSoloGameShellUi.js";
 import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
+import { useSoloEngineAudio } from "../../../hooks/solo-games/useSoloGameAudio.js";
 import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.jsx";
 import SoloGameEndInterstitialOverlay from "../SoloGameEndInterstitialOverlay.jsx";
 import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
@@ -94,6 +95,8 @@ export default function MleoMemoryEngine({
   onPreGameUiChange,
   deckBuilder = buildMemoryDeckFromShop,
 }) {
+  const sfx = useSoloEngineAudio();
+
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
   const pendingSessionEndRef = useRef(null);
@@ -142,8 +145,6 @@ export default function MleoMemoryEngine({
     onPreGameUiChange?.(isPreGame);
     return () => onPreGameUiChange?.(false);
   }, [isPreGame, onPreGameUiChange]);
-
-  const flipSound = typeof Audio !== "undefined" ? new Audio("/sounds/flap.mp3") : null;
 
   useEffect(() => {
     if (initialDifficulty) setDifficulty(initialDifficulty);
@@ -296,7 +297,7 @@ export default function MleoMemoryEngine({
     }
     if (flipped.length === 2 || flipped.includes(card.id) || matched.includes(card.id)) return;
 
-    flipSound?.play().catch(() => {});
+    sfx.playFlap();
     const newFlipped = [...flipped, card.id];
     setFlipped(newFlipped);
 
@@ -306,6 +307,7 @@ export default function MleoMemoryEngine({
       const card2 = cards.find((c) => c.id === second);
 
       if (card1?.pairKey && card1.pairKey === card2?.pairKey) {
+        sfx.playMatchOk();
         setMatched((prev) => {
           const next = [...prev, first, second];
           matchedRef.current = next;
@@ -313,6 +315,7 @@ export default function MleoMemoryEngine({
         });
         setFlipped([]);
       } else {
+        sfx.playMatchBad();
         setScore((s) => {
           const next = Math.max(0, s - 10);
           scoreRef.current = next;

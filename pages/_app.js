@@ -13,6 +13,7 @@ import { initParentPwaInstallPromptCapture } from "../lib/pwa/pwa-parent-install
 import { initTeacherPwaInstallPromptCapture } from "../lib/pwa/pwa-teacher-install-prompt";
 import { resolvePwaManifestHref, resolvePwaPortal } from "../lib/pwa/resolve-pwa-manifest";
 import { StudentThemeProvider } from "../contexts/StudentThemeContext.jsx";
+import GameAudioProvider from "../lib/game-audio/GameAudioProvider.jsx";
 import BrowserThemeColorSync from "../components/BrowserThemeColorSync.jsx";
 import CookieConsentManager from "../components/consent/CookieConsentManager.jsx";
 import { GOOGLE_CONSENT_BOOTSTRAP_SCRIPT } from "../lib/consent/google-consent-mode.client.js";
@@ -357,6 +358,7 @@ export default function MyApp({ Component, pageProps }) {
       <OfflineIndicator />
       <CookieConsentManager />
       <StudentThemeProvider>
+        <GameAudioProvider>
         <BrowserThemeColorSync />
         {isInternalDevRoute ? (
           <DevPrototypeAdminGate>
@@ -369,6 +371,7 @@ export default function MyApp({ Component, pageProps }) {
         ) : (
           <Component {...pageProps} />
         )}
+        </GameAudioProvider>
       </StudentThemeProvider>
       <Analytics beforeSend={vercelAnalyticsBeforeSend} />
     </>

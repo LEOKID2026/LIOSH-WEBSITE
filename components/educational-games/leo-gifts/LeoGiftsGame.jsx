@@ -2,6 +2,8 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import EducationalDifficultyGradeHint from "../EducationalDifficultyGradeHint.jsx";
 import EducationalGameHudFullscreenButton from "../EducationalGameHudFullscreenButton.jsx";
+import EducationalGameInstructionReplay from "../shared/EducationalGameInstructionReplay.jsx";
+import { useEducationalEngineAudio } from "../../../hooks/educational-games/useEducationalGameAudio.js";
 import {
   calcTimeBonus,
   SCORE_CORRECT,
@@ -71,6 +73,19 @@ export default function LeoGiftsGame({
   const [timeLeft, setTimeLeft] = useState(45);
   const [checkState, setCheckState] = useState(/** @type {'idle'|'ok'|'bad'} */ ("idle"));
   const [feedback, setFeedback] = useState("");
+
+  const instructionText = phase === "play" && task ? giftsPrompt(task) : "";
+  const {
+    onCorrect,
+    onWrong,
+    onStreak,
+    onTimeUp,
+    playFeedback,
+    replayInstruction,
+  } = useEducationalEngineAudio({
+    instructionText,
+    autoPlayInstruction: productionMode && phase === "play" && Boolean(task),
+  });
 
   const maxMistakes = maxMistakesForDifficulty(difficulty);
   const diffConfig = { label: DIFFICULTIES[difficulty].label, maxMistakes };
@@ -159,13 +174,16 @@ export default function LeoGiftsGame({
     timeoutHandledRef.current = true;
     timerPausedRef.current = true;
     setCheckState("bad");
-    setFeedback("הזמן נגמר! ננסה שאלה חדשה.");
+    const timeoutText = "הזמן נגמר! ננסה שאלה חדשה.";
+    setFeedback(timeoutText);
+    onTimeUp();
+    playFeedback(timeoutText);
     registerMistake();
     window.setTimeout(() => {
       if (mistakes + 1 >= maxMistakes) return;
       loadTaskAtIndex(taskIndex);
     }, 1400);
-  }, [registerMistake, loadTaskAtIndex, taskIndex, mistakes, maxMistakes]);
+  }, [registerMistake, loadTaskAtIndex, taskIndex, mistakes, maxMistakes, onTimeUp, playFeedback]);
 
   useEffect(() => {
     if (phase !== "play" || !task || timerPausedRef.current) return undefined;
@@ -191,13 +209,17 @@ export default function LeoGiftsGame({
       answerTimesRef.current.push(elapsed);
       const bonus = calcTimeBonus(timeLeft, timeLimitSec);
       setCheckState("ok");
-      setFeedback(giftsFeedback(true, perChild, remainder));
+      const okText = giftsFeedback(true, perChild, remainder);
+      setFeedback(okText);
+      onCorrect();
+      playFeedback(okText);
       setScore((s) => s + SCORE_CORRECT + bonus);
       setCurrentStreak((prev) => {
         const next = prev + 1;
         setBestStreak((best) => Math.max(best, next));
         if (next > 0 && next % STREAK_BONUS_EVERY === 0) {
           setScore((sc) => sc + SCORE_STREAK_BONUS);
+          onStreak();
         }
         return next;
       });
@@ -207,7 +229,10 @@ export default function LeoGiftsGame({
       return;
     }
     setCheckState("bad");
-    setFeedback(giftsFeedback(false, perChild, remainder));
+    const badText = giftsFeedback(false, perChild, remainder);
+    setFeedback(badText);
+    onWrong();
+    playFeedback(badText);
     registerMistake();
   }, [
     task,
@@ -218,6 +243,10 @@ export default function LeoGiftsGame({
     timeLimitSec,
     advanceAfterSuccess,
     registerMistake,
+    onCorrect,
+    onWrong,
+    onStreak,
+    playFeedback,
   ]);
 
   const endMetrics = useMemo(() => {
@@ -334,7 +363,13 @@ export default function LeoGiftsGame({
                   {task.itemEmoji}
                 </span>
                 <div className={shop.customerSpeechWrap}>
-                  <p className={shop.customerName}>משימה</p>
+                  <div className={shop.missionRow}>
+                    <p className={shop.customerName}>משימה</p>
+                    <EducationalGameInstructionReplay
+                      text={instructionText}
+                      onReplay={replayInstruction}
+                    />
+                  </div>
                   <p className={shop.missionText}>{giftsPrompt(task)}</p>
                 </div>
               </div>

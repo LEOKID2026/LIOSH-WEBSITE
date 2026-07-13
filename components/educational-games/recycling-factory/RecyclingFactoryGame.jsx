@@ -14,8 +14,13 @@ import { buildRecyclingFactoryMetrics } from "./recycling-factory-metrics.js";
 import RecyclingItemVisual from "./RecyclingItemVisual.jsx";
 import EducationalDifficultyGradeHint from "../EducationalDifficultyGradeHint.jsx";
 import EducationalGameHudFullscreenButton from "../EducationalGameHudFullscreenButton.jsx";
+import EducationalGameInstructionReplay from "../shared/EducationalGameInstructionReplay.jsx";
+import { useEducationalEngineAudio } from "../../../hooks/educational-games/useEducationalGameAudio.js";
 import shop from "../shared/educational-game-shop-layout.module.css";
 import styles from "./RecyclingFactoryGame.module.css";
+
+const RECYCLING_INSTRUCTION =
+  "מיינו כל פריט לפח הנכון — שמרו על הסביבה! גררו או לחצו פריט לפח.";
 
 /** @typedef {import('./recycling-factory-data.js').DifficultyId} DifficultyId */
 /** @typedef {import('./recycling-factory-data.js').BinId} BinId */
@@ -149,6 +154,20 @@ export default function RecyclingFactoryGame({
   );
   const [draggingUid, setDraggingUid] = useState(/** @type {string|null} */ (null));
 
+  const {
+    onCorrect,
+    onWrong,
+    onStreak,
+    onDragLift,
+    onDropOk,
+    playFeedback,
+    replayInstruction,
+    audio,
+  } = useEducationalEngineAudio({
+    instructionText: phase === "play" ? RECYCLING_INSTRUCTION : "",
+    autoPlayInstruction: productionMode && phase === "play",
+  });
+
   const dragRef = useRef(
     /** @type {{ uid: string, pointerId: number, moved: boolean, active: boolean, startX: number, startY: number }|null} */ (null),
   );
@@ -249,11 +268,10 @@ export default function RecyclingFactoryGame({
       });
       addScore(SCORE.miss);
       setStreak(0);
-      setFeedback({
-        text: "הפריט עבר את המסוע — נסו להיות מהירים יותר!",
-        fact: "",
-        type: "bad",
-      });
+      const missText = "הפריט עבר את המסוע — נסו להיות מהירים יותר!";
+      setFeedback({ text: missText, fact: "", type: "bad" });
+      onWrong();
+      playFeedback(missText);
       setHighlightBin(null);
 
       window.setTimeout(() => {
@@ -261,7 +279,7 @@ export default function RecyclingFactoryGame({
         if (phaseRef.current === "play") spawnItems();
       }, 350);
     },
-    [addScore, checkEnd, spawnItems],
+    [addScore, checkEnd, spawnItems, onWrong, playFeedback],
   );
 
   const handleCorrect = useCallback(
@@ -291,17 +309,19 @@ export default function RecyclingFactoryGame({
         setBestStreak((best) => Math.max(best, next));
         if (next === 5) addScore(SCORE.streak5);
         if (next === 10) addScore(SCORE.streak10);
+        if (next === 5 || next === 10) onStreak();
         return next;
       });
 
       addScore(bonus);
 
       const showFact = Math.random() < 0.3;
-      setFeedback({
-        text: "נכון! כל הכבוד ♻️",
-        fact: showFact ? pickFactForBin(binId) : "",
-        type: "ok",
-      });
+      const okText = "נכון! כל הכבוד ♻️";
+      const factText = showFact ? pickFactForBin(binId) : "";
+      setFeedback({ text: okText, fact: factText, type: "ok" });
+      onCorrect();
+      playFeedback(okText);
+      if (factText) playFeedback(factText);
       setHighlightBin(binId);
       window.setTimeout(() => setHighlightBin(null), 500);
 
@@ -310,7 +330,7 @@ export default function RecyclingFactoryGame({
         if (phaseRef.current === "play") spawnItems();
       }, 420);
     },
-    [addScore, checkEnd, spawnItems],
+    [addScore, checkEnd, spawnItems, onCorrect, onStreak, playFeedback],
   );
 
   const handleWrong = useCallback(
@@ -330,11 +350,10 @@ export default function RecyclingFactoryGame({
 
       const item = beltItemsRef.current.find((b) => b.uid === uid)?.item;
       const correctLabel = item ? BINS[item.bin]?.label : "";
-      setFeedback({
-        text: `לא בדיוק — ${item?.name ?? "פריט"} שייך ל${correctLabel}`,
-        fact: "",
-        type: "bad",
-      });
+      const wrongText = `לא בדיוק — ${item?.name ?? "פריט"} שייך ל${correctLabel}`;
+      setFeedback({ text: wrongText, fact: "", type: "bad" });
+      onWrong();
+      playFeedback(wrongText);
       setHighlightBin(binId);
       window.setTimeout(() => setHighlightBin(null), 450);
 
@@ -344,7 +363,7 @@ export default function RecyclingFactoryGame({
         );
       }, 420);
     },
-    [addScore, checkEnd],
+    [addScore, checkEnd, onWrong, playFeedback],
   );
 
   const sortToBin = useCallback(
@@ -405,6 +424,15 @@ export default function RecyclingFactoryGame({
     setStartTime(Date.now());
     window.setTimeout(() => spawnItems(), 200);
   }, [spawnItems]);
+
+  useEffect(() => {
+    if (phase !== "play") {
+      audio.stopAsset("sfx-conveyor");
+      return undefined;
+    }
+    audio.playSfx("sfx-conveyor", { loop: true });
+    return () => audio.stopAsset("sfx-conveyor");
+  }, [phase, audio]);
 
   useEffect(() => {
     if (phase !== "play") return undefined;
@@ -511,7 +539,8 @@ export default function RecyclingFactoryGame({
     };
     setDraggingUid(uid);
     setDragGhost({ item: beltItem.item, x: e.clientX, y: e.clientY });
-  }, []);
+    onDragLift();
+  }, [onDragLift]);
 
   useEffect(() => {
     if (!draggingUid) return undefined;
@@ -537,6 +566,7 @@ export default function RecyclingFactoryGame({
         suppressClickRef.current = true;
         const binId = findBinIdAtPoint(e.clientX, e.clientY);
         if (binId) {
+          onDropOk();
           sortToBinRef.current(drag.uid, binId);
         }
       } else {
@@ -565,7 +595,7 @@ export default function RecyclingFactoryGame({
       document.body.style.touchAction = prevTouchAction;
       document.body.style.overflow = prevOverflow;
     };
-  }, [draggingUid]);
+  }, [draggingUid, onDropOk]);
 
   const onItemClick = useCallback((uid) => {
     if (suppressClickRef.current) {
@@ -701,7 +731,13 @@ export default function RecyclingFactoryGame({
                   🦁♻️
                 </span>
                 <div className={`${shop.customerSpeechWrap} ${styles.recyclingMissionSpeech}`}>
-                  <p className={`${shop.customerName} ${styles.recyclingMissionTitle}`}>משימה</p>
+                  <div className={shop.missionRow}>
+                    <p className={`${shop.customerName} ${styles.recyclingMissionTitle}`}>משימה</p>
+                    <EducationalGameInstructionReplay
+                      text={RECYCLING_INSTRUCTION}
+                      onReplay={replayInstruction}
+                    />
+                  </div>
                   <p className={`${shop.missionText} ${styles.recyclingMissionText}`}>
                     מיינו כל פריט לפח הנכון — שמרו על הסביבה!
                     <span className={`${shop.missionTicket} ${styles.recyclingMissionHint}`}>

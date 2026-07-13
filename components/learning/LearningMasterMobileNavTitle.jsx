@@ -1,25 +1,25 @@
 /**
- * Integrated mobile nav center: subject title + sound toggle (title not duplicated below).
+ * Integrated mobile nav center: subject title + global audio toggle (title not duplicated below).
  */
-export default function LearningMasterMobileNavTitle({ MB, title, sound }) {
+export default function LearningMasterMobileNavTitle({ MB, title, audio }) {
   if (!title) return null;
+
+  const audioOn =
+    audio?.settings?.masterEnabled &&
+    audio?.settings?.sfxEnabled &&
+    audio?.settings?.musicEnabled;
 
   return (
     <>
       <h1 className={`${MB.pageTitle} leading-tight truncate max-md:text-2xl`}>{title}</h1>
-      {sound ? (
+      {audio ? (
         <button
           type="button"
-          onClick={() => {
-            sound.toggleSounds();
-            sound.toggleMusic();
-          }}
-          className={
-            sound.soundsEnabled && sound.musicEnabled ? MB.btnSoundOn : MB.btnSoundOff
-          }
-          title={sound.soundsEnabled && sound.musicEnabled ? "השתק צלילים" : "הפעל צלילים"}
+          onClick={() => audio.toggleMaster()}
+          className={audioOn ? MB.btnSoundOn : MB.btnSoundOff}
+          title={audioOn ? "השתק צלילים" : "הפעל צלילים"}
         >
-          {sound.soundsEnabled && sound.musicEnabled ? "🔊" : "🔇"}
+          {audioOn ? "🔊" : "🔇"}
         </button>
       ) : null}
     </>

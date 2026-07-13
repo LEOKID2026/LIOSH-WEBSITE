@@ -4,6 +4,7 @@ import SoloGameEndInterstitialOverlay from "../SoloGameEndInterstitialOverlay.js
 import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
 import { useSoloGameShellUi } from "../../../hooks/solo-games/useSoloGameShellUi.js";
 import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
+import { useSoloEngineAudio } from "../../../hooks/solo-games/useSoloGameAudio.js";
 import { exitMobileGameFullscreen } from "../../../lib/solo-games/solo-game-fullscreen.client.js";
 import {
   ACTIVE_PICTURE_PUZZLE_MECHANIC,
@@ -96,6 +97,8 @@ export default function MleoPicturePuzzleEngine({
   onSessionEnd,
   onPreGameUiChange,
 }) {
+  const sfx = useSoloEngineAudio();
+
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
   const pendingSessionEndRef = useRef(null);
@@ -280,6 +283,7 @@ export default function MleoPicturePuzzleEngine({
 
   const triggerHint = () => {
     if (!gameRunning || gameOver) return;
+    sfx.playUiOpen();
     setShowHintPreview(true);
     if (hintTimerRef.current) clearTimeout(hintTimerRef.current);
     hintTimerRef.current = setTimeout(() => setShowHintPreview(false), 3000);
@@ -350,6 +354,7 @@ export default function MleoPicturePuzzleEngine({
     if (tiles[index] == null) return;
 
     if (!canMoveTile(tiles, index, gridSize)) {
+      sfx.playWarning();
       setBlockedMsg("אי אפשר להזיז את האריח הזה");
       window.setTimeout(() => setBlockedMsg(""), 1200);
       return;
@@ -360,6 +365,7 @@ export default function MleoPicturePuzzleEngine({
     [next[index], next[blank]] = [next[blank], next[index]];
     movesRef.current += 1;
     setMoves(movesRef.current);
+    sfx.playDropOk();
     setTiles(next);
 
     if (isSlidingPuzzleSolved(next, gridSize)) {
@@ -380,6 +386,9 @@ export default function MleoPicturePuzzleEngine({
         ? null
         : { pieceId, source: "tray", sourceSlotId: null }
     );
+    if (!(selectedPiece?.source === "tray" && selectedPiece.pieceId === pieceId)) {
+      sfx.playDrag();
+    }
   };
 
   const handleReturnToTray = () => {
@@ -422,6 +431,7 @@ export default function MleoPicturePuzzleEngine({
       if (!result.changed) return;
 
       countMove();
+      sfx.playDropOk();
       setBoardSlots(result.boardSlots);
       setTrayPieces(result.trayPieces);
       setSelectedPiece(null);
@@ -430,6 +440,7 @@ export default function MleoPicturePuzzleEngine({
     }
 
     if (slot.placedPieceId != null) {
+      sfx.playDrag();
       setSelectedPiece({
         pieceId: slot.placedPieceId,
         source: "board",

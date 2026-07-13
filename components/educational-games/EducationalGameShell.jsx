@@ -3,8 +3,10 @@ import Head from "next/head";
 import Link from "next/link";
 import { findEducationalGame } from "../../lib/educational-games/educational-game-registry.js";
 import { useEducationalGameSession } from "../../hooks/educational-games/useEducationalGameSession.js";
+import { useEducationalGameAudio } from "../../hooks/educational-games/useEducationalGameAudio.js";
 import { useSoloGameShellUi } from "../../hooks/solo-games/useSoloGameShellUi.js";
 import { enterMobileGameFullscreenFromUserGesture } from "../../lib/solo-games/solo-game-fullscreen.client.js";
+import GameAudioFullscreenButton from "../game-audio/GameAudioFullscreenButton.jsx";
 import GameAccessGuard from "../games/GameAccessGuard.jsx";
 import EducationalGameEntryScreen from "./EducationalGameEntryScreen.jsx";
 import SoloGameFinishScreen from "../solo-games/SoloGameFinishScreen.jsx";
@@ -64,6 +66,7 @@ export default function EducationalGameShell({ gameKey }) {
     useEducationalGameSession(gameKey);
 
   const { helpGame, openSoloGameHelp, closeSoloGameHelp } = useSoloGameHelp();
+  const { onSessionStart, onWon, onLost, stopAll } = useEducationalGameAudio();
 
   const handleStart = useCallback(async () => {
     if (typeof document !== "undefined") {
@@ -73,11 +76,16 @@ export default function EducationalGameShell({ gameKey }) {
     }
     const diff = game?.hasDifficultyPicker ? difficulty : null;
     const id = await startSession(diff);
-    if (id) setPhase("playing");
-  }, [game, difficulty, startSession]);
+    if (id) {
+      onSessionStart();
+      setPhase("playing");
+    }
+  }, [game, difficulty, startSession, onSessionStart]);
 
   const handleSessionEnd = useCallback(
     async (metrics) => {
+      if (metrics?.didWin === true) onWon();
+      else if (metrics?.didWin === false) onLost();
       setPhase("settling");
       const result = await finishSession(metrics);
       if (result) {
@@ -87,8 +95,10 @@ export default function EducationalGameShell({ gameKey }) {
         setPhase("entry");
       }
     },
-    [finishSession],
+    [finishSession, onWon, onLost],
   );
+
+  useEffect(() => () => stopAll(), [stopAll]);
 
   const handlePlayAgain = useCallback(() => {
     resetSession();
@@ -129,8 +139,8 @@ export default function EducationalGameShell({ gameKey }) {
           <header
             className={
               themedShell
-                ? SG.header
-                : "flex shrink-0 items-center justify-between gap-2 border-b border-white/10 px-3 py-2 sm:px-4"
+                ? `${SG.header} relative`
+                : "relative flex shrink-0 items-center justify-between gap-2 border-b border-white/10 px-3 py-2 sm:px-4"
             }
           >
             <Link
@@ -154,6 +164,11 @@ export default function EducationalGameShell({ gameKey }) {
             >
               בית
             </Link>
+            {phase === "playing" ? (
+              <div className="absolute left-3 top-2 z-20 sm:left-4">
+                <GameAudioFullscreenButton />
+              </div>
+            ) : null}
           </header>
           ) : null}
 

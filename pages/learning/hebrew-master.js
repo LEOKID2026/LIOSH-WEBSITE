@@ -58,7 +58,7 @@ import {
   updateDailyStreak,
   getStreakReward,
 } from "../../utils/daily-streak";
-import { useSound } from "../../hooks/useSound";
+import { useGameAudio } from "../../hooks/useGameAudio";
 import { getQuestionFontStyle, getVerbalInstructionStyle } from "../../utils/learning-question-font";
 import { resolveLearningMcqChoiceClassName } from "../../utils/learning-mcq-choice-styles.client";
 import { compareAnswers } from "../../utils/answer-compare";
@@ -445,7 +445,7 @@ export default function HebrewMaster() {
   const [showStreakReward, setShowStreakReward] = useState(null);
   
   // Sound system
-  const sound = useSound();
+  const audio = useGameAudio();
 
   // מערכת רמות עם XP
   const [playerLevel, setPlayerLevel] = useState(1);
@@ -1431,7 +1431,7 @@ export default function HebrewMaster() {
     accumulateQuestionTime();
     questionTimeLedgerRef.current = null;
     // Stop background music when game resets
-    sound.stopBackgroundMusic();
+    audio.stopMusic();
     clearActiveDiagnosticState(
       hebrewPendingDiagnosticProbeRef,
       hebrewHypothesisLedgerRef
@@ -2095,8 +2095,9 @@ export default function HebrewMaster() {
     }
 
     // Start background music and play game start sound
-    sound.playBackgroundMusic();
-    sound.playSound("game-start");
+    audio.primeFromUserGesture();
+    audio.playMusic("bgm-learning-focus");
+    audio.playSfx("sfx-game-start");
     void ensureLearningSessionId();
     
     generateNewQuestion();
@@ -2126,7 +2127,7 @@ export default function HebrewMaster() {
 
   function stopGame() {
     // Stop background music when game stops
-    sound.stopBackgroundMusic();
+    audio.stopMusic();
     clearActiveDiagnosticState(
       hebrewPendingDiagnosticProbeRef,
       hebrewHypothesisLedgerRef
@@ -2145,6 +2146,7 @@ export default function HebrewMaster() {
   }
 
   function handleTimeUp() {
+    audio.playSfx("sfx-game-over");
     // Time up – במצב Challenge או Speed
     recordSessionProgress();
     setWrong((prev) => prev + 1);
@@ -2499,28 +2501,28 @@ export default function HebrewMaster() {
         const newBadge = "🔥 רצף חם";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       } else if (newStreak === 25 && !badges.includes("⚡ מהיר כברק")) {
         const newBadge = "⚡ מהיר כברק";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       } else if (newStreak === 50 && !badges.includes("🌟 אלוף") && !badges.includes("🌟 מאסטר")) {
         const newBadge = "🌟 אלוף";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       } else if (newStreak === 100 && !badges.includes("👑 מלך העברית")) {
         const newBadge = "👑 מלך העברית";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       }
@@ -2531,14 +2533,14 @@ export default function HebrewMaster() {
         const newBadge = `🧮 מלך ה${opName}`;
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       } else if (newOpCorrect === 100 && !badges.includes(`🏆 גאון ה${opName}`)) {
         const newBadge = `🏆 גאון ה${opName}`;
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       }
@@ -2553,7 +2555,7 @@ export default function HebrewMaster() {
         const newBadge = "💎 אלף נקודות";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       } else if (
@@ -2565,7 +2567,7 @@ export default function HebrewMaster() {
         const newBadge = "🎯 חמשת אלפים";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       }
@@ -2575,14 +2577,14 @@ export default function HebrewMaster() {
         const newBadge = "⭐ מאה תשובות נכונות";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       } else if (newCorrect === 500 && correct < 500 && !badges.includes("🌟 חמש מאות תשובות")) {
         const newBadge = "🌟 חמש מאות תשובות";
         setBadges((prev) => [...prev, newBadge]);
         setShowBadge(newBadge);
-        sound.playSound("badge-earned");
+        audio.playSfx("sfx-badge");
         setTimeout(() => setShowBadge(null), 3000);
         saveBadge(newBadge);
       }
@@ -2598,7 +2600,7 @@ export default function HebrewMaster() {
             setPlayerLevel((prevLevel) => {
               const newLevel = prevLevel + 1;
               setShowLevelUp(true);
-              sound.playSound("level-up");
+              audio.playSfx("sfx-level-up");
               setTimeout(() => setShowLevelUp(false), 3000);
               if (typeof window !== "undefined") {
                 try {
@@ -2662,9 +2664,9 @@ export default function HebrewMaster() {
         (streak + 1) % 5 === 0 &&
         streak + 1 >= 5
       ) {
-        sound.playSound("streak");
+        audio.playSfx("sfx-streak");
       } else {
-        sound.playSound("correct");
+        audio.playSfx("sfx-correct");
       }
       
       // Update daily streak
@@ -2695,7 +2697,7 @@ export default function HebrewMaster() {
       setStreak(0);
       
       // Play sound for wrong answer
-      sound.playSound("wrong");
+      audio.playSfx("sfx-wrong");
       
       // שמירת שגיאה לתרגול ממוקד
       const topicKey = currentQuestion.topic || currentQuestion.operation || "reading";
@@ -2843,7 +2845,7 @@ export default function HebrewMaster() {
 
           if (nextLives <= 0) {
             setFeedback(LIVE_PRACTICE_GAME_OVER_HE);
-            sound.playSound("game-over");
+            audio.playSfx("sfx-game-over");
             recordSessionProgress();
             saveRunToStorage();
             setGameActive(false);
@@ -3210,7 +3212,7 @@ export default function HebrewMaster() {
           subtitle={`${playerName || "שחקן"} • ${GRADES[grade].name} • ${displayLevelLabel()} • ${getOperationName(operation)} • ${MODES[mode].name}`}
           onBack={backSafe}
           onCurriculumClick={() => router.push("/learning/curriculum?subject=hebrew")}
-          sound={sound}
+          audio={audio}
         />
 
         <div className="md:hidden">
@@ -3223,7 +3225,7 @@ export default function HebrewMaster() {
             compactHeader
             integratedTopRow
             centerSlot={
-              <LearningMasterMobileNavTitle MB={MB} title="📚 עברית" sound={sound} />
+              <LearningMasterMobileNavTitle MB={MB} title="📚 עברית" audio={audio} />
             }
           />
         </div>

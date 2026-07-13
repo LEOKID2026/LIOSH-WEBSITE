@@ -2,6 +2,8 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import EducationalDifficultyGradeHint from "../EducationalDifficultyGradeHint.jsx";
 import EducationalGameHudFullscreenButton from "../EducationalGameHudFullscreenButton.jsx";
+import EducationalGameInstructionReplay from "../shared/EducationalGameInstructionReplay.jsx";
+import { useEducationalEngineAudio } from "../../../hooks/educational-games/useEducationalGameAudio.js";
 import shop from "../shared/educational-game-shop-layout.module.css";
 import { calcTimeBonus } from "../../../lib/educational-games/continuous-play.js";
 import {
@@ -69,6 +71,20 @@ export default function LeoWordDetectiveGame({
   const diffConfig = LANGUAGE_DIFFICULTIES[difficulty];
   const task = tasks[taskIndex] ?? null;
   const tasksPerSession = tasks.length || LANGUAGE_SESSION_TASKS;
+  const instructionText = phase === "play" && task ? task.missionHe : "";
+
+  const {
+    onCorrect,
+    onWrong,
+    onStreak,
+    onTimeUp,
+    playFeedback,
+    replayInstruction,
+    audio,
+  } = useEducationalEngineAudio({
+    instructionText,
+    autoPlayInstruction: productionMode && phase === "play" && Boolean(task),
+  });
 
   mistakesRef.current = mistakes;
   const usedPieceIds = new Set(Object.values(zoneFills));
@@ -154,13 +170,16 @@ export default function LeoWordDetectiveGame({
     timerPausedRef.current = true;
     setCheckState("bad");
     setBoardAnim("shake");
-    setFeedback("הזמן נגמר! התיק נשאר פתוח.");
+    const timeoutText = "הזמן נגמר! התיק נשאר פתוח.";
+    setFeedback(timeoutText);
+    onTimeUp();
+    playFeedback(timeoutText);
     registerMistake(task);
     window.setTimeout(() => {
       if (mistakesRef.current >= diffConfig.maxMistakes) return;
       advanceTask();
     }, 1600);
-  }, [phase, registerMistake, advanceTask, diffConfig.maxMistakes]);
+  }, [phase, registerMistake, advanceTask, diffConfig.maxMistakes, onTimeUp, playFeedback, task]);
 
   useEffect(() => {
     if (phase !== "play" || !task || timerPausedRef.current) return undefined;
@@ -214,8 +233,9 @@ export default function LeoWordDetectiveGame({
       setSelectedPiece(null);
       setCheckState("idle");
       setFeedback("");
+      audio.playSfx("sfx-evidence");
     },
-    [task, selectedPiece, usedPieceIds, zoneFills],
+    [task, selectedPiece, usedPieceIds, zoneFills, audio],
   );
 
   const clearZone = useCallback(
@@ -254,7 +274,10 @@ export default function LeoWordDetectiveGame({
       const bonus = calcTimeBonus(timeLeft, timeLimitSec);
       setCheckState("ok");
       setBoardAnim("stamp");
-      setFeedback(detectiveFeedback(true));
+      const okText = detectiveFeedback(true);
+      setFeedback(okText);
+      onCorrect();
+      playFeedback(okText);
       setSuccessCount((c) => c + 1);
       setScore((s) => {
         let next = s + LANGUAGE_SCORE.correct + bonus;
@@ -266,6 +289,7 @@ export default function LeoWordDetectiveGame({
       setCurrentStreak((p) => {
         const next = p + 1;
         setBestStreak((best) => Math.max(best, next));
+        if (next === 3 || next === 5) onStreak();
         return next;
       });
       window.setTimeout(advanceTask, 1800);
@@ -274,10 +298,13 @@ export default function LeoWordDetectiveGame({
 
     setCheckState("bad");
     setBoardAnim("shake");
-    setFeedback(detectiveFeedback(false));
+    const badText = detectiveFeedback(false);
+    setFeedback(badText);
+    onWrong();
+    playFeedback(badText);
     registerMistake(task);
     window.setTimeout(() => setBoardAnim("idle"), 700);
-  }, [task, zoneFills, timeLeft, timeLimitSec, currentStreak, advanceTask, registerMistake]);
+  }, [task, zoneFills, timeLeft, timeLimitSec, currentStreak, advanceTask, registerMistake, onCorrect, onWrong, onStreak, playFeedback]);
 
   const endMetrics = useMemo(() => {
     if (phase !== "won" && phase !== "lost") return null;
@@ -435,14 +462,26 @@ export default function LeoWordDetectiveGame({
                   📁
                 </span>
                 <div className={shop.customerSpeechWrap}>
-                  <p className={shop.customerName}>תיק חקירה</p>
+                  <div className={shop.missionRow}>
+                    <p className={shop.customerName}>תיק חקירה</p>
+                    <EducationalGameInstructionReplay
+                      text={instructionText}
+                      onReplay={replayInstruction}
+                    />
+                  </div>
                   <p className={shop.missionText}>{task.missionHe}</p>
                 </div>
               </div>
             </aside>
 
             <div key={`desk-${taskKey}`} className={proto.missionDesktop}>
-              <p className={proto.missionDesktopTitle}>תיק חקירה</p>
+              <div className={shop.missionRow}>
+                <p className={proto.missionDesktopTitle}>תיק חקירה</p>
+                <EducationalGameInstructionReplay
+                  text={instructionText}
+                  onReplay={replayInstruction}
+                />
+              </div>
               <p className={proto.missionDesktopText}>{task.missionHe}</p>
             </div>
 

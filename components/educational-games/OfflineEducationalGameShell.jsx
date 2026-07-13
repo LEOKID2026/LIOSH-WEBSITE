@@ -1,8 +1,10 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { findEducationalGame } from "../../lib/educational-games/educational-game-registry.js";
 import { difficultyLabelHe } from "../../lib/educational-games/educational-game-registry.js";
+import { useEducationalGameAudio } from "../../hooks/educational-games/useEducationalGameAudio.js";
+import GameAudioFullscreenButton from "../game-audio/GameAudioFullscreenButton.jsx";
 import { useSoloGameShellUi } from "../../hooks/solo-games/useSoloGameShellUi.js";
 import { enterMobileGameFullscreenFromUserGesture } from "../../lib/solo-games/solo-game-fullscreen.client.js";
 import {
@@ -54,6 +56,7 @@ export default function OfflineEducationalGameShell({ gameKey }) {
   const [finishData, setFinishData] = useState(null);
 
   const { helpGame, openSoloGameHelp, closeSoloGameHelp } = useSoloGameHelp();
+  const { onSessionStart, onWon, onLost, stopAll } = useEducationalGameAudio();
 
   const handleStart = useCallback(() => {
     if (typeof document !== "undefined") {
@@ -61,11 +64,14 @@ export default function OfflineEducationalGameShell({ gameKey }) {
         document.querySelector("[data-educational-game-shell]"),
       );
     }
+    onSessionStart();
     setPhase("playing");
-  }, []);
+  }, [onSessionStart]);
 
   const handleSessionEnd = useCallback(
     (metrics) => {
+      if (metrics?.didWin === true) onWon();
+      else if (metrics?.didWin === false) onLost();
       const diff = metrics?.difficulty || difficulty;
       setFinishData({
         didWin: metrics?.didWin === true,
@@ -77,8 +83,10 @@ export default function OfflineEducationalGameShell({ gameKey }) {
       });
       setPhase("finish");
     },
-    [difficulty],
+    [difficulty, onWon, onLost],
   );
+
+  useEffect(() => () => stopAll(), [stopAll]);
 
   const handlePlayAgain = useCallback(() => {
     setFinishData(null);
@@ -109,8 +117,8 @@ export default function OfflineEducationalGameShell({ gameKey }) {
         <header
           className={
             themedShell
-              ? SG.header
-              : "flex shrink-0 items-center justify-between gap-2 border-b border-white/10 px-3 py-2 sm:px-4"
+              ? `${SG.header} relative`
+              : "relative flex shrink-0 items-center justify-between gap-2 border-b border-white/10 px-3 py-2 sm:px-4"
           }
         >
           <Link
@@ -134,6 +142,11 @@ export default function OfflineEducationalGameShell({ gameKey }) {
           >
             אופליין
           </Link>
+          {phase === "playing" ? (
+            <div className="absolute left-3 top-2 z-20 sm:left-4">
+              <GameAudioFullscreenButton />
+            </div>
+          ) : null}
         </header>
 
         <main className="relative flex min-h-0 flex-1 flex-col overflow-hidden">

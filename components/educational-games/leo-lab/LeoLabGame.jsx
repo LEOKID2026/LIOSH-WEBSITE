@@ -3,6 +3,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { sharedStyles as frame } from "../../prototypes/dev/learning/shared/LearningPrototypeFrame.jsx";
 import EducationalDifficultyGradeHint from "../EducationalDifficultyGradeHint.jsx";
 import EducationalGameHudFullscreenButton from "../EducationalGameHudFullscreenButton.jsx";
+import EducationalGameInstructionReplay from "../shared/EducationalGameInstructionReplay.jsx";
+import { useEducationalEngineAudio } from "../../../hooks/educational-games/useEducationalGameAudio.js";
 import shop from "../shared/educational-game-shop-layout.module.css";
 import LabItemVisual from "./LabItemVisual.jsx";
 import {
@@ -106,6 +108,24 @@ export default function LeoLabGame({
   const diffConfig = DIFFICULTIES[difficulty];
   const currentExperiment = experiments[experimentIndex] ?? null;
   const maxPick = currentExperiment?.pickCount ?? 2;
+  const instructionText =
+    phase === "play" && currentExperiment
+      ? `${currentExperiment.prompt} בחרו ${maxPick} חפצים`
+      : "";
+
+  const {
+    onCorrect,
+    onWrong,
+    onStreak,
+    onDragLift,
+    onDropOk,
+    onSmallSuccess,
+    playFeedback,
+    replayInstruction,
+  } = useEducationalEngineAudio({
+    instructionText,
+    autoPlayInstruction: productionMode && phase === "play" && Boolean(currentExperiment),
+  });
 
   const shelfItems = useMemo(
     () => (currentExperiment ? shelfItemsForExperiment(currentExperiment) : []),
@@ -167,7 +187,8 @@ export default function LeoLabGame({
     }
     setExperimentIndex(nextIdx);
     resetExperimentUi();
-  }, [experimentIndex, experiments.length, resetExperimentUi, endRun]);
+    onSmallSuccess();
+  }, [experimentIndex, experiments.length, resetExperimentUi, endRun, onSmallSuccess]);
 
   const toggleItem = useCallback(
     (itemId) => {
@@ -210,11 +231,11 @@ export default function LeoLabGame({
       setResultIcon(exp.resultIcon);
       setResultText(exp.resultText);
       const firstTry = attemptNum === 1;
-      setFeedback({
-        text: successFeedbackMessage(firstTry),
-        fact: exp.fact,
-        type: "ok",
-      });
+      const okText = successFeedbackMessage(firstTry);
+      setFeedback({ text: okText, fact: exp.fact, type: "ok" });
+      onCorrect();
+      playFeedback(okText);
+      if (exp.fact) playFeedback(exp.fact);
       setSuccessCount((c) => c + 1);
       addScore(SCORE.correct);
       if (firstTry) {
@@ -227,6 +248,7 @@ export default function LeoLabGame({
         setBestStreak((best) => Math.max(best, next));
         if (next === 3) addScore(SCORE.streak3);
         if (next === 5) addScore(SCORE.streak5);
+        if (next === 3 || next === 5) onStreak();
         return next;
       });
 
@@ -242,11 +264,10 @@ export default function LeoLabGame({
     setMistakes(nextMistakes);
     setFailedAttempts((f) => f + 1);
 
-    setFeedback({
-      text: feedbackMessageForReason(result.reason, exp.pickCount),
-      fact: "",
-      type: "bad",
-    });
+    const badText = feedbackMessageForReason(result.reason, exp.pickCount);
+    setFeedback({ text: badText, fact: "", type: "bad" });
+    onWrong();
+    playFeedback(badText);
 
     if (nextMistakes >= diffConfig.maxMistakes) {
       window.setTimeout(() => {
@@ -261,6 +282,10 @@ export default function LeoLabGame({
     mistakes,
     diffConfig.maxMistakes,
     endRun,
+    onCorrect,
+    onWrong,
+    onStreak,
+    playFeedback,
   ]);
 
   const onShelfPointerDown = useCallback(
@@ -282,8 +307,9 @@ export default function LeoLabGame({
       };
       setDraggingItemId(itemId);
       setDragGhost({ itemId, x: e.clientX, y: e.clientY });
+      onDragLift();
     },
-    [maxPick, showResult],
+    [maxPick, showResult, onDragLift],
   );
 
   const onShelfClick = useCallback(
@@ -322,6 +348,7 @@ export default function LeoLabGame({
       if (drag.moved) {
         const zone = findDropZoneAtPoint(e.clientX, e.clientY);
         if (zone === "bench") {
+          onDropOk();
           setSelectedIds((prev) => {
             if (prev.includes(drag.itemId)) return prev;
             if (prev.length >= maxPick) return prev;
@@ -359,7 +386,7 @@ export default function LeoLabGame({
       document.body.style.touchAction = prevTouchAction;
       document.body.style.overflow = prevOverflow;
     };
-  }, [draggingItemId, maxPick]);
+  }, [draggingItemId, maxPick, onDropOk]);
 
   const accuracyPct =
     experiments.length > 0
@@ -503,7 +530,13 @@ export default function LeoLabGame({
                   {currentExperiment.missionIcon ?? "🦁👨‍🔬"}
                 </span>
                 <div className={shop.customerSpeechWrap}>
-                  <p className={shop.customerName}>{currentExperiment.title}</p>
+                  <div className={shop.missionRow}>
+                    <p className={shop.customerName}>{currentExperiment.title}</p>
+                    <EducationalGameInstructionReplay
+                      text={instructionText}
+                      onReplay={replayInstruction}
+                    />
+                  </div>
                   <p className={shop.missionText}>
                     {currentExperiment.prompt}
                     <span className={shop.missionTicket}>🧾 בחרו {maxPick} חפצים</span>

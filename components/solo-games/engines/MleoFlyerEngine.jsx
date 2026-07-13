@@ -3,18 +3,13 @@ import SoloGameMobileFullscreenButton from "../SoloGameMobileFullscreenButton.js
 import SoloGameEndInterstitialOverlay from "../SoloGameEndInterstitialOverlay.jsx";
 import SoloGamePortraitRecommendationModal from "../SoloGamePortraitRecommendationModal.jsx";
 import { useSoloGameMobileFullscreen } from "../../../hooks/solo-games/useSoloGameMobileFullscreen.js";
+import { useSoloEngineAudio } from "../../../hooks/solo-games/useSoloGameAudio.js";
 
 const BG_IMAGES = ["/images/game1.png", "/images/game2.png", "/images/game3.png", "/images/game4.png"];
 const SPRITE_DOG = "/images/leo2.png";
 const IMG_COIN = "/images/coin.png";
 const IMG_DIAMOND = "/images/diamond.png";
 const IMG_OBSTACLE = "/images/obstacle1.png";
-
-const SND_FLAP = "/sounds/flap2.mp3";
-const SND_WIN = "/sounds/win.mp3";
-const SND_LOSE = "/sounds/game-over.mp3";
-const SND_COIN = "/sounds/coin.mp3";
-const SND_BOMB = "/sounds/bomb.mp3";
 
 // Sizes per type (px)
 const sizeCoin = 42;
@@ -25,6 +20,10 @@ const sizeBomb = 50;
  * @param {{ autoStart?: boolean, onSessionEnd?: (metrics: object) => void }} props
  */
 export default function MleoFlyerEngine({ autoStart = false, onSessionEnd }) {
+  const sfx = useSoloEngineAudio();
+  const sfxRef = useRef(sfx);
+  sfxRef.current = sfx;
+
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
   const pendingSessionEndRef = useRef(null);
@@ -82,7 +81,6 @@ export default function MleoFlyerEngine({ autoStart = false, onSessionEnd }) {
     coin: null,
     diamond: null,
     obstacle: null,
-    sounds: {},
   });
 
   // ─────────────────────────────────────────────────────────────────────────────
@@ -135,17 +133,6 @@ export default function MleoFlyerEngine({ autoStart = false, onSessionEnd }) {
     loadImage(IMG_COIN).then((img) => (assetsRef.current.coin = img));
     loadImage(IMG_DIAMOND).then((img) => (assetsRef.current.diamond = img));
     loadImage(IMG_OBSTACLE).then((img) => (assetsRef.current.obstacle = img));
-
-    if (typeof Audio !== "undefined") {
-      assetsRef.current.sounds = {
-        flap: new Audio(SND_FLAP),
-        win: new Audio(SND_WIN),
-        lose: new Audio(SND_LOSE),
-        coin: new Audio(SND_COIN),
-        bomb: new Audio(SND_BOMB),
-      };
-      Object.values(assetsRef.current.sounds).forEach((a) => (a.volume = 1.0));
-    }
 
     if (typeof window !== "undefined") {
       const hs = Number(localStorage.getItem("mleoFlyerHighScore") || 0);
@@ -330,13 +317,13 @@ export default function MleoFlyerEngine({ autoStart = false, onSessionEnd }) {
         if (it.type === "coin") {
           const ns = scoreRef.current + 1;
           scoreRef.current = ns; setScore(ns);
-          assetsRef.current.sounds.coin?.play().catch(() => {});
+          sfxRef.current.playCoin();
         } else if (it.type === "diamond") {
           const ns = scoreRef.current + 5;
           scoreRef.current = ns; setScore(ns);
-          assetsRef.current.sounds.coin?.play().catch(() => {});
+          sfxRef.current.playDiamond();
         } else {
-          assetsRef.current.sounds.bomb?.play().catch(() => {});
+          sfxRef.current.playHit();
           runningRef.current = false;
           setGameRunning(false);
           setGameOver(true);
