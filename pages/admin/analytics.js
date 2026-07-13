@@ -15,6 +15,7 @@ import {
   formatAnalyticsSourceHe,
   formatAnalyticsTableHe,
   formatAnalyticsUnitHe,
+  formatWebTrafficLabelHe,
 } from "../../lib/admin-portal/admin-analytics-labels.he.js";
 import { trackProductEvent } from "../../lib/analytics/track-event.client.js";
 
@@ -375,6 +376,46 @@ function SimpleTable({ rows, columns, empty = "אין נתונים בטווח" }
   );
 }
 
+function webTrafficRowsSummary(rows, emptyText = "אין נתונים בטווח") {
+  if (!Array.isArray(rows) || rows.length === 0) return emptyText;
+  const top = rows[0];
+  const dimension = top.dimension || "generic";
+  const label = formatWebTrafficLabelHe(top.rawLabel || top.label || top.key, dimension);
+  if (top?.value != null) {
+    return `${label}: ${top.value}`;
+  }
+  if (top?.date != null) {
+    return `${rows.length} רשומות · אחרון: ${formatWebTrafficLabelHe(top.rawLabel || top.date, "daily")}`;
+  }
+  return `${rows.length} רשומות`;
+}
+
+function WebTrafficTopList({ title, rows, dimension = "generic" }) {
+  return (
+    <div className={title ? "rounded-xl border border-white/10 bg-white/[0.02] p-2" : ""}>
+      {title ? <h4 className="font-semibold mb-2 text-sm text-white/85">{title}</h4> : null}
+      <SimpleTable
+        rows={rows}
+        columns={[
+          {
+            key: "label",
+            label: "שם",
+            render: (row) =>
+              formatWebTrafficLabelHe(row.rawLabel || row.label || row.key, row.dimension || dimension),
+          },
+          { key: "value", label: "כמות" },
+        ]}
+      />
+    </div>
+  );
+}
+
+function WebTrafficUserActivityStatus({ loading, error }) {
+  if (loading) return <p className="text-sm text-white/60">{ADMIN_LOADING}</p>;
+  if (error) return <p className="text-sm text-red-300">{error}</p>;
+  return null;
+}
+
 function TopList({ title, rows }) {
   return (
     <div className={title ? "rounded-xl border border-white/10 bg-white/[0.02] p-2" : ""}>
@@ -585,7 +626,9 @@ export default function AdminAnalyticsPage() {
   const [webTraffic, setWebTraffic] = useState(null);
   const [webTrafficLoading, setWebTrafficLoading] = useState(false);
   const [webTrafficError, setWebTrafficError] = useState("");
-  const [trafficAlignedDashboard, setTrafficAlignedDashboard] = useState(null);
+  const [webTrafficUserActivity, setWebTrafficUserActivity] = useState(null);
+  const [webTrafficUserActivityLoading, setWebTrafficUserActivityLoading] = useState(false);
+  const [webTrafficUserActivityError, setWebTrafficUserActivityError] = useState("");
   const trackedOpenKeyRef = useRef("");
   const { openPanels, togglePanel, openAllPanels, closeAllPanels, isPanelOpen } = usePanelToggleState();
 
@@ -641,33 +684,27 @@ export default function AdminAnalyticsPage() {
     setWebTrafficLoading(false);
   }, []);
 
-  const needsTrafficAlignedActivity = useCallback(
-    (trafficPreset) => trafficPreset !== preset || preset === "custom" || preset === "currentMonth",
-    [preset]
-  );
-
-  const loadTrafficAlignedActivity = useCallback(
-    async (token, trafficPreset) => {
-      if (!needsTrafficAlignedActivity(trafficPreset)) {
-        setTrafficAlignedDashboard(null);
-        return;
-      }
-      const qs = new URLSearchParams({
-        preset: trafficPreset,
-        grade: "all",
-        subject: "all",
-        childStatus: "all",
-      });
-      const res = await adminAuthFetch(token, `/api/admin/analytics?${qs.toString()}`);
-      const body = await res.json().catch(() => ({}));
-      if (!res.ok || !body?.data?.sections?.userActivity) {
-        setTrafficAlignedDashboard(null);
-        return;
-      }
-      setTrafficAlignedDashboard(body.data);
-    },
-    [needsTrafficAlignedActivity]
-  );
+  const loadWebTrafficUserActivity = useCallback(async (token, trafficPreset) => {
+    setWebTrafficUserActivityLoading(true);
+    setWebTrafficUserActivityError("");
+    setWebTrafficUserActivity(null);
+    const qs = new URLSearchParams({
+      preset: trafficPreset,
+      grade: "all",
+      subject: "all",
+      childStatus: "all",
+    });
+    const res = await adminAuthFetch(token, `/api/admin/analytics?${qs.toString()}`);
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok || !body?.data?.sections?.userActivity) {
+      setWebTrafficUserActivity(null);
+      setWebTrafficUserActivityError(apiErrorMessageHe(body?.error, ADMIN_LOAD_ERROR));
+      setWebTrafficUserActivityLoading(false);
+      return;
+    }
+    setWebTrafficUserActivity(body.data.sections.userActivity);
+    setWebTrafficUserActivityLoading(false);
+  }, []);
 
   useEffect(() => {
     setWebTrafficPreset(webTrafficPresetFromDashboard(preset));
@@ -682,8 +719,13 @@ export default function AdminAnalyticsPage() {
     if (state !== "ready" || !accessToken) return;
     if (activeTab !== "webTraffic" && activeTab !== "overview") return;
     void loadWebTraffic(accessToken, webTrafficPreset);
-    void loadTrafficAlignedActivity(accessToken, webTrafficPreset);
-  }, [state, accessToken, activeTab, webTrafficPreset, loadWebTraffic, loadTrafficAlignedActivity]);
+  }, [state, accessToken, activeTab, webTrafficPreset, loadWebTraffic]);
+
+  useEffect(() => {
+    if (state !== "ready" || !accessToken) return;
+    if (activeTab !== "webTraffic") return;
+    void loadWebTrafficUserActivity(accessToken, webTrafficPreset);
+  }, [state, accessToken, activeTab, webTrafficPreset, loadWebTrafficUserActivity]);
 
   const sections = dashboard?.sections || {};
   const sourceErrors = dashboard?.sourceErrors || [];
@@ -772,14 +814,16 @@ export default function AdminAnalyticsPage() {
     [preset, from, to, grade, subject, childStatus, dashboard]
   );
 
-  const userActivitySection = useMemo(() => {
-    if (trafficAlignedDashboard?.sections?.userActivity) return trafficAlignedDashboard.sections.userActivity;
-    return sections.userActivity;
-  }, [sections.userActivity, trafficAlignedDashboard]);
+  const overviewUserActivitySection = sections.userActivity;
 
-  const mergedActivityFunnel = useMemo(
-    () => mergeActivityFunnel(userActivitySection?.funnel, webTraffic),
-    [userActivitySection?.funnel, webTraffic]
+  const overviewMergedFunnel = useMemo(
+    () => mergeActivityFunnel(overviewUserActivitySection?.funnel, webTraffic),
+    [overviewUserActivitySection?.funnel, webTraffic]
+  );
+
+  const webTrafficTabMergedFunnel = useMemo(
+    () => mergeActivityFunnel(webTrafficUserActivity?.funnel, webTraffic),
+    [webTrafficUserActivity?.funnel, webTraffic]
   );
 
   const renderTabContent = () => {
@@ -800,24 +844,24 @@ export default function AdminAnalyticsPage() {
               title="משפך סיכום"
               subtitle="תנועה באתר (Vercel) מול פעילות משתמשים (Supabase)"
               summary={
-                mergedActivityFunnel?.steps?.length
-                  ? `${mergedActivityFunnel.steps.length} שלבים`
+                overviewMergedFunnel?.steps?.length
+                  ? `${overviewMergedFunnel.steps.length} שלבים`
                   : "אין נתונים בטווח"
               }
               toggle={togglePanel}
               isOpen={isPanelOpen("overview-funnel")}
             >
-              <ActivityFunnelSummary funnel={mergedActivityFunnel} />
+              <ActivityFunnelSummary funnel={overviewMergedFunnel} />
             </Panel>
             <Panel
               panelId="overview-user-activity"
               title="פעילות משתמשים — Supabase"
               subtitle="אורחים, הורים, למידה ומשחקים (ללא חשבונות מערכת, QA ומנהלים)"
-              summary={metricsSummary(userActivitySection?.cards)}
+              summary={metricsSummary(overviewUserActivitySection?.cards)}
               toggle={togglePanel}
               isOpen={isPanelOpen("overview-user-activity")}
             >
-              <MetricGrid items={userActivitySection?.cards} />
+              <MetricGrid items={overviewUserActivitySection?.cards} />
             </Panel>
             <Panel
               panelId="overview-summary"
@@ -848,7 +892,7 @@ export default function AdminAnalyticsPage() {
                   setWebTrafficPreset(next);
                   if (accessToken) {
                     void loadWebTraffic(accessToken, next);
-                    void loadTrafficAlignedActivity(accessToken, next);
+                    void loadWebTrafficUserActivity(accessToken, next);
                   }
                 }}
               />
@@ -872,14 +916,19 @@ export default function AdminAnalyticsPage() {
               panelId="web-traffic-daily"
               title="גרף לפי יום"
               subtitle="צפיות ומבקרים לפי תאריך"
-              summary={rowsSummary(webTraffic?.daily)}
+              summary={webTrafficRowsSummary(webTraffic?.daily)}
               toggle={togglePanel}
               isOpen={isPanelOpen("web-traffic-daily")}
             >
               <SimpleTable
                 rows={webTraffic?.daily || []}
                 columns={[
-                  { key: "label", label: "תאריך", render: (row) => formatDateHe(row.date || row.label) },
+                  {
+                    key: "label",
+                    label: "תאריך",
+                    render: (row) =>
+                      formatWebTrafficLabelHe(row.rawLabel || row.label || row.date, "daily"),
+                  },
                   { key: "visitors", label: "מבקרים", render: (row) => formatTrafficNumber(row.visitors) },
                   { key: "pageviews", label: "צפיות", render: (row) => formatTrafficNumber(row.pageviews) },
                 ]}
@@ -889,46 +938,60 @@ export default function AdminAnalyticsPage() {
             <Panel
               panelId="web-traffic-pages"
               title="דפים מובילים"
-              summary={rowsSummary(webTraffic?.topPages)}
+              summary={webTrafficRowsSummary(webTraffic?.topPages)}
               toggle={togglePanel}
               isOpen={isPanelOpen("web-traffic-pages")}
             >
-              <TopList rows={webTraffic?.topPages} />
+              <WebTrafficTopList rows={webTraffic?.topPages} dimension="requestPath" />
             </Panel>
             <Panel
               panelId="web-traffic-referrers"
               title="מקורות הגעה"
-              summary={rowsSummary(webTraffic?.referrers)}
+              summary={webTrafficRowsSummary(webTraffic?.referrers)}
               toggle={togglePanel}
               isOpen={isPanelOpen("web-traffic-referrers")}
             >
-              <TopList rows={webTraffic?.referrers} />
+              <WebTrafficTopList rows={webTraffic?.referrers} dimension="referrerHostname" />
             </Panel>
             <Panel
               panelId="web-traffic-devices"
               title="מכשירים, דפדפנים ומדינות"
-              summary={rowsSummary(webTraffic?.devices)}
+              summary={webTrafficRowsSummary(webTraffic?.devices)}
               toggle={togglePanel}
               isOpen={isPanelOpen("web-traffic-devices")}
             >
               <div className="grid grid-cols-1 xl:grid-cols-3 gap-2">
-                <TopList title="מכשירים" rows={webTraffic?.devices} />
-                <TopList title="דפדפנים" rows={webTraffic?.browsers} />
-                <TopList title="מדינות" rows={webTraffic?.countries} />
+                <WebTrafficTopList title="מכשירים" rows={webTraffic?.devices} dimension="deviceType" />
+                <WebTrafficTopList title="דפדפנים" rows={webTraffic?.browsers} dimension="browserName" />
+                <WebTrafficTopList title="מדינות" rows={webTraffic?.countries} dimension="country" />
               </div>
             </Panel>
             <Panel
               panelId="web-traffic-user-activity"
               title="פעילות משתמשים — Supabase"
               subtitle="אותו טווח תאריכים כפי שנבחר לתנועה באתר"
-              summary={metricsSummary(userActivitySection?.cards)}
+              summary={
+                webTrafficUserActivityLoading
+                  ? ADMIN_LOADING
+                  : webTrafficUserActivityError
+                    ? "שגיאה בטעינה"
+                    : metricsSummary(webTrafficUserActivity?.cards)
+              }
               toggle={togglePanel}
               isOpen={isPanelOpen("web-traffic-user-activity")}
             >
-              <ActivityFunnelSummary funnel={mergedActivityFunnel} />
-              <div className="mt-3">
-                <MetricGrid items={userActivitySection?.cards} />
-              </div>
+              <WebTrafficUserActivityStatus
+                loading={webTrafficUserActivityLoading}
+                error={webTrafficUserActivityError}
+              />
+              {!webTrafficUserActivityLoading && !webTrafficUserActivityError ? (
+                <>
+                  <ActivityFunnelSummary funnel={webTrafficTabMergedFunnel} />
+                  <div className="mt-3">
+                    <MetricGrid items={webTrafficUserActivity?.cards} />
+                  </div>
+                </>
+              ) : null}
             </Panel>
           </div>
         );

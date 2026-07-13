@@ -35,6 +35,26 @@ assert.match(page, /משפך סיכום/, "overview must include activity funnel
 assert.doesNotMatch(page, /VERCEL_ANALYTICS_ACCESS_TOKEN/, "client page must not reference Vercel token env");
 assert.doesNotMatch(page, /visitor_id/, "client page must not reference visitor_id");
 
+assert.match(page, /formatWebTrafficLabelHe/, "page must use dedicated Vercel label formatter");
+assert.match(page, /WebTrafficTopList/, "page must render Vercel top lists with dedicated formatter");
+assert.match(page, /loadWebTrafficUserActivity/, "page must fetch Supabase user activity for web traffic tab");
+assert.doesNotMatch(page, /trafficAlignedDashboard/, "page must not fall back to global preset for web traffic Supabase");
+assert.doesNotMatch(page, /needsTrafficAlignedActivity/, "page must always align Supabase to webTrafficPreset");
+assert.match(webTrafficServer, /labelKey: "timestamp"/, "daily aggregate must use timestamp labelKey");
+assert.match(webTrafficServer, /rawLabel/, "aggregate rows must keep raw label separate from numeric value");
+
+const { formatWebTrafficLabelHe } = await import(u("lib/admin-portal/admin-analytics-labels.he.js"));
+assert.equal(formatWebTrafficLabelHe("2026-07-13T00:00:00.000Z", "daily"), "13.7.2026");
+assert.equal(formatWebTrafficLabelHe("/", "requestPath"), "/");
+assert.equal(formatWebTrafficLabelHe("/parent/login", "requestPath"), "/parent/login");
+assert.equal(formatWebTrafficLabelHe("mobile", "deviceType"), "נייד");
+assert.equal(formatWebTrafficLabelHe("desktop", "deviceType"), "מחשב");
+assert.equal(formatWebTrafficLabelHe("tablet", "deviceType"), "טאבלט");
+assert.equal(formatWebTrafficLabelHe("Chrome", "browserName"), "Chrome");
+assert.equal(formatWebTrafficLabelHe("IL", "country"), "IL");
+assert.notEqual(formatWebTrafficLabelHe("mobile", "deviceType"), "תרגול");
+assert.notEqual(formatWebTrafficLabelHe("/", "requestPath"), "תרגול");
+
 const analyticsServer = read("lib/admin-server/admin-analytics.server.js");
 assert.match(analyticsServer, /buildUserActivityAnalytics/, "analytics server must build user activity section");
 assert.match(analyticsServer, /solo_game_sessions/, "analytics server must query solo_game_sessions");
@@ -87,7 +107,7 @@ try {
         status: 200,
         async json() {
           return {
-            data: [{ day: "2026-07-13", pageviews: 4, visitors: 2, visitor_id: "secret" }],
+            data: [{ timestamp: "2026-07-13T00:00:00.000Z", pageviews: 4, visitors: 2, visitor_id: "secret" }],
           };
         },
       };
@@ -111,6 +131,9 @@ try {
   assert.equal(first.summary.visitors, 3);
   assert.equal(first.summary.pageviews, 9);
   assert.ok(!JSON.stringify(first).includes("visitor_id"), "response must not include visitor_id");
+  assert.equal(first.daily[0]?.rawLabel, "2026-07-13T00:00:00.000Z");
+  assert.equal(first.daily[0]?.dimension, "daily");
+  assert.equal(first.daily[0]?.pageviews, 4);
   const callsAfterFirst = fetchCalls;
 
   const second = await getAdminWebTrafficAnalytics({ preset: "last7" });
