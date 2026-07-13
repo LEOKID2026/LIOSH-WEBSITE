@@ -61,6 +61,7 @@ const CHILD_STATUSES = [
 /** Main navigation tabs — only one tab panel visible at a time. */
 export const ANALYTICS_MAIN_TABS = [
   { id: "overview", label: "סקירה כללית" },
+  { id: "webTraffic", label: "תנועה באתר" },
   { id: "accounts", label: "חשבונות" },
   { id: "parents", label: "הורים" },
   { id: "children", label: "ילדים" },
@@ -123,6 +124,112 @@ function FilterSummaryBar({
       </div>
       {open ? <div className="mt-2 pt-2 border-t border-white/10">{children}</div> : null}
     </section>
+  );
+}
+
+const WEB_TRAFFIC_PRESETS = [
+  { value: "today", label: "היום" },
+  { value: "last7", label: "7 ימים" },
+  { value: "last30", label: "30 ימים" },
+];
+
+function webTrafficPresetFromDashboard(preset) {
+  return WEB_TRAFFIC_PRESETS.some((item) => item.value === preset) ? preset : "last30";
+}
+
+function mergeActivityFunnel(userActivityFunnel, webTraffic) {
+  if (!userActivityFunnel) return null;
+  const visitors = webTraffic?.status === "available" ? webTraffic.summary?.visitors : null;
+  const steps = (userActivityFunnel.steps || []).map((step) => {
+    if (step.key !== "visitors") return step;
+    return {
+      ...step,
+      value: visitors,
+      placeholder: visitors == null,
+      status: webTraffic?.status === "not_configured" ? "not_configured" : visitors == null ? "unavailable" : "available",
+    };
+  });
+  return { ...userActivityFunnel, steps };
+}
+
+function formatTrafficNumber(value) {
+  if (value == null || value === "") return "—";
+  return new Intl.NumberFormat("he-IL").format(value);
+}
+
+function ActivityFunnelSummary({ funnel }) {
+  if (!funnel?.steps?.length) {
+    return <p className="text-sm text-white/50">אין נתונים עדיין</p>;
+  }
+  return (
+    <div className="space-y-2">
+      {funnel.disclaimer ? (
+        <p className="text-xs text-white/55 leading-relaxed">{funnel.disclaimer}</p>
+      ) : null}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-2">
+        {funnel.steps.map((step) => (
+          <div key={step.key} className="rounded-xl border border-white/10 bg-white/[0.02] p-3">
+            <p className="text-[11px] text-white/55 mb-1">{formatAnalyticsLabelHe(step.label)}</p>
+            <p className="text-xl font-bold text-white">
+              {step.placeholder && step.value == null ? "—" : formatTrafficNumber(step.value)}
+            </p>
+            <p className="text-[10px] text-white/40 mt-1 break-words">מקור: {formatAnalyticsSourceHe(step.source)}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function WebTrafficStatusMessage({ webTraffic, loading, error }) {
+  if (loading) return <p className="text-sm text-white/60">{ADMIN_LOADING}</p>;
+  if (error) return <p className="text-sm text-red-300">{error}</p>;
+  if (!webTraffic) return null;
+  if (webTraffic.status === "not_configured") {
+    return <p className="text-sm text-amber-100/90">{webTraffic.message}</p>;
+  }
+  if (webTraffic.status !== "available" && webTraffic.message) {
+    return <p className="text-sm text-amber-100/90">{webTraffic.message}</p>;
+  }
+  return null;
+}
+
+function WebTrafficSummaryCards({ webTraffic }) {
+  if (!webTraffic || webTraffic.status !== "available") return null;
+  const items = [
+    { label: "מבקרים", value: webTraffic.summary?.visitors, source: "vercel_web_analytics" },
+    { label: "צפיות בדפים", value: webTraffic.summary?.pageviews, source: "vercel_web_analytics" },
+  ];
+  return (
+    <MetricGrid
+      items={items.map((item) => ({
+        label: item.label,
+        value: item.value,
+        status: item.value == null ? "empty" : "available",
+        source: item.source,
+      }))}
+    />
+  );
+}
+
+function WebTrafficPresetBar({ value, onChange }) {
+  return (
+    <div className="flex flex-wrap gap-2">
+      {WEB_TRAFFIC_PRESETS.map((item) => (
+        <button
+          key={item.value}
+          type="button"
+          onClick={() => onChange(item.value)}
+          className={`rounded-lg border px-3 py-1.5 text-xs font-semibold ${
+            value === item.value
+              ? "border-amber-400/50 bg-amber-400/15 text-amber-100"
+              : "border-white/15 text-white/75 hover:bg-white/5"
+          }`}
+        >
+          {item.label}
+        </button>
+      ))}
+    </div>
   );
 }
 
@@ -474,6 +581,11 @@ export default function AdminAnalyticsPage() {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [webTrafficPreset, setWebTrafficPreset] = useState("last30");
+  const [webTraffic, setWebTraffic] = useState(null);
+  const [webTrafficLoading, setWebTrafficLoading] = useState(false);
+  const [webTrafficError, setWebTrafficError] = useState("");
+  const [trafficAlignedDashboard, setTrafficAlignedDashboard] = useState(null);
   const trackedOpenKeyRef = useRef("");
   const { openPanels, togglePanel, openAllPanels, closeAllPanels, isPanelOpen } = usePanelToggleState();
 
@@ -513,17 +625,80 @@ export default function AdminAnalyticsPage() {
     setLoading(false);
   }, [childStatus, grade, preset, queryString, subject]);
 
+  const loadWebTraffic = useCallback(async (token, trafficPreset) => {
+    setWebTrafficLoading(true);
+    setWebTrafficError("");
+    const qs = new URLSearchParams({ preset: trafficPreset });
+    const res = await adminAuthFetch(token, `/api/admin/analytics/web-traffic?${qs.toString()}`);
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      setWebTraffic(null);
+      setWebTrafficError(apiErrorMessageHe(body?.error, ADMIN_LOAD_ERROR));
+      setWebTrafficLoading(false);
+      return;
+    }
+    setWebTraffic(body?.data || null);
+    setWebTrafficLoading(false);
+  }, []);
+
+  const needsTrafficAlignedActivity = useCallback(
+    (trafficPreset) => trafficPreset !== preset || preset === "custom" || preset === "currentMonth",
+    [preset]
+  );
+
+  const loadTrafficAlignedActivity = useCallback(
+    async (token, trafficPreset) => {
+      if (!needsTrafficAlignedActivity(trafficPreset)) {
+        setTrafficAlignedDashboard(null);
+        return;
+      }
+      const qs = new URLSearchParams({
+        preset: trafficPreset,
+        grade: "all",
+        subject: "all",
+        childStatus: "all",
+      });
+      const res = await adminAuthFetch(token, `/api/admin/analytics?${qs.toString()}`);
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok || !body?.data?.sections?.userActivity) {
+        setTrafficAlignedDashboard(null);
+        return;
+      }
+      setTrafficAlignedDashboard(body.data);
+    },
+    [needsTrafficAlignedActivity]
+  );
+
+  useEffect(() => {
+    setWebTrafficPreset(webTrafficPresetFromDashboard(preset));
+  }, [preset]);
+
   useEffect(() => {
     if (state !== "ready" || !accessToken) return;
     void load(accessToken);
   }, [state, accessToken, load]);
+
+  useEffect(() => {
+    if (state !== "ready" || !accessToken) return;
+    if (activeTab !== "webTraffic" && activeTab !== "overview") return;
+    void loadWebTraffic(accessToken, webTrafficPreset);
+    void loadTrafficAlignedActivity(accessToken, webTrafficPreset);
+  }, [state, accessToken, activeTab, webTrafficPreset, loadWebTraffic, loadTrafficAlignedActivity]);
 
   const sections = dashboard?.sections || {};
   const sourceErrors = dashboard?.sourceErrors || [];
 
   const tabPanelIds = useMemo(
     () => ({
-      overview: ["overview-summary"],
+      overview: ["overview-funnel", "overview-user-activity", "overview-summary"],
+      webTraffic: [
+        "web-traffic-vercel",
+        "web-traffic-daily",
+        "web-traffic-pages",
+        "web-traffic-referrers",
+        "web-traffic-devices",
+        "web-traffic-user-activity",
+      ],
       accounts: [
         "accounts-totals",
         "accounts-by-date",
@@ -597,6 +772,16 @@ export default function AdminAnalyticsPage() {
     [preset, from, to, grade, subject, childStatus, dashboard]
   );
 
+  const userActivitySection = useMemo(() => {
+    if (trafficAlignedDashboard?.sections?.userActivity) return trafficAlignedDashboard.sections.userActivity;
+    return sections.userActivity;
+  }, [sections.userActivity, trafficAlignedDashboard]);
+
+  const mergedActivityFunnel = useMemo(
+    () => mergeActivityFunnel(userActivitySection?.funnel, webTraffic),
+    [userActivitySection?.funnel, webTraffic]
+  );
+
   const renderTabContent = () => {
     if (!dashboard) return null;
 
@@ -611,6 +796,30 @@ export default function AdminAnalyticsPage() {
               onCloseAll={closeAllPanels}
             />
             <Panel
+              panelId="overview-funnel"
+              title="משפך סיכום"
+              subtitle="תנועה באתר (Vercel) מול פעילות משתמשים (Supabase)"
+              summary={
+                mergedActivityFunnel?.steps?.length
+                  ? `${mergedActivityFunnel.steps.length} שלבים`
+                  : "אין נתונים בטווח"
+              }
+              toggle={togglePanel}
+              isOpen={isPanelOpen("overview-funnel")}
+            >
+              <ActivityFunnelSummary funnel={mergedActivityFunnel} />
+            </Panel>
+            <Panel
+              panelId="overview-user-activity"
+              title="פעילות משתמשים — Supabase"
+              subtitle="אורחים, הורים, למידה ומשחקים (ללא חשבונות מערכת, QA ומנהלים)"
+              summary={metricsSummary(userActivitySection?.cards)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("overview-user-activity")}
+            >
+              <MetricGrid items={userActivitySection?.cards} />
+            </Panel>
+            <Panel
               panelId="overview-summary"
               title="סיכום כללי"
               subtitle="מדדי שימוש מרכזיים ממקורות מאגר הנתונים הקיימים"
@@ -619,6 +828,107 @@ export default function AdminAnalyticsPage() {
               isOpen={isPanelOpen("overview-summary")}
             >
               <MetricGrid items={sections.overview} />
+            </Panel>
+          </div>
+        );
+
+      case "webTraffic":
+        return (
+          <div className="space-y-2">
+            <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
+            <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 space-y-2">
+              <p className="text-sm text-white/75 leading-relaxed">
+                <span className="font-semibold text-white/90">תנועה באתר — Vercel:</span> מבקרים שפתחו או גלשו באתר, גם בלי להירשם.
+                {" "}
+                <span className="font-semibold text-white/90">פעילות משתמשים — Supabase:</span> אורחים, הורים, למידה ומשחקים שנרשמו בפועל.
+              </p>
+              <WebTrafficPresetBar
+                value={webTrafficPreset}
+                onChange={(next) => {
+                  setWebTrafficPreset(next);
+                  if (accessToken) {
+                    void loadWebTraffic(accessToken, next);
+                    void loadTrafficAlignedActivity(accessToken, next);
+                  }
+                }}
+              />
+            </div>
+            <Panel
+              panelId="web-traffic-vercel"
+              title="תנועה באתר — Vercel"
+              subtitle="מבקרים וצפיות בדפים"
+              summary={
+                webTraffic?.status === "available"
+                  ? `מבקרים: ${formatTrafficNumber(webTraffic.summary?.visitors)} · צפיות: ${formatTrafficNumber(webTraffic.summary?.pageviews)}`
+                  : webTraffic?.message || "טוען..."
+              }
+              toggle={togglePanel}
+              isOpen={isPanelOpen("web-traffic-vercel")}
+            >
+              <WebTrafficStatusMessage webTraffic={webTraffic} loading={webTrafficLoading} error={webTrafficError} />
+              <WebTrafficSummaryCards webTraffic={webTraffic} />
+            </Panel>
+            <Panel
+              panelId="web-traffic-daily"
+              title="גרף לפי יום"
+              subtitle="צפיות ומבקרים לפי תאריך"
+              summary={rowsSummary(webTraffic?.daily)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("web-traffic-daily")}
+            >
+              <SimpleTable
+                rows={webTraffic?.daily || []}
+                columns={[
+                  { key: "label", label: "תאריך", render: (row) => formatDateHe(row.date || row.label) },
+                  { key: "visitors", label: "מבקרים", render: (row) => formatTrafficNumber(row.visitors) },
+                  { key: "pageviews", label: "צפיות", render: (row) => formatTrafficNumber(row.pageviews) },
+                ]}
+                empty={webTraffic?.status === "not_configured" ? webTraffic.message : "אין נתונים עדיין"}
+              />
+            </Panel>
+            <Panel
+              panelId="web-traffic-pages"
+              title="דפים מובילים"
+              summary={rowsSummary(webTraffic?.topPages)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("web-traffic-pages")}
+            >
+              <TopList rows={webTraffic?.topPages} />
+            </Panel>
+            <Panel
+              panelId="web-traffic-referrers"
+              title="מקורות הגעה"
+              summary={rowsSummary(webTraffic?.referrers)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("web-traffic-referrers")}
+            >
+              <TopList rows={webTraffic?.referrers} />
+            </Panel>
+            <Panel
+              panelId="web-traffic-devices"
+              title="מכשירים, דפדפנים ומדינות"
+              summary={rowsSummary(webTraffic?.devices)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("web-traffic-devices")}
+            >
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-2">
+                <TopList title="מכשירים" rows={webTraffic?.devices} />
+                <TopList title="דפדפנים" rows={webTraffic?.browsers} />
+                <TopList title="מדינות" rows={webTraffic?.countries} />
+              </div>
+            </Panel>
+            <Panel
+              panelId="web-traffic-user-activity"
+              title="פעילות משתמשים — Supabase"
+              subtitle="אותו טווח תאריכים כפי שנבחר לתנועה באתר"
+              summary={metricsSummary(userActivitySection?.cards)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("web-traffic-user-activity")}
+            >
+              <ActivityFunnelSummary funnel={mergedActivityFunnel} />
+              <div className="mt-3">
+                <MetricGrid items={userActivitySection?.cards} />
+              </div>
             </Panel>
           </div>
         );

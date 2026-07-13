@@ -20,6 +20,7 @@ assert.match(page, /adminAuthFetch\(token, `\/api\/admin\/analytics\?/, "page mu
 assert.doesNotMatch(page, /demo|mock|fake/i, "admin analytics page must not contain demo/mock/fake data");
 for (const label of [
   "סקירה כללית",
+  "תנועה באתר",
   "חשבונות",
   "הורים",
   "ילדים",
@@ -76,6 +77,9 @@ for (const fn of ["buildAccountAnalytics", "buildParentJoinAnalytics", "buildChi
 }
 assert.doesNotMatch(server, /school_/i, "admin analytics server must not add school analytics scope");
 assert.doesNotMatch(server, /Math\.random\(/, "server metrics must not use random/demo values");
+
+assert.match(server, /buildUserActivityAnalytics/, "server must build user activity analytics");
+assert.match(server, /solo_game_sessions/, "server must include solo game sessions");
 
 const migration = read("supabase/migrations/057_admin_analytics_events.sql");
 assert.match(migration, /create table if not exists public\.analytics_events/, "analytics_events migration missing");
