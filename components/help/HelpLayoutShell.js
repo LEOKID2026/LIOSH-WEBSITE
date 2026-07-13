@@ -1,6 +1,8 @@
 import Layout from "../Layout";
 import HelpBreadcrumb from "./HelpBreadcrumb";
 import Head from "next/head";
+import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
+import { useSharedShellUi } from "../../hooks/useSharedShellUi.js";
 
 export default function HelpLayoutShell({
   title,
@@ -11,9 +13,11 @@ export default function HelpLayoutShell({
   article = false,
 }) {
   const pageTitle = title ? `${title} · מרכז עזרה` : "מרכז עזרה";
+  const { theme } = useStudentTheme();
+  const { SP } = useSharedShellUi();
 
   return (
-    <Layout>
+    <Layout studentTheme={theme} studentShell="home">
       <Head>
         <title>{pageTitle}</title>
         <meta name="description" content={summary || "מרכז עזרה לליאו — מדריכים להורים, לילדים ולדוחות."} />
@@ -24,19 +28,13 @@ export default function HelpLayoutShell({
       >
         דלג לתוכן
       </a>
-      <div dir="rtl" className="max-w-6xl mx-auto px-4 py-8 sm:py-10">
+      <div dir="rtl" className={SP.helpLayoutWrap}>
         <HelpBreadcrumb items={breadcrumbs} />
         <header className="text-center space-y-3 mb-8">
-          <p className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 text-xs tracking-wider text-amber-300 font-semibold">
-            מרכז עזרה
-          </p>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black bg-gradient-to-r from-amber-300 via-amber-200 to-rose-300 bg-clip-text text-transparent">
-            {title}
-          </h1>
+          <p className={SP.badge}>מרכז עזרה</p>
+          <h1 className={SP.helpArticleH1}>{title}</h1>
           {summary ? (
-            <p className="text-base sm:text-lg text-white/70 max-w-2xl mx-auto text-right sm:text-center">
-              {summary}
-            </p>
+            <p className={`${SP.helpSubtitle} text-right sm:text-center`}>{summary}</p>
           ) : null}
         </header>
         {article && tocSlot ? (

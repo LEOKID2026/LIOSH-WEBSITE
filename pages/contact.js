@@ -4,6 +4,8 @@ import { getPublicPageSeo } from "../lib/site/public-page-seo.he";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { useStudentTheme } from "../contexts/StudentThemeContext.jsx";
+import { useSharedShellUi } from "../hooks/useSharedShellUi.js";
 import {
   CONTACT_EMAIL,
   LEGAL_CONTACT_PAGE_LINKS,
@@ -36,22 +38,23 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const btnBase =
   "px-5 py-2.5 rounded-xl transition hover:scale-105 text-center shadow-md text-sm sm:text-base font-semibold";
 
+/** כפתורי רשת — רוחב אחיד; גובה טבעי לפי תוכן */
+const socialBtnBase =
+  "w-full h-full px-3 py-2.5 rounded-xl transition hover:scale-105 text-center shadow-md text-sm font-semibold leading-tight flex items-center justify-center";
+
 const contactSeo = getPublicPageSeo("contact");
 
 /** טופס יצירת קשר — מוסתר עד שמערכת הדואר תוגדר לסביבת הפרודקשן */
 const CONTACT_FORM_VISIBLE = false;
 
-const inputClass =
-  "mt-1 w-full rounded-xl bg-black/50 border border-white/20 px-3 py-2 text-sm sm:text-base text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400/50";
-
 const faqs = [
   {
     q: "למי האתר מיועד?",
-    a: "האתר מיועד לילדים שרוצים לתרגל ולהתקדם, ולהורים שרוצים לקבל תמונה ברורה יותר על ההתקדמות, החוזקות והנושאים שדורשים חיזוק.",
+    a: "האתר מיועד לילדים שרוצים לתרגל ולהתקדם, ולהורים ולמורים שרוצים לקבל תמונה ברורה יותר על ההתקדמות, החוזקות והנושאים שכדאי לחזק.",
   },
   {
     q: "באילו מקצועות אפשר לתרגל?",
-    a: "האתר כולל תרגול במקצועות כמו מתמטיקה, גאומטריה, עברית, אנגלית, מדעים ומולדת/גאוגרפיה, בהתאם לשלבי הפיתוח והתוכן הזמין באתר.",
+    a: "האתר כולל תרגול במתמטיקה, גאומטריה, עברית, אנגלית, מדעים, מולדת, גאוגרפיה והיסטוריה — לפי מה שפתוח וזמין לילד באתר.",
   },
   {
     q: "מה ההורים יכולים לראות?",
@@ -63,7 +66,7 @@ const faqs = [
   },
   {
     q: "האם יש באתר גם משחקים?",
-    a: "כן. לצד התרגול הלימודי יש גם משחקים וחוויות מהנות שנועדו להוסיף מוטיבציה, עניין והתמדה בלמידה.",
+    a: "כן. לצד התרגול הלימודי יש משחקים חינוכיים, משחקי ליאו, אפשרות למשחקים עם חברים, וגם מטבעות וקלפים בעולם הילדים.",
   },
   {
     q: "איך אפשר לדווח על תקלה או לשלוח רעיון?",
@@ -84,6 +87,8 @@ function validateContactForm({ name, email, message }) {
 }
 
 export default function Contact() {
+  const { theme } = useStudentTheme();
+  const { SP } = useSharedShellUi();
   const [activeAnswer, setActiveAnswer] = useState(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -159,87 +164,82 @@ export default function Contact() {
     {
       key: "email",
       href: `mailto:${CONTACT_EMAIL}`,
-      label: "📧 אימייל",
+      label: "המייל של ליאו",
       ariaLabel: `שליחת אימייל לכתובת ${CONTACT_EMAIL}`,
-      className: `${btnBase} bg-amber-500/90 hover:bg-amber-400 border border-amber-300/40 text-black`,
+      className: `${socialBtnBase} bg-amber-500/90 hover:bg-amber-400 border border-amber-300/40 text-black`,
       external: false,
     },
     {
       key: "instagram",
       href: INSTAGRAM_URL,
-      label: "📷 אינסטגרם",
+      label: "האינסטגרם של ליאו",
       ariaLabel: "פתיחת עמוד האינסטגרם בחלון חדש",
-      className: `${btnBase} bg-pink-600/90 hover:bg-pink-500 border border-pink-400/30 text-white`,
+      className: `${socialBtnBase} bg-pink-600/90 hover:bg-pink-500 border border-pink-400/30 text-white`,
       external: true,
     },
     {
       key: "youtube",
       href: YOUTUBE_URL,
-      label: "ערוץ היוטיוב של LEO KIDS",
-      ariaLabel: "פתיחת ערוץ היוטיוב של LEO KIDS בחלון חדש",
-      className: `${btnBase} bg-red-600/90 hover:bg-red-500 border border-red-400/30 text-white`,
+      label: "היוטיוב של ליאו",
+      ariaLabel: "פתיחת היוטיוב של ליאו בחלון חדש",
+      className: `${socialBtnBase} bg-red-600/90 hover:bg-red-500 border border-red-400/30 text-white`,
       external: true,
     },
     {
       key: "facebook",
       href: FACEBOOK_URL,
-      label: "עמוד הפייסבוק של LEO KIDS",
-      ariaLabel: "פתיחת עמוד הפייסבוק של LEO KIDS בחלון חדש",
-      className: `${btnBase} bg-blue-600/90 hover:bg-blue-500 border border-blue-400/30 text-white`,
+      label: "הפייסבוק של ליאו",
+      ariaLabel: "פתיחת הפייסבוק של ליאו בחלון חדש",
+      className: `${socialBtnBase} bg-blue-600/90 hover:bg-blue-500 border border-blue-400/30 text-white`,
       external: true,
     },
   ];
 
   return (
-    <Layout page="contact">
+    <Layout page="contact" studentTheme={theme} studentShell="home">
       <PageSeo
         title={contactSeo.title}
         description={contactSeo.description}
         canonicalPath={contactSeo.canonicalPath}
       />
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        className="fixed inset-0 w-full h-full object-cover -z-10 pointer-events-none"
-        aria-hidden
-      >
-        <source src="/videos/contact-bg.mp4" type="video/mp4" />
-      </video>
+      {SP.showVideoBg ? (
+        <>
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            className="fixed inset-0 w-full h-full object-cover -z-10 pointer-events-none"
+            aria-hidden
+          >
+            <source src="/videos/contact-bg.mp4" type="video/mp4" />
+          </video>
+          <div className={SP.contactVideoOverlay} aria-hidden />
+        </>
+      ) : null}
 
-      <div
-        className="fixed inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80 -z-10 pointer-events-none"
-        aria-hidden
-      />
-
-      <div
-        dir="rtl"
-        className="relative w-full max-w-4xl mx-auto flex flex-col items-center text-white px-4 sm:px-6 pt-4 pb-10"
-      >
+      <div dir="rtl" className={SP.pageWrap}>
         <motion.h1
-          className="text-3xl sm:text-5xl md:text-6xl font-extrabold mb-4 text-center drop-shadow-lg"
+          className={SP.contactH1}
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <span className="bg-gradient-to-r from-amber-200 via-amber-300 to-rose-300 bg-clip-text text-transparent">
-            צור קשר
-          </span>
+          צור קשר
         </motion.h1>
 
         <motion.p
-          className="text-base sm:text-lg text-white/80 max-w-2xl text-center mb-8 leading-relaxed"
+          className={SP.intro}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.15 }}
         >
-          יש לכם שאלה, רעיון, הערה או תקלה? נשמח לשמוע מכם ולעזור. אפשר לפנות אלינו בנושאים שקשורים ללמידה, לחשבון הילד/ה, לדוחות ההורים, למשחקים או לחוויית השימוש באתר.
+          יש לכם שאלה, רעיון, הערה או תקלה? נשמח לשמוע מכם ולעזור. אפשר לפנות אלינו בנושאים שקשורים ללמידה, לחשבון הילד, לדוחות ההורים, למשחקים, לקלפים או לחוויית השימוש באתר.
         </motion.p>
 
         {CONTACT_FORM_VISIBLE && <motion.section
-          className="w-full max-w-2xl mb-10 rounded-2xl border border-white/15 bg-black/50 backdrop-blur-sm p-4 sm:p-6"
+          className={SP.formSection}
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
@@ -258,7 +258,7 @@ export default function Contact() {
               ) : null}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <label className="block text-sm sm:text-base">
-                  <span className="text-white/85">{CONTACT_FORM_NAME_LABEL}</span>
+                  <span className={SP.formLabel}>{CONTACT_FORM_NAME_LABEL}</span>
                   <input
                     type="text"
                     name="name"
@@ -266,7 +266,7 @@ export default function Contact() {
                     onChange={(ev) => setName(ev.target.value)}
                     maxLength={80}
                     autoComplete="name"
-                    className={inputClass}
+                    className={SP.input}
                     aria-invalid={Boolean(fieldErrors.name)}
                     aria-describedby={fieldErrors.name ? "contact-name-error" : undefined}
                   />
@@ -278,7 +278,7 @@ export default function Contact() {
                 </label>
 
                 <label className="block text-sm sm:text-base">
-                  <span className="text-white/85">{CONTACT_FORM_EMAIL_LABEL}</span>
+                  <span className={SP.formLabel}>{CONTACT_FORM_EMAIL_LABEL}</span>
                   <input
                     type="email"
                     name="email"
@@ -286,7 +286,7 @@ export default function Contact() {
                     onChange={(ev) => setEmail(ev.target.value)}
                     maxLength={254}
                     autoComplete="email"
-                    className={inputClass}
+                    className={SP.input}
                     aria-invalid={Boolean(fieldErrors.email)}
                     aria-describedby={fieldErrors.email ? "contact-email-error" : undefined}
                   />
@@ -299,26 +299,26 @@ export default function Contact() {
               </div>
 
               <label className="block text-sm sm:text-base">
-                <span className="text-white/85">{CONTACT_FORM_SUBJECT_LABEL}</span>
+                <span className={SP.formLabel}>{CONTACT_FORM_SUBJECT_LABEL}</span>
                 <input
                   type="text"
                   name="subject"
                   value={subject}
                   onChange={(ev) => setSubject(ev.target.value)}
                   maxLength={120}
-                  className={inputClass}
+                  className={SP.input}
                 />
               </label>
 
               <label className="block text-sm sm:text-base">
-                <span className="text-white/85">{CONTACT_FORM_MESSAGE_LABEL}</span>
+                <span className={SP.formLabel}>{CONTACT_FORM_MESSAGE_LABEL}</span>
                 <textarea
                   name="message"
                   value={message}
                   onChange={(ev) => setMessage(ev.target.value)}
                   rows={5}
                   maxLength={4000}
-                  className={`${inputClass} resize-y min-h-[120px]`}
+                  className={`${SP.input} resize-y min-h-[120px]`}
                   aria-invalid={Boolean(fieldErrors.message)}
                   aria-describedby={fieldErrors.message ? "contact-message-error" : undefined}
                 />
@@ -348,7 +348,7 @@ export default function Contact() {
           )}
         </motion.section>}
 
-        <div className="flex flex-wrap justify-center gap-3 mb-10 w-full">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-10 w-full max-w-md lg:max-w-3xl mx-auto">
           {socialLinks.map((link, i) => (
             <motion.a
               key={link.key}
@@ -369,7 +369,7 @@ export default function Contact() {
         </div>
 
         <motion.h2
-          className="text-2xl sm:text-3xl font-bold mb-6 text-center bg-gradient-to-r from-amber-200 to-teal-200 bg-clip-text text-transparent"
+          className={SP.h2Teal}
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
@@ -383,7 +383,7 @@ export default function Contact() {
               key={faq.q}
               type="button"
               onClick={() => setActiveAnswer(faq.a)}
-              className="px-4 py-3 bg-black/50 backdrop-blur-sm border border-white/15 rounded-xl text-amber-100 font-semibold text-sm sm:text-base text-right hover:bg-black/65 hover:border-amber-400/40 transition"
+              className={SP.faqBtn}
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.05 * i }}
@@ -400,18 +400,18 @@ export default function Contact() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.35 }}
         >
-          <p className="text-sm font-semibold text-white/80">מסמכים משפטיים</p>
+          <p className={SP.navLabel}>מסמכים משפטיים</p>
           <ul className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm">
             {LEGAL_CONTACT_PAGE_LINKS.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="text-amber-300 underline hover:text-amber-200">
+                <Link href={link.href} className={SP.link}>
                   {link.label}
                 </Link>
               </li>
             ))}
           </ul>
-          <p className="text-sm text-white/70">
-            <a href={`mailto:${CONTACT_EMAIL}`} className="text-amber-300 underline hover:text-amber-200">
+          <p className={SP.linkMuted}>
+            <a href={`mailto:${CONTACT_EMAIL}`} className={SP.link}>
               {CONTACT_EMAIL}
             </a>
           </p>
@@ -419,13 +419,9 @@ export default function Contact() {
       </div>
 
       {activeAnswer && (
-        <div
-          className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4"
-          dir="rtl"
-          onClick={handleClose}
-        >
+        <div className={SP.faqModalOverlay} dir="rtl" onClick={handleClose}>
           <motion.div
-            className="relative w-full max-w-md min-h-[260px] rounded-2xl border border-white/20 overflow-hidden shadow-2xl"
+            className={SP.faqModalPanel}
             initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.25 }}
@@ -436,7 +432,7 @@ export default function Contact() {
               style={{ backgroundImage: "url('/images/faq.png')" }}
               aria-hidden
             />
-            <div className="relative bg-black/75 backdrop-blur-sm p-6 sm:p-8 min-h-[260px] flex flex-col text-right">
+            <div className={SP.faqModalInner}>
               <button
                 type="button"
                 onClick={handleClose}
@@ -445,9 +441,7 @@ export default function Contact() {
               >
                 סגור
               </button>
-              <p className="text-base sm:text-lg text-white/95 leading-relaxed flex-1">
-                {activeAnswer}
-              </p>
+              <p className={SP.faqModalText}>{activeAnswer}</p>
             </div>
           </motion.div>
         </div>

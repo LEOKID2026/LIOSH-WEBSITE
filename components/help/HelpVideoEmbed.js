@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useSharedShellUi } from "../../hooks/useSharedShellUi.js";
 
 const MOBILE_MQ = "(max-width: 640px)";
 const PREVIEW_LABEL = "צפו בסרטון הדרכה";
@@ -70,6 +71,7 @@ export default function HelpVideoEmbed({
   transcriptHe,
   durationSec,
 }) {
+  const { SP } = useSharedShellUi();
   const [activeVp, setActiveVp] = useState("desktop");
   const [open, setOpen] = useState(false);
   const modalVideoRef = useRef(null);
@@ -159,7 +161,7 @@ export default function HelpVideoEmbed({
         type="button"
         data-help-video-preview="true"
         onClick={() => setOpen(true)}
-        className="group relative flex w-full max-w-xl mx-auto sm:mx-0 overflow-hidden rounded-xl border border-white/15 bg-black/60 text-right shadow-md transition hover:border-amber-400/40 hover:shadow-amber-900/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/70"
+        className={SP.videoPreview}
         aria-haspopup="dialog"
         aria-expanded={open}
         aria-label={PREVIEW_LABEL}
@@ -180,27 +182,21 @@ export default function HelpVideoEmbed({
           <span className="absolute inset-0 bg-black/35 group-hover:bg-black/25 transition-colors" />
           <span className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-3">
             <PlayIcon />
-            <span className="text-sm sm:text-base font-semibold text-white drop-shadow-md">
-              {PREVIEW_LABEL}
-            </span>
+            <span className={SP.videoPreviewLabel}>{PREVIEW_LABEL}</span>
           </span>
         </span>
       </button>
 
       {duration ? (
-        <p className="text-xs text-white/50 text-right">
+        <p className={SP.videoDuration}>
           משך משוער: {Math.max(1, Math.round(duration / 60))} דקות
         </p>
       ) : null}
 
       {transcriptHe ? (
-        <details className="rounded-lg border border-white/10 bg-black/50 p-3 text-right">
-          <summary className="cursor-pointer font-semibold text-amber-200 min-h-[44px] flex items-center">
-            תמלול
-          </summary>
-          <p className="mt-2 text-sm text-white/80 leading-relaxed whitespace-pre-wrap">
-            {transcriptHe}
-          </p>
+        <details className={SP.videoTranscript}>
+          <summary className={SP.videoTranscriptSummary}>תמלול</summary>
+          <p className={SP.videoTranscriptText}>{transcriptHe}</p>
         </details>
       ) : null}
 
@@ -210,32 +206,27 @@ export default function HelpVideoEmbed({
           role="presentation"
           onClick={closeModal}
         >
-          <div
-            className="absolute inset-0 bg-black/70 backdrop-blur-[2px]"
-            aria-hidden="true"
-          />
+          <div className={SP.videoModalOverlay} aria-hidden="true" />
           <div
             role="dialog"
             aria-modal="true"
             aria-label={modalLabel}
-            className="relative z-[101] flex w-full max-w-3xl max-h-[min(90vh,720px)] flex-col rounded-xl border border-white/15 bg-[#0f1419] shadow-2xl overflow-hidden"
+            className={SP.videoModalDialog}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex shrink-0 items-center justify-between gap-2 border-b border-white/10 px-3 py-2 sm:px-4">
-              <span className="text-sm font-semibold text-amber-100 truncate">
-                {PREVIEW_LABEL}
-              </span>
+            <div className={SP.videoModalHeader}>
+              <span className={SP.videoModalTitle}>{PREVIEW_LABEL}</span>
               <button
                 ref={closeBtnRef}
                 type="button"
                 onClick={closeModal}
-                className="shrink-0 min-h-[44px] min-w-[44px] rounded-lg border border-white/20 bg-white/10 px-3 text-sm font-bold text-white hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                className={SP.videoModalClose}
                 aria-label={CLOSE_LABEL}
               >
                 סגור
               </button>
             </div>
-            <div className="flex min-h-0 flex-1 items-center justify-center p-2 sm:p-3 bg-black">
+            <div className={SP.videoModalBody}>
               <video
                 ref={modalVideoRef}
                 controls

@@ -1,6 +1,8 @@
 import Layout from "../components/Layout";
 import PageSeo from "../components/seo/PageSeo";
 import { getPublicPageSeo } from "../lib/site/public-page-seo.he";
+import { useStudentTheme } from "../contexts/StudentThemeContext.jsx";
+import { useSharedShellUi } from "../hooks/useSharedShellUi.js";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,7 +10,7 @@ import Link from "next/link";
 const whyCards = [
   {
     title: "למידה בקצב אישי",
-    text: "כל ילד/ה מתקדם לפי היכולת שלו, עם תרגול שמתאים לרמה ולנושאים שבהם הוא צריך חיזוק.",
+    text: "כל ילד מתקדם לפי היכולת שלו, עם תרגול שמתאים לרמה ולנושאים שבהם הוא צריך חיזוק.",
   },
   {
     title: "תמונה ברורה להורים",
@@ -16,7 +18,7 @@ const whyCards = [
   },
   {
     title: "חוויה נעימה לילדים",
-    text: "האתר משלב תרגול, משחקים ועיצוב ידידותי כדי לעודד התמדה ולמידה חיובית.",
+    text: "האתר משלב תרגול, משחקים, מטבעות, קלפים ועיצוב ידידותי כדי לעודד התמדה ולמידה חיובית.",
   },
 ];
 
@@ -27,54 +29,58 @@ const funGamesCards = [
   },
   {
     title: "חוויה חברתית",
-    text: "אפשרות למשחקי חברה ותחרות חיובית שמחברת בין ילדים בצורה נעימה.",
+    text: "משחקים עם חברים וחוויות חברתיות לפי מה שפתוח באתר, בצורה נעימה וחיובית.",
   },
   {
     title: "מוטיבציה ללמידה",
-    text: "שילוב של תרגול, ניקוד, משחקים ואתגרים שמחזק רצון להתקדם.",
+    text: "שילוב של תרגול, מטבעות, קלפים, משחקים ואתגרים שמעודדים להמשיך.",
   },
 ];
 
 const siteFeatures = [
-  { phase: "תרגול לפי מקצועות", text: "מתמטיקה, גאומטריה, עברית, אנגלית, מדעים ומולדת/גאוגרפיה." },
+  { phase: "תרגול לפי מקצועות", text: "מתמטיקה, גאומטריה, עברית, אנגלית, מדעים, מולדת, גאוגרפיה והיסטוריה." },
   { phase: "כיתות א׳–ו׳ ורמות קושי", text: "תרגול מותאם לפי שכבת גיל, נושא ורמה, כדי לאפשר התקדמות הדרגתית וברורה לכל ילד/ה." },
   { phase: "דוחות להורים", text: "סיכום ברור של ביצועים, טעויות, חוזקות ונקודות לשיפור." },
-  { phase: "משחקים וחוויה חברתית", text: "משחקים אישיים ומשחקי חברה שנועדו להוסיף כיף, התמדה ומוטיבציה ללמידה." },
+  { phase: "משחקים וחוויה חברתית", text: "משחקים אישיים, משחקים חינוכיים, משחקים עם חברים, מטבעות וקלפים." },
 ];
 
 const aboutSeo = getPublicPageSeo("about");
 
 export default function About() {
+  const { theme } = useStudentTheme();
+  const { SP } = useSharedShellUi();
+
   return (
-    <Layout page="about">
+    <Layout page="about" studentTheme={theme} studentShell="home">
       <PageSeo
         title={aboutSeo.title}
         description={aboutSeo.description}
         canonicalPath={aboutSeo.canonicalPath}
       />
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        className="absolute inset-0 w-full h-full object-cover z-0"
-      >
-        <source src="/videos/about-bg.mp4" type="video/mp4" />
-      </video>
+      {SP.showVideoBg ? (
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          className="absolute inset-0 w-full h-full object-cover z-0"
+        >
+          <source src="/videos/about-bg.mp4" type="video/mp4" />
+        </video>
+      ) : null}
 
       <motion.main
-        className="relative min-h-screen flex flex-col items-center text-white p-0 m-0 overflow-x-hidden pt-0 mt-0"
+        className={SP.aboutMain}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
       >
-        <div className="absolute inset-0 bg-black/50 z-10" />
+        {SP.aboutVideoOverlay ? (
+          <div className={SP.aboutVideoOverlay} aria-hidden />
+        ) : null}
 
-        <div
-          dir="rtl"
-          className="relative z-20 w-full max-w-6xl p-4 sm:p-6 rounded-xl"
-        >
+        <div dir="rtl" className="relative z-20 w-full max-w-6xl p-4 sm:p-6 rounded-xl">
           <div className="flex flex-col md:flex-row items-center md:items-start gap-8 mb-12">
             <div className="flex-shrink-0">
               <Image
@@ -82,13 +88,13 @@ export default function About() {
                 alt="ליאו - סביבת לימוד חכמה לילדים"
                 width={300}
                 height={300}
-                className="rounded-2xl border-2 border-amber-400/60 shadow-lg"
+                className={SP.imageBorder}
               />
             </div>
 
             <div className="text-center md:text-right max-w-xl flex-1">
               <motion.h1
-                className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-6 bg-gradient-to-r from-amber-300 via-amber-200 to-rose-300 bg-clip-text text-transparent leading-tight"
+                className={SP.h1}
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1 }}
@@ -96,87 +102,67 @@ export default function About() {
                 אודות ליאו – לומדים, מתרגלים ומתקדמים
               </motion.h1>
 
-              <p className="text-base sm:text-lg md:text-xl mb-4 text-white/90 text-right">
+              <p className={SP.body}>
                 ברוכים הבאים לליאו – סביבת למידה חכמה בעברית, שנבנתה כדי לעזור לילדים לתרגל, להבין ולהתקדם בקצב שמתאים להם.
               </p>
 
-              <p className="text-base sm:text-lg md:text-xl mb-4 text-white/90 text-right">
-                האתר מותאם לילד/הי כיתות א׳–ו׳, עם תרגול לפי מקצוע, כיתה, נושא ורמת קושי. כך כל ילד/ה יכול להתחיל מהמקום שמתאים לו, להתקדם בהדרגה, ולחזק את הנושאים שבהם הוא צריך יותר ביטחון.
+              <p className={SP.body}>
+                האתר מיועד לילדים וילדות בכיתות א׳–ו׳, עם תרגול לפי מקצוע, כיתה, נושא ורמת קושי. כך כל ילד יכול להתחיל מהמקום שמתאים לו, להתקדם בהדרגה, ולחזק את הנושאים שבהם הוא צריך יותר ביטחון.
               </p>
 
-              <p className="text-base sm:text-lg md:text-xl text-white/85 text-right">
+              <p className={SP.bodyLast}>
                 המטרה שלנו היא להפוך את הלמידה לחוויה ברורה, נעימה ומדויקת יותר: פחות ניחושים, פחות תסכול, ויותר הבנה אמיתית של מה הילד כבר יודע ומה עדיין צריך חיזוק.
               </p>
             </div>
           </div>
 
           <section className="mb-12 text-center">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-4 bg-gradient-to-r from-amber-200 to-rose-300 bg-clip-text text-transparent">
-              המשימה שלנו
-            </h2>
-            <p className="text-base sm:text-lg md:text-xl text-white/90 max-w-3xl mx-auto mb-4 text-right">
+            <h2 className={SP.h2}>המשימה שלנו</h2>
+            <p className={SP.bodyCenter}>
               המשימה שלנו היא לעזור לילדים לבנות ביטחון בלמידה, לחזק מיומנויות בסיסיות ומתקדמות, ולתת להורים תמונה ברורה יותר על ההתקדמות של הילד.
             </p>
-            <p className="text-base sm:text-lg md:text-xl text-white/85 max-w-3xl mx-auto text-right">
-              המערכת משלבת תרגול, משחקיות, דוחות להורים ותובנות חכמות, כדי ליצור תהליך למידה שמרגיש אישי, מסודר ומעודד.
+            <p className={SP.bodyCenterMuted}>
+              המערכת משלבת תרגול, משחקיות, דוחות להורים וסיכומי התקדמות ברורים, כדי ליצור תהליך למידה שמרגיש אישי, מסודר ומעודד.
             </p>
           </section>
 
           <section className="mb-12">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-center bg-gradient-to-r from-teal-200 to-amber-200 bg-clip-text text-transparent">
-              גם לומדים וגם נהנים
-            </h2>
-            <p className="text-base sm:text-lg md:text-xl text-white/90 max-w-3xl mx-auto mb-4 text-right">
-              בנוסף לתרגול הלימודי, האתר כולל גם משחקי חברה ומשחקים חווייתיים שנועדו להוסיף כיף, מוטיבציה והנאה לתהליך הלמידה. המטרה היא שילדים לא ירגישו שהם רק ‘עושים שיעורים’, אלא נכנסים לסביבה שמאפשרת להם ללמוד, לשחק, להתחרות בצורה חיובית וליהנות.
+            <h2 className={SP.h2Teal}>גם לומדים וגם נהנים</h2>
+            <p className={SP.bodyCenter}>
+              בנוסף לתרגול הלימודי, האתר כולל משחקים חינוכיים, משחקים חווייתיים, מטבעות וקלפים שנועדו להוסיף כיף, מוטיבציה והנאה לתהליך הלמידה. המטרה היא שילדים לא ירגישו שהם רק "עושים שיעורים", אלא נכנסים לעולם ילדים צבעוני שבו אפשר ללמוד, לשחק ולהתקדם בתחושה טובה.
             </p>
-            <p className="text-base sm:text-lg md:text-xl text-white/85 max-w-3xl mx-auto mb-6 text-right">
-              חלק מהמשחקים מיועדים לחוויה אישית, וחלקם יכולים להתפתח למשחקים מרובי משתתפים – כדי לאפשר לילדים לשחק יחד, לשתף פעולה, להתחרות בכיף ולחזק התמדה דרך חוויה חברתית.
+            <p className={`${SP.bodyCenterMuted} mb-6`}>
+              יש משחקים אישיים, משחקים חינוכיים וגם אפשרות למשחקים עם חברים — לפי מה שפתוח וזמין באתר.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {funGamesCards.map((item, i) => (
-                <motion.div
-                  key={i}
-                  whileHover={{ scale: 1.03 }}
-                  className="bg-black/50 border border-white/10 p-6 rounded-xl shadow-md text-right"
-                >
-                  <h3 className="text-lg sm:text-xl font-bold text-amber-200 mb-2">{item.title}</h3>
-                  <p className="text-sm sm:text-base text-white/85">{item.text}</p>
+                <motion.div key={i} whileHover={{ scale: 1.03 }} className={SP.card}>
+                  <h3 className={SP.cardTitle}>{item.title}</h3>
+                  <p className={SP.cardText}>{item.text}</p>
                 </motion.div>
               ))}
             </div>
           </section>
 
           <section className="mb-12">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-center bg-gradient-to-r from-amber-200 to-teal-300 bg-clip-text text-transparent">
-              למה זה חשוב?
-            </h2>
+            <h2 className={SP.h2AmberTeal}>למה זה חשוב?</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
               {whyCards.map((item, i) => (
-                <motion.div
-                  key={i}
-                  whileHover={{ scale: 1.03 }}
-                  className="bg-black/50 border border-white/10 p-6 rounded-xl shadow-md text-right"
-                >
-                  <h3 className="text-lg sm:text-xl font-bold text-amber-200 mb-2">{item.title}</h3>
-                  <p className="text-sm sm:text-base text-white/85">{item.text}</p>
+                <motion.div key={i} whileHover={{ scale: 1.03 }} className={SP.card}>
+                  <h3 className={SP.cardTitle}>{item.title}</h3>
+                  <p className={SP.cardText}>{item.text}</p>
                 </motion.div>
               ))}
             </div>
           </section>
 
           <section>
-            <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-center bg-gradient-to-r from-teal-200 to-amber-200 bg-clip-text text-transparent">
-              מה תמצאו באתר?
-            </h2>
+            <h2 className={SP.h2TealAmber}>מה תמצאו באתר?</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center mb-8">
               {siteFeatures.map((phase, i) => (
-                <motion.div
-                  key={i}
-                  whileHover={{ scale: 1.03 }}
-                  className="p-6 bg-black/50 border border-white/10 rounded-xl shadow-md text-right"
-                >
-                  <h3 className="text-lg sm:text-xl font-bold text-amber-200 mb-2">{phase.phase}</h3>
-                  <p className="text-sm sm:text-base text-white/85">{phase.text}</p>
+                <motion.div key={i} whileHover={{ scale: 1.03 }} className={SP.card}>
+                  <h3 className={SP.cardTitle}>{phase.phase}</h3>
+                  <p className={SP.cardText}>{phase.text}</p>
                 </motion.div>
               ))}
             </div>
@@ -187,14 +173,11 @@ export default function About() {
                   type="button"
                   className="bg-gradient-to-r from-amber-400 via-amber-500 to-rose-500 px-8 py-4 rounded-xl text-base sm:text-lg font-bold text-black hover:scale-105 transition w-full sm:w-auto min-w-[200px]"
                 >
-                  להתחיל ללמוד
+                  לעולם הילדים
                 </button>
               </Link>
               <Link href="/parent/login">
-                <button
-                  type="button"
-                  className="bg-white/10 border border-white/25 hover:bg-white/20 px-8 py-4 rounded-xl text-base sm:text-lg font-bold text-white hover:scale-105 transition w-full sm:w-auto min-w-[200px]"
-                >
+                <button type="button" className={SP.secondaryCta}>
                   כניסת הורים
                 </button>
               </Link>

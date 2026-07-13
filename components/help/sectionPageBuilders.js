@@ -3,6 +3,7 @@ import HelpTOC from "./HelpTOC";
 import HelpArticleBody from "./HelpArticleBody";
 import HelpSearchClient from "./HelpSearchClient";
 import { listArticles, SECTIONS } from "../../data/help-center";
+import { useSharedShellUi } from "../../hooks/useSharedShellUi.js";
 
 export function buildSectionHubPage(sectionKey) {
   const section = SECTIONS[sectionKey];
@@ -24,6 +25,11 @@ export function buildSectionHubPage(sectionKey) {
   };
 }
 
+function ArticleUpdatedAt({ date }) {
+  const { SP } = useSharedShellUi();
+  return <p className={SP.updatedAt}>עודכן: {date}</p>;
+}
+
 export function buildArticlePage(sectionKey) {
   const section = SECTIONS[sectionKey];
 
@@ -42,9 +48,7 @@ export function buildArticlePage(sectionKey) {
       >
         <article lang="he" dir="rtl">
           <HelpArticleBody blocks={article.blocks} audience={article.audience} />
-          <p className="mt-8 text-xs text-white/40 text-right">
-            עודכן: {article.updatedAt}
-          </p>
+          <ArticleUpdatedAt date={article.updatedAt} />
         </article>
       </HelpLayoutShell>
     );

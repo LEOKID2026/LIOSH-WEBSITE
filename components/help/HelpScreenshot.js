@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useSharedShellUi } from "../../hooks/useSharedShellUi.js";
 
 const ALLOW_MISSING =
   process.env.NEXT_PUBLIC_HELP_CENTER_ALLOW_MISSING_SCREENSHOTS === "1" ||
   process.env.HELP_CENTER_ALLOW_MISSING_SCREENSHOTS === "1";
 
 export default function HelpScreenshot({ path, alt, caption, sources }) {
+  const { SP } = useSharedShellUi();
   const [failed, setFailed] = useState(false);
   const mobile = sources?.mobile || path;
   const tablet = sources?.tablet || path;
@@ -13,7 +15,7 @@ export default function HelpScreenshot({ path, alt, caption, sources }) {
 
   if (failed && ALLOW_MISSING) {
     return (
-      <figure className="my-6 rounded-xl border border-dashed border-white/20 bg-black/40 p-6 text-center text-white/50 text-sm">
+      <figure className={SP.screenshotMissing}>
         <figcaption>{caption || alt}</figcaption>
         <p className="mt-2">תמונת מסך תתווסף בקרוב</p>
       </figure>
@@ -22,7 +24,7 @@ export default function HelpScreenshot({ path, alt, caption, sources }) {
 
   if (failed) {
     return (
-      <figure className="my-6 rounded-xl border border-amber-500/30 bg-black/50 p-4 text-amber-200/80 text-sm text-right">
+      <figure className={SP.screenshotError}>
         <figcaption>{caption || alt}</figcaption>
         <p className="mt-2">לא ניתן לטעון את תמונת המסך</p>
       </figure>
@@ -41,13 +43,11 @@ export default function HelpScreenshot({ path, alt, caption, sources }) {
           height={768}
           loading="lazy"
           decoding="async"
-          className="w-full h-auto rounded-xl border border-white/10 shadow-lg"
+          className={SP.screenshotBorder}
           onError={() => setFailed(true)}
         />
       </picture>
-      {caption ? (
-        <figcaption className="mt-2 text-sm text-white/65">{caption}</figcaption>
-      ) : null}
+      {caption ? <figcaption className={SP.screenshotCaption}>{caption}</figcaption> : null}
     </figure>
   );
 }

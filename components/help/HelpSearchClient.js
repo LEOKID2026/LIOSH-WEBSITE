@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { useSharedShellUi } from "../../hooks/useSharedShellUi.js";
 
 function normalize(s) {
   return String(s || "")
@@ -8,6 +9,7 @@ function normalize(s) {
 }
 
 export default function HelpSearchClient({ articles, sectionBase }) {
+  const { SP } = useSharedShellUi();
   const [query, setQuery] = useState("");
   const id = "help-search-input";
 
@@ -32,7 +34,7 @@ export default function HelpSearchClient({ articles, sectionBase }) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="חיפוש לפי נושא או מילת מפתח..."
-          className="w-full md:max-w-md rounded-xl bg-black/40 border border-white/20 px-4 py-3 min-h-[44px] text-white placeholder-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300/70"
+          className={SP.searchInput}
           dir="rtl"
           aria-controls="help-search-results"
         />
@@ -40,18 +42,15 @@ export default function HelpSearchClient({ articles, sectionBase }) {
       <ul id="help-search-results" className="grid gap-3 sm:grid-cols-2">
         {filtered.map((a) => (
           <li key={a.slug}>
-            <Link
-              href={`${sectionBase}/${a.slug}`}
-              className="block rounded-xl border border-white/10 bg-black/50 p-4 hover:bg-black/65 transition text-right min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300/70"
-            >
-              <span className="font-bold text-amber-100">{a.title}</span>
-              <p className="text-sm text-white/65 mt-1 line-clamp-2">{a.summary}</p>
+            <Link href={`${sectionBase}/${a.slug}`} className={SP.searchResult}>
+              <span className={SP.searchResultTitle}>{a.title}</span>
+              <p className={SP.searchResultSummary}>{a.summary}</p>
             </Link>
           </li>
         ))}
       </ul>
       {filtered.length === 0 ? (
-        <p className="text-white/60 text-sm text-right">לא נמצאו תוצאות לחיפוש זה.</p>
+        <p className={SP.searchEmpty}>לא נמצאו תוצאות לחיפוש זה.</p>
       ) : null}
     </div>
   );

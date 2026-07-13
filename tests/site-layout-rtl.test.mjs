@@ -11,7 +11,9 @@ import {
   NAV_AREAS,
   resolveNavArea,
   shouldLayoutUseRtl,
+  shouldShowLayoutThemePicker,
 } from "../lib/site-nav.js";
+import { resolveSharedShellUi } from "../lib/student-ui/student-theme-resolver.client.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, "..");
@@ -91,6 +93,50 @@ test("getAreaHomeHref: portal routes map to area dashboards", () => {
   assert.equal(getAreaHomeHref("/student/home"), "/student/home");
   assert.equal(getAreaHomeHref("/teacher/dashboard"), "/teacher/dashboard");
   assert.equal(getAreaHomeHref("/school/dashboard"), "/teacher/dashboard");
+});
+
+test("shouldShowLayoutThemePicker: shared shell pages include about, contact, help", () => {
+  assert.equal(shouldShowLayoutThemePicker("/about"), true);
+  assert.equal(shouldShowLayoutThemePicker("/contact"), true);
+  assert.equal(shouldShowLayoutThemePicker("/help"), true);
+  assert.equal(shouldShowLayoutThemePicker("/help/parent-report"), true);
+  assert.equal(shouldShowLayoutThemePicker("/help/parents/create-parent-account"), true);
+  assert.equal(shouldShowLayoutThemePicker("/terms"), false);
+});
+
+test("shared help routes keep portal HUD home from activePortal", () => {
+  assert.equal(isSharedSiteShellPath("/help/parent-report"), true);
+  assert.equal(
+    getAreaHomeHref("/help/parent-report", { activePortal: NAV_AREAS.parent }),
+    "/parent/dashboard"
+  );
+  assert.equal(
+    resolveNavArea("/help/parent-report", { activePortal: NAV_AREAS.parent }),
+    NAV_AREAS.parent
+  );
+  const parentHelpNav = getContextNav("/help/parent-report", { activePortal: NAV_AREAS.parent });
+  assert.equal(parentHelpNav.links[0].href, "/parent/dashboard");
+});
+
+test("resolveSharedShellUi: bright and classic tokens", () => {
+  const bright = resolveSharedShellUi("bright");
+  const classic = resolveSharedShellUi("classic");
+  assert.equal(bright.isBright, true);
+  assert.equal(classic.isBright, false);
+  assert.equal(bright.SP.showVideoBg, false);
+  assert.equal(classic.SP.showVideoBg, true);
+  assert.match(bright.SP.card, /bg-white/);
+  assert.match(classic.SP.card, /bg-black/);
+  assert.match(bright.SP.helpLayoutWrap, /text-slate-800/);
+  assert.match(classic.SP.helpLayoutWrap, /text-white/);
+});
+
+test("HelpLayoutShell wires shared theme into Layout", () => {
+  const src = readFileSync(path.join(repoRoot, "components/help/HelpLayoutShell.js"), "utf8");
+  assert.match(src, /useStudentTheme/);
+  assert.match(src, /useSharedShellUi/);
+  assert.match(src, /studentTheme=\{theme\}/);
+  assert.match(src, /studentShell="home"/);
 });
 
 test("Layout.js uses centralized nav helpers and portal context persistence", () => {

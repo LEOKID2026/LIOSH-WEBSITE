@@ -71,23 +71,32 @@ export default function Gallery() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
             >
-              גלריה
+              הגלריה של ליאו
             </motion.h1>
           </div>
+
+          <motion.p
+            className={`${GL.subtitle} !mb-2`}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            תמונות וסרטונים של ליאו — הכלב שמלווה את עולם הילדים באתר.
+          </motion.p>
 
           <motion.p
             className={GL.subtitle}
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
           >
-            רגעים מהאתר, מהמשחקים ומהחוויה הלימודית של הילדים.
+            כאן אפשר להכיר את ליאו מקרוב, דרך רגעים, תמונות וסרטונים שמוסיפים חום וחיים לעולם הילדים באתר.
           </motion.p>
 
           {loading ? (
             <div className="min-h-[40vh]" aria-busy="true" />
           ) : items.length === 0 ? (
-            <p className={GL.empty}>עדיין לא נוספו תמונות או סרטונים לגלריה.</p>
+            <p className={GL.empty}>לא נמצאו תמונות או סרטונים להצגה.</p>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-5 w-full pb-6">
               {items.map((item, index) => (
@@ -104,7 +113,7 @@ export default function Gallery() {
                   {item.type === "image" ? (
                     <img
                       src={item.src}
-                      alt={`פריט גלריה ${index + 1}`}
+                      alt={`ליאו — תמונה ${index + 1}`}
                       className="w-full h-full object-cover block"
                     />
                   ) : (
@@ -133,7 +142,7 @@ export default function Gallery() {
             {items[selectedIndex].type === "image" ? (
               <img
                 src={items[selectedIndex].src}
-                alt={`פריט גלריה ${selectedIndex + 1}`}
+                alt={`ליאו — תמונה ${selectedIndex + 1}`}
                 className="w-full max-h-[80vh] object-contain rounded-xl shadow-xl mx-auto"
               />
             ) : (

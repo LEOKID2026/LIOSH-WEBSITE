@@ -3,6 +3,8 @@ import PageSeo from "../../components/seo/PageSeo";
 import { getPublicPageSeo } from "../../lib/site/public-page-seo.he";
 import HelpHubCard from "../../components/help/HelpHubCard";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
+import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
+import { useSharedShellUi } from "../../hooks/useSharedShellUi.js";
 import { SECTIONS } from "../../data/help-center";
 
 const HUB_SECTIONS = [
@@ -16,23 +18,21 @@ const helpSeo = getPublicPageSeo("help");
 
 export default function HelpCenterHome() {
   useIOSViewportFix();
+  const { theme } = useStudentTheme();
+  const { SP, isBright } = useSharedShellUi();
 
   return (
-    <Layout>
+    <Layout studentTheme={theme} studentShell="home">
       <PageSeo
         title={helpSeo.title}
         description={helpSeo.description}
         canonicalPath={helpSeo.canonicalPath}
       />
-      <div dir="rtl" className="max-w-5xl mx-auto px-4 py-10 space-y-10">
+      <div dir="rtl" className={SP.helpWrap}>
         <header className="text-center space-y-4">
-          <p className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 text-xs tracking-wider text-amber-300 font-semibold">
-            עזרה · מדריכים · שאלות נפוצות
-          </p>
-          <h1 className="text-4xl md:text-5xl font-black leading-tight bg-gradient-to-r from-amber-300 via-amber-200 to-rose-300 bg-clip-text text-transparent">
-            מרכז עזרה
-          </h1>
-          <p className="text-base md:text-lg text-white/70 max-w-2xl mx-auto">
+          <p className={SP.badge}>עזרה · מדריכים · שאלות נפוצות</p>
+          <h1 className={SP.helpH1}>מרכז עזרה</h1>
+          <p className={SP.helpSubtitle}>
             מדריכים בעברית להורים ולילדים — איך להשתמש באתר, איך לקרוא את הדוח,
             ואיך לתרגל בכל מקצוע.
           </p>
@@ -47,6 +47,7 @@ export default function HelpCenterHome() {
               description={s.description}
               emoji={s.emoji}
               sectionKey={s.hubGradientKey}
+              isBright={isBright}
             />
           ))}
         </section>
