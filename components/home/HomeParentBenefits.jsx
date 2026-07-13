@@ -11,6 +11,7 @@ export default function HomeParentBenefits({ isBright }) {
   const cls = getHomeTextClasses(isBright);
   const accent = ACCENT.parents;
   const gradient = isBright ? accent.brightCardGradient : accent.classicCardGradient;
+  const cardTitleClass = `text-base font-bold leading-snug md:text-lg ${cls.heading}`;
 
   return (
     <section className="space-y-5 md:space-y-6" data-testid="home-parent-benefits">
@@ -22,6 +23,7 @@ export default function HomeParentBenefits({ isBright }) {
             text={item.text}
             gradientClass={gradient}
             isBright={isBright}
+            titleClassName={cardTitleClass}
           />
         ))}
       </div>

@@ -14,6 +14,7 @@ export const STUDENT_PROMO_MOBILE_SRC = "/videos/promo/leo-kids-children-mobile.
  *   compact?: boolean,
  *   compactHome?: boolean,
  *   className?: string,
+ *   titleClassName?: string,
  * }} props
  */
 export default function StudentPromoVideo({
@@ -25,8 +26,10 @@ export default function StudentPromoVideo({
   compact = false,
   compactHome = false,
   className = "",
+  titleClassName = "",
 }) {
-  const titleClass = isBright ? "text-slate-900" : "text-white";
+  const titleClass =
+    titleClassName || (isBright ? "text-slate-900" : "text-white");
   const textClass = isBright ? "text-slate-600" : "text-white/75";
   const frameClass = isBright
     ? "border-slate-200/80 bg-slate-900/5 shadow-sm"

@@ -39,9 +39,7 @@ export default function HomeValueCards({ isBright }) {
               }`}
             >
               <h3
-                className={`text-lg font-black md:text-xl ${
-                  isBright ? "text-slate-900" : "text-white"
-                }`}
+                className={`text-lg font-black md:text-xl ${isBright ? "text-sky-900" : "text-sky-100"}`}
               >
                 {card.title}
               </h3>

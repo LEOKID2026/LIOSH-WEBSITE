@@ -7,6 +7,7 @@ export default function MarketingFeatureCard({
   emoji,
   gradientClass,
   isBright,
+  titleClassName = "",
 }) {
   const shellClass = `rounded-2xl bg-gradient-to-br ${gradientClass} p-[1px] h-full text-right`;
   const innerClass = isBright
@@ -22,9 +23,12 @@ export default function MarketingFeatureCard({
           </div>
         ) : null}
         <h3
-          className={`text-base font-bold leading-snug md:text-lg ${
-            isBright ? "text-slate-900" : "text-white"
-          }`}
+          className={
+            titleClassName ||
+            `text-base font-bold leading-snug md:text-lg ${
+              isBright ? "text-slate-900" : "text-white"
+            }`
+          }
         >
           {title}
         </h3>

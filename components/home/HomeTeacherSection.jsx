@@ -19,7 +19,7 @@ export default function HomeTeacherSection({ isBright }) {
       >
         {copy.label}
       </p>
-      <h2 className={`text-lg font-black md:text-xl ${cls.title}`}>{copy.title}</h2>
+      <h2 className={`text-lg font-black md:text-xl ${cls.heading}`}>{copy.title}</h2>
       <p className={`mx-auto max-w-2xl text-sm md:text-base ${cls.body}`}>{copy.text}</p>
 
       <ul className="mx-auto flex max-w-xl flex-wrap items-center justify-center gap-2 text-sm">

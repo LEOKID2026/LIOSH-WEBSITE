@@ -19,9 +19,8 @@ const homeSeo = getPublicPageSeo("home");
 export default function HomePage() {
   const { theme, isBright } = useStudentTheme();
 
-  const installBtnClass = isBright
-    ? "inline-flex h-9 items-center justify-center gap-1.5 rounded-full border border-slate-300/80 bg-white px-4 text-xs font-semibold text-slate-600 shadow-sm transition hover:bg-slate-50"
-    : "inline-flex h-9 items-center justify-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-4 text-xs font-semibold text-white/75 transition hover:bg-white/15 hover:text-white";
+  const installBtnClass =
+    "inline-flex h-11 min-w-[15rem] items-center justify-center gap-2 rounded-full bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-400 px-8 text-sm font-bold text-blue-900 shadow-lg transition-all hover:from-yellow-400 hover:via-yellow-500 hover:to-amber-500 hover:shadow-xl sm:min-w-[17rem] sm:text-base";
 
   return (
     <Layout homepage studentTheme={theme} studentShell="home">

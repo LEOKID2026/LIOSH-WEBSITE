@@ -43,52 +43,64 @@ const ICONS = {
   ),
 };
 
+const CARD_SHELL_BRIGHT = [
+  "rounded-2xl border border-sky-100/90 bg-sky-50/70",
+  "rounded-2xl border border-cyan-100/90 bg-cyan-50/65",
+  "rounded-2xl border border-violet-100/90 bg-violet-50/65",
+  "rounded-2xl border border-indigo-100/90 bg-indigo-50/60",
+  "rounded-2xl border border-emerald-100/90 bg-emerald-50/60",
+  "rounded-2xl border border-amber-100/90 bg-amber-50/55",
+];
+
+const CARD_SHELL_CLASSIC = [
+  "rounded-2xl border border-sky-400/15 bg-sky-500/10",
+  "rounded-2xl border border-cyan-400/15 bg-cyan-500/10",
+  "rounded-2xl border border-violet-400/15 bg-violet-500/10",
+  "rounded-2xl border border-indigo-400/15 bg-indigo-500/10",
+  "rounded-2xl border border-emerald-400/15 bg-emerald-500/10",
+  "rounded-2xl border border-amber-400/15 bg-amber-500/10",
+];
+
 /**
- * @param {{ id: string, title: string, text: string, isBright: boolean }} props
+ * @param {{ id: string, title: string, text: string, isBright: boolean, index?: number }} props
  */
-export default function HomeCapabilityCard({ id, title, text, isBright }) {
-  const shellClass = isBright
-    ? "rounded-2xl bg-gradient-to-br from-cyan-400/70 to-violet-400/60 p-[1px] h-full"
-    : "rounded-2xl bg-gradient-to-br from-cyan-500/50 to-violet-500/40 p-[1px] h-full";
-  const innerClass = isBright
-    ? "h-full rounded-2xl bg-white/95 p-4 text-right shadow-sm"
-    : "h-full rounded-2xl bg-black/55 p-4 text-right";
+export default function HomeCapabilityCard({ id, title, text, isBright, index = 0 }) {
+  const shells = isBright ? CARD_SHELL_BRIGHT : CARD_SHELL_CLASSIC;
+  const shellClass = shells[index % shells.length];
 
   return (
-    <article className={shellClass} data-testid={`home-capability-${id}`}>
-      <div className={innerClass}>
-        <div
-          className={`mb-3 inline-flex h-9 w-9 items-center justify-center rounded-xl ${
-            isBright ? "bg-sky-100 text-sky-700" : "bg-cyan-500/20 text-cyan-200"
-          }`}
-          aria-hidden
+    <article className={`h-full p-4 text-right md:p-5 ${shellClass}`} data-testid={`home-capability-${id}`}>
+      <div
+        className={`mb-3 inline-flex h-9 w-9 items-center justify-center rounded-xl ${
+          isBright ? "bg-white/80 text-sky-700" : "bg-white/10 text-cyan-200"
+        }`}
+        aria-hidden
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            {ICONS[id] || ICONS["parent-report"]}
-          </svg>
-        </div>
-        <h3
-          className={`text-base font-bold leading-snug md:text-lg ${
-            isBright ? "text-slate-900" : "text-white"
-          }`}
-        >
-          {title}
-        </h3>
-        <p
-          className={`mt-2 text-sm leading-relaxed ${
-            isBright ? "text-slate-600" : "text-white/75"
-          }`}
-        >
-          {text}
-        </p>
+          {ICONS[id] || ICONS["parent-report"]}
+        </svg>
       </div>
+      <h3
+        className={`text-base font-bold leading-snug md:text-lg ${
+          isBright ? "text-sky-900" : "text-sky-100"
+        }`}
+      >
+        {title}
+      </h3>
+      <p
+        className={`mt-2 text-sm leading-relaxed ${
+          isBright ? "text-slate-600" : "text-white/75"
+        }`}
+      >
+        {text}
+      </p>
     </article>
   );
 }

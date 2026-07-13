@@ -16,6 +16,7 @@ function getKidsCardGradient(isBright, index) {
 export default function HomeKidsSection({ isBright }) {
   const copy = HOMEPAGE_COPY.kids;
   const cls = getHomeTextClasses(isBright);
+  const cardTitleClass = `text-base font-bold leading-snug md:text-lg ${cls.heading}`;
 
   return (
     <section className="space-y-6 md:space-y-8" data-testid="home-kids-section">
@@ -35,6 +36,7 @@ export default function HomeKidsSection({ isBright }) {
         isBright={isBright}
         title={copy.videoTitle}
         description={copy.videoDescription}
+        titleClassName={`text-lg font-bold md:text-xl ${cls.heading}`}
         className="py-2"
       />
 
@@ -46,6 +48,7 @@ export default function HomeKidsSection({ isBright }) {
             text={item.text}
             gradientClass={getKidsCardGradient(isBright, index)}
             isBright={isBright}
+            titleClassName={cardTitleClass}
           />
         ))}
       </div>

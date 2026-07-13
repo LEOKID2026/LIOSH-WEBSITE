@@ -8,11 +8,12 @@ export const HOME_PAGE_PAD = "px-4 sm:px-6 lg:px-8";
 export function getHomeTextClasses(isBright) {
   return {
     title: isBright ? "text-slate-900" : "text-white",
+    heading: isBright ? "text-sky-900" : "text-sky-100",
     body: isBright ? "text-slate-600" : "text-white/75",
     muted: isBright ? "text-slate-500" : "text-white/60",
     sectionTitle: isBright
-      ? "text-2xl font-black text-slate-900 md:text-3xl"
-      : "text-2xl font-black text-white md:text-3xl",
+      ? "text-2xl font-black text-sky-900 md:text-3xl"
+      : "text-2xl font-black text-sky-100 md:text-3xl",
     label: isBright
       ? "border border-cyan-300 bg-cyan-100 text-cyan-900"
       : "bg-white/10 text-cyan-300",
