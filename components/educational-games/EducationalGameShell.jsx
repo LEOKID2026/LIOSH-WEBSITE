@@ -6,7 +6,6 @@ import { useEducationalGameSession } from "../../hooks/educational-games/useEduc
 import { useEducationalGameAudio } from "../../hooks/educational-games/useEducationalGameAudio.js";
 import { useSoloGameShellUi } from "../../hooks/solo-games/useSoloGameShellUi.js";
 import { enterMobileGameFullscreenFromUserGesture } from "../../lib/solo-games/solo-game-fullscreen.client.js";
-import GameAudioFullscreenButton from "../game-audio/GameAudioFullscreenButton.jsx";
 import GameAccessGuard from "../games/GameAccessGuard.jsx";
 import EducationalGameEntryScreen from "./EducationalGameEntryScreen.jsx";
 import SoloGameFinishScreen from "../solo-games/SoloGameFinishScreen.jsx";
@@ -98,7 +97,9 @@ export default function EducationalGameShell({ gameKey }) {
     [finishSession, onWon, onLost],
   );
 
-  useEffect(() => () => stopAll(), [stopAll]);
+  useEffect(() => {
+    return () => stopAll();
+  }, [stopAll]);
 
   const handlePlayAgain = useCallback(() => {
     resetSession();
@@ -164,11 +165,6 @@ export default function EducationalGameShell({ gameKey }) {
             >
               בית
             </Link>
-            {phase === "playing" ? (
-              <div className="absolute left-3 top-2 z-20 sm:left-4">
-                <GameAudioFullscreenButton />
-              </div>
-            ) : null}
           </header>
           ) : null}
 

@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useGameAudio } from "../useGameAudio.js";
 import { getEducationalBgmAssetId } from "../../lib/game-audio/game-bgm-map.js";
 
@@ -7,80 +7,85 @@ import { getEducationalBgmAssetId } from "../../lib/game-audio/game-bgm-map.js";
  */
 export function useEducationalGameAudio() {
   const audio = useGameAudio();
+  const audioRef = useRef(audio);
+  audioRef.current = audio;
 
   const onSessionStart = useCallback(() => {
-    audio.primeFromUserGesture();
-    audio.playSfx("sfx-game-start");
-    audio.playMusic(getEducationalBgmAssetId());
-  }, [audio]);
+    const a = audioRef.current;
+    a.primeFromUserGesture();
+    a.playSfx("sfx-game-start");
+    a.playMusic(getEducationalBgmAssetId());
+  }, []);
 
   const onWon = useCallback(() => {
-    audio.stopVoice();
-    audio.playSfx("sfx-success-lg");
-  }, [audio]);
+    const a = audioRef.current;
+    a.stopVoice();
+    a.playSfx("sfx-success-lg");
+  }, []);
 
   const onLost = useCallback(() => {
-    audio.stopVoice();
-    audio.playSfx("sfx-defeat");
-  }, [audio]);
+    const a = audioRef.current;
+    a.stopVoice();
+    a.playSfx("sfx-defeat");
+  }, []);
 
   const onCorrect = useCallback(() => {
-    audio.playSfx("sfx-correct");
-  }, [audio]);
+    audioRef.current.playSfx("sfx-correct");
+  }, []);
 
   const onWrong = useCallback(() => {
-    audio.playSfx("sfx-wrong");
-  }, [audio]);
+    audioRef.current.playSfx("sfx-wrong");
+  }, []);
 
   const onStreak = useCallback(() => {
-    audio.playSfx("sfx-streak");
-  }, [audio]);
+    audioRef.current.playSfx("sfx-streak");
+  }, []);
 
   const onSmallSuccess = useCallback(() => {
-    audio.playSfx("sfx-success-sm");
-  }, [audio]);
+    audioRef.current.playSfx("sfx-success-sm");
+  }, []);
 
   const onTimeUp = useCallback(() => {
-    audio.playSfx("sfx-time-up");
-  }, [audio]);
+    audioRef.current.playSfx("sfx-time-up");
+  }, []);
 
   const onDragLift = useCallback(() => {
-    audio.playSfx("sfx-drag");
-  }, [audio]);
+    audioRef.current.playSfx("sfx-drag");
+  }, []);
 
   const onDropOk = useCallback(() => {
-    audio.playSfx("sfx-drop-ok");
-  }, [audio]);
+    audioRef.current.playSfx("sfx-drop-ok");
+  }, []);
 
-  const playInstruction = useCallback(
-    (text) => {
-      if (!text) return;
-      void audio.playVoice("voice-edu-instruction", { text });
-    },
-    [audio],
-  );
+  const playInstruction = useCallback((text) => {
+    if (!text) return Promise.resolve();
+    return (
+      audioRef.current.playVoice("voice-edu-instruction", { text, locale: "he-IL" }) ??
+      Promise.resolve()
+    );
+  }, []);
 
-  const playFeedback = useCallback(
-    (text) => {
-      if (!text) return;
-      void audio.playVoice("voice-edu-feedback", { text });
-    },
-    [audio],
-  );
+  const playFeedback = useCallback((text) => {
+    if (!text) return Promise.resolve();
+    return (
+      audioRef.current.playVoice("voice-edu-feedback", { text, locale: "he-IL" }) ??
+      Promise.resolve()
+    );
+  }, []);
 
-  const replayInstruction = useCallback(
-    (text) => {
-      audio.stopVoice();
-      playInstruction(text);
-    },
-    [audio, playInstruction],
-  );
+  const replayInstruction = useCallback((text) => {
+    audioRef.current.stopVoice();
+    return playInstruction(text);
+  }, [playInstruction]);
 
   const maybeAutoInstruction = useCallback(
     (text) => {
-      if (audio.settings.autoPlayInstructions && text) playInstruction(text);
+      const a = audioRef.current;
+      if (a.settings.autoPlayInstructions && text) {
+        void playInstruction(text);
+      }
     },
-    [audio, playInstruction],
+    [playInstruction],
   );
 
   return {
@@ -108,20 +113,23 @@ export function useEducationalGameAudio() {
  */
 export function useEducationalEngineAudio({ instructionText, autoPlayInstruction = false } = {}) {
   const edu = useEducationalGameAudio();
+  const audioRef = useRef(edu.audio);
+  audioRef.current = edu.audio;
+  const maybeAutoInstructionRef = useRef(edu.maybeAutoInstruction);
+  maybeAutoInstructionRef.current = edu.maybeAutoInstruction;
 
   useEffect(() => {
     if (autoPlayInstruction && instructionText) {
-      edu.maybeAutoInstruction(instructionText);
+      maybeAutoInstructionRef.current(instructionText);
     }
-  }, [autoPlayInstruction, instructionText, edu]);
+  }, [autoPlayInstruction, instructionText]);
 
-  useEffect(
-    () => () => {
-      edu.audio.stopVoice();
-      edu.audio.stopAsset("sfx-conveyor");
-    },
-    [edu],
-  );
+  useEffect(() => {
+    return () => {
+      audioRef.current.stopVoice();
+      audioRef.current.stopAsset("sfx-conveyor");
+    };
+  }, []);
 
   return edu;
 }

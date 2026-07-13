@@ -51,12 +51,13 @@ export default function HebrewAudioBuild1Panel({
   }, [stem?.playback_kind]);
 
   useEffect(() => {
+    if (audio) return () => {};
     ctrlRef.current = createStemPlaybackController(stem, {});
     return () => {
       ctrlRef.current?.dispose();
       ctrlRef.current = null;
     };
-  }, [stem]);
+  }, [stem, audio]);
 
   /** הקראה סטטית לפי תוכן שאלה — יוצרת MP3 בשרת (לא TTS בדפדפן) */
   const ensureServerNarrationMp3 = useCallback(async () => {
@@ -110,7 +111,9 @@ export default function HebrewAudioBuild1Panel({
       if (needsServerNarration) {
         setStatusMsg("מכינים שמע…");
         await ensureServerNarrationMp3();
-        ctrlRef.current = createStemPlaybackController(stem, {});
+        if (!audio) {
+          ctrlRef.current = createStemPlaybackController(stem, {});
+        }
         setStatusMsg("משמיעים…");
       }
       if (audio) {

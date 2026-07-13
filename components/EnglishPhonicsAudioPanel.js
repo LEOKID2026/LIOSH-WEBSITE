@@ -30,12 +30,13 @@ export default function EnglishPhonicsAudioPanel({ stem, gameActive, grade = nul
   }, [stem?.playback_kind]);
 
   useEffect(() => {
+    if (audio) return () => {};
     ctrlRef.current = createStemPlaybackController(stem, {});
     return () => {
       ctrlRef.current?.dispose();
       ctrlRef.current = null;
     };
-  }, [stem]);
+  }, [stem, audio]);
 
   const playStem = useCallback(async () => {
     if (!gameActive || busy) return;

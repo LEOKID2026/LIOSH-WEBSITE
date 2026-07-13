@@ -1,6 +1,8 @@
 /**
- * Integrated mobile nav center: subject title + global audio toggle (title not duplicated below).
+ * Integrated mobile nav center: subject title + global audio settings (title not duplicated below).
  */
+import LearningMasterAudioButton from "./LearningMasterAudioButton.jsx";
+
 export default function LearningMasterMobileNavTitle({ MB, title, audio }) {
   if (!title) return null;
 
@@ -13,14 +15,11 @@ export default function LearningMasterMobileNavTitle({ MB, title, audio }) {
     <>
       <h1 className={`${MB.pageTitle} leading-tight truncate max-md:text-2xl`}>{title}</h1>
       {audio ? (
-        <button
-          type="button"
-          onClick={() => audio.toggleMaster()}
-          className={audioOn ? MB.btnSoundOn : MB.btnSoundOff}
-          title={audioOn ? "השתק צלילים" : "הפעל צלילים"}
-        >
-          {audioOn ? "🔊" : "🔇"}
-        </button>
+        <LearningMasterAudioButton
+          audioOn={audioOn}
+          buttonClassOn={MB.btnSoundOn}
+          buttonClassOff={MB.btnSoundOff}
+        />
       ) : null}
     </>
   );

@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect, useRef } from "react";
 import Layout from "../../components/Layout";
 import MaybeGameAccessGuard from "../../components/offline/MaybeGameAccessGuard.jsx";
 import StudentAdSlot from "../../components/student/StudentAdSlot.jsx";
-import GameAudioFullscreenButton from "../../components/game-audio/GameAudioFullscreenButton.jsx";
+import GameAudioSettingsButton from "../../components/game-audio/GameAudioSettingsButton.jsx";
 import { useRouter } from "next/router";
 import OfflineGameHoldShell from "../../components/offline/OfflineGameHoldShell.jsx";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
@@ -78,6 +78,7 @@ export default function TicTacToeXL() {
 
   const winner = useMemo(() => checkWinner(board, size), [board, size]);
   const isBoardFull = board.every(Boolean);
+  const isMidGame = board.some(Boolean) && !winner && !isBoardFull;
 
   useEffect(() => {
     setMounted(true);
@@ -234,7 +235,7 @@ export default function TicTacToeXL() {
               >
                 חזרה
               </button>
-              <GameAudioFullscreenButton />
+              {!isMidGame ? <GameAudioSettingsButton /> : null}
             </div>
             <div className="absolute right-2 top-2 pointer-events-auto">
               <span className="text-xs uppercase tracking-[0.3em] text-white/60">

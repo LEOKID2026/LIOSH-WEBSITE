@@ -61,6 +61,9 @@ const coreFiles = [
   "lib/game-audio/game-bgm-map.js",
   "hooks/useGameAudio.js",
   "hooks/useSound.js",
+  "components/game-audio/GameAudioSettingsButton.jsx",
+  "components/game-audio/GameAudioSettingsModal.jsx",
+  "components/game-audio/game-audio-settings-button-styles.js",
   "components/game-audio/GameAudioQuickToggle.jsx",
   "components/game-audio/GameAudioSettingsPanel.jsx",
   "components/game-audio/GameAudioFullscreenButton.jsx",
@@ -103,8 +106,26 @@ assert(sw.includes("student-offline-v10-full"), "SW cache version must be v10");
 assert(/audio.*games.*mp3/i.test(sw), "SW must match game audio mp3 paths");
 
 // 7. Shell audio hooks
-assert(read("components/solo-games/SoloGameShell.jsx").includes("useSoloGameShellAudio"), "SoloGameShell audio hook");
-assert(read("components/educational-games/EducationalGameShell.jsx").includes("useEducationalGameAudio"), "EducationalGameShell audio hook");
+assert(read("components/games/GamesHubNavBar.jsx").includes("GameAudioSettingsButton"), "GamesHubNavBar audio settings button");
+assert(read("components/games/GamesHubNavBar.jsx").includes("showAudioSettings"), "GamesHubNavBar showAudioSettings prop");
+assert(read("components/game-audio/GameAudioSettingsModal.jsx").includes("createPortal"), "GameAudioSettingsModal must portal to body");
+assert(read("components/game-audio/GameAudioSettingsModal.jsx").includes("z-[10050]"), "GameAudioSettingsModal must use high z-index");
+assert(read("components/game-audio/GameAudioSettingsButton.jsx").includes("GameAudioSettingsModal"), "GameAudioSettingsButton must open modal");
+assert(read("components/game-audio/game-audio-settings-button-styles.js").includes("h-10 w-10"), "audio button must be 40px tap target");
+assert(read("pages/student/arcade.js").includes("showAudioSettings={false}"), "arcade must hide audio settings");
+assert(read("pages/dev/solo-game-prototypes/index.js").includes("showAudioSettings={false}"), "dev solo prototypes must hide audio");
+assert(!read("components/leo-miners/LeoMinersGame.jsx").includes("GameAudioSettingsButton"), "LeoMinersGame must not show audio button during gameplay");
+assert(read("components/leo-miners/LeoMinersShell.jsx").includes("GameAudioSettingsButton"), "LeoMinersShell loading screen audio button");
+assert(read("components/solo-games/SoloGameEntryScreen.jsx").includes("GameAudioSettingsButton"), "SoloGameEntryScreen audio settings button");
+assert(!read("components/solo-games/SoloGameShell.jsx").includes("GameAudioSettingsButton"), "SoloGameShell must not show audio button during gameplay");
+assert(read("components/educational-games/EducationalGameEntryScreen.jsx").includes("GameAudioSettingsButton"), "EducationalGameEntryScreen audio settings button");
+assert(!read("components/educational-games/EducationalGameShell.jsx").includes("GameAudioSettingsButton"), "EducationalGameShell must not show audio button during gameplay");
+assert(read("pages/offline/tic-tac-toe.js").includes("isMidGame") && read("pages/offline/tic-tac-toe.js").includes("!isMidGame"), "tic-tac-toe must hide audio during play");
+assert(read("pages/offline/rock-paper-scissors.js").includes("isMidRound") && read("pages/offline/rock-paper-scissors.js").includes("!isMidRound"), "rock-paper-scissors must hide audio during round");
+assert(read("pages/offline/tap-battle.js").includes("showAudioButton"), "tap-battle must conditionally show audio");
+assert(read("pages/offline/memory-match.js").includes("isSetupPhase"), "memory-match must conditionally show audio");
+assert(read("components/learning/LearningMasterAudioButton.jsx").includes("GameAudioSettingsModal"), "Learning masters must open settings modal");
+assert(!read("components/game-audio/GameAudioQuickToggle.jsx").includes("toggleMaster"), "QuickToggle must open settings panel, not mute only");
 
 // 8. MP3 files on disk (required for closure)
 for (const id of REQUIRED_MP3_ASSET_IDS) {

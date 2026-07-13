@@ -3,6 +3,7 @@ import { SOLO_DIFFICULTY_OPTIONS } from "../../lib/solo-games/solo-game-registry
 import { useSoloOrientationHint } from "../../hooks/solo-games/useSoloOrientationHint.js";
 import SoloGameNavButtons from "./SoloGameNavButtons.jsx";
 import SoloGameHelpButton from "./SoloGameHelpButton.jsx";
+import GameAudioSettingsButton from "../game-audio/GameAudioSettingsButton.jsx";
 
 /**
  * @param {{
@@ -32,11 +33,12 @@ export default function SoloGameEntryScreen({
       className="relative flex h-full min-h-0 flex-col items-center justify-center overflow-hidden overflow-x-hidden px-4 py-2 sm:py-3 text-center"
       dir="rtl"
     >
+      <GameAudioSettingsButton className="absolute left-4 top-4 z-20 sm:left-6 sm:top-6" />
       {onOpenHelp ? (
         <SoloGameHelpButton
           game={game}
           onOpen={onOpenHelp}
-          className="absolute left-4 top-4 sm:left-6 sm:top-6"
+          className="absolute right-4 top-4 z-20 sm:right-6 sm:top-6"
         />
       ) : null}
       <div className="w-full max-w-md space-y-4 sm:space-y-5">

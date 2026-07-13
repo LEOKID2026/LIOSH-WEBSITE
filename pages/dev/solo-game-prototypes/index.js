@@ -39,6 +39,7 @@ export default function SoloGamePrototypesHubPage() {
               badge="🧪 אבטיפוסים"
               backBtnClass={GH.backBtn}
               badgeClass={GH.badge}
+              showAudioSettings={false}
             />
 
             <GamesHubHeader

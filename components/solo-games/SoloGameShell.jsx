@@ -7,7 +7,6 @@ import { findSoloGame } from "../../lib/solo-games/solo-game-registry.js";
 import { useSoloGameSession } from "../../hooks/solo-games/useSoloGameSession.js";
 import { useSoloGameShellUi } from "../../hooks/solo-games/useSoloGameShellUi.js";
 import { useSoloGameShellAudio } from "../../hooks/solo-games/useSoloGameAudio.js";
-import GameAudioFullscreenButton from "../game-audio/GameAudioFullscreenButton.jsx";
 import SoloGameEntryScreen from "./SoloGameEntryScreen.jsx";
 import SoloGameFinishScreen from "./SoloGameFinishScreen.jsx";
 import SoloGameSettlingOverlay from "./SoloGameSettlingOverlay.jsx";
@@ -154,11 +153,6 @@ export default function SoloGameShell({ gameKey }) {
           >
             בית
           </Link>
-          {phase === "playing" ? (
-            <div className="absolute left-3 top-2 z-20 sm:left-4">
-              <GameAudioFullscreenButton />
-            </div>
-          ) : null}
         </header>
 
         <main className="relative flex min-h-0 flex-1 flex-col overflow-hidden">

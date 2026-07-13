@@ -5,6 +5,7 @@ import Head from "next/head";
 import dynamic from "next/dynamic";
 
 import GameAccessGuard from "../games/GameAccessGuard.jsx";
+import GameAudioSettingsButton from "../game-audio/GameAudioSettingsButton.jsx";
 
 import { createLeoMinersEconomyClient } from "../../lib/leo-miners/leo-miners-economy.client.js";
 
@@ -199,13 +200,10 @@ export default function LeoMinersShell({ skipAccessGuard = false }) {
       </Head>
 
       {!configHydrated ? (
-
-        <p className="text-white/70 text-sm text-center py-8" dir="rtl">
-
-          טוען הגדרות משחק…
-
-        </p>
-
+        <div className="relative py-8 text-center" dir="rtl">
+          <GameAudioSettingsButton className="absolute left-4 top-4 z-20 sm:left-6 sm:top-6" />
+          <p className="text-white/70 text-sm">טוען הגדרות משחק…</p>
+        </div>
       ) : (
 
         <LeoMinersGame

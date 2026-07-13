@@ -320,8 +320,10 @@ export default function RecyclingFactoryGame({
       const factText = showFact ? pickFactForBin(binId) : "";
       setFeedback({ text: okText, fact: factText, type: "ok" });
       onCorrect();
-      playFeedback(okText);
-      if (factText) playFeedback(factText);
+      void (async () => {
+        await playFeedback(okText);
+        if (factText) await playFeedback(factText);
+      })();
       setHighlightBin(binId);
       window.setTimeout(() => setHighlightBin(null), 500);
 

@@ -69,10 +69,10 @@ export default function GameAudioProvider({ children }) {
     return () => router.events.off("routeChangeStart", onStart);
   }, [router]);
 
-  const api = useMemo(() => {
+  const stableActionsRef = useRef(null);
+  if (!stableActionsRef.current) {
     const mgr = () => managerRef.current;
-    return {
-      settings,
+    stableActionsRef.current = {
       primeFromUserGesture: () => mgr()?.primeFromUserGesture(),
       playSfx: (id, opts) => mgr()?.playSfx(id, opts),
       playMusic: (id, opts) => mgr()?.playMusic(id, opts),
@@ -97,7 +97,15 @@ export default function GameAudioProvider({ children }) {
         if (!next) mgr()?.stopAll();
       },
     };
-  }, [settings]);
+  }
+
+  const api = useMemo(
+    () => ({
+      ...stableActionsRef.current,
+      settings,
+    }),
+    [settings],
+  );
 
   return (
     <GameAudioContext.Provider value={api}>{children}</GameAudioContext.Provider>

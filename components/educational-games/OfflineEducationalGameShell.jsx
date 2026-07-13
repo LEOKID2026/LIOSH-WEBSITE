@@ -4,7 +4,6 @@ import Link from "next/link";
 import { findEducationalGame } from "../../lib/educational-games/educational-game-registry.js";
 import { difficultyLabelHe } from "../../lib/educational-games/educational-game-registry.js";
 import { useEducationalGameAudio } from "../../hooks/educational-games/useEducationalGameAudio.js";
-import GameAudioFullscreenButton from "../game-audio/GameAudioFullscreenButton.jsx";
 import { useSoloGameShellUi } from "../../hooks/solo-games/useSoloGameShellUi.js";
 import { enterMobileGameFullscreenFromUserGesture } from "../../lib/solo-games/solo-game-fullscreen.client.js";
 import {
@@ -142,11 +141,6 @@ export default function OfflineEducationalGameShell({ gameKey }) {
           >
             אופליין
           </Link>
-          {phase === "playing" ? (
-            <div className="absolute left-3 top-2 z-20 sm:left-4">
-              <GameAudioFullscreenButton />
-            </div>
-          ) : null}
         </header>
 
         <main className="relative flex min-h-0 flex-1 flex-col overflow-hidden">

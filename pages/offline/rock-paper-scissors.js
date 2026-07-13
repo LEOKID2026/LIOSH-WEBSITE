@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import Layout from "../../components/Layout";
 import MaybeGameAccessGuard from "../../components/offline/MaybeGameAccessGuard.jsx";
 import StudentAdSlot from "../../components/student/StudentAdSlot.jsx";
-import GameAudioFullscreenButton from "../../components/game-audio/GameAudioFullscreenButton.jsx";
+import GameAudioSettingsButton from "../../components/game-audio/GameAudioSettingsButton.jsx";
 import { useRouter } from "next/router";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
 import OfflineGameHoldShell from "../../components/offline/OfflineGameHoldShell.jsx";
@@ -60,6 +60,8 @@ export default function RockPaperScissors() {
         ? "רובוט ליאו"
         : "שחקן 2"
       : null;
+
+  const isMidRound = showResults || showP1Choice;
 
   useEffect(() => {
     setMounted(true);
@@ -275,7 +277,7 @@ export default function RockPaperScissors() {
               >
                 חזרה
               </button>
-              <GameAudioFullscreenButton />
+              {!isMidRound ? <GameAudioSettingsButton /> : null}
             </div>
             <div className="absolute right-2 top-2 pointer-events-auto">
               <span className="text-xs uppercase tracking-[0.3em] text-white/60">

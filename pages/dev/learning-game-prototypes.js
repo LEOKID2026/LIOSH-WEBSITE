@@ -28,6 +28,7 @@ export default function LearningGamePrototypesHubPage() {
               badge="📚 לימודי"
               backBtnClass={GH.backBtn}
               badgeClass={GH.badge}
+              showAudioSettings={false}
             />
 
             <GamesHubHeader

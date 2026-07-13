@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import GameAudioFullscreenButton from "../game-audio/GameAudioFullscreenButton.jsx";
 import { useGameAudio } from "../../hooks/useGameAudio";
 import { pointsBaseForStage, OFFLINE_DPS_FACTOR, DAILY_CAP_DISPLAY } from "../../lib/leo-miners/leo-miners-formulas.client.js";
 import {
@@ -2566,7 +2565,6 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
 
             {/* ימין: Fullscreen + Menu */}
             <div className="absolute right-2 top-0 flex gap-2 pointer-events-auto items-center">
-              <GameAudioFullscreenButton />
               <button
                 onClick={() => {
                   try { playMinersClick(); } catch {}
@@ -2627,9 +2625,9 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
 
       {/* Sound */}
       <div className="mb-4 space-y-2">
-  <h3 className="text-sm font-semibold opacity-80">צלילים</h3>
-  <p className="text-xs opacity-70">הגדרות השמע הגלובליות זמינות בכפתור 🎚️ בסרגל העליון.</p>
-</div>
+        <h3 className="text-sm font-semibold opacity-80">צלילים</h3>
+        <p className="text-xs opacity-70">הגדרות השמע הגלובליות זמינות במסך הטעינה לפני המשחק.</p>
+      </div>
 
 
       <div className="mt-4 text-xs opacity-70" dir="rtl">

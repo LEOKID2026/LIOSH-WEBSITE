@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import { useGameAudio } from "../useGameAudio.js";
 import { getSoloBgmAssetId } from "../../lib/game-audio/game-bgm-map.js";
 
@@ -7,27 +7,32 @@ import { getSoloBgmAssetId } from "../../lib/game-audio/game-bgm-map.js";
  */
 export function useSoloGameShellAudio(gameKey) {
   const audio = useGameAudio();
+  const audioRef = useRef(audio);
+  audioRef.current = audio;
 
   const onSessionStart = useCallback(() => {
-    audio.primeFromUserGesture();
-    audio.playSfx("sfx-game-start");
+    const a = audioRef.current;
+    a.primeFromUserGesture();
+    a.playSfx("sfx-game-start");
     const bgm = getSoloBgmAssetId(gameKey);
-    if (bgm) audio.playMusic(bgm);
-  }, [audio, gameKey]);
+    if (bgm) a.playMusic(bgm);
+  }, [gameKey]);
 
   const onSessionWon = useCallback(() => {
-    audio.stopVoice();
-    audio.playSfx("sfx-victory");
-  }, [audio]);
+    const a = audioRef.current;
+    a.stopVoice();
+    a.playSfx("sfx-victory");
+  }, []);
 
   const onSessionLost = useCallback(() => {
-    audio.stopVoice();
-    audio.playSfx("sfx-defeat");
-  }, [audio]);
+    const a = audioRef.current;
+    a.stopVoice();
+    a.playSfx("sfx-defeat");
+  }, []);
 
   const onExit = useCallback(() => {
-    audio.stopAll();
-  }, [audio]);
+    audioRef.current.stopAll();
+  }, []);
 
   return { audio, onSessionStart, onSessionWon, onSessionLost, onExit };
 }

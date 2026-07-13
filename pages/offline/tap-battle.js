@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import Layout from "../../components/Layout";
 import MaybeGameAccessGuard from "../../components/offline/MaybeGameAccessGuard.jsx";
 import StudentAdSlot from "../../components/student/StudentAdSlot.jsx";
-import GameAudioFullscreenButton from "../../components/game-audio/GameAudioFullscreenButton.jsx";
+import GameAudioSettingsButton from "../../components/game-audio/GameAudioSettingsButton.jsx";
 import { useRouter } from "next/router";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
 import OfflineGameHoldShell from "../../components/offline/OfflineGameHoldShell.jsx";
@@ -28,6 +28,8 @@ export default function TapBattle() {
   const [score, setScore] = useState({ left: 0, right: 0, ties: 0 });
   const [round, setRound] = useState(1);
   const [winnerMessage, setWinnerMessage] = useState("");
+
+  const showAudioButton = phase === "idle" || phase === "finished";
 
   useEffect(() => {
     setMounted(true);
@@ -198,7 +200,7 @@ export default function TapBattle() {
               >
                 חזרה
               </button>
-              <GameAudioFullscreenButton />
+              {showAudioButton ? <GameAudioSettingsButton /> : null}
             </div>
             <div className="absolute right-2 top-2 pointer-events-auto">
               <span className="text-xs uppercase tracking-[0.3em] text-white/60">

@@ -27,6 +27,7 @@ export default function SoloGamePrototypesListPage() {
               badge="🎮 סולו"
               backBtnClass={GH.backBtn}
               badgeClass={GH.badge}
+              showAudioSettings={false}
             />
 
             <GamesHubHeader

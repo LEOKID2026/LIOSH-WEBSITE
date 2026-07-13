@@ -1,4 +1,5 @@
 import StudentThemePicker from "../student/StudentThemePicker";
+import LearningMasterAudioButton from "./LearningMasterAudioButton.jsx";
 
 /**
  * Integrated desktop top row: back + title + curriculum (md+ only).
@@ -47,14 +48,11 @@ export default function LearningMasterDesktopHeader({
           <div className="flex items-center justify-center gap-2">
             <h1 className={`${MB.pageTitle} md:text-2xl lg:text-3xl`}>{title}</h1>
             {audio ? (
-              <button
-                type="button"
-                onClick={() => audio.toggleMaster()}
-                className={audioOn ? MB.btnSoundOn : MB.btnSoundOff}
-                title={audioOn ? "השתק צלילים" : "הפעל צלילים"}
-              >
-                {audioOn ? "🔊" : "🔇"}
-              </button>
+              <LearningMasterAudioButton
+                audioOn={audioOn}
+                buttonClassOn={MB.btnSoundOn}
+                buttonClassOff={MB.btnSoundOff}
+              />
             ) : null}
           </div>
         </div>

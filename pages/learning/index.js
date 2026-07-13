@@ -7,6 +7,7 @@ import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
 import { isStudentIdentityDiagnosticsEnabled } from "../../lib/dev-student-identity-client";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import LearningHubSubjectCard from "../../components/learning/LearningHubSubjectCard.jsx";
+import GameAudioSettingsButton from "../../components/game-audio/GameAudioSettingsButton.jsx";
 import StudentHomeModal from "../../components/student/StudentHomeModal";
 import StudentMonthlyPersistencePanel from "../../components/student/StudentMonthlyPersistencePanel";
 import { buildStudentHomeView } from "../../lib/learning-client/studentHomeDashboardClient";
@@ -297,7 +298,8 @@ export default function LearningHub({ showDevStudentSimulator }) {
           >
             📚 תרגול · חזרה · שיפור
           </p>
-          <div className={T.hubTopBarTheme}>
+          <div className={`${T.hubTopBarTheme} flex items-center justify-end gap-2`}>
+            <GameAudioSettingsButton />
             <button
               type="button"
               className={`${T.hubBackLink} whitespace-nowrap max-md:text-xs max-md:px-2 max-md:py-1 max-md:min-h-8`}

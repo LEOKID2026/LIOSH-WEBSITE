@@ -694,6 +694,7 @@ export default function StudentArcadePage() {
             badge="מועדון המשחקים של ליאו"
             backBtnClass={GH.backBtn}
             badgeClass={GH.arcadeNavTitle || GH.arcadeNavBadge || GH.badge}
+            showAudioSettings={false}
           />
 
           <ArcadeLobbyHeader

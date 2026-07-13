@@ -234,8 +234,10 @@ export default function LeoLabGame({
       const okText = successFeedbackMessage(firstTry);
       setFeedback({ text: okText, fact: exp.fact, type: "ok" });
       onCorrect();
-      playFeedback(okText);
-      if (exp.fact) playFeedback(exp.fact);
+      void (async () => {
+        await playFeedback(okText);
+        if (exp.fact) await playFeedback(exp.fact);
+      })();
       setSuccessCount((c) => c + 1);
       addScore(SCORE.correct);
       if (firstTry) {
