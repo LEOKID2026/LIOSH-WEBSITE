@@ -8,6 +8,8 @@ import ParentDashboardModal from "../../components/parent/ParentDashboardModal";
 import ChildGamePermissionsPanel from "../../components/parent/ChildGamePermissionsPanel";
 import ChildSubjectPermissionsPanel from "../../components/parent/ChildSubjectPermissionsPanel";
 import ParentInviteOthersButton from "../../components/parent/ParentInviteOthersButton";
+import { PARENT_PROMO_DESKTOP_SRC } from "../../components/parent/ParentPromoVideo";
+import PromoVideoClickablePreview from "../../components/promo/PromoVideoClickablePreview";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import { getParentPortalTheme } from "../../lib/parent-ui/parent-portal-theme.client.js";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
@@ -951,26 +953,47 @@ export default function ParentDashboardPage() {
     ? students.find((s) => s.id === detailsModalStudent.id) || detailsModalStudent
     : null;
 
+  const promoFrameClass = isBright
+    ? "border-slate-200/80 bg-slate-900/5 shadow-sm"
+    : "border-white/15 bg-black/30 shadow-lg shadow-black/20";
+
   return (
     <Layout {...layoutProps}>
       <div className="max-w-6xl mx-auto w-full px-3 py-3 md:px-8 md:py-8 space-y-4 md:space-y-6">
-        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 md:gap-y-3">
-          <div className="min-w-0">
-            <h1 className={`text-xl md:text-2xl font-bold leading-tight ${T.heading}`}>דשבורד הורים</h1>
-            <p className={`${T.subheading} text-sm truncate mt-1`}>{session.user?.email}</p>
+        <div className="flex flex-col gap-2 md:flex-row md:flex-wrap md:items-center md:justify-between md:gap-x-4 md:gap-y-3">
+          <div className="min-w-0 flex-1">
+            <div className="flex min-w-0 items-center justify-between gap-2">
+              <h1 className={`text-xl md:text-2xl font-bold leading-tight ${T.heading} min-w-0 truncate`}>
+                פורטל הורים
+              </h1>
+              <button type="button" onClick={logout} className={`${T.secondaryBtn} shrink-0 md:hidden`}>
+                יציאה
+              </button>
+            </div>
+            <p className={`${T.subheading} mt-1 min-w-0 truncate text-sm`}>{session.user?.email}</p>
           </div>
-          <div className="flex flex-wrap gap-2 shrink-0 justify-end">
+          <div className="grid w-full min-w-0 grid-cols-3 gap-1.5 md:flex md:w-auto md:flex-nowrap md:justify-end md:gap-2">
             <button
               type="button"
               onClick={() => setCurriculumModalOpen(true)}
-              className={T.secondaryBtn}
+              className={`${T.headerCurriculumBtn} w-full min-w-0 md:w-auto md:flex-none`}
             >
               תוכניות הלימודים
             </button>
-            <button type="button" onClick={() => setAddChildModalOpen(true)} className={T.amberBtn}>
+            <button
+              type="button"
+              onClick={() => setAddChildModalOpen(true)}
+              className={`${T.amberBtn} w-full min-w-0 px-2 text-center text-xs leading-tight md:w-auto md:flex-none md:px-4 md:text-sm`}
+            >
               הוספת ילד
             </button>
-            <button type="button" onClick={logout} className={T.secondaryBtn}>
+            <ParentInviteOthersButton
+              bright={isBright}
+              label="שתף"
+              inline
+              className={`${T.headerShareBtn} w-full min-w-0 md:w-auto md:flex-none`}
+            />
+            <button type="button" onClick={logout} className={`${T.secondaryBtn} hidden md:inline-flex`}>
               יציאה
             </button>
           </div>
@@ -991,8 +1014,13 @@ export default function ParentDashboardPage() {
                 return (
                   <div key={student.id} className={T.card}>
                     <div className="min-w-0">
-                      <h3 className={T.cardTitle}>{displayName}</h3>
-                      <p className={T.cardMeta}>{gradeLabel}</p>
+                      <p className="min-w-0 truncate md:hidden">
+                        <span className={`${T.cardTitle} inline truncate`}>{displayName}</span>
+                        <span className={`${T.cardTitle} inline`}> - </span>
+                        <span className={`${T.cardMeta} inline mt-0`}>{gradeLabel}</span>
+                      </p>
+                      <h3 className={`${T.cardTitle} truncate hidden md:block`}>{displayName}</h3>
+                      <p className={`${T.cardMeta} hidden md:block`}>{gradeLabel}</p>
                     </div>
                     <div className="flex gap-2 md:gap-2.5">
                       <Link
@@ -1030,7 +1058,18 @@ export default function ParentDashboardPage() {
               })}
             </div>
           )}
-          <ParentInviteOthersButton bright={isBright} />
+          <div
+            className="mt-2 flex justify-center md:mt-3"
+            data-testid="parent-dashboard-promo"
+          >
+            <PromoVideoClickablePreview
+              src={PARENT_PROMO_DESKTOP_SRC}
+              wrapClassName={`w-[min(62vw,240px)] md:w-[360px] aspect-video overflow-hidden rounded-xl border ${promoFrameClass}`}
+              videoClassName="h-full w-full bg-black object-contain"
+              ariaLabel="סרטון הורים"
+              testId="parent-dashboard-promo-video"
+            />
+          </div>
         </section>
 
         <ParentCurriculumModal
