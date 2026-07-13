@@ -31,7 +31,8 @@ test.describe("Android WebView parity — production mobile @android-qa", () => 
     const res = await page.goto("/", { waitUntil: "domcontentloaded" });
     expect(res?.status()).toBeLessThan(400);
     await expect(page.locator('[dir="rtl"]').first()).toBeVisible({ timeout: 30_000 });
-    await expect(page.getByRole("heading", { name: /LEO KIDS/i })).toBeVisible();
+    await expect(page.getByTestId("home-hero")).toBeVisible({ timeout: 30_000 });
+    await expect(page.getByTestId("home-brand-line")).toContainText("LEO KIDS");
     expect(page.url()).toContain(new URL(PRODUCTION).host);
   });
 

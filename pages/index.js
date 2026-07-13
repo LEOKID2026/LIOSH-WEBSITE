@@ -1,58 +1,27 @@
 import Layout from "../components/Layout";
-import Link from "next/link";
 import InstallAppChoiceButton from "../components/InstallAppChoiceButton";
 import PageSeo from "../components/seo/PageSeo";
-import StudentPromoVideo from "../components/student/StudentPromoVideo";
-import ParentPromoVideo from "../components/parent/ParentPromoVideo";
+import HomeHero from "../components/home/HomeHero";
+import HomeValueCards from "../components/home/HomeValueCards";
+import HomeLearningSystemSection from "../components/home/HomeLearningSystemSection";
+import HomeParentIntro from "../components/home/HomeParentIntro";
+import HomeParentBenefits from "../components/home/HomeParentBenefits";
+import HomeKidsSection from "../components/home/HomeKidsSection";
+import HomeHowItWorks from "../components/home/HomeHowItWorks";
+import HomeFinalCta from "../components/home/HomeFinalCta";
+import HomeTeacherSection from "../components/home/HomeTeacherSection";
+import { HOME_PAGE_MAX, HOME_PAGE_PAD } from "../components/home/home-theme";
 import { getPublicPageSeo } from "../lib/site/public-page-seo.he";
 import { useStudentTheme } from "../contexts/StudentThemeContext.jsx";
 
 const homeSeo = getPublicPageSeo("home");
 
-const PORTAL_CARDS = [
-  {
-    key: "student",
-    title: "עולם הילדים",
-    emoji: "🎒",
-    classicGradient: "from-amber-500/60 to-rose-600/70",
-    /** Full saturated face — own palette for bright mode (not classic tints). */
-    brightFace:
-      "bg-gradient-to-br from-violet-500 via-fuchsia-500 to-purple-700 text-white shadow-lg shadow-fuchsia-300/45",
-    /** Same 🎒 — shifted to teal/green so it reads on the purple face. */
-    brightEmojiFilter:
-      "[filter:hue-rotate(118deg)_saturate(2.5)_brightness(1.12)_contrast(1.05)]",
-    href: "/kids",
-  },
-  {
-    key: "parent",
-    title: "פורטל הורים",
-    emoji: "👨‍👩‍👧‍👦",
-    classicGradient: "from-emerald-500/60 to-teal-600/70",
-    brightFace:
-      "bg-gradient-to-br from-cyan-500 via-sky-500 to-blue-700 text-white shadow-lg shadow-cyan-300/45",
-    href: "/parents",
-  },
-  {
-    key: "teacher",
-    title: "פורטל מורים",
-    emoji: "📋",
-    classicGradient: "from-sky-500/60 to-indigo-600/70",
-    brightFace:
-      "bg-gradient-to-br from-orange-500 via-amber-500 to-yellow-500 text-white shadow-lg shadow-amber-300/45",
-    href: "/teachers",
-  },
-];
-
-const CARD_BODY =
-  "flex h-full min-h-[118px] w-full flex-col items-center justify-center rounded-2xl p-4 text-center md:min-h-[152px] md:p-5";
-
-function cardGridClass(key) {
-  if (key === "student") return "col-span-2 lg:col-span-1";
-  return "col-span-1";
-}
-
 export default function HomePage() {
   const { theme, isBright } = useStudentTheme();
+
+  const installBtnClass = isBright
+    ? "inline-flex h-9 items-center justify-center gap-1.5 rounded-full border border-slate-300/80 bg-white px-4 text-xs font-semibold text-slate-600 shadow-sm transition hover:bg-slate-50"
+    : "inline-flex h-9 items-center justify-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-4 text-xs font-semibold text-white/75 transition hover:bg-white/15 hover:text-white";
 
   return (
     <Layout homepage studentTheme={theme} studentShell="home">
@@ -61,99 +30,29 @@ export default function HomePage() {
         description={homeSeo.description}
         canonicalPath={homeSeo.canonicalPath}
       />
-      <div
-        className="mx-auto flex h-full min-h-0 w-full max-w-5xl flex-1 flex-col items-stretch justify-start gap-3 overflow-hidden px-3 pb-3 pt-2 md:min-h-[calc(100vh-9.5rem)] md:justify-center md:gap-5 md:px-4 md:py-4 md:flex-initial"
-        dir="rtl"
-      >
-        <section className="shrink-0 space-y-1.5 text-center md:space-y-3">
-          <p
-            className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] md:tracking-[0.25em] ${
-              isBright
-                ? "border border-green-400 bg-green-300 text-blue-800"
-                : "bg-white/10 text-amber-300"
-            }`}
-          >
-            לומדים · מתרגלים · מתקדמים
-          </p>
-          <h1
-            className={`text-[1.75rem] font-black leading-tight md:text-4xl lg:text-5xl ${
-              isBright ? "text-slate-900" : "text-white"
-            }`}
-          >
-            ברוכים הבאים אל{" "}
-            <span className={isBright ? "text-red-600" : "text-amber-300"}>LEO KIDS</span>
-          </h1>
-          <p
-            className={`mx-auto max-w-2xl px-1 text-sm leading-relaxed md:text-base md:leading-normal lg:text-lg ${
-              isBright ? "text-slate-600" : "text-white/70"
-            }`}
-          >
-            אתר לימודים לילדים עם תרגול חכם, פעילויות קצרות ומיני משחקים — מתמטיקה,
-            גאומטריה, אנגלית ועוד. הכל במקום אחד.
-          </p>
-        </section>
+      <div dir="rtl" lang="he" data-testid="home-page">
+        <HomeHero isBright={isBright} />
 
-        <section className="flex w-full shrink-0 flex-col items-center gap-3 md:gap-4">
-          <div className="grid w-full shrink-0 grid-cols-2 gap-x-2.5 gap-y-3.5 md:gap-5 lg:grid-cols-3">
-          {PORTAL_CARDS.map((card) => {
-            const gridClass = cardGridClass(card.key);
+        <div className="space-y-6 py-6 md:space-y-8 md:py-8">
+          <HomeValueCards isBright={isBright} />
 
-            const cardContent = (
-              <>
-                <div className="mb-2 text-3xl md:mb-3 md:text-4xl">
-                  <span
-                    className={
-                      isBright && card.brightEmojiFilter ? card.brightEmojiFilter : undefined
-                    }
-                  >
-                    {card.emoji}
-                  </span>
-                </div>
-                <h2 className="text-lg font-bold leading-snug md:text-xl">{card.title}</h2>
-              </>
-            );
-
-            if (isBright) {
-              const brightClass = `${CARD_BODY} ${card.brightFace} ${gridClass}`;
-              return (
-                <Link key={card.key} href={card.href} className={brightClass}>
-                  {cardContent}
-                </Link>
-              );
-            }
-
-            const shellClass = `group rounded-2xl bg-gradient-to-br ${card.classicGradient} p-[1px] w-full ${gridClass}`;
-            const inner = (
-              <div className={`${CARD_BODY} bg-black/60 text-white`}>{cardContent}</div>
-            );
-
-            return (
-              <Link key={card.key} href={card.href} className={shellClass}>
-                {inner}
-              </Link>
-            );
-          })}
+          <div className="flex justify-center">
+            <InstallAppChoiceButton buttonClassName={installBtnClass} className="mt-0" />
           </div>
+        </div>
 
-          <div
-            className="grid w-full max-w-6xl shrink-0 grid-cols-2 items-center gap-x-2 gap-y-2 md:grid-cols-[1fr_auto_1fr] md:gap-x-4 lg:gap-x-6"
-            data-testid="home-promo-videos-row"
-          >
-            <div className="col-start-1 row-start-2 justify-self-center md:row-start-1 md:justify-self-end">
-              <StudentPromoVideo
-                compactHome
-                isBright={isBright}
-                title="עולם הילדים של ליאו"
-              />
-            </div>
-            <div className="col-span-2 row-start-1 flex justify-center md:col-span-1 md:col-start-2 md:row-start-1">
-              <InstallAppChoiceButton className="mt-0 shrink-0" />
-            </div>
-            <div className="col-start-2 row-start-2 justify-self-center md:col-start-3 md:row-start-1 md:justify-self-start">
-              <ParentPromoVideo compactHome isBright={isBright} title="פורטל הורים" />
-            </div>
-          </div>
-        </section>
+        <div
+          className={`mx-auto w-full ${HOME_PAGE_MAX} ${HOME_PAGE_PAD} pb-8 md:pb-10 space-y-8 md:space-y-12 lg:space-y-14`}
+        >
+          <HomeLearningSystemSection isBright={isBright} />
+          <HomeParentIntro isBright={isBright} />
+          <HomeParentBenefits isBright={isBright} />
+
+          <HomeKidsSection isBright={isBright} />
+          <HomeHowItWorks isBright={isBright} />
+          <HomeFinalCta isBright={isBright} />
+          <HomeTeacherSection isBright={isBright} />
+        </div>
       </div>
     </Layout>
   );

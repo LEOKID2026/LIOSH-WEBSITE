@@ -37,8 +37,12 @@ assert.match(modal, /aspect-video/);
 assert.doesNotMatch(studentLogin, /StudentPromoVideo|ParentPromoVideo/);
 assert.doesNotMatch(parentLogin, /StudentPromoVideo|ParentPromoVideo/);
 
-assert.match(indexPage, /StudentPromoVideo/);
-assert.match(indexPage, /ParentPromoVideo/);
+assert.match(indexPage, /HomeParentVideo/);
+assert.match(indexPage, /HomeKidsSection/);
+const homeParentVideo = read("components/home/HomeParentVideo.jsx");
+const homeKidsSection = read("components/home/HomeKidsSection.jsx");
+assert.match(homeParentVideo, /ParentPromoVideo/);
+assert.match(homeKidsSection, /StudentPromoVideo/);
 assert.match(marketing, /audience === "kids"/);
 assert.match(marketing, /StudentPromoVideo/);
 assert.match(marketing, /audience === "parents"/);

@@ -32,10 +32,17 @@ test.describe("Hebrew maqaf sanity — desktop", () => {
 
   test("homepage welcome copy", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("heading", { name: /ברוכים הבאים אל LEO KIDS/ })).toBeVisible();
-    await expect(page.getByText(/מיני משחקים/)).toBeVisible();
+    await expect(page.getByTestId("home-hero")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: /כלים להורים\. חוויה לילדים\./ })
+    ).toBeVisible();
+    await expect(page.getByText(/מערכת ממוחשבת שממפה את ההתקדמות/)).toBeVisible();
+    await expect(page.getByTestId("home-flow-diagram")).toBeVisible();
+    await expect(page.getByTestId("home-hero-system-teaser")).toBeVisible();
+    await expect(page.getByTestId("home-parent-video")).toBeVisible();
+    await expect(page.getByTestId("home-primary-actions")).toBeVisible();
+    await expect(page.getByTestId("home-learning-system")).toBeVisible();
     await expect(page.getByText(/ל־LEO KIDS/)).toHaveCount(0);
-    await expect(page.getByText(/מיני־משחקים/)).toHaveCount(0);
   });
   test("math book page sample", async ({ page }) => {
     await page.goto("/learning/book/math/g1/add_two");
@@ -48,8 +55,10 @@ test.describe("Hebrew maqaf sanity — mobile viewport", () => {
   test("homepage mobile viewport", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/");
-    await expect(page.getByRole("heading", { name: /ברוכים הבאים אל LEO KIDS/ })).toBeVisible();
-    await expect(page.getByText(/מיני משחקים/)).toBeVisible();
+    await expect(page.getByTestId("home-hero")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: /למידה שמתקדמת צעד אחר צעד/ })
+    ).toBeVisible();
     await assertNoMaqaf(page, "home-mobile");
   });
 

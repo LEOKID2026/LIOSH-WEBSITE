@@ -241,7 +241,7 @@ export default function Layout({
 
       <main
         className={`flex-1 min-h-0 flex flex-col${
-          homepage || layoutLockViewport ? " overflow-hidden" : ""
+          layoutLockViewport ? " overflow-hidden" : ""
         }`}
         style={showStudentAd ? { paddingBottom: STUDENT_LAYOUT_CHROME_BOTTOM_CSS } : undefined}
       >

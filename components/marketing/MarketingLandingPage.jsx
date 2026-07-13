@@ -22,7 +22,7 @@ const AUDIENCE_CANONICAL_PATH = {
   teachers: "/teachers",
 };
 
-const ACCENT = {
+export const ACCENT = {
   kids: {
     cardGradientsClassic: [
       "from-violet-500/60 to-fuchsia-700/70",

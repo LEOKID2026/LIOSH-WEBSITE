@@ -9,7 +9,7 @@ import {
 /**
  * Home page — one button opens choice modal; each option goes to its dedicated install page.
  */
-export default function InstallAppChoiceButton({ className = "" }) {
+export default function InstallAppChoiceButton({ className = "", buttonClassName = "" }) {
   const [showChoiceModal, setShowChoiceModal] = useState(false);
 
   useEffect(() => {
@@ -46,12 +46,15 @@ export default function InstallAppChoiceButton({ className = "" }) {
     return null;
   }
 
+  const defaultButtonClass =
+    "inline-flex h-10 w-48 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-500 px-4 text-sm font-bold text-blue-800 shadow-md transition-all hover:from-yellow-400 hover:via-yellow-500 hover:to-yellow-600 hover:shadow-lg";
+
   return (
     <div className={className || "mt-6"}>
       <button
         onClick={() => setShowChoiceModal(true)}
         type="button"
-        className="inline-flex h-10 w-48 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-500 px-4 text-sm font-bold text-blue-800 shadow-md transition-all hover:from-yellow-400 hover:via-yellow-500 hover:to-yellow-600 hover:shadow-lg"
+        className={buttonClassName || defaultButtonClass}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

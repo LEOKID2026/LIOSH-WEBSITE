@@ -14,6 +14,8 @@ export const PARENT_PROMO_MOBILE_SRC = "/videos/promo/leo-kids-parent-mobile.mp4
  *   isBright?: boolean,
  *   compact?: boolean,
  *   compactHome?: boolean,
+ *   featured?: boolean,
+ *   embedded?: boolean,
  *   className?: string,
  * }} props
  */
@@ -25,6 +27,8 @@ export default function ParentPromoVideo({
   isBright = false,
   compact = false,
   compactHome = false,
+  featured = false,
+  embedded = false,
   className = "",
 }) {
   const titleClass = isBright ? "text-slate-900" : "text-white";
@@ -51,19 +55,32 @@ export default function ParentPromoVideo({
     );
   }
 
-  const wrapClass = compact
+  const wrapClass = featured
+    ? "w-full overflow-hidden rounded-2xl border shadow-xl lg:rounded-3xl"
+    : compact
     ? "w-full overflow-hidden rounded-xl border"
     : "mx-auto w-full max-w-3xl overflow-hidden rounded-2xl border";
 
+  const titleSize = embedded
+    ? "text-lg font-black md:text-xl"
+    : featured
+    ? "text-xl font-black md:text-2xl lg:text-3xl"
+    : "text-lg font-bold md:text-xl";
+  const descSize = embedded
+    ? "text-sm md:text-base"
+    : featured
+    ? "max-w-3xl text-sm md:text-base lg:text-lg"
+    : "max-w-xl text-sm";
+
   return (
     <section
-      className={`space-y-3 text-center ${className}`}
+      className={`space-y-2 text-right ${featured ? "space-y-3 md:space-y-4" : ""} ${className}`}
       aria-label={title}
       data-testid="parent-promo-video"
     >
-      <h2 className={`text-lg font-bold md:text-xl ${titleClass}`}>{title}</h2>
+      <h2 className={`${titleSize} ${titleClass}`}>{title}</h2>
       {description ? (
-        <p className={`mx-auto max-w-xl text-sm leading-relaxed ${textClass}`}>{description}</p>
+        <p className={`leading-relaxed ${descSize} ${textClass}`}>{description}</p>
       ) : null}
 
       <PromoVideoClickablePreview
