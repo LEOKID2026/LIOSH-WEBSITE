@@ -18,6 +18,12 @@ import {
   formatWebTrafficLabelHe,
 } from "../../lib/admin-portal/admin-analytics-labels.he.js";
 import { trackProductEvent } from "../../lib/analytics/track-event.client.js";
+import {
+  mergeFacebookReferrers,
+  pickUserActivityValue,
+  splitVisitorAndAdminPages,
+  sumLearningAndGames,
+} from "../../lib/admin-portal/admin-web-traffic-display.js";
 
 const PRESETS = [
   { value: "today", label: "היום" },
@@ -182,37 +188,6 @@ function ActivityFunnelSummary({ funnel }) {
   );
 }
 
-function WebTrafficStatusMessage({ webTraffic, loading, error }) {
-  if (loading) return <p className="text-sm text-white/60">{ADMIN_LOADING}</p>;
-  if (error) return <p className="text-sm text-red-300">{error}</p>;
-  if (!webTraffic) return null;
-  if (webTraffic.status === "not_configured") {
-    return <p className="text-sm text-amber-100/90">{webTraffic.message}</p>;
-  }
-  if (webTraffic.status !== "available" && webTraffic.message) {
-    return <p className="text-sm text-amber-100/90">{webTraffic.message}</p>;
-  }
-  return null;
-}
-
-function WebTrafficSummaryCards({ webTraffic }) {
-  if (!webTraffic || webTraffic.status !== "available") return null;
-  const items = [
-    { label: "מבקרים", value: webTraffic.summary?.visitors, source: "vercel_web_analytics" },
-    { label: "צפיות בדפים", value: webTraffic.summary?.pageviews, source: "vercel_web_analytics" },
-  ];
-  return (
-    <MetricGrid
-      items={items.map((item) => ({
-        label: item.label,
-        value: item.value,
-        status: item.value == null ? "empty" : "available",
-        source: item.source,
-      }))}
-    />
-  );
-}
-
 function WebTrafficPresetBar({ value, onChange }) {
   return (
     <div className="flex flex-wrap gap-2">
@@ -221,7 +196,7 @@ function WebTrafficPresetBar({ value, onChange }) {
           key={item.value}
           type="button"
           onClick={() => onChange(item.value)}
-          className={`rounded-lg border px-3 py-1.5 text-xs font-semibold ${
+          className={`rounded-xl border px-4 py-2 text-sm font-semibold ${
             value === item.value
               ? "border-amber-400/50 bg-amber-400/15 text-amber-100"
               : "border-white/15 text-white/75 hover:bg-white/5"
@@ -230,6 +205,252 @@ function WebTrafficPresetBar({ value, onChange }) {
           {item.label}
         </button>
       ))}
+    </div>
+  );
+}
+
+const WEB_TRAFFIC_LOADING_TEXT = "טוען נתונים…";
+
+function WebTrafficStatCard({ title, value, hint, loading, error }) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 min-h-[7.5rem] flex flex-col justify-between">
+      <p className="text-sm text-white/75">{title}</p>
+      {loading ? (
+        <p className="text-base text-white/50 mt-2">{WEB_TRAFFIC_LOADING_TEXT}</p>
+      ) : error ? (
+        <p className="text-sm text-red-300 mt-2">{error}</p>
+      ) : (
+        <>
+          <p className="text-3xl font-bold text-white leading-tight mt-2">{value}</p>
+          {hint ? <p className="text-xs text-white/50 mt-2 leading-relaxed">{hint}</p> : null}
+        </>
+      )}
+    </div>
+  );
+}
+
+function WebTrafficSection({ title, children }) {
+  return (
+    <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-4 space-y-3">
+      <h3 className="text-base font-semibold text-white/90">{title}</h3>
+      {children}
+    </section>
+  );
+}
+
+function webTrafficQuantityCell(row) {
+  const amount = row.value ?? row.pageviews ?? row.visitors;
+  return formatTrafficNumber(amount);
+}
+
+function WebTrafficTable({ rows, dimension = "generic", nameLabel = "שם", empty = "אין נתונים בטווח" }) {
+  return (
+    <SimpleTable
+      rows={rows}
+      columns={[
+        {
+          key: "label",
+          label: nameLabel,
+          render: (row) =>
+            formatWebTrafficLabelHe(row.rawLabel || row.label || row.key, row.dimension || dimension),
+        },
+        { key: "value", label: "כמות", render: webTrafficQuantityCell },
+      ]}
+      empty={empty}
+    />
+  );
+}
+
+function buildWebTrafficViewModel({
+  webTraffic,
+  webTrafficLoading,
+  webTrafficError,
+  webTrafficUserActivity,
+  webTrafficUserActivityLoading,
+  webTrafficUserActivityError,
+}) {
+  const trafficLoading = webTrafficLoading;
+  const activityLoading = webTrafficUserActivityLoading;
+  const trafficError = webTrafficError || (webTraffic?.status === "not_configured" ? webTraffic.message : webTraffic?.status !== "available" && webTraffic?.message ? webTraffic.message : "");
+  const activityError = webTrafficUserActivityError;
+  const trafficReady = !trafficLoading && !trafficError && webTraffic?.status === "available";
+  const activityReady = !activityLoading && !activityError && webTrafficUserActivity;
+
+  const { visitorPages, adminPages } = splitVisitorAndAdminPages(webTraffic?.topPages);
+  const { merged: mergedReferrers, facebookTotal } = mergeFacebookReferrers(webTraffic?.referrers);
+  const topVisitorPage = visitorPages[0] || null;
+  const topPageLabel = topVisitorPage
+    ? formatWebTrafficLabelHe(topVisitorPage.rawLabel || topVisitorPage.label, "requestPath")
+    : null;
+
+  const activityCards = webTrafficUserActivity?.cards;
+
+  return {
+    trafficLoading,
+    activityLoading,
+    trafficError: trafficError || null,
+    activityError: activityError || null,
+    trafficReady,
+    activityReady,
+    visitors: trafficReady ? webTraffic.summary?.visitors : null,
+    pageviews: trafficReady ? webTraffic.summary?.pageviews : null,
+    facebookEntries: trafficReady ? facebookTotal : null,
+    topPageLabel,
+    topPageViews: trafficReady && topVisitorPage ? topVisitorPage.value ?? topVisitorPage.pageviews : null,
+    daily: trafficReady ? webTraffic.daily || [] : [],
+    visitorPages: trafficReady ? visitorPages : [],
+    adminPages: trafficReady ? adminPages : [],
+    referrers: trafficReady ? mergedReferrers : [],
+    devices: trafficReady ? webTraffic.devices || [] : [],
+    newGuests: activityReady ? pickUserActivityValue(activityCards, "אורחים חדשים שנוצרו") : null,
+    newParents: activityReady ? pickUserActivityValue(activityCards, "הורים חדשים") : null,
+    activeUsers: activityReady ? pickUserActivityValue(activityCards, "משתמשים שביצעו פעילות בפועל") : null,
+    learningAndGames: activityReady ? sumLearningAndGames(activityCards) : null,
+  };
+}
+
+function WebTrafficTabContent({
+  webTrafficPreset,
+  onPresetChange,
+  webTraffic,
+  webTrafficLoading,
+  webTrafficError,
+  webTrafficUserActivity,
+  webTrafficUserActivityLoading,
+  webTrafficUserActivityError,
+}) {
+  const model = buildWebTrafficViewModel({
+    webTraffic,
+    webTrafficLoading,
+    webTrafficError,
+    webTrafficUserActivity,
+    webTrafficUserActivityLoading,
+    webTrafficUserActivityError,
+  });
+
+  const trafficCardProps = {
+    loading: model.trafficLoading,
+    error: model.trafficError,
+  };
+  const activityCardProps = {
+    loading: model.activityLoading,
+    error: model.activityError,
+  };
+
+  return (
+    <div className="space-y-4">
+      <WebTrafficPresetBar value={webTrafficPreset} onChange={onPresetChange} />
+
+      <div className="space-y-2">
+        <h2 className="text-sm font-semibold text-white/80">תנועה באתר</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+          <WebTrafficStatCard
+            title="מבקרים"
+            value={formatTrafficNumber(model.visitors)}
+            hint="כמה אנשים נכנסו לאתר"
+            {...trafficCardProps}
+          />
+          <WebTrafficStatCard
+            title="צפיות בדפים"
+            value={formatTrafficNumber(model.pageviews)}
+            hint="כמה דפים נפתחו בסך הכל"
+            {...trafficCardProps}
+          />
+          <WebTrafficStatCard
+            title="כניסות מפייסבוק"
+            value={formatTrafficNumber(model.facebookEntries)}
+            hint="הגעה מפייסבוק"
+            {...trafficCardProps}
+          />
+          <WebTrafficStatCard
+            title="הדף הנצפה ביותר"
+            value={formatTrafficNumber(model.topPageViews)}
+            hint={model.topPageLabel || "אין נתונים עדיין"}
+            {...trafficCardProps}
+          />
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <h2 className="text-sm font-semibold text-white/80">פעילות באתר</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+          <WebTrafficStatCard
+            title="אורחים חדשים"
+            value={formatTrafficNumber(model.newGuests)}
+            hint="ילדים שנכנסו כאורחים"
+            {...activityCardProps}
+          />
+          <WebTrafficStatCard
+            title="הורים חדשים"
+            value={formatTrafficNumber(model.newParents)}
+            hint="הורים שנרשמו לראשונה"
+            {...activityCardProps}
+          />
+          <WebTrafficStatCard
+            title="משתמשים פעילים"
+            value={formatTrafficNumber(model.activeUsers)}
+            hint="מי שלמד או שיחק בפועל"
+            {...activityCardProps}
+          />
+          <WebTrafficStatCard
+            title="למידה ומשחקים"
+            value={formatTrafficNumber(model.learningAndGames)}
+            hint="סה״כ סשני למידה ומשחק"
+            {...activityCardProps}
+          />
+        </div>
+      </div>
+
+      {!model.trafficLoading && !model.trafficError ? (
+        <div className="space-y-4">
+          <WebTrafficSection title="צפיות לפי יום">
+            <WebTrafficTable
+              rows={model.daily}
+              dimension="daily"
+              nameLabel="תאריך"
+              empty="אין נתונים עדיין"
+            />
+          </WebTrafficSection>
+
+          <WebTrafficSection title="דפים מובילים">
+            <WebTrafficTable
+              rows={model.visitorPages}
+              dimension="requestPath"
+              nameLabel="דף"
+              empty="אין נתונים עדיין"
+            />
+            {model.adminPages.length ? (
+              <div className="mt-3 rounded-xl border border-white/10 bg-white/[0.02] p-3 space-y-2">
+                <h4 className="text-sm font-semibold text-white/70">פעילות מנהל</h4>
+                <p className="text-xs text-white/45">דפי ניהול — לא נספרים יחד עם מבקרים רגילים</p>
+                <WebTrafficTable rows={model.adminPages} dimension="requestPath" nameLabel="דף" empty="אין נתונים" />
+              </div>
+            ) : null}
+          </WebTrafficSection>
+
+          <WebTrafficSection title="מקורות הגעה">
+            <WebTrafficTable
+              rows={model.referrers}
+              dimension="referrerHostname"
+              nameLabel="מקור"
+              empty="אין נתונים עדיין"
+            />
+          </WebTrafficSection>
+
+          <WebTrafficSection title="מכשירים">
+            <WebTrafficTable
+              rows={model.devices}
+              dimension="deviceType"
+              nameLabel="מכשיר"
+              empty="אין נתונים עדיין"
+            />
+          </WebTrafficSection>
+        </div>
+      ) : model.trafficLoading ? (
+        <p className="text-sm text-white/60">{WEB_TRAFFIC_LOADING_TEXT}</p>
+      ) : model.trafficError ? (
+        <p className="text-sm text-red-300">{model.trafficError}</p>
+      ) : null}
     </div>
   );
 }
@@ -374,46 +595,6 @@ function SimpleTable({ rows, columns, empty = "אין נתונים בטווח" }
       </table>
     </div>
   );
-}
-
-function webTrafficRowsSummary(rows, emptyText = "אין נתונים בטווח") {
-  if (!Array.isArray(rows) || rows.length === 0) return emptyText;
-  const top = rows[0];
-  const dimension = top.dimension || "generic";
-  const label = formatWebTrafficLabelHe(top.rawLabel || top.label || top.key, dimension);
-  if (top?.value != null) {
-    return `${label}: ${top.value}`;
-  }
-  if (top?.date != null) {
-    return `${rows.length} רשומות · אחרון: ${formatWebTrafficLabelHe(top.rawLabel || top.date, "daily")}`;
-  }
-  return `${rows.length} רשומות`;
-}
-
-function WebTrafficTopList({ title, rows, dimension = "generic" }) {
-  return (
-    <div className={title ? "rounded-xl border border-white/10 bg-white/[0.02] p-2" : ""}>
-      {title ? <h4 className="font-semibold mb-2 text-sm text-white/85">{title}</h4> : null}
-      <SimpleTable
-        rows={rows}
-        columns={[
-          {
-            key: "label",
-            label: "שם",
-            render: (row) =>
-              formatWebTrafficLabelHe(row.rawLabel || row.label || row.key, row.dimension || dimension),
-          },
-          { key: "value", label: "כמות" },
-        ]}
-      />
-    </div>
-  );
-}
-
-function WebTrafficUserActivityStatus({ loading, error }) {
-  if (loading) return <p className="text-sm text-white/60">{ADMIN_LOADING}</p>;
-  if (error) return <p className="text-sm text-red-300">{error}</p>;
-  return null;
 }
 
 function TopList({ title, rows }) {
@@ -671,6 +852,7 @@ export default function AdminAnalyticsPage() {
   const loadWebTraffic = useCallback(async (token, trafficPreset) => {
     setWebTrafficLoading(true);
     setWebTrafficError("");
+    setWebTraffic(null);
     const qs = new URLSearchParams({ preset: trafficPreset });
     const res = await adminAuthFetch(token, `/api/admin/analytics/web-traffic?${qs.toString()}`);
     const body = await res.json().catch(() => ({}));
@@ -733,14 +915,7 @@ export default function AdminAnalyticsPage() {
   const tabPanelIds = useMemo(
     () => ({
       overview: ["overview-funnel", "overview-user-activity", "overview-summary"],
-      webTraffic: [
-        "web-traffic-vercel",
-        "web-traffic-daily",
-        "web-traffic-pages",
-        "web-traffic-referrers",
-        "web-traffic-devices",
-        "web-traffic-user-activity",
-      ],
+      webTraffic: [],
       accounts: [
         "accounts-totals",
         "accounts-by-date",
@@ -821,9 +996,15 @@ export default function AdminAnalyticsPage() {
     [overviewUserActivitySection?.funnel, webTraffic]
   );
 
-  const webTrafficTabMergedFunnel = useMemo(
-    () => mergeActivityFunnel(webTrafficUserActivity?.funnel, webTraffic),
-    [webTrafficUserActivity?.funnel, webTraffic]
+  const handleWebTrafficPresetChange = useCallback(
+    (next) => {
+      setWebTrafficPreset(next);
+      if (accessToken) {
+        void loadWebTraffic(accessToken, next);
+        void loadWebTrafficUserActivity(accessToken, next);
+      }
+    },
+    [accessToken, loadWebTraffic, loadWebTrafficUserActivity]
   );
 
   const renderTabContent = () => {
@@ -878,122 +1059,16 @@ export default function AdminAnalyticsPage() {
 
       case "webTraffic":
         return (
-          <div className="space-y-2">
-            <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
-            <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 space-y-2">
-              <p className="text-sm text-white/75 leading-relaxed">
-                <span className="font-semibold text-white/90">תנועה באתר — Vercel:</span> מבקרים שפתחו או גלשו באתר, גם בלי להירשם.
-                {" "}
-                <span className="font-semibold text-white/90">פעילות משתמשים — Supabase:</span> אורחים, הורים, למידה ומשחקים שנרשמו בפועל.
-              </p>
-              <WebTrafficPresetBar
-                value={webTrafficPreset}
-                onChange={(next) => {
-                  setWebTrafficPreset(next);
-                  if (accessToken) {
-                    void loadWebTraffic(accessToken, next);
-                    void loadWebTrafficUserActivity(accessToken, next);
-                  }
-                }}
-              />
-            </div>
-            <Panel
-              panelId="web-traffic-vercel"
-              title="תנועה באתר — Vercel"
-              subtitle="מבקרים וצפיות בדפים"
-              summary={
-                webTraffic?.status === "available"
-                  ? `מבקרים: ${formatTrafficNumber(webTraffic.summary?.visitors)} · צפיות: ${formatTrafficNumber(webTraffic.summary?.pageviews)}`
-                  : webTraffic?.message || "טוען..."
-              }
-              toggle={togglePanel}
-              isOpen={isPanelOpen("web-traffic-vercel")}
-            >
-              <WebTrafficStatusMessage webTraffic={webTraffic} loading={webTrafficLoading} error={webTrafficError} />
-              <WebTrafficSummaryCards webTraffic={webTraffic} />
-            </Panel>
-            <Panel
-              panelId="web-traffic-daily"
-              title="גרף לפי יום"
-              subtitle="צפיות ומבקרים לפי תאריך"
-              summary={webTrafficRowsSummary(webTraffic?.daily)}
-              toggle={togglePanel}
-              isOpen={isPanelOpen("web-traffic-daily")}
-            >
-              <SimpleTable
-                rows={webTraffic?.daily || []}
-                columns={[
-                  {
-                    key: "label",
-                    label: "תאריך",
-                    render: (row) =>
-                      formatWebTrafficLabelHe(row.rawLabel || row.label || row.date, "daily"),
-                  },
-                  { key: "visitors", label: "מבקרים", render: (row) => formatTrafficNumber(row.visitors) },
-                  { key: "pageviews", label: "צפיות", render: (row) => formatTrafficNumber(row.pageviews) },
-                ]}
-                empty={webTraffic?.status === "not_configured" ? webTraffic.message : "אין נתונים עדיין"}
-              />
-            </Panel>
-            <Panel
-              panelId="web-traffic-pages"
-              title="דפים מובילים"
-              summary={webTrafficRowsSummary(webTraffic?.topPages)}
-              toggle={togglePanel}
-              isOpen={isPanelOpen("web-traffic-pages")}
-            >
-              <WebTrafficTopList rows={webTraffic?.topPages} dimension="requestPath" />
-            </Panel>
-            <Panel
-              panelId="web-traffic-referrers"
-              title="מקורות הגעה"
-              summary={webTrafficRowsSummary(webTraffic?.referrers)}
-              toggle={togglePanel}
-              isOpen={isPanelOpen("web-traffic-referrers")}
-            >
-              <WebTrafficTopList rows={webTraffic?.referrers} dimension="referrerHostname" />
-            </Panel>
-            <Panel
-              panelId="web-traffic-devices"
-              title="מכשירים, דפדפנים ומדינות"
-              summary={webTrafficRowsSummary(webTraffic?.devices)}
-              toggle={togglePanel}
-              isOpen={isPanelOpen("web-traffic-devices")}
-            >
-              <div className="grid grid-cols-1 xl:grid-cols-3 gap-2">
-                <WebTrafficTopList title="מכשירים" rows={webTraffic?.devices} dimension="deviceType" />
-                <WebTrafficTopList title="דפדפנים" rows={webTraffic?.browsers} dimension="browserName" />
-                <WebTrafficTopList title="מדינות" rows={webTraffic?.countries} dimension="country" />
-              </div>
-            </Panel>
-            <Panel
-              panelId="web-traffic-user-activity"
-              title="פעילות משתמשים — Supabase"
-              subtitle="אותו טווח תאריכים כפי שנבחר לתנועה באתר"
-              summary={
-                webTrafficUserActivityLoading
-                  ? ADMIN_LOADING
-                  : webTrafficUserActivityError
-                    ? "שגיאה בטעינה"
-                    : metricsSummary(webTrafficUserActivity?.cards)
-              }
-              toggle={togglePanel}
-              isOpen={isPanelOpen("web-traffic-user-activity")}
-            >
-              <WebTrafficUserActivityStatus
-                loading={webTrafficUserActivityLoading}
-                error={webTrafficUserActivityError}
-              />
-              {!webTrafficUserActivityLoading && !webTrafficUserActivityError ? (
-                <>
-                  <ActivityFunnelSummary funnel={webTrafficTabMergedFunnel} />
-                  <div className="mt-3">
-                    <MetricGrid items={webTrafficUserActivity?.cards} />
-                  </div>
-                </>
-              ) : null}
-            </Panel>
-          </div>
+          <WebTrafficTabContent
+            webTrafficPreset={webTrafficPreset}
+            onPresetChange={handleWebTrafficPresetChange}
+            webTraffic={webTraffic}
+            webTrafficLoading={webTrafficLoading}
+            webTrafficError={webTrafficError}
+            webTrafficUserActivity={webTrafficUserActivity}
+            webTrafficUserActivityLoading={webTrafficUserActivityLoading}
+            webTrafficUserActivityError={webTrafficUserActivityError}
+          />
         );
 
       case "accounts":

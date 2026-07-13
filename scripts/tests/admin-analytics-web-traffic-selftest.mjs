@@ -29,14 +29,17 @@ const page = read("pages/admin/analytics.js");
 assert.match(page, /תנועה באתר/, "analytics page must include web traffic tab label");
 assert.match(page, /webTraffic/, "analytics page must define webTraffic tab id");
 assert.match(page, /\/api\/admin\/analytics\/web-traffic/, "page must call web-traffic API separately");
-assert.match(page, /פעילות משתמשים — Supabase/, "page must label Supabase user activity");
-assert.match(page, /תנועה באתר — Vercel/, "page must label Vercel web traffic");
+assert.match(page, /WebTrafficTabContent/, "page must render simplified web traffic tab");
+assert.match(page, /WebTrafficStatCard/, "page must render owner-friendly stat cards");
+assert.match(page, /webTrafficQuantityCell/, "quantity columns must use numeric formatter only");
+assert.match(page, /פעילות מנהל/, "admin pages must be separated from visitor pages");
+assert.match(page, /טוען נתונים/, "page must show loading text without stale numbers");
 assert.match(page, /משפך סיכום/, "overview must include activity funnel");
 assert.doesNotMatch(page, /VERCEL_ANALYTICS_ACCESS_TOKEN/, "client page must not reference Vercel token env");
 assert.doesNotMatch(page, /visitor_id/, "client page must not reference visitor_id");
 
 assert.match(page, /formatWebTrafficLabelHe/, "page must use dedicated Vercel label formatter");
-assert.match(page, /WebTrafficTopList/, "page must render Vercel top lists with dedicated formatter");
+assert.match(page, /WebTrafficTable/, "page must render Vercel tables with dedicated formatter");
 assert.match(page, /loadWebTrafficUserActivity/, "page must fetch Supabase user activity for web traffic tab");
 assert.doesNotMatch(page, /trafficAlignedDashboard/, "page must not fall back to global preset for web traffic Supabase");
 assert.doesNotMatch(page, /needsTrafficAlignedActivity/, "page must always align Supabase to webTrafficPreset");
@@ -45,8 +48,10 @@ assert.match(webTrafficServer, /rawLabel/, "aggregate rows must keep raw label s
 
 const { formatWebTrafficLabelHe } = await import(u("lib/admin-portal/admin-analytics-labels.he.js"));
 assert.equal(formatWebTrafficLabelHe("2026-07-13T00:00:00.000Z", "daily"), "13.7.2026");
-assert.equal(formatWebTrafficLabelHe("/", "requestPath"), "/");
-assert.equal(formatWebTrafficLabelHe("/parent/login", "requestPath"), "/parent/login");
+assert.equal(formatWebTrafficLabelHe("/", "requestPath"), "דף הבית");
+assert.equal(formatWebTrafficLabelHe("/parent/login", "requestPath"), "כניסת הורים");
+assert.equal(formatWebTrafficLabelHe("/student/login", "requestPath"), "כניסת תלמידים");
+assert.equal(formatWebTrafficLabelHe("/parent/dashboard", "requestPath"), "אזור הורים");
 assert.equal(formatWebTrafficLabelHe("mobile", "deviceType"), "נייד");
 assert.equal(formatWebTrafficLabelHe("desktop", "deviceType"), "מחשב");
 assert.equal(formatWebTrafficLabelHe("tablet", "deviceType"), "טאבלט");
@@ -54,6 +59,30 @@ assert.equal(formatWebTrafficLabelHe("Chrome", "browserName"), "Chrome");
 assert.equal(formatWebTrafficLabelHe("IL", "country"), "IL");
 assert.notEqual(formatWebTrafficLabelHe("mobile", "deviceType"), "תרגול");
 assert.notEqual(formatWebTrafficLabelHe("/", "requestPath"), "תרגול");
+assert.notEqual(formatWebTrafficLabelHe("6", "generic"), "כיתה א׳");
+
+const {
+  isAdminWebTrafficPath,
+  mergeFacebookReferrers,
+  splitVisitorAndAdminPages,
+} = await import(u("lib/admin-portal/admin-web-traffic-display.js"));
+assert.equal(isAdminWebTrafficPath("/admin/analytics"), true);
+assert.equal(isAdminWebTrafficPath("/parent/login"), false);
+const pages = splitVisitorAndAdminPages([
+  { rawLabel: "/", value: 10 },
+  { rawLabel: "/admin/analytics", value: 3 },
+]);
+assert.equal(pages.visitorPages.length, 1);
+assert.equal(pages.adminPages.length, 1);
+const refs = mergeFacebookReferrers([
+  { rawLabel: "facebook.com", value: 4 },
+  { rawLabel: "m.facebook.com", value: 2 },
+  { rawLabel: "google.com", value: 5 },
+]);
+assert.equal(refs.facebookTotal, 6);
+assert.equal(refs.merged[0].label, "פייסבוק");
+assert.equal(refs.merged[0].value, 6);
+assert.equal(refs.merged[1].rawLabel, "google.com");
 
 const analyticsServer = read("lib/admin-server/admin-analytics.server.js");
 assert.match(analyticsServer, /buildUserActivityAnalytics/, "analytics server must build user activity section");
