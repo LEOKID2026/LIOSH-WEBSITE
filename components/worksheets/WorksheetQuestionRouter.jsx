@@ -51,6 +51,13 @@ export default function WorksheetQuestionRouter({ question }) {
     return <EnglishTranslationRenderer question={question} />;
   }
   if (questionType === "open") {
+    // Geometry open compute may still include a diagram.
+    if (subject === "geometry") {
+      if (question.diagramSpec) {
+        return <GeometryDiagramPrintRenderer question={question} />;
+      }
+      return <GeometryTextRenderer question={question} />;
+    }
     // Open writing always needs lines — even when nikud styling applies.
     if (subject === "hebrew") return <HebrewOpenAnswerRenderer question={question} />;
     if (subject === "english") return <EnglishOpenAnswerRenderer question={question} />;

@@ -13,6 +13,7 @@ import { gradeBandForKey } from "./grade-gating.js";
 import { enrichGeometryProceduralParams } from "./geometry-diagnostic-metadata-bridge.js";
 import { attachCanonicalMetadataToMathGeometryQuestion } from "../lib/learning/math-geometry-canonical-metadata.js";
 import { formatTriangleAnglesKnownTwoStem } from "./geometry-activity-question-stem.js";
+import { pickValidTriangleSides } from "../lib/worksheets/worksheet-geometry-math-valid.js";
 import { sanitizeQuestionForStudentDisplay } from "./student-question-stem-sanitizer.js";
 import { repairMcqObviousAnswerContent } from "./mcq-fail-content-repair.js";
 
@@ -769,13 +770,13 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
           params = { base, height, kind: "parallelogram_area" };
           correctAnswer = round(base * height);
           if (formulaBand === "late") {
-            question = `מקבילית: בסיס ${base}, גובה לבסיס ${height}. מה השטח?`;
+            question = `אורך בסיס המקבילית הוא ${base} ס״מ והגובה לבסיס הוא ${height} ס״מ. חשבו את שטח המקבילית.`;
           } else if (levelKey === "easy") {
-            question = `מקבילית: בסיס ${base}, גובה ${height}. מה השטח?`;
+            question = `אורך בסיס המקבילית הוא ${base} ס״מ והגובה הוא ${height} ס״מ. חשבו את שטח המקבילית.`;
           } else if (levelKey === "medium") {
-            question = `מה השטח של מקבילית עם בסיס ${base} וגובה ${height}?`;
+            question = `מה השטח של מקבילית עם בסיס ${base} ס״מ וגובה ${height} ס״מ?`;
           } else {
-            question = `אתגר — מקבילית בסיס ${base}, גובה ${height}. מה השטח?`;
+            question = `מקבילית: בסיס ${base} ס״מ וגובה ${height} ס״מ. חשבו את שטח המקבילית.`;
           }
           break;
         }
@@ -859,13 +860,13 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
             question = earlyVariants[Math.floor(Math.random() * earlyVariants.length)];
           } else if (formulaBand === "mid") {
             const variants = [
-              `מה ההיקף של ריבוע עם צלע ${side}?`,
-              `ריבוע עם צלע ${side} יחידות. מה ההיקף?`,
-              `ריבוע צלע ${side} — מה ההיקף הכולל?`,
-              `היקף ריבוע: כל צלע ${side} יחידות.`,
-              `כמה יחידות היקף יש לריבוע ${side} לכל צלע?`,
-              `צלע ${side}: חשבו היקף הריבוע.`,
-              `ריבוע מידות ${side} לכל צלע. מה ההיקף?`,
+              `מה ההיקף של ריבוע עם צלע ${side} ס״מ?`,
+              `ריבוע עם צלע ${side} ס״מ. מה ההיקף?`,
+              `ריבוע צלע ${side} ס״מ — מה ההיקף הכולל?`,
+              `אורך צלע הריבוע הוא ${side} ס״מ. חשבו את היקף הריבוע.`,
+              `כמה ס״מ היקף יש לריבוע שצלעו ${side} ס״מ?`,
+              `צלע ${side} ס״מ: חשבו את היקף הריבוע.`,
+              `ריבוע מידות ${side} ס״מ לכל צלע. מה ההיקף?`,
               `ריבוע ${side}×${side}: מה סכום צלעות המעטפת?`,
             ];
             question = variants[Math.floor(Math.random() * variants.length)];
@@ -903,20 +904,20 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
             question = storyVariants[Math.floor(Math.random() * storyVariants.length)];
           } else if (formulaBand === "early") {
             const earlyVariants = [
-              `מלבן: אורך ${length}, רוחב ${width}. מה ההיקף?`,
-              `חשבו היקף מלבן: ${length} ו-${width}. מה ההיקף?`,
-              `מלבן ${length}×${width}: חברו את ארבע הצלעות.`,
+              `מלבן: אורך ${length} ס״מ, רוחב ${width} ס״מ. מה ההיקף?`,
+              `חשבו את היקף המלבן: אורך ${length} ס״מ ורוחב ${width} ס״מ.`,
+              `מלבן ${length}×${width} ס״מ: חשבו את סכום ארבע הצלעות.`,
             ];
             question = earlyVariants[phrasing % earlyVariants.length];
           } else if (formulaBand === "mid") {
             const variants = [
-              `מה ההיקף של מלבן עם אורך ${length} ורוחב ${width}?`,
-              `מלבן אורך ${length} ורוחב ${width}. מה ההיקף?`,
-              `מלבן אורכו ${length} ורוחבו ${width} — מה ההיקף?`,
-              `היקף מלבן: ${length} ו-${width} יחידות.`,
-              `כמה יחידות היקף יש במלבן ${length}×${width}?`,
-              `אורך ${length}, רוחב ${width}: חשבו היקף המלבן.`,
-              `מלבן מידות ${length} ו-${width}. מה סכום צלעות המעטפת?`,
+              `מה ההיקף של מלבן עם אורך ${length} ס״מ ורוחב ${width} ס״מ?`,
+              `מלבן אורך ${length} ס״מ ורוחב ${width} ס״מ. מה ההיקף?`,
+              `מלבן אורכו ${length} ס״מ ורוחבו ${width} ס״מ — מה ההיקף?`,
+              `אורך המלבן הוא ${length} ס״מ ורוחבו ${width} ס״מ. חשבו את היקף המלבן.`,
+              `כמה ס״מ היקף יש במלבן ${length}×${width}?`,
+              `אורך ${length} ס״מ, רוחב ${width} ס״מ: חשבו את היקף המלבן.`,
+              `מלבן מידות ${length} ס״מ ו-${width} ס״מ. מה סכום צלעות המעטפת?`,
               `מלבן ${length}×${width}: מה ההיקף הכולל?`,
             ];
             question = variants[phrasing];
@@ -932,15 +933,13 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
         }
 
         case "triangle": {
-          const side1 = Math.floor(Math.random() * level.maxSide) + 1;
-          const side2 = Math.floor(Math.random() * level.maxSide) + 1;
-          const side3 = Math.floor(Math.random() * level.maxSide) + 1;
+          const { side1, side2, side3 } = pickValidTriangleSides(level.maxSide);
           params = { side1, side2, side3, kind: "triangle_perimeter" };
           correctAnswer = round(side1 + side2 + side3);
           question =
             formulaBand === "late"
-              ? `היקף משולש: צלעות ${side1}, ${side2}, ${side3}. מה סכום הצלעות?`
-              : `מה ההיקף של משולש עם צלעות ${side1}, ${side2}, ${side3}?`;
+              ? `אורכי צלעות המשולש הם ${side1} ס״מ, ${side2} ס״מ ו־${side3} ס״מ. חשבו את היקף המשולש.`
+              : `אורכי צלעות המשולש הם ${side1} ס״מ, ${side2} ס״מ ו־${side3} ס״מ. מה ההיקף של המשולש?`;
           break;
         }
 
@@ -2093,34 +2092,34 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
         if (formulaBand === "mid") {
           if (levelKey === "easy") {
             question = [
-              `ריבוע צלע ${side}: אלכסון קשור לפיתגורס (שני ניצבים שווים). מה אורך האלכסון?`,
-              `בריבוע צלע ${side} — שני ניצבים שווים; מה אורך האלכסון?`,
-              `פיתגורס על ריבוע: צלע ${side}, מה אלכסון?`,
+              `אורך צלע הריבוע הוא ${side} ס״מ. חשבו את אורך האלכסון.`,
+              `בריבוע צלע ${side} ס״מ — שני ניצבים שווים; מה אורך האלכסון?`,
+              `פיתגורס על ריבוע: צלע ${side} ס״מ. מה אורך האלכסון?`,
             ][diagSqW];
           } else if (levelKey === "medium") {
             question = [
-              `מה אורך האלכסון של ריבוע עם צלע ${side}?`,
-              `אלכסון בריבוע — צלע ${side}. מה האורך?`,
-              `חישוב אלכסון מריבוע צלע ${side}.`,
+              `מה אורך האלכסון של ריבוע עם צלע ${side} ס״מ?`,
+              `אורך צלע הריבוע הוא ${side} ס״מ. חשבו את אורך האלכסון.`,
+              `ריבוע עם צלע ${side} ס״מ. מה אורך האלכסון?`,
             ][diagSqW];
           } else {
             question = [
-              `אתגר אלכסון — ריבוע צלע ${side}, מה אורך האלכסון?`,
-              `ריבוע ${side}. מה d?`,
-              `ריבוע עם צלע ${side}. מה אורך האלכסון?`,
+              `אתגר אלכסון — ריבוע צלע ${side} ס״מ, מה אורך האלכסון?`,
+              `אורך צלע הריבוע הוא ${side} ס״מ. חשבו את אורך האלכסון.`,
+              `ריבוע עם צלע ${side} ס״מ. מה אורך האלכסון?`,
             ][diagSqW];
           }
         } else if (levelKey === "hard") {
           question = [
-            `בשלב אתגר — ריבוע צלע ${side}: מה אורך אלכסון?`,
-            `אתגר קצר — אלכסון בריבוע ${side}.`,
-            `ניתוח אלכסון בריבוע צלע ${side}.`,
+            `בשלב אתגר — ריבוע צלע ${side} ס״מ: מה אורך האלכסון?`,
+            `אורך צלע הריבוע הוא ${side} ס״מ. חשבו את אורך האלכסון.`,
+            `ריבוע עם צלע ${side} ס״מ. מה אורך האלכסון?`,
           ][diagSqW];
         } else {
           question = [
-            `ריבוע צלע ${side}: מה אורך אלכסון?`,
-            `אורך אלכסון בריבוע עם צלע ${side}?`,
-            `מדידת אלכסון — ריבוע ${side}.`,
+            `אורך צלע הריבוע הוא ${side} ס״מ. חשבו את אורך האלכסון.`,
+            `אורך אלכסון בריבוע עם צלע ${side} ס״מ?`,
+            `ריבוע עם צלע ${side} ס״מ. מה אורך האלכסון?`,
           ][diagSqW];
         }
       } else if (hebShape === "מלבן") {
@@ -2191,21 +2190,21 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
         correctAnswer = height;
         const hTriW = Math.floor(Math.random() * 15);
         question = [
-          `במשולש עם בסיס ${base} ושטח ${area}, מה הגובה?`,
-          `שטח המשולש הוא ${area} ובסיסו ${base}. מה גובהו?`,
-          `משולש: בסיס ${base}, שטח ${area}. מה הגובה?`,
-          `נתון משולש עם בסיס ${base} ושטח ${area}. מה אורך הגובה?`,
-          `במשולש עם בסיס ${base} ושטח ${area}, מה הגובה?`,
+          `במשולש עם בסיס ${base} ס״מ ושטח ${area} סמ״ר, מה הגובה לבסיס?`,
+          `שטח המשולש הוא ${area} סמ״ר ובסיסו ${base} ס״מ. חשבו את גובה המשולש.`,
+          `משולש: בסיס ${base} ס״מ, שטח ${area} סמ״ר. מה הגובה לבסיס?`,
+          `נתון משולש עם בסיס ${base} ס״מ ושטח ${area} סמ״ר. מה אורך הגובה?`,
+          `במשולש עם בסיס ${base} ס״מ ושטח ${area} סמ״ר, מה הגובה?`,
           `גינה משולשת: בסיס ${base} מ׳, שטח ${area} מ"ר. מה הגובה?`,
-          `משולש: בסיס ${base}, שטח ${area}. מה הגובה?`,
-          `השטח הוא ${area} יחידות. הבסיס ${base}. מה הגובה של המשולש?`,
-          `משולש שבסיסו ${base} ושטחו ${area}. כמה הגובה?`,
-          `בסיס ${base}, שטח ${area} — מצאו את גובה המשולש.`,
-          `מחשבים גובה: שטח משולש ${area}, בסיס ${base}.`,
-          `פיסת בד משולשת: בסיס ${base} ס"מ, שטח ${area} סמ"ר. מה הגובה?`,
-          `משולש: בסיס ${base}, שטח ${area}. מה הגובה?`,
-          `משולש עם בסיס ${base} יחידות ושטח ${area}. הגובה הוא?`,
-          `כדי לחשב גובה: שטח ${area} ובסיס ${base}. מה התשובה?`,
+          `משולש: בסיס ${base} ס״מ, שטח ${area} סמ״ר. חשבו את הגובה לבסיס.`,
+          `השטח הוא ${area} סמ״ר. הבסיס ${base} ס״מ. מה הגובה של המשולש?`,
+          `משולש שבסיסו ${base} ס״מ ושטחו ${area} סמ״ר. כמה הגובה?`,
+          `בסיס ${base} ס״מ, שטח ${area} סמ״ר — מצאו את גובה המשולש.`,
+          `שטח משולש ${area} סמ״ר ובסיס ${base} ס״מ. חשבו את הגובה לבסיס.`,
+          `פיסת בד משולשת: בסיס ${base} ס״מ, שטח ${area} סמ״ר. מה הגובה?`,
+          `משולש: בסיס ${base} ס״מ, שטח ${area} סמ״ר. מה הגובה?`,
+          `משולש עם בסיס ${base} ס״מ ושטח ${area} סמ״ר. מה הגובה?`,
+          `שטח ${area} סמ״ר ובסיס ${base} ס״מ. חשבו את גובה המשולש.`,
         ][hTriW];
       } else if (shapeType < 0.66) {
         const base = Math.floor(Math.random() * level.maxSide) + 1;

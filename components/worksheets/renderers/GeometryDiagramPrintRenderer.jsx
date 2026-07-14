@@ -3,6 +3,7 @@
  */
 
 import { renderGeometryDiagramSvgHtml } from "../../../lib/worksheets/worksheet-geometry-diagram-svg.js";
+import WorksheetMathAnswerLine from "../WorksheetMathAnswerLine.jsx";
 import WorksheetOptionsGrid from "../WorksheetOptionsGrid.jsx";
 
 /**
@@ -12,6 +13,7 @@ export function GeometryDiagramPrintRenderer({ question, inkSave = false }) {
   const svgHtml = question.diagramSpec
     ? renderGeometryDiagramSvgHtml(question.diagramSpec, { inkSave })
     : "";
+  const showMcq = Boolean(question.optionsHe?.length);
 
   return (
     <div className="worksheet-renderer geometry-diagram">
@@ -23,7 +25,11 @@ export function GeometryDiagramPrintRenderer({ question, inkSave = false }) {
           dangerouslySetInnerHTML={{ __html: svgHtml }}
         />
       ) : null}
-      <WorksheetOptionsGrid optionsHe={question.optionsHe} />
+      {showMcq ? (
+        <WorksheetOptionsGrid optionsHe={question.optionsHe} />
+      ) : (
+        <WorksheetMathAnswerLine />
+      )}
     </div>
   );
 }

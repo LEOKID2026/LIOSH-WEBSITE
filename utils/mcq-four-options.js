@@ -100,7 +100,7 @@ export function shouldEnforceFourMcqOptions(q) {
 
   const params = q.params && typeof q.params === "object" ? q.params : {};
   const mode = String(params.answerMode ?? q.answerMode ?? q.qType ?? "").toLowerCase();
-  if (mode === "typing" || mode === "numeric" || mode === "text") return false;
+  if (mode === "typing" || mode === "numeric" || mode === "text" || mode === "open") return false;
   if (params.kind === "empty_pool" || params.patternFamily === "no_questions") return false;
 
   if (isGeometryVariableLabelMcq(q)) return false;

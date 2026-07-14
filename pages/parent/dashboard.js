@@ -24,6 +24,7 @@ import {
   clearParentBearerSessionAndRedirect,
   resolveParentBearerSession,
 } from "../../lib/parent-client/parent-bearer-session.client.js";
+import { WORKSHEET_HUB_ENTRY_ENABLED } from "../../lib/worksheets/worksheet-hub-entry-enabled.js";
 
 const GRADE_OPTIONS = [
   { value: "grade_1", label: "כיתה א׳" },
@@ -973,16 +974,30 @@ export default function ParentDashboardPage() {
             <p className={`${T.subheading} mt-1 min-w-0 truncate text-sm`}>{session.user?.email}</p>
           </div>
           <div className="grid w-full min-w-0 grid-cols-2 gap-1.5 sm:grid-cols-3 md:flex md:w-auto md:flex-nowrap md:justify-end md:gap-2">
-            <Link
-              href="/parent/worksheets"
-              prefetch={false}
-              className={`${T.headerCurriculumBtn} w-full min-w-0 md:w-auto md:flex-none`}
-            >
-              <span aria-hidden="true" className="me-1">
-                🖨️
-              </span>
-              דפי עבודה להדפסה
-            </Link>
+            {WORKSHEET_HUB_ENTRY_ENABLED ? (
+              <Link
+                href="/parent/worksheets"
+                prefetch={false}
+                className={`${T.headerCurriculumBtn} w-full min-w-0 md:w-auto md:flex-none`}
+              >
+                <span aria-hidden="true" className="me-1">
+                  🖨️
+                </span>
+                דפי עבודה להדפסה
+              </Link>
+            ) : (
+              <button
+                type="button"
+                disabled
+                aria-disabled="true"
+                className={`${T.headerCurriculumBtn} w-full min-w-0 md:w-auto md:flex-none opacity-55 cursor-not-allowed`}
+              >
+                <span aria-hidden="true" className="me-1">
+                  🖨️
+                </span>
+                דפי עבודה להדפסה
+              </button>
+            )}
             <button
               type="button"
               onClick={() => setCurriculumModalOpen(true)}

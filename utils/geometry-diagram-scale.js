@@ -144,15 +144,26 @@ function triangleHeightFromBase(a, b, c) {
 }
 
 /**
- * Triangle from three side lengths (scaled). Bottom edge = side1 (left→right).
+ * Triangle from three side lengths (scaled, bounded). Bottom edge = side1 (left→right).
+ * Extreme ratios are capped so vertices stay printable; labels carry true lengths.
  */
 export function triangleVerticesFromSides(side1, side2, side3) {
-  const s1 = Math.max(Number(side1) || 0, 1e-9);
-  const s2 = Math.max(Number(side2) || 0, 1e-9);
-  const s3 = Math.max(Number(side3) || 0, 1e-9);
+  let s1 = Math.max(Number(side1) || 0, 1e-9);
+  let s2 = Math.max(Number(side2) || 0, 1e-9);
+  let s3 = Math.max(Number(side3) || 0, 1e-9);
 
-  const maxW = 228;
-  const maxH = 122;
+  // Cap aspect before layout so a tiny base / huge side cannot explode SVG space.
+  const maxSide = Math.max(s1, s2, s3);
+  const minSide = Math.min(s1, s2, s3);
+  if (maxSide / minSide > 2.8) {
+    // Fall back to a readable schematic proportion; caller may still label true lengths.
+    s1 = 6;
+    s2 = 7;
+    s3 = 8;
+  }
+
+  const maxW = 160;
+  const maxH = 100;
   const hEst = triangleHeightFromBase(s1, s2, s3);
   let k = Math.min(maxW / s1, maxH / Math.max(hEst, 1e-6));
   const L = s1 * k;
@@ -160,7 +171,7 @@ export function triangleVerticesFromSides(side1, side2, side3) {
   const t3 = s3 * k;
 
   if (s1 + s2 <= s3 || s1 + s3 <= s2 || s2 + s3 <= s1) {
-    return isoscelesTriangleLayout(s1, s2, s3, k);
+    return isoscelesTriangleLayout(6, 7, 8, Math.min(maxW / 6, maxH / 5));
   }
 
   const x0 = 0;
@@ -169,7 +180,7 @@ export function triangleVerticesFromSides(side1, side2, side3) {
   const y1 = 0;
   const x = (t3 * t3 - t2 * t2 + L * L) / (2 * L);
   const ySq = t3 * t3 - x * x;
-  if (ySq <= 1e-6) return isoscelesTriangleLayout(s1, s2, s3, k);
+  if (ySq <= 1e-6) return isoscelesTriangleLayout(6, 7, 8, Math.min(maxW / 6, maxH / 5));
 
   const y = Math.sqrt(ySq);
   const x2 = x;

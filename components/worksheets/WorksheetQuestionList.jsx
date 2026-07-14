@@ -7,6 +7,7 @@ import WorksheetQuestionRouter from "./WorksheetQuestionRouter.jsx";
 import { WORKSHEET_UI_HE } from "../../lib/worksheets/worksheet-ui.he.js";
 import {
   classifyWorksheetQuestionLayout,
+  geometryQuestionPrintModifierClasses,
   getWorksheetBodyGridClass,
   shouldRenderMathPrintPages,
   withWorksheetLayoutSubject,
@@ -17,15 +18,19 @@ import {
  *   question: import("../../lib/worksheets/worksheet-question-types.js").PrintableWorksheetQuestion,
  *   isPrint: boolean,
  *   subjectId?: import("../../lib/worksheets/worksheet-question-types.js").WorksheetSubjectId,
+ *   index?: number,
  * }} props
  */
-function WorksheetQuestionSection({ question, isPrint, subjectId }) {
+function WorksheetQuestionSection({ question, isPrint, subjectId, index = 0 }) {
   const normalized = withWorksheetLayoutSubject(question, subjectId);
   const layoutClass = classifyWorksheetQuestionLayout(normalized);
+  const breakMods = isPrint
+    ? geometryQuestionPrintModifierClasses(normalized, index, subjectId)
+    : "";
   const sectionClass = isPrint
-    ? `worksheet-question ${layoutClass}`
-    : `worksheet-screen-question ${
-        layoutClass === "layout-full"
+    ? `worksheet-question ${layoutClass}${breakMods}`
+    : `worksheet-screen-question ${layoutClass} ${
+        layoutClass === "layout-full" || layoutClass === "layout-geometry-single"
           ? "worksheet-screen-question--full"
           : "worksheet-screen-question--card"
       }`;
@@ -64,12 +69,13 @@ export default function WorksheetQuestionList({ questions, mode, subjectId }) {
 
   return (
     <main className={bodyClass}>
-      {questions.map((q) => (
+      {questions.map((q, index) => (
         <WorksheetQuestionSection
           key={q.displayIndex}
           question={q}
           isPrint={isPrint}
           subjectId={subjectId}
+          index={index}
         />
       ))}
     </main>

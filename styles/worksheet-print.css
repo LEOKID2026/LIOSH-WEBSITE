@@ -722,21 +722,162 @@
 }
 
 /* ── Geometry ── */
+.worksheet-body.worksheet-print-geometry,
+.worksheet-body.worksheet-print-geometry-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.worksheet-body.worksheet-print-geometry-flow .layout-geometry-double,
+.worksheet-body.worksheet-print-geometry-flow .layout-geometry-single {
+  flex: 0 0 auto;
+}
+
+/* Explicit break only when packer marked a non-first single. */
+.worksheet-question.layout-geometry-break-before {
+  page-break-before: always;
+  break-before: page;
+}
+
+.worksheet-question.layout-geometry-double {
+  display: flex;
+  flex-direction: column;
+  break-inside: avoid;
+  page-break-inside: avoid;
+  min-height: 118mm;
+  max-height: 128mm;
+  overflow: hidden;
+  margin-bottom: 0.35rem;
+  padding: 0.45rem 0.25rem 0.55rem;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.worksheet-question.layout-geometry-single {
+  display: flex;
+  flex-direction: column;
+  break-inside: avoid;
+  page-break-inside: avoid;
+  page-break-after: always;
+  break-after: page;
+  min-height: 240mm;
+  margin-bottom: 0.5rem;
+  padding: 0.55rem 0.25rem 0.75rem;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+/* First question shares the title page — leave room for header; never break before it. */
+.worksheet-question.layout-geometry-single.is-first-print-question {
+  page-break-before: auto;
+  break-before: auto;
+  min-height: 200mm;
+}
+
+.worksheet-question.layout-geometry-single:last-child {
+  page-break-after: auto;
+  break-after: auto;
+}
+
 .worksheet-diagram-wrap {
-  margin: 0.25rem auto;
-  max-width: 72mm;
+  margin: 0.35rem auto;
+  max-width: 92mm;
   break-inside: avoid;
   page-break-inside: avoid;
   text-align: center;
+  overflow: hidden;
+}
+
+.layout-geometry-single .worksheet-diagram-wrap {
+  max-width: 120mm;
+  margin: 0.7rem auto 0.85rem;
+}
+
+.layout-geometry-double .worksheet-diagram-wrap {
+  max-width: 95mm;
+  margin: 0.4rem auto 0.55rem;
 }
 
 .worksheet-geometry-svg {
   display: block;
   width: 100%;
-  max-height: 58mm;
+  max-height: 72mm;
   margin: 0 auto;
   direction: ltr;
   unicode-bidi: isolate;
+  overflow: hidden;
+}
+
+.worksheet-geometry-svg text {
+  font-weight: 400 !important;
+  font-synthesis: none !important;
+}
+
+.layout-geometry-single .worksheet-geometry-svg {
+  max-height: 110mm;
+}
+
+.layout-geometry-double .worksheet-geometry-svg {
+  max-height: 68mm;
+}
+
+.worksheet-renderer.geometry-diagram,
+.worksheet-renderer.geometry-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.worksheet-renderer.geometry-diagram .worksheet-stem,
+.worksheet-renderer.geometry-text .worksheet-stem,
+.worksheet-question.layout-geometry-double .worksheet-stem,
+.worksheet-question.layout-geometry-single .worksheet-stem {
+  font-weight: 400;
+  font-synthesis: none;
+}
+
+.worksheet-renderer.geometry-diagram .worksheet-options-section {
+  margin-top: 0.2rem;
+}
+
+/* Pin "תשובה:" to the bottom of the geometry question balloon. */
+.worksheet-question.layout-geometry-double > .worksheet-question-title,
+.worksheet-question.layout-geometry-single > .worksheet-question-title {
+  flex-shrink: 0;
+}
+
+.worksheet-question.layout-geometry-double > .worksheet-question-content,
+.worksheet-question.layout-geometry-single > .worksheet-question-content {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.worksheet-question.layout-geometry-double .worksheet-renderer.geometry-diagram,
+.worksheet-question.layout-geometry-single .worksheet-renderer.geometry-diagram,
+.worksheet-question.layout-geometry-double .worksheet-renderer.geometry-text,
+.worksheet-question.layout-geometry-single .worksheet-renderer.geometry-text {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+}
+
+.worksheet-question.layout-geometry-double .worksheet-math-answer-line,
+.worksheet-question.layout-geometry-single .worksheet-math-answer-line,
+.worksheet-renderer.geometry-diagram > .worksheet-math-answer-line,
+.worksheet-renderer.geometry-text > .worksheet-math-answer-line {
+  margin-top: auto;
+  padding-top: 0.65rem;
+  padding-bottom: 0.15rem;
+}
+
+.worksheet-math-answer-line-field {
+  flex: 1;
+  max-width: 11rem;
+  border-bottom: 1.5px solid #334155;
+  min-height: 1.55rem;
 }
 
 .english-ltr {

@@ -23,7 +23,22 @@ export function getGeometryDiagramSpec(question, options = {}) {
     /(משבצות|רשת|לוח ריבועים|ריבועים קטנים|תאים)/u.test(stem);
 
   if (topic === "area") {
-    switch (shape) {
+    const areaShape =
+      shape ||
+      (String(p.kind || "").includes("square")
+        ? "square"
+        : String(p.kind || "").includes("rectangle")
+          ? "rectangle"
+          : String(p.kind || "").includes("triangle")
+            ? "triangle"
+            : String(p.kind || "").includes("parallelogram")
+              ? "parallelogram"
+              : String(p.kind || "").includes("trapezoid")
+                ? "trapezoid"
+                : String(p.kind || "").includes("circle")
+                  ? "circle"
+                  : null);
+    switch (areaShape) {
       case "square":
         if (typeof p.side !== "number") return null;
         return asksForAreaGrid
@@ -78,7 +93,18 @@ export function getGeometryDiagramSpec(question, options = {}) {
   }
 
   if (topic === "perimeter") {
-    switch (shape) {
+    const periShape =
+      shape ||
+      (String(p.kind || "").includes("square")
+        ? "square"
+        : String(p.kind || "").includes("rectangle")
+          ? "rectangle"
+          : String(p.kind || "").includes("triangle")
+            ? "triangle"
+            : String(p.kind || "").includes("circle")
+              ? "circle"
+              : null);
+    switch (periShape) {
       case "square":
         if (typeof p.side !== "number") return null;
         return { kind: "square", mode: "perimeter", side: p.side };
@@ -107,13 +133,9 @@ export function getGeometryDiagramSpec(question, options = {}) {
     }
   }
 
-  if (topic === "volume" && shape === "cube") {
-    if (typeof p.side !== "number") return null;
-    return { kind: "square", mode: "volume", side: p.side };
-  }
-
   if (topic === "volume") {
-    if (shape === "rectangular_prism" || shape === "cube") {
+    // Cube and rectangular prism both use isometric solid_box — never a 2D square.
+    if (shape === "rectangular_prism" || shape === "cube" || p.kind === "cube_volume") {
       const l = p.length ?? p.side;
       const w = p.width ?? p.side;
       const h = p.height ?? p.side;
@@ -232,10 +254,17 @@ export function getGeometryDiagramSpec(question, options = {}) {
   if (topic === "shapes_basic") {
     const kind = p?.kind || "";
     if (kind === "shapes_basic_square" || kind === "shapes_basic_properties_square") {
-      return { kind: "square", mode: "identify" };
+      /** @type {Record<string, unknown>} */
+      const out = { kind: "square", mode: "identify" };
+      if (typeof p.side === "number") out.side = p.side;
+      return out;
     }
     if (kind === "shapes_basic_rectangle" || kind === "shapes_basic_properties_rectangle") {
-      return { kind: "rectangle", mode: "identify" };
+      /** @type {Record<string, unknown>} */
+      const out = { kind: "rectangle", mode: "identify" };
+      if (typeof p.length === "number") out.length = p.length;
+      if (typeof p.width === "number") out.width = p.width;
+      return out;
     }
     if (kind === "shapes_basic_properties_angles") {
       const template = p.shape === "מלבן" ? "rectangle" : "square";
@@ -283,17 +312,43 @@ export function getGeometryDiagramSpec(question, options = {}) {
   if (topic === "symmetry" || p.kind === "symmetry" || p.kind === "concept_symmetry") {
     const shapeHe = String(p.shape || shape || "");
     let template = "square";
-    if (shapeHe.includes("מלבן")) template = "rectangle";
-    else if (shapeHe.includes("משולש")) template = "equilateral_triangle";
-    return { kind: "symmetry", template };
+    // Stem nouns win over mismatched params.shape.
+    if (/משולש/.test(stem)) {
+      template = "equilateral_triangle";
+    } else if (/מלבן/.test(stem)) {
+      template = "rectangle";
+    } else if (/ריבוע/.test(stem)) {
+      template = "square";
+    } else if (shapeHe.includes("מלבן") || shapeHe === "rectangle") {
+      template = "rectangle";
+    } else if (shapeHe.includes("משולש") || /triangle/i.test(shapeHe)) {
+      template = "equilateral_triangle";
+    } else if (shapeHe.includes("ריבוע") || shapeHe === "square") {
+      template = "square";
+    }
+    /** @type {Record<string, unknown>} */
+    const out = { kind: "symmetry", template };
+    if (typeof p.axes === "number") out.axes = p.axes;
+    return out;
   }
 
   if (topic === "diagonal" || String(p.kind || "").startsWith("diagonal_")) {
     const shapeHe = String(p.shape || shape || "");
     let diagShape = "square";
-    if (p.kind === "diagonal_rectangle" || shapeHe === "מלבן") diagShape = "rectangle";
-    else if (p.kind === "diagonal_parallelogram" || shapeHe === "מקבילית") {
+    if (
+      p.kind === "diagonal_rectangle" ||
+      shapeHe === "מלבן" ||
+      shapeHe === "rectangle"
+    ) {
+      diagShape = "rectangle";
+    } else if (
+      p.kind === "diagonal_parallelogram" ||
+      shapeHe === "מקבילית" ||
+      shapeHe === "parallelogram"
+    ) {
       diagShape = "parallelogram";
+    } else if (p.kind === "diagonal_square" || shapeHe === "ריבוע" || shapeHe === "square") {
+      diagShape = "square";
     }
     /** @type {Record<string, unknown>} */
     const out = {
@@ -309,7 +364,9 @@ export function getGeometryDiagramSpec(question, options = {}) {
 
   if (topic === "heights" || String(p.kind || "").startsWith("heights_")) {
     const hideHeight = hideUnknownValues;
-    if (p.kind === "heights_triangle" || p.shape === "triangle") {
+    const kindKey = String(p.kind || "");
+    // Trust kind over mismatched params.shape (generator sometimes reuses wrong shape tags).
+    if (kindKey === "heights_triangle" || (!kindKey.startsWith("heights_") && p.shape === "triangle")) {
       if (typeof p.base !== "number" || typeof p.height !== "number") return null;
       return {
         kind: "triangle",
@@ -317,9 +374,13 @@ export function getGeometryDiagramSpec(question, options = {}) {
         base: p.base,
         height: p.height,
         hideHeight,
+        shape: "triangle",
       };
     }
-    if (p.kind === "heights_parallelogram" || p.shape === "parallelogram") {
+    if (
+      kindKey === "heights_parallelogram" ||
+      (!kindKey.startsWith("heights_") && p.shape === "parallelogram")
+    ) {
       if (typeof p.base !== "number" || typeof p.height !== "number") return null;
       return {
         kind: "parallelogram",
@@ -327,9 +388,13 @@ export function getGeometryDiagramSpec(question, options = {}) {
         base: p.base,
         height: p.height,
         hideHeight,
+        shape: "parallelogram",
       };
     }
-    if (p.kind === "heights_trapezoid" || p.shape === "trapezoid") {
+    if (
+      kindKey === "heights_trapezoid" ||
+      (!kindKey.startsWith("heights_") && p.shape === "trapezoid")
+    ) {
       if (
         typeof p.base1 !== "number" ||
         typeof p.base2 !== "number" ||
@@ -344,18 +409,37 @@ export function getGeometryDiagramSpec(question, options = {}) {
         base2: p.base2,
         height: p.height,
         hideHeight,
+        shape: "trapezoid",
       };
     }
     return null;
   }
 
-  if (p.kind === "tiling_count") return null;
+  if (p.kind === "tiling_count") {
+    if (
+      typeof p.floorL !== "number" ||
+      typeof p.floorW !== "number" ||
+      typeof p.tileSide !== "number"
+    ) {
+      return null;
+    }
+    return {
+      kind: "tiling",
+      mode: "count",
+      tile: "square",
+      floorL: p.floorL,
+      floorW: p.floorW,
+      tileSide: p.tileSide,
+      count: typeof p.count === "number" ? p.count : undefined,
+    };
+  }
 
   if (topic === "tiling" || p.kind === "tiling" || p.kind === "concept_tiling") {
     const shapeHe = String(p.shape || "");
     let tile = "square";
     if (shapeHe.includes("משושה")) tile = "hexagon";
     else if (shapeHe.includes("משולש")) tile = "triangle";
+    else if (shapeHe.includes("מלבן")) tile = "rectangle";
     const out = { kind: "tiling", tile, hideAngle: hideUnknownValues };
     if (typeof p.angle === "number") out.angle = p.angle;
     return out;
