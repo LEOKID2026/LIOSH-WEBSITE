@@ -27,7 +27,11 @@ export default function LearningMasterAudioButton({ audioOn, buttonClassOn, butt
       >
         {masterOn ? "🔊" : "🔇"}
       </button>
-      <GameAudioSettingsModal open={showPanel} onClose={() => setShowPanel(false)} />
+      <GameAudioSettingsModal
+        open={showPanel}
+        onClose={() => setShowPanel(false)}
+        musicScope="learning-master"
+      />
     </>
   );
 }

@@ -133,6 +133,7 @@ import {
   getStreakReward,
 } from "../../utils/daily-streak";
 import { useGameAudio } from "../../hooks/useGameAudio";
+import { startLearningMasterSessionAudio } from "../../lib/game-audio/learning-master-session-audio.js";
 import { getQuestionFontStyle, getVerbalInstructionStyle } from "../../utils/learning-question-font";
 import { resolveLearningMcqChoiceClassName } from "../../utils/learning-mcq-choice-styles.client";
 import {
@@ -2443,11 +2444,7 @@ export default function MathMaster() {
     setShowLevelUp(false);
     stepByStepViewedRef.current = false;
     
-    // Start background music and play game start sound
-    audio.primeFromUserGesture();
-
-    audio.playMusic("bgm-learning-focus");
-    audio.playSfx("sfx-game-start");
+    startLearningMasterSessionAudio(audio);
     closeExplanationModal();
     setErrorExplanation("");
     learningSessionIdRef.current = null;

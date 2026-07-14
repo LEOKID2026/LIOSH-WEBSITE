@@ -128,6 +128,7 @@ import {
   getStreakReward,
 } from "../../utils/daily-streak";
 import { useGameAudio } from "../../hooks/useGameAudio";
+import { startLearningMasterSessionAudio } from "../../lib/game-audio/learning-master-session-audio.js";
 import { getQuestionFontStyle } from "../../utils/learning-question-font";
 import { resolveLearningMcqChoiceClassName } from "../../utils/learning-mcq-choice-styles.client";
 import { compareGeometryLearnerAnswer } from "../../utils/answer-compare";
@@ -2301,10 +2302,7 @@ export default function GeometryMaster() {
     learningSessionStartPromiseRef.current = null;
     void ensureLearningSessionId();
     
-    // Start background music and play game start sound
-    audio.primeFromUserGesture();
-    audio.playMusic("bgm-learning-focus");
-    audio.playSfx("sfx-game-start");
+    startLearningMasterSessionAudio(audio);
     
     if (mode === "challenge") {
       setTimeLeft(20);

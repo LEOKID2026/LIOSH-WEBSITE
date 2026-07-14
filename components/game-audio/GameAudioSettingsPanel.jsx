@@ -1,5 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGameAudioOptional } from "../../hooks/useGameAudio.js";
+import { getMastersBgmAssetId } from "../../lib/game-audio/game-bgm-map.js";
+import {
+  loadLearningMasterMusicEnabled,
+  saveLearningMasterMusicEnabled,
+} from "../../lib/game-audio/learning-master-music-settings.js";
 
 function ToggleRow({ label, checked, onChange }) {
   return (
@@ -35,9 +40,18 @@ function VolumeRow({ label, value, onChange }) {
 /**
  * Full Hebrew settings panel for in-game fullscreen overlays.
  */
-export default function GameAudioSettingsPanel({ onClose, className = "" }) {
+export default function GameAudioSettingsPanel({ onClose, className = "", musicScope = "global" }) {
   const audio = useGameAudioOptional();
   const [open, setOpen] = useState(true);
+  const isLearningMasterScope = musicScope === "learning-master";
+  const [learningMasterMusicEnabled, setLearningMasterMusicEnabled] = useState(false);
+
+  useEffect(() => {
+    if (isLearningMasterScope) {
+      setLearningMasterMusicEnabled(loadLearningMasterMusicEnabled());
+    }
+  }, [isLearningMasterScope, open]);
+
   if (!audio) return null;
 
   const s = audio.settings;
@@ -79,8 +93,18 @@ export default function GameAudioSettingsPanel({ onClose, className = "" }) {
       />
       <ToggleRow
         label="מוזיקה"
-        checked={s.musicEnabled}
+        checked={isLearningMasterScope ? learningMasterMusicEnabled : s.musicEnabled}
         onChange={(v) => {
+          if (isLearningMasterScope) {
+            saveLearningMasterMusicEnabled(v);
+            setLearningMasterMusicEnabled(v);
+            if (v) {
+              audio.playMusic(getMastersBgmAssetId(), { learningMasterScoped: true });
+            } else {
+              audio.stopMusic();
+            }
+            return;
+          }
           audio.updateSettings({ musicEnabled: v });
           if (!v) audio.stopMusic();
         }}
@@ -124,7 +148,14 @@ export default function GameAudioSettingsPanel({ onClose, className = "" }) {
       <button
         type="button"
         className="mt-3 w-full rounded-lg border border-white/20 py-2 text-sm hover:bg-white/10"
-        onClick={() => audio.resetSettings()}
+        onClick={() => {
+          audio.resetSettings();
+          if (isLearningMasterScope) {
+            saveLearningMasterMusicEnabled(false);
+            setLearningMasterMusicEnabled(false);
+            audio.stopMusic();
+          }
+        }}
       >
         איפוס לברירת מחדל
       </button>

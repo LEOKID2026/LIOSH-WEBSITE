@@ -8,8 +8,7 @@ export default function LearningMasterMobileNavTitle({ MB, title, audio }) {
 
   const audioOn =
     audio?.settings?.masterEnabled &&
-    audio?.settings?.sfxEnabled &&
-    audio?.settings?.musicEnabled;
+    audio?.settings?.sfxEnabled;
 
   return (
     <>

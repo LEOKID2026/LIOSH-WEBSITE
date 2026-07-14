@@ -43,6 +43,7 @@ import {
   getStreakReward,
 } from "../../utils/daily-streak";
 import { useGameAudio } from "../../hooks/useGameAudio";
+import { startLearningMasterSessionAudio } from "../../lib/game-audio/learning-master-session-audio.js";
 import { useMobileViewport } from "../../hooks/useMobileViewport";
 
 import { learningMixedHebrewMathStyle } from "../../utils/learning-mixed-hebrew-math";
@@ -2320,9 +2321,7 @@ function saveScienceAnswerInParallel({
     else setTimeLeft(null);
     void ensureLearningSessionId();
 
-    audio.primeFromUserGesture();
-    audio.playMusic("bgm-learning-focus");
-    audio.playSfx("sfx-game-start");
+    startLearningMasterSessionAudio(audio);
 
     // מאתחל מאגר שאלות חדש לסשן הזה
     generateNewQuestion(true);

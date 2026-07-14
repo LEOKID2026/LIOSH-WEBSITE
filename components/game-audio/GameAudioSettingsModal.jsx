@@ -5,7 +5,7 @@ import GameAudioSettingsPanel from "./GameAudioSettingsPanel.jsx";
 /**
  * Full-screen modal shell for audio settings — portaled to document.body.
  */
-export default function GameAudioSettingsModal({ open, onClose }) {
+export default function GameAudioSettingsModal({ open, onClose, musicScope = "global" }) {
   useEffect(() => {
     if (!open || typeof document === "undefined") return undefined;
 
@@ -41,7 +41,7 @@ export default function GameAudioSettingsModal({ open, onClose }) {
         style={{ maxWidth: "min(92vw, 420px)" }}
         onClick={(event) => event.stopPropagation()}
       >
-        <GameAudioSettingsPanel onClose={onClose} />
+        <GameAudioSettingsPanel onClose={onClose} musicScope={musicScope} />
       </div>
     </div>,
     document.body,

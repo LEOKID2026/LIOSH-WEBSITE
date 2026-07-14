@@ -59,6 +59,7 @@ import {
   getStreakReward,
 } from "../../utils/daily-streak";
 import { useGameAudio } from "../../hooks/useGameAudio";
+import { startLearningMasterSessionAudio } from "../../lib/game-audio/learning-master-session-audio.js";
 import { getQuestionFontStyle, getVerbalInstructionStyle } from "../../utils/learning-question-font";
 import { resolveLearningMcqChoiceClassName } from "../../utils/learning-mcq-choice-styles.client";
 import { compareAnswers } from "../../utils/answer-compare";
@@ -2094,10 +2095,7 @@ export default function HebrewMaster() {
       setTimeLeft(null);
     }
 
-    // Start background music and play game start sound
-    audio.primeFromUserGesture();
-    audio.playMusic("bgm-learning-focus");
-    audio.playSfx("sfx-game-start");
+    startLearningMasterSessionAudio(audio);
     void ensureLearningSessionId();
     
     generateNewQuestion();
