@@ -6,6 +6,7 @@ import MarketingFeatureCard from "./MarketingFeatureCard";
 import PortalPwaInstallButton from "../pwa/PortalPwaInstallButton";
 import ParentPromoVideo from "../parent/ParentPromoVideo";
 import StudentPromoVideo from "../student/StudentPromoVideo";
+import PublicSeoEntrySection from "../seo/PublicSeoEntrySection";
 import StudentParentInviteModal from "../student/StudentParentInviteModal";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import { getPrivateTeacherLayoutProps } from "../../lib/teacher-ui/teacher-portal-theme.client.js";
@@ -194,9 +195,9 @@ function CtaButton({ cta, accent, isBright, size = "lg", onParentInvite }) {
 
 /**
  * Shared marketing landing page shell (RTL Hebrew).
- * @param {{ audience: 'kids' | 'parents' | 'teachers', content: import('../../data/marketing/landing-pages.he').MarketingPageContent }} props
+ * @param {{ audience: 'kids' | 'parents' | 'teachers', content: import('../../data/marketing/landing-pages.he').MarketingPageContent, showPublicSeoEntrySection?: boolean }} props
  */
-export default function MarketingLandingPage({ audience, content }) {
+export default function MarketingLandingPage({ audience, content, showPublicSeoEntrySection = false }) {
   const { theme, isBright } = useStudentTheme();
   const accent = ACCENT[audience];
   const portal = AUDIENCE_PORTAL[audience];
@@ -392,6 +393,10 @@ export default function MarketingLandingPage({ audience, content }) {
               ) : null}
             </div>
           </section>
+
+          {showPublicSeoEntrySection ? (
+            <PublicSeoEntrySection isBright={isBright} />
+          ) : null}
 
           <p className="pb-4 text-center">
             <Link

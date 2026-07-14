@@ -10,6 +10,7 @@ import HomeKidsSection from "../components/home/HomeKidsSection";
 import HomeHowItWorks from "../components/home/HomeHowItWorks";
 import HomeFinalCta from "../components/home/HomeFinalCta";
 import HomeTeacherSection from "../components/home/HomeTeacherSection";
+import PublicSeoEntrySection from "../components/seo/PublicSeoEntrySection";
 import { HOME_PAGE_MAX, HOME_PAGE_PAD } from "../components/home/home-theme";
 import { getPublicPageSeo } from "../lib/site/public-page-seo.he";
 import { useStudentTheme } from "../contexts/StudentThemeContext.jsx";
@@ -51,6 +52,7 @@ export default function HomePage() {
           <HomeHowItWorks isBright={isBright} />
           <HomeFinalCta isBright={isBright} />
           <HomeTeacherSection isBright={isBright} />
+          <PublicSeoEntrySection isBright={isBright} />
         </div>
       </div>
     </Layout>
