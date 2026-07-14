@@ -43,9 +43,15 @@ export default async function handler(req, res) {
         await upsertGuestSetting(ctx.serviceRole, "guest_mode_enabled", { enabled: body.guestModeEnabled === true });
       }
       if (body.defaults && typeof body.defaults === "object") {
+        const rawGames = Number(body.defaults.gamesPerCategory ?? body.defaults.games_per_category ?? 2);
+        const rawTopics = Number(body.defaults.topicsPerSubject ?? body.defaults.topics_per_subject ?? 2);
+        const gamesPerCategory =
+          Number.isFinite(rawGames) && rawGames > 0 ? Math.min(Math.floor(rawGames), 20) : 2;
+        const topicsPerSubject =
+          Number.isFinite(rawTopics) && rawTopics > 0 ? Math.min(Math.floor(rawTopics), 20) : 2;
         await upsertGuestSetting(ctx.serviceRole, "guest_defaults", {
-          games_per_category: Number(body.defaults.gamesPerCategory ?? body.defaults.games_per_category ?? 2),
-          topics_per_subject: Number(body.defaults.topicsPerSubject ?? body.defaults.topics_per_subject ?? 2),
+          games_per_category: gamesPerCategory,
+          topics_per_subject: topicsPerSubject,
         });
       }
       if (body.economy && typeof body.economy === "object") {

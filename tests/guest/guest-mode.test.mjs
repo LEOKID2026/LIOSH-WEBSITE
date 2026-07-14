@@ -113,6 +113,56 @@ describe("guest game access policy", () => {
     assert.equal(map.get("c"), undefined);
   });
 
+  test("explicit false overrides baseline without dropping other defaults", () => {
+    const catalog = [
+      { game_key: "a", category: "solo", is_enabled: true, sort_order: 1 },
+      { game_key: "b", category: "solo", is_enabled: true, sort_order: 2 },
+      { game_key: "c", category: "solo", is_enabled: true, sort_order: 3 },
+      { game_key: "x", category: "online", is_enabled: true, sort_order: 1 },
+    ];
+    const rows = [{ game_key: "a", guest_playable: false }];
+    const map = resolveDefaultGuestPlayableGameKeys(rows, catalog, 2);
+    assert.equal(map.get("a"), undefined);
+    assert.equal(map.get("b"), true);
+    assert.equal(map.get("x"), true);
+  });
+
+  test("explicit true opens game beyond gamesPerCategory", () => {
+    const catalog = [
+      { game_key: "a", category: "solo", is_enabled: true, sort_order: 1 },
+      { game_key: "b", category: "solo", is_enabled: true, sort_order: 2 },
+      { game_key: "c", category: "solo", is_enabled: true, sort_order: 3 },
+    ];
+    const rows = [{ game_key: "c", guest_playable: true }];
+    const map = resolveDefaultGuestPlayableGameKeys(rows, catalog, 2);
+    assert.equal(map.get("a"), true);
+    assert.equal(map.get("b"), true);
+    assert.equal(map.get("c"), true);
+  });
+
+  test("gamesPerCategory increase opens more baseline games even with explicit rows", () => {
+    const catalog = [
+      { game_key: "a", category: "solo", is_enabled: true, sort_order: 1 },
+      { game_key: "b", category: "solo", is_enabled: true, sort_order: 2 },
+      { game_key: "c", category: "solo", is_enabled: true, sort_order: 3 },
+      { game_key: "d", category: "solo", is_enabled: true, sort_order: 4 },
+    ];
+    const rows = [
+      { game_key: "a", guest_playable: false },
+      { game_key: "b", guest_playable: false },
+    ];
+    const mapAt2 = resolveDefaultGuestPlayableGameKeys(rows, catalog, 2);
+    assert.equal(mapAt2.get("a"), undefined);
+    assert.equal(mapAt2.get("b"), undefined);
+    assert.equal(mapAt2.get("c"), undefined);
+
+    const mapAt4 = resolveDefaultGuestPlayableGameKeys(rows, catalog, 4);
+    assert.equal(mapAt4.get("a"), undefined);
+    assert.equal(mapAt4.get("b"), undefined);
+    assert.equal(mapAt4.get("c"), true);
+    assert.equal(mapAt4.get("d"), true);
+  });
+
   test("applyGuestLockToGameAccess locks non-playable", () => {
     const base = { state: GAME_ACCESS_STATES.ALLOWED, category: "solo", gameKey: "c" };
     const row = { game_key: "c", category: "solo" };
