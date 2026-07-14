@@ -8,6 +8,7 @@ import assert from "node:assert/strict";
 import {
   splitHebrewPassageFromStem,
   enrichHebrewPrintableQuestion,
+  fixHebrewFinalLettersMidWord,
 } from "../../lib/worksheets/worksheet-hebrew-display.server.js";
 import { toPrintableWorksheetQuestion } from "../../lib/worksheets/worksheet-question-sanitize.server.js";
 import {
@@ -49,6 +50,21 @@ describe("hebrew-nikud-passage", () => {
     assert.ok(split.passageHe?.includes("דני"));
     assert.ok(split.stemHe.includes("מה עשה"));
     assert.equal(split.stemHe.includes("כיתה ג׳"), false);
+  });
+
+  test("קרא את הטקסט passage splits for reading bank prompts", () => {
+    const split = splitHebrewPassageFromStem(
+      "קרא את הטקסט: 'בבוקר שיר הכינה את כדור בפארק.' מה שיר בדקה בקשת?"
+    );
+    assert.ok(split.passageHe?.includes("בבוקר"));
+    assert.ok(split.stemHe.includes("מה שיר"));
+    assert.equal(split.stemHe.includes("קרא את הטקסט"), false);
+  });
+
+  test("fixHebrewFinalLettersMidWord converts mid-word sofit letters", () => {
+    assert.equal(fixHebrewFinalLettersMidWord("הכיןה"), "הכינה");
+    assert.equal(fixHebrewFinalLettersMidWord("החליףה"), "החליפה");
+    assert.equal(fixHebrewFinalLettersMidWord("שולחן יפה"), "שולחן יפה");
   });
 
   test("comprehension enriches to passage_mcq", () => {

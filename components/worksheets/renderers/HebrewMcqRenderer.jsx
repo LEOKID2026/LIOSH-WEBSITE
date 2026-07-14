@@ -14,7 +14,10 @@ export function HebrewMcqRenderer({ question }) {
   return (
     <div className="worksheet-renderer hebrew-mcq">
       <p className={stemClass}>{question.stemHe}</p>
-      <WorksheetOptionsGrid optionsHe={question.optionsHe} />
+      <WorksheetOptionsGrid
+        optionsHe={question.optionsHe}
+        nikudMode={Boolean(question.hasNikud)}
+      />
     </div>
   );
 }

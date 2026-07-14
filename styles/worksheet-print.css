@@ -666,6 +666,14 @@
 .worksheet-passage-long {
   font-size: 0.98rem;
   line-height: 1.8;
+  /* Long reading blocks may span pages — avoid header-only first page. */
+  break-inside: auto;
+  page-break-inside: auto;
+}
+
+.worksheet-question.layout-full:has(.worksheet-passage-long) {
+  break-inside: auto;
+  page-break-inside: auto;
 }
 
 .worksheet-hebrew-nikud {
@@ -675,7 +683,7 @@
 
 .worksheet-writing-lines {
   margin-top: 0.35rem;
-  min-height: 4.5rem;
+  min-height: calc(4 * 1.6rem);
   border: 1px solid #cbd5e1;
   border-radius: 6px;
   background-image: repeating-linear-gradient(
@@ -689,8 +697,28 @@
   page-break-inside: avoid;
 }
 
+.worksheet-writing-lines[data-lines="3"] {
+  min-height: calc(3 * 1.6rem);
+}
+
+.worksheet-writing-lines[data-lines="4"] {
+  min-height: calc(4 * 1.6rem);
+}
+
 .worksheet-writing-lines[data-lines="5"] {
-  min-height: 8rem;
+  min-height: calc(5 * 1.6rem);
+}
+
+.worksheet-writing-lines[data-lines="6"] {
+  min-height: calc(6 * 1.6rem);
+}
+
+.worksheet-writing-lines[data-lines="7"] {
+  min-height: calc(7 * 1.6rem);
+}
+
+.worksheet-writing-lines[data-lines="8"] {
+  min-height: calc(8 * 1.6rem);
 }
 
 /* ── Geometry ── */
@@ -716,6 +744,47 @@
   unicode-bidi: isolate;
   display: inline-block;
   text-align: left;
+}
+
+/* English phonics: Hebrew instruction + large LTR letter/word stimulus */
+.worksheet-phonics-instruction {
+  direction: rtl;
+  text-align: right;
+  margin-bottom: 0.35rem;
+}
+
+.worksheet-phonics-stimulus {
+  direction: ltr;
+  unicode-bidi: isolate;
+  display: block;
+  text-align: center;
+  font-weight: 700;
+  font-family: "Segoe UI", "Arial", sans-serif;
+  margin: 0.45rem 0 0.7rem;
+  line-height: 1.15;
+}
+
+.worksheet-phonics-stimulus.is-upper {
+  font-size: 2.35rem;
+}
+
+.worksheet-phonics-stimulus.is-lower {
+  font-size: 1.7rem;
+}
+
+.worksheet-phonics-stimulus.is-word {
+  font-size: 2rem;
+  letter-spacing: 0.02em;
+}
+
+.worksheet-option-text.worksheet-phonics-option.is-upper {
+  font-size: 1.35rem;
+  font-weight: 400;
+}
+
+.worksheet-option-text.worksheet-phonics-option.is-lower {
+  font-size: 1.05rem;
+  font-weight: 400;
 }
 
 /* ── Ink save ── */

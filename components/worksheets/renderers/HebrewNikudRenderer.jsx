@@ -14,7 +14,7 @@ export function HebrewNikudRenderer({ question }) {
         <div className="worksheet-passage worksheet-hebrew-nikud">{question.passageHe}</div>
       ) : null}
       <p className="worksheet-stem worksheet-hebrew-nikud">{question.stemHe}</p>
-      <WorksheetOptionsGrid optionsHe={question.optionsHe} />
+      <WorksheetOptionsGrid optionsHe={question.optionsHe} nikudMode={Boolean(question.hasNikud)} />
     </div>
   );
 }

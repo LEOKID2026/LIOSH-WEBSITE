@@ -17,7 +17,10 @@ export function HebrewLongPassageRenderer({ question }) {
         </div>
       ) : null}
       <p className={`worksheet-stem${nikud}`}>{question.stemHe}</p>
-      <WorksheetOptionsGrid optionsHe={question.optionsHe} />
+      <WorksheetOptionsGrid
+        optionsHe={question.optionsHe}
+        nikudMode={Boolean(question.hasNikud)}
+      />
     </div>
   );
 }

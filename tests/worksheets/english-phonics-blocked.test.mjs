@@ -58,7 +58,7 @@ describe("english-phonics-blocked", () => {
       },
       { displayIndex: 1, subject: "english" }
     );
-    assert.equal(printable.printability, WORKSHEET_PRINTABILITY.printable);
+    assert.equal(printable.printability, WORKSHEET_PRINTABILITY.blocked_image);
     const block = classifyEnglishWorksheetPrintBlock({
       question: "התאימו",
       answers: ["a", "b"],

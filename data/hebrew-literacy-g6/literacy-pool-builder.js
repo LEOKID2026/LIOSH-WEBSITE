@@ -72,6 +72,7 @@ function g6GenderForms(name) {
     forgot: f ? "שכחה" : "שכח",
     explained: f ? "הסבירה" : "הסביר",
     summarized: f ? "סיכמה" : "סיכם",
+    exchanged: f ? "החליפה" : "החליף",
     dailyPrompt: (n) => (f ? `מה עשתה ${n} בכל יום?` : `מה עשה ${n} בכל יום?`),
     checkObj: (obj) => (f ? `בדקה שה${obj} מסודר` : `בדק שה${obj} מסודר`),
   };
@@ -151,59 +152,139 @@ function expandPool(baseItems, topic, patternFamily, subtype, level, targetCount
 function generateUniquePassageItems(count, topic, level, patternFamily, subtype, subtopicId) {
   /** @type {Record<string, unknown>[]} */
   const out = [];
-  const templates = [
-    (name, obj, place, g, when) => ({
-      passage: `${name} ${g.kept} על ${obj} ב${place}. ${when} ${name} ${g.checked} שהכל מסודר ומוכן לשימוש.`,
-      prompt: g.dailyPrompt(name),
-      answer: g.checkObj(obj),
-      wrong: [
-        `${g.broke} את ${obj} בלי סיבה`,
-        `${g.forgot} את ${obj} בבית`,
-        `החליף${G6_FEMALE_NAMES.has(name) ? "ה" : ""} את ${obj} בלי לשאול`,
-      ],
-    }),
-    (name, obj, place, g, when) => ({
-      passage: `לפני השיעור ${name} ${g.read} ב${obj} ו${g.wrote} רשימת מילים חשובות. ${when} ${g.explained} למורה את העבודה.`,
-      prompt: `מה עש${G6_FEMALE_NAMES.has(name) ? "תה" : "ה"} ${name} לפני השיעור?`,
-      answer: `קרא${G6_FEMALE_NAMES.has(name) ? "ה" : ""} ב${obj} וכתב${G6_FEMALE_NAMES.has(name) ? "ה" : ""} רשימת מילים`,
-      wrong: ["ישן בכיתה במקום ללמוד", "זרק את התיק לפח", "שכח לבוא לשיעור לגמרי"],
-    }),
-    (name, obj, place, g, when) => {
-      const f = G6_FEMALE_NAMES.has(name);
-      return {
-        passage: `בקבוצת הלימוד ${name} ${f ? "הסבירה" : "הסביר"} לחברים איך לארגן את ${obj}. ${when} כולם סיימו את המשימה בזמן.`,
-        prompt: f ? "מה תרמה לקבוצה?" : "מה תרם לקבוצה?",
-        answer: f ? "הסבירה איך לארגן את החומר בצורה ברורה" : "הסביר איך לארגן את החומר בצורה ברורה",
-        wrong: f
-          ? ["גרמה לעיכוב של כל הקבוצה", "סירבה לעזור לחברים", "מחקה את העבודה של אחרים"]
-          : ["גרם לעיכוב של כל הקבוצה", "סירב לעזור לחברים", "מחק את העבודה של אחרים"],
-      };
+  const femaleNames = G6_FEMALE_NAMES;
+  const names = G6_NAMES;
+  const scenarios = [
+    {
+      build(name, f) {
+        return {
+          passage: `${name} ${f ? "השאירה" : "השאיר"} את המטרייה ליד דלת הכיתה. לפני שיצא${f ? "ה" : ""} הביתה, ${f ? "היא בדקה" : "הוא בדק"} שהמטרייה עדיין במקום.`,
+          prompt: f
+            ? `מה בדקה ${name} לפני שיצאה הביתה?`
+            : `מה בדק ${name} לפני שיצא הביתה?`,
+          answer: "שהמטרייה עדיין במקום",
+          wrong: [
+            f ? "שברה את המטרייה" : "שבר את המטרייה",
+            f ? "שכחה את המטרייה בבית" : "שכח את המטרייה בבית",
+            f ? "מכרה את המטרייה לחברה" : "מכר את המטרייה לחבר",
+          ],
+        };
+      },
     },
-    (name, obj, place, g, when) => ({
-      passage: `${name} ${G6_FEMALE_NAMES.has(name) ? "הכינה" : "הכין"} מצגת על ${obj} ב${place}. ${when} ${G6_FEMALE_NAMES.has(name) ? "הציגה" : "הציג"} בפני הכיתה בביטחון.`,
-      prompt: "על מה הייתה המצגת?",
-      answer: `על ${obj} ועל מה שלמדו ב${place}`,
-      wrong: ["על משחק מחשב בלבד", "על נעליים ואופנה", "על שינה בכיתה בזמן השיעור"],
-    }),
-    (name, obj, place, g, when) => {
-      const f = G6_FEMALE_NAMES.has(name);
-      return {
-        passage: `אחרי הטיול ${name} ${g.summarized} ב${obj} שלוש עובדות חשובות. ${when} ${f ? "שיתפה" : "שיתף"} אותן עם המורה.`,
-        prompt: f ? `מה עשתה ${name} אחרי הטיול?` : `מה עשה ${name} אחרי הטיול?`,
-        answer: f ? "סיכמה שלוש עובדות חשובות מהטיול" : "סיכם שלוש עובדות חשובות מהטיול",
-        wrong: f ? ["שכחה את כל מה שראתה", "זרקה את המחברת לפח", "לא השתתפה בפעילות"] : ["שכח את כל מה שראה", "זרק את המחברת לפח", "לא השתתף בפעילות"],
-      };
+    {
+      build(name, f) {
+        return {
+          passage: `${name} ${f ? "הניחה" : "הניח"} את הספר בתוך התיק. לפני השיעור ${f ? "היא בדקה" : "הוא בדק"} שהספר נמצא בתיק.`,
+          prompt: f
+            ? `מה בדקה ${name} לפני השיעור?`
+            : `מה בדק ${name} לפני השיעור?`,
+          answer: "שהספר נמצא בתיק",
+          wrong: [
+            f ? "זרקה את הספר לפח" : "זרק את הספר לפח",
+            f ? "שכחה את התיק בבית" : "שכח את התיק בבית",
+            f ? "קראה ספר אחר בחצר" : "קרא ספר אחר בחצר",
+          ],
+        };
+      },
+    },
+    {
+      build(name, f) {
+        return {
+          passage: `לפני השיעור ${name} ${f ? "קראה" : "קרא"} בספר ו${f ? "כתבה" : "כתב"} רשימת מילים חשובות. אחר כך ${f ? "הסבירה" : "הסביר"} למורה את העבודה.`,
+          prompt: f
+            ? `מה עשתה ${name} לפני השיעור?`
+            : `מה עשה ${name} לפני השיעור?`,
+          answer: f
+            ? "קראה בספר וכתבה רשימת מילים"
+            : "קרא בספר וכתב רשימת מילים",
+          wrong: [
+            "ישן בכיתה במקום ללמוד",
+            "זרק את התיק לפח",
+            "שכח לבוא לשיעור לגמרי",
+          ],
+        };
+      },
+    },
+    {
+      build(name, f) {
+        return {
+          passage: `בקבוצת הלימוד ${name} ${f ? "הסבירה" : "הסביר"} לחברים איך לארגן את המחברות במדף. בסוף העבודה כולם סיימו את המשימה בזמן.`,
+          prompt: f ? "מה תרמה לקבוצה?" : "מה תרם לקבוצה?",
+          answer: f
+            ? "הסבירה איך לארגן את החומר בצורה ברורה"
+            : "הסביר איך לארגן את החומר בצורה ברורה",
+          wrong: f
+            ? ["גרמה לעיכוב של כל הקבוצה", "סירבה לעזור לחברים", "מחקה את העבודה של אחרים"]
+            : ["גרם לעיכוב של כל הקבוצה", "סירב לעזור לחברים", "מחק את העבודה של אחרים"],
+        };
+      },
+    },
+    {
+      build(name, f) {
+        return {
+          passage: `${name} ${f ? "הכינה" : "הכין"} מצגת על מיחזור בכיתה. אחר כך ${f ? "הציגה" : "הציג"} אותה בפני התלמידים בביטחון.`,
+          prompt: "על מה הייתה המצגת?",
+          answer: "על מיחזור ועל מה שלמדו בכיתה",
+          wrong: ["על משחק מחשב בלבד", "על נעליים ואופנה", "על שינה בכיתה בזמן השיעור"],
+        };
+      },
+    },
+    {
+      build(name, f) {
+        return {
+          passage: `אחרי הטיול ${name} ${f ? "סיכמה" : "סיכם"} במחברת שלוש עובדות חשובות. אחר כך ${f ? "שיתפה" : "שיתף"} אותן עם המורה.`,
+          prompt: f
+            ? `מה עשתה ${name} אחרי הטיול?`
+            : `מה עשה ${name} אחרי הטיול?`,
+          answer: f
+            ? "סיכמה שלוש עובדות חשובות מהטיול"
+            : "סיכם שלוש עובדות חשובות מהטיול",
+          wrong: f
+            ? ["שכחה את כל מה שראתה", "זרקה את המחברת לפח", "לא השתתפה בפעילות"]
+            : ["שכח את כל מה שראה", "זרק את המחברת לפח", "לא השתתף בפעילות"],
+        };
+      },
+    },
+    {
+      build(name, f) {
+        return {
+          passage: `בהפסקה ${name} ${f ? "החזירה" : "החזיר"} את הכדור לארון המשחקים. אחר כך ${f ? "סגרה" : "סגר"} את דלת הארון.`,
+          prompt: f
+            ? `מה עשתה ${name} בהפסקה?`
+            : `מה עשה ${name} בהפסקה?`,
+          answer: f ? "החזירה את הכדור לארון המשחקים" : "החזיר את הכדור לארון המשחקים",
+          wrong: [
+            f ? "שברה את הכדור" : "שבר את הכדור",
+            f ? "שכחה את הכדור בחצר" : "שכח את הכדור בחצר",
+            f ? "זרקה את הכדור מהחלון" : "זרק את הכדור מהחלון",
+          ],
+        };
+      },
+    },
+    {
+      build(name, f) {
+        return {
+          passage: `${name} ${f ? "השקתה" : "השקה"} את הצמח על אדן החלון. בערב ${f ? "היא בדקה" : "הוא בדק"} שהעלים עדיין ירוקים.`,
+          prompt: f
+            ? `מה בדקה ${name} בערב?`
+            : `מה בדק ${name} בערב?`,
+          answer: "שהעלים עדיין ירוקים",
+          wrong: [
+            f ? "שברה את העציץ" : "שבר את העציץ",
+            f ? "זרקה את הצמח לחצר" : "זרק את הצמח לחצר",
+            f ? "שכחה להשקות את הצמח" : "שכח להשקות את הצמח",
+          ],
+        };
+      },
     },
   ];
+
   for (let i = 0; i < count; i += 1) {
-    const name = G6_NAMES[i % G6_NAMES.length];
-    const place = G6_PLACES[(i * 2) % G6_PLACES.length];
-    const obj = G6_OBJECTS[(i * 3) % G6_OBJECTS.length];
-    const g = g6GenderForms(name);
-    const when = G6_DAY_WORDS[i % G6_DAY_WORDS.length];
-    const build = templates[i % templates.length];
-    const built = build(name, obj, place, g, when);
-    const seed = i + topic.length + name.length + obj.length + when.length;
+    const name = names[i % names.length];
+    const f = femaleNames.has(name);
+    const scenario = scenarios[i % scenarios.length];
+    const built = scenario.build(name, f);
+    const seed = i + topic.length + name.length + (subtopicId || "").length;
     const { answers, correct } = fourOptions(built.answer, built.wrong, seed);
     out.push({
       topic,
@@ -220,6 +301,7 @@ function generateUniquePassageItems(count, topic, level, patternFamily, subtype,
   }
   return out;
 }
+
 
 function buildG6ComprehensionPool() {
   const easyBases = [...G6_COMP_EXPLICIT_EASY, ...G6_COMP_MAIN_EASY];

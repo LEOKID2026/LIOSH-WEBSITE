@@ -2,6 +2,7 @@
  * English sentence-building MCQ renderer.
  */
 
+import EnglishStemText from "../EnglishStemText.jsx";
 import WorksheetOptionsGrid from "../WorksheetOptionsGrid.jsx";
 
 /**
@@ -10,7 +11,7 @@ import WorksheetOptionsGrid from "../WorksheetOptionsGrid.jsx";
 export function EnglishSentenceRenderer({ question }) {
   return (
     <div className="worksheet-renderer english-sentence">
-      <p className="worksheet-stem">{question.stemHe}</p>
+      <EnglishStemText stemHe={question.stemHe} ltrSpans={question.ltrSpans} />
       <WorksheetOptionsGrid
         optionsHe={question.optionsHe}
         optionsLatin={question.optionsLatin}

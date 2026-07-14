@@ -12,6 +12,7 @@ export { HebrewLongPassageRenderer } from "./HebrewLongPassageRenderer.jsx";
 export { HebrewOpenAnswerRenderer } from "./HebrewOpenAnswerRenderer.jsx";
 export { HebrewNikudRenderer } from "./HebrewNikudRenderer.jsx";
 export { EnglishMcqRenderer } from "./EnglishMcqRenderer.jsx";
+export { EnglishPhonicsRenderer } from "./EnglishPhonicsRenderer.jsx";
 export { EnglishLtrBlock } from "./EnglishLtrBlock.jsx";
 export { EnglishTranslationRenderer } from "./EnglishTranslationRenderer.jsx";
 export { EnglishSentenceRenderer } from "./EnglishSentenceRenderer.jsx";

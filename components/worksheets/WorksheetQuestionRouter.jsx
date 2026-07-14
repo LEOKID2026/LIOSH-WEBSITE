@@ -5,6 +5,7 @@
 import {
   EnglishMcqRenderer,
   EnglishOpenAnswerRenderer,
+  EnglishPhonicsRenderer,
   EnglishSentenceRenderer,
   EnglishTranslationRenderer,
   GenericMcqRenderer,
@@ -50,15 +51,14 @@ export default function WorksheetQuestionRouter({ question }) {
     return <EnglishTranslationRenderer question={question} />;
   }
   if (questionType === "open") {
-    if (subject === "hebrew") {
-      if (question.hasNikud) return <HebrewNikudRenderer question={question} />;
-      return <HebrewOpenAnswerRenderer question={question} />;
-    }
+    // Open writing always needs lines — even when nikud styling applies.
+    if (subject === "hebrew") return <HebrewOpenAnswerRenderer question={question} />;
     if (subject === "english") return <EnglishOpenAnswerRenderer question={question} />;
     return <MathPlainRenderer question={question} />;
   }
   if (questionType === "mcq") {
     if (subject === "english") {
+      if (question.englishPhonicsMode) return <EnglishPhonicsRenderer question={question} />;
       if (question.englishSentenceMode) return <EnglishSentenceRenderer question={question} />;
       return <EnglishMcqRenderer question={question} />;
     }

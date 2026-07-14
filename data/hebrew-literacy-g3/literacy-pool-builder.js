@@ -48,12 +48,21 @@ function g3GenderForms(name) {
   return {
     kept: f ? "שמרה" : "שמר",
     checked: f ? "בדקה" : "בדק",
+    prepared: f ? "הכינה" : "הכין",
+    arranged: f ? "סידרה" : "סידר",
+    returned: f ? "חזרה" : "חזר",
+    loved: f ? "אהבה" : "אהב",
+    learned: f ? "למדה" : "למד",
+    found: f ? "מצאה" : "מצא",
+    exchanged: f ? "החליפה" : "החליף",
     didLabel: f ? "עשתה" : "עשה",
     broke: f ? "שברה" : "שבר",
     sold: f ? "מכרה" : "מכר",
     forgot: f ? "שכחה" : "שכח",
+    possSuffix: f ? "ה" : "ו",
     checkObj: (obj) => (f ? `בדקה שה${obj} מסודר` : `בדק שה${obj} מסודר`),
     dailyPrompt: (n) => (f ? `מה עשתה ${n} בכל יום?` : `מה עשה ${n} בכל יום?`),
+    didPrompt: (n, when) => (f ? `מה עשתה ${n}${when ? ` ${when}` : ""}?` : `מה עשה ${n}${when ? ` ${when}` : ""}?`),
   };
 }
 
@@ -537,47 +546,144 @@ const G3_OBJECTS = [
 function generateUniquePassageItems(count, topic, level, patternFamily, subtype) {
   /** @type {Record<string, unknown>[]} */
   const out = [];
-  const templates = [
-    (name, obj, place, g, dayWord) => ({
-      passage: `${name} ${g.kept} על ${obj} ב${place}. ב${dayWord} ${name} ${g.checked} שהכל מסודר.`,
-      prompt: g.dailyPrompt(name),
-      answer: g.checkObj(obj),
-      wrong: [`${g.broke} את ${obj}`, `${g.sold} את ${obj}`, `${g.forgot} את ${obj}`],
-    }),
-    (name, obj, place, g, dayWord) => ({
-      passage: `לפני היציאה ${name} סידר${G3_FEMALE_NAMES.has(name) ? "ה" : ""} את ${obj} ב${place}. ב${dayWord} חזר${G3_FEMALE_NAMES.has(name) ? "ה" : ""} לבדוק.`,
-      prompt: `מה עש${G3_FEMALE_NAMES.has(name) ? "תה" : "ה"} ${name} לפני היציאה?`,
-      answer: `סידר${G3_FEMALE_NAMES.has(name) ? "ה" : ""} את ${obj}`,
-      wrong: [`${g.broke} את ${obj}`, `${g.forgot} את ${obj}`, `קנה ${obj} חדש`],
-    }),
-    (name, obj, place, g, dayWord) => ({
-      passage: `${name} אהב${G3_FEMALE_NAMES.has(name) ? "ה" : ""} את ${obj} של${G3_FEMALE_NAMES.has(name) ? "ה" : "ו"} ב${place}. ב${dayWord} ${name} ${g.checked} שהוא במקום.`,
-      prompt: `מה עש${G3_FEMALE_NAMES.has(name) ? "תה" : "ה"} ${name} ב${dayWord}?`,
-      answer: g.checkObj(obj),
-      wrong: [`${g.broke} את ${obj}`, `${g.sold} את ${obj}`, `מצא${G3_FEMALE_NAMES.has(name) ? "ה" : ""} ${obj} אחר`],
-    }),
-    (name, obj, place, g, dayWord) => ({
-      passage: `בבוקר ${name} הכין${G3_FEMALE_NAMES.has(name) ? "ה" : ""} את ${obj} ב${place}. ב${dayWord} ${name} ${g.checked} שוב.`,
-      prompt: `מה ${name} ${g.checked} ב${dayWord}?`,
-      answer: g.checkObj(obj),
-      wrong: [`${g.broke} את ${obj}`, `${g.forgot} את ${obj}`, `החליף${G3_FEMALE_NAMES.has(name) ? "ה" : ""} את ${obj}`],
-    }),
-    (name, obj, place, g, dayWord) => ({
-      passage: `${name} למד${G3_FEMALE_NAMES.has(name) ? "ה" : ""} לשמור על ${obj} ב${place}. ב${dayWord} ${name} ${g.checked} שה${obj} של${G3_FEMALE_NAMES.has(name) ? "ה" : "ו"} מסודר.`,
-      prompt: `למה ${name} ${g.checked} ב${dayWord}?`,
-      answer: `כדי לוודא שה${obj} מסודר`,
-      wrong: [`כדי למכור את ${obj}`, `כדי לשבור את ${obj}`, `כדי לשכוח את ${obj}`],
-    }),
+  /** Closed scenarios — name/gender only; object, place and action stay coherent. */
+  const scenarios = [
+    {
+      build(name, f) {
+        return {
+          passage: `${name} ${f ? "השאירה" : "השאיר"} את המטרייה ליד דלת הכיתה. לפני שיצא${f ? "ה" : ""} הביתה, ${f ? "היא בדקה" : "הוא בדק"} שהמטרייה עדיין במקום.`,
+          prompt: f
+            ? `מה בדקה ${name} לפני שיצאה הביתה?`
+            : `מה בדק ${name} לפני שיצא הביתה?`,
+          answer: "שהמטרייה עדיין במקום",
+          wrong: [
+            f ? "שברה את המטרייה" : "שבר את המטרייה",
+            f ? "שכחה את המטרייה בבית" : "שכח את המטרייה בבית",
+            f ? "מכרה את המטרייה לחברה" : "מכר את המטרייה לחבר",
+          ],
+        };
+      },
+    },
+    {
+      build(name, f) {
+        return {
+          passage: `${name} ${f ? "הניחה" : "הניח"} את הספר בתוך התיק. לפני השיעור ${f ? "היא בדקה" : "הוא בדק"} שהספר נמצא בתיק.`,
+          prompt: f
+            ? `מה בדקה ${name} לפני השיעור?`
+            : `מה בדק ${name} לפני השיעור?`,
+          answer: "שהספר נמצא בתיק",
+          wrong: [
+            f ? "זרקה את הספר לפח" : "זרק את הספר לפח",
+            f ? "שכחה את התיק בבית" : "שכח את התיק בבית",
+            f ? "קראה ספר אחר בחצר" : "קרא ספר אחר בחצר",
+          ],
+        };
+      },
+    },
+    {
+      build(name, f) {
+        return {
+          passage: `בהפסקה ${name} ${f ? "החזירה" : "החזיר"} את הכדור לארון המשחקים. אחר כך ${f ? "סגרה" : "סגר"} את דלת הארון.`,
+          prompt: f
+            ? `מה עשתה ${name} בהפסקה?`
+            : `מה עשה ${name} בהפסקה?`,
+          answer: f ? "החזירה את הכדור לארון המשחקים" : "החזיר את הכדור לארון המשחקים",
+          wrong: [
+            f ? "שברה את הכדור" : "שבר את הכדור",
+            f ? "שכחה את הכדור בחצר" : "שכח את הכדור בחצר",
+            f ? "זרקה את הכדור מהחלון" : "זרק את הכדור מהחלון",
+          ],
+        };
+      },
+    },
+    {
+      build(name, f) {
+        return {
+          passage: `${name} ${f ? "סידרה" : "סידר"} את המחברת על השולחן בכיתה. לפני שיצא${f ? "ה" : ""} להפסקה, ${f ? "היא בדקה" : "הוא בדק"} שהמחברת נשארה על השולחן.`,
+          prompt: f
+            ? `מה בדקה ${name} לפני ההפסקה?`
+            : `מה בדק ${name} לפני ההפסקה?`,
+          answer: "שהמחברת נשארה על השולחן",
+          wrong: [
+            f ? "קרעה את המחברת" : "קרע את המחברת",
+            f ? "שכחה את המחברת בתיק" : "שכח את המחברת בתיק",
+            f ? "מכרה את המחברת" : "מכר את המחברת",
+          ],
+        };
+      },
+    },
+    {
+      build(name, f) {
+        return {
+          passage: `${name} ${f ? "תלתה" : "תלה"} את המעיל על המתלה במסדרון. אחרי שיעור הספורט ${f ? "היא בדקה" : "הוא בדק"} שהמעיל עדיין שם.`,
+          prompt: f
+            ? `מה בדקה ${name} אחרי שיעור הספורט?`
+            : `מה בדק ${name} אחרי שיעור הספורט?`,
+          answer: "שהמעיל עדיין על המתלה",
+          wrong: [
+            f ? "שכחה את המעיל בכיתה" : "שכח את המעיל בכיתה",
+            f ? "זרקה את המעיל לפח" : "זרק את המעיל לפח",
+            f ? "לבשה מעיל של חברה" : "לבש מעיל של חבר",
+          ],
+        };
+      },
+    },
+    {
+      build(name, f) {
+        return {
+          passage: `${name} ${f ? "השקתה" : "השקה"} את הצמח על אדן החלון. בערב ${f ? "היא בדקה" : "הוא בדק"} שהעלים עדיין ירוקים.`,
+          prompt: f
+            ? `מה בדקה ${name} בערב?`
+            : `מה בדק ${name} בערב?`,
+          answer: "שהעלים עדיין ירוקים",
+          wrong: [
+            f ? "שברה את העציץ" : "שבר את העציץ",
+            f ? "זרקה את הצמח לחצר" : "זרק את הצמח לחצר",
+            f ? "שכחה להשקות את הצמח" : "שכח להשקות את הצמח",
+          ],
+        };
+      },
+    },
+    {
+      build(name, f) {
+        return {
+          passage: `${name} ${f ? "שמה" : "שם"} את המפתח במגירה במטבח. לפני היציאה מהבית ${f ? "היא בדקה" : "הוא בדק"} שהמפתח במגירה.`,
+          prompt: f
+            ? `מה בדקה ${name} לפני היציאה מהבית?`
+            : `מה בדק ${name} לפני היציאה מהבית?`,
+          answer: "שהמפתח במגירה",
+          wrong: [
+            f ? "איבדה את המפתח בגינה" : "איבד את המפתח בגינה",
+            f ? "זרקה את המפתח לפח" : "זרק את המפתח לפח",
+            f ? "שכחה לנעול את הדלת" : "שכח לנעול את הדלת",
+          ],
+        };
+      },
+    },
+    {
+      build(name, f) {
+        return {
+          passage: `${name} ${f ? "הכניסה" : "הכניס"} מכתב לתיק כדי למסור אותו למורה. בבוקר ${f ? "היא בדקה" : "הוא בדק"} שהמכתב נמצא בתיק.`,
+          prompt: f
+            ? `מה בדקה ${name} בבוקר?`
+            : `מה בדק ${name} בבוקר?`,
+          answer: "שהמכתב נמצא בתיק",
+          wrong: [
+            f ? "קרעה את המכתב" : "קרע את המכתב",
+            f ? "שכחה את התיק בבית" : "שכח את התיק בבית",
+            f ? "מסרה את המכתב לחברה" : "מסר את המכתב לחבר",
+          ],
+        };
+      },
+    },
   ];
+
   for (let i = 0; i < count; i += 1) {
     const name = G3_NAMES[i % G3_NAMES.length];
-    const place = G3_PLACES[(i * 2) % G3_PLACES.length];
-    const obj = G3_OBJECTS[(i * 3) % G3_OBJECTS.length];
-    const g = g3GenderForms(name);
-    const dayWord = G3_UNIQUE_TAGS[i % G3_UNIQUE_TAGS.length];
-    const build = templates[i % templates.length];
-    const built = build(name, obj, place, g, dayWord);
-    const seed = i + topic.length + name.length + obj.length + dayWord.length;
+    const f = G3_FEMALE_NAMES.has(name);
+    const scenario = scenarios[i % scenarios.length];
+    const built = scenario.build(name, f);
+    const seed = i + topic.length + name.length + scenario.build.length;
     const { answers, correct } = fourOptions(built.answer, built.wrong, seed);
     out.push({
       topic,
@@ -593,6 +699,7 @@ function generateUniquePassageItems(count, topic, level, patternFamily, subtype)
   }
   return out;
 }
+
 
 /**
  * @param {number} count

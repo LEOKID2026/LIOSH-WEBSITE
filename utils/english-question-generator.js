@@ -422,7 +422,7 @@ export function generateQuestion(
           patternFamily: "vocab_translation",
         };
       } else {
-        question = `מה פירוש המילה "${randomWord[1]}"\u200F?`;
+        question = `כתוב את המילה "${randomWord[1]}"\u200F באנגלית`;
         correctAnswer = randomWord[0];
         params = {
           word: randomWord[1],

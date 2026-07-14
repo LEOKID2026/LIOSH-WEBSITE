@@ -289,8 +289,11 @@ export function attachEnglishVocabPracticeAudio(question, ctx) {
       segments.push({ locale: "he-IL", text: "אפשרויות: " + heAnswers.join(", ") });
     }
   } else {
-    // direction === "he_to_en": Q: "מה פירוש המילה 'כלב'?" → answers are English
-    segments.push({ locale: "he-IL", text: "מה פירוש המילה " + word + " באנגלית?" });
+    // direction === "he_to_en": Q: 'כתוב את המילה "כלב" באנגלית' → answers are English
+    segments.push({
+      locale: "he-IL",
+      text: `כתוב את המילה ${word} באנגלית`,
+    });
     const enAnswers = question.answers.slice(0, 4).map(String).filter(Boolean);
     if (enAnswers.length > 0) {
       segments.push({ locale: "he-IL", text: "אפשרויות:" });
