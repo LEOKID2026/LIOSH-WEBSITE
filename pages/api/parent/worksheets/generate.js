@@ -30,6 +30,8 @@ export default async function handler(req, res) {
     titleHe: typeof body?.titleHe === "string" ? body.titleHe : undefined,
     mathPracticeFormat:
       typeof body?.mathPracticeFormat === "string" ? body.mathPracticeFormat : undefined,
+    preferMcq:
+      body?.preferMcq === true ? true : body?.preferMcq === false ? false : undefined,
   });
 
   if (!generated.ok) {

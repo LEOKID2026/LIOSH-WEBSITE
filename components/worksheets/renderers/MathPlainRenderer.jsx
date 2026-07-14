@@ -4,6 +4,7 @@
 
 import WorksheetOptionsGrid from "../WorksheetOptionsGrid.jsx";
 import WorksheetProseMathLines from "../WorksheetProseMathLines.jsx";
+import WorksheetMathAnswerLine from "../WorksheetMathAnswerLine.jsx";
 import { isWorksheetMathLtrExpression, worksheetStemHasHebrew } from "../../../lib/worksheets/worksheet-math-ltr-display.js";
 
 /** @param {{ question: import("../../lib/worksheets/worksheet-question-types.js").PrintableWorksheetQuestion }} props */
@@ -17,6 +18,7 @@ export function MathPlainRenderer({ question }) {
     <div className="worksheet-renderer math-plain worksheet-renderer-compact worksheet-renderer-math-card">
       <WorksheetProseMathLines text={text} useFractionExpression={useFraction} />
       <WorksheetOptionsGrid optionsHe={question.optionsHe} mathNumericOptions showHeading={false} />
+      {!question.optionsHe?.length ? <WorksheetMathAnswerLine /> : null}
     </div>
   );
 }

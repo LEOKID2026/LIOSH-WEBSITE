@@ -14,6 +14,7 @@ import {
   saveWorksheetAnswerKeySession,
   saveWorksheetPreviewSession,
 } from "../../../lib/worksheets/worksheet-preview-session.client.js";
+import { buildWorksheetSessionFingerprint } from "../../../lib/worksheets/worksheet-fingerprint.js";
 import { WORKSHEET_UI_HE } from "../../../lib/worksheets/worksheet-ui.he.js";
 
 export default function ParentWorksheetPreviewRoute() {
@@ -27,6 +28,7 @@ export default function ParentWorksheetPreviewRoute() {
   const [answerKeyLoading, setAnswerKeyLoading] = useState(false);
   const [refreshLoading, setRefreshLoading] = useState(false);
   const [refreshError, setRefreshError] = useState("");
+  const [answerKeyError, setAnswerKeyError] = useState("");
   const [clientReady, setClientReady] = useState(false);
 
   useEffect(() => {
@@ -63,8 +65,14 @@ export default function ParentWorksheetPreviewRoute() {
     if (!session?.access_token || !previewData?.generation || !previewData.includeAnswers) {
       return;
     }
+    setAnswerKeyError("");
+    clearWorksheetAnswerKeySession();
     setAnswerKeyLoading(true);
     try {
+      const expectedWorksheetFingerprint = buildWorksheetSessionFingerprint(
+        previewData.worksheetPayload,
+        previewData.generation
+      );
       const res = await fetch("/api/parent/worksheets/answer-key", {
         method: "POST",
         headers: {
@@ -74,12 +82,18 @@ export default function ParentWorksheetPreviewRoute() {
         body: JSON.stringify({
           ...previewData.generation,
           includeAnswers: true,
+          expectedWorksheetFingerprint,
         }),
       });
       const data = await res.json();
-      if (!res.ok || !data.ok) return;
+      if (!res.ok || !data.ok) {
+        setAnswerKeyError(data.message || WORKSHEET_UI_HE.answerKeyStale);
+        return;
+      }
       saveWorksheetAnswerKeySession(data.answerKeyPayload);
       router.push("/parent/worksheets/preview/answers");
+    } catch {
+      setAnswerKeyError(WORKSHEET_UI_HE.errorGeneric);
     } finally {
       setAnswerKeyLoading(false);
     }
@@ -114,6 +128,7 @@ export default function ParentWorksheetPreviewRoute() {
           inkSave: gen.inkSave === true,
           mathPracticeFormat:
             typeof gen.mathPracticeFormat === "string" ? gen.mathPracticeFormat : undefined,
+          ...(typeof gen.preferMcq === "boolean" ? { preferMcq: gen.preferMcq } : {}),
         }),
       });
       const data = await res.json();
@@ -157,6 +172,11 @@ export default function ParentWorksheetPreviewRoute() {
         {refreshError ? (
           <p dir="rtl" className="mb-3 text-center text-sm text-red-600">
             {refreshError}
+          </p>
+        ) : null}
+        {answerKeyError ? (
+          <p dir="rtl" className="mb-3 text-center text-sm text-red-600">
+            {answerKeyError}
           </p>
         ) : null}
         <WorksheetPreviewPage

@@ -21,7 +21,11 @@ import {
 } from "../../lib/worksheets/worksheet-math-ltr-display.js";
 import {
   WORKSHEET_DEFAULT_QUESTION_COUNT,
+  WORKSHEET_MATH_CARDS_PER_PAGE,
   classifyWorksheetQuestionLayout,
+  chunkWorksheetQuestionsForMathPrint,
+  buildMathPrintPageRows,
+  getWorksheetPrintLayoutMode,
   getWorksheetBodyGridClass,
   getAnswerKeyGridClass,
 } from "../../lib/worksheets/worksheet-print-layout.js";
@@ -30,6 +34,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const ROOT = join(__dirname, "../..");
 const PRINT_CSS = readFileSync(join(__dirname, "../../styles/worksheet-print.css"), "utf8");
 import { renderMathFractionExpressionHtml } from "../../lib/worksheets/worksheet-fraction-html.js";
 
@@ -69,7 +74,9 @@ describe("worksheet-print-layout-math-ltr", () => {
 
     assert.ok(html.includes('class="worksheet-header worksheet-header-centered"'));
     assert.ok(html.includes("worksheet-brand-center"));
-    assert.ok(html.includes("worksheet-print-grid-2"));
+    assert.ok(html.includes("worksheet-print-math-pages"));
+    assert.ok(html.includes("worksheet-print-math-table"));
+    assert.ok(!html.includes("worksheet-print-card-row"));
     assert.ok(!html.includes("worksheet-print-grid-3"));
     assert.ok(!html.includes("layout-compact-3"));
     assert.ok(html.includes("layout-compact-2"));
@@ -116,21 +123,98 @@ describe("worksheet-print-layout-math-ltr", () => {
     assert.ok(!html.includes("worksheet-math-balanced-slot"));
   });
 
-  test("print layout uses natural page fill without fixed 6-per-page breaks", () => {
-    assert.equal(WORKSHEET_DEFAULT_QUESTION_COUNT, 12);
-    assert.equal(PRINT_CSS.includes("nth-child(6n)"), false);
-    assert.equal(PRINT_CSS.includes("page-break-after: always"), false);
+  test("uniform math worksheets use explicit 2x2 page chunks with table rows", () => {
+    const questions = Array.from({ length: 12 }, (_, i) => ({
+      displayIndex: i + 1,
+      subject: "math",
+      questionType: "open",
+      stemHe: `${10 + i} + ${2 + i} = __`,
+      optionsHe: [],
+    }));
+    assert.equal(getWorksheetPrintLayoutMode(questions, "math"), "math-card-pages");
+    const pages = chunkWorksheetQuestionsForMathPrint(questions);
+    assert.equal(pages.length, 3);
+    assert.equal(pages[0].length, 4);
+    assert.equal(buildMathPrintPageRows(pages[0]).length, 2);
+    assert.equal(buildMathPrintPageRows(pages[0])[0].length, 2);
+    assert.equal(WORKSHEET_MATH_CARDS_PER_PAGE, 4);
+    assert.ok(PRINT_CSS.includes("worksheet-print-page--math-cards"));
+    assert.ok(PRINT_CSS.includes("worksheet-print-math-table"));
+    assert.ok(PRINT_CSS.includes("worksheet-print-math-card"));
+    assert.ok(!PRINT_CSS.includes("worksheet-print-card-row"));
+  });
 
-    const grid = getWorksheetBodyGridClass(
-      Array.from({ length: 8 }, (_, i) => ({
-        displayIndex: i + 1,
-        subject: "math",
-        questionType: "vertical_math",
-        stemHe: "7 + 1 = __",
-        optionsHe: ["8", "6", "18", "7"],
-      }))
+  test("math print React path uses WorksheetMathPrintPages with table layout", () => {
+    const qList = readFileSync(
+      join(ROOT, "components/worksheets/WorksheetQuestionList.jsx"),
+      "utf8"
     );
-    assert.equal(grid, "worksheet-print-grid worksheet-print-grid-2");
+    const printDoc = readFileSync(
+      join(ROOT, "components/worksheets/WorksheetPrintDocument.jsx"),
+      "utf8"
+    );
+    const mathPages = readFileSync(
+      join(ROOT, "components/worksheets/WorksheetMathPrintPages.jsx"),
+      "utf8"
+    );
+    assert.match(qList, /WorksheetMathPrintPages/);
+    assert.match(qList, /shouldRenderMathPrintPages/);
+    assert.match(qList, /subjectId=\{subjectId\}/);
+    assert.match(printDoc, /subjectId=\{meta\.subjectId\}/);
+    assert.doesNotMatch(printDoc, /aria-hidden="true"/);
+    assert.match(mathPages, /worksheet-print-math-table/);
+    assert.doesNotMatch(mathPages, /worksheet-print-card-row/);
+  });
+
+  test("math short print HTML uses table layout with 4 cards on first page", () => {
+    const { questions: rawQuestions } = selectMathWorksheetQuestions({
+      gradeKey: "g3",
+      topicKey: "addition",
+      levelKey: "regular",
+      count: 12,
+      seed: 88001,
+      mathPracticeFormat: "horizontal_add_sub",
+      preferMcq: false,
+    });
+    const payload = buildWorksheetPayload(rawQuestions, {
+      titleHe: "דף",
+      subjectHe: "מתמטיקה",
+      gradeHe: "ג׳",
+      topicHe: "חיבור",
+      levelHe: "רגיל",
+      inkSave: false,
+      subjectId: "math",
+      gradeKey: "g3",
+      topicKey: "addition",
+      levelKey: "regular",
+      mathPracticeFormat: "horizontal_add_sub",
+    }, { subjectId: "math", mathPracticeFormat: "horizontal_add_sub", preferMcq: false });
+    const html = worksheetPayloadToPreviewHtml(payload);
+    assert.ok(html.includes("worksheet-print-math-pages"));
+    assert.ok(html.includes("worksheet-print-page--math-cards"));
+    assert.ok(html.includes("worksheet-print-math-table"));
+    assert.ok(html.includes("worksheet-print-math-card"));
+    assert.ok(!html.includes("worksheet-print-card-row"));
+
+    const pageCount = (html.match(/worksheet-print-page--math-cards/g) || []).length;
+    assert.equal(pageCount, 3);
+
+    const firstPageMatch = html.match(
+      /<section class="worksheet-print-page worksheet-print-page--math-cards" data-print-page="1">([\s\S]*?)<\/section>/
+    );
+    assert.ok(firstPageMatch, "expected first math print page section");
+    const firstPageHtml = firstPageMatch[1];
+    const rowCount = (firstPageHtml.match(/<tr>/g) || []).length;
+    assert.equal(rowCount, 2, "first page must have 2 table rows");
+    const cellCount = (firstPageHtml.match(/<td>/g) || []).length;
+    assert.equal(cellCount, 4, "first page must have 4 table cells");
+    const cardCount = (firstPageHtml.match(/worksheet-print-math-card/g) || []).length;
+    assert.equal(cardCount, 4, "first page must have 4 math cards");
+
+    assert.equal(
+      payload.questions.every((q) => classifyWorksheetQuestionLayout(q) === "layout-compact-2"),
+      true
+    );
   });
 
   test("print CSS keeps answer key on white background", () => {

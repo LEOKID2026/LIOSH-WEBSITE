@@ -4,6 +4,7 @@
 
 import WorksheetOptionsGrid from "../WorksheetOptionsGrid.jsx";
 import WorksheetProseMathLines from "../WorksheetProseMathLines.jsx";
+import WorksheetMathAnswerLine from "../WorksheetMathAnswerLine.jsx";
 
 /** @param {{ question: import("../../lib/worksheets/worksheet-question-types.js").PrintableWorksheetQuestion }} props */
 export function MathFractionRenderer({ question }) {
@@ -13,6 +14,7 @@ export function MathFractionRenderer({ question }) {
     <div className="worksheet-renderer math-fraction worksheet-renderer-compact worksheet-renderer-math-card">
       <WorksheetProseMathLines text={text} useFractionExpression />
       <WorksheetOptionsGrid optionsHe={question.optionsHe} mathNumericOptions showHeading={false} />
+      {!question.optionsHe?.length ? <WorksheetMathAnswerLine /> : null}
     </div>
   );
 }

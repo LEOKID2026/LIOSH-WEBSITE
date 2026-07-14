@@ -7,6 +7,7 @@
 
 
 import { WORKSHEET_UI_HE } from "../../lib/worksheets/worksheet-ui.he.js";
+import WorksheetIncludeAnswersOption from "./WorksheetIncludeAnswersOption.jsx";
 
 
 
@@ -31,7 +32,9 @@ import { WORKSHEET_UI_HE } from "../../lib/worksheets/worksheet-ui.he.js";
  *   onCreateFromRecommendation: (rec: Record<string, unknown>) => void,
 
  *   busyId: string | null,
-
+ *   includeAnswers: boolean,
+ *   includeAnswersReady: boolean,
+ *   onIncludeAnswersChange: (includeAnswers: boolean) => void,
  *   T: Record<string, string>,
 
  * }} props
@@ -57,9 +60,10 @@ export default function RecommendationsTab({
   onCreateFromRecommendation,
 
   busyId,
-
+  includeAnswers,
+  includeAnswersReady,
+  onIncludeAnswersChange,
   T,
-
 }) {
 
   const showEmpty =
@@ -118,7 +122,14 @@ export default function RecommendationsTab({
 
       ) : null}
 
-
+      {includeAnswersReady ? (
+        <WorksheetIncludeAnswersOption
+          checked={includeAnswers}
+          onChange={onIncludeAnswersChange}
+          T={T}
+          className="worksheet-rec-include-answers"
+        />
+      ) : null}
 
       {loading ? (
 

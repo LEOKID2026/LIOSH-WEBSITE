@@ -7,23 +7,20 @@
 
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-
 import { useRouter } from "next/router";
-
 import Link from "next/link";
 
 import ReadyWorksheetsTab from "./ReadyWorksheetsTab.jsx";
-
 import CreateWorksheetTab from "./CreateWorksheetTab.jsx";
-
 import RecommendationsTab from "./RecommendationsTab.jsx";
-
 import { WORKSHEET_UI_HE } from "../../lib/worksheets/worksheet-ui.he.js";
-
 import { defaultWorksheetTopicForGrade } from "../../lib/worksheets/worksheet-topic-options.js";
 import { listMathPracticeFormatsForGradeTopic } from "../../lib/worksheets/worksheet-math-practice-format.js";
-
-import { saveWorksheetPreviewSession } from "../../lib/worksheets/worksheet-preview-session.client.js";
+import {
+  loadWorksheetIncludeAnswersPref,
+  saveWorksheetIncludeAnswersPref,
+} from "../../lib/worksheets/worksheet-include-answers-pref.client.js";
+import { saveWorksheetPreviewSession, clearWorksheetAnswerKeySession } from "../../lib/worksheets/worksheet-preview-session.client.js";
 
 
 
@@ -88,10 +85,13 @@ export default function ParentWorksheetsHub({ session, students, T }) {
       mathPracticeFormat: formats[0]?.key || "",
       levelKey: "regular",
       count: 12,
-      includeAnswers: false,
+      preferMcq: false,
       inkSave: true,
     };
   });
+
+  const [includeAnswers, setIncludeAnswers] = useState(false);
+  const [includeAnswersReady, setIncludeAnswersReady] = useState(false);
 
   const [createBusy, setCreateBusy] = useState(false);
 
@@ -114,6 +114,17 @@ export default function ParentWorksheetsHub({ session, students, T }) {
 
 
   const authHeader = `Bearer ${session.access_token}`;
+
+  useEffect(() => {
+    setIncludeAnswers(loadWorksheetIncludeAnswersPref());
+    setIncludeAnswersReady(true);
+  }, []);
+
+  const handleIncludeAnswersChange = useCallback((next) => {
+    const value = next === true;
+    setIncludeAnswers(value);
+    saveWorksheetIncludeAnswersPref(value);
+  }, []);
 
 
 
@@ -171,6 +182,8 @@ export default function ParentWorksheetsHub({ session, students, T }) {
 
     (worksheetPayload, generation, includeAnswers, source) => {
 
+      clearWorksheetAnswerKeySession();
+
       saveWorksheetPreviewSession({
 
         worksheetPayload,
@@ -217,7 +230,7 @@ export default function ParentWorksheetsHub({ session, students, T }) {
 
         }
 
-        openPreview(data.worksheetPayload, data.generation, false, "ready");
+        openPreview(data.worksheetPayload, data.generation, includeAnswers, "ready");
 
       } catch {
 
@@ -231,7 +244,7 @@ export default function ParentWorksheetsHub({ session, students, T }) {
 
     },
 
-    [authHeader, openPreview]
+    [authHeader, openPreview, includeAnswers]
 
   );
 
@@ -275,6 +288,7 @@ export default function ParentWorksheetsHub({ session, students, T }) {
             createForm.subjectId === "math" && createForm.mathPracticeFormat
               ? createForm.mathPracticeFormat
               : undefined,
+          preferMcq: createForm.preferMcq === true,
 
         }),
 
@@ -291,15 +305,10 @@ export default function ParentWorksheetsHub({ session, students, T }) {
       }
 
       openPreview(
-
         data.worksheetPayload,
-
         data.generation,
-
-        createForm.includeAnswers,
-
+        includeAnswers,
         "create"
-
       );
 
     } catch {
@@ -312,7 +321,7 @@ export default function ParentWorksheetsHub({ session, students, T }) {
 
     }
 
-  }, [authHeader, createForm, openPreview]);
+  }, [authHeader, createForm, openPreview, includeAnswers]);
 
 
 
@@ -444,7 +453,7 @@ export default function ParentWorksheetsHub({ session, students, T }) {
 
         }
 
-        openPreview(data.worksheetPayload, data.generation, false, "recommendation");
+        openPreview(data.worksheetPayload, data.generation, includeAnswers, "recommendation");
 
       } catch {
 
@@ -458,7 +467,7 @@ export default function ParentWorksheetsHub({ session, students, T }) {
 
     },
 
-    [authHeader, openPreview, selectedStudentId]
+    [authHeader, openPreview, selectedStudentId, includeAnswers]
 
   );
 
@@ -565,27 +574,19 @@ export default function ParentWorksheetsHub({ session, students, T }) {
       {activeTab === "ready" ? (
 
         <ReadyWorksheetsTab
-
           items={filteredCatalogItems}
-
           loading={catalogLoading}
-
           error={catalogError}
-
           onViewPrint={handleReadyViewPrint}
-
           busySlug={busySlug}
-
           filterSubject={filterSubject}
-
           filterGrade={filterGrade}
-
           filterLevel={filterLevel}
-
           onFilterChange={handleCatalogFilterChange}
-
+          includeAnswers={includeAnswers}
+          includeAnswersReady={includeAnswersReady}
+          onIncludeAnswersChange={handleIncludeAnswersChange}
           T={T}
-
         />
 
       ) : null}
@@ -595,19 +596,15 @@ export default function ParentWorksheetsHub({ session, students, T }) {
       {activeTab === "create" ? (
 
         <CreateWorksheetTab
-
           form={createForm}
-
           onChange={(patch) => setCreateForm((prev) => ({ ...prev, ...patch }))}
-
           onSubmit={handleCreateSubmit}
-
           busy={createBusy}
-
           error={createError}
-
+          includeAnswers={includeAnswers}
+          includeAnswersReady={includeAnswersReady}
+          onIncludeAnswersChange={handleIncludeAnswersChange}
           T={T}
-
         />
 
       ) : null}
@@ -633,27 +630,19 @@ export default function ParentWorksheetsHub({ session, students, T }) {
         ) : (
 
           <RecommendationsTab
-
             students={students}
-
             selectedStudentId={selectedStudentId}
-
             onSelectStudent={setSelectedStudentId}
-
             recommendations={recommendations}
-
             emptyMessageHe={recEmptyMessage}
-
             loading={recLoading}
-
             error={recError}
-
             onCreateFromRecommendation={handleCreateFromRecommendation}
-
             busyId={busyRecId}
-
+            includeAnswers={includeAnswers}
+            includeAnswersReady={includeAnswersReady}
+            onIncludeAnswersChange={handleIncludeAnswersChange}
             T={T}
-
           />
 
         )

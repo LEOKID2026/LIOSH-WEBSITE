@@ -103,6 +103,7 @@ describe("worksheet-refresh-questions", () => {
 
     assert.match(previewSrc, /source === "create"/);
     assert.match(previewSrc, /clearWorksheetAnswerKeySession/);
+    assert.match(previewSrc, /expectedWorksheetFingerprint/);
     assert.match(previewSrc, /refreshQuestions/);
     assert.match(actionsSrc, /onRefresh/);
     assert.match(sessionSrc, /clearWorksheetAnswerKeySession/);

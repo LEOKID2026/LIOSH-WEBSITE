@@ -2,50 +2,76 @@
  * Worksheet question list — shared renderer for screen preview and print document.
  */
 
+import WorksheetMathPrintPages from "./WorksheetMathPrintPages.jsx";
 import WorksheetQuestionRouter from "./WorksheetQuestionRouter.jsx";
 import { WORKSHEET_UI_HE } from "../../lib/worksheets/worksheet-ui.he.js";
 import {
   classifyWorksheetQuestionLayout,
   getWorksheetBodyGridClass,
+  shouldRenderMathPrintPages,
+  withWorksheetLayoutSubject,
 } from "../../lib/worksheets/worksheet-print-layout.js";
+
+/**
+ * @param {{
+ *   question: import("../../lib/worksheets/worksheet-question-types.js").PrintableWorksheetQuestion,
+ *   isPrint: boolean,
+ *   subjectId?: import("../../lib/worksheets/worksheet-question-types.js").WorksheetSubjectId,
+ * }} props
+ */
+function WorksheetQuestionSection({ question, isPrint, subjectId }) {
+  const normalized = withWorksheetLayoutSubject(question, subjectId);
+  const layoutClass = classifyWorksheetQuestionLayout(normalized);
+  const sectionClass = isPrint
+    ? `worksheet-question ${layoutClass}`
+    : `worksheet-screen-question ${
+        layoutClass === "layout-full"
+          ? "worksheet-screen-question--full"
+          : "worksheet-screen-question--card"
+      }`;
+
+  return (
+    <section className={sectionClass}>
+      <h2 className={isPrint ? "worksheet-question-title" : "worksheet-screen-question-title"}>
+        <span className="worksheet-question-number">{question.displayIndex}</span>
+        <span>{WORKSHEET_UI_HE.questionLabel}</span>
+      </h2>
+      <div className={isPrint ? "worksheet-question-content" : "worksheet-screen-question-content"}>
+        <WorksheetQuestionRouter question={question} />
+      </div>
+    </section>
+  );
+}
 
 /**
  * @param {{
  *   questions: import("../../lib/worksheets/worksheet-question-types.js").PrintableWorksheetQuestion[],
  *   mode: "screen" | "print",
+ *   subjectId?: import("../../lib/worksheets/worksheet-question-types.js").WorksheetSubjectId,
  * }} props
  */
-export default function WorksheetQuestionList({ questions, mode }) {
+export default function WorksheetQuestionList({ questions, mode, subjectId }) {
   const isPrint = mode === "print";
-  const printGridClass = isPrint ? getWorksheetBodyGridClass(questions) : "";
+
+  if (isPrint && shouldRenderMathPrintPages(questions, subjectId)) {
+    return <WorksheetMathPrintPages questions={questions} subjectId={subjectId} />;
+  }
+
+  const printGridClass = isPrint ? getWorksheetBodyGridClass(questions, subjectId) : "";
   const bodyClass = isPrint
     ? `worksheet-body${printGridClass ? ` ${printGridClass}` : ""}`
     : "worksheet-screen-body";
 
   return (
     <main className={bodyClass}>
-      {questions.map((q) => {
-        const layoutClass = classifyWorksheetQuestionLayout(q);
-        const sectionClass = isPrint
-          ? `worksheet-question ${layoutClass}`
-          : `worksheet-screen-question ${
-              layoutClass === "layout-full"
-                ? "worksheet-screen-question--full"
-                : "worksheet-screen-question--card"
-            }`;
-
-        return (
-          <section key={q.displayIndex} className={sectionClass}>
-            <h2 className={isPrint ? "worksheet-question-title" : "worksheet-screen-question-title"}>
-              <span className="worksheet-question-number">{q.displayIndex}</span>
-              <span>{WORKSHEET_UI_HE.questionLabel}</span>
-            </h2>
-            <div className={isPrint ? "worksheet-question-content" : "worksheet-screen-question-content"}>
-              <WorksheetQuestionRouter question={q} />
-            </div>
-          </section>
-        );
-      })}
+      {questions.map((q) => (
+        <WorksheetQuestionSection
+          key={q.displayIndex}
+          question={q}
+          isPrint={isPrint}
+          subjectId={subjectId}
+        />
+      ))}
     </main>
   );
 }

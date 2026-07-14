@@ -9,9 +9,11 @@ import {
   resolveParentBearerSession,
 } from "../../../../lib/parent-client/parent-bearer-session.client.js";
 import {
+  clearWorksheetAnswerKeySession,
   loadWorksheetAnswerKeySession,
   loadWorksheetPreviewSession,
 } from "../../../../lib/worksheets/worksheet-preview-session.client.js";
+import { validateStoredAnswerKeyForWorksheet } from "../../../../lib/worksheets/worksheet-fingerprint.js";
 import { WORKSHEET_UI_HE } from "../../../../lib/worksheets/worksheet-ui.he.js";
 
 export default function ParentWorksheetAnswerKeyRoute() {
@@ -21,6 +23,7 @@ export default function ParentWorksheetAnswerKeyRoute() {
   const supabaseRef = useRef(null);
 
   const [answerKeyPayload, setAnswerKeyPayload] = useState(null);
+  const [staleMessage, setStaleMessage] = useState("");
   const [clientReady, setClientReady] = useState(false);
 
   useEffect(() => {
@@ -47,8 +50,14 @@ export default function ParentWorksheetAnswerKeyRoute() {
       }
 
       const stored = loadWorksheetAnswerKeySession();
-      if (!stored?.answers?.length) {
-        router.replace("/parent/worksheets/preview");
+      const validation = validateStoredAnswerKeyForWorksheet(
+        previewSession.worksheetPayload,
+        previewSession.generation,
+        stored
+      );
+      if (!validation.ok) {
+        clearWorksheetAnswerKeySession();
+        setStaleMessage(WORKSHEET_UI_HE.answerKeyStale);
         return;
       }
       setAnswerKeyPayload(stored);
@@ -58,6 +67,23 @@ export default function ParentWorksheetAnswerKeyRoute() {
   const handlePrint = useCallback(() => {
     if (typeof window !== "undefined") window.print();
   }, []);
+
+  if (staleMessage) {
+    return (
+      <Layout {...layoutProps}>
+        <div dir="rtl" className="mx-auto max-w-lg px-4 py-10 text-center">
+          <p className="mb-6 text-base text-slate-700">{staleMessage}</p>
+          <button
+            type="button"
+            className="rounded-lg bg-slate-800 px-5 py-2.5 text-sm font-semibold text-white"
+            onClick={() => router.push("/parent/worksheets/preview")}
+          >
+            {WORKSHEET_UI_HE.back}
+          </button>
+        </div>
+      </Layout>
+    );
+  }
 
   if (!answerKeyPayload) {
     return (

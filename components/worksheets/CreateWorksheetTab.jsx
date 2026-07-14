@@ -6,7 +6,9 @@ import { WORKSHEET_SUBJECT_ALLOWLIST } from "../../lib/worksheets/worksheet-prin
 import { WORKSHEET_LEVEL_OPTIONS } from "../../lib/worksheets/worksheet-level-display.js";
 import { worksheetTopicOptionsForGrade } from "../../lib/worksheets/worksheet-topic-options.js";
 import { listMathPracticeFormatsForGradeTopic } from "../../lib/worksheets/worksheet-math-practice-format.js";
+import { isWorksheetMcqOffered } from "../../lib/worksheets/worksheet-mcq-preference.js";
 import { WORKSHEET_UI_HE } from "../../lib/worksheets/worksheet-ui.he.js";
+import WorksheetIncludeAnswersOption from "./WorksheetIncludeAnswersOption.jsx";
 
 const GRADE_OPTIONS = [
   { key: "g1", label: "כיתה א׳" },
@@ -26,10 +28,23 @@ const COUNT_OPTIONS = [6, 8, 10, 12, 15, 20];
  *   onSubmit: () => void,
  *   busy: boolean,
  *   error: string,
+ *   includeAnswers: boolean,
+ *   includeAnswersReady: boolean,
+ *   onIncludeAnswersChange: (includeAnswers: boolean) => void,
  *   T: Record<string, string>,
  * }} props
  */
-export default function CreateWorksheetTab({ form, onChange, onSubmit, busy, error, T }) {
+export default function CreateWorksheetTab({
+  form,
+  onChange,
+  onSubmit,
+  busy,
+  error,
+  includeAnswers,
+  includeAnswersReady,
+  onIncludeAnswersChange,
+  T,
+}) {
   const subjectId = String(form.subjectId || "math");
   const gradeKey = String(form.gradeKey || "g3");
   const topicKey = String(form.topicKey || "");
@@ -41,6 +56,7 @@ export default function CreateWorksheetTab({ form, onChange, onSubmit, busy, err
     typeof form.mathPracticeFormat === "string" && form.mathPracticeFormat
       ? form.mathPracticeFormat
       : practiceFormatOptions[0]?.key || "";
+  const showMcqCheckbox = isWorksheetMcqOffered(subjectId);
 
   const patchTopic = (nextTopicKey) => {
     const formats = listMathPracticeFormatsForGradeTopic(gradeKey, nextTopicKey);
@@ -72,6 +88,7 @@ export default function CreateWorksheetTab({ form, onChange, onSubmit, busy, err
       subjectId: nextSubject,
       topicKey: nextTopic,
       mathPracticeFormat: formats[0]?.key || "",
+      preferMcq: isWorksheetMcqOffered(nextSubject) ? form.preferMcq === true : false,
     });
   };
 
@@ -111,7 +128,7 @@ export default function CreateWorksheetTab({ form, onChange, onSubmit, busy, err
           </label>
         </div>
 
-        <div className="worksheet-form-field worksheet-form-span-2">
+        <div className="worksheet-form-field">
           <label>
             <span className={T.label}>{WORKSHEET_UI_HE.topicField}</span>
             <select
@@ -129,7 +146,7 @@ export default function CreateWorksheetTab({ form, onChange, onSubmit, busy, err
         </div>
 
         {showPracticeFormat ? (
-          <div className="worksheet-form-field worksheet-form-span-2">
+          <div className="worksheet-form-field">
             <label>
               <span className={T.label}>{WORKSHEET_UI_HE.practiceFormatField}</span>
               <select
@@ -145,7 +162,9 @@ export default function CreateWorksheetTab({ form, onChange, onSubmit, busy, err
               </select>
             </label>
           </div>
-        ) : null}
+        ) : (
+          <div className="worksheet-form-field worksheet-form-field-empty" aria-hidden="true" />
+        )}
 
         <div className="worksheet-form-field">
           <label>
@@ -181,20 +200,31 @@ export default function CreateWorksheetTab({ form, onChange, onSubmit, busy, err
           </label>
         </div>
 
-        <div className="worksheet-form-span-2 space-y-2">
-          <label className="worksheet-checkbox-card">
-            <input
-              type="checkbox"
-              checked={form.includeAnswers === true}
-              onChange={(e) => onChange({ includeAnswers: e.target.checked })}
-            />
-            <span className="worksheet-checkbox-card-text">
-              <span className={T.label}>{WORKSHEET_UI_HE.includeAnswers}</span>
-              <span className={`worksheet-checkbox-card-hint ${T.muted}`}>
-                {WORKSHEET_UI_HE.answerKeySeparate}
+        {includeAnswersReady ? (
+          <WorksheetIncludeAnswersOption
+            checked={includeAnswers}
+            onChange={onIncludeAnswersChange}
+            T={T}
+            className="worksheet-create-include-answers"
+          />
+        ) : null}
+
+        <div className="worksheet-form-checkboxes">
+          {showMcqCheckbox ? (
+            <label className="worksheet-checkbox-card">
+              <input
+                type="checkbox"
+                checked={form.preferMcq === true}
+                onChange={(e) => onChange({ preferMcq: e.target.checked })}
+              />
+              <span className="worksheet-checkbox-card-text">
+                <span className={T.label}>{WORKSHEET_UI_HE.preferMcq}</span>
+                <span className={`worksheet-checkbox-card-hint ${T.muted}`}>
+                  {WORKSHEET_UI_HE.preferMcqHint}
+                </span>
               </span>
-            </span>
-          </label>
+            </label>
+          ) : null}
 
           <label className="worksheet-checkbox-card">
             <input

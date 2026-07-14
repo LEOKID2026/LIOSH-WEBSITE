@@ -7,10 +7,9 @@
 
 
 import { WORKSHEET_SUBJECT_ALLOWLIST } from "../../lib/worksheets/worksheet-print-allowlist.js";
-
 import { WORKSHEET_LEVEL_OPTIONS } from "../../lib/worksheets/worksheet-level-display.js";
-
 import { WORKSHEET_UI_HE } from "../../lib/worksheets/worksheet-ui.he.js";
+import WorksheetIncludeAnswersOption from "./WorksheetIncludeAnswersOption.jsx";
 
 
 
@@ -55,7 +54,9 @@ const GRADE_FILTER_OPTIONS = [
  *   filterLevel: string,
 
  *   onFilterChange: (patch: Record<string, string>) => void,
-
+ *   includeAnswers: boolean,
+ *   includeAnswersReady: boolean,
+ *   onIncludeAnswersChange: (includeAnswers: boolean) => void,
  *   T: Record<string, string>,
 
  * }} props
@@ -81,9 +82,10 @@ export default function ReadyWorksheetsTab({
   filterLevel,
 
   onFilterChange,
-
+  includeAnswers,
+  includeAnswersReady,
+  onIncludeAnswersChange,
   T,
-
 }) {
 
   if (loading) {
@@ -226,7 +228,14 @@ export default function ReadyWorksheetsTab({
 
       </div>
 
-
+      {includeAnswersReady ? (
+        <WorksheetIncludeAnswersOption
+          checked={includeAnswers}
+          onChange={onIncludeAnswersChange}
+          T={T}
+          className="worksheet-ready-include-answers"
+        />
+      ) : null}
 
       {!items.length ? (
 

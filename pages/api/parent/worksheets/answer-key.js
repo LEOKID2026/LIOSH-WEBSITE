@@ -30,6 +30,10 @@ export default async function handler(req, res) {
     seed: body?.seed,
     inkSave: body?.inkSave === true,
     titleHe: typeof body?.titleHe === "string" ? body.titleHe : undefined,
+    mathPracticeFormat:
+      typeof body?.mathPracticeFormat === "string" ? body.mathPracticeFormat : undefined,
+    preferMcq: body?.preferMcq,
+    expectedWorksheetFingerprint: body?.expectedWorksheetFingerprint,
   });
 
   if (!generated.ok) {

@@ -5,6 +5,7 @@
 import { stripMathLtrMarkers } from "../../../lib/worksheets/worksheet-math-display.server.js";
 import WorksheetOptionsGrid from "../WorksheetOptionsGrid.jsx";
 import WorksheetProseMathLines from "../WorksheetProseMathLines.jsx";
+import WorksheetMathAnswerLine from "../WorksheetMathAnswerLine.jsx";
 
 function stemIsProseOnly(stemHe) {
   const stem = String(stemHe || "").trim();
@@ -32,6 +33,7 @@ export function MathVerticalLayoutRenderer({ question }) {
         <div className="worksheet-math-vertical-slot worksheet-math-vertical-slot-empty" aria-hidden="true" />
       )}
       <WorksheetOptionsGrid optionsHe={question.optionsHe} mathNumericOptions showHeading={false} />
+      {!question.optionsHe?.length ? <WorksheetMathAnswerLine /> : null}
     </div>
   );
 }

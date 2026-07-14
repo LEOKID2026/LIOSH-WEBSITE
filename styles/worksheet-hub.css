@@ -292,6 +292,31 @@
   .worksheet-form-grid .worksheet-form-span-2 {
     grid-column: 1 / -1;
   }
+
+  .worksheet-form-field-empty {
+    display: none;
+  }
+
+  .worksheet-form-checkboxes {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.worksheet-form-checkboxes {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.worksheet-checkbox-card-disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.worksheet-checkbox-card-disabled input {
+  cursor: not-allowed;
 }
 
 .worksheet-form-field label {

@@ -16,14 +16,18 @@ export default function WorksheetPrintDocument({ worksheetPayload }) {
   const inkClass = meta.inkSave ? " ink-save" : "";
 
   return (
-    <div className="worksheet-print-document" aria-hidden="true">
+    <div className="worksheet-print-document">
       <article className={`worksheet-root${inkClass}`}>
         <WorksheetDocumentHeader
           titleHe={WORKSHEET_UI_HE.documentTitle}
           meta={meta}
           variant="worksheet"
         />
-        <WorksheetQuestionList questions={questions} mode="print" />
+        <WorksheetQuestionList
+          questions={questions}
+          mode="print"
+          subjectId={meta.subjectId}
+        />
       </article>
     </div>
   );

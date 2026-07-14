@@ -40,6 +40,7 @@ describe("worksheet-answer-key-route", () => {
     assert.equal(ak.answerKeyPayload.payloadKind, ANSWER_KEY_PAYLOAD_KIND);
     assert.ok(ak.answerKeyPayload.answers.length > 0);
     assert.equal(ws.worksheetPayload.questions.length, ak.answerKeyPayload.answers.length);
+    assert.ok(ak.answerKeyPayload.worksheetFingerprint);
   });
 
   test("answer-key API handler requires includeAnswers flag", () => {
@@ -71,6 +72,7 @@ describe("worksheet-answer-key-route", () => {
     const pub = publicAnswerKeyPayload(ak.answerKeyPayload);
     assert.ok(Array.isArray(pub.answers));
     assert.equal(pub.meta.gradeKey, undefined);
+    assert.ok(pub.worksheetFingerprint);
     const ws = await generateWorksheetForParent(GEN_PARAMS);
     assert.equal(ws.ok, true);
     assert.equal("answers" in ws.worksheetPayload, false);
