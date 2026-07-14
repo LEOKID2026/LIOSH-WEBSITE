@@ -73,12 +73,12 @@ function applyMathLevelPresentation(question, ctx) {
     const gSuf = gradeBandSuffix;
     if (ml != null && rl != null) {
       if (mathLevelKey === "easy") {
-        return `במפה מופיע קטע של ${ml} ס"מ, ובשטח האמיתי הוא ${rl} ס"מ. השלימו את קנה המידה בצורה 1:${BLANK}${gSuf}`;
+        return `במפה מופיע קטע של ${ml} ס"מ, ובמציאות הוא ${rl} ס"מ. השלימו את קנה המידה בצורה 1:${BLANK}${gSuf}`;
       }
       if (mathLevelKey === "medium") {
-        return `יחס מפה–מציאות: ${ml} ס"מ על הנייר מתאימים ל-${rl} ס"מ בפועל. מצאו את n בביטוי 1:n (כתבו n) = ${BLANK}${gSuf}`;
+        return `על המפה ${ml} ס"מ, ובמציאות ${rl} ס"מ. מה קנה המידה? כתבו את המספר אחרי 1: = ${BLANK}${gSuf}`;
       }
-      return `שני אורכים נתונים — מפה ${ml} ס"מ מול ${rl} ס"מ במציאות. אותו יחס נכתב 1:__; מה __? = ${BLANK}${gSuf}`;
+      return `נתונים שני אורכים — מפה ${ml} ס"מ ומציאות ${rl} ס"מ. קנה המידה נכתב 1:__. מה המספר החסר? = ${BLANK}${gSuf}`;
     }
   }
 
@@ -88,12 +88,12 @@ function applyMathLevelPresentation(question, ctx) {
     const gSuf = gradeBandSuffix;
     if (ml != null && sc != null) {
       if (mathLevelKey === "easy") {
-        return `קנה מידה 1:${sc} — כל ${ml} ס"מ במפה שווים לכמה ס"מ במציאות? = ${BLANK}${gSuf}`;
+        return `בקנה מידה 1:${sc} — כמה ס"מ במציאות שווים ל-${ml} ס"מ במפה? = ${BLANK}${gSuf}`;
       }
       if (mathLevelKey === "medium") {
-        return `הגדלה פי ${sc}: מדידה של ${ml} ס"מ על המפה. מה האורך האמיתי בס"מ? = ${BLANK}${gSuf}`;
+        return `קנה מידה 1:${sc}. מדידה של ${ml} ס"מ על המפה — מה האורך האמיתי בס"מ? = ${BLANK}${gSuf}`;
       }
-      return `בעיית קנה מידה 1:${sc} ומדידת מפה ${ml} ס"מ — חשבו את האורך בשטח = ${BLANK}${gSuf}`;
+      return `קנה מידה 1:${sc} ומדידת מפה ${ml} ס"מ — חשבו את האורך במציאות בס"מ = ${BLANK}${gSuf}`;
     }
   }
 
@@ -103,12 +103,12 @@ function applyMathLevelPresentation(question, ctx) {
     const gSuf = gradeBandSuffix;
     if (rl != null && sc != null) {
       if (mathLevelKey === "easy") {
-        return `בקנה 1:${sc}, אורך אמיתי ${rl} ס"מ — כמה ס"מ צריך למדוד על המפה? = ${BLANK}${gSuf}`;
+        return `בקנה מידה 1:${sc}, אורך אמיתי ${rl} ס"מ — כמה ס"מ ימדדו על המפה? = ${BLANK}${gSuf}`;
       }
       if (mathLevelKey === "medium") {
-        return `מציאות ${rl} ס"מ, קנה 1:${sc}. מה אורך הקטע על תרשים המפה? = ${BLANK}${gSuf}`;
+        return `במציאות ${rl} ס"מ, וקנה המידה 1:${sc}. מה אורך הקטע על המפה? = ${BLANK}${gSuf}`;
       }
-      return `הפכו ממציאות למפה: ${rl} ס"מ בשטח ביחס 1:${sc} נותן ___ ס"מ על הדף = ${BLANK}${gSuf}`;
+      return `המירו ממציאות למפה: ${rl} ס"מ במציאות ביחס 1:${sc} — כמה ס"מ על הדף? = ${BLANK}${gSuf}`;
     }
   }
 
@@ -278,29 +278,9 @@ function applyMathLevelPresentation(question, ctx) {
     return `כפולות: ${q0}`;
   }
 
-  if (selectedOp === "percentages") {
-    const p = params?.p;
-    const base = params?.base;
-    const gSuf = gradeBandSuffix;
-    if (kind === "perc_part_of" && p != null && base != null) {
-      if (mathLevelKey === "easy") {
-        return `אחוזים: כמה זה ${p}% מתוך ${base}? = ${BLANK}${gSuf}`;
-      }
-      if (mathLevelKey === "medium") {
-        return `חישוב חלק מהשלם: ${p}% × ${base} (תוצאה שלמה) = ${BLANK}${gSuf}`;
-      }
-      return `אחוזים: חישוב מדויק של ${p}% ממספר ${base} (תוצאה שלמה) = ${BLANK}${gSuf}`;
-    }
-    if (kind === "perc_discount" && p != null && base != null) {
-      if (mathLevelKey === "easy") {
-        return `מחיר לפני הנחה ${base}₪, הנחה ${p}% — מה המחיר הסופי? = ${BLANK}${gSuf}`;
-      }
-      if (mathLevelKey === "medium") {
-        return `${base}₪ אחרי הנחה של ${p}% — מה המחיר החדש? = ${BLANK}${gSuf}`;
-      }
-      return `בעיית אחוזים: ירידת מחיר ${p}% מ ${base}₪ — מה המחיר אחרי ההנחה? = ${BLANK}${gSuf}`;
-    }
-  }
+  // אחוזים: משאירים את ניסוח המחולל המגוון (לא דורסים לרמת קושי).
+  if (selectedOp === "percentages") return q0;
+  if (selectedOp === "ratio" || selectedOp === "scale") return q0;
 
   if (kind === "fm_gcd" && params?.a != null && params?.b != null) {
     const { a, b } = params;
@@ -436,22 +416,6 @@ function applyMathLevelPresentation(question, ctx) {
 
   if (looksNumericExercise && gNum >= 1) {
     return q0;
-  }
-
-  if (selectedOp === "ratio" && gNum >= 4) {
-    const rSuf = gradeBandSuffix;
-    if (mathLevelKey === "easy" && !/^יחס \(קל\)|^יחסים —/.test(q0)) {
-      return `יחס: ${q0}${rSuf}`;
-    }
-    if (
-      mathLevelKey === "medium" &&
-      !/^יחס \(קל\)|^יחסים —|^בעיית יחסים/.test(q0)
-    ) {
-      return `בעיית יחסים: ${q0}${rSuf}`;
-    }
-    if (mathLevelKey === "hard" && !/^יחסים —/.test(q0)) {
-      return `יחסים — ${q0}${rSuf}`;
-    }
   }
 
   return q0;
@@ -1658,6 +1622,32 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       };
       operandA = hundreds;
       operandB = multiplier;
+    } else if (
+      mathForce === "mul_vertical" &&
+      ["g4", "g5", "g6"].includes(gradeKey)
+    ) {
+      // כפל ארוך (long_multiplication) — חייב להצליח בכיתות ד'-ו', ברמות רגיל/מתקדם,
+      // ללא תלות בדגל multiDigit של levelConfig (מוגדר רק בחלק מתצורות כיתה ד').
+      let twoDigit;
+      let oneDigit;
+      if (gradeKey === "g4") {
+        twoDigit = randInt(10, 99);
+        oneDigit = randInt(2, 9);
+      } else if (gradeKey === "g5") {
+        twoDigit = randInt(10, 99);
+        oneDigit = randInt(10, 99);
+      } else {
+        // g6 — כפל ארוך מאתגר יותר: תלת-ספרתי × דו-ספרתי
+        twoDigit = randInt(100, 999);
+        oneDigit = randInt(10, 99);
+      }
+      const result = twoDigit * oneDigit;
+      correctAnswer = result;
+      const exerciseText = `${twoDigit} × ${oneDigit} = ${BLANK}`;
+      question = exerciseText;
+      params = { kind: "mul_vertical", twoDigit, oneDigit, result, exerciseText, multiDigit: true, vertical: true };
+      operandA = twoDigit;
+      operandB = oneDigit;
     } else if (gradeKey === "g4" && levelConfig.multiplication?.multiDigit && Math.random() < 0.4) {
       const twoDigit = randInt(10, 99);
       const oneDigit = randInt(2, 9);
@@ -1719,11 +1709,8 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
     const maxD = levelConfig.division.max || 100;
     const maxDivisor = levelConfig.division.maxDivisor || 12;
 
-    if (
-      mathForce === "div" &&
-      gradeKey !== "g4" &&
-      gradeKey !== "g5"
-    ) {
+    if (mathForce === "div") {
+      // חילוק בסיסי — בכל הכיתות (כולל ד'/ה'), בלי ליפול לחילוק ארוך בגלל הסתברות.
       const divisor = randInt(2, maxDivisor);
       const quotient = randInt(2, Math.max(2, Math.floor(maxD / divisor)));
       const dividend = divisor * quotient;
@@ -1768,8 +1755,9 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       operandB = divisor;
     } else if (
       mathForce === "div_two_digit" &&
-      levelConfig.division?.twoDigit
+      ["g4", "g5", "g6"].includes(gradeKey)
     ) {
+      // חילוק ארוך במחלק דו-ספרתי — גם כש־forceKind נשלח (לא תלוי בדגל twoDigit של levelConfig).
       const divisor = randInt(11, 99);
       const quotient = randInt(2, Math.max(2, Math.floor(maxD / divisor)));
       const dividend = divisor * quotient;
@@ -1783,6 +1771,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
         quotient,
         exerciseText,
         twoDigit: true,
+        longDivision: true,
       };
       operandA = dividend;
       operandB = divisor;
@@ -1861,81 +1850,40 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
         quotient -= 1;
         dividend = divisor * quotient + remainder;
       }
-      correctAnswer = `${quotient} ושארית ${remainder}`;
     } else {
-      // חילוק ללא שארית
+      // חילוק ללא שארית — עדיין בפורמט מנה+שארית כדי שלא ייפול ל־kind "div"
       const quotientMax = Math.max(minQuotient, Math.floor(maxD / divisor));
       quotient = randInt(minQuotient, quotientMax);
+      remainder = 0;
       dividend = divisor * quotient;
-      correctAnswer = quotient;
     }
 
-    const exerciseText = `${dividend} ÷ ${divisor} = ${BLANK}`;
+    correctAnswer = `${quotient} ושארית ${remainder}`;
+    const exerciseText = `${dividend} ÷ ${divisor} = ${BLANK}  שארית ${BLANK}`;
     question = exerciseText;
-    
-    if (hasRemainder) {
-      params = { kind: "div_with_remainder", dividend, divisor, quotient, remainder, exerciseText };
-    } else {
-      params = { kind: "div", dividend, divisor, quotient, exerciseText };
-    }
+    params = { kind: "div_with_remainder", dividend, divisor, quotient, remainder, exerciseText };
 
     operandA = dividend;
     operandB = divisor;
     
-    // יצירת תשובות שגויות - 4 תשובות כולל הנכונה
-    // עבור חילוק עם שארית, התשובות הן מחרוזות
-    // עבור חילוק בלי שארית, התשובות הן מספרים
+    // תשובות MCQ כמחרוזות מנה+שארית (גם כשהשארית 0)
     const wrongAnswers = new Set();
-    
-    if (hasRemainder) {
-      const addRemStr = (q, r) => {
-        if (q <= 0 || r < 0 || r >= divisor) return;
-        const s = `${q} ושארית ${r}`;
-        if (s !== correctAnswer) wrongAnswers.add(s);
-      };
-      addRemStr(quotient, (remainder + 1) % divisor || divisor - 1);
-      addRemStr(quotient + 1, remainder);
-      addRemStr(Math.max(1, quotient - 1), remainder);
-      addRemStr(quotient, Math.max(1, remainder - 1));
-      addRemStr(quotient + 1, 0);
-      if (String(quotient) !== String(correctAnswer)) {
-        wrongAnswers.add(String(quotient));
-      }
-      let guard = 0;
-      while (wrongAnswers.size < 3 && guard < 40) {
-        guard++;
-        const wq = Math.max(1, quotient + randInt(-1, 2));
-        const wr = randInt(0, divisor - 1);
-        addRemStr(wq, wr);
-      }
-    } else {
-      // יצירת תשובות שגויות לחילוק בלי שארית
-      while (wrongAnswers.size < 3) {
-        const delta = randInt(1, 3);
-        const sign = Math.random() > 0.5 ? 1 : -1;
-        const wrong = quotient + sign * delta;
-        
-        if (wrong !== quotient && wrong > 0 && !wrongAnswers.has(wrong)) {
-          wrongAnswers.add(wrong);
-        }
-      }
-      
-      // אם עדיין אין 3 תשובות, נוסיף תשובות פשוטות
-      const attempts = [
-        quotient + 1,
-        quotient - 1,
-        quotient + 2,
-        quotient - 2,
-        quotient + Math.max(1, Math.round(quotient * 0.1)),
-        quotient - Math.max(1, Math.round(quotient * 0.1)),
-      ];
-      
-      for (const attempt of attempts) {
-        if (wrongAnswers.size >= 3) break;
-        if (attempt !== quotient && attempt > 0 && !wrongAnswers.has(attempt)) {
-          wrongAnswers.add(attempt);
-        }
-      }
+    const addRemStr = (q, r) => {
+      if (q <= 0 || r < 0 || r >= divisor) return;
+      const s = `${q} ושארית ${r}`;
+      if (s !== correctAnswer) wrongAnswers.add(s);
+    };
+    addRemStr(quotient, remainder === 0 ? 1 : (remainder + 1) % divisor || divisor - 1);
+    addRemStr(quotient + 1, remainder);
+    addRemStr(Math.max(1, quotient - 1), remainder);
+    addRemStr(quotient, Math.max(0, remainder - 1));
+    addRemStr(quotient + 1, 0);
+    let remGuard = 0;
+    while (wrongAnswers.size < 3 && remGuard < 40) {
+      remGuard += 1;
+      const wq = Math.max(1, quotient + randInt(-1, 2));
+      const wr = randInt(0, divisor - 1);
+      addRemStr(wq, wr);
     }
     
     // הוספת התשובות ל-params כדי שיהיו זמינות
@@ -2373,23 +2321,78 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       const mul = randInt(Math.max(1, minMul), Math.max(1, maxMul));
       return step * mul;
     };
+    const moneyHe = (n) => `${n} שקלים`;
 
     const percOptions = [10, 20, 25, maxPercent].filter((pp) => pp <= maxPercent);
-    const p = percOptions[Math.floor(Math.random() * percOptions.length)];
+    const p = percOptions[randInt(0, percOptions.length - 1)];
     const base = chooseBaseForPercent(p);
 
-    const t = Math.random() < 0.5 ? "part_of" : "discount";
+    let t = Math.random() < 0.5 ? "part_of" : "discount";
+    if (mathForce === "perc_part_of") t = "part_of";
+    if (mathForce === "perc_discount") t = "discount";
 
     if (t === "part_of") {
       correctAnswer = (base * p) / 100; // תמיד שלם לפי בחירת base
-      question = `כמה זה ${p}% מתוך ${base}? = ${BLANK}`;
-      params = { kind: "perc_part_of", base, p };
-      } else {
+      const partTemplates = [
+        () => `כמה הם ${p}% מתוך ${base}?`,
+        () => `מצאו ${p}% מתוך ${base}.`,
+        () => `מהו הערך של ${p}% מתוך ${base}?`,
+        () =>
+          `בקופסה יש ${base} חרוזים. ${p}% מהם כחולים. כמה חרוזים כחולים יש בקופסה?`,
+        () =>
+          `בכיתה יש ${base} תלמידים. ${p}% מהם משתתפים בחוג. כמה תלמידים משתתפים בחוג?`,
+        () =>
+          `בחנות נמכרו ${base} מחברות. ${p}% מהן היו אדומות. כמה מחברות אדומות נמכרו?`,
+        () =>
+          `בספרייה יש ${base} ספרים. ${p}% מהם ספרי הרפתקאות. כמה ספרי הרפתקאות יש בספרייה?`,
+        () =>
+          `בגן יש ${base} פרחים. ${p}% מהם צהובים. כמה פרחים צהובים יש בגן?`,
+      ];
+      const templateIndex = randInt(0, partTemplates.length - 1);
+      question = partTemplates[templateIndex]();
+      params = {
+        kind: "perc_part_of",
+        base,
+        p,
+        templateIndex,
+        presentationVariant: templateIndex,
+      };
+    } else {
       const discount = (base * p) / 100; // תמיד שלם
       const finalPrice = base - discount;
-      correctAnswer = finalPrice;
-      question = `מחיר מוצר הוא ${base}₪ ויש הנחה של ${p}%. מה המחיר אחרי ההנחה? = ${BLANK}`;
-      params = { kind: "perc_discount", base, p, discount, finalPrice };
+      const items = [
+        { name: "ספר", gender: "m" },
+        { name: "משחק", gender: "m" },
+        { name: "תיק", gender: "m" },
+        { name: "כדור", gender: "m" },
+        { name: "כרטיס כניסה", gender: "m" },
+        { name: "מחברת", gender: "f" },
+        { name: "חולצה", gender: "f" },
+        { name: "ערכת יצירה", gender: "f" },
+      ];
+      const item = items[randInt(0, items.length - 1)];
+      const askDiscount = Math.random() < 0.45;
+      correctAnswer = askDiscount ? discount : finalPrice;
+      const pricePhrase =
+        item.gender === "f"
+          ? `מחירה של ${item.name} הוא ${moneyHe(base)}`
+          : `מחירו של ${item.name} הוא ${moneyHe(base)}`;
+      const onPhrase = item.gender === "f" ? "עליה" : "עליו";
+      const askPhrase = askDiscount
+        ? "מהו סכום ההנחה?"
+        : "מהו המחיר לאחר ההנחה?";
+      question = `${pricePhrase}. ניתנה ${onPhrase} הנחה של ${p}%. ${askPhrase}`;
+      params = {
+        kind: "perc_discount",
+        base,
+        p,
+        discount,
+        finalPrice,
+        ask: askDiscount ? "discount_amount" : "final_price",
+        itemName: item.name,
+        itemGender: item.gender,
+        presentationVariant: randInt(0, 7),
+      };
     }
   // ===== סדרות =====
   } else if (selectedOp === "sequences") {
@@ -3467,7 +3470,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       correctAnswer = money - toy;
       question =
         t === "pocket_money_g2"
-          ? `לאמה יש ${money}₪. היא קונה חטיף ב-${toy}₪. כמה כסף נשאר?`
+          ? `לאמה יש ${money} שקלים. היא קונה חטיף ב-${toy} שקלים. כמה כסף נשאר?`
           : `לליאו יש ${money} שקלים. הוא קונה ${toy > 5 ? "ספר" : "עיפרון"} ב-${toy} שקלים. כמה שקלים נשארו לו?`;
       params = {
         kind: t === "pocket_money_g2" ? "wp_pocket_money_g2" : "wp_pocket_money",
@@ -3615,7 +3618,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
         const total = randInt(5, 15);
         const spent = randInt(2, total - 2);
         correctAnswer = total - spent;
-        question = `לליאו יש ${total}₪ במטבעות. הוא קונה ממתק ב-${spent}₪. כמה כסף נשאר לו?`;
+        question = `לליאו יש ${total} שקלים במטבעות. הוא קונה ממתק ב-${spent} שקלים. כמה כסף נשאר לו?`;
         params = {
           kind: "wp_coins_spent",
           semanticFamily: "money_remaining",
@@ -3672,7 +3675,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       const discount = (price * discPerc) / 100; // תמיד שלם לפי בחירת price
       const finalPrice = price - discount;
       correctAnswer = finalPrice;
-      question = `חולצה עולה ${price}₪ ויש עליה הנחה של ${discPerc}%. כמה תשלם אחרי ההנחה?`;
+      question = `חולצה עולה ${price} שקלים ויש עליה הנחה של ${discPerc}%. כמה תשלם אחרי ההנחה?`;
       params = {
         kind: "wp_shop_discount",
         semanticFamily: "percent_discount",
@@ -3767,8 +3770,8 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       correctAnswer = money - totalCost;
       question =
         t === "multi_step_g6"
-          ? `לתקציב פעילות יש ${money}₪. נרכשו ${a} מחברות ו-${b} מארזי צבעים, וכל פריט עולה ${price}₪. כמה יתרה תישאר אחרי הרכישה?`
-          : `לליאו יש ${money}₪. הוא קונה ${a} עטים ו-${b} עפרונות, וכל פריט עולה ${price}₪. כמה כסף יישאר לו אחרי הקנייה?`;
+          ? `לתקציב פעילות יש ${money} שקלים. נרכשו ${a} מחברות ו-${b} מארזי צבעים, וכל פריט עולה ${price} שקלים. כמה יתרה תישאר אחרי הרכישה?`
+          : `לליאו יש ${money} שקלים. הוא קונה ${a} עטים ו-${b} עפרונות, וכל פריט עולה ${price} שקלים. כמה כסף יישאר לו אחרי הקנייה?`;
       params = {
         kind: t === "multi_step_g6" ? "wp_multi_step_g6" : "wp_multi_step",
         semanticFamily: "multi_step_money",
@@ -3787,7 +3790,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       const totalCost = totalQty * price;
       const money = randInt(totalCost + 10, totalCost + 50);
       correctAnswer = money - totalCost;
-      question = `לליאו יש ${money}₪. הוא קונה ${a} עטים ו-${b} עפרונות, וכל פריט עולה ${price}₪. כמה כסף יישאר לו אחרי הקנייה?`;
+      question = `לליאו יש ${money} שקלים. הוא קונה ${a} עטים ו-${b} עפרונות, וכל פריט עולה ${price} שקלים. כמה כסף יישאר לו אחרי הקנייה?`;
       params = {
         kind: "wp_multi_step",
         semanticFamily: "multi_step_money",
@@ -4045,11 +4048,21 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       return a;
     };
     
-    const variant = Math.random();
-    if (variant < 0.33) {
+    let ratioSlot = "find";
+    if (mathForce === "ratio_find") ratioSlot = "find";
+    else if (mathForce === "ratio_first") ratioSlot = "first";
+    else if (mathForce === "ratio_second") ratioSlot = "second";
+    else {
+      const variant = Math.random();
+      if (variant < 0.33) ratioSlot = "find";
+      else if (variant < 0.66) ratioSlot = "first";
+      else ratioSlot = "second";
+    }
+
+    if (ratioSlot === "find") {
       // מציאת היחס
       correctAnswer = `${simplifiedA}:${simplifiedB}`;
-      question = `מה היחס בין ${a} ל-${b}? (בצורה מצומצמת)`;
+      question = `מה היחס בין ${a} ל-${b}? כתבו בצורה מצומצמת.`;
       params = { kind: "ratio_find", a, b, simplifiedA, simplifiedB };
 
       // ✅ יחס הוא תשובה טקסטואלית ("a:b") ולכן יצירת התשובות הכללית עלולה להחזיר אופציה אחת בלבד.
@@ -4083,7 +4096,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
         if (!answers.includes(fallback) && fallback !== correctAnswer) answers.push(fallback);
       }
       params.answers = answers;
-    } else if (variant < 0.66) {
+    } else if (ratioSlot === "first") {
       // מציאת המספר הראשון — בוחרים k כמספר שלם כך ש-first=simplifiedA*k, second=simplifiedB*k
       // בכך היחס first:second שמור בדיוק (ללא Math.round)
       const kMax = Math.max(1, Math.floor(20 / Math.max(simplifiedA, simplifiedB)));
@@ -4091,7 +4104,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       const firstNum = simplifiedA * k;
       const secondNum = simplifiedB * k;
       correctAnswer = firstNum;
-      question = `היחס בין מספר למספר ${secondNum} הוא ${simplifiedA}:${simplifiedB}. מה המספר הראשון?`;
+      question = `היחס בין שני מספרים הוא ${simplifiedA}:${simplifiedB}. המספר השני הוא ${secondNum}. מה המספר הראשון?`;
       params = { kind: "ratio_first", firstNum, secondNum, simplifiedA, simplifiedB, k };
     } else {
       // מציאת המספר השני — אותו עיקרון, k מספר שלם
@@ -4100,7 +4113,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       const firstNum = simplifiedA * k;
       const secondNum = simplifiedB * k;
       correctAnswer = secondNum;
-      question = `היחס בין מספר ${firstNum} למספר הוא ${simplifiedA}:${simplifiedB}. מה המספר השני?`;
+      question = `היחס בין שני מספרים הוא ${simplifiedA}:${simplifiedB}. המספר הראשון הוא ${firstNum}. מה המספר השני?`;
       params = { kind: "ratio_second", firstNum, secondNum, simplifiedA, simplifiedB, k };
     }
     
@@ -4202,34 +4215,44 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
   } else if (selectedOp === "scale") {
     const scaleConfig = levelConfig.scale || {};
     const maxScale = scaleConfig.max || 100;
-    const variant = Math.random();
-    if (variant < 0.33) {
+    let scaleSlot = "map_to_real";
+    if (mathForce === "scale_map_to_real") scaleSlot = "map_to_real";
+    else if (mathForce === "scale_real_to_map") scaleSlot = "real_to_map";
+    else if (mathForce === "scale_find") scaleSlot = "find";
+    else {
+      const variant = Math.random();
+      if (variant < 0.33) scaleSlot = "map_to_real";
+      else if (variant < 0.66) scaleSlot = "real_to_map";
+      else scaleSlot = "find";
+    }
+
+    if (scaleSlot === "map_to_real") {
       // מציאת אורך במציאות לפי מפה
       const mapLength = randInt(1, 10);
-      const scale = randInt(2, 10);
+      const scale = randInt(2, Math.min(10, maxScale));
       const realLength = mapLength * scale;
       correctAnswer = realLength;
-      question = `במפה בקנה מידה 1:${scale}, אורך של ${mapLength} ס"מ במפה שווה ל-${BLANK} ס"מ במציאות`;
+      question = `בקנה מידה 1:${scale}, אורך של ${mapLength} ס"מ במפה שווה לכמה ס"מ במציאות?`;
       params = { kind: "scale_map_to_real", mapLength, scale, realLength };
       operandA = mapLength;
       operandB = scale;
-    } else if (variant < 0.66) {
-      // מציאת אורך במפה לפי מציאות
-      const realLength = randInt(10, maxScale);
-      const scale = randInt(2, 10);
-      const mapLength = realLength / scale;
-      correctAnswer = round(mapLength, 1);
-      question = `במפה בקנה מידה 1:${scale}, אורך של ${realLength} ס"מ במציאות שווה ל-${BLANK} ס"מ במפה`;
+    } else if (scaleSlot === "real_to_map") {
+      // מציאת אורך במפה לפי מציאות — תשובה שלמה: בוחרים mapLength ו-scale ומחשבים realLength
+      const mapLength = randInt(1, 10);
+      const scale = randInt(2, Math.min(10, maxScale));
+      const realLength = mapLength * scale;
+      correctAnswer = mapLength;
+      question = `בקנה מידה 1:${scale}, אורך של ${realLength} ס"מ במציאות שווה לכמה ס"מ במפה?`;
       params = { kind: "scale_real_to_map", realLength, scale, mapLength };
       operandA = realLength;
       operandB = scale;
     } else {
-      // מציאת קנה מידה — scale תמיד שלם: בוחרים scale ו-mapLength, מחשבים realLength
+      // מציאת קנה מידה — scale תמיד שלם
       const mapLength = randInt(1, 5);
-      const scale = randInt(2, 10); // קנה מידה שלם בלבד
+      const scale = randInt(2, Math.min(10, maxScale));
       const realLength = mapLength * scale;
       correctAnswer = scale;
-      question = `אורך של ${mapLength} ס"מ במפה שווה ל-${realLength} ס"מ במציאות. מה קנה המידה? (1:${BLANK})`;
+      question = `אורך של ${mapLength} ס"מ במפה שווה ל-${realLength} ס"מ במציאות. מה קנה המידה? כתבו בצורה 1:__`;
       params = { kind: "scale_find", mapLength, realLength, scale };
       operandA = mapLength;
       operandB = realLength;

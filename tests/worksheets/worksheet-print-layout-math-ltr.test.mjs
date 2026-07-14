@@ -28,6 +28,7 @@ import {
   getWorksheetPrintLayoutMode,
   getWorksheetBodyGridClass,
   getAnswerKeyGridClass,
+  shouldRenderMathPrintPages,
 } from "../../lib/worksheets/worksheet-print-layout.js";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -243,7 +244,7 @@ describe("worksheet-print-layout-math-ltr", () => {
     assert.ok(mixed.includes("answer-key-print-grid-2"));
   });
 
-  test("word problems stay full width", () => {
+  test("word problems stay on math 2×2 card pages", () => {
     const question = {
       displayIndex: 1,
       subject: "math",
@@ -253,9 +254,8 @@ describe("worksheet-print-layout-math-ltr", () => {
       writingSpaceLines: 4,
       optionsHe: [],
     };
-    assert.equal(classifyWorksheetQuestionLayout(question), "layout-full");
-    const grid = getWorksheetBodyGridClass([question]);
-    assert.equal(grid, "");
+    assert.equal(classifyWorksheetQuestionLayout(question), "layout-compact-2");
+    assert.equal(shouldRenderMathPrintPages([question], "math"), true);
   });
 
   test("renderWorksheetMathLtrHtml wraps expression", () => {

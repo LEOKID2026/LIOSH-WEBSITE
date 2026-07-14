@@ -301,8 +301,10 @@
 .worksheet-renderer-math-card .worksheet-prose-math-lines {
   flex: 1;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: 100%;
   min-height: 2.5rem;
 }
 
@@ -350,10 +352,9 @@
 }
 
 .worksheet-stem-prose-slot {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
   width: 100%;
+  align-self: stretch;
   min-height: 1.25rem;
   margin-bottom: 0;
 }
@@ -367,7 +368,10 @@
 .worksheet-stem-prose {
   margin: 0;
   width: 100%;
-  text-align: center;
+  display: block;
+  direction: rtl;
+  text-align: right;
+  align-self: stretch;
   line-height: 1.5;
   font-size: 0.95rem;
 }
@@ -375,6 +379,7 @@
 .worksheet-prose-math-lines {
   display: flex;
   flex-direction: column;
+  align-items: stretch;
   width: 100%;
   gap: 0.15rem;
 }
@@ -402,6 +407,11 @@
 
 .worksheet-stem {
   margin: 0;
+  width: 100%;
+  display: block;
+  direction: rtl;
+  text-align: right;
+  align-self: stretch;
   line-height: 1.55;
   font-size: 0.95rem;
   break-inside: avoid;
@@ -520,9 +530,56 @@
 
 .worksheet-word-problem {
   margin: 0;
+  width: 100%;
   white-space: pre-wrap;
-  line-height: 1.7;
-  font-size: 1rem;
+  line-height: 1.55;
+  font-size: 0.92rem;
+  direction: rtl;
+  text-align: right;
+  unicode-bidi: isolate;
+}
+
+.worksheet-print-math-card .worksheet-writing-lines,
+.worksheet-renderer-math-card .worksheet-writing-lines {
+  margin-top: auto;
+  min-height: 2.4rem;
+  flex-shrink: 0;
+}
+
+.worksheet-print-math-card .worksheet-writing-lines[data-lines="2"],
+.worksheet-renderer-math-card .worksheet-writing-lines[data-lines="2"] {
+  min-height: 2.6rem;
+}
+
+.worksheet-print-math-card .worksheet-writing-lines[data-lines="4"],
+.worksheet-renderer-math-card .worksheet-writing-lines[data-lines="4"] {
+  min-height: 4.6rem;
+  background-size: 100% 1.15rem;
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 1.1rem,
+    #cbd5e1 1.1rem,
+    #cbd5e1 calc(1.1rem + 1px)
+  );
+}
+
+.worksheet-remainder-prompt {
+  margin: 0.25rem 0 0;
+  width: 100%;
+  direction: rtl;
+  text-align: right;
+  unicode-bidi: isolate;
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+.worksheet-print-math-card .math-word-problem,
+.worksheet-renderer-math-card.math-word-problem {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  gap: 0.35rem;
 }
 
 /* ── MCQ options grid ── */
