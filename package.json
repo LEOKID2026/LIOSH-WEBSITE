@@ -294,6 +294,7 @@
     "qa:product-simulation:launch-rehearsal-summary": "tsx scripts/product-simulation/build-full-product-launch-rehearsal-summary.mjs",
     "qa:parent-ai:re-audit-mass-output": "tsx scripts/parent-ai-mass-simulation/re-audit-mass-simulation-output.mjs",
     "test:diagnostic-engine-v2-harness": "tsx scripts/diagnostic-engine-v2-harness.mjs",
+    "test:worksheets": "node tests/worksheets/run-all.mjs",
     "test:learning-pattern-decision:foundation": "node tests/learning-pattern-decision/pattern-visibility-foundation.test.mjs",
     "test:learning-pattern-decision:scenarios": "node tests/learning-pattern-decision/scenarios.test.mjs",
     "test:learning-pattern-decision:audit": "node scripts/learning-pattern-decision-audit.mjs",

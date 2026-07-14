@@ -972,7 +972,17 @@ export default function ParentDashboardPage() {
             </div>
             <p className={`${T.subheading} mt-1 min-w-0 truncate text-sm`}>{session.user?.email}</p>
           </div>
-          <div className="grid w-full min-w-0 grid-cols-3 gap-1.5 md:flex md:w-auto md:flex-nowrap md:justify-end md:gap-2">
+          <div className="grid w-full min-w-0 grid-cols-2 gap-1.5 sm:grid-cols-3 md:flex md:w-auto md:flex-nowrap md:justify-end md:gap-2">
+            <Link
+              href="/parent/worksheets"
+              prefetch={false}
+              className={`${T.headerCurriculumBtn} w-full min-w-0 md:w-auto md:flex-none`}
+            >
+              <span aria-hidden="true" className="me-1">
+                🖨️
+              </span>
+              דפי עבודה להדפסה
+            </Link>
             <button
               type="button"
               onClick={() => setCurriculumModalOpen(true)}

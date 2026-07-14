@@ -1370,8 +1370,8 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       useSecondDecade = false;
     }
     const forceVerticalAdd =
-      mathForce === "add_vertical" && gradeKey === "g2";
-    // כיתה ב' - חיבור במאונך (אם מוגדר)
+      mathForce === "add_vertical" && ["g2", "g3", "g4", "g5", "g6"].includes(gradeKey);
+    // חיבור במאונך — worksheets may force vertical from grade 2+
     const useVertical =
       forceVerticalAdd ||
       (gradeKey === "g2" &&
@@ -1494,8 +1494,8 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       useSecondDecade = false;
     }
     const forceVerticalSub =
-      mathForce === "sub_vertical" && gradeKey === "g2";
-    // כיתה ב' - חיסור במאונך (אם מוגדר)
+      mathForce === "sub_vertical" && ["g2", "g3", "g4", "g5", "g6"].includes(gradeKey);
+    // חיסור במאונך — worksheets may force vertical from grade 2+
     const useVertical =
       forceVerticalSub ||
       (gradeKey === "g2" &&
@@ -1739,7 +1739,37 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       };
       operandA = dividend;
       operandB = divisor;
-    } else if (mathForce === "div_two_digit" && gradeKey === "g5" && levelConfig.division?.twoDigit) {
+    } else if (
+      mathForce === "div_long" &&
+      ["g4", "g5", "g6"].includes(gradeKey)
+    ) {
+      const useTens = Math.random() < 0.5;
+      let divisor;
+      if (useTens) {
+        divisor = randInt(1, 9) * 10;
+      } else {
+        divisor = randInt(2, 9);
+      }
+      const quotient = randInt(2, Math.max(2, Math.floor(maxD / divisor)));
+      const dividend = divisor * quotient;
+      correctAnswer = quotient;
+      const exerciseText = `${dividend} ÷ ${divisor} = ${BLANK}`;
+      question = exerciseText;
+      params = {
+        kind: "div_long",
+        dividend,
+        divisor,
+        quotient,
+        exerciseText,
+        isTens: useTens,
+        longDivision: true,
+      };
+      operandA = dividend;
+      operandB = divisor;
+    } else if (
+      mathForce === "div_two_digit" &&
+      levelConfig.division?.twoDigit
+    ) {
       const divisor = randInt(11, 99);
       const quotient = randInt(2, Math.max(2, Math.floor(maxD / divisor)));
       const dividend = divisor * quotient;

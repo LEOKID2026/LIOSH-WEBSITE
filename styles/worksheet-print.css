@@ -1,0 +1,902 @@
+/**
+ * Print + preview document styles for parent worksheets — A4, RTL.
+ */
+
+@page {
+  size: A4;
+  margin: 12mm 14mm;
+}
+
+/* ── Document root ── */
+.worksheet-root {
+  direction: rtl;
+  font-family: "Noto Sans Hebrew", system-ui, "Segoe UI", sans-serif;
+  color: #111;
+  background: #fff;
+  line-height: 1.55;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+}
+
+/* ── Header ── */
+.worksheet-header {
+  margin-bottom: 0.9rem;
+  border-bottom: 2px solid #1e293b;
+  padding-bottom: 0.6rem;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.worksheet-header-centered {
+  text-align: center;
+}
+
+.worksheet-header-top {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 0.35rem;
+}
+
+.worksheet-brand-center {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.45rem;
+  grid-column: 1;
+  justify-self: start;
+  margin: 0;
+  width: auto;
+}
+
+.worksheet-brand-logo {
+  width: 3.5rem;
+  height: 3.5rem;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.worksheet-brand-name {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #dc2626;
+}
+
+.worksheet-title {
+  grid-column: 2;
+  font-size: 1.45rem;
+  font-weight: 800;
+  margin: 0;
+  line-height: 1.2;
+  color: #0f172a;
+  text-align: center;
+}
+
+.worksheet-meta {
+  margin: 0 0 0.65rem;
+  font-size: 0.92rem;
+  color: #475569;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.worksheet-fields {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 1.25rem 2rem;
+  font-size: 0.95rem;
+}
+
+.worksheet-fields-centered {
+  justify-content: center;
+  max-width: 34rem;
+  margin: 0 auto;
+}
+
+.worksheet-field-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  flex: 1 1 12rem;
+  min-width: 10rem;
+}
+
+.worksheet-field-label {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.worksheet-field-line {
+  flex: 1;
+  border-bottom: 1.5px solid #334155;
+  min-width: 5rem;
+  min-height: 1.4rem;
+}
+
+/* ── Questions ── */
+.worksheet-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.worksheet-body.worksheet-print-grid {
+  display: grid;
+  gap: 0.8rem 0.9rem;
+}
+
+.worksheet-body.worksheet-print-grid-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem 0.75rem;
+}
+
+.worksheet-question {
+  break-inside: avoid;
+  page-break-inside: avoid;
+  margin-bottom: 0.85rem;
+  padding: 0.55rem 0 0.65rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.worksheet-question.layout-full {
+  grid-column: 1 / -1;
+}
+
+.worksheet-question.layout-compact-2 {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0;
+  padding: 0.45rem 0.5rem 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  min-height: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.worksheet-question.layout-compact-2 .worksheet-question-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.worksheet-question:last-child {
+  border-bottom: none;
+}
+
+.worksheet-question-title {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  margin: 0 0 0.45rem;
+  color: #0f172a;
+}
+
+.worksheet-question-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 9999px;
+  border: 1.5px solid #334155;
+  font-size: 0.85rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.worksheet-question-content {
+  width: 100%;
+}
+
+/* ── Renderer block (stem + math + options unified) ── */
+.worksheet-renderer {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.4rem;
+  width: 100%;
+}
+
+.worksheet-renderer-compact {
+  gap: 0.35rem;
+  flex: 1;
+  min-height: 0;
+}
+
+.worksheet-renderer-math-card {
+  display: grid;
+  grid-template-rows: auto auto auto;
+  align-content: start;
+  gap: 0.2rem;
+  width: 100%;
+}
+
+.worksheet-renderer-math-card .worksheet-prose-math-lines {
+  min-height: 0;
+}
+
+.worksheet-renderer-math-card .worksheet-options-section {
+  margin-top: 0.15rem;
+  padding-top: 0.2rem;
+}
+
+.worksheet-math-balanced-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1.45rem;
+  width: 100%;
+}
+
+.worksheet-math-balanced-slot-empty {
+  min-height: 1.45rem;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.worksheet-stem-prose-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 1.25rem;
+  margin-bottom: 0;
+}
+
+.worksheet-stem-prose-slot-empty {
+  min-height: 1.25rem;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.worksheet-stem-prose {
+  margin: 0;
+  width: 100%;
+  text-align: center;
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+.worksheet-prose-math-lines {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 0.15rem;
+}
+
+.worksheet-math-vertical-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  width: 100%;
+}
+
+.worksheet-math-vertical-slot-empty {
+  display: none;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.worksheet-math-block-vertical {
+  width: 100%;
+  max-width: 8.5rem;
+  margin: 0 auto;
+}
+
+.worksheet-stem {
+  margin: 0;
+  line-height: 1.55;
+  font-size: 0.95rem;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.worksheet-stem-math {
+  text-align: center;
+}
+
+/* LTR math island — isolated from RTL page BiDi */
+.worksheet-math-ltr {
+  direction: ltr;
+  unicode-bidi: isolate;
+  display: inline-block;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}
+
+.worksheet-math-ltr.worksheet-math-ltr-block,
+.worksheet-math-ltr-block {
+  display: block;
+  text-align: center;
+  width: 100%;
+}
+
+.worksheet-math-ltr-expression {
+  font-family: "Cambria Math", "Segoe UI", system-ui, sans-serif;
+  font-size: 1.1rem;
+  line-height: 1.4;
+}
+
+/* Math expression / vertical block */
+.worksheet-math-block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 0.25rem 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.worksheet-math-block-compact {
+  padding: 0.3rem 0.4rem;
+  margin: 0;
+}
+
+.worksheet-math-expression {
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: center;
+  margin: 0;
+  font-family: "Cambria Math", "Segoe UI", system-ui, sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
+
+.worksheet-math-fraction-expression {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.12em;
+  vertical-align: middle;
+}
+
+.worksheet-fraction-stack {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  padding-inline: 0.12em;
+  line-height: 1;
+}
+
+.worksheet-fraction-num,
+.worksheet-fraction-den {
+  font-weight: 700;
+  line-height: 1;
+}
+
+.worksheet-fraction-bar {
+  display: block;
+  width: 100%;
+  min-width: 0.85em;
+  border-top: 1.5px solid currentColor;
+  margin: 0.06em 0;
+  line-height: 0;
+}
+
+.worksheet-fraction-sign,
+.worksheet-fraction-whole {
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.worksheet-math-vertical {
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: center;
+  font-family: "Cascadia Mono", "Consolas", "Courier New", monospace;
+  font-size: 1.05rem;
+  line-height: 1.35;
+  margin: 0;
+  white-space: pre;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.worksheet-word-problem {
+  margin: 0;
+  white-space: pre-wrap;
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+/* ── MCQ options grid ── */
+.worksheet-options-section {
+  width: 100%;
+  margin-top: 0.05rem;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.worksheet-options-heading {
+  margin: 0 0 0.3rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.worksheet-options {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.worksheet-options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem 0.5rem;
+  width: 100%;
+}
+
+.worksheet-options-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  width: 100%;
+}
+
+.worksheet-option-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.45rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 5px;
+  min-height: 1.9rem;
+  line-height: 1.35;
+  background: transparent;
+  box-shadow: none;
+}
+
+.worksheet-option-label {
+  font-weight: 800;
+  color: #334155;
+  flex-shrink: 0;
+  min-width: 1.35rem;
+}
+
+.worksheet-option-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.worksheet-options .english-ltr {
+  display: inline-block;
+  text-align: left;
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+/* ── Passages / writing ── */
+.worksheet-passage {
+  margin: 0 0 0.65rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  white-space: pre-wrap;
+  break-inside: avoid;
+  page-break-inside: avoid;
+  line-height: 1.75;
+  background: transparent;
+  box-shadow: none;
+}
+
+.worksheet-passage-long {
+  font-size: 0.98rem;
+  line-height: 1.8;
+}
+
+.worksheet-hebrew-nikud {
+  font-family: "Noto Sans Hebrew", "David Libre", "Segoe UI", system-ui, sans-serif;
+  line-height: 1.75;
+}
+
+.worksheet-writing-lines {
+  margin-top: 0.35rem;
+  min-height: 4.5rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 1.55rem,
+    #cbd5e1 1.55rem,
+    #cbd5e1 calc(1.55rem + 1px)
+  );
+  background-size: 100% 1.6rem;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.worksheet-writing-lines[data-lines="5"] {
+  min-height: 8rem;
+}
+
+/* ── Geometry ── */
+.worksheet-diagram-wrap {
+  margin: 0.25rem auto;
+  max-width: 72mm;
+  break-inside: avoid;
+  page-break-inside: avoid;
+  text-align: center;
+}
+
+.worksheet-geometry-svg {
+  display: block;
+  width: 100%;
+  max-height: 58mm;
+  margin: 0 auto;
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+.english-ltr {
+  direction: ltr;
+  unicode-bidi: isolate;
+  display: inline-block;
+  text-align: left;
+}
+
+/* ── Ink save ── */
+.ink-save .worksheet-root,
+.worksheet-root.ink-save {
+  color: #000;
+  background: #fff;
+}
+
+.ink-save .worksheet-root *,
+.worksheet-root.ink-save * {
+  box-shadow: none !important;
+  color: #000 !important;
+}
+
+.ink-save .worksheet-math-block,
+.ink-save .worksheet-passage,
+.ink-save .worksheet-option-cell {
+  background: transparent !important;
+  border-color: #000 !important;
+}
+
+.ink-save .worksheet-geometry-svg [fill]:not([fill="none"]) {
+  fill: none !important;
+}
+
+.ink-save .worksheet-geometry-svg text,
+.ink-save .worksheet-geometry-svg line,
+.ink-save .worksheet-geometry-svg rect,
+.ink-save .worksheet-geometry-svg polygon,
+.ink-save .worksheet-geometry-svg circle {
+  stroke: #000 !important;
+  fill: none !important;
+}
+
+/* ── Answer key ── */
+.answer-key-root .worksheet-title {
+  font-size: 1.35rem;
+}
+
+.answer-key-root .worksheet-header {
+  margin-bottom: 0.65rem;
+  padding-bottom: 0.45rem;
+}
+
+.answer-key-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.answer-key-list.answer-key-print-grid,
+.answer-key-list.answer-key-print-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem 1rem;
+}
+
+.answer-key-list.answer-key-print-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem 0.8rem;
+}
+
+.answer-key-item {
+  break-inside: avoid;
+  page-break-inside: avoid;
+  margin-bottom: 0.45rem;
+  padding: 0.55rem 0.65rem 0.65rem;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+}
+
+.answer-key-list.answer-key-print-grid .answer-key-item,
+.answer-key-list.answer-key-print-grid-2 .answer-key-item,
+.answer-key-list.answer-key-print-grid-3 .answer-key-item {
+  margin-bottom: 0;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  min-height: 0;
+  padding: 0.55rem 0.65rem 0.65rem;
+}
+
+.answer-key-item-body-structured {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 0;
+}
+
+.answer-key-item-body-structured .worksheet-prose-math-lines {
+  width: 100%;
+}
+
+.answer-key-item:last-child {
+  border-bottom: none;
+}
+
+.answer-key-item-head {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.2rem;
+  font-weight: 700;
+  font-size: 0.88rem;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.answer-key-item-answer {
+  margin: 0;
+  padding-right: 1.85rem;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  font-weight: 600;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.answer-key-item-explanation {
+  margin: 0.3rem 0 0;
+  padding-right: 2.25rem;
+  font-size: 0.85rem;
+  color: #475569;
+  line-height: 1.5;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.no-print {
+  display: block;
+}
+
+/* ── Print output ── */
+@media print {
+  @page {
+    margin: 10mm 12mm;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  body.worksheet-print-mode,
+  body.worksheet-print-mode #__next,
+  body.worksheet-print-mode #__next > div,
+  body.worksheet-print-mode .min-h-\[100svh\],
+  body.worksheet-print-mode .md\:min-h-screen,
+  body.worksheet-print-mode .h-\[100svh\] {
+    background: #fff !important;
+    background-image: none !important;
+    min-height: auto !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+
+  body.worksheet-print-mode > div {
+    background: #fff !important;
+    min-height: auto !important;
+  }
+
+  body.worksheet-print-mode [class*="bg-gradient"] {
+    background: #fff !important;
+    background-image: none !important;
+  }
+
+  body.worksheet-print-mode .flex-1 {
+    flex: none !important;
+    min-height: auto !important;
+  }
+
+  body.worksheet-print-mode header:not(.worksheet-header),
+  body.worksheet-print-mode footer,
+  body.worksheet-print-mode .worksheet-preview-actions,
+  body.worksheet-print-mode .worksheet-screen-preview,
+  body.worksheet-print-mode .no-print {
+    display: none !important;
+  }
+
+  body.worksheet-print-mode > div > main {
+    background: #fff !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .worksheet-preview-container {
+    max-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .worksheet-preview-shell {
+    max-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .worksheet-screen-preview {
+    display: none !important;
+  }
+
+  .worksheet-print-document {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .worksheet-root {
+    padding: 0;
+    max-width: none;
+    font-size: 10.5pt;
+    line-height: 1.45;
+  }
+
+  .worksheet-header {
+    display: block !important;
+    margin-bottom: 0.9rem;
+    padding-bottom: 0.65rem;
+  }
+
+  .worksheet-brand-logo {
+    width: 3.25rem;
+    height: 3.25rem;
+  }
+
+  .worksheet-body.worksheet-print-grid-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.45rem 0.55rem;
+  }
+
+  .worksheet-question.layout-compact-2 {
+    min-height: 0;
+    padding: 0.35rem 0.4rem 0.4rem;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .worksheet-renderer-math-card .worksheet-prose-math-lines {
+    min-height: 0;
+  }
+
+  .worksheet-stem-prose-slot,
+  .worksheet-stem-prose-slot-empty {
+    min-height: 4.5mm;
+  }
+
+  .worksheet-math-balanced-slot,
+  .worksheet-math-balanced-slot-empty {
+    min-height: 5mm;
+  }
+
+  .worksheet-math-vertical-slot {
+    min-height: 12mm;
+  }
+
+  .worksheet-math-vertical-slot-empty {
+    display: none !important;
+    min-height: 0 !important;
+  }
+
+  .worksheet-math-block,
+  .worksheet-math-block-compact,
+  .worksheet-math-block-vertical {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0.15rem 0 !important;
+  }
+
+  .worksheet-passage,
+  .worksheet-option-cell,
+  .worksheet-question-number {
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .worksheet-question {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    box-shadow: none !important;
+  }
+
+  .worksheet-options-section,
+  .worksheet-math-block,
+  .worksheet-diagram-wrap {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .worksheet-math-vertical {
+    font-size: 0.95rem;
+  }
+
+  .worksheet-root,
+  .answer-key-root,
+  .worksheet-print-document {
+    background: #fff !important;
+    box-shadow: none !important;
+  }
+
+  .answer-key-list.answer-key-print-grid,
+  .answer-key-list.answer-key-print-grid-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.7rem 0.85rem;
+  }
+
+  .answer-key-list.answer-key-print-grid .answer-key-item,
+  .answer-key-list.answer-key-print-grid-2 .answer-key-item {
+    padding: 0.5rem 0.6rem 0.6rem;
+  }
+
+  .answer-key-item-answer {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .answer-key-item-explanation {
+    font-size: 0.82rem;
+  }
+
+  .answer-key-root .worksheet-header {
+    margin-bottom: 0.55rem;
+    padding-bottom: 0.4rem;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .worksheet-options-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .worksheet-fields {
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .worksheet-title {
+    font-size: 1.3rem;
+  }
+}

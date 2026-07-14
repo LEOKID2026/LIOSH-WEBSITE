@@ -1,4 +1,6 @@
 import "../styles/globals.css";
+import "../styles/worksheet-print.css";
+import "../styles/worksheet-hub.css";
 import Head from "next/head";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
