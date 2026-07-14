@@ -26,7 +26,7 @@ export default async function handler(req, res) {
 
   if (rejectIfHebrewAudioEnsureRateLimited(req, res)) return;
 
-  const text = String(req.body?.text ?? "").trim();
+  const text = String(req.body?.text ?? req.body?.narration_plaintext ?? "").trim();
   if (!text || text.length > 2200) {
     return res.status(400).json({ ok: false, error: "invalid_text" });
   }
