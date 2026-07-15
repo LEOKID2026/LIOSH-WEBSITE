@@ -124,7 +124,7 @@ export function extractDoNotConcludeFromFacets(facets) {
   const out = [];
   const contract = facets?.contract || {};
   if (contract.topThinDowngraded) {
-    out.push("Report contract: topThinDowngraded — avoid strong conclusions until more practice.");
+    out.push("Report contract: topThinDowngraded - avoid strong conclusions until more practice.");
   }
   const exec = facets?.executive || {};
   const rr = String(exec.reportReadinessHe || "").trim();
@@ -182,12 +182,12 @@ export function resolveEngineDecision({ report, unit, options }) {
 }
 
 /**
- * @param {object} root — full report JSON or `{ report }` wrapper
+ * @param {object} root - full report JSON or `{ report }` wrapper
  * @param {object} [options]
  * @param {number} [options.focusUnitIndex]
  * @param {boolean} [options.allowEnglishSkillRouting] — default false: English without explicit skill+subskill → skillTaggingIncomplete
  * @param {object[]} [options.availableQuestionMetadata] — optional pass-through (wins over index when non-empty)
- * @param {object} [options.metadataIndex] — from `buildPlannerQuestionMetadataIndex`
+ * @param {object} [options.metadataIndex] - from `buildPlannerQuestionMetadataIndex`
  * @param {(q: object) => object[]} [options.getAvailableQuestionMetadata] — custom resolver; receives query shape from adapter
  * @param {number} [options.metadataQueryLimit]
  * @param {boolean} [options.metadataSubjectFallback] — default true

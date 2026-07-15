@@ -1,6 +1,6 @@
 /**
  * רכיבי פני שטח מהדוח המקיף — מופרדים ל-import בבדיקות SSR בלי Layout/router.
- * Parent Copilot Phase A: אין שינוי מבנה דוח/הדפסה כאן — שילוב Copilot רק בדף `parent-report-detailed.js`.
+ * Parent Copilot Phase A: אין שינוי מבנה דוח/הדפסה כאן - שילוב Copilot רק בדף `parent-report-detailed.js`.
  */
 export const PARENT_COPILOT_PHASE_A_SURFACE_TAG = "phaseA-no-layout-change";
 import React, { useMemo } from "react";
@@ -121,7 +121,7 @@ function pr1ParentVisibleTextHe(s) {
   t = normalizeParentFacingHe(t);
   t = stripKnownParentReportLeakageHe(t);
   if (!t) return "";
-  const numericOnly = /^[\d\s.,/%\-–—]+$/u.test(t);
+  const numericOnly = /^[\d\s.,/%\-–-]+$/u.test(t);
   if (numericOnly) return "";
   if (/^0{2,}$/u.test(t)) return "";
   return guardParentFacingText(t);
@@ -206,7 +206,7 @@ export function ExecutiveSummarySection({ es, compact }) {
         (es.monitoringOnlyAreasHe && es.monitoringOnlyAreasHe.length) ||
         (es.deferForNowAreasHe && es.deferForNowAreasHe.length)) && (
         <div className="rounded-lg border border-sky-400/24 bg-sky-950/12 px-3 py-2.5 pr-detailed-avoid-split">
-          <h4 className="pr-detailed-subheading text-sky-100/95 mb-1.5 border-0 pb-0">מה לעשות עכשיו — לפי סדר</h4>
+          <h4 className="pr-detailed-subheading text-sky-100/95 mb-1.5 border-0 pb-0">מה לעשות עכשיו - לפי סדר</h4>
           <div className="space-y-1.5 text-[11px] md:text-sm text-white/[0.86] leading-snug">
             {es.topImmediateParentActionHe ? (
               <p className="m-0">
@@ -214,7 +214,7 @@ export function ExecutiveSummarySection({ es, compact }) {
                 {pr1ParentVisibleTextHe(es.topImmediateParentActionHe)}
               </p>
             ) : (
-              <p className="m-0 text-white/55">אין נושא שכדאי להתמקד בו השבוע — שגרת תרגול קצרה מספיקה.</p>
+              <p className="m-0 text-white/55">אין נושא שכדאי להתמקד בו השבוע - שגרת תרגול קצרה מספיקה.</p>
             )}
             {es.secondPriorityActionHe ? (
               <p className="m-0">
@@ -232,7 +232,7 @@ export function ExecutiveSummarySection({ es, compact }) {
             ) : null}
             {es.deferForNowAreasHe?.length ? (
               <div className="m-0">
-                <span className="text-white/45 font-bold">לא צריך להתמקד בזה עכשיו — אפשר להמתין: </span>
+                <span className="text-white/45 font-bold">לא צריך להתמקד בזה עכשיו - אפשר להמתין: </span>
                 <span className="text-white/[0.82]">{es.deferForNowAreasHe.map(pr1ParentVisibleTextHe).join(" · ")}</span>
               </div>
             ) : null}
@@ -374,7 +374,7 @@ export function ExecutiveSummarySection({ es, compact }) {
         (es.subjectsNeedingFreshEvidenceHe && es.subjectsNeedingFreshEvidenceHe.length) ||
         (es.subjectsWherePriorPathSeemsMisalignedHe && es.subjectsWherePriorPathSeemsMisalignedHe.length)) && (
         <div className="rounded-lg border border-slate-400/22 bg-slate-950/12 px-3 py-2.5 pr-detailed-avoid-split">
-          <h4 className="pr-detailed-subheading text-slate-100/95 mb-1.5 border-0 pb-0">מה ניסינו לאחרונה — האם עזר?</h4>
+          <h4 className="pr-detailed-subheading text-slate-100/95 mb-1.5 border-0 pb-0">מה ניסינו לאחרונה - האם עזר?</h4>
           <div className="space-y-1 text-[11px] md:text-sm text-white/[0.86] leading-snug">
             {String(es.crossSubjectRecommendationMemoryStateLabelHe || "").trim() ? (
               <p className="m-0">
@@ -733,14 +733,14 @@ export function ParentAssignedActivitiesSection({ rows }) {
                 className="border-b border-white/10"
               >
                 <td className="p-2">{row.activityLabelHe || "פעילות אישית מהורה"}</td>
-                <td className="p-2">{row.subjectLabelHe || "—"}</td>
-                <td className="p-2">{row.topicLabelHe || "—"}</td>
-                <td className="p-2">{row.gradeLabelHe || "—"}</td>
+                <td className="p-2">{row.subjectLabelHe || "-"}</td>
+                <td className="p-2">{row.topicLabelHe || "-"}</td>
+                <td className="p-2">{row.gradeLabelHe || "-"}</td>
                 <td className="p-2">{row.lastActivityAtHe || "לא זמין"}</td>
                 <td className="p-2">{row.questionCount ?? 0}</td>
                 <td className="p-2">{row.accuracy ?? 0}%</td>
                 <td className="p-2">{row.timeMinutes ?? 0}</td>
-                <td className="p-2">{row.statusLabelHe || "—"}</td>
+                <td className="p-2">{row.statusLabelHe || "-"}</td>
               </tr>
             ))}
           </tbody>
@@ -774,9 +774,9 @@ function OutOfGradePracticeTable({ rows }) {
               key={row.topicRowKey || `${row.subjectId}-${row.topicLabelHe}-${idx}`}
               className="border-b border-white/10"
             >
-              <td className="p-2">{row.subjectLabelHe || "—"}</td>
-              <td className="p-2">{row.topicLabelHe || "—"}</td>
-              <td className="p-2">{row.gradeLabelHe || "—"}</td>
+              <td className="p-2">{row.subjectLabelHe || "-"}</td>
+              <td className="p-2">{row.topicLabelHe || "-"}</td>
+              <td className="p-2">{row.gradeLabelHe || "-"}</td>
               <td className="p-2">{row.questions ?? 0}</td>
               <td className="p-2">{row.accuracy ?? 0}%</td>
               <td className="p-2">{row.timeMinutes ?? 0}</td>
@@ -968,7 +968,7 @@ function topicStripParentClean(s) {
   t = t.replace(/\s{2,}/g, " ").trim();
   t = normalizeParentFacingHe(t);
   if (!t) return "";
-  const numericOnly = /^[\d\s.,/%\-–—]+$/u.test(t);
+  const numericOnly = /^[\d\s.,/%\-–-]+$/u.test(t);
   if (numericOnly) return "";
   if (/^0{2,}$/u.test(t)) return "";
   return t;

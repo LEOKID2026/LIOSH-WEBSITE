@@ -1,5 +1,5 @@
 /**
- * Geometry closure — topic exposure must match `GRADES[].topics` in geometry-constants.js (single source).
+ * Geometry closure - topic exposure must match `GRADES[].topics` in geometry-constants.js (single source).
  */
 
 import { GRADES } from "./geometry-constants.js";

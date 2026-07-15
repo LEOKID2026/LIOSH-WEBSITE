@@ -64,7 +64,7 @@ export default function AnimalHomesPrototype() {
       setFlash("ok");
     } else {
       setFeedback(
-        `${animal.name} לא גר ב${HABITATS.find((h) => h.id === habitatId)?.label} — נסו שוב`,
+        `${animal.name} לא גר ב${HABITATS.find((h) => h.id === habitatId)?.label} - נסו שוב`,
       );
       setFact("");
       setFlash("bad");
@@ -106,7 +106,7 @@ export default function AnimalHomesPrototype() {
             ) : null}
 
             <div className="rounded-xl border-2 border-yellow-400/70 bg-slate-950/80 p-3">
-              <p className="text-xs font-bold text-amber-200">🐾 חיות — לחצו לבחירה</p>
+              <p className="text-xs font-bold text-amber-200">🐾 חיות - לחצו לבחירה</p>
               <div className="mt-2 flex flex-wrap justify-center gap-2">
                 {pool.map((id) => {
                   const a = ANIMALS.find((x) => x.id === id);

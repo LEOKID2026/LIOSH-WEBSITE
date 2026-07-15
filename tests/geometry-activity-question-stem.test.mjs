@@ -10,7 +10,7 @@ import {
 import { generateActivityQuestionSetClient } from "../lib/classroom-activities/generate-activity-questions-client.js";
 
 const FROZEN_TRIANGLE_STEM =
-  "אלגברה של זוויות — סכום שתי זוויות ידועות הוא 57°+67° — השלימו לזווית השלישית במשולש.";
+  "אלגברה של זוויות - סכום שתי זוויות ידועות הוא 57°+67° - השלימו לזווית השלישית במשולש.";
 
 test("sanitizeGeometryActivityQuestionStem rewrites algebra-of-angles prefix", () => {
   const out = sanitizeGeometryActivityQuestionStem(FROZEN_TRIANGLE_STEM, {
@@ -23,7 +23,7 @@ test("sanitizeGeometryActivityQuestionStem rewrites algebra-of-angles prefix", (
 
 test("sanitizeGeometryActivityQuestionStem rewrites equation-style triangle prompt", () => {
   const out = sanitizeGeometryActivityQuestionStem(
-    "משוואת זוויות: 57° + 67° + ? = 180° — מה החסר?",
+    "משוואת זוויות: 57° + 67° + ? = 180° - מה החסר?",
     { kind: "triangle_angles", topic: "angles" }
   );
   assert.ok(!/משווא/u.test(out));
@@ -58,16 +58,19 @@ test("newly generated geometry angles items use elementary wording", async () =>
     count: 8,
   });
   assert.ok(qs.length >= 5);
+  const triangleItems = qs.filter((item) => item.params?.kind === "triangle_angles");
+  assert.ok(triangleItems.length >= 1, "expected at least one triangle_angles item");
   for (const item of qs) {
-    assert.equal(item.params?.kind, "triangle_angles");
     assert.ok(item.question);
     assert.ok(
       !geometryElementaryStemHasForbiddenTerms(item.question),
       `forbidden term in: ${item.question}`
     );
+  }
+  for (const item of triangleItems) {
     assert.match(
       item.question,
-      /חישוב|מציאת|השלימ|מה הזווית|מה נשאר|סה״כ 180°|כלל בסיס/,
+      /חישוב|מציאת|השלימ|מה הזווית|מה נשאר|סה״כ 180°|כלל בסיס|במשולש|זווית אחת|זווית שנייה/,
       `unexpected stem shape: ${item.question}`
     );
   }

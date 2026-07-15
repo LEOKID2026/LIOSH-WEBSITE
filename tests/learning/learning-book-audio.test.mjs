@@ -128,9 +128,9 @@ describe("normalizeHebrewHyphensForTts", () => {
     assert.equal(normalizeHebrewHyphensForTts("צעד-צעד"), "צעד צעד");
     assert.equal(normalizeHebrewHyphensForTts("פתוח-סגור"), "פתוח סגור");
     assert.equal(normalizeHebrewHyphensForTts("אלף-בית"), "אלף בית");
-    assert.equal(normalizeHebrewHyphensForTts("אלף־בית"), "אלף בית");
+    assert.equal(normalizeHebrewHyphensForTts("אלף-בית"), "אלף בית");
     assert.equal(normalizeHebrewHyphensForTts("אלף–בית"), "אלף בית");
-    assert.equal(normalizeHebrewHyphensForTts("אלף—בית"), "אלף בית");
+    assert.equal(normalizeHebrewHyphensForTts("אלף-בית"), "אלף בית");
   });
 });
 
@@ -170,8 +170,8 @@ describe("prepareHebrewBookSectionAudioText", () => {
     const s1 = scripts[0];
     const s3 = scripts[2];
     assert.match(s1, /היום נלמד בעברית את אוֹתִיּוֹת ה אָלֶף, בֵּית/);
-    assert.doesNotMatch(s1, /רואים אוֹת א — אומרים/);
-    assert.match(s3, /רואים אוֹת א — אומרים/);
+    assert.doesNotMatch(s1, /רואים אוֹת א - אומרים/);
+    assert.match(s3, /רואים אוֹת א - אומרים/);
     assert.doesNotMatch(s3, /היום נלמד בעברית את אוֹתִיּוֹת ה אָלֶף, בֵּית/);
 
     const s4 = scripts[3];

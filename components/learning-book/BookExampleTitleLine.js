@@ -11,7 +11,7 @@ export default function BookExampleTitleLine({ text }) {
   const parsed = parseExampleTitleLine(text);
   if (!parsed) return null;
 
-  const { mathPart, hebrewPart, trailingColon, separator = " — " } = parsed;
+  const { mathPart, hebrewPart, trailingColon, separator = " - " } = parsed;
 
   return (
     <p

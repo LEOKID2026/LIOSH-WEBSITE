@@ -235,7 +235,7 @@ describe("Admin student support activity", () => {
       {
         atIso: "2026-06-20T02:04:00.000Z",
         atLabelHe: "20/06/2026 02:04",
-        lineHe: "סיים תרגול חשבון — 16 שאלות — 75% — 26 דקות",
+        lineHe: "סיים תרגול חשבון - 16 שאלות - 75% - 26 דקות",
         detailLineHe: "תרגול חשבון · 16 שאלות · 75% · 26 דקות",
       },
     ]);
@@ -249,7 +249,7 @@ describe("Admin student support activity", () => {
       join(ROOT, "lib/admin-server/admin-student-support-activity.server.js"),
       "utf8"
     );
-    assert.match(src, /מטבעות ידנית — סיבה:/);
+    assert.match(src, /מטבעות ידנית - סיבה:/);
     assert.match(src, /ADMIN_MANUAL_COIN_REASON/);
     assert.match(src, /learning_sessions/);
     assert.match(src, /coin_transactions/);

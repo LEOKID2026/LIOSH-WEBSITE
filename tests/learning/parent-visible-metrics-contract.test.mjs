@@ -110,7 +110,7 @@ function minimalV2Unit(topicRowKey, questions, accuracy) {
 }
 
 describe("parent visible metrics contract", () => {
-  test("A — q=206 accuracy=52 counts missing: derive 107/99, never 0/206", () => {
+  test("A - q=206 accuracy=52 counts missing: derive 107/99, never 0/206", () => {
     const expected = { questions: 206, correct: 107, wrong: 99, accuracy: 52 };
     const metrics = normalizeParentVisibleMetrics({ questions: 206, accuracy: 52 });
     assertMetricsEqual(metrics, expected);
@@ -124,7 +124,7 @@ describe("parent visible metrics contract", () => {
     assert.match(dataLine, /99 תשובות שגויות/);
   });
 
-  test("B — q=206 correct=107 wrong=99 accuracy=52: consistent aggregate path", () => {
+  test("B - q=206 correct=107 wrong=99 accuracy=52: consistent aggregate path", () => {
     const expected = { questions: 206, correct: 107, wrong: 99, accuracy: 52 };
     const mapRow = {
       questions: 206,
@@ -150,7 +150,7 @@ describe("parent visible metrics contract", () => {
     );
   });
 
-  test("C — q=32 correct=22 wrong=10 accuracy=69: consistent aggregate path", () => {
+  test("C - q=32 correct=22 wrong=10 accuracy=69: consistent aggregate path", () => {
     const expected = { questions: 32, correct: 22, wrong: 10, accuracy: 69 };
     const mapRow = { questions: 32, correct: 22, wrong: 10, accuracy: 69 };
     const topicRowKey = "multiplication::grade:g2";
@@ -170,7 +170,7 @@ describe("parent visible metrics contract", () => {
     );
   });
 
-  test("D — Aaa7 addition 10/2/8/20%: consistent across surfaces", () => {
+  test("D - Aaa7 addition 10/2/8/20%: consistent across surfaces", () => {
     const expected = { questions: 10, correct: 2, wrong: 8, accuracy: 20 };
     const mapRow = { questions: 10, correct: 2, wrong: 8, accuracy: 20 };
     const topicRowKey = "addition::grade:g2";
@@ -190,7 +190,7 @@ describe("parent visible metrics contract", () => {
     );
   });
 
-  test("E — q=2: initial_data wording but metrics stay consistent", () => {
+  test("E - q=2: initial_data wording but metrics stay consistent", () => {
     const expected = { questions: 2, correct: 1, wrong: 1, accuracy: 50 };
     const metrics = normalizeParentVisibleMetrics({ questions: 2, correct: 1, wrong: 1, accuracy: 50 });
     assertMetricsEqual(metrics, expected);
@@ -214,7 +214,7 @@ describe("parent visible metrics contract", () => {
     assert.match(copy.explainSections?.data || "", /2 שאלות/);
   });
 
-  test("F — cross-surface parity via collectTopicEngineRowsFromReport", () => {
+  test("F - cross-surface parity via collectTopicEngineRowsFromReport", () => {
     const topicRowKey = "fractions::grade:g3";
     const metrics = normalizeParentVisibleMetrics({ questions: 206, accuracy: 52 });
     const report = {
@@ -241,7 +241,7 @@ describe("parent visible metrics contract", () => {
     assert.equal(rows[0].wrong, 99);
   });
 
-  test("G — negative guard: forbidden 0 correct / all wrong when accuracy > 0", () => {
+  test("G - negative guard: forbidden 0 correct / all wrong when accuracy > 0", () => {
     const broken = { questions: 206, correct: 0, wrong: 206, accuracy: 52 };
     assert.equal(isForbiddenZeroCorrectAllWrongCopy(broken), true);
 
@@ -276,7 +276,7 @@ describe("parent visible metrics contract", () => {
     assert.ok(!sections.data.includes("0 נכונות"));
   });
 
-  test("H — trendV1 only on practiced topics with displayable direction", () => {
+  test("H - trendV1 only on practiced topics with displayable direction", () => {
     const improving = {
       ok: true,
       direction: "improving",

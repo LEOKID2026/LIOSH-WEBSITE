@@ -13,7 +13,7 @@ export const TRIANGLE_AREA_TEACH_PATH_READY = true;
 export const RECTANGLE_AREA_SPINE_REGISTERED = false;
 
 /**
- * Parse grade for gate checks — accepts `g3`, `3`, numeric 3, etc.
+ * Parse grade for gate checks - accepts `g3`, `3`, numeric 3, etc.
  * @param {string|number|null|undefined} gradeLevel
  * @returns {number|null} 1–6 or null when unknown
  */

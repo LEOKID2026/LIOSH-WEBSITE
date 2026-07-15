@@ -32,7 +32,7 @@ const BASE_CLASSIFICATION = {
 export const SCENARIOS = [
   {
     id: "strong_stable_positive",
-    description: "Strong stable positive — expand_cautiously",
+    description: "Strong stable positive - expand_cautiously",
     params: {
       subjectId: "math",
       topicKey: "addition",
@@ -54,7 +54,7 @@ export const SCENARIOS = [
   },
   {
     id: "positive_insufficient_data",
-    description: "Positive but insufficient data — withhold",
+    description: "Positive but insufficient data - withhold",
     params: {
       subjectId: "math",
       topicKey: "subtraction",
@@ -76,7 +76,7 @@ export const SCENARIOS = [
   },
   {
     id: "probe_only_taxonomy_mismatch",
-    description: "Probe-only taxonomy-mismatch — probe_only",
+    description: "Probe-only taxonomy-mismatch - probe_only",
     params: {
       subjectId: "math",
       topicKey: "multiplication",
@@ -97,7 +97,7 @@ export const SCENARIOS = [
   },
   {
     id: "low_confidence",
-    description: "Low-confidence topic — probe_only",
+    description: "Low-confidence topic - probe_only",
     params: {
       subjectId: "english",
       topicKey: "vocabulary",
@@ -118,7 +118,7 @@ export const SCENARIOS = [
   },
   {
     id: "true_support_remedial",
-    description: "True support/remedial — intervene",
+    description: "True support/remedial - intervene",
     params: {
       subjectId: "math",
       topicKey: "division",
@@ -140,7 +140,7 @@ export const SCENARIOS = [
   },
   {
     id: "maintain_only",
-    description: "Maintain-only — moderate confidence stable mastery",
+    description: "Maintain-only - moderate confidence stable mastery",
     params: {
       subjectId: "math",
       topicKey: "fractions",
@@ -161,7 +161,7 @@ export const SCENARIOS = [
   },
   {
     id: "expand_cautiously",
-    description: "Expand-cautiously — high confidence, stable mastery, high volume",
+    description: "Expand-cautiously - high confidence, stable mastery, high volume",
     params: {
       subjectId: "math",
       topicKey: "decimals",
@@ -182,7 +182,7 @@ export const SCENARIOS = [
   },
   {
     id: "empty_subject",
-    description: "Empty subject — no units",
+    description: "Empty subject - no units",
     params: null,
     expected: {
       stubOnly: true,
@@ -190,7 +190,7 @@ export const SCENARIOS = [
   },
   {
     id: "same_topic_across_modes",
-    description: "Same pedagogical topic across modes — collapsed to one canonical state",
+    description: "Same pedagogical topic across modes - collapsed to one canonical state",
     params: {
       subjectId: "math",
       topicKey: "addition",

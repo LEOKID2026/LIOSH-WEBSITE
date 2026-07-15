@@ -834,12 +834,12 @@ export default function GeometryExplanationDiagram({
           </SvgText>
           {spec.mode === "perimeter" && (
             <SvgText x={cx} y={cy - rad - 16} variant="note">
-              היקף — סיבוב מלא על השפה
+              היקף - סיבוב מלא על השפה
             </SvgText>
           )}
           {spec.mode === "area" && (
             <SvgText x={cx} y={cy - rad - 16} variant="note">
-              שטח — הפנים של העיגול (לא הקו החיצוני בלבד)
+              שטח - הפנים של העיגול (לא הקו החיצוני בלבד)
             </SvgText>
           )}
         </GeometryDiagramFitSvg>
@@ -1103,7 +1103,7 @@ export default function GeometryExplanationDiagram({
             {sideLabel("c", c)}
           </SvgText>
           <SvgText x="180" y="20" variant="note">
-            זווית ישרה — היתר נגדה הוא c
+            זווית ישרה - היתר נגדה הוא c
           </SvgText>
         </GeometryDiagramFitSvg>
       </DiagramFrame>
@@ -1154,7 +1154,7 @@ export default function GeometryExplanationDiagram({
             </marker>
           </defs>
           <SvgText x="180" y="28" variant="note">
-            הזזה — אותה צורה במיקום חדש
+            הזזה - אותה צורה במיקום חדש
           </SvgText>
         </GeometryDiagramFitSvg>
       </DiagramFrame>
@@ -1181,7 +1181,7 @@ export default function GeometryExplanationDiagram({
             />
           ) : null}
           <SvgText x="180" y="28" variant="note">
-            שיקוף — תמונה מול קו המראה
+            שיקוף - תמונה מול קו המראה
           </SvgText>
         </GeometryDiagramFitSvg>
       </DiagramFrame>

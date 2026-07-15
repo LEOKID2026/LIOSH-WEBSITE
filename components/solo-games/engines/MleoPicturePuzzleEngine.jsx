@@ -486,7 +486,7 @@ export default function MleoPicturePuzzleEngine({
                       selected ? SG.preGameImageBorderSelected : SG.preGameImageBorderDefault
                     }`}
                     style={{ touchAction: "manipulation" }}
-                    aria-label={`${img.label}${selected ? " — נבחרה" : ""}`}
+                    aria-label={`${img.label}${selected ? " - נבחרה" : ""}`}
                   >
                     <img
                       src={img.src}

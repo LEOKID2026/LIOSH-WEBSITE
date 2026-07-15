@@ -134,9 +134,9 @@ function buildLimitations(overall, subjectInsights) {
     return out;
   }
   if (overall.dataConfidence === "thin") {
-    out.push("נתוני התרגול בתקופה דלים — הניסוח נשמר זהיר ומאוזן.");
+    out.push("נתוני התרגול בתקופה דלים - הניסוח נשמר זהיר ומאוזן.");
   } else if (overall.dataConfidence === "low") {
-    out.push("הנתונים בתקופה עדיין מצומצמים — כדאי לחזור ולעקוב לאחר תרגול נוסף.");
+    out.push("הנתונים בתקופה עדיין מצומצמים - כדאי לחזור ולעקוב לאחר תרגול נוסף.");
   }
   const thinSubjects = subjectInsights.filter((s) => s.dataConfidence === "thin");
   if (thinSubjects.length > 0 && thinSubjects.length <= 3) {
@@ -156,14 +156,14 @@ function buildDeterministicRecommendationsHe(strengths, focusAreas, mistakePatte
   if (mistakePatterns.length > 0) {
     const top = mistakePatterns[0];
     if (top && top.topicDisplayHe) {
-      out.push(`שמנו לב שטעויות חוזרות מופיעות בנושא ${top.topicDisplayHe} — שווה לשחזר אותו ביחד.`);
+      out.push(`שמנו לב שטעויות חוזרות מופיעות בנושא ${top.topicDisplayHe} - שווה לשחזר אותו ביחד.`);
     }
   }
   if (overall.totalQuestions > 0 && overall.totalQuestions < 12) {
     out.push("מומלץ להמשיך לאסוף נתונים לאורך זמן לפני הסקת מסקנות חזקות.");
   }
   if (out.length === 0) {
-    out.push("לא נמצאו המלצות אוטומטיות חזקות בתקופה זו — כדאי להמשיך עם שגרת תרגול רגילה.");
+    out.push("לא נמצאו המלצות אוטומטיות חזקות בתקופה זו - כדאי להמשיך עם שגרת תרגול רגילה.");
   }
   return out;
 }
@@ -195,11 +195,11 @@ function buildStudentSection(aggregate, options) {
 
 /**
  * @typedef {object} BuildPacketArgs
- * @property {object} aggregate — output of `aggregateParentReportPayload` (extended)
- * @property {object} [v2Report] — output of `generateParentReportV2`
+ * @property {object} aggregate - output of `aggregateParentReportPayload` (extended)
+ * @property {object} [v2Report] - output of `generateParentReportV2`
  * @property {object} [detailedPayload] — optional detailed payload (unused today, reserved)
  * @property {object} [options]
- * @property {string|Date|number} [options.now] — caller-injected timestamp for `generatedAt` (binding)
+ * @property {string|Date|number} [options.now] - caller-injected timestamp for `generatedAt` (binding)
  * @property {string} [options.studentDisplayName] — caller-supplied display name override
  * @property {"week"|"month"|"custom"} [options.rangeLabel]
  * @property {boolean} [options.preferDeterministic] — annotated in sourceMetadata

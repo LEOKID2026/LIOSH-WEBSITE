@@ -25,7 +25,7 @@ export function SchoolStatCard({ label, value, hint, accent = "amber" }) {
   return (
     <div className={`${SCHOOL_CARD} ${accentRing} ${SCHOOL_CARD_INNER} text-right min-w-0`}>
       <p className="text-xs text-white/50 mb-1 truncate">{label}</p>
-      <p className="text-2xl sm:text-3xl font-bold tabular-nums leading-none">{value ?? "—"}</p>
+      <p className="text-2xl sm:text-3xl font-bold tabular-nums leading-none">{value ?? "-"}</p>
       {hint ? <p className="text-xs text-white/45 mt-2">{hint}</p> : null}
     </div>
   );
@@ -96,7 +96,7 @@ export function SchoolAlertBanner({ children, tone = "amber" }) {
 
 export function SchoolSubjectBadges({ subjects, max = 6 }) {
   if (!subjects?.length) {
-    return <span className="text-white/45 text-xs">—</span>;
+    return <span className="text-white/45 text-xs">-</span>;
   }
   const unique = [...new Set(subjects)];
   const shown = unique.slice(0, max);
@@ -140,8 +140,8 @@ export function SchoolActivityStatusBadge({ status }) {
 export function SchoolActivityRow({ activity }) {
   const title = sanitizeActivityTitleHe(activity.title, activity.subject);
   const subject = schoolSubjectLabelHe(activity.subject);
-  const teacher = activity.teacherName || "—";
-  const className = activity.className || "—";
+  const teacher = activity.teacherName || "-";
+  const className = activity.className || "-";
   const mode = schoolActivityModeHe(activity.mode);
   const showReview = activity.status && activity.status !== "draft";
 

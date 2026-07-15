@@ -5,7 +5,7 @@ export default function TrainingRoomPrototypePage() {
   return (
     <>
       <Head>
-        <title>חדר האימון של ליאו — אבטיפוס</title>
+        <title>חדר האימון של ליאו - אבטיפוס</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <TrainingRoomPrototype />

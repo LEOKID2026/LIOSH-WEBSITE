@@ -113,13 +113,13 @@ export default function LeoMinersShell({ skipAccessGuard = false }) {
 
         } else if (!ready) {
 
-          setStatusMessage(message || "שגיאת שרת — נסו לרענן את הדף.");
+          setStatusMessage(message || "שגיאת שרת - נסו לרענן את הדף.");
 
         } else if (!gameOn) {
 
           setStatusMessage(
 
-            "המשחק כבוי כרגע — אפשר לשחק מקומית. להפעלה מלאה: לוח הבקרה → ליאו הכורה."
+            "המשחק כבוי כרגע - אפשר לשחק מקומית. להפעלה מלאה: לוח הבקרה → ליאו הכורה."
 
           );
 
@@ -157,7 +157,7 @@ export default function LeoMinersShell({ skipAccessGuard = false }) {
 
       .catch(() => {
 
-        setStatusMessage("שגיאת רשת — נסו לרענן את הדף.");
+        setStatusMessage("שגיאת רשת - נסו לרענן את הדף.");
 
         setGameplayConfig(getDefaultGameplayTuning());
 
@@ -193,7 +193,7 @@ export default function LeoMinersShell({ skipAccessGuard = false }) {
 
       <Head>
 
-        <title>ליאו הכורה — משחקי ליאו</title>
+        <title>ליאו הכורה - משחקי ליאו</title>
 
         <meta name="robots" content="noindex,nofollow" />
 

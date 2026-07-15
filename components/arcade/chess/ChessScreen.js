@@ -82,8 +82,8 @@ function HowToModal({ open, onClose }) {
         <ul className="list-disc space-y-2 pr-5 text-sm text-zinc-200">
           <li>לבן (מושב 1 ברשימה) מתחיל.</li>
           <li>בוחרים כלי ואז משבצת יעד לפי חוקי השחמט.</li>
-          <li>כשמגיעים לשורה האחרונה עם רגלי — קידום אוטומטי למלכה.</li>
-          <li>מט — סיום; תיקו — החזר כניסה לשני השחקנים.</li>
+          <li>כשמגיעים לשורה האחרונה עם רגלי - קידום אוטומטי למלכה.</li>
+          <li>מט - סיום; תיקו - החזר כניסה לשני השחקנים.</li>
         </ul>
       </div>
     </div>
@@ -239,12 +239,12 @@ export default function ChessScreen({ roomId }) {
         {showLobbyWait ? (
           <div className="mt-6 rounded-xl border border-amber-500/30 bg-amber-950/25 px-4 py-6 text-center text-amber-100">
             <p className="text-lg font-bold">ממתינים לשחקן…</p>
-            <p className="mt-2 text-sm text-amber-200/90">שחמט — שני שחקנים</p>
+            <p className="mt-2 text-sm text-amber-200/90">שחמט - שני שחקנים</p>
           </div>
         ) : null}
 
         {showSessionInitError ? (
-          <p className="mt-4 text-center text-sm text-rose-200">לא ניתן לטעון את הלוח — נסה לרענן</p>
+          <p className="mt-4 text-center text-sm text-rose-200">לא ניתן לטעון את הלוח - נסה לרענן</p>
         ) : null}
         {showBoardLoading ? <p className="mt-6 text-center text-zinc-400">טוען…</p> : null}
 

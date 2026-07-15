@@ -333,7 +333,7 @@ export default function ParentReportDetailedPage() {
   return (
     <Layout>
       <Head>
-        <title>דוח מקיף לתקופה — LIOSH</title>
+        <title>דוח מקיף לתקופה - LIOSH</title>
         <style>{`
           .pr-detailed-page {
             --pr-h1: 1.35rem;
@@ -1175,7 +1175,7 @@ export default function ParentReportDetailedPage() {
                     {displayMode === "summary" ? "דוח מקוצר" : "דוח מלא"}
                   </p>
                   <p className="pr-detailed-body-text text-white/85 text-sm md:text-base">
-                    דוח הורים מקיף — מבוסס על התאריכים הנבחרים
+                    דוח הורים מקיף - מבוסס על התאריכים הנבחרים
                   </p>
                   <p className="pr-detailed-muted text-sm mt-2">
                     טווח תאריכים: {pi.startDateLabelHe} – {pi.endDateLabelHe}
@@ -1185,7 +1185,7 @@ export default function ParentReportDetailedPage() {
                   </p>
                 </header>
 
-                {/* B — סיכום לתקופה (תוכן ExecutiveSummarySection ללא שינוי) */}
+                {/* B - סיכום לתקופה (תוכן ExecutiveSummarySection ללא שינוי) */}
                 <SectionCard title="סיכום לתקופה" compact={displayMode === "summary"}>
                   <ExecutiveSummarySection
                     es={normalizeExecutiveSummary(payload)}
@@ -1264,7 +1264,7 @@ export default function ParentReportDetailedPage() {
                   <ParentAssignedActivitiesSection rows={payload?.parentAssignedActivitiesInPeriod} />
                 ) : null}
 
-                {/* D — אותו payload; מלא/מקוצר; כותרת אזור + לכל מקצוע כותרת + כרטיסים פנימיים בלבד */}
+                {/* D - אותו payload; מלא/מקוצר; כותרת אזור + לכל מקצוע כותרת + כרטיסים פנימיים בלבד */}
                 {displayMode === "summary" ? (
                   <section
                     className="pr-detailed-subjects-region mb-5 md:mb-6 min-w-0"
@@ -1313,7 +1313,7 @@ export default function ParentReportDetailedPage() {
                             {sp.evidenceExamples?.length ? (
                               <div className="pr-detailed-tier-examples">
                                 <p className="pr-detailed-body-text text-sm m-0 mb-2 text-white/[0.82]">
-                                  דוגמאות מהתרגול — לעיון ההורים, בלי צורך לעבור על הכול בבת אחת.
+                                  דוגמאות מהתרגול - לעיון ההורים, בלי צורך לעבור על הכול בבת אחת.
                                 </p>
                                 <ul className="pr-detailed-muted text-xs space-y-1.5 m-0 list-none pr-0 leading-relaxed">
                                   {sp.evidenceExamples.map((e, idx) => (
@@ -1409,7 +1409,7 @@ export default function ParentReportDetailedPage() {
                   </section>
                 )}
 
-                {/* cross insights — part of structure; placed after subjects for flow */}
+                {/* cross insights - part of structure; placed after subjects for flow */}
                 <SectionCard title="מה שחוזר בכמה מקצועות" compact={displayMode === "summary"}>
                 <Bullets
                   items={(payload.crossSubjectInsights.bulletsHe || []).filter(

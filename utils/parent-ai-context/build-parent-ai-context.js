@@ -2,9 +2,9 @@
  * Unified Parent AI context builder (Phase B — infrastructure alignment only).
  *
  * Single canonical entry point that produces, for a given parent-report payload + scope:
- *   - `truthPacket`           — the same `TruthPacketV1` already used by the Parent Copilot Q&A engine
+ *   - `truthPacket`           - the same `TruthPacketV1` already used by the Parent Copilot Q&A engine
  *                               (`utils/parent-copilot/truth-packet-v1.js`). Source of grounding for the Q&A path.
- *   - `strictExplainerInput`  — the strict allowlisted input consumed by `buildParentReportAIExplanation`
+ *   - `strictExplainerInput`  - the strict allowlisted input consumed by `buildParentReportAIExplanation`
  *                               (`utils/parent-report-ai/parent-report-ai-explainer.js`). Source of grounding
  *                               for the Parent AI summary insight ("תובנה להורה") path.
  *
@@ -128,7 +128,7 @@ function safeRunStrictInputProjection(payload, projection, ctx) {
  * @param {((payload: unknown, ctx: { truthPacket: object|null; scope: object }) => unknown)} [args.strictExplainerInputBuilder]
  *   Optional projection function. The adapter that owns the strict-input shape injects its existing
  *   projection here so this module does not depend on `utils/parent-report-ai/*` (no circular import).
- *   When omitted, `strictExplainerInput` is `null` — the truth packet is still produced.
+ *   When omitted, `strictExplainerInput` is `null` - the truth packet is still produced.
  * @returns {{
  *   payload: unknown;
  *   scope: { scopeType: "topic"|"subject"|"executive"; scopeId: string; scopeLabel: string; canonicalIntent: string };
@@ -296,7 +296,7 @@ const STRICT_DATA_CONFIDENCE_BAND = {
 
 /**
  * Project the strict explainer input into the canonical core-grounding shape.
- * Returns `null` when the strict input is missing — meaning the summary insight surface will
+ * Returns `null` when the strict input is missing - meaning the summary insight surface will
  * not render anyway and there is nothing to compare.
  *
  * @param {object|null|undefined} strictInput
@@ -349,15 +349,15 @@ export function deriveCoreGroundingFromStrictExplainerInput(strictInput) {
  *   - strengths / needs source presence
  *
  * Returns:
- *   - `ok`             — `true` when no hard issues are detected (strict mode) OR when running in
+ *   - `ok`             - `true` when no hard issues are detected (strict mode) OR when running in
  *                        secondary-source mode (truth packet has no anchored data and content-level
  *                        rules are deferred to informational notes).
- *   - `secondarySource`— `true` when the truth packet uses the no-anchor fallback path. In this mode
+ *   - `secondarySource`- `true` when the truth packet uses the no-anchor fallback path. In this mode
  *                        the strict projection legitimately uses raw aggregates as a secondary source.
- *   - `issues`         — array of disagreement records, each `{ rule, severity: "issue"|"info", message }`.
+ *   - `issues`         - array of disagreement records, each `{ rule, severity: "issue"|"info", message }`.
  *                        A non-empty `issues` array with at least one `severity === "issue"` ⇒ `ok = false`.
- *   - `truthGrounding` — the projected core-grounding from the truth packet (or `null`).
- *   - `strictGrounding`— the projected core-grounding from the strict input (or `null`).
+ *   - `truthGrounding` - the projected core-grounding from the truth packet (or `null`).
+ *   - `strictGrounding`- the projected core-grounding from the strict input (or `null`).
  *
  * The function never throws: malformed inputs degrade to a no-comparison result with `ok: true`.
  *
@@ -457,7 +457,7 @@ export function verifyParentAiContextConsistency(context) {
     if (!strictGrounding.hasStrengthsText && !strictGrounding.hasNeedsText) {
       pushHardOrInfo(
         "strengths_or_needs_required_when_eligible",
-        "Truth packet has eligible recommendation with non-low confidence, but strict input has empty mainStrengths and empty mainPracticeNeeds — summary would lack any grounded narrative content.",
+        "Truth packet has eligible recommendation with non-low confidence, but strict input has empty mainStrengths and empty mainPracticeNeeds - summary would lack any grounded narrative content.",
       );
     }
   }

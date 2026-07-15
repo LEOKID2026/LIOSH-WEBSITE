@@ -26,7 +26,7 @@
  */
 
 /**
- * @param {string} canonical — {@link import("./stage-a-freeform-interpretation.js").CanonicalParentIntent}
+ * @param {string} canonical - {@link import("./stage-a-freeform-interpretation.js").CanonicalParentIntent}
  * @returns {SemanticParentIntent | null}
  */
 export function semanticIntentFromCanonical(canonical) {

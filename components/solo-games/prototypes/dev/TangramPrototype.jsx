@@ -163,7 +163,7 @@ export default function TangramPrototype() {
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
         >
-          {/* target silhouette — simple cat/house hybrid outline */}
+          {/* target silhouette - simple cat/house hybrid outline */}
           <svg
             viewBox="0 0 200 240"
             className="pointer-events-none absolute inset-[8%] h-[84%] w-[84%] opacity-40"
@@ -223,7 +223,7 @@ export default function TangramPrototype() {
         ) : null}
 
         <p className="text-center text-[10px] text-white/45 sm:text-xs">
-          אין בדיקת התאמה מושלמת — רק תחושת גרירה ו-layout
+          אין בדיקת התאמה מושלמת - רק תחושת גרירה ו-layout
         </p>
       </div>
     </DevPrototypeShell>

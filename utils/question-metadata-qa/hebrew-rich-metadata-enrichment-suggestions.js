@@ -58,7 +58,7 @@ function suggestPrerequisiteHebrewRich(raw, record) {
     return {
       ids: ["he_comp_explicit_detail"],
       confidence: "medium",
-      reason: "Inference items build on explicit-detail comprehension — validate sequencing before enforcing.",
+      reason: "Inference items build on explicit-detail comprehension - validate sequencing before enforcing.",
     };
   }
   return {

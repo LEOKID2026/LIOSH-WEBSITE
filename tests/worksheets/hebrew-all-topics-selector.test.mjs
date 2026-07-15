@@ -22,7 +22,7 @@ import {
 } from "../../lib/worksheets/worksheet-payload-build.server.js";
 
 const META = {
-  titleHe: "דף עבודה — עברית",
+  titleHe: "דף עבודה - עברית",
   subjectHe: "עברית",
   gradeHe: "כיתה ג׳",
   topicHe: "דקדוק",

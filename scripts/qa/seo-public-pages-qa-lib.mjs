@@ -189,7 +189,7 @@ export async function checkGuide11(page, base, tracker) {
     waitUntil: "domcontentloaded",
   });
   const h1 = await page.locator("h1").innerText();
-  if (h1.includes("איך לזהות אילו נושאים כדאי לחזק")) pass("guide11-title");
+  if (h1.includes("איך לבחור את הנושא הבא שכדאי לחזק")) pass("guide11-title");
   else fail("guide11-title", h1);
   if (h1.includes("במה הילד מתקשה")) fail("guide11-no-mitkashe-title");
   else pass("guide11-no-mitkashe-title");

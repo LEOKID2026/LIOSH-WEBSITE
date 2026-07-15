@@ -54,7 +54,7 @@ export const ENGLISH_OFFICIAL_SUBSECTION_CATALOG = {
         "listening_speaking",
         ["english.exposure_oral_listening", "english.vocabulary_translation"],
         "medium",
-        "כיתות נמוכות: דגש על חשיפה ומילולי — לא הבנת הנקרא פורמלית מלאה."
+        "כיתות נמוכות: דגש על חשיפה ומילולי - לא הבנת הנקרא פורמלית מלאה."
       ),
       sec(
         "g1_lexis_core",
@@ -66,11 +66,11 @@ export const ENGLISH_OFFICIAL_SUBSECTION_CATALOG = {
       ),
       sec(
         "g1_grammar_intro",
-        "דקדוק מובנה — רמת חשיפה / תרגול מוגבל",
+        "דקדוק מובנה - רמת חשיפה / תרגול מוגבל",
         "grammar",
         ["english.grammar"],
         "medium",
-        "במפת האתר השמרנית דקדוק אינו ליבה בכיתות א׳–ב׳ — תואם מצב enrichment במוצר."
+        "במפת האתר השמרנית דקדוק אינו ליבה בכיתות א׳–ב׳ - תואם מצב enrichment במוצר."
       ),
     ],
   },
@@ -116,7 +116,7 @@ export const ENGLISH_OFFICIAL_SUBSECTION_CATALOG = {
         "literacy",
         ["english.vocabulary_translation", "english.sentence_writing_patterns", "english.grammar"],
         "medium",
-        "המפה השמרנית ב-israeli-primary-curriculum-map עדיין לא מציבה strand נפרד להבנת הנקרא פורמלית לכיתה ג׳ — לא למפות מפתח זה כאן עד עדכון המפה."
+        "המפה השמרנית ב-israeli-primary-curriculum-map עדיין לא מציבה strand נפרד להבנת הנקרא פורמלית לכיתה ג׳ - לא למפות מפתח זה כאן עד עדכון המפה."
       ),
     ],
   },

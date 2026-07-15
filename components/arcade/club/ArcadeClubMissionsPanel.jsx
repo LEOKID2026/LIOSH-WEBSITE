@@ -27,7 +27,7 @@ export default function ArcadeClubMissionsPanel({ gh, className = "" }) {
   if (locked) {
     return (
       <div className={`${gh.arcadePanelMissions || gh.card} text-right ${className}`} dir="rtl">
-        <p className={gh.arcadePanelBlurb || gh.cardBlurb}>משימות יומיות — נשלט דרך Admin. כרגע לא פתוח לאורחים.</p>
+        <p className={gh.arcadePanelBlurb || gh.cardBlurb}>משימות יומיות - נשלט דרך Admin. כרגע לא פתוח לאורחים.</p>
       </div>
     );
   }

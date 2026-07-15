@@ -34,7 +34,7 @@ function ParentPassivePolicyNotice({ bright, className = "" }) {
   const T = getParentPortalTheme(bright);
   return (
     <p className={`text-xs leading-relaxed ${T.faint} ${className}`}>
-      בהמשך השימוש ב־Leo Kids, אתם מאשרים את{" "}
+      בהמשך השימוש ב-Leo Kids, אתם מאשרים את{" "}
       <Link href="/terms" className={T.linkInline}>
         תנאי השימוש
       </Link>{" "}
@@ -172,7 +172,7 @@ export default function ParentLoginPage() {
           }
           router.push("/parent/dashboard");
         } else {
-          setMessage("ההרשמה הושלמה. לאחר אימות האימייל — התחברו.");
+          setMessage("ההרשמה הושלמה. לאחר אימות האימייל - התחברו.");
         }
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({

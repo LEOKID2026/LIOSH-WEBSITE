@@ -430,7 +430,7 @@ export default function MleoBalloonsEngine({ autoStart = false, onSessionEnd }) 
             {" · "}
             <span>רמה: {level}</span>
             {" · "}
-            <span>{"❤️".repeat(Math.max(0, lives)) || "—"}</span>
+            <span>{"❤️".repeat(Math.max(0, lives)) || "-"}</span>
             {" · "}
             <span>פספוסים: {misses}</span>
             {" · "}

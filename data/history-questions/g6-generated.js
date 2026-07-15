@@ -1200,7 +1200,7 @@ export const HISTORY_QUESTIONS_G6_RAW = [
     "maxLevel": "hard",
     "type": "mcq",
     "questionType": "mcq",
-    "stem": "על סמך מקור היסטורי — מהו מקור ראשוני?",
+    "stem": "על סמך מקור היסטורי - מהו מקור ראשוני?",
     "options": [
       "מסמך או חפץ מהתקופה הנחקרת",
       "ספר לימוד שנכתב השנה",
@@ -1241,7 +1241,7 @@ export const HISTORY_QUESTIONS_G6_RAW = [
     "maxLevel": "hard",
     "type": "mcq",
     "questionType": "mcq",
-    "stem": "על סמך מקור היסטורי — מהו מקור משני?",
+    "stem": "על סמך מקור היסטורי - מהו מקור משני?",
     "options": [
       "פרשנות או סיכום שנכתב אחרי האירועים",
       "מכתב מלך מהמאה הרלוונטית",
@@ -1323,7 +1323,7 @@ export const HISTORY_QUESTIONS_G6_RAW = [
     "maxLevel": "hard",
     "type": "mcq",
     "questionType": "mcq",
-    "stem": "על סמך מקור היסטורי — איזה פריט הוא מקור ראשוני?",
+    "stem": "על סמך מקור היסטורי - איזה פריט הוא מקור ראשוני?",
     "options": [
       "מטבע עתיק שנמצא בחפירה",
       "פרק בספר היסטוריה מודרני",
@@ -1364,7 +1364,7 @@ export const HISTORY_QUESTIONS_G6_RAW = [
     "maxLevel": "hard",
     "type": "mcq",
     "questionType": "mcq",
-    "stem": "על סמך מקור היסטורי — איזה פריט הוא מקור משני?",
+    "stem": "על סמך מקור היסטורי - איזה פריט הוא מקור משני?",
     "options": [
       "אנציקלופדיה על יוון העתיקה",
       "כתובת על מקדש עתיק",
@@ -1569,7 +1569,7 @@ export const HISTORY_QUESTIONS_G6_RAW = [
     "maxLevel": "hard",
     "type": "mcq",
     "questionType": "mcq",
-    "stem": "על סמך מקור היסטורי — מהי עדות היסטורית?",
+    "stem": "על סמך מקור היסטורי - מהי עדות היסטורית?",
     "options": [
       "מידע מהעבר שעוזר להבין אירועים",
       "תחזית מזג אוויר לשבוע",
@@ -1610,7 +1610,7 @@ export const HISTORY_QUESTIONS_G6_RAW = [
     "maxLevel": "hard",
     "type": "mcq",
     "questionType": "mcq",
-    "stem": "על סמך מקור היסטורי — למה חשוב להבחין בין מקור ראשוני למשני?",
+    "stem": "על סמך מקור היסטורי - למה חשוב להבחין בין מקור ראשוני למשני?",
     "options": [
       "כדי להבין כמה קרוב המקור לאירוע",
       "כדי לבטל את כל המקורות",
@@ -1692,7 +1692,7 @@ export const HISTORY_QUESTIONS_G6_RAW = [
     "maxLevel": "hard",
     "type": "mcq",
     "questionType": "mcq",
-    "stem": "על סמך מקור היסטורי — מה קורה כששני מקורות סותרים זה את זה?",
+    "stem": "על סמך מקור היסטורי - מה קורה כששני מקורות סותרים זה את זה?",
     "options": [
       "בודקים אותם בזהירות ומחפשים הסבר",
       "בוחרים באקראי בלי לחשוב",

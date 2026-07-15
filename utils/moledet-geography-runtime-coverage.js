@@ -53,7 +53,7 @@ export function classifyMoledetGeoThinBucket(row) {
     return { kind: "C", blocking: false, reason: G12_THIN_REASON };
   }
   if (row.count < 3 && gnum >= 3) return { kind: "A", blocking: true };
-  return { kind: "C", blocking: false, reason: "כיסוי דק — ייעוץ בלבד עד הרחבת מאגר." };
+  return { kind: "C", blocking: false, reason: "כיסוי דק - ייעוץ בלבד עד הרחבת מאגר." };
 }
 
 export function summarizeMoledetGeoRuntimeThinForClosure(geoPack) {

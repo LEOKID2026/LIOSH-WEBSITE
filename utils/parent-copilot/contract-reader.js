@@ -148,7 +148,7 @@ function topicRowFromOverviewRow(overviewRow, subjectId) {
           observation: `ב${displayName} נספרו ${q} שאלות בתקופה, עם דיוק של כ-${acc}%.`,
           interpretation: `לפי נתוני הדוח ב${subjectLabelHe(subjectId)}, זהו המידע שנאסף מהתרגול בתקופה שנבחרה.`,
           uncertainty: cannotConcludeYet
-            ? "עדיין יש מעט נקודות — נבדוק שוב אחרי עוד תרגול."
+            ? "עדיין יש מעט נקודות - נבדוק שוב אחרי עוד תרגול."
             : "כדאי להמשיך לעקוב לאורך כמה ימי תרגול.",
         },
       },
@@ -256,14 +256,14 @@ export function listSyntheticAggregateAnchoredTopicRows(payload) {
     const topics = Array.isArray(sp.topicRecommendations) ? sp.topicRecommendations : [];
     const baseTr = topics[0] && typeof topics[0] === "object" ? topics[0] : null;
     const displayName =
-      String(baseTr?.displayName || "").trim() || `${subjectLabelHe(sid)} — סיכום תקופתי`;
+      String(baseTr?.displayName || "").trim() || `${subjectLabelHe(sid)} - סיכום תקופתי`;
     const topicRowKey = String(baseTr?.topicRowKey || baseTr?.topicKey || `aggregate-${sid}`).trim() || `aggregate-${sid}`;
     const cv0 = baseTr?.contractsV1 && typeof baseTr.contractsV1 === "object" ? baseTr.contractsV1 : {};
     const nar0 = cv0.narrative && typeof cv0.narrative === "object" ? cv0.narrative : {};
     const ts0 = nar0.textSlots && typeof nar0.textSlots === "object" ? nar0.textSlots : {};
     const obs =
       String(ts0.observation || "").trim() ||
-      `ב${subjectLabelHe(sid)} נספרו בטווח כ ${qc} שאלות, עם דיוק של כ ${acc}% — זו התמונה שעולה מנתוני הדוח לתקופה הזו.`;
+      `ב${subjectLabelHe(sid)} נספרו בטווח כ ${qc} שאלות, עם דיוק של כ ${acc}% - זו התמונה שעולה מנתוני הדוח לתקופה הזו.`;
     const interp =
       String(ts0.interpretation || "").trim() ||
       `לפי מה שמופיע בדוח תחת ${subjectLabelHe(sid)}, ניתן לראות את נפח התרגול ואת רמת הדיוק בתקופה שנבחרה (בלי להסיק מוקד חולשה מחוץ למה שמוצג שם).`;
@@ -291,7 +291,7 @@ export function listSyntheticAggregateAnchoredTopicRows(payload) {
             uncertainty:
               String(ts0.uncertainty || "").trim() ||
               (cannotConcludeYet
-                ? "עדיין יש מעט נקודות עם ניסוח זהיר ביחס לנפח — נבדוק שוב אחרי עוד תרגול בטווח."
+                ? "עדיין יש מעט נקודות עם ניסוח זהיר ביחס לנפח - נבדוק שוב אחרי עוד תרגול בטווח."
                 : "עדיין יש פער טבעי בין מה שנראה בבית לבין מה שנספר בדוח; נמשיך לעקוב לאורך כמה ימי תרגול."),
           },
         },
@@ -373,7 +373,7 @@ export function listCopilotAnchoredTopicRows(payload) {
  */
 /**
  * Read-only mapping of intelligenceV1 for Copilot / planning (no decisions).
- * @param {unknown} unit — diagnosticEngineV2 unit (optional `intelligenceV1` sibling)
+ * @param {unknown} unit - diagnosticEngineV2 unit (optional `intelligenceV1` sibling)
  * @returns {{ weaknessLevel: string, confidenceBand: string, recurrence: boolean }}
  */
 export function getIntelligenceSignals(unit) {

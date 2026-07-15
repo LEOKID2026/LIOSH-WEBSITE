@@ -23,7 +23,7 @@ function SurpriseBoxCardPrizeRow({ card, T }) {
           <p className={`text-xs mt-0.5 ${T.tileSub}`}>נדירות: {card.rarityHe}</p>
           {card.wasDuplicate ? (
             <p className="text-xs mt-1 text-amber-700 dark:text-amber-300 line-clamp-2">
-              {card.conversionProgressHe || "קיבלתם עותק נוסף — אפשר לאסוף ולהמיר כפילויות."}
+              {card.conversionProgressHe || "קיבלתם עותק נוסף - אפשר לאסוף ולהמיר כפילויות."}
             </p>
           ) : (
             <p className="text-xs mt-1 text-emerald-700 dark:text-emerald-300">קלף חדש באוסף!</p>
@@ -100,7 +100,7 @@ export default function StudentSurpriseBoxOpenModal({ open, onClose, onOpened })
         if (!res.ok || json?.ok !== true) {
           if (json?.code === "no_pending_box") {
             setRemainingPending(0);
-            setErrorHe(isReopen ? NO_MORE_BOX_HE : "אין קופסה מוכנה כרגע — נסו שוב מאוחר יותר.");
+            setErrorHe(isReopen ? NO_MORE_BOX_HE : "אין קופסה מוכנה כרגע - נסו שוב מאוחר יותר.");
             notifyOpened(json);
           } else {
             setErrorHe(OPEN_ERROR_HE);

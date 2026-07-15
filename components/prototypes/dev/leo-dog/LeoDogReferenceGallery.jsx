@@ -38,7 +38,7 @@ export default function LeoDogReferenceGallery({ mode }) {
     return (
       <div className={styles.galleryPanel}>
         <p className={styles.galleryNote}>
-          המשחק: toggle &quot;ליאו החדש&quot; / &quot;SVG ישן&quot;. גלריות — בלשוניות למטה.
+          המשחק: toggle &quot;ליאו החדש&quot; / &quot;SVG ישן&quot;. גלריות - בלשוניות למטה.
         </p>
       </div>
     );
@@ -54,7 +54,7 @@ export default function LeoDogReferenceGallery({ mode }) {
 
   return (
     <div className={styles.galleryPanel}>
-      <p className={styles.galleryNote}>צפייה בלבד — לא משפיע על המשחק.</p>
+      <p className={styles.galleryNote}>צפייה בלבד - לא משפיע על המשחק.</p>
       <GallerySection title="Sprites חדשים (PNG שקוף)" items={LEO_DOG_SPRITE_GALLERY} />
       <GallerySection title="קלפים legacy (לא למשחק)" items={LEO_DOG_CARD_GALLERY} />
     </div>

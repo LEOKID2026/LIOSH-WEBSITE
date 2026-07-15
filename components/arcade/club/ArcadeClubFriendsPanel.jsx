@@ -139,7 +139,7 @@ export default function ArcadeClubFriendsPanel({ gh, leoNumber = null, leoNumber
       setCopiedLeo(true);
       window.setTimeout(() => setCopiedLeo(false), 2000);
     } catch {
-      setMessage("לא הצלחנו להעתיק — נסו לסמן ולהעתיק ידנית");
+      setMessage("לא הצלחנו להעתיק - נסו לסמן ולהעתיק ידנית");
     }
   };
 
@@ -148,7 +148,7 @@ export default function ArcadeClubFriendsPanel({ gh, leoNumber = null, leoNumber
   if (locked) {
     return (
       <div className={`${gh.arcadePanelFriends || gh.card} p-4 text-right`} dir="rtl">
-        <p className={gh.arcadePanelBlurb || gh.cardBlurb}>חברים — נשלט דרך Admin. כרגע לא פתוח לאורחים.</p>
+        <p className={gh.arcadePanelBlurb || gh.cardBlurb}>חברים - נשלט דרך Admin. כרגע לא פתוח לאורחים.</p>
       </div>
     );
   }
@@ -160,7 +160,7 @@ export default function ArcadeClubFriendsPanel({ gh, leoNumber = null, leoNumber
       <div className={`space-y-2 p-3 text-right ${gh.arcadeRoomItem || gh.roomItem}`}>
         <p className={`text-sm font-bold ${gh.arcadePanelTitle || gh.cardTitle}`}>מספר ליאו שלי</p>
         <p className={`text-xs leading-relaxed ${gh.arcadePanelBlurb || gh.cardBlurb}`}>
-          זה המספר שאתה נותן לחבר — הוא יכול להקליד אותו למטה כדי לשלוח לך בקשת חברות.
+          זה המספר שאתה נותן לחבר - הוא יכול להקליד אותו למטה כדי לשלוח לך בקשת חברות.
         </p>
         {leoNumberLoading ? (
           <p className={`text-xs ${gh.arcadePanelBlurb || gh.cardBlurb}`}>מכינים לך מספר ליאו...</p>
@@ -173,7 +173,7 @@ export default function ArcadeClubFriendsPanel({ gh, leoNumber = null, leoNumber
           </div>
         ) : (
           <p className={`text-xs ${gh.arcadeEmptyText || gh.emptyText}`}>
-            לא הצלחנו להציג מספר ליאו — נסו לרענן את הדף.
+            לא הצלחנו להציג מספר ליאו - נסו לרענן את הדף.
           </p>
         )}
       </div>
@@ -181,7 +181,7 @@ export default function ArcadeClubFriendsPanel({ gh, leoNumber = null, leoNumber
       <div className={`space-y-2 p-3 text-right ${gh.arcadeRoomItem || gh.roomItem}`}>
         <p className={`text-sm font-bold ${gh.arcadePanelTitle || gh.cardTitle}`}>הוסף חבר</p>
         <p className={`text-xs leading-relaxed ${gh.arcadePanelBlurb || gh.cardBlurb}`}>
-          הקלד מספר ליאו או שם תצוגה — תישלח בקשת חברות, והחבר יצטרך לאשר.
+          הקלד מספר ליאו או שם תצוגה - תישלח בקשת חברות, והחבר יצטרך לאשר.
         </p>
         <div className="flex flex-wrap gap-2 justify-end">
           <input

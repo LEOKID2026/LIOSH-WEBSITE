@@ -21,7 +21,7 @@ const ABSOLUTE_TERMS_RE = /(תמיד|אף פעם|מצוין במיוחד|צרי�
  * Block emotional/confidence assumptions in parent-facing narrative text.
  * Product rule: parent reports must NEVER frame children's progress in terms of
  * "confidence" / "ביטחון" (positive or negative). Prefer wording like
- * "שטף", "עצמאות בתרגול", "ביסוס ההבנה", "תרגול עקבי" — see prompt.js.
+ * "שטף", "עצמאות בתרגול", "ביסוס ההבנה", "תרגול עקבי" - see prompt.js.
  *
  * Hebrew morphology note: `ביטחון` ends with the final-nun `ן`, but with possessive
  * suffixes the same root uses the medial-nun `נ`: `ביטחונו` (his), `ביטחונה` (her),

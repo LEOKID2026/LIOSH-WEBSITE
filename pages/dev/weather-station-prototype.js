@@ -5,7 +5,7 @@ export default function WeatherStationPrototypePage() {
   return (
     <>
       <Head>
-        <title>תחנת מזג האוויר — אבטיפוס</title>
+        <title>תחנת מזג האוויר - אבטיפוס</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <WeatherStationPrototype />

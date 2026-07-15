@@ -30,7 +30,7 @@ export default async function handler(req, res) {
       });
       if (!rl.allowed) {
         if (rl.retryAfterSec) res.setHeader("Retry-After", String(rl.retryAfterSec));
-        return sendTeacherApiError(res, 429, "rate_limited", "יותר מדי בקשות — המתן מעט ונסה שוב");
+        return sendTeacherApiError(res, 429, "rate_limited", "יותר מדי בקשות - המתן מעט ונסה שוב");
       }
     }
 

@@ -233,7 +233,7 @@ test("random garbage mode → unclassified, NOT eligible", () => {
   assert.equal(r.contextFlags.rawMode, "xyzzy_unknown_mode");
 });
 
-test("mode casing is normalized — PRACTICE (uppercase) → eligible", () => {
+test("mode casing is normalized - PRACTICE (uppercase) → eligible", () => {
   const r = classifyActivityEvidence("PRACTICE");
   assert.equal(r.isDiagnosticEligible, true);
   assert.equal(r.evidenceCategory, EVIDENCE_CATEGORIES.DIAGNOSTIC_INDEPENDENT);

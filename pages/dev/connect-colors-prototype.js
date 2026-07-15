@@ -6,7 +6,7 @@ export default function ConnectColorsPrototypePage() {
   return (
     <>
       <Head>
-        <title>חיבור צבעים — אבטיפוס</title>
+        <title>חיבור צבעים - אבטיפוס</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <ConnectColorsPrototype />

@@ -48,7 +48,7 @@ import {
 
 import { stripInternalReportPayloadFields } from "../../lib/parent-server/report-data-aggregate.server.js";
 
-describe("Phase 4 — unified evidence matrix", () => {
+describe("Phase 4 - unified evidence matrix", () => {
   test("tier classification aligns 5 / 8 / 12 / 15 roles", () => {
     assert.equal(classifyParentEvidenceTier(0), PARENT_EVIDENCE_TIER.none);
     assert.equal(classifyParentEvidenceTier(4), PARENT_EVIDENCE_TIER.insufficient);
@@ -69,7 +69,7 @@ describe("Phase 4 — unified evidence matrix", () => {
   });
 });
 
-describe("Phase Q1 — sufficiency thresholds", () => {
+describe("Phase Q1 - sufficiency thresholds", () => {
   test("0 = no_data", () => {
     assert.equal(resolveDataSufficiency(0, false), DATA_SUFFICIENCY.NO_DATA);
   });
@@ -94,7 +94,7 @@ describe("Phase Q1 — sufficiency thresholds", () => {
   });
 });
 
-describe("Phase Q1 — recurrence", () => {
+describe("Phase Q1 - recurrence", () => {
   test("recurrence requires 2+ wrongs on 2+ distinct days", () => {
     const met = meetsDiagnosticRecurrence([
       { isCorrect: false, answeredAt: "2026-01-10T10:00:00Z" },
@@ -112,7 +112,7 @@ describe("Phase Q1 — recurrence", () => {
   });
 });
 
-describe("Phase Q1 — parent context policy", () => {
+describe("Phase Q1 - parent context policy", () => {
   test("parent context allows free_practice and assigned_parent only", () => {
     assert.equal(isSourceAllowedInContext("free_practice", "parent"), true);
     assert.equal(isSourceAllowedInContext("assigned_parent", "parent"), true);
@@ -125,7 +125,7 @@ describe("Phase Q1 — parent context policy", () => {
   });
 });
 
-describe("Phase Q1 — traceability and strip", () => {
+describe("Phase Q1 - traceability and strip", () => {
   test("internal trace ids present; public meta has no supportingEvidenceIds", () => {
     const payload = {
       summary: { diagnosticAnswers: 6, totalSessions: 2, totalAnswers: 6 },
@@ -166,7 +166,7 @@ describe("Phase Q1 — traceability and strip", () => {
   });
 });
 
-describe("Phase Q1 — parent-facing gating (suppression only)", () => {
+describe("Phase Q1 - parent-facing gating (suppression only)", () => {
   test("insufficient data suppresses strong Hebrew insights", () => {
     const payload = attachParentContextEvidenceQuality({
       summary: { diagnosticAnswers: 3, totalSessions: 2, totalAnswers: 3 },
@@ -270,7 +270,7 @@ describe("Phase Q1 — parent-facing gating (suppression only)", () => {
   });
 });
 
-describe("Phase Q1 — compute quality snapshot", () => {
+describe("Phase Q1 - compute quality snapshot", () => {
   test("supported requires 12+ and recurrence", () => {
     const mistakes = [];
     for (let i = 0; i < 12; i++) {

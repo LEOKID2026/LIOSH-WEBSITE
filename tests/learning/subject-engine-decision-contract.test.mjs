@@ -239,4 +239,4 @@ function topicRowFromContract(input) {
   assert.equal(resolveSubjectSummaryTextFromEngineContract(contract), null);
 }
 
-console.log("subject-engine-decision-contract.test.mjs — all passed");
+console.log("subject-engine-decision-contract.test.mjs - all passed");

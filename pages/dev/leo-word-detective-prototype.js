@@ -5,7 +5,7 @@ export default function LeoWordDetectivePrototypePage() {
   return (
     <>
       <Head>
-        <title>בלש המילים של ליאו — אבטיפוס (layout חדש)</title>
+        <title>בלש המילים של ליאו - אבטיפוס (layout חדש)</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <LeoWordDetectivePrototype />

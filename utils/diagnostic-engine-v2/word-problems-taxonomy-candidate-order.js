@@ -1,5 +1,5 @@
 /**
- * Phase 2-D2 — order M-07 vs M-08 taxonomy candidates for math `word_problems` rows
+ * Phase 2-D2 - order M-07 vs M-08 taxonomy candidates for math `word_problems` rows
  * using wrong-event metadata. Does not remove candidates; only reorders when both are present.
  *
  * Row context uses `levelKey` / `gradeKey` only (like multiplication routing) so literal
@@ -93,7 +93,7 @@ function haystackForWrong(ev) {
 }
 
 /**
- * Grade / level only — avoids bucket/topic keys always containing `word_problems`.
+ * Grade / level only - avoids bucket/topic keys always containing `word_problems`.
  *
  * @param {unknown} row
  * @returns {string}

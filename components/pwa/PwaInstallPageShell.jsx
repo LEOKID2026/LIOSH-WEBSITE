@@ -57,7 +57,7 @@ export default function PwaInstallPageShell({
               onClick={() => setIosHelpOpen(true)}
               data-testid="ios-install-help-trigger"
             >
-              התקנה ב־iPhone או iPad
+              התקנה ב-iPhone או iPad
             </button>
           </div>
           <IosInstallHelpModal

@@ -1,18 +1,18 @@
 /**
- * Server-side Parent Copilot turn — `runParentCopilotTurnAsync` only on the server (LLM keys stay server-side).
+ * Server-side Parent Copilot turn - `runParentCopilotTurnAsync` only on the server (LLM keys stay server-side).
  *
  * Payload trust (launch hardening):
  * - **Production (strict):** Never executes Copilot against a client-supplied full report snapshot. The client may send
  *   `payload` for backward compatibility, but it is **ignored** for engine input unless
- *   `PARENT_COPILOT_ALLOW_CLIENT_PAYLOAD_IN_PRODUCTION=true` (emergency operator escape — insecure).
+ *   `PARENT_COPILOT_ALLOW_CLIENT_PAYLOAD_IN_PRODUCTION=true` (emergency operator escape - insecure).
  *   {@link resolveCopilotTurnPayloadForApi} rebuilds the detailed report payload server-side from Supabase (same rollup as
- *   GET `/api/parent/students/[studentId]/report-data`) plus existing report builders — see
+ *   GET `/api/parent/students/[studentId]/report-data`) plus existing report builders - see
  *   `lib/parent-copilot/copilot-turn-payload.server.js` and `lib/parent-server/db-input-to-detailed-report.server.js`.
  * - **Development:** After authorization, may use `body.payload` from the client (same as before), or unauthenticated
  *   local QA when `PARENT_COPILOT_ALLOW_UNAUTH_LOCAL_PAYLOAD` is not `"false"` and `NODE_ENV !== 'production'`.
  *
  * Authorization:
- * - Parent Bearer JWT (preferred when present): same gate as report-data — `reports_enabled` + student belongs to parent.
+ * - Parent Bearer JWT (preferred when present): same gate as report-data - `reports_enabled` + student belongs to parent.
  * - Student session cookie: `studentId` must match logged-in student.
  * - Dev-only unauthenticated payload when allowed by env (disabled in production).
  *
@@ -59,7 +59,7 @@ function logCopilotAuthDebug(label, meta = {}) {
 }
 
 /**
- * Parent Bearer path — same ownership gate as GET report-data (`reports_enabled` + parent_id match).
+ * Parent Bearer path - same ownership gate as GET report-data (`reports_enabled` + parent_id match).
  * @returns {Promise<{ ok: boolean; mode?: string; error?: string; code?: string; status?: number; stopped?: boolean; parentUserId?: string; serviceRole?: object }>}
  */
 async function authorizeParentBearer(req, res, studentId, authHeader) {

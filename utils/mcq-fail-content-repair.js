@@ -181,8 +181,8 @@ function shortenHebrewCorrectForLength(correct, targetMax, stem = "") {
     const head = c.split(";")[0].trim();
     if (head.length >= 8) c = head;
   }
-  if (c.includes(" — ")) {
-    const head = c.split(" — ")[0].trim();
+  if (c.includes(" - ")) {
+    const head = c.split(" - ")[0].trim();
     if (head.length >= 8 && head.length <= targetMax) c = head;
   }
   if (c.includes(": ")) {

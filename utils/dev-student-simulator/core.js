@@ -24,7 +24,7 @@ function localYmdFromMs(ms) {
 
 /**
  * Calendar range aligned with the short report's `period=custom` (local midnight bounds),
- * derived from session timestamps — not from UTC `date` strings on rows.
+ * derived from session timestamps - not from UTC `date` strings on rows.
  * @param {Array<{ timestamp?: number, date?: string }>} sessions
  * @returns {{ startYmd: string, endYmd: string, startMs: number, endMs: number } | null}
  */

@@ -307,7 +307,7 @@ export function buildAdaptivePlannerPreviewPack(artifactSummary, options = {}) {
 function buildPreviewMarkdown(pack) {
   const es = pack.executiveSummary;
   const lines = [
-    `# Adaptive Planner — Internal Preview Pack`,
+    `# Adaptive Planner - Internal Preview Pack`,
     ``,
     `_Non-live artifact. Not student-facing. Generated: **${pack.generatedAt}**_`,
     ``,
@@ -324,7 +324,7 @@ function buildPreviewMarkdown(pack) {
     `| afterAvailableQuestionMetadataMissingCount | ${es.afterAvailableQuestionMetadataMissingCount} |`,
     `| needsHumanReviewCount | ${es.needsHumanReviewCount} |`,
     `| skillAlignmentCoverage | ${es.skillAlignmentCoverage} |`,
-    `| Planner status — ready / caution | ${es.plannerReadyCount} / ${es.plannerCautionCount} |`,
+    `| Planner status - ready / caution | ${es.plannerReadyCount} / ${es.plannerCautionCount} |`,
     `| englishSkillTaggingIncompleteCount | ${es.englishSkillTaggingIncompleteCount} |`,
     ``,
     `### skillAlignmentBySource`,
@@ -342,7 +342,7 @@ function buildPreviewMarkdown(pack) {
         `| ${r.count} | ${r.nextAction} | ${r.plannerStatus} | ${r.subject} | ${r.skillAlignmentSource} | ${r.metadataResolutionSource} |`
     ),
     ``,
-    `## C. Examples (slim rows — no question bodies)`,
+    `## C. Examples (slim rows - no question bodies)`,
     ``,
   ];
 

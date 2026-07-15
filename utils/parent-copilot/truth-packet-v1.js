@@ -2,7 +2,7 @@
  * TruthPacketV1 — **canonical owner of “what may be said”** for a Copilot turn for a given scope.
  *
  * **Ownership:** `buildTruthPacketV1` is the single builder; consumers (`answer-composer`, `conversation-planner`,
- * `guardrail-validator`, optional `llm-orchestrator`) read the packet — they must not invent facts outside it.
+ * `guardrail-validator`, optional `llm-orchestrator`) read the packet - they must not invent facts outside it.
  *
  * **`allowedClaimEnvelope`:** Carries `requiredHedges`, `forbiddenPhrases`, and related narrative limits derived
  * from contracts. Deterministic composition and LLM drafts must respect it: required hedges must appear in parent
@@ -167,7 +167,7 @@ function looksLikeNumericOrCountLead(line) {
 }
 
 /**
- * Compact numeric context — avoid report-ish phrases ("מבחינת מספרים", "נושאים שנבדקו").
+ * Compact numeric context - avoid report-ish phrases ("מבחינת מספרים", "נושאים שנבדקו").
  * For most parent intents the topic rows already carry counts; skip redundant rollups.
  * @param {{ totalQ: number; avgAcc: number }} x
  * @param {string} [canonicalIntent]
@@ -216,7 +216,7 @@ function appendDistinctSentence(base, tail) {
 /** Topic title for parents — drops internal «— סיכום תקופתי» suffix when present. */
 function parentFacingTopicTitleHe(dn) {
   const raw = String(dn || "")
-    .replace(/\s*—\s*סיכום תקופתי\s*$/iu, "")
+    .replace(/\s*-\s*סיכום תקופתי\s*$/iu, "")
     .trim();
   if (!raw) return "";
   const rewritten = rewriteEngineTaxonomySnippetForParentHe(raw);
@@ -302,7 +302,7 @@ function buildAnchoredMetasForExecutive(allAnchored) {
 
 /**
  * For `explain_report`, surface worst-performing anchored rows first so parents see the priority gap
- * (e.g. Hebrew weakness) before other subjects — insertion order of `metas` alone is not ranked.
+ * (e.g. Hebrew weakness) before other subjects - insertion order of `metas` alone is not ranked.
  */
 /** Stable key for matching executive rows across rankings. */
 function executiveTopicKey(m) {
@@ -310,7 +310,7 @@ function executiveTopicKey(m) {
 }
 
 /**
- * Interpretation copy that signals weakness / need for support — must not be framed as a "strength".
+ * Interpretation copy that signals weakness / need for support - must not be framed as a "strength".
  * @param {string} interp
  */
 function interpretationReadsAsWeaknessNeedingSupport(interp) {
@@ -323,7 +323,7 @@ function interpretationReadsAsWeaknessNeedingSupport(interp) {
 
 /**
  * Topics eligible for positive-relative framing: not among worst focus rows, not weakness-narrative rows,
- * and accuracy/readiness crossbar (stricter than legacy — avoids "ready && acc≥70" lifting borderline topics).
+ * and accuracy/readiness crossbar (stricter than legacy - avoids "ready && acc≥70" lifting borderline topics).
  * @param {Array<object>} rankedBestFirst
  * @param {Set<string>} worstKeys
  */
@@ -385,14 +385,14 @@ function buildExecutiveIntentNarrativeSlots(x) {
   const trends = x.trendLines.filter(Boolean);
   const namedBits = metas
     .slice(0, 5)
-    .map((m) => `${subjectLabelHe(m.sid)} — ${parentFacingTopicTitleHe(m.dn) || "נושא מהדוח"}`)
+    .map((m) => `${subjectLabelHe(m.sid)} - ${parentFacingTopicTitleHe(m.dn) || "נושא מהדוח"}`)
     .join(" · ");
 
   const labelPair = (m) => {
     const sub = subjectLabelHe(m.sid);
     const topic = parentFacingTopicTitleHe(m.dn);
     if (!topic || topic === sub) return sub;
-    return `${sub} — ${topic}`;
+    return `${sub} - ${topic}`;
   };
 
   const parentUtteranceRaw = String(x.parentUtterance || "").trim();
@@ -436,7 +436,7 @@ function buildExecutiveIntentNarrativeSlots(x) {
   const defaultInterpBase =
     (metas[0]?.interp && clipHe(metas[0].interp, 200)) ||
     (trends[0] && !looksLikeNumericOrCountLead(trends[0]) ? trends[0] : "") ||
-    "מה שחסר בדוח הוא בעיקר רוחב של ניסוחים מעוגנים — לא בהכרח מספרים בפני עצמם.";
+    "מה שחסר בדוח הוא בעיקר רוחב של ניסוחים מעוגנים - לא בהכרח מספרים בפני עצמם.";
   const defaultInterp = appendDistinctSentence(defaultInterpBase, supportingNumericTail(x, intent));
 
   switch (intent) {
@@ -588,12 +588,12 @@ function buildExecutiveIntentNarrativeSlots(x) {
       const obs =
         blocked.length > 0
           ? `בדוח יש נושאים שעדיין בלי בסיס מספיק להחלטת קידום, בהם: ${blocked.slice(0, 3).map(labelPair).join(" · ")}.`
-          : `לפי הניסוחים המעוגנים, לא נחשפה עכשיו חסימת קידום חדה אצל כל הנקודות המדודות — עדיין חשוב לעקוב לפני שינוי רמה.`;
+          : `לפי הניסוחים המעוגנים, לא נחשפה עכשיו חסימת קידום חדה אצל כל הנקודות המדודות - עדיין חשוב לעקוב לפני שינוי רמה.`;
       const interp = blocked[0]?.unc
         ? clipHe(blocked[0].unc, 200)
         : trends[0] && !looksLikeNumericOrCountLead(trends[0])
           ? trends[0]
-          : `כשמסלול הקידום לא מתעדכן, זה בדרך כלל משקף שחלק מהניסוחים עדיין לא סוגרים מספיק — במיוחד סביב: ${namedBits}.`;
+          : `כשמסלול הקידום לא מתעדכן, זה בדרך כלל משקף שחלק מהניסוחים עדיין לא סוגרים מספיק - במיוחד סביב: ${namedBits}.`;
       return { observation: obs, interpretation: appendDistinctSentence(interp, supportingNumericTail(x, intent)) };
     }
     case "what_to_do_today":
@@ -643,7 +643,7 @@ function buildExecutiveIntentNarrativeSlots(x) {
       if (!thinPlan && week && hot2.length >= 2) {
         const a0 = stepAnchorFrom(hot2[0]);
         const a1 = stepAnchorFrom(hot2[1]);
-        stepsOnly = `בבית: 3 פעמים בשבוע, כ 10 דקות בכל פעם — לחלק זמן בין ${a0} לבין ${a1} (למשל יום לנושא או חצי חצי באותו יום). בכל תרגול 5–8 שאלות קצרות, ובסוף לבקש מהילד להסביר בקול איך הגיע לתשובה.`;
+        stepsOnly = `בבית: 3 פעמים בשבוע, כ 10 דקות בכל פעם - לחלק זמן בין ${a0} לבין ${a1} (למשל יום לנושא או חצי חצי באותו יום). בכל תרגול 5–8 שאלות קצרות, ובסוף לבקש מהילד להסביר בקול איך הגיע לתשובה.`;
       } else if (focus && !thinPlan) {
         const stepAnchor = stepAnchorFrom(focus);
         stepsOnly = week
@@ -660,7 +660,7 @@ function buildExecutiveIntentNarrativeSlots(x) {
                 ? labelPair(focus)
                 : "המוקדים שמזוהים בדוח כדורשי חיזוק";
         stepsOnly = week
-          ? `1) השבוע: מספר סשנים קצרים (8–10 דקות) סביב ${focusLabel}, כדי לייצב את התמונה בדוח.\n2) בכל סשן 3–5 שאלות קצרות, ואז משפט אחד — מה היה יחסית יציב ומה עדיין כדאי ללוות.\n3) לאזן חיזוק קצר מול לא להעמיס, ובסוף השבוע לסכם במשפט אחד מה התקדם.`
+          ? `1) השבוע: מספר סשנים קצרים (8–10 דקות) סביב ${focusLabel}, כדי לייצב את התמונה בדוח.\n2) בכל סשן 3–5 שאלות קצרות, ואז משפט אחד - מה היה יחסית יציב ומה עדיין כדאי ללוות.\n3) לאזן חיזוק קצר מול לא להעמיס, ובסוף השבוע לסכם במשפט אחד מה התקדם.`
           : `1) מחר: שני סבבים קצרים סביב ${focusLabel} (8–10 דקות כל אחד).\n2) בכל סבב כמה שאלות בודדות, בקצב רגוע.\n3) לסיים במשפט אחד עם הילד מה הרגישם בבית.`;
       }
       if (stepsOnly) {
@@ -687,7 +687,7 @@ function buildExecutiveIntentNarrativeSlots(x) {
       const obs =
         ask.length > 0
           ? `לפגישה או הודעה למורה, כדאי לשאול סביב המוקדים האלה מהדוח: ${ask.map(labelPair).join(" · ")}.`
-          : `מהדוח כרגע אין מוקד שמחייב ניסוח "שאלה למורה" יוצא דופן — אפשר עדיין לשתף את ${namedBits || "הניסוחים המעוגנים"}.`;
+          : `מהדוח כרגע אין מוקד שמחייב ניסוח "שאלה למורה" יוצא דופן - אפשר עדיין לשתף את ${namedBits || "הניסוחים המעוגנים"}.`;
       let interp = ask[0]?.unc || ask[0]?.interp ? clipHe(ask[0].unc || ask[0].interp, 200) : defaultInterpBase;
       interp = appendDistinctSentence(interp, supportingNumericTail(x, intent));
       if (!interp.trim()) interp = defaultInterp;
@@ -705,7 +705,7 @@ function buildExecutiveIntentNarrativeSlots(x) {
       const obs =
         fragile > 0
           ? `הדוח מציג כמה תחומים שעדיין לא מיושבים לגמרי.`
-          : `לא נראה שיש סיבה לדאגה גדולה — רוב הנושאים נראים יציבים יחסית בתרגול.`;
+          : `לא נראה שיש סיבה לדאגה גדולה - רוב הנושאים נראים יציבים יחסית בתרגול.`;
       const interp =
         fragile > 0
           ? `כדאי להמשיך בתרגול ממוקד סביב ${watchPhrase}, בקצב קצר וקבוע, ולחזור לבדוק בהמשך.`
@@ -720,7 +720,7 @@ function buildExecutiveIntentNarrativeSlots(x) {
       return {
         observation: obs,
         interpretation:
-          "אם המילה שמבלבלת לא מופיעה בשורה הזו, אפשר לשאול עליה במילים אחרות — ננסה לאחזר את אותו ניסוח מהדוח בלבד.",
+          "אם המילה שמבלבלת לא מופיעה בשורה הזו, אפשר לשאול עליה במילים אחרות - ננסה לאחזר את אותו ניסוח מהדוח בלבד.",
       };
     }
     case "report_trust_question": {
@@ -728,9 +728,9 @@ function buildExecutiveIntentNarrativeSlots(x) {
       const b = rankedBestFirst[0];
       const obs =
         w && b && (w.dn !== b.dn || w.sid !== b.sid)
-          ? `בדוח כרגע רואים תמונה תקופתית לפי הנתונים מהתרגול: למשל ב${labelPair(w)} יש דיוק של כ ${w.acc}% על פני כ ${w.q} שאלות, לעומת ${labelPair(b)} עם כ ${b.acc}% על פני כ ${b.q} שאלות — זה משקף מה שנספר בתרגול בטווח, לא רגע בודד.`
+          ? `בדוח כרגע רואים תמונה תקופתית לפי הנתונים מהתרגול: למשל ב${labelPair(w)} יש דיוק של כ ${w.acc}% על פני כ ${w.q} שאלות, לעומת ${labelPair(b)} עם כ ${b.acc}% על פני כ ${b.q} שאלות - זה משקף מה שנספר בתרגול בטווח, לא רגע בודד.`
           : w
-            ? `בדוח כרגע רואים מה שנכתב כראיה מהתרגול ב${labelPair(w)} — בעיקר ניסוח מספרי על דיוק ועל נפח שאלות.`
+            ? `בדוח כרגע רואים מה שנכתב כראיה מהתרגול ב${labelPair(w)} - בעיקר ניסוח מספרי על דיוק ועל נפח שאלות.`
             : defaultObs;
       const interp = appendDistinctSentence(
         "יכול להיות שבבית רואים הצלחה ברגע מסוים או בתשובה בודדת, בעוד שהדוח מתאר תבניות לאורך זמן ולא משווה ישירות לסיטואציה בבית.",
@@ -763,14 +763,14 @@ function buildExecutiveIntentNarrativeSlots(x) {
           obs = m0
             ? `${scarcityLead ? `${scarcityLead} ` : ""}כרגע בדוח מופיע מידע מצומצם: ב${labelPair(m0)}. ${
                 m0.obs ? `מה שרואים שם: ${clipHe(m0.obs, 220)}` : "אין עדיין פירוט ארוך שמוצג כאן."
-              } התמונה הכוללת עדיין חלקית — עד שייאספו עוד נקודות תרגול.`
+              } התמונה הכוללת עדיין חלקית - עד שייאספו עוד נקודות תרגול.`
             : defaultObs;
         }
       } else {
         const explainPick = pickExplainReportMetas(metas, rankedWorstFirst, 4);
         const chunks = explainPick.map((m) => {
           const core = m.obs ? clipHe(m.obs, 95) : "יש מידע קצר בלי פירוט ארוך";
-          return `${labelPair(m)} — ${core}`;
+          return `${labelPair(m)} - ${core}`;
         });
         obs = `${scarcityLead ? `${scarcityLead} ` : ""}לפי מה שמוצג עכשיו בדוח, אלה המקצועות והנושאים שאפשר להסתמך עליהם כרגע: ${chunks.join(" · ")}.`;
       }
@@ -794,20 +794,20 @@ function buildExecutiveIntentNarrativeSlots(x) {
       let obs;
       if (globalQ < 80 && (sparseExecutive || rollupTq < 80)) {
         obs =
-          "יש כרגע מעט נתוני תרגול בדוח — נפח הנתונים עדיין קטן יחסית, ולכן התמונה כללית עדיין חלקית; כדאי לצבור עוד קצת תרגול לפני כיוון ברור.";
+          "יש כרגע מעט נתוני תרגול בדוח - נפח הנתונים עדיין קטן יחסית, ולכן התמונה כללית עדיין חלקית; כדאי לצבור עוד קצת תרגול לפני כיוון ברור.";
       } else if (best && worst && (best.sid !== worst.sid || best.dn !== worst.dn)) {
         obs = `בגדול: ב${subjectLabelHe(best.sid)} נראה יחסית יותר יציב לפי מה שנספר בדוח, וב${subjectLabelHe(worst.sid)} יש יותר מקום לחיזוק לפי אותו טווח.`;
       } else if (worst) {
-        obs = `בגדול: הפער הבולט יותר לפי מה שנספר בדוח הוא סביב ${subjectLabelHe(worst.sid)} — שם כדאי לשים תשומת לב רגועה בבית.`;
+        obs = `בגדול: הפער הבולט יותר לפי מה שנספר בדוח הוא סביב ${subjectLabelHe(worst.sid)} - שם כדאי לשים תשומת לב רגועה בבית.`;
       } else {
         obs =
-          "בדוח יש נתונים מהתרגול על כמה מקצועות — אפשר להסתכל על זה כמו על תמונה כללית של מה שנעשה בתקופה, לא כמו ציון אחד.";
+          "בדוח יש נתונים מהתרגול על כמה מקצועות - אפשר להסתכל על זה כמו על תמונה כללית של מה שנעשה בתקופה, לא כמו ציון אחד.";
       }
       let interp = `במשפטים פשוטים: בסך הכל נספרו בערך ${Math.max(rollupTq, globalQ)} שאלות בטווח התקופה, ורמת הדיוק הכללית היא בערך ${x.avgAcc}%.`;
       if (worst && worst.acc < 55) {
-        interp += ` המקום שבו זה נראה פחות יציב הוא סביב ${subjectLabelHe(worst.sid)} — שם כדאי לחזק בקצב קצר וקבוע.`;
+        interp += ` המקום שבו זה נראה פחות יציב הוא סביב ${subjectLabelHe(worst.sid)} - שם כדאי לחזק בקצב קצר וקבוע.`;
       } else if (best && best.acc >= 75) {
-        interp += ` ב${subjectLabelHe(best.sid)} נראו בתקופה הזו תוצאות טובות יחסית יותר — אפשר לבנות על זה ביטחון הדרגתי.`;
+        interp += ` ב${subjectLabelHe(best.sid)} נראו בתקופה הזו תוצאות טובות יחסית יותר - אפשר לבנות על זה ביטחון הדרגתי.`;
       }
       return { observation: obs, interpretation: interp };
     }
@@ -823,7 +823,7 @@ function buildExecutiveIntentNarrativeSlots(x) {
         obs = `לפי הדוח, כרגע מופיעים: ${namedBits}. הדוח מתבסס על התרגול שבוצע באתר בתקופה שנבחרה.`;
       }
       let interp = sparseExecutive
-        ? "הדוח עדיין מסכם תקופה חלקית: ככל שיופיעו ניסוחים נוספים, אפשר יהיה לרכז תמונה עשירה יותר — בלי להסיק מעבר לנתוני התצוגה."
+        ? "הדוח עדיין מסכם תקופה חלקית: ככל שיופיעו ניסוחים נוספים, אפשר יהיה לרכז תמונה עשירה יותר - בלי להסיק מעבר לנתוני התצוגה."
         : metas.some((m) => m.cannot || m.readiness === "insufficient" || m.confidenceBand === "low")
           ? "כדאי להתמקד עכשיו בנושא אחד ולבדוק שוב אחרי עוד תרגול קצר."
           : "כדאי להתמקד עכשיו בנושא אחד ולבדוק שוב אחרי עוד תרגול קצר.";
@@ -850,7 +850,7 @@ function wordingEnvelopeFromNarrative(narrative) {
 }
 
 /**
- * No anchored `topicRecommendations` rows (or missing contract slice): generic explanation only — no topic-level claims, no inferred evidence.
+ * No anchored `topicRecommendations` rows (or missing contract slice): generic explanation only - no topic-level claims, no inferred evidence.
  * @param {{ scopeType: "topic"|"subject"|"executive"; scopeId: string; scopeLabel: string; canonicalIntent?: string; interpretationScope?: string; scopeClass?: string }} scope
  */
 function buildTruthPacketV1NoAnchoredFallback(scope) {
@@ -1271,7 +1271,7 @@ export function buildTruthPacketV1(payload, scope) {
     if (totalQ >= 50 && avgAcc >= 65) {
       uncertaintyLine =
         uncertainRows > 2 || cannotConcludeYet
-          ? "חלק מהניסוחים בדוח עדיין זהירים — לפעמים מה שרואים בבית נראה אחרת, וזה בסדר."
+          ? "חלק מהניסוחים בדוח עדיין זהירים - לפעמים מה שרואים בבית נראה אחרת, וזה בסדר."
           : "";
     } else {
       uncertaintyLine =

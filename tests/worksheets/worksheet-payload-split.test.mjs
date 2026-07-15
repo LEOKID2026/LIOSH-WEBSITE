@@ -17,7 +17,7 @@ import {
 } from "../../lib/worksheets/worksheet-question-types.js";
 
 const META = {
-  titleHe: "דף עבודה — כפל",
+  titleHe: "דף עבודה - כפל",
   subjectHe: "מתמטיקה",
   gradeHe: "כיתה ג׳",
   topicHe: "כפל",

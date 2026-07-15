@@ -19,7 +19,7 @@ import { WORKSHEET_PRINTABILITY } from "../../lib/worksheets/worksheet-question-
 
 const PASSAGE_RAW = {
   question:
-    "כיתה ג׳ — קראו: 'דני שם את הספר בתיק לפני שיצא לבית הספר.' מה עשה דני לפני היציאה?",
+    "כיתה ג׳ - קראו: 'דני שם את הספר בתיק לפני שיצא לבית הספר.' מה עשה דני לפני היציאה?",
   answers: ["שם ספר בתיק", "אכל ארוחת בוקר", "שיחק בחצר", "קרא ספר"],
   correctAnswer: "שם ספר בתיק",
   topic: "comprehension",

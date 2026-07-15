@@ -47,7 +47,7 @@ export function stripNiqqudInsideQuotedHebrewWordSpans(text) {
 }
 
 const SURROUNDING_PUNCT_RE =
-  /^[\s"'`׳״“”‘’.,!?;:()[\]{}\-–—]+|[\s"'`׳״“”‘’.,!?;:()[\]{}\-–—]+$/g;
+  /^[\s"'`׳״“”‘’.,!?;:()[\]{}\-–-]+|[\s"'`׳״“”‘’.,!?;:()[\]{}\-–-]+$/g;
 
 /** השוואת תשובה כשהניקוד משמעותי — בלי להסיר סימני ניקוד עבריים. */
 export function normalizeAnswerForSpellingNiqqudStrict(value) {

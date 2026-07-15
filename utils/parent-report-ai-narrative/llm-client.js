@@ -2,8 +2,8 @@
  * Provider-pluggable HTTP client for the parent-report AI narrative writer.
  *
  * Supports two providers, selected via `PARENT_REPORT_NARRATIVE_LLM_PROVIDER`:
- *   - "openai" (default) — POST `${BASE_URL}/responses` with `text.format=json_object`.
- *   - "gemini"           — POST `${BASE_URL}/models/{MODEL}:generateContent` with
+ *   - "openai" (default) - POST `${BASE_URL}/responses` with `text.format=json_object`.
+ *   - "gemini"           - POST `${BASE_URL}/models/{MODEL}:generateContent` with
  *                          `generationConfig.responseMimeType="application/json"`.
  *
  * The validator in `validate-narrative-output.js` is the authoritative gate; this

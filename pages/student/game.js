@@ -43,7 +43,7 @@ export default function StudentSoloGamesPage() {
             />
 
             <GamesHubHeader
-              title="משחקי ליאו — עולם הילד"
+              title="משחקי ליאו - עולם הילד"
               subtitle="שחקו, צברו ניקוד וקבלו מטבעות ויהלומים לעולם הילד!"
               titleClass={GH.hubTitle}
               subtitleClass={GH.hubSub}

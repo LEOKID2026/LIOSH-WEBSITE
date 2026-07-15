@@ -165,7 +165,7 @@ export function SchoolSubjectClassCard({ cls, onReport, reportLabel }) {
   return (
     <SchoolManagementCard
       title={subject}
-      subtitle={`${cls.teacherName || "—"} · ${cls.memberCount ?? 0} ילדים`}
+      subtitle={`${cls.teacherName || "-"} · ${cls.memberCount ?? 0} ילדים`}
       meta={cls.activityCount != null ? `פעילויות: ${cls.activityCount}` : null}
       action={
         <button
@@ -189,8 +189,8 @@ export function SchoolSubjectClassCard({ cls, onReport, reportLabel }) {
 export function SchoolActivityCard({ activity }) {
   const title = sanitizeActivityTitleHe(activity.title, activity.subject);
   const subject = schoolSubjectLabelHe(activity.subject);
-  const teacher = activity.teacherName || "—";
-  const className = activity.className || "—";
+  const teacher = activity.teacherName || "-";
+  const className = activity.className || "-";
   const mode = schoolActivityModeHe(activity.mode);
   const status = schoolActivityStatusHe(activity.status);
 
@@ -255,7 +255,7 @@ export function SchoolTeacherCard({
     ? allSubjectsLabel
     : uniqueSubjects.length
       ? uniqueSubjects.map((s) => schoolSubjectLabelHe(s)).join(" · ")
-      : "—";
+      : "-";
 
   return (
     <div className={`${SCHOOL_CARD} ${SCHOOL_CARD_INNER} text-right min-w-0`}>
@@ -299,7 +299,7 @@ export function SchoolStudentCard({
   learningStatusBadge = null,
 }) {
   const name = student.displayName || "ללא שם";
-  const classLabel = student.physicalClassName || "—";
+  const classLabel = student.physicalClassName || "-";
   return (
     <SchoolManagementCard
       title={name}

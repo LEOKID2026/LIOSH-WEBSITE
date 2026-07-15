@@ -37,10 +37,10 @@ export function classifyGeometryConfidenceAndReview(raw, record, prereq) {
   }
 
   if (!skillOk) {
-    confidenceReasons.push("skillId from scanner is outside geometry allowlist — needs expert mapping.");
+    confidenceReasons.push("skillId from scanner is outside geometry allowlist - needs expert mapping.");
   }
   if (!structured) {
-    confidenceReasons.push("Sparse diagnostic metadata on template — suggestion is heuristic.");
+    confidenceReasons.push("Sparse diagnostic metadata on template - suggestion is heuristic.");
   }
   return finalize("low", confidenceReasons);
 }
@@ -152,7 +152,7 @@ export function buildGeometryReviewPack(enrichmentPayload) {
     approveAsIs:
       "Use only for rows with confidence **high**, reviewPriority **low**, after verifying Hebrew stem alignment and classroom sequencing.",
     editMetadata:
-      "Adjust suggested difficulty / cognitive / error / prerequisite ids in the bank JSON — **do not** change stems or answers without curriculum approval.",
+      "Adjust suggested difficulty / cognitive / error / prerequisite ids in the bank JSON - **do not** change stems or answers without curriculum approval.",
     rejectSuggestion:
       "Discard automated suggestion when taxonomy mapping conflicts with geometry progression or engine routing.",
     needsCurriculumExpert:

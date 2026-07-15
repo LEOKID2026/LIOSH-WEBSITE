@@ -115,7 +115,7 @@ function expandPool(baseItems, topic, patternFamily, subtype, level, targetCount
         question = item.question.replace(/\?$/, ` ב${ctx}?`);
       }
     } else {
-      question = `כיתה ה׳ — ${topic}`;
+      question = `כיתה ה׳ - ${topic}`;
     }
     const answer = item.answer;
     const wrong = [...(item.wrong || [])];

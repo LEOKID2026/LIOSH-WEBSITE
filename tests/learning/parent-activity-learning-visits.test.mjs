@@ -9,13 +9,13 @@ import {
 import { computeParentVisitTimingFromStart } from "../../lib/learning-client/parentActivityLearningVisit.client.js";
 import { coalesceParentActivityVisitCreditedMs } from "../../lib/learning-supabase/parent-activity-learning-visits.server.js";
 
-test("parent visit — 8 min first visit credits 8 min", () => {
+test("parent visit - 8 min first visit credits 8 min", () => {
   const started = Date.now() - 480_000;
   const timing = computeParentVisitTimingFromStart(started);
   assert.equal(timing.creditedDwellMs, 480_000);
 });
 
-test("parent visit — 15 min visit is NOT capped at 10 (open learning)", () => {
+test("parent visit - 15 min visit is NOT capped at 10 (open learning)", () => {
   const started = Date.now() - 900_000;
   const timing = computeParentVisitTimingFromStart(started);
   assert.equal(timing.creditedDwellMs, 900_000);

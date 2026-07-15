@@ -19,7 +19,7 @@ function ShownOnceBox({ credentials, onDismiss }) {
   return (
     <div className="mt-4 rounded-xl border border-amber-500/50 bg-amber-500/10 p-4 space-y-3">
       <p className="text-amber-200 font-semibold text-sm">
-        ⚠ שמור את הפרטים האלה — לא יוצגו שוב.
+        ⚠ שמור את הפרטים האלה - לא יוצגו שוב.
       </p>
       {credentials.loginUsername ? (
         <div className="flex flex-wrap items-center gap-2 text-sm">
@@ -69,7 +69,7 @@ function ShownOnceBox({ credentials, onDismiss }) {
         className="rounded bg-amber-500 text-black font-semibold px-4 py-2 text-sm"
         onClick={onDismiss}
       >
-        סגור — שמרתי את הפרטים
+        סגור - שמרתי את הפרטים
       </button>
     </div>
   );
@@ -146,7 +146,7 @@ export default function GuardianAccessPanel({ accessToken, studentId }) {
   };
 
   const onRotatePin = async (accessId) => {
-    if (!window.confirm("הקוד הנוכחי יבוטל ויופק קוד חדש. שמור את הקוד החדש — הוא יוצג פעם אחת בלבד.")) {
+    if (!window.confirm("הקוד הנוכחי יבוטל ויופק קוד חדש. שמור את הקוד החדש - הוא יוצג פעם אחת בלבד.")) {
       return;
     }
     setBusy(true);
@@ -240,7 +240,7 @@ export default function GuardianAccessPanel({ accessToken, studentId }) {
               >
                 {guardianAccessStateHe(row.state)}
                 {row.state === "active" && row.expiresAt
-                  ? ` — פג תוקף ${formatDateHe(row.expiresAt)}`
+                  ? ` - פג תוקף ${formatDateHe(row.expiresAt)}`
                   : ""}
               </span>
             </div>

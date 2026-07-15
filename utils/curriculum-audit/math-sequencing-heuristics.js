@@ -23,7 +23,7 @@ export function mathSequencingSuspicions(invRecord, normKey) {
     flags.push({
       code: "percentages_possibly_early",
       severity: "review",
-      note: "אחוזים לפני כיתות העליונות — לאמת מול מסמך הכיתה והוראת המוסד.",
+      note: "אחוזים לפני כיתות העליונות - לאמת מול מסמך הכיתה והוראת המוסד.",
     });
   }
   // Grade 3 decimal work is common in programmes; flag only grades 1–2 unless inventory is refreshed.
@@ -31,7 +31,7 @@ export function mathSequencingSuspicions(invRecord, normKey) {
     flags.push({
       code: "decimals_possibly_early",
       severity: "review",
-      note: "עשרוניים בכיתות א׳–ב׳ — לוודא מול תוכנית הכיתה (בדגימות ישנות ייתכן נושא לא מעודכן).",
+      note: "עשרוניים בכיתות א׳–ב׳ - לוודא מול תוכנית הכיתה (בדגימות ישנות ייתכן נושא לא מעודכן).",
     });
   }
   const introUnitFracKind =
@@ -43,7 +43,7 @@ export function mathSequencingSuspicions(invRecord, normKey) {
     flags.push({
       code: "fractions_depth_unclear_low_grade",
       severity: "review",
-      note: "שברים בכיתה א׳–ב׳ — בדוק עומק צפוי לפי מסמך הכיתה.",
+      note: "שברים בכיתה א׳–ב׳ - בדוק עומק צפוי לפי מסמך הכיתה.",
     });
   }
   if (
@@ -54,7 +54,7 @@ export function mathSequencingSuspicions(invRecord, normKey) {
     flags.push({
       code: "division_with_remainder_possibly_early",
       severity: "review",
-      note: "חילוק עם שארית בכיתות נמוכות — לאמת רצף.",
+      note: "חילוק עם שארית בכיתות נמוכות - לאמת רצף.",
     });
   }
   const simpleMissingNumberEq = sub === "eq_add_simple" || sub === "eq_sub_simple";
@@ -68,13 +68,13 @@ export function mathSequencingSuspicions(invRecord, normKey) {
       flags.push({
         code: "missing_number_intro_review",
         severity: "review",
-        note: "איזון קצר / מספר חסר בטרום אלגברה — לא משוואות פורמליות; לאמת מול המוסד רק אם נדרש.",
+        note: "איזון קצר / מספר חסר בטרום אלגברה - לא משוואות פורמליות; לאמת מול המוסד רק אם נדרש.",
       });
     } else {
       flags.push({
         code: "equations_expressions_possibly_early",
         severity: "review",
-        note: "משוואות/ביטויים מוקדם — השווה למסמך הכיתה.",
+        note: "משוואות/ביטויים מוקדם - השווה למסמך הכיתה.",
       });
     }
   }
@@ -97,21 +97,21 @@ export function mathSequencingSuspicions(invRecord, normKey) {
     flags.push({
       code: "word_problem_difficulty_mismatch_low_grade",
       severity: "review",
-      note: "שאלה מילולית מסומנת קשה בכיתה נמוכה — לבדוק התאמת קושי.",
+      note: "שאלה מילולית מסומנת קשה בכיתה נמוכה - לבדוק התאמת קושי.",
     });
   }
   if (normKey.includes("powers_and_scaling") && g <= 3) {
     flags.push({
       code: "powers_scaling_possibly_early",
       severity: "review",
-      note: "חזקות/קנה מידה — לאמת מול תוכנית הכיתה.",
+      note: "חזקות/קנה מידה - לאמת מול תוכנית הכיתה.",
     });
   }
   if (normKey.includes("ratio_and_scale") && g <= 3) {
     flags.push({
       code: "ratio_scale_possibly_early",
       severity: "review",
-      note: "יחס וקנה מידה בכיתות נמוכות — לאמת.",
+      note: "יחס וקנה מידה בכיתות נמוכות - לאמת.",
     });
   }
   /** Generator emits formal divisibility stems from grade 3; grade-2 rows are legacy until inventory rescan. */

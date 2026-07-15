@@ -534,7 +534,7 @@ export default function LeoSupermarketGame({ backHref = "/dev/learning-game-prot
           <p className={styles.introHero}>🏪🛒</p>
           <h1 className={styles.introTitle}>המכולת של ליאו</h1>
           <p className={styles.introText}>
-            עזרו לליאו המוכר — בחרו מוצר, חשבו עודף והחזירו כסף נכון ללקוח
+            עזרו לליאו המוכר - בחרו מוצר, חשבו עודף והחזירו כסף נכון ללקוח
           </p>
           <div className={styles.difficultyRow}>
             {(/** @type {DifficultyId[]} */ (["easy", "medium", "hard"])).map((id) => (
@@ -629,10 +629,10 @@ export default function LeoSupermarketGame({ backHref = "/dev/learning-game-prot
               <div className={styles.checkoutFooter}>
                 <div className={styles.checkoutFooterStack}>
                   <span className={styles.checkoutAmountLine}>
-                    סכום הקנייה: {step === "change" ? formatShekel(customer.total) : "—"}
+                    סכום הקנייה: {step === "change" ? formatShekel(customer.total) : "-"}
                   </span>
                   <span className={styles.checkoutAmountLinePaid}>
-                    הלקוח שילם: {step === "change" ? formatShekel(customer.paid) : "—"}
+                    הלקוח שילם: {step === "change" ? formatShekel(customer.paid) : "-"}
                   </span>
                 </div>
               </div>
@@ -645,7 +645,7 @@ export default function LeoSupermarketGame({ backHref = "/dev/learning-game-prot
               <p className={styles.zoneTitle}>💵 העודף שאני מחזיר</p>
               <div className={styles.zoneItems}>
                 {changeDenoms.length === 0 ? (
-                  <span className={styles.zoneEmpty}>{step === "change" ? "בחרו מטבעות" : "—"}</span>
+                  <span className={styles.zoneEmpty}>{step === "change" ? "בחרו מטבעות" : "-"}</span>
                 ) : (
                   groupedChangeDenoms.map(({ value, count, lastIndex }) => (
                     <MoneyChip

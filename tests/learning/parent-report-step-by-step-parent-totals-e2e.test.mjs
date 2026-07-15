@@ -79,7 +79,7 @@ function buildFixturePayload() {
 }
 
 describe("parent report step-by-step parent totals e2e (Aaa7 regression)", () => {
-  test("aggregate + UI sync + LPD — 10/2/8/20% across surfaces", async () => {
+  test("aggregate + UI sync + LPD - 10/2/8/20% across surfaces", async () => {
     const raw = buildFixturePayload();
     const topic = raw.subjects.math.topics.addition;
     const summary = raw.summary;

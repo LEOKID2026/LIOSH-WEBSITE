@@ -50,7 +50,7 @@ function acceptanceHookHe(family, truthPacket) {
     String(truthPacket.scopeType || "") === "subject" && String(truthPacket.scopeLabel || "").trim()
       ? ` (במסגרת ${String(truthPacket.scopeLabel).trim()})`
       : "";
-  return `ממשיכים לפי ההצעה שבחרתם — ${base}${scopeTail}: `;
+  return `ממשיכים לפי ההצעה שבחרתם - ${base}${scopeTail}: `;
 }
 
 /**
@@ -182,7 +182,7 @@ export function tryBuildParentShortFollowupDraft(ctx) {
             {
               type: "observation",
               textHe:
-                "לפי מה שבדוח כרגע — אין עדיין בסיס חזק מספיק לצעד גדול; עדיף צעד זעיר מאוד אחרי עוד תרגול, או המתנה קצרה.",
+                "לפי מה שבדוח כרגע - אין עדיין בסיס חזק מספיק לצעד גדול; עדיף צעד זעיר מאוד אחרי עוד תרגול, או המתנה קצרה.",
               source: "composed",
             },
             { type: "meaning", textHe: interp ? interp.slice(0, 420) : obs.slice(0, 420), source: "composed" },
@@ -191,7 +191,7 @@ export function tryBuildParentShortFollowupDraft(ctx) {
           answerBlocks = [
             {
               type: "observation",
-              textHe: "מצוין — מתחילים בצעד קטן שמתאים למה שמופיע בדוח, בלי להרחיב מעבר לניסוח הזה.",
+              textHe: "מצוין - מתחילים בצעד קטן שמתאים למה שמופיע בדוח, בלי להרחיב מעבר לניסוח הזה.",
               source: "composed",
             },
           ];
@@ -235,7 +235,7 @@ export function tryBuildParentShortFollowupDraft(ctx) {
           answerBlocks = [
             {
               type: "observation",
-              textHe: "מובן — נשארים עם אותו ניסוח מהדוח ומתקדמים בצעד קטן הבא כשמתאים.",
+              textHe: "מובן - נשארים עם אותו ניסוח מהדוח ומתקדמים בצעד קטן הבא כשמתאים.",
               source: "composed",
             },
             { type: "meaning", textHe: interp ? interp.slice(0, 420) : obs.slice(0, 420), source: "composed" },
@@ -248,7 +248,7 @@ export function tryBuildParentShortFollowupDraft(ctx) {
       answerBlocks = [
         {
           type: "observation",
-          textHe: "בסדר — לא חייבים לקדם עכשיו. נשארים עם מה שהדוח מציג, בלי לחץ להחלטה מיידית.",
+          textHe: "בסדר - לא חייבים לקדם עכשיו. נשארים עם מה שהדוח מציג, בלי לחץ להחלטה מיידית.",
           source: "composed",
         },
         { type: "meaning", textHe: interp ? interp.slice(0, 420) : obs.slice(0, 420), source: "composed" },
@@ -262,8 +262,8 @@ export function tryBuildParentShortFollowupDraft(ctx) {
           type: "observation",
           textHe:
             dl.cannotConcludeYet || dl.confidenceBand === "low"
-              ? "זה לא בהכרח \"לא טוב\" — זה בעיקר סימן שהדוח עדיין לא סוגר מספיק כדי לתייג מצב בצורה חדה."
-              : "לפי מה שמופיע בדוח, אין כאן אות ל\"לא טוב\" גורף — עדיין מדובר בתמונה בתוך התקופה.",
+              ? "זה לא בהכרח \"לא טוב\" - זה בעיקר סימן שהדוח עדיין לא סוגר מספיק כדי לתייג מצב בצורה חדה."
+              : "לפי מה שמופיע בדוח, אין כאן אות ל\"לא טוב\" גורף - עדיין מדובר בתמונה בתוך התקופה.",
           source: "composed",
         },
         { type: "meaning", textHe: interp ? interp.slice(0, 420) : obs.slice(0, 420), source: "composed" },
@@ -275,7 +275,7 @@ export function tryBuildParentShortFollowupDraft(ctx) {
       answerBlocks = [
         {
           type: "observation",
-          textHe: obs ? `במילים פשוטות: ${obs.slice(0, 420)}` : "אין כאן פסקה ארוכה להרחבה — אפשר לנסח במילה אחרת מה בדיוק לא ברור.",
+          textHe: obs ? `במילים פשוטות: ${obs.slice(0, 420)}` : "אין כאן פסקה ארוכה להרחבה - אפשר לנסח במילה אחרת מה בדיוק לא ברור.",
           source: "composed",
         },
       ];
@@ -303,8 +303,8 @@ export function tryBuildParentShortFollowupDraft(ctx) {
         {
           type: "observation",
           textHe: obs
-            ? `ממשיכים מאותה נקודה של הדוח — נשארים באותה תמונה בלי להוסיף נושא חדש: ${obs.slice(0, 360)}`
-            : "ממשיכים מאותה נקודה של הדוח — נשארים באותה תמונה בלי להוסיף נושא חדש מעבר למה שכבר הוצג.",
+            ? `ממשיכים מאותה נקודה של הדוח - נשארים באותה תמונה בלי להוסיף נושא חדש: ${obs.slice(0, 360)}`
+            : "ממשיכים מאותה נקודה של הדוח - נשארים באותה תמונה בלי להוסיף נושא חדש מעבר למה שכבר הוצג.",
           source: "composed",
         },
       ];

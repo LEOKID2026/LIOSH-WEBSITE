@@ -320,12 +320,12 @@ export default function SchoolMessagesPage() {
                         const messageId = getSchoolMessageId(m);
                         return (
                           <tr key={messageId || m.subject} className="border-b border-white/5">
-                            <td className="p-3">{m.subject || "—"}</td>
+                            <td className="p-3">{m.subject || "-"}</td>
                             <td className="p-3">
                               {formatSchoolMessageAudienceLabel(m.audienceType, m.audienceScope)}
                             </td>
                             <td className="p-3">
-                              {m.sentAt ? new Date(m.sentAt).toLocaleDateString("he-IL") : "—"}
+                              {m.sentAt ? new Date(m.sentAt).toLocaleDateString("he-IL") : "-"}
                             </td>
                             <td className="p-3">{formatSchoolMessageListReadCount(m)}</td>
                             <td className="p-3">

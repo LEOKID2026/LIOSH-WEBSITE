@@ -71,7 +71,7 @@ function makeWrongMcqAnswer(sessionId, subject, topic, questionEngine) {
   };
 }
 
-describe("Phase 8 — question engine contract", () => {
+describe("Phase 8 - question engine contract", () => {
   test("MCQ allAnswerChoices persisted with max 8 and truncation", () => {
     const long = "x".repeat(VALUE_MAX_LEN + 50);
     const choices = Array.from({ length: 10 }, (_, i) => ({
@@ -201,7 +201,7 @@ describe("Phase 8 — question engine contract", () => {
   });
 });
 
-describe("Phase 8 — aggregator integration", () => {
+describe("Phase 8 - aggregator integration", () => {
   test("recentMistakes enriched from answer_payload.questionEngine", () => {
     const session = makeSession("sess-p8", "math");
     const engine = normalizeQuestionEnginePayload(

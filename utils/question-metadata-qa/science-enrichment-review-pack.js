@@ -106,23 +106,23 @@ export function classifyScienceConfidenceAndReview(raw, record, prereq) {
     confidenceReasons.push(`Topic "${topic}" maps deterministically to skillId "${skill}".`);
     confidenceReasons.push("Difficulty, correct answer, and explanation are present on the row.");
     if (prereq.ids.length === 0) {
-      confidenceReasons.push("Prerequisite list empty or explicitly non-sequential — subskill/cognitive/error fills are template-driven.");
+      confidenceReasons.push("Prerequisite list empty or explicitly non-sequential - subskill/cognitive/error fills are template-driven.");
     } else if (prereq.confidence === "medium") {
       confidenceReasons.push("Prerequisite slot deferred to authors (no sequential heuristic applied).");
     }
     confidenceReasons.push(
-      "Suggested subskill/cognitive/error families use topic templates — review wording against Hebrew stems if applying."
+      "Suggested subskill/cognitive/error families use topic templates - review wording against Hebrew stems if applying."
     );
     return finalize("medium", confidenceReasons, false);
   }
 
   /** LOW: weak or incomplete signals */
   if (!topicDeterministic || !skillOk) {
-    confidenceReasons.push("Topic or skillId mapping is outside the standard science topic/diagnostic allowlist — needs expert mapping.");
+    confidenceReasons.push("Topic or skillId mapping is outside the standard science topic/diagnostic allowlist - needs expert mapping.");
   }
   if (!record.difficulty) confidenceReasons.push("Missing normalized difficulty on scanned row.");
   if (!record.hasCorrectAnswer) confidenceReasons.push("Missing detectable correct answer metadata.");
-  if (!record.hasExplanation) confidenceReasons.push("Missing explanation / theory lines — harder to validate misconception routing.");
+  if (!record.hasExplanation) confidenceReasons.push("Missing explanation / theory lines - harder to validate misconception routing.");
   return finalize("low", confidenceReasons, false);
 }
 
@@ -253,7 +253,7 @@ export function buildScienceReviewPack(enrichmentPayload, unknownTokens, meta = 
     approveAsIs:
       "Use only for rows with confidence **high**, reviewPriority **low**, after spot-checking Hebrew stem alignment.",
     editMetadata:
-      "Adjust suggested subskill/cognitive/error/prerequisite ids in the bank JSON — **do not** change stems without curriculum approval.",
+      "Adjust suggested subskill/cognitive/error/prerequisite ids in the bank JSON - **do not** change stems without curriculum approval.",
     rejectSuggestion:
       "Discard automated suggestion when taxonomy mapping conflicts with classroom sequencing or engine routing.",
     needsCurriculumExpert:

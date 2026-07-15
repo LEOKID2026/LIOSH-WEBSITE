@@ -20,14 +20,14 @@ async function submitStudentLogin(page: Page, username: string, pin: string) {
   await page.getByTestId("student-login-submit").click({ force: true });
 }
 
-test.describe("Android WebView parity — production mobile @android-qa", () => {
+test.describe("Android WebView parity - production mobile @android-qa", () => {
   test.describe.configure({ mode: "serial" });
 
   test.beforeEach(async ({ context }) => {
     await context.clearCookies();
   });
 
-  test("W0 — homepage loads with RTL on production", async ({ page }) => {
+  test("W0 - homepage loads with RTL on production", async ({ page }) => {
     const res = await page.goto("/", { waitUntil: "domcontentloaded" });
     expect(res?.status()).toBeLessThan(400);
     await expect(page.locator('[dir="rtl"]').first()).toBeVisible({ timeout: 30_000 });
@@ -36,14 +36,14 @@ test.describe("Android WebView parity — production mobile @android-qa", () => 
     expect(page.url()).toContain(new URL(PRODUCTION).host);
   });
 
-  test("W1 — Hebrew RTL on student login", async ({ page }) => {
+  test("W1 - Hebrew RTL on student login", async ({ page }) => {
     await waitStudentLoginReady(page);
     const rtl = page.locator('[dir="rtl"]').first();
     await expect(rtl).toBeVisible();
     await expect(page.getByText("כניסת ילד/ה")).toBeVisible();
   });
 
-  test("S1–S2 — student login and home", async ({ page }) => {
+  test("S1–S2 - student login and home", async ({ page }) => {
     test.skip(!STUDENT_USER || !STUDENT_PIN, "Set E2E_STUDENT_USERNAME + E2E_STUDENT_PIN in .env.e2e.local");
     await waitStudentLoginReady(page);
     await submitStudentLogin(page, STUDENT_USER, STUDENT_PIN);
@@ -51,7 +51,7 @@ test.describe("Android WebView parity — production mobile @android-qa", () => 
     await expect(page.getByText(/404|הדף לא נמצא/u)).toHaveCount(0);
   });
 
-  test("S3–S4 — learning activity opens (hebrew-master smoke)", async ({ page }) => {
+  test("S3–S4 - learning activity opens (hebrew-master smoke)", async ({ page }) => {
     test.skip(!STUDENT_USER || !STUDENT_PIN, "Set E2E_STUDENT_USERNAME + E2E_STUDENT_PIN");
     await waitStudentLoginReady(page);
     await submitStudentLogin(page, STUDENT_USER, STUDENT_PIN);
@@ -61,7 +61,7 @@ test.describe("Android WebView parity — production mobile @android-qa", () => 
     await expect(page.getByText(/404|הדף לא נמצא/u)).toHaveCount(0, { timeout: 30_000 });
   });
 
-  test("P1–P2 — parent login and dashboard area", async ({ page }) => {
+  test("P1–P2 - parent login and dashboard area", async ({ page }) => {
     test.skip(!PARENT_ID || !PARENT_SECRET, "Set E2E_PARENT_EMAIL + E2E_PARENT_PASSWORD");
     await page.goto("/parent/login", { waitUntil: "domcontentloaded" });
     await page.getByPlaceholder("הקלידו אימייל או שם משתמש שקיבלתם מהמורה").fill(PARENT_ID);
@@ -71,13 +71,13 @@ test.describe("Android WebView parity — production mobile @android-qa", () => 
     await expect(page.getByText(/404|הדף לא נמצא/u)).toHaveCount(0);
   });
 
-  test("T1 — teacher login page loads", async ({ page }) => {
+  test("T1 - teacher login page loads", async ({ page }) => {
     await page.goto("/teacher/login", { waitUntil: "domcontentloaded" });
     await expect(page.getByText(/404|הדף לא נמצא/u)).toHaveCount(0);
     await expect(page.locator('[dir="rtl"]').first()).toBeVisible();
   });
 
-  test("T1b — teacher login when credentials available", async ({ page }) => {
+  test("T1b - teacher login when credentials available", async ({ page }) => {
     test.skip(!TEACHER_EMAIL || !TEACHER_PASSWORD, "Set TEACHER_PORTAL_VERIFY_EMAIL + TEACHER_PORTAL_VERIFY_PASSWORD");
     await page.goto("/teacher/login", { waitUntil: "domcontentloaded" });
     const emailField = page.getByPlaceholder(/אימייל|email/i).first();
@@ -91,32 +91,32 @@ test.describe("Android WebView parity — production mobile @android-qa", () => 
     }
   });
 
-  test("T2–T3 — school staff login page loads", async ({ page }) => {
+  test("T2–T3 - school staff login page loads", async ({ page }) => {
     await page.goto("/school/staff/login", { waitUntil: "domcontentloaded" });
     await expect(page.getByTestId("school-staff-login-root")).toBeVisible({ timeout: 30_000 });
     await expect(page.locator('[dir="rtl"]').first()).toBeVisible();
   });
 
-  test("G1 — arcade games page loads", async ({ page }) => {
+  test("G1 - arcade games page loads", async ({ page }) => {
     const res = await page.goto("/game", { waitUntil: "domcontentloaded" });
     expect(res?.status()).toBeLessThan(400);
     await expect(page.getByText(/404|הדף לא נמצא/u)).toHaveCount(0);
   });
 
-  test("G2 — learning zone loads", async ({ page }) => {
+  test("G2 - learning zone loads", async ({ page }) => {
     const res = await page.goto("/learning", { waitUntil: "domcontentloaded" });
     expect(res?.status()).toBeLessThan(400);
     await expect(page.getByText(/404|הדף לא נמצא/u)).toHaveCount(0);
   });
 
-  test("W2 — browser back navigation", async ({ page }) => {
+  test("W2 - browser back navigation", async ({ page }) => {
     await page.goto("/", { waitUntil: "domcontentloaded" });
     await page.goto("/student/login", { waitUntil: "domcontentloaded" });
     await page.goBack();
     await expect(page).toHaveURL(/\/?$/);
   });
 
-  test("W6 — keyboard input on login form", async ({ page }) => {
+  test("W6 - keyboard input on login form", async ({ page }) => {
     await waitStudentLoginReady(page);
     const input = page.getByPlaceholder("שם משתמש");
     await input.tap();

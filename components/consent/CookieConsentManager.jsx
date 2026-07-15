@@ -58,12 +58,12 @@ function CookieConsentPreferencesPanel({ onSaved, initialAds = false, initialAna
         ניהול העדפות עוגיות
       </h2>
       <p className="text-sm text-slate-600 leading-relaxed">
-        עוגיות הכרחיות נדרשות לכניסה, להעדפות ולתפקוד האתר. הבחירות למטה נוגעות לפרסומות ומדידה אופציונליות — אינן פעילות כעת.
+        עוגיות הכרחיות נדרשות לכניסה, להעדפות ולתפקוד האתר. הבחירות למטה נוגעות לפרסומות ומדידה אופציונליות - אינן פעילות כעת.
       </p>
       <label className="flex items-start justify-between gap-3 text-sm text-slate-800">
         <span>
           <span className="font-semibold block">פרסומות (לא פעיל כעת)</span>
-          <span className="text-slate-500 text-xs">פרסומות עתידיות אופציונליות — ייתכן שיופעלו בעתיד בכפוף לאישור Google ולהגדרה</span>
+          <span className="text-slate-500 text-xs">פרסומות עתידיות אופציונליות - ייתכן שיופעלו בעתיד בכפוף לאישור Google ולהגדרה</span>
         </span>
         <input
           type="checkbox"
@@ -75,7 +75,7 @@ function CookieConsentPreferencesPanel({ onSaved, initialAds = false, initialAna
       <label className="flex items-start justify-between gap-3 text-sm text-slate-800">
         <span>
           <span className="font-semibold block">מדידה ואנליטיקה (לא פעיל כעת)</span>
-          <span className="text-slate-500 text-xs">מדידה אנונימית אופציונלית — ייתכן שתופעל בעתיד בכפוף להגדרה</span>
+          <span className="text-slate-500 text-xs">מדידה אנונימית אופציונלית - ייתכן שתופעל בעתיד בכפוף להגדרה</span>
         </span>
         <input
           type="checkbox"
@@ -203,7 +203,7 @@ export default function CookieConsentManager() {
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
               האתר משתמש בעוגיות ובאחסון מקומי לתפקוד הכרחי בלבד (כניסה, העדפות והמשך שימוש).
-              פרסומות ומדידה אינן פעילות כעת — ייתכן שיופעלו בעתיד בכפוף לאישור Google ולהסכמתכם.
+              פרסומות ומדידה אינן פעילות כעת - ייתכן שיופעלו בעתיד בכפוף לאישור Google ולהסכמתכם.
             </p>
             <p className="text-[11px] text-slate-500">
               {LEGAL_LINKS.map((link, i) => (

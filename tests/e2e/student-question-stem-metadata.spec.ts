@@ -13,12 +13,12 @@ const SCREENSHOT_DIR = "reports/question-audit/screenshots";
 const FORBIDDEN_UI_PATTERNS: { id: string; re: RegExp }[] = [
   { id: "level_he", re: /רמה\s+(קלה|בינונית|קשה|מאתגרת)/u },
   { id: "level_ramat", re: /רמת\s+(easy|medium|hard|קלה|בינונית|קשה)/iu },
-  { id: "topic_key", re: /(?:^|[·•—(])\s*נושא\s+[a-z0-9_-]+/iu },
-  { id: "domain_key", re: /(?:^|[·•—(])\s*תחום\s+[a-z0-9_-]+/iu },
+  { id: "topic_key", re: /(?:^|[·•-(])\s*נושא\s+[a-z0-9_-]+/iu },
+  { id: "domain_key", re: /(?:^|[·•-(])\s*תחום\s+[a-z0-9_-]+/iu },
   { id: "unique_mark", re: /סימון\s+ייחודי/u },
   { id: "school_inquiry", re: /חקר\s+בית[\s -]?ספרי/u },
   { id: "question_about_topic", re: /שאלה\s+בנושא/u },
-  { id: "grade_label", re: /(?:^|[·•—(])\s*כיתה\s+[אבגדהו]['׳]?/u },
+  { id: "grade_label", re: /(?:^|[·•-(])\s*כיתה\s+[אבגדהו]['׳]?/u },
   { id: "concepts_framing", re: /^מושגים\s*\((קל|בינוני|אתגר)\)\s*:/u },
   {
     id: "topic_difficulty_paren",
@@ -30,7 +30,7 @@ const FORBIDDEN_UI_PATTERNS: { id: string; re: RegExp }[] = [
   },
   {
     id: "level_en_meta",
-    re: /(?:^|[·•—(])\s*(easy|medium|hard)\s*(?:[):·•—]|$)/iu,
+    re: /(?:^|[·•-(])\s*(easy|medium|hard)\s*(?:[):·•-]|$)/iu,
   },
 ];
 
@@ -269,7 +269,7 @@ async function startRound(page: Page, subj: SubjectFlow) {
   return stem;
 }
 
-test.describe("Student question stem — rendered DOM (mobile)", () => {
+test.describe("Student question stem - rendered DOM (mobile)", () => {
   test.beforeEach(async ({ page }) => {
     await page.setViewportSize(MOBILE_VIEW);
     await mockStudentSession(page);
@@ -290,7 +290,7 @@ test.describe("Student question stem — rendered DOM (mobile)", () => {
   });
 
   for (const subj of SUBJECTS) {
-    test(`${subj.name}: sample grades/levels/modes — stems clean in DOM`, async ({
+    test(`${subj.name}: sample grades/levels/modes - stems clean in DOM`, async ({
       page,
     }) => {
       await page.goto(subj.path);

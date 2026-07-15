@@ -118,7 +118,7 @@ export function buildOutcomeTrackingPhase12(ctx) {
 
   let outcomeTrackingNarrativeHe = `ב«${displayName}»: ${expLab} · ${obsLab} · ${matchLab}.`;
   if (expectedVsObservedMatch === "misaligned") {
-    outcomeTrackingNarrativeHe = `ב«${displayName}»: ${expLab} — ובפועל ${obsLab} — ${matchLab}.`;
+    outcomeTrackingNarrativeHe = `ב«${displayName}»: ${expLab} - ובפועל ${obsLab} - ${matchLab}.`;
   }
 
   const outcomeTracking = {

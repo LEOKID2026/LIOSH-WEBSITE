@@ -10,7 +10,7 @@ import {
   narrativeTitleFromRow,
 } from "./row-display-label-context.js";
 
-const GRADE_IN_TABLE_LABEL_RE = /(?:—|\()\s*(?:כיתה|תרגול ב)/u;
+const GRADE_IN_TABLE_LABEL_RE = /(?:-|\()\s*(?:כיתה|תרגול ב)/u;
 const NARRATIVE_GRADE_TITLE_RE = / - כיתה /u;
 
 /**
@@ -96,7 +96,7 @@ export function assertNoLongNarrativeTitles(detailedReport) {
         `${subject || "?"} ${kind} ${topicRowKey || ""}: title must not use long relation-in-title format (${title})`,
       );
     }
-    if (/(?:—|\()\s*תרגול ב/u.test(title)) {
+    if (/(?:-|\()\s*תרגול ב/u.test(title)) {
       failures.push(`${subject || "?"} ${kind}: banned em-dash long title (${title})`);
     }
   }

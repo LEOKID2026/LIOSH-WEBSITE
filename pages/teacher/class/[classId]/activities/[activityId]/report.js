@@ -164,7 +164,7 @@ export default function TeacherActivityReportPage({ classId, activityId }) {
                     <tr key={s.studentId} className="border-t border-white/10">
                       <td className="px-3 py-2">{s.studentFullNameMasked}</td>
                       <td className="px-3 py-2">{studentActivityStatusLabelHe(s.status)}</td>
-                      <td className="px-3 py-2 tabular-nums">{s.scorePct ?? "—"}%</td>
+                      <td className="px-3 py-2 tabular-nums">{s.scorePct ?? "-"}%</td>
                       <td className="px-3 py-2 tabular-nums">
                         {s.correctCount}/{data.activity.questionCount}
                       </td>

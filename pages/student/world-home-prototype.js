@@ -56,7 +56,7 @@ const HOME_ACHIEVEMENT_GRANTS_PATH = "/api/student/home-profile/achievement-gran
 const PROTOTYPE_PATH = "/student/world-home-prototype";
 
 const studentHomeSeo = {
-  title: "עולם הילדים — אב טיפוס",
+  title: "עולם הילדים - אב טיפוס",
   description: "אב טיפוס למסך פתיחת עולם הילדים בליאו",
   canonicalPath: PROTOTYPE_PATH,
   noindex: true,
@@ -65,7 +65,7 @@ const studentHomeSeo = {
 function mapApiErrorToHebrew(raw) {
   const s = String(raw || "").trim();
   if (!s) return "טעינת נתוני הלמידה מהשרת נכשלה.";
-  if (s === "Student session expired") return "פג תוקף החיבור — התחברו שוב.";
+  if (s === "Student session expired") return "פג תוקף החיבור - התחברו שוב.";
   if (s === "Server error") return "שגיאת שרת בטעינת נתוני הלמידה.";
   if (/[A-Za-z]{4,}/.test(s)) return "טעינת נתוני הלמידה מהשרת נכשלה.";
   return s;
@@ -114,7 +114,7 @@ function StatsSection({ dashboardView, accLabel }) {
   return (
     <>
       <p className={T.panelIntro}>
-        סיכום ההתקדמות שלך בכל הנושאים — רמה, כוכבים, דיוק ודקות למידה.
+        סיכום ההתקדמות שלך בכל הנושאים - רמה, כוכבים, דיוק ודקות למידה.
       </p>
       <div className={T.statsSummaryCard}>
         <p className={T.statsSummaryTitle}>במבט מהיר</p>
@@ -134,7 +134,7 @@ function StatsSection({ dashboardView, accLabel }) {
           </div>
           <div className={T.statsSummaryItem}>
             <p className={T.statsSummaryLabel}>מטבעות</p>
-            <p className={T.statsSummaryValue}>{dashboardView.identity.coinBalanceDisplayHe ?? dashboardView.identity.coinBalance ?? "—"}</p>
+            <p className={T.statsSummaryValue}>{dashboardView.identity.coinBalanceDisplayHe ?? dashboardView.identity.coinBalance ?? "-"}</p>
           </div>
         </div>
       </div>
@@ -173,7 +173,7 @@ function SubjectsSection({ subjects }) {
   return (
     <>
       <p className={T.panelIntro}>
-        התקדמות לפי מקצוע — דיוק, שאלות, רמה וכוכבים. לחצו על "כניסה לנושא" כדי להתחיל לתרגל.
+        התקדמות לפי מקצוע - דיוק, שאלות, רמה וכוכבים. לחצו על "כניסה לנושא" כדי להתחיל לתרגל.
       </p>
       <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-4">
         {subjects.map((s) => (
@@ -186,7 +186,7 @@ function SubjectsSection({ subjects }) {
             <div className={`${T.subjectBody} flex-1`}>
               <div className={T.subjectStatRow}>
                 <span className={T.subjectStatLabel}>דיוק</span>
-                <span className={T.subjectStatValue}>{s.accuracyDisplayHe ?? "—"}</span>
+                <span className={T.subjectStatValue}>{s.accuracyDisplayHe ?? "-"}</span>
               </div>
               <div className={T.subjectStatRow}>
                 <span className={T.subjectStatLabel}>שאלות / נכונות</span>
@@ -197,14 +197,14 @@ function SubjectsSection({ subjects }) {
               <div className={T.subjectStatRow}>
                 <span className={T.subjectStatLabel}>רמה · כוכבים</span>
                 <span className={T.subjectStatValue}>
-                  {s.levelDisplayHe ?? s.level ?? "—"} · {s.stars ?? "—"}
+                  {s.levelDisplayHe ?? s.level ?? "-"} · {s.stars ?? "-"}
                   {s.starsScopeHe ? ` (${s.starsScopeHe})` : ""}
                 </span>
               </div>
               <div className={T.subjectStatRow}>
                 <span className={T.subjectStatLabel}>דקות למידה</span>
                 <span className={T.subjectStatValue}>
-                  {s.sessionMinutesDisplayHe ?? s.sessionMinutesRounded ?? "—"}
+                  {s.sessionMinutesDisplayHe ?? s.sessionMinutesRounded ?? "-"}
                 </span>
               </div>
             </div>
@@ -231,7 +231,7 @@ function BadgesSection({ badges }) {
   if (badges.length === 0) {
     return (
       <p className={T.emptyText}>
-        עדיין אין תגים — אפשר להתחיל ללמוד ולצבור הישגים בכל נושא.
+        עדיין אין תגים - אפשר להתחיל ללמוד ולצבור הישגים בכל נושא.
       </p>
     );
   }
@@ -852,7 +852,7 @@ export default function WorldHomePrototypePage() {
             activitiesLoaded={personalActivitiesPhase === "ok" || personalActivitiesPhase === "error"}
             emptyFallback={
               <p className={T.panelEmpty}>
-                אין פעילויות אישיות כרגע. כשהמורה או ההורה ישלחו משימה — היא תופיע כאן.
+                אין פעילויות אישיות כרגע. כשהמורה או ההורה ישלחו משימה - היא תופיע כאן.
               </p>
             }
           />
@@ -862,7 +862,7 @@ export default function WorldHomePrototypePage() {
           <StudentWorksheetsPanel
             emptyFallback={
               <p className={T.panelEmpty}>
-                אין דפי עבודה פתוחים כרגע. כשיוקצו דפי עבודה — הם יופיעו כאן.
+                אין דפי עבודה פתוחים כרגע. כשיוקצו דפי עבודה - הם יופיעו כאן.
               </p>
             }
           />

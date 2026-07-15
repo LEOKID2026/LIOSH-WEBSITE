@@ -166,7 +166,7 @@ export function applyOutputGating(p) {
     } else if (hintInvalidates && confidence === "early_signal_only") {
       out.probeOnly = true;
       out.confidenceOnly = true;
-      reasons.push("אות מוקדם בלבד — כדאי עוד תרגול קצר או מעקב לפני כיוון ברור");
+      reasons.push("אות מוקדם בלבד - כדאי עוד תרגול קצר או מעקב לפני כיוון ברור");
     }
     out.contractsV1 = buildContractsBundle(true);
     return out;
@@ -185,20 +185,20 @@ export function applyOutputGating(p) {
   if (confidence === "early_signal_only") {
     out.probeOnly = true;
     out.confidenceOnly = true;
-    reasons.push("אות מוקדם בלבד — כדאי עוד תרגול קצר או מעקב לפני כיוון ברור");
+    reasons.push("אות מוקדם בלבד - כדאי עוד תרגול קצר או מעקב לפני כיוון ברור");
   }
 
   if (confidence === "low") {
     out.probeOnly = true;
     out.confidenceOnly = true;
-    reasons.push("ביטחון נמוך — כדאי לאסוף עוד תרגול לפני אבחנה מלאה");
+    reasons.push("ביטחון נמוך - כדאי לאסוף עוד תרגול לפני אבחנה מלאה");
   }
 
   if (confidence === "moderate") {
     out.diagnosisAllowed = true;
     if (narrowSample || !recurrenceFull) {
       out.confidenceOnly = true;
-      reasons.push("מדגם צר או חזרתיות חלקית — אבחנה מותנית בלבד");
+      reasons.push("מדגם צר או חזרתיות חלקית - אבחנה מותנית בלבד");
     }
     if (recurrenceFull && !narrowSample) {
       out.confidenceOnly = false;
@@ -217,7 +217,7 @@ export function applyOutputGating(p) {
         reasons.push("ביטחון גבוה ועדיפות מאשרות כיוון התערבות");
       } else if (recurrenceFull && confidence === "moderate" && (priority === "P3" || priority === "P4")) {
         out.interventionAllowed = true;
-        reasons.push("ביטחון בינוני ועדיפות גבוהה — התערבות ממוקדת");
+        reasons.push("ביטחון בינוני ועדיפות גבוהה - התערבות ממוקדת");
       }
     }
   }

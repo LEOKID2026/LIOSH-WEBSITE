@@ -20,7 +20,7 @@ import shop from "../shared/educational-game-shop-layout.module.css";
 import styles from "./RecyclingFactoryGame.module.css";
 
 const RECYCLING_INSTRUCTION =
-  "מיינו כל פריט לפח הנכון — שמרו על הסביבה! גררו או לחצו פריט לפח.";
+  "מיינו כל פריט לפח הנכון - שמרו על הסביבה! גררו או לחצו פריט לפח.";
 
 /** @typedef {import('./recycling-factory-data.js').DifficultyId} DifficultyId */
 /** @typedef {import('./recycling-factory-data.js').BinId} BinId */
@@ -268,7 +268,7 @@ export default function RecyclingFactoryGame({
       });
       addScore(SCORE.miss);
       setStreak(0);
-      const missText = "הפריט עבר את המסוע — נסו להיות מהירים יותר!";
+      const missText = "הפריט עבר את המסוע - נסו להיות מהירים יותר!";
       setFeedback({ text: missText, fact: "", type: "bad" });
       onWrong();
       playFeedback(missText);
@@ -352,7 +352,7 @@ export default function RecyclingFactoryGame({
 
       const item = beltItemsRef.current.find((b) => b.uid === uid)?.item;
       const correctLabel = item ? BINS[item.bin]?.label : "";
-      const wrongText = `לא בדיוק — ${item?.name ?? "פריט"} שייך ל${correctLabel}`;
+      const wrongText = `לא בדיוק - ${item?.name ?? "פריט"} שייך ל${correctLabel}`;
       setFeedback({ text: wrongText, fact: "", type: "bad" });
       onWrong();
       playFeedback(wrongText);
@@ -741,7 +741,7 @@ export default function RecyclingFactoryGame({
                     />
                   </div>
                   <p className={`${shop.missionText} ${styles.recyclingMissionText}`}>
-                    מיינו כל פריט לפח הנכון — שמרו על הסביבה!
+                    מיינו כל פריט לפח הנכון - שמרו על הסביבה!
                     <span className={`${shop.missionTicket} ${styles.recyclingMissionHint}`}>
                       🏭 גררו או לחצו פריט ← פח
                     </span>

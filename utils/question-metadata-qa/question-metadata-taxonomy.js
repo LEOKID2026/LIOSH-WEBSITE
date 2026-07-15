@@ -368,7 +368,7 @@ export const READINESS_RULES = {
   strong: "Skill ≥85% coverage, subskill ≥50%, avg completeness ≥0.65, high-risk share <8%.",
   medium: "Skill coverage usable but substantial gaps in cognitive/errors/prereqs.",
   weak: "Large missing skill or inconsistent tagging.",
-  missing: "Skill id largely absent — diagnosis routing unreliable.",
+  missing: "Skill id largely absent - diagnosis routing unreliable.",
 };
 
 /**

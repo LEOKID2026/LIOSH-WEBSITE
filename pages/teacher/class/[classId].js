@@ -139,7 +139,7 @@ export default function TeacherClassReportPage({ classId }) {
         .map((t) => {
           const line = formatTopicLineHe(t.subject, t.topic);
           if (!line) return null;
-          return `${line} — ביצועים טובים בכיתה (${formatPercent(t.accuracy)})`;
+          return `${line} - ביצועים טובים בכיתה (${formatPercent(t.accuracy)})`;
         })
         .filter(Boolean);
 
@@ -177,7 +177,7 @@ export default function TeacherClassReportPage({ classId }) {
 
           {memberCount === 0 ? (
             <p className="text-amber-200 text-sm mb-6">
-              הכיתה ריקה — הוסף ילדים כדי לראות דוח.
+              הכיתה ריקה - הוסף ילדים כדי לראות דוח.
             </p>
           ) : null}
 
@@ -185,7 +185,7 @@ export default function TeacherClassReportPage({ classId }) {
             <h2 className="text-lg font-semibold mb-3">סיכום כיתה</h2>
             {guidance.insufficientData && cohort.totalAnswers < 10 ? (
               <p className="text-white/70 text-sm">
-                לא ניתן לחשב המלצות — אין מספיק נתונים בתקופה זו.
+                לא ניתן לחשב המלצות - אין מספיק נתונים בתקופה זו.
               </p>
             ) : (
               <>
@@ -241,12 +241,12 @@ export default function TeacherClassReportPage({ classId }) {
                     }
                     const subj = subjectLabelHe(t.subject);
                     const headline = t.subtopicLabelHe
-                      ? `${t.topicLabelHe} — ${t.subtopicLabelHe}`
+                      ? `${t.topicLabelHe} - ${t.subtopicLabelHe}`
                       : t.topicLabelHe;
                     const errPct =
                       t.cohortAccuracyPct != null
                         ? formatPercent(100 - t.cohortAccuracyPct)
-                        : "—";
+                        : "-";
                     const action = actionTypeLabelHe(t.recommendedActionType);
                     return (
                       <li
@@ -254,7 +254,7 @@ export default function TeacherClassReportPage({ classId }) {
                         className="rounded border border-white/10 px-3 py-2"
                       >
                         <span className="font-medium">
-                          {subj ? `${subj} — ${headline}` : headline}
+                          {subj ? `${subj} - ${headline}` : headline}
                         </span>
                         : {t.affectedStudentCount ?? 0}/{memberCount} ילדים ·{" "}
                         {formatPercent(t.cohortAccuracyPct)} הצלחה · שיעור טעות {errPct}
@@ -267,7 +267,7 @@ export default function TeacherClassReportPage({ classId }) {
                   const acc =
                     t.answers > 0
                       ? formatPercent(((t.wrong || 0) / t.answers) * 100)
-                      : "—";
+                      : "-";
                   return (
                     <li key={i}>
                       {line}: {acc} שגיאות ממוצע
@@ -335,7 +335,7 @@ export default function TeacherClassReportPage({ classId }) {
               </ul>
             ) : memberCount > 0 ? (
               <p className="text-white/60 text-sm">
-                כל ילדי הכיתה בסדר — אין צורך בהתערבות מיוחדת.
+                כל ילדי הכיתה בסדר - אין צורך בהתערבות מיוחדת.
               </p>
             ) : null}
           </section>
@@ -366,7 +366,7 @@ export default function TeacherClassReportPage({ classId }) {
               </p>
             ) : (
               <p className="text-xs text-white/50 mt-2">
-                *קבוצות מחושבות על בסיס ביצועים — המורה מחליט סופית.
+                *קבוצות מחושבות על בסיס ביצועים - המורה מחליט סופית.
               </p>
             )}
           </section>
@@ -384,7 +384,7 @@ export default function TeacherClassReportPage({ classId }) {
                       <li key={i}>
                         {line}
                         {f.affectedStudents
-                          ? ` — ${f.affectedStudents} ילדים התקשו בנושא זה`
+                          ? ` - ${f.affectedStudents} ילדים התקשו בנושא זה`
                           : ""}
                       </li>
                     );
@@ -393,7 +393,7 @@ export default function TeacherClassReportPage({ classId }) {
               </ul>
             ) : (
               <p className="text-white/60 text-sm">
-                אין נושא בולט לשיעור הבא — המשך לפי תכנית הלימודים.
+                אין נושא בולט לשיעור הבא - המשך לפי תכנית הלימודים.
               </p>
             )}
           </section>

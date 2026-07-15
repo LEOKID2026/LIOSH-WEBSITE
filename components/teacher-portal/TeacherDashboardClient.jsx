@@ -42,13 +42,13 @@ function formatCompactStudentStats(student, { activityLoading = false } = {}) {
   const acc =
     student.accuracy != null && Number.isFinite(Number(student.accuracy))
       ? `${Math.round(Number(student.accuracy))}%`
-      : "—";
+      : "-";
   return `מפגשים: ${sessions} · תשובות: ${answers} · הצלחה: ${acc}`;
 }
 
 function StudentDashboardCard({ student, activityLoading = false, T, bright = false }) {
   const pending = Boolean(student.activityPending || activityLoading);
-  const badgeLabel = pending ? "טוען…" : student.statusBadge || "—";
+  const badgeLabel = pending ? "טוען…" : student.statusBadge || "-";
 
   return (
     <li className={T.studentCard}>
@@ -566,7 +566,7 @@ export default function TeacherDashboardClient({
           <p className={`text-xl font-semibold ${T.heading}`}>
             {displayName ? `שלום, ${displayName}` : "שלום, מורה"}
           </p>
-          <p className={`text-sm mt-1 ${T.subheading}`}>לוח בקרה — כיתות וילדים</p>
+          <p className={`text-sm mt-1 ${T.subheading}`}>לוח בקרה - כיתות וילדים</p>
         </div>
         <button type="button" onClick={onLogout} className={T.logoutBtn}>
           יציאה

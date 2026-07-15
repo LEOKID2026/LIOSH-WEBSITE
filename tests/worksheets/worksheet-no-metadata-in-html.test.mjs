@@ -12,7 +12,7 @@ import {
 } from "../../lib/worksheets/worksheet-payload-build.server.js";
 
 const META = {
-  titleHe: "דף עבודה — גאומטריה",
+  titleHe: "דף עבודה - גאומטריה",
   subjectHe: "גאומטריה",
   gradeHe: "כיתה ד׳",
   topicHe: "שטח",
@@ -26,7 +26,7 @@ const META = {
 
 const RAW = [
   {
-    question: "כיתה ד׳ · נושא area — מה שטח המלבן?",
+    question: "כיתה ד׳ · נושא area - מה שטח המלבן?",
     skillId: "geo_area_rect",
     diagnosticSkillId: "diag_geo_area",
     patternFamily: "area_word",

@@ -9,7 +9,7 @@ export default function ArcadeGuestUpgradeBanner({ className = "" }) {
     >
       <p className="text-sm font-semibold text-amber-100">שדרג לפרופיל ליאו לחוויה מלאה</p>
       <p className="mt-1 text-xs text-amber-100/75">
-        קשר עם הורה שומר מטבעות, קלפים ושם תצוגה — בלי לחסום את המשחקים.
+        קשר עם הורה שומר מטבעות, קלפים ושם תצוגה - בלי לחסום את המשחקים.
       </p>
       <Link
         href="/student/home"

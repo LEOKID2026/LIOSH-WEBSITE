@@ -129,7 +129,7 @@ export default function SoloGameShell({ gameKey }) {
     <GameAccessGuard gameKey={gameKey}>
     <>
       <Head>
-        <title>{game.titleHe} — משחקי ליאו</title>
+        <title>{game.titleHe} - משחקי ליאו</title>
       </Head>
       <div
         className={themedShell ? SG.shell : PLAY_SHELL}
@@ -185,7 +185,7 @@ export default function SoloGameShell({ gameKey }) {
             <SoloGameFinishScreen
               didWin={finishData.didWin === true}
               score={finishData.score ?? 0}
-              displayLevelHe={finishData.displayLevelHe || "—"}
+              displayLevelHe={finishData.displayLevelHe || "-"}
               coinsAwarded={finishData.coinsAwarded ?? 0}
               diamondsAwarded={finishData.diamondsAwarded ?? 0}
               breakdownHe={finishData.breakdownHe}

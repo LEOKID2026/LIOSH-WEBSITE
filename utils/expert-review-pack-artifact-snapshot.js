@@ -129,7 +129,7 @@ function buildScenarioMarkdown(payload) {
 
 function buildSummaryMarkdown(payload) {
   const lines = [
-    "# Expert Review Pack — summary",
+    "# Expert Review Pack - summary",
     "",
     DISCLAIMER,
     "",
@@ -160,7 +160,7 @@ function buildSummaryMarkdown(payload) {
     "",
     ...payload.scenarios.map(
       (s) =>
-        `- **${s.scenarioId}** — ${s.pass ? "PASS" : "FAIL"} — confidence ${s.engineConfidence} — readiness ${s.engineReadiness}`
+        `- **${s.scenarioId}** - ${s.pass ? "PASS" : "FAIL"} - confidence ${s.engineConfidence} - readiness ${s.engineReadiness}`
     ),
     "",
   ];
@@ -170,7 +170,7 @@ function buildSummaryMarkdown(payload) {
 /** Index for inline/browser delivery (no repo-relative file links). */
 function buildIndexMarkdownInline(manifest, summary) {
   const lines = [
-    "# Professional engine — Expert Review Pack",
+    "# Professional engine - Expert Review Pack",
     "",
     DISCLAIMER,
     "",
@@ -183,14 +183,14 @@ function buildIndexMarkdownInline(manifest, summary) {
     "",
     "## Scenarios (see bundled JSON/Markdown per scenario)",
     "",
-    ...manifest.scenarios.map((s) => `- **${s.scenarioId}** — ${s.pass ? "PASS" : "FAIL"}`),
+    ...manifest.scenarios.map((s) => `- **${s.scenarioId}** - ${s.pass ? "PASS" : "FAIL"}`),
     "",
     "## Source artifacts (paths on the machine that produced validation JSON)",
     "",
     `- Professional validation JSON: \`${manifest.sourceArtifacts.professionalEngineValidation}\``,
     manifest.sourceArtifacts.engineFinalSummary
       ? `- Engine final summary: \`${manifest.sourceArtifacts.engineFinalSummary}\``
-      : "- Engine final summary: *(not found — run engine-final after validation)*",
+      : "- Engine final summary: *(not found - run engine-final after validation)*",
   ];
   if (manifest.sourceArtifacts.orchestratorRunSummary) {
     lines.push(`- Orchestrator run summary: \`${manifest.sourceArtifacts.orchestratorRunSummary}\``);
@@ -328,7 +328,7 @@ export async function buildExpertReviewPackSnapshot(root) {
       orchestratorRunSummary: orchestratorRunSummary ? "reports/learning-simulator/orchestrator/run-summary.json" : null,
     },
     scenarios: manifestScenarios,
-    disclaimer: "Internal educational diagnostic support only — not clinical / not parent-facing.",
+    disclaimer: "Internal educational diagnostic support only - not clinical / not parent-facing.",
   };
 
   const summaryPayload = {

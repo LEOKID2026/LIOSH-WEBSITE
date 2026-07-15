@@ -76,7 +76,7 @@ export default function StudentCardsShopView({
       });
       const json = await res.json().catch(() => ({}));
       if (!res.ok || json?.ok !== true) {
-        setMessageHe(json?.code === "insufficient_coins" ? "אין מספיק מטבעות לרכישה." : "הרכישה לא הצליחה — נסו שוב.");
+        setMessageHe(json?.code === "insufficient_coins" ? "אין מספיק מטבעות לרכישה." : "הרכישה לא הצליחה - נסו שוב.");
         return;
       }
       setMessageHe(`קניתם את ${json.card?.name_he || json.card?.nameHe || "הקלף"}!`);
@@ -119,7 +119,7 @@ export default function StudentCardsShopView({
         setMessageHe(
           json?.code === "no_duplicate"
             ? "אין עותק כפול למכירה."
-            : "מכירת העותק הכפול לא הצליחה — נסו שוב."
+            : "מכירת העותק הכפול לא הצליחה - נסו שוב."
         );
         return;
       }
@@ -224,7 +224,7 @@ export default function StudentCardsShopView({
                       ? SHOP_CARD_ALREADY_OWNED_HE
                       : buyBusy
                         ? "קונה..."
-                        : `קנה ב־${priceLabel}`}
+                        : `קנה ב-${priceLabel}`}
                 </button>
               </>
             ),

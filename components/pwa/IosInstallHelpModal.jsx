@@ -101,7 +101,7 @@ export default function IosInstallHelpModal({
       >
         <div className="mb-1 flex items-start justify-between gap-2">
           <h2 id={titleId} className={titleClass}>
-            התקנה ב־iPhone או iPad
+            התקנה ב-iPhone או iPad
           </h2>
           <button
             ref={closeRef}

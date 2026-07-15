@@ -25,11 +25,11 @@ function readingHint(question, gk) {
   const st = subtype(question);
   if (isG12(question, gk)) {
     if (st.includes("niqqud") || st.includes("read_niqqud"))
-      return "הִסְתַּכֵּל בַּנְּקֻדּוֹת מִתַּחַת לְאוֹתִיּוֹת — הֵן מְסַמְּנוֹת אֵיךְ לִקְרֹא.";
+      return "הִסְתַּכֵּל בַּנְּקֻדּוֹת מִתַּחַת לְאוֹתִיּוֹת - הֵן מְסַמְּנוֹת אֵיךְ לִקְרֹא.";
     if (st.includes("letter") || st.includes("first") || st.includes("last"))
       return "זַהֵה אֵת הָאוֹת הָרִאשׁוֹנָה אוֹ הָאַחֲרוֹנָה בַּמִּלָּה.";
     if (st.includes("sound") || st.includes("syllable"))
-      return "הַקְשֵׁב לַצְּלִיל — כַּמָּה חֲלָקִים יֵשׁ בַּמִּלָּה?";
+      return "הַקְשֵׁב לַצְּלִיל - כַּמָּה חֲלָקִים יֵשׁ בַּמִּלָּה?";
     return "קְרָא אֶת הַמִּלָּה לְאַט, אוֹת אַחַר אוֹת.";
   }
   if (st.includes("passage") || st.includes("text"))
@@ -182,7 +182,7 @@ function grammarHint(question, gk) {
     return "חֲשֹׁב עַל חֶלְקֵי הַדִּבּוּר: שֵׁם עֶצֶם, פּוֹעֵל, תּוֹאַר.";
   }
   if (st.includes("gender") || st.includes("plural"))
-    return "בדוק: זכר/נקבה, יחיד/רבים — שים לב לסיום המילה.";
+    return "בדוק: זכר/נקבה, יחיד/רבים - שים לב לסיום המילה.";
   if (st.includes("verb") || st.includes("pos"))
     return "שים לב לחלק הדיבר: פועל, שם עצם, תואר.";
   if (st.includes("tense"))
@@ -237,7 +237,7 @@ function grammarSteps(question, gk) {
   if (st.includes("tense"))
     return [
       "קרא את המשפט.",
-      "מתי קרה הדבר — עבר/הווה/עתיד?",
+      "מתי קרה הדבר - עבר/הווה/עתיד?",
       "בחר את זמן הפועל הנכון.",
     ];
   if (st.includes("negation") || st.includes("transform"))

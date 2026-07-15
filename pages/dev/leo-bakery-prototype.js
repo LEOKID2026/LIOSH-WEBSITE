@@ -5,7 +5,7 @@ export default function LeoBakeryPrototypePage() {
   return (
     <>
       <Head>
-        <title>המאפייה של ליאו — אבטיפוס</title>
+        <title>המאפייה של ליאו - אבטיפוס</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <LeoBakeryPrototype />

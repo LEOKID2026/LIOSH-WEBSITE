@@ -32,7 +32,7 @@ import { buildStudentSubjectDashboardView } from "../../lib/learning-shared/stud
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "../..");
 
-describe("Phase 9 — progress storage authority", () => {
+describe("Phase 9 - progress storage authority", () => {
   test("addSessionProgress does not persist monthly progress without window", () => {
     addSessionProgress(25, 10, { subject: "math", topic: "addition" }, { studentId: "stu-9" });
     assert.deepEqual(loadMonthlyProgress("stu-9"), {});
@@ -55,7 +55,7 @@ describe("Phase 9 — progress storage authority", () => {
   });
 });
 
-describe("Phase 9 — coin formula from Admin/DB", () => {
+describe("Phase 9 - coin formula from Admin/DB", () => {
   test("learning-coin-award uses economy-config session settings (not hardcoded 10/15/20)", () => {
     const src = readFileSync(
       join(ROOT, "lib/learning-supabase/learning-coin-award.server.js"),
@@ -69,7 +69,7 @@ describe("Phase 9 — coin formula from Admin/DB", () => {
   });
 });
 
-describe("Phase 9 — monthly minutes from unified learning-time aggregate", () => {
+describe("Phase 9 - monthly minutes from unified learning-time aggregate", () => {
   test("monthly persistence and derived profile use single aggregate; tiers from Admin/DB", () => {
     const persistenceSrc = readFileSync(
       join(ROOT, "lib/learning-supabase/monthly-persistence-reward.server.js"),
@@ -112,7 +112,7 @@ describe("Phase 9 — monthly minutes from unified learning-time aggregate", () 
   });
 });
 
-describe("Phase 9 — student home uses server derived minutes", () => {
+describe("Phase 9 - student home uses server derived minutes", () => {
   test("buildStudentHomeView monthly minutes from derived not localStorage", () => {
     const view = buildStudentHomeView({
       student: {
@@ -178,7 +178,7 @@ describe("Phase 9 — student home uses server derived minutes", () => {
   });
 });
 
-describe("Phase 9 — product path imports", () => {
+describe("Phase 9 - product path imports", () => {
   test("parent-report pages use parent-report-from-api-payload not bridge", () => {
     for (const rel of ["pages/learning/parent-report.js", "pages/learning/parent-report-detailed.js"]) {
       const src = readFileSync(join(ROOT, rel), "utf8");
@@ -223,7 +223,7 @@ describe("Phase 9 — product path imports", () => {
   });
 });
 
-describe("Phase 3 — student dashboard display truth", () => {
+describe("Phase 3 - student dashboard display truth", () => {
   test("missing accuracy → noData label, not 0%", () => {
     assert.equal(formatStudentPercentHe(null, { gradedCount: 0 }), STUDENT_TRUTH_LABELS_HE.noData);
     const sub = subjectAccuracyFromDerivedSub({ correctTotal: 0, wrongTotal: 0, accuracy: null });
@@ -329,7 +329,7 @@ describe("Phase 3 — student dashboard display truth", () => {
   });
 });
 
-describe("Phase 9 — getCurrentYearMonth helper", () => {
+describe("Phase 9 - getCurrentYearMonth helper", () => {
   test("getCurrentYearMonth returns YYYY-MM", () => {
     const ym = getCurrentYearMonth();
     assert.match(ym, /^\d{4}-\d{2}$/);

@@ -97,7 +97,7 @@ export function computeDiagnosticRestraint(ctx) {
   if (hintInd && acc >= 78) {
     reasons.push("strong_score_weak_independence");
     if (level === "confirmed") level = "likely";
-    alternativeExplanations.push("הדיוק גבוה אך יש סימני תלות ברמזים — כדאי לא לפרש כמאסטרי מלא לפני עצמאות.");
+    alternativeExplanations.push("הדיוק גבוה אך יש סימני תלות ברמזים - כדאי לא לפרש כמאסטרי מלא לפני עצמאות.");
   }
 
   if (trendDer.fragileProgressPattern && behaviorType !== "fragile_success") {
@@ -127,7 +127,7 @@ export function computeDiagnosticRestraint(ctx) {
     reasons.push("fragile_success_unsupported");
     if (conclusionStrength === "strong") conclusionStrength = "tentative";
     if (level === "confirmed") level = "weak";
-    alternativeExplanations.push("פרופיל «הצלחה שבירה» דורש תמיכה במגמה או ברמזים — כרגע זה לא מלא.");
+    alternativeExplanations.push("פרופיל «הצלחה שבירה» דורש תמיכה במגמה או ברמזים - כרגע זה לא מלא.");
   }
 
   const kgClaim = behaviorType === "knowledge_gap";
@@ -136,7 +136,7 @@ export function computeDiagnosticRestraint(ctx) {
     reasons.push("knowledge_gap_under_evidence");
     if (conclusionStrength === "strong" || conclusionStrength === "moderate") conclusionStrength = "tentative";
     if (level === "confirmed") level = "weak";
-    alternativeExplanations.push("פער ידע אמיתי דורש דיוק נמוך יחד עם נפח וטעויות — כאן הנתון עדיין חלקי.");
+    alternativeExplanations.push("פער ידע אמיתי דורש דיוק נמוך יחד עם נפח וטעויות - כאן הנתון עדיין חלקי.");
   }
 
   const shouldAvoidStrongConclusion =
@@ -149,12 +149,12 @@ export function computeDiagnosticRestraint(ctx) {
     "המערכת מצמצמת ניסוח: הנתונים בטווח לא מאפשרים כיוון ברור חזק לגבי מקור הקושי.";
   if (level === "insufficient") {
     diagnosticCautionHe =
-      "מעט מדי תרגול בטווח — לא מסיקים מסקנות חזקות; מומלץ לאסוף עוד מפגשים קצרים לפני שינוי מהותי.";
+      "מעט מדי תרגול בטווח - לא מסיקים מסקנות חזקות; מומלץ לאסוף עוד מפגשים קצרים לפני שינוי מהותי.";
   } else if (level === "mixed") {
     diagnosticCautionHe =
-      "יש אותות מנוגדים (למשל מהירות מול פער ידע) — לא ננעל על כיוון אחד לפני עוד תרגול מבוקר.";
+      "יש אותות מנוגדים (למשל מהירות מול פער ידע) - לא ננעל על כיוון אחד לפני עוד תרגול מבוקר.";
   } else if (conclusionStrength === "tentative") {
-    diagnosticCautionHe = "מה שמוצג כאן סביר אך לא סופי — כדאי לעקוב ולא לדרוס את הילד בהנחה חדה.";
+    diagnosticCautionHe = "מה שמוצג כאן סביר אך לא סופי - כדאי לעקוב ולא לדרוס את הילד בהנחה חדה.";
   }
 
   return {

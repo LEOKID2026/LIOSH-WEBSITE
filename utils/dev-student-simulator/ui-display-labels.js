@@ -21,7 +21,7 @@ export const SUBJECT_DISPLAY_HE = Object.freeze({
   english: "אנגלית",
   hebrew: "עברית",
   science: "מדעים",
-  "moledet-geography": "מולדת / גיאוגרפיה",
+  "moledet-geography": "מולדת / גאוגרפיה",
 });
 
 /**
@@ -94,7 +94,7 @@ export const TOPIC_DISPLAY_HE = Object.freeze({
   homeland: "מולדת",
   community: "קהילה",
   citizenship: "אזרחות",
-  geography: "גיאוגרפיה",
+  geography: "גאוגרפיה",
   values: "ערכים",
   maps: "מפות",
   // Shared

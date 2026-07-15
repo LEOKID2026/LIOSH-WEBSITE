@@ -25,7 +25,7 @@ const INTERNAL_CHILD_LABEL_PATTERNS = [
   /משפט\s+\d+/u,
   /בחנה.{0,8}פונולוגית/u,
   /בנק\s+[א-ת׳"']/u,
-  /כיתה\s+[א-ת׳"']+\s*—/u,
+  /כיתה\s+[א-ת׳"']+\s*-/u,
   /patternFamily|subtype|diagnosticSkillId/i,
   /english_empty_pool/u,
 ];
@@ -104,7 +104,7 @@ function literalIncludes(haystack, needle) {
   if (/[\u0590-\u05FF]/.test(n)) {
     const escaped = n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     return new RegExp(
-      `(^|[\\s,.;:!?'"(\\[\\{—-])${escaped}($|[\\s,.;:!?'")\\]\\}—-])`,
+      `(^|[\\s,.;:!?'"(\\[\\{\\-–])${escaped}($|[\\s,.;:!?'")\\]\\}\\-–])`,
       "u"
     ).test(h);
   }

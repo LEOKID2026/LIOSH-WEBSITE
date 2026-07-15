@@ -208,7 +208,7 @@ export const PROBE_BY_DIAGNOSTIC_SKILL_ID = {
     reasonHe: "לבודד משפטים עם I/he/they ולבחור צורת be מתאימה.",
   },
   en_grammar_present_simple: {
-    skill: "הווה פשוט — התאמת נושא לפועל",
+    skill: "הווה פשוט - התאמת נושא לפועל",
     suggestedQuestionType: "english_subject_verb_agreement_short",
     reasonHe: "לבודד משפטים קצרים עם he/she/it ולבחור צורת פועל מתאימה.",
   },
@@ -261,7 +261,7 @@ export const PROBE_BY_DIAGNOSTIC_SKILL_ID = {
   en_grammar_phase29_standard: EN_GRAMMAR_PROBE_FALLBACK,
   en_grammar_phase29_advanced: {
     ...EN_GRAMMAR_PROBE_FALLBACK,
-    skill: "דקדוק מתקדם — שלב ביניים",
+    skill: "דקדוק מתקדם - שלב ביניים",
     reasonHe: "לבודד משפט אחד עם דפוס דקדוקי ברור לבדיקה.",
   },
   he_comp_explicit_detail: {
@@ -280,22 +280,22 @@ export const PROBE_BY_DIAGNOSTIC_SKILL_ID = {
     reasonHe: "להבדיל בין הובלת דם לבין חילוף חמצן/פחמן דוחמצני מול האוויר.",
   },
   moledet_geo_homeland: {
-    skill: "מולדת — עובדות בסיס",
+    skill: "מולדת - עובדות בסיס",
     suggestedQuestionType: "moledet_fact_one_line_recall",
     reasonHe: "שאלת עובדה קצרה על ארץ ישראל/יישובים.",
   },
   moledet_geo_community: {
-    skill: "קהילה — תפקידים ומוסדות",
+    skill: "קהילה - תפקידים ומוסדות",
     suggestedQuestionType: "moledet_fact_one_line_recall",
     reasonHe: "שאלה קצרה על חיי קהילה מהחומר.",
   },
   moledet_geo_citizenship: {
-    skill: "אזרחות — יסודות",
+    skill: "אזרחות - יסודות",
     suggestedQuestionType: "moledet_concept_minimal_contrast",
     reasonHe: "להבחין בין שני מושגי אזרחות במשפט קצר.",
   },
   moledet_geo_geography: {
-    skill: "גאוגרפיה — נוף ואקלים",
+    skill: "גאוגרפיה - נוף ואקלים",
     suggestedQuestionType: "moledet_fact_one_line_recall",
     reasonHe: "שאלת עובדה על נוף/אקלים/יישובים.",
   },

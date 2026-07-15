@@ -7,7 +7,7 @@ test.use({
   ...devices["iPhone 13"],
 });
 
-test.describe("Parent dashboard modals — mobile input stability", () => {
+test.describe("Parent dashboard modals - mobile input stability", () => {
   test.skip(!email || !password, "Set E2E_PARENT_EMAIL + E2E_PARENT_PASSWORD");
 
   async function loginParent(page: import("@playwright/test").Page) {

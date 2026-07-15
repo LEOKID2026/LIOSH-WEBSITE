@@ -176,7 +176,7 @@ function getPhaseInfo(s, now = Date.now()) {
 
 function currentGiftIntervalSec(s, now = Date.now()) {
   const ph = phaseAtGlobal(now);
-  if (s) s.lastGiftIntervalSec = ph.intervalSec; // לשמירה לשכבת ה־HUD בלבד
+  if (s) s.lastGiftIntervalSec = ph.intervalSec; // לשמירה לשכבת ה-HUD בלבד
   return ph.intervalSec;
 }
 
@@ -482,7 +482,7 @@ export default function LeoMinersGame({
     spawnCost: gp().spawn_initial_cost,
     dpsMult: 1,
     goldMult: 1,
-    muted: false, // קיים — לא נוגעים במשחק
+    muted: false, // קיים - לא נוגעים במשחק
   });
 
   const [isDesktop,  setIsDesktop]  = useState(false);
@@ -638,7 +638,7 @@ export default function LeoMinersGame({
         setGiftToastWithTTL(resp?.message || resp?.error || "לא ניתן לממש כרגע.");
       }
     } catch {
-      setGiftToastWithTTL("שגיאת רשת — נסו שוב.");
+      setGiftToastWithTTL("שגיאת רשת - נסו שוב.");
     } finally {
       setClaiming(false);
     }
@@ -2151,7 +2151,7 @@ function chooseGiftDogPlacementLevel(s) {
   const buyLevel = Math.max(1, s.spawnLevel || 1);
   if (canMergeAtBuyLevel(s)) return buyLevel;
   const low = lowestExistingLevelOnBoard(s);
-  return low || buyLevel; // אם הלוח ריק—נשארים עם דרגת הקנייה
+  return low || buyLevel; // אם הלוח ריק-נשארים עם דרגת הקנייה
 }
 
 
@@ -2343,7 +2343,7 @@ function grantDiamondPrize(s, key) {
       }
     } else {
       s.pendingDiamondDogLevel = lvl;
-      setGiftToastWithTTL(`💎 כלב (רמה ${lvl}) ממתין — פנו מקום בלוח`);
+      setGiftToastWithTTL(`💎 כלב (רמה ${lvl}) ממתין - פנו מקום בלוח`);
     }
   }
   setUi(u => ({ ...u, gold: s.gold }));
@@ -2434,7 +2434,7 @@ function previewPointsFromCoins() { return 0; }
 
 function claimCoinsToMining() {
   try { playMinersClick(); } catch {}
-  setGiftToastWithTTL("נקודות כרייה נצברות רק דרך השרת — לא ניתן להמיר מטבעות מקומית.");
+  setGiftToastWithTTL("נקודות כרייה נצברות רק דרך השרת - לא ניתן להמיר מטבעות מקומית.");
 }
 
 // ===== HUD Info modal state & content =====
@@ -2631,7 +2631,7 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
 
 
       <div className="mt-4 text-xs opacity-70" dir="rtl">
-        <p>ליאו הכורה — גרסת HUD</p>
+        <p>ליאו הכורה - גרסת HUD</p>
       </div>
     </div>
   </div>
@@ -2828,7 +2828,7 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
            style={{ top: hudTop }}
          >
           <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-center mb-2">
-            ליאו — כורים
+            ליאו - כורים
           </h1>
 
           {/* keep glow keyframes for diamonds + global UI pulses */}
@@ -2864,7 +2864,7 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
               aria-label="מידע על מטבעות"
             >
 
-{/* ONLINE/OFFLINE dot — placed to the LEFT of the coin */}
+{/* ONLINE/OFFLINE dot - placed to the LEFT of the coin */}
               <div
                 className="w-2.5 h-2.5 rounded-full ring-2 ring-black/40"
                 title={onlineDotTitle}
@@ -2932,11 +2932,11 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
               <span className="opacity-80">/3</span>
             </button>
 
-            {/* Phase label — avoid Date.now() before mount (hydration mismatch vs SSR) */}
+            {/* Phase label - avoid Date.now() before mount (hydration mismatch vs SSR) */}
             <button onClick={()=>setHudModal('gifts')} className="px-2 py-1 rounded-lg hover:bg-white/10">
               {mounted
                 ? `⏳ ${(_getPhaseInfo(stateRef.current, Date.now()).intervalSec)} שנ׳ `
-                : "⏳ — "}
+                : "⏳ - "}
             </button>
 
             <div className="flex items-center gap-3 ml-2">
@@ -2988,7 +2988,7 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
           {/* Actions row */}
           <div className="flex gap-2 mt-2 flex-wrap justify-center text-sm">
 
-          {/* ADD (spawn) — שורה 1: + [אייקון] (LV N) ; שורה 2: מחיר בלבד */}
+          {/* ADD (spawn) - שורה 1: + [אייקון] (LV N) ; שורה 2: מחיר בלבד */}
 <button
   onClick={addMiner}
   disabled={!canBuyMiner}
@@ -3040,7 +3040,7 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
 
 </button>
 
-{/* DPS — שורה 1: 🪓 +10% ; שורה 2: מחיר בלבד */}
+{/* DPS - שורה 1: 🪓 +10% ; שורה 2: מחיר בלבד */}
 <button
   onClick={upgradeDps}
   disabled={!canBuyDps}
@@ -3061,7 +3061,7 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
   </div>
 </button>
 
-{/* GOLD — שורה 1: 🟡 +10% ; שורה 2: מחיר בלבד */}
+{/* GOLD - שורה 1: 🟡 +10% ; שורה 2: מחיר בלבד */}
 <button
   onClick={upgradeGold}
   disabled={!canBuyGold}
@@ -3088,7 +3088,7 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
           <div className="w-full flex justify-center mt-1">
             <div className="flex items-center gap-2 px-2 py-1.5 text-xs">
               {/* Icon button */}
-              {/* נקודות (icon + number) — both clickable */}
+              {/* נקודות (icon + number) - both clickable */}
 <button
   onClick={() => setShowPointsModal(true)}
   className={`relative inline-flex items-center gap-2 px-2 py-1 rounded-md transition
@@ -3219,7 +3219,7 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
               <b className="text-yellow-300">
                 {formatShort(stateRef.current?.pendingOfflineGold || 0)}
               </b>{" "}
-              מטבעות ו־
+              מטבעות ו-
              <b className="text-yellow-300">
   {formatPointsShort(stateRef.current?.pendingOfflinePoints || 0)}
 
@@ -3296,8 +3296,8 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
               <section>
                 <h3 className="font-bold text-slate-900 mb-1">שדרוגים ובונוסים</h3>
                 <ul className="list-disc mr-5 space-y-1">
-                  <li><b>כוח שבירה</b> — שוברים סלעים מהר יותר.</li>
-                  <li><b>זהב</b> — יותר מטבעות מכל סלע (+10% לשדרוג).</li>
+                  <li><b>כוח שבירה</b> - שוברים סלעים מהר יותר.</li>
+                  <li><b>זהב</b> - יותר מטבעות מכל סלע (+10% לשדרוג).</li>
                   <li>מתנות, כלבים אוטומטיים ובונוסים נוספים מופיעים מעת לעת.</li>
                   <li>אפשר לאסוף יהלומים ולפתוח ארגזים מיוחדים.</li>
                 </ul>
@@ -3310,7 +3310,7 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
                   <li>יש תקרה יומית והאטה הדרגתית ככל שמתקרבים אליה.</li>
                   <li>התקדמות offline מוגבלת וביעילות מופחתת.</li>
                   <li><b>מימוש:</b> הנקודות שנצברו מומשות למטבעות ליאו דרך השרת.</li>
-                  <li>נקודות הן לבידור בלבד — אין להן ערך כספי מובטח.</li>
+                  <li>נקודות הן לבידור בלבד - אין להן ערך כספי מובטח.</li>
                 </ul>
               </section>
 
@@ -3318,7 +3318,7 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
                 <h3 className="font-bold text-slate-900 mb-1">חשוב לדעת</h3>
                 <ul className="list-disc mr-5 space-y-1">
                   <li>איזון המשחק, מתנות ומגבלות יומיות עשויים להשתנות לצורך הוגנות ותחזוקה.</li>
-                  <li>זה משחק כיף לילדים — לא ייעוץ פיננסי.</li>
+                  <li>זה משחק כיף לילדים - לא ייעוץ פיננסי.</li>
                 </ul>
               </section>
             </div>
@@ -3361,7 +3361,7 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
   <div className="fixed inset-0 z-[10060] bg-black/60 backdrop-blur-sm grid place-items-center p-4">
     <div className="w-full max-w-md rounded-2xl bg-zinc-900 text-white border border-white/10 shadow-lg">
       <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
-        <h3 className="text-lg font-semibold">בונוס צפייה — איך זה עובד?</h3>
+        <h3 className="text-lg font-semibold">בונוס צפייה - איך זה עובד?</h3>
         <button
           onClick={() => setShowGainModal(false)}
           className="px-2 py-1 rounded hover:bg-white/10"
@@ -3396,7 +3396,7 @@ const BTN_DIS  = "opacity-60 cursor-not-allowed";
         <ul className="list-disc list-inside space-y-1 text-white/80">
           <li>השלימו את הפעולה הנדרשת כדי להפעיל את הבונוס.</li>
           <li>כשמוכן, לחצו צפייה כדי לקבל את הפרס.</li>
-          <li>אם כבוי — המתינו עד שהתנאים יתמלאו.</li>
+          <li>אם כבוי - המתינו עד שהתנאים יתמלאו.</li>
         </ul>
       </div>
 

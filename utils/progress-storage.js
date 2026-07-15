@@ -55,7 +55,7 @@ export function loadMonthlyProgress(studentId) {
 /**
  * Overwrite local cache from server-derived monthly progress (server wins).
  * @param {string} [studentId]
- * @param {Record<string, unknown>|null|undefined} derived — `computeStudentLearningDerived` shape
+ * @param {Record<string, unknown>|null|undefined} derived - `computeStudentLearningDerived` shape
  */
 export function syncMonthlyProgressCacheFromServer(studentId, derived) {
   if (typeof window === "undefined" || !derived || typeof derived !== "object") return;

@@ -88,7 +88,7 @@ export function analyzePrerequisiteGap({ mastery, subjectId, skillId }) {
 
     if (allPrereqsStrong) {
       suspectedDirectSkillGap = true;
-      evidence.push("Prerequisite skills look comparatively strong—focal skill gap is plausible.");
+      evidence.push("Prerequisite skills look comparatively strong-focal skill gap is plausible.");
     } else if (anyPrereqWeakOrMissing) {
       suspectedPrerequisiteGap = true;
       for (const p of prereqStates) {
@@ -99,7 +99,7 @@ export function analyzePrerequisiteGap({ mastery, subjectId, skillId }) {
     }
   } else if (weakSelf && prereqStates.length === 0) {
     suspectedDirectSkillGap = true;
-    evidence.push("No prerequisite edges defined—treat as focal skill signal until mapped.");
+    evidence.push("No prerequisite edges defined-treat as focal skill signal until mapped.");
   }
 
   return {
@@ -110,7 +110,7 @@ export function analyzePrerequisiteGap({ mastery, subjectId, skillId }) {
     confidence: evidence.length ? "low" : "very_low",
     evidence,
     reasoning: [
-      "Dependencies are educational hypotheses—verify with targeted probes.",
+      "Dependencies are educational hypotheses-verify with targeted probes.",
       "A weak advanced skill with weak prerequisites may indicate foundation gaps.",
     ],
     nextBestPrerequisiteToCheck:

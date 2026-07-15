@@ -43,7 +43,7 @@ export default async function handler(req, res) {
     console.error("[delete-student] unexpected error", error);
     return res.status(500).json({
       ok: false,
-      error: "שגיאת שרת — נסו שוב",
+      error: "שגיאת שרת - נסו שוב",
       errorCode: "internal_error",
     });
   }

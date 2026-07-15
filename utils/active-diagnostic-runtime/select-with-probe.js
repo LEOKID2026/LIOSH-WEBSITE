@@ -6,11 +6,11 @@ import { str } from "./str-utils.js";
  * @param {Record<string, unknown>[]} p.items — eligible pool (already filtered by grade/topic where applicable)
  * @param {import("./build-pending-probe.js").PendingDiagnosticProbe|null} p.pendingProbe
  * @param {Set<string>|string[]} p.recentIds — ids or keys to avoid repeating
- * @param {string} p.currentTopic — "mixed" or concrete topic id
+ * @param {string} p.currentTopic - "mixed" or concrete topic id
  * @param {() => Record<string, unknown>|null|undefined} p.fallbackPick
  * @param {() => number} [p.randomFn]
- * @param {(item: Record<string, unknown>) => string} [p.getItemTopic] — defaults to `item.topic`
- * @param {(item: Record<string, unknown>) => string} [p.getItemId] — defaults to `item.id`
+ * @param {(item: Record<string, unknown>) => string} [p.getItemTopic] - defaults to `item.topic`
+ * @param {(item: Record<string, unknown>) => string} [p.getItemId] - defaults to `item.id`
  */
 export function selectQuestionWithProbe({
   items,

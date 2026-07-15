@@ -418,7 +418,7 @@ const PARENT_DIAGNOSTIC_EXPLANATION_CATALOG = [
     lookupKey: "finding:taxonomy:MG-07",
     explanationHe:
       "המערכת זיהתה קושי בהבנת התפקיד של מוסדות ציבור. הכוונה היא לדעת מה עושה כל מוסד ומה האחריות שלו בחברה.",
-    exampleHe: "כנסת — חקיקה / בית משפט — שיפוט",
+    exampleHe: "כנסת - חקיקה / בית משפט - שיפוט",
     status: "approved",
     approvalSource: "owner_moledet_geography_batch_approved",
   },

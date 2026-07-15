@@ -65,9 +65,9 @@ export default function GuestArcadeGameToggles({ accessToken, onMessage }) {
 
   return (
     <section className="rounded-xl border border-white/15 bg-white/5 p-4 space-y-3 text-right" dir="rtl">
-      <h2 className="text-lg font-bold">שליטת ארקייד לאורחים — משחקים</h2>
+      <h2 className="text-lg font-bold">שליטת ארקייד לאורחים - משחקים</h2>
       <p className="text-xs text-white/60">
-        אם הכל פתוח — אורח משחק כמו שחקן רגיל. כיבוי משחק חוסם גישה גם ל-quick-game וגם לחדרים.
+        אם הכל פתוח - אורח משחק כמו שחקן רגיל. כיבוי משחק חוסם גישה גם ל-quick-game וגם לחדרים.
       </p>
       <div className="flex flex-wrap gap-2 justify-end">
         <button

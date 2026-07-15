@@ -209,7 +209,7 @@ export default function HebrewAudioBuild1Panel({
 
   const skipGuided = useCallback(() => {
     if (!gameActive || busy || !guidedMode) return;
-    setStatusMsg("דילוג — ללא ציון אוטומטי.");
+    setStatusMsg("דילוג - ללא ציון אוטומטי.");
     setTimeout(() => onGuidedNeutralDone(), 600);
   }, [busy, gameActive, guidedMode, onGuidedNeutralDone]);
 

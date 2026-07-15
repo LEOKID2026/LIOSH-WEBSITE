@@ -80,7 +80,7 @@ function hasSignal(signals, id) {
   return signals.some((s) => s.id === id);
 }
 
-describe("Phase 7 — positive-evidence helpers", () => {
+describe("Phase 7 - positive-evidence helpers", () => {
   test("improvement uses diagnostic-only daily rollup", () => {
     const acc = createPositiveEvidenceAccumulator();
     const days = ["2026-01-01", "2026-01-02", "2026-01-03", "2026-01-04"];
@@ -157,7 +157,7 @@ describe("Phase 7 — positive-evidence helpers", () => {
   });
 });
 
-describe("Phase 7 — aggregator positiveEvidence", () => {
+describe("Phase 7 - aggregator positiveEvidence", () => {
   test("no praise on thin topic data", () => {
     const session = makeSession("s1", "math", "algebra");
     const answers = [
@@ -412,7 +412,7 @@ describe("Phase 7 — aggregator positiveEvidence", () => {
   });
 });
 
-describe("Phase 7 — scope guards", () => {
+describe("Phase 7 - scope guards", () => {
   test("no coins/monthly changes", () => {
     const coinPath = join(__dirname, "../../lib/learning-supabase/learning-coin-award.server.js");
     const monthlyPath = join(

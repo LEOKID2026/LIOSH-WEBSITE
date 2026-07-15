@@ -71,7 +71,7 @@ function effectiveSubskillId(q, params) {
 /**
  * @param {unknown} val
  * @param {string} pathPrefix
- * @param {string} poolBucketKey — inner pool id (e.g. `be_basic`) for taxonomy allowlist
+ * @param {string} poolBucketKey - inner pool id (e.g. `be_basic`) for taxonomy allowlist
  * @param {(q: Record<string, unknown>, poolBucketKey: string) => void} onRow
  */
 function walkPoolQuestionRows(val, pathPrefix, poolBucketKey, onRow) {

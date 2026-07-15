@@ -103,7 +103,7 @@ export default function TeacherWorksheetGradePage({ classId, worksheetId, studen
         setError(body?.error?.code || "grading_incomplete");
         return;
       }
-      setMsg(`פורסם לילד/ה · ציון: ${body?.data?.finalScorePct ?? "—"}%`);
+      setMsg(`פורסם לילד/ה · ציון: ${body?.data?.finalScorePct ?? "-"}%`);
       await load();
     } finally {
       setBusy(false);

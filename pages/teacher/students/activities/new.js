@@ -212,7 +212,7 @@ export default function TeacherPrivateStudentsNewActivityPage() {
   const studentsByGrade = useMemo(() => {
     const map = {};
     for (const s of students) {
-      const g = s.gradeLevel || "—";
+      const g = s.gradeLevel || "-";
       if (!map[g]) map[g] = 0;
       map[g] += 1;
     }
@@ -351,7 +351,7 @@ export default function TeacherPrivateStudentsNewActivityPage() {
               <span className="text-white/70">
                 כיתה (לצורך תוכן)
                 {lockedGrade ? (
-                  <span className="text-emerald-300/80 text-xs mr-1">— נגזר מהילדים הנבחרים</span>
+                  <span className="text-emerald-300/80 text-xs mr-1">- נגזר מהילדים הנבחרים</span>
                 ) : null}
               </span>
               <select

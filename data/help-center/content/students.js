@@ -84,8 +84,8 @@ export const hintsAndExplanations = studentArticle({
   toc: [{ id: "after", title: "אחרי התשובה" }],
   blocks: [
     heading(2, "after", "אחרי התשובה"),
-    paragraph("אם טעיתם — קראו את ההסבר ונסו שוב. אם צדקתם — המשיכו לשאלה הבאה!"),
-    callout("tip", "אל תמהרו — קריאת ההסבר עוזרת להבין."),
+    paragraph("אם טעיתם - קראו את ההסבר ונסו שוב. אם צדקתם - המשיכו לשאלה הבאה!"),
+    callout("tip", "אל תמהרו - קריאת ההסבר עוזרת להבין."),
     videoBlock(S, "hints-and-explanations"),
   ],
 });
@@ -98,7 +98,7 @@ export const dailyMissions = studentArticle({
   toc: [{ id: "missions", title: "משימות" }],
   blocks: [
     heading(2, "missions", "משימות"),
-    paragraph("בעמוד הבית תראו משימות יומיות. כשמסיימים אותן — מקבלים נקודות והתקדמות."),
+    paragraph("בעמוד הבית תראו משימות יומיות. כשמסיימים אותן - מקבלים נקודות והתקדמות."),
     videoBlock(S, "daily-missions"),
     screenshotBlock(S, "daily-missions", "missions", "פאנל משימות יומיות"),
   ],
@@ -112,7 +112,7 @@ export const monthlyPersistence = studentArticle({
   toc: [{ id: "persistence", title: "התמדה" }],
   blocks: [
     heading(2, "persistence", "התמדה"),
-    paragraph("ככל שמתאמנים יותר בחודש — המסע מתקדם. זה מראה כמה התמדתם!"),
+    paragraph("ככל שמתאמנים יותר בחודש - המסע מתקדם. זה מראה כמה התמדתם!"),
     screenshotBlock(S, "monthly-persistence", "persistence", "מסע התמדה חודשי"),
     videoBlock(S, "monthly-persistence"),
   ],
@@ -155,7 +155,7 @@ export const offlineGames = studentArticle({
   toc: [{ id: "offline", title: "לא מקוון" }],
   blocks: [
     heading(2, "offline", "לא מקוון"),
-    paragraph("איקס עיגול ומשחקים נוספים — בלי צורך ברשת."),
+    paragraph("איקס עיגול ומשחקים נוספים - בלי צורך ברשת."),
     screenshotBlock(S, "offline-games", "offline", "רשימת משחקים לא מקוונים"),
     videoBlock(S, "offline-games"),
     relatedLinks([{ href: "/offline", label: "משחקים לא מקוונים" }]),

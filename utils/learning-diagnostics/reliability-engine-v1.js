@@ -96,7 +96,7 @@ export function assessReliabilityV1(maps, rawMistakesBySubject, startMs, endMs) 
     reasoning: [
       totalQ < 12 ? "Thin volume lowers trust in diagnostic conclusions." : "Volume supports stronger reliability.",
       slowCorrect >= fastWrong && slowCorrect > 0
-        ? "Slow correct responses are treated as effortful success—not automatic weakness."
+        ? "Slow correct responses are treated as effortful success-not automatic weakness."
         : "Review pacing signals separately from knowledge gaps.",
       inconsistencyLevel !== "low"
         ? "Large accuracy spread across rows suggests unstable performance or mixed contexts."

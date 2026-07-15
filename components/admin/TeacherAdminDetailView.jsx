@@ -75,7 +75,7 @@ export function TeacherAdminDetailHeader({ teacher }) {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <h1 className="text-xl md:text-2xl font-bold text-right break-words">
-            {teacher.displayName || teacher.email || "—"}
+            {teacher.displayName || teacher.email || "-"}
           </h1>
         </div>
         <StatusBadge teacher={teacher} />
@@ -163,7 +163,7 @@ function TeacherRegSubmissionSection({ teacher, accessToken, onChanged }) {
           <div>
             <p className="text-white/50 text-xs mb-1">{ADMIN_REG_REQUEST_DETAILS}</p>
             <p className="text-white/85 whitespace-pre-wrap break-words leading-relaxed">
-              {req.description || "—"}
+              {req.description || "-"}
             </p>
           </div>
           <div>

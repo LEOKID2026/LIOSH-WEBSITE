@@ -9,9 +9,9 @@ import { sanitizeQuestionForStudentDisplay } from "../utils/student-question-ste
 const METADATA_CASES = [
   ["dec_sub", "חיסור עשרוניים (קל): 1.23 − 0.45 = __"],
   ["dec_add", "חיבור עשרוניים (בינוני): 2.10 + 3.20 = __"],
-  ["geometry_pyth", "פיתגורס (קל): ניצבים 3 ו-4 — מה אורך היתר?"],
+  ["geometry_pyth", "פיתגורס (קל): ניצבים 3 ו-4 - מה אורך היתר?"],
   ["divisibility", "התחלקות (קל): האם 24 מתחלק ב-3 בלי שארית?"],
-  ["grade_level", "כיתה ד׳ (קל): תיבה 2×3×4 — מה הנפח?"],
+  ["grade_level", "כיתה ד׳ (קל): תיבה 2×3×4 - מה הנפח?"],
   ["fractions", "שברים (אתגר): 1/2 + 1/4 = __"],
 ];
 

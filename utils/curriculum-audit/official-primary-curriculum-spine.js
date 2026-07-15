@@ -243,7 +243,7 @@ function buildOfficialGradeSlot(legacy, subjectKey, gradeNum) {
         gradeDepth: "intro",
         notes:
           (g.notes ? `${g.notes} ` : "") +
-          "Official frameworks stress exposure / oral / lexical bands in early grades — grammar drills are not treated as core literacy targets here.",
+          "Official frameworks stress exposure / oral / lexical bands in early grades - grammar drills are not treated as core literacy targets here.",
         sourceRefs: [
           ...CURRICULUM_SOURCE_REF_PRESETS.english_exposure_framework,
           ...g.sourceRefs,
@@ -260,7 +260,7 @@ function buildOfficialGradeSlot(legacy, subjectKey, gradeNum) {
         expectedLevel: "exposure_only",
         notes:
           (s.notes ? `${s.notes} ` : "") +
-          "Sentence-pattern pools may resemble writing skills — classify as exposure unless formally assessed.",
+          "Sentence-pattern pools may resemble writing skills - classify as exposure unless formally assessed.",
       });
     }
     enrichmentTopics.splice(
@@ -278,13 +278,13 @@ function buildOfficialGradeSlot(legacy, subjectKey, gradeNum) {
     );
     textComplexityNotes.push(
       gradeNum <= 2
-        ? "טקסטים קצרים, מילות תוכן ברורות — מורכבות תחבירית מוגבלת בדרך כלל."
+        ? "טקסטים קצרים, מילות תוכן ברורות - מורכבות תחבירית מוגבלת בדרך כלל."
         : gradeNum <= 4
           ? "טקסטים דומים לספרות ילדים; משימות הבנה מתחילות לכלול הסקות בסיסיות."
           : "טקסטים ארוכים יותר; דרישות הנמקה והיקש מתגברות."
     );
     difficultyNotes.push(
-      "מפת רשמית לפי כיתה דורשת אימות מול מסמך משרד החינוך — כאן רמת אמון בינונית עד נמוכה."
+      "מפת רשמית לפי כיתה דורשת אימות מול מסמך משרד החינוך - כאן רמת אמון בינונית עד נמוכה."
     );
     sourceRefs.push(...CURRICULUM_SOURCE_REF_PRESETS.rama_general);
   }
@@ -296,7 +296,7 @@ function buildOfficialGradeSlot(legacy, subjectKey, gradeNum) {
     );
     textComplexityNotes.push(
       gradeNum <= 2
-        ? "משפטים קצרים, שאלון מילולי בסיסי — לא ספרות כבדה."
+        ? "משפטים קצרים, שאלון מילולי בסיסי - לא ספרות כבדה."
         : "טקסטים מתארכים בהדרגה; עדיין יש לאמת מול תוכנית האנגלית בבית הספר."
     );
     sourceRefs.push(...CURRICULUM_SOURCE_REF_PRESETS.english_exposure_framework);
@@ -305,7 +305,7 @@ function buildOfficialGradeSlot(legacy, subjectKey, gradeNum) {
   if (subjectKey === "science") {
     skills.push(
       "חקירה מדעית: תצפית, השערה, ניסוי בטוח בכיתה, תיעוד.",
-      "תכני חיים, חומרים, אנרגיה, כדור הארץ וטכנולוגיה — לפי מסגרות מדע וטכנולוגיה."
+      "תכני חיים, חומרים, אנרגיה, כדור הארץ וטכנולוגיה - לפי מסגרות מדע וטכנולוגיה."
     );
     difficultyNotes.push(
       "נושאים מתקדמים (אנרגיה מוליכים מורכבים) דורשים אימות עומק לכיתה."
@@ -316,7 +316,7 @@ function buildOfficialGradeSlot(legacy, subjectKey, gradeNum) {
   if (subjectKey === "math") {
     skills.push(
       "תפיסה מספרית, פעולות, שאלות מילוליות, שברים/עשרוניים (בהתאם לכיתה), נתונים ותרשימים.",
-      "גאומטריה במתמטיקה: קשרים גיאומטריים בהקשר חישובי — מוסבר במיתר נפרד למוצר."
+      "גאומטריה במתמטיקה: קשרים גיאומטריים בהקשר חישובי - מוסבר במיתר נפרד למוצר."
     );
     difficultyNotes.push(
       "גיאומטריה כמיתר בתוך מתמטיקה מופרד ממקצוע הגאומטריה של האתר עבור השוואות דוח.",
@@ -324,14 +324,14 @@ function buildOfficialGradeSlot(legacy, subjectKey, gradeNum) {
     );
     sourceRefs.push({
       sourceType: "official_pdf",
-      title: `מתמטיקה יסודי — מסמך תוכנית לכיתה ${G_HE[gradeNum]} (מיידע)`,
+      title: `מתמטיקה יסודי - מסמך תוכנית לכיתה ${G_HE[gradeNum]} (מיידע)`,
       url: `${MATH_ELEMENTARY_GRADE_PDF_BASE}/kita${gradeNum}.pdf`,
       checkedAt: SOURCE_REGISTRY_CHECKED_AT,
-      note: "עיגון רשמי לכיתה — יש לאמת כל פריט מול הסעיפים הרלוונטיים בקובץ.",
+      note: "עיגון רשמי לכיתה - יש לאמת כל פריט מול הסעיפים הרלוונטיים בקובץ.",
     });
     sourceRefs.push({
       sourceType: "official_moe",
-      title: "חקר נתונים — מרחב פדגוגי",
+      title: "חקר נתונים - מרחב פדגוגי",
       url: "https://pop.education.gov.il/tchumey_daat/matmatika/yesodi/noseem_nilmadim/choker-netunim/",
       checkedAt: SOURCE_REGISTRY_CHECKED_AT,
       note: "מיתר חקר נתונים במסגרת התוכנית.",
@@ -340,7 +340,7 @@ function buildOfficialGradeSlot(legacy, subjectKey, gradeNum) {
 
   if (subjectKey === "geometry") {
     skills.push(
-      "הכרת צורות, מדידות (היקף, שטח), זוויות, גופים, סימטריה — עומק לפי כיתה.",
+      "הכרת צורות, מדידות (היקף, שטח), זוויות, גופים, סימטריה - עומק לפי כיתה.",
       "הפרדה בין הכרת צורה לבין נפח משולש למשולש פיתגורס וכו׳."
     );
     difficultyNotes.push(
@@ -368,7 +368,7 @@ function buildOfficialGradeSlot(legacy, subjectKey, gradeNum) {
         if (t.key && String(t.key).startsWith("moledet")) t.confidence = "medium";
       }
     }
-    skills.push("זהות, גיאוגרפיה מקומית, חברה ואזרחות — בהתאם לבנק המופיע במוצר.");
+    skills.push("זהות, גיאוגרפיה מקומית, חברה ואזרחות - בהתאם לבנק המופיע במוצר.");
     sourceRefs.push(...CURRICULUM_SOURCE_REF_PRESETS.moe_portal);
   }
 
@@ -416,9 +416,9 @@ export const OFFICIAL_SPINE_META = {
   phase: "4B-1-math-source",
   generatedFrom:
     "utils/curriculum-audit/israeli-primary-curriculum-map.js + official-curriculum-source-registry (math grades 1–6 PDFs + POP strands; RAMA supporting)",
-  scope: "Israeli elementary grades 1–6 — source-anchored planning spine (not syllabus certification)",
+  scope: "Israeli elementary grades 1–6 - source-anchored planning spine (not syllabus certification)",
   geometryVsMathNote:
-    "Geometry appears as its own subject in the product; mathematically it is a strand — comparison reports cross-reference both.",
+    "Geometry appears as its own subject in the product; mathematically it is a strand - comparison reports cross-reference both.",
   moladetaGradeBandNote:
     "Moladeta / society / citizenship items outside grades 2–4 are flagged unless an additional geography source is cited.",
   disclaimer:

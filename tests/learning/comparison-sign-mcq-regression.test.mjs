@@ -58,7 +58,7 @@ function assertStudentVisibleCompareChoices(q, label) {
   }
 }
 
-test("A — canonical helper getComparisonSign / computeComparisonSign", () => {
+test("A - canonical helper getComparisonSign / computeComparisonSign", () => {
   const cases = [
     [16, 7, ">"],
     [44, 24, ">"],
@@ -74,7 +74,7 @@ test("A — canonical helper getComparisonSign / computeComparisonSign", () => {
   }
 });
 
-test("B — generated comparison questions stay canonical", () => {
+test("B - generated comparison questions stay canonical", () => {
   const lc = getLevelConfig(2, "easy");
   for (let i = 0; i < 40; i++) {
     const raw = generateQuestion(lc, "compare", "g2", null);
@@ -87,7 +87,7 @@ test("B — generated comparison questions stay canonical", () => {
   }
 });
 
-test("C — student payload after sanitize keeps internal sign values", () => {
+test("C - student payload after sanitize keeps internal sign values", () => {
   const q = sanitizeQuestionForStudentDisplay(buildCompareQuestion(79, 35));
   assertStudentVisibleCompareChoices(q, "79/35");
   assert.equal(q.correctAnswer, ">");
@@ -98,7 +98,7 @@ test("C — student payload after sanitize keeps internal sign values", () => {
   assert.equal(reSanitized.correctAnswer, ">", "finalizeComparisonSignMcq repairs stale sign");
 });
 
-test("D — validation uses operands even when correctAnswer field is stale", () => {
+test("D - validation uses operands even when correctAnswer field is stale", () => {
   const stale = buildCompareQuestion(79, 35, "<");
   assert.equal(cmpUserMatchesCanonical(stale, ">"), true, "79 __ 35 with > must be correct");
   assert.equal(cmpUserMatchesCanonical(stale, "<"), false);
@@ -110,7 +110,7 @@ test("D — validation uses operands even when correctAnswer field is stale", ()
   assert.equal(cmpUserMatchesCanonical(q12, "="), true);
 });
 
-test("E — step-by-step explanation sign matches canonical answer (no contradiction)", () => {
+test("E - step-by-step explanation sign matches canonical answer (no contradiction)", () => {
   const cases = [
     [79, 35, ">", /79 > 35/, /הסימן .*>/],
     [85, 98, "<", /85 < 98/, /הסימן .*</],

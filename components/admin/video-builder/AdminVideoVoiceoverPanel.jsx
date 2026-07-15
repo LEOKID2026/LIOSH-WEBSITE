@@ -185,7 +185,7 @@ export default function AdminVideoVoiceoverPanel({
             onChange={(e) => onChange(e.target.value || null)}
             className="w-full rounded border border-white/20 bg-black/30 px-2 py-1.5 text-sm text-right"
           >
-            <option value="">— בחר קובץ —</option>
+            <option value="">- בחר קובץ -</option>
             {assets
               .filter((a) => a.type === "audio")
               .map((a) => (
@@ -194,7 +194,7 @@ export default function AdminVideoVoiceoverPanel({
                 </option>
               ))}
           </select>
-          <p className="text-xs text-white/40">העלאת קבצים חדשים — בטאב "מדיה"</p>
+          <p className="text-xs text-white/40">העלאת קבצים חדשים - בטאב "מדיה"</p>
         </>
       )}
 

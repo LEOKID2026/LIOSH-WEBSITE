@@ -27,7 +27,7 @@ export function parentDirectOpenerHe(intent, truthPacket) {
         : "הנה מה שמופיע בדוח לגבי הנושא הזה:";
     case "what_is_most_important":
       return fragile
-        ? "יש כמה תחומים שעדיין לא יציבים — כדאי להתחיל מהם:"
+        ? "יש כמה תחומים שעדיין לא יציבים - כדאי להתחיל מהם:"
         : exec
           ? ""
           : "הנה מה שכדאי לשים לב אליו קודם לפי הדוח:";
@@ -45,21 +45,21 @@ export function parentDirectOpenerHe(intent, truthPacket) {
           : "בשבוע הקרוב אפשר לבחור תרגול קצר וממוקד:";
       }
       if (practiceLooksSubstantial && fragile) {
-        return "יש נפח תרגול בדוח, אבל חלק מהניסוחים עדיין זהירים — כדאי לצעדים קטנים ומדידים:";
+        return "יש נפח תרגול בדוח, אבל חלק מהניסוחים עדיין זהירים - כדאי לצעדים קטנים ומדידים:";
       }
       return k === "what_to_do_today"
         ? "כדאי להתחיל בצעד קטן ולצבור עוד תרגול:"
-        : "כדאי לצבור עוד תרגול — הנה כיוון ראשוני:";
+        : "כדאי לצבור עוד תרגול - הנה כיוון ראשוני:";
     case "why_not_advance":
-      return "עצירת קידום ברמה קשורה בדרך כלל לניסוח שעדיין לא נסגר בדוח — לא בהכרח כישלון.";
+      return "עצירת קידום ברמה קשורה בדרך כלל לניסוח שעדיין לא נסגר בדוח - לא בהכרח כישלון.";
     case "what_is_going_well":
       return exec ? "" : "הנה מה שנראה חזק יחסית בתרגול, לפי הדוח:";
     case "what_is_still_difficult":
       return "הנה מה שעדיין דורש חיזוק ותרגול, לפי הדוח:";
     case "how_to_tell_child":
-      return "עדיף משפט אחד רגוע על מה שרואים בדוח, ורק אז משפט משמעות קצר — בשפה פשוטה.";
+      return "עדיף משפט אחד רגוע על מה שרואים בדוח, ורק אז משפט משמעות קצר - בשפה פשוטה.";
     case "question_for_teacher":
-      return "שאלה טובה למורה מצביעה על מה שמופיע בדוח — קצרה וספציפית.";
+      return "שאלה טובה למורה מצביעה על מה שמופיע בדוח - קצרה וספציפית.";
     case "is_intervention_needed":
       return fragile
         ? "הדוח מציג כמה תחומים שעדיין לא מיושבים לגמרי. זה לא בהכרח \"בעיה חמורה\":"
@@ -69,7 +69,7 @@ export function parentDirectOpenerHe(intent, truthPacket) {
     case "clarify_term":
       return "נשארים עם המילים שמופיעות בדוח עצמו:";
     case "strength_vs_weakness_summary":
-      return "הנה שני הכיוונים שהדוח מציג — מה חזק יותר ומה עדיין דורש עבודה:";
+      return "הנה שני הכיוונים שהדוח מציג - מה חזק יותר ומה עדיין דורש עבודה:";
     case "off_topic_redirect":
     case "simple_parent_explanation":
       return "";

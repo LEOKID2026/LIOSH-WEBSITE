@@ -107,7 +107,7 @@ export default function TeacherParentMessagePanel({ accessToken, studentId }) {
     >
       <h2 className="text-lg font-semibold mb-3">הודעה להורה</h2>
       <p className="text-sm text-white/60 mb-4">
-        ההודעה תופיע בדוח ההורה — כולל גישה עם קוד מהמורה.
+        ההודעה תופיע בדוח ההורה - כולל גישה עם קוד מהמורה.
       </p>
 
       <form onSubmit={onSubmit} className="space-y-3 mb-5">
@@ -193,7 +193,7 @@ export default function TeacherParentMessagePanel({ accessToken, studentId }) {
           <ul className="space-y-2 m-0 p-0 list-none">
             {hiddenHistory.map((msg) => (
               <li key={msg.id} className="text-xs text-white/40 line-through break-words">
-                {formatMessageDateTime(msg.createdAt)} — {msg.message}
+                {formatMessageDateTime(msg.createdAt)} - {msg.message}
               </li>
             ))}
           </ul>

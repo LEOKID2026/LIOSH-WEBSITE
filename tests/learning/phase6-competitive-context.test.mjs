@@ -88,7 +88,7 @@ function makeDiagnosticAnswer(sessionId, subject, topic, isCorrect) {
   };
 }
 
-describe("Phase 6 — competitive-context helpers", () => {
+describe("Phase 6 - competitive-context helpers", () => {
   test("isCompetitiveGameMode recognizes challenge speed marathon", () => {
     assert.equal(isCompetitiveGameMode("challenge"), true);
     assert.equal(isCompetitiveGameMode("speed"), true);
@@ -135,7 +135,7 @@ describe("Phase 6 — competitive-context helpers", () => {
   });
 });
 
-describe("Phase 6 — aggregator competitiveContext + recentMistakes", () => {
+describe("Phase 6 - aggregator competitiveContext + recentMistakes", () => {
   test("15 challenge @ 45% → competitiveAccuracy=45%, diagnosticAccuracy unchanged", () => {
     const session = makeSession("sess-ch", "math", "algebra", "challenge");
     const answers = Array.from({ length: 15 }, (_, i) =>
@@ -234,7 +234,7 @@ describe("Phase 6 — aggregator competitiveContext + recentMistakes", () => {
   });
 });
 
-describe("Phase 6 — class weakness diagnostic-aware", () => {
+describe("Phase 6 - class weakness diagnostic-aware", () => {
   test("weaknessTopics ignore competitive-only topic.wrong", () => {
     const competitiveOnlyPayload = aggregateReportPayloadFromActivityRows(
       makeStudent("stu-a"),
@@ -282,7 +282,7 @@ describe("Phase 6 — class weakness diagnostic-aware", () => {
   });
 });
 
-describe("Phase 6 — coins/monthly audit (no changes)", () => {
+describe("Phase 6 - coins/monthly audit (no changes)", () => {
   test("learning-coin-award has no mode-based skip for competitive modes", () => {
     const path = join(__dirname, "../../lib/learning-supabase/learning-coin-award.server.js");
     const src = readFileSync(path, "utf8");
@@ -298,7 +298,7 @@ describe("Phase 6 — coins/monthly audit (no changes)", () => {
   });
 });
 
-describe("Phase 6 — strip + regression guards", () => {
+describe("Phase 6 - strip + regression guards", () => {
   test("stripInternalReportPayloadFields preserves competitiveContext", () => {
     const session = makeSession("sess-strip", "math", "algebra", "speed");
     const answers = [makeCompetitiveAnswer("sess-strip", "math", "algebra", true, "speed")];

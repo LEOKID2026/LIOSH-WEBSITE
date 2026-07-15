@@ -19,7 +19,7 @@ import {
 } from "../../lib/worksheets/worksheet-math-display.server.js";
 
 const META = {
-  titleHe: "דף עבודה — חיבור במאונך",
+  titleHe: "דף עבודה - חיבור במאונך",
   subjectHe: "מתמטיקה",
   gradeHe: "כיתה ג׳",
   topicHe: "חיבור במאונך",

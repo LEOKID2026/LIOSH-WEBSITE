@@ -1347,8 +1347,8 @@ test.describe("monitor student answers UI @monitor-student-answers", () => {
     await expect(page.getByTestId("teacher-student-answer-row-0")).toBeVisible({
       timeout: 20_000,
     });
-    await expect(page.getByTestId("student-selected-answer").first()).not.toHaveText("—");
-    await expect(page.getByTestId("student-correct-answer").first()).not.toHaveText("—");
+    await expect(page.getByTestId("student-selected-answer").first()).not.toHaveText("-");
+    await expect(page.getByTestId("student-correct-answer").first()).not.toHaveText("-");
     await expect(page.getByText("נכון").first()).toBeVisible();
   });
 });

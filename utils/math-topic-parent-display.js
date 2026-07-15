@@ -55,7 +55,7 @@ function mathOperationTopicLabel(row) {
 }
 
 /**
- * Stable key for "same scoped math row" — used only to detect when mode suffix is needed.
+ * Stable key for "same scoped math row" - used only to detect when mode suffix is needed.
  * Not shown to parents.
  */
 function mathTopicScopedIdentityKey(row, rowKey) {
@@ -92,7 +92,7 @@ export function applyMathScopedParentDisplayNames(mathOperations) {
     const id = mathTopicScopedIdentityKey(row, itemKey);
     const needModeSuffix = (countByIdentity.get(id) || 0) > 1;
     const topic = mathOperationTopicLabel(row);
-    const modeSuff = needModeSuffix ? ` — ${modeSuffixLabel(row.modeKey)}` : "";
+    const modeSuff = needModeSuffix ? ` - ${modeSuffixLabel(row.modeKey)}` : "";
     const full = `${topic}${modeSuff}`.trim();
     row.displayNameScoped = full;
     row.displayName = full;

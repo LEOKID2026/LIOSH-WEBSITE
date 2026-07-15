@@ -426,7 +426,7 @@ export default function LeoWordDetectiveGame({
           <p className={frame.introHero}>🕵️🔍</p>
           <h1 className={frame.introTitle}>בלש המילים של ליאו</h1>
           <p className={frame.introText}>
-            גררו ראיות ללוח החקירה — אותיות, מילים וכרטיסי אירועים. כשהתיק מוכן, חותמים נפתר!
+            גררו ראיות ללוח החקירה - אותיות, מילים וכרטיסי אירועים. כשהתיק מוכן, חותמים נפתר!
           </p>
           <div className={frame.difficultyRow}>
             {(/** @type {DifficultyId[]} */ (["easy", "medium", "hard"])).map((id) => (

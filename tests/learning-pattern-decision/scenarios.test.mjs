@@ -368,4 +368,4 @@ for (const sc of [
   assertNoForbidden(sc.parentVisibleFinding);
 }
 
-console.log("scenarios.test.mjs — all scenarios passed");
+console.log("scenarios.test.mjs - all scenarios passed");

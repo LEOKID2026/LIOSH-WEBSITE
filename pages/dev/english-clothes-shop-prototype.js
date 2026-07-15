@@ -5,7 +5,7 @@ export default function EnglishClothesShopPrototypePage() {
   return (
     <>
       <Head>
-        <title>חנות הבגדים באנגלית — אבטיפוס</title>
+        <title>חנות הבגדים באנגלית - אבטיפוס</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <EnglishClothesShopPrototype />

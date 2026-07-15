@@ -48,7 +48,7 @@ function Dot({ kind = "dot" }) {
 }
 
 function isNumberLineRow(line) {
-  return /\d+\s*[—–\-]\s*\d+/.test(line) || /^…/.test(line);
+  return /\d+\s*[-–\-]\s*\d+/.test(line) || /^…/.test(line);
 }
 
 function isJumpAnnotation(line) {
@@ -146,7 +146,7 @@ function NumberLineRow({ line }) {
       {tokens.map((tok, i) => (
         <span key={i} className="inline-flex items-center gap-x-0.5 sm:gap-x-1">
           {i > 0 && tok.type !== "ellipsis" && (
-            <span className="px-0.5 text-sm text-[color:var(--book-text-muted)] sm:text-base">—</span>
+            <span className="px-0.5 text-sm text-[color:var(--book-text-muted)] sm:text-base">-</span>
           )}
           {tok.type === "num" ? (
             <span

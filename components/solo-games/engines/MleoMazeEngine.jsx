@@ -524,14 +524,14 @@ export default function MleoMazeEngine({
       {showIntro ? (
         <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-4 px-4 text-center">
           <img src={IMG_LEO} alt="" className="h-20 w-20 object-contain drop-shadow-lg" />
-          <h2 className="text-xl font-extrabold text-yellow-300">מרוץ מבוכים — ליאו</h2>
+          <h2 className="text-xl font-extrabold text-yellow-300">מרוץ מבוכים - ליאו</h2>
           <p className="max-w-sm text-sm font-semibold text-lime-100">
             פתרו כמה שיותר מבוכים לפני שנגמר הזמן!
           </p>
           <ul className="max-w-sm space-y-1 text-sm text-gray-300">
             <li>🔑 מצאו מפתח → 🚪 הגיעו לשער</li>
             <li>⭐ +20 · 💎 +50 · מבוך +100</li>
-            <li>כל מבוך חדש — אספו ורוצו הלאה!</li>
+            <li>כל מבוך חדש - אספו ורוצו הלאה!</li>
           </ul>
           <button
             type="button"

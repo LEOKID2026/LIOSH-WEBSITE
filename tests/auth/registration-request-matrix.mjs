@@ -264,7 +264,7 @@ async function main() {
   );
 
   if (!schoolId) {
-    console.log("\nSkipping school approval tests — school registration did not create a school row.");
+    console.log("\nSkipping school approval tests - school registration did not create a school row.");
   } else {
   const { data: schoolRow } = await db
     .from("school_accounts")

@@ -128,7 +128,7 @@ test("mapTeacherActivityStudentAnswerDetail uses frozen question_set for unanswe
 });
 
 test("legacyQuestionUnavailableLabel is stable", () => {
-  assert.equal(legacyQuestionUnavailableLabel(2), "שאלה 3 — לא זמינה");
+  assert.equal(legacyQuestionUnavailableLabel(2), "שאלה 3 - לא זמינה");
 });
 
 test("normalizeSnapshotStatus defaults to legacy_missing", () => {

@@ -87,7 +87,7 @@ function countMoledetBankRows(pools) {
 
 const MOLEDET_EASY = { name: "קל" };
 
-describe("Q2-C5 — Moledet pool enrichment", () => {
+describe("Q2-C5 - Moledet pool enrichment", () => {
   test("homeland fact row with vocabulary tag → vocabulary questionType", () => {
     const out = enrichMoledetBankRowWithCanonicalMetadata(HOMELAND_ROW, {
       topic: "homeland",
@@ -151,7 +151,7 @@ describe("Q2-C5 — Moledet pool enrichment", () => {
   });
 });
 
-describe("Q2-C5 — freeze params preservation", () => {
+describe("Q2-C5 - freeze params preservation", () => {
   test("buildMoledetFrozenParamsFromBankRow includes canonicalMetadata", () => {
     const params = buildMoledetFrozenParamsFromBankRow(HOMELAND_ROW, "homeland", "g3", "easy");
     assert.ok(params.canonicalMetadata);
@@ -186,7 +186,7 @@ describe("Q2-C5 — freeze params preservation", () => {
   });
 });
 
-describe("Q2-C5 — generator attach", () => {
+describe("Q2-C5 - generator attach", () => {
   test("generateQuestion attaches params.canonicalMetadata", () => {
     const q = generateQuestion(MOLEDET_EASY, "homeland", "g3", null, null);
     assert.notEqual(q.emptyPool, true);
@@ -197,7 +197,7 @@ describe("Q2-C5 — generator attach", () => {
   });
 });
 
-describe("Q2-C5 — geography bank coverage", () => {
+describe("Q2-C5 - geography bank coverage", () => {
   test("all exported bank rows have params.canonicalMetadata", async () => {
     const geo = await import("../../data/geography-questions/index.js");
     const pools = [
@@ -239,7 +239,7 @@ describe("Q2-C5 — geography bank coverage", () => {
   });
 });
 
-describe("Q2-C5 — helpers", () => {
+describe("Q2-C5 - helpers", () => {
   test("resolveMoledetSkillId keeps row skillId", () => {
     assert.equal(
       resolveMoledetSkillId("homeland", {}, { skillId: "moledet_geo_homeland" }),

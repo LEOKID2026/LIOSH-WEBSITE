@@ -83,7 +83,7 @@ function expandPool(baseItems, topic, patternFamily, subtype, level, targetCount
         question = item.question.replace(/\?$/, ` ב${ctx}?`);
       }
     } else {
-      question = `כיתה ג׳ — ${topic} · ${i + 1}`;
+      question = `כיתה ג׳ - ${topic} · ${i + 1}`;
     }
     const answer = item.answer;
     const wrong = [...(item.wrong || [])];
@@ -265,12 +265,12 @@ const G3_COMP_COMPARE = [
   },
   {
     question: "מה ההבדל בין 'בוקר' ל'ערב'?",
-    answer: "בוקר — התחלת היום, ערב — סוף היום",
-    wrong: ["בוקר — ערב", "אין הבדל", "בוקר — לילה"],
+    answer: "בוקר - התחלת היום, ערב - סוף היום",
+    wrong: ["בוקר - ערב", "אין הבדל", "בוקר - לילה"],
   },
   {
     question: "השוו בין 'ספר מעניין' ל'ספר משעמם':",
-    answer: "מעניין — משמח, משעמם — לא משמח",
+    answer: "מעניין - משמח, משעמם - לא משמח",
     wrong: ["אין הבדל", "זה אותו דבר", "לא יודע"],
   },
   {

@@ -565,7 +565,7 @@ export default function TeacherDiscussionQuestionPicker({
               checked={!answerRequired}
               onChange={() => setAnswerRequired(false)}
             />
-            <span>הסבר בלבד — ללא מענה נדרש</span>
+            <span>הסבר בלבד - ללא מענה נדרש</span>
           </label>
         </div>
       </div>
@@ -639,7 +639,7 @@ export default function TeacherDiscussionQuestionPicker({
                   onClick={() => {
                     toggleQuestionIndex(i);
                     if (!title.trim()) {
-                      setTitle(`דיון — ${subjectLabelHe(subject)}`);
+                      setTitle(`דיון - ${subjectLabelHe(subject)}`);
                     }
                   }}
                 >

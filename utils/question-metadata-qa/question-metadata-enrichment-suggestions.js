@@ -65,14 +65,14 @@ function suggestPrerequisiteScience(raw, record) {
       ids: [prev],
       confidence: "low",
       reason:
-        "Heuristic sequential topic link from SCIENCE_TOPIC_ORDER — validate pedagogically before enforcing prerequisites.",
+        "Heuristic sequential topic link from SCIENCE_TOPIC_ORDER - validate pedagogically before enforcing prerequisites.",
     };
   }
   return {
     ids: [],
     confidence: "medium",
     reason:
-      "No automated prerequisite chain for this skillId in taxonomy v1 — curriculum authors should map explicitly.",
+      "No automated prerequisite chain for this skillId in taxonomy v1 - curriculum authors should map explicitly.",
   };
 }
 
@@ -138,7 +138,7 @@ export function buildScienceEnrichmentSuggestion(raw, record, seqIndex) {
   const narrativeReason = [
     `Topic ${topic}; scanner skill ${record.skillId}.`,
     prereq.reason,
-    params.probePower ? `probePower=${params.probePower} mapped to cognitive tier.` : "No probePower — cognitive tier inferred from difficulty.",
+    params.probePower ? `probePower=${params.probePower} mapped to cognitive tier.` : "No probePower - cognitive tier inferred from difficulty.",
   ].join(" ");
 
   return {

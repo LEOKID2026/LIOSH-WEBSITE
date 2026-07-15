@@ -128,7 +128,7 @@ export function auditEasyLevelContent() {
   }
   if (electricityOnEasyCount > 0) {
     gaps.push(
-      `רמת קל: ${electricityOnEasyCount} ניסוי(ים) עם חשמל — להעביר לבינוני/קשה או להסיר.`,
+      `רמת קל: ${electricityOnEasyCount} ניסוי(ים) עם חשמל - להעביר לבינוני/קשה או להסיר.`,
     );
   }
   const abstractLightExperiments = easy.filter((exp) =>

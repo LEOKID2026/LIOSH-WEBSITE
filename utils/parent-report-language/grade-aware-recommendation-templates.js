@@ -8,7 +8,7 @@
 /** @typedef {{ g1_g2: GradeAwareBandCopy; g3_g4: GradeAwareBandCopy; g5_g6: GradeAwareBandCopy }} GradeAwareTaxonomyTemplate */
 
 /**
- * Math and geometry extended entries: `defaultBands` + optional `bucketOverrides` — M-01 (compare, number_sense, estimation); M-03 (multiplication, factors_multiples, powers); M-10 (division, division_with_remainder, ratio, multiplication); M-07 (word_problems); M-08 (word_problems, sequences, equations, order_of_operations); geometry G-01/G-02/G-03/G-04/G-05/G-06/G-07/G-08 (see bucketOverrides).
+ * Math and geometry extended entries: `defaultBands` + optional `bucketOverrides` - M-01 (compare, number_sense, estimation); M-03 (multiplication, factors_multiples, powers); M-10 (division, division_with_remainder, ratio, multiplication); M-07 (word_problems); M-08 (word_problems, sequences, equations, order_of_operations); geometry G-01/G-02/G-03/G-04/G-05/G-06/G-07/G-08 (see bucketOverrides).
  * Legacy flat taxonomies remain a flat {@link GradeAwareTaxonomyTemplate}.
  * @typedef {{
  *   defaultBands: GradeAwareTaxonomyTemplate;
@@ -2421,14 +2421,14 @@ export const GRADE_AWARE_RECOMMENDATION_TEMPLATES = {
         materials: {
           g3_g4: {
             actionTextHe:
-              "כדאי לתרגל המרת יחידות פשוטות — למשל גרם לקילוגרם או מ\"ל לליטר — בעזרת טבלת המרה. בקשו מהילד להסביר איזו יחידה מתאימה למדידה ולמה.",
+              "כדאי לתרגל המרת יחידות פשוטות - למשל גרם לקילוגרם או מ\"ל לליטר - בעזרת טבלת המרה. בקשו מהילד להסביר איזו יחידה מתאימה למדידה ולמה.",
             goalTextHe:
               "בשבוע הקרוב התמקדו בהמרת יחידות בסיסיות ובהסבר הבחירה ביחידה הנכונה.",
             intentDescriptionEn: "Grade 3–4 unit conversion with reference table and unit choice justification.",
           },
           g5_g6: {
             actionTextHe:
-              "כדאי לתרגל המרות יחידות במספר שלבים — כתיבה, חישוב והשוואה — ולבקש מהילד לבדוק אם התוצאה הגיונית לפי סדרי הגודל.",
+              "כדאי לתרגל המרות יחידות במספר שלבים - כתיבה, חישוב והשוואה - ולבקש מהילד לבדוק אם התוצאה הגיונית לפי סדרי הגודל.",
             goalTextHe:
               "בשבוע הקרוב התמקדו בהמרת יחידות, בדיקת הגיון התוצאה ובהסבר השלבים.",
             intentDescriptionEn: "Grade 5–6 multi-step unit conversion with reasonableness checks.",
@@ -2460,7 +2460,7 @@ export const GRADE_AWARE_RECOMMENDATION_TEMPLATES = {
             actionTextHe:
               "כדאי לתרגל קריאת ערך מגרף פשוט: מה מסמל כל ציר, איזו נקודה מתאימה לשאלה, ומה הערך שקוראים ממנה.",
             goalTextHe:
-              "בשבוע הקרוב התמקדו בקריאת ערכים מגרף — זיהוי הצירים, הנקודה והערך.",
+              "בשבוע הקרוב התמקדו בקריאת ערכים מגרף - זיהוי הצירים, הנקודה והערך.",
             intentDescriptionEn: "Grade 3–4 graph reading: axes, point location, value extraction.",
           },
           g5_g6: {
@@ -2511,7 +2511,7 @@ export const GRADE_AWARE_RECOMMENDATION_TEMPLATES = {
         animals: {
           g3_g4: {
             actionTextHe:
-              "כדאי לתרגל שאלות שבהן צריך להצביע על מקור מידע — טקסט, תצפית או תרשים. בקשו מהילד לומר \"לפי מה יודעים?\" לפני התשובה.",
+              "כדאי לתרגל שאלות שבהן צריך להצביע על מקור מידע - טקסט, תצפית או תרשים. בקשו מהילד לומר \"לפי מה יודעים?\" לפני התשובה.",
             goalTextHe:
               "בשבוע הקרוב התמקדו בביסוס תשובות על מקור מידע ברור.",
             intentDescriptionEn: "Grade 3–4 evidence/source grounding for animal-science claims.",
@@ -2527,7 +2527,7 @@ export const GRADE_AWARE_RECOMMENDATION_TEMPLATES = {
         experiments: {
           g3_g4: {
             actionTextHe:
-              "כדאי לתרגל שאלות \"מאין יודעים?\" בניסוי — מה נמדד, מה נצפה, ומה כתוב ביומן הניסוי.",
+              "כדאי לתרגל שאלות \"מאין יודעים?\" בניסוי - מה נמדד, מה נצפה, ומה כתוב ביומן הניסוי.",
             goalTextHe:
               "בשבוע הקרוב התמקדו בביסוס מסקנות על תצפית או רישום בניסוי.",
             intentDescriptionEn: "Grade 3–4 experiment evidence sourcing from observation/logs.",

@@ -63,7 +63,7 @@ export const ENGINE_V1_GUARDRAILS = [
   },
   {
     id: "mastery_100_low_q",
-    rule: "100% accuracy with q<10 does not infer mastery_stable — stays early_direction_only.",
+    rule: "100% accuracy with q<10 does not infer mastery_stable - stays early_direction_only.",
   },
   {
     id: "mixed_last_resort",

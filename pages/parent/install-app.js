@@ -12,7 +12,7 @@ export default function ParentPwaInstallPage() {
       portal="parent"
       badge="P LEO KIDS"
       title="התקנת אפליקציה להורים"
-      pageTitle="P LEO KIDS — התקנה"
+      pageTitle="P LEO KIDS - התקנה"
       appleTitle="P LEO KIDS"
       appleTouchIcon="/icons/parent/apple-touch-icon.png"
       launcher={ParentPwaInstallLauncher}

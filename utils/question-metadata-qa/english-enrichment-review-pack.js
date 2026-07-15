@@ -44,8 +44,8 @@ export function classifyEnglishConfidenceAndReview(raw, record, prereq, poolBuck
     return finalize("medium", confidenceReasons);
   }
 
-  if (!skillOk) confidenceReasons.push("skillId outside English allowlist — needs expert mapping.");
-  if (!structured) confidenceReasons.push("Sparse diagnostic metadata — heuristic suggestion.");
+  if (!skillOk) confidenceReasons.push("skillId outside English allowlist - needs expert mapping.");
+  if (!structured) confidenceReasons.push("Sparse diagnostic metadata - heuristic suggestion.");
   return finalize("low", confidenceReasons);
 }
 
@@ -162,7 +162,7 @@ export function buildEnglishReviewPack(enrichmentPayload) {
     approveAsIs:
       "Use only for rows with confidence **high**, reviewPriority **low**, after spot-checking English stem/options alignment.",
     editMetadata:
-      "Adjust suggested metadata in the bank — **do not** change English wording, options, or correct answers without curriculum approval.",
+      "Adjust suggested metadata in the bank - **do not** change English wording, options, or correct answers without curriculum approval.",
     rejectSuggestion:
       "Discard when taxonomy mapping conflicts with classroom sequencing or diagnostic routing.",
     needsCurriculumExpert:

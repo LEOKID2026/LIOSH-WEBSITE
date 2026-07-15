@@ -54,7 +54,7 @@ function StudentRewardCardModalImage({ thumbSrc, displaySrc, alt, showLocked, pr
 
   return (
     <div className="relative inline-block max-w-full max-h-[80vh] w-fit bg-transparent">
-      {/* Layout sizer — identical to pre-#4 modal (display.webp intrinsic dimensions). */}
+      {/* Layout sizer - identical to pre-#4 modal (display.webp intrinsic dimensions). */}
       <RewardCardImage
         src={displaySrc}
         preBaked={preBaked}

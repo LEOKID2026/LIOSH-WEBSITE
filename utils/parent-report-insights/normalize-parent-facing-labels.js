@@ -3,7 +3,7 @@
  *
  * The label dictionaries are inlined here on purpose so the insights module is fully self-contained
  * and can run under plain Node ESM (no Next.js bundler). They mirror the public dictionaries in
- * `utils/math-report-generator.js`. If a key is added to that file, mirror it here too — the
+ * `utils/math-report-generator.js`. If a key is added to that file, mirror it here too - the
  * `parent-report-insights-selftest.mjs` golden fixtures will surface drift quickly.
  */
 

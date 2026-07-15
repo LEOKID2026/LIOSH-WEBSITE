@@ -14,19 +14,19 @@ import { getParentPortalTheme } from "../../lib/parent-ui/parent-portal-theme.cl
 const POLL_MS = 8000;
 
 function formatWhen(iso) {
-  if (!iso) return "—";
+  if (!iso) return "-";
   try {
     return new Date(iso).toLocaleString("he-IL", {
       dateStyle: "short",
       timeStyle: "short",
     });
   } catch {
-    return "—";
+    return "-";
   }
 }
 
 function formatScore(scorePct) {
-  if (scorePct == null || Number.isNaN(Number(scorePct))) return "—";
+  if (scorePct == null || Number.isNaN(Number(scorePct))) return "-";
   return `${Number(scorePct).toFixed(0)}%`;
 }
 
@@ -185,7 +185,7 @@ function ParentActivityResultsModal({ activityId, accessToken, onClose, bright =
                       ? "נכון"
                       : q.isCorrect === false
                         ? "לא נכון"
-                        : "—"}
+                        : "-"}
                   </span>
                 </div>
                 {q.question ? (
@@ -212,15 +212,15 @@ function ParentActivityResultsModal({ activityId, accessToken, onClose, bright =
                 <div className={itemAnswerLabelClass}>
                   תשובה:{" "}
                   <span className={parentActivityAnswerValueClass(q.isCorrect, bright)}>
-                    <AssignedActivityBidiText text={q.selectedAnswer || "—"} />
+                    <AssignedActivityBidiText text={q.selectedAnswer || "-"} />
                   </span>
                 </div>
                 <div className={itemCorrectAnswerClass}>
-                  תשובה נכונה: <AssignedActivityBidiText text={q.correctAnswer || "—"} />
+                  תשובה נכונה: <AssignedActivityBidiText text={q.correctAnswer || "-"} />
                 </div>
                 {q.legacyFallback ? (
                   <div className={itemLegacyClass} data-testid="legacy-fallback-indicator">
-                    —
+                    -
                   </div>
                 ) : null}
               </div>
@@ -241,13 +241,13 @@ function ParentActivityResultsModal({ activityId, accessToken, onClose, bright =
                       ? "נכון"
                       : attempt.isCorrect === false
                         ? "לא נכון"
-                        : "—"}
+                        : "-"}
                   </span>
                 </div>
                 <div className={itemAnswerLabelClass}>
                   תשובה:{" "}
                   <span className={parentActivityAnswerValueClass(attempt.isCorrect, bright)}>
-                    {attempt.selectedAnswer || "—"}
+                    {attempt.selectedAnswer || "-"}
                   </span>
                 </div>
               </div>

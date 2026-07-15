@@ -33,7 +33,7 @@ const SUBJECT_LABEL_HE = {
 };
 
 const NARRATIVE_GRADE_TITLE_RE = / - כיתה /u;
-const TABLE_GRADE_IN_TOPIC_RE = /(?:—|\()\s*(?:כיתה|תרגול ב)/u;
+const TABLE_GRADE_IN_TOPIC_RE = /(?:-|\()\s*(?:כיתה|תרגול ב)/u;
 
 /**
  * @param {string} subjectId
@@ -297,7 +297,7 @@ export function assertAllSubjectsRepresentedInReport(detailedReport, subjectIds)
       continue;
     }
     if (!(sp.topicOverviewRows?.length > 0)) {
-      failures.push(`${subjectId}: no topic overview rows — subject dropped from detailed picture`);
+      failures.push(`${subjectId}: no topic overview rows - subject dropped from detailed picture`);
     }
   }
   return failures;

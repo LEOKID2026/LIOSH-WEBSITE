@@ -5,7 +5,7 @@ export default function EnglishWordBuilderPrototypePage() {
   return (
     <>
       <Head>
-        <title>רכבת המילים באנגלית — אבטיפוס</title>
+        <title>רכבת המילים באנגלית - אבטיפוס</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <EnglishWordBuilderPrototype />

@@ -177,13 +177,13 @@ function latinToHebrewLetterRatio(s) {
 
 /** Preposition + punctuation before a Hebrew topic word (e.g. "ב. חשבון"). */
 const MALFORMED_PREP_PUNCT_BEFORE_TOPIC_RE =
-  /(?:^|[\s,;—])(ב|על|עם|של|ל)\s*[.:]\s+(?=[\u0590-\u05FF])/u;
+  /(?:^|[\s,;-])(ב|על|עם|של|ל)\s*[.:]\s+(?=[\u0590-\u05FF])/u;
 /** e.g. "ב ." / "ב-." */
-const MALFORMED_PREP_DASH_DOT_RE = /(?:^|[\s,;—])(ב|על|עם|של|ל)\s*[ \-]\s*\./u;
+const MALFORMED_PREP_DASH_DOT_RE = /(?:^|[\s,;-])(ב|על|עם|של|ל)\s*[ \-]\s*\./u;
 
 const EXPLICIT_BROKEN_FRAGMENT_RES = [
-  /(?:^|[\s,;—])ב\.\s/u,
-  /(?:^|[\s,;—])ב\s+\.\s/u,
+  /(?:^|[\s,;-])ב\.\s/u,
+  /(?:^|[\s,;-])ב\s+\.\s/u,
   /ב \./u,
   /ב-\./u,
   /ב:\./u,

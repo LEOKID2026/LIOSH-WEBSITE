@@ -264,7 +264,7 @@ async function main() {
     "A",
     "admin_at_admin_com_is_parent_only",
     true,
-    "admin@admin.com has parent entitlement only (not app_metadata.role=admin) — expected QA parent account"
+    "admin@admin.com has parent entitlement only (not app_metadata.role=admin) - expected QA parent account"
   );
 
   // ── B: Private teacher ──

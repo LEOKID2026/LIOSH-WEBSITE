@@ -39,12 +39,12 @@ export default function SchoolStudentAssignmentPanel({
   const [message, setMessage] = useState("");
 
   const gradeOptions = useMemo(
-    () => [{ value: "", label: "—" }, ...SCHOOL_GRADE_OPTIONS.map((g) => ({ value: g.level, label: g.label }))],
+    () => [{ value: "", label: "-" }, ...SCHOOL_GRADE_OPTIONS.map((g) => ({ value: g.level, label: g.label }))],
     []
   );
 
   const classOptions = useMemo(() => {
-    if (!toGradeLevel) return [{ value: "", label: "—" }];
+    if (!toGradeLevel) return [{ value: "", label: "-" }];
     const names = physicalClasses
       .filter((c) => String(c.gradeLevel) === String(toGradeLevel))
       .map((c) => c.name);
@@ -133,7 +133,7 @@ export default function SchoolStudentAssignmentPanel({
         <div>
           <dt className="text-white/50">{SCHOOL_ASSIGN_CURRENT_GRADE}</dt>
           <dd className="font-medium">
-            {assignment?.gradeLevel ? schoolGradeLabelHe(assignment.gradeLevel) : "—"}
+            {assignment?.gradeLevel ? schoolGradeLabelHe(assignment.gradeLevel) : "-"}
           </dd>
         </div>
         <div>

@@ -41,7 +41,7 @@ export default function TeacherGradingScreen({ questions, answers, busy, onSave,
         return (
           <div key={idx} className="rounded-xl border border-white/10 p-4 bg-black/25">
             <p className="font-semibold text-white">
-              שאלה {idx} ({worksheetQuestionTypeLabelHe(q.questionType)} — {pts} נק')
+              שאלה {idx} ({worksheetQuestionTypeLabelHe(q.questionType)} - {pts} נק')
             </p>
             <p className="text-sm text-white/70 mt-2">
               תשובת הילד/ה:{" "}
@@ -52,7 +52,7 @@ export default function TeacherGradingScreen({ questions, answers, busy, onSave,
                 תוצאה אוטומטית: {ans.autoIsCorrect ? "נכון" : "לא נכון"}
               </p>
             ) : (
-              <p className="text-sm text-white/50 mt-1">תוצאה אוטומטית: — (ידני בלבד)</p>
+              <p className="text-sm text-white/50 mt-1">תוצאה אוטומטית: - (ידני בלבד)</p>
             )}
 
             <div className="mt-3 grid gap-2 sm:grid-cols-2">
@@ -138,7 +138,7 @@ export default function TeacherGradingScreen({ questions, answers, busy, onSave,
 }
 
 function formatAnswer(val) {
-  if (val == null) return "—";
+  if (val == null) return "-";
   if (typeof val === "object") return JSON.stringify(val);
   return String(val);
 }

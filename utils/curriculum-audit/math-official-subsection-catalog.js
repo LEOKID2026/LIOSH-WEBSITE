@@ -24,7 +24,7 @@ function sec(p) {
     confidence: /** @type {CatalogConfidence} */ (p.confidence || "medium"),
     notes:
       p.notes ||
-      "נוסח ידני לפי מסגרת תוכנית יסודית — יש לאמת מול PDF הכיתה לפני אישור פריט.",
+      "נוסח ידני לפי מסגרת תוכנית יסודית - יש לאמת מול PDF הכיתה לפני אישור פריט.",
     ...p,
   };
 }
@@ -55,7 +55,7 @@ export function buildSectionsForGrade(grade) {
         strand: strand.numbers,
         subsectionLabelsHe: ["ספירה כרונולוגית", "ייצוג במצבים שונים", "השוואת כמויות"],
         expectedDepth: /** @type {ExpectedDepth} */ ("intro"),
-        sourcePageHint: "פרק פתיחה / מספרים במסמך כיתה א׳ — לא נסרק אוטומטית",
+        sourcePageHint: "פרק פתיחה / מספרים במסמך כיתה א׳ - לא נסרק אוטומטית",
         mapsToNormalizedKeys: ["math.number_sense", "math.estimation_rounding"],
         confidence: "high",
       }),
@@ -65,7 +65,7 @@ export function buildSectionsForGrade(grade) {
         strand: strand.numbers,
         subsectionLabelsHe: ["חיבור עד 20", "חיסור כמשלים להוספה"],
         expectedDepth: "intro",
-        sourcePageHint: "מספרים ופעולות — כיתה א׳",
+        sourcePageHint: "מספרים ופעולות - כיתה א׳",
         mapsToNormalizedKeys: [
           "math.addition_subtraction",
           "math.mixed_operations",
@@ -79,7 +79,7 @@ export function buildSectionsForGrade(grade) {
         strand: strand.numbers,
         subsectionLabelsHe: ["בניית מודל חשיבתי לטקסט קצר"],
         expectedDepth: "intro",
-        sourcePageHint: "שאלות מילוליות — רמה בסיסית",
+        sourcePageHint: "שאלות מילוליות - רמה בסיסית",
         mapsToNormalizedKeys: ["math.word_problems"],
         confidence: "medium",
       }),
@@ -95,7 +95,7 @@ export function buildSectionsForGrade(grade) {
       }),
       sec({
         sectionKey: "g1_geometry_shapes",
-        labelHe: "צורות במישור — היכרות וסיווג ראשוני",
+        labelHe: "צורות במישור - היכרות וסיווג ראשוני",
         strand: strand.geometry,
         subsectionLabelsHe: ["זיהוי צורות", "העתקה ושרטוט חופשי"],
         expectedDepth: "intro",
@@ -105,11 +105,11 @@ export function buildSectionsForGrade(grade) {
       }),
       sec({
         sectionKey: "g1_data_intro",
-        labelHe: "חקר נתונים — ארגון ותיאור ראשוני",
+        labelHe: "חקר נתונים - ארגון ותיאור ראשוני",
         strand: strand.data,
         subsectionLabelsHe: ["טבלה פשוטה", "שאלות על נתונים"],
         expectedDepth: "intro",
-        sourcePageHint: "חקר נתונים — יסודות",
+        sourcePageHint: "חקר נתונים - יסודות",
         mapsToNormalizedKeys: ["math.data_and_charts"],
         confidence: "medium",
       })
@@ -125,7 +125,7 @@ export function buildSectionsForGrade(grade) {
         strand: strand.numbers,
         subsectionLabelsHe: ["מאות/עשרות/אחדות", "השוואה והערכה"],
         expectedDepth: "basic",
-        sourcePageHint: "מספרים ופעולות — כיתה ב׳",
+        sourcePageHint: "מספרים ופעולות - כיתה ב׳",
         mapsToNormalizedKeys: ["math.number_sense", "math.estimation_rounding"],
         confidence: "medium",
       }),
@@ -143,17 +143,17 @@ export function buildSectionsForGrade(grade) {
         sectionKey: "g2_mult_div_intro",
         labelHe: "כפל כחזרה על חיבור; חילוק כחלוקה שווה",
         strand: strand.numbers,
-        subsectionLabelsHe: ["טבלאות בסיס", "שארית — כניסה זהירה"],
+        subsectionLabelsHe: ["טבלאות בסיס", "שארית - כניסה זהירה"],
         expectedDepth: "basic",
         sourcePageHint: "כפל וחילוק ראשוני",
         mapsToNormalizedKeys: ["math.multiplication_division"],
         confidence: "medium",
         notes:
-          "לא ממפים כאן math.divisibility_factors — סימני התחלקות פורמליים בקטלוג נפרד לכיתה ג׳ (g3_divisibility_intro); הגנרטור משחרר התחלקות מכיתה ג׳ בלבד.",
+          "לא ממפים כאן math.divisibility_factors - סימני התחלקות פורמליים בקטלוג נפרד לכיתה ג׳ (g3_divisibility_intro); הגנרטור משחרר התחלקות מכיתה ג׳ בלבד.",
       }),
       sec({
         sectionKey: "g2_fractions_intro",
-        labelHe: "שברים — חצי ורבע כחלק מכלל",
+        labelHe: "שברים - חצי ורבע כחלק מכלל",
         strand: strand.numbers,
         subsectionLabelsHe: ["דגם חלק משלם", "השוואת שברי יחידה"],
         expectedDepth: "basic",
@@ -173,7 +173,7 @@ export function buildSectionsForGrade(grade) {
       }),
       sec({
         sectionKey: "g2_measurement_intro",
-        labelHe: "מדידות — אורך / משקל / זמן",
+        labelHe: "מדידות - אורך / משקל / זמן",
         strand: strand.geometry,
         subsectionLabelsHe: ["יחידות סטנדרטיות"],
         expectedDepth: "basic",
@@ -197,7 +197,7 @@ export function buildSectionsForGrade(grade) {
         strand: strand.patterns,
         subsectionLabelsHe: ["משבצת חסר", "שוויון"],
         expectedDepth: "basic",
-        sourcePageHint: "טרום אלגברה — כיתה ב׳",
+        sourcePageHint: "טרום אלגברה - כיתה ב׳",
         mapsToNormalizedKeys: ["math.patterns_sequences", "math.equations_and_expressions"],
         confidence: "low",
       })
@@ -223,9 +223,9 @@ export function buildSectionsForGrade(grade) {
       }),
       sec({
         sectionKey: "g3_mult_div_facts",
-        labelHe: "כפל וחילוק — עובדות ויחסים",
+        labelHe: "כפל וחילוק - עובדות ויחסים",
         strand: strand.numbers,
-        subsectionLabelsHe: ["חילוק עם שארית — צעדים ראשונים"],
+        subsectionLabelsHe: ["חילוק עם שארית - צעדים ראשונים"],
         expectedDepth: "developing",
         sourcePageHint: "כפל וחילוק",
         mapsToNormalizedKeys: ["math.multiplication_division"],
@@ -233,7 +233,7 @@ export function buildSectionsForGrade(grade) {
       }),
       sec({
         sectionKey: "g3_fractions_compare",
-        labelHe: "שברים — השוואה והצגה על ציר",
+        labelHe: "שברים - השוואה והצגה על ציר",
         strand: strand.numbers,
         subsectionLabelsHe: ["שברי יחידה", "שקילות פשוטה"],
         expectedDepth: "developing",
@@ -247,7 +247,7 @@ export function buildSectionsForGrade(grade) {
         strand: strand.numbers,
         subsectionLabelsHe: ["עיגול עשרוני בסיסי"],
         expectedDepth: "developing",
-        sourcePageHint: "עשרוניים — כניסה",
+        sourcePageHint: "עשרוניים - כניסה",
         mapsToNormalizedKeys: ["math.decimals"],
         confidence: "low",
       }),
@@ -263,7 +263,7 @@ export function buildSectionsForGrade(grade) {
       }),
       sec({
         sectionKey: "g3_geometry_area_intro",
-        labelHe: "גאומטריה — שטח והיקף בסיסיים",
+        labelHe: "גאומטריה - שטח והיקף בסיסיים",
         strand: strand.geometry,
         subsectionLabelsHe: ["מצולעים על רשת"],
         expectedDepth: "developing",
@@ -273,7 +273,7 @@ export function buildSectionsForGrade(grade) {
       }),
       sec({
         sectionKey: "g3_data_statistics",
-        labelHe: "חקר נתונים — ממוצע פשוט / טבלאות",
+        labelHe: "חקר נתונים - ממוצע פשוט / טבלאות",
         strand: strand.data,
         subsectionLabelsHe: [],
         expectedDepth: "developing",
@@ -283,7 +283,7 @@ export function buildSectionsForGrade(grade) {
       }),
       sec({
         sectionKey: "g3_divisibility_intro",
-        labelHe: "התחלקות — זוגיות, התחלקות ב 3/5",
+        labelHe: "התחלקות - זוגיות, התחלקות ב 3/5",
         strand: strand.numbers,
         subsectionLabelsHe: [],
         expectedDepth: "developing",
@@ -291,7 +291,7 @@ export function buildSectionsForGrade(grade) {
         mapsToNormalizedKeys: ["math.divisibility_factors"],
         confidence: "low",
         notes:
-          "מיפוי ראשון אל math.divisibility_factors; מיושר עם שחרור הגנרטור (סימני התחלקות) מכיתה ג׳ — לאמת מול kita3.pdf.",
+          "מיפוי ראשון אל math.divisibility_factors; מיושר עם שחרור הגנרטור (סימני התחלקות) מכיתה ג׳ - לאמת מול kita3.pdf.",
       }),
       sec({
         sectionKey: "g3_patterns_algebra",
@@ -333,17 +333,17 @@ export function buildSectionsForGrade(grade) {
         strand: strand.numbers,
         subsectionLabelsHe: ["בדיקות התחלקות בסיסיות", "ראשוני מול פריק"],
         expectedDepth: "developing",
-        sourcePageHint: "מספרים שלמים — כיתה ד׳",
+        sourcePageHint: "מספרים שלמים - כיתה ד׳",
         mapsToNormalizedKeys: ["math.divisibility_factors"],
         confidence: "medium",
       }),
       sec({
         sectionKey: "g4_percent_intro",
-        labelHe: "אחוזים — קשר לשבר ולחלק מכלל",
+        labelHe: "אחוזים - קשר לשבר ולחלק מכלל",
         strand: strand.numbers,
         subsectionLabelsHe: ["100 כבסיס"],
         expectedDepth: "developing",
-        sourcePageHint: "אחוזים — כניסה",
+        sourcePageHint: "אחוזים - כניסה",
         mapsToNormalizedKeys: ["math.percentages"],
         confidence: "low",
       }),
@@ -405,7 +405,7 @@ export function buildSectionsForGrade(grade) {
     s.push(
       sec({
         sectionKey: "g5_fractions_operations",
-        labelHe: "שברים — פעולות והמרות",
+        labelHe: "שברים - פעולות והמרות",
         strand: strand.numbers,
         subsectionLabelsHe: ["כפל וחילוק שברים"],
         expectedDepth: "advanced",
@@ -496,11 +496,11 @@ export function buildSectionsForGrade(grade) {
     s.push(
       sec({
         sectionKey: "g6_rational_numbers",
-        labelHe: "מספרים רציונליים — שברים, עשרוניים, ציר מספרים",
+        labelHe: "מספרים רציונליים - שברים, עשרוניים, ציר מספרים",
         strand: strand.numbers,
         subsectionLabelsHe: ["השוואה והזמנה"],
         expectedDepth: "advanced",
-        sourcePageHint: "מספרים ופעולות — כיתה ו׳",
+        sourcePageHint: "מספרים ופעולות - כיתה ו׳",
         mapsToNormalizedKeys: [
           "math.fractions",
           "math.decimals",
@@ -521,7 +521,7 @@ export function buildSectionsForGrade(grade) {
       }),
       sec({
         sectionKey: "g6_expressions_equations",
-        labelHe: "ביטויים ומשוואות — פישוט והצבה",
+        labelHe: "ביטויים ומשוואות - פישוט והצבה",
         strand: strand.patterns,
         subsectionLabelsHe: [],
         expectedDepth: "advanced",
@@ -531,7 +531,7 @@ export function buildSectionsForGrade(grade) {
       }),
       sec({
         sectionKey: "g6_geometry_area_volume",
-        labelHe: "גאומטריה — שטח, נפח, צורות מורכבות",
+        labelHe: "גאומטריה - שטח, נפח, צורות מורכבות",
         strand: strand.geometry,
         subsectionLabelsHe: [],
         expectedDepth: "advanced",
@@ -541,7 +541,7 @@ export function buildSectionsForGrade(grade) {
       }),
       sec({
         sectionKey: "g6_data_statistics",
-        labelHe: "חקר נתונים — תיאור והיסטגרם בסיסי",
+        labelHe: "חקר נתונים - תיאור והיסטגרם בסיסי",
         strand: strand.data,
         subsectionLabelsHe: [],
         expectedDepth: "advanced",
@@ -577,7 +577,7 @@ export function buildSectionsForGrade(grade) {
         expectedDepth: "advanced",
         sourcePageHint: "סיכום כיתה ו׳",
         notes:
-          "לא ממפים math.word_problems כאן — שאלות מילוליות ואחוזים/יחס מקבלות מקטע ייעודי g6_percent_ratio_problems בלבד; מונע חפיפת מועמדים בביקורת קטלוג.",
+          "לא ממפים math.word_problems כאן - שאלות מילוליות ואחוזים/יחס מקבלות מקטע ייעודי g6_percent_ratio_problems בלבד; מונע חפיפת מועמדים בביקורת קטלוג.",
         mapsToNormalizedKeys: [
           "math.mixed_operations",
           "math.addition_subtraction",
@@ -597,13 +597,13 @@ export function buildSectionsForGrade(grade) {
  */
 export function missingUncertainAreasForGrade(grade) {
   const common = [
-    "קישור מדויק לעמוד ב PDF לא נסרק אוטומטית — דורש צלב עם המסמך המודפס.",
-    "עומק מילולי וסדר הוראה משתנה בין מוסדות — לאמת מול המורה המקצועית.",
+    "קישור מדויק לעמוד ב PDF לא נסרק אוטומטית - דורש צלב עם המסמך המודפס.",
+    "עומק מילולי וסדר הוראה משתנה בין מוסדות - לאמת מול המורה המקצועית.",
   ];
   if (grade <= 2)
-    return [...common, "שברים ועשרוניים מוקדמים — רגישות רצף גיל.", "משוואות פורמליות לפני כיתה ד׳ — דורש אימות מול תוכנית המוסד."];
+    return [...common, "שברים ועשרוניים מוקדמים - רגישות רצף גיל.", "משוואות פורמליות לפני כיתה ד׳ - דורש אימות מול תוכנית המוסד."];
   if (grade <= 4)
-    return [...common, "אחוזים לפני כיתה ה׳ — לעיתים חשיפה בלבד במוסדות נבחרים."];
+    return [...common, "אחוזים לפני כיתה ה׳ - לעיתים חשיפה בלבד במוסדות נבחרים."];
   return [...common];
 }
 

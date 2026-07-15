@@ -13,7 +13,7 @@ function trimFixed(value, maxDecimals) {
  */
 export function formatMathHudNumber(value) {
   const n = Number(value);
-  if (!Number.isFinite(n)) return String(value ?? "—");
+  if (!Number.isFinite(n)) return String(value ?? "-");
 
   const sign = n < 0 ? "-" : "";
   const abs = Math.abs(n);

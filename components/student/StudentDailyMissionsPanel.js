@@ -140,7 +140,7 @@ export default function StudentDailyMissionsPanel({ dailyMissions }) {
         </div>
       ) : (
         <p className="text-slate-600 text-sm text-right mb-4 leading-relaxed">
-          השלימו משימות על ידי למידה אמיתית — כל משימה שווה מטבעות
+          השלימו משימות על ידי למידה אמיתית - כל משימה שווה מטבעות
         </p>
       )}
 

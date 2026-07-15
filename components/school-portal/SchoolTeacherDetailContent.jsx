@@ -51,7 +51,7 @@ import {
 } from "../../lib/school-portal/school-ui.he";
 
 /**
- * Full school teacher detail — shared by `/school/teachers/[teacherId]` and in-report modal.
+ * Full school teacher detail - shared by `/school/teachers/[teacherId]` and in-report modal.
  *
  * @param {{
  *   teacherId: string|null|undefined,

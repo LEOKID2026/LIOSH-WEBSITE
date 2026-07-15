@@ -35,7 +35,7 @@ export default function OfflineHub() {
           <header className="space-y-2 text-center sm:text-right">
             <p className={GH.badge}>🔌 משחקים ללא אינטרנט</p>
             <h1 className={GH.hubTitle}>משחקים ללא אינטרנט</h1>
-            <p className={GH.hubSub}>משחקים מקומיים — ללא שמירה וללא פרסים</p>
+            <p className={GH.hubSub}>משחקים מקומיים - ללא שמירה וללא פרסים</p>
           </header>
 
           <OfflineReconnectBanner />
@@ -62,7 +62,7 @@ export default function OfflineHub() {
                   href={OFFLINE_SOLO_HUB_ROUTE}
                   emoji="🎮"
                   title="12 משחקי סולו"
-                  blurb="תופס, חידות, מבוכים ועוד — בלי חיבור."
+                  blurb="תופס, חידות, מבוכים ועוד - בלי חיבור."
                   GH={GH}
                 />
               </section>
@@ -73,7 +73,7 @@ export default function OfflineHub() {
                   href={OFFLINE_EDUCATIONAL_HUB_ROUTE}
                   emoji="📚"
                   title={`${OFFLINE_EDUCATIONAL_GAMES.length} משחקים חינוכיים`}
-                  blurb="מיחזור, מכולת, מעבדה, פיצרייה, רכבת המילים ועוד — הכל מקומי."
+                  blurb="מיחזור, מכולת, מעבדה, פיצרייה, רכבת המילים ועוד - הכל מקומי."
                   GH={GH}
                 />
               </section>
@@ -92,7 +92,7 @@ export function OfflineSoloGamesHub() {
   return (
     <OfflineHubPageShell>
       <div className={`${GH.container} space-y-4`}>
-        <GamesHubNav offlineHubRoute={OFFLINE_HUB_ROUTE} title="משחקי ליאו — אופליין" GH={GH} />
+        <GamesHubNav offlineHubRoute={OFFLINE_HUB_ROUTE} title="משחקי ליאו - אופליין" GH={GH} />
         <OfflineReconnectBanner />
         <section className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4">
           {OFFLINE_SOLO_GAMES.map((game) => (
@@ -118,7 +118,7 @@ export function OfflineEducationalGamesHub() {
   return (
     <OfflineHubPageShell>
       <div className={`${GH.container} space-y-4`}>
-        <GamesHubNav offlineHubRoute={OFFLINE_HUB_ROUTE} title="משחקים חינוכיים — אופליין" GH={GH} />
+        <GamesHubNav offlineHubRoute={OFFLINE_HUB_ROUTE} title="משחקים חינוכיים - אופליין" GH={GH} />
         <OfflineReconnectBanner />
         <section className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4">
           {OFFLINE_EDUCATIONAL_GAMES.map((game) => (

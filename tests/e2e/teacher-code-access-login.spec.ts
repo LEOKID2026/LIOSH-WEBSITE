@@ -71,7 +71,7 @@ async function assertNo404(page: Page) {
   expect(page.url()).not.toMatch(/\/404/u);
 }
 
-test.describe("teacher code access — full browser flows @teacher-code-access", () => {
+test.describe("teacher code access - full browser flows @teacher-code-access", () => {
   test.describe.configure({ mode: "serial" });
 
   test.beforeEach(async ({ context }) => {
@@ -178,7 +178,7 @@ test.describe("teacher code access — full browser flows @teacher-code-access",
     await assertNo404(page);
   });
 
-  test("5a. mobile viewport — parent code login → child report", async ({ page }, testInfo) => {
+  test("5a. mobile viewport - parent code login → child report", async ({ page }, testInfo) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await openParentLogin(page);
     await submitParentLogin(page, PARENT_USER, PARENT_PIN);
@@ -196,7 +196,7 @@ test.describe("teacher code access — full browser flows @teacher-code-access",
     });
   });
 
-  test("5b. mobile viewport — student code login → student home", async ({ page }, testInfo) => {
+  test("5b. mobile viewport - student code login → student home", async ({ page }, testInfo) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await openStudentLogin(page);
     await submitStudentLogin(page, STUDENT_USER, STUDENT_PIN);

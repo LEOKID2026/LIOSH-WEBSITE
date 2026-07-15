@@ -38,7 +38,14 @@ describe("worksheet-system-closure", () => {
     }
   });
 
-  test("no public SEO worksheet routes opened", () => {
+  test("public worksheets routes exist under /practice/worksheets", () => {
+    for (const rel of [
+      "pages/practice/worksheets/index.js",
+      "pages/practice/worksheets/preview.js",
+      "pages/practice/worksheets/preview/answers.js",
+    ]) {
+      assert.ok(existsSync(join(ROOT, rel)), rel);
+    }
     assert.equal(existsSync(join(ROOT, "pages/worksheets")), false);
   });
 

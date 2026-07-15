@@ -312,7 +312,7 @@ export default function LeoBakeryGame({
   const avgDisplay =
     answerTimesRef.current.length > 0
       ? (answerTimesRef.current.reduce((a, b) => a + b, 0) / answerTimesRef.current.length).toFixed(1)
-      : "—";
+      : "-";
 
   const feedbackBarClass = [
     shop.feedbackBar,
@@ -358,7 +358,7 @@ export default function LeoBakeryGame({
         <div className={styles.screenCenter}>
           <p className={styles.introHero}>🥐🦁</p>
           <h1 className={styles.introTitle}>המאפייה של ליאו</h1>
-          <p className={styles.introText}>בנו מגשים עם כמות שווה של מאפים — כפל וקבוצות שוות!</p>
+          <p className={styles.introText}>בנו מגשים עם כמות שווה של מאפים - כפל וקבוצות שוות!</p>
           <div className={styles.difficultyRow}>
             {(/** @type {DifficultyId[]} */ (["easy", "medium", "hard"])).map((id) => (
               <button

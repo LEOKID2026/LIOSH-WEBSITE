@@ -59,7 +59,7 @@ export default function SchoolStudentParentAccessRow({
   return (
     <div className="rounded-xl border border-white/15 bg-white/5 p-4 text-sm text-right space-y-3">
       <div className="flex flex-wrap justify-between gap-2">
-        <span className="font-mono text-white/90 break-all">{row.loginUsername || "—"}</span>
+        <span className="font-mono text-white/90 break-all">{row.loginUsername || "-"}</span>
         <span className="text-white/60 shrink-0">{statusLabel(row.status)}</span>
       </div>
       {row.displayLabel || row.relation ? (

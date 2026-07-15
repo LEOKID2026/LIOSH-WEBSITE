@@ -90,7 +90,7 @@ export default function LeoPizzeriaGame({ backHref = "/dev/learning-game-prototy
           delete next[sliceIndex];
           return next;
         });
-        setFeedback("הסרנו תוספת מהחלק — בחרו תוספת חדשה");
+        setFeedback("הסרנו תוספת מהחלק - בחרו תוספת חדשה");
         return;
       }
       applyToppingToSlice(sliceIndex, selectedTopping);
@@ -198,7 +198,7 @@ export default function LeoPizzeriaGame({ backHref = "/dev/learning-game-prototy
       onDifficultyChange={setDifficulty}
       title="הפיצרייה של ליאו"
       introHero="🍕🦁"
-      introText="לקוחות נכנסים לפיצרייה — הכינו להם בדיוק את הפיצה שהם הזמינו!"
+      introText="לקוחות נכנסים לפיצרייה - הכינו להם בדיוק את הפיצה שהם הזמינו!"
       introHint={`${DIFFICULTY_HINTS[difficulty]} · ${PROTOTYPE_CUSTOMER_COUNT} לקוחות לדוגמה`}
       startLabel="פתיחת משמרת 🍕"
       onStart={startShift}

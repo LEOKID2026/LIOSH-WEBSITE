@@ -222,7 +222,7 @@ export default function StudentActivityPage({ activityId }) {
           setCurrentIdx(json.currentQuestionIdx);
         }
         if (json?.activityStatus === "paused") {
-          setFeedback({ type: "wait", message: "המורה השהה את השיעור — המתינו" });
+          setFeedback({ type: "wait", message: "המורה השהה את השיעור - המתינו" });
         }
       } catch {
         /* ignore */
@@ -928,7 +928,7 @@ export default function StudentActivityPage({ activityId }) {
       {isExplanationOnly ? (
         <>
           <p className={L.explanationBanner}>
-            אין צורך להגיש תשובה — קרא/י את התוכן
+            אין צורך להגיש תשובה - קרא/י את התוכן
           </p>
           <button
             type="button"
@@ -942,7 +942,7 @@ export default function StudentActivityPage({ activityId }) {
             }}
             className={L.submitButton}
           >
-            {effectiveIdx < questionSet.length - 1 ? "קראתי — המשך" : "סיימתי לקרוא"}
+            {effectiveIdx < questionSet.length - 1 ? "קראתי - המשך" : "סיימתי לקרוא"}
           </button>
         </>
       ) : assignedActivityQuestionUsesChoiceUi(currentQuestion) ? (

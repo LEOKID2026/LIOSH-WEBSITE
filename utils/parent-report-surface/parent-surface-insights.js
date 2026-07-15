@@ -107,7 +107,7 @@ export function resolveSubjectPrimaryParentActionHe(sp, baseReport) {
       groups[PARENT_TOPIC_TIER.MONITOR]?.[0];
     if (focus?.narrativeTitleHe) {
       const generic = tryLine(
-        `ב${focus.narrativeTitleHe}: תרגול קצר וברור בבית — דוגמה אחת, שאלה אחת, ובדיקה מהירה בסוף.`
+        `ב${focus.narrativeTitleHe}: תרגול קצר וברור בבית - דוגמה אחת, שאלה אחת, ובדיקה מהירה בסוף.`
       );
       if (generic) return generic;
     }

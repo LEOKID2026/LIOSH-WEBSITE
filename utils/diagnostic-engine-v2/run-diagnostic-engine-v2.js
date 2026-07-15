@@ -223,7 +223,7 @@ export function runDiagnosticEngineV2({ maps, rawMistakesBySubject, startMs, end
       const stableMasteryTag =
         Array.isArray(strengthProfile.tags) && strengthProfile.tags.includes("stable_mastery");
       if (bucketKey && bucketKey.includes(COMPOSITE_KEY_SEPARATOR)) {
-        throw new Error(`runDiagnosticEngineV2: topicKey/bucketKey "${bucketKey}" contains composite separator — must be collapsed before engine`);
+        throw new Error(`runDiagnosticEngineV2: topicKey/bucketKey "${bucketKey}" contains composite separator - must be collapsed before engine`);
       }
 
       const gating = applyOutputGating({
@@ -259,14 +259,14 @@ export function runDiagnosticEngineV2({ maps, rawMistakesBySubject, startMs, end
       if (!recurrenceFull) whyNotStronger.push("חזרתיות מלאה לפי סוג הטעות שנבחר לא הושגה");
       if (narrowSample) whyNotStronger.push("נפח שאלות בשורה קטן מדי לביטחון גבוה");
       if (weakEvidence) whyNotStronger.push("אין רצף אירועי טעות מספק; נדרש חיזוק ראיות לפני קביעה");
-      if (hintInvalidates) whyNotStronger.push("רמז כבד מסביר חלק מההצלחות — אין להסיק שליטה מלאה");
-      if (counterEvidenceStrong) whyNotStronger.push("דיוק גבוה יחסית לנפח טעויות — נדרשת הבחנה מול רשלנות או רעש");
+      if (hintInvalidates) whyNotStronger.push("רמז כבד מסביר חלק מההצלחות - אין להסיק שליטה מלאה");
+      if (counterEvidenceStrong) whyNotStronger.push("דיוק גבוה יחסית לנפח טעויות - נדרשת הבחנה מול רשלנות או רעש");
 
       /** @type {string[]} */
       const cannotConclude = [];
-      if (gating.cannotConcludeYet) cannotConclude.push("לא ניתן לקבוע כיוון עקבי כרגע — כדאי עוד תרגול בטווח");
+      if (gating.cannotConcludeYet) cannotConclude.push("לא ניתן לקבוע כיוון עקבי כרגע - כדאי עוד תרגול בטווח");
       if (weakTaxonomyFallbackBlocked) {
-        cannotConclude.push("האות עדיין לא מסווג לטקסונומיה יציבה — נשארים בשאלת בדיקה לפני כיוון.");
+        cannotConclude.push("האות עדיין לא מסווג לטקסונומיה יציבה - נשארים בשאלת בדיקה לפני כיוון.");
       }
       if (!chosenId && wrongCountForRules > 0) cannotConclude.push("לא נמצאה התאמה ברורה לסוג טעות אחרי סינון חזרתיות");
 

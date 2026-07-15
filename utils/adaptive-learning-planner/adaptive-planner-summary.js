@@ -23,7 +23,7 @@ export function buildPlannerSummaryPayload({ generatedAt, cases }) {
  */
 export function buildPlannerSummaryMarkdown(payload) {
   const lines = [
-    "# Adaptive Learning Planner — selftest summary",
+    "# Adaptive Learning Planner - selftest summary",
     "",
     `- **Generated:** ${payload.generatedAt}`,
     `- **Cases:** ${payload.totals.cases} | **Passed:** ${payload.totals.passed} | **Failed:** ${payload.totals.failed}`,
@@ -34,8 +34,8 @@ export function buildPlannerSummaryMarkdown(payload) {
     "| --- | --- | --- | --- |",
   ];
   for (const c of payload.cases || []) {
-    const st = c.output?.plannerStatus ?? "—";
-    const na = c.output?.nextAction ?? "—";
+    const st = c.output?.plannerStatus ?? "-";
+    const na = c.output?.nextAction ?? "-";
     lines.push(`| ${String(c.name).replace(/\|/g, "\\|")} | ${c.pass ? "yes" : "no"} | ${st} | ${na} |`);
   }
   lines.push("");

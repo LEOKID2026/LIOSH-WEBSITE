@@ -54,18 +54,18 @@ export function buildMathGeneratorMetadataMap(generatorPath = GENERATOR_PATH) {
     approach:
       "Runtime: `attachProfessionalMathMetadata` merges subject/skillId/subskillId/difficulty/cognitiveLevel/expectedErrorTypes and fills params.diagnosticSkillId / subtype / patternFamily when missing.",
     riskLevel: "low",
-    notes: "Does not replace numeric correctAnswer, answers[], or question text after generation — only enriches metadata fields.",
+    notes: "Does not replace numeric correctAnswer, answers[], or question text after generation - only enriches metadata fields.",
   };
 
   /** @type {{ pattern: string, risk: string }[]} */
   const riskyMappings = [
     {
       pattern: "Blanket patternFamily `math_${kind}` when absent",
-      risk: "low — additive only; existing probe patternFamily preserved.",
+      risk: "low - additive only; existing probe patternFamily preserved.",
     },
     {
       pattern: "diagnosticSkillId default from resolveMathSkillId → math_${kind}",
-      risk: "low — aligns scanner effectiveSkillId with generator kind.",
+      risk: "low - aligns scanner effectiveSkillId with generator kind.",
     },
   ];
 
@@ -117,7 +117,7 @@ export function buildMathGeneratorMetadataMap(generatorPath = GENERATOR_PATH) {
     confidenceBreakdown: {
       high: "Probe + fraction rows already carry diagnosticSkillId / expectedErrorTags",
       medium: "Standard op/kind rows use deterministic math_${kind} skill id",
-      low: "Edge kinds with minimal params — still safe id pattern math_*",
+      low: "Edge kinds with minimal params - still safe id pattern math_*",
     },
     riskyMappings,
     needsHumanReview: [

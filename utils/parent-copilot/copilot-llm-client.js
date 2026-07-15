@@ -1,5 +1,5 @@
 /**
- * Parent Copilot Q&A LLM — primary: OpenAI `/v1/responses` or Gemini `generateContent`.
+ * Parent Copilot Q&A LLM - primary: OpenAI `/v1/responses` or Gemini `generateContent`.
  * Optional fallback: OpenAI-compatible `POST .../chat/completions` (OpenRouter, Groq, etc.).
  *
  * Primary env:
@@ -13,7 +13,7 @@
  * Fallback env (only used after transient primary failure — see isTransientCopilotLlmFailure):
  *   PARENT_COPILOT_LLM_FALLBACK_PROVIDER   "openrouter" | "groq"
  *   PARENT_COPILOT_LLM_FALLBACK_MODEL       single model (required if FALLBACK_MODELS unset)
- *   PARENT_COPILOT_LLM_FALLBACK_MODELS      OpenRouter only: comma-separated list — app tries each model in order (single `model` per request; no OpenRouter multi-model routing)
+ *   PARENT_COPILOT_LLM_FALLBACK_MODELS      OpenRouter only: comma-separated list - app tries each model in order (single `model` per request; no OpenRouter multi-model routing)
  *   PARENT_COPILOT_LLM_FALLBACK_API_KEY     (trimmed; Bearer auth — never logged)
  *   PARENT_COPILOT_LLM_FALLBACK_BASE_URL    full URL to chat/completions (optional; sensible defaults)
  * OpenRouter-only optional attribution (see openrouter.ai docs):

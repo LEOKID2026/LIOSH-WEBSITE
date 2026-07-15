@@ -1,6 +1,6 @@
 /**
  * Regression guard: joining an existing arcade room (by room ID) must not be gated by the
- * "room_public_create" Admin feature flag — that flag is for creating a public room, not for
+ * "room_public_create" Admin feature flag - that flag is for creating a public room, not for
  * joining a room someone else already created. Otherwise disabling room *creation* would
  * accidentally also block guests from *joining*.
  * Run: node --test tests/arcade/rooms-join-feature-flag.test.mjs

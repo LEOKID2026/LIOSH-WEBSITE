@@ -80,7 +80,7 @@ const OFFLINE_HTML_FALLBACK = `<!DOCTYPE html>
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>אין חיבור — LEO K</title>
+<title>אין חיבור - LEO K</title>
 <style>
 body{margin:0;min-height:100dvh;display:flex;align-items:center;justify-content:center;background:#050816;color:#fff;font-family:system-ui,sans-serif;padding:1.5rem}
 .card{max-width:22rem;text-align:center}

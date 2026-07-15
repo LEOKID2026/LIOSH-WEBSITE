@@ -297,7 +297,7 @@ export default function EngineExpertReviewAdminPage({ packMeta: initialPack, eng
           </Link>
         </p>
         <h1 style={{ fontSize: "clamp(1.35rem, 3.2vw, 1.85rem)", fontWeight: 800, margin: "0 0 12px", color: "#f8fafc" }}>
-          Professional engine — Expert Review Pack
+          Professional engine - Expert Review Pack
         </h1>
         <p style={{ ...muted, marginBottom: 20, maxWidth: "62ch" }}>
           Internal educational diagnostic support only. Not parent-facing. Not a clinical assessment. This page is shown when{" "}
@@ -401,7 +401,7 @@ export default function EngineExpertReviewAdminPage({ packMeta: initialPack, eng
             </button>
           </div>
           <p style={{ ...muted, margin: "14px 0 0", fontSize: "clamp(0.88rem, 2vw, 0.95rem)" }}>
-            Generate builds a snapshot from existing validation JSON in memory and returns it to the browser — nothing is written under <code style={{ color: "#cbd5e1" }}>reports/</code>.
+            Generate builds a snapshot from existing validation JSON in memory and returns it to the browser - nothing is written under <code style={{ color: "#cbd5e1" }}>reports/</code>.
           </p>
         </div>
 
@@ -450,7 +450,7 @@ export default function EngineExpertReviewAdminPage({ packMeta: initialPack, eng
               <li>
                 <strong style={labelStrong}>Expert pack:</strong>{" "}
                 {hasPack && packMeta?.generatedAt
-                  ? `${packMeta.scenarioCount ?? "?"} scenarios — ${formatAdminDate(packMeta.generatedAt)}`
+                  ? `${packMeta.scenarioCount ?? "?"} scenarios - ${formatAdminDate(packMeta.generatedAt)}`
                   : "not generated yet"}
               </li>
               {packMeta?.generationMode ? (
@@ -487,14 +487,14 @@ export default function EngineExpertReviewAdminPage({ packMeta: initialPack, eng
                   <strong style={{ color: "#fff" }}>Result:</strong> {genResult.code}{" "}
                   {genResult.level === "success"
                     ? genResult.delivery === "inline_json"
-                      ? "— snapshot ready (inline, no disk)"
-                      : "— generated successfully"
+                      ? "- snapshot ready (inline, no disk)"
+                      : "- generated successfully"
                     : genResult.level === "warning"
                       ? genResult.code === "generation_not_supported_in_serverless"
-                        ? "— remote generation not supported (use CLI/CI)"
-                        : "— generated; persistence may be ephemeral on this host"
+                        ? "- remote generation not supported (use CLI/CI)"
+                        : "- generated; persistence may be ephemeral on this host"
                       : genResult.level === "error"
-                        ? "— failed"
+                        ? "- failed"
                         : ""}
                 </div>
                 {genResult.text ? <p style={{ margin: "10px 0 0" }}>{genResult.text}</p> : null}
@@ -538,7 +538,7 @@ export default function EngineExpertReviewAdminPage({ packMeta: initialPack, eng
                 Snapshot (this session)
               </h2>
               <p style={{ ...muted, marginTop: 0 }}>
-                Generated <strong style={{ color: "#e2e8f0" }}>{formatAdminDate(inlinePack.generatedAt)}</strong> — download JSON/Markdown bundles. Same content as an on-disk pack layout, without saving files on the server.
+                Generated <strong style={{ color: "#e2e8f0" }}>{formatAdminDate(inlinePack.generatedAt)}</strong> - download JSON/Markdown bundles. Same content as an on-disk pack layout, without saving files on the server.
               </p>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 18 }}>
                 <button
@@ -656,7 +656,7 @@ export default function EngineExpertReviewAdminPage({ packMeta: initialPack, eng
                   </tbody>
                 </table>
               </div>
-              {/* Mobile: stacked cards — avoids overflow-x compositor glitches that looked like duplicate rows while scrolling. */}
+              {/* Mobile: stacked cards - avoids overflow-x compositor glitches that looked like duplicate rows while scrolling. */}
               <div className="engine-review-snapshot-mobile">
                 {uniqueSnapshotScenarios.map((s) => (
                   <div
@@ -833,10 +833,10 @@ export default function EngineExpertReviewAdminPage({ packMeta: initialPack, eng
               <strong style={{ color: "#7dd3fc" }}>Remote / Vercel</strong>
               <ul style={{ margin: "10px 0 0", paddingLeft: 22 }}>
                 <li>
-                  <code style={{ fontSize: "0.9em" }}>NEXT_PUBLIC_ENABLE_ENGINE_REVIEW_ADMIN=true</code> — enables this page and APIs (build-time public).
+                  <code style={{ fontSize: "0.9em" }}>NEXT_PUBLIC_ENABLE_ENGINE_REVIEW_ADMIN=true</code> - enables this page and APIs (build-time public).
                 </li>
                 <li>
-                  <code style={{ fontSize: "0.9em" }}>ENGINE_REVIEW_ADMIN_TOKEN=&lt;secret&gt;</code> — server only; never embedded in the client bundle. Enter the same value in Admin token (stored in{" "}
+                  <code style={{ fontSize: "0.9em" }}>ENGINE_REVIEW_ADMIN_TOKEN=&lt;secret&gt;</code> - server only; never embedded in the client bundle. Enter the same value in Admin token (stored in{" "}
                   <strong>sessionStorage</strong> only).
                 </li>
               </ul>
@@ -848,7 +848,7 @@ export default function EngineExpertReviewAdminPage({ packMeta: initialPack, eng
               </li>
               <li>
                 <strong style={labelStrong}>Filesystem ephemeral risk:</strong>{" "}
-                {ephemeral ? "yes — serverless-style host; writes may not persist" : "lower — typical long-running or local Node"}
+                {ephemeral ? "yes - serverless-style host; writes may not persist" : "lower - typical long-running or local Node"}
               </li>
               <li>
                 <strong style={labelStrong}>Last known artifact path:</strong>{" "}
@@ -856,7 +856,7 @@ export default function EngineExpertReviewAdminPage({ packMeta: initialPack, eng
               </li>
             </ul>
             <p style={{ ...muted, marginTop: 16, marginBottom: 0 }}>
-              Artifacts are written under the repo / deploy workspace (not public URLs). On remote serverless, they may not survive the next cold start — use CLI from a machine with a persistent checkout when you need a stable copy.
+              Artifacts are written under the repo / deploy workspace (not public URLs). On remote serverless, they may not survive the next cold start - use CLI from a machine with a persistent checkout when you need a stable copy.
             </p>
           </section>
         </div>

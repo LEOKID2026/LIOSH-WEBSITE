@@ -97,7 +97,7 @@ function makeClassifiedAnswer(sessionId, subject, topic, isCorrect, isDiagnostic
 
 // ── dwell policy ─────────────────────────────────────────────────────────────
 
-describe("Phase 5 — dwell policy thresholds", () => {
+describe("Phase 5 - dwell policy thresholds", () => {
   test("approved threshold constants", () => {
     // Policy update: no per-page 10-cap and no per-visit/session cap — only an overall
     // 3h sanity ceiling remains (see lib/learning/book-dwell-policy.js header comment).
@@ -118,10 +118,10 @@ describe("Phase 5 — dwell policy thresholds", () => {
   });
 
   test("raw dwell fully credited (no page 10-cap); only the 3h sanity ceiling clamps", () => {
-    const raw = 900_000; // 15 minutes — well under the 3h sanity ceiling
+    const raw = 900_000; // 15 minutes - well under the 3h sanity ceiling
     const hidden = 0;
     const credited = computePageCreditedDwellMs(raw, hidden);
-    assert.equal(credited, raw, "no per-page cap — full dwell credited");
+    assert.equal(credited, raw, "no per-page cap - full dwell credited");
 
     const rawOverSanityCeiling = 12_000_000; // over 3h
     const creditedOverSanityCeiling = computePageCreditedDwellMs(rawOverSanityCeiling, 0);
@@ -129,8 +129,8 @@ describe("Phase 5 — dwell policy thresholds", () => {
   });
 
   test("session credit cap applies only above the 3h sanity ceiling", () => {
-    assert.equal(applySessionCreditCap(4_000_000), 4_000_000, "under 3h ceiling — unchanged");
-    assert.equal(applySessionCreditCap(12_000_000), SESSION_CREDIT_CAP_MS, "over 3h ceiling — clamped");
+    assert.equal(applySessionCreditCap(4_000_000), 4_000_000, "under 3h ceiling - unchanged");
+    assert.equal(applySessionCreditCap(12_000_000), SESSION_CREDIT_CAP_MS, "over 3h ceiling - clamped");
     assert.equal(applyPageCreditCap(700_000), 700_000, "no per-page 10-cap");
   });
 
@@ -141,7 +141,7 @@ describe("Phase 5 — dwell policy thresholds", () => {
 
 // ── feature flags ────────────────────────────────────────────────────────────
 
-describe("Phase 5 — feature flags", () => {
+describe("Phase 5 - feature flags", () => {
   const prevPublic = process.env.NEXT_PUBLIC_LEARNING_BOOK_TRACKING_ENABLED;
   const prevServer = process.env.LEARNING_BOOK_TRACKING_ENABLED;
 
@@ -176,7 +176,7 @@ describe("Phase 5 — feature flags", () => {
 
 // ── book context ─────────────────────────────────────────────────────────────
 
-describe("Phase 5 — book context sessionStorage", () => {
+describe("Phase 5 - book context sessionStorage", () => {
   const storage = new Map();
 
   before(() => {
@@ -230,7 +230,7 @@ describe("Phase 5 — book context sessionStorage", () => {
 
 // ── CTA mode ─────────────────────────────────────────────────────────────────
 
-describe("Phase 5 — CTA presets stay mode=learning", () => {
+describe("Phase 5 - CTA presets stay mode=learning", () => {
   const resolveFiles = [
     "lib/learning-book/resolve-math-g1-practice-target.js",
     "lib/learning-book/resolve-math-g2-practice-target.js",
@@ -256,7 +256,7 @@ describe("Phase 5 — CTA presets stay mode=learning", () => {
 
 // ── aggregator ───────────────────────────────────────────────────────────────
 
-describe("Phase 5 — aggregator learningActivity only", () => {
+describe("Phase 5 - aggregator learningActivity only", () => {
   test("book visits populate learningActivity fields", () => {
     const la = createEmptyLearningActivity();
     accumulateBookReadingActivity(
@@ -361,7 +361,7 @@ describe("Phase 5 — aggregator learningActivity only", () => {
 
 // ── classification regression ────────────────────────────────────────────────
 
-describe("Phase 5 — classification combos", () => {
+describe("Phase 5 - classification combos", () => {
   test("mode=learning after CTA is not diagnostic even with context flag", () => {
     const r = classifyActivityEvidence("learning", "free_practice", { contextAfterBookReading: true });
     assert.equal(r.isDiagnosticEligible, false);
@@ -376,7 +376,7 @@ describe("Phase 5 — classification combos", () => {
 
 // ── API handler (mock supabase) ──────────────────────────────────────────────
 
-describe("Phase 5 — book-events server", () => {
+describe("Phase 5 - book-events server", () => {
   test("unknown event returns 400", async () => {
     const result = await handleBookEvent({}, "stu-1", { event: "nope" });
     assert.equal(result.ok, false);
@@ -456,7 +456,7 @@ describe("Phase 5 — book-events server", () => {
 
 // ── coins boundary regression ────────────────────────────────────────────────
 
-describe("Phase 5 — monthly persistence unchanged", () => {
+describe("Phase 5 - monthly persistence unchanged", () => {
   test("monthly-persistence-reward delegates to the unified learning-credit aggregate (now includes books, by design)", () => {
     const path = join(__dirname, "../../lib/learning-supabase/monthly-persistence-reward.server.js");
     const src = readFileSync(path, "utf8");

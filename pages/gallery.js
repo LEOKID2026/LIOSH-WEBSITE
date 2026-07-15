@@ -81,7 +81,7 @@ export default function Gallery() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            תמונות וסרטונים של ליאו — הכלב שמלווה את עולם הילדים באתר.
+            תמונות וסרטונים של ליאו - הכלב שמלווה את עולם הילדים באתר.
           </motion.p>
 
           <motion.p
@@ -113,7 +113,7 @@ export default function Gallery() {
                   {item.type === "image" ? (
                     <img
                       src={item.src}
-                      alt={`ליאו — תמונה ${index + 1}`}
+                      alt={`ליאו - תמונה ${index + 1}`}
                       className="w-full h-full object-cover block"
                     />
                   ) : (
@@ -142,7 +142,7 @@ export default function Gallery() {
             {items[selectedIndex].type === "image" ? (
               <img
                 src={items[selectedIndex].src}
-                alt={`ליאו — תמונה ${selectedIndex + 1}`}
+                alt={`ליאו - תמונה ${selectedIndex + 1}`}
                 className="w-full max-h-[80vh] object-contain rounded-xl shadow-xl mx-auto"
               />
             ) : (

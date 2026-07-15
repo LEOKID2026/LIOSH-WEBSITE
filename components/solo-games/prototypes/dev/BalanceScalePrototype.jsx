@@ -196,7 +196,7 @@ export default function BalanceScalePrototype() {
 
         {/* item tray */}
         <div className="w-full max-w-[400px] shrink-0 rounded-2xl border-4 border-yellow-400 bg-slate-950/80 p-3">
-          <p className="mb-2 text-center text-xs font-bold text-amber-200">מגש חפצים — גררו לצד</p>
+          <p className="mb-2 text-center text-xs font-bold text-amber-200">מגש חפצים - גררו לצד</p>
           <div className="flex flex-wrap justify-center gap-2">
             {pool.map((itemId) => {
               const item = itemMap[itemId];

@@ -10,7 +10,7 @@ const WEATHER = [
     wind: 1,
     cloud: 0,
     items: ["hat", "water"],
-    hint: "חם ושמש — מה צריך?",
+    hint: "חם ושמש - מה צריך?",
   },
   {
     id: "rain",
@@ -20,7 +20,7 @@ const WEATHER = [
     wind: 2,
     cloud: 4,
     items: ["umbrella", "boots"],
-    hint: "יורד גשם — מה לוקחים?",
+    hint: "יורד גשם - מה לוקחים?",
   },
   {
     id: "wind",
@@ -30,7 +30,7 @@ const WEATHER = [
     wind: 5,
     cloud: 2,
     items: ["kite", "jacket"],
-    hint: "רוח חזקה — מה מתאים?",
+    hint: "רוח חזקה - מה מתאים?",
   },
   {
     id: "snow",
@@ -40,7 +40,7 @@ const WEATHER = [
     wind: 3,
     cloud: 5,
     items: ["coat", "boots"],
-    hint: "קר ושלג — מה לובשים?",
+    hint: "קר ושלג - מה לובשים?",
   },
   {
     id: "clouds",
@@ -50,7 +50,7 @@ const WEATHER = [
     wind: 2,
     cloud: 4,
     items: ["jacket"],
-    hint: "מעונן וקריר — מה עוזר?",
+    hint: "מעונן וקריר - מה עוזר?",
   },
   {
     id: "heat",
@@ -60,7 +60,7 @@ const WEATHER = [
     wind: 0,
     cloud: 0,
     items: ["water", "hat"],
-    hint: "חום כבד מאוד — מה חשוב?",
+    hint: "חום כבד מאוד - מה חשוב?",
   },
 ];
 
@@ -123,7 +123,7 @@ export default function WeatherStationPrototype() {
     if (correct) {
       setScore((s) => s + 10);
       setRoundsDone((r) => r + 1);
-      setFeedback(`נכון! ${round.label} — בחירה טובה ✅`);
+      setFeedback(`נכון! ${round.label} - בחירה טובה ✅`);
       setFlash("ok");
       window.setTimeout(() => {
         setFlash("");
@@ -132,7 +132,7 @@ export default function WeatherStationPrototype() {
         setFeedback("");
       }, 1600);
     } else {
-      setFeedback("לא בדיוק — חשבו מה מתאים למזג האוויר");
+      setFeedback("לא בדיוק - חשבו מה מתאים למזג האוויר");
       setFlash("bad");
       window.setTimeout(() => setFlash(""), 450);
     }

@@ -61,12 +61,12 @@ export function buildFoundationOrderingPhase14(p) {
   let foundationBeforeExpansionHe = "";
   if (foundationBeforeExpansion && dep === "likely_foundational_block") {
     foundationBeforeExpansionHe =
-      "לפני שמרחיבים את הדרישה בנושא הזה, כדאי לחזק קודם את היסוד שעליו הוא נשען — ואז לחדד.";
+      "לפני שמרחיבים את הדרישה בנושא הזה, כדאי לחזק קודם את היסוד שעליו הוא נשען - ואז לחדד.";
   } else if (foundationBeforeExpansion && dep === "mixed_dependency_signal") {
-    foundationBeforeExpansionHe = "כדאי לא לפתוח הרחבה כפולה בבת אחת — צעד קל על בסיס וצעד ממוקד בנושא.";
+    foundationBeforeExpansionHe = "כדאי לא לפתוח הרחבה כפולה בבת אחת - צעד קל על בסיס וצעד ממוקד בנושא.";
   } else if (foundationBeforeExpansion && (adv === "forming" || rel === "forming")) {
     foundationBeforeExpansionHe =
-      "בזמן שיש חשד לפער יסוד — עדיף לרכך שחרור/קידום עד שיש יותר יציבות בסיס.";
+      "בזמן שיש חשד לפער יסוד - עדיף לרכך שחרור/קידום עד שיש יותר יציבות בסיס.";
   }
 
   return {
@@ -95,10 +95,10 @@ export function buildPhase14RecommendationOverlay(p) {
   let whyThisMayBeSymptomNotCoreHe = "";
   if (dep === "likely_foundational_block") {
     whyThisMayBeSymptomNotCoreHe =
-      "כאן ייתכן שהקושי הנראה הוא לא רק נקודתי, אלא קשור לבסיס שעדיין לא התייצב — לכן לא לסגור רק על ליטוש נושאי.";
+      "כאן ייתכן שהקושי הנראה הוא לא רק נקודתי, אלא קשור לבסיס שעדיין לא התייצב - לכן לא לסגור רק על ליטוש נושאי.";
   } else if (dep === "mixed_dependency_signal") {
     whyThisMayBeSymptomNotCoreHe =
-      "התמונה מעורבת: ייתכן שיש גם רכיב מקומי וגם רכיב שמחייב יותר יציבות ביסוד — לא מחמירים בכיוון אחד בלבד.";
+      "התמונה מעורבת: ייתכן שיש גם רכיב מקומי וגם רכיב שמחייב יותר יציבות ביסוד - לא מחמירים בכיוון אחד בלבד.";
   }
 
   let whyFoundationFirstHe = "";
@@ -108,20 +108,20 @@ export function buildPhase14RecommendationOverlay(p) {
   if (ord.interventionOrdering === "foundation_first" || ord.foundationDecision === "stabilize_foundation_first") {
     whyFoundationFirstHe = blk
       ? `כדאי לפתוח מיקוד קצר ב${blk} לפני שמנסים «להספיק הכל» בנושא הזה.`
-      : "כדאי לייצב קודם בסיס קטן וברור — ואז לחדד בנושא.";
+      : "כדאי לייצב קודם בסיס קטן וברור - ואז לחדד בנושא.";
     whatCanWaitUntilFoundationStabilizesHe =
-      "אפשר להמתין עם הרחבת עומס, עם קפיצת רמה, ועם ליטוש עמוק של פרטים — עד שיש שני מפגשים קצרים עם אות עקבי.";
+      "אפשר להמתין עם הרחבת עומס, עם קפיצת רמה, ועם ליטוש עמוק של פרטים - עד שיש שני מפגשים קצרים עם אות עקבי.";
   } else if (ord.interventionOrdering === "local_support_first") {
     whyLocalSupportFirstHe =
       "בשלב הזה נראה שהקושי נשאר מקומי יותר, ולכן נכון לטפל בו באופן ממוקד בלי להרחיב לסיפור רחב מיותר.";
     whatCanWaitUntilFoundationStabilizesHe = "אין צורך לדחות הכל ל«בסיס גדול» אם הנתון כאן עדיין נקודתי.";
   } else if (ord.interventionOrdering === "parallel_light_support") {
-    whyFoundationFirstHe = "שורה קלה על בסיס — בלי להחליף את כל התוכנית.";
-    whyLocalSupportFirstHe = "במקביל נשארים עם מטרה צרה בנושא — לא שני עומסים כבדים.";
+    whyFoundationFirstHe = "שורה קלה על בסיס - בלי להחליף את כל התוכנית.";
+    whyLocalSupportFirstHe = "במקביל נשארים עם מטרה צרה בנושא - לא שני עומסים כבדים.";
     whatCanWaitUntilFoundationStabilizesHe = "להימנע מלהכפיל תרגול כבד על שני צירים באותו ערב.";
   } else {
     whyLocalSupportFirstHe = "כרגע עדיף לאסוף עוד אות לפני שמחליטים אם לפתוח טיפול רחב בבסיס.";
-    whatCanWaitUntilFoundationStabilizesHe = "שינוי אגרסיבי ברצף או ברמה — ימתין לסבב תצפית קצר.";
+    whatCanWaitUntilFoundationStabilizesHe = "שינוי אגרסיבי ברצף או ברמה - ימתין לסבב תצפית קצר.";
   }
 
   return {

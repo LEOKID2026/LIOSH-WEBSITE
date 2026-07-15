@@ -48,20 +48,20 @@ export const SPEC_FORBIDDEN_PARENT_PHRASES = Object.freeze([
 
 const MEANING_BY_ROOT_CAUSE_INSIGHT = Object.freeze({
   knowledge_gap: "הנתונים מצביעים על נקודת חיזוק שעדיין לא יציבה.",
-  speed_pressure: "חלק מהטעויות נראות קשורות למהירות — לא בהכרח לפער ידע מלא.",
+  speed_pressure: "חלק מהטעויות נראות קשורות למהירות - לא בהכרח לפער ידע מלא.",
   instruction_friction: "ייתכן שהקושי קשור להבנת ההוראה, ולא רק לידע בנושא.",
   careless_execution: "נראה שהחומר מוכר בחלקו, אבל יש טעויות ביצוע שחוזרות כשממהרים.",
   weak_independence: "הילד מצליח יותר כשיש ליווי, ועדיין כדאי לחזק פתרון עצמאי.",
-  insufficient_evidence: "עדיין מעט תשובות — כדאי עוד תרגול קצר לפני מסקנה ברורה.",
+  insufficient_evidence: "עדיין מעט תשובות - כדאי עוד תרגול קצר לפני מסקנה ברורה.",
   preliminary_direction: "יש כיוון ראשוני, אבל כדאי עוד קצת תרגול לפני מסקנה ברורה.",
   recurring_pattern:
     "כבר מופיע דפוס שחוזר בנושא הזה, ולכן כדאי להתייחס אליו ולחזק אותו. עדיין מומלץ להמשיך לתרגל כדי לוודא שהדפוס יציב לאורך זמן.",
   recurring_pattern_supported:
     "כבר מופיע דפוס שחוזר בנושא הזה בכמה מפגשים, ולכן כדאי להתייחס אליו ולחזק אותו. מומלץ להמשיך לתרגל כדי לוודא שהדפוס יציב לאורך זמן.",
   no_consistent_pattern: "יש כבר תרגול בנושא, אבל עדיין לא מופיע דפוס עקבי מספיק.",
-  mixed_signal: "יש כמה כיוונים אפשריים — כדאי לבדוק שוב אחרי עוד תרגול קצר.",
-  early_stage_instability: "עדיין מעט תשובות — כדאי עוד תרגול קצר לפני מסקנה ברורה.",
-  mixed: "יש כמה כיוונים אפשריים — כדאי לבדוק שוב אחרי עוד תרגול קצר.",
+  mixed_signal: "יש כמה כיוונים אפשריים - כדאי לבדוק שוב אחרי עוד תרגול קצר.",
+  early_stage_instability: "עדיין מעט תשובות - כדאי עוד תרגול קצר לפני מסקנה ברורה.",
+  mixed: "יש כמה כיוונים אפשריים - כדאי לבדוק שוב אחרי עוד תרגול קצר.",
 });
 
 const MEANING_BY_BEHAVIOR_EXPLAIN = Object.freeze({
@@ -82,11 +82,11 @@ const MEANING_BY_BEHAVIOR_EXPLAIN = Object.freeze({
   stable_mastery:
     "הנתונים מצביעים על שליטה טובה בנושא כרגע. חשוב לשמר את היכולת ולא למהר להסיק שכל המקצוע כבר יציב.",
   insufficient_evidence:
-    "עדיין מעט תשובות — כדאי עוד תרגול קצר לפני מסקנה ברורה.",
+    "עדיין מעט תשובות - כדאי עוד תרגול קצר לפני מסקנה ברורה.",
   undetermined:
-    "עדיין מעט תשובות — כדאי עוד תרגול קצר לפני מסקנה ברורה.",
+    "עדיין מעט תשובות - כדאי עוד תרגול קצר לפני מסקנה ברורה.",
   mixed_low_signal:
-    "עדיין מעט תשובות — כדאי עוד תרגול קצר לפני מסקנה ברורה.",
+    "עדיין מעט תשובות - כדאי עוד תרגול קצר לפני מסקנה ברורה.",
   mixed_signal:
     "יש סימנים לכמה כיוונים שונים, ולכן הדוח ממליץ להתקדם בזהירות ולא לקבוע מסקנה אחת חזקה מדי.",
   mixed:
@@ -108,7 +108,7 @@ const ACTION_BY_ROOT_CAUSE = Object.freeze({
   stable_mastery:
     "לשמר את הנושא בתרגול קצר, ואפשר לשלב בהדרגה שאלות מעט מאתגרות יותר אם הדיוק נשמר.",
   insufficient_evidence:
-    "עדיין מעט תשובות — כדאי עוד תרגול קצר באותו נושא, ואז לבדוק שוב את הדוח.",
+    "עדיין מעט תשובות - כדאי עוד תרגול קצר באותו נושא, ואז לבדוק שוב את הדוח.",
   preliminary_direction: "לבצע עוד כמה שאלות באותו נושא, ואז לבדוק שוב את הדוח.",
   recurring_pattern:
     "לחזור על שאלות דומות באותו נושא, לחזק את הנקודה שחוזרת, ולבדוק שוב אחרי עוד תרגול.",
@@ -117,7 +117,7 @@ const ACTION_BY_ROOT_CAUSE = Object.freeze({
   no_consistent_pattern:
     "להמשיך בתרגול קצר באותו נושא כדי לראות אם יתגבש דפוס עקבי.",
   mixed_signal:
-    "להמשיך בתרגול קצר באותו נושא — כדאי לבדוק שוב אחרי עוד כמה שאלות.",
+    "להמשיך בתרגול קצר באותו נושא - כדאי לבדוק שוב אחרי עוד כמה שאלות.",
   early_stage_instability:
     "לבצע עוד כמה שאלות באותו נושא, ואז לבדוק שוב את הדוח.",
 });
@@ -148,7 +148,7 @@ export const DEPENDENCY_STATE_PARENT_HE = Object.freeze({
   mixed_dependency_signal:
     "יש גם סימנים לקושי בנושא עצמו וגם סימנים שאולי הבסיס משפיע. לכן כדאי להמשיך בזהירות ולא לקבוע מסקנה אחת חזקה מדי.",
   accuracy_foundation_gap:
-    "הדיוק הנמוך חוזר מספיק כדי לחשוד שהבסיס של הנושא עדיין לא יציב, אבל אין זיהוי מדויק של תת־נושא בסיסי.",
+    "הדיוק הנמוך חוזר מספיק כדי לחשוד שהבסיס של הנושא עדיין לא יציב, אבל אין זיהוי מדויק של תת-נושא בסיסי.",
 });
 
 /** Spec §2.1 — allowed step labels for parent explain block */
@@ -318,7 +318,7 @@ function adjustInsufficientEvidenceByQHe(text, q) {
   const t = String(text || "");
   if (!t.includes("מעט תשובות")) return t;
   const n = Math.round(Number(q) || 0);
-  if (n <= 5) return "עדיין מעט נתונים — עוד קצת תרגול יעזור לנו להבין טוב יותר.";
+  if (n <= 5) return "עדיין מעט נתונים - עוד קצת תרגול יעזור לנו להבין טוב יותר.";
   if (n <= 15) return "יש כיוון ראשוני, אבל כדאי עוד קצת תרגול לפני מסקנה ברורה.";
   return "נראה שיש כאן נושא שכדאי לחזק בתרגול הקרוב.";
 }
@@ -353,7 +353,7 @@ export function topicAttentionInsightHe(p) {
   );
 
   const base =
-    `ב${subj} — בנושא ${topic}: נפתרו ${q} שאלות, הדיוק היה ${acc}%, ושיעור הטעויות היה ${wr}%. ` +
+    `ב${subj} - בנושא ${topic}: נפתרו ${q} שאלות, הדיוק היה ${acc}%, ושיעור הטעויות היה ${wr}%. ` +
     `${patternSentence ? `${patternSentence} ` : ""}${meaningSentence}`;
 
   return `${base} מה כדאי לעשות: ${action}`;
@@ -369,7 +369,7 @@ export function stableMasteryInsightHe(p) {
   if (wr == null || !Number.isFinite(Number(wr))) wr = Math.max(0, Math.min(100, 100 - acc));
   else wr = Math.round(Number(wr));
   return (
-    `ב${subj} — בנושא ${topic}: נפתרו ${q} שאלות, והדיוק היה ${acc}%. ` +
+    `ב${subj} - בנושא ${topic}: נפתרו ${q} שאלות, והדיוק היה ${acc}%. ` +
     "נראית שליטה טובה בנושא. " +
     "מה כדאי לעשות: לשמר את הנושא בתרגול קצר מדי פעם, ולבדוק שהדיוק נשמר גם בשאלות חדשות."
   );
@@ -380,7 +380,7 @@ export function advanceLevelInsightHe(p) {
   const subj = subjectLabel(p.subject, p.subjectId);
   const topic = clean(p.topic);
   return (
-    `ב${subj} — בנושא ${topic}: הנתונים מצביעים על שליטה טובה מספיק כדי לשקול עלייה ברמת הקושי בנושא הזה בלבד. ` +
+    `ב${subj} - בנושא ${topic}: הנתונים מצביעים על שליטה טובה מספיק כדי לשקול עלייה ברמת הקושי בנושא הזה בלבד. ` +
     "מומלץ להתקדם בהדרגה ולבדוק שהדיוק נשמר גם בשאלות קשות יותר."
   );
 }
@@ -390,7 +390,7 @@ export function advanceGradeInsightHe(p) {
   const subj = subjectLabel(p.subject, p.subjectId);
   const topic = clean(p.topic);
   return (
-    `ב${subj} — בנושא ${topic}: הנתונים מצביעים על מוכנות להתקדמות בנושא הזה בלבד. ` +
+    `ב${subj} - בנושא ${topic}: הנתונים מצביעים על מוכנות להתקדמות בנושא הזה בלבד. ` +
     "העלייה לא אומרת שכל המקצוע מוכן לקפיצה, אלא רק שהנושא המסוים הזה נראה יציב יותר."
   );
 }
@@ -402,7 +402,7 @@ export function strengthOverviewLineHe(p) {
   const q = Math.round(Number(p.q) || 0);
   const acc = Math.round(Number(p.acc) || 0);
   return (
-    `נקודת חוזק: ב${subj} — בנושא ${topic} נפתרו ${q} שאלות והדיוק היה ${acc}%. ` +
+    `נקודת חוזק: ב${subj} - בנושא ${topic} נפתרו ${q} שאלות והדיוק היה ${acc}%. ` +
     "זה נושא שכדאי לשמר, ובמידה שהדיוק נשמר אפשר לשקול התקדמות הדרגתית."
   );
 }
@@ -453,7 +453,7 @@ export function insufficientDataInsightHe() {
 
 /** Spec §6.1 — recent inactivity (not thin-data wording) */
 export function recentInactivityInsightHe() {
-  return "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.";
+  return "לא הייתה פעילות לאחרונה - מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.";
 }
 
 /** Spec §2.1 */
@@ -470,7 +470,7 @@ export function explainDataHe(q, acc, wrongRatio) {
   const nq = Math.round(Number(q) || 0);
   const nacc = Math.round(Number(acc) || 0);
   if (nq > 0 && nq < 5) {
-    return `הנתונים: יש ${nq} שאלות בנושא — זו תמונה ראשונית בלבד.`;
+    return `הנתונים: יש ${nq} שאלות בנושא - זו תמונה ראשונית בלבד.`;
   }
   const wr = wrongRatio != null && Number.isFinite(Number(wrongRatio)) ? Math.round(Number(wrongRatio)) : null;
   if (wr != null) return `הנתונים: ${nq} שאלות, דיוק ${nacc}%, ${wr}% טעויות.`;

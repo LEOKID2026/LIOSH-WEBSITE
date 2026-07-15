@@ -273,7 +273,7 @@ export default function MyApp({ Component, pageProps }) {
           name="viewport"
           content="width=device-width, initial-scale=1, viewport-fit=cover"
         />
-        <meta name="description" content="LEO KIDS — לימוד ומשחקים לילדים, תרגול במקצועות ודוחות להורים." />
+        <meta name="description" content="LEO KIDS - לימוד ומשחקים לילדים, תרגול במקצועות ודוחות להורים." />
         {isStudentPwaInstallMode ? (
           <>
             <meta name="theme-color" content={BROWSER_THEME_COLOR_BRIGHT} />

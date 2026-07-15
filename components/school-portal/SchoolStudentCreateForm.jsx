@@ -175,7 +175,7 @@ export default function SchoolStudentCreateForm({
                 setGradeLevel(v);
                 setPhysicalClassName("");
               }}
-              options={[{ value: "", label: "— בחרו שכבה —" }, ...SCHOOL_GRADE_OPTIONS.map((g) => ({ value: g.level, label: g.label }))]}
+              options={[{ value: "", label: "- בחרו שכבה -" }, ...SCHOOL_GRADE_OPTIONS.map((g) => ({ value: g.level, label: g.label }))]}
             />
           </label>
 
@@ -187,7 +187,7 @@ export default function SchoolStudentCreateForm({
                   data-testid="school-create-student-class"
                   value={physicalClassName}
                   onChange={setPhysicalClassName}
-                  options={[{ value: "", label: "— בחרו כיתה —" }, ...classOptions]}
+                  options={[{ value: "", label: "- בחרו כיתה -" }, ...classOptions]}
                 />
               ) : (
                 <input

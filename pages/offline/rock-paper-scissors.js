@@ -393,7 +393,7 @@ export default function RockPaperScissors() {
           {lastResult && !matchWinner && !showResults && (
             <div className="mb-1 text-xs text-white/80">
               {CHOICES.find((c) => c.id === lastResult.p1)?.emoji} מול{" "}
-              {CHOICES.find((c) => c.id === lastResult.p2)?.emoji} —{" "}
+              {CHOICES.find((c) => c.id === lastResult.p2)?.emoji} -{" "}
               {lastResult.winner === "tie"
                 ? "תיקו"
                 : lastResult.winner === "p1"

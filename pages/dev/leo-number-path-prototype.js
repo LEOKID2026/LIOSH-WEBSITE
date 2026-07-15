@@ -5,7 +5,7 @@ export default function LeoNumberPathPrototypePage() {
   return (
     <>
       <Head>
-        <title>מסלול המספרים של ליאו — אבטיפוס</title>
+        <title>מסלול המספרים של ליאו - אבטיפוס</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <LeoNumberPathPrototype />

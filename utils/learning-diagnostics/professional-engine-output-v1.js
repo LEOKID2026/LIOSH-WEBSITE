@@ -117,7 +117,7 @@ export function enrichDiagnosticEngineV2WithProfessionalEngineV1(
 
   const globalDoNotConclude = [
     ...(pf?.globalDoNotConclude || []),
-    "Educational diagnostic support only—not a medical or clinical assessment.",
+    "Educational diagnostic support only-not a medical or clinical assessment.",
     "Cross-subject patterns require confirming probes in each involved subject.",
   ];
 
@@ -141,7 +141,7 @@ export function enrichDiagnosticEngineV2WithProfessionalEngineV1(
     limitations: [
       "English generator metadata varies by pool row coverage.",
       "Subskill and misconception precision is limited until question pools/generators carry dense expectedErrorTypes and prerequisiteSkillIds.",
-      "Mastery aggregates by skill—full diagnostic precision depends on difficultyTier (or equivalent) on topic rows where available.",
+      "Mastery aggregates by skill-full diagnostic precision depends on difficultyTier (or equivalent) on topic rows where available.",
     ],
   };
 

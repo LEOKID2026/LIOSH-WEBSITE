@@ -148,4 +148,4 @@ assert.equal(
   "remediate_same_level",
 );
 
-console.log("parent-report-engine-decision-contract.test.mjs — all passed");
+console.log("parent-report-engine-decision-contract.test.mjs - all passed");

@@ -11,7 +11,7 @@
  * Phase 3 test gate (from fix plan):
  *  - Unit: assigned activity — rawTimeSpentMs = actual elapsed time
  *  - Unit: assigned activity — creditedTimeMs = Math.min(rawMs, 300_000)
- *  - Unit: assigned activity — timingStatus = "very_long" when rawMs > 600_000
+ *  - Unit: assigned activity - timingStatus = "very_long" when rawMs > 600_000
  *  - Unit: explanationViewed logic
  *  - Unit: free-practice — both rawTimeSpentMs and creditedTimeMs present
  *  - Integration sim: rawTimeSpentMs > 0 after realistic question time

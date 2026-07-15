@@ -1,5 +1,5 @@
 /**
- * Phase 2-B3 — order M-04 vs M-05 taxonomy candidates for math `fractions` rows
+ * Phase 2-B3 - order M-04 vs M-05 taxonomy candidates for math `fractions` rows
  * using wrong-event metadata (patternFamily, kind, conceptTag, optional params).
  * Does not remove candidates; only reorders when both M-04 and M-05 are present.
  */

@@ -123,9 +123,9 @@ function activityLabelWithSubjectGradeFallback(baseLabel, row, subjectId) {
     row?.contentGradeKey ?? row?.gradeKey ?? row?.contentGradeLevel ?? row?.grade
   );
   if (subjectLabel && gradeLabel && gradeLabel !== "לא זמין") {
-    return `${baseLabel} — ${subjectLabel} כיתה ${gradeLabel}`;
+    return `${baseLabel} - ${subjectLabel} כיתה ${gradeLabel}`;
   }
-  if (subjectLabel) return `${baseLabel} — ${subjectLabel}`;
+  if (subjectLabel) return `${baseLabel} - ${subjectLabel}`;
   return baseLabel;
 }
 
@@ -170,7 +170,7 @@ export function formatParentReportActivityDisplayLabelHe(input, options = {}) {
     const base = !isTechnicalParentActivityTitleHe(titleRaw)
       ? titleRaw || "פעילות אישית מהורה"
       : "פעילות אישית מהורה";
-    if (topicLabel) return `${base} — ${topicLabel}`;
+    if (topicLabel) return `${base} - ${topicLabel}`;
     return activityLabelWithSubjectGradeFallback(base, row, options.subjectId);
   }
 
@@ -259,7 +259,7 @@ function normalizeKey(value) {
     .replace(/\s+/g, "_");
 }
 
-function mapFromTable(value, table, fallback = "—") {
+function mapFromTable(value, table, fallback = "-") {
   const key = normalizeKey(value);
   if (!key) return fallback;
   if (table[key]) return table[key];
@@ -280,7 +280,7 @@ export function formatParentReportSubjectHe(subjectId) {
   if (!key || key === "unknown") return "לא ידוע";
   if (PARENT_REPORT_SUBJECT_LABELS_HE[key]) return PARENT_REPORT_SUBJECT_LABELS_HE[key];
   const platform = platformSubjectLabelHe(key);
-  if (platform && platform !== "—") return platform;
+  if (platform && platform !== "-") return platform;
   return "לא ידוע";
 }
 
@@ -304,7 +304,7 @@ export function formatParentReportSourceHe(source) {
 
 /** @param {string|null|undefined} status */
 export function formatParentReportStatusHe(status) {
-  return mapFromTable(status, PARENT_REPORT_STATUS_LABELS_HE, "—");
+  return mapFromTable(status, PARENT_REPORT_STATUS_LABELS_HE, "-");
 }
 
 /** @param {string|null|undefined} level */
@@ -325,13 +325,13 @@ export function formatParentReportGradeHe(grade) {
 
 /** @param {string|null|undefined} evidence */
 export function formatParentReportEvidenceHe(evidence) {
-  return mapFromTable(evidence, PARENT_REPORT_EVIDENCE_LABELS_HE, "—");
+  return mapFromTable(evidence, PARENT_REPORT_EVIDENCE_LABELS_HE, "-");
 }
 
 /** @param {string|null|undefined} label */
 export function formatParentReportLabelHe(label) {
   const raw = String(label || "").trim();
-  if (!raw) return "—";
+  if (!raw) return "-";
   if (HEBREW_CHAR.test(raw)) return normalizeParentFacingHe(raw);
 
   const key = normalizeKey(raw);

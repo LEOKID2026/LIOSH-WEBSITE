@@ -285,7 +285,7 @@ function buildNoScopeCategorySpecificClarification(utterance) {
     return "יכול להיות פער בין הצלחה בבית לבין ביצוע בתרגול באפליקציה. לכן מסתכלים על דפוס חוזר בדוח לאורך זמן, ולא על תשובה בודדת.";
   }
   if (/תסביר\s*לי\s*כמו\s*להורה|בלי\s*מושגים|במשפט\s*אחד|רק\s*3\s*נקודות|בקיצור/i.test(t)) {
-    return "בקצרה: הדוח משווה בין נושאים לפי כמות שאלות ודיוק בתרגול. אם הנתונים עדיין מעטים, זה סימן ראשוני ולא כיוון סופי — כדאי לצבור עוד קצת תרגול קצר לפני שקובעים כיוון.";
+    return "בקצרה: הדוח משווה בין נושאים לפי כמות שאלות ודיוק בתרגול. אם הנתונים עדיין מעטים, זה סימן ראשוני ולא כיוון סופי - כדאי לצבור עוד קצת תרגול קצר לפני שקובעים כיוון.";
   }
   if (/מה\s*לעשות\s*מחר|מה\s*לתרגל\s*השבוע|תוכנית\s*קצרה|איך\s*לעזור\s*בלי\s*לחץ/i.test(t)) {
     return "אפשר להתחיל בתוכנית קצרה: 1) 10 דקות חזרה בנושא אחד, 2) 5-8 שאלות בנושא נוסף, 3) בדיקה חוזרת בעוד יומיים אם אותו דפוס נשמר.";
@@ -898,7 +898,7 @@ function runDeterministicCore(input, options) {
     const r = buildClarificationParentCopilotResponse({
       clarificationQuestionHe:
         scopeResMissing.clarificationQuestionHe ||
-        "לא נטען דוח מקיף — לא ניתן לענות מתוך נתוני התקופה. רעננו את הדף או בחרו תקופה אחרת.",
+        "לא נטען דוח מקיף - לא ניתן לענות מתוך נתוני התקופה. רעננו את הדף או בחרו תקופה אחרת.",
       intent: stageAForMissing?.canonicalIntent || "uncertainty_boundary",
       priorRepeated,
       metadata: scopeMetaMissing,
@@ -1794,7 +1794,7 @@ export function runParentCopilotTurn(input) {
  *    - `getLlmGateDecision().enabled === false` (`maybeGenerateGroundedLlmDraft` returns immediately);
  *    - LLM or post-LLM validation fails — then deterministic baseline (or clinical-boundary branch) is kept.
  * 3. **LLM may run** only if gates pass **and** the resolved path calls `maybeGenerateGroundedLlmDraft` and the
- *    draft passes `validateLlmDraft`, `validateAnswerDraft`, and `validateParentCopilotResponseV1` — then
+ *    draft passes `validateLlmDraft`, `validateAnswerDraft`, and `validateParentCopilotResponseV1` - then
  *    telemetry `generationPath` is `llm_grounded`.
  *
  * **Fallback:** Same validator-driven fallbacks as the sync path when the final LLM-backed response is not used.

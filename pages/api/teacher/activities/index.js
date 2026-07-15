@@ -81,7 +81,7 @@ export default async function handler(req, res) {
         });
         if (!rl.allowed) {
           if (rl.retryAfterSec) res.setHeader("Retry-After", String(rl.retryAfterSec));
-          return sendTeacherApiError(res, 429, "rate_limited", "יותר מדי בקשות — המתן מעט ונסה שוב");
+          return sendTeacherApiError(res, 429, "rate_limited", "יותר מדי בקשות - המתן מעט ונסה שוב");
         }
       }
 
@@ -188,6 +188,6 @@ export default async function handler(req, res) {
     return sendTeacherApiError(res, 405, "method_not_allowed", "שיטת בקשה לא נתמכת");
   } catch (err) {
     safeApiLog("teacher/activities", err);
-    return sendTeacherApiError(res, 500, "internal_error", "שגיאת שרת — נסה שוב");
+    return sendTeacherApiError(res, 500, "internal_error", "שגיאת שרת - נסה שוב");
   }
 }

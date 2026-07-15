@@ -161,7 +161,7 @@ async function main() {
       record(
         "suspended_private_teacher_blocked_create_class",
         true,
-        "skipped — no private teacher password"
+        "skipped - no private teacher password"
       );
       await lifecycle(adminToken, privateTeacher.teacherId, "reactivate", "private_teacher");
     }

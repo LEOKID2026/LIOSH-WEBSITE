@@ -186,7 +186,7 @@ async function main() {
           parentPassword
         );
       } catch {
-        record("parent_token_skipped", true, "parent auth unavailable — admin-only API checks");
+        record("parent_token_skipped", true, "parent auth unavailable - admin-only API checks");
       }
 
       const fakeId = "00000000-0000-4000-8000-000000000099";

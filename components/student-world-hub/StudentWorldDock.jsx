@@ -159,7 +159,7 @@ export default function StudentWorldDock({
         canOpenSurprise
           ? "קופסת הפתעה מוכנה לפתיחה"
           : surpriseCountdownHe
-            ? `קופסת הפתעה — הקופסה הבאה תהיה מוכנה בעוד ${surpriseCountdownHe}`
+            ? `קופסת הפתעה - הקופסה הבאה תהיה מוכנה בעוד ${surpriseCountdownHe}`
             : "קופסת הפתעה"
       }
       disabled={!canOpenSurprise}

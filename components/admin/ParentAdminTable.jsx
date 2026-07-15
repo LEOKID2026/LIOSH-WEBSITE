@@ -38,10 +38,10 @@ export default function ParentAdminTable({ parents }) {
                 data-testid={p.isOrphanUnlinked ? "parent-row-unlinked" : "parent-row"}
               >
                 <td className="px-4 py-3 break-all" dir="ltr">
-                  {p.email || "—"}
+                  {p.email || "-"}
                 </td>
                 <td className="px-4 py-3">
-                  {p.isOrphanUnlinked ? "—" : planCodeLabelHe(p.settings?.planCode)}
+                  {p.isOrphanUnlinked ? "-" : planCodeLabelHe(p.settings?.planCode)}
                 </td>
                 <td className="px-4 py-3">{parentListStatusLabelHe(p)}</td>
                 <td className="px-4 py-3">
@@ -67,11 +67,11 @@ export default function ParentAdminTable({ parents }) {
           >
             <p className="text-xs text-white/50 mb-1">{ADMIN_COL_EMAIL}</p>
             <p className="text-sm break-all mb-2" dir="ltr">
-              {p.email || "—"}
+              {p.email || "-"}
             </p>
             <p className="text-sm text-white/70 mb-3">
               {ADMIN_COL_PLAN}:{" "}
-              {p.isOrphanUnlinked ? "—" : planCodeLabelHe(p.settings?.planCode)} · {ADMIN_COL_ACCOUNT_STATUS}:{" "}
+              {p.isOrphanUnlinked ? "-" : planCodeLabelHe(p.settings?.planCode)} · {ADMIN_COL_ACCOUNT_STATUS}:{" "}
               {parentListStatusLabelHe(p)}
             </p>
             <Link

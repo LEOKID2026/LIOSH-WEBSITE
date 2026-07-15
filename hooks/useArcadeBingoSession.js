@@ -392,11 +392,11 @@ export function useArcadeBingoSession(baseContext) {
       const ctxIsHost = Boolean(selfKey && ctxHostPk && selfKey === ctxHostPk);
       const allowHostOpenOverride = ctxIsHost && life === "active";
       let phaseLine = "ממתינים שהמארח יפתח משחק בינגו.";
-      if (life === "lobby") phaseLine = "ממתינים לשחקנים — המארח צריך להתחיל את המשחק מהלובי.";
+      if (life === "lobby") phaseLine = "ממתינים לשחקנים - המארח צריך להתחיל את המשחק מהלובי.";
       else if (life === "pending_start" || life === "pending_stakes") phaseLine = "ממתינים להימור מכל השחקנים.";
       else if (life === "active")
         phaseLine = liveSnapshot?.canOpenSession
-          ? "החדר מוכן — המארח יכול לפתוח בינגו כשלפחות שני שחקנים יושבים ומוכנים."
+          ? "החדר מוכן - המארח יכול לפתוח בינגו כשלפחות שני שחקנים יושבים ומוכנים."
           : "ממתינים שהמארח יפתח בינגו.";
       /** @type {Record<string, string|null>} */
       const roomNoMatchPrizeDisabled = {};
@@ -570,7 +570,7 @@ export function useArcadeBingoSession(baseContext) {
       }
     }
 
-    let phaseLine = "משחק פעיל — המספרים נקראים בשרת.";
+    let phaseLine = "משחק פעיל - המספרים נקראים בשרת.";
     if (snap?.sessionPhase === "playing") phaseLine = "משחק פעיל";
     else if (snap?.sessionPhase === "finished") phaseLine = "הסתיים";
 

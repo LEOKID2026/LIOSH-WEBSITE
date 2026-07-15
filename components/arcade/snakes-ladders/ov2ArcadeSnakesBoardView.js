@@ -498,7 +498,7 @@ function Ov2SnakesHudSeatChip({ si, memberBySeat, positions, turnSeat, mySeat })
       <div className="flex min-w-0 flex-1 flex-col justify-center leading-tight">
         <span className="truncate text-[8px] font-medium text-zinc-200 sm:text-[9px]">{nameLine}</span>
         <span className="font-mono text-[10px] font-semibold tabular-nums text-zinc-200 sm:text-[11px]">
-          {Number.isFinite(pos) ? pos : "—"}
+          {Number.isFinite(pos) ? pos : "-"}
         </span>
       </div>
     </div>
@@ -526,7 +526,7 @@ function PawnWithTurnRing({ seat, turnSeat, dense, edgeHang }) {
 }
 
 /**
- * לוח + HUD פנימיים מהקוד של OV2 (`MLEO-GAME/.../Ov2SnakesScreen.js`) — רכיב תצוגה בלבד.
+ * לוח + HUD פנימיים מהקוד של OV2 (`MLEO-GAME/.../Ov2SnakesScreen.js`) - רכיב תצוגה בלבד.
  *
  * @param {{
  *   edges: { ladders: Record<string, number>, snakes: Record<string, number> },

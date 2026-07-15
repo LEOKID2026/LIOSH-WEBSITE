@@ -65,7 +65,7 @@ export const HEBREW_OFFICIAL_SUBSECTION_CATALOG = {
         "decoding",
         ["hebrew.decoding_reading_fluency"],
         "high",
-        "דף כיתה א׳ POP — עיגון כיתתי ישיר יחסית.",
+        "דף כיתה א׳ POP - עיגון כיתתי ישיר יחסית.",
         ["אותיות", "צלילים", "מילים עם ניקוד"]
       ),
       sec(
@@ -83,7 +83,7 @@ export const HEBREW_OFFICIAL_SUBSECTION_CATALOG = {
         "grammar",
         ["hebrew.grammar_language_knowledge"],
         "medium",
-        "בכיתה א׳ — דקדוק מוצג ברמת מושגים בסיסיים בלבד.",
+        "בכיתה א׳ - דקדוק מוצג ברמת מושגים בסיסיים בלבד.",
         ["חלקי דיבר בסיסיים"]
       ),
       sec(
@@ -125,7 +125,7 @@ export const HEBREW_OFFICIAL_SUBSECTION_CATALOG = {
         "fluency",
         ["hebrew.decoding_reading_fluency"],
         "medium",
-        "אין דף כיתה נפרד במאגר הרישום — ידני מול POP/מיידע.",
+        "אין דף כיתה נפרד במאגר הרישום - ידני מול POP/מיידע.",
         []
       ),
       sec(
@@ -409,7 +409,7 @@ export const HEBREW_OFFICIAL_SUBSECTION_CATALOG = {
         "bridge",
         ["hebrew.vocabulary", "hebrew.oral_expression"],
         "low",
-        "מסגרת מוצרית — לא טענה לכיסוי מלא של ספרות חט״ב.",
+        "מסגרת מוצרית - לא טענה לכיסוי מלא של ספרות חט״ב.",
         []
       ),
     ],

@@ -70,7 +70,7 @@ export const GRADE_LEVELS = {
         subtraction: { min: 0, max: 50, vertical: true }, // חיסור במאונך
         multiplication: { max: 5 },
         division: { max: 50, maxDivisor: 5 },
-        fractions: { maxDen: 4 }, // חצי (1/2) ורבע (1/4) — שניהם נלמדים בכיתה ב׳
+        fractions: { maxDen: 4 }, // חצי (1/2) ורבע (1/4) - שניהם נלמדים בכיתה ב׳
         divisibility: { divisors: [2, 5, 10] }, // סימני התחלקות
         compare: { max: 1000 },
         number_sense: { max: 1000 },
@@ -225,7 +225,7 @@ export const GRADE_LEVELS = {
       easy: {
         addition: { max: 10000 },
         subtraction: { min: 0, max: 10000 },
-        multiplication: { max: 30 },  // עד 30×30 = 900 — קושי מתאים לרמה easy כיתה ה׳
+        multiplication: { max: 30 },  // עד 30×30 = 900 - קושי מתאים לרמה easy כיתה ה׳
         division: { max: 1000, maxDivisor: 12 },
         division_with_remainder: { max: 1000, maxDivisor: 12 },
         fractions: { maxDen: 8 },
@@ -243,7 +243,7 @@ export const GRADE_LEVELS = {
       medium: {
         addition: { max: 50000 },
         subtraction: { min: 0, max: 50000 },
-        multiplication: { max: 50 },  // עד 50×50 = 2500 — כפל דו-ספרתי מאתגר לרמה medium כיתה ה׳
+        multiplication: { max: 50 },  // עד 50×50 = 2500 - כפל דו-ספרתי מאתגר לרמה medium כיתה ה׳
         division: { max: 2000, maxDivisor: 12, twoDigit: true },
         division_with_remainder: { max: 2000, maxDivisor: 12 },
         fractions: { maxDen: 10 },
@@ -260,7 +260,7 @@ export const GRADE_LEVELS = {
       hard: {
         addition: { max: 100000 },
         subtraction: { min: 0, max: 100000 },
-        multiplication: { max: 99 },  // עד 99×99 = 9801 — קושי מדויק לרמת hard כיתה ה׳ (2-ספרתי × 2-ספרתי)
+        multiplication: { max: 99 },  // עד 99×99 = 9801 - קושי מדויק לרמת hard כיתה ה׳ (2-ספרתי × 2-ספרתי)
         division: { max: 5000, maxDivisor: 12 },
         division_with_remainder: { max: 5000, maxDivisor: 12 },
         fractions: { maxDen: 12 },

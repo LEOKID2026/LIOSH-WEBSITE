@@ -27,7 +27,7 @@ import {
 } from "../../../lib/admin-portal/admin-video-builder-ui.he.js";
 
 function formatDate(iso) {
-  if (!iso) return "—";
+  if (!iso) return "-";
   try {
     return new Date(iso).toLocaleString("he-IL");
   } catch {

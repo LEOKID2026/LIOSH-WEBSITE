@@ -5,7 +5,7 @@
  *  - Subject scope: `subject:<subjectKey>`        e.g. `subject:math`
  *  - Topic   scope: `topic:<subjectKey>:<bucket>[:grade:gN]` e.g. `topic:math:fractions:grade:g4`
  *
- * Grade-scoped rows MUST include `:grade:` — never collapse duplicate display labels.
+ * Grade-scoped rows MUST include `:grade:` - never collapse duplicate display labels.
  */
 
 import { buildRowSourceId } from "../parent-report-output-integrity/row-identity-v1.js";
@@ -25,7 +25,7 @@ export function buildSubjectSourceId(subjectKey) {
 
 /**
  * @param {string} subjectKey
- * @param {string} topicRowKey — full row key (may include `::grade:gN`)
+ * @param {string} topicRowKey - full row key (may include `::grade:gN`)
  * @param {string|null} [contentGradeKey]
  */
 export function buildTopicRowSourceId(subjectKey, topicRowKey, contentGradeKey = null) {

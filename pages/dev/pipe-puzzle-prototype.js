@@ -6,7 +6,7 @@ export default function PipePuzzlePrototypePage() {
   return (
     <>
       <Head>
-        <title>צינורות מים — אבטיפוס</title>
+        <title>צינורות מים - אבטיפוס</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <PipePuzzlePrototype />

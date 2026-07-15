@@ -218,7 +218,7 @@ function buildG1ReadingPool() {
         levels: ["easy", "medium"],
         patternFamily: "literacy_sounds",
         subtype: "repeated_phoneme",
-        question: `במילה '${item.word}' — איזה צליל חוזר פעמיים?`,
+        question: `במילה '${item.word}' - איזה צליל חוזר פעמיים?`,
         answers: opts,
         correct: opts.indexOf(item.repeat),
       })
@@ -299,7 +299,7 @@ function buildG1ReadingPool() {
         levels: seed % 3 === 0 ? ["medium", "hard"] : ["easy"],
         patternFamily: "literacy_sound_letter_match",
         subtype: "word_start_sound",
-        question: `במילה '${item.word}' — באיזה צליל המילה מתחילה?`,
+        question: `במילה '${item.word}' - באיזה צליל המילה מתחילה?`,
         answers: opts,
         correct: opts.indexOf(item.startSound),
       })
@@ -591,8 +591,8 @@ function buildG1GrammarPool() {
     { q: "איזו מילה היא 'פועל'?", a: "הולך", w: ["ילד", "גדול", "בבית"] },
     { q: "איזו מילה היא 'שם תואר'?", a: "חכם", w: ["ספר", "כותב", "מחר"] },
     { q: "איזו מילה היא 'מילת קישור'?", a: "ו", w: ["בית", "רץ", "יפה"] },
-    { q: "במשפט 'הילד הקטן' — מה תפקיד 'הקטן'?", a: "מתאר את הילד", w: ["שם הילד", "פועל", "מקום"] },
-    { q: "במשפט 'אני אוכל' — מה תפקיד 'אוכל'?", a: "פועל", w: ["שם", "צבע", "מספר"] },
+    { q: "במשפט 'הילד הקטן' - מה תפקיד 'הקטן'?", a: "מתאר את הילד", w: ["שם הילד", "פועל", "מקום"] },
+    { q: "במשפט 'אני אוכל' - מה תפקיד 'אוכל'?", a: "פועל", w: ["שם", "צבע", "מספר"] },
   ];
   for (const item of articleItems) {
     const seed = idx++;

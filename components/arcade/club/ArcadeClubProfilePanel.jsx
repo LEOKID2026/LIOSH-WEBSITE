@@ -90,7 +90,7 @@ export default function ArcadeClubProfilePanel({ gh }) {
       <div className="space-y-2 border-t border-emerald-200/80 pt-4">
         <label className={`block text-sm font-semibold ${gh.arcadeEntryLabel || gh.entryLabel}`}>שם משחק:</label>
         <p className={`text-[11px] ${gh.arcadePanelBlurb || gh.cardBlurb}`}>
-          שם תצוגה למשחקים בלבד — לא משנה את השם הרשמי או מספר ליאו.
+          שם תצוגה למשחקים בלבד - לא משנה את השם הרשמי או מספר ליאו.
         </p>
         <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-stretch">
           <input
@@ -121,7 +121,7 @@ export default function ArcadeClubProfilePanel({ gh }) {
             {history.map((h) => (
               <li key={h.id} className={gh.arcadeRoomItem || gh.roomItem}>
                 <span>{h.gameKey || "משחק"} · </span>
-                <span>{h.resultType || "—"} · </span>
+                <span>{h.resultType || "-"} · </span>
                 <span>+{h.rewardAmount || 0} מטבעות</span>
               </li>
             ))}

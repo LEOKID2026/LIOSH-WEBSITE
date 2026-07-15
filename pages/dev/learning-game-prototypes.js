@@ -16,7 +16,7 @@ export default function LearningGamePrototypesHubPage() {
   return (
     <>
       <Head>
-        <title>אבטיפוסים לימודיים — פיתוח</title>
+        <title>אבטיפוסים לימודיים - פיתוח</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <Layout studentTheme={theme} studentShell="home">
@@ -33,7 +33,7 @@ export default function LearningGamePrototypesHubPage() {
 
             <GamesHubHeader
               title="אבטיפוסים לימודיים"
-              subtitle="העשרה ולמידה דרך משחק — לבדיקה בלבד, לא מחובר לפרסים או למנוע הלמידה."
+              subtitle="העשרה ולמידה דרך משחק - לבדיקה בלבד, לא מחובר לפרסים או למנוע הלמידה."
               titleClass={GH.hubTitle}
               subtitleClass={GH.hubSub}
             />

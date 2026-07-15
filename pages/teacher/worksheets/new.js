@@ -206,7 +206,7 @@ export default function TeacherNewDirectWorksheetPage() {
 
   return (
     <Layout>
-      <TeacherPortalShell title="פעילות דף עבודה — ילדים נבחרים" backHref="/teacher/worksheets">
+      <TeacherPortalShell title="פעילות דף עבודה - ילדים נבחרים" backHref="/teacher/worksheets">
         <div className="max-w-2xl mx-auto space-y-5 text-right">
           {error ? <p className="text-red-300 text-sm">{error}</p> : null}
 

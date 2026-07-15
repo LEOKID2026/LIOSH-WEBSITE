@@ -239,7 +239,7 @@ function buildDiagnostics(subject, gradeFrag, sourceInfo, safetyViolationCount, 
 /**
  * @param {unknown} payload — practice / session-end snapshot (not mutated)
  * @param {object} [options]
- * @param {object} [options.metadataIndex] — snapshot index `{ entries: [...] }`
+ * @param {object} [options.metadataIndex] - snapshot index `{ entries: [...] }`
  * @param {number} [options.metadataQueryLimit]
  * @param {string} [options.currentDifficultyHint]
  */

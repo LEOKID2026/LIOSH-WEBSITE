@@ -81,4 +81,4 @@ function assignedCase({ mode, source, q, c, w, acc, pf = "pf:assigned", same = t
   assert.match(lpd.parentVisibleFinding, /דפוס חוזר/);
 }
 
-console.log("assigned-activity-lpd.test.mjs — all passed");
+console.log("assigned-activity-lpd.test.mjs - all passed");

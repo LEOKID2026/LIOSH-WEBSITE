@@ -303,7 +303,7 @@ export const SHAPE_TASKS = {
     {
       id: "h8",
       type: "rotate",
-      prompt: "אחרי סיבוב — איזו צורה נכונה?",
+      prompt: "אחרי סיבוב - איזו צורה נכונה?",
       rotateFrom: "square",
       rotateDeg: 90,
       options: ["square", "rectangle", "circle"],
@@ -330,14 +330,14 @@ export const SHAPE_TASKS = {
     {
       id: "h11",
       type: "net",
-      prompt: "פריסה של קובייה — בחרו נכון",
+      prompt: "פריסה של קובייה - בחרו נכון",
       options: ["net_cube", "net_cylinder", "net_box"],
       correctIndex: 0,
     },
     {
       id: "h12",
       type: "rotate",
-      prompt: "סיבוב חץ — מה מתקבל?",
+      prompt: "סיבוב חץ - מה מתקבל?",
       rotateFrom: "arrow",
       rotateDeg: 90,
       options: ["rotate_e", "rotate_f", "rotate_d"],

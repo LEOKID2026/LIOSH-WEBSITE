@@ -1,5 +1,5 @@
 /**
- * Raw practice rows outside the student's registered grade — transparency only, no conclusions.
+ * Raw practice rows outside the student's registered grade - transparency only, no conclusions.
  */
 
 import { subjectLabelHe } from "../lib/teacher-portal/teacher-ui.he.js";
@@ -96,7 +96,7 @@ export function buildOutOfGradePracticeTransparency(baseReport) {
         subjectId,
         subjectLabelHe: subjectLabelHe(subjectId) || subjectId,
         topicLabelHe: topicLabelFromMapRow(data, topicRowKey),
-        gradeLabelHe: formatParentReportGradeHe(contentGradeKey) || "—",
+        gradeLabelHe: formatParentReportGradeHe(contentGradeKey) || "-",
         gradeRelation,
         questions: q,
         accuracy: Math.round(Number(data.accuracy) || 0),

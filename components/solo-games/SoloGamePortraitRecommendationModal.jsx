@@ -29,7 +29,7 @@ export default function SoloGamePortraitRecommendationModal({
             className="min-h-[44px] rounded-xl bg-yellow-400 px-4 py-2 text-sm font-bold text-black"
             style={{ touchAction: "manipulation" }}
           >
-            הבנתי — אסובב
+            הבנתי - אסובב
           </button>
           <button
             type="button"

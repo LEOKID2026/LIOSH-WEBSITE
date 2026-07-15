@@ -184,7 +184,7 @@ export default function TowerStackPrototype() {
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/55">
               <p className="text-xl font-extrabold text-rose-300">Game Over</p>
               <p className="mt-1 text-sm font-semibold text-white/80">
-                {flash === "tiny" ? "הקובייה קטנה מדי" : "פספסתם — אין חפיפה"}
+                {flash === "tiny" ? "הקובייה קטנה מדי" : "פספסתם - אין חפיפה"}
               </p>
               <p className="mt-2 text-xs text-white/60">לחצו לשחק שוב</p>
             </div>

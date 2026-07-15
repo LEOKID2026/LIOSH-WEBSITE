@@ -9,7 +9,7 @@ export default function SmartBlocksPrototypePage() {
   return (
     <>
       <Head>
-        <title>בלוקים חכמים — אבטיפוס</title>
+        <title>בלוקים חכמים - אבטיפוס</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <SmartBlocksPrototype />

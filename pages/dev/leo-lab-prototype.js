@@ -5,7 +5,7 @@ export default function LeoLabPrototypePage() {
   return (
     <>
       <Head>
-        <title>מעבדת הניסויים — אבטיפוס</title>
+        <title>מעבדת הניסויים - אבטיפוס</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <LeoLabPrototype />

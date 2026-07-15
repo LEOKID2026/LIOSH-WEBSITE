@@ -43,7 +43,7 @@ export default function AdminTestsTab({ accessToken }) {
   return (
     <div className="text-right overflow-x-hidden">
       <p className="text-xs text-white/60 mb-4">
-        בדיקות קריאה לשרת — קטלוג סגור (059/060/061): 40 חנות · 24 הישג · 12 אירוע = 76
+        בדיקות קריאה לשרת - קטלוג סגור (059/060/061): 40 חנות · 24 הישג · 12 אירוע = 76
         קלפים פעילים. ברירת מחדל: רק פעילים; ארכיון דורש{" "}
         <code className="text-white/80" dir="ltr">
           ?includeInactive=true

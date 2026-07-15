@@ -65,7 +65,7 @@ function assertCanonicalBlock(cm) {
   assert.ok(["high", "medium", "low"].includes(cm.metadataConfidence));
 }
 
-describe("Q2-C2 — science bank enrichment", () => {
+describe("Q2-C2 - science bank enrichment", () => {
   test("rich body row populates full canonicalMetadata", () => {
     const out = enrichScienceBankRowWithCanonicalMetadata(BODY_1_ROW);
     const cm = out.params.canonicalMetadata;
@@ -120,7 +120,7 @@ describe("Q2-C2 — science bank enrichment", () => {
   });
 });
 
-describe("Q2-C2 — SCIENCE_QUESTIONS bank coverage", () => {
+describe("Q2-C2 - SCIENCE_QUESTIONS bank coverage", () => {
   test("all exported bank rows have params.canonicalMetadata", async () => {
     const { SCIENCE_QUESTIONS } = await import("../../data/science-questions.js");
     assert.ok(Array.isArray(SCIENCE_QUESTIONS));
@@ -139,7 +139,7 @@ describe("Q2-C2 — SCIENCE_QUESTIONS bank coverage", () => {
   });
 });
 
-describe("Q2-C2 — freeze preserves science canonicalMetadata", () => {
+describe("Q2-C2 - freeze preserves science canonicalMetadata", () => {
   test("normalizeAndFreezeQuestionSet keeps params.canonicalMetadata", () => {
     const enriched = enrichScienceBankRowWithCanonicalMetadata(BODY_1_ROW);
     const playable = {

@@ -9,6 +9,9 @@ import { listWorksheetMixedTopicOptions } from "../../lib/worksheets/worksheet-m
 import { listMathPracticeFormatsForGradeTopic } from "../../lib/worksheets/worksheet-math-practice-format.js";
 import { isWorksheetMcqOffered } from "../../lib/worksheets/worksheet-mcq-preference.js";
 import { WORKSHEET_UI_HE } from "../../lib/worksheets/worksheet-ui.he.js";
+import {
+  getPublicDemoAllowlistEntry,
+} from "../../lib/worksheets/worksheet-public-demo.constants.js";
 import WorksheetIncludeAnswersOption from "./WorksheetIncludeAnswersOption.jsx";
 import MixedTopicsPicker from "./MixedTopicsPicker.jsx";
 
@@ -42,6 +45,7 @@ function allMixedKeys(subjectId, gradeKey) {
  *   includeAnswersReady: boolean,
  *   onIncludeAnswersChange: (includeAnswers: boolean) => void,
  *   T: Record<string, string>,
+ *   variant?: "parent" | "public-demo",
  * }} props
  */
 export default function CreateWorksheetTab({
@@ -54,7 +58,9 @@ export default function CreateWorksheetTab({
   includeAnswersReady,
   onIncludeAnswersChange,
   T,
+  variant = "parent",
 }) {
+  const isPublicDemo = variant === "public-demo";
   const subjectId = String(form.subjectId || "math");
   const gradeKey = String(form.gradeKey || "g3");
   const topicKey = String(form.topicKey || "");
@@ -72,8 +78,11 @@ export default function CreateWorksheetTab({
       ? form.mathPracticeFormat
       : practiceFormatOptions[0]?.key || "";
   const showMcqCheckbox = isWorksheetMcqOffered(subjectId);
+  const allowedEntry = isPublicDemo ? getPublicDemoAllowlistEntry(subjectId, gradeKey) : null;
+  const allowedTopicKey = allowedEntry?.topicKey || "";
 
   const patchTopic = (nextTopicKey) => {
+    if (isPublicDemo && nextTopicKey !== allowedTopicKey) return;
     const formats = listMathPracticeFormatsForGradeTopic(gradeKey, nextTopicKey);
     /** @type {Record<string, unknown>} */
     const patch = {
@@ -90,7 +99,8 @@ export default function CreateWorksheetTab({
 
   const patchGrade = (nextGrade) => {
     const topics = worksheetTopicOptionsForGrade(subjectId, nextGrade);
-    const nextTopic = topics[0]?.key || "";
+    const allow = isPublicDemo ? getPublicDemoAllowlistEntry(subjectId, nextGrade) : null;
+    const nextTopic = allow?.topicKey || topics[0]?.key || "";
     const formats = listMathPracticeFormatsForGradeTopic(nextGrade, nextTopic);
     onChange({
       gradeKey: nextGrade,
@@ -102,7 +112,8 @@ export default function CreateWorksheetTab({
 
   const patchSubject = (nextSubject) => {
     const topics = worksheetTopicOptionsForGrade(nextSubject, gradeKey);
-    const nextTopic = topics[0]?.key || "";
+    const allow = isPublicDemo ? getPublicDemoAllowlistEntry(nextSubject, gradeKey) : null;
+    const nextTopic = allow?.topicKey || topics[0]?.key || "";
     const formats =
       nextSubject === "math"
         ? listMathPracticeFormatsForGradeTopic(gradeKey, nextTopic)
@@ -120,8 +131,12 @@ export default function CreateWorksheetTab({
 
   return (
     <div className={`worksheet-hub-panel worksheet-create-panel ${T.panel}`}>
-      <h2 className={`worksheet-hub-panel-title ${T.heading}`}>{WORKSHEET_UI_HE.createTitle}</h2>
-      <p className={`worksheet-hub-panel-hint ${T.muted}`}>{WORKSHEET_UI_HE.createHint}</p>
+      <h2 className={`worksheet-hub-panel-title ${T.heading}`}>
+        {isPublicDemo ? WORKSHEET_UI_HE.publicDemoTitle : WORKSHEET_UI_HE.createTitle}
+      </h2>
+      <p className={`worksheet-hub-panel-hint ${T.muted}`}>
+        {isPublicDemo ? WORKSHEET_UI_HE.publicDemoHint : WORKSHEET_UI_HE.createHint}
+      </p>
 
       <div className="worksheet-form-grid">
         <div className="worksheet-form-field">
@@ -162,11 +177,14 @@ export default function CreateWorksheetTab({
               value={topicKey}
               onChange={(e) => patchTopic(e.target.value)}
             >
-              {topicOptions.map((t) => (
-                <option key={t.key} value={t.key}>
-                  {t.label}
-                </option>
-              ))}
+              {topicOptions.map((t) => {
+                const isAllowed = !isPublicDemo || t.key === allowedTopicKey;
+                return (
+                  <option key={t.key} value={t.key} disabled={!isAllowed}>
+                    {isAllowed ? t.label : `${t.label} - ${WORKSHEET_UI_HE.publicDemoLockedTopic}`}
+                  </option>
+                );
+              })}
             </select>
           </label>
         </div>
@@ -209,6 +227,7 @@ export default function CreateWorksheetTab({
           </label>
         </div>
 
+        {!isPublicDemo ? (
         <div className="worksheet-form-field">
           <label>
             <span className={T.label}>{WORKSHEET_UI_HE.countField}</span>
@@ -225,6 +244,7 @@ export default function CreateWorksheetTab({
             </select>
           </label>
         </div>
+        ) : null}
 
         {includeAnswersReady ? (
           <WorksheetIncludeAnswersOption
@@ -268,7 +288,7 @@ export default function CreateWorksheetTab({
         </div>
       </div>
 
-      {isMixed && mixedOptions.length > 0 ? (
+      {!isPublicDemo && isMixed && mixedOptions.length > 0 ? (
         <MixedTopicsPicker
           options={mixedOptions}
           selectedKeys={mixedTopicKeys}

@@ -138,7 +138,7 @@ export default function MarbleRunPrototype() {
     if (grid[r][c]) return;
     if ((stock[type] ?? 0) <= 0) return;
     if (type === "goal" && (r !== GOAL.r || c !== GOAL.c)) {
-      setStatus("יעד — רק בתא הסיום 🎯");
+      setStatus("יעד - רק בתא הסיום 🎯");
       return;
     }
 
@@ -190,7 +190,7 @@ export default function MarbleRunPrototype() {
       if (step >= result.path.length - 1) {
         window.clearInterval(timer);
         setRunning(false);
-        setStatus(result.reached ? "הגעתם ליעד! 🎉" : "אין מסלול מלא — נסו שוב");
+        setStatus(result.reached ? "הגעתם ליעד! 🎉" : "אין מסלול מלא - נסו שוב");
       }
     }, 280);
   }, [grid]);

@@ -1,6 +1,6 @@
 /**
  * Regression guard: the "how to play" modal list items in Science/History master must not
- * show raw English ("XP") to the child — Hebrew wording only.
+ * show raw English ("XP") to the child - Hebrew wording only.
  * Run: node --test tests/learning/master-no-visible-english.test.mjs
  */
 

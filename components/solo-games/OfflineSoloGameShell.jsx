@@ -43,7 +43,7 @@ const ENGINE_MAP = {
   "fruit-slice": MleoFruitSliceEngine,
 };
 
-const OFFLINE_FINISH_SUBTITLE = "משחק מקומי — ללא שמירה וללא פרסים";
+const OFFLINE_FINISH_SUBTITLE = "משחק מקומי - ללא שמירה וללא פרסים";
 
 const PLAY_SHELL =
   "flex h-dvh max-h-dvh min-h-0 flex-col overflow-hidden bg-gray-950 text-white";
@@ -114,7 +114,7 @@ export default function OfflineSoloGameShell({ gameKey }) {
   return (
     <>
       <Head>
-        <title>{game.titleHe} — משחקים ללא אינטרנט</title>
+        <title>{game.titleHe} - משחקים ללא אינטרנט</title>
       </Head>
       <div
         className={themedShell ? SG.shell : PLAY_SHELL}
@@ -183,7 +183,7 @@ export default function OfflineSoloGameShell({ gameKey }) {
             <SoloGameFinishScreen
               didWin={finishData.didWin === true}
               score={finishData.score ?? 0}
-              displayLevelHe={finishData.displayLevelHe || "—"}
+              displayLevelHe={finishData.displayLevelHe || "-"}
               coinsAwarded={0}
               diamondsAwarded={0}
               onPlayAgain={handlePlayAgain}

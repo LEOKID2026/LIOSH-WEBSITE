@@ -114,7 +114,7 @@ export function tryBuildPhaseEClarificationBypassDraft(input) {
     });
   } else if (phaseERoute === "catalog_topic_without_anchor" && loose) {
     observation =
-      `בשלב זה — עדיין מוקדם לקבוע לגבי ילדכם מתוך האבחון הרשמי. הכותרת «${loose.displayName}» מוכרת במבנה הנושאים, אך אין בדוח ניסוח מעוגן לילד בנושא הזה — ההמשך הוא הסבר כללי בלבד ולא ניתוח רשמי של המערכת.`;
+      `בשלב זה - עדיין מוקדם לקבוע לגבי ילדכם מתוך האבחון הרשמי. הכותרת «${loose.displayName}» מוכרת במבנה הנושאים, אך אין בדוח ניסוח מעוגן לילד בנושא הזה - ההמשך הוא הסבר כללי בלבד ולא ניתוח רשמי של המערכת.`;
     meaning =
       "לא ניתן להציג זאת כחולשה או חוזק של הילד במערכת. כשיופיע ניסוח מעוגן בדוח, אפשר יחזור לשאלה מתוך הדוח.";
   } else {
@@ -122,7 +122,7 @@ export function tryBuildPhaseEClarificationBypassDraft(input) {
       ? " אם מדובר בשאלה שהודבקה מבחוץ, היא מחוץ למסגרת השאלות הרשמיות של הדוח."
       : "";
     observation =
-      `בשלב זה — עדיין מוקדם לקבוע כל דבר על ילדכם מתוך האבחון הרשמי של המערכת לגבי הנושא ששאלתם. זהו הסבר חינוכי כללי בלבד; הוא אינו נשען על מאגר השאלות הרשמי ואינו מהווה אבחון.${externalHint}`;
+      `בשלב זה - עדיין מוקדם לקבוע כל דבר על ילדכם מתוך האבחון הרשמי של המערכת לגבי הנושא ששאלתם. זהו הסבר חינוכי כללי בלבד; הוא אינו נשען על מאגר השאלות הרשמי ואינו מהווה אבחון.${externalHint}`;
     meaning =
       "לא ניתן להציג את זה כחולשה או חוזק של הילד במערכת; זה לא מחליף המלצות רשמיות מהאבחון.";
   }
@@ -201,7 +201,7 @@ export function tryBuildPhaseEResolvedShortcutDraft(input) {
         ? ` לגבי הנושא «${String(truthPacket.surfaceFacts?.displayName || truthPacket.scopeLabel || "").trim()}»,`
         : "";
     observation =
-      `בשלב זה — עדיין מוקדם לקבוע לגבי ילדכם מתוך האבחון הרשמי של המערכת.${topicHint} השאלה נראית כמו תוכן שהודבק מבחוץ — ההמשך הוא הסבר חינוכי כללי בלבד; הוא אינו נשען על מאגר השאלות הרשמי ואינו מהווה אבחון.`;
+      `בשלב זה - עדיין מוקדם לקבוע לגבי ילדכם מתוך האבחון הרשמי של המערכת.${topicHint} השאלה נראית כמו תוכן שהודבק מבחוץ - ההמשך הוא הסבר חינוכי כללי בלבד; הוא אינו נשען על מאגר השאלות הרשמי ואינו מהווה אבחון.`;
     meaning =
       "לא ניתן להציג זאת כחולשה או חוזק של הילד במערכת, ולא להסיק מהדוח על התוצאה של השאלה שהודבקה.";
   }
@@ -246,7 +246,7 @@ export function augmentPhaseEThinEvidenceDraft(draft, truthPacket) {
   const hedges = Array.isArray(truthPacket.allowedClaimEnvelope?.requiredHedges)
     ? truthPacket.allowedClaimEnvelope.requiredHedges.map((h) => String(h || "").trim()).filter(Boolean)
     : [];
-  const hedgeLead = hedges.length ? `${hedges[0]} — ` : "בשלב זה — ";
+  const hedgeLead = hedges.length ? `${hedges[0]} - ` : "בשלב זה - ";
   const caution = `${hedgeLead}אין בדוח מספיק ראיות על ילדכם בנושא «${topicLabel}» בטווח התאריכים שנבחר; מה שמוצג למטה נשען על מה שכבר מופיע בדוח, לא על כיוון רשמי מחוץ לו.`;
 
   return {

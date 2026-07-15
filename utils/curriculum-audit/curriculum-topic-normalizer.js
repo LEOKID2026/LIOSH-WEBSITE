@@ -144,10 +144,10 @@ function normalizeMath(rawTopic, rawSubtopic) {
     rawTopic,
     rawSubtopic,
     normalizedTopicKey: `math.unmapped.${primary || "empty"}`,
-    normalizedTopicLabelHe: "מתמטיקה — נושא לא ממופה באודיט",
+    normalizedTopicLabelHe: "מתמטיקה - נושא לא ממופה באודיט",
     normalizationConfidence: "low",
     normalizationNotes:
-      "Operation/topic not in strand table — expand curriculum-topic-normalizer.js.",
+      "Operation/topic not in strand table - expand curriculum-topic-normalizer.js.",
   };
 }
 
@@ -216,7 +216,7 @@ function normalizeGeometry(rawTopic, rawSubtopic) {
     rawTopic,
     rawSubtopic,
     normalizedTopicKey: `geometry.unmapped.${primarySeg || kind || "empty"}`,
-    normalizedTopicLabelHe: "גאומטריה — נושא לא ממופה באודיט",
+    normalizedTopicLabelHe: "גאומטריה - נושא לא ממופה באודיט",
     normalizationConfidence: "low",
     normalizationNotes: "Expand geometry strand map for this topic/kind.",
     compositeSegments: segments.length ? segments : undefined,
@@ -279,7 +279,7 @@ function normalizeHebrew(rawTopic, rawSubtopic) {
         normalizedTopicLabelHe: r.he,
         normalizationConfidence: "medium",
         normalizationNotes:
-          "Heuristic refinement from subtopic slug — verify against Hebrew bank metadata.",
+          "Heuristic refinement from subtopic slug - verify against Hebrew bank metadata.",
       };
     }
   }
@@ -293,7 +293,7 @@ function normalizeHebrew(rawTopic, rawSubtopic) {
       normalizedTopicLabelHe: hit.he,
       normalizationConfidence: st ? "medium" : "high",
       normalizationNotes: st
-        ? "Primary Hebrew skill from topic; subtopic present — review for finer skill tagging."
+        ? "Primary Hebrew skill from topic; subtopic present - review for finer skill tagging."
         : "Mapped from Hebrew TOPICS key.",
     };
   }
@@ -302,7 +302,7 @@ function normalizeHebrew(rawTopic, rawSubtopic) {
     rawTopic,
     rawSubtopic,
     normalizedTopicKey: `hebrew.unmapped.${t || "empty"}`,
-    normalizedTopicLabelHe: "עברית — מיומנות לא ממופה",
+    normalizedTopicLabelHe: "עברית - מיומנות לא ממופה",
     normalizationConfidence: "low",
     normalizationNotes: "Unknown Hebrew topic bucket.",
   };
@@ -339,9 +339,9 @@ function normalizeEnglish(rawTopic, rawSubtopic) {
       rawTopic,
       rawSubtopic,
       normalizedTopicKey: "english.mixed_practice",
-      normalizedTopicLabelHe: "אנגלית — ערבוב נושאים",
+      normalizedTopicLabelHe: "אנגלית - ערבוב נושאים",
       normalizationConfidence: "medium",
-      normalizationNotes: "Mixed practice — audit often skips or treats as composite.",
+      normalizationNotes: "Mixed practice - audit often skips or treats as composite.",
     };
   }
 
@@ -353,7 +353,7 @@ function normalizeEnglish(rawTopic, rawSubtopic) {
       normalizedTopicLabelHe: "דקדוק אנגלית (מסלול בריכה)",
       normalizationConfidence: pool ? "high" : "medium",
       normalizationNotes:
-        "Grammar pools vary by grade gate in product — audit uses pool key as subtype.",
+        "Grammar pools vary by grade gate in product - audit uses pool key as subtype.",
     };
   }
   if (cat === "translation") {
@@ -374,7 +374,7 @@ function normalizeEnglish(rawTopic, rawSubtopic) {
       normalizedTopicLabelHe: "משפטים, ניסוח והרחבה",
       normalizationConfidence: pool ? "medium" : "medium",
       normalizationNotes:
-        "Sentence pools touch writing-like patterns — not full composition curriculum.",
+        "Sentence pools touch writing-like patterns - not full composition curriculum.",
     };
   }
 
@@ -382,7 +382,7 @@ function normalizeEnglish(rawTopic, rawSubtopic) {
     rawTopic,
     rawSubtopic,
     normalizedTopicKey: `english.unmapped.${cat || "empty"}`,
-    normalizedTopicLabelHe: "אנגלית — קטגוריה לא ממופה",
+    normalizedTopicLabelHe: "אנגלית - קטגוריה לא ממופה",
     normalizationConfidence: "low",
     normalizationNotes: "Expected grammar | translation | sentence.",
   };
@@ -392,9 +392,9 @@ function normalizeEnglish(rawTopic, rawSubtopic) {
 function normalizeScience(rawTopic, rawSubtopic) {
   const t = slug(rawTopic);
   const domainMap = {
-    body: { key: "science.life_science_body", he: "מדעי החיים — גוף האדם" },
-    animals: { key: "science.life_science_animals", he: "מדעי החיים — בעלי חיים" },
-    plants: { key: "science.life_science_plants", he: "מדעי החיים — צמחים" },
+    body: { key: "science.life_science_body", he: "מדעי החיים - גוף האדם" },
+    animals: { key: "science.life_science_animals", he: "מדעי החיים - בעלי חיים" },
+    plants: { key: "science.life_science_plants", he: "מדעי החיים - צמחים" },
     ecosystems: {
       key: "science.life_science_ecosystems",
       he: "מערכות אקולוגיות",
@@ -436,7 +436,7 @@ function normalizeScience(rawTopic, rawSubtopic) {
     rawTopic,
     rawSubtopic,
     normalizedTopicKey: `science.unmapped.${t || "empty"}`,
-    normalizedTopicLabelHe: "מדעים — תחום לא ממופה",
+    normalizedTopicLabelHe: "מדעים - תחום לא ממופה",
     normalizationConfidence: "low",
     normalizationNotes: "Extend science domain map.",
   };
@@ -449,7 +449,7 @@ function normalizeGeography(rawTopic, rawSubtopic) {
     rawTopic,
     rawSubtopic,
     normalizedTopicKey: `moledet.bank.${t || "general"}`,
-    normalizedTopicLabelHe: "מולדת / גיאוגרפיה — נושא מהבנק הסטטי",
+    normalizedTopicLabelHe: "מולדת / גיאוגרפיה - נושא מהבנק הסטטי",
     normalizationConfidence: "medium",
     normalizationNotes:
       "Curriculum placement for Moledet/geography requires dedicated pedagogy review; kept advisory only.",

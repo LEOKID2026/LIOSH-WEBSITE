@@ -33,7 +33,7 @@ function formatCardPriceDisplay(card, defaultPrices) {
     const fallback = defaultPrices?.[card.rarity];
     return fallback != null ? `${fallback} (ברירת מחדל)` : "ברירת מחדל";
   }
-  return card.price_coins != null ? String(card.price_coins) : "—";
+  return card.price_coins != null ? String(card.price_coins) : "-";
 }
 
 export default function AdminShopTab({ accessToken }) {
@@ -242,7 +242,7 @@ export default function AdminShopTab({ accessToken }) {
           <div className="space-y-4 text-sm">
             <div>
               <p className="text-white/50 text-xs mb-1">שם הקלף</p>
-              <p className="font-semibold">{editingCard.name_he || "—"}</p>
+              <p className="font-semibold">{editingCard.name_he || "-"}</p>
             </div>
             <div>
               <p className="text-white/50 text-xs mb-1">מחיר נוכחי</p>

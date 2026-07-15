@@ -98,7 +98,7 @@ export function buildFoundationDependencyPhase14(ctx) {
       dependencyEvidence,
       ...L,
       shouldTreatAsFoundationFirst: false,
-      foundationDependencyNarrativeHe: `ב«${displayName}»: ${DEPENDENCY_STATE_LABEL_HE.likely_local_issue} — ${L.localIssueLikelihoodHe}.`,
+      foundationDependencyNarrativeHe: `ב«${displayName}»: ${DEPENDENCY_STATE_LABEL_HE.likely_local_issue} - ${L.localIssueLikelihoodHe}.`,
     };
   }
 

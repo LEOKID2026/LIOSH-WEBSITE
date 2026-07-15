@@ -88,7 +88,7 @@ function assertCanonicalBlock(cm) {
   assert.ok(["high", "medium", "low"].includes(cm.metadataConfidence));
 }
 
-describe("Q2-C4 — Hebrew pool enrichment", () => {
+describe("Q2-C4 - Hebrew pool enrichment", () => {
   test("comprehension row keeps explicit diagnosticSkillId", () => {
     const out = enrichHebrewPoolRowWithCanonicalMetadata(COMP_ROW, { topic: "comprehension" });
     const cm = out.canonicalMetadata;
@@ -168,7 +168,7 @@ describe("Q2-C4 — Hebrew pool enrichment", () => {
 const HEBREW_EASY = { name: "קל" };
 const HEBREW_MEDIUM = { name: "בינוני" };
 
-describe("Q2-C4 — Hebrew generator attach", () => {
+describe("Q2-C4 - Hebrew generator attach", () => {
   test("generateQuestion comprehension attaches params.canonicalMetadata", () => {
     const q = generateQuestion(HEBREW_EASY, "comprehension", "g3", null, {
       excludeFingerprints: new Set(),
@@ -202,7 +202,7 @@ describe("Q2-C4 — Hebrew generator attach", () => {
   });
 });
 
-describe("Q2-C4 — HEBREW_RICH_POOL bank coverage", () => {
+describe("Q2-C4 - HEBREW_RICH_POOL bank coverage", () => {
   test("all rich pool rows have row.canonicalMetadata", async () => {
     const { HEBREW_RICH_POOL } = await import("../../utils/hebrew-rich-question-bank.js");
     assert.ok(Array.isArray(HEBREW_RICH_POOL));
@@ -221,7 +221,7 @@ describe("Q2-C4 — HEBREW_RICH_POOL bank coverage", () => {
   });
 });
 
-describe("Q2-C4 — helpers", () => {
+describe("Q2-C4 - helpers", () => {
   test("inferHebrewQuestionType maps topics", () => {
     assert.equal(inferHebrewQuestionType("comprehension", {}), "reading_comprehension");
     assert.equal(inferHebrewQuestionType("vocabulary", { patternFamily: "antonym" }), "vocabulary");
@@ -251,7 +251,7 @@ describe("Q2-C4 — helpers", () => {
   });
 });
 
-describe("Q2-C4 — freeze preserves hebrew canonicalMetadata", () => {
+describe("Q2-C4 - freeze preserves hebrew canonicalMetadata", () => {
   test("normalizeAndFreezeQuestionSet keeps params.canonicalMetadata", () => {
     const q = generateQuestion(HEBREW_EASY, "grammar", "g3", null, {
       excludeFingerprints: new Set(),

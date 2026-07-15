@@ -6,7 +6,7 @@ export default function TangramPrototypePage() {
   return (
     <>
       <Head>
-        <title>טנגרם — אבטיפוס</title>
+        <title>טנגרם - אבטיפוס</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <TangramPrototype />

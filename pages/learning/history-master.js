@@ -260,7 +260,7 @@ const REFERENCE_SECTIONS = {
   greece_hellenism: {
     label: "יוון והלניזם",
     entries: [
-      { term: "דמוקרטיה", desc: "השתתפות אזרחים בהחלטות — אתונה." },
+      { term: "דמוקרטיה", desc: "השתתפות אזרחים בהחלטות - אתונה." },
       { term: "פוליס", desc: "עיר-מדינה יוונית עצמאית." },
       { term: "הלניזם", desc: "התפשטות תרבות יוונית לאחר אלכסנדר." },
       { term: "מקור ראשוני", desc: "עדות ישירה מהתקופה הנחקרת." },
@@ -269,7 +269,7 @@ const REFERENCE_SECTIONS = {
   hasmonaeans_rome: {
     label: "חשמונאים ורומא",
     entries: [
-      { term: "גזרות אנטיוכוס", desc: "לחץ על היהדות — זרז למרד." },
+      { term: "גזרות אנטיוכוס", desc: "לחץ על היהדות - זרז למרד." },
       { term: "חנוכה", desc: "ניצחון המכבים וחידוש המקדש." },
       { term: "פרובינציה", desc: "יהודה תחת שלטון רומי." },
       { term: "יבנה", desc: "מרכז ללימוד לאחר החורבן." },
@@ -592,7 +592,7 @@ function buildInsightFeedbackLines(insights, topicAnswerTails) {
     if (!lines.includes(t3)) lines.push(t3);
   } else if (insights.trend === "down") {
     const t4 =
-      "מגמת הדיוק ברצף האחרון יורדת — כדאי לחזור על החומר.";
+      "מגמת הדיוק ברצף האחרון יורדת - כדאי לחזור על החומר.";
     if (!lines.includes(t4)) lines.push(t4);
   }
 
@@ -673,7 +673,7 @@ function getErrorExplanationHistory(question, wrongAnswer) {
     case "classical_greece":
       return "השווה בין אתונה לספרטה: שלטון, חינוך וערכים.";
     case "hellenism_jews":
-      return "חשוב על המפגש בין תרבות יוונית ליהדות — סיבות ותוצאות.";
+      return "חשוב על המפגש בין תרבות יוונית ליהדות - סיבות ותוצאות.";
     case "hasmonaeans":
       return "קשר בין הגזרות, המרד והקמת הממלכה.";
     case "rome_jews":
@@ -682,7 +682,7 @@ function getErrorExplanationHistory(question, wrongAnswer) {
       break;
   }
   return correct
-    ? 'נסה לחשוב שוב לפי ניסוח השאלה והנקודות ברשימה "מה חשוב לזכור?" למעלה — בלי לנחש מהר מדי.'
+    ? 'נסה לחשוב שוב לפי ניסוח השאלה והנקודות ברשימה "מה חשוב לזכור?" למעלה - בלי לנחש מהר מדי.'
     : "בדוק שוב את הנתונים ואת ההסבר שלמדת.";
 }
 
@@ -3823,7 +3823,7 @@ function saveScienceAnswerInParallel({
                           תשובה נכונה: {item.correct}
                         </p>
                         <p className="text-xs text-rose-300">
-                          התשובה שלך: {item.wrong || "—"}
+                          התשובה שלך: {item.wrong || "-"}
                         </p>
                         <button
                           onClick={() => handleMistakePractice(item)}
@@ -4093,7 +4093,7 @@ function saveScienceAnswerInParallel({
                   <div className="bg-black/30 border border-white/10 rounded-lg p-3">
                     <div className="text-sm text-white/60 mb-2">התקדמות חודשית</div>
                     <div className="flex justify-between text-xs text-white/60 mb-1">
-                      <span>{Math.round(monthlyPersistenceView?.currentMinutes ?? 0)} / {monthlyPersistenceView?.goalMinutes ?? "—"} דק׳</span>
+                      <span>{Math.round(monthlyPersistenceView?.currentMinutes ?? 0)} / {monthlyPersistenceView?.goalMinutes ?? "-"} דק׳</span>
                       <span>{monthlyPersistenceView?.progressPct ?? 0}%</span>
                     </div>
                     <div className="w-full bg-black/50 rounded-full h-3 mb-2">

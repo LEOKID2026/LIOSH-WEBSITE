@@ -328,7 +328,7 @@ function indexHasExactPair(index, subject, skillId, subskillId) {
  * @param {string} [context.scenarioId]
  * @param {boolean} [context.allowEnglishSkillRouting]
  * @param {{ entries?: unknown[] }} [context.metadataIndex]
- * @param {unknown[]} [context.topicBucketKeys] — `facets.topicLayer.topicBucketKeys` for English bucket cross-check
+ * @param {unknown[]} [context.topicBucketKeys] - `facets.topicLayer.topicBucketKeys` for English bucket cross-check
  */
 export function resolveDiagnosticUnitSkillAlignment(unit, context = {}) {
   const warnings = /** @type {string[]} */ ([]);

@@ -1405,7 +1405,7 @@ export const TRANSLATION_POOLS = {
         "היא שוכחת את התיק"
       ],
       "correct": "יש לה תיק אדום",
-      "explanation": "She has — יש לה; red bag — תיק אדום.",
+      "explanation": "She has - יש לה; red bag - תיק אדום.",
       "difficulty": "basic",
       "cognitiveLevel": "application",
       "expectedErrorTypes": [
@@ -1428,7 +1428,7 @@ export const TRANSLATION_POOLS = {
         "אנחנו לא אוכלים בבית הספר מעולם"
       ],
       "correct": "אנחנו אוכלים ארוחת צהריים בבית הספר כל יום",
-      "explanation": "משפט שגרתי בהווה — כל יום מציין תדירות.",
+      "explanation": "משפט שגרתי בהווה - כל יום מציין תדירות.",
       "difficulty": "standard",
       "cognitiveLevel": "application",
       "expectedErrorTypes": [
@@ -1451,7 +1451,7 @@ export const TRANSLATION_POOLS = {
         "סגרו את החלון כשאתם יוצאים מהחדר"
       ],
       "correct": "כבו את האור כשאתם יוצאים מהחדר",
-      "explanation": "משפט הוראה — לכבות את האור בעת יציאה מהחדר.",
+      "explanation": "משפט הוראה - לכבות את האור בעת יציאה מהחדר.",
       "difficulty": "standard",
       "cognitiveLevel": "application",
       "expectedErrorTypes": [
@@ -1474,7 +1474,7 @@ export const TRANSLATION_POOLS = {
         "התלמידים הסבירו למורה את הנושא"
       ],
       "correct": "המורה הסבירה את הנושא החדש לאט",
-      "explanation": "explained — הסבירה; slowly — לאט.",
+      "explanation": "explained - הסבירה; slowly - לאט.",
       "difficulty": "advanced",
       "cognitiveLevel": "application",
       "expectedErrorTypes": [
@@ -1497,7 +1497,7 @@ export const TRANSLATION_POOLS = {
         "אנחנו לא יכולים להגן על הסביבה בעתיד"
       ],
       "correct": "אנרגיה נקייה יכולה לעזור להגן על כדור הארץ שלנו",
-      "explanation": "clean energy — אנרגיה נקייה; protect our planet — להגן על כדור הארץ.",
+      "explanation": "clean energy - אנרגיה נקייה; protect our planet - להגן על כדור הארץ.",
       "difficulty": "advanced",
       "cognitiveLevel": "application",
       "expectedErrorTypes": [

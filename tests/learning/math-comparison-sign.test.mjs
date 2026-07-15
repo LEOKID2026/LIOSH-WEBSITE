@@ -75,7 +75,7 @@ function proseSignFromCalcText(text, expectedSign) {
   return m ? m[1] : null;
 }
 
-test("1 — canonical helper getCanonicalComparisonSign", () => {
+test("1 - canonical helper getCanonicalComparisonSign", () => {
   const cases = [
     [32, 93, "<"],
     [85, 98, "<"],
@@ -90,7 +90,7 @@ test("1 — canonical helper getCanonicalComparisonSign", () => {
   }
 });
 
-test("2 — validation: correct selections and opposite signs wrong", () => {
+test("2 - validation: correct selections and opposite signs wrong", () => {
   const correctCases = [
     [25, 21, ">"],
     [32, 93, "<"],
@@ -115,7 +115,7 @@ test("2 — validation: correct selections and opposite signs wrong", () => {
   assert.equal(validateCompare(12, 12, "<").isCorrect, false);
 });
 
-test("3 — explanation text matches canonical sign (no contradictions)", () => {
+test("3 - explanation text matches canonical sign (no contradictions)", () => {
   const cases = [
     [32, 93, "<", "32 < 93", "<"],
     [79, 35, ">", "79 > 35", ">"],
@@ -146,7 +146,7 @@ test("3 — explanation text matches canonical sign (no contradictions)", () => 
   }
 });
 
-test("4 — wrong-answer feedback: operand explanation, no NaN", () => {
+test("4 - wrong-answer feedback: operand explanation, no NaN", () => {
   const cases = [
     [25, 21, "<", "25 > 21", ">"],
     [32, 93, ">", "32 < 93", "<"],
@@ -168,7 +168,7 @@ test("4 — wrong-answer feedback: operand explanation, no NaN", () => {
   }
 });
 
-test("4b — no NaN in step-by-step explanations", () => {
+test("4b - no NaN in step-by-step explanations", () => {
   const cases = [
     [32, 93],
     [79, 35],
@@ -190,7 +190,7 @@ test("4b — no NaN in step-by-step explanations", () => {
   }
 });
 
-test("5 — student payload shows exactly >, =, < with value/display match", () => {
+test("5 - student payload shows exactly >, =, < with value/display match", () => {
   const cases = [
     [32, 93],
     [79, 35],
@@ -209,7 +209,7 @@ test("5 — student payload shows exactly >, =, < with value/display match", () 
   }
 });
 
-test("6 — deterministic field trace for owner cases", () => {
+test("6 - deterministic field trace for owner cases", () => {
   const cases = [
     [32, 93, "<"],
     [79, 35, ">"],

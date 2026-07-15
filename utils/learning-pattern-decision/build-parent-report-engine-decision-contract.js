@@ -104,7 +104,7 @@ function buildParentSafeFindingFromEngine(p) {
   }
 
   if (engineDecision === "clear_topic_gap") {
-    return `בנושא ${name} נראה קושי ברור — ${formatWrongOfQuestionsTextHe(w, q)} (${acc}% דיוק). כדאי לחזור ולחזק את ${name} לפני שממשיכים.${suffix}`;
+    return `בנושא ${name} נראה קושי ברור - ${formatWrongOfQuestionsTextHe(w, q)} (${acc}% דיוק). כדאי לחזור ולחזק את ${name} לפני שממשיכים.${suffix}`;
   }
 
   if (engineDecision === "speed_pressure_pattern") {
@@ -153,7 +153,7 @@ export function resolveEngineDecisionUncertaintyText(q, evidenceStrength, engine
   if (strongEvidence) return null;
   if (questions >= 20) return null;
   if (questions <= 4) {
-    return "עדיין מוקדם לקבוע כיוון סופי — נמשיך לאסוף עוד נתוני תרגול קצרים.";
+    return "עדיין מוקדם לקבוע כיוון סופי - נמשיך לאסוף עוד נתוני תרגול קצרים.";
   }
   return null;
 }

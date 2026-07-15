@@ -81,7 +81,7 @@ export default function GeometryCurriculum() {
               תוכנית הלימודים באתר - גאומטריה
             </h1>
             <p className="text-sm md:text-base text-white/70 max-w-2xl mx-auto" dir="rtl">
-              מותאם לפי כיתה, נושא ורמת תרגול (רגיל / מתקדם) — כפי שמוצגים בדף הגאומטריה. בהתאם לנושאים המקובלים הנלמדים בבתי הספר היסודיים.
+              מותאם לפי כיתה, נושא ורמת תרגול (רגיל / מתקדם) - כפי שמוצגים בדף הגאומטריה. בהתאם לנושאים המקובלים הנלמדים בבתי הספר היסודיים.
             </p>
           </header>
 
@@ -94,7 +94,7 @@ export default function GeometryCurriculum() {
                     <strong>6 כיתות</strong>: א׳, ב׳, ג׳, ד׳, ה׳, ו׳
                   </li>
                   <li>
-                    <strong>שתי רמות תרגול — רגיל ומתקדם</strong> לכל כיתה
+                    <strong>שתי רמות תרגול - רגיל ומתקדם</strong> לכל כיתה
                   </li>
                   <li>
                     <strong>{topicCountLabel} נושאי גאומטריה</strong> (לא כולל &quot;ערבוב&quot; כנושא נפרד בספירה זו)
@@ -121,7 +121,7 @@ export default function GeometryCurriculum() {
                         <li key={tk}>
                           <span className="font-semibold">{getTopicName(tk)}</span>
                           {desc ? (
-                            <span className="text-white/85"> — {desc}</span>
+                            <span className="text-white/85"> - {desc}</span>
                           ) : null}
                         </li>
                       );
@@ -149,7 +149,7 @@ export default function GeometryCurriculum() {
                 <h3 className="text-xl font-bold mb-3 text-center">סיכום כללי</h3>
                 <p className="text-center mb-3">
                   במערכת מוצגים <strong>{topicCountLabel} נושאי גאומטריה</strong> (בנוסף למצב ערבוב היכן שקיים), ב 
-                  <strong> שש כיתות</strong> וב<strong>שתי רמות תרגול — רגיל ומתקדם</strong>.
+                  <strong> שש כיתות</strong> וב<strong>שתי רמות תרגול - רגיל ומתקדם</strong>.
                 </p>
                 <p className="text-center text-sm text-white/80">
                   בהתאם לנושאים המקובלים הנלמדים בבתי הספר היסודיים.

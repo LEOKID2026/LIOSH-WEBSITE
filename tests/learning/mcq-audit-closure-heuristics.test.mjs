@@ -128,7 +128,7 @@ test("English quantifier grammar cloze is not flagged for article format outlier
 
 test("Perpendicular 90° concept MCQ is not flagged for numeric plausibility", () => {
   const q = {
-    question: "שני קווים מאונכים זה לזה — מה נכון?",
+    question: "שני קווים מאונכים זה לזה - מה נכון?",
     answers: [
       "הם נפגשים בזווית של 90°",
       "הם תמיד מקבילים",

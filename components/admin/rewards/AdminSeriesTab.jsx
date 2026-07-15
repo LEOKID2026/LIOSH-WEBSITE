@@ -189,9 +189,9 @@ export default function AdminSeriesTab({ accessToken }) {
           <tbody>
             {series.map((row) => (
               <tr key={row.id} className="border-b border-white/5">
-                <td className="py-2 px-2">{row.name_he || "—"}</td>
+                <td className="py-2 px-2">{row.name_he || "-"}</td>
                 <td className="py-2 px-2" dir="ltr">
-                  {row.slug || "—"}
+                  {row.slug || "-"}
                 </td>
                 <td className="py-2 px-2">{row.display_order ?? 0}</td>
                 <td className="py-2 px-2">{row.is_active !== false ? "כן" : "לא"}</td>

@@ -5,7 +5,7 @@ export default function ShapeBuilderPrototypePage() {
   return (
     <>
       <Head>
-        <title>בונה הצורות של ליאו — אבטיפוס</title>
+        <title>בונה הצורות של ליאו - אבטיפוס</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <ShapeBuilderPrototype />

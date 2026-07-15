@@ -354,7 +354,7 @@ export function generateQuestion(
         .trim();
     const stripSurroundingPunctuation = (value) =>
       normalizeQuotes(value).replace(
-        /^[\s"'`.,!?;:()[\]{}\-–—]+|[\s"'`.,!?;:()[\]{}\-–—]+$/g,
+        /^[\s"'`.,!?;:()[\]{}\-–-]+|[\s"'`.,!?;:()[\]{}\-–-]+$/g,
         ""
       );
     const normalizeSpaces = (value) =>

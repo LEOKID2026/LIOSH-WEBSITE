@@ -30,7 +30,7 @@ export default function SchoolAdminTable({ schools }) {
             {schools.map((s) => (
               <tr key={s.schoolId} className="border-t border-white/10 hover:bg-white/[0.03]">
                 <td className="px-3 py-2.5 font-medium">{s.name}</td>
-                <td className="px-3 py-2.5 text-white/70">{s.city || "—"}</td>
+                <td className="px-3 py-2.5 text-white/70">{s.city || "-"}</td>
                 <td className="px-3 py-2.5 text-center tabular-nums">{s.teacherCount ?? 0}</td>
                 <td className="px-3 py-2.5 text-center tabular-nums">
                   {s.enrolledStudentCount ?? 0}

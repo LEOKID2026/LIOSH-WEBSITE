@@ -300,7 +300,7 @@ export default function LeoNumberPathGame({
           <p className={frame.introHero}>🔢🦁</p>
           <h1 className={frame.introTitle}>מסלול המספרים של ליאו</h1>
           <p className={frame.introText}>
-            בחרו מספרים במסלול לפי הכלל — קפיצות, זוגי/אי־זוגי וכפולות!
+            בחרו מספרים במסלול לפי הכלל - קפיצות, זוגי/אי-זוגי וכפולות!
           </p>
           <div className={frame.difficultyRow}>
             {(/** @type {DifficultyId[]} */ (["easy", "medium", "hard"])).map((id) => (
@@ -409,7 +409,7 @@ export default function LeoNumberPathGame({
                 <p className={shop.feedbackText}>
                   {feedback ||
                     (attemptsOnTask > 0
-                      ? `ניסיון ${attemptsOnTask}/${MAX_ATTEMPTS_PER_TASK} — לחצו על המספרים ואז בדקו`
+                      ? `ניסיון ${attemptsOnTask}/${MAX_ATTEMPTS_PER_TASK} - לחצו על המספרים ואז בדקו`
                       : "לחצו על המספרים ואז בדקו מסלול")}
                 </p>
               </div>

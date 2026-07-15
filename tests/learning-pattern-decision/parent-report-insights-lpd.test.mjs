@@ -217,4 +217,4 @@ function lpdRow({ q, c, w, acc, name, bucket = "addition", subjectId = "math", m
   assert.ok(!JSON.stringify(sections).includes("הילד פתר"));
 }
 
-console.log("parent-report-insights-lpd.test.mjs — all passed");
+console.log("parent-report-insights-lpd.test.mjs - all passed");

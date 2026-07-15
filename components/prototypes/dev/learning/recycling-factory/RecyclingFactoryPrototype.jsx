@@ -218,7 +218,7 @@ export default function RecyclingFactoryPrototype() {
       addScore(SCORE.miss);
       setStreak(0);
       setFeedback({
-        text: "הפריט עבר את המסוע — נסו להיות מהירים יותר!",
+        text: "הפריט עבר את המסוע - נסו להיות מהירים יותר!",
         fact: "",
         type: "bad",
       });
@@ -299,7 +299,7 @@ export default function RecyclingFactoryPrototype() {
       const item = beltItemsRef.current.find((b) => b.uid === uid)?.item;
       const correctLabel = item ? BINS[item.bin]?.label : "";
       setFeedback({
-        text: `לא בדיוק — ${item?.name ?? "פריט"} שייך ל${correctLabel}`,
+        text: `לא בדיוק - ${item?.name ?? "פריט"} שייך ל${correctLabel}`,
         fact: "",
         type: "bad",
       });

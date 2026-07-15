@@ -104,7 +104,7 @@ const EASY_ORDERS = [
     customerName: "גל",
     customerEmoji: "👧",
     greeting: "שימו גבינה על כל הפיצה, בבקשה!",
-    ticketLine: "גבינה 🧀 — על כל הפיצה",
+    ticketLine: "גבינה 🧀 - על כל הפיצה",
     spec: spec({ cheese: 4 }, 4, true),
   }),
   easyOrder({
@@ -112,7 +112,7 @@ const EASY_ORDERS = [
     customerName: "אורי",
     customerEmoji: "👦",
     greeting: "שימו עגבנייה על חצי פיצה.",
-    ticketLine: "עגבניה 🍅 — חצי (2 מתוך 4)",
+    ticketLine: "עגבניה 🍅 - חצי (2 מתוך 4)",
     spec: spec({ tomato: 2 }, 4),
   }),
   easyOrder({
@@ -120,7 +120,7 @@ const EASY_ORDERS = [
     customerName: "נועה",
     customerEmoji: "👧🏻",
     greeting: "שימו זיתים על רבע פיצה.",
-    ticketLine: "זיתים 🫒 — רבע (1 מתוך 4)",
+    ticketLine: "זיתים 🫒 - רבע (1 מתוך 4)",
     spec: spec({ olive: 1 }, 4),
   }),
   easyOrder({
@@ -144,7 +144,7 @@ const EASY_ORDERS = [
     customerName: "דניאל",
     customerEmoji: "👦🏻",
     greeting: "שימו פטריות על חצי פיצה.",
-    ticketLine: "פטריות 🍄 — חצי (2 מתוך 4)",
+    ticketLine: "פטריות 🍄 - חצי (2 מתוך 4)",
     spec: spec({ mushroom: 2 }, 4),
   }),
   easyOrder({
@@ -152,7 +152,7 @@ const EASY_ORDERS = [
     customerName: "שיר",
     customerEmoji: "👧",
     greeting: "שימו פלפל על כל הפיצה!",
-    ticketLine: "פלפל 🫑 — על כל הפיצה",
+    ticketLine: "פלפל 🫑 - על כל הפיצה",
     spec: spec({ pepper: 4 }, 4, true),
   }),
   easyOrder({
@@ -160,7 +160,7 @@ const EASY_ORDERS = [
     customerName: "יואב",
     customerEmoji: "👦",
     greeting: "שימו בזיליקום על רבע פיצה.",
-    ticketLine: "בזיליקום 🌿 — רבע (1 מתוך 4)",
+    ticketLine: "בזיליקום 🌿 - רבע (1 מתוך 4)",
     spec: spec({ basil: 1 }, 4),
   }),
   easyOrder({
@@ -176,7 +176,7 @@ const EASY_ORDERS = [
     customerName: "איתי",
     customerEmoji: "🧒",
     greeting: "שימו עגבניה על כל הפיצה.",
-    ticketLine: "עגבניה 🍅 — על כל הפיצה",
+    ticketLine: "עגבניה 🍅 - על כל הפיצה",
     spec: spec({ tomato: 4 }, 4, true),
   }),
   easyOrder({
@@ -192,7 +192,7 @@ const EASY_ORDERS = [
     customerName: "ניר",
     customerEmoji: "👦🏽",
     greeting: "שימו גבינה על חצי פיצה.",
-    ticketLine: "גבינה 🧀 — חצי (2 מתוך 4)",
+    ticketLine: "גבינה 🧀 - חצי (2 מתוך 4)",
     spec: spec({ cheese: 2 }, 4),
   }),
   easyOrder({
@@ -200,7 +200,7 @@ const EASY_ORDERS = [
     customerName: "\u05E8\u05D5\u05E0\u05D9",
     customerEmoji: "👧🏻",
     greeting: "שימו זיתים על כל הפיצה.",
-    ticketLine: "זיתים 🫒 — על כל הפיצה",
+    ticketLine: "זיתים 🫒 - על כל הפיצה",
     spec: spec({ olive: 4 }, 4, true),
   }),
   easyOrder({
@@ -216,7 +216,7 @@ const EASY_ORDERS = [
     customerName: "ליאור",
     customerEmoji: "🧑",
     greeting: "שימו בזיליקום על חצי פיצה.",
-    ticketLine: "בזיליקום 🌿 — חצי (2 מתוך 4)",
+    ticketLine: "בזיליקום 🌿 - חצי (2 מתוך 4)",
     spec: spec({ basil: 2 }, 4),
   }),
   easyOrder({
@@ -232,7 +232,7 @@ const EASY_ORDERS = [
     customerName: "אלון",
     customerEmoji: "👦🏻",
     greeting: "שימו פטריות על כל הפיצה.",
-    ticketLine: "פטריות 🍄 — על כל הפיצה",
+    ticketLine: "פטריות 🍄 - על כל הפיצה",
     spec: spec({ mushroom: 4 }, 4, true),
   }),
   easyOrder({
@@ -268,7 +268,7 @@ const MEDIUM_ORDERS = [
     customerName: "שרה",
     customerEmoji: "👩",
     greeting: "שימו פטריות על חצי פיצה.",
-    ticketLine: "פטריות 🍄 — חצי (4 מתוך 8)",
+    ticketLine: "פטריות 🍄 - חצי (4 מתוך 8)",
     spec: spec({ mushroom: 4 }, 8),
   }),
   eightSliceOrder({
@@ -276,7 +276,7 @@ const MEDIUM_ORDERS = [
     customerName: "דן",
     customerEmoji: "👨",
     greeting: "שימו זיתים על רבע פיצה.",
-    ticketLine: "זיתים 🫒 — רבע (2 מתוך 8)",
+    ticketLine: "זיתים 🫒 - רבע (2 מתוך 8)",
     spec: spec({ olive: 2 }, 8),
   }),
   eightSliceOrder({
@@ -284,7 +284,7 @@ const MEDIUM_ORDERS = [
     customerName: "מאיה",
     customerEmoji: "👧🏽",
     greeting: "שימו גבינה על שלושה רבעים מהפיצה.",
-    ticketLine: "גבינה 🧀 — 6 מתוך 8",
+    ticketLine: "גבינה 🧀 - 6 מתוך 8",
     spec: spec({ cheese: 6 }, 8),
   }),
   eightSliceOrder({
@@ -308,7 +308,7 @@ const MEDIUM_ORDERS = [
     customerName: "הדס",
     customerEmoji: "👧",
     greeting: "שימו פלפל על חצי פיצה.",
-    ticketLine: "פלפל 🫑 — חצי (4 מתוך 8)",
+    ticketLine: "פלפל 🫑 - חצי (4 מתוך 8)",
     spec: spec({ pepper: 4 }, 8),
   }),
   eightSliceOrder({
@@ -316,7 +316,7 @@ const MEDIUM_ORDERS = [
     customerName: "גיא",
     customerEmoji: "👨🏻",
     greeting: "שימו בזיליקום על רבע פיצה.",
-    ticketLine: "בזיליקום 🌿 — רבע (2 מתוך 8)",
+    ticketLine: "בזיליקום 🌿 - רבע (2 מתוך 8)",
     spec: spec({ basil: 2 }, 8),
   }),
   eightSliceOrder({
@@ -324,7 +324,7 @@ const MEDIUM_ORDERS = [
     customerName: "\u05E8\u05D5\u05E0\u05D9",
     customerEmoji: "👧🏻",
     greeting: "שימו עגבניה על שלושה רבעים מהפיצה.",
-    ticketLine: "עגבניה 🍅 — 6 מתוך 8",
+    ticketLine: "עגבניה 🍅 - 6 מתוך 8",
     spec: spec({ tomato: 6 }, 8),
   }),
   eightSliceOrder({
@@ -340,7 +340,7 @@ const MEDIUM_ORDERS = [
     customerName: "ליה",
     customerEmoji: "👧",
     greeting: "שימו גבינה על כל הפיצה.",
-    ticketLine: "גבינה 🧀 — על כל הפיצה",
+    ticketLine: "גבינה 🧀 - על כל הפיצה",
     spec: spec({ cheese: 8 }, 8, true),
   }),
   eightSliceOrder({
@@ -348,7 +348,7 @@ const MEDIUM_ORDERS = [
     customerName: "עומר",
     customerEmoji: "👦",
     greeting: "שימו פטריות על רבע פיצה.",
-    ticketLine: "פטריות 🍄 — רבע (2 מתוך 8)",
+    ticketLine: "פטריות 🍄 - רבע (2 מתוך 8)",
     spec: spec({ mushroom: 2 }, 8),
   }),
   eightSliceOrder({
@@ -356,7 +356,7 @@ const MEDIUM_ORDERS = [
     customerName: "טלי",
     customerEmoji: "👩",
     greeting: "שימו זיתים על שלושה רבעים מהפיצה.",
-    ticketLine: "זיתים 🫒 — 6 מתוך 8",
+    ticketLine: "זיתים 🫒 - 6 מתוך 8",
     spec: spec({ olive: 6 }, 8),
   }),
   eightSliceOrder({
@@ -380,7 +380,7 @@ const MEDIUM_ORDERS = [
     customerName: "מור",
     customerEmoji: "👧",
     greeting: "שימו עגבניה על חצי פיצה.",
-    ticketLine: "עגבניה 🍅 — חצי (4 מתוך 8)",
+    ticketLine: "עגבניה 🍅 - חצי (4 מתוך 8)",
     spec: spec({ tomato: 4 }, 8),
   }),
   eightSliceOrder({
@@ -396,7 +396,7 @@ const MEDIUM_ORDERS = [
     customerName: "שקד",
     customerEmoji: "👧🏻",
     greeting: "שימו פטריות על שלושה רבעים מהפיצה.",
-    ticketLine: "פטריות 🍄 — 6 מתוך 8",
+    ticketLine: "פטריות 🍄 - 6 מתוך 8",
     spec: spec({ mushroom: 6 }, 8),
   }),
   eightSliceOrder({
@@ -412,7 +412,7 @@ const MEDIUM_ORDERS = [
     customerName: "ענבל",
     customerEmoji: "👧🏽",
     greeting: "שימו פלפל על שלושה רבעים מהפיצה.",
-    ticketLine: "פלפל 🫑 — 6 מתוך 8",
+    ticketLine: "פלפל 🫑 - 6 מתוך 8",
     spec: spec({ pepper: 6 }, 8),
   }),
   eightSliceOrder({
@@ -432,7 +432,7 @@ const HARD_ORDERS = [
     customerName: "ליה",
     customerEmoji: "👧🏻",
     greeting: "שימו זיתים על שמינית מהפיצה.",
-    ticketLine: "זיתים 🫒 — שמינית (1 מתוך 8)",
+    ticketLine: "זיתים 🫒 - שמינית (1 מתוך 8)",
     spec: spec({ olive: 1 }, 8),
   }),
   eightSliceOrder({
@@ -440,7 +440,7 @@ const HARD_ORDERS = [
     customerName: "עידו",
     customerEmoji: "👦",
     greeting: "שימו פטריות על חמישה שמיניות מהפיצה.",
-    ticketLine: "פטריות 🍄 — 5 מתוך 8",
+    ticketLine: "פטריות 🍄 - 5 מתוך 8",
     spec: spec({ mushroom: 5 }, 8),
   }),
   eightSliceOrder({
@@ -472,7 +472,7 @@ const HARD_ORDERS = [
     customerName: "רון",
     customerEmoji: "👨🏻",
     greeting: "שימו בזיליקום על שמינית מהפיצה.",
-    ticketLine: "בזיליקום 🌿 — שמינית (1 מתוך 8)",
+    ticketLine: "בזיליקום 🌿 - שמינית (1 מתוך 8)",
     spec: spec({ basil: 1 }, 8),
   }),
   eightSliceOrder({
@@ -480,7 +480,7 @@ const HARD_ORDERS = [
     customerName: "אלה",
     customerEmoji: "👧",
     greeting: "שימו גבינה על שבעה שמיניות מהפיצה.",
-    ticketLine: "גבינה 🧀 — 7 מתוך 8",
+    ticketLine: "גבינה 🧀 - 7 מתוך 8",
     spec: spec({ cheese: 7 }, 8),
   }),
   eightSliceOrder({
@@ -496,7 +496,7 @@ const HARD_ORDERS = [
     customerName: "\u05D3\u05E4\u05E0\u05D4",
     customerEmoji: "👩",
     greeting: "שימו עגבניה על שני שמיניות מהפיצה.",
-    ticketLine: "עגבניה 🍅 — 2 מתוך 8",
+    ticketLine: "עגבניה 🍅 - 2 מתוך 8",
     spec: spec({ tomato: 2 }, 8),
   }),
   eightSliceOrder({
@@ -512,7 +512,7 @@ const HARD_ORDERS = [
     customerName: "קורן",
     customerEmoji: "👧🏻",
     greeting: "שימו זיתים על שישה שמיניות מהפיצה.",
-    ticketLine: "זיתים 🫒 — 6 מתוך 8",
+    ticketLine: "זיתים 🫒 - 6 מתוך 8",
     spec: spec({ olive: 6 }, 8),
   }),
   eightSliceOrder({
@@ -528,7 +528,7 @@ const HARD_ORDERS = [
     customerName: "שירה",
     customerEmoji: "👧",
     greeting: "שימו גבינה על חמישה שמיניות מהפיצה.",
-    ticketLine: "גבינה 🧀 — 5 מתוך 8",
+    ticketLine: "גבינה 🧀 - 5 מתוך 8",
     spec: spec({ cheese: 5 }, 8),
   }),
   eightSliceOrder({
@@ -552,7 +552,7 @@ const HARD_ORDERS = [
     customerName: "אורי",
     customerEmoji: "👦",
     greeting: "שימו פטריות על שלושה שמיניות מהפיצה.",
-    ticketLine: "פטריות 🍄 — 3 מתוך 8",
+    ticketLine: "פטריות 🍄 - 3 מתוך 8",
     spec: spec({ mushroom: 3 }, 8),
   }),
   eightSliceOrder({
@@ -560,7 +560,7 @@ const HARD_ORDERS = [
     customerName: "\u05DE\u05D0\u05D9\u05D4",
     customerEmoji: "👧🏻",
     greeting: "שימו עגבניה על \u05E9\u05DE\u05D9\u05E0\u05D9\u05EA אחת מהפיצה.",
-    ticketLine: "עגבניה 🍅 — \u05E9\u05DE\u05D9\u05E0\u05D9\u05EA (1 מתוך 8)",
+    ticketLine: "עגבניה 🍅 - \u05E9\u05DE\u05D9\u05E0\u05D9\u05EA (1 מתוך 8)",
     spec: spec({ tomato: 1 }, 8),
   }),
   eightSliceOrder({
@@ -576,7 +576,7 @@ const HARD_ORDERS = [
     customerName: "איתי",
     customerEmoji: "👦🏻",
     greeting: "שימו פלפל על חמישה שמיניות מהפיצה.",
-    ticketLine: "פלפל 🫑 — 5 מתוך 8",
+    ticketLine: "פלפל 🫑 - 5 מתוך 8",
     spec: spec({ pepper: 5 }, 8),
   }),
   eightSliceOrder({

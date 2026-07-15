@@ -247,7 +247,7 @@ export function validateParentNarrativeSafety(input) {
     record(
       ISSUE_CODES.thin_data_strong,
       "medium",
-      "Strong certainty markers appear alongside thin-evidence context — review wording.",
+      "Strong certainty markers appear alongside thin-evidence context - review wording.",
       "thin+hedge+strong_markers",
       false
     );

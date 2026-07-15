@@ -141,4 +141,4 @@ for (const mode of EXCLUDED_MODES) {
   assert.ok(excludedEvidence.some((e) => /learning|guided/.test(e.reason)));
 }
 
-console.log("inclusion-audit.test.mjs — passed");
+console.log("inclusion-audit.test.mjs - passed");

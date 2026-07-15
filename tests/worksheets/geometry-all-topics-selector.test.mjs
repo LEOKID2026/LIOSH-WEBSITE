@@ -23,7 +23,7 @@ import {
 } from "../../lib/worksheets/worksheet-payload-build.server.js";
 
 const META_BASE = {
-  titleHe: "דף עבודה — גאומטריה",
+  titleHe: "דף עבודה - גאומטריה",
   subjectHe: "גאומטריה",
   gradeHe: "כיתה ג׳",
   topicHe: "שטח",

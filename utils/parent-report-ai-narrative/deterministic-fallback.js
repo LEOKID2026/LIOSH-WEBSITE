@@ -68,7 +68,7 @@ function buildStrengthsBullets(packet) {
     if (!s?.sourceId || !s?.displayNameHe) continue;
     const evidence = trim(s.evidenceHe, 60);
     const text = evidence
-      ? `התרגול ב${s.displayNameHe} נראה יציב — ${evidence}.`
+      ? `התרגול ב${s.displayNameHe} נראה יציב - ${evidence}.`
       : `התרגול ב${s.displayNameHe} נראה יציב.`;
     out.push({ textHe: trim(text, 150), sourceId: s.sourceId });
   }
@@ -83,7 +83,7 @@ function buildFocusBullets(packet) {
     if (!f?.sourceId || !f?.displayNameHe) continue;
     const evidence = trim(f.evidenceHe, 60);
     const text = evidence
-      ? `כדאי להמשיך לחזק את ${f.displayNameHe} — ${evidence}.`
+      ? `כדאי להמשיך לחזק את ${f.displayNameHe} - ${evidence}.`
       : `כדאי להמשיך לחזק בעדינות את ${f.displayNameHe}.`;
     out.push({ textHe: trim(text, 150), sourceId: f.sourceId });
   }
@@ -115,17 +115,17 @@ function buildCautionNote(packet) {
   if (warnings.length === 0) return "";
   const overall = warnings.find((w) => w.scope === "overall");
   if (overall) {
-    return trim("חשוב לזכור שהנתונים בתקופה זו מועטים — מדובר בכיוון ראשוני בלבד וכדאי להימנע ממסקנות חזקות.", 280);
+    return trim("חשוב לזכור שהנתונים בתקופה זו מועטים - מדובר בכיוון ראשוני בלבד וכדאי להימנע ממסקנות חזקות.", 280);
   }
   const subjects = warnings
     .filter((w) => w.scope === "subject" && w.displayNameHe)
     .map((w) => w.displayNameHe)
     .slice(0, 3);
   if (subjects.length === 0) {
-    return trim("חשוב לזכור שהנתונים בחלק מהתחומים מצומצמים — כדאי להמשיך לעקוב לפני הסקת מסקנות.", 280);
+    return trim("חשוב לזכור שהנתונים בחלק מהתחומים מצומצמים - כדאי להמשיך לעקוב לפני הסקת מסקנות.", 280);
   }
   return trim(
-    `חשוב לזכור שבמקצועות ${subjects.join(", ")} הנתונים מצומצמים בתקופה זו — מדובר בכיוון ראשוני בלבד.`,
+    `חשוב לזכור שבמקצועות ${subjects.join(", ")} הנתונים מצומצמים בתקופה זו - מדובר בכיוון ראשוני בלבד.`,
     280
   );
 }

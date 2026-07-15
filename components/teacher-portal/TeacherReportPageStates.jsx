@@ -5,7 +5,7 @@ export function TeacherReportLoading({ title, backHref, hint }) {
   return (
     <TeacherPortalShell backHref={backHref} title={title}>
       <div className="space-y-3" role="status" aria-live="polite">
-        <p className="text-white/80">{hint || "הדוח נטען — זה עשוי לקחת כמה שניות."}</p>
+        <p className="text-white/80">{hint || "הדוח נטען - זה עשוי לקחת כמה שניות."}</p>
         <div className="h-1.5 w-full max-w-xs rounded-full bg-white/10 overflow-hidden">
           <div className="h-full w-1/3 rounded-full bg-amber-400/80 animate-pulse" />
         </div>

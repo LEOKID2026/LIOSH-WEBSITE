@@ -27,7 +27,7 @@ test("geometry transformations procedural stems avoid answer-label leakage", asy
       `stem leak for correct=${correct}: ${stem}`
     );
     for (const opt of gen.raw.answers || []) {
-      assert.doesNotMatch(String(opt), /— לא |באופן שונה/);
+      assert.doesNotMatch(String(opt), /- לא |באופן שונה/);
     }
   }
 });

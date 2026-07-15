@@ -200,7 +200,7 @@ export function detectGradeSplitContradictions(units, baseReport) {
       })
       .join("; ");
     notices.push(
-      `ב${subjectLabel}, באותו נושא (${displayName}) נראו תוצאות שונות לפי רמת הכיתה — ${parts}. לא מאחדים לשורה אחת.`,
+      `ב${subjectLabel}, באותו נושא (${displayName}) נראו תוצאות שונות לפי רמת הכיתה - ${parts}. לא מאחדים לשורה אחת.`,
     );
   }
   return notices;

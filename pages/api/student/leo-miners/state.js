@@ -87,7 +87,7 @@ export default async function handler(req, res) {
       ok: false,
       error: "Server error",
       code: "server_error",
-      message: "שגיאת שרת — נסו לרענן את הדף.",
+      message: "שגיאת שרת - נסו לרענן את הדף.",
     });
   }
 }

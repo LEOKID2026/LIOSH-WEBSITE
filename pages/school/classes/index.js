@@ -610,7 +610,7 @@ export default function SchoolClassesPage() {
                         key={grade.level}
                         title={grade.label}
                         subtitle={
-                          count != null ? `${count} כיתות פיזיות` : loading ? "…" : "—"
+                          count != null ? `${count} כיתות פיזיות` : loading ? "…" : "-"
                         }
                         gradeStatusLabel={browseStatus?.gradeStatusByLevel?.[grade.level] || null}
                         onClick={() => setGradeLevel(grade.level)}

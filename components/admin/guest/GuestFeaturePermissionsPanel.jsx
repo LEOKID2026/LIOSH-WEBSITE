@@ -68,7 +68,7 @@ export default function GuestFeaturePermissionsPanel({ accessToken, onMessage })
     <section className="rounded-xl border border-white/15 bg-white/5 p-4 space-y-3 text-right" dir="rtl">
       <h2 className="text-lg font-bold">הרשאות פיצ'רים חברתיים לאורחים</h2>
       <p className="text-xs text-white/60">
-        כל toggle נשלט דרך Admin — אין חסימה קשיחה בקוד. ברירת מחדל מוצגת בעמודה.
+        כל toggle נשלט דרך Admin - אין חסימה קשיחה בקוד. ברירת מחדל מוצגת בעמודה.
       </p>
       <div className="flex flex-wrap gap-2 justify-end">
         <button type="button" disabled={busy || !features.length} onClick={() => setAll(true)} className="rounded-lg border border-emerald-400/40 bg-emerald-500/15 px-3 py-1 text-sm">

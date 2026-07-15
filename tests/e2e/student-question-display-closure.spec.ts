@@ -11,10 +11,10 @@ const SCREENSHOT_DIR = "reports/question-audit/screenshots";
 const FORBIDDEN_UI_PATTERNS: RegExp[] = [
   /רמה\s+(קלה|בינונית|קשה|מאתגרת)/u,
   /רמת\s+(easy|medium|hard)/iu,
-  /(?:^|[·•—(])\s*נושא\s+[a-z0-9_-]+/iu,
+  /(?:^|[·•-(])\s*נושא\s+[a-z0-9_-]+/iu,
   /סימון\s+ייחודי/u,
   /שאלה\s+בנושא/u,
-  /(?:^|[·•—(])\s*כיתה\s+[אבגדהו]['׳]?/u,
+  /(?:^|[·•-(])\s*כיתה\s+[אבגדהו]['׳]?/u,
 ];
 
 type SubjectClosure = {
@@ -207,7 +207,7 @@ const SUBJECTS: SubjectClosure[] = [
   },
 ];
 
-test.describe("Student question display — 6-subject closure (mobile)", () => {
+test.describe("Student question display - 6-subject closure (mobile)", () => {
   test.beforeEach(async ({ page }) => {
     await page.setViewportSize(MOBILE_VIEW);
     await mockStudentSession(page);

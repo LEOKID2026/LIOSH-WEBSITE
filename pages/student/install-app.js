@@ -12,7 +12,7 @@ export default function StudentPwaInstallPage() {
       portal="student"
       badge="LEO KIDS"
       title="התקנת אפליקציה לילדים"
-      pageTitle="LEO KIDS — התקנה"
+      pageTitle="LEO KIDS - התקנה"
       appleTouchIcon="/icons/child/apple-touch-icon.png"
       launcher={StudentPwaInstallLauncher}
     />

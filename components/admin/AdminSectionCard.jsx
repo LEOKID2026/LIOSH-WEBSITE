@@ -14,15 +14,15 @@ export function AdminStatTile({ label, value, hint }) {
   return (
     <div className="rounded-lg border border-white/10 bg-black/20 px-3 py-3 text-right">
       <p className="text-xs text-white/50 mb-1">{label}</p>
-      <p className="text-xl font-bold tabular-nums">{value ?? "—"}</p>
+      <p className="text-xl font-bold tabular-nums">{value ?? "-"}</p>
       {hint ? <p className="text-[11px] text-white/40 mt-1">{hint}</p> : null}
     </div>
   );
 }
 
 export function AdminFieldRow({ label, value, children }) {
-  const display = children ?? value ?? "—";
-  const titleText = typeof display === "string" && display !== "—" ? display : undefined;
+  const display = children ?? value ?? "-";
+  const titleText = typeof display === "string" && display !== "-" ? display : undefined;
   return (
     <div className="grid grid-cols-1 sm:grid-cols-[minmax(5rem,auto)_1fr] items-baseline gap-x-4 gap-y-1 py-2 border-b border-white/5 last:border-0">
       <span className="text-sm text-white/50 shrink-0">{label}</span>

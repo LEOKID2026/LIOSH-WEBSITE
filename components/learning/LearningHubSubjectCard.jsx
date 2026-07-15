@@ -46,7 +46,7 @@ export default function LearningHubSubjectCard({
       <div
         className={`${cardClass} opacity-90 cursor-not-allowed`}
         aria-disabled="true"
-        aria-label={`${title} — נעול על ידי ההורים`}
+        aria-label={`${title} - נעול על ידי ההורים`}
       >
         {inner}
       </div>

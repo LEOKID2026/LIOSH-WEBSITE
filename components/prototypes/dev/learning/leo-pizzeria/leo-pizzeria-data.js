@@ -27,9 +27,9 @@ export const TOPPINGS = [
 ];
 
 export const DIFFICULTY_HINTS = {
-  easy: "הזמנות פשוטות — שלם, חצי ורבע על פיצה ב-4 חלקים",
-  medium: "יותר תוספות — רבעים, חצי ושלושה רבעים על 8 חלקים",
-  hard: "הזמנות מורכבות יותר — שמיניות ושילובים (דוגמה זמנית)",
+  easy: "הזמנות פשוטות - שלם, חצי ורבע על פיצה ב-4 חלקים",
+  medium: "יותר תוספות - רבעים, חצי ושלושה רבעים על 8 חלקים",
+  hard: "הזמנות מורכבות יותר - שמיניות ושילובים (דוגמה זמנית)",
 };
 
 /** @param {Record<number, string>} sliceMap @param {string} toppingId */
@@ -50,7 +50,7 @@ function exactly(sliceMap, sliceCount, toppingId, count) {
   }
   return {
     ok: false,
-    message: `עוד לא בדיוק — צריך ${count} חלקים עם ${toppingLabel(toppingId)} (יש ${n})`,
+    message: `עוד לא בדיוק - צריך ${count} חלקים עם ${toppingLabel(toppingId)} (יש ${n})`,
   };
 }
 
@@ -67,7 +67,7 @@ export const CUSTOMERS_BY_DIFFICULTY = {
       customerName: "גל",
       customerEmoji: "👧",
       greeting: "שלום! אפשר פיצה עם גבינה על כל החלקים?",
-      ticketLine: "גבינה 🧀 — על כל הפיצה",
+      ticketLine: "גבינה 🧀 - על כל הפיצה",
       sliceCount: 4,
       validate: (m) => exactly(m, 4, "cheese", 4),
     },
@@ -76,7 +76,7 @@ export const CUSTOMERS_BY_DIFFICULTY = {
       customerName: "אורי",
       customerEmoji: "👦",
       greeting: "אני רוצה זיתים על חצי מהפיצה, בבקשה!",
-      ticketLine: "זיתים 🫒 — חצי מהפיצה (2 מתוך 4)",
+      ticketLine: "זיתים 🫒 - חצי מהפיצה (2 מתוך 4)",
       sliceCount: 4,
       validate: (m) => exactly(m, 4, "olive", 2),
     },
@@ -84,7 +84,7 @@ export const CUSTOMERS_BY_DIFFICULTY = {
       id: "easy-noa",
       customerName: "נועה",
       customerEmoji: "👧🏻",
-      greeting: "חצי גבינה וחצי עגבניות — כמו שאתם אוהבים!",
+      greeting: "חצי גבינה וחצי עגבניות - כמו שאתם אוהבים!",
       ticketLine: "חצי 🧀 + חצי 🍅",
       sliceCount: 4,
       validate: (m) => {
@@ -100,8 +100,8 @@ export const CUSTOMERS_BY_DIFFICULTY = {
       id: "easy-amit",
       customerName: "עמית",
       customerEmoji: "🧒",
-      greeting: "תשימו עגבניות על כל הפיצה — תודה!",
-      ticketLine: "עגבניה 🍅 — על כל הפיצה",
+      greeting: "תשימו עגבניות על כל הפיצה - תודה!",
+      ticketLine: "עגבניה 🍅 - על כל הפיצה",
       sliceCount: 4,
       validate: (m) => exactly(m, 4, "tomato", 4),
     },
@@ -112,7 +112,7 @@ export const CUSTOMERS_BY_DIFFICULTY = {
       customerName: "שרה",
       customerEmoji: "👩",
       greeting: "שלום! פלפל על חצי מהפיצה, בבקשה.",
-      ticketLine: "פלפל 🫑 — חצי (4 מתוך 8)",
+      ticketLine: "פלפל 🫑 - חצי (4 מתוך 8)",
       sliceCount: 8,
       validate: (m) => exactly(m, 8, "pepper", 4),
     },
@@ -121,7 +121,7 @@ export const CUSTOMERS_BY_DIFFICULTY = {
       customerName: "דן",
       customerEmoji: "👨",
       greeting: "אפשר רבע פיצה עם פטריות?",
-      ticketLine: "פטריות 🍄 — רבע (2 מתוך 8)",
+      ticketLine: "פטריות 🍄 - רבע (2 מתוך 8)",
       sliceCount: 8,
       validate: (m) => exactly(m, 8, "mushroom", 2),
     },
@@ -129,8 +129,8 @@ export const CUSTOMERS_BY_DIFFICULTY = {
       id: "med-maya",
       customerName: "מאיה",
       customerEmoji: "👧🏽",
-      greeting: "גבינה על שלושה רבעים — כמעט הכל!",
-      ticketLine: "גבינה 🧀 — 6 מתוך 8 חלקים",
+      greeting: "גבינה על שלושה רבעים - כמעט הכל!",
+      ticketLine: "גבינה 🧀 - 6 מתוך 8 חלקים",
       sliceCount: 8,
       validate: (m) => exactly(m, 8, "cheese", 6),
     },
@@ -138,7 +138,7 @@ export const CUSTOMERS_BY_DIFFICULTY = {
       id: "med-yoni",
       customerName: "יוני",
       customerEmoji: "👦🏻",
-      greeting: "חצי זיתים וחצי עגבניות — תודה רבה!",
+      greeting: "חצי זיתים וחצי עגבניות - תודה רבה!",
       ticketLine: "חצי 🫒 + חצי 🍅",
       sliceCount: 8,
       validate: (m) => {
@@ -156,8 +156,8 @@ export const CUSTOMERS_BY_DIFFICULTY = {
       id: "hard-lia",
       customerName: "ליה",
       customerEmoji: "👧🏻",
-      greeting: "רק שמינית אחת עם בזיליקום — קטן ומדויק!",
-      ticketLine: "בזיליקום 🌿 — שמינית (1 מתוך 8)",
+      greeting: "רק שמינית אחת עם בזיליקום - קטן ומדויק!",
+      ticketLine: "בזיליקום 🌿 - שמינית (1 מתוך 8)",
       sliceCount: 8,
       validate: (m) => exactly(m, 8, "basil", 1),
     },
@@ -165,8 +165,8 @@ export const CUSTOMERS_BY_DIFFICULTY = {
       id: "hard-ido",
       customerName: "עידו",
       customerEmoji: "👦",
-      greeting: "גבינה על חמישה שמיניות — זה הכמות שלי!",
-      ticketLine: "גבינה 🧀 — 5 מתוך 8 חלקים",
+      greeting: "גבינה על חמישה שמיניות - זה הכמות שלי!",
+      ticketLine: "גבינה 🧀 - 5 מתוך 8 חלקים",
       sliceCount: 8,
       validate: (m) => exactly(m, 8, "cheese", 5),
     },
@@ -174,7 +174,7 @@ export const CUSTOMERS_BY_DIFFICULTY = {
       id: "hard-tal",
       customerName: "טל",
       customerEmoji: "🧑",
-      greeting: "רבע פטריות וחצי עגבניות — שילוב מיוחד!",
+      greeting: "רבע פטריות וחצי עגבניות - שילוב מיוחד!",
       ticketLine: "2 פטריות 🍄 + 4 עגבניות 🍅",
       sliceCount: 8,
       validate: (m) => {
@@ -190,8 +190,8 @@ export const CUSTOMERS_BY_DIFFICULTY = {
       id: "hard-ron",
       customerName: "רון",
       customerEmoji: "👨🏻",
-      greeting: "זיתים על שלושה רבעים — כמעט שלמה!",
-      ticketLine: "זיתים 🫒 — 6 מתוך 8 חלקים",
+      greeting: "זיתים על שלושה רבעים - כמעט שלמה!",
+      ticketLine: "זיתים 🫒 - 6 מתוך 8 חלקים",
       sliceCount: 8,
       validate: (m) => exactly(m, 8, "olive", 6),
     },
@@ -241,5 +241,5 @@ export function serveOkMessage() {
 }
 
 export function serveBadMessage() {
-  return "עוד לא בדיוק כמו בפתק — תקנו ונסו שוב";
+  return "עוד לא בדיוק כמו בפתק - תקנו ונסו שוב";
 }

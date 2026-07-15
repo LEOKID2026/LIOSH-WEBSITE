@@ -90,7 +90,7 @@ export function TeacherPhysicalClassActivitiesModal({ accessToken, classCard, on
   }, [load]);
 
   return (
-    <Overlay title={`פעילויות — ${classCard.name}`} onClose={onClose}>
+    <Overlay title={`פעילויות - ${classCard.name}`} onClose={onClose}>
       {phase === "loading" ? (
         <p className="text-sm text-white/60">טוען פעילויות…</p>
       ) : null}

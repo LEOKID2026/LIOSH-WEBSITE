@@ -72,7 +72,7 @@ export default function AdminParentDetailPage() {
             <div className="mb-4 text-right text-sm" data-testid="parent-detail-header">
               <p className="text-white/50">{ADMIN_COL_EMAIL}</p>
               <p dir="ltr" className="break-all">
-                {email || "—"}
+                {email || "-"}
               </p>
               <p className="text-xs text-white/40 font-mono mt-2" dir="ltr">
                 {userId}

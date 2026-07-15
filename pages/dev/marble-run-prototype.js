@@ -6,7 +6,7 @@ export default function MarbleRunPrototypePage() {
   return (
     <>
       <Head>
-        <title>מסילת כדור — אבטיפוס</title>
+        <title>מסילת כדור - אבטיפוס</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <MarbleRunPrototype />

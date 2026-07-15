@@ -139,7 +139,7 @@ export default function AdminDiamondsTab({ accessToken }) {
           g.gameKey === gameKey ? { ...g, diamondRules: json.diamondRules } : g
         )
       );
-      setMessage(`חוקי יהלומים נשמרו — ${row.titleHe || gameKey}`);
+      setMessage(`חוקי יהלומים נשמרו - ${row.titleHe || gameKey}`);
     } catch {
       setError("שגיאת רשת");
     } finally {
@@ -228,7 +228,7 @@ export default function AdminDiamondsTab({ accessToken }) {
       }
       setMessage(
         json.duplicate
-          ? "בקשה כפולה — לא בוצע שינוי נוסף"
+          ? "בקשה כפולה - לא בוצע שינוי נוסף"
           : `יתרה עודכנה: ${json.balanceAfter}`
       );
       await loadStudent();
@@ -248,7 +248,7 @@ export default function AdminDiamondsTab({ accessToken }) {
       <div>
         <h2 className="text-lg font-bold text-white">יהלומים</h2>
         <p className="text-sm text-white/60 mt-1">
-          שליטה מלאה על חוקי solo, קופסת הפתעה ועדכון ידני — נפרד ממטבעות.
+          שליטה מלאה על חוקי solo, קופסת הפתעה ועדכון ידני - נפרד ממטבעות.
         </p>
       </div>
 
@@ -273,7 +273,7 @@ export default function AdminDiamondsTab({ accessToken }) {
       </section>
 
       <section className="rounded-xl border border-white/10 bg-white/5 p-4 space-y-4">
-        <h3 className="font-semibold text-amber-200">חוקי יהלומים — 10 משחקי Solo</h3>
+        <h3 className="font-semibold text-amber-200">חוקי יהלומים - 10 משחקי Solo</h3>
         <p className="text-xs text-white/50">
           שינוי כאן משפיע ישירות על סיום משחק (diamondRules ב-payout_rules_json). מטבעות לא משתנים.
         </p>
@@ -419,7 +419,7 @@ export default function AdminDiamondsTab({ accessToken }) {
       </section>
 
       <section className="rounded-xl border border-white/10 bg-white/5 p-4 space-y-3">
-        <h3 className="font-semibold text-amber-200">קופסת הפתעה — פרסי יהלומים</h3>
+        <h3 className="font-semibold text-amber-200">קופסת הפתעה - פרסי יהלומים</h3>
         <p className="text-xs text-white/50">
           סכום + משקל (weighted pick). שינוי כאן משפיע על פתיחת קופסה בפועל.
         </p>

@@ -500,7 +500,7 @@ function buildMajorTrendsHe(subjects, subjectCoverage) {
     if (out.length >= 2) break;
   }
   if (!out.length) {
-    out.push("עדיין אין שתי מגמות חוצות מקצועות ברורות — התמונה תתבהר אחרי עוד תרגול בתקופה שנבחרה.");
+    out.push("עדיין אין שתי מגמות חוצות מקצועות ברורות - התמונה תתבהר אחרי עוד תרגול בתקופה שנבחרה.");
   }
   if (out.length === 1) {
     out.push("מגמה שנייה תתבהר אחרי עוד תרגול במקצועות עם מעט שאלות.");
@@ -534,30 +534,30 @@ function pickMainHomeRecommendationHe(subjects, subjectCoverage, summary, topFoc
   if (topFocusAreasHe[0]) {
     const core = stripLeadingBenosheaHe(topFocusAreasHe[0].replace(/\s*\([^)]*\)\s*$/u, "").trim());
     return shortenHe(
-      `להתמקד השבוע ב${core} — שני מפגשים קצרים, קריאת משימה משותפת ותרגול ממוקד בלי קפיצת רמה.`,
+      `להתמקד השבוע ב${core} - שני מפגשים קצרים, קריאת משימה משותפת ותרגול ממוקד בלי קפיצת רמה.`,
       220
     );
   }
   if (topStrengthsAcrossHe[0]) {
     return shortenHe(
-      `לשמור קצב רגוע סביב ${stripLeadingBenosheaHe(topStrengthsAcrossHe[0])} — תרגול קצר פעמיים בשבוע לשימור עקביות.`,
+      `לשמור קצב רגוע סביב ${stripLeadingBenosheaHe(topStrengthsAcrossHe[0])} - תרגול קצר פעמיים בשבוע לשימור עקביות.`,
       220
     );
   }
-  return "שני מפגשים קצרים בשבוע, דגש על קריאת המשימה לפני תשובה — עד שיתקבל עוד תרגול בתקופה שנבחרה.";
+  return "שני מפגשים קצרים בשבוע, דגש על קריאת המשימה לפני תשובה - עד שיתקבל עוד תרגול בתקופה שנבחרה.";
 }
 
 function buildCautionNoteHe(crossRisks, subjects, dominantRiskId) {
   const parts = [];
-  if (crossRisks.hintDependenceRisk) parts.push("בכמה מקצועות הילד עדיין נשען על רמזים — לא כדאי להתקדם מהר מדי.");
-  if (crossRisks.falsePromotionRisk) parts.push("סיכון לקידום שווא — לא לפרש הצלחה חלקית כמוכנות לעלייה מהירה מדי ברמה.");
-  if (crossRisks.recentTransitionRisk) parts.push("מגמות אחרונות מצביעות על זהירות — לא לרדת מדרגה בכל המקצוע בבת אחת.");
-  if (crossRisks.speedOnlyRisk) parts.push("מופיעה חולשה הקשורה למהירות — לא להכליל לכל סוגי התרגול.");
+  if (crossRisks.hintDependenceRisk) parts.push("בכמה מקצועות הילד עדיין נשען על רמזים - לא כדאי להתקדם מהר מדי.");
+  if (crossRisks.falsePromotionRisk) parts.push("סיכון לקידום שווא - לא לפרש הצלחה חלקית כמוכנות לעלייה מהירה מדי ברמה.");
+  if (crossRisks.recentTransitionRisk) parts.push("מגמות אחרונות מצביעות על זהירות - לא לרדת מדרגה בכל המקצוע בבת אחת.");
+  if (crossRisks.speedOnlyRisk) parts.push("מופיעה חולשה הקשורה למהירות - לא להכליל לכל סוגי התרגול.");
   if (parts.length) return shortenHe(parts.join(" "), 220);
   const wnts = SUBJECT_IDS.map((sid) => String(subjects?.[sid]?.whatNotToDoHe || "").trim()).filter(Boolean);
   if (wnts.length) return shortenHe(wnts.sort((a, b) => b.length - a.length)[0], 220);
   if (dominantRiskId === "none_sparse" || dominantRiskId === "none_observed") {
-    return "עדיין מעט מידע — לא לקבוע שינוי דרמטי בבית לפני שיתקבל עוד תרגול.";
+    return "עדיין מעט מידע - לא לקבוע שינוי דרמטי בבית לפני שיתקבל עוד תרגול.";
   }
   return "לעקוב אחרי הדפוסים בשורות לפני שינוי הגדרות חד.";
 }
@@ -570,9 +570,9 @@ function buildOverallConfidenceHe(subjectCoverage, crossRisks) {
     active >= 2 &&
     cov.reduce((m, c) => Math.max(m, c.questionCount || 0), 0) >
       2 * (cov.reduce((s, c) => s + (c.questionCount || 0), 0) / Math.max(active, 1));
-  let t = `בתקופה שנבחרה: ${active} מקצועות עם פעילות; ${low} עם מעט שאלות יחסית — הביטחון בין המקצועות לא אחיד.`;
+  let t = `בתקופה שנבחרה: ${active} מקצועות עם פעילות; ${low} עם מעט שאלות יחסית - הביטחון בין המקצועות לא אחיד.`;
   if (crossRisks.insufficientEvidenceRisk) t += " חלק מהנתונים עם מה שרואים בהן רק חלקית.";
-  if (uneven) t += " רוב הנתונים מגיעים ממקצוע אחד בולט — לא מניחים התפלגות שווה.";
+  if (uneven) t += " רוב הנתונים מגיעים ממקצוע אחד בולט - לא מניחים התפלגות שווה.";
   return shortenHe(t, 280);
 }
 
@@ -580,10 +580,10 @@ function buildReportReadinessHe(dataIntegrityReport, summary) {
   const issues = dataIntegrityReport?.issues;
   const n = Array.isArray(issues) ? issues.length : 0;
   const q = Number(summary?.totalQuestions) || 0;
-  if (n === 0 && q >= 24) return "בדוח יש מספיק מידע לקריאה הורית — נאספו מספיק שאלות ואין בעיות נתונים משמעותיות.";
-  if (n > 0 && q >= 18) return `הדוח קריא, אך יש ${n} הערות שלמות נתונים — לקרוא מסקנות בעדינות.`;
-  if (q < 18) return "הדוח חלקי — מומלץ להשלים עוד תרגול בתקופה שנבחרה לפני החלטות גדולות.";
-  return "בדוח יש מידע חלקי — כדאי לשלב את מה שמופיע כאן עם מה שאתם רואים בבית.";
+  if (n === 0 && q >= 24) return "בדוח יש מספיק מידע לקריאה הורית - נאספו מספיק שאלות ואין בעיות נתונים משמעותיות.";
+  if (n > 0 && q >= 18) return `הדוח קריא, אך יש ${n} הערות שלמות נתונים - לקרוא מסקנות בעדינות.`;
+  if (q < 18) return "הדוח חלקי - מומלץ להשלים עוד תרגול בתקופה שנבחרה לפני החלטות גדולות.";
+  return "בדוח יש מידע חלקי - כדאי לשלב את מה שמופיע כאן עם מה שאתם רואים בבית.";
 }
 
 function buildEvidenceBalanceHe(subjects) {
@@ -613,11 +613,11 @@ function buildMixedSignalNoticeHe(subjects, crossRisks, topStrengthsAcrossHe) {
     return "תמונה מעורבת: יש תחומים עם תוצאות טובות יחסית, אך גם סימנים שכדאי לבדוק לפני קביעה שהכול כבר יציב בכל התחומים.";
   }
   if (anyIbs) {
-    return "יש שיפור, אבל הילד עדיין נעזר בזמן הפתרון — ההתקדמות עדיין דורשת ליווי רגוע.";
+    return "יש שיפור, אבל הילד עדיין נעזר בזמן הפתרון - ההתקדמות עדיין דורשת ליווי רגוע.";
   }
   const modeNotes = SUBJECT_IDS.map((sid) => subjects?.[sid]?.modeConcentrationNoteHe).filter(Boolean);
   if (modeNotes.length >= 2) {
-    return "חולשות מרוכזות במצבי תרגול שונים — לא מכלילים אוטומטית לכל המקצוע.";
+    return "חולשות מרוכזות במצבי תרגול שונים - לא מכלילים אוטומטית לכל המקצוע.";
   }
   return null;
 }
@@ -689,7 +689,7 @@ function buildCrossSubjectPhase7Fields(subjects, subjectCoverage) {
   const majorDiagnosticCautionsHe = [];
   if (crossSubjectConclusionReadiness !== "ready") {
     majorDiagnosticCautionsHe.push(
-      "בחלק מהמקצועות יש רק סימנים ראשוניים או מעורבים — עדיין מוקדם לקבוע כיוון ברור לכל המקצועות."
+      "בחלק מהמקצועות יש רק סימנים ראשוניים או מעורבים - עדיין מוקדם לקבוע כיוון ברור לכל המקצועות."
     );
   }
   for (const c of cautionSet) {
@@ -1228,7 +1228,7 @@ function buildCrossSubjectPhase13Fields(subjects) {
       subjectsNeedingRecheckBeforeDecisionHe.push(`${lab}: כדאי סבב תצפית/נתון עדכני לפני החלטה מהותית.`);
     }
     if (gs === "pivot_gate_visible" && subjectsWithVisiblePivotTriggerHe.length < 5) {
-      subjectsWithVisiblePivotTriggerHe.push(`${lab}: אם הסבב הבא חוזר על אותו דפוס בלי שיפור — כדאי לשקול שינוי כיוון זהיר.`);
+      subjectsWithVisiblePivotTriggerHe.push(`${lab}: אם הסבב הבא חוזר על אותו דפוס בלי שיפור - כדאי לשקול שינוי כיוון זהיר.`);
     }
   }
 
@@ -1345,14 +1345,14 @@ function buildCrossSubjectPhase14Fields(subjects) {
       subjectsLikelyShowingDownstreamSymptomsHe.length < 5
     ) {
       subjectsLikelyShowingDownstreamSymptomsHe.push(
-        `${lab}: ייתכן שהקושי הנראה קשור גם לבסיס — לא רק לנקודה אחת בנושא.`
+        `${lab}: ייתכן שהקושי הנראה קשור גם לבסיס - לא רק לנקודה אחת בנושא.`
       );
     }
     if (s.subjectFoundationFirstPriority && subjectsNeedingFoundationFirstHe.length < 5) {
-      subjectsNeedingFoundationFirstHe.push(`${lab}: כדאי לפתוח קודם ייצוב בסיס קצר — ואז לחדד במקצוע.`);
+      subjectsNeedingFoundationFirstHe.push(`${lab}: כדאי לפתוח קודם ייצוב בסיס קצר - ואז לחדד במקצוע.`);
     }
     if (ds === "likely_local_issue" && subjectsSafeForLocalInterventionHe.length < 5) {
-      subjectsSafeForLocalInterventionHe.push(`${lab}: נראה שהקושי ממוקד בנושא הזה — אפשר לתרגל אותו בלי להרחיב יותר מדי.`);
+      subjectsSafeForLocalInterventionHe.push(`${lab}: נראה שהקושי ממוקד בנושא הזה - אפשר לתרגל אותו בלי להרחיב יותר מדי.`);
     }
   }
 
@@ -1381,7 +1381,7 @@ function buildCrossSubjectPhase14Fields(subjects) {
   const crossSubjectFoundationFirstPriority = foundationFirstSubjects >= 2 || downstreamHigh >= 2;
   const crossSubjectFoundationFirstPriorityHe = crossSubjectFoundationFirstPriority
     ? "בכמה מקצועות כדאי לחזק קודם בסיס לפני הרחבה או ליטוש עמוק."
-    : "ברוב המקצועות הקושי נראה ממוקד או שהמידע עדיין חלקי — לא צריך להסיק שיש קושי רחב בכל המקצועות.";
+    : "ברוב המקצועות הקושי נראה ממוקד או שהמידע עדיין חלקי - לא צריך להסיק שיש קושי רחב בכל המקצועות.";
 
   return {
     crossSubjectDependencyState,
@@ -1508,16 +1508,16 @@ function buildHomeFocusHe(subjects, topStrengthsAcrossHe, topFocusAreasHe, summa
     const cleaned = focusLabels.map(stripLeadingBenosheaHe).filter(Boolean);
     const joined = cleaned.join(" · ");
     const noun = cleaned.length > 1 ? "הנושאים" : "הנושא";
-    return `השבוע מומלץ לשים דגש על ${noun} ${joined} — ההמלצה שלנו: תרגול משותף עם הילד. אחרי טעות, לקרוא שוב את השאלה, להיכנס לחלון התרגיל הקודם ולהבין ביחד איפה הטעות.`;
+    return `השבוע מומלץ לשים דגש על ${noun} ${joined} - ההמלצה שלנו: תרגול משותף עם הילד. אחרי טעות, לקרוא שוב את השאלה, להיכנס לחלון התרגיל הקודם ולהבין ביחד איפה הטעות.`;
   }
   if (preservePhrase) {
-    return `כדאי לשמור גם על תרגול רגוע סביב ${preservePhrase} — שם כבר יש בסיס טוב.`;
+    return `כדאי לשמור גם על תרגול רגוע סביב ${preservePhrase} - שם כבר יש בסיס טוב.`;
   }
   if (q < 18) {
-    return "בתקופה שנבחרה עדיין נאסף מעט תרגול — שני תרגולים קצרים בשבוע יעזרו להבין את הכיוון טוב יותר בפעם הבאה.";
+    return "בתקופה שנבחרה עדיין נאסף מעט תרגול - שני תרגולים קצרים בשבוע יעזרו להבין את הכיוון טוב יותר בפעם הבאה.";
   }
   if (acc >= 78 && q >= 35) {
-    return "הקצב הנוכחי נראה מאוזן — אפשר להמשיך כך ולהעמיק רק בנושאים שמופיעים למעלה ברשימת המיקוד.";
+    return "הקצב הנוכחי נראה מאוזן - אפשר להמשיך כך ולהעמיק רק בנושאים שמופיעים למעלה ברשימת המיקוד.";
   }
   if (acc < 62 && q >= 18) {
     return "כדאי לייצב לאט: משימה ברורה לפני פתרון, ושבח קטן אחרי הצלחה קטנה.";
@@ -1665,19 +1665,19 @@ function buildOverallSnapshot(baseReport, subjectCoverage) {
   for (const row of practicedCoverage) {
     if (row.questionCount > 0 && row.questionCount < 15) {
       sparseSubjectsHe.push(
-        `${row.subjectLabelHe} — מספר שאלות נמוך (${row.questionCount} שאלות)`
+        `${row.subjectLabelHe} - מספר שאלות נמוך (${row.questionCount} שאלות)`
       );
     }
     const isHighVolumeStrong = row.questionCount >= 40 && row.accuracy >= 85;
     const isMediumVolumeStrong = row.questionCount >= 18 && row.accuracy >= 88;
     if (isHighVolumeStrong || isMediumVolumeStrong) {
       notableSubjectsHe.push(
-        `${row.subjectLabelHe} — נאספו ${row.questionCount} שאלות עם דיוק טוב (${row.accuracy}%)`
+        `${row.subjectLabelHe} - נאספו ${row.questionCount} שאלות עם דיוק טוב (${row.accuracy}%)`
       );
     }
   }
   if (!notableSubjectsHe.length) {
-    notableSubjectsHe.push("אין עדיין מקצוע בולט לפי כמות השאלות והדיוק — המשך תרגול יעשה את ההבדל.");
+    notableSubjectsHe.push("אין עדיין מקצוע בולט לפי כמות השאלות והדיוק - המשך תרגול יעשה את ההבדל.");
   }
   return {
     /** סה״כ זמן למידה בדקות (כמו ב V2 summary.totalTimeMinutes) */
@@ -1703,7 +1703,7 @@ function buildCrossSubjectInsights(baseReport, subjects) {
   const sparse = coverage.filter((c) => c.questionCount > 0 && c.questionCount < 10);
   if (sparse.length) {
     bulletsHe.push(
-      `ב${sparse.map((s) => s.subjectLabelHe).join(", ")} עדיין יש מעט מידע — התמונה תתבהר אחרי עוד תרגול.`
+      `ב${sparse.map((s) => s.subjectLabelHe).join(", ")} עדיין יש מעט מידע - התמונה תתבהר אחרי עוד תרגול.`
     );
   }
   const wRows = collectWeaknessRows(subjects);
@@ -1714,13 +1714,13 @@ function buildCrossSubjectInsights(baseReport, subjects) {
     );
   }
   if (!bulletsHe.length) {
-    bulletsHe.push("כרגע לא נראה דפוס שחוזר בכמה מקצועות — כשיתווסף עוד תרגול, הסעיף הזה יתעדכן.");
+    bulletsHe.push("כרגע לא נראה דפוס שחוזר בכמה מקצועות - כשיתווסף עוד תרגול, הסעיף הזה יתעדכן.");
   }
   return {
     bulletsHe,
     dataQualityNoteHe:
       (baseReport?.summary?.totalQuestions || 0) < 30
-        ? "מספר השאלות בתקופה נמוך — יש לקרוא את המסקנות הכלליות בעדינות."
+        ? "מספר השאלות בתקופה נמוך - יש לקרוא את המסקנות הכלליות בעדינות."
         : null,
   };
 }
@@ -1737,7 +1737,7 @@ function buildHomePlan(subjects) {
     if (itemsHe.length >= 6) break;
   }
   if (!itemsHe.length) {
-    itemsHe.push("עדיין אין המלצות ממוקדות מהמערכת — מומלץ להמשיך על שגרת תרגול קבועה.");
+    itemsHe.push("עדיין אין המלצות ממוקדות מהמערכת - מומלץ להמשיך על שגרת תרגול קבועה.");
   }
   return { itemsHe };
 }
@@ -1754,7 +1754,7 @@ function buildNextPeriodGoals(subjects) {
     if (itemsHe.length >= 6) break;
   }
   if (!itemsHe.length) {
-    itemsHe.push("כשיתווסף עוד תרגול בתקופה שנבחרה, יופיע כאן כיוון ברור יותר — עד אז עדיף לא להעמיס יעדים מיותרים.");
+    itemsHe.push("כשיתווסף עוד תרגול בתקופה שנבחרה, יופיע כאן כיוון ברור יותר - עד אז עדיף לא להעמיס יעדים מיותרים.");
   }
   return { itemsHe };
 }
@@ -2413,10 +2413,10 @@ function applyNarrativeConsistencyToExecutiveSummary(executiveSummary, subjectPr
   const totalSubjectQ = profiles.reduce((acc, sp) => acc + (Number(sp?.subjectQuestionCount) || 0), 0);
   const restrainedLine =
     totalSubjectQ >= 120
-      ? "בחלק מהנושאים עדיין יש מה לחזק — נשארים בצעדים קטנים ובוחנים שוב אחרי תרגול נוסף."
+      ? "בחלק מהנושאים עדיין יש מה לחזק - נשארים בצעדים קטנים ובוחנים שוב אחרי תרגול נוסף."
       : totalSubjectQ >= 60
-        ? "בחלק מהנושאים התמונה עדיין לא סגורה לגמרי — נשארים בצעדים קטנים עד שמתבהר מה נשמר."
-        : "בחלק מהנושאים המידע עדיין מצומצם — נשארים בצעדים קטנים עד להתבססות נתון נוסף.";
+        ? "בחלק מהנושאים התמונה עדיין לא סגורה לגמרי - נשארים בצעדים קטנים עד שמתבהר מה נשמר."
+        : "בחלק מהנושאים המידע עדיין מצומצם - נשארים בצעדים קטנים עד להתבססות נתון נוסף.";
   const existingMain = String(es.mainHomeRecommendationHe || "").trim();
   if (existingMain) return es;
   return {
@@ -2471,7 +2471,7 @@ function pickClearWeakestSubjectFromSummaryAggregates(summary, baseReport = null
 }
 
 function crossSubjectWeakFocusLineHe(worst) {
-  return `לפי סיכום התרגול בתקופה שנבחרה, הדיוק הנמוך ביותר (כ ${worst.acc}% על ${worst.q} תשובות) מופיע כרגע ב${worst.labelHe} — כדאי לתת שם דגש ממוקד השבוע.`;
+  return `לפי סיכום התרגול בתקופה שנבחרה, הדיוק הנמוך ביותר (כ ${worst.acc}% על ${worst.q} תשובות) מופיע כרגע ב${worst.labelHe} - כדאי לתת שם דגש ממוקד השבוע.`;
 }
 
 /**
@@ -2547,7 +2547,7 @@ function buildSubjectProfilesFromV2(baseReport) {
       const subjQ = subjectQuestionCountFromReportSummary(baseReport, sid);
       const summaryHeEmpty =
         subjQ > 0
-          ? "יש פעילות בנושא בתקופה, אך עדיין אין תמונה מסודרת מהתרגולים על הנושא — כדאי להמשיך בתרגול."
+          ? "יש פעילות בנושא בתקופה, אך עדיין אין תמונה מסודרת מהתרגולים על הנושא - כדאי להמשיך בתרגול."
           : "אין מספיק נתונים בתקופה הנבחנת.";
       out.push({
         subject: sid,
@@ -2707,7 +2707,7 @@ function buildSubjectProfilesFromV2(baseReport) {
           topicRowKey: trk,
           subjectId: sid,
           contentGradeKey: gk,
-          labelHe: patternHe ? `${topicLabel} — ${patternHe}` : topicLabel,
+          labelHe: patternHe ? `${topicLabel} - ${patternHe}` : topicLabel,
           mistakeCount: Number(u?.recurrence?.wrongCountForRules) || 0,
           questions: Number(u?.evidenceTrace?.[0]?.value?.questions) || 0,
           accuracy: Number(u?.evidenceTrace?.[0]?.value?.accuracy) || 0,
@@ -2771,7 +2771,7 @@ function buildSubjectProfilesFromV2(baseReport) {
       const w0 = topWeaknesses[0];
       const w0Label = w0
         ? String(w0.labelHe || "")
-            .replace(/^[^—]+—\s*/, "")
+            .replace(/^[^-]+-\s*/, "")
             .trim()
         : "";
       return withholdSummaryCopyHe("subject", {
@@ -2946,7 +2946,7 @@ function buildExecutiveSummaryFromV2(baseReport, subjectCoverage) {
     .slice(0, 3)
     .map((u) => {
       const topicLabel = executiveLineFromV2Unit(baseReport, u);
-      return `${parentFacingPatternLabelHe(u)} — ${topicLabel}`;
+      return `${parentFacingPatternLabelHe(u)} - ${topicLabel}`;
     });
   const registeredGradeKey =
     baseReport?.registeredGradeKey != null && String(baseReport.registeredGradeKey).trim()
@@ -3069,7 +3069,7 @@ function buildHomePlanFromV2(baseReport) {
   for (const u of maintainUnits.slice(0, 3)) {
     const action =
       resolveUnitParentActionHe(u, gradeKeyForV2UnitFromReport(baseReport, u)) ||
-      "להמשיך באותו קצב תרגול — המצב נראה יציב בתקופה שנבחרה.";
+      "להמשיך באותו קצב תרגול - המצב נראה יציב בתקופה שנבחרה.";
     itemsHe.push(
       homePlanLineFromV2Unit(baseReport, u, rewriteParentRecommendationForDetailedHe(String(action))),
     );

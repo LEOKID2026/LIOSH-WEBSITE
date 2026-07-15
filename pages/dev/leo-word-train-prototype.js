@@ -5,7 +5,7 @@ export default function LeoWordTrainPrototypePage() {
   return (
     <>
       <Head>
-        <title>רכבת המילים של ליאו — אבטיפוס (layout חדש)</title>
+        <title>רכבת המילים של ליאו - אבטיפוס (layout חדש)</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <LeoWordTrainPrototype />

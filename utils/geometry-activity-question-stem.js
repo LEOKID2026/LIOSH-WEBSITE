@@ -7,7 +7,7 @@ import { stripGeometryFormulaHelpParenthetical } from "./student-question-displa
 
 /** Patterns that must not appear in student-facing elementary geometry activity stems. */
 export const GEOMETRY_ELEMENTARY_FORBIDDEN_STEM_RE =
-  /אלגברה|משווא(?:ה|ת)|ביטוי\s+אלגברי|(?:^|[\s—–-])נעלם(?:[\s,.!?]|$)/u;
+  /אלגברה|משווא(?:ה|ת)|ביטוי\s+אלגברי|(?:^|[\s\-–])נעלם(?:[\s,.!?]|$)/u;
 
 /** Banned fallback phrase — never emit on worksheets. */
 export const GEOMETRY_GENERIC_ANSWER_FILLER_RE = /חשבו את התשובה/u;
@@ -21,7 +21,7 @@ const HAS_ASK_CUE_RE =
  * @param {number|string} angle2
  */
 export function formatTriangleAnglesKnownTwoStem(angle1, angle2) {
-  return `במשולש שתי זוויות שגודלן ${angle1}° ו־${angle2}°. חשבו את גודל הזווית השלישית.`;
+  return `במשולש שתי זוויות שגודלן ${angle1}° ו-${angle2}°. חשבו את גודל הזווית השלישית.`;
 }
 
 /**
@@ -42,7 +42,7 @@ export function buildGeometryComputeStemFromParams(kind, params = {}) {
     typeof p.width === "number"
   ) {
     const shapeHe = k === "diagonal_parallelogram" ? "המקבילית" : "המלבן";
-    return `אורכי צלעות ${shapeHe} הם ${p.side} ס״מ ו־${p.width} ס״מ. חשבו את אורך האלכסון.`;
+    return `אורכי צלעות ${shapeHe} הם ${p.side} ס״מ ו-${p.width} ס״מ. חשבו את אורך האלכסון.`;
   }
   if (
     k === "triangle_perimeter" &&
@@ -50,7 +50,7 @@ export function buildGeometryComputeStemFromParams(kind, params = {}) {
     typeof p.side2 === "number" &&
     typeof p.side3 === "number"
   ) {
-    return `אורכי צלעות המשולש הם ${p.side1} ס״מ, ${p.side2} ס״מ ו־${p.side3} ס״מ. חשבו את היקף המשולש.`;
+    return `אורכי צלעות המשולש הם ${p.side1} ס״מ, ${p.side2} ס״מ ו-${p.side3} ס״מ. חשבו את היקף המשולש.`;
   }
   if (k === "parallelogram_area" && typeof p.base === "number" && typeof p.height === "number") {
     return `אורך בסיס המקבילית הוא ${p.base} ס״מ והגובה לבסיס הוא ${p.height} ס״מ. חשבו את שטח המקבילית.`;
@@ -86,7 +86,7 @@ export function buildGeometryComputeStemFromParams(kind, params = {}) {
     typeof p.base2 === "number" &&
     typeof p.height === "number"
   ) {
-    return `בסיסי הטרפז הם ${p.base1} ס״מ ו־${p.base2} ס״מ, והגובה הוא ${p.height} ס״מ. חשבו את שטח הטרפז.`;
+    return `בסיסי הטרפז הם ${p.base1} ס״מ ו-${p.base2} ס״מ, והגובה הוא ${p.height} ס״מ. חשבו את שטח הטרפז.`;
   }
   if (k === "cylinder_volume" && typeof p.radius === "number" && typeof p.height === "number") {
     return `רדיוס הגליל הוא ${p.radius} ס״מ וגובהו ${p.height} ס״מ. חשבו את נפח הגליל (π = 3.14).`;
@@ -131,14 +131,14 @@ export function buildGeometryComputeStemFromParams(kind, params = {}) {
     return `שטח בסיס המנסרה הוא ${p.base} סמ״ר וגובהה ${p.height} ס״מ. חשבו את נפח המנסרה.`;
   }
   if (k === "pythagoras_hyp" && typeof p.a === "number" && typeof p.b === "number") {
-    return `במשולש ישר־זווית, אורכי הניצבים הם ${p.a} ס״מ ו־${p.b} ס״מ. חשבו את אורך היתר.`;
+    return `במשולש ישר-זווית, אורכי הניצבים הם ${p.a} ס״מ ו-${p.b} ס״מ. חשבו את אורך היתר.`;
   }
   if (k === "pythagoras_leg" && typeof p.c === "number") {
     if (p.which === "leg_a" && typeof p.b === "number") {
-      return `במשולש ישר־זווית, אורך היתר הוא ${p.c} ס״מ ואורך ניצב אחד הוא ${p.b} ס״מ. חשבו את אורך הניצב השני.`;
+      return `במשולש ישר-זווית, אורך היתר הוא ${p.c} ס״מ ואורך ניצב אחד הוא ${p.b} ס״מ. חשבו את אורך הניצב השני.`;
     }
     if (p.which === "leg_b" && typeof p.a === "number") {
-      return `במשולש ישר־זווית, אורך היתר הוא ${p.c} ס״מ ואורך ניצב אחד הוא ${p.a} ס״מ. חשבו את אורך הניצב השני.`;
+      return `במשולש ישר-זווית, אורך היתר הוא ${p.c} ס״מ ואורך ניצב אחד הוא ${p.a} ס״מ. חשבו את אורך הניצב השני.`;
     }
   }
 
@@ -158,7 +158,7 @@ function stemNeedsComputeRewrite(text, kind) {
   if (GEOMETRY_GENERIC_ANSWER_FILLER_RE.test(t)) return true;
   if (/^מדידת אלכסון/u.test(t)) return true;
   if (/שטח פנים/.test(t) && /ריבוע|מלבן|משולש|מקבילית|טרפז/.test(t)) return true;
-  if (/^אתגר קצר\s*—\s*אלכסון/u.test(t)) return true;
+  if (/^אתגר קצר\s*-\s*אלכסון/u.test(t)) return true;
   if (/^ניתוח אלכסון/u.test(t)) return true;
   if (/^חישוב אלכסון מ/u.test(t) && !HAS_ASK_CUE_RE.test(t)) return true;
   if (/גובה במשולש\s*\(ביחס/u.test(t)) return true;
@@ -264,8 +264,8 @@ export function normalizeGeometryWorksheetStem(text, context = {}) {
   }
 
   // Drop lead-ins that leave a data-only fragment looking unfinished.
-  t = t.replace(/^חישוב זוויות במשולש\s*[:—–-]\s*/u, "");
-  t = t.replace(/^מציאת זווית חסרה במשולש\s*[:—–-]\s*/u, "");
+  t = t.replace(/^חישוב זוויות במשולש\s*[:-–-]\s*/u, "");
+  t = t.replace(/^מציאת זווית חסרה במשולש\s*[:-–-]\s*/u, "");
 
   // Never keep the banned generic filler — rewrite from params when possible.
   t = t.replace(/\s*חשבו את התשובה\.?\s*/gu, " ").replace(/\s{2,}/g, " ").trim();
@@ -314,18 +314,18 @@ export function sanitizeGeometryActivityQuestionStem(text, context = {}) {
     context?.kind === "triangle_angles" ||
     (context?.topic === "angles" && /זווית|משולש|180°/.test(t));
 
-  t = t.replace(/אלגברה\s+של\s+זוויות\s*[—–-]\s*/gu, "חישוב זוויות במשולש — ");
+  t = t.replace(/אלגברה\s+של\s+זוויות\s*[-–-]\s*/gu, "חישוב זוויות במשולש - ");
   t = t.replace(/אלגברה\s+של\s+זוויות/gu, "חישוב זוויות במשולש");
 
   t = t.replace(
-    /משוואת\s+זוויות:\s*(\d+)°\s*\+\s*(\d+)°\s*\+\s*\?\s*=\s*180°\s*—\s*מה\s+החסר\?/gu,
+    /משוואת\s+זוויות:\s*(\d+)°\s*\+\s*(\d+)°\s*\+\s*\?\s*=\s*180°\s*-\s*מה\s+החסר\?/gu,
     (_, a1, a2) => formatTriangleAnglesKnownTwoStem(a1, a2)
   );
   t = t.replace(/משוואת\s+זוויות/gu, "חישוב זוויות במשולש");
 
   if (isTriangleAngles) {
     t = t.replace(
-      /^חישוב זוויות במשולש\s*[—–-]\s*סכום שתי זוויות ידועות הוא (\d+)°\+(\d+)°\s*[—–-]\s*השלימו (?:ל)?זווית השלישית(?: במשולש)?\.?/giu,
+      /^חישוב זוויות במשולש\s*[-–-]\s*סכום שתי זוויות ידועות הוא (\d+)°\+(\d+)°\s*[-–-]\s*השלימו (?:ל)?זווית השלישית(?: במשולש)?\.?/giu,
       (_, a1, a2) => formatTriangleAnglesKnownTwoStem(a1, a2)
     );
     t = t.replace(
@@ -337,11 +337,11 @@ export function sanitizeGeometryActivityQuestionStem(text, context = {}) {
       (_, a1, a2) => formatTriangleAnglesKnownTwoStem(a1, a2)
     );
     t = t.replace(
-      /^ניתוח\s+ל(?:לא\s+)?(?:ניסוח\s+)?(?:הכלל\s+)?(?:במפורש\s*)?[—–-]\s*/giu,
-      "מציאת זווית חסרה במשולש — "
+      /^ניתוח\s+ל(?:לא\s+)?(?:ניסוח\s+)?(?:הכלל\s+)?(?:במפורש\s*)?[-–-]\s*/giu,
+      "מציאת זווית חסרה במשולש - "
     );
-    t = t.replace(/^אתגר\s+(?:קצר|זוויות\s+משולש)\s*[—–-]\s*/giu, "חישוב זוויות במשולש — ");
-    t = t.replace(/^אתגר\s+זוויות\s+משולש\s*[—–-]\s*/giu, "חישוב זוויות במשולש — ");
+    t = t.replace(/^אתגר\s+(?:קצר|זוויות\s+משולש)\s*[-–-]\s*/giu, "חישוב זוויות במשולש - ");
+    t = t.replace(/^אתגר\s+זוויות\s+משולש\s*[-–-]\s*/giu, "חישוב זוויות במשולש - ");
   }
 
   t = stripGeometryFormulaHelpParenthetical(t);

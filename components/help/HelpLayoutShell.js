@@ -20,7 +20,7 @@ export default function HelpLayoutShell({
     <Layout studentTheme={theme} studentShell="home">
       <Head>
         <title>{pageTitle}</title>
-        <meta name="description" content={summary || "מרכז עזרה לליאו — מדריכים להורים, לילדים ולדוחות."} />
+        <meta name="description" content={summary || "מרכז עזרה לליאו - מדריכים להורים, לילדים ולדוחות."} />
       </Head>
       <a
         href="#help-main"

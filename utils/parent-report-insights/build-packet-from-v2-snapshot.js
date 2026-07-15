@@ -278,7 +278,7 @@ export function synthesizeAggregateFromV2Snapshot(report) {
  * Convenience: V2 snapshot → Insight Packet.
  *
  * @param {Record<string, unknown>|null|undefined} report — V2 parent-report snapshot
- * @param {object} [options] — passed through to `buildParentReportInsightPacket`
+ * @param {object} [options] - passed through to `buildParentReportInsightPacket`
  */
 function gradePracticeBreakdownFromV2Maps(report) {
   /** @type {Array<Record<string, unknown>>} */

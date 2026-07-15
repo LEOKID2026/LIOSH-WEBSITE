@@ -466,14 +466,14 @@ function inferErrorTypesV1(subjectId, row, behaviorDom) {
 function subjectWideWeaknessBlockedReasoning(subjectId, maps) {
   const m = maps?.[subjectId];
   if (!m || typeof m !== "object") {
-    return ["Subject map unavailable—do not infer subject-wide patterns without topic rows."];
+    return ["Subject map unavailable-do not infer subject-wide patterns without topic rows."];
   }
   const rows = Object.values(m).filter((r) => (Number(r?.questions) || 0) > 0);
   const weakRows = rows.filter((r) => Number(r.accuracy) < 70 || r.needsPractice);
   return [
     weakRows.length <= 1
       ? "Subject-wide weakness is not asserted from a single weak topic; other topics in this subject should show weakness across multiple skills."
-      : "Multiple weak topic rows exist—subject-level concern may be considered only when breadth criteria are met.",
+      : "Multiple weak topic rows exist-subject-level concern may be considered only when breadth criteria are met.",
   ];
 }
 
@@ -556,7 +556,7 @@ export function enrichDiagnosticEngineV2WithProfessionalFrameworkV1(diagnosticEn
     if (subjQ > 0) reasoning.push(`Subject-level question volume in-window is approximately ${subjQ}.`);
     if (behaviorDom) reasoning.push(`Dominant behavior signal on the row: ${behaviorDom} (informational, not a diagnosis).`);
     if (evidenceLevel === "thin" || evidenceLevel === "limited") {
-      reasoning.push("Evidence is limited—interpretation should stay cautious.");
+      reasoning.push("Evidence is limited-interpretation should stay cautious.");
     }
     if (row?.modeKey === "speed" && Number(row?.accuracy) >= 75) {
       reasoning.push(

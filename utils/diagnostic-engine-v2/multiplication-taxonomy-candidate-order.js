@@ -1,5 +1,5 @@
 /**
- * Phase 2-C2 — order M-03 vs M-10 taxonomy candidates for math `multiplication` report rows
+ * Phase 2-C2 - order M-03 vs M-10 taxonomy candidates for math `multiplication` report rows
  * using wrong-event metadata (patternFamily, kind, conceptTag, params, etc.) plus row grade/level.
  * Does not remove candidates; only reorders when both M-03 and M-10 are present.
  *
@@ -82,7 +82,7 @@ function haystackForWrong(ev) {
 }
 
 /**
- * Grade / level only — avoids bucket/topic keys always containing "multiplication".
+ * Grade / level only - avoids bucket/topic keys always containing "multiplication".
  *
  * @param {unknown} row
  * @returns {string}

@@ -491,7 +491,7 @@ export default function LeoLabGame({
           <p className={frame.introHero}>🔬🧪</p>
           <h1 className={frame.introTitle}>מעבדת הניסויים של ליאו</h1>
           <p className={frame.introText}>
-            בחרו חפצים מהמדף, שימו על שולחן הניסוי ולחצו &quot;בדוק ניסוי&quot; — גלו איך העולם
+            בחרו חפצים מהמדף, שימו על שולחן הניסוי ולחצו &quot;בדוק ניסוי&quot; - גלו איך העולם
             עובד!
           </p>
           <div className={frame.difficultyRow}>

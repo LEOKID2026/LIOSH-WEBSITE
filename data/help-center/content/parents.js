@@ -53,7 +53,7 @@ export const createParentAccount = baseArticle({
     paragraph("גלשו לעמוד כניסת ההורים והשלימו הרשמה או התחברות עם האימייל והסיסמה שלכם."),
     screenshotBlock(S, "create-parent-account", "login", "מסך כניסת הורים"),
     videoBlock(S, "create-parent-account"),
-    callout("tip", "שמרו את פרטי ההתחברות במקום בטוח — הם נדרשים לכל כניסה חוזרת."),
+    callout("tip", "שמרו את פרטי ההתחברות במקום בטוח - הם נדרשים לכל כניסה חוזרת."),
     relatedLinks([{ href: "/parent/login", label: "מעבר לכניסת הורים" }]),
   ],
 });
@@ -91,7 +91,7 @@ export const addStudents = baseArticle({
     paragraph("הזינו שם לילד/ה ובחרו כיתה (א׳ עד ו׳). לאחר השמירה יוצגו פרטי כניסה לילד/ה."),
     videoBlock(S, "add-students"),
     screenshotBlock(S, "add-students", "form", "טופס הוספת ילד/ה עם בחירת כיתה"),
-    list(["כיתה א׳ — grade_1", "כיתה ב׳ — grade_2", "ועד כיתה ו׳ — grade_6"], false),
+    list(["כיתה א׳ - grade_1", "כיתה ב׳ - grade_2", "ועד כיתה ו׳ - grade_6"], false),
   ],
 });
 
@@ -107,7 +107,7 @@ export const studentPinAndCredentials = baseArticle({
   ],
   blocks: [
     heading(2, "what-is-pin", "מה זה PIN?"),
-    paragraph("הילד/ה נכנס עם שם משתמש וקוד בן 4 ספרות. לאחר יצירה או איפוס, הקוד מוצג פעם אחת — שמרו אותו."),
+    paragraph("הילד/ה נכנס עם שם משתמש וקוד בן 4 ספרות. לאחר יצירה או איפוס, הקוד מוצג פעם אחת - שמרו אותו."),
     screenshotBlock(S, "student-pin-and-credentials", "pin-display", "הודעה עם קוד PIN חדש"),
     videoBlock(S, "student-pin-and-credentials"),
     heading(2, "reset", "איפוס"),
@@ -129,7 +129,7 @@ export const editOrDeleteStudent = baseArticle({
     screenshotBlock(S, "edit-or-delete-student", "edit", "מצב עריכת פרטי ילד/ה"),
     videoBlock(S, "edit-or-delete-student"),
     heading(2, "delete", "מחיקה"),
-    paragraph("מחיקה דורשת הקלדת שם הילד/ה לאישור — פעולה שלא ניתן לבטל."),
+    paragraph("מחיקה דורשת הקלדת שם הילד/ה לאישור - פעולה שלא ניתן לבטל."),
     callout("warning", "מחיקת ילד/ה מסירה את הגישה והנתונים המשויכים אליו מהחשבון שלכם."),
   ],
 });
@@ -202,7 +202,7 @@ export const installAsApp = baseArticle({
   toc: [{ id: "install", title: "התקנה" }],
   blocks: [
     heading(2, "install", "התקנה"),
-    paragraph("בדף הבית או בדפדפן תופיע אפשרות \"התקן כאפליקציה\" — לחצו ואשרו. כך תוכלו לפתוח את ליאו כמו אפליקציה."),
+    paragraph("בדף הבית או בדפדפן תופיע אפשרות \"התקן כאפליקציה\" - לחצו ואשרו. כך תוכלו לפתוח את ליאו כמו אפליקציה."),
     screenshotBlock(S, "install-as-app", "install-prompt", "הודעת התקנת אפליקציה"),
     videoBlock(S, "install-as-app"),
     callout("tip", "באייפון: שתפו → הוסף למסך הבית."),
@@ -240,9 +240,9 @@ export const troubleshootingLogin = baseArticle({
   blocks: [
     heading(2, "common", "בעיות נפוצות"),
     list([
-      "PIN שגוי — בקשו מההורה קוד חדש",
-      "שם משתמש לא מזוהה — ודאו איות נכון",
-      "דף לא נטען — נסו רענון או ניקוי מטמון הדפדפן",
+      "PIN שגוי - בקשו מההורה קוד חדש",
+      "שם משתמש לא מזוהה - ודאו איות נכון",
+      "דף לא נטען - נסו רענון או ניקוי מטמון הדפדפן",
     ]),
     callout("info", "אם הבעיה נמשכת, פנו אלינו דרך עמוד צור קשר."),
     videoBlock(S, "troubleshooting-login"),
@@ -262,7 +262,7 @@ export const privacyAndData = baseArticle({
     paragraph(
       "המערכת שומרת נתוני תרגול כדי להציג התקדמות ודוחות. אין לשתף קודי כניסה של ילדים עם אחרים."
     ),
-    callout("info", "לשאלות או בקשות בנושא פרטיות — ראו מדיניות פרטיות או פנו אלינו בצור קשר."),
+    callout("info", "לשאלות או בקשות בנושא פרטיות - ראו מדיניות פרטיות או פנו אלינו בצור קשר."),
     videoBlock(S, "privacy-and-data"),
     relatedLinks([
       { href: "/privacy", label: "מדיניות פרטיות" },

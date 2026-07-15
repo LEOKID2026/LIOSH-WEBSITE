@@ -25,7 +25,7 @@
  *
  * Editing rules:
  *  - Every decisionKey a render function can emit at runtime MUST have an entry here
- *    (checked by the CI gate "unmapped decision" — but only for the sampled fixtures;
+ *    (checked by the CI gate "unmapped decision" - but only for the sampled fixtures;
  *    see the "unmappedDecisions" metric note in build-golden-book.mjs for why this
  *    cannot be reported as a real "0" without a genuine runtime scan).
  *  - Every entry here MUST be reachable at runtime unless `status: "disabled"`
@@ -38,7 +38,7 @@
  *    later product decision (see `speed_pressure_pattern` and `mixed_subject_profile`
  *    below, both upgraded from `owner_copy_required` to `owner_approved` once their
  *    product-owner-approved sentence was wired to every relevant surface as the single
- *    source of that decisionKey's text — see each entry's `fallbackPolicy` for what was
+ *    source of that decisionKey's text - see each entry's `fallbackPolicy` for what was
  *    unified and where). Any OTHER decisionKey whose current rendered text was newly
  *    authored or newly routed and NOT confirmed against a pre-existing or explicitly
  *    approved template must be `"owner_copy_required"` instead.
@@ -121,7 +121,7 @@ export const PARENT_ENGINE_DECISION_CONTRACT_V2 = Object.freeze([
     forbiddenClaims: ["mastery", "stability", "attention", "fatigue", "pressure"],
     requiredTemplateIds: ["clear_topic_gap"],
     supportedSurfaces: ["shortReport", "detailedReport", "lpdExplain", "subjectSummary", "parentLetter", "parentLetterCompact"],
-    fallbackPolicy: "none — always has grounded parentSafeFinding when q>0",
+    fallbackPolicy: "none - always has grounded parentSafeFinding when q>0",
     ownerApprovalStatus: "owner_approved",
     provenance: "engineDecisionContract.parentSafeFinding",
     sourceFile: "utils/learning-pattern-decision/build-parent-report-engine-decision-contract.js",
@@ -131,7 +131,7 @@ export const PARENT_ENGINE_DECISION_CONTRACT_V2 = Object.freeze([
   {
     decisionKey: "topic_needs_strengthening",
     scope: "topic",
-    description: "Moderate difficulty in one topic — needs focused practice, not yet a clear gap.",
+    description: "Moderate difficulty in one topic - needs focused practice, not yet a clear gap.",
     evidenceRequirement: "engine accuracy band = needs_strengthening (moderate accuracy, adequate q).",
     allowedClaims: ["needs_strengthening"],
     forbiddenClaims: ["mastery", "stability", "attention", "fatigue", "pressure", "repeated_pattern"],
@@ -150,15 +150,15 @@ export const PARENT_ENGINE_DECISION_CONTRACT_V2 = Object.freeze([
     description:
       "Set by buildEngineDiagnosticDecision's speed_only_no_gap guardrail when riskFlags.speedOnlyRisk===true, " +
       "modeKey==='speed' (literal string match; 'marathon' is NOT covered by this override even though it IS " +
-      "covered by the speedOnlyRisk flag itself), and accuracyBand!=='clear_gap'. IMPORTANT — verified by " +
+      "covered by the speedOnlyRisk flag itself), and accuracyBand!=='clear_gap'. IMPORTANT - verified by " +
       "direct code inspection: there is NO comparison anywhere in this pipeline between the child's speed-mode " +
       "performance and their performance in a non-speed/regular mode on the same topic. speedOnlyRisk itself is " +
       "`behaviorType==='speed_pressure' || (mode is speed/marathon && acc>=55 && wrongRatio<0.32)` " +
-      "(topic-next-step-phase2.js buildPhase2RiskFlags) — a same-session accuracy/wrong-ratio heuristic, not " +
+      "(topic-next-step-phase2.js buildPhase2RiskFlags) - a same-session accuracy/wrong-ratio heuristic, not " +
       "evidence that the underlying knowledge is intact. The guardrail's own documented rule " +
       "('speed_only_no_gap': 'do not infer knowledge_gap') is a confidence-downgrade rule, not a positive " +
       "'proven speed-only' classification. If accuracyBand IS 'clear_gap' (very low accuracy), this guardrail " +
-      "never fires and the topic resolves to clear_topic_gap instead — clear_topic_gap always wins when the " +
+      "never fires and the topic resolves to clear_topic_gap instead - clear_topic_gap always wins when the " +
       "accuracy signal itself is that low, by construction of buildEngineDiagnosticDecision (not by a separate " +
       "override added in this fix).",
     evidenceRequirement: "computeAccuracyBand = needs_strengthening AND modeKey==='speed' (exact match) AND riskFlags.speedOnlyRisk=true (see buildEngineDiagnosticDecision + buildPhase2RiskFlags). No cross-mode comparison is performed.",
@@ -169,18 +169,18 @@ export const PARENT_ENGINE_DECISION_CONTRACT_V2 = Object.freeze([
     fallbackPolicy:
       "FIXED (product decision applied): all parent-facing renderers for this decisionKey now call the ONE " +
       "canonical sentence builder, buildSpeedPressurePatternFindingHe (utils/learning-pattern-decision/" +
-      "normalize-parent-practice-metrics.js) — (1) build-parent-report-engine-decision-contract.js's " +
+      "normalize-parent-practice-metrics.js) - (1) build-parent-report-engine-decision-contract.js's " +
       "buildParentSafeFindingFromEngine (topic parentSafeFinding, feeds shortReport/detailedReport/" +
       "subjectSummary), and (2) engine-decision-parent-copy-he.js's buildDiagnosticBodyByDecision (feeds " +
-      "buildEngineDecisionParentTopicCopyHe — screen/PDF/insights). The same file's competitiveModeContextHe " +
+      "buildEngineDecisionParentTopicCopyHe - screen/PDF/insights). The same file's competitiveModeContextHe " +
       "addendum is now suppressed specifically when engineDecision==='speed_pressure_pattern' so the canonical " +
       "sentence is never doubled up with a second, differently-worded speed remark on the same surface. The " +
       "approved sentence never claims the problem IS speed and never claims a knowledge gap is proven or ruled " +
-      "out — it only reports the wrong/question counts and recommends checking the topic untimed. The separate, " +
+      "out - it only reports the wrong/question counts and recommends checking the topic untimed. The separate, " +
       "LPD-level competitiveBucketOnly sentence in build-parent-visible-finding.js is a DIFFERENT signal (not " +
       "keyed off this decisionKey) and is out of scope for this fix; it remains a documented, pre-existing, " +
       "independent gap. At the subject level, this decisionKey is now excluded from gaps.length entirely (see " +
-      "build-subject-engine-decision-contract.js isActionableGapTopic/actionableCandidates) — it can never by " +
+      "build-subject-engine-decision-contract.js isActionableGapTopic/actionableCandidates) - it can never by " +
       "itself produce multiple_topic_gaps or focused_strengthening_needed, and is tracked separately via the " +
       "subject contract's speedCheckTopics field.",
     ownerApprovalStatus: "owner_approved",
@@ -194,7 +194,7 @@ export const PARENT_ENGINE_DECISION_CONTRACT_V2 = Object.freeze([
   {
     decisionKey: "partial_stable",
     scope: "topic",
-    description: "Decent, but not yet fully mastered, accuracy — partial stability.",
+    description: "Decent, but not yet fully mastered, accuracy - partial stability.",
     evidenceRequirement: "engine accuracy band = partial_good, adequate q.",
     allowedClaims: ["needs_strengthening"],
     forbiddenClaims: ["mastery", "knowledge_gap", "attention", "fatigue", "pressure", "repeated_pattern"],
@@ -210,7 +210,7 @@ export const PARENT_ENGINE_DECISION_CONTRACT_V2 = Object.freeze([
   {
     decisionKey: "mastery_stable",
     scope: "topic",
-    description: "High, stable accuracy over adequate volume — mastery.",
+    description: "High, stable accuracy over adequate volume - mastery.",
     evidenceRequirement: "q>=10 and accuracy>=90 (or engine mastery band).",
     allowedClaims: ["mastery", "stability"],
     forbiddenClaims: ["knowledge_gap", "needs_strengthening", "attention", "fatigue", "pressure"],
@@ -262,13 +262,13 @@ export const PARENT_ENGINE_DECISION_CONTRACT_V2 = Object.freeze([
     scope: "topic",
     description:
       "LPD topicStatus='no_clear_pattern' with NO usable evidence of difficulty (templateId='no_clear_pattern'). " +
-      "Genuinely 'not enough signal yet' — must map to insufficient_data/watch semantics, never to a strengthening claim.",
+      "Genuinely 'not enough signal yet' - must map to insufficient_data/watch semantics, never to a strengthening claim.",
     evidenceRequirement: "topicStatus === 'no_clear_pattern' AND NOT(q>=5 AND wrong>=2 AND accuracy<70)",
     allowedClaims: [],
     forbiddenClaims: ["repeated_pattern", "needs_strengthening", "mastery", "stability", "attention", "fatigue", "pressure"],
     requiredTemplateIds: ["no_clear_pattern"],
     supportedSurfaces: ["detailedReport", "lpdExplain"],
-    fallbackPolicy: "empty parentVisibleFinding (no_parent_text wording level) — silence is correct here",
+    fallbackPolicy: "empty parentVisibleFinding (no_parent_text wording level) - silence is correct here",
     ownerApprovalStatus: "owner_approved",
     provenance: "learningPatternDecision.parentVisibleFinding / build-parent-visible-finding.js",
     sourceFile: "utils/learning-pattern-decision/build-parent-visible-finding.js",
@@ -288,7 +288,7 @@ export const PARENT_ENGINE_DECISION_CONTRACT_V2 = Object.freeze([
     forbiddenClaims: ["repeated_pattern", "mastery", "stability", "attention", "fatigue", "pressure"],
     requiredTemplateIds: ["no_clear_pattern_difficulty_fallback"],
     supportedSurfaces: ["detailedReport", "lpdExplain"],
-    fallbackPolicy: "none — always renders the grounded 'כמה/הרבה טעויות' + strengthening sentence",
+    fallbackPolicy: "none - always renders the grounded 'כמה/הרבה טעויות' + strengthening sentence",
     ownerApprovalStatus: "owner_approved",
     provenance: "learningPatternDecision.parentVisibleFinding / build-parent-visible-finding.js",
     sourceFile: "utils/learning-pattern-decision/build-parent-visible-finding.js",
@@ -365,27 +365,27 @@ export const PARENT_ENGINE_DECISION_CONTRACT_V2 = Object.freeze([
     decisionKey: "mixed_subject_profile",
     scope: "subject",
     description:
-      "Exactly ONE actionable-gap topic AND at least one stable topic in the same subject — a genuinely " +
+      "Exactly ONE actionable-gap topic AND at least one stable topic in the same subject - a genuinely " +
       "distinct, more informative state than 'all gaps' (multiple_topic_gaps, gaps.length>=2) or 'all stable' " +
       "(subject_strength_stable, gaps.length===0) alone. Two or more gap topics are ALWAYS multiple_topic_gaps, " +
-      "even when stable topics also exist — mixed_subject_profile never applies to more than one gap.",
-    evidenceRequirement: "gaps.length===1 AND stable.length>=1 (exact match — see deriveSubjectDecision).",
+      "even when stable topics also exist - mixed_subject_profile never applies to more than one gap.",
+    evidenceRequirement: "gaps.length===1 AND stable.length>=1 (exact match - see deriveSubjectDecision).",
     allowedClaims: ["knowledge_gap", "needs_strengthening"],
     forbiddenClaims: ["mastery"],
     requiredTemplateIds: ["SUBJECT_OPENING_PRIORITY_TOPIC_0"],
     supportedSurfaces: ["shortReport", "subjectSummary"],
     fallbackPolicy:
       "FIXED (product decision applied): deriveSubjectDecision() now routes strictly by exact gaps/stable counts " +
-      "— gaps.length===1 && stable.length>=1 => mixed_subject_profile; gaps.length>=2 => multiple_topic_gaps " +
+      "- gaps.length===1 && stable.length>=1 => mixed_subject_profile; gaps.length>=2 => multiple_topic_gaps " +
       "(regardless of stable.length); gaps.length===1 && stable.length===0 => focused_strengthening_needed; " +
       "gaps.length===0 && stable.length>=1 => subject_strength_stable. renderSubjectOpeningPriorityTopic0 now " +
       "has a DEDICATED mixed_subject_profile branch using the product-owner-approved singular sentence ('ב" +
       "{subjectName} נראית יציבות בחלק מהנושאים, ולצדה נושא אחד שכדאי לחזק. מומלץ להתחיל ב" +
-      "{priorityTopicName}.') instead of reusing the multiple_topic_gaps plural sentence — the plural " +
+      "{priorityTopicName}.') instead of reusing the multiple_topic_gaps plural sentence - the plural " +
       "'בולטים כמה נושאים' wording is no longer reachable for this decisionKey because gaps.length is always " +
       "exactly 1 when this decision is chosen. Corrected on follow-up review from an earlier approved draft " +
       "('...יש נושאים שבהם נראית יציבות טובה...') that was itself imprecise when stable.length===1 (a single " +
-      "stable topic is not 'נושאים', plural) — the sentence never counts stable topics, so the wording must not " +
+      "stable topic is not 'נושאים', plural) - the sentence never counts stable topics, so the wording must not " +
       "imply plurality of the stable side either.",
     ownerApprovalStatus: "owner_approved",
     provenance:
@@ -405,7 +405,7 @@ export const PARENT_ENGINE_DECISION_CONTRACT_V2 = Object.freeze([
     forbiddenClaims: ["knowledge_gap", "needs_strengthening"],
     requiredTemplateIds: ["SUBJECT_CLOSING_ENGINE_CONTRACT"],
     supportedSurfaces: ["shortReport", "subjectSummary", "parentLetter", "parentLetterCompact"],
-    fallbackPolicy: "resolveSubjectSummaryTextFromEngineContract returns null when blockedLegacySummary is false — legacy short-report copy takes over",
+    fallbackPolicy: "resolveSubjectSummaryTextFromEngineContract returns null when blockedLegacySummary is false - legacy short-report copy takes over",
     ownerApprovalStatus: "owner_approved",
     provenance: "subjectEngineDecisionContract.subjectDecision",
     sourceFile: "utils/learning-pattern-decision/build-subject-engine-decision-contract.js",
@@ -416,29 +416,29 @@ export const PARENT_ENGINE_DECISION_CONTRACT_V2 = Object.freeze([
     decisionKey: "speed_check_only_subject",
     scope: "subject",
     description:
-      "No actionable-gap topic and no stable topic in this subject — the ONLY thing to report is one or more " +
+      "No actionable-gap topic and no stable topic in this subject - the ONLY thing to report is one or more " +
       "topics flagged purely by the speed_pressure_pattern guardrail (mistakes occurred during fast/timed " +
       "practice; accuracyBand was not clear_gap). This is deliberately NOT the same bucket as " +
-      "insufficient_subject_data: there IS real, sufficient practice data on a real topic — it is just not " +
+      "insufficient_subject_data: there IS real, sufficient practice data on a real topic - it is just not " +
       "evidence of a knowledge gap. Before this decision existed, this exact state (0 gaps, 0 stable, >=1 " +
       "speedCheckTopics) fell through to insufficient_subject_data, and legacy (engine-unaware) subject-summary " +
       "/ parent-letter fallback paths (e.g. findClearWeakTopicInSubject, which only checks accuracy/volume) " +
-      "then overrode that with 'נראית נקודת חיזוק ברורה' (a CLEAR, definite knowledge-gap claim) — the exact " +
+      "then overrode that with 'נראית נקודת חיזוק ברורה' (a CLEAR, definite knowledge-gap claim) - the exact " +
       "opposite of what speed_pressure_pattern is allowed to claim at the topic level.",
-    evidenceRequirement: "gaps.length===0 AND stable.length===0 AND speedCheckTopics.length>=1 (exact match — see deriveSubjectDecision).",
+    evidenceRequirement: "gaps.length===0 AND stable.length===0 AND speedCheckTopics.length>=1 (exact match - see deriveSubjectDecision).",
     allowedClaims: ["speed"],
     forbiddenClaims: ["knowledge_gap", "needs_strengthening", "mastery", "stability", "attention", "fatigue", "pressure"],
     requiredTemplateIds: ["SUBJECT_OPENING_PRIORITY_TOPIC_0"],
     supportedSurfaces: ["shortReport", "detailedReport", "subjectSummary", "parentLetter", "parentLetterCompact"],
     fallbackPolicy:
       "blockedLegacySummary is now also set true for this decisionKey when the priority speed topic has " +
-      "evidenceStrength>=supported OR questions>=20 (same threshold already used for actionable-gap topics) — " +
+      "evidenceStrength>=supported OR questions>=20 (same threshold already used for actionable-gap topics) - " +
       "this blocks ALL FOUR parent-letter line builders (opening/diagnosis/home/closing) from falling through " +
       "to the legacy, engine-unaware heuristics. renderSubjectOpeningPriorityTopic0 has a dedicated " +
       "speed_check_only_subject branch using a new dedicated slot (prioritySpeedTopic0, built from the subject " +
-      "contract's new prioritySpeedTopic field — the single highest-priority speedCheckTopics entry by the " +
+      "contract's new prioritySpeedTopic field - the single highest-priority speedCheckTopics entry by the " +
       "existing sortPriorityTopics order, never plural 'נושא אחד' wording). Diagnosis/home/closing all render " +
-      "empty for this decisionKey (no owner template registered for them) rather than any legacy text — " +
+      "empty for this decisionKey (no owner template registered for them) rather than any legacy text - " +
       "buildSubjectHomeLineHe now has the same 'return \"\" when blockedLegacySummary and no owner template' " +
       "guard already used by buildSubjectDiagnosisLineHe/buildSubjectClosingLineHe, closing a gap where it was " +
       "previously missing.",
@@ -456,13 +456,13 @@ export const PARENT_ENGINE_DECISION_CONTRACT_V2 = Object.freeze([
     scope: "subject",
     description: "No topics with usable evidence in this subject yet.",
     evidenceRequirement:
-      "allTopics.length===0 OR (gaps.length===0 AND stable.length===0 AND speedCheckTopics.length===0) — the " +
+      "allTopics.length===0 OR (gaps.length===0 AND stable.length===0 AND speedCheckTopics.length===0) - the " +
       "speedCheckTopics.length>=1 case is now routed to speed_check_only_subject instead (see that entry).",
     allowedClaims: [],
     forbiddenClaims: ["knowledge_gap", "needs_strengthening", "mastery", "stability"],
     requiredTemplateIds: ["insufficient_data_withhold"],
     supportedSurfaces: ["shortReport", "subjectSummary", "parentLetter", "parentLetterCompact"],
-    fallbackPolicy: "resolveSubjectSummaryTextFromEngineContract returns null (blockedLegacySummary is always false here) — legacy withhold copy takes over",
+    fallbackPolicy: "resolveSubjectSummaryTextFromEngineContract returns null (blockedLegacySummary is always false here) - legacy withhold copy takes over",
     ownerApprovalStatus: "owner_approved",
     provenance: "subjectEngineDecisionContract.subjectDecision",
     sourceFile: "utils/learning-pattern-decision/build-subject-engine-decision-contract.js",
@@ -474,7 +474,7 @@ export const PARENT_ENGINE_DECISION_CONTRACT_V2 = Object.freeze([
   {
     decisionKey: "narrative_we0",
     scope: "topic",
-    description: "Cannot conclude yet / insufficient readiness or confidence — most cautious envelope.",
+    description: "Cannot conclude yet / insufficient readiness or confidence - most cautious envelope.",
     evidenceRequirement: "cannotConcludeYet OR readiness==='insufficient' OR confidenceBand==='low' (below moderate-evidence threshold).",
     allowedClaims: [],
     forbiddenClaims: ["mastery", "stability", "knowledge_gap", "repeated_pattern", "attention", "fatigue", "pressure"],
@@ -490,7 +490,7 @@ export const PARENT_ENGINE_DECISION_CONTRACT_V2 = Object.freeze([
   {
     decisionKey: "narrative_we1",
     scope: "topic",
-    description: "Early signal only — first direction forming, still needs more practice.",
+    description: "Early signal only - first direction forming, still needs more practice.",
     evidenceRequirement: "readiness==='forming' or decisionTier<=1, or moderate-volume band with low accuracy.",
     allowedClaims: ["needs_strengthening"],
     forbiddenClaims: ["mastery", "stability", "repeated_pattern", "attention", "fatigue", "pressure"],
@@ -538,7 +538,7 @@ export const PARENT_ENGINE_DECISION_CONTRACT_V2 = Object.freeze([
   {
     decisionKey: "narrative_we4",
     scope: "topic",
-    description: "Highest-confidence stable/mastery envelope — eligible for a graduated recommendation step.",
+    description: "Highest-confidence stable/mastery envelope - eligible for a graduated recommendation step.",
     evidenceRequirement: "eligible && readiness==='ready' && confidenceBand==='high' && accuracy>=78 (high volume) or equivalent moderate-volume gate.",
     allowedClaims: ["stability", "mastery"],
     forbiddenClaims: ["attention", "fatigue", "pressure", "knowledge_gap"],

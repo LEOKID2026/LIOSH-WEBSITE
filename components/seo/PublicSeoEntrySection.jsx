@@ -3,10 +3,10 @@ import { getHomeBtnClasses, getHomeTextClasses } from "../home/home-theme";
 import HomeCtaLink from "../home/HomeCtaLink";
 
 const QUICK_LINKS = [
-  { label: "חשבון", href: "/practice/math" },
+  { label: "מתמטיקה", href: "/practice/math" },
   { label: "קריאה והבנת הנקרא", href: "/practice/reading" },
   { label: "אנגלית", href: "/practice/english" },
-  { label: "תרגול בלי הדפסה", href: "/practice/no-print" },
+  { label: "תרגול דיגיטלי", href: "/practice/no-print" },
   { label: "דוחות להורים", href: "/practice/parent-reports" },
   { label: "איך לבנות שגרת תרגול", href: "/guides/home-practice-routine" },
 ];
@@ -25,7 +25,7 @@ export default function PublicSeoEntrySection({ isBright }) {
     >
       <h2 className={cls.sectionTitle}>תחומי תרגול ומדריכים להורים</h2>
       <p className={`mx-auto max-w-2xl text-sm leading-relaxed md:text-base ${cls.body}`}>
-        רוצים להכיר את תחומי התרגול ב־Leo Kids? אפשר לעבור לדפי התרגול והמדריכים, לקרוא הסבר
+        רוצים להכיר את תחומי התרגול ב-Leo Kids? אפשר לעבור לדפי התרגול והמדריכים, לקרוא הסבר
         קצר, ואז להיכנס או להירשם כאזור הורים.
       </p>
 

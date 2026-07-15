@@ -33,7 +33,7 @@ export default function HelpCenterHome() {
           <p className={SP.badge}>עזרה · מדריכים · שאלות נפוצות</p>
           <h1 className={SP.helpH1}>מרכז עזרה</h1>
           <p className={SP.helpSubtitle}>
-            מדריכים בעברית להורים ולילדים — איך להשתמש באתר, איך לקרוא את הדוח,
+            מדריכים בעברית להורים ולילדים - איך להשתמש באתר, איך לקרוא את הדוח,
             ואיך לתרגל בכל מקצוע.
           </p>
         </header>

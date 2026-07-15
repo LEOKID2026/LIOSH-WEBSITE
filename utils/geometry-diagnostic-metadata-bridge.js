@@ -1,6 +1,6 @@
 /**
  * Procedural Geometry diagnostic metadata bridge (P0).
- * Enriches generator `params` only — no stem/answer changes.
+ * Enriches generator `params` only - no stem/answer changes.
  */
 import { mergeDiagnosticContractIntoParams } from "./diagnostic-question-contract.js";
 import {

@@ -31,7 +31,7 @@ export function estimateRowRootCause(p) {
       rootCauseEvidence: ["נפח או איכות ראיות לא מאפשרים נעילה על מקור הקושי."],
       secondaryPossibleCause: null,
       rootCauseNarrativeHe:
-        "עדיין אין בסיס מספיק כדי לומר במדויק מה מקור הקושי — עדיף תרגול קצר ומדיד לפני מסקנות.",
+        "עדיין אין בסיס מספיק כדי לומר במדויק מה מקור הקושי - עדיף תרגול קצר ומדיד לפני מסקנות.",
     };
   }
 
@@ -43,7 +43,7 @@ export function estimateRowRootCause(p) {
   let secondary = null;
 
   if (behaviorType === "careless_pattern") {
-    evidence.push("פרופיל דומיננטי — דפוס רשלנות");
+    evidence.push("פרופיל דומיננטי - דפוס רשלנות");
     if (riskFlags.speedOnlyRisk) secondary = "speed_pressure";
     return finalize("careless_execution", 0.66, evidence, secondary, acc, wr, q, trendDer, behaviorType);
   }
@@ -121,7 +121,7 @@ export function estimateRowRootCause(p) {
     return finalize("knowledge_gap", 0.58, evidence, secondary, acc, wr, q, trendDer, behaviorType);
   }
 
-  evidence.push("ללא נעילה ברורה — ברירת מחדל זהירה");
+  evidence.push("ללא נעילה ברורה - ברירת מחדל זהירה");
   return finalize("mixed_signal", 0.45, evidence, null, acc, wr, q, trendDer, behaviorType);
 }
 
@@ -151,23 +151,23 @@ function finalize(
 function buildNarrativeHe(rootCause, acc, wr, q, trendDer, behaviorType) {
   const parts = [];
   if (rootCause === "speed_pressure") {
-    parts.push("נראה שהקושי נוגע בעיקר למסלול מהיר או לחץ זמן — לא בהכרח לחוסר הבנה עמוק.");
+    parts.push("נראה שהקושי נוגע בעיקר למסלול מהיר או לחץ זמן - לא בהכרח לחוסר הבנה עמוק.");
   } else if (rootCause === "instruction_friction") {
     parts.push("הדפוס תואם קריאת משימה ותלות ברמזים יותר מאשר לפער ידע מלא.");
   } else if (rootCause === "knowledge_gap") {
     parts.push("הנתונים תומכים בפער ידע ממוקד לצד דיוק נמוך יחסית בנפח סביר.");
   } else if (rootCause === "careless_execution") {
-    parts.push("יש סימנים לרשלנות ביצוע לצד שליטה סבירה — כדאי לייצב דיוק לפני הורדת רמה.");
+    parts.push("יש סימנים לרשלנות ביצוע לצד שליטה סבירה - כדאי לייצב דיוק לפני הורדת רמה.");
   } else if (rootCause === "weak_independence") {
-    parts.push("העצמאות בפתרון נמוכה יחסית לעומת הדיוק — חשוב לבנות עצמאות לפני קפיצת רמה.");
+    parts.push("העצמאות בפתרון נמוכה יחסית לעומת הדיוק - חשוב לבנות עצמאות לפני קפיצת רמה.");
   } else if (rootCause === "early_stage_instability") {
-    parts.push("עדיין מוקדם בטווח — התמונה עלולה להתייצב אחרי עוד תרגול קצר ועקבי.");
+    parts.push("עדיין מוקדם בטווח - התמונה עלולה להתייצב אחרי עוד תרגול קצר ועקבי.");
   } else if (rootCause === "mixed_signal") {
-    parts.push("כמה אותות מצביעים לכיוונים שונים — לא ננעלים על הסבר יחיד בשלב זה.");
+    parts.push("כמה אותות מצביעים לכיוונים שונים - לא ננעלים על הסבר יחיד בשלב זה.");
   } else {
     parts.push("אין עדיין דיוק מספיק בנתונים כדי לתאר את מקור הקושי במילים חדות.");
   }
   parts.push(`(דיוק ${acc}%, טעויות יחסיות ${Math.round(wr * 100)}%, ${q} שאלות; פרופיל ${behaviorType})`);
-  if (trendDer?.unclearTrend) parts.push("מגמת דיוק לא חדה — שומרים על ניסוח זהיר.");
+  if (trendDer?.unclearTrend) parts.push("מגמת דיוק לא חדה - שומרים על ניסוח זהיר.");
   return parts.join(" ");
 }

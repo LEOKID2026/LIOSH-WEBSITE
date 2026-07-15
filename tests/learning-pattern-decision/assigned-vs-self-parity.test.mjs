@@ -124,4 +124,4 @@ function assertLpdParity(lpds, context) {
   assert.ok(lpds[0].parentVisibleFinding.includes("הצלחה"));
 }
 
-console.log("assigned-vs-self-parity.test.mjs — all passed");
+console.log("assigned-vs-self-parity.test.mjs - all passed");

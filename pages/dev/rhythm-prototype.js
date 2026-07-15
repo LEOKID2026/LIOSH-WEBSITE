@@ -6,7 +6,7 @@ export default function RhythmPrototypePage() {
   return (
     <>
       <Head>
-        <title>משחק קצב — אבטיפוס</title>
+        <title>משחק קצב - אבטיפוס</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <RhythmPrototype />

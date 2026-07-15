@@ -39,7 +39,7 @@ export function buildNarrativeSafetySummaryJson(params) {
 export function buildNarrativeSafetySummaryMd(params) {
   const { generatedAtIso, cases, allPassed } = params;
   const lines = [
-    "# Parent narrative safety — selftest summary",
+    "# Parent narrative safety - selftest summary",
     "",
     `- **Generated:** ${generatedAtIso}`,
     `- **Overall:** ${allPassed ? "**PASS**" : "**FAIL**"}`,
@@ -50,7 +50,7 @@ export function buildNarrativeSafetySummaryMd(params) {
 
   for (const c of cases) {
     const exp = c.expectedStatus ?? "?";
-    const act = c.result?.status ?? "—";
+    const act = c.result?.status ?? "-";
     const ok = c.pass ? "yes" : "**no**";
     lines.push(`| ${c.id} | ${exp} | ${act} | ${ok} |`);
   }

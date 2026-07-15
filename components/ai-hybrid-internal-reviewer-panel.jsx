@@ -33,29 +33,29 @@ function UnitBlock({ unit, idx }) {
       open={idx === 0}
     >
       <summary className="cursor-pointer select-none px-3 py-2.5 text-sm font-bold text-emerald-100/95 bg-emerald-950/30">
-        יחידה {idx + 1}: <span className="font-mono text-xs opacity-90">{u.unitKey || "—"}</span>
+        יחידה {idx + 1}: <span className="font-mono text-xs opacity-90">{u.unitKey || "-"}</span>
       </summary>
       <div className="px-3 pb-3 pt-1 space-y-1">
         <h4 className="text-xs font-extrabold text-white/70 uppercase tracking-wide mt-2 mb-1">v2AuthoritySnapshot</h4>
         <FieldRow label="taxonomyId">
-          <span className="font-mono text-xs">{String(snap.taxonomyId ?? "—")}</span>
+          <span className="font-mono text-xs">{String(snap.taxonomyId ?? "-")}</span>
         </FieldRow>
         <FieldRow label="אבחון">
           {snap.diagnosis ? (
             <span className="font-mono text-xs">
-              allowed={String(!!snap.diagnosis.allowed)} · taxonomyId={String(snap.diagnosis.taxonomyId ?? "—")}
+              allowed={String(!!snap.diagnosis.allowed)} · taxonomyId={String(snap.diagnosis.taxonomyId ?? "-")}
             </span>
           ) : (
-            "—"
+            "-"
           )}
         </FieldRow>
         <FieldRow label="snapshotHash">
-          <span className="font-mono text-[11px] break-all">{String(snap.snapshotHash ?? "—")}</span>
+          <span className="font-mono text-[11px] break-all">{String(snap.snapshotHash ?? "-")}</span>
         </FieldRow>
 
         <h4 className="text-xs font-extrabold text-white/70 uppercase tracking-wide mt-3 mb-1">aiAssist</h4>
         <FieldRow label="mode">
-          <span className="font-mono text-xs font-bold text-sky-200">{String(aa.mode ?? "—")}</span>
+          <span className="font-mono text-xs font-bold text-sky-200">{String(aa.mode ?? "-")}</span>
         </FieldRow>
         <FieldRow label="suppressionFlags">
           {Array.isArray(aa.suppressionFlags) && aa.suppressionFlags.length ? (
@@ -72,8 +72,8 @@ function UnitBlock({ unit, idx }) {
         <h4 className="text-xs font-extrabold text-white/70 uppercase tracking-wide mt-3 mb-1">היפותזה עליונה</h4>
         <FieldRow label="top1">
           <span className="font-mono text-xs">
-            {String(rank.top1Id || "—")} · p={Number(rank.top1Probability || 0).toFixed(4)} · band=
-            {String(rank.calibrationBand || "—")}
+            {String(rank.top1Id || "-")} · p={Number(rank.top1Probability || 0).toFixed(4)} · band=
+            {String(rank.calibrationBand || "-")}
           </span>
         </FieldRow>
         {cands.length ? (
@@ -81,7 +81,7 @@ function UnitBlock({ unit, idx }) {
             <ol className="list-decimal pr-5 m-0 space-y-1 font-mono text-[11px]">
               {cands.slice(0, 5).map((c) => (
                 <li key={`${c.candidateId}-${c.rank}`}>
-                  #{c.rank} {c.candidateId} — p={Number(c.probability).toFixed(4)}
+                  #{c.rank} {c.candidateId} - p={Number(c.probability).toFixed(4)}
                 </li>
               ))}
             </ol>
@@ -96,25 +96,25 @@ function UnitBlock({ unit, idx }) {
         </FieldRow>
         <FieldRow label="severity / action">
           <span className="font-mono text-xs">
-            {String(d.severity ?? "—")} / {String(d.action ?? "—")}
+            {String(d.severity ?? "-")} / {String(d.action ?? "-")}
           </span>
         </FieldRow>
         <FieldRow label="v2TopId vs aiTopId">
           <span className="font-mono text-xs break-all">
-            {String(d.v2TopId || "—")} vs {String(d.aiTopId || "—")}
+            {String(d.v2TopId || "-")} vs {String(d.aiTopId || "-")}
           </span>
         </FieldRow>
         <FieldRow label="reasonCodes">
           {Array.isArray(d.reasonCodes) && d.reasonCodes.length ? (
             <span className="font-mono text-[11px]">{d.reasonCodes.join(", ")}</span>
           ) : (
-            "—"
+            "-"
           )}
         </FieldRow>
 
         <h4 className="text-xs font-extrabold text-white/70 uppercase tracking-wide mt-3 mb-1">צעד בדיקה (probe)</h4>
         <FieldRow label="suggestedProbeId">
-          <span className="font-mono text-xs">{String(p.suggestedProbeId ?? "—")}</span>
+          <span className="font-mono text-xs">{String(p.suggestedProbeId ?? "-")}</span>
         </FieldRow>
         <FieldRow label="מדדים">
           <span className="font-mono text-[11px]">
@@ -124,12 +124,12 @@ function UnitBlock({ unit, idx }) {
         </FieldRow>
 
         <h4 className="text-xs font-extrabold text-white/70 uppercase tracking-wide mt-3 mb-1">הסבר (טקסט / סטטוס)</h4>
-        <FieldRow label="outputStatus">{String(ec.outputStatus ?? "—")}</FieldRow>
+        <FieldRow label="outputStatus">{String(ec.outputStatus ?? "-")}</FieldRow>
         <FieldRow label="הורה (קצר)">
-          <p className="text-xs leading-relaxed text-white/85 m-0 whitespace-pre-wrap">{par.text || "—"}</p>
+          <p className="text-xs leading-relaxed text-white/85 m-0 whitespace-pre-wrap">{par.text || "-"}</p>
         </FieldRow>
         <FieldRow label="מורה (קצר)">
-          <p className="text-xs leading-relaxed text-white/85 m-0 whitespace-pre-wrap">{tea.text || "—"}</p>
+          <p className="text-xs leading-relaxed text-white/85 m-0 whitespace-pre-wrap">{tea.text || "-"}</p>
         </FieldRow>
 
         <h4 className="text-xs font-extrabold text-white/70 uppercase tracking-wide mt-3 mb-1">אימות (validator)</h4>
@@ -148,7 +148,7 @@ function UnitBlock({ unit, idx }) {
           {Array.isArray(ev.reasonCodes) && ev.reasonCodes.length ? (
             <span className="font-mono text-[11px] break-all">{ev.reasonCodes.join(", ")}</span>
           ) : (
-            "—"
+            "-"
           )}
         </FieldRow>
       </div>
@@ -171,7 +171,7 @@ export function AiHybridInternalReviewerPanel({ hybridRuntime }) {
         className="ai-hybrid-internal-reviewer rounded-xl border border-amber-500/30 bg-amber-950/25 p-4 text-amber-100/90"
         dir="rtl"
       >
-        <h3 className="text-base font-black m-0 mb-2">ביקורת פנימית — AI Hybrid</h3>
+        <h3 className="text-base font-black m-0 mb-2">ביקורת פנימית - AI Hybrid</h3>
         <p className="text-sm m-0">
           אין <span className="font-mono">hybridRuntime</span> בדוח (null או לא עבר ולידציה). בדוק שהדוח נבנה עם מנוע V2
           ושאין כשל בטיחות.
@@ -189,9 +189,9 @@ export function AiHybridInternalReviewerPanel({ hybridRuntime }) {
     >
       <div className="flex flex-wrap items-start justify-between gap-2 mb-3">
         <div>
-          <h3 className="text-lg font-black m-0 text-emerald-100">ביקורת פנימית — hybridRuntime</h3>
+          <h3 className="text-lg font-black m-0 text-emerald-100">ביקורת פנימית - hybridRuntime</h3>
           <p className="text-xs text-white/60 m-0 mt-1">
-            לא מוצג להורים בהדפסה. גרסה {summary.hybridRuntimeVersion || "—"} · exposure {summary.exposureMode || "—"}
+            לא מוצג להורים בהדפסה. גרסה {summary.hybridRuntimeVersion || "-"} · exposure {summary.exposureMode || "-"}
           </p>
         </div>
         <button

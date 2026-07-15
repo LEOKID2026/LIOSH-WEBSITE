@@ -303,7 +303,7 @@ export default function LeoWordTrainPrototype({ backHref = "/dev/learning-game-p
           <p className={frame.introHero}>🚂🔤</p>
           <h1 className={frame.introTitle}>רכבת המילים של ליאו</h1>
           <p className={frame.introText}>
-            העמיסו קלפים על קרונות הרכבת — אותיות, מילים ומשפטים. כשהרכבת מלאה, היא יוצאת מהתחנה!
+            העמיסו קלפים על קרונות הרכבת - אותיות, מילים ומשפטים. כשהרכבת מלאה, היא יוצאת מהתחנה!
           </p>
           <div className={frame.difficultyRow}>
             {(/** @type {DifficultyId[]} */ (["easy", "medium", "hard"])).map((id) => (

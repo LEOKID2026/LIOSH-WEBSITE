@@ -159,7 +159,7 @@ export function shouldPhaseEBypassClarification(scopeRes, utteranceStr, stageA, 
 }
 
 export const PHASE_E_GENERAL_DISCLAIMER_LINE =
-  "תרגול כללי — לא מתוך מאגר השאלות הרשמי ולא משנה את האבחון";
+  "תרגול כללי - לא מתוך מאגר השאלות הרשמי ולא משנה את האבחון";
 
 export default {
   listTopicRowsForClassifier,

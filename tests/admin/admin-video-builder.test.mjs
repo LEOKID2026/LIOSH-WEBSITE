@@ -37,7 +37,7 @@ function readSrc(rel) {
   return readFileSync(join(ROOT, rel), "utf8");
 }
 
-describe("admin video builder — page & auth contract", () => {
+describe("admin video builder - page & auth contract", () => {
   test("list page uses useAdminSession", () => {
     const src = readSrc("pages/admin/video-builder/index.js");
     assert.match(src, /useAdminSession/);
@@ -235,7 +235,7 @@ describe("MP4 export", () => {
   test("returns Hebrew error when ffmpeg unavailable", async () => {
     const available = await checkFfmpegAvailable();
     if (available) {
-      assert.ok(true, "ffmpeg available locally — skip unavailable test");
+      assert.ok(true, "ffmpeg available locally - skip unavailable test");
       return;
     }
     const created = await createVideoProject(createEmptyProjectPayload("export-test"));
@@ -249,7 +249,7 @@ describe("MP4 export", () => {
   test("creates MP4 file when ffmpeg available", async () => {
     const available = await checkFfmpegAvailable();
     if (!available) {
-      assert.ok(true, "ffmpeg not installed — skip export test");
+      assert.ok(true, "ffmpeg not installed - skip export test");
       return;
     }
 

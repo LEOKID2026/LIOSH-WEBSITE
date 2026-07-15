@@ -18,7 +18,7 @@ import {
 import { toPrintableWorksheetQuestion } from "../../lib/worksheets/worksheet-question-sanitize.server.js";
 
 const META = {
-  titleHe: "דף עבודה — שברים",
+  titleHe: "דף עבודה - שברים",
   subjectHe: "מתמטיקה",
   gradeHe: "כיתה ד׳",
   topicHe: "שברים",

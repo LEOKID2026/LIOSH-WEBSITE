@@ -1693,7 +1693,7 @@ export const SCIENCE_QUESTIONS_P0_G123_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "איזה צמח הוא שרשרת מזון — מייצר מזון?",
+  "stem": "איזה צמח הוא שרשרת מזון - מייצר מזון?",
   "options": [
     "צמח ירוק",
     "אריה",

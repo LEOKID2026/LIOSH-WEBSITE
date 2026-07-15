@@ -64,7 +64,7 @@ export function buildAdviceDriftPhase11(ctx) {
     RECOMMENDATION_ROTATION_NEED_LABEL_HE.none;
 
   const repeatAdviceWarningHe = repeatAdviceWarning
-    ? "יש סימנים לכך שאותו סוג עזרה חוזר שוב בלי שינוי מספק בעצמאות — כדאי לדייק או לשנות מעט את הדרך."
+    ? "יש סימנים לכך שאותו סוג עזרה חוזר שוב בלי שינוי מספק בעצמאות - כדאי לדייק או לשנות מעט את הדרך."
     : "";
 
   const adviceDrift = {

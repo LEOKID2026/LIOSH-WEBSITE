@@ -1,5 +1,5 @@
 /**
- * Phase 2.8 — Read-only daily missions modal for subject lobby "אתגרים".
+ * Phase 2.8 - Read-only daily missions modal for subject lobby "אתגרים".
  * Keeps existing modal shell; body shows Phase 2 missions (same as /student/home).
  */
 
@@ -117,7 +117,7 @@ export default function SubjectDailyMissionsModal({ open, onClose, dailyMissions
               </p>
             ) : (
               <p className="text-white/55 text-xs text-center mb-3">
-                השלימו משימות על ידי למידה — כל משימה שווה מטבעות
+                השלימו משימות על ידי למידה - כל משימה שווה מטבעות
               </p>
             )}
             <div className="space-y-2 mb-4">

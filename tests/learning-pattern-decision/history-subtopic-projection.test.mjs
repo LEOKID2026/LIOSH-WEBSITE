@@ -79,4 +79,4 @@ assert.ok(
   "unpracticed subtopic excluded from trace list",
 );
 
-console.log("history-subtopic-projection.test.mjs — passed");
+console.log("history-subtopic-projection.test.mjs - passed");

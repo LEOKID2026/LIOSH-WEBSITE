@@ -34,7 +34,7 @@ export const SCIENCE_OFFICIAL_SUBSECTION_CATALOG = {
     sections: [
       sec(
         "g1_living_world",
-        "עולם חי וצומח — תצפית והבחנה בסיסית",
+        "עולם חי וצומח - תצפית והבחנה בסיסית",
         "life",
         [
           "science.life_science_body",
@@ -54,7 +54,7 @@ export const SCIENCE_OFFICIAL_SUBSECTION_CATALOG = {
       ),
       sec(
         "g1_energy_inquiry_enrichment",
-        "אנרגיה וחקירה — רמת חשיפה / הרחבה",
+        "אנרגיה וחקירה - רמת חשיפה / הרחבה",
         "energy_inquiry",
         ["science.energy", "science.scientific_inquiry"],
         "medium",
@@ -69,7 +69,7 @@ export const SCIENCE_OFFICIAL_SUBSECTION_CATALOG = {
     sections: [
       sec(
         "g2_life_materials",
-        "מדעי חיים וחומרים — הרחבה בסיסית",
+        "מדעי חיים וחומרים - הרחבה בסיסית",
         "life_matter",
         [
           "science.life_science_body",
@@ -174,7 +174,7 @@ export const SCIENCE_OFFICIAL_SUBSECTION_CATALOG = {
       ),
       sec(
         "g5_life_allowed",
-        "מדעי החיים (במפת השמרנית — allowed בכיתה ה׳)",
+        "מדעי החיים (במפת השמרנית - allowed בכיתה ה׳)",
         "life_allowed",
         ["science.life_science_body", "science.life_science_animals"],
         "low",
@@ -203,7 +203,7 @@ export const SCIENCE_OFFICIAL_SUBSECTION_CATALOG = {
       ),
       sec(
         "g6_life_allowed",
-        "מדעי החיים — רמת allowed במפת השמרנית",
+        "מדעי החיים - רמת allowed במפת השמרנית",
         "life_allowed",
         ["science.life_science_body", "science.life_science_animals"],
         "low",

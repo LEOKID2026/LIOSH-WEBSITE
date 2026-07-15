@@ -64,7 +64,7 @@ export default function SubjectMonthlyPrizeJourney({ view }) {
                 "rounded-lg md:rounded-xl border px-1 py-2 md:px-2 md:py-2.5 flex flex-col items-center justify-center gap-0.5 min-h-[4.25rem] md:min-h-[5rem] transition-all",
                 tierBoxClass(tier.state),
               ].join(" ")}
-              aria-label={`${tier.minutes} דקות — ${tier.label}`}
+              aria-label={`${tier.minutes} דקות - ${tier.label}`}
             >
               <span className="text-lg md:text-xl leading-none" aria-hidden>
                 {PRIZE_COIN_ICON}

@@ -254,7 +254,7 @@ async function main() {
   const { planCodeLabelHe } = await import("../../lib/admin-portal/admin-ui.he.js");
   record(
     "plan_label_teacher_basic_20",
-    planCodeLabelHe("teacher_basic_20") === "תוכנית בסיסית — עד 20 תלמידים",
+    planCodeLabelHe("teacher_basic_20") === "תוכנית בסיסית - עד 20 תלמידים",
     planCodeLabelHe("teacher_basic_20")
   );
 

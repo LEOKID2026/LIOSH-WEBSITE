@@ -15,7 +15,7 @@ const BANNED_PHRASE_RULES = [
     replace: "",
   },
   {
-    pattern: /(?:כדאי להמשיך לעקוב\s*—\s*)?נכון לעכשיו, אין כאן מידע שלא מגיע מהדוח[^.!?]*[.!?]?/gu,
+    pattern: /(?:כדאי להמשיך לעקוב\s*-\s*)?נכון לעכשיו, אין כאן מידע שלא מגיע מהדוח[^.!?]*[.!?]?/gu,
     replace: "",
   },
   {
@@ -72,13 +72,13 @@ export function dedupeSentencesHe(text) {
 }
 
 /**
- * Collapse duplicate "subject — topic" pairs within one answer body.
+ * Collapse duplicate "subject - topic" pairs within one answer body.
  * @param {string} text
  */
 export function dedupeTopicPairsHe(text) {
   const raw = norm(text);
-  if (!raw.includes("—")) return raw;
-  const pairRe = /([\u0590-\u05FF][\u0590-\u05FF\s]{0,24})\s*—\s*([\u0590-\u05FF][^\n,.;]{2,48})/gu;
+  if (!raw.includes("-")) return raw;
+  const pairRe = /([\u0590-\u05FF][\u0590-\u05FF\s]{0,24})\s*-\s*([\u0590-\u05FF][^\n,.;]{2,48})/gu;
   const seen = new Set();
   let changed = false;
   const rebuilt = raw.replace(pairRe, (full, subj, topic) => {

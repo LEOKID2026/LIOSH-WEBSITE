@@ -70,7 +70,7 @@ export function generatePathPool(difficulty, opts = {}) {
         numbers: shuffle(numbers),
         correctPath: correct,
         orderMatters: false,
-        promptHe: isEven ? "בחרו מספרים זוגיים" : "בחרו מספרים אי־זוגיים",
+        promptHe: isEven ? "בחרו מספרים זוגיים" : "בחרו מספרים אי-זוגיים",
       });
       continue;
     }
@@ -175,6 +175,6 @@ export function pathFeedback(ok) {
 
 /** @param {number[]} selected @param {boolean} orderMatters */
 export function formatSelectedPath(selected, orderMatters) {
-  if (!selected.length) return "—";
+  if (!selected.length) return "-";
   return orderMatters ? selected.join(" → ") : selected.join(" · ");
 }

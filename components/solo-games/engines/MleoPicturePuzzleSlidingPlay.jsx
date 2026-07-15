@@ -137,7 +137,7 @@ export default function MleoPicturePuzzleSlidingPlay({
                 className="min-h-[44px] rounded-xl border-2 border-sky-400 bg-sky-950/60 px-4 py-2 text-sm font-bold text-sky-100 disabled:opacity-40"
                 style={{ touchAction: "manipulation" }}
               >
-                💡 רמז — תמונה מלאה
+                💡 רמז - תמונה מלאה
               </button>
             ) : null}
           </div>
@@ -179,7 +179,7 @@ export default function MleoPicturePuzzleSlidingPlay({
                     }`}
                     style={tileBg(tile)}
                     onClick={() => onTryMove(index)}
-                    aria-label={`חלק ${tile + 1}${movable ? " — ניתן להזיז" : ""}`}
+                    aria-label={`חלק ${tile + 1}${movable ? " - ניתן להזיז" : ""}`}
                   />
                 );
               })}

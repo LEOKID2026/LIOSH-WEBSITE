@@ -433,7 +433,7 @@ export const G5_COMP_COMPARE_MEDIUM = [
     subtopicId: "g5.inference",
   },
   {
-    question: "השוו בין 'לפני' ל'אחרי' בטקסט — מה הם עוזרים להבין?",
+    question: "השוו בין 'לפני' ל'אחרי' בטקסט - מה הם עוזרים להבין?",
     answer: "סדר זמן של אירועים",
     wrong: ["צבע של חפצים", "מספר תלמידים", "שמות של פרחים", "מיקום במרחב בלבד"],
     subtopicId: "g5.inference",

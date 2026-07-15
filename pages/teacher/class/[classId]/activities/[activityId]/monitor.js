@@ -232,12 +232,12 @@ export default function TeacherActivityMonitorPage({ classId, activityId }) {
                     <td className="px-3 py-2">{s.studentFullNameMasked}</td>
                     <td className="px-3 py-2">{studentActivityStatusLabelHe(s.status)}</td>
                     <td className="px-3 py-2 tabular-nums">
-                      {s.answersCount}/{activity?.questionCount ?? "—"}
+                      {s.answersCount}/{activity?.questionCount ?? "-"}
                     </td>
                     <td className="px-3 py-2 tabular-nums">
                       {s.answersCount > 0
                         ? `${Math.round((s.correctCount / s.answersCount) * 100)}%`
-                        : "—"}
+                        : "-"}
                     </td>
                     <td className="px-3 py-2">
                       <button

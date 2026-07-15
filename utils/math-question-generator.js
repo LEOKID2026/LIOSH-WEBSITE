@@ -48,7 +48,7 @@ function applyMathLevelPresentation(question, ctx) {
       if (mathLevelKey === "medium") {
         return `נתון השוויון ${b} + ${BLANK} = ${c}. מה המספר החסר?${gSuf}`;
       }
-      return `בעיית מילים: "ל-${b} חסר חלק עד ${c}" — כמה להוסיף? = ${BLANK}${gSuf}`;
+      return `בעיית מילים: "ל-${b} חסר חלק עד ${c}" - כמה להוסיף? = ${BLANK}${gSuf}`;
     }
   }
 
@@ -78,7 +78,7 @@ function applyMathLevelPresentation(question, ctx) {
       if (mathLevelKey === "medium") {
         return `על המפה ${ml} ס"מ, ובמציאות ${rl} ס"מ. מה קנה המידה? כתבו את המספר אחרי 1: = ${BLANK}${gSuf}`;
       }
-      return `נתונים שני אורכים — מפה ${ml} ס"מ ומציאות ${rl} ס"מ. קנה המידה נכתב 1:__. מה המספר החסר? = ${BLANK}${gSuf}`;
+      return `נתונים שני אורכים - מפה ${ml} ס"מ ומציאות ${rl} ס"מ. קנה המידה נכתב 1:__. מה המספר החסר? = ${BLANK}${gSuf}`;
     }
   }
 
@@ -88,12 +88,12 @@ function applyMathLevelPresentation(question, ctx) {
     const gSuf = gradeBandSuffix;
     if (ml != null && sc != null) {
       if (mathLevelKey === "easy") {
-        return `בקנה מידה 1:${sc} — כמה ס"מ במציאות שווים ל-${ml} ס"מ במפה? = ${BLANK}${gSuf}`;
+        return `בקנה מידה 1:${sc} - כמה ס"מ במציאות שווים ל-${ml} ס"מ במפה? = ${BLANK}${gSuf}`;
       }
       if (mathLevelKey === "medium") {
-        return `קנה מידה 1:${sc}. מדידה של ${ml} ס"מ על המפה — מה האורך האמיתי בס"מ? = ${BLANK}${gSuf}`;
+        return `קנה מידה 1:${sc}. מדידה של ${ml} ס"מ על המפה - מה האורך האמיתי בס"מ? = ${BLANK}${gSuf}`;
       }
-      return `קנה מידה 1:${sc} ומדידת מפה ${ml} ס"מ — חשבו את האורך במציאות בס"מ = ${BLANK}${gSuf}`;
+      return `קנה מידה 1:${sc} ומדידת מפה ${ml} ס"מ - חשבו את האורך במציאות בס"מ = ${BLANK}${gSuf}`;
     }
   }
 
@@ -103,12 +103,12 @@ function applyMathLevelPresentation(question, ctx) {
     const gSuf = gradeBandSuffix;
     if (rl != null && sc != null) {
       if (mathLevelKey === "easy") {
-        return `בקנה מידה 1:${sc}, אורך אמיתי ${rl} ס"מ — כמה ס"מ ימדדו על המפה? = ${BLANK}${gSuf}`;
+        return `בקנה מידה 1:${sc}, אורך אמיתי ${rl} ס"מ - כמה ס"מ ימדדו על המפה? = ${BLANK}${gSuf}`;
       }
       if (mathLevelKey === "medium") {
         return `במציאות ${rl} ס"מ, וקנה המידה 1:${sc}. מה אורך הקטע על המפה? = ${BLANK}${gSuf}`;
       }
-      return `המירו ממציאות למפה: ${rl} ס"מ במציאות ביחס 1:${sc} — כמה ס"מ על הדף? = ${BLANK}${gSuf}`;
+      return `המירו ממציאות למפה: ${rl} ס"מ במציאות ביחס 1:${sc} - כמה ס"מ על הדף? = ${BLANK}${gSuf}`;
     }
   }
 
@@ -120,7 +120,7 @@ function applyMathLevelPresentation(question, ctx) {
       const opts = [
         `השוו בין שני המספרים והשלימו סימן (<, =, >): ${raw}`,
         `סימן השוואה בין המספרים: ${raw}`,
-        `בחרו < , = או > — השוו: ${raw}`,
+        `בחרו < , = או > - השוו: ${raw}`,
         `השוו את שני הערכים והשלימו סימן: ${raw}`,
       ];
       return `${opts[pv].trim()}${gSuf}`;
@@ -135,8 +135,8 @@ function applyMathLevelPresentation(question, ctx) {
       return `${opts[pv].trim()}${gSuf}`;
     }
     const opts = [
-      `השלימו סימן השוואה — בדקו לפני שבוחרים: ${raw}`,
-      `השוואה — ודאו סדר גודל לפני בחירה: ${raw}`,
+      `השלימו סימן השוואה - בדקו לפני שבוחרים: ${raw}`,
+      `השוואה - ודאו סדר גודל לפני בחירה: ${raw}`,
       `השוו בזהירות ובחרו סימן: ${raw}`,
       `ניתוח מהיר: איזה סימן מתאים? ${raw}`,
     ];
@@ -155,8 +155,8 @@ function applyMathLevelPresentation(question, ctx) {
       }
       if (mathLevelKey === "medium") {
         return pv === 0
-          ? `סימני התחלקות — האם ${num} מתחלק ב-${div}?`
-          : `חלוקה שלמה: ${num} ÷ ${div} — האם יוצא שלם?`;
+          ? `סימני התחלקות - האם ${num} מתחלק ב-${div}?`
+          : `חלוקה שלמה: ${num} ÷ ${div} - האם יוצא שלם?`;
       }
       return pv === 0
         ? `בדיקת התחלקות: האם ${num} יתחלק ב-${div}?`
@@ -200,11 +200,11 @@ function applyMathLevelPresentation(question, ctx) {
       if (mathLevelKey === "easy") {
         return pv === 0
           ? `מספרים ראשוניים: האם ${num} ראשוני או פריק?`
-          : `סיווג בסיסי: ${num} — ראשוני או פריק?`;
+          : `סיווג בסיסי: ${num} - ראשוני או פריק?`;
       }
       if (mathLevelKey === "medium") {
         return pv === 0
-          ? `סיווג מספר: ${num} — ראשוני או פריק?`
+          ? `סיווג מספר: ${num} - ראשוני או פריק?`
           : `זיהוי סוג: האם ל-${num} יש בדיוק שני מחלקים טבעיים שונים?`;
       }
       return pv === 0
@@ -216,12 +216,12 @@ function applyMathLevelPresentation(question, ctx) {
   if (selectedOp === "powers" && (kind === "power_base" || kind === "power_calc")) {
     if (kind === "power_calc") {
       if (mathLevelKey === "easy") return `חזקות: ${q0}`;
-      if (mathLevelKey === "medium") return `חישוב חזקה — ${q0}`;
+      if (mathLevelKey === "medium") return `חישוב חזקה - ${q0}`;
       return `חזקות: ${q0}`;
     }
     if (kind === "power_base") {
       if (mathLevelKey === "easy") return `מצאו בסיס בחזקה: ${q0}`;
-      if (mathLevelKey === "medium") return `חידת חזקה — ${q0}`;
+      if (mathLevelKey === "medium") return `חידת חזקה - ${q0}`;
       return `בסיס חסר בחזקה: ${q0}`;
     }
   }
@@ -230,19 +230,19 @@ function applyMathLevelPresentation(question, ctx) {
     if (kind === "est_add") {
       if (mathLevelKey === "easy") return q0.replace(/^אמד/, "אומדן קירוב: אמדו");
       if (mathLevelKey === "medium")
-        return q0.replace(/^אמד/, "אומדן חיבור — אמדו");
+        return q0.replace(/^אמד/, "אומדן חיבור - אמדו");
       return q0.replace(/^אמד/, "אומדן מדויק: אמדו ובדקו סדר גודל");
     }
     if (kind === "est_mul") {
       if (mathLevelKey === "easy") return q0.replace(/^אמד/, "אומדן כפל: אמדו");
       if (mathLevelKey === "medium")
-        return q0.replace(/^אמד/, "אומדן מכפלה — אמדו");
+        return q0.replace(/^אמד/, "אומדן מכפלה - אמדו");
       return q0.replace(/^אמד/, "אומדן כפל: אמדו לפי עיגול חכם");
     }
     if (kind === "est_quantity") {
       if (mathLevelKey === "easy") return q0.replace(/^אמד/, "כמות משוערת: אמדו");
       if (mathLevelKey === "medium")
-        return q0.replace(/^אמד/, "אומדן כמות — עגלו לעשרות");
+        return q0.replace(/^אמד/, "אומדן כמות - עגלו לעשרות");
       return q0.replace(/^אמד/, "אומדן כמות: הסבירו את העיגול");
     }
   }
@@ -289,9 +289,9 @@ function applyMathLevelPresentation(question, ctx) {
       return `מ.א.ח: מה המחלק המשותף הגדול ביותר של ${a} ו-${b}? = ${BLANK}${gSuf}`;
     }
     if (mathLevelKey === "medium") {
-      return `גורם משותף מקסימלי (GCD) לזוג ${a}, ${b} — מהו? = ${BLANK}${gSuf}`;
+      return `גורם משותף מקסימלי (GCD) לזוג ${a}, ${b} - מהו? = ${BLANK}${gSuf}`;
     }
-    return `מ.א.ח: הוכיחו בראש לפני בחירה — GCD(${a}, ${b}) = ${BLANK}${gSuf}`;
+    return `מ.א.ח: הוכיחו בראש לפני בחירה - GCD(${a}, ${b}) = ${BLANK}${gSuf}`;
   }
 
   if (kind === "round" && params?.n != null && params?.toWhat != null) {
@@ -306,12 +306,12 @@ function applyMathLevelPresentation(question, ctx) {
       }
       if (mathLevelKey === "medium") {
         return pv === 0
-          ? `עגלו את ${n} לעשרות הקרובות — מה התוצאה? = ${BLANK}${gSuf}`
+          ? `עגלו את ${n} לעשרות הקרובות - מה התוצאה? = ${BLANK}${gSuf}`
           : `עיגול לפי כלל עשרות: ${n} = ${BLANK}${gSuf}`;
       }
       return pv === 0
         ? `עיגול לעשרות: בחרו את המספר המתאים אחרי עיגול ${n} = ${BLANK}${gSuf}`
-        : `בחירה נכונה אחרי עיגול ${n} לעשרות — ? = ${BLANK}${gSuf}`;
+        : `בחירה נכונה אחרי עיגול ${n} לעשרות - ? = ${BLANK}${gSuf}`;
     }
     if (mathLevelKey === "easy") {
       return pv === 0
@@ -320,7 +320,7 @@ function applyMathLevelPresentation(question, ctx) {
     }
     if (mathLevelKey === "medium") {
       return pv === 0
-        ? `עגלו את ${n} למאות הקרובות — מה התוצאה? = ${BLANK}${gSuf}`
+        ? `עגלו את ${n} למאות הקרובות - מה התוצאה? = ${BLANK}${gSuf}`
         : `עיגול למאות לפי כלל: ${n} → ? = ${BLANK}${gSuf}`;
     }
     return pv === 0
@@ -349,7 +349,7 @@ function applyMathLevelPresentation(question, ctx) {
             : `השלימו סכום: ${af} + ${bf} = ${BLANK}${gSuf}`;
         }
         return pv === 0
-          ? `חיבור עשרוניים — בדקו ספרות: ${af} + ${bf} = ${BLANK}${gSuf}`
+          ? `חיבור עשרוניים - בדקו ספרות: ${af} + ${bf} = ${BLANK}${gSuf}`
           : `ניתוח סכום: ${af} + ${bf} = ${BLANK}${gSuf}`;
       }
       if (mathLevelKey === "easy") {
@@ -363,7 +363,7 @@ function applyMathLevelPresentation(question, ctx) {
           : `השלימו הפרש: ${af} − ${bf} = ${BLANK}${gSuf}`;
       }
       return pv === 0
-        ? `חיסור עשרוניים — בדקו לפני בחירה: ${af} − ${bf} = ${BLANK}${gSuf}`
+        ? `חיסור עשרוניים - בדקו לפני בחירה: ${af} − ${bf} = ${BLANK}${gSuf}`
         : `ניתוח הפרש: ${af} − ${bf} = ${BLANK}${gSuf}`;
     }
   }
@@ -377,7 +377,7 @@ function applyMathLevelPresentation(question, ctx) {
     }
     if (mathLevelKey === "medium") {
       return (
-        q0.replace(/^השלם את הסדרה\b/, "זיהוי דפוס — השלימו את הסדרה") + gSuf
+        q0.replace(/^השלם את הסדרה\b/, "זיהוי דפוס - השלימו את הסדרה") + gSuf
       );
     }
     return (
@@ -2048,7 +2048,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
           probePower: "high",
           expectedErrorTags: ["wrong_lcm", "adds_denominators_directly", "concept_gap"],
           explanationHe:
-            "חיבור/חיסור שברים עם מכנים שונים — דורש מציאת מכנה משותף לפני חיבור המונים.",
+            "חיבור/חיסור שברים עם מכנים שונים - דורש מציאת מכנה משותף לפני חיבור המונים.",
         });
         
         // צמצום התוצאה אם אפשר
@@ -2081,7 +2081,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
           const pickDivQ = () =>
             [
               `מה התוצאה של ${dividend} ÷ ${divisor}? רשמו כשבר: ${BLANK}`,
-              `${dividend} חלקי ${divisor} — רשמו כשבר מצומצם: ${BLANK}`,
+              `${dividend} חלקי ${divisor} - רשמו כשבר מצומצם: ${BLANK}`,
               `חילוק שלמים כשבר: ${dividend} ÷ ${divisor} = ${BLANK}`,
             ][Math.floor(Math.random() * 3)];
           question = pickDivQ();
@@ -2136,7 +2136,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
         const biggerStr = n1 > n2 ? `${n1}/${den}` : `${n2}/${den}`;
         correctAnswer = biggerStr;
         question = [
-          `איזה שבר גדול יותר — ${n1}/${den} או ${n2}/${den}? רשמו את השבר הגדול: ${BLANK}`,
+          `איזה שבר גדול יותר - ${n1}/${den} או ${n2}/${den}? רשמו את השבר הגדול: ${BLANK}`,
           `בחרו את השבר הגדול מבין ${n1}/${den} ו-${n2}/${den}: ${BLANK}`,
           `השוו בין ${n1}/${den} ל-${n2}/${den}. הגדול הוא: ${BLANK}`,
         ][Math.floor(Math.random() * 3)];
@@ -2169,7 +2169,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       }
     } else if (gradeKey === "g3" || gradeKey === "g4") {
       // כיתות ג'-ד' — מכנה זהה, השוואה, צמצום בסיסי, שקילות פשוטה
-      const g4tag = gradeKey === "g4" ? "כיתה ד׳ — " : "";
+      const g4tag = gradeKey === "g4" ? "כיתה ד׳ - " : "";
       const den = dens[Math.floor(Math.random() * dens.length)] || 4;
       const branch = Math.random();
 
@@ -2231,7 +2231,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
           probePower: "medium",
           expectedErrorTags: ["calculation_slip", "operation_confusion"],
           explanationHe:
-            "חיבור/חיסור שברים עם מכנה זהה — טעויות נפוצות בחישוב המונה או בבחירת הפעולה.",
+            "חיבור/חיסור שברים עם מכנה זהה - טעויות נפוצות בחישוב המונה או בבחירת הפעולה.",
         });
 
         correctAnswer = `${resNum}/${resDen}`;
@@ -2245,7 +2245,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
         const biggerStr = n1 > n2 ? `${n1}/${den}` : `${n2}/${den}`;
         correctAnswer = biggerStr;
         question = [
-          `${g4tag}איזה שבר גדול יותר — ${n1}/${den} או ${n2}/${den}? רשמו את השבר הגדול: ${BLANK}`,
+          `${g4tag}איזה שבר גדול יותר - ${n1}/${den} או ${n2}/${den}? רשמו את השבר הגדול: ${BLANK}`,
           `${g4tag}השוו ${n1}/${den} ו-${n2}/${den} (מכנה ${den}). הגדול: ${BLANK}`,
         ][Math.floor(Math.random() * 2)];
         params = {
@@ -2645,7 +2645,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
         }
         const bigger = x > y ? x : y;
         correctAnswer = bigger;
-        question = `איזה מספר גדול יותר — ${x.toFixed(places)} או ${y.toFixed(places)}? רשמו את הגדול: ${BLANK}`;
+        question = `איזה מספר גדול יותר - ${x.toFixed(places)} או ${y.toFixed(places)}? רשמו את הגדול: ${BLANK}`;
         params = { kind: "dec_compare_max", x, y, places };
         operandA = x;
         operandB = y;
@@ -4173,7 +4173,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       operandB = 0;
     } else if (slot < 0.25) {
       correctAnswer = 0;
-      question = `0 × ${a} = ${BLANK} — השלם את המספר החסר`;
+      question = `0 × ${a} = ${BLANK} - השלם את המספר החסר`;
       params = { kind: "zero_mul_eq", a };
       operandA = 0;
       operandB = a;

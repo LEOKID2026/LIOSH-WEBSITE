@@ -26,7 +26,7 @@ function sec(p) {
     confidence: /** @type {CatalogConfidence} */ (p.confidence || "medium"),
     notes:
       p.notes ||
-      "נוסח ידני לפי מיתר הגאומטריה בתוכנית מתמטיקה יסודית — לאמת מול PDF הכיתה.",
+      "נוסח ידני לפי מיתר הגאומטריה בתוכנית מתמטיקה יסודית - לאמת מול PDF הכיתה.",
     ...p,
   };
 }
@@ -50,11 +50,11 @@ export function buildGeometrySectionsForGrade(grade) {
     s.push(
       sec({
         sectionKey: "g1_shapes_plane_intro",
-        labelHe: "צורות במישור — היכרות והעתקה",
+        labelHe: "צורות במישור - היכרות והעתקה",
         strand: strand.shapes,
         subsectionLabelsHe: ["זיהוי ריבוע ומלבן", "סיווג ראשוני"],
         expectedDepth: "intro",
-        sourcePageHint: "גאומטריה כיתה א׳ — צורות בסיסיות",
+        sourcePageHint: "גאומטריה כיתה א׳ - צורות בסיסיות",
         mapsToNormalizedKeys: ["geometry.shape_recognition_plane_figures"],
         confidence: "high",
       }),
@@ -70,7 +70,7 @@ export function buildGeometrySectionsForGrade(grade) {
       }),
       sec({
         sectionKey: "g1_solids_area_exposure",
-        labelHe: "גופים ושטח — חשיפה ראשונית",
+        labelHe: "גופים ושטח - חשיפה ראשונית",
         strand: strand.measure,
         subsectionLabelsHe: ["הכרת גופים", "השוואת שטחים פשוטה"],
         expectedDepth: "intro",
@@ -80,7 +80,7 @@ export function buildGeometrySectionsForGrade(grade) {
       }),
       sec({
         sectionKey: "g1_parallel_spatial_intro",
-        labelHe: "מקבילים ומאונכים — תפיסה ראשונית",
+        labelHe: "מקבילים ומאונכים - תפיסה ראשונית",
         strand: strand.spatial,
         subsectionLabelsHe: [],
         expectedDepth: "intro",
@@ -96,7 +96,7 @@ export function buildGeometrySectionsForGrade(grade) {
     s.push(
       sec({
         sectionKey: "g2_area_solids_core",
-        labelHe: "שטח וגופים — המשך כיתה ב׳",
+        labelHe: "שטח וגופים - המשך כיתה ב׳",
         strand: strand.measure,
         subsectionLabelsHe: ["שטיח פשוט", "גופים מוכרים"],
         expectedDepth: "basic",
@@ -129,7 +129,7 @@ export function buildGeometrySectionsForGrade(grade) {
       }),
       sec({
         sectionKey: "g2_angles_intro",
-        labelHe: "זוויות — היכרות",
+        labelHe: "זוויות - היכרות",
         strand: strand.reasoning,
         subsectionLabelsHe: [],
         expectedDepth: "basic",
@@ -403,11 +403,11 @@ export function buildGeometrySectionsForGrade(grade) {
  */
 export function geometryMissingUncertainAreasForGrade(grade) {
   const common = [
-    "מיתר הגאומטריה משולב בתוכנית המתמטיקה — לאמת סדר עומק מול מסמך הכיתה.",
+    "מיתר הגאומטריה משולב בתוכנית המתמטיקה - לאמת סדר עומק מול מסמך הכיתה.",
     "קישור לעמוד מדויק ב PDF לא נסרק אוטומטית.",
   ];
-  if (grade <= 2) return [...common, "חשיפה מוקדמת לנושאים מתקדמים — רגישות רצף מוסדית."];
-  if (grade <= 4) return [...common, "נפח ואלכסונים — לאמת עומק לפי המוסד."];
+  if (grade <= 2) return [...common, "חשיפה מוקדמת לנושאים מתקדמים - רגישות רצף מוסדית."];
+  if (grade <= 4) return [...common, "נפח ואלכסונים - לאמת עומק לפי המוסד."];
   return [...common];
 }
 

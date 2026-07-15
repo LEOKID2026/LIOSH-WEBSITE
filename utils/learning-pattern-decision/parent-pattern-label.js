@@ -1,5 +1,5 @@
 /**
- * Parent-safe pattern labels — never expose raw engine ids or "unknown" to parents.
+ * Parent-safe pattern labels - never expose raw engine ids or "unknown" to parents.
  */
 
 import {

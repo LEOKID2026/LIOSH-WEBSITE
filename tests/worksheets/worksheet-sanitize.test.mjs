@@ -24,7 +24,7 @@ const RAW_WITH_INTERNAL = {
   generatorKind: "math_v2",
   subSkill: "carry",
   params: { topicKey: "multiplication", gradeKey: "g3" },
-  question: "כיתה ג׳ · נושא multiplication — כמה זה 3 + 4?",
+  question: "כיתה ג׳ · נושא multiplication - כמה זה 3 + 4?",
   answers: ["6", "7", "8", "9"],
   correctIndex: 1,
   explanation: "3+4=7",

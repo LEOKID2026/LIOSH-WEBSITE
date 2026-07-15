@@ -6,7 +6,7 @@ export default function FruitSlicePrototypePage() {
   return (
     <>
       <Head>
-        <title>חיתוך פירות — אבטיפוס</title>
+        <title>חיתוך פירות - אבטיפוס</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <FruitSlicePrototype />

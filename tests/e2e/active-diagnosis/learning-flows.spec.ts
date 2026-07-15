@@ -33,7 +33,7 @@ async function confirmMixedModal(page: Page) {
   }
 }
 
-test.describe("Active diagnosis — learning flows (smoke)", () => {
+test.describe("Active diagnosis - learning flows (smoke)", () => {
   test.describe.configure({ mode: "serial" });
 
   test.beforeEach(async ({ page }) => {

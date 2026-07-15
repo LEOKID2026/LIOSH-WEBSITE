@@ -91,7 +91,7 @@ export default async function handler(req, res) {
         markdown: s.markdown,
       })),
       persistenceMessage:
-        "Snapshot built in memory only — nothing written under reports/. Use the admin page downloads or run CLI locally to persist files.",
+        "Snapshot built in memory only - nothing written under reports/. Use the admin page downloads or run CLI locally to persist files.",
       cliFallback:
         "Persist a full tree under reports/ locally: npm run qa:learning-simulator:expert-review-pack (after validation PASS).",
     });

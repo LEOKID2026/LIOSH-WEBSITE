@@ -33,7 +33,7 @@ export const TRAINING_AREAS = [
         { id: "me4", prompt: "המשיכu: 2, 4, 6, ?", options: ["7", "8", "9"], correctIndex: 1 },
         { id: "me5", prompt: "כמה זה 5 × 1?", options: ["5", "6", "4"], correctIndex: 0 },
         { id: "me6", prompt: "כמה זה 3 × 3?", options: ["6", "9", "12"], correctIndex: 1 },
-        { id: "me7", prompt: "איזה מספר אי־זוגי?", options: ["4", "6", "5"], correctIndex: 2 },
+        { id: "me7", prompt: "איזה מספר אי-זוגי?", options: ["4", "6", "5"], correctIndex: 2 },
         { id: "me8", prompt: "כמה זה 10 ÷ 2?", options: ["4", "5", "6"], correctIndex: 1 },
       ],
       medium: [
@@ -51,7 +51,7 @@ export const TRAINING_AREAS = [
         { id: "mh2", prompt: "כמה זה 72 ÷ 9?", options: ["7", "8", "9"], correctIndex: 1 },
         { id: "mh3", prompt: "המשיכu: 4, 8, 12, ?", options: ["14", "16", "18"], correctIndex: 1 },
         { id: "mh4", prompt: "כמה זה 11 × 3?", options: ["33", "30", "36"], correctIndex: 0 },
-        { id: "mh5", prompt: "איזה מספר אי־זוגי?", options: ["22", "24", "25"], correctIndex: 2 },
+        { id: "mh5", prompt: "איזה מספר אי-זוגי?", options: ["22", "24", "25"], correctIndex: 2 },
         { id: "mh6", prompt: "כמה זה 56 ÷ 7?", options: ["7", "8", "9"], correctIndex: 1 },
         { id: "mh7", prompt: "כמה זה 8 × 8?", options: ["56", "64", "72"], correctIndex: 1 },
         { id: "mh8", prompt: "המשיכu: 10, 20, 30, ?", options: ["35", "40", "45"], correctIndex: 1 },
@@ -103,11 +103,11 @@ export const TRAINING_AREAS = [
     emoji: "🔤",
     tasks: {
       easy: [
-        { id: "ee1", prompt: "תמונה: 🐱 — בחרu מילה", options: ["cat", "dog", "sun"], correctIndex: 0, emoji: "🐱" },
-        { id: "ee2", prompt: "אות ראשונה ב־dog", options: ["d", "g", "o"], correctIndex: 0 },
+        { id: "ee1", prompt: "תמונה: 🐱 - בחרu מילה", options: ["cat", "dog", "sun"], correctIndex: 0, emoji: "🐱" },
+        { id: "ee2", prompt: "אות ראשונה ב-dog", options: ["d", "g", "o"], correctIndex: 0 },
         { id: "ee3", prompt: "כלb → ?", options: ["dog", "milk", "book"], correctIndex: 0 },
         { id: "ee4", prompt: "תמונה: ☀️", options: ["sun", "red", "bus"], correctIndex: 0, emoji: "☀️" },
-        { id: "ee5", prompt: "אות ראשונה ב־cat", options: ["c", "t", "a"], correctIndex: 0 },
+        { id: "ee5", prompt: "אות ראשונה ב-cat", options: ["c", "t", "a"], correctIndex: 0 },
         { id: "ee6", prompt: "חלב → ?", options: ["milk", "book", "chair"], correctIndex: 0 },
         { id: "ee7", prompt: "תמונה: 🔴", options: ["red", "green", "blue"], correctIndex: 0, emoji: "🔴" },
         { id: "ee8", prompt: "בנה: c-a-t", options: ["cat", "car", "cap"], correctIndex: 0 },
@@ -125,7 +125,7 @@ export const TRAINING_AREAS = [
       hard: [
         { id: "eh1", prompt: "סדרu: I / like / milk", options: ["I like milk", "like I milk", "milk like I"], correctIndex: 0 },
         { id: "eh2", prompt: "I see a ___", options: ["dog", "table", "run"], correctIndex: 0 },
-        { id: "eh3", prompt: "תמונה 🐱 — משפט", options: ["I see a cat", "I like milk", "I run fast"], correctIndex: 0, emoji: "🐱" },
+        { id: "eh3", prompt: "תמונה 🐱 - משפט", options: ["I see a cat", "I like milk", "I run fast"], correctIndex: 0, emoji: "🐱" },
         { id: "eh4", prompt: "סדרu: I / see / a / cat", options: ["I see a cat", "see I a cat", "cat see I a"], correctIndex: 0 },
         { id: "eh5", prompt: "The apple is ___", options: ["red", "swim", "chair"], correctIndex: 0 },
         { id: "eh6", prompt: "תמונה 📚", options: ["I read a book", "I eat apple", "I see sun"], correctIndex: 0, emoji: "📚" },
@@ -161,14 +161,14 @@ export const TRAINING_AREAS = [
         { id: "gm8", prompt: "כמה ריבועים? (4×2)", options: ["6", "8", "10"], correctIndex: 1 },
       ],
       hard: [
-        { id: "gh1", prompt: "סיבוב 90° — ריבוע נשאר?", options: ["כן, נראה אותו דבר", "הופך לעיגול", "נעלם"], correctIndex: 0 },
+        { id: "gh1", prompt: "סיבוב 90° - ריבוע נשאר?", options: ["כן, נראה אותו דבר", "הופך לעיגול", "נעלם"], correctIndex: 0 },
         { id: "gh2", prompt: "פריסה של קובייה?", options: ["6 ריבועים בצורת צלב", "עיגול אחד", "משולש"], correctIndex: 0 },
-        { id: "gh3", prompt: "שיקוף משולש — צורה", options: ["משולש מראה", "ריבוע", "קו"], correctIndex: 0 },
+        { id: "gh3", prompt: "שיקוף משולש - צורה", options: ["משולש מראה", "ריבוע", "קו"], correctIndex: 0 },
         { id: "gh4", prompt: "פריסה של גליל?", options: ["מלבן + 2 עיגולים", "6 ריבועים", "משולש"], correctIndex: 0 },
         { id: "gh5", prompt: "כמה ריבועים? (5×3=12 מלאים)", options: ["10", "12", "15"], correctIndex: 1 },
         { id: "gh6", prompt: "סיבוב חץ 180°", options: ["מצביע הפוך", "נעלם", "הופך לעיגול"], correctIndex: 0 },
         { id: "gh7", prompt: "פריסה של תיבה (מלבן)", options: ["6 מלבנים", "2 עיגולים", "משולש"], correctIndex: 0 },
-        { id: "gh8", prompt: "שטח — כמה יחידות?", options: ["8", "9", "10"], correctIndex: 1 },
+        { id: "gh8", prompt: "שטח - כמה יחידות?", options: ["8", "9", "10"], correctIndex: 1 },
       ],
     },
   },
@@ -179,34 +179,34 @@ export const TRAINING_AREAS = [
     emoji: "📖",
     tasks: {
       easy: [
-        { id: "re1", prompt: "«נועה לקחה מטרייה כי ירד גשם» — למה?", options: ["כי ירד גשם", "כי היה חם", "כי ישנה"], correctIndex: 0 },
-        { id: "re2", prompt: "«דני שתה מים כי צמא» — למה?", options: ["כי צמא", "כי ירד שלג", "כי רץ"], correctIndex: 0 },
-        { id: "re3", prompt: "«אמא קנתה תפוחים» — מי?", options: ["אמא", "הכלb", "מורה"], correctIndex: 0 },
-        { id: "re4", prompt: "«שיחקu בגן» — איפה?", options: ["בגן", "בים", "בכיתה"], correctIndex: 0 },
-        { id: "re5", prompt: "«שרה לבשה מעיל» — למה?", options: ["כי קר", "כי חם", "כי גשם"], correctIndex: 0 },
-        { id: "re6", prompt: "«סבא סיפר סיפור» — מי?", options: ["סבא", "כלb", "שכn"], correctIndex: 0 },
-        { id: "re7", prompt: "«ציפורים על העץ» — איפה?", options: ["על העץ", "בים", "ברחוב"], correctIndex: 0 },
-        { id: "re8", prompt: "«יואb הדליק אור» — למה?", options: ["כי חשך", "כי קיץ", "כי ים"], correctIndex: 0 },
+        { id: "re1", prompt: "«נועה לקחה מטרייה כי ירד גשם» - למה?", options: ["כי ירד גשם", "כי היה חם", "כי ישנה"], correctIndex: 0 },
+        { id: "re2", prompt: "«דני שתה מים כי צמא» - למה?", options: ["כי צמא", "כי ירד שלג", "כי רץ"], correctIndex: 0 },
+        { id: "re3", prompt: "«אמא קנתה תפוחים» - מי?", options: ["אמא", "הכלb", "מורה"], correctIndex: 0 },
+        { id: "re4", prompt: "«שיחקu בגן» - איפה?", options: ["בגן", "בים", "בכיתה"], correctIndex: 0 },
+        { id: "re5", prompt: "«שרה לבשה מעיל» - למה?", options: ["כי קר", "כי חם", "כי גשם"], correctIndex: 0 },
+        { id: "re6", prompt: "«סבא סיפר סיפור» - מי?", options: ["סבא", "כלb", "שכn"], correctIndex: 0 },
+        { id: "re7", prompt: "«ציפורים על העץ» - איפה?", options: ["על העץ", "בים", "ברחוב"], correctIndex: 0 },
+        { id: "re8", prompt: "«יואb הדליק אור» - למה?", options: ["כי חשך", "כי קיץ", "כי ים"], correctIndex: 0 },
       ],
       medium: [
-        { id: "rm1", prompt: "«אמא הכינה, אחר כך יצאu לבית ספר» — מה קודם?", options: ["ארוחת בוקר", "חזרו הביתה", "גשם"], correctIndex: 0 },
-        { id: "rm2", prompt: "«נעמי מצאה חתלתול» — מי?", options: ["נעמi", "אבא", "שכn"], correctIndex: 0 },
-        { id: "rm3", prompt: "«נסעu לים, שחu» — איפה?", options: ["בים", "בבית", "ביער"], correctIndex: 0 },
+        { id: "rm1", prompt: "«אמא הכינה, אחר כך יצאu לבית ספר» - מה קודם?", options: ["ארוחת בוקר", "חזרו הביתה", "גשם"], correctIndex: 0 },
+        { id: "rm2", prompt: "«נעמי מצאה חתלתול» - מי?", options: ["נעמi", "אבא", "שכn"], correctIndex: 0 },
+        { id: "rm3", prompt: "«נסעu לים, שחu» - איפה?", options: ["בים", "בבית", "ביער"], correctIndex: 0 },
         { id: "rm4", prompt: "כותרת: «דni אוהb לצייר»", options: ["דni אוהb לצייר", "דni בחנות", "דni ישn"], correctIndex: 0 },
-        { id: "rm5", prompt: "«שתלu זרעים, השקu, צמחu» — מה אחרי השקייה?", options: ["צמחu", "שלג", "ים"], correctIndex: 0 },
-        { id: "rm6", prompt: "«הספרנית עזרה» — מי?", options: ["ספרנית", "רופא", "נהג"], correctIndex: 0 },
+        { id: "rm5", prompt: "«שתלu זרעים, השקu, צמחu» - מה אחרי השקייה?", options: ["צמחu", "שלג", "ים"], correctIndex: 0 },
+        { id: "rm6", prompt: "«הספרנית עזרה» - מי?", options: ["ספרנית", "רופא", "נהג"], correctIndex: 0 },
         { id: "rm7", prompt: "כותרת: «גשם, משחקים בבית»", options: ["יום גשום", "טיול", "קנייה"], correctIndex: 0 },
-        { id: "rm8", prompt: "«לפני שינה קראu סיפור» — מה לפני כיבוי אור?", options: ["קראu סיפור", "ארוחת בוקר", "גן"], correctIndex: 0 },
+        { id: "rm8", prompt: "«לפני שינה קראu סיפור» - מה לפני כיבוי אור?", options: ["קראu סיפור", "ארוחת בוקר", "גן"], correctIndex: 0 },
       ],
       hard: [
-        { id: "rh1", prompt: "«יעל הכינה עוגה לאמא» — מה מבינים?", options: ["יעל אוהbת אמא", "כועסת", "לא bשל"], correctIndex: 0 },
-        { id: "rh2", prompt: "«תומer לקח רצועה» — מוכיח?", options: ["יוצא לטיול", "ישn", "אוכl"], correctIndex: 0 },
-        { id: "rh3", prompt: "«עייפים, שכbו, נרדמו» — «עייפים»?", options: ["מותשים", "שמחים", "רעbים"], correctIndex: 0 },
-        { id: "rh4", prompt: "«ליאo שכח מחברת» — מה מבינים?", options: ["צריך מחברת", "אוהb שחייה", "חופש"], correctIndex: 0 },
+        { id: "rh1", prompt: "«יעל הכינה עוגה לאמא» - מה מבינים?", options: ["יעל אוהbת אמא", "כועסת", "לא bשל"], correctIndex: 0 },
+        { id: "rh2", prompt: "«תומer לקח רצועה» - מוכיח?", options: ["יוצא לטיול", "ישn", "אוכl"], correctIndex: 0 },
+        { id: "rh3", prompt: "«עייפים, שכbו, נרדמו» - «עייפים»?", options: ["מותשים", "שמחים", "רעbים"], correctIndex: 0 },
+        { id: "rh4", prompt: "«ליאo שכח מחברת» - מה מבינים?", options: ["צריך מחברת", "אוהb שחייה", "חופש"], correctIndex: 0 },
         { id: "rh5", prompt: "כותרת: «ציפורים נודדות דרומה»", options: ["נדידת ציפורים", "שחייה", "ארוחה"], correctIndex: 0 },
-        { id: "rh6", prompt: "«שמיים כהים, רעם» — גשם?", options: ["כן", "לא", "שלg"], correctIndex: 0 },
-        { id: "rh7", prompt: "«אמיץ, עזר לחבר» — «אמיץ»?", options: ["לא מפחd", "עיif", "כועs"], correctIndex: 0 },
-        { id: "rh8", prompt: "«מאיה חסכה בקופסה» — מה מבינים?", options: ["חסכה לקנייה", "זרקה כסף", "לא אוהbת סבתא"], correctIndex: 0 },
+        { id: "rh6", prompt: "«שמיים כהים, רעם» - גשם?", options: ["כן", "לא", "שלg"], correctIndex: 0 },
+        { id: "rh7", prompt: "«אמיץ, עזר לחבר» - «אמיץ»?", options: ["לא מפחd", "עיif", "כועs"], correctIndex: 0 },
+        { id: "rh8", prompt: "«מאיה חסכה בקופסה» - מה מבינים?", options: ["חסכה לקנייה", "זרקה כסף", "לא אוהbת סבתא"], correctIndex: 0 },
       ],
     },
   },
@@ -222,12 +222,12 @@ export function pickTrainingTasks(areaId, difficulty) {
 }
 
 export function trainingFeedback(ok) {
-  return ok ? "יפה! המשיכu כך" : "כמעט — ננסה שוב בצורה פשוטה יותר";
+  return ok ? "יפה! המשיכu כך" : "כמעט - ננסה שוב בצורה פשוטה יותר";
 }
 
 export function trainingSummaryMessage(correct, total) {
   const ratio = total > 0 ? correct / total : 0;
-  if (ratio >= 0.85) return "השתפרתם במשימות האלה — כדאי להמשיך לתרגל";
-  if (ratio >= 0.5) return "תרגלתם היום נקודות חשובות — נמשיך להתאמן";
-  return "נמשיך להתאמן יחד — כל ניסיון מחזק";
+  if (ratio >= 0.85) return "השתפרתם במשימות האלה - כדאי להמשיך לתרגל";
+  if (ratio >= 0.5) return "תרגלתם היום נקודות חשובות - נמשיך להתאמן";
+  return "נמשיך להתאמן יחד - כל ניסיון מחזק";
 }

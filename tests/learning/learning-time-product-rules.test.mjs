@@ -103,7 +103,7 @@ describe("product learning-time rules", () => {
     assert.equal(out.creditedMs, 25 * 60_000);
   });
 
-  test("12. question advance is not a new visit unit — visit open-learning uncapped by question cap", () => {
+  test("12. question advance is not a new visit unit - visit open-learning uncapped by question cap", () => {
     const visit = computeOpenLearningTiming(45 * 60_000);
     assert.equal(visit.creditedTimeMs, 45 * 60_000);
     const q = computeAssignedActivityTiming(45 * 60_000);

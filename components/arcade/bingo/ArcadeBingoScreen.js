@@ -15,7 +15,7 @@ import StudentAdSlot from "../../student/StudentAdSlot.jsx";
 
 /** @param {number|null|undefined} ms */
 function fmtCountdown(ms) {
-  if (ms == null) return "—";
+  if (ms == null) return "-";
   const s = Math.max(0, Math.ceil(ms / 1000));
   if (s >= 120) return `${Math.ceil(s / 60)} דק'`;
   if (s >= 60) return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
@@ -275,7 +275,7 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
     if (life === "pending_start" || life === "pending_stakes") return "ממתינים להימור מכל השחקנים";
     if (life === "active" && !vm.roomActiveSessionId && !snapSid) return "ממתינים שהמארח יפתח בינגו";
     if (life === "active" && (vm.roomActiveSessionId || snapSid)) return "משחק";
-    return sp || life || "—";
+    return sp || life || "-";
   }, [isLiveMatch, vm.roomLifecyclePhase, vm.sessionPhase, vm.roomActiveSessionId, vm.authoritativeSnapshot]);
 
   const playingLive = Boolean(vm.isLive && isLiveMatch && vm.sessionPhase === "playing");
@@ -387,7 +387,7 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
         >
           <span className="flex h-[2.25rem] max-h-[2.25rem] min-w-[5.5rem] flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-white/10 bg-black/40 px-3 py-0 text-xs leading-tight text-zinc-400 sm:h-[2.5rem] sm:max-h-[2.5rem] sm:min-w-0 sm:px-4 sm:text-sm">
             <span className="font-semibold text-zinc-500">אחרון</span>
-            <span className="font-mono font-semibold text-amber-100">{vm.lastCalled ?? "—"}</span>
+            <span className="font-mono font-semibold text-amber-100">{vm.lastCalled ?? "-"}</span>
           </span>
           <span className="flex h-[2.25rem] max-h-[2.25rem] min-w-[5.5rem] flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-white/10 bg-black/40 px-3 py-0 text-xs leading-tight text-zinc-400 sm:h-[2.5rem] sm:max-h-[2.5rem] sm:min-w-0 sm:px-4 sm:text-sm">
             <span className="font-semibold text-zinc-500">הבא</span>
@@ -409,11 +409,11 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
         >
           <span className="flex h-[2rem] max-h-[2rem] min-w-[5rem] flex-1 items-center justify-center gap-1 whitespace-nowrap rounded-md border border-white/10 bg-black/40 px-2 py-0 text-[10px] leading-tight text-zinc-400 sm:h-[2.25rem] sm:max-h-[2.25rem] sm:min-w-0 sm:text-xs">
             <span className="font-semibold text-zinc-500">אחרון</span>
-            <span className="font-mono font-semibold text-amber-100">{vm.lastCalled ?? "—"}</span>
+            <span className="font-mono font-semibold text-amber-100">{vm.lastCalled ?? "-"}</span>
           </span>
           <span className="flex h-[2rem] max-h-[2rem] min-w-[5rem] flex-1 items-center justify-center gap-1 whitespace-nowrap rounded-md border border-white/10 bg-black/40 px-2 py-0 text-[10px] leading-tight text-zinc-400 sm:h-[2.25rem] sm:max-h-[2.25rem] sm:min-w-0 sm:text-xs">
             <span className="font-semibold text-zinc-500">הבא</span>
-            <span className="font-mono font-semibold text-zinc-300">—</span>
+            <span className="font-mono font-semibold text-zinc-300">-</span>
           </span>
           <span className="flex h-[2rem] max-h-[2rem] min-w-[5rem] flex-1 items-center justify-center gap-1 whitespace-nowrap rounded-md border border-white/10 bg-black/40 px-2 py-0 text-[10px] leading-tight text-zinc-400 sm:h-[2.25rem] sm:max-h-[2.25rem] sm:min-w-0 sm:text-xs">
             <span className="font-semibold text-zinc-500">חפיסה</span>
@@ -435,7 +435,7 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
             <div className="mt-2 grid grid-cols-2 gap-2 border-t border-white/10 pt-2 sm:mt-0 sm:border-l sm:border-t-0 sm:pl-4 sm:pt-0">
               <div>
                 <div className="text-[9px] font-semibold text-zinc-500">נקרא לאחרונה</div>
-                <div className="font-mono text-sm text-amber-100">{vm.lastCalled ?? "—"}</div>
+                <div className="font-mono text-sm text-amber-100">{vm.lastCalled ?? "-"}</div>
               </div>
               <div>
                 <div className="text-[9px] font-semibold text-zinc-500">הבא</div>
@@ -454,11 +454,11 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
           </div>
           <div className="text-[9px] text-zinc-300 sm:text-[10px]">
             <div className="font-semibold text-zinc-500">אחרון</div>
-            <div className="mt-0.5 font-mono text-xs text-amber-100 sm:text-sm">{vm.lastCalled ?? "—"}</div>
+            <div className="mt-0.5 font-mono text-xs text-amber-100 sm:text-sm">{vm.lastCalled ?? "-"}</div>
           </div>
           <div className="text-[9px] text-zinc-300 sm:text-[10px]">
             <div className="font-semibold text-zinc-500">הבא</div>
-            <div className="mt-0.5 font-mono text-xs text-zinc-100 sm:text-sm">—</div>
+            <div className="mt-0.5 font-mono text-xs text-zinc-100 sm:text-sm">-</div>
           </div>
         </div>
       ) : null}

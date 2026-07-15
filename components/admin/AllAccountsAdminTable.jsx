@@ -177,7 +177,7 @@ function AllAccountsRow({
         data-user-id={row.userId}
       >
         <p className="text-sm break-all" dir="ltr">
-          {row.email || "—"}
+          {row.email || "-"}
         </p>
         <p className="text-xs text-white/45 font-mono" dir="ltr">
           {row.userId}
@@ -196,7 +196,7 @@ function AllAccountsRow({
   return (
     <tr className="border-t border-white/10 hover:bg-white/5" data-testid="all-accounts-row" data-user-id={row.userId}>
       <td className="px-3 py-3 break-all" dir="ltr">
-        {row.email || "—"}
+        {row.email || "-"}
       </td>
       <td className="px-3 py-3 text-xs font-mono text-white/50" dir="ltr">
         {row.userId}

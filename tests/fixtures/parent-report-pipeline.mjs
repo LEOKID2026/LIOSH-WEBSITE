@@ -247,7 +247,7 @@ export const PARENT_REPORT_SCENARIOS = {
             confidenceBadge: "medium",
             sufficiencyBadge: "medium",
             diagnosticType: "fragile_success",
-            whyThisRecommendationHe: "fragile_success — דיוק עולה אך עצמאות יורדת.",
+            whyThisRecommendationHe: "fragile_success - דיוק עולה אך עצמאות יורדת.",
           },
         }),
       },

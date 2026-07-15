@@ -712,7 +712,7 @@ function ManualNumberLineWorkspace({ operands }) {
         })}
       </div>
       <p className={`${C.mutedTextXs} mt-2 text-center`} dir="rtl">
-        המספרים מסומנים בקו — לחצו לסימון עבודה
+        המספרים מסומנים בקו - לחצו לסימון עבודה
       </p>
     </div>
   );
@@ -846,7 +846,7 @@ function PlaceValueTableWorkspace({ operands, centerOperands = false, fillParent
             <tr>
               <td colSpan={spec.cols} className={C.tableCellStrong}>
                 <ScratchpadDigitDisplay
-                  value="—"
+                  value="-"
                   className={`${C.operandCell} mx-auto`}
                   aria-label="fraction exercise"
                 />
@@ -1036,7 +1036,7 @@ function DivisionGroupsWorkspace({ operands }) {
         ))}
       </div>
       <p className={`${C.mutedTextXs} text-center`} dir="rtl">
-        לחצו לסימון קבוצות — ללא חלוקה אוטומטית
+        לחצו לסימון קבוצות - ללא חלוקה אוטומטית
       </p>
     </div>
   );
@@ -1289,7 +1289,7 @@ function PercentGridWorkspace() {
         ))}
       </div>
       <p className={C.mutedTextXs} dir="rtl">
-        סמנו ריבועים — ללא חישוב אחוז
+        סמנו ריבועים - ללא חישוב אחוז
       </p>
     </div>
   );
@@ -1373,7 +1373,7 @@ function ManualOrderWorkspace() {
         ))}
       </div>
       <p className={`${C.mutedTextXs} text-center`} dir="rtl">
-        תיבות ריקות לסדר פעולות — ללא רמז לפעולה
+        תיבות ריקות לסדר פעולות - ללא רמז לפעולה
       </p>
     </div>
   );

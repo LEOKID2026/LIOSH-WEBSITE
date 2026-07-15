@@ -82,7 +82,7 @@ export const PARENT_READABILITY_LEAK_SUBSTRINGS = [
   "בחירת כפל לא מתאים לחילוק",
   /* Parent copy guard — diagnostic-engine jargon in default-visible report text */
   "אין שאלות בטווח",
-  "בטווח זה — אין שאלות",
+  "בטווח זה - אין שאלות",
   "לא תורגל בטווח",
   "מקצועות שלא נדגמו",
   "סף נפח",
@@ -170,7 +170,7 @@ export const PARENT_COPY_DUPLICATE_WORD_PAIRS = Object.freeze([
 /** Forbidden fragments in parent-report Hebrew copy sources (denylist for copy guard). */
 export const PARENT_COPY_FORBIDDEN_FRAGMENTS = Object.freeze([
   "אין שאלות בטווח",
-  "בטווח זה — אין שאלות",
+  "בטווח זה - אין שאלות",
   "לא תורגל בטווח",
   "מקצועות שלא נדגמו",
   "סף נפח",
@@ -187,7 +187,7 @@ export const PARENT_COPY_FORBIDDEN_FRAGMENTS = Object.freeze([
   "מסקנה חזקה",
   /* Awkward bare "בתקופה" / engineer empty-state wording */
   "שורות דוח בתקופה",
-  "אין שורות דוח —",
+  "אין שורות דוח -",
   "בתרגול בתקופה שנבחרה",
   "מה שנאסף בתקופה",
   "בתקופה כדי לסכם",

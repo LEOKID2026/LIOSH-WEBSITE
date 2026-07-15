@@ -17,7 +17,7 @@ export default function SchoolInboxMessageDetailContent({
       </h2>
       {senderLine ? <p className="text-xs text-amber-200/90">{senderLine}</p> : null}
       {sentLabel ? <p className="text-xs text-white/50">{sentLabel}</p> : null}
-      <p className="text-sm text-white/85 whitespace-pre-wrap">{message.body || "—"}</p>
+      <p className="text-sm text-white/85 whitespace-pre-wrap">{message.body || "-"}</p>
       <SchoolMessageConfirmationActions message={message} busy={markBusy} onMarkRead={onMarkRead} />
     </>
   );

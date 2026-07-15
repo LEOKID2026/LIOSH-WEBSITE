@@ -66,7 +66,7 @@ export const TRAIN_TASKS = {
     {
       id: "e7",
       type: "build_word",
-      promptHe: "בנו מילה מ־3 אותיות",
+      promptHe: "בנו מילה מ-3 אותיות",
       emoji: "🐱",
       word: "cat",
       letters: ["c", "a", "t", "b", "r"],
@@ -74,7 +74,7 @@ export const TRAIN_TASKS = {
     {
       id: "e8",
       type: "build_word",
-      promptHe: "בנו מילה מ־3 אותיות",
+      promptHe: "בנו מילה מ-3 אותיות",
       emoji: "🐶",
       word: "dog",
       letters: ["d", "o", "g", "s", "n"],
@@ -82,7 +82,7 @@ export const TRAIN_TASKS = {
     {
       id: "e9",
       type: "build_word",
-      promptHe: "בנו מילה מ־3 אותיות",
+      promptHe: "בנו מילה מ-3 אותיות",
       emoji: "☀️",
       word: "sun",
       letters: ["s", "u", "n", "m", "p"],
@@ -98,7 +98,7 @@ export const TRAIN_TASKS = {
     {
       id: "e11",
       type: "build_word",
-      promptHe: "בנו מילה מ־3 אותיות",
+      promptHe: "בנו מילה מ-3 אותיות",
       emoji: "🔴",
       word: "red",
       letters: ["r", "e", "d", "b", "l"],
@@ -115,7 +115,7 @@ export const TRAIN_TASKS = {
     {
       id: "m1",
       type: "build_word",
-      promptHe: "בנו מילה מ־4 אותיות",
+      promptHe: "בנו מילה מ-4 אותיות",
       emoji: "🥛",
       word: "milk",
       letters: ["m", "i", "l", "k", "a", "e"],
@@ -123,7 +123,7 @@ export const TRAIN_TASKS = {
     {
       id: "m2",
       type: "build_word",
-      promptHe: "בנו מילה מ־4 אותיות",
+      promptHe: "בנו מילה מ-4 אותיות",
       emoji: "📚",
       word: "book",
       letters: ["b", "o", "o", "k", "r", "t"],
@@ -131,7 +131,7 @@ export const TRAIN_TASKS = {
     {
       id: "m3",
       type: "build_word",
-      promptHe: "בנו מילה מ־5 אותיות",
+      promptHe: "בנו מילה מ-5 אותיות",
       emoji: "🟢",
       word: "green",
       letters: ["g", "r", "e", "e", "n", "a", "t"],
@@ -173,7 +173,7 @@ export const TRAIN_TASKS = {
     {
       id: "m8",
       type: "build_word",
-      promptHe: "בנו מילה מ־5 אותיות",
+      promptHe: "בנו מילה מ-5 אותיות",
       emoji: "🪑",
       word: "chair",
       letters: ["c", "h", "a", "i", "r", "e", "o"],
@@ -190,7 +190,7 @@ export const TRAIN_TASKS = {
     {
       id: "m10",
       type: "build_word",
-      promptHe: "בנו מילה מ־5 אותיות",
+      promptHe: "בנו מילה מ-5 אותיות",
       emoji: "🍎",
       word: "apple",
       letters: ["a", "p", "p", "l", "e", "o", "r"],

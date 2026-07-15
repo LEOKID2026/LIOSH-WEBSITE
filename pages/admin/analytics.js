@@ -51,12 +51,12 @@ const GRADES = [
 
 const SUBJECTS = [
   { value: "all", label: "כל המקצועות" },
-  { value: "math", label: "חשבון" },
-  { value: "geometry", label: "גיאומטריה" },
+  { value: "math", label: "מתמטיקה" },
+  { value: "geometry", label: "גאומטריה" },
   { value: "hebrew", label: "עברית" },
   { value: "english", label: "אנגלית" },
   { value: "science", label: "מדעים" },
-  { value: "moledet_geography", label: "מולדת וגיאוגרפיה" },
+  { value: "moledet_geography", label: "מולדת וגאוגרפיה" },
 ];
 
 const CHILD_STATUSES = [
@@ -86,13 +86,13 @@ export const ANALYTICS_MAIN_TABS = [
 ];
 
 function formatDateHe(iso) {
-  if (!iso || typeof iso !== "string") return iso || "—";
+  if (!iso || typeof iso !== "string") return iso || "-";
   const [y, m, d] = iso.split("-");
   if (!y || !m || !d) return iso;
   return `${d}/${m}/${y}`;
 }
 
-function labelFromOptions(value, options, fallback = "—") {
+function labelFromOptions(value, options, fallback = "-") {
   return options.find((item) => item.value === value)?.label || fallback;
 }
 
@@ -160,7 +160,7 @@ function mergeActivityFunnel(userActivityFunnel, webTraffic) {
 }
 
 function formatTrafficNumber(value) {
-  if (value == null || value === "") return "—";
+  if (value == null || value === "") return "-";
   return new Intl.NumberFormat("he-IL").format(value);
 }
 
@@ -178,7 +178,7 @@ function ActivityFunnelSummary({ funnel }) {
           <div key={step.key} className="rounded-xl border border-white/10 bg-white/[0.02] p-3">
             <p className="text-[11px] text-white/55 mb-1">{formatAnalyticsLabelHe(step.label)}</p>
             <p className="text-xl font-bold text-white">
-              {step.placeholder && step.value == null ? "—" : formatTrafficNumber(step.value)}
+              {step.placeholder && step.value == null ? "-" : formatTrafficNumber(step.value)}
             </p>
             <p className="text-[10px] text-white/40 mt-1 break-words">מקור: {formatAnalyticsSourceHe(step.source)}</p>
           </div>
@@ -422,7 +422,7 @@ function WebTrafficTabContent({
             {model.adminPages.length ? (
               <div className="mt-3 rounded-xl border border-white/10 bg-white/[0.02] p-3 space-y-2">
                 <h4 className="text-sm font-semibold text-white/70">פעילות מנהל</h4>
-                <p className="text-xs text-white/45">דפי ניהול — לא נספרים יחד עם מבקרים רגילים</p>
+                <p className="text-xs text-white/45">דפי ניהול - לא נספרים יחד עם מבקרים רגילים</p>
                 <WebTrafficTable rows={model.adminPages} dimension="requestPath" nameLabel="דף" empty="אין נתונים" />
               </div>
             ) : null}
@@ -466,7 +466,7 @@ function thirtyDaysAgoIso() {
 }
 
 function valueText(metric) {
-  if (!metric) return "—";
+  if (!metric) return "-";
   if (metric.status === "not_tracked") return "עדיין לא נמדד";
   if (metric.status === "requires_events") return "דורש איסוף אירועים";
   if (metric.status === "empty") return "אין נתונים עדיין";
@@ -539,7 +539,7 @@ function MetricGrid({ items }) {
 }
 
 function cellValue(row, col) {
-  return col.render ? col.render(row) : formatAnalyticsLabelHe(row[col.key]) ?? "—";
+  return col.render ? col.render(row) : formatAnalyticsLabelHe(row[col.key]) ?? "-";
 }
 
 function SimpleTable({ rows, columns, empty = "אין נתונים בטווח" }) {
@@ -634,7 +634,7 @@ function FunnelList({ funnels }) {
               {
                 key: "conversionFromPrevious",
                 label: "המרה",
-                render: (row) => (row.conversionFromPrevious == null ? "—" : `${row.conversionFromPrevious}%`),
+                render: (row) => (row.conversionFromPrevious == null ? "-" : `${row.conversionFromPrevious}%`),
               },
               { key: "source", label: "מקור", render: (row) => formatAnalyticsSourceHe(row.source) },
             ]}
@@ -1036,7 +1036,7 @@ export default function AdminAnalyticsPage() {
             </Panel>
             <Panel
               panelId="overview-user-activity"
-              title="פעילות משתמשים — Supabase"
+              title="פעילות משתמשים - Supabase"
               subtitle="אורחים, הורים, למידה ומשחקים (ללא חשבונות מערכת, QA ומנהלים)"
               summary={metricsSummary(overviewUserActivitySection?.cards)}
               toggle={togglePanel}
@@ -1526,7 +1526,7 @@ export default function AdminAnalyticsPage() {
             <Panel
               panelId="retention-summary"
               title="חזרה לשימוש"
-              subtitle="שימור יום 1 / 7 / 30 — רק אחרי מספיק זמן ונתונים"
+              subtitle="שימור יום 1 / 7 / 30 - רק אחרי מספיק זמן ונתונים"
               summary={metricsSummary(sections.retention)}
               toggle={togglePanel}
               isOpen={isPanelOpen("retention-summary")}
@@ -1707,7 +1707,7 @@ export default function AdminAnalyticsPage() {
             <>
               {sourceErrors.length ? (
                 <div className="rounded-xl border border-amber-400/25 bg-amber-400/10 p-2 text-xs text-amber-100">
-                  יש {sourceErrors.length} מקורות נתונים חסרים — פרטים בטאב "בדיקות אמת".
+                  יש {sourceErrors.length} מקורות נתונים חסרים - פרטים בטאב "בדיקות אמת".
                 </div>
               ) : null}
 

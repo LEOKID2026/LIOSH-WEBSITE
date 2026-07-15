@@ -103,7 +103,7 @@ function setAllThreeMetadataFlags() {
 
 /** Existing topic-insight template — promotion must not introduce new Hebrew copy. */
 const EXISTING_TOPIC_INSIGHT_RE =
-  /^כדאי לשים לב ל.+ — זה נושא שחוזר בתרגולים\.$/;
+  /^כדאי לשים לב ל.+ - זה נושא שחוזר בתרגולים\.$/;
 
 function assertStrippedPublicPromotionSanitized(stripped) {
   assert.equal(stripped.meta._evidenceQuality, undefined);
@@ -196,14 +196,14 @@ function publicEvidenceQualityShape(eq) {
   };
 }
 
-describe("Q2-E.1 — feature flag default", () => {
+describe("Q2-E.1 - feature flag default", () => {
   test("default flag is OFF", () => {
     delete process.env[FLAG_ENV];
     assert.equal(isDiagnosticMetadataSubskillEnabled(), false);
   });
 });
 
-describe("Q2-E.1 — resolver safety", () => {
+describe("Q2-E.1 - resolver safety", () => {
   test("returns null when not diagnostic-eligible", () => {
     const meta = resolveCanonicalMetadataFromAnswerSnapshot(
       {
@@ -254,7 +254,7 @@ describe("Q2-E.1 — resolver safety", () => {
   });
 });
 
-describe("Q2-E.1 — flag OFF public payload unchanged", () => {
+describe("Q2-E.1 - flag OFF public payload unchanged", () => {
   test("public meta.evidenceQuality shape unchanged vs flag ON internal-only delta", () => {
     delete process.env[FLAG_ENV];
     const payload = basePayload();
@@ -314,7 +314,7 @@ describe("Q2-E.1 — flag OFF public payload unchanged", () => {
   });
 });
 
-describe("Q2-E.1 — flag ON internal grouping", () => {
+describe("Q2-E.1 - flag ON internal grouping", () => {
   test("internal bySubSkill entry shape", () => {
     process.env[FLAG_ENV] = "true";
     const { internal } = computeParentContextEvidenceQuality(basePayload());
@@ -360,7 +360,7 @@ describe("Q2-E.1 — flag ON internal grouping", () => {
   });
 });
 
-describe("Q2-E.2 — error pattern recurrence", () => {
+describe("Q2-E.2 - error pattern recurrence", () => {
   test("normalizePossibleErrorPatterns dedupes and drops empty", () => {
     assert.deepEqual(
       normalizePossibleErrorPatterns(["wrong_denominator", "", "wrong_denominator", "  "]),
@@ -477,7 +477,7 @@ describe("Q2-E.2 — error pattern recurrence", () => {
   });
 });
 
-describe("Q2-E.3 — metadata confidence caps", () => {
+describe("Q2-E.3 - metadata confidence caps", () => {
   test("high metadata keeps strong internal cap", () => {
     const cap = resolveMetadataConfidenceCap({
       metadataConfidence: "high",
@@ -616,7 +616,7 @@ describe("Q2-E.3 — metadata confidence caps", () => {
   });
 });
 
-describe("Q2-E.4 — questionType internal filters", () => {
+describe("Q2-E.4 - questionType internal filters", () => {
   function mathMixedQuestionTypePayload() {
     return {
       summary: { diagnosticAnswers: 10, totalSessions: 2, totalAnswers: 10 },
@@ -960,7 +960,7 @@ describe("Q2-E.4 — questionType internal filters", () => {
   });
 });
 
-describe("Q2-E.5-A — shadow parent gating (internal only)", () => {
+describe("Q2-E.5-A - shadow parent gating (internal only)", () => {
   function supportedTopicOnlyWeakMetadataPayload() {
     return {
       summary: { diagnosticAnswers: 12, totalSessions: 3, totalAnswers: 12 },
@@ -1261,7 +1261,7 @@ describe("Q2-E.5-A — shadow parent gating (internal only)", () => {
   });
 });
 
-describe("Q2-E.5-B — active parent gating trial (flag-gated)", () => {
+describe("Q2-E.5-B - active parent gating trial (flag-gated)", () => {
   function activeGatingSuppressPayload() {
     return {
       summary: { diagnosticAnswers: 12, totalSessions: 3, totalAnswers: 12 },
@@ -1332,7 +1332,7 @@ describe("Q2-E.5-B — active parent gating trial (flag-gated)", () => {
     };
   }
 
-  test("both flags OFF — default unchanged", () => {
+  test("both flags OFF - default unchanged", () => {
     clearMetadataFlags();
     assert.equal(isDiagnosticMetadataSubskillEnabled(), false);
     assert.equal(isDiagnosticMetadataParentGatingEnabled(), false);
@@ -1342,7 +1342,7 @@ describe("Q2-E.5-B — active parent gating trial (flag-gated)", () => {
     assert.equal(internal.gatingDecisions, undefined);
   });
 
-  test("metadata ON / active OFF — shadow only, parent-facing unchanged", () => {
+  test("metadata ON / active OFF - shadow only, parent-facing unchanged", () => {
     clearMetadataFlags();
     const offBlocks = buildParentFacingBlocks(activeGatingSuppressPayload());
     setMetadataOnlyFlag();
@@ -1354,7 +1354,7 @@ describe("Q2-E.5-B — active parent gating trial (flag-gated)", () => {
     assert.deepEqual(onBlocks, offBlocks);
   });
 
-  test("both flags ON — suppresses weak supported topic strong diagnosis", () => {
+  test("both flags ON - suppresses weak supported topic strong diagnosis", () => {
     setMetadataOnlyFlag();
     const metadataOnlyPayload = attachParentContextEvidenceQuality(activeGatingSuppressPayload());
     const metadataOnlyBlocks = buildParentFacingBlocks(metadataOnlyPayload);
@@ -1378,7 +1378,7 @@ describe("Q2-E.5-B — active parent gating trial (flag-gated)", () => {
     );
   });
 
-  test("both flags ON — does not suppress when high-confidence subSkill recurrence supports diagnosis", () => {
+  test("both flags ON - does not suppress when high-confidence subSkill recurrence supports diagnosis", () => {
     setBothMetadataFlags();
     const payload = attachParentContextEvidenceQuality(basePayload());
     assert.equal(allowsStrongParentDiagnosisAtTopic(payload, "math", "fractions"), false);
@@ -1392,7 +1392,7 @@ describe("Q2-E.5-B — active parent gating trial (flag-gated)", () => {
     assert.deepEqual(blocks, metadataOnlyBlocks);
   });
 
-  test("both flags ON — promotion candidates remain shadow-only", () => {
+  test("both flags ON - promotion candidates remain shadow-only", () => {
     setBothMetadataFlags();
     const payload = {
       summary: { diagnosticAnswers: 8, totalSessions: 2, totalAnswers: 8 },
@@ -1566,7 +1566,7 @@ describe("Q2-E.5-B — active parent gating trial (flag-gated)", () => {
     assert.equal(internal.appliedParentGating, undefined);
   });
 
-  test("flag matrix — targeted parent gating simulation", () => {
+  test("flag matrix - targeted parent gating simulation", () => {
     const raw = activeGatingSuppressPayload();
     clearMetadataFlags();
     const matrix = {
@@ -1587,7 +1587,7 @@ describe("Q2-E.5-B — active parent gating trial (flag-gated)", () => {
   });
 });
 
-describe("Q2-E.5-C1 — promotion candidate validation (shadow only)", () => {
+describe("Q2-E.5-C1 - promotion candidate validation (shadow only)", () => {
   test("validates high-confidence subSkill recurrence candidate internally", () => {
     process.env[FLAG_ENV] = "true";
     const { internal } = computeParentContextEvidenceQuality(basePayload());
@@ -1755,7 +1755,7 @@ describe("Q2-E.5-C1 — promotion candidate validation (shadow only)", () => {
     assert.deepEqual(onBlocks, offBlocks);
   });
 
-  test("no active promotion applied — gating and public sufficiency unchanged", () => {
+  test("no active promotion applied - gating and public sufficiency unchanged", () => {
     process.env[FLAG_ENV] = "true";
     const attached = attachParentContextEvidenceQuality(basePayload());
     assert.equal(attached.meta.evidenceQuality.byTopic["math::fractions"].dataSufficiency, "preliminary_signal");
@@ -1780,7 +1780,7 @@ describe("Q2-E.5-C1 — promotion candidate validation (shadow only)", () => {
   });
 });
 
-describe("Q2-E.5-C2 — active parent promotion trial (flag-gated)", () => {
+describe("Q2-E.5-C2 - active parent promotion trial (flag-gated)", () => {
   function c2WordProblemContrastPayload() {
     return {
       summary: { diagnosticAnswers: 8, totalSessions: 2, totalAnswers: 8 },
@@ -1959,7 +1959,7 @@ describe("Q2-E.5-C2 — active parent promotion trial (flag-gated)", () => {
   }
 
   describe("flag matrix", () => {
-    test("all flags OFF — default unchanged", () => {
+    test("all flags OFF - default unchanged", () => {
       clearMetadataFlags();
       assert.equal(isActiveMetadataParentPromotionEnabled(), false);
       const attached = attachParentContextEvidenceQuality(insufficientStudentPromotablePayload());
@@ -1971,7 +1971,7 @@ describe("Q2-E.5-C2 — active parent promotion trial (flag-gated)", () => {
       );
     });
 
-    test("metadata flag ON only — internal only, no parent-facing promotion", () => {
+    test("metadata flag ON only - internal only, no parent-facing promotion", () => {
       clearMetadataFlags();
       const offBlocks = buildParentFacingBlocks(insufficientStudentPromotablePayload());
       setMetadataOnlyFlag();
@@ -1983,7 +1983,7 @@ describe("Q2-E.5-C2 — active parent promotion trial (flag-gated)", () => {
       assert.equal(attached.meta._evidenceQuality?.appliedParentPromotion, undefined);
     });
 
-    test("metadata + gating ON, promotion OFF — E.5-B suppression only, no promotion", () => {
+    test("metadata + gating ON, promotion OFF - E.5-B suppression only, no promotion", () => {
       setBothMetadataFlags();
       const promotable = attachParentContextEvidenceQuality(insufficientStudentPromotablePayload());
       assert.equal(promotable.meta._evidenceQuality?.promotionDecisions, undefined);
@@ -2053,7 +2053,7 @@ describe("Q2-E.5-C2 — active parent promotion trial (flag-gated)", () => {
       assert.equal(suppress.meta._evidenceQuality?.promotionDecisions, undefined);
     });
 
-    test("all three flags ON — promotion applies only to validated candidates", () => {
+    test("all three flags ON - promotion applies only to validated candidates", () => {
       const raw = insufficientStudentPromotablePayload();
       clearMetadataFlags();
       const allOff = attachParentContextEvidenceQuality(raw);
@@ -2401,7 +2401,7 @@ describe("Q2-E.5-C2 — active parent promotion trial (flag-gated)", () => {
   });
 
   describe("parent-facing behavior", () => {
-  test("no new Hebrew copy — promotion reuses existing topic-insight template only", () => {
+  test("no new Hebrew copy - promotion reuses existing topic-insight template only", () => {
     clearMetadataFlags();
     const before = buildParentFacingBlocks(insufficientStudentPromotablePayload());
     setAllThreeMetadataFlags();
@@ -2559,7 +2559,7 @@ describe("Q2-E.5-C2 — active parent promotion trial (flag-gated)", () => {
     assert.equal(payload.meta._evidenceQuality?.promotionDecisions, undefined);
   });
 
-  test("public dataSufficiency unchanged — promotion does not override classification", () => {
+  test("public dataSufficiency unchanged - promotion does not override classification", () => {
     setAllThreeMetadataFlags();
     const attached = attachParentContextEvidenceQuality(insufficientStudentPromotablePayload());
     assert.equal(attached.meta.evidenceQuality.student.dataSufficiency, "insufficient_data");
@@ -2631,7 +2631,7 @@ describe("Q2-E.5-C2 — active parent promotion trial (flag-gated)", () => {
   });
 });
 
-describe("Q2-E.6 — problemClass / difficultyDepth internal analysis (flag-gated)", () => {
+describe("Q2-E.6 - problemClass / difficultyDepth internal analysis (flag-gated)", () => {
   function mathMixedPedagogyPayload() {
     return {
       summary: { diagnosticAnswers: 10, totalSessions: 2, totalAnswers: 10 },
@@ -2771,7 +2771,7 @@ describe("Q2-E.6 — problemClass / difficultyDepth internal analysis (flag-gate
     assert.equal(difficultyDepthBucket(undefined), "unclassified");
   });
 
-  test("problemClass breakdown exists internally — procedural vs mixed", () => {
+  test("problemClass breakdown exists internally - procedural vs mixed", () => {
     process.env[FLAG_ENV] = "true";
     const { internal } = computeParentContextEvidenceQuality(mathMixedPedagogyPayload());
     assert.ok(internal.problemClasses?.["math::fractions::procedural"]);
@@ -2787,7 +2787,7 @@ describe("Q2-E.6 — problemClass / difficultyDepth internal analysis (flag-gate
     assert.equal(wpGroup.problemClassBreakdown?.mixed?.problemClass, "mixed");
   });
 
-  test("difficultyDepth breakdown exists internally — recall vs multi_step", () => {
+  test("difficultyDepth breakdown exists internally - recall vs multi_step", () => {
     process.env[FLAG_ENV] = "true";
     const { internal } = computeParentContextEvidenceQuality(mathMixedPedagogyPayload());
     assert.ok(internal.difficultyDepths?.["math::fractions::recall"]);

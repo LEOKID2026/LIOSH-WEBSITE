@@ -285,7 +285,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
       "concept_confusion"
     ],
     "suggestedQuestionType": "geometry_concept_minimal_contrast",
-    "question": "ריצוף ריבועי לחדר: צלע הריצוף 5 מ׳. כדי לדעת כמה מ״ר צריך לרכוש — איזה מושג מחשבים?",
+    "question": "ריצוף ריבועי לחדר: צלע הריצוף 5 מ׳. כדי לדעת כמה מ״ר צריך לרכוש - איזה מושג מחשבים?",
     "correct": "שטח",
     "options": [
       "שטח",
@@ -357,7 +357,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
       "concept_confusion"
     ],
     "suggestedQuestionType": "geometry_concept_minimal_contrast",
-    "question": "פרויקט תכנון: גדר סביב מגרש מלבני (רק החיצון). כדי להזמין אורך גדר — מה מודדים?",
+    "question": "פרויקט תכנון: גדר סביב מגרש מלבני (רק החיצון). כדי להזמין אורך גדר - מה מודדים?",
     "correct": "היקף",
     "options": [
       "היקף",
@@ -431,7 +431,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
       "concept_confusion"
     ],
     "suggestedQuestionType": "geometry_formula_choice",
-    "question": "שטיח מלבני לחדר גדול: אורך 8 מ׳ ורוחב 3 מ׳. לפני חישוב שטח החלל — מה צעד ראשון מתאים?",
+    "question": "שטיח מלבני לחדר גדול: אורך 8 מ׳ ורוחב 3 מ׳. לפני חישוב שטח החלל - מה צעד ראשון מתאים?",
     "correct": "להכפיל אורך ברוחב",
     "options": [
       "להכפיל אורך ברוחב",
@@ -533,7 +533,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
       "triangle_angle_sum_error",
       "angle_measure_error"
     ],
-    "question": "במשולש, שתי זוויות פנימיות ידועות (למשל 50° ו 60°). לפני חישוב המספר המדויק — איזה עיקרון גיאומטרי מאפשר להסיק על השלישית?",
+    "question": "במשולש, שתי זוויות פנימיות ידועות (למשל 50° ו 60°). לפני חישוב המספר המדויק - איזה עיקרון גיאומטרי מאפשר להסיק על השלישית?",
     "correct": "סכום שלוש הזוויות במשולש הוא 180°",
     "options": [
       "סכום שלוש הזוויות במשולש הוא 180°",
@@ -635,7 +635,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
       "parallel_corresponding_angle_error",
       "angle_equality_error"
     ],
-    "question": "שני ישרים מקבילים חותכים על ידי קו חוצה. זוג זוויות מתאימות (באותו מיקום יחסי) — מה הקשר ביניהן?",
+    "question": "שני ישרים מקבילים חותכים על ידי קו חוצה. זוג זוויות מתאימות (באותו מיקום יחסי) - מה הקשר ביניהן?",
     "correct": "שוות בגודל",
     "options": [
       "שוות בגודל",
@@ -664,7 +664,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "equal_sides",
     "conceptTag": "equilateral",
     "distractorFamily": "class_mislabel",
-    "question": "משולש שבו כל שלוש הצלעות שוות — איך נקרא?",
+    "question": "משולש שבו כל שלוש הצלעות שוות - איך נקרא?",
     "correct": "משולש שווה צלעות",
     "options": [
       "משולש שווה צלעות",
@@ -693,7 +693,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "equal_sides_review",
     "conceptTag": "equilateral_late",
     "distractorFamily": "class_mislabel",
-    "question": "בסיווג לפי צלעות: משולש עם שלוש צלעות שוות — השם המתאים הוא:",
+    "question": "בסיווג לפי צלעות: משולש עם שלוש צלעות שוות - השם המתאים הוא:",
     "correct": "משולש שווה צלעות",
     "options": [
       "משולש שווה צלעות",
@@ -764,7 +764,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
       "opposite_sides_parallel_error",
       "shape_property_misread"
     ],
-    "question": "במקבילית — לגבי זוגות צלעות נגדיות נכון לומר שהם:",
+    "question": "במקבילית - לגבי זוגות צלעות נגדיות נכון לומר שהם:",
     "correct": "מקבילות ושוות באורך",
     "options": [
       "מקבילות ושוות באורך",
@@ -906,7 +906,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
       "reflection_vs_rotation_confusion",
       "transform_confusion"
     ],
-    "question": "שיקוף ביחס לציר סימטרייה — הדימוי הקרוב ביותר הוא:",
+    "question": "שיקוף ביחס לציר סימטרייה - הדימוי הקרוב ביותר הוא:",
     "correct": "תמונה במראה",
     "options": [
       "תמונה במראה",
@@ -971,7 +971,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "definition",
     "conceptTag": "perp_meeting",
     "distractorFamily": "line_relation",
-    "question": "שני קווים מאונכים זה לזה — מה נכון?",
+    "question": "שני קווים מאונכים זה לזה - מה נכון?",
     "correct": "הם נפגשים בזווית של 90°",
     "options": [
       "הם נפגשים בזווית של 90°",
@@ -1000,7 +1000,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "definition_late",
     "conceptTag": "perp_meeting_late",
     "distractorFamily": "line_relation",
-    "question": "שני ישרים מאונכים זה לזה — מה תכונה נכונה בנקודת החיתוך?",
+    "question": "שני ישרים מאונכים זה לזה - מה תכונה נכונה בנקודת החיתוך?",
     "correct": "הם נפגשים בזווית של 90°",
     "options": [
       "הם נפגשים בזווית של 90°",
@@ -1029,7 +1029,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "parallel_def",
     "conceptTag": "parallel_never_meet",
     "distractorFamily": "line_relation",
-    "question": "שני קווים מקבילים באותו מישור — מה תכונה נכונה?",
+    "question": "שני קווים מקבילים באותו מישור - מה תכונה נכונה?",
     "correct": "אין להם נקודת חיתוך ונשארים באותו מרחק",
     "options": [
       "אין להם נקודת חיתוך ונשארים באותו מרחק",
@@ -1058,7 +1058,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "parallel_def_late",
     "conceptTag": "parallel_never_meet_late",
     "distractorFamily": "line_relation",
-    "question": "שני ישרים מקבילים באותו מישור — לגבי חיתוך ביניהם נכון ש:",
+    "question": "שני ישרים מקבילים באותו מישור - לגבי חיתוך ביניהם נכון ש:",
     "correct": "אין להם נקודת חיתוך ונשארים באותו מרחק",
     "options": [
       "אין להם נקודת חיתוך ונשארים באותו מרחק",
@@ -1239,7 +1239,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
       "dimension_confusion",
       "measurement_error"
     ],
-    "question": "כשמדברים על נפח של תיבה סגורה — מה המשמעות הגיאומטרית העיקרית?",
+    "question": "כשמדברים על נפח של תיבה סגורה - מה המשמעות הגיאומטרית העיקרית?",
     "correct": "כמה מקום תפוס בתוך התיבה בשלושה ממדים",
     "options": [
       "כמה מקום תפוס בתוך התיבה בשלושה ממדים",
@@ -1343,7 +1343,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
       "circumference_vs_area_confusion",
       "measurement_error"
     ],
-    "question": "כמה מטרים עובר גלגל אופניים במסלול מעגלי אחד מלא — זה קשור בעיקר ל:",
+    "question": "כמה מטרים עובר גלגל אופניים במסלול מעגלי אחד מלא - זה קשור בעיקר ל:",
     "correct": "היקף המעגל",
     "options": [
       "היקף המעגל",
@@ -1462,7 +1462,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "cube_faces_late",
     "conceptTag": "cube_faces_late",
     "distractorFamily": "solid_confusion",
-    "question": "בגוף תלת ממדי מסוג קובייה — כמה פאות מרובעות יש בדרך כלל?",
+    "question": "בגוף תלת ממדי מסוג קובייה - כמה פאות מרובעות יש בדרך כלל?",
     "correct": "6",
     "options": [
       "6",
@@ -1520,7 +1520,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "compare_late",
     "conceptTag": "apex_late",
     "distractorFamily": "solid_confusion",
-    "question": "בהשוואה גיאומטרית: פירמידה לעומת מנסרה עם אותו צורת בסיס — מה נכון?",
+    "question": "בהשוואה גיאומטרית: פירמידה לעומת מנסרה עם אותו צורת בסיס - מה נכון?",
     "correct": "לפירמידה יש קודקוד אחד; למנסרה שתי בסיסים מקבילים דומים",
     "options": [
       "לפירמידה יש קודקוד אחד; למנסרה שתי בסיסים מקבילים דומים",
@@ -1698,7 +1698,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
       "מקבילים לא נפגשים; מאונכים נפגשים בזווית 90°",
       "מקבילים תמיד קצרים יותר",
       "מאונכים לעולם לא נפגשים",
-      "אין הבדל — זה אותו דבר"
+      "אין הבדל - זה אותו דבר"
     ],
     "difficulty": "standard",
     "cognitiveLevel": "understanding",
@@ -1802,7 +1802,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "property_late",
     "conceptTag": "diag_equal_rect_late",
     "distractorFamily": "diagonal_confusion",
-    "question": "במלבן — לגבי שני האלכסונים נכון ש:",
+    "question": "במלבן - לגבי שני האלכסונים נכון ש:",
     "correct": "שווים באורך וחוצים זה את זה",
     "options": [
       "שווים באורך וחוצים זה את זה",
@@ -1901,7 +1901,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
       "polygon_side_count_error",
       "careless_error"
     ],
-    "question": "בצורה מרובעת עם כל הצלעות שוות (ריבוע) — כמה צלעות יש?",
+    "question": "בצורה מרובעת עם כל הצלעות שוות (ריבוע) - כמה צלעות יש?",
     "correct": "4",
     "options": [
       "4",
@@ -2110,7 +2110,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "translation",
     "conceptTag": "slide",
     "distractorFamily": "transform_confusion",
-    "question": "הצורה זזה למקום חדש בלי סיבוב ובלי שינוי גודל — איזו תנועה זו?",
+    "question": "הצורה זזה למקום חדש בלי סיבוב ובלי שינוי גודל - איזו תנועה זו?",
     "correct": "הזזה",
     "options": [
       "הזזה",
@@ -2139,7 +2139,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "reflection",
     "conceptTag": "mirror_flip",
     "distractorFamily": "transform_confusion",
-    "question": "הצורה מתהפכת כמו במראה ליד קו — איזו תנועה זו?",
+    "question": "הצורה מתהפכת כמו במראה ליד קו - איזו תנועה זו?",
     "correct": "שיקוף",
     "options": [
       "שיקוף",
@@ -2169,7 +2169,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "rotation",
     "conceptTag": "turn",
     "distractorFamily": "transform_confusion",
-    "question": "הצורה מסתובבת סביב נקודה בלי לשנות גודל — איזו תנועה זו?",
+    "question": "הצורה מסתובבת סביב נקודה בלי לשנות גודל - איזו תנועה זו?",
     "correct": "סיבוב",
     "options": [
       "סיבוב",
@@ -2199,7 +2199,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "identity",
     "conceptTag": "no_motion",
     "distractorFamily": "transform_confusion",
-    "question": "הצורה נשארה באותו מקום ובאותו כיוון — איזו טרנספורמציה מתאימה?",
+    "question": "הצורה נשארה באותו מקום ובאותו כיוון - איזו טרנספורמציה מתאימה?",
     "correct": "ללא תנועה",
     "options": [
       "ללא תנועה",
@@ -2227,7 +2227,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "reflection_hard",
     "conceptTag": "mirror_axis",
     "distractorFamily": "transform_confusion",
-    "question": "אתגר: רק הכיוון משתנה כמו במראה מול ציר, הגודל נשמר — איזו טרנספורמציה?",
+    "question": "אתגר: רק הכיוון משתנה כמו במראה מול ציר, הגודל נשמר - איזו טרנספורמציה?",
     "correct": "שיקוף",
     "options": [
       "שיקוף",
@@ -2255,7 +2255,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "translation_hard",
     "conceptTag": "slide_only",
     "distractorFamily": "transform_confusion",
-    "question": "אתגר: רק המיקום משתנה, בלי סיבוב ובלי שינוי גודל — איזו תנועה?",
+    "question": "אתגר: רק המיקום משתנה, בלי סיבוב ובלי שינוי גודל - איזו תנועה?",
     "correct": "הזזה",
     "options": [
       "הזזה",
@@ -2283,7 +2283,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "rotation_hard",
     "conceptTag": "turn_center",
     "distractorFamily": "transform_confusion",
-    "question": "אתגר: הצורה מסתובבת סביב מרכז קבוע בלי שינוי גודל — איזו טרנספורמציה?",
+    "question": "אתגר: הצורה מסתובבת סביב מרכז קבוע בלי שינוי גודל - איזו טרנספורמציה?",
     "correct": "סיבוב",
     "options": [
       "סיבוב",

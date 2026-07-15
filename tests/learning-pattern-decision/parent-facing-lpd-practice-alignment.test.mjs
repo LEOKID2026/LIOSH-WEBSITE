@@ -32,7 +32,7 @@ function mistake(patternFamily, i = 0) {
 }
 
 describe("parent-facing LPD practice alignment", () => {
-  test("A — q=10 parent totals with sparse diagnostic mistakes: no initial_data, no forbidden copy", () => {
+  test("A - q=10 parent totals with sparse diagnostic mistakes: no initial_data, no forbidden copy", () => {
     const lpd = buildLearningPatternDecision({
       subjectId: "math",
       topicRowKey: "addition",
@@ -82,7 +82,7 @@ describe("parent-facing LPD practice alignment", () => {
     assert.ok(!sections.meaning.includes("מוקדם לזהות"));
   });
 
-  test("B — repeated pattern with unknown label → generic difficulty copy, no pattern name", () => {
+  test("B - repeated pattern with unknown label → generic difficulty copy, no pattern name", () => {
     const lpd = buildLearningPatternDecision({
       subjectId: "math",
       topicRowKey: "addition",
@@ -97,14 +97,14 @@ describe("parent-facing LPD practice alignment", () => {
     assert.match(lpd.parentVisibleFinding, /טעויות|שגויות/u);
   });
 
-  test("C — activity gap diagnostic mismatch suppressed from parent insights", () => {
+  test("C - activity gap diagnostic mismatch suppressed from parent insights", () => {
     const gap = buildActivityGapParentInsightHe({
       summary: { totalAnswers: 10, diagnosticAnswers: 2, totalSessions: 1 },
     });
     assert.equal(gap, null);
   });
 
-  test("D — q=10 acc=20% tier is strengthen/clear_gap not low_evidence", () => {
+  test("D - q=10 acc=20% tier is strengthen/clear_gap not low_evidence", () => {
     const tier = parentTopicTierFromUnit(
       { evidenceTrace: [{ type: "volume", value: { questions: 10, accuracy: 20 } }] },
       { questions: 10, accuracy: 20 },
@@ -113,7 +113,7 @@ describe("parent-facing LPD practice alignment", () => {
     assert.ok(tier === "clear_gap" || tier === "strengthen");
   });
 
-  test("E — legacy learning_guided attempts count in aggregation + LPD uses parent totals", () => {
+  test("E - legacy learning_guided attempts count in aggregation + LPD uses parent totals", () => {
     const session = {
       id: "sess-lg",
       student_id: "stu",
@@ -194,7 +194,7 @@ describe("parent-facing LPD practice alignment", () => {
     assert.notEqual(lpd.topicStatus, "positive_observed");
   });
 
-  test("F — q=1–2 remains initial_topic_data", () => {
+  test("F - q=1–2 remains initial_topic_data", () => {
     const lpd = buildLearningPatternDecision({
       subjectId: "math",
       topicRowKey: "addition",
@@ -218,7 +218,7 @@ describe("parent-facing LPD practice alignment", () => {
     assert.equal(guardParentFacingText(copy.primaryFinding).length > 0, true);
   });
 
-  test("G — q=10 acc=20% with wrong=0 on row still yields clear difficulty finding", () => {
+  test("G - q=10 acc=20% with wrong=0 on row still yields clear difficulty finding", () => {
     const row = {
       subjectId: "math",
       topicKey: "addition",
@@ -262,7 +262,7 @@ describe("parent-facing LPD practice alignment", () => {
     assert.match(copy.explainSections.data, /8 שגויות/);
   });
 
-  test("H — q=10 wrong=8 with real pattern label shows specific pattern", () => {
+  test("H - q=10 wrong=8 with real pattern label shows specific pattern", () => {
     const lpd = buildLearningPatternDecision({
       subjectId: "math",
       topicRowKey: "addition",
@@ -279,7 +279,7 @@ describe("parent-facing LPD practice alignment", () => {
     assert.ok(!String(lpd.parentVisibleFinding).includes("unknown"));
   });
 
-  test("I — q=10 wrong=8 mixed patterns without usable label → general difficulty only", () => {
+  test("I - q=10 wrong=8 mixed patterns without usable label → general difficulty only", () => {
     const rawMistakes = [
       ...Array.from({ length: 4 }, (_, i) => mistake("unknown", i)),
       ...Array.from({ length: 4 }, (_, i) => mistake("pf:other", i + 4)),

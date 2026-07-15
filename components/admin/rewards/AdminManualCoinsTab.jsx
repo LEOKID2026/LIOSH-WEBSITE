@@ -244,7 +244,7 @@ export default function AdminManualCoinsTab({ accessToken }) {
   return (
     <div className="text-right w-full max-w-full overflow-x-hidden">
       <p className="text-xs text-white/60 mb-4">
-        חיפוש לפי מייל הורה, בחירת ילד, מעקב פעילות והוספת מטבעות — לתמיכה ובקרה.
+        חיפוש לפי מייל הורה, בחירת ילד, מעקב פעילות והוספת מטבעות - לתמיכה ובקרה.
       </p>
 
       <section className="rounded-xl border border-white/10 bg-white/[0.03] p-4 mb-4 w-full max-w-xl">
@@ -277,7 +277,7 @@ export default function AdminManualCoinsTab({ accessToken }) {
       {loadPhase === "ok" && children.length > 0 ? (
         <section className="rounded-xl border border-white/10 bg-white/[0.03] p-4 mb-4 w-full max-w-xl">
           <p className="text-sm text-white/50 mb-3">
-            ילדים של {parentEmail || "—"} ({children.length})
+            ילדים של {parentEmail || "-"} ({children.length})
           </p>
           <ul className="space-y-3">
             {children.map((child) => (
@@ -286,7 +286,7 @@ export default function AdminManualCoinsTab({ accessToken }) {
                 className="rounded-lg border border-white/10 bg-black/20 p-3 flex flex-col sm:flex-row sm:items-center gap-3"
               >
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-base">{child.fullName || "—"}</p>
+                  <p className="font-semibold text-base">{child.fullName || "-"}</p>
                   {child.gradeLabelHe ? (
                     <p className="text-xs text-white/60 mt-0.5">{child.gradeLabelHe}</p>
                   ) : null}
@@ -320,10 +320,10 @@ export default function AdminManualCoinsTab({ accessToken }) {
         <section className="rounded-xl border border-emerald-400/30 bg-emerald-500/5 p-4 mb-4 w-full max-w-xl">
           <p className="text-xs text-emerald-200/80 mb-2 font-semibold">ילד נבחר</p>
           <p className="text-sm text-white/50 mb-1">שם הילד</p>
-          <p className="text-base font-semibold mb-3">{selectedStudent.fullName || "—"}</p>
+          <p className="text-base font-semibold mb-3">{selectedStudent.fullName || "-"}</p>
           <p className="text-sm text-white/50 mb-1">מייל ההורה</p>
           <p className="text-sm mb-3 break-all" dir="ltr">
-            {parentEmail || "—"}
+            {parentEmail || "-"}
           </p>
           <p className="text-sm text-white/50 mb-1">יתרה נוכחית</p>
           <p className="text-lg font-bold text-amber-200 mb-3">
@@ -393,7 +393,7 @@ export default function AdminManualCoinsTab({ accessToken }) {
           }
         >
           <p className="text-xs text-white/50 mb-3">
-            {selectedStudent.fullName || "—"} · עד 20 אירועים
+            {selectedStudent.fullName || "-"} · עד 20 אירועים
           </p>
           {eventsPhase === "loading" ? (
             <p className="text-sm text-white/60">{ADMIN_LOADING}</p>
@@ -408,7 +408,7 @@ export default function AdminManualCoinsTab({ accessToken }) {
                   key={`${ev.atIso}-${i}`}
                   className="rounded border border-white/10 bg-black/25 px-2 py-1.5 leading-relaxed break-words"
                 >
-                  {ev.displayLineHe || `${ev.atLabelHe} — ${ev.lineHe}`}
+                  {ev.displayLineHe || `${ev.atLabelHe} - ${ev.lineHe}`}
                 </li>
               ))}
             </ul>
@@ -443,7 +443,7 @@ export default function AdminManualCoinsTab({ accessToken }) {
           <div className="space-y-3 text-sm">
             <div>
               <p className="text-white/50 mb-1">שם הילד</p>
-              <p className="font-semibold">{selectedStudent.fullName || "—"}</p>
+              <p className="font-semibold">{selectedStudent.fullName || "-"}</p>
             </div>
             <div>
               <p className="text-white/50 mb-1">יתרה נוכחית</p>
@@ -496,7 +496,7 @@ export default function AdminManualCoinsTab({ accessToken }) {
                 className="w-full rounded-lg bg-black/30 border border-white/15 px-3 py-2 text-white resize-y min-h-[4rem]"
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
-                placeholder="אופציונלי — לתיעוד פנימי"
+                placeholder="אופציונלי - לתיעוד פנימי"
               />
             </div>
           </div>

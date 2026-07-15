@@ -11,7 +11,7 @@ import {
 } from "../../utils/learning-pattern-decision/subject-clear-weak-topic.js";
 
 describe("subject summary clear weak topic", () => {
-  test("buildSubjectParentLetter — math/addition q=10 acc=20% avoids insufficient copy", () => {
+  test("buildSubjectParentLetter - math/addition q=10 acc=20% avoids insufficient copy", () => {
     const sp = {
       subjectLabelHe: "מתמטיקה",
       subjectConclusionReadiness: "not_ready",
@@ -48,7 +48,7 @@ describe("subject summary clear weak topic", () => {
     assert.match(all, /חיזוק|חזק/);
   });
 
-  test("withholdSummaryCopyHe — subject q=10 acc=20% names weak topic", () => {
+  test("withholdSummaryCopyHe - subject q=10 acc=20% names weak topic", () => {
     const line = withholdSummaryCopyHe("subject", {
       subjectReportQuestions: 10,
       sumUnitQuestions: 10,

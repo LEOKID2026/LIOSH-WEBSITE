@@ -102,4 +102,4 @@ assert.equal(sharedResolve(12), "strong");
   assert.ok(lpd.parentVisibleFinding.length > 0);
 }
 
-console.log("volume-parent-wording.test.mjs — all passed");
+console.log("volume-parent-wording.test.mjs - all passed");

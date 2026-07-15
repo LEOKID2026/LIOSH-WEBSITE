@@ -1,6 +1,6 @@
 /**
  * Regression guard: the Parent Copilot truth-packet step text must not use the harsher
- * "דורש ליווי" phrasing — must use the softer, already-established "כדאי ללוות" wording.
+ * "דורש ליווי" phrasing - must use the softer, already-established "כדאי ללוות" wording.
  * Run: node --test tests/parent-report-language/truth-packet-no-doresh-livuy.test.mjs
  */
 

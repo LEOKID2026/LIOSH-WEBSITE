@@ -12,7 +12,7 @@ export default function TeacherPwaInstallPage() {
       portal="teacher"
       badge="T LEO KIDS"
       title="התקנת אפליקציה למורים"
-      pageTitle="T LEO KIDS — התקנה"
+      pageTitle="T LEO KIDS - התקנה"
       appleTitle="T LEO KIDS"
       appleTouchIcon="/icons/teacher/apple-touch-icon.png"
       launcher={TeacherPwaInstallLauncher}

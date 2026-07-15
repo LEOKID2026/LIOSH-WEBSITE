@@ -14,7 +14,7 @@ const GAME_HUB_CARDS = [
     key: "regular",
     title: "המשחקים של ליאו",
     emoji: "🎮",
-    blurb: "משחקי ליאו הקלאסיים — ריצה, טיסה, חידות ועוד.",
+    blurb: "משחקי ליאו הקלאסיים - ריצה, טיסה, חידות ועוד.",
     href: "/game",
   },
   {
@@ -28,7 +28,7 @@ const GAME_HUB_CARDS = [
     key: "offline",
     title: "משחקים כל הזמן עם ליאו",
     emoji: "🔌",
-    blurb: "משחקים על אותו מכשיר — גם בלי אינטרנט.",
+    blurb: "משחקים על אותו מכשיר - גם בלי אינטרנט.",
     href: "/offline",
   },
   {
@@ -67,7 +67,7 @@ export default function GamesHubPage() {
 
           <GamesHubHeader
             title=""
-            subtitle="בחרו את סוג החוויה שמתאימה לכם — משחקי ליאו, משחקים ללא אינטרנט, או משחקים עם חברים."
+            subtitle="בחרו את סוג החוויה שמתאימה לכם - משחקי ליאו, משחקים ללא אינטרנט, או משחקים עם חברים."
             titleClass={GH.hubTitle}
             subtitleClass={GH.hubSub}
           />

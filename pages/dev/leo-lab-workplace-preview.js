@@ -6,7 +6,7 @@ export default function LeoLabWorkplacePreviewPage() {
   return (
     <>
       <Head>
-        <title>מעבדה — workplace pilot preview</title>
+        <title>מעבדה - workplace pilot preview</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <LeoLabGame backHref="/dev/learning-game-prototypes" />

@@ -164,7 +164,7 @@ export function tryBuildComparisonPracticalFollowupDraft(ctx) {
 
   const label = sid ? subjectLabelHe(sid) : "";
   const hook = label
-    ? `ממשיכים מההשוואה שהוצגה — במיוחד סביב ${label}: `
+    ? `ממשיכים מההשוואה שהוצגה - במיוחד סביב ${label}: `
     : "ממשיכים מההשוואה על התקופה: ";
   const oix = answerBlocks.findIndex((b) => b.type === "observation" && String(b.textHe || "").trim());
   if (oix >= 0 && !String(answerBlocks[oix].textHe || "").includes("ממשיכים מההשוואה")) {

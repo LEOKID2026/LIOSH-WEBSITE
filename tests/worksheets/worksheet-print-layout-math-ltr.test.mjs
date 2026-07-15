@@ -40,7 +40,7 @@ const PRINT_CSS = readFileSync(join(__dirname, "../../styles/worksheet-print.css
 import { renderMathFractionExpressionHtml } from "../../lib/worksheets/worksheet-fraction-html.js";
 
 const META = {
-  titleHe: "דף עבודה — חיבור",
+  titleHe: "דף עבודה - חיבור",
   subjectHe: "מתמטיקה",
   gradeHe: "כיתה א׳",
   topicHe: "חיבור",
@@ -282,7 +282,7 @@ describe("worksheet-print-layout-math-ltr", () => {
     assert.equal(denom.mathLtr, "1/2 + 1/2");
 
     const compare = splitWorksheetStemProseAndMath(
-      "איזה שבר גדול יותר — 3/4 או 1/4? רשמו את השבר הגדול:"
+      "איזה שבר גדול יותר - 3/4 או 1/4? רשמו את השבר הגדול:"
     );
     assert.equal(compare.mode, "mixed-inline");
     assert.ok(compare.proseHe?.includes("איזה שבר גדול יותר"));
@@ -306,7 +306,7 @@ describe("worksheet-print-layout-math-ltr", () => {
     assert.equal(answerSplit.mathLtr, "3/4 − 1/4 = 2/4");
 
     const answerCompare = formatAnswerKeyStemDisplay(
-      "איזה שבר גדול יותר — 3/4 או 1/4? רשמו את השבר הגדול:",
+      "איזה שבר גדול יותר - 3/4 או 1/4? רשמו את השבר הגדול:",
       "3/4"
     );
     assert.equal(answerCompare.mode, "split");

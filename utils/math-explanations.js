@@ -88,7 +88,7 @@ export function getHint(question, operation, gradeKey) {
     case "zero_one_properties":
       return "מספר × 0 = 0. מספר × 1 = אותו מספר. מספר + 0 = אותו מספר.";
     case "division_with_remainder":
-      return "חשב כמה פעמים המחלק נכנס — ומה נשאר. בדיקה: מחלק × מנה + שארית = מחולק.";
+      return "חשב כמה פעמים המחלק נכנס - ומה נשאר. בדיקה: מחלק × מנה + שארית = מחולק.";
     default:
       return "נסה לפתור את השאלה לפי הנושא המתאים.";
   }
@@ -504,7 +504,7 @@ export function getSolutionSteps(question, operation, gradeKey) {
         );
       } else {
         steps.push(
-          toSpan(mix`3. ${M(String(p.a))} = ${M(String(p.b))} — המספרים שווים.`, "3")
+          toSpan(mix`3. ${M(String(p.a))} = ${M(String(p.b))} - המספרים שווים.`, "3")
         );
       }
       return steps;
@@ -858,7 +858,7 @@ export function getSolutionSteps(question, operation, gradeKey) {
     case "scale": {
       if (p.kind === "scale_map_to_real") {
         return [
-          toSpan(mix`1. קנה מידה 1:${M(String(p.scale))} — כל ס"מ במפה = ${M(String(p.scale))} ס"מ במציאות.`, "1"),
+          toSpan(mix`1. קנה מידה 1:${M(String(p.scale))} - כל ס"מ במפה = ${M(String(p.scale))} ס"מ במציאות.`, "1"),
           toSpan(mix`2. נכפול: ${M(`${p.mapLength} × ${p.scale} = ${ans}`)}.`, "2"),
           toSpan(mix`3. המרחק במציאות: ${ans} ס"מ.`, "3"),
         ];
@@ -871,7 +871,7 @@ export function getSolutionSteps(question, operation, gradeKey) {
         ];
       }
       return [
-        toSpan(mix`1. קנה מידה 1:X — כל יחידה במפה = X יחידות במציאות.`, "1"),
+        toSpan(mix`1. קנה מידה 1:X - כל יחידה במפה = X יחידות במציאות.`, "1"),
         toSpan(mix`2. מציאות = מפה × X. מפה = מציאות ÷ X.`, "2"),
         toSpan(mix`3. התשובה: ${ans}.`, "3"),
       ];
@@ -883,8 +883,8 @@ export function getSolutionSteps(question, operation, gradeKey) {
         toSpan(mix`2. מחשבים: ${M(`${p.num} ÷ ${p.divisor}`)}.`, "2"),
         toSpan(
           p.isDivisible
-            ? mix`3. יוצא שלם — ${M(String(p.num))} כן מתחלק ב-${M(String(p.divisor))}.`
-            : mix`3. לא יוצא שלם — ${M(String(p.num))} לא מתחלק ב-${M(String(p.divisor))}.`,
+            ? mix`3. יוצא שלם - ${M(String(p.num))} כן מתחלק ב-${M(String(p.divisor))}.`
+            : mix`3. לא יוצא שלם - ${M(String(p.num))} לא מתחלק ב-${M(String(p.divisor))}.`,
           "3"
         ),
       ];
@@ -917,7 +917,7 @@ export function getSolutionSteps(question, operation, gradeKey) {
       if (p.kind === "order_add_mul") {
         const prod = p.b * p.c;
         return [
-          toSpan(mix`1. כפל לפני חיבור: ${M(`${p.a} + ${p.b} × ${p.c}`)} — כופלים קודם.`, "1"),
+          toSpan(mix`1. כפל לפני חיבור: ${M(`${p.a} + ${p.b} × ${p.c}`)} - כופלים קודם.`, "1"),
           toSpan(mix`2. ${M(`${p.b} × ${p.c} = ${prod}`)}, ואז ${M(`${p.a} + ${prod} = ${ans}`)}.`, "2"),
           toSpan(mix`3. התשובה: ${ans}.`, "3"),
         ];
@@ -925,7 +925,7 @@ export function getSolutionSteps(question, operation, gradeKey) {
       if (p.kind === "order_mul_sub") {
         const prod = p.a * p.b;
         return [
-          toSpan(mix`1. כפל לפני חיסור: ${M(`${p.a} × ${p.b} - ${p.c}`)} — כופלים קודם.`, "1"),
+          toSpan(mix`1. כפל לפני חיסור: ${M(`${p.a} × ${p.b} - ${p.c}`)} - כופלים קודם.`, "1"),
           toSpan(mix`2. ${M(`${p.a} × ${p.b} = ${prod}`)}, ואז ${M(`${prod} - ${p.c} = ${ans}`)}.`, "2"),
           toSpan(mix`3. התשובה: ${ans}.`, "3"),
         ];
@@ -933,7 +933,7 @@ export function getSolutionSteps(question, operation, gradeKey) {
       if (p.kind === "order_parentheses") {
         const sum = p.a + p.b;
         return [
-          toSpan(mix`1. סוגריים קודם: ${M(`(${p.a} + ${p.b}) × ${p.c}`)} — חישוב הסוגריים תחילה.`, "1"),
+          toSpan(mix`1. סוגריים קודם: ${M(`(${p.a} + ${p.b}) × ${p.c}`)} - חישוב הסוגריים תחילה.`, "1"),
           toSpan(mix`2. ${M(`${p.a} + ${p.b} = ${sum}`)}, ואז ${M(`${sum} × ${p.c} = ${ans}`)}.`, "2"),
           toSpan(mix`3. התשובה: ${ans}.`, "3"),
         ];
@@ -1115,7 +1115,7 @@ export function getErrorExplanation(question, operation, wrongAnswer, gradeKey, 
       if (!Number.isNaN(userAnsNum) && userAnsNum > correctNum) {
         return "נראה שחיברת משהו פעמיים או טעית בחיבור ביניים.";
       }
-      return "כדאי לבדוק שוב את החיבור לפי שלבים — אפשר לפרק לעשרות ויחידות ולחבר חלק-חלק.";
+      return "כדאי לבדוק שוב את החיבור לפי שלבים - אפשר לפרק לעשרות ויחידות ולחבר חלק-חלק.";
     case "subtraction":
       return "בחיסור קל להתבלבל בסדר המספרים. בדוק שוב שהקטנת את המספר הגדול ולא להפך.";
     case "multiplication":

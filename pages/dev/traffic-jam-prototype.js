@@ -6,7 +6,7 @@ export default function TrafficJamPrototypePage() {
   return (
     <>
       <Head>
-        <title>פקק תנועה — אבטיפוס</title>
+        <title>פקק תנועה - אבטיפוס</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <TrafficJamPrototype />

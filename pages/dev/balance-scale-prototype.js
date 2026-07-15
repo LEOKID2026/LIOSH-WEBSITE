@@ -6,7 +6,7 @@ export default function BalanceScalePrototypePage() {
   return (
     <>
       <Head>
-        <title>מאזניים — אבטיפוס</title>
+        <title>מאזניים - אבטיפוס</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <BalanceScalePrototype />

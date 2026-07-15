@@ -165,7 +165,7 @@ function synthesizeDistractor(correct, usedKeys, ctx = {}) {
     }
   }
 
-  const suffixes = [" (לא)", " — אחר", " — לא", " · א", " · ב"];
+  const suffixes = [" (לא)", " - אחר", " - לא", " · א", " · ב"];
   for (const suf of suffixes) {
     const cand = `${ca}${suf}`;
     const key = normalizeOptionForCompare(cand);

@@ -325,7 +325,7 @@ export default function LeoLabGame({ backHref = "/dev/learning-game-prototypes" 
           <p className={styles.introHero}>🔬🧪</p>
           <h1 className={styles.introTitle}>מעבדת הניסויים של ליאו</h1>
           <p className={styles.introText}>
-            בחרו חפצים מהמדף, שימו על שולחן הניסוי ולחצו &quot;בדוק ניסוי&quot; — גלו איך
+            בחרו חפצים מהמדף, שימו על שולחן הניסוי ולחצו &quot;בדוק ניסוי&quot; - גלו איך
             העולם עובד!
           </p>
           <div className={styles.difficultyRow}>

@@ -515,7 +515,7 @@ function getErrorExplanation(question, topic, wrongAnswer, gradeKey, opts = {}) 
 
     case "writing":
       return learning
-        ? `התשובה הנכונה היא "${ca}". כנראה שטעית באיות — בדוק שוב אות-אחר-אות.`
+        ? `התשובה הנכונה היא "${ca}". כנראה שטעית באיות - בדוק שוב אות-אחר-אות.`
         : "כנראה שטעית באיות (spelling). בדוק שוב אות-אחר-אות, שים לב אל th / sh / ch ולסיום המילה (s / ed / ing).";
 
     default:
@@ -3820,7 +3820,7 @@ export default function EnglishMaster() {
                   <div className="bg-black/30 border border-white/10 rounded-lg p-3">
                     <div className="text-sm text-white/60 mb-2">התקדמות חודשית</div>
                     <div className="flex justify-between text-xs text-white/60 mb-1">
-                      <span>{Math.round(monthlyPersistenceView?.currentMinutes ?? 0)} / {monthlyPersistenceView?.goalMinutes ?? "—"} דק׳</span>
+                      <span>{Math.round(monthlyPersistenceView?.currentMinutes ?? 0)} / {monthlyPersistenceView?.goalMinutes ?? "-"} דק׳</span>
                       <span>{monthlyPersistenceView?.progressPct ?? 0}%</span>
                     </div>
                     <div className="w-full bg-black/50 rounded-full h-3 mb-2">

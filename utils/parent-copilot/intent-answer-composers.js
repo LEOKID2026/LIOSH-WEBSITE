@@ -246,7 +246,7 @@ function gradeSplitNarrativeHe(rows) {
     .join("; ");
   const weak = pickWeakestRow(rows);
   if (!parts) return "";
-  let text = `באותו נושא יש תרגול בכמה רמות כיתה — ${parts}.`;
+  let text = `באותו נושא יש תרגול בכמה רמות כיתה - ${parts}.`;
   if (weak) {
     text += ` הקו החלש יותר הוא ${weak.label} (דיוק ${weak.acc}%).`;
   }
@@ -304,26 +304,26 @@ function composeReportExplanation(params) {
 
   const practicedPhrase =
     subjectLabels.length > 0
-      ? `בטווח התקופה נרשם תרגול ב${subjectLabels.join(", ")} — סה״כ כ ${totalQ} שאלות.`
+      ? `בטווח התקופה נרשם תרגול ב${subjectLabels.join(", ")} - סה״כ כ ${totalQ} שאלות.`
       : totalQ > 0
         ? `בטווח התקופה נרשמו כ ${totalQ} שאלות תרגול.`
-        : "בטווח התקופה יש עדיין מעט מאוד תרגול — התמונה כללית עדיין חלקית.";
+        : "בטווח התקופה יש עדיין מעט מאוד תרגול - התמונה כללית עדיין חלקית.";
 
   /** @type {string[]} */
   const meaningParts = [];
   if (strong.length) {
     meaningParts.push(
-      `מה שעובד יחסית טוב: ${strong.map((m) => `${subjectLabelHe(m.sid)} — ${m.displayName} (כ ${m.acc}% על ${m.q} שאלות)`).join("; ")}.`,
+      `מה שעובד יחסית טוב: ${strong.map((m) => `${subjectLabelHe(m.sid)} - ${m.displayName} (כ ${m.acc}% על ${m.q} שאלות)`).join("; ")}.`,
     );
   }
   if (weak.length) {
     const lead =
       weak.length === 1
-        ? `הדבר המרכזי שדורש תשומת לב כרגע הוא ${subjectLabelHe(weak[0].sid)} — ${weak[0].displayName}`
-        : `מקומות שדורשים חיזוק: ${weak.map((m) => `${subjectLabelHe(m.sid)} — ${m.displayName} (כ ${m.acc}%)`).join("; ")}`;
+        ? `הדבר המרכזי שדורש תשומת לב כרגע הוא ${subjectLabelHe(weak[0].sid)} - ${weak[0].displayName}`
+        : `מקומות שדורשים חיזוק: ${weak.map((m) => `${subjectLabelHe(m.sid)} - ${m.displayName} (כ ${m.acc}%)`).join("; ")}`;
     meaningParts.push(`${lead}.`);
   } else if (!strong.length && metas.length) {
-    meaningParts.push("אין עדיין קו חזק מאוד בולט — כדאי להמשיך תרגול קצר ולעקוב אחרי יציבות.");
+    meaningParts.push("אין עדיין קו חזק מאוד בולט - כדאי להמשיך תרגול קצר ולעקוב אחרי יציבות.");
   }
 
   let action =
@@ -395,9 +395,9 @@ function composeTopicProblem(params) {
   const meaningParts = [];
   if (gradeNote) meaningParts.push(gradeNote);
   if (registered && primary.gradeRelation === "higher") {
-    meaningParts.push(`חלק מהתרגול בוצע מעל הכיתה הרשומה (${registered}) — כדאי לקרוא את זה בנפרד מביצוע בכיתה הרשומה.`);
+    meaningParts.push(`חלק מהתרגול בוצע מעל הכיתה הרשומה (${registered}) - כדאי לקרוא את זה בנפרד מביצוע בכיתה הרשומה.`);
   } else if (primary.gradeRelation === "lower") {
-    meaningParts.push("חלק מהתרגול בוצע ברמת בסיס/כיתה נמוכה — קושי כאן עשוי להעיד על צורך בחיזוק היסודות בנושא לפני שמתקדמים לרמת הכיתה.");
+    meaningParts.push("חלק מהתרגול בוצע ברמת בסיס/כיתה נמוכה - קושי כאן עשוי להעיד על צורך בחיזוק היסודות בנושא לפני שמתקדמים לרמת הכיתה.");
   }
   const problemSrcPhrase = evidenceSourcePhraseHe(primary.primaryEvidenceSource);
   if (problemSrcPhrase) {
@@ -406,21 +406,21 @@ function composeTopicProblem(params) {
   if (polarity === POLARITY.support_needed) {
     meaningParts.push(
       patternHe
-        ? `ב${displayName} יש ${q} שאלות עם דיוק כ ${acc}% — נראה קושי חוזר: ${patternHe}. מבחינה לימודית, זה אומר שהבסיס עדיין לא יציב מספיק לפני שמוסיפים קושי.`
+        ? `ב${displayName} יש ${q} שאלות עם דיוק כ ${acc}% - נראה קושי חוזר: ${patternHe}. מבחינה לימודית, זה אומר שהבסיס עדיין לא יציב מספיק לפני שמוסיפים קושי.`
         : meaningHeForPolarity(displayName, q, acc) +
             " מבחינה לימודית, זה אומר שכדאי לחזק לפני שמסיקים שהכול יציב.",
     );
   } else if (polarity === POLARITY.thin) {
-    meaningParts.push(`ב${displayName} יש עדיין מעט תרגול (${q} שאלות) — מוקדם לקבוע כיוון ברור.`);
+    meaningParts.push(`ב${displayName} יש עדיין מעט תרגול (${q} שאלות) - מוקדם לקבוע כיוון ברור.`);
   } else {
     meaningParts.push(
-      `ב${displayName} נראית יציבות יחסית (${acc}% על ${q} שאלות) — עדיין כדאי לוודא שזה חוזר.`,
+      `ב${displayName} נראית יציבות יחסית (${acc}% על ${q} שאלות) - עדיין כדאי לוודא שזה חוזר.`,
     );
   }
 
   const observation =
     rowMetricsList.length >= 2
-      ? `ב${displayName} יש תרגול בכמה רמות כיתה בתקופה — להלן הפירוט לפי שורות בדוח.`
+      ? `ב${displayName} יש תרגול בכמה רמות כיתה בתקופה - להלן הפירוט לפי שורות בדוח.`
       : `ב${primary.label} בתקופה הזו יש ${q} שאלות, עם דיוק של כ ${acc}%.`;
 
   const action =
@@ -481,7 +481,7 @@ function composeMistakePattern(params) {
       answerBlocks: [
         {
           type: "observation",
-          textHe: `ב${label} יש ${q} שאלות בטווח התקופה — עדיין מעט נתון.`,
+          textHe: `ב${label} יש ${q} שאלות בטווח התקופה - עדיין מעט נתון.`,
           source: "intent_composer",
         },
         {
@@ -515,12 +515,12 @@ function composeMistakePattern(params) {
         },
         {
           type: "meaning",
-          textHe: `הטעות הבולטת שחוזרת היא ${mistakeText}. זה סוג טעות שכדאי לזהות בזמן תרגול — לא רק לספור נכון/לא נכון.`,
+          textHe: `הטעות הבולטת שחוזרת היא ${mistakeText}. זה סוג טעות שכדאי לזהות בזמן תרגול - לא רק לספור נכון/לא נכון.`,
           source: "intent_composer",
         },
         {
           type: "next_step",
-          textHe: `תרגול ממוקד: 2–3 שאלות מאותו סוג, בלי לדלג על שלב — ולשאול את הילד לומר בקול מה הוא עושה לפני התשובה.`,
+          textHe: `תרגול ממוקד: 2–3 שאלות מאותו סוג, בלי לדלג על שלב - ולשאול את הילד לומר בקול מה הוא עושה לפני התשובה.`,
           source: "intent_composer",
         },
       ],
@@ -545,7 +545,7 @@ function composeMistakePattern(params) {
       {
         type: "next_step",
         textHe:
-          "כדי לאסוף את זה: בזמן תרגול, לרשום משפט אחד על מה הילד עשה לפני שטעה — אחרי 3–4 פעמים יופיע דפוס.",
+          "כדי לאסוף את זה: בזמן תרגול, לרשום משפט אחד על מה הילד עשה לפני שטעה - אחרי 3–4 פעמים יופיע דפוס.",
         source: "intent_composer",
       },
     ],
@@ -580,7 +580,7 @@ function composeHomePractice(params) {
       },
       {
         type: "meaning",
-        textHe: `${duration}: (1) 2–3 שאלות מאותו סוג בלי עזרה; (2) בדיקה קצרה יחד אחרי כל שאלה — מה עשית לפני התשובה; (3) לשים לב אם אותו סוג טעות חוזר.`,
+        textHe: `${duration}: (1) 2–3 שאלות מאותו סוג בלי עזרה; (2) בדיקה קצרה יחד אחרי כל שאלה - מה עשית לפני התשובה; (3) לשים לב אם אותו סוג טעות חוזר.`,
         source: "intent_composer",
       },
       {
@@ -616,14 +616,14 @@ function composeStrength(params) {
       answerBlocks: [
         {
           type: "observation",
-          textHe: `בטווח התקופה תורגל רק ${subjectLabelHe(sid)} (${subQ} שאלות) — אין מספיק נתונים להשוואה בין מקצועות.`,
+          textHe: `בטווח התקופה תורגל רק ${subjectLabelHe(sid)} (${subQ} שאלות) - אין מספיק נתונים להשוואה בין מקצועות.`,
           source: "intent_composer",
         },
         {
           type: "meaning",
           textHe: best
-            ? `לפי מה שיש בדוח, ${subjectLabelHe(sid)} הוא המקצוע היחיד עם תרגול — ${best.displayName} בכ ${best.acc}% על ${best.q} שאלות.`
-            : `${subjectLabelHe(sid)} הוא המקצוע היחיד עם תרגול בטווח — אי אפשר לדרג "חזק/חלש" בין מקצועות.`,
+            ? `לפי מה שיש בדוח, ${subjectLabelHe(sid)} הוא המקצוע היחיד עם תרגול - ${best.displayName} בכ ${best.acc}% על ${best.q} שאלות.`
+            : `${subjectLabelHe(sid)} הוא המקצוע היחיד עם תרגול בטווח - אי אפשר לדרג "חזק/חלש" בין מקצועות.`,
           source: "intent_composer",
         },
       ],
@@ -642,7 +642,7 @@ function composeStrength(params) {
         },
         {
           type: "meaning",
-          textHe: "זה לא אומר שאין הצלחות — רק שעדיין מוקדם לסמן חוזק יציב לפי הנתונים בטווח.",
+          textHe: "זה לא אומר שאין הצלחות - רק שעדיין מוקדם לסמן חוזק יציב לפי הנתונים בטווח.",
           source: "intent_composer",
         },
       ],
@@ -652,12 +652,12 @@ function composeStrength(params) {
   }
 
   const list = metas
-    .map((m) => `${subjectLabelHe(m.sid)} — ${m.displayName}: כ ${m.acc}% על ${m.q} שאלות`)
+    .map((m) => `${subjectLabelHe(m.sid)} - ${m.displayName}: כ ${m.acc}% על ${m.q} שאלות`)
     .join("; ");
 
   const singleSubjectNote =
     practicedSubjects.length === 1
-      ? `בטווח התקופה תורגל רק ${subjectLabelHe(practicedSubjects[0])} — אין מספיק נתונים להשוואה בין מקצועות. `
+      ? `בטווח התקופה תורגל רק ${subjectLabelHe(practicedSubjects[0])} - אין מספיק נתונים להשוואה בין מקצועות. `
       : "";
 
   const lead = metas[0];
@@ -690,8 +690,8 @@ function composeStrength(params) {
   if (strongestSub) {
     observationHe =
       withAvg.length === 1
-        ? `יש כרגע בעיקר מקצוע אחד עם מספיק תרגול מספרי בדוח — ${strongestSub.label}, עם דיוק ממוצע של כ ${strongestSub.avg}%.`
-        : `המקצוע החזק ביותר כרגע הוא ${strongestSub.label} — לפי ממוצע הדיוק הכללי על פני הנושאים עם תרגול בדוח (בערך ${strongestSub.avg}%).`;
+        ? `יש כרגע בעיקר מקצוע אחד עם מספיק תרגול מספרי בדוח - ${strongestSub.label}, עם דיוק ממוצע של כ ${strongestSub.avg}%.`
+        : `המקצוע החזק ביותר כרגע הוא ${strongestSub.label} - לפי ממוצע הדיוק הכללי על פני הנושאים עם תרגול בדוח (בערך ${strongestSub.avg}%).`;
   }
 
   return {
@@ -811,7 +811,7 @@ function composeProgression(params) {
     if (focus.length) metas = focus;
   }
 
-  const sttl = (sid, name) => `${subjectLabelHe(sid)} — ${name}`;
+  const sttl = (sid, name) => `${subjectLabelHe(sid)} - ${name}`;
 
   if (!metas.length) {
     return {
@@ -847,7 +847,7 @@ function composeProgression(params) {
         const list = lowerWeak.slice(0, 3).map((m) => `${sttl(m.sid, m.displayName)} (כ ${m.acc}% על ${m.q} שאלות)`).join("; ");
         return {
           answerBlocks: [
-            { type: "observation", textHe: `כן — לפי הדוח יש קושי גם מתחת לכיתה הרשומה ב: ${list}.`, source: "intent_composer" },
+            { type: "observation", textHe: `כן - לפי הדוח יש קושי גם מתחת לכיתה הרשומה ב: ${list}.`, source: "intent_composer" },
             { type: "meaning", textHe: "קושי ברמת בסיס מצביע על צורך לחזק את היסודות בנושא לפני שמתקדמים לרמת הכיתה.", source: "intent_composer" },
             { type: "next_step", textHe: `כדאי לתרגל ברמת בסיס ב${lowerWeak[0].displayName} עד שהדיוק עולה, ורק אז לחזור לרמת הכיתה.`, source: "intent_composer" },
           ],
@@ -905,7 +905,7 @@ function composeProgression(params) {
       const list = higherStrong.slice(0, 3).map((m) => `${sttl(m.sid, m.displayName)} (כ ${m.acc}% על ${m.q} שאלות)`).join("; ");
       return {
         answerBlocks: [
-          { type: "observation", textHe: `כן — הילד עבד והצליח גם מעל הכיתה הרשומה ב: ${list}.`, source: "intent_composer" },
+          { type: "observation", textHe: `כן - הילד עבד והצליח גם מעל הכיתה הרשומה ב: ${list}.`, source: "intent_composer" },
           { type: "meaning", textHe: "הצלחה מעל רמת הכיתה מצביעה על יכולת גבוהה בנושא הזה.", source: "intent_composer" },
           { type: "next_step", textHe: `אפשר לשקול להעלות קושי או להתקדם לנושא מתקדם יותר ב${higherStrong[0].displayName}.`, source: "intent_composer" },
         ],
@@ -925,7 +925,7 @@ function composeProgression(params) {
         {
           type: "meaning",
           textHe: strong.length
-            ? `יש שליטה יפה ברמת הכיתה (למשל ${sttl(strong[0].sid, strong[0].displayName)}) — אפשר לשקול להעלות קושי בהדרגה.`
+            ? `יש שליטה יפה ברמת הכיתה (למשל ${sttl(strong[0].sid, strong[0].displayName)}) - אפשר לשקול להעלות קושי בהדרגה.`
             : "כדאי לאסוף עוד תרגול לפני שמסיקים על יכולת מעל הכיתה.",
           source: "intent_composer",
         },
@@ -939,7 +939,7 @@ function composeProgression(params) {
     return {
       answerBlocks: [
         { type: "observation", textHe: "לפי הדוח, אין עדיין נושא עם מספיק תרגול ודיוק גבוה כדי להמליץ על התקדמות בביטחון.", source: "intent_composer" },
-        { type: "meaning", textHe: "זה לא אומר שאין הצלחות — רק שעדיין מוקדם להמליץ על עלייה ברמה לפי הנתונים בטווח.", source: "intent_composer" },
+        { type: "meaning", textHe: "זה לא אומר שאין הצלחות - רק שעדיין מוקדם להמליץ על עלייה ברמה לפי הנתונים בטווח.", source: "intent_composer" },
         { type: "next_step", textHe: "כדאי להמשיך תרגול קצר וקבוע, ואז לשאול שוב כשהדיוק מתייצב.", source: "intent_composer" },
       ],
       plannerIntent: "why_not_advance",
@@ -951,11 +951,11 @@ function composeProgression(params) {
   const list = strong.slice(0, 3).map((m) => `${sttl(m.sid, m.displayName)} (כ ${m.acc}% על ${m.q} שאלות)`).join("; ");
   const relStep =
     gradeScopeMeaningHe({ gradeRelation: lead.gradeRelation, isStrength: true, topicName: lead.displayName }) ||
-    `ב${lead.displayName} יש שליטה טובה — אפשר להעלות קושי בהדרגה או לעבור לנושא הבא.`;
+    `ב${lead.displayName} יש שליטה טובה - אפשר להעלות קושי בהדרגה או לעבור לנושא הבא.`;
   const reallocate = lead.q >= MASTERY_REALLOCATION_Q_MIN ? masteryReallocationHe(lead.displayName) : "";
   const focusElsewhere =
     weak.length && weak[0].topicRowKey !== lead.topicRowKey
-      ? `אם רוצים למקד מאמץ — אפשר להפנות חלק מהזמן מ${lead.displayName} אל ${sttl(weak[0].sid, weak[0].displayName)} שדורש יותר חיזוק.`
+      ? `אם רוצים למקד מאמץ - אפשר להפנות חלק מהזמן מ${lead.displayName} אל ${sttl(weak[0].sid, weak[0].displayName)} שדורש יותר חיזוק.`
       : "";
   const srcPhrase = evidenceSourcePhraseHe(lead.primaryEvidenceSource);
 

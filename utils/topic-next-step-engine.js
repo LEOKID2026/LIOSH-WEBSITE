@@ -85,14 +85,14 @@ import {
 /** @typedef {'advance_level'|'advance_grade_topic_only'|'maintain_and_strengthen'|'maintain_regular_strengthen_medium'|'remediate_same_level'|'drop_one_level_topic_only'|'drop_one_grade_topic_only'|'suggest_return_to_regular'} RecommendedNextStep */
 
 export const RECOMMENDED_STEP_LABEL_HE = {
-  advance_level: "מעבר לרמת מתקדם — באותו נושא בלבד",
-  advance_grade_topic_only: "העלאת כיתה — באותו נושא בלבד",
+  advance_level: "מעבר לרמת מתקדם - באותו נושא בלבד",
+  advance_grade_topic_only: "העלאת כיתה - באותו נושא בלבד",
   maintain_and_strengthen: "לבסס באותה רמה",
   maintain_regular_strengthen_medium: "לבסס ברמה רגילה",
   remediate_same_level: "חיזוק באותה רמה",
   suggest_return_to_regular: "חזרה לתרגול רגיל",
   drop_one_level_topic_only: "חיזוק באותה רמה",
-  drop_one_grade_topic_only: "הורדת רמת קושי — באותו נושא בלבד",
+  drop_one_grade_topic_only: "הורדת רמת קושי - באותו נושא בלבד",
 };
 
 /** Engine field key — split to keep parent-copy guard clean. */
@@ -201,7 +201,7 @@ function buildHebrewCopy(step, ctx, cfg) {
 
   const mPart =
     mC >= cfg.copyMentionMistakesMin
-      ? ` בתקופה שנבחרה נרשמו ${mC} טעויות בנושא הזה — לקרוא את המשימה לאט לפני מענה.`
+      ? ` בתקופה שנבחרה נרשמו ${mC} טעויות בנושא הזה - לקרוא את המשימה לאט לפני מענה.`
       : "";
 
   /** @type {Record<RecommendedNextStep, { reasonHe: string, parentHe: string, studentHe: string }>} */
@@ -212,20 +212,20 @@ function buildHebrewCopy(step, ctx, cfg) {
       studentHe: "אפשר לנסות מתקדם באותו נושא.",
     },
     advance_grade_topic_only: {
-      reasonHe: `בנושא ${displayName} כבר עובדים בתרגול הנוכחי (${levelLabel}) עם דיוק טוב (${acc}%) וכמות שאלות מספיקה (${q} שאלות). אפשר לנסות כיתה גבוהה יותר דווקא בנושא הזה — לא לכל המקצוע.`,
-      parentHe: `אם ניתן לבחור כיתה לפי נושא — בנושא ${displayName} אפשר לנסות כיתה אחת מעלה. זה רק לנושא הזה; בשאר הנושאים נשארים כרגיל עד שיהיו נתונים דומים.`,
-      studentHe: `בנושא ${displayName} אפשר לנסות כיתה קצת יותר גבוהה — רק שם, צעד אחר צעד.`,
+      reasonHe: `בנושא ${displayName} כבר עובדים בתרגול הנוכחי (${levelLabel}) עם דיוק טוב (${acc}%) וכמות שאלות מספיקה (${q} שאלות). אפשר לנסות כיתה גבוהה יותר דווקא בנושא הזה - לא לכל המקצוע.`,
+      parentHe: `אם ניתן לבחור כיתה לפי נושא - בנושא ${displayName} אפשר לנסות כיתה אחת מעלה. זה רק לנושא הזה; בשאר הנושאים נשארים כרגיל עד שיהיו נתונים דומים.`,
+      studentHe: `בנושא ${displayName} אפשר לנסות כיתה קצת יותר גבוהה - רק שם, צעד אחר צעד.`,
     },
     maintain_and_strengthen: {
-      reasonHe: `בנושא ${displayName} יש ${q} שאלות ודיוק של כ-${acc}%${mPart}. עדיין לא בטוחים מספיק לקפיצה קדימה או אחורה — כדאי להמשיך באותה כיתה ורמת קושי ולחזק עקביות.`,
+      reasonHe: `בנושא ${displayName} יש ${q} שאלות ודיוק של כ-${acc}%${mPart}. עדיין לא בטוחים מספיק לקפיצה קדימה או אחורה - כדאי להמשיך באותה כיתה ורמת קושי ולחזק עקביות.`,
       parentHe: `בנושא ${displayName} מומלץ להמשיך כרגע באותה רמת קושי, להוסיף תרגול קצר וממוקד פעמיים בשבוע. המטרה: ביסוס הנושא ועקביות לפני שמשנים משהו.`,
-      studentHe: `כדאי להתאמן עוד קצת בנושא ${displayName} באותה רמה — ואז נחליט על צעד הבא.`,
+      studentHe: `כדאי להתאמן עוד קצת בנושא ${displayName} באותה רמה - ואז נחליט על צעד הבא.`,
     },
     remediate_same_level: {
       reasonHe: `בנושא ${displayName} הדיוק בינוני (${acc}%) עם ${q} שאלות${mPart}. עדיף לחזק את הבסיס באותה רמת קושי לפני שמנסים משהו חדש.`,
       parentHe:
         "כדאי להמשיך על אותה רמת קושי ולהתמקד בהבנת הטעויות: לתרגל ביחד עם הילד, ואחרי תשובה שגויה לעצור ולברר ביחד איפה זה הסתבך. עדיף לא לעלות רמה לפני שיש תחושה של התקדמות ועקביות.",
-      studentHe: `נחזק קודם את הבסיס בנושא ${displayName} באותה רמה — ואז נתקדם.`,
+      studentHe: `נחזק קודם את הבסיס בנושא ${displayName} באותה רמה - ואז נתקדם.`,
     },
     maintain_regular_strengthen_medium: {
       reasonHe: "כדאי לצבור עוד תרגול יציב ברמה רגילה לפני מעבר למתקדם.",
@@ -243,9 +243,9 @@ function buildHebrewCopy(step, ctx, cfg) {
       studentHe: "נחזק קודם בתרגול רגיל, ואז נמשיך הלאה.",
     },
     drop_one_grade_topic_only: {
-      reasonHe: `בנושא ${displayName} עובדים כבר ברמה הקלה ביותר (${levelLabel}) אבל הדיוק עדיין נמוך (${acc}%)${mPart}. סביר שהפער הוא כיתתי — כדאי לרדת כיתה אחת רק בנושא הזה.`,
+      reasonHe: `בנושא ${displayName} עובדים כבר ברמה הקלה ביותר (${levelLabel}) אבל הדיוק עדיין נמוך (${acc}%)${mPart}. סביר שהפער הוא כיתתי - כדאי לרדת כיתה אחת רק בנושא הזה.`,
       parentHe: "מומלץ לנסות רמה או כיתה יותר נמוכה ואז להתקדם בהדרגה.",
-      studentHe: `בנושא ${displayName} ננסה כיתה קצת יותר נוחה — רק שם — כדי שהכל יהיה יותר הוגן.`,
+      studentHe: `בנושא ${displayName} ננסה כיתה קצת יותר נוחה - רק שם - כדי שהכל יהיה יותר הוגן.`,
     },
   };
 
@@ -274,7 +274,7 @@ export function applyAggressiveEvidenceCap(result, row, ctx, cfg) {
   }
   const step = "maintain_and_strengthen";
   const copy = buildHebrewCopy(step, ctx, cfg);
-  const note = " (הנתון עדיין חלקי — לא משנים כיתה או רמת קושי כרגע; כדאי לבסס באותה הגדרה ולאסוף עוד קצת תרגול.)";
+  const note = " (הנתון עדיין חלקי - לא משנים כיתה או רמת קושי כרגע; כדאי לבסס באותה הגדרה ולאסוף עוד קצת תרגול.)";
   trace.push({
     source: "recommendation",
     phase: "post_cap_adjustments",
@@ -376,9 +376,9 @@ function runLegacyTopicNextStep(row, mistakeEventCount, cfg) {
         currentMastery: acc,
         stability,
         confidence,
-        reasonHe: `יש רק ${q} שאלות בנושא ${displayName} בתקופה שנבחרה — מוקדם מדי לשנות כיתה או רמת קושי. עדיף עוד מפגשים קצרים באותה הגדרה ואז נבחן מחדש.`,
+        reasonHe: `יש רק ${q} שאלות בנושא ${displayName} בתקופה שנבחרה - מוקדם מדי לשנות כיתה או רמת קושי. עדיף עוד מפגשים קצרים באותה הגדרה ואז נבחן מחדש.`,
         parentHe: `בנושא ${displayName} יש עדיין מעט נתונים (${q} שאלות). המלצה להמשיך באותה רמת קושי, להוסיף שניים שלושה תרגולים קצרים כדי שההמלצה הבאה תהיה מדויקת יותר.`,
-        studentHe: `נמשיך עוד קצת באותה רמה בנושא ${displayName} — ואז נדע טוב יותר מה הלאה.`,
+        studentHe: `נמשיך עוד קצת באותה רמה בנושא ${displayName} - ואז נדע טוב יותר מה הלאה.`,
         recommendationDecisionTrace: trace,
       },
       row,
@@ -1189,13 +1189,13 @@ export function decideTopicNextStep(row, mistakeEventCount, cfg = DEFAULT_TOPIC_
     whyFoundationFirstHe: phase14Overlay.whyFoundationFirstHe,
   });
   if (capped.postCapApplied) {
-    whyThisRecommendationHe += " נשמר כלל זהירות — לא עושים שינוי גדול כשהמידע עדיין חלקי.";
+    whyThisRecommendationHe += " נשמר כלל זהירות - לא עושים שינוי גדול כשהמידע עדיין חלקי.";
   }
   whyThisRecommendationHe += ` נקודה שכדאי לשים עליה לב: ${rootCausePayload.rootCauseLabelHe || rootCausePayload.rootCause}.`;
   const dc = String(restraintPayload.diagnosticCautionHe || "").trim();
   if (dc) whyThisRecommendationHe += ` ${dc}`;
   if (phase10Aging.confidenceDecayApplied) {
-    whyThisRecommendationHe += " הנתונים בתקופה שנבחרה מתחילים להתיישן — נשארים עם ניסוח זהיר יחסית.";
+    whyThisRecommendationHe += " הנתונים בתקופה שנבחרה מתחילים להתיישן - נשארים עם ניסוח זהיר יחסית.";
   }
   if (phase11Drift.repeatAdviceWarning && phase11Overlay.whyWeShouldNotRepeatSameSupportHe) {
     whyThisRecommendationHe += ` ${phase11Overlay.whyWeShouldNotRepeatSameSupportHe}`;
@@ -1250,7 +1250,7 @@ export function decideTopicNextStep(row, mistakeEventCount, cfg = DEFAULT_TOPIC_
     (phase13Gates.releaseGate === "forming" || phase13Gates.advanceGate === "forming") &&
     !whyThisRecommendationHe.includes("לא מרחיבים שחרור")
   ) {
-    whyThisRecommendationHe += " כל עוד לא ברור מאיפה מתחיל הקושי — לא מפחיתים עזרה ולא מקדמים מהר מדי.";
+    whyThisRecommendationHe += " כל עוד לא ברור מאיפה מתחיל הקושי - לא מפחיתים עזרה ולא מקדמים מהר מדי.";
   }
 
   return {

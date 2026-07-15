@@ -14,7 +14,7 @@ const HEB_LETTER = /[\u0590-\u05FF]/;
 
 /**
  * Final-letter forms that are often accidentally doubled at word end (keyboard slip).
- * Do not collapse other doubles (e.g. "לברר") — those are valid Hebrew.
+ * Do not collapse other doubles (e.g. "לברר") - those are valid Hebrew.
  */
 const HEB_FINAL_FORM_TYPOS = new Set(["ם", "ן", "ץ", "ף", "ך"]);
 

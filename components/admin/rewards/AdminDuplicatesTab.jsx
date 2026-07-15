@@ -53,7 +53,7 @@ export default function AdminDuplicatesTab({ accessToken }) {
       {message ? <p className="text-sm text-emerald-300 mb-3">{message}</p> : null}
       <section className="rounded-xl border border-white/10 bg-white/[0.03] p-4 space-y-4">
         <p className="text-sm text-white/75 leading-relaxed">
-          הילד/ה יכול/ה למכור עותק כפול של קלף חנות ידנית — רק מהכפתור בחנות, ותמיד נשאר עותק אחד באוסף.
+          הילד/ה יכול/ה למכור עותק כפול של קלף חנות ידנית - רק מהכפתור בחנות, ותמיד נשאר עותק אחד באוסף.
           המרת 10 כפילויות אוטומטית בוטלה.
         </p>
         <label className="block text-xs text-white/70">

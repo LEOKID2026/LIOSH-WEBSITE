@@ -24,7 +24,7 @@ function collectFromBucket(aggregate, accessor) {
       if (count < MIN_BUCKET_OCCURRENCES) continue;
       const topicLabel = getTopicDisplayNameHe(subjectKey, topicKey);
       const subjectLabel = getSubjectDisplayNameHe(subjectKey);
-      const label = topicLabel ? `${subjectLabel} — ${safeHebrewLabel(topicLabel, subjectLabel)}` : subjectLabel;
+      const label = topicLabel ? `${subjectLabel} - ${safeHebrewLabel(topicLabel, subjectLabel)}` : subjectLabel;
       labels.push(label);
     }
   }

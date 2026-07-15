@@ -42,7 +42,7 @@ export function buildClinicalBoundaryAnswerDraft() {
 }
 
 /**
- * Normalized join of boundary blocks — matches `validateAnswerDraft` joined shape (single spaces between blocks).
+ * Normalized join of boundary blocks - matches `validateAnswerDraft` joined shape (single spaces between blocks).
  */
 export function clinicalBoundaryJoinedFingerprintHe() {
   return [CLINICAL_BOUNDARY_LINE_1_HE, CLINICAL_BOUNDARY_LINE_2_HE, CLINICAL_BOUNDARY_LINE_3_HE].join(" ");
@@ -153,7 +153,7 @@ export function defaultConcretePlanTextHe(intentMain, truthPacket) {
   if (intentMain === "what_to_do_today") {
     return `1) מחר 10 דקות תרגול ממוקד ב${subj}. 2) 5–8 שאלות קצרות ולבדוק מה חוזר. 3) לסיים במשפט אחד עם הילד על מה ניסיתם.`;
   }
-  return `1) לבחור נושא אחד מרכזי ב${subj} ולחלק תרגול לשלושה חלונות קצרים בשבוע. 2) בכל חלון 5–8 שאלות קצרות ולבדוק אם אותה טעות חוזרת. 3) בסוף השבוע: משפט אחד עם הילד — מה התקדם ומה עדיין צריך חיזוק.`;
+  return `1) לבחור נושא אחד מרכזי ב${subj} ולחלק תרגול לשלושה חלונות קצרים בשבוע. 2) בכל חלון 5–8 שאלות קצרות ולבדוק אם אותה טעות חוזרת. 3) בסוף השבוע: משפט אחד עם הילד - מה התקדם ומה עדיין צריך חיזוק.`;
 }
 
 /**
@@ -279,7 +279,7 @@ export function composeAnswerDraft(plan, truthPacket, coachingCtx = null) {
         {
           type: "observation",
           textHe:
-            "בדוח התרגול שהוצג כאן אין כרגע נתונים על הנושא ששאלת עליו — המערכת מתעדת רק את מקצועות הלימוד המופיעים בדוח.",
+            "בדוח התרגול שהוצג כאן אין כרגע נתונים על הנושא ששאלת עליו - המערכת מתעדת רק את מקצועות הלימוד המופיעים בדוח.",
           source: "composed",
         },
         {
@@ -432,13 +432,13 @@ export function composeAnswerDraft(plan, truthPacket, coachingCtx = null) {
         /דקים מדי|לא ניתן לקבוע כיוון עקבי|כיוון ברור|שאלות פתוחות|עדיין לא מאפשר לקבוע/u.test(reason)
       ) {
         reason =
-          "יש כאן נפח תרגול משמעותי בדוח; עדיין יש הבדל טבעי בין מה שקורה בבית לבין מה שנספר בטווח — נעדכן שוב אחרי עוד תרגול.";
+          "יש כאן נפח תרגול משמעותי בדוח; עדיין יש הבדל טבעי בין מה שקורה בבית לבין מה שנספר בטווח - נעדכן שוב אחרי עוד תרגול.";
       }
       if (hasIntelligenceSignals && ivConf === "low" && sfQ < 90) {
-        reason = "זו תמונה ראשונית בלבד — " + reason;
+        reason = "זו תמונה ראשונית בלבד - " + reason;
       }
       if (hasIntelligenceSignals && ivWeak === "tentative" && sfQ < 100) {
-        reason = "יש סימן ראשוני בלבד לחולשה — " + reason;
+        reason = "יש סימן ראשוני בלבד לחולשה - " + reason;
       }
       const hedges = Array.isArray(truthPacket.allowedClaimEnvelope?.requiredHedges)
         ? truthPacket.allowedClaimEnvelope.requiredHedges.map((h) => String(h || "").trim()).filter(Boolean)
@@ -446,7 +446,7 @@ export function composeAnswerDraft(plan, truthPacket, coachingCtx = null) {
       const priorSlotsForHedgeDedup = [obs, interp, lim].filter(Boolean).join(" ");
       for (const h of hedges) {
         if (h && !requiredHedgeAlreadyCoveredInDraft(h, reason, priorSlotsForHedgeDedup)) {
-          reason = `${h} — ${reason}`;
+          reason = `${h} - ${reason}`;
         }
       }
       answerBlocks.push({ type: "uncertainty_reason", textHe: reason, source: "composed" });
@@ -498,8 +498,8 @@ export function composeAnswerDraft(plan, truthPacket, coachingCtx = null) {
   if (isMixedGradeReportQuestion(foldUtteranceForHeMatch(parentUtterance)) && gpm?.mixedGradePractice) {
     const note = String(gpm.mixedGradePracticeNoteHe || "").trim();
     const gradeLine = note
-      ? `${note} כל שורה בדוח מציגה את כיתת התוכן שבה בוצע התרגול — לא למזג בין כיתות כשקובעים כיוון.`
-      : "כשאותו נושא מופיע בכיתות תוכן שונות, כל שורה בדוח נספרת בנפרד — לא למזג בין כיתות.";
+      ? `${note} כל שורה בדוח מציגה את כיתת התוכן שבה בוצע התרגול - לא למזג בין כיתות כשקובעים כיוון.`
+      : "כשאותו נושא מופיע בכיתות תוכן שונות, כל שורה בדוח נספרת בנפרד - לא למזג בין כיתות.";
     if (!composed.some((b) => String(b.textHe || "").includes("כיתה"))) {
       composed = [...composed, { type: "meaning", textHe: gradeLine, source: "composed" }];
     }

@@ -83,7 +83,7 @@ function HowToModal({ open, onClose }) {
           <li>שחור (מושב שמאלי ברשימה) מתחיל; תורות לסירוגין.</li>
           <li>זזים אלכסונית קדימה; מלכים זזים בכל האלכסונים.</li>
           <li>חובה לאכול אם יש קפיצה זמינה.</li>
-          <li>אכילות רצופות עם אותו כלי — ימשיכו את התור עד שאין המשך.</li>
+          <li>אכילות רצופות עם אותו כלי - ימשיכו את התור עד שאין המשך.</li>
         </ul>
       </div>
     </div>
@@ -230,12 +230,12 @@ export default function CheckersScreen({ roomId }) {
         {showLobbyWait ? (
           <div className="mt-6 rounded-xl border border-amber-500/30 bg-amber-950/25 px-4 py-6 text-center text-amber-100">
             <p className="text-lg font-bold">ממתינים לשחקן…</p>
-            <p className="mt-2 text-sm text-amber-200/90">דמקה — שני שחקנים</p>
+            <p className="mt-2 text-sm text-amber-200/90">דמקה - שני שחקנים</p>
           </div>
         ) : null}
 
         {showSessionInitError ? (
-          <p className="mt-4 text-center text-sm text-rose-200">לא ניתן לטעון את הלוח — נסה לרענן</p>
+          <p className="mt-4 text-center text-sm text-rose-200">לא ניתן לטעון את הלוח - נסה לרענן</p>
         ) : null}
         {showBoardLoading ? <p className="mt-6 text-center text-zinc-400">טוען…</p> : null}
 

@@ -90,7 +90,7 @@ export function clampHebrewParentTextToMaxPS(text, maxPS, contentClass = "diagno
     out = out.replace(PS3_REGEX, "נאסוף עוד תצפית");
     out = out.replace(PS3_PROMO_REGEX, "לא משנים הגדרה דרמטית בשלב זה");
     if (contentClass === "diagnosis" && !/מוקדם|חלקי|אולי|נאסוף/.test(out)) {
-      out = `עדיין מוקדם לנעול כיוון — ${out}`;
+      out = `עדיין מוקדם לנעול כיוון - ${out}`;
     }
     return out.replace(/\s+/g, " ").trim();
   }
@@ -99,7 +99,7 @@ export function clampHebrewParentTextToMaxPS(text, maxPS, contentClass = "diagno
     out = out.replace(PS3_REGEX, "נראה שכדאי");
     out = out.replace(PS3_PROMO_REGEX, "לא לדחוף שינוי חד בשלב זה");
     if (contentClass === "diagnosis" && !/מוקדם|חלקי|אולי/.test(out)) {
-      out = `סימן ראשוני בלבד — ${out}`;
+      out = `סימן ראשוני בלבד - ${out}`;
     }
   } else if (maxPS === 2) {
     out = out.replace(/מומלץ בבירור|בהחלט כדאי/giu, "כדאי בזהירות");

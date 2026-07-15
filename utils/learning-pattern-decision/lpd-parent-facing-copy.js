@@ -187,7 +187,7 @@ export function buildLpdParentInsightLineHe(row) {
 
   const subj = String(row.subjectLabelHe || row.subject || "").trim();
   const label = String(row.label || row.displayName || "").trim();
-  if (subj && label) return guardParentFacingText(`${subj} — «${label}»: ${finding}`);
+  if (subj && label) return guardParentFacingText(`${subj} - «${label}»: ${finding}`);
   if (label) return guardParentFacingText(`«${label}»: ${finding}`);
   return finding;
 }

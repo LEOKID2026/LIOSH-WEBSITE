@@ -413,7 +413,7 @@ export default function MleoTargetTapEngine({
             {" · "}
             <span>רמה: {level}</span>
             {" · "}
-            <span>{"❤️".repeat(Math.max(0, lives)) || "—"}</span>
+            <span>{"❤️".repeat(Math.max(0, lives)) || "-"}</span>
             {" · "}
             <span>טעויות: {misses}</span>
             {" · "}

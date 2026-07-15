@@ -75,7 +75,7 @@ export default function SchoolActivityMonitorPage({ activityId }) {
             <div className="rounded-lg border border-white/10 bg-black/25 p-4 space-y-1">
               <h1 className="text-lg font-semibold text-white">{activity.title}</h1>
               <p className="text-sm text-white/70">
-                ילדים: {students.length} · שאלות: {activity.questionCount ?? "—"}
+                ילדים: {students.length} · שאלות: {activity.questionCount ?? "-"}
               </p>
               {data?.summary?.classAccuracy != null ? (
                 <p className="text-sm text-white/70">
@@ -103,12 +103,12 @@ export default function SchoolActivityMonitorPage({ activityId }) {
                       <td className="px-3 py-2">{s.studentFullNameMasked}</td>
                       <td className="px-3 py-2">{studentActivityStatusLabelHe(s.status)}</td>
                       <td className="px-3 py-2 tabular-nums">
-                        {s.answersCount}/{activity?.questionCount ?? "—"}
+                        {s.answersCount}/{activity?.questionCount ?? "-"}
                       </td>
                       <td className="px-3 py-2 tabular-nums">
                         {s.answersCount > 0
                           ? `${Math.round((s.correctCount / s.answersCount) * 100)}%`
-                          : "—"}
+                          : "-"}
                       </td>
                       <td className="px-3 py-2">
                         <button

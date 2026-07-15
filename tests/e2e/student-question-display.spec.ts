@@ -56,7 +56,7 @@ async function confirmMixedModal(page: Page) {
   }
 }
 
-test.describe("Student question display — layout (mobile)", () => {
+test.describe("Student question display - layout (mobile)", () => {
   test.beforeEach(async ({ page }) => {
     await page.setViewportSize(MOBILE_VIEW);
     await mockStudentSession(page);

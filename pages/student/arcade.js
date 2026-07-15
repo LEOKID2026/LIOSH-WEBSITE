@@ -124,16 +124,16 @@ function apiMessage(result) {
 function quickMatchMessage(payload) {
   if (!payload || payload.ok !== true) return apiMessage({ payload, status: 200 });
   const m = payload.mode;
-  if (m === "already_in_room") return "כבר נמצא בחדר — אפשר ללחוץ על כניסה למשחק";
+  if (m === "already_in_room") return "כבר נמצא בחדר - אפשר ללחוץ על כניסה למשחק";
   if (m === "joined") return "הצטרפת לשחקן שמחכה בחדר";
-  if (m === "created") return "נוצר חדר משחק מהיר — מחכה לשחקן נוסף";
+  if (m === "created") return "נוצר חדר משחק מהיר - מחכה לשחקן נוסף";
   return "מוכן";
 }
 
 function roomTypeLabel(rt) {
   if (rt === "quick") return "משחק מהיר";
   if (rt === "public") return "ציבורי";
-  return rt || "—";
+  return rt || "-";
 }
 
 function EntryCostSelector({
@@ -201,7 +201,7 @@ function ArcadeGameActionPanel({
       <div className="flex flex-wrap items-end justify-between gap-2">
         <div className="text-right">
           <p className={actionTitle}>
-            משחק נבחר: <span className="font-bold">{selectedTitle || "—"}</span>
+            משחק נבחר: <span className="font-bold">{selectedTitle || "-"}</span>
           </p>
           <p className={`mt-0.5 ${actionMeta}`}>סכום כניסה: {entryCostLabel} מטבעות</p>
         </div>
@@ -651,8 +651,8 @@ export default function StudentArcadePage() {
 
   const hlRoom = roomHighlight?.room;
   const hlRoomId = hlRoom?.id != null ? String(hlRoom.id) : "";
-  const hlStatus = hlRoom?.status != null ? String(hlRoom.status) : "—";
-  const hlEntry = hlRoom?.entry_cost != null ? String(hlRoom.entry_cost) : "—";
+  const hlStatus = hlRoom?.status != null ? String(hlRoom.status) : "-";
+  const hlEntry = hlRoom?.entry_cost != null ? String(hlRoom.entry_cost) : "-";
   const hlRoomType = hlRoom?.room_type != null ? String(hlRoom.room_type) : "";
   const hlJoinCode =
     hlRoom?.join_code != null && String(hlRoom.join_code).trim() !== ""
@@ -684,7 +684,7 @@ export default function StudentArcadePage() {
     <Layout studentTheme={theme} studentShell="home">
     <GameAccessGuard category="online">
       <Head>
-        <title>מועדון המשחקים של ליאו — LEO K</title>
+        <title>מועדון המשחקים של ליאו - LEO K</title>
       </Head>
       <div className={GH.pageWrap} dir="rtl">
         <div className="w-full max-w-[1400px] mx-auto px-3 sm:px-4 md:px-6 py-4 md:py-8 pb-6 overflow-x-hidden space-y-4">
@@ -785,7 +785,7 @@ export default function StudentArcadePage() {
                   />
                 </div>
                 <ArcadeGameActionPanel
-                  selectedTitle={selectedGame?.title || "—"}
+                  selectedTitle={selectedGame?.title || "-"}
                   entryCostLabel={entryCostLabel}
                   canAct={canPlaySelected}
                   costBlocked={costBlockedForSelected}
@@ -827,7 +827,7 @@ export default function StudentArcadePage() {
                   <h3 className={GH.arcadeSectionTitle || GH.sectionTitle}>חדרים פתוחים</h3>
                   <p className={`mt-1 text-[11px] sm:text-xs ${GH.arcadePanelBlurb || GH.cardBlurb}`}>חדרים ציבוריים ומשחק מהיר שמחכים לשחקן</p>
                   {!openRoomsPollActive ? (
-                    <p className={`mt-3 ${GH.arcadeEmptyText || GH.emptyText}`}>אין רשימה — המשחק לא פעיל</p>
+                    <p className={`mt-3 ${GH.arcadeEmptyText || GH.emptyText}`}>אין רשימה - המשחק לא פעיל</p>
                   ) : openRooms.length === 0 ? (
                     <p className={`mt-3 ${GH.arcadeEmptyText || GH.emptyText}`}>אין חדרים פתוחים כרגע</p>
                   ) : (
@@ -868,7 +868,7 @@ export default function StudentArcadePage() {
                 </div>
 
                 <div className={GH.arcadePanelJoinCode || GH.card}>
-                  <h3 className={GH.arcadeSectionTitle || GH.sectionTitle}>חדר פרטי — הצטרפות בקוד</h3>
+                  <h3 className={GH.arcadeSectionTitle || GH.sectionTitle}>חדר פרטי - הצטרפות בקוד</h3>
                   <p className={`mt-1 text-[11px] sm:text-xs ${GH.arcadePanelBlurb || GH.cardBlurb}`}>הזן את הקוד שקיבלת מחבר</p>
                   <div className="mt-3 flex flex-col gap-2">
                     <input

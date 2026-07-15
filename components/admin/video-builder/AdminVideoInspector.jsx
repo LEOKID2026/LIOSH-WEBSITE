@@ -163,7 +163,7 @@ export default function AdminVideoInspector({
             <div className="rounded-lg border border-white/10 bg-black/20 p-3">
               <span className="text-xs text-white/50">{VB_SCENE_MEDIA}</span>
               <div className="mt-2 flex items-center gap-2 justify-between">
-                <span className="text-xs text-white/70 truncate flex-1">{media?.filename || "—"}</span>
+                <span className="text-xs text-white/70 truncate flex-1">{media?.filename || "-"}</span>
                 <button
                   type="button"
                   onClick={() => {

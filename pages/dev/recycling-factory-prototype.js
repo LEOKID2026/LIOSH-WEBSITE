@@ -5,7 +5,7 @@ export default function RecyclingFactoryPrototypePage() {
   return (
     <>
       <Head>
-        <title>מפעל המיחזור של ליאו — אבטיפוס</title>
+        <title>מפעל המיחזור של ליאו - אבטיפוס</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <RecyclingFactoryPrototype />

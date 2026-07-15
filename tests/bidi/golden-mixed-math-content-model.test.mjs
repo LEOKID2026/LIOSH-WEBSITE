@@ -67,7 +67,7 @@ const MIXED = [
 
 /** Prose-dominant lines: must render with isolated numbers, never glued. */
 const PROSE_LINES = [
-  "איזה מספר נמצא 3 צעדים ימינה מ־2?",
+  "איזה מספר נמצא 3 צעדים ימינה מ-2?",
   "2 מקלי עשרת ועוד מקל עשרת אחד = 3 מקלי עשרת",
 ];
 

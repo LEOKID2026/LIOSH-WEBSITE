@@ -96,7 +96,7 @@ export function buildMoledetGeographyReviewPack(enrichmentPayload, opts = {}) {
     approveAsIs:
       "Use for rows with confidence **high** after spot-checking strand labels against curriculum intent.",
     editMetadata:
-      "Adjust difficulty / cognitive / error tags in the bank — **do not** change Hebrew stems, distractors, or correct indices without curriculum approval.",
+      "Adjust difficulty / cognitive / error tags in the bank - **do not** change Hebrew stems, distractors, or correct indices without curriculum approval.",
     rejectSuggestion:
       "Discard when strand mapping conflicts with classroom sequencing or assessment design.",
     needsCurriculumExpert:

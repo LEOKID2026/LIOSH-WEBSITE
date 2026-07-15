@@ -17,7 +17,7 @@ const DESTINATIONS = [
     name: "אילת",
     emoji: "🐠",
     region: "דרום",
-    fact: "אילת נמצאת על שפת הים האדום — מקום מצוין לשחות ולצלול.",
+    fact: "אילת נמצאת על שפת הים האדום - מקום מצוין לשחות ולצלול.",
     quiz: "העיר הדרומית ביותר, ליד הים האדום",
     x: 28,
     y: 88,
@@ -27,7 +27,7 @@ const DESTINATIONS = [
     name: "ים המלח",
     emoji: "🧂",
     region: "דרום",
-    fact: "בים המלח המים מלוחים מאוד — קל לצוף!",
+    fact: "בים המלח המים מלוחים מאוד - קל לצוף!",
     quiz: "המקום הנמוך ביותר על פני כדור הארץ",
     x: 42,
     y: 58,
@@ -47,7 +47,7 @@ const DESTINATIONS = [
     name: "החרמון",
     emoji: "🏔️",
     region: "צפון",
-    fact: "בחרמון יורד שלג בחורף — פסגת ההר הגבוהה בארץ.",
+    fact: "בחרמון יורד שלג בחורף - פסגת ההר הגבוהה בארץ.",
     quiz: "הר גבוה בצפון, עם שלג בחורף",
     x: 62,
     y: 12,
@@ -142,7 +142,7 @@ export default function IsraelJourneyPrototype() {
           setFeedback("");
         }, 2200);
       } else {
-        setFeedback("לא בדיוק — נסו יעד אחר לפי הרמז");
+        setFeedback("לא בדיוק - נסו יעד אחר לפי הרמז");
       }
     }
   };
@@ -168,7 +168,7 @@ export default function IsraelJourneyPrototype() {
           <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
             <p className="text-5xl">🇮🇱</p>
             <p className="max-w-sm text-sm font-semibold text-sky-200">
-              טיילו עם ליאו בין יעדים בישראל — גלו עובדות או פתרו משימות!
+              טיילו עם ליאו בין יעדים בישראל - גלו עובדות או פתרו משימות!
             </p>
             <button type="button" onClick={startExplore} className="min-h-[48px] rounded-xl bg-sky-600 px-8 py-2.5 text-base font-bold text-white">
               מסע חופשי

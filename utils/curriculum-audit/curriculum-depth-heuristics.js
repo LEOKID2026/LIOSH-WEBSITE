@@ -70,14 +70,14 @@ export function analyzeCurriculumDepth(rec, norm, ctx = {}) {
   const nkGrades = ctx.normKeyGrades?.[`${subject}|${nk}`];
   if (nkGrades && nkGrades.size >= 4) {
     depthFlags.push(FLAG.TOPIC_SHALLOW_CROSS_GRADE);
-    notes.push("Normalized topic appears across many grades — verify depth progression.");
+    notes.push("Normalized topic appears across many grades - verify depth progression.");
   }
 
   if (subject === "english" && gmin <= 2) {
     if (rawTopic === "grammar" || nk.startsWith("english.grammar")) {
       depthFlags.push(FLAG.ENGLISH_GRAMMAR_EARLY);
       suggestNeedsHumanReview = true;
-      notes.push("English grammar exposure in grades 1–2 — confirm oral/exposure vs formal grammar.");
+      notes.push("English grammar exposure in grades 1–2 - confirm oral/exposure vs formal grammar.");
     }
     if (rawTopic === "sentence" || nk.startsWith("english.sentence_writing")) {
       depthFlags.push(FLAG.ENGLISH_SENTENCE_EARLY);
@@ -91,7 +91,7 @@ export function analyzeCurriculumDepth(rec, norm, ctx = {}) {
     if (heavyRc) {
       depthFlags.push(FLAG.ENGLISH_RC_EARLY);
       suggestNeedsHumanReview = true;
-      notes.push("Reading-load / literacy-heavy item in early English — confirm exposure vs formal comprehension.");
+      notes.push("Reading-load / literacy-heavy item in early English - confirm exposure vs formal comprehension.");
     }
   }
 
@@ -102,17 +102,17 @@ export function analyzeCurriculumDepth(rec, norm, ctx = {}) {
     if ((rawTopic.includes("volume") || nk.includes("volume")) && gmin <= 1) {
       depthFlags.push(FLAG.GEOMETRY_VOLUME_EARLY);
       suggestTooAdvanced = true;
-      notes.push("Volume strand before grade 2 — sequencing review.");
+      notes.push("Volume strand before grade 2 - sequencing review.");
     }
     if ((rawTopic.includes("diagonal") || nk.includes("diagonals")) && gmin <= 2) {
       depthFlags.push(FLAG.GEOMETRY_DIAGONALS_EARLY);
       suggestTooAdvanced = true;
-      notes.push("Diagonal properties before grade 3 — sequencing review.");
+      notes.push("Diagonal properties before grade 3 - sequencing review.");
     }
     if (gmin <= 3 && ADV_ANGLE_HINT.test(preview)) {
       depthFlags.push(FLAG.GEOMETRY_ADVANCED_ANGLES_EARLY);
       suggestTooAdvanced = true;
-      notes.push("Advanced angle vocabulary in stem — verify grade placement.");
+      notes.push("Advanced angle vocabulary in stem - verify grade placement.");
     }
   }
 
@@ -125,7 +125,7 @@ export function analyzeCurriculumDepth(rec, norm, ctx = {}) {
       depthFlags.push(FLAG.MATH_PERCENTAGES_TOO_EARLY);
       if (gmin <= 2) suggestTooAdvanced = true;
       else suggestNeedsHumanReview = true;
-      notes.push("Percent strand in lower primary — sequencing / depth review.");
+      notes.push("Percent strand in lower primary - sequencing / depth review.");
     }
     if ((rawTopic.includes("fraction") || nk.includes("fractions")) && gmin <= 2 && diff === "hard") {
       depthFlags.push(FLAG.MATH_FRACTIONS_DEPTH_UNCLEAR);
@@ -134,7 +134,7 @@ export function analyzeCurriculumDepth(rec, norm, ctx = {}) {
     if (nk.includes("fractions") || nk.includes("decimals")) {
       if (preview.length > 200 || diff.includes("|")) {
         depthFlags.push(FLAG.MATH_FRACTIONS_DEPTH_UNCLEAR);
-        notes.push("Fraction/decimal item with complex difficulty label — depth clarity review.");
+        notes.push("Fraction/decimal item with complex difficulty label - depth clarity review.");
       }
     }
   }
@@ -142,13 +142,13 @@ export function analyzeCurriculumDepth(rec, norm, ctx = {}) {
   if (subject === "hebrew" && gmin <= 2 && nk.includes("grammar_language_knowledge")) {
     depthFlags.push(FLAG.HEBREW_LANGUAGE_COMPLEXITY_EARLY);
     suggestNeedsHumanReview = true;
-    notes.push("Formal Hebrew grammar/language-knowledge tagging in very early grades — confirm spiral vs mastery.");
+    notes.push("Formal Hebrew grammar/language-knowledge tagging in very early grades - confirm spiral vs mastery.");
   }
 
   const sciByG = ctx.coverageContext?.scienceByGrade;
   if (subject === "science" && sciByG && sciByG[gmin] != null && sciByG[gmin] < 40) {
     depthFlags.push(FLAG.SCIENCE_GRADE_LOW_COVERAGE);
-    notes.push(`Science grade ${gmin} row count globally low (${sciByG[gmin]}) — coverage caveat.`);
+    notes.push(`Science grade ${gmin} row count globally low (${sciByG[gmin]}) - coverage caveat.`);
   }
 
   const hebByG = ctx.coverageContext?.hebrewByGrade;
@@ -160,7 +160,7 @@ export function analyzeCurriculumDepth(rec, norm, ctx = {}) {
   if (subject === "moledet-geography") {
     if (["values", "homeland"].includes(rawTopic)) {
       depthFlags.push(FLAG.MOLEDET_VALUES_REPEATED);
-      notes.push("Moledet theme repeats across grades — intentional spiral vs duplication review.");
+      notes.push("Moledet theme repeats across grades - intentional spiral vs duplication review.");
     }
   }
 

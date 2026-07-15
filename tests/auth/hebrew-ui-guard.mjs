@@ -106,8 +106,8 @@ const APPROVED_LIFECYCLE_HE = [
   "ביטול הרשאה",
   "ניהול סטטוס בית ספר",
   "הקפאת בית ספר",
-  "ניהול גישות תלמידים והורים",
-  "צפייה בדוחות ופרטי תלמידים",
+  "ניהול גישות ילדים והורים",
+  "צפייה בדוחות ופרטי ילדים",
 ];
 
 const results = [];
@@ -173,7 +173,7 @@ async function main() {
   );
   record(
     "mapper_no_raw_key_fallback",
-    personaLabelHe("unknown_xyz") === "—" && entitlementStatusLabelHe("unknown_xyz") === "—",
+    personaLabelHe("unknown_xyz") === "-" && entitlementStatusLabelHe("unknown_xyz") === "-",
     "unknown maps to em-dash"
   );
   record(
@@ -183,17 +183,17 @@ async function main() {
   );
   record(
     "mapper_grant_student_access_admin",
-    operatorGrantLabel("studentAccessAdmin") === "ניהול גישות תלמידים והורים",
+    operatorGrantLabel("studentAccessAdmin") === "ניהול גישות ילדים והורים",
     operatorGrantLabel("studentAccessAdmin")
   );
   record(
     "mapper_grant_student_data_viewer",
-    operatorGrantLabel("studentDataViewer") === "צפייה בדוחות ופרטי תלמידים",
+    operatorGrantLabel("studentDataViewer") === "צפייה בדוחות ופרטי ילדים",
     operatorGrantLabel("studentDataViewer")
   );
   record(
     "mapper_plan_teacher_basic_20",
-    planCodeLabelHe("teacher_basic_20") === "תוכנית בסיסית — עד 20 תלמידים",
+    planCodeLabelHe("teacher_basic_20") === "תוכנית בסיסית - עד 20 ילדים",
     planCodeLabelHe("teacher_basic_20")
   );
   record(

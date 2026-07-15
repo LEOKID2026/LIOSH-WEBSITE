@@ -40,7 +40,7 @@ export function buildInterventionPlanPhase8(ctx) {
   /** @type {string[]} */
   const stepsHe = [];
   let interventionSuccessSignalHe = "עקביות קטנה: אותה רמה עם פחות טעויות חוזרות.";
-  let interventionStopSignalHe = "אם נוצר חוסר סבלנות או התנגדות — לעצור ולקצר עוד.";
+  let interventionStopSignalHe = "אם נוצר חוסר סבלנות או התנגדות - לעצור ולקצר עוד.";
   let doNowHe = "";
   let avoidNowHe = "";
 
@@ -52,10 +52,10 @@ export function buildInterventionPlanPhase8(ctx) {
     interventionFormat = "observation_block";
     interventionParentEffort = "low";
     interventionGoal = "collect_evidence";
-    stepsHe.push(`לצפות ב 2–3 תרגולים קצרים בנושא ${displayName} באותה רמת קושי — לרשום רק האם הילד קורא את המשימה לפני מענה.`);
+    stepsHe.push(`לצפות ב 2–3 תרגולים קצרים בנושא ${displayName} באותה רמת קושי - לרשום רק האם הילד קורא את המשימה לפני מענה.`);
     stepsHe.push("לא לשנות כיתה או רמה בבית בשלב זה.");
-    interventionSuccessSignalHe = "אחרי 2–3 מפגשים קצרים נראה אם הדפוס חוזר — אז אפשר להחמיר מיקוד.";
-    interventionStopSignalHe = "אם כל מפגש הופך למאבק — לצמצם אל 5–7 דקות ולחזור למחר.";
+    interventionSuccessSignalHe = "אחרי 2–3 מפגשים קצרים נראה אם הדפוס חוזר - אז אפשר להחמיר מיקוד.";
+    interventionStopSignalHe = "אם כל מפגש הופך למאבק - לצמצם אל 5–7 דקות ולחזור למחר.";
     doNowHe = "תרגול קצר ומדיד: אותה משימה, אותה רמה, דגש על קריאה לפני תשובה.";
     avoidNowHe = "לא לגזור מסקנות עמוקות ולא להחמיר רמה בגלל תוצאה בודדת.";
   } else if (rootCause === "speed_pressure") {
@@ -64,10 +64,10 @@ export function buildInterventionPlanPhase8(ctx) {
     interventionFormat = capAggressivePlan ? "observation_block" : "guided_practice";
     interventionParentEffort = capAggressivePlan ? "low" : "medium";
     interventionGoal = "accuracy_over_speed";
-    stepsHe.push(`בנושא ${displayName} לבחור מצב רגוע (לא מרתון) לאותה רמת קושי — דיוק לפני שעון.`);
+    stepsHe.push(`בנושא ${displayName} לבחור מצב רגוע (לא מרתון) לאותה רמת קושי - דיוק לפני שעון.`);
     stepsHe.push("מטרה: שני ניסיונות זהים ברצף עם בדיקה קצרה לפני שליחה.");
-    interventionSuccessSignalHe = "כשהדיוק נשמר בלי לחץ זמן — אפשר לחזור בהדרגה למסלול מהיר יותר.";
-    interventionStopSignalHe = "אם הילד מזדרז שוב — לחזור לרגע לתרגול ללא טיימר.";
+    interventionSuccessSignalHe = "כשהדיוק נשמר בלי לחץ זמן - אפשר לחזור בהדרגה למסלול מהיר יותר.";
+    interventionStopSignalHe = "אם הילד מזדרז שוב - לחזור לרגע לתרגול ללא טיימר.";
     doNowHe = "תרגול אחד קצר בלי טיימר, עם עצירה לפני שליחה.";
     avoidNowHe = "לא להפוך חולשה במהירות לירידת רמה בכל המקצוע ולא לדחוף שיאים.";
   } else if (rootCause === "instruction_friction") {
@@ -77,9 +77,9 @@ export function buildInterventionPlanPhase8(ctx) {
     interventionParentEffort = "medium";
     interventionGoal = "clarity_first";
     stepsHe.push(`משימה אחת בנושא ${displayName}: לקרוא יחד את הניסוח, לנסח במשפט מה מבקשים, ורק אז לפתור.`);
-    stepsHe.push("רמז אחד בלבד אחרי ניסיון עצמי קצר — לא שרשרת רמזים.");
-    interventionSuccessSignalHe = "כשהילד מתחיל לעצור לבד לפני תשובה — סימן שהעומס יורד.";
-    interventionStopSignalHe = "אם נשארים על רמזים — לקצר את המשימה ולחזור למחר.";
+    stepsHe.push("רמז אחד בלבד אחרי ניסיון עצמי קצר - לא שרשרת רמזים.");
+    interventionSuccessSignalHe = "כשהילד מתחיל לעצור לבד לפני תשובה - סימן שהעומס יורד.";
+    interventionStopSignalHe = "אם נשארים על רמזים - לקצר את המשימה ולחזור למחר.";
     doNowHe = "משימה קצרה, ניסוח ברור, פחות הסברים ארוכים בזמן התרגול.";
     avoidNowHe = "לא להסביר כל פריט במילים רבות כשהקושי הוא בהבנת המשימה.";
   } else if (rootCause === "weak_independence") {
@@ -90,8 +90,8 @@ export function buildInterventionPlanPhase8(ctx) {
     interventionGoal = "fade_support";
     stepsHe.push(`בנושא ${displayName}: שלב א׳ עם ליווי קצר, שלב ב׳ ניסיון עצמאי באותה משימה, השוואה בסוף.`);
     stepsHe.push("להגדיל רק מעט את החלק העצמאי כשהצלחה קטנה חוזרת פעמיים.");
-    interventionSuccessSignalHe = "כשהילד מסיים שלב ב׳ לבד ברובו — אפשר להרחיב מעט.";
-    interventionStopSignalHe = "אם העצמאות יורדת והטעויות עולות — לחזור ליחס הכוונה גבוה יותר לשבוע.";
+    interventionSuccessSignalHe = "כשהילד מסיים שלב ב׳ לבד ברובו - אפשר להרחיב מעט.";
+    interventionStopSignalHe = "אם העצמאות יורדת והטעויות עולות - לחזור ליחס הכוונה גבוה יותר לשבוע.";
     doNowHe = "להפריד בבירור בין \"ניסיון לבד\" לבין \"בדיקה יחד בסוף\".";
     avoidNowHe = "לא לעבור למתקדם לפני שני מפגשים עקביים עם עצמאות סבירה.";
   } else if (rootCause === "knowledge_gap" && !capAggressivePlan) {
@@ -100,10 +100,10 @@ export function buildInterventionPlanPhase8(ctx) {
     interventionFormat = "guided_practice";
     interventionParentEffort = sparse ? "medium" : "high";
     interventionGoal = "core_skill_gap";
-    stepsHe.push(`בנושא ${displayName} לבחור 2–3 טעויות טיפוסיות ולחזור עליהן באותה רמה — לא להרחיב נושאים.`);
-    stepsHe.push("פעמיים בשבוע, 8–12 דקות — מספיק לביסוס אם עקבי.");
-    interventionSuccessSignalHe = "כשאותו סוג טעות נעלם בשני מפגשים רצופים — סימן לייצוב.";
-    interventionStopSignalHe = "אם אין שיפור אחרי שבועיים של עקביות — לעצור ולבחון רמה או ניסוח.";
+    stepsHe.push(`בנושא ${displayName} לבחור 2–3 טעויות טיפוסיות ולחזור עליהן באותה רמה - לא להרחיב נושאים.`);
+    stepsHe.push("פעמיים בשבוע, 8–12 דקות - מספיק לביסוס אם עקבי.");
+    interventionSuccessSignalHe = "כשאותו סוג טעות נעלם בשני מפגשים רצופים - סימן לייצוב.";
+    interventionStopSignalHe = "אם אין שיפור אחרי שבועיים של עקביות - לעצור ולבחון רמה או ניסוח.";
     doNowHe = "חזרה ממוקדת על טעויות דומות באותה רמת קושי.";
     avoidNowHe = "לא לדלג על בסיס ולא לפתוח יותר מדי נושאים במקביל.";
   } else if (rootCause === "careless_execution") {
@@ -114,7 +114,7 @@ export function buildInterventionPlanPhase8(ctx) {
     interventionGoal = "execution_habits";
     stepsHe.push(`בנושא ${displayName} לבדוק לפני שליחה: ניסוח → תשובה → בדיקה מהירה (10 שניות).`);
     interventionSuccessSignalHe = "פחות טעויות \"מוכרות\" באותו סוג משימה.";
-    interventionStopSignalHe = "אם הטעויות עמוקות יותר מרשלנות — לעבור לחיזוק מושגי.";
+    interventionStopSignalHe = "אם הטעויות עמוקות יותר מרשלנות - לעבור לחיזוק מושגי.";
     doNowHe = "כל משימה עם עצירת בדיקה קצרה לפני סיום.";
     avoidNowHe = "לא להניח מיד שזה פער ידע עמוק כשיש שליטה חלקית.";
   } else if (rootCause === "mixed_signal" || rootCause === "early_stage_instability") {
@@ -123,9 +123,9 @@ export function buildInterventionPlanPhase8(ctx) {
     interventionFormat = "observation_block";
     interventionParentEffort = "low";
     interventionGoal = "observe_and_stabilize";
-    stepsHe.push(`בנושא ${displayName} לשמור על אותה הגדרה ולתעד הצלחות קטנות — לא לשנות משתנים רבים.`);
-    interventionSuccessSignalHe = "כששני מפגשים רצופים נראים דומים — אפשר לבחור כיוון אחד.";
-    interventionStopSignalHe = "אם התמונה משתנה מאוד בין מפגשים — להישאר עם תרגול קצר ולשים לב, בלי שינוי גדול.";
+    stepsHe.push(`בנושא ${displayName} לשמור על אותה הגדרה ולתעד הצלחות קטנות - לא לשנות משתנים רבים.`);
+    interventionSuccessSignalHe = "כששני מפגשים רצופים נראים דומים - אפשר לבחור כיוון אחד.";
+    interventionStopSignalHe = "אם התמונה משתנה מאוד בין מפגשים - להישאר עם תרגול קצר ולשים לב, בלי שינוי גדול.";
     doNowHe = "להמשיך באותה רמה ולבדוק את הדיוק אחרי כל מפגש.";
     avoidNowHe = "לא לנעול הסבר יחיד כשיש אותות מנוגדים.";
   } else {
@@ -134,9 +134,9 @@ export function buildInterventionPlanPhase8(ctx) {
     interventionFormat = capAggressivePlan ? "observation_block" : "mixed";
     interventionParentEffort = capAggressivePlan ? "low" : "medium";
     interventionGoal = "balanced_support";
-    stepsHe.push(`בנושא ${displayName} תרגול קצר פעמיים בשבוע — מיקוד אחד לכל מפגש.`);
+    stepsHe.push(`בנושא ${displayName} תרגול קצר פעמיים בשבוע - מיקוד אחד לכל מפגש.`);
     interventionSuccessSignalHe = "שיפור קטן ועקבי בדיוק או בפחות טעויות חוזרות.";
-    interventionStopSignalHe = "אם אין תנועה אחרי שבועיים — לעדכן את אופן התרגול.";
+    interventionStopSignalHe = "אם אין תנועה אחרי שבועיים - לעדכן את אופן התרגול.";
     doNowHe = "תרגול קצר וקבוע סביב אותה רמה.";
     avoidNowHe = "לא להעמיס יעדים גדולים כשהתמונה עדיין לא בשלה.";
   }
@@ -156,11 +156,11 @@ export function buildInterventionPlanPhase8(ctx) {
   if (mp9 === "concept_confusion" && stepsHe.length && !capAggressivePlan) {
     stepsHe.push(`התאמה לדפוס: לבודד משפט מפתח אחד בנושא ${displayName} ולחזור עליו לפני הרחבה.`);
   } else if (mp9 === "procedure_break" && stepsHe.length) {
-    stepsHe.push(`התאמה לדפוס: לכתוב שלבביניים אחד בכל פעם — לא לדלג לתוצאה סופית מיד.`);
+    stepsHe.push(`התאמה לדפוס: לכתוב שלבביניים אחד בכל פעם - לא לדלג לתוצאה סופית מיד.`);
   } else if (mp9 === "speed_driven_error") {
     if (doNowHe && !doNowHe.includes("טיימר")) doNowHe = `${doNowHe} בלי טיימר בשלב זה.`.trim();
   } else if (mp9 === "instruction_misread" && stepsHe.length) {
-    stepsHe.push("התאמה לדפוס: לקרוא את המשימה בקול ולנסח במילה אחת מה מבקשים — ואז לפתור.");
+    stepsHe.push("התאמה לדפוס: לקרוא את המשימה בקול ולנסח במילה אחת מה מבקשים - ואז לפתור.");
   }
   if (ls9 === "fragile_retention" || ls9 === "regression_signal" || rr9 === "high") {
     if (!avoidNowHe.includes("להרחיב") && !avoidNowHe.includes("קידום"))

@@ -251,7 +251,7 @@ export function resolveScope(input) {
     return {
       resolutionStatus: "clarification_required",
       clarificationQuestionHe:
-        "לא נטען דוח מקיף — לא ניתן לענות מתוך נתוני התקופה. רעננו את הדף או בחרו תקופה אחרת.",
+        "לא נטען דוח מקיף - לא ניתן לענות מתוך נתוני התקופה. רעננו את הדף או בחרו תקופה אחרת.",
       scopeConfidence: 0,
       scopeReason: "missing_payload",
       stageA,
@@ -348,7 +348,7 @@ export function resolveScope(input) {
     if (!hit) {
       return {
         resolutionStatus: "clarification_required",
-        clarificationQuestionHe: "בנושא הזה עדיין אין מספיק תרגול שמופיע בדוח — כדאי לבחור נושא שכבר יש בו תרגול.",
+        clarificationQuestionHe: "בנושא הזה עדיין אין מספיק תרגול שמופיע בדוח - כדאי לבחור נושא שכבר יש בו תרגול.",
         scopeConfidence: 0.2,
         scopeReason: "selected_context_topic_missing_anchor",
         stageA,
@@ -378,7 +378,7 @@ export function resolveScope(input) {
     if (!subjectHasAnchor) {
       return {
         resolutionStatus: "clarification_required",
-        clarificationQuestionHe: "במקצוע הזה אין עדיין נושא עם מספיק תרגול כדי לדבר עליו — אפשר לנסות מקצוע אחר.",
+        clarificationQuestionHe: "במקצוע הזה אין עדיין נושא עם מספיק תרגול כדי לדבר עליו - אפשר לנסות מקצוע אחר.",
         scopeConfidence: 0.24,
         scopeReason: "selected_context_subject_missing_anchor",
         stageA,
@@ -397,8 +397,8 @@ export function resolveScope(input) {
     return {
       resolutionStatus: "clarification_required",
       clarificationQuestionHe: names
-        ? `יש כמה נושאים דומים בדוח — על איזה מהם לענות: ${names}?`
-        : "יש כאן יותר מנושא אחד — על איזה נושא לענות?",
+        ? `יש כמה נושאים דומים בדוח - על איזה מהם לענות: ${names}?`
+        : "יש כאן יותר מנושא אחד - על איזה נושא לענות?",
       scopeConfidence: 0.25,
       scopeReason: "utterance_topic_ambiguous",
       stageA,
@@ -440,7 +440,7 @@ export function resolveScope(input) {
   if (topicMatch.ambiguous) {
     return {
       resolutionStatus: "clarification_required",
-      clarificationQuestionHe: "יש כאן יותר מנושא אחד — על איזה נושא לענות?",
+      clarificationQuestionHe: "יש כאן יותר מנושא אחד - על איזה נושא לענות?",
       scopeConfidence: 0.25,
       scopeReason: "utterance_topic_ambiguous",
       stageA,
@@ -490,7 +490,7 @@ export function resolveScope(input) {
     return {
       resolutionStatus: "clarification_required",
       clarificationQuestionHe:
-        "בדוח אין כרגע מספיק שאלות מעוגנות כדי לענות בצורה מדויקת — הנתונים עדיין מצומצמים ומוקדם לכיוון ברור. כדאי לצבור עוד קצת תרגול בטווח התאריכים (למשל 5–8 שאלות ממוקדות בשבוע), ואז לנסות שוב.",
+        "בדוח אין כרגע מספיק שאלות מעוגנות כדי לענות בצורה מדויקת - הנתונים עדיין מצומצמים ומוקדם לכיוון ברור. כדאי לצבור עוד קצת תרגול בטווח התאריכים (למשל 5–8 שאלות ממוקדות בשבוע), ואז לנסות שוב.",
       scopeConfidence: 0,
       scopeReason: "no_anchor_available",
       stageA,

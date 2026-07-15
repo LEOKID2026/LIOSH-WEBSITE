@@ -49,7 +49,7 @@ export function detectCrossSubjectPatternsV1(maps, summaryCounts) {
       evidence: ["Weak math word-problem row with concurrent Hebrew comprehension signal."],
       confidence: "low",
       reasoning: [
-        "Both subjects show limited accuracy with adequate volume—may share comprehension/instruction factors.",
+        "Both subjects show limited accuracy with adequate volume-may share comprehension/instruction factors.",
       ],
       doNotConclude: [
         "Not a clinical diagnosis.",
@@ -84,7 +84,7 @@ export function detectCrossSubjectPatternsV1(maps, summaryCounts) {
         involvedSubjects: ["moledet-geography", "geometry"],
         evidence: ["Both spatial/map-heavy subjects below band simultaneously."],
         confidence: "low",
-        reasoning: ["May reflect shared spatial reasoning demands—not definitive."],
+        reasoning: ["May reflect shared spatial reasoning demands-not definitive."],
         doNotConclude: ["Verify with targeted spatial vs symbolic tasks.", "Educational hypothesis only."],
         nextProbe: { probeType: "cross_subject_check", subjects: ["geometry", "moledet-geography"], questionCount: 4 },
       });

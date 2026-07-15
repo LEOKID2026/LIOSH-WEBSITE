@@ -66,7 +66,7 @@ export function buildMistakeIntelligencePhase9(ctx) {
     mistakeSpecificity = "unknown";
   } else if (weakSignal && mC < 4) {
     dominantMistakePattern = "insufficient_mistake_evidence";
-    evidence.push("האות לגבי דפוס טעות חוזר עדיין חלש — לא מדויקים סוג טעות צר.");
+    evidence.push("האות לגבי דפוס טעות חוזר עדיין חלש - לא מדויקים סוג טעות צר.");
     mistakePatternConfidence = 0.28;
     mistakeRecurrenceLevel = q >= 8 ? "unclear" : "isolated";
   } else if (
@@ -127,11 +127,11 @@ export function buildMistakeIntelligencePhase9(ctx) {
       mistakePatternConfidence = Math.min(0.85, 0.52 + (mC >= 4 ? 0.1 : 0));
     } else if (rootCause === "weak_independence" || (td.independenceDeteriorating && acc >= 72)) {
       dominantMistakePattern = "support_dependent_success";
-      evidence.push("הצלחה יחסית לצד ירידה בעצמאות — הטעות נראות קשורות לשחרור עזרה.");
+      evidence.push("הצלחה יחסית לצד ירידה בעצמאות - הטעות נראות קשורות לשחרור עזרה.");
       mistakePatternConfidence = Math.min(0.82, 0.5 + (mC >= 3 ? 0.08 : 0));
     } else if (rootCause === "careless_execution" || behaviorType === "careless_pattern") {
       dominantMistakePattern = "careless_flip";
-      evidence.push("שיעור טעויות בינוני לעומת דיוק סביר — דפוס רשלני/ביצועי.");
+      evidence.push("שיעור טעויות בינוני לעומת דיוק סביר - דפוס רשלני/ביצועי.");
       mistakePatternConfidence = 0.58;
     } else if (
       rootCause === "knowledge_gap" &&
@@ -141,12 +141,12 @@ export function buildMistakeIntelligencePhase9(ctx) {
       mC >= 6
     ) {
       dominantMistakePattern = wr > 0.38 ? "concept_confusion" : "procedure_break";
-      evidence.push("חוזרות טעויות עם דיוק נמוך ונפח טעויות תומך — נראה פער בסדרי פעולה או במושג.");
+      evidence.push("חוזרות טעויות עם דיוק נמוך ונפח טעויות תומך - נראה פער בסדרי פעולה או במושג.");
       mistakePatternConfidence = Math.min(0.86, 0.58 + mC * 0.02);
     } else if (td.fragileProgressPattern || (behaviorType === "fragile_success" && rf.hintDependenceRisk)) {
       if (accuracyBand === "needs_strengthening" && !taxonomyMatch?.taxonomyMatch) {
         dominantMistakePattern = "mixed_mistake_pattern";
-        evidence.push("מגמה מעורבת (דיוק מול עצמאות) — לא ננעלים על סוג טעות אחד.");
+        evidence.push("מגמה מעורבת (דיוק מול עצמאות) - לא ננעלים על סוג טעות אחד.");
         mistakePatternConfidence = 0.48;
       } else if (accuracyBand === "clear_gap") {
         dominantMistakePattern = acc < 50 ? "concept_confusion" : "procedure_break";
@@ -159,7 +159,7 @@ export function buildMistakeIntelligencePhase9(ctx) {
       }
     } else if (q < 12 && (td.unclearTrend !== false || !td.trendConfOk)) {
       dominantMistakePattern = "early_learning_noise";
-      evidence.push("טווח מוקדם או מגמה לא חדה — הטעויות עדיין \"רעש למידה\".");
+      evidence.push("טווח מוקדם או מגמה לא חדה - הטעויות עדיין \"רעש למידה\".");
       mistakePatternConfidence = 0.4;
     } else if (accuracyBand === "needs_strengthening" && q >= 10) {
       dominantMistakePattern = "procedure_break";
@@ -171,7 +171,7 @@ export function buildMistakeIntelligencePhase9(ctx) {
       mistakePatternConfidence = 0.54;
     } else {
       dominantMistakePattern = "mixed_mistake_pattern";
-      evidence.push("תערובת אותות — דפוס טעות לא חד משמעי.");
+      evidence.push("תערובת אותות - דפוס טעות לא חד משמעי.");
       mistakePatternConfidence = 0.45;
     }
   }
@@ -195,7 +195,7 @@ export function buildMistakeIntelligencePhase9(ctx) {
     MISTAKE_PATTERN_LABEL_HE[dominantMistakePattern] || MISTAKE_PATTERN_LABEL_HE.insufficient_mistake_evidence;
 
   const mistakePatternNarrativeHe = `בנושא ${displayName} הדפוס הבולט: ${dominantMistakePatternLabelHe}${
-    mistakeRecurrenceLevel === "persistent" ? " — חוזר לאורך הטווח." : mistakeRecurrenceLevel === "repeating" ? " — חוזר בינונית." : ""
+    mistakeRecurrenceLevel === "persistent" ? " - חוזר לאורך הטווח." : mistakeRecurrenceLevel === "repeating" ? " - חוזר בינונית." : ""
   }`.trim();
 
   const mistakeIntelligence = {

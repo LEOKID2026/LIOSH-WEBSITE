@@ -304,7 +304,7 @@ async function collectFromRun(
   return { rows, unique: seen.size };
 }
 
-test.describe("Final visual runtime QA — Hebrew child screen", () => {
+test.describe("Final visual runtime QA - Hebrew child screen", () => {
   test.beforeEach(async ({ page }) => {
     await page.setViewportSize(MOBILE_VIEW);
     await mockStudentSession(page);

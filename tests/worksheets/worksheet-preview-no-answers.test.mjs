@@ -74,7 +74,7 @@ describe("worksheet-preview-no-answers", () => {
     assert.equal(pub.meta.levelKey, undefined);
   });
 
-  test("preview page stores worksheet only — answer key fetched on separate route", () => {
+  test("preview page stores worksheet only - answer key fetched on separate route", () => {
     const previewSrc = readFileSync(
       join(ROOT, "pages/parent/worksheets/preview.js"),
       "utf8"

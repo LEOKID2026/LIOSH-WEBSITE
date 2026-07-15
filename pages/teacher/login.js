@@ -214,7 +214,7 @@ export default function TeacherLoginPage({ inviteOnly }) {
       });
       if (error || !data?.session?.access_token) {
         setLoginError(
-          "כתובת הדוא״ל או הסיסמה שגויים. אם אתה מורה רשום — נסה שנית."
+          "כתובת הדוא״ל או הסיסמה שגויים. אם אתה מורה רשום - נסה שנית."
         );
         await signOutAndStayOnLogin();
         return;
@@ -245,7 +245,7 @@ export default function TeacherLoginPage({ inviteOnly }) {
 
       if (me.status === 403 || me.body?.error?.code === "not_a_teacher") {
         setLoginError(
-          "כתובת הדוא״ל או הסיסמה שגויים. אם אתה מורה רשום — נסה שנית."
+          "כתובת הדוא״ל או הסיסמה שגויים. אם אתה מורה רשום - נסה שנית."
         );
         await signOutAndStayOnLogin();
         return;
@@ -259,7 +259,7 @@ export default function TeacherLoginPage({ inviteOnly }) {
           onboard.body?.error?.code !== "db_schema_not_ready"
         ) {
           setLoginError(
-            "כתובת הדוא״ל או הסיסמה שגויים. אם אתה מורה רשום — נסה שנית."
+            "כתובת הדוא״ל או הסיסמה שגויים. אם אתה מורה רשום - נסה שנית."
           );
           await signOutAndStayOnLogin();
           return;
@@ -286,7 +286,7 @@ export default function TeacherLoginPage({ inviteOnly }) {
       }
 
       setLoginError(
-        "כתובת הדוא״ל או הסיסמה שגויים. אם אתה מורה רשום — נסה שנית."
+        "כתובת הדוא״ל או הסיסמה שגויים. אם אתה מורה רשום - נסה שנית."
       );
       await signOutAndStayOnLogin();
     } finally {

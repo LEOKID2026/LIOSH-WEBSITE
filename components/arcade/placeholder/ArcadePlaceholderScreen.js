@@ -110,7 +110,7 @@ export default function ArcadePlaceholderScreen({ roomId, title }) {
   const message =
     typeof board.message === "string" && board.message.trim()
       ? board.message
-      : "גרסת ארקייד — חיבור חדר פעיל; חוקי משחק מלאים יתווספו בשלב הבא.";
+      : "גרסת ארקייד - חיבור חדר פעיל; חוקי משחק מלאים יתווספו בשלב הבא.";
 
   const waiting = room?.status === "waiting";
   const phase = placeholder?.phase != null ? String(placeholder.phase) : "";
@@ -145,7 +145,7 @@ export default function ArcadePlaceholderScreen({ roomId, title }) {
                 <ul className="space-y-1 text-sm text-zinc-300">
                   {players.map((p) => (
                     <li key={String(p.student_id)}>
-                      {String(p.display_name || "").trim() || "שחקן"} — מושב {(Number(p.seat_index) || 0) + 1}
+                      {String(p.display_name || "").trim() || "שחקן"} - מושב {(Number(p.seat_index) || 0) + 1}
                     </li>
                   ))}
                 </ul>

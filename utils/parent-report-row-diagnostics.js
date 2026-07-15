@@ -260,21 +260,21 @@ export function evaluateDataSufficiency(q, evidenceStrength, confidence01) {
   if (q <= 0) {
     return {
       level: "low",
-      labelHe: "לא נאספו שאלות בתקופה שנבחרה — אין בסיס נתונים לשורה זו.",
+      labelHe: "לא נאספו שאלות בתקופה שנבחרה - אין בסיס נתונים לשורה זו.",
       suppressAggressiveStep: true,
     };
   }
   if (q < 4) {
     return {
       level: "low",
-      labelHe: "מעט מדי שאלות בתקופה — ההסקות לשורה זו חלקיות מאוד.",
+      labelHe: "מעט מדי שאלות בתקופה - ההסקות לשורה זו חלקיות מאוד.",
       suppressAggressiveStep: true,
     };
   }
   if (q >= 40) {
     return {
       level: "strong",
-      labelHe: "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
+      labelHe: "נאספו הרבה שאלות - אפשר לסמוך יותר על מה שרואים בנושא הזה.",
       suppressAggressiveStep: false,
     };
   }
@@ -283,8 +283,8 @@ export function evaluateDataSufficiency(q, evidenceStrength, confidence01) {
       level: evidenceStrength === "strong" ? "strong" : "medium",
       labelHe:
         evidenceStrength === "strong"
-          ? "יש מספיק שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
-          : "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת מיומנות בלבד.",
+          ? "יש מספיק שאלות - אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          : "יש מספיק שאלות לנושא הזה - שינויים זהירים בתת מיומנות בלבד.",
       suppressAggressiveStep: false,
     };
   }
@@ -293,28 +293,28 @@ export function evaluateDataSufficiency(q, evidenceStrength, confidence01) {
       level: evidenceStrength === "strong" ? "strong" : "medium",
       labelHe:
         evidenceStrength === "strong"
-          ? "יש מספיק שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
-          : "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת מיומנות בלבד.",
+          ? "יש מספיק שאלות - אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          : "יש מספיק שאלות לנושא הזה - שינויים זהירים בתת מיומנות בלבד.",
       suppressAggressiveStep: false,
     };
   }
   if (q < 8 || evidenceStrength === "low" || (confidence01 ?? 0) < 0.22) {
     return {
       level: "medium",
-      labelHe: "המידע עדיין חלקי — לא משנים כיתה או רמה לפי שורה אחת בלבד.",
+      labelHe: "המידע עדיין חלקי - לא משנים כיתה או רמה לפי שורה אחת בלבד.",
       suppressAggressiveStep: true,
     };
   }
   if (evidenceStrength === "strong" && q >= 12) {
     return {
       level: "strong",
-      labelHe: "יש מספיק שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
+      labelHe: "יש מספיק שאלות - אפשר לסמוך יותר על מה שרואים בנושא הזה.",
       suppressAggressiveStep: false,
     };
   }
   return {
     level: "medium",
-    labelHe: "נתונים בינוניים — מומלץ שינויים זהירים בלבד.",
+    labelHe: "נתונים בינוניים - מומלץ שינויים זהירים בלבד.",
     suppressAggressiveStep: evidenceStrength === "low",
   };
 }
@@ -420,11 +420,11 @@ export function computeRowDiagnosticSignals(subjectId, topicRowKey, row, mistake
     evidenceStrength === "strong" && q >= 14 && stability01 >= 0.45 && confidence01 >= 0.35;
   const isEarlySignalOnly = sufficiency.level !== "strong" || evidenceStrength === "low";
 
-  let patternStabilityHe = "עדיין מוקדם — לא ברור אם זה נשמר לאורך זמן רק מהנתונים כאן.";
+  let patternStabilityHe = "עדיין מוקדם - לא ברור אם זה נשמר לאורך זמן רק מהנתונים כאן.";
   if (isStablePattern) {
-    patternStabilityHe = "זה חוזר בכמה תרגולים — התמונה משקפת מגמה ולא רק מפגש בודד.";
+    patternStabilityHe = "זה חוזר בכמה תרגולים - התמונה משקפת מגמה ולא רק מפגש בודד.";
   } else if (sufficiency.level === "medium") {
-    patternStabilityHe = "יש כיוון חלקי — כדאי לאסוף עוד תרגול לפני שאומרים משהו חד משמעי.";
+    patternStabilityHe = "יש כיוון חלקי - כדאי לאסוף עוד תרגול לפני שאומרים משהו חד משמעי.";
   }
 
   const decisionTrace = buildDiagnosticsDecisionTrace({

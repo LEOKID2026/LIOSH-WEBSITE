@@ -1,7 +1,7 @@
 /**
  * Hebrew static audio — first pass envelope (Core v1).
  * g1–g2 × reading/comprehension × listen_and_choose | oral_comprehension_mcq | phonological_discrimination_he (קריאה g1–g2 בלבד במצורף)
- * קבצי שמע נוצרים לפי hash על `narration_plaintext` — ראו `hebrew-audio-narration-binding.js` ו `/api/hebrew-audio-ensure`.
+ * קבצי שמע נוצרים לפי hash על `narration_plaintext` - ראו `hebrew-audio-narration-binding.js` ו `/api/hebrew-audio-ensure`.
  */
 
 /** @type {ReadonlySet<string>} */

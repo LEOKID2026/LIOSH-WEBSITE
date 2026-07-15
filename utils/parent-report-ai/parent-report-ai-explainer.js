@@ -20,7 +20,7 @@ const SUBJECT_LABEL_HE = {
   science: "מדעים",
   geometry: "גאומטריה",
   english: "אנגלית",
-  "moledet-geography": "גיאוגרפיה",
+  "moledet-geography": "גאוגרפיה",
 };
 
 /**
@@ -87,15 +87,15 @@ export function getDeterministicParentReportExplanation(input) {
     );
   } else if (dc === "low") {
     parts.push(
-      `לגבי ${subjectHe}: הנתונים בתקופה שנבחרה עדיין מצומצמים — מהתרגול שנאסף אפשר לקבל כיוון ראשוני בלבד.`
+      `לגבי ${subjectHe}: הנתונים בתקופה שנבחרה עדיין מצומצמים - מהתרגול שנאסף אפשר לקבל כיוון ראשוני בלבד.`
     );
   } else if (accBand === "low" || accBand === "mixed") {
     parts.push(
-      `לגבי ${subjectHe}: מהתרגול שנאסף אפשר לראות תחום שכדאי לחזק בבית — כדאי להמשיך לעקוב ולא לקבוע חד משמעית רק ממפגש בודד.`
+      `לגבי ${subjectHe}: מהתרגול שנאסף אפשר לראות תחום שכדאי לחזק בבית - כדאי להמשיך לעקוב ולא לקבוע חד משמעית רק ממפגש בודד.`
     );
   } else {
     parts.push(
-      `לגבי ${subjectHe}: מהתרגול שנאסף אפשר לראות תמונה ברורה יותר של תחומים עם תוצאות טובות יחסית ושל נושאים לחיזוק — כדאי להמשיך לעקוב בעדינות.`,
+      `לגבי ${subjectHe}: מהתרגול שנאסף אפשר לראות תמונה ברורה יותר של תחומים עם תוצאות טובות יחסית ושל נושאים לחיזוק - כדאי להמשיך לעקוב בעדינות.`,
     );
   }
 
@@ -199,7 +199,7 @@ async function callOpenAiParentExplanation(prompt, env, signal) {
 }
 
 /**
- * @param {object} rawInput — fields for `buildStrictParentReportAIInput`
+ * @param {object} rawInput - fields for `buildStrictParentReportAIInput`
  * @param {{ env?: Record<string, string | undefined>, signal?: AbortSignal, preferDeterministicOnly?: boolean }} [options]
  * @returns {Promise<{ ok: true, text: string, source: "ai" | "deterministic_fallback" } | { ok: false, reason: string, source: "none" }>}
  */

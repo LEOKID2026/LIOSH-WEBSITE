@@ -12,7 +12,7 @@ export const PARENT_FACING_SURFACES = [
   },
   {
     id: "short_report_smart_summary",
-    labelHe: "סיכום חכם — דוח קצר",
+    labelHe: "סיכום חכם - דוח קצר",
     classification: "aggregate-only",
     requiresRowIdentity: false,
     requiresGradeSplitRespect: true,
@@ -20,7 +20,7 @@ export const PARENT_FACING_SURFACES = [
   },
   {
     id: "detailed_smart_summary",
-    labelHe: "סיכום חכם — דוח מפורט",
+    labelHe: "סיכום חכם - דוח מפורט",
     classification: "aggregate-only",
     requiresRowIdentity: false,
     requiresGradeSplitRespect: true,
@@ -53,7 +53,7 @@ export const PARENT_FACING_SURFACES = [
     classification: "mixed",
     requiresRowIdentity: false,
     requiresGradeSplitRespect: true,
-    implementation: "buildHomePlanFromV2 — per-unit lines with parentFacingLabel",
+    implementation: "buildHomePlanFromV2 - per-unit lines with parentFacingLabel",
   },
   {
     id: "executive_summary",
@@ -165,7 +165,7 @@ export function auditParentFacingSurfaces(detailedReport, baseReport) {
     const byClean = new Map();
     for (const [trk, row] of Object.entries(tm)) {
       const clean = String(row?.cleanTopicLabelHe || row?.displayName || "");
-      if (/(?:—|\()\s*(?:כיתה|תרגול ב)/u.test(clean)) tableGradeInTopic += 1;
+      if (/(?:-|\()\s*(?:כיתה|תרגול ב)/u.test(clean)) tableGradeInTopic += 1;
       const narrative = String(row?.narrativeTopicLabelHe || "");
       if (!byClean.has(clean)) byClean.set(clean, []);
       byClean.get(clean).push({ trk, narrative });

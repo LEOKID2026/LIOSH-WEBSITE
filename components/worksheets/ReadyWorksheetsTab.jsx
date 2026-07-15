@@ -58,6 +58,8 @@ const GRADE_FILTER_OPTIONS = [
  *   includeAnswersReady: boolean,
  *   onIncludeAnswersChange: (includeAnswers: boolean) => void,
  *   T: Record<string, string>,
+ *   titleOverride?: string,
+ *   hintOverride?: string,
 
  * }} props
 
@@ -86,6 +88,8 @@ export default function ReadyWorksheetsTab({
   includeAnswersReady,
   onIncludeAnswersChange,
   T,
+  titleOverride,
+  hintOverride,
 }) {
 
   if (loading) {
@@ -130,9 +134,13 @@ export default function ReadyWorksheetsTab({
 
     <div className={`worksheet-hub-panel ${T.panel}`}>
 
-      <h2 className={`worksheet-hub-panel-title ${T.heading}`}>{WORKSHEET_UI_HE.readyTitle}</h2>
+      <h2 className={`worksheet-hub-panel-title ${T.heading}`}>
+        {titleOverride || WORKSHEET_UI_HE.readyTitle}
+      </h2>
 
-      <p className={`worksheet-hub-panel-hint ${T.muted}`}>{WORKSHEET_UI_HE.readyHint}</p>
+      <p className={`worksheet-hub-panel-hint ${T.muted}`}>
+        {hintOverride || WORKSHEET_UI_HE.readyHint}
+      </p>
 
 
 

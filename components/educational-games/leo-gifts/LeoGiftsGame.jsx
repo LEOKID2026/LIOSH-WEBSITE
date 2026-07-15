@@ -280,7 +280,7 @@ export default function LeoGiftsGame({
   const avgDisplay =
     answerTimesRef.current.length > 0
       ? (answerTimesRef.current.reduce((a, b) => a + b, 0) / answerTimesRef.current.length).toFixed(1)
-      : "—";
+      : "-";
 
   const feedbackBarClass = [
     shop.feedbackBar,

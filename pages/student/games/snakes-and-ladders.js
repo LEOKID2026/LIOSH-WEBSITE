@@ -19,7 +19,7 @@ export default function StudentSnakesAndLaddersPage() {
     return (
       <>
         <Head>
-          <title>נחשים וסולמות — ארקייד</title>
+          <title>נחשים וסולמות - ארקייד</title>
         </Head>
         <div className="min-h-screen bg-zinc-950 px-4 py-8 text-zinc-300 space-y-3">
           <p>חסר מזהה חדר.</p>
@@ -34,7 +34,7 @@ export default function StudentSnakesAndLaddersPage() {
   return (
     <>
       <Head>
-        <title>נחשים וסולמות — ארקייד</title>
+        <title>נחשים וסולמות - ארקייד</title>
       </Head>
       <div
         className="flex h-dvh max-h-dvh min-h-0 flex-col overflow-hidden bg-zinc-950 text-zinc-100"

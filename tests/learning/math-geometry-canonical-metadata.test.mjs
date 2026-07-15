@@ -29,7 +29,7 @@ function pick(v) {
   return v != null && String(v).trim() !== "" ? String(v).trim() : null;
 }
 
-describe("Q2-C1 — math attachProfessionalMathMetadata", () => {
+describe("Q2-C1 - math attachProfessionalMathMetadata", () => {
   test("fractions procedural populates params.canonicalMetadata", () => {
     const out = attachProfessionalMathMetadata(
       {
@@ -85,7 +85,7 @@ describe("Q2-C1 — math attachProfessionalMathMetadata", () => {
   });
 });
 
-describe("Q2-C1 — geometry procedural", () => {
+describe("Q2-C1 - geometry procedural", () => {
   test("square_area enrich + canonical attach", () => {
     const enriched = enrichGeometryProceduralParams(
       { kind: "square_area", length: 4 },
@@ -137,7 +137,7 @@ describe("Q2-C1 — geometry procedural", () => {
   });
 });
 
-describe("Q2-C1 — freeze preserves canonicalMetadata in params", () => {
+describe("Q2-C1 - freeze preserves canonicalMetadata in params", () => {
   test("normalizeAndFreezeQuestionSet keeps params.canonicalMetadata", () => {
     const out = attachProfessionalMathMetadata(
       {
@@ -164,7 +164,7 @@ describe("Q2-C1 — freeze preserves canonicalMetadata in params", () => {
   });
 });
 
-describe("Q2-C1 — coverage fields present", () => {
+describe("Q2-C1 - coverage fields present", () => {
   const REQUIRED_CANONICAL_KEYS = [
     "contractVersion",
     "subject",

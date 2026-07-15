@@ -454,9 +454,9 @@ export default function PwaDebug() {
             ))}
           </section>
 
-          {/* Dynamic Route Chunk Variants — key diagnostic for %5B/%5D issue */}
+          {/* Dynamic Route Chunk Variants - key diagnostic for %5B/%5D issue */}
           <section style={{ marginBottom: 20 }}>
-            <SectionHead title="Dynamic Route Chunks — Encoding Check" />
+            <SectionHead title="Dynamic Route Chunks - Encoding Check" />
             <Row
               label="solo/[gameKey] (decoded)"
               value={data.soloRaw ? "✓ in cache" : "✗ MISSING"}
@@ -493,7 +493,7 @@ export default function PwaDebug() {
           <section style={{ marginBottom: 20 }}>
             <SectionHead title={`Shared Chunks in Cache (${data.allChunkList?.length ?? 0})`} />
             {!data.allChunkList?.length ? (
-              <div style={{ fontSize: 12, color: "#f87171" }}>NONE — shared chunks missing!</div>
+              <div style={{ fontSize: 12, color: "#f87171" }}>NONE - shared chunks missing!</div>
             ) : (
               data.allChunkList.map((p) => (
                 <div
@@ -510,7 +510,7 @@ export default function PwaDebug() {
           <section style={{ marginBottom: 20 }}>
             <SectionHead title={`Page Chunk Files in Cache (${data.pageChunkList?.length ?? 0})`} />
             {!data.pageChunkList?.length ? (
-              <div style={{ fontSize: 12, color: "#f87171" }}>NONE — page chunks missing!</div>
+              <div style={{ fontSize: 12, color: "#f87171" }}>NONE - page chunks missing!</div>
             ) : (
               data.pageChunkList.map((p) => (
                 <div

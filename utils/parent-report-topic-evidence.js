@@ -45,7 +45,7 @@ export function hasTopicLevelEvidence(questionCount) {
 }
 
 /**
- * Volume-aware row sufficiency — never "low" for high-volume rows unless q is tiny.
+ * Volume-aware row sufficiency - never "low" for high-volume rows unless q is tiny.
  * @param {number} questionCount
  * @param {string} rowSignalLevel — strong|medium|low from diagnostics
  * @param {string} [evidenceStrength] — strong|medium|low
@@ -206,8 +206,8 @@ export function parentFacingTopicRowLabelHe(args) {
   const gradeLabel = gk ? formatParentReportGradeLabel(gk) : "";
   if (!gradeLabel || gradeLabel === "לא זמין") return name;
   const rel = String(args?.gradeRelation || "").trim();
-  if (rel === "higher") return `${name} (תרגול ב${gradeLabel} — מעל הכיתה הרשומה)`;
-  if (rel === "lower") return `${name} (תרגול ב${gradeLabel} — בסיס/כיתה נמוכה)`;
+  if (rel === "higher") return `${name} (תרגול ב${gradeLabel} - מעל הכיתה הרשומה)`;
+  if (rel === "lower") return `${name} (תרגול ב${gradeLabel} - בסיס/כיתה נמוכה)`;
   if (rel === "same") return `${name} (כיתה ${gradeLabel.replace(/^כיתה\s+/u, "")})`;
   return `${name} (תרגול ב${gradeLabel})`;
 }

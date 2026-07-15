@@ -42,13 +42,13 @@ export default function TeacherWorksheetReport({ classId, worksheetId, report, w
               <tr key={row.studentId} className="border-t border-white/10">
                 <td className="p-3 text-white">{row.studentName}</td>
                 <td className="p-3 text-white/80">
-                  {row.pdfOpenCount > 0 ? "✓" : "—"}
+                  {row.pdfOpenCount > 0 ? "✓" : "-"}
                 </td>
                 <td className="p-3 text-white/80">
-                  {row.markedCompletedAt ? "✓" : "—"}
+                  {row.markedCompletedAt ? "✓" : "-"}
                 </td>
                 <td className="p-3 text-white/80">
-                  {row.digitalSubmittedAt ? "✓" : "—"}
+                  {row.digitalSubmittedAt ? "✓" : "-"}
                 </td>
                 <td className="p-3 text-white/80">
                   {worksheetGradingStatusLabelHe(row.gradingStatus)}
@@ -56,7 +56,7 @@ export default function TeacherWorksheetReport({ classId, worksheetId, report, w
                 <td className="p-3 text-white">
                   {row.gradingStatus === "published" && row.finalScorePct != null
                     ? `${row.finalScorePct}%`
-                    : "—"}
+                    : "-"}
                 </td>
                 <td className="p-3">
                   {report.worksheetMode !== "pdf_only" &&

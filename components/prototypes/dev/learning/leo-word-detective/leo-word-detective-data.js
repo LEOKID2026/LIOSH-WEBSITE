@@ -45,7 +45,7 @@ export const WORD_DETECTIVE_TASKS = {
       id: "e2",
       type: "fill_gap",
       caseLabel: "תיק #2",
-      missionHe: "השלימו: שו_חן — גררו אות לחלל",
+      missionHe: "השלימו: שו_חן - גררו אות לחלל",
       zones: [{ id: "z1", label: "אות חסרה", icon: "🧩" }],
       pieces: shufflePieces([
         { id: "p1", label: "ל" },
@@ -74,9 +74,9 @@ export const WORD_DETECTIVE_TASKS = {
       id: "e4",
       type: "sort_letter",
       caseLabel: "תיק #4",
-      missionHe: "גררו מילה שמתחילה ב־מ׳ לתיקייה",
+      missionHe: "גררו מילה שמתחילה ב-מ׳ לתיקייה",
       zones: [
-        { id: "zM", label: "מתחיל ב־מ׳", icon: "📁" },
+        { id: "zM", label: "מתחיל ב-מ׳", icon: "📁" },
         { id: "zX", label: "לא מתאים", icon: "🗑️" },
       ],
       pieces: shufflePieces([
@@ -91,7 +91,7 @@ export const WORD_DETECTIVE_TASKS = {
       id: "e5",
       type: "letter_drop",
       caseLabel: "תיק #5",
-      missionHe: "גררו אות פותחת — חתול",
+      missionHe: "גררו אות פותחת - חתול",
       emoji: "🐱",
       zones: [{ id: "z1", label: "אות פותחת", icon: "🔤" }],
       pieces: shufflePieces([
@@ -121,7 +121,7 @@ export const WORD_DETECTIVE_TASKS = {
       id: "e7",
       type: "fill_gap",
       caseLabel: "תיק #7",
-      missionHe: "הילד שתה ___ — גררו מילה",
+      missionHe: "הילד שתה ___ - גררו מילה",
       zones: [{ id: "z1", label: "ראיה", icon: "📌" }],
       pieces: shufflePieces([
         { id: "p1", label: "מים" },
@@ -135,7 +135,7 @@ export const WORD_DETECTIVE_TASKS = {
       id: "e8",
       type: "letter_drop",
       caseLabel: "תיק #8",
-      missionHe: "גררו אות פותחת — בית",
+      missionHe: "גררו אות פותחת - בית",
       emoji: "🏠",
       zones: [{ id: "z1", label: "אות פותחת", icon: "🔤" }],
       pieces: shufflePieces([
@@ -150,8 +150,8 @@ export const WORD_DETECTIVE_TASKS = {
       id: "e9",
       type: "sort_letter",
       caseLabel: "תיק #9",
-      missionHe: "גררו מילה שמתחילה ב־ס׳",
-      zones: [{ id: "zS", label: "מתחיל ב־ס׳", icon: "📁" }],
+      missionHe: "גררו מילה שמתחילה ב-ס׳",
+      zones: [{ id: "zS", label: "מתחיל ב-ס׳", icon: "📁" }],
       pieces: shufflePieces([
         { id: "p1", label: "ספר" },
         { id: "p2", label: "כלב" },
@@ -164,7 +164,7 @@ export const WORD_DETECTIVE_TASKS = {
       id: "e10",
       type: "image_word",
       caseLabel: "תיק #10",
-      missionHe: "גררו מילה — עיפרון לכתיבה",
+      missionHe: "גררו מילה - עיפרון לכתיבה",
       emoji: "✏️",
       zones: [{ id: "z1", label: "ראיה", icon: "📌" }],
       pieces: shufflePieces([
@@ -243,7 +243,7 @@ export const WORD_DETECTIVE_TASKS = {
       id: "m5",
       type: "fill_sentence",
       caseLabel: "תיק #5",
-      missionHe: "גררו מילה: הגשם ירד — לקחתי ___",
+      missionHe: "גררו מילה: הגשם ירד - לקחתי ___",
       zones: [{ id: "z1", label: "ראיה", icon: "📌" }],
       pieces: shufflePieces([
         { id: "p1", label: "מטרייה" },
@@ -271,7 +271,7 @@ export const WORD_DETECTIVE_TASKS = {
       id: "m7",
       type: "word_family",
       caseLabel: "תיק #7",
-      missionHe: "משפחת «למד» — גררו מילה",
+      missionHe: "משפחת «למד» - גררו מילה",
       zones: [{ id: "zFam", label: "משפחת למד", icon: "🧬" }],
       pieces: shufflePieces([
         { id: "p1", label: "לימוד" },
@@ -299,7 +299,7 @@ export const WORD_DETECTIVE_TASKS = {
       id: "m9",
       type: "fill_sentence",
       caseLabel: "תיק #9",
-      missionHe: "היה קר — לבשתי ___",
+      missionHe: "היה קר - לבשתי ___",
       zones: [{ id: "z1", label: "ראיה", icon: "📌" }],
       pieces: shufflePieces([
         { id: "p1", label: "מעיל" },
@@ -329,7 +329,7 @@ export const WORD_DETECTIVE_TASKS = {
       id: "h1",
       type: "event_order",
       caseLabel: "תיק #1",
-      missionHe: "סדרו אירועים — גררו ללוח",
+      missionHe: "סדרו אירועים - גררו ללוח",
       passage: "דני יצא מהבית. הלך לגן ושיחק. אחר כך חזר לארוחת צהריים.",
       zones: [
         { id: "z0", label: "קודם", icon: "1️⃣" },
@@ -495,7 +495,7 @@ export function validateDetectiveTask(task, zoneFills) {
 }
 
 export function detectiveFeedback(ok) {
-  return ok ? "🔖 התיק נפתר!" : "הראיה לא מתאימה — נסו שוב";
+  return ok ? "🔖 התיק נפתר!" : "הראיה לא מתאימה - נסו שוב";
 }
 
 /** @param {DifficultyId} difficulty */

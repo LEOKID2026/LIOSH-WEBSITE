@@ -120,13 +120,13 @@ export function buildCanonicalState(params) {
   const { subjectId, topicKey, bucketKey, displayName, evidence, decisionInputs, classification, confidenceLevel } = params;
 
   if (subjectId === "__unknown_subject__" || !subjectId) {
-    throw new Error(`buildCanonicalState: subjectId is "${subjectId}" — must be a real subject identifier`);
+    throw new Error(`buildCanonicalState: subjectId is "${subjectId}" - must be a real subject identifier`);
   }
   if (topicKey === "__unknown_topic__" || !topicKey) {
-    throw new Error(`buildCanonicalState: topicKey is "${topicKey}" — must be a real topic identifier`);
+    throw new Error(`buildCanonicalState: topicKey is "${topicKey}" - must be a real topic identifier`);
   }
   if (topicKey.includes(COMPOSITE_KEY_SEPARATOR)) {
-    throw new Error(`buildCanonicalState: topicKey "${topicKey}" contains composite separator — must be collapsed before canonical state creation`);
+    throw new Error(`buildCanonicalState: topicKey "${topicKey}" contains composite separator - must be collapsed before canonical state creation`);
   }
 
   const tableResult = evaluateDecisionTable({

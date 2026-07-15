@@ -134,4 +134,4 @@ function assertInitialOnly(lpd) {
   assertInitialOnly(lpd);
 }
 
-console.log("q12-initial-data.test.mjs — all passed");
+console.log("q12-initial-data.test.mjs - all passed");

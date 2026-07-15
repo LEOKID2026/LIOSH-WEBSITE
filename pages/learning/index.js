@@ -312,7 +312,7 @@ export default function LearningHub({ showDevStudentSimulator }) {
         <header className={T.hubHeaderCard}>
           <h1 className={T.hubTitle}>מרכז משחקי האתגר</h1>
           <p className={`${T.hubDesc} mt-2 line-clamp-2 md:line-clamp-none`}>
-            כאן ההתמדה משתלמת — ככל שמשחקים יותר, צוברים יותר מטבעות.
+            כאן ההתמדה משתלמת - ככל שמשחקים יותר, צוברים יותר מטבעות.
           </p>
         </header>
 

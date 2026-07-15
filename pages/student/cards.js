@@ -315,7 +315,7 @@ export default function StudentCardsPage() {
       const json = await res.json().catch(() => ({}));
       if (!res.ok || json?.ok !== true) {
         setMessageIsError(true);
-        setMessageHe(json?.code === "insufficient_coins" ? "אין מספיק מטבעות לרכישה." : "הרכישה לא הצליחה — נסו שוב.");
+        setMessageHe(json?.code === "insufficient_coins" ? "אין מספיק מטבעות לרכישה." : "הרכישה לא הצליחה - נסו שוב.");
         return;
       }
       setMessageIsError(false);
@@ -361,7 +361,7 @@ export default function StudentCardsPage() {
         setMessageHe(
           json?.code === "no_duplicate"
             ? "אין עותק כפול למכירה."
-            : "מכירת העותק הכפול לא הצליחה — נסו שוב."
+            : "מכירת העותק הכפול לא הצליחה - נסו שוב."
         );
         return;
       }
@@ -435,7 +435,7 @@ export default function StudentCardsPage() {
       return (
         <WindowedStudentCardsGrid
           items={collectionList}
-          emptyMessage="עדיין אין קלפים באוסף — פתחו קופסת הפתעה בעולם הילד או קנו בחנות!"
+          emptyMessage="עדיין אין קלפים באוסף - פתחו קופסת הפתעה בעולם הילד או קנו בחנות!"
           T={T}
           previewCards={collectionList}
           studentFullName={studentDisplayName}
@@ -513,7 +513,7 @@ export default function StudentCardsPage() {
                         ? SHOP_CARD_ALREADY_OWNED_HE
                         : buyBusy
                           ? "קונה..."
-                          : `קנה ב־${priceLabel}`}
+                          : `קנה ב-${priceLabel}`}
                   </button>
                 </>
               ),

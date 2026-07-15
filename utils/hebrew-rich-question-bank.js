@@ -40,7 +40,7 @@ export const HEBREW_RICH_POOL = [
       "detail_recall_error",
       "comprehension_gap"
     ],
-    "question": "כיתה ג׳ — קראו: 'דני שם את הספר בתיק לפני שיצא לבית הספר.' מה עשה דני לפני היציאה?",
+    "question": "כיתה ג׳ - קראו: 'דני שם את הספר בתיק לפני שיצא לבית הספר.' מה עשה דני לפני היציאה?",
     "answers": [
       "שם את הספר בתיק",
       "קנה ספר חדש",
@@ -72,7 +72,7 @@ export const HEBREW_RICH_POOL = [
       "detail_recall_error",
       "comprehension_gap"
     ],
-    "question": "כיתה ד׳ — לפי המשפט: 'דני שם את הספר בתיק לפני שיצא לבית הספר.' מה עשה דני לפני היציאה?",
+    "question": "כיתה ד׳ - לפי המשפט: 'דני שם את הספר בתיק לפני שיצא לבית הספר.' מה עשה דני לפני היציאה?",
     "answers": [
       "שם את הספר בתיק",
       "קנה ספר חדש",
@@ -105,7 +105,7 @@ export const HEBREW_RICH_POOL = [
       "inference_error",
       "comprehension_gap"
     ],
-    "question": "כיתה ג׳ — קראו: 'מיכל חיפשה את המפתחות בכל הבית, ובסוף מצאה אותם בכיס המעיל.' מה ניתן להסיק?",
+    "question": "כיתה ג׳ - קראו: 'מיכל חיפשה את המפתחות בכל הבית, ובסוף מצאה אותם בכיס המעיל.' מה ניתן להסיק?",
     "answers": [
       "המפתחות לא היו במקום שציפתה למצוא בהתחלה",
       "מיכל איבדה את המעיל",
@@ -141,7 +141,7 @@ export const HEBREW_RICH_POOL = [
       "inference_error",
       "comprehension_gap"
     ],
-    "question": "כיתה ד׳ — קראו: 'מיכל חיפשה את המפתחות בכל הבית, ובסוף מצאה אותם בכיס המעיל.' מה ההסקה הסבירה ביותר?",
+    "question": "כיתה ד׳ - קראו: 'מיכל חיפשה את המפתחות בכל הבית, ובסוף מצאה אותם בכיס המעיל.' מה ההסקה הסבירה ביותר?",
     "answers": [
       "המפתחות לא היו במקום שציפתה למצוא בהתחלה",
       "מיכל איבדה את המעיל",
@@ -251,7 +251,7 @@ export const HEBREW_RICH_POOL = [
     "patternFamily": "cause_effect",
     "subtype": "because",
     "distractorFamily": "reversed_cause",
-    "question": "כיתה ג׳ — קראו: 'בגלל הגשם הכבד ביטלו את הטיול.' מה הסיבה לביטול?",
+    "question": "כיתה ג׳ - קראו: 'בגלל הגשם הכבד ביטלו את הטיול.' מה הסיבה לביטול?",
     "answers": [
       "גשם כבד",
       "חום גבוה",
@@ -276,7 +276,7 @@ export const HEBREW_RICH_POOL = [
     "patternFamily": "cause_effect",
     "subtype": "because",
     "distractorFamily": "reversed_cause",
-    "question": "כיתה ד׳ — בגלל מה בוטל הטיול לפי המשפט: 'בגלל הגשם הכבד ביטלו את הטיול'?",
+    "question": "כיתה ד׳ - בגלל מה בוטל הטיול לפי המשפט: 'בגלל הגשם הכבד ביטלו את הטיול'?",
     "answers": [
       "גשם כבד",
       "חום גבוה",
@@ -327,7 +327,7 @@ export const HEBREW_RICH_POOL = [
     "patternFamily": "completion",
     "subtype": "context_clue",
     "distractorFamily": "semantic_near",
-    "question": "כיתה ג׳ — השלמה: 'השמיים אפורים ויש רוח — כנראה ש___.' מה האפשרות ההגיונית ביותר?",
+    "question": "כיתה ג׳ - השלמה: 'השמיים אפורים ויש רוח - כנראה ש___.' מה האפשרות ההגיונית ביותר?",
     "answers": [
       "עומד לרדת גשם",
       "נלך לבריכה",
@@ -353,7 +353,7 @@ export const HEBREW_RICH_POOL = [
     "patternFamily": "completion",
     "subtype": "context_clue",
     "distractorFamily": "semantic_near",
-    "question": "כיתה ד׳ — המשפט: 'השמיים אפורים ויש רוח — כנראה ש___.' השלמה הטובה ביותר:",
+    "question": "כיתה ד׳ - המשפט: 'השמיים אפורים ויש רוח - כנראה ש___.' השלמה הטובה ביותר:",
     "answers": [
       "עומד לרדת גשם",
       "נלך לבריכה",
@@ -380,7 +380,7 @@ export const HEBREW_RICH_POOL = [
     "distractorFamily": "polar",
     "optionCount": 4,
     "binary": false,
-    "question": "בלילה בהיר — מה נכון לגבי מה שרואים בשמיים?",
+    "question": "בלילה בהיר - מה נכון לגבי מה שרואים בשמיים?",
     "answers": [
       "רואים בעיקר את הירח ולא את השמש",
       "רואים בעיקר את השמש כמו ביום",
@@ -408,7 +408,7 @@ export const HEBREW_RICH_POOL = [
     "distractorFamily": "wrong_place",
     "optionCount": 4,
     "binary": false,
-    "question": "לפי המשפט ׳הילדים משחקים בחצר׳ — איפה מתרחשת הפעולה לפי הטקסט?",
+    "question": "לפי המשפט ׳הילדים משחקים בחצר׳ - איפה מתרחשת הפעולה לפי הטקסט?",
     "answers": [
       "בחצר",
       "בכיתה",
@@ -435,7 +435,7 @@ export const HEBREW_RICH_POOL = [
     "distractorFamily": "polar",
     "optionCount": 2,
     "binary": true,
-    "question": "כיתה ג׳ — האם המשפט נכון? 'הפועל מתאר פעולה או מצב.'",
+    "question": "כיתה ג׳ - האם המשפט נכון? 'הפועל מתאר פעולה או מצב.'",
     "answers": [
       "נכון",
       "לא נכון"
@@ -460,7 +460,7 @@ export const HEBREW_RICH_POOL = [
     "distractorFamily": "polar",
     "optionCount": 2,
     "binary": true,
-    "question": "כיתה ד׳ — האם נכון לומר: 'הפועל מתאר פעולה או מצב'?",
+    "question": "כיתה ד׳ - האם נכון לומר: 'הפועל מתאר פעולה או מצב'?",
     "answers": [
       "נכון",
       "לא נכון"
@@ -535,7 +535,7 @@ export const HEBREW_RICH_POOL = [
     "patternFamily": "gender_number",
     "subtype": "plural",
     "distractorFamily": "agreement_error",
-    "question": "כיתה ג׳ — איזו צורה נכונה? 'הספרים ___ על המדף.'",
+    "question": "כיתה ג׳ - איזו צורה נכונה? 'הספרים ___ על המדף.'",
     "answers": [
       "מונחים",
       "מונח",
@@ -561,7 +561,7 @@ export const HEBREW_RICH_POOL = [
     "patternFamily": "gender_number",
     "subtype": "plural",
     "distractorFamily": "agreement_error",
-    "question": "כיתה ד׳ — השלימו את הצורה הנכונה: 'הספרים ___ על המדף.'",
+    "question": "כיתה ד׳ - השלימו את הצורה הנכונה: 'הספרים ___ על המדף.'",
     "answers": [
       "מונחים",
       "מונח",
@@ -636,7 +636,7 @@ export const HEBREW_RICH_POOL = [
     "patternFamily": "prep_choice",
     "subtype": "collocation",
     "distractorFamily": "wrong_prep",
-    "question": "כיתה ג׳ — השלימו: 'דיברנו ___ הפרויקט.'",
+    "question": "כיתה ג׳ - השלימו: 'דיברנו ___ הפרויקט.'",
     "answers": [
       "על",
       "ב",
@@ -662,7 +662,7 @@ export const HEBREW_RICH_POOL = [
     "patternFamily": "prep_choice",
     "subtype": "collocation",
     "distractorFamily": "wrong_prep",
-    "question": "כיתה ד׳ — בחרו מילת יחס מתאימה: 'דיברנו ___ הפרויקט.'",
+    "question": "כיתה ד׳ - בחרו מילת יחס מתאימה: 'דיברנו ___ הפרויקט.'",
     "answers": [
       "על",
       "ב",
@@ -927,7 +927,7 @@ export const HEBREW_RICH_POOL = [
     "patternFamily": "word_level_early_g1",
     "subtype": "spelling_meaning_then_choice",
     "distractorFamily": "orthography",
-    "question": "מקום לגור בו עם דלת וחלונות — בחרו איות:",
+    "question": "מקום לגור בו עם דלת וחלונות - בחרו איות:",
     "answers": [
       "בית",
       "באת",
@@ -953,7 +953,7 @@ export const HEBREW_RICH_POOL = [
     "patternFamily": "word_level_early_g2",
     "subtype": "spelling_choice_niqqud",
     "distractorFamily": "orthography",
-    "question": "כלי שכותבים בו שיעורים בבית הספר — איזו מילה מנוקדת נכונה?",
+    "question": "כלי שכותבים בו שיעורים בבית הספר - איזו מילה מנוקדת נכונה?",
     "answers": [
       "מַחְבֶּרֶת",
       "מחבארת",
@@ -979,7 +979,7 @@ export const HEBREW_RICH_POOL = [
     "patternFamily": "spell_word_early_ab_writing",
     "subtype": "object_riddle",
     "distractorFamily": "orthography",
-    "question": "יש בו עופרת וכותבים איתו על הדף — בחרו איות לשם החפץ:",
+    "question": "יש בו עופרת וכותבים איתו על הדף - בחרו איות לשם החפץ:",
     "answers": [
       "עיפרון",
       "איפרון",
@@ -1404,7 +1404,7 @@ export const HEBREW_RICH_POOL = [
     "patternFamily": "structural",
     "subtype": "paragraph_role",
     "distractorFamily": "function_confusion",
-    "question": "פסקה שבה מובאים עובדות ומספרים ללא הבעת דעה — מה תפקידה העיקרי?",
+    "question": "פסקה שבה מובאים עובדות ומספרים ללא הבעת דעה - מה תפקידה העיקרי?",
     "answers": [
       "להציג מידע",
       "לספר בדיחה",

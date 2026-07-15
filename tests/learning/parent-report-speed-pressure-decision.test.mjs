@@ -15,7 +15,7 @@ function decision(input) {
   return buildEngineDiagnosticDecision(input).engineDecision;
 }
 
-describe("speed_pressure_pattern — buildEngineDiagnosticDecision reachability", () => {
+describe("speed_pressure_pattern - buildEngineDiagnosticDecision reachability", () => {
   test("happy path: needs_strengthening + modeKey=speed + speedOnlyRisk → speed_pressure_pattern", () => {
     const q = 28;
     const acc = 58;
@@ -101,7 +101,7 @@ describe("speed_pressure_pattern — buildEngineDiagnosticDecision reachability"
   });
 });
 
-describe("speed_pressure_pattern — speedOnlyRisk from behavior profile", () => {
+describe("speed_pressure_pattern - speedOnlyRisk from behavior profile", () => {
   test("buildPhase2RiskFlags sets speedOnlyRisk when behavior dominantType is speed_pressure", () => {
     const flags = buildPhase2RiskFlags(
       { questions: 28, wrong: 12, accuracy: 58, modeKey: "practice", evidenceStrength: "medium", dataSufficiencyLevel: "strong" },

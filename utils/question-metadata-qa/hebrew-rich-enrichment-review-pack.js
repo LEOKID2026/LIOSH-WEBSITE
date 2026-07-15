@@ -38,8 +38,8 @@ export function classifyHebrewRichConfidenceAndReview(raw, record, prereq) {
     return finalize("medium", confidenceReasons);
   }
 
-  if (!skillOk) confidenceReasons.push("skillId outside Hebrew rich allowlist — needs expert mapping.");
-  if (!structured) confidenceReasons.push("Sparse diagnostic metadata — heuristic suggestion.");
+  if (!skillOk) confidenceReasons.push("skillId outside Hebrew rich allowlist - needs expert mapping.");
+  if (!structured) confidenceReasons.push("Sparse diagnostic metadata - heuristic suggestion.");
   return finalize("low", confidenceReasons);
 }
 
@@ -150,7 +150,7 @@ export function buildHebrewRichReviewPack(enrichmentPayload) {
     approveAsIs:
       "Use only for rows with confidence **high**, reviewPriority **low**, after spot-checking Hebrew stem alignment.",
     editMetadata:
-      "Adjust suggested difficulty / cognitive / error / prerequisite ids in the bank — **do not** change Hebrew wording or answer indices without curriculum approval.",
+      "Adjust suggested difficulty / cognitive / error / prerequisite ids in the bank - **do not** change Hebrew wording or answer indices without curriculum approval.",
     rejectSuggestion:
       "Discard when taxonomy mapping conflicts with classroom sequencing or diagnostic routing.",
     needsCurriculumExpert:

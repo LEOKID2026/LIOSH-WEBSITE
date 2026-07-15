@@ -75,22 +75,22 @@ export default function TrackingDebugPanel({
       }}
     >
       <div style={{ color: "#8f8", marginBottom: 4 }}>[tracking debug] {subjectId}</div>
-      <div>1 UI: {uiSelection ?? "—"}</div>
-      <div>2 currentQuestion.topic: {cqT !== undefined && cqT !== null ? String(cqT) : "—"}</div>
-      <div>3 currentQuestion.operation: {cqO !== undefined && cqO !== null ? String(cqO) : "—"}</div>
-      <div>4 trackingRef.current: {refVal != null && refVal !== "" ? String(refVal) : "—"}</div>
+      <div>1 UI: {uiSelection ?? "-"}</div>
+      <div>2 currentQuestion.topic: {cqT !== undefined && cqT !== null ? String(cqT) : "-"}</div>
+      <div>3 currentQuestion.operation: {cqO !== undefined && cqO !== null ? String(cqO) : "-"}</div>
+      <div>4 trackingRef.current: {refVal != null && refVal !== "" ? String(refVal) : "-"}</div>
       <div>
-        5 last track*Time: fn={snap.lastTrackedFn || "—"} bucket=
-        {snap.lastTrackedBucket || "—"} dur={snap.lastTrackedDuration ?? "—"} mode=
-        {snap.lastTrackedMode || "—"}
+        5 last track*Time: fn={snap.lastTrackedFn || "-"} bucket=
+        {snap.lastTrackedBucket || "-"} dur={snap.lastTrackedDuration ?? "-"} mode=
+        {snap.lastTrackedMode || "-"}
       </div>
       <div>
         6 LS buckets count: {count}
       </div>
-      <div>7 LS keys: {keys.length ? keys.join(", ") : "—"}</div>
+      <div>7 LS keys: {keys.length ? keys.join(", ") : "-"}</div>
       <div>
-        8 last addSessionProgress: subject={snap.lastSessionSubject || "—"} topic=
-        {snap.lastSessionTopic || "—"} mode={snap.lastSessionMode || "—"}
+        8 last addSessionProgress: subject={snap.lastSessionSubject || "-"} topic=
+        {snap.lastSessionTopic || "-"} mode={snap.lastSessionMode || "-"}
       </div>
     </div>
   );

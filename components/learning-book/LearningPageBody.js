@@ -496,7 +496,7 @@ export default function LearningPageBody({
         }
       `}</style>
 
-      {/* Book page — swipe target; spacer clears fixed footer */}
+      {/* Book page - swipe target; spacer clears fixed footer */}
       <div
         className={`mx-auto w-full max-w-3xl ${
           hasLessonNav ? "pb-[15.5rem] sm:pb-[13.5rem]" : "pb-[11.5rem] sm:pb-[10.5rem]"
@@ -566,7 +566,7 @@ export default function LearningPageBody({
         </article>
       </div>
 
-      {/* Bottom HUD — fixed, always visible */}
+      {/* Bottom HUD - fixed, always visible */}
       <footer
         className={`fixed bottom-0 left-0 right-0 z-40 border-t border-[color:var(--book-accent-border)] backdrop-blur-md ${theme.footerBg}`}
         dir="rtl"

@@ -237,7 +237,7 @@ function TrayGrid({
 
               }`}
 
-              aria-label={`חלק ${piece.pieceId + 1}${selected ? " — נבחר" : ""}`}
+              aria-label={`חלק ${piece.pieceId + 1}${selected ? " - נבחר" : ""}`}
 
             >
 
@@ -454,7 +454,7 @@ export default function MleoPicturePuzzlePlacementPlay({
 
           }`}
 
-          aria-label={`חלק ${slot.placedPieceId + 1}${isSelected ? " — נבחר" : ""}`}
+          aria-label={`חלק ${slot.placedPieceId + 1}${isSelected ? " - נבחר" : ""}`}
 
         >
 
@@ -604,7 +604,7 @@ export default function MleoPicturePuzzlePlacementPlay({
 
 
 
-          {/* Mobile portrait — top tray + hint */}
+          {/* Mobile portrait - top tray + hint */}
 
           <div className="puzzle-tray-portrait-top shrink-0 max-lg:landscape:hidden lg:hidden">
 
@@ -690,7 +690,7 @@ export default function MleoPicturePuzzlePlacementPlay({
 
 
 
-          {/* Mobile landscape — left tray */}
+          {/* Mobile landscape - left tray */}
 
           <div className="hidden min-h-0 w-[72px] shrink-0 max-lg:landscape:flex max-lg:landscape:flex-col sm:w-[88px] lg:hidden">
 
@@ -726,7 +726,7 @@ export default function MleoPicturePuzzlePlacementPlay({
 
 
 
-          {/* Board — always square */}
+          {/* Board - always square */}
 
           <div
 
@@ -812,7 +812,7 @@ export default function MleoPicturePuzzlePlacementPlay({
 
 
 
-          {/* Mobile portrait — bottom tray */}
+          {/* Mobile portrait - bottom tray */}
 
           <div className="puzzle-tray-portrait-bottom max-h-[22%] min-h-0 shrink-0 max-lg:landscape:hidden lg:hidden">
 
@@ -852,7 +852,7 @@ export default function MleoPicturePuzzlePlacementPlay({
 
 
 
-          {/* Mobile landscape — right tray */}
+          {/* Mobile landscape - right tray */}
 
           <div className="hidden min-h-0 w-[72px] shrink-0 max-lg:landscape:flex max-lg:landscape:flex-col sm:w-[88px] lg:hidden">
 
@@ -888,7 +888,7 @@ export default function MleoPicturePuzzlePlacementPlay({
 
 
 
-          {/* Desktop — right tray (all pieces) */}
+          {/* Desktop - right tray (all pieces) */}
 
           <aside className="hidden min-h-0 w-[128px] shrink-0 flex-col overflow-hidden lg:flex md:w-[148px]">
 

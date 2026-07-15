@@ -46,19 +46,19 @@ export function buildEvidenceTargetsPhase13(ctx) {
 
   const targetSuccessSignalHe =
     targetEvidenceType === "independence_confirmation"
-      ? "הצלחה קצרה בסוף המשימה בלי הכוונה באמצע — גם אם לא מושלם."
+      ? "הצלחה קצרה בסוף המשימה בלי הכוונה באמצע - גם אם לא מושלם."
       : targetEvidenceType === "accuracy_confirmation"
         ? "שני מפגשים קצרים עם דיוק דומה כשהקצב רגוע."
         : targetEvidenceType === "retention_confirmation"
-          ? "פתרון נכון אחרי הפסקה קצרה או למחרת — בלי חזרה מיידית לרמז."
+          ? "פתרון נכון אחרי הפסקה קצרה או למחרת - בלי חזרה מיידית לרמז."
           : targetEvidenceType === "mistake_reduction_confirmation"
             ? "פחות טעויות מאותו «דפוס» באותה רמת קושי."
             : targetEvidenceType === "fresh_data_needed"
-              ? "סבב תרגול אחד חד עם רישום קצר בסוף — מה השתנה."
-              : "מפגש קצר עם אותו כיוון — ולראות אם הילד מגיב עקבית.";
+              ? "סבב תרגול אחד חד עם רישום קצר בסוף - מה השתנה."
+              : "מפגש קצר עם אותו כיוון - ולראות אם הילד מגיב עקבית.";
 
   const targetFailureSignalHe =
-    "אם חוזרים בדיוק אותו סוג טעות בלי שינוי — עוצרים ומצמצמים מטרה.";
+    "אם חוזרים בדיוק אותו סוג טעות בלי שינוי - עוצרים ומצמצמים מטרה.";
 
   const targetIndependenceSignalHe = "פחות עצירות לאמצע משימה כשההוראות ברורות.";
 

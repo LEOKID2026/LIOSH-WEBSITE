@@ -69,7 +69,7 @@ function renderTopicDataLine(s) {
   const topic = s.topicName;
   const qText = formatQuestionsText(s.questions);
   if (hasBreakdown(s)) {
-    let line = `הנתונים: נפתרו ${qText} בנושא ${topic}, מתוכן ${formatCorrectText(s.correct)} ו־${formatWrongText(s.wrong)}.`;
+    let line = `הנתונים: נפתרו ${qText} בנושא ${topic}, מתוכן ${formatCorrectText(s.correct)} ו-${formatWrongText(s.wrong)}.`;
     if (hasReliableAccuracy(s) && s.accuracy > 0) {
       line += ` הדיוק הוא ${s.accuracy}%.`;
     }
@@ -127,7 +127,7 @@ function renderDifficultyObservedPattern(s) {
 /** @param {TopicOwnerCopySlots} s */
 function renderDifficultyObservedMeaning(s) {
   if (s.decisionCode === "clear_topic_gap") {
-    return `מה זה אומר: כנראה לא מדובר בטעות חד־פעמית. כדאי לחזור לבסיס של ${s.topicName} לפני שממשיכים.`;
+    return `מה זה אומר: כנראה לא מדובר בטעות חד-פעמית. כדאי לחזור לבסיס של ${s.topicName} לפני שממשיכים.`;
   }
   return `מה זה אומר: הילד מצליח בחלק מהשאלות, אבל ${s.topicName} עדיין לא יציב מספיק.`;
 }
@@ -135,7 +135,7 @@ function renderDifficultyObservedMeaning(s) {
 /** @param {TopicOwnerCopySlots} s */
 function renderDifficultyObservedHomeAction(s) {
   if (hasPattern(s)) {
-    return `מה כדאי לעשות ביחד: לפתור 5–8 שאלות קצרות בנושא ${s.topicName}. אחרי כל טעות לעצור, לבקש מהילד להסביר איך פתר, ולשים לב במיוחד ל־${s.detectedPattern}.`;
+    return `מה כדאי לעשות ביחד: לפתור 5–8 שאלות קצרות בנושא ${s.topicName}. אחרי כל טעות לעצור, לבקש מהילד להסביר איך פתר, ולשים לב במיוחד ל-${s.detectedPattern}.`;
   }
   return `מה כדאי לעשות ביחד: לפתור 5–8 שאלות קצרות בנושא ${s.topicName}. אחרי כל טעות לעצור ולבקש מהילד להסביר איך פתר.`;
 }
@@ -300,7 +300,7 @@ function renderNarrativeWe0Snapshot(s) {
 /** @param {TopicOwnerCopySlots} s */
 function renderNarrativeWe0Caution(s) {
   if (s.decisionCode === "early_direction_only") {
-    return "זה עדיין מידע ראשוני — כדאי להוסיף עוד כמה שאלות ולבדוק אם הכיוון נשמר.";
+    return "זה עדיין מידע ראשוני - כדאי להוסיף עוד כמה שאלות ולבדוק אם הכיוון נשמר.";
   }
   if (s.decisionCode === "clear_topic_gap") {
     return "כאן כבר לא מדובר רק במידע ראשוני; כדאי לחזור ולחזק את הנושא בצורה ממוקדת.";

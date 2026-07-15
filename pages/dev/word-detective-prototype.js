@@ -5,7 +5,7 @@ export default function WordDetectivePrototypePage() {
   return (
     <>
       <Head>
-        <title>בלש המילים של ליאו — אבטיפוס</title>
+        <title>בלש המילים של ליאו - אבטיפוס</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <WordDetectivePrototype />

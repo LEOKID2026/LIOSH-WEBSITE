@@ -96,7 +96,7 @@ export function buildHebrewArchiveReviewPack(enrichmentPayload, opts = {}) {
     approveAsIs:
       "Use for rows with confidence **high** and reviewPriority **low** after spot-checking suggested skill/category alignment.",
     editMetadata:
-      "Adjust suggested difficulty / cognitive / error families in the bank — **do not** change Hebrew stems, options, or correct indices without curriculum approval.",
+      "Adjust suggested difficulty / cognitive / error families in the bank - **do not** change Hebrew stems, options, or correct indices without curriculum approval.",
     rejectSuggestion:
       "Discard when domain mapping conflicts with intended literacy strand or report routing.",
     needsCurriculumExpert:

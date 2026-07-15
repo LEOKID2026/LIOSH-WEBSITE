@@ -2992,7 +2992,7 @@ export function buildWordProblemsAnimation(params, answer) {
     steps.push({
       id: "identify-operation",
       title: "זיהוי הפעולה",
-      ...learningStepFields(mix`אם קונים משהו — מורידים מהסכום, כלומר חיסור.`),
+      ...learningStepFields(mix`אם קונים משהו - מורידים מהסכום, כלומר חיסור.`),
       highlights: ["operation"],
       type: "word_problems",
       params,

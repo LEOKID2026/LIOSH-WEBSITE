@@ -1046,7 +1046,7 @@ function safeNumber(n) {
 const EVIDENCE_STRENGTH_HE = { low: "מוגבלת", medium: "בינונית", strong: "טובה" };
 
 const INSUFFICIENT_EVIDENCE_LINE_HE =
-  "מידע מועט בנושא — כדאי להמשיך בתרגול לפני שקובעים כיוון חד משמעי.";
+  "מידע מועט בנושא - כדאי להמשיך בתרגול לפני שקובעים כיוון חד משמעי.";
 
 /** Strip internal engine identifiers from diagnostic trace lines shown to parents. */
 function sanitizeDecisionTraceDetailHeForParents(raw) {
@@ -1064,7 +1064,7 @@ const POSITIVE_LEVEL_RANK = { excellent: 3, very_good: 2, good: 1, none: 0 };
 
 /** Positive-first evidence line: approved tier text (no diagnosis/taxonomy dependency). */
 function v2PositiveStrengthBodyHe() {
-  return "תרגול טוב ועקבי — נראית שליטה טובה בחומר.";
+  return "תרגול טוב ועקבי - נראית שליטה טובה בחומר.";
 }
 
 /**
@@ -1316,7 +1316,7 @@ function appendThinOverviewHedgeToLine(line, unit) {
   if (!base || !unitRequiresShortThinOverviewHedge(unit)) return base;
   const hedge = v2ShortOverviewCannotConcludeHe();
   if (base.includes(hedge)) return base;
-  return `${base} — ${hedge}`;
+  return `${base} - ${hedge}`;
 }
 
 /**
@@ -1744,7 +1744,7 @@ function summarizeV2UnitsForSubject(units, opts = {}) {
       const weakAcc = Number(topWeak?.evidenceTrace?.[0]?.value?.accuracy) || 0;
       if (weakQ >= 5 && weakAcc < 70) {
         return normalizeParentFacingHe(
-          `בנושא ${String(topWeak?.displayName || evidenceExampleTitleFallbackHe())}: כדאי לחזק את הנושא בתרגול קצר — לפי ${weakQ} שאלות ודיוק של ${Math.round(weakAcc)}%.`,
+          `בנושא ${String(topWeak?.displayName || evidenceExampleTitleFallbackHe())}: כדאי לחזק את הנושא בתרגול קצר - לפי ${weakQ} שאלות ודיוק של ${Math.round(weakAcc)}%.`,
         );
       }
       return normalizeParentFacingHe(
@@ -2509,7 +2509,7 @@ export function generateParentReportV2(
     if (!topicMap || typeof topicMap !== "object") continue;
     for (const key of Object.keys(topicMap)) {
       if (key.includes("\u0001")) {
-        throw new Error(`generateParentReportV2: topic key "${key}" in subject "${sid}" contains composite separator — must be collapsed before engine`);
+        throw new Error(`generateParentReportV2: topic key "${key}" in subject "${sid}" contains composite separator - must be collapsed before engine`);
       }
     }
   }

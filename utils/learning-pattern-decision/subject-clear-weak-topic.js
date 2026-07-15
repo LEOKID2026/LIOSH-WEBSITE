@@ -57,9 +57,9 @@ export function isClearWeakSubjectVolume(q, acc) {
 export function subjectClearWeakOpeningHe(subjectLabelHe, topicLabelHe) {
   const lab = String(subjectLabelHe || "המקצוע").trim();
   const topic = String(topicLabelHe || "הנושא")
-    .replace(/^[^—]+—\s*/, "")
+    .replace(/^[^-]+-\s*/, "")
     .trim();
-  return `ב${lab} נראית נקודת חיזוק ברורה בנושא ${topic} — כדאי לחזק אותו בתרגול קצר ורגוע.`;
+  return `ב${lab} נראית נקודת חיזוק ברורה בנושא ${topic} - כדאי לחזק אותו בתרגול קצר ורגוע.`;
 }
 
 /**
@@ -69,7 +69,7 @@ export function subjectClearWeakOpeningHe(subjectLabelHe, topicLabelHe) {
 export function subjectClearWeakClosingHe(subjectLabelHe, topicLabelHe) {
   const lab = String(subjectLabelHe || "המקצוע").trim();
   const topic = String(topicLabelHe || "הנושא")
-    .replace(/^[^—]+—\s*/, "")
+    .replace(/^[^-]+-\s*/, "")
     .trim();
   return `בשבועות הקרובים כדאי להתמקד ב${topic} ולבדוק שוב אחרי עוד כמה תרגולים קצרים.`;
 }

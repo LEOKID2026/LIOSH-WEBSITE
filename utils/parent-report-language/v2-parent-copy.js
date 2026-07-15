@@ -11,7 +11,7 @@ import { confidenceLevelParentSummaryHe } from "./confidence-parent-he.js";
 export function executiveV2HomeFocusHe(topFocusAreasHe) {
   const areas = Array.isArray(topFocusAreasHe) ? topFocusAreasHe.filter(Boolean) : [];
   if (!areas.length) {
-    return "עדיין אין מוקד ברור — השבוע כדאי לתרגל מעט בכמה נושאים ולראות מה נשאר יציב.";
+    return "עדיין אין מוקד ברור - השבוע כדאי לתרגל מעט בכמה נושאים ולראות מה נשאר יציב.";
   }
   return `להתמקד קודם ב: ${areas.slice(0, 2).join(" · ")}`;
 }
@@ -40,7 +40,7 @@ export function executiveV2MajorTrendsLinesHe(p) {
   }
   const line2 =
     stable === 0 && units >= 4
-      ? `כשנבדקים יחסית הרבה נושאים במקביל, לא תמיד נראית מיד יציבות חזקה באותה משמעות בכולם — זה נורמלי; כדאי להמשיך בתרגול כדי לייצב מה שנראה חוזר.`
+      ? `כשנבדקים יחסית הרבה נושאים במקביל, לא תמיד נראית מיד יציבות חזקה באותה משמעות בכולם - זה נורמלי; כדאי להמשיך בתרגול כדי לייצב מה שנראה חוזר.`
       : `נושאים שנשמרים טוב: ${stable} מתוך מה שנבדק. ב ${actionable} נושאים יש בסיס לשיחה ממוקדת בבית. ב ${uncertain} נושאים עדיין אין תמונה ברורה.`;
   return [`בתקופה שנבחרה נבדקו ${units} נושאים.`, line2];
 }
@@ -48,7 +48,7 @@ export function executiveV2MajorTrendsLinesHe(p) {
 /** @param {boolean} hasUncertain */
 export function executiveV2MixedSignalNoticeHe(hasUncertain) {
   if (!hasUncertain) return "";
-  return "בכמה נושאים התוצאות עדיין לא יציבות — עוד קצת תרגול יעזור לפני שקובעים כיוון ברור.";
+  return "בכמה נושאים התוצאות עדיין לא יציבות - עוד קצת תרגול יעזור לפני שקובעים כיוון ברור.";
 }
 
 /**
@@ -65,7 +65,7 @@ export function executiveV2OverallConfidenceHe(diagnosed, units, stable = 0) {
     return "מבט כולל: עדיין אין מספיק נושאים בתקופה שנבחרה כדי לבנות תמונה ביתית ברורה.";
   }
   if (u === 1 && actionable === 0) {
-    return "מבט כולל: בתקופה שנבחרה נבדק כרגע נושא אחד בלבד — נשארים עם ניסוח זהיר וממשיכים לאסוף עוד תרגול.";
+    return "מבט כולל: בתקופה שנבחרה נבדק כרגע נושא אחד בלבד - נשארים עם ניסוח זהיר וממשיכים לאסוף עוד תרגול.";
   }
   return `מבט כולל: ב ${actionable} מתוך ${u} נושאים שנבדקו יש בסיס ראשוני לשיחה בבית על כיוון ממוקד.`;
 }
@@ -87,8 +87,8 @@ export function executiveV2EvidenceBalanceHe(stable, diagnosed) {
 export function executiveV2CautionNoteHe(p) {
   const p4 = Math.max(0, Number(p.p4Length) || 0);
   const u = Math.max(0, Number(p.uncertainLength) || 0);
-  if (p4 > 0) return "יש נושאים שכדאי לשים עליהם לב השבוע — אפשר לשתף את המורה במה שמופיע בדוח ולבחור יחד צעד לימודי קצר לשבוע הקרוב.";
-  if (u > 0) return "בחלק מהנושאים עדיין אין כיוון ברור — עוד קצת תרגול יבהיר את התמונה.";
+  if (p4 > 0) return "יש נושאים שכדאי לשים עליהם לב השבוע - אפשר לשתף את המורה במה שמופיע בדוח ולבחור יחד צעד לימודי קצר לשבוע הקרוב.";
+  if (u > 0) return "בחלק מהנושאים עדיין אין כיוון ברור - עוד קצת תרגול יבהיר את התמונה.";
   return "";
 }
 
@@ -97,11 +97,11 @@ export function executiveV2ReportReadinessHe(unitsLength) {
   const n = Math.max(0, Number(unitsLength) || 0);
   return n >= 8
     ? "בתקופה שנבחרה יש מספיק תרגול כדי לדבר בזהירות על כיוון כללי בבית."
-    : "התרגול בתקופה שנבחרה עדיין מצומצם — כדאי לקרוא את הסיכום בעיון ולהמשיך לאסוף תרגול.";
+    : "התרגול בתקופה שנבחרה עדיין מצומצם - כדאי לקרוא את הסיכום בעיון ולהמשיך לאסוף תרגול.";
 }
 
 export function homePlanV2EmptyFallbackHe() {
-  return "אין כרגע פעולה ביתית חד-משמעית — השבוע כדאי תרגול קצר וממוקד כדי להבהיר את הכיוון.";
+  return "אין כרגע פעולה ביתית חד-משמעית - השבוע כדאי תרגול קצר וממוקד כדי להבהיר את הכיוון.";
 }
 
 export function nextPeriodGoalsV2EmptyFallbackHe() {
@@ -129,7 +129,7 @@ export function crossSubjectV2BulletsHe(p) {
   }
   if (c > 0) {
     bullets.push(
-      `ב ${c} נושאים התוצאות עדיין לא אחידות — עוד תרגול קצר יעזור לראות אם זה נשאר או מתייצב.`
+      `ב ${c} נושאים התוצאות עדיין לא אחידות - עוד תרגול קצר יעזור לראות אם זה נשאר או מתייצב.`
     );
   }
   return bullets;
@@ -137,7 +137,7 @@ export function crossSubjectV2BulletsHe(p) {
 
 export function crossSubjectV2DataQualityNoteHe(unitsLength) {
   const n = Math.max(0, Number(unitsLength) || 0);
-  return n < 8 ? "מספר הנושאים שנבדקו נמוך יחסית — ככל שיצטבר עוד תרגול התמונה תתבהר." : null;
+  return n < 8 ? "מספר הנושאים שנבדקו נמוך יחסית - ככל שיצטבר עוד תרגול התמונה תתבהר." : null;
 }
 
 export function subjectV2TrendNarrativeHighPriorityHe() {
@@ -149,7 +149,7 @@ export function subjectV2TrendNarrativeStableHe() {
 }
 
 export function subjectV2RecalibrationNeedYesHe() {
-  return "לפני שינוי כיוון או רמת קושי — עוד סיבוב תרגול קצר.";
+  return "לפני שינוי כיוון או רמת קושי - עוד סיבוב תרגול קצר.";
 }
 
 /** Canonical “no recalibration” — keep in sync with `SubjectPhase3Insights` visibility filter */
@@ -161,7 +161,7 @@ export function subjectV2RecalibrationNeedNoHe() {
 
 /** When output gating blocks a firm conclusion */
 export function topicRecommendationV2CautionGatedHe() {
-  return "בנושא הזה עדיין לא קובעים כיוון חזק — קודם עוד תרגול ממוקד באותו נושא.";
+  return "בנושא הזה עדיין לא קובעים כיוון חזק - קודם עוד תרגול ממוקד באותו נושא.";
 }
 
 /**

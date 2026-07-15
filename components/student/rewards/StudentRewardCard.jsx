@@ -121,7 +121,7 @@ function VirtualizedSeriesThumb({ card, index, imageSrc, onOpen, keepMounted }) 
           className="relative w-full h-full p-0 border-0 bg-transparent cursor-zoom-in focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/70"
           onClick={() => onOpen(index)}
           aria-label={
-            card.owned ? `הגדלת תמונת הקלף ${card.nameHe}` : `${card.nameHe} — נעול`
+            card.owned ? `הגדלת תמונת הקלף ${card.nameHe}` : `${card.nameHe} - נעול`
           }
         >
           <RewardCardImage

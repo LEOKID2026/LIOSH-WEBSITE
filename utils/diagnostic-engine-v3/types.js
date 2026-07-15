@@ -3,7 +3,7 @@
  */
 
 export const ENGINE_V3_VERSION = "3.0.0";
-export const ENGINE_V3_BLUEPRINT = "Diagnostic Engine V3 — fast, deep, evidence-bound";
+export const ENGINE_V3_BLUEPRINT = "Diagnostic Engine V3 - fast, deep, evidence-bound";
 
 /** Wave 1 — richest error/subskill rules */
 export const V3_WAVE1_SUBJECT_IDS = Object.freeze(["math", "hebrew", "english"]);

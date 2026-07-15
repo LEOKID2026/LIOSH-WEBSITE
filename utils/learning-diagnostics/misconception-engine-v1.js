@@ -88,7 +88,7 @@ export function inferMisconceptionFromWrongAnswer(params) {
       }
     }
     if (ev.isCorrect && respMs > SLOW_CORRECT_MS) {
-      reasoning.push("Slow correct response may reflect careful work—not a weakness signal.");
+      reasoning.push("Slow correct response may reflect careful work-not a weakness signal.");
       doNotConclude.push("Slow correct work should not be interpreted as low mastery by itself.");
     }
   }
@@ -98,7 +98,7 @@ export function inferMisconceptionFromWrongAnswer(params) {
     if (errorType === "insufficient_evidence") {
       if (subjectId === "math") {
         errorType = "calculation_error";
-        suspectedMisconception = "Numeric/text answer mismatch—may be calculation slip or conceptual confusion.";
+        suspectedMisconception = "Numeric/text answer mismatch-may be calculation slip or conceptual confusion.";
         confidence = "low";
       } else if (subjectId === "english") {
         errorType = "grammar_pattern_error";

@@ -88,7 +88,7 @@ const FETCH_META = { sessionsFilterField: "started_at", answersFilterField: "ans
 
 // ── Test 1: learning answers at 100% + practice at 40% ──────────────────────
 
-describe("Phase 4 — diagnostic bucket separation", () => {
+describe("Phase 4 - diagnostic bucket separation", () => {
   test("10 learning-mode answers at 100% + 5 practice at 40% → diagnosticAccuracy=40%, learningAnswers=10", () => {
     const session = makeSession("sess-1", "math", "algebra", "learning");
     const sessions = [session];
@@ -247,7 +247,7 @@ describe("Phase 4 — diagnostic bucket separation", () => {
 
 // ── Test 2: stripInternalReportPayloadFields ─────────────────────────────────
 
-describe("Phase 4 — _rawActivityAccuracy not in human-facing responses", () => {
+describe("Phase 4 - _rawActivityAccuracy not in human-facing responses", () => {
   test("stripInternalReportPayloadFields removes raw accuracy from subjects and summary", () => {
     const payload = {
       summary: { totalAnswers: 10, accuracy: 70, diagnosticAccuracy: 60 },
@@ -340,7 +340,7 @@ describe("Phase 4 — _rawActivityAccuracy not in human-facing responses", () =>
 
 // ── Test 3: Classroom rollup classification ───────────────────────────────────
 
-describe("Phase 4 — classroom rollup classification by mode", () => {
+describe("Phase 4 - classroom rollup classification by mode", () => {
   test("quiz mode activity → diagnosticAnswers, not learningAnswers", () => {
     const activities = [
       { id: "act-1", subject: "math", topic: "algebra", class_id: "cls-1",
@@ -430,7 +430,7 @@ describe("Phase 4 — classroom rollup classification by mode", () => {
 
 // ── Test 4: per-topic diagnostic accuracy ─────────────────────────────────────
 
-describe("Phase 4 — per-topic diagnosticAccuracy", () => {
+describe("Phase 4 - per-topic diagnosticAccuracy", () => {
   test("topics get diagnosticAccuracy computed separately from raw accuracy", () => {
     const session = makeSession("sess-9", "math", "algebra", "mixed");
     const answers = [
@@ -467,7 +467,7 @@ describe("Phase 4 — per-topic diagnosticAccuracy", () => {
 
 // ── Test 5: parent activity attempts included in guardian report ──────────────
 
-describe("Phase 4 — parent activity attempts classification", () => {
+describe("Phase 4 - parent activity attempts classification", () => {
   test("parent activity attempt with quiz mode → diagnostic bucket", () => {
     const parentAttempt = {
       id: "par-att-1",
@@ -555,7 +555,7 @@ describe("Phase 4 — parent activity attempts classification", () => {
 
 // ── Test 6: meta version and structure ───────────────────────────────────────
 
-describe("Phase 4 — payload meta and version", () => {
+describe("Phase 4 - payload meta and version", () => {
   test("result.meta.version is phase-8-mcq-engine-contract", () => {
     const result = aggregateReportPayloadFromActivityRows(
       makeStudent(),
@@ -609,7 +609,7 @@ describe("Phase 4 — payload meta and version", () => {
 
 // ── Test 7: speed and marathon competitive classification ─────────────────────
 
-describe("Phase 4 — speed and marathon are competitive", () => {
+describe("Phase 4 - speed and marathon are competitive", () => {
   test("speed and marathon answers go to competitive bucket", () => {
     const session = makeSession("sess-10", "math", "algebra", "speed");
     const speedAnswers = [
@@ -646,7 +646,7 @@ describe("Phase 4 — speed and marathon are competitive", () => {
 
 // ── Test 8: stripInternalReportPayloadFields idempotency ─────────────────────
 
-describe("Phase 4 — stripInternalReportPayloadFields contract", () => {
+describe("Phase 4 - stripInternalReportPayloadFields contract", () => {
   test("stripping is idempotent (applying twice gives same result)", () => {
     const session = makeSession("sess-11", "math", "algebra", "practice");
     const answer = makeClassifiedAnswer("sess-11", "math", "algebra", true, true, "diagnostic_independent");
@@ -680,7 +680,7 @@ describe("Phase 4 — stripInternalReportPayloadFields contract", () => {
 
 // ── Phase 5 regression: book rows excluded from diagnostic buckets ───────────
 
-describe("Phase 4/5 — book data does not affect diagnosticAccuracy", () => {
+describe("Phase 4/5 - book data does not affect diagnosticAccuracy", () => {
   test("mergeLearningActivityBookData leaves diagnostic summary unchanged", () => {
     const session = makeSession("sess-book-reg", "math", "algebra", "practice");
     const answer = makeClassifiedAnswer(

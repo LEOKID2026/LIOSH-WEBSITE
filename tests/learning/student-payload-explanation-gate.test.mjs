@@ -17,7 +17,7 @@ test("quiz strip removes correct answer and may keep explanation off pre-attempt
         question: "מה תפקיד הלב?",
         choices: ["a", "b", "c", "d"],
         correctAnswer: "b",
-        explanation: "הלב מזרים דם — b",
+        explanation: "הלב מזרים דם - b",
       },
     ],
     "quiz"
@@ -34,7 +34,7 @@ test("homework strip removes correct answer but may include explanation", () => 
         question: "מה תפקיד הלב?",
         choices: ["a", "b", "c", "d"],
         correctAnswer: "b",
-        explanation: "הלב מזרים דם — b",
+        explanation: "הלב מזרים דם - b",
       },
     ],
     "homework"

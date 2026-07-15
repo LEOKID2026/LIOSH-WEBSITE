@@ -60,7 +60,7 @@ export function geometrySequencingSuspicions(invRecord, normKey) {
     flags.push({
       code: "topic_not_in_product_grade",
       severity: "high",
-      note: `מפתח מנורמל ${normKey} לא תואם נושאים זמינים ב-${gk} — ייתכן מאגר/מטא-דאטה ישן או כיתה שגויה.`,
+      note: `מפתח מנורמל ${normKey} לא תואם נושאים זמינים ב-${gk} - ייתכן מאגר/מטא-דאטה ישן או כיתה שגויה.`,
     });
   }
 
@@ -86,7 +86,7 @@ export function geometrySequencingSuspicions(invRecord, normKey) {
       flags.push({
         code: "topic_unusual_late_row",
         severity: "medium",
-        note: `כיתה ${gmin} אחרי טווח הנושא "${normKey}" במוצר (עד כיתה ${maxG}) — לא בהכרח שגיאה.`,
+        note: `כיתה ${gmin} אחרי טווח הנושא "${normKey}" במוצר (עד כיתה ${maxG}) - לא בהכרח שגיאה.`,
       });
     }
   }
@@ -95,7 +95,7 @@ export function geometrySequencingSuspicions(invRecord, normKey) {
     flags.push({
       code: "depth_unclear_norm_mapping",
       severity: "low",
-      note: `אין מיפוי נושא מוצר ל-${normKey} — לבדוק מנורמל והרחבת מפת NORM_TO_TOPIC.`,
+      note: `אין מיפוי נושא מוצר ל-${normKey} - לבדוק מנורמל והרחבת מפת NORM_TO_TOPIC.`,
     });
   }
 
@@ -104,7 +104,7 @@ export function geometrySequencingSuspicions(invRecord, normKey) {
     flags.push({
       code: "tiling_usually_enrichment_early",
       severity: "low",
-      note: "ריצוף לרוב מדורג כהעשרה בשכבות נמוכות — לאמת מול PDF.",
+      note: "ריצוף לרוב מדורג כהעשרה בשכבות נמוכות - לאמת מול PDF.",
     });
   }
 

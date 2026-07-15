@@ -54,7 +54,7 @@ function deriveRequiredCautionNoteHe(thinDataWarnings) {
   if (!Array.isArray(thinDataWarnings) || thinDataWarnings.length === 0) return null;
   const hasOverall = thinDataWarnings.some((w) => w?.scope === "overall");
   if (hasOverall) {
-    return "חשוב לזכור שהנתונים בתקופה זו מועטים — מדובר בכיוון ראשוני בלבד וכדאי להימנע ממסקנות חזקות.";
+    return "חשוב לזכור שהנתונים בתקופה זו מועטים - מדובר בכיוון ראשוני בלבד וכדאי להימנע ממסקנות חזקות.";
   }
   const subjects = thinDataWarnings
     .filter(
@@ -66,9 +66,9 @@ function deriveRequiredCautionNoteHe(thinDataWarnings) {
     .map((w) => w.displayNameHe.trim())
     .slice(0, 3);
   if (subjects.length === 0) {
-    return "חשוב לזכור שהנתונים בחלק מהתחומים מצומצמים — מדובר בכיוון ראשוני בלבד.";
+    return "חשוב לזכור שהנתונים בחלק מהתחומים מצומצמים - מדובר בכיוון ראשוני בלבד.";
   }
-  return `חשוב לזכור שבמקצועות ${subjects.join(", ")} הנתונים מצומצמים בתקופה זו — מדובר בכיוון ראשוני בלבד.`;
+  return `חשוב לזכור שבמקצועות ${subjects.join(", ")} הנתונים מצומצמים בתקופה זו - מדובר בכיוון ראשוני בלבד.`;
 }
 
 export function buildAiNarrativeInput(packet) {

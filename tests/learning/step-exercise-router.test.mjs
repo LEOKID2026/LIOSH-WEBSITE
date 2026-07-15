@@ -93,7 +93,7 @@ test("parseFractionPreLines splits fraction pre", () => {
   assert.equal(lines.length, 2);
 });
 
-test("buildAnimationForOperation smoke — each step gets exerciseView", () => {
+test("buildAnimationForOperation smoke - each step gets exerciseView", () => {
   const cases = [
     {
       operation: "multiplication",

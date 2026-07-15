@@ -46,7 +46,7 @@ function sumOrphanMsForSessions(sessions, answerMsBySession) {
   return orphanMs;
 }
 
-describe("unified monthly learning time — units and timezone", () => {
+describe("unified monthly learning time - units and timezone", () => {
   test("no seconds/minutes confusion: ms → minutes → seconds round-trip", () => {
     const ms = 555.49 * 60_000;
     const minutes = creditedMsToRoundedMinutes(ms);
@@ -63,7 +63,7 @@ describe("unified monthly learning time — units and timezone", () => {
   });
 });
 
-describe("unified monthly learning time — books/activities/visits rules", () => {
+describe("unified monthly learning time - books/activities/visits rules", () => {
   test("orphan gap does not double-count answers already credited", () => {
     const sessions = [
       {
@@ -116,7 +116,7 @@ describe("unified monthly learning time — books/activities/visits rules", () =
   });
 });
 
-describe("unified monthly learning time — parent report display preserves aggregate", () => {
+describe("unified monthly learning time - parent report display preserves aggregate", () => {
   test("bridge prefers creditedLearningMinutes from unified source", () => {
     const report = {
       summary: { totalTimeMinutes: 31, totalQuestions: 10, totalCorrect: 5, totalWrong: 5 },

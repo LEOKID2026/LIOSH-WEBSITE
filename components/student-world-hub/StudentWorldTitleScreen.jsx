@@ -53,7 +53,7 @@ export default function StudentWorldTitleScreen({
   greetingHe,
   promptHe = "מה עושים היום?",
   coinsDisplay,
-  diamondsDisplay = "—",
+  diamondsDisplay = "-",
   leoNumber = "",
   leoNumberLabelHe = "",
   avatarEmoji,

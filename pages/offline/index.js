@@ -30,7 +30,7 @@ const OFFLINE_GAMES = [
     title: "קרב הקשות",
     emoji: "⚡️",
     players: "2 שחקנים",
-    blurb: "כל צד מקיש מהר ככל האפשר — מי ינצח?",
+    blurb: "כל צד מקיש מהר ככל האפשר - מי ינצח?",
   },
   {
     slug: "memory-match",
@@ -70,7 +70,7 @@ export default function OfflineHub() {
 
           <GamesHubHeader
             title="משחקים כל הזמן עם ליאו"
-            subtitle="משחקים על אותו מכשיר — גם בלי אינטרנט."
+            subtitle="משחקים על אותו מכשיר - גם בלי אינטרנט."
             titleClass={GH.hubTitle}
             subtitleClass={GH.hubSub}
           />

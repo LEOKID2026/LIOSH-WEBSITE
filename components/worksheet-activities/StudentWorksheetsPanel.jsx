@@ -43,7 +43,7 @@ export default function StudentWorksheetsPanel({ emptyFallback = null }) {
   return (
     <section className={T.worksheetSection}>
       <p className={T.panelIntro}>
-        דפי עבודה שהוקצו לך — פתחו כל דף, מלאו ושלחו לבדיקה.
+        דפי עבודה שהוקצו לך - פתחו כל דף, מלאו ושלחו לבדיקה.
       </p>
       <div className="grid gap-3">
         {worksheets.map((w) => {

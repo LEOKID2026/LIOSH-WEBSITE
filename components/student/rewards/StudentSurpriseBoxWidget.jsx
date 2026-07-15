@@ -134,7 +134,7 @@ export default function StudentSurpriseBoxWidget({
             </p>
           ) : (
             <p className={`mt-0.5 text-xs md:text-sm ${T.tileSub}`}>
-              המשיכו ללמוד — בקרוב תגיע קופסה חדשה!
+              המשיכו ללמוד - בקרוב תגיע קופסה חדשה!
             </p>
           )}
         </div>

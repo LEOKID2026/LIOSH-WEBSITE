@@ -83,7 +83,7 @@ export default function TeacherActivityStudentAnswersModal({
       ? `${detail.student.accuracyPct}%`
       : student.answersCount > 0
         ? `${Math.round((student.correctCount / student.answersCount) * 100)}%`
-        : "—";
+        : "-";
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
@@ -114,7 +114,7 @@ export default function TeacherActivityStudentAnswersModal({
           <p>
             סטטוס: {studentActivityStatusLabelHe(status)} · דיוק: {accuracy} · תשובות:{" "}
             {detail?.student?.answersCount ?? student.answersCount ?? 0}/
-            {detail?.activity?.questionCount ?? "—"}
+            {detail?.activity?.questionCount ?? "-"}
           </p>
         </div>
 
@@ -175,18 +175,18 @@ export default function TeacherActivityStudentAnswersModal({
                       <div className="flex flex-wrap gap-x-2">
                         <dt className="text-white/50">תשובת הילד/ה:</dt>
                         <dd className="text-white/90" data-testid="student-selected-answer">
-                          <AssignedActivityBidiText text={q.selectedAnswer ?? "—"} />
+                          <AssignedActivityBidiText text={q.selectedAnswer ?? "-"} />
                         </dd>
                       </div>
                       <div className="flex flex-wrap gap-x-2">
                         <dt className="text-white/50">תשובה נכונה:</dt>
                         <dd className="text-white/90" data-testid="student-correct-answer">
-                          <AssignedActivityBidiText text={q.correctAnswer ?? "—"} />
+                          <AssignedActivityBidiText text={q.correctAnswer ?? "-"} />
                         </dd>
                       </div>
                       {q.legacyFallback ? (
                         <p className="text-white/45 text-xs" data-testid="legacy-fallback-indicator">
-                          —
+                          -
                         </p>
                       ) : null}
                     </dl>

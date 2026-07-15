@@ -181,7 +181,7 @@ export function tryComposeContinuityPatternDraft(params) {
       const ctx = resolveContextTopicMetrics(payload, conv, { allowWeakestFallback: false });
       if (!ctx?.q) return { noData: true };
       const anchor = topicAnchorFields(ctx);
-      const text = `היום הייתי עושה דבר אחד: פעילות קצרה בנושא ${anchor.subjectLabel} — ${anchor.topicLabel}. בדוח מופיעות שם ${anchor.questionCount} שאלות עם ${anchor.accuracyPercent}% הצלחה, ולכן זה מקום טוב לתרגול ממוקד. לעשות 5–10 דקות בלבד, 3–5 שאלות, ובסוף לשאול את הילד: איך חשבת על התשובה?`;
+      const text = `היום הייתי עושה דבר אחד: פעילות קצרה בנושא ${anchor.subjectLabel} - ${anchor.topicLabel}. בדוח מופיעות שם ${anchor.questionCount} שאלות עם ${anchor.accuracyPercent}% הצלחה, ולכן זה מקום טוב לתרגול ממוקד. לעשות 5–10 דקות בלבד, 3–5 שאלות, ובסוף לשאול את הילד: איך חשבת על התשובה?`;
       return continuityDraft(text, anchor, utteranceStr, "what_to_do_today", payload);
     }
     case "what_now": {
@@ -190,50 +190,50 @@ export function tryComposeContinuityPatternDraft(params) {
           "כדי לבדוק את זה בצורה פשוטה, כדאי לפתוח תרגול רגיל אחד בלי לחץ זמן בנושא המרכזי שמופיע בדוח, 5–10 דקות בלבד. אחרי כמה שאלות אפשר לבדוק אם התשובות יציבות יותר. אם גם אז אין מספיק מידע בדוח, לא מסיקים מסקנה וממשיכים לצבור תרגול.";
         const anchor = resolveFollowUpAnchor(payload, conv, { allowWeakestForWhatNow: true });
         if (anchor) {
-          text += ` הנושא להתחלה: ${anchor.subjectLabel} — ${anchor.topicLabel}.`;
+          text += ` הנושא להתחלה: ${anchor.subjectLabel} - ${anchor.topicLabel}.`;
           return continuityDraft(text, anchor, utteranceStr, "what_to_do_now", payload);
         }
         return continuityExecutiveDraft(text, utteranceStr, "what_to_do_now", payload);
       }
       const anchor = resolveFollowUpAnchor(payload, conv, { allowWeakestForWhatNow: true });
       if (!anchor) return { noData: true };
-      const text = `הצעד הבא הוא תרגול קצר בנושא ${anchor.subjectLabel} — ${anchor.topicLabel}: 5–10 דקות, מעט שאלות, ואז בדיקה אם התשובות יציבות יותר. לא צריך לפתוח כמה נושאים יחד.`;
+      const text = `הצעד הבא הוא תרגול קצר בנושא ${anchor.subjectLabel} - ${anchor.topicLabel}: 5–10 דקות, מעט שאלות, ואז בדיקה אם התשובות יציבות יותר. לא צריך לפתוח כמה נושאים יחד.`;
       return continuityDraft(text, anchor, utteranceStr, "what_to_do_now", payload);
     }
     case "severity": {
       const ctx = resolveContextTopicMetrics(payload, conv, { allowWeakestFallback: false });
       if (!ctx?.q) return { noData: true };
       const anchor = topicAnchorFields(ctx);
-      const text = `מהדוח אפשר להתייחס לזה רק כנושא לימודי לתרגול. ב־${anchor.subjectLabel} — ${anchor.topicLabel} מופיעות ${anchor.questionCount} שאלות עם ${anchor.accuracyPercent}% הצלחה, ולכן ההמלצה היא להתחיל מתרגול קצר וממוקד, לא להסיק מעבר למה שהדוח מראה.`;
+      const text = `מהדוח אפשר להתייחס לזה רק כנושא לימודי לתרגול. ב-${anchor.subjectLabel} - ${anchor.topicLabel} מופיעות ${anchor.questionCount} שאלות עם ${anchor.accuracyPercent}% הצלחה, ולכן ההמלצה היא להתחיל מתרגול קצר וממוקד, לא להסיק מעבר למה שהדוח מראה.`;
       return continuityDraft(text, anchor, utteranceStr, "explain_report", payload);
     }
     case "preserve": {
       const strong = resolveStrongOrLast(payload, conv);
       if (!strong || strong.questionCount < 1) return { noData: true };
-      const text = `כדי לשמר את ${strong.subjectLabel} — ${strong.topicLabel}, מספיק תרגול קצר פעם-פעמיים בשבוע. המטרה היא לשמור על רצף בלי להעמיס, ולבדוק שהדיוק נשאר יציב.`;
+      const text = `כדי לשמר את ${strong.subjectLabel} - ${strong.topicLabel}, מספיק תרגול קצר פעם-פעמיים בשבוע. המטרה היא לשמור על רצף בלי להעמיס, ולבדוק שהדיוק נשאר יציב.`;
       return continuityDraft(text, strong, utteranceStr, "what_is_going_well", payload);
     }
     case "if_wrong": {
       const anchor = resolveFollowUpAnchor(payload, conv);
       if (!anchor) return { noData: true };
-      const text = `אם הוא טועה בנושא ${anchor.subjectLabel} — ${anchor.topicLabel}, עדיף לעצור אחרי שאלה אחת או שתיים, לבקש ממנו להסביר איך חשב, ואז לפתור יחד שאלה דומה. המטרה היא להבין את הדרך, לא למהר לעוד הרבה שאלות.`;
+      const text = `אם הוא טועה בנושא ${anchor.subjectLabel} - ${anchor.topicLabel}, עדיף לעצור אחרי שאלה אחת או שתיים, לבקש ממנו להסביר איך חשב, ואז לפתור יחד שאלה דומה. המטרה היא להבין את הדרך, לא למהר לעוד הרבה שאלות.`;
       return continuityDraft(text, anchor, utteranceStr, "what_to_do_now", payload);
     }
     case "simpler": {
       const anchor = resolveFollowUpAnchor(payload, conv);
       if (!anchor) return { noData: true };
-      const text = `במילים פשוטות: הנושא שכדאי להתמקד בו עכשיו הוא ${anchor.subjectLabel} — ${anchor.topicLabel}. כדאי לעשות תרגול קצר, לבדוק איך הוא עונה, ולא להסיק מעבר למה שמופיע בדוח.`;
+      const text = `במילים פשוטות: הנושא שכדאי להתמקד בו עכשיו הוא ${anchor.subjectLabel} - ${anchor.topicLabel}. כדאי לעשות תרגול קצר, לבדוק איך הוא עונה, ולא להסיק מעבר למה שמופיע בדוח.`;
       return continuityDraft(text, anchor, utteranceStr, "explain_report", payload);
     }
     case "shorten": {
       const anchors = extractTopicAnchorsFromSummary(payload, conv, 2);
       if (anchors.length >= 2) {
-        const text = `בקצרה: השבוע להתמקד ב־${anchors[0].subjectLabel} — ${anchors[0].topicLabel} וב־${anchors[1].subjectLabel} — ${anchors[1].topicLabel}. לתרגל 5–10 דקות בכל פעם, בלי להעמיס עוד נושאים.`;
+        const text = `בקצרה: השבוע להתמקד ב-${anchors[0].subjectLabel} - ${anchors[0].topicLabel} וב-${anchors[1].subjectLabel} - ${anchors[1].topicLabel}. לתרגל 5–10 דקות בכל פעם, בלי להעמיס עוד נושאים.`;
         return continuityDraft(text, anchors[0], utteranceStr, "explain_report", payload);
       }
       const anchor = resolveFollowUpAnchor(payload, conv) || (anchors[0] ?? null);
       if (!anchor) return { noData: true };
-      const text = `בקצרה: להתמקד ב־${anchor.subjectLabel} — ${anchor.topicLabel}, לתרגל 5–10 דקות, ואז לבדוק אם יש שיפור בתשובות הבאות.`;
+      const text = `בקצרה: להתמקד ב-${anchor.subjectLabel} - ${anchor.topicLabel}, לתרגל 5–10 דקות, ואז לבדוק אם יש שיפור בתשובות הבאות.`;
       return continuityDraft(text, anchor, utteranceStr, "explain_report", payload);
     }
     case "why": {
@@ -248,7 +248,7 @@ export function tryComposeContinuityPatternDraft(params) {
       const ctx = resolveContextTopicMetrics(payload, conv, { allowWeakestFallback: false });
       const anchor = ctx ? topicAnchorFields(ctx) : resolveFollowUpAnchor(payload, conv);
       if (!anchor?.questionCount) return { noData: true };
-      const text = `כי בדוח מופיעות ב־${anchor.subjectLabel} — ${anchor.topicLabel} ${anchor.questionCount} שאלות עם ${anchor.accuracyPercent}% הצלחה. זה הנתון שממנו מגיעה ההמלצה.`;
+      const text = `כי בדוח מופיעות ב-${anchor.subjectLabel} - ${anchor.topicLabel} ${anchor.questionCount} שאלות עם ${anchor.accuracyPercent}% הצלחה. זה הנתון שממנו מגיעה ההמלצה.`;
       return continuityDraft(text, anchor, utteranceStr, "explain_report", payload);
     }
     default:

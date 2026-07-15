@@ -31,18 +31,18 @@ function discussionBody(count, answerRequired = true) {
   };
 }
 
-test("create normal discussion with 1 question — server accepts", () => {
+test("create normal discussion with 1 question - server accepts", () => {
   const parsed = parseCreateActivityBody(discussionBody(1));
   assert.equal(parsed.ok, true);
 });
 
-test("create normal discussion with 3 questions — server accepts", () => {
+test("create normal discussion with 3 questions - server accepts", () => {
   const parsed = parseCreateActivityBody(discussionBody(3));
   assert.equal(parsed.ok, true);
   assert.equal(parsed.payload.questionCount, 3);
 });
 
-test("create normal discussion with 5 questions — server accepts", () => {
+test("create normal discussion with 5 questions - server accepts", () => {
   const parsed = parseCreateActivityBody(discussionBody(5));
   assert.equal(parsed.ok, true);
 });
@@ -57,7 +57,7 @@ test("server rejects discussion with 6 questions", () => {
   assert.equal(parsed.ok, false);
 });
 
-test("create explanation-only discussion (answerRequired=false) — server accepts", () => {
+test("create explanation-only discussion (answerRequired=false) - server accepts", () => {
   const parsed = parseCreateActivityBody(discussionBody(2, false));
   assert.equal(parsed.ok, true);
   assert.equal(parsed.payload.answerRequired, false);
@@ -117,7 +117,7 @@ test("explanation-only discussion excluded from diagnostic rollup", () => {
   assert.equal(shouldRevealCorrectAnswerToStudent("discussion"), false);
 });
 
-test("normal discussion — student must submit answer — enforced via answerRequired default", () => {
+test("normal discussion - student must submit answer - enforced via answerRequired default", () => {
   const parsed = parseCreateActivityBody(discussionBody(1));
   assert.equal(parsed.payload.answerRequired, true);
 });

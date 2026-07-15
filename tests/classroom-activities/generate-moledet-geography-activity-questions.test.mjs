@@ -53,7 +53,7 @@ test("moledet_geography generates N=5 for g5 geography hard", async () => {
   }
 });
 
-test("moledet_geography empty pool throws (g3 mixed — no bank rows for mixed)", async () => {
+test("moledet_geography empty pool throws (g3 mixed - no bank rows for mixed)", async () => {
   await assert.rejects(
     () =>
       generateActivityQuestionSetClient({

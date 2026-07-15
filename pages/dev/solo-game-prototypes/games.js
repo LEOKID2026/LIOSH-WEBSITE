@@ -15,7 +15,7 @@ export default function SoloGamePrototypesListPage() {
   return (
     <>
       <Head>
-        <title>אבטיפוסי משחקי סולו — פיתוח</title>
+        <title>אבטיפוסי משחקי סולו - פיתוח</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <Layout studentTheme={theme} studentShell="home">
@@ -32,7 +32,7 @@ export default function SoloGamePrototypesListPage() {
 
             <GamesHubHeader
               title="אבטיפוסי משחקי סולו"
-              subtitle="רעיונות למשחקי סולו חדשים — לבדיקה בלבד, לא מחוברים לפרסים או לעולם הילד."
+              subtitle="רעיונות למשחקי סולו חדשים - לבדיקה בלבד, לא מחוברים לפרסים או לעולם הילד."
               titleClass={GH.hubTitle}
               subtitleClass={GH.hubSub}
             />

@@ -44,7 +44,7 @@ function build() {
         strand: "moledet_geography_integrated",
         confidence: "medium",
         mapsToNormalizedKeys: [`moledet.bank.${gk}`],
-        notes: "ניסוח פנימי לפי קובץ האתר — דורש הצלבה ידנית מול PDF בעלים.",
+        notes: "ניסוח פנימי לפי קובץ האתר - דורש הצלבה ידנית מול PDF בעלים.",
       });
     }
     let j = 0;

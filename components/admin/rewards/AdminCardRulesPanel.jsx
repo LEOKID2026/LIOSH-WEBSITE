@@ -128,7 +128,7 @@ export default function AdminCardRulesPanel({ accessToken, cardId, cardName, emb
 
   return (
     <div className={shellClass}>
-      {!embedded ? <h4 className="font-bold text-sm">חוקי קבלה — {cardName || "קלף"}</h4> : null}
+      {!embedded ? <h4 className="font-bold text-sm">חוקי קבלה - {cardName || "קלף"}</h4> : null}
       {message ? <p className="text-xs text-emerald-300">{message}</p> : null}
 
       {rules.length === 0 ? (

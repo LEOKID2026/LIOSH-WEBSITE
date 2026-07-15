@@ -195,7 +195,7 @@ export default function AdminArcadeTab({ accessToken }) {
         return;
       }
       setSessionRow(json.row || sessionRow);
-      setMessage("נשמר — מטבעות מתרגול");
+      setMessage("נשמר - מטבעות מתרגול");
       void loadAll();
     } finally {
       setBusy("");
@@ -225,7 +225,7 @@ export default function AdminArcadeTab({ accessToken }) {
         setMessage(apiErrorMessageHe(json?.error, "שמירה נכשלה"));
         return;
       }
-      setMessage(`נשמר — עלות כניסה ${editDraft.amount}`);
+      setMessage(`נשמר - עלות כניסה ${editDraft.amount}`);
       closeEdit();
       void loadAll();
     } finally {
@@ -263,7 +263,7 @@ export default function AdminArcadeTab({ accessToken }) {
         return;
       }
       const row = payoutRows.find((r) => r.id === editId);
-      setMessage(`נשמר — ${row?.game_key || "משחק"}`);
+      setMessage(`נשמר - ${row?.game_key || "משחק"}`);
       closeEdit();
       void loadAll();
     } finally {
@@ -347,8 +347,8 @@ export default function AdminArcadeTab({ accessToken }) {
             <tbody>
               {entryRows.map((row) => (
                 <tr key={row.id} className="border-b border-white/5">
-                  <td className="py-2 px-2">{row.amount ?? "—"}</td>
-                  <td className="py-2 px-2">{row.label_he || "—"}</td>
+                  <td className="py-2 px-2">{row.amount ?? "-"}</td>
+                  <td className="py-2 px-2">{row.label_he || "-"}</td>
                   <td className="py-2 px-2">{row.is_active !== false ? "כן" : "לא"}</td>
                   <td className="py-2 px-2">
                     <button

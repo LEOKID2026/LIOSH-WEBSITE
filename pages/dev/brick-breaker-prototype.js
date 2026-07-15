@@ -6,7 +6,7 @@ export default function BrickBreakerPrototypePage() {
   return (
     <>
       <Head>
-        <title>שובר לבנים — אבטיפוס</title>
+        <title>שובר לבנים - אבטיפוס</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <BrickBreakerPrototype />

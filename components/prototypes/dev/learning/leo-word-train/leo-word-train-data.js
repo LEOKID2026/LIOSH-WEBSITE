@@ -199,19 +199,19 @@ export const WORD_TRAIN_TASKS = {
       solution: { c1: "blue", c2: "bag" },
     },
     buildWordTask("m4", "תחנה 4", "בנו את המילה school", "🏫", "school"),
-    fillWordTask("m5", "תחנה 5", "השלימו shirt — אות חסרה", "shirt", [2], "👕"),
+    fillWordTask("m5", "תחנה 5", "השלימו shirt - אות חסרה", "shirt", [2], "👕"),
     buildWordTask("m6", "תחנה 6", "בנו את המילה book", "📚", "book"),
     buildWordTask("m7", "תחנה 7", "בנו את המילה green", "🟢", "green"),
-    buildWordTask("m8", "תחנה 8", "העמיסו מילה — כיסא", "🪑", "chair"),
+    buildWordTask("m8", "תחנה 8", "העמיסו מילה - כיסא", "🪑", "chair"),
     buildWordTask("m9", "תחנה 9", "בנו את המילה desk", "📝", "desk"),
-    buildWordTask("m10", "תחנה 10", "העמיסו מילה — מים", "💧", "water"),
+    buildWordTask("m10", "תחנה 10", "העמיסו מילה - מים", "💧", "water"),
   ],
   hard: [
     {
       id: "h1",
       type: "word_order",
       stationLabel: "תחנה 1",
-      missionHe: "סדרו מילים על הקרונות — I / like / pizza",
+      missionHe: "סדרו מילים על הקרונות - I / like / pizza",
       carriages: [
         { id: "w0", kind: "slot", hint: "1" },
         { id: "w1", kind: "slot", hint: "2" },
@@ -229,7 +229,7 @@ export const WORD_TRAIN_TASKS = {
       id: "h2",
       type: "word_order",
       stationLabel: "תחנה 2",
-      missionHe: "סדרו מילים — The / dog / runs",
+      missionHe: "סדרו מילים - The / dog / runs",
       carriages: [
         { id: "w0", kind: "slot", hint: "1" },
         { id: "w1", kind: "slot", hint: "2" },
@@ -247,7 +247,7 @@ export const WORD_TRAIN_TASKS = {
       id: "h3",
       type: "sentence_gap",
       stationLabel: "תחנה 3",
-      missionHe: "העמיסו מילה חסרה — I drink ___",
+      missionHe: "העמיסו מילה חסרה - I drink ___",
       carriages: [
         { id: "p1", kind: "fixed", content: "I" },
         { id: "p2", kind: "fixed", content: "drink" },
@@ -260,7 +260,7 @@ export const WORD_TRAIN_TASKS = {
       id: "h4",
       type: "sentence_gap",
       stationLabel: "תחנה 4",
-      missionHe: "העמיסו מילה — The cat is ___",
+      missionHe: "העמיסו מילה - The cat is ___",
       carriages: [
         { id: "p1", kind: "fixed", content: "The" },
         { id: "p2", kind: "fixed", content: "cat" },
@@ -274,7 +274,7 @@ export const WORD_TRAIN_TASKS = {
       id: "h5",
       type: "word_order",
       stationLabel: "תחנה 5",
-      missionHe: "סדרו — We / go / to / school",
+      missionHe: "סדרו - We / go / to / school",
       carriages: [
         { id: "w0", kind: "slot", hint: "1" },
         { id: "w1", kind: "slot", hint: "2" },
@@ -294,7 +294,7 @@ export const WORD_TRAIN_TASKS = {
       id: "h6",
       type: "word_order",
       stationLabel: "תחנה 6",
-      missionHe: "סדרו — She / likes / red",
+      missionHe: "סדרו - She / likes / red",
       carriages: [
         { id: "w0", kind: "slot", hint: "1" },
         { id: "w1", kind: "slot", hint: "2" },
@@ -312,7 +312,7 @@ export const WORD_TRAIN_TASKS = {
       id: "h7",
       type: "sentence_gap",
       stationLabel: "תחנה 7",
-      missionHe: "העמיסו מילה — I ___ a cat",
+      missionHe: "העמיסו מילה - I ___ a cat",
       carriages: [
         { id: "p1", kind: "fixed", content: "I" },
         { id: "gap", kind: "slot" },
@@ -340,7 +340,7 @@ export const WORD_TRAIN_TASKS = {
       id: "h9",
       type: "word_order",
       stationLabel: "תחנה 9",
-      missionHe: "סדרו — I / read / a / book",
+      missionHe: "סדרו - I / read / a / book",
       carriages: [
         { id: "w0", kind: "slot", hint: "1" },
         { id: "w1", kind: "slot", hint: "2" },
@@ -360,7 +360,7 @@ export const WORD_TRAIN_TASKS = {
       id: "h10",
       type: "sentence_gap",
       stationLabel: "תחנה 10",
-      missionHe: "I am hungry — העמיסו מילת הקשר",
+      missionHe: "I am hungry - העמיסו מילת הקשר",
       carriages: [
         { id: "p1", kind: "fixed", content: "I" },
         { id: "p2", kind: "fixed", content: "want" },
@@ -390,7 +390,7 @@ export function validateTrainTask(task, fills) {
 }
 
 export function trainFeedback(ok) {
-  return ok ? "🚂 הרכבת יוצאת מהתחנה!" : "הקרונות רועדים — בדקו שוב";
+  return ok ? "🚂 הרכבת יוצאת מהתחנה!" : "הקרונות רועדים - בדקו שוב";
 }
 
 /** @param {DifficultyId} difficulty */

@@ -5,7 +5,7 @@ export default function ReadingComprehensionPrototypePage() {
   return (
     <>
       <Head>
-        <title>סיירת הבנת הנקרא — אבטיפוס</title>
+        <title>סיירת הבנת הנקרא - אבטיפוס</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <ReadingComprehensionPrototype />

@@ -53,7 +53,7 @@ export default function ArcadeMyRoomPage() {
     <Layout studentTheme={theme} studentShell="home">
       <GameAccessGuard category="online">
         <Head>
-          <title>החדר שלי — מועדון ליאו</title>
+          <title>החדר שלי - מועדון ליאו</title>
         </Head>
         <div className={GH.pageWrap} dir="rtl">
           <div className={`${GH.container} max-w-3xl space-y-4`}>
@@ -65,12 +65,12 @@ export default function ArcadeMyRoomPage() {
 
             {locked ? (
               <div className={`${GH.card} p-4 text-right`}>
-                <p className={GH.cardBlurb}>חדר אישי — נשלט דרך Admin. כרגע לא פתוח לאורחים.</p>
+                <p className={GH.cardBlurb}>חדר אישי - נשלט דרך Admin. כרגע לא פתוח לאורחים.</p>
               </div>
             ) : (
               <div className={`${GH.card} space-y-4 p-4 text-right`}>
                 <h1 className={GH.sectionTitle}>החדר שלי</h1>
-                <p className={`text-sm ${GH.cardBlurb}`}>קישוטים, גביעים והזמנת חברים — מרחב אישי בלבד</p>
+                <p className={`text-sm ${GH.cardBlurb}`}>קישוטים, גביעים והזמנת חברים - מרחב אישי בלבד</p>
 
                 <label className="block space-y-1">
                   <span className={`text-sm ${GH.entryLabel}`}>שם החדר</span>
@@ -82,7 +82,7 @@ export default function ArcadeMyRoomPage() {
                   <p className={`mt-1 text-xs ${GH.cardBlurb}`}>
                     {(room?.decorationSlots || []).length
                       ? `${room.decorationSlots.length} פריטים מוצגים`
-                      : "אין גביעים עדיין — השלם משימות וטורנירים"}
+                      : "אין גביעים עדיין - השלם משימות וטורנירים"}
                   </p>
                 </div>
 

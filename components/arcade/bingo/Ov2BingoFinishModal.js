@@ -73,11 +73,11 @@ export default function Ov2BingoFinishModal({
   const settlementText = () => {
     if (isWalkover) return `+${walkoverAmt} מטבעות`;
     if (claimsTotal > 0) return `+${claimsTotal.toLocaleString()} מטבעות (פרסים)`;
-    return "—";
+    return "-";
   };
 
   const reasonLine = isWalkover
-    ? `נשאר אחרון — ${winner?.name || winner?.participantKey || "מנצח"}`
+    ? `נשאר אחרון - ${winner?.name || winner?.participantKey || "מנצח"}`
     : winner?.participantKey
       ? `מנצח: ${winner.name || winner.participantKey}`
       : "המשחק הסתיים";
@@ -135,7 +135,7 @@ export default function Ov2BingoFinishModal({
             </div>
             <p className="mt-3 text-center text-[11px] leading-snug text-zinc-400">{reasonLine}</p>
             <p className="mt-2 text-center text-[10px] leading-snug text-zinc-500">
-              {finishLocked ? "שולח תוצאות ליתרה שלך…" : "הסיבוב הסתיים — בקשו משחק חוזר, ואז המארח מתחיל את הבא."}
+              {finishLocked ? "שולח תוצאות ליתרה שלך…" : "הסיבוב הסתיים - בקשו משחק חוזר, ואז המארח מתחיל את הבא."}
             </p>
           </div>
         </div>

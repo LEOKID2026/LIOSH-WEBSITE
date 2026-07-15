@@ -219,7 +219,7 @@ export default function AdminCardsTab({ accessToken }) {
           <tbody>
             {cards.map((card) => (
               <tr key={card.id} className="border-b border-white/5">
-                <td className="py-2 px-2">{card.name_he || "—"}</td>
+                <td className="py-2 px-2">{card.name_he || "-"}</td>
                 <td className="py-2 px-2">{formatCardTypeHe(card.card_type)}</td>
                 <td className="py-2 px-2">{formatRarityHe(card.rarity)}</td>
                 <td className="py-2 px-2">{formatVisibilityModeHe(card.visibility_mode)}</td>
@@ -593,7 +593,7 @@ function CardImageUpload({ cardId, accessToken, cardType, imageUrl, imageAssetKe
       <p className="font-semibold text-xs">תמונת קלף</p>
       <p className="text-white/45 text-[11px]">
         העלאות חדשות נשמרות ב-Supabase Storage. קלפים עם נתיב יחסי ב-public ממשיכים לעבוד ללא שינוי.
-        אם שיניתם מפתח קלף או סדרה — שמרו את הקלף לפני העלאה.
+        אם שיניתם מפתח קלף או סדרה - שמרו את הקלף לפני העלאה.
       </p>
       {previewSrc ? (
         <div className="flex justify-center">
@@ -604,10 +604,10 @@ function CardImageUpload({ cardId, accessToken, cardType, imageUrl, imageAssetKe
           />
         </div>
       ) : (
-        <p className="text-white/40 text-xs">אין תמונה — העלו PNG או WEBP</p>
+        <p className="text-white/40 text-xs">אין תמונה - העלו PNG או WEBP</p>
       )}
       {localPreviewUrl ? (
-        <p className="text-amber-200/80 text-[11px]">תצוגה מקדימה לפני שמירה — לחצו &quot;העלה תמונה&quot; לשמירה</p>
+        <p className="text-amber-200/80 text-[11px]">תצוגה מקדימה לפני שמירה - לחצו &quot;העלה תמונה&quot; לשמירה</p>
       ) : null}
       {imageUrl ? (
         <p className="text-white/40 text-[11px] break-all" dir="ltr">

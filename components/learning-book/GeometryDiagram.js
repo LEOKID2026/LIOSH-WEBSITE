@@ -303,7 +303,7 @@ function SquareAreaGridDiagram({ theme }) {
     }
   }
   return (
-    <DiagramSvg label="שטח ריבוע — ריבועי יחידה">
+    <DiagramSvg label="שטח ריבוע - ריבועי יחידה">
       {cells}
       <HebrewLabel text={GEOMETRY_DIAGRAM_LABELS.area} x={110} y={24} />
       <MathMeasure text="4 × 4 = 16" x={110} y={156} />

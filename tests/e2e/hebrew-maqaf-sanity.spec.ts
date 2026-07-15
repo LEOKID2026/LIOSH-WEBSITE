@@ -21,7 +21,7 @@ async function assertNoMaqaf(page: import("@playwright/test").Page, routeName: s
   expect(text, `${routeName} should not contain Hebrew maqaf U+05BE`).not.toContain(MAQAF);
 }
 
-test.describe("Hebrew maqaf sanity — desktop", () => {
+test.describe("Hebrew maqaf sanity - desktop", () => {
   for (const route of PUBLIC_ROUTES) {
     test(`${route.name} has no visible maqaf`, async ({ page }) => {
       await page.goto(route.path, { waitUntil: "domcontentloaded", timeout: 60_000 });
@@ -42,7 +42,7 @@ test.describe("Hebrew maqaf sanity — desktop", () => {
     await expect(page.getByTestId("home-parent-video")).toBeVisible();
     await expect(page.getByTestId("home-primary-actions")).toBeVisible();
     await expect(page.getByTestId("home-learning-system")).toBeVisible();
-    await expect(page.getByText(/ל־LEO KIDS/)).toHaveCount(0);
+    await expect(page.getByText(/ל-LEO KIDS/)).toHaveCount(0);
   });
   test("math book page sample", async ({ page }) => {
     await page.goto("/learning/book/math/g1/add_two");
@@ -51,7 +51,7 @@ test.describe("Hebrew maqaf sanity — desktop", () => {
   });
 });
 
-test.describe("Hebrew maqaf sanity — mobile viewport", () => {
+test.describe("Hebrew maqaf sanity - mobile viewport", () => {
   test("homepage mobile viewport", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/");
@@ -70,7 +70,7 @@ test.describe("Hebrew maqaf sanity — mobile viewport", () => {
   });
 });
 
-test.describe("Hebrew maqaf sanity — authenticated student", () => {
+test.describe("Hebrew maqaf sanity - authenticated student", () => {
   const username = process.env.E2E_STUDENT_USERNAME || "";
   const pin = process.env.E2E_STUDENT_PIN || "";
   test.skip(!username || !pin, "Set E2E_STUDENT_USERNAME + E2E_STUDENT_PIN");
@@ -89,7 +89,7 @@ test.describe("Hebrew maqaf sanity — authenticated student", () => {
   });
 });
 
-test.describe("Hebrew maqaf sanity — authenticated parent", () => {
+test.describe("Hebrew maqaf sanity - authenticated parent", () => {
   const email = process.env.E2E_PARENT_EMAIL || "";
   const password = process.env.E2E_PARENT_PASSWORD || "";
   test.skip(!email || !password, "Set E2E_PARENT_EMAIL + E2E_PARENT_PASSWORD");

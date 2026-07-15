@@ -44,14 +44,14 @@ function TeacherAdminMobileCard({ teacher: t }) {
     <article className="rounded-xl border border-white/15 bg-black/25 p-4 text-right space-y-3">
       <div className="flex items-start justify-between gap-3">
         <h3 className="font-semibold text-base text-white min-w-0 break-words">
-          {t.displayName || "—"}
+          {t.displayName || "-"}
         </h3>
         <StatusBadge active={active} entitlementStatus={t.entitlementStatus} />
       </div>
 
       <div>
         <p className="text-xs text-white/50 mb-0.5">{ADMIN_COL_EMAIL}</p>
-        <p className="text-sm text-white/80 break-all leading-relaxed">{t.email || "—"}</p>
+        <p className="text-sm text-white/80 break-all leading-relaxed">{t.email || "-"}</p>
       </div>
 
       <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
@@ -73,11 +73,11 @@ function TeacherAdminMobileCard({ teacher: t }) {
         </div>
         <div className="col-span-2">
           <dt className="text-xs text-white/50 mb-0.5">{ADMIN_COL_SCHOOL}</dt>
-          <dd className="font-medium">{t.schoolName || "—"}</dd>
+          <dd className="font-medium">{t.schoolName || "-"}</dd>
         </div>
         <div className="col-span-2">
           <dt className="text-xs text-white/50 mb-0.5">{ADMIN_COL_PER_CLASS_CAP}</dt>
-          <dd className="font-medium tabular-nums">{t.quotas?.maxStudentsPerClass ?? "—"}</dd>
+          <dd className="font-medium tabular-nums">{t.quotas?.maxStudentsPerClass ?? "-"}</dd>
         </div>
       </dl>
 
@@ -137,27 +137,27 @@ function TeacherAdminDesktopTable({ teachers }) {
           <tbody>
             {teachers.map((t) => {
               const active = t.isAccountActive !== false && t.isActive;
-              const email = t.email || "—";
+              const email = t.email || "-";
               return (
                 <tr key={t.teacherId} className="border-t border-white/10 hover:bg-white/[0.03]">
                   <td className="px-3 py-2.5 font-medium">
                     <span
                       className="block truncate"
-                      title={t.displayName && t.displayName !== "—" ? t.displayName : undefined}
+                      title={t.displayName && t.displayName !== "-" ? t.displayName : undefined}
                     >
-                      {t.displayName || "—"}
+                      {t.displayName || "-"}
                     </span>
                   </td>
                   <td className="px-3 py-2.5 text-white/80 min-w-[12rem]">
                     <span
                       className="block truncate max-w-[28rem] xl:max-w-[36rem] 2xl:max-w-none"
-                      title={email !== "—" ? email : undefined}
+                      title={email !== "-" ? email : undefined}
                     >
                       {email}
                     </span>
                   </td>
                   <td className="px-3 py-2.5 text-white/70 truncate max-w-[8rem]" title={t.schoolName || undefined}>
-                    {t.schoolName || "—"}
+                    {t.schoolName || "-"}
                   </td>
                   <td className="px-2 py-2.5 text-center tabular-nums whitespace-nowrap">
                     {t.classCount ?? 0}
@@ -172,7 +172,7 @@ function TeacherAdminDesktopTable({ teachers }) {
                     {t.individualActivityCount ?? 0}
                   </td>
                   <td className="px-2 py-2.5 text-center tabular-nums whitespace-nowrap">
-                    {t.quotas?.maxStudentsPerClass ?? "—"}
+                    {t.quotas?.maxStudentsPerClass ?? "-"}
                   </td>
                   <td className="px-2 py-2.5 text-center">
                     <StatusBadge active={active} entitlementStatus={t.entitlementStatus} />

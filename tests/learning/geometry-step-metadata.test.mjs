@@ -214,7 +214,7 @@ test("enrichGeometryAnimationSteps attaches metadata per slide", () => {
   }
 });
 
-test("generateQuestion smoke — metadata for procedural questions", () => {
+test("generateQuestion smoke - metadata for procedural questions", () => {
   globalThis.__LIOSH_SKIP_GEOMETRY_CONCEPTUAL = true;
   try {
     for (const gradeKey of ["g3", "g4", "g5", "g6"]) {

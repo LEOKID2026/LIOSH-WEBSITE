@@ -15,7 +15,7 @@ export const SECTIONS = {
   students: {
     key: "students",
     title: "מדריך לילדים",
-    description: "כניסה, תרגול, משימות ומשחקים — בשפה פשוטה.",
+    description: "כניסה, תרגול, משימות ומשחקים - בשפה פשוטה.",
     href: "/help/students",
     emoji: "🎒",
     hubGradientKey: "students",
@@ -23,7 +23,7 @@ export const SECTIONS = {
   "parent-report": {
     key: "parent-report",
     title: "הסבר דוח הורים",
-    description: "איך לקרוא כל חלק בדוח — מילה במילה.",
+    description: "איך לקרוא כל חלק בדוח - מילה במילה.",
     href: "/help/parent-report",
     emoji: "📊",
     hubGradientKey: "parent-report",

@@ -198,7 +198,7 @@ describe("guest resume ui helpers", () => {
   test("linked resume failure shows parent login guidance", () => {
     const banner = guestResumeFailureBannerFromPayload({
       code: "guest_already_linked",
-      message: "המספר כבר שויך להורה — התחבר/י עם שם משתמש ו-PIN",
+      message: "המספר כבר שויך להורה - התחבר/י עם שם משתמש ו-PIN",
     });
     assert.equal(banner?.code, "guest_already_linked");
     assert.match(banner?.messageHe || "", /התחבר/);

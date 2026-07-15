@@ -247,7 +247,7 @@ export default function AdminEconomyTab({ accessToken, onNavigateTab }) {
       setMessage(apiErrorMessageHe(body?.error, "שמירה נכשלה"));
       return;
     }
-    setMessage("משימה יומית נשמרה — השינוי יחול על פרסים עתידיים בלבד.");
+    setMessage("משימה יומית נשמרה - השינוי יחול על פרסים עתידיים בלבד.");
     closeEdit();
     void loadAll();
   };
@@ -275,7 +275,7 @@ export default function AdminEconomyTab({ accessToken, onNavigateTab }) {
       setMessage(apiErrorMessageHe(body?.error, "שמירה נכשלה"));
       return;
     }
-    setMessage("מדרגת התמדה נשמרה — השינוי יחול על פרסים עתידיים בלבד.");
+    setMessage("מדרגת התמדה נשמרה - השינוי יחול על פרסים עתידיים בלבד.");
     closeEdit();
     void loadAll();
   };
@@ -327,7 +327,7 @@ export default function AdminEconomyTab({ accessToken, onNavigateTab }) {
   return (
     <div className="text-right">
       <p className="text-xs text-amber-200/80 mb-4">
-        שינוי יחול על פרסים עתידיים בלבד — לא על מטבעות שכבר ניתנו.
+        שינוי יחול על פרסים עתידיים בלבד - לא על מטבעות שכבר ניתנו.
       </p>
       {pageMessage ? <p className="text-sm text-emerald-300 mb-3">{pageMessage}</p> : null}
 
@@ -362,9 +362,9 @@ export default function AdminEconomyTab({ accessToken, onNavigateTab }) {
             <tbody>
               {filteredDaily.map((row) => (
                 <tr key={row.id} className="border-b border-white/5">
-                  <td className="py-2 px-2">{row.text_he || "—"}</td>
-                  <td className="py-2 px-2">{row.target_value ?? "—"}</td>
-                  <td className="py-2 px-2">{row.reward_coins ?? "—"}</td>
+                  <td className="py-2 px-2">{row.text_he || "-"}</td>
+                  <td className="py-2 px-2">{row.target_value ?? "-"}</td>
+                  <td className="py-2 px-2">{row.reward_coins ?? "-"}</td>
                   <td className="py-2 px-2">{row.is_active !== false ? "כן" : "לא"}</td>
                   <td className="py-2 px-2">
                     <button
@@ -397,9 +397,9 @@ export default function AdminEconomyTab({ accessToken, onNavigateTab }) {
             <tbody>
               {monthlyRows.map((row) => (
                 <tr key={row.id} className="border-b border-white/5">
-                  <td className="py-2 px-2">{row.minutes_threshold ?? "—"}</td>
-                  <td className="py-2 px-2">{row.reward_coins ?? "—"}</td>
-                  <td className="py-2 px-2">{row.label_he || "—"}</td>
+                  <td className="py-2 px-2">{row.minutes_threshold ?? "-"}</td>
+                  <td className="py-2 px-2">{row.reward_coins ?? "-"}</td>
+                  <td className="py-2 px-2">{row.label_he || "-"}</td>
                   <td className="py-2 px-2">{row.is_active !== false ? "כן" : "לא"}</td>
                   <td className="py-2 px-2">
                     <button
@@ -445,7 +445,7 @@ export default function AdminEconomyTab({ accessToken, onNavigateTab }) {
             <AdminSaveButton busy={busy === "global"} onClick={() => void saveGlobal()} />
           </div>
         ) : (
-          <p className="text-white/50 text-sm">אין הגדרות גלובליות — יש להריץ את עדכון מסד הנתונים של מערכת הקלפים.</p>
+          <p className="text-white/50 text-sm">אין הגדרות גלובליות - יש להריץ את עדכון מסד הנתונים של מערכת הקלפים.</p>
         )}
       </AdminSection>
 
@@ -497,7 +497,7 @@ export default function AdminEconomyTab({ accessToken, onNavigateTab }) {
                 changeLog.map((row) => (
                   <tr key={row.id} className="border-b border-white/5">
                     <td className="py-2 px-2 whitespace-nowrap">
-                      {row.created_at ? new Date(row.created_at).toLocaleString("he-IL") : "—"}
+                      {row.created_at ? new Date(row.created_at).toLocaleString("he-IL") : "-"}
                     </td>
                     <td className="py-2 px-2">{formatEconomySettingAreaHe(row.setting_area)}</td>
                     <td className="py-2 px-2">{formatEconomyEntityKeyHe(row.entity_key)}</td>

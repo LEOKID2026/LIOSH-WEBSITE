@@ -63,6 +63,30 @@ function skip(id, detail = "") {
   console.log(`  ○ ${id} — ${detail}`);
 }
 
+async function dismissCookieConsent(page) {
+  const accept = page.getByRole("button", { name: "אישור" });
+  if (await accept.isVisible({ timeout: 3000 }).catch(() => false)) {
+    await accept.click();
+    await page.waitForTimeout(300);
+  }
+}
+
+async function primeConsentStorage(context) {
+  await context.addInitScript(() => {
+    localStorage.setItem(
+      "leokids_consent_v1",
+      JSON.stringify({
+        version: 1,
+        choice: "accepted",
+        ads: false,
+        analytics: false,
+        decidedAt: new Date().toISOString(),
+        source: "banner",
+      }),
+    );
+  });
+}
+
 async function ensureGuestEnabled(service) {
   await service.from("guest_mode_settings").upsert(
     {
@@ -109,15 +133,23 @@ async function main() {
 
   const browser = await chromium.launch({ headless: true });
   const ctx = await browser.newContext({ baseURL: BASE, locale: "he-IL" });
+  await primeConsentStorage(ctx);
   const page = await ctx.newPage();
 
   let leoNumber = "";
   let guestStudentId = "";
 
-  // Guest login + home tiles
-  console.log("1. Guest home + tiles");
+  // Guest login + world home dock
+  console.log("1. Guest home + world dock");
   try {
+    const consoleErrors = [];
+    page.on("pageerror", (err) => consoleErrors.push(String(err.message || err)));
+
     await guestLogin(page);
+    await dismissCookieConsent(page);
+    await page.getByTestId("student-world-title-screen").waitFor({ state: "visible", timeout: 60_000 });
+    pass("browser-world-home-loaded");
+
     const me = await page.evaluate(async () => {
       const r = await fetch("/api/student/me", { credentials: "same-origin" });
       return r.json();
@@ -127,6 +159,30 @@ async function main() {
     if (me?.isGuest && leoNumber) pass("browser-guest-login", leoNumber);
     else fail("browser-guest-login");
 
+    if (await page.getByTestId("student-world-home-coins").isVisible().catch(() => false)) {
+      pass("browser-world-home-coins-visible");
+    } else fail("browser-world-home-coins-visible");
+
+    if (await page.getByTestId("student-share-friends-btn-chip").isVisible().catch(() => false)) {
+      pass("browser-world-home-share-visible");
+    } else fail("browser-world-home-share-visible");
+
+    if (await page.getByTestId("student-parent-invite-open").isVisible().catch(() => false)) {
+      pass("browser-parent-invite-visible");
+      await page.getByTestId("student-parent-invite-open").click();
+      const dialog = page.getByRole("dialog", { name: /הורה יקר/i });
+      if (await dialog.isVisible({ timeout: 5000 }).catch(() => false)) {
+        pass("browser-parent-invite-modal");
+        await page.keyboard.press("Escape");
+      } else fail("browser-parent-invite-modal");
+    } else fail("browser-parent-invite-visible");
+
+    for (const gateId of ["learning", "games", "club"]) {
+      const gate = page.locator(`[data-testid="student-world-gate-${gateId}"]`).locator("visible=true").first();
+      if (await gate.isVisible().catch(() => false)) pass(`browser-gate-visible-${gateId}`);
+      else fail(`browser-gate-visible-${gateId}`);
+    }
+
     const lp = await page.evaluate(async () => {
       const r = await fetch("/api/student/learning-profile", { credentials: "same-origin" });
       return { status: r.status, json: await r.json() };
@@ -134,17 +190,46 @@ async function main() {
     if (lp.status === 403 && lp.json?.code === "guest_not_eligible") pass("browser-learning-profile-blocked");
     else fail("browser-learning-profile-blocked", `HTTP ${lp.status}`);
 
-    for (const tileId of ["stats", "progress", "missions", "classroom", "worksheets", "recommendations"]) {
-      const tile = page.getByTestId(`student-home-tile-${tileId}`);
-      const disabled = await tile.isDisabled().catch(() => false);
-      const text = await tile.textContent().catch(() => "");
-      if (disabled && text.includes("🔒")) pass(`browser-tile-locked-${tileId}`);
-      else fail(`browser-tile-locked-${tileId}`, `disabled=${disabled}`);
+    const lockedPanels = ["stats", "progress", "missions", "classroom", "worksheets", "recommendations"];
+    for (const panelId of lockedPanels) {
+      await page.getByTestId(`student-world-dock-${panelId}`).click();
+      const toastVisible = await page
+        .getByTestId("student-world-home-lock-toast")
+        .isVisible({ timeout: 3000 })
+        .catch(() => false);
+      const modalVisible = await page.getByTestId("student-home-modal").isVisible().catch(() => false);
+      if (toastVisible && !modalVisible) pass(`browser-dock-locked-${panelId}`);
+      else fail(`browser-dock-locked-${panelId}`, `toast=${toastVisible} modal=${modalVisible}`);
+      await page.waitForTimeout(2300);
     }
 
-    const subjectsTile = page.getByTestId("student-home-tile-subjects");
-    if (await subjectsTile.isEnabled().catch(() => false)) pass("browser-tile-subjects-open");
-    else fail("browser-tile-subjects-open");
+    await page.getByTestId("student-world-dock-subjects").click();
+    await page.getByTestId("student-home-modal").waitFor({ state: "visible", timeout: 10_000 });
+    const subjectsPanel = await page.getByTestId("student-home-modal").getAttribute("data-panel");
+    if (subjectsPanel === "subjects") pass("browser-dock-open-subjects");
+    else fail("browser-dock-open-subjects", `panel=${subjectsPanel}`);
+    await page.getByRole("button", { name: "סגור" }).click();
+    await page.getByTestId("student-home-modal").waitFor({ state: "hidden", timeout: 5000 }).catch(() => {});
+
+    await page.getByTestId("student-world-dock-badges").click();
+    await page.getByTestId("student-home-modal").waitFor({ state: "visible", timeout: 10_000 });
+    const badgesPanel = await page.getByTestId("student-home-modal").getAttribute("data-panel");
+    if (badgesPanel === "badges") pass("browser-dock-open-badges");
+    else fail("browser-dock-open-badges", `panel=${badgesPanel}`);
+    await page.getByRole("button", { name: "סגור" }).click();
+
+    const surpriseBtn = page.getByTestId("student-world-dock-surprise-box");
+    if (await surpriseBtn.isVisible().catch(() => false)) {
+      pass("browser-surprise-box-visible");
+      const ready = await surpriseBtn.getAttribute("data-surprise-ready");
+      if (ready === "true" || ready === "false") pass("browser-surprise-box-state", ready);
+      else fail("browser-surprise-box-state", `ready=${ready}`);
+    } else {
+      skip("browser-surprise-box-visible", "rewards disabled");
+    }
+
+    if (consoleErrors.length === 0) pass("browser-guest-home-no-js-errors");
+    else fail("browser-guest-home-no-js-errors", consoleErrors.join(" | ").slice(0, 300));
   } catch (e) {
     fail("browser-guest-home", String(e.message || e));
   }
@@ -232,6 +317,7 @@ async function main() {
   // Admin UI
   console.log("\n4. Admin /admin/guest");
   const adminCtx = await browser.newContext({ baseURL: BASE, locale: "he-IL" });
+  await primeConsentStorage(adminCtx);
   const adminPage = await adminCtx.newPage();
   try {
     if (!adminPassword) throw new Error("no admin password");
@@ -268,6 +354,7 @@ async function main() {
   // Parent link flow — fresh guest via API (do not reuse browser guest)
   console.log("\n5. Parent link UI");
   const parentCtx = await browser.newContext({ baseURL: BASE, locale: "he-IL" });
+  await primeConsentStorage(parentCtx);
   const parentPage = await parentCtx.newPage();
   let linkLeo = "";
   try {
@@ -288,6 +375,7 @@ async function main() {
     );
 
     await parentPage.goto("/parent/login", { waitUntil: "domcontentloaded", timeout: 90_000 });
+    await dismissCookieConsent(parentPage);
     await parentPage.getByTestId("parent-login-identifier").waitFor({ state: "visible", timeout: 30_000 });
     await parentPage.waitForTimeout(1500);
     await parentPage.getByTestId("parent-login-identifier").fill("admin@admin.com");
@@ -300,7 +388,7 @@ async function main() {
       throw new Error(`parent login failed at ${parentPage.url()} — ${errSnippet}`);
     }
     await parentPage.getByRole("button", { name: "הוספת ילד" }).click();
-    const addModal = parentPage.getByRole("dialog");
+    const addModal = parentPage.getByRole("dialog", { name: "הוספת ילד" });
     await addModal.waitFor({ state: "visible", timeout: 15_000 });
     const childName = `QA-Browser-${Date.now().toString(36).slice(-4)}`;
     const childUser = `qa${Date.now().toString(36).slice(-6)}`;
@@ -326,6 +414,7 @@ async function main() {
 
     await parentPage.context().clearCookies();
     const childCtx = await browser.newContext({ baseURL: BASE, locale: "he-IL" });
+    await primeConsentStorage(childCtx);
     const childPage = await childCtx.newPage();
     await childPage.goto("/student/login", { waitUntil: "domcontentloaded", timeout: 90_000 });
     await childPage.getByText("בודקים חיבור...").waitFor({ state: "detached", timeout: 120_000 }).catch(() => {});
@@ -333,12 +422,25 @@ async function main() {
     await childPage.getByTestId("student-login-pin").fill(childPin);
     await childPage.getByTestId("student-login-submit").click();
     await childPage.waitForURL(/\/student\/home/, { timeout: 60_000 });
+    await childPage.getByTestId("student-world-title-screen").waitFor({ state: "visible", timeout: 60_000 });
     const childMe = await childPage.evaluate(async () => {
       const r = await fetch("/api/student/me", { credentials: "same-origin" });
       return r.json();
     });
     if (childMe?.ok && !childMe?.isGuest) pass("browser-child-login-after-link", childUser);
     else fail("browser-child-login-after-link");
+
+    const registeredPanels = ["stats", "missions", "classroom", "badges"];
+    for (const panelId of registeredPanels) {
+      await childPage.getByTestId(`student-world-dock-${panelId}`).click();
+      await childPage.getByTestId("student-home-modal").waitFor({ state: "visible", timeout: 15_000 });
+      const panelAttr = await childPage.getByTestId("student-home-modal").getAttribute("data-panel");
+      if (panelAttr === panelId) pass(`browser-child-dock-open-${panelId}`);
+      else fail(`browser-child-dock-open-${panelId}`, `panel=${panelAttr}`);
+      await childPage.getByRole("button", { name: "סגור" }).click();
+      await childPage.getByTestId("student-home-modal").waitFor({ state: "hidden", timeout: 5000 }).catch(() => {});
+    }
+
     await childCtx.close();
   } catch (e) {
     fail("browser-parent-link", String(e.message || e));

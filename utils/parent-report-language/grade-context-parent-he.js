@@ -30,7 +30,7 @@ export function gradeContextExplanationHe(args) {
   if (rel === "lower") {
     if (isStrength) return "יסודות קודמים נראים יציבים.";
     if (needsSupport) return "כדאי לחזור על יסודות מכיתות קודמות.";
-    return "התרגול בוצע מתחת לכיתה הרשומה — כדאי לקרוא את התוצאה כתמונת בסיס.";
+    return "התרגול בוצע מתחת לכיתה הרשומה - כדאי לקרוא את התוצאה כתמונת בסיס.";
   }
 
   return "";

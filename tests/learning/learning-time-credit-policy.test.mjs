@@ -22,7 +22,7 @@ import {
   resolveTierCapMs,
 } from "../../utils/learning-time-credit/index.js";
 
-test("central cap constants — 10 minutes", () => {
+test("central cap constants - 10 minutes", () => {
   assert.equal(LEARNING_UNIT_CREDIT_CAP_MS, 600_000);
   assert.equal(LEARNING_UNIT_CREDIT_CAP_SECONDS, 600);
   assert.equal(LEARNING_UNIT_CREDIT_CAP_MINUTES, 10);
@@ -136,7 +136,7 @@ test("14. monthly minutes aggregation helper rounds consistently", () => {
   assert.equal(creditedMsToRoundedMinutes(125_000), 2.08);
 });
 
-test("session orphan — credits open unit without double-counting answers", () => {
+test("session orphan - credits open unit without double-counting answers", () => {
   assert.equal(resolveSessionOrphanCreditedMs(120_000, 300_000), 180_000);
   assert.equal(resolveSessionOrphanCreditedMs(600_000, 900_000), 300_000);
 });

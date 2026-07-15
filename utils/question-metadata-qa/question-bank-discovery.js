@@ -16,7 +16,7 @@ export const STATIC_QUESTION_BANK_MODULES = [
   { path: "data/geography-questions/g4.js", subjectId: "moledet-geography" },
   { path: "data/geography-questions/g5.js", subjectId: "moledet-geography" },
   { path: "data/geography-questions/g6.js", subjectId: "moledet-geography" },
-  { path: "data/hebrew-questions/g1.js", subjectId: "hebrew-archive", note: "archive parallel bank — see file header" },
+  { path: "data/hebrew-questions/g1.js", subjectId: "hebrew-archive", note: "archive parallel bank - see file header" },
   { path: "data/hebrew-questions/g2.js", subjectId: "hebrew-archive" },
   { path: "data/hebrew-questions/g3.js", subjectId: "hebrew-archive" },
   { path: "data/hebrew-questions/g4.js", subjectId: "hebrew-archive" },
@@ -29,7 +29,7 @@ export const GEOMETRY_CONCEPTUAL_BANK = {
   path: "utils/geometry-conceptual-bank.js",
   subjectId: "geometry",
   exportName: "GEOMETRY_CONCEPTUAL_ITEMS",
-  note: "Template rows for conceptual MCQ — scanned as static metadata carriers",
+  note: "Template rows for conceptual MCQ - scanned as static metadata carriers",
 };
 
 /**
@@ -40,17 +40,17 @@ export const PROCEDURAL_QUESTION_SOURCES = [
   {
     path: "utils/math-question-generator.js",
     subjectId: "math",
-    note: "Procedural math items — metadata assigned at generation time",
+    note: "Procedural math items - metadata assigned at generation time",
   },
   {
     path: "utils/geometry-question-generator.js",
     subjectId: "geometry",
-    note: "Procedural geometry — use geometry-conceptual-bank + generator params",
+    note: "Procedural geometry - use geometry-conceptual-bank + generator params",
   },
   {
     path: "utils/hebrew-question-generator.js",
     subjectId: "hebrew",
-    note: "Live Hebrew MCQ merge (legacy + rich pool) — large module",
+    note: "Live Hebrew MCQ merge (legacy + rich pool) - large module",
   },
   {
     path: "utils/moledet-geography-question-generator.js",

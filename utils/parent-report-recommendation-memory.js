@@ -127,7 +127,7 @@ export function buildRecommendationMemoryPhase12(ctx) {
     PRIOR_RECOMMENDATION_SIGNATURE_LABEL_HE[priorRecommendationSignature] ||
     PRIOR_RECOMMENDATION_SIGNATURE_LABEL_HE.unknown;
 
-  const recommendationMemoryNarrativeHe = `ב«${displayName}»: ${stLab} · ${depthLab} · ${priorSigLab} — ${carryLab}.`;
+  const recommendationMemoryNarrativeHe = `ב«${displayName}»: ${stLab} · ${depthLab} · ${priorSigLab} - ${carryLab}.`;
 
   const recommendationMemory = {
     version: 1,

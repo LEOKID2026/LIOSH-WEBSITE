@@ -30,7 +30,7 @@ export function buildProbeRecommendationsV1(ctx = {}) {
   const t = String(ctx.thinData || "");
   if (t === "true" || ctx.volumeHint === "low") {
     out.push({
-      probeReason: "Thin practice window—need more observations before stable interpretation.",
+      probeReason: "Thin practice window-need more observations before stable interpretation.",
       targetSubjectId: ctx.targetSubjectId || null,
       targetSkillId: null,
       targetSubskillId: null,
@@ -75,7 +75,7 @@ export function buildProbeRecommendationsV1(ctx = {}) {
 
   if (ctx.strongMasterySignal) {
     out.push({
-      probeReason: "Strong observed mastery with adequate volume—optional challenge probe to confirm transfer.",
+      probeReason: "Strong observed mastery with adequate volume-optional challenge probe to confirm transfer.",
       targetSubjectId: ctx.strongMasterySubjectId || ctx.targetSubjectId || null,
       targetSkillId: ctx.strongMasterySkillId || ctx.targetSkillId || null,
       targetSubskillId: null,
@@ -90,7 +90,7 @@ export function buildProbeRecommendationsV1(ctx = {}) {
 
   if (out.length === 0) {
     out.push({
-      probeReason: "Default maintenance probe—confirm stability.",
+      probeReason: "Default maintenance probe-confirm stability.",
       targetSubjectId: ctx.targetSubjectId || null,
       targetSkillId: ctx.targetSkillId || null,
       targetSubskillId: null,

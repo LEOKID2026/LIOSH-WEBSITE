@@ -16,7 +16,7 @@ function subjectArticle(slug, title, emoji, topics, masterPath) {
     slug,
     section: S,
     title: `מדריך ${title}`,
-    summary: `תרגול ב${title} לכיתות א׳–ו׳ — מה לומדים ואיך מתרגלים.`,
+    summary: `תרגול ב${title} לכיתות א׳–ו׳ - מה לומדים ואיך מתרגלים.`,
     keywords: [title, "מקצוע", "תרגול"],
     toc: [
       { id: "who", title: "למי מתאים?" },
@@ -35,7 +35,7 @@ function subjectArticle(slug, title, emoji, topics, masterPath) {
       screenshotBlock(S, slug, "question", `מסך תרגול ב${title}`),
       screenshotBlock(S, slug, "explanation", `הסבר לשאלה ב${title}`),
       heading(2, "tips", "טיפים"),
-      callout("tip", "תרגלו בקצב קבוע — קצת כל יום עדיף על הרבה ביום אחד."),
+      callout("tip", "תרגלו בקצב קבוע - קצת כל יום עדיף על הרבה ביום אחד."),
       relatedLinks([
         { href: masterPath, label: `מעבר לתרגול ${title}` },
         { href: "/learning", label: "אזור לימודים" },
@@ -46,7 +46,7 @@ function subjectArticle(slug, title, emoji, topics, masterPath) {
 
 export const math = subjectArticle(
   "math",
-  "חשבון",
+  "מתמטיקה",
   "🧮",
   ["חיבור, חיסור, כפל וחילוק", "שברים ועשרוניים (בכיתות הבכירות)", "בעיות מילוליות"],
   "/learning/math-master"
@@ -86,9 +86,9 @@ export const hebrew = subjectArticle(
 
 export const moledetGeography = subjectArticle(
   "moledet-geography",
-  "מולדת וגיאוגרפיה",
+  "מולדת וגאוגרפיה",
   "🗺️",
-  ["מולדת ואזרחות", "גיאוגרפיה של ישראל והעולם", "חברה וסביבה"],
+  ["מולדת ואזרחות", "גאוגרפיה של ישראל והעולם", "חברה וסביבה"],
   "/learning/moledet-geography-master"
 );
 

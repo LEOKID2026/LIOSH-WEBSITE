@@ -83,7 +83,7 @@ export default function ParentTeacherCodeReport({
       setIsSchoolLinked(schoolLinked);
       setMustChangePin(schoolLinked && Boolean(me.body.data.mustChangePin));
       setPinGateDone(!schoolLinked || !me.body.data.mustChangePin);
-      setLoadingHint("הדוח נטען — זה עשוי לקחת כמה שניות.");
+      setLoadingHint("הדוח נטען - זה עשוי לקחת כמה שניות.");
 
       if (schoolLinked) {
         const inboxRes = await fetch("/api/guardian/school-messages", {

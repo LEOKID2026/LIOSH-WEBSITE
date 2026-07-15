@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("Phase D.2B — parent policy acceptance", () => {
+test.describe("Phase D.2B - parent policy acceptance", () => {
   test("A: wrong credentials show Hebrew error, not English", async ({ page }) => {
     await page.goto("/parent/login");
     await page.getByTestId("parent-login-identifier").fill("wrong-parent@example.com");
@@ -19,7 +19,7 @@ test.describe("Phase D.2B — parent policy acceptance", () => {
     await expect(page.getByTestId("parent-login-identifier")).toBeVisible({ timeout: 10_000 });
     await expect(page.getByTestId("parent-policy-acceptance-checkbox")).toHaveCount(0);
     await expect(page.getByTestId("parent-signup-submit")).toBeEnabled();
-    await expect(page.getByText("בהמשך השימוש ב־Leo Kids")).toBeVisible();
+    await expect(page.getByText("בהמשך השימוש ב-Leo Kids")).toBeVisible();
   });
 
   test("E: Google sign-in button appears on parent login only", async ({ page }) => {
@@ -33,7 +33,7 @@ test.describe("Phase D.2B — parent policy acceptance", () => {
     await expect(page.getByTestId("parent-google-sign-in")).toHaveCount(0);
   });
 
-  test("F: single login action row — no duplicate login tabs", async ({ page }) => {
+  test("F: single login action row - no duplicate login tabs", async ({ page }) => {
     await page.goto("/parent/login");
     await expect(page.getByTestId("parent-google-sign-in")).toBeVisible();
     await expect(page.getByTestId("parent-login-submit")).toHaveCount(1);
@@ -42,7 +42,7 @@ test.describe("Phase D.2B — parent policy acceptance", () => {
   });
 });
 
-test.describe("Phase D.2B — parent policy acceptance (authenticated)", () => {
+test.describe("Phase D.2B - parent policy acceptance (authenticated)", () => {
   const email = process.env.E2E_PARENT_POLICY_EMAIL || process.env.E2E_PARENT_EMAIL || "";
   const password = process.env.E2E_PARENT_POLICY_PASSWORD || process.env.E2E_PARENT_PASSWORD || "";
 

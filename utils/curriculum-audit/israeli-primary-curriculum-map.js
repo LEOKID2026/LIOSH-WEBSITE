@@ -39,13 +39,13 @@ export const CURRICULUM_SOURCE_REF_PRESETS = {
       title: "Internal conservative strand mapping (LIOSH audit layer)",
       url: "",
       checkedAt: "2026-05-09",
-      note: "Repo-maintained interpretation — requires pedagogy sign-off before any release gate.",
+      note: "Repo-maintained interpretation - requires pedagogy sign-off before any release gate.",
     },
   ],
   rama_general: [
     {
       sourceType: "rama",
-      title: "אופקים חדשים — עקרונות כלליים (משרד החינוך / רשויות)",
+      title: "אופקים חדשים - עקרונות כלליים (משרד החינוך / רשויות)",
       url: "https://www.gov.il/he/departments/education",
       checkedAt: "2026-05-09",
       note: "General framework reference only; does not map individual question stems to outcomes.",
@@ -54,24 +54,24 @@ export const CURRICULUM_SOURCE_REF_PRESETS = {
   moe_portal: [
     {
       sourceType: "official_moe",
-      title: "משרד החינוך — דף ראשי והנחיות כלליות",
+      title: "משרד החינוך - דף ראשי והנחיות כלליות",
       url: "https://www.gov.il/he/departments/education",
       checkedAt: "2026-05-09",
-      note: "Official portal — use for policy context; not a line-by-line syllabus match.",
+      note: "Official portal - use for policy context; not a line-by-line syllabus match.",
     },
   ],
   /** Broad framing only — not item-level English outcomes. */
   english_exposure_framework: [
     {
       sourceType: "official_moe",
-      title: "משרד החינוך — מסגרת כללית (אנגלית)",
+      title: "משרד החינוך - מסגרת כללית (אנגלית)",
       url: "https://www.gov.il/he/departments/education",
       checkedAt: "2026-05-09",
-      note: "General policy context; early grades often emphasize exposure/listening — verify formal literacy vs exposure per school.",
+      note: "General policy context; early grades often emphasize exposure/listening - verify formal literacy vs exposure per school.",
     },
     {
       sourceType: "rama",
-      title: "אופקים חדשים — עקרונות כלליים (משרד החינוך / רשויות)",
+      title: "אופקים חדשים - עקרונות כלליים (משרד החינוך / רשויות)",
       url: "https://www.gov.il/he/departments/education",
       checkedAt: "2026-05-09",
       note: "General framework reference only; does not map individual question stems to outcomes.",
@@ -84,14 +84,14 @@ export const CURRICULUM_SOURCE_REF_PRESETS = {
       title: "Internal strand: plane shapes recognition (audit)",
       url: "",
       checkedAt: "2026-05-09",
-      note: "Repo interpretation of typical early shape recognition — requires pedagogy validation.",
+      note: "Repo interpretation of typical early shape recognition - requires pedagogy validation.",
     },
     {
       sourceType: "official_moe",
-      title: "משרד החינוך — דף ראשי והנחיות כלליות",
+      title: "משרד החינוך - דף ראשי והנחיות כלליות",
       url: "https://www.gov.il/he/departments/education",
       checkedAt: "2026-05-09",
-      note: "Official portal — use for policy context; not a line-by-line syllabus match.",
+      note: "Official portal - use for policy context; not a line-by-line syllabus match.",
     },
   ],
 };
@@ -162,7 +162,7 @@ function mathGrade(g) {
     allowedTopics: [],
     enrichmentTopics: [],
     notExpectedYet: [],
-    sourceNotes: `כיתה ${G_HE[g]} — מתמטיקה: מיפוי לפי מיתרים (מספרים, פעולות, מילולי, שברים וכו׳). יש לאמת מול תוכנית האח״ח.`,
+    sourceNotes: `כיתה ${G_HE[g]} - מתמטיקה: מיפוי לפי מיתרים (מספרים, פעולות, מילולי, שברים וכו׳). יש לאמת מול תוכנית האח״ח.`,
     confidence: "medium",
   };
 
@@ -264,7 +264,7 @@ function geometryGrade(g) {
     allowedTopics: [],
     enrichmentTopics: [],
     notExpectedYet: [],
-    sourceNotes: `כיתה ${G_HE[g]} — גאומטריה: נושאים מופרדים (צורות, זוויות, שטח...).`,
+    sourceNotes: `כיתה ${G_HE[g]} - גאומטריה: נושאים מופרדים (צורות, זוויות, שטח...).`,
     confidence: "medium",
   };
 
@@ -314,7 +314,7 @@ function hebrewGrade(g) {
     allowedTopics: [],
     enrichmentTopics: [],
     notExpectedYet: [],
-    sourceNotes: `כיתה ${G_HE[g]} — עברית לפי מיומנויות יסוד.`,
+    sourceNotes: `כיתה ${G_HE[g]} - עברית לפי מיומנויות יסוד.`,
     confidence: "medium",
   };
 
@@ -369,7 +369,7 @@ function englishGrade(g) {
     allowedTopics: [],
     enrichmentTopics: [],
     notExpectedYet: [],
-    sourceNotes: `כיתה ${G_HE[g]} — אנגלית: מופרד חשיפה / אוצר מילים / דקדוק / משפטים. גלי גיל—לא להניח ליבה זהה.`,
+    sourceNotes: `כיתה ${G_HE[g]} - אנגלית: מופרד חשיפה / אוצר מילים / דקדוק / משפטים. גלי גיל-לא להניח ליבה זהה.`,
     confidence: "medium",
   };
 
@@ -391,9 +391,9 @@ function englishGrade(g) {
 
 // ---------- Science ----------
 function scienceGrade(g) {
-  const LIFE = td("science.life_science_body", "מדעי החיים — גוף האדם", "core");
-  const AN = td("science.life_science_animals", "מדעי החיים — בעלי חיים", "core");
-  const PL = td("science.life_science_plants", "מדעי החיים — צמחים", "core");
+  const LIFE = td("science.life_science_body", "מדעי החיים - גוף האדם", "core");
+  const AN = td("science.life_science_animals", "מדעי החיים - בעלי חיים", "core");
+  const PL = td("science.life_science_plants", "מדעי החיים - צמחים", "core");
   const ECO = td("science.life_science_ecosystems", "מערכות אקולוגיות", "allowed");
   const MAT = td("science.materials_matter", "חומרים וחומר", "core");
   const EN = td("science.energy", "אנרגיה", "allowed");
@@ -407,7 +407,7 @@ function scienceGrade(g) {
     allowedTopics: [],
     enrichmentTopics: [],
     notExpectedYet: [],
-    sourceNotes: `כיתה ${G_HE[g]} — מדעים לפי תחומים עיקריים.`,
+    sourceNotes: `כיתה ${G_HE[g]} - מדעים לפי תחומים עיקריים.`,
     confidence: "medium",
   };
 
@@ -440,7 +440,7 @@ function geographyGrade(g) {
     allowedTopics: [BANK],
     enrichmentTopics: [],
     notExpectedYet: [],
-    sourceNotes: `כיתה ${G_HE[g]} — מולדת/גיאוגרפיה: המיפוי השלבי נשאר ברמת אמון נמוכה עד סימון פדגוגי ייעודי.`,
+    sourceNotes: `כיתה ${G_HE[g]} - מולדת/גיאוגרפיה: המיפוי השלבי נשאר ברמת אמון נמוכה עד סימון פדגוגי ייעודי.`,
     confidence: "low",
   };
 }
@@ -467,7 +467,7 @@ export const ISRAELI_PRIMARY_CURRICULUM_MAP = {
   geometry: {
     ...buildSubjectGrades(geometryGrade),
     repoHints: {
-      note: "Separated geometry strands — do not collapse to one topic.",
+      note: "Separated geometry strands - do not collapse to one topic.",
     },
   },
   hebrew: {
@@ -487,7 +487,7 @@ export const ISRAELI_PRIMARY_CURRICULUM_MAP = {
   "moledet-geography": {
     ...buildSubjectGrades(geographyGrade),
     repoHints: {
-      note: "Inventory retained; curriculum placement deferred — confidence low.",
+      note: "Inventory retained; curriculum placement deferred - confidence low.",
     },
   },
 };
@@ -495,7 +495,7 @@ export const ISRAELI_PRIMARY_CURRICULUM_MAP = {
 export const CURRICULUM_MAP_META = {
   version: 3,
   phase: 3,
-  scope: "Israel elementary (grades 1–6) — conservative structured mapping + advisory source anchors",
+  scope: "Israel elementary (grades 1–6) - conservative structured mapping + advisory source anchors",
   defaultConfidence: "medium",
   disclaimer:
     "This map does not encode an official Ministry of Education syllabus line-by-line. " +

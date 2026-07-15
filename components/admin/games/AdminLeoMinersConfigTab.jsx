@@ -244,9 +244,9 @@ export default function AdminLeoMinersConfigTab({ accessToken }) {
     <div className="space-y-6 text-right" dir="rtl">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-lg font-bold text-white">Leo Miners — הגדרות משחק</h2>
+          <h2 className="text-lg font-bold text-white">Leo Miners - הגדרות משחק</h2>
           <p className="text-sm text-white/60 mt-1">
-            שינוי איזון/פרסים/הפעלה — ללא migration נוסף אחרי SQL 095.
+            שינוי איזון/פרסים/הפעלה - ללא migration נוסף אחרי SQL 095.
           </p>
         </div>
         <Link
@@ -269,7 +269,7 @@ export default function AdminLeoMinersConfigTab({ accessToken }) {
         {!dbReady ? (
           <p className="text-sm text-rose-200">
             {code === "miners_db_not_ready"
-              ? "טבלאות Leo Miners עדיין לא קיימות — יש להריץ migration 095 לפני שמירה."
+              ? "טבלאות Leo Miners עדיין לא קיימות - יש להריץ migration 095 לפני שמירה."
               : "מסד הנתונים לא מוכן."}
           </p>
         ) : null}
@@ -287,13 +287,13 @@ export default function AdminLeoMinersConfigTab({ accessToken }) {
           disabled={formDisabled}
         />
         <ToggleRow
-          label="קטלוג site_game_catalog — leo-miners"
+          label="קטלוג site_game_catalog - leo-miners"
           checked={catalogEnabled}
           onChange={setCatalogEnabled}
           disabled={formDisabled}
         />
         <ToggleRow
-          label="reward_economy_solo_game_rules — leo-miners"
+          label="reward_economy_solo_game_rules - leo-miners"
           checked={soloRuleActive}
           onChange={setSoloRuleActive}
           disabled={formDisabled}
@@ -348,7 +348,7 @@ export default function AdminLeoMinersConfigTab({ accessToken }) {
       <section className="rounded-xl border border-white/10 bg-white/5 p-4 space-y-3">
         <h3 className="font-semibold text-amber-200">softcut / stage_blocks</h3>
         <p className="text-sm text-white/60">
-          נשמרים ב-settings_json ונקראים בשרת. לעריכה מתקדמת — JSON מלא (reset משחזר ברירות מחדל).
+          נשמרים ב-settings_json ונקראים בשרת. לעריכה מתקדמת - JSON מלא (reset משחזר ברירות מחדל).
         </p>
         {mergedPreview ? (
           <pre className="text-xs text-white/70 bg-black/40 rounded-lg p-3 overflow-x-auto text-left dir-ltr">

@@ -112,11 +112,11 @@ function SnakesHowToModal({ open, onClose }) {
         </div>
         <ul className="list-disc space-y-2 pr-5 text-sm leading-relaxed text-zinc-200">
           <li>כל שחקן בתורו מזריק קוביה ומתקדם על הלוח לפי המספר.</li>
-          <li>נחש מוריד, סולם מעלה — לפי המפה הקלאסית.</li>
+          <li>נחש מוריד, סולם מעלה - לפי המפה הקלאסית.</li>
           <li>מי שמגיע בדיוק ל-100 מנצח.</li>
           <li>זריקה שחורגת מ-100 לא מזיזה אותך (נשאר באותו משבצת).</li>
           <li>
-            שש בקובייה נותן תור נוסף — עד שני ששים ברצף. בשש השלישי ברצף אין תזוזה והתור עובר; אם אחרי שני ששים יוצא מספר אחר — משחקים אותו והתור עובר.
+            שש בקובייה נותן תור נוסף - עד שני ששים ברצף. בשש השלישי ברצף אין תזוזה והתור עובר; אם אחרי שני ששים יוצא מספר אחר - משחקים אותו והתור עובר.
           </li>
         </ul>
       </div>
@@ -266,7 +266,7 @@ export default function SnakesLaddersScreen({ roomId }) {
                   המשחק יתחיל בעוד {waitSecondsLeft} {waitSecondsLeft === 1 ? "שנייה" : "שניות"}
                 </p>
                 <p className="mt-2 text-sm text-amber-200/90">
-                  אם החדר יתמלא לפני כן — המשחק יתחיל מיד
+                  אם החדר יתמלא לפני כן - המשחק יתחיל מיד
                 </p>
               </>
             ) : (
@@ -279,7 +279,7 @@ export default function SnakesLaddersScreen({ roomId }) {
         ) : null}
 
         {showSessionInitError ? (
-          <p className="mt-4 text-center text-sm text-rose-200">לא ניתן לטעון את מצב המשחק — נסה לרענן</p>
+          <p className="mt-4 text-center text-sm text-rose-200">לא ניתן לטעון את מצב המשחק - נסה לרענן</p>
         ) : null}
 
         {showBoardLoading ? (

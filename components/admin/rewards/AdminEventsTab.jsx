@@ -162,18 +162,18 @@ export default function AdminEventsTab({ accessToken }) {
             <tbody>
               {cards.map((card) => (
                 <tr key={card.id} className="border-b border-white/5">
-                  <td className="py-2 px-2">{card.name_he || "—"}</td>
+                  <td className="py-2 px-2">{card.name_he || "-"}</td>
                   <td className="py-2 px-2 whitespace-nowrap">
-                    {card.reward_card_series?.name_he || "—"}
+                    {card.reward_card_series?.name_he || "-"}
                   </td>
                   <td className="py-2 px-2 whitespace-nowrap text-amber-200/90">
                     {eventCardDisplayStatusHe(card)}
                   </td>
                   <td className="py-2 px-2 whitespace-nowrap">
-                    {card.starts_at ? card.starts_at.slice(0, 16).replace("T", " ") : "—"}
+                    {card.starts_at ? card.starts_at.slice(0, 16).replace("T", " ") : "-"}
                   </td>
                   <td className="py-2 px-2 whitespace-nowrap">
-                    {card.ends_at ? card.ends_at.slice(0, 16).replace("T", " ") : "—"}
+                    {card.ends_at ? card.ends_at.slice(0, 16).replace("T", " ") : "-"}
                   </td>
                   <td className="py-2 px-2">{card.is_active !== false ? "כן" : "לא"}</td>
                   <td className="py-2 px-2">

@@ -5,7 +5,7 @@ export default function LeoSupermarketPrototypePage() {
   return (
     <>
       <Head>
-        <title>המכולת של ליאו — אבטיפוס</title>
+        <title>המכולת של ליאו - אבטיפוס</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <LeoSupermarketPrototype />

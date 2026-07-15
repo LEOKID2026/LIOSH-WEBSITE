@@ -77,7 +77,7 @@ export function zeroEvidenceSubjectLineHe(subjectLabel) {
  */
 export function thinEvidenceSubjectLineHe(subjectLabel, q) {
   const n = Math.max(0, Math.floor(Number(q) || 0));
-  return `${subjectLabel}: ${n} שאלות בתקופה שנבחרה — עדיין מעט מידע; כדאי להמשיך לתרגל ולבדוק שוב`;
+  return `${subjectLabel}: ${n} שאלות בתקופה שנבחרה - עדיין מעט מידע; כדאי להמשיך לתרגל ולבדוק שוב`;
 }
 
 /**
@@ -226,7 +226,7 @@ export function lineMentionsSubjectLabelHe(text, label) {
   if (!t || !lab) return false;
   return (
     t.startsWith(`${lab}:`) ||
-    t.startsWith(`${lab} —`) ||
+    t.startsWith(`${lab} -`) ||
     t.includes(`${lab}:`) ||
     t.includes(`ב${lab}`) ||
     t.includes(`${lab},`)

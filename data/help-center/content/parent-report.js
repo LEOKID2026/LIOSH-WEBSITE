@@ -16,7 +16,7 @@ export const reportOverview = baseArticle({
   slug: "report-overview",
   section: S,
   title: "סקירת דוח ההורים",
-  summary: "דוח מקוצר לעומת דוח מפורט — מתי משתמשים בכל אחד.",
+  summary: "דוח מקוצר לעומת דוח מפורט - מתי משתמשים בכל אחד.",
   keywords: ["דוח", "סקירה"],
   toc: [
     { id: "short", title: "דוח מקוצר" },
@@ -37,7 +37,7 @@ export const summaryCard = baseArticle({
   slug: "summary-card",
   section: S,
   title: "כרטיס סיכום",
-  summary: "החלק העליון של הדוח — תמונת מצב כללית.",
+  summary: "החלק העליון של הדוח - תמונת מצב כללית.",
   keywords: ["סיכום", "כרטיס"],
   toc: [{ id: "card", title: "כרטיס הסיכום" }],
   blocks: [
@@ -57,7 +57,7 @@ export const dataPresence = baseArticle({
   toc: [{ id: "presence", title: "נוכחות נתונים" }],
   blocks: [
     heading(2, "presence", "נוכחות נתונים"),
-    paragraph("אם הילד/ה תרגל מעט, הדוח יציין שאין עדיין מספיק מידע. זה תקין — המשיכו לתרגל."),
+    paragraph("אם הילד/ה תרגל מעט, הדוח יציין שאין עדיין מספיק מידע. זה תקין - המשיכו לתרגל."),
     callout("info", "ככל שיש יותר תרגול, התובנות בדוח נעשות מדויקות יותר."),
     screenshotBlock(S, "data-presence", "low-data", "הודעה על מעט נתונים בדוח"),
     videoBlock(S, "data-presence"),
@@ -89,8 +89,8 @@ export const strengthsAndImprovements = baseArticle({
   blocks: [
     heading(2, "blocks", "חלקים בדוח"),
     list([
-      "חוזקות — נושאים שבהם הביצועים טובים",
-      "לשיפור — נושאים שדורשים תרגול נוסף",
+      "חוזקות - נושאים שבהם הביצועים טובים",
+      "לשיפור - נושאים שדורשים תרגול נוסף",
     ]),
     screenshotBlock(S, "strengths-and-improvements", "strengths", "רשימת חוזקות ושיפורים"),
     videoBlock(S, "strengths-and-improvements"),
@@ -106,7 +106,7 @@ export const topicsAndBuckets = baseArticle({
   toc: [{ id: "topics", title: "טבלאות נושאים" }],
   blocks: [
     heading(2, "topics", "טבלאות נושאים"),
-    paragraph("לכל מקצוע מופיעים נושאים ספציפיים — למשל חיבור במתמטיקה או אוצר מילים באנגלית."),
+    paragraph("לכל מקצוע מופיעים נושאים ספציפיים - למשל חיבור במתמטיקה או אוצר מילים באנגלית."),
     screenshotBlock(S, "topics-and-buckets", "topics-table", "טבלת נושאים במתמטיקה"),
     videoBlock(S, "topics-and-buckets"),
   ],
@@ -171,7 +171,7 @@ export const detailedReport = baseArticle({
     heading(2, "exec", "סיכום מנהלים"),
     paragraph("פתיח כללי לדוח המפורט עם המסר המרכזי."),
     heading(2, "letter", "מכתב הורי"),
-    paragraph("לכל מקצוע יש הסבר מילולי להורים — מה הילד/ה יודע ומה כדאי לחזק."),
+    paragraph("לכל מקצוע יש הסבר מילולי להורים - מה הילד/ה יודע ומה כדאי לחזק."),
     screenshotBlock(S, "detailed-report", "letter", "מכתב הורי במקצוע אחד"),
     videoBlock(S, "detailed-report"),
   ],
@@ -186,10 +186,10 @@ export const printingAndPdf = baseArticle({
   toc: [{ id: "export", title: "ייצוא" }],
   blocks: [
     heading(2, "export", "ייצוא"),
-    paragraph("בדוח יש אפשרות לייצא לקובץ PDF או להדפיס — שימושי לפגישה עם המורה."),
+    paragraph("בדוח יש אפשרות לייצא לקובץ PDF או להדפיס - שימושי לפגישה עם המורה."),
     screenshotBlock(S, "printing-and-pdf", "pdf", "כפתור ייצוא PDF"),
     videoBlock(S, "printing-and-pdf"),
-    callout("tip", "בהדפסה — בדקו בתצוגה מקדימה שהכל נכנס לעמוד."),
+    callout("tip", "בהדפסה - בדקו בתצוגה מקדימה שהכל נכנס לעמוד."),
   ],
 });
 
@@ -197,7 +197,7 @@ export const understandingTheDisclaimer = baseArticle({
   slug: "understanding-the-disclaimer",
   section: S,
   title: "הבנת ההבהרה החשובה",
-  summary: "מה אומרת ההבהרה בתחתית הדוח — נוסח מלא.",
+  summary: "מה אומרת ההבהרה בתחתית הדוח - נוסח מלא.",
   keywords: ["הבהרה", "משפטי"],
   toc: [{ id: "disclaimer", title: "הבהרה חשובה" }],
   blocks: [

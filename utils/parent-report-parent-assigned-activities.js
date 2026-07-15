@@ -79,13 +79,13 @@ export function buildParentActivityDisplayLabelHe(p) {
 
   if (!isTechnicalParentActivityTitleHe(titleRaw)) {
     const base = titleRaw || "פעילות אישית מהורה";
-    if (topicSuffix) return `${base} — ${topicSuffix}`;
-    if (subjectGradeFallback) return `${base} — ${subjectGradeFallback}`;
+    if (topicSuffix) return `${base} - ${topicSuffix}`;
+    if (subjectGradeFallback) return `${base} - ${subjectGradeFallback}`;
     return base;
   }
 
-  if (topicSuffix) return `פעילות אישית מהורה — ${topicSuffix}`;
-  if (subjectGradeFallback) return `פעילות אישית מהורה — ${subjectGradeFallback}`;
+  if (topicSuffix) return `פעילות אישית מהורה - ${topicSuffix}`;
+  if (subjectGradeFallback) return `פעילות אישית מהורה - ${subjectGradeFallback}`;
   return "פעילות אישית מהורה";
 }
 
@@ -117,7 +117,7 @@ function normalizeAggregateParentActivityRow(raw) {
     questionCount: q,
     accuracy: Math.round(Number(raw?.accuracy) || 0),
     timeMinutes: Math.round(tm || (Number(raw?.timeMsSum) || 0) / 60000),
-    statusLabelHe: raw?.status ? formatParentReportStatusHe(raw.status) : "—",
+    statusLabelHe: raw?.status ? formatParentReportStatusHe(raw.status) : "-",
   };
 }
 

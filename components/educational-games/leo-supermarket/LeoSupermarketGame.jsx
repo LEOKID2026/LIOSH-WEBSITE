@@ -678,7 +678,7 @@ export default function LeoSupermarketGame({
           <p className={styles.introHero}>🏪🛒</p>
           <h1 className={styles.introTitle}>המכולת של ליאו</h1>
           <p className={styles.introText}>
-            עזרו לליאו המוכר — בחרו מוצר, חשבו עודף והחזירו כסף נכון ללקוח
+            עזרו לליאו המוכר - בחרו מוצר, חשבו עודף והחזירו כסף נכון ללקוח
           </p>
           <div className={styles.difficultyRow}>
             {(/** @type {DifficultyId[]} */ (["easy", "medium", "hard"])).map((id) => (
@@ -729,7 +729,7 @@ export default function LeoSupermarketGame({
             </div>
 
             <section className={styles.shelfSection}>
-              <p className={styles.shelfTitle}>🗄️ מדף המוצרים — בחרו מה שהלקוח ביקש</p>
+              <p className={styles.shelfTitle}>🗄️ מדף המוצרים - בחרו מה שהלקוח ביקש</p>
               <div className={styles.shelfGrid}>
                 {PRODUCTS.map((product) => {
                   const onRegister = selectedProductIds.includes(product.id);
@@ -788,9 +788,9 @@ export default function LeoSupermarketGame({
                     <span className={styles.zoneEmpty}>
                       {step === "change"
                         ? expectedChangeForCustomer === 0
-                          ? "אין עודף — לחצו מסור עודף"
+                          ? "אין עודף - לחצו מסור עודף"
                           : "בחרו מטבעות"
-                        : "—"}
+                        : "-"}
                     </span>
                   ) : (
                     groupedChangeDenoms.map(({ value, count, lastIndex }) => (
@@ -811,13 +811,13 @@ export default function LeoSupermarketGame({
                       <span className={styles.checkoutAmountLine}>
                         <span className={styles.checkoutAmountLabel}>סכום הקנייה:</span>
                         <span className={styles.checkoutAmountValue}>
-                          {step === "change" ? formatShekel(customer.total) : "—"}
+                          {step === "change" ? formatShekel(customer.total) : "-"}
                         </span>
                       </span>
                       <span className={styles.checkoutAmountLinePaid}>
                         <span className={styles.checkoutAmountLabel}>הלקוח שילם:</span>
                         <span className={styles.checkoutAmountValue}>
-                          {step === "change" ? formatShekel(customer.paid) : "—"}
+                          {step === "change" ? formatShekel(customer.paid) : "-"}
                         </span>
                       </span>
                     </div>
@@ -831,7 +831,7 @@ export default function LeoSupermarketGame({
             </div>
 
             <section className={styles.moneySection}>
-              <p className={styles.moneyTitle}>💰 מגירת הקופה — בחרו מטבעות לעודף</p>
+              <p className={styles.moneyTitle}>💰 מגירת הקופה - בחרו מטבעות לעודף</p>
               <div className={styles.moneyGrid}>
                 {diffConfig.denoms.map((value) => {
                   const style = DENOM_STYLES[value];

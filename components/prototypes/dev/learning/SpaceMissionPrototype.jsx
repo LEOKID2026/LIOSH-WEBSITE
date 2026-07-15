@@ -2,9 +2,9 @@ import { useCallback, useState } from "react";
 import DevPrototypeShell from "../../../solo-games/prototypes/dev/DevPrototypeShell.jsx";
 
 const BODIES = [
-  { id: "mars", name: "מאדים", emoji: "🔴", fact: "מאדים הוא הכוכב האדום — קר ואבקי." },
+  { id: "mars", name: "מאדים", emoji: "🔴", fact: "מאדים הוא הכוכב האדום - קר ואבקי." },
   { id: "saturn", name: "שבתאי", emoji: "🪐", fact: "לשבתאי יש טבעות גדולות מקרח ואבק." },
-  { id: "earth", name: "כדור הארץ", emoji: "🌍", fact: "כדור הארץ הוא הבית שלנו — יש בו מים וחיים." },
+  { id: "earth", name: "כדור הארץ", emoji: "🌍", fact: "כדור הארץ הוא הבית שלנו - יש בו מים וחיים." },
   { id: "moon", name: "הירח", emoji: "🌙", fact: "הירח מקיף את כדור הארץ ומאיר בלילה." },
   { id: "sun", name: "השמש", emoji: "☀️", fact: "השמש היא כוכב שמחמם את מערכת השמש." },
   { id: "jupiter", name: "צדק", emoji: "🟤", fact: "צדק הוא כוכב הלכת הגדול ביותר." },
@@ -82,7 +82,7 @@ export default function SpaceMissionPrototype() {
           setFeedback("");
         }, 2000);
       } else {
-        setFeedback(`לא ${body?.name} — נסו שוב לפי המשימה`);
+        setFeedback(`לא ${body?.name} - נסו שוב לפי המשימה`);
         setFact("");
         setFlash("bad");
         window.setTimeout(() => setFlash(""), 400);

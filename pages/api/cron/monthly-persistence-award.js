@@ -4,7 +4,7 @@
  * Runs daily via Vercel Cron. On the first Israel calendar day of each month,
  * awards the previous month's persistence tiers to all eligible students.
  *
- * Auth: CRON_SECRET — Vercel sends `Authorization: Bearer <CRON_SECRET>` automatically.
+ * Auth: CRON_SECRET - Vercel sends `Authorization: Bearer <CRON_SECRET>` automatically.
  *       ENABLE_MONTHLY_PERSISTENCE_CRON=true must be set.
  */
 import { getLearningSupabaseServiceRoleClient } from "../../../lib/learning-supabase/server";

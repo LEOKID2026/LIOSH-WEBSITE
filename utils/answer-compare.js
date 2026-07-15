@@ -133,7 +133,7 @@ export function normalizeAnswerExactText(value) {
   return String(value ?? "")
     .replace(/[\u201c\u201d\u05f4]/g, '"')
     .replace(/[\u2018\u2019\u05f3]/g, "'")
-    .replace(/^[\s"'`.,!?;:()[\]{}\-–—]+|[\s"'`.,!?;:()[\]{}\-–—]+$/g, "")
+    .replace(/^[\s"'`.,!?;:()[\]{}\-–-]+|[\s"'`.,!?;:()[\]{}\-–-]+$/g, "")
     .trim()
     .replace(/\s+/g, " ")
     .toLowerCase();
@@ -141,7 +141,7 @@ export function normalizeAnswerExactText(value) {
 
 const HEBREW_NIQQUD_RE = /[\u0591-\u05C7]/g;
 const SURROUNDING_PUNCT_RE =
-  /^[\s"'`׳״“”‘’.,!?;:()[\]{}\-–—]+|[\s"'`׳״“”‘’.,!?;:()[\]{}\-–—]+$/g;
+  /^[\s"'`׳״“”‘’.,!?;:()[\]{}\-–-]+|[\s"'`׳״“”‘’.,!?;:()[\]{}\-–-]+$/g;
 
 /**
  * Hebrew relaxed compare (matches hebrew-master strip + punct rules; no wording changes).
@@ -163,7 +163,7 @@ export function normalizeHebrewRelaxedAnswer(value) {
  * @param {object} p
  * @param {"exact_text"|"mcq_index"|"exact_integer"|"trim_string_equal"|"numeric_absolute_tolerance"|"numeric_scale_relative_tolerance"|"hebrew_relaxed_text"|"hebrew_niqqud_strict"} p.mode
  * @param {unknown} p.user
- * @param {unknown} [p.expected] — for exact_text: canonical correct string; for exact_integer: finite integer `expected`; `user` must be a trimmed string of ASCII digits only (full string, no `parseInt` prefix acceptance)
+ * @param {unknown} [p.expected] - for exact_text: canonical correct string; for exact_integer: finite integer `expected`; `user` must be a trimmed string of ASCII digits only (full string, no `parseInt` prefix acceptance)
  * @param {unknown[]} [p.acceptedList] — optional extra accepted strings (exact_text, hebrew_*)
  * @param {unknown} [p.expectedIndex] — for mcq_index
  * @param {number} [p.tolerance] — required for numeric_absolute_tolerance (caller supplies; e.g. 0.01). Clamped to {@link MAX_NUMERIC_ABSOLUTE_TOLERANCE} if larger.

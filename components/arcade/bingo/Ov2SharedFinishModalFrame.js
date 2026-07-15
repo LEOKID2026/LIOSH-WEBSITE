@@ -6,8 +6,8 @@ import { createPortal } from "react-dom";
 /**
  * Shared round-result shell (Four Line reference): full-screen dim + scrollable zinc card.
  * Rendered via `createPortal(..., document.body)` so it always covers the full viewport above shell chrome.
- * - `finish` — z-[100], bottom sheet on small viewports (match result).
- * - `center` — z-[90], centered (e.g. MeldMatch “finish hand”; below stake-double z-[95] if both existed).
+ * - `finish` - z-[100], bottom sheet on small viewports (match result).
+ * - `center` - z-[90], centered (e.g. MeldMatch “finish hand”; below stake-double z-[95] if both existed).
  * @param {{ children: import("react").ReactNode, titleId?: string, variant?: "finish" | "center" }} props
  */
 export default function Ov2SharedFinishModalFrame({ children, titleId, variant = "finish" }) {

@@ -461,7 +461,7 @@ export default function LeoPizzeriaGame({
           <p className={frame.introHero}>🍕🦁</p>
           <h1 className={frame.introTitle}>הפיצרייה של ליאו</h1>
           <p className={frame.introText}>
-            לקוחות נכנסים לפיצרייה — הכינו להם בדיוק את הפיצה שהם הזמינו!
+            לקוחות נכנסים לפיצרייה - הכינו להם בדיוק את הפיצה שהם הזמינו!
           </p>
           <div className={frame.difficultyRow}>
             {(/** @type {DifficultyId[]} */ (["easy", "medium", "hard"])).map((id) => (

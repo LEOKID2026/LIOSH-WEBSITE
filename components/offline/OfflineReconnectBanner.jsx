@@ -21,7 +21,7 @@ export default function OfflineReconnectBanner() {
         className="rounded-xl border border-emerald-300 bg-emerald-50 px-3 py-2 text-center text-sm text-emerald-900"
         dir="rtl"
       >
-        חזר חיבור —{" "}
+        חזר חיבור -{" "}
         <Link href="/student/login" className="font-bold text-emerald-800 underline underline-offset-2">
           חזרה לאפליקציה
         </Link>

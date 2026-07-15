@@ -733,7 +733,7 @@ export default function DevStudentSimulatorClient() {
           </p>
           <p style={{ margin: "0 0 4px", fontSize: 13, fontWeight: 600 }}>{t.appliedDateRange}</p>
           <p dir="ltr" style={{ margin: "0 0 8px", fontSize: 12, color: COLORS.muted }}>
-            {lastApplyVerification.dateRange?.startYmd || "—"} \u2192 {lastApplyVerification.dateRange?.endYmd || "—"}
+            {lastApplyVerification.dateRange?.startYmd || "-"} \u2192 {lastApplyVerification.dateRange?.endYmd || "-"}
           </p>
           <p style={{ margin: "0 0 4px", fontSize: 13, fontWeight: 600 }}>{t.appliedReadback}</p>
           <p style={{ margin: "0 0 8px", fontSize: 12, color: COLORS.muted }}>

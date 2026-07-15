@@ -495,7 +495,7 @@ export function feedbackMessageForReason(reason) {
     case "wrong":
       return "החפץ הזה לא מתאים לניסוי הזה";
     case "too_many":
-      return "בחרו פחות חפצים — רק מה שצריך לניסוי";
+      return "בחרו פחות חפצים - רק מה שצריך לניסוי";
     default:
       return "נסו שוב!";
   }

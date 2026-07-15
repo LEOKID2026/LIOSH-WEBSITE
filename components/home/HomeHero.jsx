@@ -1,16 +1,18 @@
 import PromoVideoClickablePreview from "../promo/PromoVideoClickablePreview.jsx";
 import { PARENT_PROMO_DESKTOP_SRC } from "../parent/ParentPromoVideo";
 import { HOMEPAGE_COPY, HOMEPAGE_ROUTES } from "../../data/home/homepage-copy.he";
+import { WORKSHEET_HUB_ENTRY_ENABLED } from "../../lib/worksheets/worksheet-hub-entry-enabled.js";
 import { getHomeBtnClasses, getHomeTextClasses } from "./home-theme";
 import HomeCtaLink from "./HomeCtaLink";
 
 function HeroButtons({ isBright, className = "" }) {
   const copy = HOMEPAGE_COPY.hero;
-  const parentBtn = `${getHomeBtnClasses("parents", isBright, "primary")} min-h-12 w-full px-6 text-base font-bold sm:w-auto md:min-h-[3.25rem] md:px-8 md:text-lg`;
-  const kidsBtn = `${getHomeBtnClasses("kids", isBright, "secondary")} min-h-12 w-full px-6 text-base font-bold sm:w-auto md:min-h-[3.25rem] md:px-8 md:text-lg`;
+  const parentBtn = `${getHomeBtnClasses("parents", isBright, "primary")} min-h-12 w-full whitespace-nowrap px-6 text-base font-bold sm:w-auto md:min-h-[3.25rem] md:px-8 md:text-lg`;
+  const kidsBtn = `${getHomeBtnClasses("kids", isBright, "secondary")} min-h-12 w-full whitespace-nowrap px-6 text-base font-bold sm:w-auto md:min-h-[3.25rem] md:px-8 md:text-lg`;
+  const worksheetsBtn = `${getHomeBtnClasses("teachers", isBright, "secondary")} min-h-12 w-full whitespace-nowrap px-6 text-base font-bold sm:w-auto md:min-h-[3.25rem] md:px-8 md:text-lg`;
 
   return (
-    <div className={`flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap ${className}`}>
+    <div className={`flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap lg:flex-nowrap ${className}`}>
       <HomeCtaLink
         href={HOMEPAGE_ROUTES.parentLogin}
         label={copy.parentCta}
@@ -23,6 +25,24 @@ function HeroButtons({ isBright, className = "" }) {
         className={kidsBtn}
         testId="home-hero-kids-cta"
       />
+      {WORKSHEET_HUB_ENTRY_ENABLED ? (
+        <HomeCtaLink
+          href={HOMEPAGE_ROUTES.worksheets}
+          label={copy.worksheetsCta}
+          className={worksheetsBtn}
+          testId="home-hero-worksheets-cta"
+        />
+      ) : (
+        <button
+          type="button"
+          disabled
+          aria-disabled="true"
+          data-testid="home-hero-worksheets-cta"
+          className={`${worksheetsBtn} cursor-not-allowed opacity-55`}
+        >
+          {copy.worksheetsCta}
+        </button>
+      )}
     </div>
   );
 }
@@ -43,7 +63,7 @@ export default function HomeHero({ isBright }) {
   return (
     <section data-testid="home-hero" className="w-full">
       <div className="mx-auto max-w-[1400px] px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
-        <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
+        <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.06fr)_minmax(0,0.94fr)] lg:gap-12">
           <div className="flex flex-col gap-4 text-center lg:gap-5 lg:text-right">
             <p
               className={`inline-flex items-center justify-center self-center rounded-full px-4 py-1.5 text-xs font-bold tracking-wide md:text-sm lg:self-start ${cls.heroBadge}`}

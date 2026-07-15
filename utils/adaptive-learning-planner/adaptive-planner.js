@@ -146,7 +146,7 @@ export function planAdaptiveLearning(raw) {
     o.reasonCodes.push(REASON_CODES.ENGLISH_SKILL_TAGGING_INCOMPLETE);
     o.studentSafeSummary = "English practice can continue, but skill routing should be confirmed by a teacher.";
     o.parentSafeSummary = "English tagging is incomplete in the content bank; planner will not auto-route fine-grained skills.";
-    o.internalNotes.push("English exempt / missing skillId — no confident adaptive routing.");
+    o.internalNotes.push("English exempt / missing skillId - no confident adaptive routing.");
     return o;
   }
 
@@ -177,7 +177,7 @@ export function planAdaptiveLearning(raw) {
       : "A few more practice items before changing level.";
     o.parentSafeSummary = probe
       ? "Light probe set recommended; avoid strong conclusions."
-      : "Thin evidence — collect a small batch of practice before advancing.";
+      : "Thin evidence - collect a small batch of practice before advancing.";
     return o;
   }
 
@@ -189,7 +189,7 @@ export function planAdaptiveLearning(raw) {
     o.targetDifficulty = normalizeDifficulty(raw?.currentDifficultyHint || "standard");
     o.reasonCodes.push(REASON_CODES.PROBE_GUESSING);
     o.studentSafeSummary = "Short probe to verify understanding versus guessing.";
-    o.parentSafeSummary = "Inconsistent or guess-heavy signals — use a small diagnostic set.";
+    o.parentSafeSummary = "Inconsistent or guess-heavy signals - use a small diagnostic set.";
     return o;
   }
 

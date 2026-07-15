@@ -193,7 +193,7 @@ export function computeMetadataGateRollup({ records, loadErrors, duplicates, ris
 }
 
 /**
- * Policy entrypoint matching `{ summary, issues }` naming — forwards to `computeMetadataGateRollup`.
+ * Policy entrypoint matching `{ summary, issues }` naming - forwards to `computeMetadataGateRollup`.
  * Pass scan context as **second** argument: `{ records, loadErrors, duplicates, riskTotals }`.
  * @param {object} _summary reserved for future merged rollup from summary.json
  * @param {object} scanContext

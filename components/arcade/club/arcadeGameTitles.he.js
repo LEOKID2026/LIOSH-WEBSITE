@@ -1,6 +1,6 @@
 /**
  * Shared Hebrew display titles for the 7 active arcade board games.
- * Never show a raw English gameKey (e.g. "fourline", "snakes-and-ladders") to a child —
+ * Never show a raw English gameKey (e.g. "fourline", "snakes-and-ladders") to a child -
  * always resolve through displayArcadeGameTitle() first.
  */
 

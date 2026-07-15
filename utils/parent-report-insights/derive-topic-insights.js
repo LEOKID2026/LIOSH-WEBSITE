@@ -1,9 +1,9 @@
 /**
  * Per-topic and per-subject insight derivation. Produces stable arrays:
- *   - `topicInsights[]`  — one entry per (subject, topic) with measurable data.
- *   - `subjectInsights[]` — one entry per subject with at least one answer.
- *   - `strengths[]`      — subjects + topics flagged as strengths (subject-first).
- *   - `focusAreas[]`     — subjects + topics flagged as focus areas (subject-first).
+ *   - `topicInsights[]`  - one entry per (subject, topic) with measurable data.
+ *   - `subjectInsights[]` - one entry per subject with at least one answer.
+ *   - `strengths[]`      - subjects + topics flagged as strengths (subject-first).
+ *   - `focusAreas[]`     - subjects + topics flagged as focus areas (subject-first).
  *
  * Strength threshold: total ≥ 4 questions AND accuracy ≥ 80%.
  * Focus    threshold: total ≥ 3 questions AND accuracy < 55%.

@@ -4,7 +4,7 @@ import StudentLearningAvatar from "./StudentLearningAvatar.jsx";
 export default function ArcadeLobbyHeader({
   displayName,
   coinBalance,
-  diamondBalance = "—",
+  diamondBalance = "-",
   isGuest = false,
   leoNumber = null,
   avatarEmoji = "👤",
@@ -38,7 +38,7 @@ export default function ArcadeLobbyHeader({
             <h1 className={`${title} truncate`}>{displayName || "שחקן"}</h1>
             {isGuest ? (
               <p className={guest}>
-                שחקן אורח{leoNumber ? ` · מספר ליאו ${leoNumber}` : ""} — קשר עם הורה לחוויה מלאה
+                שחקן אורח{leoNumber ? ` · מספר ליאו ${leoNumber}` : ""} - קשר עם הורה לחוויה מלאה
               </p>
             ) : null}
           </div>

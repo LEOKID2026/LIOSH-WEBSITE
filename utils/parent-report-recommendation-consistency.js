@@ -135,7 +135,7 @@ export function resolveUnitParentActionHe(unit, gradeKey, opts = {}) {
         unit,
         withGradeScopeInsight(
           normalizeParentFacingHe(
-            `ב${name} מומלץ להישאר בינתיים באותה רמה, ורק אם ההצלחה נמשכת גם בהמשך — להוסיף קושי קטן ומדוד.`
+            `ב${name} מומלץ להישאר בינתיים באותה רמה, ורק אם ההצלחה נמשכת גם בהמשך - להוסיף קושי קטן ומדוד.`
           ),
           unit
         )
@@ -146,7 +146,7 @@ export function resolveUnitParentActionHe(unit, gradeKey, opts = {}) {
         unit,
         withGradeScopeInsight(
           normalizeParentFacingHe(
-            `ב${name} מומלץ להמשיך באותה רמה, ורק אם זה ממשיך להצליח באופן יציב — להוסיף מעט קושי.`
+            `ב${name} מומלץ להמשיך באותה רמה, ורק אם זה ממשיך להצליח באופן יציב - להוסיף מעט קושי.`
           ),
           unit
         )
@@ -186,7 +186,7 @@ export function resolveUnitNextGoalHe(unit, gradeKey, opts = {}) {
     const name = topicName(unit);
     return withGradeScopeInsight(
       normalizeParentFacingHe(
-        `לשבוע הקרוב ב${name}: להמשיך באותה רמה, ואם ההצלחה נשמרת — לנסות צעד אחד מעט מאתגר יותר.`
+        `לשבוע הקרוב ב${name}: להמשיך באותה רמה, ואם ההצלחה נשמרת - לנסות צעד אחד מעט מאתגר יותר.`
       ),
       unit
     );

@@ -120,7 +120,7 @@ function letterDropTask(id, caseLabel, spec) {
   return wrapDetectiveTask("easy", "letter_drop", {
     id,
     caseLabel,
-    missionHe: `גררו אות פותחת — ${word}`,
+    missionHe: `גררו אות פותחת - ${word}`,
     emoji,
     zones: [{ id: "z1", label: "אות פותחת", icon: "🔤" }],
     pieces,
@@ -139,7 +139,7 @@ function fillGapTask(id, caseLabel, spec) {
   return wrapDetectiveTask("easy", "fill_gap", {
     id,
     caseLabel,
-    missionHe: `השלימו: ${fragment} — גררו אות`,
+    missionHe: `השלימו: ${fragment} - גררו אות`,
     zones: [{ id: "z1", label: "אות חסרה", icon: "🧩" }],
     pieces,
     solution: { z1: "p1" },
@@ -172,8 +172,8 @@ function sortLetterTask(id, caseLabel, spec) {
   return wrapDetectiveTask("easy", "sort_letter", {
     id,
     caseLabel,
-    missionHe: `גררו מילה שמתחילה ב־${letter}`,
-    zones: [{ id: "zL", label: `מתחיל ב־${letter}`, icon: "📁" }],
+    missionHe: `גררו מילה שמתחילה ב-${letter}`,
+    zones: [{ id: "zL", label: `מתחיל ב-${letter}`, icon: "📁" }],
     pieces,
     solution: { zL: correctId },
     feedbackShort: "מילה נכונה לתיקייה!",
@@ -273,7 +273,7 @@ function eventOrderTask(id, caseLabel, spec) {
   return wrapDetectiveTask("hard", "event_order", {
     id,
     caseLabel,
-    missionHe: "סדרו אירועים — גררו ללוח",
+    missionHe: "סדרו אירועים - גררו ללוח",
     passage,
     zones,
     pieces,
@@ -402,8 +402,8 @@ function buildMediumDetectiveTasks() {
 
   const fillSentences = [
     { sentence: "הילדה ___ ספר", answer: "קוראת", options: ["קוראת", "רצה", "כחול", "שולחן"] },
-    { sentence: "הגשם ירד — לקחתי ___", answer: "מטרייה", options: ["מטרייה", "גלידה", "כדור", "ספר"] },
-    { sentence: "היה קר — לבשתי ___", answer: "מעיל", options: ["מעיל", "בגד ים", "כובע קיץ", "גלידה"] },
+    { sentence: "הגשם ירד - לקחתי ___", answer: "מטרייה", options: ["מטרייה", "גלידה", "כדור", "ספר"] },
+    { sentence: "היה קר - לבשתי ___", answer: "מעיל", options: ["מעיל", "בגד ים", "כובע קיץ", "גלידה"] },
     { sentence: "אמא ___ אוכל", answer: "מבשלת", options: ["מבשלת", "רצה", "כחול", "גשם"] },
     { sentence: "הכלב ___ בגינה", answer: "רץ", options: ["רץ", "ירוק", "שולחן", "ספר"] },
     { sentence: "השמש ___ בחוץ", answer: "זורחת", options: ["זורחת", "שותה", "כחול", "ענן"] },
@@ -713,7 +713,7 @@ export function validateDetectiveTask(task, zoneFills) {
 
 /** @param {boolean} ok */
 export function detectiveFeedback(ok) {
-  return ok ? "🔖 התיק נפתר!" : "הראיה לא מתאימה — נסו שוב";
+  return ok ? "🔖 התיק נפתר!" : "הראיה לא מתאימה - נסו שוב";
 }
 
 /** @param {DifficultyId} difficulty */

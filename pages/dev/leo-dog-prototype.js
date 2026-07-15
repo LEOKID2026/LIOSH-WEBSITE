@@ -6,7 +6,7 @@ export default function LeoDogPrototypePage() {
   return (
     <>
       <Head>
-        <title>הכלב של ליאו — אבטיפוס</title>
+        <title>הכלב של ליאו - אבטיפוס</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <LeoDogGame />

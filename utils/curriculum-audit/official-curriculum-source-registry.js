@@ -38,7 +38,7 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
   {
     subject: "math",
     sourceType: "official_moe",
-    title: "מרחב פדגוגי — מתמטיקה יסודי: תוכנית לימודים חדשה (מסגרת רשמית)",
+    title: "מרחב פדגוגי - מתמטיקה יסודי: תוכנית לימודים חדשה (מסגרת רשמית)",
     url: "https://pop.education.gov.il/tchumey_daat/matmatika/yesodi/oraat-math/new-curriculum/",
     checkedAt: SOURCE_REGISTRY_CHECKED_AT,
     appliesToGrades: [1, 2, 3, 4, 5, 6],
@@ -51,14 +51,14 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     providesSkillOrDepthDetail: true,
     needsHumanPedagogyReview: true,
     actionNeeded:
-      "להצליב עם מסמכי כיתה במיידע (kita1–kita6) לפרט כיתתי — דף זה מגדיר מסגרת כללית.",
+      "להצליב עם מסמכי כיתה במיידע (kita1–kita6) לפרט כיתתי - דף זה מגדיר מסגרת כללית.",
     notes:
       "מקור רשמי ישיר דרך POP. גאומטריה במסגרת מתמטיקה כמיתר לצד מספרים וחקר נתונים.",
   },
   {
     subject: "math",
     sourceType: "official_moe",
-    title: "מרחב פדגוגי — מתמטיקה יסודי: תוכנית לימודים (דף תוכנית)",
+    title: "מרחב פדגוגי - מתמטיקה יסודי: תוכנית לימודים (דף תוכנית)",
     url: "https://pop.education.gov.il/tchumey_daat/matmatika/yesodi/oraat-math/tohnit-limudim/",
     checkedAt: SOURCE_REGISTRY_CHECKED_AT,
     appliesToGrades: [1, 2, 3, 4, 5, 6],
@@ -76,7 +76,7 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
   {
     subject: "math",
     sourceType: "official_pdf",
-    title: "משרד החינוך — מסמך PDF (מיידע): פתיח לתוכנית המתמטיקה ליסודי",
+    title: "משרד החינוך - מסמך PDF (מיידע): פתיח לתוכנית המתמטיקה ליסודי",
     url: "https://meyda.education.gov.il/files/Tochniyot_Limudim/Math/Yesodi/mavo1.pdf",
     checkedAt: SOURCE_REGISTRY_CHECKED_AT,
     appliesToGrades: [1, 2, 3, 4, 5, 6],
@@ -89,7 +89,7 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     providesSkillOrDepthDetail: true,
     needsHumanPedagogyReview: true,
     actionNeeded: "להשלים עם מסמכי כיתה ספציפיים (מזכירות פדגוגית) לכל כיתה.",
-    notes: "PDF סקירתי רשמי — משלים למסמכי kita1–kita6.",
+    notes: "PDF סקירתי רשמי - משלים למסמכי kita1–kita6.",
   },
   /* Per-grade official programme PDFs — primary anchors for grade×strand verification */
   ...[1, 2, 3, 4, 5, 6].map((g) => {
@@ -97,7 +97,7 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     return {
       subject: "math",
       sourceType: "official_pdf",
-      title: `משרד החינוך — מתמטיקה יסודי: מסמך תוכנית לכיתה ${he} (PDF, מזכירות פדגוגית)`,
+      title: `משרד החינוך - מתמטיקה יסודי: מסמך תוכנית לכיתה ${he} (PDF, מזכירות פדגוגית)`,
       url: `${MATH_ELEMENTARY_GRADE_PDF_BASE}/kita${g}.pdf`,
       checkedAt: SOURCE_REGISTRY_CHECKED_AT,
       appliesToGrades: [g],
@@ -124,13 +124,13 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
       actionNeeded:
         "לאמת פריטי מאגר מול הסעיפים הרלוונטיים בתוך המסמך לכיתה זו (מספרים, שברים, חקר נתונים, גאומטריה וכו׳).",
       notes:
-        "מסמך כיתה רשמי במאגר מיידע — עיגון ישיר לכיתה; פירוט נושאים בתוך ה PDF.",
+        "מסמך כיתה רשמי במאגר מיידע - עיגון ישיר לכיתה; פירוט נושאים בתוך ה PDF.",
     };
   }),
   {
     subject: "math",
     sourceType: "official_moe",
-    title: "מרחב פדגוגי — חקר נתונים (מיתר מתמטיקה יסודי)",
+    title: "מרחב פדגוגי - חקר נתונים (מיתר מתמטיקה יסודי)",
     url: "https://pop.education.gov.il/tchumey_daat/matmatika/yesodi/noseem_nilmadim/choker-netunim/",
     checkedAt: SOURCE_REGISTRY_CHECKED_AT,
     appliesToGrades: [1, 2, 3, 4, 5, 6],
@@ -143,12 +143,12 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     providesSkillOrDepthDetail: true,
     needsHumanPedagogyReview: true,
     actionNeeded: "להצליב עם מסמך כיתה למידול עומק חקר נתונים לפי שכבה.",
-    notes: "דף POP רשמי למיתר חקר נתונים — משלים למסמכי כיתה.",
+    notes: "דף POP רשמי למיתר חקר נתונים - משלים למסמכי כיתה.",
   },
   {
     subject: "math",
     sourceType: "official_moe",
-    title: "מרחב פדגוגי — גאומטריה וצורות (מיתר מתמטיקה ליסודי)",
+    title: "מרחב פדגוגי - גאומטריה וצורות (מיתר מתמטיקה ליסודי)",
     url: "https://pop.education.gov.il/tchumey_daat/matmatika/yesodi/noseem_nilmadim/geometrya/",
     checkedAt: SOURCE_REGISTRY_CHECKED_AT,
     appliesToGrades: [1, 2, 3, 4, 5, 6],
@@ -161,13 +161,13 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     providesSkillOrDepthDetail: true,
     needsHumanPedagogyReview: true,
     actionNeeded:
-      "תיקון תוכן נפרד בגאומטריה במוצר — יושוו מול מיתר זה ובמסמכי כיתה; לא עומס גאומטריה נפרד כאן.",
-    notes: "מיתר גאומטריה במתמטיקה — ההפרדה למקצוע גאומטריה במוצר היא נושא נפרד מהרחבה זו.",
+      "תיקון תוכן נפרד בגאומטריה במוצר - יושוו מול מיתר זה ובמסמכי כיתה; לא עומס גאומטריה נפרד כאן.",
+    notes: "מיתר גאומטריה במתמטיקה - ההפרדה למקצוע גאומטריה במוצר היא נושא נפרד מהרחבה זו.",
   },
   {
     subject: "math",
     sourceType: "internal_gap",
-    title: "מפת נושאים עדינה (אחוזים / עשרונים / שברים) לפי כיתה — לא מפורקת כאן לאובייקטים נפרדים",
+    title: "מפת נושאים עדינה (אחוזים / עשרונים / שברים) לפי כיתה - לא מפורקת כאן לאובייקטים נפרדים",
     url: "",
     checkedAt: SOURCE_REGISTRY_CHECKED_AT,
     appliesToGrades: [1, 2, 3, 4, 5, 6],
@@ -180,7 +180,7 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     providesSkillOrDepthDetail: false,
     needsHumanPedagogyReview: true,
     actionNeeded:
-      "בדיקת רצף פדגוגי מול מסמך כיתה (PDF) ומיפוי מילולי לפני תיקוני תוכן — ראו דוח math-bank-vs-official-source.",
+      "בדיקת רצף פדגוגי מול מסמך כיתה (PDF) ומיפוי מילולי לפני תיקוני תוכן - ראו דוח math-bank-vs-official-source.",
     notes:
       "העיגון הרשמי לכיתה קיים ב PDF; המיפוי האוטומטי לנושא משנה בתוך הכיתה נשאר לאימות אנושי.",
   },
@@ -189,7 +189,7 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
   {
     subject: "geometry",
     sourceType: "official_moe",
-    title: "מרחב פדגוגי — גאומטריה במתמטיקה יסודי (מצולעים וצורות)",
+    title: "מרחב פדגוגי - גאומטריה במתמטיקה יסודי (מצולעים וצורות)",
     url: "https://pop.education.gov.il/tchumey_daat/matmatika/yesodi/noseem_nilmadim/geometrya/",
     checkedAt: SOURCE_REGISTRY_CHECKED_AT,
     appliesToGrades: [1, 2, 3, 4, 5, 6],
@@ -202,13 +202,13 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     providesSkillOrDepthDetail: true,
     needsHumanPedagogyReview: true,
     actionNeeded:
-      "מקצוע בהפרדה טכנית במוצר — יש לאמת רצף עומק מול מיתר הגאומטריה בתוכנית המתמטיקה.",
+      "מקצוע בהפרדה טכנית במוצר - יש לאמת רצף עומק מול מיתר הגאומטריה בתוכנית המתמטיקה.",
     notes: "עיגון רשמי זהה למיתר הגאומטריה במתמטיקה; לא תוכנית גאומטריה נפרדת במשרד.",
   },
   {
     subject: "geometry",
     sourceType: "official_moe",
-    title: "מרחב פדגוגי — תוכנית מתמטיקה יסודי (מסגרת כוללת מיתר גאומטריה ומדידות)",
+    title: "מרחב פדגוגי - תוכנית מתמטיקה יסודי (מסגרת כוללת מיתר גאומטריה ומדידות)",
     url: "https://pop.education.gov.il/tchumey_daat/matmatika/yesodi/oraat-math/new-curriculum/",
     checkedAt: SOURCE_REGISTRY_CHECKED_AT,
     appliesToGrades: [1, 2, 3, 4, 5, 6],
@@ -221,7 +221,7 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     providesSkillOrDepthDetail: true,
     needsHumanPedagogyReview: true,
     actionNeeded: "ראו גם דף מצולעים למיפוי נושאים ספציפיים.",
-    notes: "מסגרת רשמית POP למתמטיקה — הגאומטריה כמיתר בתוכה.",
+    notes: "מסגרת רשמית POP למתמטיקה - הגאומטריה כמיתר בתוכה.",
   },
   /** Per-grade official programme PDFs — same kita1–kita6 as math; geometry strand appears inside each document. */
   ...[1, 2, 3, 4, 5, 6].map((g) => {
@@ -229,7 +229,7 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     return {
       subject: "geometry",
       sourceType: "official_pdf",
-      title: `משרד החינוך — מתמטיקה יסודי כיתה ${he} (PDF): מיתר גאומטריה במסמך הכיתה`,
+      title: `משרד החינוך - מתמטיקה יסודי כיתה ${he} (PDF): מיתר גאומטריה במסמך הכיתה`,
       url: `${MATH_ELEMENTARY_GRADE_PDF_BASE}/kita${g}.pdf`,
       checkedAt: SOURCE_REGISTRY_CHECKED_AT,
       appliesToGrades: [g],
@@ -250,7 +250,7 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
       actionNeeded:
         "להצליב נושאי הגאומטריה במוצר מול סעיפי הגאומטריה בתוך מסמך הכיתה (PDF).",
       notes:
-        "מסמך כיתה זהה למתמטיקה — עיגון כיתתי לביצוע ביקורת גאומטריה ושורות מאגר.",
+        "מסמך כיתה זהה למתמטיקה - עיגון כיתתי לביצוע ביקורת גאומטריה ושורות מאגר.",
     };
   }),
 
@@ -258,7 +258,7 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
   {
     subject: "hebrew",
     sourceType: "official_moe",
-    title: "מרחב פדגוגי — תוכנית לימודים: עברית חינוך לשוני (יסודי)",
+    title: "מרחב פדגוגי - תוכנית לימודים: עברית חינוך לשוני (יסודי)",
     url: "https://pop.education.gov.il/tchumey_daat/ivrit_chinhch_leshony/yesodi/pedagogy-hebrew-linguistic-education/curriculum/",
     checkedAt: SOURCE_REGISTRY_CHECKED_AT,
     appliesToGrades: [1, 2, 3, 4, 5, 6],
@@ -271,12 +271,12 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     providesSkillOrDepthDetail: true,
     needsHumanPedagogyReview: true,
     actionNeeded: "להצמיד טבלאות כיתה/שכבה מתוך מסמכי התוכנית המלאים במיידע אם נדרש עיגון נושא כיתה.",
-    notes: "מקור POP רשמי ישיר — עדיין דורש השלמת פריסה כיתתית ידנית לצורך התאמת מאגר.",
+    notes: "מקור POP רשמי ישיר - עדיין דורש השלמת פריסה כיתתית ידנית לצורך התאמת מאגר.",
   },
   {
     subject: "hebrew",
     sourceType: "official_moe",
-    title: "מרחב פדגוגי — דף כיתה א׳ (דוגמה לעיגון כיתתי בתוכנית העברית)",
+    title: "מרחב פדגוגי - דף כיתה א׳ (דוגמה לעיגון כיתתי בתוכנית העברית)",
     url: "https://pop.education.gov.il/tchumey_daat/ivrit_chinhch_leshony/yesodi/pedagogy-hebrew-linguistic-education/teaching-hebrew-grade1/",
     checkedAt: SOURCE_REGISTRY_CHECKED_AT,
     appliesToGrades: [1],
@@ -289,14 +289,14 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     providesSkillOrDepthDetail: true,
     needsHumanPedagogyReview: true,
     actionNeeded: "להוסיף דפי כיתה נפרדים לכיתות ב׳–ו׳ מאותו עץ POP כשזמינים.",
-    notes: "עיגון כיתתי לכיתה א׳ בלבד — לא מכסה את כל המאגר.",
+    notes: "עיגון כיתתי לכיתה א׳ בלבד - לא מכסה את כל המאגר.",
   },
   ...[2, 3, 4, 5, 6].map((g) => {
     const he = ["ב׳", "ג׳", "ד׳", "ה׳", "ו׳"][g - 2];
     return {
       subject: "hebrew",
       sourceType: "official_moe",
-      title: `מרחב פדגוגי — עברית חינוך לשוני: דף התוכנית הכללי (ייחוס ביקורת לכיתה ${he})`,
+      title: `מרחב פדגוגי - עברית חינוך לשוני: דף התוכנית הכללי (ייחוס ביקורת לכיתה ${he})`,
       url: "https://pop.education.gov.il/tchumey_daat/ivrit_chinhch_leshony/yesodi/pedagogy-hebrew-linguistic-education/curriculum/",
       checkedAt: SOURCE_REGISTRY_CHECKED_AT,
       appliesToGrades: [g],
@@ -309,15 +309,15 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
       providesSkillOrDepthDetail: false,
       needsHumanPedagogyReview: true,
       actionNeeded:
-        "אותו דף POP כללי לכל הכיתות — להשלים עם טבלאות מפורטות במיידע או דפי כיתה ייעודיים כשפורסמו.",
+        "אותו דף POP כללי לכל הכיתות - להשלים עם טבלאות מפורטות במיידע או דפי כיתה ייעודיים כשפורסמו.",
       notes:
-        "שורת ייחוס כיתתית לאוטומציה — אין כאן פירוט כיתתי מלא כמו PDF מתמטיקה לכל כיתה.",
+        "שורת ייחוס כיתתית לאוטומציה - אין כאן פירוט כיתתי מלא כמו PDF מתמטיקה לכל כיתה.",
     };
   }),
   {
     subject: "hebrew",
     sourceType: "internal_gap",
-    title: "טבלאות מפורטות לפי כיתה ומיומנות (מסמכי מיידע / PDF) — לא מצורפים במלואם במאגר זה",
+    title: "טבלאות מפורטות לפי כיתה ומיומנות (מסמכי מיידע / PDF) - לא מצורפים במלואם במאגר זה",
     url: "",
     checkedAt: SOURCE_REGISTRY_CHECKED_AT,
     appliesToGrades: [1, 2, 3, 4, 5, 6],
@@ -330,14 +330,14 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     providesSkillOrDepthDetail: false,
     needsHumanPedagogyReview: true,
     actionNeeded: "להוסיף קישורי PDF רשמיים מהמיידע לכל שכבה לפני טענת יישור מלא.",
-    notes: "נשאר רווח מכוון — לא לטעון היגוי מלא של המאגר בלי עיגון נוסף.",
+    notes: "נשאר רווח מכוון - לא לטעון היגוי מלא של המאגר בלי עיגון נוסף.",
   },
 
   /* ---------- English as foreign language ---------- */
   {
     subject: "english",
     sourceType: "official_moe",
-    title: "מרחב פדגוגי — תוכנית לימודים באנגלית ליסודי (מסגרת רשמית)",
+    title: "מרחב פדגוגי - תוכנית לימודים באנגלית ליסודי (מסגרת רשמית)",
     url: "https://pop.education.gov.il/tchumey_daat/english/yesodi/curriculum/",
     checkedAt: SOURCE_REGISTRY_CHECKED_AT,
     appliesToGrades: [1, 2, 3, 4, 5, 6],
@@ -352,12 +352,12 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     actionNeeded:
       "להצליב עם מסמכי תוכנית / פירוט Can-do ולהפריד חשיפה מול דקדוק פורמלי בכיתות נמוכות.",
     notes:
-      "מחליף את דף משרד החינוך הכללי — זהו עמוד POP ייעודי לאנגלית יסודי.",
+      "מחליף את דף משרד החינוך הכללי - זהו עמוד POP ייעודי לאנגלית יסודי.",
   },
   {
     subject: "english",
     sourceType: "official_moe",
-    title: "מרחב פדגוגי — פדגוגיה באנגלית (אוריינות, הרחבת יכולות)",
+    title: "מרחב פדגוגי - פדגוגיה באנגלית (אוריינות, הרחבת יכולות)",
     url: "https://pop.education.gov.il/tchumey_daat/english/yesodi/english-pedagogy/",
     checkedAt: SOURCE_REGISTRY_CHECKED_AT,
     appliesToGrades: [1, 2, 3, 4, 5, 6],
@@ -370,13 +370,13 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     providesSkillOrDepthDetail: true,
     needsHumanPedagogyReview: true,
     actionNeeded: "להשתמש יחד עם תוכנית הלימודים כדי לסווג פריטי חשיפה לעומת ליבה.",
-    notes: "תומך בהפרדת מודליות שפה ואוריינות — לא עיגון נושא כיתה עצמו.",
+    notes: "תומך בהפרדת מודליות שפה ואוריינות - לא עיגון נושא כיתה עצמו.",
   },
   {
     subject: "english",
     sourceType: "official_pdf",
     title:
-      "English as a foreign language — Curriculum framework (2020), owner workspace copy (Curriculum2020.pdf)",
+      "English as a foreign language - Curriculum framework (2020), owner workspace copy (Curriculum2020.pdf)",
     url: "תוכנית משרד החינוך/english Curriculum2020.pdf",
     checkedAt: SOURCE_REGISTRY_CHECKED_AT,
     appliesToGrades: [1, 2, 3, 4, 5, 6],
@@ -389,14 +389,14 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     providesSkillOrDepthDetail: true,
     needsHumanPedagogyReview: true,
     actionNeeded:
-      "להצליב מול דפי POP ומול מיפוי המוצר — הקובץ הוא עותק מקומי לעיגון בעלים ולא מחליף ביקורת ידנית.",
+      "להצליב מול דפי POP ומול מיפוי המוצר - הקובץ הוא עותק מקומי לעיגון בעלים ולא מחליף ביקורת ידנית.",
     notes:
-      "מסמך PDF השמור בתיקיית תוכניות המאגר; משמש כמקור ייחוס לסגירת אנגלית — לא לערוך את הקובץ במסגרת פיתוח אוטומטי.",
+      "מסמך PDF השמור בתיקיית תוכניות המאגר; משמש כמקור ייחוס לסגירת אנגלית - לא לערוך את הקובץ במסגרת פיתוח אוטומטי.",
   },
   {
     subject: "english",
     sourceType: "internal_gap",
-    title: "מיפוי נושא בריכת דקדוק מול פסקאות Can-do לפי כיתה — לא ממופה אוטומטית במאגר",
+    title: "מיפוי נושא בריכת דקדוק מול פסקאות Can-do לפי כיתה - לא ממופה אוטומטית במאגר",
     url: "",
     checkedAt: SOURCE_REGISTRY_CHECKED_AT,
     appliesToGrades: [1, 2, 3, 4, 5, 6],
@@ -416,7 +416,7 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
   {
     subject: "science",
     sourceType: "official_moe",
-    title: "מרחב פדגוגי — הוראת המדע והטכנולוגיה (יסודי)",
+    title: "מרחב פדגוגי - הוראת המדע והטכנולוגיה (יסודי)",
     url: "https://pop.education.gov.il/tchumey_daat/mada-tehnologia/yesodi/technology-science-pedagogy/",
     checkedAt: SOURCE_REGISTRY_CHECKED_AT,
     appliesToGrades: [1, 2, 3, 4, 5, 6],
@@ -429,12 +429,12 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     providesSkillOrDepthDetail: true,
     needsHumanPedagogyReview: true,
     actionNeeded: "להשלים טבלאות נושא לפי כיתה מתוך מסגרת המדע והטכנולוגיה במיידע.",
-    notes: "עמוד POP רשמי — לא מחליף טבלת פריסה כיתתית מלאה.",
+    notes: "עמוד POP רשמי - לא מחליף טבלת פריסה כיתתית מלאה.",
   },
   {
     subject: "science",
     sourceType: "official_moe",
-    title: "מרחב פדגוגי — חקר מדעי ופתרון בעיות (מדע וטכנולוגיה יסודי)",
+    title: "מרחב פדגוגי - חקר מדעי ופתרון בעיות (מדע וטכנולוגיה יסודי)",
     url: "https://pop.education.gov.il/tchumey_daat/mada-tehnologia/yesodi/technology-science-pedagogy/scientific-research/",
     checkedAt: SOURCE_REGISTRY_CHECKED_AT,
     appliesToGrades: [1, 2, 3, 4, 5, 6],
@@ -447,13 +447,13 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     providesSkillOrDepthDetail: true,
     needsHumanPedagogyReview: true,
     actionNeeded: "להצליב עם דרישות בטיחות וחקירה מהתוכנית המלאה.",
-    notes: "מדגיש מיומנות חקר — לא כל תוכן תחום חיים/חומרים.",
+    notes: "מדגיש מיומנות חקר - לא כל תוכן תחום חיים/חומרים.",
   },
   {
     subject: "science",
     sourceType: "official_pdf",
     title:
-      "Science & technology — elementary curriculum framework (2016), owner workspace copy (science Curriculum2016.docx)",
+      "Science & technology - elementary curriculum framework (2016), owner workspace copy (science Curriculum2016.docx)",
     url: "תוכנית משרד החינוך/science Curriculum2016.docx",
     checkedAt: SOURCE_REGISTRY_CHECKED_AT,
     appliesToGrades: [1, 2, 3, 4, 5, 6],
@@ -466,14 +466,14 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     providesSkillOrDepthDetail: true,
     needsHumanPedagogyReview: true,
     actionNeeded:
-      "להצליב עם דפי POP ועם פריסת כיתות במסמך — הקובץ הוא DOCX מקומי לעיגון בעלים; לא לערוך במסגרת פיתוח אוטומטי.",
+      "להצליב עם דפי POP ועם פריסת כיתות במסמך - הקובץ הוא DOCX מקומי לעיגון בעלים; לא לערוך במסגרת פיתוח אוטומטי.",
     notes:
-      "מסמך DOCX השמור בתיקיית תוכניות המאגר; משמש כמקור ייחוס לסגירת מדעים — פורמט Word, לא PDF.",
+      "מסמך DOCX השמור בתיקיית תוכניות המאגר; משמש כמקור ייחוס לסגירת מדעים - פורמט Word, לא PDF.",
   },
   {
     subject: "science",
     sourceType: "internal_gap",
-    title: "טבלת פריסת נושאים רשמית לפי כיתה (מדע וטכנולוגיה) — לא קושרה כאן",
+    title: "טבלת פריסת נושאים רשמית לפי כיתה (מדע וטכנולוגיה) - לא קושרה כאן",
     url: "",
     checkedAt: SOURCE_REGISTRY_CHECKED_AT,
     appliesToGrades: [1, 2, 3, 4, 5, 6],
@@ -485,15 +485,15 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     providesTopicLevelDetail: false,
     providesSkillOrDepthDetail: false,
     needsHumanPedagogyReview: true,
-    actionNeeded: "לפני הוספת שאלות מדע — לקשר PDF/מסגרת כיתתית רשמית.",
-    notes: "נשאר רווח מכוון — תואם הנחיית עצירת תוכן עד אישור מיפוי.",
+    actionNeeded: "לפני הוספת שאלות מדע - לקשר PDF/מסגרת כיתתית רשמית.",
+    notes: "נשאר רווח מכוון - תואם הנחיית עצירת תוכן עד אישור מיפוי.",
   },
 
   /* ---------- Moledet / society / citizenship ---------- */
   {
     subject: "moledet-geography",
     sourceType: "official_moe",
-    title: "מרחב פדגוגי — תוכניות לימודים: מולדת, חברה ואזרחות (יסודי)",
+    title: "מרחב פדגוגי - תוכניות לימודים: מולדת, חברה ואזרחות (יסודי)",
     url: "https://pop.education.gov.il/learning-plans/homeland_society_citizenship/elementary/",
     checkedAt: SOURCE_REGISTRY_CHECKED_AT,
     appliesToGrades: [2, 3, 4],
@@ -506,12 +506,12 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     providesSkillOrDepthDetail: false,
     needsHumanPedagogyReview: true,
     actionNeeded: "לאמת מול מוסד שהמסלול תואם את מסגרת כיתות ב׳–ד׳.",
-    notes: "מקור POP ישיר המצהיר תוכנית יסודי — לא דף משרד כללי.",
+    notes: "מקור POP ישיר המצהיר תוכנית יסודי - לא דף משרד כללי.",
   },
   {
     subject: "moledet-geography",
     sourceType: "official_moe",
-    title: "מרחב פדגוגי — מפרט תכנים לכיתה ג׳ (מולדת, חברה ואזרחות)",
+    title: "מרחב פדגוגי - מפרט תכנים לכיתה ג׳ (מולדת, חברה ואזרחות)",
     url: "https://pop.education.gov.il/tchumey_daat/moledet_hevra_ezrahut/yesodi/curriculum/third-grade/",
     checkedAt: SOURCE_REGISTRY_CHECKED_AT,
     appliesToGrades: [3],
@@ -529,7 +529,7 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
   {
     subject: "moledet-geography",
     sourceType: "official_moe",
-    title: "מרחב פדגוגי — מולדת חברה ואזרחות יסודי (כניסה למאגרי נושאים)",
+    title: "מרחב פדגוגי - מולדת חברה ואזרחות יסודי (כניסה למאגרי נושאים)",
     url: "https://pop.education.gov.il/tchumey_daat/moledet_hevra_ezrahut/yesodi/",
     checkedAt: SOURCE_REGISTRY_CHECKED_AT,
     appliesToGrades: [2, 3, 4],
@@ -542,12 +542,12 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     providesSkillOrDepthDetail: false,
     needsHumanPedagogyReview: true,
     actionNeeded: "להעדיף דפי כיתה ספציפיים לצורך השוואת פריטים במאגר.",
-    notes: "דף כניסה רשמי POP — פחות מפורט ממפרט כיתה ייעודי.",
+    notes: "דף כניסה רשמי POP - פחות מפורט ממפרט כיתה ייעודי.",
   },
   {
     subject: "moledet-geography",
     sourceType: "official_pdf",
-    title: "מולדת וגיאוגרפיה — עותק עבודה של בעלים (homeland-curriculum.pdf)",
+    title: "מולדת וגיאוגרפיה - עותק עבודה של בעלים (homeland-curriculum.pdf)",
     url: "תוכנית משרד החינוך/homeland-curriculum.pdf",
     checkedAt: SOURCE_REGISTRY_CHECKED_AT,
     appliesToGrades: [1, 2, 3, 4],
@@ -560,14 +560,14 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     providesSkillOrDepthDetail: true,
     needsHumanPedagogyReview: true,
     actionNeeded:
-      "להצליב עם דפי POP ועם ניסוח שיעורים בפועל — הקובץ הוא PDF מקומי לעיגון בעלים; לא לערוך במסגרת פיתוח אוטומטי.",
+      "להצליב עם דפי POP ועם ניסוח שיעורים בפועל - הקובץ הוא PDF מקומי לעיגון בעלים; לא לערוך במסגרת פיתוח אוטומטי.",
     notes:
       "PDF השמור בתיקיית תוכנית משרד החינוך; משמש כמקור ייחוס לסגירת מולדת/גיאוגרפיה לצד דפי POP.",
   },
   {
     subject: "moledet-geography",
     sourceType: "official_pdf",
-    title: "גיאוגרפיה כיתות ה׳–ו׳ — עותק עבודה של בעלים (tohnit-geography-5-6.pdf)",
+    title: "גיאוגרפיה כיתות ה׳–ו׳ - עותק עבודה של בעלים (tohnit-geography-5-6.pdf)",
     url: "תוכנית משרד החינוך/tohnit-geography-5-6.pdf",
     checkedAt: SOURCE_REGISTRY_CHECKED_AT,
     appliesToGrades: [5, 6],
@@ -585,7 +585,7 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
   {
     subject: "moledet-geography",
     sourceType: "official_pdf",
-    title: "כיתה ו׳ — תוכנית עזר (tochnit-vav.pdf, עותק בעלים)",
+    title: "כיתה ו׳ - תוכנית עזר (tochnit-vav.pdf, עותק בעלים)",
     url: "תוכנית משרד החינוך/tochnit-vav.pdf",
     checkedAt: SOURCE_REGISTRY_CHECKED_AT,
     appliesToGrades: [6],
@@ -598,12 +598,12 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     providesSkillOrDepthDetail: true,
     needsHumanPedagogyReview: true,
     actionNeeded: "לאמת מול דף כיתה ו׳ ב-POP ומול מאגר השאלות.",
-    notes: "PDF עזר לכיתה ו׳ — עיגון בעלים.",
+    notes: "PDF עזר לכיתה ו׳ - עיגון בעלים.",
   },
   {
     subject: "moledet-geography",
     sourceType: "internal_gap",
-    title: "כיתות א׳, ה׳, ו׳ — ללא מסגרת מולדת זהה לכיתות ב׳–ד׳ במסמך זה",
+    title: "כיתות א׳, ה׳, ו׳ - ללא מסגרת מולדת זהה לכיתות ב׳–ד׳ במסמך זה",
     url: "",
     checkedAt: SOURCE_REGISTRY_CHECKED_AT,
     appliesToGrades: [1, 5, 6],
@@ -624,7 +624,7 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
   {
     subject: "math",
     sourceType: "rama",
-    title: 'ראמ"ה — תחום מתמטיקה (הערכה; לא תוכנית לימודים)',
+    title: 'ראמ"ה - תחום מתמטיקה (הערכה; לא תוכנית לימודים)',
     url: "https://rama.edu.gov.il/field/math",
     checkedAt: SOURCE_REGISTRY_CHECKED_AT,
     appliesToGrades: "all",
@@ -637,14 +637,14 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     providesSkillOrDepthDetail: false,
     needsHumanPedagogyReview: true,
     actionNeeded:
-      "להשתמש רק כהשלמת ציפיות הערכה לצד מסמכי משרד החינוך (PDF/POP) — לא כעיגון יחיד לפריט.",
+      "להשתמש רק כהשלמת ציפיות הערכה לצד מסמכי משרד החינוך (PDF/POP) - לא כעיגון יחיד לפריט.",
     notes:
-      "דף תחום מתמטיקה בראמ״ה; לפי ראמ״ה לעיתים הכלים מיושרים לתוכנית — עדיין מקור הערכה, לא מפת שיעור.",
+      "דף תחום מתמטיקה בראמ״ה; לפי ראמ״ה לעיתים הכלים מיושרים לתוכנית - עדיין מקור הערכה, לא מפת שיעור.",
   },
   {
     subject: "english",
     sourceType: "rama",
-    title: 'ראמ"ה — הערכה במקצועות שפה (תומך; לא תוכנית לימודים)',
+    title: 'ראמ"ה - הערכה במקצועות שפה (תומך; לא תוכנית לימודים)',
     url: "https://rama.edu.gov.il/",
     checkedAt: SOURCE_REGISTRY_CHECKED_AT,
     appliesToGrades: "all",
@@ -656,13 +656,13 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     providesTopicLevelDetail: false,
     providesSkillOrDepthDetail: false,
     needsHumanPedagogyReview: true,
-    actionNeeded: "להצליב עם תוכנית האנגלית ב POP — לא עם דף ראמ\"ה כמפת תוכן.",
-    notes: "מקור הערכה ארצית — לא עיגון תוכן פריט פריט.",
+    actionNeeded: "להצליב עם תוכנית האנגלית ב POP - לא עם דף ראמ\"ה כמפת תוכן.",
+    notes: "מקור הערכה ארצית - לא עיגון תוכן פריט פריט.",
   },
   {
     subject: "science",
     sourceType: "rama",
-    title: 'ראמ"ה — מבחני מדע (דוגמה למקור הערכה; לא תוכנית לימודים)',
+    title: 'ראמ"ה - מבחני מדע (דוגמה למקור הערכה; לא תוכנית לימודים)',
     url: "https://rama.edu.gov.il/",
     checkedAt: SOURCE_REGISTRY_CHECKED_AT,
     appliesToGrades: "all",
@@ -674,7 +674,7 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     providesTopicLevelDetail: false,
     providesSkillOrDepthDetail: false,
     needsHumanPedagogyReview: true,
-    actionNeeded: "להסתמך על POP מדע/טכנולוגיה למפת תוכן — ראמ\"ה להשוואת תוצאות בלבד.",
+    actionNeeded: "להסתמך על POP מדע/טכנולוגיה למפת תוכן - ראמ\"ה להשוואת תוצאות בלבד.",
     notes: "ראמ\"ה ≠ תוכנית לימודים.",
   },
 ];

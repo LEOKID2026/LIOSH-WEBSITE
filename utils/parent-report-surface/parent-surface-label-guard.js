@@ -83,7 +83,7 @@ export function sanitizeParentSurfaceTextHe(text, ctx = {}) {
   t = t.replace(/\s{2,}/g, " ").trim();
   if (!t) return ctx.allowEmpty ? "" : "";
   if (isForbiddenParentSurfaceLabel(t, ctx)) return "";
-  if (/^[\d\s.,/%\-–—]+$/u.test(t)) return "";
+  if (/^[\d\s.,/%\-–-]+$/u.test(t)) return "";
   return t;
 }
 

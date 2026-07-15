@@ -82,10 +82,10 @@ export function rewriteParentRecommendationForDetailedHe(raw) {
   s = s.replace(/\s+/g, " ").trim();
   s = s.replace(/^על ([^,]+), (?:אחרי מה שנאסף בתקופה(?: שנבחרה)?|לפי התרגול שנאסף בתקופה שנבחרה):\s*/u, "ב$1: ");
   s = s.replace(/במשחק/g, "בתרגול");
-  s = s.replace(/אם במשחק יש בחירת כיתה לפי נושא —/g, "אם ניתן להפריד רמת קושי לפי נושא —");
-  s = s.replace(/אם אפשר לבחור כיתה נפרדת לפי נושא —/g, "אם ניתן להתאים רמת קושי נפרדת לפי נושא —");
+  s = s.replace(/אם במשחק יש בחירת כיתה לפי נושא -/g, "אם ניתן להפריד רמת קושי לפי נושא -");
+  s = s.replace(/אם אפשר לבחור כיתה נפרדת לפי נושא -/g, "אם ניתן להתאים רמת קושי נפרדת לפי נושא -");
   s = s.replace(
-    /אם ניתן להתאים רמת קושי נפרדת לפי נושא — ב(.+?) כדאי כיתה אחת נמוכה יותר\. בשאר הנושאים לא חייבים לשנות\./u,
+    /אם ניתן להתאים רמת קושי נפרדת לפי נושא - ב(.+?) כדאי כיתה אחת נמוכה יותר\. בשאר הנושאים לא חייבים לשנות\./u,
     "בנושא $1 מומלץ לנסות רמה או כיתה יותר נמוכה ואז להתקדם בהדרגה."
   );
   s = s.replace(
@@ -104,7 +104,7 @@ export function rewriteParentRecommendationForDetailedHe(raw) {
   s = s.replace(/מומלץ להקשות מעט רק בנושא הזה/g, "מומלץ לעלות רמה רק בנושא הזה");
   s = s.replace(/רק בנושא הזה במשחק/g, "רק בנושא הזה בתרגול");
   s = s.replace(
-    /כדאי להתאמן עוד קצת ב(?:«|")?([^»"]+)(?:»|")? באותה רמה — ואז נחליט על צעד הבא\./gu,
+    /כדאי להתאמן עוד קצת ב(?:«|")?([^»"]+)(?:»|")? באותה רמה - ואז נחליט על צעד הבא\./gu,
     "מומלץ להמשיך בתרגול קצר בנושא $1 באותה רמת קושי, ולעכב שינוי עד שיש עקביות."
   );
   s = s.replace(/\s+/g, " ").trim();
@@ -207,8 +207,8 @@ function buildSubjectOpeningLineHe(sp, lab) {
   }
   if (pri === "maintain" && domSucc && ex0 && !mr) {
     const t = [
-      stripGuillemetsHe(`ב${lab} אפשר לנוח קצת על הגז: ${domSucc} — מספיק שגרת תרגול קצרה.`),
-      stripGuillemetsHe(`ב${lab} התמונה עקבית יחסית (${domSucc}) — אין חובה להוסיף עומס; מספיק לעקוב בעדינות.`),
+      stripGuillemetsHe(`ב${lab} אפשר לנוח קצת על הגז: ${domSucc} - מספיק שגרת תרגול קצרה.`),
+      stripGuillemetsHe(`ב${lab} התמונה עקבית יחסית (${domSucc}) - אין חובה להוסיף עומס; מספיק לעקוב בעדינות.`),
     ];
     return t[Math.abs((domSucc + lab).length) % t.length];
   }
@@ -217,30 +217,30 @@ function buildSubjectOpeningLineHe(sp, lab) {
     if (w0 && isClearWeakSubjectVolume(w0.questions, w0.accuracy)) {
       const coreW = displayTopicCoreHe(w0.labelHe) || displayTopicPhraseHe(w0.labelHe);
       return stripGuillemetsHe(
-        `ב${lab} נראית נקודת חיזוק ברורה ב${displayTopicPhraseHe(w0.labelHe) || coreW} — כדאי לחזק את הנושא בתרגול קצר.`,
+        `ב${lab} נראית נקודת חיזוק ברורה ב${displayTopicPhraseHe(w0.labelHe) || coreW} - כדאי לחזק את הנושא בתרגול קצר.`,
       );
     }
     const templates = [
-      `ב${lab} עדיין מוקדם לדעת בבירור מה קורה לפי התרגול — מה שכן בולט: ${domRc}. כדאי להמשיך עם תרגול קצר לפני שינוי מהותי.`,
-      `ב${lab} המידע שנאסף בתקופה שנבחרה עדיין חלקי; הכיוון הסביר ביותר כרגע הוא ${domRc} — בלי לנעול תוכנית ארוכה.`,
+      `ב${lab} עדיין מוקדם לדעת בבירור מה קורה לפי התרגול - מה שכן בולט: ${domRc}. כדאי להמשיך עם תרגול קצר לפני שינוי מהותי.`,
+      `ב${lab} המידע שנאסף בתקופה שנבחרה עדיין חלקי; הכיוון הסביר ביותר כרגע הוא ${domRc} - בלי לנעול תוכנית ארוכה.`,
     ];
     return stripGuillemetsHe(templates[Math.abs((lab + domRc).length) % templates.length]);
   }
   if (readiness === "partial" && domRc && w0) {
     return stripGuillemetsHe(
-      `ב${lab} יש תמונה אמצעית: ${domRc} לצד ${displayTopicPhraseHe(w0.labelHe)} — כדאי לעקוב ולא לקבוע סופית עדיין.`
+      `ב${lab} יש תמונה אמצעית: ${domRc} לצד ${displayTopicPhraseHe(w0.labelHe)} - כדאי לעקוב ולא לקבוע סופית עדיין.`
     );
   }
 
   if (domSucc && sp?.dominantSuccessPattern === "stable_mastery" && ex0 && !mr) {
     return stripGuillemetsHe(
-      `ב${lab} נראית עקביות טובה (${domSucc}) ב ${displayTopicPhraseHe(ex0.labelHe)} — כדאי לשמור על קצב רגוע.`
+      `ב${lab} נראית עקביות טובה (${domSucc}) ב ${displayTopicPhraseHe(ex0.labelHe)} - כדאי לשמור על קצב רגוע.`
     );
   }
   if (mr && ex0) {
     const acc = Math.round(Number(ex0.accuracy) || 0);
     return stripGuillemetsHe(
-      `ב${lab} יש גם תחומים עם תוצאות טובות יחסית (למשל ${displayTopicPhraseHe(ex0.labelHe)}, כ ${acc}%) וגם נקודות שכדאי לשים לב אליהן — לא מסמנים עדיין את כל הנושא כיציב.`
+      `ב${lab} יש גם תחומים עם תוצאות טובות יחסית (למשל ${displayTopicPhraseHe(ex0.labelHe)}, כ ${acc}%) וגם נקודות שכדאי לשים לב אליהן - לא מסמנים עדיין את כל הנושא כיציב.`
     );
   }
   if (domRisk && domRisk !== "דל נתון" && w0) {
@@ -270,7 +270,7 @@ function buildSubjectOpeningLineHe(sp, lab) {
     const pre = sparse ? "נראה ש" : "";
     return stripGuillemetsHe(`${pre}ב${lab} יש התקדמות חלקית ב ${displayTopicPhraseHe(imp0.labelHe)} (דיוק כ ${acc}%).`);
   }
-  return stripGuillemetsHe(`עדיין מוקדם לסכם לגבי ${lab} — מעט מידע בתקופה שנבחרה.`);
+  return stripGuillemetsHe(`עדיין מוקדם לסכם לגבי ${lab} - מעט מידע בתקופה שנבחרה.`);
 }
 
 /** משפט אבחנה אחד — ממזג חוזק/חולשה בלי בלוקים נפרדים */
@@ -314,7 +314,7 @@ function buildSubjectDiagnosisLineHe(sp, lab) {
   }
 
   if (trendLine && domRisk && domRisk !== "דל נתון") {
-    const base = stripGuillemetsHe(`${domRisk} — ${trendLine}`);
+    const base = stripGuillemetsHe(`${domRisk} - ${trendLine}`);
     if (w0 && s0) {
       return stripGuillemetsHe(
         `${base} לפי התרגול שנאסף בתקופה שנבחרה: ${displayTopicPhraseHe(s0.labelHe)} יש בסיס טוב; לעומת זאת ${displayTopicPhraseHe(w0.labelHe)} כדאי לתת חיזוק ממוקד.`
@@ -334,7 +334,7 @@ function buildSubjectDiagnosisLineHe(sp, lab) {
     const strong = (Number(w0.mistakeCount) || 0) >= 8;
     const tail = strong
       ? "שווה לחזק; הדפוס חוזר בעקביות."
-      : "שווה לחזק — וכדאי להמשיך לעקוב בלי למהר לקבוע כיוון סופי.";
+      : "שווה לחזק - וכדאי להמשיך לעקוב בלי למהר לקבוע כיוון סופי.";
     return stripGuillemetsHe(
       `לפי התרגול שנאסף בתקופה שנבחרה: ${displayTopicPhraseHe(s0.labelHe)} יש בסיס טוב; לעומת זאת ${displayTopicPhraseHe(w0.labelHe)} ${tail}`
     );
@@ -342,17 +342,17 @@ function buildSubjectDiagnosisLineHe(sp, lab) {
   if (w0) {
     const ws =
       (Number(w0.mistakeCount) || 0) >= 8
-        ? "חזרה עקבית — כדאי לשים על זה דגש"
+        ? "חזרה עקבית - כדאי לשים על זה דגש"
         : "עדיין לא ברור אם זה דפוס ארוך";
-    return stripGuillemetsHe(`המיקוד המעשי כרגע: ${displayTopicPhraseHe(w0.labelHe)} — ${ws}.`);
+    return stripGuillemetsHe(`המיקוד המעשי כרגע: ${displayTopicPhraseHe(w0.labelHe)} - ${ws}.`);
   }
   if (s0) {
-    return stripGuillemetsHe(`הכיוון החזק: ${displayTopicPhraseHe(s0.labelHe)} — שווה לשמר עליו עם תרגול קצר עד שהכיוון מתבהר.`);
+    return stripGuillemetsHe(`הכיוון החזק: ${displayTopicPhraseHe(s0.labelHe)} - שווה לשמר עליו עם תרגול קצר עד שהכיוון מתבהר.`);
   }
   if (imp0 && !w0) {
-    return stripGuillemetsHe(`יש תנועה ${displayTopicPhraseHe(imp0.labelHe)} — כדאי להמשיך בתרגול קצר ולא לקפוץ רמה מהר.`);
+    return stripGuillemetsHe(`יש תנועה ${displayTopicPhraseHe(imp0.labelHe)} - כדאי להמשיך בתרגול קצר ולא לקפוץ רמה מהר.`);
   }
-  return stripGuillemetsHe("התמונה עדיין חלקית — עוד קצת תרגול יבהיר את הכיוון.");
+  return stripGuillemetsHe("התמונה עדיין חלקית - עוד קצת תרגול יבהיר את הכיוון.");
 }
 
 function buildSubjectHomeLineHe(sp, lab) {
@@ -485,7 +485,7 @@ function applySubjectNarrativeGuardrails(sp, letter) {
 function topicLetterSlotFromPriorityTopic(topic) {
   if (!topic || typeof topic !== "object") return null;
   const raw = String(topic.topicLabelKey || topic.displayName || topic.topicName || "").trim();
-  const core = displayTopicCoreHe(raw) || raw.replace(/^[^—]+—\s*/, "").trim();
+  const core = displayTopicCoreHe(raw) || raw.replace(/^[^-]+-\s*/, "").trim();
   if (!core) return null;
   const patternRaw = topic.detectedPattern ? String(topic.detectedPattern).trim() : "";
   return {
@@ -525,7 +525,7 @@ function collectSubjectLetterTopicSlots(sp) {
           ? String(tr.taxonomy.patternHe).trim()
           : null;
     pushRow({
-      topic: displayTopicCoreHe(name) || name.replace(/^[^—]+—\s*/, "").trim(),
+      topic: displayTopicCoreHe(name) || name.replace(/^[^-]+-\s*/, "").trim(),
       questions: q,
       accuracy: Math.round(Number(tr?.accuracy) || 0),
       pattern: pattern || null,
@@ -537,7 +537,7 @@ function collectSubjectLetterTopicSlots(sp) {
     const q = Number(w?.questions) || 0;
     if (!name || q <= 0) continue;
     pushRow({
-      topic: displayTopicCoreHe(name) || name.replace(/^[^—]+—\s*/, "").trim(),
+      topic: displayTopicCoreHe(name) || name.replace(/^[^-]+-\s*/, "").trim(),
       questions: q,
       accuracy: Math.round(Number(w?.accuracy) || 0),
       pattern: null,

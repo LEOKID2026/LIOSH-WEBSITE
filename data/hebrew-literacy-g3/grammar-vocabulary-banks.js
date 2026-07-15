@@ -48,18 +48,18 @@ const GRAMMAR_EASY_TENSE = [
   { subtopicId: "g3.tense_system_intro", question: "באיזה זמן הפועל 'אכל'?", answer: "עבר", wrong: ["הווה","עתיד","ציווי"] },
   { subtopicId: "g3.tense_system_intro", question: "באיזה זמן הפועל 'אוכל'?", answer: "הווה", wrong: ["עבר","עתיד","ציווי"] },
   { subtopicId: "g3.tense_system_intro", question: "באיזה זמן הפועל 'אלך'?", answer: "עתיד", wrong: ["עבר","הווה","ציווי"] },
-  { subtopicId: "g3.tense_system_intro", question: "במשפט 'דני כתב מכתב' — באיזה זמן הפועל?", answer: "עבר", wrong: ["הווה","עתיד","ציווי"] },
-  { subtopicId: "g3.tense_system_intro", question: "במשפט 'מיה שותה מים' — באיזה זמן הפועל?", answer: "הווה", wrong: ["עבר","עתיד","ציווי"] },
-  { subtopicId: "g3.tense_system_intro", question: "במשפט 'מחר נצא לטיול' — באיזה זמן הפועל?", answer: "עתיד", wrong: ["עבר","הווה","ציווי"] },
+  { subtopicId: "g3.tense_system_intro", question: "במשפט 'דני כתב מכתב' - באיזה זמן הפועל?", answer: "עבר", wrong: ["הווה","עתיד","ציווי"] },
+  { subtopicId: "g3.tense_system_intro", question: "במשפט 'מיה שותה מים' - באיזה זמן הפועל?", answer: "הווה", wrong: ["עבר","עתיד","ציווי"] },
+  { subtopicId: "g3.tense_system_intro", question: "במשפט 'מחר נצא לטיול' - באיזה זמן הפועל?", answer: "עתיד", wrong: ["עבר","הווה","ציווי"] },
   { subtopicId: "g3.tense_system_intro", question: "באיזה זמן הפועל 'רץ'?", answer: "הווה", wrong: ["עבר","עתיד","ציווי"] },
   { subtopicId: "g3.tense_system_intro", question: "באיזה זמן הפועל 'רץ' ב'אתמול רץ בחצר'?", answer: "עבר", wrong: ["הווה","עתיד","ציווי"] },
   { subtopicId: "g3.tense_system_intro", question: "באיזה זמן הפועל 'אשחק'?", answer: "עתיד", wrong: ["עבר","הווה","ציווי"] },
-  { subtopicId: "g3.tense_system_intro", question: "במשפט 'הילדים משחקים בכדור' — באיזה זמן?", answer: "הווה", wrong: ["עבר","עתיד","ציווי"] },
-  { subtopicId: "g3.tense_system_intro", question: "במשפט 'אמא אפתה עוגה אתמול' — באיזה זמן?", answer: "עבר", wrong: ["הווה","עתיד","ציווי"] },
-  { subtopicId: "g3.tense_system_intro", question: "במשפט 'בערב נקרא סיפור' — באיזה זמן?", answer: "עתיד", wrong: ["עבר","הווה","ציווי"] },
-  { subtopicId: "g3.tense_system_intro", question: "המילה 'שמר' ב'הוא שמר על הסוד' — באיזה זמן?", answer: "עבר", wrong: ["הווה","עתיד","ציווי"] },
-  { subtopicId: "g3.tense_system_intro", question: "המילה 'שומר' ב'השומר שומר על הבניין' — באיזה זמן?", answer: "הווה", wrong: ["עבר","עתיד","ציווי"] },
-  { subtopicId: "g3.tense_system_intro", question: "המילה 'אשמור' ב'אשמור על המחברת' — באיזה זמן?", answer: "עתיד", wrong: ["עבר","הווה","ציווי"] },
+  { subtopicId: "g3.tense_system_intro", question: "במשפט 'הילדים משחקים בכדור' - באיזה זמן?", answer: "הווה", wrong: ["עבר","עתיד","ציווי"] },
+  { subtopicId: "g3.tense_system_intro", question: "במשפט 'אמא אפתה עוגה אתמול' - באיזה זמן?", answer: "עבר", wrong: ["הווה","עתיד","ציווי"] },
+  { subtopicId: "g3.tense_system_intro", question: "במשפט 'בערב נקרא סיפור' - באיזה זמן?", answer: "עתיד", wrong: ["עבר","הווה","ציווי"] },
+  { subtopicId: "g3.tense_system_intro", question: "המילה 'שמר' ב'הוא שמר על הסוד' - באיזה זמן?", answer: "עבר", wrong: ["הווה","עתיד","ציווי"] },
+  { subtopicId: "g3.tense_system_intro", question: "המילה 'שומר' ב'השומר שומר על הבניין' - באיזה זמן?", answer: "הווה", wrong: ["עבר","עתיד","ציווי"] },
+  { subtopicId: "g3.tense_system_intro", question: "המילה 'אשמור' ב'אשמור על המחברת' - באיזה זמן?", answer: "עתיד", wrong: ["עבר","הווה","ציווי"] },
 ];
 
 const GRAMMAR_EASY_POS = [
@@ -120,8 +120,8 @@ const GRAMMAR_EASY_BINYAN = [
   { subtopicId: "g3.binyan_light", question: "מה שורש המילה 'שחק'?", answer: "ש.ח.ק", wrong: ["כ.ת.ב","ל.מ.ד","א.כ.ל"] },
   { subtopicId: "g3.binyan_light", question: "איזו מילה מאותה משפחה כמו 'כתיבה'?", answer: "כותב", wrong: ["רץ","יפה","מחר"] },
   { subtopicId: "g3.binyan_light", question: "איזו מילה מאותה משפחה כמו 'לימוד'?", answer: "לומד", wrong: ["אדום","שולחן","מעל"] },
-  { subtopicId: "g3.binyan_light", question: "בבניין פעל — הפועל מראה פעולה ___ .", answer: "פשוטה", wrong: ["מורכבת מאוד","שם עצם","מילת זמן"] },
-  { subtopicId: "g3.binyan_light", question: "המילה 'מורה' ב'המורה מלמדת' — איזה חלק דיבור?", answer: "שם עצם", wrong: ["פועל","מילת קישור","שם תואר"] },
+  { subtopicId: "g3.binyan_light", question: "בבניין פעל - הפועל מראה פעולה ___ .", answer: "פשוטה", wrong: ["מורכבת מאוד","שם עצם","מילת זמן"] },
+  { subtopicId: "g3.binyan_light", question: "המילה 'מורה' ב'המורה מלמדת' - איזה חלק דיבור?", answer: "שם עצם", wrong: ["פועל","מילת קישור","שם תואר"] },
 ];
 
 const GRAMMAR_MED_TENSE = [
@@ -130,11 +130,11 @@ const GRAMMAR_MED_TENSE = [
   { subtopicId: "g3.tense_system_intro", question: "בחר משפט בעתיד: ___", answer: "מחר נבקר בספרייה", wrong: ["אתמול ביקרנו בספרייה","עכשיו אנחנו בספרייה","הספרייה גדולה"] },
   { subtopicId: "g3.tense_system_intro", question: "בחר משפט בעבר: ___", answer: "אתמול אכלנו פיצה בבית", wrong: ["מחר נאכל","עכשיו אוכלים","אני רעב"] },
   { subtopicId: "g3.tense_system_intro", question: "בחר משפט בהווה: ___", answer: "הילדים משחקים עכשיו", wrong: ["מחר ישחקו","אתמול שיחקו","המשחק יפה"] },
-  { subtopicId: "g3.tense_system_intro", question: "'הוא רץ' ו'הוא רץ מחר' — באיזה משפט הפועל בעתיד?", answer: "הוא רץ מחר", wrong: ["הוא רץ","שניהם עבר","שניהם הווה"] },
+  { subtopicId: "g3.tense_system_intro", question: "'הוא רץ' ו'הוא רץ מחר' - באיזה משפט הפועל בעתיד?", answer: "הוא רץ מחר", wrong: ["הוא רץ","שניהם עבר","שניהם הווה"] },
   { subtopicId: "g3.tense_system_intro", question: "איזה משפט מתאר עבר?", answer: "אתמול ירד גשם", wrong: ["מחר ירד גשם","עכשיו יורד גשם","הגשם קר"] },
   { subtopicId: "g3.tense_system_intro", question: "איזה משפט מתאר עתיד?", answer: "בסוף השבוע נטייל", wrong: ["אתמול טיילנו","אנחנו מטיילים","הטיול ארוך"] },
-  { subtopicId: "g3.tense_system_intro", question: "הפועל 'שיחק' — באיזה זמן?", answer: "עבר", wrong: ["הווה","עתיד","שם עצם"] },
-  { subtopicId: "g3.tense_system_intro", question: "הפועל 'ישחק' — באיזה זמן?", answer: "עתיד", wrong: ["עבר","הווה","שם תואר"] },
+  { subtopicId: "g3.tense_system_intro", question: "הפועל 'שיחק' - באיזה זמן?", answer: "עבר", wrong: ["הווה","עתיד","שם עצם"] },
+  { subtopicId: "g3.tense_system_intro", question: "הפועל 'ישחק' - באיזה זמן?", answer: "עתיד", wrong: ["עבר","הווה","שם תואר"] },
 ];
 
 const GRAMMAR_MED_CONN = [
@@ -171,9 +171,9 @@ const GRAMMAR_MED_BINYAN = [
   { subtopicId: "g3.binyan_light", question: "איזו מילה מאותה משפחה כמו 'כתיבה'?", answer: "מכתב", wrong: ["רץ","גדול","מחר"] },
   { subtopicId: "g3.binyan_light", question: "איזו מילה מאותה משפחה כמו 'לימוד'?", answer: "תלמיד", wrong: ["שולחן","אדום","מעל"] },
   { subtopicId: "g3.binyan_light", question: "בבניין פעל הפועל מתאר ___ .", answer: "פעולה", wrong: ["מקום","צבע","מספר"] },
-  { subtopicId: "g3.binyan_light", question: "המילה 'מספר' (מספר סיפור) — מאיזה שורש?", answer: "ס.פ.ר", wrong: ["כ.ת.ב","ר.ץ","א.כ.ל"] },
-  { subtopicId: "g3.binyan_light", question: "המילה 'שומר' ו'שמירה' — מה משותף?", answer: "אותו שורש", wrong: ["אותו בניין בלבד","אין קשר","הם נרדפות"] },
-  { subtopicId: "g3.binyan_light", question: "המילה 'לומד' ו'לימוד' — מה משותף?", answer: "אותו שורש", wrong: ["אותו זמן","אין קשר","הם הפכים"] },
+  { subtopicId: "g3.binyan_light", question: "המילה 'מספר' (מספר סיפור) - מאיזה שורש?", answer: "ס.פ.ר", wrong: ["כ.ת.ב","ר.ץ","א.כ.ל"] },
+  { subtopicId: "g3.binyan_light", question: "המילה 'שומר' ו'שמירה' - מה משותף?", answer: "אותו שורש", wrong: ["אותו בניין בלבד","אין קשר","הם נרדפות"] },
+  { subtopicId: "g3.binyan_light", question: "המילה 'לומד' ו'לימוד' - מה משותף?", answer: "אותו שורש", wrong: ["אותו זמן","אין קשר","הם הפכים"] },
   { subtopicId: "g3.binyan_light", question: "מה שורש המילה 'אכל'?", answer: "א.כ.ל", wrong: ["ש.ת.ה","י.ש.ן","ר.ץ"] },
   { subtopicId: "g3.binyan_light", question: "מה שורש המילה 'שתה'?", answer: "ש.ת.ה", wrong: ["א.כ.ל","כ.ת.ב","ל.מ.ד"] },
 ];
@@ -181,12 +181,12 @@ const GRAMMAR_MED_BINYAN = [
 const GRAMMAR_HARD_TENSE = [
   { subtopicId: "g3.tense_system_intro", question: "איזה משפט משלב עבר והווה?", answer: "אתמול למדתי, ועכשיו אני חוזר על החומר", wrong: ["מחר אלמד","הלימוד קשה","המורה מלמדת"] },
   { subtopicId: "g3.tense_system_intro", question: "איזה משפט מתאר עתיד?", answer: "כשאגדל, ארצה לעזור לאנשים", wrong: ["כשהייתי קטן","עכשיו אני עוזר","העזרה חשובה"] },
-  { subtopicId: "g3.tense_system_intro", question: "'הוא כתב' לעומת 'הוא כותב' — מה ההבדל?", answer: "עבר לעומת הווה", wrong: ["עתיד לעומת עבר","אין הבדל","שם עצם לעומת פועל"] },
-  { subtopicId: "g3.tense_system_intro", question: "'היא תלמד' — באיזה זמן?", answer: "עתיד", wrong: ["עבר","הווה","ציווי"] },
+  { subtopicId: "g3.tense_system_intro", question: "'הוא כתב' לעומת 'הוא כותב' - מה ההבדל?", answer: "עבר לעומת הווה", wrong: ["עתיד לעומת עבר","אין הבדל","שם עצם לעומת פועל"] },
+  { subtopicId: "g3.tense_system_intro", question: "'היא תלמד' - באיזה זמן?", answer: "עתיד", wrong: ["עבר","הווה","ציווי"] },
   { subtopicId: "g3.tense_system_intro", question: "בחר את המשפט שמתאר תכנית לעתיד:", answer: "מחר נכין פרויקט", wrong: ["אתמול הכנו","עכשיו מכינים","הפרויקט גדול"] },
   { subtopicId: "g3.tense_system_intro", question: "בחר משפט שמתאר מה שכבר קרה:", answer: "לפני שבוע ביקרנו במוזיאון", wrong: ["מחר נבקר","אנחנו במוזיאון","המוזיאון יפה"] },
-  { subtopicId: "g3.tense_system_intro", question: "הפועל 'דיבר' — באיזה זמן?", answer: "עבר", wrong: ["הווה","עתיד","שם תואר"] },
-  { subtopicId: "g3.tense_system_intro", question: "הפועל 'ידבר' — באיזה זמן?", answer: "עתיד", wrong: ["עבר","הווה","מילת מקום"] },
+  { subtopicId: "g3.tense_system_intro", question: "הפועל 'דיבר' - באיזה זמן?", answer: "עבר", wrong: ["הווה","עתיד","שם תואר"] },
+  { subtopicId: "g3.tense_system_intro", question: "הפועל 'ידבר' - באיזה זמן?", answer: "עתיד", wrong: ["עבר","הווה","מילת מקום"] },
 ];
 
 const GRAMMAR_HARD_CONN = [
@@ -205,8 +205,8 @@ const GRAMMAR_HARD_BINYAN = [
   { subtopicId: "g3.binyan_light", question: "מה שורש המילה 'הזמנה' (הזמין)?", answer: "ז.מ.ן", wrong: ["כ.ת.ב","ל.מ.ד","ש.ח.ק"] },
   { subtopicId: "g3.binyan_light", question: "איזו מילה מאותה משפחה כמו 'כתיבה'?", answer: "כתב", wrong: ["רץ","גדול","מעל"] },
   { subtopicId: "g3.binyan_light", question: "איזו מילה מאותה משפחה כמו 'שמירה'?", answer: "שומר", wrong: ["אדום","שולחן","מחר"] },
-  { subtopicId: "g3.binyan_light", question: "המילה 'מספר' ו'סיפור' — מה משותף?", answer: "שורש ס.פ.ר", wrong: ["אין קשר","אותו זמן","הם הפכים"] },
-  { subtopicId: "g3.binyan_light", question: "המילה 'לומד' ו'מלמד' — מה משותף?", answer: "שורש ל.מ.ד", wrong: ["אין קשר","אותו בניין","הם נרדפות"] },
+  { subtopicId: "g3.binyan_light", question: "המילה 'מספר' ו'סיפור' - מה משותף?", answer: "שורש ס.פ.ר", wrong: ["אין קשר","אותו זמן","הם הפכים"] },
+  { subtopicId: "g3.binyan_light", question: "המילה 'לומד' ו'מלמד' - מה משותף?", answer: "שורש ל.מ.ד", wrong: ["אין קשר","אותו בניין","הם נרדפות"] },
   { subtopicId: "g3.binyan_light", question: "מה שורש המילה 'ריצה'?", answer: "ר.ו.ץ", wrong: ["כ.ת.ב","א.כ.ל","י.ש.ן"] },
   { subtopicId: "g3.binyan_light", question: "מה שורש המילה 'אכילה'?", answer: "א.כ.ל", wrong: ["ש.ת.ה","ל.מ.ד","כ.ת.ב"] },
 ];
@@ -340,13 +340,13 @@ const VOCAB_HARD_COMPARE = [
   { subtopicId: "g3.context_meaning", question: "מה ההבדל: 'בית' לעומת 'דירה'?", answer: "בית גדול יותר", wrong: ["אותו דבר","דירה גדולה יותר","אין קשר"] },
   { subtopicId: "g3.context_meaning", question: "מה ההבדל: 'נהר' לעומת 'נחל'?", answer: "נהר גדול יותר", wrong: ["נחל גדול יותר","אותו דבר","אין קשר"] },
   { subtopicId: "g3.context_meaning", question: "מה ההבדל: 'יער' לעומת 'חורש'?", answer: "יער גדול יותר", wrong: ["חורש גדול יותר","אותו דבר","אין קשר"] },
-  { subtopicId: "g3.context_meaning", question: "מה ההבדל: 'שמח' לעומת 'מרוצה'?", answer: "שמח — רגש, מרוצה — מהתוצאה", wrong: ["אותו דבר","הפכים","אין קשר"] },
-  { subtopicId: "g3.context_meaning", question: "מה ההבדל: 'ללמוד' לעומת 'לשנן'?", answer: "לשנן — לזכור בעל פה", wrong: ["אותו דבר","ללמוד — רק לקרוא","אין קשר"] },
-  { subtopicId: "g3.context_meaning", question: "מה ההבדל: 'לשאול' לעומת 'לבקש'?", answer: "לשאול — שאלה, לבקש — בקשה", wrong: ["אותו דבר","הפכים","אין קשר"] },
-  { subtopicId: "g3.context_meaning", question: "מה ההבדל: 'לעזור' לעומת 'להציל'?", answer: "להציל — במצב חירום", wrong: ["אותו דבר","לעזור — רק במשחק","אין קשר"] },
-  { subtopicId: "g3.context_meaning", question: "מה ההבדל: 'לחשוב' לעומת 'לדמיין'?", answer: "לדמיין — בתוך הראש", wrong: ["אותו דבר","לחשוב — רק בכתב","אין קשר"] },
-  { subtopicId: "g3.context_meaning", question: "מה ההבדל: 'רך' לעומת 'רך לעיסה'?", answer: "רך לעיסה — אוכל", wrong: ["אותו דבר","רך — רק בגד","אין קשר"] },
-  { subtopicId: "g3.context_meaning", question: "מה ההבדל: 'כוכב' לעומת 'כוכב לכת'?", answer: "כוכב לכת — בחלל", wrong: ["אותו דבר","כוכב — רק בים","אין קשר"] },
+  { subtopicId: "g3.context_meaning", question: "מה ההבדל: 'שמח' לעומת 'מרוצה'?", answer: "שמח - רגש, מרוצה - מהתוצאה", wrong: ["אותו דבר","הפכים","אין קשר"] },
+  { subtopicId: "g3.context_meaning", question: "מה ההבדל: 'ללמוד' לעומת 'לשנן'?", answer: "לשנן - לזכור בעל פה", wrong: ["אותו דבר","ללמוד - רק לקרוא","אין קשר"] },
+  { subtopicId: "g3.context_meaning", question: "מה ההבדל: 'לשאול' לעומת 'לבקש'?", answer: "לשאול - שאלה, לבקש - בקשה", wrong: ["אותו דבר","הפכים","אין קשר"] },
+  { subtopicId: "g3.context_meaning", question: "מה ההבדל: 'לעזור' לעומת 'להציל'?", answer: "להציל - במצב חירום", wrong: ["אותו דבר","לעזור - רק במשחק","אין קשר"] },
+  { subtopicId: "g3.context_meaning", question: "מה ההבדל: 'לחשוב' לעומת 'לדמיין'?", answer: "לדמיין - בתוך הראש", wrong: ["אותו דבר","לחשוב - רק בכתב","אין קשר"] },
+  { subtopicId: "g3.context_meaning", question: "מה ההבדל: 'רך' לעומת 'רך לעיסה'?", answer: "רך לעיסה - אוכל", wrong: ["אותו דבר","רך - רק בגד","אין קשר"] },
+  { subtopicId: "g3.context_meaning", question: "מה ההבדל: 'כוכב' לעומת 'כוכב לכת'?", answer: "כוכב לכת - בחלל", wrong: ["אותו דבר","כוכב - רק בים","אין קשר"] },
 ];
 
 const VOCAB_HARD_CLOZE = [
@@ -371,10 +371,10 @@ const VOCAB_HARD_FAMILIES = [
   { subtopicId: "g3.word_families", question: "איזו מילה מאותה משפחה כמו 'תקווה'?", answer: "מקווה", wrong: ["רץ","גדול","מחר"] },
   { subtopicId: "g3.word_families", question: "איזו מילה מאותה משפחה כמו 'אהבה'?", answer: "אוהב", wrong: ["אדום","שולחן","מעל"] },
   { subtopicId: "g3.word_families", question: "איזו מילה מאותה משפחה כמו 'פחד'?", answer: "פוחד", wrong: ["רץ","גדול","מחר"] },
-  { subtopicId: "g3.word_families", question: "המילה 'כתב' ו'מכתב' — מה משותף?", answer: "שורש כ.ת.ב", wrong: ["אין קשר","אותו זמן","הם הפכים"] },
-  { subtopicId: "g3.word_families", question: "המילה 'למד' ו'תלמיד' — מה משותף?", answer: "שורש ל.מ.ד", wrong: ["אין קשר","אותו בניין","הם נרדפות"] },
-  { subtopicId: "g3.word_families", question: "המילה 'שמר' ו'שמירה' — מה משותף?", answer: "שורש ש.מ.ר", wrong: ["אין קשר","אותו זמן","הם הפכים"] },
-  { subtopicId: "g3.word_families", question: "המילה 'אכל' ו'אוכל' — מה משותף?", answer: "שורש א.כ.ל", wrong: ["אין קשר","אותו בניין","הם נרדפות"] },
+  { subtopicId: "g3.word_families", question: "המילה 'כתב' ו'מכתב' - מה משותף?", answer: "שורש כ.ת.ב", wrong: ["אין קשר","אותו זמן","הם הפכים"] },
+  { subtopicId: "g3.word_families", question: "המילה 'למד' ו'תלמיד' - מה משותף?", answer: "שורש ל.מ.ד", wrong: ["אין קשר","אותו בניין","הם נרדפות"] },
+  { subtopicId: "g3.word_families", question: "המילה 'שמר' ו'שמירה' - מה משותף?", answer: "שורש ש.מ.ר", wrong: ["אין קשר","אותו זמן","הם הפכים"] },
+  { subtopicId: "g3.word_families", question: "המילה 'אכל' ו'אוכל' - מה משותף?", answer: "שורש א.כ.ל", wrong: ["אין קשר","אותו בניין","הם נרדפות"] },
 ];
 
 const VOCAB_CONTEXT_EXTRAS = [

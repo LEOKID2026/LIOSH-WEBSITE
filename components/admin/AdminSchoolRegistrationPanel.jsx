@@ -103,11 +103,11 @@ export default function AdminSchoolRegistrationPanel({
             </p>
             <p>
               <span className="text-white/50">איש קשר: </span>
-              {req.contactName || "—"}
+              {req.contactName || "-"}
             </p>
             <p>
               <span className="text-white/50">דוא״ל: </span>
-              {req.contactEmail || "—"}
+              {req.contactEmail || "-"}
             </p>
             {req.contactPhone ? (
               <p>

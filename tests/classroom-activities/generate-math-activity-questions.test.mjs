@@ -161,7 +161,7 @@ test("invalid math topic throws before unrelated questions are returned", async 
 const MATRIX_GRADES = Object.keys(GRADES);
 
 for (const gradeLevel of MATRIX_GRADES) {
-  test(`math matrix ${gradeLevel} — all listed operations match topic family`, async () => {
+  test(`math matrix ${gradeLevel} - all listed operations match topic family`, async () => {
     const topics = topicOptionsForSubject("math", gradeLevel).map((o) => o.key);
     assert.ok(topics.length > 0);
 

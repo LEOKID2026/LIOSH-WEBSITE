@@ -5,7 +5,7 @@ export default function SpaceMissionPrototypePage() {
   return (
     <>
       <Head>
-        <title>משימת חלל — אבטיפוס</title>
+        <title>משימת חלל - אבטיפוס</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <SpaceMissionPrototype />

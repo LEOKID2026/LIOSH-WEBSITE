@@ -42,7 +42,7 @@ function countCompletedAssistantTurns(lines) {
 }
 
 /**
- * Optional server-side runner (e.g. `/api/parent/copilot-turn`) — keeps LLM keys off the client.
+ * Optional server-side runner (e.g. `/api/parent/copilot-turn`) - keeps LLM keys off the client.
  * When omitted, uses bundled `runParentCopilotTurnAsync` / `runParentCopilotTurn` (detailed report default).
  *
  * @param {{ payload: object; selectedContextRef?: object | null; asyncTurnRunner?: ((input: object) => Promise<unknown>) | null }} props
@@ -118,7 +118,7 @@ export function ParentCopilotPanel({ payload, selectedContextRef = null, asyncTu
           answerCore = (res.answerBlocks || []).map((b) => b.textHe).join("\n\n");
           fullText = answerCore;
           if (res.suggestedFollowUp?.textHe) {
-            fullText += `\n\n— ${res.suggestedFollowUp.textHe}`;
+            fullText += `\n\n- ${res.suggestedFollowUp.textHe}`;
           }
         }
 
@@ -276,7 +276,7 @@ export function ParentCopilotPanel({ payload, selectedContextRef = null, asyncTu
           let displayText = ln.text;
           if (ln.role === "assistant" && ln.kind === "message" && ln.answerCore != null) {
             const core = String(ln.answerCore || "");
-            const fu = ln.followUpText && ln.revealFollowUp ? `\n\n— ${ln.followUpText}` : "";
+            const fu = ln.followUpText && ln.revealFollowUp ? `\n\n- ${ln.followUpText}` : "";
             displayText = core + fu;
           }
 

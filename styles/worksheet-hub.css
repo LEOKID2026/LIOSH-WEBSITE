@@ -838,6 +838,26 @@
   font-size: 0.9rem;
 }
 
+.public-seo-worksheets-slot .worksheet-hub-page {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+
+.public-seo-worksheets-slot .worksheet-hub-panel {
+  box-shadow: var(--ws-shadow);
+}
+
+@media (max-width: 640px) {
+  .public-seo-worksheets-slot .worksheet-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .public-seo-worksheets-slot .worksheet-hub-tabs {
+    flex-wrap: nowrap;
+  }
+}
+
 .worksheet-loading-dot {
   width: 0.55rem;
   height: 0.55rem;

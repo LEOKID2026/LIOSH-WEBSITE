@@ -352,7 +352,7 @@ function dualPhraseTask(id, stationLabel, pair) {
       { id: "x3", label: "book" },
     ]),
     solution: { c1: color, c2: noun },
-    feedbackShort: "שני הקרונות במקום — יוצאים!",
+    feedbackShort: "שני הקרונות במקום - יוצאים!",
   });
 }
 
@@ -384,7 +384,7 @@ function wordOrderTask(id, stationLabel, missionHe, words, distractor) {
     carriages: slots,
     pieces,
     solution: Object.fromEntries(words.map((w, i) => [`w${i}`, w])),
-    feedbackShort: "סדר המילים נכון — הרכבת יוצאת!",
+    feedbackShort: "סדר המילים נכון - הרכבת יוצאת!",
   });
 }
 
@@ -415,7 +415,7 @@ function contextWordTask(id, stationLabel, clue, word) {
   return wrapTrainTask("hard", "context_word", {
     id,
     stationLabel,
-    missionHe: `${clue} — העמיסו מילת הקשר`,
+    missionHe: `${clue} - העמיסו מילת הקשר`,
     carriages: [
       { id: "p1", kind: "fixed", content: clue.split(" ")[0] ?? clue },
       { id: "gap", kind: "slot" },
@@ -444,7 +444,7 @@ function imageSentenceTask(id, stationLabel, emoji, words, distractor) {
       { id: "d", label: distractor },
     ]),
     solution: Object.fromEntries(words.map((w, i) => [`w${i}`, w])),
-    feedbackShort: "המשפט מתאר את התמונה — יוצאים!",
+    feedbackShort: "המשפט מתאר את התמונה - יוצאים!",
   });
 }
 
@@ -580,7 +580,7 @@ function buildHardTrainTasks() {
       sentenceGapTask(
         `wt-h-sg-${i + 1}`,
         `תחנה ${i + 9}`,
-        `העמיסו מילה חסרה — ${mission}`,
+        `העמיסו מילה חסרה - ${mission}`,
         prefix,
         word,
         suffix,
@@ -639,7 +639,7 @@ export function validateTrainTask(task, fills) {
 
 /** @param {boolean} ok */
 export function trainFeedback(ok) {
-  return ok ? "🚂 הרכבת יוצאת מהתחנה!" : "הקרונות רועדים — בדקו שוב";
+  return ok ? "🚂 הרכבת יוצאת מהתחנה!" : "הקרונות רועדים - בדקו שוב";
 }
 
 /** @param {DifficultyId} difficulty */
@@ -695,7 +695,7 @@ export function auditWordTrainContent() {
         if (!EASY_TYPES.has(type)) gaps.push(`${task.id}: סוג ${type} לא מותר ברמה קלה`);
         if (EASY_BANNED.has(type)) gaps.push(`${task.id}: סוג ${type} אסור ברמה קלה`);
         if (trainEasySlotCount(task) !== 1) {
-          gaps.push(`${task.id}: קל — צריך בדיוק קרון ריק אחד`);
+          gaps.push(`${task.id}: קל - צריך בדיוק קרון ריק אחד`);
         }
       }
       if (level === "medium" && !MEDIUM_TYPES.has(type)) {
@@ -708,7 +708,7 @@ export function auditWordTrainContent() {
       if (trainCanCopy(task)) gaps.push(`${task.id}: העתקה מהשאלה`);
       if (trainAnswerInPrompt(task)) gaps.push(`${task.id}: התשובה מופיעה ב-prompt`);
       if (type === "fill_gaps" && !trainGapHasSingleBlank(task)) {
-        gaps.push(`${task.id}: fill_gaps — צריך בדיוק חלל אחד`);
+        gaps.push(`${task.id}: fill_gaps - צריך בדיוק חלל אחד`);
       }
       if (!trainSolutionInPieces(task)) {
         gaps.push(`${task.id}: אין מספיק קלפים לפתרון (multiset)`);

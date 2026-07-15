@@ -74,11 +74,11 @@ function HowToModal({ open, onClose }) {
           </button>
         </div>
         <ul className="list-disc space-y-2 pr-5 text-sm text-zinc-200">
-          <li>זוג 6 — שני שחקנים, שבעה קלפים לכל אחד.</li>
+          <li>זוג 6 - שני שחקנים, שבעה קלפים לכל אחד.</li>
           <li>הפותח נקבע לפי הכפול הגבוה ביותר (או סכום הנקודות).</li>
           <li>חיבור קלף לקצוות השרשרת לפי מספר התואם.</li>
-          <li>אין מהלך חוקי — מדלגים; שני דילוגים ברצף מסיימים בחסימה (סכום נקודות נמוך מנצח).</li>
-          <li>יציאה מלאה — ניצחון.</li>
+          <li>אין מהלך חוקי - מדלגים; שני דילוגים ברצף מסיימים בחסימה (סכום נקודות נמוך מנצח).</li>
+          <li>יציאה מלאה - ניצחון.</li>
         </ul>
       </div>
     </div>
@@ -221,12 +221,12 @@ export default function DominoesScreen({ roomId }) {
         {showLobbyWait ? (
           <div className="mt-6 rounded-xl border border-amber-500/30 bg-amber-950/25 px-4 py-6 text-center text-amber-100">
             <p className="text-lg font-bold">ממתינים לשחקן…</p>
-            <p className="mt-2 text-sm text-amber-200/90">דומינו — נדרשים שני שחקנים</p>
+            <p className="mt-2 text-sm text-amber-200/90">דומינו - נדרשים שני שחקנים</p>
           </div>
         ) : null}
 
         {showSessionInitError ? (
-          <p className="mt-4 text-center text-sm text-rose-200">לא ניתן לטעון את המשחק — נסה לרענן</p>
+          <p className="mt-4 text-center text-sm text-rose-200">לא ניתן לטעון את המשחק - נסה לרענן</p>
         ) : null}
         {showBoardLoading ? <p className="mt-6 text-center text-zinc-400">טוען…</p> : null}
 
@@ -317,7 +317,7 @@ export default function DominoesScreen({ roomId }) {
               {finished ? (
                 <div className="space-y-1">
                   <p className="text-lg font-bold text-amber-200">
-                    {isDraw ? "תיקו (חסימה)" : didIWin ? "ניצחת!" : `הפסדת — ניצח ${seatLabels[vm.winnerSeat ?? -1] ?? ""}`}
+                    {isDraw ? "תיקו (חסימה)" : didIWin ? "ניצחת!" : `הפסדת - ניצח ${seatLabels[vm.winnerSeat ?? -1] ?? ""}`}
                   </p>
                   {vm.mySettlementAmount != null ? (
                     <p className="text-sm text-zinc-400">
@@ -332,7 +332,7 @@ export default function DominoesScreen({ roomId }) {
                     ? "שולח…"
                     : vm.canClientAct
                       ? vm.mustPass
-                        ? "אין לך מהלך חוקי — דלג"
+                        ? "אין לך מהלך חוקי - דלג"
                         : "בחר קלף (או צד אם מוצג)"
                       : "המתן לתורך"}
                 </p>

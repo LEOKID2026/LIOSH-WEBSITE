@@ -249,7 +249,7 @@ export default function AdminVideoSceneList({ project, assets, onChange, onSelec
                     <span className="text-xs text-white/50">{VB_SCENE_MEDIA}</span>
                     <div className="mt-1 flex items-center gap-2 justify-end">
                       <span className="text-xs text-white/70 truncate max-w-[12rem]">
-                        {media?.filename || "—"}
+                        {media?.filename || "-"}
                       </span>
                       <button
                         type="button"

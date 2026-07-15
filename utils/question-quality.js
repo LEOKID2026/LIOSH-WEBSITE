@@ -3,7 +3,7 @@
  */
 
 const NIQQUD_RE = /[\u0591-\u05C7]/g;
-const PUNCT_EDGE_RE = /^[\s"'`׳״“”‘’.,!?;:()[\]{}\-–—]+|[\s"'`׳״“”‘’.,!?;:()[\]{}\-–—]+$/g;
+const PUNCT_EDGE_RE = /^[\s"'`׳״“”‘’.,!?;:()[\]{}\-–-]+|[\s"'`׳״“”‘’.,!?;:()[\]{}\-–-]+$/g;
 
 /** @param {string} text */
 export function normalizeOptionForCompare(text) {

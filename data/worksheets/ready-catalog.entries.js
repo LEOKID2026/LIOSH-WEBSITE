@@ -97,7 +97,7 @@ export const READY_CATALOG_ENTRIES = [
     gradeKey: "g2",
     topicKey: "fractions",
     mathPracticeFormat: "fractions",
-    titleHe: "שברי יחידה — חצי ורבע",
+    titleHe: "שברי יחידה - חצי ורבע",
     levelKey: "regular",
     count: 12,
     seed: 60106,

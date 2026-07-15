@@ -426,8 +426,8 @@ export default function ParentReportDetailedPage() {
             if (!cancelled) {
               setParentReportError(
                 isTeacherSource
-                  ? "נדרשת התחברות כמורה — התחברו מחדש ונסו שוב."
-                  : "נדרשת התחברות כהורה — השתמשו בכניסת הורה ונסו שוב."
+                  ? "נדרשת התחברות כמורה - התחברו מחדש ונסו שוב."
+                  : "נדרשת התחברות כהורה - השתמשו בכניסת הורה ונסו שוב."
               );
               setPayload(null);
               setBaseReport(null);
@@ -504,7 +504,7 @@ export default function ParentReportDetailedPage() {
               );
             setParentReportError(
               networkLike
-                ? "טעינת הדוח לקחה יותר מדי זמן — נסו טווח קצר יותר או רענון."
+                ? "טעינת הדוח לקחה יותר מדי זמן - נסו טווח קצר יותר או רענון."
                 : "לא ניתן לטעון את הדוח המקיף כרגע."
             );
             setPayload(null);
@@ -887,7 +887,7 @@ export default function ParentReportDetailedPage() {
       layoutLockViewport={!reportImmersive && !(payload && periodHasPracticeEvidence)}
     >
       <Head>
-        <title>דוח מקיף לתקופה — Leo Kids</title>
+        <title>דוח מקיף לתקופה - Leo Kids</title>
         <style>{`
           .pr-detailed-page {
             --pr-h1: 1.35rem;
@@ -1778,7 +1778,7 @@ export default function ParentReportDetailedPage() {
                     {displayMode === "summary" ? "דוח מקוצר" : "דוח מלא"}
                   </p>
                   <p className="pr-detailed-body-text text-white/85 text-sm md:text-base">
-                    דוח הורים מקיף — מבוסס על התאריכים הנבחרים
+                    דוח הורים מקיף - מבוסס על התאריכים הנבחרים
                   </p>
                   <p className="pr-detailed-muted text-sm mt-2">
                     טווח תאריכים: {pi.startDateLabelHe} – {pi.endDateLabelHe}
@@ -1793,7 +1793,7 @@ export default function ParentReportDetailedPage() {
                   excludeHomeTipTextsHe={serverHomeRecommendationsListHe}
                 />
 
-                {/* C — מה עשינו בתקופה הזאת */}
+                {/* C - מה עשינו בתקופה הזאת */}
                 <SectionCard title="מה עשינו בתקופה הזאת" compact={displayMode === "summary"}>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
                   <div className="rounded-lg bg-white/5 border border-white/10 p-3 text-center">
@@ -1920,7 +1920,7 @@ export default function ParentReportDetailedPage() {
                   </SectionCard>
                 ) : null}
 
-                {/* D — אותו payload; מלא/מקוצר; כותרת אזור + לכל מקצוע כותרת + כרטיסים פנימיים בלבד */}
+                {/* D - אותו payload; מלא/מקוצר; כותרת אזור + לכל מקצוע כותרת + כרטיסים פנימיים בלבד */}
                 {displayMode === "summary" ? (
                   <section
                     className="pr-detailed-subjects-region mb-5 md:mb-6 min-w-0"
@@ -1995,7 +1995,7 @@ export default function ParentReportDetailedPage() {
                             {sp.evidenceExamples?.length ? (
                               <div className="pr-detailed-tier-examples">
                                 <p className="pr-detailed-body-text text-sm m-0 mb-2 text-white/[0.82]">
-                                  דוגמאות מהתרגול — לעיון ההורים, בלי צורך לעבור על הכול בבת אחת.
+                                  דוגמאות מהתרגול - לעיון ההורים, בלי צורך לעבור על הכול בבת אחת.
                                 </p>
                                 <ul className="pr-detailed-muted text-xs space-y-1.5 m-0 list-none pr-0 leading-relaxed">
                                   {sp.evidenceExamples.map((e, idx) => (

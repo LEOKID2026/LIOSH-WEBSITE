@@ -17,17 +17,17 @@ import {
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "../..");
 
-test("duration with zero answers — legacy path credits zero seconds at 300s+", () => {
+test("duration with zero answers - legacy path credits zero seconds at 300s+", () => {
   assert.equal(legacyTopicCreditSeconds(300), 0);
   assert.equal(legacyTopicCreditSeconds(600), 0);
 });
 
-test("inflated duration — fairness caps per question; session cap 3h", () => {
+test("inflated duration - fairness caps per question; session cap 3h", () => {
   assert.equal(fairnessTopicCreditSeconds(600_000), 600);
   assert.equal(capSessionCreditedMs(4 * 60 * 60 * 1000), 3 * 60 * 60 * 1000);
 });
 
-test("partial / unanswered — legacy credits zero at 300s+; fairness credits only positive ms", () => {
+test("partial / unanswered - legacy credits zero at 300s+; fairness credits only positive ms", () => {
   assert.equal(topicCreditSecondsFromQuestionClose(0, true, 0), 0);
   assert.equal(topicCreditSecondsFromQuestionClose(120_000, true, 0), 120);
   assert.equal(topicCreditSecondsFromQuestionClose(120_000, false, 360), 0);

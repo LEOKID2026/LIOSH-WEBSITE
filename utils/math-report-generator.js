@@ -1408,8 +1408,8 @@ export function generateRecommendations(operations, mistakes) {
     // המלצות "לא טובות" (אדום) — דיוק נמוך או הרבה טעויות בתקופה
     if ((hasQuestions && accuracy < 65 && questions >= TH.minDataQuestions) || mistakesCount >= 10) {
       const msgParts = [];
-      if (accuracy < 65) msgParts.push(`דיוק נמוך (${accuracy}%) — מומלץ לחזור על הבסיס ולעבוד לאט`);
-      if (mistakesCount >= 10) msgParts.push(`${mistakesCount} טעויות בתקופה — כדאי לתרגל את הנושא באופן ממוקד`);
+      if (accuracy < 65) msgParts.push(`דיוק נמוך (${accuracy}%) - מומלץ לחזור על הבסיס ולעבוד לאט`);
+      if (mistakesCount >= 10) msgParts.push(`${mistakesCount} טעויות בתקופה - כדאי לתרגל את הנושא באופן ממוקד`);
       if (timeMinutes < 10) msgParts.push("מומלץ גם להגדיל את זמן התרגול לנושא הזה");
 
       recommendations.push({

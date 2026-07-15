@@ -119,7 +119,7 @@ export default function AssignActivityModal({
       });
       setPreview(qs || []);
     } catch {
-      setError("לא ניתן ליצור שאלות — נסו נושא אחר");
+      setError("לא ניתן ליצור שאלות - נסו נושא אחר");
     } finally {
       setBusy(false);
     }

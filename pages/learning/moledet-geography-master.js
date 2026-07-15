@@ -2858,7 +2858,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
                   <div className="bg-black/30 border border-white/10 rounded-lg p-3">
                     <div className="text-sm text-white/60 mb-2">התקדמות חודשית</div>
                     <div className="flex justify-between text-xs text-white/60 mb-1">
-                      <span>{Math.round(monthlyPersistenceView?.currentMinutes ?? 0)} / {monthlyPersistenceView?.goalMinutes ?? "—"} דק׳</span>
+                      <span>{Math.round(monthlyPersistenceView?.currentMinutes ?? 0)} / {monthlyPersistenceView?.goalMinutes ?? "-"} דק׳</span>
                       <span>{monthlyPersistenceView?.progressPct ?? 0}%</span>
                     </div>
                     <div className="w-full bg-black/50 rounded-full h-3 mb-2">
@@ -2993,7 +2993,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
                       📈 תרגול מדורג
                     </div>
                     <div className="text-sm text-white/70">
-                      תרגול מדורג — מתחיל ברמה נמוכה ומתקדם לרמה שבחרת
+                      תרגול מדורג - מתחיל ברמה נמוכה ומתקדם לרמה שבחרת
                     </div>
                   </button>
                   

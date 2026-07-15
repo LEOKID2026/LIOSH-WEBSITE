@@ -41,7 +41,7 @@ const LABEL = {
   nQuestions: "שאלות",
   perTopicTopicTrend: "מגמה (נושא)",
   computedTotals: "מחושב אוטומטית",
-  topicsDisabledHint: "לחצו לפתיחת הטבלה. עדכון (Apply) רק מסומני פעיל עם שאלות > 0 — לא מחייב בחירה בכל מקצוע.",
+  topicsDisabledHint: "לחצו לפתיחת הטבלה. עדכון (Apply) רק מסומני פעיל עם שאלות > 0 - לא מחייב בחירה בכל מקצוע.",
   applySourceHint: "רק שורות נושא: פעיל + שאלות קובעות מה ייכלל ב Apply.",
 };
 

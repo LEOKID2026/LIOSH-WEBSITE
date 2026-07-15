@@ -52,7 +52,7 @@ export default function StudentGamesHubPage() {
 
           <GamesHubHeader
             title=""
-            subtitle="בחרו את סוג החוויה שמתאימה לכם — משחקי ליאו, משחקים ללא אינטרנט."
+            subtitle="בחרו את סוג החוויה שמתאימה לכם - משחקי ליאו, משחקים ללא אינטרנט."
             titleClass={GH.hubTitle}
             subtitleClass={GH.hubSub}
           />

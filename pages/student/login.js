@@ -126,7 +126,7 @@ export default function StudentLoginPage() {
     setMessage("");
     try {
       if (shouldBlockGuestStartAfterResumeFailure(guestResumeBanner?.code)) {
-        setMessage(guestResumeBanner?.messageHe || "המספר כבר שויך להורה — התחבר/י עם שם משתמש וקוד.");
+        setMessage(guestResumeBanner?.messageHe || "המספר כבר שויך להורה - התחבר/י עם שם משתמש וקוד.");
         return;
       }
 

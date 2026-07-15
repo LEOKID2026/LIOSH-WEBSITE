@@ -73,8 +73,8 @@ const G2_VOCAB = [
   { question: "מה נרדף ל'קטן'?", answer: "זעיר", wrong: ["גדול", "רחב", "גבוה"] },
   { question: "מה נרדף ל'מהיר'?", answer: "זריז", wrong: ["איטי", "כבד", "עייף"] },
   { question: "מה נרדף ל'איטי'?", answer: "מתון", wrong: ["מהיר", "חזק", "רעש"] },
-  { question: "במשפט 'הילד אכל ארוחת בוקר' — מה פירוש 'ארוחת בוקר'?", answer: "האוכל שאוכלים בבוקר", wrong: ["ארוחת ערב", "חטיף בלילה", "ארוחת צהריים"] },
-  { question: "במשפט 'היא לבשה מעיל' — מה פירוש 'מעיל'?", answer: "בגד חם לחורף", wrong: ["כובע קיץ", "נעליים", "כפפות בלבד"] },
+  { question: "במשפט 'הילד אכל ארוחת בוקר' - מה פירוש 'ארוחת בוקר'?", answer: "האוכל שאוכלים בבוקר", wrong: ["ארוחת ערב", "חטיף בלילה", "ארוחת צהריים"] },
+  { question: "במשפט 'היא לבשה מעיל' - מה פירוש 'מעיל'?", answer: "בגד חם לחורף", wrong: ["כובע קיץ", "נעליים", "כפפות בלבד"] },
   { question: "מה ההפך מ'חם'?", answer: "קר", wrong: ["חמים", "לוהט", "נעים"] },
   { question: "מה ההפך מ'יום'?", answer: "לילה", wrong: ["בוקר", "צהריים", "ערב"] },
   { question: "מה ההפך מ'פתוח'?", answer: "סגור", wrong: ["רחב", "גדול", "מלא"] },
@@ -189,7 +189,7 @@ function buildG2ReadingPool() {
       levels: ["easy", "medium"],
       patternFamily: "g2_simple_punctuation_read",
       subtype: "punctuation_pick",
-      question: `במשפט '${item.s}' — ${item.q}`,
+      question: `במשפט '${item.s}' - ${item.q}`,
       answers,
       correct,
     });
@@ -207,7 +207,7 @@ function resolveExpandQuestion(item, topic, i, baseLen) {
   } else if (item.sentence && (item.q || item.question)) {
     base = `${item.sentence} ${item.q || item.question}`.trim();
   } else {
-    base = `כיתה ב׳ — ${topic}`;
+    base = `כיתה ב׳ - ${topic}`;
   }
   return i >= baseLen ? `${base} · משפט ${i + 1}` : base;
 }

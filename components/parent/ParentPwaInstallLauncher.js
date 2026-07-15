@@ -105,7 +105,7 @@ export default function ParentPwaInstallLauncher({ isBright = false }) {
       {promptAccepted ? (
         <p className={T.infoMsg}>
           Chrome אישר את ההתקנה. אם האייקון P LEO KIDS לא הופיע במסך הבית תוך דקה, רענן את הדף ונסה
-          שוב. אם עדיין אין אייקון — הסר התקנות קודמות של האתר מהגדרות האפליקציות.
+          שוב. אם עדיין אין אייקון - הסר התקנות קודמות של האתר מהגדרות האפליקציות.
         </p>
       ) : null}
 
@@ -115,7 +115,7 @@ export default function ParentPwaInstallLauncher({ isBright = false }) {
             ? "חלון ההתקנה כבר נוצל. רענן את הדף כדי לנסות שוב, אם Chrome עדיין מאפשר."
             : unavailableReason === "error"
               ? "חלון ההתקנה נכשל. רענן את הדף ונסה שוב."
-              : "Chrome לא הציע חלון התקנה ל-P LEO KIDS כרגע. ודא/י ש-LEO KIDS מותקנת, ונסה/י רענון — שתי האפליקציות אמורות להיות נפרדות."}
+              : "Chrome לא הציע חלון התקנה ל-P LEO KIDS כרגע. ודא/י ש-LEO KIDS מותקנת, ונסה/י רענון - שתי האפליקציות אמורות להיות נפרדות."}
         </p>
       ) : null}
     </div>

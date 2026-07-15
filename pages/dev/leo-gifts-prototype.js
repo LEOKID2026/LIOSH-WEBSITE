@@ -5,7 +5,7 @@ export default function LeoGiftsPrototypePage() {
   return (
     <>
       <Head>
-        <title>המתנות של ליאו — אבטיפוס</title>
+        <title>המתנות של ליאו - אבטיפוס</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <LeoGiftsPrototype />

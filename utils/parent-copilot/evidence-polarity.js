@@ -50,12 +50,12 @@ export function meaningHeForPolarity(displayName, q, acc) {
     return `ב${label} אין עדיין מספיק תרגול בטווח התקופה כדי לקבוע כיוון.`;
   }
   if (tier === POLARITY.thin) {
-    return `ב${label} יש ${questions} שאלות בלבד — עדיין מוקדם לקבוע כיוון ברור.`;
+    return `ב${label} יש ${questions} שאלות בלבד - עדיין מוקדם לקבוע כיוון ברור.`;
   }
   if (tier === POLARITY.strong) {
-    return `ב${label} נראית יציבות טובה יחסית (${accuracy}% דיוק על ${questions} שאלות) — כדאי לשמר תרגול שגרתי.`;
+    return `ב${label} נראית יציבות טובה יחסית (${accuracy}% דיוק על ${questions} שאלות) - כדאי לשמר תרגול שגרתי.`;
   }
-  return `ב${label} יש ${questions} שאלות עם דיוק של כ ${accuracy}% — זה מצב שדורש חיזוק ממוקד, לא סימן ליציבות חזקה.`;
+  return `ב${label} יש ${questions} שאלות עם דיוק של כ ${accuracy}% - זה מצב שדורש חיזוק ממוקד, לא סימן ליציבות חזקה.`;
 }
 
 /**

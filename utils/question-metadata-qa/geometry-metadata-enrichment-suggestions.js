@@ -77,14 +77,14 @@ function suggestPrerequisiteGeometry(raw, record) {
     return {
       ids: ["tri_sum_180"],
       confidence: "medium",
-      reason: "Late-band triangle angle-sum row extends the same principle — confirm sequencing before enforcing.",
+      reason: "Late-band triangle angle-sum row extends the same principle - confirm sequencing before enforcing.",
     };
   }
 
   return {
     ids: [],
     confidence: "medium",
-    reason: "No automated prerequisite chain for this template — curriculum authors map explicitly.",
+    reason: "No automated prerequisite chain for this template - curriculum authors map explicitly.",
   };
 }
 

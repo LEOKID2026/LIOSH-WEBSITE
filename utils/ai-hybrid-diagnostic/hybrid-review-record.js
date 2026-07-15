@@ -118,7 +118,7 @@ export function buildHybridCaseReviewRecord({
           : !!(d.v2TopId && d.aiTopId && d.v2TopId !== d.aiTopId),
       narrativeHe:
         typeof d.hasDisagreement === "boolean" && d.hasDisagreement
-          ? `התנגשות: V2 בחר ${d.v2TopId || "—"} לעומת Hybrid top ${d.aiTopId || "—"} (חומרה: ${d.severity || "—"})`
+          ? `התנגשות: V2 בחר ${d.v2TopId || "-"} לעומת Hybrid top ${d.aiTopId || "-"} (חומרה: ${d.severity || "-"})`
           : "אין התנגשות בין V2 לבין היפותזה עליונה של Hybrid.",
     },
   };

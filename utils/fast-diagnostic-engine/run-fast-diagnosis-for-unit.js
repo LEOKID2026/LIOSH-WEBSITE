@@ -24,7 +24,7 @@ function stripInternalTokensHe(s) {
 /**
  * @param {object} params
  * @param {Record<string, unknown>} params.unit — diagnosticEngineV2 unit
- * @param {import("../mistake-event.js").MistakeEventV1[]} params.events — filtered row events
+ * @param {import("../mistake-event.js").MistakeEventV1[]} params.events - filtered row events
  * @param {Record<string, unknown>} params.row
  */
 export function runFastDiagnosisForUnit({ unit, events, row }) {
@@ -162,16 +162,16 @@ function buildHypothesisHe({ diagnosisStage, topicName, dominantTag, w, ratio, s
   }
   if (diagnosisStage === "working_hypothesis") {
     return normalizeParentFacingHe(
-      `השערה ראשונית ב${topicName}: חוזרות על אותו סוג טעות — כדאי לאמת בהמשך עם עוד דוגמאות. ${tagLab ? `מוקד: ${tagLab}.` : ""}`
+      `השערה ראשונית ב${topicName}: חוזרות על אותו סוג טעות - כדאי לאמת בהמשך עם עוד דוגמאות. ${tagLab ? `מוקד: ${tagLab}.` : ""}`
     );
   }
   if (diagnosisStage === "early_signal") {
     return normalizeParentFacingHe(
-      `סימן ראשוני ב${topicName}${tagLab ? ` — נראה קשר ל${tagLab}` : summary ? ` — ${summary}` : ""}. מדובר בתמונה מוקדמת בלבד.`
+      `סימן ראשוני ב${topicName}${tagLab ? ` - נראה קשר ל${tagLab}` : summary ? ` - ${summary}` : ""}. מדובר בתמונה מוקדמת בלבד.`
     );
   }
   return normalizeParentFacingHe(
-    `עדיין לא ניתן לבחור דפוס יציב ב${topicName} — נמשיך לאסוף תצפיות ממוקדות.${w > 0 ? ` (${w} טעויות בטווח)` : ""}`
+    `עדיין לא ניתן לבחור דפוס יציב ב${topicName} - נמשיך לאסוף תצפיות ממוקדות.${w > 0 ? ` (${w} טעויות בטווח)` : ""}`
   );
 }
 
@@ -269,16 +269,16 @@ function buildNextProbe({ diagnosisStage, topicName, dominantTag, subjectId, w, 
 function buildParentSafeHe({ diagnosisStage, topicName, hypothesisHe, w, q, suspectedErrorTags, nextProbe }) {
   const stagePhrase =
     diagnosisStage === "early_signal"
-      ? "זהו סימן ראשוני בלבד — לא כיוון סופי."
+      ? "זהו סימן ראשוני בלבד - לא כיוון סופי."
       : diagnosisStage === "working_hypothesis"
-        ? "זוהי השערת עבודה — כדאי לאמת בתרגול המשך."
+        ? "זוהי השערת עבודה - כדאי לאמת בתרגול המשך."
         : diagnosisStage === "stable_diagnosis"
-          ? "הדפוס נראה יציב יחסית לטווח הזה — עדיין כדאי לעקוב גם בהמשך."
+          ? "הדפוס נראה יציב יחסית לטווח הזה - עדיין כדאי לעקוב גם בהמשך."
           : "עדיין חסר אות חזק מספיק; נמשיך לאסוף תצפיות.";
 
   const tags = tagsSummaryHe(suspectedErrorTags.slice(0, 2));
   const base = `${hypothesisHe} ${stagePhrase}`;
   const probe = nextProbe?.reasonHe ? ` הצעה להמשך: ${nextProbe.reasonHe}` : "";
-  const counts = q > 0 || w > 0 ? ` (שאלות בטווח: ${q || "—"}, טעויות נספרות: ${w})` : "";
+  const counts = q > 0 || w > 0 ? ` (שאלות בטווח: ${q || "-"}, טעויות נספרות: ${w})` : "";
   return normalizeParentFacingHe(`${base}${tags ? ` נושאי מיקוד אפשריים: ${tags}.` : ""}${probe}${counts}`);
 }

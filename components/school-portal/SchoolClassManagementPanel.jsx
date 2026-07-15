@@ -31,7 +31,7 @@ export default function SchoolClassManagementPanel({ accessToken, onChanged }) {
   const [message, setMessage] = useState("");
 
   const gradeOptions = useMemo(
-    () => [{ value: "", label: "—" }, ...SCHOOL_GRADE_OPTIONS.map((g) => ({ value: g.level, label: g.label }))],
+    () => [{ value: "", label: "-" }, ...SCHOOL_GRADE_OPTIONS.map((g) => ({ value: g.level, label: g.label }))],
     []
   );
 

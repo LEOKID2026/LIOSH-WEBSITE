@@ -6,7 +6,7 @@ export default function TowerStackPrototypePage() {
   return (
     <>
       <Head>
-        <title>מגדל קוביות — אבטיפוס</title>
+        <title>מגדל קוביות - אבטיפוס</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <TowerStackPrototype />

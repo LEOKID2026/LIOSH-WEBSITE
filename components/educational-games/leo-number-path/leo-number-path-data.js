@@ -113,7 +113,7 @@ function buildParityTask(difficulty, cfg, guard) {
     orderMatters: false,
     promptHe: isEven
       ? "בחרו את כל המספרים הזוגיים על המסלול"
-      : "בחרו את כל המספרים האי־זוגיים על המסלול",
+      : "בחרו את כל המספרים האי-זוגיים על המסלול",
   };
 }
 
@@ -271,7 +271,7 @@ export function pathFeedback(ok) {
 
 /** @param {number[]} selected @param {boolean} orderMatters */
 export function formatSelectedPath(selected, orderMatters) {
-  if (!selected.length) return "—";
+  if (!selected.length) return "-";
   return orderMatters ? selected.join(" → ") : selected.join(" · ");
 }
 

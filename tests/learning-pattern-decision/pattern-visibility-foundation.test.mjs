@@ -130,4 +130,4 @@ assert.equal(resolveEvidenceStrength(5), "emerging");
 assert.equal(resolveEvidenceStrength(12), "strong");
 assert.equal(resolveEvidenceStrength(3), "small_sample");
 
-console.log("pattern-visibility-foundation.test.mjs — all passed");
+console.log("pattern-visibility-foundation.test.mjs - all passed");

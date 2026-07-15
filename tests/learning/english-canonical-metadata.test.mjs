@@ -67,7 +67,7 @@ function countPoolRows(pools) {
   return total;
 }
 
-describe("Q2-C3 — English pool enrichment", () => {
+describe("Q2-C3 - English pool enrichment", () => {
   test("grammar row keeps explicit diagnosticSkillId", () => {
     const out = enrichEnglishPoolRowWithCanonicalMetadata(GRAMMAR_ROW, {
       topic: "grammar",
@@ -148,7 +148,7 @@ describe("Q2-C3 — English pool enrichment", () => {
   });
 });
 
-describe("Q2-C3 — English generator attach", () => {
+describe("Q2-C3 - English generator attach", () => {
   test("generateQuestion grammar attaches params.canonicalMetadata", () => {
     const q = generateQuestion(1, "grammar", "g3", null, "easy", {
       forceSkillId: "en_grammar_be_present",
@@ -188,7 +188,7 @@ describe("Q2-C3 — English generator attach", () => {
   });
 });
 
-describe("Q2-C3 — English pool bank coverage", () => {
+describe("Q2-C3 - English pool bank coverage", () => {
   test("exported pools have row.canonicalMetadata", async () => {
     const { GRAMMAR_POOLS, SENTENCE_POOLS, TRANSLATION_POOLS } = await import(
       "../../data/english-questions/index.js"
@@ -221,7 +221,7 @@ describe("Q2-C3 — English pool bank coverage", () => {
   });
 });
 
-describe("Q2-C3 — helpers", () => {
+describe("Q2-C3 - helpers", () => {
   test("inferEnglishQuestionType maps topics", () => {
     assert.equal(inferEnglishQuestionType("grammar", {}), "grammar");
     assert.equal(inferEnglishQuestionType("vocabulary", {}), "vocabulary");
@@ -251,7 +251,7 @@ describe("Q2-C3 — helpers", () => {
   });
 });
 
-describe("Q2-C3 — freeze preserves english canonicalMetadata", () => {
+describe("Q2-C3 - freeze preserves english canonicalMetadata", () => {
   test("normalizeAndFreezeQuestionSet keeps params.canonicalMetadata", () => {
     const q = generateQuestion(1, "grammar", "g3", null, "easy", {
       forceSkillId: "en_grammar_be_present",

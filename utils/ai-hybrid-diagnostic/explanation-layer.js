@@ -49,7 +49,7 @@ export function buildHybridExplanations({ snapshot, ranking, probeIntel, gate, c
       : "לפי נתוני התרגול בטווח הזה, יש תמונת מצב ראשונית. ";
     const tail =
       gate.mode === "rank_only"
-        ? "מידת הוודאות בינונית — כדאי לקרוא את ההסבר יחד עם המורה לפני החלטות."
+        ? "מידת הוודאות בינונית - כדאי לקרוא את ההסבר יחד עם המורה לפני החלטות."
         : "ניתן להשתמש בהמלצות הבדיקה כדי לצמצם אי ודאות.";
     return base + tail;
   }
@@ -87,7 +87,7 @@ export function buildHybridExplanations({ snapshot, ranking, probeIntel, gate, c
   }
 
   const uncertaintyLine = requireUncertainty
-    ? "מידת הוודאות: ייתכנו פרשנויות שונות — יש לשלב שיקול דעת מבוגר."
+    ? "מידת הוודאות: ייתכנו פרשנויות שונות - יש לשלב שיקול דעת מבוגר."
     : "מידת הוודאות גבוהה יחסית לפי שערי המערכת לטווח זה.";
 
   return {

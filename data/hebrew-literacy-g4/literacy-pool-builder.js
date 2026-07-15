@@ -112,7 +112,7 @@ function expandPool(baseItems, topic, patternFamily, subtype, level, targetCount
         question = item.question.replace(/\?$/, ` ב${ctx}?`);
       }
     } else {
-      question = `כיתה ד׳ — ${topic} · ${i + 1}`;
+      question = `כיתה ד׳ - ${topic} · ${i + 1}`;
     }
     const answer = item.answer;
     const wrong = [...(item.wrong || [])];

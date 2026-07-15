@@ -298,7 +298,7 @@ export function buildParentMetricsDataLineHe(metrics, topicName) {
 
   if (metrics.canShowCorrectWrongBreakdown) {
     const { correct: c, wrong: w } = metrics;
-    let line = `הנתונים: נפתרו ${qText} בנושא ${topic}, מתוכן ${formatCorrectTextHe(c)} ו־${formatWrongTextHe(w)}.`;
+    let line = `הנתונים: נפתרו ${qText} בנושא ${topic}, מתוכן ${formatCorrectTextHe(c)} ו-${formatWrongTextHe(w)}.`;
     if (hasReliableAccuracyHe(metrics) && acc > 0) {
       line += ` הדיוק הוא ${acc}%.`;
     }

@@ -21,7 +21,7 @@ const REQUIRED_ROUTES = [
   {
     pageId: "sub_two",
     section: 3,
-    title: "חיסור שני מספרים — דוגמה מלאה",
+    title: "חיסור שני מספרים - דוגמה מלאה",
     expected: ["68 − 24 = 44"],
     forbidden: ["4468 − 24"],
   },
@@ -556,9 +556,9 @@ test.describe("Grade 2 math learning book route-level BiDi regressions", () => {
       pageId: "ns_even_odd",
       section: 3,
       expected: [
-        "24 — זוגי:",
+        "24 - זוגי:",
         "לכל כוכב יש שותף → 24 זוגי.",
-        "35 — אי-זוגי:",
+        "35 - אי-זוגי:",
         "נשאר כוכב אחד לבד → 35 אי-זוגי.",
         "טיפ: ב-35 הספרה האחרונה היא 5 → אי-זוגי.",
       ],
@@ -576,7 +576,7 @@ test.describe("Grade 2 math learning book route-level BiDi regressions", () => {
       expected: [
         "1 מאה + 2 עשרות + 4 אחדות = 124",
         "100 + 20 + 4 = 124",
-        "דוגמה נוספת — 405:",
+        "דוגמה נוספת - 405:",
         "4 מאות, 0 עשרות, 5 אחדות",
         "400 + 0 + 5 = 405",
       ],

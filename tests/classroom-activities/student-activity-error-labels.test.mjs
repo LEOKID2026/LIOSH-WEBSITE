@@ -44,7 +44,7 @@ test("English API literals map to Hebrew", () => {
   );
   assert.equal(
     resolveStudentActivityApiErrorHe({ error: "Server error" }),
-    "שגיאת שרת — נסו שוב"
+    "שגיאת שרת - נסו שוב"
   );
 });
 

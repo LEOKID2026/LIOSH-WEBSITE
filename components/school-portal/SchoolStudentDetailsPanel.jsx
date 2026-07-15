@@ -67,7 +67,7 @@ function FieldRow({ label, value }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-[minmax(8rem,11rem)_1fr] gap-1 sm:gap-3 py-2 border-b border-white/5 last:border-b-0">
       <dt className="text-xs text-white/50">{label}</dt>
-      <dd className="text-sm text-white/90 break-words whitespace-pre-wrap">{value || "—"}</dd>
+      <dd className="text-sm text-white/90 break-words whitespace-pre-wrap">{value || "-"}</dd>
     </div>
   );
 }
@@ -383,7 +383,7 @@ export default function SchoolStudentDetailsPanel({
             </label>
             {form.dateOfBirth ? (
               <p className="text-sm text-white/70">
-                {SC_DETAILS_FIELD_CHILD_AGE}: {editComputedAge ?? "—"}
+                {SC_DETAILS_FIELD_CHILD_AGE}: {editComputedAge ?? "-"}
               </p>
             ) : (
               <label className="block text-sm">

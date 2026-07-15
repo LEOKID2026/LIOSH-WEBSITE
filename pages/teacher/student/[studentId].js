@@ -134,12 +134,12 @@ export default function TeacherStudentReportPage({ studentId }) {
         .filter((s) => s.topicLabelHe)
         .map((s) => {
           const subj = subjectLabelHe(s.subject);
-          return `${subj ? `${subj} — ` : ""}${s.topicLabelHe} — ${formatPercent(s.accuracyPct)} הצלחה`;
+          return `${subj ? `${subj} - ` : ""}${s.topicLabelHe} - ${formatPercent(s.accuracyPct)} הצלחה`;
         })
     : (guidance.strengthsForTeacher || [])
         .map((s) => {
           const line = formatTopicLineHe(s.subject, s.topic);
-          return line ? `${line} — ${formatPercent(s.accuracy)} הצלחה` : null;
+          return line ? `${line} - ${formatPercent(s.accuracy)} הצלחה` : null;
         })
         .filter(Boolean);
 
@@ -171,10 +171,10 @@ export default function TeacherStudentReportPage({ studentId }) {
           }
           const subj = subjectLabelHe(u.subject);
           const headline = u.subtopicLabelHe
-            ? `${u.topicLabelHe} — ${u.subtopicLabelHe}`
+            ? `${u.topicLabelHe} - ${u.subtopicLabelHe}`
             : u.topicLabelHe;
           const stats = `${u.evidenceSummary?.wrongCount ?? 0} טעויות מ-${u.evidenceSummary?.totalAnswers ?? 0} תשובות · ${formatPercent(u.evidenceSummary?.accuracyPct)} הצלחה`;
-          return subj ? `${subj} — ${headline} · ${stats}` : `${headline} · ${stats}`;
+          return subj ? `${subj} - ${headline} · ${stats}` : `${headline} · ${stats}`;
         })
     : (guidance.nextPracticeFocus || [])
         .map((f) => {
@@ -253,7 +253,7 @@ export default function TeacherStudentReportPage({ studentId }) {
               <div>
                 <dt className="text-white/60">פעילות אחרונה</dt>
                 <dd className="font-semibold">
-                  {tg.lastActivityDate ? formatDateHe(tg.lastActivityDate) : "—"}
+                  {tg.lastActivityDate ? formatDateHe(tg.lastActivityDate) : "-"}
                 </dd>
               </div>
             </dl>
@@ -280,7 +280,7 @@ export default function TeacherStudentReportPage({ studentId }) {
                 ) : null}
                 {inactiveDays != null && inactiveDays >= 7 ? (
                   <p className="text-amber-200 text-sm mb-2">
-                    הילד/ה לא תרגל ביותר מ-7 ימים — מומלץ לעקוב.
+                    הילד/ה לא תרגל ביותר מ-7 ימים - מומלץ לעקוב.
                   </p>
                 ) : null}
                 {recommendationUnits.slice(0, 5).map((u) => {
@@ -309,7 +309,7 @@ export default function TeacherStudentReportPage({ studentId }) {
                     );
                   }
                   const headline = u.subtopicLabelHe
-                    ? `${u.topicLabelHe} — ${u.subtopicLabelHe}`
+                    ? `${u.topicLabelHe} - ${u.subtopicLabelHe}`
                     : u.topicLabelHe;
                   let recurrenceLine = null;
                   if (ev.recurrenceSignal === "full" && ev.recurrenceDays) {
@@ -325,7 +325,7 @@ export default function TeacherStudentReportPage({ studentId }) {
                       className="rounded-lg border border-white/10 bg-black/20 p-3 text-sm space-y-1"
                     >
                       <p className="font-semibold text-amber-100">
-                        {subj ? `${subj} — ${headline}` : headline}
+                        {subj ? `${subj} - ${headline}` : headline}
                       </p>
                       <p className="text-white/75">
                         {ev.wrongCount ?? 0} טעויות מ-{ev.totalAnswers ?? 0} תשובות ·{" "}
@@ -349,7 +349,7 @@ export default function TeacherStudentReportPage({ studentId }) {
                 ) : null}
                 {inactiveDays != null && inactiveDays >= 7 ? (
                   <p className="text-amber-200 text-sm mb-2">
-                    הילד/ה לא תרגל ביותר מ-7 ימים — מומלץ לעקוב.
+                    הילד/ה לא תרגל ביותר מ-7 ימים - מומלץ לעקוב.
                   </p>
                 ) : null}
               </>
@@ -366,10 +366,10 @@ export default function TeacherStudentReportPage({ studentId }) {
                   const prompt =
                     ex.prompt && ex.prompt.length > 80
                       ? `${ex.prompt.slice(0, 80)}…`
-                      : ex.prompt || "—";
+                      : ex.prompt || "-";
                   return (
                     <li key={i} className="rounded border border-white/10 px-3 py-2">
-                      {prompt} → {ex.userAnswer || "—"} (נכון: {ex.expectedAnswer || "—"})
+                      {prompt} → {ex.userAnswer || "-"} (נכון: {ex.expectedAnswer || "-"})
                       {ex.date ? ` · ${formatDateHe(ex.date)}` : ""}
                     </li>
                   );
@@ -433,7 +433,7 @@ export default function TeacherStudentReportPage({ studentId }) {
           </section>
 
           <section className="rounded-xl border border-white/15 bg-black/30 p-5 mb-6">
-            <h2 className="text-lg font-semibold mb-2">גישת הורה — סיכום</h2>
+            <h2 className="text-lg font-semibold mb-2">גישת הורה - סיכום</h2>
             {gas.active > 0 ? (
               <p className="text-emerald-300 text-sm">גישה פעילה ({gas.active})</p>
             ) : gas.expired > 0 ? (

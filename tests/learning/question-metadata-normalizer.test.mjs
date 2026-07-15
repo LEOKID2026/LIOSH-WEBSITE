@@ -20,7 +20,7 @@ import {
 
 import { SUBJECT_FIXTURES } from "./fixtures/question-metadata-fixtures.mjs";
 
-describe("Q2-B — legacy mapping", () => {
+describe("Q2-B - legacy mapping", () => {
   test("diagnosticSkillId / skill_key / questionEngine.skillId → skillId", () => {
     assert.equal(
       normalizeQuestionMetadata({ skill_key: "math_add_two" }).skillId,
@@ -87,7 +87,7 @@ describe("Q2-B — legacy mapping", () => {
   });
 });
 
-describe("Q2-B — subject fixtures", () => {
+describe("Q2-B - subject fixtures", () => {
   for (const [name, fixture] of Object.entries(SUBJECT_FIXTURES)) {
     test(`${name} normalizes with contractVersion`, () => {
       const out = normalizeQuestionMetadata(fixture);
@@ -98,7 +98,7 @@ describe("Q2-B — subject fixtures", () => {
     });
   }
 
-  test("math — difficultyDepth from cognitiveLevel", () => {
+  test("math - difficultyDepth from cognitiveLevel", () => {
     const out = normalizeQuestionMetadata(SUBJECT_FIXTURES.math);
     assert.equal(out.difficultyDepth, "simple_application");
     assert.equal(out.difficulty, "medium");
@@ -106,39 +106,39 @@ describe("Q2-B — subject fixtures", () => {
     assert.ok(out.possibleErrorPatterns.includes("denominator_confusion"));
   });
 
-  test("geometry — requiresVisual from shape", () => {
+  test("geometry - requiresVisual from shape", () => {
     const out = normalizeQuestionMetadata(SUBJECT_FIXTURES.geometry);
     assert.equal(out.requiresVisual, true);
     assert.equal(out.questionType, "diagram");
     assert.equal(out.metadataConfidence, "medium");
   });
 
-  test("science — skillId and error patterns", () => {
+  test("science - skillId and error patterns", () => {
     const out = normalizeQuestionMetadata(SUBJECT_FIXTURES.science);
     assert.equal(out.skillId, "sci_body_fact_recall");
     assert.equal(out.metadataConfidence, "high");
     assert.equal(out.questionType, "technical");
   });
 
-  test("english — questionType from topic grammar", () => {
+  test("english - questionType from topic grammar", () => {
     const out = normalizeQuestionMetadata(SUBJECT_FIXTURES.english);
     assert.equal(out.questionType, "grammar");
     assert.equal(out.subSkill, "past_simple");
   });
 
-  test("hebrew — difficultyDepth from difficultyBand", () => {
+  test("hebrew - difficultyDepth from difficultyBand", () => {
     const out = normalizeQuestionMetadata(SUBJECT_FIXTURES.hebrew);
     assert.equal(out.difficultyDepth, "recall");
     assert.equal(out.metadataConfidence, "low");
   });
 
-  test("moledet — skillId from params", () => {
+  test("moledet - skillId from params", () => {
     const out = normalizeQuestionMetadata(SUBJECT_FIXTURES.moledet);
     assert.equal(out.skillId, "moledet_geo_homeland");
     assert.equal(out.subSkill, "map_regions");
   });
 
-  test("frozen assigned snapshot — skill_key mapping", () => {
+  test("frozen assigned snapshot - skill_key mapping", () => {
     const out = normalizeQuestionMetadata(SUBJECT_FIXTURES.frozenAssigned);
     assert.equal(out.skillId, "math_add_two");
     assert.equal(out.subSkill, "carry");
@@ -146,14 +146,14 @@ describe("Q2-B — subject fixtures", () => {
     assert.equal(out.difficulty, "basic");
   });
 
-  test("math word problem — questionType word_problem", () => {
+  test("math word problem - questionType word_problem", () => {
     const out = normalizeQuestionMetadata(SUBJECT_FIXTURES.mathWordProblem);
     assert.equal(out.questionType, "word_problem");
     assert.equal(out.difficultyDepth, "simple_application");
   });
 });
 
-describe("Q2-B — safe derivations", () => {
+describe("Q2-B - safe derivations", () => {
   test("requiresVisual from shape and geometry kind", () => {
     assert.equal(deriveRequiresVisual({ shape: "triangle" }), true);
     assert.equal(
@@ -183,7 +183,7 @@ describe("Q2-B — safe derivations", () => {
   });
 });
 
-describe("Q2-B — diagnosticEligibleByMetadata hint only", () => {
+describe("Q2-B - diagnosticEligibleByMetadata hint only", () => {
   test("true when skillId present and not learning-only kind", () => {
     assert.equal(
       computeDiagnosticEligibleByMetadataHint("math_frac_add_like", { kind: "frac_add_like" }),
@@ -206,7 +206,7 @@ describe("Q2-B — diagnosticEligibleByMetadata hint only", () => {
     );
   });
 
-  test("step-by-step context does not flip product flags — hint may still be true", () => {
+  test("step-by-step context does not flip product flags - hint may still be true", () => {
     const out = normalizeQuestionMetadata(SUBJECT_FIXTURES.stepByStepContext);
     assert.equal(out.diagnosticEligibleByMetadata, true);
     assert.equal(SUBJECT_FIXTURES.stepByStepContext.isDiagnosticEligible, false);
@@ -221,7 +221,7 @@ describe("Q2-B — diagnosticEligibleByMetadata hint only", () => {
   });
 });
 
-describe("Q2-B — includeLegacy debug option", () => {
+describe("Q2-B - includeLegacy debug option", () => {
   test("includeLegacy adds _legacy block without changing canonical fields", () => {
     const base = normalizeQuestionMetadata(SUBJECT_FIXTURES.math);
     const withLegacy = normalizeQuestionMetadata(SUBJECT_FIXTURES.math, { includeLegacy: true });
@@ -233,7 +233,7 @@ describe("Q2-B — includeLegacy debug option", () => {
   });
 });
 
-describe("Q2-B — edge cases", () => {
+describe("Q2-B - edge cases", () => {
   test("null/empty input returns contractVersion only", () => {
     assert.deepEqual(normalizeQuestionMetadata(null), {
       contractVersion: QUESTION_METADATA_CONTRACT_VERSION,

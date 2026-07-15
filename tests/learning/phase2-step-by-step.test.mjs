@@ -222,7 +222,7 @@ test("timing: wrong answer answered alone → saved with afterStepByStep=false (
   const ref = { current: false };
 
   // === ANSWER SUBMIT MOMENT (save call happens here) ===
-  const savedAfterStepByStep = ref.current; // false — no help viewed before this answer
+  const savedAfterStepByStep = ref.current; // false - no help viewed before this answer
   const resultOfWrongAnswer = classifyActivityEvidence("practice", "free_practice", {
     afterStepByStep: savedAfterStepByStep,
   });
@@ -251,7 +251,7 @@ test("timing: retry after error explanation → saved with afterStepByStep=true 
   const ref = { current: true }; // ref was set true after the wrong answer
 
   // === RETRY SUBMIT MOMENT ===
-  const savedAfterStepByStep = ref.current; // true — error explanation was shown
+  const savedAfterStepByStep = ref.current; // true - error explanation was shown
   const resultOfRetry = classifyActivityEvidence("practice", "free_practice", {
     afterStepByStep: savedAfterStepByStep,
   });
@@ -280,7 +280,7 @@ test("timing: new question after wrong → ref resets to false, next answer is d
   ref.current = false;
 
   // === ANSWER SUBMIT ON NEW QUESTION ===
-  const savedAfterStepByStep = ref.current; // false — reset for new question
+  const savedAfterStepByStep = ref.current; // false - reset for new question
   const result = classifyActivityEvidence("practice", "free_practice", {
     afterStepByStep: savedAfterStepByStep,
   });

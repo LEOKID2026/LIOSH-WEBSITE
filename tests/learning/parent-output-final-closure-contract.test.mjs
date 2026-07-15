@@ -129,7 +129,7 @@ check("every active topic-engine decisionKey is reachable via buildParentReportE
   }
 });
 
-check("speed_pressure_pattern uses the single approved sentence at topic level — reports wrong/question counts and recommends an untimed check, never claims speed IS the problem or a knowledge gap", () => {
+check("speed_pressure_pattern uses the single approved sentence at topic level - reports wrong/question counts and recommends an untimed check, never claims speed IS the problem or a knowledge gap", () => {
   const finding = topicEngineFixtures.speed_pressure_pattern.parentSafeFinding;
   assert.match(finding, /בתרגול\s*המהיר/u, "must reference the fast/timed practice context");
   assert.match(finding, /ללא\s*הגבלת\s*זמן/u, "must recommend checking in untimed practice");
@@ -219,7 +219,7 @@ check("regular (non-speed) mode with the same question/accuracy numbers as the s
 // longer emits a second, non-canonical "קשורות למהירות" sentence for speed_pressure_pattern
 // ---------------------------------------------------------------------------
 
-check("buildSpeedPressurePatternFindingHe is the ONLY text speed_pressure_pattern produces on the detailed-report explain surface — buildExplainIdentifiedLineHe's 'identified' line is empty", () => {
+check("buildSpeedPressurePatternFindingHe is the ONLY text speed_pressure_pattern produces on the detailed-report explain surface - buildExplainIdentifiedLineHe's 'identified' line is empty", () => {
   const sig = {
     engineDiagnosticDecision: { engineDecision: "speed_pressure_pattern" },
     riskFlags: { speedOnlyRisk: true },
@@ -236,13 +236,13 @@ check("buildSpeedPressurePatternFindingHe is the ONLY text speed_pressure_patter
     topicEngineRowSignals: sig,
   });
   assert.ok(sections, "must produce explain sections");
-  assert.equal(sections.identified, "", "identified line must be empty for speed_pressure_pattern — no second sentence");
+  assert.equal(sections.identified, "", "identified line must be empty for speed_pressure_pattern - no second sentence");
   assert.equal(sections.action, "", "speed_pressure_pattern has no separate home-action line to avoid a duplicate recommendation");
 
   const combined = `${sections.identified} ${sections.data} ${sections.pattern} ${sections.meaning} ${sections.action}`;
   const canonicalMentions = (combined.match(/בתרגול\s*המהיר/gu) || []).length;
   assert.equal(canonicalMentions, 1, `"בתרגול המהיר" must appear exactly once across all explain sections, got ${canonicalMentions}: "${combined}"`);
-  assert.doesNotMatch(combined, /קשור\S*\s*ל?מהירות/u, "must never claim mistakes are CAUSED BY speed — only that they occurred during fast practice");
+  assert.doesNotMatch(combined, /קשור\S*\s*ל?מהירות/u, "must never claim mistakes are CAUSED BY speed - only that they occurred during fast practice");
 
   const recommendationMentions = (combined.match(/לפני\s*שמחליטים\s*אם\s*נדרש\s*חיזוק\s*בידע/gu) || []).length;
   assert.equal(recommendationMentions, 1, `the single recommendation must appear exactly once (no duplicate recommendation), got ${recommendationMentions}`);
@@ -331,7 +331,7 @@ check("multiple speedCheckTopics: subject-level sentence names only the single h
   assert.equal(contract.subjectDecision, "speed_check_only_subject");
   assert.equal(contract.speedCheckTopics.length, 2);
   const summary = resolveSubjectSummaryTextFromEngineContract(contract, { subjectLabelHe: "חשבון" });
-  assert.doesNotMatch(summary, /נושא\s*אחד/u, "must not say 'one topic' — it simply names the priority topic without counting");
+  assert.doesNotMatch(summary, /נושא\s*אחד/u, "must not say 'one topic' - it simply names the priority topic without counting");
   const topicMentions = (summary.match(/סדרות|זוויות/gu) || []).length;
   assert.equal(topicMentions, 1, `must name exactly one (the priority) topic, got ${topicMentions} mentions: "${summary}"`);
 });
@@ -428,7 +428,7 @@ check("mixed_subject_profile (1 gap + 5 stable): same decision and same approved
   assert.doesNotMatch(summary, /כמה\s*נושאים/u);
   assert.match(summary, /נושא\s*אחד\s*שכדאי\s*לחזק/u);
   assert.match(summary, /נראית\s*יציבות\s*בחלק\s*מהנושאים/u,
-    "1-stable and 5-stable cases must render the exact same wording — the sentence never counts stable topics");
+    "1-stable and 5-stable cases must render the exact same wording - the sentence never counts stable topics");
 });
 
 check("multiple_topic_gaps (2 gaps + 1 stable): 2+ gaps always win over mixed_subject_profile, even with stable topics present", () => {
@@ -500,7 +500,7 @@ check("no unsupported claims in any topic-engine fixture text", () => {
     const text = String(contract.parentSafeFinding || "");
     if (!text) continue;
     const violations = findUnsupportedClaims(key, text);
-    assert.deepEqual(violations, [], `decisionKey="${key}" text contains forbidden claim(s): ${violations.join(",")} — text: "${text}"`);
+    assert.deepEqual(violations, [], `decisionKey="${key}" text contains forbidden claim(s): ${violations.join(",")} - text: "${text}"`);
   }
 });
 
@@ -574,7 +574,7 @@ check("q=1 topic-engine finding never renders '1 שאלות'", () => {
   assert.doesNotMatch(text, HEBREW_SINGULAR_VIOLATION_RE, `text: "${text}"`);
 });
 
-check("formatWrongOfQuestionsTextHe(1, q) — the phrase every clear_topic_gap/speed_pressure_pattern finding uses — renders 'שגיאה אחת', never '1 שגיאות'/'1 שגויות'", () => {
+check("formatWrongOfQuestionsTextHe(1, q) - the phrase every clear_topic_gap/speed_pressure_pattern finding uses - renders 'שגיאה אחת', never '1 שגיאות'/'1 שגויות'", () => {
   const text = formatWrongOfQuestionsTextHe(1, 8);
   assert.equal(text, "שגיאה אחת מתוך 8 שאלות");
   assert.doesNotMatch(text, HEBREW_SINGULAR_VIOLATION_RE);
@@ -653,7 +653,7 @@ for (const [key, contract] of Object.entries(narrativeFixtures)) {
   });
 }
 
-check("WE4 (highest-confidence envelope) never asserts attention/fatigue/pressure — no such evidence is computed", () => {
+check("WE4 (highest-confidence envelope) never asserts attention/fatigue/pressure - no such evidence is computed", () => {
   // Sample every deterministic seed variant, not just the first pickVariant outcome.
   for (let i = 0; i < 12; i++) {
     const c = buildNarrativeContractV1({
@@ -672,7 +672,7 @@ check("WE4 (highest-confidence envelope) never asserts attention/fatigue/pressur
     if (c.wordingEnvelope !== "WE4") continue;
     const text = String(c.textSlots.interpretation || "");
     const violations = findUnsupportedClaims("narrative_we4", text);
-    assert.deepEqual(violations, [], `seed ${i} WE4 text contains forbidden claim(s): ${violations.join(",")} — "${text}"`);
+    assert.deepEqual(violations, [], `seed ${i} WE4 text contains forbidden claim(s): ${violations.join(",")} - "${text}"`);
   }
 });
 
@@ -727,7 +727,7 @@ check("no duplicate decisionKey entries in the contract", () => {
   assert.equal(new Set(keys).size, keys.length);
 });
 
-console.log(`parent-output-final-closure-contract.test.mjs — ${checks - failures}/${checks} checks passed`);
+console.log(`parent-output-final-closure-contract.test.mjs - ${checks - failures}/${checks} checks passed`);
 if (failures > 0) {
   console.error(`${failures} check(s) FAILED`);
   process.exit(1);

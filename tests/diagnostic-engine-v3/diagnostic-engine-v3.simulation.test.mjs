@@ -79,7 +79,7 @@ test("DE3: evidence contract leaves missing fields null", () => {
   assert.ok(c.errorType === ERROR_TYPE_V3.UNKNOWN || c.errorType != null);
 });
 
-test("Scenario 1 — few questions → insufficient / needs probe", () => {
+test("Scenario 1 - few questions → insufficient / needs probe", () => {
   const { v3, rollups } = runScenario({
     subjectId: "math",
     topic: "addition",
@@ -97,7 +97,7 @@ test("Scenario 1 — few questions → insufficient / needs probe", () => {
   assert.ok(Array.isArray(v3.unitEnrichments));
 });
 
-test("Scenario 2 — recurring wrong same subskill", () => {
+test("Scenario 2 - recurring wrong same subskill", () => {
   const { rollups } = runScenario({
     subjectId: "math",
     topic: "fractions",
@@ -120,7 +120,7 @@ test("Scenario 2 — recurring wrong same subskill", () => {
   assert.notEqual(r.diagnosisStage, DIAGNOSIS_STAGE.STABLE);
 });
 
-test("Scenario 3 — contradictory signals", () => {
+test("Scenario 3 - contradictory signals", () => {
   const { rollups } = runScenario({
     subjectId: "hebrew",
     topic: "grammar",
@@ -150,7 +150,7 @@ test("Scenario 3 — contradictory signals", () => {
   assert.equal(r.recommendedNextStep, RECOMMENDED_NEXT_STEP.GIVE_PROBE);
 });
 
-test("Scenario 4 — fast and wrong (speed / guessing)", () => {
+test("Scenario 4 - fast and wrong (speed / guessing)", () => {
   const { rollups } = runScenario({
     subjectId: "english",
     topic: "vocabulary",
@@ -173,7 +173,7 @@ test("Scenario 4 — fast and wrong (speed / guessing)", () => {
   assert.ok(r.fastWrongCount >= 1);
 });
 
-test("Scenario 5 — slow and accurate", () => {
+test("Scenario 5 - slow and accurate", () => {
   const { rollups } = runScenario({
     subjectId: "math",
     topic: "addition",
@@ -196,7 +196,7 @@ test("Scenario 5 — slow and accurate", () => {
   );
 });
 
-test("Scenario 6 — reading comprehension issue", () => {
+test("Scenario 6 - reading comprehension issue", () => {
   const cls = classifyErrorTypeV3(
     "hebrew",
     normalizeMistakeEvent(
@@ -225,7 +225,7 @@ test("Scenario 6 — reading comprehension issue", () => {
   assert.equal(rollups[0].recommendedNextStep, RECOMMENDED_NEXT_STEP.REDUCE_READING);
 });
 
-test("Scenario 7 — strong mastery", () => {
+test("Scenario 7 - strong mastery", () => {
   const { rollups, de2 } = runScenario({
     subjectId: "math",
     topic: "multiplication",
@@ -247,7 +247,7 @@ test("Scenario 7 — strong mastery", () => {
   );
 });
 
-test("Scenario 8 — parent assigned activity evidence source", () => {
+test("Scenario 8 - parent assigned activity evidence source", () => {
   const c = buildDiagnosticEvidenceContractV3({
     subjectId: "english",
     event: normalizeMistakeEvent(
@@ -328,7 +328,7 @@ test("DE3: does not remove DE2 units", () => {
   assert.equal(v3.de2Reference.unitCount, de2.units.length);
 });
 
-test("Grade context — below registered struggle → foundationRisk (not hidden)", () => {
+test("Grade context - below registered struggle → foundationRisk (not hidden)", () => {
   const gc = resolveGradeContextV3({
     registeredGrade: "g4",
     contentGrade: "g2",
@@ -343,7 +343,7 @@ test("Grade context — below registered struggle → foundationRisk (not hidden
   assert.ok(gc.caveatReasons.includes("below_registered_foundation_signal"));
 });
 
-test("Grade context — above registered wrong → caveat, not auto grade-gap", () => {
+test("Grade context - above registered wrong → caveat, not auto grade-gap", () => {
   const gc = resolveGradeContextV3({
     registeredGrade: "g3",
     contentGrade: "g5",
@@ -383,7 +383,7 @@ test("Grade context — above registered wrong → caveat, not auto grade-gap", 
   assert.equal(r.recommendedNextStep, RECOMMENDED_NEXT_STEP.GIVE_PROBE);
 });
 
-test("Grade context — above registered success → enrichmentSignal", () => {
+test("Grade context - above registered success → enrichmentSignal", () => {
   const gc = resolveGradeContextV3({
     registeredGrade: "g3",
     contentGrade: "g5",
@@ -395,7 +395,7 @@ test("Grade context — above registered success → enrichmentSignal", () => {
   assert.equal(gc.foundationRisk, false);
 });
 
-test("Grade context — evidence contract includes grade fields", () => {
+test("Grade context - evidence contract includes grade fields", () => {
   const c = buildDiagnosticEvidenceContractV3({
     subjectId: "hebrew",
     event: normalizeMistakeEvent(

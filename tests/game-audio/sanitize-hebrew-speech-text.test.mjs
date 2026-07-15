@@ -9,8 +9,8 @@ test("strips emoji after Hebrew product names", () => {
 });
 
 test("preserves plain Hebrew and intentional English exercise content", () => {
-  const hebrew = "מיינו כל פריט לפח הנכון — שמרו על הסביבה!";
-  assert.equal(sanitizeHebrewSpeechText(hebrew), "מיינו כל פריט לפח הנכון — שמרו על הסביבה!");
+  const hebrew = "מיינו כל פריט לפח הנכון - שמרו על הסביבה!";
+  assert.equal(sanitizeHebrewSpeechText(hebrew), "מיינו כל פריט לפח הנכון - שמרו על הסביבה!");
   const english = "סדרו משפט: I like pizza";
   assert.equal(sanitizeHebrewSpeechText(english), english);
   assert.equal(sanitizeHebrewSpeechText("Build the word: water"), "Build the word: water");
@@ -37,8 +37,8 @@ test("adds pause before lab-style second clause", () => {
 
 test("strips pizzeria ticket emojis without removing topping names", () => {
   assert.equal(
-    sanitizeHebrewSpeechText("גבינה 🧀 — על כל הפיצה"),
-    "גבינה — על כל הפיצה",
+    sanitizeHebrewSpeechText("גבינה 🧀 - על כל הפיצה"),
+    "גבינה - על כל הפיצה",
   );
   assert.equal(
     sanitizeHebrewSpeechText("1 עגבניה 🍅 + 3 גבינה 🧀"),

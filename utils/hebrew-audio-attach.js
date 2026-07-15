@@ -113,7 +113,7 @@ export function attachHebrewAudioToQuestion(question, ctx) {
     max_replays = 3;
     max_duration_sec = 12;
   } else if (task_mode === "phonological_discrimination_he") {
-    tts_text = `האזינו לצליל המילה. ${listenTts} — בחרו את האפשרות המתאימה אחרי ההאזנה.`;
+    tts_text = `האזינו לצליל המילה. ${listenTts} - בחרו את האפשרות המתאימה אחרי ההאזנה.`;
     transcript = clipForTts(qText, 400);
   } else if (task_mode === "audio_grammar_choice_he") {
     tts_text = `האזינו ובדקו לפי השמע: ${listenTts}`;
@@ -196,10 +196,10 @@ export function attachHebrewAudioToQuestion(question, ctx) {
           : "הקלטה קצרה";
     question.exerciseText =
       task_mode === "structured_spoken_response_he"
-        ? "הקליטו תשובה קצרה לפי ההנחיה. ההקלטה נשמרת לבדיקה — אין ציון אוטומטי מלא לדיבור בשלב זה."
+        ? "הקליטו תשובה קצרה לפי ההנחיה. ההקלטה נשמרת לבדיקה - אין ציון אוטומטי מלא לדיבור בשלב זה."
         : task_mode === "read_aloud_short_he"
           ? "הקליטו את ההקראה לפי ההנחיה בקול. ההקלטה נשמרת לבדיקה ידנית."
-          : "הקליטו את עצמכם לפי ההנחיה בקול. ההקלטה נשמרת לבדיקה — אין ציון אוטומטי לדיבור בשלב זה.";
+          : "הקליטו את עצמכם לפי ההנחיה בקול. ההקלטה נשמרת לבדיקה - אין ציון אוטומטי לדיבור בשלב זה.";
     question.question = question.exerciseText;
   } else {
     const hint =

@@ -23,7 +23,7 @@ export function assertGradeOperationsMatchPolicy(gradeKey) {
   if (banned) {
     for (const op of ops) {
       if (banned.has(op)) {
-        violations.push(`${gradeKey}: forbidden operation exposed — "${op}"`);
+        violations.push(`${gradeKey}: forbidden operation exposed - "${op}"`);
       }
     }
   }

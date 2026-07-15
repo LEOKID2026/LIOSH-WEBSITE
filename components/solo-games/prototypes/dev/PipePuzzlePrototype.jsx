@@ -136,7 +136,7 @@ export default function PipePuzzlePrototype() {
   const checkWater = () => {
     const result = simulateWater(grid);
     setFlow(result.order.map(([r, c]) => `${r},${c}`));
-    setStatus(result.reachedEnd ? "המים זורמים! 💧" : "אין חיבור מלא — סובבו עוד צינורות");
+    setStatus(result.reachedEnd ? "המים זורמים! 💧" : "אין חיבור מלא - סובבו עוד צינורות");
   };
 
   const resetPuzzle = () => {

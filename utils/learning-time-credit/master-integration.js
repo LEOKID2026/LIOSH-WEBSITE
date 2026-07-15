@@ -113,7 +113,7 @@ export function beginMasterQuestionLedger(ledgerRef, options) {
  * Close open question ledger: credit session ms and optional topic track.
  *
  * @param {import('react').MutableRefObject<QuestionTimeLedger | null>} ledgerRef
- * @param {import('react').MutableRefObject<number>} sessionSecondsRef — stores milliseconds (legacy name)
+ * @param {import('react').MutableRefObject<number>} sessionSecondsRef - stores milliseconds (legacy name)
  * @param {(closed: { creditedMs: number, creditedSecForTopic: number }) => void} [onTopicTrack]
  * @returns {ReturnType<QuestionTimeLedger['closeQuestion']> | null}
  */
@@ -150,7 +150,7 @@ export function legacyAccumulateQuestionWallTime(questionStartTime, sessionSecon
 }
 
 /**
- * @param {import('react').MutableRefObject<number>} sessionSecondsRef — milliseconds accumulated
+ * @param {import('react').MutableRefObject<number>} sessionSecondsRef - milliseconds accumulated
  */
 export function resolveMasterSessionDurationSeconds(sessionSecondsRef) {
   const rawMs = Number(sessionSecondsRef.current) || 0;

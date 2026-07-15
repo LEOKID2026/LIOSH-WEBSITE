@@ -60,7 +60,7 @@ export default function UnifiedLegalPolicyPage({ pageKey = "legal", scrollToSect
               </p>
               <p className="text-sm sm:text-base text-white/70 leading-relaxed">
                 השימוש באתר, יצירת חשבון, כניסה עם Google, כניסה עם אימייל וסיסמה, שימוש של ילד, שימוש של מורה
-                או המשך שימוש באתר לאחר עדכון התנאים — מהווים הסכמה לתנאים המפורטים בעמוד זה.
+                או המשך שימוש באתר לאחר עדכון התנאים - מהווים הסכמה לתנאים המפורטים בעמוד זה.
               </p>
             </>
           ) : (

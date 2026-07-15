@@ -4,7 +4,7 @@
  *  - `topic_recurrence`: the same `(subject, topic)` pair appears multiple times.
  *
  * Output items are deterministic-sorted (occurrences DESC, topicDisplayHe ASC), capped to 6.
- * Raw `prompt` / `expectedAnswer` / `userAnswer` text is NEVER carried forward — only Hebrew topic
+ * Raw `prompt` / `expectedAnswer` / `userAnswer` text is NEVER carried forward - only Hebrew topic
  * labels and counts.
  */
 
@@ -40,7 +40,7 @@ export function deriveMistakePatterns(aggregate) {
     const [subjectKey, topicKey] = k.split("|");
     const subjectLabel = getSubjectDisplayNameHe(subjectKey);
     const topicLabel = getTopicDisplayNameHe(subjectKey, topicKey);
-    const display = topicLabel ? `${subjectLabel} — ${safeHebrewLabel(topicLabel, subjectLabel)}` : subjectLabel;
+    const display = topicLabel ? `${subjectLabel} - ${safeHebrewLabel(topicLabel, subjectLabel)}` : subjectLabel;
     out.push({ topicDisplayHe: display, subjectKey, occurrences: n, kind: "same_question_recurrence" });
   }
   for (const [k, n] of topicCounts.entries()) {
@@ -48,7 +48,7 @@ export function deriveMistakePatterns(aggregate) {
     const [subjectKey, topicKey] = k.split("|");
     const subjectLabel = getSubjectDisplayNameHe(subjectKey);
     const topicLabel = getTopicDisplayNameHe(subjectKey, topicKey);
-    const display = topicLabel ? `${subjectLabel} — ${safeHebrewLabel(topicLabel, subjectLabel)}` : subjectLabel;
+    const display = topicLabel ? `${subjectLabel} - ${safeHebrewLabel(topicLabel, subjectLabel)}` : subjectLabel;
     out.push({ topicDisplayHe: display, subjectKey, occurrences: n, kind: "topic_recurrence" });
   }
 

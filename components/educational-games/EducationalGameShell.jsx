@@ -122,7 +122,7 @@ export default function EducationalGameShell({ gameKey }) {
     <GameAccessGuard gameKey={gameKey}>
       <>
         <Head>
-          <title>{game.titleHe} — משחקים חינוכיים</title>
+          <title>{game.titleHe} - משחקים חינוכיים</title>
         </Head>
         <div
           className={
@@ -197,7 +197,7 @@ export default function EducationalGameShell({ gameKey }) {
               <SoloGameFinishScreen
                 didWin={finishData.didWin === true}
                 score={finishData.score ?? 0}
-                displayLevelHe={finishData.displayLevelHe || "—"}
+                displayLevelHe={finishData.displayLevelHe || "-"}
                 coinsAwarded={finishData.coinsAwarded ?? 0}
                 breakdownHe={finishData.breakdownHe}
                 balanceAfter={finishData.balanceAfter}

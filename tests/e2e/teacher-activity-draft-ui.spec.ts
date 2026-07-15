@@ -27,7 +27,7 @@ async function teacherLoginViaUi(page: Page) {
   await page.waitForURL(/\/teacher\/dashboard\/?(\?.*)?$/, { timeout: 45_000 });
 }
 
-test.describe("teacher activity draft — browser UI auth @teacher-activity-draft-ui", () => {
+test.describe("teacher activity draft - browser UI auth @teacher-activity-draft-ui", () => {
   test("[T-ACT-UI-01] login → preview → save draft sends valid bearer token", async ({
     page,
     request,

@@ -1,5 +1,5 @@
 /**
- * Moledet / geography (`data/geography-questions/g*.js`) — proposal-only enrichment.
+ * Moledet / geography (`data/geography-questions/g*.js`) - proposal-only enrichment.
  */
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";

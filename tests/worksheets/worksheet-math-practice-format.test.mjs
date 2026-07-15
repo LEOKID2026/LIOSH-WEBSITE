@@ -24,7 +24,7 @@ import {
 import { WORKSHEET_LEVEL_OPTIONS } from "../../lib/worksheets/worksheet-level-display.js";
 
 const META = {
-  titleHe: "דף עבודה — מתמטיקה",
+  titleHe: "דף עבודה - מתמטיקה",
   subjectHe: "מתמטיקה",
   gradeHe: "כיתה ג׳",
   topicHe: "חיבור",

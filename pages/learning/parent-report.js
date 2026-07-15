@@ -410,7 +410,7 @@ function diagnosticCardConfidenceLabelHe(raw) {
   const x = String(raw || "").trim().toLowerCase();
   if (x === "moderate") return confidenceBadgeLabelHe("medium");
   if (x === "medium" || x === "high" || x === "low") return confidenceBadgeLabelHe(x);
-  if (x === "contradictory") return "התוצאות מעורבות — נמשיך לעקוב";
+  if (x === "contradictory") return "התוצאות מעורבות - נמשיך לעקוב";
   return diagnosticParentVisibleTextHe(raw || "");
 }
 
@@ -865,20 +865,20 @@ function buildParentReportDiagnosticsView(report) {
 
 /** הגדרות כרטיסי נושא — מקור אחד לרשימת המקצועות + איסוף תוויות גלובלי */
 const TOPIC_BAR_SUBJECT_CARDS = [
-  { title: "מתמטיקה — דיוק לפי נושא", mapKey: "mathOperations", prefix: "math_", border: "border-blue-400/25" },
-  { title: "גאומטריה — דיוק לפי נושא", mapKey: "geometryTopics", prefix: "geometry_", border: "border-emerald-400/25" },
-  { title: "אנגלית — דיוק לפי נושא", mapKey: "englishTopics", prefix: "english_", border: "border-purple-400/25" },
-  { title: "מדעים — דיוק לפי נושא", mapKey: "scienceTopics", prefix: "science_", border: "border-green-400/25" },
-  { title: "היסטוריה — דיוק לפי נושא", mapKey: "historyTopics", prefix: "history_", border: "border-amber-400/25" },
-  { title: "עברית — דיוק לפי נושא", mapKey: "hebrewTopics", prefix: "hebrew_", border: "border-orange-400/25" },
+  { title: "מתמטיקה - דיוק לפי נושא", mapKey: "mathOperations", prefix: "math_", border: "border-blue-400/25" },
+  { title: "גאומטריה - דיוק לפי נושא", mapKey: "geometryTopics", prefix: "geometry_", border: "border-emerald-400/25" },
+  { title: "אנגלית - דיוק לפי נושא", mapKey: "englishTopics", prefix: "english_", border: "border-purple-400/25" },
+  { title: "מדעים - דיוק לפי נושא", mapKey: "scienceTopics", prefix: "science_", border: "border-green-400/25" },
+  { title: "היסטוריה - דיוק לפי נושא", mapKey: "historyTopics", prefix: "history_", border: "border-amber-400/25" },
+  { title: "עברית - דיוק לפי נושא", mapKey: "hebrewTopics", prefix: "hebrew_", border: "border-orange-400/25" },
   {
-    title: `${VISUAL_STRAND_LABEL_HE.moledet} — דיוק לפי נושא`,
+    title: `${VISUAL_STRAND_LABEL_HE.moledet} - דיוק לפי נושא`,
     mapKey: "_visualMoledetTopics",
     prefix: moledetGeographyReportTopicKeyPrefix(),
     border: "border-cyan-400/25",
   },
   {
-    title: `${VISUAL_STRAND_LABEL_HE.geography} — דיוק לפי נושא`,
+    title: `${VISUAL_STRAND_LABEL_HE.geography} - דיוק לפי נושא`,
     mapKey: "_visualGeographyTopics",
     prefix: moledetGeographyReportTopicKeyPrefix(),
     border: "border-teal-400/25",
@@ -886,7 +886,7 @@ const TOPIC_BAR_SUBJECT_CARDS = [
 ];
 
 /**
- * גיאומטריית אב — "סיכום לפי שש המקצועות" הוא המקור; מסילת המגרעת (רוחב פיקסלים) זהה לכל גרפי הנושא.
+ * גיאומטריית אב - "סיכום לפי שש המקצועות" הוא המקור; מסילת המגרעת (רוחב פיקסלים) זהה לכל גרפי הנושא.
  */
 const MASTER_BAR_CHART_GEOMETRY = {
   /** מרווחים בתוך מסילת הגרף בלבד — זהים לסיכום ולנושאים (יישור אופקי אחיד) */
@@ -1094,7 +1094,7 @@ function hasMeaningfulExampleAnswer(v) {
   if (v == null) return false;
   const s = String(v).trim();
   if (!s) return false;
-  if (s === "—" || s === "-" || s.toLowerCase() === "undefined") return false;
+  if (s === "-" || s === "-" || s.toLowerCase() === "undefined") return false;
   return true;
 }
 
@@ -1483,8 +1483,8 @@ export default function ParentReport() {
         if (!cancelled) {
           setParentReportError(
             isTeacherSource
-              ? "נדרשת התחברות כמורה — התחברו מחדש ונסו שוב."
-              : "נדרשת התחברות כהורה — השתמשו בכניסת הורה ונסו שוב."
+              ? "נדרשת התחברות כמורה - התחברו מחדש ונסו שוב."
+              : "נדרשת התחברות כהורה - השתמשו בכניסת הורה ונסו שוב."
           );
           setReport(null);
           setCopilotDetailedPayload(null);
@@ -1566,7 +1566,7 @@ export default function ParentReport() {
               /aborted|timeout/i.test(String(loadErr.message || "")));
           setParentReportError(
             aborted
-              ? "טעינת הדוח לקחה יותר מדי זמן — נסו טווח קצר יותר או רענון."
+              ? "טעינת הדוח לקחה יותר מדי זמן - נסו טווח קצר יותר או רענון."
               : "שגיאת רשת בטעינת הדוח."
           );
           setReport(null);
@@ -1870,7 +1870,7 @@ export default function ParentReport() {
         <Head>
           <style>{PARENT_REPORT_SITE_BRIGHT_CSS}</style>
         </Head>
-        {/* Same page shell / top spacing as populated report — no vertical centering. */}
+        {/* Same page shell / top spacing as populated report - no vertical centering. */}
         <div
           className={getParentReportNoScrollPageShellClass(isBright, reportShellOpts)}
           dir="rtl"
@@ -2366,7 +2366,7 @@ export default function ParentReport() {
               </Link>
             </div>
 
-            {/* בחירת תאריכים מותאמת אישית (לא נכנס ל-PDF) — rendered inside ReportDateRangeControl */}
+            {/* בחירת תאריכים מותאמת אישית (לא נכנס ל-PDF) - rendered inside ReportDateRangeControl */}
             
             <p className="text-xs md:text-sm text-white/60 mt-1 text-center" dir="ltr" style={{ direction: 'ltr', textAlign: 'center' }}>
               {formatDate(report.startDate)} - {formatDate(report.endDate)}
@@ -2462,7 +2462,7 @@ export default function ParentReport() {
                     <p className="m-0 text-white/55 text-xs">
                       {Number(displayReport.summary?.totalQuestions) > 0 &&
                       diagnosticsView?.presence?.state === "hasVolumeNoPattern"
-                        ? "יש נתוני תרגול בתקופה שנבחרה, אך עדיין אין מספיק בסיס ברור מהתרגולים כדי לראות לאיזה נושא כדאי להתמקד — כדאי להמשיך בתרגול ולעקוב שוב לאחר מכן."
+                        ? "יש נתוני תרגול בתקופה שנבחרה, אך עדיין אין מספיק בסיס ברור מהתרגולים כדי לראות לאיזה נושא כדאי להתמקד - כדאי להמשיך בתרגול ולעקוב שוב לאחר מכן."
                         : "אין עדיין תחום שכדאי לשים לב עכשיו בתקופה שנבחרה."}
                     </p>
                   ) : null}
@@ -2486,7 +2486,7 @@ export default function ParentReport() {
             </div>
           ) : null}
 
-          {/* סיכום לפי מקצוע — רק מקצועות עם evidence בתקופה */}
+          {/* סיכום לפי מקצוע - רק מקצועות עם evidence בתקופה */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3 mb-3 md:mb-6 avoid-break">
             {filterSubjectOverviewRowsWithEvidence(buildSubjectOverviewRows(displayReport)).map((row) => {
               const ui = SUBJECT_OVERVIEW_CARD_UI[row.key] || SUBJECT_OVERVIEW_CARD_UI.math;
@@ -3569,7 +3569,7 @@ export default function ParentReport() {
             );
           })()}
 
-          {/* המלצות — מקור ראשי: patternDiagnostics; ישן רק אם אין אובייקט אבחון */}
+          {/* המלצות - מקור ראשי: patternDiagnostics; ישן רק אם אין אובייקט אבחון */}
           {diagnosticsView &&
             (diagnosticsView.mode === "insufficient" ||
               diagnosticsView.mode === "new" ||
@@ -3802,7 +3802,7 @@ export default function ParentReport() {
                                       {x.tierHe || "מה שהילד עושה טוב לאורך זמן"}
                                     </div>
                                     <div className="parent-report-print-muted-text text-xs md:text-sm text-white/80 break-words">
-                                      {diagnosticParentVisibleTextHe(x.labelHe)} — דיוק {x.accuracy}% ({x.questions} שאלות)
+                                      {diagnosticParentVisibleTextHe(x.labelHe)} - דיוק {x.accuracy}% ({x.questions} שאלות)
                                     </div>
                                   </div>
                                 </div>
@@ -3825,7 +3825,7 @@ export default function ParentReport() {
                                       {x.tierHe || "תוצאות טובות בנושא"}
                                     </div>
                                     <div className="parent-report-print-muted-text text-xs md:text-sm text-white/80 break-words">
-                                      {diagnosticParentVisibleTextHe(x.labelHe)} — דיוק {x.accuracy}% ({x.questions} שאלות)
+                                      {diagnosticParentVisibleTextHe(x.labelHe)} - דיוק {x.accuracy}% ({x.questions} שאלות)
                                     </div>
                                   </div>
                                 </div>
@@ -3848,7 +3848,7 @@ export default function ParentReport() {
                                       {maintainTierHeDisplay(x.tierHe) || "עקביות"}
                                     </div>
                                     <div className="parent-report-print-muted-text text-xs md:text-sm text-white/80 break-words">
-                                      {diagnosticParentVisibleTextHe(x.labelHe)} — דיוק {x.accuracy}% ({x.questions} שאלות)
+                                      {diagnosticParentVisibleTextHe(x.labelHe)} - דיוק {x.accuracy}% ({x.questions} שאלות)
                                     </div>
                                   </div>
                                 </div>
@@ -3874,7 +3874,7 @@ export default function ParentReport() {
                                       {diagnosticParentVisibleTextHe(
                                         improvingDiagnosticsDisplayLabelHe(x.labelHe)
                                       )}{" "}
-                                      — דיוק {x.accuracy}% ({x.questions} שאלות)
+                                      - דיוק {x.accuracy}% ({x.questions} שאלות)
                                     </div>
                                   </div>
                                 </div>
@@ -3970,7 +3970,7 @@ export default function ParentReport() {
                                   <span className="text-lg shrink-0">✨</span>
                                   <div className="flex-1 min-w-0">
                                     <div className="parent-report-print-subheading font-semibold text-xs md:text-sm text-white/90 mb-0.5">
-                                      המלצה לילד/ה — שימור מה שעובד טוב
+                                      המלצה לילד/ה - שימור מה שעובד טוב
                                     </div>
                                     <div className="parent-report-print-muted-text text-xs md:text-sm text-white/80 break-words">
                                       {diagnosticParentVisibleTextHe(r.textHe)}
@@ -3988,7 +3988,7 @@ export default function ParentReport() {
                                   <span className="text-lg shrink-0">💬</span>
                                   <div className="flex-1 min-w-0">
                                     <div className="parent-report-print-subheading font-semibold text-xs md:text-sm text-white/90 mb-0.5">
-                                      המלצה להורה — עידוד ושימור
+                                      המלצה להורה - עידוד ושימור
                                     </div>
                                     <div className="parent-report-print-muted-text text-xs md:text-sm text-white/80 break-words">
                                       {diagnosticParentVisibleTextHe(r.textHe)}
@@ -4075,7 +4075,7 @@ export default function ParentReport() {
               </div>
             )}
 
-          {/* ——— אזור גרפים בלבד ——— */}
+          {/* --- אזור גרפים בלבד --- */}
           <section
             className="parent-report-graph-section space-y-5 md:space-y-7 mb-3 md:mb-6"
             aria-label="גרפים"
@@ -4440,7 +4440,7 @@ export default function ParentReport() {
                         סיכום לפי שש המקצועות
                       </h2>
                       <p className="parent-report-print-chart-subtitle text-[11px] md:text-xs text-white/55 mt-0.5">
-                        זמן תרגול (דקות) — בפרטים מלאים יופיעו גם שאלות ודיוק
+                        זמן תרגול (דקות) - בפרטים מלאים יופיעו גם שאלות ודיוק
                       </p>
                     </div>
                     <div
@@ -4680,7 +4680,7 @@ export default function ParentReport() {
                                   questions: q,
                                   timeMinutes: p.timeMinutes,
                                 });
-                                const timePart = timeLabel === "—" ? "" : ` · ${timeLabel}`;
+                                const timePart = timeLabel === "-" ? "" : ` · ${timeLabel}`;
                                 return [`דיוק ${p.accuracy}% · ${q} שאלות${timePart}`, ""];
                               }}
                             />

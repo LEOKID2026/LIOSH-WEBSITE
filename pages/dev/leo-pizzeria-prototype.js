@@ -5,7 +5,7 @@ export default function LeoPizzeriaPrototypePage() {
   return (
     <>
       <Head>
-        <title>הפיצרייה של ליאו — אבטיפוס</title>
+        <title>הפיצרייה של ליאו - אבטיפוס</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <LeoPizzeriaPrototype />

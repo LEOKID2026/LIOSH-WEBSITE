@@ -161,7 +161,7 @@ export default function AdminGuestPage() {
                   />
                 </label>
                 <label className="text-sm block">
-                  קופסת הפתעה — מקסימום צבירה
+                  קופסת הפתעה - מקסימום צבירה
                   <input
                     className="mt-1 w-full rounded bg-black/30 border border-white/20 px-2 py-1"
                     type="number"
@@ -226,11 +226,11 @@ export default function AdminGuestPage() {
                   <tbody>
                     {guests.map((g) => (
                       <tr key={g.id} className="border-b border-white/5">
-                        <td className="py-2 px-2 font-mono">{g.leoNumber || "—"}</td>
+                        <td className="py-2 px-2 font-mono">{g.leoNumber || "-"}</td>
                         <td className="py-2 px-2">{g.guestStatus}</td>
                         <td className="py-2 px-2">{g.coinBalance}</td>
                         <td className="py-2 px-2">{g.cardCount}</td>
-                        <td className="py-2 px-2">{g.guestLastSeenAt ? new Date(g.guestLastSeenAt).toLocaleString("he-IL") : "—"}</td>
+                        <td className="py-2 px-2">{g.guestLastSeenAt ? new Date(g.guestLastSeenAt).toLocaleString("he-IL") : "-"}</td>
                       </tr>
                     ))}
                     {!guests.length ? (

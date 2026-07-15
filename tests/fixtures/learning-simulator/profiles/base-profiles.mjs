@@ -6,7 +6,7 @@
 export const BASE_PROFILES = {
   p_strong_all_subjects: {
     profileId: "p_strong_all_subjects",
-    displayName: "Strong learner — balanced across subjects",
+    displayName: "Strong learner - balanced across subjects",
     grades: ["g1", "g2", "g3", "g4", "g5", "g6"],
     subjectWeights: {
       math: 1 / 6,
@@ -29,7 +29,7 @@ export const BASE_PROFILES = {
 
   p_thin_data: {
     profileId: "p_thin_data",
-    displayName: "Thin evidence — low session count",
+    displayName: "Thin evidence - low session count",
     grades: ["g1", "g2", "g3", "g4", "g5", "g6"],
     subjectWeights: { math: 1 },
     topicWeaknesses: {},
@@ -199,7 +199,7 @@ export const BASE_PROFILES = {
     trendPolicy: "flat",
     dataVolumePolicy: "normal",
     randomGuessRate: 0.07,
-    notes: "Deep suite — uniformly weaker learner.",
+    notes: "Deep suite - uniformly weaker learner.",
   },
 
   p_random_guessing_student: {
@@ -215,7 +215,7 @@ export const BASE_PROFILES = {
     trendPolicy: "flat",
     dataVolumePolicy: "normal",
     randomGuessRate: 0.46,
-    notes: "High guess rate blended toward chance accuracy — avoid overconfident conclusions.",
+    notes: "High guess rate blended toward chance accuracy - avoid overconfident conclusions.",
   },
 
   p_inconsistent_student: {

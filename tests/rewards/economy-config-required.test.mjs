@@ -157,7 +157,7 @@ describe("requireEconomyConfig", () => {
     else process.env.REWARD_ECONOMY_SETTINGS_ENABLED = prev;
   });
 
-  test("throws economy_config_missing when DB rows incomplete — not legacy", async () => {
+  test("throws economy_config_missing when DB rows incomplete - not legacy", async () => {
     const supabase = createMockSupabase({ daily: [], monthly: [], global: null });
     await assert.rejects(
       () => requireEconomyConfig(supabase),

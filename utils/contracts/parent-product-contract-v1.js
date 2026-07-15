@@ -94,11 +94,11 @@ function firstNonEmpty(...values) {
 function confidenceLabelHe(row) {
   const c = String(row?.confidenceLevel || "").toLowerCase();
   if (row?.thinEvidenceDowngraded || row?.gateReadiness === "insufficient") {
-    return "כמה אפשר לסמוך על זה: עדיין לא גבוה — צריך עוד תרגול לפני שסוגרים תמונה ברורה.";
+    return "כמה אפשר לסמוך על זה: עדיין לא גבוה - צריך עוד תרגול לפני שסוגרים תמונה ברורה.";
   }
   if (c === "high") return "כמה אפשר לסמוך על זה: די גבוה יחסית למידע שנאסף.";
-  if (c === "moderate") return "כמה אפשר לסמוך על זה: בינוני — יש כיוון ברור, אבל כדאי לבדוק שוב אחרי עוד תרגול.";
-  return "כמה אפשר לסמוך על זה: עדיין לא גבוה — כדאי להמשיך לתרגל ולבדוק שוב.";
+  if (c === "moderate") return "כמה אפשר לסמוך על זה: בינוני - יש כיוון ברור, אבל כדאי לבדוק שוב אחרי עוד תרגול.";
+  return "כמה אפשר לסמוך על זה: עדיין לא גבוה - כדאי להמשיך לתרגל ולבדוק שוב.";
 }
 
 function trendSummaryHe(row) {
@@ -110,7 +110,7 @@ function trendSummaryHe(row) {
   }
   const dir = String(trend.accuracyDirection || "unknown");
   if (dir === "up") return "נראית מגמת שיפור מבוססת.";
-  if (dir === "down") return "נראית ירידה לאחרונה — שווה לשים לב בשבוע הקרוב.";
+  if (dir === "down") return "נראית ירידה לאחרונה - שווה לשים לב בשבוע הקרוב.";
   if (dir === "flat") return "נראית יציבות יחסית ללא שינוי מהותי.";
   return "אין כרגע נתון מגמה מספק.";
 }

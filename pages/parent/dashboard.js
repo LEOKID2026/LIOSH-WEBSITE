@@ -37,7 +37,7 @@ const GRADE_OPTIONS = [
 ];
 
 function gradeLabelFromValue(value) {
-  return GRADE_OPTIONS.find((g) => g.value === value)?.label || value || "—";
+  return GRADE_OPTIONS.find((g) => g.value === value)?.label || value || "-";
 }
 
 /** Neutral action buttons on child cards — theme applied via getParentPortalTheme(). */
@@ -291,7 +291,7 @@ export default function ParentDashboardPage() {
         const credPayload = await credRes.json();
         if (!credRes.ok) {
           credentialMessage =
-            credPayload.error || "הילד/ה נוצר/ה, אך הגדרת פרטי כניסה נכשלה — ניתן להגדיר בפרטי הילד/ה";
+            credPayload.error || "הילד/ה נוצר/ה, אך הגדרת פרטי כניסה נכשלה - ניתן להגדיר בפרטי הילד/ה";
         } else {
           const loginUsername = credPayload.username || initialUsername;
           setCredentialConfirmation({
@@ -558,7 +558,7 @@ export default function ParentDashboardPage() {
         setMessage("הילד נמחק לצמיתות");
       }
     } catch (_err) {
-      setDeleteError("שגיאת רשת — נסה שנית");
+      setDeleteError("שגיאת רשת - נסה שנית");
     }
     setBusy(false);
   };
@@ -568,7 +568,7 @@ export default function ParentDashboardPage() {
       await navigator.clipboard.writeText(username);
       setMessage("שם המשתמש הועתק ללוח");
     } catch (_e) {
-      setMessage("לא ניתן להעתיק אוטומטית — העתיקו ידנית");
+      setMessage("לא ניתן להעתיק אוטומטית - העתיקו ידנית");
     }
   };
 
@@ -648,7 +648,7 @@ export default function ParentDashboardPage() {
           className={T.inputMt}
           value={newGuestLeoNumber}
           onChange={(e) => setNewGuestLeoNumber(e.target.value.replace(/\D/g, "").slice(0, 8))}
-          placeholder="מספר ליאו — 8 ספרות"
+          placeholder="מספר ליאו - 8 ספרות"
           inputMode="numeric"
           autoComplete="off"
           disabled={busy || students.length >= studentLimit}
@@ -740,7 +740,7 @@ export default function ParentDashboardPage() {
                 [student.id]: e.target.value.replace(/\D/g, "").slice(0, 8),
               }))
             }
-            placeholder="מספר ליאו — 8 ספרות"
+            placeholder="מספר ליאו - 8 ספרות"
             inputMode="numeric"
             autoComplete="off"
             disabled={busy}
@@ -779,7 +779,7 @@ export default function ParentDashboardPage() {
 
           {showConfirmationHere ? (
             <div className={T.confirmBox}>
-              <div className={T.confirmTitle}>חשוב לשמור את הפרטים — ה-PIN לא יוצג שוב.</div>
+              <div className={T.confirmTitle}>חשוב לשמור את הפרטים - ה-PIN לא יוצג שוב.</div>
               <div>
                 שם משתמש: <strong className={T.confirmStrong}>{credentialConfirmation.username}</strong>
               </div>
@@ -1119,7 +1119,7 @@ export default function ParentDashboardPage() {
         <ParentDashboardModal
           bright={isBright}
           open={Boolean(detailsStudent)}
-          title={detailsStudent ? `פרטים — ${detailsStudent.full_name || "ילד"}` : "פרטים"}
+          title={detailsStudent ? `פרטים - ${detailsStudent.full_name || "ילד"}` : "פרטים"}
           onClose={closeDetailsModal}
           size="2xl"
         >

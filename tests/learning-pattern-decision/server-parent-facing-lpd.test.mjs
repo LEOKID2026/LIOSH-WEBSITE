@@ -180,4 +180,4 @@ function mkMistakes(subject, topic, n, patternFamily = "pf:same") {
   }
 }
 
-console.log("server-parent-facing-lpd.test.mjs — all passed");
+console.log("server-parent-facing-lpd.test.mjs - all passed");

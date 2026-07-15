@@ -58,7 +58,7 @@ const G1_EASY_QUESTIONS = {
     { question: "מה האות הראשונה במילה 'בית'?", answers: ["ב", "ת", "י", "ה"], correct: 0 },
     { question: "מה האות האחרונה במילה 'כלב'?", answers: ["כ", "ל", "ב", "ה"], correct: 2 },
     {
-      question: "במילה 'שמש' — איזה צליל (אות) חוזר פעמיים?",
+      question: "במילה 'שמש' - איזה צליל (אות) חוזר פעמיים?",
       answers: ["ש", "מ", "ס", "ה"],
       correct: 0,
       subtopicId: "g1.phoneme_awareness",
@@ -81,13 +81,13 @@ const G1_EASY_QUESTIONS = {
     { question: "מה האות הראשונה במילה 'גן'?", answers: ["ג", "ן", "י", "ה"], correct: 0 },
     { question: "קרא את המילה: 'דג'", answers: ["דג", "דגג", "דק", "דב"], correct: 0 },
     {
-      question: "במילה 'מים' — איזה צליל חוזר פעמיים?",
+      question: "במילה 'מים' - איזה צליל חוזר פעמיים?",
       answers: ["מ", "י", "ם", "ה"],
       correct: 0,
       subtopicId: "g1.phoneme_awareness",
     },
     {
-      question: "במילה 'אבא' — ההברה הראשונה (א-) היא פתוחה או סגורה?",
+      question: "במילה 'אבא' - ההברה הראשונה (א-) היא פתוחה או סגורה?",
       answers: ["פתוחה", "סגורה", "אין הברות", "לא יודעים"],
       correct: 0,
       subtopicId: "g1.open_close_syllable",
@@ -111,7 +111,7 @@ const G1_EASY_QUESTIONS = {
       subtopicId: "g1.basic_niqqud",
     },
     {
-      question: "במילה 'דג' — באיזה צליל המילה מתחילה?",
+      question: "במילה 'דג' - באיזה צליל המילה מתחילה?",
       answers: ["ד", "ג", "דג", "גד"],
       correct: 0,
       subtopicId: "g1.sound_letter_match",
@@ -129,19 +129,19 @@ const G1_EASY_QUESTIONS = {
       subtopicId: "g1.simple_words_read",
     },
     {
-      question: "במילה 'שלום' — איזו אות סופית כתובים בסוף המילה?",
+      question: "במילה 'שלום' - איזו אות סופית כתובים בסוף המילה?",
       answers: ["ם", "ש", "ל", "ו"],
       correct: 0,
       subtopicId: "g1.final_letters",
     },
     {
-      question: "במילה 'כן' — איזו אות סופית כתובים בסוף המילה?",
+      question: "במילה 'כן' - איזו אות סופית כתובים בסוף המילה?",
       answers: ["ן", "כ", "נ", "ה"],
       correct: 0,
       subtopicId: "g1.final_letters",
     },
     {
-      question: "במילה 'יום' — איזו אות סופית כתובים בסוף המילה?",
+      question: "במילה 'יום' - איזו אות סופית כתובים בסוף המילה?",
       answers: ["ם", "י", "ו", "מ"],
       correct: 0,
       subtopicId: "g1.final_letters",
@@ -159,25 +159,25 @@ const G1_EASY_QUESTIONS = {
       subtopicId: "g1.letters",
     },
     {
-      question: "במילה 'תות' — איזה צליל חוזר פעמיים?",
+      question: "במילה 'תות' - איזה צליל חוזר פעמיים?",
       answers: ["ת", "ו", "ס", "ה"],
       correct: 0,
       subtopicId: "g1.phoneme_awareness",
     },
     {
-      question: "במילה 'בובה' — איזה צליל חוזר פעמיים?",
+      question: "במילה 'בובה' - איזה צליל חוזר פעמיים?",
       answers: ["ב", "ו", "ה", "א"],
       correct: 0,
       subtopicId: "g1.phoneme_awareness",
     },
     {
-      question: "במילה 'כיתה' — ההברה הראשונה 'כי' היא פתוחה או סגורה?",
+      question: "במילה 'כיתה' - ההברה הראשונה 'כי' היא פתוחה או סגורה?",
       answers: ["פתוחה", "סגורה", "אין הברות", "לא יודעים"],
       correct: 0,
       subtopicId: "g1.open_close_syllable",
     },
     {
-      question: "במילה 'אבא' — ההברה השנייה (בא-) היא פתוחה או סגורה?",
+      question: "במילה 'אבא' - ההברה השנייה (בא-) היא פתוחה או סגורה?",
       answers: ["סגורה", "פתוחה", "אין הברות", "לא יודעים"],
       correct: 0,
       subtopicId: "g1.open_close_syllable",
@@ -219,13 +219,13 @@ const G1_EASY_QUESTIONS = {
       subtopicId: "g1.basic_niqqud",
     },
     {
-      question: "במילה 'צבע' — באיזה צליל המילה מתחילה?",
+      question: "במילה 'צבע' - באיזה צליל המילה מתחילה?",
       answers: ["צ", "ב", "ע", "צב"],
       correct: 0,
       subtopicId: "g1.sound_letter_match",
     },
     {
-      question: "במילה 'פרח' — באיזה צליל המילה מתחילה?",
+      question: "במילה 'פרח' - באיזה צליל המילה מתחילה?",
       answers: ["פ", "ר", "ח", "פר"],
       correct: 0,
       subtopicId: "g1.sound_letter_match",
@@ -257,7 +257,7 @@ const G1_EASY_QUESTIONS = {
       subtype: "water_animal",
     },
     {
-      question: "במילה 'אָרוֹן' — איזו אות סופית מופיעה בסוף המילה?",
+      question: "במילה 'אָרוֹן' - איזו אות סופית מופיעה בסוף המילה?",
       answers: ["ן", "נ", "ם", "ך"],
       correct: 0,
       subtopicId: "g1.final_letters",
@@ -265,7 +265,7 @@ const G1_EASY_QUESTIONS = {
       subtype: "final_nun",
     },
     {
-      question: "במילה 'יָד' — איזו אות סופית כותבים בסוף?",
+      question: "במילה 'יָד' - איזו אות סופית כותבים בסוף?",
       answers: ["ד", "י", "ה", "ת"],
       correct: 0,
       subtopicId: "g1.final_letters",
@@ -289,7 +289,7 @@ const G1_EASY_QUESTIONS = {
       subtype: "on_rhyme",
     },
     {
-      question: "במילה 'פִּנָה' — ההברה הראשונה פתוחה או סגורה?",
+      question: "במילה 'פִּנָה' - ההברה הראשונה פתוחה או סגורה?",
       answers: ["סגורה", "פתוחה", "שתיהן", "אין הברות"],
       correct: 0,
       subtopicId: "g1.open_close_syllable",
@@ -321,7 +321,7 @@ const G1_EASY_QUESTIONS = {
       subtype: "three_syllables",
     },
     {
-      question: "במילה 'כּוֹבַע' — באיזה צליל המילה מתחילה?",
+      question: "במילה 'כּוֹבַע' - באיזה צליל המילה מתחילה?",
       answers: ["כ", "ב", "ע", "כב"],
       correct: 0,
       subtopicId: "g1.sound_letter_match",
@@ -335,7 +335,7 @@ const G1_EASY_QUESTIONS = {
     { question: "מה ההפך של 'גדול'?", answers: ["קטן", "צבעוני", "יפה", "חכם"], correct: 0 },
     { question: "מי דואגת לנו הרבה בבית ואפשר לקרוא לה 'אמא'?", answers: ["אמא", "אבא", "אח", "סבא"], correct: 0 },
     {
-      question: "במשפט ׳המכונית אדומה׳ — מה המילה ׳אדום׳ מתארת?",
+      question: "במשפט ׳המכונית אדומה׳ - מה המילה ׳אדום׳ מתארת?",
       answers: ["צבע של המכונית", "מספר המכונית", "שם הרחוב", "גודל המנוע"],
       correct: 0,
       subtopicId: "g1.word_meaning_concrete",
@@ -426,7 +426,7 @@ const G1_EASY_QUESTIONS = {
   ],
   writing: [
     {
-      question: "יש לנו מקום לגור בו עם דלת וחלונות — במילה אחת, איך נכתוב את שם המקום?",
+      question: "יש לנו מקום לגור בו עם דלת וחלונות - במילה אחת, איך נכתוב את שם המקום?",
       answers: ["בית", "באת", "ביית", "ביט"],
       correct: 0,
       subtopicId: "g1.copy_word",
@@ -458,7 +458,7 @@ const G1_EASY_QUESTIONS = {
       subtype: "place_school",
     },
     {
-      question: "חיה שמנבחת לפעמים ויש לה זנב — במילה אחת, איך נכתוב את שם החיה?",
+      question: "חיה שמנבחת לפעמים ויש לה זנב - במילה אחת, איך נכתוב את שם החיה?",
       answers: ["כלב", "כבל", "כלוב", "קלב"],
       correct: 0,
       subtopicId: "g1.copy_word",
@@ -474,7 +474,7 @@ const G1_EASY_QUESTIONS = {
       subtype: "concept_then_spell",
     },
     {
-      question: "יש בו עופרת וכותבים איתו על הדף — בחרו איות נכון לשם החפץ:",
+      question: "יש בו עופרת וכותבים איתו על הדף - בחרו איות נכון לשם החפץ:",
       answers: ["עפרון", "אפרון", "עפורון", "עפרנ"],
       correct: 0,
       subtopicId: "g1.copy_word",
@@ -498,7 +498,7 @@ const G1_EASY_QUESTIONS = {
       subtype: "role",
     },
     {
-      question: "אוכלים עליו לפעמים או כותבים עליו בכיתה — בחרו איות למילה שמתארת את הרהיט הארוך:",
+      question: "אוכלים עליו לפעמים או כותבים עליו בכיתה - בחרו איות למילה שמתארת את הרהיט הארוך:",
       answers: ["שולחן", "שלחן", "שולחנ", "שלחנ"],
       correct: 0,
       subtopicId: "g1.copy_word",
@@ -506,7 +506,7 @@ const G1_EASY_QUESTIONS = {
       subtype: "furniture",
     },
     {
-      question: "פרי עגול ואדום לפעמים — בחרו איות נכון לשם הפרי:",
+      question: "פרי עגול ואדום לפעמים - בחרו איות נכון לשם הפרי:",
       answers: ["תפוח", "טפוח", "תבוח", "תיפוח"],
       correct: 0,
       subtopicId: "g1.copy_word",
@@ -514,7 +514,7 @@ const G1_EASY_QUESTIONS = {
       subtype: "apple",
     },
     {
-      question: "בכיתה רואים דרכו החוצה — בחרו איות למילה שמתארת את הפתח המואר:",
+      question: "בכיתה רואים דרכו החוצה - בחרו איות למילה שמתארת את הפתח המואר:",
       answers: ["חלון", "חלונ", "חילון", "חלאון"],
       correct: 0,
       subtopicId: "g1.copy_word",
@@ -522,7 +522,7 @@ const G1_EASY_QUESTIONS = {
       subtype: "classroom",
     },
     {
-      question: "קוראים ממנו סיפורים — בחרו איות למילה שמתארת את החפץ:",
+      question: "קוראים ממנו סיפורים - בחרו איות למילה שמתארת את החפץ:",
       answers: ["ספר", "ספור", "סבר", "ספיר"],
       correct: 0,
       subtopicId: "g1.copy_word",
@@ -538,7 +538,7 @@ const G1_EASY_QUESTIONS = {
       subtype: "machberet",
     },
     {
-      question: "המילה מופיעה כאן: ׳ספר׳ — הקלידו בדיוק את המילה (בלי רווחים מיותרים):",
+      question: "המילה מופיעה כאן: ׳ספר׳ - הקלידו בדיוק את המילה (בלי רווחים מיותרים):",
       answers: ["ספר", "ספור", "סבר", "ספיר"],
       correct: 0,
       subtopicId: "g1.copy_word",
@@ -548,7 +548,7 @@ const G1_EASY_QUESTIONS = {
       maxTypingChars: 8,
     },
     {
-      question: "המילה מופיעה כאן: ׳בית׳ — הקלידו בדיוק את המילה:",
+      question: "המילה מופיעה כאן: ׳בית׳ - הקלידו בדיוק את המילה:",
       answers: ["בית", "באת", "ביית", "ביט"],
       correct: 0,
       subtopicId: "g1.copy_word",
@@ -558,7 +558,7 @@ const G1_EASY_QUESTIONS = {
       maxTypingChars: 8,
     },
     {
-      question: "המילה מופיעה כאן: ׳אמא׳ — הקלידו בדיוק את המילה:",
+      question: "המילה מופיעה כאן: ׳אמא׳ - הקלידו בדיוק את המילה:",
       answers: ["אמא", "אמה", "אימא", "אמאה"],
       correct: 0,
       subtopicId: "g1.copy_word",
@@ -589,12 +589,12 @@ const G1_EASY_QUESTIONS = {
   ],
   grammar: [
     { question: "מה חלק הדיבר של המילה 'בית'?", answers: ["שם עצם", "פועל", "תואר", "מספר"], correct: 0, patternFamily: "g1_grammar_pos_label", subtopicId: "g1.grammar_pos_roles" },
-    { question: "במשפט ׳הילד אוכל תפוח׳ — איזו מילה היא הפועל?", answers: ["אוכל", "הילד", "תפוח", "המשפט"], correct: 0, patternFamily: "g1_grammar_pick_verb", subtopicId: "g1.grammar_pos_roles" },
-    { question: "במשפט ׳הפרחים צבעוניים׳ — איזו מילה היא התואר?", answers: ["צבעוניים", "הפרחים", "פרחים", "הפרח"], correct: 0, patternFamily: "g1_grammar_pick_adj", subtopicId: "g1.grammar_pos_roles" },
-    { question: "במשפט ׳הוא רץ מהר׳ — איך נקראת המילה 'מהר'?", answers: ["תואר (איך)", "שם עצם", "פועל", "מילת שאלה"], correct: 0, patternFamily: "g1_grammar_pos_manner", subtopicId: "g1.grammar_pos_roles" },
+    { question: "במשפט ׳הילד אוכל תפוח׳ - איזו מילה היא הפועל?", answers: ["אוכל", "הילד", "תפוח", "המשפט"], correct: 0, patternFamily: "g1_grammar_pick_verb", subtopicId: "g1.grammar_pos_roles" },
+    { question: "במשפט ׳הפרחים צבעוניים׳ - איזו מילה היא התואר?", answers: ["צבעוניים", "הפרחים", "פרחים", "הפרח"], correct: 0, patternFamily: "g1_grammar_pick_adj", subtopicId: "g1.grammar_pos_roles" },
+    { question: "במשפט ׳הוא רץ מהר׳ - איך נקראת המילה 'מהר'?", answers: ["תואר (איך)", "שם עצם", "פועל", "מילת שאלה"], correct: 0, patternFamily: "g1_grammar_pos_manner", subtopicId: "g1.grammar_pos_roles" },
     { question: "בחרו משפט תקין על הכלב ופועל ׳רץ׳:", answers: ["הכלב רץ", "הכלב רצים", "הכלב רצה", "כלבים רץ"], correct: 0, patternFamily: "g1_grammar_subject_verb_animal", subtopicId: "g1.grammar_agreement_light" },
     { question: "איזה ניסוח מתאים לגוף ולמין (ילד/ילדה)?", answers: ["הילד רץ", "הילד רצים", "הילדה רץ", "הילדים רץ"], correct: 0, patternFamily: "g1_grammar_gender_agreement_short", subtopicId: "g1.grammar_agreement_light" },
-    { question: "בחרו משפט תקין — חתול ופועל ׳ישן׳:", answers: ["החתול ישן", "החתול ישנה", "חתולים ישן", "החתול ישנים"], correct: 0, patternFamily: "g1_grammar_subject_verb_cat", subtopicId: "g1.grammar_agreement_light" },
+    { question: "בחרו משפט תקין - חתול ופועל ׳ישן׳:", answers: ["החתול ישן", "החתול ישנה", "חתולים ישן", "החתול ישנים"], correct: 0, patternFamily: "g1_grammar_subject_verb_cat", subtopicId: "g1.grammar_agreement_light" },
     { question: "מה המשפט התקין לגבי דג ופועל ׳שוחה׳?", answers: ["הדג שוחה", "הדג שוחים", "דגים שוחה", "הדג שוחות"], correct: 0, patternFamily: "g1_grammar_subject_verb_fish", subtopicId: "g1.grammar_agreement_light" },
     { question: "איזה משפט לא תקין?", answers: ["אני קורא ספר", "אוכל הילד תפוח", "אמא מבשלת מרק", "הכלב רץ בחצר"], correct: 1, patternFamily: "g1_grammar_illformed_pick", subtopicId: "g1.grammar_wellformed" },
     { question: "בחרו מילה שמשלימה: בבוקר אני ___ קורא.", answers: ["תמיד", "שולחן", "רץ", "במים"], correct: 0, patternFamily: "g1_grammar_cloze_adverb", subtopicId: "g1.grammar_cloze_deixis" },
@@ -606,7 +606,7 @@ const G1_EASY_QUESTIONS = {
     { question: "בחרו צמד מילים מתאים:", answers: ["ילד קטן", "ילד רץ לאט", "ילד שולחן", "ילד במים"], correct: 0, patternFamily: "g1_grammar_noun_adj_pair", subtopicId: "g1.grammar_agreement_light" },
     { question: "בחרו משפט תקין:", answers: ["הילדים משחקים בחצר", "הילדים משחק בחצר", "הילד משחקים בחצר", "הילדים משחקים חצר"], correct: 0, patternFamily: "g1_grammar_plural_verb_play", subtopicId: "g1.grammar_agreement_light" },
     { question: "מי מתאים לשאלה: ׳מי בא לכיתה?׳", answers: ["המורה", "מהר", "בשקט", "למה"], correct: 0, patternFamily: "g1_grammar_wh_answer_fit", subtopicId: "g1.grammar_connectors_time" },
-    { question: "במשפט ׳אמא מבשלת מרק׳ — איזו מילה היא הפועל?", answers: ["מבשלת", "אמא", "מרק", "המשפט"], correct: 0, patternFamily: "g1_grammar_pick_verb_cook", subtopicId: "g1.grammar_pos_roles" },
+    { question: "במשפט ׳אמא מבשלת מרק׳ - איזו מילה היא הפועל?", answers: ["מבשלת", "אמא", "מרק", "המשפט"], correct: 0, patternFamily: "g1_grammar_pick_verb_cook", subtopicId: "g1.grammar_pos_roles" },
     { question: "בחרו משפט עם ׳ו׳ חיבור נכון:", answers: ["אמא ואבא", "אמא אבא", "אמא עם ואבא", "ואמא אבא"], correct: 0, patternFamily: "g1_grammar_conjunction_and", subtopicId: "g1.grammar_connectors_time" },
     { question: "בחרו משפט תקין לנקבה:", answers: ["הילדה קוראת", "הילדה קוראים", "הילד קוראת", "הילדות קורא"], correct: 0, patternFamily: "g1_grammar_fem_singular_verb", subtopicId: "g1.grammar_agreement_light" },
     { question: "בחרו משפט תקין לעתיד:", answers: ["מחר אני אלך לגן", "מחר אני הלכתי לגן", "מחר אני הולך אתמול", "מחר אני לגן אתמול"], correct: 0, patternFamily: "g1_grammar_future_basic", subtopicId: "g1.grammar_connectors_time" },
@@ -847,13 +847,13 @@ const G1_MEDIUM_QUESTIONS = {
     { question: "השלימו את המילה: הילדה הקטנה י_דה.", answers: ["ילדה", "יילדה", "ילתה", "ילגה"], correct: 0 },
     { question: "קרא את המילה: 'מורה'", answers: ["מורה", "מורא", "מוורה", "מורי"], correct: 0 },
     {
-      question: "במילה 'בובה' — איזה צליל חוזר בתחילת המילה?",
+      question: "במילה 'בובה' - איזה צליל חוזר בתחילת המילה?",
       answers: ["ב", "ה", "בו", "בה"],
       correct: 0,
       subtopicId: "g1.phoneme_awareness",
     },
     {
-      question: "במילה 'כלב' — ההברה האחרונה 'לב' היא פתוחה או סגורה?",
+      question: "במילה 'כלב' - ההברה האחרונה 'לב' היא פתוחה או סגורה?",
       answers: ["סגורה", "פתוחה", "אין הברה", "לא בטוחים"],
       correct: 0,
       subtopicId: "g1.open_close_syllable",
@@ -877,7 +877,7 @@ const G1_MEDIUM_QUESTIONS = {
       subtopicId: "g1.basic_niqqud",
     },
     {
-      question: "במילה 'סוס' — באיזה צליל המילה מתחילה?",
+      question: "במילה 'סוס' - באיזה צליל המילה מתחילה?",
       answers: ["ס", "ו", "סו", "סוס"],
       correct: 0,
       subtopicId: "g1.sound_letter_match",
@@ -895,13 +895,13 @@ const G1_MEDIUM_QUESTIONS = {
       subtopicId: "g1.simple_words_read",
     },
     {
-      question: "במילה 'רץ' — איזו אות סופית כתובים בסוף המילה?",
+      question: "במילה 'רץ' - איזו אות סופית כתובים בסוף המילה?",
       answers: ["ץ", "ר", "צ", "ז"],
       correct: 0,
       subtopicId: "g1.final_letters",
     },
     {
-      question: "במילה 'לך' — איזו אות סופית כתובים בסוף המילה?",
+      question: "במילה 'לך' - איזו אות סופית כתובים בסוף המילה?",
       answers: ["ך", "ל", "כ", "ה"],
       correct: 0,
       subtopicId: "g1.final_letters",
@@ -913,13 +913,13 @@ const G1_MEDIUM_QUESTIONS = {
       subtopicId: "g1.letters",
     },
     {
-      question: "במילה 'בננה' — איזה צליל חוזר בתוך המילה?",
+      question: "במילה 'בננה' - איזה צליל חוזר בתוך המילה?",
       answers: ["נ", "ב", "ה", "ל"],
       correct: 0,
       subtopicId: "g1.phoneme_awareness",
     },
     {
-      question: "במילה 'מורה' — ההברה הראשונה 'מו' היא פתוחה או סגורה?",
+      question: "במילה 'מורה' - ההברה הראשונה 'מו' היא פתוחה או סגורה?",
       answers: ["פתוחה", "סגורה", "אין הברות", "לא יודעים"],
       correct: 0,
       subtopicId: "g1.open_close_syllable",
@@ -943,7 +943,7 @@ const G1_MEDIUM_QUESTIONS = {
       subtopicId: "g1.basic_niqqud",
     },
     {
-      question: "במילה 'נחש' — באיזה צליל המילה מסתיימת?",
+      question: "במילה 'נחש' - באיזה צליל המילה מסתיימת?",
       answers: ["ש", "ח", "נ", "ה"],
       correct: 0,
       subtopicId: "g1.sound_letter_match",
@@ -969,7 +969,7 @@ const G1_MEDIUM_QUESTIONS = {
       subtype: "weather_sentence",
     },
     {
-      question: "במילה 'חֲלוֹן' — ההברה השנייה פתוחה או סגורה?",
+      question: "במילה 'חֲלוֹן' - ההברה השנייה פתוחה או סגורה?",
       answers: ["סגורה", "פתוחה", "שתיהן", "אין הברה"],
       correct: 0,
       subtopicId: "g1.open_close_syllable",
@@ -993,7 +993,7 @@ const G1_MEDIUM_QUESTIONS = {
       subtype: "segol_shein",
     },
     {
-      question: "במילה 'פַּרְחֵי' (רבים) — כמה הברות יש?",
+      question: "במילה 'פַּרְחֵי' (רבים) - כמה הברות יש?",
       answers: ["2", "1", "3", "4"],
       correct: 0,
       subtopicId: "g1.syllables",
@@ -1002,11 +1002,11 @@ const G1_MEDIUM_QUESTIONS = {
     },
   ],
   comprehension: [
-    { question: "במשפט 'ילד קורא' — מה הוא כנראה עושה?", answers: ["קורא טקסט", "ישן עכשיו", "מבשל מרק", "רץ במסלול"], correct: 0 },
+    { question: "במשפט 'ילד קורא' - מה הוא כנראה עושה?", answers: ["קורא טקסט", "ישן עכשיו", "מבשל מרק", "רץ במסלול"], correct: 0 },
     { question: "מה קול של כלב לפעמים אומר לנו?", answers: ["שהוא נובח", "שהוא ספר", "שהוא שולחן", "שהוא ענן"], correct: 0 },
     { question: "מה ההפך של 'שמח'?", answers: ["עצוב", "צבעוני", "יפה", "חכם"], correct: 0 },
-    { question: "כשהשמש זורחת — איך מרגיש בדרך כלל בחוץ?", answers: ["מאיר ובהיר", "חשוך לגמרי", "קרח מלא", "שקט לגמרי בלי אור"], correct: 0 },
-    { question: "כשכותבים 'ילד משחק' — מה הוא כנראה עושה?", answers: ["משחק", "ישן בכיתה", "כותב מחברת", "אוכל ארוחת ערב"], correct: 0 },
+    { question: "כשהשמש זורחת - איך מרגיש בדרך כלל בחוץ?", answers: ["מאיר ובהיר", "חשוך לגמרי", "קרח מלא", "שקט לגמרי בלי אור"], correct: 0 },
+    { question: "כשכותבים 'ילד משחק' - מה הוא כנראה עושה?", answers: ["משחק", "ישן בכיתה", "כותב מחברת", "אוכל ארוחת ערב"], correct: 0 },
     { question: "סמנו את התשובה הנכונה לפי ההוראה: אם המשפט נכון לחצו על ׳כן׳.", answers: ["כן", "לא", "אולי", "לא יודע"], correct: 0 },
     {
       question: "מי שותה מים כשצמא?",
@@ -1057,7 +1057,7 @@ const G1_MEDIUM_QUESTIONS = {
   ],
   writing: [
     {
-      question: "בכיתה יש לפעמים ילד וגם ___ — בחרו איות למילה שמתארת ילדה:",
+      question: "בכיתה יש לפעמים ילד וגם ___ - בחרו איות למילה שמתארת ילדה:",
       answers: ["ילדה", "יילדה", "ילדא", "ילדהה"],
       correct: 0,
       subtopicId: "g1.copy_word",
@@ -1065,7 +1065,7 @@ const G1_MEDIUM_QUESTIONS = {
       subtype: "classroom_contrast",
     },
     {
-      question: "כותבים בה שיעורים ומדביקים לפעמים מדבקות — בחרו איות למילה שמתארת את החפץ:",
+      question: "כותבים בה שיעורים ומדביקים לפעמים מדבקות - בחרו איות למילה שמתארת את החפץ:",
       answers: ["מחברת", "מחברט", "מחבורת", "מחבת"],
       correct: 0,
       subtopicId: "g1.copy_word",
@@ -1092,7 +1092,7 @@ const G1_MEDIUM_QUESTIONS = {
       maxTypingChars: 8,
     },
     {
-      question: "משתמשים בו כדי לצבוע או להדגיש — בחרו איות למילה שמתארת חומר צבע:",
+      question: "משתמשים בו כדי לצבוע או להדגיש - בחרו איות למילה שמתארת חומר צבע:",
       answers: ["צבע", "צביח", "צביע", "צבעע"],
       correct: 0,
       subtopicId: "g1.copy_word",
@@ -1100,7 +1100,7 @@ const G1_MEDIUM_QUESTIONS = {
       subtype: "material_hint",
     },
     {
-      question: "אבא, אמא והילדים ביחד — בחרו איות למילה שמתארת את הקבוצה:",
+      question: "אבא, אמא והילדים ביחד - בחרו איות למילה שמתארת את הקבוצה:",
       answers: ["משפחה", "משפחא", "משפחהה", "מושפחה"],
       correct: 0,
       subtopicId: "g1.copy_word",
@@ -1351,7 +1351,7 @@ const G1_HARD_QUESTIONS = {
     },
     { question: "מה המילה הנכונה: ת_למיד?", answers: ["תלמיד", "תלמידד", "טלמיד", "תלמידי"], correct: 0 },
     {
-      question: "כיתה א׳ — קרא את המשפט: 'הילדים משחקים בחצר'",
+      question: "כיתה א׳ - קרא את המשפט: 'הילדים משחקים בחצר'",
       answers: ["הילדים משחקים בחצר", "ילידים משחקים בחצר", "הילדים משחקים בחצה", "הילדים משחקים בצר"],
       correct: 0,
     },
@@ -1367,13 +1367,13 @@ const G1_HARD_QUESTIONS = {
       correct: 0,
     },
     {
-      question: "במילה 'אבא' — איזה אות חוזר פעמיים?",
+      question: "במילה 'אבא' - איזה אות חוזר פעמיים?",
       answers: ["א", "ב", "אין חזרה", "ב וא"],
       correct: 0,
       subtopicId: "g1.phoneme_awareness",
     },
     {
-      question: "במילה 'מורה' — ההברה האחרונה היא פתוחה או סגורה?",
+      question: "במילה 'מורה' - ההברה האחרונה היא פתוחה או סגורה?",
       answers: ["פתוחה", "סגורה", "שתיהן", "אין הברה"],
       correct: 0,
       subtopicId: "g1.open_close_syllable",
@@ -1397,7 +1397,7 @@ const G1_HARD_QUESTIONS = {
       subtopicId: "g1.basic_niqqud",
     },
     {
-      question: "במילה 'צפרדע' — באיזה צליל המילה מתחילה?",
+      question: "במילה 'צפרדע' - באיזה צליל המילה מתחילה?",
       answers: ["צ", "פ", "ציפור", "דע"],
       correct: 0,
       subtopicId: "g1.sound_letter_match",
@@ -1409,25 +1409,25 @@ const G1_HARD_QUESTIONS = {
       subtopicId: "g1.simple_words_read",
     },
     {
-      question: "במילה 'ארץ' — איזו אות סופית כתובים בסוף המילה?",
+      question: "במילה 'ארץ' - איזו אות סופית כתובים בסוף המילה?",
       answers: ["ץ", "ר", "צ", "ת"],
       correct: 0,
       subtopicId: "g1.final_letters",
     },
     {
-      question: "במילה 'מחשב' — מה האות השנייה?",
+      question: "במילה 'מחשב' - מה האות השנייה?",
       answers: ["ח", "מ", "ש", "ב"],
       correct: 0,
       subtopicId: "g1.letters",
     },
     {
-      question: "במילה 'אמא' — איזה צליל חוזר פעמיים?",
+      question: "במילה 'אמא' - איזה צליל חוזר פעמיים?",
       answers: ["מ", "א", "ה", "ב"],
       correct: 0,
       subtopicId: "g1.phoneme_awareness",
     },
     {
-      question: "במילה 'שולחן' — ההברה האחרונה היא פתוחה או סגורה?",
+      question: "במילה 'שולחן' - ההברה האחרונה היא פתוחה או סגורה?",
       answers: ["סגורה", "פתוחה", "שתיהן", "אין הברה"],
       correct: 0,
       subtopicId: "g1.open_close_syllable",
@@ -1451,7 +1451,7 @@ const G1_HARD_QUESTIONS = {
       subtopicId: "g1.basic_niqqud",
     },
     {
-      question: "במילה 'שבת' — באיזה צליל המילה מסתיימת?",
+      question: "במילה 'שבת' - באיזה צליל המילה מסתיימת?",
       answers: ["ת", "ב", "ש", "ה"],
       correct: 0,
       subtopicId: "g1.sound_letter_match",
@@ -1494,15 +1494,15 @@ const G1_HARD_QUESTIONS = {
     },
   ],
   comprehension: [
-    { question: "במשפט 'ילד קורא ספר' — מה הפעולה העיקרית?", answers: ["קורא", "כותב", "מצייר", "ישן"], correct: 0 },
-    { question: "כשהשמש זורחת בבוקר — מה קורה בדרך כלל?", answers: ["יש אור וחום", "הכל חשוך", "יורד שלג תמיד", "הלילה מתחיל"], correct: 0 },
+    { question: "במשפט 'ילד קורא ספר' - מה הפעולה העיקרית?", answers: ["קורא", "כותב", "מצייר", "ישן"], correct: 0 },
+    { question: "כשהשמש זורחת בבוקר - מה קורה בדרך כלל?", answers: ["יש אור וחום", "הכל חשוך", "יורד שלג תמיד", "הלילה מתחיל"], correct: 0 },
     {
-      question: "בכיתה א׳: כשכותבים 'ילדים משחקים בחצר' — מה הם עושים?",
+      question: "בכיתה א׳: כשכותבים 'ילדים משחקים בחצר' - מה הם עושים?",
       answers: ["משחקים", "קוראים שיעור", "ישנים", "אוכלים ארוחת צהריים בכיתה"],
       correct: 0,
     },
-    { question: "במשפט 'הכלב רץ' — מה הכלב עושה?", answers: ["רץ", "ישן", "אוכל", "שוחה במים"], correct: 0 },
-    { question: "במשפט 'אמא קוראת ספר לילד' — מה אמא עושה?", answers: ["קוראת ספר", "כותבת ספר", "מציירת ספר", "שרה בלי ספר"], correct: 0 },
+    { question: "במשפט 'הכלב רץ' - מה הכלב עושה?", answers: ["רץ", "ישן", "אוכל", "שוחה במים"], correct: 0 },
+    { question: "במשפט 'אמא קוראת ספר לילד' - מה אמא עושה?", answers: ["קוראת ספר", "כותבת ספר", "מציירת ספר", "שרה בלי ספר"], correct: 0 },
     {
       question: "איפה אפשר לקרוא ספר בשקט?",
       answers: ["בספרייה", "במגרש כדורגל", "במטבח בזמן בישול", "במקלחת"],
@@ -1544,7 +1544,7 @@ const G1_HARD_QUESTIONS = {
       subtype: "role_school",
     },
     {
-      question: "דביקה קטנה שמדביקים על דף או על כיסא — בחרו איות למילה שמתארת את החפץ:",
+      question: "דביקה קטנה שמדביקים על דף או על כיסא - בחרו איות למילה שמתארת את החפץ:",
       answers: ["מדבקה", "מדבקא", "מדבקע", "מדבקוה"],
       correct: 0,
       subtopicId: "g1.copy_word",
@@ -1552,7 +1552,7 @@ const G1_HARD_QUESTIONS = {
       subtype: "object_school",
     },
     {
-      question: "כלי עם שני חלקים שחותכים איתו נייר — בחרו איות למילה שמתארת את הכלי:",
+      question: "כלי עם שני חלקים שחותכים איתו נייר - בחרו איות למילה שמתארת את הכלי:",
       answers: ["מספריים", "מספוריים", "נספריים", "משפריים"],
       correct: 0,
       subtopicId: "g1.copy_word",
@@ -1572,7 +1572,7 @@ const G1_HARD_QUESTIONS = {
     },
     {
       question:
-        "בחרו משפט מלא לכותרת ביומן: ׳אחרי בית הספר׳ — משפט אחד, כתיב תקין וניסוח של כתיבה:",
+        "בחרו משפט מלא לכותרת ביומן: ׳אחרי בית הספר׳ - משפט אחד, כתיב תקין וניסוח של כתיבה:",
       answers: [
         "אחרי בית הספר שיחקתי עם החברים בחצר.",
         "אחרי בית ספר שיחקתי עם החברים בחצר.",
@@ -1585,7 +1585,7 @@ const G1_HARD_QUESTIONS = {
       subtype: "after_school",
     },
     {
-      question: "בדיווח קצר ביומן: ׳אתמול ___ ספר בבית.׳ — בחרו רק את האיות הנכון של המילה החסרה:",
+      question: "בדיווח קצר ביומן: ׳אתמול ___ ספר בבית.׳ - בחרו רק את האיות הנכון של המילה החסרה:",
       answers: ["קראתי", "קרתי", "קראתיי", "כראתי"],
       correct: 0,
       subtopicId: "g1.spell_word_choice",
@@ -1597,7 +1597,7 @@ const G1_HARD_QUESTIONS = {
     },
     {
       question:
-        "בבית הספר נכנסים לחלק מהיום שנקרא לפעמים בשם של ___ — בחרו איות (בלי ניקוד בשאלה):",
+        "בבית הספר נכנסים לחלק מהיום שנקרא לפעמים בשם של ___ - בחרו איות (בלי ניקוד בשאלה):",
       answers: ["שיעור", "שייעור", "שיעורר", "טיעור"],
       correct: 0,
       subtopicId: "g1.copy_word",
@@ -1700,7 +1700,7 @@ const G2_EASY_QUESTIONS = {
     },
     { question: "מה המילה הנכונה: ס_פר?", answers: ["ספר", "סבר", "סברי", "סברת"], correct: 0 },
     {
-      question: "כיתה ב׳ — קרא את המשפט: 'הילדים משחקים בחצר'",
+      question: "כיתה ב׳ - קרא את המשפט: 'הילדים משחקים בחצר'",
       answers: ["הילדים משחקים בחצר", "ילידים משחקים בחצר", "הילדים משחקים בחצה", "הילדים משחקים בצר"],
       correct: 0,
     },
@@ -1729,7 +1729,7 @@ const G2_EASY_QUESTIONS = {
       subtopicId: "g2.short_sentence",
     },
     {
-      question: "בקריאה: אחרי משפט שמספרים בו סיפור מצחיק — איזה סימן פיסוק מתאים בסוף?",
+      question: "בקריאה: אחרי משפט שמספרים בו סיפור מצחיק - איזה סימן פיסוק מתאים בסוף?",
       answers: ["!", "?", ".", ","],
       correct: 0,
       subtopicId: "g2.simple_punctuation_read",
@@ -1774,7 +1774,7 @@ const G2_EASY_QUESTIONS = {
       subtype: "prep_word",
     },
     {
-      question: "בקריאה: אחרי רשימה (׳עיפרון, מחק, סרגל׳) — איזה סימן מתאים בין פריט לפריט?",
+      question: "בקריאה: אחרי רשימה (׳עיפרון, מחק, סרגל׳) - איזה סימן מתאים בין פריט לפריט?",
       answers: [",", ".", "?", "!"],
       correct: 0,
       subtopicId: "g2.simple_punctuation_read",
@@ -1791,15 +1791,15 @@ const G2_EASY_QUESTIONS = {
     },
   ],
   comprehension: [
-    { question: "במשפט 'ילד קורא ספר בכיתה' — מה קורה בכיתה?", answers: ["קוראים ספר", "מבשלים מרק", "ישנים", "רצים במסלול"], correct: 0 },
-    { question: "ניגוד (הפוך במשמעות) ל׳גדול׳ — איזו מילה מתאימה?", answers: ["קטן", "צבעוני", "יפה", "חכם"], correct: 0 },
-    { question: "כשהשמש זורחת בבוקר — מה נכון?", answers: ["יש אור בחוץ", "הכל חשוך", "יורד שלג תמיד", "הלילה מתחיל"], correct: 0 },
+    { question: "במשפט 'ילד קורא ספר בכיתה' - מה קורה בכיתה?", answers: ["קוראים ספר", "מבשלים מרק", "ישנים", "רצים במסלול"], correct: 0 },
+    { question: "ניגוד (הפוך במשמעות) ל׳גדול׳ - איזו מילה מתאימה?", answers: ["קטן", "צבעוני", "יפה", "חכם"], correct: 0 },
+    { question: "כשהשמש זורחת בבוקר - מה נכון?", answers: ["יש אור בחוץ", "הכל חשוך", "יורד שלג תמיד", "הלילה מתחיל"], correct: 0 },
     {
-      question: "בכיתה ב׳: כשכותבים 'ילדים משחקים בחצר' — מה הם עושים?",
+      question: "בכיתה ב׳: כשכותבים 'ילדים משחקים בחצר' - מה הם עושים?",
       answers: ["משחקים", "קוראים שיעור", "כותבים מבחן", "אוכלים ארוחת ערב"],
       correct: 0,
     },
-    { question: "אם מישהו לא ׳שמח׳ אלא במצב רגשי הפוך — איך קוראים לזה?", answers: ["עצוב", "שמח", "יפה", "גדול"], correct: 0 },
+    { question: "אם מישהו לא ׳שמח׳ אלא במצב רגשי הפוך - איך קוראים לזה?", answers: ["עצוב", "שמח", "יפה", "גדול"], correct: 0 },
     {
       question: "מה יבוא קודם לפי הסדר: ׳בוקר׳ ואז ׳ערב׳?",
       answers: ["בוקר קודם", "ערב קודם", "שניהם יחד", "אי אפשר לדעת"],
@@ -1807,25 +1807,25 @@ const G2_EASY_QUESTIONS = {
       subtopicId: "g2.simple_sequence",
     },
     {
-      question: "לפי הסדר: ׳קודם שוטפים ידיים ואז יושבים לאכול׳ — מה קורה ראשון?",
+      question: "לפי הסדר: ׳קודם שוטפים ידיים ואז יושבים לאכול׳ - מה קורה ראשון?",
       answers: ["שוטפים ידיים", "יושבים לאכול", "אוכלים ואז שוטפים", "לא כתוב"],
       correct: 0,
       subtopicId: "g2.simple_sequence",
     },
     {
-      question: "לפי המשפט ׳הילד שכח את המעיל בבית׳ — מה כנראה קרה לו בחוץ?",
+      question: "לפי המשפט ׳הילד שכח את המעיל בבית׳ - מה כנראה קרה לו בחוץ?",
       answers: ["הוא עלול להרגיש קר", "הוא שכח גם את הכובע", "המעיל נהיה ספר", "השמיים נסגרו"],
       correct: 0,
       subtopicId: "g2.light_inference",
     },
     {
-      question: "לפי המשפט ׳המורה ביקשה שקט כדי להסביר׳ — מה היא רצתה מהכיתה?",
+      question: "לפי המשפט ׳המורה ביקשה שקט כדי להסביר׳ - מה היא רצתה מהכיתה?",
       answers: ["להקשיב בלי רעש", "לרוץ מהר", "לשיר חזק", "לסגור את החלונות"],
       correct: 0,
       subtopicId: "g2.light_inference",
     },
     {
-      question: "לפי המשפט ׳הילדים הכינו ערכת עזרה ראשונה לפרויקט׳ — מה כנראה היה חשוב בפרויקט?",
+      question: "לפי המשפט ׳הילדים הכינו ערכת עזרה ראשונה לפרויקט׳ - מה כנראה היה חשוב בפרויקט?",
       answers: ["בטיחות וזהירות", "בישול מתכון", "בחירת צבע לקיר", "מספר מילים באנגלית"],
       correct: 0,
       subtopicId: "g2.light_inference",
@@ -1833,7 +1833,7 @@ const G2_EASY_QUESTIONS = {
       subtype: "project_goal",
     },
     {
-      question: "לפי המשפט ׳נשארנו בפנים כי ירד גשם חזק׳ — למה נשארו?",
+      question: "לפי המשפט ׳נשארנו בפנים כי ירד גשם חזק׳ - למה נשארו?",
       answers: ["בגלל מזג אוויר רע בחוץ", "כי חסרו כיסאות", "כי ביקשו להישאר ערים כל הלילה", "כי בוטל השיעור לתמיד"],
       correct: 0,
       subtopicId: "g2.light_inference",
@@ -1841,14 +1841,14 @@ const G2_EASY_QUESTIONS = {
       subtype: "weather_cause",
     },
     {
-      question: "לפי הסדר: ׳קודם פותחים מחברת ואז כותבים כותרת׳ — מה קורה אחרי הפתיחה?",
+      question: "לפי הסדר: ׳קודם פותחים מחברת ואז כותבים כותרת׳ - מה קורה אחרי הפתיחה?",
       answers: ["כותבים כותרת", "פותחים מחברת", "סוגרים מחברת", "לא כתוב"],
       correct: 0,
       subtopicId: "g2.simple_sequence",
     },
     {
       question:
-        "שני משפטים: ׳הילדים נכנסו לחדר המוסיקה. המורה הדליקה אור.׳ — מה הרעיון המרכזי?",
+        "שני משפטים: ׳הילדים נכנסו לחדר המוסיקה. המורה הדליקה אור.׳ - מה הרעיון המרכזי?",
       answers: [
         "מתחילים פעילות/שיעור בחדר",
         "הילדים ישנים בבית",
@@ -1863,7 +1863,7 @@ const G2_EASY_QUESTIONS = {
     },
     {
       question:
-        "שני משפטים: ׳אמא שמה מרק על האש. אבא מכין סלט.׳ — מה המשותף לשני המשפטים?",
+        "שני משפטים: ׳אמא שמה מרק על האש. אבא מכין סלט.׳ - מה המשותף לשני המשפטים?",
       answers: ["הכנת אוכל בבית", "טיול ביער", "משחק כדורגל", "קניית ספרים"],
       correct: 0,
       subtopicId: "g2.detail_main_idea",
@@ -1873,7 +1873,7 @@ const G2_EASY_QUESTIONS = {
     },
     {
       question:
-        "משפט אחד: ׳הדלת נטרקה בגלל הרוח׳ — מה הסיבה הסבירה ביותר?",
+        "משפט אחד: ׳הדלת נטרקה בגלל הרוח׳ - מה הסיבה הסבירה ביותר?",
       answers: ["רוח חזקה", "הדלת נשברה לתמיד", "מישהו שכח את המפתח בבית", "המורה ביקשה שקט"],
       correct: 0,
       subtopicId: "g2.light_inference",
@@ -1904,7 +1904,7 @@ const G2_EASY_QUESTIONS = {
       maxTypingChars: 10,
     },
     {
-      question: "בשיעור עוסקים לפעמים ב___ טקסט (מילה אחת) — בחרו איות נכון:",
+      question: "בשיעור עוסקים לפעמים ב___ טקסט (מילה אחת) - בחרו איות נכון:",
       answers: ["קריאה", "קריאהה", "קרייה", "קריאא"],
       correct: 0,
       subtopicId: "g2.sentence_wellformed",
@@ -1915,7 +1915,7 @@ const G2_EASY_QUESTIONS = {
       maxTypingChars: 10,
     },
     {
-      question: "כותבים בה שיעורים ומסדרים דפים — בחרו איות למילה שמתארת את החפץ:",
+      question: "כותבים בה שיעורים ומסדרים דפים - בחרו איות למילה שמתארת את החפץ:",
       answers: ["מחברת", "מחברט", "מחבת", "מהברת"],
       correct: 0,
       subtopicId: "g2.fluent_words",
@@ -1923,7 +1923,7 @@ const G2_EASY_QUESTIONS = {
       subtype: "object_context",
     },
     {
-      question: "בשיעור לפעמים פותרים ___ בכיתה או בבית — בחרו איות למילה שמתארת את המטלה:",
+      question: "בשיעור לפעמים פותרים ___ בכיתה או בבית - בחרו איות למילה שמתארת את המטלה:",
       answers: ["תרגיל", "תרגייל", "טרגיל", "תרגיול"],
       correct: 0,
       subtopicId: "g2.fluent_words",
@@ -1979,7 +1979,7 @@ const G2_EASY_QUESTIONS = {
     },
     {
       question:
-        "בכתיבה: בסוף משפט הודעה רגילה כמו ׳היום למדנו משהו חדש׳ — כתבו מילה אחת: איך קוראים לסימן הפיסוק המתאים? (אחת מארבע: נקודה / סימן שאלה / סימן קריאה / פסיק)",
+        "בכתיבה: בסוף משפט הודעה רגילה כמו ׳היום למדנו משהו חדש׳ - כתבו מילה אחת: איך קוראים לסימן הפיסוק המתאים? (אחת מארבע: נקודה / סימן שאלה / סימן קריאה / פסיק)",
       answers: ["נקודה", "סימן שאלה", "סימן קריאה", "פסיק"],
       correct: 0,
       subtopicId: "g2.punctuation_choice",
@@ -1991,7 +1991,7 @@ const G2_EASY_QUESTIONS = {
     },
     {
       question:
-        "בכתיבה: המשפט ׳איפה המחק׳ הוא שאלה — כתבו מילה אחת: איך קוראים לסימן הנכון בסוף? (אחת מארבע: נקודה / סימן שאלה / סימן קריאה / פסיק)",
+        "בכתיבה: המשפט ׳איפה המחק׳ הוא שאלה - כתבו מילה אחת: איך קוראים לסימן הנכון בסוף? (אחת מארבע: נקודה / סימן שאלה / סימן קריאה / פסיק)",
       answers: ["סימן שאלה", "נקודה", "סימן קריאה", "פסיק"],
       correct: 0,
       subtopicId: "g2.punctuation_choice",
@@ -2002,7 +2002,7 @@ const G2_EASY_QUESTIONS = {
       maxTypingChars: 16,
     },
     {
-      question: "בכתיבה: המשפט ׳וואו כמה זה גבוה׳ מביע הפתעה — איזה סימן פיסוק מתאים בסוף המשפט?",
+      question: "בכתיבה: המשפט ׳וואו כמה זה גבוה׳ מביע הפתעה - איזה סימן פיסוק מתאים בסוף המשפט?",
       answers: ["!", ".", "?", ","],
       correct: 0,
       subtopicId: "g2.punctuation_choice",
@@ -2010,7 +2010,7 @@ const G2_EASY_QUESTIONS = {
       subtype: "surprise",
     },
     {
-      question: "בכתיבה: המשפט ׳ניפגש אחרי ההפסקה׳ הוא הודעה רגילה — איזה סימן פיסוק מתאים בסוף המשפט?",
+      question: "בכתיבה: המשפט ׳ניפגש אחרי ההפסקה׳ הוא הודעה רגילה - איזה סימן פיסוק מתאים בסוף המשפט?",
       answers: [".", "?", "!", "..."],
       correct: 0,
       subtopicId: "g2.punctuation_choice",
@@ -2018,7 +2018,7 @@ const G2_EASY_QUESTIONS = {
       subtype: "statement",
     },
     {
-      question: "בכתיבה: המשפט ׳מתי מתחיל השיעור׳ — איזה סימן פיסוק נכון בסוף המשפט?",
+      question: "בכתיבה: המשפט ׳מתי מתחיל השיעור׳ - איזה סימן פיסוק נכון בסוף המשפט?",
       answers: ["?", ".", "!", ","],
       correct: 0,
       subtopicId: "g2.punctuation_choice",
@@ -2026,7 +2026,7 @@ const G2_EASY_QUESTIONS = {
       subtype: "wh_question",
     },
     {
-      question: "בכתיבה: המשפט ׳אל תרוצו במסדרון׳ הוא הוראה חזקה — איזה סימן פיסוק מתאים בסוף המשפט?",
+      question: "בכתיבה: המשפט ׳אל תרוצו במסדרון׳ הוא הוראה חזקה - איזה סימן פיסוק מתאים בסוף המשפט?",
       answers: ["!", ".", "?", ","],
       correct: 0,
       subtopicId: "g2.punctuation_choice",
@@ -2034,7 +2034,7 @@ const G2_EASY_QUESTIONS = {
       subtype: "command",
     },
     {
-      question: "בכתיבה: המשפט ׳הבאתי עפרון ומחק׳ ממשיך ברשימה — איזה סימן פיסוק מתאים בין ׳עפרון׳ ל׳מחק׳ בתוך המשפט?",
+      question: "בכתיבה: המשפט ׳הבאתי עפרון ומחק׳ ממשיך ברשימה - איזה סימן פיסוק מתאים בין ׳עפרון׳ ל׳מחק׳ בתוך המשפט?",
       answers: [",", ".", "?", "!"],
       correct: 0,
       subtopicId: "g2.punctuation_choice",
@@ -2042,7 +2042,7 @@ const G2_EASY_QUESTIONS = {
       subtype: "inline_pair",
     },
     {
-      question: "בכתיבה: המשפט ׳תודה על העזרה׳ הוא משפט מנומס — איזה סימן פיסוק מתאים בסוף המשפט?",
+      question: "בכתיבה: המשפט ׳תודה על העזרה׳ הוא משפט מנומס - איזה סימן פיסוק מתאים בסוף המשפט?",
       answers: [".", "?", "!", ","],
       correct: 0,
       subtopicId: "g2.punctuation_choice",
@@ -2051,8 +2051,8 @@ const G2_EASY_QUESTIONS = {
     },
   ],
   grammar: [
-    { question: "במשפט ׳הילד קורא ספר׳ — איזו מילה היא הפועל?", answers: ["קורא", "הילד", "ספר", "המשפט"], correct: 0, subtopicId: "g2.pos_basic", patternFamily: "g2_grammar_pick_verb_read" },
-    { question: "במשפט ׳הפרח יפה מאוד׳ — איזו מילה היא התואר?", answers: ["יפה", "הפרח", "מאוד", "המשפט"], correct: 0, subtopicId: "g2.pos_basic", patternFamily: "g2_grammar_pick_adj_flower" },
+    { question: "במשפט ׳הילד קורא ספר׳ - איזו מילה היא הפועל?", answers: ["קורא", "הילד", "ספר", "המשפט"], correct: 0, subtopicId: "g2.pos_basic", patternFamily: "g2_grammar_pick_verb_read" },
+    { question: "במשפט ׳הפרח יפה מאוד׳ - איזו מילה היא התואר?", answers: ["יפה", "הפרח", "מאוד", "המשפט"], correct: 0, subtopicId: "g2.pos_basic", patternFamily: "g2_grammar_pick_adj_flower" },
     {
       question: "איזה משפט נכון?",
       answers: ["הילדים קוראים", "הילדים קורא", "הילד קוראים", "הילדה קוראים"],
@@ -2061,36 +2061,36 @@ const G2_EASY_QUESTIONS = {
       patternFamily: "g2_grammar_plural_read",
     },
     {
-      question: "במשפט ׳אתמול קראתי ספר׳ — באיזה זמן הפועל העיקרי?",
+      question: "במשפט ׳אתמול קראתי ספר׳ - באיזה זמן הפועל העיקרי?",
       answers: ["עבר", "הווה", "עתיד", "לא ידוע"],
       correct: 0,
       subtopicId: "g2.simple_tense",
       patternFamily: "g2_grammar_tense_yesterday_read",
     },
-    { question: "במשפט ׳אני לומד בכיתה׳ — איזו מילה היא שם העצם?", answers: ["כיתה", "לומד", "אני", "ב"], correct: 0, subtopicId: "g2.pos_basic", patternFamily: "g2_grammar_pick_noun_classroom" },
+    { question: "במשפט ׳אני לומד בכיתה׳ - איזו מילה היא שם העצם?", answers: ["כיתה", "לומד", "אני", "ב"], correct: 0, subtopicId: "g2.pos_basic", patternFamily: "g2_grammar_pick_noun_classroom" },
     {
-      question: "במשפט ׳עכשיו אני כותב במחברת׳ — באיזה זמן הפועל ׳כותב׳?",
+      question: "במשפט ׳עכשיו אני כותב במחברת׳ - באיזה זמן הפועל ׳כותב׳?",
       answers: ["הווה", "עבר", "עתיד", "לא ידוע"],
       correct: 0,
       subtopicId: "g2.simple_tense",
       patternFamily: "g2_grammar_tense_now_write",
     },
     {
-      question: "במשפט ׳הילדות עייפות אחרי הטיול׳ — איזה ניסוח מתאים לרבים נקבה?",
+      question: "במשפט ׳הילדות עייפות אחרי הטיול׳ - איזה ניסוח מתאים לרבים נקבה?",
       answers: ["הן עייפות", "הוא עייפות", "אתם עייפות", "את עייפות"],
       correct: 0,
       subtopicId: "g2.number_gender_light",
       patternFamily: "g2_grammar_fem_plural_tired",
     },
     {
-      question: "במשפט ׳מחר נכתוב תרגיל׳ — באיזה זמן הפועל ׳נכתוב׳?",
+      question: "במשפט ׳מחר נכתוב תרגיל׳ - באיזה זמן הפועל ׳נכתוב׳?",
       answers: ["עתיד", "עבר", "הווה", "לא ידוע"],
       correct: 0,
       subtopicId: "g2.simple_tense",
       patternFamily: "g2_grammar_tense_tomorrow_write",
     },
     {
-      question: "במשפט ׳הם שרים שיר ביחד׳ — איזה ניסוח מתאים לרבים זכר?",
+      question: "במשפט ׳הם שרים שיר ביחד׳ - איזה ניסוח מתאים לרבים זכר?",
       answers: ["הם שרים", "הוא שרים", "היא שרים", "אני שרים"],
       correct: 0,
       subtopicId: "g2.number_gender_light",
@@ -2098,7 +2098,7 @@ const G2_EASY_QUESTIONS = {
       subtype: "plural_masc",
     },
     {
-      question: "במשפט ׳אמש ציירנו ציור גדול׳ — באיזה זמן הפועל ׳ציירנו׳?",
+      question: "במשפט ׳אמש ציירנו ציור גדול׳ - באיזה זמן הפועל ׳ציירנו׳?",
       answers: ["עבר", "הווה", "עתיד", "לא ידוע"],
       correct: 0,
       subtopicId: "g2.simple_tense",
@@ -2110,10 +2110,10 @@ const G2_EASY_QUESTIONS = {
     { question: "איזו מילה לא שייכת לקבוצה?", answers: ["מחברת", "עיפרון", "מחק", "כיסא"], correct: 3, subtopicId: "g2.pos_basic", patternFamily: "g2_grammar_odd_school_objects" },
     { question: "איזה משפט עם סימן שאלה נכון?", answers: ["מה הביאו לפיקניק?", "מה הביאו לפיקניק.", "מה הביאו לפיקניק", "?מה הביאו לפיקניק"], correct: 0, subtopicId: "g2.simple_tense", patternFamily: "g2_grammar_question_picnic" },
     { question: "בחרו משפט תקין:", answers: ["הן רצות בגן", "הן רץ בגן", "הוא רצות בגן", "אתם רצות בגן"], correct: 0, subtopicId: "g2.number_gender_light", patternFamily: "g2_grammar_fem_plural_run" },
-    { question: "במשפט ׳המורה הסבירה את השיעור׳ — באיזה זמן הפועל?", answers: ["עבר", "הווה", "עתיד", "לא ידוע"], correct: 0, subtopicId: "g2.simple_tense", patternFamily: "g2_grammar_tense_teacher_explained" },
+    { question: "במשפט ׳המורה הסבירה את השיעור׳ - באיזה זמן הפועל?", answers: ["עבר", "הווה", "עתיד", "לא ידוע"], correct: 0, subtopicId: "g2.simple_tense", patternFamily: "g2_grammar_tense_teacher_explained" },
     { question: "בחרו משפט תקין לעתיד:", answers: ["בשבוע הבא נבקר במוזיאון", "בשבוע הבא ביקרנו במוזיאון", "בשבוע הבא ביקר במוזיאון", "בשבוע הבא נבקר אתמול"], correct: 0, subtopicId: "g2.simple_tense", patternFamily: "g2_grammar_future_museum" },
     { question: "בחרו משפט עם חיבור נכון:", answers: ["נעליים וגרביים", "נעליים גרביים", "נעליים עם וגרביים", "ונעליים גרביים"], correct: 0, subtopicId: "g2.number_gender_light", patternFamily: "g2_grammar_and_clothes" },
-    { question: "במשפט ׳הילדים אכלו פירות׳ — באיזה זמן הפועל?", answers: ["עבר", "הווה", "עתיד", "לא ידוע"], correct: 0, subtopicId: "g2.simple_tense", patternFamily: "g2_grammar_tense_ate_fruit" },
+    { question: "במשפט ׳הילדים אכלו פירות׳ - באיזה זמן הפועל?", answers: ["עבר", "הווה", "עתיד", "לא ידוע"], correct: 0, subtopicId: "g2.simple_tense", patternFamily: "g2_grammar_tense_ate_fruit" },
     { question: "איזה משפט מתאר הווה?", answers: ["היום אני לומד חדש", "אתמול למדתי חדש", "מחר אלמד חדש", "אתמול מחר אני לומד"], correct: 0, subtopicId: "g2.simple_tense", patternFamily: "g2_grammar_present_today" },
     { question: "בחרו משפט תקין:", answers: ["אתם מציירים תמונה", "אתם מציירת תמונה", "את מציירים תמונה", "אני מציירים תמונה"], correct: 0, subtopicId: "g2.number_gender_light", patternFamily: "g2_grammar_you_masc_draw" },
     { question: "בחרו ניסוח מתאים ל׳אנחנו שמחים׳:", answers: ["אנחנו שמחים", "אנחנו שמחה", "אני שמחים", "הם שמחים אנחנו"], correct: 0, subtopicId: "g2.number_gender_light", patternFamily: "g2_grammar_we_happy" },
@@ -2165,13 +2165,13 @@ const G2_EASY_QUESTIONS = {
       subtype: "adjective",
     },
     {
-      question: "לפי המשפט ׳אחרי הספורט היינו צמאים מאוד׳ — למה כנראה שתו מים?",
+      question: "לפי המשפט ׳אחרי הספורט היינו צמאים מאוד׳ - למה כנראה שתו מים?",
       answers: ["כי שיחקו והתאמצו", "כי ישנו", "כי ציירו", "כי קראו בשקט"],
       correct: 0,
       subtopicId: "g2.context_clue_easy",
     },
     {
-      question: "לפי המשפט ׳המורה דיברה לאט כדי שכולם יבינו׳ — מה ׳לאט׳ אומר כאן?",
+      question: "לפי המשפט ׳המורה דיברה לאט כדי שכולם יבינו׳ - מה ׳לאט׳ אומר כאן?",
       answers: ["בקצב איטי", "בקול חזק", "בלי מילים", "בלי הסבר"],
       correct: 0,
       subtopicId: "g2.context_clue_easy",
@@ -2295,7 +2295,7 @@ const G2_MEDIUM_QUESTIONS = {
       correct: 0,
     },
     {
-      question: "בקריאה: איזה סימן פיסוק מתאים בסוף משפט מפתיע — ׳אוי׳?",
+      question: "בקריאה: איזה סימן פיסוק מתאים בסוף משפט מפתיע - ׳אוי׳?",
       answers: ["!", "?", ".", ","],
       correct: 0,
       subtopicId: "g2.simple_punctuation_read",
@@ -2318,7 +2318,7 @@ const G2_MEDIUM_QUESTIONS = {
       subtopicId: "g2.short_sentence",
     },
     {
-      question: "בקריאה: בסוף משפט שמספרים בו עובדה רגילה — איזה סימן פיסוק מתאים?",
+      question: "בקריאה: בסוף משפט שמספרים בו עובדה רגילה - איזה סימן פיסוק מתאים?",
       answers: [".", "?", "!", "..."],
       correct: 0,
       subtopicId: "g2.simple_punctuation_read",
@@ -2358,29 +2358,29 @@ const G2_MEDIUM_QUESTIONS = {
     },
   ],
   comprehension: [
-    { question: "במשפט 'ילדים קוראים ספרים בכיתה' — מה קורה?", answers: ["קוראים ספרים", "מבשלים", "ישנים", "רצים במסלול"], correct: 0 },
-    { question: "כשהשמש זורחת בבוקר ומאירה — מה זה אומר?", answers: ["יש אור וחום", "הכל חשוך", "יורד גשם תמיד", "הלילה מתחיל"], correct: 0 },
+    { question: "במשפט 'ילדים קוראים ספרים בכיתה' - מה קורה?", answers: ["קוראים ספרים", "מבשלים", "ישנים", "רצים במסלול"], correct: 0 },
+    { question: "כשהשמש זורחת בבוקר ומאירה - מה זה אומר?", answers: ["יש אור וחום", "הכל חשוך", "יורד גשם תמיד", "הלילה מתחיל"], correct: 0 },
     { question: "מה ההפך של 'עצוב'?", answers: ["שמח", "עצוב", "יפה", "גדול"], correct: 0 },
     {
-      question: "לפי הסדר: ׳קודם נכנסים לאולם ואז יושבים׳ — מה קורה ראשון?",
+      question: "לפי הסדר: ׳קודם נכנסים לאולם ואז יושבים׳ - מה קורה ראשון?",
       answers: ["נכנסים לאולם", "יושבים", "שניהם יחד", "לא כתוב"],
       correct: 0,
       subtopicId: "g2.simple_sequence",
     },
     {
-      question: "לפי הסדר: ׳קודם פותחים ספר ואז קוראים את השורה הראשונה׳ — מה קורה אחרי הפתיחה?",
+      question: "לפי הסדר: ׳קודם פותחים ספר ואז קוראים את השורה הראשונה׳ - מה קורה אחרי הפתיחה?",
       answers: ["קוראים את השורה הראשונה", "פותחים ספר", "סוגרים ספר", "לא כתוב"],
       correct: 0,
       subtopicId: "g2.simple_sequence",
     },
     {
-      question: "לפי המשפט ׳הילדים הכינו פוסטר לכיתה והדביקו תמונות׳ — מה הם כנראה הכינו?",
+      question: "לפי המשפט ׳הילדים הכינו פוסטר לכיתה והדביקו תמונות׳ - מה הם כנראה הכינו?",
       answers: ["עבודה ויזואלית לקיר", "ארוחת בוקר", "רשימת קניות", "מפת דרכים"],
       correct: 0,
       subtopicId: "g2.light_inference",
     },
     {
-      question: "לפי הסדר: ׳קודם קוראים את השאלה ואז בוחרים תשובה׳ — מה קורה ראשון?",
+      question: "לפי הסדר: ׳קודם קוראים את השאלה ואז בוחרים תשובה׳ - מה קורה ראשון?",
       answers: ["קוראים את השאלה", "בוחרים תשובה", "שניהם יחד", "לא כתוב"],
       correct: 0,
       subtopicId: "g2.simple_sequence",
@@ -2388,7 +2388,7 @@ const G2_MEDIUM_QUESTIONS = {
   ],
   writing: [
     {
-      question: "דף קטן או פתק שעוזר לזכור מילים לבחינה — בחרו איות למילה שמתארת את החפץ:",
+      question: "דף קטן או פתק שעוזר לזכור מילים לבחינה - בחרו איות למילה שמתארת את החפץ:",
       answers: ["תזכירית", "תזכיריית", "תיזכירית", "טזכירית"],
       correct: 0,
       subtopicId: "g2.fluent_words",
@@ -2453,7 +2453,7 @@ const G2_MEDIUM_QUESTIONS = {
     },
     {
       question:
-        "בכתיבה: המשפט ׳המורה ביקשה שקט כדי להסביר את הניסוי׳ מסתיים כהודעה — כתבו מילה אחת: איך קוראים לסימן המתאים בסוף? (נקודה / סימן שאלה / סימן קריאה / פסיק)",
+        "בכתיבה: המשפט ׳המורה ביקשה שקט כדי להסביר את הניסוי׳ מסתיים כהודעה - כתבו מילה אחת: איך קוראים לסימן המתאים בסוף? (נקודה / סימן שאלה / סימן קריאה / פסיק)",
       answers: ["נקודה", "סימן שאלה", "סימן קריאה", "פסיק"],
       correct: 0,
       subtopicId: "g2.punctuation_choice",
@@ -2465,7 +2465,7 @@ const G2_MEDIUM_QUESTIONS = {
     },
     {
       question:
-        "בכתיבה: המשפט ׳למה לא הבאת את המחברת׳ — כתבו מילה אחת: איך קוראים לסימן הנכון בסוף? (נקודה / סימן שאלה / סימן קריאה / פסיק)",
+        "בכתיבה: המשפט ׳למה לא הבאת את המחברת׳ - כתבו מילה אחת: איך קוראים לסימן הנכון בסוף? (נקודה / סימן שאלה / סימן קריאה / פסיק)",
       answers: ["סימן שאלה", "נקודה", "סימן קריאה", "פסיק"],
       correct: 0,
       subtopicId: "g2.punctuation_choice",
@@ -2476,7 +2476,7 @@ const G2_MEDIUM_QUESTIONS = {
       maxTypingChars: 16,
     },
     {
-      question: "בכתיבה: המשפט ׳זהירות הרצפה רטובה׳ הוא אזהרה קצרה — איזה סימן פיסוק מתאים בסוף המשפט?",
+      question: "בכתיבה: המשפט ׳זהירות הרצפה רטובה׳ הוא אזהרה קצרה - איזה סימן פיסוק מתאים בסוף המשפט?",
       answers: ["!", ".", "?", ","],
       correct: 0,
       subtopicId: "g2.punctuation_choice",
@@ -2484,7 +2484,7 @@ const G2_MEDIUM_QUESTIONS = {
       subtype: "warning_sign",
     },
     {
-      question: "בכתיבה: המשפט ׳אחר הצהריים יש מפגש עם ההורים׳ — איזה סימן פיסוק מתאים בסוף המשפט?",
+      question: "בכתיבה: המשפט ׳אחר הצהריים יש מפגש עם ההורים׳ - איזה סימן פיסוק מתאים בסוף המשפט?",
       answers: [".", "?", "!", ","],
       correct: 0,
       subtopicId: "g2.punctuation_choice",
@@ -2492,7 +2492,7 @@ const G2_MEDIUM_QUESTIONS = {
       subtype: "schedule_note",
     },
     {
-      question: "בכתיבה: המשפט ׳מי אחראי על לוח המודעות השבוע׳ — איזה סימן פיסוק נכון בסוף המשפט?",
+      question: "בכתיבה: המשפט ׳מי אחראי על לוח המודעות השבוע׳ - איזה סימן פיסוק נכון בסוף המשפט?",
       answers: ["?", ".", "!", ","],
       correct: 0,
       subtopicId: "g2.punctuation_choice",
@@ -2500,7 +2500,7 @@ const G2_MEDIUM_QUESTIONS = {
       subtype: "who_question",
     },
     {
-      question: "בכתיבה: המשפט ׳הכנו חומרים נייר צבעים ודבק׳ מפרט רשימה — איזה סימן פיסוק מתאים אחרי ׳נייר׳ בתוך המשפט?",
+      question: "בכתיבה: המשפט ׳הכנו חומרים נייר צבעים ודבק׳ מפרט רשימה - איזה סימן פיסוק מתאים אחרי ׳נייר׳ בתוך המשפט?",
       answers: [",", ".", "?", "!"],
       correct: 0,
       subtopicId: "g2.punctuation_choice",
@@ -2508,7 +2508,7 @@ const G2_MEDIUM_QUESTIONS = {
       subtype: "serial_comma",
     },
     {
-      question: "בכתיבה: המשפט ׳האם כולם הבינו את ההוראות׳ — איזה סימן פיסוק מתאים בסוף המשפט?",
+      question: "בכתיבה: המשפט ׳האם כולם הבינו את ההוראות׳ - איזה סימן פיסוק מתאים בסוף המשפט?",
       answers: ["?", ".", "!", ","],
       correct: 0,
       subtopicId: "g2.punctuation_choice",
@@ -2516,7 +2516,7 @@ const G2_MEDIUM_QUESTIONS = {
       subtype: "yes_no_question_style",
     },
     {
-      question: "בכתיבה: המשפט ׳נתראה מחר בבוקר׳ הוא משלום קצר — איזה סימן פיסוק מתאים בסוף המשפט?",
+      question: "בכתיבה: המשפט ׳נתראה מחר בבוקר׳ הוא משלום קצר - איזה סימן פיסוק מתאים בסוף המשפט?",
       answers: [".", "?", "!", ","],
       correct: 0,
       subtopicId: "g2.punctuation_choice",
@@ -2534,19 +2534,19 @@ const G2_MEDIUM_QUESTIONS = {
       subtopicId: "g2.number_gender_light",
     },
     {
-      question: "במשפט ׳מחר נלך לטיול׳ — באיזה זמן הפועל ׳נלך׳?",
+      question: "במשפט ׳מחר נלך לטיול׳ - באיזה זמן הפועל ׳נלך׳?",
       answers: ["עתיד", "עבר", "הווה", "לא ידוע"],
       correct: 0,
       subtopicId: "g2.simple_tense",
     },
     {
-      question: "במשפט ׳בשבוע הבא נבקר במוזיאון׳ — באיזה זמן הפועל ׳נבקר׳?",
+      question: "במשפט ׳בשבוע הבא נבקר במוזיאון׳ - באיזה זמן הפועל ׳נבקר׳?",
       answers: ["עתיד", "עבר", "הווה", "לא ידוע"],
       correct: 0,
       subtopicId: "g2.simple_tense",
     },
     {
-      question: "במשפט ׳אתמול ציירנו שלט לכיתה׳ — באיזה זמן הפועל ׳ציירנו׳?",
+      question: "במשפט ׳אתמול ציירנו שלט לכיתה׳ - באיזה זמן הפועל ׳ציירנו׳?",
       answers: ["עבר", "הווה", "עתיד", "לא ידוע"],
       correct: 0,
       subtopicId: "g2.simple_tense",
@@ -2574,7 +2574,7 @@ const G2_MEDIUM_QUESTIONS = {
       subtopicId: "g2.synonyms_basic",
     },
     {
-      question: "לפי המשפט ׳הרוח נשבה חזק והענפים זזו׳ — מה כנראה קרה בחוץ?",
+      question: "לפי המשפט ׳הרוח נשבה חזק והענפים זזו׳ - מה כנראה קרה בחוץ?",
       answers: ["הייתה רוח", "היה שלג", "היה שקט מוחלט", "היה חושך"],
       correct: 0,
       subtopicId: "g2.context_clue_easy",
@@ -2657,7 +2657,7 @@ const G2_HARD_QUESTIONS = {
       correct: 0,
     },
     {
-      question: "בקריאה: אחרי סיפור קצר ומפתיע — איזה סימן פיסוק מתאים אחרי המילה ׳פתאום׳?",
+      question: "בקריאה: אחרי סיפור קצר ומפתיע - איזה סימן פיסוק מתאים אחרי המילה ׳פתאום׳?",
       answers: ["!", ".", "?", ","],
       correct: 0,
       subtopicId: "g2.simple_punctuation_read",
@@ -2691,7 +2691,7 @@ const G2_HARD_QUESTIONS = {
       subtopicId: "g2.short_sentence",
     },
     {
-      question: "בקריאה: אחרי רשימה קצרה של פריטים (׳עיפרון, מחק, סרגל׳) — איזה סימן פיסוק מתאים בין פריט לפריט?",
+      question: "בקריאה: אחרי רשימה קצרה של פריטים (׳עיפרון, מחק, סרגל׳) - איזה סימן פיסוק מתאים בין פריט לפריט?",
       answers: [",", ".", "?", "!"],
       correct: 0,
       subtopicId: "g2.simple_punctuation_read",
@@ -2715,33 +2715,33 @@ const G2_HARD_QUESTIONS = {
     },
   ],
   comprehension: [
-    { question: "במשפט 'ילדים קוראים ספרים ומכינים שיעורי בית' — מה הם עושים?", answers: ["קוראים ומתכוננים", "רק משחקים", "רק ישנים", "רק מציירים"], correct: 0 },
+    { question: "במשפט 'ילדים קוראים ספרים ומכינים שיעורי בית' - מה הם עושים?", answers: ["קוראים ומתכוננים", "רק משחקים", "רק ישנים", "רק מציירים"], correct: 0 },
     {
-      question: "כשהשמש זורחת בבוקר ומאירה את העולם — מה נכון לומר על האור בחוץ?",
+      question: "כשהשמש זורחת בבוקר ומאירה את העולם - מה נכון לומר על האור בחוץ?",
       answers: ["יש הרבה אור מהשמש", "השמש נעלמת", "הכל חשוך", "רק עננים"],
       correct: 0,
       subtopicId: "g2.light_inference",
     },
     {
-      question: "לפי הסדר: ׳קודם אוכלים ארוחת בוקר ואז יוצאים לדרך׳ — מה קורה אחרי הארוחה?",
+      question: "לפי הסדר: ׳קודם אוכלים ארוחת בוקר ואז יוצאים לדרך׳ - מה קורה אחרי הארוחה?",
       answers: ["יוצאים לדרך", "אוכלים ארוחת בוקר", "שניהם יחד", "לא כתוב"],
       correct: 0,
       subtopicId: "g2.simple_sequence",
     },
     {
-      question: "לפי הסדר: ׳קודם כותבים טיוטה ואז מתקנים שגיאות׳ — מה עושים אחרי הטיוטה?",
+      question: "לפי הסדר: ׳קודם כותבים טיוטה ואז מתקנים שגיאות׳ - מה עושים אחרי הטיוטה?",
       answers: ["מתקנים שגיאות", "כותבים טיוטה", "קוראים בלבד", "לא כתוב"],
       correct: 0,
       subtopicId: "g2.simple_sequence",
     },
     {
-      question: "לפי המשפט ׳הילדים הכינו חומרים לשבוע המדעים ושאלו שאלות׳ — מה כנראה היה המטרה?",
+      question: "לפי המשפט ׳הילדים הכינו חומרים לשבוע המדעים ושאלו שאלות׳ - מה כנראה היה המטרה?",
       answers: ["להבין ולחקור נושא", "לבשל ארוחת צהריים", "לישון מוקדם", "לסגור את בית הספר"],
       correct: 0,
       subtopicId: "g2.light_inference",
     },
     {
-      question: "לפי הסדר: ׳קודם מסדרים חומרים ואז מתחילים לעבוד בקבוצה׳ — מה קורה ראשון?",
+      question: "לפי הסדר: ׳קודם מסדרים חומרים ואז מתחילים לעבוד בקבוצה׳ - מה קורה ראשון?",
       answers: ["מסדרים חומרים", "מתחילים לעבוד בקבוצה", "שניהם יחד", "לא כתוב"],
       correct: 0,
       subtopicId: "g2.simple_sequence",
@@ -2784,7 +2784,7 @@ const G2_HARD_QUESTIONS = {
     },
     {
       question:
-        "בכתיבה: המשפט ׳הילדים הציגו פרויקט והקהל מחא כפיים׳ מסתיים כעובדה מלאה — כתבו מילה אחת: איך קוראים לסימן המתאים בסוף? (נקודה / סימן שאלה / סימן קריאה / פסיק)",
+        "בכתיבה: המשפט ׳הילדים הציגו פרויקט והקהל מחא כפיים׳ מסתיים כעובדה מלאה - כתבו מילה אחת: איך קוראים לסימן המתאים בסוף? (נקודה / סימן שאלה / סימן קריאה / פסיק)",
       answers: ["נקודה", "סימן שאלה", "סימן קריאה", "פסיק"],
       correct: 0,
       subtopicId: "g2.punctuation_choice",
@@ -2796,7 +2796,7 @@ const G2_HARD_QUESTIONS = {
     },
     {
       question:
-        "בכתיבה: המשפט ׳איך בחרתם את הנושא לעבודה המשותפת׳ — כתבו מילה אחת: איך קוראים לסימן הנכון בסוף? (נקודה / סימן שאלה / סימן קריאה / פסיק)",
+        "בכתיבה: המשפט ׳איך בחרתם את הנושא לעבודה המשותפת׳ - כתבו מילה אחת: איך קוראים לסימן הנכון בסוף? (נקודה / סימן שאלה / סימן קריאה / פסיק)",
       answers: ["סימן שאלה", "נקודה", "סימן קריאה", "פסיק"],
       correct: 0,
       subtopicId: "g2.punctuation_choice",
@@ -2807,7 +2807,7 @@ const G2_HARD_QUESTIONS = {
       maxTypingChars: 16,
     },
     {
-      question: "בכתיבה: המשפט ׳שימו לב השער נסגר בעוד חמש דקות׳ הוא אזהרה דחופה — איזה סימן פיסוק מתאים בסוף המשפט?",
+      question: "בכתיבה: המשפט ׳שימו לב השער נסגר בעוד חמש דקות׳ הוא אזהרה דחופה - איזה סימן פיסוק מתאים בסוף המשפט?",
       answers: ["!", ".", "?", ","],
       correct: 0,
       subtopicId: "g2.punctuation_choice",
@@ -2815,7 +2815,7 @@ const G2_HARD_QUESTIONS = {
       subtype: "urgent_notice",
     },
     {
-      question: "בכתיבה: המשפט ׳הנחיות הבטיחות חלות על כולם בלי יוצא מן הכלל׳ — איזה סימן פיסוק מתאים בסוף המשפט?",
+      question: "בכתיבה: המשפט ׳הנחיות הבטיחות חלות על כולם בלי יוצא מן הכלל׳ - איזה סימן פיסוק מתאים בסוף המשפט?",
       answers: [".", "?", "!", ","],
       correct: 0,
       subtopicId: "g2.punctuation_choice",
@@ -2823,7 +2823,7 @@ const G2_HARD_QUESTIONS = {
       subtype: "formal_rule",
     },
     {
-      question: "בכתיבה: המשפט ׳מי חתם על רשימת הנוכחים לטיול׳ — איזה סימן פיסוק נכון בסוף המשפט?",
+      question: "בכתיבה: המשפט ׳מי חתם על רשימת הנוכחים לטיול׳ - איזה סימן פיסוק נכון בסוף המשפט?",
       answers: ["?", ".", "!", ","],
       correct: 0,
       subtopicId: "g2.punctuation_choice",
@@ -2831,7 +2831,7 @@ const G2_HARD_QUESTIONS = {
       subtype: "admin_question",
     },
     {
-      question: "בכתיבה: המשפט ׳נבדוק שוב את התוצאות לפני שמדפיסים׳ — איזה סימן פיסוק מתאים בסוף המשפט?",
+      question: "בכתיבה: המשפט ׳נבדוק שוב את התוצאות לפני שמדפיסים׳ - איזה סימן פיסוק מתאים בסוף המשפט?",
       answers: [".", "?", "!", ","],
       correct: 0,
       subtopicId: "g2.punctuation_choice",
@@ -2839,7 +2839,7 @@ const G2_HARD_QUESTIONS = {
       subtype: "planning_sentence",
     },
     {
-      question: "בכתיבה: המשפט ׳האם מותר להשתמש במחשב בשלב זה של העבודה׳ — איזה סימן פיסוק מתאים בסוף המשפט?",
+      question: "בכתיבה: המשפט ׳האם מותר להשתמש במחשב בשלב זה של העבודה׳ - איזה סימן פיסוק מתאים בסוף המשפט?",
       answers: ["?", ".", "!", ","],
       correct: 0,
       subtopicId: "g2.punctuation_choice",
@@ -2847,7 +2847,7 @@ const G2_HARD_QUESTIONS = {
       subtype: "permission_question",
     },
     {
-      question: "בכתיבה: המשפט ׳ספרים מחברות ומחקים מסודרים על המדף׳ — איזה סימן פיסוק מתאים אחרי ׳מחברות׳ בתוך המשפט?",
+      question: "בכתיבה: המשפט ׳ספרים מחברות ומחקים מסודרים על המדף׳ - איזה סימן פיסוק מתאים אחרי ׳מחברות׳ בתוך המשפט?",
       answers: [",", ".", "?", "!"],
       correct: 0,
       subtopicId: "g2.punctuation_choice",
@@ -2864,19 +2864,19 @@ const G2_HARD_QUESTIONS = {
       subtopicId: "g2.number_gender_light",
     },
     {
-      question: "במשפט ׳אתמול למדנו שיעור מעניין׳ — באיזה זמן הפועל העיקרי ׳למדנו׳?",
+      question: "במשפט ׳אתמול למדנו שיעור מעניין׳ - באיזה זמן הפועל העיקרי ׳למדנו׳?",
       answers: ["עבר", "הווה", "עתיד", "לא ידוע"],
       correct: 0,
       subtopicId: "g2.simple_tense",
     },
     {
-      question: "במשפט ׳היום אנחנו לומדים שיעור חדש׳ — באיזה זמן הפועל ׳לומדים׳?",
+      question: "במשפט ׳היום אנחנו לומדים שיעור חדש׳ - באיזה זמן הפועל ׳לומדים׳?",
       answers: ["הווה", "עבר", "עתיד", "לא ידוע"],
       correct: 0,
       subtopicId: "g2.simple_tense",
     },
     {
-      question: "במשפט ׳המורות הסבירו את הניסוי בזהירות׳ — איזה ניסוח מתאים לרבים נקבה?",
+      question: "במשפט ׳המורות הסבירו את הניסוי בזהירות׳ - איזה ניסוח מתאים לרבים נקבה?",
       answers: ["הן הסבירו", "הוא הסבירו", "הם הסבירו", "אתה הסבירו"],
       correct: 0,
       subtopicId: "g2.number_gender_light",
@@ -2903,7 +2903,7 @@ const G2_HARD_QUESTIONS = {
       subtopicId: "g2.synonyms_basic",
     },
     {
-      question: "לפי המשפט ׳הילדים לבשו חליפות ויצאו לבמה׳ — איפה הם כנראה היו?",
+      question: "לפי המשפט ׳הילדים לבשו חליפות ויצאו לבמה׳ - איפה הם כנראה היו?",
       answers: ["בהצגה או מופע", "במקרר", "במחסן כלים", "בבריכה"],
       correct: 0,
       subtopicId: "g2.context_clue_easy",
@@ -3040,7 +3040,7 @@ const G3_EASY_QUESTIONS = {
       subtopicId: "g3.word_families",
     },
     {
-      question: "במשפט 'הילד עייף אחרי המשחק' — מה המשמעות של 'עייף' כאן?",
+      question: "במשפט 'הילד עייף אחרי המשחק' - מה המשמעות של 'עייף' כאן?",
       answers: ["מותש ורוצה מנוחה", "שמח מאוד", "רעב בלבד", "קורא בקול"],
       correct: 0,
       subtopicId: "g3.context_meaning",
@@ -3054,7 +3054,7 @@ const G3_EASY_QUESTIONS = {
       subtype: "lamad_root",
     },
     {
-      question: "במשפט 'היא דיברה בלחש כדי לא להפריע' — מה המשמעות של 'בלחש' בהקשר?",
+      question: "במשפט 'היא דיברה בלחש כדי לא להפריע' - מה המשמעות של 'בלחש' בהקשר?",
       answers: ["בקול שקט מאוד", "בקול רם", "בלי מילים בכלל", "רק בשירה"],
       correct: 0,
       subtopicId: "g3.context_meaning",
@@ -3073,7 +3073,7 @@ const G3_MEDIUM_QUESTIONS = {
     ...G3_READING_MEDIUM_BANK,
     {
       question:
-        "כיתה ג׳ — טקסט מידעי מול סיפור (1): 'בטבלה: 12 ימים עם גשם, 18 בלי גשם.' לעומת סיפור: 'הגשם דפק על החלון.' מה ההבדל בז׳אנר?",
+        "כיתה ג׳ - טקסט מידעי מול סיפור (1): 'בטבלה: 12 ימים עם גשם, 18 בלי גשם.' לעומת סיפור: 'הגשם דפק על החלון.' מה ההבדל בז׳אנר?",
       answers: ["במידע יש עובדות ובסיפור יש עלילה ותיאור חווייתי", "אין הבדל", "שניהם רק שירים", "במידע חייבת להיות עלילה"],
       correct: 0,
       subtopicId: "g3.genre_tag_info_vs_story",
@@ -3082,7 +3082,7 @@ const G3_MEDIUM_QUESTIONS = {
     },
     {
       question:
-        "כיתה ג׳ — טקסט מידעי מול סיפור (2): 'המים רותחים ב-100°C (בלחץ אטמוספרי רגיל).' לעומת: 'הקומקום שרק כועס.' מה נכון?",
+        "כיתה ג׳ - טקסט מידעי מול סיפור (2): 'המים רותחים ב-100°C (בלחץ אטמוספרי רגיל).' לעומת: 'הקומקום שרק כועס.' מה נכון?",
       answers: ["במשפט המידעי יש ניסוח עובדתי; בסיפור יש דימוי", "בשניהם רק מספרים", "במידע אסור להשתמש במילים", "בסיפור חייבים רק טבלאות"],
       correct: 0,
       subtopicId: "g3.genre_tag_info_vs_story",
@@ -3091,7 +3091,7 @@ const G3_MEDIUM_QUESTIONS = {
     },
     {
       question:
-        "כיתה ג׳ — טקסט מידעי מול סיפור (3): 'מחקר מצא ששתיית מים מסייעת בריכוז.' לעומת: 'דני שתה והרגיש גיבור.' מה מאפיין את המידע?",
+        "כיתה ג׳ - טקסט מידעי מול סיפור (3): 'מחקר מצא ששתיית מים מסייעת בריכוז.' לעומת: 'דני שתה והרגיש גיבור.' מה מאפיין את המידע?",
       answers: ["מקור/ממצא מנוסח בזהירות; בסיפור דגש על דמות ורגש", "רק שמות", "רק צחוק", "אין הבדל"],
       correct: 0,
       subtopicId: "g3.genre_tag_info_vs_story",
@@ -3100,7 +3100,7 @@ const G3_MEDIUM_QUESTIONS = {
     },
     {
       question:
-        "כיתה ג׳ — טקסט מידעי מול סיפור (4): 'לוח שנה: 365 ימים.' לעומת: 'השנה רצה מהר כמו סוס.' מה ההבדל?",
+        "כיתה ג׳ - טקסט מידעי מול סיפור (4): 'לוח שנה: 365 ימים.' לעומת: 'השנה רצה מהר כמו סוס.' מה ההבדל?",
       answers: ["במידע עובדות; במטפורה בסיפור יש השוואה דימוית", "שניהם טבלאות", "במידע חייבת מטפורה", "בסיפור אין משפטים"],
       correct: 0,
       subtopicId: "g3.genre_tag_info_vs_story",
@@ -3194,7 +3194,7 @@ const G3_MEDIUM_QUESTIONS = {
       subtype: "n4",
     },
     {
-      question: "כיתה ג׳ — מילת קישור 1: השלימו: 'התכוננו למבחן' ____ 'ענינו בביטחון.'",
+      question: "כיתה ג׳ - מילת קישור 1: השלימו: 'התכוננו למבחן' ____ 'ענינו בביטחון.'",
       answers: ["ולכן", "אולם", "רק אם", "בלי"],
       correct: 0,
       subtopicId: "g3.connectors",
@@ -3202,7 +3202,7 @@ const G3_MEDIUM_QUESTIONS = {
       subtype: "n1",
     },
     {
-      question: "כיתה ג׳ — מילת קישור 2: 'רצינו לשחק בחוץ' ____ 'ירד גשם.'",
+      question: "כיתה ג׳ - מילת קישור 2: 'רצינו לשחק בחוץ' ____ 'ירד גשם.'",
       answers: ["אבל", "לכן", "וגם", "כי"],
       correct: 0,
       subtopicId: "g3.connectors",
@@ -3210,7 +3210,7 @@ const G3_MEDIUM_QUESTIONS = {
       subtype: "n2",
     },
     {
-      question: "כיתה ג׳ — מילת קישור 3: 'קראנו את ההוראות' ____ 'התחלנו לעבוד.'",
+      question: "כיתה ג׳ - מילת קישור 3: 'קראנו את ההוראות' ____ 'התחלנו לעבוד.'",
       answers: ["ורק אז", "אבל", "למרות", "אולי"],
       correct: 0,
       subtopicId: "g3.connectors",
@@ -3218,7 +3218,7 @@ const G3_MEDIUM_QUESTIONS = {
       subtype: "n3",
     },
     {
-      question: "כיתה ג׳ — מילת קישור 4: 'היינה עייפים' ____ 'המשכנו לנסות.'",
+      question: "כיתה ג׳ - מילת קישור 4: 'היינה עייפים' ____ 'המשכנו לנסות.'",
       answers: ["אבל", "לכן", "כי", "וגם"],
       correct: 0,
       subtopicId: "g3.connectors",
@@ -3236,7 +3236,7 @@ const G3_MEDIUM_QUESTIONS = {
       subtopicId: "g3.word_families",
     },
     {
-      question: "במשפט 'הרוח נשבה חזק' — מה המשמעות של 'נשבה' כאן?",
+      question: "במשפט 'הרוח נשבה חזק' - מה המשמעות של 'נשבה' כאן?",
       answers: ["נעה באוויר", "ישנה", "אוכלת", "צובעת"],
       correct: 0,
       subtopicId: "g3.context_meaning",
@@ -3250,7 +3250,7 @@ const G3_MEDIUM_QUESTIONS = {
       subtype: "shama_root",
     },
     {
-      question: "במשפט 'הם דחפו את השולחן בזהירות' — מה המשמעות של 'בזהירות' בהקשר?",
+      question: "במשפט 'הם דחפו את השולחן בזהירות' - מה המשמעות של 'בזהירות' בהקשר?",
       answers: ["בלי למהר ובלי לגרום נזק", "מהר מאוד", "בקול רם", "בלי לגעת בכלל"],
       correct: 0,
       subtopicId: "g3.context_meaning",
@@ -3310,7 +3310,7 @@ const G3_HARD_QUESTIONS = {
   ],
   vocabulary: [
     {
-      question: "בכיתה ג׳ — מה המשמעות של ״אוצר מילים ספרותי״ בקריאה?",
+      question: "בכיתה ג׳ - מה המשמעות של ״אוצר מילים ספרותי״ בקריאה?",
       answers: ["מילים עשירות ומתאימות לספרות", "רק מילים פשוטות", "רק אותיות", "ללא מילים"],
       correct: 0,
     },
@@ -3321,7 +3321,7 @@ const G3_HARD_QUESTIONS = {
       subtopicId: "g3.word_families",
     },
     {
-      question: "במשפט 'הלב דופק מהר אחרי ריצה' — מה המשמעות של 'דופק' כאן?",
+      question: "במשפט 'הלב דופק מהר אחרי ריצה' - מה המשמעות של 'דופק' כאן?",
       answers: ["פועם בקצב", "כותב", "ישן", "אוכל"],
       correct: 0,
       subtopicId: "g3.context_meaning",
@@ -3345,7 +3345,7 @@ const G3_HARD_QUESTIONS = {
   ],
   speaking: [
     {
-      question: "בכיתה ג׳ — מה נכון לגבי דיון ספרותי?",
+      question: "בכיתה ג׳ - מה נכון לגבי דיון ספרותי?",
       answers: ["דיון על הטקסט, דמויות ומסרים", "רק שתיקה", "רק צחוק", "ללא דיון"],
       correct: 0,
     },
@@ -3368,7 +3368,7 @@ const G4_EASY_QUESTIONS = {
       subtopicId: "g4.summary_intro",
     },
     {
-      question: "בטקסט מידעי על חתולים — איפה נכון לשים פסקה חדשה אחרי נושא חדש?",
+      question: "בטקסט מידעי על חתולים - איפה נכון לשים פסקה חדשה אחרי נושא חדש?",
       answers: ["אחרי שסיימנו לדבר על מאכל ועוברים לשינה", "רק בסוף הספר", "לפני הכותרת הראשונה בלבד", "אין צורך בפסקאות"],
       correct: 0,
       subtopicId: "g4.text_structure",
@@ -3382,7 +3382,7 @@ const G4_EASY_QUESTIONS = {
       subtype: "topic_boundary",
     },
     {
-      question: "בחיבור קצר — איזה משפט מתאים לפתיחת סיכום של טקסט על מיחזור?",
+      question: "בחיבור קצר - איזה משפט מתאים לפתיחת סיכום של טקסט על מיחזור?",
       answers: ["לסיכום, מיחזור עוזר להפחית פסולת", "פתאום הופיע דינוזאור", "אין צורך במשפט פתיחה", "רק לכתוב שם המחבר"],
       correct: 0,
       subtopicId: "g4.summary_intro",
@@ -3395,7 +3395,7 @@ const G4_EASY_QUESTIONS = {
     { question: "איך כותבים תיאור?", answers: ["תיאור מפורט של מה שרואים", "רק מילה אחת", "רק אות", "ללא תיאור"], correct: 0, subtopicId: "g4.genre_appropriate_language" },
     { question: "איך כותבים הסבר?", answers: ["הסבר ברור ומסודר", "רק מילה אחת", "רק אות", "ללא הסבר"], correct: 0 },
     {
-      question: "בטקסט הסבר מדעי לכיתה ד׳ — איזו שפה מתאימה יותר?",
+      question: "בטקסט הסבר מדעי לכיתה ד׳ - איזו שפה מתאימה יותר?",
       answers: ["מדויקת וברורה, עם מילים מהנושא", "סלנג חברים בלבד", "שירים בלי קשר", "משפטים בלי נושא"],
       correct: 0,
       subtopicId: "g4.genre_appropriate_language",
@@ -3406,13 +3406,13 @@ const G4_EASY_QUESTIONS = {
     { question: "מה שורש המילה 'כותב'?", answers: ["כ-ת-ב", "כ-ת", "ת-ב", "כ-ב"], correct: 0, subtopicId: "g4.root_pattern_intro" },
     { question: "מה נטיית הפועל 'כותב' בגוף ראשון רבים?", answers: ["אנחנו כותבים", "אני כותב", "אתה כותב", "הוא כותב"], correct: 0 },
     {
-      question: "במילה 'הִתְכּוֹנְנוּ' — מה הבניין והשורש לפי מה שלמדנו?",
+      question: "במילה 'הִתְכּוֹנְנוּ' - מה הבניין והשורש לפי מה שלמדנו?",
       answers: ["התפעל + כונ", "פיעל + כתב", "קל + רוץ", "נפעל + אכל"],
       correct: 0,
       subtopicId: "g4.root_pattern_intro",
     },
     {
-      question: "במילה 'כותבים' — מה השורש והבניין הנפוצים בדומה ל'לכתוב'?",
+      question: "במילה 'כותבים' - מה השורש והבניין הנפוצים בדומה ל'לכתוב'?",
       answers: ["שורש כת ב ובניין פעל (צורת רבים)", "שורש ר וץ בלבד", "אין שורש", "בניין התפעל תמיד"],
       correct: 0,
       subtopicId: "g4.root_pattern_intro",
@@ -3424,7 +3424,7 @@ const G4_EASY_QUESTIONS = {
     { question: "מה משפחת המילה 'כתיבה'?", answers: ["כתיבה, כותב, כתב", "קריאה, קורא", "שמיעה, שומע", "ראייה, רואה"], correct: 0 },
     { question: "מה משמעות המילה 'חיים'?", answers: ["חיים", "מוות", "ללא כלום", "רק חלום"], correct: 0 },
     {
-      question: "בסיפור — מה המשמעות של 'דמות' (מילה ספרותית)?",
+      question: "בסיפור - מה המשמעות של 'דמות' (מילה ספרותית)?",
       answers: ["אדם או בעל חיים בטקסט", "רק שם של פרק", "סוג של נקודה", "צבע הדף"],
       correct: 0,
       subtopicId: "g4.literary_lexicon_light",
@@ -3455,7 +3455,7 @@ const G4_MEDIUM_QUESTIONS = {
     { question: "קרא את הסיפור: 'ילד יצא לטיול ביער. הוא ראה פרחים יפים וציפורים שרות. הוא נהנה מהטבע ונזכר כמה העולם יפה.' מה הנושא?", answers: ["הנאה מהטבע ויופיו", "ילד ישן", "ילד אוכל", "ילד כותב"], correct: 0 },
     {
       question:
-        "כיתה ד׳ — טקסט מידעי (1): 'לפי הטבלה, 40% מהתלמידים אכלו ארוחת בוקר לפני בית הספר.' מה מאפיין טקסט מידעי?",
+        "כיתה ד׳ - טקסט מידעי (1): 'לפי הטבלה, 40% מהתלמידים אכלו ארוחת בוקר לפני בית הספר.' מה מאפיין טקסט מידעי?",
       answers: ["מציג עובדות ונתונים שניתן לבדוק", "רק דמיון בלי עובדות", "רק שיחה בין חברים", "רק שיר ללא משמעות"],
       correct: 0,
       subtopicId: "g4.info_lit_intro",
@@ -3464,7 +3464,7 @@ const G4_MEDIUM_QUESTIONS = {
     },
     {
       question:
-        "כיתה ד׳ — טקסט מידעי (2): 'מקור: אתר משרד הבריאות — שתיית מים חשובה בימים חמים.' למה חשוב לציין מקור?",
+        "כיתה ד׳ - טקסט מידעי (2): 'מקור: אתר משרד הבריאות - שתיית מים חשובה בימים חמים.' למה חשוב לציין מקור?",
       answers: ["כדי לדעת מאיפה העובדה ולבדוק אמינות", "כדי להחביא מידע", "כדי שלא יהיו משפטים", "זה לא חשוב לעולם"],
       correct: 0,
       subtopicId: "g4.info_lit_intro",
@@ -3473,7 +3473,7 @@ const G4_MEDIUM_QUESTIONS = {
     },
     {
       question:
-        "כיתה ד׳ — טקסט מידעי (3): 'ניסוי: שתי קבוצות; קבוצה א' קיבלה מים נוספים.' מה סוג המידע כאן?",
+        "כיתה ד׳ - טקסט מידעי (3): 'ניסוי: שתי קבוצות; קבוצה א' קיבלה מים נוספים.' מה סוג המידע כאן?",
       answers: ["תיאור תהליך/ניסוי עם משתנים", "סיפור על דרקון", "שיר חג", "רשימת קניות בלבד"],
       correct: 0,
       subtopicId: "g4.info_lit_intro",
@@ -3482,7 +3482,7 @@ const G4_MEDIUM_QUESTIONS = {
     },
     {
       question:
-        "כיתה ד׳ — טקסט מידעי (4): 'הגדרה: אקלים הוא ממוצע מזג אוויר לאורך שנים רבות.' מה ההבדל בין מזג אוויר לאקלים?",
+        "כיתה ד׳ - טקסט מידעי (4): 'הגדרה: אקלים הוא ממוצע מזג אוויר לאורך שנים רבות.' מה ההבדל בין מזג אוויר לאקלים?",
       answers: ["מזג אוויר לטווח קצר; אקלים לטווח ארוך", "אין הבדל", "אקלים זה רק גשם", "מזג אוויר זה רק קיץ"],
       correct: 0,
       subtopicId: "g4.info_lit_intro",
@@ -3515,7 +3515,7 @@ const G4_MEDIUM_QUESTIONS = {
       subtype: "cohesion",
     },
     {
-      question: "סיכום של טקסט על זיהום אוויר — איזה משפט שומר על דיוק ולא מוסיף מידע שלא הופיע?",
+      question: "סיכום של טקסט על זיהום אוויר - איזה משפט שומר על דיוק ולא מוסיף מידע שלא הופיע?",
       answers: ["הטקסט מציג כמה גורמים לזיהום ומדוע זה משנה את איכות החיים", "לכן כולם תמיד אוהבים גשם", "בטח יש חייזרים", "הכול בגלל צבע עיפרון אחד"],
       correct: 0,
       subtopicId: "g4.summary_intro",
@@ -3528,7 +3528,7 @@ const G4_MEDIUM_QUESTIONS = {
     { question: "איך כותבים תיאור?", answers: ["תיאור מפורט ומעניין", "רק מילה", "רק אות", "ללא תיאור"], correct: 0, subtopicId: "g4.genre_appropriate_language" },
     { question: "איך כותבים הסבר?", answers: ["הסבר ברור ומסודר", "רק מילה", "רק אות", "ללא הסבר"], correct: 0 },
     {
-      question: "בסיפור ילדים — מה מתאים לשפת הטקסט?",
+      question: "בסיפור ילדים - מה מתאים לשפת הטקסט?",
       answers: ["פשוטה וציורית, עם פרטים חושיים", "רשימת מספרים בלבד", "שפה משפטית רשמית מאוד", "בלי פסיקים"],
       correct: 0,
       subtopicId: "g4.genre_appropriate_language",
@@ -3539,13 +3539,13 @@ const G4_MEDIUM_QUESTIONS = {
     { question: "מה נטיית פועל?", answers: ["שינוי הפועל לפי גוף וזמן", "רק מילה אחת", "רק אות", "ללא שינוי"], correct: 0 },
     { question: "מה חלקי דיבר?", answers: ["שם עצם, פועל, תואר, מילות קישור", "רק שם עצם", "רק פועל", "ללא כלום"], correct: 0 },
     {
-      question: "במילים 'הִסְתַּכְּלוּ' ו'מִסְתַּכֵּל' — מה משותף לפי שורש ודפוס?",
+      question: "במילים 'הִסְתַּכְּלוּ' ו'מִסְתַּכֵּל' - מה משותף לפי שורש ודפוס?",
       answers: ["שורש ס כל ובניינים שונים של אותו שורש", "אין שורש משותף", "רק אות ראשונה", "רק ארוך המילה"],
       correct: 0,
       subtopicId: "g4.root_pattern_intro",
     },
     {
-      question: "במילים 'הִתְוַכְּחוּ' ו'מִתְוַכֵּחַ' — מה הדמיון המבני לעומק?",
+      question: "במילים 'הִתְוַכְּחוּ' ו'מִתְוַכֵּחַ' - מה הדמיון המבני לעומק?",
       answers: ["בניין התפעל עם שינוי לפי גוף ומספר על אותו שורש", "אין קשר ביניהן", "רק ארוך המילה", "רק ניקוד"],
       correct: 0,
       subtopicId: "g4.root_pattern_intro",
@@ -3554,7 +3554,7 @@ const G4_MEDIUM_QUESTIONS = {
     },
     {
       question:
-        "כיתה ד׳ — הכתבה ושגיאת כתיב (1): במשפט 'הילדים אכלו תפוחים' — איזו חלופה נכונה אם ביקשו צורת רבים של 'תפוח'?",
+        "כיתה ד׳ - הכתבה ושגיאת כתיב (1): במשפט 'הילדים אכלו תפוחים' - איזו חלופה נכונה אם ביקשו צורת רבים של 'תפוח'?",
       answers: ["תפוחים", "תפוחיםים", "תפוח", "תפוחה"],
       correct: 0,
       subtopicId: "g4.dictation_spot_error",
@@ -3563,7 +3563,7 @@ const G4_MEDIUM_QUESTIONS = {
     },
     {
       question:
-        "כיתה ד׳ — הכתבה ושגיאת כתיב (2): בהכתבה נכתב 'יבש' במקום 'יָבֵשׁ' (במובן opposite of wet). מה סוג הטעות?",
+        "כיתה ד׳ - הכתבה ושגיאת כתיב (2): בהכתבה נכתב 'יבש' במקום 'יָבֵשׁ' (במובן opposite of wet). מה סוג הטעות?",
       answers: ["שגיאת כתיב/ניקוד לפי המילה הנכונה בהקשר", "אין טעות", "טעות רק במספרים", "טעות רק בפיסוק"],
       correct: 0,
       subtopicId: "g4.dictation_spot_error",
@@ -3572,7 +3572,7 @@ const G4_MEDIUM_QUESTIONS = {
     },
     {
       question:
-        "כיתה ד׳ — הכתבה ושגיאת כתיב (3): במשפט 'הם רצים למגרש' — איזו צורה מתאימה לגוף נסתר יחיד?",
+        "כיתה ד׳ - הכתבה ושגיאת כתיב (3): במשפט 'הם רצים למגרש' - איזו צורה מתאימה לגוף נסתר יחיד?",
       answers: ["הוא רץ למגרש", "הם רצים למגרש", "אתה רצים למגרש", "אנחנו רצה למגרש"],
       correct: 0,
       subtopicId: "g4.dictation_spot_error",
@@ -3581,8 +3581,8 @@ const G4_MEDIUM_QUESTIONS = {
     },
     {
       question:
-        "כיתה ד׳ — הכתבה ושגיאת כתיב (4): איזו צורה שגויה נפוצה במילה 'כִּיסֵא'?",
-      answers: ["כיסא בלי אותיות ניקוד כשביקשו צורה מדויקת בהכתבה — טעות בהתאמה לניקוד הנלמד", "תמיד נכון", "אין צורה שגויה", "רק אות ראשונה"],
+        "כיתה ד׳ - הכתבה ושגיאת כתיב (4): איזו צורה שגויה נפוצה במילה 'כִּיסֵא'?",
+      answers: ["כיסא בלי אותיות ניקוד כשביקשו צורה מדויקת בהכתבה - טעות בהתאמה לניקוד הנלמד", "תמיד נכון", "אין צורה שגויה", "רק אות ראשונה"],
       correct: 0,
       subtopicId: "g4.dictation_spot_error",
       patternFamily: "phase717_p0_dictation",
@@ -3591,7 +3591,7 @@ const G4_MEDIUM_QUESTIONS = {
   ],
   vocabulary: [
     {
-      question: "בכיתה ד׳ — מה המשמעות של ״אוצר מילים ספרותי״ בקריאה?",
+      question: "בכיתה ד׳ - מה המשמעות של ״אוצר מילים ספרותי״ בקריאה?",
       answers: ["מילים עשירות המתאימות לספרות", "רק מילים פשוטות", "רק אותיות", "ללא מילים"],
       correct: 0,
     },
@@ -3619,7 +3619,7 @@ const G4_MEDIUM_QUESTIONS = {
   ],
   speaking: [
     {
-      question: "בכיתה ד׳ — מה נכון לגבי דיון ספרותי?",
+      question: "בכיתה ד׳ - מה נכון לגבי דיון ספרותי?",
       answers: ["דיון על הטקסט, דמויות ומסרים", "רק שתיקה", "רק צחוק", "ללא דיון"],
       correct: 0,
     },
@@ -3635,7 +3635,7 @@ const G4_HARD_QUESTIONS = {
     { question: "מה ניתוח ספרותי מעמיק?", answers: ["ניתוח של רבדים שונים: נושא, דמויות, סמלים, מסר", "רק קריאה", "רק כתיבה", "ללא ניתוח"], correct: 0 },
     { question: "מה חשיבה ביקורתית?", answers: ["חשיבה ביקורתית על הטקסט והמסר", "רק הסכמה", "רק סירוב", "ללא חשיבה"], correct: 0 },
     {
-      question: "בטקסט ארוך על מחזור המים — מה כדאי לכלול במשפט פתיחה של סיכום?",
+      question: "בטקסט ארוך על מחזור המים - מה כדאי לכלול במשפט פתיחה של סיכום?",
       answers: ["הנושא המרכזי: מחזור המים בטבע", "רק שם המחבר", "רשימת כל המילים באל״ף בי״ת", "ציטוט מלא בלי הבנה"],
       correct: 0,
       subtopicId: "g4.summary_intro",
@@ -3647,7 +3647,7 @@ const G4_HARD_QUESTIONS = {
       subtopicId: "g4.text_structure",
     },
     {
-      question: "במאמר ארוך — למה כדאי שמשפט הסיכום יחזור במילים אחרות על השאלה שפתחה את הטקסט?",
+      question: "במאמר ארוך - למה כדאי שמשפט הסיכום יחזור במילים אחרות על השאלה שפתחה את הטקסט?",
       answers: ["כדי לסגור מעגל ולהדגיש את התשובה המרכזית", "כדי להוסיף נושא חדש שלא נלמד", "כדי להאריך בלי מטרה", "כדי למחוק את הפתיחה"],
       correct: 0,
       subtopicId: "g4.summary_intro",
@@ -3659,7 +3659,7 @@ const G4_HARD_QUESTIONS = {
     { question: "איך כותבים חיבור טיעוני?", answers: ["כתיבת חיבור עם טענה, נימוקים ומסקנה", "רק מילה", "רק אות", "ללא חיבור"], correct: 0 },
     { question: "איך כותבים דעה מנומקת?", answers: ["הצגת דעה עם נימוקים ברורים", "רק מילה", "רק אות", "ללא דעה"], correct: 0, subtopicId: "g4.genre_appropriate_language" },
     {
-      question: "במכתב רשמי לרכזת — מה לא מתאים?",
+      question: "במכתב רשמי לרכזת - מה לא מתאים?",
       answers: ["פתיחה בסגנון 'היי מה קורה'", "כותרת ברורה", "נימוס בסיסי", "חתימה בסוף"],
       correct: 0,
       subtopicId: "g4.genre_appropriate_language",
@@ -3667,7 +3667,7 @@ const G4_HARD_QUESTIONS = {
   ],
   grammar: [
     {
-      question: "בכיתה ד׳ — מה המשמעות של ״תחביר מורכב״ בהקשר של משפטים מורכבים?",
+      question: "בכיתה ד׳ - מה המשמעות של ״תחביר מורכב״ בהקשר של משפטים מורכבים?",
       answers: ["מבני משפט מורכבים ומשולבים", "רק משפטים פשוטים", "רק מילים", "ללא מבנה"],
       correct: 0,
     },
@@ -3679,7 +3679,7 @@ const G4_HARD_QUESTIONS = {
       subtopicId: "g4.root_pattern_intro",
     },
     {
-      question: "במילה 'הִתְיַיעֲצוּ' — מה עקרון חשוב לזיהוי שורש כשיש תחילית הִתְ?",
+      question: "במילה 'הִתְיַיעֲצוּ' - מה עקרון חשוב לזיהוי שורש כשיש תחילית הִתְ?",
       answers: ["לבודד את ליבת המילה אחרי הסרת בניין/תחילית לפי כלל שנלמד", "לספור רק אותיות עיצור", "להתעלם מהשורש", "לקחת רק האות הראשונה"],
       correct: 0,
       subtopicId: "g4.root_pattern_intro",
@@ -3759,7 +3759,7 @@ const G5_EASY_QUESTIONS = {
       subtopicId: "g5.genre_variety",
     },
     {
-      question: "בחיבור טיעוני — איפה נכון לשים את הנימוק העיקרי אחרי הטענה?",
+      question: "בחיבור טיעוני - איפה נכון לשים את הנימוק העיקרי אחרי הטענה?",
       answers: ["מיד אחרי הטענה, לפני דוגמה או מקור", "רק בכותרת", "רק אחרי חתימה", "בלי קשר לטענה"],
       correct: 0,
       subtopicId: "g5.full_composition_scaffold_choice",
@@ -3772,7 +3772,7 @@ const G5_EASY_QUESTIONS = {
     { question: "מה נטיות פועל?", answers: ["שינוי הפועל לפי גוף, זמן ומספר", "רק פועל אחד", "ללא שינוי", "לא יודע"], correct: 0 },
     { question: "מה חלקי דיבר?", answers: ["זיהוי חלקי הדיבר השונים", "רק שם עצם", "רק פועל", "ללא חלקים"], correct: 0 },
     {
-      question: "במילים 'לְהַדְרִיךְ' (למשל) ו'הוּא מַדְרִיךְ' — מה משתנה בעיקרון?",
+      question: "במילים 'לְהַדְרִיךְ' (למשל) ו'הוּא מַדְרִיךְ' - מה משתנה בעיקרון?",
       answers: ["צורת הפועל (זמן/גוף/מספר) לפי אותו שורש ובניין", "רק האורך של המילה", "רק הניקוד בלי משמעות", "אין שורש משותף"],
       correct: 0,
       subtopicId: "g5.verb_patterns",
@@ -3828,7 +3828,7 @@ const G5_MEDIUM_QUESTIONS = {
     { question: "קרא את הטקסט המורכב: 'הילד קרא ספר על הרפתקאות של גיבור אמיץ. במהלך הקריאה, הוא השווה את עצמו לגיבור והבין שגם הוא יכול להיות אמיץ ולהתמודד עם אתגרים. הספר לימד אותו על אומץ ותושייה.' מה המסר והעמדה?", answers: ["קריאה מלמדת אומץ ומעודדת התמודדות", "רק קריאה", "רק משחק", "רק אכילה"], correct: 0 },
     {
       question:
-        "כיתה ה׳ — מיקום בטקסט (1): 'בפסקה השנייה כתוב מפורש למה הדמות מפחדת.' איפה נמצאת העמדה המרכזית לפי המשפט?",
+        "כיתה ה׳ - מיקום בטקסט (1): 'בפסקה השנייה כתוב מפורש למה הדמות מפחדת.' איפה נמצאת העמדה המרכזית לפי המשפט?",
       answers: ["בפסקה השנייה", "בכותרת בלבד", "בפתיחה בלבד", "מחוץ לטקסט"],
       correct: 0,
       subtopicId: "g5.position_in_text",
@@ -3837,7 +3837,7 @@ const G5_MEDIUM_QUESTIONS = {
     },
     {
       question:
-        "כיתה ה׳ — מיקום בטקסט (2): 'משפט הסיכום מופיע לפני המשפט האחרון.' מה זה אומר על מיקום הסיכום?",
+        "כיתה ה׳ - מיקום בטקסט (2): 'משפט הסיכום מופיע לפני המשפט האחרון.' מה זה אומר על מיקום הסיכום?",
       answers: ["הסיכום לא בהכרח בסוף המאמר", "הסיכום תמיד חייב להיות במילה הראשונה", "אין סיכום", "הסיכום תמיד באמצע בלי קשר"],
       correct: 0,
       subtopicId: "g5.position_in_text",
@@ -3846,7 +3846,7 @@ const G5_MEDIUM_QUESTIONS = {
     },
     {
       question:
-        "כיתה ה׳ — מיקום בטקסט (3): 'הראיה לטענה מופיעה אחרי המשפט שמציג את הטענה.' מה הסדר?",
+        "כיתה ה׳ - מיקום בטקסט (3): 'הראיה לטענה מופיעה אחרי המשפט שמציג את הטענה.' מה הסדר?",
       answers: ["טענה ואחריה ראיה", "ראיה לפני טענה תמיד אסורה", "אין סדר בטקסטים", "תמיד מתחילים מסיכום"],
       correct: 0,
       subtopicId: "g5.position_in_text",
@@ -3855,7 +3855,7 @@ const G5_MEDIUM_QUESTIONS = {
     },
     {
       question:
-        "כיתה ה׳ — מיקום בטקסט (4): באיזה פסקה מופיעה ההגדרה למושג אקלים? מה סוג השאלה?",
+        "כיתה ה׳ - מיקום בטקסט (4): באיזה פסקה מופיעה ההגדרה למושג אקלים? מה סוג השאלה?",
       answers: ["שאלה על מיקום מידע בפסקאות", "שאלה על צבע עיפרון", "שאלה על מספר אותיות בלבד", "שאלה בלי קשר לטקסט"],
       correct: 0,
       subtopicId: "g5.position_in_text",
@@ -3893,12 +3893,12 @@ const G5_MEDIUM_QUESTIONS = {
     { question: "איך כותבים מובנה?", answers: ["כתיבה מסודרת עם מבנה ברור", "רק מילה", "רק אות", "ללא מבנה"], correct: 0 },
     {
       question: "מתי עדיף ז'אנר 'הסבר' ולא 'סיפור'?",
-      answers: ["כשרוצים להבהיר איך משהו עובד או למה הוא קורה", "כשרוצים רק לצייר כריכה", "תמיד — אין הבדל", "רק כשכותבים שיר"],
+      answers: ["כשרוצים להבהיר איך משהו עובד או למה הוא קורה", "כשרוצים רק לצייר כריכה", "תמיד - אין הבדל", "רק כשכותבים שיר"],
       correct: 0,
       subtopicId: "g5.genre_variety",
     },
     {
-      question: "בחיבור — איך כדאי לנסח 'ניגוד' בין טענה לניגודית בצורה מנומקת?",
+      question: "בחיבור - איך כדאי לנסח 'ניגוד' בין טענה לניגודית בצורה מנומקת?",
       answers: ["'מצד אחד ... מצד שני ...' ואז החלטה מבוססת", "להתעלם מהניגוד", "רק לצעוק שהכול שגוי", "לכתוב רק משפט אחד בלי קשר"],
       correct: 0,
       subtopicId: "g5.full_composition_scaffold_choice",
@@ -3908,7 +3908,7 @@ const G5_MEDIUM_QUESTIONS = {
   ],
   grammar: [
     {
-      question: "בכיתה ה׳ — מה המשמעות של ״תחביר מורכב״ לעומת משפט פשוט?",
+      question: "בכיתה ה׳ - מה המשמעות של ״תחביר מורכב״ לעומת משפט פשוט?",
       answers: ["מבני משפט מורכבים ומשולבים", "רק משפטים פשוטים", "רק מילים", "ללא מבנה"],
       correct: 0,
     },
@@ -3957,7 +3957,7 @@ const G5_MEDIUM_QUESTIONS = {
     { question: "איך מציגים ז'אנרים שונים?", answers: ["הצגה בסגנונות שונים", "רק סגנון אחד", "ללא סגנון", "לא יודע"], correct: 0 },
     { question: "איך כותבים יצירתי?", answers: ["הבעה יצירתית עם דמיון", "רק עובדות", "רק מספרים", "ללא יצירתיות"], correct: 0 },
     {
-      question: "בחרו משפט שמביא נימוק אחרי טענה: 'צריך לאסוף בקבוקים למיחזור' —",
+      question: "בחרו משפט שמביא נימוק אחרי טענה: 'צריך לאסוף בקבוקים למיחזור' -",
       answers: ["כי זה מפחית זיהום ושומר על הסביבה", "כי זה לא חשוב", "בלי סיבה", "רק כי כך נהוג לומר"],
       correct: 0,
       subtopicId: "g5.argument_scaffold_choice",
@@ -3998,13 +3998,13 @@ const G5_HARD_QUESTIONS = {
     { question: "איך כותבים מחקר?", answers: ["כתיבת מחקר מעמיק", "רק מילה", "רק אות", "ללא מחקר"], correct: 0 },
     { question: "איך כותבים ציטוט?", answers: ["ציטוט נכון של מקורות", "רק העתקה", "ללא ציטוט", "לא יודע"], correct: 0, subtopicId: "g5.genre_variety" },
     {
-      question: "במאמר מדעי — למה לא משלבים סיפור אישי ארוך באמצע ההסבר?",
+      question: "במאמר מדעי - למה לא משלבים סיפור אישי ארוך באמצע ההסבר?",
       answers: ["כי הוא עלול לסטות מהמטרה ולהחליש את החדות", "כי זה תמיד אסור בכל טקסט", "כי אין מקום לדוגמאות", "כי מדע לא משתמש במילים"],
       correct: 0,
       subtopicId: "g5.genre_variety",
     },
     {
-      question: "במאמר — איך כדאי לסיים אחרי שמעלים טענה נגדית ומפריכים אותה?",
+      question: "במאמר - איך כדאי לסיים אחרי שמעלים טענה נגדית ומפריכים אותה?",
       answers: ["לחזור לטענה המרכזית ולחזק אותה בנימוק מסכם", "לפתוח נושא חדש שלא קשור", "למחוק את הפתיחה", "להפסיק באמצע משפט"],
       correct: 0,
       subtopicId: "g5.full_composition_scaffold_choice",
@@ -4077,7 +4077,7 @@ const G6_EASY_QUESTIONS = {
     { question: "מה הערכת ביקורתית?", answers: ["הערכה ביקורתית של הטקסט", "רק קריאה", "רק כתיבה", "ללא הערכה"], correct: 0, subtopicId: "g6.critical_evaluation_light" },
     {
       question: "הטקסט טוען: 'כל התלמידים בכיתה זה אוהבים מתמטיקה.' האם הטענה מאוזנת?",
-      answers: ["לא — היא מכלילה ואין ראיות", "כן — תמיד נכון", "אין דרך לבדוק", "זה עניין של צבעים"],
+      answers: ["לא - היא מכלילה ואין ראיות", "כן - תמיד נכון", "אין דרך לבדוק", "זה עניין של צבעים"],
       correct: 0,
       subtopicId: "g6.critical_evaluation_light",
     },
@@ -4102,7 +4102,7 @@ const G6_EASY_QUESTIONS = {
     { question: "איך כותבים סיכומים מורכבים?", answers: ["סיכום מעמיק ומפורט", "רק מילה", "רק אות", "ללא סיכום"], correct: 0 },
     { question: "איך כותבים דעה מנומקת?", answers: ["הצגת דעה עם נימוקים ברורים", "רק מילה", "רק אות", "ללא דעה"], correct: 0 },
     {
-      question: "בדיון כתוב (פורום) — איזו פתיחה שומרת על נימוס ועדיין מביעה חילוקי דעות?",
+      question: "בדיון כתוב (פורום) - איזו פתיחה שומרת על נימוס ועדיין מביעה חילוקי דעות?",
       answers: ["אני מסכים חלקית, אך יש לשקול גם את הנקודה הבאה", "אתה טועה תמיד בלי יוצא מן הכלל", "בלי קשר לנושא", "רק קללות"],
       correct: 0,
       subtopicId: "g6.argumentative_full_scaffold",
@@ -4110,7 +4110,7 @@ const G6_EASY_QUESTIONS = {
       subtype: "civil_counter",
     },
     {
-      question: "לפני שמצטטים מקור — מה חשוב לוודא כדי לשמור על אמינות?",
+      question: "לפני שמצטטים מקור - מה חשוב לוודא כדי לשמור על אמינות?",
       answers: ["שהציטוט מדויק ומקושר להקשר שבו נאמר", "שהציטוט יהיה ארוך ככל האפשר תמיד", "שלא יהיה שום שם מקור", "להעתיק בלי לקרוא"],
       correct: 0,
       subtopicId: "g6.research_literacy_choice",
@@ -4133,7 +4133,7 @@ const G6_EASY_QUESTIONS = {
       subtopicId: "g6.academic_vocab",
     },
     {
-      question: "במדע — מה המשמעות של 'ניסוי ביקורתי'?",
+      question: "במדע - מה המשמעות של 'ניסוי ביקורתי'?",
       answers: ["בדיקה שמנסה לבודד גורם אחד", "סיפור על חללית", "שיעור חינוך גופני", "כתיבת שיר"],
       correct: 0,
       subtopicId: "g6.discipline_words_light",
@@ -4147,7 +4147,7 @@ const G6_EASY_QUESTIONS = {
       subtype: "method_term",
     },
     {
-      question: "בכימיה — מה המשמעות של 'תגובה'?",
+      question: "בכימיה - מה המשמעות של 'תגובה'?",
       answers: ["שינוי שבו חומרים הופכים לחומרים אחרים", "רק כתיבת טבלה", "סוג של שיר", "מילה ללא משמעות"],
       correct: 0,
       subtopicId: "g6.discipline_words_light",
@@ -4172,7 +4172,7 @@ const G6_MEDIUM_QUESTIONS = {
     { question: "קרא את הטקסט: 'הילד קרא ספר מחקר מעמיק על נושא מורכב. הספר הציג מחקרים שונים, השווה ביניהם והסיק מסקנות. במהלך הקריאה, הילד פיתח חשיבה ביקורתית והבין כמה חשוב לבדוק עובדות, להבין נקודות מבט שונות ולהסיק מסקנות מבוססות.' מה המסר האקדמי?", answers: ["חשיבות מחקר, ביקורתיות ומסקנות מבוססות", "רק קריאה", "רק משחק", "רק אכילה"], correct: 0 },
     {
       question:
-        "כיתה ו׳ — ניתוח טקסט מורכב (1): 'המחבר מציג טענה, מביא נתון, ואז מסיק — אבל לא מציין מגבלות המדגם.' מה רכיב חסר בניתוח?",
+        "כיתה ו׳ - ניתוח טקסט מורכב (1): 'המחבר מציג טענה, מביא נתון, ואז מסיק - אבל לא מציין מגבלות המדגם.' מה רכיב חסר בניתוח?",
       answers: ["דיון במגבלות/הקשר של הנתונים", "רק כותרת", "רק צבע", "אין חוסר"],
       correct: 0,
       subtopicId: "g6.complex_text_analysis",
@@ -4181,7 +4181,7 @@ const G6_MEDIUM_QUESTIONS = {
     },
     {
       question:
-        "כיתה ו׳ — ניתוח טקסט מורכב (2): 'במאמר יש שני מקורות שסותרים זה את זה.' מה השלב הנכון לפני מסקנה?",
+        "כיתה ו׳ - ניתוח טקסט מורכב (2): 'במאמר יש שני מקורות שסותרים זה את זה.' מה השלב הנכון לפני מסקנה?",
       answers: ["להשוות שיטות והקשר ולאחד הסבר סביר", "לבחור אקראית", "להתעלם מהסתירה", "לסיים בלי קריאה"],
       correct: 0,
       subtopicId: "g6.complex_text_analysis",
@@ -4190,7 +4190,7 @@ const G6_MEDIUM_QUESTIONS = {
     },
     {
       question:
-        "כיתה ו׳ — ניתוח טקסט מורכב (3): 'הכותב משתמש במילים טעונות בלי הגדרה.' מה הבעיה בניתוח קריאה?",
+        "כיתה ו׳ - ניתוח טקסט מורכב (3): 'הכותב משתמש במילים טעונות בלי הגדרה.' מה הבעיה בניתוח קריאה?",
       answers: ["חוסר בהירות של מושגים מרכזיים", "זה תמיד מצוין", "אין קשר לשפה", "רק בעיה של כתיב"],
       correct: 0,
       subtopicId: "g6.complex_text_analysis",
@@ -4199,7 +4199,7 @@ const G6_MEDIUM_QUESTIONS = {
     },
     {
       question:
-        "כיתה ו׳ — ניתוח טקסט מורכב (4): 'המסקנה חזקה מהנתונים המוצגים.' איך קורא ביקורתי צריך לבדוק?",
+        "כיתה ו׳ - ניתוח טקסט מורכב (4): 'המסקנה חזקה מהנתונים המוצגים.' איך קורא ביקורתי צריך לבדוק?",
       answers: ["לבדוק אם הנתונים באמת תומכים במסקנה", "לקבל תמיד", "להתעלם מהנתונים", "לכתוב מסקנה חדשה בלי קשר"],
       correct: 0,
       subtopicId: "g6.complex_text_analysis",
@@ -4236,7 +4236,7 @@ const G6_MEDIUM_QUESTIONS = {
     { question: "איך כותבים מחקר?", answers: ["כתיבת מחקר מעמיק וארוך", "רק מילה", "רק אות", "ללא מחקר"], correct: 0 },
     { question: "איך כותבים עבודות ארוכות?", answers: ["כתיבת עבודה מפורטת וארוכה", "רק מילה", "רק אות", "ללא עבודה"], correct: 0 },
     {
-      question: "במאמר — איך נכון לנסח 'הגבלה' של הטענה שלך (מה המחקר לא בדק)?",
+      question: "במאמר - איך נכון לנסח 'הגבלה' של הטענה שלך (מה המחקר לא בדק)?",
       answers: ["לציין במפורש מה אינו נכלל ולמה זה משנה", "לא לציין הגבלות כדי להיראות חזק", "להכליל לכל האנושות תמיד", "למחוק את המקורות"],
       correct: 0,
       subtopicId: "g6.argumentative_full_scaffold",
@@ -4244,7 +4244,7 @@ const G6_MEDIUM_QUESTIONS = {
       subtype: "epistemic_honesty",
     },
     {
-      question: "כשמשווים שני מקורות שסותרים זה את זה — מה השלב הראשון לפני מסקנה?",
+      question: "כשמשווים שני מקורות שסותרים זה את זה - מה השלב הראשון לפני מסקנה?",
       answers: ["לבדוק הקשר, שיטה, ותאריך/מטרת כל מקור", "לבחור את הקצר מביניהם", "להתעלם מהסתירה", "לכתוב רק דעה אישית"],
       correct: 0,
       subtopicId: "g6.research_literacy_choice",
@@ -4255,13 +4255,13 @@ const G6_MEDIUM_QUESTIONS = {
   grammar: [
     { question: "מהו דקדוק?", answers: ["דקדוק", "רק רשימת מילים", "רק אותיות", "ללא דקדוק"], correct: 0 },
     {
-      question: "בכיתה ו׳ / חטיבת ביניים — מה מאפיין תחביר מורכב לעומת משפט בסיסי?",
+      question: "בכיתה ו׳ / חטיבת ביניים - מה מאפיין תחביר מורכב לעומת משפט בסיסי?",
       answers: ["מבני משפט מורכבים ומגוונים", "רק משפטים פשוטים", "רק מילים", "ללא מבנה"],
       correct: 0,
     },
     {
       question:
-        "כיתה ו׳ — התאמת פועל לנושא (1): איזה משפט נכון תחבירית?",
+        "כיתה ו׳ - התאמת פועל לנושא (1): איזה משפט נכון תחבירית?",
       answers: ["הילדים משחקים בחצר", "הילדים משחק בחצר", "הילדים משחקים בחצר הוא", "הילדים משחקים הוא"],
       correct: 0,
       subtopicId: "g6.subject_verb_advanced",
@@ -4270,7 +4270,7 @@ const G6_MEDIUM_QUESTIONS = {
     },
     {
       question:
-        "כיתה ו׳ — התאמת פועל לנושא (2): איזה משפט נכון?",
+        "כיתה ו׳ - התאמת פועל לנושא (2): איזה משפט נכון?",
       answers: ["הקבוצה מתאמנת בימי שלישי", "הקבוצה מתאמנים בימי שלישי", "הקבוצה מתאמנת הם", "הקבוצה מתאמנים הוא"],
       correct: 0,
       subtopicId: "g6.subject_verb_advanced",
@@ -4279,7 +4279,7 @@ const G6_MEDIUM_QUESTIONS = {
     },
     {
       question:
-        "כיתה ו׳ — התאמת פועל לנושא (3): איזה משפט נכון?",
+        "כיתה ו׳ - התאמת פועל לנושא (3): איזה משפט נכון?",
       answers: ["רוב התלמידים מגיעים בזמן", "רוב התלמידים מגיע בזמן", "רוב התלמידים מגיעים הוא", "רוב התלמידים מגיע בזמן הם"],
       correct: 0,
       subtopicId: "g6.subject_verb_advanced",
@@ -4288,7 +4288,7 @@ const G6_MEDIUM_QUESTIONS = {
     },
     {
       question:
-        "כיתה ו׳ — התאמת פועל לנושא (4): איזה משפט נכון?",
+        "כיתה ו׳ - התאמת פועל לנושא (4): איזה משפט נכון?",
       answers: ["שורת המתכוננים מתארכת לפני הדלת", "שורת המתכוננים מתארכים לפני הדלת", "שורת המתכוננים מתארכת הם", "שורת המתכוננים מתארכים הוא"],
       correct: 0,
       subtopicId: "g6.subject_verb_advanced",
@@ -4297,7 +4297,7 @@ const G6_MEDIUM_QUESTIONS = {
     },
     {
       question:
-        "כיתה ו׳ — יחסי שייכות ומילות יחס: איזה משפט נכון?",
+        "כיתה ו׳ - יחסי שייכות ומילות יחס: איזה משפט נכון?",
       answers: ["הספר של דני על השולחן", "הספר של דני בשולחן", "הספר דני על השולחן", "של דני הספר על שולחן"],
       correct: 0,
       subtopicId: "g6.possession_prep",
@@ -4306,7 +4306,7 @@ const G6_MEDIUM_QUESTIONS = {
     },
     {
       question:
-        "כיתה ו׳ — שייכות: איך כותבים נכון את צמד המילים (הארנק / יוסי)?",
+        "כיתה ו׳ - שייכות: איך כותבים נכון את צמד המילים (הארנק / יוסי)?",
       answers: ["הארנק של יוסי", "הארנק יוסי", "של ארנק יוסי", "יוסי ארנק"],
       correct: 0,
       subtopicId: "g6.possession_prep",
@@ -4315,7 +4315,7 @@ const G6_MEDIUM_QUESTIONS = {
     },
     {
       question:
-        "כיתה ו׳ — מילת יחס: איפה הנעליים ביחס לדלת (בכניסה לכיתה)?",
+        "כיתה ו׳ - מילת יחס: איפה הנעליים ביחס לדלת (בכניסה לכיתה)?",
       answers: ["ליד הדלת", "הדלת ליד", "בדלת ליד", "ליד של דלת"],
       correct: 0,
       subtopicId: "g6.possession_prep",
@@ -4324,7 +4324,7 @@ const G6_MEDIUM_QUESTIONS = {
     },
     {
       question:
-        "כיתה ו׳ — שייכות + מקום: איזה משפט מתאר נכון את התיק והכיסא?",
+        "כיתה ו׳ - שייכות + מקום: איזה משפט מתאר נכון את התיק והכיסא?",
       answers: ["התיק שלי ליד הכיסא", "התיק לי ליד כיסא", "שלי תיק ליד הכיסא", "התיק שלי כיסא ליד"],
       correct: 0,
       subtopicId: "g6.possession_prep",
@@ -4342,7 +4342,7 @@ const G6_MEDIUM_QUESTIONS = {
       subtopicId: "g6.academic_vocab",
     },
     {
-      question: "בהיסטוריה — מה המשמעות של 'מקור ראשוני'?",
+      question: "בהיסטוריה - מה המשמעות של 'מקור ראשוני'?",
       answers: ["מסמך או עדות מתקופה האירוע", "סיכום מאוחר בלבד", "דעה בלי בסיס", "תמונה מדומיינת"],
       correct: 0,
       subtopicId: "g6.discipline_words_light",
@@ -4356,7 +4356,7 @@ const G6_MEDIUM_QUESTIONS = {
       subtype: "logic_vocab",
     },
     {
-      question: "ביולוגיה — מה המשמעות של 'מערכת' בגוף האדם?",
+      question: "ביולוגיה - מה המשמעות של 'מערכת' בגוף האדם?",
       answers: ["קבוצת איברים שמשתפת פעולה למטרה משותפת", "איבר בודד בלבד", "סוג של צמח", "מילה ללא משמעות"],
       correct: 0,
       subtopicId: "g6.discipline_words_light",
@@ -4391,13 +4391,13 @@ const G6_HARD_QUESTIONS = {
     },
     {
       question: "הטקסט: 'רק 5 משיבים ענו על הסקר.' מה מגביל את המסקנה 'כל הציבור חושב כך'?",
-      answers: ["מדגם קטן מאוד — אי אפשר להכליל", "הסקר תמיד מדויק", "אין מגבלה", "סקר לא מודד דעות"],
+      answers: ["מדגם קטן מאוד - אי אפשר להכליל", "הסקר תמיד מדויק", "אין מגבלה", "סקר לא מודד דעות"],
       correct: 0,
       subtopicId: "g6.evidence_from_text",
     },
     {
       question: "מקור ממומן מציג נתון, אך מסתיר שחלק מהנתון נאסף בחופשה בלבד. מה הבעיה הביקורתית?",
-      answers: ["הטיה אפשרית במדגם ובפרשנות — צריך שקיפות", "אין בעיה אם הנתון נכון", "חופשה משפרת תמיד מחקר", "זה רק עניין של עיצוב"],
+      answers: ["הטיה אפשרית במדגם ובפרשנות - צריך שקיפות", "אין בעיה אם הנתון נכון", "חופשה משפרת תמיד מחקר", "זה רק עניין של עיצוב"],
       correct: 0,
       subtopicId: "g6.critical_evaluation_light",
       patternFamily: "g6_crit_sampling_bias",
@@ -4409,7 +4409,7 @@ const G6_HARD_QUESTIONS = {
     { question: "איך כותבים מחקר?", answers: ["כתיבת מחקר מעמיק ומקצועי", "רק מילה", "רק אות", "ללא מחקר"], correct: 0 },
     { question: "איך כותבים פרסום?", answers: ["כתיבה ברמת פרסום", "רק מילה", "רק אות", "ללא פרסום"], correct: 0 },
     {
-      question: "במאמר ארוך — איך כדאי לסיים אחרי שקראתם מחקר שמפריך חלקית את הטענה שלכם?",
+      question: "במאמר ארוך - איך כדאי לסיים אחרי שקראתם מחקר שמפריך חלקית את הטענה שלכם?",
       answers: ["לעדכן את הטענה ולנסח מסקנה מדויקת יותר עם הסתייגות", "להתעלם מהמחקר", "להעתיק את המחקר בלי ציטוט", "למחוק את כל הפרק"],
       correct: 0,
       subtopicId: "g6.argumentative_full_scaffold",
@@ -4417,7 +4417,7 @@ const G6_HARD_QUESTIONS = {
       subtype: "revision_ethics",
     },
     {
-      question: "כשמציגים 'ניגוד' בין שני מחקרים — מה חייב להופיע כדי שההשוואה תהיה הוגנת?",
+      question: "כשמציגים 'ניגוד' בין שני מחקרים - מה חייב להופיע כדי שההשוואה תהיה הוגנת?",
       answers: ["קריטריון משווה (אוכלוסייה, שיטה, מדד) ולא רק מסקנה", "רק שם המוסד", "רק ציטוט ארוך בלי הקשר", "רק דעה אישית"],
       correct: 0,
       subtopicId: "g6.research_literacy_choice",
@@ -4439,7 +4439,7 @@ const G6_HARD_QUESTIONS = {
       subtopicId: "g6.academic_vocab",
     },
     {
-      question: "בגיאוגרפיה — מה המשמעות של 'אקלים'?",
+      question: "בגיאוגרפיה - מה המשמעות של 'אקלים'?",
       answers: ["דפוס מזג אוויר אופייני לאזור לאורך זמן", "יום גשום בלבד", "סוג של עץ", "מפה בלי הסבר"],
       correct: 0,
       subtopicId: "g6.discipline_words_light",
@@ -4453,7 +4453,7 @@ const G6_HARD_QUESTIONS = {
       subtype: "stats_literacy",
     },
     {
-      question: "בפיזיקה — מה המשמעות של 'חיכוך'?",
+      question: "בפיזיקה - מה המשמעות של 'חיכוך'?",
       answers: ["כוח שמתנגד לתנועה בין משטחים", "סוג של צליל", "מילה לתיאור צבע", "תמיד אומר שאין תנועה"],
       correct: 0,
       subtopicId: "g6.discipline_words_light",
@@ -4997,7 +4997,7 @@ export function generateQuestion(
   }
 
   const HEBREW_NIQQUD_RE = /[\u0591-\u05C7]/g;
-  const SURROUNDING_PUNCT_RE = /^[\s"'`׳״“”‘’.,!?;:()[\]{}\-–—]+|[\s"'`׳״“”‘’.,!?;:()[\]{}\-–—]+$/g;
+  const SURROUNDING_PUNCT_RE = /^[\s"'`׳״“”‘’.,!?;:()[\]{}\-–-]+|[\s"'`׳״“”‘’.,!?;:()[\]{}\-–-]+$/g;
   const normalizeQuotes = (value) =>
     String(value || "")
       .replace(/[“”״]/g, '"')
