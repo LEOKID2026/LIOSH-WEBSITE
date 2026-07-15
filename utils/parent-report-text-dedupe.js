@@ -17,7 +17,7 @@ export function normalizeParentReportTextForDedupe(text) {
     .replace(/[\u0591-\u05C7]/g, "") // strip Hebrew niqqud if present
     .replace(/[""״]/g, '"')
     .replace(/['׳]/g, "'")
-    .replace(/[.,;:!?()\-־–-"'׃]/g, "")
+    .replace(/[.,;:!?()־–"'׃-]/g, "")
     .replace(/\s+/g, " ")
     .trim()
     .toLowerCase();
