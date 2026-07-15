@@ -479,7 +479,7 @@ export function applyPhase7RestraintGuards(step, ctx) {
     if (isDropStep(out)) {
       apply(
         "phase7_restraint_soften_drop",
-        "לא מורידים רמה או כיתה כשעדיין אין מספיק מידע - ממשיכים בחיזוק באותה רמה.",
+        "תרגולים נוספים יעזרו להציג תמונה ברורה יותר.",
         "remediate_same_level"
       );
     }
@@ -488,7 +488,7 @@ export function applyPhase7RestraintGuards(step, ctx) {
   if (rc === "insufficient_evidence" && isDropStep(out)) {
     apply(
       "phase7_insufficient_evidence_drop",
-      "אין עדיין מספיק מידע כדי להבין מאיפה הקושי מתחיל - לא מורידים רמה; ממשיכים בחיזוק מבוקר.",
+      "תרגולים נוספים יעזרו להציג תמונה ברורה יותר.",
       "remediate_same_level"
     );
   }
