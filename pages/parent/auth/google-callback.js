@@ -59,7 +59,7 @@ export default function ParentGoogleOAuthCallbackPage() {
         return;
       }
 
-      router.replace(finished.redirectTo || "/parent/home");
+      router.replace(finished.redirectTo || "/parent/dashboard");
     })().catch(() => {
       clearParentGoogleOAuthFlow();
       setMessage("שגיאה בהתחברות עם Google. נסו שוב.");

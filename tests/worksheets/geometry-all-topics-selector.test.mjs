@@ -23,8 +23,8 @@ import {
 } from "../../lib/worksheets/worksheet-payload-build.server.js";
 
 const META_BASE = {
-  titleHe: "דף עבודה — גיאומטריה",
-  subjectHe: "גיאומטריה",
+  titleHe: "דף עבודה — גאומטריה",
+  subjectHe: "גאומטריה",
   gradeHe: "כיתה ג׳",
   topicHe: "שטח",
   levelHe: "בינוני",
@@ -103,10 +103,10 @@ describe("geometry-all-topics-selector", () => {
     assert.equal(metaAudit.pass, true, metaAudit.hits.join(", "));
   });
 
-  test("blocked diagram kinds are documented in allowlist", () => {
-    assert.ok(GEOMETRY_PRINT_BLOCKED_DIAGRAM_KINDS.has("solid_cylinder"));
-    assert.ok(GEOMETRY_PRINT_BLOCKED_DIAGRAM_KINDS.has("solid_sphere"));
-    assert.ok(GEOMETRY_PRINT_BLOCKED_DIAGRAM_KINDS.has("solid_pyramid"));
-    assert.ok(GEOMETRY_PRINT_BLOCKED_DIAGRAM_KINDS.has("solid_cone"));
+  test("curved solids are supported diagram kinds (not blocked)", () => {
+    assert.ok(GEOMETRY_PRINT_BLOCKED_DIAGRAM_KINDS.has("pending"));
+    for (const kind of ["solid_cylinder", "solid_sphere", "solid_pyramid", "solid_cone", "solid_prism"]) {
+      assert.equal(GEOMETRY_PRINT_BLOCKED_DIAGRAM_KINDS.has(kind), false, kind);
+    }
   });
 });

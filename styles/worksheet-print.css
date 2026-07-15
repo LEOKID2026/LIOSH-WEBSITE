@@ -528,6 +528,34 @@
   page-break-inside: avoid;
 }
 
+/* חילוק ארוך: קו מאוזן + מאונך כגבולות רציפים עם פינה אחת */
+.worksheet-long-division {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: stretch;
+  direction: ltr;
+  unicode-bidi: isolate;
+  font-family: "Cascadia Mono", "Consolas", "Courier New", monospace;
+  font-size: 1.12rem;
+  line-height: 1.15;
+  color: #111;
+  margin: 0 auto;
+}
+
+.worksheet-long-division-dividend {
+  border-top: 2.25px solid currentColor;
+  border-right: 2.25px solid currentColor;
+  padding: 0.14em 0.32em 0.02em 0.1em;
+  letter-spacing: 0.06em;
+  box-sizing: border-box;
+}
+
+.worksheet-long-division-divisor {
+  align-self: flex-end;
+  padding: 0 0 0.02em 0.3em;
+  letter-spacing: 0.06em;
+}
+
 .worksheet-word-problem {
   margin: 0;
   width: 100%;
@@ -1257,6 +1285,15 @@
 
   .worksheet-math-vertical {
     font-size: 11pt;
+  }
+
+  .worksheet-long-division {
+    font-size: 11pt;
+  }
+
+  .worksheet-long-division-dividend {
+    border-top-width: 1.75pt;
+    border-right-width: 1.75pt;
   }
 
   .worksheet-option-cell {

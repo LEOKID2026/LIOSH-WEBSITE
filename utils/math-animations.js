@@ -13,25 +13,19 @@ export function buildVerticalOperation(topNumber, bottomNumber, operator = "-") 
   // טיפול מיוחד לחילוק ארוך - המחולק משמאל עם סוגר, המחלק מימין
   if (operator === "÷") {
     // בחילוק ארוך התצוגה הנכונה היא:
-    //  ____
+    // ────┐
     // 1320│6
-    // הקו האופקי הוא קו תחתון (underscore) בשורה הראשונה, בתחתית השורה
-    // הפרמטרים מועברים כך: topNumber = divisor (מחלק), bottomNumber = dividend (מחולק)
-    
+    // הקו המאוזן מתחבר לפינה עם הקו המאונך (┐ מעל │).
+    // הפרמטרים: topNumber = divisor (מחלק), bottomNumber = dividend (מחולק)
+
     const divisor = String(topNumber); // המחלק (6)
     const dividend = String(bottomNumber); // המחולק (1320)
-    const dividendLen = dividend.length;
-    
-    // שורה 1: קו תחתון (underscore) - בשורה הראשונה, בתחתית השורה, באורך המחולק
-    // הקו התחתון מיושר בדיוק מעל המחולק, מוזז ימינה ליישור מדויק
-    const line1 = "_".repeat(dividendLen) + " ";
-    
-    // שורה 2: המחולק (dividend) + סוגר אנכי (│) + המחלק (divisor)
-    // הקו התחתון בשורה 1 מיושר בדיוק מעל המחולק בשורה 2
-    const line2 = dividend + "│" + divisor;
-    
-    // יצירת הפורמט המדויק - הקו התחתון בשורה הראשונה בתחתית השורה, מוזז שמאלה
-    const raw = line1 + "\n" + line2;
+    const dividendLen = Math.max(1, dividend.length);
+
+    const line1 = `${"─".repeat(dividendLen)}┐`;
+    const line2 = `${dividend}│${divisor}`;
+
+    const raw = `${line1}\n${line2}`;
     // עוטפים את כל הבלוק בסימון LTR כדי שלא יתבלגן בתוך טקסט עברי
     return pureMathLtrDisplay(raw);
   }

@@ -87,6 +87,7 @@ export default function ParentWorksheetsHub({ session, students, T }) {
       count: 12,
       preferMcq: false,
       inkSave: true,
+      mixedTopicKeys: null,
     };
   });
 
@@ -257,20 +258,17 @@ export default function ParentWorksheetsHub({ session, students, T }) {
     setCreateError("");
 
     try {
+      if (
+        createForm.topicKey === "mixed" &&
+        Array.isArray(createForm.mixedTopicKeys) &&
+        createForm.mixedTopicKeys.length === 0
+      ) {
+        setCreateError(WORKSHEET_UI_HE.mixedTopicsEmptyError);
+        return;
+      }
 
-      const res = await fetch("/api/parent/worksheets/generate", {
-
-        method: "POST",
-
-        headers: {
-
-          Authorization: authHeader,
-
-          "Content-Type": "application/json",
-
-        },
-
-        body: JSON.stringify({
+      /** @type {Record<string, unknown>} */
+      const body = {
 
           subjectId: createForm.subjectId,
 
@@ -290,7 +288,25 @@ export default function ParentWorksheetsHub({ session, students, T }) {
               : undefined,
           preferMcq: createForm.preferMcq === true,
 
-        }),
+        };
+
+      if (createForm.topicKey === "mixed" && Array.isArray(createForm.mixedTopicKeys)) {
+        body.mixedTopicKeys = createForm.mixedTopicKeys;
+      }
+
+      const res = await fetch("/api/parent/worksheets/generate", {
+
+        method: "POST",
+
+        headers: {
+
+          Authorization: authHeader,
+
+          "Content-Type": "application/json",
+
+        },
+
+        body: JSON.stringify(body),
 
       });
 

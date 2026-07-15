@@ -12,8 +12,8 @@ import {
 } from "../../lib/worksheets/worksheet-payload-build.server.js";
 
 const META = {
-  titleHe: "דף עבודה — גיאומטריה",
-  subjectHe: "גיאומטריה",
+  titleHe: "דף עבודה — גאומטריה",
+  subjectHe: "גאומטריה",
   gradeHe: "כיתה ד׳",
   topicHe: "שטח",
   levelHe: "בינוני",

@@ -59,9 +59,10 @@ describe("worksheet-system-closure", () => {
     }
   });
 
-  test("geometry blocked diagram kinds documented", () => {
-    for (const kind of ["solid_cylinder", "solid_sphere", "solid_pyramid", "solid_cone"]) {
-      assert.ok(GEOMETRY_PRINT_BLOCKED_DIAGRAM_KINDS.has(kind), kind);
+  test("geometry only pending remains as blocked diagram kind", () => {
+    assert.ok(GEOMETRY_PRINT_BLOCKED_DIAGRAM_KINDS.has("pending"));
+    for (const kind of ["solid_cylinder", "solid_sphere", "solid_pyramid", "solid_cone", "solid_prism"]) {
+      assert.equal(GEOMETRY_PRINT_BLOCKED_DIAGRAM_KINDS.has(kind), false, kind);
     }
   });
 

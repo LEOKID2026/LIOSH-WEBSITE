@@ -148,11 +148,45 @@ export function getGeometryDiagramSpec(question, options = {}) {
     if (shape === "sphere" && typeof p.radius === "number") {
       return { kind: "solid_sphere", mode: "volume", radius: p.radius };
     }
-    if (shape === "pyramid" && typeof p.side === "number" && typeof p.height === "number") {
-      return { kind: "solid_pyramid", mode: "volume", side: p.side, height: p.height };
+    if (shape === "pyramid") {
+      const side = typeof p.side === "number" ? p.side : p.baseSide;
+      const height = p.height;
+      if (typeof side !== "number" || typeof height !== "number") return null;
+      /** @type {Record<string, unknown>} */
+      const out = { kind: "solid_pyramid", mode: "volume", side, height, solidShape: "pyramid" };
+      if (typeof p.baseWidth === "number") out.width = p.baseWidth;
+      if (typeof p.baseSide === "number") out.baseSide = p.baseSide;
+      return out;
     }
     if (shape === "cone" && typeof p.radius === "number" && typeof p.height === "number") {
       return { kind: "solid_cone", mode: "volume", radius: p.radius, height: p.height };
+    }
+    if (shape === "prism") {
+      const height = p.height;
+      if (typeof height !== "number") return null;
+      if (p.kind === "prism_volume_triangle" || (typeof p.base === "number" && typeof p.baseHeight === "number")) {
+        if (typeof p.base !== "number" || typeof p.baseHeight !== "number") return null;
+        return {
+          kind: "solid_prism",
+          mode: "volume",
+          solidShape: "prism",
+          base: p.base,
+          baseHeight: p.baseHeight,
+          height,
+        };
+      }
+      const baseLength = p.baseLength ?? p.length;
+      const baseWidth = p.baseWidth ?? p.width;
+      if (typeof baseLength !== "number" || typeof baseWidth !== "number") return null;
+      return {
+        kind: "solid_prism",
+        mode: "volume",
+        solidShape: "prism",
+        baseLength,
+        baseWidth,
+        base: baseLength,
+        height,
+      };
     }
   }
 

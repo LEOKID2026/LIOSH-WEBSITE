@@ -95,7 +95,7 @@ export default function ParentLoginPage() {
         setSessionCheckPending(false);
         return;
       }
-      router.replace("/parent/home");
+      router.replace("/parent/dashboard");
     });
     return () => {
       mounted = false;
@@ -170,7 +170,7 @@ export default function ParentLoginPage() {
             setMessage(ready.messageHe || "החשבון נוצר אך לא הצלחנו להשלים את ההגדרה. נסו להתחבר.");
             return;
           }
-          router.push("/parent/home");
+          router.push("/parent/dashboard");
         } else {
           setMessage("ההרשמה הושלמה. לאחר אימות האימייל — התחברו.");
         }
@@ -192,7 +192,7 @@ export default function ParentLoginPage() {
             actorType: "parent",
             idempotencyKey: `parent_login:${Date.now()}`,
           });
-          router.push("/parent/home");
+          router.push("/parent/dashboard");
         }
       }
     } finally {
@@ -248,7 +248,7 @@ export default function ParentLoginPage() {
         return;
       }
 
-      router.push(finished.redirectTo || "/parent/home");
+      router.push(finished.redirectTo || "/parent/dashboard");
     } catch (error) {
       setMessage(mapParentAuthError(error, "login"));
     } finally {

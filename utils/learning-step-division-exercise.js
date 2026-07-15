@@ -34,15 +34,33 @@ export function computeDivisionSteps(dividend, divisor) {
 export function parseDivisionPre(pre) {
   if (!pre || typeof pre !== "string") return null;
   const raw = pre.replace(/\u2066|\u2069/g, "");
-  const lines = raw.split("\n");
-  if (lines.length < 3) return null;
-  const baseLine = lines[2] || "";
+  const lines = raw
+    .split("\n")
+    .map((line) => String(line || "").trimEnd())
+    .filter((line) => line.length > 0);
+  if (lines.length < 2) return null;
+
+  let bodyIdx = -1;
+  for (let i = lines.length - 1; i >= 0; i -= 1) {
+    if (lines[i].includes("│")) {
+      bodyIdx = i;
+      break;
+    }
+  }
+  if (bodyIdx < 0) return null;
+
+  const baseLine = lines[bodyIdx] || "";
   const pipeIdx = baseLine.indexOf("│");
   if (pipeIdx < 0) return null;
   const dividend = baseLine.slice(0, pipeIdx).trim();
   const divisor = baseLine.slice(pipeIdx + 1).trim();
-  const quotientLine = (lines[0] || "").trim();
-  return { dividend, divisor, quotientLine, workLines: lines.slice(3) };
+  const quotientLine =
+    bodyIdx >= 2
+      ? (lines[0] || "").trim()
+      : bodyIdx === 1 && /^[\d.]+$/.test((lines[0] || "").trim())
+        ? (lines[0] || "").trim()
+        : "";
+  return { dividend, divisor, quotientLine, workLines: lines.slice(bodyIdx + 1) };
 }
 
 /**

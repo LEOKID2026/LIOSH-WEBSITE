@@ -16,8 +16,8 @@ import {
 import { WORKSHEET_PRINTABILITY } from "../../lib/worksheets/worksheet-question-types.js";
 
 const META = {
-  titleHe: "דף עבודה — גיאומטריה",
-  subjectHe: "גיאומטריה",
+  titleHe: "דף עבודה — גאומטריה",
+  subjectHe: "גאומטריה",
   gradeHe: "כיתה ד׳",
   topicHe: "שטח",
   levelHe: "בינוני",

@@ -5,6 +5,7 @@ import {
   generateWorksheetForParent,
   publicWorksheetPayload,
 } from "../../../../lib/worksheets/worksheet-generate.server.js";
+import { worksheetMixedTopicsErrorHe } from "../../../../lib/worksheets/worksheet-mixed-topics.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -32,14 +33,20 @@ export default async function handler(req, res) {
       typeof body?.mathPracticeFormat === "string" ? body.mathPracticeFormat : undefined,
     preferMcq:
       body?.preferMcq === true ? true : body?.preferMcq === false ? false : undefined,
+    mixedTopicKeys: Array.isArray(body?.mixedTopicKeys)
+      ? body.mixedTopicKeys
+      : body?.mixedTopicKeys === null
+        ? null
+        : undefined,
   });
 
   if (!generated.ok) {
     const status = generated.status || 500;
+    const mixedMsg = worksheetMixedTopicsErrorHe(String(generated.code || ""));
     return res.status(status).json({
       ok: false,
       error: generated.code,
-      message: generated.message,
+      message: mixedMsg || generated.message,
     });
   }
 

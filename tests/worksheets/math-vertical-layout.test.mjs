@@ -158,4 +158,35 @@ describe("math-vertical-layout", () => {
       "expected at least one vertical decimal add/sub"
     );
   });
+
+  test("long division prints continuous corner bracket html", () => {
+    const { questions } = selectMathWorksheetQuestions({
+      gradeKey: "g4",
+      topicKey: "division",
+      levelKey: "regular",
+      count: 4,
+      seed: 440,
+      mathPracticeFormat: "long_division",
+    });
+    assert.ok(questions.length >= 2);
+    const payload = buildWorksheetPayload(
+      questions,
+      {
+        ...META,
+        topicKey: "division",
+        topicHe: "חילוק ארוך",
+        gradeKey: "g4",
+        gradeHe: "כיתה ד׳",
+        mathPracticeFormat: "long_division",
+      },
+      {
+        subjectId: "math",
+        mathPracticeFormat: "long_division",
+      }
+    );
+    const html = worksheetPayloadToPreviewHtml(payload);
+    assert.match(html, /worksheet-long-division/);
+    assert.match(html, /worksheet-long-division-dividend/);
+    assert.doesNotMatch(html, /<pre class="worksheet-math-vertical"[^>]*>[^<]*│/);
+  });
 });

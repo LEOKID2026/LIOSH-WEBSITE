@@ -31,7 +31,12 @@ assert.equal(oauthSrc.includes("signInWithIdToken"), true);
 assert.match(oauthSrc, /provider:\s*["']google["']/);
 assert.equal(oauthSrc.includes("completeParentGoogleSession"), true);
 assert.equal(oauthSrc.includes('postParentSessionReady(accessToken, "google")'), true);
-assert.equal(oauthSrc.includes('"/parent/home"') || oauthSrc.includes("PARENT_GOOGLE_HOME_PATH"), true);
+assert.equal(
+  oauthSrc.includes('"/parent/dashboard"') ||
+    oauthSrc.includes('"/parent/home"') ||
+    oauthSrc.includes("PARENT_GOOGLE_HOME_PATH"),
+  true
+);
 
 // 3) Official GIS script + click-only (no One Tap / auto / prompt)
 assert.equal(buttonSrc.includes("accounts.google.com/gsi/client") || oauthSrc.includes("accounts.google.com/gsi/client"), true);

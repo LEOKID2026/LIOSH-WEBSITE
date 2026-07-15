@@ -25,6 +25,7 @@ import {
   resolveParentBearerSession,
 } from "../../lib/parent-client/parent-bearer-session.client.js";
 import { WORKSHEET_HUB_ENTRY_ENABLED } from "../../lib/worksheets/worksheet-hub-entry-enabled.js";
+import PortalLoadingPanel from "../../components/ui/PortalLoadingPanel.jsx";
 
 const GRADE_OPTIONS = [
   { value: "grade_1", label: "כיתה א׳" },
@@ -945,7 +946,9 @@ export default function ParentDashboardPage() {
   if (!session) {
     return (
       <Layout {...layoutProps}>
-        <div className={`max-w-6xl mx-auto px-3 py-4 text-sm ${T.loading}`}>בודק התחברות הורה...</div>
+        <div className="max-w-md mx-auto px-4 py-8" dir="rtl" lang="he">
+          <PortalLoadingPanel isBright={isBright} message="בודק התחברות הורה..." />
+        </div>
       </Layout>
     );
   }

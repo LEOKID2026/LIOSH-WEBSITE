@@ -23,7 +23,7 @@ const CONCEPT_RAW = {
 
 const META = {
   titleHe: "דף עבודה",
-  subjectHe: "גיאומטריה",
+  subjectHe: "גאומטריה",
   gradeHe: "כיתה ג׳",
   topicHe: "מקבילות",
   levelHe: "קל",
@@ -76,19 +76,29 @@ describe("geometry-text-renderer", () => {
     assert.equal(html.includes("generatorKind"), false);
   });
 
-  test("blocked solid cylinder volume is not printable", () => {
+  test("solid cylinder volume is printable with SVG", () => {
     const raw = {
-      question: "מה נפח הגליל?",
+      question: "רדיוס הגליל הוא 5 ס״מ וגובהו 10 ס״מ. חשבו את נפח הגליל (π = 3.14).",
       answers: ["100", "200", "314", "400"],
       correctAnswer: "314",
       topic: "volume",
       shape: "cylinder",
-      params: { kind: "volume_cylinder", radius: 5, height: 10 },
+      params: { kind: "cylinder_volume", radius: 5, height: 10, answerMode: "mcq" },
+      answerMode: "mcq",
     };
     const printable = toPrintableWorksheetQuestion(raw, {
       displayIndex: 1,
       subject: "geometry",
     });
-    assert.equal(printable.printability, WORKSHEET_PRINTABILITY.blocked_diagram_pending);
+    assert.equal(printable.printability, WORKSHEET_PRINTABILITY.printable);
+    assert.equal(printable.diagramSpec?.kind, "solid_cylinder");
+    const payload = buildWorksheetPayload([raw], {
+      ...META,
+      topicHe: "נפח",
+      gradeHe: "ו׳",
+    }, { subjectId: "geometry" });
+    const html = worksheetPayloadToPreviewHtml(payload);
+    assert.ok(html.includes("worksheet-geometry-svg"));
+    assert.ok(html.includes("<ellipse") || html.includes("<circle") || html.includes("<line"));
   });
 });

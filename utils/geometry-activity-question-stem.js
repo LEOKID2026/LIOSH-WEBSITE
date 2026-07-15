@@ -88,6 +88,59 @@ export function buildGeometryComputeStemFromParams(kind, params = {}) {
   ) {
     return `בסיסי הטרפז הם ${p.base1} ס״מ ו־${p.base2} ס״מ, והגובה הוא ${p.height} ס״מ. חשבו את שטח הטרפז.`;
   }
+  if (k === "cylinder_volume" && typeof p.radius === "number" && typeof p.height === "number") {
+    return `רדיוס הגליל הוא ${p.radius} ס״מ וגובהו ${p.height} ס״מ. חשבו את נפח הגליל (π = 3.14).`;
+  }
+  if (k === "sphere_volume" && typeof p.radius === "number") {
+    return `רדיוס הכדור הוא ${p.radius} ס״מ. חשבו את נפח הכדור (π = 3.14).`;
+  }
+  if (
+    (k === "pyramid_volume_square" || k === "pyramid_volume_rectangular") &&
+    (typeof p.side === "number" || typeof p.baseSide === "number") &&
+    typeof p.height === "number"
+  ) {
+    const side = typeof p.side === "number" ? p.side : p.baseSide;
+    if (typeof p.baseWidth === "number" || typeof p.width === "number") {
+      const w = typeof p.baseWidth === "number" ? p.baseWidth : p.width;
+      return `בסיס הפירמידה הוא מלבן באורך ${side} ס״מ וברוחב ${w} ס״מ, וגובהה ${p.height} ס״מ. חשבו את נפח הפירמידה.`;
+    }
+    return `אורך צלע בסיס הפירמידה הריבועי הוא ${side} ס״מ וגובהה ${p.height} ס״מ. חשבו את נפח הפירמידה.`;
+  }
+  if (k === "cone_volume" && typeof p.radius === "number" && typeof p.height === "number") {
+    return `רדיוס בסיס החרוט הוא ${p.radius} ס״מ וגובהו ${p.height} ס״מ. חשבו את נפח החרוט (π = 3.14).`;
+  }
+  if (k === "cube_volume" && typeof p.side === "number") {
+    return `אורך צלע הקובייה הוא ${p.side} ס״מ. חשבו את נפח הקובייה.`;
+  }
+  if (
+    (k === "rectangular_prism_volume" || k === "box_volume") &&
+    typeof p.length === "number" &&
+    typeof p.width === "number" &&
+    typeof p.height === "number"
+  ) {
+    return `אורך התיבה הוא ${p.length} ס״מ, רוחבה ${p.width} ס״מ וגובהה ${p.height} ס״מ. חשבו את נפח התיבה.`;
+  }
+  if (
+    (k === "prism_volume_triangle" || k === "prism_volume_rectangular") &&
+    typeof p.base === "number" &&
+    typeof p.height === "number"
+  ) {
+    if (typeof p.baseHeight === "number") {
+      return `בסיס המנסרה המשולשת הוא משולש שאורך בסיסו ${p.base} ס״מ וגובהו ${p.baseHeight} ס״מ, וגובה המנסרה הוא ${p.height} ס״מ. חשבו את נפח המנסרה.`;
+    }
+    return `שטח בסיס המנסרה הוא ${p.base} סמ״ר וגובהה ${p.height} ס״מ. חשבו את נפח המנסרה.`;
+  }
+  if (k === "pythagoras_hyp" && typeof p.a === "number" && typeof p.b === "number") {
+    return `במשולש ישר־זווית, אורכי הניצבים הם ${p.a} ס״מ ו־${p.b} ס״מ. חשבו את אורך היתר.`;
+  }
+  if (k === "pythagoras_leg" && typeof p.c === "number") {
+    if (p.which === "leg_a" && typeof p.b === "number") {
+      return `במשולש ישר־זווית, אורך היתר הוא ${p.c} ס״מ ואורך ניצב אחד הוא ${p.b} ס״מ. חשבו את אורך הניצב השני.`;
+    }
+    if (p.which === "leg_b" && typeof p.a === "number") {
+      return `במשולש ישר־זווית, אורך היתר הוא ${p.c} ס״מ ואורך ניצב אחד הוא ${p.a} ס״מ. חשבו את אורך הניצב השני.`;
+    }
+  }
 
   return null;
 }
@@ -104,6 +157,7 @@ function stemNeedsComputeRewrite(text, kind) {
   if (k.startsWith("concept_")) return false;
   if (GEOMETRY_GENERIC_ANSWER_FILLER_RE.test(t)) return true;
   if (/^מדידת אלכסון/u.test(t)) return true;
+  if (/שטח פנים/.test(t) && /ריבוע|מלבן|משולש|מקבילית|טרפז/.test(t)) return true;
   if (/^אתגר קצר\s*—\s*אלכסון/u.test(t)) return true;
   if (/^ניתוח אלכסון/u.test(t)) return true;
   if (/^חישוב אלכסון מ/u.test(t) && !HAS_ASK_CUE_RE.test(t)) return true;
@@ -125,8 +179,25 @@ function stemNeedsComputeRewrite(text, kind) {
     "diagonal_rectangle",
     "diagonal_parallelogram",
     "trapezoid_area",
+    "cylinder_volume",
+    "sphere_volume",
+    "pyramid_volume_square",
+    "pyramid_volume_rectangular",
+    "cone_volume",
+    "cube_volume",
+    "rectangular_prism_volume",
+    "prism_volume_triangle",
+    "prism_volume_rectangular",
+    "pythagoras_hyp",
+    "pythagoras_leg",
   ]);
   if (computeKinds.has(k) && !HAS_ASK_CUE_RE.test(t)) return true;
+  if (
+    (k === "pythagoras_hyp" || k === "pythagoras_leg") &&
+    (!/ס״מ|סמ/.test(t) || !HAS_ASK_CUE_RE.test(t))
+  ) {
+    return true;
+  }
 
   if (
     /היקף|שטח|נפח|אלכסון|גובה|יתר|ניצב/.test(t) &&

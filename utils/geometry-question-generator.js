@@ -617,7 +617,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
             } else if (levelKey === "medium") {
               question = [
                 `מה השטח של ריבוע עם צלע ${side}?`,
-                `נתון ריבוע, צלע ${side}. חשבו שטח פנים.`,
+                `נתון ריבוע, צלע ${side}. חשבו את שטח הריבוע.`,
                 `ביטוי לשטח ריבוע: צלע ${side}. מה הערך המספרי?`,
                 `ריבוע מידות ${side}×${side}: חישוב שטח.`,
                 `חשבו שטח ריבוע צלע ${side} יחידות.`,
@@ -1056,10 +1056,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
             Math.floor(Math.random() * level.maxSide) + 1;
           params = { radius, height, kind: "cylinder_volume" };
           correctAnswer = round(PI * radius * radius * height);
-          question =
-            gradeKey === "g6"
-              ? `גליל: רדיוס ${radius}, גובה ${height}. מה הנפח? (π = 3.14)`
-              : `מה הנפח של גליל עם רדיוס ${radius} וגובה ${height}? (π = 3.14)`;
+          question = `רדיוס הגליל הוא ${radius} ס״מ וגובהו ${height} ס״מ. חשבו את נפח הגליל (π = 3.14).`;
           break;
         }
 
@@ -1068,10 +1065,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
             Math.floor(Math.random() * (level.maxSide / 3)) + 1;
           params = { radius, kind: "sphere_volume" };
           correctAnswer = round((4 / 3) * PI * radius * radius * radius);
-          question =
-            gradeKey === "g6"
-              ? `כדור במרחב, רדיוס ${radius}. מה הנפח? (π = 3.14)`
-              : `מה הנפח של כדור עם רדיוס ${radius}? (π = 3.14)`;
+          question = `רדיוס הכדור הוא ${radius} ס״מ. חשבו את נפח הכדור (π = 3.14).`;
           break;
         }
 
@@ -1084,21 +1078,29 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
           
           if (isSquareBase) {
             const baseArea = baseSide * baseSide;
-            params = { baseSide, height, baseArea, kind: "pyramid_volume_square" };
+            params = { baseSide, side: baseSide, height, baseArea, kind: "pyramid_volume_square" };
             correctAnswer = round((baseArea * height) / 3);
             question =
               gradeKey === "g6"
-                ? `פירמידה: בסיס ריבועי צלע ${baseSide}, גובה ${height}. מה הנפח?`
-                : `מה הנפח של פירמידה עם בסיס ריבועי (צלע ${baseSide}) וגובה ${height}?`;
+                ? `אורך צלע בסיס הפירמידה הריבועי הוא ${baseSide} ס״מ וגובה הפירמידה הוא ${height} ס״מ. חשבו את נפח הפירמידה.`
+                : `אורך צלע בסיס הפירמידה הריבועי הוא ${baseSide} ס״מ וגובהה ${height} ס״מ. מה נפח הפירמידה?`;
           } else {
             const baseWidth = Math.floor(Math.random() * (level.maxSide / 2)) + 1;
             const baseArea = baseSide * baseWidth;
-            params = { baseSide, baseWidth, height, baseArea, kind: "pyramid_volume_rectangular" };
+            params = {
+              baseSide,
+              side: baseSide,
+              baseWidth,
+              width: baseWidth,
+              height,
+              baseArea,
+              kind: "pyramid_volume_rectangular",
+            };
             correctAnswer = round((baseArea * height) / 3);
             question =
               gradeKey === "g6"
-                ? `פירמידה: בסיס מלבני ${baseSide}×${baseWidth}, גובה ${height}. מה הנפח?`
-                : `מה הנפח של פירמידה עם בסיס מלבני (${baseSide} × ${baseWidth}) וגובה ${height}?`;
+                ? `בסיס הפירמידה הוא מלבן באורך ${baseSide} ס״מ וברוחב ${baseWidth} ס״מ, וגובהה ${height} ס״מ. חשבו את נפח הפירמידה.`
+                : `בסיס מלבני ${baseSide}×${baseWidth} ס״מ וגובה ${height} ס״מ. מה נפח הפירמידה?`;
           }
           break;
         }
@@ -1109,10 +1111,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
           const height = Math.floor(Math.random() * level.maxSide) + 1;
           params = { radius, height, kind: "cone_volume" };
           correctAnswer = round((PI * radius * radius * height) / 3);
-          question =
-            gradeKey === "g6"
-              ? `חרוט: רדיוס ${radius}, גובה ${height}. מה הנפח? (π = 3.14)`
-              : `מה הנפח של חרוט עם רדיוס ${radius} וגובה ${height}? (π = 3.14)`;
+          question = `רדיוס בסיס החרוט הוא ${radius} ס״מ וגובהו ${height} ס״מ. חשבו את נפח החרוט (π = 3.14).`;
           break;
         }
 
@@ -1129,14 +1128,14 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
             const baseArea = (base * baseHeight) / 2;
             params = { base, baseHeight, height, baseArea, kind: "prism_volume_triangle" };
             correctAnswer = round(baseArea * height);
-            question = `מה הנפח של מנסרה עם בסיס משולש (בסיס ${base}, גובה ${baseHeight}) וגובה המנסרה ${height}?`;
+            question = `בסיס המנסרה הוא משולש: בסיס ${base} ס״מ וגובה ${baseHeight} ס״מ, וגובה המנסרה ${height} ס״מ. חשבו את נפח המנסרה.`;
           } else {
             const baseLength = Math.floor(Math.random() * (level.maxSide / 2)) + 1;
             const baseWidth = Math.floor(Math.random() * (level.maxSide / 2)) + 1;
             const baseArea = baseLength * baseWidth;
             params = { baseLength, baseWidth, height, baseArea, kind: "prism_volume_rectangular" };
             correctAnswer = round(baseArea * height);
-            question = `מה הנפח של מנסרה עם בסיס מלבני (${baseLength} × ${baseWidth}) וגובה המנסרה ${height}?`;
+            question = `בסיס המנסרה הוא מלבן ${baseLength}×${baseWidth} ס״מ, וגובה המנסרה ${height} ס״מ. חשבו את נפח המנסרה.`;
           }
           break;
         }

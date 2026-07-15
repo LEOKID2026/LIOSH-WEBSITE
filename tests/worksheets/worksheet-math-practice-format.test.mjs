@@ -57,9 +57,10 @@ function printableForFormat(topicKey, formatId, gradeKey = "g3", seed = 77) {
 
 describe("worksheet-math-practice-format", () => {
   test("all initial format ids are registered", () => {
-    assert.equal(WORKSHEET_MATH_PRACTICE_FORMAT_IDS.length, 13);
+    assert.equal(WORKSHEET_MATH_PRACTICE_FORMAT_IDS.length, 14);
     assert.ok(WORKSHEET_MATH_PRACTICE_FORMAT_IDS.includes("horizontal_add_sub"));
     assert.ok(WORKSHEET_MATH_PRACTICE_FORMAT_IDS.includes("long_division"));
+    assert.ok(WORKSHEET_MATH_PRACTICE_FORMAT_IDS.includes("long_division_with_remainder"));
   });
 
   test("horizontal_add_sub shows horizontal only", () => {
@@ -104,6 +105,56 @@ describe("worksheet-math-practice-format", () => {
     for (const q of printable) {
       assert.ok(!q.verticalLayoutLtr);
       assert.notEqual(q.questionType, "vertical_math");
+    }
+  });
+
+  test("division_with_remainder offers basic and long formats from g4", () => {
+    const g3 = listMathPracticeFormatsForGradeTopic("g3", "division_with_remainder");
+    assert.deepEqual(
+      g3.map((f) => f.key),
+      ["division_with_remainder"]
+    );
+    const g4 = listMathPracticeFormatsForGradeTopic("g4", "division_with_remainder");
+    assert.deepEqual(
+      g4.map((f) => f.key),
+      ["division_with_remainder", "long_division_with_remainder"]
+    );
+    assert.equal(g4[0].label, "חילוק בסיסי");
+    assert.equal(g4[1].label, "חילוק ארוך");
+  });
+
+  test("division_with_remainder basic stays horizontal", () => {
+    const printable = printableForFormat(
+      "division_with_remainder",
+      "division_with_remainder",
+      "g4",
+      107
+    );
+    assert.ok(printable.length >= 4);
+    for (const q of printable) {
+      assert.ok(!q.verticalLayoutLtr);
+      assert.notEqual(q.questionType, "vertical_math");
+      assert.ok(q.mathExpressionLtr);
+      assert.doesNotMatch(String(q.stemHe || ""), /שארית/);
+      assert.doesNotMatch(String(q.mathExpressionLtr || ""), /שארית/);
+      assert.match(String(q.mathExpressionLtr || ""), /÷/);
+    }
+  });
+
+  test("long_division_with_remainder renders vertical bracket", () => {
+    const printable = printableForFormat(
+      "division_with_remainder",
+      "long_division_with_remainder",
+      "g4",
+      108
+    );
+    assert.ok(printable.length >= 4);
+    for (const q of printable) {
+      assert.ok(q.verticalLayoutLtr, "must use vertical long division layout");
+      assert.equal(q.questionType, "vertical_math");
+      assert.ok(!q.mathExpressionLtr);
+      assert.doesNotMatch(String(q.stemHe || ""), /שארית/);
+      assert.doesNotMatch(String(q.verticalLayoutLtr || ""), /שארית/);
     }
   });
 

@@ -5,10 +5,12 @@
 import { WORKSHEET_SUBJECT_ALLOWLIST } from "../../lib/worksheets/worksheet-print-allowlist.js";
 import { WORKSHEET_LEVEL_OPTIONS } from "../../lib/worksheets/worksheet-level-display.js";
 import { worksheetTopicOptionsForGrade } from "../../lib/worksheets/worksheet-topic-options.js";
+import { listWorksheetMixedTopicOptions } from "../../lib/worksheets/worksheet-mixed-topics.js";
 import { listMathPracticeFormatsForGradeTopic } from "../../lib/worksheets/worksheet-math-practice-format.js";
 import { isWorksheetMcqOffered } from "../../lib/worksheets/worksheet-mcq-preference.js";
 import { WORKSHEET_UI_HE } from "../../lib/worksheets/worksheet-ui.he.js";
 import WorksheetIncludeAnswersOption from "./WorksheetIncludeAnswersOption.jsx";
+import MixedTopicsPicker from "./MixedTopicsPicker.jsx";
 
 const GRADE_OPTIONS = [
   { key: "g1", label: "כיתה א׳" },
@@ -20,6 +22,14 @@ const GRADE_OPTIONS = [
 ];
 
 const COUNT_OPTIONS = [6, 8, 10, 12, 15, 20];
+
+/**
+ * @param {string} subjectId
+ * @param {string} gradeKey
+ */
+function allMixedKeys(subjectId, gradeKey) {
+  return listWorksheetMixedTopicOptions(subjectId, gradeKey).map((t) => t.key);
+}
 
 /**
  * @param {{
@@ -49,6 +59,11 @@ export default function CreateWorksheetTab({
   const gradeKey = String(form.gradeKey || "g3");
   const topicKey = String(form.topicKey || "");
   const topicOptions = worksheetTopicOptionsForGrade(subjectId, gradeKey);
+  const mixedOptions = listWorksheetMixedTopicOptions(subjectId, gradeKey);
+  const isMixed = topicKey === "mixed";
+  const mixedTopicKeys = Array.isArray(form.mixedTopicKeys)
+    ? form.mixedTopicKeys.map(String)
+    : mixedOptions.map((t) => t.key);
   const practiceFormatOptions =
     subjectId === "math" ? listMathPracticeFormatsForGradeTopic(gradeKey, topicKey) : [];
   const showPracticeFormat = practiceFormatOptions.length > 1;
@@ -60,10 +75,17 @@ export default function CreateWorksheetTab({
 
   const patchTopic = (nextTopicKey) => {
     const formats = listMathPracticeFormatsForGradeTopic(gradeKey, nextTopicKey);
-    onChange({
+    /** @type {Record<string, unknown>} */
+    const patch = {
       topicKey: nextTopicKey,
       mathPracticeFormat: formats[0]?.key || "",
-    });
+    };
+    if (nextTopicKey === "mixed") {
+      patch.mixedTopicKeys = allMixedKeys(subjectId, gradeKey);
+    } else {
+      patch.mixedTopicKeys = null;
+    }
+    onChange(patch);
   };
 
   const patchGrade = (nextGrade) => {
@@ -74,6 +96,7 @@ export default function CreateWorksheetTab({
       gradeKey: nextGrade,
       topicKey: nextTopic,
       mathPracticeFormat: formats[0]?.key || "",
+      mixedTopicKeys: nextTopic === "mixed" ? allMixedKeys(subjectId, nextGrade) : null,
     });
   };
 
@@ -89,8 +112,11 @@ export default function CreateWorksheetTab({
       topicKey: nextTopic,
       mathPracticeFormat: formats[0]?.key || "",
       preferMcq: isWorksheetMcqOffered(nextSubject) ? form.preferMcq === true : false,
+      mixedTopicKeys: nextTopic === "mixed" ? allMixedKeys(nextSubject, gradeKey) : null,
     });
   };
+
+  const mixedEmpty = isMixed && mixedTopicKeys.length === 0;
 
   return (
     <div className={`worksheet-hub-panel worksheet-create-panel ${T.panel}`}>
@@ -242,12 +268,24 @@ export default function CreateWorksheetTab({
         </div>
       </div>
 
+      {isMixed && mixedOptions.length > 0 ? (
+        <MixedTopicsPicker
+          options={mixedOptions}
+          selectedKeys={mixedTopicKeys}
+          onChange={(nextKeys) => onChange({ mixedTopicKeys: nextKeys })}
+          T={T}
+        />
+      ) : null}
+
       {error ? <p className={`mt-4 ${T.error}`}>{error}</p> : null}
+      {mixedEmpty && !error ? (
+        <p className={`mt-4 ${T.error}`}>{WORKSHEET_UI_HE.mixedTopicsEmptyError}</p>
+      ) : null}
 
       <div className="mt-5">
         <button
           type="button"
-          disabled={busy || !form.topicKey}
+          disabled={busy || !form.topicKey || mixedEmpty}
           onClick={onSubmit}
           className={`worksheet-primary-cta ${T.primaryBtn}`}
         >

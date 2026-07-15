@@ -177,7 +177,7 @@ export function triangleLayoutFromAngles(angle1, angle2, angle3, options = {}) {
   };
 }
 
-/** @typedef {'square'|'rectangle'|'parallelogram'|'trapezoid'|'rhombus'|'quadrilateral_general'|'triangle_equilateral'|'triangle_isosceles'|'triangle_scalene'} ShapeTemplateId */
+/** @typedef {'square'|'rectangle'|'parallelogram'|'trapezoid'|'rhombus'|'kite'|'quadrilateral_general'|'triangle_equilateral'|'triangle_isosceles'|'triangle_scalene'|'pentagon_regular'|'hexagon_regular'|'octagon_regular'} ShapeTemplateId */
 
 /** Relative polygon templates centered at origin, then shifted to canvas center. */
 const SHAPE_POLYGONS = {
@@ -232,7 +232,32 @@ const SHAPE_POLYGONS = {
     { x: -102, y: 76 },
     { x: 96, y: 68 },
   ],
+  kite: [
+    { x: 0, y: -88 },
+    { x: 52, y: -8 },
+    { x: 0, y: 88 },
+    { x: -52, y: -8 },
+  ],
+  pentagon_regular: regularPolygonPoints(5, 78),
+  hexagon_regular: regularPolygonPoints(6, 78),
+  octagon_regular: regularPolygonPoints(8, 72),
 };
+
+/**
+ * @param {number} n
+ * @param {number} r
+ * @returns {{ x: number, y: number }[]}
+ */
+function regularPolygonPoints(n, r) {
+  /** @type {{ x: number, y: number }[]} */
+  const pts = [];
+  const start = -Math.PI / 2;
+  for (let i = 0; i < n; i += 1) {
+    const a = start + (i * 2 * Math.PI) / n;
+    pts.push({ x: r * Math.cos(a), y: r * Math.sin(a) });
+  }
+  return pts;
+}
 
 /**
  * @param {ShapeTemplateId|string} templateId
@@ -263,6 +288,7 @@ export function resolveQuadrilateralTemplate(type) {
     מקבילית: "parallelogram",
     טרפז: "trapezoid",
     מעוין: "rhombus",
+    דלתון: "kite",
   };
   return map[type] || "quadrilateral_general";
 }

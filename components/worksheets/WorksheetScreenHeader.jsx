@@ -26,14 +26,14 @@ export default function WorksheetScreenHeader({
   return (
     <header className="worksheet-screen-info-card">
       <div className="worksheet-screen-brand" dir="ltr" lang="en">
+        <span className="worksheet-screen-brand-name">LEO KIDS</span>
         <img
           src="/images/coin.png"
-          alt="LEO KIDS"
+          alt=""
           width={64}
           height={64}
           className="worksheet-screen-brand-logo"
         />
-        <span className="worksheet-screen-brand-name">LEO KIDS</span>
       </div>
       <h1 className="worksheet-screen-title">{titleHe}</h1>
       <p className="worksheet-screen-meta">

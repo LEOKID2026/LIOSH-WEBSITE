@@ -1825,18 +1825,40 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       operandB = divisor;
     }
   } else if (selectedOp === "division_with_remainder") {
-    // חילוק עם שארית - כולל גם עם שארית וגם בלי שארית
-    const maxD = levelConfig.division_with_remainder?.max || 100;
-    const maxDivisor = levelConfig.division_with_remainder?.maxDivisor || 12;
-    const divisor = randInt(2, maxDivisor);
-    
+    // חילוק עם שארית — בסיסי (אופקי) או ארוך (אנכי) לפי forceKind.
+    const maxDBase = levelConfig.division_with_remainder?.max || 100;
+    const maxDivisorBase = levelConfig.division_with_remainder?.maxDivisor || 12;
+    const forceLongRemainder =
+      mathForce === "div_with_remainder_long" &&
+      ["g4", "g5", "g6"].includes(gradeKey);
+
+    let divisor;
+    let maxD = maxDBase;
+    if (forceLongRemainder) {
+      maxD = Math.max(
+        maxDBase,
+        Number(levelConfig.division?.max) || 0,
+        gradeKey === "g6" ? 900 : gradeKey === "g5" ? 500 : 200
+      );
+      if (["g5", "g6"].includes(gradeKey) && Math.random() < 0.4) {
+        divisor = randInt(11, Math.min(29, Math.max(11, Math.floor(maxD / 10))));
+      } else if (Math.random() < 0.5) {
+        divisor = randInt(1, 9) * 10;
+        if (divisor < 2) divisor = 10;
+      } else {
+        divisor = randInt(2, 9);
+      }
+    } else {
+      divisor = randInt(2, maxDivisorBase);
+    }
+
     // לפחות 80% עם שארית (כמו שביקשת)
     // אם אין טווח חוקי ליצור שארית (למשל maxD קטן מדי) ניפול אוטומטית לללא שארית.
     const minQuotient = maxD >= divisor * 2 ? 2 : 1;
     const maxQuotientForRemainder = Math.floor((maxD - 1) / divisor); // כדי שיהיה מקום לשארית >= 1
     const canMakeRemainder = maxQuotientForRemainder >= minQuotient && divisor > 1;
     const hasRemainder = canMakeRemainder && Math.random() < 0.8;
-    
+
     let quotient, dividend, remainder = 0;
     if (hasRemainder) {
       // חילוק עם שארית
@@ -1858,14 +1880,33 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       dividend = divisor * quotient;
     }
 
+    // חילוק ארוך: העדפת תרגיל עם מנה/מחולק גדולים יותר כשאפשר.
+    if (forceLongRemainder && dividend < 20 && quotient < 10) {
+      const bump = randInt(2, 5);
+      quotient = Math.max(quotient, bump);
+      dividend = divisor * quotient + remainder;
+      while (dividend > maxD && quotient > 2) {
+        quotient -= 1;
+        dividend = divisor * quotient + remainder;
+      }
+    }
+
     correctAnswer = `${quotient} ושארית ${remainder}`;
-    const exerciseText = `${dividend} ÷ ${divisor} = ${BLANK}  שארית ${BLANK}`;
+    const exerciseText = `${dividend} ÷ ${divisor} = ${BLANK}`;
     question = exerciseText;
-    params = { kind: "div_with_remainder", dividend, divisor, quotient, remainder, exerciseText };
+    params = {
+      kind: forceLongRemainder ? "div_with_remainder_long" : "div_with_remainder",
+      dividend,
+      divisor,
+      quotient,
+      remainder,
+      exerciseText,
+      ...(forceLongRemainder ? { longDivision: true } : {}),
+    };
 
     operandA = dividend;
     operandB = divisor;
-    
+
     // תשובות MCQ כמחרוזות מנה+שארית (גם כשהשארית 0)
     const wrongAnswers = new Set();
     const addRemStr = (q, r) => {
@@ -1885,16 +1926,16 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       const wr = randInt(0, divisor - 1);
       addRemStr(wq, wr);
     }
-    
+
     // הוספת התשובות ל-params כדי שיהיו זמינות
     const allAnswers = [correctAnswer, ...Array.from(wrongAnswers).slice(0, 3)];
-    
+
     // ערבוב התשובות
     for (let i = allAnswers.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [allAnswers[i], allAnswers[j]] = [allAnswers[j], allAnswers[i]];
     }
-    
+
     // החזרת התשובות במקום standard processing
     // נצטרך לטפל בזה אחר כך בקוד - אבל בינתיים נשמור את זה ב-params
     params.answers = allAnswers;
