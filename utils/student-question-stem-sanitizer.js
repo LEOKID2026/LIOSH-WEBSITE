@@ -39,7 +39,7 @@ export const STUDENT_STEM_METADATA_LEAK_CHECKS = [
   },
   {
     id: "grade_level_composite_prefix",
-    re: /^בכיתה\s+[אבגדהו]['׳]?\s*[-–-]\s*רמה\s+(קלה|בינונית|קשה|מאתגרת)/u,
+    re: /^בכיתה\s+[אבגדהו]['׳]?\s*[–-]\s*רמה\s+(קלה|בינונית|קשה|מאתגרת)/u,
     label: "בכיתה grade - רמה level composite prefix",
   },
   {
@@ -137,7 +137,7 @@ export function sanitizeStudentQuestionStem(text) {
   // "כיתה ה׳ · רמה קלה — CORE · מוקד slot"  OR  "כיתה ה׳ · רמה קלה · CORE · מוקד slot"
   t = t.replace(
     new RegExp(
-      `^כיתה\\s+${GRADE_HEB}\\s*[·•]\\s*${LEVEL_WORD}\\s+${LEVEL_HE_OR_EN}\\s*[-–-]\\s*`,
+      `^כיתה\\s+${GRADE_HEB}\\s*[·•]\\s*${LEVEL_WORD}\\s+${LEVEL_HE_OR_EN}\\s*[–-]\\s*`,
       "iu"
     ),
     ""
@@ -175,7 +175,7 @@ export function sanitizeStudentQuestionStem(text) {
     ""
   );
   t = t.replace(
-    new RegExp(`^כיתה\\s+${GRADE_HEB}\\s*[-–-]\\s*`, "u"),
+    new RegExp(`^כיתה\\s+${GRADE_HEB}\\s*[–-]\\s*`, "u"),
     ""
   );
 
@@ -186,7 +186,7 @@ export function sanitizeStudentQuestionStem(text) {
   // Science / batch opener: "בכיתה ה׳ — רמה בינונית: …" (metadata header only — not in-question grade mentions)
   t = t.replace(
     new RegExp(
-      `^בכיתה\\s+${GRADE_HEB}\\s*[-–-]\\s*${LEVEL_WORD}\\s*${LEVEL_HE_OR_EN}\\s*:\\s*`,
+      `^בכיתה\\s+${GRADE_HEB}\\s*[–-]\\s*${LEVEL_WORD}\\s*${LEVEL_HE_OR_EN}\\s*:\\s*`,
       "iu"
     ),
     ""
@@ -212,8 +212,8 @@ export function sanitizeStudentQuestionStem(text) {
         .trim();
       if (!bare) return true;
       // "רמה קלה — real question" is NOT pure metadata
-      if (/[-–-]/.test(bare) && bare.split(/[-–-]/).length >= 2) {
-        const after = bare.split(/[-–-]/).slice(1).join("-").trim();
+      if (/[–-]/.test(bare) && bare.split(/[–-]/).length >= 2) {
+        const after = bare.split(/[–-]/).slice(1).join("-").trim();
         if (after.length >= 8) return false;
       }
       return (
@@ -261,7 +261,7 @@ export function sanitizeStudentQuestionStem(text) {
     prev = t;
     t = t.replace(leadChunk, "");
     t = t.replace(
-      /^\s*רמה\s+(קלה|בינונית|קשה|מאתגרת|רגילה|מתקדמת)\s*[-–-]\s*/iu,
+      /^\s*רמה\s+(קלה|בינונית|קשה|מאתגרת|רגילה|מתקדמת)\s*[–-]\s*/iu,
       ""
     );
     t = t.replace(/^\s*מושגים\s*\((קל|בינוני|אתגר)\)\s*:\s*/iu, "");
@@ -281,10 +281,10 @@ export function sanitizeStudentQuestionStem(text) {
 
   // Level + topic combo prefixes: "רמה קלה — משוואה, מצאו…" → keep instruction after comma when present
   t = t.replace(
-    /^רמה\s+(קלה|בינונית|קשה|מאתגרת)\s*[-–-]\s*[^,:\n]+,\s*/iu,
+    /^רמה\s+(קלה|בינונית|קשה|מאתגרת)\s*[–-]\s*[^,:\n]+,\s*/iu,
     ""
   );
-  t = t.replace(/^רמה\s+(קלה|בינונית|קשה|מאתגרת)\s*[-–-]\s*/iu, "");
+  t = t.replace(/^רמה\s+(קלה|בינונית|קשה|מאתגרת)\s*[–-]\s*/iu, "");
   t = t.replace(
     /^(?:משוואה|חיבור|חיסור|כפל|חילוק|שברים|השוואת\s+מספרים)\s*,\s*/iu,
     ""
@@ -305,7 +305,7 @@ export function sanitizeStudentQuestionStem(text) {
 
   // Redundant fluff openers only (keep real task wording like "מצאו את הנעלם")
   const fluffOpeners =
-    /^(?:חישוב קל|מה התוצאה|פתרו|חיבור\/חיסור קצר|נסו לבד|חשבו לבד|מה יוצא|תרגיל|משחקון חשבון|אתגר קטן|בדקו|חידה חשבונית|כמה יוצא בסוף|חישוב|אתגר\s*[-–-]\s*הערכו ואמתו|בדקו פעמיים לפני בחירה|שאלת אתגר|גרסה מאתגרת|יחס\s*\(קל\)|בעיית יחסים|אתגר יחסים)\s*:\s*/iu;
+    /^(?:חישוב קל|מה התוצאה|פתרו|חיבור\/חיסור קצר|נסו לבד|חשבו לבד|מה יוצא|תרגיל|משחקון חשבון|אתגר קטן|בדקו|חידה חשבונית|כמה יוצא בסוף|חישוב|אתגר\s*[–-]\s*הערכו ואמתו|בדקו פעמיים לפני בחירה|שאלת אתגר|גרסה מאתגרת|יחס\s*\(קל\)|בעיית יחסים|אתגר יחסים)\s*:\s*/iu;
   t = t.replace(fluffOpeners, "");
 
   if (isTopicDifficultyMetadataLead(t)) {

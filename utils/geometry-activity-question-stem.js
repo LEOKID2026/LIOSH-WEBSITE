@@ -314,7 +314,7 @@ export function sanitizeGeometryActivityQuestionStem(text, context = {}) {
     context?.kind === "triangle_angles" ||
     (context?.topic === "angles" && /זווית|משולש|180°/.test(t));
 
-  t = t.replace(/אלגברה\s+של\s+זוויות\s*[-–-]\s*/gu, "חישוב זוויות במשולש - ");
+  t = t.replace(/אלגברה\s+של\s+זוויות\s*[–-]\s*/gu, "חישוב זוויות במשולש - ");
   t = t.replace(/אלגברה\s+של\s+זוויות/gu, "חישוב זוויות במשולש");
 
   t = t.replace(
@@ -325,7 +325,7 @@ export function sanitizeGeometryActivityQuestionStem(text, context = {}) {
 
   if (isTriangleAngles) {
     t = t.replace(
-      /^חישוב זוויות במשולש\s*[-–-]\s*סכום שתי זוויות ידועות הוא (\d+)°\+(\d+)°\s*[-–-]\s*השלימו (?:ל)?זווית השלישית(?: במשולש)?\.?/giu,
+      /^חישוב זוויות במשולש\s*[–-]\s*סכום שתי זוויות ידועות הוא (\d+)°\+(\d+)°\s*[–-]\s*השלימו (?:ל)?זווית השלישית(?: במשולש)?\.?/giu,
       (_, a1, a2) => formatTriangleAnglesKnownTwoStem(a1, a2)
     );
     t = t.replace(
@@ -337,11 +337,11 @@ export function sanitizeGeometryActivityQuestionStem(text, context = {}) {
       (_, a1, a2) => formatTriangleAnglesKnownTwoStem(a1, a2)
     );
     t = t.replace(
-      /^ניתוח\s+ל(?:לא\s+)?(?:ניסוח\s+)?(?:הכלל\s+)?(?:במפורש\s*)?[-–-]\s*/giu,
+      /^ניתוח\s+ל(?:לא\s+)?(?:ניסוח\s+)?(?:הכלל\s+)?(?:במפורש\s*)?[–-]\s*/giu,
       "מציאת זווית חסרה במשולש - "
     );
-    t = t.replace(/^אתגר\s+(?:קצר|זוויות\s+משולש)\s*[-–-]\s*/giu, "חישוב זוויות במשולש - ");
-    t = t.replace(/^אתגר\s+זוויות\s+משולש\s*[-–-]\s*/giu, "חישוב זוויות במשולש - ");
+    t = t.replace(/^אתגר\s+(?:קצר|זוויות\s+משולש)\s*[–-]\s*/giu, "חישוב זוויות במשולש - ");
+    t = t.replace(/^אתגר\s+זוויות\s+משולש\s*[–-]\s*/giu, "חישוב זוויות במשולש - ");
   }
 
   t = stripGeometryFormulaHelpParenthetical(t);
