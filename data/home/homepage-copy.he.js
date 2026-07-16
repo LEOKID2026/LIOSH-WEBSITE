@@ -1,16 +1,14 @@
 /** Approved homepage copy - single source of truth for "/" */
 
 export const HOMEPAGE_BRAND_LINE =
-  "LEO KIDS - כלים להורים, חוויה לילדים ולמידה שמתקדמת צעד אחר צעד";
+  "LEO KIDS - כלים להורים, חוויה לילדים ולמידה שמתקדמת צעד אחרי צעד";
 
 export const HOMEPAGE_COPY = {
   hero: {
     badge: "לומדים · משחקים · מתקדמים",
-    titleLines: [
-      "כלים להורים.",
-      "חוויה לילדים.",
-      "למידה שמתקדמת צעד אחר צעד.",
-    ],
+    titleBrand: "LEO KIDS",
+    titlePrimary: "כלים להורים. חוויה לילדים.",
+    titleSecondary: "למידה שמתקדמת צעד אחרי צעד.",
     subtitle:
       "LEO KIDS מחבר בין תרגול ומשחקים לילדים לבין מערכת ממוחשבת שממפה את ההתקדמות ומציגה להורים תמונת מצב ברורה.",
     reinforcement: "מקצועות · נושאים · מיומנויות · תתי-מיומנויות",

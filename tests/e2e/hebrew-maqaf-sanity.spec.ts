@@ -57,7 +57,7 @@ test.describe("Hebrew maqaf sanity - mobile viewport", () => {
     await page.goto("/");
     await expect(page.getByTestId("home-hero")).toBeVisible();
     await expect(
-      page.getByRole("heading", { name: /למידה שמתקדמת צעד אחר צעד/ })
+      page.getByRole("heading", { name: /למידה שמתקדמת צעד אחרי צעד/ })
     ).toBeVisible();
     await assertNoMaqaf(page, "home-mobile");
   });

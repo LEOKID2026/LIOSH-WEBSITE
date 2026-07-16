@@ -74,11 +74,26 @@ export default function HomeHero({ isBright }) {
             <h1
               className={`text-[1.9rem] font-black leading-[1.1] md:text-4xl lg:text-[3rem] ${titleClass}`}
             >
-              {copy.titleLines.map((line) => (
-                <span key={line} className="block">
-                  {line}
+              <span
+                className={`mb-2 flex items-center justify-center gap-2 self-center lg:justify-end lg:self-end ${isBright ? "text-red-600" : "text-red-400"}`}
+                dir="ltr"
+                lang="en"
+              >
+                <span className="text-xl font-extrabold tracking-widest md:text-2xl lg:text-3xl">
+                  {copy.titleBrand}
                 </span>
-              ))}
+                <img
+                  src="/images/coin.png"
+                  alt=""
+                  aria-hidden="true"
+                  width={32}
+                  height={32}
+                  className="h-8 w-8 shrink-0 object-contain"
+                  style={{ transform: "scale(1.9)" }}
+                />
+              </span>
+              <span className="block">{copy.titlePrimary}</span>
+              <span className="block">{copy.titleSecondary}</span>
             </h1>
 
             <p className={`text-sm leading-relaxed md:text-base lg:text-lg ${cls.body}`}>
