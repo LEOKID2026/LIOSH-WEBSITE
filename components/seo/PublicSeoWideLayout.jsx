@@ -25,6 +25,9 @@ import {
  *   intro: string,
  *   children: import("react").ReactNode,
  *   footer?: import("react").ReactNode,
+ *   heroActions?: import("react").ReactNode,
+ *   heroNote?: string,
+ *   heroNoteClassName?: string,
  * }} props
  */
 export default function PublicSeoWideLayout({
@@ -35,6 +38,9 @@ export default function PublicSeoWideLayout({
   intro,
   children,
   footer,
+  heroActions,
+  heroNote,
+  heroNoteClassName = "",
 }) {
   const { theme, isBright } = useStudentTheme();
   const seo = getPublicPageSeo(seoKey);
@@ -56,7 +62,8 @@ export default function PublicSeoWideLayout({
             {badge ? <p className={cls.badge}>{badge}</p> : null}
             <h1 className={cls.h1}>{h1}</h1>
             <p className={cls.intro}>{intro}</p>
-            <PublicSeoParentCta isBright={isBright} />
+            {heroActions ?? <PublicSeoParentCta isBright={isBright} />}
+            {heroNote ? <p className={`${heroNoteClassName} ${cls.muted}`}>{heroNote}</p> : null}
           </header>
 
           <div className="space-y-8 md:space-y-10">{children}</div>

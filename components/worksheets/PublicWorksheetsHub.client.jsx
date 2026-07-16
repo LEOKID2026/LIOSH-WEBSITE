@@ -4,9 +4,11 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
+import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import ReadyWorksheetsTab from "./ReadyWorksheetsTab.jsx";
 import CreateWorksheetTab from "./CreateWorksheetTab.jsx";
 import { WORKSHEET_UI_HE } from "../../lib/worksheets/worksheet-ui.he.js";
+import { getPublicSeoWideClasses } from "../seo/public-seo-wide-theme";
 import { getPublicDemoAllowlistEntry } from "../../lib/worksheets/worksheet-public-demo.constants.js";
 import { listMathPracticeFormatsForGradeTopic } from "../../lib/worksheets/worksheet-math-practice-format.js";
 import {
@@ -44,10 +46,24 @@ function defaultPublicDemoForm(subjectId, gradeKey) {
 }
 
 /**
- * @param {{ T: Record<string, string> }} props
+ * @param {{
+ *   T: Record<string, string>,
+ *   landingEmbed?: boolean,
+ *   generatorLead?: { h2: string, paragraph: string },
+ *   readyLead?: { h2: string, paragraph: string },
+ *   sectionLeadClass?: string,
+ * }} props
  */
-export default function PublicWorksheetsHub({ T }) {
+export default function PublicWorksheetsHub({
+  T,
+  landingEmbed = false,
+  generatorLead,
+  readyLead,
+  sectionLeadClass = "",
+}) {
   const router = useRouter();
+  const { isBright } = useStudentTheme();
+  const landingCls = landingEmbed ? getPublicSeoWideClasses(isBright) : null;
 
   const [catalogItems, setCatalogItems] = useState([]);
   const [catalogLoading, setCatalogLoading] = useState(true);
@@ -193,11 +209,18 @@ export default function PublicWorksheetsHub({ T }) {
 
   return (
     <div dir="rtl" lang="he" className="worksheet-hub-page space-y-8">
-      <section id="demo" className="scroll-mt-24 space-y-4">
+      <section id="worksheet-generator" className="scroll-mt-24 space-y-4">
+        {landingEmbed && generatorLead && landingCls ? (
+          <>
+            <h2 className={landingCls.sectionTitle}>{generatorLead.h2}</h2>
+            <p className={`${sectionLeadClass} ${landingCls.body}`}>{generatorLead.paragraph}</p>
+          </>
+        ) : null}
         <CreateWorksheetTab
           form={createForm}
           onChange={(patch) => setCreateForm((prev) => ({ ...prev, ...patch }))}
           onSubmit={handleCreateSubmit}
+          onRefresh={handleCreateSubmit}
           busy={createBusy}
           error={createError}
           includeAnswers={includeAnswers}
@@ -205,14 +228,23 @@ export default function PublicWorksheetsHub({ T }) {
           onIncludeAnswersChange={handleIncludeAnswersChange}
           T={T}
           variant="public-demo"
+          hidePanelHeader={landingEmbed}
         />
-        <p className={`text-sm leading-relaxed ${T.muted}`}>
-          במערכת המלאה להורים ניתן ליצור דפי עבודה שוב ושוב, ללא הגבלה. הדפים נוצרים מחדש
-          ומשתנים בין יצירה ליצירה.
-        </p>
+        {landingEmbed ? null : (
+          <p className={`text-sm leading-relaxed ${T.muted}`}>
+            במערכת המלאה להורים ניתן ליצור דפי עבודה שוב ושוב, ללא הגבלה. הדפים נוצרים מחדש
+            ומשתנים בין יצירה ליצירה.
+          </p>
+        )}
       </section>
 
-      <section id="catalog" className="scroll-mt-24 space-y-4">
+      <section id="ready-worksheets" className="scroll-mt-24 space-y-4">
+        {landingEmbed && readyLead && landingCls ? (
+          <>
+            <h2 className={landingCls.sectionTitle}>{readyLead.h2}</h2>
+            <p className={`${sectionLeadClass} ${landingCls.body}`}>{readyLead.paragraph}</p>
+          </>
+        ) : null}
         <ReadyWorksheetsTab
           items={filteredCatalogItems}
           loading={catalogLoading}
@@ -229,6 +261,7 @@ export default function PublicWorksheetsHub({ T }) {
           T={T}
           titleOverride={WORKSHEET_UI_HE.publicReadyTitle}
           hintOverride={WORKSHEET_UI_HE.publicReadyHint}
+          hidePanelHeader={landingEmbed}
         />
       </section>
     </div>

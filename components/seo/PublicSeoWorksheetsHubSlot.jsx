@@ -4,20 +4,31 @@ import PublicWorksheetsHub from "../worksheets/PublicWorksheetsHub.client.jsx";
 import { getPublicSeoWideClasses } from "./public-seo-wide-theme";
 
 /**
- * Worksheets generator + catalog embedded in the public SEO wide layout.
+ * @param {{
+ *   generatorLead?: { h2: string, paragraph: string },
+ *   readyLead?: { h2: string, paragraph: string },
+ *   landingStyles?: Record<string, string>,
+ * }} [props]
  */
-export default function PublicSeoWorksheetsHubSlot() {
+export default function PublicSeoWorksheetsHubSlot({ generatorLead, readyLead, landingStyles }) {
   const { isBright } = useStudentTheme();
   const cls = getPublicSeoWideClasses(isBright);
   const T = getParentPortalTheme(isBright);
+  const hubSlotClass = landingStyles?.hubSlot || "";
 
   return (
     <section
-      className={`public-seo-worksheets-slot ${cls.interactiveSlot}`}
+      className={`${hubSlotClass} public-seo-worksheets-slot ${cls.interactiveSlot}`}
       data-testid="public-seo-worksheets-slot"
       aria-label="מחולל וקטלוג דפי עבודה"
     >
-      <PublicWorksheetsHub T={T} />
+      <PublicWorksheetsHub
+        T={T}
+        landingEmbed={Boolean(generatorLead && readyLead)}
+        generatorLead={generatorLead}
+        readyLead={readyLead}
+        sectionLeadClass={landingStyles?.sectionLead || ""}
+      />
     </section>
   );
 }

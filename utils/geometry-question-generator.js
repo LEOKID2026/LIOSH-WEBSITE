@@ -1546,21 +1546,39 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
         subtype: formulaBand === "mid" ? "mid_band" : "late_band",
       };
       correctAnswer = selectedType;
-      if (formulaBand === "mid") {
-        question =
-          levelKey === "easy"
-            ? `התבוננו בשני הישרים בשרטוט. מה היחס ביניהם?`
-            : levelKey === "medium"
-              ? `סיווג ישרים לפי השרטוט: מה היחס הנכון?`
-              : `לפי השרטוט, איזה יחס מתקיים בין שני הישרים?`;
-      } else {
-        question =
-          levelKey === "easy"
-            ? `זיהוי מהיר: מה היחס בין הישרים שבשרטוט?`
-            : levelKey === "medium"
-              ? `בחרו לפי השרטוט: מה היחס בין שני הישרים?`
-              : `לפי הסימון והשרטוט, מה היחס הגיאומטרי בין שני הישרים?`;
-      }
+      const ppMidStems = {
+        easy: [
+          `התבוננו בשני הישרים בשרטוט. מה היחס ביניהם?`,
+          `זיהוי מהיר: מה היחס בין הישרים שבשרטוט?`,
+        ],
+        medium: [
+          `סיווג ישרים לפי השרטוט: מה היחס הנכון?`,
+          `בחרו לפי השרטוט: מה היחס בין שני הישרים?`,
+        ],
+        hard: [
+          `לפי השרטוט, איזה יחס מתקיים בין שני הישרים?`,
+          `סיווג ישרים לפי השרטוט: מה היחס הנכון?`,
+          `התבוננו בשני הישרים בשרטוט. מה היחס ביניהם?`,
+        ],
+      };
+      const ppLateStems = {
+        easy: [
+          `זיהוי מהיר: מה היחס בין הישרים שבשרטוט?`,
+          `התבוננו בשני הישרים בשרטוט. מה היחס ביניהם?`,
+        ],
+        medium: [
+          `בחרו לפי השרטוט: מה היחס בין שני הישרים?`,
+          `סיווג ישרים לפי השרטוט: מה היחס הנכון?`,
+        ],
+        hard: [
+          `לפי הסימון והשרטוט, מה היחס הגיאומטרי בין שני הישרים?`,
+          `לפי השרטוט, איזה יחס מתקיים בין שני הישרים?`,
+          `בחרו לפי השרטוט: מה היחס בין שני הישרים?`,
+        ],
+      };
+      const stemBank = formulaBand === "mid" ? ppMidStems : ppLateStems;
+      const stems = stemBank[levelKey] || stemBank.medium || stemBank.easy;
+      question = stems[Math.floor(Math.random() * stems.length)];
       break;
     }
 

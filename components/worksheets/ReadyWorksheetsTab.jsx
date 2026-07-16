@@ -60,29 +60,18 @@ const GRADE_FILTER_OPTIONS = [
  *   T: Record<string, string>,
  *   titleOverride?: string,
  *   hintOverride?: string,
-
+ *   hidePanelHeader?: boolean,
  * }} props
-
  */
-
 export default function ReadyWorksheetsTab({
-
   items,
-
   loading,
-
   error,
-
   onViewPrint,
-
   busySlug,
-
   filterSubject,
-
   filterGrade,
-
   filterLevel,
-
   onFilterChange,
   includeAnswers,
   includeAnswersReady,
@@ -90,6 +79,7 @@ export default function ReadyWorksheetsTab({
   T,
   titleOverride,
   hintOverride,
+  hidePanelHeader = false,
 }) {
 
   if (loading) {
@@ -134,13 +124,17 @@ export default function ReadyWorksheetsTab({
 
     <div className={`worksheet-hub-panel ${T.panel}`}>
 
-      <h2 className={`worksheet-hub-panel-title ${T.heading}`}>
-        {titleOverride || WORKSHEET_UI_HE.readyTitle}
-      </h2>
+      {hidePanelHeader ? null : (
+        <>
+          <h2 className={`worksheet-hub-panel-title ${T.heading}`}>
+            {titleOverride || WORKSHEET_UI_HE.readyTitle}
+          </h2>
 
-      <p className={`worksheet-hub-panel-hint ${T.muted}`}>
-        {hintOverride || WORKSHEET_UI_HE.readyHint}
-      </p>
+          <p className={`worksheet-hub-panel-hint ${T.muted}`}>
+            {hintOverride || WORKSHEET_UI_HE.readyHint}
+          </p>
+        </>
+      )}
 
 
 

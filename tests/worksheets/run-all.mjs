@@ -52,6 +52,7 @@ const TEST_FILES = [
   "public-worksheets-preview-empty.test.mjs",
   "worksheets-seo-page-qa.mjs",
   "worksheet-system-closure.test.mjs",
+  "worksheet-content-grade-fix.test.mjs",
 ];
 
 /**

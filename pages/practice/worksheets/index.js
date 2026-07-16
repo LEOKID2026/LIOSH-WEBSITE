@@ -1,7 +1,7 @@
-import PracticeSeoLandingPage from "../../../components/seo/PracticeSeoLandingPage";
+import WorksheetsSeoLandingPage from "../../../components/seo/WorksheetsSeoLandingPage";
 import { getWorksheetsPageContent } from "../../../data/seo/worksheets-pages.he";
 
 export default function PublicWorksheetsPage() {
   const content = getWorksheetsPageContent();
-  return <PracticeSeoLandingPage content={content} />;
+  return <WorksheetsSeoLandingPage content={content} />;
 }

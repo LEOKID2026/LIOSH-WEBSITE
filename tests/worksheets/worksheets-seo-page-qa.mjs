@@ -20,14 +20,23 @@ describe("worksheets-seo-page-qa", () => {
     const content = getWorksheetsPageContent();
     assert.ok(content.h1.length > 10);
     assert.equal(content.seoKey, "practice-worksheets");
-    assert.ok(content.sections.length >= 4);
-    assert.ok(content.faq.length >= 4);
+    assert.ok(content.stats.length === 4);
+    assert.ok(content.faq.length >= 6);
+    assert.ok(content.generator.h2.length > 5);
+    assert.ok(content.ready.h2.length > 5);
   });
 
   test("SEO entry and sitemap include /practice/worksheets only", () => {
     const seo = getPublicPageSeo("practice-worksheets");
     assert.equal(seo.canonicalPath, "/practice/worksheets");
-    assert.ok(seo.title.includes("דפי עבודה"));
+    assert.equal(
+      seo.title,
+      "דפי עבודה לילדים להדפסה לפי כיתה ומקצוע | LEO KIDS"
+    );
+    assert.equal(
+      seo.description,
+      "צרו דפי עבודה לילדים לפי כיתה ומקצוע, בחרו מתוך 35 דפים מוכנים, פתחו דפי תשובות ושלבו תרגול במתמטיקה, גאומטריה, עברית ואנגלית."
+    );
     assert.ok(SEO_PUBLIC_PATHS.includes("/practice/worksheets"));
 
     const sitemap = readFileSync(join(ROOT, "public/sitemap.xml"), "utf8");
@@ -38,7 +47,7 @@ describe("worksheets-seo-page-qa", () => {
   test("גאומטריה spelling - not גיאומטריה", () => {
     const files = [
       "data/seo/worksheets-pages.he.js",
-      "components/seo/PracticeSeoLandingPage.jsx",
+      "components/seo/WorksheetsSeoLandingPage.jsx",
       "components/seo/PublicSeoWideLayout.jsx",
       "lib/site/public-page-seo.he.js",
     ];
@@ -51,20 +60,20 @@ describe("worksheets-seo-page-qa", () => {
     }
   });
 
-  test("landing page uses unified PracticeSeoLandingPage wrapper", () => {
+  test("landing page uses dedicated WorksheetsSeoLandingPage wrapper", () => {
     const src = readFileSync(join(ROOT, "pages/practice/worksheets/index.js"), "utf8");
-    assert.match(src, /PracticeSeoLandingPage/);
+    assert.match(src, /WorksheetsSeoLandingPage/);
     assert.match(src, /getWorksheetsPageContent/);
-    assert.doesNotMatch(src, /WorksheetsSeoLandingPage/);
+    assert.doesNotMatch(src, /PracticeSeoLandingPage/);
   });
 
   test("unified public SEO wide layout exists", () => {
     const layout = readFileSync(join(ROOT, "components/seo/PublicSeoWideLayout.jsx"), "utf8");
     assert.match(layout, /PublicSeoWideLayout/);
     assert.match(layout, /public-seo-wide-layout/);
-    const practice = readFileSync(join(ROOT, "components/seo/PracticeSeoLandingPage.jsx"), "utf8");
-    assert.match(practice, /PublicSeoWideLayout/);
-    assert.match(practice, /PublicSeoWorksheetsHubSlot/);
+    const worksheets = readFileSync(join(ROOT, "components/seo/WorksheetsSeoLandingPage.jsx"), "utf8");
+    assert.match(worksheets, /PublicSeoWideLayout/);
+    assert.match(worksheets, /PublicSeoWorksheetsHubSlot/);
     const guide = readFileSync(join(ROOT, "components/seo/GuideSeoArticlePage.jsx"), "utf8");
     assert.match(guide, /PublicSeoWideLayout/);
   });

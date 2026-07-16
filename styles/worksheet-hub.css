@@ -414,6 +414,17 @@
   line-height: 1.4;
 }
 
+.worksheet-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+}
+
+.worksheet-form-refresh-btn {
+  min-height: 2.55rem;
+}
+
 .worksheet-primary-cta {
   width: 100%;
   border-radius: 0.75rem;
@@ -424,6 +435,11 @@
 }
 
 @media (min-width: 640px) {
+  .worksheet-form-actions .worksheet-primary-cta {
+    width: auto;
+    min-width: 12rem;
+  }
+
   .worksheet-primary-cta {
     width: auto;
     min-width: 12rem;

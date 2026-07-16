@@ -18,7 +18,7 @@ import { WORKSHEET_HUB_ENTRY_ENABLED } from "../../lib/worksheets/worksheet-hub-
 
 describe("worksheet-mixed-topics", () => {
   test("hub entry is enabled for parent QA", () => {
-    assert.equal(WORKSHEET_HUB_ENTRY_ENABLED, false);
+    assert.equal(WORKSHEET_HUB_ENTRY_ENABLED, true);
   });
 
   test("mixed itself is never listed for any core subject", () => {

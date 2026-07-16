@@ -39,6 +39,7 @@ function allMixedKeys(subjectId, gradeKey) {
  *   form: Record<string, unknown>,
  *   onChange: (patch: Record<string, unknown>) => void,
  *   onSubmit: () => void,
+ *   onRefresh?: () => void,
  *   busy: boolean,
  *   error: string,
  *   includeAnswers: boolean,
@@ -46,12 +47,14 @@ function allMixedKeys(subjectId, gradeKey) {
  *   onIncludeAnswersChange: (includeAnswers: boolean) => void,
  *   T: Record<string, string>,
  *   variant?: "parent" | "public-demo",
+ *   hidePanelHeader?: boolean,
  * }} props
  */
 export default function CreateWorksheetTab({
   form,
   onChange,
   onSubmit,
+  onRefresh,
   busy,
   error,
   includeAnswers,
@@ -59,6 +62,7 @@ export default function CreateWorksheetTab({
   onIncludeAnswersChange,
   T,
   variant = "parent",
+  hidePanelHeader = false,
 }) {
   const isPublicDemo = variant === "public-demo";
   const subjectId = String(form.subjectId || "math");
@@ -131,12 +135,16 @@ export default function CreateWorksheetTab({
 
   return (
     <div className={`worksheet-hub-panel worksheet-create-panel ${T.panel}`}>
-      <h2 className={`worksheet-hub-panel-title ${T.heading}`}>
-        {isPublicDemo ? WORKSHEET_UI_HE.publicDemoTitle : WORKSHEET_UI_HE.createTitle}
-      </h2>
-      <p className={`worksheet-hub-panel-hint ${T.muted}`}>
-        {isPublicDemo ? WORKSHEET_UI_HE.publicDemoHint : WORKSHEET_UI_HE.createHint}
-      </p>
+      {hidePanelHeader ? null : (
+        <>
+          <h2 className={`worksheet-hub-panel-title ${T.heading}`}>
+            {isPublicDemo ? WORKSHEET_UI_HE.publicDemoTitle : WORKSHEET_UI_HE.createTitle}
+          </h2>
+          <p className={`worksheet-hub-panel-hint ${T.muted}`}>
+            {isPublicDemo ? WORKSHEET_UI_HE.publicDemoHint : WORKSHEET_UI_HE.createHint}
+          </p>
+        </>
+      )}
 
       <div className="worksheet-form-grid">
         <div className="worksheet-form-field">
@@ -302,15 +310,29 @@ export default function CreateWorksheetTab({
         <p className={`mt-4 ${T.error}`}>{WORKSHEET_UI_HE.mixedTopicsEmptyError}</p>
       ) : null}
 
-      <div className="mt-5">
+      <div className={`mt-5 ${isPublicDemo && onRefresh ? "worksheet-form-actions" : ""}`}>
         <button
           type="button"
           disabled={busy || !form.topicKey || mixedEmpty}
           onClick={onSubmit}
           className={`worksheet-primary-cta ${T.primaryBtn}`}
         >
-          {busy ? WORKSHEET_UI_HE.generating : WORKSHEET_UI_HE.createWorksheet}
+          {busy
+            ? WORKSHEET_UI_HE.generating
+            : isPublicDemo
+              ? WORKSHEET_UI_HE.publicDemoCreate
+              : WORKSHEET_UI_HE.createWorksheet}
         </button>
+        {isPublicDemo && onRefresh ? (
+          <button
+            type="button"
+            disabled={busy || !form.topicKey || mixedEmpty}
+            onClick={onRefresh}
+            className="worksheet-action-btn worksheet-action-btn-secondary worksheet-form-refresh-btn"
+          >
+            {busy ? WORKSHEET_UI_HE.refreshingQuestions : WORKSHEET_UI_HE.refreshQuestions}
+          </button>
+        ) : null}
       </div>
     </div>
   );

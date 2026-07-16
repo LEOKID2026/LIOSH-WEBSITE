@@ -43,7 +43,7 @@ const SOLID_SPECS = [
 
 describe("geometry-diagram-coverage", () => {
   test("hub entry is enabled for parent QA", () => {
-    assert.equal(WORKSHEET_HUB_ENTRY_ENABLED, false);
+    assert.equal(WORKSHEET_HUB_ENTRY_ENABLED, true);
   });
 
   test("all solid diagram kinds are supported and not blocked", () => {
