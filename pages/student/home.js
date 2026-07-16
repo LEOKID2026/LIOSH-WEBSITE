@@ -873,7 +873,9 @@ export default function StudentHomePage() {
           <p className={T.emptyText}>עדיין אין נתונים</p>
         );
       case "progress":
-        return dashboardView.monthlyPersistence?.loadError ? (
+        return analyticsPhase === "loading" || analyticsPhase === "idle" ? (
+          <p className={T.emptyText}>טוען התקדמות חודשית...</p>
+        ) : dashboardView.monthlyPersistence?.loadError ? (
           <p className={T.emptyText}>{STUDENT_TRUTH_LABELS_HE.unavailable}</p>
         ) : dashboardView.monthlyPersistence?.tiers?.length ? (
           <StudentMonthlyPersistencePanel monthlyPersistence={dashboardView.monthlyPersistence} />

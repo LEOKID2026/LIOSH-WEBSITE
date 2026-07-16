@@ -11,7 +11,15 @@ import AssignedActivityBidiText from "../classroom-activities/AssignedActivityBi
 import { trackProductEvent } from "../../lib/analytics/track-event.client.js";
 import { getParentPortalTheme } from "../../lib/parent-ui/parent-portal-theme.client.js";
 
-const POLL_MS = 8000;
+const POLL_MS = 30_000;
+
+/** Statuses that can still change while the modal is open. */
+function activityMayStillChange(activity) {
+  const status = String(activity?.studentStatus || activity?.status || "")
+    .trim()
+    .toLowerCase();
+  return status !== "submitted" && status !== "archived";
+}
 
 function formatWhen(iso) {
   if (!iso) return "-";
@@ -305,11 +313,19 @@ function ParentSentActivitiesModal({ studentId, accessToken, refreshKey, onClose
 
   useEffect(() => {
     if (!studentId || !accessToken) return undefined;
+    // Poll only while modal is mounted and at least one activity may still change.
+    if (!loaded) return undefined;
+    const mayChange = activities.some(activityMayStillChange);
+    if (!mayChange) return undefined;
+
     const timer = setInterval(() => {
+      if (typeof document !== "undefined" && document.visibilityState === "hidden") {
+        return;
+      }
       void load();
     }, POLL_MS);
     return () => clearInterval(timer);
-  }, [studentId, accessToken, load]);
+  }, [studentId, accessToken, load, loaded, activities]);
 
   return (
     <>

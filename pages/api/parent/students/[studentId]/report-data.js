@@ -8,6 +8,7 @@ import {
 } from "../../../../../lib/parent-server/report-data-aggregate.server.js";
 import { attachStudentLearningAccountToParentReportPayload } from "../../../../../lib/parent-server/parent-report-account-attachment.server.js";
 import { enrichPayloadWithParentFacing } from "../../../../../lib/parent-server/parent-report-parent-facing.server.js";
+import { loadStudentLearningDerivedCached } from "../../../../../lib/learning-supabase/student-home-profile-load.server.js";
 
 const DEFAULT_RANGE_DAYS = 30;
 /** Short-lived in-memory cache — same parent/student/range within TTL skips re-aggregation. */
@@ -88,11 +89,22 @@ export default async function handler(req, res) {
     }
 
     const serviceClient = getLearningSupabaseServiceRoleClient();
-    const analytics = await aggregateParentReportPayload(serviceClient, student, fromDate, toDate, {
-      includeParentActivities: true,
-      includePrivateTeacherActivities: true,
-    });
-    const payload = await attachStudentLearningAccountToParentReportPayload(serviceClient, student, analytics);
+    // Range aggregate (incl. unified time) and full-history derived are independent —
+    // run in parallel so we do not pay serial wall time for both. Derived uses the
+    // existing 45s cache when warm (e.g. after student home).
+    const [analytics, derived] = await Promise.all([
+      aggregateParentReportPayload(serviceClient, student, fromDate, toDate, {
+        includeParentActivities: true,
+        includePrivateTeacherActivities: true,
+      }),
+      loadStudentLearningDerivedCached(serviceClient, studentId),
+    ]);
+    const payload = await attachStudentLearningAccountToParentReportPayload(
+      serviceClient,
+      student,
+      analytics,
+      { derived }
+    );
     const enriched = await enrichPayloadWithParentFacing(serviceClient, payload, studentId);
     const responseBody = stripInternalReportPayloadFields(enriched);
     reportDataResponseCache.set(cacheKey, {
