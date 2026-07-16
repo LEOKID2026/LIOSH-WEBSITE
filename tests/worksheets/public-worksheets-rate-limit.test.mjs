@@ -43,6 +43,7 @@ describe("public-worksheets-rate-limit", () => {
       ["pages/api/public/worksheets/generate.js", "rejectIfPublicWorksheetsGenerateRateLimited"],
       ["pages/api/public/worksheets/answer-key.js", "rejectIfPublicWorksheetsAnswerKeyRateLimited"],
       ["pages/api/public/worksheets/ready/[slug].js", "rejectIfPublicWorksheetsReadyRateLimited"],
+      ["pages/api/public/analytics/worksheet-event.js", "rejectIfPublicWorksheetAnalyticsEventRateLimited"],
     ];
     for (const [rel, fn] of pairs) {
       const src = readFileSync(join(ROOT, rel), "utf8");

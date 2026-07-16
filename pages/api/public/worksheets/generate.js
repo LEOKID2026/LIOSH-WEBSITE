@@ -1,6 +1,12 @@
 import { rejectIfCrossOriginCookieMutation } from "../../../../lib/security/same-origin.js";
 import { rejectIfPublicWorksheetsGenerateRateLimited } from "../../../../lib/security/public-api-rate-limit.js";
 import { readJsonBody } from "../../../../lib/learning-supabase/learning-activity.js";
+import { getLearningSupabaseServiceRoleClient } from "../../../../lib/learning-supabase/server";
+import {
+  insertPublicWorksheetAnalyticsEvent,
+  isValidPublicWorksheetVisitSessionId,
+  schedulePublicWorksheetAnalyticsWork,
+} from "../../../../lib/analytics/public-worksheet-analytics.server.js";
 import {
   generateWorksheetForParent,
   publicWorksheetPayload,
@@ -46,6 +52,18 @@ export default async function handler(req, res) {
       error: generated.code,
       message: mixedMsg || generated.message,
     });
+  }
+
+  const visitSessionId = String(body?.visitSessionId || body?.visit_session_id || "").trim();
+  if (isValidPublicWorksheetVisitSessionId(visitSessionId)) {
+    const supabase = getLearningSupabaseServiceRoleClient();
+    schedulePublicWorksheetAnalyticsWork(
+      req.context,
+      insertPublicWorksheetAnalyticsEvent(supabase, {
+        eventName: "public_worksheet_generated",
+        visitSessionId,
+      })
+    );
   }
 
   return res.status(200).json({

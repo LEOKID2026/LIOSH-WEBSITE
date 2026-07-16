@@ -318,6 +318,7 @@ function WebTrafficTabContent({
   webTrafficUserActivity,
   webTrafficUserActivityLoading,
   webTrafficUserActivityError,
+  publicWorksheetVisits,
 }) {
   const model = buildWebTrafficViewModel({
     webTraffic,
@@ -399,6 +400,14 @@ function WebTrafficTabContent({
             {...activityCardProps}
           />
         </div>
+      </div>
+
+      <div className="space-y-2">
+        <h2 className="text-sm font-semibold text-white/80">מחולל דפי עבודה ציבורי</h2>
+        <p className="text-xs text-white/50 leading-relaxed">
+          מדידת ביקורים בטאב הנוכחי בלבד (sessionStorage) — לפי טווח הסינון הראשי בראש העמוד.
+        </p>
+        <MetricGrid items={publicWorksheetVisits?.cards} />
       </div>
 
       {!model.trafficLoading && !model.trafficError ? (
@@ -1068,6 +1077,7 @@ export default function AdminAnalyticsPage() {
             webTrafficUserActivity={webTrafficUserActivity}
             webTrafficUserActivityLoading={webTrafficUserActivityLoading}
             webTrafficUserActivityError={webTrafficUserActivityError}
+            publicWorksheetVisits={sections.publicWorksheetVisits}
           />
         );
 

@@ -53,5 +53,7 @@ describe("public-worksheets-no-auth", () => {
     assert.match(src, /\/api\/public\/worksheets\/generate/);
     assert.match(src, /\/api\/public\/worksheets\/ready/);
     assert.doesNotMatch(src, /\/api\/parent\/worksheets/);
+    assert.match(src, /visitSessionId/);
+    assert.match(src, /trackPublicWorksheetPageViewedOnce/);
   });
 });

@@ -48,6 +48,7 @@ const TEST_FILES = [
   "public-worksheets-no-auth.test.mjs",
   "public-worksheets-no-pii.test.mjs",
   "public-worksheets-rate-limit.test.mjs",
+  "public-worksheet-visit-analytics.test.mjs",
   "public-worksheets-catalog-parity.test.mjs",
   "public-worksheets-preview-empty.test.mjs",
   "worksheets-seo-page-qa.mjs",
