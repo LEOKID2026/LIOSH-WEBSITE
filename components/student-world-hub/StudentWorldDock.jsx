@@ -32,6 +32,13 @@ const dockBadgeClass =
   "absolute -left-1.5 -top-1.5 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-rose-500 px-1 text-[11px] font-bold text-white md:-left-1 md:-top-1 md:h-4 md:min-w-[1rem] md:px-0.5 md:text-[9px]";
 
 /**
+ * Out-of-flow status line in the empty space above the icon grid.
+ * Must not affect dock height (mt-auto would otherwise shift the gates).
+ */
+const surpriseStatusLineClass =
+  "pointer-events-none absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-[calc(100%+2px)] whitespace-nowrap text-center text-[10px] font-semibold text-slate-700 drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)] sm:text-xs";
+
+/**
  * @param {{
  *   guestLockedPanelSet?: Set<string>,
  *   lockMessage?: string,
@@ -58,6 +65,7 @@ export default function StudentWorldDock({
   const [surprisePending, setSurprisePending] = useState(0);
   const [surpriseReady, setSurpriseReady] = useState(false);
   const [secondsRemaining, setSecondsRemaining] = useState(null);
+  const [maxPendingBoxes, setMaxPendingBoxes] = useState(0);
 
   const surpriseEnabled = Boolean(onSurpriseOpen) && isCardRewardsEnabledClient();
 
@@ -73,6 +81,7 @@ export default function StudentWorldDock({
       if (!res.ok || json?.ok !== true) return;
       setSurpriseReady(json.ready === true);
       setSurprisePending(Math.max(0, Number(json.pendingBoxCount) || 0));
+      setMaxPendingBoxes(Math.max(0, Number(json.maxPendingBoxes) || 0));
       setSecondsRemaining(
         json.secondsRemaining != null ? Math.max(0, Number(json.secondsRemaining) || 0) : null
       );
@@ -97,8 +106,16 @@ export default function StudentWorldDock({
     }
   }, [surpriseStatusOverride]);
 
+  const atPendingMax =
+    maxPendingBoxes > 0 && surprisePending >= maxPendingBoxes;
+
   useEffect(() => {
-    if (!surpriseEnabled || surpriseReady || secondsRemaining == null || secondsRemaining <= 0) {
+    if (
+      !surpriseEnabled ||
+      atPendingMax ||
+      secondsRemaining == null ||
+      secondsRemaining <= 0
+    ) {
       return undefined;
     }
     const timer = setInterval(() => {
@@ -111,7 +128,7 @@ export default function StudentWorldDock({
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, [surpriseEnabled, surpriseReady, secondsRemaining, loadSurpriseStatus]);
+  }, [surpriseEnabled, atPendingMax, secondsRemaining, loadSurpriseStatus]);
 
   const tryPanel = (panelId) => {
     const locked = isWorldHubPanelLocked(panelId, guestLockedPanelSet);
@@ -124,9 +141,21 @@ export default function StudentWorldDock({
 
   const canOpenSurprise = surpriseEnabled && surpriseReady && !surpriseOpeningLocked;
   const surpriseCountdownHe =
-    !surpriseReady && secondsRemaining != null && secondsRemaining > 0
+    !atPendingMax && secondsRemaining != null && secondsRemaining > 0
       ? formatCountdownHe(secondsRemaining)
       : null;
+
+  const surpriseStatusLine = useMemo(() => {
+    if (!surpriseEnabled) return null;
+    if (atPendingMax) {
+      if (surprisePending === 1) return { kind: "count", text: "יש לך קופסה אחת" };
+      return { kind: "count", text: `יש לך ${surprisePending} קופסאות` };
+    }
+    if (surpriseCountdownHe) {
+      return { kind: "countdown", time: surpriseCountdownHe };
+    }
+    return { kind: "placeholder", text: "\u00A0" };
+  }, [surpriseEnabled, atPendingMax, surprisePending, surpriseCountdownHe]);
 
   const primaryItems = STUDENT_WORLD_DOCK_PRIMARY.filter((item) => item.kind !== "more");
 
@@ -263,10 +292,29 @@ export default function StudentWorldDock({
   };
 
   const secondaryStart = Math.min(DOCK_ICONS_PER_DESKTOP_ROW, dockItems.length);
-  const showSurpriseCountdown = Boolean(surpriseEnabled && surpriseCountdownHe);
 
   return (
-    <div className="flex w-full justify-center -translate-y-5 pt-1 md:translate-y-2 md:pt-2" data-testid="student-world-dock">
+    <div
+      className="relative flex w-full justify-center -translate-y-5 pt-1 md:translate-y-2 md:pt-2"
+      data-testid="student-world-dock"
+    >
+      {surpriseStatusLine ? (
+        <p
+          className={surpriseStatusLineClass}
+          data-testid="student-world-dock-surprise-countdown"
+          aria-hidden={surpriseStatusLine.kind === "placeholder"}
+        >
+          {surpriseStatusLine.kind === "countdown" ? (
+            <>
+              הקופסה הבאה בעוד{" "}
+              <span className="tabular-nums">{surpriseStatusLine.time}</span>
+            </>
+          ) : (
+            <span className="tabular-nums">{surpriseStatusLine.text}</span>
+          )}
+        </p>
+      ) : null}
+
       <div className={dockShell}>
         <div className={dockGridClass} data-testid="student-world-dock-grid">
           {dockItems.slice(0, secondaryStart).map((entry) => (
@@ -274,16 +322,6 @@ export default function StudentWorldDock({
               {renderDockEntry(entry)}
             </span>
           ))}
-
-          {showSurpriseCountdown ? (
-            <p
-              className="col-span-full hidden max-w-[18rem] justify-self-center text-center text-[10px] font-semibold text-slate-700 drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)] sm:text-xs md:block"
-              data-testid="student-world-dock-surprise-countdown"
-            >
-              הקופסה הבאה בעוד{" "}
-              <span className="tabular-nums">{surpriseCountdownHe}</span>
-            </p>
-          ) : null}
 
           <span className="contents" data-testid="student-world-dock-secondary">
             {dockItems.slice(secondaryStart).map((entry) => (
@@ -293,13 +331,6 @@ export default function StudentWorldDock({
             ))}
           </span>
         </div>
-
-        {showSurpriseCountdown ? (
-          <p className="max-w-[18rem] text-center text-[10px] font-semibold text-slate-700 drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)] sm:text-xs md:hidden">
-            הקופסה הבאה בעוד{" "}
-            <span className="tabular-nums">{surpriseCountdownHe}</span>
-          </p>
-        ) : null}
       </div>
     </div>
   );

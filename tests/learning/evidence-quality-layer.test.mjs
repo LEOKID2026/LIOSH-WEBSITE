@@ -37,7 +37,6 @@ import {
 
 import {
   insightsContainThinDataContradiction,
-  insightsContainCautiousTopicSignal,
   insightsContainStrongDiagnosisLeak,
   insightsContainTechnicalLeak,
 } from "../../lib/learning/evidence-quality-insight-copy.js";
@@ -214,7 +213,16 @@ describe("Phase Q1 - parent-facing gating (suppression only)", () => {
     const insights = buildParentInsightsHe(payload);
     assert.ok(!insightsContainStrongDiagnosisLeak(insights));
     assert.ok(!insightsContainThinDataContradiction(insights));
-    assert.ok(insightsContainCautiousTopicSignal(insights));
+    // Approved LPD cautious topic line (legacy "כדאי לשים לב" / old markers are not required).
+    assert.ok(
+      insights.some(
+        (t) =>
+          /^.+ - «.+»: .+\.$/u.test(String(t || "")) &&
+          /טעויות/u.test(String(t || "")) &&
+          /חוזר/u.test(String(t || ""))
+      ),
+      `expected LPD cautious topic insight, got: ${JSON.stringify(insights)}`
+    );
     assert.ok(!insightsContainTechnicalLeak(insights));
   });
 
@@ -246,8 +254,17 @@ describe("Phase Q1 - parent-facing gating (suppression only)", () => {
     assert.equal(allowsStrongParentDiagnosisAtStudent(payload), true);
     const insights = buildParentInsightsHe(payload);
     assert.ok(!insightsContainThinDataContradiction(insights));
-    assert.ok(insights.some((t) => /דפוס שחוזר/u.test(t)));
-    assert.ok(insightsContainCautiousTopicSignal(insights));
+    // Supported tier still surfaces an approved LPD topic line (not legacy "דפוס שחוזר" copy).
+    assert.ok(
+      insights.some(
+        (t) =>
+          /^.+ - «.+»: .+\.$/u.test(String(t || "")) &&
+          /טעויות/u.test(String(t || "")) &&
+          /חוזר/u.test(String(t || ""))
+      ),
+      `expected LPD topic insight at supported tier, got: ${JSON.stringify(insights)}`
+    );
+    assert.ok(!insightsContainStrongDiagnosisLeak(insights));
     assert.ok(!insightsContainTechnicalLeak(insights));
   });
 

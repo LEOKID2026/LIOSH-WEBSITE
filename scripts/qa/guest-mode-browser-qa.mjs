@@ -187,8 +187,11 @@ async function main() {
       const r = await fetch("/api/student/learning-profile", { credentials: "same-origin" });
       return { status: r.status, json: await r.json() };
     });
-    if (lp.status === 403 && lp.json?.code === "guest_not_eligible") pass("browser-learning-profile-blocked");
-    else fail("browser-learning-profile-blocked", `HTTP ${lp.status}`);
+    if (lp.status === 200 && lp.json?.ok === true && lp.json?.studentId) {
+      pass("browser-learning-profile-ok", `studentId=${String(lp.json.studentId).slice(0, 8)}`);
+    } else {
+      fail("browser-learning-profile-ok", `HTTP ${lp.status} code=${lp.json?.code || ""}`);
+    }
 
     const lockedPanels = ["stats", "progress", "missions", "classroom", "worksheets", "recommendations"];
     for (const panelId of lockedPanels) {

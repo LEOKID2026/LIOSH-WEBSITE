@@ -374,8 +374,14 @@ async function main() {
   }
 
   const lp = await api("GET", "/api/student/learning-profile");
-  if (!lp.res.ok && lp.json.code === "guest_not_eligible") pass("guest-learning-profile-blocked");
-  else fail("guest-learning-profile-blocked", `HTTP ${lp.res.status} ${JSON.stringify(lp.json).slice(0, 100)}`);
+  if (lp.res.ok && lp.json?.ok === true && lp.json?.studentId === guestId1) {
+    pass("guest-learning-profile-ok", `studentId=${String(lp.json.studentId).slice(0, 8)}`);
+  } else {
+    fail(
+      "guest-learning-profile-ok",
+      `HTTP ${lp.res.status} ${JSON.stringify(lp.json).slice(0, 120)}`
+    );
+  }
 
   if (me1.json.guestPolicy?.lockedHomePanels?.length >= 6) pass("guest-locked-panels-policy");
   else fail("guest-locked-panels-policy", String(me1.json.guestPolicy?.lockedHomePanels?.length));

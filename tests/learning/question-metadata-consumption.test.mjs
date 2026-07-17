@@ -101,9 +101,16 @@ function setAllThreeMetadataFlags() {
   process.env[PROMOTION_FLAG_ENV] = "true";
 }
 
-/** Existing topic-insight template — promotion must not introduce new Hebrew copy. */
-const EXISTING_TOPIC_INSIGHT_RE =
-  /^כדאי לשים לב ל.+ - זה נושא שחוזר בתרגולים\.$/;
+/** Approved LPD topic-insight line — promotion must reuse this shape only (not legacy copy). */
+const EXISTING_TOPIC_INSIGHT_RE = /^.+ - «.+»: .+\.$/u;
+
+function insightHasApprovedTopicLine(text) {
+  return EXISTING_TOPIC_INSIGHT_RE.test(String(text || ""));
+}
+
+function insightsIncludeApprovedTopicLine(insights) {
+  return (insights || []).some(insightHasApprovedTopicLine);
+}
 
 function assertStrippedPublicPromotionSanitized(stripped) {
   assert.equal(stripped.meta._evidenceQuality, undefined);
@@ -118,8 +125,10 @@ function assertPromotionUsesExistingHebrewOnly(beforeInsights, afterInsights) {
   const beforeSet = new Set(beforeInsights);
   const added = afterInsights.filter((line) => !beforeSet.has(line));
   for (const line of added) {
-    // No new Hebrew strings: promotion may only surface the existing topic-insight template.
+    // No new Hebrew strings: promotion may only surface the existing LPD topic-insight template.
     assert.match(line, EXISTING_TOPIC_INSIGHT_RE);
+    assert.equal(line.includes("כדאי לשים לב ל"), false);
+    assert.equal(line.includes("זה נושא שחוזר בתרגולים"), false);
   }
 }
 
@@ -1368,8 +1377,8 @@ describe("Q2-E.5-B - active parent gating trial (flag-gated)", () => {
       true
     );
     assert.equal(allowsStrongParentDiagnosisAtTopic(activePayload, "math", "fractions"), false);
-    assert.ok(metadataOnlyBlocks.insights.some((t) => t.includes("כדאי לשים לב")));
-    assert.ok(!activeBlocks.insights.some((t) => t.includes("כדאי לשים לב")));
+    assert.ok(insightsIncludeApprovedTopicLine(metadataOnlyBlocks.insights));
+    assert.ok(!insightsIncludeApprovedTopicLine(activeBlocks.insights));
     assert.ok(activePayload.meta._evidenceQuality?.appliedParentGating);
     assert.ok(activePayload.meta._evidenceQuality?.gatingDecisions?.length > 0);
     assert.equal(
@@ -1582,8 +1591,8 @@ describe("Q2-E.5-B - active parent gating trial (flag-gated)", () => {
     };
     assert.deepEqual(matrix.metadataOnly, matrix.bothOff);
     assert.notDeepEqual(matrix.bothOn.insights, matrix.bothOff.insights);
-    assert.ok(matrix.bothOff.insights.some((t) => t.includes("כדאי לשים לב")));
-    assert.ok(!matrix.bothOn.insights.some((t) => t.includes("כדאי לשים לב")));
+    assert.ok(insightsIncludeApprovedTopicLine(matrix.bothOff.insights));
+    assert.ok(!insightsIncludeApprovedTopicLine(matrix.bothOn.insights));
   });
 });
 
@@ -2072,8 +2081,8 @@ describe("Q2-E.5-C2 - active parent promotion trial (flag-gated)", () => {
 
       const offBlocks = buildParentFacingBlocks(allOff);
       const onBlocks = buildParentFacingBlocks(allOn);
-      assert.ok(!offBlocks.insights.some((t) => t.includes("כדאי לשים לב")));
-      assert.ok(onBlocks.insights.some((t) => t.includes("כדאי לשים לב")));
+      assert.ok(!insightsIncludeApprovedTopicLine(offBlocks.insights));
+      assert.ok(insightsIncludeApprovedTopicLine(onBlocks.insights));
       assertPromotionUsesExistingHebrewOnly(offBlocks.insights, onBlocks.insights);
     });
   });
@@ -2095,8 +2104,8 @@ describe("Q2-E.5-C2 - active parent promotion trial (flag-gated)", () => {
       )
     );
     assert.equal(allowsStrongParentTopicInsight(attached, "math", "fractions"), true);
-    assert.ok(!withoutPromotion.insights.some((t) => t.includes("כדאי לשים לב")));
-    assert.ok(withPromotion.insights.some((t) => t.includes("כדאי לשים לב")));
+    assert.ok(!insightsIncludeApprovedTopicLine(withoutPromotion.insights));
+    assert.ok(insightsIncludeApprovedTopicLine(withPromotion.insights));
     assert.equal(
       attached.meta.evidenceQuality.byTopic["math::fractions"].dataSufficiency,
       "preliminary_signal"
@@ -2409,7 +2418,7 @@ describe("Q2-E.5-C2 - active parent promotion trial (flag-gated)", () => {
       attachParentContextEvidenceQuality(insufficientStudentPromotablePayload())
     );
     assertPromotionUsesExistingHebrewOnly(before.insights, after.insights);
-    const topicLines = after.insights.filter((t) => t.includes("כדאי לשים לב"));
+    const topicLines = after.insights.filter(insightHasApprovedTopicLine);
     assert.equal(topicLines.length, 1);
     assert.match(topicLines[0], EXISTING_TOPIC_INSIGHT_RE);
   });
@@ -2615,8 +2624,8 @@ describe("Q2-E.5-C2 - active parent promotion trial (flag-gated)", () => {
 
     assert.deepEqual(sim.metadataOnly.blocks, sim.allFlagsOff.blocks);
     assert.deepEqual(sim.gatingOnly.blocks.insights, sim.allFlagsOff.blocks.insights);
-    assert.ok(!sim.allFlagsOff.blocks.insights.some((t) => t.includes("כדאי לשים לב")));
-    assert.ok(sim.allThreeOn.blocks.insights.some((t) => t.includes("כדאי לשים לב")));
+    assert.ok(!insightsIncludeApprovedTopicLine(sim.allFlagsOff.blocks.insights));
+    assert.ok(insightsIncludeApprovedTopicLine(sim.allThreeOn.blocks.insights));
     assertPromotionUsesExistingHebrewOnly(
       sim.allFlagsOff.blocks.insights,
       sim.allThreeOn.blocks.insights

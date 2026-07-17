@@ -17,16 +17,6 @@ import { ensureDailyMissionsInDb } from "../../../lib/learning-supabase/mission-
 import { evaluateMonthlyPersistenceReward, buildMonthlyPersistenceStatusPayload } from "../../../lib/learning-supabase/monthly-persistence-reward.server";
 import { buildStudentEconomyConfigPayload } from "../../../lib/rewards/server/economy-config.server.js";
 import { guardCookieMutationOrigin } from "../../../lib/security/api-guards.js";
-import { assertNotGuestForReports } from "../../../lib/guest/guest-access-policy.server.js";
-
-function rejectGuestLearningProfile(res, block) {
-  return res.status(block.status || 403).json({
-    ok: false,
-    error: block.message,
-    code: block.code,
-    guestLocked: true,
-  });
-}
 
 function buildSubjectsResponse(normalized) {
   /** @type {Record<string, unknown>} */
@@ -63,10 +53,6 @@ export default async function handler(req, res) {
     }
 
     const studentId = auth.studentId;
-    const guestBlock = assertNotGuestForReports(auth.student || {});
-    if (!guestBlock.ok) {
-      return rejectGuestLearningProfile(res, guestBlock);
-    }
 
     const supabase = getLearningSupabaseServiceRoleClient();
 
