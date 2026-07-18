@@ -159,7 +159,7 @@ const { GRADE_AWARE_RECOMMENDATION_TEMPLATES } = await import(
 {
   const eng = GRADE_AWARE_RECOMMENDATION_TEMPLATES.english;
   const keys = Object.keys(eng).sort();
-  assert.deepEqual(keys, ["E-01", "E-02", "E-03", "E-04", "E-05", "E-06", "E-07"], "english template taxonomy ids");
+  assert.deepEqual(keys, ["E-01", "E-02", "E-03", "E-04", "E-05", "E-06", "E-07", "E-08"], "english template taxonomy ids");
 }
 
 // —— 10b. Routing + resolver template integration (no crash) ——

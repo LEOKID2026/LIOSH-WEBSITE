@@ -63,6 +63,9 @@ function normalizeReadiness(value) {
   const r = String(value || "").trim().toLowerCase();
   if (r === "ready") return "ready";
   if (r === "forming" || r === "partial" || r === "moderate") return "forming";
+  // "emerging" and "unstable" are valid readiness states (READINESS_STATES enum) that must
+  // not silently collapse to "insufficient" — they represent partial but non-zero readiness.
+  if (r === "emerging" || r === "unstable") return "forming";
   return "insufficient";
 }
 

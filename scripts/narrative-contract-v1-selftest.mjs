@@ -80,7 +80,7 @@ function runNarrativeContractV1Selftest() {
   const narrative = buildTopicRecommendationNarrative(tr);
   assert.equal(narrative.snapshot, `${highSignal.textSlots.observation} ${highSignal.textSlots.interpretation}`);
   assert.equal(narrative.homeLine, highSignal.textSlots.action);
-  assert.equal(narrative.cautionLineHe, "");
+  assert.equal(narrative.cautionLineHe, "יש מספיק מידע על מצב הנושא, אבל אין מספיק פירוט כדי לזהות את תת המיומנות המדויקת.");
 
   const trLow = {
     displayName: "שברים",

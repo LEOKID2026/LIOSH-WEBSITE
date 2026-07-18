@@ -43,12 +43,12 @@ function applyMathLevelPresentation(question, ctx) {
     const gSuf = gradeBandSuffix;
     if (b != null && Number.isFinite(c)) {
       if (mathLevelKey === "easy") {
-        return `השלמה עד ${c}: מה צריך להוסיף ל-${b} כדי להגיע ל-${c}? = ${BLANK}${gSuf}`;
+        return `השלמה עד ${c}: מה צריך להוסיף ל-${b} כדי להגיע ל-${c}?${gSuf}`;
       }
       if (mathLevelKey === "medium") {
         return `נתון השוויון ${b} + ${BLANK} = ${c}. מה המספר החסר?${gSuf}`;
       }
-      return `בעיית מילים: "ל-${b} חסר חלק עד ${c}" - כמה להוסיף? = ${BLANK}${gSuf}`;
+      return `בעיית מילים: "ל-${b} חסר חלק עד ${c}" - כמה להוסיף?${gSuf}`;
     }
   }
 
@@ -58,12 +58,12 @@ function applyMathLevelPresentation(question, ctx) {
     const gSuf = gradeBandSuffix;
     if (b != null && Number.isFinite(c)) {
       if (mathLevelKey === "easy") {
-        return `עד ${c}: מה מוסיפים ל-${b} כדי לסיים ל-${c}? = ${BLANK}${gSuf}`;
+        return `עד ${c}: מה מוסיפים ל-${b} כדי לסיים ל-${c}?${gSuf}`;
       }
       if (mathLevelKey === "medium") {
         return `חסר במשוואה: ${b} + ${BLANK} = ${c}${gSuf}`;
       }
-      return `בלי לחשב בטור: מה החיבור ל-${c} שמתחיל ב-${b}? = ${BLANK}${gSuf}`;
+      return `בלי לחשב בטור: מה החיבור ל-${c} שמתחיל ב-${b}?${gSuf}`;
     }
   }
 
@@ -2645,7 +2645,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
         }
         const bigger = x > y ? x : y;
         correctAnswer = bigger;
-        question = `איזה מספר גדול יותר - ${x.toFixed(places)} או ${y.toFixed(places)}? רשמו את הגדול: ${BLANK}`;
+        question = `איזה מספר גדול יותר: ${x.toFixed(places)} או ${y.toFixed(places)}?`;
         params = { kind: "dec_compare_max", x, y, places };
         operandA = x;
         operandB = y;
@@ -3033,10 +3033,10 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       const dir = Math.random() < 0.5 ? "after" : "before";
       if (dir === "after") {
         correctAnswer = n + 1;
-        question = `מה המספר שבא אחרי ${n}? = ${BLANK}`;
+        question = `מה המספר שבא אחרי ${n}?`;
       } else {
         correctAnswer = n - 1;
-        question = `מה המספר שבא לפני ${n}? = ${BLANK}`;
+        question = `מה המספר שבא לפני ${n}?`;
       }
       params = { kind: "ns_neighbors", n, dir };
     } else if (mathForce === "ns_place_tens_units") {
@@ -3046,8 +3046,8 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       const units = n % 10;
       correctAnswer = askTens ? tens : units;
       question = askTens
-        ? `מהי ספרת העשרות במספר ${n}? = ${BLANK}`
-        : `מהי ספרת האחדות במספר ${n}? = ${BLANK}`;
+        ? `מהי ספרת העשרות במספר ${n}?`
+        : `מהי ספרת האחדות במספר ${n}?`;
       params = { kind: "ns_place_tens_units", n, askTens, tens, units };
     } else if (mathForce === "ns_complement10") {
       const b = randInt(1, 9);
@@ -3149,10 +3149,10 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       const dir = Math.random() < 0.5 ? "after" : "before";
       if (dir === "after") {
         correctAnswer = n + 1;
-        question = `מה המספר שבא אחרי ${n}? = ${BLANK}`;
+        question = `מה המספר שבא אחרי ${n}?`;
       } else {
         correctAnswer = n - 1;
-        question = `מה המספר שבא לפני ${n}? = ${BLANK}`;
+        question = `מה המספר שבא לפני ${n}?`;
       }
       params = { kind: "ns_neighbors", n, dir };
     } else if (t === "place_tens_units") {
@@ -3162,8 +3162,8 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       const units = n % 10;
       correctAnswer = askTens ? tens : units;
       question = askTens
-        ? `מהי ספרת העשרות במספר ${n}? = ${BLANK}`
-        : `מהי ספרת האחדות במספר ${n}? = ${BLANK}`;
+        ? `מהי ספרת העשרות במספר ${n}?`
+        : `מהי ספרת האחדות במספר ${n}?`;
       params = { kind: "ns_place_tens_units", n, askTens, tens, units };
     } else if (t === "place_hundreds") {
       const n = randInt(100, 999);
@@ -3182,7 +3182,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
           : partType === "tens"
           ? "העשרות"
           : "האחדות";
-      question = `מהי ספרת ${label} במספר ${n}? = ${BLANK}`;
+      question = `מהי ספרת ${label} במספר ${n}?`;
       params = { kind: "ns_place_hundreds", n, partType, hundreds, tens, units };
     } else if (t === "complement10") {
       const b = randInt(1, 9);

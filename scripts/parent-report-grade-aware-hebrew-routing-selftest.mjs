@@ -168,7 +168,7 @@ const { runDiagnosticEngineV2 } = await import(
   const keys = Object.keys(he).sort();
   assert.deepEqual(
     keys,
-    ["H-01", "H-02", "H-03", "H-04", "H-06", "H-07", "H-08"],
+    ["H-01", "H-02", "H-03", "H-04", "H-05", "H-06", "H-07", "H-08"],
     "hebrew grade-aware template taxonomy ids (Phase 4-C3 adds H-01/H-02/H-03/H-06/H-07)"
   );
 }

@@ -79,7 +79,10 @@ function deriveReadinessState(gateReadiness, gateState, cannotConcludeYet) {
   if (cannotConcludeYet) return "insufficient";
   const gr = String(gateReadiness || "insufficient");
   const gs = String(gateState || "gates_not_ready");
-  if (gr === "high" && gs !== "gates_not_ready") return "ready";
+  // gateReadiness:"high" already passed all evidence guards (weak, stale, low-volume).
+  // Requiring gateState !== "gates_not_ready" also blocked first-time high-accuracy topics
+  // that haven't been through outcome-tracking yet. The evidence quality check is sufficient.
+  if (gr === "high") return "ready";
   if (gr === "moderate") return "emerging";
   if (gr === "low") return gs === "mixed_gate_state" ? "unstable" : "emerging";
   return "insufficient";

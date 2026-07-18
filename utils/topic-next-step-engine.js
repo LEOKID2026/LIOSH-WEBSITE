@@ -1094,6 +1094,7 @@ export function decideTopicNextStep(row, mistakeEventCount, cfg = DEFAULT_TOPIC_
     evidenceStrength: String(row?.evidenceStrength || "low"),
     dataSufficiencyLevel: String(row?.dataSufficiencyLevel || "low"),
     conclusionStrength: restraintPayload.conclusionStrength,
+    dev2ConfidenceLevel: String(restraintPayload.diagnosticConfidenceBand || ""),
     rootCause: rootCausePayload.rootCause,
     retentionRisk: memoryPhase9.retentionRisk,
     learningStage: memoryPhase9.learningStage,
