@@ -38,6 +38,104 @@
   justify-content: center;
 }
 
+.pizzaFrameSm {
+  width: 100%;
+  max-width: min(42vw, 220px);
+  aspect-ratio: 1;
+}
+
+.compareRow {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: center;
+  gap: clamp(12px, 3vw, 28px);
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.compareCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 16px;
+  transition: box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.compareHighlight {
+  background: rgba(253, 230, 138, 0.55);
+  box-shadow: 0 0 0 3px #f59e0b;
+}
+
+.compareCaption {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #92400e;
+}
+
+.missionBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.missionFraction {
+  display: flex;
+  justify-content: center;
+  padding: 4px 0;
+}
+
+.combineRow,
+.eqSolution {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.combineOp {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #78350f;
+}
+
+.combineAsk {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #b45309;
+}
+
+.ticketHint {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #78350f;
+}
+
+.identifyFraction {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.identifyStepper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+.identifyHint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #92400e;
+  text-align: center;
+}
+
 .pizzaSvg {
   width: 100%;
   height: 100%;

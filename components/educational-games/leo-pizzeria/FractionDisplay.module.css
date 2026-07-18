@@ -1,0 +1,41 @@
+.fraction {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  line-height: 1.05;
+  font-weight: 800;
+  color: #78350f;
+  margin-inline: 0.2em;
+  user-select: none;
+}
+
+.numerator,
+.denominator {
+  display: block;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.bar {
+  display: block;
+  width: 100%;
+  min-width: 1.1em;
+  height: 2px;
+  margin: 0.08em 0;
+  background: currentColor;
+  border-radius: 1px;
+}
+
+.sm {
+  font-size: 0.95rem;
+}
+
+.md {
+  font-size: 1.35rem;
+}
+
+.lg {
+  font-size: 1.85rem;
+}

@@ -6,15 +6,18 @@ import EducationalGameHudFullscreenButton from "../EducationalGameHudFullscreenB
 import EducationalGameInstructionReplay from "../shared/EducationalGameInstructionReplay.jsx";
 import { useEducationalEngineAudio } from "../../../hooks/educational-games/useEducationalGameAudio.js";
 import shop from "../shared/educational-game-shop-layout.module.css";
+import FractionDisplay, { COMPARE_LABEL_HE } from "./FractionDisplay.jsx";
 import {
   CUSTOMERS_PER_LEVEL,
   DIFFICULTIES,
   SCORE,
   isPizzeriaWin,
   pickCustomersForRun,
+  pizzeriaSolutionPayload,
   toppingById,
   TOPPINGS,
   validateCustomerOrder,
+  validatePizzeriaAnswer,
   wedgeCenter,
   wedgePath,
 } from "./leo-pizzeria-data.js";
@@ -22,12 +25,90 @@ import { buildLeoPizzeriaMetrics } from "./leo-pizzeria-metrics.js";
 import styles from "./LeoPizzeriaGame.module.css";
 
 /** @typedef {import('./leo-pizzeria-data.js').DifficultyId} DifficultyId */
-/** @typedef {import('./leo-pizzeria-data.js').PizzeriaCustomerOrder} PizzeriaCustomerOrder */
+/** @typedef {import('./leo-pizzeria-data.js').PizzeriaTask} PizzeriaCustomerOrder */
 
+const MAX_ATTEMPTS = 3;
 const SVG_SIZE = 200;
 const CX = 100;
 const CY = 100;
 const R = 88;
+
+/**
+ * @param {{
+ *   sliceCount: number
+ *   sliceMap?: Record<number, string>
+ *   locked?: boolean
+ *   interactive?: boolean
+ *   onSliceTap?: (i: number) => void
+ *   ariaLabel?: string
+ *   className?: string
+ * }} props
+ */
+function PizzaSvg({
+  sliceCount,
+  sliceMap = {},
+  locked = false,
+  interactive = true,
+  onSliceTap,
+  ariaLabel = "פיצה",
+  className = "",
+}) {
+  const slices = Array.from({ length: sliceCount }, (_, i) => {
+    const toppingId = sliceMap[i];
+    const topping = toppingId && toppingId !== "__prefilled__" ? toppingById(toppingId) : null;
+    const center = wedgeCenter(i, sliceCount, R, CX, CY);
+    const path = wedgePath(i, sliceCount, R, CX, CY);
+    const filled = Boolean(toppingId);
+    const isPrefill = toppingId === "__prefilled__";
+    return (
+      <g key={i} data-pizza-slice={interactive && !locked ? i : undefined}>
+        <path
+          d={path}
+          fill={isPrefill ? "#fde68a" : filled ? "#fef3c7" : "#fff7ed"}
+          stroke="#b45309"
+          strokeWidth="2"
+          style={{ cursor: interactive && !locked && !isPrefill ? "pointer" : "default" }}
+          onClick={() => {
+            if (!interactive || locked || isPrefill) return;
+            onSliceTap?.(i);
+          }}
+        />
+        {topping ? (
+          <text x={center.x} y={center.y} textAnchor="middle" dominantBaseline="central" fontSize="22">
+            {topping.emoji}
+          </text>
+        ) : null}
+        {isPrefill ? (
+          <text x={center.x} y={center.y} textAnchor="middle" dominantBaseline="central" fontSize="14">
+            ✓
+          </text>
+        ) : null}
+      </g>
+    );
+  });
+
+  return (
+    <svg
+      viewBox={`0 0 ${SVG_SIZE} ${SVG_SIZE}`}
+      className={`${styles.pizzaSvg} ${className}`}
+      aria-label={ariaLabel}
+    >
+      <circle cx={CX} cy={CY} r={R + 6} fill="#92400e" />
+      <circle cx={CX} cy={CY} r={R} fill="#dc2626" opacity="0.92" />
+      <circle cx={CX} cy={CY} r={R * 0.92} fill="#fbbf24" />
+      {slices}
+      <circle cx={CX} cy={CY} r={R * 0.1} fill="#fef3c7" stroke="#b45309" strokeWidth="2" />
+    </svg>
+  );
+}
+
+/** Prefill map for a static fraction pizza */
+function fractionSliceMap(n, d, toppingId) {
+  /** @type {Record<number, string>} */
+  const map = {};
+  for (let i = 0; i < n; i += 1) map[i] = toppingId;
+  return map;
+}
 
 /**
  * @param {{
@@ -77,10 +158,14 @@ export default function LeoPizzeriaGame({
   const [failedAttempts, setFailedAttempts] = useState(0);
   const [currentStreak, setCurrentStreak] = useState(0);
   const [bestStreak, setBestStreak] = useState(0);
-  const [checkState, setCheckState] = useState(/** @type {'idle'|'ok'|'bad'} */ ("idle"));
+  const [checkState, setCheckState] = useState(/** @type {'idle'|'ok'|'bad'|'reveal'} */ ("idle"));
   const [feedback, setFeedback] = useState("");
   const [customerKey, setCustomerKey] = useState(0);
   const [timeLeft, setTimeLeft] = useState(0);
+  const [attemptsOnTask, setAttemptsOnTask] = useState(0);
+  const [answerNumerator, setAnswerNumerator] = useState(0);
+  const [compareRelation, setCompareRelation] = useState(/** @type {'greater'|'less'|'equal'|null} */ (null));
+  const [controlsLocked, setControlsLocked] = useState(false);
 
   const dragRef = useRef(/** @type {{ toppingId: string } | null} */ (null));
   const [dragGhost, setDragGhost] = useState(
@@ -89,7 +174,17 @@ export default function LeoPizzeriaGame({
 
   const diffConfig = DIFFICULTIES[difficulty];
   const customer = customers[customerIndex] ?? null;
-  const sliceCount = customer?.sliceCount ?? diffConfig.sliceCount;
+  const sliceCount = customer?.sliceCount ?? 4;
+  const variant = customer?.variant ?? "build_fraction";
+  const isIdentify = variant === "identify_fraction";
+  const isCompare = variant === "compare_fractions";
+  const isBuild = variant === "build_fraction";
+  const isEquivalent = variant === "equivalent_fraction";
+  const isComplete = variant === "complete_whole";
+  const isCombine = variant === "combine_visual_fractions";
+  const usesWorkPizza = !isCompare;
+  const usesToppings = usesWorkPizza && !isIdentify;
+
   const instructionText =
     phase === "play" && customer ? `${customer.greeting} ${customer.ticketLine}` : "";
 
@@ -114,12 +209,37 @@ export default function LeoPizzeriaGame({
     setScore((s) => Math.max(0, s + delta));
   }, []);
 
-  const resetPizza = useCallback(() => {
-    setSliceMap({});
-    setSelectedTopping(null);
+  const buildPrefillMap = useCallback((cust) => {
+    /** @type {Record<number, string>} */
+    const map = {};
+    if (!cust) return map;
+    if (cust.variant === "identify_fraction" && cust.spec?.requirements) {
+      let idx = 0;
+      for (const [toppingId, count] of Object.entries(cust.spec.requirements)) {
+        for (let i = 0; i < count; i += 1) {
+          map[idx] = toppingId;
+          idx += 1;
+        }
+      }
+    }
+    if (cust.variant === "complete_whole" && cust.spec?.prefilledSlices) {
+      for (let i = 0; i < cust.spec.prefilledSlices; i += 1) {
+        map[i] = "__prefilled__";
+      }
+    }
+    return map;
+  }, []);
+
+  const resetPizza = useCallback((cust = null) => {
+    setSliceMap(buildPrefillMap(cust));
+    setSelectedTopping(cust?.toppingId || null);
     setCheckState("idle");
     setFeedback("");
-  }, []);
+    setAttemptsOnTask(0);
+    setAnswerNumerator(0);
+    setCompareRelation(null);
+    setControlsLocked(false);
+  }, [buildPrefillMap]);
 
   const startGame = useCallback(() => {
     const list = pickCustomersForRun(difficulty);
@@ -136,7 +256,7 @@ export default function LeoPizzeriaGame({
     timeoutHandledForCustomerRef.current = -1;
     startTimeRef.current = Date.now();
     sessionEndFiredRef.current = false;
-    resetPizza();
+    resetPizza(list[0]);
     setTimeLeft(list[0]?.timeLimitSec ?? diffConfig.timeLimitsByBand[0]);
     setPhase("play");
   }, [difficulty, resetPizza, diffConfig.timeLimitsByBand]);
@@ -153,7 +273,7 @@ export default function LeoPizzeriaGame({
       }
       setCustomerIndex(nextIndex);
       setCustomerKey((k) => k + 1);
-      resetPizza();
+      resetPizza(customers[nextIndex]);
       timeoutHandledForCustomerRef.current = -1;
       setTimeLeft(customers[nextIndex]?.timeLimitSec ?? diffConfig.timeLimitsByBand[0]);
     },
@@ -170,8 +290,55 @@ export default function LeoPizzeriaGame({
     [nextCustomer],
   );
 
+  const revealSolution = useCallback(
+    (cust) => {
+      setControlsLocked(true);
+      setCheckState("reveal");
+      const payload = pizzeriaSolutionPayload(cust);
+
+      if (payload.type === "identify") {
+        setAnswerNumerator(payload.numerator);
+        setFeedback("פתרון: זה השבר הנכון");
+      } else if (payload.type === "compare") {
+        setCompareRelation(/** @type {'greater'|'less'|'equal'} */ (payload.relation));
+        setFeedback(`פתרון: ${COMPARE_LABEL_HE[payload.relation] || "שווים"}`);
+      } else if (payload.type === "equivalent" && payload.target) {
+        /** @type {Record<number, string>} */
+        const map = {};
+        for (let i = 0; i < payload.target.n; i += 1) map[i] = payload.toppingId;
+        setSliceMap(map);
+        setFeedback("פתרון: השברים שווים");
+      } else if (payload.type === "complete") {
+        /** @type {Record<number, string>} */
+        const map = {};
+        for (let i = 0; i < payload.given; i += 1) map[i] = "__prefilled__";
+        for (let i = 0; i < payload.missing; i += 1) {
+          map[payload.given + i] = payload.toppingId;
+        }
+        setSliceMap(map);
+        setFeedback("פתרון: החלק החסר הושלם לשלם");
+      } else if (payload.type === "combine" && payload.result) {
+        /** @type {Record<number, string>} */
+        const map = {};
+        for (let i = 0; i < payload.result.n; i += 1) map[i] = payload.toppingId;
+        setSliceMap(map);
+        setFeedback("פתרון: סמנו את סכום החלקים על הפיצה");
+      } else if (payload.type === "build") {
+        /** @type {Record<number, string>} */
+        const map = {};
+        for (let i = 0; i < payload.numerator; i += 1) map[i] = payload.toppingId;
+        setSliceMap(map);
+        setFeedback("פתרון: סמנו את מספר החלקים המתאים לשבר");
+      }
+
+      // Revealed solution is not a success
+      window.setTimeout(() => advanceAfterCustomer(customerIndex), 2400);
+    },
+    [advanceAfterCustomer, customerIndex],
+  );
+
   const handleTimeout = useCallback(() => {
-    if (phase !== "play" || !customer) return;
+    if (phase !== "play" || !customer || controlsLocked) return;
 
     const nextMistakes = mistakesRef.current + 1;
     mistakesRef.current = nextMistakes;
@@ -191,24 +358,35 @@ export default function LeoPizzeriaGame({
     }
 
     advanceAfterCustomer(customerIndex);
-  }, [phase, customer, addScore, diffConfig.maxMistakes, endRun, advanceAfterCustomer, customerIndex, onTimeUp, playFeedback]);
+  }, [
+    phase,
+    customer,
+    controlsLocked,
+    addScore,
+    diffConfig.maxMistakes,
+    endRun,
+    advanceAfterCustomer,
+    customerIndex,
+    onTimeUp,
+    playFeedback,
+  ]);
 
   useEffect(() => {
-    if (phase !== "play" || !customer) return undefined;
+    if (phase !== "play" || !customer || controlsLocked) return undefined;
     if (timeLeft > 0) return undefined;
     if (timeoutHandledForCustomerRef.current === customerIndex) return undefined;
     timeoutHandledForCustomerRef.current = customerIndex;
     handleTimeout();
     return undefined;
-  }, [phase, customer, timeLeft, customerIndex, handleTimeout]);
+  }, [phase, customer, timeLeft, customerIndex, handleTimeout, controlsLocked]);
 
   useEffect(() => {
-    if (phase !== "play" || !customer) return undefined;
+    if (phase !== "play" || !customer || controlsLocked) return undefined;
     const t = window.setInterval(() => {
       setTimeLeft((sec) => Math.max(0, sec - 1));
     }, 1000);
     return () => window.clearInterval(t);
-  }, [phase, customer, customerIndex]);
+  }, [phase, customer, customerIndex, controlsLocked]);
 
   useEffect(() => {
     return () => {
@@ -222,16 +400,21 @@ export default function LeoPizzeriaGame({
   }, [autoStart, phase, customers.length, startGame]);
 
   const applyToppingToSlice = useCallback((sliceIndex, toppingId) => {
-    setSliceMap((prev) => ({ ...prev, [sliceIndex]: toppingId }));
+    if (controlsLocked) return;
+    setSliceMap((prev) => {
+      if (prev[sliceIndex] === "__prefilled__") return prev;
+      return { ...prev, [sliceIndex]: toppingId };
+    });
     setCheckState("idle");
     setFeedback("");
-  }, []);
+  }, [controlsLocked]);
 
   const onSliceTap = useCallback(
     (sliceIndex) => {
-      if (checkState === "ok") return;
+      if (controlsLocked || checkState === "ok" || checkState === "reveal") return;
       if (!selectedTopping) {
         setSliceMap((prev) => {
+          if (prev[sliceIndex] === "__prefilled__") return prev;
           const next = { ...prev };
           delete next[sliceIndex];
           return next;
@@ -242,16 +425,17 @@ export default function LeoPizzeriaGame({
       }
       applyToppingToSlice(sliceIndex, selectedTopping);
     },
-    [selectedTopping, applyToppingToSlice, checkState],
+    [selectedTopping, applyToppingToSlice, checkState, controlsLocked],
   );
 
   const onToppingPointerDown = useCallback((e, toppingId) => {
+    if (controlsLocked) return;
     if (e.button !== 0) return;
     dragRef.current = { toppingId };
     setSelectedTopping(toppingId);
     setDragGhost({ toppingId, x: e.clientX, y: e.clientY });
     onDragLift();
-  }, [onDragLift]);
+  }, [onDragLift, controlsLocked]);
 
   const onPointerMove = useCallback((e) => {
     if (!dragRef.current) return;
@@ -272,23 +456,42 @@ export default function LeoPizzeriaGame({
   const onPointerUp = useCallback(
     (e) => {
       if (!dragRef.current) return;
-      const sliceIndex = findSliceAtPoint(e.clientX, e.clientY);
-      if (sliceIndex != null) {
-        onDropOk();
-        applyToppingToSlice(sliceIndex, dragRef.current.toppingId);
+      if (!controlsLocked) {
+        const sliceIndex = findSliceAtPoint(e.clientX, e.clientY);
+        if (sliceIndex != null) {
+          onDropOk();
+          applyToppingToSlice(sliceIndex, dragRef.current.toppingId);
+        }
       }
       dragRef.current = null;
       setDragGhost(null);
     },
-    [applyToppingToSlice, findSliceAtPoint, onDropOk],
+    [applyToppingToSlice, findSliceAtPoint, onDropOk, controlsLocked],
   );
 
   const servePizza = useCallback(() => {
-    if (!customer || checkState === "ok") return;
+    if (!customer || checkState === "ok" || checkState === "reveal" || controlsLocked) return;
 
-    const result = validateCustomerOrder(customer, sliceMap);
+    let result;
+    if (isIdentify) {
+      result = validatePizzeriaAnswer(customer, {
+        numerator: answerNumerator,
+        denominator: customer.sliceCount,
+      });
+    } else if (isCompare) {
+      result = validatePizzeriaAnswer(customer, { relation: compareRelation || "" });
+    } else {
+      /** @type {Record<number, string>} */
+      const workMap = {};
+      for (const [k, v] of Object.entries(sliceMap)) {
+        if (v && v !== "__prefilled__") workMap[Number(k)] = v;
+      }
+      result = validateCustomerOrder(customer, workMap);
+    }
+
     if (result.ok) {
       setCheckState("ok");
+      setControlsLocked(true);
       setFeedback(result.message);
       onCorrect();
       playFeedback(result.message);
@@ -308,6 +511,8 @@ export default function LeoPizzeriaGame({
       return;
     }
 
+    const nextAttempt = attemptsOnTask + 1;
+    setAttemptsOnTask(nextAttempt);
     setCheckState("bad");
     setFeedback(result.message);
     onWrong();
@@ -316,62 +521,36 @@ export default function LeoPizzeriaGame({
     setCurrentStreak(0);
     const nextMistakes = mistakes + 1;
     setMistakes(nextMistakes);
+    mistakesRef.current = nextMistakes;
     if (nextMistakes >= diffConfig.maxMistakes) {
       window.setTimeout(() => endRun("lost"), 1800);
+      return;
+    }
+    if (nextAttempt >= MAX_ATTEMPTS) {
+      revealSolution(customer);
     }
   }, [
     customer,
     sliceMap,
     checkState,
+    controlsLocked,
     customerIndex,
     advanceAfterCustomer,
     addScore,
     mistakes,
+    attemptsOnTask,
+    isIdentify,
+    isCompare,
+    answerNumerator,
+    compareRelation,
     diffConfig.maxMistakes,
     endRun,
     onCorrect,
     onWrong,
     onStreak,
     playFeedback,
+    revealSolution,
   ]);
-
-  const pizzaSlices = useMemo(() => {
-    if (!customer) return null;
-    return Array.from({ length: sliceCount }, (_, i) => {
-      const toppingId = sliceMap[i];
-      const topping = toppingId ? toppingById(toppingId) : null;
-      const center = wedgeCenter(i, sliceCount, R, CX, CY);
-      const path = wedgePath(i, sliceCount, R, CX, CY);
-      const filled = Boolean(toppingId);
-      return (
-        <g key={i} data-pizza-slice={i}>
-          <path
-            d={path}
-            className={`${styles.slicePath} ${filled ? styles.sliceFilled : styles.sliceEmpty} ${selectedTopping ? styles.sliceHover : ""}`}
-            onClick={() => onSliceTap(i)}
-            role="button"
-            aria-label={`חלק ${i + 1}${topping ? ` · ${topping.name}` : ""}`}
-          />
-          {!filled && sliceCount === 4 ? (
-            <text x={center.x} y={center.y + 2} textAnchor="middle" className={styles.sliceHint}>
-              {i + 1}
-            </text>
-          ) : null}
-          {topping ? (
-            <text
-              x={center.x}
-              y={center.y + (sliceCount <= 4 ? 8 : 6)}
-              textAnchor="middle"
-              className={styles.sliceToppingEmoji}
-              style={{ fontSize: sliceCount <= 4 ? 36 : 28 }}
-            >
-              {topping.emoji}
-            </text>
-          ) : null}
-        </g>
-      );
-    });
-  }, [customer, sliceCount, sliceMap, selectedTopping, onSliceTap]);
 
   const endMetrics = useMemo(() => {
     if (phase !== "won" && phase !== "lost") return null;
@@ -414,10 +593,235 @@ export default function LeoPizzeriaGame({
     shop.feedbackBar,
     checkState === "ok"
       ? shop.feedbackOk
-      : checkState === "bad"
+      : checkState === "bad" || checkState === "reveal"
         ? shop.feedbackBad
         : shop.feedbackNeutral,
   ].join(" ");
+
+  const solutionPayload = checkState === "reveal" && customer ? pizzeriaSolutionPayload(customer) : null;
+
+  /** Mission panel with FractionDisplay where needed */
+  function renderMission() {
+    if (!customer) return null;
+    return (
+      <div className={styles.missionBlock}>
+        <p className={shop.missionText}>{customer.greeting}</p>
+        {(isBuild || isEquivalent) && customer.sourceFraction ? (
+          <div className={styles.missionFraction}>
+            <FractionDisplay
+              numerator={customer.sourceFraction.n}
+              denominator={customer.sourceFraction.d}
+              size="lg"
+            />
+          </div>
+        ) : null}
+        {isCombine && customer.combineA && customer.combineB ? (
+          <div className={styles.combineRow}>
+            <FractionDisplay numerator={customer.combineA.n} denominator={customer.combineA.d} size="lg" />
+            <span className={styles.combineOp} aria-hidden>+</span>
+            <FractionDisplay numerator={customer.combineB.n} denominator={customer.combineB.d} size="lg" />
+            <span className={styles.combineOp} aria-hidden>=</span>
+            <span className={styles.combineAsk}>?</span>
+          </div>
+        ) : null}
+        {isComplete && customer.sourceFraction ? (
+          <div className={styles.missionFraction}>
+            <FractionDisplay
+              numerator={customer.sourceFraction.n}
+              denominator={customer.sourceFraction.d}
+              size="md"
+            />
+          </div>
+        ) : null}
+        <p className={styles.ticketHint}>{customer.ticketLine}</p>
+      </div>
+    );
+  }
+
+  function renderWorkArea() {
+    if (!customer) return null;
+
+    if (isCompare && customer.compareA && customer.compareB) {
+      const highlight =
+        checkState === "reveal" && compareRelation
+          ? compareRelation
+          : null;
+      return (
+        <div className={styles.compareRow}>
+          <div
+            className={`${styles.compareCard} ${
+              highlight === "greater" || highlight === "equal" ? styles.compareHighlight : ""
+            }`}
+          >
+            <div className={styles.pizzaFrameSm}>
+              <PizzaSvg
+                sliceCount={customer.compareA.d}
+                sliceMap={fractionSliceMap(customer.compareA.n, customer.compareA.d, customer.compareA.toppingId)}
+                interactive={false}
+                locked
+                ariaLabel="פיצה ראשונה"
+              />
+            </div>
+            <FractionDisplay numerator={customer.compareA.n} denominator={customer.compareA.d} size="md" />
+            <span className={styles.compareCaption}>הראשון</span>
+          </div>
+          <div
+            className={`${styles.compareCard} ${
+              highlight === "less" || highlight === "equal" ? styles.compareHighlight : ""
+            }`}
+          >
+            <div className={styles.pizzaFrameSm}>
+              <PizzaSvg
+                sliceCount={customer.compareB.d}
+                sliceMap={fractionSliceMap(customer.compareB.n, customer.compareB.d, customer.compareB.toppingId)}
+                interactive={false}
+                locked
+                ariaLabel="פיצה שנייה"
+              />
+            </div>
+            <FractionDisplay numerator={customer.compareB.n} denominator={customer.compareB.d} size="md" />
+            <span className={styles.compareCaption}>השני</span>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className={styles.pizzaFrame}>
+        <PizzaSvg
+          sliceCount={sliceCount}
+          sliceMap={sliceMap}
+          locked={controlsLocked || isIdentify}
+          interactive={usesToppings}
+          onSliceTap={onSliceTap}
+          ariaLabel="פיצה לעבודה"
+        />
+      </div>
+    );
+  }
+
+  function renderTools() {
+    if (!customer) return null;
+
+    if (isIdentify) {
+      return (
+        <div className={`${frame.panel} ${shop.toolsPanel}`}>
+          <p className={shop.toolsTitle}>כמה חלקים מסומנים?</p>
+          <div className={styles.identifyFraction}>
+            <div className={styles.identifyStepper}>
+              <button
+                type="button"
+                className={shop.stepperBtn}
+                disabled={controlsLocked}
+                onClick={() => setAnswerNumerator((v) => Math.min(sliceCount, v + 1))}
+              >
+                +
+              </button>
+              <FractionDisplay numerator={answerNumerator} denominator={sliceCount} size="lg" />
+              <button
+                type="button"
+                className={shop.stepperBtn}
+                disabled={controlsLocked}
+                onClick={() => setAnswerNumerator((v) => Math.max(0, v - 1))}
+              >
+                −
+              </button>
+            </div>
+            <p className={styles.identifyHint}>המכנה קבוע לפי מספר הפרוסות</p>
+          </div>
+        </div>
+      );
+    }
+
+    if (isCompare) {
+      return (
+        <div className={`${frame.panel} ${shop.toolsPanel}`}>
+          <p className={shop.toolsTitle}>השוואה</p>
+          <div className={shop.actionRow} style={{ flexDirection: "column", gap: 8 }}>
+            {(["greater", "less", "equal"]).map((rel) => (
+              <button
+                key={rel}
+                type="button"
+                className={`${shop.secondaryBtn} ${compareRelation === rel ? shop.toolBtnActive : ""}`}
+                disabled={controlsLocked}
+                onClick={() => setCompareRelation(/** @type {'greater'|'less'|'equal'} */ (rel))}
+              >
+                {COMPARE_LABEL_HE[rel]}
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    if (isEquivalent && customer.sourceFraction && customer.targetFraction) {
+      return (
+        <div className={`${frame.panel} ${shop.toolsPanel}`}>
+          <p className={shop.toolsTitle}>שברים שווים</p>
+          {solutionPayload?.type === "equivalent" ? (
+            <div className={styles.eqSolution}>
+              <FractionDisplay
+                numerator={customer.sourceFraction.n}
+                denominator={customer.sourceFraction.d}
+                size="md"
+              />
+              <span className={styles.combineOp}>=</span>
+              <FractionDisplay
+                numerator={customer.targetFraction.n}
+                denominator={customer.targetFraction.d}
+                size="md"
+              />
+            </div>
+          ) : (
+            <p className={styles.identifyHint}>סמנו על הפיצה את החלק השווה</p>
+          )}
+          <div className={shop.toolsGrid}>
+            {TOPPINGS.filter((t) => t.id === customer.toppingId).map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                className={`${shop.toolBtn} ${selectedTopping === t.id ? shop.toolBtnActive : ""}`}
+                disabled={controlsLocked}
+                onClick={() => setSelectedTopping(t.id)}
+                onPointerDown={(e) => onToppingPointerDown(e, t.id)}
+              >
+                <span className={shop.toolEmoji}>{t.emoji}</span>
+                <span>{t.name}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className={`${frame.panel} ${shop.toolsPanel}`}>
+        <p className={shop.toolsTitle}>מדף תוספות</p>
+        <div className={shop.toolsGrid}>
+          {TOPPINGS.map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              className={`${shop.toolBtn} ${selectedTopping === t.id ? shop.toolBtnActive : ""}`}
+              disabled={controlsLocked}
+              onClick={() => {
+                if (controlsLocked) return;
+                setSelectedTopping((cur) => (cur === t.id ? null : t.id));
+                setCheckState("idle");
+                setFeedback("");
+              }}
+              onPointerDown={(e) => onToppingPointerDown(e, t.id)}
+              aria-label={t.name}
+              aria-pressed={selectedTopping === t.id}
+            >
+              <span className={shop.toolEmoji}>{t.emoji}</span>
+              <span>{t.name}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -513,58 +917,42 @@ export default function LeoPizzeriaGame({
                       onReplay={replayInstruction}
                     />
                   </div>
-                  <p className={shop.missionText}>
-                    {customer.greeting}
-                    <span className={shop.missionTicket}>🧾 {customer.ticketLine}</span>
-                  </p>
+                  {renderMission()}
                 </div>
               </div>
             </aside>
 
-            <section className={shop.workCol}>
-              <div className={styles.pizzaFrame}>
-                <svg
-                  viewBox={`0 0 ${SVG_SIZE} ${SVG_SIZE}`}
-                  className={styles.pizzaSvg}
-                  aria-label="פיצה לעבודה"
-                >
-                  <circle cx={CX} cy={CY} r={R + 6} fill="#92400e" />
-                  <circle cx={CX} cy={CY} r={R} fill="#dc2626" opacity="0.92" />
-                  <circle cx={CX} cy={CY} r={R * 0.92} fill="#fbbf24" />
-                  {pizzaSlices}
-                  <circle cx={CX} cy={CY} r={R * 0.1} fill="#fef3c7" stroke="#b45309" strokeWidth="2" />
-                </svg>
-              </div>
-            </section>
+            <section className={shop.workCol}>{renderWorkArea()}</section>
 
             <aside className={shop.sideCol}>
-              <div className={`${frame.panel} ${shop.toolsPanel}`}>
-                <p className={shop.toolsTitle}>🧺 מדף תוספות</p>
-                <div className={shop.toolsGrid}>
-                  {TOPPINGS.map((t) => (
-                    <button
-                      key={t.id}
-                      type="button"
-                      className={`${shop.toolBtn} ${selectedTopping === t.id ? shop.toolBtnActive : ""}`}
-                      onClick={() => {
-                        setSelectedTopping((cur) => (cur === t.id ? null : t.id));
-                        setCheckState("idle");
-                        setFeedback("");
-                      }}
-                      onPointerDown={(e) => onToppingPointerDown(e, t.id)}
-                      aria-label={t.name}
-                      aria-pressed={selectedTopping === t.id}
-                    >
-                      <span className={shop.toolEmoji}>{t.emoji}</span>
-                      <span>{t.name}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
+              {renderTools()}
               {feedback || checkState !== "idle" ? (
                 <div className={feedbackBarClass}>
                   <p className={shop.feedbackText}>{feedback}</p>
+                  {solutionPayload?.type === "equivalent" && customer.sourceFraction && customer.targetFraction ? (
+                    <div className={styles.eqSolution}>
+                      <FractionDisplay
+                        numerator={customer.sourceFraction.n}
+                        denominator={customer.sourceFraction.d}
+                        size="sm"
+                      />
+                      <span>=</span>
+                      <FractionDisplay
+                        numerator={customer.targetFraction.n}
+                        denominator={customer.targetFraction.d}
+                        size="sm"
+                      />
+                    </div>
+                  ) : null}
+                  {solutionPayload?.type === "identify" ? (
+                    <div className={styles.eqSolution}>
+                      <FractionDisplay
+                        numerator={solutionPayload.numerator}
+                        denominator={solutionPayload.denominator}
+                        size="md"
+                      />
+                    </div>
+                  ) : null}
                 </div>
               ) : null}
             </aside>
@@ -574,12 +962,17 @@ export default function LeoPizzeriaGame({
                 <button
                   type="button"
                   className={shop.primaryBtn}
-                  disabled={checkState === "ok"}
+                  disabled={controlsLocked || checkState === "ok" || checkState === "reveal"}
                   onClick={servePizza}
                 >
                   הגש פיצה 🍕
                 </button>
-                <button type="button" className={shop.secondaryBtn} onClick={resetPizza}>
+                <button
+                  type="button"
+                  className={shop.secondaryBtn}
+                  disabled={controlsLocked}
+                  onClick={() => resetPizza(customer)}
+                >
                   נקה פיצה
                 </button>
               </div>

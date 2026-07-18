@@ -1,22 +1,36 @@
 /** @typedef {'easy' | 'medium' | 'hard'} DifficultyId */
+/** @typedef {'share_equally' | 'make_groups' | 'find_remainder'} GiftsMode */
 
-import { PRODUCTION_MIN_POOL, shuffle } from "../../../lib/educational-games/educational-task-picker.js";
+import {
+  createMathTask,
+  pickBalancedSession,
+  randInt,
+  shuffledCopy,
+} from "../../../lib/educational-games/math-task-schema.js";
 import {
   pickSessionFromBands,
-  SESSION_FINAL_COUNT,
-  SESSION_MID_COUNT,
-  SESSION_OPEN_COUNT,
   TASKS_PER_SESSION,
   timeLimitForSessionIndex,
 } from "../../../lib/educational-games/educational-session-standard.js";
 
-/** @typedef {{
+/**
+ * @typedef {{
  *   id: string
+ *   gameKey: 'leo-gifts'
+ *   difficulty: DifficultyId
+ *   skillId: string
+ *   variant: GiftsMode
+ *   operands: { total: number, divisor: number, mode: GiftsMode, itemLabel: string, itemEmoji: string }
+ *   expectedAnswer: { quotient: number, remainder: number }
+ *   representationType: string
  *   total: number
- *   children: number
+ *   children?: number
+ *   groupSize?: number
+ *   mode: GiftsMode
  *   itemLabel: string
  *   itemEmoji: string
- * }} GiftsTask */
+ * }} GiftsTask
+ */
 
 export { TASKS_PER_SESSION };
 
@@ -41,98 +55,202 @@ const ITEM_TYPES = [
   { itemLabel: "ממתקים", itemEmoji: "🍭" },
 ];
 
-/** @param {number} min @param {number} max */
-function randInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-/** @typedef {0 | 1 | 2} GiftsSessionBand */
-
-/** @param {DifficultyId} difficulty @param {GiftsSessionBand} band */
-function giftsBandConfig(difficulty, band) {
+/** @param {DifficultyId} difficulty */
+function giftsQuotas(difficulty) {
   if (difficulty === "easy") {
-    if (band === 0) return { childrenMin: 2, childrenMax: 4, maxTotal: 20, allowRemainder: false };
-    if (band === 1) return { childrenMin: 2, childrenMax: 5, maxTotal: 32, allowRemainder: false };
-    return { childrenMin: 3, childrenMax: 6, maxTotal: 40, allowRemainder: false };
+    return {
+      "division.equal_sharing": 12,
+      "division.make_groups": 6,
+      "division.remainder": 2,
+    };
   }
   if (difficulty === "medium") {
-    if (band === 0) return { childrenMin: 3, childrenMax: 5, maxTotal: 30, allowRemainder: false };
-    if (band === 1) return { childrenMin: 4, childrenMax: 8, maxTotal: 56, allowRemainder: true };
-    return { childrenMin: 5, childrenMax: 10, maxTotal: 80, allowRemainder: true };
+    return {
+      "division.equal_sharing": 7,
+      "division.make_groups": 7,
+      "division.remainder": 6,
+    };
   }
-  if (band === 0) return { childrenMin: 4, childrenMax: 6, maxTotal: 42, allowRemainder: true };
-  if (band === 1) return { childrenMin: 5, childrenMax: 8, maxTotal: 72, allowRemainder: true };
-  return { childrenMin: 6, childrenMax: 10, maxTotal: 100, allowRemainder: true };
+  return {
+    "division.equal_sharing": 6,
+    "division.make_groups": 6,
+    "division.remainder": 5,
+    "division.relation_to_multiplication": 3,
+  };
 }
 
-/** @param {DifficultyId} difficulty @param {GiftsSessionBand} band @param {number} [salt] */
-function generateGiftsPoolForBand(difficulty, band, salt = 0) {
-  const cfg = giftsBandConfig(difficulty, band);
-  const seen = new Set();
+/**
+ * @param {DifficultyId} difficulty
+ * @param {GiftsMode} mode
+ * @param {boolean} allowRemainder
+ * @param {number} salt
+ * @returns {GiftsTask[]}
+ */
+function generateGiftsPoolForMode(difficulty, mode, allowRemainder, salt = 0) {
+  const cfg =
+    difficulty === "easy"
+      ? { divisorMin: 2, divisorMax: 5, maxTotal: 30, quotMax: 6 }
+      : difficulty === "medium"
+        ? { divisorMin: 2, divisorMax: 8, maxTotal: 72, quotMax: 10 }
+        : { divisorMin: 3, divisorMax: 10, maxTotal: 120, quotMax: 12 };
+
   /** @type {GiftsTask[]} */
   const pool = [];
+  const seen = new Set();
 
-  for (let children = cfg.childrenMin; children <= cfg.childrenMax; children += 1) {
-    for (let per = 2; per <= Math.max(2, Math.floor(cfg.maxTotal / children)); per += 1) {
-      const totalEven = per * children;
-      if (totalEven <= cfg.maxTotal) {
+  for (let divisor = cfg.divisorMin; divisor <= cfg.divisorMax; divisor += 1) {
+    for (let quot = 1; quot <= cfg.quotMax; quot += 1) {
+      const remOptions = allowRemainder ? [0, ...Array.from({ length: divisor - 1 }, (_, i) => i + 1)] : [0];
+      for (const rem of remOptions) {
+        if (difficulty === "easy" && rem > 0 && pool.filter((t) => t.expectedAnswer.remainder > 0).length >= 8) {
+          continue;
+        }
+        const total = quot * divisor + rem;
+        if (total < divisor || total > cfg.maxTotal) continue;
+        if (rem >= divisor) continue;
+
         for (let itemIdx = 0; itemIdx < ITEM_TYPES.length; itemIdx += 1) {
           const item = ITEM_TYPES[(itemIdx + salt) % ITEM_TYPES.length];
-          const key = `${totalEven}x${children}-${item.itemLabel}`;
+          const key = `${mode}-${total}-${divisor}-${item.itemLabel}`;
           if (seen.has(key)) continue;
           seen.add(key);
-          pool.push({
-            id: `g-${difficulty}-b${band}-${pool.length}-${key}`,
-            total: totalEven,
-            children,
+
+          const skillId =
+            mode === "find_remainder" || rem > 0
+              ? rem > 0
+                ? "division.remainder"
+                : mode === "make_groups"
+                  ? "division.make_groups"
+                  : "division.equal_sharing"
+              : mode === "make_groups"
+                ? "division.make_groups"
+                : "division.equal_sharing";
+
+          const useRelation =
+            difficulty === "hard" && rem === 0 && (pool.length + salt) % 7 === 0;
+
+          /** @type {GiftsTask} */
+          const task = {
+            ...createMathTask({
+              id: `g-${difficulty}-${mode}-${pool.length}`,
+              gameKey: "leo-gifts",
+              difficulty,
+              skillId: useRelation ? "division.relation_to_multiplication" : skillId,
+              variant: mode,
+              operands: {
+                total,
+                divisor,
+                mode,
+                itemLabel: item.itemLabel,
+                itemEmoji: item.itemEmoji,
+              },
+              expectedAnswer: { quotient: quot, remainder: rem },
+              representationType: difficulty === "easy" ? "visual" : "mixed",
+            }),
+            total,
+            mode,
             itemLabel: item.itemLabel,
             itemEmoji: item.itemEmoji,
-          });
-        }
-      }
-      if (cfg.allowRemainder) {
-        for (let rem = 1; rem < children; rem += 1) {
-          const total = per * children + rem;
-          if (total > cfg.maxTotal || total < children * 2) continue;
-          for (let itemIdx = 0; itemIdx < ITEM_TYPES.length; itemIdx += 1) {
-            const item = ITEM_TYPES[(itemIdx + salt) % ITEM_TYPES.length];
-            const key = `${total}x${children}-${item.itemLabel}`;
-            if (seen.has(key)) continue;
-            seen.add(key);
-            pool.push({
-              id: `g-${difficulty}-b${band}-${pool.length}-${key}`,
-              total,
-              children,
-              itemLabel: item.itemLabel,
-              itemEmoji: item.itemEmoji,
-            });
+          };
+
+          if (mode === "share_equally" || mode === "find_remainder") {
+            task.children = divisor;
+          } else {
+            task.groupSize = divisor;
           }
+
+          pool.push(task);
         }
       }
     }
   }
 
-  return shuffle(pool);
+  return shuffledCopy(pool);
+}
+
+/** @param {GiftsTask} task */
+export function giftsTaskKey(task) {
+  return `${task.mode}-${task.total}-${task.operands.divisor}-${task.itemLabel}`;
 }
 
 /** @param {GiftsTask} task */
 export function giftsTaskDifficultyScore(task) {
-  const rem = task.total % task.children;
-  return task.children * 3 + task.total * 0.15 + (rem > 0 ? 8 : 0);
+  const rem = task.expectedAnswer.remainder;
+  return task.operands.divisor * 3 + task.total * 0.12 + (rem > 0 ? 10 : 0) + (task.mode === "make_groups" ? 4 : 0);
 }
 
 /** @param {DifficultyId} difficulty */
 export function buildGiftsSessionRun(difficulty) {
   const salt = Math.floor(Math.random() * 10000);
-  const opening = generateGiftsPoolForBand(difficulty, 0, salt)
-    .sort((a, b) => giftsTaskDifficultyScore(a) - giftsTaskDifficultyScore(b));
-  const mid = generateGiftsPoolForBand(difficulty, 1, salt + 1)
-    .sort((a, b) => giftsTaskDifficultyScore(a) - giftsTaskDifficultyScore(b));
-  const final = generateGiftsPoolForBand(difficulty, 2, salt + 2)
-    .sort((a, b) => giftsTaskDifficultyScore(a) - giftsTaskDifficultyScore(b));
+  const allowRemEarly = difficulty !== "easy";
+  const sharePool = generateGiftsPoolForMode(difficulty, "share_equally", allowRemEarly || difficulty === "easy", salt);
+  const groupsPool = generateGiftsPoolForMode(difficulty, "make_groups", allowRemEarly, salt + 1);
+  const remPool = generateGiftsPoolForMode(
+    difficulty,
+    difficulty === "hard" ? "find_remainder" : "share_equally",
+    true,
+    salt + 2,
+  ).filter((t) => t.expectedAnswer.remainder > 0);
 
-  const run = pickSessionFromBands(opening, mid, final, giftsTaskKey, TASKS_PER_SESSION);
-  return run.map((task, i) => ({
+  /** @type {Record<string, GiftsTask[]>} */
+  const pools = {
+    "division.equal_sharing": sharePool.filter((t) => t.skillId === "division.equal_sharing" || t.mode === "share_equally"),
+    "division.make_groups": groupsPool,
+    "division.remainder": remPool.length ? remPool : sharePool.filter((t) => t.expectedAnswer.remainder > 0),
+    "division.relation_to_multiplication": sharePool.filter((t) => t.expectedAnswer.remainder === 0),
+  };
+
+  const quotas = giftsQuotas(difficulty);
+  let run = pickBalancedSession(pools, quotas, giftsTaskKey, TASKS_PER_SESSION);
+
+  if (run.length < TASKS_PER_SESSION) {
+    const opening = sharePool.sort((a, b) => giftsTaskDifficultyScore(a) - giftsTaskDifficultyScore(b));
+    const mid = shuffledCopy([...sharePool, ...groupsPool]);
+    const final = shuffledCopy([...groupsPool, ...remPool, ...sharePool]);
+    run = pickSessionFromBands(opening, mid, final, giftsTaskKey, TASKS_PER_SESSION);
+  }
+
+  // Easy: force share_equally early, make_groups late
+  if (difficulty === "easy") {
+    const shares = run.filter((t) => t.mode === "share_equally").slice(0, 12);
+    const groups = run.filter((t) => t.mode === "make_groups").slice(0, 6);
+    const rem = run.filter((t) => t.expectedAnswer.remainder > 0).slice(0, 2);
+    run = [...shares.slice(0, 10), ...groups.slice(0, 4), ...shares.slice(10), ...groups.slice(4), ...rem].slice(
+      0,
+      TASKS_PER_SESSION,
+    );
+    while (run.length < TASKS_PER_SESSION && shares.length) {
+      run.push(shares[run.length % shares.length]);
+    }
+  }
+
+  // Gradual difficulty: sort lightly within halves
+  const mid = Math.floor(run.length / 2);
+  const first = run.slice(0, mid).sort((a, b) => giftsTaskDifficultyScore(a) - giftsTaskDifficultyScore(b));
+  const second = run.slice(mid).sort((a, b) => giftsTaskDifficultyScore(a) - giftsTaskDifficultyScore(b));
+  run = [...first, ...second];
+
+  const used = new Set();
+  run = run.filter((t) => {
+    const k = giftsTaskKey(t);
+    if (used.has(k)) return false;
+    used.add(k);
+    return true;
+  });
+
+  while (run.length < TASKS_PER_SESSION) {
+    const extra = generateGiftsPoolForMode(difficulty, "share_equally", difficulty !== "easy", salt + run.length);
+    for (const t of extra) {
+      if (run.length >= TASKS_PER_SESSION) break;
+      const k = giftsTaskKey(t);
+      if (used.has(k)) continue;
+      used.add(k);
+      run.push(t);
+    }
+    break;
+  }
+
+  return run.slice(0, TASKS_PER_SESSION).map((task, i) => ({
     ...task,
     id: `g-${difficulty}-run-${i}`,
   }));
@@ -150,78 +268,63 @@ export function isGiftsWin(successful, total, mistakes, maxMistakes) {
   return successful >= total;
 }
 
-/**
- * @param {DifficultyId} difficulty
- * @param {{ salt?: number, stage?: number, band?: GiftsSessionBand }} [opts]
- */
-export function generateGiftsPool(difficulty, opts = {}) {
-  const salt = opts.salt ?? 0;
-  /** @type {GiftsTask[]} */
-  let pool = [];
-  const seen = new Set();
-  for (const band of /** @type {GiftsSessionBand[]} */ ([0, 1, 2])) {
-    for (const task of generateGiftsPoolForBand(difficulty, band, salt + band)) {
-      const key = giftsTaskKey(task);
-      if (seen.has(key)) continue;
-      seen.add(key);
-      pool.push(task);
-    }
-  }
-
-  let guard = 0;
-  while (pool.length < PRODUCTION_MIN_POOL + 10 && guard < 1200) {
-    guard += 1;
-    const band = /** @type {GiftsSessionBand} */ (guard % 3);
-    for (const task of generateGiftsPoolForBand(difficulty, band, salt + guard)) {
-      const key = giftsTaskKey(task);
-      if (seen.has(key)) continue;
-      seen.add(key);
-      pool.push(task);
-      if (pool.length >= PRODUCTION_MIN_POOL + 10) break;
-    }
-  }
-
-  return shuffle(pool);
-}
-
-/** @param {GiftsTask} task */
-export function giftsTaskKey(task) {
-  return `${task.total}x${task.children}-${task.itemLabel}`;
-}
-
-/** @param {GiftsTask} task @param {number} perChild @param {number} remainder */
-export function validateGiftsDivision(task, perChild, remainder) {
-  const { total, children } = task;
-  if (perChild < 0 || remainder < 0) return { ok: false };
-  if (perChild * children + remainder !== total) return { ok: false };
-  if (remainder >= children) return { ok: false };
-  const expectedPer = Math.floor(total / children);
-  const expectedRem = total % children;
-  if (perChild !== expectedPer || remainder !== expectedRem) return { ok: false };
-  return { ok: true, expectedPer, expectedRem };
+/** @param {GiftsTask} task @param {number} quotient @param {number} remainder */
+export function validateGiftsDivision(task, quotient, remainder) {
+  const divisor = task.operands.divisor;
+  const total = task.total;
+  if (quotient < 0 || remainder < 0) return { ok: false };
+  if (remainder >= divisor) return { ok: false };
+  if (quotient * divisor + remainder !== total) return { ok: false };
+  const expectedQuot = Math.floor(total / divisor);
+  const expectedRem = total % divisor;
+  if (quotient !== expectedQuot || remainder !== expectedRem) return { ok: false };
+  return { ok: true, expectedPer: expectedQuot, expectedRem };
 }
 
 /** @param {GiftsTask} task */
 export function giftsPrompt(task) {
-  const remainder = task.total % task.children;
-  if (remainder > 0) {
-    return `לליאו יש ${task.total} ${task.itemLabel}. הגיעו ${task.children} ילדים. כמה כל ילד מקבל וכמה נשאר לליאו?`;
+  const { itemLabel, total } = task;
+  if (task.mode === "make_groups") {
+    const size = task.groupSize ?? task.operands.divisor;
+    if (task.expectedAnswer.remainder > 0 || task.skillId === "division.remainder") {
+      return `יש ${total} ${itemLabel}. בכל שקית שמים ${size}. כמה שקיות מלאות אפשר להכין וכמה יישארו?`;
+    }
+    return `יש ${total} ${itemLabel}. בכל שקית שמים ${size}. כמה שקיות מלאות אפשר להכין?`;
   }
-  return `לליאו יש ${task.total} ${task.itemLabel}. הגיעו ${task.children} ילדים. כמה יקבל כל ילד?`;
+  const children = task.children ?? task.operands.divisor;
+  if (task.expectedAnswer.remainder > 0 || task.mode === "find_remainder") {
+    return `יש ${total} ${itemLabel} ו-${children} ילדים. כמה יקבל כל ילד וכמה יישאר?`;
+  }
+  return `יש ${total} ${itemLabel} ו-${children} ילדים. חלקן שווה בשווה. כמה יקבל כל ילד?`;
+}
+
+/** @param {GiftsTask} task */
+export function giftsSolutionText(task) {
+  const q = task.expectedAnswer.quotient;
+  const r = task.expectedAnswer.remainder;
+  const d = task.operands.divisor;
+  if (task.mode === "make_groups") {
+    return r > 0
+      ? `פתרון: ${q} שקיות × ${d} בכל שקית + ${r} נשאר = ${task.total}`
+      : `פתרון: ${q} שקיות × ${d} בכל שקית = ${task.total}`;
+  }
+  return r > 0
+    ? `פתרון: ${q} לכל ילד × ${d} ילדים + ${r} נשאר = ${task.total}`
+    : `פתרון: ${q} לכל ילד × ${d} ילדים = ${task.total}`;
 }
 
 /** @param {boolean} ok @param {number} perChild @param {number} remainder */
 export function giftsFeedback(ok, perChild, remainder) {
   if (ok) {
     if (remainder > 0) {
-      return `יפה! כל ילד קיבל ${perChild} ולליאו נשארו ${remainder}.`;
+      return `יפה! התוצאה ${perChild} והשארית ${remainder}.`;
     }
-    return "מעולה! כל ילד קיבל אותו מספר.";
+    return "מעולה! חילקתם נכון.";
   }
-  return "כמעט! בדקו שכל הילדים קיבלו שווה בשווה ושלא נשאר יותר מדי לליאו.";
+  return "כמעט! בדקו שהחלוקה שווה ושהשארית קטנה מהמחלק.";
 }
 
-const CHILD_EMOJIS = ["👧", "👦", "🧒", "👧🏽", "👦🏽", "🧒🏻", "👧🏻", "👦🏻", "🧒🏽", "👧🏼", "👦🏼", "🧒🏼"];
+const CHILD_EMOJIS = ["👧", "👦", "🧒", "👧🏻", "👦🏻", " compat", "👧🏼", "👦🏼", " compat", "👧🏽", "👦🏽", " compat"];
 
 /** @param {number} index */
 export function childEmojiAt(index) {
@@ -233,4 +336,19 @@ export function childrenGridClass(childCount) {
   if (childCount <= 4) return "gridFew";
   if (childCount <= 8) return "gridMedium";
   return "gridMany";
+}
+
+/** @param {GiftsTask} task */
+export function giftsDivisorLabel(task) {
+  return task.mode === "make_groups" ? "שקיות" : "ילדים";
+}
+
+/** @param {GiftsTask} task */
+export function giftsQuotientLabel(task) {
+  return task.mode === "make_groups" ? "שקיות מלאות" : "לכל ילד";
+}
+
+/** Compatibility: old field name */
+export function generateGiftsPool(difficulty, opts = {}) {
+  return generateGiftsPoolForMode(difficulty, "share_equally", difficulty !== "easy", opts.salt ?? 0);
 }

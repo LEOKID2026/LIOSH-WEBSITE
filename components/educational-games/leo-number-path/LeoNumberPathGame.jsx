@@ -12,6 +12,7 @@ import {
   formatSelectedPath,
   isNumberPathWin,
   pathFeedback,
+  pathSolutionText,
   SCORE,
   TASKS_PER_SESSION,
   validatePath,
@@ -205,9 +206,13 @@ export default function LeoNumberPathGame({
     }
 
     if (attemptNum >= MAX_ATTEMPTS_PER_TASK) {
+      const solution = pathSolutionText(currentTask);
+      setFeedback(solution);
+      setSelected([...currentTask.correctPath]);
+      playFeedback(solution);
       window.setTimeout(() => {
         advanceTask();
-      }, 1800);
+      }, 2200);
     }
   }, [
     currentTask,
