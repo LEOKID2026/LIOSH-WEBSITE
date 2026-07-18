@@ -1,6 +1,8 @@
 import { useMemo } from "react";
 import { useStudentSessionContext } from "../components/student/StudentSessionContext";
+import { useDemoMode } from "../components/demo/DemoModeContext.jsx";
 import { resolveStudentSessionView } from "../lib/learning-client/resolveStudentSessionView";
+import { isDemoMode, readDemoSession } from "../lib/demo/demo-mode.client.js";
 import {
   LIOSH_ACTIVE_STUDENT_ID_KEY,
   readStudentGradeLevelCache,
@@ -22,10 +24,16 @@ function readActiveStudentIdFromStorage() {
  */
 export function useResolvedStudentSession() {
   const ctx = useStudentSessionContext();
+  const { session: demoSession, isDemo } = useDemoMode();
   const activeStudentId = readActiveStudentIdFromStorage();
   const cachedGradeLevelRaw = activeStudentId
     ? readStudentGradeLevelCache(activeStudentId)
     : null;
+
+  const demoGradeLevel =
+    isDemo || isDemoMode()
+      ? demoSession?.gradeLevel || readDemoSession()?.gradeLevel || null
+      : null;
 
   return useMemo(
     () =>
@@ -34,8 +42,9 @@ export function useResolvedStudentSession() {
         student: ctx.student,
         activeStudentId,
         cachedGradeLevelRaw,
+        demoGradeLevel,
       }),
-    [ctx.status, ctx.student, activeStudentId, cachedGradeLevelRaw]
+    [ctx.status, ctx.student, activeStudentId, cachedGradeLevelRaw, demoGradeLevel]
   );
 }
 
