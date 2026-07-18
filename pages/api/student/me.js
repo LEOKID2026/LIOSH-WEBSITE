@@ -22,11 +22,13 @@ import {
   isGuestStudentFromDbRow,
   isSchemaNotReadyError,
 } from "../../../lib/learning/subject-permissions/subject-access.server.js";
+import {
+  createStudentApiTimingBucket,
+  finishStudentApiTiming,
+  timeStudentApiPhase,
+} from "../../../lib/dev/student-api-timing.server.js";
 
 export default async function handler(req, res) {
-  // Authenticated identity must never be served from a shared or disk cache — otherwise
-  // after switching students (new session cookie), a stale cached GET can return the
-  // previous child and client sync logic would overwrite the correct identity.
   res.setHeader("Cache-Control", "private, no-store, no-cache, must-revalidate");
   res.setHeader("Pragma", "no-cache");
   res.setHeader("Expires", "0");
@@ -36,20 +38,25 @@ export default async function handler(req, res) {
     return res.status(405).json({ ok: false, error: "Method not allowed" });
   }
 
+  const timing = createStudentApiTimingBucket();
+
   try {
-    const auth = await getAuthenticatedStudentSession(req);
+    const auth = await timeStudentApiPhase("resolveSession", () => getAuthenticatedStudentSession(req), timing);
     if (!auth) {
       clearStudentSessionCookie(res);
+      finishStudentApiTiming(res, "/api/student/me", timing);
       return res.status(401).json({ ok: false, error: "Student session expired" });
     }
 
     const supabase = getLearningSupabaseServiceRoleClient();
     const nowIso = new Date().toISOString();
 
-    await supabase
-      .from("student_sessions")
-      .update({ last_seen_at: nowIso })
-      .eq("id", auth.studentSessionId);
+    await timeStudentApiPhase("touchSession", async () => {
+      await supabase
+        .from("student_sessions")
+        .update({ last_seen_at: nowIso })
+        .eq("id", auth.studentSessionId);
+    }, timing);
 
     const student = auth.student;
     const rel = student.student_coin_balances;
@@ -73,46 +80,49 @@ export default async function handler(req, res) {
       leoNumberLabelHe: formatLeoNumberLabelHe(student),
     };
 
-    const guestPolicy = isGuestStudent(student)
-      ? await buildGuestPolicyPayload(supabase, student)
-      : null;
+    const guestPolicy = await timeStudentApiPhase("guestPolicy", async () => (
+      isGuestStudent(student) ? buildGuestPolicyPayload(supabase, student) : null
+    ), timing);
 
     /** @type {Record<string, unknown>} */
     const accessPayload = {};
-    const { data: studentDbRow } = await supabase
-      .from("students")
-      .select("id, parent_id, grade_level, account_kind")
-      .eq("id", student.id)
-      .maybeSingle();
+    await timeStudentApiPhase("subjectAccess", async () => {
+      const { data: studentDbRow } = await supabase
+        .from("students")
+        .select("id, parent_id, grade_level, account_kind")
+        .eq("id", student.id)
+        .maybeSingle();
 
-    if (
-      studentDbRow &&
-      isChildUnderParentFromDbRow(studentDbRow) &&
-      !isGuestStudentFromDbRow(studentDbRow)
-    ) {
-      try {
-        await callEnsureParentStudentLearningPermissionsRpc(supabase, {
-          parentId: studentDbRow.parent_id,
-          changedBy: studentDbRow.parent_id,
-          studentId: student.id,
-        });
-        const permissions = await computeSubjectPermissionsPayload(
-          supabase,
-          student.id,
-          studentDbRow.grade_level
-        );
-        accessPayload.allowStudentGradePicker = permissions.allowStudentGradePicker;
-        accessPayload.subjectPermissions = permissions.subjectPermissions;
-      } catch (error) {
-        if (!isSchemaNotReadyError(error)) throw error;
+      if (
+        studentDbRow &&
+        isChildUnderParentFromDbRow(studentDbRow) &&
+        !isGuestStudentFromDbRow(studentDbRow)
+      ) {
+        try {
+          await callEnsureParentStudentLearningPermissionsRpc(supabase, {
+            parentId: studentDbRow.parent_id,
+            changedBy: studentDbRow.parent_id,
+            studentId: student.id,
+          });
+          const permissions = await computeSubjectPermissionsPayload(
+            supabase,
+            student.id,
+            studentDbRow.grade_level,
+          );
+          accessPayload.allowStudentGradePicker = permissions.allowStudentGradePicker;
+          accessPayload.subjectPermissions = permissions.subjectPermissions;
+        } catch (error) {
+          if (!isSchemaNotReadyError(error)) throw error;
+        }
       }
-    }
+    }, timing);
 
     const debugStudentIdentity = devStudentIdentityPayload("student-me-api", student);
     if (isStudentIdentityDebugEnabled() && debugStudentIdentity) {
       safeApiLog("[LIOSH student identity] API", debugStudentIdentity);
     }
 
+    finishStudentApiTiming(res, "/api/student/me", timing);
     return res.status(200).json({
       ok: true,
       student: bodyStudent,
@@ -123,7 +133,7 @@ export default async function handler(req, res) {
     });
   } catch (_e) {
     clearStudentSessionCookie(res);
+    finishStudentApiTiming(res, "/api/student/me", timing);
     return res.status(500).json({ ok: false, error: "שגיאת שרת" });
   }
 }
-

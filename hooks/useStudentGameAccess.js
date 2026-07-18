@@ -1,5 +1,8 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { StudentGameAccessContext } from "../contexts/StudentGameAccessContext.jsx";
+import { fetchStudentGameAccessClient } from "../lib/learning-client/studentGameAccessClient.js";
+
+export { fetchStudentGameAccessClient };
 
 const EMPTY_GAME_ACCESS = {
   gamesByKey: {},
@@ -36,20 +39,6 @@ export function buildStudentGameAccessView(data) {
     permissions: data?.permissions || null,
     isGuest: data?.isGuest === true,
   };
-}
-
-/** @returns {Promise<{ ok: boolean, data: object | null, error: string | null }>} */
-export async function fetchStudentGameAccessClient() {
-  try {
-    const res = await fetch("/api/student/game-access", { credentials: "include" });
-    const json = await res.json().catch(() => ({}));
-    if (!res.ok || !json.ok) {
-      return { ok: false, data: null, error: json.error || "load_failed" };
-    }
-    return { ok: true, data: json, error: null };
-  } catch {
-    return { ok: false, data: null, error: "network_error" };
-  }
 }
 
 function useStudentGameAccessFetch({ enabled = true } = {}) {

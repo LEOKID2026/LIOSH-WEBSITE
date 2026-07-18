@@ -4,7 +4,6 @@ import PageSeo from "../../components/seo/PageSeo";
 import { getPublicPageSeo } from "../../lib/site/public-page-seo.he";
 import Link from "next/link";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
-import { isStudentIdentityDiagnosticsEnabled } from "../../lib/dev-student-identity-client";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import LearningHubSubjectCard from "../../components/learning/LearningHubSubjectCard.jsx";
 import StudentHomeModal from "../../components/student/StudentHomeModal";
@@ -25,7 +24,6 @@ import {
   DEMO_DASHBOARD_VIEW,
   DEMO_HOME_PAYLOAD,
 } from "../../components/demo/demo-display-fixtures.js";
-
 const HOME_SUMMARY_PATH = "/api/student/home-profile/summary";
 const PROGRESS_PANEL = {
   title: "ההתקדמות שלי",
@@ -34,7 +32,7 @@ const PROGRESS_PANEL = {
   variant: "progress",
 };
 
-const LEARNING_GAMES = [
+const LEARNING_SUBJECTS = [
   {
     slug: "math-master",
     permissionKey: "math",
@@ -92,6 +90,11 @@ const LEARNING_GAMES = [
     blurb: "יוון, הלניזם, החשמונאים, רומא והיהודים.",
   },
 ];
+
+const LEARNING_GAMES = LEARNING_SUBJECTS.map((subject) => ({
+  ...subject,
+  href: `/student/learning/${subject.slug}`,
+}));
 
 const DEFAULT_SUBJECT_CARD = {
   card: "border-slate-100 hover:border-sky-100 bg-white",
@@ -260,34 +263,6 @@ export default function LearningHub({ showDevStudentSimulator }) {
     return undefined;
   }, [demoSession?.gradeLevel]);
 
-  useEffect(() => {
-    if (isDemoMode()) return undefined;
-    if (!isStudentIdentityDiagnosticsEnabled()) return undefined;
-    console.log("[learning/index] localStorage on mount", {
-      liosh_active_student_id: localStorage.getItem("liosh_active_student_id"),
-      mleo_player_name: localStorage.getItem("mleo_player_name"),
-    });
-    fetch("/api/student/me", { credentials: "include", cache: "no-store" })
-      .then((r) => r.json().catch(() => ({})))
-      .then((payload) => {
-        console.log("[learning/index] GET /api/student/me", {
-          ok: payload?.ok === true,
-          id: payload.student?.id,
-          fullName: payload.student?.full_name,
-          gradeLevel: payload.student?.grade_level,
-          debug: payload.debugStudentIdentity,
-        });
-        console.log("[learning/index] localStorage after /me response", {
-          liosh_active_student_id: localStorage.getItem("liosh_active_student_id"),
-          mleo_player_name: localStorage.getItem("mleo_player_name"),
-        });
-      })
-      .catch((err) => {
-        console.log("[learning/index] GET /api/student/me failed", String(err?.message || err));
-      });
-    return undefined;
-  }, []);
-
   useEffect(
     () => () => {
       if (lockToastTimerRef.current) window.clearTimeout(lockToastTimerRef.current);
@@ -351,6 +326,7 @@ export default function LearningHub({ showDevStudentSimulator }) {
             return (
               <LearningHubSubjectCard
                 key={g.slug}
+                href={g.href}
                 slug={g.slug}
                 permissionKey={g.permissionKey}
                 title={g.title}

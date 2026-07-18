@@ -2,7 +2,7 @@ import "../styles/globals.css";
 import "../styles/worksheet-print.css";
 import "../styles/worksheet-hub.css";
 import Head from "next/head";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { Analytics } from "@vercel/analytics/next";
 import OfflineIndicator from "../components/OfflineIndicator";
@@ -22,6 +22,13 @@ import { GOOGLE_CONSENT_BOOTSTRAP_SCRIPT } from "../lib/consent/google-consent-m
 import { isStudentProtectedRoute, isDemoAccessibleRoute } from "../lib/student-ui/student-protected-routes.client.js";
 import DemoAccessGate from "../components/demo/DemoAccessGate.jsx";
 import { hasDemoSession } from "../lib/demo/demo-mode.client.js";
+import { StudentNavigationProvider } from "../contexts/StudentNavigationContext.jsx";
+import {
+  installStudentFetchTiming,
+  installStudentRoutePerfHooks,
+  perfMarkHydrationComplete,
+} from "../lib/student-ui/student-runtime-perf.client.js";
+import { isStudentPerfInstrumentationEnabled } from "../lib/student-ui/student-session-instrumentation.client.js";
 import {
   BROWSER_THEME_COLOR_BRIGHT,
   BROWSER_THEME_COLOR_BOOTSTRAP_SCRIPT,
@@ -114,12 +121,26 @@ export default function MyApp({ Component, pageProps }) {
   }, [router.pathname]);
 
   useEffect(() => {
+    if (!isStudentPerfInstrumentationEnabled()) return undefined;
+    installStudentFetchTiming();
+    installStudentRoutePerfHooks(router);
+    perfMarkHydrationComplete();
+    return undefined;
+  }, [router]);
+
+  const swRegisteredRef = useRef(false);
+
+  useEffect(() => {
     if (typeof window === "undefined" || !("serviceWorker" in navigator)) {
       return undefined;
     }
 
     // בפיתוח: ראה DevServiceWorkerCleanup — לא רושמים SW; מנקים רישומים ו Cache Storage.
     if (process.env.NODE_ENV === "development") {
+      return undefined;
+    }
+
+    if (swRegisteredRef.current) {
       return undefined;
     }
 
@@ -145,17 +166,19 @@ export default function MyApp({ Component, pageProps }) {
         }
       })();
 
+      swRegisteredRef.current = true;
       return () => {
         cancelled = true;
       };
     }
 
-    const pathname = router.pathname || "";
+    const pathname = window.location.pathname || "";
     const isParentRoute = pathname.startsWith("/parent/");
     const isStudentRoute = pathname.startsWith("/student/");
     const isTeacherRoute = pathname.startsWith("/teacher/");
 
     const registerSW = () => {
+      swRegisteredRef.current = true;
       if (isParentRoute) {
         navigator.serviceWorker
           .register("/parent/sw.js", { scope: "/parent/" })
@@ -255,20 +278,21 @@ export default function MyApp({ Component, pageProps }) {
 
     window.addEventListener("load", registerSW);
     return () => window.removeEventListener("load", registerSW);
-  }, [router.pathname]);
+  }, []);
 
   const pathname = router.pathname || "";
   const shouldGate = isStudentProtectedRoute(pathname);
-  /** @type {["pending" | "demo" | "student" | "none", import("react").Dispatch<import("react").SetStateAction<"pending" | "demo" | "student" | "none">>] */
-  const [gateKind, setGateKind] = useState("pending");
+  const [gateKind, setGateKind] = useState(() => (shouldGate ? "student" : "none"));
 
   useEffect(() => {
+    if (!shouldGate) {
+      setGateKind("none");
+      return;
+    }
     if (hasDemoSession() && isDemoAccessibleRoute(pathname)) {
       setGateKind("demo");
-    } else if (shouldGate) {
-      setGateKind("student");
     } else {
-      setGateKind("none");
+      setGateKind("student");
     }
   }, [pathname, shouldGate]);
 
@@ -381,16 +405,18 @@ export default function MyApp({ Component, pageProps }) {
           <DevPrototypeAdminGate>
             <Component {...pageProps} />
           </DevPrototypeAdminGate>
-        ) : gateKind === "pending" && shouldGate ? (
-          <div className="min-h-[40vh]" dir="rtl" lang="he" aria-busy="true" aria-label="טוען" />
         ) : gateKind === "demo" ? (
-          <DemoAccessGate>
-            <Component {...pageProps} />
-          </DemoAccessGate>
+          <StudentNavigationProvider>
+            <DemoAccessGate>
+              <Component {...pageProps} />
+            </DemoAccessGate>
+          </StudentNavigationProvider>
         ) : gateKind === "student" ? (
-          <StudentAccessGate>
-            <Component {...pageProps} />
-          </StudentAccessGate>
+          <StudentNavigationProvider>
+            <StudentAccessGate>
+              <Component {...pageProps} />
+            </StudentAccessGate>
+          </StudentNavigationProvider>
         ) : (
           <Component {...pageProps} />
         )}

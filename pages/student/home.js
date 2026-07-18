@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Layout from "../../components/Layout";
@@ -25,7 +26,9 @@ import {
   setClientAchievementGrantsInFlight,
   clearClientAchievementGrantsInFlight,
 } from "../../lib/learning-client/studentHomeProfileClient";
-import { invalidateStudentMeClientCache, getCachedStudentMe, setCachedStudentMe } from "../../lib/learning-client/studentMeClient";
+import { invalidateStudentMeClientCache, getCachedStudentMe } from "../../lib/learning-client/studentMeClient";
+import { invalidateStudentGameAccessClientCache } from "../../lib/learning-client/studentGameAccessClient.js";
+import { useStudentSessionContext } from "../../components/student/StudentSessionContext";
 import { STUDENT_TRUTH_LABELS_HE } from "../../lib/learning-shared/student-display-truth.js";
 import StudentAvatarPickerModal from "../../components/student/StudentAvatarPickerModal";
 import {
@@ -49,6 +52,8 @@ import { isGuestStudent } from "../../lib/guest/guest-display.js";
 import { shouldClearGuestResumeTokenOnLogout } from "../../lib/guest/guest-resume-token.client.js";
 import StudentLoadingPanel from "../../components/ui/StudentLoadingPanel.jsx";
 import { isDemoMode, buildDemoDisplayStudent, clearDemoSession } from "../../lib/demo/demo-mode.client.js";
+import { useClientDemoMode } from "../../hooks/useClientDemoMode.js";
+import { useStudentNavigation } from "../../contexts/StudentNavigationContext.jsx";
 import {
   DEMO_HOME_PAYLOAD,
   DEMO_AVATAR_EMOJI,
@@ -306,8 +311,12 @@ function RecommendationsSection({ recommendations }) {
 export default function StudentHomePage() {
   const router = useRouter();
   const { tokens: T, theme, isBright } = useStudentTheme();
+  const { status: sessionStatus, student: sessionStudent } = useStudentSessionContext();
+  const demoActive = useClientDemoMode();
+  const { clearNavigation } = useStudentNavigation();
   const [authPhase, setAuthPhase] = useState("checking");
   const [student, setStudent] = useState(null);
+  const shellStudent = student || sessionStudent;
   const [homePayload, setHomePayload] = useState(null);
   const [profilePhase, setProfilePhase] = useState("idle");
   const [analyticsPhase, setAnalyticsPhase] = useState("idle");
@@ -334,8 +343,15 @@ export default function StudentHomePage() {
     if (patch) setSurpriseBoxStatus(patch);
     setBoxRefreshToken((token) => token + 1);
   }, []);
+
+  useEffect(() => {
+    if (boxModalOpen) clearNavigation();
+  }, [boxModalOpen, clearNavigation]);
+
   const cardRewardsEnabled = isCardRewardsEnabledClient();
-  const isGuestHome = Boolean(guestPolicy || student?.account_kind === "guest" || student?.accountKind === "guest");
+  const isGuestHome = Boolean(
+    guestPolicy || shellStudent?.account_kind === "guest" || shellStudent?.accountKind === "guest",
+  );
   const guestLockedPanelSet = useMemo(() => {
     if (!isGuestHome) return new Set();
     const ids = guestPolicy?.lockedHomePanels || GUEST_LOCKED_HOME_PANELS;
@@ -507,7 +523,7 @@ export default function StudentHomePage() {
 
   useEffect(() => {
     if (!router.isReady) return undefined;
-    if (isDemoMode()) {
+    if (demoActive || isDemoMode()) {
       const demoStudent = buildDemoDisplayStudent();
       setStudent(demoStudent);
       setAuthPhase("authed");
@@ -522,6 +538,7 @@ export default function StudentHomePage() {
       setHeroAvatarBackground("sky");
       return undefined;
     }
+
     let mounted = true;
     setProfileError("");
     setPersonalActivities([]);
@@ -529,114 +546,50 @@ export default function StudentHomePage() {
     setPersonalActivitiesPhase("idle");
 
     const cachedMe = getCachedStudentMe();
-    if (cachedMe?.student?.id) {
-      setStudent(cachedMe.student);
-      setAuthPhase("authed");
-      const cachedHome = getCachedStudentHomePayload(cachedMe.student.id);
-      if (cachedHome?.merged) {
-        setHomePayload(cachedHome.merged);
-        setProfilePhase("ok");
-        setAnalyticsPhase(cachedHome.analytics ? "ok" : "idle");
-      } else {
-        setProfilePhase("idle");
-        setHomePayload(null);
-      }
-    } else {
-      setAuthPhase("checking");
-      setStudent(null);
-      setHomePayload(null);
-      setProfilePhase("idle");
-      setAnalyticsPhase("idle");
+    const activeStudent = sessionStudent || cachedMe?.student;
+
+    if (sessionStatus === "blocked") {
+      setAuthPhase("anon");
+      router.replace("/student/login");
+      return () => {
+        mounted = false;
+      };
     }
 
-    (async () => {
-      try {
-        const meRes = await fetch("/api/student/me", {
-          credentials: "include",
-          cache: "no-store",
-          headers: { Accept: "application/json" },
-        });
-
-        if (!mounted) return;
-
-        const payload = await meRes.json().catch(() => ({}));
-        if (isStudentIdentityDiagnosticsEnabled()) {
-          console.info("[student/home] /api/student/me", {
-            httpStatus: meRes.status,
-            hasStudent: !!payload?.student?.id,
-          });
-        }
-        if (!meRes.ok || !payload?.student?.id) {
-          setAuthPhase("anon");
-          router.replace("/student/login");
-          return;
-        }
-
-        setCachedStudentMe(payload);
-        syncStudentLocalStorageIdentity(payload.student, "student/home after /me");
-        setStudent(payload.student);
-        setGuestPolicy(payload.guestPolicy || null);
-        setAuthPhase("authed");
-
-        const cachedHome = getCachedStudentHomePayload(payload.student.id);
-        if (cachedHome?.merged) {
-          setHomePayload(cachedHome.merged);
-          setProfilePhase("ok");
-          setAnalyticsPhase(cachedHome.analytics ? "ok" : "idle");
-          void loadHomeAnalytics(payload.student.id, cachedHome.summary || {});
-          void loadHomeAchievementGrants(payload.student.id);
-          return;
-        }
-
-        setProfilePhase("loading");
-        const summaryRes = await fetch(HOME_SUMMARY_PATH, {
-          credentials: "include",
-          cache: "no-store",
-          headers: { Accept: "application/json" },
-        });
-        if (!mounted) return;
-
-        const summaryText = await summaryRes.text();
-        let summaryJson = {};
-        try {
-          summaryJson = summaryText ? JSON.parse(summaryText) : {};
-        } catch {
-          if (!getCachedStudentHomePayload(payload.student.id)?.merged) {
-            setProfileError(`תגובת השרת לא בפורמט תקין (קוד ${summaryRes.status}).`);
-            setProfilePhase("error");
-          }
-          return;
-        }
-
-        if (summaryRes.ok && summaryJson?.ok === true && summaryJson?.accountSnapshot) {
-          setCachedStudentHomePayload(payload.student.id, { summary: summaryJson });
-          const cached = getCachedStudentHomePayload(payload.student.id);
-          setHomePayload(mergeStudentHomePayloads(summaryJson, cached?.analytics));
-          setProfilePhase("ok");
-          window.setTimeout(() => {
-            if (!mounted) return;
-            void loadHomeAnalytics(payload.student.id, summaryJson);
-            void loadHomeAchievementGrants(payload.student.id);
-          }, 0);
-          return;
-        }
-
-        void loadHomeDashboard(payload.student);
-      } catch {
-        if (!mounted) return;
-        setAuthPhase("anon");
-        router.replace("/student/login");
+    if (!activeStudent?.id) {
+      if (sessionStatus === "loading") {
+        setAuthPhase("checking");
       }
-    })();
+      return () => {
+        mounted = false;
+      };
+    }
+
+    setStudent(activeStudent);
+    setAuthPhase("authed");
+    setGuestPolicy(cachedMe?.guestPolicy || null);
+
+    const cachedHome = getCachedStudentHomePayload(activeStudent.id);
+    if (cachedHome?.merged) {
+      setHomePayload(cachedHome.merged);
+      setProfilePhase("ok");
+      setAnalyticsPhase(cachedHome.analytics ? "ok" : "idle");
+      void loadHomeAnalytics(activeStudent.id, cachedHome.summary || {});
+      void loadHomeAchievementGrants(activeStudent.id);
+    } else {
+      setProfilePhase("idle");
+      setHomePayload(null);
+      setAnalyticsPhase("idle");
+      void loadHomeDashboard(activeStudent);
+    }
 
     return () => {
       mounted = false;
     };
-    // רק isReady + loadHomeDashboard — לא router (משתנה בהידרציה ומבטל fetch באמצע → stuck על "טוען את דף הבית...").
-  }, [router.isReady, loadHomeDashboard]);
+  }, [router.isReady, sessionStatus, sessionStudent, loadHomeDashboard, router, demoActive]);
 
   const dashboardView = useMemo(() => {
-    if (isDemoMode()) return DEMO_DASHBOARD_VIEW;
+    if (demoActive) return DEMO_DASHBOARD_VIEW;
     if (!student?.id || profilePhase !== "ok" || !homePayload) return null;
     try {
       const v = buildStudentHomeView({ student, homePayload });
@@ -837,7 +790,7 @@ export default function StudentHomePage() {
   const closeHomePanel = useCallback(() => setActivePanel(null), []);
 
   const onLogout = async () => {
-    if (isDemoMode()) {
+    if (demoActive || isDemoMode()) {
       clearDemoSession();
       await router.replace("/");
       return;
@@ -857,6 +810,7 @@ export default function StudentHomePage() {
       invalidateStudentLearningProfileClientCache();
       invalidateStudentHomeProfileClientCache(sid);
       invalidateStudentMeClientCache();
+      invalidateStudentGameAccessClientCache(sid);
       setStudent(null);
       setHomePayload(null);
       setProfilePhase("idle");
@@ -870,21 +824,21 @@ export default function StudentHomePage() {
     }
   };
 
-  if (authPhase === "checking" || authPhase === "anon") {
-    return <LoadingScreen message={authPhase === "anon" ? "מעבירים לכניסה..." : "טוען את דף הבית..."} />;
+  if (authPhase === "anon") {
+    return <LoadingScreen message="מעבירים לכניסה..." />;
   }
 
-  if (!student) {
-    return <LoadingScreen message="טוען..." />;
+  if (!shellStudent) {
+    return <LoadingScreen message={authPhase === "checking" ? "טוען את דף הבית..." : "טוען..."} />;
   }
 
-  const heroName = String(student.displayNameHe || student.full_name || "").trim() || "ילד/ה";
-  const heroGreeting = String(student.greetingHe || "").trim() || `שלום ${heroName}`;
-  const heroLeoNumber = String(student.leoNumber ?? student.leo_number ?? "").trim();
-  const heroLeoLabel = String(student.leoNumberLabelHe || "").trim();
+  const heroName = String(shellStudent.displayNameHe || shellStudent.full_name || "").trim() || "ילד/ה";
+  const heroGreeting = String(shellStudent.greetingHe || "").trim() || `שלום ${heroName}`;
+  const heroLeoNumber = String(shellStudent.leoNumber ?? shellStudent.leo_number ?? "").trim();
+  const heroLeoLabel = String(shellStudent.leoNumberLabelHe || "").trim();
   const heroCoinsDisplay =
-    student.coin_balance != null
-      ? String(Number(student.coin_balance) || 0)
+    shellStudent.coin_balance != null
+      ? String(Number(shellStudent.coin_balance) || 0)
       : dashboardView?.identity?.coinBalanceDisplayHe ?? STUDENT_TRUTH_LABELS_HE.unavailable;
   const heroDiamondsDisplay =
     diamondBalance === null || diamondBalance === undefined
@@ -956,7 +910,7 @@ export default function StudentHomePage() {
         noindex={studentHomeSeo.noindex}
       />
       <div
-        key={isDemoMode() ? "demo-home" : student?.id || "student-home"}
+        key={demoActive ? "demo-home" : student?.id || "student-home"}
         className="relative flex h-full min-h-0 w-full flex-1 flex-col"
         style={{
           marginBottom: `calc(-1 * (${STUDENT_LAYOUT_CHROME_BOTTOM_CSS}))`,
@@ -988,10 +942,16 @@ export default function StudentHomePage() {
           lockMessage={guestPolicy?.lockMessageHe || GUEST_LOCK_MESSAGE_HE}
           logoutBusy={logoutBusy}
           onOpenPanel={openHomePanel}
-          onOpenAvatar={isDemoMode() ? undefined : () => setShowAvatarModal(true)}
+          onOpenAvatar={demoActive ? undefined : () => setShowAvatarModal(true)}
           onLogout={() => void onLogout()}
           onLockedTap={showLockToast}
-          onSurpriseOpen={cardRewardsEnabled && !isDemoMode() ? () => setBoxModalOpen(true) : undefined}
+          onSurpriseOpen={
+            cardRewardsEnabled && !demoActive
+              ? () => {
+                  flushSync(() => setBoxModalOpen(true));
+                }
+              : undefined
+          }
           surpriseOpeningLocked={boxModalOpen}
           surpriseRefreshToken={boxRefreshToken}
           surpriseStatusOverride={surpriseBoxStatus}
@@ -1054,12 +1014,12 @@ export default function StudentHomePage() {
         {renderActivePanelContent()}
       </StudentHomeModal>
       <StudentSurpriseBoxOpenModal
-        open={boxModalOpen && !isDemoMode()}
+        open={boxModalOpen && !demoActive}
         onClose={() => setBoxModalOpen(false)}
         onOpened={handleSurpriseBoxOpened}
       />
       <StudentAvatarPickerModal
-        open={showAvatarModal && !isDemoMode()}
+        open={showAvatarModal && !demoActive}
         onClose={() => setShowAvatarModal(false)}
         playerName={heroName}
         serverAvatarEmoji={

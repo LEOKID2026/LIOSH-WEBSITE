@@ -1,11 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "../Layout";
 import { StudentSessionProvider } from "../student/StudentSessionContext";
 import { StudentSubjectAccessProvider } from "../../contexts/StudentSubjectAccessContext.jsx";
 import { StudentGameAccessProvider } from "../../contexts/StudentGameAccessContext.jsx";
 import { buildStudentGameAccessView } from "../../hooks/useStudentGameAccess.js";
-import { studentPathNeedsGameAccess } from "../../lib/student-ui/student-game-access-paths.client.js";
 import { buildDemoDisplayStudent, readDemoSession } from "../../lib/demo/demo-mode.client.js";
 import { isDemoOnlineGameRoute } from "../../lib/demo/demo-online-game-routes.client.js";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
@@ -14,6 +13,12 @@ import { DemoModeProvider, useDemoMode } from "./DemoModeContext.jsx";
 import DemoModeBar from "./DemoModeBar.jsx";
 import DemoTimeExpiredModal from "./DemoTimeExpiredModal.jsx";
 import DemoOnlineGameUnavailable from "./DemoOnlineGameUnavailable.jsx";
+import {
+  fetchDemoCatalogClient,
+  getCachedDemoCatalog,
+} from "../../lib/demo/demo-catalog-client.js";
+import { perfMount } from "../../lib/student-ui/student-session-instrumentation.client.js";
+import { prefetchStudentHubRoutes } from "../../lib/student-ui/student-hub-prefetch.client.js";
 
 function resolveGateLayoutShell(pathname) {
   const path = pathname || "";
@@ -34,40 +39,84 @@ function DemoAccessGateInner({ children }) {
   const router = useRouter();
   const pathname = router.pathname || "";
   const { session, timeExpiredModalOpen, setTimeExpiredModalOpen } = useDemoMode();
-  const needsGameAccess = studentPathNeedsGameAccess(pathname);
+  const bootstrappedRef = useRef(false);
+  const mountCountedRef = useRef(false);
+  const hubsPrefetchedRef = useRef(false);
+
+  const gradeLevel = session?.gradeLevel || "g3";
 
   const [catalogState, setCatalogState] = useState("loading");
   const [catalogData, setCatalogData] = useState(null);
+  const [initialColdLoad, setInitialColdLoad] = useState(true);
 
-  const gradeLevel = session?.gradeLevel || readDemoSession()?.gradeLevel || "g3";
+  useEffect(() => {
+    if (!mountCountedRef.current) {
+      mountCountedRef.current = true;
+      perfMount("DemoAccessGate");
+    }
+  }, []);
 
-  const loadCatalog = useCallback(async () => {
-    setCatalogState("loading");
-    try {
-      const res = await fetch(
-        `/api/demo/catalog?gradeLevel=${encodeURIComponent(gradeLevel)}`,
-        { credentials: "same-origin", cache: "no-store" },
-      );
-      const json = await res.json().catch(() => ({}));
-      if (!res.ok || !json.ok) {
-        setCatalogState("error");
-        setCatalogData(null);
+  const loadCatalog = useCallback(
+    async ({ force = false } = {}) => {
+      const cached = getCachedDemoCatalog(gradeLevel);
+      if (!force && cached) {
+        setCatalogData(cached);
+        setCatalogState("ready");
+        setInitialColdLoad(false);
+        void fetchDemoCatalogClient(gradeLevel, { force: true, background: true });
         return;
       }
-      setCatalogData(json);
+
+      if (!cached) {
+        setCatalogState("loading");
+      }
+
+      const result = await fetchDemoCatalogClient(gradeLevel, { force: true });
+      if (result.ok && result.data) {
+        setCatalogData(result.data);
+        setCatalogState("ready");
+        setInitialColdLoad(false);
+        if (!hubsPrefetchedRef.current) {
+          hubsPrefetchedRef.current = true;
+          prefetchStudentHubRoutes(router);
+        }
+        return;
+      }
+      if (!result.fromCache) {
+        setCatalogState("error");
+        setCatalogData(null);
+        setInitialColdLoad(false);
+      }
+    },
+    [gradeLevel],
+  );
+
+  useEffect(() => {
+    if (bootstrappedRef.current) return undefined;
+    bootstrappedRef.current = true;
+
+    const cached = getCachedDemoCatalog(gradeLevel);
+    if (cached) {
+      setCatalogData(cached);
       setCatalogState("ready");
-    } catch {
-      setCatalogState("error");
-      setCatalogData(null);
+      setInitialColdLoad(false);
+      void fetchDemoCatalogClient(gradeLevel, { force: true, background: true });
+      if (!hubsPrefetchedRef.current) {
+        hubsPrefetchedRef.current = true;
+        prefetchStudentHubRoutes(router);
+      }
+      return undefined;
     }
-  }, [gradeLevel]);
+
+    void loadCatalog({ force: true });
+    return undefined;
+  }, [gradeLevel, loadCatalog, router]);
 
   useEffect(() => {
-    void loadCatalog();
-  }, [loadCatalog]);
-
-  useEffect(() => {
-    const onGrade = () => void loadCatalog();
+    const onGrade = () => {
+      bootstrappedRef.current = false;
+      void loadCatalog({ force: true });
+    };
     window.addEventListener("leokids:demo-grade-changed", onGrade);
     return () => window.removeEventListener("leokids:demo-grade-changed", onGrade);
   }, [loadCatalog]);
@@ -93,15 +142,15 @@ function DemoAccessGateInner({ children }) {
   );
 
   const gameAccessValue = useMemo(() => {
-    if (!needsGameAccess || !catalogData) return null;
+    if (!catalogData) return null;
     return buildStudentGameAccessView(catalogData);
-  }, [needsGameAccess, catalogData]);
+  }, [catalogData]);
 
   if (isDemoOnlineGameRoute(pathname)) {
     return <DemoOnlineGameUnavailable />;
   }
 
-  if (catalogState === "loading") {
+  if (initialColdLoad && catalogState === "loading") {
     return (
       <DemoGateShell pathname={pathname}>
         <StudentLoadingPanel message="טוען מצב הדגמה..." fullPage />
@@ -129,14 +178,11 @@ function DemoAccessGateInner({ children }) {
     </StudentSubjectAccessProvider>
   );
 
-  const pageContent =
-    needsGameAccess && gameAccessValue ? (
-      wrapSubject(
+  const pageContent = gameAccessValue
+    ? wrapSubject(
         <StudentGameAccessProvider value={gameAccessValue}>{children}</StudentGameAccessProvider>,
       )
-    ) : (
-      wrapSubject(children)
-    );
+    : wrapSubject(children);
 
   return (
     <StudentSessionProvider value={sessionValue}>

@@ -3,6 +3,7 @@ import { useStudentSubjectAccess } from "../../hooks/useStudentSubjectAccess.js"
 
 /**
  * @param {{
+ *   href: string,
  *   slug: string,
  *   permissionKey: string,
  *   title: string,
@@ -13,6 +14,7 @@ import { useStudentSubjectAccess } from "../../hooks/useStudentSubjectAccess.js"
  * }} props
  */
 export default function LearningHubSubjectCard({
+  href,
   slug,
   permissionKey,
   title,
@@ -54,7 +56,7 @@ export default function LearningHubSubjectCard({
   }
 
   return (
-    <Link href={`/student/learning/${slug}`} className={cardClass}>
+    <Link href={href} prefetch className={cardClass}>
       {inner}
     </Link>
   );

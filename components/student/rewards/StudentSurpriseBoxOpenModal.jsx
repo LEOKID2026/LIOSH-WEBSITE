@@ -4,6 +4,10 @@ import Link from "next/link";
 import { useStudentTheme } from "../../../contexts/StudentThemeContext.jsx";
 import { formatCoinAmountHe } from "../../../lib/rewards/rewards-ui.he.js";
 import RewardCardImage from "./RewardCardImage.jsx";
+import {
+  perfPrintScenarioTable,
+  perfTimeline,
+} from "../../../lib/student-ui/student-runtime-perf.client.js";
 
 const OPEN_PATH = "/api/student/rewards/surprise-box/open";
 const OPEN_TIMEOUT_MS = 30_000;
@@ -114,6 +118,8 @@ export default function StudentSurpriseBoxOpenModal({ open, onClose, onOpened })
           setRemainingPending(pendingAfter);
           setPhase("done");
         });
+        perfTimeline("surprise-result");
+        perfPrintScenarioTable("surprise");
         notifyOpened(json);
       } catch {
         if (cancelled) return;
@@ -139,6 +145,7 @@ export default function StudentSurpriseBoxOpenModal({ open, onClose, onOpened })
 
   useEffect(() => {
     if (!open) return undefined;
+    perfTimeline("surprise-modal-visible");
     const onKeyDown = (event) => {
       if (event.key === "Escape" && phase !== "opening") onClose?.();
     };
@@ -195,7 +202,7 @@ export default function StudentSurpriseBoxOpenModal({ open, onClose, onOpened })
             ✕
           </button>
           <h2 id={titleId} className={`text-base font-bold text-right flex-1 ${T.tileTitle}`}>
-            {phase === "opening" ? "פותחים קופסה..." : phase === "done" ? "יש! קיבלתם פרסים!" : "קופסת הפתעה"}
+            {phase === "opening" ? "קופסת הפתעה" : phase === "done" ? "יש! קיבלתם פרסים!" : "קופסת הפתעה"}
           </h2>
           <span className="text-xl shrink-0" aria-hidden>
             🎁
@@ -204,10 +211,7 @@ export default function StudentSurpriseBoxOpenModal({ open, onClose, onOpened })
 
         <div className="px-3 py-2.5 space-y-2 text-right">
           {phase === "opening" ? (
-            <div className="flex flex-col items-center py-4 gap-2">
-              <div className={T.loadingSpinner} aria-hidden />
-              <p className={`${T.loadingText} text-sm`}>מגלגלים את הפרסים...</p>
-            </div>
+            <p className={`${T.loadingText} text-sm text-center py-4`}>טוען...</p>
           ) : null}
 
           {phase === "error" ? (
