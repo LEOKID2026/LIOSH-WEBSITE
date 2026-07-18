@@ -338,7 +338,10 @@ export function buildNarrativeContractV1(input) {
     textSlots: {
       observation: buildObservationSlot(displayName, q, acc, `${baseSeed}:obs`),
       interpretation: buildInterpretationSlot(envelope, cannotConcludeYet, `${baseSeed}:int`, q, acc),
-      action: buildActionSlot(cappedIntensity, recommendationEligible, `${baseSeed}:act`),
+      // WE0 and WE1 must never carry an action slot — the contract invariant.
+      action: (envelope === "WE0" || envelope === "WE1")
+        ? null
+        : buildActionSlot(cappedIntensity, recommendationEligible, `${baseSeed}:act`),
       uncertainty,
     },
   };
@@ -370,6 +373,9 @@ export function validateNarrativeContractV1(contract) {
   }
   if (String(c.recommendationIntensityCap || "") === "RI0" && c?.textSlots?.action) {
     errors.push("RI0 cap forbids action text");
+  }
+  if ((String(c.wordingEnvelope || "") === "WE0" || String(c.wordingEnvelope || "") === "WE1") && c?.textSlots?.action != null && c?.textSlots?.action !== "") {
+    errors.push("WE0/WE1 must not carry action slot");
   }
   return { ok: errors.length === 0, errors };
 }

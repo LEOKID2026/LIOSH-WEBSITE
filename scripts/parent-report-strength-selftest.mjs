@@ -345,6 +345,115 @@ console.log("\n[Scenario 8] Subject not practiced (0 questions)");
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
+// WE0/WE1 action-slot contract (regression guard for Fix-2 + phase6 CI contract)
+// ──────────────────────────────────────────────────────────────────────────────
+
+function buildWeakNarrative(subjectId, topicKey, gateReadinessBand) {
+  const bundle = buildDecisionReadinessContractsBundleV1({
+    questions: 3, accuracy: 0.6,
+    gateReadiness: gateReadinessBand || "insufficient",
+    gateState: "gates_not_ready", cannotConcludeYet: false,
+    evidenceStrength: "low", dataSufficiencyLevel: "low",
+    conclusionStrength: "tentative", weak: false,
+    internalGateReadinessBand: gateReadinessBand || "insufficient",
+    dev2ConfidenceLevel: "low", confidence: "low",
+  });
+  return buildNarrativeContractV1({ topicKey, subjectId, questions: 3,
+    accuracy: 0.6, displayName: topicKey, contractsV1: bundle });
+}
+
+// 1. geometry + WE0 → no action
+{
+  const n = buildWeakNarrative("geometry", "shapes", "insufficient");
+  check("geometry WE0: envelope is WE0", n.wordingEnvelope, "WE0");
+  check("geometry WE0: action empty", !n.textSlots.action || n.textSlots.action == null, true);
+}
+
+// 2. geometry + WE0/WE1 → no action (moderate gateReadiness, 8 questions → low volume)
+{
+  const bundle = buildDecisionReadinessContractsBundleV1({
+    questions: 8, accuracy: 0.62, gateReadiness: "moderate", gateState: "mixed_gate_state",
+    cannotConcludeYet: false, evidenceStrength: "low", dataSufficiencyLevel: "moderate",
+    conclusionStrength: "tentative", weak: false, internalGateReadinessBand: "moderate",
+    dev2ConfidenceLevel: "low", confidence: "low",
+  });
+  const n = buildNarrativeContractV1({ topicKey: "angles", subjectId: "geometry",
+    questions: 8, accuracy: 62, displayName: "angles", contractsV1: bundle });
+  const we = n.wordingEnvelope;
+  check("geometry moderate: envelope WE0 or WE1", we === "WE0" || we === "WE1", true);
+  check("geometry moderate: action empty", !n.textSlots.action || n.textSlots.action == null, true);
+}
+
+// 3. math + WE0 → no action
+{
+  const n = buildWeakNarrative("math", "add:1_2", "insufficient");
+  check("math WE0: envelope is WE0", n.wordingEnvelope, "WE0");
+  check("math WE0: action empty", !n.textSlots.action || n.textSlots.action == null, true);
+}
+
+// 4. confirmed strength → WE3/WE4 → action present
+// buildDecisionReadinessContractsBundleV1 does not produce a recommendation field;
+// that is added by the full pipeline. For this unit test we add it manually.
+// buildNarrativeContractV1 expects accuracy as percentage (95), not decimal (0.95).
+{
+  const bundle = buildDecisionReadinessContractsBundleV1({
+    questions: 40, accuracy: 0.95, gateReadiness: "high", gateState: "gates_ready",
+    cannotConcludeYet: false, evidenceStrength: "strong", dataSufficiencyLevel: "high",
+    conclusionStrength: "strong", weak: false, internalGateReadinessBand: "high",
+    dev2ConfidenceLevel: "high", confidence: "high",
+  });
+  const contractsV1 = { ...bundle, recommendation: { eligible: true, intensity: "RI2" } };
+  const n = buildNarrativeContractV1({ topicKey: "multiplication", subjectId: "math",
+    questions: 40, accuracy: 95, displayName: "multiplication", contractsV1 });
+  const we = n.wordingEnvelope;
+  check("WE3/WE4 strength: envelope WE3 or WE4", we === "WE3" || we === "WE4", true);
+  check("WE3/WE4 strength: action present", !!(n.textSlots.action && n.textSlots.action.trim()), true);
+}
+
+// 5. cannotConcludeYet=true → no action
+{
+  const bundle = buildDecisionReadinessContractsBundleV1({
+    questions: 30, accuracy: 0.9, gateReadiness: "high", gateState: "gates_ready",
+    cannotConcludeYet: true, evidenceStrength: "strong", dataSufficiencyLevel: "high",
+    conclusionStrength: "tentative", weak: false, internalGateReadinessBand: "high",
+    dev2ConfidenceLevel: "high", confidence: "high",
+  });
+  const n = buildNarrativeContractV1({ topicKey: "fractions", subjectId: "math",
+    questions: 30, accuracy: 90, displayName: "fractions", contractsV1: bundle });
+  const we = n.wordingEnvelope;
+  check("cannotConcludeYet: WE0 or WE1", we === "WE0" || we === "WE1", true);
+  check("cannotConcludeYet: action empty", !n.textSlots.action || n.textSlots.action == null, true);
+}
+
+// 6. strength topic A + struggle topic B — no action leak from A to B
+{
+  const bA = buildDecisionReadinessContractsBundleV1({
+    questions: 40, accuracy: 0.95, gateReadiness: "high", gateState: "gates_ready",
+    cannotConcludeYet: false, evidenceStrength: "strong", dataSufficiencyLevel: "high",
+    conclusionStrength: "strong", weak: false, internalGateReadinessBand: "high",
+    dev2ConfidenceLevel: "high", confidence: "high",
+  });
+  const cvA = { ...bA, recommendation: { eligible: true, intensity: "RI2" } };
+  const nA = buildNarrativeContractV1({ topicKey: "add:1_2", subjectId: "math",
+    questions: 40, accuracy: 95, displayName: "addition", contractsV1: cvA });
+  const weA = nA.wordingEnvelope;
+  check("topic A strength: WE3 or WE4", weA === "WE3" || weA === "WE4", true);
+  check("topic A strength: action present", !!(nA.textSlots.action && nA.textSlots.action.trim()), true);
+
+  const bB = buildDecisionReadinessContractsBundleV1({
+    questions: 5, accuracy: 0.4, gateReadiness: "insufficient", gateState: "gates_not_ready",
+    cannotConcludeYet: false, evidenceStrength: "low", dataSufficiencyLevel: "low",
+    conclusionStrength: "tentative", weak: true, internalGateReadinessBand: "insufficient",
+    dev2ConfidenceLevel: "low", confidence: "low",
+  });
+  const nB = buildNarrativeContractV1({ topicKey: "fractions", subjectId: "math",
+    questions: 5, accuracy: 40, displayName: "fractions", contractsV1: bB });
+  const weB = nB.wordingEnvelope;
+  check("topic B struggle: WE0 or WE1", weB === "WE0" || weB === "WE1", true);
+  check("topic B struggle: action empty (no leak)", !nB.textSlots.action || nB.textSlots.action == null, true);
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
 // Summary
 // ──────────────────────────────────────────────────────────────────────────────
 console.log(`\n─────────────────────────────────────────`);
