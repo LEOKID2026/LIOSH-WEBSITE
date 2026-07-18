@@ -2,7 +2,7 @@ import "../styles/globals.css";
 import "../styles/worksheet-print.css";
 import "../styles/worksheet-hub.css";
 import Head from "next/head";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Analytics } from "@vercel/analytics/next";
 import OfflineIndicator from "../components/OfflineIndicator";
@@ -19,7 +19,9 @@ import GameAudioProvider from "../lib/game-audio/GameAudioProvider.jsx";
 import BrowserThemeColorSync from "../components/BrowserThemeColorSync.jsx";
 import CookieConsentManager from "../components/consent/CookieConsentManager.jsx";
 import { GOOGLE_CONSENT_BOOTSTRAP_SCRIPT } from "../lib/consent/google-consent-mode.client.js";
-import { isStudentProtectedRoute } from "../lib/student-ui/student-protected-routes.client.js";
+import { isStudentProtectedRoute, isDemoAccessibleRoute } from "../lib/student-ui/student-protected-routes.client.js";
+import DemoAccessGate from "../components/demo/DemoAccessGate.jsx";
+import { hasDemoSession } from "../lib/demo/demo-mode.client.js";
 import {
   BROWSER_THEME_COLOR_BRIGHT,
   BROWSER_THEME_COLOR_BOOTSTRAP_SCRIPT,
@@ -257,6 +259,19 @@ export default function MyApp({ Component, pageProps }) {
 
   const pathname = router.pathname || "";
   const shouldGate = isStudentProtectedRoute(pathname);
+  /** @type {["pending" | "demo" | "student" | "none", import("react").Dispatch<import("react").SetStateAction<"pending" | "demo" | "student" | "none">>] */
+  const [gateKind, setGateKind] = useState("pending");
+
+  useEffect(() => {
+    if (hasDemoSession() && isDemoAccessibleRoute(pathname)) {
+      setGateKind("demo");
+    } else if (shouldGate) {
+      setGateKind("student");
+    } else {
+      setGateKind("none");
+    }
+  }, [pathname, shouldGate]);
+
   const isInternalDevRoute = pathnameIsInternalDevRoute(pathname);
   const pwaPortal = resolvePwaPortal(pathname);
   const manifestHref = resolvePwaManifestHref(pathname);
@@ -366,7 +381,13 @@ export default function MyApp({ Component, pageProps }) {
           <DevPrototypeAdminGate>
             <Component {...pageProps} />
           </DevPrototypeAdminGate>
-        ) : shouldGate ? (
+        ) : gateKind === "pending" && shouldGate ? (
+          <div className="min-h-[40vh]" dir="rtl" lang="he" aria-busy="true" aria-label="טוען" />
+        ) : gateKind === "demo" ? (
+          <DemoAccessGate>
+            <Component {...pageProps} />
+          </DemoAccessGate>
+        ) : gateKind === "student" ? (
           <StudentAccessGate>
             <Component {...pageProps} />
           </StudentAccessGate>

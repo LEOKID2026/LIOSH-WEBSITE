@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
 import OfflineGameHoldShell from "../../components/offline/OfflineGameHoldShell.jsx";
 import { useGameAudio } from "../../hooks/useGameAudio";
+import { assertDemoPlayAllowed } from "../../lib/demo/demo-play-guard.client.js";
 
 const DURATIONS = [5, 10, 15];
 
@@ -103,6 +104,7 @@ export default function TapBattle() {
   }, [phase, timeLeft]);
 
   function startRound() {
+    if (!assertDemoPlayAllowed()) return;
     primeFromUserGesture();
     setCounts({ left: 0, right: 0 });
     setWinnerMessage("");
@@ -149,6 +151,7 @@ export default function TapBattle() {
   }
 
   function resetMatch() {
+    if (!assertDemoPlayAllowed()) return;
     setScore({ left: 0, right: 0, ties: 0 });
     setRound(1);
     nextRound();

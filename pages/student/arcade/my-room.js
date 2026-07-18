@@ -5,8 +5,11 @@ import Layout from "../../../components/Layout";
 import { useStudentTheme } from "../../../contexts/StudentThemeContext.jsx";
 import { useGamesHubUi } from "../../../hooks/useGamesHubUi.js";
 import GameAccessGuard from "../../../components/games/GameAccessGuard.jsx";
+import { isDemoMode } from "../../../lib/demo/demo-mode.client.js";
+import { DEMO_MY_ROOM_FIXTURE } from "../../../components/demo/demo-display-fixtures.js";
 
 export default function ArcadeMyRoomPage() {
+  const demoMode = isDemoMode();
   const { theme } = useStudentTheme();
   const { GH } = useGamesHubUi();
   const [room, setRoom] = useState(null);
@@ -29,10 +32,15 @@ export default function ArcadeMyRoomPage() {
   }, []);
 
   useEffect(() => {
+    if (demoMode) return undefined;
     void load();
-  }, [load]);
+  }, [load, demoMode]);
 
   const save = async () => {
+    if (demoMode) {
+      setMessage("שמירה אינה זמינה במצב הדגמה.");
+      return;
+    }
     setBusy(true);
     setMessage("");
     try {
@@ -63,7 +71,12 @@ export default function ArcadeMyRoomPage() {
               </Link>
             </div>
 
-            {locked ? (
+            {demoMode ? (
+              <div className={`${GH.card} space-y-4 p-4 text-right`}>
+                <h1 className={GH.sectionTitle}>החדר שלי</h1>
+                <p className={`text-sm ${GH.cardBlurb}`}>{DEMO_MY_ROOM_FIXTURE.messageHe}</p>
+              </div>
+            ) : locked ? (
               <div className={`${GH.card} p-4 text-right`}>
                 <p className={GH.cardBlurb}>חדר אישי - נשלט דרך Admin. כרגע לא פתוח לאורחים.</p>
               </div>

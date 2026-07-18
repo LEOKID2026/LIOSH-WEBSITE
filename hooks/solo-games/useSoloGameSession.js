@@ -1,4 +1,6 @@
 import { useCallback, useRef, useState } from "react";
+import { isDemoMode } from "../../lib/demo/demo-mode.client.js";
+import { assertDemoPlayAllowed } from "../../lib/demo/demo-play-guard.client.js";
 
 async function postJson(url, body) {
   const res = await fetch(url, {
@@ -9,6 +11,10 @@ async function postJson(url, body) {
   });
   const payload = await res.json().catch(() => ({}));
   return { ok: res.ok && payload?.ok === true, status: res.status, payload };
+}
+
+function demoSessionId() {
+  return `demo-solo-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
 /**
@@ -27,6 +33,17 @@ export function useSoloGameSession(gameKey) {
       setError("");
       finishResultRef.current = null;
       try {
+        if (isDemoMode()) {
+          if (!assertDemoPlayAllowed()) {
+            setError("זמן ההדגמה הסתיים");
+            return null;
+          }
+          const id = demoSessionId();
+          setSessionId(id);
+          setSessionStartedAtMs(Date.now());
+          return id;
+        }
+
         const { ok, payload } = await postJson("/api/student/solo-games/start", {
           gameKey,
           difficulty: difficulty || undefined,
@@ -48,7 +65,7 @@ export function useSoloGameSession(gameKey) {
         setBusy(false);
       }
     },
-    [gameKey]
+    [gameKey],
   );
 
   const finishSession = useCallback(
@@ -62,6 +79,21 @@ export function useSoloGameSession(gameKey) {
       try {
         const durationMs =
           sessionStartedAtMs != null ? Math.max(0, Date.now() - sessionStartedAtMs) : undefined;
+
+        if (isDemoMode()) {
+          const payload = {
+            ok: true,
+            demo: true,
+            sessionId,
+            metrics: {
+              ...metrics,
+              durationMs: metrics?.durationMs ?? durationMs,
+            },
+          };
+          finishResultRef.current = payload;
+          return payload;
+        }
+
         const { ok, payload } = await postJson("/api/student/solo-games/finish", {
           sessionId,
           metrics: {
@@ -82,7 +114,7 @@ export function useSoloGameSession(gameKey) {
         setBusy(false);
       }
     },
-    [sessionId, sessionStartedAtMs]
+    [sessionId, sessionStartedAtMs],
   );
 
   const resetSession = useCallback(() => {

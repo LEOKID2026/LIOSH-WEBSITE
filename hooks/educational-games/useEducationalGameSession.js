@@ -1,4 +1,6 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useState } from "react";
+import { isDemoMode } from "../../lib/demo/demo-mode.client.js";
+import { assertDemoPlayAllowed } from "../../lib/demo/demo-play-guard.client.js";
 
 async function postJson(url, body) {
   const res = await fetch(url, {
@@ -9,6 +11,10 @@ async function postJson(url, body) {
   });
   const payload = await res.json().catch(() => ({}));
   return { ok: res.ok && payload?.ok === true, status: res.status, payload };
+}
+
+function demoSessionId() {
+  return `demo-edu-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
 /**
@@ -25,6 +31,17 @@ export function useEducationalGameSession(gameKey) {
       setBusy(true);
       setError("");
       try {
+        if (isDemoMode()) {
+          if (!assertDemoPlayAllowed()) {
+            setError("זמן ההדגמה הסתיים");
+            return null;
+          }
+          const id = demoSessionId();
+          setSessionId(id);
+          setSessionStartedAtMs(Date.now());
+          return id;
+        }
+
         const { ok, payload } = await postJson("/api/student/educational-games/start", {
           gameKey,
           difficulty: difficulty || undefined,
@@ -60,6 +77,21 @@ export function useEducationalGameSession(gameKey) {
       try {
         const durationMs =
           sessionStartedAtMs != null ? Math.max(0, Date.now() - sessionStartedAtMs) : undefined;
+
+        if (isDemoMode()) {
+          return {
+            ok: true,
+            demo: true,
+            sessionId,
+            metrics: {
+              ...metrics,
+              gameKey,
+              category: "educational",
+              durationMs: metrics?.durationMs ?? durationMs,
+            },
+          };
+        }
+
         const { ok, payload } = await postJson("/api/student/educational-games/finish", {
           sessionId,
           metrics: {

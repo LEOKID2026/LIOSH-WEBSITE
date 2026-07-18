@@ -3,12 +3,14 @@ import Link from "next/link";
 import Layout from "../../../components/Layout";
 import StudentAnswerSheet from "../../../components/worksheet-activities/StudentAnswerSheet";
 import { worksheetGradingStatusLabelHe } from "../../../lib/worksheet-activities/worksheet-labels.client.js";
+import { isDemoMode } from "../../../lib/demo/demo-mode.client.js";
 
 export async function getServerSideProps(context) {
   return { props: { worksheetId: String(context.params?.worksheetId || "").trim() } };
 }
 
 export default function StudentWorksheetPage({ worksheetId }) {
+  const demoMode = isDemoMode();
   const [worksheet, setWorksheet] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [studentStatus, setStudentStatus] = useState(null);
@@ -18,6 +20,7 @@ export default function StudentWorksheetPage({ worksheetId }) {
   const [msg, setMsg] = useState("");
 
   const load = useCallback(async () => {
+    if (demoMode) return;
     setError("");
     try {
       const res = await fetch(`/api/student/worksheet-activities/${encodeURIComponent(worksheetId)}`, {
@@ -35,11 +38,12 @@ export default function StudentWorksheetPage({ worksheetId }) {
     } catch {
       setError("שגיאת רשת");
     }
-  }, [worksheetId]);
+  }, [worksheetId, demoMode]);
 
   useEffect(() => {
+    if (demoMode) return;
     void load();
-  }, [load]);
+  }, [load, demoMode]);
 
   const openPdf = useCallback(async () => {
     setBusy(true);
@@ -61,6 +65,10 @@ export default function StudentWorksheetPage({ worksheetId }) {
   }, [worksheetId, load]);
 
   const markComplete = useCallback(async () => {
+    if (demoMode) {
+      setError("הגשה אינה זמינה במצב הדגמה.");
+      return;
+    }
     if (!window.confirm("לסמן שסיימתם את דף העבודה?")) return;
     setBusy(true);
     setMsg("");
@@ -82,6 +90,10 @@ export default function StudentWorksheetPage({ worksheetId }) {
   }, [worksheetId, load]);
 
   const submitAnswers = useCallback(async () => {
+    if (demoMode) {
+      setError("הגשה אינה זמינה במצב הדגמה.");
+      return;
+    }
     if (!window.confirm("להגיש את התשובות?")) return;
     setBusy(true);
     setMsg("");
@@ -117,6 +129,22 @@ export default function StudentWorksheetPage({ worksheetId }) {
       setBusy(false);
     }
   }, [worksheetId, questions, answers, load]);
+
+  if (demoMode && !worksheet) {
+    return (
+      <Layout>
+        <div className="max-w-2xl mx-auto px-4 py-8 text-right" dir="rtl" lang="he">
+          <Link href="/student/home" className="text-sm text-cyan-300 hover:underline">
+            ← חזרה לדף הבית
+          </Link>
+          <h1 className="text-2xl font-bold text-white mt-4">דף עבודה — מצב הדגמה</h1>
+          <p className="text-white/75 text-sm mt-4">
+            ניתן לצפות בדפי עבודה מהרשימה בדף הבית. הגשה דיגיטלית אינה זמינה במצב הדגמה.
+          </p>
+        </div>
+      </Layout>
+    );
+  }
 
   if (!worksheet) {
     return (

@@ -48,6 +48,13 @@ import { GUEST_LOCK_MESSAGE_HE, GUEST_LOCKED_HOME_PANELS, LIOSH_GUEST_RESUME_TOK
 import { isGuestStudent } from "../../lib/guest/guest-display.js";
 import { shouldClearGuestResumeTokenOnLogout } from "../../lib/guest/guest-resume-token.client.js";
 import StudentLoadingPanel from "../../components/ui/StudentLoadingPanel.jsx";
+import { isDemoMode, buildDemoDisplayStudent, clearDemoSession } from "../../lib/demo/demo-mode.client.js";
+import {
+  DEMO_HOME_PAYLOAD,
+  DEMO_AVATAR_EMOJI,
+  DEMO_DASHBOARD_VIEW,
+  DEMO_DIAMOND_BALANCE,
+} from "../../components/demo/demo-display-fixtures.js";
 
 import { syncMonthlyProgressCacheFromServer } from "../../utils/progress-storage.js";
 
@@ -500,6 +507,21 @@ export default function StudentHomePage() {
 
   useEffect(() => {
     if (!router.isReady) return undefined;
+    if (isDemoMode()) {
+      const demoStudent = buildDemoDisplayStudent();
+      setStudent(demoStudent);
+      setAuthPhase("authed");
+      setHomePayload(DEMO_HOME_PAYLOAD);
+      setProfilePhase("ok");
+      setAnalyticsPhase("ok");
+      setDiamondBalance(DEMO_DIAMOND_BALANCE);
+      setPersonalActivities([]);
+      setPersonalActivityCount(0);
+      setPersonalActivitiesPhase("idle");
+      setHeroAvatarEmoji(DEMO_AVATAR_EMOJI);
+      setHeroAvatarBackground("sky");
+      return undefined;
+    }
     let mounted = true;
     setProfileError("");
     setPersonalActivities([]);
@@ -614,6 +636,7 @@ export default function StudentHomePage() {
   }, [router.isReady, loadHomeDashboard]);
 
   const dashboardView = useMemo(() => {
+    if (isDemoMode()) return DEMO_DASHBOARD_VIEW;
     if (!student?.id || profilePhase !== "ok" || !homePayload) return null;
     try {
       const v = buildStudentHomeView({ student, homePayload });
@@ -635,6 +658,7 @@ export default function StudentHomePage() {
   }, [student, homePayload, profilePhase]);
 
   useEffect(() => {
+    if (isDemoMode()) return undefined;
     if (authPhase !== "authed" || !student?.id) {
       setPersonalActivities([]);
       setPersonalActivityCount(0);
@@ -688,6 +712,7 @@ export default function StudentHomePage() {
   }, [authPhase, student?.id]);
 
   useEffect(() => {
+    if (isDemoMode()) return undefined;
     if (authPhase !== "authed" || !student?.id) {
       setDiamondBalance(null);
       return undefined;
@@ -812,6 +837,11 @@ export default function StudentHomePage() {
   const closeHomePanel = useCallback(() => setActivePanel(null), []);
 
   const onLogout = async () => {
+    if (isDemoMode()) {
+      clearDemoSession();
+      await router.replace("/");
+      return;
+    }
     setLogoutMessage("");
     const sid = student?.id;
     setLogoutBusy(true);
@@ -926,7 +956,7 @@ export default function StudentHomePage() {
         noindex={studentHomeSeo.noindex}
       />
       <div
-        key={student.id}
+        key={isDemoMode() ? "demo-home" : student?.id || "student-home"}
         className="relative flex h-full min-h-0 w-full flex-1 flex-col"
         style={{
           marginBottom: `calc(-1 * (${STUDENT_LAYOUT_CHROME_BOTTOM_CSS}))`,
@@ -958,10 +988,10 @@ export default function StudentHomePage() {
           lockMessage={guestPolicy?.lockMessageHe || GUEST_LOCK_MESSAGE_HE}
           logoutBusy={logoutBusy}
           onOpenPanel={openHomePanel}
-          onOpenAvatar={() => setShowAvatarModal(true)}
+          onOpenAvatar={isDemoMode() ? undefined : () => setShowAvatarModal(true)}
           onLogout={() => void onLogout()}
           onLockedTap={showLockToast}
-          onSurpriseOpen={cardRewardsEnabled ? () => setBoxModalOpen(true) : undefined}
+          onSurpriseOpen={cardRewardsEnabled && !isDemoMode() ? () => setBoxModalOpen(true) : undefined}
           surpriseOpeningLocked={boxModalOpen}
           surpriseRefreshToken={boxRefreshToken}
           surpriseStatusOverride={surpriseBoxStatus}
@@ -1024,12 +1054,12 @@ export default function StudentHomePage() {
         {renderActivePanelContent()}
       </StudentHomeModal>
       <StudentSurpriseBoxOpenModal
-        open={boxModalOpen}
+        open={boxModalOpen && !isDemoMode()}
         onClose={() => setBoxModalOpen(false)}
         onOpened={handleSurpriseBoxOpened}
       />
       <StudentAvatarPickerModal
-        open={showAvatarModal}
+        open={showAvatarModal && !isDemoMode()}
         onClose={() => setShowAvatarModal(false)}
         playerName={heroName}
         serverAvatarEmoji={

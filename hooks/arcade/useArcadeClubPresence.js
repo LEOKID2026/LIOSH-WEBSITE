@@ -1,8 +1,10 @@
 import { useEffect } from "react";
+import { isDemoMode } from "../../lib/demo/demo-mode.client.js";
 
 /** Heartbeat + pending invite banner */
 export function useArcadeClubPresence() {
   useEffect(() => {
+    if (isDemoMode()) return undefined;
     const tick = () => {
       void fetch("/api/arcade/presence/heartbeat", { method: "POST" });
     };
@@ -15,6 +17,7 @@ export function useArcadeClubPresence() {
 /** @param {{ onInvite: (invite: object) => void }} opts */
 export function useArcadeClubInvites({ onInvite }) {
   useEffect(() => {
+    if (isDemoMode()) return undefined;
     let cancelled = false;
 
     const poll = async () => {

@@ -21,6 +21,8 @@ import { GUEST_GAME_LOCK_LABEL_HE } from "../../lib/guest/constants.js";
 import { mapEntryCostOptionsForUi } from "../../lib/learning-client/economyConfigClient.js";
 import { studentAvatarFromHomeSummary } from "../../lib/learning-client/studentHomeAvatarFromSummary.js";
 import { clearArcadeActiveRoom } from "../../lib/arcade/client/arcadeRoomLifecycle.client.js";
+import { isDemoMode, readDemoSession } from "../../lib/demo/demo-mode.client.js";
+import { DEMO_ARCADE_FIXTURES } from "../../components/demo/demo-display-fixtures.js";
 import {
   arcadeGameTileTheme,
   ARCADE_TILE_BADGE_ACTIVE,
@@ -359,6 +361,7 @@ function ArcadeGameCard({
 }
 
 export default function StudentArcadePage() {
+  const demoMode = isDemoMode();
   const { theme } = useStudentTheme();
   const { GH } = useGamesHubUi();
   const [balance, setBalance] = useState(null);
@@ -444,6 +447,47 @@ export default function StudentArcadePage() {
   }, []);
 
   useEffect(() => {
+    if (!demoMode) return undefined;
+    let cancelled = false;
+    (async () => {
+      try {
+        const grade = readDemoSession()?.gradeLevel || "g3";
+        const res = await fetch(`/api/demo/catalog?gradeLevel=${encodeURIComponent(grade)}`, {
+          credentials: "same-origin",
+          cache: "no-store",
+        });
+        const json = await res.json().catch(() => ({}));
+        if (cancelled || !json?.ok) return;
+        if (Array.isArray(json.games)) {
+          setGames(
+            json.games
+              .filter((g) => g.category === "online")
+              .map((g) => ({
+                gameKey: g.gameKey,
+                enabled: g.isEnabled === true,
+                foundationOnly: false,
+                guestLocked: false,
+              })),
+          );
+        }
+      } finally {
+        if (!cancelled) setInitialSyncDone(true);
+      }
+    })();
+    setBalance(DEMO_ARCADE_FIXTURES.balance);
+    setDiamondBalance(DEMO_ARCADE_FIXTURES.diamondBalance);
+    setClubProfile({ ...DEMO_ARCADE_FIXTURES.clubProfile });
+    setHomeAvatarEmoji(DEMO_ARCADE_FIXTURES.avatar.avatarEmoji);
+    setHomeAvatarCustomDataUrl(DEMO_ARCADE_FIXTURES.avatar.avatarCustomDataUrl);
+    setHomeAvatarBackground(DEMO_ARCADE_FIXTURES.avatar.avatarBackgroundKey);
+    setOpenRooms([]);
+    return () => {
+      cancelled = true;
+    };
+  }, [demoMode]);
+
+  useEffect(() => {
+    if (demoMode) return undefined;
     let cancelled = false;
     (async () => {
       try {
@@ -455,7 +499,7 @@ export default function StudentArcadePage() {
     return () => {
       cancelled = true;
     };
-  }, [refresh]);
+  }, [refresh, demoMode]);
 
   const lobbyGameVm = useMemo(() => {
     return LOBBY_GAME_ROWS.map((row) => {
@@ -512,15 +556,19 @@ export default function StudentArcadePage() {
   }, []);
 
   useEffect(() => {
-    if (!openRoomsPollActive) return undefined;
+    if (demoMode || !openRoomsPollActive) return undefined;
     refreshOpenRooms();
     const id = setInterval(() => {
       void refreshOpenRooms();
     }, POLL_MS);
     return () => clearInterval(id);
-  }, [openRoomsPollActive, refreshOpenRooms]);
+  }, [openRoomsPollActive, refreshOpenRooms, demoMode]);
 
   const run = async (promise) => {
+    if (demoMode) {
+      setUserMessage("פעולה זו אינה זמינה במצב הדגמה.");
+      return null;
+    }
     setBusy(true);
     setUserMessage("");
     try {
@@ -535,6 +583,10 @@ export default function StudentArcadePage() {
   };
 
   const runQuick = async (promise) => {
+    if (demoMode) {
+      setUserMessage("משחק מהיר אינו זמין במצב הדגמה.");
+      return null;
+    }
     setBusy(true);
     setUserMessage("");
     try {
@@ -698,7 +750,7 @@ export default function StudentArcadePage() {
           />
 
           <ArcadeLobbyHeader
-            displayName={clubProfile?.displayName || "שחקן"}
+            displayName={clubProfile?.displayName || (demoMode ? "שחקן הדגמה" : "שחקן")}
             coinBalance={balanceDisplay}
             diamondBalance={diamondDisplay}
             isGuest={Boolean(clubProfile?.isGuest)}
@@ -739,6 +791,7 @@ export default function StudentArcadePage() {
               gh={GH}
               leoNumber={clubProfile?.leoNumber ?? null}
               leoNumberLoading={clubProfile == null}
+              demoDisabled={demoMode}
             />
           ) : activeTab === "shop" ? (
             <ArcadeClubShopPanel
@@ -746,11 +799,12 @@ export default function StudentArcadePage() {
               coinBalance={balanceNum}
               onCoinBalanceChange={(bal) => setBalance(bal)}
               studentFullName={clubProfile?.fullName || ""}
+              demoDisabled={demoMode}
             />
           ) : activeTab === "profile" ? (
             <div className="space-y-4">
-              <ArcadeClubProfilePanel gh={GH} />
-              <ArcadeClubMissionsPanel gh={GH} />
+              <ArcadeClubProfilePanel gh={GH} demoMode={demoMode} />
+              <ArcadeClubMissionsPanel gh={GH} demoMode={demoMode} />
               <div className={`${GH.arcadePanelMyRoom || GH.card} text-right`}>
                 <h3 className={GH.arcadeSectionTitle || GH.sectionTitle}>חדר אישי</h3>
                 <p className={`mt-1 text-sm ${GH.arcadePanelBlurb || GH.cardBlurb}`}>מרחב אישי עם גביעים וקישוטים</p>

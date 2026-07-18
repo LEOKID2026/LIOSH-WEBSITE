@@ -12,6 +12,7 @@ import {
   activityModeLabelHe,
   isClassroomActivitiesEnabled,
 } from "../../../lib/classroom-activities/classroom-activities-labels.client.js";
+import { isDemoMode } from "../../../lib/demo/demo-mode.client.js";
 import { formatStudentActivityCompletionSummaryHe } from "../../../lib/classroom-activities/student-activity-result-labels.client.js";
 import { resolveStudentActivityApiErrorHe } from "../../../lib/classroom-activities/student-activity-error-labels.client.js";
 import { resolveStudentActivityAnswerInputProps, assignedActivityUsesNumericKeyboard, resolveAssignedActivityMathScratchpadContext, assignedActivityUsesMathScratchpad, getStudentActivityQuestionFontStyle } from "../../../lib/classroom-activities/student-activity-question-ui.client.js";
@@ -129,6 +130,11 @@ export default function StudentActivityPage({ activityId }) {
   const isTouchDevice = useTouchPrimaryDevice();
 
   const startSession = useCallback(async () => {
+    if (isDemoMode()) {
+      setError("פעילויות כיתה אינן פעילות במצב הדגמה.");
+      setPhase("error");
+      return;
+    }
     setPhase("loading");
     setError("");
     try {

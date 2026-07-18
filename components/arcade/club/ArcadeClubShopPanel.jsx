@@ -8,6 +8,7 @@ import StudentCardsShopView from "../../student/rewards/StudentCardsShopView.jsx
  *   coinBalance?: number|null,
  *   onCoinBalanceChange?: (balance: number) => void,
  *   studentFullName?: string,
+ *   demoDisabled?: boolean,
  * }} props
  */
 export default function ArcadeClubShopPanel({
@@ -15,8 +16,23 @@ export default function ArcadeClubShopPanel({
   coinBalance = null,
   onCoinBalanceChange,
   studentFullName = "",
+  demoDisabled = false,
 }) {
   const { tokens: T } = useStudentTheme();
+
+  if (demoDisabled) {
+    return (
+      <div className={`${gh.arcadePanelShop || gh.card} space-y-3 text-right min-w-0`} dir="rtl">
+        <h3 className={gh.arcadeSectionTitle || gh.sectionTitle}>חנות קלפים</h3>
+        <p className={gh.arcadePanelBlurb || gh.cardBlurb}>
+          חנות הקלפים אינה פעילה במצב הדגמה. ניתן לצפות באוסף הדגמה בדף הקלפים.
+        </p>
+        <Link href="/student/cards" className={gh.btnJoinCode || gh.btnSecondary}>
+          לאוסף הדגמה
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className={`${gh.arcadePanelShop || gh.card} space-y-4 text-right min-w-0`} dir="rtl">

@@ -9,8 +9,8 @@ function friendRequestFeedback(json) {
   return json?.message || json?.error || "שגיאה";
 }
 
-/** @param {{ gh: Record<string, string>, leoNumber?: string|null, leoNumberLoading?: boolean }} props */
-export default function ArcadeClubFriendsPanel({ gh, leoNumber = null, leoNumberLoading = false }) {
+/** @param {{ gh: Record<string, string>, leoNumber?: string|null, leoNumberLoading?: boolean, demoDisabled?: boolean }} props */
+export default function ArcadeClubFriendsPanel({ gh, leoNumber = null, leoNumberLoading = false, demoDisabled = false }) {
   const [friends, setFriends] = useState([]);
   const [pending, setPending] = useState([]);
   const [query, setQuery] = useState("");
@@ -31,8 +31,9 @@ export default function ArcadeClubFriendsPanel({ gh, leoNumber = null, leoNumber
   }, []);
 
   useEffect(() => {
+    if (demoDisabled) return undefined;
     void load();
-  }, [load]);
+  }, [load, demoDisabled]);
 
   const sendRequest = async () => {
     setBusy(true);
@@ -144,6 +145,16 @@ export default function ArcadeClubFriendsPanel({ gh, leoNumber = null, leoNumber
   };
 
   const leoDisplay = leoNumber != null && String(leoNumber).trim() !== "" ? String(leoNumber).trim() : null;
+
+  if (demoDisabled) {
+    return (
+      <div className={`${gh.arcadePanelFriends || gh.card} p-4 text-right`} dir="rtl">
+        <p className={gh.arcadePanelBlurb || gh.cardBlurb}>
+          חברים ומספר ליאו — תצוגה במצב הדגמה. הוספת חברים והזמנות אינן פעילות.
+        </p>
+      </div>
+    );
+  }
 
   if (locked) {
     return (
