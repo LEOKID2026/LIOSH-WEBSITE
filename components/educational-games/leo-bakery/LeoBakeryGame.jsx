@@ -12,6 +12,7 @@ import {
 } from "../../../lib/educational-games/continuous-play.js";
 import { maxMistakesForDifficulty } from "../../../lib/educational-games/educational-session-standard.js";
 import {
+  bakeryControlHint,
   bakeryFeedback,
   bakeryPrompt,
   bakerySolutionText,
@@ -245,7 +246,7 @@ export default function LeoBakeryGame({
     timeoutHandledRef.current = true;
     registerMistake();
     onTimeUp();
-    if (task) revealAndAdvance(`הזמן נגמר! ${bakerySolutionText(task)}`);
+    if (task) revealAndAdvance(`הזמן נגמר. הנה הפתרון:\n${bakerySolutionText(task)}`);
   }, [registerMistake, onTimeUp, task, revealAndAdvance]);
 
   useEffect(() => {
@@ -402,7 +403,7 @@ export default function LeoBakeryGame({
           </div>
         ) : (
           <div className={s.hud}>
-            <span className={s.hudChip}>{productionMode ? "🥐" : "🥐 אבטיפוס"}</span>
+            <span className={s.hudChip}>{productionMode ? "🥐" : "🥐"}</span>
           </div>
         )}
         {showFullscreenButton && onFullscreenToggle ? (
@@ -418,7 +419,7 @@ export default function LeoBakeryGame({
         <div className={styles.screenCenter}>
           <p className={styles.introHero}>🥐🦁</p>
           <h1 className={styles.introTitle}>המאפייה של ליאו</h1>
-          <p className={styles.introText}>בנו מגשים עם כמות שווה של מאפים - כפל וקבוצות שוות!</p>
+          <p className={styles.introText}>סדרו מאפים במגשים ופתרו תרגילי כפל.</p>
           <div className={styles.difficultyRow}>
             {(/** @type {DifficultyId[]} */ (["easy", "medium", "hard"])).map((id) => (
               <button
@@ -433,7 +434,7 @@ export default function LeoBakeryGame({
           </div>
           <EducationalDifficultyGradeHint className={`${styles.introText} opacity-70`} style={{ fontSize: "0.72rem" }} />
           <button type="button" className={styles.startBtn} onClick={startGame}>
-            התחל משחק
+            התחלת המשחק
           </button>
         </div>
       ) : null}
@@ -441,7 +442,7 @@ export default function LeoBakeryGame({
       {phase === "play" && task ? (
         <div className={shop.shopMain}>
           <p className={shop.counterLabel}>
-            🥐 מאפיית ליאו · שלב {internalStage}
+            המאפייה · משימה {taskIndex + 1} מתוך {TASKS_PER_SESSION}
           </p>
 
           <div className={`${shop.shopGrid} ${styles.bakeryShopGrid}`} data-educational-workplace-grid="">
@@ -525,7 +526,7 @@ export default function LeoBakeryGame({
                     </div>
                   </div>
                   <div className={shop.controlRow}>
-                    <span className={shop.controlLabel}>בכל מגש</span>
+                    <span className={shop.controlLabel}>מאפים בכל מגש</span>
                     <div className={shop.stepperRow}>
                       <button
                         type="button"
@@ -555,7 +556,7 @@ export default function LeoBakeryGame({
                 </div>
                 {needsEnteredTotal ? (
                   <div className={shop.controlRow}>
-                    <span className={shop.controlLabel}>סך הכול</span>
+                    <span className={shop.controlLabel}>מאפים בסך הכול</span>
                     <div className={shop.stepperRow}>
                       <button
                         type="button"
@@ -585,7 +586,7 @@ export default function LeoBakeryGame({
 
               <div className={feedbackBarClass}>
                 <p className={shop.feedbackText}>
-                  {feedback || "הגדירו מגשים וכמות בכל מגש, ואז לחצו בדיקה"}
+                  {feedback || (task ? bakeryControlHint(task) : "בנו את ההזמנה.")}
                 </p>
               </div>
             </aside>
@@ -593,10 +594,10 @@ export default function LeoBakeryGame({
             <div className={shop.bottomBar}>
               <div className={shop.actionRow}>
                 <button type="button" className={shop.primaryBtn} onClick={runCheck}>
-                  בדוק הזמנה
+                  בדיקת ההזמנה
                 </button>
                 <button type="button" className={shop.secondaryBtn} onClick={resetTaskUi}>
-                  איפוס
+                  ניקוי
                 </button>
               </div>
             </div>
@@ -608,11 +609,11 @@ export default function LeoBakeryGame({
         <div className={styles.screenCenter}>
           <div className={styles.endCard}>
             <h2 className={styles.endTitle}>
-              {phase === "won" ? "🎉 סיימתם את המאפייה!" : "🥐 סיום משחק"}
+              {"כל הכבוד! סיימתם את המאפייה."}
             </h2>
             <p className={styles.endStat}>⭐ ניקוד: {score}</p>
             <p className={styles.endStat}>
-              ✅ תשובות נכונות: {successCount}/{TASKS_PER_SESSION}
+              הזמנות שהושלמו: {successCount}/{TASKS_PER_SESSION}
             </p>
             <p className={styles.endStat}>❌ טעויות: {mistakes}</p>
             <p className={styles.endStat}>📈 שלב הכי גבוה: {highestStage}</p>

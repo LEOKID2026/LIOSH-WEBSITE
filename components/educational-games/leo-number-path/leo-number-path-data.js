@@ -142,8 +142,8 @@ function buildParityTask(difficulty, cfg, guard, isEven) {
     correctPath: correct,
     orderMatters: false,
     promptHe: isEven
-      ? "בחרו את כל המספרים הזוגיים על המסלול"
-      : "בחרו את כל המספרים האי־זוגיים על המסלול",
+      ? "בחרו את כל המספרים הזוגיים."
+      : "בחרו את כל המספרים האי־זוגיים.",
   };
 }
 
@@ -178,7 +178,6 @@ function buildSkipTask(difficulty, cfg, guard) {
   ]).slice(0, 18);
 
   const start = correct[0];
-  const directionHe = backward ? "אחורה" : "קדימה";
 
   return {
     ...createMathTask({
@@ -196,7 +195,9 @@ function buildSkipTask(difficulty, cfg, guard) {
     numbers,
     correctPath: correct,
     orderMatters: true,
-    promptHe: `התחילו מ-${start} וקפצו ${directionHe} ב־${step}. בחרו את המסלול לפי הסדר.`,
+    promptHe: backward
+      ? `התחילו ב־${start}. בכל צעד החסירו ${step}. בחרו את המספרים לפי הסדר.`
+      : `התחילו ב־${start}. בכל צעד הוסיפו ${step}. בחרו את המספרים לפי הסדר.`,
   };
 }
 
@@ -240,7 +241,7 @@ function buildMultiplesTask(difficulty, cfg, guard) {
     numbers,
     correctPath: correctOnBoard,
     orderMatters: false,
-    promptHe: `בחרו את כל הכפולות של ${multiple} על המסלול`,
+    promptHe: `בחרו את כל הכפולות של ${multiple}.`,
   };
 }
 
@@ -281,7 +282,7 @@ function buildSequenceTask(difficulty, cfg, guard, geometric) {
       numbers,
       correctPath: correctSeq,
       orderMatters: true,
-      promptHe: `סדרת כפל: מתחילים ב־${start}, כל פעם כפול ${ratio}. בחרו את המסלול לפי הסדר.`,
+      promptHe: `התחילו ב־${start}. בכל צעד כפלו את המספר ב־${ratio}. בחרו את המספרים לפי הסדר.`,
     };
   }
 
@@ -311,9 +312,12 @@ function buildSequenceTask(difficulty, cfg, guard, geometric) {
     ...distractorsWhere(correctSeq, randInt(5, 7), cfg.maxNum, near),
   ]);
 
-  const clue = missingMiddle
-    ? `השלימו את הסדרה: ${shown.join(" , ")} (קפיצה קבועה)`
-    : `סדרה חשבונית: מתחילים ב־${correctSeq[0]}, מוסיפים ${descending ? "מינוס " : ""}${step} בכל פעם. בחרו את כל האיברים לפי הסדר.`;
+  const startVal = correctSeq[0];
+  const promptHe = missingMiddle
+    ? "השלימו את הסדרה. בחרו את המספרים החסרים לפי הסדר."
+    : descending
+      ? `התחילו ב־${startVal}. בכל צעד החסירו ${step}. בחרו את המספרים לפי הסדר.`
+      : `התחילו ב־${startVal}. בכל צעד הוסיפו ${step}. בחרו את המספרים לפי הסדר.`;
 
   return {
     ...createMathTask({
@@ -335,7 +339,8 @@ function buildSequenceTask(difficulty, cfg, guard, geometric) {
     numbers,
     correctPath: correctSeq,
     orderMatters: true,
-    promptHe: clue,
+    promptHe,
+    seriesDisplayLtr: missingMiddle ? shown.join(" , ") : null,
   };
 }
 
@@ -394,13 +399,22 @@ export function validatePath(task, selected) {
 
 /** @param {boolean} ok */
 export function pathFeedback(ok) {
-  return ok ? "מעולה! בחרתם מסלול נכון." : "כמעט! בדקו שוב את הכלל ואת הסדר.";
+  return ok ? "מעולה! בחרתם את המסלול הנכון." : "בדקו שוב את הכלל ואת סדר המספרים.";
+}
+
+/**
+ * @param {PathTask} task
+ * @returns {{ text: string, pathLtr: string }}
+ */
+export function pathSolutionParts(task) {
+  const path = task.orderMatters ? task.correctPath.join(" → ") : task.correctPath.join(" · ");
+  return { text: "המסלול הנכון:", pathLtr: path };
 }
 
 /** @param {PathTask} task */
 export function pathSolutionText(task) {
-  const path = task.orderMatters ? task.correctPath.join(" → ") : task.correctPath.join(" · ");
-  return `המסלול הנכון: ${path}`;
+  const parts = pathSolutionParts(task);
+  return `${parts.text}\n${parts.pathLtr}`;
 }
 
 /** @param {number[]} selected @param {boolean} orderMatters */

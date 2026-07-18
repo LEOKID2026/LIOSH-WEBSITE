@@ -47,13 +47,37 @@ export const GIFTS_TIME_LIMITS_BY_BAND = {
   hard: [35, 30, 25],
 };
 
-const ITEM_TYPES = [
-  { itemLabel: "מתנות", itemEmoji: "🎁" },
-  { itemLabel: "סוכריות", itemEmoji: "🍬" },
-  { itemLabel: "מדבקות", itemEmoji: "⭐" },
-  { itemLabel: "כוכבים", itemEmoji: "🌟" },
-  { itemLabel: "ממתקים", itemEmoji: "🍭" },
-];
+const ITEM_FORMS = Object.freeze({
+  gifts: { singular: "מתנה", plural: "מתנות", emoji: "🎁" },
+  candies: { singular: "סוכרייה", plural: "סוכריות", emoji: "🍬" },
+  stickers: { singular: "מדבקה", plural: "מדבקות", emoji: "⭐" },
+  stars: { singular: "כוכב", plural: "כוכבים", emoji: "🌟" },
+  sweets: { singular: "ממתק", plural: "ממתקים", emoji: "🍭" },
+});
+
+const ITEM_KEYS = Object.keys(ITEM_FORMS);
+
+/**
+ * @param {keyof typeof ITEM_FORMS | string} key
+ * @param {number} count
+ */
+export function giftsItemLabel(key, count) {
+  const forms = ITEM_FORMS[key];
+  if (!forms) return String(key);
+  return count === 1 ? forms.singular : forms.plural;
+}
+
+/** @param {keyof typeof ITEM_FORMS | string} key */
+export function giftsItemEmoji(key) {
+  return ITEM_FORMS[key]?.emoji || "🎁";
+}
+
+/** @param {number} count */
+export function remainingItemsText(count) {
+  if (count === 0) return "לא נשארו פריטים.";
+  if (count === 1) return "נשאר פריט אחד.";
+  return `נשארו ${count} פריטים.`;
+}
 
 /** @param {DifficultyId} difficulty */
 function giftsQuotas(difficulty) {
@@ -109,9 +133,11 @@ function generateGiftsPoolForMode(difficulty, mode, allowRemainder, salt = 0) {
         if (total < divisor || total > cfg.maxTotal) continue;
         if (rem >= divisor) continue;
 
-        for (let itemIdx = 0; itemIdx < ITEM_TYPES.length; itemIdx += 1) {
-          const item = ITEM_TYPES[(itemIdx + salt) % ITEM_TYPES.length];
-          const key = `${mode}-${total}-${divisor}-${item.itemLabel}`;
+        for (let itemIdx = 0; itemIdx < ITEM_KEYS.length; itemIdx += 1) {
+          const itemKey = ITEM_KEYS[(itemIdx + salt) % ITEM_KEYS.length];
+          const itemLabel = giftsItemLabel(itemKey, total);
+          const itemEmoji = giftsItemEmoji(itemKey);
+          const key = `${mode}-${total}-${divisor}-${itemKey}`;
           if (seen.has(key)) continue;
           seen.add(key);
 
@@ -141,16 +167,18 @@ function generateGiftsPoolForMode(difficulty, mode, allowRemainder, salt = 0) {
                 total,
                 divisor,
                 mode,
-                itemLabel: item.itemLabel,
-                itemEmoji: item.itemEmoji,
+                itemKey,
+                itemLabel,
+                itemEmoji,
               },
               expectedAnswer: { quotient: quot, remainder: rem },
               representationType: difficulty === "easy" ? "visual" : "mixed",
             }),
             total,
             mode,
-            itemLabel: item.itemLabel,
-            itemEmoji: item.itemEmoji,
+            itemKey,
+            itemLabel,
+            itemEmoji,
           };
 
           if (mode === "share_equally" || mode === "find_remainder") {
@@ -283,48 +311,76 @@ export function validateGiftsDivision(task, quotient, remainder) {
 
 /** @param {GiftsTask} task */
 export function giftsPrompt(task) {
-  const { itemLabel, total } = task;
+  const total = task.total;
+  const itemLabel =
+    task.itemKey != null ? giftsItemLabel(task.itemKey, total) : task.itemLabel;
   if (task.mode === "make_groups") {
     const size = task.groupSize ?? task.operands.divisor;
     if (task.expectedAnswer.remainder > 0 || task.skillId === "division.remainder") {
-      return `יש ${total} ${itemLabel}. בכל שקית שמים ${size}. כמה שקיות מלאות אפשר להכין וכמה יישארו?`;
+      return `יש ${total} ${itemLabel}. שמים ${size} בכל שקית. כמה שקיות מלאות אפשר להכין וכמה יישארו?`;
     }
-    return `יש ${total} ${itemLabel}. בכל שקית שמים ${size}. כמה שקיות מלאות אפשר להכין?`;
+    return `יש ${total} ${itemLabel}. שמים ${size} בכל שקית. כמה שקיות מלאות אפשר להכין?`;
   }
   const children = task.children ?? task.operands.divisor;
   if (task.expectedAnswer.remainder > 0 || task.mode === "find_remainder") {
-    return `יש ${total} ${itemLabel} ו-${children} ילדים. כמה יקבל כל ילד וכמה יישאר?`;
+    return `חלקו ${total} ${itemLabel} שווה בשווה בין ${children} ילדים. כמה יקבל כל ילד וכמה יישארו?`;
   }
-  return `יש ${total} ${itemLabel} ו-${children} ילדים. חלקן שווה בשווה. כמה יקבל כל ילד?`;
+  return `חלקו ${total} ${itemLabel} שווה בשווה בין ${children} ילדים. כמה יקבל כל ילד?`;
 }
 
-/** @param {GiftsTask} task */
-export function giftsSolutionText(task) {
+/**
+ * @param {GiftsTask} task
+ * @returns {{ text: string, equation: string }}
+ */
+export function giftsSolutionParts(task) {
   const q = task.expectedAnswer.quotient;
   const r = task.expectedAnswer.remainder;
   const d = task.operands.divisor;
   if (task.mode === "make_groups") {
-    return r > 0
-      ? `פתרון: ${q} שקיות × ${d} בכל שקית + ${r} נשאר = ${task.total}`
-      : `פתרון: ${q} שקיות × ${d} בכל שקית = ${task.total}`;
-  }
-  return r > 0
-    ? `פתרון: ${q} לכל ילד × ${d} ילדים + ${r} נשאר = ${task.total}`
-    : `פתרון: ${q} לכל ילד × ${d} ילדים = ${task.total}`;
-}
-
-/** @param {boolean} ok @param {number} perChild @param {number} remainder */
-export function giftsFeedback(ok, perChild, remainder) {
-  if (ok) {
-    if (remainder > 0) {
-      return `יפה! התוצאה ${perChild} והשארית ${remainder}.`;
+    const size = task.groupSize ?? d;
+    if (r > 0) {
+      return {
+        text: `פתרון: אפשר להכין ${q} שקיות מלאות. ${remainingItemsText(r)}`,
+        equation: `${q} × ${size} + ${r} = ${task.total}`,
+      };
     }
-    return "מעולה! חילקתם נכון.";
+    return {
+      text: `פתרון: אפשר להכין ${q} שקיות מלאות.`,
+      equation: `${q} × ${size} = ${task.total}`,
+    };
   }
-  return "כמעט! בדקו שהחלוקה שווה ושהשארית קטנה מהמחלק.";
+  const children = task.children ?? d;
+  if (r > 0) {
+    return {
+      text: `פתרון: כל ילד מקבל ${q}. ${remainingItemsText(r)}`,
+      equation: `${children} × ${q} + ${r} = ${task.total}`,
+    };
+  }
+  return {
+    text: `פתרון: כל ילד מקבל ${q}.`,
+    equation: `${children} × ${q} = ${task.total}`,
+  };
 }
 
-const CHILD_EMOJIS = ["👧", "👦", "🧒", "👧🏻", "👦🏻", " compat", "👧🏼", "👦🏼", " compat", "👧🏽", "👦🏽", " compat"];
+/** @param {GiftsTask} task */
+export function giftsSolutionText(task) {
+  const parts = giftsSolutionParts(task);
+  return `${parts.text}\n${parts.equation}`;
+}
+
+/**
+ * @param {boolean} ok
+ * @param {GiftsTask} [task]
+ */
+export function giftsFeedback(ok, task) {
+  if (ok) return "מעולה! החלוקה נכונה.";
+  if (task?.mode === "make_groups") {
+    return "בדקו שוב כמה שקיות מלאות אפשר להכין וכמה יישארו.";
+  }
+  return "בדקו שוב כמה יקבל כל ילד וכמה יישארו.";
+}
+
+const CHILD_EMOJIS = ["👧", "👦", "🧒", "👧🏻", "👦🏻", "🧑🏻", "👧🏼", "👦🏼", "🧑🏼", "👧", "👦", "🧒"];
 
 /** @param {number} index */
 export function childEmojiAt(index) {

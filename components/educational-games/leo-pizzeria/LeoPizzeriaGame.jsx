@@ -298,16 +298,16 @@ export default function LeoPizzeriaGame({
 
       if (payload.type === "identify") {
         setAnswerNumerator(payload.numerator);
-        setFeedback("פתרון: זה השבר הנכון");
+        setFeedback("פתרון: השבר הוא");
       } else if (payload.type === "compare") {
         setCompareRelation(/** @type {'greater'|'less'|'equal'} */ (payload.relation));
-        setFeedback(`פתרון: ${COMPARE_LABEL_HE[payload.relation] || "שווים"}`);
+        setFeedback(`פתרון: ${COMPARE_LABEL_HE[payload.relation] || COMPARE_LABEL_HE.equal}.`);
       } else if (payload.type === "equivalent" && payload.target) {
         /** @type {Record<number, string>} */
         const map = {};
         for (let i = 0; i < payload.target.n; i += 1) map[i] = payload.toppingId;
         setSliceMap(map);
-        setFeedback("פתרון: השברים שווים");
+        setFeedback("פתרון: שני השברים שווים.");
       } else if (payload.type === "complete") {
         /** @type {Record<number, string>} */
         const map = {};
@@ -316,19 +316,19 @@ export default function LeoPizzeriaGame({
           map[payload.given + i] = payload.toppingId;
         }
         setSliceMap(map);
-        setFeedback("פתרון: החלק החסר הושלם לשלם");
+        setFeedback("פתרון: השלמנו את הפרוסות החסרות וקיבלנו פיצה שלמה.");
       } else if (payload.type === "combine" && payload.result) {
         /** @type {Record<number, string>} */
         const map = {};
         for (let i = 0; i < payload.result.n; i += 1) map[i] = payload.toppingId;
         setSliceMap(map);
-        setFeedback("פתרון: סמנו את סכום החלקים על הפיצה");
+        setFeedback("פתרון: סכום השברים הוא");
       } else if (payload.type === "build") {
         /** @type {Record<number, string>} */
         const map = {};
         for (let i = 0; i < payload.numerator; i += 1) map[i] = payload.toppingId;
         setSliceMap(map);
-        setFeedback("פתרון: סמנו את מספר החלקים המתאים לשבר");
+        setFeedback("פתרון: כך מסמנים את השבר.");
       }
 
       // Revealed solution is not a success
@@ -347,7 +347,7 @@ export default function LeoPizzeriaGame({
     setCurrentStreak(0);
     addScore(SCORE.timeout);
     setCheckState("bad");
-    const timeoutText = "הלקוח חיכה יותר מדי";
+    const timeoutText = "הזמן נגמר. עוברים ללקוח הבא.";
     setFeedback(timeoutText);
     onTimeUp();
     playFeedback(timeoutText);
@@ -663,7 +663,7 @@ export default function LeoPizzeriaGame({
               />
             </div>
             <FractionDisplay numerator={customer.compareA.n} denominator={customer.compareA.d} size="md" />
-            <span className={styles.compareCaption}>הראשון</span>
+            <span className={styles.compareCaption}>פיצה ראשונה</span>
           </div>
           <div
             className={`${styles.compareCard} ${
@@ -680,7 +680,7 @@ export default function LeoPizzeriaGame({
               />
             </div>
             <FractionDisplay numerator={customer.compareB.n} denominator={customer.compareB.d} size="md" />
-            <span className={styles.compareCaption}>השני</span>
+            <span className={styles.compareCaption}>פיצה שנייה</span>
           </div>
         </div>
       );
@@ -694,7 +694,7 @@ export default function LeoPizzeriaGame({
           locked={controlsLocked || isIdentify}
           interactive={usesToppings}
           onSliceTap={onSliceTap}
-          ariaLabel="פיצה לעבודה"
+          ariaLabel="הפיצה שעליה מסמנים"
         />
       </div>
     );
@@ -706,7 +706,7 @@ export default function LeoPizzeriaGame({
     if (isIdentify) {
       return (
         <div className={`${frame.panel} ${shop.toolsPanel}`}>
-          <p className={shop.toolsTitle}>כמה חלקים מסומנים?</p>
+          <p className={shop.toolsTitle}>כמה פרוסות מסומנות?</p>
           <div className={styles.identifyFraction}>
             <div className={styles.identifyStepper}>
               <button
@@ -727,7 +727,7 @@ export default function LeoPizzeriaGame({
                 −
               </button>
             </div>
-            <p className={styles.identifyHint}>המכנה קבוע לפי מספר הפרוסות</p>
+            <p className={styles.identifyHint}>בחרו את מספר הפרוסות המסומנות.</p>
           </div>
         </div>
       );
@@ -736,7 +736,7 @@ export default function LeoPizzeriaGame({
     if (isCompare) {
       return (
         <div className={`${frame.panel} ${shop.toolsPanel}`}>
-          <p className={shop.toolsTitle}>השוואה</p>
+          <p className={shop.toolsTitle}>בחרו את התשובה הנכונה.</p>
           <div className={shop.actionRow} style={{ flexDirection: "column", gap: 8 }}>
             {(["greater", "less", "equal"]).map((rel) => (
               <button
@@ -757,7 +757,7 @@ export default function LeoPizzeriaGame({
     if (isEquivalent && customer.sourceFraction && customer.targetFraction) {
       return (
         <div className={`${frame.panel} ${shop.toolsPanel}`}>
-          <p className={shop.toolsTitle}>שברים שווים</p>
+          <p className={shop.toolsTitle}>סמנו על הפיצה את החלק המתאים.</p>
           {solutionPayload?.type === "equivalent" ? (
             <div className={styles.eqSolution}>
               <FractionDisplay
@@ -773,7 +773,7 @@ export default function LeoPizzeriaGame({
               />
             </div>
           ) : (
-            <p className={styles.identifyHint}>סמנו על הפיצה את החלק השווה</p>
+            <p className={styles.identifyHint}>סמנו על הפיצה את החלק המתאים.</p>
           )}
           <div className={shop.toolsGrid}>
             {TOPPINGS.filter((t) => t.id === customer.toppingId).map((t) => (
@@ -796,7 +796,7 @@ export default function LeoPizzeriaGame({
 
     return (
       <div className={`${frame.panel} ${shop.toolsPanel}`}>
-        <p className={shop.toolsTitle}>מדף תוספות</p>
+        <p className={shop.toolsTitle}>בחרו תוספת</p>
         <div className={shop.toolsGrid}>
           {TOPPINGS.map((t) => (
             <button
@@ -848,7 +848,7 @@ export default function LeoPizzeriaGame({
           </div>
         ) : (
           <div className={frame.hud}>
-            <span className={frame.hudChip}>{productionMode ? "🍕" : "🍕 אבטיפוס"}</span>
+            <span className={frame.hudChip}>{productionMode ? "🍕" : "🍕"}</span>
           </div>
         )}
         {showFullscreenButton && onFullscreenToggle ? (
@@ -865,7 +865,7 @@ export default function LeoPizzeriaGame({
           <p className={frame.introHero}>🍕🦁</p>
           <h1 className={frame.introTitle}>הפיצרייה של ליאו</h1>
           <p className={frame.introText}>
-            לקוחות נכנסים לפיצרייה - הכינו להם בדיוק את הפיצה שהם הזמינו!
+            הכינו פיצות ופתרו משימות בשברים.
           </p>
           <div className={frame.difficultyRow}>
             {(/** @type {DifficultyId[]} */ (["easy", "medium", "hard"])).map((id) => (
@@ -887,7 +887,7 @@ export default function LeoPizzeriaGame({
             {CUSTOMERS_PER_LEVEL} לקוחות · טיימר לכל לקוח · גרירה או לחיצה על תוספות
           </p>
           <button type="button" className={frame.startBtn} onClick={startGame}>
-            פתיחת משמרת 🍕
+            התחלת המשחק
           </button>
         </div>
       ) : null}
@@ -965,7 +965,7 @@ export default function LeoPizzeriaGame({
                   disabled={controlsLocked || checkState === "ok" || checkState === "reveal"}
                   onClick={servePizza}
                 >
-                  הגש פיצה 🍕
+                  בדיקת הפיצה
                 </button>
                 <button
                   type="button"
@@ -973,7 +973,7 @@ export default function LeoPizzeriaGame({
                   disabled={controlsLocked}
                   onClick={() => resetPizza(customer)}
                 >
-                  נקה פיצה
+                  ניקוי הפיצה
                 </button>
               </div>
             </div>
@@ -984,10 +984,10 @@ export default function LeoPizzeriaGame({
       {phase === "won" && !productionMode ? (
         <div className={frame.screenCenter}>
           <div className={frame.endCard}>
-            <h2 className={frame.endTitle}>🎉 סיימתם את המשמרת!</h2>
+            <h2 className={frame.endTitle}>כל הכבוד! סיימתם את הפיצרייה.</h2>
             <p className={frame.endStat}>⭐ ניקוד: {score}</p>
             <p className={frame.endStat}>
-              ✅ לקוחות: {successCount}/{customers.length}
+              משימות שנפתרו: {successCount}/{customers.length}
             </p>
             <p className={frame.endStat}>❌ טעויות: {mistakes}</p>
             <div className={frame.endActions}>
@@ -1002,9 +1002,9 @@ export default function LeoPizzeriaGame({
       {phase === "lost" && !productionMode ? (
         <div className={frame.screenCenter}>
           <div className={frame.endCard}>
-            <h2 className={frame.endTitle}>🍕 סיום משמרת</h2>
+            <h2 className={frame.endTitle}>כל הכבוד! סיימתם את הפיצרייה.</h2>
             <p className={frame.endStat}>⭐ ניקוד: {score}</p>
-            <p className={frame.endStat}>✅ פיצות נכונות: {successCount}</p>
+            <p className={frame.endStat}>משימות שנפתרו: {successCount}</p>
             <p className={frame.endStat}>❌ טעויות: {mistakes}</p>
             <div className={frame.endActions}>
               <button type="button" className={frame.startBtn} onClick={startGame}>

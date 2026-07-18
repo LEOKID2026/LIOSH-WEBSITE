@@ -64,7 +64,7 @@ export const DIFFICULTIES = {
     id: "medium",
     label: "בינוני",
     denominators: [2, 3, 4, 6, 8],
-    hint: "מונה ומכנה, שברים שווים והשוואה",
+    hint: "בניית שברים, שברים שווים והשוואה",
     maxMistakes: 4,
     timeLimitsByBand: [45, 40, 35],
   },
@@ -72,7 +72,7 @@ export const DIFFICULTIES = {
     id: "hard",
     label: "קשה",
     denominators: [3, 4, 5, 6, 8, 10, 12],
-    hint: "שברים שווים, השוואה ושילובים",
+    hint: "שברים שווים, השוואה וחיבור חזותי",
     maxMistakes: 3,
     timeLimitsByBand: [40, 35, 30],
   },
@@ -215,8 +215,8 @@ function generatePoolForVariant(difficulty, variant, salt = 0) {
             }),
             customerName: name,
             customerEmoji: emoji,
-            greeting: "הכינו פיצה לפי השבר",
-            ticketLine: "סמנו את החלק המתאים על הפיצה",
+            greeting: "הכינו פיצה לפי השבר המוצג.",
+            ticketLine: "סמנו את מספר הפרוסות המתאים.",
             sliceCount: denom,
             pizzaCount: 1,
             toppingId: topping.id,
@@ -243,8 +243,8 @@ function generatePoolForVariant(difficulty, variant, salt = 0) {
             }),
             customerName: name,
             customerEmoji: emoji,
-            greeting: "כמה חלקים מסומנים?",
-            ticketLine: "בחרו את המונה — המכנה נקבע לפי מספר הפרוסות",
+            greeting: "כמה פרוסות מסומנות?",
+            ticketLine: "בחרו את מספר הפרוסות המסומנות.",
             sliceCount: denom,
             pizzaCount: 1,
             toppingId: topping.id,
@@ -277,8 +277,8 @@ function generatePoolForVariant(difficulty, variant, salt = 0) {
             }),
             customerName: name,
             customerEmoji: emoji,
-            greeting: "השלימו את הפיצה לשלם",
-            ticketLine: "סמנו את החלק החסר",
+            greeting: "השלימו את הפיצה לשלם.",
+            ticketLine: "סמנו את הפרוסות החסרות.",
             sliceCount: denom,
             pizzaCount: 1,
             toppingId: topping.id,
@@ -318,8 +318,8 @@ function generatePoolForVariant(difficulty, variant, salt = 0) {
               }),
               customerName: name,
               customerEmoji: emoji,
-              greeting: "התאימו שבר ששווה ל",
-              ticketLine: "סמנו על הפיצה את החלק השווה",
+              greeting: "הכינו שבר ששווה לשבר המוצג.",
+              ticketLine: "סמנו על הפיצה את החלק המתאים.",
               sliceCount: targetD,
               pizzaCount: 1,
               toppingId: topping.id,
@@ -359,8 +359,8 @@ function generatePoolForVariant(difficulty, variant, salt = 0) {
                 }),
                 customerName: name,
                 customerEmoji: emoji,
-                greeting: "השוו בין שני השברים",
-                ticketLine: "בחרו: גדול יותר, קטן יותר, או שווים",
+                greeting: "איזה שבר גדול יותר?",
+                ticketLine: "בחרו את התשובה הנכונה.",
                 sliceCount: Math.max(denom, d2),
                 pizzaCount: 2,
                 toppingId: topping.id,
@@ -396,8 +396,8 @@ function generatePoolForVariant(difficulty, variant, salt = 0) {
               }),
               customerName: name,
               customerEmoji: emoji,
-              greeting: "חברו את השברים ובנו את התוצאה על הפיצה",
-              ticketLine: "סמנו את תוצאת החיבור",
+              greeting: "חברו את השברים.",
+              ticketLine: "סמנו על הפיצה את התוצאה.",
               sliceCount: denom,
               pizzaCount: 1,
               toppingId: topping.id,
@@ -512,14 +512,14 @@ export function validateOrderSpec(orderSpec, sliceCount, sliceMap) {
 
   for (const toppingId of Object.values(sliceMap)) {
     if (toppingId && toppingId !== "__prefilled__" && requirements[toppingId] == null) {
-      return { ok: false, message: "שימו לב: יש תוספת מיותרת על הפיצה." };
+      return { ok: false, message: "יש תוספת על פרוסה שלא צריך לסמן." };
     }
   }
 
   for (const [toppingId, required] of Object.entries(requirements)) {
     const actual = counts[toppingId] || 0;
     if (actual > required) {
-      return { ok: false, message: "שימו לב: יש תוספת מיותרת על הפיצה." };
+      return { ok: false, message: "יש תוספת על פרוסה שלא צריך לסמן." };
     }
   }
 
@@ -530,23 +530,26 @@ export function validateOrderSpec(orderSpec, sliceCount, sliceMap) {
   }
 
   if (missingTotal > 0) {
-    return { ok: false, message: "כמעט! בדקו כמה חלקים סומנו." };
+    return { ok: false, message: "בדקו שוב כמה פרוסות צריך לסמן." };
   }
 
   if (filled > filledSlices) {
-    return { ok: false, message: "שימו לב: יש תוספת מיותרת על הפיצה." };
+    return { ok: false, message: "יש תוספת על פרוסה שלא צריך לסמן." };
   }
 
   if (!allowEmpty && filled < filledSlices) {
-    return { ok: false, message: "כמעט! בדקו כמה חלקים סומנו." };
+    return { ok: false, message: "בדקו שוב כמה פרוסות צריך לסמן." };
   }
 
-  return { ok: true, message: "כל הכבוד! הפיצה מוכנה." };
+  return { ok: true, message: "מעולה! הפיצה מוכנה." };
 }
 
 /** @param {PizzeriaTask} order @param {Record<number, string>} sliceMap */
 export function validateCustomerOrder(order, sliceMap) {
-  if (!order.spec) return { ok: false, message: "משימה לא תקינה" };
+  if (!order.spec) {
+    console.error("[leo-pizzeria] invalid order without spec", order?.id);
+    return { ok: false, message: "" };
+  }
   return validateOrderSpec(order.spec, order.sliceCount, sliceMap);
 }
 
@@ -561,17 +564,23 @@ export function validatePizzeriaAnswer(order, answer) {
       answer.numerator === exp.numerator &&
       answer.denominator === exp.denominator &&
       answer.denominator === order.sliceCount;
-    return { ok, message: ok ? "מעולה! זיהיתם את השבר." : "בדקו כמה חלקים מסומנים." };
+    return {
+      ok,
+      message: ok ? "מעולה! בחרתם את השבר הנכון." : "בדקו שוב כמה פרוסות מסומנות.",
+    };
   }
   if (order.variant === "compare_fractions") {
     const exp = /** @type {{ relation: string }} */ (order.expectedAnswer);
     const ok = answer.relation === exp.relation;
-    return { ok, message: ok ? "השוואה מדויקת!" : "נסו להשוות שוב לפי גודל החלק." };
+    return {
+      ok,
+      message: ok ? "מעולה! ההשוואה נכונה." : "השוו שוב בין החלק המסומן בשתי הפיצות.",
+    };
   }
   if (answer.sliceMap && order.spec) {
     return validateOrderSpec(order.spec, order.sliceCount, answer.sliceMap);
   }
-  return { ok: false, message: "תשובה חסרה" };
+  return { ok: false, message: "בחרו תשובה לפני הבדיקה." };
 }
 
 export function getCustomerTimeLimit(difficultyId, index) {
@@ -617,24 +626,23 @@ export function wedgeCenter(index, total, radius, cx, cy) {
 export function pizzeriaSolutionText(order) {
   if (order.variant === "compare_fractions") {
     const exp = /** @type {{ relation: string }} */ (order.expectedAnswer);
-    if (exp.relation === "greater") return "פתרון: הראשון גדול יותר";
-    if (exp.relation === "less") return "פתרון: הראשון קטן יותר";
-    return "פתרון: שווים";
+    if (exp.relation === "greater") return "פתרון: השבר הראשון גדול יותר.";
+    if (exp.relation === "less") return "פתרון: השבר השני גדול יותר.";
+    return "פתרון: שני השברים שווים.";
   }
   if (order.variant === "identify_fraction") {
-    return "פתרון: זה השבר הנכון";
+    return "פתרון: השבר הוא";
   }
-  if (order.variant === "equivalent_fraction" && order.sourceFraction && order.targetFraction) {
-    return "פתרון: השברים שווים";
+  if (order.variant === "equivalent_fraction") {
+    return "פתרון: שני השברים שווים.";
   }
   if (order.variant === "complete_whole") {
-    const exp = /** @type {{ given: number, numerator: number, denominator: number }} */ (order.expectedAnswer);
-    return `פתרון: היה ${exp.given}, נוסף ${exp.numerator}, יחד ${exp.denominator}`;
+    return "פתרון: השלמנו את הפרוסות החסרות וקיבלנו פיצה שלמה.";
   }
-  if (order.variant === "combine_visual_fractions" && order.combineA && order.combineB) {
-    return "פתרון: סמנו את סכום החלקים על הפיצה";
+  if (order.variant === "combine_visual_fractions") {
+    return "פתרון: סכום השברים הוא";
   }
-  return "פתרון: סמנו את מספר החלקים המתאים לשבר";
+  return "פתרון: כך מסמנים את השבר.";
 }
 
 /** Structured solution payload for UI (no English enums exposed). */

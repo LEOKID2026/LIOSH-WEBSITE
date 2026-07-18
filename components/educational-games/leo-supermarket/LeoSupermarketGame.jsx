@@ -13,6 +13,7 @@ import {
   isChangeAmountCorrect,
   isSupermarketWin,
   sumChangeDenoms,
+  supermarketCompletedCustomersText,
 } from "./leo-supermarket-data.js";
 import { buildLeoSupermarketMetrics } from "./leo-supermarket-metrics.js";
 import GroceryItemVisual from "./GroceryItemVisual.jsx";
@@ -308,7 +309,7 @@ export default function LeoSupermarketGame({
     setStreak(0);
     addScore(SCORE.timeout);
     onTimeUp();
-    showZoneFeedback("global", "הלקוח חיכה יותר מדי", "bad");
+    showZoneFeedback("global", "הזמן נגמר. עוברים ללקוח הבא.", "bad");
 
     const idx = customerIndexRef.current;
     const list = customersRef.current;
@@ -338,7 +339,7 @@ export default function LeoSupermarketGame({
         setStreak(0);
         addScore(SCORE.wrongProduct);
         onWrong();
-        showZoneFeedback("customer", "זה לא המוצר שהלקוח ביקש", "bad");
+        showZoneFeedback("customer", "בדקו שוב אילו מוצרים הלקוח ביקש.", "bad");
         if (nextMistakes > DIFFICULTIES[difficulty].maxMistakes) finishGame(false);
         return;
       }
@@ -347,7 +348,7 @@ export default function LeoSupermarketGame({
       audio.playSfx("sfx-register");
       const nextSelected = [...selectedProductIdsRef.current, productId];
       setSelectedProductIds(nextSelected);
-      showZoneFeedback("customer", "מוצר נכון!", "ok");
+      showZoneFeedback("customer", "מעולה! בחרתם את המוצרים הנכונים.", "ok");
 
       if (nextSelected.length >= cust.requestedIds.length) {
         setStep("change");
@@ -382,7 +383,7 @@ export default function LeoSupermarketGame({
       if (isFirstTry) addScore(SCORE.firstTryBonus);
       onCorrect();
       audio.playSfx("sfx-coin");
-      showZoneFeedback("register", "מעולה! החזרת עודף נכון", "ok");
+      showZoneFeedback("register", "מעולה! החזרתם את העודף הנכון.", "ok");
       const wasFast = timeLeftRef.current > Math.floor(cust.timeLimitSec * 0.35);
       completeCustomerSuccess(wasFast);
       return;
@@ -396,7 +397,7 @@ export default function LeoSupermarketGame({
     setStreak(0);
     addScore(SCORE.wrongChange);
     onWrong();
-    showZoneFeedback("register", "כמעט! נסו לחשב שוב את העודף", "bad");
+    showZoneFeedback("register", "בדקו שוב את סכום הקנייה ואת הסכום ששולם.", "bad");
 
     if (nextMistakes > DIFFICULTIES[difficulty].maxMistakes) {
       finishGame(false);
@@ -661,7 +662,7 @@ export default function LeoSupermarketGame({
           </div>
         ) : (
           <div className={styles.hud}>
-            <span className={styles.hudChip}>{productionMode ? "🏪" : "🧪 אבטיפוס"}</span>
+            <span className={styles.hudChip}>{productionMode ? "🏪" : "🏪"}</span>
           </div>
         )}
         {showFullscreenButton && onFullscreenToggle ? (
@@ -678,7 +679,7 @@ export default function LeoSupermarketGame({
           <p className={styles.introHero}>🏪🛒</p>
           <h1 className={styles.introTitle}>המכולת של ליאו</h1>
           <p className={styles.introText}>
-            עזרו לליאו המוכר - בחרו מוצר, חשבו עודף והחזירו כסף נכון ללקוח
+            עזרו לליאו לבחור מוצרים ולהחזיר את העודף הנכון.
           </p>
           <div className={styles.difficultyRow}>
             {(/** @type {DifficultyId[]} */ (["easy", "medium", "hard"])).map((id) => (
@@ -697,7 +698,7 @@ export default function LeoSupermarketGame({
             {CUSTOMERS_PER_LEVEL} לקוחות · עד {diffConfig.maxMistakes} פסילות · הקושי עולה בהדרגה
           </p>
           <button type="button" className={styles.startBtn} onClick={startGame}>
-            התחל משחק
+            התחלת המשחק
           </button>
         </div>
       ) : null}
@@ -705,7 +706,7 @@ export default function LeoSupermarketGame({
       {phase === "play" && customer ? (
         <div className={shop.shopMain}>
           <p className={shop.counterLabel}>
-            🏪 המכולת · לקוח {customerIndex + 1}/{CUSTOMERS_PER_LEVEL}
+            המכולת · לקוח {customerIndex + 1} מתוך {CUSTOMERS_PER_LEVEL}
           </p>
 
           <div className={styles.supermarketFlow} data-educational-workplace-grid="">
@@ -729,7 +730,7 @@ export default function LeoSupermarketGame({
             </div>
 
             <section className={styles.shelfSection}>
-              <p className={styles.shelfTitle}>🗄️ מדף המוצרים - בחרו מה שהלקוח ביקש</p>
+              <p className={styles.shelfTitle}>בחרו את המוצרים שהלקוח ביקש.</p>
               <div className={styles.shelfGrid}>
                 {PRODUCTS.map((product) => {
                   const onRegister = selectedProductIds.includes(product.id);
@@ -759,10 +760,10 @@ export default function LeoSupermarketGame({
                 role="region"
                 aria-label="קופה"
               >
-                <p className={styles.zoneTitle}>🧾 הקופה</p>
+                <p className={styles.zoneTitle}>המוצרים שבחרתם</p>
                 <div className={styles.zoneItems}>
                   {selectedProductIds.length === 0 ? (
-                    <span className={styles.zoneEmpty}>בחרו את המוצר שהלקוח ביקש</span>
+                    <span className={styles.zoneEmpty}>המוצרים שתבחרו יופיעו כאן.</span>
                   ) : (
                     selectedProductIds.map((id) => {
                       const p = PRODUCTS.find((x) => x.id === id);
@@ -782,14 +783,14 @@ export default function LeoSupermarketGame({
                 data-drop-zone="change"
                 className={`${styles.changeZone} ${step === "change" ? styles.changeZoneActive : ""}`}
               >
-                <p className={styles.zoneTitle}>💵 העודף שאני מחזיר</p>
+                <p className={styles.zoneTitle}>העודף שבחרתם</p>
                 <div className={styles.zoneItems}>
                   {changeDenoms.length === 0 ? (
                     <span className={styles.zoneEmpty}>
                       {step === "change"
                         ? expectedChangeForCustomer === 0
-                          ? "אין עודף - לחצו מסור עודף"
-                          : "בחרו מטבעות"
+                          ? "אין צורך להחזיר עודף."
+                          : "בחרו מטבעות לעודף."
                         : "-"}
                     </span>
                   ) : (
@@ -822,7 +823,7 @@ export default function LeoSupermarketGame({
                       </span>
                     </div>
                     <p className={styles.checkoutAmountChange}>
-                      <span className={styles.checkoutAmountLabel}>סכום שהחזרת:</span>
+                      <span className={styles.checkoutAmountLabel}>העודף שבחרתם:</span>
                       <span className={styles.checkoutAmountValue}>{formatShekel(changeSum)}</span>
                     </p>
                   </div>
@@ -831,7 +832,7 @@ export default function LeoSupermarketGame({
             </div>
 
             <section className={styles.moneySection}>
-              <p className={styles.moneyTitle}>💰 מגירת הקופה - בחרו מטבעות לעודף</p>
+              <p className={styles.moneyTitle}>בחרו מטבעות לעודף.</p>
               <div className={styles.moneyGrid}>
                 {diffConfig.denoms.map((value) => {
                   const style = DENOM_STYLES[value];
@@ -860,7 +861,7 @@ export default function LeoSupermarketGame({
                   disabled={step !== "change" || changeDenoms.length === 0}
                   onClick={clearChange}
                 >
-                  נקה עודף
+                  ניקוי
                 </button>
                 <button
                   type="button"
@@ -868,7 +869,7 @@ export default function LeoSupermarketGame({
                   disabled={step !== "change"}
                   onClick={submitChange}
                 >
-                  מסור עודף ✓
+                  החזרת עודף
                 </button>
               </div>
             </div>
@@ -881,14 +882,12 @@ export default function LeoSupermarketGame({
         <div className={styles.screenCenter}>
           <p className={styles.introHero}>{phase === "won" ? "🎉" : "💪"}</p>
           <h2 className={styles.introTitle}>
-            {endMetrics?.completedAllCustomers
-              ? `כל הכבוד! שירתת ${endMetrics.correctCustomers} לקוחות ועזרת לליאו במכולת`
-              : `כל הכבוד! שירתת ${endMetrics?.correctCustomers ?? 0} לקוחות ועזרת לליאו במכולת`}
+            {supermarketCompletedCustomersText(endMetrics?.correctCustomers ?? correctCustomers ?? 0)}
           </h2>
           <div className={styles.endStats}>
             <p>⭐ ניקוד: {score}</p>
             <p>
-              👤 לקוחות נכונים: {correctCustomers}/{CUSTOMERS_PER_LEVEL}
+              לקוחות שהושלמו: {correctCustomers}/{CUSTOMERS_PER_LEVEL}
             </p>
             <p>🛒 לקוחות שטופלו: {customersCompleted}/{CUSTOMERS_PER_LEVEL}</p>
             <p>❌ פסילות: {wrongProducts + wrongChange + timeoutMistakes}</p>

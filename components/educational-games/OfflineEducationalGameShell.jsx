@@ -36,7 +36,7 @@ const ENGINE_MAP = {
   "leo-word-detective": MleoLeoWordDetectiveEngine,
 };
 
-const OFFLINE_FINISH_SUBTITLE = "משחק מקומי - ללא שמירה וללא פרסים";
+const OFFLINE_FINISH_SUBTITLE = "משחק ללא חיבור. ההתקדמות והפרסים לא יישמרו.";
 
 const PLAY_SHELL =
   "flex h-dvh max-h-dvh min-h-0 flex-col overflow-hidden bg-gray-950 text-white";

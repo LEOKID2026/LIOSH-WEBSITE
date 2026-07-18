@@ -288,7 +288,7 @@ export default function LeoNumberPathGame({
           </div>
         ) : (
           <div className={frame.hud}>
-            <span className={frame.hudChip}>{productionMode ? "🔢" : "🔢 אבטיפוס"}</span>
+            <span className={frame.hudChip}>{productionMode ? "🔢" : "🔢"}</span>
           </div>
         )}
         {showFullscreenButton && onFullscreenToggle ? (
@@ -305,7 +305,7 @@ export default function LeoNumberPathGame({
           <p className={frame.introHero}>🔢🦁</p>
           <h1 className={frame.introTitle}>מסלול המספרים של ליאו</h1>
           <p className={frame.introText}>
-            בחרו מספרים במסלול לפי הכלל - קפיצות, זוגי/אי-זוגי וכפולות!
+            בחרו מספרים לפי הכלל ובנו את המסלול הנכון.
           </p>
           <div className={frame.difficultyRow}>
             {(/** @type {DifficultyId[]} */ (["easy", "medium", "hard"])).map((id) => (
@@ -324,7 +324,7 @@ export default function LeoNumberPathGame({
             {TASKS_PER_SESSION} משימות · עד {MAX_ATTEMPTS_PER_TASK} ניסיונות לכל משימה
           </p>
           <button type="button" className={frame.startBtn} onClick={startGame}>
-            התחל משחק
+            התחלת המשחק
           </button>
         </div>
       ) : null}
@@ -332,7 +332,7 @@ export default function LeoNumberPathGame({
       {phase === "play" && currentTask ? (
         <div className={shop.shopMain}>
           <p className={shop.counterLabel}>
-            🔢 מסלול המספרים · משימה {taskIndex + 1}/{TASKS_PER_SESSION}
+            מסלול המספרים · משימה {taskIndex + 1} מתוך {TASKS_PER_SESSION}
           </p>
 
           <div className={`${shop.shopGrid} ${styles.pathShopGrid}`} data-educational-workplace-grid="">
@@ -351,8 +351,13 @@ export default function LeoNumberPathGame({
                   </div>
                   <p className={shop.missionText}>
                     {currentTask.promptHe}
+                    {currentTask.seriesDisplayLtr ? (
+                      <span dir="ltr" style={{ display: "block", marginTop: "0.35rem" }}>
+                        {currentTask.seriesDisplayLtr}
+                      </span>
+                    ) : null}
                     <span className={shop.missionTicket}>
-                      🧾 ניסיון {Math.max(1, attemptsOnTask || 1)}/{MAX_ATTEMPTS_PER_TASK}
+                      ניסיון {Math.max(1, attemptsOnTask || 1)} מתוך {MAX_ATTEMPTS_PER_TASK}
                     </span>
                   </p>
                 </div>
@@ -362,7 +367,7 @@ export default function LeoNumberPathGame({
             <section className={`${shop.workCol} ${styles.pathWorkCol}`}>
               <div className={shop.workFrame}>
                 <div className={shop.workSurface}>
-                  <p className={shop.workSurfaceTitle}>🪨 בחרו מספרים</p>
+                  <p className={shop.workSurfaceTitle}>בחרו מספרים</p>
                   <div className={`${shop.workSurfaceBody} ${styles.pathPanel}`}>
                     <div
                       className={`${styles.stonePath} ${stoneGridSizeClass} ${styles.stonePathFit}`}
@@ -392,9 +397,9 @@ export default function LeoNumberPathGame({
 
             <aside className={shop.sideCol}>
               <div className={`${frame.panel} ${shop.toolsPanel}`}>
-                <p className={shop.toolsTitle}>📍 המסלול שלכם</p>
+                <p className={shop.toolsTitle}>המספרים שבחרתם</p>
                 <div className={styles.selectedBar}>
-                  <span className={styles.selectedLabel}>בחרנו:</span>
+                  <span className={styles.selectedLabel}>המספרים שבחרתם:</span>
                   <span className={styles.selectedPath} dir="ltr">
                     {formatSelectedPath(selected, orderMatters)}
                   </span>
@@ -414,8 +419,8 @@ export default function LeoNumberPathGame({
                 <p className={shop.feedbackText}>
                   {feedback ||
                     (attemptsOnTask > 0
-                      ? `ניסיון ${attemptsOnTask}/${MAX_ATTEMPTS_PER_TASK} - לחצו על המספרים ואז בדקו`
-                      : "לחצו על המספרים ואז בדקו מסלול")}
+                      ? `ניסיון ${attemptsOnTask} מתוך ${MAX_ATTEMPTS_PER_TASK}`
+                      : "בחרו את המספרים ולחצו על „בדיקת המסלול”.")}
                 </p>
               </div>
             </aside>
@@ -428,7 +433,7 @@ export default function LeoNumberPathGame({
                   disabled={checkState === "ok"}
                   onClick={runCheck}
                 >
-                  בדוק מסלול
+                  בדיקת המסלול
                 </button>
                 <button
                   type="button"
@@ -436,7 +441,7 @@ export default function LeoNumberPathGame({
                   disabled={checkState === "ok" || selected.length === 0}
                   onClick={clearSelection}
                 >
-                  נקה בחירה
+                  ניקוי הבחירה
                 </button>
               </div>
             </div>
@@ -447,10 +452,10 @@ export default function LeoNumberPathGame({
       {phase === "won" && !productionMode ? (
         <div className={frame.screenCenter}>
           <div className={frame.endCard}>
-            <h2 className={frame.endTitle}>🎉 סיימתם את המסלול!</h2>
+            <h2 className={frame.endTitle}>כל הכבוד! סיימתם את מסלול המספרים.</h2>
             <p className={frame.endStat}>⭐ ניקוד: {score}</p>
             <p className={frame.endStat}>
-              ✅ הצלחות: {successCount}/{tasks.length || TASKS_PER_SESSION}
+              משימות שנפתרו: {successCount}/{tasks.length || TASKS_PER_SESSION}
             </p>
             <p className={frame.endStat}>❌ טעויות: {mistakes}</p>
             <p className={frame.endStat}>📊 רמה: {diffConfig.label}</p>

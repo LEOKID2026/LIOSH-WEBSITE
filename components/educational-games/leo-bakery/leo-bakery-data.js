@@ -347,37 +347,75 @@ export function validateBakery(task, answer) {
 /** @param {BakeryTask} task */
 export function bakeryPrompt(task) {
   if (task.mode === "build") {
-    return `הכינו ${task.trays} מגשים עם ${task.perTray} ${task.itemLabel} בכל מגש`;
+    return `הכינו ${task.trays} מגשים. שימו ${task.perTray} מאפים בכל מגש.`;
   }
   if (task.mode === "findTrays") {
-    return `יש ${task.total} ${task.itemLabel}. בכל מגש ${task.perTray}. כמה מגשים צריך?`;
+    return `יש ${task.total} מאפים. בכל מגש שמים ${task.perTray} מאפים. כמה מגשים צריך?`;
   }
   if (task.mode === "findPerTray") {
-    return `יש ${task.total} ${task.itemLabel} ל-${task.trays} מגשים. כמה בכל מגש?`;
+    return `מחלקים ${task.total} מאפים שווה בשווה בין ${task.trays} מגשים. כמה מאפים יהיו בכל מגש?`;
   }
   if (task.mode === "findTotal") {
-    return `יש ${task.trays} מגשים, ובכל מגש ${task.perTray} ${task.itemLabel}. כמה סך הכול?`;
+    return `יש ${task.trays} מגשים, ובכל מגש ${task.perTray} מאפים. כמה מאפים יש בסך הכול?`;
   }
   if (task.mode === "sameTotal") {
     const g = task.givenArrangement;
-    return `ההזמנה היא ${g?.trays} × ${g?.perTray} (= ${task.total}). סדרו אחרת עם אותה כמות כוללת.`;
+    return `יש ${task.total} מאפים. עכשיו הם מסודרים ב־${g?.trays} מגשים, ${g?.perTray} בכל מגש. סדרו את אותה כמות במספר אחר של מגשים.`;
   }
-  return `הכינו את ההזמנה של ${task.itemLabel}`;
+  return `הכינו ${task.trays} מגשים. שימו ${task.perTray} מאפים בכל מגש.`;
+}
+
+/** @param {BakeryTask} task */
+export function bakeryControlHint(task) {
+  if (task.mode === "build") return "בנו את ההזמנה.";
+  if (task.mode === "findTotal") return "בחרו כמה מאפים יש בסך הכול.";
+  if (task.mode === "findTrays") return "בחרו כמה מגשים צריך.";
+  if (task.mode === "findPerTray") return "בחרו כמה מאפים יהיו בכל מגש.";
+  if (task.mode === "sameTotal") return "בחרו סידור אחר לאותה כמות.";
+  return "בנו את ההזמנה.";
+}
+
+/**
+ * @param {BakeryTask} task
+ * @returns {{ text: string, equation: string }}
+ */
+export function bakerySolutionParts(task) {
+  const e = bakeryExpected(task);
+  if (task.mode === "sameTotal") {
+    return {
+      text: `פתרון אפשרי: ${e.trays} מגשים, ${e.perTray} מאפים בכל מגש.`,
+      equation: `${e.trays} × ${e.perTray} = ${e.total}`,
+    };
+  }
+  if (task.mode === "findTrays") {
+    return {
+      text: `פתרון: צריך ${e.trays} מגשים.`,
+      equation: `${e.trays} × ${e.perTray} = ${e.total}`,
+    };
+  }
+  if (task.mode === "findPerTray") {
+    return {
+      text: `פתרון: בכל מגש יהיו ${e.perTray} מאפים.`,
+      equation: `${e.trays} × ${e.perTray} = ${e.total}`,
+    };
+  }
+  return {
+    text: "פתרון:",
+    equation: `${e.trays} × ${e.perTray} = ${e.total}`,
+  };
 }
 
 /** @param {BakeryTask} task */
 export function bakerySolutionText(task) {
-  const e = bakeryExpected(task);
-  if (task.mode === "sameTotal") {
-    const g = task.givenArrangement;
-    return `פתרון אפשרי: ${e.trays} × ${e.perTray} = ${e.total} (במקום ${g?.trays} × ${g?.perTray})`;
-  }
-  return `פתרון: ${e.trays} × ${e.perTray} = ${e.total}`;
+  const parts = bakerySolutionParts(task);
+  return `${parts.text}\n${parts.equation}`;
 }
 
 /** @param {boolean} ok */
 export function bakeryFeedback(ok) {
-  return ok ? "מעולה! הכנתם בדיוק את ההזמנה." : "כמעט! בדקו כמה מגשים יש וכמה יש בכל מגש.";
+  return ok
+    ? "מעולה! ההזמנה מוכנה."
+    : "בדקו שוב את מספר המגשים ואת מספר המאפים בכל מגש.";
 }
 
 /** @param {number} count @param {string} emoji @param {string} [representationType] */
@@ -391,12 +429,12 @@ export function trayItemDisplay(count, emoji, representationType = "visual") {
 
 /** @param {BakeryTask} task */
 export function bakeryInfoBar(task) {
-  if (task.mode === "findTrays") return `${task.total} ${task.itemLabel} · בכל מגש ${task.perTray}`;
-  if (task.mode === "findPerTray") return `${task.total} ${task.itemLabel} · ${task.trays} מגשים`;
+  if (task.mode === "findTrays") return `${task.total} מאפים · בכל מגש ${task.perTray}`;
+  if (task.mode === "findPerTray") return `${task.total} מאפים · ${task.trays} מגשים`;
   if (task.mode === "findTotal") return `${task.trays} מגשים · בכל מגש ${task.perTray}`;
   if (task.mode === "sameTotal") {
     const g = task.givenArrangement;
-    return `נתון: ${g?.trays} × ${g?.perTray} = ${task.total}`;
+    return `${task.total} מאפים · ${g?.trays} × ${g?.perTray}`;
   }
   return `${task.trays} מגשים · בכל מגש ${task.perTray}`;
 }

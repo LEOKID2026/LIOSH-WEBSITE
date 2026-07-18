@@ -26,7 +26,7 @@
 export const PRODUCTS = [
   { id: "apple", name: "תפוח", price: 3, requestIcon: "🍎", shelfIcon: "🍎" },
   { id: "banana", name: "בננה", price: 4, requestIcon: "🍌", shelfIcon: "🍌" },
-  { id: "tomato", name: "עגבניה", price: 4, requestIcon: "🍅", shelfIcon: "🍅" },
+  { id: "tomato", name: "עגבנייה", price: 4, requestIcon: "🍅", shelfIcon: "🍅" },
   { id: "water", name: "מים", price: 2, requestIcon: "💧", shelfIcon: "💧" },
   { id: "bread", name: "לחם", price: 5, requestIcon: "🍞", shelfIcon: "🍞" },
   { id: "milk", name: "חלב", price: 6, requestIcon: "🥛", shelfIcon: "🥛" },
@@ -209,11 +209,17 @@ export function customerRequestText(customer) {
   const items = customer.items;
   if (items.length === 1) {
     const item = items[0];
-    return `אני רוצה ${item.name} ${item.requestIcon}`;
+    return `אפשר לקבל ${item.name} ${item.requestIcon}?`;
   }
   const parts = items.map((item) => `${item.name} ${item.requestIcon}`);
   const last = parts.pop();
-  return `אני רוצה ${parts.join(", ")} ו-${last}`;
+  return `אפשר לקבל ${parts.join(", ")} ו־${last}?`;
+}
+
+/** @param {number} count */
+export function supermarketCompletedCustomersText(count) {
+  if (count === 1) return "כל הכבוד! עזרתם ללקוח אחד במכולת.";
+  return `כל הכבוד! עזרתם ל־${count} לקוחות במכולת.`;
 }
 
 /** @param {SupermarketCustomer} customer */

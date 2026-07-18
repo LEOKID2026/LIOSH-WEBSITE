@@ -210,7 +210,7 @@ export default function LeoGiftsGame({
     registerMistake();
     onTimeUp();
     if (task) {
-      revealAndAdvance(`הזמן נגמר! ${giftsSolutionText(task)}`);
+      revealAndAdvance(`הזמן נגמר. הנה הפתרון:\n${giftsSolutionText(task)}`);
     }
   }, [registerMistake, onTimeUp, task, revealAndAdvance]);
 
@@ -238,7 +238,7 @@ export default function LeoGiftsGame({
       answerTimesRef.current.push(elapsed);
       const bonus = calcTimeBonus(timeLeft, timeLimitSec);
       setCheckState("ok");
-      const okText = `${giftsFeedback(true, perChild, remainder)} ${giftsSolutionText(task)}`;
+      const okText = giftsFeedback(true, task);
       setFeedback(okText);
       onCorrect();
       playFeedback(okText);
@@ -266,7 +266,7 @@ export default function LeoGiftsGame({
       revealAndAdvance(giftsSolutionText(task));
       return;
     }
-    const badText = giftsFeedback(false, perChild, remainder);
+    const badText = giftsFeedback(false, task);
     setFeedback(badText);
     playFeedback(badText);
   }, [
@@ -331,11 +331,11 @@ export default function LeoGiftsGame({
   const idleFeedback =
     task?.mode === "make_groups"
       ? showRemainder
-        ? "בחרו כמה שקיות מלאות וכמה נשאר"
-        : "בחרו כמה שקיות מלאות אפשר להכין"
+        ? "בחרו כמה שקיות מלאות אפשר להכין וכמה יישארו."
+        : "בחרו כמה שקיות מלאות אפשר להכין."
       : showRemainder
-        ? "בחרו כמה כל ילד מקבל וכמה נשאר"
-        : "בחרו כמה כל ילד מקבל";
+        ? "בחרו כמה יקבל כל ילד וכמה יישארו."
+        : "בחרו כמה יקבל כל ילד.";
 
   const isMakeGroups = task?.mode === "make_groups";
   const quotientLabel = task ? giftsQuotientLabel(task) : "לכל ילד";
@@ -362,7 +362,7 @@ export default function LeoGiftsGame({
           </div>
         ) : (
           <div className={s.hud}>
-            <span className={s.hudChip}>{productionMode ? "🍬" : "🍬 אבטיפוס"}</span>
+            <span className={s.hudChip}>{productionMode ? "🍬" : "🍬"}</span>
           </div>
         )}
         {showFullscreenButton && onFullscreenToggle ? (
@@ -378,7 +378,7 @@ export default function LeoGiftsGame({
         <div className={styles.screenCenter}>
           <p className={styles.introHero}>🍬🦁</p>
           <h1 className={styles.introTitle}>חנות הממתקים של ליאו</h1>
-          <p className={styles.introText}>עזרו לליאו לחלק ממתקים בין הילדים בצורה שווה!</p>
+          <p className={styles.introText}>עזרו לליאו לחלק פריטים שווה בשווה.</p>
           <div className={styles.difficultyRow}>
             {(/** @type {DifficultyId[]} */ (["easy", "medium", "hard"])).map((id) => (
               <button
@@ -393,7 +393,7 @@ export default function LeoGiftsGame({
           </div>
           <EducationalDifficultyGradeHint className={`${styles.introText} opacity-70`} style={{ fontSize: "0.72rem" }} />
           <button type="button" className={styles.startBtn} onClick={startGame}>
-            התחל משחק
+            התחלת המשחק
           </button>
         </div>
       ) : null}
@@ -401,7 +401,7 @@ export default function LeoGiftsGame({
       {phase === "play" && task ? (
         <div className={shop.shopMain}>
           <p className={shop.counterLabel}>
-            🍬 חנות הממתקים · שלב {internalStage}
+            חנות הממתקים · משימה {taskIndex + 1} מתוך {TASKS_PER_SESSION}
           </p>
 
           <div className={`${shop.shopGrid} ${styles.giftsShopGrid}`} data-educational-workplace-grid="">
@@ -485,7 +485,7 @@ export default function LeoGiftsGame({
                   </div>
                   {showRemainder ? (
                     <div className={shop.controlRow}>
-                      <span className={shop.controlLabel}>שארית</span>
+                      <span className={shop.controlLabel}>נשארו</span>
                       <div className={shop.stepperRow}>
                         <button
                           type="button"
@@ -524,10 +524,10 @@ export default function LeoGiftsGame({
             <div className={shop.bottomBar}>
               <div className={shop.actionRow}>
                 <button type="button" className={shop.primaryBtn} onClick={runCheck}>
-                  בדוק חלוקה
+                  בדיקת החלוקה
                 </button>
                 <button type="button" className={shop.secondaryBtn} onClick={resetTaskUi}>
-                  איפוס
+                  ניקוי
                 </button>
               </div>
             </div>
@@ -539,11 +539,11 @@ export default function LeoGiftsGame({
         <div className={styles.screenCenter}>
           <div className={styles.endCard}>
             <h2 className={styles.endTitle}>
-              {phase === "won" ? "🎉 סיימתם את חנות הממתקים!" : "🍬 סיום משחק"}
+              כל הכבוד! סיימתם את חנות הממתקים.
             </h2>
             <p className={styles.endStat}>⭐ ניקוד: {score}</p>
             <p className={styles.endStat}>
-              ✅ תשובות נכונות: {successCount}/{TASKS_PER_SESSION}
+              משימות שנפתרו: {successCount}/{TASKS_PER_SESSION}
             </p>
             <p className={styles.endStat}>❌ טעויות: {mistakes}</p>
             <p className={styles.endStat}>📈 שלב הכי גבוה: {highestStage}</p>
