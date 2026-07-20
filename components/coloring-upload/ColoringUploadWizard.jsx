@@ -43,13 +43,14 @@ import {
 
 import {
 
-  runColoringPipelineWithHfFallback,
+  runUploadCreationPipeline,
 
   terminatePipelineWorker,
 
   getPipelineErrorMessageHe,
 
 } from "../../lib/coloring-upload/pipeline-client.client.js";
+import { COLORING_UPLOAD_STYLE_COLORING } from "../../lib/coloring-upload/style-transfer-styles.js";
 
 import {
   buildUploadFinalA4,
@@ -69,6 +70,8 @@ import ColoringUploadCropEditor from "./ColoringUploadCropEditor.jsx";
 import ColoringUploadProgress from "./ColoringUploadProgress.jsx";
 
 import ColoringUploadPreview from "./ColoringUploadPreview.jsx";
+
+import ColoringUploadStyleSelector from "./ColoringUploadStyleSelector.jsx";
 
 import ColoringUploadPrintDocument from "./ColoringUploadPrintDocument.jsx";
 
@@ -119,6 +122,12 @@ export default function ColoringUploadWizard() {
   const [quotaLimit, setQuotaLimit] = useState(10);
 
   const [fallbackNotice, setFallbackNotice] = useState(false);
+
+  const [artStyle, setArtStyle] = useState(
+    /** @type {import("../../lib/coloring-upload/style-transfer-styles.js").ColoringUploadStyleId} */ (
+      COLORING_UPLOAD_STYLE_COLORING
+    )
+  );
 
 
 
@@ -184,6 +193,8 @@ export default function ColoringUploadWizard() {
 
     setFallbackNotice(false);
 
+    setArtStyle(COLORING_UPLOAD_STYLE_COLORING);
+
     setPrintOrientation("portrait");
 
     setStep("upload");
@@ -220,9 +231,12 @@ export default function ColoringUploadWizard() {
 
 
 
-  const buildFinalOutput = useCallback(async (lineArt) => {
+  const buildFinalOutput = useCallback(async (lineArt, stylized = false) => {
 
-    const { blob, orientation } = await buildUploadFinalA4(lineArt);
+    const { blob, orientation } = await buildUploadFinalA4(lineArt, {
+      centerMode: stylized ? "geometric" : "line-art",
+      layout: stylized ? "native-aspect" : "margined",
+    });
 
     finalA4BlobRef.current = blob;
 
@@ -248,7 +262,7 @@ export default function ColoringUploadWizard() {
 
   const processLineArt = useCallback(
 
-    async (imageData) => {
+    async (imageData, style) => {
 
       setBusy(true);
 
@@ -264,7 +278,7 @@ export default function ColoringUploadWizard() {
 
         const authHeader = await getColoringUploadAuthHeader();
 
-        const result = await runColoringPipelineWithHfFallback(imageData, {
+        const result = await runUploadCreationPipeline(imageData, style, {
 
           weakDevice: caps.weakDevice,
 
@@ -294,7 +308,7 @@ export default function ColoringUploadWizard() {
 
         }
 
-        await buildFinalOutput(result.lineArt);
+        await buildFinalOutput(result.lineArt, Boolean(result.isStylized));
 
         setStep("preview");
 
@@ -323,6 +337,13 @@ export default function ColoringUploadWizard() {
     [caps.weakDevice, buildFinalOutput]
 
   );
+
+
+
+  const createConfirmLabel =
+    artStyle === COLORING_UPLOAD_STYLE_COLORING
+      ? WORKSHEET_UI_HE.coloringUploadCreateColoring
+      : WORKSHEET_UI_HE.coloringUploadCreateArt;
 
 
 
@@ -418,7 +439,7 @@ export default function ColoringUploadWizard() {
 
       const imageData = extractCropImageData(bitmap, crop.transform, maxEdge);
 
-      await processLineArt(imageData);
+      await processLineArt(imageData, artStyle);
 
     } catch {
 
@@ -524,7 +545,13 @@ export default function ColoringUploadWizard() {
 
       {step === "upload" ? (
 
-        <ColoringUploadFilePicker onFile={handleFile} disabled={busy} error={error} />
+        <>
+
+          <ColoringUploadStyleSelector value={artStyle} onChange={setArtStyle} disabled={busy} />
+
+          <ColoringUploadFilePicker onFile={handleFile} disabled={busy} error={error} />
+
+        </>
 
       ) : null}
 
@@ -533,6 +560,8 @@ export default function ColoringUploadWizard() {
       {step === "crop" && sourceUrl ? (
 
         <>
+
+          <ColoringUploadStyleSelector value={artStyle} onChange={setArtStyle} disabled={busy} />
 
           <ColoringUploadCropEditor
 
@@ -552,6 +581,7 @@ export default function ColoringUploadWizard() {
 
             onConfirm={handleCropConfirm}
             onRestart={resetAll}
+            confirmLabel={createConfirmLabel}
           />
 
           {error ? <p className="worksheet-error">{error}</p> : null}

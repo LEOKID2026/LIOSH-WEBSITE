@@ -6,6 +6,7 @@ const PHASE_LABELS = {
   opencv_ready: WORKSHEET_UI_HE.coloringUploadPhaseOpenCvReady,
   segment: WORKSHEET_UI_HE.coloringUploadPhaseSegment,
   "hf-lineart": WORKSHEET_UI_HE.coloringUploadPhaseHfLineart,
+  "style-transfer": WORKSHEET_UI_HE.coloringUploadPhaseStyleTransfer,
   "hf-fallback": WORKSHEET_UI_HE.coloringUploadPhaseHfFallback,
 };
 

@@ -410,7 +410,98 @@
   border: 0;
 }
 
+.coloring-upload-style-selector {
+  margin: 0 0 0.55rem;
+  padding: 0;
+  border: 0;
+}
+
+.coloring-upload-style-selector-legend {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 0.4rem;
+  padding: 0;
+}
+
+.coloring-upload-style-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.4rem;
+  align-items: center;
+}
+
+.coloring-upload-style-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.coloring-upload-style-pill-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  padding: 0.32rem 0.62rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 999px;
+  background: #fff;
+  color: #334155;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.coloring-upload-style-pill:hover .coloring-upload-style-pill-label {
+  border-color: #c4b5fd;
+  background: #faf5ff;
+}
+
+.coloring-upload-style-pill--selected .coloring-upload-style-pill-label {
+  border-color: #7c3aed;
+  background: #f5f3ff;
+  color: #5b21b6;
+  box-shadow: 0 1px 6px rgba(91, 33, 182, 0.12);
+}
+
+.coloring-upload-style-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.coloring-upload-style-emoji {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.coloring-upload-style-title {
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+}
+
+.coloring-upload-style-selector:disabled .coloring-upload-style-pill {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.coloring-upload-style-selector:disabled .coloring-upload-style-pill-label {
+  pointer-events: none;
+}
+
 @media (max-width: 640px) {
+  .coloring-upload-style-pill-label {
+    font-size: 0.74rem;
+    padding: 0.28rem 0.52rem;
+  }
+
   .worksheet-primary-cta,
   .worksheet-secondary-cta {
     min-height: 44px;

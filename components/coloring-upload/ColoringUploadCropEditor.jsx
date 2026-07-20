@@ -38,6 +38,7 @@ const A4_RATIO = 210 / 297;
 
  *   onConfirm: (payload: { transform: import("../../lib/coloring-upload/crop-math.js").CropTransform }) => void,
  *   onRestart?: () => void,
+ *   confirmLabel?: string,
  * }} props
  */
 export default function ColoringUploadCropEditor({
@@ -50,6 +51,7 @@ export default function ColoringUploadCropEditor({
   onZoomChange,
   onConfirm,
   onRestart,
+  confirmLabel,
 }) {
 
   const containerRef = useRef(null);
@@ -320,7 +322,7 @@ export default function ColoringUploadCropEditor({
           onClick={confirm}
           disabled={!imgReady}
         >
-          {WORKSHEET_UI_HE.coloringUploadCropConfirm}
+          {confirmLabel || WORKSHEET_UI_HE.coloringUploadCropConfirm}
         </button>
         {onRestart ? (
           <button
