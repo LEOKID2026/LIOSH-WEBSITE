@@ -16,6 +16,15 @@ function buildContentSecurityPolicy() {
     "https://analytics.google.com",
     "https://pagead2.googlesyndication.com",
     "https://googleads.g.doubleclick.net",
+    // IMG.LY background-removal model + WASM assets (client-side segmentation)
+    "https://staticimgly.com",
+    // Hugging Face Hub — Transformers.js PoC model downloads
+    "https://huggingface.co",
+    "https://*.huggingface.co",
+    "https://cdn-lfs.huggingface.co",
+    // Hugging Face Spaces — HF line-art Gradio proxy (server-side fetch)
+    "https://*.hf.space",
+    "https://awacke1-image-to-line-drawings.hf.space",
   ];
   if (!isProdBuild) {
     connectSrc.push(
@@ -130,6 +139,13 @@ const nextConfig = {
       }
     : {}),
   webpack: (config, { dev, isServer }) => {
+    if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        sharp: false,
+        "onnxruntime-node": false,
+      };
+    }
     if (dev) {
       // Windows + long paths: filesystem webpack cache often corrupts mid-compile (ENOENT/rename).
       if (isWindows) {

@@ -4,6 +4,8 @@ import "../styles/worksheet-writing-print.css";
 import "../styles/worksheet-writing-print-portrait.css";
 import "../styles/worksheet-writing-print-landscape.css";
 import "../styles/worksheet-coloring-print.css";
+import "../styles/worksheet-coloring-upload-print.css";
+import "../styles/worksheet-coloring-upload.css";
 import "../styles/worksheet-hub.css";
 import Head from "next/head";
 import { useEffect, useRef, useState } from "react";

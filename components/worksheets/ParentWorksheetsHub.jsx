@@ -16,10 +16,11 @@ import CreateWritingWorksheetTab, {
   buildWritingGenerateBody,
   defaultWritingCreateForm,
 } from "../writing/CreateWritingWorksheetTab.jsx";
-import CreateColoringWorksheetTab, {
+import {
   buildColoringGenerateBody,
   defaultColoringCreateForm,
 } from "../coloring/CreateColoringWorksheetTab.jsx";
+import ColoringTabShell from "../coloring-upload/ColoringTabShell.jsx";
 import ColoringPreviewModal from "../coloring/ColoringPreviewModal.jsx";
 import WorksheetPreviewModal from "./WorksheetPreviewModal.jsx";
 import RecommendationsTab from "./RecommendationsTab.jsx";
@@ -841,7 +842,7 @@ export default function ParentWorksheetsHub({ session, students, T }) {
           </div>
 
           {createWorksheetType === "coloring" ? (
-            <CreateColoringWorksheetTab
+            <ColoringTabShell
               cards={coloringCards}
               selectedCardKey={coloringForm.cardKey}
               onSelectCardKey={(cardKey) => setColoringForm((prev) => ({ ...prev, cardKey }))}

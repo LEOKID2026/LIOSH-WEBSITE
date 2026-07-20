@@ -11,10 +11,11 @@ import CreateWritingWorksheetTab, {
   buildWritingGenerateBody,
   defaultWritingCreateForm,
 } from "../writing/CreateWritingWorksheetTab.jsx";
-import CreateColoringWorksheetTab, {
+import {
   buildColoringGenerateBody,
   defaultColoringCreateForm,
 } from "../coloring/CreateColoringWorksheetTab.jsx";
+import ColoringTabShell from "../coloring-upload/ColoringTabShell.jsx";
 import ColoringPreviewModal from "../coloring/ColoringPreviewModal.jsx";
 import WorksheetPreviewModal from "./WorksheetPreviewModal.jsx";
 import { WORKSHEET_UI_HE } from "../../lib/worksheets/worksheet-ui.he.js";
@@ -461,7 +462,7 @@ export default function PublicWorksheetsHub({
         </div>
 
         {createKind === "coloring" ? (
-          <CreateColoringWorksheetTab
+          <ColoringTabShell
             cards={coloringCards}
             selectedCardKey={coloringForm.cardKey}
             onSelectCardKey={(cardKey) => setColoringForm((prev) => ({ ...prev, cardKey }))}
