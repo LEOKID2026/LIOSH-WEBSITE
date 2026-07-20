@@ -24,6 +24,7 @@ export default function WorksheetPreviewActions({
   onRefresh,
   refreshLoading = false,
   backHref = "/parent/worksheets",
+  onClose,
 }) {
   return (
     <div className="worksheet-preview-actions no-print">
@@ -57,9 +58,19 @@ export default function WorksheetPreviewActions({
         </button>
       ) : null}
 
-      <Link href={backHref} className="worksheet-action-btn worksheet-action-btn-ghost">
-        {WORKSHEET_UI_HE.back}
-      </Link>
+      {onClose ? (
+        <button
+          type="button"
+          onClick={onClose}
+          className="worksheet-action-btn worksheet-action-btn-ghost"
+        >
+          {WORKSHEET_UI_HE.coloringModalClose}
+        </button>
+      ) : (
+        <Link href={backHref} className="worksheet-action-btn worksheet-action-btn-ghost">
+          {WORKSHEET_UI_HE.back}
+        </Link>
+      )}
     </div>
   );
 }

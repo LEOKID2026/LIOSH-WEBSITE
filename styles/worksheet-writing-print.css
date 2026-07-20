@@ -292,6 +292,9 @@
   }
 
   body.worksheet-writing-print-mode .worksheet-preview-shell > *:not(.writing-print-document),
+  body.worksheet-writing-print-mode .worksheet-hub-page > *:not(.worksheet-print-document),
+  body.worksheet-writing-print-mode .worksheet-preview-modal-backdrop,
+  body.worksheet-writing-print-mode .worksheet-preview-modal,
   body.worksheet-writing-print-mode .writing-screen-preview,
   body.worksheet-writing-print-mode .writing-screen-page {
     display: none !important;

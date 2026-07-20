@@ -16,6 +16,7 @@ import CreateColoringWorksheetTab, {
   defaultColoringCreateForm,
 } from "../coloring/CreateColoringWorksheetTab.jsx";
 import ColoringPreviewModal from "../coloring/ColoringPreviewModal.jsx";
+import WorksheetPreviewModal from "./WorksheetPreviewModal.jsx";
 import { WORKSHEET_UI_HE } from "../../lib/worksheets/worksheet-ui.he.js";
 import { getPublicSeoWideClasses } from "../seo/public-seo-wide-theme";
 import { getPublicDemoAllowlistEntry } from "../../lib/worksheets/worksheet-public-demo.constants.js";
@@ -27,7 +28,10 @@ import {
 import {
   clearWorksheetPublicAnswerKeySession,
   saveWorksheetPublicPreviewSession,
+  saveWorksheetPublicAnswerKeySession,
 } from "../../lib/worksheets/worksheet-public-preview-session.client.js";
+import { buildWorksheetSessionFingerprint } from "../../lib/worksheets/worksheet-fingerprint.js";
+import { isWritingWorksheetPayload } from "../../lib/worksheets/worksheet-payload-kind.client.js";
 import { getPublicWorksheetVisitSessionId } from "../../lib/analytics/public-worksheet-session.client.js";
 import { trackPublicWorksheetPageViewedOnce } from "../../lib/analytics/track-public-worksheet-page-view.client.js";
 
@@ -102,6 +106,10 @@ export default function PublicWorksheetsHub({
   const [coloringCreateBusy, setColoringCreateBusy] = useState(false);
   const [coloringCreateError, setColoringCreateError] = useState("");
   const [coloringPreviewPayload, setColoringPreviewPayload] = useState(null);
+  const [worksheetPreviewSession, setWorksheetPreviewSession] = useState(null);
+  const [previewRefreshLoading, setPreviewRefreshLoading] = useState(false);
+  const [previewAnswerKeyLoading, setPreviewAnswerKeyLoading] = useState(false);
+  const [previewModalError, setPreviewModalError] = useState("");
 
   useEffect(() => {
     setIncludeAnswers(loadWorksheetIncludeAnswersPref());
@@ -171,6 +179,111 @@ export default function PublicWorksheetsHub({
     [router]
   );
 
+  const openWorksheetPreviewModal = useCallback(
+    (worksheetPayload, generation, includeAnswersValue, source) => {
+      clearWorksheetPublicAnswerKeySession();
+      setPreviewModalError("");
+      setWorksheetPreviewSession({
+        worksheetPayload,
+        generation,
+        includeAnswers: includeAnswersValue === true,
+        source,
+      });
+    },
+    []
+  );
+
+  const handlePreviewModalRefresh = useCallback(async () => {
+    if (
+      !worksheetPreviewSession ||
+      worksheetPreviewSession.source !== "public-demo" ||
+      !worksheetPreviewSession.generation ||
+      isWritingWorksheetPayload(worksheetPreviewSession.worksheetPayload)
+    ) {
+      return;
+    }
+    setPreviewModalError("");
+    setPreviewRefreshLoading(true);
+    try {
+      const gen = worksheetPreviewSession.generation;
+      const newSeed = Math.floor(Math.random() * 1_000_000);
+      const res = await fetch("/api/public/worksheets/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          subjectId: gen.subjectId,
+          gradeKey: gen.gradeKey,
+          topicKey: gen.topicKey,
+          levelKey: gen.levelKey,
+          seed: newSeed,
+          inkSave: gen.inkSave === true,
+          mathPracticeFormat:
+            typeof gen.mathPracticeFormat === "string" ? gen.mathPracticeFormat : undefined,
+          ...(typeof gen.preferMcq === "boolean" ? { preferMcq: gen.preferMcq } : {}),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        setPreviewModalError(data.message || WORKSHEET_UI_HE.refreshQuestionsError);
+        return;
+      }
+      clearWorksheetPublicAnswerKeySession();
+      setWorksheetPreviewSession({
+        worksheetPayload: data.worksheetPayload,
+        generation: data.generation,
+        includeAnswers: worksheetPreviewSession.includeAnswers === true,
+        source: "public-demo",
+      });
+    } catch {
+      setPreviewModalError(WORKSHEET_UI_HE.refreshQuestionsError);
+    } finally {
+      setPreviewRefreshLoading(false);
+    }
+  }, [worksheetPreviewSession]);
+
+  const handlePreviewModalAnswerKey = useCallback(async () => {
+    if (!worksheetPreviewSession?.generation || !worksheetPreviewSession.includeAnswers) {
+      return;
+    }
+    setPreviewModalError("");
+    clearWorksheetPublicAnswerKeySession();
+    setPreviewAnswerKeyLoading(true);
+    try {
+      const expectedWorksheetFingerprint = buildWorksheetSessionFingerprint(
+        worksheetPreviewSession.worksheetPayload,
+        worksheetPreviewSession.generation
+      );
+      const body = {
+        includeAnswers: true,
+        expectedWorksheetFingerprint,
+      };
+      if (worksheetPreviewSession.source === "public-ready" && worksheetPreviewSession.slug) {
+        body.source = "public-ready";
+        body.slug = worksheetPreviewSession.slug;
+      } else {
+        Object.assign(body, worksheetPreviewSession.generation);
+      }
+      const res = await fetch("/api/public/worksheets/answer-key", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        setPreviewModalError(data.message || WORKSHEET_UI_HE.answerKeyStale);
+        return;
+      }
+      saveWorksheetPublicPreviewSession(worksheetPreviewSession);
+      saveWorksheetPublicAnswerKeySession(data.answerKeyPayload);
+      setWorksheetPreviewSession(null);
+      router.push("/practice/worksheets/preview/answers");
+    } catch {
+      setPreviewModalError(WORKSHEET_UI_HE.errorGeneric);
+    } finally {
+      setPreviewAnswerKeyLoading(false);
+    }
+  }, [worksheetPreviewSession, router]);
+
   const handleReadyViewPrint = useCallback(
     async (slug) => {
       setBusySlug(slug);
@@ -229,13 +342,13 @@ export default function PublicWorksheetsHub({
         setCreateError(data.message || data.error || WORKSHEET_UI_HE.errorGeneric);
         return;
       }
-      openPreview(data.worksheetPayload, data.generation, includeAnswers, "public-demo");
+      openWorksheetPreviewModal(data.worksheetPayload, data.generation, includeAnswers, "public-demo");
     } catch {
       setCreateError(WORKSHEET_UI_HE.errorGeneric);
     } finally {
       setCreateBusy(false);
     }
-  }, [createForm, openPreview, includeAnswers]);
+  }, [createForm, openWorksheetPreviewModal, includeAnswers]);
 
   const handleWritingCreateSubmit = useCallback(async () => {
     setWritingCreateBusy(true);
@@ -260,7 +373,7 @@ export default function PublicWorksheetsHub({
         setWritingCreateError(data.message || data.error || WORKSHEET_UI_HE.errorGeneric);
         return;
       }
-      openPreview(
+      openWorksheetPreviewModal(
         data.worksheetPayload,
         data.generation,
         false,
@@ -271,7 +384,7 @@ export default function PublicWorksheetsHub({
     } finally {
       setWritingCreateBusy(false);
     }
-  }, [writingForm, openPreview]);
+  }, [writingForm, openWorksheetPreviewModal]);
 
   const handleColoringCreateSubmit = useCallback(async (cardKeyOverride) => {
     setColoringCreateBusy(true);
@@ -430,6 +543,29 @@ export default function PublicWorksheetsHub({
       <ColoringPreviewModal
         worksheetPayload={coloringPreviewPayload}
         onClose={() => setColoringPreviewPayload(null)}
+        T={T}
+      />
+
+      <WorksheetPreviewModal
+        session={worksheetPreviewSession}
+        onClose={() => setWorksheetPreviewSession(null)}
+        onRefresh={
+          worksheetPreviewSession &&
+          !isWritingWorksheetPayload(worksheetPreviewSession.worksheetPayload) &&
+          worksheetPreviewSession.source === "public-demo"
+            ? handlePreviewModalRefresh
+            : undefined
+        }
+        onAnswerKey={
+          worksheetPreviewSession?.includeAnswers &&
+          worksheetPreviewSession?.generation &&
+          !isWritingWorksheetPayload(worksheetPreviewSession.worksheetPayload)
+            ? handlePreviewModalAnswerKey
+            : undefined
+        }
+        refreshLoading={previewRefreshLoading}
+        answerKeyLoading={previewAnswerKeyLoading}
+        errorMessage={previewModalError}
         T={T}
       />
     </div>

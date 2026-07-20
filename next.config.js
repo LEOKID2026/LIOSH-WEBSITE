@@ -95,6 +95,13 @@ if (isProdBuild) {
 // Video-builder API reads runtime files only under public/admin-video-assets and
 // data/admin-video-builder. Without excludes, Next output tracing pulls in all of public/.
 const VIDEO_BUILDER_API_ROUTE = "/api/admin/video-builder/**";
+const COLORING_CATALOG_FILE = "./data/coloring/coloring-pages-catalog.json";
+const COLORING_WORKSHEET_API_ROUTES = [
+  "/api/parent/worksheets/coloring-catalog",
+  "/api/public/worksheets/coloring-catalog",
+  "/api/parent/worksheets/generate",
+  "/api/public/worksheets/generate",
+];
 
 const nextConfig = {
   ...(process.env.NEXT_DIST_DIR ? { distDir: process.env.NEXT_DIST_DIR } : {}),
@@ -108,6 +115,9 @@ const nextConfig = {
       "./public/admin-video-assets/**",
       "./data/admin-video-builder/**",
     ],
+    ...Object.fromEntries(
+      COLORING_WORKSHEET_API_ROUTES.map((route) => [route, [COLORING_CATALOG_FILE]])
+    ),
   },
   reactStrictMode: false, // זמנית - כדי למנוע רענון אינסופי בפיתוח
   // Windows: lower parallel SSG concurrency to avoid intermittent PageNotFoundError

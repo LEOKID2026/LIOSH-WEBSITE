@@ -933,3 +933,64 @@
     transform: scale(1);
   }
 }
+
+.worksheet-preview-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 1rem;
+  overflow-y: auto;
+  background: rgb(15 23 42 / 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.worksheet-preview-modal {
+  width: min(100%, 820px);
+  margin: auto;
+  padding: 1rem 1.15rem 1.25rem;
+  border-radius: 1rem;
+  border: 1px solid rgb(15 23 42 / 0.08);
+  background: #fff;
+  box-shadow: 0 24px 64px rgb(15 23 42 / 0.18);
+}
+
+.worksheet-preview-modal-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.worksheet-preview-modal-title {
+  margin: 0;
+  font-size: 1.125rem;
+  line-height: 1.35;
+}
+
+.worksheet-preview-modal-body .worksheet-screen-preview,
+.worksheet-preview-modal-body .writing-screen-preview {
+  padding: 0;
+}
+
+@media print {
+  body.worksheet-print-mode:not(.worksheet-writing-print-mode):not(.worksheet-coloring-print-mode)
+    .worksheet-hub-page
+    > *:not(.worksheet-print-document),
+  body.worksheet-print-mode:not(.worksheet-writing-print-mode):not(.worksheet-coloring-print-mode)
+    .worksheet-preview-modal-backdrop,
+  body.worksheet-print-mode:not(.worksheet-writing-print-mode):not(.worksheet-coloring-print-mode)
+    .worksheet-preview-modal {
+    display: none !important;
+    height: 0 !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+    visibility: hidden !important;
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+  }
+}
