@@ -1,0 +1,56 @@
+{
+  "glyphId": "ג",
+  "group": "he-print",
+  "viewBox": 100,
+  "strokeCount": 1,
+  "strokes": [
+    {
+      "order": 1,
+      "pathId": "stroke-1",
+      "path": "M 50.39 28.06 L 58.54 41.85 L 65.77 40.42 L 59.58 60.7 L 50.27 69.65 L 60.14 79.3 L 37.94 80.99",
+      "start": {
+        "x": 50.39,
+        "y": 28.06
+      },
+      "end": {
+        "x": 37.94,
+        "y": 80.99
+      },
+      "direction": "reference-derived",
+      "arrow": false
+    }
+  ],
+  "dotPoints": [
+    {
+      "x": 50.39,
+      "y": 28.06
+    },
+    {
+      "x": 58.54,
+      "y": 41.85
+    },
+    {
+      "x": 65.77,
+      "y": 40.42
+    },
+    {
+      "x": 59.58,
+      "y": 60.7
+    },
+    {
+      "x": 50.27,
+      "y": 69.65
+    },
+    {
+      "x": 60.14,
+      "y": 79.3
+    },
+    {
+      "x": 37.94,
+      "y": 80.99
+    }
+  ],
+  "generatedBy": "reference-image-dot-extraction",
+  "referenceQuality": "visual tracing asset; stroke order is approximate",
+  "version": 1
+}

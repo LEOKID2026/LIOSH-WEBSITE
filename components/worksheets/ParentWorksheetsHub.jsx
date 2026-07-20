@@ -6,12 +6,21 @@
 
 
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
 import ReadyWorksheetsTab from "./ReadyWorksheetsTab.jsx";
 import CreateWorksheetTab from "./CreateWorksheetTab.jsx";
+import CreateWritingWorksheetTab, {
+  buildWritingGenerateBody,
+  defaultWritingCreateForm,
+} from "../writing/CreateWritingWorksheetTab.jsx";
+import CreateColoringWorksheetTab, {
+  buildColoringGenerateBody,
+  defaultColoringCreateForm,
+} from "../coloring/CreateColoringWorksheetTab.jsx";
+import ColoringPreviewModal from "../coloring/ColoringPreviewModal.jsx";
 import RecommendationsTab from "./RecommendationsTab.jsx";
 import { WORKSHEET_UI_HE } from "../../lib/worksheets/worksheet-ui.he.js";
 import { defaultWorksheetTopicForGrade } from "../../lib/worksheets/worksheet-topic-options.js";
@@ -72,7 +81,13 @@ export default function ParentWorksheetsHub({ session, students, T }) {
 
   const [filterLevel, setFilterLevel] = useState("");
 
+  const [filterWorksheetType, setFilterWorksheetType] = useState("");
 
+  const [filterWritingCategory, setFilterWritingCategory] = useState("");
+
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const [createWorksheetType, setCreateWorksheetType] = useState("questions");
 
   const [createForm, setCreateForm] = useState(() => {
     const gradeKey = "g3";
@@ -98,7 +113,18 @@ export default function ParentWorksheetsHub({ session, students, T }) {
 
   const [createError, setCreateError] = useState("");
 
+  const [writingForm, setWritingForm] = useState(() => defaultWritingCreateForm());
 
+  const [writingCreateBusy, setWritingCreateBusy] = useState(false);
+
+  const [writingCreateError, setWritingCreateError] = useState("");
+
+  const [coloringCards, setColoringCards] = useState([]);
+  const [coloringCatalogLoading, setColoringCatalogLoading] = useState(true);
+  const [coloringForm, setColoringForm] = useState(() => defaultColoringCreateForm());
+  const [coloringCreateBusy, setColoringCreateBusy] = useState(false);
+  const [coloringCreateError, setColoringCreateError] = useState("");
+  const [coloringPreviewPayload, setColoringPreviewPayload] = useState(null);
 
   const [selectedStudentId, setSelectedStudentId] = useState(students[0]?.id || "");
 
@@ -186,15 +212,10 @@ export default function ParentWorksheetsHub({ session, students, T }) {
       clearWorksheetAnswerKeySession();
 
       saveWorksheetPreviewSession({
-
         worksheetPayload,
-
         generation,
-
         includeAnswers: includeAnswers === true,
-
         source,
-
       });
 
       router.push("/parent/worksheets/preview");
@@ -339,7 +360,82 @@ export default function ParentWorksheetsHub({ session, students, T }) {
 
   }, [authHeader, createForm, openPreview, includeAnswers]);
 
+  const handleWritingCreateSubmit = useCallback(async () => {
+    setWritingCreateBusy(true);
+    setWritingCreateError("");
+    try {
+      const body = buildWritingGenerateBody(writingForm);
+      const res = await fetch("/api/parent/worksheets/generate", {
+        method: "POST",
+        headers: {
+          Authorization: authHeader,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        setWritingCreateError(data.message || data.error || WORKSHEET_UI_HE.errorGeneric);
+        return;
+      }
+      openPreview(data.worksheetPayload, data.generation, false, "create");
+    } catch {
+      setWritingCreateError(WORKSHEET_UI_HE.errorGeneric);
+    } finally {
+      setWritingCreateBusy(false);
+    }
+  }, [authHeader, writingForm, openPreview]);
 
+  const fetchColoringCatalog = useCallback(async () => {
+    setColoringCatalogLoading(true);
+    try {
+      const res = await fetch("/api/parent/worksheets/coloring-catalog", {
+        headers: { Authorization: authHeader },
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        setColoringCards([]);
+        return;
+      }
+      setColoringCards(Array.isArray(data.cards) ? data.cards : []);
+    } catch {
+      setColoringCards([]);
+    } finally {
+      setColoringCatalogLoading(false);
+    }
+  }, [authHeader]);
+
+  useEffect(() => {
+    fetchColoringCatalog();
+  }, [fetchColoringCatalog]);
+
+  const handleColoringCreateSubmit = useCallback(async (cardKeyOverride) => {
+    setColoringCreateBusy(true);
+    setColoringCreateError("");
+    try {
+      const cardKey = String(cardKeyOverride || coloringForm.cardKey || "").trim();
+      const body = buildColoringGenerateBody({ cardKey });
+      const res = await fetch("/api/parent/worksheets/generate", {
+        method: "POST",
+        headers: {
+          Authorization: authHeader,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        setColoringCreateError(data.message || data.error || WORKSHEET_UI_HE.errorGeneric);
+        return;
+      }
+      setColoringForm((prev) => ({ ...prev, cardKey }));
+      setColoringPreviewPayload(data.worksheetPayload);
+    } catch {
+      setColoringCreateError(WORKSHEET_UI_HE.errorGeneric);
+    } finally {
+      setColoringCreateBusy(false);
+    }
+  }, [authHeader, coloringForm.cardKey]);
 
   const fetchRecommendations = useCallback(async () => {
 
@@ -489,32 +585,13 @@ export default function ParentWorksheetsHub({ session, students, T }) {
 
 
 
-  const filteredCatalogItems = useMemo(() => {
-
-    return catalogItems.filter((item) => {
-
-      if (filterSubject && item.subjectId !== filterSubject) return false;
-
-      if (filterGrade && item.gradeKey !== filterGrade) return false;
-
-      if (filterLevel && item.levelKey !== filterLevel) return false;
-
-      return true;
-
-    });
-
-  }, [catalogItems, filterSubject, filterGrade, filterLevel]);
-
-
-
   const handleCatalogFilterChange = useCallback((patch) => {
-
+    if ("filterWorksheetType" in patch) setFilterWorksheetType(patch.filterWorksheetType);
+    if ("filterWritingCategory" in patch) setFilterWritingCategory(patch.filterWritingCategory);
     if ("filterSubject" in patch) setFilterSubject(patch.filterSubject);
-
     if ("filterGrade" in patch) setFilterGrade(patch.filterGrade);
-
     if ("filterLevel" in patch) setFilterLevel(patch.filterLevel);
-
+    if ("searchQuery" in patch) setSearchQuery(patch.searchQuery);
   }, []);
 
 
@@ -590,18 +667,22 @@ export default function ParentWorksheetsHub({ session, students, T }) {
       {activeTab === "ready" ? (
 
         <ReadyWorksheetsTab
-          items={filteredCatalogItems}
+          items={catalogItems}
           loading={catalogLoading}
           error={catalogError}
           onViewPrint={handleReadyViewPrint}
           busySlug={busySlug}
+          filterWorksheetType={filterWorksheetType}
+          filterWritingCategory={filterWritingCategory}
           filterSubject={filterSubject}
           filterGrade={filterGrade}
           filterLevel={filterLevel}
+          searchQuery={searchQuery}
           onFilterChange={handleCatalogFilterChange}
           includeAnswers={includeAnswers}
           includeAnswersReady={includeAnswersReady}
           onIncludeAnswersChange={handleIncludeAnswersChange}
+          hintOverride={WORKSHEET_UI_HE.writingCatalogHint}
           T={T}
         />
 
@@ -610,19 +691,71 @@ export default function ParentWorksheetsHub({ session, students, T }) {
 
 
       {activeTab === "create" ? (
+        <div className="space-y-4">
+          <div className="worksheet-create-type-toggle" role="tablist" aria-label="סוג מחולל">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={createWorksheetType === "questions"}
+              className={`worksheet-hub-tab ${createWorksheetType === "questions" ? T.tabActive : T.tabIdle}`}
+              onClick={() => setCreateWorksheetType("questions")}
+            >
+              {WORKSHEET_UI_HE.createTypeQuestions}
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={createWorksheetType === "writing"}
+              className={`worksheet-hub-tab ${createWorksheetType === "writing" ? T.tabActive : T.tabIdle}`}
+              onClick={() => setCreateWorksheetType("writing")}
+            >
+              {WORKSHEET_UI_HE.createTypeWriting}
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={createWorksheetType === "coloring"}
+              className={`worksheet-hub-tab ${createWorksheetType === "coloring" ? T.tabActive : T.tabIdle}`}
+              onClick={() => setCreateWorksheetType("coloring")}
+            >
+              {WORKSHEET_UI_HE.createTypeColoring}
+            </button>
+          </div>
 
-        <CreateWorksheetTab
-          form={createForm}
-          onChange={(patch) => setCreateForm((prev) => ({ ...prev, ...patch }))}
-          onSubmit={handleCreateSubmit}
-          busy={createBusy}
-          error={createError}
-          includeAnswers={includeAnswers}
-          includeAnswersReady={includeAnswersReady}
-          onIncludeAnswersChange={handleIncludeAnswersChange}
-          T={T}
-        />
-
+          {createWorksheetType === "coloring" ? (
+            <CreateColoringWorksheetTab
+              cards={coloringCards}
+              selectedCardKey={coloringForm.cardKey}
+              onSelectCardKey={(cardKey) => setColoringForm((prev) => ({ ...prev, cardKey }))}
+              onSubmit={handleColoringCreateSubmit}
+              busy={coloringCreateBusy}
+              error={coloringCreateError}
+              loading={coloringCatalogLoading}
+              T={T}
+            />
+          ) : createWorksheetType === "writing" ? (
+            <CreateWritingWorksheetTab
+              form={writingForm}
+              onChange={(patch) => setWritingForm((prev) => ({ ...prev, ...patch }))}
+              onSubmit={handleWritingCreateSubmit}
+              busy={writingCreateBusy}
+              error={writingCreateError}
+              T={T}
+            />
+          ) : (
+            <CreateWorksheetTab
+              form={createForm}
+              onChange={(patch) => setCreateForm((prev) => ({ ...prev, ...patch }))}
+              onSubmit={handleCreateSubmit}
+              busy={createBusy}
+              error={createError}
+              includeAnswers={includeAnswers}
+              includeAnswersReady={includeAnswersReady}
+              onIncludeAnswersChange={handleIncludeAnswersChange}
+              T={T}
+            />
+          )}
+        </div>
       ) : null}
 
 
@@ -664,6 +797,12 @@ export default function ParentWorksheetsHub({ session, students, T }) {
         )
 
       ) : null}
+
+      <ColoringPreviewModal
+        worksheetPayload={coloringPreviewPayload}
+        onClose={() => setColoringPreviewPayload(null)}
+        T={T}
+      />
 
     </div>
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" data-glyph="ת" data-group="he-print" data-centerline="true">
+  <path id="stroke-1" d="M 71.6 11.5 L 63.8 9.400000000000006 L 51.6 9.400000000000006" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-2" d="M 29.7 9.400000000000006 L 50.3 9.400000000000006" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-3" d="M 27.1 47.9 L 27.1 11.5" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-4" d="M 82 55.2 L 82 27.299999999999997 L 80.5 20.799999999999997 L 78.1 17.400000000000006" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-5" d="M 24.2 85.7 L 27.1 78.1 L 27.1 49" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-6" d="M 82 92.4 L 82 55.7" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="71.6" cy="11.5" r="3" fill="#dc2626" data-stroke-start="1"/><circle cx="51.6" cy="9.400000000000006" r="2" fill="#16a34a" data-stroke-end="1"/>
+  <circle cx="29.7" cy="9.400000000000006" r="3" fill="#dc2626" data-stroke-start="2"/><circle cx="50.3" cy="9.400000000000006" r="2" fill="#16a34a" data-stroke-end="2"/>
+  <circle cx="27.1" cy="47.9" r="3" fill="#dc2626" data-stroke-start="3"/><circle cx="27.1" cy="11.5" r="2" fill="#16a34a" data-stroke-end="3"/>
+  <circle cx="82" cy="55.2" r="3" fill="#dc2626" data-stroke-start="4"/><circle cx="78.1" cy="17.400000000000006" r="2" fill="#16a34a" data-stroke-end="4"/>
+  <circle cx="24.2" cy="85.7" r="3" fill="#dc2626" data-stroke-start="5"/><circle cx="27.1" cy="49" r="2" fill="#16a34a" data-stroke-end="5"/>
+  <circle cx="82" cy="92.4" r="3" fill="#dc2626" data-stroke-start="6"/><circle cx="82" cy="55.7" r="2" fill="#16a34a" data-stroke-end="6"/>
+</svg>

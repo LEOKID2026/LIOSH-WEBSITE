@@ -1,0 +1,68 @@
+{
+  "glyphId": "ס",
+  "group": "he-print",
+  "viewBox": 100,
+  "strokeCount": 1,
+  "strokes": [
+    {
+      "order": 1,
+      "pathId": "stroke-1",
+      "path": "M 39.16 22.09 L 41.17 35.74 L 41.44 51.9 L 41.87 68.08 L 56.07 76.22 L 70.49 70.56 L 73.06 56.17 L 72.78 40 L 70.68 24.01 L 55.02 22.13",
+      "start": {
+        "x": 39.16,
+        "y": 22.09
+      },
+      "end": {
+        "x": 55.02,
+        "y": 22.13
+      },
+      "direction": "reference-derived",
+      "arrow": false
+    }
+  ],
+  "dotPoints": [
+    {
+      "x": 39.16,
+      "y": 22.09
+    },
+    {
+      "x": 55.02,
+      "y": 22.13
+    },
+    {
+      "x": 70.68,
+      "y": 24.01
+    },
+    {
+      "x": 41.17,
+      "y": 35.74
+    },
+    {
+      "x": 72.78,
+      "y": 40.0
+    },
+    {
+      "x": 41.44,
+      "y": 51.9
+    },
+    {
+      "x": 73.06,
+      "y": 56.17
+    },
+    {
+      "x": 41.87,
+      "y": 68.08
+    },
+    {
+      "x": 70.49,
+      "y": 70.56
+    },
+    {
+      "x": 56.07,
+      "y": 76.22
+    }
+  ],
+  "generatedBy": "reference-image-dot-extraction",
+  "referenceQuality": "visual tracing asset; stroke order is approximate",
+  "version": 1
+}

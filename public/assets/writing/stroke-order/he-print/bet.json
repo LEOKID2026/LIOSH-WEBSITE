@@ -1,0 +1,60 @@
+{
+  "glyphId": "ב",
+  "group": "he-print",
+  "viewBox": 100,
+  "strokeCount": 1,
+  "strokes": [
+    {
+      "order": 1,
+      "pathId": "stroke-1",
+      "path": "M 57.74 27.69 L 68.12 34.98 L 69.15 50.56 L 69.23 66.71 L 71.61 82.48 L 54.73 82.56 L 37.83 82.79 L 41.49 27.78",
+      "start": {
+        "x": 57.74,
+        "y": 27.69
+      },
+      "end": {
+        "x": 41.49,
+        "y": 27.78
+      },
+      "direction": "reference-derived",
+      "arrow": false
+    }
+  ],
+  "dotPoints": [
+    {
+      "x": 41.49,
+      "y": 27.78
+    },
+    {
+      "x": 57.74,
+      "y": 27.69
+    },
+    {
+      "x": 68.12,
+      "y": 34.98
+    },
+    {
+      "x": 69.15,
+      "y": 50.56
+    },
+    {
+      "x": 69.23,
+      "y": 66.71
+    },
+    {
+      "x": 37.83,
+      "y": 82.79
+    },
+    {
+      "x": 54.73,
+      "y": 82.56
+    },
+    {
+      "x": 71.61,
+      "y": 82.48
+    }
+  ],
+  "generatedBy": "reference-image-dot-extraction",
+  "referenceQuality": "visual tracing asset; stroke order is approximate",
+  "version": 1
+}

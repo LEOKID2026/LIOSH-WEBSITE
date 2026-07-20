@@ -1,10 +1,13 @@
 import { rejectIfPublicWorksheetsReadyRateLimited } from "../../../../../lib/security/public-api-rate-limit.js";
+import { getTypeHandler } from "../../../../../lib/worksheets/worksheet-type-registry.js";
 import { getReadyWorksheetBySlug } from "../../../../../lib/worksheets/worksheet-ready-catalog.js";
+import { getWritingCatalogEntryBySlug } from "../../../../../lib/writing/writing-catalog.server.js";
 import {
   generateWorksheetForParent,
   publicWorksheetPayload,
 } from "../../../../../lib/worksheets/worksheet-generate.server.js";
 import { buildWorksheetPayloadMeta } from "../../../../../lib/worksheets/worksheet-meta-labels.server.js";
+import { WORKSHEET_UI_HE } from "../../../../../lib/worksheets/worksheet-ui.he.js";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
@@ -14,6 +17,35 @@ export default async function handler(req, res) {
   if (rejectIfPublicWorksheetsReadyRateLimited(req, res)) return undefined;
 
   const slug = String(req.query?.slug || "").trim();
+  const writingEntry = getWritingCatalogEntryBySlug(slug);
+
+  if (writingEntry) {
+    if (!writingEntry.publicAccess) {
+      return res.status(403).json({
+        ok: false,
+        error: "writing_slug_locked",
+        message: WORKSHEET_UI_HE.writingLockedText,
+      });
+    }
+
+    const handler = getTypeHandler("writing");
+    const generated = handler.generate({ slug, publicOnly: true });
+    if (!generated.ok) {
+      return res.status(generated.status || 500).json({
+        ok: false,
+        error: generated.code,
+        message: generated.message,
+      });
+    }
+    return res.status(200).json({
+      ok: true,
+      worksheetPayload: handler.publicPayload(generated.worksheetPayload),
+      generation: generated.generation,
+      slug: writingEntry.slug,
+      worksheetType: "writing",
+    });
+  }
+
   const entry = getReadyWorksheetBySlug(slug);
   if (!entry) {
     return res.status(404).json({ ok: false, error: "not_found" });
@@ -56,5 +88,6 @@ export default async function handler(req, res) {
     worksheetPayload: publicWorksheetPayload(generated.worksheetPayload),
     generation: generated.generation,
     slug: entry.slug,
+    worksheetType: "questions",
   });
 }

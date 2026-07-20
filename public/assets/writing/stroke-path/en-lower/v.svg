@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" data-glyph="v" data-group="en-lower" data-centerline="true">
+  <path id="stroke-1" d="M 16.9 23.400000000000006 L 12.8 19.299999999999997 L 7.6 16.099999999999994" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-2" d="M 19 25.299999999999997 L 14.8 15.599999999999994 L 15.1 8.299999999999997" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-3" d="M 60.7 31.5 L 68.8 7.599999999999994" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-4" d="M 43.2 92.4 L 44.8 87 L 43.2 62.2" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="16.9" cy="23.400000000000006" r="3" fill="#dc2626" data-stroke-start="1"/><circle cx="7.6" cy="16.099999999999994" r="2" fill="#16a34a" data-stroke-end="1"/>
+  <circle cx="19" cy="25.299999999999997" r="3" fill="#dc2626" data-stroke-start="2"/><circle cx="15.1" cy="8.299999999999997" r="2" fill="#16a34a" data-stroke-end="2"/>
+  <circle cx="60.7" cy="31.5" r="3" fill="#dc2626" data-stroke-start="3"/><circle cx="68.8" cy="7.599999999999994" r="2" fill="#16a34a" data-stroke-end="3"/>
+  <circle cx="43.2" cy="92.4" r="3" fill="#dc2626" data-stroke-start="4"/><circle cx="43.2" cy="62.2" r="2" fill="#16a34a" data-stroke-end="4"/>
+</svg>

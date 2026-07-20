@@ -1,0 +1,64 @@
+{
+  "glyphId": "כ",
+  "group": "he-script",
+  "viewBox": 100,
+  "strokeCount": 1,
+  "strokes": [
+    {
+      "order": 1,
+      "pathId": "stroke-1",
+      "path": "M 47.6 42.8 L 56.72 44.24 L 63.6 50.8 L 65.2 60.4 L 63.6 69.2 L 58.8 76.4 L 49.2 79.6 L 39.87 79.33 L 38 46",
+      "start": {
+        "x": 47.6,
+        "y": 42.8
+      },
+      "end": {
+        "x": 38.0,
+        "y": 46.0
+      },
+      "direction": "reference-derived",
+      "arrow": false
+    }
+  ],
+  "dotPoints": [
+    {
+      "x": 47.6,
+      "y": 42.8
+    },
+    {
+      "x": 38.0,
+      "y": 46.0
+    },
+    {
+      "x": 56.72,
+      "y": 44.24
+    },
+    {
+      "x": 63.6,
+      "y": 50.8
+    },
+    {
+      "x": 65.2,
+      "y": 60.4
+    },
+    {
+      "x": 63.6,
+      "y": 69.2
+    },
+    {
+      "x": 58.8,
+      "y": 76.4
+    },
+    {
+      "x": 39.87,
+      "y": 79.33
+    },
+    {
+      "x": 49.2,
+      "y": 79.6
+    }
+  ],
+  "generatedBy": "reference-image-dot-extraction",
+  "referenceQuality": "visual tracing asset; stroke order is approximate",
+  "version": 1
+}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 100 100"
+     fill="none"
+     data-trace="full_trace"
+     data-dot-trace="true"
+     data-source="user-reference">
+  <circle cx="50.39" cy="28.06" r="2" fill="#444444"/>
+  <circle cx="58.54" cy="41.85" r="2" fill="#444444"/>
+  <circle cx="65.77" cy="40.42" r="2" fill="#444444"/>
+  <circle cx="59.58" cy="60.7" r="2" fill="#444444"/>
+  <circle cx="50.27" cy="69.65" r="2" fill="#444444"/>
+  <circle cx="60.14" cy="79.3" r="2" fill="#444444"/>
+  <circle cx="37.94" cy="80.99" r="2" fill="#444444"/>
+</svg>

@@ -1,0 +1,56 @@
+{
+  "glyphId": "ר",
+  "group": "he-script",
+  "viewBox": 100,
+  "strokeCount": 1,
+  "strokes": [
+    {
+      "order": 1,
+      "pathId": "stroke-1",
+      "path": "M 46 44.4 L 55.33 44.67 L 63.2 51.6 L 64.4 61.2 L 63.2 70.8 L 62 80.4 L 36.67 47.87",
+      "start": {
+        "x": 46.0,
+        "y": 44.4
+      },
+      "end": {
+        "x": 36.67,
+        "y": 47.87
+      },
+      "direction": "reference-derived",
+      "arrow": false
+    }
+  ],
+  "dotPoints": [
+    {
+      "x": 46.0,
+      "y": 44.4
+    },
+    {
+      "x": 55.33,
+      "y": 44.67
+    },
+    {
+      "x": 36.67,
+      "y": 47.87
+    },
+    {
+      "x": 63.2,
+      "y": 51.6
+    },
+    {
+      "x": 64.4,
+      "y": 61.2
+    },
+    {
+      "x": 63.2,
+      "y": 70.8
+    },
+    {
+      "x": 62.0,
+      "y": 80.4
+    }
+  ],
+  "generatedBy": "reference-image-dot-extraction",
+  "referenceQuality": "visual tracing asset; stroke order is approximate",
+  "version": 1
+}

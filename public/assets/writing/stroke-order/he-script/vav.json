@@ -1,0 +1,48 @@
+{
+  "glyphId": "ו",
+  "group": "he-script",
+  "viewBox": 100,
+  "strokeCount": 1,
+  "strokes": [
+    {
+      "order": 1,
+      "pathId": "stroke-1",
+      "path": "M 54 33.2 L 54 42.8 L 54 52.4 L 54 62 L 54 71.6",
+      "start": {
+        "x": 54.0,
+        "y": 33.2
+      },
+      "end": {
+        "x": 54.0,
+        "y": 71.6
+      },
+      "direction": "reference-derived",
+      "arrow": false
+    }
+  ],
+  "dotPoints": [
+    {
+      "x": 54.0,
+      "y": 33.2
+    },
+    {
+      "x": 54.0,
+      "y": 42.8
+    },
+    {
+      "x": 54.0,
+      "y": 52.4
+    },
+    {
+      "x": 54.0,
+      "y": 62.0
+    },
+    {
+      "x": 54.0,
+      "y": 71.6
+    }
+  ],
+  "generatedBy": "reference-image-dot-extraction",
+  "referenceQuality": "visual tracing asset; stroke order is approximate",
+  "version": 1
+}

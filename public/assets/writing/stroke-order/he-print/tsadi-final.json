@@ -1,0 +1,60 @@
+{
+  "glyphId": "ץ",
+  "group": "he-print",
+  "viewBox": 100,
+  "strokeCount": 1,
+  "strokes": [
+    {
+      "order": 1,
+      "pathId": "stroke-1",
+      "path": "M 42.61 23.92 L 42.47 36.82 L 52.7 43.84 L 42.53 49.84 L 42.47 63.18 L 42.4 76.96 L 64.32 37.05 L 70.22 24.44",
+      "start": {
+        "x": 42.61,
+        "y": 23.92
+      },
+      "end": {
+        "x": 70.22,
+        "y": 24.44
+      },
+      "direction": "reference-derived",
+      "arrow": false
+    }
+  ],
+  "dotPoints": [
+    {
+      "x": 70.22,
+      "y": 24.44
+    },
+    {
+      "x": 42.61,
+      "y": 23.92
+    },
+    {
+      "x": 42.47,
+      "y": 36.82
+    },
+    {
+      "x": 64.32,
+      "y": 37.05
+    },
+    {
+      "x": 52.7,
+      "y": 43.84
+    },
+    {
+      "x": 42.53,
+      "y": 49.84
+    },
+    {
+      "x": 42.47,
+      "y": 63.18
+    },
+    {
+      "x": 42.4,
+      "y": 76.96
+    }
+  ],
+  "generatedBy": "reference-image-dot-extraction",
+  "referenceQuality": "visual tracing asset; stroke order is approximate",
+  "version": 1
+}

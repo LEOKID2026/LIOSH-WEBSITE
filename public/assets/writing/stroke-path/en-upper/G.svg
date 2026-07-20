@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" data-glyph="G" data-group="en-upper" data-centerline="true">
+  <path id="stroke-1" d="M 75 12.200000000000003 L 70.6 15.900000000000006 L 62.8 13.299999999999997 L 51.6 12" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-2" d="M 27.9 18.200000000000003 L 37.2 13.5 L 51 12" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-3" d="M 12.8 50.3 L 13.3 41.9 L 15.4 33.900000000000006 L 22.1 23.200000000000003" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-4" d="M 47.7 52.3 L 61.7 52.3" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-5" d="M 71.1 68.5 L 71.1 57" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-6" d="M 22.1 77.9 L 15.6 67.7 L 13.8 61.5 L 12.8 50.8" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-7" d="M 70.8 81.8 L 71.1 69" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-8" d="M 50.8 88 L 37.2 87 L 27.3 82.3" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-9" d="M 51.8 88 L 65.6 86.5" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="75" cy="12.200000000000003" r="3" fill="#dc2626" data-stroke-start="1"/><circle cx="51.6" cy="12" r="2" fill="#16a34a" data-stroke-end="1"/>
+  <circle cx="27.9" cy="18.200000000000003" r="3" fill="#dc2626" data-stroke-start="2"/><circle cx="51" cy="12" r="2" fill="#16a34a" data-stroke-end="2"/>
+  <circle cx="12.8" cy="50.3" r="3" fill="#dc2626" data-stroke-start="3"/><circle cx="22.1" cy="23.200000000000003" r="2" fill="#16a34a" data-stroke-end="3"/>
+  <circle cx="47.7" cy="52.3" r="3" fill="#dc2626" data-stroke-start="4"/><circle cx="61.7" cy="52.3" r="2" fill="#16a34a" data-stroke-end="4"/>
+  <circle cx="71.1" cy="68.5" r="3" fill="#dc2626" data-stroke-start="5"/><circle cx="71.1" cy="57" r="2" fill="#16a34a" data-stroke-end="5"/>
+  <circle cx="22.1" cy="77.9" r="3" fill="#dc2626" data-stroke-start="6"/><circle cx="12.8" cy="50.8" r="2" fill="#16a34a" data-stroke-end="6"/>
+  <circle cx="70.8" cy="81.8" r="3" fill="#dc2626" data-stroke-start="7"/><circle cx="71.1" cy="69" r="2" fill="#16a34a" data-stroke-end="7"/>
+  <circle cx="50.8" cy="88" r="3" fill="#dc2626" data-stroke-start="8"/><circle cx="27.3" cy="82.3" r="2" fill="#16a34a" data-stroke-end="8"/>
+  <circle cx="51.8" cy="88" r="3" fill="#dc2626" data-stroke-start="9"/><circle cx="65.6" cy="86.5" r="2" fill="#16a34a" data-stroke-end="9"/>
+</svg>

@@ -1,0 +1,26 @@
+{
+  "glyphId": "1",
+  "group": "digits",
+  "viewBox": 100,
+  "strokeCount": 1,
+  "strokes": [
+    {
+      "order": 1,
+      "pathId": "stroke-1",
+      "path": "M 40 25.2 L 47.9 21.5 L 60 10 L 60 90",
+      "start": {
+        "x": 40.0,
+        "y": 25.2
+      },
+      "end": {
+        "x": 60.0,
+        "y": 90.0
+      },
+      "direction": "ttb",
+      "arrow": true
+    }
+  ],
+  "alternatives": [],
+  "generatedBy": "openai-manual-single-stroke-v1",
+  "version": 2
+}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" data-glyph="f" data-group="en-lower" data-centerline="true">
+  <path id="stroke-1" d="M 46.4 14.299999999999997 L 35.2 11.700000000000003" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-2" d="M 25 37.2 L 25.5 20.599999999999994 L 27.6 16.400000000000006" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-3" d="M 7.6 42.2 L 20.6 41.9" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-4" d="M 29.9 42.2 L 43 41.7" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-5" d="M 26 46.4 L 25 45.1 L 25.5 38" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-6" d="M 26 92.4 L 27.1 89.1 L 27.1 78.4 L 25.3 51.3" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="46.4" cy="14.299999999999997" r="3" fill="#dc2626" data-stroke-start="1"/><circle cx="35.2" cy="11.700000000000003" r="2" fill="#16a34a" data-stroke-end="1"/>
+  <circle cx="25" cy="37.2" r="3" fill="#dc2626" data-stroke-start="2"/><circle cx="27.6" cy="16.400000000000006" r="2" fill="#16a34a" data-stroke-end="2"/>
+  <circle cx="7.6" cy="42.2" r="3" fill="#dc2626" data-stroke-start="3"/><circle cx="20.6" cy="41.9" r="2" fill="#16a34a" data-stroke-end="3"/>
+  <circle cx="29.9" cy="42.2" r="3" fill="#dc2626" data-stroke-start="4"/><circle cx="43" cy="41.7" r="2" fill="#16a34a" data-stroke-end="4"/>
+  <circle cx="26" cy="46.4" r="3" fill="#dc2626" data-stroke-start="5"/><circle cx="25.5" cy="38" r="2" fill="#16a34a" data-stroke-end="5"/>
+  <circle cx="26" cy="92.4" r="3" fill="#dc2626" data-stroke-start="6"/><circle cx="25.3" cy="51.3" r="2" fill="#16a34a" data-stroke-end="6"/>
+</svg>

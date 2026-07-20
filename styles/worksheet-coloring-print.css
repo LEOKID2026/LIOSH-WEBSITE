@@ -1,0 +1,262 @@
+/* Coloring worksheet — screen preview + A4 print */
+
+@page coloring-a4 {
+  size: A4 portrait;
+  margin: 0;
+}
+
+.coloring-preview-screen {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0 2rem;
+}
+
+.coloring-preview-frame {
+  width: min(100%, 620px);
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+}
+
+.coloring-preview-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.coloring-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.75rem;
+  max-height: 28rem;
+  overflow: auto;
+  padding: 0.25rem;
+}
+
+.worksheet-input,
+.worksheet-select {
+  background: #fff;
+  border: 1px solid rgb(15 23 42 / 0.12);
+  border-radius: 0.65rem;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.9375rem;
+  color: #0f172a;
+}
+
+.worksheet-input::placeholder {
+  color: #64748b;
+}
+
+.worksheet-input:focus,
+.worksheet-select:focus {
+  outline: 2px solid rgb(37 99 235 / 0.35);
+  outline-offset: 1px;
+  border-color: #2563eb;
+}
+
+.coloring-card-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border: 2px solid rgba(15, 23, 42, 0.08);
+  border-radius: 12px;
+  background: #fff;
+  cursor: pointer;
+  text-align: center;
+}
+
+.coloring-card-tile--active {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+.coloring-card-tile-preview {
+  aspect-ratio: 210 / 297;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.coloring-card-tile-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.coloring-card-tile-name {
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+.coloring-create-actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 0.85rem 0 0.25rem;
+  background: linear-gradient(180deg, rgb(255 255 255 / 0) 0%, rgb(255 255 255 / 0.94) 28%, #fff 100%);
+}
+
+.coloring-preview-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 1rem;
+  overflow-y: auto;
+  background: rgb(15 23 42 / 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.coloring-preview-modal {
+  width: min(100%, 720px);
+  margin: auto;
+  padding: 1rem 1.15rem 1.25rem;
+  border-radius: 1rem;
+  border: 1px solid rgb(15 23 42 / 0.08);
+  background: #fff;
+  box-shadow: 0 24px 64px rgb(15 23 42 / 0.18);
+}
+
+.coloring-preview-modal-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.coloring-preview-modal-title {
+  margin: 0;
+  font-size: 1.125rem;
+  line-height: 1.35;
+}
+
+.coloring-preview-modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.coloring-preview-modal .coloring-preview-screen {
+  padding: 0;
+}
+
+@media screen {
+  .coloring-print-document {
+    display: none;
+  }
+}
+
+@media print {
+  @page :blank {
+    display: none;
+  }
+
+  html,
+  body,
+  body.worksheet-coloring-print-mode,
+  body.worksheet-coloring-print-mode #__next,
+  body.worksheet-coloring-print-mode #__next > div,
+  body.worksheet-coloring-print-mode main,
+  body.worksheet-coloring-print-mode .worksheet-preview-container,
+  body.worksheet-coloring-print-mode .worksheet-preview-shell {
+    background: #fff !important;
+    background-image: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+  }
+
+  body.worksheet-coloring-print-mode [class*="bg-gradient"],
+  body.worksheet-coloring-print-mode [class*="from-"],
+  body.worksheet-coloring-print-mode [class*="to-"] {
+    background: #fff !important;
+    background-image: none !important;
+  }
+
+  body.worksheet-coloring-print-mode header,
+  body.worksheet-coloring-print-mode footer,
+  body.worksheet-coloring-print-mode nav {
+    display: none !important;
+  }
+
+  body.worksheet-coloring-print-mode .worksheet-hub-page > *:not(.coloring-print-document),
+  body.worksheet-coloring-print-mode .coloring-preview-modal-backdrop,
+  body.worksheet-coloring-print-mode .coloring-preview-modal,
+  body.worksheet-coloring-print-mode .coloring-preview-screen {
+    display: none !important;
+    height: 0 !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+    visibility: hidden !important;
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+  }
+
+  body.worksheet-coloring-print-mode .worksheet-preview-shell > *:not(.coloring-print-document),
+  body.worksheet-coloring-print-mode .worksheet-preview-actions,
+  body.worksheet-coloring-print-mode .coloring-preview-screen {
+    display: none !important;
+    height: 0 !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+    visibility: hidden !important;
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+  }
+
+  body.worksheet-coloring-print-mode .coloring-print-document {
+    display: block !important;
+    visibility: visible !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    inset: 0 !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+  }
+
+  body.worksheet-coloring-print-mode .coloring-print-page {
+    page: coloring-a4;
+    width: 210mm;
+    height: 297mm;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    break-before: auto;
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+    background: #fff !important;
+  }
+
+  body.worksheet-coloring-print-mode .coloring-print-image {
+    display: block;
+    width: 210mm;
+    height: 297mm;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    object-fit: fill;
+    background: #fff !important;
+  }
+}

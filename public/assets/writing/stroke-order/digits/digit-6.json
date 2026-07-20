@@ -1,0 +1,26 @@
+{
+  "glyphId": "6",
+  "group": "digits",
+  "viewBox": 100,
+  "strokeCount": 1,
+  "strokes": [
+    {
+      "order": 1,
+      "pathId": "stroke-1",
+      "path": "M 72 21.5 L 68 13.9 L 56 10 L 48.1 10 L 36 13.9 L 28 25.2 L 24 44.3 L 24 63.4 L 28 78.6 L 36 86.2 L 48.1 90 L 52 90 L 64.1 86.2 L 72 78.6 L 76 67.2 L 76 63.4 L 72 51.9 L 64.1 44.3 L 52 40.5 L 48.1 40.5 L 36 44.3 L 28 51.9 L 24 63.4",
+      "start": {
+        "x": 72.0,
+        "y": 21.5
+      },
+      "end": {
+        "x": 24.0,
+        "y": 63.4
+      },
+      "direction": "ttb",
+      "arrow": true
+    }
+  ],
+  "alternatives": [],
+  "generatedBy": "openai-manual-single-stroke-v1",
+  "version": 2
+}

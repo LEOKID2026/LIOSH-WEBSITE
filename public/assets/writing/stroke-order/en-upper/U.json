@@ -1,0 +1,26 @@
+{
+  "glyphId": "U",
+  "group": "en-upper",
+  "viewBox": 100,
+  "strokeCount": 1,
+  "strokes": [
+    {
+      "order": 1,
+      "pathId": "stroke-1",
+      "path": "M 22 10 L 22 67.2 L 26 78.6 L 34 86.2 L 46.1 90 L 53.9 90 L 66 86.2 L 74 78.6 L 78 67.2 L 78 10",
+      "start": {
+        "x": 22.0,
+        "y": 10.0
+      },
+      "end": {
+        "x": 78.0,
+        "y": 10.0
+      },
+      "direction": "ltr",
+      "arrow": true
+    }
+  ],
+  "alternatives": [],
+  "generatedBy": "openai-manual-single-stroke-v1",
+  "version": 2
+}

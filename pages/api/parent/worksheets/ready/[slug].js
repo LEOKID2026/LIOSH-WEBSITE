@@ -1,5 +1,7 @@
 import { requireParentApiContext } from "../../../../../lib/auth/persona-guard.server.js";
+import { getTypeHandler } from "../../../../../lib/worksheets/worksheet-type-registry.js";
 import { getReadyWorksheetBySlug } from "../../../../../lib/worksheets/worksheet-ready-catalog.js";
+import { getWritingCatalogEntryBySlug } from "../../../../../lib/writing/writing-catalog.server.js";
 import {
   generateWorksheetForParent,
   publicWorksheetPayload,
@@ -15,6 +17,27 @@ export default async function handler(req, res) {
   if (ctx.stopped) return undefined;
 
   const slug = String(req.query?.slug || "").trim();
+  const writingEntry = getWritingCatalogEntryBySlug(slug);
+
+  if (writingEntry) {
+    const handler = getTypeHandler("writing");
+    const generated = handler.generate({ slug });
+    if (!generated.ok) {
+      return res.status(generated.status || 500).json({
+        ok: false,
+        error: generated.code,
+        message: generated.message,
+      });
+    }
+    return res.status(200).json({
+      ok: true,
+      worksheetPayload: handler.publicPayload(generated.worksheetPayload),
+      generation: generated.generation,
+      slug: writingEntry.slug,
+      worksheetType: "writing",
+    });
+  }
+
   const entry = getReadyWorksheetBySlug(slug);
   if (!entry) {
     return res.status(404).json({ ok: false, error: "not_found" });
@@ -57,5 +80,6 @@ export default async function handler(req, res) {
     worksheetPayload: publicWorksheetPayload(generated.worksheetPayload),
     generation: generated.generation,
     slug: entry.slug,
+    worksheetType: "questions",
   });
 }

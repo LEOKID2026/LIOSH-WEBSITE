@@ -1,0 +1,88 @@
+{
+  "glyphId": "מ",
+  "group": "he-script",
+  "viewBox": 100,
+  "strokeCount": 1,
+  "strokes": [
+    {
+      "order": 1,
+      "pathId": "stroke-1",
+      "path": "M 65.2 36.4 L 65.2 46 L 65.2 55.6 L 65.2 65.2 L 60.4 69.2 L 65.2 74 L 55.6 62 L 50.53 54.27 L 46 47.6 L 40.93 39.87 L 36.4 36.4 L 36.4 46 L 36.4 55.6 L 36.4 65.2 L 36.13 74.53",
+      "start": {
+        "x": 65.2,
+        "y": 36.4
+      },
+      "end": {
+        "x": 36.13,
+        "y": 74.53
+      },
+      "direction": "reference-derived",
+      "arrow": false
+    }
+  ],
+  "dotPoints": [
+    {
+      "x": 36.4,
+      "y": 36.4
+    },
+    {
+      "x": 65.2,
+      "y": 36.4
+    },
+    {
+      "x": 40.93,
+      "y": 39.87
+    },
+    {
+      "x": 36.4,
+      "y": 46.0
+    },
+    {
+      "x": 65.2,
+      "y": 46.0
+    },
+    {
+      "x": 46.0,
+      "y": 47.6
+    },
+    {
+      "x": 36.4,
+      "y": 55.6
+    },
+    {
+      "x": 50.53,
+      "y": 54.27
+    },
+    {
+      "x": 65.2,
+      "y": 55.6
+    },
+    {
+      "x": 55.6,
+      "y": 62.0
+    },
+    {
+      "x": 36.4,
+      "y": 65.2
+    },
+    {
+      "x": 65.2,
+      "y": 65.2
+    },
+    {
+      "x": 60.4,
+      "y": 69.2
+    },
+    {
+      "x": 36.13,
+      "y": 74.53
+    },
+    {
+      "x": 65.2,
+      "y": 74.0
+    }
+  ],
+  "generatedBy": "reference-image-dot-extraction",
+  "referenceQuality": "visual tracing asset; stroke order is approximate",
+  "version": 1
+}

@@ -1,0 +1,40 @@
+{
+  "glyphId": "י",
+  "group": "he-script",
+  "viewBox": 100,
+  "strokeCount": 1,
+  "strokes": [
+    {
+      "order": 1,
+      "pathId": "stroke-1",
+      "path": "M 51.2 50 L 51.6 58.8 L 51.6 68.4",
+      "start": {
+        "x": 51.2,
+        "y": 50.0
+      },
+      "end": {
+        "x": 51.6,
+        "y": 68.4
+      },
+      "direction": "reference-derived",
+      "arrow": false
+    }
+  ],
+  "dotPoints": [
+    {
+      "x": 51.2,
+      "y": 50.0
+    },
+    {
+      "x": 51.6,
+      "y": 58.8
+    },
+    {
+      "x": 51.6,
+      "y": 68.4
+    }
+  ],
+  "generatedBy": "reference-image-dot-extraction",
+  "referenceQuality": "visual tracing asset; stroke order is approximate",
+  "version": 1
+}

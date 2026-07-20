@@ -1,0 +1,68 @@
+/**
+
+ * Writing worksheet A4 portrait print — 182×273 mm content area policy.
+
+ */
+
+
+
+@page writing-portrait {
+  size: A4 portrait;
+  margin: 12mm 14mm;
+}
+
+/* Do not set page: writing-portrait on sections — it causes a trailing blank sheet in Chrome. */
+
+@media print {
+
+  .writing-print-document .writing-page--portrait.writing-print-page {
+
+    width: 100%;
+
+    max-width: 182mm;
+
+    min-height: 0;
+
+    height: auto;
+
+    box-sizing: border-box;
+
+    break-after: auto;
+
+    page-break-after: auto;
+
+    border: none;
+
+    border-radius: 0;
+
+    padding: 0;
+
+    margin: 0 auto;
+
+    background: #fff;
+
+  }
+
+
+
+  .writing-print-document > .writing-page--portrait.writing-print-page + .writing-page--portrait.writing-print-page {
+    break-before: page;
+    page-break-before: always;
+  }
+
+  .writing-print-document > .writing-page--portrait.writing-print-page {
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+  }
+
+
+
+  .writing-print-document .writing-print-page--empty {
+
+    display: none !important;
+
+  }
+
+}
+
+

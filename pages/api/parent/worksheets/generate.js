@@ -2,9 +2,9 @@ import { rejectIfCrossOriginCookieMutation } from "../../../../lib/security/same
 import { requireParentApiContext } from "../../../../lib/auth/persona-guard.server.js";
 import { readJsonBody } from "../../../../lib/learning-supabase/learning-activity.js";
 import {
-  generateWorksheetForParent,
-  publicWorksheetPayload,
-} from "../../../../lib/worksheets/worksheet-generate.server.js";
+  getTypeHandler,
+  resolveWorksheetType,
+} from "../../../../lib/worksheets/worksheet-type-registry.js";
 import { worksheetMixedTopicsErrorHe } from "../../../../lib/worksheets/worksheet-mixed-topics.js";
 
 export default async function handler(req, res) {
@@ -18,26 +18,19 @@ export default async function handler(req, res) {
   if (ctx.stopped) return undefined;
 
   const body = readJsonBody(req);
-  const inkSave = body?.inkSave === true;
+  const worksheetType = resolveWorksheetType(body);
+  const handler = getTypeHandler(worksheetType);
 
-  const generated = await generateWorksheetForParent({
-    subjectId: body?.subjectId,
-    gradeKey: body?.gradeKey,
-    topicKey: body?.topicKey,
-    levelKey: body?.levelKey,
-    count: body?.count,
-    seed: body?.seed,
-    inkSave,
-    titleHe: typeof body?.titleHe === "string" ? body.titleHe : undefined,
-    mathPracticeFormat:
-      typeof body?.mathPracticeFormat === "string" ? body.mathPracticeFormat : undefined,
-    preferMcq:
-      body?.preferMcq === true ? true : body?.preferMcq === false ? false : undefined,
+  const generated = await handler.generate({
+    ...body,
+    inkSave: body?.inkSave === true,
     mixedTopicKeys: Array.isArray(body?.mixedTopicKeys)
       ? body.mixedTopicKeys
       : body?.mixedTopicKeys === null
         ? null
         : undefined,
+    preferMcq:
+      body?.preferMcq === true ? true : body?.preferMcq === false ? false : undefined,
   });
 
   if (!generated.ok) {
@@ -52,7 +45,7 @@ export default async function handler(req, res) {
 
   return res.status(200).json({
     ok: true,
-    worksheetPayload: publicWorksheetPayload(generated.worksheetPayload),
+    worksheetPayload: handler.publicPayload(generated.worksheetPayload),
     generation: generated.generation,
   });
 }

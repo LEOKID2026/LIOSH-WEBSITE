@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" data-glyph="ת" data-group="he-script" data-centerline="true">
+  <path id="stroke-1" d="M 62.2 31 L 63.5 19" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-2" d="M 81.5 35.2 L 80.2 27.099999999999994 L 76.3 19.299999999999997" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-3" d="M 82.3 54.9 L 81.5 53.6 L 81.8 36.5" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-4" d="M 48.7 71.9 L 55.5 58.3 L 61.7 33.900000000000006" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-5" d="M 24.7 86.7 L 32.6 84.9 L 39.6 81" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-6" d="M 7.6 88 L 23.4 87" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="62.2" cy="31" r="3" fill="#dc2626" data-stroke-start="1"/><circle cx="63.5" cy="19" r="2" fill="#16a34a" data-stroke-end="1"/>
+  <circle cx="81.5" cy="35.2" r="3" fill="#dc2626" data-stroke-start="2"/><circle cx="76.3" cy="19.299999999999997" r="2" fill="#16a34a" data-stroke-end="2"/>
+  <circle cx="82.3" cy="54.9" r="3" fill="#dc2626" data-stroke-start="3"/><circle cx="81.8" cy="36.5" r="2" fill="#16a34a" data-stroke-end="3"/>
+  <circle cx="48.7" cy="71.9" r="3" fill="#dc2626" data-stroke-start="4"/><circle cx="61.7" cy="33.900000000000006" r="2" fill="#16a34a" data-stroke-end="4"/>
+  <circle cx="24.7" cy="86.7" r="3" fill="#dc2626" data-stroke-start="5"/><circle cx="39.6" cy="81" r="2" fill="#16a34a" data-stroke-end="5"/>
+  <circle cx="7.6" cy="88" r="3" fill="#dc2626" data-stroke-start="6"/><circle cx="23.4" cy="87" r="2" fill="#16a34a" data-stroke-end="6"/>
+</svg>

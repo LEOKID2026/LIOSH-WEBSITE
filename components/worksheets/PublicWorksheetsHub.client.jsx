@@ -2,11 +2,20 @@
  * Public worksheets hub — demo generator + ready catalog, no auth.
  */
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import ReadyWorksheetsTab from "./ReadyWorksheetsTab.jsx";
 import CreateWorksheetTab from "./CreateWorksheetTab.jsx";
+import CreateWritingWorksheetTab, {
+  buildWritingGenerateBody,
+  defaultWritingCreateForm,
+} from "../writing/CreateWritingWorksheetTab.jsx";
+import CreateColoringWorksheetTab, {
+  buildColoringGenerateBody,
+  defaultColoringCreateForm,
+} from "../coloring/CreateColoringWorksheetTab.jsx";
+import ColoringPreviewModal from "../coloring/ColoringPreviewModal.jsx";
 import { WORKSHEET_UI_HE } from "../../lib/worksheets/worksheet-ui.he.js";
 import { getPublicSeoWideClasses } from "../seo/public-seo-wide-theme";
 import { getPublicDemoAllowlistEntry } from "../../lib/worksheets/worksheet-public-demo.constants.js";
@@ -74,12 +83,25 @@ export default function PublicWorksheetsHub({
   const [filterSubject, setFilterSubject] = useState("");
   const [filterGrade, setFilterGrade] = useState("");
   const [filterLevel, setFilterLevel] = useState("");
+  const [filterWorksheetType, setFilterWorksheetType] = useState("");
+  const [filterWritingCategory, setFilterWritingCategory] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
+  const [createKind, setCreateKind] = useState("questions");
   const [createForm, setCreateForm] = useState(() => defaultPublicDemoForm("math", "g3"));
+  const [writingForm, setWritingForm] = useState(() => defaultWritingCreateForm());
   const [includeAnswers, setIncludeAnswers] = useState(false);
   const [includeAnswersReady, setIncludeAnswersReady] = useState(false);
   const [createBusy, setCreateBusy] = useState(false);
   const [createError, setCreateError] = useState("");
+  const [writingCreateBusy, setWritingCreateBusy] = useState(false);
+  const [writingCreateError, setWritingCreateError] = useState("");
+  const [coloringCards, setColoringCards] = useState([]);
+  const [coloringCatalogLoading, setColoringCatalogLoading] = useState(true);
+  const [coloringForm, setColoringForm] = useState(() => defaultColoringCreateForm());
+  const [coloringCreateBusy, setColoringCreateBusy] = useState(false);
+  const [coloringCreateError, setColoringCreateError] = useState("");
+  const [coloringPreviewPayload, setColoringPreviewPayload] = useState(null);
 
   useEffect(() => {
     setIncludeAnswers(loadWorksheetIncludeAnswersPref());
@@ -114,6 +136,21 @@ export default function PublicWorksheetsHub({
   useEffect(() => {
     fetchCatalog();
   }, [fetchCatalog]);
+
+  useEffect(() => {
+    (async () => {
+      setColoringCatalogLoading(true);
+      try {
+        const res = await fetch("/api/public/worksheets/coloring-catalog");
+        const data = await res.json();
+        setColoringCards(res.ok && data.ok && Array.isArray(data.cards) ? data.cards : []);
+      } catch {
+        setColoringCards([]);
+      } finally {
+        setColoringCatalogLoading(false);
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     trackPublicWorksheetPageViewedOnce();
@@ -200,19 +237,74 @@ export default function PublicWorksheetsHub({
     }
   }, [createForm, openPreview, includeAnswers]);
 
-  const filteredCatalogItems = useMemo(() => {
-    return catalogItems.filter((item) => {
-      if (filterSubject && item.subjectId !== filterSubject) return false;
-      if (filterGrade && item.gradeKey !== filterGrade) return false;
-      if (filterLevel && item.levelKey !== filterLevel) return false;
-      return true;
-    });
-  }, [catalogItems, filterSubject, filterGrade, filterLevel]);
+  const handleWritingCreateSubmit = useCallback(async () => {
+    setWritingCreateBusy(true);
+    setWritingCreateError("");
+    try {
+      const newSeed = Math.floor(Math.random() * 1_000_000);
+      const visitSessionId = getPublicWorksheetVisitSessionId();
+      const body = {
+        ...buildWritingGenerateBody(writingForm),
+        seed: newSeed,
+        source: "public-demo",
+        presetId: writingForm.demoPresetId,
+        ...(visitSessionId ? { visitSessionId } : {}),
+      };
+      const res = await fetch("/api/public/worksheets/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        setWritingCreateError(data.message || data.error || WORKSHEET_UI_HE.errorGeneric);
+        return;
+      }
+      openPreview(
+        data.worksheetPayload,
+        data.generation,
+        false,
+        "public-writing-demo"
+      );
+    } catch {
+      setWritingCreateError(WORKSHEET_UI_HE.errorGeneric);
+    } finally {
+      setWritingCreateBusy(false);
+    }
+  }, [writingForm, openPreview]);
+
+  const handleColoringCreateSubmit = useCallback(async (cardKeyOverride) => {
+    setColoringCreateBusy(true);
+    setColoringCreateError("");
+    try {
+      const cardKey = String(cardKeyOverride || coloringForm.cardKey || "").trim();
+      const body = buildColoringGenerateBody({ cardKey });
+      const res = await fetch("/api/public/worksheets/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        setColoringCreateError(data.message || data.error || WORKSHEET_UI_HE.errorGeneric);
+        return;
+      }
+      setColoringForm((prev) => ({ ...prev, cardKey }));
+      setColoringPreviewPayload(data.worksheetPayload);
+    } catch {
+      setColoringCreateError(WORKSHEET_UI_HE.errorGeneric);
+    } finally {
+      setColoringCreateBusy(false);
+    }
+  }, [coloringForm.cardKey]);
 
   const handleCatalogFilterChange = useCallback((patch) => {
+    if ("filterWorksheetType" in patch) setFilterWorksheetType(patch.filterWorksheetType);
+    if ("filterWritingCategory" in patch) setFilterWritingCategory(patch.filterWritingCategory);
     if ("filterSubject" in patch) setFilterSubject(patch.filterSubject);
     if ("filterGrade" in patch) setFilterGrade(patch.filterGrade);
     if ("filterLevel" in patch) setFilterLevel(patch.filterLevel);
+    if ("searchQuery" in patch) setSearchQuery(patch.searchQuery);
   }, []);
 
   return (
@@ -224,20 +316,78 @@ export default function PublicWorksheetsHub({
             <p className={`${sectionLeadClass} ${landingCls.body}`}>{generatorLead.paragraph}</p>
           </>
         ) : null}
-        <CreateWorksheetTab
-          form={createForm}
-          onChange={(patch) => setCreateForm((prev) => ({ ...prev, ...patch }))}
-          onSubmit={handleCreateSubmit}
-          onRefresh={handleCreateSubmit}
-          busy={createBusy}
-          error={createError}
-          includeAnswers={includeAnswers}
-          includeAnswersReady={includeAnswersReady}
-          onIncludeAnswersChange={handleIncludeAnswersChange}
-          T={T}
-          variant="public-demo"
-          hidePanelHeader={landingEmbed}
-        />
+
+        <div className="worksheet-create-type-toggle" role="tablist" aria-label="סוג מחולל">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={createKind === "questions"}
+            className={`worksheet-hub-tab ${createKind === "questions" ? T.tabActive : T.tabIdle}`}
+            onClick={() => setCreateKind("questions")}
+          >
+            {WORKSHEET_UI_HE.createTypeQuestions}
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={createKind === "writing"}
+            className={`worksheet-hub-tab ${createKind === "writing" ? T.tabActive : T.tabIdle}`}
+            onClick={() => setCreateKind("writing")}
+          >
+            {WORKSHEET_UI_HE.createTypeWriting}
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={createKind === "coloring"}
+            className={`worksheet-hub-tab ${createKind === "coloring" ? T.tabActive : T.tabIdle}`}
+            onClick={() => setCreateKind("coloring")}
+          >
+            {WORKSHEET_UI_HE.createTypeColoring}
+          </button>
+        </div>
+
+        {createKind === "coloring" ? (
+          <CreateColoringWorksheetTab
+            cards={coloringCards}
+            selectedCardKey={coloringForm.cardKey}
+            onSelectCardKey={(cardKey) => setColoringForm((prev) => ({ ...prev, cardKey }))}
+            onSubmit={handleColoringCreateSubmit}
+            busy={coloringCreateBusy}
+            error={coloringCreateError}
+            loading={coloringCatalogLoading}
+            T={T}
+            variant="public-demo"
+            hidePanelHeader={landingEmbed}
+          />
+        ) : createKind === "writing" ? (
+          <CreateWritingWorksheetTab
+            form={writingForm}
+            onChange={(patch) => setWritingForm((prev) => ({ ...prev, ...patch }))}
+            onSubmit={handleWritingCreateSubmit}
+            busy={writingCreateBusy}
+            error={writingCreateError}
+            T={T}
+            variant="public-demo"
+            hidePanelHeader={landingEmbed}
+          />
+        ) : (
+          <CreateWorksheetTab
+            form={createForm}
+            onChange={(patch) => setCreateForm((prev) => ({ ...prev, ...patch }))}
+            onSubmit={handleCreateSubmit}
+            onRefresh={handleCreateSubmit}
+            busy={createBusy}
+            error={createError}
+            includeAnswers={includeAnswers}
+            includeAnswersReady={includeAnswersReady}
+            onIncludeAnswersChange={handleIncludeAnswersChange}
+            T={T}
+            variant="public-demo"
+            hidePanelHeader={landingEmbed}
+          />
+        )}
+
         {landingEmbed ? null : (
           <p className={`text-sm leading-relaxed ${T.muted}`}>
             במערכת המלאה להורים ניתן ליצור דפי עבודה שוב ושוב, ללא הגבלה. הדפים נוצרים מחדש
@@ -254,24 +404,34 @@ export default function PublicWorksheetsHub({
           </>
         ) : null}
         <ReadyWorksheetsTab
-          items={filteredCatalogItems}
+          items={catalogItems}
           loading={catalogLoading}
           error={catalogError}
           onViewPrint={handleReadyViewPrint}
           busySlug={busySlug}
+          filterWorksheetType={filterWorksheetType}
+          filterWritingCategory={filterWritingCategory}
           filterSubject={filterSubject}
           filterGrade={filterGrade}
           filterLevel={filterLevel}
+          searchQuery={searchQuery}
           onFilterChange={handleCatalogFilterChange}
           includeAnswers={includeAnswers}
           includeAnswersReady={includeAnswersReady}
           onIncludeAnswersChange={handleIncludeAnswersChange}
           T={T}
           titleOverride={WORKSHEET_UI_HE.publicReadyTitle}
-          hintOverride={WORKSHEET_UI_HE.publicReadyHint}
+          hintOverride={WORKSHEET_UI_HE.writingCatalogHint}
           hidePanelHeader={landingEmbed}
+          enableLockedModal
         />
       </section>
+
+      <ColoringPreviewModal
+        worksheetPayload={coloringPreviewPayload}
+        onClose={() => setColoringPreviewPayload(null)}
+        T={T}
+      />
     </div>
   );
 }

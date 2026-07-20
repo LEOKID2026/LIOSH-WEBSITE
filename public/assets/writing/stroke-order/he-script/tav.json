@@ -1,0 +1,76 @@
+{
+  "glyphId": "ת",
+  "group": "he-script",
+  "viewBox": 100,
+  "strokeCount": 1,
+  "strokes": [
+    {
+      "order": 1,
+      "pathId": "stroke-1",
+      "path": "M 50.8 37.2 L 58.8 39.6 L 63.6 47.6 L 63.6 57.2 L 63.6 66.8 L 64 75.6 L 36.4 74.8 L 28.67 76.13 L 36.4 66.8 L 36.4 58.8 L 36.4 50.8 L 39.07 40.93",
+      "start": {
+        "x": 50.8,
+        "y": 37.2
+      },
+      "end": {
+        "x": 39.07,
+        "y": 40.93
+      },
+      "direction": "reference-derived",
+      "arrow": false
+    }
+  ],
+  "dotPoints": [
+    {
+      "x": 39.07,
+      "y": 40.93
+    },
+    {
+      "x": 50.8,
+      "y": 37.2
+    },
+    {
+      "x": 58.8,
+      "y": 39.6
+    },
+    {
+      "x": 63.6,
+      "y": 47.6
+    },
+    {
+      "x": 36.4,
+      "y": 50.8
+    },
+    {
+      "x": 36.4,
+      "y": 58.8
+    },
+    {
+      "x": 63.6,
+      "y": 57.2
+    },
+    {
+      "x": 36.4,
+      "y": 66.8
+    },
+    {
+      "x": 63.6,
+      "y": 66.8
+    },
+    {
+      "x": 36.4,
+      "y": 74.8
+    },
+    {
+      "x": 64.0,
+      "y": 75.6
+    },
+    {
+      "x": 28.67,
+      "y": 76.13
+    }
+  ],
+  "generatedBy": "reference-image-dot-extraction",
+  "referenceQuality": "visual tracing asset; stroke order is approximate",
+  "version": 1
+}

@@ -1,0 +1,84 @@
+{
+  "glyphId": "ץ",
+  "group": "he-script",
+  "viewBox": 100,
+  "strokeCount": 1,
+  "strokes": [
+    {
+      "order": 1,
+      "pathId": "stroke-1",
+      "path": "M 62.8 25.2 L 58.53 34.53 L 50.8 35.6 L 50.8 42 L 50.8 51.6 L 45.2 52.4 L 39.33 56.93 L 37.73 65.47 L 42 72 L 50.53 71.33 L 50.8 62 L 44.13 31.87 L 39.87 27.07 L 50.53 27.07",
+      "start": {
+        "x": 62.8,
+        "y": 25.2
+      },
+      "end": {
+        "x": 50.53,
+        "y": 27.07
+      },
+      "direction": "reference-derived",
+      "arrow": false
+    }
+  ],
+  "dotPoints": [
+    {
+      "x": 39.87,
+      "y": 27.07
+    },
+    {
+      "x": 50.53,
+      "y": 27.07
+    },
+    {
+      "x": 62.8,
+      "y": 25.2
+    },
+    {
+      "x": 44.13,
+      "y": 31.87
+    },
+    {
+      "x": 50.8,
+      "y": 35.6
+    },
+    {
+      "x": 58.53,
+      "y": 34.53
+    },
+    {
+      "x": 50.8,
+      "y": 42.0
+    },
+    {
+      "x": 45.2,
+      "y": 52.4
+    },
+    {
+      "x": 50.8,
+      "y": 51.6
+    },
+    {
+      "x": 39.33,
+      "y": 56.93
+    },
+    {
+      "x": 50.8,
+      "y": 62.0
+    },
+    {
+      "x": 37.73,
+      "y": 65.47
+    },
+    {
+      "x": 42.0,
+      "y": 72.0
+    },
+    {
+      "x": 50.53,
+      "y": 71.33
+    }
+  ],
+  "generatedBy": "reference-image-dot-extraction",
+  "referenceQuality": "visual tracing asset; stroke order is approximate",
+  "version": 1
+}

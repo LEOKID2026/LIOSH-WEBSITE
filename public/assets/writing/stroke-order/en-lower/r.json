@@ -1,0 +1,41 @@
+{
+  "glyphId": "r",
+  "group": "en-lower",
+  "viewBox": 100,
+  "strokeCount": 2,
+  "strokes": [
+    {
+      "order": 1,
+      "pathId": "stroke-1",
+      "path": "M 37.4 29 L 37.4 71",
+      "start": {
+        "x": 37.4,
+        "y": 29.0
+      },
+      "end": {
+        "x": 37.4,
+        "y": 71.0
+      },
+      "direction": "ttb",
+      "arrow": true
+    },
+    {
+      "order": 2,
+      "pathId": "stroke-2",
+      "path": "M 37.4 47 L 40.6 38.1 L 46.9 32 L 53.2 29 L 62.6 29",
+      "start": {
+        "x": 37.4,
+        "y": 47.0
+      },
+      "end": {
+        "x": 62.6,
+        "y": 29.0
+      },
+      "direction": "ltr",
+      "arrow": true
+    }
+  ],
+  "alternatives": [],
+  "generatedBy": "openai-manual-single-stroke-v1",
+  "version": 2
+}

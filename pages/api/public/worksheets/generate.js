@@ -8,10 +8,11 @@ import {
   schedulePublicWorksheetAnalyticsWork,
 } from "../../../../lib/analytics/public-worksheet-analytics.server.js";
 import {
-  generateWorksheetForParent,
-  publicWorksheetPayload,
-} from "../../../../lib/worksheets/worksheet-generate.server.js";
+  getTypeHandler,
+  resolveWorksheetType,
+} from "../../../../lib/worksheets/worksheet-type-registry.js";
 import { validatePublicDemoGenerationParams } from "../../../../lib/worksheets/worksheet-public-demo-allowlist.server.js";
+import { validatePublicWritingDemoGenerationParams } from "../../../../lib/writing/writing-public-demo-allowlist.server.js";
 import { worksheetMixedTopicsErrorHe } from "../../../../lib/worksheets/worksheet-mixed-topics.js";
 
 export default async function handler(req, res) {
@@ -23,6 +24,80 @@ export default async function handler(req, res) {
   if (rejectIfPublicWorksheetsGenerateRateLimited(req, res)) return undefined;
 
   const body = readJsonBody(req);
+  const worksheetType = resolveWorksheetType(body);
+  const typeHandler = getTypeHandler(worksheetType);
+
+  if (worksheetType === "coloring") {
+    const generated = typeHandler.generate({
+      cardKey: body?.cardKey,
+    });
+
+    if (!generated.ok) {
+      return res.status(generated.status || 500).json({
+        ok: false,
+        error: generated.code,
+        message: generated.message,
+      });
+    }
+
+    return res.status(200).json({
+      ok: true,
+      worksheetPayload: typeHandler.publicPayload(generated.worksheetPayload),
+      generation: generated.generation,
+    });
+  }
+
+  if (worksheetType === "writing") {
+    const validated = validatePublicWritingDemoGenerationParams({
+      ...body,
+      presetId: body?.presetId || body?.demoPresetId,
+      demoPresetId: body?.demoPresetId || body?.presetId,
+    });
+    if (!validated.ok) {
+      const status =
+        validated.error === "TASK_TYPE_NOT_ALLOWED_IN_PUBLIC_DEMO" ||
+        validated.error === "PUBLIC_DEMO_CONTENT_NOT_ALLOWED" ||
+        validated.error === "NUMBER_MODE_NOT_ALLOWED_IN_PUBLIC_DEMO" ||
+        validated.error === "PUBLIC_DEMO_QUANTITY_NOT_ALLOWED"
+          ? 403
+          : 400;
+      return res.status(status).json({ ok: false, error: validated.error });
+    }
+
+    const generated = await typeHandler.generate({
+      ...validated.normalized,
+      source: "public-demo",
+      presetId: validated.presetId,
+      demoPresetId: validated.presetId,
+    });
+
+    if (!generated.ok) {
+      return res.status(generated.status || 500).json({
+        ok: false,
+        error: generated.code,
+        message: generated.message,
+      });
+    }
+
+    const visitSessionId = String(body?.visitSessionId || body?.visit_session_id || "").trim();
+    if (isValidPublicWorksheetVisitSessionId(visitSessionId)) {
+      const supabase = getLearningSupabaseServiceRoleClient();
+      schedulePublicWorksheetAnalyticsWork(
+        req.context,
+        insertPublicWorksheetAnalyticsEvent(supabase, {
+          eventName: "public_worksheet_generated",
+          visitSessionId,
+        })
+      );
+    }
+
+    return res.status(200).json({
+      ok: true,
+      worksheetPayload: typeHandler.publicPayload(generated.worksheetPayload),
+      generation: generated.generation,
+    });
+  }
+
   const validated = validatePublicDemoGenerationParams({
     subjectId: body?.subjectId,
     gradeKey: body?.gradeKey,
@@ -42,7 +117,7 @@ export default async function handler(req, res) {
     return res.status(status).json({ ok: false, error: validated.error });
   }
 
-  const generated = await generateWorksheetForParent(validated.normalized);
+  const generated = await typeHandler.generate(validated.normalized);
 
   if (!generated.ok) {
     const status = generated.status || 500;
@@ -68,7 +143,7 @@ export default async function handler(req, res) {
 
   return res.status(200).json({
     ok: true,
-    worksheetPayload: publicWorksheetPayload(generated.worksheetPayload),
+    worksheetPayload: typeHandler.publicPayload(generated.worksheetPayload),
     generation: generated.generation,
   });
 }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" data-glyph="z" data-group="en-lower" data-centerline="true">
+  <path id="stroke-1" d="M 7.6 15.900000000000006 L 38.5 14.599999999999994" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-2" d="M 56.5 16.700000000000003 L 51 14.599999999999994 L 39.1 14.299999999999997" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-3" d="M 57 39.3 L 63.8 31.799999999999997 L 65.4 26.599999999999994" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-4" d="M 11.5 77.1 L 19.5 75.8" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-5" d="M 19.8 75.3 L 21.6 71.1 L 27.9 64.1" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-6" d="M 44 85.2 L 32.6 85.4 L 28.1 84.1" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-7" d="M 44.5 85.2 L 59.4 83.6 L 76.3 80.2" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="7.6" cy="15.900000000000006" r="3" fill="#dc2626" data-stroke-start="1"/><circle cx="38.5" cy="14.599999999999994" r="2" fill="#16a34a" data-stroke-end="1"/>
+  <circle cx="56.5" cy="16.700000000000003" r="3" fill="#dc2626" data-stroke-start="2"/><circle cx="39.1" cy="14.299999999999997" r="2" fill="#16a34a" data-stroke-end="2"/>
+  <circle cx="57" cy="39.3" r="3" fill="#dc2626" data-stroke-start="3"/><circle cx="65.4" cy="26.599999999999994" r="2" fill="#16a34a" data-stroke-end="3"/>
+  <circle cx="11.5" cy="77.1" r="3" fill="#dc2626" data-stroke-start="4"/><circle cx="19.5" cy="75.8" r="2" fill="#16a34a" data-stroke-end="4"/>
+  <circle cx="19.8" cy="75.3" r="3" fill="#dc2626" data-stroke-start="5"/><circle cx="27.9" cy="64.1" r="2" fill="#16a34a" data-stroke-end="5"/>
+  <circle cx="44" cy="85.2" r="3" fill="#dc2626" data-stroke-start="6"/><circle cx="28.1" cy="84.1" r="2" fill="#16a34a" data-stroke-end="6"/>
+  <circle cx="44.5" cy="85.2" r="3" fill="#dc2626" data-stroke-start="7"/><circle cx="76.3" cy="80.2" r="2" fill="#16a34a" data-stroke-end="7"/>
+</svg>

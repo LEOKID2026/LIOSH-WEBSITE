@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" data-glyph="J" data-group="en-upper" data-centerline="true">
+  <path id="stroke-1" d="M 27.6 47.1 L 27.6 7.599999999999994" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-2" d="M 24.5 84.1 L 27.6 76.8 L 27.6 47.9" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-3" d="M 16.4 88.8 L 7.6 88" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="27.6" cy="47.1" r="3" fill="#dc2626" data-stroke-start="1"/><circle cx="27.6" cy="7.599999999999994" r="2" fill="#16a34a" data-stroke-end="1"/>
+  <circle cx="24.5" cy="84.1" r="3" fill="#dc2626" data-stroke-start="2"/><circle cx="27.6" cy="47.9" r="2" fill="#16a34a" data-stroke-end="2"/>
+  <circle cx="16.4" cy="88.8" r="3" fill="#dc2626" data-stroke-start="3"/><circle cx="7.6" cy="88" r="2" fill="#16a34a" data-stroke-end="3"/>
+</svg>

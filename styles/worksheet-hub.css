@@ -838,7 +838,9 @@
 
 @media print {
   .worksheet-screen-preview,
-  .worksheet-preview-actions {
+  .worksheet-preview-actions,
+  .writing-screen-preview,
+  .coloring-preview-screen {
     display: none !important;
   }
 
@@ -880,6 +882,44 @@
   border-radius: 9999px;
   background: #0ea5e9;
   animation: worksheet-pulse 1s ease-in-out infinite;
+}
+
+.worksheet-subject-badge[data-subject="writing"] {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #99f6e4;
+}
+
+.worksheet-catalog-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.18rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  border: 1px solid #e2e8f0;
+  background: #f1f5f9;
+  color: #475569;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.worksheet-create-type-toggle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.worksheet-filter-search {
+  flex: 1 1 12rem;
+  min-width: 10rem;
+}
+
+.worksheet-form-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
 }
 
 @keyframes worksheet-pulse {

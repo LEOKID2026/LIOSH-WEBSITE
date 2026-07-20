@@ -1,5 +1,5 @@
 import { rejectIfPublicWorksheetsCatalogRateLimited } from "../../../../lib/security/public-api-rate-limit.js";
-import { buildReadyWorksheetCatalogItems } from "../../../../lib/worksheets/worksheet-public-catalog.server.js";
+import { buildUnifiedWorksheetCatalogItems } from "../../../../lib/worksheets/worksheet-public-catalog.server.js";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
@@ -8,5 +8,7 @@ export default async function handler(req, res) {
 
   if (rejectIfPublicWorksheetsCatalogRateLimited(req, res)) return undefined;
 
-  return res.status(200).json({ ok: true, items: buildReadyWorksheetCatalogItems() });
+  const items = buildUnifiedWorksheetCatalogItems();
+
+  return res.status(200).json({ ok: true, items, total: items.length });
 }

@@ -1,0 +1,45 @@
+{
+  "count": 10,
+  "samples": [
+    {
+      "group": "he-print",
+      "glyph": "א"
+    },
+    {
+      "group": "he-print",
+      "glyph": "ש"
+    },
+    {
+      "group": "he-print",
+      "glyph": "ץ"
+    },
+    {
+      "group": "he-script",
+      "glyph": "א"
+    },
+    {
+      "group": "he-script",
+      "glyph": "מ"
+    },
+    {
+      "group": "he-script",
+      "glyph": "ץ"
+    },
+    {
+      "group": "en-upper",
+      "glyph": "A"
+    },
+    {
+      "group": "en-lower",
+      "glyph": "a"
+    },
+    {
+      "group": "en-lower",
+      "glyph": "g"
+    },
+    {
+      "group": "digits",
+      "glyph": "5"
+    }
+  ]
+}

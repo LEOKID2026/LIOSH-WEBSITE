@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" data-glyph="u" data-group="en-lower" data-centerline="true">
+  <path id="stroke-1" d="M 14.6 43.5 L 14.8 23.200000000000003 L 16.7 7.599999999999994" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-2" d="M 58.9 49.2 L 57.3 20.299999999999997 L 58.6 7.599999999999994" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-3" d="M 21.1 76.8 L 17.2 66.4 L 14.6 44.3" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-4" d="M 51.6 76 L 56.8 68.7 L 59.6 61.2 L 58.9 50" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-5" d="M 32.8 83.6 L 40.9 80.5 L 50.3 73.2" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="stroke-6" d="M 62.2 92.4 L 63.3 85.4 L 61.7 77.9" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="14.6" cy="43.5" r="3" fill="#dc2626" data-stroke-start="1"/><circle cx="16.7" cy="7.599999999999994" r="2" fill="#16a34a" data-stroke-end="1"/>
+  <circle cx="58.9" cy="49.2" r="3" fill="#dc2626" data-stroke-start="2"/><circle cx="58.6" cy="7.599999999999994" r="2" fill="#16a34a" data-stroke-end="2"/>
+  <circle cx="21.1" cy="76.8" r="3" fill="#dc2626" data-stroke-start="3"/><circle cx="14.6" cy="44.3" r="2" fill="#16a34a" data-stroke-end="3"/>
+  <circle cx="51.6" cy="76" r="3" fill="#dc2626" data-stroke-start="4"/><circle cx="58.9" cy="50" r="2" fill="#16a34a" data-stroke-end="4"/>
+  <circle cx="32.8" cy="83.6" r="3" fill="#dc2626" data-stroke-start="5"/><circle cx="50.3" cy="73.2" r="2" fill="#16a34a" data-stroke-end="5"/>
+  <circle cx="62.2" cy="92.4" r="3" fill="#dc2626" data-stroke-start="6"/><circle cx="61.7" cy="77.9" r="2" fill="#16a34a" data-stroke-end="6"/>
+</svg>

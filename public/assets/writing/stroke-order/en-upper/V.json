@@ -1,0 +1,41 @@
+{
+  "glyphId": "V",
+  "group": "en-upper",
+  "viewBox": 100,
+  "strokeCount": 2,
+  "strokes": [
+    {
+      "order": 1,
+      "pathId": "stroke-1",
+      "path": "M 18 10 L 50 90",
+      "start": {
+        "x": 18.0,
+        "y": 10.0
+      },
+      "end": {
+        "x": 50.0,
+        "y": 90.0
+      },
+      "direction": "ttb",
+      "arrow": true
+    },
+    {
+      "order": 2,
+      "pathId": "stroke-2",
+      "path": "M 82 10 L 50 90",
+      "start": {
+        "x": 82.0,
+        "y": 10.0
+      },
+      "end": {
+        "x": 50.0,
+        "y": 90.0
+      },
+      "direction": "ttb",
+      "arrow": true
+    }
+  ],
+  "alternatives": [],
+  "generatedBy": "openai-manual-single-stroke-v1",
+  "version": 2
+}

@@ -1,0 +1,68 @@
+{
+  "glyphId": "פ",
+  "group": "he-print",
+  "viewBox": 100,
+  "strokeCount": 1,
+  "strokes": [
+    {
+      "order": 1,
+      "pathId": "stroke-1",
+      "path": "M 53.33 22.22 L 41.6 29.14 L 42.05 45.9 L 55.88 52.03 L 75.83 52.01 L 75.85 35.73 L 70.19 22.49 L 75.5 69.11 L 63.1 75.71 L 46.85 75.62",
+      "start": {
+        "x": 53.33,
+        "y": 22.22
+      },
+      "end": {
+        "x": 46.85,
+        "y": 75.62
+      },
+      "direction": "reference-derived",
+      "arrow": false
+    }
+  ],
+  "dotPoints": [
+    {
+      "x": 53.33,
+      "y": 22.22
+    },
+    {
+      "x": 70.19,
+      "y": 22.49
+    },
+    {
+      "x": 41.6,
+      "y": 29.14
+    },
+    {
+      "x": 75.85,
+      "y": 35.73
+    },
+    {
+      "x": 42.05,
+      "y": 45.9
+    },
+    {
+      "x": 75.83,
+      "y": 52.01
+    },
+    {
+      "x": 55.88,
+      "y": 52.03
+    },
+    {
+      "x": 75.5,
+      "y": 69.11
+    },
+    {
+      "x": 46.85,
+      "y": 75.62
+    },
+    {
+      "x": 63.1,
+      "y": 75.71
+    }
+  ],
+  "generatedBy": "reference-image-dot-extraction",
+  "referenceQuality": "visual tracing asset; stroke order is approximate",
+  "version": 1
+}

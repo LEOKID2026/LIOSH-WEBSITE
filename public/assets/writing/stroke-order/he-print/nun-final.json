@@ -1,0 +1,48 @@
+{
+  "glyphId": "ן",
+  "group": "he-print",
+  "viewBox": 100,
+  "strokeCount": 1,
+  "strokes": [
+    {
+      "order": 1,
+      "pathId": "stroke-1",
+      "path": "M 52.16 22.08 L 57.53 33.06 L 57.31 48.59 L 57.33 62.66 L 57.14 77.55",
+      "start": {
+        "x": 52.16,
+        "y": 22.08
+      },
+      "end": {
+        "x": 57.14,
+        "y": 77.55
+      },
+      "direction": "reference-derived",
+      "arrow": false
+    }
+  ],
+  "dotPoints": [
+    {
+      "x": 52.16,
+      "y": 22.08
+    },
+    {
+      "x": 57.53,
+      "y": 33.06
+    },
+    {
+      "x": 57.31,
+      "y": 48.59
+    },
+    {
+      "x": 57.33,
+      "y": 62.66
+    },
+    {
+      "x": 57.14,
+      "y": 77.55
+    }
+  ],
+  "generatedBy": "reference-image-dot-extraction",
+  "referenceQuality": "visual tracing asset; stroke order is approximate",
+  "version": 1
+}
