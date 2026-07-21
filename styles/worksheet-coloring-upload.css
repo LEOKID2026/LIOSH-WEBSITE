@@ -105,6 +105,43 @@
   align-items: center;
 }
 
+.coloring-upload-drag-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(30, 58, 138, 0.2);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.coloring-upload-drag-target {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2.5rem 2rem;
+  max-width: 22rem;
+  width: 100%;
+  border: 2px dashed #3b82f6;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 8px 32px rgba(15, 23, 42, 0.12);
+  text-align: center;
+  pointer-events: none;
+}
+
+.coloring-upload-drag-target-label {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #1d4ed8;
+  line-height: 1.4;
+}
+
 .coloring-upload-dropzone:focus-visible {
   outline: 2px solid #2563eb;
   outline-offset: 2px;
@@ -411,7 +448,7 @@
 }
 
 .coloring-upload-style-selector {
-  margin: 0 0 0.55rem;
+  margin: 0 0 0.75rem;
   padding: 0;
   border: 0;
 }
@@ -420,15 +457,16 @@
   font-size: 0.85rem;
   font-weight: 600;
   color: #64748b;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.5rem;
   padding: 0;
 }
 
 .coloring-upload-style-pills {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem 0.4rem;
-  align-items: center;
+  gap: 0.75rem;
+  align-items: stretch;
+  justify-content: flex-start;
 }
 
 .coloring-upload-style-pill {
@@ -445,17 +483,24 @@
 .coloring-upload-style-pill-label {
   display: inline-flex;
   align-items: center;
-  gap: 0.28rem;
-  padding: 0.32rem 0.62rem;
-  border: 1.5px solid #e2e8f0;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.75rem 1.25rem;
+  border: 2px solid #e2e8f0;
   border-radius: 999px;
   background: #fff;
   color: #334155;
-  font-size: 0.78rem;
-  font-weight: 600;
-  line-height: 1.2;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.25;
   white-space: nowrap;
-  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
 }
 
 .coloring-upload-style-pill:hover .coloring-upload-style-pill-label {
@@ -463,11 +508,26 @@
   background: #faf5ff;
 }
 
+.coloring-upload-style-pill:focus-within .coloring-upload-style-pill-label {
+  outline: none;
+  border-color: #a78bfa;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+}
+
 .coloring-upload-style-pill--selected .coloring-upload-style-pill-label {
   border-color: #7c3aed;
-  background: #f5f3ff;
+  background: linear-gradient(180deg, #faf5ff 0%, #ede9fe 100%);
   color: #5b21b6;
-  box-shadow: 0 1px 6px rgba(91, 33, 182, 0.12);
+  font-weight: 600;
+  box-shadow:
+    0 0 0 3px rgba(124, 58, 237, 0.22),
+    0 4px 16px rgba(91, 33, 182, 0.22);
+}
+
+.coloring-upload-style-pill--selected:focus-within .coloring-upload-style-pill-label {
+  box-shadow:
+    0 0 0 3px rgba(124, 58, 237, 0.32),
+    0 4px 16px rgba(91, 33, 182, 0.28);
 }
 
 .coloring-upload-style-input {
@@ -477,8 +537,9 @@
 }
 
 .coloring-upload-style-emoji {
-  font-size: 0.95rem;
+  font-size: 1.35rem;
   line-height: 1;
+  flex-shrink: 0;
 }
 
 .coloring-upload-style-title {
@@ -497,9 +558,46 @@
 }
 
 @media (max-width: 640px) {
+  .coloring-upload-style-pills {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 0.625rem;
+  }
+
+  .coloring-upload-style-pill {
+    display: flex;
+    min-width: 0;
+  }
+
+  /* Row 1: 3 equal buttons */
+  .coloring-upload-style-pill:nth-child(1),
+  .coloring-upload-style-pill:nth-child(2),
+  .coloring-upload-style-pill:nth-child(3) {
+    grid-column: span 2;
+  }
+
+  /* Row 2: 2 buttons centered */
+  .coloring-upload-style-pill:nth-child(4) {
+    grid-column: 2 / span 2;
+  }
+
+  .coloring-upload-style-pill:nth-child(5) {
+    grid-column: 4 / span 2;
+  }
+
   .coloring-upload-style-pill-label {
-    font-size: 0.74rem;
-    padding: 0.28rem 0.52rem;
+    width: 100%;
+    min-height: 48px;
+    padding: 0.5rem 0.35rem;
+    font-size: 0.8125rem;
+    white-space: normal;
+    text-align: center;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .coloring-upload-style-emoji {
+    font-size: 1.2rem;
   }
 
   .worksheet-primary-cta,

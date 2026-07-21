@@ -6,12 +6,8 @@ const STYLE_OPTIONS = [
   { id: COLORING_UPLOAD_STYLE_COLORING, emoji: "🎨", titleKey: "coloringUploadStyleColoringTitle" },
   { id: "comic", emoji: "💥", titleKey: "coloringUploadStyleComicTitle" },
   { id: "pencil", emoji: "✏️", titleKey: "coloringUploadStylePencilTitle" },
-  { id: "poster", emoji: "🖼️", titleKey: "coloringUploadStylePosterTitle" },
-  { id: "pixar", emoji: "🧸", titleKey: "coloringUploadStylePixarTitle" },
-  { id: "watercolor", emoji: "🌊", titleKey: "coloringUploadStyleWatercolorTitle" },
   { id: "anime", emoji: "🎌", titleKey: "coloringUploadStyleAnimeTitle" },
-  { id: "storybook", emoji: "📖", titleKey: "coloringUploadStyleStorybookTitle" },
-  { id: "pixel", emoji: "🕹️", titleKey: "coloringUploadStylePixelTitle" },
+  { id: "pixar", emoji: "🧸", titleKey: "coloringUploadStylePixarTitle" },
 ];
 
 /**

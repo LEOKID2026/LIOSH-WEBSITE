@@ -1,62 +1,52 @@
 /**
  * Temporary — test Replicate image style transfer on a local photo.
  *
- * Generates three stylized variants (comic, pencil sketch, retro poster).
+ * Generates stylized variants using REPLICATE_STYLE_CONFIGS from the server module.
  *
  * Usage:
- *   node --env-file=.env.local scripts/coloring-upload/test-replicate.mjs [imagePath] [--style=comic|pencil|poster]
+ *   node --env-file=.env.local scripts/coloring-upload/test-replicate.mjs [imagePath]
+ *   node --env-file=.env.local scripts/coloring-upload/test-replicate.mjs omer.jpeg --style=pencil
  *
+ * Styles: comic, pencil, anime, pixar
  * Requires REPLICATE_API_TOKEN in environment.
  */
 import fs from "node:fs/promises";
 import path from "node:path";
 import Replicate from "replicate";
 import { loadProjectEnv, ROOT } from "../coloring-pages/load-env.mjs";
+import { REPLICATE_STYLE_CONFIGS } from "../../lib/coloring-upload/style-transfer-styles.server.js";
 
 const cliArgs = process.argv.slice(2);
 const styleFilter = cliArgs.find((arg) => arg.startsWith("--style="))?.slice("--style=".length) ?? null;
 const imagePath = cliArgs.find((arg) => !arg.startsWith("--")) || path.join(ROOT, "omer.jpeg");
 const REPORT = path.join(ROOT, "tmp", "replicate-style-transfer-report.json");
 
-/** Image-to-image style transfer via Flux Kontext (prompt-driven edit). */
-const STYLE_MODEL =
-  "black-forest-labs/flux-kontext-pro:897a70f5a7dbd8a0611413b3b98cf417b45f266bd595c571a22947619d9ae462";
+const STYLE_IDS = Object.keys(REPLICATE_STYLE_CONFIGS);
 
-/** @type {Array<{ id: string, label: string, output: string, prompt: string, negativePrompt?: string }>} */
-const STYLES = [
-  {
-    id: "comic",
-    label: "Comic / Graphic Novel",
-    output: path.join(ROOT, "tmp", "style-comic-v2.png"),
-    prompt:
-      "modern graphic novel comic illustration, marvel comic style, preserve full image composition, clean bold ink outlines, dynamic vibrant shading, professional digital art",
-    negativePrompt:
-      "photorealistic, monochrome, blurry, distorted face, noise, pop art, halftone dots, ben-day dots, oversaturated, grainy, vintage comic",
-  },
-  {
-    id: "pencil",
-    label: "Colored Pencil / Artistic Sketch",
-    output: path.join(ROOT, "tmp", "style-pencil.png"),
-    prompt: "colored pencil sketch of the full image, wide shot, preserve full composition and all people/background, artistic illustration, textured paper effect",
-  },
-  {
-    id: "poster",
-    label: "Retro Poster",
-    output: path.join(ROOT, "tmp", "style-poster.png"),
-    prompt: "vector poster art, full scene illustration, minimal shading, clean flat shapes, stylish typography-free design",
-  },
-];
+/** @type {Record<string, string>} */
+const STYLE_LABELS = {
+  comic: "Comic / Graphic Novel",
+  pencil: "Colored Pencil / Artistic Sketch",
+  anime: "Anime",
+  pixar: "Pixar / 3D Animation",
+};
+
+/** @type {Record<string, string>} */
+const STYLE_OUTPUTS = {
+  comic: path.join(ROOT, "tmp", "style-comic-v2.png"),
+  pencil: path.join(ROOT, "tmp", "style-pencil.png"),
+  anime: path.join(ROOT, "tmp", "style-anime.png"),
+  pixar: path.join(ROOT, "tmp", "style-pixar.png"),
+};
+
+/** @type {Array<{ id: string, label: string, output: string }>} */
+const STYLES = STYLE_IDS.map((id) => ({
+  id,
+  label: STYLE_LABELS[id] ?? id,
+  output: STYLE_OUTPUTS[id] ?? path.join(ROOT, "tmp", `style-${id}.png`),
+}));
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-/**
- * Flux Kontext has no negative_prompt field — fold avoid-list into the edit instruction.
- * @param {{ prompt: string, negativePrompt?: string }} style
- */
-function buildEditPrompt(style) {
-  if (!style.negativePrompt) return style.prompt;
-  return `${style.prompt}. Avoid: ${style.negativePrompt}`;
-}
 
 /**
  * @param {unknown} err
@@ -88,7 +78,7 @@ function describeReplicateError(err) {
   }
 
   if (status === 404 || /404|not found/i.test(message)) {
-    return { code: "MODEL_NOT_FOUND", status: 404, message: "Model or version not found on Replicate." };
+    return { code: "MODEL_NOT_FOUND", status: 404, message: "Model not found on Replicate." };
   }
 
   return { code: "REQUEST_FAILED", status, message: message.split("\n")[0] };
@@ -154,18 +144,12 @@ async function saveOutput(output, dest) {
 }
 
 /**
- * @param {Buffer} image
- * @param {{ prompt: string, negativePrompt?: string }} style
+ * @param {string} styleId
  */
-function buildInput(image, style) {
-  return {
-    input_image: image,
-    prompt: buildEditPrompt(style),
-    aspect_ratio: "match_input_image",
-    output_format: "png",
-    safety_tolerance: 2,
-    seed: 42,
-  };
+function getStyleConfig(styleId) {
+  const config = REPLICATE_STYLE_CONFIGS[styleId];
+  if (!config) throw new Error(`Unknown style "${styleId}" — not in REPLICATE_STYLE_CONFIGS`);
+  return config;
 }
 
 async function main() {
@@ -191,7 +175,7 @@ async function main() {
 
   const stylesToRun = styleFilter ? STYLES.filter((s) => s.id === styleFilter) : STYLES;
   if (styleFilter && stylesToRun.length === 0) {
-    console.error(`Unknown style "${styleFilter}". Use: comic, pencil, or poster.`);
+    console.error(`Unknown style "${styleFilter}". Use: ${STYLE_IDS.join(", ")}.`);
     process.exit(1);
   }
 
@@ -199,23 +183,21 @@ async function main() {
 
   for (const style of stylesToRun) {
     const started = Date.now();
-    console.error(`Generating ${style.label} (${style.id}) …`);
+    const { model, buildInput } = getStyleConfig(style.id);
+    const input = buildInput(imageBuffer);
+
+    console.error(`Generating ${style.label} (${style.id}) via ${model.split(":")[0]} …`);
 
     try {
-      const output = await runWithRetry(
-        replicate,
-        STYLE_MODEL,
-        buildInput(imageBuffer, style)
-      );
+      const output = await runWithRetry(replicate, model, input);
       const writeInfo = await saveOutput(output, style.output);
       results.push({
         ok: true,
         id: style.id,
         label: style.label,
+        model,
+        input,
         output: style.output,
-        prompt: style.prompt,
-        negativePrompt: style.negativePrompt ?? null,
-        editPrompt: buildEditPrompt(style),
         elapsedMs: Date.now() - started,
         outputBytes: writeInfo.bytes,
         outputUrl: writeInfo.sourceUrl,
@@ -227,10 +209,9 @@ async function main() {
         ok: false,
         id: style.id,
         label: style.label,
+        model,
+        input,
         output: style.output,
-        prompt: style.prompt,
-        negativePrompt: style.negativePrompt ?? null,
-        editPrompt: buildEditPrompt(style),
         elapsedMs: Date.now() - started,
         ...info,
       });
@@ -243,8 +224,6 @@ async function main() {
   const report = {
     ok: results.every((r) => r.ok),
     source: imagePath,
-    model: "black-forest-labs/flux-kontext-pro",
-    version: STYLE_MODEL.split(":")[1],
     styles: results,
   };
 
