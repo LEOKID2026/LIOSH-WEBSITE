@@ -11,6 +11,7 @@ import {
   MAX_MCQ_CHOICES,
   VALUE_MAX_LEN,
   DISTRACTOR_UNKNOWN,
+  GENERIC_PROXIMITY,
   buildQuestionEngineMetadataFromQuestion,
   normalizeQuestionEnginePayload,
   buildAssignedQuestionSnapshotWithEngine,
@@ -123,14 +124,17 @@ describe("Phase 8 - question engine contract", () => {
     assert.ok(audit.issues.includes("stem_leak_detected"));
   });
 
-  test("plain-string MCQ options use unknown distractor sentinel", () => {
+  test("plain-string MCQ options use generic_proximity distractor sentinel", () => {
     const engine = normalizeQuestionEnginePayload(
       buildQuestionEngineMetadataFromQuestion(
         { answers: ["a", "b", "c"], correctAnswer: "b" },
         { selectedValue: "a" }
       )
     );
-    assert.equal(engine.distractorFamily, DISTRACTOR_UNKNOWN);
+    // enrichMcqChoicesWithEvidenceTags tags untagged wrong options as GENERIC_PROXIMITY
+    // (not unknown) so partial metadata still records a taxonomy placeholder.
+    assert.equal(engine.distractorFamily, GENERIC_PROXIMITY);
+    assert.notEqual(engine.distractorFamily, DISTRACTOR_UNKNOWN);
     assert.equal(engine.metadataConfidence, "partial");
   });
 
@@ -194,6 +198,7 @@ describe("Phase 8 - question engine contract", () => {
       distractorFamily: "mul_instead_of_add",
       questionType: "mcq",
       skillId: "math.add_two",
+      diagnosticSkillId: "math.add_two",
       metadataConfidence: "full",
     });
     assert.equal(fields.allAnswerChoices, undefined);

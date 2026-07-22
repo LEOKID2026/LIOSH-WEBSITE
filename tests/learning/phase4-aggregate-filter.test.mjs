@@ -150,14 +150,17 @@ describe("Phase 4 - diagnostic bucket separation", () => {
     );
 
     const mathSubj = result.subjects.math;
-    assert.equal(mathSubj.competitiveAnswers, 0, "competitive/game answers are excluded from report evidence");
-    assert.equal(mathSubj.competitiveAccuracy, 0, "competitiveAccuracy should be 0 when excluded");
+    assert.equal(mathSubj.competitiveAnswers, 5, "challenge answers go to competitive bucket");
+    assert.equal(mathSubj.competitiveCorrect, 2, "2/5 challenge answers correct");
+    assert.equal(mathSubj.competitiveAccuracy, 40, "competitiveAccuracy should be 40%");
     assert.equal(mathSubj.diagnosticAnswers, 1, "diagnosticAnswers should be 1 (only practice)");
     assert.equal(mathSubj.diagnosticAccuracy, 100, "diagnosticAccuracy should be 100% (practice only)");
+    assert.equal(mathSubj.answers, 1, "parent practice totals exclude competitive game attempts");
 
     const summary = result.summary;
-    assert.equal(summary.competitiveAnswers, 0, "summary.competitiveAnswers should be 0");
-    assert.equal(summary.competitiveAccuracy, 0, "summary.competitiveAccuracy should be 0");
+    assert.equal(summary.competitiveAnswers, 5, "summary.competitiveAnswers should be 5");
+    assert.equal(summary.competitiveCorrect, 2, "summary.competitiveCorrect should be 2");
+    assert.equal(summary.competitiveAccuracy, 40, "summary.competitiveAccuracy should be 40%");
     assert.equal(summary.diagnosticAnswers, 1, "summary.diagnosticAnswers should be 1");
   });
 
@@ -632,14 +635,17 @@ describe("Phase 4 - speed and marathon are competitive", () => {
     );
 
     const mathSubj = result.subjects.math;
-    assert.equal(mathSubj.competitiveAnswers, 0, "speed/marathon game modes excluded from report evidence");
-    assert.equal(mathSubj.competitiveCorrect, 0, "no competitive answers counted");
-    assert.equal(mathSubj.answers, 0, "game mode answers not counted");
+    assert.equal(mathSubj.competitiveAnswers, 5, "speed/marathon answers go to competitive bucket");
+    assert.equal(mathSubj.competitiveCorrect, 3, "3/5 speed+marathon answers correct");
+    assert.equal(mathSubj.competitiveAccuracy, 60, "competitiveAccuracy should be 60%");
+    assert.equal(mathSubj.answers, 0, "parent practice totals exclude competitive game attempts");
     assert.equal(mathSubj.diagnosticAnswers, 0, "speed/marathon do NOT contaminate diagnosticAnswers");
     assert.equal(mathSubj.diagnosticAccuracy, 0, "no diagnostic answers → diagnosticAccuracy=0");
 
     const summary = result.summary;
-    assert.equal(summary.competitiveAnswers, 0);
+    assert.equal(summary.competitiveAnswers, 5);
+    assert.equal(summary.competitiveCorrect, 3);
+    assert.equal(summary.competitiveAccuracy, 60);
     assert.equal(summary.diagnosticAnswers, 0);
   });
 });

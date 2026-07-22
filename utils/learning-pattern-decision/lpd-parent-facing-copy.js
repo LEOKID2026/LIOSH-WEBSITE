@@ -377,10 +377,22 @@ export function buildLpdSafeTopicExplainSectionsHe(row) {
     learningPatternDecision: lpd,
   });
   if (ownerSections) {
+    const contract =
+      lpd.engineDecisionContract ||
+      row?.engineDecisionContract ||
+      null;
+    const patternLabel = resolveParentFacingPatternLabelHe(contract?.detectedPattern);
+    const identified =
+      patternLabel && contract?.parentSafeFinding
+        ? contract.parentSafeFinding
+        : ownerSections.identified;
     return {
-      identified: guardParentFacingText(ownerSections.identified),
+      identified: guardParentFacingText(identified),
       data: guardParentFacingText(ownerSections.data),
-      pattern: guardParentFacingText(ownerSections.pattern),
+      pattern: guardParentFacingText(
+        ownerSections.pattern ||
+          (patternLabel && q >= 5 ? `הטעות שחוזרת: ${patternLabel}.` : "")
+      ),
       meaning: guardParentFacingText(ownerSections.meaning),
       action: guardParentFacingText(ownerSections.action),
     };

@@ -2,6 +2,8 @@
  * Owner-authored topic-level Hebrew copy — Phase B+C+D (templateId + slots only).
  */
 
+import { formatCorrectWrongBreakdownPhraseHe } from "../learning-pattern-decision/normalize-parent-practice-metrics.js";
+
 /** @typedef {{
  *   topicName: string,
  *   subjectName: string,
@@ -35,18 +37,6 @@ function formatQuestionsText(n) {
   return `${q} שאלות`;
 }
 
-function formatCorrectText(n) {
-  const c = Math.max(0, Math.round(Number(n) || 0));
-  if (c === 1) return "תשובה אחת נכונה";
-  return `${c} תשובות נכונות`;
-}
-
-function formatWrongText(n) {
-  const w = Math.max(0, Math.round(Number(n) || 0));
-  if (w === 1) return "תשובה אחת שגויה";
-  return `${w} תשובות שגויות`;
-}
-
 function hasBreakdown(s) {
   const q = Math.max(0, Math.round(Number(s.questions) || 0));
   const c = Math.max(0, Math.round(Number(s.correct) || 0));
@@ -69,7 +59,7 @@ function renderTopicDataLine(s) {
   const topic = s.topicName;
   const qText = formatQuestionsText(s.questions);
   if (hasBreakdown(s)) {
-    let line = `הנתונים: נפתרו ${qText} בנושא ${topic}, מתוכן ${formatCorrectText(s.correct)} ו-${formatWrongText(s.wrong)}.`;
+    let line = `הנתונים: נפתרו ${qText} בנושא ${topic}, ${formatCorrectWrongBreakdownPhraseHe(s.correct, s.wrong)}.`;
     if (hasReliableAccuracy(s) && s.accuracy > 0) {
       line += ` הדיוק הוא ${s.accuracy}%.`;
     }

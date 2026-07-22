@@ -10,15 +10,15 @@ const HISTORY_SKILL_LABEL_HE = HISTORY_CURRICULUM_SKILL_LABEL_HE || {};
 
 /** @type {Record<string, string>} */
 const HISTORY_TAXONOMY_TO_SKILL = {
-  "H-01": "hist_concepts",
-  "H-02": "hist_timeline_sequence",
-  "H-03": "hist_cause_effect",
-  "H-04": "hist_comparison",
-  "H-05": "hist_figures_roles",
-  "H-06": "hist_governance_institutions",
-  "H-07": "hist_culture_heritage",
-  "H-08": "hist_simple_source",
-  "H-09": "hist_past_present_link",
+  "HI-01": "hist_concepts",
+  "HI-02": "hist_timeline_sequence",
+  "HI-03": "hist_cause_effect",
+  "HI-04": "hist_comparison",
+  "HI-05": "hist_figures_roles",
+  "HI-06": "hist_governance_institutions",
+  "HI-07": "hist_culture_heritage",
+  "HI-08": "hist_simple_source",
+  "HI-09": "hist_past_present_link",
 };
 
 /**

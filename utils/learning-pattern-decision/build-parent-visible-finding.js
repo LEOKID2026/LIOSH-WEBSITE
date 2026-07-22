@@ -169,6 +169,13 @@ export function buildParentVisibleFinding({
       parentVisibleFinding =
         `בנושא ${name} מופיע דפוס חוזר של טעויות (${patternLabel}). כדאי לחזק את הנושא.${contextSuffix}`;
       return { parentVisibleFinding, parentWordingLevel, templateId };
+    } else if (rawPatternLabel) {
+      templateId = "difficulty_repeated_evidence_tag";
+      parentWordingLevel =
+        evidenceStrength === "strong" ? "strong_pattern" : "repeated_pattern";
+      parentVisibleFinding =
+        `בנושא ${name} מופיע דפוס חוזר של טעויות (${rawPatternLabel}). כדאי לחזק את הנושא.${contextSuffix}`;
+      return { parentVisibleFinding, parentWordingLevel, templateId };
     } else {
       templateId = "difficulty_repeated_generic";
       parentWordingLevel = "repeated_pattern";

@@ -174,7 +174,7 @@ describe("P0 mixed evidence fixture", () => {
     assert.equal(math.correct, 6, "2+2+1 self/practice/learning/step + 1 parent");
     assert.equal(math.wrong, 3, "1 self + 1 step-by-step + 1 parent");
     assert.equal(summary.learningAnswers, 4, "learning + step-by-step in learning bucket");
-    assert.equal(summary.competitiveAnswers, 0, "game modes excluded");
+    assert.equal(summary.competitiveAnswers, 3, "game modes tracked in competitive bucket only");
     assert.equal(summary.stepByStepCount, 2, "step-by-step attempts tracked in learning bucket");
 
     // Passive session duration must not inflate practice session count/duration

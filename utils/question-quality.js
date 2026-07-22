@@ -2,12 +2,20 @@
  * Cross-subject MCQ / stem quality checks for audits and runtime polish.
  */
 
+import { mcqCellLabel } from "./mcq-option-cell.js";
+
 const NIQQUD_RE = /[\u0591-\u05C7]/g;
 const PUNCT_EDGE_RE = /^[\s"'`׳״“”‘’.,!?;:()[\]{}\-–-]+|[\s"'`׳״“”‘’.,!?;:()[\]{}\-–-]+$/g;
 
 /** @param {string} text */
 export function normalizeOptionForCompare(text) {
-  return String(text ?? "")
+  const raw =
+    text != null && typeof text === "object"
+      ? mcqCellLabel(text)
+      : text == null
+        ? ""
+        : String(text);
+  return raw
     .trim()
     .toLowerCase()
     .replace(NIQQUD_RE, "")
@@ -62,11 +70,17 @@ const READING_DISTRACTOR_REPLACEMENTS = [
  * @param {unknown} q
  * @returns {{ answers: string[], correctIndex: number, correctAnswer: string|null }}
  */
+function mcqDisplayText(cell) {
+  if (cell == null) return "";
+  if (typeof cell === "object") return mcqCellLabel(cell).trim();
+  return String(cell).trim();
+}
+
 export function extractMcqFields(q) {
   const answers = Array.isArray(q?.answers)
-    ? q.answers.map((a) => String(a ?? "").trim()).filter(Boolean)
+    ? q.answers.map((a) => mcqDisplayText(a)).filter(Boolean)
     : Array.isArray(q?.options)
-      ? q.options.map((a) => String(a ?? "").trim()).filter(Boolean)
+      ? q.options.map((a) => mcqDisplayText(a)).filter(Boolean)
       : [];
 
   let correctIndex =

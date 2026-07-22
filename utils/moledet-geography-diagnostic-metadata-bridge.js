@@ -1,7 +1,5 @@
-/**
- * Maps static geography bank rows → diagnostic contract fields on question.params.
- * No stem/option changes.
- */
+import { normalizeExpectedErrorTags } from "../lib/learning/taxonomy-tag-normalizer.js";
+import { defaultErrorTagsForSubjectTopic } from "../lib/learning/mcq-subject-default-error-tags.js";
 
 /** @param {string} topic */
 function topicSkillId(topic) {
@@ -19,11 +17,18 @@ export function moledetDiagnosticContractFromBankRow(row, topic) {
   const types = Array.isArray(r.expectedErrorTypes)
     ? r.expectedErrorTypes.map((x) => String(x).trim()).filter(Boolean)
     : [];
-  const tags = Array.isArray(r.expectedErrorTags)
+  let tags = Array.isArray(r.expectedErrorTags)
     ? r.expectedErrorTags.map((x) => String(x).trim()).filter(Boolean)
     : types.length
       ? types
-      : ["fact_recall_gap", "concept_confusion"];
+      : [];
+  tags = normalizeExpectedErrorTags([
+    ...defaultErrorTagsForSubjectTopic("moledet_geography", topic, r.patternFamily),
+    ...tags,
+  ]);
+  if (tags.length === 0) {
+    tags = normalizeExpectedErrorTags(["concept_confusion", "fact_recall_gap"]);
+  }
   return {
     diagnosticSkillId: String(r.diagnosticSkillId || skill),
     patternFamily: String(r.patternFamily || skill),

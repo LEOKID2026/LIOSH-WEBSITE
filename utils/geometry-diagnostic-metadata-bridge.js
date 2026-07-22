@@ -3,6 +3,8 @@
  * Enriches generator `params` only - no stem/answer changes.
  */
 import { mergeDiagnosticContractIntoParams } from "./diagnostic-question-contract.js";
+import { defaultErrorTagsForSubjectTopic } from "../lib/learning/mcq-subject-default-error-tags.js";
+import { normalizeExpectedErrorTags } from "../lib/learning/taxonomy-tag-normalizer.js";
 import {
   isTriangleAreaFormulaGradeAllowed,
   isTriangleAreaFormulaKind,
@@ -493,18 +495,22 @@ export function enrichGeometryProceduralParams(params, ctx = {}) {
     };
   }
 
-  const expectedErrorTypes = [...contract.expectedErrorTags];
   const resolvedPatternFamily =
     patternFamily ||
     (kind
       ? `${topic || "geometry"}_${kind}`
       : `${topic || "geometry"}_procedural_${ctx.gradeKey || "g3"}_${ctx.levelKey || "easy"}`);
 
+  const expectedErrorTypes = normalizeExpectedErrorTags([
+    ...defaultErrorTagsForSubjectTopic("geometry", topic, resolvedPatternFamily),
+    ...contract.expectedErrorTags,
+  ]);
+
   return mergeDiagnosticContractIntoParams(base, {
     patternFamily: resolvedPatternFamily,
     conceptTag: contract.conceptTag,
     diagnosticSkillId: contract.diagnosticSkillId,
-    expectedErrorTags: contract.expectedErrorTags,
+    expectedErrorTags: expectedErrorTypes,
     expectedErrorTypes,
     probePower: contract.probePower || "medium",
   });

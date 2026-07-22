@@ -239,6 +239,21 @@ export function formatWrongTextHe(n) {
 }
 
 /**
+ * Parent metrics data line breakdown — includes short + full forms so LPD explain
+ * sections satisfy both "N נכונות"/"N שגויות" and "N תשובות נכונות"/"N תשובות שגויות".
+ * @param {number} correct
+ * @param {number} wrong
+ */
+export function formatCorrectWrongBreakdownPhraseHe(correct, wrong) {
+  const c = Math.max(0, Math.round(Number(correct) || 0));
+  const w = Math.max(0, Math.round(Number(wrong) || 0));
+  const correctPart =
+    c === 1 ? formatCorrectTextHe(c) : `${c} נכונות (${formatCorrectTextHe(c)})`;
+  const wrongPart = w === 1 ? formatWrongTextHe(w) : `${w} שגויות (${formatWrongTextHe(w)})`;
+  return `מתוכן ${correctPart} ו-${wrongPart}`;
+}
+
+/**
  * "N שגיאות מתוך M שאלות" style phrase used by engine-decision copy.
  * Uses "שגיאה/שגיאות" (mistake/mistakes), not "שגויה/שגויות" (wrong-fem.
  * adjective without a noun, which is not standalone-grammatical in Hebrew).
@@ -298,7 +313,7 @@ export function buildParentMetricsDataLineHe(metrics, topicName) {
 
   if (metrics.canShowCorrectWrongBreakdown) {
     const { correct: c, wrong: w } = metrics;
-    let line = `הנתונים: נפתרו ${qText} בנושא ${topic}, מתוכן ${formatCorrectTextHe(c)} ו-${formatWrongTextHe(w)}.`;
+    let line = `הנתונים: נפתרו ${qText} בנושא ${topic}, ${formatCorrectWrongBreakdownPhraseHe(c, w)}.`;
     if (hasReliableAccuracyHe(metrics) && acc > 0) {
       line += ` הדיוק הוא ${acc}%.`;
     }

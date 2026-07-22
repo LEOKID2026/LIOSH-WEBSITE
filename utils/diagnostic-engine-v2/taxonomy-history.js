@@ -1,7 +1,7 @@
 /** @type {import("./taxonomy-types.js").TaxonomyRow[]} */
 export const HISTORY_TAXONOMY_ROWS = [
   {
-    id: "H-01",
+    id: "HI-01",
     subjectId: "history",
     domainHe: "מושג",
     topicHe: "יסודות",
@@ -22,7 +22,7 @@ export const HISTORY_TAXONOMY_ROWS = [
     escalationHe: "אין שיפור",
   },
   {
-    id: "H-02",
+    id: "HI-02",
     subjectId: "history",
     domainHe: "ציר זמן",
     topicHe: "רצף",
@@ -43,7 +43,7 @@ export const HISTORY_TAXONOMY_ROWS = [
     escalationHe: "אין שיפור",
   },
   {
-    id: "H-03",
+    id: "HI-03",
     subjectId: "history",
     domainHe: "הסקה",
     topicHe: "סיבה ותוצאה",
@@ -64,7 +64,7 @@ export const HISTORY_TAXONOMY_ROWS = [
     escalationHe: "מורה חברתי",
   },
   {
-    id: "H-04",
+    id: "HI-04",
     subjectId: "history",
     domainHe: "השוואה",
     topicHe: "דמיון והבדל",
@@ -85,7 +85,7 @@ export const HISTORY_TAXONOMY_ROWS = [
     escalationHe: "אין שיפור",
   },
   {
-    id: "H-05",
+    id: "HI-05",
     subjectId: "history",
     domainHe: "דמויות",
     topicHe: "תפקיד",
@@ -106,7 +106,7 @@ export const HISTORY_TAXONOMY_ROWS = [
     escalationHe: "אין שיפור",
   },
   {
-    id: "H-06",
+    id: "HI-06",
     subjectId: "history",
     domainHe: "שלטון",
     topicHe: "מוסדות",
@@ -127,7 +127,7 @@ export const HISTORY_TAXONOMY_ROWS = [
     escalationHe: "אין שיפור",
   },
   {
-    id: "H-07",
+    id: "HI-07",
     subjectId: "history",
     domainHe: "תרבות",
     topicHe: "מורשת",
@@ -148,7 +148,7 @@ export const HISTORY_TAXONOMY_ROWS = [
     escalationHe: "אין שיפור",
   },
   {
-    id: "H-08",
+    id: "HI-08",
     subjectId: "history",
     domainHe: "מקור",
     topicHe: "ראיות",
@@ -169,7 +169,7 @@ export const HISTORY_TAXONOMY_ROWS = [
     escalationHe: "מורה חברתי",
   },
   {
-    id: "H-09",
+    id: "HI-09",
     subjectId: "history",
     domainHe: "קשר",
     topicHe: "עבר והווה",

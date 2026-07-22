@@ -88,10 +88,10 @@ export function pickPrimaryTaxonomyIdForMetadata(subjectId, candidateIds, source
   }
 
   if (subjectId === "history") {
-    if (ids.includes("H-08") && (kind.includes("source") || subtype.includes("source"))) return "H-08";
-    if (ids.includes("H-02") && (kind.includes("timeline") || kind.includes("sequence"))) return "H-02";
-    if (ids.includes("H-03") && (kind.includes("cause") || kind.includes("effect"))) return "H-03";
-    if (ids.includes("H-04") && kind.includes("compare")) return "H-04";
+    if (ids.includes("HI-08") && (kind.includes("source") || subtype.includes("source"))) return "HI-08";
+    if (ids.includes("HI-02") && (kind.includes("timeline") || kind.includes("sequence"))) return "HI-02";
+    if (ids.includes("HI-03") && (kind.includes("cause") || kind.includes("effect"))) return "HI-03";
+    if (ids.includes("HI-04") && kind.includes("compare")) return "HI-04";
   }
 
   return ids[0];

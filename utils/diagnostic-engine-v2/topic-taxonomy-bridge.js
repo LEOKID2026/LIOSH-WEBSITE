@@ -93,12 +93,12 @@ const SCIENCE_TOPIC_TO_IDS = {
 
 /** @type {Record<string, string[]>} */
 const HISTORY_TOPIC_TO_IDS = {
-  what_is_history: ["H-01", "H-08"],
-  classical_greece: ["H-04", "H-06", "H-07"],
-  hellenism_jews: ["H-03", "H-05"],
-  hasmonaeans: ["H-02", "H-03", "H-05", "H-06"],
-  rome_jews: ["H-02", "H-03", "H-05", "H-06", "H-09"],
-  mixed: ["H-01"],
+  what_is_history: ["HI-01", "HI-08"],
+  classical_greece: ["HI-04", "HI-06", "HI-07"],
+  hellenism_jews: ["HI-03", "HI-05"],
+  hasmonaeans: ["HI-02", "HI-03", "HI-05", "HI-06"],
+  rome_jews: ["HI-02", "HI-03", "HI-05", "HI-06", "HI-09"],
+  mixed: ["HI-01"],
 };
 
 /** @type {Record<string, string[]>} */
