@@ -2,71 +2,69 @@
   "glyphId": "ט",
   "group": "he-print",
   "viewBox": 100,
-  "strokeCount": 1,
+  "strokeCount": 4,
   "strokes": [
     {
       "order": 1,
       "pathId": "stroke-1",
-      "path": "M 63.01 27.72 L 58.31 41.78 L 45.09 47.98 L 45.09 31.26 L 77.97 30.67 L 78.73 47.75 L 78.79 65.88 L 76.73 79 L 63.75 82.56 L 47.26 79.05 L 45.22 65.48",
+      "path": "M 52.23 40.88 L 63.61 29.5",
       "start": {
-        "x": 63.01,
-        "y": 27.72
+        "x": 52.23,
+        "y": 40.88
       },
       "end": {
-        "x": 45.22,
-        "y": 65.48
+        "x": 63.61,
+        "y": 29.5
       },
-      "direction": "reference-derived",
-      "arrow": false
+      "direction": "btt",
+      "arrow": true
+    },
+    {
+      "order": 2,
+      "pathId": "stroke-2",
+      "path": "M 63.61 29.5 L 63.61 64.18",
+      "start": {
+        "x": 63.61,
+        "y": 29.5
+      },
+      "end": {
+        "x": 63.61,
+        "y": 64.18
+      },
+      "direction": "ttb",
+      "arrow": true
+    },
+    {
+      "order": 3,
+      "pathId": "stroke-3",
+      "path": "M 63.61 64.18 L 36.39 64.18",
+      "start": {
+        "x": 63.61,
+        "y": 64.18
+      },
+      "end": {
+        "x": 36.39,
+        "y": 64.18
+      },
+      "direction": "rtl",
+      "arrow": true
+    },
+    {
+      "order": 4,
+      "pathId": "stroke-4",
+      "path": "M 36.39 64.18 L 36.39 29.84",
+      "start": {
+        "x": 36.39,
+        "y": 64.18
+      },
+      "end": {
+        "x": 36.39,
+        "y": 29.84
+      },
+      "direction": "btt",
+      "arrow": true
     }
   ],
-  "dotPoints": [
-    {
-      "x": 45.09,
-      "y": 31.26
-    },
-    {
-      "x": 63.01,
-      "y": 27.72
-    },
-    {
-      "x": 77.97,
-      "y": 30.67
-    },
-    {
-      "x": 58.31,
-      "y": 41.78
-    },
-    {
-      "x": 45.09,
-      "y": 47.98
-    },
-    {
-      "x": 78.73,
-      "y": 47.75
-    },
-    {
-      "x": 45.22,
-      "y": 65.48
-    },
-    {
-      "x": 78.79,
-      "y": 65.88
-    },
-    {
-      "x": 47.26,
-      "y": 79.05
-    },
-    {
-      "x": 76.73,
-      "y": 79.0
-    },
-    {
-      "x": 63.75,
-      "y": 82.56
-    }
-  ],
-  "generatedBy": "reference-image-dot-extraction",
-  "referenceQuality": "visual tracing asset; stroke order is approximate",
+  "generatedBy": "build-glyph-assets",
   "version": 1
 }

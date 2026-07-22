@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" data-glyph="ז" data-group="he-print" data-centerline="true">
-  <path id="stroke-1" d="M 22.4 9.400000000000006 L 36.2 9.400000000000006" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <path id="stroke-2" d="M 7.6 9.400000000000006 L 21.6 9.400000000000006" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <path id="stroke-3" d="M 17.4 46.6 L 17.2 33.599999999999994 L 20.3 22.099999999999994" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <path id="stroke-4" d="M 19.5 68.2 L 17.7 49.7" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <path id="stroke-5" d="M 22.1 92.4 L 20.1 73.2" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="22.4" cy="9.400000000000006" r="3" fill="#dc2626" data-stroke-start="1"/><circle cx="36.2" cy="9.400000000000006" r="2" fill="#16a34a" data-stroke-end="1"/>
-  <circle cx="7.6" cy="9.400000000000006" r="3" fill="#dc2626" data-stroke-start="2"/><circle cx="21.6" cy="9.400000000000006" r="2" fill="#16a34a" data-stroke-end="2"/>
-  <circle cx="17.4" cy="46.6" r="3" fill="#dc2626" data-stroke-start="3"/><circle cx="20.3" cy="22.099999999999994" r="2" fill="#16a34a" data-stroke-end="3"/>
-  <circle cx="19.5" cy="68.2" r="3" fill="#dc2626" data-stroke-start="4"/><circle cx="17.7" cy="49.7" r="2" fill="#16a34a" data-stroke-end="4"/>
-  <circle cx="22.1" cy="92.4" r="3" fill="#dc2626" data-stroke-start="5"/><circle cx="20.1" cy="73.2" r="2" fill="#16a34a" data-stroke-end="5"/>
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 100 100"
+     fill="none"
+     stroke="currentColor"
+     stroke-linecap="butt"
+     stroke-linejoin="round"
+     data-glyph="ז"
+     data-group="he-print"
+     data-centerline="true"
+     >
+  <path id="stroke-1" d="M 39.2 26.5 L 60.8 32.79" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round"/>
+  <path id="stroke-2" d="M 49.51 29.5 L 49.51 64.18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round"/>
+  <circle cx="39.2" cy="26.5" r="1.1" fill="currentColor"/>
+  <circle cx="60.8" cy="32.79" r="1.1" fill="currentColor"/>
+  <circle cx="49.51" cy="64.18" r="1.1" fill="currentColor"/>
 </svg>

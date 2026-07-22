@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
-  <path d="M 26.5 7.1 L 21.8 7.1 L 21.8 92.9 L 26.5 92.9 L 26.5 7.1 M 24.8 88.9 L 7.1 88.9 L 7.9 92.9 L 24.8 92.9 L 24.8 88.9" fill="#e2e8f0" stroke="#64748b" stroke-width="1.2" stroke-linejoin="round"/>
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 100 100"
+     fill="none"
+     stroke="currentColor"
+     stroke-linecap="butt"
+     stroke-linejoin="round"
+     data-glyph="ו"
+     data-group="he-print"
+     data-outline="true"
+     >
+  <path id="stroke-1" d="M 44.46 29.5 L 55.54 29.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round"/>
+  <path id="stroke-2" d="M 55.54 29.5 L 55.54 64.18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round"/>
 </svg>

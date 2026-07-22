@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 100 100"
+     fill="none"
+     stroke-linecap="butt"
+     stroke-linejoin="round"
+     data-trace="full_trace"
+     data-monoline="true"
+     data-source="approved-print-export"
+     data-glyph="ץ"
+     data-group="he-print"
+     >
+  <path id="stroke-1" d="M 38.26 29.85 L 57.87 69.19" fill="none" stroke="#444444" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round" stroke-dasharray="4 2.659" stroke-dashoffset="0"/>
+  <path id="stroke-2" d="M 61.74 29.5 L 47.72 48.84" fill="none" stroke="#444444" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round" stroke-dasharray="4 2.629" stroke-dashoffset="0"/>
+</svg>

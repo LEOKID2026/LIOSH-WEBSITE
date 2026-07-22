@@ -2,47 +2,39 @@
   "glyphId": "ז",
   "group": "he-print",
   "viewBox": 100,
-  "strokeCount": 1,
+  "strokeCount": 2,
   "strokes": [
     {
       "order": 1,
       "pathId": "stroke-1",
-      "path": "M 52.25 27.8 L 64.79 28.35 L 61.27 44.73 L 61.27 62.39 L 61.18 79.32",
+      "path": "M 39.2 26.5 L 60.8 32.79",
       "start": {
-        "x": 52.25,
-        "y": 27.8
+        "x": 39.2,
+        "y": 26.5
       },
       "end": {
-        "x": 61.18,
-        "y": 79.32
+        "x": 60.8,
+        "y": 32.79
       },
-      "direction": "reference-derived",
-      "arrow": false
+      "direction": "ltr",
+      "arrow": true
+    },
+    {
+      "order": 2,
+      "pathId": "stroke-2",
+      "path": "M 49.51 29.5 L 49.51 64.18",
+      "start": {
+        "x": 49.51,
+        "y": 29.5
+      },
+      "end": {
+        "x": 49.51,
+        "y": 64.18
+      },
+      "direction": "ttb",
+      "arrow": true
     }
   ],
-  "dotPoints": [
-    {
-      "x": 52.25,
-      "y": 27.8
-    },
-    {
-      "x": 64.79,
-      "y": 28.35
-    },
-    {
-      "x": 61.27,
-      "y": 44.73
-    },
-    {
-      "x": 61.27,
-      "y": 62.39
-    },
-    {
-      "x": 61.18,
-      "y": 79.32
-    }
-  ],
-  "generatedBy": "reference-image-dot-extraction",
-  "referenceQuality": "visual tracing asset; stroke order is approximate",
+  "generatedBy": "build-glyph-assets",
   "version": 1
 }

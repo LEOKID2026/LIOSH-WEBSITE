@@ -2,67 +2,54 @@
   "glyphId": "צ",
   "group": "he-print",
   "viewBox": 100,
-  "strokeCount": 1,
+  "strokeCount": 3,
   "strokes": [
     {
       "order": 1,
       "pathId": "stroke-1",
-      "path": "M 77.22 25.78 L 69.65 40.96 L 59.61 51.04 L 47.61 39.67 L 40.53 26.23 L 33.89 28.89 L 40.99 76.84 L 56.5 76.75 L 73.8 74.63 L 72.22 62.05",
+      "path": "M 36.49 29.5 L 63.49 64.18",
       "start": {
-        "x": 77.22,
-        "y": 25.78
+        "x": 36.49,
+        "y": 29.5
       },
       "end": {
-        "x": 72.22,
-        "y": 62.05
+        "x": 63.49,
+        "y": 64.18
       },
-      "direction": "reference-derived",
-      "arrow": false
+      "direction": "ttb",
+      "arrow": true
+    },
+    {
+      "order": 2,
+      "pathId": "stroke-2",
+      "path": "M 63.49 64.18 L 36.03 64.18",
+      "start": {
+        "x": 63.49,
+        "y": 64.18
+      },
+      "end": {
+        "x": 36.03,
+        "y": 64.18
+      },
+      "direction": "rtl",
+      "arrow": true
+    },
+    {
+      "order": 3,
+      "pathId": "stroke-3",
+      "path": "M 63.97 28.2 L 50.9 46.58",
+      "start": {
+        "x": 63.97,
+        "y": 28.2
+      },
+      "end": {
+        "x": 50.9,
+        "y": 46.58
+      },
+      "direction": "ttb",
+      "arrow": true
     }
   ],
-  "dotPoints": [
-    {
-      "x": 40.53,
-      "y": 26.23
-    },
-    {
-      "x": 77.22,
-      "y": 25.78
-    },
-    {
-      "x": 33.89,
-      "y": 28.89
-    },
-    {
-      "x": 47.61,
-      "y": 39.67
-    },
-    {
-      "x": 69.65,
-      "y": 40.96
-    },
-    {
-      "x": 59.61,
-      "y": 51.04
-    },
-    {
-      "x": 72.22,
-      "y": 62.05
-    },
-    {
-      "x": 73.8,
-      "y": 74.63
-    },
-    {
-      "x": 40.99,
-      "y": 76.84
-    },
-    {
-      "x": 56.5,
-      "y": 76.75
-    }
-  ],
-  "generatedBy": "reference-image-dot-extraction",
-  "referenceQuality": "visual tracing asset; stroke order is approximate",
+  "generatedBy": "build-glyph-assets",
   "version": 1
 }

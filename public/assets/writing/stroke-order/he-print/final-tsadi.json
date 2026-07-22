@@ -1,0 +1,40 @@
+{
+  "glyphId": "ץ",
+  "group": "he-print",
+  "viewBox": 100,
+  "strokeCount": 2,
+  "strokes": [
+    {
+      "order": 1,
+      "pathId": "stroke-1",
+      "path": "M 38.26 29.85 L 57.87 69.19",
+      "start": {
+        "x": 38.26,
+        "y": 29.85
+      },
+      "end": {
+        "x": 57.87,
+        "y": 69.19
+      },
+      "direction": "ttb",
+      "arrow": true
+    },
+    {
+      "order": 2,
+      "pathId": "stroke-2",
+      "path": "M 61.74 29.5 L 47.72 48.84",
+      "start": {
+        "x": 61.74,
+        "y": 29.5
+      },
+      "end": {
+        "x": 47.72,
+        "y": 48.84
+      },
+      "direction": "ttb",
+      "arrow": true
+    }
+  ],
+  "generatedBy": "build-glyph-assets",
+  "version": 1
+}

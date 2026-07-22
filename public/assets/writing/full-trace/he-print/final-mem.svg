@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 100 100"
+     fill="none"
+     stroke-linecap="butt"
+     stroke-linejoin="round"
+     data-trace="full_trace"
+     data-monoline="true"
+     data-source="approved-print-export"
+     data-glyph="ם"
+     data-group="he-print"
+     >
+  <path id="stroke-1" d="M 34.01 29.5 L 65.77 29.5" fill="none" stroke="#444444" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round" stroke-dasharray="4 2.94" stroke-dashoffset="0"/>
+  <path id="stroke-2" d="M 65.77 29.5 L 65.99 64.18" fill="none" stroke="#444444" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round" stroke-dasharray="4 3.67" stroke-dashoffset="0"/>
+  <path id="stroke-3" d="M 65.99 64.18 L 35.8 64.18" fill="none" stroke="#444444" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round" stroke-dasharray="4 2.547" stroke-dashoffset="0"/>
+  <path id="stroke-4" d="M 35.68 29.5 L 35.8 64.18" fill="none" stroke="#444444" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round" stroke-dasharray="4 3.67" stroke-dashoffset="0"/>
+</svg>

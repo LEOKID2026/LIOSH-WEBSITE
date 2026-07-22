@@ -2,16 +2,15 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      viewBox="0 0 100 100"
      fill="none"
+     stroke-linecap="butt"
+     stroke-linejoin="round"
      data-trace="full_trace"
-     data-dot-trace="true"
-     data-source="user-reference">
-  <circle cx="41.15" cy="25.38" r="2" fill="#444444"/>
-  <circle cx="73.29" cy="25.73" r="2" fill="#444444"/>
-  <circle cx="73.24" cy="42.22" r="2" fill="#444444"/>
-  <circle cx="41.2" cy="44.44" r="2" fill="#444444"/>
-  <circle cx="73.06" cy="59.54" r="2" fill="#444444"/>
-  <circle cx="41.16" cy="63.69" r="2" fill="#444444"/>
-  <circle cx="66.97" cy="71.52" r="2" fill="#444444"/>
-  <circle cx="34.81" cy="76.74" r="2" fill="#444444"/>
-  <circle cx="50.72" cy="76.73" r="2" fill="#444444"/>
+     data-monoline="true"
+     data-source="approved-print-export"
+     data-glyph="ע"
+     data-group="he-print"
+     >
+  <path id="stroke-1" d="M 64.64 29.5 L 64.64 64.18" fill="none" stroke="#444444" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round" stroke-dasharray="4 3.67" stroke-dashoffset="0"/>
+  <path id="stroke-2" d="M 64.64 64.18 L 35.36 64.18" fill="none" stroke="#444444" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round" stroke-dasharray="4 2.32" stroke-dashoffset="0"/>
+  <path id="stroke-3" d="M 48.26 29.61 L 48.26 64.18" fill="none" stroke="#444444" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round" stroke-dasharray="4 3.643" stroke-dashoffset="0"/>
 </svg>

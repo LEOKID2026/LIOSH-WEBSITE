@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 100 100"
+     fill="none"
+     stroke="currentColor"
+     stroke-linecap="butt"
+     stroke-linejoin="round"
+     data-glyph="ף"
+     data-group="he-print"
+     data-centerline="true"
+     >
+  <path id="stroke-1" d="M 38.62 29.5 L 61.38 29.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round"/>
+  <path id="stroke-2" d="M 61.38 29.5 L 61.38 69.19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round"/>
+  <path id="stroke-3" d="M 38.91 29.5 L 38.91 40.84" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round"/>
+  <path id="stroke-4" d="M 38.91 40.84 L 47.08 40.84" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round"/>
+  <circle cx="38.62" cy="29.5" r="1.1" fill="currentColor"/>
+  <circle cx="61.38" cy="29.5" r="1.1" fill="currentColor"/>
+  <circle cx="61.38" cy="69.19" r="1.1" fill="currentColor"/>
+  <circle cx="47.08" cy="40.84" r="1.1" fill="currentColor"/>
+</svg>

@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
-  <path d="M 30.4 13.1 L 7.3 7.1 L 7.1 10.9 L 30.1 16.8 Q 37.4 18.8 43.3 21.7 Q 49.2 24.7 53.5 30.6 Q 57.9 36.5 60.5 46.9 Q 63.1 57.3 64 74.2 L 64 74.2 L 64.8 92.4 L 69.2 92.4 L 68.5 74.7 Q 68 60.4 66 50.4 Q 64 40.5 60.6 34 Q 57.3 27.5 52.8 23.5 Q 48.3 19.4 42.7 17.1 Q 37 14.7 30.4 13.1 L 30.4 13.1 M 33 15.4 L 31.1 15.4 L 10.6 92 L 14.7 92.9 L 32.7 25.8 Q 33.1 24.6 33.3 23 Q 33.4 21.4 33.3 19.5 Q 33.3 17.6 33 15.4 L 33 15.4" fill="#e2e8f0" stroke="#64748b" stroke-width="1.2" stroke-linejoin="round"/>
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 100 100"
+     fill="none"
+     stroke="currentColor"
+     stroke-linecap="butt"
+     stroke-linejoin="round"
+     data-glyph="ע"
+     data-group="he-print"
+     data-outline="true"
+     >
+  <path id="stroke-1" d="M 64.64 29.5 L 64.64 64.18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round"/>
+  <path id="stroke-2" d="M 64.64 64.18 L 35.36 64.18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round"/>
+  <path id="stroke-3" d="M 48.26 29.61 L 48.26 64.18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round"/>
 </svg>

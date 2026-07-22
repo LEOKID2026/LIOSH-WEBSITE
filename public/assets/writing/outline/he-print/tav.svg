@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
-  <path d="M 84.6 7.1 L 79.9 7.1 L 79.9 68.2 Q 79.9 78.6 75.1 83.8 Q 70.3 88.9 60 88.9 L 60 88.9 L 24.8 88.9 L 24.8 92.9 L 60.7 92.9 Q 72.5 92.9 78.5 86.7 Q 84.6 80.5 84.6 68.6 L 84.6 68.6 L 84.6 7.1 M 13.2 7.1 L 7.1 7.1 L 7.9 11.1 L 13.2 11.1 Q 17.3 11.1 19.8 12.8 Q 22.3 14.5 23.5 17.9 Q 24.8 21.4 24.8 26.8 L 24.8 26.8 L 24.8 91.1 L 29.5 91.1 L 29.5 24.8 Q 29.5 16.4 25.2 11.8 Q 20.9 7.1 13.2 7.1 L 13.2 7.1 M 25.5 88.9 L 10.8 88.9 L 11.5 92.9 L 25.5 92.9 L 25.5 88.9" fill="#e2e8f0" stroke="#64748b" stroke-width="1.2" stroke-linejoin="round"/>
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 100 100"
+     fill="none"
+     stroke="currentColor"
+     stroke-linecap="butt"
+     stroke-linejoin="round"
+     data-glyph="ת"
+     data-group="he-print"
+     data-outline="true"
+     >
+  <path id="stroke-1" d="M 40.53 29.5 L 70.86 29.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round"/>
+  <path id="stroke-2" d="M 70.86 29.5 L 70.86 64.18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round"/>
+  <path id="stroke-3" d="M 41.38 29.5 L 41.38 64.18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round"/>
+  <path id="stroke-4" d="M 41.38 64.18 L 29.14 64.18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round"/>
 </svg>

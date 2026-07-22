@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" data-glyph="ל" data-group="he-print" data-centerline="true">
-  <path id="stroke-1" d="M 9.1 18.5 L 9.4 7.799999999999997" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <path id="stroke-2" d="M 30.2 28.599999999999994 L 48.2 28.599999999999994" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <path id="stroke-3" d="M 10.9 28.599999999999994 L 29.4 28.599999999999994" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <path id="stroke-4" d="M 31.5 87.5 L 48.7 34.400000000000006" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="9.1" cy="18.5" r="3" fill="#dc2626" data-stroke-start="1"/><circle cx="9.4" cy="7.799999999999997" r="2" fill="#16a34a" data-stroke-end="1"/>
-  <circle cx="30.2" cy="28.599999999999994" r="3" fill="#dc2626" data-stroke-start="2"/><circle cx="48.2" cy="28.599999999999994" r="2" fill="#16a34a" data-stroke-end="2"/>
-  <circle cx="10.9" cy="28.599999999999994" r="3" fill="#dc2626" data-stroke-start="3"/><circle cx="29.4" cy="28.599999999999994" r="2" fill="#16a34a" data-stroke-end="3"/>
-  <circle cx="31.5" cy="87.5" r="3" fill="#dc2626" data-stroke-start="4"/><circle cx="48.7" cy="34.400000000000006" r="2" fill="#16a34a" data-stroke-end="4"/>
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 100 100"
+     fill="none"
+     stroke="currentColor"
+     stroke-linecap="butt"
+     stroke-linejoin="round"
+     data-glyph="ל"
+     data-group="he-print"
+     data-centerline="true"
+     >
+  <path id="stroke-1" d="M 39.25 20.38 L 39.25 29.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round"/>
+  <path id="stroke-2" d="M 39.25 29.5 L 60.74 29.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round"/>
+  <path id="stroke-3" d="M 60.74 29.5 L 48.38 64.18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round"/>
+  <circle cx="39.25" cy="20.38" r="1.1" fill="currentColor"/>
+  <circle cx="60.74" cy="29.5" r="1.1" fill="currentColor"/>
+  <circle cx="48.38" cy="64.18" r="1.1" fill="currentColor"/>
 </svg>

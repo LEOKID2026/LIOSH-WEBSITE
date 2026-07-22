@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" data-glyph="ד" data-group="he-print" data-centerline="true">
-  <path id="stroke-1" d="M 39.1 9.400000000000006 L 69.8 9.400000000000006" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <path id="stroke-2" d="M 7.6 9.400000000000006 L 38.5 9.400000000000006" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <path id="stroke-3" d="M 54.4 51.8 L 54.4 15.400000000000006 L 55.5 11.5" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <path id="stroke-4" d="M 54.4 92.4 L 54.4 52.3" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="39.1" cy="9.400000000000006" r="3" fill="#dc2626" data-stroke-start="1"/><circle cx="69.8" cy="9.400000000000006" r="2" fill="#16a34a" data-stroke-end="1"/>
-  <circle cx="7.6" cy="9.400000000000006" r="3" fill="#dc2626" data-stroke-start="2"/><circle cx="38.5" cy="9.400000000000006" r="2" fill="#16a34a" data-stroke-end="2"/>
-  <circle cx="54.4" cy="51.8" r="3" fill="#dc2626" data-stroke-start="3"/><circle cx="55.5" cy="11.5" r="2" fill="#16a34a" data-stroke-end="3"/>
-  <circle cx="54.4" cy="92.4" r="3" fill="#dc2626" data-stroke-start="4"/><circle cx="54.4" cy="52.3" r="2" fill="#16a34a" data-stroke-end="4"/>
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 100 100"
+     fill="none"
+     stroke="currentColor"
+     stroke-linecap="butt"
+     stroke-linejoin="round"
+     data-glyph="ד"
+     data-group="he-print"
+     data-centerline="true"
+     >
+  <path id="stroke-1" d="M 35.43 29.5 L 64.57 29.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round"/>
+  <path id="stroke-2" d="M 60.57 29.5 L 60.57 64.18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round"/>
+  <circle cx="35.43" cy="29.5" r="1.1" fill="currentColor"/>
+  <circle cx="64.57" cy="29.5" r="1.1" fill="currentColor"/>
+  <circle cx="60.57" cy="64.18" r="1.1" fill="currentColor"/>
 </svg>

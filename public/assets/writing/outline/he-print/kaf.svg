@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
-  <path d="M 29 7.1 L 7.1 7.1 L 7.1 11.1 L 29 11.1 Q 43.8 11.1 51.4 21 Q 59 30.9 59 50 L 59 50 Q 59 69.2 51.4 79.1 Q 43.8 88.9 29 88.9 L 29 88.9 L 7.1 88.9 L 7.9 92.9 L 29 92.9 Q 46.2 92.9 55.1 82 Q 63.9 71.1 63.9 50 L 63.9 50 Q 63.9 28.9 55.1 18 Q 46.2 7.1 29 7.1 L 29 7.1" fill="#e2e8f0" stroke="#64748b" stroke-width="1.2" stroke-linejoin="round"/>
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 100 100"
+     fill="none"
+     stroke="currentColor"
+     stroke-linecap="butt"
+     stroke-linejoin="round"
+     data-glyph="כ"
+     data-group="he-print"
+     data-outline="true"
+     >
+  <path id="stroke-1" d="M 37 29.5 L 63 29.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round"/>
+  <path id="stroke-2" d="M 63 29.5 L 63 64.18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round"/>
+  <path id="stroke-3" d="M 63 64.18 L 37 64.18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round"/>
 </svg>

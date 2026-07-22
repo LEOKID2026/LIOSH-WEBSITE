@@ -1,0 +1,40 @@
+{
+  "glyphId": "ן",
+  "group": "he-print",
+  "viewBox": 100,
+  "strokeCount": 2,
+  "strokes": [
+    {
+      "order": 1,
+      "pathId": "stroke-1",
+      "path": "M 44 29.5 L 56 29.5",
+      "start": {
+        "x": 44,
+        "y": 29.5
+      },
+      "end": {
+        "x": 56,
+        "y": 29.5
+      },
+      "direction": "ltr",
+      "arrow": true
+    },
+    {
+      "order": 2,
+      "pathId": "stroke-2",
+      "path": "M 56 29.5 L 56 69.19",
+      "start": {
+        "x": 56,
+        "y": 29.5
+      },
+      "end": {
+        "x": 56,
+        "y": 69.19
+      },
+      "direction": "ttb",
+      "arrow": true
+    }
+  ],
+  "generatedBy": "build-glyph-assets",
+  "version": 1
+}

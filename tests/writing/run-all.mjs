@@ -16,6 +16,7 @@ const TEST_FILES = [
   "writing-session-ttl.test.mjs",
   "writing-public-demo-allowlist.test.mjs",
   "writing-asset-quality.test.mjs",
+  "writing-hebrew-print-approved-assets.test.mjs",
   "writing-trace-mode.test.mjs",
   "writing-print-integrity.test.mjs",
   "writing-asset-http.test.mjs",

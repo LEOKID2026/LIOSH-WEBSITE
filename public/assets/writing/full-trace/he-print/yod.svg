@@ -2,10 +2,14 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      viewBox="0 0 100 100"
      fill="none"
+     stroke-linecap="butt"
+     stroke-linejoin="round"
      data-trace="full_trace"
-     data-dot-trace="true"
-     data-source="user-reference">
-  <circle cx="57.48" cy="27.93" r="2" fill="#444444"/>
-  <circle cx="68.84" cy="30.67" r="2" fill="#444444"/>
-  <circle cx="70.16" cy="44.93" r="2" fill="#444444"/>
+     data-monoline="true"
+     data-source="approved-print-export"
+     data-glyph="י"
+     data-group="he-print"
+     >
+  <path id="stroke-1" d="M 44.02 29.5 L 55.98 29.5" fill="none" stroke="#444444" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round" stroke-dasharray="4 3.96" stroke-dashoffset="0"/>
+  <path id="stroke-2" d="M 55.98 29.5 L 55.98 47.29" fill="none" stroke="#444444" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round" stroke-dasharray="4 2.895" stroke-dashoffset="0"/>
 </svg>

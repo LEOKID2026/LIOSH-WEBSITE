@@ -2,12 +2,14 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      viewBox="0 0 100 100"
      fill="none"
+     stroke-linecap="butt"
+     stroke-linejoin="round"
      data-trace="full_trace"
-     data-dot-trace="true"
-     data-source="user-reference">
-  <circle cx="52.25" cy="27.8" r="2" fill="#444444"/>
-  <circle cx="64.79" cy="28.35" r="2" fill="#444444"/>
-  <circle cx="61.27" cy="44.73" r="2" fill="#444444"/>
-  <circle cx="61.27" cy="62.39" r="2" fill="#444444"/>
-  <circle cx="61.18" cy="79.32" r="2" fill="#444444"/>
+     data-monoline="true"
+     data-source="approved-print-export"
+     data-glyph="ז"
+     data-group="he-print"
+     >
+  <path id="stroke-1" d="M 39.2 26.5 L 60.8 32.79" fill="none" stroke="#444444" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round" stroke-dasharray="4 2.166" stroke-dashoffset="0"/>
+  <path id="stroke-2" d="M 49.51 29.5 L 49.51 64.18" fill="none" stroke="#444444" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round" stroke-dasharray="4 3.67" stroke-dashoffset="0"/>
 </svg>

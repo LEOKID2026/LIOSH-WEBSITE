@@ -1,0 +1,40 @@
+{
+  "glyphId": "ך",
+  "group": "he-print",
+  "viewBox": 100,
+  "strokeCount": 2,
+  "strokes": [
+    {
+      "order": 1,
+      "pathId": "stroke-1",
+      "path": "M 37 29.5 L 63 29.5",
+      "start": {
+        "x": 37,
+        "y": 29.5
+      },
+      "end": {
+        "x": 63,
+        "y": 29.5
+      },
+      "direction": "ltr",
+      "arrow": true
+    },
+    {
+      "order": 2,
+      "pathId": "stroke-2",
+      "path": "M 63 29.5 L 63 69.19",
+      "start": {
+        "x": 63,
+        "y": 29.5
+      },
+      "end": {
+        "x": 63,
+        "y": 69.19
+      },
+      "direction": "ttb",
+      "arrow": true
+    }
+  ],
+  "generatedBy": "build-glyph-assets",
+  "version": 1
+}

@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" data-glyph="ס" data-group="he-print" data-centerline="true">
-  <path id="stroke-1" d="M 62.8 11.5 L 55.2 9.400000000000006 L 46.4 9.400000000000006" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <path id="stroke-2" d="M 28.9 9.400000000000006 L 45.3 9.400000000000006" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <path id="stroke-3" d="M 8.1 9.400000000000006 L 16.7 9.400000000000006" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <path id="stroke-4" d="M 76.3 45.3 L 76 34.599999999999994 L 73.2 23.200000000000003" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <path id="stroke-5" d="M 15.4 49.2 L 16.1 36.7 L 18.8 25.5" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <path id="stroke-6" d="M 72.7 71.1 L 75.3 60.9 L 76.3 46.1" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <path id="stroke-7" d="M 19.3 74.5 L 16.1 62.5 L 15.4 50" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <path id="stroke-8" d="M 45.1 90.9 L 56.3 89.1" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <path id="stroke-9" d="M 44.5 90.9 L 33.3 89.1" fill="none" stroke="#334155" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="62.8" cy="11.5" r="3" fill="#dc2626" data-stroke-start="1"/><circle cx="46.4" cy="9.400000000000006" r="2" fill="#16a34a" data-stroke-end="1"/>
-  <circle cx="28.9" cy="9.400000000000006" r="3" fill="#dc2626" data-stroke-start="2"/><circle cx="45.3" cy="9.400000000000006" r="2" fill="#16a34a" data-stroke-end="2"/>
-  <circle cx="8.1" cy="9.400000000000006" r="3" fill="#dc2626" data-stroke-start="3"/><circle cx="16.7" cy="9.400000000000006" r="2" fill="#16a34a" data-stroke-end="3"/>
-  <circle cx="76.3" cy="45.3" r="3" fill="#dc2626" data-stroke-start="4"/><circle cx="73.2" cy="23.200000000000003" r="2" fill="#16a34a" data-stroke-end="4"/>
-  <circle cx="15.4" cy="49.2" r="3" fill="#dc2626" data-stroke-start="5"/><circle cx="18.8" cy="25.5" r="2" fill="#16a34a" data-stroke-end="5"/>
-  <circle cx="72.7" cy="71.1" r="3" fill="#dc2626" data-stroke-start="6"/><circle cx="76.3" cy="46.1" r="2" fill="#16a34a" data-stroke-end="6"/>
-  <circle cx="19.3" cy="74.5" r="3" fill="#dc2626" data-stroke-start="7"/><circle cx="15.4" cy="50" r="2" fill="#16a34a" data-stroke-end="7"/>
-  <circle cx="45.1" cy="90.9" r="3" fill="#dc2626" data-stroke-start="8"/><circle cx="56.3" cy="89.1" r="2" fill="#16a34a" data-stroke-end="8"/>
-  <circle cx="44.5" cy="90.9" r="3" fill="#dc2626" data-stroke-start="9"/><circle cx="33.3" cy="89.1" r="2" fill="#16a34a" data-stroke-end="9"/>
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 100 100"
+     fill="none"
+     stroke="currentColor"
+     stroke-linecap="butt"
+     stroke-linejoin="round"
+     data-glyph="ס"
+     data-group="he-print"
+     data-centerline="true"
+     >
+  <path id="stroke-1" d="M 34.33 31.05 C 34.33 31.05 38.08 30.58 38.08 30.58 C 38.08 30.58 41.51 30.19 41.51 30.19 C 41.51 30.19 44.65 29.89 44.65 29.89 C 44.65 29.89 47.54 29.68 47.54 29.68 C 47.54 29.68 50.19 29.54 50.19 29.54 C 50.19 29.54 52.65 29.5 52.65 29.5 C 52.65 29.5 54.93 29.54 54.93 29.54 C 54.93 29.54 57.07 29.68 57.07 29.68 C 57.07 29.68 59.09 29.89 59.09 29.89 C 59.09 29.89 61.03 30.19 61.03 30.19 C 61.03 30.19 62.9 30.58 62.9 30.58 C 62.9 30.58 64.75 31.05 64.75 31.05 C 64.75 31.05 65.17 32.61 65.17 32.61 C 65.17 32.61 65.52 34.17 65.52 34.17 C 65.52 34.17 65.8 35.74 65.8 35.74 C 65.8 35.74 66.01 37.34 66.01 37.34 C 66.01 37.34 66.16 38.96 66.16 38.96 C 66.16 38.96 66.25 40.63 66.25 40.63 C 66.25 40.63 66.28 42.34 66.28 42.34 C 66.28 42.34 66.25 44.09 66.25 44.09 C 66.25 44.09 66.18 45.9 66.18 45.9 C 66.18 45.9 66.05 47.78 66.05 47.78 C 66.05 47.78 65.88 49.73 65.88 49.73 C 65.88 49.73 65.67 51.76 65.67 51.76 C 65.67 51.76 65.38 53.7 65.38 53.7 C 65.38 53.7 64.96 55.41 64.96 55.41 C 64.96 55.41 64.39 56.9 64.39 56.9 C 64.39 56.9 63.65 58.2 63.65 58.2 C 63.65 58.2 62.75 59.32 62.75 59.32 C 62.75 59.32 61.64 60.3 61.64 60.3 C 61.64 60.3 60.32 61.15 60.32 61.15 C 60.32 61.15 58.78 61.88 58.78 61.88 C 58.78 61.88 56.99 62.53 56.99 62.53 C 56.99 62.53 54.94 63.11 54.94 63.11 C 54.94 63.11 52.62 63.66 52.62 63.66 C 52.62 63.66 50 64.18 50 64.18 C 50 64.18 47.38 63.66 47.38 63.66 C 47.38 63.66 45.06 63.11 45.06 63.11 C 45.06 63.11 43.01 62.53 43.01 62.53 C 43.01 62.53 41.22 61.88 41.22 61.88 C 41.22 61.88 39.68 61.15 39.68 61.15 C 39.68 61.15 38.37 60.3 38.37 60.3 C 38.37 60.3 37.25 59.32 37.25 59.32 C 37.25 59.32 36.35 58.2 36.35 58.2 C 36.35 58.2 35.61 56.9 35.61 56.9 C 35.61 56.9 35.04 55.41 35.04 55.41 C 35.04 55.41 34.62 53.7 34.62 53.7 C 34.62 53.7 34.33 51.76 34.33 51.76 C 34.33 51.76 34.12 49.73 34.12 49.73 C 34.12 49.73 33.95 47.78 33.95 47.78 C 33.95 47.78 33.82 45.9 33.82 45.9 C 33.82 45.9 33.75 44.09 33.75 44.09 C 33.75 44.09 33.72 42.34 33.72 42.34 C 33.72 42.34 33.76 40.63 33.76 40.63 C 33.76 40.63 33.84 38.96 33.84 38.96 C 33.84 38.96 33.99 37.34 33.99 37.34 C 33.99 37.34 34.2 35.74 34.2 35.74 C 34.2 35.74 34.48 34.17 34.48 34.17 C 34.48 34.17 34.83 32.61 34.83 32.61 C 34.83 32.61 35.25 31.05 35.25 31.05 C 35.25 31.05 35.04 31.05 35.04 31.05 C 35.04 31.05 34.86 31.05 34.86 31.05 C 34.86 31.05 34.72 31.05 34.72 31.05 C 34.72 31.05 34.6 31.05 34.6 31.05 C 34.6 31.05 34.51 31.05 34.51 31.05 C 34.51 31.05 34.45 31.05 34.45 31.05 C 34.45 31.05 34.39 31.05 34.39 31.05 C 34.39 31.05 34.37 31.05 34.37 31.05 C 34.37 31.05 34.35 31.05 34.35 31.05 C 34.35 31.05 34.33 31.05 34.33 31.05 C 34.33 31.05 34.33 31.05 34.33 31.05 C 34.33 31.05 34.33 31.05 34.33 31.05" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="butt" stroke-linejoin="round"/>
+  <circle cx="34.33" cy="31.05" r="1.1" fill="currentColor"/>
 </svg>

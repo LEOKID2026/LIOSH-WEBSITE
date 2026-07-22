@@ -1,0 +1,70 @@
+{
+  "glyphId": "ם",
+  "group": "he-print",
+  "viewBox": 100,
+  "strokeCount": 4,
+  "strokes": [
+    {
+      "order": 1,
+      "pathId": "stroke-1",
+      "path": "M 34.01 29.5 L 65.77 29.5",
+      "start": {
+        "x": 34.01,
+        "y": 29.5
+      },
+      "end": {
+        "x": 65.77,
+        "y": 29.5
+      },
+      "direction": "ltr",
+      "arrow": true
+    },
+    {
+      "order": 2,
+      "pathId": "stroke-2",
+      "path": "M 65.77 29.5 L 65.99 64.18",
+      "start": {
+        "x": 65.77,
+        "y": 29.5
+      },
+      "end": {
+        "x": 65.99,
+        "y": 64.18
+      },
+      "direction": "ttb",
+      "arrow": true
+    },
+    {
+      "order": 3,
+      "pathId": "stroke-3",
+      "path": "M 65.99 64.18 L 35.8 64.18",
+      "start": {
+        "x": 65.99,
+        "y": 64.18
+      },
+      "end": {
+        "x": 35.8,
+        "y": 64.18
+      },
+      "direction": "rtl",
+      "arrow": true
+    },
+    {
+      "order": 4,
+      "pathId": "stroke-4",
+      "path": "M 35.68 29.5 L 35.8 64.18",
+      "start": {
+        "x": 35.68,
+        "y": 29.5
+      },
+      "end": {
+        "x": 35.8,
+        "y": 64.18
+      },
+      "direction": "ttb",
+      "arrow": true
+    }
+  ],
+  "generatedBy": "build-glyph-assets",
+  "version": 1
+}

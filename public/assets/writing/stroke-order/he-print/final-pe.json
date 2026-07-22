@@ -1,0 +1,70 @@
+{
+  "glyphId": "ף",
+  "group": "he-print",
+  "viewBox": 100,
+  "strokeCount": 4,
+  "strokes": [
+    {
+      "order": 1,
+      "pathId": "stroke-1",
+      "path": "M 38.62 29.5 L 61.38 29.5",
+      "start": {
+        "x": 38.62,
+        "y": 29.5
+      },
+      "end": {
+        "x": 61.38,
+        "y": 29.5
+      },
+      "direction": "ltr",
+      "arrow": true
+    },
+    {
+      "order": 2,
+      "pathId": "stroke-2",
+      "path": "M 61.38 29.5 L 61.38 69.19",
+      "start": {
+        "x": 61.38,
+        "y": 29.5
+      },
+      "end": {
+        "x": 61.38,
+        "y": 69.19
+      },
+      "direction": "ttb",
+      "arrow": true
+    },
+    {
+      "order": 3,
+      "pathId": "stroke-3",
+      "path": "M 38.91 29.5 L 38.91 40.84",
+      "start": {
+        "x": 38.91,
+        "y": 29.5
+      },
+      "end": {
+        "x": 38.91,
+        "y": 40.84
+      },
+      "direction": "ttb",
+      "arrow": true
+    },
+    {
+      "order": 4,
+      "pathId": "stroke-4",
+      "path": "M 38.91 40.84 L 47.08 40.84",
+      "start": {
+        "x": 38.91,
+        "y": 40.84
+      },
+      "end": {
+        "x": 47.08,
+        "y": 40.84
+      },
+      "direction": "ltr",
+      "arrow": true
+    }
+  ],
+  "generatedBy": "build-glyph-assets",
+  "version": 1
+}

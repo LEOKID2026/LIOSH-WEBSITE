@@ -2,51 +2,39 @@
   "glyphId": "ר",
   "group": "he-print",
   "viewBox": 100,
-  "strokeCount": 1,
+  "strokeCount": 2,
   "strokes": [
     {
       "order": 1,
       "pathId": "stroke-1",
-      "path": "M 51.51 22 L 66.67 22.13 L 80.44 24.5 L 81.67 40 L 81.73 56.53 L 81.73 72.67",
+      "path": "M 37 29.5 L 63 29.5",
       "start": {
-        "x": 51.51,
-        "y": 22.0
+        "x": 37,
+        "y": 29.5
       },
       "end": {
-        "x": 81.73,
-        "y": 72.67
+        "x": 63,
+        "y": 29.5
       },
-      "direction": "reference-derived",
-      "arrow": false
+      "direction": "ltr",
+      "arrow": true
+    },
+    {
+      "order": 2,
+      "pathId": "stroke-2",
+      "path": "M 63 29.5 L 63 64.18",
+      "start": {
+        "x": 63,
+        "y": 29.5
+      },
+      "end": {
+        "x": 63,
+        "y": 64.18
+      },
+      "direction": "ttb",
+      "arrow": true
     }
   ],
-  "dotPoints": [
-    {
-      "x": 51.51,
-      "y": 22.0
-    },
-    {
-      "x": 66.67,
-      "y": 22.13
-    },
-    {
-      "x": 80.44,
-      "y": 24.5
-    },
-    {
-      "x": 81.67,
-      "y": 40.0
-    },
-    {
-      "x": 81.73,
-      "y": 56.53
-    },
-    {
-      "x": 81.73,
-      "y": 72.67
-    }
-  ],
-  "generatedBy": "reference-image-dot-extraction",
-  "referenceQuality": "visual tracing asset; stroke order is approximate",
+  "generatedBy": "build-glyph-assets",
   "version": 1
 }
