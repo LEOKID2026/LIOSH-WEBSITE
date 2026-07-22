@@ -149,6 +149,7 @@ import {
   decrementPendingProbeExpiry,
   probeMatchesSession,
 } from "../../utils/active-diagnostic-runtime/index.js";
+import { useMasterDiagnosticPersistence } from "../../lib/learning/useMasterDiagnosticPersistence.js";
 import { geometryWrongActivatesProbe } from "../../utils/geometry-active-probe.js";
 import {
   pickGeometryProbeConceptual,
@@ -304,6 +305,7 @@ export default function GeometryMaster() {
   const learningSessionStartPromiseRef = useRef(null);
   const geometryPendingDiagnosticProbeRef = useRef(null);
   const geometryHypothesisLedgerRef = useRef(null);
+  const geometryAdaptiveStateRef = useRef(null);
   const bookPracticePresetRef = useRef(null);
   const practiceForceKindRef = useRef(null);
   const learningProfileStudentIdRef = useRef(null);
@@ -943,12 +945,22 @@ export default function GeometryMaster() {
     installLearningDiagnosticDebugOnce();
   }, []);
 
-  useEffect(() => {
-    clearActiveDiagnosticState(
-      geometryPendingDiagnosticProbeRef,
-      geometryHypothesisLedgerRef
-    );
-  }, [grade, level, topic, practiceFocus]);
+  const {
+    snapshot: snapshotGeometryDiagnostic,
+    resolveAdaptiveTarget: resolveGeometryAdaptiveTarget,
+    recordAdaptive: recordGeometryAdaptive,
+  } = useMasterDiagnosticPersistence({
+      studentIdRef: learningProfileStudentIdRef,
+      subjectId: "geometry",
+      gradeKey: grade,
+      levelKey: level,
+      operationOrTopic: topic,
+      pendingRef: geometryPendingDiagnosticProbeRef,
+      ledgerRef: geometryHypothesisLedgerRef,
+      adaptiveRef: geometryAdaptiveStateRef,
+      sessionFullName,
+      forceKindRef: practiceForceKindRef,
+    });
 
   useEffect(() => {
     refreshMonthlyPersistenceView();
@@ -1164,6 +1176,8 @@ export default function GeometryMaster() {
     
     const localRecentQuestions = SessionAntiRepeatBuffer.fromIterable(recentQuestions);
     const probeAtSessionStart = geometryPendingDiagnosticProbeRef.current;
+
+    resolveGeometryAdaptiveTarget({ operation: validTopic });
 
     do {
       const selectedTopics = validTopic === "mixed" 
@@ -1665,6 +1679,8 @@ export default function GeometryMaster() {
           now: probeAnsweredAt,
         }
       );
+      recordGeometryAdaptive(inferredTags?.[0] || null, isCorrect);
+      snapshotGeometryDiagnostic();
       diagnosticProbeMetaForSave = buildDiagnosticProbeClientMeta({
         probeMeta: questionForSave._probeMeta,
         ledger: geometryHypothesisLedgerRef.current,
@@ -3158,6 +3174,10 @@ export default function GeometryMaster() {
                     </div>
                   ) : null}
 
+                  <div
+                    data-testid="geometry-question-stem"
+                    className="relative w-full flex-1 min-h-0 flex flex-col"
+                  >
                   {/* בדיקה אם יש שאלה תקינה */}
                   {currentQuestion.params?.kind === "no_question" ? (
                     <div
@@ -3169,7 +3189,6 @@ export default function GeometryMaster() {
                   ) : (
                     <>
                       <StudentQuestionDisplay
-                        testId="geometry-question-stem"
                         question={currentQuestion.question}
                         questionLabel={currentQuestion.questionLabel}
                         exerciseText={currentQuestion.exerciseText}
@@ -3244,6 +3263,7 @@ export default function GeometryMaster() {
                       ) : null
                     }
                   />
+                  </div>
 
                   {questionDiagramSpec && (
                     <div

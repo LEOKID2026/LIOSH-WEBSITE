@@ -56,8 +56,8 @@ import {
   buildHebrewApprovedVerbalMasterLayout,
   buildHebrewApprovedVerbalMcqGridClassName,
   getHebrewApprovedSingleVerbalQuestionStyle,
-  HEBREW_APPROVED_VERBAL_ANSWER_AREA_CLASS,
 } from "../../utils/hebrew-approved-verbal-master-contract.client.js";
+import { LEARNING_MASTER_ANSWER_SURFACE_CLASS } from "../../utils/learning-master-question-pressure.client.js";
 import { resolveStudentQuestionDisplayParts } from "../../utils/student-question-display";
 import {
   getSolutionSteps,
@@ -113,12 +113,14 @@ import {
   mergeDiagnosticIntoMistakeEntry,
 } from "../../utils/diagnostic-mistake-metadata";
 import { normalizeMistakeEvent } from "../../utils/mistake-event.js";
+import { inferNormalizedTags } from "../../utils/fast-diagnostic-engine/infer-tags.js";
 import {
   buildPendingProbeFromMistake,
   probeMatchesSession,
   attachProbeMetaToQuestion,
   decrementPendingProbeExpiry,
 } from "../../utils/active-diagnostic-runtime/index.js";
+import { useMasterDiagnosticPersistence } from "../../lib/learning/useMasterDiagnosticPersistence.js";
 import {
   finishLearningSession,
   saveLearningAnswer,
@@ -302,6 +304,8 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
   /** Real topic/operation bucket for the question on screen (avoids stale currentQuestion) */
   const moledetTrackingTopicKeyRef = useRef(null);
   const moledetPendingDiagnosticProbeRef = useRef(null);
+  const moledetHypothesisLedgerRef = useRef(null);
+  const moledetAdaptiveStateRef = useRef(null);
   const learningProfileStudentIdRef = useRef(null);
   const learningProfileHydratedRef = useRef(false);
   const [serverAccountSubjectAccuracyPct, setServerAccountSubjectAccuracyPct] = useState(null);
@@ -377,6 +381,24 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
   const bookPracticePresetRef = useRef(null);
   const practiceForceKindRef = useRef(null);
   const practiceForceSkillIdRef = useRef(null);
+
+  const {
+    snapshot: snapshotMoledetDiagnostic,
+    resolveAdaptiveTarget: resolveMoledetAdaptiveTarget,
+    recordAdaptive: recordMoledetAdaptive,
+  } = useMasterDiagnosticPersistence({
+      studentIdRef: learningProfileStudentIdRef,
+      subjectId: "moledet_geography",
+      gradeKey: grade,
+      levelKey: level,
+      operationOrTopic: operation,
+      pendingRef: moledetPendingDiagnosticProbeRef,
+      ledgerRef: moledetHypothesisLedgerRef,
+      adaptiveRef: moledetAdaptiveStateRef,
+      sessionFullName,
+      forceKindRef: practiceForceKindRef,
+    });
+
   const questionBookHref = useMemo(() => {
     if (mode !== "learning" || !currentQuestion) return null;
     if (!strandBookGradeSet.has(grade)) return null;
@@ -1406,6 +1428,8 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
     const localRecentQuestions = SessionAntiRepeatBuffer.fromIterable(recentQuestions);
     const probeAtStart = moledetPendingDiagnosticProbeRef.current;
 
+    resolveMoledetAdaptiveTarget({ operation: operationForState });
+
     do {
       let opForQuestion = operationForState;
       if (supportsWordProblems) {
@@ -2268,6 +2292,14 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
       }
       try {
         const normalized = normalizeMistakeEvent(mistake, "moledet-geography");
+        const inferredTags = inferNormalizedTags(normalized, "moledet-geography");
+        recordMoledetAdaptive(
+          inferredTags?.[0] ||
+            normalized?.misconceptionTag ||
+            normalized?.distractorFamily ||
+            null,
+          false
+        );
         moledetPendingDiagnosticProbeRef.current = buildPendingProbeFromMistake(
           normalized,
           {
@@ -2281,6 +2313,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
           },
           "moledet-geography"
         );
+        snapshotMoledetDiagnostic();
       } catch {
         moledetPendingDiagnosticProbeRef.current = null;
       }
@@ -3648,7 +3681,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
                   />
                   </div>
 
-                  <div className={HEBREW_APPROVED_VERBAL_ANSWER_AREA_CLASS}>
+                  <div className={`${LEARNING_MASTER_ANSWER_SURFACE_CLASS} relative z-30`}>
                   <div
                     className={buildHebrewApprovedVerbalMcqGridClassName({
                       useNarrowMobileAnswerFallback:

@@ -275,6 +275,14 @@ import {
   clearActiveDiagnosticState,
   decrementPendingProbeExpiry,
 } from "../../utils/active-diagnostic-runtime/index.js";
+import {
+  bootstrapMasterDiagnosticState,
+  buildMasterDiagnosticCtx,
+  recordMisconceptionAdaptiveAnswer,
+  resolveMasterAdaptiveQuestionTarget,
+  snapshotMasterDiagnosticState,
+} from "../../lib/learning/diagnostic-state-master-helper.js";
+import { createMisconceptionAdaptiveState } from "../../lib/learning/misconception-adaptive-routing.js";
 import { mathWrongActivatesProbe } from "../../utils/math-active-probe.js";
 import {
   patchLearningDiagnosticDebug,
@@ -562,6 +570,7 @@ export default function MathMaster() {
   const plannerNextSessionClientMetaRef = useRef(null);
   const mathPendingDiagnosticProbeRef = useRef(null);
   const mathHypothesisLedgerRef = useRef(null);
+  const mathAdaptiveStateRef = useRef(null);
   const bookPracticePresetRef = useRef(null);
   const practiceForceKindRef = useRef(null);
   const learningProfileStudentIdRef = useRef(null);
@@ -1299,11 +1308,22 @@ export default function MathMaster() {
   }, []);
 
   useEffect(() => {
-    clearActiveDiagnosticState(
+    if (!mathAdaptiveStateRef.current) {
+      mathAdaptiveStateRef.current = createMisconceptionAdaptiveState();
+    }
+    bootstrapMasterDiagnosticState(
+      buildMasterDiagnosticCtx(
+        learningProfileStudentIdRef.current,
+        "math",
+        grade,
+        level,
+        operation
+      ),
       mathPendingDiagnosticProbeRef,
-      mathHypothesisLedgerRef
+      mathHypothesisLedgerRef,
+      mathAdaptiveStateRef
     );
-  }, [grade, level, operation, practiceFocus]);
+  }, [grade, level, operation, practiceFocus, sessionFullName]);
 
   const [selectedRow, setSelectedRow] = useState(null);
   const [selectedCol, setSelectedCol] = useState(null);
@@ -2071,6 +2091,12 @@ export default function MathMaster() {
 
     const localRecentQuestions = SessionAntiRepeatBuffer.fromIterable(recentQuestions);
 
+    resolveMasterAdaptiveQuestionTarget(
+      mathAdaptiveStateRef,
+      practiceForceKindRef,
+      { operation: operationForState }
+    );
+
     const probeAtStart = mathPendingDiagnosticProbeRef.current;
     const probeMetaHolder = { current: null };
 
@@ -2326,6 +2352,8 @@ export default function MathMaster() {
           selectedValue: userAnswer,
           generatorSource: "math-master",
           afterStepByStep: stepByStepViewedRef.current,
+          isCorrect,
+          subject: "math",
         })
       : null;
     if (questionEngine) {
@@ -2695,6 +2723,27 @@ export default function MathMaster() {
           probeMeta: questionForSave._probeMeta,
           now: probeAnsweredAt,
         }
+      );
+      const diagCtx = buildMasterDiagnosticCtx(
+        learningProfileStudentIdRef.current,
+        "math",
+        grade,
+        level,
+        operation
+      );
+      recordMisconceptionAdaptiveAnswer({
+        ctx: diagCtx,
+        pendingRef: mathPendingDiagnosticProbeRef,
+        ledgerRef: mathHypothesisLedgerRef,
+        adaptiveRef: mathAdaptiveStateRef,
+        tag: inferredTags?.[0] || null,
+        isCorrect,
+      });
+      snapshotMasterDiagnosticState(
+        diagCtx,
+        mathPendingDiagnosticProbeRef,
+        mathHypothesisLedgerRef,
+        mathAdaptiveStateRef
       );
       diagnosticProbeMetaForSave = buildDiagnosticProbeClientMeta({
         probeMeta: questionForSave._probeMeta,
@@ -3159,6 +3208,18 @@ export default function MathMaster() {
               patchLearningDiagnosticDebug({
                 pendingProbe: { math: mathPendingDiagnosticProbeRef.current },
               });
+              snapshotMasterDiagnosticState(
+                buildMasterDiagnosticCtx(
+                  learningProfileStudentIdRef.current,
+                  "math",
+                  grade,
+                  level,
+                  operation
+                ),
+                mathPendingDiagnosticProbeRef,
+                mathHypothesisLedgerRef,
+                mathAdaptiveStateRef
+              );
             } else {
               mathPendingDiagnosticProbeRef.current = null;
             }

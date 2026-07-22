@@ -545,6 +545,12 @@ function inferMathDistractorFamily(wrongVal, correctAnswer, kind, params) {
   if (!Number.isFinite(n)) return GENERIC_PROXIMITY_FAMILY;
   const a = params?.a;
   const b = params?.b;
+  if (kind === "add_three" && a != null && b != null && params?.c != null) {
+    const c = params.c;
+    if (n === a + b) return "omitted_addend";
+    if (n === b + c) return "omitted_addend";
+    if (n === a + c) return "omitted_addend";
+  }
   if (
     (kind === "add_two" ||
       kind === "add_vertical" ||
@@ -553,6 +559,11 @@ function inferMathDistractorFamily(wrongVal, correctAnswer, kind, params) {
     a != null &&
     b != null
   ) {
+    const sum = a + b;
+    const onesSum = (Math.abs(a % 10) + Math.abs(b % 10)) % 10;
+    const noCarry =
+      Math.floor(a / 10) * 10 + Math.floor(b / 10) * 10 + (Math.abs(a % 10) + Math.abs(b % 10)) % 10;
+    if (Math.abs(a % 10) + Math.abs(b % 10) >= 10 && n === noCarry && n !== sum) return "carry_error";
     if (n === a * b) return "mul_instead_of_add";
     if (n === Math.abs(a - b)) return "sub_instead_of_add";
   }
@@ -574,8 +585,30 @@ function inferMathDistractorFamily(wrongVal, correctAnswer, kind, params) {
     }
     if (mx != null && my != null && n === mx + my) return "add_instead_of_mul";
   }
+  if (kind.startsWith("wp_unit") && a != null) {
+    const factor = Number(params?.factor) || Number(params?.conversionFactor) || 100;
+    if (n === a && n !== correctAnswer) return "unit_error";
+    if (n === a * 10 && factor === 100) return "unit_error";
+    if (n === a * factor || n === a / factor) return "unit_error";
+  }
   if (kind.startsWith("wp_") && a != null && b != null && n === a * b) {
     return "wrong_operation_wp";
+  }
+  if ((kind === "mul" || kind === "mul_vertical") && a != null && b != null) {
+    const product = a * b;
+    const near = [a * (b - 1), a * (b + 1), (a - 1) * b, (a + 1) * b].filter((v) => v !== product);
+    if (near.includes(n)) return "multiplication_fact_error";
+  }
+  if ((kind === "frac_add" || kind === "frac_add_sub") && params?.n1 != null) {
+    const n1 = Number(params.n1);
+    const d1 = Number(params.den1 ?? params.d1);
+    const n2 = Number(params.n2);
+    const d2 = Number(params.den2 ?? params.d2);
+    if (Number.isFinite(n1) && Number.isFinite(d1) && Number.isFinite(n2) && Number.isFinite(d2)) {
+      if (String(n) === String(n1 + n2) || String(wrongVal) === `${n1 + n2}/${d1 + d2}`) {
+        return "common_denominator_error";
+      }
+    }
   }
   void correctAnswer;
   return GENERIC_PROXIMITY_FAMILY;

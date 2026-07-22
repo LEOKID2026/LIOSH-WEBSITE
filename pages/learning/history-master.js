@@ -76,6 +76,7 @@ import {
   clearActiveDiagnosticState,
   decrementPendingProbeExpiry,
 } from "../../utils/active-diagnostic-runtime/index.js";
+import { useMasterDiagnosticPersistence } from "../../lib/learning/useMasterDiagnosticPersistence.js";
 import { inferNormalizedTags } from "../../utils/fast-diagnostic-engine/infer-tags.js";
 import {
   finishLearningSession,
@@ -860,6 +861,7 @@ export default function HistoryMaster() {
   const pendingDiagnosticProbeRef = useRef(null);
   /** Session-local hypothesis ledger after probe answers (Phase 3D-B). Never persisted. */
   const historyHypothesisLedgerRef = useRef(null);
+  const historyAdaptiveStateRef = useRef(null);
   /** Question pool topic id for the question currently being timed (matches localStorage bucket). */
   const historyTrackingTopicKeyRef = useRef(null);
   const bookPracticePresetRef = useRef(null);
@@ -998,10 +1000,21 @@ export default function HistoryMaster() {
   const [focusedPracticeMode, setFocusedPracticeMode] = useState("normal");
   const focusedPracticeModeRef = useRef("normal");
 
-  useEffect(() => {
-    pendingDiagnosticProbeRef.current = null;
-    historyHypothesisLedgerRef.current = null;
-  }, [grade, level, displayLevel, topic, practiceFocus]);
+  const {
+    snapshot: snapshotHistoryDiagnostic,
+    resolveAdaptiveTarget: resolveHistoryAdaptiveTarget,
+    recordAdaptive: recordHistoryAdaptive,
+  } = useMasterDiagnosticPersistence({
+    studentIdRef: learningProfileStudentIdRef,
+    subjectId: "history",
+    gradeKey: grade,
+    levelKey: level,
+    operationOrTopic: topic,
+    pendingRef: pendingDiagnosticProbeRef,
+    ledgerRef: historyHypothesisLedgerRef,
+    adaptiveRef: historyAdaptiveStateRef,
+    sessionFullName,
+  });
 
   useEffect(() => {
     focusedPracticeModeRef.current = focusedPracticeMode;
@@ -2084,6 +2097,8 @@ function saveScienceAnswerInParallel({
 
     const probeAtStart = pendingDiagnosticProbeRef.current;
 
+    resolveHistoryAdaptiveTarget({ operation: topic });
+
     /** Phase 3D-B — attach probe meta via shared runtime when probe-driven row is shown. */
     let probeAttachOpts = null;
 
@@ -2449,6 +2464,8 @@ function saveScienceAnswerInParallel({
           now: probeAnsweredAt,
         }
       );
+      recordHistoryAdaptive(inferredTags?.[0] || null, isCorrect);
+      snapshotHistoryDiagnostic();
       diagnosticProbeMetaForSave = buildDiagnosticProbeClientMeta({
         probeMeta: questionForSave._probeMeta,
         ledger: historyHypothesisLedgerRef.current,

@@ -12,6 +12,7 @@ import {
 import { gradeBandForKey } from "./grade-gating.js";
 import { enrichGeometryProceduralParams } from "./geometry-diagnostic-metadata-bridge.js";
 import { attachCanonicalMetadataToMathGeometryQuestion } from "../lib/learning/math-geometry-canonical-metadata.js";
+import { applyMcqEvidenceTaggingToQuestion } from "../lib/learning/mcq-option-evidence-tagging.js";
 import { formatTriangleAnglesKnownTwoStem } from "./geometry-activity-question-stem.js";
 import { pickValidTriangleSides } from "../lib/worksheets/worksheet-geometry-math-valid.js";
 import { sanitizeQuestionForStudentDisplay } from "./student-question-stem-sanitizer.js";
@@ -1862,12 +1863,12 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
               "סובבנו צורה סביב מרכזה - מה סוג התנועה?",
               "הצורה הסתובבה סביב מרכז - איזו תנועה?",
               "כמו גלגל שמסתובב - איזו תנועה זו?",
-              "ביצענו סיבוב של צורה סביב נקודה - מה הפעולה?",
-              "הצורה עשתה רבע סיבוב - איזו תנועה?",
+              "ביצענו תנועה סביב נקודה - מה הפעולה?",
+              "הצורה עשתה רבע מסלול - איזו תנועה?",
             ],
             medium: [
               "צורה מסתובבת סביב נקודה קבועה - איזו טרנספורמציה?",
-              "סיבוב סביב מרכז בלי שינוי גודל - מה השם הנכון?",
+              "תנועה סביב מרכז בלי שינוי גודל - מה השם הנכון?",
               "פעולה שצורה מסתובבת סביב נקודה בזווית - מה שמה?",
               "כל נקודה מסתובבת סביב מרכז בזווית שווה - מה הטרנספורמציה?",
               "הצורה עשתה 180° סביב נקודה - מה הפעולה?",
@@ -1878,7 +1879,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
               "הצורה מסתובבת סביב נקודה קבועה - מה סוג הטרנספורמציה?",
               "פעולה ישומרת מרחקים מהמרכז ומשנה זוויות - מה שמה?",
               "טרנספורמציה שמכפילה את כל המרחקים מהמרכז ב-1 - מה?",
-              "סיבוב ב-270° עם כיוון השעון - מה הפעולה?",
+              "ב-270° עם כיוון השעון - מה סוג התנועה?",
               "כל נקודה נעה על מעגל סביב המרכז - מה הטרנספורמציה?",
             ],
           },
@@ -2637,22 +2638,28 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
     levelKey,
   });
 
-  return sanitizeQuestionForStudentDisplay(
-    attachCanonicalMetadataToMathGeometryQuestion(
-      {
-        question,
-        correctAnswer: repairedCorrect,
-        answers: repairedAnswers,
-        topic: selectedTopic,
-        shape,
-        params: enrichedParams,
-      },
-      {
-        subject: "geometry",
-        gradeKey,
-        levelKey,
-        topic: selectedTopic,
-      }
+  return applyMcqEvidenceTaggingToQuestion(
+    sanitizeQuestionForStudentDisplay(
+      attachCanonicalMetadataToMathGeometryQuestion(
+        {
+          question,
+          correctAnswer: repairedCorrect,
+          answers: repairedAnswers,
+          options: repairedAnswers,
+          correctIndex: finalCorrectIdx >= 0 ? finalCorrectIdx : 0,
+          topic: selectedTopic,
+          shape,
+          params: enrichedParams,
+          subjectId: "geometry",
+          type: "mcq",
+        },
+        {
+          subject: "geometry",
+          gradeKey,
+          levelKey,
+          topic: selectedTopic,
+        }
+      )
     )
   );
 }

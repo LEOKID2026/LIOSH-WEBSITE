@@ -1,6 +1,6 @@
 import { TAXONOMY_BY_ID } from "../diagnostic-engine-v2/taxonomy-registry.js";
 import { taxonomyIdsForReportBucket } from "../diagnostic-engine-v2/topic-taxonomy-bridge.js";
-import { passesRecurrenceRules } from "../diagnostic-engine-v2/recurrence.js";
+import { passesEvidenceRecurrenceRules } from "../diagnostic-engine-v2/evidence-recurrence.js";
 import { filterMistakesForRow } from "../parent-report-row-trend.js";
 import { NUMERIC_GATES } from "./constants.js";
 import { taxonomyPriorBoost } from "./learning-loop.js";
@@ -54,7 +54,7 @@ export function rankHypotheses({ unit, row, features, rawMistakes, startMs, endM
   const logits = candidateIds.map((tid) => {
     const trow = TAXONOMY_BY_ID[tid];
     if (!trow) return -99;
-    let logit = passesRecurrenceRules(wrongs, trow) ? 1.2 : 0.2;
+    let logit = passesEvidenceRecurrenceRules(wrongs, trow) ? 1.2 : 0.2;
     if (tid === v2Chosen) logit += 2.0;
     logit += taxonomyPriorBoost(tid, learningState || { taxonomyLiftByKey: {} });
     const wrongRate = wrongs.length / Math.max(1, events.length || 1);

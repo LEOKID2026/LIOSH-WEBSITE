@@ -91,14 +91,14 @@ const GRAMMAR_EASY_CONNECTORS = [
 ];
 
 const GRAMMAR_EASY_PUNCT = [
-  { subtopicId: "g3.connectors", question: "איזה סימן בסוף משפט שאלה?", answer: "?", wrong: [".","!",","] },
-  { subtopicId: "g3.connectors", question: "איזה סימן בסוף משפט רגיל?", answer: ".", wrong: ["?","!",","] },
-  { subtopicId: "g3.connectors", question: "איזה סימן מתאים בסוף: 'מה שמך'", answer: "?", wrong: [".","!",","] },
-  { subtopicId: "g3.connectors", question: "איזה סימן מתאים בסוף: 'הילדים משחקים בחצר'", answer: ".", wrong: ["?","!",","] },
-  { subtopicId: "g3.connectors", question: "איזה סימן מפריד בין מילים ברשימה?", answer: ",", wrong: [".","?","!"] },
-  { subtopicId: "g3.connectors", question: "איזה סימן מתאים בסוף: 'איזה יום יפה'", answer: "!", wrong: [".","?",","] },
-  { subtopicId: "g3.connectors", question: "איזה סימן מתאים בסוף: 'האם אתה מוכן'", answer: "?", wrong: [".","!",","] },
-  { subtopicId: "g3.connectors", question: "איזה סימן מתאים בסוף: 'תודה רבה'", answer: ".", wrong: ["?",",","!"] },
+  { subtopicId: "g3.connectors", question: "איזה סימן בסוף משפט שאלה?", answer: "סימן שאלה", wrong: ["נקודה","סימן קריאה","פסיק"] },
+  { subtopicId: "g3.connectors", question: "איזה סימן בסוף משפט רגיל?", answer: "נקודה", wrong: ["סימן שאלה","סימן קריאה","פסיק"] },
+  { subtopicId: "g3.connectors", question: "איזה סימן מתאים בסוף: 'מה שמך'", answer: "סימן שאלה", wrong: ["נקודה","סימן קריאה","פסיק"] },
+  { subtopicId: "g3.connectors", question: "איזה סימן מתאים בסוף: 'הילדים משחקים בחצר'", answer: "נקודה", wrong: ["סימן שאלה","סימן קריאה","פסיק"] },
+  { subtopicId: "g3.connectors", question: "איזה סימן מפריד בין מילים ברשימה?", answer: "פסיק", wrong: ["נקודה","סימן שאלה","סימן קריאה"] },
+  { subtopicId: "g3.connectors", question: "איזה סימן מתאים בסוף: 'איזה יום יפה'", answer: "סימן קריאה", wrong: ["נקודה","סימן שאלה","פסיק"] },
+  { subtopicId: "g3.connectors", question: "איזה סימן מתאים בסוף: 'האם אתה מוכן'", answer: "סימן שאלה", wrong: ["נקודה","סימן קריאה","פסיק"] },
+  { subtopicId: "g3.connectors", question: "איזה סימן מתאים בסוף: 'תודה רבה'", answer: "נקודה", wrong: ["סימן שאלה","פסיק","סימן קריאה"] },
 ];
 
 const GRAMMAR_EASY_AGREE = [
@@ -191,7 +191,7 @@ const GRAMMAR_HARD_TENSE = [
 
 const GRAMMAR_HARD_CONN = [
   { subtopicId: "g3.connectors", question: "איזו מילה מתאימה: '___ למדתי, ___ שכחתי'?", answer: "לפעמים", wrong: ["תמיד","לכן","ו"] },
-  { subtopicId: "g3.connectors", question: "איזו מילה מתאימה: '___ היה קשה, ___ הצלחנו'?", answer: "למרות ש", wrong: ["ו","או","כי"] },
+  { subtopicId: "g3.connectors", question: "איזו מילה מתאימה: '___ היה קשה, ___ הצלחנו'?", answer: "למרות ש", wrong: ["לכן","מאחר ש","אם"] },
   { subtopicId: "g3.connectors", question: "איזו מילה מתאימה: '___ תשאל, ___ תדע'?", answer: "אם", wrong: ["אבל","למרות","או"] },
   { subtopicId: "g3.connectors", question: "מה תפקיד 'אף על פי'?", answer: "מראה ניגוד", wrong: ["מחבר רשימה","שואל שאלה","מציין מקום"] },
   { subtopicId: "g3.connectors", question: "איזו מילה מתאימה: '___ סיימנו, ___ חגגנו'?", answer: "כש", wrong: ["או","למרות","אם לא"] },

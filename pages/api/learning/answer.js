@@ -26,6 +26,7 @@ import { guardCookieMutationOrigin } from "../../../lib/security/api-guards.js";
 import { assertLearningSubjectSessionAllowed } from "../../../lib/learning/subject-permissions/session-asserts.server.js";
 import { classifyActivityEvidence } from "../../../lib/learning/activity-classification.js";
 import { normalizeQuestionEnginePayload } from "../../../lib/learning/question-engine-metadata.js";
+import { normalizeAnswerEvidence } from "../../../lib/learning/answer-evidence-contract.js";
 import { buildDiagnosticCanonicalMetadata } from "../../../lib/learning/diagnostic-canonical-metadata.js";
 import { trackServerAnalyticsEvent } from "../../../lib/analytics/track-event.server.js";
 import { buildAnswerLevelFields } from "../../../lib/learning/session-evidence-levels.js";
@@ -257,6 +258,12 @@ export default async function handler(req, res) {
       answerPayload.questionEngine = canonicalBundle.enrichedQuestionEngine;
     } else if (questionEngine) {
       answerPayload.questionEngine = questionEngine;
+    }
+    const storedEvidence = normalizeAnswerEvidence(
+      questionEngine?.answerEvidence || answerPayload.questionEngine?.answerEvidence
+    );
+    if (storedEvidence) {
+      answerPayload.answerEvidence = storedEvidence;
     }
     if (canonicalBundle.diagnosticMetadata) {
       answerPayload.diagnosticMetadata = canonicalBundle.diagnosticMetadata;

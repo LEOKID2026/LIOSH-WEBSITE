@@ -81,6 +81,7 @@ import {
   clearActiveDiagnosticState,
   decrementPendingProbeExpiry,
 } from "../../utils/active-diagnostic-runtime/index.js";
+import { useMasterDiagnosticPersistence } from "../../lib/learning/useMasterDiagnosticPersistence.js";
 import {
   hebrewScriptLikely,
   isChildHebrewNiqqudGradeKey,
@@ -298,6 +299,7 @@ export default function HebrewMaster() {
   const hebrewTaskShapeTailRef = useRef([]);
   const hebrewPendingDiagnosticProbeRef = useRef(null);
   const hebrewHypothesisLedgerRef = useRef(null);
+  const hebrewAdaptiveStateRef = useRef(null);
   const learningProfileStudentIdRef = useRef(null);
   const learningProfileHydratedRef = useRef(false);
   const [serverAccountSubjectAccuracyPct, setServerAccountSubjectAccuracyPct] = useState(null);
@@ -865,12 +867,22 @@ export default function HebrewMaster() {
     );
   }, [router.isReady, router.query, grade]);
 
-  useEffect(() => {
-    clearActiveDiagnosticState(
-      hebrewPendingDiagnosticProbeRef,
-      hebrewHypothesisLedgerRef
-    );
-  }, [grade, level, operation, practiceFocus]);
+  const {
+    snapshot: snapshotHebrewDiagnostic,
+    resolveAdaptiveTarget: resolveHebrewAdaptiveTarget,
+    recordAdaptive: recordHebrewAdaptive,
+  } = useMasterDiagnosticPersistence({
+    studentIdRef: learningProfileStudentIdRef,
+    subjectId: "hebrew",
+    gradeKey: grade,
+    levelKey: level,
+    operationOrTopic: operation,
+    pendingRef: hebrewPendingDiagnosticProbeRef,
+    ledgerRef: hebrewHypothesisLedgerRef,
+    adaptiveRef: hebrewAdaptiveStateRef,
+    sessionFullName,
+    forceKindRef: practiceForceKindRef,
+  });
 
   const [selectedRow, setSelectedRow] = useState(null);
   const [selectedCol, setSelectedCol] = useState(null);
@@ -1599,6 +1611,8 @@ export default function HebrewMaster() {
     }
 
     const localRecentQuestions = SessionAntiRepeatBuffer.fromIterable(recentQuestions);
+
+    resolveHebrewAdaptiveTarget({ operation: operationForState });
 
     const probeAtStart = hebrewPendingDiagnosticProbeRef.current;
     const probeCandidate =
@@ -2396,6 +2410,8 @@ export default function HebrewMaster() {
           now: probeAnsweredAt,
         }
       );
+      recordHebrewAdaptive(inferredTags?.[0] || null, isCorrect);
+      snapshotHebrewDiagnostic();
       diagnosticProbeMetaForSave = buildDiagnosticProbeClientMeta({
         probeMeta: questionForSave._probeMeta,
         ledger: hebrewHypothesisLedgerRef.current,

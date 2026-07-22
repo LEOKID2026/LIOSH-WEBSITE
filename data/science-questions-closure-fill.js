@@ -784,7 +784,8 @@ export const SCIENCE_QUESTIONS_CLOSURE_FILL = [
       "g1",
       "g2",
       "g3",
-      "g4"
+      "g4",
+      "g5"
     ],
     "minLevel": "hard",
     "maxLevel": "hard",

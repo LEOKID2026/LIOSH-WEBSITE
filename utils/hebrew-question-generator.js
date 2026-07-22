@@ -7,6 +7,9 @@ import {
   stripHebrewQuestionPedagogicalLeadIn,
 } from './hebrew-legacy-metadata.js';
 import { sanitizeQuestionForStudentDisplay } from './student-question-stem-sanitizer.js';
+import { applyMcqEvidenceTaggingToQuestion } from '../lib/learning/mcq-option-evidence-tagging.js';
+import { defaultErrorTagsForSubjectTopic } from '../lib/learning/mcq-subject-default-error-tags.js';
+import { normalizeExpectedErrorTags } from '../lib/learning/taxonomy-tag-normalizer.js';
 import {
   withG1SubtopicPreference,
   attachG1SubtopicParams,
@@ -5615,7 +5618,22 @@ export function finalizeHebrewMcq(raw, selectedTopic, levelKey, gradeKey) {
     if (padded.correctIndex != null) q.correct = padded.correctIndex;
     q.optionCount = padded.answers.length;
   }
-  return sanitizeQuestionForStudentDisplay(q);
+  return applyMcqEvidenceTaggingToQuestion({
+    ...sanitizeQuestionForStudentDisplay(q),
+    subjectId: "hebrew",
+    subject: "hebrew",
+    type: "mcq",
+    options: q.answers,
+    answers: q.answers,
+    correctIndex: q.correct,
+    params: {
+      ...(q.params || {}),
+      expectedErrorTags: normalizeExpectedErrorTags([
+        ...defaultErrorTagsForSubjectTopic("hebrew", q.topic || q.operation, q.params?.patternFamily),
+        ...(q.params?.expectedErrorTags || q.params?.expectedErrorTypes || []),
+      ]),
+    },
+  });
 }
 
 function isShallowLegacyQuestion(raw, levelKey, gradeKey) {

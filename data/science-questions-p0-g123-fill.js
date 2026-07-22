@@ -299,7 +299,7 @@ export const SCIENCE_QUESTIONS_P0_G123_FILL = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "מה התועלת בשתיית מים במהלך היום?",
+  "stem": "מדוע חשוב לשתות מים לאורך היום?",
   "options": [
     "כדי לעזור לגוף לעבוד כראוי",
     "כדי שלא נצטרך לנשום",

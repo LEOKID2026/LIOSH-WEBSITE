@@ -4,6 +4,9 @@
 import { sanitizeQuestionForStudentDisplay } from "./student-question-stem-sanitizer.js";
 import { mergeDiagnosticContractIntoParams } from "./diagnostic-question-contract.js";
 import { attachCanonicalMetadataToEnglishQuestion } from "../lib/learning/english-canonical-metadata.js";
+import { applyMcqEvidenceTaggingToQuestion } from "../lib/learning/mcq-option-evidence-tagging.js";
+import { defaultErrorTagsForSubjectTopic } from "../lib/learning/mcq-subject-default-error-tags.js";
+import { normalizeExpectedErrorTags } from "../lib/learning/taxonomy-tag-normalizer.js";
 import { mcqCellValue } from "./mcq-option-cell.js";
 import { ENGLISH_GRADES, ENGLISH_GRADE_ORDER } from "../data/english-curriculum.js";
 import {
@@ -1063,7 +1066,26 @@ export function generateQuestion(
     }
   }
 
-  return finalized;
+  return applyMcqEvidenceTaggingToQuestion({
+    ...finalized,
+    subjectId: "english",
+    subject: "english",
+    type: "mcq",
+    options: finalized.answers,
+    answers: finalized.answers,
+    correctIndex: finalized.correct ?? finalized.correctIndex,
+    params: {
+      ...(finalized.params || {}),
+      expectedErrorTags: normalizeExpectedErrorTags([
+        ...defaultErrorTagsForSubjectTopic(
+          "english",
+          selectedTopic,
+          finalized.params?.patternFamily
+        ),
+        ...(finalized.params?.expectedErrorTags || finalized.params?.expectedErrorTypes || []),
+      ]),
+    },
+  });
 }
 
 export { ENGLISH_GRADES, ENGLISH_GRADE_ORDER };

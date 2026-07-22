@@ -37,8 +37,8 @@ import {
   buildHebrewApprovedVerbalMasterLayout,
   buildHebrewApprovedVerbalMcqGridClassName,
   getHebrewApprovedSingleVerbalQuestionStyle,
-  HEBREW_APPROVED_VERBAL_ANSWER_AREA_CLASS,
 } from "../../utils/hebrew-approved-verbal-master-contract.client.js";
+import { LEARNING_MASTER_ANSWER_SURFACE_CLASS } from "../../utils/learning-master-question-pressure.client.js";
 import EnglishPhonicsAudioPanel from "../../components/EnglishPhonicsAudioPanel";
 import { validateAudioStem } from "../../utils/audio-task-contract";
 import { isLowerGradeG1G2Key } from "../../utils/lower-grade-practice-runtime-quality";
@@ -61,6 +61,11 @@ import {
   clearActiveDiagnosticState,
   decrementPendingProbeExpiry,
 } from "../../utils/active-diagnostic-runtime/index.js";
+import { useMasterDiagnosticPersistence } from "../../lib/learning/useMasterDiagnosticPersistence.js";
+import {
+  buildMasterDiagnosticCtx,
+  snapshotMasterDiagnosticState,
+} from "../../lib/learning/diagnostic-state-master-helper.js";
 import { mergeDiagnosticContractIntoParams } from "../../utils/diagnostic-question-contract";
 import { mcqCellValue } from "../../utils/mcq-option-cell";
 import { useLearningMasterUi } from "../../hooks/useLearningMasterUi";
@@ -715,6 +720,7 @@ export default function EnglishMaster() {
   const [mistakes, setMistakes] = useState([]);
   const englishPendingDiagnosticProbeRef = useRef(null);
   const englishHypothesisLedgerRef = useRef(null);
+  const englishAdaptiveStateRef = useRef(null);
   const englishGrammarRecentRowKeysRef = useRef([]);
   const bookPracticePresetRef = useRef(null);
   const practiceForceKindRef = useRef(null);
@@ -898,13 +904,26 @@ export default function EnglishMaster() {
   const [showPlayerProfile, setShowPlayerProfile] = useState(false);
   const gradeLabels = ["א", "ב", "ג", "ד", "ה", "ו"];
 
+  const {
+    snapshot: snapshotEnglishDiagnostic,
+    resolveAdaptiveTarget: resolveEnglishAdaptiveTarget,
+    recordAdaptive: recordEnglishAdaptive,
+  } = useMasterDiagnosticPersistence({
+    studentIdRef: learningProfileStudentIdRef,
+    subjectId: "english",
+    gradeKey: grade,
+    levelKey: level,
+    operationOrTopic: topic,
+    pendingRef: englishPendingDiagnosticProbeRef,
+    ledgerRef: englishHypothesisLedgerRef,
+    adaptiveRef: englishAdaptiveStateRef,
+    sessionFullName,
+    forceKindRef: practiceForceKindRef,
+  });
+
   useEffect(() => {
-    clearActiveDiagnosticState(
-      englishPendingDiagnosticProbeRef,
-      englishHypothesisLedgerRef
-    );
     englishGrammarRecentRowKeysRef.current = [];
-  }, [grade, level, topic, practiceFocus]);
+  }, [grade, level, topic, practiceFocus, sessionFullName]);
 
   useEffect(() => {
     let cancelled = false;
@@ -1744,6 +1763,9 @@ export default function EnglishMaster() {
     const localRecentQuestions = SessionAntiRepeatBuffer.fromIterable(recentQuestions);
     const probeAtStart = englishPendingDiagnosticProbeRef.current;
     const probeMetaHolder = { current: null };
+
+    resolveEnglishAdaptiveTarget({ operation: topicForState });
+
     do {
       question = generateQuestion(
         levelConfig,
@@ -2083,6 +2105,19 @@ export default function EnglishMaster() {
           now: probeAnsweredAt,
         }
       );
+      recordEnglishAdaptive(inferredTags?.[0] || null, isCorrect);
+      snapshotMasterDiagnosticState(
+        buildMasterDiagnosticCtx(
+          learningProfileStudentIdRef.current,
+          "english",
+          grade,
+          level,
+          topic
+        ),
+        englishPendingDiagnosticProbeRef,
+        englishHypothesisLedgerRef,
+        englishAdaptiveStateRef
+      );
       diagnosticProbeMetaForSave = buildDiagnosticProbeClientMeta({
         probeMeta: questionForSave._probeMeta,
         ledger: englishHypothesisLedgerRef.current,
@@ -2341,6 +2376,18 @@ export default function EnglishMaster() {
               fallbackLevel: currentQuestion.levelKey || level,
             },
             "english"
+          );
+          snapshotMasterDiagnosticState(
+            buildMasterDiagnosticCtx(
+              learningProfileStudentIdRef.current,
+              "english",
+              grade,
+              level,
+              topic
+            ),
+            englishPendingDiagnosticProbeRef,
+            englishHypothesisLedgerRef,
+            englishAdaptiveStateRef
           );
         } else {
           englishPendingDiagnosticProbeRef.current = null;
@@ -3069,7 +3116,7 @@ export default function EnglishMaster() {
                   />
                   </div>
 
-                  <div className={HEBREW_APPROVED_VERBAL_ANSWER_AREA_CLASS}>
+                  <div className={`${LEARNING_MASTER_ANSWER_SURFACE_CLASS} relative z-30`}>
                     {currentQuestion.qType === "typing" ? (
                       <div className={MB.answerWrap}>
                         <div className="text-center mb-3 max-[420px]:mb-2">

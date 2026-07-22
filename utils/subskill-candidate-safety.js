@@ -4,7 +4,7 @@
  */
 
 import { TAXONOMY_BY_ID } from "./diagnostic-engine-v2/taxonomy-registry.js";
-import { passesRecurrenceRules } from "./diagnostic-engine-v2/recurrence.js";
+import { passesEvidenceRecurrenceRules } from "./diagnostic-engine-v2/evidence-recurrence.js";
 
 /** Align with existing engine v1 guardrails (T1 = q≥10); not a recurrence threshold change. */
 export const MIN_Q_FOR_SAFE_SUBSKILL = 10;
@@ -168,7 +168,7 @@ export function assessSubskillCandidateSafety(ctx) {
 
   /** @type {string} */
   let sourceOfSubskill = "unknown";
-  if (ctx.recurrenceMatched && trow && passesRecurrenceRules(wrongs, trow)) {
+  if (ctx.recurrenceMatched && trow && passesEvidenceRecurrenceRules(wrongs, trow)) {
     sourceOfSubskill = possibleErrorPatternsPresent
       ? "recurrence_with_error_patterns"
       : "recurrence_events";

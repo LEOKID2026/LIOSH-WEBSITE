@@ -84,7 +84,8 @@ export const SCIENCE_QUESTIONS_PHASE_B = [
     "id": "sci_phb_g1_materials_med_03",
     "topic": "materials",
     "grades": [
-      "g1"
+      "g1",
+      "g2"
     ],
     "minLevel": "medium",
     "maxLevel": "medium",
@@ -121,7 +122,8 @@ export const SCIENCE_QUESTIONS_PHASE_B = [
     "id": "sci_phb_g1_materials_med_04",
     "topic": "materials",
     "grades": [
-      "g1"
+      "g1",
+      "g2"
     ],
     "minLevel": "medium",
     "maxLevel": "medium",
@@ -159,7 +161,8 @@ export const SCIENCE_QUESTIONS_PHASE_B = [
     "topic": "materials",
     "grades": [
       "g1",
-      "g2"
+      "g2",
+      "g3"
     ],
     "minLevel": "hard",
     "maxLevel": "hard",
@@ -197,7 +200,8 @@ export const SCIENCE_QUESTIONS_PHASE_B = [
     "topic": "materials",
     "grades": [
       "g1",
-      "g2"
+      "g2",
+      "g3"
     ],
     "minLevel": "hard",
     "maxLevel": "hard",
@@ -423,7 +427,8 @@ export const SCIENCE_QUESTIONS_PHASE_B = [
     "id": "sci_phb_g1_earth_space_med_04",
     "topic": "earth_space",
     "grades": [
-      "g1"
+      "g1",
+      "g2"
     ],
     "minLevel": "medium",
     "maxLevel": "medium",
@@ -461,7 +466,8 @@ export const SCIENCE_QUESTIONS_PHASE_B = [
     "topic": "earth_space",
     "grades": [
       "g1",
-      "g2"
+      "g2",
+      "g3"
     ],
     "minLevel": "hard",
     "maxLevel": "hard",
@@ -499,7 +505,8 @@ export const SCIENCE_QUESTIONS_PHASE_B = [
     "topic": "earth_space",
     "grades": [
       "g1",
-      "g2"
+      "g2",
+      "g3"
     ],
     "minLevel": "hard",
     "maxLevel": "hard",
@@ -725,7 +732,8 @@ export const SCIENCE_QUESTIONS_PHASE_B = [
     "id": "sci_phb_g1_environment_med_04",
     "topic": "environment",
     "grades": [
-      "g1"
+      "g1",
+      "g2"
     ],
     "minLevel": "medium",
     "maxLevel": "medium",
@@ -763,7 +771,8 @@ export const SCIENCE_QUESTIONS_PHASE_B = [
     "topic": "environment",
     "grades": [
       "g1",
-      "g2"
+      "g2",
+      "g3"
     ],
     "minLevel": "hard",
     "maxLevel": "hard",
@@ -801,7 +810,8 @@ export const SCIENCE_QUESTIONS_PHASE_B = [
     "topic": "environment",
     "grades": [
       "g1",
-      "g2"
+      "g2",
+      "g3"
     ],
     "minLevel": "hard",
     "maxLevel": "hard",
@@ -915,7 +925,8 @@ export const SCIENCE_QUESTIONS_PHASE_B = [
     "grades": [
       "g1",
       "g2",
-      "g3"
+      "g3",
+      "g4"
     ],
     "minLevel": "hard",
     "maxLevel": "hard",
@@ -954,7 +965,8 @@ export const SCIENCE_QUESTIONS_PHASE_B = [
     "grades": [
       "g1",
       "g2",
-      "g3"
+      "g3",
+      "g4"
     ],
     "minLevel": "hard",
     "maxLevel": "hard",
@@ -1633,7 +1645,8 @@ export const SCIENCE_QUESTIONS_PHASE_B = [
     "id": "sci_phb_g3_earth_space_eas_01",
     "topic": "earth_space",
     "grades": [
-      "g3"
+      "g3",
+      "g4"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -2189,7 +2202,8 @@ export const SCIENCE_QUESTIONS_PHASE_B = [
     "id": "sci_phb_g5_materials_eas_02",
     "topic": "materials",
     "grades": [
-      "g5"
+      "g5",
+      "g6"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",
@@ -2375,7 +2389,8 @@ export const SCIENCE_QUESTIONS_PHASE_B = [
     "id": "sci_phb_g5_earth_space_eas_02",
     "topic": "earth_space",
     "grades": [
-      "g5"
+      "g5",
+      "g6"
     ],
     "minLevel": "easy",
     "maxLevel": "easy",

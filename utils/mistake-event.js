@@ -149,6 +149,22 @@ export function normalizeMistakeEvent(raw, subjectId) {
   const subtype = strOrNull(p.subtype ?? params.subtype);
   const distractorFamily = strOrNull(p.distractorFamily ?? params.distractorFamily);
   const conceptTag = strOrNull(p.conceptTag ?? params.conceptTag);
+  const misconceptionTag =
+    strOrNull(p.misconceptionTag) ||
+    strOrNull(p.metadata && typeof p.metadata === "object" ? p.metadata.misconceptionTag : null) ||
+    strOrNull(
+      p.answerEvidence && typeof p.answerEvidence === "object"
+        ? p.answerEvidence.detectedMisconception
+        : null
+    ) ||
+    strOrNull(
+      p.questionEngine && typeof p.questionEngine === "object"
+        ? p.questionEngine.misconceptionTag
+        : null
+    ) ||
+    (distractorFamily && distractorFamily !== "unknown" && distractorFamily !== "generic_proximity"
+      ? distractorFamily
+      : null);
 
   const diagnosticSkillId = strOrNull(p.diagnosticSkillId ?? params.diagnosticSkillId);
   const nextProbeSkillId = strOrNull(p.nextProbeSkillId ?? params.nextProbeSkillId);
@@ -251,6 +267,7 @@ export function normalizeMistakeEvent(raw, subjectId) {
     patternFamily,
     subtype,
     distractorFamily,
+    misconceptionTag,
     conceptTag,
     answerMode: strOrNull(p.answerMode),
     responseMs: optFiniteNumber(p.responseMs ?? p.timeSpentMs ?? params.responseMs),
@@ -281,6 +298,7 @@ export function normalizeMistakeEvent(raw, subjectId) {
  */
 export function mistakePatternClusterKey(ev) {
   if (!ev) return "unspecified";
+  if (ev.misconceptionTag) return `mt:${ev.misconceptionTag}`;
   if (ev.patternFamily) return `pf:${ev.patternFamily}`;
   if (ev.subtype && ev.kind) return `k:${ev.kind}|st:${ev.subtype}`;
   if (ev.kind) return `k:${ev.kind}`;

@@ -5,2524 +5,4587 @@
  */
 export const SCIENCE_QUESTIONS_PHASE3 = [
   {
-    "id": "env_28",
-    "topic": "environment",
+    "id": "sci_phb_g1_materials_med_04",
+    "topic": "materials",
     "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "בעיר גדולה הוגדלו שטחי בטון וכבישים, ופחתו שטחי גינות ועצים. מה הסיכוי הגבוה ביותר לתוצאה מיידית ביום חם?",
-    "options": [
-      "ירידה בלחות היחסית במרכז העיר לעומת סביבה ירוקה",
-      "עלייה במהירות הרוח בלבד בלי שינוי טמפרטורה",
-      "הגברת מידת המלח בים התיכון ליד החוף",
-      "הפסקת פעילות מערכת הנשימה בכל הצמחים באזור"
-    ],
-    "correctIndex": 0,
-    "explanation": "בטון ואספלט חמים נוטים לחמם את הסביבה ולפחית אידוי מים מצמחים; ביום חם זה מגביר לעיתים אפקט חום ומרגיש 'לחץ חום' בעיר. לחות יחסית לעיתים יורדת כי פחות אידוי מצמחים ופחות קירור מקומי מצל וממים.",
-    "theoryLines": [
-      "אי הפרדות עירוניות ('איי חום') קשורות לכיסוי קרקע ולצל.",
-      "צמחים משפיעים על אידוי ועל קירור מקומי דרך צל ומים."
-    ],
-    "params": {
-      "patternFamily": "sci_environment_ecosystems",
-      "subtype": "sci_environment_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "env_29",
-    "topic": "environment",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "חקלאי השקה יתר על שדה בקרקע כבדה. מה ההיגיון המדעי הסביר ביותר לכך שבסופו של דבר עלול לצאת פחות מזון מהשדה למרות יותר מים?",
-    "options": [
-      "רוויה ארוכת טווח יוצרת תנאי ללא חמצן בקרקע, פגיעה בשורשים ושחרור גזים המזיקים לצמיחה",
-      "מים מדללים את הכלורופיל בצמח עד שהוא נעלם לחלוטין ביום אחד",
-      "הצמחים עוברים לנשימה לא נרצפת ומפסיקים לספוג CO₂ לתמיד",
-      "המים גורמים לצמחים 'להתנוון' כי הם מזוהמים תמיד בניטרטים בלבד"
-    ],
-    "correctIndex": 0,
-    "explanation": "השקיית יתר עלולה לדכא חמצן בנרהיזוספירה, לפגוע בקליטת מזון ושורשים ולהפחית יעילות - לעיתים מופיעים גם בצקות או ריקבון שורש. לא 'דילול כלורופיל' ולא עצירת CO₂ לנצח הם ההסבר המרכזי.",
-    "theoryLines": [
-      "שורשים צריכים חמצן לנשיפה תאית.",
-      "מים עודפים משנים מצבי חמצן בקרקע ואת קשרי הגומלין עם חיידקים."
-    ],
-    "params": {
-      "patternFamily": "sci_environment_ecosystems",
-      "subtype": "sci_environment_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "env_30",
-    "topic": "environment",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "מין מסוים צמח מגיב לטיפול חקלאי חדש וגדל מהר מאוד. למה זה עלול להיות רמז לסיכון אקולוגי ולא רק להצלחה?",
-    "options": [
-      "יתכן שכיסוי חקלאי גובר יצמצם מינים אחרים ופגיעה בגיוון ובביוסטביליות",
-      "צמחים איטיים נחשבים ליחידים המזיקים לסביבה, ולכן צמיחה מהירה תמיד מסמנת הצלחה",
-      "גדילה מהירה מוכיחה שאין צורך בניטור קרקע או מים",
-      "מגוון מינים גדול תמיד עולה בלי קשר לשטח או למשאבים"
-    ],
-    "correctIndex": 0,
-    "explanation": "יתרון תחרותי חד פעמי עלול ללחוץ על מינים אחרים, לפגוע במאגרים גנטיים ובשירותים אקולוגיים. לכן נדרשת חשיבה מערכתית, לא רק תשואה לשדה בודד.",
-    "theoryLines": [
-      "גיוון ביולוגי תומך ביציבות מול מחלות ובתי גידול.",
-      "שינוי יחסי גומלין יכול לשנות את שרשרת המזון."
-    ],
-    "params": {
-      "patternFamily": "sci_environment_ecosystems",
-      "subtype": "sci_environment_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "env_31",
-    "topic": "environment",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "אם נשבר קטע מרשת המזון באגם (למשל היעלם טורף עליון), מה התשובה הזהירה ביותר?",
-    "options": [
-      "ההשפעה תלויה במהירות ובמבנה הרשת; לעיתים יש חליפות תפקידים ולעיתים צניחת יציבות",
-      "תמיד תתרחש התאוששות מלאה תוך יומיים בלי תלות במין",
-      "תמיד ייעלמו כל הצמחים קודם כי הטורף הוא המגדל",
-      "שרשרת המזון אינה משתנה אם רק חסר טורף אחד משלושה עשר"
-    ],
-    "correctIndex": 0,
-    "explanation": "רשתות אקולוגיות מורכבות; איבוד טורף עליון עשוי לשנות אוכלוסיות של טורפים/נטרפים אחרים בדרכים שונות. אין כלל אחד פשוט לכל האגמים.",
-    "theoryLines": [
-      "רשת מזון היא מערכת יחסים רבת שכבות.",
-      "שינוי בולט עלול ליצור אפקטים מדורגים (במדרגות)."
-    ],
-    "params": {
-      "patternFamily": "sci_environment_ecosystems",
-      "subtype": "sci_environment_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "env_32",
-    "topic": "environment",
-    "grades": [
-      "g5",
-      "g6"
+      "g1",
+      "g2"
     ],
     "minLevel": "medium",
     "maxLevel": "medium",
     "type": "mcq",
-    "stem": "מה ההבדל העיקרי בין מיחזור נייר לבין הפחתת צריכת נייר מלכתחילה?",
+    "stem": "ממה עשוי כוס פלסטיק לרוב?",
     "options": [
-      "הפחתה מקטינה ביקוש למשאבים ופסולת מראש; מיחזור מטפל בפסולת שכבר נוצרה",
-      "אין הבדל: שניהם אומרים את אותה פעולה בדיוק",
-      "מיחזור תמיד נפחים יותר אנרגיה מאשר הפקת נייר חדש ולכן מיותר",
-      "הפחתה משמעה רק לזרוק פחות בלי לשנות ייצור"
+      "חומר סינתטי",
+      "עץ מלא בדרך כלל",
+      "ברזל כבד",
+      "זכוכית שקופה"
     ],
     "correctIndex": 0,
-    "explanation": "היררכיית 3R שמה 'הפחתה' לפני 'מיחזור'. הפחתת שימוש יורדת היקף גזירה/ייצור; מיחזור עוסק במוצרים לאחר שימוש כדי לצמצם הטמנה ולחסוך חומר גלם.",
-    "theoryLines": [
-      "\"צמצם\" לפני \"השתמש מחדש\" לפני \"מחזר\".",
-      "כל שלב חוסך משאבים בשלב אחר במחזור החיים."
-    ],
+    "explanation": "פלסטיק הוא חומר מלאכותי קל.",
     "params": {
-      "patternFamily": "sci_environment_sustainability",
-      "subtype": "sci_environment_general",
-      "cognitiveLevel": "understanding",
+      "patternFamily": "sci_phb_materials_g1_medium_g1_materials_plastic",
+      "subtype": "sci_materials_general",
+      "conceptTag": "g1_materials_plastic",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
       "expectedErrorTypes": [
+        "fact_recall_gap",
         "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
+        "careless_error"
       ],
-      "difficulty": "standard"
-    }
+      "expectedErrorTags": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_materials_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "materials",
+        "grade": "g1",
+        "skillId": "sci_materials_general",
+        "subSkill": "sci_materials_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "recall",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "fact_recall_gap",
+          "concept_confusion",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_materials_general",
+    "skillId": "sci_materials_general"
   },
   {
-    "id": "env_33",
-    "topic": "environment",
+    "id": "sci_phb_g1_materials_hard_01",
+    "topic": "materials",
     "grades": [
-      "g5",
-      "g6"
+      "g1",
+      "g2",
+      "g3"
     ],
     "minLevel": "hard",
     "maxLevel": "hard",
     "type": "mcq",
-    "stem": "למה עלייה אמיתית ומתמשכת בגזי חממה באטמוספרה קשורה לעליית ממוצע טמפרטורות, ולא רק לתרגום ישיר 'יותר חום מהשמש'?",
+    "stem": "למה אבן וספוג שונים במגע?",
     "options": [
-      "כי הגזים מחזקים לכידת קרינה חוזרת בתוך מערכת כדור הארץ אטמוספרה ומשנים איזון אנרגטי",
-      "כי השמש משנה בהירות בכל שנה בדיוק כמו שנת הלימודים",
-      "כי גזי חממה בולעים את כל קרינת השמש שמגיעה כך שאין יום ולילה",
-      "כי רק האוקיינוס קובע טמפרטורה וגזי חממה משפיעים על הכבידה"
+      "תכונות קשיחות",
+      "צבע בלבד",
+      "גודל בלבד",
+      "ריח בלבד"
     ],
     "correctIndex": 0,
-    "explanation": "מנגנון החממה: קרינה קצרת גל קולטת, פליטה ארוכת גל חזקה יותר, ונבנית שיווי משקל חם יותר. זה לא 'פחות שמש' בהכרח אלא שינוי בחוזק הלכידה.",
-    "theoryLines": [
-      "איזון אנרגטי קובע טמפרטורה ממוצעת.",
-      "פחמן דוחמצני ומתאן גורמים לחיזוק אפקט חממה."
-    ],
+    "explanation": "קשיחות ורכות הן תכונות חומר.",
     "params": {
-      "patternFamily": "sci_environment_ecosystems",
-      "subtype": "sci_environment_general",
+      "patternFamily": "sci_phb_materials_g1_hard_g1_materials_hardness_compare",
+      "subtype": "sci_materials_general",
+      "conceptTag": "g1_materials_hardness_compare",
+      "difficulty": "advanced",
       "cognitiveLevel": "analysis",
+      "kind": "phase_b",
       "expectedErrorTypes": [
+        "misconception",
         "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
+        "fact_recall_gap"
       ],
-      "difficulty": "advanced"
-    }
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_materials_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "materials",
+        "grade": "g1",
+        "skillId": "sci_materials_general",
+        "subSkill": "sci_materials_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_materials_general",
+    "skillId": "sci_materials_general"
   },
   {
-    "id": "env_34",
-    "topic": "environment",
+    "id": "sci_phb_g1_materials_hard_02",
+    "topic": "materials",
     "grades": [
-      "g4",
-      "g5",
-      "g6"
+      "g1",
+      "g2",
+      "g3"
+    ],
+    "minLevel": "hard",
+    "maxLevel": "hard",
+    "type": "mcq",
+    "stem": "מה קורה כשלוחצים על ספוג?",
+    "options": [
+      "משתנה צורה",
+      "נשבר לרסיסים",
+      "הופך למתכת",
+      "נעלם בדרך כלל"
+    ],
+    "correctIndex": 0,
+    "explanation": "חומר רך מתעצב וחוזר.",
+    "params": {
+      "patternFamily": "sci_phb_materials_g1_hard_g1_materials_sponge_press",
+      "subtype": "sci_materials_general",
+      "conceptTag": "g1_materials_sponge_press",
+      "difficulty": "advanced",
+      "cognitiveLevel": "analysis",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "concept_confusion",
+        "misconception",
+        "careless_error"
+      ],
+      "expectedErrorTags": [
+        "concept_confusion",
+        "misconception",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_materials_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "materials",
+        "grade": "g1",
+        "skillId": "sci_materials_general",
+        "subSkill": "sci_materials_general",
+        "questionType": "technical",
+        "problemClass": "mixed",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "concept_confusion",
+          "misconception",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_materials_general",
+    "skillId": "sci_materials_general"
+  },
+  {
+    "id": "sci_phb_g1_materials_hard_03",
+    "topic": "materials",
+    "grades": [
+      "g1",
+      "g2"
+    ],
+    "minLevel": "hard",
+    "maxLevel": "hard",
+    "type": "mcq",
+    "stem": "איך בודקים אם חומר מחוספס?",
+    "options": [
+      "מרגישים חיכוך",
+      "שוקלים אותו",
+      "מקשיבים לו",
+      "מריחים בלבד"
+    ],
+    "correctIndex": 0,
+    "explanation": "מחוספס יוצר חיכוך במגע.",
+    "params": {
+      "patternFamily": "sci_phb_materials_g1_hard_g1_materials_rough_test",
+      "subtype": "sci_materials_general",
+      "conceptTag": "g1_materials_rough_test",
+      "difficulty": "advanced",
+      "cognitiveLevel": "analysis",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "concept_confusion",
+        "misconception",
+        "careless_error"
+      ],
+      "expectedErrorTags": [
+        "concept_confusion",
+        "misconception",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_materials_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "materials",
+        "grade": "g1",
+        "skillId": "sci_materials_general",
+        "subSkill": "sci_materials_general",
+        "questionType": "technical",
+        "problemClass": "mixed",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "concept_confusion",
+          "misconception",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_materials_general",
+    "skillId": "sci_materials_general"
+  },
+  {
+    "id": "sci_phb_g1_materials_hard_04",
+    "topic": "materials",
+    "grades": [
+      "g1"
+    ],
+    "minLevel": "hard",
+    "maxLevel": "hard",
+    "type": "mcq",
+    "stem": "למה חומרים שונים זה מזה?",
+    "options": [
+      "לכל חומר תכונות",
+      "כולם זהים תמיד",
+      "רק הצבע משנה",
+      "אין הבדל בדרך כלל"
+    ],
+    "correctIndex": 0,
+    "explanation": "תכונות כמו קשיחות ורכות משתנות.",
+    "params": {
+      "patternFamily": "sci_phb_materials_g1_hard_g1_materials_different_props",
+      "subtype": "sci_materials_general",
+      "conceptTag": "g1_materials_different_props",
+      "difficulty": "advanced",
+      "cognitiveLevel": "analysis",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_materials_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "materials",
+        "grade": "g1",
+        "skillId": "sci_materials_general",
+        "subSkill": "sci_materials_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_materials_general",
+    "skillId": "sci_materials_general"
+  },
+  {
+    "id": "sci_phb_g1_earth_space_med_01",
+    "topic": "earth_space",
+    "grades": [
+      "g1",
+      "g2"
     ],
     "minLevel": "medium",
     "maxLevel": "medium",
     "type": "mcq",
-    "stem": "מדוע הוספת מדביר ללא הדרכה מקצועית עלולה לפגוע גם במינים שאינם המטרה (דגים, חרקים מועילים)?",
+    "stem": "מתי רואים שמש ביום?",
     "options": [
-      "כי חומרים פעילים עשויים לעבור בשרשרת המזון או לפגוע בלא ממוקדים",
-      "כי מדבירים פועלים רק על צמחים ולא נכנסים לבעלי חיים",
-      "כי כל חומר טבעי לא נשאר בכלל בסביבה אחרי דקה",
-      "כי רק טמפרטורה גבוהה פוגעת בחרקים"
+      "כשהשמיים בהירים",
+      "אזור עם הרבה אנשים",
+      "מקום עם מים",
+      "אזור בטבע בדרך כלל"
     ],
     "correctIndex": 0,
-    "explanation": "אי דיוק ביישום, נשיאה במים, או רגישות שונה בין מינים יוצרים דליפה אקולוגית. לכן חשוב ייעוץ, מינון, ומניעת חשיפה מיותרת.",
-    "theoryLines": [
-      "סביבה ובריאות קשורים לשימוש נכון בכימיקלים.",
-      "מינים שונים רגישים לרמות שונות של רעל."
-    ],
+    "explanation": "ביום השמש מאירה את השמיים.",
     "params": {
-      "patternFamily": "sci_environment_ecosystems",
-      "subtype": "sci_environment_general",
-      "cognitiveLevel": "understanding",
+      "patternFamily": "sci_phb_earth_space_g1_medium_g1_earth_sun_day",
+      "subtype": "sci_earth_space_general",
+      "conceptTag": "g1_earth_sun_day",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
       "expectedErrorTypes": [
+        "fact_recall_gap",
         "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
+        "careless_error"
       ],
-      "difficulty": "standard"
-    }
+      "expectedErrorTags": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_earth_space_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "earth_space",
+        "grade": "g1",
+        "skillId": "sci_earth_space_general",
+        "subSkill": "sci_earth_space_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "recall",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "fact_recall_gap",
+          "concept_confusion",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_earth_space_general",
+    "skillId": "sci_earth_space_general"
   },
   {
-    "id": "env_35",
-    "topic": "environment",
+    "id": "sci_phb_g1_earth_space_med_02",
+    "topic": "earth_space",
     "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "במצב שבו אוכלוסיית דגי טורף באגם גדלה מהר לאחר כניסת דג טורף חדש, מהי הבעיה המרכזית לגוף המים אם אין טורף עליון שיאזן?",
-    "options": [
-      "הטורף החדש עלול לסיים פריטי מזון ולייצר קריסת אוכלוסיות או שרשרת מזון מקוצרת",
-      "הטורף תמיד יגדל בלי הגבלה כי אין מגבלת מזון בעולם",
-      "כל הדגים האחרים יגדלו אותו דבר כי יש פחות תחרות",
-      "האגם יהפוך מי מלח דרך הטורף בלבד"
-    ],
-    "correctIndex": 0,
-    "explanation": "בלי ויסות, טורף חדש יכול לדכא נטרפים עד לנקודת מנוסה או להכחיד מינים; זה מסכן יציבות. המקרה מדגים חדירת מינים פולשים.",
-    "theoryLines": [
-      "מין פולש עלול לשנות שיווי משקל שיצרב שנים.",
-      "אוכלוסייה יציבה תלויה בזרימת אנרגיה וחומר."
-    ],
-    "params": {
-      "patternFamily": "sci_environment_ecosystems",
-      "subtype": "sci_environment_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "env_36",
-    "topic": "environment",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "למה 'אנרגיה מתחדשת' לא פותרת אוטומטית את כל נזקי הסביבה?",
-    "options": [
-      "כי גם טורבינות, סוללות וכריית מתכות ללוחות שמש דורשים קרקע, משאבים ופסולת",
-      "כי אנרגיה מתחדשת אינה מייצרת חשמל מעולם",
-      "כי רוח ושמש פועלים רק בלילה",
-      "כי אין צורך בתכנון אתרים כשהכל טבעי"
-    ],
-    "correctIndex": 0,
-    "explanation": "מתחדשות מפחיתה פליטות דלקים פוסיליים אך עם שטחי תשתית, לוגיסטיקה ופירוק. צריך ניתוח מחזור חיים ולא סיסמה.",
-    "theoryLines": [
-      "שקילות סביבתית בודקת ייצור, תפעול וסוף חיים.",
-      "סתירה אקולוגית: יצירת שטחים לתשתית עשויה לפגוע בטבע."
-    ],
-    "params": {
-      "patternFamily": "sci_environment_sustainability",
-      "subtype": "sci_environment_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "env_37",
-    "topic": "environment",
-    "grades": [
-      "g5",
-      "g6"
+      "g1",
+      "g2"
     ],
     "minLevel": "medium",
     "maxLevel": "medium",
     "type": "mcq",
-    "stem": "תלמיד בנה הצהרה: 'אם הכניסו יותר דגים לאגם, יהיה יותר מזון לכל הטורפים'. איפה הטעות ההיגיונית?",
+    "stem": "מה יוצר צל בחצוץ?",
     "options": [
-      "מזון בשרשרת אינו גדל ללא מקור אנרגיה וצמחים/מזון בסיס; ייתכן דווקא דלון",
-      "יותר דגים תמיד יוצרים יותר צמחי מים",
-      "טורפים ניזונים רק מהשמש ולא מחומר אורגני",
-      "מספר בעלי חיים לא יכול להשפיע על ריכוז חמצן במים"
+      "גוף חוסם אור",
+      "הירח בלבד",
+      "גשם כבד בדרך כלל",
+      "רוח חזקה"
     ],
     "correctIndex": 0,
-    "explanation": "בשרשרת מזון דרושה בסיס פרימרי (צמחים/ פלנקטון). עומס דגים עלול לערער יציבות, להגדיל דלקון או לדכא נטרפים אחרים - לא להגדיל אוטומטית 'מלאי מזון'.",
-    "theoryLines": [
-      "אנרגיה נכנסת בעיקר דרך פוטוסינתזה.",
-      "יכולת נשיאה של מערכת מוגבלת בקרקע ובמזון."
-    ],
+    "explanation": "צל נוצר כשאור נחסם.",
     "params": {
-      "patternFamily": "sci_environment_ecosystems",
-      "subtype": "sci_environment_general",
-      "cognitiveLevel": "understanding",
+      "patternFamily": "sci_phb_earth_space_g1_medium_g1_earth_shadow",
+      "subtype": "sci_earth_space_general",
+      "conceptTag": "g1_earth_shadow",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
       "expectedErrorTypes": [
+        "misconception",
         "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
+        "fact_recall_gap"
       ],
-      "difficulty": "standard"
-    }
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_earth_space_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "earth_space",
+        "grade": "g1",
+        "skillId": "sci_earth_space_general",
+        "subSkill": "sci_earth_space_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_earth_space_general",
+    "skillId": "sci_earth_space_general"
   },
   {
-    "id": "env_38",
-    "topic": "environment",
+    "id": "sci_phb_g1_earth_space_med_03",
+    "topic": "earth_space",
     "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "מדוע שטפונות קיצוניות עלולות להעצים סחיפה של אדמה מעורבת בכימיקלים חקלאיים שימושיים?",
-    "options": [
-      "כי שטף מים חזק סוחף שכבת טיפוח ומוביל את החומרים לערוצי ניקוז ולמים פנימיים",
-      "כי מים לא נוגעים מעולם בקרקע חקלאית",
-      "כי כימיקלים נדבקים רק לאוויר ולא זזים",
-      "כי סחיפה נדירה מדי כדי לשנות משהו במים"
-    ],
-    "correctIndex": 0,
-    "explanation": "גשם חזק על שטח חשוף או מהודק עלול להדיח דשן וחומרים אל תוך מי נגר, נחלים ומאגרים. זה מדגיש חיבור בין מזג אקסטרימלי, קרקע וזיהום.",
-    "theoryLines": [
-      "זרימת מים מזיזה חומרים פיזיקליים וכימיים.",
-      "ניהול קרקע מפחית סחיפה."
-    ],
-    "params": {
-      "patternFamily": "sci_environment_ecosystems",
-      "subtype": "sci_environment_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "env_39",
-    "topic": "environment",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "ילד שואל: למה בעונת הקיץ בחוף עירוני פחות גשם אבל יותר אי נוחות? איזה עיקרון מדעי עוזר לנמק את שני הצדדים בעדינות?",
-    "options": [
-      "שילוב בין תבניות אקלים עונתיות לבין אדים ימיים וחום עירוני מקומי",
-      "מזג האוויר זהה בכל שכונה של העיר בכל רגע נתון",
-      "ים משחרר רק מלח ולכן לא משפיע על לחות",
-      "קיץ משמעו בוודאות אפס אידוי בעולם"
-    ],
-    "correctIndex": 0,
-    "explanation": "בקיץ לעיתים 'עונה יבשה' אזורית, אך ליד הים עשויים להיות אדים, ובריבוי בטון וחום עירוני עלולה להיות תחושת חום מעיקה. נדרש הבחנה בין מעט משקעים לבין תנאי נוחות תרמית.",
-    "theoryLines": [
-      "לחות וטמפרטורה משפיעות על תחושת החום.",
-      "אקלים עונתי ומקומי משולבים."
-    ],
-    "params": {
-      "patternFamily": "sci_environment_ecosystems",
-      "subtype": "sci_environment_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "env_40",
-    "topic": "environment",
-    "grades": [
-      "g5",
-      "g6"
+      "g1",
+      "g2"
     ],
     "minLevel": "medium",
     "maxLevel": "medium",
     "type": "mcq",
-    "stem": "מהו קשר הגיוני בין צמחייה לאורך נחל לבין יכולת הסינון הטבעי של מים זורמים?",
+    "stem": "מתי קר יותר לרוב בישראל?",
     "options": [
-      "שורשים ומבנה קרקע תומכים בסינון מכני ובקליטת מזהמים כימיים חלקיים",
-      "צמחים בונים מחסום בטון שחוסם זרימת מים לחלוטין",
-      "אין קשר: רק מסננות תעשייתיות מסננות",
-      "מים זורמים נקיים תמיד בלי קשר לצמחייה"
+      "בעונת החורף",
+      "באמצע הקיץ",
+      "בלילה בלבד",
+      "תמיד אותו דבר"
     ],
     "correctIndex": 0,
-    "explanation": "צמחי גדות משפרים מבנה קרקע, מפחיתים סחיפה ותומכים במיקרואורגניזמים המפרקים. זה לא תחליף מלא לטיפול אבל חשוב במערכת.",
-    "theoryLines": [
-      "שירותי מערכות אקולוגיות כוללים סינון טבעי.",
-      "סחיפה קשורה לכיסוי קרקע."
-    ],
+    "explanation": "בחורף הטמפרטורה נמוכה יותר.",
     "params": {
-      "patternFamily": "sci_environment_ecosystems",
-      "subtype": "sci_environment_general",
-      "cognitiveLevel": "understanding",
+      "patternFamily": "sci_phb_earth_space_g1_medium_g1_earth_winter_cold",
+      "subtype": "sci_earth_space_general",
+      "conceptTag": "g1_earth_winter_cold",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
       "expectedErrorTypes": [
+        "fact_recall_gap",
         "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
+        "careless_error"
       ],
-      "difficulty": "standard"
-    }
+      "expectedErrorTags": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_earth_space_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "earth_space",
+        "grade": "g1",
+        "skillId": "sci_earth_space_general",
+        "subSkill": "sci_earth_space_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "recall",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "fact_recall_gap",
+          "concept_confusion",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_earth_space_general",
+    "skillId": "sci_earth_space_general"
   },
   {
-    "id": "env_41",
-    "topic": "environment",
+    "id": "sci_phb_g1_earth_space_med_04",
+    "topic": "earth_space",
     "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "במחשבה 'מה קורה אם…': אם יורדים כמות הדייגים הלגיטימיים באזור דגה שנשחק, אך הברחות גדלות, מה התוצאה הסבירה?",
-    "options": [
-      "האוכלוסייה עלולה להמשיך לרדת כי ההסרה בפועל נשארת גבוהה",
-      "הדגים תמיד ישתכפלו פי שלושה בלי קשר ללחץ",
-      "דייגים חוקיים הם הגורם היחיד למגמת גודל האוכלוסייה",
-      "בריחה מחמירה אוטומטית מעלה את גודל הזכר מיד"
-    ],
-    "correctIndex": 0,
-    "explanation": "השפעה אקולוגית נובעת מכלל ההסרה בפועל. אכיפה חלשה יכולה לבטל הפחתה 'על הנייר'.",
-    "theoryLines": [
-      "ניהול משאבים משלב חוק, ניטור וקהילה.",
-      "לחץ דיג הוא גורם דינמי."
-    ],
-    "params": {
-      "patternFamily": "sci_environment_ecosystems",
-      "subtype": "sci_environment_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "env_42",
-    "topic": "environment",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "למה יצירת מאגרי מים מלאכותיים ללא חישוב איזון מים עלולה לפגוע במעיינות במורד הזרימה?",
-    "options": [
-      "כי שאיבת מים תת קרקעית או שינוי זרימה יכולים להקטין הזנה של אקוויפרים ולפגוע בבסיס המעיין",
-      "מעיינות תמיד ממלאים את עצמם בלי קשר למים באגם",
-      "מאגירים מלאכותיים מגבירים רק את כמות הגשם באזור בלי צנרת",
-      "מים במעיין מגיעים רק ממי גשם ישיר מעל הפיה ולא מזרימה תת קרקעית"
-    ],
-    "correctIndex": 0,
-    "explanation": "מעיינות רבים תלויים בתמיכה של מי תהום ושבילי זרימה. חישוב הידרולוגי חסר עלול להפחית האכלות או לשנות לחץ מים אזורי.",
-    "theoryLines": [
-      "מחזור המים כולל משטחים, ניקוז ותהום.",
-      "אגמים והספקות משנים משטר זרימה מקומי."
-    ],
-    "params": {
-      "patternFamily": "sci_environment_ecosystems",
-      "subtype": "sci_environment_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "env_43",
-    "topic": "environment",
-    "grades": [
-      "g5",
-      "g6"
+      "g1",
+      "g2"
     ],
     "minLevel": "medium",
     "maxLevel": "medium",
     "type": "mcq",
-    "stem": "מה ההבדל העיקרי בין חממה טבעית (אקלים) לבין 'אפקט חממה' כשמדברים על שינוי אקלים?",
+    "stem": "מה רואים בלילה בשמיים?",
     "options": [
-      "האפקט הטבעי קיים ונחוץ לחיים; ההתייחסות בעייתית כשהוא מתחזק יתר על המידה בגלל פעילות אנושית",
-      "אין הבדל - שני המונחים תמיד מתארים אותה תקלה",
-      "חממה טבעית פירושה שאין קרינה מהשמש לכדור הארץ",
-      "אפקט חממה מתרחש רק במדבר ולא באוקיינוס"
+      "ירח וכוכבים",
+      "שמש בוהקת",
+      "קשת בענן",
+      "עננים בלבד"
     ],
     "correctIndex": 0,
-    "explanation": "בלי גזי חממה טבעיים הטמפרטורה הייתה קרירה מדי לחיים רבים; הבעיה היא חיזוק יתר. גורמים לבלבול במונחים ולדיון לא מדויק.",
-    "theoryLines": [
-      "שפה מדעית מדויקת עוזרת להבין בעיה ופתרון.",
-      "כדור הארץ מקבל ומפלט קרינה במאזן דינמי."
-    ],
+    "explanation": "בלילה השמש מוסתרת מאיתנו.",
     "params": {
-      "patternFamily": "sci_environment_ecosystems",
-      "subtype": "sci_environment_general",
-      "cognitiveLevel": "understanding",
+      "patternFamily": "sci_phb_earth_space_g1_medium_g1_earth_night_sky",
+      "subtype": "sci_earth_space_general",
+      "conceptTag": "g1_earth_night_sky",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
       "expectedErrorTypes": [
+        "fact_recall_gap",
         "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
+        "careless_error"
       ],
-      "difficulty": "standard"
-    }
+      "expectedErrorTags": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_earth_space_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "earth_space",
+        "grade": "g1",
+        "skillId": "sci_earth_space_general",
+        "subSkill": "sci_earth_space_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "recall",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "fact_recall_gap",
+          "concept_confusion",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_earth_space_general",
+    "skillId": "sci_earth_space_general"
   },
   {
-    "id": "env_44",
-    "topic": "environment",
+    "id": "sci_phb_g1_earth_space_hard_01",
+    "topic": "earth_space",
     "grades": [
-      "g5",
-      "g6"
+      "g1",
+      "g2",
+      "g3"
     ],
     "minLevel": "hard",
     "maxLevel": "hard",
     "type": "mcq",
-    "stem": "למה הפחתת קוטג' חקלאי בסמוך לבית גידול טבעי עלולה לשפר דווקא עמידות של מין נדיר - ולא רק 'לפחות בנייה'?",
+    "stem": "למה יום ולילה מתחלפים?",
     "options": [
-      "כי מרווח מנותק יפתח מסדרונות אקולוגיים, יקטין פיצול בתי גידול ויוריד סיכון לתאונות/הפרעות אנושיות",
-      "כי כל בנייה תמיד מגדילה גיוון מיד ללא תלות במיקום",
-      "כי מין נדיר ניזון רק מבטון לכן צריך יותר כבישים",
-      "כי בית גידול טבעי לא תלוי בשטח רציף"
+      "כדור הארץ מסתובב",
+      "הירח נעלם בדרך כלל",
+      "השמש נכבית",
+      "העננים נעלמים"
     ],
     "correctIndex": 0,
-    "explanation": "מסדרונות ורציפות שטח תומכים בהגירה, בגנים ובגיוון. פיצול בתי גידול מגביר סיכון לקריסה דמוגרפית.",
-    "theoryLines": [
-      "ניהול נוף משלב ביולוגיה ומתכננים.",
-      "אי רציפות היא אחד הגורמים לאובדן מינים."
-    ],
+    "explanation": "סיבוב כדור הארץ יוצר מחזור יום-לילה.",
     "params": {
-      "patternFamily": "sci_environment_ecosystems",
-      "subtype": "sci_environment_general",
+      "patternFamily": "sci_phb_earth_space_g1_hard_g1_earth_day_night_spin",
+      "subtype": "sci_earth_space_general",
+      "conceptTag": "g1_earth_day_night_spin",
+      "difficulty": "advanced",
       "cognitiveLevel": "analysis",
+      "kind": "phase_b",
       "expectedErrorTypes": [
+        "misconception",
         "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
+        "fact_recall_gap"
       ],
-      "difficulty": "advanced"
-    }
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_earth_space_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "earth_space",
+        "grade": "g1",
+        "skillId": "sci_earth_space_general",
+        "subSkill": "sci_earth_space_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_earth_space_general",
+    "skillId": "sci_earth_space_general"
   },
   {
-    "id": "env_45",
-    "topic": "environment",
+    "id": "sci_phb_g1_earth_space_hard_02",
+    "topic": "earth_space",
     "grades": [
-      "g5",
-      "g6"
+      "g1",
+      "g2",
+      "g3"
     ],
     "minLevel": "hard",
     "maxLevel": "hard",
     "type": "mcq",
-    "stem": "אם דו״ח טוען 'המגמה בנתוני טמפרטורה תואמת שינוי אקלים אנושי', למה השוואה לעשורים הרחוקים (למשל מדידות מוקדמות) דורשת זהירות?",
+    "stem": "מה קורה כשענן מכסה שמש?",
     "options": [
-      "כי רשת המדידות, הכלים והכיסוי הגאוגרפי השתנו - אי אחידות עלולה להטות מגמות מקומיות",
-      "כי לעולם לא היו שינויים בעבר גאולוגי",
-      "כי טמפרטורה לא נמדדת מעולם לפני המצאת המדחום",
-      "כי כל נתוני העבר הם מזויפים"
+      "פחות אור ופחות",
+      "הלילה מגיע מיד",
+      "הירח גדל בדרך כלל",
+      "הים נעלם בדרך כלל"
     ],
     "correctIndex": 0,
-    "explanation": "מדענים מתקנים הטיות (באיאסים) ומשווים רשתות שונות. זהירות מתודולוגית היא לא 'ספוט' אלא דיוק.",
-    "theoryLines": [
-      "סדר נתונים ומטא דאטה חשובים בניתוח סדרות זמן.",
-      "הבנת אי ודאות היא חלק מלמידה מדעית."
-    ],
+    "explanation": "ענן מפזר ומסתיר קרינה.",
     "params": {
-      "patternFamily": "sci_environment_ecosystems",
-      "subtype": "sci_environment_general",
+      "patternFamily": "sci_phb_earth_space_g1_hard_g1_earth_cloud_cover",
+      "subtype": "sci_earth_space_general",
+      "conceptTag": "g1_earth_cloud_cover",
+      "difficulty": "advanced",
       "cognitiveLevel": "analysis",
+      "kind": "phase_b",
       "expectedErrorTypes": [
         "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
+        "misconception",
+        "careless_error"
       ],
-      "difficulty": "advanced"
-    }
+      "expectedErrorTags": [
+        "concept_confusion",
+        "misconception",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_earth_space_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "earth_space",
+        "grade": "g1",
+        "skillId": "sci_earth_space_general",
+        "subSkill": "sci_earth_space_general",
+        "questionType": "technical",
+        "problemClass": "mixed",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "concept_confusion",
+          "misconception",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_earth_space_general",
+    "skillId": "sci_earth_space_general"
   },
   {
-    "id": "env_46",
+    "id": "sci_phb_g1_earth_space_hard_03",
+    "topic": "earth_space",
+    "grades": [
+      "g1",
+      "g2"
+    ],
+    "minLevel": "hard",
+    "maxLevel": "hard",
+    "type": "mcq",
+    "stem": "למה בקיץ חם יותר לרוב?",
+    "options": [
+      "שעות אור ארוכות",
+      "אין שמש בקיץ",
+      "הירח מחמם בדרך כלל",
+      "הגשם תמיד בדרך כלל"
+    ],
+    "correctIndex": 0,
+    "explanation": "בקיץ יש יותר קרינת שמש.",
+    "params": {
+      "patternFamily": "sci_phb_earth_space_g1_hard_g1_earth_summer_heat",
+      "subtype": "sci_earth_space_general",
+      "conceptTag": "g1_earth_summer_heat",
+      "difficulty": "advanced",
+      "cognitiveLevel": "analysis",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_earth_space_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "earth_space",
+        "grade": "g1",
+        "skillId": "sci_earth_space_general",
+        "subSkill": "sci_earth_space_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_earth_space_general",
+    "skillId": "sci_earth_space_general"
+  },
+  {
+    "id": "sci_phb_g1_earth_space_hard_04",
+    "topic": "earth_space",
+    "grades": [
+      "g1"
+    ],
+    "minLevel": "hard",
+    "maxLevel": "hard",
+    "type": "mcq",
+    "stem": "למה לובשים מעיל בגשם?",
+    "options": [
+      "מגן ממים ומרוח",
+      "כדי לראות ירח",
+      "כדי להאיץ סיבוב כדור הארץ",
+      "כדי לעשות צל"
+    ],
+    "correctIndex": 0,
+    "explanation": "בגדים שומרים על גוף יבש.",
+    "params": {
+      "patternFamily": "sci_phb_earth_space_g1_hard_g1_earth_rain_coat",
+      "subtype": "sci_earth_space_general",
+      "conceptTag": "g1_earth_rain_coat",
+      "difficulty": "advanced",
+      "cognitiveLevel": "analysis",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "concept_confusion",
+        "misconception",
+        "careless_error"
+      ],
+      "expectedErrorTags": [
+        "concept_confusion",
+        "misconception",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_earth_space_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "earth_space",
+        "grade": "g1",
+        "skillId": "sci_earth_space_general",
+        "subSkill": "sci_earth_space_general",
+        "questionType": "technical",
+        "problemClass": "mixed",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "concept_confusion",
+          "misconception",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_earth_space_general",
+    "skillId": "sci_earth_space_general"
+  },
+  {
+    "id": "sci_phb_g1_environment_med_01",
     "topic": "environment",
     "grades": [
-      "g5",
-      "g6"
+      "g1",
+      "g2"
     ],
     "minLevel": "medium",
     "maxLevel": "medium",
     "type": "mcq",
-    "stem": "מהי הסיבה המדעית להעדפת צמחייה מקומית בגינון ציבורי לעומת מינים 'תצוגתיים' שאינם מותאמים לאקלים?",
+    "stem": "למה זורקים פח לפח אשפה?",
     "options": [
-      "צמחים מקומיים נוטים לדרוש פחות השקיה/טיפול, לתמוך בחרקים ובעופות מקומיים ולייצב מערכת",
-      "מינים מקומיים תמיד דורשים יותר דשנים חיצוניים",
-      "מקומיים לעולם לא פרחים ולכן פחות יפים",
-      "אין הבדל אקולוגי בין מקומי לזר"
+      "שומרים על ניקיון",
+      "מגדילים זבל",
+      "מונעים מים",
+      "סוגרים שמש"
     ],
     "correctIndex": 0,
-    "explanation": "התאמה לאקלים מפחיתה לחץ על משאבים ומחזקת קשרים עם מזהמי אבקה וטורפים טבעיים; מינים זרים עלולים להפוך לפולשים.",
-    "theoryLines": [
-      "התאמות אבולוציוניות קשורות לתנאי סביבה.",
-      "גינון אחראי תומך בשירותים אקולוגיים עירוניים."
-    ],
+    "explanation": "פח נכון מונע לכלוך.",
     "params": {
-      "patternFamily": "sci_environment_ecosystems",
+      "patternFamily": "sci_phb_environment_g1_medium_g1_env_trash_bin",
       "subtype": "sci_environment_general",
-      "cognitiveLevel": "understanding",
+      "conceptTag": "g1_env_trash_bin",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
       "expectedErrorTypes": [
+        "misconception",
         "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
+        "fact_recall_gap"
       ],
-      "difficulty": "standard"
-    }
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_environment_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "environment",
+        "grade": "g1",
+        "skillId": "sci_environment_general",
+        "subSkill": "sci_environment_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_environment_general",
+    "skillId": "sci_environment_general"
   },
   {
-    "id": "env_47",
+    "id": "sci_phb_g1_environment_med_02",
     "topic": "environment",
     "grades": [
-      "g5",
-      "g6"
+      "g1",
+      "g2"
     ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
+    "minLevel": "medium",
+    "maxLevel": "medium",
     "type": "mcq",
-    "stem": "במערכת אגם, עלייה חדה בריכוז מתכות כבדות במי שתייה של חיות. מה התסמין המערכתי הסביר ביותר לפני בדיקת מעבדה?",
+    "stem": "מה עוזר לצמחים בגינה?",
     "options": [
-      "הפסקת שרשרת מזון: ערעור בבסיס הפלנקטון/אצות שהועלו ממשקעים",
-      "עלייה מיידית וקבועה בגודל האגם בלי מקור מים",
-      "הפיכת כל המים למתכת מוצקה בבת אחת",
-      "היעדר כל חמצן במים גם אם אין שינוי בטמפרטורה"
+      "מים ואור שמש",
+      "אזור עם הרבה אנשים",
+      "מקום עם מים",
+      "אזור בטבע"
     ],
     "correctIndex": 0,
-    "explanation": "מתכות כבדות נוטות להצטבר במשקעים ובביומסה; פגיעה בתחתית שרשרת המזון מסמנת סכנה רחבה. צריך ניטור ומקור זיהום.",
-    "theoryLines": [
-      "ביומגנום והצטברות רעלנים בשרשרת המזון.",
-      "משקעים הם מאגרים פוטנציאליים של מזהמים."
-    ],
+    "explanation": "צמחים זקוקים למים ולאור.",
     "params": {
-      "patternFamily": "sci_environment_ecosystems",
+      "patternFamily": "sci_phb_environment_g1_medium_g1_env_plants_needs",
       "subtype": "sci_environment_general",
-      "cognitiveLevel": "analysis",
+      "conceptTag": "g1_env_plants_needs",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
       "expectedErrorTypes": [
+        "fact_recall_gap",
         "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
+        "careless_error"
       ],
-      "difficulty": "advanced"
-    }
+      "expectedErrorTags": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_environment_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "environment",
+        "grade": "g1",
+        "skillId": "sci_environment_general",
+        "subSkill": "sci_environment_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "recall",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "fact_recall_gap",
+          "concept_confusion",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_environment_general",
+    "skillId": "sci_environment_general"
   },
   {
-    "id": "env_48",
+    "id": "sci_phb_g1_environment_med_03",
     "topic": "environment",
     "grades": [
-      "g5",
-      "g6"
+      "g1",
+      "g2"
     ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
+    "minLevel": "medium",
+    "maxLevel": "medium",
     "type": "mcq",
-    "stem": "למה 'שינוי שימוש קרקע' (למשל יער → שדה) מדווח לעיתים כגורם חזק לאובדן פחמן מהאדמה?",
+    "stem": "למה לא רוצים בוץ בכיתה?",
     "options": [
-      "כי צומח ושורשים מחזיקים פחמן אורגני; עקירה, שריפה או עיבוד קרקע מהירים משחררים פחמן או מקטינים קליטה",
-      "כי שדות תמיד קולטים יותר CO₂ מיער גם ביום הראשון",
-      "כי עצים לא מכילים פחמן כלל",
-      "כי שימוש קרקע משפיע רק על צבע המפה ולא על פחמן"
+      "עלול להיות מלכלך",
+      "זה מחזק עצים",
+      "זה מייצר כוכבים",
+      "אין סיבה בדרך כלל"
     ],
     "correctIndex": 0,
-    "explanation": "ביומסה וקרקע אוגרים פחמן; שינוי מהיר משחרר לאטמוספרה או מקטין קליטה עתידית. זה חלק מחשבון מקורות שקע.",
-    "theoryLines": [
-      "יערות הם מאגרי פחמן.",
-      "ניהול קרקע ויער משפיעים על מאזן פחמן."
-    ],
+    "explanation": "בוץ מלכלך ועלול להחליק.",
     "params": {
-      "patternFamily": "sci_environment_ecosystems",
+      "patternFamily": "sci_phb_environment_g1_medium_g1_env_mud_class",
       "subtype": "sci_environment_general",
-      "cognitiveLevel": "analysis",
+      "conceptTag": "g1_env_mud_class",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
       "expectedErrorTypes": [
+        "misconception",
         "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
+        "fact_recall_gap"
       ],
-      "difficulty": "advanced"
-    }
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_environment_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "environment",
+        "grade": "g1",
+        "skillId": "sci_environment_general",
+        "subSkill": "sci_environment_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_environment_general",
+    "skillId": "sci_environment_general"
   },
   {
-    "id": "env_49",
+    "id": "sci_phb_g1_environment_med_04",
     "topic": "environment",
     "grades": [
-      "g5",
-      "g6"
+      "g1",
+      "g2"
     ],
     "minLevel": "medium",
     "maxLevel": "medium",
     "type": "mcq",
-    "stem": "מה ההיגיון בכך שנזקי שמירת טבע לתיירות 'רכה' עדיין דורשים תכנון?",
+    "stem": "מה חשוב לחיות בטבע?",
     "options": [
-      "כי עומס מבקרים עלול לדחוף שבילים, להטריד בעלי חיים ולהביא פסולת ומזהמים אף בלי כוונה",
-      "תיירות רכה אומרת שאין כלל נזק אפשרי",
-      "בעלי חיים לא מרגישים הפרעה קולית",
-      "פסולת תמיד נעלמת באופן קוסמי ביער"
+      "מקום מחיה ומזון",
+      "אזור עם הרבה אנשים",
+      "מקום עם מים",
+      "אזור בטבע בדרך כלל"
     ],
     "correctIndex": 0,
-    "explanation": "ניהול מבקרים, נתיבים, עונות רגישות וחינוך מפחיתים דחיפה אקולוגית. תיירות ברת קיימא היא איזון.",
-    "theoryLines": [
-      "הפרעה אנתרופוגנית היא גורם שימור.",
-      "למידה חיצונית מחייבת אחריות התנהגותית."
-    ],
+    "explanation": "בעלי חיים זקוקים למזון ומחסה.",
     "params": {
-      "patternFamily": "sci_environment_ecosystems",
+      "patternFamily": "sci_phb_environment_g1_medium_g1_env_habitat_needs",
       "subtype": "sci_environment_general",
-      "cognitiveLevel": "understanding",
+      "conceptTag": "g1_env_habitat_needs",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
       "expectedErrorTypes": [
+        "misconception",
         "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
+        "fact_recall_gap"
       ],
-      "difficulty": "standard"
-    }
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_environment_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "environment",
+        "grade": "g1",
+        "skillId": "sci_environment_general",
+        "subSkill": "sci_environment_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_environment_general",
+    "skillId": "sci_environment_general"
   },
   {
-    "id": "env_50",
+    "id": "sci_phb_g1_environment_hard_01",
     "topic": "environment",
     "grades": [
-      "g5",
-      "g6"
+      "g1",
+      "g2",
+      "g3"
     ],
     "minLevel": "hard",
     "maxLevel": "hard",
     "type": "mcq",
-    "stem": "למה אזור חקלאי המפריד בין שני יערות קטנים עלול להפחית את סיכוי ההישרדות של מין פרפר הדורש שטח גדול?",
+    "stem": "למה חשוב לחסוך מים?",
     "options": [
-      "כי פיצול יוצר אוכלוסיות מבודדות עם גנים מצומצמים ומעט חוצים בין קטעים",
-      "כי פרפרים נדדו תמיד בלי גבולות ללא קשר לפיתוח",
-      "כי חקלאי תמיד מגדיל רק פרחי בר מתאימים",
-      "כי גודל אוכלוסייה לא משפיע על סיכון הכחדה"
+      "מים מוגבלים לכולם",
+      "מים לא נחוצים",
+      "מים מחליפים שמש",
+      "אין צורך במים"
     ],
     "correctIndex": 0,
-    "explanation": "אפקט מסדרון/פיצול (habitat fragmentation) מגביר דריפט גנטי, מקריס סיכויי הישרדות מפני אירועים אקראיים ומקטין שטח מזון הולם.",
-    "theoryLines": [
-      "אקולוגיה של נוף חוקרת קישוריות בתי גידול.",
-      "גודל אוכלוסייה קטן מגביר פגיעות."
-    ],
+    "explanation": "מים יקרים וצריך לחסוך.",
     "params": {
-      "patternFamily": "sci_environment_ecosystems",
+      "patternFamily": "sci_phb_environment_g1_hard_g1_env_save_water",
       "subtype": "sci_environment_general",
+      "conceptTag": "g1_env_save_water",
+      "difficulty": "advanced",
       "cognitiveLevel": "analysis",
+      "kind": "phase_b",
       "expectedErrorTypes": [
         "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
+        "misconception",
+        "careless_error"
       ],
-      "difficulty": "advanced"
-    }
+      "expectedErrorTags": [
+        "concept_confusion",
+        "misconception",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_environment_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "environment",
+        "grade": "g1",
+        "skillId": "sci_environment_general",
+        "subSkill": "sci_environment_general",
+        "questionType": "technical",
+        "problemClass": "mixed",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "concept_confusion",
+          "misconception",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_environment_general",
+    "skillId": "sci_environment_general"
   },
   {
-    "id": "env_51",
+    "id": "sci_phb_g1_environment_hard_02",
     "topic": "environment",
     "grades": [
-      "g5",
-      "g6"
+      "g1",
+      "g2",
+      "g3"
     ],
     "minLevel": "hard",
     "maxLevel": "hard",
     "type": "mcq",
-    "stem": "מה נכון לגבי שיפור איכות מים במפרץ אחרי סערה?",
+    "stem": "מה קורה אם זורקים זבל בים?",
     "options": [
-        "צריך מדידות וזמן - לא בהכרח שיפור מיידי",
-        "איכות המים תשתפר מיד בלי מדידות נוספות",
-        "סערה תמיד מזהמת ללא יוצא מן הכלל",
-        "אין קשר בין ניקוז לבין איכות מים"
+      "מזהם מים ומזיק",
+      "מנקה את הים",
+      "מגדיל דגים",
+      "אין השפעה"
     ],
     "correctIndex": 0,
-    "explanation": "פתיחת ניקוזים עלולה להזרים במי גשם שטחים מזוהמים, לא רק 'לשטוף' זיהום החוצה; יש צורך בניטור לזמן ולמקום ולסיכון אקולוגי.",
-    "theoryLines": [
-      "ניהול מי נגר דורש תכנון הידרולוגי.",
-      "מדידות מאפשרות השוואה לפני/אחרי."
-    ],
+    "explanation": "זבל פוגע בחיים ימיים.",
     "params": {
-      "patternFamily": "sci_environment_ecosystems",
+      "patternFamily": "sci_phb_environment_g1_hard_g1_env_sea_litter",
       "subtype": "sci_environment_general",
+      "conceptTag": "g1_env_sea_litter",
+      "difficulty": "advanced",
       "cognitiveLevel": "analysis",
+      "kind": "phase_b",
       "expectedErrorTypes": [
         "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
+        "misconception",
+        "careless_error"
       ],
-      "difficulty": "advanced"
-    }
+      "expectedErrorTags": [
+        "concept_confusion",
+        "misconception",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_environment_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "environment",
+        "grade": "g1",
+        "skillId": "sci_environment_general",
+        "subSkill": "sci_environment_general",
+        "questionType": "technical",
+        "problemClass": "mixed",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "concept_confusion",
+          "misconception",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_environment_general",
+    "skillId": "sci_environment_general"
   },
   {
-    "id": "env_52",
+    "id": "sci_phb_g1_environment_hard_03",
     "topic": "environment",
     "grades": [
-      "g5",
-      "g6"
+      "g1",
+      "g2"
     ],
-    "minLevel": "medium",
-    "maxLevel": "medium",
+    "minLevel": "hard",
+    "maxLevel": "hard",
     "type": "mcq",
-    "stem": "באילו מצבים תמיכה בקומפוסט ביתי תורמת גם להפחתת פליטות מטמנה וגם לשיפור קרקע מקומית?",
+    "stem": "למה שומרים על עצים בפארק?",
     "options": [
-      "כאשר פסולת אורגנית מתפרקת אירובית/דומה בבית וחוזרת לקרקע בתנאים בטוחים",
-      "כאשר כל הפסולת נזרקת לאותה שקית פלסטיק ללא מיון",
-      "כשמייבאים קומפוסט מחו״ל בלבד ואין פירוק מקומי",
-      "כשאין אף צמח בגינה ולכן אין צורך בחומרה אורגנית"
+      "נותנים צל וחמצן",
+      "מונעים גשם",
+      "אוכלים בעלי חיים",
+      "מייצרים דלק"
     ],
     "correctIndex": 0,
-    "explanation": "פירוק אורגני מקומי מקטין נפח להטמנה (פחות מתאן מהירקות) ומחזיר חומר למחזור הקרקע אם הבטיחות הביולוגית נשמרת.",
-    "theoryLines": [
-      "פסולת אורגנית היא חלק ממחזור התאים.",
-      "בטיחות: הימנעות מבשר/שומן בקומפוסט ביתי פשוט."
-    ],
+    "explanation": "עצים תורמים לאוויר ולצל.",
     "params": {
-      "patternFamily": "sci_environment_ecosystems",
+      "patternFamily": "sci_phb_environment_g1_hard_g1_env_park_trees",
       "subtype": "sci_environment_general",
-      "cognitiveLevel": "understanding",
+      "conceptTag": "g1_env_park_trees",
+      "difficulty": "advanced",
+      "cognitiveLevel": "analysis",
+      "kind": "phase_b",
       "expectedErrorTypes": [
+        "misconception",
         "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
+        "fact_recall_gap"
       ],
-      "difficulty": "standard"
-    }
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_environment_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "environment",
+        "grade": "g1",
+        "skillId": "sci_environment_general",
+        "subSkill": "sci_environment_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_environment_general",
+    "skillId": "sci_environment_general"
   },
   {
-    "id": "env_53",
+    "id": "sci_phb_g1_environment_hard_04",
     "topic": "environment",
     "grades": [
-      "g5",
-      "g6"
+      "g1"
     ],
     "minLevel": "hard",
     "maxLevel": "hard",
     "type": "mcq",
-    "stem": "בהסכם סביבתי בין שתי מדינות שכנות לגבי זיהום אוויר גובלי, מה נושא חייב להישמר כדי שהנתונים יהיו משווים?",
+    "stem": "מה דואגים לטבע בביקור?",
     "options": [
-      "אחידות בשיטות מדידה, גבהים, מיקומי תחנות ויחידות דיווח לכל הצדדים",
-      "כל צד יכול להמציא יחידות משלו בלי תיאום",
-      "די לדווח פעם בשנה בלי קשר לרוח",
-      "טמפרטורה היא המדד היחיד שקובע איכות אוויר"
+      "לא לקטוף ולזרוק",
+      "לשרוף עלים",
+      "לשבור ענפים",
+      "להשאיר זבל"
     ],
     "correctIndex": 0,
-    "explanation": "ניטור אוויר רגיש לפרוטוקול: גובה דגימה, זמן, כיול ושקיפות. השוואה ללא סטנדרט פוגעת באמון ובמדיניות.",
-    "theoryLines": [
-      "נתונים טובים תומכים בהחלטות ציבוריות.",
-      "זיהום גובלי מחייב שיתוף פעולה."
-    ],
+    "explanation": "התנהגות זהירה שומרת על הטבע.",
     "params": {
-      "patternFamily": "sci_environment_ecosystems",
+      "patternFamily": "sci_phb_environment_g1_hard_g1_env_visit_care",
       "subtype": "sci_environment_general",
+      "conceptTag": "g1_env_visit_care",
+      "difficulty": "advanced",
       "cognitiveLevel": "analysis",
+      "kind": "phase_b",
       "expectedErrorTypes": [
         "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
+        "misconception",
+        "careless_error"
       ],
-      "difficulty": "advanced"
-    }
+      "expectedErrorTags": [
+        "concept_confusion",
+        "misconception",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_environment_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "environment",
+        "grade": "g1",
+        "skillId": "sci_environment_general",
+        "subSkill": "sci_environment_general",
+        "questionType": "technical",
+        "problemClass": "mixed",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "concept_confusion",
+          "misconception",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_environment_general",
+    "skillId": "sci_environment_general"
   },
   {
-    "id": "exp_27",
-    "topic": "experiments",
+    "id": "sci_phb_g2_materials_hard_01",
+    "topic": "materials",
     "grades": [
-      "g5",
-      "g6"
+      "g1",
+      "g2",
+      "g3",
+      "g4"
     ],
     "minLevel": "hard",
     "maxLevel": "hard",
     "type": "mcq",
-    "stem": "קבוצת בקר קיבלה השקיה ואור אחידים; קבוצת הניסוי קיבלה דשן נוסף אבל הוצבה במסדרון מואר יותר. למה קשה לקבוע אם השינוי בגובה נובע מהדשן?",
+    "stem": "מה שונה במגע בין מתכת לעץ?",
     "options": [
-      "כי השתנו שני גורמים בוזמנית (אור והדשן) ולכן לא ברור מה גרם להבדל",
-      "כי דשן לעולם לא משפיע על צמיחה",
-      "כי קבוצת הבקר תמיד שווה לניסוי אם יש מים",
-      "כי אור לא משפיע על פוטוסינתזה"
+      "מתכת קשה וקרה",
+      "עץ תמיד שקוף",
+      "מתכת תמיד רכה",
+      "אין הבדל"
     ],
     "correctIndex": 0,
-    "explanation": "במבחן הוגן משנים רק משתנה אחד ממוקד. כאן האור הוא 'מפריע' (confounder) שמונע מסקנה נקייה.",
-    "theoryLines": [
-      "משתנה מבוקר מאפשר לשייך סיבה לתוצאה.",
-      "שינוי מרובי גורמים דורש תכנון מחדש של הניסוי."
-    ],
+    "explanation": "מתכות קשיחות ומוליכות חום.",
     "params": {
-      "patternFamily": "sci_experiments_scientific_method",
-      "subtype": "sci_experiments_general",
+      "patternFamily": "sci_phb_materials_g2_hard_g2_materials_metal_wood",
+      "subtype": "sci_materials_general",
+      "conceptTag": "g2_materials_metal_wood",
+      "difficulty": "advanced",
       "cognitiveLevel": "analysis",
+      "kind": "phase_b",
       "expectedErrorTypes": [
-        "strategy_error",
-        "reading_comprehension_error",
-        "concept_confusion"
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
       ],
-      "difficulty": "advanced"
-    }
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_materials_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "materials",
+        "grade": "g1",
+        "skillId": "sci_materials_general",
+        "subSkill": "sci_materials_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_materials_general",
+    "skillId": "sci_materials_general"
   },
   {
-    "id": "exp_28",
-    "topic": "experiments",
+    "id": "sci_phb_g2_materials_hard_02",
+    "topic": "materials",
     "grades": [
-      "g5",
-      "g6"
+      "g1",
+      "g2",
+      "g3",
+      "g4"
     ],
     "minLevel": "hard",
     "maxLevel": "hard",
     "type": "mcq",
-    "stem": "למה חוקרים חוזרים על ניסוי באותה שאלה במקומות או בזמנים שונים לפני שמסיקים בביטחון?",
+    "stem": "איך בודקים אם חומר שקוף?",
     "options": [
-      "כי תוצאה חד פעמית עלולה להיגרם ממזל, טעות מדידה או נסיבות מקומיות ולא לשקף כלל",
-      "כי חזרה תמיד מוחקת את תוצאות הניסוי הראשון",
-      "כי ניסוי מדעי מותר להסיק ממנו מסקנה אחרי ניסיון יחיד בלבד",
-      "כי שכפול תמיד משנה את השאלה המקורית"
+      "רואים דרכו צורה או אור",
+      "שוקלים אותו בלבד",
+      "מריחים אותו בדרך כלל",
+      "שומעים צליל בדרך כלל"
     ],
     "correctIndex": 0,
-    "explanation": "שחזור (replication) מחזק אמון: אם דפוס חוזר, הסיכוי שהוא 'קולע במקרה' קטן. זה חלק מתרבות האימות במדע.",
-    "theoryLines": [
-      "אמינות נבנית מנתונים חוזרים ומאיזון שגיאות.",
-      "מדע מתבסס על בדיקה חוצת מעבדות."
-    ],
+    "explanation": "שקיפות מאפשרת מעבר אור.",
     "params": {
-      "patternFamily": "sci_experiments_scientific_method",
-      "subtype": "sci_experiments_general",
+      "patternFamily": "sci_phb_materials_g2_hard_g2_materials_transparent",
+      "subtype": "sci_materials_general",
+      "conceptTag": "g2_materials_transparent",
+      "difficulty": "advanced",
       "cognitiveLevel": "analysis",
+      "kind": "phase_b",
       "expectedErrorTypes": [
-        "strategy_error",
-        "reading_comprehension_error",
-        "concept_confusion"
+        "concept_confusion",
+        "misconception",
+        "careless_error"
       ],
-      "difficulty": "advanced"
-    }
+      "expectedErrorTags": [
+        "concept_confusion",
+        "misconception",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_materials_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "materials",
+        "grade": "g1",
+        "skillId": "sci_materials_general",
+        "subSkill": "sci_materials_general",
+        "questionType": "technical",
+        "problemClass": "mixed",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "concept_confusion",
+          "misconception",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_materials_general",
+    "skillId": "sci_materials_general"
   },
   {
-    "id": "exp_29",
-    "topic": "experiments",
+    "id": "sci_phb_g2_materials_hard_03",
+    "topic": "materials",
     "grades": [
-      "g5",
-      "g6"
+      "g2"
+    ],
+    "minLevel": "hard",
+    "maxLevel": "hard",
+    "type": "mcq",
+    "stem": "למה פלסטיק קל לרוב?",
+    "options": [
+      "צפיפות נמוכה יחסית",
+      "הוא עשוי מברזל",
+      "הוא תמיד כבד",
+      "אין לו מסה בדרך כלל"
+    ],
+    "correctIndex": 0,
+    "explanation": "חומר קל שוקל פחות.",
+    "params": {
+      "patternFamily": "sci_phb_materials_g2_hard_g2_materials_plastic_light",
+      "subtype": "sci_materials_general",
+      "conceptTag": "g2_materials_plastic_light",
+      "difficulty": "advanced",
+      "cognitiveLevel": "analysis",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_materials_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "materials",
+        "grade": "g2",
+        "skillId": "sci_materials_general",
+        "subSkill": "sci_materials_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_materials_general",
+    "skillId": "sci_materials_general"
+  },
+  {
+    "id": "sci_phb_g2_materials_hard_04",
+    "topic": "materials",
+    "grades": [
+      "g2"
+    ],
+    "minLevel": "hard",
+    "maxLevel": "hard",
+    "type": "mcq",
+    "stem": "מה קורה לשעווה ליד מקור חום?",
+    "options": [
+      "נוטה להימס",
+      "הופכת לאבן",
+      "נעלמת בדרך כלל",
+      "מקפיאה מים"
+    ],
+    "correctIndex": 0,
+    "explanation": "חום מעביר שעווה למצב נוזלי.",
+    "params": {
+      "patternFamily": "sci_phb_materials_g2_hard_g2_materials_wax_melt",
+      "subtype": "sci_materials_general",
+      "conceptTag": "g2_materials_wax_melt",
+      "difficulty": "advanced",
+      "cognitiveLevel": "analysis",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "concept_confusion",
+        "misconception",
+        "careless_error"
+      ],
+      "expectedErrorTags": [
+        "concept_confusion",
+        "misconception",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_materials_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "materials",
+        "grade": "g2",
+        "skillId": "sci_materials_general",
+        "subSkill": "sci_materials_general",
+        "questionType": "technical",
+        "problemClass": "mixed",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "concept_confusion",
+          "misconception",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_materials_general",
+    "skillId": "sci_materials_general"
+  },
+  {
+    "id": "sci_phb_g2_earth_space_med_01",
+    "topic": "earth_space",
+    "grades": [
+      "g1",
+      "g2"
     ],
     "minLevel": "medium",
     "maxLevel": "medium",
     "type": "mcq",
-    "stem": "מה התפקיד של קבוצת בקרה בניסוי השוואתי על צמחים?",
+    "stem": "מה סימן של יום גשום?",
     "options": [
-      "לספק בסיס בלי הטיפול הנבדק, כדי להשוות אליו כששאר התנאים זהים ככל האפשר",
-      "לגרום לתוצאות להיראות יותר גרועות בכוונה",
-      "להחליף את השערה במסקנה הסופית",
-      "למדוד רק את המים ולא את הצמח"
+      "עננים וטיפות מים",
+      "ירח מלא בלבד",
+      "שמש חזקה בדרך כלל",
+      "כוכבים בלבד"
     ],
     "correctIndex": 0,
-    "explanation": "בקרה מאפשרת להבדיל בין 'מה היה קורה בלי הטיפול' לבין 'מה שקרה אחרי הטיפול'. בלי זה קשה לפרש הבדלים.",
-    "theoryLines": [
-      "השוואה מבוקרת היא לב לוגיקה של ניסוי.",
-      "קבוצת בקרה מקלה לבודד השפעה של טיפול."
-    ],
+    "explanation": "גשם מלווה עננים ומים.",
     "params": {
-      "patternFamily": "sci_experiments_scientific_method",
-      "subtype": "sci_experiments_general",
+      "patternFamily": "sci_phb_earth_space_g2_medium_g2_earth_rain_signs",
+      "subtype": "sci_earth_space_general",
+      "conceptTag": "g2_earth_rain_signs",
+      "difficulty": "standard",
       "cognitiveLevel": "understanding",
+      "kind": "phase_b",
       "expectedErrorTypes": [
-        "strategy_error",
-        "reading_comprehension_error",
-        "concept_confusion"
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
       ],
-      "difficulty": "standard"
-    }
+      "expectedErrorTags": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_earth_space_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "earth_space",
+        "grade": "g1",
+        "skillId": "sci_earth_space_general",
+        "subSkill": "sci_earth_space_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "medium",
+        "difficultyDepth": "recall",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "fact_recall_gap",
+          "concept_confusion",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_earth_space_general",
+    "skillId": "sci_earth_space_general"
   },
   {
-    "id": "exp_30",
-    "topic": "experiments",
+    "id": "sci_phb_g2_earth_space_med_02",
+    "topic": "earth_space",
     "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "חוקר שאל רק אנשים שנכנסים למתחם קניות בשעות הערב על דעתם בנושא איכות אוויר. איזה סיכון מתודולוגי מרכזי כאן?",
-    "options": [
-        "כדי לעקוב אחרי השינוי לאורך זמן",
-        "כדי לשנות את תוצאת הניסוי",
-        "כדי לבטל את קבוצת הביקורת",
-        "כדי לא לרשום טעויות"
-    ],
-    "correctIndex": 0,
-    "explanation": "דגימה במקום/זמן מאפיין מערך מצומצם של אנשים. מסקנות 'לכולם' דורשות אסטרטגיית דגימה רחבה או הצהרה מפורשת על ההגבלה.",
-    "theoryLines": [
-      "איכות מסקנה תלויה באיך נאספו הנתונים.",
-      "הטיות דגימה נפוצות בהחלטות אינטואיטיביות."
-    ],
-    "params": {
-      "patternFamily": "sci_experiments_scientific_method",
-      "subtype": "sci_experiments_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "strategy_error",
-        "reading_comprehension_error",
-        "concept_confusion"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "exp_31",
-    "topic": "experiments",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "גוף מדיד השתמש במד סרט שכבר התכווץ מעט אחרי שימוש ממושך. באופן עקבי, איך זה עלול לעוות תוצאות אורך?",
-    "options": [
-      "מדידות אורך יצאו בדרך כלל גדולות מהאמת כי המרווחים בין הסימונים 'צפופים' מדי",
-      "המד תמיד יודע לתקן את עצמו אוטומטית",
-      "זה משפיע רק על מסה ולא על אורך",
-      "זה יוצר רק שגיאות אקראיות בלי כיוון קבוע"
-    ],
-    "correctIndex": 0,
-    "explanation": "שגיאת כיול/מכשיר שיטתית נוטה לכיוון קבוע. לעומת 'רעש' אקראי, כאן חוזרת אותה הטיה בכל מדידה - חשוב לזהות ולמתקן.",
-    "theoryLines": [
-      "דיוק (קרוב לאמת) שונה מדיוק חוזר (עקביות).",
-      "כיול מכשירים הוא חלק מעבודה מדעית אחראית."
-    ],
-    "params": {
-      "patternFamily": "sci_experiments_scientific_method",
-      "subtype": "sci_experiments_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "strategy_error",
-        "reading_comprehension_error",
-        "concept_confusion"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "exp_32",
-    "topic": "experiments",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "בניסוי חימום מים, חוקר הוסיף בוזמנית יותר מלח וגם הגביר את להבה. מה הבעיה בניסוח מסקנה 'המלח האיך את החימום'?",
-    "options": [
-      "לא ניתן לבודד את תפקיד המלח כי גם עוצמת החימום השתנתה",
-      "זה תקין תמיד לשנות שני דברים יחד",
-      "להבה לא משפיעה על טמפרטורה",
-      "מלח תמיד מבטל חימום"
-    ],
-    "correctIndex": 0,
-    "explanation": "כשני גורמים משתנים, ההבדל בתוצאה הוא 'תערובת השפעות'. צריך ניסויים נפרדים או טבלת גורמים מתוכננת.",
-    "theoryLines": [
-      "בקרת משתנים מאפשרת הסקה לוגית.",
-      "תכנון ניסוי הוא לא פחות חשוב מביצוע."
-    ],
-    "params": {
-      "patternFamily": "sci_experiments_observation_inference",
-      "subtype": "sci_experiments_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "strategy_error",
-        "reading_comprehension_error",
-        "concept_confusion"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "exp_33",
-    "topic": "experiments",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "במחקר פשוט על תרופה חדשה הדווחת להקל בכאב, למה חשוב להשוות גם לקבוצה שמקבלת חיקוי בלי החומר הפעיל (פלצבו), כשהמדידה היא דיווח חווייה?",
-    "options": [
-      "כי ציפייה והמלצת מבחן יכולות לשנות דיווח בלי שינוי ביולוגי אמיתי",
-      "כי פלצבו מבטיח תמיד שהתרופה עובדת",
-      "כי כאב לא נמדד מעולם במדע",
-      "כי חיקוי תמיד גורם לנזק ולכן אסור"
-    ],
-    "correctIndex": 0,
-    "explanation": "אפקט פלצבו/המלצה מדגים שדיווח אנושי אינו רק 'מדידה נקייה'. בקרה מאפשרת להעריך עודף אמיתי מעבר לציפייה.",
-    "theoryLines": [
-      "מחקר טוב בודד את עוצמת הטיפול מהקונטקסט הפסיכולוגי.",
-      "שקיפות מתודולוגית חשובה לפרשנות."
-    ],
-    "params": {
-      "patternFamily": "sci_experiments_scientific_method",
-      "subtype": "sci_experiments_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "strategy_error",
-        "reading_comprehension_error",
-        "concept_confusion"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "exp_34",
-    "topic": "experiments",
-    "grades": [
-      "g5",
-      "g6"
+      "g1",
+      "g2"
     ],
     "minLevel": "medium",
     "maxLevel": "medium",
     "type": "mcq",
-    "stem": "למה מדענים מתעדים בדיוק איך הכינו חומרים, טמפרטורה וזמנים גם אם הניסוי 'עבד'?",
+    "stem": "מה גורם לרוח לעיתים?",
     "options": [
-      "כדי שאחרים יוכלו לשחזר ולאמת או לגלות טעויות נסתרות",
-      "כדי שלא יידעו איך לחזור על הניסוי",
-      "כי תיעוד נדרש רק כשהניסוי נכשל",
-      "כי בדיוק לא חשוב אם התוצאה ברורה"
+      "תנועת אוויר בין",
+      "סיבוב הירח בלבד",
+      "צבע העננים",
+      "גובה עצים בדרך כלל"
     ],
     "correctIndex": 0,
-    "explanation": "שחזור הוא אבן יסוד: בלי פרוטוקול, ממצאים נשארים סיפור אישי. תיעוד תומך בלמידה קולקטיבית.",
-    "theoryLines": [
-      "ידע מדעי הוא ציבורי ובדיק.",
-      "פרוטוקול מפחית אי הבנות."
-    ],
+    "explanation": "הבדלי לחץ מניעים רוח.",
     "params": {
-      "patternFamily": "sci_experiments_scientific_method",
-      "subtype": "sci_experiments_general",
+      "patternFamily": "sci_phb_earth_space_g2_medium_g2_earth_wind_cause",
+      "subtype": "sci_earth_space_general",
+      "conceptTag": "g2_earth_wind_cause",
+      "difficulty": "standard",
       "cognitiveLevel": "understanding",
+      "kind": "phase_b",
       "expectedErrorTypes": [
-        "strategy_error",
-        "reading_comprehension_error",
-        "concept_confusion"
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
       ],
-      "difficulty": "standard"
-    }
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_earth_space_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "earth_space",
+        "grade": "g1",
+        "skillId": "sci_earth_space_general",
+        "subSkill": "sci_earth_space_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "medium",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_earth_space_general",
+    "skillId": "sci_earth_space_general"
   },
   {
-    "id": "exp_35",
-    "topic": "experiments",
+    "id": "sci_phb_g2_earth_space_hard_01",
+    "topic": "earth_space",
     "grades": [
-      "g5",
-      "g6"
+      "g1",
+      "g2",
+      "g3"
     ],
     "minLevel": "hard",
     "maxLevel": "hard",
     "type": "mcq",
-    "stem": "תלמיד מדד אורך פריסה חמש פעמים קיבל 10.0, 10.1, 9.9, 10.0, 10.2 ס״מ אך המד סרט היה קצר בסנטימטר מכל התוויות. מה נכון לגבי השגיאה כאן?",
+    "stem": "למה יש עונות שונות בשנה?",
     "options": [
-      "הפיזור קטן אבל כל ערך מוסט שיטתית מהאמת בגלל כשל כיול במד",
-      "אם הפיזור קטן אין שום שגיאה כלל",
-      "זה רק שגיאה אקראית כי המספרים קרובים",
-      "ממוצע של חמישה תמיד מתקן אוטומטית שגיאת כיול"
+      "מיקום השמש",
+      "הירח נעלם",
+      "הים נסגר",
+      "אין שמש בדרך כלל"
     ],
     "correctIndex": 0,
-    "explanation": "עקביות (פיזור קטן) לא מבטיחה דיוק: מכשיר מוסט יכול לתת ערכים חוזרים אך שגויים באותו כיוון. צריך כיול והשוואה למוערך אמת.",
-    "theoryLines": [
-      "שגיאה שיטתית שונה מרעש אקראי.",
-      "ממוצע לא מסיר הטיה קבועה של מכשיר."
-    ],
+    "explanation": "זווית השמש משנה עונות.",
     "params": {
-      "patternFamily": "sci_experiments_scientific_method",
-      "subtype": "sci_experiments_general",
+      "patternFamily": "sci_phb_earth_space_g2_hard_g2_earth_seasons",
+      "subtype": "sci_earth_space_general",
+      "conceptTag": "g2_earth_seasons",
+      "difficulty": "advanced",
       "cognitiveLevel": "analysis",
+      "kind": "phase_b",
       "expectedErrorTypes": [
-        "strategy_error",
-        "reading_comprehension_error",
-        "concept_confusion"
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
       ],
-      "difficulty": "advanced"
-    }
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_earth_space_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "earth_space",
+        "grade": "g1",
+        "skillId": "sci_earth_space_general",
+        "subSkill": "sci_earth_space_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_earth_space_general",
+    "skillId": "sci_earth_space_general"
   },
   {
-    "id": "exp_36",
-    "topic": "experiments",
+    "id": "sci_phb_g2_earth_space_hard_02",
+    "topic": "earth_space",
     "grades": [
-      "g5",
-      "g6"
+      "g1",
+      "g2",
+      "g3"
+    ],
+    "minLevel": "hard",
+    "maxLevel": "hard",
+    "type": "mcq",
+    "stem": "מה קורה במחזור המים כשחם?",
+    "options": [
+      "אידוי ממים גדל",
+      "המים נעלמים לנצח",
+      "אין אידוי",
+      "השמש נכבית"
+    ],
+    "correctIndex": 0,
+    "explanation": "חום מגביר אידוי.",
+    "params": {
+      "patternFamily": "sci_phb_earth_space_g2_hard_g2_earth_evaporation_heat",
+      "subtype": "sci_earth_space_general",
+      "conceptTag": "g2_earth_evaporation_heat",
+      "difficulty": "advanced",
+      "cognitiveLevel": "analysis",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "concept_confusion",
+        "misconception",
+        "careless_error"
+      ],
+      "expectedErrorTags": [
+        "concept_confusion",
+        "misconception",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_earth_space_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "earth_space",
+        "grade": "g1",
+        "skillId": "sci_earth_space_general",
+        "subSkill": "sci_earth_space_general",
+        "questionType": "technical",
+        "problemClass": "mixed",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "concept_confusion",
+          "misconception",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_earth_space_general",
+    "skillId": "sci_earth_space_general"
+  },
+  {
+    "id": "sci_phb_g2_earth_space_hard_03",
+    "topic": "earth_space",
+    "grades": [
+      "g2"
+    ],
+    "minLevel": "hard",
+    "maxLevel": "hard",
+    "type": "mcq",
+    "stem": "למה יש מלח בים המלח?",
+    "options": [
+      "אידוי גדול והמלח נשאר",
+      "אין מים בים בדרך כלל",
+      "גשם ממיס מלח בדרך כלל",
+      "הירח מוסיף מלח"
+    ],
+    "correctIndex": 0,
+    "explanation": "אידוי מרוכז מלחים.",
+    "params": {
+      "patternFamily": "sci_phb_earth_space_g2_hard_g2_earth_dead_sea_salt",
+      "subtype": "sci_earth_space_general",
+      "conceptTag": "g2_earth_dead_sea_salt",
+      "difficulty": "advanced",
+      "cognitiveLevel": "analysis",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_earth_space_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "earth_space",
+        "grade": "g2",
+        "skillId": "sci_earth_space_general",
+        "subSkill": "sci_earth_space_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_earth_space_general",
+    "skillId": "sci_earth_space_general"
+  },
+  {
+    "id": "sci_phb_g2_earth_space_hard_04",
+    "topic": "earth_space",
+    "grades": [
+      "g2"
+    ],
+    "minLevel": "hard",
+    "maxLevel": "hard",
+    "type": "mcq",
+    "stem": "מה תפקיד הענן במזג אוויר?",
+    "options": [
+      "נושא אדי מים ומצל",
+      "מייצר כוכבים",
+      "סוגר את הלילה",
+      "מחליף את השמש"
+    ],
+    "correctIndex": 0,
+    "explanation": "עננים חלק ממחזור המים.",
+    "params": {
+      "patternFamily": "sci_phb_earth_space_g2_hard_g2_earth_cloud_role",
+      "subtype": "sci_earth_space_general",
+      "conceptTag": "g2_earth_cloud_role",
+      "difficulty": "advanced",
+      "cognitiveLevel": "analysis",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_earth_space_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "earth_space",
+        "grade": "g2",
+        "skillId": "sci_earth_space_general",
+        "subSkill": "sci_earth_space_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_earth_space_general",
+    "skillId": "sci_earth_space_general"
+  },
+  {
+    "id": "sci_phb_g2_environment_med_01",
+    "topic": "environment",
+    "grades": [
+      "g1",
+      "g2"
     ],
     "minLevel": "medium",
     "maxLevel": "medium",
     "type": "mcq",
-    "stem": "בודקים אם זרע נדיר נובט ב 50% מהמקרים. למה דגימה של שלושה זרעים בלבד לא נותנת בסיס טוב למסקנה כללית?",
+    "stem": "למה ממחזרים בקבוקים?",
     "options": [
-        "מדידה חוזרת מגדילה אמינות",
-        "מדידה אחת מספיקה תמיד",
-        "אין צורך ביומן ניסוי",
-        "תוצאה אקראית מספיקה"
+      "מפחיתים זבל וחוסכים",
+      "מגדילים פסולת",
+      "מונעים מים בדרך כלל",
+      "סוגרים שמש בדרך כלל"
     ],
     "correctIndex": 0,
-    "explanation": "רעש סטטיסטי גדול כשהמונה קטן: חוסר נביטה יחיד עלול להטעות. חזרות ודגימה גדולה יותר מייצבות הערכת שיעור.",
-    "theoryLines": [
-      "גודל דגימה משפיע על ביטחון במסקנות.",
-      "תוצאה במדגם היא הערכה, לא בהכרח 'החוק האמיתי'."
-    ],
+    "explanation": "מיחזור חוסך חומרים.",
     "params": {
-      "patternFamily": "sci_experiments_observation_inference",
-      "subtype": "sci_experiments_general",
+      "patternFamily": "sci_phb_environment_g2_medium_g2_env_recycle_bottles",
+      "subtype": "sci_environment_general",
+      "conceptTag": "g2_env_recycle_bottles",
+      "difficulty": "standard",
       "cognitiveLevel": "understanding",
+      "kind": "phase_b",
       "expectedErrorTypes": [
-        "strategy_error",
-        "reading_comprehension_error",
-        "concept_confusion"
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
       ],
-      "difficulty": "standard"
-    }
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_environment_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "environment",
+        "grade": "g1",
+        "skillId": "sci_environment_general",
+        "subSkill": "sci_environment_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "medium",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_environment_general",
+    "skillId": "sci_environment_general"
   },
   {
-    "id": "exp_37",
-    "topic": "experiments",
+    "id": "sci_phb_g2_environment_hard_01",
+    "topic": "environment",
     "grades": [
-      "g5",
-      "g6"
+      "g1",
+      "g2",
+      "g3"
     ],
     "minLevel": "hard",
     "maxLevel": "hard",
     "type": "mcq",
-    "stem": "בניסוי התנהגות בכיתה, התלמידים ידעו שהם מצולמים. למה זה עלול לשנות את הממצא לעומת מצב לא צפוי?",
+    "stem": "למה לא שורפים פסולת בחוץ?",
     "options": [
-      "כי מודעות לצפייה משנה התנהגות (אפקט צפייה/הוות'ורן) ולכן התוצאה פחות מייצגת 'מצב רגיל'",
-      "כי צילום תמיד מבטל פיזיקה של הכיתה",
-      "כי תלמידים לא מגיבים לסביבה חברתית",
-      "כי ניסוי חייב להיעשות רק בלי הסכמה"
+      "מזהם אוויר",
+      "מחזק עצים",
+      "מייצר מים",
+      "אין סיכון"
     ],
     "correctIndex": 0,
-    "explanation": "ניסויים עם בני אדם דורשים חשיבה אתית וגם של מודעות לשינוי התנהגותי. לפעמים צריך תכנון חלופי או דיווח מפורש על המגבלה.",
-    "theoryLines": [
-      "מדידה יכולה להשפיע על המישנה שנמדדה.",
-      "אתיקה במחקר ובכיתה חשובה כמו דיוק."
-    ],
+    "explanation": "שריפה פולטת עשן מזיק.",
     "params": {
-      "patternFamily": "sci_experiments_scientific_method",
-      "subtype": "sci_experiments_general",
+      "patternFamily": "sci_phb_environment_g2_hard_g2_env_no_burning",
+      "subtype": "sci_environment_general",
+      "conceptTag": "g2_env_no_burning",
+      "difficulty": "advanced",
       "cognitiveLevel": "analysis",
+      "kind": "phase_b",
       "expectedErrorTypes": [
-        "strategy_error",
-        "reading_comprehension_error",
-        "concept_confusion"
+        "concept_confusion",
+        "misconception",
+        "careless_error"
       ],
-      "difficulty": "advanced"
-    }
+      "expectedErrorTags": [
+        "concept_confusion",
+        "misconception",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_environment_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "environment",
+        "grade": "g1",
+        "skillId": "sci_environment_general",
+        "subSkill": "sci_environment_general",
+        "questionType": "technical",
+        "problemClass": "mixed",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "concept_confusion",
+          "misconception",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_environment_general",
+    "skillId": "sci_environment_general"
   },
   {
-    "id": "exp_38",
-    "topic": "experiments",
+    "id": "sci_phb_g2_environment_hard_02",
+    "topic": "environment",
     "grades": [
-      "g5",
-      "g6"
+      "g1",
+      "g2",
+      "g3"
     ],
     "minLevel": "hard",
     "maxLevel": "hard",
     "type": "mcq",
-    "stem": "איזה ניסוח מתאר נכון את ההבדל בין השערה למסקנה אחרי ניסוי?",
+    "stem": "מה קורה כשמזהמים נחל?",
     "options": [
-      "השערה היא חיזוי לפני הבדיקה; המסקנה מבוססת על ראיות שנאספו בפועל",
-      "מסקנה והשערה הם אותו דבר בשלבים שונים של כתיבה בלבד",
-      "השערה נכתבת רק אחרי שרואים תוצאה",
-      "מסקנה אסורה אם היא לא תואמת את הציפייה הראשונית"
+      "מזיק לדגים ולצמחים",
+      "מנקה את המים",
+      "מגדיל דגים בדרך כלל",
+      "אין השפעה בדרך כלל"
     ],
     "correctIndex": 0,
-    "explanation": "השערה מנחה את הבדיקה; המסקנה משקפת מה הנתונים תומכים בהן. אפשר לדחות השערה - זה תקין ומעיד על כנות מחקרית.",
-    "theoryLines": [
-      "מחזור חקר: שאלה → השערה → ניסוי → ניתוח → מסקנה.",
-      "חוסר איסוף ראיות מספק מחליש מסקנה."
-    ],
+    "explanation": "זיהום פוגע בחיים.",
     "params": {
-      "patternFamily": "sci_experiments_observation_inference",
-      "subtype": "sci_experiments_general",
+      "patternFamily": "sci_phb_environment_g2_hard_g2_env_stream_pollution",
+      "subtype": "sci_environment_general",
+      "conceptTag": "g2_env_stream_pollution",
+      "difficulty": "advanced",
       "cognitiveLevel": "analysis",
+      "kind": "phase_b",
       "expectedErrorTypes": [
-        "strategy_error",
-        "reading_comprehension_error",
-        "concept_confusion"
+        "concept_confusion",
+        "misconception",
+        "careless_error"
       ],
-      "difficulty": "advanced"
-    }
+      "expectedErrorTags": [
+        "concept_confusion",
+        "misconception",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_environment_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "environment",
+        "grade": "g1",
+        "skillId": "sci_environment_general",
+        "subSkill": "sci_environment_general",
+        "questionType": "technical",
+        "problemClass": "mixed",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "concept_confusion",
+          "misconception",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_environment_general",
+    "skillId": "sci_environment_general"
   },
   {
-    "id": "exp_39",
-    "topic": "experiments",
+    "id": "sci_phb_g2_environment_hard_03",
+    "topic": "environment",
+    "grades": [
+      "g2"
+    ],
+    "minLevel": "hard",
+    "maxLevel": "hard",
+    "type": "mcq",
+    "stem": "למה שותלים עצים בשכונה?",
+    "options": [
+      "מייצרים חמצן וצל",
+      "מונעים גשם לנצח",
+      "אוכלים בעלי חיים",
+      "מייצרים פלסטיק"
+    ],
+    "correctIndex": 0,
+    "explanation": "עצים משפרים אוויר וצל.",
+    "params": {
+      "patternFamily": "sci_phb_environment_g2_hard_g2_env_plant_trees",
+      "subtype": "sci_environment_general",
+      "conceptTag": "g2_env_plant_trees",
+      "difficulty": "advanced",
+      "cognitiveLevel": "analysis",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_environment_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "environment",
+        "grade": "g2",
+        "skillId": "sci_environment_general",
+        "subSkill": "sci_environment_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_environment_general",
+    "skillId": "sci_environment_general"
+  },
+  {
+    "id": "sci_phb_g2_environment_hard_04",
+    "topic": "environment",
+    "grades": [
+      "g2"
+    ],
+    "minLevel": "hard",
+    "maxLevel": "hard",
+    "type": "mcq",
+    "stem": "מה התנהגות ידידותית לטבע?",
+    "options": [
+      "הליכה על שבילים",
+      "קטיפת כל הפרחים",
+      "השארת זבל בדרך כלל",
+      "שבירת ענפים"
+    ],
+    "correctIndex": 0,
+    "explanation": "שבילים שומרים על בית גידול.",
+    "params": {
+      "patternFamily": "sci_phb_environment_g2_hard_g2_env_trail_behavior",
+      "subtype": "sci_environment_general",
+      "conceptTag": "g2_env_trail_behavior",
+      "difficulty": "advanced",
+      "cognitiveLevel": "analysis",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "concept_confusion",
+        "misconception",
+        "careless_error"
+      ],
+      "expectedErrorTags": [
+        "concept_confusion",
+        "misconception",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_environment_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "environment",
+        "grade": "g2",
+        "skillId": "sci_environment_general",
+        "subSkill": "sci_environment_general",
+        "questionType": "technical",
+        "problemClass": "mixed",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "concept_confusion",
+          "misconception",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_environment_general",
+    "skillId": "sci_environment_general"
+  },
+  {
+    "id": "sci_phb_g3_materials_eas_01",
+    "topic": "materials",
+    "grades": [
+      "g3"
+    ],
+    "minLevel": "easy",
+    "maxLevel": "easy",
+    "type": "mcq",
+    "stem": "איזה חומר מוליך חשמל טוב?",
+    "options": [
+      "נחושת",
+      "פלסטיק",
+      "עץ יבש",
+      "זכוכית"
+    ],
+    "correctIndex": 0,
+    "explanation": "מתכות מוליכות זרם.",
+    "params": {
+      "patternFamily": "sci_phb_materials_g3_easy_g3_materials_conductor",
+      "subtype": "sci_materials_general",
+      "conceptTag": "g3_materials_conductor",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "expectedErrorTags": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_materials_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "materials",
+        "grade": "g3",
+        "skillId": "sci_materials_general",
+        "subSkill": "sci_materials_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "recall",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "fact_recall_gap",
+          "concept_confusion",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_materials_general",
+    "skillId": "sci_materials_general"
+  },
+  {
+    "id": "sci_phb_g3_materials_eas_02",
+    "topic": "materials",
+    "grades": [
+      "g3"
+    ],
+    "minLevel": "easy",
+    "maxLevel": "easy",
+    "type": "mcq",
+    "stem": "מה מצב הצבירה של מים בחדר?",
+    "options": [
+      "נוזל",
+      "מוצק",
+      "גז בלבד",
+      "פלסמה"
+    ],
+    "correctIndex": 0,
+    "explanation": "בטמפרטורת חדר מים נוזלים.",
+    "params": {
+      "patternFamily": "sci_phb_materials_g3_easy_g3_materials_water_liquid",
+      "subtype": "sci_materials_general",
+      "conceptTag": "g3_materials_water_liquid",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "expectedErrorTags": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_materials_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "materials",
+        "grade": "g3",
+        "skillId": "sci_materials_general",
+        "subSkill": "sci_materials_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "recall",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "fact_recall_gap",
+          "concept_confusion",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_materials_general",
+    "skillId": "sci_materials_general"
+  },
+  {
+    "id": "sci_phb_g3_materials_hard_01",
+    "topic": "materials",
+    "grades": [
+      "g3",
+      "g4"
+    ],
+    "minLevel": "hard",
+    "maxLevel": "hard",
+    "type": "mcq",
+    "stem": "מה משפיע על מהירות התכת קרח?",
+    "options": [
+      "טמפרטורה סביב",
+      "צבע הקיר",
+      "שם הילד בדרך כלל",
+      "גובה כיסא"
+    ],
+    "correctIndex": 0,
+    "explanation": "חום ושטח משפיעים על התכה.",
+    "params": {
+      "patternFamily": "sci_phb_materials_g3_hard_g3_materials_ice_melt_rate",
+      "subtype": "sci_materials_general",
+      "conceptTag": "g3_materials_ice_melt_rate",
+      "difficulty": "advanced",
+      "cognitiveLevel": "analysis",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "concept_confusion",
+        "misconception",
+        "careless_error"
+      ],
+      "expectedErrorTags": [
+        "concept_confusion",
+        "misconception",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_materials_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "materials",
+        "grade": "g3",
+        "skillId": "sci_materials_general",
+        "subSkill": "sci_materials_general",
+        "questionType": "technical",
+        "problemClass": "mixed",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "concept_confusion",
+          "misconception",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_materials_general",
+    "skillId": "sci_materials_general"
+  },
+  {
+    "id": "sci_phb_g3_materials_hard_02",
+    "topic": "materials",
+    "grades": [
+      "g3",
+      "g4"
+    ],
+    "minLevel": "hard",
+    "maxLevel": "hard",
+    "type": "mcq",
+    "stem": "מה הבדל בין שינוי פיזיקלי לכימי?",
+    "options": [
+      "פיזיקלי אותו חומר,",
+      "אין הבדל בדרך כלל",
+      "כימי תמיד צבע",
+      "פיזיקלי תמיד אש"
+    ],
+    "correctIndex": 0,
+    "explanation": "בכימי נוצר חומר אחר.",
+    "params": {
+      "patternFamily": "sci_phb_materials_g3_hard_g3_materials_phys_vs_chem",
+      "subtype": "sci_materials_general",
+      "conceptTag": "g3_materials_phys_vs_chem",
+      "difficulty": "advanced",
+      "cognitiveLevel": "analysis",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_materials_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "materials",
+        "grade": "g3",
+        "skillId": "sci_materials_general",
+        "subSkill": "sci_materials_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_materials_general",
+    "skillId": "sci_materials_general"
+  },
+  {
+    "id": "sci_phb_g3_earth_space_eas_01",
+    "topic": "earth_space",
+    "grades": [
+      "g3",
+      "g4"
+    ],
+    "minLevel": "easy",
+    "maxLevel": "easy",
+    "type": "mcq",
+    "stem": "מה גורם ליום ולילה?",
+    "options": [
+      "סיבוב כדור",
+      "הירח נעלם",
+      "השמש נכבית",
+      "הגשם בדרך כלל"
+    ],
+    "correctIndex": 0,
+    "explanation": "סיבוב יוצר מחזור אור-חושך.",
+    "params": {
+      "patternFamily": "sci_phb_earth_space_g3_easy_g3_earth_day_night",
+      "subtype": "sci_earth_space_general",
+      "conceptTag": "g3_earth_day_night",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "expectedErrorTags": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_earth_space_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "earth_space",
+        "grade": "g3",
+        "skillId": "sci_earth_space_general",
+        "subSkill": "sci_earth_space_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "recall",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "fact_recall_gap",
+          "concept_confusion",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_earth_space_general",
+    "skillId": "sci_earth_space_general"
+  },
+  {
+    "id": "sci_phb_g3_earth_space_eas_02",
+    "topic": "earth_space",
+    "grades": [
+      "g3"
+    ],
+    "minLevel": "easy",
+    "maxLevel": "easy",
+    "type": "mcq",
+    "stem": "מאיפה האור שאנו רואים מהירח?",
+    "options": [
+      "מאור השמש",
+      "מהירח עצמו",
+      "מהים",
+      "מהעננים בלבד"
+    ],
+    "correctIndex": 0,
+    "explanation": "הירח מחזיר אור שמש.",
+    "params": {
+      "patternFamily": "sci_phb_earth_space_g3_easy_g3_earth_moon_light",
+      "subtype": "sci_earth_space_general",
+      "conceptTag": "g3_earth_moon_light",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_earth_space_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "earth_space",
+        "grade": "g3",
+        "skillId": "sci_earth_space_general",
+        "subSkill": "sci_earth_space_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_earth_space_general",
+    "skillId": "sci_earth_space_general"
+  },
+  {
+    "id": "sci_phb_g3_earth_space_hard_01",
+    "topic": "earth_space",
+    "grades": [
+      "g3"
+    ],
+    "minLevel": "hard",
+    "maxLevel": "hard",
+    "type": "mcq",
+    "stem": "למה בישראל חם בקיץ וגשום בחורף?",
+    "options": [
+      "אקלים ים תיכוני",
+      "אין עונות בדרך כלל",
+      "הירח קובע גשם",
+      "הים נעלם בדרך כלל"
+    ],
+    "correctIndex": 0,
+    "explanation": "אקלים מקומי קובע עונות.",
+    "params": {
+      "patternFamily": "sci_phb_earth_space_g3_hard_g3_earth_med_climate",
+      "subtype": "sci_earth_space_general",
+      "conceptTag": "g3_earth_med_climate",
+      "difficulty": "advanced",
+      "cognitiveLevel": "analysis",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_earth_space_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "earth_space",
+        "grade": "g3",
+        "skillId": "sci_earth_space_general",
+        "subSkill": "sci_earth_space_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_earth_space_general",
+    "skillId": "sci_earth_space_general"
+  },
+  {
+    "id": "sci_phb_g3_earth_space_hard_02",
+    "topic": "earth_space",
+    "grades": [
+      "g3"
+    ],
+    "minLevel": "hard",
+    "maxLevel": "hard",
+    "type": "mcq",
+    "stem": "מה שלב אחרי אידוי במחזור המים?",
+    "options": [
+      "התעבות לעננים",
+      "הצטברות באוקיינוס בלבד",
+      "היעלמות מים",
+      "הפסקת שמש"
+    ],
+    "correctIndex": 0,
+    "explanation": "אדים מתעבים לטיפות.",
+    "params": {
+      "patternFamily": "sci_phb_earth_space_g3_hard_g3_earth_condensation",
+      "subtype": "sci_earth_space_general",
+      "conceptTag": "g3_earth_condensation",
+      "difficulty": "advanced",
+      "cognitiveLevel": "analysis",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_earth_space_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "earth_space",
+        "grade": "g3",
+        "skillId": "sci_earth_space_general",
+        "subSkill": "sci_earth_space_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_earth_space_general",
+    "skillId": "sci_earth_space_general"
+  },
+  {
+    "id": "sci_phb_g3_environment_eas_01",
+    "topic": "environment",
+    "grades": [
+      "g3"
+    ],
+    "minLevel": "easy",
+    "maxLevel": "easy",
+    "type": "mcq",
+    "stem": "מי בתחילת שרשרת מזון?",
+    "options": [
+      "צמחים",
+      "נמר",
+      "עכבר",
+      "עורב"
+    ],
+    "correctIndex": 0,
+    "explanation": "צמחים מייצרים מזון מאור.",
+    "params": {
+      "patternFamily": "sci_phb_environment_g3_easy_g3_env_food_chain_start",
+      "subtype": "sci_environment_general",
+      "conceptTag": "g3_env_food_chain_start",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "expectedErrorTags": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_environment_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "environment",
+        "grade": "g3",
+        "skillId": "sci_environment_general",
+        "subSkill": "sci_environment_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "recall",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "fact_recall_gap",
+          "concept_confusion",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_environment_general",
+    "skillId": "sci_environment_general"
+  },
+  {
+    "id": "sci_phb_g3_environment_eas_02",
+    "topic": "environment",
+    "grades": [
+      "g3"
+    ],
+    "minLevel": "easy",
+    "maxLevel": "easy",
+    "type": "mcq",
+    "stem": "למה ממחזרים נייר?",
+    "options": [
+      "חוסך עצים",
+      "מגדיל זבל",
+      "מונע מים",
+      "סוגר שמש"
+    ],
+    "correctIndex": 0,
+    "explanation": "נייר ממוחזר חוסך עצים.",
+    "params": {
+      "patternFamily": "sci_phb_environment_g3_easy_g3_env_paper_recycle",
+      "subtype": "sci_environment_general",
+      "conceptTag": "g3_env_paper_recycle",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_environment_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "environment",
+        "grade": "g3",
+        "skillId": "sci_environment_general",
+        "subSkill": "sci_environment_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_environment_general",
+    "skillId": "sci_environment_general"
+  },
+  {
+    "id": "sci_phb_g3_environment_hard_01",
+    "topic": "environment",
+    "grades": [
+      "g3"
+    ],
+    "minLevel": "hard",
+    "maxLevel": "hard",
+    "type": "mcq",
+    "stem": "מה קורה כשמכריתים יער?",
+    "options": [
+      "פוגעים בבתי גידול",
+      "מגדילים מינים",
+      "מייצרים יותר חמצן",
+      "אין השפעה בדרך כלל"
+    ],
+    "correctIndex": 0,
+    "explanation": "כריתה מצמצמת מחיה.",
+    "params": {
+      "patternFamily": "sci_phb_environment_g3_hard_g3_env_deforestation",
+      "subtype": "sci_environment_general",
+      "conceptTag": "g3_env_deforestation",
+      "difficulty": "advanced",
+      "cognitiveLevel": "analysis",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "concept_confusion",
+        "misconception",
+        "careless_error"
+      ],
+      "expectedErrorTags": [
+        "concept_confusion",
+        "misconception",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_environment_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "environment",
+        "grade": "g3",
+        "skillId": "sci_environment_general",
+        "subSkill": "sci_environment_general",
+        "questionType": "technical",
+        "problemClass": "mixed",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "concept_confusion",
+          "misconception",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_environment_general",
+    "skillId": "sci_environment_general"
+  },
+  {
+    "id": "sci_phb_g3_environment_hard_02",
+    "topic": "environment",
+    "grades": [
+      "g3"
+    ],
+    "minLevel": "hard",
+    "maxLevel": "hard",
+    "type": "mcq",
+    "stem": "למה זיהום אוויר מזיק?",
+    "options": [
+      "מקשה על נשימה",
+      "מחזק צמחים",
+      "מייצר מים",
+      "אין השפעה"
+    ],
+    "correctIndex": 0,
+    "explanation": "חומרים באוויר פוגעים בריאות.",
+    "params": {
+      "patternFamily": "sci_phb_environment_g3_hard_g3_env_air_pollution",
+      "subtype": "sci_environment_general",
+      "conceptTag": "g3_env_air_pollution",
+      "difficulty": "advanced",
+      "cognitiveLevel": "analysis",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "concept_confusion",
+        "misconception",
+        "careless_error"
+      ],
+      "expectedErrorTags": [
+        "concept_confusion",
+        "misconception",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_environment_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "environment",
+        "grade": "g3",
+        "skillId": "sci_environment_general",
+        "subSkill": "sci_environment_general",
+        "questionType": "technical",
+        "problemClass": "mixed",
+        "difficulty": "hard",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "concept_confusion",
+          "misconception",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_environment_general",
+    "skillId": "sci_environment_general"
+  },
+  {
+    "id": "sci_phb_g4_materials_eas_01",
+    "topic": "materials",
+    "grades": [
+      "g4"
+    ],
+    "minLevel": "easy",
+    "maxLevel": "easy",
+    "type": "mcq",
+    "stem": "איך מפרידים חול ממים בכלי?",
+    "options": [
+      "סינון או",
+      "בישול בלבד",
+      "צביעה",
+      "הקפאה"
+    ],
+    "correctIndex": 0,
+    "explanation": "הפרדה פיזית לפי גודל וצפיפות.",
+    "params": {
+      "patternFamily": "sci_phb_materials_g4_easy_g4_materials_sand_water_sep",
+      "subtype": "sci_materials_general",
+      "conceptTag": "g4_materials_sand_water_sep",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "concept_confusion",
+        "misconception",
+        "careless_error"
+      ],
+      "expectedErrorTags": [
+        "concept_confusion",
+        "misconception",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_materials_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "materials",
+        "grade": "g4",
+        "skillId": "sci_materials_general",
+        "subSkill": "sci_materials_general",
+        "questionType": "technical",
+        "problemClass": "mixed",
+        "difficulty": "basic",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "concept_confusion",
+          "misconception",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_materials_general",
+    "skillId": "sci_materials_general"
+  },
+  {
+    "id": "sci_phb_g4_materials_eas_02",
+    "topic": "materials",
+    "grades": [
+      "g4"
+    ],
+    "minLevel": "easy",
+    "maxLevel": "easy",
+    "type": "mcq",
+    "stem": "מה תכונה של נוזל?",
+    "options": [
+      "לוקח את צורת",
+      "תמיד קשיח",
+      "לא זז בדרך כלל",
+      "תמיד שקוף"
+    ],
+    "correctIndex": 0,
+    "explanation": "נוזלים נזילים.",
+    "params": {
+      "patternFamily": "sci_phb_materials_g4_easy_g4_materials_liquid_shape",
+      "subtype": "sci_materials_general",
+      "conceptTag": "g4_materials_liquid_shape",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "expectedErrorTags": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_materials_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "materials",
+        "grade": "g4",
+        "skillId": "sci_materials_general",
+        "subSkill": "sci_materials_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "recall",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "fact_recall_gap",
+          "concept_confusion",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_materials_general",
+    "skillId": "sci_materials_general"
+  },
+  {
+    "id": "sci_phb_g4_earth_space_eas_01",
+    "topic": "earth_space",
+    "grades": [
+      "g4"
+    ],
+    "minLevel": "easy",
+    "maxLevel": "easy",
+    "type": "mcq",
+    "stem": "מה גורם לסירוגין של יום ולילה על כדור הארץ?",
+    "options": [
+      "סיבוב כדור",
+      "הירח נעלם",
+      "השמש נכבית",
+      "רק גשם בדרך כלל"
+    ],
+    "correctIndex": 0,
+    "explanation": "סיבוב יוצר מחזור יום-לילה.",
+    "params": {
+      "patternFamily": "sci_phb_earth_space_g4_easy_g4_earth_rotation_day",
+      "subtype": "sci_earth_space_general",
+      "conceptTag": "g4_earth_rotation_day",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_earth_space_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "earth_space",
+        "grade": "g4",
+        "skillId": "sci_earth_space_general",
+        "subSkill": "sci_earth_space_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_earth_space_general",
+    "skillId": "sci_earth_space_general"
+  },
+  {
+    "id": "sci_phb_g4_earth_space_eas_02",
+    "topic": "earth_space",
+    "grades": [
+      "g4"
+    ],
+    "minLevel": "easy",
+    "maxLevel": "easy",
+    "type": "mcq",
+    "stem": "מה השלב הראשון במחזור המים?",
+    "options": [
+      "אידוי",
+      "גשם",
+      "התעבות",
+      "שקיעה"
+    ],
+    "correctIndex": 0,
+    "explanation": "חום מגביר אידוי.",
+    "params": {
+      "patternFamily": "sci_phb_earth_space_g4_easy_g4_earth_water_cycle_start",
+      "subtype": "sci_earth_space_general",
+      "conceptTag": "g4_earth_water_cycle_start",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "expectedErrorTags": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_earth_space_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "earth_space",
+        "grade": "g4",
+        "skillId": "sci_earth_space_general",
+        "subSkill": "sci_earth_space_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "recall",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "fact_recall_gap",
+          "concept_confusion",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_earth_space_general",
+    "skillId": "sci_earth_space_general"
+  },
+  {
+    "id": "sci_phb_g4_environment_eas_01",
+    "topic": "environment",
+    "grades": [
+      "g4"
+    ],
+    "minLevel": "easy",
+    "maxLevel": "easy",
+    "type": "mcq",
+    "stem": "מהו בית גידול?",
+    "options": [
+      "מקום שבו בעל חיים",
+      "סוג מזון בלבד",
+      "שם של פרח בדרך כלל",
+      "כלי בית ספר"
+    ],
+    "correctIndex": 0,
+    "explanation": "בית גידול כולל תנאים לחיים.",
+    "params": {
+      "patternFamily": "sci_phb_environment_g4_easy_g4_env_habitat_def",
+      "subtype": "sci_environment_general",
+      "conceptTag": "g4_env_habitat_def",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "expectedErrorTags": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_environment_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "environment",
+        "grade": "g4",
+        "skillId": "sci_environment_general",
+        "subSkill": "sci_environment_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "recall",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "fact_recall_gap",
+          "concept_confusion",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_environment_general",
+    "skillId": "sci_environment_general"
+  },
+  {
+    "id": "sci_phb_g4_environment_eas_02",
+    "topic": "environment",
+    "grades": [
+      "g4"
+    ],
+    "minLevel": "easy",
+    "maxLevel": "easy",
+    "type": "mcq",
+    "stem": "מה מקור האנרגיה בשרשרת מזון?",
+    "options": [
+      "השמש",
+      "הירח",
+      "האדמה בלבד",
+      "הרוח בלבד"
+    ],
+    "correctIndex": 0,
+    "explanation": "אור השמש מזין יצרנים.",
+    "params": {
+      "patternFamily": "sci_phb_environment_g4_easy_g4_env_sun_energy_chain",
+      "subtype": "sci_environment_general",
+      "conceptTag": "g4_env_sun_energy_chain",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_environment_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "environment",
+        "grade": "g4",
+        "skillId": "sci_environment_general",
+        "subSkill": "sci_environment_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_environment_general",
+    "skillId": "sci_environment_general"
+  },
+  {
+    "id": "sci_phb_g5_materials_eas_01",
+    "topic": "materials",
     "grades": [
       "g5",
       "g6"
+    ],
+    "minLevel": "easy",
+    "maxLevel": "easy",
+    "type": "mcq",
+    "stem": "איזה חומר מבודד חשמל טוב?",
+    "options": [
+      "גומי",
+      "נחושת",
+      "אלומיניום",
+      "ברזל"
+    ],
+    "correctIndex": 0,
+    "explanation": "גומי עוצר זרימת זרם.",
+    "params": {
+      "patternFamily": "sci_phb_materials_g5_easy_g5_materials_insulator",
+      "subtype": "sci_materials_general",
+      "conceptTag": "g5_materials_insulator",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "expectedErrorTags": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_materials_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "materials",
+        "grade": "g5",
+        "skillId": "sci_materials_general",
+        "subSkill": "sci_materials_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "recall",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "fact_recall_gap",
+          "concept_confusion",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_materials_general",
+    "skillId": "sci_materials_general"
+  },
+  {
+    "id": "sci_phb_g5_materials_eas_02",
+    "topic": "materials",
+    "grades": [
+      "g5",
+      "g6"
+    ],
+    "minLevel": "easy",
+    "maxLevel": "easy",
+    "type": "mcq",
+    "stem": "מה דוגמה לשינוי פיזיקלי?",
+    "options": [
+      "התכת קרח",
+      "בעירת נייר",
+      "חמצון ברז",
+      "הפקת אור"
+    ],
+    "correctIndex": 0,
+    "explanation": "התכה שומרת על מים.",
+    "params": {
+      "patternFamily": "sci_phb_materials_g5_easy_g5_materials_physical_change",
+      "subtype": "sci_materials_general",
+      "conceptTag": "g5_materials_physical_change",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_materials_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "materials",
+        "grade": "g5",
+        "skillId": "sci_materials_general",
+        "subSkill": "sci_materials_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_materials_general",
+    "skillId": "sci_materials_general"
+  },
+  {
+    "id": "sci_phb_g5_materials_eas_03",
+    "topic": "materials",
+    "grades": [
+      "g5"
+    ],
+    "minLevel": "easy",
+    "maxLevel": "easy",
+    "type": "mcq",
+    "stem": "מה תכונה אופיינית של מתכת?",
+    "options": [
+      "מוליכה וגמישה",
+      "תמיד שקופה",
+      "תמיד רכה",
+      "לא מוליכה"
+    ],
+    "correctIndex": 0,
+    "explanation": "מתכות מוליכות וניתנות לעיצוב.",
+    "params": {
+      "patternFamily": "sci_phb_materials_g5_easy_g5_materials_metal_props",
+      "subtype": "sci_materials_general",
+      "conceptTag": "g5_materials_metal_props",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "expectedErrorTags": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_materials_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "materials",
+        "grade": "g5",
+        "skillId": "sci_materials_general",
+        "subSkill": "sci_materials_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "recall",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "fact_recall_gap",
+          "concept_confusion",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_materials_general",
+    "skillId": "sci_materials_general"
+  },
+  {
+    "id": "sci_phb_g5_materials_med_01",
+    "topic": "materials",
+    "grades": [
+      "g5"
     ],
     "minLevel": "medium",
     "maxLevel": "medium",
     "type": "mcq",
-    "stem": "מה המשמעות של 'בדיקה הוגנת' (fair test) כשמשווים שתי שיטות לניקוי שמן ממים?",
+    "stem": "מה משפיע על מהירות התמוססות מלח?",
     "options": [
-      "שכל מה שלא בוחנים נשאר זהה (כמות מים, טמפרטורה, זמן ערבוב) ומשתנה רק שיטת הניקוי",
-      "שמשנים את כל התנאים יחד כדי לראות 'מי הכי חזק'",
-      "שמשתמשים במים שונים לחלוטין בכל צד בלי מדידה",
-      "שלא מודדים כלום בסוף"
+      "ערבוב וטמפרטורה",
+      "צבע הקערה בדרך כלל",
+      "גובה החדר בדרך כלל",
+      "שם המלח בלבד"
     ],
     "correctIndex": 0,
-    "explanation": "הוגנות פירושה בידוד גורם אחד: אחרת ההבדל יכול לנבוע ממזל או מתנאי נסתר, לא מהשיטה.",
-    "theoryLines": [
-      "בדיקה הוגנת מבודדת משתנה עצמאי אחד.",
-      "שליטה במשתנים מצמצמת פרשנויות מקושרות."
-    ],
+    "explanation": "חום וערבוב משנים קצב.",
     "params": {
-      "patternFamily": "sci_experiments_scientific_method",
-      "subtype": "sci_experiments_general",
+      "patternFamily": "sci_phb_materials_g5_medium_g5_materials_dissolve_rate",
+      "subtype": "sci_materials_general",
+      "conceptTag": "g5_materials_dissolve_rate",
+      "difficulty": "standard",
       "cognitiveLevel": "understanding",
+      "kind": "phase_b",
       "expectedErrorTypes": [
-        "strategy_error",
-        "reading_comprehension_error",
-        "concept_confusion"
+        "concept_confusion",
+        "misconception",
+        "careless_error"
       ],
-      "difficulty": "standard"
-    }
+      "expectedErrorTags": [
+        "concept_confusion",
+        "misconception",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_materials_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "materials",
+        "grade": "g5",
+        "skillId": "sci_materials_general",
+        "subSkill": "sci_materials_general",
+        "questionType": "technical",
+        "problemClass": "mixed",
+        "difficulty": "medium",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "concept_confusion",
+          "misconception",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_materials_general",
+    "skillId": "sci_materials_general"
   },
   {
-    "id": "exp_40",
-    "topic": "experiments",
+    "id": "sci_phb_g5_materials_med_02",
+    "topic": "materials",
     "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "אם פעמיים דשן תמיד לא נותן פי שניים יבול, למה זה שובר מודל 'קשר ישר' פשוט בין כמות דשן לתוצאה?",
-    "options": [
-      "כי מערכות ביולוגיות מגיבות בלמות, במחסור במזינים ובפיזור אופטימלי - לעיתים יש נקודת תואם מיטבית",
-      "כי דשן אף פעם לא משפיע",
-      "כי יבול תמיד גדל ליניארית לנצח",
-      "כי קשר ישר מתאר רק פיזיקה ולא ביולוגיה"
-    ],
-    "correctIndex": 0,
-    "explanation": "מגבלות משאבים, רעילות בכמות גבוהה ושימוש יעיל משתנים לפי רמה - לכן עקומות צמיחה אינן קו ישר פשוט.",
-    "theoryLines": [
-      "מודלים פשוטים מתאימים לטווח מצומצם.",
-      "יישום יתר של קלט עלול לפגוע במקום לעזור."
-    ],
-    "params": {
-      "patternFamily": "sci_experiments_scientific_method",
-      "subtype": "sci_experiments_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "strategy_error",
-        "reading_comprehension_error",
-        "concept_confusion"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "exp_41",
-    "topic": "experiments",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "למה לא מערבבים ברישות בכיתה נוזלים מסומנים 'לא ידוע' כדי 'לראות מה יקרה'?",
-    "options": [
-      "כי תגובות בלתי צפויות עלולות לשחרר גזים או חום, לפגוע בעור או בדרכי נשימה בלי ציוד הגנה",
-      "כי נוזלים לא מגיבים זה עם זה מעולם",
-      "כי אסור לכל תלמיד להשתמש בכפפות",
-      "כי 'לא ידוע' תמיד אומר שהנוזל מים בטוח"
-    ],
-    "correctIndex": 0,
-    "explanation": "בטיחות במעבדה כוללת זיהוי חומרים, הוראות מורה וציוד. סקרנות טובה מתכננת מראש, לא מסתכנת 'על העיוור'.",
-    "theoryLines": [
-      "ניסויים כימיים דורשים ידע על מסוכנות חומרים.",
-      "נהלי בטיחות מגנים על קהילת הלומדים."
-    ],
-    "params": {
-      "patternFamily": "sci_experiments_scientific_method",
-      "subtype": "sci_experiments_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "strategy_error",
-        "reading_comprehension_error",
-        "concept_confusion"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "exp_42",
-    "topic": "experiments",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "בנתוני הדרכה מראים שככל ילדים קונים יותר גלידה ביום קיץ יש יותר טביעות בבריכה. מה המסקנה הסבירה ביותר?",
-    "options": [
-        "השערה היא ניחוש שניתן לבדוק",
-        "השערה היא תוצאה סופית",
-        "השערה מחליפה מדידה",
-        "השערה אינה קשורה לניסוי"
-    ],
-    "correctIndex": 0,
-    "explanation": "מתאמה (קורלציה) אינה סיבה: נתון 'זז יחד' לא מוכיח מנגנון; צריך הסבר, ניסוי או שליטה בגורמים.",
-    "theoryLines": [
-      "הסקת סיבה דורשת מעבר לשכנות בנתונים.",
-      "בניית מודל הסבר כולל בדיקת אלטרנטיבות."
-    ],
-    "params": {
-      "patternFamily": "sci_experiments_observation_inference",
-      "subtype": "sci_experiments_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "strategy_error",
-        "reading_comprehension_error",
-        "concept_confusion"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "exp_43",
-    "topic": "experiments",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "בניסוי טעם משקה, מעריך המבחן לא יודע איזו כוס היא המקורית. למה זה עוזר?",
-    "options": [
-      "מפחית הטיית מצפה: המעריך לא ינסה 'להתאים' את תוצאתו לציפייה",
-      "מבטיח שהמשקה ישתנה כימית בין הכוסות",
-      "מונע מהמשתתפים לשתות",
-      "מבטל את צורך בקבוצת בקרה"
-    ],
-    "correctIndex": 0,
-    "explanation": "כשהמודד אינו יודע איזו כוס היא המקורית, פחות סיכוי שהפרשנות תהיה מושפעת מדעה מוקדמת. זה כלי מתודולוגי בסיסי במחקרי חושים.",
-    "theoryLines": [
-      "מדידה אובייקטיבית מצמצמת הטיות אנושיות.",
-      "שקיפות פרוטוקול תומכת באמון."
-    ],
-    "params": {
-      "patternFamily": "sci_experiments_scientific_method",
-      "subtype": "sci_experiments_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "strategy_error",
-        "reading_comprehension_error",
-        "concept_confusion"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "exp_44",
-    "topic": "experiments",
-    "grades": [
-      "g5",
-      "g6"
+      "g5"
     ],
     "minLevel": "medium",
     "maxLevel": "medium",
     "type": "mcq",
-    "stem": "בסדרת זמנים של טמפרטורה יומית יש נקודה אחת חריגה מאוד בלי הסבר מזג אוויר. מה צעד חקר סביר לפני מחיקה?",
+    "stem": "מה הבדל בין תערובת לתרכוב?",
     "options": [
-      "לבדוק רישום, כיול מכשיר או טעות הקלדה; אם מתאמת טעות - לתעד תיקון ואם לא - לחקור נסיבה מקומית",
-      "תמיד למחוק את הנקודה הגבוהה ביותר אוטומטית",
-      "תמיד להתעלם כי חריגים לא חשובים",
-      "להמציא ערך חדש בלי להסביר"
+      "תערובת ניתנת להפרדה",
+      "אין הבדל בדרך כלל",
+      "תרכוב תמיד גז",
+      "תערובת תמיד אטום"
     ],
     "correctIndex": 0,
-    "explanation": "טיפול בחריגים דורש בקרה: זה יכול להיות כיווץ אמת או טעות. מדענים מתעדים החלטות כדי לשמור על שקיפות.",
-    "theoryLines": [
-      "ניקיון נתונים הוא תהליך ביקורתי, לא 'מחיקה אמנותית'.",
-      "יומן מעבדה תומך במעקב אחרי שינויים."
-    ],
+    "explanation": "בתרכוב חומרים משולבים כימית.",
     "params": {
-      "patternFamily": "sci_experiments_scientific_method",
-      "subtype": "sci_experiments_general",
+      "patternFamily": "sci_phb_materials_g5_medium_g5_materials_mixture_compound",
+      "subtype": "sci_materials_general",
+      "conceptTag": "g5_materials_mixture_compound",
+      "difficulty": "standard",
       "cognitiveLevel": "understanding",
+      "kind": "phase_b",
       "expectedErrorTypes": [
-        "strategy_error",
-        "reading_comprehension_error",
-        "concept_confusion"
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
       ],
-      "difficulty": "standard"
-    }
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_materials_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "materials",
+        "grade": "g5",
+        "skillId": "sci_materials_general",
+        "subSkill": "sci_materials_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "medium",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_materials_general",
+    "skillId": "sci_materials_general"
   },
   {
-    "id": "exp_45",
-    "topic": "experiments",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "מכשיר מודד עד עשירית אחידה אבל מכוון בקבועים שגויים. איזה תיאור נכון?",
-    "options": [
-      "רזולוציה גבוהה לא מתקנת שגיאת מערכת; המספר נראה 'מדויק' אך רחוק מהאמת",
-      "אם הרזולוציה גבוהה המכשיר בהכרח מדויק",
-      "מכשיר חסר כיול נותן רק מספרים שלמים",
-      "שגיאת קבועים נעלמת אם מודדים מהר"
-    ],
-    "correctIndex": 0,
-    "explanation": "ריבוי ספרות אחרי הנקודה לא אומר שהמספר נכון לעולם. כיול מתקן ספי מידה; רזולוציה רק מתארת רגישות לשינוי קטן.",
-    "theoryLines": [
-      "רזולוציה ודיוק הם ממדים שונים.",
-      "נתון צריך להיות נתון מהימן, לא רק עמוק."
-    ],
-    "params": {
-      "patternFamily": "sci_experiments_scientific_method",
-      "subtype": "sci_experiments_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "strategy_error",
-        "reading_comprehension_error",
-        "concept_confusion"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "exp_46",
-    "topic": "experiments",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "medium",
-    "maxLevel": "medium",
-    "type": "mcq",
-    "stem": "למה רושמים תצפית גולמית לפני 'לתרגם' אותה למסקנה מסודרת ביומן מעבדה?",
-    "options": [
-        "מסקנה מבוססת על הנתונים שנאספו",
-        "מסקנה לפני שמודדים",
-        "מסקנה בלי קשר לתוצאות",
-        "מסקנה שמבטלת את הניסוי"
-    ],
-    "correctIndex": 0,
-    "explanation": "תיעוד גולמי מאפשר לבדוק אם הפרשנות עקבית עם העובדות. זה גם לומדים מאחרים - ומשפרים יכולת ביקורת עצמית.",
-    "theoryLines": [
-      "נתונים גולמיים הם בסיס לשקיפות.",
-      "פרשנות טובה נבדקת מול הרישום המקורי."
-    ],
-    "params": {
-      "patternFamily": "sci_experiments_observation_inference",
-      "subtype": "sci_experiments_general",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "strategy_error",
-        "reading_comprehension_error",
-        "concept_confusion"
-      ],
-      "difficulty": "standard"
-    }
-  },
-  {
-    "id": "exp_47",
-    "topic": "experiments",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "אם בכל יום מודדים את אורך צל אחרי השיעור באותה שיטה, ותמיד שוכחים לכוון את המד מחדש, איך השגיאה מתנהגת לאורך השבוע?",
-    "options": [
-      "אותה הטיה שיטתית חוזרת - לא מפוזרת 'באקראי' סביב האמת",
-      "השגיאה נעלמת כי חזרה יוצרת ממוצע מושלם",
-      "כל יום השגיאה משתנה כיוון באקראי מוחלט",
-      "בלי כיול אין משמעות למדידת צל"
-    ],
-    "correctIndex": 0,
-    "explanation": "שגיאת פרוצדורה/מכשיר קבועה יוצרת דפוס שיטתי. חזרה מחזקת את הסיכון הזה אם לא מתקנים מקור.",
-    "theoryLines": [
-      "פרוטוקולים קבועים ותחזוקת ציוד מפחיתים שגיאות דביקות.",
-      "זיהוי דפוס בשגיאה הוא רמז לכיול או מתודולוגיה."
-    ],
-    "params": {
-      "patternFamily": "sci_experiments_scientific_method",
-      "subtype": "sci_experiments_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "strategy_error",
-        "reading_comprehension_error",
-        "concept_confusion"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "exp_48",
-    "topic": "experiments",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "חוקר לא פרסם פרטים חסרי רגישות אבל קריטיים לשחזור (ריכוזים, זמני חימום). מה הסיכון לקהילה המדעית?",
-    "options": [
-      "אחרים לא יכולים לבדוק את הממצא - והידע נשאר לא יציב או תלוי באמון עיוור",
-      "זה משפר תמיד את המחקר כי נשמר סוד",
-      "שחזור לא נחוץ אם כותבים את המסקנה בלבד",
-      "פרטים מספריים מסוכנים לפרסום תמיד"
-    ],
-    "correctIndex": 0,
-    "explanation": "שקיפות מתודולוגית היא חלק מאחריות: בלי פרוטוקול ברור, קשה להפריד בין תגלית לבין טעות או מזל.",
-    "theoryLines": [
-      "מדע מתבסס על ביקורת חוזרת.",
-      "תיעוד מלא מגן גם על חוקרים - פחות אי הבנות."
-    ],
-    "params": {
-      "patternFamily": "sci_experiments_scientific_method",
-      "subtype": "sci_experiments_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "strategy_error",
-        "reading_comprehension_error",
-        "concept_confusion"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "exp_49",
-    "topic": "experiments",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "בניסוי 'כמה מים נשארים בכוס אחרי יום', מה הוגדר בדרך כלל כתוצאה תלויה (dependent) לעומת תנאי שמשנים בכוונה?",
-    "options": [
-      "כמות המים שנשארה היא התוצאה התלויה; חום/מיקום/כיסוי הם גורמים מניפולטיביים",
-      "זמן היום הוא התוצאה התלויה; כמות המים נשארת תמיד קבועה",
-      "צבע הכוס הוא התוצאה; המים הם משתנה מניפולטיבי",
-      "אין הבדל בין משתנים בניסוי פשוט"
-    ],
-    "correctIndex": 0,
-    "explanation": "משתנה עצמאי הוא מה שבוחרים לשנות; תלוי הוא מה שמודדים כתגובה. דיוק בשפה עוזר לתכנן טבלאות וגרפים.",
-    "theoryLines": [
-      "סיווג משתנים מארגן חשיבה ניסיונית.",
-      "גרפים טובים מציגים תלוי מול עצמאי."
-    ],
-    "params": {
-      "patternFamily": "sci_experiments_scientific_method",
-      "subtype": "sci_experiments_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "strategy_error",
-        "reading_comprehension_error",
-        "concept_confusion"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "exp_50",
-    "topic": "experiments",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "בנתונים מבית ספר, ממוצע הציון בענף א' גבוה מבענף ב' למרות שבכל כיתה בנפרד ממוצע א' נמוך. איך זה ייתכן?",
-    "options": [
-      "פרדוקס סימפסון: חלוקת גודל כיתות/רמות שונה בין הענפים יוצרת ממוצע כללי מטעה כשלא מפצלים לפי קבוצה",
-      "זה בלתי אפשרי מתמטית",
-      "ממוצע תמיד שווה לממוצע החלקי הקטן ביותר",
-      "זה קורה רק אם בוחרים תלמידים לפי מזל"
-    ],
-    "correctIndex": 0,
-    "explanation": "ממצא מצטבר יכול להתהפך כשמבחינים בקבוצות משנה - לכן חשוב לשאול 'על איזה חתך מדברים'.",
-    "theoryLines": [
-      "ניתוח לפי שכבות מגלה דפוסים נסתרים.",
-      "נתון מצטבר 'גלובלי' לא תמיד משקף כל קבוצת משנה."
-    ],
-    "params": {
-      "patternFamily": "sci_experiments_scientific_method",
-      "subtype": "sci_experiments_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "strategy_error",
-        "reading_comprehension_error",
-        "concept_confusion"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "exp_51",
-    "topic": "experiments",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "בודקים אם חומץ מפחית קילוף שמדליק מקל גפרור. למה חשוב שכל הקבוצות יעבדו באותה טמפרטורת סביבה דומה?",
-    "options": [
-      "כי קצב תגובות כימיות/התפשטות גז תלוי בטמפרטורה ועלול להסוות השפעת החומץ",
-      "טמפרטורה משפיעה רק על צבע הקילוף",
-      "בניסוי כימי אין משתנים מפריעים",
-      "קור בחדר מבטל את הצורך בבקרה"
-    ],
-    "correctIndex": 0,
-    "explanation": "טמפרטורה היא משתנה מפתח לקצב וללחץ אדי; אם היא שונה בין קבוצות, קשה לייחס שינוי לחומץ.",
-    "theoryLines": [
-      "משתני סביבה משפיעים על קינטיקה.",
-      "בקרה מפחיתה הטיות חבויות."
-    ],
-    "params": {
-      "patternFamily": "sci_experiments_scientific_method",
-      "subtype": "sci_experiments_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "strategy_error",
-        "reading_comprehension_error",
-        "concept_confusion"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "exp_52",
-    "topic": "experiments",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "medium",
-    "maxLevel": "medium",
-    "type": "mcq",
-    "stem": "מה התפקיד של ביקורת עמיתים (peer review) בתהליך פרסום מדעי?",
-    "options": [
-      "בודקים מתודולוגיה, עקביות ורלוונטיות לפני שמקבלים לפרסום רבים - לא 'חותמת אמת סופית'",
-      "מוודאים שכל מסקנה נכונה ב 100% לפני כל ניסוי",
-      "מחליפים ניסויים בשדה",
-      "מונעים מכל חוקר לפרסם לנצח"
-    ],
-    "correctIndex": 0,
-    "explanation": "ביקורת עמיתים היא סינון ושיפור, לא אורקל: ממצאים יכולים להשתנות אחרי שחזורים. עם זה היא מפחיתה טעויות גסות.",
-    "theoryLines": [
-      "ידע מדעי הוא תהליך חברתי ביקורתי.",
-      "לקרוא מקור מקורי עדיין דורש חשיבה ביקורתית."
-    ],
-    "params": {
-      "patternFamily": "sci_experiments_scientific_method",
-      "subtype": "sci_experiments_general",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "strategy_error",
-        "reading_comprehension_error",
-        "concept_confusion"
-      ],
-      "difficulty": "standard"
-    }
-  },
-  {
-    "id": "earth_29",
+    "id": "sci_phb_g5_earth_space_eas_01",
     "topic": "earth_space",
     "grades": [
       "g5",
       "g6"
     ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
+    "minLevel": "easy",
+    "maxLevel": "easy",
     "type": "mcq",
-    "stem": "באזור קו המשווה, אנרגיית השמש 'מתפזרת' על שטח גדול יותר של פני כדור הארץ מאשר בקטבים (לאותה שעה מקומית). מה ההסבר הכללי לכך שאקלים קו המשווה חם יותר בממוצע?",
+    "stem": "מה משפיע על מזג אוויר יומי?",
     "options": [
-      "זווית שמש גבוהה יחסית מרכזת יותר אנרגיה ליחידת שטח, לעומת קרניים 'שטוחות' שמפזרות את אותה אנרגיה על שטח גדול יותר בקווי רוחב גבוהים",
-      "השמש נמצאת תמיד קרובה יותר פיזית לקו המשווה מכל נקודה אחרת בכדור",
-      "בקטבים אין קרינת שמש בכלל",
-      "קו המשווה חם רק בגלל שממים נוסים"
+      "טמפרטורה, לחות",
+      "צבע הבגד בדרך כלל",
+      "גובה הכיסא",
+      "שם העיר בדרך כלל"
     ],
     "correctIndex": 0,
-    "explanation": "גיאומטריית קרינה ויום שנה קובעים כמה אנרגיה מגיעה ליחידת שטח לאורך זמן - זה בסיס להבנת חגורות אקלים.",
-    "theoryLines": [
-      "זווית השפעה של קרינה קשורה ליום שנה וקו רוחב.",
-      "אקלים הוא ממוצע לטווח ארוך; מזג אוויר הוא לטווח קצר."
-    ],
+    "explanation": "גורמים מטאורולוגיים קובעים מזג.",
     "params": {
-      "patternFamily": "sci_earth_space_cycles",
+      "patternFamily": "sci_phb_earth_space_g5_easy_g5_earth_daily_weather",
       "subtype": "sci_earth_space_general",
-      "cognitiveLevel": "analysis",
+      "conceptTag": "g5_earth_daily_weather",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
       "expectedErrorTypes": [
+        "misconception",
         "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
+        "fact_recall_gap"
       ],
-      "difficulty": "advanced"
-    }
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_earth_space_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "earth_space",
+        "grade": "g5",
+        "skillId": "sci_earth_space_general",
+        "subSkill": "sci_earth_space_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_earth_space_general",
+    "skillId": "sci_earth_space_general"
   },
   {
-    "id": "earth_30",
+    "id": "sci_phb_g5_earth_space_eas_02",
     "topic": "earth_space",
     "grades": [
       "g5",
+      "g6"
+    ],
+    "minLevel": "easy",
+    "maxLevel": "easy",
+    "type": "mcq",
+    "stem": "למה נוצרת רוח?",
+    "options": [
+      "תנועת אוויר בין",
+      "סיבוב ירח בלבד",
+      "צבע עננים בדרך כלל",
+      "גובה עצים בדרך כלל"
+    ],
+    "correctIndex": 0,
+    "explanation": "הבדלי לחץ מניעים רוח.",
+    "params": {
+      "patternFamily": "sci_phb_earth_space_g5_easy_g5_earth_wind_pressure",
+      "subtype": "sci_earth_space_general",
+      "conceptTag": "g5_earth_wind_pressure",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_earth_space_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "earth_space",
+        "grade": "g5",
+        "skillId": "sci_earth_space_general",
+        "subSkill": "sci_earth_space_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_earth_space_general",
+    "skillId": "sci_earth_space_general"
+  },
+  {
+    "id": "sci_phb_g5_environment_eas_01",
+    "topic": "environment",
+    "grades": [
+      "g5"
+    ],
+    "minLevel": "easy",
+    "maxLevel": "easy",
+    "type": "mcq",
+    "stem": "מה משמעות שימור טבע?",
+    "options": [
+      "הגנה על מינים",
+      "ציד חופשי",
+      "כריתת יער",
+      "זריקת זבל"
+    ],
+    "correctIndex": 0,
+    "explanation": "שימור שומר על מערכות חיות.",
+    "params": {
+      "patternFamily": "sci_phb_environment_g5_easy_g5_env_conservation",
+      "subtype": "sci_environment_general",
+      "conceptTag": "g5_env_conservation",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "expectedErrorTags": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_environment_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "environment",
+        "grade": "g5",
+        "skillId": "sci_environment_general",
+        "subSkill": "sci_environment_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "recall",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "fact_recall_gap",
+          "concept_confusion",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_environment_general",
+    "skillId": "sci_environment_general"
+  },
+  {
+    "id": "sci_phb_g5_environment_eas_02",
+    "topic": "environment",
+    "grades": [
+      "g5"
+    ],
+    "minLevel": "easy",
+    "maxLevel": "easy",
+    "type": "mcq",
+    "stem": "למה מיחזור חשוב?",
+    "options": [
+      "מפחית פסולת",
+      "מגדיל זבל",
+      "מונע מים",
+      "סוגר שמש"
+    ],
+    "correctIndex": 0,
+    "explanation": "מיחזור חוסך חומרים.",
+    "params": {
+      "patternFamily": "sci_phb_environment_g5_easy_g5_env_recycle_importance",
+      "subtype": "sci_environment_general",
+      "conceptTag": "g5_env_recycle_importance",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_environment_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "environment",
+        "grade": "g5",
+        "skillId": "sci_environment_general",
+        "subSkill": "sci_environment_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_environment_general",
+    "skillId": "sci_environment_general"
+  },
+  {
+    "id": "sci_phb_g6_materials_eas_01",
+    "topic": "materials",
+    "grades": [
+      "g6"
+    ],
+    "minLevel": "easy",
+    "maxLevel": "easy",
+    "type": "mcq",
+    "stem": "מה דוגמה לשינוי כימי?",
+    "options": [
+      "חלודה על ברז",
+      "התכת קרח",
+      "שבירת זכוכית",
+      "קיפיאון מים"
+    ],
+    "correctIndex": 0,
+    "explanation": "חמצון יוצר חומר חדש.",
+    "params": {
+      "patternFamily": "sci_phb_materials_g6_easy_g6_materials_chemical_change",
+      "subtype": "sci_materials_general",
+      "conceptTag": "g6_materials_chemical_change",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_materials_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "materials",
+        "grade": "g6",
+        "skillId": "sci_materials_general",
+        "subSkill": "sci_materials_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_materials_general",
+    "skillId": "sci_materials_general"
+  },
+  {
+    "id": "sci_phb_g6_materials_eas_02",
+    "topic": "materials",
+    "grades": [
+      "g6"
+    ],
+    "minLevel": "easy",
+    "maxLevel": "easy",
+    "type": "mcq",
+    "stem": "איזה חומר מבודד חשמל?",
+    "options": [
+      "פלסטיק עבה",
+      "נחושת בדרך כלל",
+      "אלומיניום",
+      "ברזל בדרך כלל"
+    ],
+    "correctIndex": 0,
+    "explanation": "פלסטיק עוצר זרם.",
+    "params": {
+      "patternFamily": "sci_phb_materials_g6_easy_g6_materials_insulator_plastic",
+      "subtype": "sci_materials_general",
+      "conceptTag": "g6_materials_insulator_plastic",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "expectedErrorTags": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_materials_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "materials",
+        "grade": "g6",
+        "skillId": "sci_materials_general",
+        "subSkill": "sci_materials_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "recall",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "fact_recall_gap",
+          "concept_confusion",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_materials_general",
+    "skillId": "sci_materials_general"
+  },
+  {
+    "id": "sci_phb_g6_materials_eas_03",
+    "topic": "materials",
+    "grades": [
+      "g6"
+    ],
+    "minLevel": "easy",
+    "maxLevel": "easy",
+    "type": "mcq",
+    "stem": "מה מצבי הצבירה של מים?",
+    "options": [
+      "מוצק, נוזל וגז",
+      "אזור עם הרבה אנשים",
+      "מקום עם מים",
+      "אזור בטבע"
+    ],
+    "correctIndex": 0,
+    "explanation": "מים יכולים בכל שלושת המצבים.",
+    "params": {
+      "patternFamily": "sci_phb_materials_g6_easy_g6_materials_water_states",
+      "subtype": "sci_materials_general",
+      "conceptTag": "g6_materials_water_states",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
+      "expectedErrorTypes": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "expectedErrorTags": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_materials_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "materials",
+        "grade": "g6",
+        "skillId": "sci_materials_general",
+        "subSkill": "sci_materials_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "recall",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "fact_recall_gap",
+          "concept_confusion",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_materials_general",
+    "skillId": "sci_materials_general"
+  },
+  {
+    "id": "sci_phb_g6_materials_med_01",
+    "topic": "materials",
+    "grades": [
       "g6"
     ],
     "minLevel": "medium",
     "maxLevel": "medium",
     "type": "mcq",
-    "stem": "ביום שמש קטע חוף מתחמם; בלילה הים נשאר חמים יחסית. איזו תמונה תיאורית נכונה לרוח חוף נוחה ביום?",
+    "stem": "מה דוגמה לשינוי פיזיקלי שקורה במים?",
     "options": [
-      "אוויר חם יחסית מעל היבשה עולה; אוויר יחסית קר מעל המים 'ממלא' - רוח מהים ליבשה",
-      "רוח תמיד נושבת מההרים לים בצוהריים",
-      "הים תמיד קר יותר מהיבשה בצוהריים",
-      "אין קשר בין הבדלי חימום לניעת אוויר"
+      "קיפיאון והתכה",
+      "בעירה לגז הליום",
+      "חמצון לחלודה",
+      "הפקת אור"
     ],
     "correctIndex": 0,
-    "explanation": "הבדלי חימום סגולי בין מים ליבשה יוצרים הבדלי לחץ מקומיים ורוחות ים יבשה משתנות במחזור יומי.",
-    "theoryLines": [
-      "חום סגולי שונה לחומרים שונים.",
-      "רוח היא תנועת אוויר מלחץ גבוה לנמוך."
-    ],
+    "explanation": "מעבר מצב צבירה הוא פיזיקלי.",
     "params": {
-      "patternFamily": "sci_earth_space_cycles",
-      "subtype": "sci_earth_space_general",
+      "patternFamily": "sci_phb_materials_g6_medium_g6_materials_phase_change",
+      "subtype": "sci_materials_general",
+      "conceptTag": "g6_materials_phase_change",
+      "difficulty": "standard",
       "cognitiveLevel": "understanding",
+      "kind": "phase_b",
       "expectedErrorTypes": [
+        "misconception",
         "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
+        "fact_recall_gap"
       ],
-      "difficulty": "standard"
-    }
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_materials_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "materials",
+        "grade": "g6",
+        "skillId": "sci_materials_general",
+        "subSkill": "sci_materials_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "medium",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_materials_general",
+    "skillId": "sci_materials_general"
   },
   {
-    "id": "earth_31",
-    "topic": "earth_space",
+    "id": "sci_phb_g6_materials_med_02",
+    "topic": "materials",
     "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "למה שלב הירח בלילה מסוים לא נגרם בעיקר מעננות כמו 'וילון' שמסתיר חלקים מהירח?",
-    "options": [
-      "כי בשלבים שונים רואים שונה את חלק מכדור הירח המואר - תלות בגאומטריה ירח ארץ שמש, לא בענן מקומי",
-      "כי עננים יוצרים ירח מלא בכל לילה",
-      "כי הירח מאיר את עצמו ללא קשר לשמש",
-      "כי מיקום הירח לא משתנה לעולם"
-    ],
-    "correctIndex": 0,
-    "explanation": "פאזות הירח נובעות מהאור הנראה המוחזר והצל שמטיל כדור הארץ/זווית השפעה - ענן יכול להסתיר אבל לא 'ליצור' פאזה.",
-    "theoryLines": [
-      "שמש מקור האור; הירח משקף חלק הנראה לפי מיקום.",
-      "תצפית תלויה גם בהירות שמים."
-    ],
-    "params": {
-      "patternFamily": "sci_earth_space_cycles",
-      "subtype": "sci_earth_space_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "earth_32",
-    "topic": "earth_space",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "איך מסדרת גזי חממה כמו CO₂ מחממת את הקרקע בהשוואה לכוכב ללא אטמוספרה עבה דומה?",
-    "options": [
-      "אור נראה נכנס; חלק מהקרינה בתת אדום נבלע/מוחזק ומאט יציאת אנרגיה לחלל - מאזן אנרגטי שמקושר לטמפרטורה ממוצעת גבוהה יותר",
-      "CO₂ יוצר אור חדש בתוך האטמוספרה",
-      "הם חוסמים את כל קרינת השמש לחלוטין",
-      "הם מקררים ישירות על ידי יצירת קרח באטמוספרה"
-    ],
-    "correctIndex": 0,
-    "explanation": "אטמוספירה פעילה אינה חממה זכוכית פשוטה, אבל הרעיון המרכזי: כשחלק מהאנרגיה הנפלטת חוזר פנימה, המאזן הקרינתי מתחמם בממוצע.",
-    "theoryLines": [
-      "אנרגיה מהשמש מוזנת ומוחזרת לחלל.",
-      "הרכב אטמוספרה משפיע על מאזן קרינתי."
-    ],
-    "params": {
-      "patternFamily": "sci_earth_space_cycles",
-      "subtype": "sci_earth_space_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "earth_33",
-    "topic": "earth_space",
-    "grades": [
-      "g5",
       "g6"
     ],
     "minLevel": "medium",
     "maxLevel": "medium",
     "type": "mcq",
-    "stem": "באיזה סוג סלעים נוטים למצוא לרוב מאובנים טובים יחסית, ולמה?",
+    "stem": "מה משפיע על קצב התמוססות?",
     "options": [
-      "במשקעים, כי שכבות נדחסו עם הזמן ושמרו הדפסות/שלדים רכים יחסית בלי התכה",
-      "בסלעים מגמטיים (מותכים), כי חום גבוה משמר DNA",
-      "במסה מותכת, כי היא קופאת סביב המאובנים בלי חיכוך",
-      "בכל סלע בלי קשר להיווצרות"
+      "טמפרטורה וגודל",
+      "צבע הקערה",
+      "שם החומר בלבד",
+      "גובה השולחן"
     ],
     "correctIndex": 0,
-    "explanation": "משקעים נוצרים מהצטברות והלחמה; הם מייצגים שלבים סביבתיים בהם נותרו עקבות חיים. סלעים מותכים 'מחקו' לעיתים מבנים עדינים.",
-    "theoryLines": [
-      "מחזור סלעים כולל לדוגמה התגבשות, התכה וסחיפה/השקעה - לא תמיד באותו סדר.",
-      "מאובנים הם ראיות לחיים בעבר גאולוגי."
-    ],
+    "explanation": "חום ושטח פנים משנים קצב.",
     "params": {
-      "patternFamily": "sci_earth_space_cycles",
-      "subtype": "sci_earth_space_general",
+      "patternFamily": "sci_phb_materials_g6_medium_g6_materials_dissolution_factors",
+      "subtype": "sci_materials_general",
+      "conceptTag": "g6_materials_dissolution_factors",
+      "difficulty": "standard",
       "cognitiveLevel": "understanding",
+      "kind": "phase_b",
       "expectedErrorTypes": [
         "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
+        "misconception",
+        "careless_error"
       ],
-      "difficulty": "standard"
-    }
+      "expectedErrorTags": [
+        "concept_confusion",
+        "misconception",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_materials_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "materials",
+        "grade": "g6",
+        "skillId": "sci_materials_general",
+        "subSkill": "sci_materials_general",
+        "questionType": "technical",
+        "problemClass": "mixed",
+        "difficulty": "medium",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "concept_confusion",
+          "misconception",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_materials_general",
+    "skillId": "sci_materials_general"
   },
   {
-    "id": "earth_34",
+    "id": "sci_phb_g6_earth_space_eas_01",
     "topic": "earth_space",
     "grades": [
-      "g5",
       "g6"
     ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
+    "minLevel": "easy",
+    "maxLevel": "easy",
     "type": "mcq",
-    "stem": "למה מערכות סופתיות גדולות בחצי הכדור הצפוני נוטות לסובב בכיוון עקבי (ברמת עקרון לימודי)?",
+    "stem": "מה קשור לעונות בחצי כדור?",
     "options": [
-      "הסטייה של אפקט קוריוליס ביחס לציר סיבוב כדור הארץ מטה את מסלולי הסיבוב של מערכות גדולות לאורך זמן",
-      "כי השמש דוחפת סופות בכיוון אחד קבוע יומי",
-      "כי הכבידה גדולה יותר בקטבים ולכן הסיבוב הפוך במיידי",
-      "כי רוח תמיד זורמת ממזרח למערב בלי עקממיות"
+      "נטיית ציר",
+      "סיבוב ירח",
+      "גובה עננים",
+      "צבע ים"
     ],
     "correctIndex": 0,
-    "explanation": "סיבוב כדור הארץ מוסיף הסטה לתנועה גדולה בזמן; זה לא מסביר קומפס יומי בכוס מים, אבל כן דפוסים גלובליים במודלים פשוטים.",
-    "theoryLines": [
-      "מסה גדולה ואורך זמן חשובים להבחין באפקטים כיווניים.",
-      "מודלים מפשטים עוזרים וגם מגבילים-חשוב הקשר קנה מידה."
-    ],
+    "explanation": "זווית השמש ומסלול קובעים עונות.",
     "params": {
-      "patternFamily": "sci_earth_space_weather",
+      "patternFamily": "sci_phb_earth_space_g6_easy_g6_earth_seasons_tilt",
       "subtype": "sci_earth_space_general",
-      "cognitiveLevel": "analysis",
+      "conceptTag": "g6_earth_seasons_tilt",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
       "expectedErrorTypes": [
+        "misconception",
         "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
+        "fact_recall_gap"
       ],
-      "difficulty": "advanced"
-    }
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_earth_space_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "earth_space",
+        "grade": "g6",
+        "skillId": "sci_earth_space_general",
+        "subSkill": "sci_earth_space_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_earth_space_general",
+    "skillId": "sci_earth_space_general"
   },
   {
-    "id": "earth_35",
+    "id": "sci_phb_g6_earth_space_eas_02",
     "topic": "earth_space",
     "grades": [
-      "g5",
       "g6"
     ],
-    "minLevel": "medium",
-    "maxLevel": "medium",
+    "minLevel": "easy",
+    "maxLevel": "easy",
     "type": "mcq",
-    "stem": "למה שימור 'אגני ניקוז' (נחלים ושטחי ספיגה בראשיתם) תורם להגנה על מים במורד?",
+    "stem": "מה תפקיד השמש במחזור המים?",
     "options": [
-      "כי מעכבים/מסננים זרימה חזקה, מפחיתים סחיפה ומאפשרים חלחול במקום הצפות מהירות עם משקעים מזהמים",
-      "כי בראשית הנחל תמיד אין שום זיהום ולכן אין קשר למורד",
-      "כי סחיפה לא קיימת בנחלים",
-      "כי מים לא רוצים לזרום למטה"
+      "מספקת אנרגיה לאידוי",
+      "מונעת גשם בדרך כלל",
+      "סוגרת עננים בדרך כלל",
+      "מחליפה את הירח"
     ],
     "correctIndex": 0,
-    "explanation": "ניהול נוף משפיע על מהירות המים והעומס אצל המשקעים. הגנה במקור מפחיתה עלויות בקהילות במורד הזרימה.",
-    "theoryLines": [
-      "מחזור המים מחבר ראשית למישור.",
-      "מניעת סחיפה שומרת על איכות מים וקרקע."
-    ],
+    "explanation": "חום השמש מאיץ אידוי.",
     "params": {
-      "patternFamily": "sci_earth_space_cycles",
+      "patternFamily": "sci_phb_earth_space_g6_easy_g6_earth_sun_water_cycle",
       "subtype": "sci_earth_space_general",
-      "cognitiveLevel": "understanding",
+      "conceptTag": "g6_earth_sun_water_cycle",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
       "expectedErrorTypes": [
+        "misconception",
         "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
+        "fact_recall_gap"
       ],
-      "difficulty": "standard"
-    }
+      "expectedErrorTags": [
+        "misconception",
+        "concept_confusion",
+        "fact_recall_gap"
+      ],
+      "diagnosticSkillId": "sci_earth_space_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "earth_space",
+        "grade": "g6",
+        "skillId": "sci_earth_space_general",
+        "subSkill": "sci_earth_space_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_earth_space_general",
+    "skillId": "sci_earth_space_general"
   },
   {
-    "id": "earth_36",
-    "topic": "earth_space",
+    "id": "sci_phb_g6_environment_eas_01",
+    "topic": "environment",
     "grades": [
-      "g5",
       "g6"
     ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
+    "minLevel": "easy",
+    "maxLevel": "easy",
     "type": "mcq",
-    "stem": "למה אפר געשי עלול להשפיע גם על טיסה מעל אזורים רחוקים מההתפרצות, ולפעמים גם על טמפרטורה זמנית באקלים?",
+    "stem": "מהו גיוון ביולוגי?",
     "options": [
-      "כי חלקיקים וגזים מגיעים לגבהים גדולים, משנים איכות אוויר והתפלגות קרינה - ובקנה מידע רלוונטי גם לבטיחות טיסה",
-      "כי אפר געשי נשאר תמיד רק מעל לוע הר הגעש ולא יכול לזוז ברוח",
-      "כי התפרצות משנה את מרחק ארץ שמש",
-      "כי מטוסים ניזונים מאפר ולכן עוצרים"
+      "מגוון מינים",
+      "צבע עננים",
+      "גובה הר בדרך כלל",
+      "סוג בגד בדרך כלל"
     ],
     "correctIndex": 0,
-    "explanation": "ענן אפר געשי חזק יכול להישא לאלפי קילומטרים; השפעה על ראות/מנועים ועל איזון קרינתי לטווח קצר - נושא שקשור גם לאקלים וגם לבטיחות טיסה.",
-    "theoryLines": [
-      "אטמוספרה היא מערכת מקושרת כדורית.",
-      "תופעות געשיות יכולות להיות מקומיות וגם גלובליות לפי העוצמה."
-    ],
+    "explanation": "גיוון = הרבה מינים שונים.",
     "params": {
-      "patternFamily": "sci_earth_space_cycles",
-      "subtype": "sci_earth_space_general",
-      "cognitiveLevel": "analysis",
+      "patternFamily": "sci_phb_environment_g6_easy_g6_env_biodiversity",
+      "subtype": "sci_environment_general",
+      "conceptTag": "g6_env_biodiversity",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
       "expectedErrorTypes": [
+        "fact_recall_gap",
         "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
+        "careless_error"
       ],
-      "difficulty": "advanced"
-    }
+      "expectedErrorTags": [
+        "fact_recall_gap",
+        "concept_confusion",
+        "careless_error"
+      ],
+      "diagnosticSkillId": "sci_environment_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "environment",
+        "grade": "g6",
+        "skillId": "sci_environment_general",
+        "subSkill": "sci_environment_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "recall",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "fact_recall_gap",
+          "concept_confusion",
+          "careless_error"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_environment_general",
+    "skillId": "sci_environment_general"
   },
   {
-    "id": "earth_37",
-    "topic": "earth_space",
+    "id": "sci_phb_g6_environment_eas_02",
+    "topic": "environment",
     "grades": [
-      "g5",
       "g6"
     ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
+    "minLevel": "easy",
+    "maxLevel": "easy",
     "type": "mcq",
-    "stem": "איפה בעיקרון ממוקמת שכבת האוזון שחוסמת חלק מה UV, ולמה חשיבותה לחיים בפני השטח?",
+    "stem": "למה זיהום מים מסוכן?",
     "options": [
-      "בסטרטוספרה; צמצום קרינת מעלסגול קשיחה מפחית נזקים ל-DNA בעור, בצמחים ולמערכות אקולוגיות רגישות",
-      "בליבה; שם מתחממים אוקיינוסים",
-      "על פני הירח בלבד",
-      "בתוך האוקיינוס בלבד"
+      "פוגע בבריאות",
+      "מחזק דגים",
+      "מייצר חמצן",
+      "אין השפעה"
     ],
     "correctIndex": 0,
-    "explanation": "אוזון הוא חלק מרכיבי אטמוספירה מורכבת; פגיעה בו מחברת חשיפת קרינה לבריאות ולמערכות ייצור מזון.",
-    "theoryLines": [
-      "אטמוספרה בנויה שכבות עם תפקידים שונים.",
-      "קרינה מהשמש מעצבת סביבה."
-    ],
+    "explanation": "זיהום מזיק לחיים במים.",
     "params": {
-      "patternFamily": "sci_earth_space_cycles",
-      "subtype": "sci_earth_space_general",
-      "cognitiveLevel": "analysis",
+      "patternFamily": "sci_phb_environment_g6_easy_g6_env_water_pollution",
+      "subtype": "sci_environment_general",
+      "conceptTag": "g6_env_water_pollution",
+      "difficulty": "basic",
+      "cognitiveLevel": "recall",
+      "kind": "phase_b",
       "expectedErrorTypes": [
+        "misconception",
         "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
+        "fact_recall_gap"
       ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "earth_38",
-    "topic": "earth_space",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "medium",
-    "maxLevel": "medium",
-    "type": "mcq",
-    "stem": "מה הגורם העיקרי לגאות ושפל בים סמוך לחוף בקנה מידה יומי?",
-    "options": [
-      "משיכה גרביטציונית של הירח ושל השמש (ומיקום יחסי), לא רק טמפרטורת המים",
-      "אך ורק רוחות סוחפות בלי השפעת ירח",
-      "התפשטות חום ממדבר בלי השפעת ירח ושמש",
-      "צבע המים בלבד"
-    ],
-    "correctIndex": 0,
-    "explanation": "גאות קשורות לשדות משיכה ומומנט דוחה של שמש/ירח; רוח משפיעה אבל לא מסבירה לבד את המחזור הכפול היומי במקומות רבים.",
-    "theoryLines": [
-      "כוח משיכה פועל על מאסות גדולות ומים נוטים להגיב.",
-      "תופעות ימיות יכולות לשלב כמה גורמי עזר."
-    ],
-    "params": {
-      "patternFamily": "sci_earth_space_cycles",
-      "subtype": "sci_earth_space_general",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
+      "expectedErrorTags": [
+        "misconception",
         "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
+        "fact_recall_gap"
       ],
-      "difficulty": "standard"
-    }
-  },
-  {
-    "id": "earth_39",
-    "topic": "earth_space",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "מה הקשר האמיתי בין רעידות אדמה חזקות לבין לוחות טקטוניים בקנה לימודי?",
-    "options": [
-        "כוכב לכת קרוב לשמש",
-        "כוכב רחוק מהגלקסיה",
-        "לוויין של ירח",
-        "ענן גז בלבד"
-    ],
-    "correctIndex": 0,
-    "explanation": "דינמיקת לוחות מסבירה מיקומי רעידות/חזיתות וטווח סיכון; זה בסיס להבנת סיכונים ולבנייה מותאמת.",
-    "theoryLines": [
-      "קרום כדור הארץ אינו אחיד ונייח.",
-      "גלים סייסמיים נוצרים מתנועה והתפרצות לחץ."
-    ],
-    "params": {
-      "patternFamily": "sci_earth_space_cycles",
-      "subtype": "sci_earth_space_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "earth_40",
-    "topic": "earth_space",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "איך צמצום שטח קרח והחלפתו במי ים כהים יחסית עלולים, ברעיון, להאיץ חימום אזורי בלי צורך במספרים מדויקים?",
-    "options": [
-      "פחות אלבדו: פני מים כהים בולעים יותר קרינה מהקרח המחזיר; לולאת משוב חיובית מחמירה מגמה מקומית",
-      "קרח תמיד כהה ממים ולכן מחמם יותר",
-      "אין קשר בין צבע פני כדור הארץ לגריעת אנרגיה",
-      "מים לא סופגים קרינת שמש כלל"
-    ],
-    "correctIndex": 0,
-    "explanation": "אלבדו - מידת ההחזר - משפיע על כמה אנרגיה נבלעת; שינוי מקרח למים משנה מאזן אנרגיה מקומי ויכול לתמוך במשובים.",
-    "theoryLines": [
-      "משובים באקלים מסבירים שינויים מהירים מקומיים.",
-      "אוקיינוס וקרח עוגנים אקלים."
-    ],
-    "params": {
-      "patternFamily": "sci_earth_space_cycles",
-      "subtype": "sci_earth_space_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "earth_41",
-    "topic": "earth_space",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "medium",
-    "maxLevel": "medium",
-    "type": "mcq",
-    "stem": "למה נטיפים וזקיפים (סטלאקטיטים וסטלאגמיטים) בתוך מערות נוצרים לאט מאוד - לרוב לאורך אלפי שנים?",
-    "options": [
-      "כי המים ממיסים סידן ומצטברים מחדש בהדרגה; המסה והשקיעה הם תהליכי טיפהטיפה",
-      "כי הם נוצרים בהתפרצות געשית מהירה בכל מערה",
-      "כי מערה חמה מדי לכל מסה",
-      "כי מים לא יכולים להמיס סלע"
-    ],
-    "correctIndex": 0,
-    "explanation": "קארסט הוא דינמיקה כימית הידרולוגית; קצב איטי אבל מתמשך יוצר מבנים חדים.",
-    "theoryLines": [
-      "סלעים משתנים גם בקנה מידה גאולוגי לאט.",
-      "מים הם סוכן מסה ומוגה."
-    ],
-    "params": {
-      "patternFamily": "sci_earth_space_cycles",
-      "subtype": "sci_earth_space_general",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
-      ],
-      "difficulty": "standard"
-    }
-  },
-  {
-    "id": "earth_42",
-    "topic": "earth_space",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "מה הקשר בין טבעת האש (פס געשי רעידות סביב האוקיינוס השקט) לבין ריכוז רעידות והתפרצויות?",
-    "options": [
-      "גבולות לוחות במפגשים יוצרים תנועה טקטונית ומהלכי מאגמה - ולכן פעילות גבוהה בקשת המסומנת",
-      "זה קו שרק מציין מיקום דגים ולא קשור ללוחות",
-      "לוחות נפרדים לעולם אינם יכולים לפגוע בגבול משותף",
-      "טבעת האש היא רק מרכז תרבותי"
-    ],
-    "correctIndex": 0,
-    "explanation": "מפת גבולות לוחות מסייעת לחזות איפה אנרגיה גאולוגית משוחררת; זה כלי חשיבה גאוגרפי מדעי.",
-    "theoryLines": [
-      "מבנה כדור הארץ כולל גבולות בין לוחות טקטוניים.",
-      "געש ורעידות משתפים הקשרים טקטוניים."
-    ],
-    "params": {
-      "patternFamily": "sci_earth_space_cycles",
-      "subtype": "sci_earth_space_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "earth_43",
-    "topic": "earth_space",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "medium",
-    "maxLevel": "medium",
-    "type": "mcq",
-    "stem": "איזה תנאי ים תומך בלידה וחיזוק של סופה טרופית חזקה - ברמת ידע בית ספרית?",
-    "options": [
-      "מי ים חמים העליונים שמזרימים אנרגיה ולחות לאטמוספרה ומאפשרים סיבוב מאורגן יותר",
-      "מי ים קרים מאוד בלבד",
-      "עונת חורף יבשה לחלוטין ללא אדי מים",
-      "לחץ אוויר גבוה מאוד בלבד בלי סיבוב"
-    ],
-    "correctIndex": 0,
-    "explanation": "אנרגיה לטנטית מחומם האוקיינוס היא 'דלק' למערכות; לכן שינויי טמפרטורת ים קשורים לסיכון אזורי.",
-    "theoryLines": [
-      "אוקיינוס ואטמוספרה מחליפים אנרגיה ולחות.",
-      "התפתחות סופה היא תהליך רבשלבי."
-    ],
-    "params": {
-      "patternFamily": "sci_earth_space_weather",
-      "subtype": "sci_earth_space_general",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
-      ],
-      "difficulty": "standard"
-    }
-  },
-  {
-    "id": "earth_44",
-    "topic": "earth_space",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "למה 'מחזור סלעים' אינו רצף אחיד קבוע של ארבעה שלבים שתמיד חוזרים באותו סדר מהיר?",
-    "options": [
-      "כי דרכים שונות (טמפרטורה, לחץ, מסה, הובלה) יוצרות מסלולים שונים; סלע יכול לדלג/לחזור לפי נסיבות",
-      "כי סלע תמיד נשאר מאובן לנצח בלי שינוי",
-      "כי יש רק שלב אחד: התגבשות",
-      "כי מחזור קורה פעם אחת בכל כדור ארץ ונעצר"
-    ],
-    "correctIndex": 0,
-    "explanation": "המחזור הוא מודל מחשבתי המקשר תהליכים; בפועל היסטוריה גאולוגית יכולה להיות מורכבת ולכלול 'קפיצות' לסוג אחר.",
-    "theoryLines": [
-      "מודלים מפשטים את המציאות ולא מחליפים אותה.",
-      "סלעים 'מספרים' היסטוריה של תהליכים."
-    ],
-    "params": {
-      "patternFamily": "sci_earth_space_cycles",
-      "subtype": "sci_earth_space_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "earth_45",
-    "topic": "earth_space",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "למה אקלים ליד קו המשווה נבדל בדרך כלל מאקלים ליד קטבים מעבר להבדלי שמש בלבד?",
-    "options": [
-        "סיבוב כדור הארץ סביב צירה",
-        "השמש נעלמת בלילה",
-        "הירח מסתיר את השמש",
-        "העננים כבים את האור"
-    ],
-    "correctIndex": 0,
-    "explanation": "מערכת אקלים היא רבת משתנים: אוקיינוס, ירח, אלבדו, זרימות. קו רוחב הוא נקודת התחלה, לא הסוף.",
-    "theoryLines": [
-      "אקלים הוא תוצאה של אנרגיה ומים על פני כדור.",
-      "מפות אקלים מסכמות ממוצעים לאורך זמן."
-    ],
-    "params": {
-      "patternFamily": "sci_earth_space_cycles",
-      "subtype": "sci_earth_space_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "earth_46",
-    "topic": "earth_space",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "hard",
-    "maxLevel": "hard",
-    "type": "mcq",
-    "stem": "בשנה יבשה, למה קידוח באקוויפר מקומי עלול להעמיק יובש בשטחים מרוחקים מהבור?",
-    "options": [
-      "כי מי התהום כפופים למשטר הידרולוגי; שאיבה משנה לחצים/מפלים, מאטה התחדשות ועלולה לייבש יובלים נסתרים במורד",
-      "מי תהום לא זזים מעולם בין נקודות",
-      "קידוח מוסיף מים ללא הגבלה בלי השפעה על שכנים",
-      "יבש נמדד רק במדחום בור"
-    ],
-    "correctIndex": 0,
-    "explanation": "משאבי מים תת קרקעיים משותפים לעיתים; ניצול חריף פוגע בזמינות לחיים, חקלאות ונחלים.",
-    "theoryLines": [
-      "מחזור המים כולל חלחול וזרימה תת קרקעית.",
-      "ניהול משאב דורש הכרת אקוויפר משותף."
-    ],
-    "params": {
-      "patternFamily": "sci_earth_space_cycles",
-      "subtype": "sci_earth_space_general",
-      "cognitiveLevel": "analysis",
-      "expectedErrorTypes": [
-        "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
-      ],
-      "difficulty": "advanced"
-    }
-  },
-  {
-    "id": "earth_47",
-    "topic": "earth_space",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "medium",
-    "maxLevel": "medium",
-    "type": "mcq",
-    "stem": "למה גובה צל במרכז ישראל משתנה במהלך היום בהנחת יום בהיר?",
-    "options": [
-      "כי זווית קרני השמש משתנה עם סיבוב כדור הארץ - הצל נטה ומתקצר/מתארך",
-      "כי השמש סובבת סביב כדור הארץ בגובה קבוע לעיל",
-      "כי צל תלוי רק בעננים ולא בשעה",
-      "כי כדור הארץ שטוח לכן אין שינוי זווית"
-    ],
-    "correctIndex": 0,
-    "explanation": "סיבוב יומי משנה קו אופק השמש ולכן צל; זה קשור לשעות, עונות וקו רוחב.",
-    "theoryLines": [
-      "תנועה יום לילה נובעת מסיבוב כדור הארץ.",
-      "מודל גיאומטרי של צל ואור מסביר במעבדה פשוטה."
-    ],
-    "params": {
-      "patternFamily": "sci_earth_space_cycles",
-      "subtype": "sci_earth_space_general",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
-      ],
-      "difficulty": "standard"
-    }
-  },
-  {
-    "id": "earth_48",
-    "topic": "earth_space",
-    "grades": [
-      "g5",
-      "g6"
-    ],
-    "minLevel": "medium",
-    "maxLevel": "medium",
-    "type": "mcq",
-    "stem": "למה מזג אוויר בודד ליומיים יכול להיות קריר בעוד שמגמת שנה שלמה מתחממת - ברמת הבדל מושגים?",
-    "options": [
-      "מזג אוויר הוא שינויים קצרי טווח; אקלים הוא ממוצע/שכיחות לאורך זמן - השקיעה ביום קר לא מבטלת מגמה שנתית",
-      "אין הבדל בין יום לעשור",
-      "אם יום אחד קר, השנה בהכרח קרה יותר מהממוצע",
-      "מדידת טמפרטורה לא משפיעה על כלום"
-    ],
-    "correctIndex": 0,
-    "explanation": "ניסוח מדעי מדויק מונע 'הסקות קופצניות' ממקרה בודד. זה חשוב בדיון על הקצה אקלימי.",
-    "theoryLines": [
-      "שונות טבעית קיימת בתוך מגמות.",
-      "סטטיסטיקה בולטת רק אחרי מספיק זמן."
-    ],
-    "params": {
-      "patternFamily": "sci_earth_space_weather",
-      "subtype": "sci_earth_space_general",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "concept_confusion",
-        "vocabulary_confusion",
-        "misconception"
-      ],
-      "difficulty": "standard"
-    }
+      "diagnosticSkillId": "sci_environment_general",
+      "canonicalMetadata": {
+        "contractVersion": "question-metadata-contract-v1",
+        "subject": "science",
+        "topic": "environment",
+        "grade": "g6",
+        "skillId": "sci_environment_general",
+        "subSkill": "sci_environment_general",
+        "questionType": "technical",
+        "problemClass": "conceptual",
+        "difficulty": "basic",
+        "difficultyDepth": "simple_application",
+        "requiresVisual": false,
+        "requiresAudio": false,
+        "answerFormat": "mcq",
+        "metadataConfidence": "high",
+        "diagnosticEligibleByMetadata": true,
+        "possibleErrorPatterns": [
+          "misconception",
+          "concept_confusion",
+          "fact_recall_gap"
+        ],
+        "notes": null
+      }
+    },
+    "subSkill": "sci_environment_general",
+    "skillId": "sci_environment_general"
   }
 ];

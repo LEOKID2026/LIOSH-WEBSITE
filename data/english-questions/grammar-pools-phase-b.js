@@ -1156,12 +1156,12 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "patternFamily": "phase_b_g5_fut_hard_01",
       "question": "Choose the correct sentence:",
       "options": [
-        "Look at those clouds - it will pour soon",
-        "Look at those clouds - it is going to pour soon",
-        "Look at those clouds - it went pour soon",
-        "Look at those clouds - it goes pour soon"
+        "Look at those clouds — it will pour soon",
+        "Look at those clouds — it is going to pour soon",
+        "Look at those clouds — it went pour soon",
+        "Look at those clouds — it goes pour soon"
       ],
-      "correct": "Look at those clouds - it is going to pour soon",
+      "correct": "Look at those clouds — it is going to pour soon",
       "explanation": "Evidence now → going to.",
       "difficulty": "advanced"
     },
