@@ -1,9 +1,9 @@
-import { getDemoParentChildById } from "../../../../../lib/demo/parent-demo-data/children.js";
+import { getDemoParentChildById } from "../../../../../../lib/demo/parent-demo-data/children.js";
 import {
   rejectDemoMethod,
   rejectNonDemoParentBearer,
   validateDemoParentStudentId,
-} from "../../../../../lib/demo/parent-demo-api.server.js";
+} from "../../../../../../lib/demo/parent-demo-api.server.js";
 
 const DEMO_GAME_PERMISSIONS = Object.freeze({
   onlineEnabled: true,

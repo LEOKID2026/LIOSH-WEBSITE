@@ -1,12 +1,12 @@
-import { DEMO_PARENT_SUBJECTS } from "../../../../../lib/demo/parent-demo-data/constants.js";
-import { getSubjectPermissionLabelHe } from "../../../../../lib/learning/subject-permissions/subject-permission-labels.he.js";
-import { normalizeGradeLevelToKey } from "../../../../../lib/learning-student-defaults.js";
-import { getDemoParentChildById } from "../../../../../lib/demo/parent-demo-data/children.js";
+import { DEMO_PARENT_SUBJECTS } from "../../../../../../lib/demo/parent-demo-data/constants.js";
+import { getSubjectPermissionLabelHe } from "../../../../../../lib/learning/subject-permissions/subject-permission-labels.he.js";
+import { normalizeGradeLevelToKey } from "../../../../../../lib/learning-student-defaults.js";
+import { getDemoParentChildById } from "../../../../../../lib/demo/parent-demo-data/children.js";
 import {
   rejectDemoMethod,
   rejectNonDemoParentBearer,
   validateDemoParentStudentId,
-} from "../../../../../lib/demo/parent-demo-api.server.js";
+} from "../../../../../../lib/demo/parent-demo-api.server.js";
 
 export default async function handler(req, res) {
   if (rejectDemoMethod(res, req.method, ["GET", "PUT"])) return undefined;
