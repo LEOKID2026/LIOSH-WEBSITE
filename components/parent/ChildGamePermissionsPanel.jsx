@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getParentPortalTheme } from "../../lib/parent-ui/parent-portal-theme.client.js";
 import { mapParentPanelApiError } from "../../lib/parent-server/parent-api-errors.he.js";
+import { assertParentDemoReadOnly } from "../../lib/demo/parent-demo-readonly.client.js";
 
 const CATEGORY_LABELS = {
   online: "משחקים מקוונים",
@@ -46,6 +47,11 @@ export default function ChildGamePermissionsPanel({ studentId, accessToken, brig
   }, [studentId, accessToken]);
 
   async function toggleCategory(key) {
+    const readOnly = assertParentDemoReadOnly("save");
+    if (!readOnly.allowed) {
+      setError(readOnly.messageHe);
+      return;
+    }
     const field = `${key}Enabled`;
     const nextValue = !permissions[field];
     setSaving(key);

@@ -60,7 +60,11 @@ import {
   getDeterministicParentAiExplanationFromParentReportV2,
 } from "../../utils/parent-report-ai/parent-report-ai-adapter";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
-import { postParentCopilotTurn } from "../../lib/parent-client/copilot-turn-api.js";
+import {
+  postParentCopilotTurn,
+  resolveParentReportBearerToken,
+} from "../../lib/parent-client/copilot-turn-api.js";
+import { hasParentDemoSession } from "../../lib/demo/parent-demo-mode.client.js";
 import {
   runParentReportGenerationFromApiBody,
   computeReportRangeForParentApi,
@@ -401,7 +405,12 @@ export default function ParentReportDetailedPage() {
 
         const customDates = p === "custom" && cs && ce;
         const { from, to } = computeReportRangeForParentApi(p, Boolean(customDates), cs || "", ce || "");
-        const fetchKey = `${parentStudentId}|${from}|${to}|${isTeacherSource ? "teacher" : "parent"}`;
+        const remoteSourceKind = isTeacherSource
+          ? "teacher"
+          : hasParentDemoSession()
+            ? "demo"
+            : "parent";
+        const fetchKey = `${parentStudentId}|${from}|${to}|${remoteSourceKind}`;
         if (reportRemoteFetchKeyRef.current === fetchKey) {
           setLoading(false);
           return;
@@ -412,9 +421,26 @@ export default function ParentReportDetailedPage() {
         reportRemoteInflightKeyRef.current = fetchKey;
 
         try {
-          const supabase = getLearningSupabaseBrowserClient();
-          const { data: sessData } = await supabase.auth.getSession();
-          let token = sessData?.session?.access_token;
+          let configOk = true;
+          if (!hasParentDemoSession()) {
+            try {
+              getLearningSupabaseBrowserClient();
+            } catch {
+              configOk = false;
+            }
+          }
+          if (!configOk) {
+            if (!cancelled) {
+              setParentReportError("שגיאת הגדרות מערכת.");
+              setPayload(null);
+              setBaseReport(null);
+              setLoading(false);
+            }
+            reportRemoteInflightKeyRef.current = null;
+            return;
+          }
+
+          let token = await resolveParentReportBearerToken();
           if (
             !token &&
             typeof window !== "undefined" &&
@@ -438,7 +464,7 @@ export default function ParentReportDetailedPage() {
           }
 
           const qs = new URLSearchParams({ from, to });
-          const remoteKind = isTeacherSource ? "teacher" : "parent";
+          const remoteKind = remoteSourceKind;
           const path = parentReportRemoteDataUrl(remoteKind, parentStudentId, qs);
           const url =
             typeof window !== "undefined" && window.location?.origin

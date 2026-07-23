@@ -1812,7 +1812,12 @@ export async function runParentCopilotTurnAsync(input) {
   const detRoute = routeParentQuestion(String(input?.utterance || ""), input?.payload);
   let effectiveRoute = detRoute;
   let classifierLlmAttempt = null;
-  if (detRoute.classifierBucket === "ambiguous_or_unclear" && getLlmGateDecision().enabled) {
+  const forceDeterministic = input?.forceDeterministic === true;
+  if (
+    !forceDeterministic &&
+    detRoute.classifierBucket === "ambiguous_or_unclear" &&
+    getLlmGateDecision().enabled
+  ) {
     const llmRes = await classifyParentQuestionViaLlm({
       utterance: String(input?.utterance || ""),
       payload: redactPayloadForCopilotGrounding(input?.payload),
@@ -1891,10 +1896,12 @@ export async function runParentCopilotTurnAsync(input) {
     core.intent === "sensitive_education_choice" ||
     core.intent === "off_topic_redirect" ||
     core.intent === "parent_policy_refusal" ||
-    core.intent === "unclear"
+    core.intent === "unclear" ||
+    forceDeterministic
   ) {
-    const skipReason =
-      core.intent === "sensitive_education_choice"
+    const skipReason = forceDeterministic
+      ? "demo_force_deterministic"
+      : core.intent === "sensitive_education_choice"
         ? "llm_skipped_sensitive_education_boundary"
         : core.intent === "clinical_boundary"
           ? "llm_skipped_clinical_boundary"

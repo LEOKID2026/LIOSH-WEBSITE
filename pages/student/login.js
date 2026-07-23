@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import Layout from "../../components/Layout";
 import PortalLoginHeading from "../../components/auth/PortalLoginHeading";
 import StudentParentInviteModal from "../../components/student/StudentParentInviteModal";
@@ -21,6 +22,7 @@ import {
   shouldBlockGuestStartAfterResumeFailure,
   shouldConfirmNewGuestAfterResumeFailure,
 } from "../../lib/guest/guest-resume-ui.client.js";
+import { STUDENT_PWA_INSTALL_PATH } from "../../lib/pwa/pwa-install-mode.js";
 
 function resolveNextTarget(router) {
   const raw = router.query?.next;
@@ -84,6 +86,9 @@ export default function StudentLoginPage() {
   const parentCopyMsgBtnClass = isBright
     ? "w-full rounded-lg border border-violet-500 bg-violet-600 px-3 py-2 text-sm font-semibold text-white hover:bg-violet-700 transition shadow-sm"
     : "w-full rounded-lg border border-violet-300/45 bg-violet-400/10 px-3 py-2 text-sm font-semibold text-violet-100 hover:bg-violet-400/20 hover:border-violet-200/55 transition";
+  const installAppBtnClass = isBright
+    ? "w-full inline-flex items-center justify-center rounded-lg border border-emerald-500 bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700 transition shadow-sm"
+    : "w-full inline-flex items-center justify-center rounded-lg border border-emerald-300/45 bg-emerald-400/10 px-3 py-2 text-sm font-semibold text-emerald-100 hover:bg-emerald-400/20 hover:border-emerald-200/55 transition";
 
   useEffect(() => {
     if (!router.isReady) return undefined;
@@ -320,6 +325,15 @@ export default function StudentLoginPage() {
             >
               העתק הודעה להורה
             </button>
+            <Link
+              href={STUDENT_PWA_INSTALL_PATH}
+              prefetch={false}
+              className={installAppBtnClass}
+              aria-label="התקנת אפליקציה"
+              data-testid="student-login-install-app"
+            >
+              התקנת אפליקציה
+            </Link>
           </div>
         </form>
 

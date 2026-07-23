@@ -8,6 +8,7 @@ import ParentDashboardModal from "../../components/parent/ParentDashboardModal";
 import ChildGamePermissionsPanel from "../../components/parent/ChildGamePermissionsPanel";
 import ChildSubjectPermissionsPanel from "../../components/parent/ChildSubjectPermissionsPanel";
 import ParentInviteOthersButton from "../../components/parent/ParentInviteOthersButton";
+import ParentStudentWorldButton from "../../components/parent/ParentStudentWorldButton";
 import { PARENT_PROMO_DESKTOP_SRC } from "../../components/parent/ParentPromoVideo";
 import PromoVideoClickablePreview from "../../components/promo/PromoVideoClickablePreview";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
@@ -26,6 +27,13 @@ import {
 } from "../../lib/parent-client/parent-bearer-session.client.js";
 import { WORKSHEET_HUB_ENTRY_ENABLED } from "../../lib/worksheets/worksheet-hub-entry-enabled.js";
 import PortalLoadingPanel from "../../components/ui/PortalLoadingPanel.jsx";
+import { useParentDemoMode } from "../../components/demo/ParentDemoModeContext.jsx";
+import {
+  buildParentDemoSyntheticAuthSession,
+  hasParentDemoSession,
+} from "../../lib/demo/parent-demo-mode.client.js";
+import { navigateParentDemoToPublicWorksheets } from "../../lib/demo/parent-demo-public-worksheets-nav.client.js";
+import { assertParentDemoReadOnly } from "../../lib/demo/parent-demo-readonly.client.js";
 
 const GRADE_OPTIONS = [
   { value: "grade_1", label: "כיתה א׳" },
@@ -68,8 +76,12 @@ const CHILD_PIN_INPUT_PROPS = {
 export default function ParentDashboardPage() {
   const router = useRouter();
   const { theme, isBright } = useStudentTheme();
+  const { isDemo, exitDemo } = useParentDemoMode();
   const T = getParentPortalTheme(isBright);
   const layoutProps = { studentTheme: theme, studentShell: "home" };
+  const openDemoWorksheetsHub = useCallback(() => {
+    navigateParentDemoToPublicWorksheets(router);
+  }, [router]);
   const supabaseRef = useRef(null);
   const trackedDashboardOpenRef = useRef(false);
   const lastStudentsFetchAtRef = useRef(0);
@@ -80,6 +92,7 @@ export default function ParentDashboardPage() {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [clientReady, setClientReady] = useState(false);
+  const showDemoWorksheetsEntry = clientReady && hasParentDemoSession();
 
   const [newName, setNewName] = useState("");
   const [newGrade, setNewGrade] = useState("");
@@ -162,7 +175,16 @@ export default function ParentDashboardPage() {
   }, [router]);
 
   useEffect(() => {
-    if (!clientReady || !supabaseRef.current) return;
+    if (!clientReady) return;
+
+    if (hasParentDemoSession()) {
+      const demoSession = buildParentDemoSyntheticAuthSession();
+      setSession(demoSession);
+      fetchStudents(demoSession);
+      return undefined;
+    }
+
+    if (!supabaseRef.current) return;
     const supabase = supabaseRef.current;
     let mounted = true;
     resolveParentBearerSession(supabase).then((s) => {
@@ -208,6 +230,11 @@ export default function ParentDashboardPage() {
 
   const createStudent = async (e) => {
     e.preventDefault();
+    const readOnly = assertParentDemoReadOnly("create_student");
+    if (!readOnly.allowed) {
+      setMessage(readOnly.messageHe);
+      return;
+    }
     if (!session?.access_token) return;
     if (students.length >= studentLimit) {
       setMessage(`ניתן להוסיף עד ${studentLimit} ילדים בלבד לחשבון הורה`);
@@ -329,6 +356,11 @@ export default function ParentDashboardPage() {
   };
 
   const saveStudent = async (studentId) => {
+    const readOnly = assertParentDemoReadOnly("update_student");
+    if (!readOnly.allowed) {
+      setMessage(readOnly.messageHe);
+      return;
+    }
     if (!session?.access_token) return;
     const edit = editById[studentId];
     if (!edit) return;
@@ -361,6 +393,14 @@ export default function ParentDashboardPage() {
   };
 
   const linkGuestToStudent = async (studentId) => {
+    const readOnly = assertParentDemoReadOnly("guest_link");
+    if (!readOnly.allowed) {
+      setGuestLinkMessageByStudentId((prev) => ({
+        ...prev,
+        [studentId]: readOnly.messageHe,
+      }));
+      return;
+    }
     if (!session?.access_token) return;
     const leoDigits = String(guestLeoByStudentId[studentId] || "").replace(/\D/g, "").slice(0, 8);
     if (leoDigits.length !== 8) {
@@ -410,6 +450,11 @@ export default function ParentDashboardPage() {
   };
 
   const saveStudentCredentials = async (studentId, childFullName) => {
+    const readOnly = assertParentDemoReadOnly("credentials");
+    if (!readOnly.allowed) {
+      setMessage(readOnly.messageHe);
+      return;
+    }
     if (!session?.access_token) return;
     const form = credentialsByStudentId[studentId] || {};
     const username = String(form.username || "").trim();
@@ -462,6 +507,11 @@ export default function ParentDashboardPage() {
   };
 
   const savePinReset = async (studentId, loginUsername, childFullName) => {
+    const readOnly = assertParentDemoReadOnly("credentials");
+    if (!readOnly.allowed) {
+      setMessage(readOnly.messageHe);
+      return;
+    }
     if (!session?.access_token) return;
     const pin = String(credentialsByStudentId[studentId]?.pin || "").trim();
     if (!loginUsername) {
@@ -515,6 +565,11 @@ export default function ParentDashboardPage() {
   };
 
   const confirmDeleteStudent = async () => {
+    const readOnly = assertParentDemoReadOnly("delete_student");
+    if (!readOnly.allowed) {
+      setDeleteError(readOnly.messageHe);
+      return;
+    }
     if (!session?.access_token || !deleteModalStudent) return;
     const expected = String(deleteModalStudent.full_name || "").trim();
     if (String(deleteConfirmName).trim() !== expected) return;
@@ -573,6 +628,11 @@ export default function ParentDashboardPage() {
   };
 
   const logout = async () => {
+    if (isDemo) {
+      exitDemo();
+      router.push("/");
+      return;
+    }
     if (!supabaseRef.current) {
       router.push("/parent/login");
       return;
@@ -607,15 +667,17 @@ export default function ParentDashboardPage() {
     });
   };
 
-  const renderAddChildForm = () => (
+  const renderAddChildForm = () => {
+    const addChildFormLocked = !isDemo && students.length >= studentLimit;
+    return (
     <form
       onSubmit={createStudent}
-      className={`space-y-2 ${students.length >= studentLimit ? "opacity-60" : ""}`}
+      className={`space-y-2 ${addChildFormLocked ? "opacity-60" : ""}`}
     >
       <p className={`text-sm ${T.muted}`}>
         ילדים בחשבון: {students.length} / {studentLimit}
       </p>
-      {students.length >= studentLimit ? (
+      {addChildFormLocked ? (
         <p className={T.warning}>{`הגעת למגבלת ${studentLimit} ילדים לחשבון`}</p>
       ) : null}
       <input
@@ -626,14 +688,14 @@ export default function ParentDashboardPage() {
         autoComplete="name"
         enterKeyHint="next"
         required
-        disabled={busy || students.length >= studentLimit}
+        disabled={busy || addChildFormLocked}
       />
       <select
         className={T.input}
         value={newGrade}
         onChange={(e) => setNewGrade(e.target.value)}
         required
-        disabled={busy || students.length >= studentLimit}
+        disabled={busy || addChildFormLocked}
       >
         <option value="">בחר כיתה</option>
         {GRADE_OPTIONS.map((g) => (
@@ -651,7 +713,7 @@ export default function ParentDashboardPage() {
           placeholder="מספר ליאו - 8 ספרות"
           inputMode="numeric"
           autoComplete="off"
-          disabled={busy || students.length >= studentLimit}
+          disabled={busy || addChildFormLocked}
         />
       </div>
       <div className={T.panel}>
@@ -664,7 +726,7 @@ export default function ParentDashboardPage() {
             onChange={(e) => setNewChildUsername(e.target.value)}
             placeholder="לדוגמה: noam123"
             autoComplete="off"
-            disabled={busy || students.length >= studentLimit}
+            disabled={busy || addChildFormLocked}
           />
         </div>
         <div>
@@ -674,16 +736,17 @@ export default function ParentDashboardPage() {
             value={newChildPin}
             onChange={(e) => setNewChildPin(e.target.value.replace(/\D/g, "").slice(0, 4))}
             placeholder="4 ספרות"
-            disabled={busy || students.length >= studentLimit}
+            disabled={busy || addChildFormLocked}
             {...CHILD_PIN_INPUT_PROPS}
           />
         </div>
       </div>
-      <button className={`w-full ${T.amberBtn}`} disabled={busy || students.length >= studentLimit}>
+      <button className={`w-full ${T.amberBtn}`} disabled={busy || addChildFormLocked}>
         הוסף ילד
       </button>
     </form>
-  );
+    );
+  };
 
   const renderChildDetailsContent = (student) => {
     const edit = editById[student.id] || {
@@ -970,24 +1033,57 @@ export default function ParentDashboardPage() {
               <h1 className={`text-xl md:text-2xl font-bold leading-tight ${T.heading} min-w-0 truncate`}>
                 פורטל הורים
               </h1>
-              <button type="button" onClick={logout} className={`${T.secondaryBtn} shrink-0 md:hidden`}>
-                יציאה
-              </button>
+              <div className="flex shrink-0 items-center gap-1.5 md:hidden">
+                <ParentStudentWorldButton
+                  className={`${T.headerStudentWorldBtn} min-w-0 px-2 py-2`}
+                />
+                <button type="button" onClick={logout} className={`${T.secondaryBtn} shrink-0 px-2 py-2`}>
+                  יציאה
+                </button>
+              </div>
             </div>
-            <p className={`${T.subheading} mt-1 min-w-0 truncate text-sm`}>{session.user?.email}</p>
+            <p className={`${T.subheading} mt-1 min-w-0 truncate text-sm`}>
+              {isDemo ? "מצב הדגמה - פורטל הורים" : session.user?.email}
+            </p>
           </div>
           <div className="grid w-full min-w-0 grid-cols-2 gap-1.5 sm:grid-cols-3 md:flex md:w-auto md:flex-nowrap md:justify-end md:gap-2">
             {WORKSHEET_HUB_ENTRY_ENABLED ? (
-              <Link
-                href="/parent/worksheets"
-                prefetch={false}
-                className={`${T.headerCurriculumBtn} w-full min-w-0 md:w-auto md:flex-none`}
-              >
-                <span aria-hidden="true" className="me-1">
-                  🖨️
-                </span>
-                דפי עבודה להדפסה
-              </Link>
+              !clientReady ? (
+                <button
+                  type="button"
+                  disabled
+                  aria-disabled="true"
+                  className={`${T.headerCurriculumBtn} w-full min-w-0 md:w-auto md:flex-none opacity-55 cursor-not-allowed`}
+                >
+                  <span aria-hidden="true" className="me-1">
+                    🖨️
+                  </span>
+                  דפי עבודה להדפסה
+                </button>
+              ) : showDemoWorksheetsEntry ? (
+                <button
+                  type="button"
+                  onClick={openDemoWorksheetsHub}
+                  className={`${T.headerCurriculumBtn} w-full min-w-0 md:w-auto md:flex-none`}
+                  data-testid="parent-demo-worksheets-entry"
+                >
+                  <span aria-hidden="true" className="me-1">
+                    🖨️
+                  </span>
+                  דפי עבודה להדפסה
+                </button>
+              ) : (
+                <Link
+                  href="/parent/worksheets"
+                  prefetch={false}
+                  className={`${T.headerCurriculumBtn} w-full min-w-0 md:w-auto md:flex-none`}
+                >
+                  <span aria-hidden="true" className="me-1">
+                    🖨️
+                  </span>
+                  דפי עבודה להדפסה
+                </Link>
+              )
             ) : (
               <button
                 type="button"
@@ -1021,6 +1117,11 @@ export default function ParentDashboardPage() {
               inline
               className={`${T.headerShareBtn} w-full min-w-0 md:w-auto md:flex-none`}
             />
+            <span className="hidden md:contents">
+              <ParentStudentWorldButton
+                className={`${T.headerStudentWorldBtn} w-auto flex-none`}
+              />
+            </span>
             <button type="button" onClick={logout} className={`${T.secondaryBtn} hidden md:inline-flex`}>
               יציאה
             </button>

@@ -6,6 +6,7 @@ import {
   COPY_INVITE_SUCCESS_MESSAGE_HE,
   copyTextToClipboard,
 } from "../../lib/ui/copy-confirm-message.he.js";
+import { assertParentDemoReadOnly } from "../../lib/demo/parent-demo-readonly.client.js";
 
 /**
  * Share invite — copy message + centered popup confirmation.
@@ -22,6 +23,13 @@ export default function ParentInviteOthersButton({
   const [popupIsError, setPopupIsError] = useState(false);
 
   const handleClick = async () => {
+    const readOnly = assertParentDemoReadOnly("share");
+    if (!readOnly.allowed) {
+      setPopupIsError(true);
+      setPopupMessage(readOnly.messageHe);
+      setPopupOpen(true);
+      return;
+    }
     const ok = await copyTextToClipboard(buildParentReferralInviteMessageHe());
     if (ok) {
       setPopupIsError(false);

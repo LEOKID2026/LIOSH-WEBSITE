@@ -9,6 +9,10 @@ import {
   clearParentBearerSessionAndRedirect,
   resolveParentBearerSession,
 } from "../../../lib/parent-client/parent-bearer-session.client.js";
+import {
+  buildParentDemoSyntheticAuthSession,
+  hasParentDemoSession,
+} from "../../../lib/demo/parent-demo-mode.client.js";
 
 export default function ParentWorksheetsPage() {
   const router = useRouter();
@@ -31,8 +35,25 @@ export default function ParentWorksheetsPage() {
   }, []);
 
   const bootstrap = useCallback(async () => {
-    if (!supabaseRef.current) return;
     setLoading(true);
+    if (hasParentDemoSession()) {
+      const demoSession = buildParentDemoSyntheticAuthSession();
+      setSession(demoSession);
+      try {
+        const res = await fetch("/api/parent/list-students", {
+          headers: { Authorization: `Bearer ${demoSession.access_token}` },
+        });
+        const data = await res.json();
+        setStudents(res.ok && data.ok ? data.students || [] : []);
+      } catch {
+        setStudents([]);
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+
+    if (!supabaseRef.current) return;
     const activeSession = await resolveParentBearerSession(supabaseRef.current);
     if (!activeSession?.access_token) {
       await clearParentBearerSessionAndRedirect(supabaseRef.current, router);

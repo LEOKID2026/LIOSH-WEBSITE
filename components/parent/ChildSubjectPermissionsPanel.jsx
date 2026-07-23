@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { getParentPortalTheme } from "../../lib/parent-ui/parent-portal-theme.client.js";
 import { mapParentPanelApiError } from "../../lib/parent-server/parent-api-errors.he.js";
+import { assertParentDemoReadOnly } from "../../lib/demo/parent-demo-readonly.client.js";
 
 const FILTER_OPTIONS = [
   { id: "all", label: "הכול" },
@@ -55,6 +56,10 @@ export default function ChildSubjectPermissionsPanel({ studentId, accessToken, b
   }, [subjects, filter]);
 
   async function patchBody(body) {
+    const readOnly = assertParentDemoReadOnly("save_permissions");
+    if (!readOnly.allowed) {
+      throw new Error(readOnly.messageHe);
+    }
     setError("");
     const res = await fetch(`/api/parent/students/${studentId}/subject-permissions`, {
       method: "PATCH",

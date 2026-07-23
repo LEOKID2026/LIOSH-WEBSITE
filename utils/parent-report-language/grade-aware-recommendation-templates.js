@@ -3065,11 +3065,11 @@ export const GRADE_AWARE_RECOMMENDATION_TEMPLATES = {
     },
   },
   history: {
-    "H-01": {
+    "HI-01": {
       defaultBands: {
-        g1_g2: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-01: G6-only history; lower bands null." },
-        g3_g4: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-01: G6-only history; lower bands null." },
-        g5_g6: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-01 default: use bucketOverrides or engine fallback." },
+        g1_g2: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "HI-01: G6-only history; lower bands null." },
+        g3_g4: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "HI-01: G6-only history; lower bands null." },
+        g5_g6: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "HI-01 default: use bucketOverrides or engine fallback." },
       },
       bucketOverrides: {
         what_is_history: {
@@ -3088,11 +3088,11 @@ export const GRADE_AWARE_RECOMMENDATION_TEMPLATES = {
         },
       },
     },
-    "H-02": {
+    "HI-02": {
       defaultBands: {
-        g1_g2: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-02: G6-only." },
-        g3_g4: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-02: G6-only." },
-        g5_g6: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-02 default: use bucketOverrides." },
+        g1_g2: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "HI-02: G6-only." },
+        g3_g4: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "HI-02: G6-only." },
+        g5_g6: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "HI-02 default: use bucketOverrides." },
       },
       bucketOverrides: {
         hasmonaeans: {
@@ -3118,11 +3118,11 @@ export const GRADE_AWARE_RECOMMENDATION_TEMPLATES = {
         },
       },
     },
-    "H-03": {
+    "HI-03": {
       defaultBands: {
-        g1_g2: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-03: G6-only." },
-        g3_g4: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-03: G6-only." },
-        g5_g6: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-03 default: use bucketOverrides." },
+        g1_g2: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "HI-03: G6-only." },
+        g3_g4: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "HI-03: G6-only." },
+        g5_g6: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "HI-03 default: use bucketOverrides." },
       },
       bucketOverrides: {
         hellenism_jews: {
@@ -3155,11 +3155,11 @@ export const GRADE_AWARE_RECOMMENDATION_TEMPLATES = {
         },
       },
     },
-    "H-04": {
+    "HI-04": {
       defaultBands: {
-        g1_g2: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-04: G6-only." },
-        g3_g4: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-04: G6-only." },
-        g5_g6: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-04 default: use bucketOverrides." },
+        g1_g2: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "HI-04: G6-only." },
+        g3_g4: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "HI-04: G6-only." },
+        g5_g6: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "HI-04 default: use bucketOverrides." },
       },
       bucketOverrides: {
         classical_greece: {
@@ -3178,11 +3178,11 @@ export const GRADE_AWARE_RECOMMENDATION_TEMPLATES = {
         },
       },
     },
-    "H-05": {
+    "HI-05": {
       defaultBands: {
-        g1_g2: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-05: G6-only." },
-        g3_g4: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-05: G6-only." },
-        g5_g6: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-05 default: use bucketOverrides." },
+        g1_g2: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "HI-05: G6-only." },
+        g3_g4: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "HI-05: G6-only." },
+        g5_g6: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "HI-05 default: use bucketOverrides." },
       },
       bucketOverrides: {
         hellenism_jews: {
@@ -3208,11 +3208,11 @@ export const GRADE_AWARE_RECOMMENDATION_TEMPLATES = {
         },
       },
     },
-    "H-06": {
+    "HI-06": {
       defaultBands: {
-        g1_g2: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-06: G6-only." },
-        g3_g4: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-06: G6-only." },
-        g5_g6: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-06 default: use bucketOverrides." },
+        g1_g2: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "HI-06: G6-only." },
+        g3_g4: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "HI-06: G6-only." },
+        g5_g6: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "HI-06 default: use bucketOverrides." },
       },
       bucketOverrides: {
         classical_greece: {
@@ -3245,11 +3245,11 @@ export const GRADE_AWARE_RECOMMENDATION_TEMPLATES = {
         },
       },
     },
-    "H-07": {
+    "HI-07": {
       defaultBands: {
-        g1_g2: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-07: G6-only." },
-        g3_g4: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-07: G6-only." },
-        g5_g6: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-07 default: use bucketOverrides." },
+        g1_g2: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "HI-07: G6-only." },
+        g3_g4: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "HI-07: G6-only." },
+        g5_g6: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "HI-07 default: use bucketOverrides." },
       },
       bucketOverrides: {
         classical_greece: {
@@ -3275,11 +3275,11 @@ export const GRADE_AWARE_RECOMMENDATION_TEMPLATES = {
         },
       },
     },
-    "H-08": {
+    "HI-08": {
       defaultBands: {
-        g1_g2: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-08: G6-only." },
-        g3_g4: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-08: G6-only." },
-        g5_g6: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-08 default: use bucketOverrides." },
+        g1_g2: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "HI-08: G6-only." },
+        g3_g4: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "HI-08: G6-only." },
+        g5_g6: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "HI-08 default: use bucketOverrides." },
       },
       bucketOverrides: {
         what_is_history: {
@@ -3298,11 +3298,11 @@ export const GRADE_AWARE_RECOMMENDATION_TEMPLATES = {
         },
       },
     },
-    "H-09": {
+    "HI-09": {
       defaultBands: {
-        g1_g2: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-09: G6-only." },
-        g3_g4: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-09: G6-only." },
-        g5_g6: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "H-09 default: use bucketOverrides." },
+        g1_g2: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "HI-09: G6-only." },
+        g3_g4: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "HI-09: G6-only." },
+        g5_g6: { actionTextHe: null, goalTextHe: null, intentDescriptionEn: "HI-09 default: use bucketOverrides." },
       },
       bucketOverrides: {
         rome_jews: {

@@ -14,6 +14,7 @@ import ParentSentActivitiesPanel from "./ParentSentActivitiesPanel.jsx";
 import { trackProductEvent } from "../../lib/analytics/track-event.client.js";
 import { getParentPortalTheme } from "../../lib/parent-ui/parent-portal-theme.client.js";
 import { mapParentPanelApiError } from "../../lib/parent-server/parent-api-errors.he.js";
+import { assertParentDemoReadOnly } from "../../lib/demo/parent-demo-readonly.client.js";
 
 const PARENT_ACTIVITY_MODE = "guided_practice";
 const MAX_QUESTION_COUNT = 30;
@@ -126,6 +127,11 @@ export default function AssignActivityModal({
   }, [subject, activityGradeKey, topic, displayLevel, questionCountInput]);
 
   const sendActivity = useCallback(async () => {
+    const readOnly = assertParentDemoReadOnly("assign_activity");
+    if (!readOnly.allowed) {
+      setError(readOnly.messageHe);
+      return;
+    }
     if (!activityGradeKey) {
       setError("יש לבחור כיתה לפעילות לפני השליחה");
       return;
