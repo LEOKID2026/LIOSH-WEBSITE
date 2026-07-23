@@ -18,7 +18,8 @@ const PUBLIC_ROOT = path.join(ROOT, "public");
 /** @param {string} assetId */
 function resolvePublicAsset(assetId) {
   if (!assetId || !assetId.startsWith("/")) return null;
-  return path.join(PUBLIC_ROOT, assetId.replace(/^\//, "").replace(/\//g, path.sep));
+  const pathname = assetId.split("?")[0];
+  return path.join(PUBLIC_ROOT, pathname.replace(/^\//, "").replace(/\//g, path.sep));
 }
 
 /** @param {import("../../lib/writing/writing-worksheet-types.js").WritingWorksheetPayload} payload */

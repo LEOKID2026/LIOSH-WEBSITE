@@ -19,6 +19,7 @@ import ColoringTabShell from "../coloring-upload/ColoringTabShell.jsx";
 import ColoringPreviewModal from "../coloring/ColoringPreviewModal.jsx";
 import WorksheetPreviewModal from "./WorksheetPreviewModal.jsx";
 import { WORKSHEET_UI_HE } from "../../lib/worksheets/worksheet-ui.he.js";
+import { writingErrorLabelHe } from "../../lib/writing/writing-error-labels.he.js";
 import { getPublicSeoWideClasses } from "../seo/public-seo-wide-theme";
 import { getPublicDemoAllowlistEntry } from "../../lib/worksheets/worksheet-public-demo.constants.js";
 import { listMathPracticeFormatsForGradeTopic } from "../../lib/worksheets/worksheet-math-practice-format.js";
@@ -371,7 +372,9 @@ export default function PublicWorksheetsHub({
       });
       const data = await res.json();
       if (!res.ok || !data.ok) {
-        setWritingCreateError(data.message || data.error || WORKSHEET_UI_HE.errorGeneric);
+        setWritingCreateError(
+          data.message || writingErrorLabelHe(data.error) || WORKSHEET_UI_HE.errorGeneric
+        );
         return;
       }
       openWorksheetPreviewModal(

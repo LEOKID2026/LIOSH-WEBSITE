@@ -28,7 +28,7 @@ export default function WritingPrintDocument({ worksheetPayload }) {
   return (
     <div
       className={`worksheet-print-document writing-print-document${inkClass}`}
-      data-print-orientation={primaryOrientation}
+      data-page-orientation={primaryOrientation}
       data-page-count={printablePages.length}
     >
       {printablePages.map((page, pageIndex) => (

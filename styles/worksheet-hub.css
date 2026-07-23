@@ -170,6 +170,30 @@
   box-shadow: 0 4px 18px rgb(14 165 233 / 0.1);
 }
 
+a.worksheet-ready-card-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+a.worksheet-ready-card-link:focus-visible {
+  outline: 2px solid #0ea5e9;
+  outline-offset: 2px;
+}
+
+.ready-worksheet-public-preview-embed {
+  overflow: auto;
+  max-height: min(70vh, 960px);
+  border-radius: 0.85rem;
+  border: 1px solid var(--ws-border);
+  background: #fff;
+  padding: 0.75rem;
+}
+
+.ready-worksheet-public-preview-embed .worksheet-screen-preview {
+  min-width: min(100%, 720px);
+  margin-inline: auto;
+}
+
 .worksheet-ready-card-top {
   display: flex;
   flex-wrap: wrap;

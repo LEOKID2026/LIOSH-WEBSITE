@@ -21,7 +21,7 @@
 export const ENGLISH_WORD_PACKS = {
   colors: {
     id: "colors",
-    titleHe: "Colors",
+    titleHe: "צבעים",
     words: [
       { text: "red", illustrationId: "ill-pencil", colorInstructionHe: "צבעו באדום" },
       { text: "blue", illustrationId: "ill-pencil", colorInstructionHe: "צבעו בכחול" },
@@ -35,7 +35,7 @@ export const ENGLISH_WORD_PACKS = {
   },
   animals: {
     id: "animals",
-    titleHe: "Animals",
+    titleHe: "בעלי חיים",
     words: [
       { text: "cat", illustrationId: "ill-cat" },
       { text: "dog", illustrationId: "ill-dog" },
@@ -49,7 +49,7 @@ export const ENGLISH_WORD_PACKS = {
   },
   family: {
     id: "family",
-    titleHe: "Family",
+    titleHe: "משפחה",
     words: [
       { text: "mom", illustrationId: "ill-mom" },
       { text: "dad", illustrationId: "ill-dad" },
@@ -63,7 +63,7 @@ export const ENGLISH_WORD_PACKS = {
   },
   food: {
     id: "food",
-    titleHe: "Food",
+    titleHe: "אוכל",
     words: [
       { text: "apple", illustrationId: "ill-apple" },
       { text: "banana", illustrationId: "ill-banana" },
@@ -77,7 +77,7 @@ export const ENGLISH_WORD_PACKS = {
   },
   school: {
     id: "school",
-    titleHe: "School",
+    titleHe: "בית הספר",
     words: [
       { text: "book", illustrationId: "ill-book" },
       { text: "pencil", illustrationId: "ill-pencil" },
@@ -91,7 +91,7 @@ export const ENGLISH_WORD_PACKS = {
   },
   body: {
     id: "body",
-    titleHe: "Body",
+    titleHe: "גוף",
     words: [
       { text: "hand", illustrationId: "ill-hand" },
       { text: "foot", illustrationId: "ill-foot" },
@@ -105,7 +105,7 @@ export const ENGLISH_WORD_PACKS = {
   },
   home: {
     id: "home",
-    titleHe: "Home",
+    titleHe: "בית",
     words: [
       { text: "house", illustrationId: "ill-house" },
       { text: "door", illustrationId: "ill-door" },
@@ -119,7 +119,7 @@ export const ENGLISH_WORD_PACKS = {
   },
   nature: {
     id: "nature",
-    titleHe: "Nature",
+    titleHe: "טבע",
     words: [
       { text: "sun", illustrationId: "ill-sun" },
       { text: "tree", illustrationId: "ill-tree" },
@@ -133,7 +133,7 @@ export const ENGLISH_WORD_PACKS = {
   },
   transport: {
     id: "transport",
-    titleHe: "Transport",
+    titleHe: "תחבורה",
     words: [
       { text: "car", illustrationId: "ill-car" },
       { text: "bus", illustrationId: "ill-bus" },
@@ -147,7 +147,7 @@ export const ENGLISH_WORD_PACKS = {
   },
   numbers: {
     id: "numbers",
-    titleHe: "Numbers",
+    titleHe: "מספרים",
     words: [
       { text: "one", illustrationId: "qty-01" },
       { text: "two", illustrationId: "qty-02" },
@@ -161,7 +161,7 @@ export const ENGLISH_WORD_PACKS = {
   },
   cvc: {
     id: "cvc",
-    titleHe: "CVC words",
+    titleHe: "מילים קצרות",
     words: [
       { text: "cat", illustrationId: "ill-cat" },
       { text: "dog", illustrationId: "ill-dog" },
@@ -175,7 +175,7 @@ export const ENGLISH_WORD_PACKS = {
   },
   sight: {
     id: "sight",
-    titleHe: "Sight words",
+    titleHe: "מילות תדירות",
     words: [
       { text: "the", illustrationId: "ill-book" },
       { text: "and", illustrationId: "ill-book" },

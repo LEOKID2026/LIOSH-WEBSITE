@@ -43,18 +43,6 @@ function traceItemClass(traceRenderMode) {
 
 
 /**
- * Scale Hebrew dot-trace SVGs to match English/digit visual height in the same cell.
- * @param {string} character
- * @param {import("../../lib/writing/writing-worksheet-types.js").ScriptStyle} itemScriptStyle
- */
-function hebrewTraceScaleClass(character, itemScriptStyle) {
-  if (!/[\u0590-\u05FF]/.test(String(character || ""))) return "";
-  return itemScriptStyle === "script" ? "writing-item--hebrew-script" : "writing-item--hebrew-print";
-}
-
-
-
-/**
 
  * @param {{
 
@@ -195,7 +183,12 @@ function WritingItemView({ item, meta, scriptStyle, mode }) {
 
   const traceClass = traceItemClass(item.traceRenderMode);
 
-
+  const isHebrewModelSvg =
+    item.itemType === "glyph" &&
+    item.traceRenderMode === "faint_model" &&
+    Boolean(item.svgAssetId) &&
+    lang !== "en" &&
+    /[\u0590-\u05FF]/.test(String(item.character || ""));
 
   const isTraceSvgMode =
 
@@ -207,15 +200,17 @@ function WritingItemView({ item, meta, scriptStyle, mode }) {
 
   const showGlyphText =
 
-    item.taskType !== "trace" ||
+    (item.taskType !== "trace" ||
 
-    item.traceRenderMode === "faint_model" ||
+      item.traceRenderMode === "faint_model" ||
 
-    (!isTraceSvgMode && !item.svgAssetId);
+      (!isTraceSvgMode && !item.svgAssetId)) &&
+    !isHebrewModelSvg;
 
   const showTraceSvg =
 
-    item.taskType === "trace" && isTraceSvgMode && item.svgAssetId && item.itemType !== "word";
+    (item.taskType === "trace" && isTraceSvgMode && item.svgAssetId && item.itemType !== "word") ||
+    isHebrewModelSvg;
 
 
 
@@ -267,9 +262,9 @@ function WritingItemView({ item, meta, scriptStyle, mode }) {
 
       <div
 
-        className={`writing-item writing-item--number writing-item--${item.taskType} ${traceClass}`}
+        className={`writing-item writing-item--number writing-item--ltr-glyph writing-item--${item.taskType} ${traceClass}`}
 
-        dir={dir}
+        dir="ltr"
 
         style={{ fontFamily }}
 
@@ -396,15 +391,25 @@ function WritingItemView({ item, meta, scriptStyle, mode }) {
 
 
   if (item.itemType === "glyph") {
-    const hebrewClass = hebrewTraceScaleClass(item.character, item.scriptStyle || scriptStyle);
-
+    const isLtrGlyph =
+      item.direction === "ltr" ||
+      lang === "en" ||
+      (item.character && /[A-Za-z]/.test(String(item.character)));
     return (
 
       <div
 
-        className={`writing-item writing-item--glyph writing-item--${item.taskType} ${traceClass}${hebrewClass ? ` ${hebrewClass}` : ""}`.trim()}
+        className={[
+          "writing-item",
+          "writing-item--glyph",
+          `writing-item--${item.taskType}`,
+          traceClass,
+          isLtrGlyph ? "writing-item--ltr-glyph" : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
 
-        dir={dir}
+        dir={isLtrGlyph ? "ltr" : dir}
 
         style={{ fontFamily }}
 
@@ -549,6 +554,10 @@ export default function WritingBlockContent({ block, meta, scriptStyle, mode }) 
         data-density={meta.pageDensity}
 
         data-line-template={meta.lineTemplate}
+
+        data-font-size={meta.fontSize || "md"}
+
+        data-print-strength={meta.printStrength || "normal"}
 
       >
 
@@ -713,6 +722,8 @@ export function WritingPageContent({
     <section
 
       className={rootClass}
+
+      data-page-orientation={orientation}
 
       data-orientation={orientation}
 

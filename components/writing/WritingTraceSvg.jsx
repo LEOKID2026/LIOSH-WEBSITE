@@ -4,9 +4,11 @@
 
 import { useEffect, useState } from "react";
 import {
+  resolveWritingGlyphGroup,
   resolveWritingSvgAssetUrl,
   withWritingTraceAssetVersion,
 } from "../../lib/writing/writing-trace-asset-resolver.js";
+import { writingGlyphVisualScaleForGroup } from "../../lib/writing/writing-glyph-visual-scale.js";
 
 /**
  * @param {{
@@ -40,6 +42,15 @@ export default function WritingTraceSvg({
     }) || src;
 
   const versionedSrc = withWritingTraceAssetVersion(resolvedSrc);
+  const glyphGroup = resolveWritingGlyphGroup({ character, scriptStyle, language });
+  const usesVisualScale =
+    traceRenderMode === "full_trace" || traceRenderMode === "faint_model";
+  const visualScale = usesVisualScale
+    ? writingGlyphVisualScaleForGroup(glyphGroup, traceRenderMode)
+    : 1;
+  const frameStyle = usesVisualScale
+    ? { "--writing-glyph-visual-scale": String(visualScale) }
+    : undefined;
 
   useEffect(() => {
     let cancelled = false;
@@ -112,11 +123,18 @@ export default function WritingTraceSvg({
   return (
     <span
       dir="ltr"
-      className={`writing-trace-inline ${className}`.trim()}
-      data-writing-trace-ready="true"
-      data-writing-trace-src={versionedSrc}
-      data-writing-trace-mode={mode}
-      dangerouslySetInnerHTML={{ __html: inlineSvg }}
-    />
+      className={`writing-glyph-frame ${className}`.trim()}
+      data-writing-glyph-group={glyphGroup}
+      data-trace-render-mode={traceRenderMode}
+      style={frameStyle}
+    >
+      <span
+        className="writing-trace-inline"
+        data-writing-trace-ready="true"
+        data-writing-trace-src={versionedSrc}
+        data-writing-trace-mode={mode}
+        dangerouslySetInnerHTML={{ __html: inlineSvg }}
+      />
+    </span>
   );
 }

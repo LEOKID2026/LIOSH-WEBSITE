@@ -12,9 +12,15 @@ import { WritingPageContent } from "./WritingBlockContent.jsx";
  */
 export default function WritingScreenPreview({ worksheetPayload }) {
   const { meta, pages, scriptStyle } = worksheetPayload;
+  const pageOrientation =
+    pages[0]?.orientation === "landscape" ? "landscape" : "portrait";
 
   return (
-    <div className="writing-screen-preview worksheet-screen-preview" aria-label="תצוגה מקדימה">
+    <div
+      className="writing-screen-preview worksheet-screen-preview"
+      data-page-orientation={pageOrientation}
+      aria-label="תצוגה מקדימה"
+    >
       <header className="writing-screen-info-card worksheet-screen-info-card">
         <div className="worksheet-screen-brand" dir="ltr" lang="en">
           <span className="worksheet-screen-brand-name">LEO KIDS</span>

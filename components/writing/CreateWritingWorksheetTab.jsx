@@ -3,12 +3,16 @@
  */
 
 import {
+  ENGLISH_LOWER,
   ENGLISH_UPPER,
   HEBREW_LETTERS,
+  HEBREW_FINALS,
   HEBREW_WORD_PACKS,
   ENGLISH_WORD_PACKS,
   PREWRITING_PATHS,
   WRITING_CATEGORY_LABELS_HE,
+  prewritingPathLabelHe,
+  wordPackLabelHe,
 } from "../../lib/writing/writing-constants.js";
 import {
   WRITING_REQUEST_DEFAULTS,
@@ -63,6 +67,33 @@ const PERSONAL_KIND_OPTIONS = [
 const LINE_COUNT_OPTIONS = [3, 4, 5, 6, 8, 10, 12];
 
 /**
+ * @param {string} writingCategory
+ * @returns {string[]}
+ */
+function manualDefaultCharacters(writingCategory) {
+  if (writingCategory === "hebrew_letters") return ["א"];
+  if (writingCategory === "english_letters") return ["A"];
+  return [];
+}
+
+const ITEMS_PER_LINE_OPTIONS = [1, 2, 3, 4, 5, 6];
+
+const FONT_SIZE_OPTIONS = [
+  { key: "sm", label: "קטן" },
+  { key: "md", label: "בינוני" },
+  { key: "lg", label: "גדול" },
+  { key: "xl", label: "גדול מאוד" },
+];
+
+const PRINT_STRENGTH_OPTIONS = [
+  { key: "light", label: "עדין" },
+  { key: "normal", label: "רגיל" },
+  { key: "strong", label: "חזק" },
+];
+
+const LETTER_NUMBER_CATEGORIES = new Set(["hebrew_letters", "english_letters", "numbers"]);
+
+/**
  * @returns {Record<string, unknown>}
  */
 export function defaultWritingCreateForm() {
@@ -75,6 +106,8 @@ export function defaultWritingCreateForm() {
     traceRenderMode: WRITING_REQUEST_DEFAULTS.traceRenderMode,
     lineCount: WRITING_REQUEST_DEFAULTS.lineCount,
     itemsPerLine: WRITING_REQUEST_DEFAULTS.itemsPerLine,
+    fontSize: WRITING_REQUEST_DEFAULTS.fontSize,
+    printStrength: "normal",
     letterCase: "upper",
     numberRange: { min: 1, max: 5 },
     numberMode: "digit",
@@ -123,8 +156,9 @@ export function buildWritingGenerateBody(form) {
     lineCount: Number(form.lineCount) || WRITING_REQUEST_DEFAULTS.lineCount,
     itemsPerLine: Number(form.itemsPerLine) || WRITING_REQUEST_DEFAULTS.itemsPerLine,
     repeatsPerLine: WRITING_REQUEST_DEFAULTS.repeatsPerLine,
-    fontSize: WRITING_REQUEST_DEFAULTS.fontSize,
+    fontSize: String(form.fontSize || WRITING_REQUEST_DEFAULTS.fontSize),
     strokeStyle: WRITING_REQUEST_DEFAULTS.strokeStyle,
+    printStrength: String(form.printStrength || "normal"),
     includeExample: WRITING_REQUEST_DEFAULTS.includeExample,
     includeCopyRows: WRITING_REQUEST_DEFAULTS.includeCopyRows,
     includeIndependentRows: WRITING_REQUEST_DEFAULTS.includeIndependentRows,
@@ -147,7 +181,7 @@ export function buildWritingGenerateBody(form) {
           .filter(Boolean);
   } else if (category === "english_letters") {
     body.characters = Array.isArray(form.characters)
-      ? form.characters
+      ? form.characters.filter(Boolean)
       : [String(form.characters || "A")];
     body.letterCase = form.letterCase || "upper";
   } else if (category === "numbers") {
@@ -208,6 +242,14 @@ export default function CreateWritingWorksheetTab({
   const hebrewChars = Array.isArray(form.characters)
     ? form.characters.map(String)
     : String(form.characters || "א").split("").filter(Boolean);
+  const letterCase = String(form.letterCase || "upper");
+  const englishLetterPool = letterCase === "lower" ? ENGLISH_LOWER : ENGLISH_UPPER;
+  const englishChars = Array.isArray(form.characters)
+    ? form.characters.map(String).filter(Boolean)
+    : ["A"];
+  const showLetterNumberLayout =
+    !isPublicDemo && !isReferenceSheet && LETTER_NUMBER_CATEGORIES.has(category);
+  const hebrewLetterGrid = [...HEBREW_LETTERS.slice(0, 22), ...HEBREW_FINALS];
 
   const applyDemoPreset = (presetId) => {
     const preset = getPublicWritingDemoPreset(presetId);
@@ -259,7 +301,10 @@ export default function CreateWritingWorksheetTab({
               onChange={(e) => {
                 const key = e.target.value;
                 if (!key) {
-                  onChange({ referenceSheetPreset: "" });
+                  onChange({
+                    referenceSheetPreset: "",
+                    characters: manualDefaultCharacters(category),
+                  });
                   return;
                 }
                 const applied = applyReferenceSheetPreset(key);
@@ -283,7 +328,14 @@ export default function CreateWritingWorksheetTab({
           <select
             className={T.inputMt}
             value={category}
-            onChange={(e) => onChange({ writingCategory: e.target.value })}
+            onChange={(e) => {
+              const nextCategory = e.target.value;
+              onChange({
+                writingCategory: nextCategory,
+                referenceSheetPreset: "",
+                characters: manualDefaultCharacters(nextCategory),
+              });
+            }}
           >
             {WRITING_UI_CATEGORIES.map((key) => (
               <option key={key} value={key}>
@@ -302,7 +354,7 @@ export default function CreateWritingWorksheetTab({
             {WORKSHEET_UI_HE.writingLettersField}
           </span>
           <div className="worksheet-writing-letter-grid">
-            {HEBREW_LETTERS.slice(0, 22).map((letter) => {
+            {hebrewLetterGrid.map((letter) => {
               const selected = hebrewChars.includes(letter);
               return (
                 <button
@@ -333,8 +385,10 @@ export default function CreateWritingWorksheetTab({
             </span>
             <select
               className={T.inputMt}
-              value={String(form.letterCase || "upper")}
-              onChange={(e) => onChange({ letterCase: e.target.value })}
+              value={letterCase}
+              onChange={(e) =>
+                onChange({ letterCase: e.target.value, characters: manualDefaultCharacters("english_letters") })
+              }
             >
               <option value="upper">אותיות גדולות</option>
               <option value="lower">אותיות קטנות</option>
@@ -345,17 +399,28 @@ export default function CreateWritingWorksheetTab({
             <span className={`worksheet-filter-label ${T.muted}`}>
               {WORKSHEET_UI_HE.writingLettersField}
             </span>
-            <select
-              className={T.inputMt}
-              value={String(form.characters?.[0] || "A")}
-              onChange={(e) => onChange({ characters: [e.target.value] })}
-            >
-              {ENGLISH_UPPER.map((letter) => (
-                <option key={letter} value={letter}>
-                  {letter}
-                </option>
-              ))}
-            </select>
+            <div className="worksheet-writing-letter-grid">
+              {englishLetterPool.map((letter) => {
+                const selected = englishChars.includes(letter);
+                return (
+                  <button
+                    key={letter}
+                    type="button"
+                    className={`worksheet-writing-letter-btn${selected ? " is-selected" : ""}`}
+                    aria-pressed={selected}
+                    onClick={() => {
+                      const next = selected
+                        ? englishChars.filter((c) => c !== letter)
+                        : [...englishChars, letter];
+                      const fallback = englishLetterPool[0] || "A";
+                      onChange({ characters: next.length ? next : [fallback] });
+                    }}
+                  >
+                    {letter}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </>
       ) : null}
@@ -431,7 +496,7 @@ export default function CreateWritingWorksheetTab({
           >
             {PREWRITING_PATHS.map((pathId) => (
               <option key={pathId} value={pathId}>
-                {pathId}
+                {prewritingPathLabelHe(pathId)}
               </option>
             ))}
           </select>
@@ -451,7 +516,7 @@ export default function CreateWritingWorksheetTab({
             >
               {Object.keys(HEBREW_WORD_PACKS).map((packId) => (
                 <option key={packId} value={packId}>
-                  {packId}
+                  {wordPackLabelHe(HEBREW_WORD_PACKS, packId)}
                 </option>
               ))}
               <option value="custom">מותאם אישית</option>
@@ -487,10 +552,10 @@ export default function CreateWritingWorksheetTab({
             >
               {Object.keys(ENGLISH_WORD_PACKS).map((packId) => (
                 <option key={packId} value={packId}>
-                  {packId}
+                  {wordPackLabelHe(ENGLISH_WORD_PACKS, packId)}
                 </option>
               ))}
-              <option value="custom">custom</option>
+              <option value="custom">מותאם אישית</option>
             </select>
           </div>
           {form.wordPackId === "custom" ? (
@@ -541,6 +606,66 @@ export default function CreateWritingWorksheetTab({
             />
           </div>
         </>
+      ) : null}
+
+      {showLetterNumberLayout ? (
+        <div className="worksheet-form-grid">
+          <label className="worksheet-form-field">
+            <span className={`worksheet-filter-label ${T.muted}`}>מספר אותיות בשורה</span>
+            <select
+              className={T.inputMt}
+              value={Number(form.itemsPerLine ?? WRITING_REQUEST_DEFAULTS.itemsPerLine)}
+              onChange={(e) => onChange({ itemsPerLine: Number(e.target.value) })}
+            >
+              {ITEMS_PER_LINE_OPTIONS.map((n) => (
+                <option key={n} value={n}>
+                  {n}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="worksheet-form-field">
+            <span className={`worksheet-filter-label ${T.muted}`}>גודל האות</span>
+            <select
+              className={T.inputMt}
+              value={String(form.fontSize || WRITING_REQUEST_DEFAULTS.fontSize)}
+              onChange={(e) => onChange({ fontSize: e.target.value })}
+            >
+              {FONT_SIZE_OPTIONS.map((opt) => (
+                <option key={opt.key} value={opt.key}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="worksheet-form-field">
+            <span className={`worksheet-filter-label ${T.muted}`}>חוזק ההדפסה</span>
+            <select
+              className={T.inputMt}
+              value={String(form.printStrength || "normal")}
+              onChange={(e) => onChange({ printStrength: e.target.value })}
+            >
+              {PRINT_STRENGTH_OPTIONS.map((opt) => (
+                <option key={opt.key} value={opt.key}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="worksheet-form-field">
+            <span className={`worksheet-filter-label ${T.muted}`}>
+              {WORKSHEET_UI_HE.writingOrientationField}
+            </span>
+            <select
+              className={T.inputMt}
+              value={String(form.pageOrientation || "portrait")}
+              onChange={(e) => onChange({ pageOrientation: e.target.value })}
+            >
+              <option value="portrait">לאורך</option>
+              <option value="landscape">לרוחב</option>
+            </select>
+          </label>
+        </div>
       ) : null}
 
       <div className="worksheet-form-grid">
@@ -620,7 +745,7 @@ export default function CreateWritingWorksheetTab({
         </label>
         ) : null}
 
-        {!isPublicDemo ? (
+        {!isPublicDemo && !showLetterNumberLayout ? (
           <label className="worksheet-form-field">
             <span className={`worksheet-filter-label ${T.muted}`}>
               {WORKSHEET_UI_HE.writingOrientationField}

@@ -16,6 +16,12 @@ import { WORKSHEET_UI_HE } from "../../../lib/worksheets/worksheet-ui.he.js";
 
 const BACK_HREF = "/practice/worksheets";
 
+const PREVIEW_SEO = {
+  title: "תצוגת דף עבודה · LEO KIDS",
+  description: "תצוגה מקדימה של דף עבודה.",
+  canonicalPath: "/practice/worksheets/preview",
+};
+
 export default function PublicWorksheetPreviewRoute() {
   const router = useRouter();
   const { theme } = useStudentTheme();
@@ -126,50 +132,38 @@ export default function PublicWorksheetPreviewRoute() {
     }
   }, [previewData]);
 
+  let body;
+
   if (!sessionChecked) {
-    return (
+    body = (
       <Layout {...layoutProps}>
         <div dir="rtl" className="p-4 text-center text-slate-500">
           {WORKSHEET_UI_HE.loading}
         </div>
       </Layout>
     );
-  }
-
-  if (!previewData) {
-    return (
-      <>
-        <PageSeo
-          title="תצוגת דף עבודה · LEO KIDS"
-          description="תצוגה מקדימה של דף עבודה."
-          canonicalPath="/practice/worksheets/preview"
-          noindex
-        />
-        <Layout {...layoutProps}>
-          <div dir="rtl" className="mx-auto max-w-lg px-4 py-10 text-center">
-            <p className="mb-6 text-base text-slate-700">{WORKSHEET_UI_HE.publicPreviewLost}</p>
-            <Link
-              href={BACK_HREF}
-              className="inline-flex rounded-lg bg-slate-800 px-5 py-2.5 text-sm font-semibold text-white"
-            >
-              {WORKSHEET_UI_HE.publicPreviewLostCta}
-            </Link>
-          </div>
-        </Layout>
-      </>
+  } else if (!previewData) {
+    body = (
+      <Layout {...layoutProps}>
+        <div dir="rtl" className="mx-auto max-w-lg px-4 py-10 text-center">
+          <p className="mb-6 text-base text-slate-700">{WORKSHEET_UI_HE.publicPreviewLost}</p>
+          <Link
+            href={BACK_HREF}
+            className="inline-flex rounded-lg bg-slate-800 px-5 py-2.5 text-sm font-semibold text-white"
+          >
+            {WORKSHEET_UI_HE.publicPreviewLostCta}
+          </Link>
+        </div>
+      </Layout>
     );
-  }
+  } else {
+    const backHref =
+      typeof previewData.returnPath === "string" && previewData.returnPath.startsWith("/")
+        ? previewData.returnPath
+        : BACK_HREF;
+    const showRefresh = previewData.source === "public-demo";
 
-  const showRefresh = previewData.source === "public-demo";
-
-  return (
-    <>
-      <PageSeo
-        title="תצוגת דף עבודה · LEO KIDS"
-        description="תצוגה מקדימה של דף עבודה."
-        canonicalPath="/practice/worksheets/preview"
-        noindex
-      />
+    body = (
       <Layout {...layoutProps}>
         <div className="worksheet-preview-container px-4 py-4 md:px-6 md:py-6">
           {refreshError ? (
@@ -190,10 +184,17 @@ export default function PublicWorksheetPreviewRoute() {
             answerKeyLoading={answerKeyLoading}
             onRefresh={showRefresh ? handleRefresh : undefined}
             refreshLoading={refreshLoading}
-            backHref={BACK_HREF}
+            backHref={backHref}
           />
         </div>
       </Layout>
+    );
+  }
+
+  return (
+    <>
+      <PageSeo {...PREVIEW_SEO} noindex />
+      {body}
     </>
   );
 }

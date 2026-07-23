@@ -3,7 +3,9 @@
  */
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { WORKSHEET_SUBJECT_ALLOWLIST } from "../../lib/worksheets/worksheet-print-allowlist.js";
+import { readyWorksheetPublicPath } from "../../lib/worksheets/worksheet-ready-public-paths.js";
 import { WORKSHEET_LEVEL_OPTIONS } from "../../lib/worksheets/worksheet-level-display.js";
 import { WORKSHEET_UI_HE } from "../../lib/worksheets/worksheet-ui.he.js";
 import { WRITING_CATEGORY_LABELS_HE } from "../../lib/writing/writing-constants.js";
@@ -122,6 +124,9 @@ export default function ReadyWorksheetsTab({
   const handleCardActivate = (item) => {
     if (enableLockedModal && item.locked === true) {
       setLockedItem(item);
+      return;
+    }
+    if (item.worksheetType === "questions") {
       return;
     }
     onViewPrint(String(item.slug));
@@ -296,12 +301,13 @@ export default function ReadyWorksheetsTab({
           <div className="worksheet-ready-grid">
             {pageItems.map((item) => {
               const isWriting = item.worksheetType === "writing";
+              const isQuestion = item.worksheetType === "questions";
               const isLocked = item.locked === true;
-              return (
-                <article
-                  key={String(item.slug)}
-                  className={`worksheet-ready-card${isLocked ? " is-locked" : ""}`}
-                >
+              const cardHref =
+                isQuestion && !isLocked ? readyWorksheetPublicPath(String(item.slug)) : null;
+
+              const cardBody = (
+                <>
                   <div>
                     <div className="worksheet-ready-card-top">
                       {isWriting ? (
@@ -341,23 +347,48 @@ export default function ReadyWorksheetsTab({
                     )}
                   </div>
 
-                  <button
-                    type="button"
-                    disabled={busySlug === item.slug}
-                    onClick={() => handleCardActivate(item)}
-                    className={T.cardReportBtn}
-                    aria-label={
-                      isLocked
-                        ? `${item.titleHe || item.topicHe} — ${WORKSHEET_UI_HE.writingLockedTitle}`
-                        : undefined
-                    }
+                  {cardHref ? (
+                    <span className={T.cardReportBtn}>{WORKSHEET_UI_HE.viewAndPrint}</span>
+                  ) : (
+                    <button
+                      type="button"
+                      disabled={busySlug === item.slug}
+                      onClick={() => handleCardActivate(item)}
+                      className={T.cardReportBtn}
+                      aria-label={
+                        isLocked
+                          ? `${item.titleHe || item.topicHe} — ${WORKSHEET_UI_HE.writingLockedTitle}`
+                          : undefined
+                      }
+                    >
+                      {busySlug === item.slug
+                        ? WORKSHEET_UI_HE.loading
+                        : isLocked
+                          ? WORKSHEET_UI_HE.writingLockedTitle
+                          : WORKSHEET_UI_HE.viewAndPrint}
+                    </button>
+                  )}
+                </>
+              );
+
+              if (cardHref) {
+                return (
+                  <Link
+                    key={String(item.slug)}
+                    href={cardHref}
+                    className={`worksheet-ready-card worksheet-ready-card-link${isLocked ? " is-locked" : ""}`}
                   >
-                    {busySlug === item.slug
-                      ? WORKSHEET_UI_HE.loading
-                      : isLocked
-                        ? WORKSHEET_UI_HE.writingLockedTitle
-                        : WORKSHEET_UI_HE.viewAndPrint}
-                  </button>
+                    {cardBody}
+                  </Link>
+                );
+              }
+
+              return (
+                <article
+                  key={String(item.slug)}
+                  className={`worksheet-ready-card${isLocked ? " is-locked" : ""}`}
+                >
+                  {cardBody}
                 </article>
               );
             })}

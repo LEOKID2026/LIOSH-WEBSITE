@@ -29,11 +29,11 @@ export default function StudentBookIndex({ batches, subject, grade, bookMeta }) 
 }
 
 export async function getStaticPaths() {
-  const { LEARNING_BOOK_META_LIST } = await import(
-    "../../../../../../lib/learning-book/learning-book-catalog-meta.js"
+  const { getDynamicRouteBooks } = await import(
+    "../../../../../../lib/learning-book/learning-book-catalog.js"
   );
-  const paths = LEARNING_BOOK_META_LIST.filter((b) => b.status === "authored").map((b) => ({
-    params: { subject: b.subject, grade: b.grade },
+  const paths = getDynamicRouteBooks().map((book) => ({
+    params: { subject: book.subject, grade: book.grade },
   }));
   return { paths, fallback: false };
 }

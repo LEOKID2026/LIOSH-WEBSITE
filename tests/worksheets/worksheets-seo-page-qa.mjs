@@ -26,7 +26,7 @@ describe("worksheets-seo-page-qa", () => {
     assert.ok(content.ready.h2.length > 5);
   });
 
-  test("SEO entry and sitemap include /practice/worksheets only", () => {
+  test("SEO entry and sitemap include /practice/worksheets and ready worksheet pages", () => {
     const seo = getPublicPageSeo("practice-worksheets");
     assert.equal(seo.canonicalPath, "/practice/worksheets");
     assert.equal(
@@ -38,9 +38,14 @@ describe("worksheets-seo-page-qa", () => {
       "צרו דפי עבודה לילדים לפי כיתה ומקצוע, בחרו מתוך 35 דפים מוכנים, פתחו דפי תשובות ושלבו תרגול במתמטיקה, גאומטריה, עברית ואנגלית."
     );
     assert.ok(SEO_PUBLIC_PATHS.includes("/practice/worksheets"));
+    assert.ok(SEO_PUBLIC_PATHS.includes("/practice/worksheets/math-g1-addition-horizontal-regular"));
 
     const sitemap = readFileSync(join(ROOT, "public/sitemap.xml"), "utf8");
     assert.match(sitemap, /\/practice\/worksheets<\/loc>/);
+    assert.match(
+      sitemap,
+      /\/practice\/worksheets\/math-g1-addition-horizontal-regular<\/loc>/
+    );
     assert.doesNotMatch(sitemap, /\/practice\/worksheets\/preview/);
   });
 

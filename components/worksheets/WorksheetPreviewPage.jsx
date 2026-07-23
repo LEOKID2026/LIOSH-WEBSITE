@@ -52,6 +52,9 @@ export default function WorksheetPreviewPage({
     document.body.classList.add("worksheet-print-mode");
     if (isWritingWorksheetPayload(worksheetPayload)) {
       document.body.classList.add("worksheet-writing-print-mode");
+      const orientation =
+        worksheetPayload.pages?.[0]?.orientation === "landscape" ? "landscape" : "portrait";
+      document.body.classList.add(`worksheet-writing-print-orientation-${orientation}`);
     }
     if (isColoringWorksheetPayload(worksheetPayload)) {
       document.body.classList.add("worksheet-coloring-print-mode");
@@ -59,6 +62,8 @@ export default function WorksheetPreviewPage({
     return () => {
       document.body.classList.remove("worksheet-print-mode");
       document.body.classList.remove("worksheet-writing-print-mode");
+      document.body.classList.remove("worksheet-writing-print-orientation-portrait");
+      document.body.classList.remove("worksheet-writing-print-orientation-landscape");
       document.body.classList.remove("worksheet-coloring-print-mode");
     };
   }, [worksheetPayload]);

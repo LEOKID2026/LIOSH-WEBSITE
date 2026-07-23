@@ -25,6 +25,7 @@ import ColoringPreviewModal from "../coloring/ColoringPreviewModal.jsx";
 import WorksheetPreviewModal from "./WorksheetPreviewModal.jsx";
 import RecommendationsTab from "./RecommendationsTab.jsx";
 import { WORKSHEET_UI_HE } from "../../lib/worksheets/worksheet-ui.he.js";
+import { writingErrorLabelHe } from "../../lib/writing/writing-error-labels.he.js";
 import { defaultWorksheetTopicForGrade } from "../../lib/worksheets/worksheet-topic-options.js";
 import { listMathPracticeFormatsForGradeTopic } from "../../lib/worksheets/worksheet-math-practice-format.js";
 import {
@@ -494,7 +495,9 @@ export default function ParentWorksheetsHub({ session, students, T }) {
       });
       const data = await res.json();
       if (!res.ok || !data.ok) {
-        setWritingCreateError(data.message || data.error || WORKSHEET_UI_HE.errorGeneric);
+        setWritingCreateError(
+          data.message || writingErrorLabelHe(data.error) || WORKSHEET_UI_HE.errorGeneric
+        );
         return;
       }
       openWorksheetPreviewModal(data.worksheetPayload, data.generation, false, "create");

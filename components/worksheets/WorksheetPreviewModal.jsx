@@ -55,12 +55,17 @@ export default function WorksheetPreviewModal({
     document.body.classList.add("worksheet-print-mode");
     if (isWriting) {
       document.body.classList.add("worksheet-writing-print-mode");
+      const orientation =
+        worksheetPayload.pages?.[0]?.orientation === "landscape" ? "landscape" : "portrait";
+      document.body.classList.add(`worksheet-writing-print-orientation-${orientation}`);
     }
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.body.classList.remove("worksheet-print-mode");
       document.body.classList.remove("worksheet-writing-print-mode");
+      document.body.classList.remove("worksheet-writing-print-orientation-portrait");
+      document.body.classList.remove("worksheet-writing-print-orientation-landscape");
       document.body.style.overflow = prevOverflow;
     };
   }, [worksheetPayload, isWriting]);

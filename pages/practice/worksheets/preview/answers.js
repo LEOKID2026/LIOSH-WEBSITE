@@ -16,6 +16,12 @@ import { WORKSHEET_UI_HE } from "../../../../lib/worksheets/worksheet-ui.he.js";
 const PREVIEW_HREF = "/practice/worksheets/preview";
 const BACK_HREF = "/practice/worksheets";
 
+const ANSWERS_SEO = {
+  title: "דף תשובות · LEO KIDS",
+  description: "דף תשובות לדף עבודה.",
+  canonicalPath: "/practice/worksheets/preview/answers",
+};
+
 export default function PublicWorksheetAnswerKeyRoute() {
   const router = useRouter();
   const { theme } = useStudentTheme();
@@ -61,83 +67,55 @@ export default function PublicWorksheetAnswerKeyRoute() {
     if (typeof window !== "undefined") window.print();
   }, []);
 
+  let body;
+
   if (!sessionChecked) {
-    return (
+    body = (
       <Layout {...layoutProps}>
         <div dir="rtl" className="p-4 text-center text-slate-500">
           {WORKSHEET_UI_HE.loading}
         </div>
       </Layout>
     );
-  }
-
-  if (lostSession) {
-    return (
-      <>
-        <PageSeo
-          title="דף תשובות · LEO KIDS"
-          description="דף תשובות לדף עבודה."
-          canonicalPath="/practice/worksheets/preview/answers"
-          noindex
-        />
-        <Layout {...layoutProps}>
-          <div dir="rtl" className="mx-auto max-w-lg px-4 py-10 text-center">
-            <p className="mb-6 text-base text-slate-700">{WORKSHEET_UI_HE.publicPreviewLost}</p>
-            <Link
-              href={BACK_HREF}
-              className="inline-flex rounded-lg bg-slate-800 px-5 py-2.5 text-sm font-semibold text-white"
-            >
-              {WORKSHEET_UI_HE.publicPreviewLostCta}
-            </Link>
-          </div>
-        </Layout>
-      </>
+  } else if (lostSession) {
+    body = (
+      <Layout {...layoutProps}>
+        <div dir="rtl" className="mx-auto max-w-lg px-4 py-10 text-center">
+          <p className="mb-6 text-base text-slate-700">{WORKSHEET_UI_HE.publicPreviewLost}</p>
+          <Link
+            href={BACK_HREF}
+            className="inline-flex rounded-lg bg-slate-800 px-5 py-2.5 text-sm font-semibold text-white"
+          >
+            {WORKSHEET_UI_HE.publicPreviewLostCta}
+          </Link>
+        </div>
+      </Layout>
     );
-  }
-
-  if (staleMessage) {
-    return (
-      <>
-        <PageSeo
-          title="דף תשובות · LEO KIDS"
-          description="דף תשובות לדף עבודה."
-          canonicalPath="/practice/worksheets/preview/answers"
-          noindex
-        />
-        <Layout {...layoutProps}>
-          <div dir="rtl" className="mx-auto max-w-lg px-4 py-10 text-center">
-            <p className="mb-6 text-base text-slate-700">{staleMessage}</p>
-            <button
-              type="button"
-              className="rounded-lg bg-slate-800 px-5 py-2.5 text-sm font-semibold text-white"
-              onClick={() => router.push(PREVIEW_HREF)}
-            >
-              {WORKSHEET_UI_HE.back}
-            </button>
-          </div>
-        </Layout>
-      </>
+  } else if (staleMessage) {
+    body = (
+      <Layout {...layoutProps}>
+        <div dir="rtl" className="mx-auto max-w-lg px-4 py-10 text-center">
+          <p className="mb-6 text-base text-slate-700">{staleMessage}</p>
+          <button
+            type="button"
+            className="rounded-lg bg-slate-800 px-5 py-2.5 text-sm font-semibold text-white"
+            onClick={() => router.push(PREVIEW_HREF)}
+          >
+            {WORKSHEET_UI_HE.back}
+          </button>
+        </div>
+      </Layout>
     );
-  }
-
-  if (!answerKeyPayload) {
-    return (
+  } else if (!answerKeyPayload) {
+    body = (
       <Layout {...layoutProps}>
         <div dir="rtl" className="p-4 text-center text-slate-500">
           {WORKSHEET_UI_HE.loading}
         </div>
       </Layout>
     );
-  }
-
-  return (
-    <>
-      <PageSeo
-        title="דף תשובות · LEO KIDS"
-        description="דף תשובות לדף עבודה."
-        canonicalPath="/practice/worksheets/preview/answers"
-        noindex
-      />
+  } else {
+    body = (
       <Layout {...layoutProps}>
         <div className="worksheet-preview-container px-4 py-4 md:px-6 md:py-6">
           <WorksheetAnswerKeyPage
@@ -147,6 +125,13 @@ export default function PublicWorksheetAnswerKeyRoute() {
           />
         </div>
       </Layout>
+    );
+  }
+
+  return (
+    <>
+      <PageSeo {...ANSWERS_SEO} noindex />
+      {body}
     </>
   );
 }

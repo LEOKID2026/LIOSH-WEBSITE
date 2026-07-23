@@ -14,14 +14,17 @@ import { WORKSHEET_UI_HE } from "../../lib/worksheets/worksheet-ui.he.js";
  *     levelHe: string,
  *   },
  *   variant?: "worksheet" | "answer-key",
+ *   titleTag?: "h1" | "h2" | "h3" | "p",
  * }} props
  */
 export default function WorksheetScreenHeader({
   titleHe = WORKSHEET_UI_HE.documentTitle,
   meta,
   variant = "worksheet",
+  titleTag = "h1",
 }) {
   const showFields = variant === "worksheet";
+  const TitleTag = titleTag;
 
   return (
     <header className="worksheet-screen-info-card">
@@ -35,7 +38,7 @@ export default function WorksheetScreenHeader({
           className="worksheet-screen-brand-logo"
         />
       </div>
-      <h1 className="worksheet-screen-title">{titleHe}</h1>
+      <TitleTag className="worksheet-screen-title">{titleHe}</TitleTag>
       <p className="worksheet-screen-meta">
         {meta.subjectHe} · {meta.gradeHe} · {meta.topicHe} · {meta.levelHe}
       </p>

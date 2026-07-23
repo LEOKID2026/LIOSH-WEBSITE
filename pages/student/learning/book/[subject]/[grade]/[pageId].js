@@ -49,11 +49,11 @@ export default function StudentBookPage({
 }
 
 export async function getStaticPaths() {
-  const { LEARNING_BOOK_CATALOG_LIST } = await import(
+  const { getDynamicRouteBooks } = await import(
     "../../../../../../lib/learning-book/learning-book-catalog.js"
   );
   const paths = [];
-  for (const book of LEARNING_BOOK_CATALOG_LIST.filter((b) => b.status === "authored")) {
+  for (const book of getDynamicRouteBooks()) {
     for (const pageId of book.registry.pageOrder) {
       paths.push({ params: { subject: book.subject, grade: book.grade, pageId } });
     }

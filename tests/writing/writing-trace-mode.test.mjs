@@ -108,7 +108,7 @@ assert.equal(readyTrace[0].traceRenderMode, "full_trace");
 const mixed = generateWritingForParent({
   worksheetType: "writing",
   writingCategory: "hebrew_letters",
-  characters: ["א"],
+  characters: ["א", "ב"],
   scriptStyle: "print",
   tracingMode: "trace_and_copy",
   traceRenderMode: "full_trace",

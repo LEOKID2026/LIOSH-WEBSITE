@@ -24,6 +24,29 @@
   margin-inline: auto;
 }
 
+/* A4 screen preview — portrait vs landscape */
+.writing-screen-preview[data-page-orientation="portrait"] .writing-screen-page {
+  max-width: min(100%, 210mm);
+  width: 100%;
+  aspect-ratio: 210 / 297;
+  box-sizing: border-box;
+}
+
+.writing-screen-preview[data-page-orientation="landscape"] .writing-screen-page {
+  max-width: min(100%, 297mm);
+  width: 100%;
+  aspect-ratio: 297 / 210;
+  box-sizing: border-box;
+}
+
+.writing-print-document[data-page-orientation="portrait"] .writing-print-page {
+  max-width: 210mm;
+}
+
+.writing-print-document[data-page-orientation="landscape"] .writing-print-page {
+  max-width: 297mm;
+}
+
 .writing-page-fields {
   display: flex;
   flex-wrap: wrap;
@@ -67,7 +90,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem 0.85rem;
-  align-items: flex-end;
+  align-items: center;
   margin-bottom: 0.75rem;
   min-height: 2rem;
   border-bottom: 1px dashed #cbd5e1;
@@ -76,10 +99,11 @@
 
 .writing-item {
   display: inline-flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
   min-width: 2.5rem;
   min-height: 2.75rem;
+  line-height: 0;
 }
 
 .writing-glyph {
@@ -89,6 +113,15 @@
 
 .writing-item--faint .writing-glyph {
   color: #94a3b8;
+}
+
+.writing-item--faint .writing-trace-inline svg path,
+.writing-item--faint .writing-trace-inline svg circle {
+  stroke: #94a3b8;
+}
+
+.writing-item--faint .writing-trace-inline svg circle {
+  fill: #94a3b8;
 }
 
 .writing-item--outline .writing-glyph,
@@ -101,23 +134,77 @@
 .writing-item--stroke-path .writing-glyph-svg,
 .writing-item--full-trace .writing-glyph-svg,
 .writing-glyph-svg--trace,
-.writing-trace-inline svg {
-  width: 2.1rem;
-  height: 2.1rem;
+.writing-glyph-frame {
+  width: var(--writing-glyph-size, 2.1rem);
+  height: var(--writing-glyph-size, 2.1rem);
+  max-width: none;
+  max-height: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  line-height: 0;
+  overflow: visible;
+  direction: ltr;
+  unicode-bidi: isolate;
+  transform: none;
+}
+
+.writing-glyph-frame .writing-trace-inline,
+.writing-glyph-frame .writing-trace-inline svg {
+  display: block;
+  width: 100%;
+  height: 100%;
   max-width: none;
   max-height: none;
   object-fit: contain;
-  display: block;
+  vertical-align: unset;
+  transform: none;
 }
 
-.writing-item--full-trace .writing-glyph-svg--trace {
-  width: 2.1rem;
-  height: 2.1rem;
+/* full_trace + hebrew faint_model (stroke-path) — normalize visible glyph size (writing-glyph-visual-scale.js) */
+.writing-item--full-trace .writing-glyph-frame[data-trace-render-mode="full_trace"] .writing-trace-inline,
+.writing-item--faint .writing-glyph-frame[data-trace-render-mode="faint_model"] .writing-trace-inline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.writing-item--full-trace .writing-glyph-frame[data-trace-render-mode="full_trace"] .writing-trace-inline svg,
+.writing-item--faint .writing-glyph-frame[data-trace-render-mode="faint_model"] .writing-trace-inline svg {
+  flex-shrink: 0;
+  transform: scale(var(--writing-glyph-visual-scale, 1));
+  transform-origin: center center;
+}
+
+.writing-item--full-trace,
+.writing-item--faint {
+  overflow: visible;
+}
+
+.writing-block--practice .writing-practice-row {
+  overflow: visible;
+  align-items: center;
+}
+
+.writing-item--ltr-glyph,
+.writing-item--ltr-glyph .writing-glyph-frame {
+  direction: ltr;
+  unicode-bidi: isolate;
+  transform: none;
+}
+
+.writing-item--full-trace .writing-glyph-svg--trace,
+.writing-item--full-trace .writing-glyph-frame {
+  width: var(--writing-glyph-size, 2.1rem);
+  height: var(--writing-glyph-size, 2.1rem);
 }
 
 .writing-item--copy .writing-glyph,
 .writing-item--faint .writing-glyph {
-  font-size: 2.1rem;
+  font-size: var(--writing-glyph-size, 2.1rem);
   line-height: 1;
 }
 
@@ -343,7 +430,14 @@
     height: auto !important;
     min-height: 0 !important;
     max-height: none !important;
-    page: auto !important;
+  }
+
+  body.worksheet-writing-print-mode.worksheet-writing-print-orientation-portrait .writing-print-document {
+    page: writing-portrait;
+  }
+
+  body.worksheet-writing-print-mode.worksheet-writing-print-orientation-landscape .writing-print-document {
+    page: writing-landscape;
   }
 
   body.worksheet-writing-print-mode .writing-print-page:first-child {
@@ -369,14 +463,14 @@
 
   body.worksheet-writing-print-mode .writing-glyph-svg--trace,
   body.worksheet-writing-print-mode .writing-item--full-trace .writing-glyph-svg,
-  body.worksheet-writing-print-mode .writing-trace-inline svg {
-    width: 9mm !important;
-    height: 9mm !important;
+  body.worksheet-writing-print-mode .writing-glyph-frame {
+    width: var(--writing-glyph-size-print, 9mm) !important;
+    height: var(--writing-glyph-size-print, 9mm) !important;
   }
 
   body.worksheet-writing-print-mode .writing-item--copy .writing-glyph,
   body.worksheet-writing-print-mode .writing-item--faint .writing-glyph {
-    font-size: 26pt;
+    font-size: var(--writing-glyph-size-print, 9mm);
     line-height: 1;
   }
 
@@ -385,8 +479,27 @@
     max-height: 12mm;
   }
 
+  body.worksheet-writing-print-mode .writing-glyph-frame .writing-trace-inline svg {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  body.worksheet-writing-print-mode
+    .writing-item--full-trace
+    .writing-glyph-frame[data-trace-render-mode="full_trace"]
+    .writing-trace-inline
+    svg,
+  body.worksheet-writing-print-mode
+    .writing-item--faint
+    .writing-glyph-frame[data-trace-render-mode="faint_model"]
+    .writing-trace-inline
+    svg {
+    transform: scale(var(--writing-glyph-visual-scale, 1)) !important;
+    transform-origin: center center !important;
+  }
+
   body.worksheet-writing-print-mode .writing-glyph {
-    font-size: 24pt;
+    font-size: var(--writing-glyph-size-print, 9mm);
   }
 
   body.worksheet-writing-print-mode .writing-item--faint .writing-glyph {
@@ -434,7 +547,8 @@
   padding-bottom: 0.2rem;
 }
 
-.writing-block[data-line-template="reference_sheet"] .writing-item--full-trace .writing-glyph-svg--trace {
+.writing-block[data-line-template="reference_sheet"] .writing-item--full-trace .writing-glyph-svg--trace,
+.writing-block[data-line-template="reference_sheet"] .writing-item--full-trace .writing-glyph-frame {
   width: 1.85rem;
   height: 1.85rem;
 }
@@ -447,15 +561,16 @@
   }
 
   body.worksheet-writing-print-mode .writing-block[data-line-template="reference_sheet"] .writing-item--full-trace .writing-glyph-svg--trace,
-  body.worksheet-writing-print-mode .writing-block[data-line-template="reference_sheet"] .writing-glyph-svg--trace {
+  body.worksheet-writing-print-mode .writing-block[data-line-template="reference_sheet"] .writing-glyph-svg--trace,
+  body.worksheet-writing-print-mode .writing-block[data-line-template="reference_sheet"] .writing-glyph-frame {
     width: 8mm !important;
     height: 8mm !important;
   }
 }
 
 /*
- * Hebrew trace scale (he-print / he-script only).
- * Cell size stays identical to English/digits; SVG ink is scaled and centered.
+ * Hebrew trace assets — placement is baked into SVG at build time.
+ * Keep cell wrapper only; no extra CSS scale.
  */
 .writing-item--hebrew-print.writing-item--full-trace,
 .writing-item--hebrew-script.writing-item--full-trace {
@@ -464,30 +579,124 @@
   justify-content: center;
 }
 
-.writing-item--hebrew-print.writing-item--full-trace .writing-trace-inline,
-.writing-item--hebrew-script.writing-item--full-trace .writing-trace-inline {
-  display: inline-flex;
-  align-items: center;
+/* Single letter hero — one large glyph per practice row */
+.writing-block[data-line-template="single_letter_hero"] .writing-practice-row {
   justify-content: center;
-  overflow: visible;
+  min-height: 3.25rem;
+  margin-bottom: 0.65rem;
 }
 
-.writing-item--hebrew-print.writing-item--full-trace .writing-trace-inline svg {
-  transform: scale(1.52);
-  transform-origin: center center;
+.writing-block[data-line-template="single_letter_hero"] .writing-item--full-trace .writing-glyph-frame,
+.writing-block[data-line-template="single_letter_hero"] .writing-item--faint .writing-glyph-frame,
+.writing-block[data-line-template="single_letter_hero"] .writing-glyph-frame {
+  width: 3.25rem;
+  height: 3.25rem;
 }
 
-.writing-item--hebrew-script.writing-item--full-trace .writing-trace-inline svg {
-  transform: scale(1.82);
-  transform-origin: center center;
+.writing-block[data-line-template="single_letter_hero"] .writing-item--copy .writing-glyph,
+.writing-block[data-line-template="single_letter_hero"] .writing-item--faint .writing-glyph {
+  font-size: clamp(2.75rem, 6vw, 3.25rem);
+}
+
+/* Word row — whole word as one unit */
+.writing-block[data-line-template="word_row"] .writing-practice-row {
+  justify-content: flex-start;
+  gap: 0.65rem 1rem;
+}
+
+.writing-block[data-line-template="word_row"] .writing-item--word {
+  min-width: 5rem;
+  flex: 0 1 auto;
+}
+
+.writing-block[data-line-template="word_row"] .writing-glyph--word {
+  font-size: clamp(1.75rem, 4.5vw, 2.35rem);
+  line-height: 1.1;
+}
+
+.writing-block[data-line-template="word_row"] .writing-word-trace-char .writing-glyph-frame {
+  width: 2.35rem;
+  height: 2.35rem;
 }
 
 @media print {
-  body.worksheet-writing-print-mode .writing-item--hebrew-print.writing-item--full-trace .writing-trace-inline svg {
-    transform: scale(1.52);
+  body.worksheet-writing-print-mode .writing-block[data-line-template="single_letter_hero"] .writing-practice-row {
+    min-height: 22mm;
+    margin-bottom: 2mm;
   }
 
-  body.worksheet-writing-print-mode .writing-item--hebrew-script.writing-item--full-trace .writing-trace-inline svg {
-    transform: scale(1.82);
+  body.worksheet-writing-print-mode .writing-block[data-line-template="single_letter_hero"] .writing-glyph-frame,
+  body.worksheet-writing-print-mode .writing-block[data-line-template="single_letter_hero"] .writing-item--full-trace .writing-glyph-frame {
+    width: 17mm !important;
+    height: 17mm !important;
+  }
+
+  body.worksheet-writing-print-mode .writing-block[data-line-template="single_letter_hero"] .writing-item--copy .writing-glyph,
+  body.worksheet-writing-print-mode .writing-block[data-line-template="single_letter_hero"] .writing-item--faint .writing-glyph {
+    font-size: 48pt;
+  }
+
+  body.worksheet-writing-print-mode .writing-block[data-line-template="word_row"] .writing-glyph--word {
+    font-size: 32pt;
+  }
+
+  body.worksheet-writing-print-mode .writing-block[data-line-template="word_row"] .writing-word-trace-char .writing-glyph-frame {
+    width: 12mm !important;
+    height: 12mm !important;
   }
 }
+
+/* Font size — uniform glyph frame for Hebrew, English, and digits (70% / 100% / 135% / 175%) */
+.writing-block[data-font-size="sm"] {
+  --writing-glyph-size: 1.47rem;
+  --writing-glyph-size-print: 6.3mm;
+}
+
+.writing-block[data-font-size="md"] {
+  --writing-glyph-size: 2.1rem;
+  --writing-glyph-size-print: 9mm;
+}
+
+.writing-block[data-font-size="lg"] {
+  --writing-glyph-size: 2.835rem;
+  --writing-glyph-size-print: 12.15mm;
+}
+
+.writing-block[data-font-size="xl"] {
+  --writing-glyph-size: 3.675rem;
+  --writing-glyph-size-print: 15.75mm;
+}
+
+/* Print strength — opacity and stroke weight only (line style unchanged) */
+.writing-block[data-print-strength="light"] .writing-item--full-trace .writing-trace-inline svg path,
+.writing-block[data-print-strength="light"] .writing-item--full-trace .writing-trace-inline svg circle,
+.writing-block[data-print-strength="light"] .writing-item--outline .writing-trace-inline svg path,
+.writing-block[data-print-strength="light"] .writing-item--stroke-path .writing-trace-inline svg path,
+.writing-block[data-print-strength="light"] .writing-item--faint .writing-trace-inline svg path,
+.writing-block[data-print-strength="light"] .writing-item--faint .writing-trace-inline svg circle {
+  opacity: 0.48;
+  stroke-width: 1.15;
+}
+
+.writing-block[data-print-strength="light"] .writing-item--faint .writing-glyph,
+.writing-block[data-print-strength="light"] .writing-item--copy .writing-glyph {
+  color: #94a3b8;
+  opacity: 0.55;
+}
+
+.writing-block[data-print-strength="strong"] .writing-item--full-trace .writing-trace-inline svg path,
+.writing-block[data-print-strength="strong"] .writing-item--full-trace .writing-trace-inline svg circle,
+.writing-block[data-print-strength="strong"] .writing-item--outline .writing-trace-inline svg path,
+.writing-block[data-print-strength="strong"] .writing-item--stroke-path .writing-trace-inline svg path,
+.writing-block[data-print-strength="strong"] .writing-item--faint .writing-trace-inline svg path,
+.writing-block[data-print-strength="strong"] .writing-item--faint .writing-trace-inline svg circle {
+  opacity: 1;
+  stroke-width: 2.35;
+}
+
+.writing-block[data-print-strength="strong"] .writing-item--faint .writing-glyph,
+.writing-block[data-print-strength="strong"] .writing-item--copy .writing-glyph {
+  color: #334155;
+  opacity: 1;
+}
+
