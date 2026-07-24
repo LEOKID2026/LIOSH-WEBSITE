@@ -51,6 +51,7 @@ test("P4 parent report maps ADC V2 once and renders only parent-safe translation
   );
   const renderable = source("pages/learning/parent-report-detailed.renderable.jsx");
   const shortReport = source("pages/learning/parent-report.js");
+  const detailedBuilder = source("utils/detailed-parent-report.js");
   const translations = source(
     "utils/action-decision-contract/parent-action-decision-translations-he.js",
   );
@@ -60,6 +61,11 @@ test("P4 parent report maps ADC V2 once and renders only parent-safe translation
   assert.doesNotMatch(renderable, /actionDecisionContract\.(reasonCodes|intensity)/);
   assert.doesNotMatch(translations, /confidence/);
   assert.doesNotMatch(translations, /taxonomyId/);
+  assert.match(detailedBuilder, /legacyRecommendedActionFromContractV2/);
+  assert.doesNotMatch(
+    detailedBuilder,
+    /action\s*===\s*["']advance_cautiously["']/,
+  );
 });
 
 test("P4 migrated LPD rollups do not fall back to legacy recommendation authority", () => {
@@ -77,17 +83,36 @@ test("P4 migrated LPD rollups do not fall back to legacy recommendation authorit
   assert.doesNotMatch(copy, /contract\.recommendedAction/);
 });
 
-test("P4 maintain RI0 remains a neutral ADC V2 display mirror", () => {
+test("P4 all ADC V2 actions use one authoritative legacy display mapper", () => {
+  const expectedLegacyStep = {
+    collect_more_evidence: "maintain_current_path",
+    give_probe_questions: "maintain_current_path",
+    practice_more: "remediate_same_level",
+    targeted_practice: "remediate_same_level",
+    strengthen_prerequisite: "review_prerequisite",
+    remove_timer: "maintain_current_path",
+    reduce_reading_load: "maintain_current_path",
+    guided_to_independent_transition: "maintain_current_path",
+    maintain: "maintain_current_path",
+    monitor_before_escalation: "maintain_current_path",
+    advance_cautiously: "advance_level",
+  };
+  for (const [action, expectedStep] of Object.entries(expectedLegacyStep)) {
+    assert.equal(
+      legacyRecommendedActionFromContractV2({
+        version: "2.0.0",
+        action,
+      }),
+      expectedStep,
+      action,
+    );
+  }
+
   const actionDecisionContract = {
     version: "2.0.0",
     action: "maintain",
     intensity: "RI0",
   };
-  assert.equal(
-    legacyRecommendedActionFromContractV2(actionDecisionContract),
-    "maintain_current_path",
-  );
-
   const record = buildTopicRecommendationRecord(
     "math",
     "addition",

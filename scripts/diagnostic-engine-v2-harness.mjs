@@ -75,7 +75,11 @@ const MATRIX = [
     rowKey: "addition\u0001learning\u0001g4\u0001medium",
     row: row({ displayName: "חיבור", questions: 4, correct: 3, wrong: 1, accuracy: 75 }),
     mistakes: wrongEvents({ subject: "math", bucketKey: "addition", count: 1 }),
-    assertCase: (u) => assert.equal(u.outputGating.cannotConcludeYet, false),
+    assertCase: (u) => {
+      assert.equal(u.outputGating.cannotConcludeYet, true);
+      assert.equal(u.outputGating.interventionAllowed, false);
+      assert.equal(u.outputGating.contractsV1.decision.cannotConcludeYet, true);
+    },
   },
   {
     id: "geometry_contradictory",
@@ -215,10 +219,11 @@ const MATRIX = [
       level: "easy",
     }),
     assertCase: (u) => {
-      assert.equal(u.outputGating.positiveConclusionAllowed, true);
-      assert.equal(u.outputGating.cannotConcludeYet, false);
+      assert.equal(u.outputGating.positiveConclusionAllowed, false);
+      assert.equal(u.outputGating.cannotConcludeYet, true);
       assert.equal(u.outputGating.positiveAuthorityLevel, "very_good");
-      assert.equal(u.outputGating.additiveCautionAllowed, true);
+      assert.equal(u.outputGating.additiveCautionAllowed, false);
+      assert.ok(u.outputGating.positiveAuthorityReasonCodes.includes("weak_evidence"));
     },
   },
   {
@@ -242,10 +247,11 @@ const MATRIX = [
       level: "easy",
     }),
     assertCase: (u) => {
-      assert.equal(u.outputGating.positiveConclusionAllowed, true);
-      assert.equal(u.outputGating.cannotConcludeYet, false);
+      assert.equal(u.outputGating.positiveConclusionAllowed, false);
+      assert.equal(u.outputGating.cannotConcludeYet, true);
       assert.equal(u.outputGating.positiveAuthorityLevel, "excellent");
       assert.equal(u.outputGating.additiveCautionAllowed, false);
+      assert.ok(u.outputGating.positiveAuthorityReasonCodes.includes("weak_evidence"));
     },
   },
   {
@@ -292,10 +298,12 @@ const MATRIX = [
       level: "easy",
     }),
     assertCase: (u) => {
-      assert.equal(u.outputGating.positiveConclusionAllowed, true);
-      assert.equal(u.outputGating.cannotConcludeYet, false);
+      assert.equal(u.outputGating.positiveConclusionAllowed, false);
+      assert.equal(u.outputGating.cannotConcludeYet, true);
       assert.equal(u.outputGating.positiveAuthorityLevel, "very_good");
-      assert.equal(u.outputGating.additiveCautionAllowed, true);
+      assert.equal(u.outputGating.additiveCautionAllowed, false);
+      assert.equal(u.recurrence.full, false);
+      assert.ok(u.outputGating.positiveAuthorityReasonCodes.includes("weak_evidence"));
     },
   },
   {

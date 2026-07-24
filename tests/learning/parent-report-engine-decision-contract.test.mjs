@@ -91,7 +91,9 @@ function rowFromMetrics(q, c, w, acc) {
     },
   });
   assert.equal(contract.engineDecision, "clear_topic_gap");
-  assert.equal(contract.recommendedAction, "watch");
+  assert.equal(contract.actionDecisionContract.action, "give_probe_questions");
+  assert.equal(contract.actionDecisionContract.intensity, "RI0");
+  assert.equal(contract.recommendedAction, "maintain_current_path");
   assert.equal(contract.actionAuthority.source, "canonicalState");
   assert.equal(contract.actionAuthority.recommendationAllowed, false);
   assert.match(contract.parentSafeFinding, /קושי ברור|הרבה טעויות/);

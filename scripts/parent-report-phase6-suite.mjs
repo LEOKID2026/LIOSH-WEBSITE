@@ -2935,7 +2935,9 @@ function runPhase8InterventionPriorityAndCalibration() {
     },
   };
   const sparseTr = buildTopicRecommendationFromV2UnitForPhaseTests(sparseUnit, sparseBase, "math");
-  assert.equal(sparseTr.recommendedNextStep, "maintain_and_strengthen");
+  assert.equal(sparseTr.actionDecisionContract.action, "none");
+  assert.equal(sparseTr.actionDecisionContract.intensity, "RI0");
+  assert.equal(sparseTr.recommendedNextStep, "none");
   assert.equal(sparseTr.thinEvidenceDowngraded, true);
 
   const calSparse = buildPracticeCalibration({

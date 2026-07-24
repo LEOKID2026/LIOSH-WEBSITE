@@ -1,3 +1,5 @@
+import { legacyRecommendedActionFromContractV2 } from "../action-decision-contract/action-decision-contract-v2.js";
+
 /**
  * Dev-time guard: recommendation intensity must match decision.step map.
  * @param {object|null|undefined} contract
@@ -5,6 +7,22 @@
  */
 export function assertContractMatchesStep(contract, step) {
   if (!contract) return;
+
+  if (contract.version === "2.0.0") {
+    const expectedStep = legacyRecommendedActionFromContractV2(contract);
+    if (step !== expectedStep) {
+      throw new Error(
+        "ADC V2 action mismatch with legacy step: " +
+          String(contract.action || "none") +
+          " -> " +
+          step +
+          " (expected " +
+          expectedStep +
+          ")"
+      );
+    }
+    return;
+  }
 
   const map = {
     maintain_current_path: "RI0",

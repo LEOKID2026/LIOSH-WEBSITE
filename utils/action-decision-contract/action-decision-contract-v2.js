@@ -192,19 +192,25 @@ export function isInterventionActionV2(action) {
 export function legacyRecommendedActionFromContractV2(contract) {
   const action = String(contract?.action || "none");
   if (action === "none") return "none";
-  if (["collect_more_evidence", "give_probe_questions", "monitor_before_escalation"].includes(action)) {
-    return "watch";
-  }
-  if (action === "maintain") {
+  if (
+    [
+      "collect_more_evidence",
+      "give_probe_questions",
+      "maintain",
+      "monitor_before_escalation",
+      "remove_timer",
+      "reduce_reading_load",
+      "guided_to_independent_transition",
+    ].includes(action)
+  ) {
     return "maintain_current_path";
   }
-  if (action === "advance_cautiously") {
-    return "maintain_and_strengthen";
-  }
-  if (contract?.eligible === true && isInterventionActionV2(action)) {
+  if (["practice_more", "targeted_practice"].includes(action)) {
     return "remediate_same_level";
   }
-  return "watch";
+  if (action === "strengthen_prerequisite") return "review_prerequisite";
+  if (action === "advance_cautiously") return "advance_level";
+  return "maintain_current_path";
 }
 
 /**

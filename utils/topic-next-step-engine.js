@@ -83,7 +83,7 @@ import {
 } from "./contracts/parent-report-contracts-v1.js";
 import { legacyRecommendedActionFromContractV2 } from "./action-decision-contract/action-decision-contract-v2.js";
 
-/** @typedef {'advance_level'|'advance_grade_topic_only'|'maintain_current_path'|'watch'|'maintain_and_strengthen'|'maintain_regular_strengthen_medium'|'remediate_same_level'|'drop_one_level_topic_only'|'drop_one_grade_topic_only'|'suggest_return_to_regular'} RecommendedNextStep */
+/** @typedef {'advance_level'|'advance_grade_topic_only'|'maintain_current_path'|'watch'|'maintain_and_strengthen'|'maintain_regular_strengthen_medium'|'remediate_same_level'|'review_prerequisite'|'drop_one_level_topic_only'|'drop_one_grade_topic_only'|'suggest_return_to_regular'} RecommendedNextStep */
 
 export const RECOMMENDED_STEP_LABEL_HE = {
   advance_level: "מעבר לרמת מתקדם - באותו נושא בלבד",
@@ -93,6 +93,7 @@ export const RECOMMENDED_STEP_LABEL_HE = {
   maintain_and_strengthen: "לבסס באותה רמה",
   maintain_regular_strengthen_medium: "לבסס ברמה רגילה",
   remediate_same_level: "חיזוק באותה רמה",
+  review_prerequisite: "חזרה קצרה לידע המקדים",
   suggest_return_to_regular: "חזרה לתרגול רגיל",
   drop_one_level_topic_only: "חיזוק באותה רמה",
   drop_one_grade_topic_only: "הורדת רמת קושי - באותו נושא בלבד",
@@ -257,6 +258,11 @@ function buildHebrewCopy(step, ctx, cfg) {
       parentHe:
         "כדאי להמשיך על אותה רמת קושי ולהתמקד בהבנת הטעויות: לתרגל ביחד עם הילד, ואחרי תשובה שגויה לעצור ולברר ביחד איפה זה הסתבך. עדיף לא לעלות רמה לפני שיש תחושה של התקדמות ועקביות.",
       studentHe: `נחזק קודם את הבסיס בנושא ${displayName} באותה רמה - ואז נתקדם.`,
+    },
+    review_prerequisite: {
+      reasonHe: `בנושא ${displayName} מומלצת חזרה קצרה ומוגבלת על הבסיס הרלוונטי לפני המשך התרגול.`,
+      parentHe: `מומלץ לבצע חזרה קצרה ומוגבלת על הבסיס הרלוונטי ל${displayName}, ולאחר מכן לבדוק מחדש.`,
+      studentHe: `נחזור בקצרה לבסיס הרלוונטי ל${displayName}, ואז נמשיך.`,
     },
     maintain_regular_strengthen_medium: {
       reasonHe: "כדאי לצבור עוד תרגול יציב ברמה רגילה לפני מעבר למתקדם.",
@@ -1504,17 +1510,15 @@ export function buildTopicRecommendationRecord(
 
   const recommendationContractV1Normalized = normalizeRecommendationContract(
     recommendationContractV1Checked,
-    adcLegacyStep || decision.step
+    decision.step
   );
 
-  const recommendedNextStepEffective = legacyDisplayStepAtIntensity(
-    adcLegacyStep || decision.step,
-    String(
-      actionDecisionContractV2?.intensity ||
-      recommendationContractV1Normalized.intensity ||
-      "RI0"
-    )
-  );
+  const recommendedNextStepEffective = actionDecisionContractV2
+    ? adcLegacyStep
+    : legacyDisplayStepAtIntensity(
+        decision.step,
+        String(recommendationContractV1Normalized.intensity || "RI0")
+      );
 
   if (process.env.NODE_ENV !== "production") {
     assertContractMatchesStep(
@@ -1526,6 +1530,7 @@ export function buildTopicRecommendationRecord(
   const recValidationNormalized = validateRecommendationContractV1(recommendationContractV1Normalized);
 
   const authoritativeDisplayCopy =
+    actionDecisionContractV2 ||
     recommendedNextStepEffective === "maintain_current_path" ||
     recommendedNextStepEffective === "watch"
       ? buildHebrewCopy(
@@ -1535,6 +1540,9 @@ export function buildTopicRecommendationRecord(
             questions: q,
             accuracy: Number(row?.accuracy) || 0,
             mistakeEventCount: mC,
+            levelLabel: String(row?.level || normLevelKey(row) || "לא זמין"),
+            gradeLabel: String(row?.grade || normGradeKey(row) || "לא זמין"),
+            wrongRatio: q > 0 ? (Number(row?.wrong) || 0) / q : 0,
           },
           cfg
         )
@@ -1590,6 +1598,7 @@ export function buildTopicRecommendationRecord(
     },
     // Backward compatibility mirror only (temporary).
     recommendationContractV1: recommendationContractV1Normalized,
+    actionDecisionContract: actionDecisionContractV2,
     trend: row?.trend ?? null,
     behaviorProfile: row?.behaviorProfile ?? null,
     recommendedNextStep: recommendedNextStepEffective,

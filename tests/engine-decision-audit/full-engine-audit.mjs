@@ -42,12 +42,7 @@ import {
   ED_NONE,
   ED_MASTERY_STABLE,
   ED_SPEED_PRESSURE_PATTERN,
-  RA_REMEDIATE_SAME_LEVEL,
-  RA_REMEDIATE_STEP_DOWN,
-  RA_WATCH,
-  RA_MAINTAIN_AND_STRENGTHEN,
-  RA_MAINTAIN,
-  RA_INTERVENE,
+  LEGACY_MIRROR_RECOMMENDED_ACTION_CODES,
   DEPRECATED_UNREACHABLE_RECOMMENDED_ACTION_CODES,
   CONTRACT_ONLY_RECOMMENDED_ACTION_CODES,
 } from "../../utils/learning-pattern-decision/engine-decision-codes.js";
@@ -68,6 +63,7 @@ import {
   LEGACY_ACTION_MAPPINGS_V2,
   UNSUPPORTED_LEGACY_ACTIONS_V2,
   buildActionDecisionContractV2,
+  legacyRecommendedActionFromContractV2,
   validateActionDecisionContractV2,
 } from "../../utils/action-decision-contract/action-decision-contract-v2.js";
 
@@ -1361,15 +1357,7 @@ const declaredEngineDecisions = [
   ED_SPEED_PRESSURE_PATTERN,
 ];
 const reachedEngineDecisions = new Set(cases.map((c) => c.edc?.engineDecision).filter(Boolean));
-const declaredRecommendedActions = [
-  RA_REMEDIATE_SAME_LEVEL,
-  RA_REMEDIATE_STEP_DOWN,
-  RA_WATCH,
-  RA_MAINTAIN_AND_STRENGTHEN,
-  RA_MAINTAIN,
-  RA_INTERVENE,
-  "none",
-];
+const declaredRecommendedActions = [...LEGACY_MIRROR_RECOMMENDED_ACTION_CODES];
 const reachedRecommendedActions = new Set(cases.map((c) => c.edc?.recommendedAction).filter(Boolean));
 for (const differential of differentials) {
   if (differential.outputA?.recommendedAction) {
@@ -1387,6 +1375,11 @@ reachedRecommendedActions.add(
     { canonicalPresent: true, recommendationAllowed: true, intensityCap: "RI1" },
   ),
 );
+for (const action of ACTION_CODES_V2) {
+  reachedRecommendedActions.add(
+    legacyRecommendedActionFromContractV2({ action }),
+  );
+}
 
 // V3 action reachability via controlled direct rollups.
 const v3ActionInputs = [

@@ -86,6 +86,7 @@ function build({
   engineDecision = "clear_topic_gap",
   context: unifiedDecisionContext = context(),
   questions = 12,
+  decisionTimestamp = Date.UTC(2026, 3, 10, 12, 0, 0),
 } = {}) {
   return buildActionDecisionContractV2({
     subjectId: "math",
@@ -94,6 +95,7 @@ function build({
     metrics: { questions, accuracy: 45, wrong: 7 },
     canonicalState: canonical(actionState, cap, allowed),
     unifiedDecisionContext,
+    decisionTimestamp,
   });
 }
 

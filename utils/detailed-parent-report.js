@@ -142,11 +142,9 @@ import {
   EDC_DECISION_FIELD,
   ED_CLEAR_TOPIC_GAP,
   ED_TOPIC_NEEDS_STRENGTHENING,
-  RA_REMEDIATE_SAME_LEVEL,
-  RA_WATCH,
-  RA_MAINTAIN_AND_STRENGTHEN,
   SP_SUBJECT_ENGINE_CONTRACT,
 } from "./learning-pattern-decision/engine-decision-codes.js";
+import { legacyRecommendedActionFromContractV2 } from "./action-decision-contract/action-decision-contract-v2.js";
 import { guardParentFacingText } from "./learning-pattern-decision/lpd-parent-facing-copy.js";
 import { resolveTopicRecommendationOwnerCopyHe } from "./learning-pattern-decision/resolve-topic-owner-copy.js";
 
@@ -2207,35 +2205,29 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
       unit: u,
     });
   const actionDecisionContract = topicEngineContract.actionDecisionContract;
-  const finalStep = (() => {
-    const action = String(actionDecisionContract?.action || "");
-    if (action === "advance_cautiously") return "advance_level";
-    if (
-      [
-        "practice_more",
-        "targeted_practice",
-        "strengthen_prerequisite",
-        "remove_timer",
-        "reduce_reading_load",
-        "guided_to_independent_transition",
-      ].includes(action)
-    ) {
-      return RA_REMEDIATE_SAME_LEVEL;
-    }
-    return RA_MAINTAIN_AND_STRENGTHEN;
-  })();
+  const finalStep = actionDecisionContract
+    ? legacyRecommendedActionFromContractV2(actionDecisionContract)
+    : String(
+        u?.recommendedNextStep ||
+        mapRow?.diagnosticRecommendedNextStep ||
+        "maintain_and_strengthen",
+      );
   const gradeRelation = geForIdentity.gradeRelation;
   const parentActionDecision =
     mapRow?.parentActionDecision ||
     u?.parentActionDecision ||
     null;
+  const legacyStepFallbackLabel =
+    finalStep === "remediate_same_level"
+      ? "לחזק לפני שמתקדמים"
+      : finalStep === "review_prerequisite"
+        ? "חזרה קצרה לבסיס הרלוונטי"
+        : finalStep === "advance_level"
+          ? "להתקדם שלב אחד בזהירות"
+          : "להמשיך במסלול הרגיל";
   let finalLabelRaw =
     parentActionDecision?.label ||
-    (finalStep === "remediate_same_level"
-      ? "לחזק לפני שמתקדמים"
-      : outQuestions >= TOPIC_REC_MIN_ACTIONABLE_QUESTIONS
-        ? "לחזק לפי מה שחוזר"
-        : "צריך עוד שאלות");
+    legacyStepFallbackLabel;
   if (suppressRegisteredGradeStrengthenCopy(gradeRelation)) {
     finalLabelRaw = resolveGradeAwareRecommendationStepLabelHe(gradeRelation, finalLabelRaw);
   }
@@ -2243,9 +2235,7 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
     sanitizeParentSurfaceTextHe(finalLabelRaw, { subjectId }) ||
     (suppressRegisteredGradeStrengthenCopy(gradeRelation)
       ? resolveGradeAwareRecommendationStepLabelHe(gradeRelation, "")
-      : finalStep === "remediate_same_level"
-        ? "לחזק לפני שמתקדמים"
-        : "לחזק לפי מה שחוזר");
+      : legacyStepFallbackLabel);
   const conclusionStrength = cannotConcludeYet
     ? "withheld"
     : canonicalDecisionTier >= 3

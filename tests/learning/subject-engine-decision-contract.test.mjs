@@ -135,7 +135,11 @@ function topicRowFromContract(input) {
   const contract = buildSubjectEngineDecisionContract("math", [addition], { subjectLabelKey: "math" });
 
   assert.equal(addition.engineDecisionContract.engineDecision, "clear_topic_gap");
-  assert.equal(addition.engineDecisionContract.recommendedAction, "watch");
+  assert.equal(
+    addition.engineDecisionContract.actionDecisionContract.action,
+    "give_probe_questions",
+  );
+  assert.equal(addition.engineDecisionContract.recommendedAction, "maintain_current_path");
   assert.equal(contract.subjectDecision, "insufficient_subject_data");
   assert.equal(contract.priorityTopics.length, 1);
   assert.equal(contract.priorityTopics[0].engineDecision, "clear_topic_gap");

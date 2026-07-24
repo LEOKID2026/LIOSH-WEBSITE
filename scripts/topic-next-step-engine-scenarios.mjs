@@ -11,8 +11,21 @@ import {
 const END_MS = Date.UTC(2026, 3, 10, 23, 59, 59, 999);
 
 const engMod = await import("../utils/topic-next-step-engine.js");
-const { buildTopicRecommendationsForSubject, DEFAULT_TOPIC_NEXT_STEP_CONFIG } =
+const {
+  buildTopicRecommendationsForSubject,
+  enrichReportMapsWithTopicStepHints,
+  DEFAULT_TOPIC_NEXT_STEP_CONFIG,
+} =
   engMod.default && typeof engMod.default === "object" ? engMod.default : engMod;
+const { runDiagnosticEngineV2 } = await import(
+  "../utils/diagnostic-engine-v2/run-diagnostic-engine-v2.js"
+);
+const { runDiagnosticEngineV3 } = await import(
+  "../utils/diagnostic-engine-v3/index.js"
+);
+const { applyLearningPatternDecisionToUnitsAndRows } = await import(
+  "../utils/learning-pattern-decision/index.js"
+);
 
 /**
  * מפת תרחישי audit — כל שורה: תרחיש, נושא, בחירת שורה, ציפיות מבניות.
@@ -37,21 +50,28 @@ const ENGINE_SCENARIO_MATRIX = [
     id: "one_dominant",
     scenario: "one_dominant_subject",
     pick: { subjectId: "math", topicRowKey: FIXTURE_MATH_ROW_ADD_LEARN_G4_MED },
-    expect: { recommendedNextStep: "maintain_and_strengthen" },
+    expect: {
+      recommendedNextStep: "maintain_current_path",
+      adcAction: "collect_more_evidence",
+      adcIntensity: "RI0",
+      targetTopic: "addition",
+    },
   },
   {
     id: "stable_excellence",
     scenario: "stable_excellence",
     pick: { subjectId: "math", topicRowKey: FIXTURE_MATH_ROW_ADD_LEARN_G4_MED },
     // Fixture now sets an explicit behaviorProfile (dominantType: "stable_mastery")
-    // matching what `computeRowBehaviorProfile` would classify this statistical
-    // profile as in production (q>=8, acc>=88, wrongRatio<=0.14, few wrong events).
-    // With a real "stable_mastery" classification, the engine's own
-    // stable_mastery/unclear-trend guards correctly cap the aggressive
-    // "advance_level" step down to "maintain_and_strengthen" because this fixture
-    // still has no trend/session evidence — this is the engine behaving safely,
-    // not a regression.
-    expect: { recommendedNextStep: "maintain_and_strengthen", diagnosticType: "stable_mastery" },
+    // matching the statistical profile. It still has no independent recurrence
+    // or taxonomy evidence, so ADC V2 authorizes collection only and the legacy
+    // display mirror must remain neutral.
+    expect: {
+      recommendedNextStep: "maintain_current_path",
+      diagnosticType: "stable_mastery",
+      adcAction: "collect_more_evidence",
+      adcIntensity: "RI0",
+      targetTopic: "addition",
+    },
   },
   {
     id: "fragile_success",
@@ -59,45 +79,84 @@ const ENGINE_SCENARIO_MATRIX = [
     pick: { subjectId: "math", topicRowKey: FIXTURE_MATH_ROW_ADD_LEARN_G4_MED },
     expect: {
       diagnosticType: "fragile_success",
-      recommendedNextStep: "remediate_same_level",
+      recommendedNextStep: "maintain_current_path",
       rootCauseNotIn: ["careless_execution"],
+      adcAction: "collect_more_evidence",
+      adcIntensity: "RI0",
+      targetTopic: "addition",
     },
   },
   {
     id: "knowledge_gap",
     scenario: "knowledge_gap",
     pick: { subjectId: "math", topicRowKey: FIXTURE_MATH_ROW_ADD_LEARN_G4_MED },
-    expect: { diagnosticType: "knowledge_gap", recommendedNextStep: "remediate_same_level" },
+    expect: {
+      diagnosticType: "knowledge_gap",
+      recommendedNextStep: "maintain_current_path",
+      adcAction: "collect_more_evidence",
+      adcIntensity: "RI0",
+      targetTopic: "addition",
+    },
   },
   {
     id: "careless_pattern",
     scenario: "careless_pattern",
     pick: { subjectId: "math", topicRowKey: FIXTURE_MATH_ROW_ADD_LEARN_G4_MED },
-    expect: { diagnosticType: "careless_pattern", rootCause: "careless_execution" },
+    expect: {
+      diagnosticType: "careless_pattern",
+      rootCause: "careless_execution",
+      recommendedNextStep: "maintain_current_path",
+      adcAction: "collect_more_evidence",
+      adcIntensity: "RI0",
+      targetTopic: "addition",
+    },
   },
   {
     id: "instruction_friction",
     scenario: "instruction_friction",
     pick: { subjectId: "math", topicRowKey: FIXTURE_MATH_ROW_ADD_LEARN_G4_MED },
-    expect: { diagnosticType: "instruction_friction" },
+    expect: {
+      diagnosticType: "instruction_friction",
+      recommendedNextStep: "maintain_current_path",
+      adcAction: "collect_more_evidence",
+      adcIntensity: "RI0",
+      targetTopic: "addition",
+    },
   },
   {
     id: "speed_only",
     scenario: "speed_only_weakness",
     pick: { subjectId: "math" },
-    expect: { diagnosticType: "speed_pressure" },
+    expect: {
+      diagnosticType: "speed_pressure",
+      recommendedNextStep: "maintain_current_path",
+      adcAction: "collect_more_evidence",
+      adcIntensity: "RI0",
+      targetTopic: "addition",
+    },
   },
   {
     id: "positive_trend_weak_indep",
     scenario: "positive_trend_weak_independence",
     pick: { subjectId: "math", topicRowKey: FIXTURE_MATH_ROW_ADD_LEARN_G4_MED },
-    expect: { diagnosticType: "undetermined", recommendedNextStep: "maintain_and_strengthen" },
+    expect: {
+      diagnosticType: "undetermined",
+      recommendedNextStep: "maintain_current_path",
+      adcAction: "collect_more_evidence",
+      adcIntensity: "RI0",
+      targetTopic: "addition",
+    },
   },
   {
     id: "mixed_cross",
     scenario: "mixed_signals_cross_subjects",
     pick: { subjectId: "math", topicRowKey: FIXTURE_MATH_ROW_ADD_LEARN_G4_MED },
-    expect: { recommendedNextStep: "maintain_and_strengthen" },
+    expect: {
+      recommendedNextStep: "maintain_current_path",
+      adcAction: "collect_more_evidence",
+      adcIntensity: "RI0",
+      targetTopic: "addition",
+    },
   },
   {
     id: "high_risk_strengths",
@@ -106,25 +165,46 @@ const ENGINE_SCENARIO_MATRIX = [
     expect: {
       diagnosticType: "fragile_success",
       rootCauseNotIn: ["careless_execution", "mixed_signal"],
+      recommendedNextStep: "maintain_current_path",
+      adcAction: "collect_more_evidence",
+      adcIntensity: "RI0",
+      targetTopic: "addition",
     },
   },
   {
     id: "recent_transition",
     scenario: "recent_transition_recent_difficulty_increase",
     pick: { subjectId: "math", topicRowKey: FIXTURE_MATH_ROW_ADD_LEARN_G4_MED },
-    expect: { recommendedNextStep: "remediate_same_level" },
+    expect: {
+      recommendedNextStep: "maintain_current_path",
+      adcAction: "collect_more_evidence",
+      adcIntensity: "RI0",
+      targetTopic: "addition",
+    },
   },
   {
     id: "phase7_sparse",
     scenario: "phase7_cross_subject_sparse_mixed",
     pick: { subjectId: "math" },
-    expect: { recommendedNextStep: "remediate_same_level", diagnosticType: "knowledge_gap" },
+    expect: {
+      recommendedNextStep: "maintain_current_path",
+      diagnosticType: "knowledge_gap",
+      adcAction: "collect_more_evidence",
+      adcIntensity: "RI0",
+      targetTopic: "addition",
+    },
   },
   {
     id: "phase7_geometry_fragile",
     scenario: "phase7_cross_subject_sparse_mixed",
     pick: { subjectId: "geometry", geometryKey: "perimeter\u0001learning" },
-    expect: { diagnosticType: "fragile_success", recommendedNextStep: "maintain_and_strengthen" },
+    expect: {
+      diagnosticType: "fragile_success",
+      recommendedNextStep: "maintain_current_path",
+      adcAction: "collect_more_evidence",
+      adcIntensity: "RI0",
+      targetTopic: "perimeter",
+    },
   },
   {
     id: "grade_level_mismatch",
@@ -133,27 +213,67 @@ const ENGINE_SCENARIO_MATRIX = [
     expect: {
       forbiddenSteps: ["advance_grade_topic_only"],
       diagnosticType: "knowledge_gap",
+      recommendedNextStep: "maintain_current_path",
+      adcAction: "collect_more_evidence",
+      adcIntensity: "RI0",
+      targetTopic: "addition",
     },
   },
 ];
 
 function pickRecommendation(base, pick) {
   const { subjectId, topicRowKey, geometryKey } = pick;
-  const topicMap =
-    subjectId === "geometry"
-      ? base.geometryTopics || {}
-      : subjectId === "math"
-        ? base.mathOperations || {}
-        : {};
   const analysis = base.analysis || {};
+  const maps = {
+    math: base.mathOperations || {},
+    geometry: base.geometryTopics || {},
+  };
+  const mistakesBySubject = {
+    math: analysis.mathMistakesByOperation || {},
+    geometry: analysis.geometryMistakesByTopic || {},
+  };
+  const rawMistakesBySubject = { math: [], geometry: [] };
+
+  enrichReportMapsWithTopicStepHints(
+    maps,
+    mistakesBySubject,
+    END_MS,
+    DEFAULT_TOPIC_NEXT_STEP_CONFIG,
+    { rawMistakesBySubject, startMs: 0 },
+  );
+  const diagnosticEngineV2 = runDiagnosticEngineV2({
+    maps,
+    rawMistakesBySubject,
+    startMs: 0,
+    endMs: END_MS,
+  });
+  const diagnosticEngineV3 = runDiagnosticEngineV3({
+    maps,
+    rawMistakesBySubject,
+    startMs: 0,
+    endMs: END_MS,
+    diagnosticEngineV2,
+  });
+  applyLearningPatternDecisionToUnitsAndRows({
+    diagnosticEngineV2,
+    maps,
+    diagnosticEngineV3,
+    rawMistakesBySubject,
+    startMs: 0,
+    endMs: END_MS,
+  });
+
   const aKey =
-    subjectId === "math"
-      ? "mathMistakesByOperation"
-      : subjectId === "geometry"
-        ? "geometryMistakesByTopic"
-        : "mathMistakesByOperation";
-  const slice = { [aKey]: analysis[aKey] || {} };
-  const recs = buildTopicRecommendationsForSubject(subjectId, topicMap, slice, DEFAULT_TOPIC_NEXT_STEP_CONFIG, END_MS);
+    subjectId === "geometry"
+      ? "geometryMistakesByTopic"
+      : "mathMistakesByOperation";
+  const recs = buildTopicRecommendationsForSubject(
+    subjectId,
+    maps[subjectId] || {},
+    { [aKey]: mistakesBySubject[subjectId] || {} },
+    DEFAULT_TOPIC_NEXT_STEP_CONFIG,
+    END_MS,
+  );
   if (!recs.length) return null;
   if (topicRowKey) {
     const hit = recs.find((r) => r.topicRowKey === topicRowKey);
@@ -188,6 +308,30 @@ function checkExpectation(expect, actualRec) {
   if (Array.isArray(expect.forbiddenSteps) && expect.forbiddenSteps.includes(actualRec.recommendedNextStep)) {
     failures.push(`forbidden step ${actualRec.recommendedNextStep}`);
   }
+  if (
+    expect.adcAction != null &&
+    actualRec.actionDecisionContract?.action !== expect.adcAction
+  ) {
+    failures.push(
+      `ADC action want ${expect.adcAction} got ${actualRec.actionDecisionContract?.action}`,
+    );
+  }
+  if (
+    expect.adcIntensity != null &&
+    actualRec.actionDecisionContract?.intensity !== expect.adcIntensity
+  ) {
+    failures.push(
+      `ADC intensity want ${expect.adcIntensity} got ${actualRec.actionDecisionContract?.intensity}`,
+    );
+  }
+  if (
+    expect.targetTopic != null &&
+    actualRec.actionDecisionContract?.target?.topic !== expect.targetTopic
+  ) {
+    failures.push(
+      `ADC target topic want ${expect.targetTopic} got ${actualRec.actionDecisionContract?.target?.topic}`,
+    );
+  }
   return { ok: failures.length === 0, failures };
 }
 
@@ -199,6 +343,9 @@ function summarize(rec) {
     rootCause: rec.rootCause,
     questions: rec.questions,
     accuracy: rec.accuracy,
+    adcAction: rec.actionDecisionContract?.action || null,
+    adcIntensity: rec.actionDecisionContract?.intensity || null,
+    target: rec.actionDecisionContract?.target || null,
   };
 }
 

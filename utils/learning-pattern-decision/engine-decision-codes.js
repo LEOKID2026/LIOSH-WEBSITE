@@ -33,6 +33,9 @@ export const RA_WATCH = "watch";
 export const RA_MAINTAIN_AND_STRENGTHEN = "maintain_and_strengthen";
 export const RA_MAINTAIN = "maintain";
 export const RA_INTERVENE = "intervene";
+export const RA_MAINTAIN_CURRENT_PATH = "maintain_current_path";
+export const RA_REVIEW_PREREQUISITE = "review_prerequisite";
+export const RA_ADVANCE_LEVEL = "advance_level";
 
 /**
  * P2 status: every `recommendedAction` value is a backward-compatible mirror.
@@ -45,6 +48,9 @@ export const LEGACY_MIRROR_RECOMMENDED_ACTION_CODES = new Set([
   RA_MAINTAIN_AND_STRENGTHEN,
   RA_MAINTAIN,
   RA_INTERVENE,
+  RA_MAINTAIN_CURRENT_PATH,
+  RA_REVIEW_PREREQUISITE,
+  RA_ADVANCE_LEVEL,
   "none",
 ]);
 
@@ -55,6 +61,8 @@ export const LEGACY_MIRROR_RECOMMENDED_ACTION_CODES = new Set([
  */
 export const DEPRECATED_UNREACHABLE_RECOMMENDED_ACTION_CODES = new Set([
   RA_REMEDIATE_STEP_DOWN,
+  RA_WATCH,
+  RA_MAINTAIN_AND_STRENGTHEN,
   RA_MAINTAIN,
   RA_INTERVENE,
 ]);
