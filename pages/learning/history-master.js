@@ -162,6 +162,9 @@ import LearningMasterMobileNavTitle from "../../components/learning/LearningMast
 import { StepExerciseUiProvider } from "../../contexts/StepExerciseUiContext.jsx";
 import { formatMathHudNumber } from "../../utils/math-master-hud-number.client.js";
 import { useStudentDisplayLevelPractice } from "../../hooks/useStudentDisplayLevelPractice.js";
+import { useActionDecisionRouteSync } from "../../hooks/useActionDecisionRouteSync.js";
+import { usePracticeMoreBudget } from "../../hooks/usePracticeMoreBudget.js";
+import { resolvePracticeMoreTopicOverride } from "../../lib/learning/practice-more-budget.js";
 import { useStudentActionDecision } from "../../hooks/useStudentActionDecision.js";
 import { StudentDisplayLevelSelect } from "../../components/learning/StudentDisplayLevelSelect.js";
 import {
@@ -1474,19 +1477,14 @@ export default function HistoryMaster() {
     }
   }, [dailyChallenge.date, weeklyChallenge.week]);
 
-  // ----- TIMER -----
-  useEffect(() => {
-    if (actionDecisionDirective.active) {
-      if (
-        ["advance_cautiously", "strengthen_prerequisite"].includes(
-          actionDecisionDirective.action,
-        ) &&
-        actionDecisionDirective.routePolicy.level !== level
-      ) {
-        applyPlannerLevelKey(actionDecisionDirective.routePolicy.level);
-      }
-    }
-  }, [actionDecisionDirective, applyPlannerLevelKey, level]);
+  // ADC-driven level, with rollback on expiry/failure
+  // (see hooks/useActionDecisionRouteSync.js — BLOCKER-2 closure).
+  useActionDecisionRouteSync({
+    directive: actionDecisionDirective,
+    level,
+    applyLevel: applyPlannerLevelKey,
+  });
+  const practiceMoreBudget = usePracticeMoreBudget(actionDecisionDirective);
 
   useEffect(() => {
     if (!gameActive) return;
@@ -1537,8 +1535,18 @@ export default function HistoryMaster() {
       return [];
     }
 
+    // While a practice_more budget remains, pin the question pool to the
+    // decision's topic — overriding "mixed"/practice-focus group expansion
+    // below. See docs/audits/DECISION-ENGINE-CLAUDE-BLOCKER-CLOSURE-2026-07-24.md.
+    const practiceMoreTopicLock = resolvePracticeMoreTopicOverride(
+      practiceMoreBudget,
+      allowedTopicsForGrade
+    );
+
     let topicsList;
-    if (mode === "practice" && practiceFocus !== "balanced") {
+    if (practiceMoreTopicLock) {
+      topicsList = [practiceMoreTopicLock];
+    } else if (mode === "practice" && practiceFocus !== "balanced") {
       topicsList = (PRACTICE_TOPIC_GROUPS[practiceFocus] || []).filter((t) =>
         allowedTopicsForGrade.includes(t)
       );
@@ -2544,8 +2552,16 @@ function saveScienceAnswerInParallel({
       !actionDecisionDirective.active ||
       actionDecisionDirective.sessionPolicy.allowEscalation
     ) {
-      applyAnswerAdaptive(isCorrect, { mode: focusedPracticeModeRef.current });
+      applyAnswerAdaptive(isCorrect, {
+        mode: focusedPracticeModeRef.current,
+        gameMode: reportModeFromGameState(mode, focusedPracticeModeRef.current),
+        afterStepByStep: stepByStepViewedRef.current,
+      });
     }
+    practiceMoreBudget.consume({
+      gameMode: reportModeFromGameState(mode, focusedPracticeModeRef.current),
+      afterStepByStep: stepByStepViewedRef.current,
+    });
     enqueueWrongQuestionRetry(isCorrect, isCorrect ? null : currentQuestion.id);
     if (isCorrect) {
       let points = 10 + streak;

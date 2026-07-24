@@ -21,6 +21,9 @@ export function useStudentActionDecision({
   gradeKey,
   levelKey,
 }) {
+  // Persistence-key context: intentionally still keyed by grade/level, since
+  // lib/learning/diagnostic-state-persistence.js also stores level-scoped
+  // pendingProbe/hypothesisLedger/adaptiveState for other callers.
   const storageCtx = useMemo(
     () => ({
       studentId,
@@ -31,15 +34,23 @@ export function useStudentActionDecision({
     }),
     [studentId, subjectId, topicKey, gradeKey, levelKey],
   );
+  const storageCtxRef = useRef(storageCtx);
+  storageCtxRef.current = storageCtx;
   const stateRef = useRef(null);
   const [revision, setRevision] = useState(0);
 
+  // Decision-identity trigger for (re)fetching the ADC contract itself:
+  // student + subject + topic ONLY (docs/audits/DECISION-ENGINE-CLAUDE-BLOCKER-CLOSURE-2026-07-24.md,
+  // Part 4). gradeKey/levelKey must NOT be part of this — a level change
+  // driven by the same active decision (or the display-level toggle) must
+  // never reset activitiesSinceDecision, force a refetch, or leave a gap
+  // where the directive briefly looks inactive.
   useEffect(() => {
     if (!enabled || !studentId || !subjectId || !topicKey) return undefined;
     let cancelled = false;
     stateRef.current = null;
     setRevision((value) => value + 1);
-    const loaded = loadDiagnosticState(storageCtx);
+    const loaded = loadDiagnosticState(storageCtxRef.current);
     fetchStudentActionDecisions()
       .then((response) => {
         if (cancelled) return;
@@ -62,7 +73,7 @@ export function useStudentActionDecision({
                 reevaluationRequired: false,
               };
         saveDiagnosticState({
-          ...storageCtx,
+          ...storageCtxRef.current,
           ...(loaded || {}),
           activeActionDecision: stateRef.current,
         });
@@ -74,7 +85,8 @@ export function useStudentActionDecision({
     return () => {
       cancelled = true;
     };
-  }, [enabled, studentId, subjectId, topicKey, storageCtx]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enabled, studentId, subjectId, topicKey]);
 
   const directive = useMemo(
     () =>

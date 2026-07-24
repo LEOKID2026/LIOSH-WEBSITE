@@ -113,6 +113,9 @@ import {
 } from "../../utils/learning-step-exercise-types";
 import { finalizeAnimationSteps } from "../../utils/learning-step-animation-pipeline";
 import { useLearningMasterUi } from "../../hooks/useLearningMasterUi.js";
+import { useActionDecisionRouteSync } from "../../hooks/useActionDecisionRouteSync.js";
+import { usePracticeMoreBudget } from "../../hooks/usePracticeMoreBudget.js";
+import { resolvePracticeMoreTopicOverride } from "../../lib/learning/practice-more-budget.js";
 import SubjectMasterSessionShell from "../../components/learning/SubjectMasterSessionShell.jsx";
 import StudentLoadingPanel from "../../components/ui/StudentLoadingPanel.jsx";
 import { useGuestPlayableTopics } from "../../hooks/useGuestPlayableTopics.js";
@@ -1686,23 +1689,17 @@ export default function MathMaster() {
     return () => window.removeEventListener("resize", syncScratchpadAnchor);
   }, [mounted, gameActive, grade, level, operation, mode]);
 
-  // Timer countdown (רק במצב Challenge או Speed)
-  useEffect(() => {
-    if (actionDecisionDirective.active) {
-      if (actionDecisionDirective.questionPolicy.preferKind) {
-        practiceForceKindRef.current =
-          actionDecisionDirective.questionPolicy.preferKind;
-      }
-      if (
-        ["advance_cautiously", "strengthen_prerequisite"].includes(
-          actionDecisionDirective.action,
-        ) &&
-        actionDecisionDirective.routePolicy.level !== level
-      ) {
-        setLevel(actionDecisionDirective.routePolicy.level);
-      }
-    }
-  }, [actionDecisionDirective, level]);
+  // ADC-driven forced question kind + level, with rollback on expiry/failure
+  // (see hooks/useActionDecisionRouteSync.js — BLOCKER-2 closure).
+  useActionDecisionRouteSync({
+    directive: actionDecisionDirective,
+    level,
+    applyLevel: setLevel,
+    forceKindRef: practiceForceKindRef,
+  });
+  // Real runtime consumption of practice_more's additionalQuestions budget
+  // (see hooks/usePracticeMoreBudget.js).
+  const practiceMoreBudget = usePracticeMoreBudget(actionDecisionDirective);
 
   useEffect(() => {
     if (!gameActive || (mode !== "challenge" && mode !== "speed")) return;
@@ -2147,6 +2144,19 @@ export default function MathMaster() {
           opForQuestion =
             Math.random() < 0.5 ? "word_problems" : operation;
         }
+      }
+
+      // While a practice_more budget remains, pin the topic actually used
+      // for content selection to the decision's topic — overriding "mixed"
+      // random pick and the word-problems coin-flip above. This is the
+      // real product effect of practice_more, not just bookkeeping (see
+      // docs/audits/DECISION-ENGINE-CLAUDE-BLOCKER-CLOSURE-2026-07-24.md).
+      const practiceMoreTopicLock = resolvePracticeMoreTopicOverride(
+        practiceMoreBudget,
+        GRADES[grade].operations
+      );
+      if (practiceMoreTopicLock) {
+        opForQuestion = practiceMoreTopicLock;
       }
 
       question = generateQuestion(
@@ -2812,24 +2822,38 @@ export default function MathMaster() {
     const questionId = currentQuestion.id
       ? String(currentQuestion.id)
       : questionFingerprint || `math-${Date.now()}`;
+    // Authority boundary (docs/audits/DECISION-ENGINE-CLAUDE-BLOCKER-CLOSURE-2026-07-24.md):
+    // this block only COMPUTES the legacy streak metrics for observation. It
+    // must never call setLevel — only an active ActionDecisionContractV2
+    // decision may change level/route (see the actionDecisionDirective.routePolicy.level
+    // effect below). Guided/learning/book/step-by-step evidence is excluded
+    // via isStudentAdaptiveActive → isEligibleAdaptiveStreakEvent.
     if (
       (!actionDecisionDirective.active ||
         actionDecisionDirective.sessionPolicy.allowEscalation) &&
       isStudentAdaptiveActive("math", {
         displayLevel: displayLevelRef.current,
         mode: focusedPracticeModeRef.current,
+        gameMode: reportModeFromGameState(mode, focusedPracticeModeRef.current),
+        afterStepByStep: stepByStepViewedRef.current,
       })
     ) {
       regularAdaptiveRef.current = applyStudentAdaptiveAnswer(
         "math",
         regularAdaptiveRef.current,
         isCorrect,
-        { displayLevel: displayLevelRef.current, mode: focusedPracticeModeRef.current }
+        {
+          displayLevel: displayLevelRef.current,
+          mode: focusedPracticeModeRef.current,
+          gameMode: reportModeFromGameState(mode, focusedPracticeModeRef.current),
+          afterStepByStep: stepByStepViewedRef.current,
+        }
       );
-      if (displayLevelRef.current === "regular") {
-        setLevel(regularAdaptiveRef.current.internalState);
-      }
     }
+    practiceMoreBudget.consume({
+      gameMode: reportModeFromGameState(mode, focusedPracticeModeRef.current),
+      afterStepByStep: stepByStepViewedRef.current,
+    });
     saveAnswerInParallel({
       question: currentQuestion,
       userAnswer: numericAnswer,

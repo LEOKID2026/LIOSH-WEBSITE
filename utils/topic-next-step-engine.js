@@ -61,7 +61,7 @@ import {
   hasRegularMediumEvidence,
   resolveRowDisplayLevelKey,
 } from "../lib/learning/parent-report-display-level.js";
-import { assertContractMatchesStep } from "./contracts/assert-contract-step-consistency.js";
+import { assertContractStepAuthority } from "./contracts/assert-contract-step-consistency.js";
 import { normalizeRecommendationContract } from "./contracts/recommendation-contract-normalizer.js";
 import {
   applyRecommendationContractToRecord,
@@ -1513,6 +1513,16 @@ export function buildTopicRecommendationRecord(
     decision.step
   );
 
+  // Authority boundary (docs/audits/DECISION-ENGINE-CLAUDE-BLOCKER-CLOSURE-2026-07-24.md,
+  // Part 8): when ActionDecisionContractV2 exists it is always the mirror
+  // source (adcLegacyStep). When it is absent, `decision.step` (the fully
+  // independent legacy engine's own opinion) is still clamped by
+  // recommendationContractV1Normalized's OWN, separately-calibrated
+  // intensity via legacyDisplayStepAtIntensity — it is not surfaced
+  // unconstrained. assertContractStepAuthority (below) makes that
+  // consistency check unconditional (previously dev-only) and, unlike a
+  // raw throw, fails safe in production so it can never crash a render
+  // path that legitimately has no ADC coverage yet.
   const recommendedNextStepEffective = actionDecisionContractV2
     ? adcLegacyStep
     : legacyDisplayStepAtIntensity(
@@ -1520,12 +1530,10 @@ export function buildTopicRecommendationRecord(
         String(recommendationContractV1Normalized.intensity || "RI0")
       );
 
-  if (process.env.NODE_ENV !== "production") {
-    assertContractMatchesStep(
-      actionDecisionContractV2 || recommendationContractV1Normalized,
-      recommendedNextStepEffective
-    );
-  }
+  assertContractStepAuthority(
+    actionDecisionContractV2 || recommendationContractV1Normalized,
+    recommendedNextStepEffective
+  );
 
   const recValidationNormalized = validateRecommendationContractV1(recommendationContractV1Normalized);
 

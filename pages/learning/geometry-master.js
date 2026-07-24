@@ -225,6 +225,11 @@ import { buildDailyMissionsView } from "../../lib/learning-client/dailyMissionsV
 import { fetchStudentHomeProfile } from "../../lib/learning-client/fetchStudentHomeProfile";
 import { buildSubjectMonthlyPersistenceViewFromProfile } from "../../lib/learning-client/subjectMonthlyPersistenceView";
 import { useStudentDisplayLevelPractice } from "../../hooks/useStudentDisplayLevelPractice.js";
+import { useActionDecisionRouteSync } from "../../hooks/useActionDecisionRouteSync.js";
+import { usePracticeMoreBudget } from "../../hooks/usePracticeMoreBudget.js";
+import { resolvePracticeMoreTopicOverride } from "../../lib/learning/practice-more-budget.js";
+import { usePrerequisiteContentOverride } from "../../hooks/usePrerequisiteContentOverride.js";
+import { pickQuestionForSkill } from "../../lib/learning/prerequisite-content-source.js";
 import { useStudentActionDecision } from "../../hooks/useStudentActionDecision.js";
 import { StudentDisplayLevelSelect } from "../../components/learning/StudentDisplayLevelSelect.js";
 import {
@@ -1193,10 +1198,20 @@ export default function GeometryMaster() {
 
     resolveGeometryAdaptiveTarget({ operation: validTopic });
 
+    // While a practice_more budget remains, pin content selection to the
+    // decision's topic — overriding the "mixed" random pick below. See
+    // docs/audits/DECISION-ENGINE-CLAUDE-BLOCKER-CLOSURE-2026-07-24.md.
+    const practiceMoreTopicLock = resolvePracticeMoreTopicOverride(
+      practiceMoreBudget,
+      allowedTopics
+    );
+
     do {
-      const selectedTopics = validTopic === "mixed" 
-        ? Object.keys(mixedTopics).filter(t => mixedTopics[t] && allowedTopics.includes(t))
-        : [validTopic];
+      const selectedTopics = practiceMoreTopicLock
+        ? [practiceMoreTopicLock]
+        : validTopic === "mixed"
+          ? Object.keys(mixedTopics).filter(t => mixedTopics[t] && allowedTopics.includes(t))
+          : [validTopic];
       
       if (selectedTopics.length === 0) {
         question = {
@@ -1210,8 +1225,22 @@ export default function GeometryMaster() {
       
       const currentTopic = selectedTopics[Math.floor(Math.random() * selectedTopics.length)];
       question = null;
+      // docs/audits/DECISION-ENGINE-CLAUDE-BLOCKER-CLOSURE-2026-07-24.md
+      // (Part 2): strengthen_prerequisite (exact_skill) content override —
+      // affects ONLY which question is selected for this draw. `topic`
+      // (decisionTopic, driving useStudentActionDecision's identity) is
+      // never touched here.
+      if (prerequisiteContentOverride) {
+        const picked = pickQuestionForSkill(
+          prerequisiteContentOverride.subject,
+          prerequisiteContentOverride.skillId,
+          attempts,
+        );
+        if (picked) question = picked;
+      }
       // Use concrete rolled topic (not "mixed") so probe.topicId must match this draw — avoids unrelated probes in mixed mode.
       if (
+        !question &&
         probeAtSessionStart &&
         probeMatchesSession(
           probeAtSessionStart,
@@ -1258,15 +1287,15 @@ export default function GeometryMaster() {
           levelConfig,
           currentTopic,
           grade,
-          validTopic === "mixed" ? mixedTopics : null,
+          !practiceMoreTopicLock && validTopic === "mixed" ? mixedTopics : null,
           practiceForceKindRef.current
             ? { topic: currentTopic, forceKind: practiceForceKindRef.current }
             : null
         );
       }
       
-      // אם אין שאלה זמינה, ננסה נושא אחר
-      if (!question || question.params?.kind === "no_question") {
+      // אם אין שאלה זמינה, ננסה נושא אחר — לא כאשר practice_more נעל את הנושא
+      if (!practiceMoreTopicLock && (!question || question.params?.kind === "no_question")) {
         const nextTopic = allowedTopics.find(t => t !== "mixed" && t !== currentTopic);
         if (nextTopic) {
           question = generateQuestion(levelConfig, nextTopic, grade, null);
@@ -1728,8 +1757,16 @@ export default function GeometryMaster() {
       !actionDecisionDirective.active ||
       actionDecisionDirective.sessionPolicy.allowEscalation
     ) {
-      applyAnswerAdaptive(isCorrect, { mode: focusedPracticeModeRef.current });
+      applyAnswerAdaptive(isCorrect, {
+        mode: focusedPracticeModeRef.current,
+        gameMode: reportModeFromGameState(mode, focusedPracticeModeRef.current),
+        afterStepByStep: stepByStepViewedRef.current,
+      });
     }
+    practiceMoreBudget.consume({
+      gameMode: reportModeFromGameState(mode, focusedPracticeModeRef.current),
+      afterStepByStep: stepByStepViewedRef.current,
+    });
     saveGeometryAnswerInParallel({
       question: questionForSave,
       userAnswer: answer,
@@ -2176,22 +2213,19 @@ export default function GeometryMaster() {
     };
   }, [mounted]);
 
-  useEffect(() => {
-    if (actionDecisionDirective.active) {
-      if (actionDecisionDirective.questionPolicy.preferKind) {
-        practiceForceKindRef.current =
-          actionDecisionDirective.questionPolicy.preferKind;
-      }
-      if (
-        ["advance_cautiously", "strengthen_prerequisite"].includes(
-          actionDecisionDirective.action,
-        ) &&
-        actionDecisionDirective.routePolicy.level !== level
-      ) {
-        applyPlannerLevelKey(actionDecisionDirective.routePolicy.level);
-      }
-    }
-  }, [actionDecisionDirective, applyPlannerLevelKey, level]);
+  // ADC-driven forced question kind + level, with rollback on expiry/failure
+  // (see hooks/useActionDecisionRouteSync.js — BLOCKER-2 closure).
+  useActionDecisionRouteSync({
+    directive: actionDecisionDirective,
+    level,
+    applyLevel: applyPlannerLevelKey,
+    forceKindRef: practiceForceKindRef,
+  });
+  const practiceMoreBudget = usePracticeMoreBudget(actionDecisionDirective);
+  const prerequisiteContentOverride = usePrerequisiteContentOverride(
+    actionDecisionDirective,
+    "geometry",
+  );
 
   useEffect(() => {
     if (!gameActive || (mode !== "challenge" && mode !== "speed")) return;

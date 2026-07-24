@@ -186,31 +186,100 @@ export function isInterventionActionV2(action) {
 }
 
 /**
+ * Single authoritative source for every legacy/compatibility projection of
+ * an ADC V2 action (docs/audits/DECISION-ENGINE-CLAUDE-BLOCKER-CLOSURE-2026-07-24.md,
+ * Part 8). Two legacy vocabularies previously existed as independent,
+ * hand-maintained tables that could silently drift apart:
+ *   - legacyRecommendedActionFromContractV2 (EDC-legacy step vocabulary,
+ *     used by utils/topic-next-step-engine.js / parent report mirror)
+ *   - the old LEGACY_NEXT_ACTION_BY_ADC in
+ *     lib/learning-client/scheduleAdaptivePlannerRecommendation.js (planner
+ *     UI vocabulary)
+ * They cannot simply share one output value — the planner vocabulary is
+ * finer-grained (e.g. it distinguishes collect_more_evidence from
+ * give_probe_questions from maintain, which the EDC-legacy step collapses
+ * into a single "maintain_current_path"). Losing that granularity by
+ * composing one through the other would be a real behavior change. Instead
+ * both projections are declared together, once, per ADC action, so there is
+ * exactly one place a new/changed action must be added.
+ * @type {Record<string, { edcStep: string, plannerTarget: string|null }>}
+ */
+export const LEGACY_ACTION_PROJECTIONS_V2 = Object.freeze({
+  none: Object.freeze({ edcStep: "none", plannerTarget: null }),
+  collect_more_evidence: Object.freeze({
+    edcStep: "maintain_current_path",
+    plannerTarget: "pause_collect_more_data",
+  }),
+  give_probe_questions: Object.freeze({
+    edcStep: "maintain_current_path",
+    plannerTarget: "probe_skill",
+  }),
+  practice_more: Object.freeze({
+    edcStep: "remediate_same_level",
+    plannerTarget: "practice_current",
+  }),
+  targeted_practice: Object.freeze({
+    edcStep: "remediate_same_level",
+    plannerTarget: "practice_current",
+  }),
+  strengthen_prerequisite: Object.freeze({
+    edcStep: "review_prerequisite",
+    plannerTarget: "review_prerequisite",
+  }),
+  remove_timer: Object.freeze({
+    edcStep: "maintain_current_path",
+    plannerTarget: "practice_current",
+  }),
+  reduce_reading_load: Object.freeze({
+    edcStep: "maintain_current_path",
+    plannerTarget: "practice_current",
+  }),
+  guided_to_independent_transition: Object.freeze({
+    edcStep: "maintain_current_path",
+    plannerTarget: "practice_current",
+  }),
+  maintain: Object.freeze({
+    edcStep: "maintain_current_path",
+    plannerTarget: "maintain_skill",
+  }),
+  monitor_before_escalation: Object.freeze({
+    edcStep: "maintain_current_path",
+    plannerTarget: "pause_collect_more_data",
+  }),
+  advance_cautiously: Object.freeze({
+    edcStep: "advance_level",
+    plannerTarget: "advance_skill",
+  }),
+});
+
+function legacyProjectionForAction(action) {
+  return (
+    LEGACY_ACTION_PROJECTIONS_V2[String(action || "none")] ||
+    LEGACY_ACTION_PROJECTIONS_V2.maintain_current_path ||
+    LEGACY_ACTION_PROJECTIONS_V2.none
+  );
+}
+
+/**
  * Legacy mirror only. This adapter never selects or authorizes an action.
  * @param {Record<string, unknown>|null|undefined} contract
  */
 export function legacyRecommendedActionFromContractV2(contract) {
   const action = String(contract?.action || "none");
   if (action === "none") return "none";
-  if (
-    [
-      "collect_more_evidence",
-      "give_probe_questions",
-      "maintain",
-      "monitor_before_escalation",
-      "remove_timer",
-      "reduce_reading_load",
-      "guided_to_independent_transition",
-    ].includes(action)
-  ) {
-    return "maintain_current_path";
-  }
-  if (["practice_more", "targeted_practice"].includes(action)) {
-    return "remediate_same_level";
-  }
-  if (action === "strengthen_prerequisite") return "review_prerequisite";
-  if (action === "advance_cautiously") return "advance_level";
-  return "maintain_current_path";
+  return legacyProjectionForAction(action).edcStep;
+}
+
+/**
+ * Planner-UI legacy mirror (see LEGACY_ACTION_PROJECTIONS_V2 above). Never
+ * selects or authorizes an action — derives from the same single source as
+ * legacyRecommendedActionFromContractV2.
+ * @param {Record<string, unknown>|null|undefined} contract
+ * @returns {string}
+ */
+export function legacyPlannerTargetFromContractV2(contract) {
+  const action = String(contract?.action || "none");
+  return legacyProjectionForAction(action).plannerTarget || "pause_collect_more_data";
 }
 
 /**

@@ -61,6 +61,16 @@ export function useStudentDisplayLevelPractice(subjectId) {
     }
   }, [subjectId]);
 
+  /**
+   * Authority boundary (docs/audits/DECISION-ENGINE-CLAUDE-BLOCKER-CLOSURE-2026-07-24.md):
+   * This only COMPUTES the legacy streak metrics (correctStreak/wrongStreak/
+   * internalState) for observation — it must never call setSourceDifficulty/
+   * setLevel. Only an active ActionDecisionContractV2 decision may change the
+   * student's route/level (via applyPlannerLevelKey below, driven by
+   * lib/learning/action-decision-executor.js). Guided/learning/book/
+   * step-by-step evidence is excluded from the streak by
+   * isStudentAdaptiveActive → isEligibleAdaptiveStreakEvent.
+   */
   const applyAnswerAdaptive = useCallback(
     (isCorrect, context = {}) => {
       if (
@@ -75,12 +85,7 @@ export function useStudentDisplayLevelPractice(subjectId) {
         displayLevel: displayLevelRef.current,
         ...context,
       });
-      if (displayLevelRef.current === "regular") {
-        const sd = adaptiveRef.current.internalState;
-        setSourceDifficulty(sd);
-        return sd;
-      }
-      return "hard";
+      return sourceDifficulty;
     },
     [subjectId, sourceDifficulty]
   );

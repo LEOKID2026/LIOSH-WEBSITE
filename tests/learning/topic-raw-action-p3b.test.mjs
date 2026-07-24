@@ -42,6 +42,23 @@ test("P3 closure: all 72 regular topics have raw proof and seven mixed topics fa
     );
     if (closureProducer) {
       const result = runP3RawTopicProducerScenario(closureProducer);
+      // docs/audits/DECISION-ENGINE-CLAUDE-BLOCKER-CLOSURE-2026-07-24.md
+      // (Part 6, mirrored from scripts/decision-engine-p3b-coverage-audit.mjs):
+      // topicLevelOnly producers (triangles/circles — verified no real
+      // per-option distractor evidence exists) have ruleId: null and no
+      // taxonomy rule to accumulate recurrence against by design; passing
+      // means correctly producing NO taxonomy/subskill match while staying
+      // on-topic, not matching result.de2.recurrence.full.
+      if (closureProducer.topicLevelOnly) {
+        assert.equal(result.de2.taxonomyId, null);
+        assert.equal(
+          result.actionDecisionContract.target.topic,
+          closureProducer.canonicalTopic,
+        );
+        assert.equal(result.actionDecisionContract.target.subskill, null);
+        assert.equal(result.actionDecisionContract.target.subskillId, null);
+        continue;
+      }
       assert.equal(result.de2.taxonomyId, closureProducer.ruleId);
       assert.equal(result.de2.recurrence.full, true);
       assert.equal(

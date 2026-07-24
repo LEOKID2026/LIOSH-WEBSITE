@@ -185,6 +185,9 @@ import {
   tryConsumeBookContextOnPracticeEntry,
 } from "../../lib/learning-book/book-context-master-helper";
 import { useStudentDisplayLevelPractice } from "../../hooks/useStudentDisplayLevelPractice.js";
+import { useActionDecisionRouteSync } from "../../hooks/useActionDecisionRouteSync.js";
+import { usePracticeMoreBudget } from "../../hooks/usePracticeMoreBudget.js";
+import { resolvePracticeMoreTopicOverride } from "../../lib/learning/practice-more-budget.js";
 import { useStudentActionDecision } from "../../hooks/useStudentActionDecision.js";
 import { StudentDisplayLevelSelect } from "../../components/learning/StudentDisplayLevelSelect.js";
 import {
@@ -1595,22 +1598,15 @@ export default function EnglishMaster() {
     };
   }, [mounted]);
 
-  useEffect(() => {
-    if (actionDecisionDirective.active) {
-      if (actionDecisionDirective.questionPolicy.preferKind) {
-        practiceForceKindRef.current =
-          actionDecisionDirective.questionPolicy.preferKind;
-      }
-      if (
-        ["advance_cautiously", "strengthen_prerequisite"].includes(
-          actionDecisionDirective.action,
-        ) &&
-        actionDecisionDirective.routePolicy.level !== level
-      ) {
-        applyPlannerLevelKey(actionDecisionDirective.routePolicy.level);
-      }
-    }
-  }, [actionDecisionDirective, applyPlannerLevelKey, level]);
+  // ADC-driven forced question kind + level, with rollback on expiry/failure
+  // (see hooks/useActionDecisionRouteSync.js — BLOCKER-2 closure).
+  useActionDecisionRouteSync({
+    directive: actionDecisionDirective,
+    level,
+    applyLevel: applyPlannerLevelKey,
+    forceKindRef: practiceForceKindRef,
+  });
+  const practiceMoreBudget = usePracticeMoreBudget(actionDecisionDirective);
 
   useEffect(() => {
     if (!gameActive || (mode !== "challenge" && mode !== "speed")) return;
@@ -1792,6 +1788,18 @@ export default function EnglishMaster() {
       topicForState = "translation";
     } else if (useStoryQuestions && translationVisible && topicForState !== "translation") {
       topicForState = Math.random() < 0.5 ? "translation" : topicForState;
+    }
+
+    // While a practice_more budget remains, pin content selection to the
+    // decision's topic — overriding "mixed"/translation-swap above. See
+    // docs/audits/DECISION-ENGINE-CLAUDE-BLOCKER-CLOSURE-2026-07-24.md.
+    const practiceMoreTopicLock = resolvePracticeMoreTopicOverride(
+      practiceMoreBudget,
+      visibleEnglishTopics
+    );
+    if (practiceMoreTopicLock) {
+      topicForState = practiceMoreTopicLock;
+      mixedConfig = null;
     }
 
     const levelConfig = getLevelForGrade(levelForQuestion, gradeForQuestion);
@@ -2184,13 +2192,21 @@ export default function EnglishMaster() {
       isStudentAdaptiveActive("english", {
         displayLevel: displayLevelRef.current,
         mode: focusedPracticeMode,
+        gameMode: reportModeFromGameState(mode, focusedPracticeMode),
+        afterStepByStep: stepByStepViewedRef.current,
       })
     ) {
       applyAnswerAdaptive(isCorrect, {
         displayLevel: displayLevelRef.current,
         mode: focusedPracticeMode,
+        gameMode: reportModeFromGameState(mode, focusedPracticeMode),
+        afterStepByStep: stepByStepViewedRef.current,
       });
     }
+    practiceMoreBudget.consume({
+      gameMode: reportModeFromGameState(mode, focusedPracticeMode),
+      afterStepByStep: stepByStepViewedRef.current,
+    });
     saveEnglishAnswerInParallel({
       question: questionForSave,
       userAnswer: answer,

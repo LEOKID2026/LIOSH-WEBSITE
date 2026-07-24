@@ -150,6 +150,36 @@ function buildTopicProof(row) {
   if (closureProducer) {
     const result = runP3RawTopicProducerScenario(closureProducer);
     const targetTopic = result.actionDecisionContract?.target?.topic;
+    // docs/audits/DECISION-ENGINE-CLAUDE-BLOCKER-CLOSURE-2026-07-24.md
+    // (Part 6): topicLevelOnly producers (verified: no real per-option
+    // distractor evidence exists for this content) have no ruleId to match
+    // by design — passing means correctly producing NO taxonomy/subskill
+    // match and staying on-topic, not matching a specific rule. Topic-level
+    // passing counts as passing; subskill match is not a coverage
+    // requirement for these topics.
+    if (closureProducer.topicLevelOnly) {
+      const noFalseMatch = result.de2.taxonomyId == null;
+      const stayedOnTopic = targetTopic === closureProducer.canonicalTopic;
+      const noSubskillClaim =
+        !result.actionDecisionContract?.target?.subskill &&
+        !result.actionDecisionContract?.target?.subskillId;
+      const passed = noFalseMatch && stayedOnTopic && noSubskillClaim;
+      return {
+        status: passed ? "passed" : "failed",
+        proofType: "real_topic_question_producer_topic_level_only",
+        ruleId: null,
+        producer: result.producer,
+        taxonomyId: result.de2.taxonomyId,
+        recurrenceFull: result.de2.recurrence?.full === true,
+        canonicalActionState: result.de2.canonicalState?.actionState,
+        action: result.actionDecisionContract?.action,
+        target: result.actionDecisionContract?.target,
+        canonicalTopic: closureProducer.canonicalTopic,
+        reasonCode: passed
+          ? "topic:real_question_topic_level_only_proven"
+          : "topic:real_question_topic_level_only_failed",
+      };
+    }
     const passed =
       result.de2.taxonomyId === closureProducer.ruleId &&
       result.de2.recurrence?.full === true &&

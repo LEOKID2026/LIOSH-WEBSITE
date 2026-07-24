@@ -1,16 +1,45 @@
+/**
+ * Professional calibration for the 11 ADC V2 actions.
+ *
+ * docs/audits/DECISION-ENGINE-CLAUDE-BLOCKER-CLOSURE-2026-07-24.md (Part 7,
+ * option B): this contract previously declared `allows`, `blocks`,
+ * `minWrongEvents`, `minSessions`, `trendPolicy`, `guidedPolicy`,
+ * `timingPolicy`, and `gradePolicy` per action, but nothing in the codebase
+ * ever read them — they were documentation, not enforcement, while a
+ * validator checked only that they existed (not that anything used them).
+ * That is a second, contradicting "source of truth" next to the real
+ * enforcement, which actually lives in:
+ *
+ *   - min wrong-events / min-sessions for a safe subskill claim:
+ *     utils/subskill-candidate-safety.js (MIN_WRONG_EVENTS_FOR_SAFE_SUBSKILL,
+ *     recurrencePolicy.minSessionsForSubskill from
+ *     utils/diagnostic-engine-v2/taxonomy-recurrence-policy.js)
+ *   - cross-session vs single-session gating for topic-level targeted_practice:
+ *     utils/learning-pattern-decision/build-unified-decision-context.js
+ *     (sessionSnapshot -> signals.sessions.consistency)
+ *   - trend policy (improving never escalates):
+ *     utils/action-decision-contract/action-decision-contract-v2.js,
+ *     `trend.eligible && trend.direction === "improving"` branch
+ *   - guided-vs-independent policy (guided evidence never claims mastery):
+ *     action-decision-contract-v2.js's `assistance.evidenceMode === "guided"`
+ *     branches, fed by GUIDED_MODES in build-unified-decision-context.js
+ *   - timing policy (remove_timer requires real timing evidence):
+ *     action-decision-contract-v2.js's `supportedSpeedPressure` check
+ *   - grade policy (above-grade never becomes a foundation claim; grade
+ *     foundation never becomes an exact skill):
+ *     action-decision-contract-v2.js's `aboveGradeCaveat`/`foundationEvidence`
+ *     branches + utils/action-decision-contract/prerequisite-precision.js
+ *
+ * Only the fields actually consumed by calibrationForActionV1's callers
+ * remain declared here: `maxIntensity` (capIntensityByCalibrationV1),
+ * `reevaluateAfterActivities` / `maxAgeHours` (buildDecisionLifecycleV1),
+ * and `transitionWhen` (copied into the lifecycle's reevaluation metadata).
+ */
 export const DECISION_CALIBRATION_CONTRACT_VERSION = "1.0.0";
 
 const ACTIONS = {
   collect_more_evidence: {
     family: "evidence_collection",
-    allows: ["missing_authority", "thin_evidence", "uncertain_or_conflicting_evidence"],
-    blocks: ["no_practice_activity"],
-    minWrongEvents: 0,
-    minSessions: 0,
-    trendPolicy: "observe",
-    guidedPolicy: "allowed_without_specificity",
-    timingPolicy: "not_required",
-    gradePolicy: "topic_unchanged",
     maxIntensity: "RI0",
     reevaluateAfterActivities: 4,
     maxAgeHours: 72,
@@ -18,14 +47,6 @@ const ACTIONS = {
   },
   give_probe_questions: {
     family: "evidence_collection",
-    allows: ["probe_only_authority", "diagnose_only_authority", "candidate_pattern_unconfirmed"],
-    blocks: ["confirmed_pattern_with_intervention_authority"],
-    minWrongEvents: 1,
-    minSessions: 1,
-    trendPolicy: "verify_before_change",
-    guidedPolicy: "probe_must_be_independent",
-    timingPolicy: "not_required",
-    gradePolicy: "probe_at_content_grade",
     maxIntensity: "RI0",
     reevaluateAfterActivities: 3,
     maxAgeHours: 48,
@@ -33,14 +54,6 @@ const ACTIONS = {
   },
   practice_more: {
     family: "current_topic_reinforcement",
-    allows: ["same_topic_need", "declining_without_specific_pattern"],
-    blocks: ["above_grade_caveat", "strong_independent_mastery", "recent_improvement"],
-    minWrongEvents: 2,
-    minSessions: 1,
-    trendPolicy: "improving_downgrades_to_monitor",
-    guidedPolicy: "no_subskill_claim",
-    timingPolicy: "timer_unchanged",
-    gradePolicy: "same_grade_topic_only",
     maxIntensity: "RI2",
     reevaluateAfterActivities: 5,
     maxAgeHours: 120,
@@ -48,14 +61,6 @@ const ACTIONS = {
   },
   targeted_practice: {
     family: "current_or_subskill_reinforcement",
-    allows: ["cross_session_recurrence", "safe_subskill"],
-    blocks: ["single_session_only", "guided_only", "topic_level_subskill_claim", "recent_improvement"],
-    minWrongEvents: 3,
-    minSessions: 2,
-    trendPolicy: "improving_downgrades_to_monitor",
-    guidedPolicy: "subskill_requires_independent_evidence",
-    timingPolicy: "not_a_timing_intervention",
-    gradePolicy: "never_cross_topic",
     maxIntensity: "RI2",
     reevaluateAfterActivities: 6,
     maxAgeHours: 168,
@@ -63,14 +68,6 @@ const ACTIONS = {
   },
   strengthen_prerequisite: {
     family: "prerequisite_reinforcement",
-    allows: ["exact_prerequisite_evidence", "grade_foundation_area"],
-    blocks: ["above_grade_content", "strong_independent_mastery", "missing_foundation_evidence"],
-    minWrongEvents: 3,
-    minSessions: 2,
-    trendPolicy: "improving_reduces_intensity",
-    guidedPolicy: "independent_failure_required",
-    timingPolicy: "not_required",
-    gradePolicy: "grade_foundation_is_never_exact_skill",
     maxIntensity: "RI2",
     reevaluateAfterActivities: 6,
     maxAgeHours: 168,
@@ -78,14 +75,6 @@ const ACTIONS = {
   },
   remove_timer: {
     family: "practice_mode_adaptation",
-    allows: ["timing_evidence", "fast_wrong_recurrence"],
-    blocks: ["missing_timing_evidence", "slow_accurate"],
-    minWrongEvents: 2,
-    minSessions: 1,
-    trendPolicy: "improving_restores_standard_timing",
-    guidedPolicy: "allowed_temporarily",
-    timingPolicy: "required",
-    gradePolicy: "content_unchanged",
     maxIntensity: "RI1",
     reevaluateAfterActivities: 4,
     maxAgeHours: 72,
@@ -93,14 +82,6 @@ const ACTIONS = {
   },
   reduce_reading_load: {
     family: "practice_mode_adaptation",
-    allows: ["reading_load_evidence"],
-    blocks: ["missing_reading_load_evidence", "content_level_reduction"],
-    minWrongEvents: 2,
-    minSessions: 1,
-    trendPolicy: "improving_restores_standard_presentation",
-    guidedPolicy: "same_learning_goal",
-    timingPolicy: "not_required",
-    gradePolicy: "content_goal_unchanged",
     maxIntensity: "RI2",
     reevaluateAfterActivities: 4,
     maxAgeHours: 96,
@@ -108,14 +89,6 @@ const ACTIONS = {
   },
   guided_to_independent_transition: {
     family: "practice_mode_adaptation",
-    allows: ["guided_success", "independent_gap"],
-    blocks: ["no_guided_success", "independent_mastery"],
-    minWrongEvents: 1,
-    minSessions: 1,
-    trendPolicy: "advance_release_step_only_after_success",
-    guidedPolicy: "fade_support_one_step",
-    timingPolicy: "not_required",
-    gradePolicy: "content_unchanged",
     maxIntensity: "RI2",
     reevaluateAfterActivities: 4,
     maxAgeHours: 96,
@@ -123,14 +96,6 @@ const ACTIONS = {
   },
   maintain: {
     family: "monitoring",
-    allows: ["stable_mastery", "strong_independent_success"],
-    blocks: ["confirmed_active_gap"],
-    minWrongEvents: 0,
-    minSessions: 1,
-    trendPolicy: "continue_on_stable_or_improving",
-    guidedPolicy: "independent_success_preferred",
-    timingPolicy: "standard",
-    gradePolicy: "current_path",
     maxIntensity: "RI0",
     reevaluateAfterActivities: 8,
     maxAgeHours: 336,
@@ -138,14 +103,6 @@ const ACTIONS = {
   },
   monitor_before_escalation: {
     family: "monitoring",
-    allows: ["recent_improvement", "above_grade_caveat", "conflicting_evidence", "stale_pattern"],
-    blocks: ["none"],
-    minWrongEvents: 1,
-    minSessions: 1,
-    trendPolicy: "preferred_on_recent_improvement",
-    guidedPolicy: "no_specificity",
-    timingPolicy: "not_required",
-    gradePolicy: "above_grade_never_foundation",
     maxIntensity: "RI0",
     reevaluateAfterActivities: 4,
     maxAgeHours: 96,
@@ -153,14 +110,6 @@ const ACTIONS = {
   },
   advance_cautiously: {
     family: "advancement",
-    allows: ["strong_independent_mastery", "canonical_expand_authority"],
-    blocks: ["guided_only", "grade_caveat", "contradictory_evidence", "active_gap"],
-    minWrongEvents: 0,
-    minSessions: 2,
-    trendPolicy: "stable_or_improving_only",
-    guidedPolicy: "independent_evidence_required",
-    timingPolicy: "not_required",
-    gradePolicy: "one_step_only",
     maxIntensity: "RI1",
     reevaluateAfterActivities: 4,
     maxAgeHours: 96,
@@ -267,8 +216,8 @@ export function validateDecisionCalibrationContractV1(
     if (!Number.isFinite(Number(policy?.maxAgeHours))) {
       errors.push(`${action}:expiry_missing`);
     }
-    if (!Array.isArray(policy?.allows) || !Array.isArray(policy?.blocks)) {
-      errors.push(`${action}:evidence_policy_missing`);
+    if (!Array.isArray(policy?.transitionWhen) || policy.transitionWhen.length === 0) {
+      errors.push(`${action}:transition_policy_missing`);
     }
   }
   return { ok: errors.length === 0, errors };

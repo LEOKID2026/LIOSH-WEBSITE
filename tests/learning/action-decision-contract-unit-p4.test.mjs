@@ -1,3 +1,20 @@
+/**
+ * ADC V2 contract unit test — NOT an end-to-end benchmark.
+ *
+ * docs/audits/DECISION-ENGINE-CLAUDE-BLOCKER-CLOSURE-2026-07-24.md (Part 5,
+ * closing BLOCKER-3 from docs/audits/DECISION-ENGINE-INDEPENDENT-CLAUDE-AUDIT-2026-07-24.md):
+ * every `canonical`/`ctx` object below is a hand-written literal injected
+ * directly into `buildActionDecisionContractV2` — it does NOT start from raw
+ * child answer data, and it does NOT call the real evidence pipeline
+ * (utils/canonical-topic-state/decision-table.js /
+ * utils/learning-pattern-decision/build-unified-decision-context.js). It is
+ * a real, useful regression test of ActionDecisionContractV2's own branch
+ * logic (last-mile action selection), kept as-is on purpose — but it must
+ * not be cited as validating what a real student's evidence produces.
+ *
+ * For a genuine raw-evidence-to-executor-directive benchmark, see
+ * tests/learning/decision-engine-e2e-benchmark.test.mjs.
+ */
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -359,7 +376,7 @@ test("P4 calibration contract defines all eleven temporary actions", () => {
   assert.equal(Object.keys(DECISION_CALIBRATION_ACTIONS_V1).length, 11);
 });
 
-test("P4 benchmark: fifty professional decisions match authorization and RI caps", () => {
+test("P4 contract unit test: fifty injected-canonical-state cases match authorization and RI caps (NOT a raw-evidence benchmark — see decision-engine-e2e-benchmark.test.mjs)", () => {
   assert.equal(BENCHMARK.length, 50);
   for (const scenario of BENCHMARK) {
     const p = scenario.profile;

@@ -15,6 +15,10 @@ import {
   validatePrerequisitePrecision,
 } from "../../utils/action-decision-contract/prerequisite-precision.js";
 import {
+  hasContentForSkill,
+  hasExactSkillConsumer,
+} from "../../lib/learning/prerequisite-content-source.js";
+import {
   extractDiagnosticMetadataFromQuestion,
   mergeDiagnosticIntoMistakeEntry,
 } from "../../utils/diagnostic-mistake-metadata.js";
@@ -75,7 +79,17 @@ test("P3B all 12 current prerequisite declarations resolve to curriculum entitie
   }
 });
 
-test("P3B real declared prerequisites resolve as exact curriculum skills", () => {
+test("P3B real declared prerequisites resolve to exact_skill only when BOTH real bank content exists AND the subject has a wired runtime consumer; otherwise fall back", () => {
+  // docs/audits/DECISION-ENGINE-CLAUDE-BLOCKER-CLOSURE-2026-07-24.md (round 4):
+  // exact_skill requires three independent things to be true — registered,
+  // real bank content of its OWN (a declared prerequisite id is not
+  // automatically backed by content just because the declaring question
+  // exists — e.g. geometry's "tri_sum_180" is registered but no geometry
+  // question is itself tagged with that diagnosticSkillId), and the
+  // subject's master actually consuming contentOverrideTarget at runtime
+  // (currently only geometry — see hasExactSkillConsumer). Expectations
+  // below are computed from the same two independently-checkable real-data
+  // facts, not assumed per subject.
   for (const row of declarations()) {
     const detail = resolvePrerequisitePrecision({
       subjectId: row.subjectId,
@@ -84,9 +98,16 @@ test("P3B real declared prerequisites resolve as exact curriculum skills", () =>
       v3: { prerequisiteSkill: row.id },
       prerequisiteSignal: { prerequisiteSkillIds: [row.id] },
     });
-    assert.equal(detail.precision, "exact_skill", row.id);
-    assert.equal(detail.entityType, "curriculum_skill", row.id);
-    assert.equal(detail.id, row.id);
+    const expectExact =
+      hasExactSkillConsumer(row.subjectId) && hasContentForSkill(row.id, row.subjectId);
+    if (expectExact) {
+      assert.equal(detail.precision, "exact_skill", row.id);
+      assert.equal(detail.entityType, "curriculum_skill", row.id);
+      assert.equal(detail.id, row.id);
+    } else {
+      assert.equal(detail.precision, "grade_foundation_area", row.id);
+      assert.notEqual(detail.id, row.id, row.id);
+    }
     assert.equal(validatePrerequisitePrecision(detail).ok, true, row.id);
   }
 });
@@ -208,11 +229,15 @@ test("P3B real bank prerequisite reaches ActionDecisionContractV2 exactly", () =
       reconciler: { reasonCodes: [] },
     },
   });
+  // science has no wired runtime consumer yet (see hasExactSkillConsumer) —
+  // the contract must fall back to grade_foundation_area, never claim
+  // exact_skill for "sci_body_fact_recall" here even though it's registered
+  // and has real bank content (proven by the P3B tests above).
   assert.equal(contract.action, "strengthen_prerequisite");
-  assert.equal(contract.target.prerequisite, "sci_body_fact_recall");
-  assert.equal(contract.target.prerequisiteDetail.precision, "exact_skill");
+  assert.equal(contract.target.prerequisite, "body");
+  assert.equal(contract.target.prerequisiteDetail.precision, "grade_foundation_area");
   assert.equal(
     contract.target.prerequisiteDetail.entityType,
-    "curriculum_skill",
+    "topic_foundation_area",
   );
 });

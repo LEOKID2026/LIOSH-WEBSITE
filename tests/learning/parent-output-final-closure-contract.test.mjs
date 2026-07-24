@@ -70,22 +70,43 @@ function topicRow({ subjectId, topicRowKey, topicName, q, c, w, acc, unit = {} }
   };
 }
 
+// docs/audits/DECISION-ENGINE-CLAUDE-BLOCKER-CLOSURE-2026-07-24.md (round 5):
+// since commit 30ebd6ebe ("complete decision engine production integration"),
+// buildSubjectEngineDecisionContract's isActionableGapTopic requires a REAL
+// ADC V2 actionDecisionContract (eligible + intervention) rather than a bare
+// recommendedAction string, and buildParentReportEngineDecisionContract only
+// computes one when `unit.canonicalState` is present (canonicalState = unit
+// ?.canonicalState, exactly as the real production caller
+// build-learning-pattern-decision.js always supplies it from a real DE2
+// unit). Fixtures built without a canonicalState fail-closed to
+// collect_more_evidence/intervention:false — which is CORRECT fail-safe
+// behavior for a topic with no real authority context, but means these test
+// fixtures must supply one explicitly to represent an authorized topic.
+const GAP_AUTHORIZED_CANONICAL_STATE = {
+  actionState: "intervene",
+  recommendation: { allowed: true, intensityCap: "RI2", reasonCodes: ["test:authorized_gap"] },
+};
+const MAINTAIN_CANONICAL_STATE = {
+  actionState: "maintain",
+  recommendation: { allowed: true, intensityCap: "RI0", reasonCodes: ["test:authorized_maintain"] },
+};
+
 // ---------------------------------------------------------------------------
 // Gate: every entry in the contract is reachable at runtime (unless disabled)
 // ---------------------------------------------------------------------------
 
 const topicEngineFixtures = {
   clear_topic_gap: buildParentReportEngineDecisionContract(
-    topicRow({ subjectId: "math", topicRowKey: "addition::g1", topicName: "חיבור", q: 10, c: 2, w: 8, acc: 20 }),
+    topicRow({ subjectId: "math", topicRowKey: "addition::g1", topicName: "חיבור", q: 10, c: 2, w: 8, acc: 20, unit: { canonicalState: GAP_AUTHORIZED_CANONICAL_STATE } }),
   ),
   topic_needs_strengthening: buildParentReportEngineDecisionContract(
-    topicRow({ subjectId: "math", topicRowKey: "subtraction::g3", topicName: "חיסור", q: 12, c: 7, w: 5, acc: 58 }),
+    topicRow({ subjectId: "math", topicRowKey: "subtraction::g3", topicName: "חיסור", q: 12, c: 7, w: 5, acc: 58, unit: { canonicalState: GAP_AUTHORIZED_CANONICAL_STATE } }),
   ),
   partial_stable: buildParentReportEngineDecisionContract(
     topicRow({ subjectId: "math", topicRowKey: "multiplication::g4", topicName: "כפל", q: 14, c: 10, w: 4, acc: 71 }),
   ),
   mastery_stable: buildParentReportEngineDecisionContract(
-    topicRow({ subjectId: "math", topicRowKey: "division::g4", topicName: "חילוק", q: 16, c: 15, w: 1, acc: 94 }),
+    topicRow({ subjectId: "math", topicRowKey: "division::g4", topicName: "חילוק", q: 16, c: 15, w: 1, acc: 94, unit: { canonicalState: MAINTAIN_CANONICAL_STATE } }),
   ),
   early_direction_only: buildParentReportEngineDecisionContract(
     topicRow({ subjectId: "math", topicRowKey: "fractions::g5", topicName: "שברים", q: 6, c: 5, w: 1, acc: 83 }),
@@ -93,17 +114,25 @@ const topicEngineFixtures = {
   insufficient_data: buildParentReportEngineDecisionContract(
     topicRow({ subjectId: "math", topicRowKey: "decimals::g5", topicName: "עשרוניים", q: 1, c: 1, w: 0, acc: 100 }),
   ),
+  // riskFlags now lives at row.topicEngineRowSignals.riskFlags (the real
+  // production shape attached by utils/topic-next-step-engine.js's
+  // enrichReportMapsWithTopicStepHints) — unit.riskFlags stopped being read
+  // by build-parent-report-engine-decision-contract.js in commit 30ebd6ebe
+  // ("DE2 units do not produce riskFlags... do not read a fictional DE2
+  // field").
   speed_pressure_pattern: buildParentReportEngineDecisionContract({
     subjectId: "math",
     topicRowKey: "sequences::g5",
     topicName: "סדרות",
-    row: { questions: 28, correct: 16, wrong: 12, accuracy: 58, displayName: "סדרות", modeKey: "speed" },
+    row: {
+      questions: 28, correct: 16, wrong: 12, accuracy: 58, displayName: "סדרות", modeKey: "speed",
+      topicEngineRowSignals: { riskFlags: { speedOnlyRisk: true } },
+    },
     unit: {
       subjectId: "math",
       topicRowKey: "sequences::g5",
       displayName: "סדרות",
       modeKey: "speed",
-      riskFlags: { speedOnlyRisk: true },
     },
   }),
 };
@@ -186,13 +215,15 @@ check("clear_topic_gap wins over speed_pressure_pattern when accuracy is very lo
     subjectId: "math",
     topicRowKey: "sequences::g5",
     topicName: "סדרות",
-    row: { questions: 28, correct: 8, wrong: 20, accuracy: 29, displayName: "סדרות", modeKey: "speed" },
+    row: {
+      questions: 28, correct: 8, wrong: 20, accuracy: 29, displayName: "סדרות", modeKey: "speed",
+      topicEngineRowSignals: { riskFlags: { speedOnlyRisk: true } },
+    },
     unit: {
       subjectId: "math",
       topicRowKey: "sequences::g5",
       displayName: "סדרות",
       modeKey: "speed",
-      riskFlags: { speedOnlyRisk: true },
     },
   });
   assert.equal(veryLowAccSpeed.engineDecision, "clear_topic_gap",
@@ -253,13 +284,15 @@ function speedTopicFixture(topicRowKey, displayName, { q = 28, c = 16, w = 12, a
     subjectId: "math",
     topicRowKey,
     topicName: displayName,
-    row: { questions: q, correct: c, wrong: w, accuracy: acc, displayName, modeKey: "speed" },
+    row: {
+      questions: q, correct: c, wrong: w, accuracy: acc, displayName, modeKey: "speed",
+      topicEngineRowSignals: { riskFlags: { speedOnlyRisk: true } },
+    },
     unit: {
       subjectId: "math",
       topicRowKey,
       displayName,
       modeKey: "speed",
-      riskFlags: { speedOnlyRisk: true },
     },
   });
   return {
@@ -341,13 +374,16 @@ check("clear_topic_gap under very-low-accuracy speed mode still produces focused
     subjectId: "math",
     topicRowKey: "sequences::g5",
     topicName: "סדרות",
-    row: { questions: 28, correct: 8, wrong: 20, accuracy: 29, displayName: "סדרות", modeKey: "speed" },
+    row: {
+      questions: 28, correct: 8, wrong: 20, accuracy: 29, displayName: "סדרות", modeKey: "speed",
+      topicEngineRowSignals: { riskFlags: { speedOnlyRisk: true } },
+    },
     unit: {
       subjectId: "math",
       topicRowKey: "sequences::g5",
       displayName: "סדרות",
       modeKey: "speed",
-      riskFlags: { speedOnlyRisk: true },
+      canonicalState: GAP_AUTHORIZED_CANONICAL_STATE,
     },
   });
   assert.equal(veryLowAccSpeed.engineDecision, "clear_topic_gap");

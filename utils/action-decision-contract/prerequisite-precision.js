@@ -3,6 +3,10 @@ import {
   curriculumSkillEntity,
   isRegisteredCurriculumSkill,
 } from "../curriculum-skill-entity-registry.js";
+import {
+  hasContentForSkill,
+  hasExactSkillConsumer,
+} from "../../lib/learning/prerequisite-content-source.js";
 
 export const PREREQUISITE_PRECISION = Object.freeze([
   "exact_skill",
@@ -11,10 +15,27 @@ export const PREREQUISITE_PRECISION = Object.freeze([
   "generic_foundation_review",
 ]);
 
+// docs/audits/DECISION-ENGINE-CLAUDE-BLOCKER-CLOSURE-2026-07-24.md (Part 2,
+// round 4): a skill must be (1) registered, (2) actually servable by a real
+// question bank, AND (3) actually consumed at runtime by that subject's
+// master page — before exact_skill can be produced. (3) is deliberately
+// checked separately from (2): a subject can have real bank content for a
+// skill while its master's question-generation loop still doesn't read
+// contentOverrideTarget yet (currently true for hebrew/science — see
+// hasExactSkillConsumer). A contract must never promise an action nothing
+// will actually execute; unsupported subjects fall through to
+// grade_foundation_area/generic_foundation_review below.
 function exactSkillCandidate(ids, subjectId) {
+  if (!hasExactSkillConsumer(subjectId)) return null;
   for (const raw of ids) {
     const id = String(raw || "").trim();
-    if (id && isRegisteredCurriculumSkill(id, subjectId)) return id;
+    if (
+      id &&
+      isRegisteredCurriculumSkill(id, subjectId) &&
+      hasContentForSkill(id, subjectId)
+    ) {
+      return id;
+    }
   }
   return null;
 }
@@ -58,6 +79,12 @@ export function resolvePrerequisitePrecision(input) {
         ? "v3.prerequisiteSkill"
         : "mistake_metadata.prerequisiteSkillIds",
       entityValidated: true,
+      // docs/audits/DECISION-ENGINE-CLAUDE-BLOCKER-CLOSURE-2026-07-24.md
+      // (Part 3): registered curriculum skills declare their own real
+      // content topicKey — surfaced here so the executor can actually
+      // route question selection to it (previously it referenced a
+      // contract.target.prerequisiteTopic field that nothing ever set).
+      topicKey: entity.topicKey || null,
     };
   }
 

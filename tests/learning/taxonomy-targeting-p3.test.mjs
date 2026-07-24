@@ -505,7 +505,11 @@ test("P3 subskill: above-grade mismatch blocks specific weakness target", () => 
   );
 });
 
-test("P3B prerequisite: explicit registered curriculum skill has exact precision", () => {
+test("P3B prerequisite: registered curriculum skill without a wired runtime consumer falls back, never claims exact precision", () => {
+  // science has real bank content + a registered entity for
+  // sci_body_fact_recall, but no master page consumes contentOverrideTarget
+  // for science yet — see lib/learning/prerequisite-content-source.js's
+  // EXACT_SKILL_CONSUMER_SUBJECTS (docs/audits/DECISION-ENGINE-CLAUDE-BLOCKER-CLOSURE-2026-07-24.md, round 4).
   const context = actionContext();
   context.signals.grade = {
     relation: "lower",
@@ -526,8 +530,8 @@ test("P3B prerequisite: explicit registered curriculum skill has exact precision
     unifiedDecisionContext: context,
   });
   assert.equal(contract.action, "strengthen_prerequisite");
-  assert.equal(contract.target.prerequisite, "sci_body_fact_recall");
-  assert.equal(contract.target.prerequisiteDetail.precision, "exact_skill");
+  assert.equal(contract.target.prerequisite, "body");
+  assert.equal(contract.target.prerequisiteDetail.precision, "grade_foundation_area");
   assert.equal(validatePrerequisitePrecision(contract.target.prerequisiteDetail).ok, true);
 });
 
@@ -596,7 +600,7 @@ test("P3 prerequisite: unregistered curriculum skill falls back explicitly inste
   );
 });
 
-test("P3 prerequisite: raw metadata can reach an exact registered prerequisite target", () => {
+test("P3 prerequisite: raw metadata for a registered science skill falls back (no wired runtime consumer), never masquerades as exact", () => {
   const result = runP3RawRuleScenario("S-03", {
     gradeRelation: "lower",
     registeredGradeKey: "g4",
@@ -606,9 +610,9 @@ test("P3 prerequisite: raw metadata can reach an exact registered prerequisite t
   assert.equal(result.actionDecisionContract.action, "strengthen_prerequisite");
   assert.equal(
     result.actionDecisionContract.target.prerequisiteDetail.precision,
-    "exact_skill",
+    "grade_foundation_area",
   );
-  assert.equal(
+  assert.notEqual(
     result.actionDecisionContract.target.prerequisite,
     "sci_body_fact_recall",
   );

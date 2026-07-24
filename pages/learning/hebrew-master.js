@@ -158,6 +158,9 @@ import { fetchStudentHomeProfile } from "../../lib/learning-client/fetchStudentH
 import { buildSubjectMonthlyPersistenceViewFromProfile } from "../../lib/learning-client/subjectMonthlyPersistenceView";
 import { useLearningVisibilityClock } from "../../hooks/useLearningVisibilityClock";
 import { useStudentDisplayLevelPractice } from "../../hooks/useStudentDisplayLevelPractice.js";
+import { useActionDecisionRouteSync } from "../../hooks/useActionDecisionRouteSync.js";
+import { usePracticeMoreBudget } from "../../hooks/usePracticeMoreBudget.js";
+import { resolvePracticeMoreTopicOverride } from "../../lib/learning/practice-more-budget.js";
 import { useStudentActionDecision } from "../../hooks/useStudentActionDecision.js";
 import { StudentDisplayLevelSelect } from "../../components/learning/StudentDisplayLevelSelect.js";
 import {
@@ -1365,23 +1368,15 @@ export default function HebrewMaster() {
     };
   }, [currentQuestion, grade]);
 
-  // Timer countdown (רק במצב Challenge או Speed)
-  useEffect(() => {
-    if (actionDecisionDirective.active) {
-      if (actionDecisionDirective.questionPolicy.preferKind) {
-        practiceForceKindRef.current =
-          actionDecisionDirective.questionPolicy.preferKind;
-      }
-      if (
-        ["advance_cautiously", "strengthen_prerequisite"].includes(
-          actionDecisionDirective.action,
-        ) &&
-        actionDecisionDirective.routePolicy.level !== level
-      ) {
-        applyPlannerLevelKey(actionDecisionDirective.routePolicy.level);
-      }
-    }
-  }, [actionDecisionDirective, applyPlannerLevelKey, level]);
+  // ADC-driven forced question kind + level, with rollback on expiry/failure
+  // (see hooks/useActionDecisionRouteSync.js — BLOCKER-2 closure).
+  useActionDecisionRouteSync({
+    directive: actionDecisionDirective,
+    level,
+    applyLevel: applyPlannerLevelKey,
+    forceKindRef: practiceForceKindRef,
+  });
+  const practiceMoreBudget = usePracticeMoreBudget(actionDecisionDirective);
 
   useEffect(() => {
     if (!gameActive || (mode !== "challenge" && mode !== "speed")) return;
@@ -1650,6 +1645,15 @@ export default function HebrewMaster() {
 
     const localRecentQuestions = SessionAntiRepeatBuffer.fromIterable(recentQuestions);
 
+    // While a practice_more budget remains, pin content selection to the
+    // decision's topic — overriding "mixed" random pick below, and reused
+    // by the G1/G2 quality-retry loop further down this function. See
+    // docs/audits/DECISION-ENGINE-CLAUDE-BLOCKER-CLOSURE-2026-07-24.md.
+    const practiceMoreTopicLock = resolvePracticeMoreTopicOverride(
+      practiceMoreBudget,
+      GRADES[grade].topics
+    );
+
     resolveHebrewAdaptiveTarget({ operation: operationForState });
 
     const probeAtStart = hebrewPendingDiagnosticProbeRef.current;
@@ -1669,6 +1673,10 @@ export default function HebrewMaster() {
           opForQuestion =
             Math.random() < 0.5 ? "word_problems" : operation;
         }
+      }
+
+      if (practiceMoreTopicLock) {
+        opForQuestion = practiceMoreTopicLock;
       }
 
       question = generateQuestion(
@@ -1825,11 +1833,12 @@ export default function HebrewMaster() {
         qualityRetries < maxQualityRetries
       ) {
         qualityRetries += 1;
+        const recoveryOp = practiceMoreTopicLock || operationForState;
         const recoveryQ = generateQuestion(
           levelConfigCopy,
-          operationForState,
+          recoveryOp,
           grade,
-          operationForState === "mixed" ? mixedOperations : null,
+          recoveryOp === "mixed" ? mixedOperations : null,
           { excludeFingerprints: new Set() }
         );
         audioBuild1CounterRef.current += 1;
@@ -2471,8 +2480,16 @@ export default function HebrewMaster() {
       !actionDecisionDirective.active ||
       actionDecisionDirective.sessionPolicy.allowEscalation
     ) {
-      applyAnswerAdaptive(isCorrect, { mode: focusedPracticeMode });
+      applyAnswerAdaptive(isCorrect, {
+        mode: focusedPracticeMode,
+        gameMode: reportModeFromGameState(mode, focusedPracticeMode),
+        afterStepByStep: stepByStepViewedRef.current,
+      });
     }
+    practiceMoreBudget.consume({
+      gameMode: reportModeFromGameState(mode, focusedPracticeMode),
+      afterStepByStep: stepByStepViewedRef.current,
+    });
     saveHebrewAnswerInParallel({
       question: questionForSave,
       userAnswer: answer,

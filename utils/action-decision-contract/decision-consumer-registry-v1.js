@@ -16,6 +16,17 @@ export const DECISION_CONSUMER_REGISTRY_V1 = Object.freeze([
     role: "runtime_executor",
   }),
   Object.freeze({
+    id: "legacy-internal-adaptive-streak",
+    paths: Object.freeze([
+      "lib/learning/regular-internal-adaptive.js",
+      "lib/learning/science-internal-adaptive.js",
+      "lib/learning/adaptive-streak-mode-eligibility.js",
+      "hooks/useStudentDisplayLevelPractice.js",
+    ]),
+    status: "legacy_evidence_only",
+    role: "observational_streak_metrics_cannot_authorize_level_or_route",
+  }),
+  Object.freeze({
     id: "student-action-api",
     paths: Object.freeze(["pages/api/student/action-decisions.js"]),
     status: "adc_v2",

@@ -143,6 +143,9 @@ import {
   tryConsumeBookContextOnPracticeEntry,
 } from "../../lib/learning-book/book-context-master-helper";
 import { useStudentDisplayLevelPractice } from "../../hooks/useStudentDisplayLevelPractice.js";
+import { useActionDecisionRouteSync } from "../../hooks/useActionDecisionRouteSync.js";
+import { usePracticeMoreBudget } from "../../hooks/usePracticeMoreBudget.js";
+import { resolvePracticeMoreTopicOverride } from "../../lib/learning/practice-more-budget.js";
 import { useStudentActionDecision } from "../../hooks/useStudentActionDecision.js";
 import { StudentDisplayLevelRegularOnly } from "../../components/learning/StudentDisplayLevelSelect.js";
 import { studentDisplayLevelLabel } from "../../lib/learning-client/student-display-level-practice.js";
@@ -1427,19 +1430,14 @@ export default function ScienceMaster() {
     }
   }, [dailyChallenge.date, weeklyChallenge.week]);
 
-  // ----- TIMER -----
-  useEffect(() => {
-    if (actionDecisionDirective.active) {
-      if (
-        ["advance_cautiously", "strengthen_prerequisite"].includes(
-          actionDecisionDirective.action,
-        ) &&
-        actionDecisionDirective.routePolicy.level !== level
-      ) {
-        applyPlannerLevelKey(actionDecisionDirective.routePolicy.level);
-      }
-    }
-  }, [actionDecisionDirective, applyPlannerLevelKey, level]);
+  // ADC-driven level, with rollback on expiry/failure
+  // (see hooks/useActionDecisionRouteSync.js — BLOCKER-2 closure).
+  useActionDecisionRouteSync({
+    directive: actionDecisionDirective,
+    level,
+    applyLevel: applyPlannerLevelKey,
+  });
+  const practiceMoreBudget = usePracticeMoreBudget(actionDecisionDirective);
 
   useEffect(() => {
     if (!gameActive) return;
@@ -1493,8 +1491,18 @@ export default function ScienceMaster() {
       return [];
     }
 
+    // While a practice_more budget remains, pin the question pool to the
+    // decision's topic — overriding "mixed"/practice-focus group expansion
+    // below. See docs/audits/DECISION-ENGINE-CLAUDE-BLOCKER-CLOSURE-2026-07-24.md.
+    const practiceMoreTopicLock = resolvePracticeMoreTopicOverride(
+      practiceMoreBudget,
+      allowedTopicsForGrade
+    );
+
     let topicsList;
-    if (mode === "practice" && practiceFocus !== "balanced") {
+    if (practiceMoreTopicLock) {
+      topicsList = [practiceMoreTopicLock];
+    } else if (mode === "practice" && practiceFocus !== "balanced") {
       topicsList = (PRACTICE_TOPIC_GROUPS[practiceFocus] || []).filter((t) =>
         allowedTopicsForGrade.includes(t)
       );
@@ -2478,10 +2486,22 @@ function saveScienceAnswerInParallel({
     if (
       (!actionDecisionDirective.active ||
         actionDecisionDirective.sessionPolicy.allowEscalation) &&
-      isStudentAdaptiveActive("science", { mode: focusedPracticeMode })
+      isStudentAdaptiveActive("science", {
+        mode: focusedPracticeMode,
+        gameMode: reportModeFromGameState(mode, focusedPracticeMode),
+        afterStepByStep: stepByStepViewedRef.current,
+      })
     ) {
-      applyAnswerAdaptive(isCorrect, { mode: focusedPracticeMode });
+      applyAnswerAdaptive(isCorrect, {
+        mode: focusedPracticeMode,
+        gameMode: reportModeFromGameState(mode, focusedPracticeMode),
+        afterStepByStep: stepByStepViewedRef.current,
+      });
     }
+    practiceMoreBudget.consume({
+      gameMode: reportModeFromGameState(mode, focusedPracticeMode),
+      afterStepByStep: stepByStepViewedRef.current,
+    });
 
     saveScienceAnswerInParallel({
       question: questionForSave,

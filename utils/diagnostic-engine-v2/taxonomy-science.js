@@ -131,7 +131,15 @@ export const SCIENCE_TAXONOMY_ROWS = [
     subjectId: "science",
     domainHe: "אקולוגיה",
     topicHe: "יחסים",
-    subskillHe: "רשת מזון",
+    // docs/audits/DECISION-ENGINE-CLAUDE-BLOCKER-CLOSURE-2026-07-24.md (Part 6):
+    // required tags (environment_error, ecosystem_confusion — see
+    // taxonomy-evidence-rules.js) only appear on genuine ecosystem-concept
+    // questions (e.g. data/science-questions.js "env_2": "what is an
+    // ecosystem?"). Recycling/conservation questions in the same
+    // "environment" topic (e.g. "env_1") carry no such tag and structurally
+    // cannot match this rule. Label broadened from the narrower "food web"
+    // to the accurate scope of what can actually trigger this row.
+    subskillHe: "מערכת אקולוגית ויחסים בין יצורים",
     patternHe: "רמה שגויה חוזרת",
     minWrong: 3,
     minDistinctPatternFamilies: 0,

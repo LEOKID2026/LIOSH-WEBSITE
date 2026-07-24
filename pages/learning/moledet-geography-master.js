@@ -193,6 +193,9 @@ import LearningMasterMobileNavTitle from "../../components/learning/LearningMast
 import { StepExerciseUiProvider } from "../../contexts/StepExerciseUiContext.jsx";
 import { formatMathHudNumber } from "../../utils/math-master-hud-number.client.js";
 import { useStudentDisplayLevelPractice } from "../../hooks/useStudentDisplayLevelPractice.js";
+import { useActionDecisionRouteSync } from "../../hooks/useActionDecisionRouteSync.js";
+import { usePracticeMoreBudget } from "../../hooks/usePracticeMoreBudget.js";
+import { resolvePracticeMoreTopicOverride } from "../../lib/learning/practice-more-budget.js";
 import { useStudentActionDecision } from "../../hooks/useStudentActionDecision.js";
 import { StudentDisplayLevelSelect } from "../../components/learning/StudentDisplayLevelSelect.js";
 import {
@@ -1264,23 +1267,15 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
     };
   }, [mounted]);
 
-  // Timer countdown (רק במצב Challenge או Speed)
-  useEffect(() => {
-    if (actionDecisionDirective.active) {
-      if (actionDecisionDirective.questionPolicy.preferKind) {
-        practiceForceKindRef.current =
-          actionDecisionDirective.questionPolicy.preferKind;
-      }
-      if (
-        ["advance_cautiously", "strengthen_prerequisite"].includes(
-          actionDecisionDirective.action,
-        ) &&
-        actionDecisionDirective.routePolicy.level !== level
-      ) {
-        applyPlannerLevelKey(actionDecisionDirective.routePolicy.level);
-      }
-    }
-  }, [actionDecisionDirective, applyPlannerLevelKey, level]);
+  // ADC-driven forced question kind + level, with rollback on expiry/failure
+  // (see hooks/useActionDecisionRouteSync.js — BLOCKER-2 closure).
+  useActionDecisionRouteSync({
+    directive: actionDecisionDirective,
+    level,
+    applyLevel: applyPlannerLevelKey,
+    forceKindRef: practiceForceKindRef,
+  });
+  const practiceMoreBudget = usePracticeMoreBudget(actionDecisionDirective);
 
   useEffect(() => {
     if (!gameActive || (mode !== "challenge" && mode !== "speed")) return;
@@ -1468,6 +1463,14 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
 
     resolveMoledetAdaptiveTarget({ operation: operationForState });
 
+    // While a practice_more budget remains, pin content selection to the
+    // decision's topic — overriding "mixed" random pick below. See
+    // docs/audits/DECISION-ENGINE-CLAUDE-BLOCKER-CLOSURE-2026-07-24.md.
+    const practiceMoreTopicLock = resolvePracticeMoreTopicOverride(
+      practiceMoreBudget,
+      GRADES[grade].topics
+    );
+
     do {
       let opForQuestion = operationForState;
       if (supportsWordProblems) {
@@ -1477,6 +1480,10 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
           opForQuestion =
             Math.random() < 0.5 ? "word_problems" : operation;
         }
+      }
+
+      if (practiceMoreTopicLock) {
+        opForQuestion = practiceMoreTopicLock;
       }
 
       const probeResultHolder = {};
@@ -2007,8 +2014,16 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
       !actionDecisionDirective.active ||
       actionDecisionDirective.sessionPolicy.allowEscalation
     ) {
-      applyAnswerAdaptive(isCorrect, { mode: focusedPracticeModeRef.current });
+      applyAnswerAdaptive(isCorrect, {
+        mode: focusedPracticeModeRef.current,
+        gameMode: reportModeFromGameState(mode, focusedPracticeModeRef.current),
+        afterStepByStep: stepByStepViewedRef.current,
+      });
     }
+    practiceMoreBudget.consume({
+      gameMode: reportModeFromGameState(mode, focusedPracticeModeRef.current),
+      afterStepByStep: stepByStepViewedRef.current,
+    });
     saveMoledetAnswerInParallel({
       question: questionForSave,
       userAnswer: answer,

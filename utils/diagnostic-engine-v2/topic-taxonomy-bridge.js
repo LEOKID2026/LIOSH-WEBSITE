@@ -41,14 +41,31 @@ const GEOMETRY_TOPIC_TO_IDS = {
   volume: ["G-05"],
   angles: ["G-02"],
   parallel_perpendicular: ["G-01"],
-  triangles: ["G-01"],
+  // docs/audits/DECISION-ENGINE-CLAUDE-BLOCKER-CLOSURE-2026-07-24.md (Part 6):
+  // G-01 is rectangle/parallelogram property confusion, not a triangle rule
+  // — verified against utils/diagnostic-engine-v2/taxonomy-geometry.js AND
+  // against utils/geometry-question-generator.js's "triangles" classify
+  // case, which carries no real per-option distractorFamily evidence at
+  // all. G-08 (triangle area) and G-09 (Pythagoras) are real, dedicated
+  // triangle rules but are already correctly scoped to their own topic keys
+  // (area, pythagoras) below — not to generic triangle classification.
+  // Left empty on purpose: topic-level practice only, never a mislabeled
+  // subskill claim, until a real dedicated row is added.
+  triangles: [],
   transformations: ["G-04"],
   rotation: ["G-04"],
   symmetry: ["G-07"],
   diagonal: ["G-01"],
   heights: ["G-03"],
   tiling: ["G-02"],
-  circles: ["G-03", "G-06"],
+  // docs/audits/DECISION-ENGINE-CLAUDE-BLOCKER-CLOSURE-2026-07-24.md (Part 6):
+  // no taxonomy row is actually about circles (radius/diameter/pi) — G-03 is
+  // parallelogram height selection and G-06 is perimeter unit conversion,
+  // both approximate fits verified against
+  // utils/geometry-question-generator.js's circle cases, which carry no
+  // real per-option distractorFamily evidence either. Left empty on
+  // purpose: topic-level only.
+  circles: [],
   solids: ["G-01", "G-05"],
   pythagoras: ["G-09"],
   mixed: ["G-01"],
