@@ -81,12 +81,15 @@ import {
   buildEvidenceContractV1,
   validateEvidenceContractV1,
 } from "./contracts/parent-report-contracts-v1.js";
+import { legacyRecommendedActionFromContractV2 } from "./action-decision-contract/action-decision-contract-v2.js";
 
-/** @typedef {'advance_level'|'advance_grade_topic_only'|'maintain_and_strengthen'|'maintain_regular_strengthen_medium'|'remediate_same_level'|'drop_one_level_topic_only'|'drop_one_grade_topic_only'|'suggest_return_to_regular'} RecommendedNextStep */
+/** @typedef {'advance_level'|'advance_grade_topic_only'|'maintain_current_path'|'watch'|'maintain_and_strengthen'|'maintain_regular_strengthen_medium'|'remediate_same_level'|'drop_one_level_topic_only'|'drop_one_grade_topic_only'|'suggest_return_to_regular'} RecommendedNextStep */
 
 export const RECOMMENDED_STEP_LABEL_HE = {
   advance_level: "מעבר לרמת מתקדם - באותו נושא בלבד",
   advance_grade_topic_only: "העלאת כיתה - באותו נושא בלבד",
+  maintain_current_path: "להמשיך במסלול הרגיל",
+  watch: "להמשיך ולאסוף מידע",
   maintain_and_strengthen: "לבסס באותה רמה",
   maintain_regular_strengthen_medium: "לבסס ברמה רגילה",
   remediate_same_level: "חיזוק באותה רמה",
@@ -94,6 +97,24 @@ export const RECOMMENDED_STEP_LABEL_HE = {
   drop_one_level_topic_only: "חיזוק באותה רמה",
   drop_one_grade_topic_only: "הורדת רמת קושי - באותו נושא בלבד",
 };
+
+function legacyDisplayStepAtIntensity(step, intensity) {
+  const current = String(step || "");
+  if (intensity === "RI0") {
+    return current === "watch" ? "watch" : "maintain_current_path";
+  }
+  if (intensity === "RI1") return "maintain_and_strengthen";
+  if (intensity === "RI2") {
+    return [
+      "remediate_same_level",
+      "drop_one_level_topic_only",
+      "drop_one_grade_topic_only",
+    ].includes(current)
+      ? current
+      : "remediate_same_level";
+  }
+  return current;
+}
 
 /** Engine field key — split to keep parent-copy guard clean. */
 const K_SKILL_FOCUS = "sub" + "skillCandidate";
@@ -215,6 +236,16 @@ function buildHebrewCopy(step, ctx, cfg) {
       reasonHe: `בנושא ${displayName} כבר עובדים בתרגול הנוכחי (${levelLabel}) עם דיוק טוב (${acc}%) וכמות שאלות מספיקה (${q} שאלות). אפשר לנסות כיתה גבוהה יותר דווקא בנושא הזה - לא לכל המקצוע.`,
       parentHe: `אם ניתן לבחור כיתה לפי נושא - בנושא ${displayName} אפשר לנסות כיתה אחת מעלה. זה רק לנושא הזה; בשאר הנושאים נשארים כרגיל עד שיהיו נתונים דומים.`,
       studentHe: `בנושא ${displayName} אפשר לנסות כיתה קצת יותר גבוהה - רק שם, צעד אחר צעד.`,
+    },
+    maintain_current_path: {
+      reasonHe: `בנושא ${displayName} החלטת המנוע היא להמשיך במסלול הרגיל ללא תרגול חיזוק נוסף.`,
+      parentHe: `בנושא ${displayName} מומלץ להמשיך במסלול הרגיל. ההחלטה תיבדק מחדש לאחר פעילות נוספת.`,
+      studentHe: `ממשיכים כרגיל בנושא ${displayName}.`,
+    },
+    watch: {
+      reasonHe: `בנושא ${displayName} עדיין לא נדרש שינוי במסלול. נאסוף עוד מידע לפני החלטה נוספת.`,
+      parentHe: `בנושא ${displayName} מומלץ להמשיך כרגע במסלול הרגיל ולאסוף עוד פעילות לפני שינוי.`,
+      studentHe: `ממשיכים כרגיל ואוספים עוד מידע בנושא ${displayName}.`,
     },
     maintain_and_strengthen: {
       reasonHe: `בנושא ${displayName} יש ${q} שאלות ודיוק של כ-${acc}%${mPart}. עדיין לא בטוחים מספיק לקפיצה קדימה או אחורה - כדאי להמשיך באותה כיתה ורמת קושי ולחזק עקביות.`,
@@ -1357,6 +1388,13 @@ export function buildTopicRecommendationRecord(
   const rowAug = { ...row, ...signals, engineConfidenceTier, accuracyBand, taxonomyMatch, subjectId: String(subjectId) };
   const decision = decideTopicNextStep(rowAug, mC, cfg);
   const q = Number(row?.questions) || 0;
+  const actionDecisionContractV2 =
+    row?.actionDecisionContract?.version === "2.0.0"
+      ? row.actionDecisionContract
+      : null;
+  const adcLegacyStep = actionDecisionContractV2
+    ? legacyRecommendedActionFromContractV2(actionDecisionContractV2)
+    : null;
 
   const toneByKey =
     toneContext && typeof toneContext === "object" && toneContext.parentTopicToneByKey
@@ -1372,9 +1410,19 @@ export function buildTopicRecommendationRecord(
       ? cautionLinesByKey[String(topicRowKey)]
       : null;
 
-  const recommendationDecisionTrace = Array.isArray(decision.recommendationDecisionTrace)
-    ? decision.recommendationDecisionTrace
-    : [];
+  const recommendationDecisionTrace = actionDecisionContractV2
+    ? [
+        {
+          source: "action_decision_contract_v2",
+          phase: "authority_mirror",
+          ruleId: `adc_v2:${String(actionDecisionContractV2.action || "none")}`,
+          step: adcLegacyStep,
+          intensity: String(actionDecisionContractV2.intensity || "RI0"),
+        },
+      ]
+    : Array.isArray(decision.recommendationDecisionTrace)
+      ? decision.recommendationDecisionTrace
+      : [];
   const decisionTrace = [
     ...(Array.isArray(signals.decisionTrace) ? signals.decisionTrace : []),
     ...recommendationDecisionTrace,
@@ -1456,16 +1504,46 @@ export function buildTopicRecommendationRecord(
 
   const recommendationContractV1Normalized = normalizeRecommendationContract(
     recommendationContractV1Checked,
-    decision.step
+    adcLegacyStep || decision.step
+  );
+
+  const recommendedNextStepEffective = legacyDisplayStepAtIntensity(
+    adcLegacyStep || decision.step,
+    String(
+      actionDecisionContractV2?.intensity ||
+      recommendationContractV1Normalized.intensity ||
+      "RI0"
+    )
   );
 
   if (process.env.NODE_ENV !== "production") {
-    assertContractMatchesStep(recommendationContractV1Normalized, decision.step);
+    assertContractMatchesStep(
+      actionDecisionContractV2 || recommendationContractV1Normalized,
+      recommendedNextStepEffective
+    );
   }
 
   const recValidationNormalized = validateRecommendationContractV1(recommendationContractV1Normalized);
 
-  const recommendedNextStepEffective = decision.step;
+  const authoritativeDisplayCopy =
+    recommendedNextStepEffective === "maintain_current_path" ||
+    recommendedNextStepEffective === "watch"
+      ? buildHebrewCopy(
+          recommendedNextStepEffective,
+          {
+            displayName: String(row?.displayName || bucketKey || topicRowKey),
+            questions: q,
+            accuracy: Number(row?.accuracy) || 0,
+            mistakeEventCount: mC,
+          },
+          cfg
+        )
+      : null;
+  if (authoritativeDisplayCopy) {
+    whyThisRecommendationHe = authoritativeDisplayCopy.reasonHe;
+    recommendedParentActionHe = authoritativeDisplayCopy.parentHe;
+    recommendedStudentActionHe = authoritativeDisplayCopy.studentHe;
+  }
 
   const baseRecord = {
     subject: subjectId,
@@ -1517,8 +1595,9 @@ export function buildTopicRecommendationRecord(
     recommendedNextStep: recommendedNextStepEffective,
     recommendedStepLabelHe:
       RECOMMENDED_STEP_LABEL_HE[recommendedNextStepEffective] ||
-      RECOMMENDED_STEP_LABEL_HE.maintain_and_strengthen,
-    recommendedStepReasonHe: decision.reasonHe,
+      RECOMMENDED_STEP_LABEL_HE.maintain_current_path,
+    recommendedStepReasonHe:
+      authoritativeDisplayCopy?.reasonHe || decision.reasonHe,
     recommendedParentActionHe,
     recommendedStudentActionHe,
     recommendedEvidenceLevelHe:

@@ -195,7 +195,10 @@ export function legacyRecommendedActionFromContractV2(contract) {
   if (["collect_more_evidence", "give_probe_questions", "monitor_before_escalation"].includes(action)) {
     return "watch";
   }
-  if (action === "maintain" || action === "advance_cautiously") {
+  if (action === "maintain") {
+    return "maintain_current_path";
+  }
+  if (action === "advance_cautiously") {
     return "maintain_and_strengthen";
   }
   if (contract?.eligible === true && isInterventionActionV2(action)) {

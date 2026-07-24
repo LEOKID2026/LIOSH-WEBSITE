@@ -6,6 +6,8 @@ import {
   DECISION_CONSUMER_REGISTRY_V1,
   validateDecisionConsumerRegistryV1,
 } from "../../utils/action-decision-contract/decision-consumer-registry-v1.js";
+import { legacyRecommendedActionFromContractV2 } from "../../utils/action-decision-contract/action-decision-contract-v2.js";
+import { buildTopicRecommendationRecord } from "../../utils/topic-next-step-engine.js";
 
 const MASTER_FILES = [
   "math",
@@ -73,6 +75,42 @@ test("P4 migrated LPD rollups do not fall back to legacy recommendation authorit
     /topic\.recommendedAction|t\.recommendedAction/,
   );
   assert.doesNotMatch(copy, /contract\.recommendedAction/);
+});
+
+test("P4 maintain RI0 remains a neutral ADC V2 display mirror", () => {
+  const actionDecisionContract = {
+    version: "2.0.0",
+    action: "maintain",
+    intensity: "RI0",
+  };
+  assert.equal(
+    legacyRecommendedActionFromContractV2(actionDecisionContract),
+    "maintain_current_path",
+  );
+
+  const record = buildTopicRecommendationRecord(
+    "math",
+    "addition",
+    {
+      bucketKey: "addition",
+      displayName: "חיבור",
+      questions: 8,
+      correct: 7,
+      wrong: 1,
+      accuracy: 88,
+      actionDecisionContract,
+    },
+    {},
+    undefined,
+    Date.UTC(2026, 6, 24),
+  );
+  assert.equal(record.recommendedNextStep, "maintain_current_path");
+  assert.equal(record.contractsV1.recommendation.intensity, "RI0");
+  assert.doesNotMatch(record.recommendedParentActionHe, /לחזק|חיזוק|לבסס/);
+  assert.equal(
+    record.recommendationDecisionTrace[0]?.source,
+    "action_decision_contract_v2",
+  );
 });
 
 test("P4 legacy planner UI is a one-way ADC V2 mirror with no parallel endpoint or flag", () => {

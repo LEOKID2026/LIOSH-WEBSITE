@@ -2616,6 +2616,12 @@ export function generateParentReportV2(
     startMs,
     endMs,
   });
+  // ADC V2 is created by LPD. Refresh legacy display fields as a one-way
+  // compatibility mirror so topic-next-step cannot retain a parallel action.
+  enrichReportMapsWithTopicStepHints(maps, mistakesBySubjectMaps, endMs, undefined, {
+    rawMistakesBySubject,
+    startMs,
+  });
   syncRowFlagsFromLearningPatternDecision(maps);
 
   const lpdRollups = buildTopicRollupsFromLearningPatternDecision(

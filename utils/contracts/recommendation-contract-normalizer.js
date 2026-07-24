@@ -1,6 +1,8 @@
 const RI_RANK = Object.freeze({ RI0: 0, RI1: 1, RI2: 2, RI3: 3 });
 const RI_FROM_RANK = Object.freeze(["RI0", "RI1", "RI2", "RI3"]);
 const STEP_CAP = Object.freeze({
+  maintain_current_path: "RI0",
+  watch: "RI0",
   maintain_and_strengthen: "RI1",
   remediate_same_level: "RI2",
   advance_level: "RI3",

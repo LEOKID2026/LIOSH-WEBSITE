@@ -7,6 +7,8 @@ export function assertContractMatchesStep(contract, step) {
   if (!contract) return;
 
   const map = {
+    maintain_current_path: "RI0",
+    watch: "RI0",
     maintain_and_strengthen: "RI1",
     remediate_same_level: "RI2",
     advance_level: "RI3",
