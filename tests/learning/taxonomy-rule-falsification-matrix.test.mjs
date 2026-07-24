@@ -1,5 +1,5 @@
 /**
- * 59-rule falsification matrix — delegates synthetic plumbing to taxonomy-rule-synthetic-pipeline.test.mjs
+ * 76-rule falsification matrix — delegates synthetic plumbing to taxonomy-rule-synthetic-pipeline.test.mjs
  * Real runtime proof: tests/learning/taxonomy-rule-real-runtime-e2e.test.mjs
  * Run: node --test tests/learning/taxonomy-rule-falsification-matrix.test.mjs
  */
@@ -19,11 +19,11 @@ import { classifyAnswerEvidence } from "../../lib/learning/classifiers/index.js"
 import { RULE_PRIMARY_PRODUCER } from "../../lib/learning/taxonomy-rule-primary-producers.js";
 
 describe("taxonomy runtime matrix completeness", () => {
-  test("59 rules in matrix", () => {
+  test("76 rules in matrix", () => {
     const ids = allTaxonomyIdsWithEvidenceRules();
-    assert.equal(ids.length, 59);
+    assert.equal(ids.length, 76);
     const matrix = buildTaxonomyRuleRuntimeMatrix();
-    assert.equal(matrix.length, 59);
+    assert.equal(matrix.length, 76);
   });
 
   test("every rule has 10 fixture scenarios", () => {
@@ -41,22 +41,22 @@ describe("taxonomy runtime matrix completeness", () => {
     }
   });
 
-  test("59/59 active primary producers", () => {
+  test("76/76 active primary producers", () => {
     const summary = summarizeRuntimeMatrix();
-    assert.equal(summary.totalRules, 59);
-    assert.equal(summary.rulesWithActiveProducer, 59);
-    assert.equal(summary.rulesWithPrimaryProducer, 59);
-    assert.equal(Object.keys(RULE_PRIMARY_PRODUCER).length, 59);
+    assert.equal(summary.totalRules, 76);
+    assert.equal(summary.rulesWithActiveProducer, 76);
+    assert.equal(summary.rulesWithPrimaryProducer, 76);
+    assert.equal(Object.keys(RULE_PRIMARY_PRODUCER).length, 76);
   });
 
-  test("59/59 positive+negative E2E", () => {
+  test("76/76 positive+negative E2E", () => {
     const summary = summarizeRuntimeMatrix();
-    assert.equal(summary.rulesWithPositiveFixture, 59);
-    assert.equal(summary.rulesWithE2E, 59);
+    assert.equal(summary.rulesWithPositiveFixture, 76);
+    assert.equal(summary.rulesWithE2E, 76);
   });
 });
 
-describe("all 59 rules — E2E scenario checks", () => {
+describe("all 76 rules — E2E scenario checks", () => {
   const matrix = buildTaxonomyRuleRuntimeMatrix();
 
   for (const row of matrix) {

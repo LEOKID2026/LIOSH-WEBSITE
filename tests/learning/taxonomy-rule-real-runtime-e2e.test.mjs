@@ -1,5 +1,5 @@
 /**
- * REAL_RUNTIME_E2E — 59 rules via active generators/banks; NO injected misconceptionTag.
+ * REAL_RUNTIME_E2E — 76 rules via active generators/banks; NO injected misconceptionTag.
  * Run: node --test tests/learning/taxonomy-rule-real-runtime-e2e.test.mjs
  */
 
@@ -20,8 +20,8 @@ import {
 import { buildParentEvidenceStatements } from "../../lib/learning/parent-report-evidence-pipeline.js";
 
 describe("REAL_RUNTIME_E2E completeness", () => {
-  test("59 real runtime scenarios defined", () => {
-    assert.equal(REAL_RUNTIME_SCENARIOS.length, 59);
+  test("76 real runtime scenarios defined", () => {
+    assert.equal(REAL_RUNTIME_SCENARIOS.length, 76);
   });
 });
 

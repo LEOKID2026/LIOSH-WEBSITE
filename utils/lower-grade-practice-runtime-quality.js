@@ -129,6 +129,22 @@ export function resolveMcqCorrectValue(question) {
 }
 
 /**
+ * MCQs that ask which punctuation mark fits — stem may end with "?" while answer is "?".
+ * @param {Record<string, unknown>|null|undefined} question
+ * @param {string} correct
+ */
+function isPunctuationMarkChoiceMcq(question, correct) {
+  const c = String(correct || "").trim();
+  if (!c || c.length > 12) return false;
+  const surfaces = collectChildVisibleSurfaces(question);
+  if (!surfaces.some((s) => /איזה\s+סימן|סימן\s+מתאים|בחרו\s+משפט\s+עם\s+סימן/u.test(s))) {
+    return false;
+  }
+  if (/^(?:סימן\s+שאלה|נקודה|סימן\s+קריאה|פסיק)$/u.test(c)) return true;
+  return c.length <= 2 && /^[.?!,;:!?"'\u05BE-]+$/u.test(c);
+}
+
+/**
  * Strict copy-leak check for G1/G2 MCQs.
  * @param {Record<string, unknown>|null|undefined} question
  */
@@ -139,6 +155,8 @@ export function hasMcqCopyAnswerLeak(question) {
 
   const correct = resolveMcqCorrectValue(question);
   if (!correct || correct.length < 1) return false;
+
+  if (isPunctuationMarkChoiceMcq(question, correct)) return false;
 
   const itemType = String(
     question.params?.itemType || question.params?.subtype || ""

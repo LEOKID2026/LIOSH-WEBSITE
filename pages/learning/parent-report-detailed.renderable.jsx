@@ -42,8 +42,12 @@ function topicNextStepVisualVariant(step) {
     case "advance_level":
     case "advance_grade_topic_only":
       return "advance";
+    case "insufficient_information":
+    case "verification_needed":
+    case "progress_or_mastery":
     case "maintain_and_strengthen":
       return "maintain";
+    case "strengthening_needed":
     case "remediate_same_level":
       return "remediate";
     case "drop_one_level_topic_only":
@@ -1359,7 +1363,10 @@ export default function ParentReportDetailedPage() {
                                 <p className="pr-detailed-topic-rec-head">נושאים שדורשים ליווי בתקופה שנבחרה</p>
                                 <div className="space-y-2.5">
                                   {sp.topicRecommendations.map((tr, idx) => {
-                                    const tv = topicNextStepVisualVariant(tr.recommendedNextStep);
+                                    const tv = topicNextStepVisualVariant(
+                                      tr.parentActionDecision?.state ||
+                                        tr.recommendedNextStep,
+                                    );
                                     const nar = buildTopicRecommendationNarrative(tr);
                                     return (
                                       <div key={tr.topicRowKey} className={idx === 0 ? "pr-detailed-topic-first-card-wrap" : ""}>
@@ -1383,14 +1390,31 @@ export default function ParentReportDetailedPage() {
                                               {tr.recommendedStepLabelHe}
                                             </span>
                                           </div>
-                                          <p className="pr-detailed-body-text text-sm leading-relaxed m-0 mt-2 text-white/[0.9]">
-                                            {nar.snapshot}
-                                          </p>
-                                          {nar.homeLine ? (
-                                            <p className="pr-detailed-body-text text-sm leading-relaxed m-0 mt-2.5 text-amber-100/95">
-                                              {nar.homeLine}
-                                            </p>
-                                          ) : null}
+                                          {tr.parentActionDecision ? (
+                                            <div className="mt-2 space-y-1.5">
+                                              <p className="pr-detailed-body-text text-sm leading-relaxed m-0 text-white/[0.9]">
+                                                {tr.parentActionDecision.observed}
+                                              </p>
+                                              <p className="pr-detailed-body-text text-sm leading-relaxed m-0 text-amber-100/95">
+                                                {tr.parentActionDecision.recommendation}
+                                              </p>
+                                              <p className="pr-detailed-muted text-xs leading-relaxed m-0 text-white/60">
+                                                {tr.parentActionDecision.temporary}{" "}
+                                                {tr.parentActionDecision.reevaluation}
+                                              </p>
+                                            </div>
+                                          ) : (
+                                            <>
+                                              <p className="pr-detailed-body-text text-sm leading-relaxed m-0 mt-2 text-white/[0.9]">
+                                                {nar.snapshot}
+                                              </p>
+                                              {nar.homeLine ? (
+                                                <p className="pr-detailed-body-text text-sm leading-relaxed m-0 mt-2.5 text-amber-100/95">
+                                                  {nar.homeLine}
+                                                </p>
+                                              ) : null}
+                                            </>
+                                          )}
                                           <TopicRecommendationExplainStrip tr={tr} />
                                         </div>
                                       </div>

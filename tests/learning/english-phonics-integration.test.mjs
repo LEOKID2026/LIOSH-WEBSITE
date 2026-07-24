@@ -90,9 +90,9 @@ describe("english phonics integration", () => {
 
   it("runtime-eligible counts exclude requiresAudio rows", () => {
     const counts = countRuntimeEligiblePhonicsItems();
-    assert.equal(counts.g1, 15);
-    assert.equal(counts.g2, 9);
-    assert.equal(counts.total, 24);
+    assert.equal(counts.g1, 60);
+    assert.equal(counts.g2, 52);
+    assert.equal(counts.total, 112);
 
     const audioRows = [...PHONICS_G1_POOL, ...PHONICS_G2_POOL].filter((r) => r.requiresAudio);
     assert.equal(audioRows.length, 47);

@@ -193,6 +193,7 @@ import LearningMasterMobileNavTitle from "../../components/learning/LearningMast
 import { StepExerciseUiProvider } from "../../contexts/StepExerciseUiContext.jsx";
 import { formatMathHudNumber } from "../../utils/math-master-hud-number.client.js";
 import { useStudentDisplayLevelPractice } from "../../hooks/useStudentDisplayLevelPractice.js";
+import { useStudentActionDecision } from "../../hooks/useStudentActionDecision.js";
 import { StudentDisplayLevelSelect } from "../../components/learning/StudentDisplayLevelSelect.js";
 import {
   studentDisplayLevelKeys,
@@ -415,6 +416,19 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
   const [streak, setStreak] = useState(0);
   const [correct, setCorrect] = useState(0);
   const [wrong, setWrong] = useState(0);
+  const {
+    directive: actionDecisionDirective,
+    recordActivity: recordActionDecisionActivity,
+  } = useStudentActionDecision({
+    enabled:
+      learningProfileHydrationTick > 0 &&
+      Boolean(learningProfileStudentIdRef.current),
+    studentId: learningProfileStudentIdRef.current,
+    subjectId: MG_SUBJECT,
+    topicKey: operation,
+    gradeKey: grade,
+    levelKey: level,
+  });
   const [timeLeft, setTimeLeft] = useState(20);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [feedback, setFeedback] = useState(null);
@@ -1252,7 +1266,31 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
 
   // Timer countdown (רק במצב Challenge או Speed)
   useEffect(() => {
+    if (actionDecisionDirective.active) {
+      if (actionDecisionDirective.questionPolicy.preferKind) {
+        practiceForceKindRef.current =
+          actionDecisionDirective.questionPolicy.preferKind;
+      }
+      if (
+        ["advance_cautiously", "strengthen_prerequisite"].includes(
+          actionDecisionDirective.action,
+        ) &&
+        actionDecisionDirective.routePolicy.level !== level
+      ) {
+        applyPlannerLevelKey(actionDecisionDirective.routePolicy.level);
+      }
+    }
+  }, [actionDecisionDirective, applyPlannerLevelKey, level]);
+
+  useEffect(() => {
     if (!gameActive || (mode !== "challenge" && mode !== "speed")) return;
+    if (
+      actionDecisionDirective.active &&
+      actionDecisionDirective.sessionPolicy.timerEnabled === false
+    ) {
+      if (timeLeft != null) setTimeLeft(null);
+      return;
+    }
     if (timeLeft == null) return;
 
     if (timeLeft <= 0) {
@@ -1265,7 +1303,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, [gameActive, mode, timeLeft]);
+  }, [actionDecisionDirective, gameActive, mode, timeLeft]);
 
   // שמירת ריצה נוכחית אל localStorage + עדכון Best & Leaderboard
   function saveRunToStorage() {
@@ -1929,6 +1967,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
 
   function handleAnswer(answer) {
     if (selectedAnswer || !gameActive || !currentQuestion) return;
+    recordActionDecisionActivity();
     const questionForSave = currentQuestion;
     const hintUsedForSave = false;
     const rawMs = questionStartTime ? Math.max(0, Date.now() - questionStartTime) : null;
@@ -1964,7 +2003,12 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
       expected: currentQuestion.correctAnswer,
       acceptedList: [currentQuestion.correctAnswer],
     });
-    applyAnswerAdaptive(isCorrect, { mode: focusedPracticeModeRef.current });
+    if (
+      !actionDecisionDirective.active ||
+      actionDecisionDirective.sessionPolicy.allowEscalation
+    ) {
+      applyAnswerAdaptive(isCorrect, { mode: focusedPracticeModeRef.current });
+    }
     saveMoledetAnswerInParallel({
       question: questionForSave,
       userAnswer: answer,
@@ -3626,6 +3670,9 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
                       question={currentQuestion.question}
                       questionLabel={currentQuestion.questionLabel}
                       exerciseText={currentQuestion.exerciseText}
+                      readingPresentation={
+                        actionDecisionDirective.sessionPolicy.readingPresentation
+                      }
                       getQuestionFontStyle={getQuestionFontStyle}
                       resolveVerbalSingleStyle={getHebrewApprovedSingleVerbalQuestionStyle}
                       leadClassName={
@@ -3721,7 +3768,10 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
 
                   {currentQuestion && (
                     <div className="w-full flex justify-center gap-2 flex-wrap mb-2 min-h-[2.75rem]" dir="rtl">
-                        {mode === "learning" && currentQuestion && (
+                        {mode === "learning" &&
+                          actionDecisionDirective.sessionPolicy.guidance !==
+                            "independent" &&
+                          currentQuestion && (
                           <button
                             type="button"
                             onClick={() => {

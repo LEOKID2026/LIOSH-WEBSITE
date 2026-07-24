@@ -13802,14 +13802,12 @@ export const HISTORY_QUESTIONS_G6_RAW = [
       "patternFamily": "hist_g6_hist_sub_hasmonaean_kingdom_hasmonaean_origin",
       "subtype": "hist_sub_hasmonaean_kingdom",
       "conceptTag": "hist_hist_sub_hasmonaean_kingdom_hasmonaean_origin",
-      "diagnosticSkillId": "hist_governance_institutions",
+      "diagnosticSkillId": "hist_hasmonaean_origin",
       "probePower": "medium",
       "expectedErrorTags": [
-        "institution_confusion",
         "concept_confusion"
       ],
       "expectedErrorTypes": [
-        "institution_confusion",
         "concept_confusion"
       ],
       "cognitiveLevel": "recall",
@@ -14376,14 +14374,12 @@ export const HISTORY_QUESTIONS_G6_RAW = [
       "patternFamily": "hist_g6_hist_sub_hasmonaean_kingdom_hasmonaean_origin",
       "subtype": "hist_sub_hasmonaean_kingdom",
       "conceptTag": "hist_hist_sub_hasmonaean_kingdom_hasmonaean_origin",
-      "diagnosticSkillId": "hist_governance_institutions",
+      "diagnosticSkillId": "hist_hasmonaean_origin",
       "probePower": "medium",
       "expectedErrorTags": [
-        "institution_confusion",
         "concept_confusion"
       ],
       "expectedErrorTypes": [
-        "institution_confusion",
         "concept_confusion"
       ],
       "cognitiveLevel": "understanding",
@@ -14950,14 +14946,12 @@ export const HISTORY_QUESTIONS_G6_RAW = [
       "patternFamily": "hist_g6_hist_sub_hasmonaean_kingdom_hasmonaean_origin",
       "subtype": "hist_sub_hasmonaean_kingdom",
       "conceptTag": "hist_hist_sub_hasmonaean_kingdom_hasmonaean_origin",
-      "diagnosticSkillId": "hist_governance_institutions",
+      "diagnosticSkillId": "hist_hasmonaean_origin",
       "probePower": "high",
       "expectedErrorTags": [
-        "institution_confusion",
         "concept_confusion"
       ],
       "expectedErrorTypes": [
-        "institution_confusion",
         "concept_confusion"
       ],
       "cognitiveLevel": "application",

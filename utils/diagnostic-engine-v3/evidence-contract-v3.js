@@ -8,6 +8,9 @@ import { normalizeDiagnosticSubjectId } from "../diagnostic-evidence.js";
 import { buildQuestionSkillMetadataV1 } from "../learning-diagnostics/question-skill-metadata-v1.js";
 import { classifyErrorTypeV3, ERROR_TYPE_V3 } from "./error-types-v3.js";
 import { resolveGradeContextV3 } from "./grade-relation-v3.js";
+import {
+  assessDiagnosticEvidenceEligibility,
+} from "../diagnostic-evidence-eligibility.js";
 
 const REPORT_AGG_FLUENCY_SLOW_MS = 60_000;
 const REPORT_AGG_FLUENCY_FAST_MS = 6_000;
@@ -84,6 +87,7 @@ export function buildDiagnosticEvidenceContractV3(input) {
       expectedErrorTags: ev.expectedErrorTags,
       diagnosticSkillId: ev.diagnosticSkillId,
       distractorFamily: ev.distractorFamily,
+      prerequisiteSkillIds: ev.prerequisiteSkillIds,
     },
     correctAnswer: ev.correctAnswer,
   };
@@ -126,10 +130,16 @@ export function buildDiagnosticEvidenceContractV3(input) {
       : null);
 
   const metadataPresent = ev.metadataPresent === true || !!(ev.patternFamily || ev.diagnosticSkillId);
+  const evidenceEligibility = assessDiagnosticEvidenceEligibility({
+    ...ev,
+    mode: input?.activityMode || ev.mode,
+    evidenceSource: input?.evidenceSource || ev.evidenceSource,
+  });
   let diagnosticWeight = 0.35;
   if (metadataPresent) diagnosticWeight = 0.7;
   if (errorType !== ERROR_TYPE_V3.UNKNOWN && errorTypeConfidence === "medium") diagnosticWeight = 0.85;
   if (!isCorrect && errorType === ERROR_TYPE_V3.UNKNOWN) diagnosticWeight = 0.25;
+  if (!evidenceEligibility.diagnosticEligible) diagnosticWeight = 0;
 
   let readingLoad = null;
   const cog = String(meta.cognitiveLevel || "").toLowerCase();
@@ -207,6 +217,7 @@ export function buildDiagnosticEvidenceContractV3(input) {
     readingLoad,
     expectedTimeMs,
     diagnosticWeight,
+    evidenceEligibility,
     evidenceSource: pickStr(input?.evidenceSource) || pickStr(ev.evidenceSource) || null,
     activityMode: pickStr(input?.activityMode) || pickStr(ev.mode) || null,
     probeEvidence,

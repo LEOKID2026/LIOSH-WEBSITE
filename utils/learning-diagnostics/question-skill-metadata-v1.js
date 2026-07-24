@@ -163,7 +163,8 @@ export function buildQuestionSkillMetadataV1(question, context = {}) {
     ? expectedFromParams.map(String).filter(Boolean)
     : [];
 
-  const prereq = params?.prerequisiteSkillIds;
+  const prereq =
+    params?.prerequisiteSkillIds ?? question?.prerequisiteSkillIds;
   const prerequisiteSkillIds = Array.isArray(prereq) ? prereq.map(String).filter(Boolean) : [];
 
   const generatorId =

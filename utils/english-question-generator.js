@@ -770,7 +770,7 @@ export function generateQuestion(
           template: template.template,
           explanation: template.explanation,
           patternFamily: template.patternFamily || "sentence_completion",
-          distractorFamily: template.distractorFamily || "same_slot_forms",
+          distractorFamily: template.distractorFamily || null,
           sentenceOptionSet: Array.isArray(template.options)
             ? template.options
             : null,
@@ -1066,7 +1066,7 @@ export function generateQuestion(
     }
   }
 
-  return applyMcqEvidenceTaggingToQuestion({
+  const taggedQuestion = applyMcqEvidenceTaggingToQuestion({
     ...finalized,
     subjectId: "english",
     subject: "english",
@@ -1086,6 +1086,72 @@ export function generateQuestion(
       ]),
     },
   });
+  if (
+    selectedTopic === "phonics" &&
+    taggedQuestion.params?.itemType === "early_word_reading" &&
+    Array.isArray(taggedQuestion.params?.mcqOptionCells)
+  ) {
+    const correct = String(taggedQuestion.correctAnswer || "").toLowerCase();
+    let retainedMinimalPair = false;
+    return {
+      ...taggedQuestion,
+      params: {
+        ...taggedQuestion.params,
+        mcqOptionCells: taggedQuestion.params.mcqOptionCells.map((cell) => {
+          if (!cell || typeof cell !== "object") return cell;
+          const candidate = String(cell.value || "").toLowerCase();
+          const differentLetters =
+            candidate.length === correct.length
+              ? [...candidate].filter((letter, index) => letter !== correct[index]).length
+              : Infinity;
+          const isCorrect = candidate === correct;
+          const isMinimalPair =
+            !isCorrect && differentLetters === 1 && !retainedMinimalPair;
+          if (isMinimalPair) retainedMinimalPair = true;
+          return {
+            ...cell,
+            distractorFamily: isCorrect
+              ? null
+              : isMinimalPair
+                ? "phonics_minimal_pair_error"
+                : "generic_proximity",
+            misconceptionTag: null,
+          };
+        }),
+        phonicsDiagnosticEvidence: {
+          version: "phonics-minimal-pair-evidence-v1",
+          itemType: "early_word_reading",
+          correctWord: correct,
+          transformation: "single_grapheme_substitution",
+        },
+      },
+    };
+  }
+  if (selectedTopic !== "sentences" || !Array.isArray(taggedQuestion.params?.mcqOptionCells)) {
+    return taggedQuestion;
+  }
+  let retainedDiagnostic = false;
+  return {
+    ...taggedQuestion,
+    params: {
+      ...taggedQuestion.params,
+      mcqOptionCells: taggedQuestion.params.mcqOptionCells.map((cell) => {
+        if (!cell || typeof cell !== "object") return cell;
+        if (
+          cell.distractorFamily === "sentence_structure_error" &&
+          !retainedDiagnostic
+        ) {
+          retainedDiagnostic = true;
+          return cell;
+        }
+        return {
+          ...cell,
+          distractorFamily: "generic_proximity",
+          misconceptionTag: null,
+        };
+      }),
+    },
+  };
 }
 
 export { ENGLISH_GRADES, ENGLISH_GRADE_ORDER };

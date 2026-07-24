@@ -2,6 +2,10 @@
  * DE2 taxonomy evidence requirements — every active rule must declare evidence source.
  * topic + minWrong alone is NEVER sufficient for diagnosis.
  */
+import {
+  getTagProducer,
+} from "../../lib/learning/taxonomy-tag-producer-registry.js";
+import { MATH_TOPIC_COVERAGE_EVIDENCE_RULES } from "./taxonomy-math-topic-coverage.js";
 
 /** @typedef {"misconception_tag"|"distractor_family"|"pattern_family"|"concept_tag"|"direct_numeric"} EvidenceSourceKind */
 
@@ -117,7 +121,12 @@ export const TAXONOMY_EVIDENCE_RULES = Object.freeze({
   "G-01": {
     taxonomyId: "G-01",
     evidenceSource: "distractor_family",
-    requiredTags: ["shape_property_confusion", "quadrilateral_confusion", "parallel_perpendicular_confusion"],
+    requiredTags: [
+      "shape_property_confusion",
+      "quadrilateral_confusion",
+      "parallel_perpendicular_confusion",
+      "rectangle_diagonal",
+    ],
     minTagMatches: 3,
     minRelevantQuestions: 3,
     minOccurrenceRatio: 0.6,
@@ -157,7 +166,14 @@ export const TAXONOMY_EVIDENCE_RULES = Object.freeze({
   "G-06": {
     taxonomyId: "G-06",
     evidenceSource: "misconception_tag",
-    requiredTags: ["perimeter_area_confusion", "unit_error", "perimeter_formula_error"],
+    requiredTags: [
+      "perimeter_area_confusion",
+      "unit_error",
+      "perimeter_formula_error",
+      "formula_selection_error",
+      "square_perimeter_compute",
+      "circle_perimeter_compute",
+    ],
     minTagMatches: 3,
     minRelevantQuestions: 3,
     minOccurrenceRatio: 0.6,
@@ -174,6 +190,15 @@ export const TAXONOMY_EVIDENCE_RULES = Object.freeze({
     taxonomyId: "G-08",
     evidenceSource: "misconception_tag",
     requiredTags: ["forgot_divide_by_2", "triangle_area_error", "formula_error"],
+    minTagMatches: 3,
+    minRelevantQuestions: 3,
+    minOccurrenceRatio: 0.6,
+  },
+  "G-09": {
+    taxonomyId: "G-09",
+    evidenceSource: "distractor_family",
+    requiredTags: ["pythagorean_relation_error"],
+    questionKinds: ["pythagoras"],
     minTagMatches: 3,
     minRelevantQuestions: 3,
     minOccurrenceRatio: 0.6,
@@ -301,7 +326,7 @@ export const TAXONOMY_EVIDENCE_RULES = Object.freeze({
   "E-08": {
     taxonomyId: "E-08",
     evidenceSource: "distractor_family",
-    requiredTags: ["listening_comprehension_error"],
+    requiredTags: ["phonics_minimal_pair_error"],
     minTagMatches: 3,
     minRelevantQuestions: 3,
     minOccurrenceRatio: 0.6,
@@ -453,7 +478,10 @@ export const TAXONOMY_EVIDENCE_RULES = Object.freeze({
   "HI-03": {
     taxonomyId: "HI-03",
     evidenceSource: "distractor_family",
-    requiredTags: ["cause_effect_error", "historical_inference_error"],
+    requiredTags: [
+      "cause_effect_error",
+      "historical_inference_error",
+    ],
     minTagMatches: 3,
     minRelevantQuestions: 3,
     minOccurrenceRatio: 0.6,
@@ -506,6 +534,7 @@ export const TAXONOMY_EVIDENCE_RULES = Object.freeze({
     minRelevantQuestions: 3,
     minOccurrenceRatio: 0.6,
   },
+  ...MATH_TOPIC_COVERAGE_EVIDENCE_RULES,
 });
 
 /**
@@ -537,9 +566,6 @@ export function extractMisconceptionTagFromEvent(ev) {
   if (ev.distractorFamily && ev.distractorFamily !== "unknown" && ev.distractorFamily !== "generic_proximity") {
     return ev.distractorFamily;
   }
-  if (Array.isArray(ev.expectedErrorTags) && ev.expectedErrorTags.length === 1) {
-    return ev.expectedErrorTags[0];
-  }
   return null;
 }
 
@@ -549,21 +575,14 @@ export function extractMisconceptionTagFromEvent(ev) {
  */
 export function eventMatchesEvidenceRule(ev, rule) {
   if (!ev || !rule || ev.isCorrect) return false;
+  const activeRequiredTags = rule.requiredTags.filter(
+    (requiredTag) => getTagProducer(requiredTag)?.active === true,
+  );
   const tag = extractMisconceptionTagFromEvent(ev);
   if (!tag) return false;
-  if (rule.requiredTags.includes(tag)) return true;
-  if (Array.isArray(ev.possibleErrorPatterns)) {
-    for (const p of ev.possibleErrorPatterns) {
-      if (rule.requiredTags.includes(String(p))) return true;
-    }
-  }
-  if (ev.patternFamily && rule.requiredTags.some((t) => String(ev.patternFamily).includes(t))) {
-    return true;
-  }
-  if (ev.conceptTag && rule.requiredTags.some((t) => String(ev.conceptTag).includes(t))) {
-    return true;
-  }
-  return false;
+  // Selected-answer evidence is authoritative. Question-level possible patterns
+  // describe what could be diagnosed, not what this particular wrong answer proves.
+  return activeRequiredTags.includes(tag);
 }
 
 /**

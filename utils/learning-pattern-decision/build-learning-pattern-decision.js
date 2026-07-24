@@ -15,6 +15,7 @@ import { partitionPatternEligibleMistakes } from "./resolve-excluded-evidence.js
 import { normalizeParentVisibleMetrics } from "./normalize-parent-practice-metrics.js";
 import { isUsableParentPatternLabel } from "./parent-pattern-label.js";
 import { evidenceStrengthRank } from "./resolve-evidence-strength.js";
+import { buildUnifiedDecisionContext } from "./build-unified-decision-context.js";
 
 /**
  * @param {object} p
@@ -99,6 +100,14 @@ export function buildLearningPatternDecision({
   const topicName =
     String(row?.displayName || unit?.displayName || row?.topicLabel || topicKey).trim() ||
     topicKey;
+  const unifiedDecisionContext = buildUnifiedDecisionContext({
+    row,
+    unit,
+    v3Enrichment,
+    eligibleMistakes: included,
+    excludedEvidence,
+    evidenceBucketCounts: bucketCounts,
+  });
 
   const engineDecisionContract = buildParentReportEngineDecisionContract({
     subjectId: sid,
@@ -108,6 +117,8 @@ export function buildLearningPatternDecision({
     unit,
     v3Enrichment,
     professionalSlice,
+    unifiedDecisionContext,
+    decisionTimestamp: endMs,
   });
   trace.push(...engineDecisionContract.traceReason.map((t) => `edc:${t}`));
 
@@ -275,6 +286,7 @@ export function buildLearningPatternDecision({
     parentVisibleFinding: parentVisibleFindingFinal,
     parentWordingLevel: engineDecisionContract.detectedPattern ? "repeated_pattern" : parentWordingLevel,
     engineDecisionContract,
+    unifiedDecisionContext,
     blockedClaims,
     excludedEvidence,
     sourceEngines: [...new Set(sourceEngines)],

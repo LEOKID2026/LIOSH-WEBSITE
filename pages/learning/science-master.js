@@ -143,6 +143,7 @@ import {
   tryConsumeBookContextOnPracticeEntry,
 } from "../../lib/learning-book/book-context-master-helper";
 import { useStudentDisplayLevelPractice } from "../../hooks/useStudentDisplayLevelPractice.js";
+import { useStudentActionDecision } from "../../hooks/useStudentActionDecision.js";
 import { StudentDisplayLevelRegularOnly } from "../../components/learning/StudentDisplayLevelSelect.js";
 import { studentDisplayLevelLabel } from "../../lib/learning-client/student-display-level-practice.js";
 import {
@@ -841,6 +842,19 @@ export default function ScienceMaster() {
   const learningProfileHydratedRef = useRef(false);
   const [serverAccountSubjectAccuracyPct, setServerAccountSubjectAccuracyPct] = useState(null);
   const [learningProfileHydrationTick, setLearningProfileHydrationTick] = useState(0);
+  const {
+    directive: actionDecisionDirective,
+    recordActivity: recordActionDecisionActivity,
+  } = useStudentActionDecision({
+    enabled:
+      learningProfileHydrationTick > 0 &&
+      Boolean(learningProfileStudentIdRef.current),
+    studentId: learningProfileStudentIdRef.current,
+    subjectId: "science",
+    topicKey: topic,
+    gradeKey: grade,
+    levelKey: level,
+  });
   const scoresStoreRef = useRef({});
   const progressLoadedRef = useRef(false);
   const progressStringRef = useRef("");
@@ -1415,8 +1429,28 @@ export default function ScienceMaster() {
 
   // ----- TIMER -----
   useEffect(() => {
+    if (actionDecisionDirective.active) {
+      if (
+        ["advance_cautiously", "strengthen_prerequisite"].includes(
+          actionDecisionDirective.action,
+        ) &&
+        actionDecisionDirective.routePolicy.level !== level
+      ) {
+        applyPlannerLevelKey(actionDecisionDirective.routePolicy.level);
+      }
+    }
+  }, [actionDecisionDirective, applyPlannerLevelKey, level]);
+
+  useEffect(() => {
     if (!gameActive) return;
     if (mode !== "challenge" && mode !== "speed") return;
+    if (
+      actionDecisionDirective.active &&
+      actionDecisionDirective.sessionPolicy.timerEnabled === false
+    ) {
+      if (timeLeft != null) setTimeLeft(null);
+      return;
+    }
     if (timeLeft == null) return;
     if (timeLeft <= 0) {
       handleTimeUp();
@@ -1427,7 +1461,7 @@ export default function ScienceMaster() {
     }, 1000);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timeLeft, gameActive, mode]);
+  }, [actionDecisionDirective, timeLeft, gameActive, mode]);
 
   function filterQuestionsForCurrentSettings(levelOverride) {
     const gradeKey = grade;
@@ -2362,6 +2396,7 @@ function saveScienceAnswerInParallel({
 
   function handleAnswer(idx) {
     if (!gameActive || !currentQuestion || selectedAnswer != null) return;
+    recordActionDecisionActivity();
     const questionForSave = currentQuestion;
     const hintUsedForSave = false;
     const rawMs = questionStartTime ? Math.max(0, Date.now() - questionStartTime) : null;
@@ -2440,7 +2475,11 @@ function saveScienceAnswerInParallel({
       });
     }
 
-    if (isStudentAdaptiveActive("science", { mode: focusedPracticeMode })) {
+    if (
+      (!actionDecisionDirective.active ||
+        actionDecisionDirective.sessionPolicy.allowEscalation) &&
+      isStudentAdaptiveActive("science", { mode: focusedPracticeMode })
+    ) {
       applyAnswerAdaptive(isCorrect, { mode: focusedPracticeMode });
     }
 
@@ -3337,6 +3376,9 @@ function saveScienceAnswerInParallel({
                     question={
                       currentQuestion?.stem || "אין שאלה זמינה להגדרה זו."
                     }
+                    readingPresentation={
+                      actionDecisionDirective.sessionPolicy.readingPresentation
+                    }
                     getQuestionFontStyle={getQuestionFontStyle}
                     resolveVerbalSingleStyle={getHebrewApprovedSingleVerbalQuestionStyle}
                     leadClassName={
@@ -3424,7 +3466,10 @@ function saveScienceAnswerInParallel({
                   )}
 
                   <div className="w-full flex justify-center gap-2 flex-wrap mb-2 min-h-[2.75rem]" dir="rtl">
-                    {mode === "learning" && currentQuestion && (
+                    {mode === "learning" &&
+                      actionDecisionDirective.sessionPolicy.guidance !==
+                        "independent" &&
+                      currentQuestion && (
                       <button
                         type="button"
                         onClick={() => {

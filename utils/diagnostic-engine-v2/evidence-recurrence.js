@@ -43,7 +43,11 @@ export function evaluateEvidenceRecurrence(wrongEvents, taxonomyRow) {
     };
   }
 
-  const wrongs = Array.isArray(wrongEvents) ? wrongEvents.filter((e) => !e.isCorrect) : [];
+  const wrongs = Array.isArray(wrongEvents)
+    ? wrongEvents.filter(
+        (e) => e && typeof e === "object" && e.isCorrect !== true,
+      )
+    : [];
   const matching = wrongs.filter((e) => eventMatchesEvidenceRule(e, rule));
 
   const seen = new Set();

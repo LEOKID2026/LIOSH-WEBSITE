@@ -206,12 +206,12 @@ describe("Hebrew/History ID collision resolved", () => {
   test("no duplicate taxonomy ids in registry", () => {
     const ids = ALL_TAXONOMY_ROWS.map((r) => r.id);
     assert.equal(ids.length, new Set(ids).size);
-    assert.equal(ids.length, 59);
+    assert.equal(ids.length, 76);
   });
 
-  test("all 59 rules have evidence requirements", () => {
+  test("all 76 rules have evidence requirements", () => {
     const ruleIds = allTaxonomyIdsWithEvidenceRules();
-    assert.equal(ruleIds.length, 59);
+    assert.equal(ruleIds.length, 76);
     for (const row of ALL_TAXONOMY_ROWS) {
       assert.ok(ruleIds.includes(row.id), `missing evidence rule for ${row.id}`);
     }

@@ -5,12 +5,19 @@
 
 import { TAXONOMY_BY_ID } from "./diagnostic-engine-v2/taxonomy-registry.js";
 import { passesEvidenceRecurrenceRules } from "./diagnostic-engine-v2/evidence-recurrence.js";
+import {
+  isIndependentRecurrenceEvidence,
+} from "./diagnostic-evidence-eligibility.js";
+import {
+  recurrencePolicyForRule,
+} from "./diagnostic-engine-v2/taxonomy-recurrence-policy.js";
 
 /** Align with existing engine v1 guardrails (T1 = q≥10); not a recurrence threshold change. */
 export const MIN_Q_FOR_SAFE_SUBSKILL = 10;
 
 /** Minimum wrong events with metadata for safe subskill display. */
 export const MIN_WRONG_EVENTS_FOR_SAFE_SUBSKILL = 3;
+export const SUBSKILL_SAFETY_CONTRACT_VERSION = 3;
 
 /**
  * Mirror of parent-report-engine-v1-signals computeAccuracyBand (avoid circular import).
@@ -51,6 +58,22 @@ function distinctDayCount(wrongs) {
   return days.size;
 }
 
+function distinctSessionCount(wrongs) {
+  const sessions = new Set();
+  for (const event of wrongs) {
+    if (!event || typeof event !== "object") continue;
+    const sessionId =
+      event.sessionId ??
+      event.activitySessionId ??
+      event.metadata?.sessionId ??
+      event.metadata?.activitySessionId;
+    if (sessionId != null && String(sessionId).trim()) {
+      sessions.add(String(sessionId).trim());
+    }
+  }
+  return sessions.size;
+}
+
 /**
  * @param {unknown[]} wrongs
  */
@@ -70,6 +93,57 @@ function metadataSourceBreakdown(wrongs) {
   return { questionMeta, taxonomyOnly, other };
 }
 
+function observedMistakeTags(wrongs) {
+  const tags = new Set();
+  for (const event of wrongs) {
+    const candidates = [
+      event?.misconceptionTag,
+      event?.distractorFamily,
+      event?.answerEvidence?.detectedMisconception,
+      event?.metadata?.misconceptionTag,
+      event?.metadata?.distractorFamily,
+      event?.metadata?.answerEvidence?.detectedMisconception,
+    ];
+    for (const candidate of candidates) {
+      if (candidate != null && String(candidate).trim()) {
+        tags.add(String(candidate).trim());
+      }
+    }
+  }
+  return tags;
+}
+
+function hasTopicSubskillSemanticMismatch(chosenId, normalizedTopic, wrongs) {
+  const topic = String(normalizedTopic || "");
+  const tags = observedMistakeTags(wrongs);
+  if (
+    chosenId === "G-01" &&
+    ["triangles", "parallel_perpendicular", "solids"].includes(topic)
+  ) {
+    return true;
+  }
+  if (chosenId === "G-02" && topic === "tiling") return true;
+  if (chosenId === "G-06" && topic === "circles") return true;
+  if (
+    chosenId === "G-06" &&
+    topic === "perimeter" &&
+    !tags.has("unit_error")
+  ) {
+    return true;
+  }
+  if (chosenId === "E-06" && ["sentence", "sentences"].includes(topic)) {
+    return true;
+  }
+  if (
+    chosenId === "S-07" &&
+    topic === "environment" &&
+    !tags.has("food_web_error")
+  ) {
+    return true;
+  }
+  return false;
+}
+
 /**
  * @param {object} ctx
  * @param {string} ctx.subjectId
@@ -83,6 +157,10 @@ function metadataSourceBreakdown(wrongs) {
  * @param {boolean} [ctx.disambiguationApplied]
  * @param {string|null|undefined} [ctx.disambiguationWinnerId]
  * @param {boolean} [ctx.geographyDefinitionOnly]
+ * @param {number} [ctx.independentEvidenceCount]
+ * @param {boolean} [ctx.probeEvidenceSupported]
+ * @param {boolean} [ctx.counterEvidenceStrong]
+ * @param {boolean} [ctx.patternActiveRecently]
  */
 export function assessSubskillCandidateSafety(ctx) {
   const wrongs = Array.isArray(ctx.wrongs) ? ctx.wrongs.filter((e) => e && !e.isCorrect) : [];
@@ -97,6 +175,7 @@ export function assessSubskillCandidateSafety(ctx) {
 
   if (!technical || !chosenId) {
     return {
+      contractVersion: SUBSKILL_SAFETY_CONTRACT_VERSION,
       safeToShowSubskill: false,
       fallbackUsed: false,
       sourceOfSubskill: "none",
@@ -114,9 +193,20 @@ export function assessSubskillCandidateSafety(ctx) {
   const acc = Math.round(Number(ctx.row?.accuracy) || 0);
   const band = computeAccuracyBandLocal(acc, q);
   const trow = TAXONOMY_BY_ID[chosenId] || null;
+  const recurrencePolicy = recurrencePolicyForRule(chosenId);
   const metaBreakdown = metadataSourceBreakdown(wrongs);
   const questionMetadataRate =
     wrongs.length > 0 ? Math.round((metaBreakdown.questionMeta / wrongs.length) * 100) : 0;
+  const independentEvidenceCount = Number.isFinite(Number(ctx.independentEvidenceCount))
+    ? Math.max(0, Number(ctx.independentEvidenceCount))
+    : wrongs.filter(isIndependentRecurrenceEvidence).length;
+  const probeEvidenceSupported =
+    ctx.probeEvidenceSupported === true ||
+    wrongs.some(
+      (event) =>
+        event?.metadata?.probeConfirmed === true ||
+        event?.metadata?.answerEvidence?.evidenceType === "PROBE_CONFIRMED",
+    );
 
   const listDisambiguationApplied =
     candidateIdsRaw.length > 1 && !candidateListsEqual(candidateIdsRaw, candidateIdsOrdered);
@@ -138,6 +228,12 @@ export function assessSubskillCandidateSafety(ctx) {
   );
 
   const normBucket = String(taxonomyMatch?.normalizedBucketKey || "").trim().toLowerCase();
+  if (chosenId && TAXONOMY_BY_ID[chosenId]?.topicLevelOnly === true) {
+    blockReasons.push("topic_level_evidence_only");
+  }
+  if (hasTopicSubskillSemanticMismatch(chosenId, normBucket, wrongs)) {
+    blockReasons.push("topic_subskill_semantic_mismatch");
+  }
 
   if (fallbackUsed) blockReasons.push("first_candidate_without_disambiguation");
   if (
@@ -148,7 +244,12 @@ export function assessSubskillCandidateSafety(ctx) {
   ) {
     blockReasons.push("geography_multi_candidate_unresolved");
   }
-  if (multiCandidate && !disambiguationApplied && !ctx.recurrenceMatched) {
+  if (
+    multiCandidate &&
+    (!disambiguationApplied ||
+      !ctx.disambiguationWinnerId ||
+      ctx.disambiguationWinnerId !== chosenId)
+  ) {
     blockReasons.push("multi_candidate_unresolved");
   }
   if (q < MIN_Q_FOR_SAFE_SUBSKILL) blockReasons.push("low_q");
@@ -156,6 +257,13 @@ export function assessSubskillCandidateSafety(ctx) {
   if (trow && wrongs.length < trow.minWrong) blockReasons.push("below_taxonomy_min_wrong");
   if (trow?.minDistinctDays > 0 && distinctDayCount(wrongs) < trow.minDistinctDays) {
     blockReasons.push("below_taxonomy_min_distinct_days");
+  }
+  if (
+    recurrencePolicy &&
+    distinctSessionCount(wrongs) <
+      recurrencePolicy.minSessionsForSubskill
+  ) {
+    blockReasons.push("below_recurrence_min_sessions");
   }
   if (band === "mastery") blockReasons.push("mastery_control_row");
   if (band === "partial_good" && acc >= 80 && wrongs.length < 6) {
@@ -165,6 +273,24 @@ export function assessSubskillCandidateSafety(ctx) {
     blockReasons.push("taxonomy_fallback_metadata_only");
   }
   if (normBucket === "mixed" || normBucket === "general") blockReasons.push("general_bucket");
+  if (!ctx.recurrenceMatched && !probeEvidenceSupported) {
+    blockReasons.push("recurrence_or_probe_required");
+  }
+  if (
+    ctx.recurrenceMatched &&
+    !probeEvidenceSupported &&
+    independentEvidenceCount < MIN_WRONG_EVENTS_FOR_SAFE_SUBSKILL
+  ) {
+    blockReasons.push("insufficient_independent_evidence");
+  }
+  if (String(taxonomyMatch?.matchStrength || "") !== "strong") {
+    blockReasons.push("taxonomy_match_not_strong");
+  }
+  if (String(ctx.row?.gradeRelation || "") === "higher") {
+    blockReasons.push("above_grade_subskill_claim_blocked");
+  }
+  if (ctx.counterEvidenceStrong === true) blockReasons.push("counter_evidence_strong");
+  if (ctx.patternActiveRecently === false) blockReasons.push("pattern_not_recently_active");
 
   /** @type {string} */
   let sourceOfSubskill = "unknown";
@@ -187,19 +313,24 @@ export function assessSubskillCandidateSafety(ctx) {
   const safeToShowSubskill = blockReasons.length === 0;
 
   return {
+    contractVersion: SUBSKILL_SAFETY_CONTRACT_VERSION,
     safeToShowSubskill,
     fallbackUsed,
     sourceOfSubskill,
     blockReasons,
     evidenceCount: wrongs.length,
     distinctDays: distinctDayCount(wrongs),
+    distinctSessions: distinctSessionCount(wrongs),
     possibleErrorPatternsPresent,
     questionMetadataRate,
+    independentEvidenceCount,
+    probeEvidenceSupported,
     falsePositiveRisk: safeToShowSubskill ? null : blockReasons[0] || "unsafe",
     disambiguationApplied,
     multiCandidate,
     chosenId,
     taxonomyMinWrong: trow?.minWrong ?? null,
+    recurrencePolicy,
     accuracyBand: band,
   };
 }

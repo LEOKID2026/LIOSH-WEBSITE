@@ -56,9 +56,9 @@ function generatePhonics(gradeKey, pageId) {
 describe("english phonics runtime display", () => {
   it("runtime-eligible pool excludes picture/listening-only item types", () => {
     const counts = countRuntimeEligiblePhonicsItems();
-    assert.equal(counts.g1, 15);
-    assert.equal(counts.g2, 9);
-    assert.equal(counts.total, 24);
+    assert.equal(counts.g1, 60);
+    assert.equal(counts.g2, 52);
+    assert.equal(counts.total, 112);
 
     for (const gradeKey of ["g1", "g2"]) {
       const pool = getRuntimeEligiblePhonicsPool(gradeKey);

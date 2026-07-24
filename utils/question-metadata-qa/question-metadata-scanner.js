@@ -187,6 +187,26 @@ function effectiveSubject(q, params, subjectHint) {
   );
 }
 
+function effectiveGradeHint(q) {
+  if (Array.isArray(q.grades) && q.grades.length > 0) {
+    return q.grades.join(",");
+  }
+  if (q.gradeBand === "early") return "g1,g2";
+  if (q.gradeBand === "mid") return "g3,g4";
+  if (q.gradeBand === "late") return "g5,g6";
+  const min = Number(q.minGrade);
+  const max = Number(q.maxGrade);
+  if (Number.isFinite(min) || Number.isFinite(max)) {
+    const lo = Math.max(1, Math.min(6, Number.isFinite(min) ? min : max));
+    const hi = Math.max(lo, Math.min(6, Number.isFinite(max) ? max : min));
+    return Array.from(
+      { length: hi - lo + 1 },
+      (_, index) => `g${lo + index}`,
+    ).join(",");
+  }
+  return null;
+}
+
 /**
  * @param {Record<string, unknown>} q
  * @param {string} sourceFile
@@ -268,6 +288,7 @@ export function buildScanRecord(q, sourceFile, objectPath, subjectHint, seqIndex
     declaredId: declaredId || null,
     sourceFile: sourceFile.replace(/\\/g, "/"),
     objectPath,
+    subjectHint: subjectHint || null,
     subject,
     skillId,
     subskillId,
@@ -278,7 +299,7 @@ export function buildScanRecord(q, sourceFile, objectPath, subjectHint, seqIndex
     hasCorrectAnswer: hasCorrectAnswer(q),
     hasExplanation: hasExplanation(q, params),
     questionType: pickStr(q.type) || pickStr(q.qType) || null,
-    gradeHint: Array.isArray(q.grades) ? q.grades.join(",") : pickStr(q.minGrade) || pickStr(q.maxGrade) || null,
+    gradeHint: effectiveGradeHint(q),
     metadataCompletenessScore: Math.round(score * 1000) / 1000,
     issues: [...new Set(issues)],
     riskLevel,

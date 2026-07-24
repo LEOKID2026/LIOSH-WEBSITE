@@ -30,6 +30,26 @@ const VERBAL_INSTRUCTION_CLASS =
 const VERBAL_PASSAGE_CLASS =
   "text-center break-words overflow-wrap-anywhere max-w-full px-2 w-full mx-auto";
 
+function renderReadingLoadAdaptation(text, mode) {
+  if (mode !== "concise_chunked") return text;
+  let chunks = String(text || "")
+    .split(/(?<=[.!?؟׃])\s+/u)
+    .map((chunk) => chunk.trim())
+    .filter(Boolean);
+  if (chunks.length < 2 && String(text || "").length > 80) {
+    chunks = String(text || "")
+      .split(/(?<=[,;،])\s+/u)
+      .map((chunk) => chunk.trim())
+      .filter(Boolean);
+  }
+  if (chunks.length < 2) return text;
+  return chunks.map((chunk, index) => (
+    <span key={`${index}:${chunk.slice(0, 12)}`} className="block mb-1 last:mb-0">
+      {chunk}
+    </span>
+  ));
+}
+
 /**
  * Student-facing question: instruction (RTL) + body (LTR for equations/formulas).
  * Verbal reading questions use a 3-tier hierarchy when structure is clear.
@@ -57,6 +77,8 @@ export default function StudentQuestionDisplay({
    * (border / background / padding). Used by geometry assigned-activity only.
    */
   plainVerbalFinalQuestion = false,
+  /** Temporary presentation-only adaptation; wording and learning goal are unchanged. */
+  readingPresentation = "standard",
 }) {
   const isMobileViewport = useMobileViewport();
   const resolveQuestionFontStyle = getQuestionFontStyleProp || getQuestionFontStyle;
@@ -170,7 +192,12 @@ export default function StudentQuestionDisplay({
                 ...bodyColorOnly,
               }}
             >
-              {stackedFractions ? renderMaybeStackedFractionText(hierarchy.passage) : hierarchy.passage}
+              {stackedFractions
+                ? renderMaybeStackedFractionText(hierarchy.passage)
+                : renderReadingLoadAdaptation(
+                    hierarchy.passage,
+                    readingPresentation,
+                  )}
             </p>
           ) : null}
 
@@ -240,7 +267,9 @@ export default function StudentQuestionDisplay({
             ...bodyColorOnly,
           }}
         >
-          {stackedFractions ? renderMaybeStackedFractionText(hierarchy.text) : hierarchy.text}
+          {stackedFractions
+            ? renderMaybeStackedFractionText(hierarchy.text)
+            : renderReadingLoadAdaptation(hierarchy.text, readingPresentation)}
         </p>
       ) : (
         <>

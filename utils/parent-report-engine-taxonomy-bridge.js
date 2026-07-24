@@ -59,7 +59,15 @@ function canEmitSubskillCandidate(matchStrength, evidenceFlags, wrongs) {
  */
 export function resolveRowTaxonomyMatch({ subjectId, topicRowKey, row, rawMistakes, startMs, endMs }) {
   const sid = String(subjectId || "").trim();
-  const events = filterMistakesForRow(sid, topicRowKey, row, rawMistakes || [], startMs, endMs);
+  const events = filterMistakesForRow(
+    sid,
+    topicRowKey,
+    row,
+    rawMistakes || [],
+    startMs,
+    endMs,
+    { independentRecurrenceOnly: true },
+  );
   const wrongs = events.filter((e) => !e.isCorrect);
   const rowWrongTotal = Math.max(0, Number(row?.wrong) || 0);
   const wrongCountForRules = Math.max(wrongs.length, rowWrongTotal);
@@ -209,6 +217,9 @@ export function resolveRowTaxonomyMatch({ subjectId, topicRowKey, row, rawMistak
     disambiguationApplied,
     disambiguationWinnerId,
     geographyDefinitionOnly,
+    counterEvidenceStrong:
+      (Number(row?.accuracy) >= 88 && wrongCountForRules >= 4) ||
+      (row?.modeKey === "speed" && Number(row?.accuracy) >= 82 && wrongCountForRules >= 2),
   });
 
   return {

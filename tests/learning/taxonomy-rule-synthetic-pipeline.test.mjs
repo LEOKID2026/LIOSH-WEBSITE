@@ -16,9 +16,9 @@ import { allTaxonomyIdsWithEvidenceRules } from "../../utils/diagnostic-engine-v
 import { RULE_PRIMARY_PRODUCER } from "../../lib/learning/taxonomy-rule-primary-producers.js";
 
 describe("SYNTHETIC_PIPELINE — matrix plumbing", () => {
-  test("59 rules in synthetic matrix", () => {
-    assert.equal(allTaxonomyIdsWithEvidenceRules().length, 59);
-    assert.equal(buildTaxonomyRuleRuntimeMatrix().length, 59);
+  test("76 rules in synthetic matrix", () => {
+    assert.equal(allTaxonomyIdsWithEvidenceRules().length, 76);
+    assert.equal(buildTaxonomyRuleRuntimeMatrix().length, 76);
   });
 
   test("every rule has 10 synthetic fixture scenarios", () => {
@@ -29,8 +29,8 @@ describe("SYNTHETIC_PIPELINE — matrix plumbing", () => {
 
   test("synthetic positive+negative plumbing checks", () => {
     const summary = summarizeRuntimeMatrix();
-    assert.equal(summary.totalRules, 59);
-    assert.equal(Object.keys(RULE_PRIMARY_PRODUCER).length, 59);
+    assert.equal(summary.totalRules, 76);
+    assert.equal(Object.keys(RULE_PRIMARY_PRODUCER).length, 76);
   });
 });
 

@@ -185,6 +185,7 @@ import {
   tryConsumeBookContextOnPracticeEntry,
 } from "../../lib/learning-book/book-context-master-helper";
 import { useStudentDisplayLevelPractice } from "../../hooks/useStudentDisplayLevelPractice.js";
+import { useStudentActionDecision } from "../../hooks/useStudentActionDecision.js";
 import { StudentDisplayLevelSelect } from "../../components/learning/StudentDisplayLevelSelect.js";
 import {
   isStudentAdaptiveActive,
@@ -626,6 +627,19 @@ export default function EnglishMaster() {
   const [streak, setStreak] = useState(0);
   const [correct, setCorrect] = useState(0);
   const [wrong, setWrong] = useState(0);
+  const {
+    directive: actionDecisionDirective,
+    recordActivity: recordActionDecisionActivity,
+  } = useStudentActionDecision({
+    enabled:
+      learningProfileHydrationTick > 0 &&
+      Boolean(learningProfileStudentIdRef.current),
+    studentId: learningProfileStudentIdRef.current,
+    subjectId: "english",
+    topicKey: topic,
+    gradeKey: grade,
+    levelKey: level,
+  });
   const [timeLeft, setTimeLeft] = useState(20);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [typedAnswer, setTypedAnswer] = useState("");
@@ -1582,7 +1596,31 @@ export default function EnglishMaster() {
   }, [mounted]);
 
   useEffect(() => {
+    if (actionDecisionDirective.active) {
+      if (actionDecisionDirective.questionPolicy.preferKind) {
+        practiceForceKindRef.current =
+          actionDecisionDirective.questionPolicy.preferKind;
+      }
+      if (
+        ["advance_cautiously", "strengthen_prerequisite"].includes(
+          actionDecisionDirective.action,
+        ) &&
+        actionDecisionDirective.routePolicy.level !== level
+      ) {
+        applyPlannerLevelKey(actionDecisionDirective.routePolicy.level);
+      }
+    }
+  }, [actionDecisionDirective, applyPlannerLevelKey, level]);
+
+  useEffect(() => {
     if (!gameActive || (mode !== "challenge" && mode !== "speed")) return;
+    if (
+      actionDecisionDirective.active &&
+      actionDecisionDirective.sessionPolicy.timerEnabled === false
+    ) {
+      if (timeLeft != null) setTimeLeft(null);
+      return;
+    }
     if (timeLeft == null) return;
     if (timeLeft <= 0) {
       handleTimeUp();
@@ -1592,7 +1630,7 @@ export default function EnglishMaster() {
       setTimeLeft((prev) => (prev != null ? prev - 1 : prev));
     }, 1000);
     return () => clearTimeout(timer);
-  }, [gameActive, mode, timeLeft]);
+  }, [actionDecisionDirective, gameActive, mode, timeLeft]);
 
   function saveRunToStorage() {
     if (typeof window === "undefined" || !playerName.trim()) return;
@@ -2010,6 +2048,7 @@ export default function EnglishMaster() {
 
   function handleAnswer(answer) {
     if (selectedAnswer || !gameActive || !currentQuestion) return;
+    recordActionDecisionActivity();
     const questionForSave = currentQuestion;
     const hintUsedForSave = false;
     const rawMs = questionStartTime ? Math.max(0, Date.now() - questionStartTime) : null;
@@ -2140,6 +2179,8 @@ export default function EnglishMaster() {
       mode: reportModeFromGameState(mode, focusedPracticeMode),
     };
     if (
+      (!actionDecisionDirective.active ||
+        actionDecisionDirective.sessionPolicy.allowEscalation) &&
       isStudentAdaptiveActive("english", {
         displayLevel: displayLevelRef.current,
         mode: focusedPracticeMode,
@@ -3069,6 +3110,9 @@ export default function EnglishMaster() {
                       question={currentQuestion.question}
                       questionLabel={currentQuestion.questionLabel}
                       exerciseText={currentQuestion.exerciseText}
+                      readingPresentation={
+                        actionDecisionDirective.sessionPolicy.readingPresentation
+                      }
                       getQuestionFontStyle={getQuestionFontStyle}
                       resolveVerbalSingleStyle={getHebrewApprovedSingleVerbalQuestionStyle}
                       leadClassName={
@@ -3205,6 +3249,8 @@ export default function EnglishMaster() {
 
                     <div className="w-full flex justify-center gap-2 flex-wrap mb-2 min-h-[2.75rem]" dir="rtl">
                       {mode === "learning" &&
+                        actionDecisionDirective.sessionPolicy.guidance !==
+                          "independent" &&
                         currentQuestion &&
                         currentQuestion.topic !== "phonics" && (
                           <button

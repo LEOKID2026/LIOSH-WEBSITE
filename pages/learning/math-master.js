@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import Layout from "../../components/Layout";
 import { useRouter } from "next/router";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
+import { useStudentActionDecision } from "../../hooks/useStudentActionDecision.js";
 import {
   LEVELS,
   GRADE_LEVELS,
@@ -647,6 +648,19 @@ export default function MathMaster() {
   const [streak, setStreak] = useState(0);
   const [correct, setCorrect] = useState(0);
   const [wrong, setWrong] = useState(0);
+  const {
+    directive: actionDecisionDirective,
+    recordActivity: recordActionDecisionActivity,
+  } = useStudentActionDecision({
+    enabled:
+      learningProfileHydrationTick > 0 &&
+      Boolean(learningProfileStudentIdRef.current),
+    studentId: learningProfileStudentIdRef.current,
+    subjectId: "math",
+    topicKey: operation,
+    gradeKey: grade,
+    levelKey: level,
+  });
   const [timeLeft, setTimeLeft] = useState(20);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [textAnswer, setTextAnswer] = useState(""); // תשובה בקלט טקסט למצבי למידה ותרגול
@@ -1674,7 +1688,31 @@ export default function MathMaster() {
 
   // Timer countdown (רק במצב Challenge או Speed)
   useEffect(() => {
+    if (actionDecisionDirective.active) {
+      if (actionDecisionDirective.questionPolicy.preferKind) {
+        practiceForceKindRef.current =
+          actionDecisionDirective.questionPolicy.preferKind;
+      }
+      if (
+        ["advance_cautiously", "strengthen_prerequisite"].includes(
+          actionDecisionDirective.action,
+        ) &&
+        actionDecisionDirective.routePolicy.level !== level
+      ) {
+        setLevel(actionDecisionDirective.routePolicy.level);
+      }
+    }
+  }, [actionDecisionDirective, level]);
+
+  useEffect(() => {
     if (!gameActive || (mode !== "challenge" && mode !== "speed")) return;
+    if (
+      actionDecisionDirective.active &&
+      actionDecisionDirective.sessionPolicy.timerEnabled === false
+    ) {
+      if (timeLeft != null) setTimeLeft(null);
+      return;
+    }
     if (timeLeft == null) return;
 
     if (timeLeft <= 0) {
@@ -1687,7 +1725,7 @@ export default function MathMaster() {
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, [gameActive, mode, timeLeft]);
+  }, [actionDecisionDirective, gameActive, mode, timeLeft]);
 
   // שמירת ריצה נוכחית אל localStorage + עדכון Best & Leaderboard
   function saveRunToStorage() {
@@ -2626,6 +2664,7 @@ export default function MathMaster() {
 
   function handleAnswer(answer) {
     if (selectedAnswer || !gameActive || !currentQuestion) return;
+    recordActionDecisionActivity();
     setScratchpadCloseSignal((n) => n + 1);
     const questionForSave = currentQuestion;
     const hintUsedForSave = false;
@@ -2774,6 +2813,8 @@ export default function MathMaster() {
       ? String(currentQuestion.id)
       : questionFingerprint || `math-${Date.now()}`;
     if (
+      (!actionDecisionDirective.active ||
+        actionDecisionDirective.sessionPolicy.allowEscalation) &&
       isStudentAdaptiveActive("math", {
         displayLevel: displayLevelRef.current,
         mode: focusedPracticeModeRef.current,
@@ -4721,6 +4762,10 @@ export default function MathMaster() {
                         question={displayQuestionForStem}
                         questionLabel={currentQuestion.questionLabel}
                         exerciseText={displayExerciseTextForStem}
+                        readingPresentation={
+                          actionDecisionDirective.sessionPolicy
+                            .readingPresentation
+                        }
                         stackedFractions={
                           currentQuestion.operation === "fractions" ||
                           hasStackedFractionToken(
@@ -5092,7 +5137,9 @@ export default function MathMaster() {
                   {currentQuestion && (
                     <div className="mt-2 flex flex-col gap-2 w-full">
                       <div className={MB.answerActionsBar} dir="rtl">
-                        {mode === "learning" && (
+                        {mode === "learning" &&
+                          actionDecisionDirective.sessionPolicy.guidance !==
+                            "independent" && (
                           <button
                             type="button"
                             onClick={() => {

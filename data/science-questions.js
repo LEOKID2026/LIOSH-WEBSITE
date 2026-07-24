@@ -1837,9 +1837,14 @@ export const SCIENCE_QUESTIONS = [
       "subtype": "sci_environment_general",
       "cognitiveLevel": "understanding",
       "expectedErrorTypes": [
+        "ecosystem_confusion",
         "concept_confusion",
         "vocabulary_confusion",
         "misconception"
+      ],
+      "expectedErrorTags": [
+        "ecosystem_confusion",
+        "concept_confusion"
       ],
       "difficulty": "standard",
       "diagnosticSkillId": "sci_environment_general",
@@ -1860,6 +1865,7 @@ export const SCIENCE_QUESTIONS = [
         "metadataConfidence": "high",
         "diagnosticEligibleByMetadata": true,
         "possibleErrorPatterns": [
+          "ecosystem_confusion",
           "concept_confusion",
           "vocabulary_confusion",
           "misconception"

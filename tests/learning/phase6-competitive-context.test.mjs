@@ -290,11 +290,13 @@ describe("Phase 6 - coins/monthly audit (no changes)", () => {
     assert.doesNotMatch(src, /challenge|speed|marathon/);
   });
 
-  test("monthly-persistence-reward queries learning_sessions only", () => {
+  test("monthly-persistence-reward delegates to unified learning-credit aggregate", () => {
     const path = join(__dirname, "../../lib/learning-supabase/monthly-persistence-reward.server.js");
     const src = readFileSync(path, "utf8");
-    assert.match(src, /\.from\("learning_sessions"\)/);
-    assert.doesNotMatch(src, /book_reading_sessions|book_page_visits/);
+    // Phase 9 single-truth: monthly tiers use sumStudentLearningCreditedMinutesInIsraelMonth
+    // (answers + parent activities + books), not a direct learning_sessions query.
+    assert.match(src, /sumStudentLearningCreditedMinutesInIsraelMonth/);
+    assert.doesNotMatch(src, /\.from\("learning_sessions"\)/);
   });
 });
 

@@ -145,7 +145,9 @@ export const GENERIC_EXPECTED_ERROR_TYPES = [
   "vocabulary_confusion",
   "reading_comprehension_error",
   "grammar_error",
+  "tense_error",
   "concept_confusion",
+  "ecosystem_confusion",
   "prerequisite_gap",
   "careless_error",
   "strategy_error",
@@ -153,11 +155,22 @@ export const GENERIC_EXPECTED_ERROR_TYPES = [
 ];
 
 /**
+ * Recognized content-bank tags with no active decision-taxonomy rule.
+ * They are explicit unsupported metadata, not active professional capabilities.
+ */
+export const UNSUPPORTED_EXPECTED_ERROR_TYPES = new Set([
+  "passive_error",
+  "modal_error",
+  "comparatives_error",
+]);
+
+/**
  * Bank-specific / existing tags in science pool (do not require human rename before taxonomy match).
  */
 export const EXTENDED_EXPECTED_ERROR_TYPES = new Set([
   ...GENERIC_EXPECTED_ERROR_TYPES,
   ...BANK_ENRICHED_EXPECTED_ERROR_TYPES,
+  ...UNSUPPORTED_EXPECTED_ERROR_TYPES,
   "fact_recall_gap",
   "classification_error",
   "cause_effect_gap",

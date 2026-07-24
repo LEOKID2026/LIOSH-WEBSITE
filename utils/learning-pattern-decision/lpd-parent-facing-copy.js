@@ -422,7 +422,8 @@ export function buildLpdSafeTopicExplainSectionsHe(row) {
           )
         : guardParentFacingText(lpdMeaningLineHe(lpd, topicName));
     const action =
-      contract.recommendedAction === "remediate_same_level"
+      contract.actionDecisionContract?.eligible === true &&
+      contract.actionDecisionContract?.intervention === true
         ? guardParentFacingText(
             `מה כדאי לעשות ביחד: לתרגל כמה שאלות קצרות ב${topicName}, ולבקש מהילד להסביר את הדרך בקול.`,
           )

@@ -350,6 +350,13 @@ const INSUFFICIENT_TREND_SESSIONS_RE = /אין\s+מספיק\s+מפגש/;
 function ParentReportRowDiagnosticsFootnote({ data }) {
   const row = data && typeof data === "object" ? data : null;
   if (!row) return null;
+  if (row.parentActionDecision?.recommendation) {
+    return (
+      <div className="text-[9px] md:text-[10px] text-white/55 leading-tight max-w-[14rem] min-w-0 w-full mx-auto text-center line-clamp-2 break-words">
+        {row.parentActionDecision.recommendation}
+      </div>
+    );
+  }
   const q = Number(row.questions) || 0;
   const minQuestionsForStatus = TOPIC_EVIDENCE_THRESHOLDS.minQuestionsModerate;
   const suffLabel = String(row.dataSufficiencyLabelHe || "").trim();
@@ -572,6 +579,11 @@ function buildTopicRowsForChart(map, keyPrefix, regularDisplay = null) {
         data?.learningPatternDecision && typeof data.learningPatternDecision === "object"
           ? data.learningPatternDecision
           : null,
+      parentActionDecision:
+        data?.parentActionDecision &&
+        typeof data.parentActionDecision === "object"
+          ? data.parentActionDecision
+          : null,
       topicEngineRowSignals: data?.topicEngineRowSignals && typeof data.topicEngineRowSignals === "object" ? data.topicEngineRowSignals : null,
       trend: data?.trend && typeof data.trend === "object" ? data.trend : null,
       trendV1: data?.trendV1 && typeof data.trendV1 === "object" ? data.trendV1 : null,
@@ -599,6 +611,10 @@ function topicBarColor(accuracy) {
 }
 
 function topicBarColorFromRow(row) {
+  const parentState = row?.parentActionDecision?.state;
+  if (parentState === "strengthening_needed") return "#f59e0b";
+  if (parentState === "progress_or_mastery") return "#10b981";
+  if (parentState) return "#94a3b8";
   const ui = topicUiFromLearningPatternDecision(row);
   if (ui.hasLpd) {
     if (ui.excellent || ui.findingType === "success_pattern") return "#10b981";
@@ -613,14 +629,24 @@ function topicAccuracyTextClass(row) {
 }
 
 function topicStatusEmoji(row) {
+  const parentState = row?.parentActionDecision?.state;
+  if (parentState === "strengthening_needed") return "⚠️";
+  if (parentState === "progress_or_mastery") return "✅";
+  if (parentState) return "🔎";
   return topicUiFromLearningPatternDecision(row).statusEmoji;
 }
 
 function topicShowsNeedsPractice(row) {
+  if (row?.parentActionDecision) {
+    return row.parentActionDecision.state === "strengthening_needed";
+  }
   return topicUiFromLearningPatternDecision(row).needsPractice;
 }
 
 function topicShowsExcellent(row) {
+  if (row?.parentActionDecision) {
+    return row.parentActionDecision.state === "progress_or_mastery";
+  }
   return topicUiFromLearningPatternDecision(row).excellent;
 }
 

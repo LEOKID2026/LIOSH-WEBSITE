@@ -24,6 +24,10 @@ import {
 } from "./learning-pattern-decision/index.js";
 import { normalizeParentVisibleMetrics } from "./learning-pattern-decision/normalize-parent-practice-metrics.js";
 import {
+  buildExpiredParentActionDecisionV1,
+  buildParentSafeActionDecisionV1,
+} from "./action-decision-contract/parent-action-decision-translations-he.js";
+import {
 
   activityGapNonDiagnosticOnlyHe,
 
@@ -208,6 +212,12 @@ export function collectTopicEngineRowsFromReport(report) {
           data.learningPatternDecision && typeof data.learningPatternDecision === "object"
             ? data.learningPatternDecision
             : null,
+        actionDecisionContract:
+          data.actionDecisionContract ||
+          data.engineDecisionContract?.actionDecisionContract ||
+          data.learningPatternDecision?.engineDecisionContract
+            ?.actionDecisionContract ||
+          null,
 
         trend: data.trend && typeof data.trend === "object" ? data.trend : null,
 
@@ -633,6 +643,64 @@ export function buildParentInsightsFromTopicEngineHe(report, apiPayload = null) 
 
 }
 
+export function buildParentFacingFromAdcV2(report) {
+  const contractRows = collectTopicEngineRowsFromReport(report)
+    .filter(
+      (row) =>
+        row.actionDecisionContract?.version === "2.0.0" &&
+        row.actionDecisionContract?.eligible === true,
+    );
+  const rows = contractRows
+    .filter((row) => {
+      const expiresAt = Date.parse(
+        String(row.actionDecisionContract?.expiry?.expiresAt || ""),
+      );
+      return Number.isFinite(expiresAt) && expiresAt > Date.now();
+    })
+    .sort((a, b) => {
+      const interventionDiff =
+        Number(b.actionDecisionContract?.intervention === true) -
+        Number(a.actionDecisionContract?.intervention === true);
+      if (interventionDiff) return interventionDiff;
+      return (
+        (Number(b.questions) || 0) - (Number(a.questions) || 0) ||
+        (Number(a.accuracy) || 0) - (Number(b.accuracy) || 0)
+      );
+    });
+  const selected = [];
+  const seenSubjects = new Set();
+  for (const row of rows) {
+    if (seenSubjects.has(row.subjectId)) continue;
+    const parentDecision = buildParentSafeActionDecisionV1(
+      row.actionDecisionContract,
+      { topicLabel: row.label },
+    );
+    if (!parentDecision) continue;
+    selected.push(parentDecision);
+    seenSubjects.add(row.subjectId);
+    if (selected.length >= 3) break;
+  }
+  if (!selected.length) {
+    if (!contractRows.length) return null;
+    const expired = buildExpiredParentActionDecisionV1();
+    return {
+      parentState: expired.state,
+      insights: [expired.observed],
+      homeRecommendations: [
+        `${expired.recommendation} ${expired.temporary} ${expired.reevaluation}`,
+      ],
+    };
+  }
+  return {
+    parentState: selected[0].state,
+    insights: selected.map((decision) => decision.observed),
+    homeRecommendations: selected.map(
+      (decision) =>
+        `${decision.recommendation} ${decision.temporary} ${decision.reevaluation}`,
+    ),
+  };
+}
+
 
 
 /**
@@ -747,7 +815,11 @@ export function applyTopicEngineParentFacingInsights(clientReport, apiPayload = 
 
   const payload = apiPayload || clientReport._reportApiPayload || null;
 
-  const engineInsights = buildParentInsightsFromTopicEngineHe(clientReport, payload);
+  const adcParentFacing = buildParentFacingFromAdcV2(clientReport);
+
+  const engineInsights = adcParentFacing
+    ? []
+    : buildParentInsightsFromTopicEngineHe(clientReport, payload);
 
   const hasEngineRows = collectTopicEngineRowsFromReport(clientReport).some(
 
@@ -765,7 +837,20 @@ export function applyTopicEngineParentFacingInsights(clientReport, apiPayload = 
 
 
 
-  if (hasEngineRows) {
+  if (adcParentFacing) {
+
+    clientReport.parentFacing.insights = adcParentFacing.insights;
+    clientReport.parentFacing.homeRecommendations =
+      adcParentFacing.homeRecommendations;
+    clientReport.parentFacing.parentState = adcParentFacing.parentState;
+    clientReport._parentFacingInsightsSource = "adc_v2";
+    clientReport._parentFacingHomeSource = "adc_v2";
+    dedupeDiagnosticOverviewAgainstInsights(
+      clientReport,
+      adcParentFacing.insights,
+    );
+
+  } else if (hasEngineRows) {
 
     const activityGap = buildActivityGapParentInsightHe(payload);
 

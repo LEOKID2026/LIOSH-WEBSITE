@@ -2206,24 +2206,36 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
       row: mapRow && typeof mapRow === "object" ? mapRow : {},
       unit: u,
     });
-  const contractRequiresRemediate =
-    topicEngineContract.recommendedAction === RA_REMEDIATE_SAME_LEVEL;
-  const finalStep = contractRequiresRemediate
-    ? RA_REMEDIATE_SAME_LEVEL
-    : thinEvidenceDowngraded &&
-        topicEngineContract[EDC_DECISION_FIELD] !== ED_CLEAR_TOPIC_GAP &&
-        topicEngineContract[EDC_DECISION_FIELD] !== ED_TOPIC_NEEDS_STRENGTHENING
-      ? RA_MAINTAIN_AND_STRENGTHEN
-      : topicEngineContract.recommendedAction === RA_WATCH
-        ? RA_MAINTAIN_AND_STRENGTHEN
-        : step;
+  const actionDecisionContract = topicEngineContract.actionDecisionContract;
+  const finalStep = (() => {
+    const action = String(actionDecisionContract?.action || "");
+    if (action === "advance_cautiously") return "advance_level";
+    if (
+      [
+        "practice_more",
+        "targeted_practice",
+        "strengthen_prerequisite",
+        "remove_timer",
+        "reduce_reading_load",
+        "guided_to_independent_transition",
+      ].includes(action)
+    ) {
+      return RA_REMEDIATE_SAME_LEVEL;
+    }
+    return RA_MAINTAIN_AND_STRENGTHEN;
+  })();
   const gradeRelation = geForIdentity.gradeRelation;
+  const parentActionDecision =
+    mapRow?.parentActionDecision ||
+    u?.parentActionDecision ||
+    null;
   let finalLabelRaw =
-    finalStep === "remediate_same_level"
+    parentActionDecision?.label ||
+    (finalStep === "remediate_same_level"
       ? "לחזק לפני שמתקדמים"
       : outQuestions >= TOPIC_REC_MIN_ACTIONABLE_QUESTIONS
         ? "לחזק לפי מה שחוזר"
-        : "צריך עוד שאלות";
+        : "צריך עוד שאלות");
   if (suppressRegisteredGradeStrengthenCopy(gradeRelation)) {
     finalLabelRaw = resolveGradeAwareRecommendationStepLabelHe(gradeRelation, finalLabelRaw);
   }
@@ -2259,6 +2271,8 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
     displayName: String(u?.displayName || "").trim(),
     learningPatternDecision: lpd,
     [EDC_CONTRACT_KEY]: topicEngineContract,
+    actionDecisionContract,
+    parentActionDecision,
     parentVisibleFinding:
       topicEngineContract.parentSafeFinding || lpd?.parentVisibleFinding || "",
     parentWordingLevel: lpd?.parentWordingLevel || "no_parent_text",

@@ -162,6 +162,7 @@ import LearningMasterMobileNavTitle from "../../components/learning/LearningMast
 import { StepExerciseUiProvider } from "../../contexts/StepExerciseUiContext.jsx";
 import { formatMathHudNumber } from "../../utils/math-master-hud-number.client.js";
 import { useStudentDisplayLevelPractice } from "../../hooks/useStudentDisplayLevelPractice.js";
+import { useStudentActionDecision } from "../../hooks/useStudentActionDecision.js";
 import { StudentDisplayLevelSelect } from "../../components/learning/StudentDisplayLevelSelect.js";
 import {
   migrateLegacyPracticeKeyToDisplayLevel,
@@ -870,6 +871,19 @@ export default function HistoryMaster() {
   const learningProfileHydratedRef = useRef(false);
   const [serverAccountSubjectAccuracyPct, setServerAccountSubjectAccuracyPct] = useState(null);
   const [learningProfileHydrationTick, setLearningProfileHydrationTick] = useState(0);
+  const {
+    directive: actionDecisionDirective,
+    recordActivity: recordActionDecisionActivity,
+  } = useStudentActionDecision({
+    enabled:
+      learningProfileHydrationTick > 0 &&
+      Boolean(learningProfileStudentIdRef.current),
+    studentId: learningProfileStudentIdRef.current,
+    subjectId: "history",
+    topicKey: topic,
+    gradeKey: grade,
+    levelKey: level,
+  });
   const scoresStoreRef = useRef({});
   const progressLoadedRef = useRef(false);
   const progressStringRef = useRef("");
@@ -1462,8 +1476,28 @@ export default function HistoryMaster() {
 
   // ----- TIMER -----
   useEffect(() => {
+    if (actionDecisionDirective.active) {
+      if (
+        ["advance_cautiously", "strengthen_prerequisite"].includes(
+          actionDecisionDirective.action,
+        ) &&
+        actionDecisionDirective.routePolicy.level !== level
+      ) {
+        applyPlannerLevelKey(actionDecisionDirective.routePolicy.level);
+      }
+    }
+  }, [actionDecisionDirective, applyPlannerLevelKey, level]);
+
+  useEffect(() => {
     if (!gameActive) return;
     if (mode !== "challenge" && mode !== "speed") return;
+    if (
+      actionDecisionDirective.active &&
+      actionDecisionDirective.sessionPolicy.timerEnabled === false
+    ) {
+      if (timeLeft != null) setTimeLeft(null);
+      return;
+    }
     if (timeLeft == null) return;
     if (timeLeft <= 0) {
       handleTimeUp();
@@ -1474,7 +1508,7 @@ export default function HistoryMaster() {
     }, 1000);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timeLeft, gameActive, mode]);
+  }, [actionDecisionDirective, timeLeft, gameActive, mode]);
 
   function filterQuestionsForCurrentSettings() {
     const gradeKey = grade;
@@ -2408,6 +2442,7 @@ function saveScienceAnswerInParallel({
 
   function handleAnswer(idx) {
     if (!gameActive || !currentQuestion || selectedAnswer != null) return;
+    recordActionDecisionActivity();
     const questionForSave = currentQuestion;
     const hintUsedForSave = false;
     const rawMs = questionStartTime ? Math.max(0, Date.now() - questionStartTime) : null;
@@ -2505,7 +2540,12 @@ function saveScienceAnswerInParallel({
     };
     trackCurrentQuestionTime();
     bumpTopicIntel(currentQuestion.topic, !isCorrect);
-    applyAnswerAdaptive(isCorrect, { mode: focusedPracticeModeRef.current });
+    if (
+      !actionDecisionDirective.active ||
+      actionDecisionDirective.sessionPolicy.allowEscalation
+    ) {
+      applyAnswerAdaptive(isCorrect, { mode: focusedPracticeModeRef.current });
+    }
     enqueueWrongQuestionRetry(isCorrect, isCorrect ? null : currentQuestion.id);
     if (isCorrect) {
       let points = 10 + streak;
@@ -3386,6 +3426,9 @@ function saveScienceAnswerInParallel({
                     question={
                       currentQuestion?.stem || "אין שאלה זמינה להגדרה זו."
                     }
+                    readingPresentation={
+                      actionDecisionDirective.sessionPolicy.readingPresentation
+                    }
                     getQuestionFontStyle={getQuestionFontStyle}
                     resolveVerbalSingleStyle={getHebrewApprovedSingleVerbalQuestionStyle}
                     leadClassName={
@@ -3473,7 +3516,10 @@ function saveScienceAnswerInParallel({
                   )}
 
                   <div className="w-full flex justify-center gap-2 flex-wrap mb-2 min-h-[2.75rem]" dir="rtl">
-                    {mode === "learning" && currentQuestion && (
+                    {mode === "learning" &&
+                      actionDecisionDirective.sessionPolicy.guidance !==
+                        "independent" &&
+                      currentQuestion && (
                       <button
                         type="button"
                         onClick={() => {

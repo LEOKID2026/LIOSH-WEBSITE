@@ -2,6 +2,7 @@ import { GRADES, BLANK } from './math-constants.js';
 import { mergeDiagnosticContractIntoParams } from './diagnostic-question-contract.js';
 import { probeMatchesSession } from './active-diagnostic-runtime/session-match.js';
 import { attachProfessionalMathMetadata } from './math-question-metadata.js';
+import { attachMathTopicDiagnosticEvidence } from './math-topic-diagnostic-evidence.js';
 import { sanitizeQuestionForStudentDisplay } from './student-question-stem-sanitizer.js';
 import {
   COMPARISON_SIGN_DISPLAY_ORDER,
@@ -1237,13 +1238,15 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
   const finalizeMathQuestionOutput = (out) =>
     sanitizeQuestionForStudentDisplay(
       attachMathEquationInstructionLabel(
-        attachProfessionalMathMetadata(
-          finalizeMathMcqAnswerBundle(out, randInt),
-          {
-            selectedOp,
-            gradeKey,
-            mathLevelKey,
-          }
+        attachMathTopicDiagnosticEvidence(
+          attachProfessionalMathMetadata(
+            finalizeMathMcqAnswerBundle(out, randInt),
+            {
+              selectedOp,
+              gradeKey,
+              mathLevelKey,
+            }
+          )
         ),
         gradeKey
       )

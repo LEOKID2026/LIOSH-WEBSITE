@@ -3059,7 +3059,7 @@ export const SENTENCE_POOLS = {
       "maxGrade": 6,
       "patternFamily": "advanced_third_conditional_g6",
       "difficulty": "advanced",
-      "cognitiveLevel": "evaluation",
+      "cognitiveLevel": "analysis",
       "expectedErrorTypes": ["grammar_error", "tense_error", "careless_error"],
       "skillId": "advanced_third_conditional_g6",
       "subtype": "advanced"
@@ -3115,7 +3115,7 @@ export const SENTENCE_POOLS = {
       "maxGrade": 6,
       "patternFamily": "advanced_indirect_question_g6",
       "difficulty": "advanced",
-      "cognitiveLevel": "evaluation",
+      "cognitiveLevel": "analysis",
       "expectedErrorTypes": ["grammar_error", "modal_error", "careless_error"],
       "skillId": "advanced_indirect_question_g6",
       "subtype": "advanced"

@@ -13,6 +13,9 @@ import {
   normalizeSessionModeForMath,
 } from "./parent-report-row-diagnostics.js";
 import { normalizeMistakeEvent } from "./mistake-event.js";
+import {
+  isIndependentRecurrenceEvidence,
+} from "./diagnostic-evidence-eligibility.js";
 import { mathReportBaseOperationKey } from "./math-report-generator.js";
 import { TOPIC_EVIDENCE_THRESHOLDS } from "./parent-report-topic-evidence.js";
 
@@ -140,7 +143,15 @@ function mistakeMatchesRowEsm(subjectId, topicRowKey, row, ev) {
   return c1 && c2 && c1 === c2;
 }
 
-export function filterMistakesForRow(subjectId, topicRowKey, row, mistakes, startMs, endMs) {
+export function filterMistakesForRow(
+  subjectId,
+  topicRowKey,
+  row,
+  mistakes,
+  startMs,
+  endMs,
+  options = {},
+) {
   const arr = Array.isArray(mistakes) ? mistakes : [];
   const out = [];
   for (const m of arr) {
@@ -149,6 +160,12 @@ export function filterMistakesForRow(subjectId, topicRowKey, row, mistakes, star
     const t = ev.timestamp;
     if (t == null || t < startMs || t > endMs) continue;
     if (!mistakeMatchesRowEsm(subjectId, topicRowKey, row, ev)) continue;
+    if (
+      options?.independentRecurrenceOnly === true &&
+      !isIndependentRecurrenceEvidence({ ...ev, ...m })
+    ) {
+      continue;
+    }
     out.push(ev);
   }
   return out;

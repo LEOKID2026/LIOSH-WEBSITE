@@ -197,6 +197,15 @@ export function normalizeMistakeEvent(raw, subjectId) {
   } else if (expectedErrorTags?.length) {
     possibleErrorPatterns = expectedErrorTags;
   }
+  const rawPrerequisites =
+    p.prerequisiteSkillIds ??
+    params.prerequisiteSkillIds ??
+    (p.metadata && typeof p.metadata === "object"
+      ? p.metadata.prerequisiteSkillIds
+      : null);
+  const prerequisiteSkillIds = Array.isArray(rawPrerequisites)
+    ? rawPrerequisites.map((id) => String(id).trim()).filter(Boolean)
+    : [];
 
   const skillId =
     strOrNull(p.skillId) ||
@@ -212,6 +221,9 @@ export function normalizeMistakeEvent(raw, subjectId) {
   let metadata = null;
   if (p.metadata && typeof p.metadata === "object" && !Array.isArray(p.metadata)) {
     metadata = { ...p.metadata };
+    if (prerequisiteSkillIds.length > 0) {
+      metadata.prerequisiteSkillIds = prerequisiteSkillIds;
+    }
   } else if (
     patternFamily ||
     skillId ||
@@ -224,6 +236,9 @@ export function normalizeMistakeEvent(raw, subjectId) {
       ...(skillId ? { skillId } : {}),
       ...(subskillId ? { subskillId } : {}),
       ...(possibleErrorPatterns?.length ? { possibleErrorPatterns } : {}),
+      ...(prerequisiteSkillIds.length
+        ? { prerequisiteSkillIds }
+        : {}),
       ...(p.metadataPresent === true ? { metadataPresent: true } : {}),
       ...(strOrNull(p.reasonMissingMetadata)
         ? { reasonMissingMetadata: strOrNull(p.reasonMissingMetadata) }
@@ -247,6 +262,17 @@ export function normalizeMistakeEvent(raw, subjectId) {
     level: strOrNull(p.level ?? snap?.level),
     mode: strOrNull(p.mode),
     timestamp: mistakeTimestampMs(p),
+    sessionId: strOrNull(
+      p.sessionId ??
+        p.activitySessionId ??
+        p.metadata?.sessionId ??
+        p.metadata?.activitySessionId,
+    ),
+    afterStepByStep:
+      p.afterStepByStep === true || p.metadata?.afterStepByStep === true,
+    hintsUsed: optFiniteNumber(p.hintsUsed ?? p.metadata?.hintsUsed),
+    evidenceSource:
+      strOrNull(p.evidenceSource ?? p.evidenceSourceKey ?? p.activitySource),
     exerciseText,
     questionLabel:
       strOrNull(p.questionLabel) ||
@@ -284,6 +310,7 @@ export function normalizeMistakeEvent(raw, subjectId) {
     possibleErrorPatterns,
     skillId,
     subskillId,
+    prerequisiteSkillIds,
     metadata,
     metadataPresent: p.metadataPresent === true ? true : metadata ? true : null,
     reasonMissingMetadata: strOrNull(p.reasonMissingMetadata),

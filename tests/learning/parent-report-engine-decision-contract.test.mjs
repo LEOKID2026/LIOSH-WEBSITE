@@ -9,13 +9,21 @@ import { restoreLearningPatternDecisionsFromUnits } from "../../utils/learning-p
 import { buildLpdSafeTopicExplainSectionsHe } from "../../utils/learning-pattern-decision/lpd-parent-facing-copy.js";
 
 function mockUnit({ patternHe, actionState = "intervene", questions = 206, correct = 108, wrong = 98, accuracy = 52 }) {
+  const actionAllowed = !["withhold", "probe_only"].includes(actionState);
   return {
     subjectId: "math",
     topicRowKey: "fractions::grade:g4",
     displayName: "שברים",
     taxonomy: { patternHe, id: "M-05", subskillHe: "השוואת שברים" },
     diagnosis: { allowed: true, lineHe: patternHe },
-    canonicalState: { actionState },
+    canonicalState: {
+      actionState,
+      recommendation: {
+        allowed: actionAllowed,
+        intensityCap: actionAllowed ? "RI3" : "RI0",
+        family: actionState,
+      },
+    },
     evidenceTrace: [{ type: "volume", value: { questions, correct, wrong, accuracy } }],
   };
 }
@@ -75,12 +83,17 @@ function rowFromMetrics(q, c, w, acc) {
     topicName: "חיבור",
     row: rowFromMetrics(10, 2, 8, 20),
     unit: {
-      canonicalState: { actionState: "probe_only" },
+      canonicalState: {
+        actionState: "probe_only",
+        recommendation: { allowed: false, intensityCap: "RI0", family: "probe_only" },
+      },
       evidenceTrace: [{ type: "volume", value: { questions: 10, correct: 2, wrong: 8, accuracy: 20 } }],
     },
   });
   assert.equal(contract.engineDecision, "clear_topic_gap");
-  assert.equal(contract.recommendedAction, "remediate_same_level");
+  assert.equal(contract.recommendedAction, "watch");
+  assert.equal(contract.actionAuthority.source, "canonicalState");
+  assert.equal(contract.actionAuthority.recommendationAllowed, false);
   assert.match(contract.parentSafeFinding, /קושי ברור|הרבה טעויות/);
   assert.doesNotMatch(contract.parentSafeFinding, /כמה טעויות/);
 }
@@ -142,9 +155,25 @@ function rowFromMetrics(q, c, w, acc) {
   assert.match(sections.pattern, /השוואה לפי מונה בלבד/);
 }
 
-// mapEngineRecommendedAction overrides probe_only on clear gap
+// P0: canonical probe_only/RI0 cannot be overridden by clear-gap metrics.
 assert.equal(
-  mapEngineRecommendedAction("probe_only", "clear_topic_gap", { questions: 10, wrong: 8, accuracy: 20 }),
+  mapEngineRecommendedAction(
+    "probe_only",
+    "clear_topic_gap",
+    { questions: 10, wrong: 8, accuracy: 20 },
+    { canonicalPresent: true, recommendationAllowed: false, intensityCap: "RI0" },
+  ),
+  "watch",
+);
+
+// Canonical intervention authority can approve remediation.
+assert.equal(
+  mapEngineRecommendedAction(
+    "intervene",
+    "clear_topic_gap",
+    { questions: 10, wrong: 8, accuracy: 20 },
+    { canonicalPresent: true, recommendationAllowed: true, intensityCap: "RI2" },
+  ),
   "remediate_same_level",
 );
 

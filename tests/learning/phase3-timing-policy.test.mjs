@@ -75,8 +75,9 @@ test("deriveTimingStatus: challenge mode cap 120s → long at 240_001", () => {
   assert.equal(deriveTimingStatus(240_001, 120_000), "very_long");
 });
 
-test("deriveTimingStatus: default cap constant is 300_000", () => {
-  assert.equal(DEFAULT_FREE_PRACTICE_CAP_MS, 300_000);
+test("deriveTimingStatus: default cap constant is 600_000", () => {
+  assert.equal(DEFAULT_FREE_PRACTICE_CAP_MS, 600_000);
+  assert.equal(ASSIGNED_ACTIVITY_CREDIT_CAP_MS, 600_000);
 });
 
 // ── computeAssignedActivityTiming ────────────────────────────────────────────
@@ -89,20 +90,20 @@ test("assigned: normal elapsed 5000ms → normal status", () => {
   assert.equal(timingStatus, "normal");
 });
 
-test("assigned: elapsed at exact cap 300_000ms → normal status", () => {
+test("assigned: elapsed at exact cap 600_000ms → normal status", () => {
   const { rawTimeSpentMs, creditedTimeMs, timingStatus } =
-    computeAssignedActivityTiming(300_000);
-  assert.equal(rawTimeSpentMs, 300_000);
-  assert.equal(creditedTimeMs, 300_000);
+    computeAssignedActivityTiming(600_000);
+  assert.equal(rawTimeSpentMs, 600_000);
+  assert.equal(creditedTimeMs, 600_000);
   assert.equal(timingStatus, "normal");
 });
 
-test("assigned: credited is capped at 300_000 when raw exceeds cap", () => {
+test("assigned: credited is capped at 600_000 when raw exceeds cap", () => {
   const { rawTimeSpentMs, creditedTimeMs } =
-    computeAssignedActivityTiming(400_000);
-  assert.equal(rawTimeSpentMs, 400_000);
+    computeAssignedActivityTiming(700_000);
+  assert.equal(rawTimeSpentMs, 700_000);
   assert.equal(creditedTimeMs, ASSIGNED_ACTIVITY_CREDIT_CAP_MS);
-  assert.equal(creditedTimeMs, 300_000);
+  assert.equal(creditedTimeMs, 600_000);
 });
 
 test("assigned: raw is preserved (never capped) when very large", () => {
@@ -110,18 +111,18 @@ test("assigned: raw is preserved (never capped) when very large", () => {
   const { rawTimeSpentMs, creditedTimeMs } =
     computeAssignedActivityTiming(rawInput);
   assert.equal(rawTimeSpentMs, rawInput);
-  assert.equal(creditedTimeMs, 300_000);
+  assert.equal(creditedTimeMs, 600_000);
   assert.notEqual(rawTimeSpentMs, creditedTimeMs);
 });
 
-test("assigned: timingStatus = long for 300_001 to 600_000ms", () => {
-  assert.equal(computeAssignedActivityTiming(300_001).timingStatus, "long");
-  assert.equal(computeAssignedActivityTiming(500_000).timingStatus, "long");
-  assert.equal(computeAssignedActivityTiming(600_000).timingStatus, "long");
+test("assigned: timingStatus = long for 600_001 to 1_200_000ms", () => {
+  assert.equal(computeAssignedActivityTiming(600_001).timingStatus, "long");
+  assert.equal(computeAssignedActivityTiming(900_000).timingStatus, "long");
+  assert.equal(computeAssignedActivityTiming(1_200_000).timingStatus, "long");
 });
 
-test("assigned: timingStatus = very_long for rawMs > 600_000", () => {
-  assert.equal(computeAssignedActivityTiming(600_001).timingStatus, "very_long");
+test("assigned: timingStatus = very_long for rawMs > 1_200_000", () => {
+  assert.equal(computeAssignedActivityTiming(1_200_001).timingStatus, "very_long");
   assert.equal(computeAssignedActivityTiming(3_600_000).timingStatus, "very_long");
 });
 
@@ -154,9 +155,9 @@ test("free-practice: both rawTimeSpentMs and creditedTimeMs present", () => {
   assert.ok("timingStatus" in result);
 });
 
-test("free-practice: no ledger → creditedMs capped at default 300_000", () => {
-  const { creditedTimeMs } = computeFreePracticeTiming(400_000);
-  assert.equal(creditedTimeMs, 300_000);
+test("free-practice: no ledger → creditedMs capped at default 600_000", () => {
+  const { creditedTimeMs } = computeFreePracticeTiming(700_000);
+  assert.equal(creditedTimeMs, 600_000);
 });
 
 test("free-practice: null rawMs → rawTimeSpentMs null, no_timer status", () => {
@@ -198,11 +199,11 @@ test("free-practice: raw within 300s cap → normal", () => {
 
 test("assigned: overCreditCap = false when rawMs <= cap (within budget)", () => {
   assert.equal(computeAssignedActivityTiming(5_000).overCreditCap, false);
-  assert.equal(computeAssignedActivityTiming(300_000).overCreditCap, false);
+  assert.equal(computeAssignedActivityTiming(600_000).overCreditCap, false);
 });
 
 test("assigned: overCreditCap = true when rawMs > cap (long)", () => {
-  assert.equal(computeAssignedActivityTiming(300_001).overCreditCap, true);
+  assert.equal(computeAssignedActivityTiming(600_001).overCreditCap, true);
 });
 
 test("assigned: overCreditCap = true when rawMs > cap (very_long)", () => {
@@ -222,11 +223,11 @@ test("assigned: overCreditCap is always explicitly present in result", () => {
 
 test("free-practice: overCreditCap = false when rawMs <= cap", () => {
   assert.equal(computeFreePracticeTiming(100_000).overCreditCap, false);
-  assert.equal(computeFreePracticeTiming(300_000).overCreditCap, false);
+  assert.equal(computeFreePracticeTiming(600_000).overCreditCap, false);
 });
 
 test("free-practice: overCreditCap = true when rawMs > cap", () => {
-  assert.equal(computeFreePracticeTiming(300_001).overCreditCap, true);
+  assert.equal(computeFreePracticeTiming(600_001).overCreditCap, true);
   assert.equal(computeFreePracticeTiming(900_000).overCreditCap, true);
 });
 
@@ -296,7 +297,7 @@ test("simulation: very long session (35 minutes) preserves raw, caps credited", 
     computeAssignedActivityTiming(rawMs);
 
   assert.equal(rawTimeSpentMs, rawMs, "raw must be exact");
-  assert.equal(creditedTimeMs, 300_000, "credited must be capped at 300s");
+  assert.equal(creditedTimeMs, 600_000, "credited must be capped at 600s");
   assert.equal(timingStatus, "very_long");
   assert.ok(
     rawTimeSpentMs > creditedTimeMs,
@@ -309,8 +310,8 @@ test("simulation: free-practice answer payload has both raw and credited", () =>
   const questionStartTime = Date.now() - 45_000;
   const rawMs = questionStartTime ? Math.max(0, Date.now() - questionStartTime) : null;
   const { rawTimeSpentMs, creditedTimeMs, timingStatus } = computeFreePracticeTiming(rawMs, {
-    creditedMs: Math.min(rawMs ?? 0, 300_000),
-    tierCapMs: 300_000,
+    creditedMs: Math.min(rawMs ?? 0, 600_000),
+    tierCapMs: 600_000,
   });
 
   const payload = {

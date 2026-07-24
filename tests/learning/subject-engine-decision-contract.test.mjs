@@ -41,7 +41,10 @@ function topicRowFromContract(input) {
       displayName: "שברים",
       taxonomy: { patternHe: "השוואה לפי מונה בלבד", subskillHe: "השוואת שברים" },
       diagnosis: { allowed: true, lineHe: "השוואה לפי מונה בלבד" },
-      canonicalState: { actionState: "intervene" },
+      canonicalState: {
+        actionState: "intervene",
+        recommendation: { allowed: true, intensityCap: "RI2", family: "intervene" },
+      },
       evidenceTrace: [{ type: "volume", value: { questions: 206, correct: 108, wrong: 98, accuracy: 52 } }],
     },
   });
@@ -57,7 +60,10 @@ function topicRowFromContract(input) {
       displayName: "כפל",
       taxonomy: { patternHe: "אותם זוגות שגויים", subskillHe: "כפל" },
       diagnosis: { allowed: true, lineHe: "אותם זוגות שגויים" },
-      canonicalState: { actionState: "intervene" },
+      canonicalState: {
+        actionState: "intervene",
+        recommendation: { allowed: true, intensityCap: "RI2", family: "intervene" },
+      },
       evidenceTrace: [{ type: "volume", value: { questions: 32, correct: 22, wrong: 10, accuracy: 69 } }],
     },
   });
@@ -118,7 +124,10 @@ function topicRowFromContract(input) {
     topicName: "חיבור",
     row: { questions: 10, correct: 2, wrong: 8, accuracy: 20, displayName: "חיבור" },
     unit: {
-      canonicalState: { actionState: "probe_only" },
+      canonicalState: {
+        actionState: "probe_only",
+        recommendation: { allowed: false, intensityCap: "RI0", family: "probe_only" },
+      },
       evidenceTrace: [{ type: "volume", value: { questions: 10, correct: 2, wrong: 8, accuracy: 20 } }],
     },
   });
@@ -126,10 +135,11 @@ function topicRowFromContract(input) {
   const contract = buildSubjectEngineDecisionContract("math", [addition], { subjectLabelKey: "math" });
 
   assert.equal(addition.engineDecisionContract.engineDecision, "clear_topic_gap");
-  assert.equal(contract.subjectDecision, "focused_strengthening_needed");
+  assert.equal(addition.engineDecisionContract.recommendedAction, "watch");
+  assert.equal(contract.subjectDecision, "insufficient_subject_data");
   assert.equal(contract.priorityTopics.length, 1);
   assert.equal(contract.priorityTopics[0].engineDecision, "clear_topic_gap");
-  assert.equal(contract.recommendedSubjectAction, "remediate_priority_topics_same_level");
+  assert.equal(contract.recommendedSubjectAction, "insufficient_data_withhold");
 }
 
 // short report subject summary — contract wiring from topic map
@@ -145,7 +155,10 @@ function topicRowFromContract(input) {
       displayName: "שברים",
       taxonomy: { patternHe: "השוואה לפי מונה בלבד", subskillHe: "השוואת שברים" },
       diagnosis: { allowed: true, lineHe: "השוואה לפי מונה בלבד" },
-      canonicalState: { actionState: "intervene" },
+      canonicalState: {
+        actionState: "intervene",
+        recommendation: { allowed: true, intensityCap: "RI2", family: "intervene" },
+      },
       evidenceTrace: [{ type: "volume", value: { questions: 206, correct: 108, wrong: 98, accuracy: 52 } }],
       priority: { level: "P4" },
     },
@@ -162,7 +175,10 @@ function topicRowFromContract(input) {
       displayName: "כפל",
       taxonomy: { patternHe: "אותם זוגות שגויים", subskillHe: "טבלת כפל" },
       diagnosis: { allowed: true, lineHe: "אותם זוגות שגויים" },
-      canonicalState: { actionState: "intervene" },
+      canonicalState: {
+        actionState: "intervene",
+        recommendation: { allowed: true, intensityCap: "RI2", family: "intervene" },
+      },
       evidenceTrace: [{ type: "volume", value: { questions: 32, correct: 22, wrong: 10, accuracy: 69 } }],
       priority: { level: "P3" },
     },
@@ -202,7 +218,10 @@ function topicRowFromContract(input) {
         topicRowKey: "fractions::grade:g5",
         displayName: "שברים",
         diagnosis: { allowed: true },
-        canonicalState: { actionState: "intervene" },
+        canonicalState: {
+          actionState: "intervene",
+          recommendation: { allowed: true, intensityCap: "RI2", family: "intervene" },
+        },
         evidenceTrace: [{ type: "volume", value: { questions: 206, correct: 108, wrong: 98, accuracy: 52 } }],
         priority: { level: "P4" },
       },
@@ -211,7 +230,10 @@ function topicRowFromContract(input) {
         topicRowKey: "multiplication::grade:g5",
         displayName: "כפל",
         diagnosis: { allowed: true },
-        canonicalState: { actionState: "intervene" },
+        canonicalState: {
+          actionState: "intervene",
+          recommendation: { allowed: true, intensityCap: "RI2", family: "intervene" },
+        },
         evidenceTrace: [{ type: "volume", value: { questions: 32, correct: 22, wrong: 10, accuracy: 69 } }],
         priority: { level: "P3" },
       },

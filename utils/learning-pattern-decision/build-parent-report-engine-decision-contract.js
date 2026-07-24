@@ -17,47 +17,64 @@ import {
 } from "./normalize-parent-practice-metrics.js";
 import { isUsableParentPatternLabel, sanitizeParentPatternLabel } from "./parent-pattern-label.js";
 import { resolveEvidenceStrength } from "./resolve-evidence-strength.js";
+import {
+  buildUnifiedDecisionContext,
+  reconcileEngineDecisionWithContext,
+} from "./build-unified-decision-context.js";
+import {
+  buildActionDecisionContractV2,
+  legacyRecommendedActionFromContractV2,
+} from "../action-decision-contract/action-decision-contract-v2.js";
 
 /** @typedef {"de2"|"v3"|"professional"|"canonicalState"|"topic_aggregation"} EngineSource */
 
 /**
+ * @deprecated P2 compatibility helper for isolated legacy callers/tests.
+ * The active EDC pipeline selects through ActionDecisionContractV2 and only
+ * mirrors its result back to `recommendedAction`.
  * @param {string|null|undefined} actionState
  * @param {string} engineDecision
  * @param {{ questions: number, accuracy: number, wrong: number }} metrics
+ * @param {{
+ *   canonicalPresent?: boolean,
+ *   recommendationAllowed?: boolean,
+ *   intensityCap?: string
+ * }} [authority]
  */
-export function mapEngineRecommendedAction(actionState, engineDecision, metrics) {
+export function mapEngineRecommendedAction(actionState, engineDecision, metrics, authority = {}) {
   const q = Math.max(0, Number(metrics?.questions) || 0);
-  const acc = Math.max(0, Math.min(100, Math.round(Number(metrics?.accuracy) || 0)));
   const action = String(actionState || "").trim().toLowerCase();
+  const canonicalPresent = authority?.canonicalPresent === true;
+  const recommendationAllowed = authority?.recommendationAllowed === true;
+  const intensityCap = String(authority?.intensityCap || "RI0");
+
+  if (q <= 0) return "none";
+
+  // P0 authority rule: metrics and engineDecision may describe the finding, but only
+  // canonical state may authorize an action. Missing canonical authority is fail-closed.
+  if (
+    !canonicalPresent ||
+    !recommendationAllowed ||
+    intensityCap === "RI0" ||
+    action === "withhold" ||
+    action === "probe_only"
+  ) {
+    return "watch";
+  }
 
   if (
-    engineDecision === "clear_topic_gap" ||
-    engineDecision === "topic_needs_strengthening" ||
-    action === "intervene" ||
-    action === "remediate" ||
-    action === "remediate_same_level"
+    action === "intervene" &&
+    (engineDecision === "clear_topic_gap" || engineDecision === "topic_needs_strengthening")
   ) {
     return "remediate_same_level";
   }
 
-  if (engineDecision === "partial_stable" && q >= 10 && acc < 72) {
-    return "remediate_same_level";
+  if (action === "maintain" || action === "expand_cautiously") {
+    return "maintain_and_strengthen";
   }
 
-  if (q >= 5 && acc < 70 && metrics.wrong >= 2) {
-    return "remediate_same_level";
-  }
-
-  if (action === "probe_only" || action === "maintain" || action === "withhold") {
-    return q >= 5 && acc < 70 ? "remediate_same_level" : "maintain_and_strengthen";
-  }
-
-  if (engineDecision === "mastery_stable") return "maintain_and_strengthen";
-  if (engineDecision === "early_direction_only" || engineDecision === "insufficient_data") {
-    return "watch";
-  }
-
-  return "maintain_and_strengthen";
+  // diagnose_only authorizes a diagnosis, not remediation.
+  return "watch";
 }
 
 /**
@@ -249,11 +266,23 @@ export function buildParentReportEngineDecisionContract(input = {}) {
       ? input.professionalSlice
       : null;
   const row = input.row && typeof input.row === "object" ? input.row : {};
+  const actionTopicKey =
+    String(unit?.bucketKey || row?.bucketKey || topicRowKey.split("\u0001")[0]).trim() ||
+    topicRowKey;
 
   const metrics = normalizeParentVisibleMetrics(row, unit);
   traceReason.push(`metrics:q=${metrics.questions},c=${metrics.correct},w=${metrics.wrong},acc=${metrics.accuracy}`);
 
   if (metrics.questions <= 0) {
+    const actionDecisionContract = buildActionDecisionContractV2({
+      subjectId,
+      topicKey: actionTopicKey,
+      engineDecision: "none",
+      metrics,
+      canonicalState: unit?.canonicalState || null,
+      unifiedDecisionContext: null,
+      decisionTimestamp: input.decisionTimestamp,
+    });
     return {
       subject: subjectId,
       topic: topicRowKey,
@@ -271,6 +300,7 @@ export function buildParentReportEngineDecisionContract(input = {}) {
       severity: "none",
       evidenceStrength: "none",
       recommendedAction: "none",
+      actionDecisionContract,
       parentSafeFinding: "",
       uncertaintyText: null,
       blockPatternClaim: true,
@@ -312,25 +342,89 @@ export function buildParentReportEngineDecisionContract(input = {}) {
   const tier = computeEngineConfidenceTier(metrics.questions);
   const accuracyBand = computeAccuracyBand(metrics.accuracy, metrics.questions);
 
+  const unifiedDecisionContext =
+    input.unifiedDecisionContext && typeof input.unifiedDecisionContext === "object"
+      ? input.unifiedDecisionContext
+      : buildUnifiedDecisionContext({ row, unit, v3Enrichment });
+  const subskillSignal = unifiedDecisionContext?.signals?.subskill || {};
+  const patternSignal = unifiedDecisionContext?.signals?.pattern || {};
   const taxonomyMatch =
-    unit?.taxonomyMatch && typeof unit.taxonomyMatch === "object" ? unit.taxonomyMatch : null;
+    patternSignal.taxonomyMatched === true
+      ? {
+          taxonomyMatch: true,
+          taxonomyId: patternSignal.taxonomyId,
+          matchStrength: patternSignal.recurrenceFull ? "strong" : "moderate",
+          classificationReasonCode: null,
+          rawBucketKey: String(unit?.bucketKey || row?.bucketKey || ""),
+          normalizedBucketKey: String(unit?.bucketKey || row?.bucketKey || ""),
+          subskillCandidateTechnical: subskillSignal.candidate || null,
+          subskillCandidate: subskillSignal.safe === true ? subskillSignal.candidate : null,
+          subskillSafety: subskillSignal.safety || null,
+          safeSubskillToShow: subskillSignal.safe === true,
+          patternCandidate: patternSignal.dominantPattern
+            ? {
+                patternKey: String(patternSignal.dominantPattern),
+                confidence: patternSignal.eligible ? 0.82 : 0.48,
+              }
+            : null,
+        }
+      : null;
+  // DE2 units do not produce riskFlags. The active producer attaches them to the
+  // topic row under topicEngineRowSignals; do not read a fictional DE2 field.
+  const rowRiskFlags =
+    row?.topicEngineRowSignals?.riskFlags &&
+    typeof row.topicEngineRowSignals.riskFlags === "object"
+      ? row.topicEngineRowSignals.riskFlags
+      : {};
+  if (Object.keys(rowRiskFlags).length > 0) traceReason.push("row:risk_flags_present");
 
-  const engineDiagnosticDecision = buildEngineDiagnosticDecision({
+  const baseEngineDiagnosticDecision = buildEngineDiagnosticDecision({
     q: metrics.questions,
     acc: metrics.accuracy,
     wrongRatio,
     engineConfidenceTier: tier,
     accuracyBand,
     taxonomyMatch,
-    rootCause: String(unit?.rootCause?.rootCause || ""),
-    behaviorType: String(unit?.behavior?.type || ""),
+    rootCause:
+      unifiedDecisionContext?.signals?.grade?.foundationRisk === true
+        ? "foundation_risk"
+        : unifiedDecisionContext?.signals?.upstreamDiagnostic
+              ?.shouldAvoidStrongConclusion === false
+          ? String(unifiedDecisionContext.signals.upstreamDiagnostic.rootCause || "")
+          : "",
+    behaviorType: String(
+      unifiedDecisionContext?.signals?.upstreamDiagnostic?.diagnosticType ||
+        row?.behaviorProfile?.dominantType ||
+        "",
+    ),
     dominantMistakePattern: detectedPattern || "",
-    riskFlags: unit?.riskFlags || {},
-    modeKey: String(row?.modeKey || unit?.modeKey || ""),
+    riskFlags: rowRiskFlags,
+    modeKey: String(row?.modeKey || ""),
   });
+  const reconciledDecision = reconcileEngineDecisionWithContext(
+    baseEngineDiagnosticDecision.engineDecision,
+    unifiedDecisionContext,
+  );
+  const engineDiagnosticDecision = {
+    ...baseEngineDiagnosticDecision,
+    engineDecision: reconciledDecision.engineDecision,
+    why: [
+      ...(baseEngineDiagnosticDecision.why || []),
+      ...reconciledDecision.reasonCodes,
+      ...(unifiedDecisionContext?.reconciler?.reasonCodes || []),
+    ],
+    reasonCodes: [...new Set([
+      ...reconciledDecision.reasonCodes,
+      ...(unifiedDecisionContext?.reconciler?.reasonCodes || []),
+    ])],
+    priorityAdjustment: Number(unifiedDecisionContext?.reconciler?.priorityAdjustment) || 0,
+  };
 
   const engineDecision = String(engineDiagnosticDecision.engineDecision || "insufficient_data");
   traceReason.push(`engineDecision:${engineDecision}`);
+  for (const reasonCode of engineDiagnosticDecision.reasonCodes || []) {
+    traceReason.push(`unified:${reasonCode}`);
+  }
 
   const evidenceStrength = resolveEvidenceStrength(metrics.questions);
   const severity =
@@ -347,7 +441,29 @@ export function buildParentReportEngineDecisionContract(input = {}) {
     engineDiagnosticDecision.safeSubskillToShow === false &&
     !detectedPattern;
 
-  const recommendedAction = mapEngineRecommendedAction(actionState, engineDecision, metrics);
+  const actionDecisionContract = buildActionDecisionContractV2({
+    subjectId,
+    topicKey: actionTopicKey,
+    engineDecision,
+    metrics,
+    canonicalState,
+    unifiedDecisionContext,
+    decisionTimestamp: input.decisionTimestamp,
+  });
+  const actionAuthority = {
+    source: "canonicalState",
+    canonicalPresent: actionDecisionContract.authorityTrace.canonicalPresent,
+    recommendationAllowed:
+      actionDecisionContract.authorityTrace.recommendationAllowed,
+    intensityCap: actionDecisionContract.authorityTrace.intensityCap,
+    actionState: actionDecisionContract.authorityTrace.actionState,
+  };
+  const recommendedAction = legacyRecommendedActionFromContractV2(
+    actionDecisionContract,
+  );
+  traceReason.push(
+    `actionAuthority:canonical=${actionAuthority.canonicalPresent}:allowed=${actionAuthority.recommendationAllowed}:cap=${actionAuthority.intensityCap}`,
+  );
   traceReason.push(`recommendedAction:${recommendedAction}`);
 
   const parentSafeFinding = buildParentSafeFindingFromEngine({
@@ -379,14 +495,23 @@ export function buildParentReportEngineDecisionContract(input = {}) {
     sourceEngine,
     detectedPattern,
     misconceptionLabel: de2DiagnosisLine || detectedPattern || null,
-    affectedSubskill: de2SubskillHe || engineDiagnosticDecision.subskillCandidate?.labelHe || null,
+    affectedSubskill:
+      subskillSignal.safe === true
+        ? subskillSignal.candidate?.labelHe || de2SubskillHe || null
+        : null,
     severity,
     evidenceStrength,
     recommendedAction,
+    actionDecisionContract,
     parentSafeFinding,
     uncertaintyText,
     blockPatternClaim,
     actionState: actionState || null,
+    actionAuthority,
+    unifiedDecisionContext,
+    signalPriorityAdjustment:
+      Number(unifiedDecisionContext?.reconciler?.priorityAdjustment) || 0,
+    signalPriorityReasons: unifiedDecisionContext?.reconciler?.reasonCodes || [],
     traceReason,
     engineDiagnosticDecision,
     dataText: buildParentMetricsDataLineHe(metrics, topicName),

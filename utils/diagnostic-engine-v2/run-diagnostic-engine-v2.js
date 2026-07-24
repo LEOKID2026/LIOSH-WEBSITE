@@ -63,7 +63,15 @@ export function runDiagnosticEngineV2({ maps, rawMistakesBySubject, startMs, end
     for (const [topicRowKey, row] of Object.entries(topicMap)) {
       if (!row || typeof row !== "object") continue;
 
-      const events = filterMistakesForRow(subjectId, topicRowKey, row, raw, startMs, endMs);
+      const events = filterMistakesForRow(
+        subjectId,
+        topicRowKey,
+        row,
+        raw,
+        startMs,
+        endMs,
+        { independentRecurrenceOnly: true },
+      );
       const wrongs = events.filter((e) => !e.isCorrect);
       const rowWrongTotal = Math.max(0, Number(row.wrong) || 0);
       const wrongCountForRules = Math.max(wrongs.length, rowWrongTotal);
@@ -153,6 +161,8 @@ export function runDiagnosticEngineV2({ maps, rawMistakesBySubject, startMs, end
       }
       /** @type {string|null} */
       let chosenId = null;
+      /** @type {string[]} */
+      const matchingCandidateIds = [];
       /** @type {ReturnType<typeof evaluateEvidenceRecurrence>|null} */
       let evidenceRecurrence = null;
       for (const tid of candidateIds) {
@@ -160,9 +170,11 @@ export function runDiagnosticEngineV2({ maps, rawMistakesBySubject, startMs, end
         if (!trow) continue;
         const evRec = evaluateEvidenceRecurrence(wrongs, trow);
         if (passesEvidenceRecurrenceRules(wrongs, trow)) {
-          chosenId = tid;
-          evidenceRecurrence = evRec;
-          break;
+          matchingCandidateIds.push(tid);
+          if (!chosenId) {
+            chosenId = tid;
+            evidenceRecurrence = evRec;
+          }
         }
       }
       const weakTaxonomyFallbackBlocked = !chosenId && candidateIdsRaw.length > 0 && wrongCountForRules >= 2;
@@ -294,6 +306,16 @@ export function runDiagnosticEngineV2({ maps, rawMistakesBySubject, startMs, end
           state: classificationState,
           reasonCode: classificationReasonCode,
           weakFallbackBlocked: weakTaxonomyFallbackBlocked,
+        },
+        taxonomySelection: {
+          candidateIdsRaw: [...candidateIdsRaw],
+          candidateIdsOrdered: [...candidateIds],
+          matchingCandidateIds,
+          disambiguationApplied:
+            candidateIdsRaw.length <= 1 || matchingCandidateIds.length === 1,
+          disambiguationWinnerId:
+            matchingCandidateIds.length === 1 ? matchingCandidateIds[0] : null,
+          conflict: matchingCandidateIds.length > 1,
         },
         evidenceTrace,
         taxonomy: tax

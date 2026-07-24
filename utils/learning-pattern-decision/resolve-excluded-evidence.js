@@ -1,37 +1,11 @@
 /**
  * Pattern-eligible evidence inclusion/exclusion — subject-agnostic.
  */
-import { classifyActivityEvidence, EVIDENCE_CATEGORIES } from "../../lib/learning/activity-classification.js";
+import { EVIDENCE_CATEGORIES } from "../../lib/learning/activity-classification.js";
 import {
-  EVIDENCE_SOURCE,
-  normalizeEvidenceSourceKey,
-} from "../../lib/learning-supabase/evidence-source.js";
+  assessDiagnosticEvidenceEligibility,
+} from "../diagnostic-evidence-eligibility.js";
 import { normalizeMistakeEvent } from "../mistake-event.js";
-
-/**
- * @param {import("../mistake-event.js").MistakeEventV1|Record<string, unknown>} ev
- * @returns {"free_practice"|"assigned_class"|"assigned_individual"|"assigned_parent"|"learning_book"}
- */
-function activitySourceFromEvent(ev) {
-  const raw =
-    ev?.evidenceSource ??
-    ev?.evidenceSourceKey ??
-    ev?.activitySource ??
-    (ev?.metadata && typeof ev.metadata === "object" ? ev.metadata.evidenceSource : null);
-  const key = normalizeEvidenceSourceKey(raw);
-  switch (key) {
-    case EVIDENCE_SOURCE.PARENT_ASSIGNED:
-      return "assigned_parent";
-    case EVIDENCE_SOURCE.PRIVATE_TEACHER_ASSIGNED:
-      return "assigned_individual";
-    case EVIDENCE_SOURCE.CLASSROOM_ASSIGNED:
-      return "assigned_class";
-    case EVIDENCE_SOURCE.LEARNING_BOOK:
-      return "learning_book";
-    default:
-      return "free_practice";
-  }
-}
 
 /**
  * @param {unknown[]} rawMistakes
@@ -43,6 +17,8 @@ function activitySourceFromEvent(ev) {
 export function partitionPatternEligibleMistakes(rawMistakes, subjectId, topicRowKey, startMs, endMs) {
   /** @type {import("../mistake-event.js").MistakeEventV1[]} */
   const included = [];
+  /** @type {import("../mistake-event.js").MistakeEventV1[]} */
+  const diagnosticIncluded = [];
   /** @type {{ reason: string, mode: string|null, count: number, evidenceCategory: string }[]} */
   const excludedBuckets = [];
   /** @type {Map<string, { reason: string, mode: string|null, count: number, evidenceCategory: string }>} */
@@ -70,47 +46,34 @@ export function partitionPatternEligibleMistakes(rawMistakes, subjectId, topicRo
       if (!String(topicRowKey).startsWith(evTopic)) continue;
     }
 
-    const mode = ev.mode || "unclassified";
-    const activitySource = activitySourceFromEvent(ev);
-    const afterStepByStep =
-      ev.afterStepByStep === true ||
-      (ev.metadata && typeof ev.metadata === "object" && ev.metadata.afterStepByStep === true);
-    const hintsUsed =
-      typeof ev.hintUsed === "boolean" && ev.hintUsed
-        ? 1
-        : typeof ev.hintsUsed === "number"
-          ? ev.hintsUsed
-          : 0;
-    const classified = classifyActivityEvidence(mode, activitySource, {
-      afterStepByStep,
-      hintsUsed,
+    const eligibility = assessDiagnosticEvidenceEligibility({
+      ...ev,
+      ...(raw && typeof raw === "object" ? raw : {}),
     });
-    const cat = classified.evidenceCategory;
+    const mode = eligibility.mode || "unclassified";
+    const cat = eligibility.evidenceCategory;
 
-    if (
-      cat === EVIDENCE_CATEGORIES.LEARNING_GUIDED ||
-      cat === EVIDENCE_CATEGORIES.LEARNING_REVIEW ||
-      cat === EVIDENCE_CATEGORIES.LEARNING_BOOK ||
-      cat === EVIDENCE_CATEGORIES.LEARNING_CONTEXT ||
-      cat === EVIDENCE_CATEGORIES.UNCLASSIFIED ||
-      !classified.isDiagnosticEligible
-    ) {
+    if (!eligibility.independentRecurrenceEligible) {
       const key = `${cat}|${mode}`;
       const prev = excludedMap.get(key) || {
-        reason: exclusionReason(cat),
+        reason:
+          eligibility.reasonCodes[0] ||
+          exclusionReason(cat),
         mode,
         count: 0,
         evidenceCategory: cat,
       };
       prev.count += 1;
       excludedMap.set(key, prev);
-      continue;
     }
 
-    included.push(ev);
-    if (cat === EVIDENCE_CATEGORIES.DIAGNOSTIC_COMPETITIVE) competitiveCount += 1;
-    else if (cat === EVIDENCE_CATEGORIES.DIAGNOSTIC_GUIDED) guidedCount += 1;
-    else independentCount += 1;
+    if (eligibility.diagnosticEligible) {
+      diagnosticIncluded.push(ev);
+      if (cat === EVIDENCE_CATEGORIES.DIAGNOSTIC_COMPETITIVE) competitiveCount += 1;
+      else if (cat === EVIDENCE_CATEGORIES.DIAGNOSTIC_GUIDED) guidedCount += 1;
+      else if (eligibility.independentRecurrenceEligible) independentCount += 1;
+    }
+    if (eligibility.independentRecurrenceEligible) included.push(ev);
   }
 
   for (const v of excludedMap.values()) excludedBuckets.push(v);
@@ -120,6 +83,7 @@ export function partitionPatternEligibleMistakes(rawMistakes, subjectId, topicRo
 
   return {
     included,
+    diagnosticIncluded,
     excludedEvidence: excludedBuckets,
     competitiveBucketOnly,
     bucketCounts: { independentCount, competitiveCount, guidedCount },

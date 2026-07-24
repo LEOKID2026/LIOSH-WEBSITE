@@ -89,8 +89,12 @@ function topicNextStepVisualVariant(step) {
     case "advance_level":
     case "advance_grade_topic_only":
       return "advance";
+    case "insufficient_information":
+    case "verification_needed":
+    case "progress_or_mastery":
     case "maintain_and_strengthen":
       return "maintain";
+    case "strengthening_needed":
     case "remediate_same_level":
       return "remediate";
     case "drop_one_level_topic_only":
@@ -856,7 +860,9 @@ export default function ParentReportDetailedPage() {
           {(() => {
             const seenStepLabels = new Set();
             return sp.topicRecommendations.map((tr, idx) => {
-              const tv = topicNextStepVisualVariant(tr.recommendedNextStep);
+              const tv = topicNextStepVisualVariant(
+                tr.parentActionDecision?.state || tr.recommendedNextStep,
+              );
               const nar =
                 topicRecommendationNarratives.get(tr.topicRowKey) || buildTopicRecommendationNarrative(tr);
               const snapshotNorm = normalizeLineForDedupe(nar.snapshot);

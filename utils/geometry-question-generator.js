@@ -17,6 +17,7 @@ import { formatTriangleAnglesKnownTwoStem } from "./geometry-activity-question-s
 import { pickValidTriangleSides } from "../lib/worksheets/worksheet-geometry-math-valid.js";
 import { sanitizeQuestionForStudentDisplay } from "./student-question-stem-sanitizer.js";
 import { repairMcqObviousAnswerContent } from "./mcq-fail-content-repair.js";
+import { attachGeometryTopicDiagnosticEvidence } from "./geometry-topic-diagnostic-evidence.js";
 
 function geometryTopicLabelHe(topicKey) {
   return TOPICS[topicKey]?.name || "נושא";
@@ -518,22 +519,33 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
       topic: selectedTopic,
     });
     if (conceptual) {
-      return sanitizeQuestionForStudentDisplay(
-        attachCanonicalMetadataToMathGeometryQuestion(
-          {
-            question: conceptual.question,
-            correctAnswer: conceptual.correctAnswer,
-            answers: conceptual.answers,
-            topic: selectedTopic,
-            shape,
-            params: conceptual.params,
-          },
-          {
-            subject: "geometry",
-            gradeKey,
-            levelKey,
-            topic: selectedTopic,
-          }
+      return attachGeometryTopicDiagnosticEvidence(
+        applyMcqEvidenceTaggingToQuestion(
+          sanitizeQuestionForStudentDisplay(
+            attachCanonicalMetadataToMathGeometryQuestion(
+              {
+                question: conceptual.question,
+                correctAnswer: conceptual.correctAnswer,
+                answers: conceptual.answers,
+                options: conceptual.answers,
+                correctIndex: conceptual.answers.findIndex(
+                  (answer) => String(answer) === String(conceptual.correctAnswer)
+                ),
+                topic: selectedTopic,
+                shape,
+                params: conceptual.params,
+                subjectId: "geometry",
+                subject: "geometry",
+                type: "mcq",
+              },
+              {
+                subject: "geometry",
+                gradeKey,
+                levelKey,
+                topic: selectedTopic,
+              }
+            )
+          )
         )
       );
     }
@@ -2638,9 +2650,10 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
     levelKey,
   });
 
-  return applyMcqEvidenceTaggingToQuestion(
-    sanitizeQuestionForStudentDisplay(
-      attachCanonicalMetadataToMathGeometryQuestion(
+  return attachGeometryTopicDiagnosticEvidence(
+    applyMcqEvidenceTaggingToQuestion(
+      sanitizeQuestionForStudentDisplay(
+        attachCanonicalMetadataToMathGeometryQuestion(
         {
           question,
           correctAnswer: repairedCorrect,
@@ -2659,6 +2672,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
           levelKey,
           topic: selectedTopic,
         }
+        )
       )
     )
   );

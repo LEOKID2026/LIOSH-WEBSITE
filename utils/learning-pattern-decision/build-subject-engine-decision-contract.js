@@ -19,13 +19,6 @@ const ENGINE_DECISION_RANK = {
   none: 0,
 };
 
-/** @type {Set<string>} */
-const REMEDIATE_ACTIONS = new Set([
-  "remediate_same_level",
-  "remediate_step_down",
-  "intervene",
-]);
-
 /**
  * @param {Record<string, unknown>|null|undefined} row
  * @returns {(Record<string, unknown> & { _decisionRank: number, _evidenceRank: number })|null}
@@ -51,6 +44,10 @@ function extractTopicEngineContract(row) {
 
   const engineDecision = String(edc.engineDecision || "none");
   const evidenceStrength = String(edc.evidenceStrength || "none");
+  const actionDecisionContract =
+    edc.actionDecisionContract && typeof edc.actionDecisionContract === "object"
+      ? edc.actionDecisionContract
+      : null;
 
   return {
     topicKey: String(row?.topicRowKey || row?.topicKey || edc.topic || "").trim(),
@@ -69,6 +66,13 @@ function extractTopicEngineContract(row) {
     severity: String(edc.severity || "none"),
     evidenceStrength,
     recommendedAction: String(edc.recommendedAction || "none"),
+    actionDecisionContract,
+    action: String(actionDecisionContract?.action || ""),
+    actionFamily: String(actionDecisionContract?.family || ""),
+    signalPriorityAdjustment: Number(edc.signalPriorityAdjustment) || 0,
+    signalPriorityReasons: Array.isArray(edc.signalPriorityReasons)
+      ? [...edc.signalPriorityReasons]
+      : [],
     parentSafeFinding: String(
       edc.parentSafeFinding || row?.parentVisibleFinding || "",
     ).trim(),
@@ -98,8 +102,8 @@ function isActionableGapTopic(topic) {
     return false;
   }
   return (
-    REMEDIATE_ACTIONS.has(String(topic.recommendedAction || "")) ||
-    String(topic.recommendedAction || "") !== "watch"
+    topic.actionDecisionContract?.eligible === true &&
+    topic.actionDecisionContract?.intervention === true
   );
 }
 
@@ -115,9 +119,9 @@ function deriveSubjectDecision(priorityTopics, allTopics, speedCheckTopicsCount 
   const gaps = priorityTopics.filter(isActionableGapTopic);
   const stable = allTopics.filter(
     (t) =>
-      String(t.engineDecision || "") === "partial_stable" ||
-      String(t.recommendedAction || "") === "maintain" ||
-      String(t.recommendedAction || "") === "maintain_and_strengthen",
+      String(t.engineDecision || "") !== "speed_pressure_pattern" &&
+      (String(t.engineDecision || "") === "partial_stable" ||
+        String(t.action || "") === "maintain"),
   );
 
   // Product-approved routing order (mixed_subject_profile only ever describes exactly
@@ -173,13 +177,24 @@ function sortPriorityTopics(topics) {
     const sa = sevRank[String(a.severity)] || 0;
     const sb = sevRank[String(b.severity)] || 0;
     if (sb !== sa) return sb - sa;
+    const signalPriorityA = Number(a.signalPriorityAdjustment) || 0;
+    const signalPriorityB = Number(b.signalPriorityAdjustment) || 0;
+    if (signalPriorityB !== signalPriorityA) return signalPriorityB - signalPriorityA;
     const wrongA = Number(a.wrong) || 0;
     const wrongB = Number(b.wrong) || 0;
     if (wrongB !== wrongA) return wrongB - wrongA;
     const accA = Number(a.accuracy) || 0;
     const accB = Number(b.accuracy) || 0;
     if (accA !== accB) return accA - accB;
-    return (Number(b.questions) || 0) - (Number(a.questions) || 0);
+    const questionDelta = (Number(b.questions) || 0) - (Number(a.questions) || 0);
+    if (questionDelta !== 0) return questionDelta;
+
+    // P0 deterministic tie-breaker: canonical topic key is independent of input order.
+    const keyA = String(a.topicKey || "").normalize("NFKC").toLowerCase();
+    const keyB = String(b.topicKey || "").normalize("NFKC").toLowerCase();
+    if (keyA < keyB) return -1;
+    if (keyA > keyB) return 1;
+    return 0;
   });
 }
 
@@ -255,9 +270,9 @@ export function buildSubjectEngineDecisionContract(subjectId, topicRows = [], op
   const stableStrengths = allTopicsClean
     .filter(
       (t) =>
-        String(t.engineDecision || "") === "partial_stable" ||
-        String(t.recommendedAction || "") === "maintain" ||
-        String(t.recommendedAction || "") === "maintain_and_strengthen",
+        String(t.engineDecision || "") !== "speed_pressure_pattern" &&
+        (String(t.engineDecision || "") === "partial_stable" ||
+          String(t.action || "") === "maintain"),
     )
     .map((t) => t.topicKey)
     .filter(Boolean);
@@ -305,7 +320,7 @@ export function buildSubjectEngineDecisionContract(subjectId, topicRows = [], op
 
   for (const t of priorityTopics) {
     traceReason.push(
-      `priority:${t.topicKey}:decision=${t.engineDecision}:action=${t.recommendedAction}`,
+      `priority:${t.topicKey}:decision=${t.engineDecision}:action=${t.action}`,
     );
   }
 

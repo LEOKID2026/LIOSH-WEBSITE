@@ -158,6 +158,7 @@ import { fetchStudentHomeProfile } from "../../lib/learning-client/fetchStudentH
 import { buildSubjectMonthlyPersistenceViewFromProfile } from "../../lib/learning-client/subjectMonthlyPersistenceView";
 import { useLearningVisibilityClock } from "../../hooks/useLearningVisibilityClock";
 import { useStudentDisplayLevelPractice } from "../../hooks/useStudentDisplayLevelPractice.js";
+import { useStudentActionDecision } from "../../hooks/useStudentActionDecision.js";
 import { StudentDisplayLevelSelect } from "../../components/learning/StudentDisplayLevelSelect.js";
 import {
   studentDisplayLevelKeys,
@@ -410,6 +411,19 @@ export default function HebrewMaster() {
   const [streak, setStreak] = useState(0);
   const [correct, setCorrect] = useState(0);
   const [wrong, setWrong] = useState(0);
+  const {
+    directive: actionDecisionDirective,
+    recordActivity: recordActionDecisionActivity,
+  } = useStudentActionDecision({
+    enabled:
+      learningProfileHydrationTick > 0 &&
+      Boolean(learningProfileStudentIdRef.current),
+    studentId: learningProfileStudentIdRef.current,
+    subjectId: "hebrew",
+    topicKey: operation,
+    gradeKey: grade,
+    levelKey: level,
+  });
   const [timeLeft, setTimeLeft] = useState(20);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [typedAnswer, setTypedAnswer] = useState("");
@@ -1353,7 +1367,31 @@ export default function HebrewMaster() {
 
   // Timer countdown (רק במצב Challenge או Speed)
   useEffect(() => {
+    if (actionDecisionDirective.active) {
+      if (actionDecisionDirective.questionPolicy.preferKind) {
+        practiceForceKindRef.current =
+          actionDecisionDirective.questionPolicy.preferKind;
+      }
+      if (
+        ["advance_cautiously", "strengthen_prerequisite"].includes(
+          actionDecisionDirective.action,
+        ) &&
+        actionDecisionDirective.routePolicy.level !== level
+      ) {
+        applyPlannerLevelKey(actionDecisionDirective.routePolicy.level);
+      }
+    }
+  }, [actionDecisionDirective, applyPlannerLevelKey, level]);
+
+  useEffect(() => {
     if (!gameActive || (mode !== "challenge" && mode !== "speed")) return;
+    if (
+      actionDecisionDirective.active &&
+      actionDecisionDirective.sessionPolicy.timerEnabled === false
+    ) {
+      if (timeLeft != null) setTimeLeft(null);
+      return;
+    }
     if (timeLeft == null) return;
 
     if (timeLeft <= 0) {
@@ -1366,7 +1404,7 @@ export default function HebrewMaster() {
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, [gameActive, mode, timeLeft]);
+  }, [actionDecisionDirective, gameActive, mode, timeLeft]);
 
   // שמירת ריצה נוכחית אל localStorage + עדכון Best & Leaderboard
   function saveRunToStorage() {
@@ -2300,6 +2338,7 @@ export default function HebrewMaster() {
   function handleAnswer(answer) {
     if (selectedAnswer || !gameActive || !currentQuestion) return;
     if (currentQuestion.answerMode === "hebrew_audio_recorded_manual") return;
+    recordActionDecisionActivity();
     const questionForSave = currentQuestion;
     const hintUsedForSave = false;
     const rawMs = questionStartTime ? Math.max(0, Date.now() - questionStartTime) : null;
@@ -2428,7 +2467,12 @@ export default function HebrewMaster() {
       });
     }
 
-    applyAnswerAdaptive(isCorrect, { mode: focusedPracticeMode });
+    if (
+      !actionDecisionDirective.active ||
+      actionDecisionDirective.sessionPolicy.allowEscalation
+    ) {
+      applyAnswerAdaptive(isCorrect, { mode: focusedPracticeMode });
+    }
     saveHebrewAnswerInParallel({
       question: questionForSave,
       userAnswer: answer,
@@ -4273,6 +4317,9 @@ export default function HebrewMaster() {
                         suppressAudioOnlyShamaLabel ? "" : disQuestionLabel
                       }
                       exerciseText={disExerciseText}
+                      readingPresentation={
+                        actionDecisionDirective.sessionPolicy.readingPresentation
+                      }
                       getQuestionFontStyle={getQuestionFontStyle}
                       leadClassName={`${MB.questionLead} ${questionBottomSpacingClass} break-words overflow-wrap-anywhere max-w-full px-2`}
                       bodyClassName={`${MB.questionBody} ${questionBottomSpacingClass} max-w-full px-2 break-words overflow-wrap-anywhere`}
@@ -4419,7 +4466,10 @@ export default function HebrewMaster() {
 
                   {currentQuestion && (
                     <div className="w-full flex justify-center gap-2 flex-wrap mb-2 min-h-[2.75rem]" dir="rtl">
-                        {mode === "learning" && currentQuestion && (
+                        {mode === "learning" &&
+                          actionDecisionDirective.sessionPolicy.guidance !==
+                            "independent" &&
+                          currentQuestion && (
                           <button
                             type="button"
                             onClick={() => {

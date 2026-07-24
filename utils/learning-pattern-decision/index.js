@@ -22,6 +22,40 @@ export {
 export { partitionPatternEligibleMistakes } from "./resolve-excluded-evidence.js";
 export { buildLearningPatternDecision } from "./build-learning-pattern-decision.js";
 export {
+  buildUnifiedDecisionContext,
+  reconcileEngineDecisionWithContext,
+} from "./build-unified-decision-context.js";
+export {
+  ACTION_DECISION_CONTRACT_VERSION,
+  ACTION_CODES_V2,
+  ACTION_FAMILIES_V2,
+  ACTION_DELIVERY_MODES_V2,
+  ACTIVE_INTERVENTION_ACTIONS_V2,
+  NON_INTERVENTION_ACTIONS_V2,
+  LEGACY_ACTION_MAPPINGS_V2,
+  DEPRECATED_AMBIGUOUS_LEGACY_ACTIONS_V2,
+  UNSUPPORTED_LEGACY_ACTIONS_V2,
+  buildActionDecisionContractV2,
+  validateActionDecisionContractV2,
+  legacyRecommendedActionFromContractV2,
+  mapLegacyActionToV2,
+  isInterventionActionV2,
+} from "../action-decision-contract/action-decision-contract-v2.js";
+export {
+  PREREQUISITE_PRECISION,
+  resolvePrerequisitePrecision,
+  validatePrerequisitePrecision,
+} from "../action-decision-contract/prerequisite-precision.js";
+export {
+  DECISION_CALIBRATION_CONTRACT_VERSION,
+  DECISION_CALIBRATION_CONTRACT_V1,
+  DECISION_CALIBRATION_ACTIONS_V1,
+  calibrationForActionV1,
+  capIntensityByCalibrationV1,
+  buildDecisionLifecycleV1,
+  validateDecisionCalibrationContractV1,
+} from "../action-decision-contract/decision-calibration-contract-v1.js";
+export {
   buildParentReportEngineDecisionContract,
   mapEngineRecommendedAction,
   resolveEngineDecisionUncertaintyText,

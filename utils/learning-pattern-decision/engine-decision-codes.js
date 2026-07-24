@@ -34,6 +34,34 @@ export const RA_MAINTAIN_AND_STRENGTHEN = "maintain_and_strengthen";
 export const RA_MAINTAIN = "maintain";
 export const RA_INTERVENE = "intervene";
 
+/**
+ * P2 status: every `recommendedAction` value is a backward-compatible mirror.
+ * ActionDecisionContractV2 is the only active action-selection authority.
+ */
+export const LEGACY_MIRROR_RECOMMENDED_ACTION_CODES = new Set([
+  RA_REMEDIATE_SAME_LEVEL,
+  RA_REMEDIATE_STEP_DOWN,
+  RA_WATCH,
+  RA_MAINTAIN_AND_STRENGTHEN,
+  RA_MAINTAIN,
+  RA_INTERVENE,
+  "none",
+]);
+
+/**
+ * P0 contract status: these codes remain readable for backward compatibility but
+ * are not emitted by the active EDC mapper. Consumers must not advertise them as
+ * reachable actions.
+ */
+export const DEPRECATED_UNREACHABLE_RECOMMENDED_ACTION_CODES = new Set([
+  RA_REMEDIATE_STEP_DOWN,
+  RA_MAINTAIN,
+  RA_INTERVENE,
+]);
+
+/** Contract-only terminal value emitted for q=0 before the practiced-topic path. */
+export const CONTRACT_ONLY_RECOMMENDED_ACTION_CODES = new Set(["none"]);
+
 /** Evidence strength codes */
 export const ES_STRONG = "strong";
 export const ES_SUPPORTED = "supported";

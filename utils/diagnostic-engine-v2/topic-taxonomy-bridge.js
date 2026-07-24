@@ -7,29 +7,29 @@ import { mathReportBaseOperationKey } from "../math-report-generator.js";
 /** @type {Record<string, string[]>} */
 const MATH_OP_TO_IDS = {
   number_sense: ["M-01"],
-  compare: ["M-01"],
-  scale: ["M-01"],
+  compare: ["M-11"],
+  scale: ["M-12"],
   addition: ["M-02"],
   subtraction: ["M-09"],
   multiplication: ["M-03", "M-10"],
-  division: ["M-10"],
-  division_with_remainder: ["M-10"],
+  division: ["M-13"],
+  division_with_remainder: ["M-14"],
   fractions: ["M-04", "M-05"],
-  decimals: ["M-06"],
+  decimals: ["M-15"],
   rounding: ["M-06"],
   word_problems: ["M-07", "M-08"],
-  sequences: ["M-08"],
-  percentages: ["M-06"],
-  ratio: ["M-10"],
-  equations: ["M-08"],
-  order_of_operations: ["M-08"],
+  sequences: ["M-16"],
+  percentages: ["M-17"],
+  ratio: ["M-18"],
+  equations: ["M-19"],
+  order_of_operations: ["M-20"],
   mixed: ["M-02", "M-03"],
-  divisibility: ["M-02"],
-  prime_composite: ["M-01"],
-  powers: ["M-03"],
-  zero_one_properties: ["M-01"],
-  estimation: ["M-01"],
-  factors_multiples: ["M-03"],
+  divisibility: ["M-21"],
+  prime_composite: ["M-22"],
+  powers: ["M-23"],
+  zero_one_properties: ["M-24"],
+  estimation: ["M-25"],
+  factors_multiples: ["M-26"],
 };
 
 /** @type {Record<string, string[]>} */
@@ -41,16 +41,16 @@ const GEOMETRY_TOPIC_TO_IDS = {
   volume: ["G-05"],
   angles: ["G-02"],
   parallel_perpendicular: ["G-01"],
-  triangles: ["G-08"],
+  triangles: ["G-01"],
   transformations: ["G-04"],
   rotation: ["G-04"],
   symmetry: ["G-07"],
   diagonal: ["G-01"],
   heights: ["G-03"],
-  tiling: ["G-01"],
-  circles: ["G-02"],
-  solids: ["G-05"],
-  pythagoras: ["G-08"],
+  tiling: ["G-02"],
+  circles: ["G-03", "G-06"],
+  solids: ["G-01", "G-05"],
+  pythagoras: ["G-09"],
   mixed: ["G-01"],
 };
 
@@ -63,7 +63,7 @@ const ENGLISH_TOPIC_TO_IDS = {
   /** Audit/inventory uses grammar category id `sentence` for sentence pools — alias of UI topic `sentences`. */
   sentence: ["E-06"],
   writing: ["E-07"],
-  listening: ["E-08"],
+  phonics: ["E-08"],
   mixed: ["E-01"],
 };
 
@@ -112,6 +112,16 @@ const MOLEDET_TOPIC_TO_IDS = {
   mixed: ["MG-01"],
 };
 
+const SUBJECT_TOPIC_TAXONOMY_MAPS = Object.freeze({
+  math: MATH_OP_TO_IDS,
+  geometry: GEOMETRY_TOPIC_TO_IDS,
+  english: ENGLISH_TOPIC_TO_IDS,
+  hebrew: HEBREW_TOPIC_TO_IDS,
+  science: SCIENCE_TOPIC_TO_IDS,
+  history: HISTORY_TOPIC_TO_IDS,
+  "moledet-geography": MOLEDET_TOPIC_TO_IDS,
+});
+
 /**
  * Product bucket aliases → canonical keys that exist in taxonomy maps above.
  * No invented taxonomy — only redirects to keys already mapped.
@@ -120,6 +130,7 @@ const MOLEDET_TOPIC_TO_IDS = {
 const TOPIC_BUCKET_ALIASES = {
   shapes: "shapes_basic",
   sentence: "sentences",
+  listening: "phonics",
   map: "maps",
   human_body: "body",
 };
@@ -231,4 +242,18 @@ export function taxonomyIdsForReportBucket(subjectId, bucketKeyRaw) {
     return MOLEDET_TOPIC_TO_IDS[bucketKey] ? [...MOLEDET_TOPIC_TO_IDS[bucketKey]] : [];
   }
   return [];
+}
+
+/**
+ * Read-only inventory used by P3 coverage and orphan audits.
+ */
+export function taxonomyTopicCoverageInventory() {
+  return Object.entries(SUBJECT_TOPIC_TAXONOMY_MAPS).flatMap(
+    ([subjectId, topicMap]) =>
+      Object.entries(topicMap).map(([topicKey, taxonomyIds]) => ({
+        subjectId,
+        topicKey,
+        taxonomyIds: [...taxonomyIds],
+      })),
+  );
 }
