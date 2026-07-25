@@ -1004,6 +1004,7 @@ export function TopicRecommendationExplainStrip({ tr, suppressedLines = [] }) {
       explainSections.pattern,
       explainSections.meaning,
       explainSections.action,
+      explainSections.systemAction || null,
     ].filter((body) => {
       const n = topicStripNorm(body);
       if (!n) return false;

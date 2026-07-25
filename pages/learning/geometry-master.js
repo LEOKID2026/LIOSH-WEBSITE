@@ -1753,10 +1753,7 @@ export default function GeometryMaster() {
       total: 1,
       mode: reportModeFromGameState(mode, focusedPracticeMode),
     };
-    if (
-      !actionDecisionDirective.active ||
-      actionDecisionDirective.sessionPolicy.allowEscalation
-    ) {
+    if (!actionDecisionDirective.active) {
       applyAnswerAdaptive(isCorrect, {
         mode: focusedPracticeModeRef.current,
         gameMode: reportModeFromGameState(mode, focusedPracticeModeRef.current),

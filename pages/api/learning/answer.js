@@ -26,7 +26,7 @@ import { guardCookieMutationOrigin } from "../../../lib/security/api-guards.js";
 import { assertLearningSubjectSessionAllowed } from "../../../lib/learning/subject-permissions/session-asserts.server.js";
 import { classifyActivityEvidence } from "../../../lib/learning/activity-classification.js";
 import { normalizeQuestionEnginePayload } from "../../../lib/learning/question-engine-metadata.js";
-import { normalizeAnswerEvidence } from "../../../lib/learning/answer-evidence-contract.js";
+import { buildWriteTimeAnswerEvidenceFields } from "../../../lib/learning/classifiers/write-time-answer-evidence.js";
 import { buildDiagnosticCanonicalMetadata } from "../../../lib/learning/diagnostic-canonical-metadata.js";
 import { trackServerAnalyticsEvent } from "../../../lib/analytics/track-event.server.js";
 import { buildAnswerLevelFields } from "../../../lib/learning/session-evidence-levels.js";
@@ -132,9 +132,13 @@ export default async function handler(req, res) {
       ...normalizeClientMeta(body.clientMeta),
       gameMode: answerMode,
     };
-    const answerParams =
+    const bodyParams =
       body.params && typeof body.params === "object" && !Array.isArray(body.params)
         ? body.params
+        : null;
+    const rawQuestionEngine =
+      body.questionEngine && typeof body.questionEngine === "object" && !Array.isArray(body.questionEngine)
+        ? body.questionEngine
         : null;
     const contentGradeKey =
       normalizePracticeGradeKey(clientGradeHint) ||
@@ -186,7 +190,7 @@ export default async function handler(req, res) {
       { afterStepByStep, contextAfterBookReading, hintsUsed }
     );
 
-    let questionEngine = normalizeQuestionEnginePayload(body.questionEngine);
+    let questionEngine = normalizeQuestionEnginePayload(rawQuestionEngine);
     const bodyLevel = normalizeOptionalString(body.level, 40);
     const levelFields = buildAnswerLevelFields({
       subjectId: subject,
@@ -203,6 +207,21 @@ export default async function handler(req, res) {
       questionEngine = { ...questionEngine, difficulty: levelFields.questionEngineDifficulty };
     }
 
+    const expectedAnswerRaw = normalizeOptionalString(body.expectedAnswer, 1000);
+    const userAnswerRaw = normalizeOptionalString(body.userAnswer, 1000);
+    const writeTimeEvidence = buildWriteTimeAnswerEvidenceFields({
+      subject,
+      topic: normalizeOptionalString(body.topic, 120),
+      isCorrect: body.isCorrect,
+      userAnswer: userAnswerRaw,
+      expectedAnswer: expectedAnswerRaw,
+      bodyParams,
+      rawQuestionEngine,
+      questionEngine,
+      questionId,
+      selectedOptionIndex: normalizeOptionalInteger(body.selectedOptionIndex, 0, 100),
+    });
+
     const answerPayload = {
       subject,
       topic: normalizeOptionalString(body.topic, 120),
@@ -217,8 +236,8 @@ export default async function handler(req, res) {
         : {}),
       questionFingerprint: normalizeOptionalString(body.questionFingerprint, 300),
       prompt: normalizeOptionalString(body.prompt, 5000),
-      expectedAnswer: normalizeOptionalString(body.expectedAnswer, 1000),
-      userAnswer: normalizeOptionalString(body.userAnswer, 1000),
+      expectedAnswer: expectedAnswerRaw,
+      userAnswer: userAnswerRaw,
       hintsUsed,
       // Phase 3: raw wall time preserved; credited time capped by policy
       timeSpentMs: rawTimeSpentMs,
@@ -235,10 +254,17 @@ export default async function handler(req, res) {
       evidenceCategory: classification.evidenceCategory,
       isDiagnosticEligible: classification.isDiagnosticEligible,
       contextFlags: classification.contextFlags,
+      // Evidence-safe write-time classification (deterministic tags only)
+      params: writeTimeEvidence.params,
+      answerEvidence: writeTimeEvidence.answerEvidence,
+      misconceptionTag: writeTimeEvidence.misconceptionTag,
+      distractorFamily: writeTimeEvidence.distractorFamily,
+      patternFamily: writeTimeEvidence.patternFamily,
+      classifierRuleId: writeTimeEvidence.classifierRuleId,
+      classifierVersion: writeTimeEvidence.classifierVersion,
+      evidenceReason: writeTimeEvidence.evidenceReason,
+      questionKind: writeTimeEvidence.questionKind,
     };
-    if (answerParams) {
-      answerPayload.params = answerParams;
-    }
 
     const canonicalBundle = buildDiagnosticCanonicalMetadata({
       subject,
@@ -248,22 +274,28 @@ export default async function handler(req, res) {
       isDiagnosticEligible: classification.isDiagnosticEligible,
       source: {
         ...answerPayload,
-        params: answerParams || undefined,
+        params: writeTimeEvidence.params,
         questionEngine,
       },
       questionEngine,
     });
 
     if (canonicalBundle.enrichedQuestionEngine) {
-      answerPayload.questionEngine = canonicalBundle.enrichedQuestionEngine;
+      answerPayload.questionEngine = {
+        ...canonicalBundle.enrichedQuestionEngine,
+        ...(writeTimeEvidence.params ? { params: writeTimeEvidence.params } : {}),
+        ...(writeTimeEvidence.answerEvidence
+          ? { answerEvidence: writeTimeEvidence.answerEvidence }
+          : {}),
+      };
     } else if (questionEngine) {
-      answerPayload.questionEngine = questionEngine;
-    }
-    const storedEvidence = normalizeAnswerEvidence(
-      questionEngine?.answerEvidence || answerPayload.questionEngine?.answerEvidence
-    );
-    if (storedEvidence) {
-      answerPayload.answerEvidence = storedEvidence;
+      answerPayload.questionEngine = {
+        ...questionEngine,
+        ...(writeTimeEvidence.params ? { params: writeTimeEvidence.params } : {}),
+        ...(writeTimeEvidence.answerEvidence
+          ? { answerEvidence: writeTimeEvidence.answerEvidence }
+          : {}),
+      };
     }
     if (canonicalBundle.diagnosticMetadata) {
       answerPayload.diagnosticMetadata = canonicalBundle.diagnosticMetadata;

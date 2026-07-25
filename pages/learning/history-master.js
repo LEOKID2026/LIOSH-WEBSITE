@@ -2548,10 +2548,7 @@ function saveScienceAnswerInParallel({
     };
     trackCurrentQuestionTime();
     bumpTopicIntel(currentQuestion.topic, !isCorrect);
-    if (
-      !actionDecisionDirective.active ||
-      actionDecisionDirective.sessionPolicy.allowEscalation
-    ) {
+    if (!actionDecisionDirective.active) {
       applyAnswerAdaptive(isCorrect, {
         mode: focusedPracticeModeRef.current,
         gameMode: reportModeFromGameState(mode, focusedPracticeModeRef.current),

@@ -170,7 +170,9 @@ import {
   finishLearningSession,
 } from "../../lib/learning-client/learningActivityClient";
 import { buildQuestionEngineMetadataFromQuestion } from "../../lib/learning/question-engine-metadata.js";
+import { pickPersistableMathClassifierParams } from "../../lib/learning/math-classifier-params.js";
 import { resolveMathSessionTopic } from "../../lib/learning/session-topic-helpers.js";
+import { resolveMathStudentAnswerMode } from "../../utils/math-student-answer-mode.js";
 import { computeFreePracticeTiming } from "../../lib/learning/timing-policy.js";
 import { useLearningVisibilityClock } from "../../hooks/useLearningVisibilityClock";
 import {
@@ -2394,7 +2396,15 @@ export default function MathMaster() {
     creditedTimeMs,
     timingStatus,
     diagnosticProbeMeta,
+    answerMode: answerModeOverride,
   }) {
+    const answerMode =
+      answerModeOverride ||
+      resolveMathStudentAnswerMode({
+        mode,
+        practiceMode,
+        question,
+      });
     const questionEngine = question
       ? buildQuestionEngineMetadataFromQuestion(question, {
           selectedValue: userAnswer,
@@ -2402,12 +2412,18 @@ export default function MathMaster() {
           afterStepByStep: stepByStepViewedRef.current,
           isCorrect,
           subject: "math",
+          answerMode,
         })
       : null;
     if (questionEngine) {
       questionEngine.difficulty =
         question?.sourceDifficulty || question?.difficulty || level || questionEngine.difficulty;
     }
+    // W1: dual-write classifier operands on body.params (not qid-only)
+    const persistableParams = pickPersistableMathClassifierParams(
+      question?.params,
+      question,
+    );
     const answerLevelFields = buildStudentAnswerLevelFields(
       "math",
       displayLevelRef.current,
@@ -2427,6 +2443,7 @@ export default function MathMaster() {
           prompt,
           expectedAnswer,
           userAnswer,
+          params: persistableParams,
           questionEngine,
           isCorrect,
           hintsUsed: 0,
@@ -2744,11 +2761,11 @@ export default function MathMaster() {
             prm.patternFamily != null ? String(prm.patternFamily) : null,
           conceptTag: prm.conceptTag != null ? String(prm.conceptTag) : null,
           kind: prm.kind != null ? String(prm.kind) : null,
-          answerMode:
-            Array.isArray(questionForSave.answers) &&
-            questionForSave.answers.length > 1
-              ? "choice"
-              : "typed",
+          answerMode: resolveMathStudentAnswerMode({
+            mode,
+            practiceMode,
+            question: questionForSave,
+          }),
         };
         wrongEntry = mergeDiagnosticIntoMistakeEntry(
           wrongEntry,
@@ -2829,8 +2846,7 @@ export default function MathMaster() {
     // effect below). Guided/learning/book/step-by-step evidence is excluded
     // via isStudentAdaptiveActive → isEligibleAdaptiveStreakEvent.
     if (
-      (!actionDecisionDirective.active ||
-        actionDecisionDirective.sessionPolicy.allowEscalation) &&
+      (!actionDecisionDirective.active) &&
       isStudentAdaptiveActive("math", {
         displayLevel: displayLevelRef.current,
         mode: focusedPracticeModeRef.current,
@@ -3198,11 +3214,11 @@ export default function MathMaster() {
             distractorFamily:
               prm.distractorFamily != null ? String(prm.distractorFamily) : null,
             conceptTag: prm.conceptTag != null ? String(prm.conceptTag) : null,
-            answerMode:
-              Array.isArray(currentQuestion.answers) &&
-              currentQuestion.answers.length > 1
-                ? "choice"
-                : "numeric",
+            answerMode: resolveMathStudentAnswerMode({
+              mode,
+              practiceMode,
+              question: currentQuestion,
+            }),
             total: totalQuestions + 1,
             correctCountInSession: correctRef.current,
             isCorrect: false,
@@ -4881,12 +4897,14 @@ export default function MathMaster() {
                     {(() => {
                     // נושאים שצריכים כפתורי בחירה: שברים, יחס, השוואה, קנה מידה, גורמים וכפולות, חילוק עם שארית
                     const needsChoiceButtons = 
-                      currentQuestion.operation === "fractions" ||
                       currentQuestion.operation === "ratio" ||
                       currentQuestion.operation === "scale" ||
                       currentQuestion.operation === "compare" ||
                       currentQuestion.operation === "factors_multiples" ||
                       currentQuestion.operation === "division_with_remainder" ||
+                      // Topic-3: fraction compare always choice; other fracs by content
+                      (String(currentQuestion.params?.kind || "").includes("frac_compare") ||
+                        String(currentQuestion.params?.kind || "").includes("compare_like_den")) ||
                       // בדיקה אם יש תשובות שאינן מספרים
                       (currentQuestion.answers && currentQuestion.answers.some(ans => {
                         if (typeof ans === "string") {

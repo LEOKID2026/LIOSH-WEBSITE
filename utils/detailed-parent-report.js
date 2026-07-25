@@ -145,7 +145,7 @@ import {
   SP_SUBJECT_ENGINE_CONTRACT,
 } from "./learning-pattern-decision/engine-decision-codes.js";
 import { legacyRecommendedActionFromContractV2 } from "./action-decision-contract/action-decision-contract-v2.js";
-import { guardParentFacingText } from "./learning-pattern-decision/lpd-parent-facing-copy.js";
+import { guardParentFacingText, resolveTopicParentFindingHe } from "./learning-pattern-decision/lpd-parent-facing-copy.js";
 import { resolveTopicRecommendationOwnerCopyHe } from "./learning-pattern-decision/resolve-topic-owner-copy.js";
 
 const SUBJECT_IDS = [
@@ -1988,6 +1988,270 @@ function buildTopicOverviewRowsFromUnits(baseReport, sid, units, topicMapForSid)
     .sort((a, b) => (Number(b.questions) || 0) - (Number(a.questions) || 0));
 }
 
+/** @param {unknown} mapRow */
+function readMapRowEngineContract(mapRow) {
+  if (!mapRow || typeof mapRow !== "object") return null;
+  const row = /** @type {Record<string, unknown>} */ (mapRow);
+  const lpd =
+    row.learningPatternDecision && typeof row.learningPatternDecision === "object"
+      ? /** @type {Record<string, unknown>} */ (row.learningPatternDecision)
+      : null;
+  return (
+    row[EDC_CONTRACT_KEY] ||
+    row.engineDecisionContract ||
+    (lpd ? lpd[EDC_CONTRACT_KEY] || lpd.engineDecisionContract : null) ||
+    null
+  );
+}
+
+/** @param {unknown} contract */
+function engineContractSpecificityScore(contract) {
+  if (!contract || typeof contract !== "object") return 0;
+  const c = /** @type {Record<string, unknown>} */ (contract);
+  let score = 0;
+  if (String(c.detectedPattern || "").trim()) score += 100;
+  if (String(c.detectedPatternId || c.detectedTaxonomyId || "").trim()) score += 50;
+  const finding = String(c.parentSafeFinding || "").trim();
+  if (finding) {
+    score += 10;
+    if (/דפוס|מופיע דפוס|טעות שחוזר|נצפה דפוס/i.test(finding)) score += 40;
+  }
+  return score;
+}
+
+/** @param {unknown} row @param {string} topicRowKey */
+function readRowGradeKey(row, topicRowKey) {
+  const r = row && typeof row === "object" ? /** @type {Record<string, unknown>} */ (row) : null;
+  const gk = r?.gradeKey ?? r?.contentGradeKey ?? r?.actualGradeKey;
+  if (gk != null && String(gk).trim()) return String(gk).trim();
+  const trk = String(topicRowKey || "");
+  if (trk.includes("::grade:")) return trk.split("::grade:")[1] || null;
+  return null;
+}
+
+/** @param {string} topicRowKey @param {string} bucketKey */
+function isTopicAggregateRowKey(topicRowKey, bucketKey) {
+  const trk = String(topicRowKey || "").trim();
+  const bk = String(bucketKey || "").trim();
+  if (!trk) return false;
+  if (trk === bk) return true;
+  return !trk.includes("::grade:");
+}
+
+/** @param {unknown} contract @param {string} gradeKey */
+function contractLinksPatternToGrade(contract, gradeKey) {
+  if (!contract || typeof contract !== "object" || !gradeKey) return false;
+  const c = /** @type {Record<string, unknown>} */ (contract);
+  const linked = c.patternGradeKey || c.detectedPatternGradeKey || c.evidenceGradeKey || c.contentGradeKey;
+  if (linked && String(linked).trim() === gradeKey) return true;
+  const adc = c.actionDecisionContract;
+  const target = adc && typeof adc === "object" ? adc.target : null;
+  if (target && typeof target === "object") {
+    const tg = target.gradeKey || target.contentGradeKey;
+    if (tg && String(tg).trim() === gradeKey) return true;
+  }
+  const basis = Array.isArray(c.evidenceBasis) ? c.evidenceBasis : [];
+  return basis.some((b) => {
+    if (!b || typeof b !== "object") return false;
+    const entry = /** @type {Record<string, unknown>} */ (b);
+    const g = entry.gradeKey || entry.contentGradeKey || entry.scopeGradeKey;
+    return g && String(g).trim() === gradeKey;
+  });
+}
+
+/** @param {unknown} rowA @param {unknown} rowB */
+function evidenceSourceCountsOverlap(rowA, rowB) {
+  const a =
+    rowA && typeof rowA === "object"
+      ? /** @type {Record<string, unknown>} */ (rowA).evidenceSourceCounts
+      : null;
+  const b =
+    rowB && typeof rowB === "object"
+      ? /** @type {Record<string, unknown>} */ (rowB).evidenceSourceCounts
+      : null;
+  if (!a || !b || typeof a !== "object" || typeof b !== "object") return false;
+  for (const [src, countA] of Object.entries(a)) {
+    if ((Number(countA) || 0) > 0 && (Number(b[src]) || 0) > 0) return true;
+  }
+  return false;
+}
+
+/** @param {unknown} row @param {string} patternHe */
+function rowRepeatedMistakeSupportsPattern(row, patternHe) {
+  const pattern = String(patternHe || "").trim();
+  if (!pattern || !row || typeof row !== "object") return false;
+  const lpd = /** @type {Record<string, unknown>} */ (row).learningPatternDecision;
+  const patterns = Array.isArray(lpd?.repeatedMistakePatterns) ? lpd.repeatedMistakePatterns : [];
+  for (const item of patterns) {
+    if (!item || typeof item !== "object") continue;
+    const p = /** @type {Record<string, unknown>} */ (item);
+    const label = String(p.label || "").trim();
+    const key = String(p.key || "").trim();
+    if (label && (label === pattern || pattern.includes(label) || label.includes(pattern))) return true;
+    if (key.startsWith("engine:") && key.slice("engine:".length).includes(pattern.slice(0, 16))) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Pattern from a sibling row may only attach to the displayed row when evidence overlap is proven.
+ * bucketKey/topic identity alone is never sufficient.
+ */
+function mapRowsProvePatternEvidenceOverlap(targetRow, targetTrk, siblingRow, siblingTrk, siblingContract) {
+  const pattern = String(siblingContract?.detectedPattern || "").trim();
+  if (!pattern) return false;
+
+  const parsed = splitTopicRowKey(targetTrk);
+  const bucketKey = String(
+    (targetRow && typeof targetRow === "object" ? targetRow.bucketKey : null) ||
+      parsed?.bucketKey ||
+      targetTrk,
+  ).split("::")[0];
+  const targetGrade = readRowGradeKey(targetRow, targetTrk);
+  const siblingGrade = readRowGradeKey(siblingRow, siblingTrk);
+  const siblingIsAggregate = isTopicAggregateRowKey(siblingTrk, bucketKey);
+  const targetIsAggregate = isTopicAggregateRowKey(targetTrk, bucketKey);
+
+  if (rowRepeatedMistakeSupportsPattern(targetRow, pattern)) return true;
+
+  if (siblingIsAggregate && !targetIsAggregate) return false;
+
+  if (targetGrade && siblingGrade && targetGrade === siblingGrade) return true;
+  if (targetGrade && contractLinksPatternToGrade(siblingContract, targetGrade)) return true;
+  if (!siblingIsAggregate && !targetIsAggregate && evidenceSourceCountsOverlap(targetRow, siblingRow)) {
+    return true;
+  }
+  return false;
+}
+
+/** @param {unknown} mapRow */
+function mapRowHasSupportedEnginePattern(mapRow) {
+  const contract = readMapRowEngineContract(mapRow);
+  return String(contract?.detectedPattern || "").trim().length > 0;
+}
+
+/**
+ * Aggregate/topic-level units with a supported engine pattern may appear even when tier is monitor.
+ * @param {object} unit
+ * @param {unknown} mapRow
+ */
+function topicRecommendationUnitIncluded(unit, mapRow) {
+  const trk = String(unit?.topicRowKey || "");
+  const tier = parentTopicTierFromUnit(unit, mapRow);
+  if (parentTopicTierShowsRecommendationCard(tier)) return true;
+  const parsed = splitTopicRowKey(trk);
+  const bucketKey = String(
+    (mapRow && typeof mapRow === "object" ? mapRow.bucketKey : null) ||
+      parsed?.bucketKey ||
+      trk,
+  ).split("::")[0];
+  if (!isTopicAggregateRowKey(trk, bucketKey)) return false;
+  return mapRowHasSupportedEnginePattern(mapRow);
+}
+
+/** @param {unknown} primary @param {unknown} supplemental */
+function mergeEngineContractsPreferSpecific(primary, supplemental) {
+  if (!supplemental || typeof supplemental !== "object") return primary;
+  if (!primary || typeof primary !== "object") return supplemental;
+  const p = /** @type {Record<string, unknown>} */ (primary);
+  const s = /** @type {Record<string, unknown>} */ (supplemental);
+  if (engineContractSpecificityScore(s) <= engineContractSpecificityScore(p)) return primary;
+  return {
+    ...p,
+    ...s,
+    detectedPattern: s.detectedPattern || p.detectedPattern,
+    detectedPatternId: s.detectedPatternId || p.detectedPatternId,
+    detectedTaxonomyId: s.detectedTaxonomyId || p.detectedTaxonomyId,
+    parentSafeFinding: s.parentSafeFinding || p.parentSafeFinding,
+    actionDecisionContract: s.actionDecisionContract || p.actionDecisionContract,
+  };
+}
+
+/**
+ * Merge sibling engine contracts only when proven evidence overlap exists.
+ * Aggregate-only patterns must stay on the topic-level row, not on grade units.
+ * @param {unknown} mapRow
+ * @param {Record<string, unknown>} topicMapForSid
+ * @param {object} unit
+ */
+function enrichMapRowWithSiblingTopicEngineContracts(mapRow, topicMapForSid, unit) {
+  if (!mapRow || typeof mapRow !== "object") return mapRow;
+  const row = /** @type {Record<string, unknown>} */ (mapRow);
+  const currentContract = readMapRowEngineContract(row);
+  if (engineContractSpecificityScore(currentContract) >= 100) return mapRow;
+
+  const parsed = splitTopicRowKey(String(unit?.topicRowKey || ""));
+  const bucketKey = String(row.bucketKey || parsed?.bucketKey || "").split("::")[0];
+  if (!bucketKey) return mapRow;
+
+  const unitTrk = String(unit?.topicRowKey || "");
+  if (isTopicAggregateRowKey(unitTrk, bucketKey)) return mapRow;
+
+  let bestContract = null;
+  let bestLpd = null;
+  let bestScore = engineContractSpecificityScore(currentContract);
+  let bestQuestions = 0;
+
+  for (const [trk, sibling] of Object.entries(topicMapForSid || {})) {
+    if (!sibling || typeof sibling !== "object") continue;
+    if (trk === unitTrk) continue;
+    const sib = /** @type {Record<string, unknown>} */ (sibling);
+    const sibBucket = String(sib.bucketKey || trk.split("::")[0] || "").split("::")[0];
+    if (sibBucket !== bucketKey) continue;
+
+    const sibContract = readMapRowEngineContract(sib);
+    const sibScore = engineContractSpecificityScore(sibContract);
+    if (sibScore < 100) continue;
+    if (!mapRowsProvePatternEvidenceOverlap(row, unitTrk, sib, trk, sibContract)) continue;
+
+    const sibQuestions = Number(sib.questions) || 0;
+    if (sibScore > bestScore || (sibScore === bestScore && sibQuestions > bestQuestions)) {
+      bestContract = sibContract;
+      bestLpd =
+        sib.learningPatternDecision && typeof sib.learningPatternDecision === "object"
+          ? sib.learningPatternDecision
+          : null;
+      bestScore = sibScore;
+      bestQuestions = sibQuestions;
+    }
+  }
+
+  if (!bestContract) return mapRow;
+
+  const mergedContract = mergeEngineContractsPreferSpecific(currentContract, bestContract);
+  const mergedLpd =
+    bestLpd && typeof bestLpd === "object"
+      ? {
+          ...(row.learningPatternDecision && typeof row.learningPatternDecision === "object"
+            ? row.learningPatternDecision
+            : {}),
+          ...bestLpd,
+          [EDC_CONTRACT_KEY]: mergedContract,
+        }
+      : row.learningPatternDecision;
+
+  return {
+    ...row,
+    learningPatternDecision: mergedLpd,
+    [EDC_CONTRACT_KEY]: mergedContract,
+    engineDecisionContract: mergedContract,
+  };
+}
+
+/** @param {unknown} reportMeta @param {string} subjectId */
+function topicMapForSubjectFromReportMeta(reportMeta, subjectId) {
+  if (reportMeta?.topicMapForSid && typeof reportMeta.topicMapForSid === "object") {
+    return /** @type {Record<string, unknown>} */ (reportMeta.topicMapForSid);
+  }
+  const mk = REPORT_MAP_KEY[subjectId];
+  const br = reportMeta?.baseReport;
+  return mk && br?.[mk] && typeof br[mk] === "object"
+    ? /** @type {Record<string, unknown>} */ (br[mk])
+    : {};
+}
+
 /**
  * @param {Record<string, unknown>} rec
  * @param {string} subjectLabelHe
@@ -2004,7 +2268,16 @@ function applyTopicOwnerCopyToRecommendation(rec, subjectLabelHe = "") {
   const ownerDoNow = resolveTopicRecommendationOwnerCopyHe(row, "doNow");
   const ownerCaution = resolveTopicRecommendationOwnerCopyHe(row, "caution");
 
-  if (ownerFinding) rec.parentVisibleFinding = guardParentFacingText(ownerFinding);
+  if (ownerFinding) {
+    const engineFinding = guardParentFacingText(
+      rec.parentVisibleFinding || resolveTopicParentFindingHe(row) || "",
+    );
+    if (!engineFinding || ownerFinding === engineFinding) {
+      rec.parentVisibleFinding = guardParentFacingText(ownerFinding);
+    } else {
+      rec.parentVisibleFinding = engineFinding;
+    }
+  }
   if (ownerStep) rec.recommendedStepLabelHe = guardParentFacingText(ownerStep);
   if (ownerPlan) rec.interventionPlanHe = guardParentFacingText(ownerPlan);
   if (ownerDoNow) rec.doNowHe = guardParentFacingText(ownerDoNow);
@@ -2049,6 +2322,8 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
   const cautionAdditive = !!u?.outputGating?.additiveCautionAllowed && !gated;
   const topicKey = String(u?.topicRowKey || "");
   const subjectId = String(u?.subjectId || "__unknown_subject__");
+  const topicMapForSid = topicMapForSubjectFromReportMeta(reportMeta, subjectId);
+  const resolvedMapRow = enrichMapRowWithSiblingTopicEngineContracts(mapRow, topicMapForSid, u);
   const gatingContracts =
     u?.outputGating?.contractsV1 && typeof u.outputGating.contractsV1 === "object"
       ? u.outputGating.contractsV1
@@ -2069,7 +2344,10 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
   })();
   const canonicalDecisionTier = cs?.assessment?.decisionTier ?? (Number(baseDecision?.decisionTier) || 0);
 
-  const mapCv = mapRow?.contractsV1 && typeof mapRow.contractsV1 === "object" ? mapRow.contractsV1 : null;
+  const mapCv =
+    resolvedMapRow?.contractsV1 && typeof resolvedMapRow.contractsV1 === "object"
+      ? resolvedMapRow.contractsV1
+      : null;
   const mapEvidence = mapCv?.evidence && typeof mapCv.evidence === "object" ? mapCv.evidence : null;
   const mapEvidenceValidation =
     mapCv?.evidenceValidation && typeof mapCv.evidenceValidation === "object" ? mapCv.evidenceValidation : null;
@@ -2122,7 +2400,7 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
     gateReadiness: effectiveReadiness,
     evidenceStrength,
   });
-  const hasSubskillMetadata = resolveHasSubskillMetadataFromRowSources(u, mapRow);
+  const hasSubskillMetadata = resolveHasSubskillMetadataFromRowSources(u, resolvedMapRow);
   const rowGkFromTopicKeyEarly = (() => {
     if (!topicKey) return null;
     const parsed = splitTopicRowKey(topicKey);
@@ -2182,26 +2460,26 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
     contractsV1.evidence = { skillBreakdownAvailable: true };
   }
 
-  const lpd = mapRow?.learningPatternDecision || u?.learningPatternDecision || null;
+  const lpd = resolvedMapRow?.learningPatternDecision || u?.learningPatternDecision || null;
   const parentVisibleMetrics = normalizeParentVisibleMetrics(
     {
       questions: outQuestions,
       accuracy: outAccuracy,
-      correct: mapRow?.correct,
-      wrong: mapRow?.wrong,
-      parentVisibleMetrics: mapRow?.parentVisibleMetrics,
+      correct: resolvedMapRow?.correct ?? mapRow?.correct,
+      wrong: resolvedMapRow?.wrong ?? mapRow?.wrong,
+      parentVisibleMetrics: resolvedMapRow?.parentVisibleMetrics ?? mapRow?.parentVisibleMetrics,
     },
-    mapRow && typeof mapRow === "object" ? mapRow : null,
+    resolvedMapRow && typeof resolvedMapRow === "object" ? resolvedMapRow : null,
   );
   const topicEngineContract =
     lpd?.[EDC_CONTRACT_KEY] ||
-    mapRow?.[EDC_CONTRACT_KEY] ||
+    resolvedMapRow?.[EDC_CONTRACT_KEY] ||
     u?.[EDC_CONTRACT_KEY] ||
     buildParentReportEngineDecisionContract({
       subjectId,
       topicRowKey: topicKey,
-      topicName: String(u?.displayName || mapRow?.displayName || ""),
-      row: mapRow && typeof mapRow === "object" ? mapRow : {},
+      topicName: String(u?.displayName || resolvedMapRow?.displayName || mapRow?.displayName || ""),
+      row: resolvedMapRow && typeof resolvedMapRow === "object" ? resolvedMapRow : {},
       unit: u,
     });
   const actionDecisionContract = topicEngineContract.actionDecisionContract;
@@ -2284,7 +2562,7 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
     wrong: parentVisibleMetrics.wrong,
     accuracy: parentVisibleMetrics.accuracy,
     parentVisibleMetrics,
-    mapRow: mapRow && typeof mapRow === "object" ? mapRow : null,
+    mapRow: resolvedMapRow && typeof resolvedMapRow === "object" ? resolvedMapRow : null,
     trendV1:
       mapRow && typeof mapRow === "object" && mapRow.trendV1 && typeof mapRow.trendV1 === "object"
         ? mapRow.trendV1
@@ -2354,6 +2632,13 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
     threshold_policy_used: `topic_recommendation_questions>=${TOPIC_REC_MIN_ACTIONABLE_QUESTIONS}`,
     contractsV1,
   };
+  const resolvedFinding = resolveTopicParentFindingHe({
+    ...rec,
+    label: rec.displayName || rec.narrativeTitleHe,
+    mapRow: resolvedMapRow,
+  });
+  if (resolvedFinding) rec.parentVisibleFinding = resolvedFinding;
+
   return applyTopicOwnerCopyToRecommendation(rec, SUBJECT_LABEL_HE[subjectId] || "");
 }
 
@@ -2614,8 +2899,7 @@ function buildSubjectProfilesFromV2(baseReport) {
               trk && topicMapForSid[trk] && typeof topicMapForSid[trk] === "object"
                 ? topicMapForSid[trk]
                 : null;
-            const tier = parentTopicTierFromUnit(u, mapR);
-            return parentTopicTierShowsRecommendationCard(tier);
+            return topicRecommendationUnitIncluded(u, mapR);
           })
           .map((u) =>
             recommendationFromV2Unit(u, topicMapForSid[String(u?.topicRowKey || "")] || null, {
@@ -3280,5 +3564,9 @@ export function buildTopicRecommendationFromV2UnitForPhaseTests(unit, baseReport
       ? /** @type {Record<string, object>} */ (baseReport[mk])
       : {};
   const trk = String(unit?.topicRowKey || "");
-  return recommendationFromV2Unit(unit, trk ? tm[trk] || null : null);
+  return recommendationFromV2Unit(unit, trk ? tm[trk] || null : null, {
+    registeredGradeKey: baseReport?.registeredGradeKey,
+    baseReport,
+    topicMapForSid: tm,
+  });
 }

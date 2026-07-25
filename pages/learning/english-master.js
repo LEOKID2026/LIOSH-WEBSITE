@@ -2187,8 +2187,7 @@ export default function EnglishMaster() {
       mode: reportModeFromGameState(mode, focusedPracticeMode),
     };
     if (
-      (!actionDecisionDirective.active ||
-        actionDecisionDirective.sessionPolicy.allowEscalation) &&
+      (!actionDecisionDirective.active) &&
       isStudentAdaptiveActive("english", {
         displayLevel: displayLevelRef.current,
         mode: focusedPracticeMode,

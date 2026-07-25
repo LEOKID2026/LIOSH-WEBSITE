@@ -60,8 +60,32 @@ export const MATH_TOPIC_COVERAGE_EVIDENCE_RULES = Object.freeze(
       {
         taxonomyId: d.id,
         evidenceSource: "distractor_family",
-        requiredTags: [d.tag],
-        questionKinds: [d.questionKind],
+        requiredTags:
+          d.id === "M-13"
+            ? [d.tag, "mul_instead_of_div", "sub_instead_of_div", "division_fact_error"]
+            : d.id === "M-14"
+              ? [d.tag]
+              : d.id === "M-15"
+                ? [d.tag]
+                : d.id === "M-17"
+                  ? [d.tag, "percentage_base_error"]
+                  : d.id === "M-19"
+                    ? [d.tag, "inverse_operation_error", "equation_sign_error"]
+                    : [d.tag],
+        questionKinds:
+          d.id === "M-13"
+            ? ["div", "div_long", "div_two_digit"]
+            : d.id === "M-14"
+              ? ["div_with_remainder", "div_with_remainder_long"]
+              : d.id === "M-15"
+                ? ["dec_", "dec_add", "dec_sub", "dec_multiply", "dec_divide"]
+                : d.id === "M-17"
+                  ? ["perc_", "perc_part_of", "perc_discount"]
+                  : d.id === "M-19"
+                    ? ["eq_", "eq_add_simple", "eq_sub_simple", "eq_mul", "eq_div"]
+                    : d.id === "M-24"
+                      ? ["zero_", "one_"]
+                      : [d.questionKind],
         minTagMatches: 3,
         minRelevantQuestions: 3,
         minOccurrenceRatio: 0.6,

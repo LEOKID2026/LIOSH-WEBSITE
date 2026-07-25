@@ -2476,10 +2476,7 @@ export default function HebrewMaster() {
       });
     }
 
-    if (
-      !actionDecisionDirective.active ||
-      actionDecisionDirective.sessionPolicy.allowEscalation
-    ) {
+    if (!actionDecisionDirective.active) {
       applyAnswerAdaptive(isCorrect, {
         mode: focusedPracticeMode,
         gameMode: reportModeFromGameState(mode, focusedPracticeMode),

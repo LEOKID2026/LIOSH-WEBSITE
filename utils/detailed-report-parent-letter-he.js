@@ -26,6 +26,7 @@ import {
 import { findTopicRecommendationForPriority } from "./learning-pattern-decision/build-subject-engine-decision-contract.js";
 import { resolveSubjectLetterOwnerCopyHe } from "./learning-pattern-decision/resolve-subject-owner-copy.js";
 import { resolveNarrativeOwnerCopyHe } from "./learning-pattern-decision/resolve-topic-owner-copy.js";
+import { stripParentTopicSectionPrefixHe } from "./learning-pattern-decision/parent-facing-error-pattern-he.js";
 import { SUBJECT_OWNER_COPY_TEMPLATE_IDS } from "./parent-report-language/parent-report-owner-copy-templates-he.js";
 import {
   RENDER_SOURCE_SUBJECT_ENGINE,
@@ -702,14 +703,17 @@ export function buildTopicRecommendationNarrative(tr) {
   let homeFromContract = hasCanonicalNarrative ? recommendationSlot || "" : recommendationSlot || homeAug;
   const ownerSnapshot = resolveNarrativeOwnerCopyHe(tr, "snapshot");
   const ownerCaution = resolveNarrativeOwnerCopyHe(tr, "cautionLineHe");
-  let snapshotOut = ownerSnapshot || snapshotFromContract || snap;
+  const canonicalFinding = stripGuillemetsHe(
+    stripParentTopicSectionPrefixHe(String(tr?.parentVisibleFinding || "").trim()),
+  );
+  let snapshotOut = canonicalFinding || ownerSnapshot || snapshotFromContract || snap;
 
   if (suppressRegisteredGradeStrengthenCopy(gradeRelation)) {
     const needsSupport = gradeContextNeedsSupport(gradeRelation, acc);
     const isStrength = gradeContextIsStrength(gradeRelation, acc, q);
     const expl = gradeContextExplanationHe({ gradeRelation, isStrength, needsSupport });
     const action = gradeContextActionHe({ gradeRelation, isStrength, needsSupport });
-    if (expl) snapshotOut = q > 0 ? `ב${core} ${expl}` : expl;
+    if (expl && !canonicalFinding) snapshotOut = q > 0 ? `ב${core} ${expl}` : expl;
     if (action) homeFromContract = action;
   }
 

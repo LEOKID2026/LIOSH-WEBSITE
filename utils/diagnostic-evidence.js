@@ -11,6 +11,8 @@ import { normalizeMistakeEvent } from "./mistake-event.js";
 import {
   resolveAnswerLevelFromPayload,
 } from "../lib/learning/session-evidence-levels.js";
+import { classifyHistoricalAnswerPayloadReadOnly } from "../lib/learning/classifiers/write-time-answer-evidence.js";
+import { normalizeAnswerEvidence } from "../lib/learning/answer-evidence-contract.js";
 
 /** Evidence sources allowed for parent-report diagnostic engine. */
 export const DIAGNOSTIC_EVIDENCE_SOURCES = Object.freeze({
@@ -93,6 +95,131 @@ export function assessMetadataPresence(row, subjectId) {
   };
 }
 
+function pickEvidenceStr(v) {
+  if (v == null || v === "") return null;
+  const s = String(v).trim();
+  return s || null;
+}
+
+/**
+ * Parse pipe-delimited questionId metadata into classifier params (kind, a, b, den1, …).
+ * Stored answer payloads often have empty params; questionId retains generator operands.
+ * @param {string|null|undefined} questionId
+ * @returns {Record<string, unknown>}
+ */
+export function parseClassifierParamsFromQuestionId(questionId) {
+  const qid = pickEvidenceStr(questionId);
+  if (!qid) return {};
+  const parts = qid.split("|");
+  /** @type {Record<string, unknown>} */
+  const out = {};
+  if (parts[1]) out.kind = parts[1];
+  for (let i = 3; i < parts.length; i += 1) {
+    const seg = parts[i];
+    if (!seg || !seg.includes(":")) continue;
+    const colon = seg.indexOf(":");
+    const key = seg.slice(0, colon).trim();
+    let raw = seg.slice(colon + 1).trim();
+    if (!key) continue;
+    if (raw.startsWith('"') && raw.endsWith('"')) raw = raw.slice(1, -1);
+    if (raw.startsWith("[") || raw.startsWith("{")) {
+      try {
+        out[key] = JSON.parse(raw);
+        continue;
+      } catch {
+        /* use raw string */
+      }
+    }
+    const num = Number(raw);
+    out[key] = Number.isFinite(num) && String(num) === raw ? num : raw;
+  }
+  return out;
+}
+
+/**
+ * @param {string|null|undefined} questionId
+ * @param {Record<string, unknown>|null|undefined} params
+ */
+export function mergeClassifierParamsFromQuestionId(questionId, params) {
+  const fromQid = parseClassifierParamsFromQuestionId(questionId);
+  const base =
+    params && typeof params === "object" && !Array.isArray(params) ? { ...params } : {};
+  return { ...fromQid, ...base };
+}
+
+function usableMisconceptionTag(v) {
+  const t = pickEvidenceStr(v);
+  if (!t || t === "unknown" || t === "generic_proximity") return null;
+  return t;
+}
+
+/**
+ * Resolve misconception tag for aggregate-read wrong answers.
+ * Re-runs classifyAnswerEvidence when stored payloads lack tags (historical rows).
+ * @param {object} p
+ */
+export function resolveMisconceptionEvidenceAtAggregateRead(p) {
+  const payload = p && typeof p === "object" ? p : {};
+  const questionEngine =
+    payload.questionEngine && typeof payload.questionEngine === "object" ? payload.questionEngine : null;
+  let answerEvidence = normalizeAnswerEvidence(payload.answerEvidence ?? questionEngine?.answerEvidence);
+
+  // Prefer write-time persisted tags (already evidence-gated)
+  let tag =
+    usableMisconceptionTag(payload.misconceptionTag) ||
+    usableMisconceptionTag(answerEvidence?.detectedMisconception);
+
+  let classifierRuleId = pickEvidenceStr(payload.classifierRuleId) || null;
+  let evidenceReason = pickEvidenceStr(payload.evidenceReason) || null;
+
+  // Historical read-only repair: deterministic only — never topic-alone, never force tags.
+  // Also backfill classifierRuleId / answerEvidence when a tag is present without proof fields
+  // (needed for same_session_observed proven-tag gating).
+  const needsHistorical =
+    !tag || !classifierRuleId || !answerEvidence || !answerEvidence?.detectedMisconception;
+  if (needsHistorical) {
+    const historical = classifyHistoricalAnswerPayloadReadOnly(
+      {
+        ...payload,
+        params: mergeClassifierParamsFromQuestionId(payload.questionId, payload.params),
+        questionEngine,
+      },
+      {
+        questionId: payload.questionId,
+        subject: pickEvidenceStr(payload.subject) || "unknown",
+        isCorrect: false,
+      },
+    );
+    if (historical.canTagSafely && historical.misconceptionTag) {
+      const histTag = usableMisconceptionTag(historical.misconceptionTag);
+      if (!tag) tag = histTag;
+      // Only adopt historical proof when it agrees with an existing tag (or fills a missing tag)
+      if (histTag && (!tag || histTag === tag)) {
+        answerEvidence = historical.fields?.answerEvidence || answerEvidence;
+        classifierRuleId = historical.fields?.classifierRuleId || classifierRuleId;
+        evidenceReason = historical.evidenceReason || evidenceReason;
+      }
+    } else if (!tag) {
+      evidenceReason = historical.evidenceReason || "unclassified_no_deterministic_rule";
+    }
+  }
+
+  const distractorFamily = tag
+    ? usableMisconceptionTag(payload.distractorFamily) ||
+      usableMisconceptionTag(questionEngine?.distractorFamily) ||
+      usableMisconceptionTag(payload.engineFields?.distractorFamily) ||
+      tag
+    : null;
+
+  return {
+    misconceptionTag: tag || null,
+    distractorFamily: distractorFamily || null,
+    answerEvidence: answerEvidence || null,
+    classifierRuleId,
+    evidenceReason,
+  };
+}
+
 /**
  * Build unified diagnostic evidence row from aggregate wrong-answer capture.
  * @param {object} p
@@ -124,11 +251,14 @@ export function buildDiagnosticEvidenceRow(p) {
 
   /** @type {Record<string, unknown>} */
   const metadata = {};
+  const misconceptionResolved = resolveMisconceptionEvidenceAtAggregateRead(p);
+
   for (const key of [
     "patternFamily",
     "subtype",
     "conceptTag",
     "distractorFamily",
+    "misconceptionTag",
     "skillId",
     "subSkill",
     "subskillId",
@@ -148,6 +278,12 @@ export function buildDiagnosticEvidenceRow(p) {
   ]) {
     const v = engineFields[key] ?? diagnosticMeta?.[key];
     if (v != null && v !== "") metadata[key] = v;
+  }
+  if (misconceptionResolved.misconceptionTag && !metadata.misconceptionTag) {
+    metadata.misconceptionTag = misconceptionResolved.misconceptionTag;
+  }
+  if (misconceptionResolved.distractorFamily && !metadata.distractorFamily) {
+    metadata.distractorFamily = misconceptionResolved.distractorFamily;
   }
   if (Array.isArray(diagnosticMeta?.taxonomyIds) && diagnosticMeta.taxonomyIds.length) {
     metadata.taxonomyIds = diagnosticMeta.taxonomyIds;
@@ -215,8 +351,8 @@ export function buildDiagnosticEvidenceRow(p) {
     sourceDifficulty,
     answeredAt: p?.answeredAt ?? null,
     isCorrect: false,
-    selectedAnswer: p?.userAnswer ?? null,
-    correctAnswer: p?.expectedAnswer ?? null,
+    selectedAnswer: p?.userAnswer ?? p?.selectedAnswer ?? null,
+    correctAnswer: p?.expectedAnswer ?? p?.correctAnswer ?? null,
     answerType: engineFields.questionType ?? metadata.questionType ?? null,
     responseMs: p?.timeSpentMs != null ? Math.round(Number(p.timeSpentMs)) : null,
     sessionElapsedMs: p?.sessionElapsedMs ?? null,
@@ -230,9 +366,26 @@ export function buildDiagnosticEvidenceRow(p) {
     taxonomyCandidateIds,
     possibleErrorPatterns: metadata.possibleErrorPatterns ?? null,
     patternFamily: metadata.patternFamily ?? null,
+    misconceptionTag: misconceptionResolved.misconceptionTag ?? metadata.misconceptionTag ?? null,
+    distractorFamily:
+      misconceptionResolved.distractorFamily ?? metadata.distractorFamily ?? null,
+    answerEvidence: misconceptionResolved.answerEvidence ?? p?.answerEvidence ?? null,
+    classifierRuleId: misconceptionResolved.classifierRuleId || p?.classifierRuleId || null,
+    evidenceReason: misconceptionResolved.evidenceReason || p?.evidenceReason || null,
+    params: mergeClassifierParamsFromQuestionId(p?.questionId, p?.params),
     metadataPresent: metaAssessment.metadataPresent,
     reasonMissingMetadata: metaAssessment.reasonMissingMetadata,
-    metadata: Object.keys(metadata).length ? metadata : null,
+    metadata: Object.keys(metadata).length
+      ? {
+          ...metadata,
+          ...(misconceptionResolved.classifierRuleId
+            ? { classifierRuleId: misconceptionResolved.classifierRuleId }
+            : {}),
+          ...(misconceptionResolved.misconceptionTag
+            ? { misconceptionTag: misconceptionResolved.misconceptionTag }
+            : {}),
+        }
+      : null,
     diagnosticMetadata: diagnosticMeta,
     prompt: p?.prompt ?? null,
   };
@@ -276,6 +429,11 @@ export function diagnosticEvidenceToStorageMistake(evidence, aggregateSubjectId)
     changedAnswer: ev.changedAnswer ?? undefined,
     firstTryCorrect: ev.firstTryMiss === true ? false : undefined,
     patternFamily: ev.patternFamily ?? undefined,
+    misconceptionTag: ev.misconceptionTag ?? undefined,
+    distractorFamily: ev.distractorFamily ?? undefined,
+    answerEvidence: ev.answerEvidence ?? undefined,
+    classifierRuleId: ev.classifierRuleId ?? undefined,
+    params: ev.params && typeof ev.params === "object" ? ev.params : undefined,
     diagnosticSkillId: ev.skillId ?? undefined,
     possibleErrorPatterns: ev.possibleErrorPatterns ?? undefined,
     expectedErrorTags: Array.isArray(ev.possibleErrorPatterns) ? ev.possibleErrorPatterns : undefined,
@@ -299,6 +457,9 @@ export function diagnosticEvidenceToStorageMistake(evidence, aggregateSubjectId)
     Object.assign(metaObj, ev.metadata);
   }
   if (ev.patternFamily && !metaObj.patternFamily) metaObj.patternFamily = ev.patternFamily;
+  if (ev.misconceptionTag && !metaObj.misconceptionTag) metaObj.misconceptionTag = ev.misconceptionTag;
+  if (ev.distractorFamily && !metaObj.distractorFamily) metaObj.distractorFamily = ev.distractorFamily;
+  if (ev.answerEvidence && !metaObj.answerEvidence) metaObj.answerEvidence = ev.answerEvidence;
   if (ev.skillId && !metaObj.skillId) metaObj.skillId = ev.skillId;
   if (ev.subskillId && !metaObj.subskillId) metaObj.subskillId = ev.subskillId;
   if (ev.possibleErrorPatterns && !metaObj.possibleErrorPatterns) {
@@ -323,10 +484,23 @@ export function aggregateMistakeRowToStorageEvent(aggregateRow, aggregateSubject
   if (!aggregateRow || typeof aggregateRow !== "object") return null;
   const engineFields =
     aggregateRow.engineFields && typeof aggregateRow.engineFields === "object"
-      ? aggregateRow.engineFields
+      ? {
+          ...aggregateRow.engineFields,
+          ...(aggregateRow.misconceptionTag && !aggregateRow.engineFields.misconceptionTag
+            ? { misconceptionTag: aggregateRow.misconceptionTag }
+            : {}),
+          ...(aggregateRow.distractorFamily && !aggregateRow.engineFields.distractorFamily
+            ? { distractorFamily: aggregateRow.distractorFamily }
+            : {}),
+          ...(aggregateRow.classifierRuleId && !aggregateRow.engineFields.classifierRuleId
+            ? { classifierRuleId: aggregateRow.classifierRuleId }
+            : {}),
+        }
       : {
           patternFamily: aggregateRow.patternFamily,
           distractorFamily: aggregateRow.distractorFamily,
+          misconceptionTag: aggregateRow.misconceptionTag,
+          classifierRuleId: aggregateRow.classifierRuleId,
           skillId: aggregateRow.skillId,
           subSkill: aggregateRow.subSkill,
           subskillId: aggregateRow.subskillId,
@@ -343,6 +517,11 @@ export function aggregateMistakeRowToStorageEvent(aggregateRow, aggregateSubject
     hintsUsed: aggregateRow.hintsUsed,
     timeSpentMs: aggregateRow.timeSpentMs,
     diagnosticMetadata: aggregateRow.diagnosticMetadata,
+    misconceptionTag: aggregateRow.misconceptionTag,
+    answerEvidence: aggregateRow.answerEvidence,
+    classifierRuleId: aggregateRow.classifierRuleId,
+    evidenceReason: aggregateRow.evidenceReason,
+    params: aggregateRow.params,
     engineFields,
   });
   return diagnosticEvidenceToStorageMistake(evidence, aggregateSubjectId);

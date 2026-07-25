@@ -4,6 +4,12 @@
  */
 import { TAXONOMY_BY_ID } from "../diagnostic-engine-v2/taxonomy-registry.js";
 import {
+  primaryProducerForRule,
+  ruleHasPrimaryProducer,
+  RULE_PRIMARY_PRODUCER,
+} from "../../lib/learning/taxonomy-rule-primary-producers.js";
+import { resolveParentPatternLabelForDisplay } from "../learning-pattern-decision/parent-pattern-label.js";
+import {
   resolvePrerequisitePrecision,
   validatePrerequisitePrecision,
 } from "./prerequisite-precision.js";
@@ -168,6 +174,82 @@ function target(
   };
 }
 
+/** @type {Map<string, string>} */
+const TAG_TO_TAXONOMY_ID = (() => {
+  /** @type {Map<string, string>} */
+  const map = new Map();
+  for (const [taxonomyId, producer] of Object.entries(RULE_PRIMARY_PRODUCER)) {
+    const tag = String(producer?.tag || "").trim();
+    if (tag) map.set(tag, taxonomyId);
+  }
+  return map;
+})();
+
+function taxonomyLabelHe(taxonomyId) {
+  const row = TAXONOMY_BY_ID[String(taxonomyId || "")];
+  if (!row?.patternHe) return null;
+  return resolveParentPatternLabelForDisplay(String(row.patternHe).trim()) || String(row.patternHe).trim();
+}
+
+function taxonomyIdFromPatternTag(tag) {
+  const key = String(tag || "").trim();
+  if (!key) return null;
+  return TAG_TO_TAXONOMY_ID.get(key) || null;
+}
+
+/**
+ * Wire detected taxonomy / producer into ADC target without changing finding copy.
+ * Safe subskill → label + id (subskill_focus). Active producer only → id (topic_focus + preferKind).
+ * @param {string} subjectId
+ * @param {string} topicKey
+ * @param {{
+ *   detectedTaxonomyId?: string|null,
+ *   detectedPatternTag?: string|null,
+ *   signals?: Record<string, unknown>,
+ * }} [options]
+ */
+export function resolveTaxonomyAwareActionTarget(
+  subjectId,
+  topicKey,
+  { detectedTaxonomyId = null, detectedPatternTag = null, signals = {} } = {},
+) {
+  const subskill =
+    signals?.subskill && typeof signals.subskill === "object" ? signals.subskill : {};
+  const pattern =
+    signals?.pattern && typeof signals.pattern === "object" ? signals.pattern : {};
+  const safeId =
+    subskill.safe === true ? String(subskill.candidate?.taxonomyId || "").trim() : "";
+  if (safeId && ruleHasPrimaryProducer(safeId)) {
+    return target(
+      subjectId,
+      topicKey,
+      subskill.candidate?.labelHe || taxonomyLabelHe(safeId),
+      null,
+      safeId,
+    );
+  }
+
+  const taxonomyId = String(
+    detectedTaxonomyId || pattern.taxonomyId || taxonomyIdFromPatternTag(detectedPatternTag) || "",
+  ).trim();
+  if (taxonomyId && ruleHasPrimaryProducer(taxonomyId)) {
+    return target(subjectId, topicKey, null, null, taxonomyId);
+  }
+
+  return target(subjectId, topicKey);
+}
+
+/**
+ * @param {string} taxonomyId
+ * @returns {"subskill"|"pattern"|"topic"|null}
+ */
+export function classifyTaxonomyRuntimePrecision(taxonomyId) {
+  const id = String(taxonomyId || "").trim();
+  if (!id) return "topic";
+  if (!ruleHasPrimaryProducer(id)) return "topic";
+  return primaryProducerForRule(id)?.active ? "pattern" : "topic";
+}
+
 function dedupeBlocked(items) {
   const seen = new Set();
   return items.filter((item) => {
@@ -297,6 +379,8 @@ export function mapLegacyActionToV2(legacyAction) {
  *   metrics?: { questions?: number, accuracy?: number, wrong?: number },
  *   canonicalState?: Record<string, unknown>|null,
  *   unifiedDecisionContext?: Record<string, unknown>|null,
+ *   detectedTaxonomyId?: string|null,
+ *   detectedPatternTag?: string|null,
  *   decisionTimestamp?: number,
  *   previousAction?: string|null
  * }} input
@@ -367,11 +451,18 @@ export function buildActionDecisionContractV2(input = {}) {
     interventionAuthorized,
   };
 
+  const defaultActionTarget = () =>
+    resolveTaxonomyAwareActionTarget(subjectId, topicKey, {
+      detectedTaxonomyId: input.detectedTaxonomyId,
+      detectedPatternTag: input.detectedPatternTag,
+      signals,
+    });
+
   const make = ({
     action,
     family,
     requestedIntensity = "RI0",
-    actionTarget = target(subjectId, topicKey),
+    actionTarget = defaultActionTarget(),
     deliveryMode = "standard",
     reasonCodes = [],
     eligible = true,
@@ -513,13 +604,11 @@ export function buildActionDecisionContractV2(input = {}) {
     return make({
       action: "give_probe_questions",
       family: "evidence_collection",
-      actionTarget: target(
-        subjectId,
-        topicKey,
-        signals?.subskill?.safe === true
-          ? signals.subskill?.candidate?.labelHe || null
-          : null,
-      ),
+      actionTarget: resolveTaxonomyAwareActionTarget(subjectId, topicKey, {
+        detectedTaxonomyId: input.detectedTaxonomyId,
+        detectedPatternTag: input.detectedPatternTag,
+        signals,
+      }),
       deliveryMode: "diagnostic_independent",
       reasonCodes: ["action:diagnosis_requires_independent_verification"],
     });

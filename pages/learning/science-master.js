@@ -2484,8 +2484,7 @@ function saveScienceAnswerInParallel({
     }
 
     if (
-      (!actionDecisionDirective.active ||
-        actionDecisionDirective.sessionPolicy.allowEscalation) &&
+      (!actionDecisionDirective.active) &&
       isStudentAdaptiveActive("science", {
         mode: focusedPracticeMode,
         gameMode: reportModeFromGameState(mode, focusedPracticeMode),

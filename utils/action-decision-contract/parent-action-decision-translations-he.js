@@ -36,20 +36,60 @@ function fillTopic(template, topic) {
   return String(template || "").replace("{{topic}}", topic || "הנושא");
 }
 
+/**
+ * ADC-only: what the system will do next — never replaces DE2 finding text.
+ * @param {Record<string, unknown>|null|undefined} contract
+ * @param {{ topicLabel?: string }} [opts]
+ */
+export function buildParentSystemActionLineHe(contract, { topicLabel = "" } = {}) {
+  if (!contract || contract.version !== "2.0.0") return "";
+  const action = String(contract.action || "").trim();
+  const topic =
+    String(topicLabel || contract.target?.topic || "").trim() || "הנושא";
+  const subskill =
+    contract.target?.subskill && contract.target?.subskillId
+      ? String(contract.target.subskill)
+      : null;
+
+  switch (action) {
+    case "collect_more_evidence":
+      return `המערכת תציג עוד שאלות ב${topic} כדי לבדוק אם הדפוס חוזר.`;
+    case "give_probe_questions":
+      return subskill
+        ? `המערכת תציג שאלות בדיקה ב${topic} שמבדילות בין ${subskill} לבין אפשרויות אחרות.`
+        : `המערכת תציג שאלות בדיקה ב${topic} שמבדילות בין האפשרויות הרלוונטיות.`;
+    case "practice_more":
+      return `המערכת תציג תרגול נוסף ב${topic} באותה רמה.`;
+    case "targeted_practice":
+      return subskill
+        ? `המערכת תציג תרגול ממוקד ב${topic}, עם דגש על ${subskill}.`
+        : `המערכת תציג תרגול ממוקד ב${topic}.`;
+    case "strengthen_prerequisite":
+      return contract.target?.prerequisiteDetail?.precision === "exact_skill"
+        ? `המערכת תחזור לתרגל מיומנות בסיס קטנה לפני ${topic}.`
+        : `המערכת תחזור לתרגל בסיס ב${topic} לפני שממשיכים הלאה.`;
+    case "remove_timer":
+      return `המערכת תוריד לזמן קצר את לחץ הזמן ב${topic}, בלי לשנות את הנושא.`;
+    case "reduce_reading_load":
+      return `המערכת תציג את השאלות ב${topic} בניסוח קצר יותר, בלי לשנות את המטרה.`;
+    case "guided_to_independent_transition":
+      return `המערכת תעבור בהדרגה מליווי לעבודה עצמאית ב${topic}.`;
+    case "maintain":
+      return `המערכת תמשיך במסלול הרגיל ב${topic}.`;
+    case "monitor_before_escalation":
+      return `המערכת תמשיך לעקוב ב${topic} לפני שינוי נוסף.`;
+    case "advance_cautiously":
+      return `המערכת תעלה בזהירות רמת אחת ב${topic}.`;
+    default:
+      return "";
+  }
+}
+
 export function buildParentSafeActionDecisionV1(contract, {
   topicLabel = "",
 } = {}) {
   if (!contract || contract.version !== "2.0.0") return null;
   const state = parentActionDisplayStateV1(contract.action);
-  const wrongEvents =
-    Number(
-      contract.evidenceSnapshot?.wrongEvents ??
-        contract.evidenceSnapshot?.wrong,
-    ) || 0;
-  const independentSessions =
-    Number(contract.evidenceSnapshot?.independentSessions) ||
-    (contract.evidenceSnapshot?.sessions === "cross_session" ? 2 : 0);
-  const repeated = wrongEvents >= 3 && independentSessions >= 2;
   const topic =
     String(
       topicLabel ||
@@ -64,21 +104,21 @@ export function buildParentSafeActionDecisionV1(contract, {
   const hasExactPrerequisite =
     prerequisiteDetail?.precision === "exact_skill" &&
     Boolean(contract.target?.prerequisite);
-  const observed = repeated
-    ? `נצפה דפוס שחזר ביותר מפעילות עצמאית אחת בנושא ${topic}.`
-    : `המידע בנושא ${topic} עדיין ראשוני ואינו מצביע לבדו על דפוס קבוע.`;
-  const actionText = fillTopic(COPY[state], subskill || topic);
+  const actionLine = buildParentSystemActionLineHe(contract, { topicLabel: topic });
+  const actionText =
+    actionLine || fillTopic(COPY[state], subskill || topic);
   const temporary = "הפעולה זמנית ואינה תיוג קבוע של הילד.";
   const reevaluation = contract.reevaluation?.afterActivities
-    ? `ההחלטה תיבדק מחדש לאחר ${contract.reevaluation.afterActivities} פעילויות או כאשר תתקבל ראיה עצמאית חדשה.`
+    ? `ההחלטה תיבדק מחדש לאחר ${contract.reevaluation.afterActivities} פעילות או כאשר תתקבל ראיה עצמאית חדשה.`
     : "ההחלטה תיבדק מחדש כאשר תתקבל ראיה עצמאית חדשה.";
   return {
     contractVersion: "parent-action-decision-v1",
     state,
     label: LABELS[state],
-    observed,
-    recurrence: repeated ? "repeated_pattern" : "single_or_limited_evidence",
+    observed: "",
+    recurrence: "action_only",
     recommendation: actionText,
+    systemActionLineHe: actionLine || actionText,
     temporary,
     reevaluation,
     target: {
@@ -97,10 +137,12 @@ export function buildExpiredParentActionDecisionV1() {
     contractVersion: "parent-action-decision-v1",
     state: "insufficient_information",
     label: LABELS.insufficient_information,
-    observed:
-      "ההחלטה מהתקופה שנבחרה אינה פעילה עוד, ולכן היא אינה משנה את מסלול הלמידה הנוכחי.",
+    observed: "",
     recurrence: "expired_evidence_window",
-    recommendation: COPY.insufficient_information,
+    recommendation:
+      "ההחלטה מהתקופה שנבחרה אינה פעילה עוד, ולכן היא אינה משנה את מסלול הלמידה הנוכחי.",
+    systemActionLineHe:
+      "ההחלטה מהתקופה שנבחרה אינה פעילה עוד, ולכן היא אינה משנה את מסלול הלמידה הנוכחי.",
     temporary: "לא נשמרה התאמה פעילה על סמך ראיה ישנה.",
     reevaluation: "החלטה חדשה תתקבל רק לאחר פעילות עדכנית.",
     target: {

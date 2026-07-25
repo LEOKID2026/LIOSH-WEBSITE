@@ -9,8 +9,8 @@ const MATH_OP_TO_IDS = {
   number_sense: ["M-01"],
   compare: ["M-11"],
   scale: ["M-12"],
-  addition: ["M-02"],
-  subtraction: ["M-09"],
+  addition: ["M-02", "M-27", "M-08", "M-01"],
+  subtraction: ["M-09", "M-01"],
   multiplication: ["M-03", "M-10"],
   division: ["M-13"],
   division_with_remainder: ["M-14"],
@@ -81,6 +81,9 @@ const ENGLISH_TOPIC_TO_IDS = {
   sentence: ["E-06"],
   writing: ["E-07"],
   phonics: ["E-08"],
+  listening: ["E-08"],
+  prepositions: ["E-04"],
+  phrasal_verbs: ["E-05"],
   mixed: ["E-01"],
 };
 
@@ -93,6 +96,8 @@ const HEBREW_TOPIC_TO_IDS = {
   comprehension: ["H-04"],
   homophones: ["H-05"],
   speaking: ["H-08"],
+  punctuation: ["H-07"],
+  expression: ["H-08"],
   mixed: ["H-01"],
 };
 
@@ -218,6 +223,14 @@ export function taxonomyIdsForReportBucketLegacy(subjectId, bucketKeyRaw) {
   if (subjectId === "moledet-geography") {
     return MOLEDET_TOPIC_TO_IDS[bucketKey] ? [...MOLEDET_TOPIC_TO_IDS[bucketKey]] : [];
   }
+  if (
+    subjectId === "moledet_geography" ||
+    subjectId === "geography" ||
+    subjectId === "homeland" ||
+    subjectId === "moledet"
+  ) {
+    return MOLEDET_TOPIC_TO_IDS[bucketKey] ? [...MOLEDET_TOPIC_TO_IDS[bucketKey]] : [];
+  }
   return [];
 }
 
@@ -255,7 +268,13 @@ export function taxonomyIdsForReportBucket(subjectId, bucketKeyRaw) {
   if (sid === "history") {
     return HISTORY_TOPIC_TO_IDS[bucketKey] ? [...HISTORY_TOPIC_TO_IDS[bucketKey]] : [];
   }
-  if (sid === "moledet-geography") {
+  if (
+    sid === "moledet-geography" ||
+    sid === "moledet_geography" ||
+    sid === "geography" ||
+    sid === "homeland" ||
+    sid === "moledet"
+  ) {
     return MOLEDET_TOPIC_TO_IDS[bucketKey] ? [...MOLEDET_TOPIC_TO_IDS[bucketKey]] : [];
   }
   return [];

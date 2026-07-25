@@ -147,6 +147,7 @@ function buildContractRow(row, subjectProfile) {
     subjectProfile?.summaryHe
   );
   const mainStatus = firstNonEmpty(
+    row?.parentVisibleFinding,
     subjectProfile?.summaryHe,
     `ב${subjectProfile?.subjectLabelHe || "המקצוע"} כדאי תרגול ממוקד וזהיר בשלב הזה.`
   );

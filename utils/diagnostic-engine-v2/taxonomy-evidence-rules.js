@@ -6,6 +6,7 @@ import {
   getTagProducer,
 } from "../../lib/learning/taxonomy-tag-producer-registry.js";
 import { MATH_TOPIC_COVERAGE_EVIDENCE_RULES } from "./taxonomy-math-topic-coverage.js";
+import { extractEventQuestionKind } from "./extract-event-question-kind.js";
 
 /** @typedef {"misconception_tag"|"distractor_family"|"pattern_family"|"concept_tag"|"direct_numeric"} EvidenceSourceKind */
 
@@ -28,7 +29,20 @@ export const TAXONOMY_EVIDENCE_RULES = Object.freeze({
     taxonomyId: "M-01",
     evidenceSource: "misconception_tag",
     requiredTags: ["representation_error", "place_value_error", "number_sense_error"],
-    questionKinds: ["ns_", "compare", "scale", "place"],
+    // Topic-1 integer add/sub place ±10ᵏ + ones/tens collapse use these kinds (W6 exit).
+    questionKinds: [
+      "ns_",
+      "compare",
+      "scale",
+      "place",
+      "add_two",
+      "add_vertical",
+      "add_three",
+      "add_second_decade",
+      "add_tens_only",
+      "sub_two",
+      "sub_vertical",
+    ],
     minTagMatches: 3,
     minRelevantQuestions: 3,
     minOccurrenceRatio: 0.6,
@@ -37,7 +51,7 @@ export const TAXONOMY_EVIDENCE_RULES = Object.freeze({
     taxonomyId: "M-02",
     evidenceSource: "misconception_tag",
     requiredTags: ["carry_error", "regroup_error", "column_carry_error"],
-    questionKinds: ["add_two", "add_vertical", "add_three"],
+    questionKinds: ["add_two", "add_vertical", "add_three", "add_second_decade"],
     minTagMatches: 3,
     minRelevantQuestions: 3,
     minOccurrenceRatio: 0.5,
@@ -47,7 +61,7 @@ export const TAXONOMY_EVIDENCE_RULES = Object.freeze({
     taxonomyId: "M-03",
     evidenceSource: "misconception_tag",
     requiredTags: ["fact_error", "multiplication_fact_error"],
-    questionKinds: ["mul"],
+    questionKinds: ["mul", "mul_vertical", "mul_tens", "mul_hundreds"],
     minTagMatches: 4,
     minRelevantQuestions: 4,
     minOccurrenceRatio: 0.5,
@@ -56,8 +70,17 @@ export const TAXONOMY_EVIDENCE_RULES = Object.freeze({
   "M-04": {
     taxonomyId: "M-04",
     evidenceSource: "misconception_tag",
-    requiredTags: ["numerator_only_compare", "denominator_only_compare", "fraction_compare_error"],
-    questionKinds: ["frac_compare", "frac_"],
+    requiredTags: [
+      "numerator_only_compare",
+      "denominator_only_compare",
+      "fraction_compare_error",
+    ],
+    questionKinds: [
+      "frac_compare",
+      "frac_compare_same_den",
+      "frac_compare_like_den",
+      "compare",
+    ],
     minTagMatches: 3,
     minRelevantQuestions: 3,
     minOccurrenceRatio: 0.6,
@@ -65,8 +88,24 @@ export const TAXONOMY_EVIDENCE_RULES = Object.freeze({
   "M-05": {
     taxonomyId: "M-05",
     evidenceSource: "misconception_tag",
-    requiredTags: ["mirror_error", "common_denominator_error", "fraction_operation_error"],
-    questionKinds: ["frac_add", "frac_sub"],
+    requiredTags: [
+      "mirror_error",
+      "common_denominator_error",
+      "fraction_operation_error",
+      "numerator_only_operation",
+      "fraction_reciprocal_error",
+      "fraction_simplification_error",
+    ],
+    questionKinds: [
+      "frac_add",
+      "frac_sub",
+      "frac_add_sub",
+      "frac_same_den",
+      "frac_multiply",
+      "frac_divide",
+      "frac_reduce",
+      "frac_simplify",
+    ],
     minTagMatches: 3,
     minRelevantQuestions: 3,
     minOccurrenceRatio: 0.6,
@@ -74,8 +113,15 @@ export const TAXONOMY_EVIDENCE_RULES = Object.freeze({
   "M-06": {
     taxonomyId: "M-06",
     evidenceSource: "misconception_tag",
-    requiredTags: ["rounding_wrong_direction", "place_value_error", "decimal_place_error"],
-    questionKinds: ["dec_", "round"],
+    requiredTags: [
+      "rounding_wrong_direction",
+      "rounding_direction_error",
+      "calculation_off_by_one",
+      "place_value_error",
+      "decimal_place_error",
+    ],
+    // Rounding / place-value only — never match dec_add / dec_sub via broad "dec_" prefix
+    questionKinds: ["round", "dec_round", "place", "digit"],
     minTagMatches: 3,
     minRelevantQuestions: 3,
     minOccurrenceRatio: 0.6,
@@ -84,7 +130,7 @@ export const TAXONOMY_EVIDENCE_RULES = Object.freeze({
     taxonomyId: "M-07",
     evidenceSource: "misconception_tag",
     requiredTags: ["unit_error", "wrong_unit", "unit_conversion_error"],
-    questionKinds: ["wp_"],
+    questionKinds: ["wp_", "wp_unit"],
     minTagMatches: 3,
     minRelevantQuestions: 3,
     minOccurrenceRatio: 0.6,
@@ -92,8 +138,14 @@ export const TAXONOMY_EVIDENCE_RULES = Object.freeze({
   "M-08": {
     taxonomyId: "M-08",
     evidenceSource: "misconception_tag",
-    requiredTags: ["omitted_addend", "omitted_step", "multi_step_failure", "wrong_final_step"],
-    questionKinds: ["add_three", "wp_", "multi_step"],
+    requiredTags: [
+      "omitted_addend",
+      "omitted_step",
+      "multi_step_failure",
+      "wrong_final_step",
+      "wrong_operation_wp",
+    ],
+    questionKinds: ["add_three", "wp_", "multi_step", "wp_change"],
     minTagMatches: 3,
     minRelevantQuestions: 3,
     minOccurrenceRatio: 0.67,
@@ -102,8 +154,18 @@ export const TAXONOMY_EVIDENCE_RULES = Object.freeze({
   "M-09": {
     taxonomyId: "M-09",
     evidenceSource: "misconception_tag",
-    requiredTags: ["add_instead_of_sub", "reverse_direction", "operand_reversal"],
+    requiredTags: ["add_instead_of_sub", "reverse_direction", "operand_reversal", "borrow_error"],
     questionKinds: ["sub_two", "sub_vertical"],
+    minTagMatches: 3,
+    minRelevantQuestions: 3,
+    minOccurrenceRatio: 0.6,
+    requiresDistinctAnswers: true,
+  },
+  "M-27": {
+    taxonomyId: "M-27",
+    evidenceSource: "misconception_tag",
+    requiredTags: ["sub_instead_of_add", "mul_instead_of_add"],
+    questionKinds: ["add_two", "add_vertical", "add_three", "add_second_decade", "add_tens_only"],
     minTagMatches: 3,
     minRelevantQuestions: 3,
     minOccurrenceRatio: 0.6,
@@ -112,8 +174,24 @@ export const TAXONOMY_EVIDENCE_RULES = Object.freeze({
   "M-10": {
     taxonomyId: "M-10",
     evidenceSource: "misconception_tag",
-    requiredTags: ["mul_instead_of_div", "add_instead_of_mul", "inverse_operation_error", "wrong_operation_wp"],
-    questionKinds: ["div", "mul", "ratio"],
+    requiredTags: [
+      "mul_instead_of_div",
+      "add_instead_of_mul",
+      "sub_instead_of_div",
+      "inverse_operation_error",
+      "wrong_operation_wp",
+    ],
+    questionKinds: [
+      "div",
+      "div_long",
+      "div_two_digit",
+      "mul",
+      "mul_vertical",
+      "mul_tens",
+      "mul_hundreds",
+      "ratio",
+      "wp_",
+    ],
     minTagMatches: 3,
     minRelevantQuestions: 3,
     minOccurrenceRatio: 0.6,
@@ -127,6 +205,7 @@ export const TAXONOMY_EVIDENCE_RULES = Object.freeze({
       "parallel_perpendicular_confusion",
       "rectangle_diagonal",
     ],
+    // MCQ conceptual — no kind gate (synthetic/bank kinds vary)
     minTagMatches: 3,
     minRelevantQuestions: 3,
     minOccurrenceRatio: 0.6,
@@ -134,7 +213,12 @@ export const TAXONOMY_EVIDENCE_RULES = Object.freeze({
   "G-02": {
     taxonomyId: "G-02",
     evidenceSource: "distractor_family",
-    requiredTags: ["angle_range_error", "protractor_reading_error"],
+    requiredTags: [
+      "angle_range_error",
+      "protractor_reading_error",
+      "triangle_angle_sum_error",
+    ],
+    // Kind gate only for numeric angle TEPs; MCQ angle tags still match without kind
     minTagMatches: 3,
     minRelevantQuestions: 3,
     minOccurrenceRatio: 0.6,
@@ -143,6 +227,7 @@ export const TAXONOMY_EVIDENCE_RULES = Object.freeze({
     taxonomyId: "G-03",
     evidenceSource: "misconception_tag",
     requiredTags: ["height_base_confusion", "area_formula_error", "parallelogram_area_error"],
+    // MCQ + numeric; avoid kind gate so bank/synthetic area tags still match
     minTagMatches: 3,
     minRelevantQuestions: 3,
     minOccurrenceRatio: 0.6,
@@ -159,6 +244,7 @@ export const TAXONOMY_EVIDENCE_RULES = Object.freeze({
     taxonomyId: "G-05",
     evidenceSource: "misconception_tag",
     requiredTags: ["volume_perimeter_confusion", "volume_formula_error"],
+    questionKinds: ["rectangular_prism_volume", "cube_volume", "box_volume", "volume"],
     minTagMatches: 3,
     minRelevantQuestions: 3,
     minOccurrenceRatio: 0.6,
@@ -173,6 +259,14 @@ export const TAXONOMY_EVIDENCE_RULES = Object.freeze({
       "formula_selection_error",
       "square_perimeter_compute",
       "circle_perimeter_compute",
+    ],
+    questionKinds: [
+      "rectangle_area",
+      "rectangle_perimeter",
+      "square_area",
+      "square_perimeter",
+      "rect_area",
+      "perimeter",
     ],
     minTagMatches: 3,
     minRelevantQuestions: 3,
@@ -190,6 +284,7 @@ export const TAXONOMY_EVIDENCE_RULES = Object.freeze({
     taxonomyId: "G-08",
     evidenceSource: "misconception_tag",
     requiredTags: ["forgot_divide_by_2", "triangle_area_error", "formula_error"],
+    questionKinds: ["triangle_area", "trapezoid_area", "tri_area", "story_triangle_area"],
     minTagMatches: 3,
     minRelevantQuestions: 3,
     minOccurrenceRatio: 0.6,
@@ -198,7 +293,7 @@ export const TAXONOMY_EVIDENCE_RULES = Object.freeze({
     taxonomyId: "G-09",
     evidenceSource: "distractor_family",
     requiredTags: ["pythagorean_relation_error"],
-    questionKinds: ["pythagoras"],
+    questionKinds: ["pythagoras", "pythagoras_hyp", "pythagoras_leg"],
     minTagMatches: 3,
     minRelevantQuestions: 3,
     minOccurrenceRatio: 0.6,
@@ -207,6 +302,7 @@ export const TAXONOMY_EVIDENCE_RULES = Object.freeze({
     taxonomyId: "H-01",
     evidenceSource: "distractor_family",
     requiredTags: ["vocabulary_context_error", "synonym_confusion", "meaning_error"],
+    // MCQ conceptual — no kind gate
     minTagMatches: 3,
     minRelevantQuestions: 3,
     minOccurrenceRatio: 0.6,
@@ -571,10 +667,22 @@ export function extractMisconceptionTagFromEvent(ev) {
 
 /**
  * @param {import("../mistake-event.js").MistakeEventV1} ev
+ * @param {string[]} [questionKinds]
+ */
+export function eventQuestionKindMatches(ev, questionKinds) {
+  if (!Array.isArray(questionKinds) || questionKinds.length === 0) return true;
+  const kind = extractEventQuestionKind(ev) || "";
+  if (!kind) return false;
+  return questionKinds.some((prefix) => kind.includes(String(prefix)) || kind === String(prefix));
+}
+
+/**
+ * @param {import("../mistake-event.js").MistakeEventV1} ev
  * @param {TaxonomyEvidenceRule} rule
  */
 export function eventMatchesEvidenceRule(ev, rule) {
   if (!ev || !rule || ev.isCorrect) return false;
+  if (!eventQuestionKindMatches(ev, rule.questionKinds)) return false;
   const activeRequiredTags = rule.requiredTags.filter(
     (requiredTag) => getTagProducer(requiredTag)?.active === true,
   );

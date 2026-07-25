@@ -15,7 +15,12 @@ import { orderEnglishTaxonomyCandidates } from "./english-taxonomy-candidate-ord
 import { orderHebrewTaxonomyCandidates } from "./hebrew-taxonomy-candidate-order.js";
 import { orderMoledetTaxonomyCandidates } from "./moledet-taxonomy-candidate-order.js";
 import { heavyHintLikelyInvalidatesPattern } from "./recurrence.js";
-import { passesEvidenceRecurrenceRules, evaluateEvidenceRecurrence } from "./evidence-recurrence.js";
+import {
+  passesEvidenceRecurrenceRules,
+  evaluateEvidenceRecurrence,
+  isPrimaryDominantPattern,
+} from "./evidence-recurrence.js";
+import { passesDetectedPatternEvidenceGate } from "./pattern-evidence-gate.js";
 import { resolveConfidenceLevel } from "./confidence-policy.js";
 import { resolvePriority, breadthFromWeakRowCount } from "./priority-policy.js";
 import { applyOutputGating } from "./output-gating.js";
@@ -177,28 +182,45 @@ export function runDiagnosticEngineV2({ maps, rawMistakesBySubject, startMs, end
           }
         }
       }
-      const weakTaxonomyFallbackBlocked = !chosenId && candidateIdsRaw.length > 0 && wrongCountForRules >= 2;
-      const classificationState = !candidateIdsRaw.length
+
+      /** @type {ReturnType<typeof passesDetectedPatternEvidenceGate>|null} */
+      let patternEvidenceGate = null;
+      if (chosenId) {
+        patternEvidenceGate = passesDetectedPatternEvidenceGate({
+          taxonomyId: chosenId,
+          evidenceRecurrence,
+          matchingEvents: evidenceRecurrence?.matchingEvents,
+          wrongEvents: wrongs,
+        });
+        if (!patternEvidenceGate.allowed) {
+          chosenId = null;
+          evidenceRecurrence = null;
+        }
+      }
+
+      const weakTaxonomyFallbackBlocked =
+        (!chosenId && candidateIdsRaw.length > 0 && wrongCountForRules >= 2) ||
+        (patternEvidenceGate != null && !patternEvidenceGate.allowed);
+      let classificationState = !candidateIdsRaw.length
         ? "unclassified_no_taxonomy_match"
         : weakTaxonomyFallbackBlocked
           ? "unclassified_weak_evidence"
           : chosenId
             ? "classified"
             : "unclassified_no_taxonomy_match";
-      const classificationReasonCode = !candidateIdsRaw.length
+      let classificationReasonCode = !candidateIdsRaw.length
         ? "no_taxonomy_mapping"
-        : weakTaxonomyFallbackBlocked
-          ? "weak_taxonomy_fallback_blocked"
-          : !chosenId
-            ? "taxonomy_not_matched"
-            : null;
+        : patternEvidenceGate && !patternEvidenceGate.allowed
+          ? "pattern_evidence_gate_blocked"
+          : weakTaxonomyFallbackBlocked
+            ? "weak_taxonomy_fallback_blocked"
+            : !chosenId
+              ? "taxonomy_not_matched"
+              : null;
 
-      const recurrenceFull = !!(() => {
-        if (!chosenId) return false;
-        const trow = TAXONOMY_BY_ID[chosenId];
-        if (!trow) return false;
-        return passesEvidenceRecurrenceRules(wrongs, trow);
-      })();
+      // Full/primary recurrence = ratio gate met. Secondary observed patterns stay classified
+      // but must not claim "full" dominant recurrence for gating/parent wording.
+      const recurrenceFull = !!(chosenId && isPrimaryDominantPattern(evidenceRecurrence));
       const counterEvidenceStrong =
         (Number(row.accuracy) >= 88 && wrongCountForRules >= 4) ||
         (row.modeKey === "speed" && Number(row.accuracy) >= 82 && wrongCountForRules >= 2);
@@ -270,6 +292,11 @@ export function runDiagnosticEngineV2({ maps, rawMistakesBySubject, startMs, end
       if (weakTaxonomyFallbackBlocked) {
         cannotConclude.push("האות עדיין לא מסווג לטקסונומיה יציבה - נשארים בשאלת בדיקה לפני כיוון.");
       }
+      if (patternEvidenceGate && !patternEvidenceGate.allowed) {
+        cannotConclude.push(
+          `אין ראיות מספקות לדפוס ספציפי (${patternEvidenceGate.reason}) — נשאר fallback.`,
+        );
+      }
       if (!chosenId && wrongCountForRules > 0) cannotConclude.push("לא נמצאה התאמה ברורה לסוג טעות אחרי סינון חזרתיות");
 
       const gradeRelation =
@@ -307,6 +334,31 @@ export function runDiagnosticEngineV2({ maps, rawMistakesBySubject, startMs, end
           reasonCode: classificationReasonCode,
           weakFallbackBlocked: weakTaxonomyFallbackBlocked,
         },
+        patternEvidence: patternEvidenceGate
+          ? {
+              allowed: patternEvidenceGate.allowed,
+              patternLayer: patternEvidenceGate.patternLayer || null,
+              isPrimaryDominant: patternEvidenceGate.isPrimaryDominant === true,
+              isSecondaryObserved: patternEvidenceGate.isSecondaryObserved === true,
+              isSameSessionObserved: patternEvidenceGate.isSameSessionObserved === true,
+              sharedMisconceptionTag: patternEvidenceGate.sharedMisconceptionTag || null,
+              reason: patternEvidenceGate.reason,
+              evidenceCount: patternEvidenceGate.evidenceCount ?? evidenceRecurrence?.evidenceCount ?? 0,
+              matchingEvidenceCount:
+                patternEvidenceGate.matchingEvidenceCount ??
+                patternEvidenceGate.evidenceCount ??
+                evidenceRecurrence?.evidenceCount ??
+                0,
+              occurrenceRatio:
+                patternEvidenceGate.occurrenceRatio ?? evidenceRecurrence?.occurrenceRatio ?? null,
+              distinctDays: patternEvidenceGate.distinctDays ?? null,
+              supportingEvidence: patternEvidenceGate.supportingEvidence || [],
+              sampleEvidence:
+                patternEvidenceGate.sampleEvidence ||
+                patternEvidenceGate.supportingEvidence ||
+                [],
+            }
+          : null,
         taxonomySelection: {
           candidateIdsRaw: [...candidateIdsRaw],
           candidateIdsOrdered: [...candidateIds],
@@ -348,6 +400,8 @@ export function runDiagnosticEngineV2({ maps, rawMistakesBySubject, startMs, end
                 occurrenceRatio: evidenceRecurrence.occurrenceRatio,
                 reasonCode: evidenceRecurrence.reasonCode,
                 requiredTags: evidenceRecurrence.requiredTags,
+                patternLayer: patternEvidenceGate?.patternLayer || null,
+                confirmed: evidenceRecurrence.confirmed === true,
               }
             : null,
         },

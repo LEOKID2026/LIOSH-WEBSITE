@@ -4,6 +4,7 @@ import { probeMatchesSession } from './active-diagnostic-runtime/session-match.j
 import { attachProfessionalMathMetadata } from './math-question-metadata.js';
 import { attachMathTopicDiagnosticEvidence } from './math-topic-diagnostic-evidence.js';
 import { sanitizeQuestionForStudentDisplay } from './student-question-stem-sanitizer.js';
+import { ensureMathQuestionParamsOperands } from '../lib/learning/math-classifier-params.js';
 import {
   COMPARISON_SIGN_DISPLAY_ORDER,
   computeComparisonSign,
@@ -584,7 +585,35 @@ function inferMathDistractorFamily(wrongVal, correctAnswer, kind, params) {
       mx = params?.twoDigit;
       my = params?.oneDigit;
     }
-    if (mx != null && my != null && n === mx + my) return "add_instead_of_mul";
+    if (mx != null && my != null && n === Number(mx) + Number(my)) return "add_instead_of_mul";
+  }
+  if (
+    kind === "div" ||
+    kind === "div_long" ||
+    kind === "div_two_digit"
+  ) {
+    const dividend = params?.dividend ?? a;
+    const divisor = params?.divisor ?? b;
+    if (dividend != null && divisor != null) {
+      if (n === Number(dividend) * Number(divisor)) return "mul_instead_of_div";
+      if (n === Number(dividend) - Number(divisor)) return "sub_instead_of_div";
+      const q = Number(dividend) / Number(divisor);
+      if (Number.isInteger(q) && Math.abs(n - q) === 1) return "division_fact_error";
+    }
+  }
+  if (
+    (kind === "div_with_remainder" || kind === "div_with_remainder_long") &&
+    typeof wrongVal === "string" &&
+    typeof correctAnswer === "string"
+  ) {
+    const parseRem = (s) => {
+      const m = String(s).match(/(-?\d+)\s*ושארית\s*(-?\d+)/u);
+      if (!m) return null;
+      return { q: Number(m[1]), r: Number(m[2]) };
+    };
+    const w = parseRem(wrongVal);
+    const c = parseRem(correctAnswer);
+    if (w && c && (w.q !== c.q || w.r !== c.r)) return "math_remainder_error";
   }
   if (kind.startsWith("wp_unit") && a != null) {
     const factor = Number(params?.factor) || Number(params?.conversionFactor) || 100;
@@ -816,6 +845,7 @@ export function buildMathMcqAnswerList(correctAnswer, selectedOp, params, randIn
     if (dividend != null && divisor != null) {
       addI(divisor);
       addI(dividend - divisor);
+      addI(dividend * divisor);
       addI(quot + 1);
       addI(Math.max(1, quot - 1));
       addI(Math.floor(dividend / (divisor + 1)));
@@ -1235,8 +1265,8 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       ? String(globalThis.__LIOSH_MATH_FORCE)
       : "");
 
-  const finalizeMathQuestionOutput = (out) =>
-    sanitizeQuestionForStudentDisplay(
+  const finalizeMathQuestionOutput = (out) => {
+    const finalized = sanitizeQuestionForStudentDisplay(
       attachMathEquationInstructionLabel(
         attachMathTopicDiagnosticEvidence(
           attachProfessionalMathMetadata(
@@ -1251,6 +1281,9 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
         gradeKey
       )
     );
+    // W1: dual-write operands onto params after all metadata attaches
+    return ensureMathQuestionParamsOperands(finalized);
+  };
 
   const densSmallProbe = [2, 4, 5, 10];
   const densBigProbe = [2, 3, 4, 5, 6, 8, 10, 12];

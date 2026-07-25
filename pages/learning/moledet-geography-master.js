@@ -2010,10 +2010,7 @@ export function MoledetGeographyMasterPage({ visualStrand: visualStrandProp = VI
       expected: currentQuestion.correctAnswer,
       acceptedList: [currentQuestion.correctAnswer],
     });
-    if (
-      !actionDecisionDirective.active ||
-      actionDecisionDirective.sessionPolicy.allowEscalation
-    ) {
+    if (!actionDecisionDirective.active) {
       applyAnswerAdaptive(isCorrect, {
         mode: focusedPracticeModeRef.current,
         gameMode: reportModeFromGameState(mode, focusedPracticeModeRef.current),
