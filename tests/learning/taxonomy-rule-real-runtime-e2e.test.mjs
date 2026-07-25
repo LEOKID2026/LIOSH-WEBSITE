@@ -1,5 +1,5 @@
 /**
- * REAL_RUNTIME_E2E — 76 rules via active generators/banks; NO injected misconceptionTag.
+ * REAL_RUNTIME_E2E — 77 rules via active generators/banks; NO injected misconceptionTag.
  * Run: node --test tests/learning/taxonomy-rule-real-runtime-e2e.test.mjs
  */
 
@@ -9,6 +9,7 @@ import assert from "node:assert/strict";
 import {
   REAL_RUNTIME_SCENARIOS,
   classifyRealRuntimeScenario,
+  classifyRealRuntimePayload,
 } from "../../lib/learning/fixtures/taxonomy-real-runtime-fixtures.js";
 import { normalizeMistakeEvent } from "../../utils/mistake-event.js";
 import { passesEvidenceRecurrenceRules } from "../../utils/diagnostic-engine-v2/evidence-recurrence.js";
@@ -21,7 +22,7 @@ import { buildParentEvidenceStatements } from "../../lib/learning/parent-report-
 
 describe("REAL_RUNTIME_E2E completeness", () => {
   test("76 real runtime scenarios defined", () => {
-    assert.equal(REAL_RUNTIME_SCENARIOS.length, 76);
+    assert.equal(REAL_RUNTIME_SCENARIOS.length, 77);
   });
 });
 
@@ -45,8 +46,14 @@ describe("REAL_RUNTIME_E2E — per rule", () => {
     test(`${scenario.ruleId} recurrence + routing + parent from classified events`, () => {
       const row = TAXONOMY_BY_ID[scenario.ruleId];
       const min = Math.max(row.minWrong || 3, 3);
-      const positiveEv = classifyRealRuntimeScenario(scenario, true);
+      // One generator load — classify + events must share the same question/answer.
       const payload = scenario.loadPositive();
+      const positiveEv = classifyRealRuntimePayload(scenario, payload);
+      assert.equal(
+        positiveEv.detectedMisconception,
+        scenario.expectedTag,
+        `${scenario.ruleId} recurrence seed tag`,
+      );
       const events = Array.from({ length: min }, (_, i) =>
         normalizeMistakeEvent(
           {
@@ -86,7 +93,9 @@ describe("REAL_RUNTIME_E2E — per rule", () => {
         wrongEvents: events,
         taxonomyId: scenario.ruleId,
       });
-      const observed = parent.statements.find((s) => s.kind === "OBSERVED_PATTERN");
+      const observed = parent.statements.find(
+        (s) => s.kind === "OBSERVED_PATTERN" || s.kind === "CONFIRMED_PATTERN",
+      );
       assert.ok(observed, `${scenario.ruleId} parent observed pattern`);
     });
   }

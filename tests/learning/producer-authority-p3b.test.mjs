@@ -47,16 +47,17 @@ test("P3B every required tag is active or explicitly unsupported", () => {
 });
 
 test("P3B unsupported required tags cannot activate a taxonomy match", () => {
-  const rule = TAXONOMY_EVIDENCE_RULES["G-06"];
+  // G-02 still lists protractor_reading_error as required but inactive/unproduced.
+  const rule = TAXONOMY_EVIDENCE_RULES["G-02"];
   assert.equal(
-    TAXONOMY_REQUIRED_TAG_STATUS.perimeter_formula_error.status,
+    TAXONOMY_REQUIRED_TAG_STATUS.protractor_reading_error.status,
     "unsupported_unproduced",
   );
   assert.equal(
     eventMatchesEvidenceRule(
       {
         isCorrect: false,
-        misconceptionTag: "perimeter_formula_error",
+        misconceptionTag: "protractor_reading_error",
       },
       rule,
     ),
@@ -66,9 +67,25 @@ test("P3B unsupported required tags cannot activate a taxonomy match", () => {
     eventMatchesEvidenceRule(
       {
         isCorrect: false,
-        misconceptionTag: "perimeter_area_confusion",
+        misconceptionTag: "angle_range_error",
       },
       rule,
+    ),
+    true,
+  );
+  // G-06 perimeter_formula_error is now actively produced by geometry TEPs.
+  assert.equal(
+    TAXONOMY_REQUIRED_TAG_STATUS.perimeter_formula_error.status,
+    "active",
+  );
+  assert.equal(
+    eventMatchesEvidenceRule(
+      {
+        isCorrect: false,
+        misconceptionTag: "perimeter_formula_error",
+        params: { kind: "rectangle_perimeter" },
+      },
+      TAXONOMY_EVIDENCE_RULES["G-06"],
     ),
     true,
   );
