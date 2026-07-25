@@ -232,9 +232,8 @@ export function buildParentVisibleFinding({
       return { parentVisibleFinding, parentWordingLevel, templateId };
     }
     templateId = "no_clear_pattern";
-    parentWordingLevel = "factual_observation";
-    parentVisibleFinding =
-      `נרשמו ${q} תשובות בנושא ${name}, אך לא נמצא כרגע דפוס טעות חוזר.${contextSuffix}`;
+    parentWordingLevel = "no_parent_text";
+    parentVisibleFinding = "";
     return { parentVisibleFinding, parentWordingLevel, templateId };
   }
 
@@ -249,10 +248,7 @@ export function buildParentVisibleFinding({
   }
 
   templateId = "no_clear_pattern";
-  parentWordingLevel = "factual_observation";
-  parentVisibleFinding =
-    q > 0
-      ? `נרשמו ${q} תשובות בנושא ${name}, אך לא נמצא כרגע דפוס טעות חוזר.${contextSuffix}`
-      : "";
+  parentWordingLevel = "no_parent_text";
+  parentVisibleFinding = "";
   return { parentVisibleFinding, parentWordingLevel, templateId };
 }
