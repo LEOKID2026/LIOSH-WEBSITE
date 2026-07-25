@@ -1998,8 +1998,7 @@ function readMapRowEngineContract(mapRow) {
       : null;
   return (
     row[EDC_CONTRACT_KEY] ||
-    row.engineDecisionContract ||
-    (lpd ? lpd[EDC_CONTRACT_KEY] || lpd.engineDecisionContract : null) ||
+    (lpd ? lpd[EDC_CONTRACT_KEY] : null) ||
     null
   );
 }
@@ -2236,7 +2235,6 @@ function enrichMapRowWithSiblingTopicEngineContracts(mapRow, topicMapForSid, uni
     ...row,
     learningPatternDecision: mergedLpd,
     [EDC_CONTRACT_KEY]: mergedContract,
-    engineDecisionContract: mergedContract,
   };
 }
 
