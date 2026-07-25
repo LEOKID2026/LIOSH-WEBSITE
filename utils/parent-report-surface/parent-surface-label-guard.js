@@ -11,6 +11,20 @@ const ENGINE_STEP =
 /** Probe specification format — never parent-facing, even in geometry. */
 const PROBE_SPECIFICATION_HE = /עם\s*\/\s*בלי/i;
 
+/**
+ * Internal probeHe phrasing that must not appear on parent-facing surfaces.
+ * Keep taxonomy.probeHe intact in engine contracts; only block surface copy.
+ */
+const INTERNAL_PROBE_HE_PHRASES = Object.freeze([
+  "עם תבנית שלבים",
+  "ציר + סימבולי",
+  "זמן כפול לאותו סט",
+  "שני ייצוגים לאותו מספר",
+  "המראה 2,3,4",
+  "רשת חלקית",
+  "שתי יחידות לאותו סכום",
+]);
+
 /** Geometry-only phrases that must not appear outside geometry. */
 const GEOMETRY_ONLY_PHRASES = [
   "אנכי מול אופקי",
@@ -56,6 +70,9 @@ export function isForbiddenParentSurfaceLabel(text, ctx = {}) {
   if (ENGINE_STEP.test(t)) return true;
   if (PROBE_SPECIFICATION_HE.test(t)) return true;
   if (/^probeHe$|^interventionHe$|^escalationHe$|^specificationHe$/i.test(t)) return true;
+  for (const phrase of INTERNAL_PROBE_HE_PHRASES) {
+    if (t === phrase || t.includes(phrase)) return true;
+  }
 
   const sid = String(ctx.subjectId || "").trim().toLowerCase();
   const isGeometry = sid === "geometry" || sid === "math-geometry";

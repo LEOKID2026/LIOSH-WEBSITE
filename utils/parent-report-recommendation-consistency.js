@@ -168,10 +168,9 @@ export function resolveUnitParentActionHe(unit, gradeKey, opts = {}) {
 
   if (noRaw) return null;
 
-  const fallback = bestEffortText(
-    unit?.intervention?.immediateActionHe || unit?.probe?.specificationHe || ""
-  );
-  return surfaceActionOut(unit, fallback);
+  // Keep probeHe / probe.specificationHe / intervention.immediateActionHe internal.
+  // They must not become parent-facing action copy when grade-aware templates are absent.
+  return null;
 }
 
 /**
