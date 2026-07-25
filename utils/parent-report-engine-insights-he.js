@@ -8,6 +8,12 @@
 
 import { subjectLabelHe } from "../lib/teacher-portal/teacher-ui.he.js";
 import {
+  topicBucketBelongsToVisualStrand,
+  VISUAL_STRAND_GEOGRAPHY,
+  VISUAL_STRAND_LABEL_HE,
+  VISUAL_STRAND_MOLEDET,
+} from "../lib/learning-shared/moledet-geography-display.js";
+import {
   filterCoreParentReportRows,
   resolveRegisteredGradeKeyFromReport,
 } from "./parent-report-core-grade-filter.js";
@@ -19,14 +25,19 @@ import { buildTopicDiagnosticExplainSectionsHe } from "./parent-report-ui-explai
 import {
   buildLpdParentInsightLineHe,
   buildLpdSafeTopicInsightLineHe,
+  buildTopicParentReportBundleHe,
   getLpdFromRow,
   rowIsPositiveFromLpd,
 } from "./learning-pattern-decision/index.js";
 import { normalizeParentVisibleMetrics } from "./learning-pattern-decision/normalize-parent-practice-metrics.js";
 import {
   buildExpiredParentActionDecisionV1,
-  buildParentSafeActionDecisionV1,
+  buildParentSystemActionLineHe,
+  parentActionDisplayStateV1,
 } from "./action-decision-contract/parent-action-decision-translations-he.js";
+import {
+  homeFallbackHe,
+} from "./parent-report-language/parent-report-hebrew-copy-spec.js";
 import {
 
   activityGapNonDiagnosticOnlyHe,
@@ -113,6 +124,30 @@ const REMEDIATE_STEPS = new Set([
 
 const ADVANCE_STEPS = new Set(["advance_level", "advance_grade_topic_only"]);
 
+/**
+ * Short-report subject label — split moledet/geography when strand is known.
+ * @param {string} subjectId
+ * @param {string} topicKey
+ * @param {unknown} rowData
+ */
+function resolveParentReportSubjectLabelHe(subjectId, topicKey, rowData) {
+  if (subjectId !== "moledet-geography") {
+    return subjectLabelHe(subjectId) || subjectId;
+  }
+  const key = String(topicKey || "")
+    .trim()
+    .toLowerCase()
+    .split("\u0001")[0]
+    .split("::")[0];
+  if (topicBucketBelongsToVisualStrand(key, VISUAL_STRAND_MOLEDET, rowData)) {
+    return VISUAL_STRAND_LABEL_HE[VISUAL_STRAND_MOLEDET];
+  }
+  if (topicBucketBelongsToVisualStrand(key, VISUAL_STRAND_GEOGRAPHY, rowData)) {
+    return VISUAL_STRAND_LABEL_HE[VISUAL_STRAND_GEOGRAPHY];
+  }
+  return subjectLabelHe(subjectId) || subjectId;
+}
+
 
 
 /**
@@ -176,7 +211,7 @@ export function collectTopicEngineRowsFromReport(report) {
 
         subjectId,
 
-        subjectLabelHe: subjectLabelHe(subjectId) || subjectId,
+        subjectLabelHe: resolveParentReportSubjectLabelHe(subjectId, topicKey, data),
 
         topicKey,
 
@@ -212,6 +247,10 @@ export function collectTopicEngineRowsFromReport(report) {
           data.learningPatternDecision && typeof data.learningPatternDecision === "object"
             ? data.learningPatternDecision
             : null,
+        engineDecisionContract:
+          data.engineDecisionContract ||
+          data.learningPatternDecision?.engineDecisionContract ||
+          null,
         actionDecisionContract:
           data.actionDecisionContract ||
           data.engineDecisionContract?.actionDecisionContract ||
@@ -644,12 +683,11 @@ export function buildParentInsightsFromTopicEngineHe(report, apiPayload = null) 
 }
 
 export function buildParentFacingFromAdcV2(report) {
-  const contractRows = collectTopicEngineRowsFromReport(report)
-    .filter(
-      (row) =>
-        row.actionDecisionContract?.version === "2.0.0" &&
-        row.actionDecisionContract?.eligible === true,
-    );
+  const contractRows = collectTopicEngineRowsFromReport(report).filter(
+    (row) =>
+      row.actionDecisionContract?.version === "2.0.0" &&
+      row.actionDecisionContract?.eligible === true,
+  );
   const rows = contractRows
     .filter((row) => {
       const expiresAt = Date.parse(
@@ -667,38 +705,72 @@ export function buildParentFacingFromAdcV2(report) {
         (Number(a.accuracy) || 0) - (Number(b.accuracy) || 0)
       );
     });
-  const selected = [];
-  const seenSubjects = new Set();
-  for (const row of rows) {
-    if (seenSubjects.has(row.subjectId)) continue;
-    const parentDecision = buildParentSafeActionDecisionV1(
-      row.actionDecisionContract,
-      { topicLabel: row.label },
-    );
-    if (!parentDecision) continue;
-    selected.push(parentDecision);
-    seenSubjects.add(row.subjectId);
-    if (selected.length >= 3) break;
-  }
-  if (!selected.length) {
+
+  if (!rows.length) {
     if (!contractRows.length) return null;
     const expired = buildExpiredParentActionDecisionV1();
     return {
       parentState: expired.state,
-      insights: [expired.observed],
-      homeRecommendations: [
-        `${expired.recommendation} ${expired.temporary} ${expired.reevaluation}`,
-      ],
+      systemActions: [expired.systemActionLineHe],
+      insights: [],
+      homeRecommendations: [],
     };
   }
+
+  const systemActions = [];
+  const seenSubjects = new Set();
+  let parentState = "progress_or_mastery";
+  for (const row of rows) {
+    if (seenSubjects.has(row.subjectId)) continue;
+    const line = buildParentSystemActionLineHe(row.actionDecisionContract, {
+      topicLabel: row.label,
+    });
+    if (line) systemActions.push(line);
+    parentState = parentActionDisplayStateV1(row.actionDecisionContract.action);
+    seenSubjects.add(row.subjectId);
+    if (systemActions.length >= 3) break;
+  }
+
   return {
-    parentState: selected[0].state,
-    insights: selected.map((decision) => decision.observed),
-    homeRecommendations: selected.map(
-      (decision) =>
-        `${decision.recommendation} ${decision.temporary} ${decision.reevaluation}`,
-    ),
+    parentState,
+    systemActions,
+    insights: [],
+    homeRecommendations: [],
   };
+}
+
+/**
+ * Home recommendations linked to DE2/LPD findings; ADC actions stay separate.
+ * @param {Record<string, unknown>} report
+ */
+export function buildHomeRecommendationsFromTopicEngineHe(report) {
+  const rows = collectTopicEngineRowsFromReport(report)
+    .filter((row) => (Number(row.questions) || 0) > 0)
+    .sort((a, b) => {
+      const needA = rowNeedsAttention(a) ? 0 : 1;
+      const needB = rowNeedsAttention(b) ? 0 : 1;
+      if (needA !== needB) return needA - needB;
+      return (Number(a.accuracy) || 0) - (Number(b.accuracy) || 0);
+    });
+
+  const recs = [];
+  for (const row of rows) {
+    if (recs.length >= 3) break;
+    const bundle = buildTopicParentReportBundleHe(row);
+    if (bundle.homeRecommendation) {
+      recs.push(bundle.homeRecommendation);
+      continue;
+    }
+    if (bundle.finding) {
+      const topic = String(row.label || "").trim() || "הנושא";
+      recs.push(
+        `מה כדאי לעשות ביחד: לתרגל כמה שאלות קצרות ב${topic}, ולבקש מהילד להסביר את הדרך בקול.`,
+      );
+    }
+  }
+
+  if (!recs.length) return [homeFallbackHe()];
+  return recs;
 }
 
 
@@ -814,70 +886,33 @@ export function applyTopicEngineParentFacingInsights(clientReport, apiPayload = 
 
 
   const payload = apiPayload || clientReport._reportApiPayload || null;
-
   const adcParentFacing = buildParentFacingFromAdcV2(clientReport);
-
-  const engineInsights = adcParentFacing
-    ? []
-    : buildParentInsightsFromTopicEngineHe(clientReport, payload);
+  const engineInsights = buildParentInsightsFromTopicEngineHe(clientReport, payload);
+  const homeRecommendations = buildHomeRecommendationsFromTopicEngineHe(clientReport);
 
   const hasEngineRows = collectTopicEngineRowsFromReport(clientReport).some(
-
     (r) => r.topicEngineRowSignals,
-
   );
 
-
-
   if (!clientReport.parentFacing || typeof clientReport.parentFacing !== "object") {
-
     clientReport.parentFacing = {};
-
   }
 
-
-
-  if (adcParentFacing) {
-
-    clientReport.parentFacing.insights = adcParentFacing.insights;
-    clientReport.parentFacing.homeRecommendations =
-      adcParentFacing.homeRecommendations;
+  clientReport.parentFacing.insights =
+    engineInsights.length > 0 ? engineInsights : [noUrgentTopicInsightHe()];
+  clientReport.parentFacing.homeRecommendations = homeRecommendations;
+  clientReport.parentFacing.systemActions = adcParentFacing?.systemActions || [];
+  if (adcParentFacing?.parentState) {
     clientReport.parentFacing.parentState = adcParentFacing.parentState;
-    clientReport._parentFacingInsightsSource = "adc_v2";
-    clientReport._parentFacingHomeSource = "adc_v2";
-    dedupeDiagnosticOverviewAgainstInsights(
-      clientReport,
-      adcParentFacing.insights,
-    );
+  }
+  clientReport._parentFacingInsightsSource = "topic_engine";
+  clientReport._parentFacingHomeSource = adcParentFacing
+    ? "finding_plus_adc"
+    : "topic_engine";
+  dedupeDiagnosticOverviewAgainstInsights(clientReport, engineInsights);
 
-  } else if (hasEngineRows) {
-
-    const activityGap = buildActivityGapParentInsightHe(payload);
-
-    clientReport.parentFacing.insights =
-
-      engineInsights.length > 0
-
-        ? engineInsights
-
-        : activityGap
-
-          ? [activityGap]
-
-          : [noUrgentTopicInsightHe()];
-
-    clientReport._parentFacingInsightsSource = "topic_engine";
-
-    dedupeDiagnosticOverviewAgainstInsights(clientReport, engineInsights);
-
-  } else if (engineInsights.length) {
-
-    clientReport.parentFacing.insights = engineInsights;
-
-    clientReport._parentFacingInsightsSource = "topic_engine";
-
-    dedupeDiagnosticOverviewAgainstInsights(clientReport, engineInsights);
-
+  if (hasEngineRows && !engineInsights.length) {
+    clientReport._parentFacingInsightsSource = "topic_engine_empty";
   }
 
 

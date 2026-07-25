@@ -230,10 +230,10 @@ export function buildLearningPatternDecision({
         ? engineDecisionContract.parentSafeFinding
         : fallbackHasRepeatedPattern && fallbackFinding
           ? fallbackFinding
-          : preferLpdFallbackOverEngine
-            ? fallbackFinding
-            : engineFindingWins
-              ? engineDecisionContract.parentSafeFinding
+          : engineFindingWins
+            ? engineDecisionContract.parentSafeFinding
+            : preferLpdFallbackOverEngine
+              ? fallbackFinding
               : fallbackFinding || engineDecisionContract.parentSafeFinding;
   if (competitiveBucketOnly && fallbackFinding) {
     trace.push("parentVisibleFinding:competitive_bucket_only");

@@ -14,9 +14,12 @@ import {
 import {
   resolveTopicExplainOwnerSectionsHe,
   resolveTopicPrimaryFindingOwnerCopyHe,
+  resolveTopicRecommendationOwnerCopyHe,
 } from "./resolve-topic-owner-copy.js";
+import { EDC_CONTRACT_KEY } from "./engine-decision-codes.js";
+import { buildParentSystemActionLineHe } from "../action-decision-contract/parent-action-decision-translations-he.js";
 
-/** @typedef {{ identified: string, data: string, pattern: string, meaning: string, action: string }} LpdExplainSections */
+/** @typedef {{ identified: string, data: string, pattern: string, meaning: string, action: string, systemAction?: string }} LpdExplainSections */
 
 /** @type {readonly [string, string][]} */
 const ROW_KEY_SUBJECT_PREFIXES = [
@@ -153,12 +156,138 @@ export function lpdParentVisibleFindingFromRow(row) {
 }
 
 /**
- * When LPD is present, legacy engine diagnostic copy must not surface to parents.
+ * Prefer LPD/DE2 explain sections over legacy topicEngineRowSignals copy on detailed report rows.
  * @param {Record<string, unknown>|null|undefined} row
  */
 export function shouldSuppressLegacyEngineParentCopy(row) {
-  const q = Number(row?.questions) || 0;
-  return q > 0;
+  const lpd = getLpdFromRow(row);
+  if (lpd && lpd.topicStatus !== "not_practiced") return true;
+  const contract = readEngineContractFromRow(row);
+  if (String(contract?.parentSafeFinding || "").trim()) return true;
+  if (String(contract?.detectedPattern || "").trim()) return true;
+  return false;
+}
+
+/**
+ * @param {Record<string, unknown>|null|undefined} row
+ * @returns {Record<string, unknown>|null|undefined}
+ */
+function readEngineContractFromRow(row) {
+  const lpd = getLpdFromRow(row);
+  return (
+    row?.[EDC_CONTRACT_KEY] ||
+    row?.engineDecisionContract ||
+    lpd?.[EDC_CONTRACT_KEY] ||
+    lpd?.engineDecisionContract ||
+    null
+  );
+}
+
+/**
+ * DE2 is the authority for parent finding text; LPD only guards unsupported wording.
+ * @param {Record<string, unknown>|null|undefined} row
+ * @param {unknown[]} [rawMistakes]
+ * @returns {string}
+ */
+export function resolveTopicParentFindingHe(row, rawMistakes = []) {
+  const metrics = normalizeParentVisibleMetrics(row, row?.mapRow || null);
+  const q = metrics.questions;
+  if (q <= 0) return "";
+
+  const lpd = resolveOrBuildLpdOnRow({ ...row, parentVisibleMetrics: metrics }, rawMistakes);
+  const enriched = { ...row, parentVisibleMetrics: metrics, learningPatternDecision: lpd };
+  const contract = readEngineContractFromRow(enriched);
+
+  const safeFinding = guardParentFacingText(String(contract?.parentSafeFinding || "").trim());
+  if (safeFinding) return safeFinding;
+
+  const patternLabel = resolveParentFacingPatternLabelHe(contract?.detectedPattern);
+  if (patternLabel) {
+    const topicName =
+      String(row?.label || row?.displayName || row?.narrativeTitleHe || "").trim() || "הנושא";
+    return guardParentFacingText(`ב${topicName} נצפה דפוס: ${patternLabel}.`);
+  }
+
+  const ownerFinding = resolveTopicPrimaryFindingOwnerCopyHe(enriched);
+  if (ownerFinding) return guardParentFacingText(ownerFinding);
+
+  if (lpd?.parentVisibleFinding) return guardParentFacingText(lpd.parentVisibleFinding);
+  return "";
+}
+
+/**
+ * LPD-only evidence wording: initial vs recurring — never deletes the finding.
+ * @param {Record<string, unknown>|null|undefined} row
+ * @param {import("./schema.js").LearningPatternDecisionShape|null|undefined} [lpd]
+ * @returns {string}
+ */
+export function resolveTopicEvidenceBasisHe(row, lpd = null) {
+  const metrics = normalizeParentVisibleMetrics(row, row?.mapRow || null);
+  const q = metrics.questions;
+  if (q <= 0) return "";
+
+  const resolvedLpd =
+    lpd || resolveOrBuildLpdOnRow({ ...row, parentVisibleMetrics: metrics });
+  const topicName =
+    String(row?.label || row?.displayName || row?.narrativeTitleHe || "").trim() || "הנושא";
+  const contract = readEngineContractFromRow({ ...row, learningPatternDecision: resolvedLpd });
+  if (contract?.dataText) {
+    return guardParentFacingText(String(contract.dataText));
+  }
+
+  const base = buildParentMetricsDataLineHe(metrics, topicName);
+  const patterns = Array.isArray(resolvedLpd?.repeatedMistakePatterns)
+    ? resolvedLpd.repeatedMistakePatterns
+    : [];
+  const patternHits = patterns.reduce(
+    (sum, p) => sum + Math.max(0, Number(p?.count) || 0),
+    0,
+  );
+  const strength = String(resolvedLpd?.evidenceStrength || contract?.evidenceStrength || "");
+  const recurring =
+    patternHits >= 2 ||
+    strength === "supported" ||
+    strength === "strong" ||
+    String(resolvedLpd?.topicStatus || "") === "difficulty_repeated";
+
+  if (q <= 2) return guardParentFacingText(`${base} זהו ממצא ראשוני.`);
+  if (recurring) {
+    return guardParentFacingText(`${base} הדפוס חוזר בכמה מהתשובות.`);
+  }
+  return guardParentFacingText(`${base} זהו ממצא ראשוני.`);
+}
+
+/**
+ * @param {Record<string, unknown>|null|undefined} row
+ * @param {unknown[]} [rawMistakes]
+ */
+export function buildTopicParentReportBundleHe(row, rawMistakes = []) {
+  const metrics = normalizeParentVisibleMetrics(row, row?.mapRow || null);
+  const lpd = resolveOrBuildLpdOnRow({ ...row, parentVisibleMetrics: metrics }, rawMistakes);
+  const enriched = { ...row, parentVisibleMetrics: metrics, learningPatternDecision: lpd };
+  const topicName =
+    String(row?.label || row?.displayName || row?.narrativeTitleHe || "").trim() || "הנושא";
+
+  const finding = resolveTopicParentFindingHe(enriched, rawMistakes);
+  const evidence = resolveTopicEvidenceBasisHe(enriched, lpd);
+  const adcContract =
+    row?.actionDecisionContract ||
+    readEngineContractFromRow(enriched)?.actionDecisionContract ||
+    null;
+  const systemAction = guardParentFacingText(
+    buildParentSystemActionLineHe(adcContract, { topicLabel: topicName }),
+  );
+  const homeRecommendation = guardParentFacingText(
+    resolveTopicRecommendationOwnerCopyHe(enriched, "doNow") ||
+      lpdHomeActionLineHe(lpd, topicName),
+  );
+
+  return {
+    finding,
+    evidence,
+    systemAction,
+    homeRecommendation,
+  };
 }
 
 /**
@@ -170,11 +299,12 @@ export function shouldSuppressLegacyEngineParentCopy(row) {
 export function buildLpdSafeTopicInsightLineHe(row, rawMistakes = []) {
   const lpd = resolveOrBuildLpdOnRow(row, rawMistakes);
   if (!lpd || !lpdHasParentTopicInsight(lpd)) return "";
-  const ownerFinding = resolveTopicPrimaryFindingOwnerCopyHe({ ...row, learningPatternDecision: lpd });
-  const finding = guardParentFacingText(ownerFinding || lpd.parentVisibleFinding);
+  const finding = resolveTopicParentFindingHe(
+    { ...row, learningPatternDecision: lpd },
+    rawMistakes,
+  );
   if (!finding) return "";
-  const enriched = { ...row, learningPatternDecision: lpd };
-  return buildLpdParentInsightLineHe({ ...enriched, learningPatternDecision: { ...lpd, parentVisibleFinding: finding } });
+  return buildLpdParentInsightLineHe({ ...row, learningPatternDecision: { ...lpd, parentVisibleFinding: finding } });
 }
 
 /**
@@ -371,127 +501,66 @@ export function buildLpdSafeTopicExplainSectionsHe(row) {
   const q = metrics.questions;
   if (q <= 0 || !lpd || lpd.topicStatus === "not_practiced") return null;
 
-  const ownerSections = resolveTopicExplainOwnerSectionsHe({
-    ...row,
-    parentVisibleMetrics: metrics,
-    learningPatternDecision: lpd,
-  });
-  if (ownerSections) {
-    const contract =
-      lpd.engineDecisionContract ||
-      row?.engineDecisionContract ||
-      null;
-    const patternLabel = resolveParentFacingPatternLabelHe(contract?.detectedPattern);
-    const identified =
-      patternLabel && contract?.parentSafeFinding
-        ? contract.parentSafeFinding
-        : ownerSections.identified;
-    return {
-      identified: guardParentFacingText(identified),
-      data: guardParentFacingText(ownerSections.data),
-      pattern: guardParentFacingText(
-        ownerSections.pattern ||
-          (patternLabel && q >= 5 ? `הטעות שחוזרת: ${patternLabel}.` : "")
-      ),
-      meaning: guardParentFacingText(ownerSections.meaning),
-      action: guardParentFacingText(ownerSections.action),
-    };
-  }
-
+  const enriched = { ...row, parentVisibleMetrics: metrics, learningPatternDecision: lpd };
   const topicName =
     String(row?.label || row?.displayName || lpd.recommendedFocus || "").trim() || "הנושא";
-  const acc = metrics.accuracy;
-  const w = metrics.wrong;
+  const bundle = buildTopicParentReportBundleHe(enriched);
+  const contract = readEngineContractFromRow(enriched);
+  const patternLabel = resolveParentFacingPatternLabelHe(contract?.detectedPattern);
+  const patternFromLpd = guardParentFacingText(lpdPatternLineHe(lpd));
+  const pattern =
+    patternFromLpd ||
+    (patternLabel && q >= 5 ? guardParentFacingText(`הטעות שחוזרת: ${patternLabel}.`) : "");
 
-  const contract =
-    lpd.engineDecisionContract ||
-    row?.engineDecisionContract ||
-    null;
-
-  if (contract?.parentSafeFinding && q >= 3) {
-    const patternLabel = resolveParentFacingPatternLabelHe(contract.detectedPattern);
-    const pattern =
-      patternLabel && q >= 5
-        ? guardParentFacingText(`הטעות שחוזרת: ${patternLabel}.`)
-        : "";
-    const meaning =
-      contract.engineDecision === "clear_topic_gap" ||
-      contract.engineDecision === "topic_needs_strengthening"
-        ? guardParentFacingText(
-            `מה זה אומר: כדאי לחזק את ${topicName} לפני שממשיכים לנושאים קשים יותר.`,
-          )
-        : guardParentFacingText(lpdMeaningLineHe(lpd, topicName));
-    const action =
-      contract.actionDecisionContract?.eligible === true &&
-      contract.actionDecisionContract?.intervention === true
-        ? guardParentFacingText(
-            `מה כדאי לעשות ביחד: לתרגל כמה שאלות קצרות ב${topicName}, ולבקש מהילד להסביר את הדרך בקול.`,
-          )
-        : guardParentFacingText(lpdHomeActionLineHe(lpd, topicName));
-
-    return {
-      identified: guardParentFacingText(`מה רואים: ${contract.parentSafeFinding}`),
-      data: guardParentFacingText(
-        contract.dataText || buildParentMetricsDataLineHe(metrics, topicName),
-      ),
-      pattern,
-      meaning,
-      action,
-    };
-  }
-
-  const finding = guardParentFacingText(lpd.parentVisibleFinding);
-  const isInitial = q <= 2;
-
-  let data = guardParentFacingText(buildParentMetricsDataLineHe(metrics, topicName));
-
-  if (isInitial) {
+  if (q <= 2) {
     const topicShort = topicName.replace(/\s*-\s*כיתה\s*[א-ט״']+\s*$/u, "").trim() || topicName;
     return {
-      identified: guardParentFacingText(`מה רואים: יש כרגע מעט שאלות בנושא ${topicShort}.`),
+      identified: guardParentFacingText(`מה נמצא: יש כרגע מעט שאלות בנושא ${topicShort}.`),
       data: guardParentFacingText(
-        buildParentMetricsDataLineHe({ ...metrics, questions: q, accuracy: acc }, topicShort),
+        bundle.evidence ||
+          buildParentMetricsDataLineHe({ ...metrics, questions: q }, topicShort),
       ),
       pattern: "",
       meaning: guardParentFacingText("מה זה אומר: עדיין מוקדם להסיק מסקנה ברורה. צריך עוד כמה שאלות בנושא."),
       action: guardParentFacingText(
-        "מה כדאי לעשות ביחד: להמשיך לתרגל מעט, בלי להסיק עדיין שיש קושי קבוע.",
+        bundle.homeRecommendation ||
+          "מה כדאי לעשות ביחד: להמשיך לתרגל מעט, בלי להסיק עדיין שיש קושי קבוע.",
       ),
+      systemAction: bundle.systemAction
+        ? guardParentFacingText(`מה המערכת עושה: ${bundle.systemAction}`)
+        : "",
     };
   }
 
-  const identified = finding
-    ? `מה רואים: ${finding}`
-    : `מה רואים: מיקוד בנושא ${topicName}.`;
+  const ownerSections = resolveTopicExplainOwnerSectionsHe(enriched);
+  const identified = bundle.finding
+    ? guardParentFacingText(`מה נמצא: ${bundle.finding}`)
+    : guardParentFacingText(ownerSections?.identified || `מה נמצא: מיקוד בנושא ${topicName}.`);
+  const data = guardParentFacingText(
+    bundle.evidence
+      ? `על מה זה מבוסס: ${bundle.evidence}`
+      : ownerSections?.data || buildParentMetricsDataLineHe(metrics, topicName),
+  );
+  const meaning = guardParentFacingText(
+    ownerSections?.meaning || lpdMeaningLineHe(lpd, topicName),
+  );
+  const homeAction = guardParentFacingText(
+    ownerSections?.action ||
+      bundle.homeRecommendation ||
+      lpdHomeActionLineHe(lpd, topicName),
+  );
+  const systemAction = bundle.systemAction
+    ? guardParentFacingText(`מה המערכת עושה: ${bundle.systemAction}`)
+    : "";
 
-  const pattern = q >= 5 ? guardParentFacingText(lpdPatternLineHe(lpd)) : "";
-  let meaning = guardParentFacingText(lpdMeaningLineHe(lpd, topicName));
-  if (!meaning && !isInitial && w > 0 && q >= 3) {
-    meaning = guardParentFacingText(
-      "מה זה אומר: כדאי לחזק את הנושא לפני שממשיכים לנושאים קשים יותר.",
-    );
-  }
-  let action =
-    q >= 3 ? guardParentFacingText(lpdHomeActionLineHe(lpd, topicName)) : "";
-  if (!action && !isInitial && w > 0 && q >= 3) {
-    action = guardParentFacingText(
-      `מה כדאי לעשות ביחד: לפתור כמה שאלות קצרות בנושא ${topicName}, בקצב רגוע, ולבקש מהילד להסביר את שלבי הפתרון.`,
-    );
-  }
-
-  const sections = {
-    identified: guardParentFacingText(identified),
+  return {
+    identified,
     data,
     pattern,
     meaning,
-    action,
+    action: homeAction,
+    systemAction,
   };
-
-  if (!sections.identified && !sections.data && !sections.meaning && !sections.action) {
-    return sections.data ? { identified: "", data: sections.data, pattern: "", meaning: "", action: "" } : null;
-  }
-
-  return sections;
 }
 
 /**
@@ -531,14 +600,18 @@ export function resolveParentExplainRowCopy(row) {
     parentVisibleMetrics: metrics,
     learningPatternDecision: lpd,
   });
-  const primaryFinding = guardParentFacingText(ownerPrimaryFinding || lpd.parentVisibleFinding);
+  const primaryFinding = guardParentFacingText(
+    resolveTopicParentFindingHe(
+      { ...row, parentVisibleMetrics: metrics, learningPatternDecision: lpd },
+    ) || ownerPrimaryFinding || lpd.parentVisibleFinding,
+  );
   const isInitial = q <= 2;
 
   return {
     hasLpd: true,
     primaryFinding,
     explainSections,
-    suppressEngineCopy: true,
+    suppressEngineCopy: false,
     parentWordingLevel: String(lpd.parentWordingLevel || "factual_observation"),
     showTrend: !isInitial && q >= 5 && !rowNeedsPracticeFromLpd({ learningPatternDecision: lpd }),
     findingType: String(lpd.findingType || ""),

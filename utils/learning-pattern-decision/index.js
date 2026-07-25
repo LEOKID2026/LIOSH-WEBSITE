@@ -147,4 +147,7 @@ export {
   LEGACY_TOPIC_ATTENTION_INSIGHT_DISABLED,
   resolveParentExplainRowCopy,
   buildLpdSafeTopicExplainSectionsHe,
+  resolveTopicParentFindingHe,
+  resolveTopicEvidenceBasisHe,
+  buildTopicParentReportBundleHe,
 } from "./lpd-parent-facing-copy.js";

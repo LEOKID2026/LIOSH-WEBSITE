@@ -101,6 +101,8 @@ function buildParentSafeFindingFromEngine(p) {
   const hasPattern = isUsableParentPatternLabel(p.detectedPattern) && !!pattern;
   const suffix = q > 0 ? ` מבוסס על ${formatQuestionsTextHe(q)} שנפתרו בנושא.` : "";
   const engineDecision = String(p.engineDecision || "");
+  const patternLayer = String(p.patternLayer || "");
+  const matchCount = Math.max(0, Math.floor(Number(p.matchingEvidenceCount) || 0));
 
   if (q <= 0) return "";
 
@@ -110,14 +112,22 @@ function buildParentSafeFindingFromEngine(p) {
       : `בנושא ${name} נפתרו ${formatQuestionsTextHe(q)}. עדיין מוקדם לזהות דפוס ברור בנושא.`;
   }
 
-  if (hasPattern && !p.blockPatternClaim) {
-    return `בנושא ${name} מופיע דפוס חוזר של טעויות (${pattern}). כדאי לחזק את הנושא.${suffix}`;
+  // Same-session proven cluster: non-dominant, watch-for-recurrence wording
+  if (hasPattern && !p.blockPatternClaim && patternLayer === "same_session_observed") {
+    const times = matchCount > 0 ? `${matchCount} פעמים` : "מספר פעמים";
+    return `בתרגול האחרון נצפו כמה טעויות מאותו סוג: ${pattern} (${times}). כדאי לשים לב אם זה חוזר גם בתרגולים הבאים.`;
   }
 
-  if (p.misconceptionLabel && isUsableParentPatternLabel(p.misconceptionLabel)) {
-    const misc = cleanParentFindingPattern(p.misconceptionLabel);
-    if (!misc) return "";
-    return `בנושא ${name} זוהתה טעות חוזרת: ${misc}. כדאי לחזק את הנושא.${suffix}`;
+  // Multi-day secondary observed: specific finding without claiming a single dominant pattern
+  if (hasPattern && !p.blockPatternClaim && patternLayer === "secondary_observed") {
+    const times =
+      matchCount > 0 ? `${matchCount} פעמים` : "מספר פעמים";
+    return `בנושא ${name} לא זוהה דפוס דומיננטי יחיד, אך נצפתה בעיה חוזרת: ${pattern} (${times}). כדאי לשים לב לכך בתרגול.${suffix}`;
+  }
+
+  // Primary/dominant pattern claims require detectedPattern — never invent from misconceptionLabel alone
+  if (hasPattern && !p.blockPatternClaim) {
+    return `בנושא ${name} מופיע דפוס חוזר של טעויות (${pattern}). כדאי לחזק את הנושא.${suffix}`;
   }
 
   if (engineDecision === "clear_topic_gap") {
@@ -310,6 +320,24 @@ export function buildParentReportEngineDecisionContract(input = {}) {
   }
 
   const de2PatternHe = unit ? parentFacingPatternLabelHe(unit) : "";
+  const patternLayer =
+    String(unit?.patternEvidence?.patternLayer || unit?.recurrence?.evidenceRecurrence?.patternLayer || "").trim() ||
+    null;
+  const matchingEvidenceCount = Math.max(
+    0,
+    Math.floor(
+      Number(
+        unit?.patternEvidence?.matchingEvidenceCount ??
+          unit?.patternEvidence?.evidenceCount ??
+          unit?.recurrence?.evidenceRecurrence?.evidenceCount ??
+          0,
+      ) || 0,
+    ),
+  );
+  const patternEvidenceBlocked =
+    unit?.patternEvidence?.allowed === false ||
+    unit?.classification?.state !== "classified" ||
+    (unit?.patternEvidence?.evidenceCount != null && unit.patternEvidence.evidenceCount <= 0);
   const de2SubskillHe = sanitizeParentPatternLabel(
     String(unit?.taxonomy?.subskillHe || "").trim(),
   );
@@ -330,12 +358,16 @@ export function buildParentReportEngineDecisionContract(input = {}) {
   /** @type {EngineSource} */
   let sourceEngine = "topic_aggregation";
   let detectedPattern = null;
-  if (de2PatternHe && isUsableParentPatternLabel(de2PatternHe)) {
+  if (de2PatternHe && isUsableParentPatternLabel(de2PatternHe) && !patternEvidenceBlocked) {
     detectedPattern = de2PatternHe;
     sourceEngine = "de2";
-  } else if (v3PatternHe) {
+  } else if (v3PatternHe && !patternEvidenceBlocked) {
+    // V3 may not introduce a specific pattern when DE2 evidence gate blocked
     detectedPattern = v3PatternHe;
     sourceEngine = "v3";
+  }
+  if (patternEvidenceBlocked && de2PatternHe) {
+    traceReason.push(`de2:pattern_blocked:${unit?.patternEvidence?.reason || unit?.classification?.reasonCode || "insufficient_evidence"}`);
   }
 
   const wrongRatio = metrics.questions > 0 ? metrics.wrong / metrics.questions : 0;
@@ -438,8 +470,19 @@ export function buildParentReportEngineDecisionContract(input = {}) {
 
   const blockPatternClaim =
     canonicalState?.actionState?.withholdParentClaim === true ||
-    engineDiagnosticDecision.safeSubskillToShow === false &&
-    !detectedPattern;
+    patternEvidenceBlocked ||
+    (engineDiagnosticDecision.safeSubskillToShow === false && !detectedPattern);
+
+  const detectedTaxonomyId =
+    String(unit?.taxonomy?.id || unit?.classification?.detectedTaxonomyId || "").trim() ||
+    null;
+  const detectedPatternTag =
+    String(
+      unit?.classification?.primaryTag ||
+        row?.detectedPattern ||
+        unifiedDecisionContext?.signals?.pattern?.dominantPattern ||
+        "",
+    ).trim() || null;
 
   const actionDecisionContract = buildActionDecisionContractV2({
     subjectId,
@@ -448,6 +491,8 @@ export function buildParentReportEngineDecisionContract(input = {}) {
     metrics,
     canonicalState,
     unifiedDecisionContext,
+    detectedTaxonomyId,
+    detectedPatternTag,
     decisionTimestamp: input.decisionTimestamp,
   });
   const actionAuthority = {
@@ -473,7 +518,11 @@ export function buildParentReportEngineDecisionContract(input = {}) {
     misconceptionLabel: de2DiagnosisLine || null,
     engineDecision,
     blockPatternClaim,
+    patternLayer,
+    matchingEvidenceCount,
   });
+  if (patternLayer) traceReason.push(`patternLayer:${patternLayer}`);
+  if (matchingEvidenceCount > 0) traceReason.push(`matchingEvidenceCount:${matchingEvidenceCount}`);
   traceReason.push(parentSafeFinding ? "parentSafeFinding:engine" : "parentSafeFinding:empty");
 
   const uncertaintyText = resolveEngineDecisionUncertaintyText(
@@ -494,6 +543,8 @@ export function buildParentReportEngineDecisionContract(input = {}) {
     engineDecision,
     sourceEngine,
     detectedPattern,
+    patternLayer,
+    matchingEvidenceCount,
     misconceptionLabel: de2DiagnosisLine || detectedPattern || null,
     affectedSubskill:
       subskillSignal.safe === true

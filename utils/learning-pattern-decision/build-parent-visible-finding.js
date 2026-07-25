@@ -40,7 +40,8 @@ export function findForbiddenParentWords(text) {
   for (const w of FORBIDDEN_PARENT_WORDS) {
     if (s.includes(String(w).toLowerCase())) hits.push(w);
   }
-  if (/בתרגול האחרון/i.test(text)) hits.push("בתרגול האחרון");
+  // "בתרגול האחרון" is allowed for same_session_observed pattern copy
+  // (proven same-tag cluster in one session / short window).
   return hits;
 }
 
@@ -231,8 +232,9 @@ export function buildParentVisibleFinding({
       return { parentVisibleFinding, parentWordingLevel, templateId };
     }
     templateId = "no_clear_pattern";
-    parentWordingLevel = "no_parent_text";
-    parentVisibleFinding = "";
+    parentWordingLevel = "factual_observation";
+    parentVisibleFinding =
+      `נרשמו ${q} תשובות בנושא ${name}, אך לא נמצא כרגע דפוס טעות חוזר.${contextSuffix}`;
     return { parentVisibleFinding, parentWordingLevel, templateId };
   }
 
@@ -247,7 +249,10 @@ export function buildParentVisibleFinding({
   }
 
   templateId = "no_clear_pattern";
-  parentWordingLevel = "no_parent_text";
-  parentVisibleFinding = "";
+  parentWordingLevel = "factual_observation";
+  parentVisibleFinding =
+    q > 0
+      ? `נרשמו ${q} תשובות בנושא ${name}, אך לא נמצא כרגע דפוס טעות חוזר.${contextSuffix}`
+      : "";
   return { parentVisibleFinding, parentWordingLevel, templateId };
 }
