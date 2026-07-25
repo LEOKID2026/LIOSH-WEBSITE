@@ -317,8 +317,8 @@ export function buildLpdParentInsightLineHe(row) {
 
   const subj = String(row.subjectLabelHe || row.subject || "").trim();
   const label = String(row.label || row.displayName || "").trim();
-  if (subj && label) return guardParentFacingText(`${subj} - «${label}»: ${finding}`);
-  if (label) return guardParentFacingText(`«${label}»: ${finding}`);
+  if (subj && label) return guardParentFacingText(`${subj} - "${label}": ${finding}`);
+  if (label) return guardParentFacingText(`"${label}": ${finding}`);
   return finding;
 }
 
@@ -479,7 +479,7 @@ function lpdHomeActionLineHe(lpd, topicName) {
   const ft = String(lpd.findingType || "");
 
   if (ts === "mixed" || ft === "mixed_pattern") {
-    return `מה כדאי לעשות ביחד: לבחור 5–8 שאלות בנושא ${topicName}, לשלב שאלות קלות ובינוניות, ולעצור בכל טעות כדי להבין מה קרה.`;
+    return `מה כדאי לעשות ביחד: לבחור 5-8 שאלות בנושא ${topicName}, לשלב שאלות קלות ובינוניות, ולעצור בכל טעות כדי להבין מה קרה.`;
   }
   if (ts.startsWith("positive") || ft === "success_pattern") {
     return `מה כדאי לעשות ביחד: להמשיך מדי פעם בתרגול קצר ב${topicName}, כדי לשמור על מה שכבר עובד.`;

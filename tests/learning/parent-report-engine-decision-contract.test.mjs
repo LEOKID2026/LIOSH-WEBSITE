@@ -44,10 +44,10 @@ function rowFromMetrics(q, c, w, acc) {
     unit,
     rawMistakes: [],
   });
-  assert.match(lpd.parentVisibleFinding, /השוואה לפי מונה בלבד/);
+  assert.match(lpd.parentVisibleFinding, /השוואת שברים לפי המונה בלבד/);
   assert.doesNotMatch(lpd.parentVisibleFinding, /כמה טעויות/);
   assert.equal(lpd.engineDecisionContract.sourceEngine, "de2");
-  assert.equal(lpd.engineDecisionContract.detectedPattern, "השוואה לפי מונה בלבד");
+  assert.equal(lpd.engineDecisionContract.detectedPattern, "השוואת שברים לפי המונה בלבד");
 }
 
 // OMER כפל — repeated pairs pattern
@@ -71,7 +71,7 @@ function rowFromMetrics(q, c, w, acc) {
     unit,
     rawMistakes: [],
   });
-  assert.match(lpd.parentVisibleFinding, /אותם זוגות שגויים/);
+  assert.match(lpd.parentVisibleFinding, /טעויות חוזרות בעובדות כפל/);
   assert.equal(lpd.engineDecisionContract.recommendedAction, "remediate_same_level");
 }
 
@@ -153,8 +153,8 @@ function rowFromMetrics(q, c, w, acc) {
     learningPatternDecision: lpd,
   });
   assert.ok(sections);
-  assert.match(sections.identified, /השוואה לפי מונה בלבד/);
-  assert.match(sections.pattern, /השוואה לפי מונה בלבד/);
+  assert.match(sections.identified, /השוואת שברים לפי המונה בלבד/);
+  assert.match(sections.pattern, /השוואת שברים לפי המונה בלבד/);
 }
 
 // P0: canonical probe_only/RI0 cannot be overridden by clear-gap metrics.

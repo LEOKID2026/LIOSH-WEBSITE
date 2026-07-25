@@ -799,11 +799,11 @@ function dedupeDiagnosticOverviewAgainstInsights(report, insightLines) {
 
   for (const line of insightLines) {
 
-    const matches = String(line || "").match(/«([^»]+)»/g) || [];
+    const matches = String(line || "").match(/"([^"]+)"|«([^»]+)»/g) || [];
 
     for (const m of matches) {
 
-      const topic = m.replace(/[«»]/g, "").trim();
+      const topic = m.replace(/[«»"]/g, "").trim();
 
       if (topic) insightTopics.add(topic);
 

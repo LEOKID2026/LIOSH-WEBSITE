@@ -125,9 +125,9 @@ function renderDifficultyObservedMeaning(s) {
 /** @param {TopicOwnerCopySlots} s */
 function renderDifficultyObservedHomeAction(s) {
   if (hasPattern(s)) {
-    return `מה כדאי לעשות ביחד: לפתור 5–8 שאלות קצרות בנושא ${s.topicName}. אחרי כל טעות לעצור, לבקש מהילד להסביר איך פתר, ולשים לב במיוחד ל-${s.detectedPattern}.`;
+    return `מה כדאי לעשות ביחד: לפתור 5-8 שאלות קצרות בנושא ${s.topicName}. אחרי כל טעות לעצור, לבקש מהילד להסביר איך פתר, ולשים לב במיוחד ל-${s.detectedPattern}.`;
   }
-  return `מה כדאי לעשות ביחד: לפתור 5–8 שאלות קצרות בנושא ${s.topicName}. אחרי כל טעות לעצור ולבקש מהילד להסביר איך פתר.`;
+  return `מה כדאי לעשות ביחד: לפתור 5-8 שאלות קצרות בנושא ${s.topicName}. אחרי כל טעות לעצור ולבקש מהילד להסביר איך פתר.`;
 }
 
 /** @param {TopicOwnerCopySlots} s */
@@ -160,7 +160,7 @@ function renderPositiveObservedBase(s) {
 
 /** @param {TopicOwnerCopySlots} s */
 function renderPositiveObservedIdentified(s) {
-  return `מה רואים: ב${s.topicName} נראית הצלחה טובה בשאלות שנפתרו.`;
+  return `מה רואים: ב${s.topicName} נראית הצלחה טובה בשאלות שנפתרו עד עכשיו.`;
 }
 
 /** @param {TopicOwnerCopySlots} s */
@@ -219,12 +219,12 @@ function renderInitialTopicDataHomeAction(s) {
 
 /** @param {TopicOwnerCopySlots} s */
 function renderPracticeFocusBase(s) {
-  return `ב${s.topicName} היו כמה טעויות, אבל עדיין אין מספיק שאלות כדי לדעת אם זה חוזר בקביעות.`;
+  return `ב${s.topicName} נרשמו כמה טעויות, אבל עדיין אין מספיק שאלות כדי לדעת אם זה חוזר בקביעות.`;
 }
 
 /** @param {TopicOwnerCopySlots} s */
 function renderPracticeFocusIdentified(s) {
-  return `מה רואים: היו כמה טעויות בנושא ${s.topicName}, אבל עדיין אין מספיק שאלות כדי לדעת אם זה דפוס קבוע.`;
+  return `מה רואים: נרשמו כמה טעויות בנושא ${s.topicName}, אבל עדיין אין מספיק שאלות כדי לדעת אם זה דפוס קבוע.`;
 }
 
 /** @param {TopicOwnerCopySlots} s */
@@ -273,7 +273,7 @@ function renderMixedMeaning(s) {
 
 /** @param {TopicOwnerCopySlots} s */
 function renderMixedHomeAction(s) {
-  return `מה כדאי לעשות ביחד: לבחור 5–8 שאלות בנושא ${s.topicName}, לשלב שאלות קלות ובינוניות, ולעצור בכל טעות כדי להבין מה קרה.`;
+  return `מה כדאי לעשות ביחד: לבחור 5-8 שאלות בנושא ${s.topicName}, לשלב שאלות קלות ובינוניות, ולעצור בכל טעות כדי להבין מה קרה.`;
 }
 
 /** @param {TopicOwnerCopySlots} s */

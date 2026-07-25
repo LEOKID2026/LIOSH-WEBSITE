@@ -6,6 +6,7 @@
 import { mathReportBaseOperationKey } from "../math-report-generator.js";
 import { rewriteEngineTaxonomySnippetForParentHe } from "../diagnostic-labels-he.js";
 import { normalizeParentFacingHe } from "./parent-facing-normalize-he.js";
+import { sanitizeParentPatternLabel } from "../learning-pattern-decision/parent-pattern-label.js";
 
 /** Engine-internal M-10 patternHe — must not appear parent-facing. */
 export const M10_ENGINE_PATTERN_HE = "בחירת כפל לא מתאים לחילוק";
@@ -143,6 +144,10 @@ export function parentFacingPatternLabelHe(unit) {
   }
 
   if (!raw) return "";
+  const taxonomyId = unitTaxonomyId(unit);
+  const subjectId = String(u.subjectId || u.subject || "").trim() || null;
+  const remapped = sanitizeParentPatternLabel(raw, { taxonomyId, subjectId });
+  if (remapped) return normalizeParentFacingHe(remapped);
   return normalizeParentFacingHe(rewriteEngineTaxonomySnippetForParentHe(raw));
 }
 

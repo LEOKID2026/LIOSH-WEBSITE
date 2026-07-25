@@ -157,7 +157,7 @@ function renderRemediatePriorityTopicsSameLevel(slots) {
 
 /** @param {SubjectOwnerCopySlots} _slots */
 function renderSubjectClosingEngineContract(_slots) {
-  return "עדיף לעבוד קצר וממוקד: לבחור נושא אחד בכל פעם, לפתור 5–8 שאלות, ואז לבקש מהילד להסביר איך הגיע לתשובה. אחרי כמה תרגולים אפשר לבדוק אם הדיוק והיציבות משתפרים.";
+  return "עדיף לעבוד קצר וממוקד: לבחור נושא אחד בכל פעם, לפתור 5-8 שאלות, ואז לבקש מהילד להסביר איך הגיע לתשובה. אחרי כמה תרגולים אפשר לבדוק אם הדיוק והיציבות משתפרים.";
 }
 
 /** @type {Record<string, (slots: SubjectOwnerCopySlots) => string>} */

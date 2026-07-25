@@ -79,9 +79,10 @@ export function mapEngineRecommendedAction(actionState, engineDecision, metrics,
 
 /**
  * @param {string|null|undefined} raw
+ * @param {{ taxonomyId?: string|null, subjectId?: string|null }} [ctx]
  */
-function cleanParentFindingPattern(raw) {
-  let t = sanitizeParentPatternLabel(String(raw || ""));
+function cleanParentFindingPattern(raw, ctx = {}) {
+  let t = sanitizeParentPatternLabel(String(raw || ""), ctx);
   t = t.replace(/\(נקודת מיקוד:[^)]*\)/gi, "");
   t = t.replace(/נקודת המיקוד היא[^.]*\.?\s*/gi, "");
   t = t.replace(/מצביע על דפוס:\s*/gi, "");
@@ -97,8 +98,9 @@ function buildParentSafeFindingFromEngine(p) {
   const q = p.metrics.questions;
   const acc = p.metrics.accuracy;
   const w = p.metrics.wrong;
-  const pattern = cleanParentFindingPattern(p.detectedPattern);
-  const hasPattern = isUsableParentPatternLabel(p.detectedPattern) && !!pattern;
+  const labelCtx = { taxonomyId: p.taxonomyId, subjectId: p.subjectId };
+  const pattern = cleanParentFindingPattern(p.detectedPattern, labelCtx);
+  const hasPattern = isUsableParentPatternLabel(p.detectedPattern, labelCtx) && !!pattern;
   const suffix = q > 0 ? ` מבוסס על ${formatQuestionsTextHe(q)} שנפתרו בנושא.` : "";
   const engineDecision = String(p.engineDecision || "");
   const patternLayer = String(p.patternLayer || "");
@@ -108,30 +110,30 @@ function buildParentSafeFindingFromEngine(p) {
 
   if (q <= 2) {
     return q === 1
-      ? `בנושא ${name} יש נתונים ראשוניים בלבד. ככל שיהיו עוד שאלות בנושא, נוכל להציג תמונה מדויקת יותר.`
-      : `בנושא ${name} נפתרו ${formatQuestionsTextHe(q)}. עדיין מוקדם לזהות דפוס ברור בנושא.`;
+      ? `בנושא ${name} יש כרגע מעט נתונים. ככל שיצטבר תרגול נוסף, נוכל להציג תמונה מדויקת יותר.`
+      : `בנושא ${name} נפתרו ${formatQuestionsTextHe(q)}. עדיין מוקדם לקבוע אם קיים דפוס שחוזר בנושא.`;
   }
 
   // Same-session proven cluster: non-dominant, watch-for-recurrence wording
   if (hasPattern && !p.blockPatternClaim && patternLayer === "same_session_observed") {
     const times = matchCount > 0 ? `${matchCount} פעמים` : "מספר פעמים";
-    return `בתרגול האחרון נצפו כמה טעויות מאותו סוג: ${pattern} (${times}). כדאי לשים לב אם זה חוזר גם בתרגולים הבאים.`;
+    return `בתרגול האחרון הופיעו כמה טעויות מאותו סוג: ${pattern} (${times}). כדאי לבדוק אם הדבר חוזר גם בתרגולים הבאים.`;
   }
 
   // Multi-day secondary observed: specific finding without claiming a single dominant pattern
   if (hasPattern && !p.blockPatternClaim && patternLayer === "secondary_observed") {
     const times =
       matchCount > 0 ? `${matchCount} פעמים` : "מספר פעמים";
-    return `בנושא ${name} לא זוהה דפוס דומיננטי יחיד, אך נצפתה בעיה חוזרת: ${pattern} (${times}). כדאי לשים לב לכך בתרגול.${suffix}`;
+    return `בנושא ${name} לא הופיע דפוס מרכזי אחד, אבל חזר אותו סוג של טעות: ${pattern} (${times}). כדאי לשים לב לכך בתרגול הבא.${suffix}`;
   }
 
   // Primary/dominant pattern claims require detectedPattern — never invent from misconceptionLabel alone
   if (hasPattern && !p.blockPatternClaim) {
-    return `בנושא ${name} מופיע דפוס חוזר של טעויות (${pattern}). כדאי לחזק את הנושא.${suffix}`;
+    return `בנושא ${name} חזר אותו סוג של טעות: ${pattern}. כדאי לתרגל את החלק הזה בצורה ממוקדת.${suffix}`;
   }
 
   if (engineDecision === "clear_topic_gap") {
-    return `בנושא ${name} נראה קושי ברור - ${formatWrongOfQuestionsTextHe(w, q)} (${acc}% דיוק). כדאי לחזור ולחזק את ${name} לפני שממשיכים.${suffix}`;
+    return `בנושא ${name} נראה קושי ברור. ${formatWrongOfQuestionsTextHe(w, q)} (${acc}% דיוק). כדאי לחזור ולתרגל את הנושא לפני שממשיכים.${suffix}`;
   }
 
   if (engineDecision === "speed_pressure_pattern") {
@@ -142,7 +144,7 @@ function buildParentSafeFindingFromEngine(p) {
   }
 
   if (engineDecision === "topic_needs_strengthening") {
-    return `בנושא ${name} יש נקודת חיזוק שכדאי לעבוד עליה (${formatQuestionsTextHe(q)}, ${acc}% דיוק). כדאי חיזוק ממוקד.${suffix}`;
+    return `בנושא ${name} יש חלק שדורש חיזוק (${formatQuestionsTextHe(q)}, ${acc}% דיוק). כדאי חיזוק ממוקד.${suffix}`;
   }
 
   if (engineDecision === "partial_stable") {
@@ -162,6 +164,9 @@ function buildParentSafeFindingFromEngine(p) {
 
   if (q >= 5 && w >= 2 && acc < 70) {
     const volume = acc <= 40 || w / Math.max(q, 1) >= 0.5 ? "הרבה טעויות" : "כמה טעויות";
+    if (volume === "הרבה טעויות") {
+      return `בנושא ${name} נרשמו כמה טעויות בשאלות שנפתרו. כדאי לעבור על הטעויות ולתרגל שוב את החלקים שבהם הופיע קושי.${suffix}`;
+    }
     return `בנושא ${name} היו ${volume} בשאלות שנפתרו. כדאי לחזור ולחזק את הנושא.${suffix}`;
   }
 
@@ -520,6 +525,8 @@ export function buildParentReportEngineDecisionContract(input = {}) {
     blockPatternClaim,
     patternLayer,
     matchingEvidenceCount,
+    taxonomyId: detectedTaxonomyId,
+    subjectId,
   });
   if (patternLayer) traceReason.push(`patternLayer:${patternLayer}`);
   if (matchingEvidenceCount > 0) traceReason.push(`matchingEvidenceCount:${matchingEvidenceCount}`);

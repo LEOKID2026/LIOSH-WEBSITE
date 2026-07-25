@@ -82,7 +82,7 @@ const PARENT_DIAGNOSTIC_EXPLANATION_CATALOG = [
     lookupKey: "finding:taxonomy:M-07",
     explanationHe:
       "המערכת זיהתה קושי בהתאמת יחידת המידה לתשובה. ייתכן שהחישוב המספרי נכון, אבל צריך לבדוק אם התשובה צריכה להיות בקילוגרמים, מטרים, שקלים, דקות וכדומה.",
-    exampleHe: "5 ק״מ / 5 ק״ג",
+    exampleHe: "5 ק\"מ / 5 ק\"ג",
     status: "approved",
     approvalSource: "owner_math_batch_approved",
   },
@@ -154,7 +154,7 @@ const PARENT_DIAGNOSTIC_EXPLANATION_CATALOG = [
     lookupKey: "finding:taxonomy:G-06",
     explanationHe:
       "המערכת זיהתה קושי בהמרת יחידות לפני חישוב היקף או אורך. הכוונה היא לוודא שכל המידות באותה יחידה לפני שמחברים או משווים.",
-    exampleHe: "120 ס״מ = 1.2 מ׳",
+    exampleHe: "120 ס\"מ = 1.2 מ׳",
     status: "approved",
     approvalSource: "owner_geometry_batch_approved",
   },
@@ -338,7 +338,7 @@ const PARENT_DIAGNOSTIC_EXPLANATION_CATALOG = [
     lookupKey: "finding:taxonomy:S-05",
     explanationHe:
       "המערכת זיהתה קושי בשימוש נכון ביחידות מדידה ובהמרה ביניהן. הכוונה היא לבדוק אם מודדים אורך, מסה, זמן או נפח, ולהשתמש ביחידה המתאימה.",
-    exampleHe: "1000 גרם = 1 ק״ג",
+    exampleHe: "1000 גרם = 1 ק\"ג",
     status: "approved",
     approvalSource: "owner_science_subject_batch_approved",
   },
@@ -370,7 +370,7 @@ const PARENT_DIAGNOSTIC_EXPLANATION_CATALOG = [
     lookupKey: "finding:taxonomy:MG-01",
     explanationHe:
       "המערכת זיהתה קושי בהבנת סולם במפה. הכוונה היא להבין איך מרחק קטן במפה מייצג מרחק גדול יותר במציאות.",
-    exampleHe: "1 ס״מ במפה = 1 ק״מ במציאות",
+    exampleHe: "1 ס\"מ במפה = 1 ק\"מ במציאות",
     status: "approved",
     approvalSource: "owner_moledet_geography_batch_approved",
   },

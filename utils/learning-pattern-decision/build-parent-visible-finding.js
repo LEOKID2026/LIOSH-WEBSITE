@@ -46,33 +46,6 @@ export function findForbiddenParentWords(text) {
 }
 
 /**
- * @param {number} wrongCount
- * @param {number} questionCount
- * @param {number} accuracy
- */
-function difficultyVolumePhrase(wrongCount, questionCount, accuracy) {
-  const w = Math.max(0, Number(wrongCount) || 0);
-  const q = Math.max(0, Number(questionCount) || 0);
-  const acc = Number(accuracy) || 0;
-  const ratio = q > 0 ? w / q : 0;
-  if (ratio >= 0.5 || acc <= 40) return "הרבה טעויות";
-  return "כמה טעויות";
-}
-
-/**
- * @param {number} wrongCount
- * @param {number} questionCount
- * @param {number} accuracy
- */
-function difficultyActionPhrase(wrongCount, questionCount, accuracy) {
-  const w = Math.max(0, Number(wrongCount) || 0);
-  const q = Math.max(0, Number(questionCount) || 0);
-  const acc = Number(accuracy) || 0;
-  if (q >= 5 && (acc < 55 || w >= Math.ceil(q * 0.4))) return "לחזור ולחזק";
-  return "לחזור ולתרגל";
-}
-
-/**
  * @param {object} p
  * @param {string} p.topicName
  * @param {number} p.questionCount
@@ -124,8 +97,8 @@ export function buildParentVisibleFinding({
     parentWordingLevel = "factual_observation";
     parentVisibleFinding =
       q === 1
-        ? `בנושא ${name} יש נתונים ראשוניים בלבד. ככל שיהיו עוד שאלות בנושא, נוכל להציג תמונה מדויקת יותר.`
-        : `בנושא ${name} נפתרו ${q} שאלות. עדיין מוקדם לזהות דפוס ברור בנושא.`;
+        ? `בנושא ${name} יש כרגע מעט נתונים. ככל שיצטבר תרגול נוסף, נוכל להציג תמונה מדויקת יותר.`
+        : `בנושא ${name} נפתרו ${q} שאלות. עדיין מוקדם לקבוע אם קיים דפוס שחוזר בנושא.`;
     return { parentVisibleFinding, parentWordingLevel, templateId };
   }
 
@@ -155,8 +128,8 @@ export function buildParentVisibleFinding({
     templateId = "mixed";
     parentWordingLevel = "pattern_observed";
     parentVisibleFinding =
-      `בנושא ${name} יש גם הצלחות וגם נקודות שכדאי לחזק. ` +
-      `כדאי לחזק חלקים שדורשים תשומת לב, ובמקביל להמשיך לחזק את מה שכבר עובד.${contextSuffix}`;
+      `בנושא ${name} יש גם הצלחות וגם חלקים שדורשים חיזוק. ` +
+      `כדאי להמשיך לתרגל את מה שכבר עובד ולחזור בצורה ממוקדת על החלקים שבהם הופיעו טעויות.${contextSuffix}`;
     return { parentVisibleFinding, parentWordingLevel, templateId };
   }
 
@@ -168,14 +141,14 @@ export function buildParentVisibleFinding({
       parentWordingLevel =
         evidenceStrength === "strong" ? "strong_pattern" : "repeated_pattern";
       parentVisibleFinding =
-        `בנושא ${name} מופיע דפוס חוזר של טעויות (${patternLabel}). כדאי לחזק את הנושא.${contextSuffix}`;
+        `בנושא ${name} חזר אותו סוג של טעות: ${patternLabel}. כדאי לתרגל את החלק הזה בצורה ממוקדת.${contextSuffix}`;
       return { parentVisibleFinding, parentWordingLevel, templateId };
     } else if (rawPatternLabel) {
       templateId = "difficulty_repeated_evidence_tag";
       parentWordingLevel =
         evidenceStrength === "strong" ? "strong_pattern" : "repeated_pattern";
       parentVisibleFinding =
-        `בנושא ${name} מופיע דפוס חוזר של טעויות (${rawPatternLabel}). כדאי לחזק את הנושא.${contextSuffix}`;
+        `בנושא ${name} חזר אותו סוג של טעות: ${rawPatternLabel}. כדאי לתרגל את החלק הזה בצורה ממוקדת.${contextSuffix}`;
       return { parentVisibleFinding, parentWordingLevel, templateId };
     } else {
       templateId = "difficulty_repeated_generic";
@@ -192,14 +165,12 @@ export function buildParentVisibleFinding({
     topicStatus === "practice_focus" ||
     findingType === "practice_focus"
   ) {
-    const volume = difficultyVolumePhrase(w, q, acc);
-    const action = difficultyActionPhrase(w, q, acc);
     templateId = topicStatus === "practice_focus" || findingType === "practice_focus"
       ? "practice_focus"
       : "difficulty_observed";
     parentWordingLevel = q >= 5 ? "pattern_observed" : "factual_observation";
     parentVisibleFinding =
-      `בנושא ${name} ${volume === "הרבה טעויות" ? "היו הרבה טעויות" : "היו כמה טעויות"} בשאלות שנפתרו. כדאי ${action} את הנושא.${contextSuffix}`;
+      `בנושא ${name} נרשמו כמה טעויות בשאלות שנפתרו. כדאי לעבור על הטעויות ולתרגל שוב את החלקים שבהם הופיע קושי.${contextSuffix}`;
     return { parentVisibleFinding, parentWordingLevel, templateId };
   }
 
@@ -208,7 +179,7 @@ export function buildParentVisibleFinding({
     parentWordingLevel =
       evidenceStrength === "strong" ? "strong_pattern" : "pattern_observed";
     parentVisibleFinding =
-      `בנושא ${name} נראית הצלחה טובה ועקבית בשאלות שנפתרו.${contextSuffix}`;
+      `בנושא ${name} נראית הצלחה יציבה בשאלות שנפתרו.${contextSuffix}`;
     return { parentVisibleFinding, parentWordingLevel, templateId };
   }
 
@@ -217,18 +188,16 @@ export function buildParentVisibleFinding({
     parentWordingLevel =
       q >= 8 ? "pattern_observed" : "factual_observation";
     parentVisibleFinding =
-      `בנושא ${name} נראית הצלחה טובה בשאלות שנפתרו.${contextSuffix}`;
+      `בנושא ${name} נראית הצלחה טובה בשאלות שנפתרו עד עכשיו.${contextSuffix}`;
     return { parentVisibleFinding, parentWordingLevel, templateId };
   }
 
   if (topicStatus === "no_clear_pattern") {
     if (q >= 5 && w >= 2 && acc < 70) {
-      const volume = difficultyVolumePhrase(w, q, acc);
-      const action = difficultyActionPhrase(w, q, acc);
       templateId = "no_clear_pattern_difficulty_fallback";
       parentWordingLevel = "pattern_observed";
       parentVisibleFinding =
-        `בנושא ${name} ${volume === "הרבה טעויות" ? "היו הרבה טעויות" : "היו כמה טעויות"} בשאלות שנפתרו. כדאי ${action} את הנושא.${contextSuffix}`;
+        `בנושא ${name} נרשמו כמה טעויות בשאלות שנפתרו. כדאי לעבור על הטעויות ולתרגל שוב את החלקים שבהם הופיע קושי.${contextSuffix}`;
       return { parentVisibleFinding, parentWordingLevel, templateId };
     }
     templateId = "no_clear_pattern";
@@ -238,12 +207,10 @@ export function buildParentVisibleFinding({
   }
 
   if (q >= 5 && w >= 2 && acc < 70) {
-    const volume = difficultyVolumePhrase(w, q, acc);
-    const action = difficultyActionPhrase(w, q, acc);
     templateId = "difficulty_observed_fallback";
     parentWordingLevel = "pattern_observed";
     parentVisibleFinding =
-      `בנושא ${name} ${volume === "הרבה טעויות" ? "היו הרבה טעויות" : "היו כמה טעויות"} בשאלות שנפתרו. כדאי ${action} את הנושא.${contextSuffix}`;
+      `בנושא ${name} נרשמו כמה טעויות בשאלות שנפתרו. כדאי לעבור על הטעויות ולתרגל שוב את החלקים שבהם הופיע קושי.${contextSuffix}`;
     return { parentVisibleFinding, parentWordingLevel, templateId };
   }
 

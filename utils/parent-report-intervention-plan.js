@@ -1,5 +1,5 @@
-/**
- * Phase 8 — תוכנית התערבות מיקרומבנית לשורת נושא (מבוססת Phase 7).
+﻿/**
+ * Phase 8 - תוכנית התערבות מיקרומבנית לשורת נושא (מבוססת Phase 7).
  * טהור לוגית; לא תלוי React.
  */
 
@@ -52,10 +52,10 @@ export function buildInterventionPlanPhase8(ctx) {
     interventionFormat = "observation_block";
     interventionParentEffort = "low";
     interventionGoal = "collect_evidence";
-    stepsHe.push(`לצפות ב 2–3 תרגולים קצרים בנושא ${displayName} באותה רמת קושי - לרשום רק האם הילד קורא את המשימה לפני מענה.`);
+    stepsHe.push(`לצפות ב 2-3 תרגולים קצרים בנושא ${displayName} באותה רמת קושי - לרשום רק האם הילד קורא את המשימה לפני מענה.`);
     stepsHe.push("לא לשנות כיתה או רמה בבית בשלב זה.");
-    interventionSuccessSignalHe = "אחרי 2–3 מפגשים קצרים נראה אם הדפוס חוזר - אז אפשר להחמיר מיקוד.";
-    interventionStopSignalHe = "אם כל מפגש הופך למאבק - לצמצם אל 5–7 דקות ולחזור למחר.";
+    interventionSuccessSignalHe = "אחרי 2-3 מפגשים קצרים נראה אם הדפוס חוזר - אז אפשר להחמיר מיקוד.";
+    interventionStopSignalHe = "אם כל מפגש הופך למאבק - לצמצם אל 5-7 דקות ולחזור למחר.";
     doNowHe = "תרגול קצר ומדיד: אותה משימה, אותה רמה, דגש על קריאה לפני תשובה.";
     avoidNowHe = "לא לגזור מסקנות עמוקות ולא להחמיר רמה בגלל תוצאה בודדת.";
   } else if (rootCause === "speed_pressure") {
@@ -100,8 +100,8 @@ export function buildInterventionPlanPhase8(ctx) {
     interventionFormat = "guided_practice";
     interventionParentEffort = sparse ? "medium" : "high";
     interventionGoal = "core_skill_gap";
-    stepsHe.push(`בנושא ${displayName} לבחור 2–3 טעויות טיפוסיות ולחזור עליהן באותה רמה - לא להרחיב נושאים.`);
-    stepsHe.push("פעמיים בשבוע, 8–12 דקות - מספיק לביסוס אם עקבי.");
+    stepsHe.push(`בנושא ${displayName} לבחור 2-3 טעויות טיפוסיות ולחזור עליהן באותה רמה - לא להרחיב נושאים.`);
+    stepsHe.push("פעמיים בשבוע, 8-12 דקות - מספיק לביסוס אם עקבי.");
     interventionSuccessSignalHe = "כשאותו סוג טעות נעלם בשני מפגשים רצופים - סימן לייצוב.";
     interventionStopSignalHe = "אם אין שיפור אחרי שבועיים של עקביות - לעצור ולבחון רמה או ניסוח.";
     doNowHe = "חזרה ממוקדת על טעויות דומות באותה רמת קושי.";
@@ -177,10 +177,10 @@ export function buildInterventionPlanPhase8(ctx) {
     stepsHe: [...stepsHe],
     cadenceHe:
       interventionDurationBand === "very_short"
-        ? "2–3 מפגשים קצרים בשבוע (5–8 דקות)"
+        ? "2-3 מפגשים קצרים בשבוע (5-8 דקות)"
         : interventionDurationBand === "short"
-          ? "2 מפגשים בשבוע (כ 8–12 דקות)"
-          : "2–3 מפגשים בשבוע (עד ~15 דקות)",
+          ? "2 מפגשים בשבוע (כ 8-12 דקות)"
+          : "2-3 מפגשים בשבוע (עד ~15 דקות)",
   };
 
   const interventionPlanHe = [interventionPlan.headlineHe, ...stepsHe, interventionPlan.cadenceHe]

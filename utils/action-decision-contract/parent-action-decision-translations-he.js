@@ -1,12 +1,12 @@
 const COPY = Object.freeze({
   insufficient_information:
-    "עדיין אין מספיק פעילות כדי לקבוע אם נדרש חיזוק. מומלץ להשלים מספר תרגולים נוספים.",
+    "עדיין אין מספיק תרגול כדי לקבוע אם נדרש חיזוק. כדאי להשלים מספר תרגולים נוספים.",
   verification_needed:
-    "נראה דפוס שכדאי לבדוק בעזרת מספר שאלות ממוקדות לפני שינוי התרגול.",
+    "נראה סוג טעות שכדאי לבדוק בעזרת כמה שאלות ממוקדות לפני שינוי התרגול.",
   strengthening_needed:
-    "במספר פעילויות עצמאיות חזר קושי בנושא {{topic}}. מומלץ תרגול ממוקד וקצר.",
+    "בכמה פעילויות עצמאיות חזר קושי בנושא {{topic}}. כדאי לבצע תרגול קצר וממוקד.",
   progress_or_mastery:
-    "נראית התקדמות עקבית בנושא {{topic}}. מומלץ להמשיך במסלול הרגיל.",
+    "לא נבחר שינוי במסלול הלמידה בנושא {{topic}}.",
 });
 
 const LABELS = Object.freeze({
@@ -69,17 +69,17 @@ export function buildParentSystemActionLineHe(contract, { topicLabel = "" } = {}
         ? `המערכת תחזור לתרגל מיומנות בסיס קטנה לפני ${topic}.`
         : `המערכת תחזור לתרגל בסיס ב${topic} לפני שממשיכים הלאה.`;
     case "remove_timer":
-      return `המערכת תוריד לזמן קצר את לחץ הזמן ב${topic}, בלי לשנות את הנושא.`;
+      return `המערכת תסיר לזמן קצר את הגבלת הזמן ב${topic}, בלי לשנות את התוכן.`;
     case "reduce_reading_load":
-      return `המערכת תציג את השאלות ב${topic} בניסוח קצר יותר, בלי לשנות את המטרה.`;
+      return `המערכת תציג שאלות קצרות וברורות יותר ב${topic}, בלי לשנות את המטרה הלימודית.`;
     case "guided_to_independent_transition":
-      return `המערכת תעבור בהדרגה מליווי לעבודה עצמאית ב${topic}.`;
+      return `המערכת תפחית בהדרגה את העזרה ב${topic} ותעבור לעבודה עצמאית.`;
     case "maintain":
       return `המערכת תמשיך במסלול הרגיל ב${topic}.`;
     case "monitor_before_escalation":
       return `המערכת תמשיך לעקוב ב${topic} לפני שינוי נוסף.`;
     case "advance_cautiously":
-      return `המערכת תעלה בזהירות רמת אחת ב${topic}.`;
+      return `המערכת תעלה בהדרגה את רמת הקושי ב${topic}.`;
     default:
       return "";
   }
@@ -107,10 +107,10 @@ export function buildParentSafeActionDecisionV1(contract, {
   const actionLine = buildParentSystemActionLineHe(contract, { topicLabel: topic });
   const actionText =
     actionLine || fillTopic(COPY[state], subskill || topic);
-  const temporary = "הפעולה זמנית ואינה תיוג קבוע של הילד.";
+  const temporary = "הפעולה זמנית ותיבדק מחדש בהתאם לתרגול הבא.";
   const reevaluation = contract.reevaluation?.afterActivities
-    ? `ההחלטה תיבדק מחדש לאחר ${contract.reevaluation.afterActivities} פעילות או כאשר תתקבל ראיה עצמאית חדשה.`
-    : "ההחלטה תיבדק מחדש כאשר תתקבל ראיה עצמאית חדשה.";
+    ? `ההחלטה תיבדק מחדש לאחר ${contract.reevaluation.afterActivities} פעילויות או כאשר תתקבל ראיה חדשה מתרגול נוסף.`
+    : "ההחלטה תיבדק מחדש כאשר תתקבל ראיה חדשה מתרגול נוסף.";
   return {
     contractVersion: "parent-action-decision-v1",
     state,

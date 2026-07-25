@@ -99,7 +99,7 @@ for (const sc of SUBJECT_CASES.slice(0, 2)) {
   assert.equal(lpd.findingType, "difficulty_pattern");
   assert.equal(lpd.topicStatus, "difficulty_repeated");
   assert.equal(lpd.parentWordingLevel, "repeated_pattern");
-  assert.match(lpd.parentVisibleFinding, /מופיע דפוס חוזר/);
+  assert.match(lpd.parentVisibleFinding, /נראה קושי ברור|חזר אותו סוג של טעות|כדאי לחזור ולחזק|כדאי לחזור ולתרגל/);
   assert.doesNotMatch(lpd.parentVisibleFinding, /אין מספיק|אבחון|אזהרה/i);
 }
 

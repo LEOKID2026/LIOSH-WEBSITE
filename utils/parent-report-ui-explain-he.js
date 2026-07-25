@@ -300,10 +300,10 @@ export function phase8PracticeCalibrationLineHe(rowOrRec) {
   const countOk = Number.isFinite(n) && n > 0;
   const len =
     src.recommendedSessionLengthBand === "very_short"
-      ? "5–8 דק׳"
+      ? "5-8 דקות"
       : src.recommendedSessionLengthBand === "moderate"
         ? "עד ~15 דק׳"
-        : "8–12 דק׳";
+        : "8-12 דקות";
   if (!countOk) return "";
   return `${n} פעמים בשבוע, כ ${len} בכל פעם.`;
 }

@@ -186,9 +186,13 @@ const TAG_TO_TAXONOMY_ID = (() => {
 })();
 
 function taxonomyLabelHe(taxonomyId) {
-  const row = TAXONOMY_BY_ID[String(taxonomyId || "")];
+  const id = String(taxonomyId || "");
+  const row = TAXONOMY_BY_ID[id];
   if (!row?.patternHe) return null;
-  return resolveParentPatternLabelForDisplay(String(row.patternHe).trim()) || String(row.patternHe).trim();
+  return (
+    resolveParentPatternLabelForDisplay(String(row.patternHe).trim(), { taxonomyId: id }) ||
+    String(row.patternHe).trim()
+  );
 }
 
 function taxonomyIdFromPatternTag(tag) {
