@@ -515,7 +515,7 @@ export function buildLpdSafeTopicExplainSectionsHe(row) {
   if (q <= 2) {
     const topicShort = topicName.replace(/\s*-\s*כיתה\s*[א-ט״']+\s*$/u, "").trim() || topicName;
     return {
-      identified: guardParentFacingText(`מה נמצא: יש כרגע מעט שאלות בנושא ${topicShort}.`),
+      identified: guardParentFacingText(`מה רואים: יש כרגע מעט שאלות בנושא ${topicShort}.`),
       data: guardParentFacingText(
         bundle.evidence ||
           buildParentMetricsDataLineHe({ ...metrics, questions: q }, topicShort),
@@ -534,8 +534,8 @@ export function buildLpdSafeTopicExplainSectionsHe(row) {
 
   const ownerSections = resolveTopicExplainOwnerSectionsHe(enriched);
   const identified = bundle.finding
-    ? guardParentFacingText(`מה נמצא: ${bundle.finding}`)
-    : guardParentFacingText(ownerSections?.identified || `מה נמצא: מיקוד בנושא ${topicName}.`);
+    ? guardParentFacingText(`מה רואים: ${bundle.finding}`)
+    : guardParentFacingText(ownerSections?.identified || `מה רואים: מיקוד בנושא ${topicName}.`);
   const data = guardParentFacingText(
     bundle.evidence
       ? `על מה זה מבוסס: ${bundle.evidence}`
