@@ -124,7 +124,7 @@ function buildParentSafeFindingFromEngine(p) {
   if (hasPattern && !p.blockPatternClaim && patternLayer === "secondary_observed") {
     const times =
       matchCount > 0 ? `${matchCount} פעמים` : "מספר פעמים";
-    return `בנושא ${name} לא הופיע דפוס מרכזי אחד, אבל חזר אותו סוג של טעות: ${pattern} (${times}). כדאי לשים לב לכך בתרגול הבא.${suffix}`;
+    return `בנושא ${name} לא הופיע דפוס מרכזי אחד, אבל אותו סוג של טעות חזר ${times}: ${pattern}. מומלץ לחזור על החלק הזה בתרגול הבא ולבדוק אם הטעות חוזרת.${suffix}`;
   }
 
   // Primary/dominant pattern claims require detectedPattern — never invent from misconceptionLabel alone
