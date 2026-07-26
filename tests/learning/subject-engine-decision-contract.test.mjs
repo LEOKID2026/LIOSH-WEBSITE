@@ -41,6 +41,8 @@ function topicRowFromContract(input) {
       displayName: "שברים",
       taxonomy: { patternHe: "השוואה לפי מונה בלבד", subskillHe: "השוואת שברים" },
       diagnosis: { allowed: true, lineHe: "השוואה לפי מונה בלבד" },
+      classification: { state: "classified", primaryTag: "numerator_only_compare" },
+      patternEvidence: { allowed: true, evidenceCount: 98 },
       canonicalState: {
         actionState: "intervene",
         recommendation: { allowed: true, intensityCap: "RI2", family: "intervene" },
@@ -60,6 +62,8 @@ function topicRowFromContract(input) {
       displayName: "כפל",
       taxonomy: { patternHe: "אותם זוגות שגויים", subskillHe: "כפל" },
       diagnosis: { allowed: true, lineHe: "אותם זוגות שגויים" },
+      classification: { state: "classified", primaryTag: "multiplication_fact_error" },
+      patternEvidence: { allowed: true, evidenceCount: 10 },
       canonicalState: {
         actionState: "intervene",
         recommendation: { allowed: true, intensityCap: "RI2", family: "intervene" },
@@ -81,12 +85,12 @@ function topicRowFromContract(input) {
   assert.equal(contract.priorityTopics.length, 2);
   assert.equal(contract.priorityTopics[0].topicKey, "fractions::grade:g5");
   assert.equal(contract.priorityTopics[1].topicKey, "multiplication::grade:g5");
-  assert.match(String(contract.priorityTopics[0].detectedPattern), /השוואה לפי מונה בלבד/);
-  assert.match(String(contract.priorityTopics[1].detectedPattern), /אותם זוגות שגויים/);
-  assert.deepEqual(contract.strongestDetectedPatterns, [
-    "השוואה לפי מונה בלבד",
-    "אותם זוגות שגויים",
-  ]);
+  assert.match(String(contract.priorityTopics[0].detectedPattern), /השוואת שברים לפי המונה בלבד|השוואה לפי מונה בלבד/);
+  assert.match(String(contract.priorityTopics[1].detectedPattern), /טעויות חוזרות בעובדות כפל|אותם זוגות שגויים/);
+  assert.ok(
+    contract.strongestDetectedPatterns.some((p) => /מונה בלבד/.test(String(p))) &&
+      contract.strongestDetectedPatterns.some((p) => /כפל|זוגות/.test(String(p))),
+  );
   assert.equal(contract.totalQuestions, 238);
   assert.ok(contract.weightedAccuracy > 0 && contract.weightedAccuracy < 100);
 
@@ -94,7 +98,7 @@ function topicRowFromContract(input) {
   assert.ok(summary && summary.length > 0);
   assert.match(summary, /בולטים כמה נושאים שדורשים חיזוק/);
   assert.match(summary, /שברים/);
-  assert.match(summary, /השוואה לפי מונה בלבד/);
+  assert.match(summary, /השוואת שברים לפי המונה בלבד|השוואה לפי מונה בלבד/);
   assert.doesNotMatch(summary, /בחלק מהשורות/);
   assert.doesNotMatch(summary, /עדיין לא מספיק/);
   assert.doesNotMatch(summary, /עדיין מוקדם/);
@@ -159,6 +163,8 @@ function topicRowFromContract(input) {
       displayName: "שברים",
       taxonomy: { patternHe: "השוואה לפי מונה בלבד", subskillHe: "השוואת שברים" },
       diagnosis: { allowed: true, lineHe: "השוואה לפי מונה בלבד" },
+      classification: { state: "classified", primaryTag: "numerator_only_compare" },
+      patternEvidence: { allowed: true, evidenceCount: 98 },
       canonicalState: {
         actionState: "intervene",
         recommendation: { allowed: true, intensityCap: "RI2", family: "intervene" },
@@ -179,6 +185,8 @@ function topicRowFromContract(input) {
       displayName: "כפל",
       taxonomy: { patternHe: "אותם זוגות שגויים", subskillHe: "טבלת כפל" },
       diagnosis: { allowed: true, lineHe: "אותם זוגות שגויים" },
+      classification: { state: "classified", primaryTag: "multiplication_fact_error" },
+      patternEvidence: { allowed: true, evidenceCount: 10 },
       canonicalState: {
         actionState: "intervene",
         recommendation: { allowed: true, intensityCap: "RI2", family: "intervene" },

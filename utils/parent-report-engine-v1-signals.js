@@ -14,6 +14,7 @@ import { mapTaxonomyToMistakePatternFamily } from "./parent-report-engine-taxono
  */
 export function computeEngineConfidenceTier(q) {
   const n = Number(q) || 0;
+  // Final product bands: 1–4 → T0, 5–9 → T1, 10–19 → T2, 20–49 → T3, 50+ → T4
   if (n < 5) return "T0";
   if (n < 10) return "T1";
   if (n < 20) return "T2";
@@ -153,24 +154,29 @@ export function buildEngineDiagnosticDecision(p) {
   let topicWeaknessLevel = "none";
 
   if (tier === "T0") {
+    // 1–4 questions: never mastery / partial_stable; stay insufficient_data
     engineDecision = "insufficient_data";
     topicWeaknessLevel = "none";
     guardrailsApplied.push("insufficient_at_t0");
     why.push("volume_below_5");
   } else if (accuracyBand === "mastery") {
+    // mastery_stable only from 10+ questions
     engineDecision = q >= 10 ? "mastery_stable" : "early_direction_only";
     topicWeaknessLevel = "none";
     if (q < 10) guardrailsApplied.push("mastery_100_low_q");
     why.push("accuracy_band_mastery");
   } else if (accuracyBand === "partial_good") {
-    engineDecision = tier >= "T2" ? "partial_stable" : "early_direction_only";
+    // 5–9 with ≥70% → early_direction_only; 10+ → partial_stable
+    engineDecision = q >= 10 ? "partial_stable" : "early_direction_only";
     topicWeaknessLevel = "emerging";
     why.push("accuracy_band_partial_good");
   } else if (accuracyBand === "needs_strengthening") {
+    // 5–9 and 10+: topic_needs_strengthening when 50–69%
     engineDecision = "topic_needs_strengthening";
-    topicWeaknessLevel = tier >= "T2" ? "moderate" : "emerging";
+    topicWeaknessLevel = q >= 10 ? "moderate" : "emerging";
     why.push("accuracy_band_needs_strengthening");
   } else if (accuracyBand === "clear_gap") {
+    // 5+ with <50% → clear_topic_gap (T1+)
     engineDecision = tier >= "T1" ? "clear_topic_gap" : "insufficient_data";
     topicWeaknessLevel = tier >= "T2" ? "clear" : "moderate";
     why.push("accuracy_band_clear_gap");

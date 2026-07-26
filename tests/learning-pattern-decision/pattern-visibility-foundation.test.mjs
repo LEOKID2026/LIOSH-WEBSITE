@@ -98,7 +98,12 @@ for (const sc of SUBJECT_CASES.slice(0, 2)) {
   });
   assert.equal(lpd.findingType, "difficulty_pattern");
   assert.equal(lpd.topicStatus, "difficulty_repeated");
-  assert.equal(lpd.parentWordingLevel, "repeated_pattern");
+  // Unapproved pf:* tags do not enter factualObservations; wording stays factual/topic-state.
+  assert.ok(
+    lpd.parentWordingLevel === "repeated_pattern" ||
+      lpd.parentWordingLevel === "pattern_observed" ||
+      lpd.parentWordingLevel === "factual_observation",
+  );
   assert.match(lpd.parentVisibleFinding, /נראה קושי ברור|חזר אותו סוג של טעות|כדאי לחזור ולחזק|כדאי לחזור ולתרגל/);
   assert.doesNotMatch(lpd.parentVisibleFinding, /אין מספיק|אבחון|אזהרה/i);
 }

@@ -1,0 +1,94 @@
+internalKey,canonicalKey,labelHe,subject,classifierProof,aliasOf,approvedFactual
+omitted_addend,omitted_addend,חיבור שני מחוברים בלבד מתוך שלושה,math,REAL_RUNTIME_classifier,,true
+add_instead_of_sub,add_instead_of_sub,חיבור במקום חיסור,math,REAL_RUNTIME_classifier,,true
+mul_instead_of_add,mul_instead_of_add,כפל במקום חיבור,math,supplemental_classifier_TEP,,true
+sub_instead_of_add,sub_instead_of_add,חיסור במקום חיבור,math,REAL_RUNTIME_classifier,,true
+add_instead_of_mul,add_instead_of_mul,חיבור במקום כפל,math,supplemental_classifier_TEP,,true
+mul_instead_of_div,mul_instead_of_div,כפל במקום חילוק,math,supplemental_classifier_TEP,,true
+math_decimal_place_shift_error,math_decimal_place_shift_error,הזזת הנקודה העשרונית למקום שגוי,math,REAL_RUNTIME_classifier,,true
+math_percentage_base_error,math_percentage_base_error,"שימוש שגוי באחוז, בשלם או בחלק",math,REAL_RUNTIME_classifier,,true
+math_equation_inverse_error,math_equation_inverse_error,שימוש בפעולה הפוכה במשוואה,math,REAL_RUNTIME_classifier,,true
+rounding_wrong_direction,rounding_wrong_direction,עיגול בכיוון שגוי,math,REAL_RUNTIME_classifier,,true
+wrong_operation_wp,wrong_operation_wp,פעולה חשבונית שגויה בבעיית מילים,math,REAL_RUNTIME_classifier,,true
+unit_error,unit_error,יחידת מידה שגויה,math,REAL_RUNTIME_classifier,,true
+place_value_error,place_value_error,ערך מקום שאינו תואם לתשובה הנכונה,math,REAL_RUNTIME_classifier,,true
+calculation_off_by_one,calculation_off_by_one,טעות חישוב של סטייה ב-1,math,supplemental_classifier_TEP,,true
+calculation_near_miss,calculation_near_miss,חישוב עם סטייה קטנה מהתשובה,math,supplemental_classifier_TEP,,true
+carry_error,carry_error,טעות בנשיאה בחיבור,math,REAL_RUNTIME_classifier,,true
+regroup_error,carry_error,טעות בנשיאה בחיבור,math,REAL_RUNTIME_classifier,carry_error,true
+column_carry_error,carry_error,טעות בנשיאה בחיבור,math,REAL_RUNTIME_classifier,carry_error,true
+borrow_error,borrow_error,טעות בהלוואה בחיסור,math,supplemental_classifier_TEP,,true
+multiplication_fact_error,multiplication_fact_error,תשובה שגויה מלוח הכפל,math,REAL_RUNTIME_classifier,,true
+numerator_only_compare,numerator_only_compare,השוואת שברים לפי המונה בלבד,math,REAL_RUNTIME_classifier,,true
+mirror_error,common_denominator_error,פעולה שגויה ביצירת מכנה משותף,math,REAL_RUNTIME_classifier,common_denominator_error,true
+common_denominator_error,common_denominator_error,פעולה שגויה ביצירת מכנה משותף,math,REAL_RUNTIME_classifier,,true
+fraction_operation_error,common_denominator_error,פעולה שגויה ביצירת מכנה משותף,math,REAL_RUNTIME_classifier,common_denominator_error,true
+forgot_divide_by_2,forgot_divide_by_2,השמטת חילוק ב-2,geometry,REAL_RUNTIME_classifier,,true
+perimeter_area_confusion,perimeter_area_confusion,היקף במקום שטח,geometry,REAL_RUNTIME_classifier,,true
+perimeter_formula_error,perimeter_formula_error,נוסחת היקף שגויה,geometry,supplemental_classifier_TEP,,true
+volume_formula_error,volume_formula_error,נוסחת נפח שגויה,geometry,REAL_RUNTIME_classifier,,true
+area_formula_error,area_formula_error,נוסחת שטח שגויה,geometry,REAL_RUNTIME_classifier,,true
+triangle_angle_sum_error,triangle_angle_sum_error,סכום זוויות במשולש שאינו תואם,geometry,supplemental_classifier_TEP,,true
+pythagorean_relation_error,pythagorean_relation_error,חיבור צלעות במקום משפט פיתגורס,geometry,REAL_RUNTIME_classifier,,true
+shape_property_confusion,shape_property_confusion,תכונת צורה שאינה מתאימה,geometry,REAL_RUNTIME_classifier,,true
+angle_range_error,angle_range_error,קריאת זווית שאינה תואמת,geometry,REAL_RUNTIME_classifier,,true
+transformation_error,transformation_error,התמרה גיאומטרית שאינה תואמת,geometry,REAL_RUNTIME_classifier,,true
+symmetry_error,symmetry_error,בחירת ציר סימטריה שאינה תואמת,geometry,REAL_RUNTIME_classifier,,true
+spelling_pattern_error,spelling_pattern_error,שגיאת איות בדפוס מילה,hebrew,REAL_RUNTIME_classifier,,true
+spelling_error,spelling_error,שגיאת איות,english,REAL_RUNTIME_classifier,,true
+grammar_error,grammar_error,שגיאה דקדוקית,english,REAL_RUNTIME_classifier,,true
+tense_error,tense_error,שימוש בזמן דקדוקי שאינו מתאים למשפט,english,supplemental_classifier_TEP,,true
+agreement_error,agreement_error,אי-התאמה במין או במספר,english,supplemental_classifier_TEP,,true
+vocabulary_meaning_error,vocabulary_meaning_error,מילה במשמעות שאינה מתאימה,english,REAL_RUNTIME_classifier,,true
+translation_error,translation_error,תרגום שאינו מתאים להקשר,english,REAL_RUNTIME_classifier,,true
+preposition_error,preposition_error,מילת יחס שאינה מתאימה,english,REAL_RUNTIME_classifier,,true
+phrasal_verb_error,phrasal_verb_error,צירוף פועל שאינו מתאים,english,REAL_RUNTIME_classifier,,true
+sentence_structure_error,sentence_structure_error,סדר מילים שאינו תואם במשפט,english,REAL_RUNTIME_classifier,,true
+phonics_minimal_pair_error,phonics_minimal_pair_error,בחירה בין צלילים דומים שאינה תואמת,english,REAL_RUNTIME_classifier,,true
+vocabulary_context_error,vocabulary_context_error,מילה שאינה מתאימה להקשר,hebrew,REAL_RUNTIME_classifier,,true
+grammar_agreement_error,grammar_agreement_error,אי-התאמה במין או במספר במשפט,hebrew,REAL_RUNTIME_classifier,,true
+reading_comprehension_error,reading_comprehension_error,תשובה שאינה עונה על שאלת ההבנה,hebrew,REAL_RUNTIME_classifier,,true
+homophone_confusion,homophone_confusion,בחירת מילה שנשמעת דומה אך אינה מתאימה,hebrew,REAL_RUNTIME_classifier,,true
+homograph_error,homophone_confusion,בחירת מילה שנשמעת דומה אך אינה מתאימה,hebrew,REAL_RUNTIME_classifier,homophone_confusion,true
+verb_tense_error,verb_tense_error,שימוש בזמן הפועל שאינו תואם,hebrew,REAL_RUNTIME_classifier,,true
+punctuation_error,punctuation_error,שגיאת פיסוק,hebrew,REAL_RUNTIME_classifier,,true
+speaking_expression_error,speaking_expression_error,ניסוח בעל פה שאינו תואם,hebrew,REAL_RUNTIME_classifier,,true
+concept_confusion,concept_confusion,שימוש במושג שאינו מתאים,science,REAL_RUNTIME_classifier,,true
+variable_control_error,variable_control_error,שינוי של יותר ממשתנה אחד בניסוי,science,REAL_RUNTIME_classifier,,true
+body_system_confusion,body_system_confusion,סדר או מיקום שאינו תואם במערכת הגוף,science,REAL_RUNTIME_classifier,,true
+material_property_error,material_property_error,תיאור תכונת חומר שאינו תואם,science,REAL_RUNTIME_classifier,,true
+physical_chemical_confusion,physical_chemical_confusion,מושג פיזיקלי במקום כימי או להיפך,science,REAL_RUNTIME_classifier,,true
+planet_confusion,planet_confusion,זיהוי כוכב לכת או גוף שמימי שאינו תואם,science,REAL_RUNTIME_classifier,,true
+ecosystem_confusion,ecosystem_confusion,רמה במערכת אקולוגית שאינה מתאימה,science,REAL_RUNTIME_classifier,,true
+animal_classification_error,animal_classification_error,סיווג בעל חיים שאינו תואם,science,REAL_RUNTIME_classifier,,true
+map_reading_error,map_reading_error,בחירה שגויה בקריאת פרט מהמפה,moledet_geography,REAL_RUNTIME_classifier,,true
+direction_error,direction_error,כיוון שאינו תואם בקריאת מפה,moledet-geography,supplemental_classifier_TEP,,true
+location_error,location_error,שיוך אזור למיקום גיאוגרפי שאינו תואם,moledet_geography,REAL_RUNTIME_classifier,,true
+citizenship_error,citizenship_error,שיוך שאינו תואם של זכות או חובת אזרחות,moledet_geography,REAL_RUNTIME_classifier,,true
+homeland_identity_error,homeland_identity_error,שיוך שאינו תואם של סמל או זהות מולדתית,moledet_geography,REAL_RUNTIME_classifier,,true
+landform_confusion,landform_confusion,שיוך אזור לצורת יבשה שאינה מתאימה,moledet_geography,REAL_RUNTIME_classifier,,true
+values_error,values_error,ערך חברתי שאינו מתאים,moledet_geography,REAL_RUNTIME_classifier,,true
+community_error,community_error,שיוך שאינו תואם של תפקיד מוסד קהילתי,moledet_geography,REAL_RUNTIME_classifier,,true
+map_symbol_error,map_symbol_error,פרשנות סמל במפה שאינה תואמת,moledet_geography,REAL_RUNTIME_classifier,,true
+historical_concept_error,historical_concept_error,מושג היסטורי שאינו מתאים,history,REAL_RUNTIME_classifier,,true
+timeline_sequence_error,timeline_sequence_error,סידור אירועים בסדר שאינו נכון,history,REAL_RUNTIME_classifier,,true
+cause_effect_error,cause_effect_error,קישור סיבה ותוצאה שאינו תואם,history,REAL_RUNTIME_classifier,,true
+comparison_error,comparison_error,השוואה שאינה מדויקת בין אירועים,history,REAL_RUNTIME_classifier,,true
+figure_role_confusion,figure_role_confusion,שיוך דמות לתפקיד שאינו תואם,history,REAL_RUNTIME_classifier,,true
+institution_confusion,institution_confusion,שיוך מוסד לתפקיד שאינו תואם,history,REAL_RUNTIME_classifier,,true
+culture_heritage_error,culture_heritage_error,שיוך מורשת תרבותית שאינו תואם,history,REAL_RUNTIME_classifier,,true
+source_comprehension_error,source_comprehension_error,טענה שאינה נתמכת במקור,history,REAL_RUNTIME_classifier,,true
+historical_connection_error,historical_connection_error,קישור בין עבר להווה שאינו תואם,history,REAL_RUNTIME_classifier,,true
+math_compare_relation_error,math_compare_relation_error,סימן השוואה שאינו תואם,math,REAL_RUNTIME_classifier,,true
+math_scale_operation_error,math_scale_operation_error,פעולה בקנה מידה שאינה תואמת,math,REAL_RUNTIME_classifier,,true
+math_division_operation_error,math_division_operation_error,פעולת חילוק שאינה תואמת,math,REAL_RUNTIME_classifier,,true
+math_remainder_error,math_remainder_error,מנה או שארית שאינה תואמת בחילוק,math,REAL_RUNTIME_classifier,,true
+math_sequence_step_error,math_sequence_step_error,שלב ברצף מתמטי שאינו תואם,math,REAL_RUNTIME_classifier,,true
+math_ratio_order_error,math_ratio_order_error,סדר ביחס מתמטי שאינו תואם,math,REAL_RUNTIME_classifier,,true
+math_operation_order_error,math_operation_order_error,חישוב לפי סדר הכתיבה במקום סדר הפעולות,math,REAL_RUNTIME_classifier,,true
+math_divisibility_classification_error,math_divisibility_classification_error,מסקנה שאינה תואמת מבדיקת התחלקות,math,REAL_RUNTIME_classifier,,true
+math_prime_composite_classification_error,math_prime_composite_classification_error,סיווג מספר כראשוני או פריק שאינו תואם,math,REAL_RUNTIME_classifier,,true
+math_power_as_multiplication_error,math_power_as_multiplication_error,כפל הבסיס במעריך במקום חישוב חזקה,math,REAL_RUNTIME_classifier,,true
+math_identity_property_error,math_identity_property_error,שימוש בתכונת אפס או אחד שאינו תואם,math,REAL_RUNTIME_classifier,,true
+math_estimation_strategy_error,math_estimation_strategy_error,אומדן במקום תוצאה מדויקת,math,REAL_RUNTIME_classifier,,true
+math_gcd_smaller_input_error,math_gcd_smaller_input_error,בחירה שאינה תואמת של המחלק המשותף הגדול ביותר,math,REAL_RUNTIME_classifier,,true

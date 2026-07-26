@@ -1,0 +1,896 @@
+{
+  "generatedAt": "2026-07-26T19:39:40.374Z",
+  "mode": "post_fix_local_only",
+  "commitPushDeploy": false,
+  "provenTagsWithFactualLabel": 93,
+  "provenTagsMissingLabel": 0,
+  "aliasesUnified": [
+    "variable_control_confusion→variable_control_error",
+    "experiment_variable_control→variable_control_error",
+    "material_property_confusion→material_property_error",
+    "physical_change_confusion→physical_chemical_confusion",
+    "chemical_change_confusion→physical_chemical_confusion",
+    "earth_space_confusion→planet_confusion",
+    "classification_error→animal_classification_error",
+    "environment_error→ecosystem_confusion",
+    "geography_feature_error→landform_confusion",
+    "transform_confusion→transformation_error",
+    "fact_recall_gap→historical_concept_error",
+    "chronology_error→timeline_sequence_error",
+    "sequence_error→timeline_sequence_error",
+    "cause_effect_confusion→cause_effect_error",
+    "cause_effect_reversal→cause_effect_error",
+    "past_present_confusion→historical_connection_error",
+    "past_present_link_error→historical_connection_error",
+    "cultural_influence_confusion→culture_heritage_error",
+    "evidence_claim_error→source_comprehension_error",
+    "heritage_confusion→homeland_identity_error",
+    "rights_duties_confusion→citizenship_error",
+    "map_scale_error→map_reading_error",
+    "symbol_confusion→map_symbol_error",
+    "preposition_confusion→preposition_error",
+    "article_confusion→preposition_error",
+    "tense_confusion→grammar_error",
+    "agreement_confusion→grammar_agreement_error",
+    "vocabulary_context_confusion→vocabulary_context_error",
+    "reading_comprehension_confusion→reading_comprehension_error",
+    "phrasal_confusion→phrasal_verb_error",
+    "sentence_order_error→sentence_structure_error",
+    "shape_confusion→shape_property_confusion",
+    "angle_confusion→angle_range_error",
+    "area_confusion→area_formula_error",
+    "volume_confusion→volume_formula_error",
+    "symmetry_confusion→symmetry_error",
+    "mul_fact_error→multiplication_fact_error",
+    "regroup_error→carry_error",
+    "column_carry_error→carry_error",
+    "wrong_unit→unit_error",
+    "unit_conversion_confusion→unit_error",
+    "mirror_error→common_denominator_error",
+    "fraction_operation_error→common_denominator_error",
+    "homograph_error→homophone_confusion",
+    "timeline_error→timeline_sequence_error",
+    "sequence_confusion→timeline_sequence_error",
+    "place_identification_error→location_error",
+    "detail_recall_error→location_error",
+    "grammar_forms→grammar_error",
+    "hebrew_agreement_error→grammar_agreement_error",
+    "vocabulary_confusion→vocabulary_context_error",
+    "ecosystem_relation_confusion→ecosystem_confusion",
+    "earth_space_error→planet_confusion",
+    "state_of_matter_error→physical_chemical_confusion",
+    "procedure_order_confusion→concept_confusion",
+    "reading_comprehension_error→reading_comprehension_error",
+    "concept_confusion→concept_confusion",
+    "direction_confusion→map_symbol_error",
+    "visual_reasoning_error→shape_property_confusion",
+    "square_properties→shape_property_confusion",
+    "rectangle_properties→shape_property_confusion",
+    "shape_angle_properties→angle_range_error",
+    "triangle_angle_sum→angle_range_error",
+    "translation_reflection→transformation_error",
+    "rotation_transform→transformation_error",
+    "reflection_symmetry→symmetry_error",
+    "area_general→area_formula_error",
+    "volume_general→volume_formula_error",
+    "perimeter_general→perimeter_area_confusion",
+    "comprehension_gap→reading_comprehension_error",
+    "grammar_pattern_error→grammar_error",
+    "mammal_classification→animal_classification_error",
+    "properties_confusion→material_property_error",
+    "matter_state_confusion→physical_chemical_confusion",
+    "earth_space_planet_confusion→planet_confusion",
+    "careless_error→concept_confusion"
+  ],
+  "noFixClassification": [
+    {
+      "tag": "omitted_step",
+      "classification": "producer_exists_but_fixture_missing",
+      "producerActive": true
+    },
+    {
+      "tag": "multi_step_failure",
+      "classification": "producer_exists_but_fixture_missing",
+      "producerActive": true
+    },
+    {
+      "tag": "wrong_final_step",
+      "classification": "producer_exists_but_fixture_missing",
+      "producerActive": true
+    },
+    {
+      "tag": "operand_reversal",
+      "classification": "producer_exists_but_fixture_missing",
+      "producerActive": true
+    },
+    {
+      "tag": "reverse_direction",
+      "classification": "alias",
+      "producerActive": true
+    },
+    {
+      "tag": "percentage_base_error",
+      "classification": "alias",
+      "producerActive": true
+    },
+    {
+      "tag": "equation_sign_error",
+      "classification": "producer_exists_but_fixture_missing",
+      "producerActive": true
+    },
+    {
+      "tag": "inverse_operation_error",
+      "classification": "alias",
+      "producerActive": true
+    },
+    {
+      "tag": "rounding_direction_error",
+      "classification": "alias",
+      "producerActive": true
+    },
+    {
+      "tag": "column_arithmetic_error",
+      "classification": "producer_exists_but_fixture_missing",
+      "producerActive": true
+    },
+    {
+      "tag": "number_sense_error",
+      "classification": "producer_exists_but_fixture_missing",
+      "producerActive": true
+    },
+    {
+      "tag": "fact_error",
+      "classification": "alias",
+      "producerActive": true
+    },
+    {
+      "tag": "denominator_only_compare",
+      "classification": "producer_exists_but_fixture_missing",
+      "producerActive": true
+    },
+    {
+      "tag": "fraction_compare_error",
+      "classification": "producer_exists_but_fixture_missing",
+      "producerActive": true
+    },
+    {
+      "tag": "decimal_place_error",
+      "classification": "alias",
+      "producerActive": true
+    },
+    {
+      "tag": "volume_perimeter_confusion",
+      "classification": "producer_exists_but_fixture_missing",
+      "producerActive": true
+    },
+    {
+      "tag": "height_base_confusion",
+      "classification": "producer_exists_but_fixture_missing",
+      "producerActive": true
+    },
+    {
+      "tag": "parallelogram_area_error",
+      "classification": "producer_exists_but_fixture_missing",
+      "producerActive": true
+    },
+    {
+      "tag": "formula_error",
+      "classification": "dormant",
+      "producerActive": true
+    },
+    {
+      "tag": "triangle_area_error",
+      "classification": "alias",
+      "producerActive": true
+    },
+    {
+      "tag": "formula_selection_error",
+      "classification": "dormant",
+      "producerActive": true
+    },
+    {
+      "tag": "rectangle_diagonal",
+      "classification": "unreachable_producer",
+      "producerActive": true
+    },
+    {
+      "tag": "square_perimeter_compute",
+      "classification": "unreachable_producer",
+      "producerActive": true
+    },
+    {
+      "tag": "circle_perimeter_compute",
+      "classification": "unreachable_producer",
+      "producerActive": true
+    },
+    {
+      "tag": "rotation_direction_error",
+      "classification": "producer_exists_but_fixture_missing",
+      "producerActive": true
+    },
+    {
+      "tag": "writing_pattern_error",
+      "classification": "producer_exists_but_fixture_missing",
+      "producerActive": true
+    },
+    {
+      "tag": "writing_error",
+      "classification": "producer_exists_but_fixture_missing",
+      "producerActive": true
+    }
+  ],
+  "labelBeforeAfter": [
+    {
+      "tag": "omitted_addend",
+      "beforeHadLabel": false,
+      "afterLabelHe": "חיבור שני מחוברים בלבד מתוך שלושה",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "add_instead_of_sub",
+      "beforeHadLabel": false,
+      "afterLabelHe": "חיבור במקום חיסור",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "mul_instead_of_add",
+      "beforeHadLabel": false,
+      "afterLabelHe": "כפל במקום חיבור",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "sub_instead_of_add",
+      "beforeHadLabel": false,
+      "afterLabelHe": "חיסור במקום חיבור",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "add_instead_of_mul",
+      "beforeHadLabel": false,
+      "afterLabelHe": "חיבור במקום כפל",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "mul_instead_of_div",
+      "beforeHadLabel": false,
+      "afterLabelHe": "כפל במקום חילוק",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "math_decimal_place_shift_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "הזזת הנקודה העשרונית למקום שגוי",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "math_percentage_base_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "שימוש שגוי באחוז, בשלם או בחלק",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "math_equation_inverse_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "שימוש בפעולה הפוכה במשוואה",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "rounding_wrong_direction",
+      "beforeHadLabel": false,
+      "afterLabelHe": "עיגול בכיוון שגוי",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "wrong_operation_wp",
+      "beforeHadLabel": false,
+      "afterLabelHe": "פעולה חשבונית שגויה בבעיית מילים",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "unit_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "יחידת מידה שגויה",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "place_value_error",
+      "beforeHadLabel": true,
+      "afterLabelHe": "ערך מקום שאינו תואם לתשובה הנכונה",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "calculation_off_by_one",
+      "beforeHadLabel": true,
+      "afterLabelHe": "טעות חישוב של סטייה ב-1",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "calculation_near_miss",
+      "beforeHadLabel": false,
+      "afterLabelHe": "חישוב עם סטייה קטנה מהתשובה",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "carry_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "טעות בנשיאה בחיבור",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "regroup_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "טעות בנשיאה בחיבור",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "column_carry_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "טעות בנשיאה בחיבור",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "borrow_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "טעות בהלוואה בחיסור",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "multiplication_fact_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "תשובה שגויה מלוח הכפל",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "numerator_only_compare",
+      "beforeHadLabel": false,
+      "afterLabelHe": "השוואת שברים לפי המונה בלבד",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "mirror_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "פעולה שגויה ביצירת מכנה משותף",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "common_denominator_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "פעולה שגויה ביצירת מכנה משותף",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "fraction_operation_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "פעולה שגויה ביצירת מכנה משותף",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "forgot_divide_by_2",
+      "beforeHadLabel": false,
+      "afterLabelHe": "השמטת חילוק ב-2",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "perimeter_area_confusion",
+      "beforeHadLabel": false,
+      "afterLabelHe": "היקף במקום שטח",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "perimeter_formula_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "נוסחת היקף שגויה",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "volume_formula_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "נוסחת נפח שגויה",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "area_formula_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "נוסחת שטח שגויה",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "triangle_angle_sum_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "סכום זוויות במשולש שאינו תואם",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "pythagorean_relation_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "חיבור צלעות במקום משפט פיתגורס",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "shape_property_confusion",
+      "beforeHadLabel": false,
+      "afterLabelHe": "תכונת צורה שאינה מתאימה",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "angle_range_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "קריאת זווית שאינה תואמת",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "transformation_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "התמרה גיאומטרית שאינה תואמת",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "symmetry_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "בחירת ציר סימטריה שאינה תואמת",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "spelling_pattern_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "שגיאת איות בדפוס מילה",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "spelling_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "שגיאת איות",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "grammar_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "שגיאה דקדוקית",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "tense_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "שימוש בזמן דקדוקי שאינו מתאים למשפט",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "agreement_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "אי-התאמה במין או במספר",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "vocabulary_meaning_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "מילה במשמעות שאינה מתאימה",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "translation_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "תרגום שאינו מתאים להקשר",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "preposition_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "מילת יחס שאינה מתאימה",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "phrasal_verb_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "צירוף פועל שאינו מתאים",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "sentence_structure_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "סדר מילים שאינו תואם במשפט",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "phonics_minimal_pair_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "בחירה בין צלילים דומים שאינה תואמת",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "vocabulary_context_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "מילה שאינה מתאימה להקשר",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "grammar_agreement_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "אי-התאמה במין או במספר במשפט",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "reading_comprehension_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "תשובה שאינה עונה על שאלת ההבנה",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "homophone_confusion",
+      "beforeHadLabel": false,
+      "afterLabelHe": "בחירת מילה שנשמעת דומה אך אינה מתאימה",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "homograph_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "בחירת מילה שנשמעת דומה אך אינה מתאימה",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "verb_tense_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "שימוש בזמן הפועל שאינו תואם",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "punctuation_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "שגיאת פיסוק",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "speaking_expression_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "ניסוח בעל פה שאינו תואם",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "concept_confusion",
+      "beforeHadLabel": false,
+      "afterLabelHe": "שימוש במושג שאינו מתאים",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "variable_control_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "שינוי של יותר ממשתנה אחד בניסוי",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "body_system_confusion",
+      "beforeHadLabel": false,
+      "afterLabelHe": "סדר או מיקום שאינו תואם במערכת הגוף",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "material_property_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "תיאור תכונת חומר שאינו תואם",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "physical_chemical_confusion",
+      "beforeHadLabel": false,
+      "afterLabelHe": "מושג פיזיקלי במקום כימי או להיפך",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "planet_confusion",
+      "beforeHadLabel": false,
+      "afterLabelHe": "זיהוי כוכב לכת או גוף שמימי שאינו תואם",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "ecosystem_confusion",
+      "beforeHadLabel": false,
+      "afterLabelHe": "רמה במערכת אקולוגית שאינה מתאימה",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "animal_classification_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "סיווג בעל חיים שאינו תואם",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "map_reading_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "בחירה שגויה בקריאת פרט מהמפה",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "direction_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "כיוון שאינו תואם בקריאת מפה",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "location_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "שיוך אזור למיקום גיאוגרפי שאינו תואם",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "citizenship_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "שיוך שאינו תואם של זכות או חובת אזרחות",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "homeland_identity_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "שיוך שאינו תואם של סמל או זהות מולדתית",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "landform_confusion",
+      "beforeHadLabel": false,
+      "afterLabelHe": "שיוך אזור לצורת יבשה שאינה מתאימה",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "values_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "ערך חברתי שאינו מתאים",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "community_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "שיוך שאינו תואם של תפקיד מוסד קהילתי",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "map_symbol_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "פרשנות סמל במפה שאינה תואמת",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "historical_concept_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "מושג היסטורי שאינו מתאים",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "timeline_sequence_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "סידור אירועים בסדר שאינו נכון",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "cause_effect_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "קישור סיבה ותוצאה שאינו תואם",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "comparison_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "השוואה שאינה מדויקת בין אירועים",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "figure_role_confusion",
+      "beforeHadLabel": false,
+      "afterLabelHe": "שיוך דמות לתפקיד שאינו תואם",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "institution_confusion",
+      "beforeHadLabel": false,
+      "afterLabelHe": "שיוך מוסד לתפקיד שאינו תואם",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "culture_heritage_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "שיוך מורשת תרבותית שאינו תואם",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "source_comprehension_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "טענה שאינה נתמכת במקור",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "historical_connection_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "קישור בין עבר להווה שאינו תואם",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "math_compare_relation_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "סימן השוואה שאינו תואם",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "math_scale_operation_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "פעולה בקנה מידה שאינה תואמת",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "math_division_operation_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "פעולת חילוק שאינה תואמת",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "math_remainder_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "מנה או שארית שאינה תואמת בחילוק",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "math_sequence_step_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "שלב ברצף מתמטי שאינו תואם",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "math_ratio_order_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "סדר ביחס מתמטי שאינו תואם",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "math_operation_order_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "חישוב לפי סדר הכתיבה במקום סדר הפעולות",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "math_divisibility_classification_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "מסקנה שאינה תואמת מבדיקת התחלקות",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "math_prime_composite_classification_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "סיווג מספר כראשוני או פריק שאינו תואם",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "math_power_as_multiplication_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "כפל הבסיס במעריך במקום חישוב חזקה",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "math_identity_property_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "שימוש בתכונת אפס או אחד שאינו תואם",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "math_estimation_strategy_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "אומדן במקום תוצאה מדויקת",
+      "status": "approved_factual"
+    },
+    {
+      "tag": "math_gcd_smaller_input_error",
+      "beforeHadLabel": false,
+      "afterLabelHe": "בחירה שאינה תואמת של המחלק המשותף הגדול ביותר",
+      "status": "approved_factual"
+    }
+  ],
+  "ladderDiff": {
+    "before": {
+      "strong": "q>=40 AND ratioAmongWrongs>=0.5",
+      "consistent": "q>=12 AND ratioAmongWrongs>=0.4",
+      "repeated": "q>=5 AND count>=2",
+      "observed": "count>=2"
+    },
+    "after": {
+      "strong": "q>=10 AND count>=5 AND ratioOfErrors>=0.5 AND ratioOfQuestions>=0.2",
+      "consistent": "q>=5 AND count>=3 AND ratioOfErrors>=0.4 AND ratioOfQuestions>=0.15",
+      "repeated": "count>=2 (no ratio gate)",
+      "observed": "count===1"
+    },
+    "examples": {
+      "2of40": "repeated",
+      "3of40": "repeated",
+      "4of12": "consistent",
+      "6of25": "strong",
+      "4of4": "repeated"
+    }
+  },
+  "traces": {
+    "AAA12_fractions": {
+      "engineDecision": "clear_topic_gap",
+      "detectedPattern": null,
+      "blockPatternClaim": true,
+      "patternLayer": null,
+      "adc": "collect_more_evidence",
+      "observedPatternLevel": "consistent",
+      "factualObservations": [
+        {
+          "key": "mt:calculation_off_by_one",
+          "canonicalKey": "calculation_off_by_one",
+          "labelHe": "טעות חישוב של סטייה ב-1",
+          "count": 6,
+          "totalQuestions": 25,
+          "totalErrors": 14,
+          "ratioOfQuestions": 0.24,
+          "ratioOfErrors": 0.4286,
+          "distinctSessions": 0,
+          "distinctDays": 1,
+          "firstSeenAt": 1700000000000,
+          "lastSeenAt": 1700000005000,
+          "recurrenceLevel": "consistent"
+        }
+      ],
+      "parentVisibleFinding": "בנושא שברים נראה קושי ברור. 14 שגיאות מתוך 25 שאלות (44% דיוק). כדאי לחזור ולתרגל את הנושא לפני שממשיכים. ב-6 תשובות חזרה טעות חישוב של סטייה ב-1. מבוסס על 25 שאלות שנפתרו בנושא.",
+      "chrome": {
+        "displayDecision": "clear_topic_gap",
+        "visualVariant": "remediate",
+        "badgeHe": "כדאי לתרגל עוד",
+        "statusEmoji": "⚠️",
+        "accuracyClass": "text-amber-400",
+        "badgeClassName": "text-amber-200 text-xs",
+        "cardClassName": "bg-yellow-500/15 border border-yellow-400/45",
+        "excellent": false,
+        "needsPractice": true,
+        "insufficientData": false,
+        "weakTopic": true
+      }
+    },
+    "2of40": {
+      "engineDecision": "mastery_stable",
+      "observedPatternLevel": "repeated",
+      "recurrence": "repeated",
+      "finding": "נראית הצלחה טובה ויציבה בנושא שברים. לצד ההצלחה, בשתי תשובות חזרה טעות חישוב של סטייה ב-1. מבוסס על 40 שאלות שנפתרו בנושא.",
+      "detectedPattern": null,
+      "blockPatternClaim": true
+    },
+    "6of25": {
+      "engineDecision": "partial_stable",
+      "observedPatternLevel": "strong",
+      "finding": "יש הבנה חלקית בנושא שברים. ב-6 תשובות חזרה טעות חישוב של סטייה ב-1. מבוסס על 25 שאלות שנפתרו בנושא."
+    },
+    "4of4": {
+      "engineDecision": "insufficient_data",
+      "observedPatternLevel": "repeated",
+      "recurrence": "repeated",
+      "finding": "בנושא שברים, מבוסס על 4 שאלות שנפתרו בנושא, נראה דפוס מוקדם של טעויות. ב-4 תשובות חזרה טעות חישוב של סטייה ב-1. מבוסס על 4 שאלות שנפתרו בנושא.",
+      "chrome": {
+        "displayDecision": "insufficient_data",
+        "visualVariant": "neutral",
+        "badgeHe": "מעט שאלות - נראו הרבה טעויות",
+        "statusEmoji": "🔎",
+        "accuracyClass": "text-white/70",
+        "badgeClassName": "text-slate-300 text-xs",
+        "cardClassName": "bg-yellow-500/10 border border-yellow-400/35",
+        "excellent": false,
+        "needsPractice": true,
+        "insufficientData": true,
+        "weakTopic": true,
+        "engineDecision": "insufficient_data",
+        "patternLayer": null
+      }
+    },
+    "20Q_90_2err": {
+      "engineDecision": "mastery_stable",
+      "finding": "נראית הצלחה טובה ויציבה בנושא שברים. לצד ההצלחה, בשתי תשובות חזרה טעות חישוב של סטייה ב-1. מבוסס על 20 שאלות שנפתרו בנושא.",
+      "obsCount": 1
+    }
+  },
+  "dossierSummary": {
+    "scanned": 60,
+    "note": "snapshot predates factualObservations; live LPD path is authoritative"
+  },
+  "observationsBesidePartial": true,
+  "observationsBesideMastery": true,
+  "internalTagExposure": false,
+  "reportParityConflicts": 0,
+  "engineFieldsPreserved": {
+    "detectedPattern": null,
+    "blockPatternClaim": true,
+    "note": "factualObservations is additive; ADC action table untouched; recurrence ladder for parent observations updated as approved"
+  }
+}

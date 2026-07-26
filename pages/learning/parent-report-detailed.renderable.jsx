@@ -31,31 +31,15 @@ import {
   enrichDetailedParentReportWithParentAi,
   getDeterministicDetailedParentAiExplanation,
 } from "../../utils/parent-report-ai/parent-report-ai-adapter";
+import { topicNextStepVisualVariantFromRowOrStep } from "../../utils/parent-report-surface/parent-topic-display-chrome.js";
 
 /**
- * מיפוי ויזואלי בלבד לפי recommendedNextStep מה payload — לא משנה מנוע או תוכן.
- * @param {string | undefined} step
- * @returns {"advance" | "maintain" | "remediate" | "drop"}
+ * מיפוי ויזואלי בלבד לפי engineDecision הקנוני — לא משנה מנוע או תוכן.
+ * @param {string | Record<string, unknown> | undefined} stepOrRow
+ * @returns {"advance" | "maintain" | "remediate" | "drop" | "neutral"}
  */
-function topicNextStepVisualVariant(step) {
-  switch (step) {
-    case "advance_level":
-    case "advance_grade_topic_only":
-      return "advance";
-    case "insufficient_information":
-    case "verification_needed":
-    case "progress_or_mastery":
-    case "maintain_and_strengthen":
-      return "maintain";
-    case "strengthening_needed":
-    case "remediate_same_level":
-      return "remediate";
-    case "drop_one_level_topic_only":
-    case "drop_one_grade_topic_only":
-      return "drop";
-    default:
-      return "maintain";
-  }
+function topicNextStepVisualVariant(stepOrRow) {
+  return topicNextStepVisualVariantFromRowOrStep(stepOrRow);
 }
 
 function SectionCard({ title, children, className = "", compact = false }) {
@@ -504,6 +488,10 @@ export default function ParentReportDetailedPage() {
             border: 1px solid rgba(56, 189, 248, 0.36);
             background: linear-gradient(165deg, rgba(12, 74, 110, 0.3), rgba(30, 58, 95, 0.26));
           }
+          .pr-detailed-topic-nextstep--neutral {
+            border: 1px solid rgba(148, 163, 184, 0.38);
+            background: linear-gradient(165deg, rgba(51, 65, 85, 0.28), rgba(30, 41, 59, 0.22));
+          }
           .pr-detailed-topic-nextstep--remediate {
             border: 1px solid rgba(251, 191, 36, 0.4);
             background: linear-gradient(165deg, rgba(120, 53, 15, 0.3), rgba(69, 26, 3, 0.22));
@@ -565,6 +553,11 @@ export default function ParentReportDetailedPage() {
             border: 1px solid rgba(125, 211, 252, 0.45);
             color: #e0f2fe;
             background: rgba(12, 74, 110, 0.48);
+          }
+          .pr-detailed-topic-badge--neutral {
+            border: 1px solid rgba(148, 163, 184, 0.45);
+            color: #e2e8f0;
+            background: rgba(51, 65, 85, 0.48);
           }
           .pr-detailed-topic-badge--remediate {
             border: 1px solid rgba(251, 191, 36, 0.48);
@@ -910,8 +903,13 @@ export default function ParentReportDetailedPage() {
               border: 1.5px solid #0369a1 !important;
               border-right: 4px solid #0ea5e9 !important;
             }
-            #parent-report-detailed-print .pr-detailed-topic-nextstep--remediate {
+            #parent-report-detailed-print .pr-detailed-topic-nextstep--neutral {
               background: #ffffff !important;
+              border: 1.5px solid #64748b !important;
+              border-right: 4px solid #94a3b8 !important;
+            }
+            #parent-report-detailed-print .pr-detailed-topic-nextstep--remediate {
+              background: #fffbeb !important;
               border: 1.5px solid #d97706 !important;
               border-right: 4px solid #f59e0b !important;
             }
@@ -987,6 +985,11 @@ export default function ParentReportDetailedPage() {
               background: #dbeafe !important;
               border: 1px solid #2563eb !important;
               color: #1e3a8a !important;
+            }
+            #parent-report-detailed-print .pr-detailed-topic-badge--neutral {
+              background: #f1f5f9 !important;
+              border: 1px solid #64748b !important;
+              color: #334155 !important;
             }
             #parent-report-detailed-print .pr-detailed-topic-badge--remediate {
               background: #ffedd5 !important;
@@ -1363,10 +1366,7 @@ export default function ParentReportDetailedPage() {
                                 <p className="pr-detailed-topic-rec-head">נושאים שדורשים ליווי בתקופה שנבחרה</p>
                                 <div className="space-y-2.5">
                                   {sp.topicRecommendations.map((tr, idx) => {
-                                    const tv = topicNextStepVisualVariant(
-                                      tr.parentActionDecision?.state ||
-                                        tr.recommendedNextStep,
-                                    );
+                                    const tv = topicNextStepVisualVariant(tr);
                                     const nar = buildTopicRecommendationNarrative(tr);
                                     return (
                                       <div key={tr.topicRowKey} className={idx === 0 ? "pr-detailed-topic-first-card-wrap" : ""}>

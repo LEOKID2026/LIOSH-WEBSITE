@@ -1,0 +1,93 @@
+﻿[
+    {
+        "exitCode":  0,
+        "command":  "node --test tests/learning/factual-observations-final-closure.test.mjs",
+        "duration_ms":  529,
+        "failed":  0,
+        "passed":  29
+    },
+    {
+        "exitCode":  0,
+        "command":  "node --test tests/learning/calculation-off-by-one-parent-finding.test.mjs",
+        "duration_ms":  370,
+        "failed":  0,
+        "passed":  4
+    },
+    {
+        "exitCode":  0,
+        "command":  "node --test tests/learning/repeated-mistake-pattern-label-safety.test.mjs",
+        "duration_ms":  357,
+        "failed":  0,
+        "passed":  4
+    },
+    {
+        "exitCode":  0,
+        "command":  "node --test tests/learning/parent-topic-display-chrome.test.mjs",
+        "duration_ms":  358,
+        "failed":  0,
+        "passed":  5
+    },
+    {
+        "exitCode":  0,
+        "command":  "node --test tests/learning/parent-report-engine-decision-contract.test.mjs",
+        "duration_ms":  373,
+        "failed":  0,
+        "passed":  1
+    },
+    {
+        "exitCode":  0,
+        "command":  "node --test tests/learning/subject-engine-decision-contract.test.mjs",
+        "duration_ms":  449,
+        "failed":  0,
+        "passed":  1
+    },
+    {
+        "exitCode":  0,
+        "command":  "node --test tests/learning/action-decision-contract-p2.test.mjs",
+        "duration_ms":  351,
+        "failed":  0,
+        "passed":  21
+    },
+    {
+        "exitCode":  0,
+        "command":  "node --test tests/learning/action-decision-contract-unit-p4.test.mjs",
+        "duration_ms":  318,
+        "failed":  0,
+        "passed":  3
+    },
+    {
+        "exitCode":  0,
+        "command":  "node --test tests/learning/parent-output-final-closure-contract.test.mjs",
+        "duration_ms":  457,
+        "failed":  0,
+        "passed":  1
+    },
+    {
+        "exitCode":  0,
+        "command":  "node --test tests/learning-pattern-decision/pattern-visibility-foundation.test.mjs",
+        "duration_ms":  348,
+        "failed":  0,
+        "passed":  1
+    },
+    {
+        "exitCode":  0,
+        "command":  "node --test tests/learning-pattern-decision/scenarios.test.mjs",
+        "duration_ms":  346,
+        "failed":  0,
+        "passed":  1
+    },
+    {
+        "exitCode":  0,
+        "command":  "node --test tests/learning-pattern-decision/parent-facing-lpd-practice-alignment.test.mjs",
+        "duration_ms":  532,
+        "failed":  0,
+        "passed":  9
+    },
+    {
+        "exitCode":  0,
+        "command":  "node --test tests/demo/parent-demo-report-parity.test.mjs",
+        "duration_ms":  20686,
+        "failed":  0,
+        "passed":  9
+    }
+]

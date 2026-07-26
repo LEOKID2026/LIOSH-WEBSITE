@@ -4,6 +4,7 @@
 import { SUBJECT_IDS } from "../diagnostic-engine-v2/subject-ids.js";
 import { rowNeedsPracticeFromLpd, rowIsPositiveFromLpd } from "./apply-learning-pattern-decision.js";
 import { guardParentFacingText } from "./lpd-parent-facing-copy.js";
+import { parentTopicDisplayChromeFromRow } from "../parent-report-surface/parent-topic-display-chrome.js";
 
 /**
  * Sync legacy row flags from LPD (internal mirror — UI should prefer LPD).
@@ -64,14 +65,21 @@ export function buildTopicRollupsFromLearningPatternDecision(maps, subjectLabels
  */
 export function topicUiFromLearningPatternDecision(row) {
   const lpd = row?.learningPatternDecision;
+  const chrome = parentTopicDisplayChromeFromRow(row);
   if (!lpd || typeof lpd !== "object") {
     return {
       hasLpd: false,
       showRow: Number(row?.questions) > 0,
-      needsPractice: false,
-      excellent: false,
-      accuracyClass: "text-white/70",
-      statusEmoji: "👍",
+      needsPractice: chrome.needsPractice,
+      excellent: chrome.excellent,
+      insufficientData: chrome.insufficientData,
+      accuracyClass: chrome.accuracyClass,
+      statusEmoji: chrome.statusEmoji,
+      badgeHe: chrome.badgeHe,
+      cardClassName: chrome.cardClassName,
+      badgeClassName: chrome.badgeClassName,
+      visualVariant: chrome.visualVariant,
+      displayDecision: chrome.displayDecision,
       parentFinding: "",
       findingType: "none",
       parentWordingLevel: "no_parent_text",
@@ -85,8 +93,14 @@ export function topicUiFromLearningPatternDecision(row) {
       showRow: false,
       needsPractice: false,
       excellent: false,
+      insufficientData: false,
       accuracyClass: "text-white/70",
       statusEmoji: "",
+      badgeHe: "",
+      cardClassName: "",
+      badgeClassName: "",
+      visualVariant: chrome.visualVariant,
+      displayDecision: chrome.displayDecision,
       parentFinding: "",
       findingType: "none",
       parentWordingLevel: "no_parent_text",
@@ -95,26 +109,20 @@ export function topicUiFromLearningPatternDecision(row) {
 
   const ft = String(lpd.findingType || "");
   const ts = String(lpd.topicStatus || "");
-  const isInitial = ts === "initial_data" || ft === "initial_topic_data";
-  const needsPractice = rowNeedsPracticeFromLpd(row);
-  const excellent = rowIsPositiveFromLpd(row) && q >= 10;
-
-  let accuracyClass = "text-white/80";
-  if (!isInitial && (ft === "success_pattern" || ts.startsWith("positive"))) {
-    accuracyClass = "text-emerald-400";
-  } else if (needsPractice) {
-    accuracyClass = "text-amber-400";
-  }
-
-  const statusEmoji = isInitial ? "👍" : excellent ? "✅" : needsPractice ? "⚠️" : "👍";
 
   return {
     hasLpd: true,
     showRow: true,
-    needsPractice,
-    excellent,
-    accuracyClass,
-    statusEmoji,
+    needsPractice: chrome.needsPractice,
+    excellent: chrome.excellent,
+    insufficientData: chrome.insufficientData,
+    accuracyClass: chrome.accuracyClass,
+    statusEmoji: chrome.statusEmoji,
+    badgeHe: chrome.badgeHe,
+    cardClassName: chrome.cardClassName,
+    badgeClassName: chrome.badgeClassName,
+    visualVariant: chrome.visualVariant,
+    displayDecision: chrome.displayDecision,
     parentFinding: guardParentFacingText(String(lpd.parentVisibleFinding || "")),
     findingType: ft,
     parentWordingLevel: String(lpd.parentWordingLevel || ""),

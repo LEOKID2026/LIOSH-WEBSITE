@@ -7,6 +7,11 @@ import { resolveObservedPatternLevel } from "./resolve-observed-pattern-level.js
 import { resolveTopicFinding } from "./resolve-topic-finding.js";
 import { resolveBlockedClaims } from "./resolve-blocked-claims.js";
 import { buildParentVisibleFinding } from "./build-parent-visible-finding.js";
+import { enrichParentFindingWithConsistentStrongTag } from "./enrich-parent-finding-with-factual-pattern.js";
+import {
+  buildFactualObservations,
+  resolveObservedPatternLevelFromFactualObservations,
+} from "./build-factual-observations.js";
 import {
   buildParentReportEngineDecisionContract,
   injectEnginePatternIntoRepeatedMistakes,
@@ -98,8 +103,14 @@ export function buildLearningPatternDecision({
     (unit?.diagnosis?.allowed === true && w >= 2);
 
   const topicName =
-    String(row?.displayName || unit?.displayName || row?.topicLabel || topicKey).trim() ||
-    topicKey;
+    String(
+      row?.displayName ||
+        row?.topicNameHe ||
+        row?.label ||
+        unit?.displayName ||
+        row?.topicLabel ||
+        topicKey,
+    ).trim() || topicKey;
   const unifiedDecisionContext = buildUnifiedDecisionContext({
     row,
     unit,
@@ -172,12 +183,24 @@ export function buildLearningPatternDecision({
     trace.push("v3:refined_pattern_label");
   }
 
-  const observedPatternLevel = resolveObservedPatternLevel({
+  const factualObservations = buildFactualObservations({
+    wrongEvents: eligibleWrongEvents,
+    totalQuestions: performanceQ,
+    totalErrors: performanceW,
+  });
+
+  const observedPatternLevelFromFacts =
+    resolveObservedPatternLevelFromFactualObservations(factualObservations, performanceQ);
+  const observedPatternLevelFallback = resolveObservedPatternLevel({
     questionCount: performanceQ,
     wrongCount: performanceW,
     wrongEvents: eligibleWrongEvents,
     hasPositiveDominance: finding.hasPositiveDominance,
   });
+  const observedPatternLevel =
+    observedPatternLevelFromFacts !== "none"
+      ? observedPatternLevelFromFacts
+      : observedPatternLevelFallback;
 
   const blockedClaims = resolveBlockedClaims({
     topicStatus,
@@ -223,7 +246,7 @@ export function buildLearningPatternDecision({
     (eligibleWrongEvents.length > 0 ||
       !["clear_topic_gap", "topic_needs_strengthening"].includes(engineDecisionCode));
 
-  const parentVisibleFindingFinal =
+  const parentVisibleFindingSelected =
     competitiveBucketOnly && fallbackFinding
       ? fallbackFinding
       : engineDecisionContract.detectedPattern && engineDecisionContract.parentSafeFinding
@@ -235,6 +258,35 @@ export function buildLearningPatternDecision({
             : preferLpdFallbackOverEngine
               ? fallbackFinding
               : fallbackFinding || engineDecisionContract.parentSafeFinding;
+
+  const parentVisibleFindingFinal = enrichParentFindingWithConsistentStrongTag({
+    finding: parentVisibleFindingSelected,
+    topicName,
+    questions: performanceQ,
+    wrong: performanceW,
+    accuracy,
+    engineDecision: engineDecisionCode,
+    observedPatternLevel,
+    evidenceStrength,
+    repeatedMistakePatterns,
+    factualObservations,
+    subjectId: sid,
+    taxonomyId:
+      unifiedDecisionContext?.signals?.pattern?.taxonomyId ||
+      unit?.taxonomy?.id ||
+      null,
+  });
+  // Keep EDC parent-safe finding + factualObservations aligned for all report surfaces.
+  // Do not mutate detectedPattern / blockPatternClaim / taxonomy / patternLayer / engineDecision / ADC.
+  if (
+    parentVisibleFindingFinal &&
+    parentVisibleFindingFinal !== String(engineDecisionContract.parentSafeFinding || "")
+  ) {
+    engineDecisionContract.parentSafeFinding = parentVisibleFindingFinal;
+    trace.push("parentVisibleFinding:composed_with_factual_observations");
+  }
+  engineDecisionContract.factualObservations = factualObservations;
+
   if (competitiveBucketOnly && fallbackFinding) {
     trace.push("parentVisibleFinding:competitive_bucket_only");
   } else if (engineDecisionContract.detectedPattern && engineDecisionContract.parentSafeFinding) {
@@ -282,9 +334,20 @@ export function buildLearningPatternDecision({
         ? [{ type: "topic_success", accuracy, questionCount: performanceQ }]
         : [],
     repeatedMistakePatterns,
+    factualObservations,
     recommendedFocus: recommendedFocus && performanceQ > 2 ? topicName : null,
     parentVisibleFinding: parentVisibleFindingFinal,
-    parentWordingLevel: engineDecisionContract.detectedPattern ? "repeated_pattern" : parentWordingLevel,
+    parentWordingLevel:
+      factualObservations.length > 0
+        ? factualObservations[0].recurrenceLevel === "strong"
+          ? "strong_pattern"
+          : factualObservations[0].recurrenceLevel === "consistent" ||
+              factualObservations[0].recurrenceLevel === "repeated"
+            ? "repeated_pattern"
+            : "factual_observation"
+        : engineDecisionContract.detectedPattern
+          ? "repeated_pattern"
+          : parentWordingLevel,
     engineDecisionContract,
     unifiedDecisionContext,
     blockedClaims,

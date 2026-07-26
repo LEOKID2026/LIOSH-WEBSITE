@@ -78,7 +78,7 @@ import {
   deriveParentDataPresenceForDiagnosticsView,
   PARENT_THIN_DATA_EXPLAINER_HE,
 } from "../../utils/parent-data-presence.js";
-import { topicUiFromLearningPatternDecision } from "../../utils/learning-pattern-decision/parent-report-ui-helpers.js";
+import { parentTopicDisplayChromeFromRow } from "../../utils/parent-report-surface/parent-topic-display-chrome.js";
 import { normalizeParentVisibleMetrics } from "../../utils/learning-pattern-decision/normalize-parent-practice-metrics.js";
 import {
   filterSubjectOverviewRowsWithEvidence,
@@ -610,44 +610,24 @@ function topicBarColor(accuracy) {
   return "#ef4444";
 }
 
-function topicBarColorFromRow(row) {
-  const parentState = row?.parentActionDecision?.state;
-  if (parentState === "strengthening_needed") return "#f59e0b";
-  if (parentState === "progress_or_mastery") return "#10b981";
-  if (parentState) return "#94a3b8";
-  const ui = topicUiFromLearningPatternDecision(row);
-  if (ui.hasLpd) {
-    if (ui.excellent || ui.findingType === "success_pattern") return "#10b981";
-    if (ui.needsPractice) return "#f59e0b";
-    return "#94a3b8";
-  }
-  return topicBarColor(Number(row?.accuracy) || 0);
-}
-
 function topicAccuracyTextClass(row) {
-  return topicUiFromLearningPatternDecision(row).accuracyClass;
+  return parentTopicDisplayChromeFromRow(row).accuracyClass;
 }
 
-function topicStatusEmoji(row) {
-  const parentState = row?.parentActionDecision?.state;
-  if (parentState === "strengthening_needed") return "⚠️";
-  if (parentState === "progress_or_mastery") return "✅";
-  if (parentState) return "🔎";
-  return topicUiFromLearningPatternDecision(row).statusEmoji;
-}
-
-function topicShowsNeedsPractice(row) {
-  if (row?.parentActionDecision) {
-    return row.parentActionDecision.state === "strengthening_needed";
+function TopicProgressStatusBadge({ data, compact = false }) {
+  const chrome = parentTopicDisplayChromeFromRow(data);
+  if (compact) {
+    return <span title={chrome.badgeHe}>{chrome.statusEmoji}</span>;
   }
-  return topicUiFromLearningPatternDecision(row).needsPractice;
+  return (
+    <span className={chrome.badgeClassName}>
+      {chrome.statusEmoji} {chrome.badgeHe}
+    </span>
+  );
 }
 
-function topicShowsExcellent(row) {
-  if (row?.parentActionDecision) {
-    return row.parentActionDecision.state === "progress_or_mastery";
-  }
-  return topicUiFromLearningPatternDecision(row).excellent;
+function topicProgressCardClassName(data) {
+  return parentTopicDisplayChromeFromRow(data).cardClassName;
 }
 
 /** סדר תצוגת אבחון מקצועי — תואם `patternDiagnostics.subjects` (הצטיינות עקבית → תוצאות טובות יחסית → מומלץ לשמר → נקודות לשיפור → תחומים דורשים תשומת לב) */
@@ -2536,13 +2516,7 @@ export default function ParentReport() {
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-[10px] md:text-sm whitespace-nowrap align-top">
                             <div className="flex flex-col items-center">
-                              {topicShowsExcellent(data) ? (
-                                <span className="text-emerald-400">✅</span>
-                              ) : topicShowsNeedsPractice(data) ? (
-                                <span className="text-red-400">⚠️</span>
-                              ) : (
-                                <span className="text-yellow-400">👍</span>
-                              )}
+                              <TopicProgressStatusBadge data={data} compact />
                               <ParentReportRowDiagnosticsFootnote data={data} />
                             </div>
                           </td>
@@ -2556,7 +2530,7 @@ export default function ParentReport() {
                 {regularReportTopicTableEntries(displayReport, "mathOperations", regularReportDisplay)
                   .sort(([_, a], [__, b]) => b.questions - a.questions)
                   .map(([op, data]) => (
-                    <div key={op} className="bg-black/40 border border-white/20 rounded-lg p-3">
+                    <div key={op} className={`rounded-lg p-3 ${topicProgressCardClassName(data)}`}>
                       <div className="font-semibold text-sm mb-2 text-blue-400">{regularReportTopicLabel("math", data, op, regularReportDisplay)}</div>
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <div>
@@ -2588,13 +2562,7 @@ export default function ParentReport() {
                         </div>
                       </div>
                       <div className="mt-2 text-center">
-                        {topicShowsExcellent(data) ? (
-                          <span className="text-emerald-400 text-xs">✅ מצוין</span>
-                        ) : topicShowsNeedsPractice(data) ? (
-                          <span className="text-red-400 text-xs">⚠️ כדאי לתרגל עוד</span>
-                        ) : (
-                          <span className="text-yellow-400 text-xs">👍 טוב</span>
-                        )}
+                        <TopicProgressStatusBadge data={data} />
                         <ParentReportRowDiagnosticsFootnote data={data} />
                       </div>
                     </div>
@@ -2673,13 +2641,7 @@ export default function ParentReport() {
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-[10px] md:text-sm whitespace-nowrap align-top">
                             <div className="flex flex-col items-center">
-                              {topicShowsExcellent(data) ? (
-                                <span className="text-emerald-400">✅</span>
-                              ) : topicShowsNeedsPractice(data) ? (
-                                <span className="text-red-400">⚠️</span>
-                              ) : (
-                                <span className="text-yellow-400">👍</span>
-                              )}
+                              <TopicProgressStatusBadge data={data} compact />
                               <ParentReportRowDiagnosticsFootnote data={data} />
                             </div>
                           </td>
@@ -2693,7 +2655,7 @@ export default function ParentReport() {
                 {regularReportTopicTableEntries(displayReport, "geometryTopics", regularReportDisplay)
                   .sort(([_, a], [__, b]) => b.questions - a.questions)
                   .map(([topic, data]) => (
-                    <div key={topic} className="bg-black/40 border border-white/20 rounded-lg p-3">
+                    <div key={topic} className={`rounded-lg p-3 ${topicProgressCardClassName(data)}`}>
                       <div className="font-semibold text-sm mb-2 text-emerald-400">{regularReportTopicLabel("geometry", data, topic, regularReportDisplay)}</div>
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <div>
@@ -2725,13 +2687,7 @@ export default function ParentReport() {
                         </div>
                       </div>
                       <div className="mt-2 text-center">
-                        {topicShowsExcellent(data) ? (
-                          <span className="text-emerald-400 text-xs">✅ מצוין</span>
-                        ) : topicShowsNeedsPractice(data) ? (
-                          <span className="text-red-400 text-xs">⚠️ כדאי לתרגל עוד</span>
-                        ) : (
-                          <span className="text-yellow-400 text-xs">👍 טוב</span>
-                        )}
+                        <TopicProgressStatusBadge data={data} />
                         <ParentReportRowDiagnosticsFootnote data={data} />
                       </div>
                     </div>
@@ -2811,13 +2767,7 @@ export default function ParentReport() {
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-[10px] md:text-sm whitespace-nowrap align-top">
                             <div className="flex flex-col items-center">
-                              {topicShowsExcellent(data) ? (
-                                <span className="text-emerald-400">✅</span>
-                              ) : topicShowsNeedsPractice(data) ? (
-                                <span className="text-red-400">⚠️</span>
-                              ) : (
-                                <span className="text-yellow-400">👍</span>
-                              )}
+                              <TopicProgressStatusBadge data={data} compact />
                               <ParentReportRowDiagnosticsFootnote data={data} />
                             </div>
                           </td>
@@ -2831,7 +2781,7 @@ export default function ParentReport() {
                 {regularReportTopicTableEntries(displayReport, "englishTopics", regularReportDisplay)
                   .sort(([_, a], [__, b]) => b.questions - a.questions)
                   .map(([topic, data]) => (
-                    <div key={topic} className="bg-black/40 border border-white/20 rounded-lg p-3">
+                    <div key={topic} className={`rounded-lg p-3 ${topicProgressCardClassName(data)}`}>
                       <div className="font-semibold text-sm mb-2 text-purple-400">{regularReportTopicLabel("english", data, topic, regularReportDisplay)}</div>
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <div>
@@ -2863,13 +2813,7 @@ export default function ParentReport() {
                         </div>
                       </div>
                       <div className="mt-2 text-center">
-                        {topicShowsExcellent(data) ? (
-                          <span className="text-emerald-400 text-xs">✅ מצוין</span>
-                        ) : topicShowsNeedsPractice(data) ? (
-                          <span className="text-red-400 text-xs">⚠️ כדאי לתרגל עוד</span>
-                        ) : (
-                          <span className="text-yellow-400 text-xs">👍 טוב</span>
-                        )}
+                        <TopicProgressStatusBadge data={data} />
                         <ParentReportRowDiagnosticsFootnote data={data} />
                       </div>
                     </div>
@@ -2949,13 +2893,7 @@ export default function ParentReport() {
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-[10px] md:text-sm whitespace-nowrap align-top">
                             <div className="flex flex-col items-center">
-                              {topicShowsExcellent(data) ? (
-                                <span className="text-emerald-400">✅</span>
-                              ) : topicShowsNeedsPractice(data) ? (
-                                <span className="text-red-400">⚠️</span>
-                              ) : (
-                                <span className="text-yellow-400">👍</span>
-                              )}
+                              <TopicProgressStatusBadge data={data} compact />
                               <ParentReportRowDiagnosticsFootnote data={data} />
                             </div>
                           </td>
@@ -2969,7 +2907,7 @@ export default function ParentReport() {
                 {regularReportTopicTableEntries(displayReport, "scienceTopics", regularReportDisplay)
                   .sort(([_, a], [__, b]) => b.questions - a.questions)
                   .map(([topic, data]) => (
-                    <div key={topic} className="bg-black/40 border border-white/20 rounded-lg p-3">
+                    <div key={topic} className={`rounded-lg p-3 ${topicProgressCardClassName(data)}`}>
                       <div className="font-semibold text-sm mb-2 text-green-400">{regularReportTopicLabel("science", data, topic, regularReportDisplay)}</div>
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <div>
@@ -3001,13 +2939,7 @@ export default function ParentReport() {
                         </div>
                       </div>
                       <div className="mt-2 text-center">
-                        {topicShowsExcellent(data) ? (
-                          <span className="text-emerald-400 text-xs">✅ מצוין</span>
-                        ) : topicShowsNeedsPractice(data) ? (
-                          <span className="text-red-400 text-xs">⚠️ כדאי לתרגל עוד</span>
-                        ) : (
-                          <span className="text-yellow-400 text-xs">👍 טוב</span>
-                        )}
+                        <TopicProgressStatusBadge data={data} />
                         <ParentReportRowDiagnosticsFootnote data={data} />
                       </div>
                     </div>
@@ -3087,13 +3019,7 @@ export default function ParentReport() {
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-[10px] md:text-sm whitespace-nowrap align-top">
                             <div className="flex flex-col items-center">
-                              {topicShowsExcellent(data) ? (
-                                <span className="text-emerald-400">✅</span>
-                              ) : topicShowsNeedsPractice(data) ? (
-                                <span className="text-red-400">⚠️</span>
-                              ) : (
-                                <span className="text-yellow-400">👍</span>
-                              )}
+                              <TopicProgressStatusBadge data={data} compact />
                               <ParentReportRowDiagnosticsFootnote data={data} />
                             </div>
                           </td>
@@ -3107,7 +3033,7 @@ export default function ParentReport() {
                 {regularReportTopicTableEntries(displayReport, "hebrewTopics", regularReportDisplay)
                   .sort(([_, a], [__, b]) => b.questions - a.questions)
                   .map(([topic, data]) => (
-                    <div key={topic} className="bg-black/40 border border-white/20 rounded-lg p-3">
+                    <div key={topic} className={`rounded-lg p-3 ${topicProgressCardClassName(data)}`}>
                       <div className="font-semibold text-sm mb-2 text-orange-400">{regularReportTopicLabel("hebrew", data, topic, regularReportDisplay)}</div>
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <div>
@@ -3139,13 +3065,7 @@ export default function ParentReport() {
                         </div>
                       </div>
                       <div className="mt-2 text-center">
-                        {topicShowsExcellent(data) ? (
-                          <span className="text-emerald-400 text-xs">✅ מצוין</span>
-                        ) : topicShowsNeedsPractice(data) ? (
-                          <span className="text-red-400 text-xs">⚠️ כדאי לתרגל עוד</span>
-                        ) : (
-                          <span className="text-yellow-400 text-xs">👍 טוב</span>
-                        )}
+                        <TopicProgressStatusBadge data={data} />
                         <ParentReportRowDiagnosticsFootnote data={data} />
                       </div>
                     </div>
@@ -3234,13 +3154,7 @@ export default function ParentReport() {
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-[10px] md:text-sm whitespace-nowrap align-top">
                             <div className="flex flex-col items-center">
-                              {topicShowsExcellent(data) ? (
-                                <span className="text-emerald-400">✅</span>
-                              ) : topicShowsNeedsPractice(data) ? (
-                                <span className="text-red-400">⚠️</span>
-                              ) : (
-                                <span className="text-yellow-400">👍</span>
-                              )}
+                              <TopicProgressStatusBadge data={data} compact />
                               <ParentReportRowDiagnosticsFootnote data={data} />
                             </div>
                           </td>
@@ -3258,7 +3172,7 @@ export default function ParentReport() {
                     )
                   .sort(([_, a], [__, b]) => b.questions - a.questions)
                   .map(([topic, data]) => (
-                    <div key={topic} className="bg-black/40 border border-white/20 rounded-lg p-3">
+                    <div key={topic} className={`rounded-lg p-3 ${topicProgressCardClassName(data)}`}>
                       <div className="font-semibold text-sm mb-2 text-cyan-400">{subjectTopicLabelForParentHe(MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID, data, topic)}</div>
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <div>
@@ -3290,13 +3204,7 @@ export default function ParentReport() {
                         </div>
                       </div>
                       <div className="mt-2 text-center">
-                        {topicShowsExcellent(data) ? (
-                          <span className="text-emerald-400 text-xs">✅ מצוין</span>
-                        ) : topicShowsNeedsPractice(data) ? (
-                          <span className="text-red-400 text-xs">⚠️ כדאי לתרגל עוד</span>
-                        ) : (
-                          <span className="text-yellow-400 text-xs">👍 טוב</span>
-                        )}
+                        <TopicProgressStatusBadge data={data} />
                         <ParentReportRowDiagnosticsFootnote data={data} />
                       </div>
                     </div>
@@ -3384,13 +3292,7 @@ export default function ParentReport() {
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-[10px] md:text-sm whitespace-nowrap align-top">
                             <div className="flex flex-col items-center">
-                              {topicShowsExcellent(data) ? (
-                                <span className="text-emerald-400">✅</span>
-                              ) : topicShowsNeedsPractice(data) ? (
-                                <span className="text-red-400">⚠️</span>
-                              ) : (
-                                <span className="text-yellow-400">👍</span>
-                              )}
+                              <TopicProgressStatusBadge data={data} compact />
                               <ParentReportRowDiagnosticsFootnote data={data} />
                             </div>
                           </td>
@@ -3407,7 +3309,7 @@ export default function ParentReport() {
                     )
                   .sort(([_, a], [__, b]) => b.questions - a.questions)
                   .map(([topic, data]) => (
-                    <div key={topic} className="bg-black/40 border border-white/20 rounded-lg p-3">
+                    <div key={topic} className={`rounded-lg p-3 ${topicProgressCardClassName(data)}`}>
                       <div className="font-semibold text-sm mb-2 text-teal-400">{subjectTopicLabelForParentHe(MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID, data, topic)}</div>
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <div>
@@ -3440,13 +3342,7 @@ export default function ParentReport() {
                         </div>
                       </div>
                       <div className="mt-2 text-center">
-                        {topicShowsExcellent(data) ? (
-                          <span className="text-emerald-400 text-xs">✅ מצוין</span>
-                        ) : topicShowsNeedsPractice(data) ? (
-                          <span className="text-red-400 text-xs">⚠️ כדאי לתרגל עוד</span>
-                        ) : (
-                          <span className="text-yellow-400 text-xs">👍 טוב</span>
-                        )}
+                        <TopicProgressStatusBadge data={data} />
                         <ParentReportRowDiagnosticsFootnote data={data} />
                       </div>
                     </div>

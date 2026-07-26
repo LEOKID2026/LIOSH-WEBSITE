@@ -16,6 +16,8 @@ function mockUnit({ patternHe, actionState = "intervene", questions = 206, corre
     displayName: "שברים",
     taxonomy: { patternHe, id: "M-05", subskillHe: "השוואת שברים" },
     diagnosis: { allowed: true, lineHe: patternHe },
+    classification: { state: "classified", primaryTag: "numerator_only_compare" },
+    patternEvidence: { allowed: true, evidenceCount: Math.max(1, wrong) },
     canonicalState: {
       actionState,
       recommendation: {
@@ -62,6 +64,9 @@ function rowFromMetrics(q, c, w, acc) {
   });
   unit.displayName = "כפל";
   unit.topicRowKey = "multiplication::grade:g4";
+  unit.taxonomy = { patternHe: "אותם זוגות שגויים", id: "M-03", subskillHe: "כפל" };
+  unit.classification = { state: "classified", primaryTag: "multiplication_fact_error" };
+  unit.patternEvidence = { allowed: true, evidenceCount: 10 };
   const row = rowFromMetrics(32, 22, 10, 69);
   row.displayName = "כפל";
   const lpd = buildLearningPatternDecision({

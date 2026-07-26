@@ -3,6 +3,11 @@
  * Deterministic parent-facing summary envelope for detailed report payloads.
  */
 
+import {
+  resolveParentTopicDisplayDecision,
+  resolveCanonicalEngineDecisionFromRow,
+} from "../parent-report-surface/parent-topic-display-chrome.js";
+
 export const PARENT_PRODUCT_CONTRACT_VERSION = "v1";
 export const PRODUCT_CONTRACT_MIN_EVIDENCE_QUESTIONS = 8;
 export const PRODUCT_CONTRACT_MIN_TREND_POINTS = 3;
@@ -152,6 +157,8 @@ function buildContractRow(row, subjectProfile) {
     `ב${subjectProfile?.subjectLabelHe || "המקצוע"} כדאי תרגול ממוקד וזהיר בשלב הזה.`
   );
   const mainPriority = firstNonEmpty(doNow, "להמשיך תרגול קצר ומדויק עם משימה אחת ברורה.");
+  const engineDecision = resolveCanonicalEngineDecisionFromRow(row);
+  const displayDecision = resolveParentTopicDisplayDecision(row);
   return {
     mainStatusHe: removeForbiddenTerms(mainStatus),
     mainPriorityHe: removeForbiddenTerms(mainPriority),
@@ -161,6 +168,8 @@ function buildContractRow(row, subjectProfile) {
     confidenceHe: removeForbiddenTerms(confidenceLabelHe(row)),
     evidenceSummaryHe: removeForbiddenTerms(buildEvidenceSummaryHe(row)),
     nextCheckHe: removeForbiddenTerms(nextCheckHe(row)),
+    engineDecision: engineDecision || null,
+    displayDecision,
     evidence: {
       questionCount: Number(row?.questions) || 0,
       ...getTrendEvidenceCounters(row),
@@ -266,6 +275,8 @@ export function buildParentProductContractV1(detailedReport) {
         confidenceHe: "כמה אפשר לסמוך על זה: עדיין לא גבוה בשלב זה.",
         evidenceSummaryHe: "הנתונים הקיימים עדיין חלקיים.",
         nextCheckHe: `לאסוף לפחות ${PRODUCT_CONTRACT_MIN_EVIDENCE_QUESTIONS} שאלות לפני החלטה.`,
+        engineDecision: "insufficient_data",
+        displayDecision: "insufficient_data",
         evidence: {
           questionCount: 0,
           trendEvidencePoints: 0,

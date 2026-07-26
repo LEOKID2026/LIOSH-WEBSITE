@@ -1,8 +1,14 @@
 /**
  * Subject-agnostic repeated mistake pattern detection from wrong events.
  * Priority: patternFamily → subtype+kind → kind → conceptTag → topicOrOperation
+ *
+ * Parent-facing recurrence levels follow the final product ladder (2026-07-26).
+ * Cluster inclusion for repeatedMistakePatterns still requires count>=2 among wrongs
+ * (DE2-oriented). Factual observations (count>=1) are built separately.
  */
 import { mistakePatternClusterKey } from "../mistake-event.js";
+import { parentFacingErrorPatternLabelHe } from "./parent-facing-error-pattern-he.js";
+import { resolveFactualRecurrenceLevel } from "./build-factual-observations.js";
 
 const MIN_WRONGS_FOR_REPEAT = 2;
 const MIN_REPEAT_RATIO = 0.4;
@@ -37,18 +43,25 @@ export function resolveRepeatedMistakePatterns(wrongEvents) {
 }
 
 /**
+ * Parent-facing label only: approved Hebrew from parentFacingErrorPatternLabelHe,
+ * otherwise "unknown". Never expose the internal cluster key as label.
  * @param {import("../mistake-event.js").MistakeEventV1} ev
  * @param {string} key
  */
 function patternLabelFromEvent(ev, key) {
-  if (ev?.patternFamily) return String(ev.patternFamily);
-  if (ev?.subtype) return String(ev.subtype);
-  if (ev?.kind) return String(ev.kind);
-  if (key.startsWith("pf:")) return key.slice(3);
-  return "";
+  const fromKey = parentFacingErrorPatternLabelHe(key);
+  if (fromKey) return fromKey;
+  for (const candidate of [ev?.patternFamily, ev?.subtype, ev?.kind]) {
+    const mapped = parentFacingErrorPatternLabelHe(candidate);
+    if (mapped) return mapped;
+  }
+  return "unknown";
 }
 
 /**
+ * Final product ladder for observedPatternLevel (from top repeated cluster).
+ * Uses ratio among wrongs as ratioOfErrors; ratioOfQuestions = count/q.
+ *
  * @param {{ key: string, count: number, ratio: number, label: string }[]} patterns
  * @param {number} questionCount
  * @returns {"none"|"observed"|"repeated"|"consistent"|"strong"}
@@ -57,9 +70,16 @@ export function resolveObservedPatternLevelFromPatterns(patterns, questionCount)
   const q = Math.max(0, Number(questionCount) || 0);
   if (!patterns.length || q === 0) return "none";
   const top = patterns[0];
-  if (q >= 40 && top.ratio >= 0.5) return "strong";
-  if (q >= 12 && top.ratio >= 0.4) return "consistent";
-  if (q >= 5 && top.count >= 2) return "repeated";
-  if (top.count >= 2) return "observed";
-  return "none";
+  const count = Math.max(0, Math.floor(Number(top.count) || 0));
+  // top.ratio is count/wrongs — treat as ratioOfErrors; derive errors from ratio when possible
+  const ratioAmongWrongs = Number(top.ratio) || 0;
+  const totalErrors =
+    ratioAmongWrongs > 0 ? Math.max(count, Math.round(count / ratioAmongWrongs)) : count;
+  return resolveFactualRecurrenceLevel({
+    count,
+    totalQuestions: q,
+    totalErrors,
+  });
 }
+
+export { resolveFactualRecurrenceLevel };

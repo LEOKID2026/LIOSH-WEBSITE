@@ -83,6 +83,7 @@ export function emptyLearningPatternDecision(subjectId, topicKey) {
     detectedPatterns: [],
     positivePatterns: [],
     repeatedMistakePatterns: [],
+    factualObservations: [],
     recommendedFocus: null,
     parentVisibleFinding: "",
     parentWordingLevel: "no_parent_text",
